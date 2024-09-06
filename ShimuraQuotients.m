@@ -1,12 +1,15 @@
 // Lower and upper bounds for number of points in reduction mod p, 
 // scaled by 12/p-1, see [HH]
 
+function Omega(n)
+    return #PrimeDivisors(n);
+end function;
+
 function LowerBound(D, N)
     ps := PrimeDivisors(N);
     c_D := EulerPhi(D);
     c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
-    omega := #ps;
-    return c_D * c_N / (2^omega);
+    return c_D * c_N / (2^Omega(D*N));
 end function;
 
 function UpperBound(p)
@@ -24,7 +27,7 @@ function MinimalNumberOfALinQuotient(D, N)
     return Maximum(0,Ceiling(Log(2, (c_D * c_N) / UpperBound(p))));
 end function;
 
-procedure VerifyBound(: r := 6)
+procedure VerifyBound(: r := 7)
     ps := PrimesUpTo(100);
     assert LowerBound(1, &*ps[1..r]) gt UpperBound(ps[r+1]);
     assert LowerBound(&*ps[1..r], 1) gt UpperBound(ps[r+1]);
@@ -35,10 +38,17 @@ function FindMaximalN(r)
     return Floor(UpperBound(ps[r])*2^(r-1));
 end function;
 
+// Using https://math.stackexchange.com/questions/301837/is-the-euler-phi-function-bounded-below EEDDIITT -> TODO: Find a reference
 function FindMaximalD(r)
-    return 1290;
+    // Using phi(D) >= Sqrt(D/2)
+    // Enough that Sqrt(D/2) gt ub
+    // D gt 2*ub^2;
+//  return 1290;
+    
     ps := PrimesUpTo(100);
     ub := Ceiling(UpperBound(ps[r]));
+    return 2*ub^2;
+    
     ps := PrimesUpTo(ub+1);
     maxD := 1;
     for num_primes in [1..r] do
@@ -60,14 +70,10 @@ function FindMaximalD(r)
     return maxD;
 end function;
 
-function Omega(n)
-    return #PrimeDivisors(n);
-end function;
-
-function FindPairs()
+function FindPairs(: r := 7)
     pairs := [];
-    N0 := FindMaximalN(6);
-    D0 := FindMaximalD(6);
+    N0 := FindMaximalN(r);
+    D0 := FindMaximalD(r);
     Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
     for D in Ds do
 	print "D = ", D;
@@ -129,26 +135,199 @@ function GenusShimuraCurve(D, N)
     return Floor(g);
 end function;
     
+function PsiOgg(p, n)
+    if (n eq 1) then
+	return 1;
+    end if;
+    is_prime_power, q, k := IsPrimePower(n);
+    if (is_prime_power) then
+	return ((q eq p) select Floor(p^k *(1 + 1/p)) else 1);
+    end if;
+    fac := Factorization(n);
+    return &*[Integers() | PsiOgg(p, pe[1]^pe[2]) : pe in fac];
+end function;
+
+function LegendreSymbol(R, p)
+    f := Conductor(R);
+    if (f mod p eq 0) then
+	return 1;
+    end if;
+    ZF := MaximalOrder(R);
+    return KroneckerCharacter(Discriminant(ZF))(p);
+end function;
+
+// Here R is the quadratic order and 
+// O is a fixed quaternion Eichler order of level F in 
+// the quaternion algebra B of discriminant D. 
+// based on Theorem 2 in [Ogg]
+function NuOgg(p, R, D, F)
+    if (D mod p eq 0) then
+	return 1 - LegendreSymbol(R, p);
+    end if;
+    if Valuation(F, p) eq 1 then
+	return 1 + LegendreSymbol(R, p);
+    end if;
+    assert Valuation(F, p) ge 2;
+    f := Conductor(R);
+    ZF := MaximalOrder(R);
+    chi := KroneckerCharacter(Discriminant(ZF));
+    k := Valuation(f, p);
+    K := Valuation(F, p);
+    if (K ge 2*(1 + k)) then
+	if (chi(p) eq 1) then
+	    return 2*PsiOgg(p, f);
+	end if;
+	return 0;
+    end if;
+    if (K eq 1 + 2*k) then
+	if (chi(p) eq 1) then
+	    return 2*PsiOgg(p, f);
+	end if;
+	if (chi(p) eq 0) then
+	    return p^k;
+	end if;
+	assert chi(p) eq -1;
+	return 0;
+    end if;
+    if (K eq 2*k) then
+	return p^(k-1)*(p+1+chi(p));
+    end if;
+    if (K le 2*k - 1) then
+	if IsEven(K) then
+	    return p^(k div 2) + p^(k div 2 - 1);
+	else
+	    return 2*p^(k div 2);
+	end if;
+    end if;
+    // Should not reach here
+    assert false;
+end function;
+
 // Quotient by w_m, m divides DN, following [Ogg]
-function GenusShimuraCurveQuotient(D, N, m)
+
+// The number of the fixed points of w_m on X_0(D,N) 
+function NumFixedPoints(D, N, m)
     if (m eq 2) then
 	orders := [MaximalOrder(QuadraticField(-1)), 
 		   MaximalOrder(QuadraticField(-2))];
     elif (m mod 4 eq 3) then
-	O<alpha> := MaximalOrder(QuadraticField(-m));
-	orders := [O, sub<O | 1, 2*alpha> ];
+	F := QuadraticField(-m);
+	_, sqrt_minus_m := IsSquare(F!(-m));
+	O := MaximalOrder(F);
+	alpha := (1 + sqrt_minus_m)/2;
+	orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
     else
-	orders := [MaximalOrder(QuadraticField(-m))];
+	F := QuadraticField(-m);
+	_, sqrt_minus_m := IsSquare(F!(-m));
+	O := MaximalOrder(F);
+	orders := [sub<O | 1, sqrt_minus_m>];
     end if;
-    g := 0;
+    e := 0;
     for R in orders do
 	h := PicardNumber(R);
-	// use Pete's formula (or Ogg)
+	// Using formula (4) in [Ogg]
+	prod := &*[Integers() | 
+		  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
+	e +:= h*prod;
     end for;
+    if (D eq 1) and (m eq 4) then
+	M := N div 4;
+	num_fixed_cusps := &+[Integers() | 
+			     EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+	e +:= num_fixed_cusps;
+    end if;
+    return e;
+end function;
+    
+function GenusShimuraCurveQuotientSingleAL(D, N, m)
+    e := NumFixedPoints(D, N, m);
+    g_big := GenusShimuraCurve(D, N);
+    g := (g_big+1)/2 - e/4;
+    assert IsIntegral(g);
+    return Floor(g);
 end function;
 
 function GenusShimuraCurveQuotient(D, N, als)
-    
+    total_e := 0;
+    for al in als do
+	assert GCD(al, (D*N) div al) eq 1;
+	if (al ne 1) then
+	    total_e +:= NumFixedPoints(D, N, al);
+	end if;
+    end for;
+    if #als eq 1 then 
+	s := 0; 
+    else
+	is_prime_power, two, s := IsPrimePower(#als);
+	assert is_prime_power and (two eq 2);
+    end if;
+    g_big := GenusShimuraCurve(D, N);
+    g := 1 + (g_big - 1)/2^s - total_e/2^(s+1);
+    assert IsIntegral(g);
+    return Floor(g);
+end function;
+
+function exp_to_Q(e, N, ps)
+    ZZ := Integers();
+    return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq 1];
+end function;
+
+function ALSubgroups(N)
+    ZZ := Integers();
+    Qs_in_grp := AssociativeArray();
+    ps := PrimeDivisors(N);
+    W := AbelianGroup([2 : i in [1..#ps]]);
+    subs_W := Subgroups(W);
+    Qs := {};
+    for H in subs_W do
+	exps := {Eltseq(W!h) : h in H`subgroup};
+	Include(~Qs, {exp_to_Q(e,N,ps) : e in exps});
+    end for;
+    return Qs;
+end function;
+
+function code_we_ran()
+    pairs := FindPairs();
+    // relevant_pairs := [p : p in pairs | IsEven(Omega(p[1]))];
+    relevant_pairs := pairs;
+    genera := [GenusShimuraCurve(a[1], a[2]) : a in relevant_pairs];
+    dont_know_idxs := [i : i in [1..#genera] | genera[i] ge 3];
+    dont_know_pairs := [relevant_pairs[i] : i in dont_know_idxs];
+    // Minimal number of Atkin-Lehners we should quotient by to get something 
+    // where there is a chance of hyperelliptic
+    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in relevant_pairs];
+    al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in relevant_pairs | a[1] gt 1];
+    num_curves := &+[#Divisors(a[1]*a[2]) : a in relevant_pairs];
+    D := 6;
+    // N := 40; // complicated JL
+    N := 55;
+    min_num := al_nums[Index(pairs, <D,N>)];
+    al_subs := ALSubgroups(D*N);
+    al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
+    genera := [];
+    for als in al_subs_allowed do
+	g := GenusShimuraCurveQuotient(D, N, als);
+	Append(~genera, <D, N, als, g>); 
+    end for;
+end function;
+		      
+function GetGenera(pairs)
+    // Restrict first to coprime D and N
+    pairs := [p : p in pairs | GCD(p[1], p[2]) eq 1];
+    genera := [];
+    for i->p in pairs do
+	D := p[1];
+	N := p[2];
+	min_num := al_nums[i];
+	al_subs := ALSubgroups(D*N);
+	al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
+	for als in al_subs_allowed do
+	    g := GenusShimuraCurveQuotient(D, N, als);
+	    Append(~genera, <D, N, als, g>); 
+	end for;
+	print "i = ", i;
+    end for;
+    return genera;
 end function;
 
 // [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N) 
