@@ -1,4 +1,4 @@
-// Loerr and upper bounds for number of points in reduction mod p, 
+// Lower and upper bounds for number of points in reduction mod p, 
 // scaled by 12/p-1, see [HH]
 
 function LowerBound(D, N)
