@@ -286,18 +286,16 @@ function ALSubgroups(N)
     return Qs;
 end function;
 
-function code_we_ran()
+procedure code_we_ran()
     pairs := FindPairs();
-    // relevant_pairs := [p : p in pairs | IsEven(Omega(p[1]))];
-    relevant_pairs := pairs;
-    genera := [GenusShimuraCurve(a[1], a[2]) : a in relevant_pairs];
+    genera := [GenusShimuraCurve(a[1], a[2]) : a in pairs];
     dont_know_idxs := [i : i in [1..#genera] | genera[i] ge 3];
-    dont_know_pairs := [relevant_pairs[i] : i in dont_know_idxs];
+    dont_know_pairs := [pairs[i] : i in dont_know_idxs];
     // Minimal number of Atkin-Lehners we should quotient by to get something 
     // where there is a chance of hyperelliptic
-    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in relevant_pairs];
-    al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in relevant_pairs | a[1] gt 1];
-    num_curves := &+[#Divisors(a[1]*a[2]) : a in relevant_pairs];
+    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
+    al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs | a[1] gt 1];
+    num_curves := &+[#Divisors(a[1]*a[2]) : a in pairs];
     D := 6;
     // N := 40; // complicated JL
     N := 55;
@@ -309,7 +307,12 @@ function code_we_ran()
 	g := GenusShimuraCurveQuotient(D, N, als);
 	Append(~genera, <D, N, als, g>); 
     end for;
-end function;
+    genera := GetGenera(pairs);
+
+    known_proj:= [c : c in genera | c[4] eq 0]; //genus 0 
+    known_hyperell:= [c : c in genera | c[4] eq 1 or c[4] eq 2]; //genus 1 or 2
+
+end procedure;
 		      
 function GetGenera(pairs)
     // Restrict first to coprime D and N
@@ -318,6 +321,7 @@ function GetGenera(pairs)
     for i->p in pairs do
 	D := p[1];
 	N := p[2];
+    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
 	min_num := al_nums[i];
 	al_subs := ALSubgroups(D*N);
 	al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
