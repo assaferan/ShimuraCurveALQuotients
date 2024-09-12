@@ -330,6 +330,67 @@ function GetGenera(pairs)
     return genera;
 end function;
 
+/*
+function sum_n_powers(a_p, p, n)
+    if n eq 0 then 
+	return 2;
+    end if;
+    if n eq 1 then 
+	return a_p;
+    end if;
+    return a_p*sum_n_powers(a_p, p, n-1) - p*sum_n_powers(a_p, p, n-2);
+end function;
+*/
+
+function sum_n_powers(mfs, p, n, BV)
+    assert n ge 1;
+    assert Level(mfs) mod p ne 0;
+    T_p_n := HeckeOperator(mfs, p^n);
+    T_p_n := ChangeRing(T_p_n, Rationals());
+    T_p_n := Solution(BV, BV*T_p_n);
+    if n eq 1 then 
+	return Trace(T_p_n);
+    end if;
+    T_p_n_2 := HeckeOperator(mfs, p^(n-2));
+    T_p_n_2 := ChangeRing(T_p_n_2, Rationals());
+    T_p_n_2 := Solution(BV, BV*T_p_n_2);
+    return Trace(T_p_n - p*T_p_n_2);
+end function;
+
+// Returns false if X is not subhyperelliptic
+// If returns true we don't know (compare point counts)
+				
+function checkSubhyperelliptic(X)
+    g := X[4];
+    assert g ge 3;
+    N := X[2];
+    assert X[1] eq 1;
+    ws := [w : w in X[3] | w ne 1];
+//    assert X[3] eq {1};
+    mfs := CuspForms(N);
+    als := [AtkinLehnerOperator(mfs,w) : w in ws];
+    V := VectorSpace(Rationals(), Dimension(mfs));
+    for al in als do
+	V := V meet Kernel(al-1);
+    end for;
+    BV := BasisMatrix(V);
+    ps := [p : p in PrimesUpTo(4*g^2) | N mod p ne 0];
+    for p in ps do
+	v := 1;
+	while (p^v le 4*g^2) do
+	    num_pts := p^v+1 - sum_n_powers(mfs, p, v, BV);
+	    if (num_pts gt 2*(1+p^v)) then
+		// print p, v;
+		return false;
+	    end if;
+	    v +:= 1;
+	end while;
+    end for;
+    return true;
+end function;
+
+
+
 // [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N) 
 // with square-free levels
 //
