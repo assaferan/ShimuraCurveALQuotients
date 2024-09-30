@@ -286,6 +286,8 @@ function ALSubgroups(N)
     return Qs;
 end function;
 
+forward GetGenera, coversCurvesInList, filterByTrace;
+
 procedure code_we_ran()
     pairs := FindPairs();
     genera := [GenusShimuraCurve(a[1], a[2]) : a in pairs];
@@ -296,23 +298,81 @@ procedure code_we_ran()
     al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
     al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs | a[1] gt 1];
     num_curves := &+[#Divisors(a[1]*a[2]) : a in pairs];
-    D := 6;
+//    D := 6;
     // N := 40; // complicated JL
-    N := 55;
-    min_num := al_nums[Index(pairs, <D,N>)];
-    al_subs := ALSubgroups(D*N);
-    al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
-    genera := [];
-    for als in al_subs_allowed do
-	g := GenusShimuraCurveQuotient(D, N, als);
-	Append(~genera, <D, N, als, g>); 
-    end for;
+//    N := 55;
+//    min_num := al_nums[Index(pairs, <D,N>)];
+//    al_subs := ALSubgroups(D*N);
+ //   al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
+ //   genera := [];
+//    for als in al_subs_allowed do
+//	g := GenusShimuraCurveQuotient(D, N, als);
+//	Append(~genera, <D, N, als, g>); 
+//    end for;
     genera := GetGenera(pairs);
 
     known_proj:= [c : c in genera | c[4] eq 0]; //genus 0 
-    known_hyperell:= [c : c in genera | c[4] eq 1 or c[4] eq 2]; //genus 1 or 2
+    known_hyperell:= {c : c in genera | c[4] eq 1 or c[4] eq 2}; //genus 1 or 2
 
+    known_hyperell join:= {c : c in genera | 
+			   coversCurvesInList(c, known_proj : index := 2) };
+    
+    remaining := [c : c in genera | (c notin known_hyperell) and 
+				    (c notin known_proj)];
+    
+    pass_hecke_trace := [checkHeckeTrace(X) : X in remaining];
+    
+    // failed := [i : i in [1..#remaining] | not pass_hecke_trace[i]];
+    
+    remaining := filterByTrace(remaining);
+    
 end procedure;
+
+function filterByTrace(curve_list)
+    lut := AssociativeArray();
+    for i->X in curve_list do
+	D, N, als, g := Explode(X);
+	if not IsDefined(lut, <D,N>) then
+	    lut[<D,N>] := [];
+	end if;
+	lut[<D,N>] := Append(lut[<D,N>], i);
+    end for;
+    failed := {};
+    i := 1;
+    while (i le #curve_list) do
+	X := curve_list[i];
+	if not pass_hecke_trace(X) then
+	    Append(~failed, i);
+	    D, N, als, g := Explode(X);
+	    for j in lut[<D,N>] do
+		if curve_list[j][3] subset als then
+		    Insert(~failed, j);
+		end if;
+	    end for;
+	end if;
+	i +:= 1;
+	while ((i in failed) and (i le #curve_list)) do
+	    i +:= 1;
+	end while;
+    end while;
+    return [curve_list[i] : i notin failed];
+end function;
+
+function coversCurvesInList(c, curve_list : index := 0)
+    D, N, als, g := Explode(c);
+    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
+					 and (als subset c2[3])];
+    for r in relevant do
+	als_r := r[3];
+	if (index ne 0) then
+	    if #als_r eq index*#als then
+		return true;
+	    end if;
+	end if;
+    end for;
+    
+    return false;
+end function;
 		      
 function GetGenera(pairs)
     // Restrict first to coprime D and N
@@ -364,14 +424,20 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 				
-function checkSubhyperelliptic(X)
+function checkHeckeTrace(X)
     g := X[4];
     assert g ge 3;
     N := X[2];
-    assert X[1] eq 1;
+    // assert X[1] eq 1;
+    D := X[1];
     ws := [w : w in X[3] | w ne 1];
 //    assert X[3] eq {1};
-    mfs := CuspForms(N);
+    // mfs := NewSubspace(CuspForms(D*N), D);
+    mfs := CuspidalSubspace(ModularSymbols(D*N,2,1));
+    primes := PrimeDivisors(D);
+    for p in primes do
+	mfs := NewSubspace(mfs, p);
+    end for;
     als := [AtkinLehnerOperator(mfs,w) : w in ws];
     V := VectorSpace(Rationals(), Dimension(mfs));
     for al in als do
