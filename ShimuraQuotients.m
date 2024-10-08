@@ -286,7 +286,7 @@ function ALSubgroups(N)
     return Qs;
 end function;
 
-forward GetGenera, coversCurvesInList, filterByTrace;
+forward GetGenera, coversCurvesInList, filterByTrace, checkHeckeTrace;
 
 procedure code_we_ran()
     pairs := FindPairs();
@@ -341,7 +341,7 @@ function filterByTrace(curve_list)
     i := 1;
     while (i le #curve_list) do
 	X := curve_list[i];
-	if not pass_hecke_trace(X) then
+	if not checkHeckeTrace(X) then
 	    Append(~failed, i);
 	    D, N, als, g := Explode(X);
 	    for j in lut[<D,N>] do
@@ -355,7 +355,7 @@ function filterByTrace(curve_list)
 	    i +:= 1;
 	end while;
     end while;
-    return [curve_list[i] : i notin failed];
+    return [curve_list[i] : i in [1..#curve_list] | i notin failed];
 end function;
 
 function coversCurvesInList(c, curve_list : index := 0)
@@ -444,7 +444,7 @@ function checkHeckeTrace(X)
 	V := V meet Kernel(al-1);
     end for;
     BV := BasisMatrix(V);
-    ps := [p : p in PrimesUpTo(4*g^2) | N mod p ne 0];
+    ps := [p : p in PrimesUpTo(4*g^2) | D*N mod p ne 0];
     for p in ps do
 	v := 1;
 	while (p^v le 4*g^2) do
