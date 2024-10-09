@@ -311,16 +311,44 @@ procedure code_we_ran()
 //    end for;
     genera := GetGenera(pairs);
 
-    known_proj:= [c : c in genera | c[4] eq 0]; //genus 0 
-    known_hyperell:= {c : c in genera | c[4] eq 1 or c[4] eq 2}; //genus 1 or 2
+    known_proj:= {c : c in genera | c[4] eq 0}; //genus 0 
+    known_hyperell:= {c : c in genera | c[4] le 2}; // subhyperelliptic
 
     known_hyperell join:= {c : c in genera | 
 			   coversCurvesInList(c, known_proj : index := 2) };
     
-    remaining := [c : c in genera | (c notin known_hyperell) and 
-				    (c notin known_proj)];
+    remaining := {c : c in genera | c notin known_hyperell};
+
+    // This turns out to be false
+    exists(c){c : c in remaining | exists(d){d : d in known_hyperell | d[2] eq c[2] and d[1] eq c[1] and d[3] subset c[3] }};
+
+    passed_test := [];
+    for i->c in remaining do
+	print "i = ", i;
+	if testALFixedPointsOnQuotient(c) then
+	    Append(~passed_test, c);
+	end if;
+    end for;
+
+    remaining := passed_test;
     
-    pass_hecke_trace := [checkHeckeTrace(X) : X in remaining];
+    hyp3 := {c : c in remaining |
+	     (c[4] eq 3) and coversCurvesInList(c, genus2curves)};
+
+    known_hyperell join:= hyp3;
+
+    remaining := {c : c in remaining | c notin known_hyperell};
+
+    more_hyp := {c : c in remaining | coveredByCurvesInList(c, known_hyperell)};
+    known_hyperell join:= more_hyp;
+
+    nonhyp := {c : c in genera | (c notin known_hyperell)
+				 and (c notin remaining)};
+    more_nonhyp := {c : c in remaining | coversCurvesInList(c, nonhyp)};
+    nonhyp join:= more_nonhyp;
+    remaining diff:= more_nonhyp;
+    
+    // pass_hecke_trace := [checkHeckeTrace(X) : X in remaining];
     
     // failed := [i : i in [1..#remaining] | not pass_hecke_trace[i]];
     
@@ -340,13 +368,14 @@ function filterByTrace(curve_list)
     failed := {};
     i := 1;
     while (i le #curve_list) do
+	print "i = ", i;
 	X := curve_list[i];
 	if not checkHeckeTrace(X) then
-	    Append(~failed, i);
+	    Include(~failed, i);
 	    D, N, als, g := Explode(X);
 	    for j in lut[<D,N>] do
 		if curve_list[j][3] subset als then
-		    Insert(~failed, j);
+		    Include(~failed, j);
 		end if;
 	    end for;
 	end if;
@@ -368,12 +397,33 @@ function coversCurvesInList(c, curve_list : index := 0)
 	    if #als_r eq index*#als then
 		return true;
 	    end if;
+	else
+	    return true;
 	end if;
     end for;
     
     return false;
 end function;
-		      
+
+function coveredByCurvesInList(c, curve_list : index := 0)
+    D, N, als, g := Explode(c);
+    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
+					 and (c2[3] subset als)];
+    for r in relevant do
+	als_r := r[3];
+	if (index ne 0) then
+	    if #als eq index*#als_r then
+		return true;
+	    end if;
+	else
+	    // print r;
+	    return true;
+	end if;
+    end for;
+    
+    return false;
+end function;
+
 function GetGenera(pairs)
     // Restrict first to coprime D and N
     pairs := [p : p in pairs | GCD(p[1], p[2]) eq 1];
@@ -381,7 +431,7 @@ function GetGenera(pairs)
     for i->p in pairs do
 	D := p[1];
 	N := p[2];
-    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
+	al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
 	min_num := al_nums[i];
 	al_subs := ALSubgroups(D*N);
 	al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
@@ -459,7 +509,35 @@ function checkHeckeTrace(X)
     return true;
 end function;
 
+function al_mul(w, m)
+    ps := PrimeDivisors(w*m);
+    wvals := Vector(GF(2), [Valuation(w, p) : p in ps]);
+    mvals := Vector(GF(2), [Valuation(m, p) : p in ps]);
+    wmvals := mvals + wvals;
+    wm := &*[ps[i]^(Integers()!wmvals[i]) : i in [1..#ps]];
+    return wm;
+end function;
 
+function CountFixedPointsOnQuotient(w, c)
+    D := c[1];
+    N := c[2];
+    W := c[3];
+    return (1/#W) * &+[NumFixedPoints(D, N, al_mul(w, m)) : m in W];
+end function;
+
+function testALFixedPointsOnQuotient(c)
+    D, N, W, g := Explode(c);
+    ws := [d : d in Divisors(D*N) | d notin W and (GCD(d, D*N div d) eq 1)];
+    for d in ws do
+	fix := CountFixedPointsOnQuotient(d, c);
+	if IsEven(g) and fix gt 2 then
+	    return false;
+	elif IsOdd(g) and fix gt 4 then
+	    return false;
+	end if;
+    end for;
+    return true;
+end function;
 
 // [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N) 
 // with square-free levels
