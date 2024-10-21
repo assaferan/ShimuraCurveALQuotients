@@ -322,11 +322,10 @@ procedure code_we_ran()
     // This turns out to be false
     exists(c){c : c in remaining | exists(d){d : d in known_hyperell | d[2] eq c[2] and d[1] eq c[1] and d[3] subset c[3] }};
 
-    passed_test := [];
-    for i->c in remaining do
-	print "i = ", i;
+    passed_test := {};
+    for c in remaining do
 	if testALFixedPointsOnQuotient(c) then
-	    Append(~passed_test, c);
+	    Include(~passed_test, c);
 	end if;
     end for;
 
