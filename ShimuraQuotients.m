@@ -286,7 +286,7 @@ function ALSubgroups(N)
     return Qs;
 end function;
 
-forward GetGenera, coversCurvesInList, filterByTrace, checkHeckeTrace;
+forward GetGenera, coversCurvesInList, filterByTrace, checkHeckeTrace, testALFixedPointsOnQuotient;
 
 procedure code_we_ran()
     pairs := FindPairs();
@@ -331,6 +331,8 @@ procedure code_we_ran()
     end for;
 
     remaining := passed_test;
+
+    genus2curves := {c : c in genera | c[4] eq 2};
     
     hyp3 := {c : c in remaining |
 	     (c[4] eq 3) and coversCurvesInList(c, genus2curves)};
