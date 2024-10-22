@@ -1,3 +1,5 @@
+// Committed to Geometrically Hyperelliptic
+
 // Lower and upper bounds for number of points in reduction mod p, 
 // scaled by 12/p-1, see [HH]
 
@@ -12,8 +14,14 @@ function LowerBound(D, N)
     return c_D * c_N / (2^Omega(D*N));
 end function;
 
-function UpperBound(p)
-    return 24*(1+p^2)/(p-1);
+function UpperBound(p : Geometric := true)
+    // We use the fact that the geometric gonality is 2
+    // so gonality over Q (hence also over F_p) is at most 4
+    gonality := 2;
+    if Geometric then
+	gonality := gonality^2;
+    end if;
+    return 12*gonality*(1+p^2)/(p-1);
 end function;
 
 function MinimalNumberOfALinQuotient(D, N)
@@ -88,7 +96,7 @@ function FindPairs(: r := 7)
 	    while (N mod p eq 0) do
 		p := NextPrime(p);
 	    end while;
-	    if (LowerBound(D, N) le UpperBound(p)) then
+	    if (LowerBound(D, N) le UpperBound(p : Geometric := (D gt 1))) then
 		Append(~pairs, <D, N>);
 	    end if;
 	end for;
@@ -286,76 +294,8 @@ function ALSubgroups(N)
     return Qs;
 end function;
 
-forward GetGenera, coversCurvesInList, filterByTrace, checkHeckeTrace, testALFixedPointsOnQuotient;
+forward GetGenera, coversCurvesInList, filterByTrace, checkHeckeTrace, testALFixedPointsOnQuotient, coveredByCurvesInList;
 
-procedure code_we_ran()
-    pairs := FindPairs();
-    genera := [GenusShimuraCurve(a[1], a[2]) : a in pairs];
-    dont_know_idxs := [i : i in [1..#genera] | genera[i] ge 3];
-    dont_know_pairs := [pairs[i] : i in dont_know_idxs];
-    // Minimal number of Atkin-Lehners we should quotient by to get something 
-    // where there is a chance of hyperelliptic
-    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
-    al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs | a[1] gt 1];
-    num_curves := &+[#Divisors(a[1]*a[2]) : a in pairs];
-//    D := 6;
-    // N := 40; // complicated JL
-//    N := 55;
-//    min_num := al_nums[Index(pairs, <D,N>)];
-//    al_subs := ALSubgroups(D*N);
- //   al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
- //   genera := [];
-//    for als in al_subs_allowed do
-//	g := GenusShimuraCurveQuotient(D, N, als);
-//	Append(~genera, <D, N, als, g>); 
-//    end for;
-    genera := GetGenera(pairs);
-
-    known_proj:= {c : c in genera | c[4] eq 0}; //genus 0 
-    known_hyperell:= {c : c in genera | c[4] le 2}; // subhyperelliptic
-
-    known_hyperell join:= {c : c in genera | 
-			   coversCurvesInList(c, known_proj : index := 2) };
-    
-    remaining := {c : c in genera | c notin known_hyperell};
-
-    // This turns out to be false
-    exists(c){c : c in remaining | exists(d){d : d in known_hyperell | d[2] eq c[2] and d[1] eq c[1] and d[3] subset c[3] }};
-
-    passed_test := {};
-    for c in remaining do
-	if testALFixedPointsOnQuotient(c) then
-	    Include(~passed_test, c);
-	end if;
-    end for;
-
-    remaining := passed_test;
-
-    genus2curves := {c : c in genera | c[4] eq 2};
-    
-    hyp3 := {c : c in remaining |
-	     (c[4] eq 3) and coversCurvesInList(c, genus2curves)};
-
-    known_hyperell join:= hyp3;
-
-    remaining := {c : c in remaining | c notin known_hyperell};
-
-    more_hyp := {c : c in remaining | coveredByCurvesInList(c, known_hyperell)};
-    known_hyperell join:= more_hyp;
-
-    nonhyp := {c : c in genera | (c notin known_hyperell)
-				 and (c notin remaining)};
-    more_nonhyp := {c : c in remaining | coversCurvesInList(c, nonhyp)};
-    nonhyp join:= more_nonhyp;
-    remaining diff:= more_nonhyp;
-    
-    // pass_hecke_trace := [checkHeckeTrace(X) : X in remaining];
-    
-    // failed := [i : i in [1..#remaining] | not pass_hecke_trace[i]];
-    
-    remaining := filterByTrace(remaining);
-    
-end procedure;
 
 function filterByTrace(curve_list)
     lut := AssociativeArray();
@@ -540,7 +480,195 @@ function testALFixedPointsOnQuotient(c)
     return true;
 end function;
 
+// implementing Proposition 6 of [FH]
+// returns the W for which X_0(D,N)/W is not hyperelliptic
+function testComplicatedALFixedPointsOnQuotient(D,N)
+    cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
+    // print "cond_2 = ", cond_2;
+    cond_1 := [N2 : N2 in cond_2 | (N2 mod 4 ne 3) or
+				   ((N2 mod 8 eq 3) and IsEven(N)) or
+				   ((N2 mod 8 eq 7) and IsEven(D))];
+    // print "cond_1 = ", cond_1;
+    num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
+    good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
+		  (num_fixed[i] mod 3 eq 0) and
+		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
+    N2s := [cond_1[i] : i in good_idxs];
+    // print "N2s = ", N2s;
+    nfixed := [num_fixed[i] : i in good_idxs];
+    omega := Omega(D*N);
+    Ws := ALSubgroups(D*N);
+    Ws := [W : W in Ws | GenusShimuraCurveQuotient(D, N, W) ge 3];
+    non_hyp := {};
+    for i->N2 in N2s do
+	r := omega - Valuation(nfixed[i], 2);
+	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
+/*
+	if (N2 eq 195) then
+	    print "N2 = ", 195;
+	    print "Ws = ", Ws;
+	end if;
+*/
+	for W in Ws do
+	    is_non_hyp := false;
+	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
+	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
+/*
+	    if (N2 eq 195) and ({6, 10, 26} subset W) then
+		print "N1s = ", N1s;
+	    end if;
+*/
+	    for N1 in N1s do
+		a := AssociativeArray();
+		for w in W do
+		    a[al_mul(N1, w)] := w;
+		end for;
+		/*
+		if (N2 eq 195) and ({6, 10, 26} subset W) then
+		    print "N1 = ", N1;
+		    for k in Keys(a) do
+			print "a[", k, "] = ", a[k];
+		    end for;
+		end if;
+*/
+		for w in W do
+		    N_prime := al_mul(N2, w);
+		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
+			// print "w = ", w;
+			// print "N2 * w = ", N_prime;
+		    //end if;
+		    if IsDefined(a, N_prime) then
+			/*
+			print "N_prime = ", N_prime;
+			print "N_double_prime = ", a[N_prime];
+			print "N_triple_prime = ", w;
+			print "h(-4N_1) = ", ClassNumber(-4*N1);
+			print "h(-4N_2) = ", ClassNumber(-4*N2);
+		       */
+			Include(~non_hyp, W);
+			Ws := [WW : WW in Ws | WW ne W]; 
+			is_non_hyp := true;
+			break;
+		    end if;
+		end for;
+		if is_non_hyp then
+		    break;
+		end if;
+	    end for;
+	end for;
+    end for;
+    return non_hyp;
+end function;
+
+procedure code_we_ran()
+    pairs := FindPairs();
+    genera := [GenusShimuraCurve(a[1], a[2]) : a in pairs];
+    dont_know_idxs := [i : i in [1..#genera] | genera[i] ge 3];
+    dont_know_pairs := [pairs[i] : i in dont_know_idxs];
+    // Minimal number of Atkin-Lehners we should quotient by to get something 
+    // where there is a chance of hyperelliptic
+    al_nums := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs];
+    al_nums_shimura := [MinimalNumberOfALinQuotient(a[1], a[2]) : a in pairs | a[1] gt 1];
+    num_curves := &+[#Divisors(a[1]*a[2]) : a in pairs];
+//    D := 6;
+    // N := 40; // complicated JL
+//    N := 55;
+//    min_num := al_nums[Index(pairs, <D,N>)];
+//    al_subs := ALSubgroups(D*N);
+ //   al_subs_allowed := [S : S in al_subs | #S ge 2^min_num];
+ //   genera := [];
+//    for als in al_subs_allowed do
+//	g := GenusShimuraCurveQuotient(D, N, als);
+//	Append(~genera, <D, N, als, g>); 
+//    end for;
+    genera := GetGenera(pairs);
+
+    known_proj:= {c : c in genera | c[4] eq 0}; //genus 0 
+    known_hyperell:= {c : c in genera | c[4] le 2}; // subhyperelliptic
+
+    known_hyperell join:= {c : c in genera | 
+			   coversCurvesInList(c, known_proj : index := 2) };
+    
+    remaining := {c : c in genera | c notin known_hyperell};
+
+    // downward closure
+    more_hyp := {c : c in remaining | coveredByCurvesInList(c, known_hyperell)};
+    known_hyperell join:= more_hyp;
+    
+    // This turns out to be false
+    // exists(c){c : c in remaining | exists(d){d : d in known_hyperell | d[2] eq c[2] and d[1] eq c[1] and d[3] subset c[3] }};
+
+    passed_test := {};
+    lc := 0;
+    for c in remaining do
+	if testALFixedPointsOnQuotient(c) then
+	    Include(~passed_test, c);
+	end if;
+	lc +:= 1;
+	if (lc mod 100 eq 0) then
+	    print "lc = ", lc;
+	end if;
+    end for;
+
+    remaining := passed_test;
+
+    genus2curves := {c : c in genera | c[4] eq 2};
+
+    // upward closure
+    hyp3 := {c : c in remaining |
+	     (c[4] eq 3) and coversCurvesInList(c, genus2curves)};
+
+    known_hyperell join:= hyp3;
+
+    remaining := {c : c in remaining | c notin known_hyperell};
+
+    // downward closure
+    more_hyp := {c : c in remaining | coveredByCurvesInList(c, known_hyperell)};
+    known_hyperell join:= more_hyp;
+
+    nonhyp := {c : c in genera | (c notin known_hyperell)
+				 and (c notin remaining)};
+    more_nonhyp := {c : c in remaining | coversCurvesInList(c, nonhyp)};
+    nonhyp join:= more_nonhyp;
+    remaining diff:= more_nonhyp;
+
+    DN_pairs := {<c[1], c[2]> : c in remaining};
+    remaining_seq := [c : c in remaining];
+    lut := AssociativeArray();
+    for i in [1..#remaining] do
+	c := remaining_seq[i];
+	lut[<c[1], c[2], c[3]>] := i;
+    end for;
+    
+    non_hyp := {};
+    lc := 0;
+    for DN in DN_pairs do
+	D, N := Explode(DN);
+	Ws := testComplicatedALFixedPointsOnQuotient(D, N);
+	for W in Ws do
+	    if IsDefined(lut, <D,N,W>) then
+		Include(~non_hyp, remaining_seq[lut[<D,N,W>]]);
+	    end if;
+	end for;
+	lc +:= 1;
+	if (lc mod 100 eq 0) then
+	    print "lc = ", lc;
+	end if;
+    end for;
+
+    remaining diff:= non_hyp;
+    
+    // pass_hecke_trace := [checkHeckeTrace(X) : X in remaining];
+    
+    // failed := [i : i in [1..#remaining] | not pass_hecke_trace[i]];
+
+    remaining := filterByTrace(remaining);
+    
+end procedure;
+
+// [FH] Furumoto, Hasegawa, "Hyperelliptic Quotients of Modular Curves X_0(N)"
+//
 // [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N) 
-// with square-free levels
+// with square-free levels"
 //
 // [Ogg] Real points on Shimura Curves
