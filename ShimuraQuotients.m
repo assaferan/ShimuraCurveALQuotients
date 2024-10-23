@@ -55,9 +55,11 @@ function UpperBound(p : Geometric := true)
     // We use the fact that the geometric gonality is 2
     // so gonality over Q (hence also over F_p) is at most 4
     gonality := 2;
+    /* Not needed in the hyperelliptic case, because of [Poonen, Thm 2.5(i)]
     if Geometric then
 	gonality := gonality^2;
     end if;
+    */ 
     return 12*gonality*(1+p^2)/(p-1);
 end function;
 
@@ -97,7 +99,7 @@ function GetLargestPrimeIndex()
 	r +:= 1;
     end while;
     VerifyBound(r);
-    return r;
+     return r;
 end function;
 
 function FindMaximalN(r)
@@ -107,45 +109,40 @@ end function;
 
 // Using https://math.stackexchange.com/questions/301837/is-the-euler-phi-function-bounded-below EEDDIITT -> TODO: Find a reference
 function FindMaximalD(r)
-    // Using phi(D) >= Sqrt(D/2)
-    // Enough that Sqrt(D/2) gt ub
-    // D gt 2*ub^2;
-//  return 1290;
-    
     ps := FirstPrimes(r);
     ub := Ceiling(UpperBound(ps[r]));
-    return 2*ub^2;
-    
-    ps := PrimesUpTo(ub+1);
-    maxD := 1;
-    for num_primes in [1..r] do
-	A := CartesianPower(ps, num_primes);
-	for a in A do
-	    D := &*a;
-	    if not IsSquarefree(D) then
-		continue;
-	    end if;
-	    if EulerPhi(D) gt ub then
-		break;
-	    else
-		if D gt maxD then
-		    maxD := D;
-		end if;
-	    end if;
-	end for;
-    end for;
-    return maxD;
+    C := 2^(r-1)*ub;
+    p := 2;
+    prev := Infinity();
+    bound := Infinity();
+    A := p;
+    RR := RealField();
+    r := 1;
+    while (bound le prev) do
+	p := NextPrime(p);
+	delta := RR!(1 - Log(p-1) / Log(p));
+	A *:= p;
+	r +:= 1;
+	prev := bound;
+	bound := Ceiling(A*(C/EulerPhi(A))^(1/(1-delta)));
+	// print "bound = ", bound;
+    end while;
+    return bound; //, r, A;
 end function;
 
 // At the moment, we restrict to D and N being coprime
 function FindPairs(r : Coprime := true)
     pairs := [];
-    N0 := FindMaximalN(r);
+    // N0 := FindMaximalN(r);
+    ps := FirstPrimes(r);
+    ub := Ceiling(UpperBound(ps[r]));
+    C := 2^(r-1)*ub;
     D0 := FindMaximalD(r);
     Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
     for D in Ds do
 	print "D = ", D;
-	Nmax := Floor(N0 / EulerPhi(D));
+	// Nmax := Floor(N0 / EulerPhi(D));
+	Nmax := Ceiling(C / EulerPhi(D));
 	Ns := [1..Nmax];	
 	if Coprime then
 	    Ns := [N : N in Ns | GCD(D,N) eq 1];
@@ -799,7 +796,9 @@ procedure GetHyperellipticCandidates()
 
     // Find all pairs (D,N) satisfying the inequality of
     // Proposition 1.
-    modular_curves := FindPairs(r); // time : 12.680
+    modular_curves := FindPairs(r); // time : 1.020
+
+    assert #modular_curves eq 2372;
 
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
