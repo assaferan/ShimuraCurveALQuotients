@@ -4,7 +4,8 @@
 // Committed to Geometrically Hyperelliptic curves 
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
-                          TraceFormulaGamma0HeckeALNew;
+       TraceFormulaGamma0HeckeALNew,
+       get_ds, n_prime, d_prime, dd_prime, Q_prime;
 
 // A record format to save information we care about for each of the curves
 
@@ -509,6 +510,7 @@ function sum_n_powers(mfs, p, n, BV)
 end function;
 
 // At the moment only works on the whole space S_2(N)
+/*
 function sum_n_powers_trace_formula(N, W, p, n)
     t_p_n := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^n, w) : w in W];
     if n eq 1 then
@@ -517,12 +519,25 @@ function sum_n_powers_trace_formula(N, W, p, n)
     t_p_n_2 := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^(n-2), w) : w in W];
     return t_p_n - p*t_p_n_2; 
 end function;
+*/
 
 function TraceDNew(D,N,k,n,Q)
-    t := TraceFormulaGamma0HeckeALNew(D*N, k, n, Q);
-    for p in PrimeDivisors(N) do
-	N_prime := D*N div p;
-	t +:= 2*TraceFormulaGamma0HeckeAL(N_prime, k, n, GCD(Q, N_prime));
+    t := 0;
+    for dN in Divisors(N) do
+	N_prime := D*N div dN;
+	ds := get_ds(D*N, Q, N_prime, n);
+	for d in ds do
+	    n_p := n_prime(d, D*N, Q, N_prime, n);
+	    d_p := d_prime(d, D*N, Q, N_prime);
+	    dd_p := dd_prime(d, D*N, Q, N_prime, n);
+	    Q_p := Q_prime(D*N, Q, N_prime);
+	    // Should always be trivial as n is coprime to D*N
+	    // term := GCD(d_p, n);
+	    // term *:= MoebiusMu(dd_p);
+	    // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
+	    // t +:= t_d * #Divisors(d);
+	    t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
+	end for;
     end for;
     return t;
 end function;
