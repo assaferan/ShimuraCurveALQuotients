@@ -34,6 +34,53 @@ CurveQuot := recformat< D : RngIntElt,
 // is_hyp - if hyperelliptic (neither elliptic, nor p1)
 // is_subhyp - if subhyperelliptic (i.e. any of the above)
 
+function IsEqualCurve(crv1, crv2)
+    if (crv1`D ne crv2`D) then
+	return false;
+    end if;
+    if (crv1`N ne crv2`N) then
+	return false;
+    end if;
+    if (crv1`W ne crv2`W) then
+	return false;
+    end if;
+    if (crv1`g ne crv2`g) then
+	return false;
+    end if;
+    if (assigned crv1`is_p1) then
+	if not assigned crv2`is_p1 then
+	    return false;
+	end if;
+	if (crv1`is_p1 ne crv2`is_p1) then
+	    return false;
+	end if;
+    end if;
+    if (assigned crv1`is_ec) then
+	if not assigned crv2`is_ec then
+	    return false;
+	end if;
+	if (crv1`is_ec ne crv2`is_ec) then
+	    return false;
+	end if;
+    end if;
+    if (assigned crv1`is_hyp) then
+	if not assigned crv2`is_hyp then
+	    return false;
+	end if;
+	if (crv1`is_hyp ne crv2`is_hyp) then
+	    return false;
+	end if;
+    end if;
+    if (assigned crv1`is_subhyp) then
+	if not assigned crv2`is_subhyp then
+	    return false;
+	end if;
+	if (crv1`is_subhyp ne crv2`is_subhyp) then
+	    return false;
+	end if;
+    end if;
+    return true;
+end function;
 
 // Lower and upper bounds for number of points in reduction mod p, 
 // scaled by 12/p-1, see [HH]
@@ -509,18 +556,7 @@ function sum_n_powers(mfs, p, n, BV)
     return Trace(T_p_n - p*T_p_n_2);
 end function;
 
-// At the moment only works on the whole space S_2(N)
-/*
-function sum_n_powers_trace_formula(N, W, p, n)
-    t_p_n := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^n, w) : w in W];
-    if n eq 1 then
-	return t_p_n;
-    end if;
-    t_p_n_2 := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^(n-2), w) : w in W];
-    return t_p_n - p*t_p_n_2; 
-end function;
-*/
-
+// Computes the trace of T_n * W_Q on the space S_k(DN)^(D-new)
 function TraceDNew(D,N,k,n,Q)
     t := 0;
     for dN in Divisors(N) do
@@ -559,87 +595,43 @@ end function;
 // If returns true we don't know (compare point counts)
 				
 function CheckHeckeTrace(X)
-    // g := X[4];
     assert X`g ge 3;
-    // N := X[2];
-    // D := X[1];
-    // ws := [w : w in X[3] | w ne 1];
     ws := [w : w in X`W | w ne 1];
-    /*
-    mfs := CuspidalSubspace(ModularSymbols(X`D*X`N,2,1));
-    primes := PrimeDivisors(X`D);
-    for p in primes do
-	mfs := NewSubspace(mfs, p);
-    end for;
-    als := [AtkinLehnerOperator(mfs,w) : w in ws];
-    V := VectorSpace(Rationals(), Dimension(mfs));
-    for al in als do
-	V := V meet Kernel(al-1);
-    end for;
-    BV := BasisMatrix(V);
-   */
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
-	v := 1;
-	while (p^v le 4*X`g^2) do
-	    trace_frob_n := sum_n_powers_trace_formula(X`D, X`N, X`W, p, v);
-	    // assert trace_frob_n eq sum_n_powers(mfs, p, v, BV);
-	    num_pts := p^v+1 - trace_frob_n;
+	v_max := Floor(Log(p,4*X`g^2));
+	tps := AssociativeArray([-1..v_max]);
+	tps[-1] := 0;
+	for v in [1..v_max] do
+	    tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
+	end for;
+	if (v_max gt 1) then
+	    tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
+	end if;
+	for v in [1..v_max] do
+	    trace_frob_n := tps[v] - p*tps[v-2];
+	    num_pts := p^v  + 1 - trace_frob_n;
 	    if (num_pts gt 2*(1+p^v)) then
-		// print p, v;
+		// print "p, v = ", p, v;
 		return false;
 	    end if;
-	    v +:= 1;
-	end while;
+	end for;
     end for;
     return true;
 end function;
 
 procedure FilterByTrace(~curve_list)
-    // This was just for upward closure, we can skip it now
-    /*
-    lut := AssociativeArray();
-    for i->X in curve_list do
-	// D, N, als, g := Explode(X);
-	if not IsDefined(lut, <X`D,X`N>) then
-	    lut[<X`D,X`N>] := [];
-	end if;
-	lut[<X`D,X`N>] := Append(lut[<X`D,X`N>], i);
-    end for;
-    failed := {};
-    i := 1;
-   */
-    // while (i le #curve_list) do
     for i->X in curve_list do
 	if assigned X`is_subhyp then
 	    continue;
 	end if;
 	print "i = ", i;
-//	X := curve_list[i];
 	if not CheckHeckeTrace(X) then
-	    // Include(~failed, i);
 	    curve_list[i]`is_subhyp := false;
 	    curve_list[i]`is_hyp := false;
-	    // This was for upward closure, no longer needed
-	    /*
-	    D, N, als, g := Explode(X);
-	    for j in lut[<D,N>] do
-		if curve_list[j][3] subset als then
-		    Include(~failed, j);
-		end if;
-	    end for;
-	   */
 	end if;
-	/*
-	i +:= 1;
-	while ((i in failed) and (i le #curve_list)) do
-	    i +:= 1;
-	end while;
-       */
-	// end while;
     end for;
     return;
-    //return [curve_list[i] : i in [1..#curve_list] | i notin failed];
 end procedure;
 
 function al_mul(w, m)
@@ -915,12 +907,37 @@ procedure VerifyHHTable1(curves)
     Table1[7] diff:= {288, 296};
     // !! This is weird - N = 1170 should be appearing in Table 1,
     // but for some reason it does not.
+    // It seems to be a mistake in the original paper,
+    // since 1170 does appear in Table 3 in Appendix A,
+    // as one of the levels which were removed after counting points.
     Table1[12] join:= {1170};
     assert Maximum([c`g : c in curves | c`D eq 1]) eq 19;
     for g in [3..19] do
 	genus_g := {c`N : c in curves | (c`D eq 1) and (c`g eq g)};
 	assert Table1[g] eq genus_g;
     end for;
+    return;
+end procedure;
+
+procedure VerifyHHTable2(curves)
+    Table2 := [[] : g in [1..19]];
+    Table2[3] := [ 127, 136, 144, 152, 162, 164, 171, 175, 183, 185,
+		   194, 196, 207, 217, 234, 240, 246, 252, 258, 270,
+		   282, 290, 294, 310, 312, 315, 318, 348, 420, 462,
+		   476, 510 ];
+    Table2[4] := [ 160, 176, 264, 280, 300, 306, 322, 342, 345, 370,
+		   546, 570 ];
+    Table2[5] := [ 216, 279, 396, 630, 714 ];
+    Table2[6] := [ 336, 690 ];
+    Table2[7] := [ 360, 450 ];
+    Table2[10] := [840];
+    Table2[12] := [2310];
+    // This seems to be removed by considering p = 11, v = 2. Check!
+    // Table2[19] := [1680];
+    by_genus := [[X`N : X in curves | X`D eq 1 and
+				      not assigned X`is_subhyp and
+					  X`g eq g] : g in [1..19]];
+    assert Table2 eq by_genus;
     return;
 end procedure;
 
@@ -945,8 +962,19 @@ procedure GetHyperellipticCandidates()
 
     UpdateByGenus(~star_curves);
 
-    FilterByTrace(~star_curves); // time :
+    FilterByTrace(~star_curves); // time : 5376.150
     
+    VerifyHHTable2(star_curves);
+
+    // writing to a file, in case we would like to load it directly 
+    Write("star_curves_point_count.dat", star_curves);
+
+    // testing that reading the file works
+    read_curves := eval Read("star_curves_point_count.dat");
+    assert #read_curves eq #star_curves;
+    assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :
+		j in [1..#star_curves]];
+
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
     

@@ -2,23 +2,34 @@ function Sfast(N, u, t, n)
   fac := Factorization(N*u);
   num_sols := 1;
   for f in fac do
-    p,e := Explode(f);
-    if p eq 2 then
-      e2 := Valuation(1-t+n, 2);
-      if (e2 eq 0) or (e gt e2) then
-        return 0;
-      end if;
-      if IsEven(t) then
-        num_sols *:= 2^(e-1);
-      end if;
-    else
+      p,e := Explode(f);
       y := t^2-4*n;
+      if (y eq 0) then
+	  return p^(e div 2);
+      end if;
       e_y := Valuation(y, p);
+      y_0 := y div p^e_y;
+      // following [Assaf]
+      if p eq 2 then
+	  if (e_y le e + 1) and IsOdd(e_y) then
+	      return 0;
+	  end if;
+	  if (e le e_y-2) then
+	      num_sols *:= 2^(e div 2);
+	  elif (e_y le e - 1) and IsEven(e_y) then
+	      num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(y_0, 2))*(1 + KroneckerSymbol(-1, y_0));
+	  elif (e eq e_y) and IsEven(e_y) then
+	      num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(-1, y_0));
+	  elif (e eq e_y - 1) and IsEven(e_y) then
+	      num_sols *:= 2^(e_y div 2 - 1);
+	  else
+	      Error("Not Implemented!");
+	  end if;
+    else
       if e_y lt e then
         if IsOdd(e_y) then
           return 0;
         end if;
-	y_0 := y div p^e_y;
         is_sq := IsSquare(Integers(p)!y_0);
         if not is_sq then
 	  return 0;
@@ -29,7 +40,7 @@ function Sfast(N, u, t, n)
       end if;
     end if;
   end for;
-  return num_sols div u;
+  return Integers()!num_sols div u;
 end function;
 
 function S(N, u, t, n)
@@ -112,8 +123,11 @@ function Lemma4_5(N, u, D)
 end function;
 
 function Cfast(N, u, t, n)
-    S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
-    return #S * Lemma4_5(N, u, t^2 - 4*n);
+    // S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
+//    nS1 := #S(N, 1, t, n);
+    nS2 := Sfast(N, 1, t, n);
+//    assert nS1 eq nS2;
+    return nS2 * Lemma4_5(N, u, t^2 - 4*n);
 end function;
 
 function Hurwitz(n)
@@ -736,3 +750,5 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
     end for;
     printf "\n";
 end procedure;
+
+// [Assaf] - E. Assaf, a note on the trace formula
