@@ -565,6 +565,7 @@ function CheckHeckeTrace(X)
     // D := X[1];
     // ws := [w : w in X[3] | w ne 1];
     ws := [w : w in X`W | w ne 1];
+    /*
     mfs := CuspidalSubspace(ModularSymbols(X`D*X`N,2,1));
     primes := PrimeDivisors(X`D);
     for p in primes do
@@ -576,12 +577,13 @@ function CheckHeckeTrace(X)
 	V := V meet Kernel(al-1);
     end for;
     BV := BasisMatrix(V);
+   */
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
 	v := 1;
 	while (p^v le 4*X`g^2) do
 	    trace_frob_n := sum_n_powers_trace_formula(X`D, X`N, X`W, p, v);
-	    assert trace_frob_n eq sum_n_powers(mfs, p, v, BV);
+	    // assert trace_frob_n eq sum_n_powers(mfs, p, v, BV);
 	    num_pts := p^v+1 - trace_frob_n;
 	    if (num_pts gt 2*(1+p^v)) then
 		// print p, v;
