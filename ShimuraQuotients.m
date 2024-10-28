@@ -774,6 +774,8 @@ procedure UpdateByGenus(~curves)
     for i in [1..#curves] do
 	if (curves[i]`g eq 0) then
 	    curves[i]`is_p1 := true;
+	    curves[i]`is_ec := false;
+	    curves[i]`is_hyp := false;
 	    // check the ones with hyperelliptic AL involution
 	    if assigned curves[i]`covered_by then
 		for cover in curves[i]`covered_by do
@@ -786,6 +788,7 @@ procedure UpdateByGenus(~curves)
 	end if;
 	if (curves[i]`g eq 1) then
 	    curves[i]`is_ec := true;
+	    curves[i]`is_hyp := false;
 	end if;
 	if (curves[i]`g eq 2) then
 	    curves[i]`is_hyp := true;
