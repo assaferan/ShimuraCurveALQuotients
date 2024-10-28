@@ -312,24 +312,24 @@ function NuOgg(p, R, D, F)
 end function;
 
 
-function ConstructOrders(m : cached_orders := cached_orders)
+function ConstructOrders(m : cached_orders := false)
 	if m in Keys(cached_orders) then
 		return cached_orders[m];
 	else
 	    if (m eq 2) then
-		orders := [MaximalOrder(QuadraticField(-1)), 
-			   MaximalOrder(QuadraticField(-2))];
+			orders := [MaximalOrder(QuadraticField(-1)), 
+				   MaximalOrder(QuadraticField(-2))];
 	    elif (m mod 4 eq 3) then
-		F := QuadraticField(-m);
-		_, sqrt_minus_m := IsSquare(F!(-m));
-		O := MaximalOrder(F);
-		alpha := (1 + sqrt_minus_m)/2;
-		orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+			F := QuadraticField(-m);
+			_, sqrt_minus_m := IsSquare(F!(-m));
+			O := MaximalOrder(F);
+			alpha := (1 + sqrt_minus_m)/2;
+			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
 	    else
-		F := QuadraticField(-m);
-		_, sqrt_minus_m := IsSquare(F!(-m));
-		O := MaximalOrder(F);
-		orders := [sub<O | 1, sqrt_minus_m>];
+			F := QuadraticField(-m);
+			_, sqrt_minus_m := IsSquare(F!(-m));
+			O := MaximalOrder(F);
+			orders := [sub<O | 1, sqrt_minus_m>];
 	    end if;
 	    class_nos :=[];
 	    for R in orders do 
@@ -338,7 +338,7 @@ function ConstructOrders(m : cached_orders := cached_orders)
 			h := PicardNumber(R);
 			Append(~class_nos, h);
 		end for;
-		cached_orders[m] := {* orders, class_nos *};
+		cached_orders[m] := [* orders, class_nos *];
 		return cached_orders[m];
 	end if;
 
@@ -347,7 +347,7 @@ end function;
 // Quotient by w_m, m divides DN, following [Ogg]
 
 // The number of the fixed points of w_m on X_0(D,N) 
-function NumFixedPoints(D, N, m)
+function NumFixedPoints(D, N, m :cached_orders := false)
     // if (m eq 2) then
 	// orders := [MaximalOrder(QuadraticField(-1)), 
 	// 	   MaximalOrder(QuadraticField(-2))];
@@ -364,7 +364,7 @@ function NumFixedPoints(D, N, m)
 	// orders := [sub<O | 1, sqrt_minus_m>];
     // end if;
     e := 0;
-    pair := ConstructOrders(m);
+    pair := ConstructOrders(m :cached_orders:=cached_orders);
     orders := pair[1];
     class_nos := pair[2];
     for i->R in orders do
@@ -377,15 +377,15 @@ function NumFixedPoints(D, N, m)
     end for;
     if (D eq 1) and (m eq 4) then
 		M := N div 4;
-		num_fixed_cusps := &+[Integers() | 
-				     EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+		num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
 		e +:= num_fixed_cusps;
     end if;
     return e;
 end function;
     
 function GenusShimuraCurveQuotientSingleAL(D, N, m)
-    e := NumFixedPoints(D, N, m);
+	cached_orders := AssociativeArray();
+    e := NumFixedPoints(D, N, m :cached_orders := cached_orders);
     g_big := GenusShimuraCurve(D, N);
     g := (g_big+1)/2 - e/4;
     assert IsIntegral(g);
@@ -393,11 +393,12 @@ function GenusShimuraCurveQuotientSingleAL(D, N, m)
 end function;
 
 function GenusShimuraCurveQuotient(D, N, als)
+	cached_orders := AssociativeArray();
     total_e := 0;
     for al in als do
 	assert GCD(al, (D*N) div al) eq 1;
 	if (al ne 1) then
-	    total_e +:= NumFixedPoints(D, N, al);
+	    total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
 	end if;
     end for;
     if #als eq 1 then 
@@ -977,7 +978,7 @@ procedure GetHyperellipticCandidates()
     
     assert #star_curves eq 2342;
 
-    UpdateGenera(~star_curves); // time : 53.760
+    time UpdateGenera(~star_curves); // time : 182.450
     
     VerifyHHTable1(star_curves);
 
