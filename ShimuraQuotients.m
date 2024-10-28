@@ -53,22 +53,28 @@ end function;
 
 function LowerBoundN(N)
     ps := PrimeDivisors(N);
-    c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
+    if N eq 1 then
+    	c_N := 1;
+   	else 
+    	c_N := N * &*[ 1 + 1/p : p in ps];
+    end if;
     return c_N / 2^Omega(N);
 end function;
 
-function LowerBound(D, N, p)
-    lb := LowerBoundD(D)*LowerBoundN(N);
+function LowerBound(D, N, p: lb:=false)
+	if lb cmpeq false then
+    	lb := LowerBoundD(D)*LowerBoundN(N);
+	end if;
     if D eq 1 then
-	h := Maximum([h : h in Divisors(24) | N mod h^2 eq 0]);
-	h2 := GCD(h,8); h3 := GCD(h,3);
-	cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
-		 (GCD(h2^2, N div h2^2) eq 1);
-	s2 := cond2 select 3/4 else 1;
-	cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
-	s3 := cond3 select 2/3 else 1;
-	s := s2*s3;
-	lb +:= 12*h*s/(p-1);
+		h := Maximum([h : h in [ 1, 2, 3, 4, 6, 8, 12, 24 ] | N mod h^2 eq 0]);
+		h2 := GCD(h,8); h3 := GCD(h,3);
+		cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
+			 (GCD(h2^2, N div h2^2) eq 1);
+		s2 := cond2 select 3/4 else 1;
+		cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
+		s3 := cond3 select 2/3 else 1;
+		s := s2*s3;
+		lb +:= 12*h*s/(p-1);
     end if;
     return lb;
 end function;
@@ -158,30 +164,42 @@ function FindPairs(r : Coprime := true)
     C := 2^(r-1)*ub;
     D0 := FindMaximalD(r);
     // Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
-    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];   
+    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];  
+
+    // stores LowerBoundN on [1..C]
+    lNs := [LowerBoundN(N) : N in [1..C]];
     for D in Ds do
-	// print "D = ", D;
-	// Nmax := Floor(N0 / EulerPhi(D));
-	Nmax := Ceiling(C / EulerPhi(D));
-	Ns := [1..Nmax];	
-	if Coprime then
-	    Ns := [N : N in Ns | GCD(D,N) eq 1];
-	end if;
-	for N in Ns do
-	    /*
-	    if (N mod 1000 eq 0) then
-		print "N =", N;
-	    end if;
-	   */
-	    p := 2;
-	    while (N mod p eq 0) do
-		p := NextPrime(p);
-	    end while;
-	    if (LowerBound(D, N, p) le UpperBound(p)) then
-		W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-		Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
-	    end if;
-	end for;
+    	lD := LowerBoundD(D);
+		// print "D = ", D;
+		// Nmax := Floor(N0 / EulerPhi(D));
+		Nmax := Ceiling(C / EulerPhi(D));
+		Ns := [1..Nmax];	
+		if Coprime then
+		    Ns := [N : N in Ns | GCD(D,N) eq 1];
+		end if;
+
+		for N in Ns do
+		    /*
+		    if (N mod 1000 eq 0) then
+			print "N =", N;
+		    end if;
+		   */
+		    p := 2;
+		    while (N mod p eq 0) do
+			p := NextPrime(p);
+		    end while;
+		    if D eq 1 then 
+		    	if lD*lNs[N] le UpperBound(p) then
+			    	W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+				end if;
+			else 
+		    	if (LowerBound(1, N, p) le UpperBound(p)) then
+					W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+				end if;
+		    end if;
+		end for;
     end for;
     return pairs;
 end function;
