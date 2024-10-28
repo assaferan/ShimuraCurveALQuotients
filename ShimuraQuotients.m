@@ -188,13 +188,13 @@ function FindPairs(r : Coprime := true)
 		    while (N mod p eq 0) do
 			p := NextPrime(p);
 		    end while;
-		    if D eq 1 then 
+		    if D ne 1 then 
 		    	if lD*lNs[N] le UpperBound(p) then
 			    	W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
 					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
 				end if;
 			else 
-		    	if (LowerBound(1, N, p) le UpperBound(p)) then
+		    	if (LowerBound(D, N, p) le UpperBound(p)) then
 					W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
 					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
 				end if;
