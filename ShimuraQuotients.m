@@ -231,6 +231,9 @@ function FindPairs(r : Coprime := true)
 	    end if;
 	end for;
     end for;
+    for i->pair in pairs do
+	pairs[i]`curve_id := i;
+    end for;
     return pairs;
 end function;
 
@@ -922,7 +925,7 @@ procedure VerifyHHTable1(curves)
     return;
 end procedure;
 
-procedure VerifyHHTable2(curves)
+function GetHHTable2()
     Table2 := [[] : g in [1..19]];
     Table2[3] := [ 127, 136, 144, 152, 162, 164, 171, 175, 183, 185,
 		   194, 196, 207, 217, 234, 240, 246, 252, 258, 270,
@@ -937,10 +940,62 @@ procedure VerifyHHTable2(curves)
     Table2[12] := [2310];
     // This seems to be removed by considering p = 11, v = 2. Check!
     // Table2[19] := [1680];
+    return Table2;
+end function;
+
+function GetModularByGenus(curves)
+    g_max := Maximum([X`g : X in curves]);
     by_genus := [[X`N : X in curves | X`D eq 1 and
 				      not assigned X`is_subhyp and
-					  X`g eq g] : g in [1..19]];
+					  X`g eq g] : g in [1..g_max]];
+    return by_genus;
+end function;
+
+procedure VerifyHHTable2(curves)
+    Table2 := GetHHTable2();
+    by_genus := GetModularByGenus(curves);
     assert Table2 eq by_genus;
+    return;
+end procedure;
+
+procedure VerifyHHProposition1(curves)
+    Table2 := GetHHTable2();
+    by_genus := GetModularByGenus(curves);
+    Table2[3] := [N : N in Table2[3] | N ne 194];
+    Table2[4] := [N : N in Table2[4] | N ne 546];
+    assert Table2 eq by_genus;
+    return;
+end procedure;
+
+// Apply the observation from [HH96] Proposition 1,
+// that if X_0^*(D, pN) and X_0^*(D, N) have the same genus,
+// they will be isomorphic in characteristic p
+procedure HHProposition1(~curves)
+    lut_D := AssociativeArray();
+    lut_DN := AssociativeArray();
+    for X in curves do
+	lut_DN[<X`D, X`N>] := X`curve_id;
+	if not IsDefined(lut_D, X`D) then
+	    lut_D[X`D] := [];
+	end if;
+	lut_D[X`D] := Append(lut_D[X`D], X`N); 
+    end for;
+    for i->X in curves do
+	if (assigned X`is_subhyp) and (not X`is_subhyp) then
+	    Ns := lut_D[X`D];
+	    ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
+					 IsPrime(N div X`N)];
+	    for p in ps do
+		if IsDefined(lut_DN, <X`D, p*X`N>) then
+		    other := lut_DN[<X`D, p*X`N>];
+		    if X`g eq curves[other]`g then
+			curves[other]`is_subhyp := false;
+			curves[other]`is_hyp := false;
+		    end if;
+		end if;
+	    end for;
+	end if;
+    end for;
     return;
 end procedure;
 
@@ -970,7 +1025,7 @@ procedure GetHyperellipticCandidates()
     VerifyHHTable2(star_curves);
 
     // writing to a file, in case we would like to load it directly 
-    Write("star_curves_point_count.dat", star_curves);
+    Write("star_curves_point_count.dat", star_curves : Overwrite);
 
     // testing that reading the file works
     read_curves := eval Read("star_curves_point_count.dat");
@@ -978,6 +1033,11 @@ procedure GetHyperellipticCandidates()
     assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :
 		j in [1..#star_curves]];
 
+    // Applying Proposition 1 from [HH96]
+    // verifying that we get the right thing for modular curves
+    HHProposition1(~star_curves);
+    VerifyHHProposition1(star_curves); 
+    
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
     
