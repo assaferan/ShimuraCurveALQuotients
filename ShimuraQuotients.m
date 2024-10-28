@@ -383,8 +383,7 @@ function NumFixedPoints(D, N, m :cached_orders := false)
     return e;
 end function;
     
-function GenusShimuraCurveQuotientSingleAL(D, N, m)
-	cached_orders := AssociativeArray();
+function GenusShimuraCurveQuotientSingleAL(D, N, m :cached_orders := cached_orders)
     e := NumFixedPoints(D, N, m :cached_orders := cached_orders);
     g_big := GenusShimuraCurve(D, N);
     g := (g_big+1)/2 - e/4;
@@ -392,8 +391,7 @@ function GenusShimuraCurveQuotientSingleAL(D, N, m)
     return Floor(g);
 end function;
 
-function GenusShimuraCurveQuotient(D, N, als)
-	cached_orders := AssociativeArray();
+function GenusShimuraCurveQuotient(D, N, als :cached_orders := cached_orders)
     total_e := 0;
     for al in als do
 	assert GCD(al, (D*N) div al) eq 1;
@@ -480,7 +478,7 @@ function coveredByCurvesInList(c, curve_list : index := 0)
     return false;
 end function;
 
-function GetGenera(pairs)
+function GetGenera(pairs : cached_orders := cached_orders)
     // No longer needed
     // Restrict first to coprime D and N
     // pairs := [p : p in pairs | GCD(p[1], p[2]) eq 1];
@@ -494,7 +492,7 @@ function GetGenera(pairs)
 	al_subs := ALSubgroups(D*N);
 	al_subs_allowed := [S[1] : S in al_subs | #S[1] ge 2^min_num];
 	for als in al_subs_allowed do
-	    g := GenusShimuraCurveQuotient(D, N, als);
+	    g := GenusShimuraCurveQuotient(D, N, als : cached_orders := cached_orders);
 	    Append(~genera, <D, N, als, g>); 
 	end for;
 	print "i = ", i;
@@ -502,14 +500,14 @@ function GetGenera(pairs)
     return genera;
 end function;
 
-procedure UpdateGenera(~curves)
+procedure UpdateGenera(~curves : cached_orders := cached_orders)
     for i->c in curves do
-	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
+	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W : cached_orders := cached_orders);
     end for;
     return;
 end procedure;
 
-function GetQuotientsAndGenera(curves)
+function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
     quots := [];
     for i->c in curves do
 	min_num := MinimalNumberOfALinQuotient(c`D, c`N);
@@ -524,7 +522,7 @@ function GetQuotientsAndGenera(curves)
 	cur_sz := #quots;
 	for j->S in allowed_subs do
 	    als := S[1];
-	    g := GenusShimuraCurveQuotient(c`D, c`N, als);
+	    g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
 	    quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
 				    g := g, curve_id := cur_sz + j,
 				    covered_by := {cur_sz + idx : idx in S[2]},
@@ -978,9 +976,13 @@ procedure GetHyperellipticCandidates()
     
     assert #star_curves eq 2342;
 
-    time UpdateGenera(~star_curves); // time : 182.450
+    cached_orders := AssociativeArray();
+
+
+    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time : 156.390
     
     VerifyHHTable1(star_curves);
+
 
     UpdateByGenus(~star_curves);
 
@@ -991,7 +993,7 @@ procedure GetHyperellipticCandidates()
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(star_curves); // time : 5458.290
+    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // time : 1303.930
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
