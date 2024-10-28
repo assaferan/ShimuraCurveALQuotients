@@ -3,6 +3,9 @@
 
 // Committed to Geometrically Hyperelliptic curves 
 
+import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
+                          TraceFormulaGamma0HeckeALNew;
+
 // A record format to save information we care about for each of the curves
 
 CurveQuot := recformat< D : RngIntElt, 
@@ -44,11 +47,30 @@ function FirstPrimes(n)
     return ps[1..n];
 end function;
 
-function LowerBound(D, N)
+function LowerBoundD(D)
+    return EulerPhi(D)/ 2^Omega(D);
+end function;
+
+function LowerBoundN(N)
     ps := PrimeDivisors(N);
-    c_D := EulerPhi(D);
     c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
-    return c_D * c_N / (2^Omega(D*N));
+    return c_N / 2^Omega(N);
+end function;
+
+function LowerBound(D, N, p)
+    lb := LowerBoundD(D)*LowerBoundN(N);
+    if D eq 1 then
+	h := Maximum([h : h in Divisors(24) | N mod h^2 eq 0]);
+	h2 := GCD(h,8); h3 := GCD(h,3);
+	cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
+		 (GCD(h2^2, N div h2^2) eq 1);
+	s2 := cond2 select 3/4 else 1;
+	cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
+	s3 := cond3 select 2/3 else 1;
+	s := s2*s3;
+	lb +:= 12*h*s/(p-1);
+    end if;
+    return lb;
 end function;
 
 function UpperBound(p : Geometric := true)
@@ -76,9 +98,9 @@ end function;
 
 procedure VerifyBound(r)
     ps := FirstPrimes(r+1);
-    assert LowerBound(1, &*ps[1..r]) gt UpperBound(ps[r+1] :
-						   Geometric := false);
-    assert LowerBound(&*ps[1..r], 1) gt UpperBound(ps[r+1]);
+    assert LowerBoundN(&*ps[1..r]) gt UpperBound(ps[r+1] :
+						 Geometric := false);
+    assert LowerBoundD(&*ps[1..r]) gt UpperBound(ps[r+1]);
 end procedure;
 
 function GetLargestPrimeIndex()
@@ -86,20 +108,16 @@ function GetLargestPrimeIndex()
     prod := 1;
     LB := 1;
     UB := 1;
-    LB1 := 1;
-    UB1 := 1;
     r := -1;
-    while (LB le UB) or (LB1 le UB1) do
+    while (LB le UB) do
 	prod *:= p;
 	p := NextPrime(p);
-	LB := LowerBound(prod, 1);
+	LB := LowerBoundD(prod);
 	UB := UpperBound(p);
-	LB1 := LowerBound(1, prod);
-	UB1 := UpperBound(p : Geometric := false);
 	r +:= 1;
     end while;
     VerifyBound(r);
-     return r;
+    return r;
 end function;
 
 function FindMaximalN(r)
@@ -131,6 +149,7 @@ function FindMaximalD(r)
 end function;
 
 // At the moment, we restrict to D and N being coprime
+// Find all curves X_0*(D,N) which might be subhyperelliptic
 function FindPairs(r : Coprime := true)
     pairs := [];
     // N0 := FindMaximalN(r);
@@ -138,9 +157,10 @@ function FindPairs(r : Coprime := true)
     ub := Ceiling(UpperBound(ps[r]));
     C := 2^(r-1)*ub;
     D0 := FindMaximalD(r);
-    Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
+    // Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
+    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];   
     for D in Ds do
-	print "D = ", D;
+	// print "D = ", D;
 	// Nmax := Floor(N0 / EulerPhi(D));
 	Nmax := Ceiling(C / EulerPhi(D));
 	Ns := [1..Nmax];	
@@ -157,8 +177,9 @@ function FindPairs(r : Coprime := true)
 	    while (N mod p eq 0) do
 		p := NextPrime(p);
 	    end while;
-	    if (LowerBound(D, N) le UpperBound(p : Geometric := (D gt 1))) then
-		Append(~pairs, rec<CurveQuot | D := D, N := N, W := {1} >);
+	    if (LowerBound(D, N, p) le UpperBound(p)) then
+		W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+		Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
 	    end if;
 	end for;
     end for;
@@ -425,6 +446,13 @@ function GetGenera(pairs)
     return genera;
 end function;
 
+procedure UpdateGenera(~curves)
+    for i->c in curves do
+	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
+    end for;
+    return;
+end procedure;
+
 function GetQuotientsAndGenera(curves)
     quots := [];
     for i->c in curves do
@@ -464,6 +492,7 @@ function sum_n_powers(a_p, p, n)
 end function;
 */
 
+// Can work faster if we first compute all the traces (half the work)
 function sum_n_powers(mfs, p, n, BV)
     assert n ge 1;
     assert Level(mfs) mod p ne 0;
@@ -477,6 +506,38 @@ function sum_n_powers(mfs, p, n, BV)
     T_p_n_2 := ChangeRing(T_p_n_2, Rationals());
     T_p_n_2 := Solution(BV, BV*T_p_n_2);
     return Trace(T_p_n - p*T_p_n_2);
+end function;
+
+// At the moment only works on the whole space S_2(N)
+function sum_n_powers_trace_formula(N, W, p, n)
+    t_p_n := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^n, w) : w in W];
+    if n eq 1 then
+	return t_p_n;
+    end if;
+    t_p_n_2 := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^(n-2), w) : w in W];
+    return t_p_n - p*t_p_n_2; 
+end function;
+
+function TraceDNew(D,N,k,n,Q)
+    t := TraceFormulaGamma0HeckeALNew(D*N, k, n, Q);
+    for p in PrimeDivisors(N) do
+	N_prime := D*N div p;
+	t +:= 2*TraceFormulaGamma0HeckeAL(N_prime, k, n, GCD(Q, N_prime));
+    end for;
+    return t;
+end function;
+
+function TraceDNewALFixed(D,N,k,n,W)
+    return 1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
+end function;
+
+function sum_n_powers_trace_formula(D, N, W, p, n)
+    t_p_n := TraceDNewALFixed(D,N,2,p^n,W);
+    if n eq 1 then
+	return t_p_n;
+    end if;
+    t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
+    return t_p_n - p*t_p_n_2; 
 end function;
 
 // Returns false if X is not subhyperelliptic
@@ -504,7 +565,9 @@ function CheckHeckeTrace(X)
     for p in ps do
 	v := 1;
 	while (p^v le 4*X`g^2) do
-	    num_pts := p^v+1 - sum_n_powers(mfs, p, v, BV);
+	    trace_frob_n := sum_n_powers_trace_formula(X`D, X`N, X`W, p, v);
+	    assert trace_frob_n eq sum_n_powers(mfs, p, v, BV);
+	    num_pts := p^v+1 - trace_frob_n;
 	    if (num_pts gt 2*(1+p^v)) then
 		// print p, v;
 		return false;
@@ -703,12 +766,14 @@ procedure UpdateByGenus(~curves)
 	if (curves[i]`g eq 0) then
 	    curves[i]`is_p1 := true;
 	    // check the ones with hyperelliptic AL involution
-	    for cover in curves[i]`covered_by do
-		curves[cover]`is_subhyp := true;
-		if (curves[cover]`g ge 2) then
-		    curves[cover]`is_hyp := true;
-		end if;
-	    end for;
+	    if assigned curves[i]`covered_by then
+		for cover in curves[i]`covered_by do
+		    curves[cover]`is_subhyp := true;
+		    if (curves[cover]`g ge 2) then
+			curves[cover]`is_hyp := true;
+		    end if;
+		end for;
+	    end if;
 	end if;
 	if (curves[i]`g eq 1) then
 	    curves[i]`is_ec := true;
@@ -788,6 +853,60 @@ procedure Genus3CoversGenus2(~curves)
     return;
 end procedure;
 
+procedure VerifyHHTable1(curves)
+    Table1 := AssociativeArray([3..19]);
+    Table1[3] := {97, 109, 113, 127, 128, 136, 139, 144, 149, 151,
+		  152, 162, 164, 169, 171, 175, 178, 179, 183, 185,
+		  187, 189, 194, 196, 203, 207, 217, 234, 236, 240,
+		  245, 246, 248, 249, 252, 258, 270, 282, 290, 294,
+		  295, 303, 310, 312, 315, 318, 329, 348, 420, 429,
+		  430, 455, 462, 476, 510};
+    Table1[4] := {137, 148, 160, 172, 173, 176, 199, 200, 201, 202,
+		  214, 219, 224, 225, 228, 242, 247, 254, 259, 260,
+		  261, 262, 264, 267, 273, 275, 280, 300, 305, 306,
+		  308, 319, 321, 322, 335, 341, 342, 345, 350, 354,
+		  355, 366, 370, 374, 385, 399, 426, 434, 483, 546,
+		  570};
+    Table1[5] := {157, 181, 192, 208, 212, 216, 218, 226, 235, 237,
+		  250, 253, 278, 279, 302, 323, 364, 371, 377, 378,
+		  391, 396, 402, 406, 410, 414, 418, 435, 438, 440,
+		  442, 444, 465, 494, 495, 595, 630, 714, 770, 798};
+    Table1[6] := {163, 197, 211, 244, 265, 272, 274, 291, 297, 301,
+		  325, 336, 340, 470, 506, 561, 564, 690, 780, 858};
+    Table1[7] := {193, 232, 268, 288, 296, 298, 309, 360, 372, 450,
+		  456, 460, 474, 492, 498, 504, 518, 558, 582, 660,
+		  870, 924};
+    Table1[8] := {292, 408, 468, 480, 534, 540, 552, 606, 930, 966,
+		  990, 1020};
+    Table1[9] := {516, 522, 528, 1110, 1140};
+    Table1[10] := {600, 840, 1050, 1230, 1290};
+    Table1[11] := {};
+    Table1[12] := {2310};
+    Table1[13] := {1260};
+    Table1[14] := {2730};
+    Table1[15] := {1470};
+    Table1[16] := {};
+    Table1[17] := {};
+    Table1[18] := {};
+    Table1[19] := {1680};
+    // We add here a list of discrepancies
+    // This is because the formula in [FH99] is slightly better than
+    // the one in [HH96] accounting for all the cusps in the quotient
+    Table1[3] diff:= {128};
+    Table1[5] diff:= {495};
+    Table1[6] diff:= {272, 297};
+    Table1[7] diff:= {288, 296};
+    // !! This is weird - N = 1170 should be appearing in Table 1,
+    // but for some reason it does not.
+    Table1[12] join:= {1170};
+    assert Maximum([c`g : c in curves | c`D eq 1]) eq 19;
+    for g in [3..19] do
+	genus_g := {c`N : c in curves | (c`D eq 1) and (c`g eq g)};
+	assert Table1[g] eq genus_g;
+    end for;
+    return;
+end procedure;
+
 //procedure code_we_ran()
 procedure GetHyperellipticCandidates()
     // Find the largest prime we need to consider for the
@@ -796,16 +915,27 @@ procedure GetHyperellipticCandidates()
 
     // Find all pairs (D,N) satisfying the inequality of
     // Proposition 1.
-    modular_curves := FindPairs(r); // time : 1.020
+    star_curves := FindPairs(r); // time : 1.020
 
-    assert #modular_curves eq 2372;
+    // I added some code that just
+    // focuses on the star quotients X_0^*(D,N)
+    
+    assert #star_curves eq 2342;
 
+    UpdateGenera(~star_curves); // time : 53.760
+    
+    VerifyHHTable1(star_curves);
+
+    UpdateByGenus(~star_curves);
+
+    FilterByTrace(~star_curves); // time :
+    
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(modular_curves); // time : 5458.290
+    curves := GetQuotientsAndGenera(star_curves); // time : 5458.290
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
