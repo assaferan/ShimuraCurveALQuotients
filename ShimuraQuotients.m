@@ -311,38 +311,75 @@ function NuOgg(p, R, D, F)
     assert false;
 end function;
 
+
+function ConstructOrders(m : cached_orders := cached_orders)
+	if m in Keys(cached_orders) then
+		return cached_orders[m];
+	else
+	    if (m eq 2) then
+		orders := [MaximalOrder(QuadraticField(-1)), 
+			   MaximalOrder(QuadraticField(-2))];
+	    elif (m mod 4 eq 3) then
+		F := QuadraticField(-m);
+		_, sqrt_minus_m := IsSquare(F!(-m));
+		O := MaximalOrder(F);
+		alpha := (1 + sqrt_minus_m)/2;
+		orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+	    else
+		F := QuadraticField(-m);
+		_, sqrt_minus_m := IsSquare(F!(-m));
+		O := MaximalOrder(F);
+		orders := [sub<O | 1, sqrt_minus_m>];
+	    end if;
+	    class_nos :=[];
+	    for R in orders do 
+	    	//compute info about orders and store it
+	    	//let's start with just storing the class numbers
+			h := PicardNumber(R);
+			Append(~class_nos, h);
+		end for;
+		cached_orders[m] := {* orders, class_nos *};
+		return cached_orders[m];
+	end if;
+
+end function;
+
 // Quotient by w_m, m divides DN, following [Ogg]
 
 // The number of the fixed points of w_m on X_0(D,N) 
 function NumFixedPoints(D, N, m)
-    if (m eq 2) then
-	orders := [MaximalOrder(QuadraticField(-1)), 
-		   MaximalOrder(QuadraticField(-2))];
-    elif (m mod 4 eq 3) then
-	F := QuadraticField(-m);
-	_, sqrt_minus_m := IsSquare(F!(-m));
-	O := MaximalOrder(F);
-	alpha := (1 + sqrt_minus_m)/2;
-	orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
-    else
-	F := QuadraticField(-m);
-	_, sqrt_minus_m := IsSquare(F!(-m));
-	O := MaximalOrder(F);
-	orders := [sub<O | 1, sqrt_minus_m>];
-    end if;
+    // if (m eq 2) then
+	// orders := [MaximalOrder(QuadraticField(-1)), 
+	// 	   MaximalOrder(QuadraticField(-2))];
+    // elif (m mod 4 eq 3) then
+	// F := QuadraticField(-m);
+	// _, sqrt_minus_m := IsSquare(F!(-m));
+	// O := MaximalOrder(F);
+	// alpha := (1 + sqrt_minus_m)/2;
+	// orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+    // else
+	// F := QuadraticField(-m);
+	// _, sqrt_minus_m := IsSquare(F!(-m));
+	// O := MaximalOrder(F);
+	// orders := [sub<O | 1, sqrt_minus_m>];
+    // end if;
     e := 0;
-    for R in orders do
-	h := PicardNumber(R);
-	// Using formula (4) in [Ogg]
-	prod := &*[Integers() | 
-		  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
-	e +:= h*prod;
+    pair := ConstructOrders(m);
+    orders := pair[1];
+    class_nos := pair[2];
+    for i->R in orders do
+		// h := PicardNumber(R);
+		h := class_nos[i];
+		// Using formula (4) in [Ogg]
+		prod := &*[Integers() | 
+			  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
+		e +:= h*prod;
     end for;
     if (D eq 1) and (m eq 4) then
-	M := N div 4;
-	num_fixed_cusps := &+[Integers() | 
-			     EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
-	e +:= num_fixed_cusps;
+		M := N div 4;
+		num_fixed_cusps := &+[Integers() | 
+				     EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+		e +:= num_fixed_cusps;
     end if;
     return e;
 end function;
@@ -933,7 +970,7 @@ procedure GetHyperellipticCandidates()
 
     // Find all pairs (D,N) satisfying the inequality of
     // Proposition 1.
-    star_curves := FindPairs(r); // time : 1.020
+    time star_curves := FindPairs(r); // time : 1.980
 
     // I added some code that just
     // focuses on the star quotients X_0^*(D,N)
