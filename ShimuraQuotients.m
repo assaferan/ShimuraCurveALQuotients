@@ -459,6 +459,51 @@ function coversCurvesInList(c, curve_list : index := 0)
     return false;
 end function;
 
+function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
+	// copied from sage code
+	/*An iterator over `(k,n)` reduced echelon matrices over the finite field `K`.
+
+    INPUT:
+
+    - ``K`` -- a finite field
+
+    - ``k`` -- number of rows (or the size of the subspace)
+
+    - ``n`` -- number of columns (or the dimension of the ambient space)*/
+    if n lt k then 
+        error "echelon matrix with fewer rows than columns i.e. not full rank are not implemented";
+    end if;
+    matrices := [];
+
+    one := K!1;
+    Klist := [x : x in K];
+    //select pivot columns
+    for pivots in Subsets({1..n},k) do
+    	sqpivots := SetToSequence(pivots);
+    	m0 := ZeroMatrix(K,k,n);
+    	free_positions := [];
+    	for i in [1..k] do
+            m0[i,sqpivots[i]] := one;
+            for j in [sqpivots[i]+1..n] do
+                if j notin sqpivots then
+                    Append(~free_positions,<i,j>);
+                end if;
+       		end for;
+        end for;
+    //fill in the rest of the entries not determined by pivot columns/ RREF
+	    num_free_pos := #free_positions;
+	    for v in CartesianPower(Klist, num_free_pos) do
+	    	for i in [1..num_free_pos] do
+	                m0[free_positions[i][1], free_positions[i][2]] := v[i];
+	        end for;
+	        Append(~matrices, m0);
+	    end for;
+	 end for;
+
+    return matrices;
+    //Now if Rank(VerticalJoin(m1, m2))  = max rank (mi) then one is contained in the other
+end function;
+
 function coveredByCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
     relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
