@@ -531,18 +531,6 @@ function GetQuotientsAndGenera(curves)
     return quots;
 end function;
 
-/*
-function sum_n_powers(a_p, p, n)
-    if n eq 0 then 
-	return 2;
-    end if;
-    if n eq 1 then 
-	return a_p;
-    end if;
-    return a_p*sum_n_powers(a_p, p, n-1) - p*sum_n_powers(a_p, p, n-2);
-end function;
-*/
-
 // Can work faster if we first compute all the traces (half the work)
 function sum_n_powers(mfs, p, n, BV)
     assert n ge 1;
@@ -994,6 +982,78 @@ procedure HHProposition1(~curves)
 		    end if;
 		end if;
 	    end for;
+	end if;
+    end for;
+    return;
+end procedure;
+
+// Get a hyperelliptic curve from q-expansions
+function IsHyperelliptic(qexps, prec)
+    R<q> := Universe(qexps);
+    K := BaseRing(R);
+    fs := [f + O(q^prec) : f in qexps];
+    g := #fs;
+    T, E := EchelonForm(Matrix([&cat[Eltseq(x)
+				     : x in AbsEltseq(f)] : f in fs]));
+    fs := [&+[E[j][i]*fs[i] : i in [1..g]] : j in [1..g]];
+    x := fs[g-1] / fs[g];
+    y := q * Derivative(x) / fs[g];
+    mons := [x^i : i in [0..2*g+2]] cat [-y^2];
+    denom := q^(-(2*g+2)*Valuation(x));
+    f_mons := [denom*m + O(q^AbsolutePrecision(y)) : m in mons];
+    ker := Kernel(Matrix([AbsEltseq(f : FixedLength) : f in f_mons]));
+    if (Dimension(ker) eq 0) then
+	return false, _;
+    end if;
+    if Dimension(ker) gt 1 then
+	error "Too many relations, not enough precision!";
+    end if;
+    ker_b := Basis(ker)[1];
+    ker_b /:= -ker_b[2*g+4];
+    R<x> := PolynomialRing(K);
+    poly := &+[ker_b[i+1]*x^i : i in [0..2*g+2]];
+    X := HyperellipticCurve(-poly);
+    return true, X, fs;
+end function;
+
+// !! Issue - we do not know that Jacquet-Langlands
+// respects multiplication. In fact, it probably does not.
+
+// This implies that for Shimura curves we really do need to
+// evaluate q-expansions around CM points
+
+// Although this is not a canonical model over Q,
+// it still yields a geometrical model over C,
+// so we can use the q-expansions to check
+// now using Eran's magma hack to allow for
+// D-new modular forms where D is not a prime
+// Returns whether the curve is geometrically hyperelliptic or not
+function qExpansionCheck(X)
+    assert X`g ge 3;
+    assert X`D eq 1; // At the moment this only makes sense for modular curves
+    ws := [w : w in X`W | w ne 1];
+    mfs := NewSubspace(CuspForms(X`D*X`N,2), X`D);
+    mfs := BaseChange(mfs, Rationals());
+    als := [AtkinLehnerOperator(mfs,w) : w in ws];
+    V := VectorSpace(mfs);
+    for al in als do
+	V := V meet Kernel(al-1);
+    end for;
+    assert X`g eq Dimension(V);
+    BV := BasisMatrix(V);
+    prec := 4*X`g^2+8*X`g-20+1;
+    qexps := [qExpansion(f, prec) : f in Basis(mfs)];
+    Rq<q> := Universe(qexps);
+    coeff_mat := Matrix([AbsEltseq(qexp) : qexp in qexps]);
+    qexps_V := [Rq!Eltseq(r) : r in Rows(BV*coeff_mat)];
+    return IsHyperelliptic(qexps_V, prec);
+end function;
+
+procedure Filter_qExpansion(~curves)
+    for i->X in curves do
+	if not assigned X`is_subhyp then
+	    curves[i]`is_hyp := qExpansionCheck(X);
+	    curves[i]`is_subhyp := curves[i]`is_hyp;
 	end if;
     end for;
     return;
