@@ -413,50 +413,9 @@ end function;
 
 function exp_to_Q(e, N, ps)
     ZZ := Integers();
-    return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq 1];
-end function;
-
-// Returns a sequence of tuples,
-// containing the divisors in the group, the indices of maximal subgroups
-// and the indices of minimal overgroups
-function ALSubgroups(N)
-    ZZ := Integers();
-    Qs_in_grp := AssociativeArray();
-    ps := PrimeDivisors(N);
-    W := AbelianGroup([2 : i in [1..#ps]]);
-    PW, PW_to_W := PermutationGroup(W);
-    subs_PW := SubgroupLattice(PW);
-    // subs_W := Subgroups(W);
-    // Qs := {};
-    Qs := [];
-    // for H in subs_W do
-    for i in [1..#subs_PW] do
-	PH := subs_PW!i;
-	H := PW_to_W(Group(PH));
-	exps := {Eltseq(W!h) : h in H};
-	grp := {exp_to_Q(e,N,ps) : e in exps};
-	//Include(~Qs, grp);
-	Append(~Qs, <grp, MaximalSubgroups(PH), MinimalOvergroups(PH)>);
-    end for;
-    return Qs;
-end function;
-
-function coversCurvesInList(c, curve_list : index := 0)
-    D, N, als, g := Explode(c);
-    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
-					 and (als subset c2[3])];
-    for r in relevant do
-	als_r := r[3];
-	if (index ne 0) then
-	    if #als_r eq index*#als then
-		return true;
-	    end if;
-	else
-	    return true;
-	end if;
-    end for;
-    
-    return false;
+    e := Eltseq(e);
+    P := Parent(e[1]);
+    return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq P!1];
 end function;
 
 function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
@@ -480,7 +439,7 @@ function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
     //select pivot columns
     for pivots in Subsets({1..n},k) do
     	sqpivots := SetToSequence(pivots);
-    	m0 := ZeroMatrix(K,k,n);
+    	m0 := KMatrixSpace(K,k,n)!ZeroMatrix(K,k,n);
     	free_positions := [];
     	for i in [1..k] do
             m0[i,sqpivots[i]] := one;
@@ -501,7 +460,101 @@ function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
 	 end for;
 
     return matrices;
-    //Now if Rank(VerticalJoin(m1, m2))  = max rank (mi) then one is contained in the other
+end function;
+
+
+
+// Returns a sequence of tuples,
+// containing the divisors in the group, the indices of maximal subgroups
+// and the indices of minimal overgroups
+
+
+function MaxSubgroups(m, sl);
+	r := #Rows(m);
+	if r eq 0 then
+		return {Integers()|};
+	else 
+		all_mats :=  &cat[[* x : x in r *] : r in sl];
+		subgps := {};
+		for n in sl[r] do //rank r-1 things
+			if RowSpace(n) subset RowSpace(m) then
+				i := Index(all_mats, n);
+				Include(~subgps, i);
+			end if;
+		end for;
+		return subgps;
+	end if;
+
+end function;
+
+function MinOvergps(m, sl);
+	r := #Rows(m);
+	all_mats :=  &cat[[* x : x in r *] : r in sl];
+	if r eq #sl - 1 then
+		return {Integers()|};
+	else 
+		subgps := {};
+		for n in sl[r+2] do 
+			if RowSpace(m) subset RowSpace(n) then
+				i := Index(all_mats, n);
+				Include(~subgps, i);
+			end if;
+		end for;
+		return subgps;
+	end if;
+end function;
+
+function ALSubgroups(N)
+    ZZ := Integers();
+    Qs_in_grp := AssociativeArray();
+    ps := PrimeDivisors(N);
+    Qs := [];
+    subgp_lattice := [* *];
+    for r in [0..#ps] do 
+    	ms := ReduchedEchelonMatrixIterator(r,#ps); 
+    	Append(~subgp_lattice, ms);
+    end for;
+
+    // W := AbelianGroup([2 : i in [1..#ps]]);
+    // PW, PW_to_W := PermutationGroup(W);
+    // subs_PW := SubgroupLattice(PW);
+    // subs_W := Subgroups(W);
+    // for H in subs_W do
+    // for i in [1..#subs_PW] do
+	// PH := subs_PW!i;
+	// H := PW_to_W(Group(PH));
+	// exps := {Eltseq(W!h) : h in H};
+	for rkgp in subgp_lattice do
+		for m in rkgp do
+			if #Rows(m) eq 0 then
+				grp := {1};
+			else
+				grp := {exp_to_Q(e,N,ps) : e in Rows(m)};
+			end if;
+			// Include(~Qs, grp);
+			Append(~Qs, <grp, MaxSubgroups(m, subgp_lattice), MinOvergps(m,subgp_lattice)>);
+		end for;
+	end for;
+
+    return Qs;
+end function;
+
+function coversCurvesInList(c, curve_list : index := 0)
+    D, N, als, g := Explode(c);
+    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
+					 and (als subset c2[3])];
+    for r in relevant do
+	als_r := r[3];
+	if (index ne 0) then
+	    if #als_r eq index*#als then
+		return true;
+	    end if;
+	else
+	    return true;
+	end if;
+    end for;
+    
+    return false;
 end function;
 
 function coveredByCurvesInList(c, curve_list : index := 0)
