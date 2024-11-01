@@ -1124,7 +1124,7 @@ procedure GetHyperellipticCandidates()
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // time : 1303.930
+    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //787.280
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
