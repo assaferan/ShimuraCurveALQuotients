@@ -308,8 +308,10 @@ end function;
 
 function LegendreSymbol(R, p)
     f := Conductor(R);
+    // Working with equation orders
+    // f := Norm(Conductor(R));
     if (f mod p eq 0) then
-	return 1;
+	    return 1;
     end if;
     ZF := MaximalOrder(R);
     return KroneckerCharacter(Discriminant(ZF))(p);
@@ -328,6 +330,8 @@ function NuOgg(p, R, D, F)
     end if;
     assert Valuation(F, p) ge 2;
     f := Conductor(R);
+    // Working with orders
+    // f := Norm(Conductor(R));
     ZF := MaximalOrder(R);
     chi := KroneckerCharacter(Discriminant(ZF));
     k := Valuation(f, p);
@@ -378,7 +382,8 @@ function SquarePart(m)
 	return prod;
 end function;
 
-function ConstructOrders(m : cached_orders := false)
+function ConstructOrders(m : cached_orders := AssociativeArray())
+    //_<x> := PolynomialRing(Integers());
 	if m in Keys(cached_orders) then
 		return cached_orders[m];
 	else
@@ -393,6 +398,7 @@ function ConstructOrders(m : cached_orders := false)
 			O := MaximalOrder(F);
 			alpha := (1 + sqrt_minus_m)/2;
 			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+            // orders := [EquationOrder(x^2+x+((m+1) div 4)), EquationOrder(x^2+m)];
 	    else
 			F<a> := QuadraticField(-m);
 			sqm := SquarePart(m);
@@ -400,12 +406,14 @@ function ConstructOrders(m : cached_orders := false)
 			// _, sqrt_minus_m := IsSquare(F!(-m));
 			O := MaximalOrder(F);
 			orders := [sub<O | 1, sqrt_minus_m>];
+            // orders := [EquationOrder(x^2+m)];
 	    end if;
 	    class_nos :=[];
 	    for R in orders do 
 	    	//compute info about orders and store it
 	    	//let's start with just storing the class numbers
 			h := PicardNumber(R);
+            // h := #PicardGroup(R);
 			Append(~class_nos, h);
 		end for;
 		cached_orders[m] := [* orders, class_nos *];
@@ -1271,7 +1279,7 @@ procedure GetHyperellipticCandidates()
 
     // Find all pairs (D,N) satisfying the inequality of
     // Proposition 1.
-    time star_curves := FindPairs(r); // time : 1.980
+    time star_curves := FindPairs(r); // time : 0.580
 
     // I added some code that just
     // focuses on the star quotients X_0^*(D,N)
@@ -1280,11 +1288,9 @@ procedure GetHyperellipticCandidates()
 
     cached_orders := AssociativeArray();
 
-
-    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 36.410
+    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 12.020
     
     VerifyHHTable1(star_curves);
-
 
     UpdateByGenus(~star_curves);
 
