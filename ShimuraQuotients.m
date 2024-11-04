@@ -101,22 +101,28 @@ end function;
 
 function LowerBoundN(N)
     ps := PrimeDivisors(N);
-    c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
+    if N eq 1 then
+    	c_N := 1;
+   	else 
+    	c_N := N * &*[ 1 + 1/p : p in ps];
+    end if;
     return c_N / 2^Omega(N);
 end function;
 
-function LowerBound(D, N, p)
-    lb := LowerBoundD(D)*LowerBoundN(N);
+function LowerBound(D, N, p: lb:=false)
+	if lb cmpeq false then
+    	lb := LowerBoundD(D)*LowerBoundN(N);
+	end if;
     if D eq 1 then
-	h := Maximum([h : h in Divisors(24) | N mod h^2 eq 0]);
-	h2 := GCD(h,8); h3 := GCD(h,3);
-	cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
-		 (GCD(h2^2, N div h2^2) eq 1);
-	s2 := cond2 select 3/4 else 1;
-	cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
-	s3 := cond3 select 2/3 else 1;
-	s := s2*s3;
-	lb +:= 12*h*s/(p-1);
+		h := Maximum([h : h in [ 1, 2, 3, 4, 6, 8, 12, 24 ] | N mod h^2 eq 0]);
+		h2 := GCD(h,8); h3 := GCD(h,3);
+		cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
+			 (GCD(h2^2, N div h2^2) eq 1);
+		s2 := cond2 select 3/4 else 1;
+		cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
+		s3 := cond3 select 2/3 else 1;
+		s := s2*s3;
+		lb +:= 12*h*s/(p-1);
     end if;
     return lb;
 end function;
@@ -206,30 +212,42 @@ function FindPairs(r : Coprime := true)
     C := 2^(r-1)*ub;
     D0 := FindMaximalD(r);
     // Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
-    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];   
+    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];  
+
+    // stores LowerBoundN on [1..C]
+    lNs := [LowerBoundN(N) : N in [1..C]];
     for D in Ds do
-	// print "D = ", D;
-	// Nmax := Floor(N0 / EulerPhi(D));
-	Nmax := Ceiling(C / EulerPhi(D));
-	Ns := [1..Nmax];	
-	if Coprime then
-	    Ns := [N : N in Ns | GCD(D,N) eq 1];
-	end if;
-	for N in Ns do
-	    /*
-	    if (N mod 1000 eq 0) then
-		print "N =", N;
-	    end if;
-	   */
-	    p := 2;
-	    while (N mod p eq 0) do
-		p := NextPrime(p);
-	    end while;
-	    if (LowerBound(D, N, p) le UpperBound(p)) then
-		W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-		Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
-	    end if;
-	end for;
+    	lD := LowerBoundD(D);
+		// print "D = ", D;
+		// Nmax := Floor(N0 / EulerPhi(D));
+		Nmax := Ceiling(C / EulerPhi(D));
+		Ns := [1..Nmax];	
+		if Coprime then
+		    Ns := [N : N in Ns | GCD(D,N) eq 1];
+		end if;
+
+		for N in Ns do
+		    /*
+		    if (N mod 1000 eq 0) then
+			print "N =", N;
+		    end if;
+		   */
+		    p := 2;
+		    while (N mod p eq 0) do
+			p := NextPrime(p);
+		    end while;
+		    if D ne 1 then 
+		    	if lD*lNs[N] le UpperBound(p) then
+			    	W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+				end if;
+			else 
+		    	if (LowerBound(D, N, p) le UpperBound(p)) then
+					W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+				end if;
+		    end if;
+		end for;
     end for;
     for i->pair in pairs do
 	pairs[i]`curve_id := i;
@@ -344,56 +362,92 @@ function NuOgg(p, R, D, F)
     assert false;
 end function;
 
+
+function ConstructOrders(m : cached_orders := false)
+	if m in Keys(cached_orders) then
+		return cached_orders[m];
+	else
+	    if (m eq 2) then
+			orders := [MaximalOrder(QuadraticField(-1)), 
+				   MaximalOrder(QuadraticField(-2))];
+	    elif (m mod 4 eq 3) then
+			F := QuadraticField(-m);
+			_, sqrt_minus_m := IsSquare(F!(-m));
+			O := MaximalOrder(F);
+			alpha := (1 + sqrt_minus_m)/2;
+			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+	    else
+			F := QuadraticField(-m);
+			_, sqrt_minus_m := IsSquare(F!(-m));
+			O := MaximalOrder(F);
+			orders := [sub<O | 1, sqrt_minus_m>];
+	    end if;
+	    class_nos :=[];
+	    for R in orders do 
+	    	//compute info about orders and store it
+	    	//let's start with just storing the class numbers
+			h := PicardNumber(R);
+			Append(~class_nos, h);
+		end for;
+		cached_orders[m] := [* orders, class_nos *];
+		return cached_orders[m];
+	end if;
+
+end function;
+
 // Quotient by w_m, m divides DN, following [Ogg]
 
 // The number of the fixed points of w_m on X_0(D,N) 
-function NumFixedPoints(D, N, m)
-    if (m eq 2) then
-	orders := [MaximalOrder(QuadraticField(-1)), 
-		   MaximalOrder(QuadraticField(-2))];
-    elif (m mod 4 eq 3) then
-	F := QuadraticField(-m);
-	_, sqrt_minus_m := IsSquare(F!(-m));
-	O := MaximalOrder(F);
-	alpha := (1 + sqrt_minus_m)/2;
-	orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
-    else
-	F := QuadraticField(-m);
-	_, sqrt_minus_m := IsSquare(F!(-m));
-	O := MaximalOrder(F);
-	orders := [sub<O | 1, sqrt_minus_m>];
-    end if;
+function NumFixedPoints(D, N, m :cached_orders := false)
+    // if (m eq 2) then
+	// orders := [MaximalOrder(QuadraticField(-1)), 
+	// 	   MaximalOrder(QuadraticField(-2))];
+    // elif (m mod 4 eq 3) then
+	// F := QuadraticField(-m);
+	// _, sqrt_minus_m := IsSquare(F!(-m));
+	// O := MaximalOrder(F);
+	// alpha := (1 + sqrt_minus_m)/2;
+	// orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+    // else
+	// F := QuadraticField(-m);
+	// _, sqrt_minus_m := IsSquare(F!(-m));
+	// O := MaximalOrder(F);
+	// orders := [sub<O | 1, sqrt_minus_m>];
+    // end if;
     e := 0;
-    for R in orders do
-	h := PicardNumber(R);
-	// Using formula (4) in [Ogg]
-	prod := &*[Integers() | 
-		  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
-	e +:= h*prod;
+    pair := ConstructOrders(m :cached_orders:=cached_orders);
+    orders := pair[1];
+    class_nos := pair[2];
+    for i->R in orders do
+		// h := PicardNumber(R);
+		h := class_nos[i];
+		// Using formula (4) in [Ogg]
+		prod := &*[Integers() | 
+			  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
+		e +:= h*prod;
     end for;
     if (D eq 1) and (m eq 4) then
-	M := N div 4;
-	num_fixed_cusps := &+[Integers() | 
-			     EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
-	e +:= num_fixed_cusps;
+		M := N div 4;
+		num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+		e +:= num_fixed_cusps;
     end if;
     return e;
 end function;
     
-function GenusShimuraCurveQuotientSingleAL(D, N, m)
-    e := NumFixedPoints(D, N, m);
+function GenusShimuraCurveQuotientSingleAL(D, N, m :cached_orders := cached_orders)
+    e := NumFixedPoints(D, N, m :cached_orders := cached_orders);
     g_big := GenusShimuraCurve(D, N);
     g := (g_big+1)/2 - e/4;
     assert IsIntegral(g);
     return Floor(g);
 end function;
 
-function GenusShimuraCurveQuotient(D, N, als)
+function GenusShimuraCurveQuotient(D, N, als :cached_orders := cached_orders)
     total_e := 0;
     for al in als do
 	assert GCD(al, (D*N) div al) eq 1;
 	if (al ne 1) then
-	    total_e +:= NumFixedPoints(D, N, al);
+	    total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
 	end if;
     end for;
     if #als eq 1 then 
@@ -475,7 +529,7 @@ function coveredByCurvesInList(c, curve_list : index := 0)
     return false;
 end function;
 
-function GetGenera(pairs)
+function GetGenera(pairs : cached_orders := cached_orders)
     // No longer needed
     // Restrict first to coprime D and N
     // pairs := [p : p in pairs | GCD(p[1], p[2]) eq 1];
@@ -489,7 +543,7 @@ function GetGenera(pairs)
 	al_subs := ALSubgroups(D*N);
 	al_subs_allowed := [S[1] : S in al_subs | #S[1] ge 2^min_num];
 	for als in al_subs_allowed do
-	    g := GenusShimuraCurveQuotient(D, N, als);
+	    g := GenusShimuraCurveQuotient(D, N, als : cached_orders := cached_orders);
 	    Append(~genera, <D, N, als, g>); 
 	end for;
 	print "i = ", i;
@@ -497,14 +551,14 @@ function GetGenera(pairs)
     return genera;
 end function;
 
-procedure UpdateGenera(~curves)
+procedure UpdateGenera(~curves : cached_orders := cached_orders)
     for i->c in curves do
-	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
+	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W : cached_orders := cached_orders);
     end for;
     return;
 end procedure;
 
-function GetQuotientsAndGenera(curves)
+function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
     quots := [];
     for i->c in curves do
 	min_num := MinimalNumberOfALinQuotient(c`D, c`N);
@@ -519,7 +573,7 @@ function GetQuotientsAndGenera(curves)
 	cur_sz := #quots;
 	for j->S in allowed_subs do
 	    als := S[1];
-	    g := GenusShimuraCurveQuotient(c`D, c`N, als);
+	    g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
 	    quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
 				    g := g, curve_id := cur_sz + j,
 				    covered_by := {cur_sz + idx : idx in S[2]},
@@ -1067,16 +1121,20 @@ procedure GetHyperellipticCandidates()
 
     // Find all pairs (D,N) satisfying the inequality of
     // Proposition 1.
-    star_curves := FindPairs(r); // time : 1.020
+    time star_curves := FindPairs(r); // time : 1.980
 
     // I added some code that just
     // focuses on the star quotients X_0^*(D,N)
     
     assert #star_curves eq 2342;
 
-    UpdateGenera(~star_curves); // time : 53.760
+    cached_orders := AssociativeArray();
+
+
+    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time : 156.390
     
     VerifyHHTable1(star_curves);
+
 
     UpdateByGenus(~star_curves);
 
@@ -1103,7 +1161,7 @@ procedure GetHyperellipticCandidates()
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(star_curves); // time : 5458.290
+    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // time : 1303.930
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
