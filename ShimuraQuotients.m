@@ -363,6 +363,21 @@ function NuOgg(p, R, D, F)
 end function;
 
 
+function SquarePart(m)
+	fac := Factorization(m);
+	prod := 1;
+	for f in fac do
+		if f[2] ge 2 then
+			if IsEven(f[2]) then
+				prod *:=  Integers()!(f[1]^(Integers()!f[2]/2));
+			else 
+				prod *:=  Integers()!(f[1]^(Integers()!(f[2]-1)/2));
+			end if;
+		end if;
+	end for;
+	return prod;
+end function;
+
 function ConstructOrders(m : cached_orders := false)
 	if m in Keys(cached_orders) then
 		return cached_orders[m];
@@ -371,14 +386,18 @@ function ConstructOrders(m : cached_orders := false)
 			orders := [MaximalOrder(QuadraticField(-1)), 
 				   MaximalOrder(QuadraticField(-2))];
 	    elif (m mod 4 eq 3) then
-			F := QuadraticField(-m);
-			_, sqrt_minus_m := IsSquare(F!(-m));
+			F<a> := QuadraticField(-m);
+			// _, sqrt_minus_m := IsSquare(F!(-m));
+			sqm := SquarePart(m);
+			sqrt_minus_m:= sqm*a;
 			O := MaximalOrder(F);
 			alpha := (1 + sqrt_minus_m)/2;
 			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
 	    else
-			F := QuadraticField(-m);
-			_, sqrt_minus_m := IsSquare(F!(-m));
+			F<a> := QuadraticField(-m);
+			sqm := SquarePart(m);
+			sqrt_minus_m:= sqm*a;
+			// _, sqrt_minus_m := IsSquare(F!(-m));
 			O := MaximalOrder(F);
 			orders := [sub<O | 1, sqrt_minus_m>];
 	    end if;
@@ -464,33 +483,173 @@ end function;
 
 function exp_to_Q(e, N, ps)
     ZZ := Integers();
-    return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq 1];
+    e := Eltseq(e);
+    P := Parent(e[1]);
+    return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq P!1];
 end function;
+
+function al_mul(w, m, ND)
+	ps := PrimeDivisors(ND);
+    // ps := PrimeDivisors(w*m);
+    wvals := Vector(Integers(), [Valuation(w, p) : p in ps]);
+    mvals := Vector(Integers(), [Valuation(m, p) : p in ps]);
+    // wmvals := mvals + wvals;
+    wmvals := Vector(Integers(), [0 : p in ps]);
+    for i in [1..#ps] do
+    	if wvals[i] eq 0 then
+    		wmvals[i] := mvals[i];
+    	elif mvals[i] eq 0 then
+    		wmvals[i] := wvals[i];
+    	else 
+    		wmvals[i] := 0;
+    	end if;
+   	end for;
+   	wm := &*[ps[i]^(wmvals[i]) : i in [1..#ps]];
+    return wm;
+end function;
+
+function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
+	// copied from sage code
+	/*An iterator over `(k,n)` reduced echelon matrices over the finite field `K`.
+
+    INPUT:
+
+    - ``K`` -- a finite field
+
+    - ``k`` -- number of rows (or the size of the subspace)
+
+    - ``n`` -- number of columns (or the dimension of the ambient space)*/
+    if n lt k then 
+        error "echelon matrix with fewer rows than columns i.e. not full rank are not implemented";
+    end if;
+    matrices := [];
+
+    one := K!1;
+    Klist := [x : x in K];
+    //select pivot columns
+    for pivots in Subsets({1..n},k) do
+    	sqpivots := SetToSequence(pivots);
+    	m0 := KMatrixSpace(K,k,n)!ZeroMatrix(K,k,n);
+    	free_positions := [];
+    	for i in [1..k] do
+            m0[i,sqpivots[i]] := one;
+            for j in [sqpivots[i]+1..n] do
+                if j notin sqpivots then
+                    Append(~free_positions,<i,j>);
+                end if;
+       		end for;
+        end for;
+    //fill in the rest of the entries not determined by pivot columns/ RREF
+	    num_free_pos := #free_positions;
+	    for v in CartesianPower(Klist, num_free_pos) do
+	    	for i in [1..num_free_pos] do
+	                m0[free_positions[i][1], free_positions[i][2]] := v[i];
+	        end for;
+	        Append(~matrices, m0);
+	    end for;
+	 end for;
+
+    return matrices;
+end function;
+
+
 
 // Returns a sequence of tuples,
 // containing the divisors in the group, the indices of maximal subgroups
 // and the indices of minimal overgroups
+
+
+function MaxSubgroups(m, sl);
+	r := #Rows(m);
+	if r eq 0 then
+		return {Integers()|};
+	else 
+		all_mats :=  &cat[[* x : x in r *] : r in sl];
+		subgps := {};
+		for n in sl[r] do //rank r-1 things
+			if RowSpace(n) subset RowSpace(m) then
+				i := Index(all_mats, n);
+				Include(~subgps, i);
+			end if;
+		end for;
+		return subgps;
+	end if;
+
+end function;
+
+function MinOvergps(m, sl);
+	r := #Rows(m);
+	all_mats :=  &cat[[* x : x in r *] : r in sl];
+	if r eq #sl - 1 then
+		return {Integers()|};
+	else 
+		subgps := {};
+		for n in sl[r+2] do 
+			if RowSpace(m) subset RowSpace(n) then
+				i := Index(all_mats, n);
+				Include(~subgps, i);
+			end if;
+		end for;
+		return subgps;
+	end if;
+end function;
+
+function AllALsFromGens(Ws, ND)
+	allws := {Integers()|};
+	S := Subsets(Ws);
+	for s in S do
+		if #s eq 0 then
+			Include(~allws, 1);
+		else
+			prod := 1;
+			for w in s do
+				prod := al_mul(w,prod, ND);
+			end for;
+			Include(~allws, prod);
+		end if;
+	end for;
+	return allws;
+end function;
+
 function ALSubgroups(N)
     ZZ := Integers();
     Qs_in_grp := AssociativeArray();
     ps := PrimeDivisors(N);
-    W := AbelianGroup([2 : i in [1..#ps]]);
-    PW, PW_to_W := PermutationGroup(W);
-    subs_PW := SubgroupLattice(PW);
-    // subs_W := Subgroups(W);
-    // Qs := {};
     Qs := [];
-    // for H in subs_W do
-    for i in [1..#subs_PW] do
-	PH := subs_PW!i;
-	H := PW_to_W(Group(PH));
-	exps := {Eltseq(W!h) : h in H};
-	grp := {exp_to_Q(e,N,ps) : e in exps};
-	//Include(~Qs, grp);
-	Append(~Qs, <grp, MaximalSubgroups(PH), MinimalOvergroups(PH)>);
+    subgp_lattice := [* *];
+    for r in [0..#ps] do 
+    	ms := ReduchedEchelonMatrixIterator(r,#ps); 
+    	Append(~subgp_lattice, ms);
     end for;
+
+    // W := AbelianGroup([2 : i in [1..#ps]]);
+    // PW, PW_to_W := PermutationGroup(W);
+    // subs_PW := SubgroupLattice(PW);
+    // subs_W := Subgroups(W);
+    // for H in subs_W do
+    // for i in [1..#subs_PW] do
+	// PH := subs_PW!i;
+	// H := PW_to_W(Group(PH));
+	// exps := {Eltseq(W!h) : h in H};
+	for rkgp in subgp_lattice do
+		for m in rkgp do
+			if #Rows(m) eq 0 then
+				grp := {Integers()|};
+			else
+				grp := {Integers()|exp_to_Q(e,N,ps) : e in Rows(m)};
+			end if;
+			// print grp; 
+			// Include(~Qs, grp);
+			grp := AllALsFromGens(grp, N);
+			// print "generates", grp;
+			Append(~Qs, <grp, MaxSubgroups(m, subgp_lattice), MinOvergps(m,subgp_lattice)>);
+		end for;
+	end for;
+
     return Qs;
 end function;
+
+
 
 function coversCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
@@ -679,20 +838,11 @@ procedure FilterByTrace(~curve_list)
     return;
 end procedure;
 
-function al_mul(w, m)
-    ps := PrimeDivisors(w*m);
-    wvals := Vector(GF(2), [Valuation(w, p) : p in ps]);
-    mvals := Vector(GF(2), [Valuation(m, p) : p in ps]);
-    wmvals := mvals + wvals;
-    wm := &*[ps[i]^(Integers()!wmvals[i]) : i in [1..#ps]];
-    return wm;
-end function;
-
 function CountFixedPointsOnQuotient(w, c)
-    // D := c[1];
-    // N := c[2];
+    D := c[1];
+    N := c[2];
     // W := c[3];
-    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m)) : m in c`W];
+    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, N*D)) : m in c`W];
 end function;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
@@ -776,7 +926,7 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
 	    for N1 in N1s do
 		a := AssociativeArray();
 		for w in W do
-		    a[al_mul(N1, w)] := w;
+		    a[al_mul(N1, w,D*N)] := w;
 		end for;
 		/*
 		if (N2 eq 195) and ({6, 10, 26} subset W) then
@@ -787,7 +937,7 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
 		end if;
 */
 		for w in W do
-		    N_prime := al_mul(N2, w);
+		    N_prime := al_mul(N2, w, D*N);
 		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
 			// print "w = ", w;
 			// print "N2 * w = ", N_prime;
@@ -1131,7 +1281,7 @@ procedure GetHyperellipticCandidates()
     cached_orders := AssociativeArray();
 
 
-    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time : 156.390
+    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 36.410
     
     VerifyHHTable1(star_curves);
 
@@ -1161,7 +1311,7 @@ procedure GetHyperellipticCandidates()
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // time : 1303.930
+    time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //787.280
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
