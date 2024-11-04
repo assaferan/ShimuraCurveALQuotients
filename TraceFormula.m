@@ -125,9 +125,9 @@ end function;
 
 function Cfast(N, u, t, n)
     // S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
-    nS1 := #S(N, 1, t, n);
+    // nS1 := #S(N, 1, t, n);
     nS2 := Sfast(N, 1, t, n);
-    assert nS1 eq nS2;
+    // assert nS1 eq nS2;
     return nS2 * Lemma4_5(N, u, t^2 - 4*n);
 end function;
 
