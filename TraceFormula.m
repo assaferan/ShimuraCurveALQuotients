@@ -1,29 +1,30 @@
 function Sfast(N, u, t, n)
   fac := Factorization(N*u);
   num_sols := 1;
+  y := t^2-4*n;
   for f in fac do
       p,e := Explode(f);
-      y := t^2-4*n;
       if (y eq 0) then
-	  return p^(e div 2);
+	    num_sols *:= p^(e div 2);
+        continue;
       end if;
       e_y := Valuation(y, p);
       y_0 := y div p^e_y;
       // following [Assaf]
       if p eq 2 then
-	  if (e_y le e + 1) and IsOdd(e_y) then
+	    if (e_y le e + 1) and IsOdd(e_y) then
 	      return 0;
-	  end if;
+	    end if;
 	  if (e le e_y-2) then
-	      num_sols *:= 2^(e div 2);
+	    num_sols *:= 2^(e div 2);
 	  elif (e_y le e - 1) and IsEven(e_y) then
-	      num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(y_0, 2))*(1 + KroneckerSymbol(-1, y_0));
+	    num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(y_0, 2))*(1 + KroneckerSymbol(-1, y_0));
 	  elif (e eq e_y) and IsEven(e_y) then
-	      num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(-1, y_0));
+	    num_sols *:= 2^(e_y div 2 - 1)*(1 + KroneckerSymbol(-1, y_0));
 	  elif (e eq e_y - 1) and IsEven(e_y) then
-	      num_sols *:= 2^(e_y div 2 - 1);
+	    num_sols *:= 2^(e_y div 2 - 1);
 	  else
-	      Error("Not Implemented!");
+	    Error("Not Implemented!");
 	  end if;
     else
       if e_y lt e then
@@ -32,11 +33,11 @@ function Sfast(N, u, t, n)
         end if;
         is_sq := IsSquare(Integers(p)!y_0);
         if not is_sq then
-	  return 0;
+	        return 0;
         end if;
         num_sols *:= p^(e_y div 2) * 2;
       else
-	num_sols *:= p^(e div 2);  
+	    num_sols *:= p^(e div 2);  
       end if;
     end if;
   end for;
@@ -124,9 +125,9 @@ end function;
 
 function Cfast(N, u, t, n)
     // S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
-//    nS1 := #S(N, 1, t, n);
+    nS1 := #S(N, 1, t, n);
     nS2 := Sfast(N, 1, t, n);
-//    assert nS1 eq nS2;
+    assert nS1 eq nS2;
     return nS2 * Lemma4_5(N, u, t^2 - 4*n);
 end function;
 
@@ -465,31 +466,31 @@ function TraceFormulaGamma0HeckeAL(N, k, n, Q)
     w := k - 2;
     max_abst := Floor(SquareRoot(4*Q*n)) div Q;
     for tQ in [-max_abst..max_abst] do
-	t := tQ*Q;
-	for u in Divisors(Q) do
-	    for u_prime in Divisors(Q_prime) do
-		if ((4*n*Q-t^2) mod (u*u_prime)^2 eq 0) then
-		    // print "u =", u, " u_prime = ", u_prime, "t = ", t;
-		    S1 +:= P(k,t,Q*n)*H((4*Q*n-t^2) div (u*u_prime)^2)*Cfast(Q_prime,u_prime,t,Q*n)
-			   *MoebiusMu(u) / Q^(w div 2);
-		    // print "S1 = ", S1;
-		end if;
+	    t := tQ*Q;
+	    for u in Divisors(Q) do
+	        for u_prime in Divisors(Q_prime) do
+		        if ((4*n*Q-t^2) mod (u*u_prime)^2 eq 0) then
+		            // print "u =", u, " u_prime = ", u_prime, "t = ", t;
+		            S1 +:= P(k,t,Q*n)*H((4*Q*n-t^2) div (u*u_prime)^2)*Cfast(Q_prime,u_prime,t,Q*n)
+			                *MoebiusMu(u) / Q^(w div 2);
+		            // print "S1 = ", S1;
+		        end if;
+	        end for;
 	    end for;
-	end for;
     end for;
     S2 := 0;
     for d in Divisors(n*Q) do
-	a := n*Q div d;
-	if (a+d) mod Q eq 0 then
-	    // print "a = ", a, "d = ", d;
-	    S2 +:= Minimum(a,d)^(k-1)*Phil(N,Q,a,d) / Q^(w div 2);
-	    // print "S2 = ", S2;
-	end if;
+	    a := n*Q div d;
+	    if (a+d) mod Q eq 0 then
+	        // print "a = ", a, "d = ", d;
+	        S2 +:= Minimum(a,d)^(k-1)*Phil(N,Q,a,d) / Q^(w div 2);
+	        // print "S2 = ", S2;
+	    end if;
     end for;
     // print "S2 = ", S2;
     ret := -S1 / 2 - S2 / 2;
     if k eq 2 then
-	ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
+	    ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
     end if;
     return ret;
 end function;
@@ -726,11 +727,11 @@ end function;
 function TraceFormulaGamma0HeckeALNew(N, k, n, Q)
     trace := 0;
     for N_prime in Divisors(N) do
-	a := alpha(Q, n, N div N_prime);
-	Q_prime := GCD(N_prime, Q);
-	term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
-	term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime);
-	trace +:= a*term;
+	    a := alpha(Q, n, N div N_prime);
+	    Q_prime := GCD(N_prime, Q);
+	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
+	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime);
+	    trace +:= a*term;
     end for;
     return trace;
 end function;

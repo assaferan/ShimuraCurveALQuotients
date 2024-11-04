@@ -728,26 +728,28 @@ end procedure;
 function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
     quots := [];
     for i->c in curves do
-	min_num := MinimalNumberOfALinQuotient(c`D, c`N);
-	al_subs := ALSubgroups(c`D*c`N);
-	allowed_idxs := [j : j in [1..#al_subs] | #al_subs[j][1] ge 2^min_num];
-	update_idxs := func < S | {Index(allowed_idxs, idx)
-				   : idx in S | idx in allowed_idxs}>;
-	allowed_subs := [<al_subs[j][1],
-			  update_idxs(al_subs[j][2]),
-			  update_idxs(al_subs[j][3])>
-			 : j in allowed_idxs];
-	cur_sz := #quots;
-	for j->S in allowed_subs do
-	    als := S[1];
-	    g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
-	    quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
-				    g := g, curve_id := cur_sz + j,
-				    covered_by := {cur_sz + idx : idx in S[2]},
-				    covers := {cur_sz + idx : idx in S[3]}>;
-	    Append(~quots, quot);
-	end for;
-	print "i = ", i;
+	    min_num := MinimalNumberOfALinQuotient(c`D, c`N);
+	    al_subs := ALSubgroups(c`D*c`N);
+	    allowed_idxs := [j : j in [1..#al_subs] | #al_subs[j][1] ge 2^min_num];
+	    update_idxs := func < S | {Index(allowed_idxs, idx)
+		        		   : idx in S | idx in allowed_idxs}>;
+	    allowed_subs := [<al_subs[j][1],
+			            update_idxs(al_subs[j][2]),
+			            update_idxs(al_subs[j][3])>
+			            : j in allowed_idxs];
+	    cur_sz := #quots;
+	    for j->S in allowed_subs do
+	        als := S[1];
+	        g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
+	        quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
+			    	    g := g, curve_id := cur_sz + j,
+				        covered_by := {cur_sz + idx : idx in S[2]},
+				        covers := {cur_sz + idx : idx in S[3]}>;
+	        Append(~quots, quot);
+	    end for;
+        if (i mod 100 eq 0) then
+	        print "i = ", i, "/", #curves;
+        end if; 
     end for;
     return quots;
 end function;
@@ -772,20 +774,20 @@ end function;
 function TraceDNew(D,N,k,n,Q)
     t := 0;
     for dN in Divisors(N) do
-	N_prime := D*N div dN;
-	ds := get_ds(D*N, Q, N_prime, n);
-	for d in ds do
-	    n_p := n_prime(d, D*N, Q, N_prime, n);
-	    d_p := d_prime(d, D*N, Q, N_prime);
-	    dd_p := dd_prime(d, D*N, Q, N_prime, n);
-	    Q_p := Q_prime(D*N, Q, N_prime);
-	    // Should always be trivial as n is coprime to D*N
-	    // term := GCD(d_p, n);
-	    // term *:= MoebiusMu(dd_p);
-	    // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
-	    // t +:= t_d * #Divisors(d);
-	    t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
-	end for;
+	    N_prime := D*N div dN;
+	    ds := get_ds(D*N, Q, N_prime, n);
+	    for d in ds do
+	        n_p := n_prime(d, D*N, Q, N_prime, n);
+	        d_p := d_prime(d, D*N, Q, N_prime);
+	        dd_p := dd_prime(d, D*N, Q, N_prime, n);
+	        Q_p := Q_prime(D*N, Q, N_prime);
+	        // Should always be trivial as n is coprime to D*N
+	        // term := GCD(d_p, n);
+	        // term *:= MoebiusMu(dd_p);
+	        // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
+	        // t +:= t_d * #Divisors(d);
+	        t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
+	    end for;
     end for;
     return t;
 end function;
@@ -811,23 +813,23 @@ function CheckHeckeTrace(X)
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
-	v_max := Floor(Log(p,4*X`g^2));
-	tps := AssociativeArray([-1..v_max]);
-	tps[-1] := 0;
-	for v in [1..v_max] do
-	    tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
-	end for;
-	if (v_max gt 1) then
-	    tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
-	end if;
-	for v in [1..v_max] do
-	    trace_frob_n := tps[v] - p*tps[v-2];
-	    num_pts := p^v  + 1 - trace_frob_n;
-	    if (num_pts gt 2*(1+p^v)) then
-		// print "p, v = ", p, v;
-		return false;
+	    v_max := Floor(Log(p,4*X`g^2));
+	    tps := AssociativeArray([-1..v_max]);
+	    tps[-1] := 0;
+	    for v in [1..v_max] do
+	        tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
+	    end for;
+	    if (v_max gt 1) then
+	        tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
 	    end if;
-	end for;
+	    for v in [1..v_max] do
+	        trace_frob_n := tps[v] - p*tps[v-2];
+	        num_pts := p^v  + 1 - trace_frob_n;
+	        if (num_pts gt 2*(1+p^v)) then
+		        print "p, v = ", p, v;
+		        return false;
+	        end if;
+	    end for;
     end for;
     return true;
 end function;
@@ -1294,7 +1296,7 @@ procedure GetHyperellipticCandidates()
 
     UpdateByGenus(~star_curves);
 
-    FilterByTrace(~star_curves); // time : 5376.150
+    FilterByTrace(~star_curves); // time : 4761.170
     
     VerifyHHTable2(star_curves);
 
@@ -1315,9 +1317,7 @@ procedure GetHyperellipticCandidates()
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
     
-    // For some reason this now takes an insane amount of time
-    // Check if the subgroup lattice is inefficient
-    time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //787.280
+    time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // 148.660
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
