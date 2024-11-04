@@ -312,6 +312,21 @@ function NuOgg(p, R, D, F)
 end function;
 
 
+function SquarePart(m)
+	fac := Factorization(m);
+	prod := 1;
+	for f in fac do
+		if f[2] ge 2 then
+			if IsEven(f[2]) then
+				prod *:=  Integers()!(f[1]^(Integers()!f[2]/2));
+			else 
+				prod *:=  Integers()!(f[1]^(Integers()!(f[2]-1)/2));
+			end if;
+		end if;
+	end for;
+	return prod;
+end function;
+
 function ConstructOrders(m : cached_orders := false)
 	if m in Keys(cached_orders) then
 		return cached_orders[m];
@@ -320,14 +335,18 @@ function ConstructOrders(m : cached_orders := false)
 			orders := [MaximalOrder(QuadraticField(-1)), 
 				   MaximalOrder(QuadraticField(-2))];
 	    elif (m mod 4 eq 3) then
-			F := QuadraticField(-m);
-			_, sqrt_minus_m := IsSquare(F!(-m));
+			F<a> := QuadraticField(-m);
+			// _, sqrt_minus_m := IsSquare(F!(-m));
+			sqm := SquarePart(m);
+			sqrt_minus_m:= sqm*a;
 			O := MaximalOrder(F);
 			alpha := (1 + sqrt_minus_m)/2;
 			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
 	    else
-			F := QuadraticField(-m);
-			_, sqrt_minus_m := IsSquare(F!(-m));
+			F<a> := QuadraticField(-m);
+			sqm := SquarePart(m);
+			sqrt_minus_m:= sqm*a;
+			// _, sqrt_minus_m := IsSquare(F!(-m));
 			O := MaximalOrder(F);
 			orders := [sub<O | 1, sqrt_minus_m>];
 	    end if;
@@ -1110,7 +1129,7 @@ procedure GetHyperellipticCandidates()
     cached_orders := AssociativeArray();
 
 
-    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time : 156.390
+    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 36.410
     
     VerifyHHTable1(star_curves);
 
@@ -1124,7 +1143,7 @@ procedure GetHyperellipticCandidates()
     
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
-    curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //787.280
+    time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //787.280
 
     // updating classification from the genera we computed
     UpdateByGenus(~curves);
