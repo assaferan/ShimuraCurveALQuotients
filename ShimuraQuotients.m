@@ -1029,22 +1029,6 @@ procedure VerifyHHTable1(curves)
     return;
 end procedure;
 
-
-procedure UpdateIsoStatus(~c1, ~c2)
-
-    if assigned(c1`is_hyp) and not assigned(c2`is_hyp) then
-        c2`is_hyp := c1`is_hyp;
-        print "found pair";
-        print N, WNs;
-        print M, WMs;
-    elif assigned(c2`is_hyp) and not assigned(c1`is_hyp) then
-        c1`is_hyp := c2`is_hyp;
-        print "found pair";
-        print N, WNs;
-        print M, WMs;
-    elif assigned(c1`is_hyp) and assigned(c2`is_hyp) then
-        assert assigned(c1`is_hyp) eq assigned(c2`is_hyp);
-    end if;
 function GetHHTable2()
     Table2 := [[] : g in [1..19]];
     Table2[3] := [ 127, 136, 144, 152, 162, 164, 171, 175, 183, 185,
@@ -1148,6 +1132,21 @@ function IsHyperelliptic(qexps, prec)
     return true, X, fs;
 end function;
 
+procedure UpdateIsoStatus(~c1, ~c2)
+
+    if assigned(c1`is_hyp) and not assigned(c2`is_hyp) then
+        c2`is_hyp := c1`is_hyp;
+        print "found pair";
+        print N, WNs;
+        print M, WMs;
+    elif assigned(c2`is_hyp) and not assigned(c1`is_hyp) then
+        c1`is_hyp := c2`is_hyp;
+        print "found pair";
+        print N, WNs;
+        print M, WMs;
+    elif assigned(c1`is_hyp) and assigned(c2`is_hyp) then
+        assert assigned(c1`is_hyp) eq assigned(c2`is_hyp);
+    end if;
 end procedure;
 
 procedure UpdateByIsomorphisms(curves)
