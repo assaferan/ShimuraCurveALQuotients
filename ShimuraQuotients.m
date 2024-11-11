@@ -28,48 +28,48 @@ import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
 
 function IsEqualCurve(crv1, crv2)
     if (crv1`D ne crv2`D) then
-	return false;
+    return false;
     end if;
     if (crv1`N ne crv2`N) then
-	return false;
+    return false;
     end if;
     if (crv1`W ne crv2`W) then
-	return false;
+    return false;
     end if;
     if (crv1`g ne crv2`g) then
-	return false;
+    return false;
     end if;
     if (assigned crv1`IsP1) then
-	if not assigned crv2`IsP1 then
-	    return false;
-	end if;
-	if (crv1`IsP1 ne crv2`IsP1) then
-	    return false;
-	end if;
+    if not assigned crv2`IsP1 then
+        return false;
+    end if;
+    if (crv1`IsP1 ne crv2`IsP1) then
+        return false;
+    end if;
     end if;
     if (assigned crv1`IsEC) then
-	if not assigned crv2`IsEC then
-	    return false;
-	end if;
-	if (crv1`IsEC ne crv2`IsEC) then
-	    return false;
-	end if;
+    if not assigned crv2`IsEC then
+        return false;
+    end if;
+    if (crv1`IsEC ne crv2`IsEC) then
+        return false;
+    end if;
     end if;
     if (assigned crv1`IsHyp) then
-	if not assigned crv2`IsHyp then
-	    return false;
-	end if;
-	if (crv1`IsHyp ne crv2`IsHyp) then
-	    return false;
-	end if;
+    if not assigned crv2`IsHyp then
+        return false;
+    end if;
+    if (crv1`IsHyp ne crv2`IsHyp) then
+        return false;
+    end if;
     end if;
     if (assigned crv1`IsSubhyp) then
-	if not assigned crv2`IsSubhyp then
-	    return false;
-	end if;
-	if (crv1`IsSubhyp ne crv2`IsSubhyp) then
-	    return false;
-	end if;
+    if not assigned crv2`IsSubhyp then
+        return false;
+    end if;
+    if (crv1`IsSubhyp ne crv2`IsSubhyp) then
+        return false;
+    end if;
     end if;
     return true;
 end function;
@@ -94,27 +94,27 @@ end function;
 function LowerBoundN(N)
     ps := PrimeDivisors(N);
     if N eq 1 then
-    	c_N := 1;
-   	else 
-    	c_N := N * &*[ 1 + 1/p : p in ps];
+        c_N := 1;
+       else 
+        c_N := N * &*[ 1 + 1/p : p in ps];
     end if;
     return c_N / 2^Omega(N);
 end function;
 
 function LowerBound(D, N, p: lb:=false)
-	if lb cmpeq false then
-    	lb := LowerBoundD(D)*LowerBoundN(N);
-	end if;
+    if lb cmpeq false then
+        lb := LowerBoundD(D)*LowerBoundN(N);
+    end if;
     if D eq 1 then
-		h := Maximum([h : h in [ 1, 2, 3, 4, 6, 8, 12, 24 ] | N mod h^2 eq 0]);
-		h2 := GCD(h,8); h3 := GCD(h,3);
-		cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
-			 (GCD(h2^2, N div h2^2) eq 1);
-		s2 := cond2 select 3/4 else 1;
-		cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
-		s3 := cond3 select 2/3 else 1;
-		s := s2*s3;
-		lb +:= 12*h*s/(p-1);
+        h := Maximum([h : h in [ 1, 2, 3, 4, 6, 8, 12, 24 ] | N mod h^2 eq 0]);
+        h2 := GCD(h,8); h3 := GCD(h,3);
+        cond2 := IsEven(h2) and (N mod h2^2 eq 0) and
+             (GCD(h2^2, N div h2^2) eq 1);
+        s2 := cond2 select 3/4 else 1;
+        cond3 := (h3 eq 3) and Valuation(N, 3) eq 2;
+        s3 := cond3 select 2/3 else 1;
+        s := s2*s3;
+        lb +:= 12*h*s/(p-1);
     end if;
     return lb;
 end function;
@@ -125,7 +125,7 @@ function UpperBound(p : Geometric := true)
     gonality := 2;
     /* Not needed in the hyperelliptic case, because of [Poonen, Thm 2.5(i)]
     if Geometric then
-	gonality := gonality^2;
+    gonality := gonality^2;
     end if;
     */ 
     return 12*gonality*(1+p^2)/(p-1);
@@ -137,7 +137,7 @@ function MinimalNumberOfALinQuotient(D, N)
     c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
     p := 2;
     while (N mod p eq 0) do
-	p := NextPrime(p);
+    p := NextPrime(p);
     end while;
     return Maximum(0,Ceiling(Log(2, (c_D * c_N) / UpperBound(p))));
 end function;
@@ -145,7 +145,7 @@ end function;
 procedure VerifyBound(r)
     ps := FirstPrimes(r+1);
     assert LowerBoundN(&*ps[1..r]) gt UpperBound(ps[r+1] :
-						 Geometric := false);
+                         Geometric := false);
     assert LowerBoundD(&*ps[1..r]) gt UpperBound(ps[r+1]);
 end procedure;
 
@@ -156,11 +156,11 @@ function GetLargestPrimeIndex()
     UB := 1;
     r := -1;
     while (LB le UB) do
-	prod *:= p;
-	p := NextPrime(p);
-	LB := LowerBoundD(prod);
-	UB := UpperBound(p);
-	r +:= 1;
+    prod *:= p;
+    p := NextPrime(p);
+    LB := LowerBoundD(prod);
+    UB := UpperBound(p);
+    r +:= 1;
     end while;
     VerifyBound(r);
     return r;
@@ -183,13 +183,13 @@ function FindMaximalD(r)
     RR := RealField();
     r := 1;
     while (bound le prev) do
-	p := NextPrime(p);
-	delta := RR!(1 - Log(p-1) / Log(p));
-	A *:= p;
-	r +:= 1;
-	prev := bound;
-	bound := Ceiling(A*(C/EulerPhi(A))^(1/(1-delta)));
-	// print "bound = ", bound;
+    p := NextPrime(p);
+    delta := RR!(1 - Log(p-1) / Log(p));
+    A *:= p;
+    r +:= 1;
+    prev := bound;
+    bound := Ceiling(A*(C/EulerPhi(A))^(1/(1-delta)));
+    // print "bound = ", bound;
     end while;
     return bound; //, r, A;
 end function;
@@ -209,40 +209,40 @@ function FindPairs(r : Coprime := true)
     // stores LowerBoundN on [1..C]
     lNs := [LowerBoundN(N) : N in [1..C]];
     for D in Ds do
-    	lD := LowerBoundD(D);
-		// print "D = ", D;
-		// Nmax := Floor(N0 / EulerPhi(D));
-		Nmax := Ceiling(C / EulerPhi(D));
-		Ns := [1..Nmax];	
-		if Coprime then
-		    Ns := [N : N in Ns | GCD(D,N) eq 1];
-		end if;
+        lD := LowerBoundD(D);
+        // print "D = ", D;
+        // Nmax := Floor(N0 / EulerPhi(D));
+        Nmax := Ceiling(C / EulerPhi(D));
+        Ns := [1..Nmax];    
+        if Coprime then
+            Ns := [N : N in Ns | GCD(D,N) eq 1];
+        end if;
 
-		for N in Ns do
-		    /*
-		    if (N mod 1000 eq 0) then
-			print "N =", N;
-		    end if;
-		   */
-		    p := 2;
-		    while (N mod p eq 0) do
-			p := NextPrime(p);
-		    end while;
-		    if D ne 1 then 
-		    	if lD*lNs[N] le UpperBound(p) then
-			    	W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
-				end if;
-			else 
-		    	if (LowerBound(D, N, p) le UpperBound(p)) then
-					W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-					Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
-				end if;
-		    end if;
-		end for;
+        for N in Ns do
+            /*
+            if (N mod 1000 eq 0) then
+            print "N =", N;
+            end if;
+           */
+            p := 2;
+            while (N mod p eq 0) do
+            p := NextPrime(p);
+            end while;
+            if D ne 1 then 
+                if lD*lNs[N] le UpperBound(p) then
+                    W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+                    Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                end if;
+            else 
+                if (LowerBound(D, N, p) le UpperBound(p)) then
+                    W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+                    Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                end if;
+            end if;
+        end for;
     end for;
     for i->pair in pairs do
-	pairs[i]`CurveID := i;
+    pairs[i]`CurveID := i;
     end for;
     return pairs;
 end function;
@@ -250,20 +250,20 @@ end function;
 // 2 corresponds to cusps, 3, 4
 function NumberOfEllipticPoints(D, N, order)
     if order eq 2 then
-	if D eq 1 then
-	    return &+[EulerPhi(GCD(d, N div d)) : d in Divisors(N)];
-	else
-	    return 0;
-	end if;
+    if D eq 1 then
+        return &+[EulerPhi(GCD(d, N div d)) : d in Divisors(N)];
+    else
+        return 0;
+    end if;
     end if;
     if order eq 4 then
-	Q := 4;
+    Q := 4;
     end if;
     if order eq 3 then 
-	Q := 9;
+    Q := 9;
     end if;
     if (N mod Q eq 0) then
-	return 0;
+    return 0;
     end if;
     primesD := PrimeDivisors(D);
     primesN := PrimeDivisors(N);
@@ -279,8 +279,8 @@ function GenusShimuraCurve(D, N)
     g := 1 + phiD * P1N / 12;
     e := AssociativeArray();
     for h in [2,3,4] do
-	e[h] := NumberOfEllipticPoints(D, N, h);
-	g -:= e[h] / h;
+    e[h] := NumberOfEllipticPoints(D, N, h);
+    g -:= e[h] / h;
     end for;
     assert IsIntegral(g);
     return Floor(g);
@@ -288,11 +288,11 @@ end function;
     
 function PsiOgg(p, n)
     if (n eq 1) then
-	return 1;
+    return 1;
     end if;
     is_prime_power, q, k := IsPrimePower(n);
     if (is_prime_power) then
-	return ((q eq p) select Floor(p^k *(1 + 1/p)) else 1);
+    return ((q eq p) select Floor(p^k *(1 + 1/p)) else 1);
     end if;
     fac := Factorization(n);
     return &*[Integers() | PsiOgg(p, pe[1]^pe[2]) : pe in fac];
@@ -303,7 +303,7 @@ function LegendreSymbol(R, p)
     // Working with equation orders
     // f := Norm(Conductor(R));
     if (f mod p eq 0) then
-	    return 1;
+        return 1;
     end if;
     ZF := MaximalOrder(R);
     return KroneckerCharacter(Discriminant(ZF))(p);
@@ -315,10 +315,10 @@ end function;
 // based on Theorem 2 in [Ogg]
 function NuOgg(p, R, D, F)
     if (D mod p eq 0) then
-	return 1 - LegendreSymbol(R, p);
+    return 1 - LegendreSymbol(R, p);
     end if;
     if Valuation(F, p) eq 1 then
-	return 1 + LegendreSymbol(R, p);
+    return 1 + LegendreSymbol(R, p);
     end if;
     assert Valuation(F, p) ge 2;
     f := Conductor(R);
@@ -329,30 +329,30 @@ function NuOgg(p, R, D, F)
     k := Valuation(f, p);
     K := Valuation(F, p);
     if (K ge 2*(1 + k)) then
-	if (chi(p) eq 1) then
-	    return 2*PsiOgg(p, f);
-	end if;
-	return 0;
+    if (chi(p) eq 1) then
+        return 2*PsiOgg(p, f);
+    end if;
+    return 0;
     end if;
     if (K eq 1 + 2*k) then
-	if (chi(p) eq 1) then
-	    return 2*PsiOgg(p, f);
-	end if;
-	if (chi(p) eq 0) then
-	    return p^k;
-	end if;
-	assert chi(p) eq -1;
-	return 0;
+    if (chi(p) eq 1) then
+        return 2*PsiOgg(p, f);
+    end if;
+    if (chi(p) eq 0) then
+        return p^k;
+    end if;
+    assert chi(p) eq -1;
+    return 0;
     end if;
     if (K eq 2*k) then
-	return p^(k-1)*(p+1+chi(p));
+    return p^(k-1)*(p+1+chi(p));
     end if;
     if (K le 2*k - 1) then
-	if IsEven(K) then
-	    return p^(k div 2) + p^(k div 2 - 1);
-	else
-	    return 2*p^(k div 2);
-	end if;
+    if IsEven(K) then
+        return p^(k div 2) + p^(k div 2 - 1);
+    else
+        return 2*p^(k div 2);
+    end if;
     end if;
     // Should not reach here
     assert false;
@@ -360,57 +360,57 @@ end function;
 
 
 function SquarePart(m)
-	fac := Factorization(m);
-	prod := 1;
-	for f in fac do
-		if f[2] ge 2 then
-			if IsEven(f[2]) then
-				prod *:=  Integers()!(f[1]^(Integers()!f[2]/2));
-			else 
-				prod *:=  Integers()!(f[1]^(Integers()!(f[2]-1)/2));
-			end if;
-		end if;
-	end for;
-	return prod;
+    fac := Factorization(m);
+    prod := 1;
+    for f in fac do
+        if f[2] ge 2 then
+            if IsEven(f[2]) then
+                prod *:=  Integers()!(f[1]^(Integers()!f[2]/2));
+            else 
+                prod *:=  Integers()!(f[1]^(Integers()!(f[2]-1)/2));
+            end if;
+        end if;
+    end for;
+    return prod;
 end function;
 
 function ConstructOrders(m : cached_orders := AssociativeArray())
     //_<x> := PolynomialRing(Integers());
-	if m in Keys(cached_orders) then
-		return cached_orders[m];
-	else
-	    if (m eq 2) then
-			orders := [MaximalOrder(QuadraticField(-1)), 
-				   MaximalOrder(QuadraticField(-2))];
-	    elif (m mod 4 eq 3) then
-			F<a> := QuadraticField(-m);
-			// _, sqrt_minus_m := IsSquare(F!(-m));
-			sqm := SquarePart(m);
-			sqrt_minus_m:= sqm*a;
-			O := MaximalOrder(F);
-			alpha := (1 + sqrt_minus_m)/2;
-			orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+    if m in Keys(cached_orders) then
+        return cached_orders[m];
+    else
+        if (m eq 2) then
+            orders := [MaximalOrder(QuadraticField(-1)), 
+                   MaximalOrder(QuadraticField(-2))];
+        elif (m mod 4 eq 3) then
+            F<a> := QuadraticField(-m);
+            // _, sqrt_minus_m := IsSquare(F!(-m));
+            sqm := SquarePart(m);
+            sqrt_minus_m:= sqm*a;
+            O := MaximalOrder(F);
+            alpha := (1 + sqrt_minus_m)/2;
+            orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
             // orders := [EquationOrder(x^2+x+((m+1) div 4)), EquationOrder(x^2+m)];
-	    else
-			F<a> := QuadraticField(-m);
-			sqm := SquarePart(m);
-			sqrt_minus_m:= sqm*a;
-			// _, sqrt_minus_m := IsSquare(F!(-m));
-			O := MaximalOrder(F);
-			orders := [sub<O | 1, sqrt_minus_m>];
+        else
+            F<a> := QuadraticField(-m);
+            sqm := SquarePart(m);
+            sqrt_minus_m:= sqm*a;
+            // _, sqrt_minus_m := IsSquare(F!(-m));
+            O := MaximalOrder(F);
+            orders := [sub<O | 1, sqrt_minus_m>];
             // orders := [EquationOrder(x^2+m)];
-	    end if;
-	    class_nos :=[];
-	    for R in orders do 
-	    	//compute info about orders and store it
-	    	//let's start with just storing the class numbers
-			h := PicardNumber(R);
+        end if;
+        class_nos :=[];
+        for R in orders do 
+            //compute info about orders and store it
+            //let's start with just storing the class numbers
+            h := PicardNumber(R);
             // h := #PicardGroup(R);
-			Append(~class_nos, h);
-		end for;
-		cached_orders[m] := [* orders, class_nos *];
-		return cached_orders[m];
-	end if;
+            Append(~class_nos, h);
+        end for;
+        cached_orders[m] := [* orders, class_nos *];
+        return cached_orders[m];
+    end if;
 
 end function;
 
@@ -424,17 +424,17 @@ function NumFixedPoints(D, N, m :cached_orders := false)
     orders := pair[1];
     class_nos := pair[2];
     for i->R in orders do
-		// h := PicardNumber(R);
-		h := class_nos[i];
-		// Using formula (4) in [Ogg]
-		prod := &*[Integers() | 
-			  NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
-		e +:= h*prod;
+        // h := PicardNumber(R);
+        h := class_nos[i];
+        // Using formula (4) in [Ogg]
+        prod := &*[Integers() | 
+              NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
+        e +:= h*prod;
     end for;
     if (D eq 1) and (m eq 4) then
-		M := N div 4;
-		num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
-		e +:= num_fixed_cusps;
+        M := N div 4;
+        num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+        e +:= num_fixed_cusps;
     end if;
     return e;
 end function;
@@ -450,16 +450,16 @@ end function;
 function GenusShimuraCurveQuotient(D, N, als :cached_orders := cached_orders)
     total_e := 0;
     for al in als do
-	assert GCD(al, (D*N) div al) eq 1;
-	if (al ne 1) then
-	    total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
-	end if;
+    assert GCD(al, (D*N) div al) eq 1;
+    if (al ne 1) then
+        total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
+    end if;
     end for;
     if #als eq 1 then 
-	s := 0; 
+    s := 0; 
     else
-	is_prime_power, two, s := IsPrimePower(#als);
-	assert is_prime_power and (two eq 2);
+    is_prime_power, two, s := IsPrimePower(#als);
+    assert is_prime_power and (two eq 2);
     end if;
     g_big := GenusShimuraCurve(D, N);
     g := 1 + (g_big - 1)/2^s - total_e/2^(s+1);
@@ -475,28 +475,28 @@ function exp_to_Q(e, N, ps)
 end function;
 
 function al_mul(w, m, ND)
-	ps := PrimeDivisors(ND);
+    ps := PrimeDivisors(ND);
     // ps := PrimeDivisors(w*m);
     wvals := Vector(Integers(), [Valuation(w, p) : p in ps]);
     mvals := Vector(Integers(), [Valuation(m, p) : p in ps]);
     // wmvals := mvals + wvals;
     wmvals := Vector(Integers(), [0 : p in ps]);
     for i in [1..#ps] do
-    	if wvals[i] eq 0 then
-    		wmvals[i] := mvals[i];
-    	elif mvals[i] eq 0 then
-    		wmvals[i] := wvals[i];
-    	else 
-    		wmvals[i] := 0;
-    	end if;
-   	end for;
-   	wm := &*[ps[i]^(wmvals[i]) : i in [1..#ps]];
+        if wvals[i] eq 0 then
+            wmvals[i] := mvals[i];
+        elif mvals[i] eq 0 then
+            wmvals[i] := wvals[i];
+        else 
+            wmvals[i] := 0;
+        end if;
+       end for;
+       wm := &*[ps[i]^(wmvals[i]) : i in [1..#ps]];
     return wm;
 end function;
 
 function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
-	// copied from sage code
-	/*An iterator over `(k,n)` reduced echelon matrices over the finite field `K`.
+    // copied from sage code
+    /*An iterator over `(k,n)` reduced echelon matrices over the finite field `K`.
 
     INPUT:
 
@@ -514,26 +514,26 @@ function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
     Klist := [x : x in K];
     //select pivot columns
     for pivots in Subsets({1..n},k) do
-    	sqpivots := SetToSequence(pivots);
-    	m0 := KMatrixSpace(K,k,n)!ZeroMatrix(K,k,n);
-    	free_positions := [];
-    	for i in [1..k] do
+        sqpivots := SetToSequence(pivots);
+        m0 := KMatrixSpace(K,k,n)!ZeroMatrix(K,k,n);
+        free_positions := [];
+        for i in [1..k] do
             m0[i,sqpivots[i]] := one;
             for j in [sqpivots[i]+1..n] do
                 if j notin sqpivots then
                     Append(~free_positions,<i,j>);
                 end if;
-       		end for;
+               end for;
         end for;
     //fill in the rest of the entries not determined by pivot columns/ RREF
-	    num_free_pos := #free_positions;
-	    for v in CartesianPower(Klist, num_free_pos) do
-	    	for i in [1..num_free_pos] do
-	                m0[free_positions[i][1], free_positions[i][2]] := v[i];
-	        end for;
-	        Append(~matrices, m0);
-	    end for;
-	 end for;
+        num_free_pos := #free_positions;
+        for v in CartesianPower(Klist, num_free_pos) do
+            for i in [1..num_free_pos] do
+                    m0[free_positions[i][1], free_positions[i][2]] := v[i];
+            end for;
+            Append(~matrices, m0);
+        end for;
+     end for;
 
     return matrices;
 end function;
@@ -546,55 +546,55 @@ end function;
 
 
 function MaxSubgroups(m, sl);
-	r := #Rows(m);
-	if r eq 0 then
-		return {Integers()|};
-	else 
-		all_mats :=  &cat[[* x : x in r *] : r in sl];
-		subgps := {};
-		for n in sl[r] do //rank r-1 things
-			if RowSpace(n) subset RowSpace(m) then
-				i := Index(all_mats, n);
-				Include(~subgps, i);
-			end if;
-		end for;
-		return subgps;
-	end if;
+    r := #Rows(m);
+    if r eq 0 then
+        return {Integers()|};
+    else 
+        all_mats :=  &cat[[* x : x in r *] : r in sl];
+        subgps := {};
+        for n in sl[r] do //rank r-1 things
+            if RowSpace(n) subset RowSpace(m) then
+                i := Index(all_mats, n);
+                Include(~subgps, i);
+            end if;
+        end for;
+        return subgps;
+    end if;
 
 end function;
 
 function MinOvergps(m, sl);
-	r := #Rows(m);
-	all_mats :=  &cat[[* x : x in r *] : r in sl];
-	if r eq #sl - 1 then
-		return {Integers()|};
-	else 
-		subgps := {};
-		for n in sl[r+2] do 
-			if RowSpace(m) subset RowSpace(n) then
-				i := Index(all_mats, n);
-				Include(~subgps, i);
-			end if;
-		end for;
-		return subgps;
-	end if;
+    r := #Rows(m);
+    all_mats :=  &cat[[* x : x in r *] : r in sl];
+    if r eq #sl - 1 then
+        return {Integers()|};
+    else 
+        subgps := {};
+        for n in sl[r+2] do 
+            if RowSpace(m) subset RowSpace(n) then
+                i := Index(all_mats, n);
+                Include(~subgps, i);
+            end if;
+        end for;
+        return subgps;
+    end if;
 end function;
 
 function AllALsFromGens(Ws, ND)
-	allws := {Integers()|};
-	S := Subsets(Ws);
-	for s in S do
-		if #s eq 0 then
-			Include(~allws, 1);
-		else
-			prod := 1;
-			for w in s do
-				prod := al_mul(w,prod, ND);
-			end for;
-			Include(~allws, prod);
-		end if;
-	end for;
-	return allws;
+    allws := {Integers()|};
+    S := Subsets(Ws);
+    for s in S do
+        if #s eq 0 then
+            Include(~allws, 1);
+        else
+            prod := 1;
+            for w in s do
+                prod := al_mul(w,prod, ND);
+            end for;
+            Include(~allws, prod);
+        end if;
+    end for;
+    return allws;
 end function;
 
 function ALSubgroups(N)
@@ -604,24 +604,24 @@ function ALSubgroups(N)
     Qs := [];
     subgp_lattice := [* *];
     for r in [0..#ps] do 
-    	ms := ReduchedEchelonMatrixIterator(r,#ps); 
-    	Append(~subgp_lattice, ms);
+        ms := ReduchedEchelonMatrixIterator(r,#ps); 
+        Append(~subgp_lattice, ms);
     end for;
 
-	for rkgp in subgp_lattice do
-		for m in rkgp do
-			if #Rows(m) eq 0 then
-				grp := {Integers()|};
-			else
-				grp := {Integers()|exp_to_Q(e,N,ps) : e in Rows(m)};
-			end if;
-			// print grp; 
-			// Include(~Qs, grp);
-			grp := AllALsFromGens(grp, N);
-			// print "generates", grp;
-			Append(~Qs, <grp, MaxSubgroups(m, subgp_lattice), MinOvergps(m,subgp_lattice)>);
-		end for;
-	end for;
+    for rkgp in subgp_lattice do
+        for m in rkgp do
+            if #Rows(m) eq 0 then
+                grp := {Integers()|};
+            else
+                grp := {Integers()|exp_to_Q(e,N,ps) : e in Rows(m)};
+            end if;
+            // print grp; 
+            // Include(~Qs, grp);
+            grp := AllALsFromGens(grp, N);
+            // print "generates", grp;
+            Append(~Qs, <grp, MaxSubgroups(m, subgp_lattice), MinOvergps(m,subgp_lattice)>);
+        end for;
+    end for;
 
     return Qs;
 end function;
@@ -629,7 +629,7 @@ end function;
 
 procedure UpdateGenera(~curves : cached_orders := cached_orders)
     for i->c in curves do
-	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W : cached_orders := cached_orders);
+    curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W : cached_orders := cached_orders);
     end for;
     return;
 end procedure;
@@ -637,27 +637,27 @@ end procedure;
 function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
     quots := [];
     for i->c in curves do
-	    min_num := MinimalNumberOfALinQuotient(c`D, c`N);
-	    al_subs := ALSubgroups(c`D*c`N);
-	    allowed_idxs := [j : j in [1..#al_subs] | #al_subs[j][1] ge 2^min_num];
-	    update_idxs := func < S | {Index(allowed_idxs, idx)
-		        		   : idx in S | idx in allowed_idxs}>;
-	    allowed_subs := [<al_subs[j][1],
-			            update_idxs(al_subs[j][2]),
-			            update_idxs(al_subs[j][3])>
-			            : j in allowed_idxs];
-	    cur_sz := #quots;
-	    for j->S in allowed_subs do
-	        als := S[1];
-	        g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
-	        quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
-			    	    g := g, CurveID := cur_sz + j,
-				        CoveredBy := {cur_sz + idx : idx in S[2]},
-				        Covers := {cur_sz + idx : idx in S[3]}>;
-	        Append(~quots, quot);
-	    end for;
+        min_num := MinimalNumberOfALinQuotient(c`D, c`N);
+        al_subs := ALSubgroups(c`D*c`N);
+        allowed_idxs := [j : j in [1..#al_subs] | #al_subs[j][1] ge 2^min_num];
+        update_idxs := func < S | {Index(allowed_idxs, idx)
+                           : idx in S | idx in allowed_idxs}>;
+        allowed_subs := [<al_subs[j][1],
+                        update_idxs(al_subs[j][2]),
+                        update_idxs(al_subs[j][3])>
+                        : j in allowed_idxs];
+        cur_sz := #quots;
+        for j->S in allowed_subs do
+            als := S[1];
+            g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
+            quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
+                        g := g, CurveID := cur_sz + j,
+                        CoveredBy := {cur_sz + idx : idx in S[2]},
+                        Covers := {cur_sz + idx : idx in S[3]}>;
+            Append(~quots, quot);
+        end for;
         if (i mod 100 eq 0) then
-	        print "i = ", i, "/", #curves;
+            print "i = ", i, "/", #curves;
         end if; 
     end for;
     return quots;
@@ -671,7 +671,7 @@ function sum_n_powers(mfs, p, n, BV)
     T_p_n := ChangeRing(T_p_n, Rationals());
     T_p_n := Solution(BV, BV*T_p_n);
     if n eq 1 then 
-	return Trace(T_p_n);
+    return Trace(T_p_n);
     end if;
     T_p_n_2 := HeckeOperator(mfs, p^(n-2));
     T_p_n_2 := ChangeRing(T_p_n_2, Rationals());
@@ -683,20 +683,20 @@ end function;
 function TraceDNew(D,N,k,n,Q)
     t := 0;
     for dN in Divisors(N) do
-	    N_prime := D*N div dN;
-	    ds := get_ds(D*N, Q, N_prime, n);
-	    for d in ds do
-	        n_p := n_prime(d, D*N, Q, N_prime, n);
-	        d_p := d_prime(d, D*N, Q, N_prime);
-	        dd_p := dd_prime(d, D*N, Q, N_prime, n);
-	        Q_p := Q_prime(D*N, Q, N_prime);
-	        // Should always be trivial as n is coprime to D*N
-	        // term := GCD(d_p, n);
-	        // term *:= MoebiusMu(dd_p);
-	        // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
-	        // t +:= t_d * #Divisors(d);
-	        t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
-	    end for;
+        N_prime := D*N div dN;
+        ds := get_ds(D*N, Q, N_prime, n);
+        for d in ds do
+            n_p := n_prime(d, D*N, Q, N_prime, n);
+            d_p := d_prime(d, D*N, Q, N_prime);
+            dd_p := dd_prime(d, D*N, Q, N_prime, n);
+            Q_p := Q_prime(D*N, Q, N_prime);
+            // Should always be trivial as n is coprime to D*N
+            // term := GCD(d_p, n);
+            // term *:= MoebiusMu(dd_p);
+            // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
+            // t +:= t_d * #Divisors(d);
+            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
+        end for;
     end for;
     return t;
 end function;
@@ -708,7 +708,7 @@ end function;
 function sum_n_powers_trace_formula(D, N, W, p, n)
     t_p_n := TraceDNewALFixed(D,N,2,p^n,W);
     if n eq 1 then
-	return t_p_n;
+    return t_p_n;
     end if;
     t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
     return t_p_n - p*t_p_n_2; 
@@ -716,43 +716,43 @@ end function;
 
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
-				
+                
 function CheckHeckeTrace(X)
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
-	    v_max := Floor(Log(p,4*X`g^2));
-	    tps := AssociativeArray([-1..v_max]);
-	    tps[-1] := 0;
-	    for v in [1..v_max] do
-	        tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
-	    end for;
-	    if (v_max gt 1) then
-	        tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
-	    end if;
-	    for v in [1..v_max] do
-	        trace_frob_n := tps[v] - p*tps[v-2];
-	        num_pts := p^v  + 1 - trace_frob_n;
-	        if (num_pts gt 2*(1+p^v)) then
-		        print "p, v = ", p, v;
-		        return false;
-	        end if;
-	    end for;
+        v_max := Floor(Log(p,4*X`g^2));
+        tps := AssociativeArray([-1..v_max]);
+        tps[-1] := 0;
+        for v in [1..v_max] do
+            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
+        end for;
+        if (v_max gt 1) then
+            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
+        end if;
+        for v in [1..v_max] do
+            trace_frob_n := tps[v] - p*tps[v-2];
+            num_pts := p^v  + 1 - trace_frob_n;
+            if (num_pts gt 2*(1+p^v)) then
+                print "p, v = ", p, v;
+                return false;
+            end if;
+        end for;
     end for;
     return true;
 end function;
 
 procedure FilterByTrace(~curve_list)
     for i->X in curve_list do
-	if assigned X`IsSubhyp then
-	    continue;
-	end if;
-	print "i = ", i;
-	if not CheckHeckeTrace(X) then
-	    curve_list[i]`IsSubhyp := false;
-	    curve_list[i]`IsHyp := false;
-	end if;
+    if assigned X`IsSubhyp then
+        continue;
+    end if;
+    print "i = ", i;
+    if not CheckHeckeTrace(X) then
+        curve_list[i]`IsSubhyp := false;
+        curve_list[i]`IsHyp := false;
+    end if;
     end for;
     return;
 end procedure;
@@ -775,30 +775,30 @@ function TestALFixedPointsOnQuotient(X)
     DN := X`D*X`N;
     ws := [d : d in Divisors(DN) | d notin X`W and (GCD(d, DN div d) eq 1)];
     for d in ws do
-	fix := CountFixedPointsOnQuotient(d, X);
-	if IsEven(X`g) and fix gt 2 then
-	    return false;
-	elif IsOdd(X`g) and fix gt 4 then
-	    return false;
-	end if;
+    fix := CountFixedPointsOnQuotient(d, X);
+    if IsEven(X`g) and fix gt 2 then
+        return false;
+    elif IsOdd(X`g) and fix gt 4 then
+        return false;
+    end if;
     end for;
     return true;
 end function;
 
 procedure FilterByALFixedPointsOnQuotient(~curves)
     for lc->c in curves do
-	if (assigned c`IsSubhyp) and c`IsSubhyp then
-	    continue;
-	end if;
-	// if testALFixedPointsOnQuotient(c) then
-	    // Include(~passed_test, c);
-	if not TestALFixedPointsOnQuotient(c) then
-	    curves[lc]`IsSubhyp := false;
-	end if;
-	// lc +:= 1;
-	if (lc mod 100 eq 0) then
-	    print "lc = ", lc;
-	end if;
+    if (assigned c`IsSubhyp) and c`IsSubhyp then
+        continue;
+    end if;
+    // if testALFixedPointsOnQuotient(c) then
+        // Include(~passed_test, c);
+    if not TestALFixedPointsOnQuotient(c) then
+        curves[lc]`IsSubhyp := false;
+    end if;
+    // lc +:= 1;
+    if (lc mod 100 eq 0) then
+        print "lc = ", lc;
+    end if;
     end for;
     return;
 end procedure;
@@ -809,13 +809,13 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
     cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
     // print "cond_2 = ", cond_2;
     cond_1 := [N2 : N2 in cond_2 | (N2 mod 4 ne 3) or
-				   ((N2 mod 8 eq 3) and IsEven(N)) or
-				   ((N2 mod 8 eq 7) and IsEven(D))];
+                   ((N2 mod 8 eq 3) and IsEven(N)) or
+                   ((N2 mod 8 eq 7) and IsEven(D))];
     // print "cond_1 = ", cond_1;
     num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
     good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
-		  (num_fixed[i] mod 3 eq 0) and
-		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
+          (num_fixed[i] mod 3 eq 0) and
+          (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
     N2s := [cond_1[i] : i in good_idxs];
     // print "N2s = ", N2s;
     nfixed := [num_fixed[i] : i in good_idxs];
@@ -825,91 +825,91 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
     Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
     non_hyp := {};
     for i->N2 in N2s do
-	r := omega - Valuation(nfixed[i], 2);
-	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
+    r := omega - Valuation(nfixed[i], 2);
+    Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
 /*
-	if (N2 eq 195) then
-	    print "N2 = ", 195;
-	    print "Ws = ", Ws;
-	end if;
+    if (N2 eq 195) then
+        print "N2 = ", 195;
+        print "Ws = ", Ws;
+    end if;
 */
-	for W in Ws do
-	    is_non_hyp := false;
-	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
-	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
+    for W in Ws do
+        is_non_hyp := false;
+        N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
+        N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
 /*
-	    if (N2 eq 195) and ({6, 10, 26} subset W) then
-		print "N1s = ", N1s;
-	    end if;
+        if (N2 eq 195) and ({6, 10, 26} subset W) then
+        print "N1s = ", N1s;
+        end if;
 */
-	    for N1 in N1s do
-		a := AssociativeArray();
-		for w in W do
-		    a[al_mul(N1, w,D*N)] := w;
-		end for;
-		/*
-		if (N2 eq 195) and ({6, 10, 26} subset W) then
-		    print "N1 = ", N1;
-		    for k in Keys(a) do
-			print "a[", k, "] = ", a[k];
-		    end for;
-		end if;
+        for N1 in N1s do
+        a := AssociativeArray();
+        for w in W do
+            a[al_mul(N1, w,D*N)] := w;
+        end for;
+        /*
+        if (N2 eq 195) and ({6, 10, 26} subset W) then
+            print "N1 = ", N1;
+            for k in Keys(a) do
+            print "a[", k, "] = ", a[k];
+            end for;
+        end if;
 */
-		for w in W do
-		    N_prime := al_mul(N2, w, D*N);
-		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
-			// print "w = ", w;
-			// print "N2 * w = ", N_prime;
-		    //end if;
-		    if IsDefined(a, N_prime) then
-			/*
-			print "N_prime = ", N_prime;
-			print "N_double_prime = ", a[N_prime];
-			print "N_triple_prime = ", w;
-			print "h(-4N_1) = ", ClassNumber(-4*N1);
-			print "h(-4N_2) = ", ClassNumber(-4*N2);
-		       */
-			Include(~non_hyp, W);
-			Ws := [WW : WW in Ws | WW ne W]; 
-			is_non_hyp := true;
-			break;
-		    end if;
-		end for;
-		if is_non_hyp then
-		    break;
-		end if;
-	    end for;
-	end for;
+        for w in W do
+            N_prime := al_mul(N2, w, D*N);
+            //if (N2 eq 195) and ({6, 10, 26} subset W) then
+            // print "w = ", w;
+            // print "N2 * w = ", N_prime;
+            //end if;
+            if IsDefined(a, N_prime) then
+            /*
+            print "N_prime = ", N_prime;
+            print "N_double_prime = ", a[N_prime];
+            print "N_triple_prime = ", w;
+            print "h(-4N_1) = ", ClassNumber(-4*N1);
+            print "h(-4N_2) = ", ClassNumber(-4*N2);
+               */
+            Include(~non_hyp, W);
+            Ws := [WW : WW in Ws | WW ne W]; 
+            is_non_hyp := true;
+            break;
+            end if;
+        end for;
+        if is_non_hyp then
+            break;
+        end if;
+        end for;
+    end for;
     end for;
     return non_hyp;
 end function;
 
 procedure UpdateByGenus(~curves)
     for i in [1..#curves] do
-	if (curves[i]`g eq 0) then
-	    curves[i]`IsP1 := true;
-	    curves[i]`IsEC := false;
-	    curves[i]`IsHyp := false;
-	    // check the ones with hyperelliptic AL involution
-	    if assigned curves[i]`CoveredBy then
-		for cover in curves[i]`CoveredBy do
-		    curves[cover]`IsSubhyp := true;
-		    if (curves[cover]`g ge 2) then
-			curves[cover]`IsHyp := true;
-		    end if;
-		end for;
-	    end if;
-	end if;
-	if (curves[i]`g eq 1) then
-	    curves[i]`IsEC := true;
-	    curves[i]`IsHyp := false;
-	end if;
-	if (curves[i]`g eq 2) then
-	    curves[i]`IsHyp := true;
-	end if;
-	if (curves[i]`g le 2) then
-	    curves[i]`IsSubhyp := true;
-	end if;	
+    if (curves[i]`g eq 0) then
+        curves[i]`IsP1 := true;
+        curves[i]`IsEC := false;
+        curves[i]`IsHyp := false;
+        // check the ones with hyperelliptic AL involution
+        if assigned curves[i]`CoveredBy then
+        for cover in curves[i]`CoveredBy do
+            curves[cover]`IsSubhyp := true;
+            if (curves[cover]`g ge 2) then
+            curves[cover]`IsHyp := true;
+            end if;
+        end for;
+        end if;
+    end if;
+    if (curves[i]`g eq 1) then
+        curves[i]`IsEC := true;
+        curves[i]`IsHyp := false;
+    end if;
+    if (curves[i]`g eq 2) then
+        curves[i]`IsHyp := true;
+    end if;
+    if (curves[i]`g le 2) then
+        curves[i]`IsSubhyp := true;
+    end if;    
     end for;
     return;
 end procedure;
@@ -920,61 +920,61 @@ procedure FilterByComplicatedALFixedPointsOnQuotient(~curves)
     
     lut := AssociativeArray();
     for i in [1..#curves] do
-	c := curves[i];
-	lut[<c`D, c`N, c`W>] := i;
+    c := curves[i];
+    lut[<c`D, c`N, c`W>] := i;
     end for;
     
     for lc->DN in DN_pairs do
-	D, N := Explode(DN);
-	Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
-	for W in Ws do
-	    if not IsDefined(lut, <D,N,W>) then
-		continue;
-	    end if;
-	    curves[lut[<D,N,W>]]`IsSubhyp := false;
-	    if (curves[lut[<D,N,W>]]`g ge 2) then
-		curves[lut[<D,N,W>]]`IsHyp := false;
-	    end if;
-	end for;
-	if (lc mod 100 eq 0) then
-	    print "lc = ", lc;
-	end if;
+    D, N := Explode(DN);
+    Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
+    for W in Ws do
+        if not IsDefined(lut, <D,N,W>) then
+        continue;
+        end if;
+        curves[lut[<D,N,W>]]`IsSubhyp := false;
+        if (curves[lut[<D,N,W>]]`g ge 2) then
+        curves[lut[<D,N,W>]]`IsHyp := false;
+        end if;
+    end for;
+    if (lc mod 100 eq 0) then
+        print "lc = ", lc;
+    end if;
     end for;
     return;
 end procedure;
 
 procedure DownwardClosure(~curves)
     for c in curves do
-	if (assigned c`IsSubhyp) and c`IsSubhyp then
-	    for covered in c`Covers do
-		curves[covered]`IsSubhyp := true;
-	    end for;
-	end if;
+    if (assigned c`IsSubhyp) and c`IsSubhyp then
+        for covered in c`Covers do
+        curves[covered]`IsSubhyp := true;
+        end for;
+    end if;
     end for;
     return;
 end procedure;
 
 procedure UpwardClosure(~curves)
     for c in curves do
-	if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
-	    for cover in c`CoveredBy do
-		curves[cover]`IsSubhyp := false;
-	    end for;
-	end if;
+    if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
+        for cover in c`CoveredBy do
+        curves[cover]`IsSubhyp := false;
+        end for;
+    end if;
     end for;
     return;
 end procedure;
 
 procedure Genus3CoversGenus2(~curves)
     for c in curves do
-	if c`g eq 2 then
-	    for cover in c`CoveredBy do
-		if curves[cover]`g eq 3 then
-		    curves[cover]`IsSubhyp := true;
-		    curves[cover]`IsHyp := true;
-		end if;
-	    end for;
-	end if;
+    if c`g eq 2 then
+        for cover in c`CoveredBy do
+        if curves[cover]`g eq 3 then
+            curves[cover]`IsSubhyp := true;
+            curves[cover]`IsHyp := true;
+        end if;
+        end for;
+    end if;
     end for;
     return;
 end procedure;
@@ -982,28 +982,28 @@ end procedure;
 procedure VerifyHHTable1(curves)
     Table1 := AssociativeArray([3..19]);
     Table1[3] := {97, 109, 113, 127, 128, 136, 139, 144, 149, 151,
-		  152, 162, 164, 169, 171, 175, 178, 179, 183, 185,
-		  187, 189, 194, 196, 203, 207, 217, 234, 236, 240,
-		  245, 246, 248, 249, 252, 258, 270, 282, 290, 294,
-		  295, 303, 310, 312, 315, 318, 329, 348, 420, 429,
-		  430, 455, 462, 476, 510};
+          152, 162, 164, 169, 171, 175, 178, 179, 183, 185,
+          187, 189, 194, 196, 203, 207, 217, 234, 236, 240,
+          245, 246, 248, 249, 252, 258, 270, 282, 290, 294,
+          295, 303, 310, 312, 315, 318, 329, 348, 420, 429,
+          430, 455, 462, 476, 510};
     Table1[4] := {137, 148, 160, 172, 173, 176, 199, 200, 201, 202,
-		  214, 219, 224, 225, 228, 242, 247, 254, 259, 260,
-		  261, 262, 264, 267, 273, 275, 280, 300, 305, 306,
-		  308, 319, 321, 322, 335, 341, 342, 345, 350, 354,
-		  355, 366, 370, 374, 385, 399, 426, 434, 483, 546,
-		  570};
+          214, 219, 224, 225, 228, 242, 247, 254, 259, 260,
+          261, 262, 264, 267, 273, 275, 280, 300, 305, 306,
+          308, 319, 321, 322, 335, 341, 342, 345, 350, 354,
+          355, 366, 370, 374, 385, 399, 426, 434, 483, 546,
+          570};
     Table1[5] := {157, 181, 192, 208, 212, 216, 218, 226, 235, 237,
-		  250, 253, 278, 279, 302, 323, 364, 371, 377, 378,
-		  391, 396, 402, 406, 410, 414, 418, 435, 438, 440,
-		  442, 444, 465, 494, 495, 595, 630, 714, 770, 798};
+          250, 253, 278, 279, 302, 323, 364, 371, 377, 378,
+          391, 396, 402, 406, 410, 414, 418, 435, 438, 440,
+          442, 444, 465, 494, 495, 595, 630, 714, 770, 798};
     Table1[6] := {163, 197, 211, 244, 265, 272, 274, 291, 297, 301,
-		  325, 336, 340, 470, 506, 561, 564, 690, 780, 858};
+          325, 336, 340, 470, 506, 561, 564, 690, 780, 858};
     Table1[7] := {193, 232, 268, 288, 296, 298, 309, 360, 372, 450,
-		  456, 460, 474, 492, 498, 504, 518, 558, 582, 660,
-		  870, 924};
+          456, 460, 474, 492, 498, 504, 518, 558, 582, 660,
+          870, 924};
     Table1[8] := {292, 408, 468, 480, 534, 540, 552, 606, 930, 966,
-		  990, 1020};
+          990, 1020};
     Table1[9] := {516, 522, 528, 1110, 1140};
     Table1[10] := {600, 840, 1050, 1230, 1290};
     Table1[11] := {};
@@ -1030,8 +1030,8 @@ procedure VerifyHHTable1(curves)
     Table1[12] join:= {1170};
     assert Maximum([c`g : c in curves | c`D eq 1]) eq 19;
     for g in [3..19] do
-	genus_g := {c`N : c in curves | (c`D eq 1) and (c`g eq g)};
-	assert Table1[g] eq genus_g;
+    genus_g := {c`N : c in curves | (c`D eq 1) and (c`g eq g)};
+    assert Table1[g] eq genus_g;
     end for;
     return;
 end procedure;
@@ -1039,11 +1039,11 @@ end procedure;
 function GetHHTable2()
     Table2 := [[] : g in [1..19]];
     Table2[3] := [ 127, 136, 144, 152, 162, 164, 171, 175, 183, 185,
-		   194, 196, 207, 217, 234, 240, 246, 252, 258, 270,
-		   282, 290, 294, 310, 312, 315, 318, 348, 420, 462,
-		   476, 510 ];
+           194, 196, 207, 217, 234, 240, 246, 252, 258, 270,
+           282, 290, 294, 310, 312, 315, 318, 348, 420, 462,
+           476, 510 ];
     Table2[4] := [ 160, 176, 264, 280, 300, 306, 322, 342, 345, 370,
-		   546, 570 ];
+           546, 570 ];
     Table2[5] := [ 216, 279, 396, 630, 714 ];
     Table2[6] := [ 336, 690 ];
     Table2[7] := [ 360, 450 ];
@@ -1057,8 +1057,8 @@ end function;
 function GetModularByGenus(curves)
     g_max := Maximum([X`g : X in curves]);
     by_genus := [[X`N : X in curves | X`D eq 1 and
-				      not assigned X`IsSubhyp and
-					  X`g eq g] : g in [1..g_max]];
+                      not assigned X`IsSubhyp and
+                      X`g eq g] : g in [1..g_max]];
     return by_genus;
 end function;
 
@@ -1085,27 +1085,27 @@ procedure HHProposition1(~curves)
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
-	lut_DN[<X`D, X`N>] := X`CurveID;
-	if not IsDefined(lut_D, X`D) then
-	    lut_D[X`D] := [];
-	end if;
-	lut_D[X`D] := Append(lut_D[X`D], X`N); 
+    lut_DN[<X`D, X`N>] := X`CurveID;
+    if not IsDefined(lut_D, X`D) then
+        lut_D[X`D] := [];
+    end if;
+    lut_D[X`D] := Append(lut_D[X`D], X`N); 
     end for;
     for i->X in curves do
-	if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
-	    Ns := lut_D[X`D];
-	    ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
-					 IsPrime(N div X`N)];
-	    for p in ps do
-		if IsDefined(lut_DN, <X`D, p*X`N>) then
-		    other := lut_DN[<X`D, p*X`N>];
-		    if X`g eq curves[other]`g then
-			curves[other]`IsSubhyp := false;
-			curves[other]`IsHyp := false;
-		    end if;
-		end if;
-	    end for;
-	end if;
+    if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
+        Ns := lut_D[X`D];
+        ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
+                     IsPrime(N div X`N)];
+        for p in ps do
+        if IsDefined(lut_DN, <X`D, p*X`N>) then
+            other := lut_DN[<X`D, p*X`N>];
+            if X`g eq curves[other]`g then
+            curves[other]`IsSubhyp := false;
+            curves[other]`IsHyp := false;
+            end if;
+        end if;
+        end for;
+    end if;
     end for;
     return;
 end procedure;
@@ -1117,7 +1117,7 @@ function IsHyperelliptic(qexps, prec)
     fs := [f + O(q^prec) : f in qexps];
     g := #fs;
     T, E := EchelonForm(Matrix([&cat[Eltseq(x)
-				     : x in AbsEltseq(f)] : f in fs]));
+                     : x in AbsEltseq(f)] : f in fs]));
     fs := [&+[E[j][i]*fs[i] : i in [1..g]] : j in [1..g]];
     x := fs[g-1] / fs[g];
     y := q * Derivative(x) / fs[g];
@@ -1126,10 +1126,10 @@ function IsHyperelliptic(qexps, prec)
     f_mons := [denom*m + O(q^AbsolutePrecision(y)) : m in mons];
     ker := Kernel(Matrix([AbsEltseq(f : FixedLength) : f in f_mons]));
     if (Dimension(ker) eq 0) then
-	return false, _;
+    return false, _;
     end if;
     if Dimension(ker) gt 1 then
-	error "Too many relations, not enough precision!";
+    error "Too many relations, not enough precision!";
     end if;
     ker_b := Basis(ker)[1];
     ker_b /:= -ker_b[2*g+4];
@@ -1160,7 +1160,7 @@ function qExpansionCheck(X)
     als := [AtkinLehnerOperator(mfs,w) : w in ws];
     V := VectorSpace(mfs);
     for al in als do
-	V := V meet Kernel(al-1);
+    V := V meet Kernel(al-1);
     end for;
     assert X`g eq Dimension(V);
     BV := BasisMatrix(V);
@@ -1174,10 +1174,10 @@ end function;
 
 procedure Filter_qExpansion(~curves)
     for i->X in curves do
-	if not assigned X`IsSubhyp then
-	    curves[i]`IsHyp := qExpansionCheck(X);
-	    curves[i]`IsSubhyp := curves[i]`IsHyp;
-	end if;
+    if not assigned X`IsSubhyp then
+        curves[i]`IsHyp := qExpansionCheck(X);
+        curves[i]`IsSubhyp := curves[i]`IsHyp;
+    end if;
     end for;
     return;
 end procedure;
@@ -1216,7 +1216,7 @@ procedure GetHyperellipticCandidates()
     read_curves := eval Read("star_curves_point_count.dat");
     assert #read_curves eq #star_curves;
     assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :
-		j in [1..#star_curves]];
+        j in [1..#star_curves]];
 
     // Applying Proposition 1 from [HH96]
     // verifying that we get the right thing for modular curves
