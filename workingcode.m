@@ -1,4 +1,6 @@
 procedure GetHyperellipticCandidates(:trace:=false)
+    SetVerbose("ShimuraQuotients", 3);
+
     // Find the largest prime we need to consider for the
     // inequality in Proposition 1.
     r := GetLargestPrimeIndex();
@@ -68,11 +70,15 @@ procedure GetHyperellipticCandidates(:trace:=false)
     DownwardClosure(~curves);
 
     // Using Proposition 6 from [FH] adapted to the Shimura curve situation
-    FilterByComplicatedALFixedPointsOnQuotient(~curves);
+    time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
 
     UpwardClosure(~curves);
 
     UpdateByIsomorphisms(~curves);
+
+    UpwardClosure(~curves);
+
+    DownwardClosure(~curves);
 
     // Using trace of Hecke operators to count points and show more curves are
     // non-hyperelliptic

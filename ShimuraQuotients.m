@@ -239,6 +239,7 @@ intrinsic FindPairs(r :: RngIntElt: Coprime := true) -> SeqEnum
             if D ne 1 then
                 if lD*lNs[N] le UpperBound(p) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+                    print W;
                     //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
                     S := CreateShimuraQuot(D, N, W);
                     Append(~pairs, S);
@@ -246,6 +247,7 @@ intrinsic FindPairs(r :: RngIntElt: Coprime := true) -> SeqEnum
             else
                 if (LowerBound(D, N, p) le UpperBound(p)) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+                    print W;
                     S := CreateShimuraQuot(D, N, W);
                     //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
                     Append(~pairs, S);
@@ -428,7 +430,7 @@ end intrinsic;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt :cached_orders := false)-> RingIntElt
+intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt :cached_orders := AssociativeArray())-> RingIntElt
     {The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
     pair := ConstructOrders(m :cached_orders:=cached_orders);
@@ -770,7 +772,7 @@ intrinsic FilterByTrace(~curve_list::SeqEnum)
 	if assigned X`IsSubhyp then
             continue;
 	end if;
-	print "i = ", i;
+	vprint ShimuraQuotients, 2: "i = ", i;
 	if not CheckHeckeTrace(X) then
             curve_list[i]`IsSubhyp := false;
             curve_list[i]`IsHyp := false;
@@ -812,7 +814,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := As
     // if testALFixedPointsOnQuotient(c) then
         // Include(~passed_test, c);
     if not TestALFixedPointsOnQuotient(c : cached_orders := cached_orders) then
-        curves[lc]`is_subhyp := false;
+        curves[lc]`IsSubhyp := false;
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
@@ -823,7 +825,7 @@ end intrinsic;
 
 // implementing Proposition 6 of [FH]
 // returns the W for which X_0(D,N)/W is not hyperelliptic
-intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> SetEnum
+intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt :cached_orders := AssociativeArray()) -> SetEnum
     {}
     cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
     // print "cond_2 = ", cond_2;
@@ -831,7 +833,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 				   ((N2 mod 8 eq 3) and IsEven(N)) or
 				   ((N2 mod 8 eq 7) and IsEven(D))];
     // print "cond_1 = ", cond_1;
-    num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
+    num_fixed := [NumFixedPoints(D, N, N2 : cached_orders := cached_orders) : N2 in cond_1];
     good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
 		  (num_fixed[i] mod 3 eq 0) and
 		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
@@ -841,7 +843,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
     omega := Omega(D*N);
     Ws := ALSubgroups(D*N);
     // !! TODO - Could reuse the data we already have
-    Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
+    Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1] :cached_orders := cached_orders) ge 3];
     non_hyp := {};
     for i->N2 in N2s do
 	r := omega - Valuation(nfixed[i], 2);
@@ -855,7 +857,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 	for W in Ws do
 	    is_non_hyp := false;
 	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
-	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
+	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1 :cached_orders := cached_orders) eq 2^(omega-r)];
 /*
 	    if (N2 eq 195) and ({6, 10, 26} subset W) then
 		print "N1s = ", N1s;
@@ -933,7 +935,7 @@ intrinsic UpdateByGenus(~curves :: SeqEnum)
     end for;
 end intrinsic;
 
-intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum)
+intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := AssociativeArray())
     {}
     DN_pairs := {<c`D, c`N> : c in curves | not assigned c`IsSubhyp};
     DN_pairs := [pair : pair in DN_pairs];
@@ -946,7 +948,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum)
 
     for lc->DN in DN_pairs do
     D, N := Explode(DN);
-    Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
+    Ws := TestComplicatedALFixedPointsOnQuotient(D, N :cached_orders := cached_orders);
     for W in Ws do
         if not IsDefined(lut, <D,N,W>) then
         continue;
@@ -957,7 +959,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum)
         end if;
     end for;
     if (lc mod 100 eq 0) then
-        print "lc = ", lc;
+        vprint ShimuraQuotients, 2: "lc = ", lc;
     end if;
     end for;
 end intrinsic;
@@ -1163,14 +1165,14 @@ procedure UpdateIsoStatus(~c1, ~c2)
     WNs := c2`W;
     D := c1`D;
 
-    if assigned(c1`is_hyp) and not assigned(c2`is_hyp) then
-        c2`is_hyp := c1`is_hyp;
-        printf "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
-    elif assigned(c2`is_hyp) and not assigned(c1`is_hyp) then
-        c1`is_hyp := c2`is_hyp;
-        printf"Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
-    elif assigned(c1`is_hyp) and assigned(c2`is_hyp) then
-        assert assigned(c1`is_hyp) eq assigned(c2`is_hyp);
+    if assigned(c1`IsHyp) and not assigned(c2`IsHyp) then
+        c2`IsHyp := c1`IsHyp;
+        vprintf ShimuraQuotients, 2: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
+    elif assigned(c2`IsHyp) and not assigned(c1`IsHyp) then
+        c1`IsHyp := c2`IsHyp;
+        vprintf ShimuraQuotients, 2: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
+    elif assigned(c1`IsHyp) and assigned(c2`IsHyp) then
+        assert assigned(c1`IsHyp) eq assigned(c2`IsHyp);
     end if;
 end procedure;
 
@@ -1191,8 +1193,10 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
         if IsEven(M) and GCD(2, M div 2) eq 1 then
             N := 2*M;
             WNs := Include(WMs, 4);
-            curve2 := lut[<D, N, WNs>];
-            UpdateIsoStatus(~curve1, ~curve2);
+            if <D,N,WNs> in Keys(lut) then 
+                curve2 := curves[lut[<D, N, WNs>]];
+                UpdateIsoStatus(~curve, ~curve2);
+            end if;
         end if;
 	
         function eps(Ni)
@@ -1203,19 +1207,21 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
             end if;
         end function;
 
-        if M mod 9 eq 0 and GCD(9, M div 9 eq 1) then
+        if M mod 9 eq 0 and GCD(9, M div 9) eq 1 then
             WNs := {};
             for Ni in WMs do
                 e:= eps(Ni);
                 if e ne 0 then
-                    Include(~WNs, al_mul(Ni, 9));
+                    Include(~WNs, al_mul(Ni, 9, N*D));
                 else
                     Include(~WNs, Ni);
                 end if;
             end for;
+            if <D,N,WNs> in Keys(lut) then 
+                curve2 := curves[lut[<D, N, WNs>]];
+                UpdateIsoStatus(~curve, ~curve2);
+            end if;
         end if;
-        curve2 := lut[<D, M, WNs>];
-        UpdateIsoStatus(~curve1, ~curve2);
     end for;
 
 end intrinsic;

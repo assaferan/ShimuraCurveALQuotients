@@ -4,7 +4,7 @@ declare attributes ShimuraQuot: D, N, W, g, CurveID, CoveredBy, Covers, IsP1, Is
 
 intrinsic Print(x::ShimuraQuot)
   {Print x}
-  printf "Shimura quotient of level %o, and discriminant %o by Atkin-Lehners", x`N, x`D, x`W;
+  printf "Shimura quotient of level %o, and discriminant %o by Atkin-Lehners %o", x`N, x`D, x`W;
 end intrinsic;
 
 intrinsic CreateShimuraQuot(D ::RngIntElt,N ::RngIntElt,W ::SetEnum) -> ShimuraQuot
