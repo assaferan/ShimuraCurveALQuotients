@@ -10,7 +10,8 @@ declare type ShimuraQuot;
 declare attributes ShimuraQuot: D, N, W, g, CurveID, CoveredBy, Covers, IsP1, IsEC, IsHyp, IsSubhyp;
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
-                          TraceFormulaGamma0HeckeALNew;
+       TraceFormulaGamma0HeckeALNew,
+       get_ds, n_prime, d_prime, dd_prime, Q_prime;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -657,19 +658,8 @@ function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
     return quots;
 end function;
 
-/*
-function sum_n_powers(a_p, p, n)
-    if n eq 0 then
-    return 2;
-    end if;
-    if n eq 1 then
-    return a_p;
-    end if;
-    return a_p*sum_n_powers(a_p, p, n-1) - p*sum_n_powers(a_p, p, n-2);
-end function;
-*/
-
 // Can work faster if we first compute all the traces (half the work)
+/*
 function sum_n_powers(mfs, p, n, BV)
     assert n ge 1;
     assert Level(mfs) mod p ne 0;
@@ -684,16 +674,7 @@ function sum_n_powers(mfs, p, n, BV)
     T_p_n_2 := Solution(BV, BV*T_p_n_2);
     return Trace(T_p_n - p*T_p_n_2);
 end function;
-
-// At the moment only works on the whole space S_2(N)
-function sum_n_powers_trace_formula(N, W, p, n)
-    t_p_n := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^n, w) : w in W];
-    if n eq 1 then
-    return t_p_n;
-    end if;
-    t_p_n_2 := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^(n-2), w) : w in W];
-    return t_p_n - p*t_p_n_2;
-end function;
+*/
 
 function TraceDNew(D,N,k,n,Q)
     t := 0;
@@ -720,6 +701,7 @@ function TraceDNewALFixed(D,N,k,n,W)
     return 1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
 end function;
 
+/*
 function sum_n_powers_trace_formula(D, N, W, p, n)
     t_p_n := TraceDNewALFixed(D,N,2,p^n,W);
     if n eq 1 then
@@ -728,28 +710,14 @@ function sum_n_powers_trace_formula(D, N, W, p, n)
     t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
     return t_p_n - p*t_p_n_2;
 end function;
+*/
 
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
 function CheckHeckeTrace(X)
-    // g := X[4];
     assert X`g ge 3;
-    // N := X[2];
-    // D := X[1];
-    // ws := [w : w in X[3] | w ne 1];
     ws := [w : w in X`W | w ne 1];
-    mfs := CuspidalSubspace(ModularSymbols(X`D*X`N,2,1));
-    primes := PrimeDivisors(X`D);
-    for p in primes do
-	mfs := NewSubspace(mfs, p);
-    end for;
-    als := [AtkinLehnerOperator(mfs,w) : w in ws];
-    V := VectorSpace(Rationals(), Dimension(mfs));
-    for al in als do
-	V := V meet Kernel(al-1);
-    end for;
-    BV := BasisMatrix(V);
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
         v_max := Floor(Log(p,4*X`g^2));
