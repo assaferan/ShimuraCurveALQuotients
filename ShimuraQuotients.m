@@ -837,13 +837,13 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
     cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
     // print "cond_2 = ", cond_2;
     cond_1 := [N2 : N2 in cond_2 | (N2 mod 4 ne 3) or
-                   ((N2 mod 8 eq 3) and IsEven(N)) or
-                   ((N2 mod 8 eq 7) and IsEven(D))];
+				   ((N2 mod 8 eq 3) and IsEven(N)) or
+				   ((N2 mod 8 eq 7) and IsEven(D))];
     // print "cond_1 = ", cond_1;
     num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
     good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
-          (num_fixed[i] mod 3 eq 0) and
-          (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
+		  (num_fixed[i] mod 3 eq 0) and
+		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
     N2s := [cond_1[i] : i in good_idxs];
     // print "N2s = ", N2s;
     nfixed := [num_fixed[i] : i in good_idxs];
@@ -853,62 +853,62 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
     Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
     non_hyp := {};
     for i->N2 in N2s do
-    r := omega - Valuation(nfixed[i], 2);
-    Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
+	r := omega - Valuation(nfixed[i], 2);
+	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
 /*
-    if (N2 eq 195) then
-        print "N2 = ", 195;
-        print "Ws = ", Ws;
-    end if;
+	if (N2 eq 195) then
+	    print "N2 = ", 195;
+	    print "Ws = ", Ws;
+	end if;
 */
-    for W in Ws do
-        is_non_hyp := false;
-        N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
-        N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
+	for W in Ws do
+	    is_non_hyp := false;
+	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
+	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
 /*
-        if (N2 eq 195) and ({6, 10, 26} subset W) then
-        print "N1s = ", N1s;
-        end if;
+	    if (N2 eq 195) and ({6, 10, 26} subset W) then
+		print "N1s = ", N1s;
+	    end if;
 */
-        for N1 in N1s do
-            a := AssociativeArray();
-            for w in W do
-		a[al_mul(N1, w,D*N)] := w;
-            end for;
-        /*
-        if (N2 eq 195) and ({6, 10, 26} subset W) then
-            print "N1 = ", N1;
-            for k in Keys(a) do
-            print "a[", k, "] = ", a[k];
-            end for;
-        end if;
+	    for N1 in N1s do
+		a := AssociativeArray();
+		for w in W do
+		    a[al_mul(N1, w,D*N)] := w;
+		end for;
+		/*
+		if (N2 eq 195) and ({6, 10, 26} subset W) then
+		    print "N1 = ", N1;
+		    for k in Keys(a) do
+			print "a[", k, "] = ", a[k];
+		    end for;
+		end if;
 */
-            for w in W do
-		N_prime := al_mul(N2, w, D*N);
-            //if (N2 eq 195) and ({6, 10, 26} subset W) then
-            // print "w = ", w;
-            // print "N2 * w = ", N_prime;
-            //end if;
-		if IsDefined(a, N_prime) then
-            /*
-            print "N_prime = ", N_prime;
-            print "N_double_prime = ", a[N_prime];
-            print "N_triple_prime = ", w;
-            print "h(-4N_1) = ", ClassNumber(-4*N1);
-            print "h(-4N_2) = ", ClassNumber(-4*N2);
-               */
-		    Include(~non_hyp, W);
-		    Ws := [WW : WW in Ws | WW ne W];
-		    is_non_hyp := true;
+		for w in W do
+		    N_prime := al_mul(N2, w, D*N);
+		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
+			// print "w = ", w;
+			// print "N2 * w = ", N_prime;
+		    //end if;
+		    if IsDefined(a, N_prime) then
+			/*
+			print "N_prime = ", N_prime;
+			print "N_double_prime = ", a[N_prime];
+			print "N_triple_prime = ", w;
+			print "h(-4N_1) = ", ClassNumber(-4*N1);
+			print "h(-4N_2) = ", ClassNumber(-4*N2);
+		       */
+			Include(~non_hyp, W);
+			Ws := [WW : WW in Ws | WW ne W]; 
+			is_non_hyp := true;
+			break;
+		    end if;
+		end for;
+		if is_non_hyp then
 		    break;
 		end if;
-            end for; // w
-            if is_non_hyp then
-		break;
-            end if;
-        end for; // N1
-    end for; // W
-    
+	    end for;
+	end for;
+    end for;
     return non_hyp;
 end function;
 
