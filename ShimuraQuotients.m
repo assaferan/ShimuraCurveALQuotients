@@ -3,23 +3,29 @@
 
 // Committed to Geometrically Hyperelliptic curves 
 
+declare verbose ShimuraQuotients, 3;
+
+declare type ShimuraQuot;
+
+declare attributes ShimuraQuot: D, N, W, g, curve_id, covered_by, covers, is_p1, is_ec, is_hyp, is_subhyp;
+
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
 
 // A record format to save information we care about for each of the curves
 
-CurveQuot := recformat< D : RngIntElt, 
-			N : RngIntElt,
-			W : SetEnum,
-			g : RngIntElt,
-			curve_id : RngIntElt, 
-			covered_by : SetEnum,			
-			covers : SetEnum,
-			is_p1 : BoolElt, 
-			is_ec : BoolElt, 
-			is_hyp : BoolElt,
-			is_subhyp : BoolElt>;
+// CurveQuot := recformat< D : RngIntElt, 
+// 			N : RngIntElt,
+// 			W : SetEnum,
+// 			g : RngIntElt,
+// 			curve_id : RngIntElt, 
+// 			covered_by : SetEnum,			
+// 			covers : SetEnum,
+// 			is_p1 : BoolElt, 
+// 			is_ec : BoolElt, 
+// 			is_hyp : BoolElt,
+// 			is_subhyp : BoolElt>;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -658,7 +664,8 @@ function ALSubgroups(N)
 end function;
 
 
-
+/*
+These functions are obsolete and does not run
 function coversCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
     relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
@@ -676,6 +683,7 @@ function coversCurvesInList(c, curve_list : index := 0)
     
     return false;
 end function;
+
 
 function coveredByCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
@@ -695,6 +703,7 @@ function coveredByCurvesInList(c, curve_list : index := 0)
     
     return false;
 end function;
+
 
 function GetGenera(pairs : cached_orders := cached_orders)
     // No longer needed
@@ -717,6 +726,7 @@ function GetGenera(pairs : cached_orders := cached_orders)
     end for;
     return genera;
 end function;
+*/
 
 procedure UpdateGenera(~curves : cached_orders := cached_orders)
     for i->c in curves do
