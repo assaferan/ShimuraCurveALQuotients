@@ -3,11 +3,9 @@
 
 // Committed to Geometrically Hyperelliptic curves
 
-declare verbose ShimuraQuotients, 3;
+Attach("alquots.m");
 
-declare type ShimuraQuot;
-
-declare attributes ShimuraQuot: D, N, W, g, CurveID, CoveredBy, Covers, IsP1, IsEC, IsHyp, IsSubhyp;
+// declare verbose ShimuraQuotients, 3;
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
@@ -231,12 +229,16 @@ function FindPairs(r : Coprime := true)
             if D ne 1 then
                 if lD*lNs[N] le UpperBound(p) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-                    Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                    //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                    S := CreateShimuraQuot(D, N, W);
+                    Append(~pairs, S);
                 end if;
             else
                 if (LowerBound(D, N, p) le UpperBound(p)) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-                    Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                    S := CreateShimuraQuot(D, N, W);
+                    //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
+                    Append(~pairs, S);
                 end if;
             end if;
         end for;
@@ -645,10 +647,11 @@ function GetQuotientsAndGenera(curves: cached_orders := cached_orders)
         for j->S in allowed_subs do
             als := S[1];
             g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
-            quot := rec<CurveQuot | D := c`D, N := c`N, W := als,
-                        g := g, CurveID := cur_sz + j,
-                        CoveredBy := {cur_sz + idx : idx in S[2]},
-                        Covers := {cur_sz + idx : idx in S[3]}>;
+            quot := CreateShimuraQuot(c`D, c`N, als);
+            quot`g := g;
+            quot`CurveID := cur_sz + j;
+            quot`CoveredBy := {cur_sz + idx : idx in S[2]};
+            quot`Covers := {cur_sz + idx : idx in S[3]};
             Append(~quots, quot);
         end for;
         if (i mod 100 eq 0) then
@@ -1133,23 +1136,24 @@ function IsHyperelliptic(qexps, prec)
 end function;
 
 procedure UpdateIsoStatus(~c1, ~c2)
+    M := c1`N;
+    WMs := c1`W;
+    N := c2`N;
+    WNs := c2`W;
+    D := c1`D;
 
     if assigned(c1`is_hyp) and not assigned(c2`is_hyp) then
         c2`is_hyp := c1`is_hyp;
-        print "found pair";
-        print N, WNs;
-        print M, WMs;
+        printf "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
     elif assigned(c2`is_hyp) and not assigned(c1`is_hyp) then
         c1`is_hyp := c2`is_hyp;
-        print "found pair";
-        print N, WNs;
-        print M, WMs;
+        printf"Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
     elif assigned(c1`is_hyp) and assigned(c2`is_hyp) then
         assert assigned(c1`is_hyp) eq assigned(c2`is_hyp);
     end if;
 end procedure;
 
-procedure UpdateByIsomorphisms(curves)
+procedure UpdateByIsomorphisms(~curves)
 
     lut := AssociativeArray();
     for i in [1..#curves] do
@@ -1166,7 +1170,7 @@ procedure UpdateByIsomorphisms(curves)
             N := 2*M;
             WNs := Include(WMs, 4);
             curve2 := lut[<D, N, WNs>];
-            UpdateIsoStatus(curve1, curve2);
+            UpdateIsoStatus(~curve1, ~curve2);
         end if;
 	
         function eps(Ni)
@@ -1189,22 +1193,9 @@ procedure UpdateByIsomorphisms(curves)
             end for;
         end if;
         curve2 := lut[<D, M, WNs>];
-        if assigned(curve`is_hyp) and not assigned(curve2`is_hyp) then
-            curve2`is_hyp := curve`is_hyp;
-            print "found pair";
-            print N, WNs;
-            print M, WMs;
-        elif assigned(curve2`is_hyp) and not assigned(curve`is_hyp) then
-            curve`is_hyp := curve2`is_hyp;
-            print "found pair";
-            print N, WNs;
-            print M, WMs;
-        elif assigned(curve`is_hyp) and assigned(curve2`is_hyp) then
-            assert assigned(curve`is_hyp) eq assigned(curve2`is_hyp);
-        else
-            continue;
-        end if;
+        UpdateIsoStatus(~curve1, ~curve2);
     end for;
+
 end procedure;
 // Although this is not a canonical model over Q,
 // it still yields a geometrical model over C,
@@ -1314,6 +1305,8 @@ procedure GetHyperellipticCandidates()
     FilterByComplicatedALFixedPointsOnQuotient(~curves);
 
     UpwardClosure(~curves);
+
+    UpdateByIsomorphisms(~curves);
 
     // Using trace of Hecke operators to count points and show more curves are
     // non-hyperelliptic
