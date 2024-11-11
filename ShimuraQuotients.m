@@ -1,22 +1,22 @@
 // File for determining the hyperelliptic quotients of Shimura curves
 // of the form X_0(D,N)
 
-// Committed to Geometrically Hyperelliptic curves 
+// Committed to Geometrically Hyperelliptic curves
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
                           TraceFormulaGamma0HeckeALNew;
 
 // A record format to save information we care about for each of the curves
 
-CurveQuot := recformat< D : RngIntElt, 
+CurveQuot := recformat< D : RngIntElt,
             N : RngIntElt,
             W : SetEnum,
             g : RngIntElt,
-            curve_id : RngIntElt, 
-            covered_by : SetEnum,           
+            curve_id : RngIntElt,
+            covered_by : SetEnum,
             covers : SetEnum,
-            is_p1 : BoolElt, 
-            is_ec : BoolElt, 
+            is_p1 : BoolElt,
+            is_ec : BoolElt,
             is_hyp : BoolElt,
             is_subhyp : BoolElt>;
 
@@ -34,7 +34,7 @@ CurveQuot := recformat< D : RngIntElt,
 // is_subhyp - if subhyperelliptic (i.e. any of the above)
 
 
-// Lower and upper bounds for number of points in reduction mod p, 
+// Lower and upper bounds for number of points in reduction mod p,
 // scaled by 12/p-1, see [HH]
 
 function Omega(n)
@@ -55,7 +55,7 @@ function LowerBoundN(N)
     ps := PrimeDivisors(N);
     if N eq 1 then
         c_N := 1;
-    else 
+    else
         c_N := N * &*[ 1 + 1/p : p in ps];
     end if;
     return c_N / 2^Omega(N);
@@ -87,7 +87,7 @@ function UpperBound(p : Geometric := true)
     if Geometric then
     gonality := gonality^2;
     end if;
-    */ 
+    */
     return 12*gonality*(1+p^2)/(p-1);
 end function;
 
@@ -164,7 +164,7 @@ function FindPairs(r : Coprime := true)
     C := 2^(r-1)*ub;
     D0 := FindMaximalD(r);
     // Ds := [D : D in [1..D0] | IsSquarefree(D) and IsEven(Omega(D))];
-    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];  
+    Ds := [D : D in [1..D0] | MoebiusMu(D) eq 1];
 
     // stores LowerBoundN on [1..C]
     lNs := [LowerBoundN(N) : N in [1..C]];
@@ -173,7 +173,7 @@ function FindPairs(r : Coprime := true)
         // print "D = ", D;
         // Nmax := Floor(N0 / EulerPhi(D));
         Nmax := Ceiling(C / EulerPhi(D));
-        Ns := [1..Nmax];    
+        Ns := [1..Nmax];
         if Coprime then
             Ns := [N : N in Ns | GCD(D,N) eq 1];
         end if;
@@ -188,12 +188,12 @@ function FindPairs(r : Coprime := true)
             while (N mod p eq 0) do
             p := NextPrime(p);
             end while;
-            if D ne 1 then 
+            if D ne 1 then
                 if lD*lNs[N] le UpperBound(p) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
                     Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
                 end if;
-            else 
+            else
                 if (LowerBound(D, N, p) le UpperBound(p)) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
                     Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
@@ -216,7 +216,7 @@ function NumberOfEllipticPoints(D, N, order)
     if order eq 4 then
     Q := 4;
     end if;
-    if order eq 3 then 
+    if order eq 3 then
     Q := 9;
     end if;
     if (N mod Q eq 0) then
@@ -224,7 +224,7 @@ function NumberOfEllipticPoints(D, N, order)
     end if;
     primesD := PrimeDivisors(D);
     primesN := PrimeDivisors(N);
-    e_D := &*[Integers() | 1 - KroneckerSymbol(-order, p) : p in primesD]; 
+    e_D := &*[Integers() | 1 - KroneckerSymbol(-order, p) : p in primesD];
     e_N := &*[Integers() | 1 + KroneckerSymbol(-order, p) : p in primesN];
     return e_D * e_N;
 end function;
@@ -242,7 +242,7 @@ function GenusShimuraCurve(D, N)
     assert IsIntegral(g);
     return Floor(g);
 end function;
-    
+
 function PsiOgg(p, n)
     if (n eq 1) then
     return 1;
@@ -264,9 +264,9 @@ function LegendreSymbol(R, p)
     return KroneckerCharacter(Discriminant(ZF))(p);
 end function;
 
-// Here R is the quadratic order and 
-// O is a fixed quaternion Eichler order of level F in 
-// the quaternion algebra B of discriminant D. 
+// Here R is the quadratic order and
+// O is a fixed quaternion Eichler order of level F in
+// the quaternion algebra B of discriminant D.
 // based on Theorem 2 in [Ogg]
 function NuOgg(p, R, D, F)
     if (D mod p eq 0) then
@@ -319,7 +319,7 @@ function SquarePart(m)
         if f[2] ge 2 then
             if IsEven(f[2]) then
                 prod *:=  Integers()!(f[1]^(Integers()!f[2]/2));
-            else 
+            else
                 prod *:=  Integers()!(f[1]^(Integers()!(f[2]-1)/2));
             end if;
         end if;
@@ -332,7 +332,7 @@ function ConstructOrders(m : cached_orders := AssociativeArray())
         return cached_orders[m];
     else
         if (m eq 2) then
-            orders := [MaximalOrder(QuadraticField(-1)), 
+            orders := [MaximalOrder(QuadraticField(-1)),
                    MaximalOrder(QuadraticField(-2))];
         elif (m mod 4 eq 3) then
             F<a> := QuadraticField(-m);
@@ -351,7 +351,7 @@ function ConstructOrders(m : cached_orders := AssociativeArray())
             orders := [sub<O | 1, sqrt_minus_m>];
         end if;
         class_nos :=[];
-        for R in orders do 
+        for R in orders do
             //compute info about orders and store it
             //let's start with just storing the class numbers
             h := PicardNumber(R);
@@ -365,10 +365,10 @@ end function;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-// The number of the fixed points of w_m on X_0(D,N) 
+// The number of the fixed points of w_m on X_0(D,N)
 function NumFixedPoints(D, N, m :cached_orders := AssociativeArray())
     // if (m eq 2) then
-    // orders := [MaximalOrder(QuadraticField(-1)), 
+    // orders := [MaximalOrder(QuadraticField(-1)),
     //     MaximalOrder(QuadraticField(-2))];
     // elif (m mod 4 eq 3) then
     // F := QuadraticField(-m);
@@ -390,8 +390,8 @@ function NumFixedPoints(D, N, m :cached_orders := AssociativeArray())
         // h := PicardNumber(R);
         h := class_nos[i];
         // Using formula (4) in [Ogg]
-        prod := &*[Integers() | 
-              NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0]; 
+        prod := &*[Integers() |
+              NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
         e +:= h*prod;
     end for;
     if (D eq 1) and (m eq 4) then
@@ -401,7 +401,7 @@ function NumFixedPoints(D, N, m :cached_orders := AssociativeArray())
     end if;
     return e;
 end function;
-    
+
 function GenusShimuraCurveQuotientSingleAL(D, N, m :cached_orders := cached_orders)
     e := NumFixedPoints(D, N, m :cached_orders := cached_orders);
     g_big := GenusShimuraCurve(D, N);
@@ -418,8 +418,8 @@ function GenusShimuraCurveQuotient(D, N, als :cached_orders := cached_orders)
         total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
     end if;
     end for;
-    if #als eq 1 then 
-    s := 0; 
+    if #als eq 1 then
+    s := 0;
     else
     is_prime_power, two, s := IsPrimePower(#als);
     assert is_prime_power and (two eq 2);
@@ -449,7 +449,7 @@ function al_mul(w, m, ND)
             wmvals[i] := mvals[i];
         elif mvals[i] eq 0 then
             wmvals[i] := wvals[i];
-        else 
+        else
             wmvals[i] := 0;
         end if;
     end for;
@@ -468,7 +468,7 @@ function ReduchedEchelonMatrixIterator(k, n : K := FiniteField(2))
     - ``k`` -- number of rows (or the size of the subspace)
 
     - ``n`` -- number of columns (or the dimension of the ambient space)*/
-    if n lt k then 
+    if n lt k then
         error "echelon matrix with fewer rows than columns i.e. not full rank are not implemented";
     end if;
     matrices := [];
@@ -512,7 +512,7 @@ function MaxSubgroups(m, sl);
     r := #Rows(m);
     if r eq 0 then
         return {Integers()|};
-    else 
+    else
         all_mats :=  &cat[[* x : x in r *] : r in sl];
         subgps := {};
         for n in sl[r] do //rank r-1 things
@@ -531,9 +531,9 @@ function MinOvergps(m, sl);
     all_mats :=  &cat[[* x : x in r *] : r in sl];
     if r eq #sl - 1 then
         return {Integers()|};
-    else 
+    else
         subgps := {};
-        for n in sl[r+2] do 
+        for n in sl[r+2] do
             if RowSpace(m) subset RowSpace(n) then
                 i := Index(all_mats, n);
                 Include(~subgps, i);
@@ -566,8 +566,8 @@ function ALSubgroups(N)
     ps := PrimeDivisors(N);
     Qs := [];
     subgp_lattice := [* *];
-    for r in [0..#ps] do 
-        ms := ReduchedEchelonMatrixIterator(r,#ps); 
+    for r in [0..#ps] do
+        ms := ReduchedEchelonMatrixIterator(r,#ps);
         Append(~subgp_lattice, ms);
     end for;
 
@@ -587,7 +587,7 @@ function ALSubgroups(N)
             else
                 grp := {Integers()|exp_to_Q(e,N,ps) : e in Rows(m)};
             end if;
-            // print grp; 
+            // print grp;
             // Include(~Qs, grp);
             grp := AllALsFromGens(grp, N);
             // print "generates", grp;
@@ -602,7 +602,7 @@ end function;
 
 function coversCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
-    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
+    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N)
                      and (als subset c2[3])];
     for r in relevant do
     als_r := r[3];
@@ -614,13 +614,13 @@ function coversCurvesInList(c, curve_list : index := 0)
         return true;
     end if;
     end for;
-    
+
     return false;
 end function;
 
 function coveredByCurvesInList(c, curve_list : index := 0)
     D, N, als, g := Explode(c);
-    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N) 
+    relevant := [c2 : c2 in curve_list | (c2[1] eq D) and (c2[2] eq N)
                      and (c2[3] subset als)];
     for r in relevant do
     als_r := r[3];
@@ -633,7 +633,7 @@ function coveredByCurvesInList(c, curve_list : index := 0)
         return true;
     end if;
     end for;
-    
+
     return false;
 end function;
 
@@ -652,7 +652,7 @@ function GetGenera(pairs : cached_orders := cached_orders)
     al_subs_allowed := [S[1] : S in al_subs | #S[1] ge 2^min_num];
     for als in al_subs_allowed do
         g := GenusShimuraCurveQuotient(D, N, als : cached_orders := cached_orders);
-        Append(~genera, <D, N, als, g>); 
+        Append(~genera, <D, N, als, g>);
     end for;
     print "i = ", i;
     end for;
@@ -695,10 +695,10 @@ end function;
 
 /*
 function sum_n_powers(a_p, p, n)
-    if n eq 0 then 
+    if n eq 0 then
     return 2;
     end if;
-    if n eq 1 then 
+    if n eq 1 then
     return a_p;
     end if;
     return a_p*sum_n_powers(a_p, p, n-1) - p*sum_n_powers(a_p, p, n-2);
@@ -712,7 +712,7 @@ function sum_n_powers(mfs, p, n, BV)
     T_p_n := HeckeOperator(mfs, p^n);
     T_p_n := ChangeRing(T_p_n, Rationals());
     T_p_n := Solution(BV, BV*T_p_n);
-    if n eq 1 then 
+    if n eq 1 then
     return Trace(T_p_n);
     end if;
     T_p_n_2 := HeckeOperator(mfs, p^(n-2));
@@ -728,7 +728,7 @@ function sum_n_powers_trace_formula(N, W, p, n)
     return t_p_n;
     end if;
     t_p_n_2 := 1/#W*&+[TraceFormulaGamma0HeckeAL(N, 2, p^(n-2), w) : w in W];
-    return t_p_n - p*t_p_n_2; 
+    return t_p_n - p*t_p_n_2;
 end function;
 
 function TraceDNew(D,N,k,n,Q)
@@ -750,12 +750,12 @@ function sum_n_powers_trace_formula(D, N, W, p, n)
     return t_p_n;
     end if;
     t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
-    return t_p_n - p*t_p_n_2; 
+    return t_p_n - p*t_p_n_2;
 end function;
 
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
-                
+
 function CheckHeckeTrace(X)
     // g := X[4];
     assert X`g ge 3;
@@ -951,7 +951,7 @@ function TestComplicatedALFixedPointsOnQuotient(D,N)
             print "h(-4N_2) = ", ClassNumber(-4*N2);
                */
             Include(~non_hyp, W);
-            Ws := [WW : WW in Ws | WW ne W]; 
+            Ws := [WW : WW in Ws | WW ne W];
             is_non_hyp := true;
             break;
             end if;
@@ -987,7 +987,7 @@ procedure UpdateByGenus(~curves)
     end if;
     if (curves[i]`g le 2) then
         curves[i]`is_subhyp := true;
-    end if; 
+    end if;
     end for;
     return;
 end procedure;
@@ -995,13 +995,13 @@ end procedure;
 procedure FilterByComplicatedALFixedPointsOnQuotient(~curves)
     DN_pairs := {<c`D, c`N> : c in curves | not assigned c`is_subhyp};
     DN_pairs := [pair : pair in DN_pairs];
-    
+
     lut := AssociativeArray();
     for i in [1..#curves] do
     c := curves[i];
     lut[<c`D, c`N, c`W>] := i;
     end for;
-    
+
     for lc->DN in DN_pairs do
     D, N := Explode(DN);
     Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
@@ -1118,12 +1118,12 @@ procedure UpdateIsoStatus(~c1, ~c2)
         c2`is_hyp := c1`is_hyp;
         print "found pair";
         print N, WNs;
-        print M, WMs; 
+        print M, WMs;
     elif assigned(c2`is_hyp) and not assigned(c1`is_hyp) then
         c1`is_hyp := c2`is_hyp;
         print "found pair";
         print N, WNs;
-        print M, WMs; 
+        print M, WMs;
     elif assigned(c1`is_hyp) and assigned(c2`is_hyp) then
         assert assigned(c1`is_hyp) eq assigned(c2`is_hyp);
     end if;
@@ -1175,12 +1175,12 @@ procedure UpdateByIsomorphisms(curves)
                     curve2`is_hyp := curve`is_hyp;
                     print "found pair";
                     print N, WNs;
-                    print M, WMs; 
+                    print M, WMs;
                 elif assigned(curve2`is_hyp) and not assigned(curve`is_hyp) then
                     curve`is_hyp := curve2`is_hyp;
                     print "found pair";
                     print N, WNs;
-                    print M, WMs; 
+                    print M, WMs;
                 elif assigned(curve`is_hyp) and assigned(curve2`is_hyp) then
                     assert assigned(curve`is_hyp) eq assigned(curve2`is_hyp);
                 else
@@ -1202,24 +1202,24 @@ procedure GetHyperellipticCandidates()
 
     // I added some code that just
     // focuses on the star quotients X_0^*(D,N)
-    
+
     assert #star_curves eq 2342;
 
     cached_orders := AssociativeArray();
 
 
     time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 36.410
-    
+
     VerifyHHTable1(star_curves);
 
 
     UpdateByGenus(~star_curves);
 
     FilterByTrace(~star_curves); // time :
-    
+
     // Create a list of all Atkin-Lehner quotients
     // compute their genera, and store the covering structure.
-    
+
     // For some reason this now takes an insane amount of time
     // Check if the subgroup lattice is inefficient
     time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); //356.440
@@ -1239,7 +1239,7 @@ procedure GetHyperellipticCandidates()
 
     // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
     Genus3CoversGenus2(~curves);
-    
+
     DownwardClosure(~curves);
 
     // Using Proposition 6 from [FH] adapted to the Shimura curve situation
@@ -1252,12 +1252,12 @@ procedure GetHyperellipticCandidates()
     FilterByTrace(~curves);
 
     UpwardClosure(~curves);
-    
+
 end procedure;
 
 // [FH] Furumoto, Hasegawa, "Hyperelliptic Quotients of Modular Curves X_0(N)"
 //
-// [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N) 
+// [HH] Hasegawa, Hashimoto, "Hyperelliptic modular curves X_0^*(N)
 // with square-free levels"
 //
 // [Ogg] Real points on Shimura Curves
