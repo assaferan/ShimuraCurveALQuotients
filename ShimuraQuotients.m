@@ -239,7 +239,7 @@ intrinsic FindPairs(r :: RngIntElt: Coprime := true) -> SeqEnum
             if D ne 1 then
                 if lD*lNs[N] le UpperBound(p) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-                    print W;
+                    vprint ShimuraQuotients, 3: W;
                     //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
                     S := CreateShimuraQuot(D, N, W);
                     Append(~pairs, S);
@@ -247,7 +247,7 @@ intrinsic FindPairs(r :: RngIntElt: Coprime := true) -> SeqEnum
             else
                 if (LowerBound(D, N, p) le UpperBound(p)) then
                     W := {d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
-                    print W;
+                    vprint ShimuraQuotients, 3: W;
                     S := CreateShimuraQuot(D, N, W);
                     //Append(~pairs, rec<CurveQuot | D := D, N := N, W := W >);
                     Append(~pairs, S);
