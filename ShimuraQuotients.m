@@ -596,7 +596,8 @@ function MinOvergps(m, sl);
     end if;
 end function;
 
-function AllALsFromGens(Ws, ND)
+intrinsic AllALsFromGens(Ws::SetEnum, ND::RngIntElt) ->SetEnum
+    {Get all ALs from a generating set}
     allws := {Integers()|};
     S := Subsets(Ws);
     for s in S do
@@ -611,7 +612,7 @@ function AllALsFromGens(Ws, ND)
         end if;
     end for;
     return allws;
-end function;
+end intrinsic;
 
 intrinsic ALSubgroups(N::RngIntElt) -> SetEnum
     {All Atkin Lehner subgroups}
@@ -1167,14 +1168,18 @@ procedure UpdateIsoStatus(~c1, ~c2)
 
     if assigned(c1`IsHyp) and not assigned(c2`IsHyp) then
         c2`IsHyp := c1`IsHyp;
-        vprintf ShimuraQuotients, 2: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
+        vprintf ShimuraQuotients, 2: "Found new isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
     elif assigned(c2`IsHyp) and not assigned(c1`IsHyp) then
         c1`IsHyp := c2`IsHyp;
-        vprintf ShimuraQuotients, 2: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o", N, WNs, M, WMs, D;
+        vprintf ShimuraQuotients, 2: "Found new isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
     elif assigned(c1`IsHyp) and assigned(c2`IsHyp) then
         assert assigned(c1`IsHyp) eq assigned(c2`IsHyp);
+        vprintf ShimuraQuotients, 3: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
+    elif not assigned(c1`IsHyp) and not assigned(c2`IsHyp) then
+        vprintf ShimuraQuotients, 3: "Found (currently useless) isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
     end if;
 end procedure;
+
 
 intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
     {}
@@ -1189,10 +1194,20 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
         curve := curves[i];
         M := curve`N;
         WMs := curve`W;
+        badcurve := false; //check all ALs belong to the right level
+        for w in WMs do
+            if w mod 2 eq 0 then
+                badcurve := true;
+            end if;
+        end for;
+        if badcurve then
+            continue;
+        end if;
         D := curve`D;
         if IsEven(M) and GCD(2, M div 2) eq 1 then
             N := 2*M;
             WNs := Include(WMs, 4);
+            WNs := AllALsFromGens(WNs, N*D);
             if <D,N,WNs> in Keys(lut) then 
                 curve2 := curves[lut[<D, N, WNs>]];
                 UpdateIsoStatus(~curve, ~curve2);
@@ -1213,8 +1228,10 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
                 e:= eps(Ni);
                 if e ne 0 then
                     Include(~WNs, al_mul(Ni, 9, N*D));
+                    WNs := AllALsFromGens(WNs, N*D);
                 else
                     Include(~WNs, Ni);
+                    WNs := AllALsFromGens(WNs, N*D);
                 end if;
             end for;
             if <D,N,WNs> in Keys(lut) then 

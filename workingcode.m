@@ -1,3 +1,5 @@
+AttachSpec("shimuraquots.spec");
+
 procedure GetHyperellipticCandidates(:trace:=false)
     SetVerbose("ShimuraQuotients", 3);
 
@@ -70,7 +72,7 @@ procedure GetHyperellipticCandidates(:trace:=false)
     DownwardClosure(~curves);
 
     // Using Proposition 6 from [FH] adapted to the Shimura curve situation
-    time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
+    time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders); //long time
 
     UpwardClosure(~curves);
 
