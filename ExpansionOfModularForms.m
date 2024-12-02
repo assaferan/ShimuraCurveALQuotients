@@ -19,6 +19,8 @@ function V(k, Lbasis, t, Bound, Wprec, eps)
     nm := map<M2F -> F | x :-> x[1,1]^2+x[2,2]^2 + x[1,2]^2 + x[2,1]^2 >;
     abs4X2 := map<M2F -> F | x :-> (x[1,1]+x[2,2])^2 + (x[1,2] - x[2,1])^2 >;
     Lgram := Matrix([[nm(x+y)-nm(x)-nm(y) : y in Lbasis] : x in Lbasis]);
+    // Next line is to make sure Lgram is symmetric despite precision issues
+    Lgram := 1/2*(Lgram + Transpose(Lgram));
     // Lgram := ChangeRing(Lgram, Rationals());
     L := LatticeWithGram(Lgram);
     nmBd := Bound; // if 4*|X|^2 = (a+d)^2 + (b-c)^2 < Bound, then
@@ -62,6 +64,10 @@ function FindRdbases(D,N)
 	    Rdbases[d] := [(1/GCD(d, hnf[i,i]))*basis[i] : i in [1..4]];
 	    // we actually want to embd them into M2(R)
 	    Rdbases[d] := [iota(emb_B_BF(b)) : b in Rdbases[d]];
+        F := BaseRing(Universe(Rdbases[d]));
+        pl := RealPlaces(F)[1];
+        M2R := MatrixAlgebra(RR,2);
+        Rdbases[d] := [M2R | [Evaluate(x, pl) : x in Eltseq(m)] : m in Rdbases[d]];
     end for;
     return Rdbases;
 end function;
