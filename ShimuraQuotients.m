@@ -1093,17 +1093,17 @@ function GetModularByGenus(curves)
     return by_genus;
 end function;
 
-intrinsic VerifyHHTable2(curves::SeqEnum) -> BoolElt
+intrinsic VerifyHHTable2(starcurves::SeqEnum)
     {}
     Table2 := GetHHTable2();
-    by_genus := GetModularByGenus(curves);
+    by_genus := GetModularByGenus(starcurves);
     assert Table2 eq by_genus;
 end intrinsic;
 
-intrinsic VerifyHHProposition1(curves::SeqEnum) -> BoolElt
+intrinsic VerifyHHProposition1(starcurves::SeqEnum)
     {}
     Table2 := GetHHTable2();
-    by_genus := GetModularByGenus(curves);
+    by_genus := GetModularByGenus(starcurves);
     Table2[3] := [N : N in Table2[3] | N ne 194];
     Table2[4] := [N : N in Table2[4] | N ne 546];
     assert Table2 eq by_genus;
