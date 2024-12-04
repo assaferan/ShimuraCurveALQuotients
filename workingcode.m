@@ -41,7 +41,7 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
         if false then //check data
             read_curves := eval Read("star_curves_point_count.dat");
             assert #read_curves eq #star_curves;
-            assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :vj in [1..#star_curves]];
+            assert &and[IsEqualCurve(read_curves[j], star_curves[j]) : j in [1..#star_curves]];
             HHProposition1(~star_curves);
             VerifyHHProposition1(star_curves);
         end if;
