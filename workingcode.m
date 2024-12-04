@@ -1,6 +1,7 @@
 AttachSpec("shimuraquots.spec");
 
 procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
+    SetDebugOnError(true);
     SetVerbose("ShimuraQuotients", 3);
 
     // Find the largest prime we need to consider for the
