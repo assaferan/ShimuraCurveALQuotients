@@ -723,7 +723,16 @@ function TraceDNew(D,N,k,n,Q)
 end function;
 
 function TraceDNewALFixed(D,N,k,n,W)
-    return 1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
+    sum := 0;
+    for w in W do
+        sgn := (-1)^#PrimeDivisors(GCD(w,D));
+        sum +:= sgn*TraceDNew(D, N, k, n, w);
+    end for;
+    sum *:= 1/#W;
+
+    //1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
+    
+    return sum;
 end function;
 
 /*
@@ -740,7 +749,8 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-function CheckHeckeTrace(X)
+intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
+    {}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
@@ -753,6 +763,7 @@ function CheckHeckeTrace(X)
         end for;
         if (v_max gt 1) then
             tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
+            assert tps[0] eq X`g;
         end if;
         for v in [1..v_max] do
             trace_frob_n := tps[v] - p*tps[v-2];
@@ -764,7 +775,7 @@ function CheckHeckeTrace(X)
         end for;
     end for;
     return true;
-end function;
+end intrinsic;
 
 intrinsic FilterByTrace(~curve_list::SeqEnum)
     {}

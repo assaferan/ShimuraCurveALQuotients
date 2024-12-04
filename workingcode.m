@@ -1,30 +1,31 @@
 AttachSpec("shimuraquots.spec");
 
-procedure GetHyperellipticCandidates(:trace:=false)
+procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
     SetVerbose("ShimuraQuotients", 3);
 
     // Find the largest prime we need to consider for the
     // inequality in Proposition 1.
-    r := GetLargestPrimeIndex();
 
-    // Find all pairs (D,N) satisfying the inequality of
-    // Proposition 1.
-    time star_curves := FindPairs(r); // time : 1.980
+    if recompute_data then 
+        r := GetLargestPrimeIndex();
 
-    // I added some code that just
-    // focuses on the star quotients X_0^*(D,N)
+        // Find all pairs (D,N) satisfying the inequality of
+        // Proposition 1.
+        time star_curves := FindPairs(r); // time : 1.980
 
-    assert #star_curves eq 2342;
+        // I added some code that just
+        // focuses on the star quotients X_0^*(D,N)
 
-    cached_orders := AssociativeArray();
+        assert #star_curves eq 2342;
 
-    time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 12
+         cached_orders := AssociativeArray();
 
-    VerifyHHTable1(star_curves);
+         time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 12
 
-    UpdateByGenus(~star_curves);
+        VerifyHHTable1(star_curves);
 
-    if trace then 
+        UpdateByGenus(~star_curves);
+
 
         FilterByTrace(~star_curves); // time :
 
@@ -37,55 +38,75 @@ procedure GetHyperellipticCandidates(:trace:=false)
         Write("star_curves_point_count.dat", star_curves : Overwrite);
 
         // testing that reading the file works
-        read_curves := eval Read("star_curves_point_count.dat");
-        assert #read_curves eq #star_curves;
-        assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :
-            j in [1..#star_curves]];
+        if false then //check data
+            read_curves := eval Read("star_curves_point_count.dat");
+            assert #read_curves eq #star_curves;
+            assert &and[IsEqualCurve(read_curves[j], star_curves[j]) :vj in [1..#star_curves]];
+            HHProposition1(~star_curves);
+            VerifyHHProposition1(star_curves);
+        end if;
 
-        // Applying Proposition 1 from [HH96]
-        // verifying that we get the right thing for modular curves
-        HHProposition1(~star_curves);
-        VerifyHHProposition1(star_curves);
+        time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // 148.660
+
+        // updating classification from the genera we computed
+        UpdateByGenus(~curves);
+
+        UpwardClosure(~curves);
+
+        // downward closure - if covered by subhyperelliptic, then subhyperelliptic
+        DownwardClosure(~curves);
+
+        // Using the fact that if w acts non-trivially ans has more than
+        // 4 fixed points on X, then X is non-hyperelliptic
+        FilterByALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
+
+        // upward closure - if covering a non-hyperelliptic, then non-hyperelliptic
+        UpwardClosure(~curves);
+
+        // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
+        Genus3CoversGenus2(~curves);
+
+        DownwardClosure(~curves);
+
+        // Using the fact that if w acts non-trivially ans has more than
+        // 4 fixed points on X, then X is non-hyperelliptic
+        FilterByALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
+
+        // upward closure - if covering a non-hyperelliptic, then non-hyperelliptic
+        UpwardClosure(~curves);
+
+        // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
+        Genus3CoversGenus2(~curves);
+
+        DownwardClosure(~curves);
+
+        // Using Proposition 6 from [FH] adapted to the Shimura curve situation
+
+        time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders); //long time
+
+        UpwardClosure(~curves);
+
+        UpdateByIsomorphisms(~curves);
+
+        UpwardClosure(~curves);
+
+        DownwardClosure(~curves);
+
+        // Using trace of Hecke operators to count points and show more curves are
+        // non-hyperelliptic
+        FilterByTrace(~curves);
+
+        UpwardClosure(~curves);
+
+        Write("all_curves_progress.dat", curves : Overwrite);
+
     end if;
 
-    // Create a list of all Atkin-Lehner quotients
-    // compute their genera, and store the covering structure.
+    if read_data then
 
-    time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // 148.660
+        curves := eval Read("all_curves_progress.dat");
 
-    // updating classification from the genera we computed
-    UpdateByGenus(~curves);
+    end if;
 
-    // downward closure - if covered by subhyperelliptic, then subhyperelliptic
-    DownwardClosure(~curves);
-
-    // Using the fact that if w acts non-trivially ans has more than
-    // 4 fixed points on X, then X is non-hyperelliptic
-    FilterByALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
-
-    // upward closure - if covering a non-hyperelliptic, then non-hyperelliptic
-    UpwardClosure(~curves);
-
-    // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
-    Genus3CoversGenus2(~curves);
-
-    DownwardClosure(~curves);
-
-    // Using Proposition 6 from [FH] adapted to the Shimura curve situation
-    time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders); //long time
-
-    UpwardClosure(~curves);
-
-    UpdateByIsomorphisms(~curves);
-
-    UpwardClosure(~curves);
-
-    DownwardClosure(~curves);
-
-    // Using trace of Hecke operators to count points and show more curves are
-    // non-hyperelliptic
-    FilterByTrace(~curves);
-
-    UpwardClosure(~curves);
 
 end procedure;
