@@ -37,8 +37,10 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
 
         // writing to a file, in case we would like to load it directly
 
+        Write("star_curves_point_count.dat", "" : Overwrite);
+
         for curve in star_curves do
-            Write("star_curves_point_count.dat", Sprint(curve, "Magma") : Overwrite);
+            Write("star_curves_point_count.dat", Sprint(curve, "Magma"));
         end for;
 
         // testing that reading the file works
@@ -90,8 +92,11 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
 
         DownwardClosure(~curves);
 
+
+        Write("all_curves_progress.dat", "" : Overwrite);
+
         for curve in curves do
-            Write("all_curves_progress.dat", Sprint(curve, "Magma") : Overwrite);
+            Write("all_curves_progress.dat", Sprint(curve, "Magma"));
         end for;
 
     end if;
