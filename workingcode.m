@@ -36,7 +36,10 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
         // compute their genera, and store the covering structure.
 
         // writing to a file, in case we would like to load it directly
-        Write("star_curves_point_count.dat", star_curves : Overwrite);
+
+        for curve in star_curves do
+            Write("star_curves_point_count.dat", Sprint(curve, "Magma") : Overwrite);
+        end for;
 
         // testing that reading the file works
         if false then //check data
@@ -69,21 +72,15 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
 
         DownwardClosure(~curves);
 
-        // Using the fact that if w acts non-trivially ans has more than
-        // 4 fixed points on X, then X is non-hyperelliptic
-        FilterByALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
-
-        // upward closure - if covering a non-hyperelliptic, then non-hyperelliptic
-        UpwardClosure(~curves);
-
-        // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
-        Genus3CoversGenus2(~curves);
-
-        DownwardClosure(~curves);
-
         // Using Proposition 6 from [FH] adapted to the Shimura curve situation
 
         time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders); //long time
+
+        UpwardClosure(~curves);
+
+        // Using trace of Hecke operators to count points and show more curves are
+        // non-hyperelliptic
+        FilterByTrace(~curves);
 
         UpwardClosure(~curves);
 
@@ -93,13 +90,9 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
 
         DownwardClosure(~curves);
 
-        // Using trace of Hecke operators to count points and show more curves are
-        // non-hyperelliptic
-        FilterByTrace(~curves);
-
-        UpwardClosure(~curves);
-
-        Write("all_curves_progress.dat", curves : Overwrite);
+        for curve in curves do
+            Write("all_curves_progress.dat", Sprint(curve, "Magma") : Overwrite);
+        end for;
 
     end if;
 
