@@ -102,9 +102,9 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
     end if;
 
     if read_data then
-
-        curves := eval Read("all_curves_progress.dat");
-
+        f :=  Read("all_curves_progress.dat");
+        lines := Split(f, ";");
+        curves := [ eval c : c in lines];
     end if;
 
 

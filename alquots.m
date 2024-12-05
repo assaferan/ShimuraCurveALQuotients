@@ -9,7 +9,7 @@ intrinsic Print(x::ShimuraQuot, L::MonStgElt)
     elif L eq "Magma" then
         keys := ["D", "N", "W", "g", "CurveID", "CoveredBy", "Covers", "IsP1", "IsEC", "IsHyp", "IsSubhyp"];
         data := [* <k, x``k> : k in keys | assigned x``k *];
-        printf "CreateShimuraQuot(%m);\n", data;
+        printf "CreateShimuraQuot(%m);", data;
     end if;
 
 end intrinsic;
