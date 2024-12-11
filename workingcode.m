@@ -1,6 +1,7 @@
-AttachSpec("shimuraquots.spec");
+// AttachSpec("shimuraquots.spec");
 
-procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
+intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -> SeqEnum
+{.}
     SetDebugOnError(true);
     SetVerbose("ShimuraQuotients", 3);
 
@@ -107,5 +108,5 @@ procedure GetHyperellipticCandidates(:recompute_data:=false, read_data :=true)
         curves := [ eval c : c in lines];
     end if;
 
-
-end procedure;
+    return curves;
+end intrinsic;
