@@ -1289,6 +1289,57 @@ procedure Filter_qExpansion(~curves)
     end for;
 end procedure;
 
+
+intrinsic CheckProgress(curves :: SeqEnum) -> FldRatElt, RingIntElt
+    {}
+    total := #curves;
+    done := Rationals()!0;
+    for c in curves do
+        if assigned c`IsSubhyp then
+            done +:= 1;
+        end if;
+    end for;
+    return done/total, total - done;
+end intrinsic;
+
+intrinsic IsStarCurve(X ::ShimuraQuot) -> BoolElt
+    {}
+    if #X`Covers eq 0 then return true;
+    else return false;
+    end if;
+
+end intrinsic;
+
+
+intrinsic NumWeierstrassPoints(X :: ShimuraQuot, curves::SeqEnum) -> RngIntElt
+    {}
+    g := X`g;
+    WPs := 0;
+    for id in X`Covers do
+        C := curves[id];
+        gq := C`g;
+        if gq eq Floor(g/2) then
+            continue;
+        else
+            ws := C`W diff X`W;
+            WPs +:= &+[NumFixedPoints(X`N, X`D, w) : w in ws]; 
+        end if;
+    end for;
+    return WPs;
+end intrinsic;
+
+intrinsic FilterbyWSPoints(~curves::SeqEnum)
+    {}
+    for i->c in curves do
+        if assigned curves[i]`IsSubhyp then continue; end if;
+        ws := NumWeierstrassPoints(c, curves);
+        g := c`g;
+        if ws gt 2*g + 2 then
+            curves[i]`IsSubhyp := false;
+        end if;
+    end for;
+end intrinsic;
+
 //procedure code_we_ran()
 
 // [FH] Furumoto, Hasegawa, "Hyperelliptic Quotients of Modular Curves X_0(N)"
