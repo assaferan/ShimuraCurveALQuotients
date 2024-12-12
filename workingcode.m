@@ -93,6 +93,14 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
+        FilterByWSPoints(~curves);
+        
+        UpdateByIsomorphisms(~curves);
+
+        UpwardClosure(~curves);
+
+        DownwardClosure(~curves);
+
 
         Write("all_curves_progress.dat", "" : Overwrite);
 

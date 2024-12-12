@@ -827,6 +827,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := As
         // Include(~passed_test, c);
     if not TestALFixedPointsOnQuotient(c : cached_orders := cached_orders) then
         curves[lc]`IsSubhyp := false;
+        curves[lc]`IsHyp := false;
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
@@ -937,6 +938,8 @@ intrinsic UpdateByGenus(~curves :: SeqEnum)
     if (curves[i]`g eq 1) then
         curves[i]`IsEC := true;
         curves[i]`IsHyp := false;
+    else
+        curves[i]`IsEC := false;
     end if;
     if (curves[i]`g eq 2) then
         curves[i]`IsHyp := true;
@@ -982,6 +985,12 @@ intrinsic DownwardClosure(~curves::SeqEnum)
     if (assigned c`IsSubhyp) and c`IsSubhyp then
         for covered in c`Covers do
         curves[covered]`IsSubhyp := true;
+        if curves[covered]`g eq 0 then
+            curves[covered]`IsP1 := true;
+        elif curves[covered]`g eq 1 then
+            curves[covered]`IsEC := true;
+        else curves[covered]`IsHyp := true;
+        end if;
         end for;
     end if;
     end for;
@@ -993,6 +1002,7 @@ intrinsic UpwardClosure(~curves::SeqEnum)
     if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
         for cover in c`CoveredBy do
         curves[cover]`IsSubhyp := false;
+        curves[cover]`IsHyp := false;
         end for;
     end if;
     end for;
@@ -1177,16 +1187,22 @@ procedure UpdateIsoStatus(~c1, ~c2)
     WNs := c2`W;
     D := c1`D;
 
-    if assigned(c1`IsHyp) and not assigned(c2`IsHyp) then
-        c2`IsHyp := c1`IsHyp;
+    if assigned(c1`IsSubhyp) and not assigned(c2`IsSubhyp) then
+        c2`IsSubhyp := c1`IsSubhyp;
+        if assigned c1`IsHyp then
+            c2`IsHyp := c1`IsHyp;
+        end if;
         vprintf ShimuraQuotients, 2: "Found new isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
-    elif assigned(c2`IsHyp) and not assigned(c1`IsHyp) then
-        c1`IsHyp := c2`IsHyp;
+    elif assigned(c2`IsSubhyp) and not assigned(c1`IsSubhyp) then
+        c1`IsSubhyp := c2`IsSubhyp;
+        if assigned c2`IsHyp then
+            c1`IsHyp := c2`IsHyp;
+        end if;
         vprintf ShimuraQuotients, 2: "Found new isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
-    elif assigned(c1`IsHyp) and assigned(c2`IsHyp) then
-        assert assigned(c1`IsHyp) eq assigned(c2`IsHyp);
+    elif assigned(c1`IsSubhyp) and assigned(c2`IsSubhyp) then
+        assert assigned(c1`IsSubhyp) eq assigned(c2`IsSubhyp);
         vprintf ShimuraQuotients, 3: "Found isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
-    elif not assigned(c1`IsHyp) and not assigned(c2`IsHyp) then
+    elif not assigned(c1`IsSubhyp) and not assigned(c2`IsSubhyp) then
         vprintf ShimuraQuotients, 3: "Found (currently useless) isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
     end if;
 end procedure;
@@ -1328,7 +1344,7 @@ intrinsic NumWeierstrassPoints(X :: ShimuraQuot, curves::SeqEnum) -> RngIntElt
     return WPs;
 end intrinsic;
 
-intrinsic FilterbyWSPoints(~curves::SeqEnum)
+intrinsic FilterByWSPoints(~curves::SeqEnum)
     {}
     for i->c in curves do
         if assigned curves[i]`IsSubhyp then continue; end if;
@@ -1336,6 +1352,24 @@ intrinsic FilterbyWSPoints(~curves::SeqEnum)
         g := c`g;
         if ws gt 2*g + 2 then
             curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
+        end if;
+    end for;
+end intrinsic;
+
+//this shouldn't be necessary now that I fixed the code, but sometimes we were accidentally updating subhyp without hyp
+intrinsic updatehypfromsubhyp(~curves::SeqEnum)
+    {}
+    for i->c in curves do
+        if assigned curves[i]`IsSubhyp and not assigned curves[i]`IsHyp then
+            g := curves[i]`g;
+            if g eq 1 then
+                curves[i]`IsEC := curves[i]`IsSubhyp;
+            elif g eq 0 then
+                curves[i]`IsP1 := curves[i]`IsSubhyp;
+            else
+                curves[i]`IsHyp := curves[i]`IsSubhyp;
+            end if;
         end if;
     end for;
 end intrinsic;
