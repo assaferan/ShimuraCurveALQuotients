@@ -722,7 +722,8 @@ function TraceDNew(D,N,k,n,Q)
     return t;
 end function;
 
-function TraceDNewALFixed(D,N,k,n,W)
+intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum) -> RngIntElt
+    {}
     sum := 0;
     for w in W do
         sgn := (-1)^#PrimeDivisors(GCD(w,D));
@@ -733,7 +734,7 @@ function TraceDNewALFixed(D,N,k,n,W)
     //1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
     
     return sum;
-end function;
+end intrinsic;
 
 /*
 function sum_n_powers_trace_formula(D, N, W, p, n)
@@ -792,9 +793,10 @@ intrinsic FilterByTrace(~curve_list::SeqEnum)
     end for;
 end intrinsic;
 
-function CountFixedPointsOnQuotient(w, c : cached_orders := AssociativeArray())
+intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot : cached_orders := AssociativeArray()) -> RngIntElt
+    {}
     return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D) : cached_orders := cached_orders) : m in c`W];
-end function;
+end intrinsic;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
 // (so it is either elliptic or hyperelliptic)
