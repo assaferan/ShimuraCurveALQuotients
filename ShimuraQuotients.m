@@ -1376,6 +1376,19 @@ intrinsic updatehypfromsubhyp(~curves::SeqEnum)
     end for;
 end intrinsic;
 
+intrinsic MakeDataSets()
+    {}
+    curves := GetHyperellipticCandidates();
+    unknown := [c : c in curves | not assigned c`IsSubhyp];
+    unknownstar := [ c : c in unknown | IsStarCurve(c)];
+    unknownmodstar := [ c : c in unknownstar | c`D eq 1];
+    lut := AssociativeArray();
+    for i in [1..#curves] do
+        c := curves[i];
+        lut[<c`D, c`N, c`W>] := i;
+    end for;
+end intrinsic;
+
 //procedure code_we_ran()
 
 // [FH] Furumoto, Hasegawa, "Hyperelliptic Quotients of Modular Curves X_0(N)"
