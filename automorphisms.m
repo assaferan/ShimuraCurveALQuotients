@@ -1,5 +1,3 @@
-// cached_traces := AssociativeArray();
-// class_nos := AssociativeArray();
 function NumPointsFpd(X,p, d :cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     D := X`D;
     N := X`N;
@@ -21,7 +19,7 @@ function NumPointsFpd(X,p, d :cached_traces := AssociativeArray(), class_nos := 
     trace_frob_n := tpsd - p*tpsdmin2;
 
     num_points := p^d + 1 - trace_frob_n;
-    return Integers()!num_points;
+    return Integers()!num_points, cached_traces;
 end function;
 
 function modr2(r)
@@ -34,19 +32,21 @@ end function;
 function Pp(X, n, p: cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     sum := 0;
     for d in Divisors(n) do
-        sum +:= modr2(MoebiusMu(n div d) * Abs(NumPointsFpd(X,p,d : cached_traces := cached_traces, class_nos := class_nos)));
+        numpts, cached_traces := NumPointsFpd(X,p,d : cached_traces := cached_traces, class_nos := class_nos);
+        sum +:= modr2(MoebiusMu(n div d) * Abs(numpts));
     end for;
-    return sum/n;
+    return sum/n, cached_traces;
 end function;
 
 function involutioncounter(X, p,k :cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     assert X`g gt 2;
     sum := 0;
     for i in [0..k] do
-     sum +:= (2*i+1)* Pp(X, 2*i+1, p :cached_traces := cached_traces, class_nos := class_nos);
+       valp, cached_traces:= Pp(X, 2*i+1, p :cached_traces := cached_traces, class_nos := class_nos);
+     sum +:= (2*i+1)* valp;
      print "sum is", sum;
      if sum gt 2*X`g+2 then return false, sum; end if;
     end for;
-    return true, sum;
+    return true, sum, cached_traces;
 end function;
 

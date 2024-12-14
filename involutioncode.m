@@ -1,3 +1,6 @@
+AttachSpec("shimuraquots.spec");
+cached_traces := AssociativeArray();
+class_nos := AssociativeArray();
 curves := GetHyperellipticCandidates();
 unknown := [c : c in curves | not assigned c`IsSubhyp];
 unknownstar := [ c : c in unknown | IsStarCurve(c)];
@@ -9,7 +12,6 @@ for i in [1..#curves] do
 end for;
 
 load "automorphisms.m";
-cached_traces := AssociativeArray();
 //Curves with 3 good
 testcurves := [x : x in unknownstar |3 notin PrimeFactors(x`D*x`N )];
 potential_curves := [];
@@ -48,7 +50,7 @@ for i->X in testcurves do
     print "doing curve number", i;
     D := X`D; N := X`N;
     p := 2; 
-    b, sum := involutioncounter(X,p,2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum, cached_traces := involutioncounter(X,p,2:cached_traces := cached_traces, class_nos := class_nos);
     if sum ne 0 then
         Append(~potential_curves,X);
         print "potential good one", i;
@@ -62,7 +64,7 @@ for i->X in potential_curves do
     g := X`g;
     print g;
     p := 2;
-    b, sum := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum, cached_traces := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
     if not b then
         print p;
         print "success";
