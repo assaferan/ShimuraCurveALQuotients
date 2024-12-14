@@ -45,7 +45,7 @@ function involutioncounter(X, p,k :cached_traces := AssociativeArray(), class_no
        valp, cached_traces:= Pp(X, 2*i+1, p :cached_traces := cached_traces, class_nos := class_nos);
      sum +:= (2*i+1)* valp;
      print "sum is", sum;
-     if sum gt 2*X`g+2 then return false, sum; end if;
+     if sum gt 2*X`g+2 then return false, sum, cached_traces; end if;
     end for;
     return true, sum, cached_traces;
 end function;

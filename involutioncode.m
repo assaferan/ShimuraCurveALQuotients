@@ -19,7 +19,7 @@ for i->X in testcurves do
     print "doing curve number", i;
     D := X`D; N := X`N;
     p := 3; 
-    b, sum := involutioncounter(X,p,3:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum, cached_traces := involutioncounter(X,p,3:cached_traces := cached_traces, class_nos := class_nos);
     if sum ne 0 then
         Append(~potential_curves,X);
         print "potential good one", i;
@@ -34,7 +34,7 @@ for i->X in potential_curves do
     g := X`g;
     p := 3;
     print g;
-    b, sum := involutioncounter(X,p,2*g:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum, cached_traces := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
     if not b then
         print "success";
         Append(~nonhyp, X);
