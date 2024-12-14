@@ -701,7 +701,7 @@ function sum_n_powers(mfs, p, n, BV)
 end function;
 */
 
-function TraceDNew(D,N,k,n,Q)
+function TraceDNew(D,N,k,n,Q :class_nos := AssociativeArray())
     t := 0;
     for dN in Divisors(N) do
         N_prime := D*N div dN;
@@ -716,18 +716,18 @@ function TraceDNew(D,N,k,n,Q)
             // term *:= MoebiusMu(dd_p);
             // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
             // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
+            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p :class_nos := class_nos);
         end for;
     end for;
     return t;
 end function;
 
-intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum) -> RngIntElt
+intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum :class_nos := AssociativeArray()) -> RngIntElt
     {}
     sum := 0;
     for w in W do
         sgn := (-1)^#PrimeDivisors(GCD(w,D));
-        sum +:= sgn*TraceDNew(D, N, k, n, w);
+        sum +:= sgn*TraceDNew(D, N, k, n, w: class_nos := class_nos);
     end for;
     sum *:= 1/#W;
 
@@ -750,7 +750,7 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
+intrinsic CheckHeckeTrace(X ::ShimuraQuot:class_nos := AssociativeArray()) ->BoolElt
     {}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
@@ -760,10 +760,10 @@ intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
         tps := AssociativeArray([-1..v_max]);
         tps[-1] := 0;
         for v in [1..v_max] do
-            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
+            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W:class_nos := class_nos);
         end for;
         if (v_max gt 1) then
-            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
+            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W:class_nos := class_nos);
             assert tps[0] eq X`g;
         end if;
         for v in [1..v_max] do

@@ -704,7 +704,7 @@ end function;
 
 forward TraceFormulaGamma0HeckeALNew;
 
-function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
+function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q : class_nos := AssociativeArray())
     trace := 0;
     n_Q := GCD(n, Q);
     n_NQ := n div n_Q;
@@ -722,7 +722,7 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
 		NQ_primes := [NQ_p : NQ_p in Divisors(N div Q) | (GCD(d_NQ, NQ_p) eq 1) and ((N div (Q*NQ_p)) mod d_NQ eq 0)];
 		N_primes := [Q_p * NQ_p : Q_p in Q_primes, NQ_p in NQ_primes];
 		weights := [#[x : x in Divisors(GCD(N div Q, N div N_p)) | GCD(x,n) eq 1] : N_p in N_primes];
-		traces := [TraceFormulaGamma0HeckeALNew(N_p, k, n div n_p, GCD(N_p, Q)) : N_p in N_primes];
+		traces := [TraceFormulaGamma0HeckeALNew(N_p, k, n div n_p, GCD(N_p, Q) :class_nos := class_nos) : N_p in N_primes];
 		term := &+[Integers() | weights[i]*traces[i] : i in [1..#N_primes]];
 		term *:= n_p^(k div 2) div d;
 		term *:= MoebiusMu(d);
@@ -733,19 +733,19 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
     return trace;
 end function;
 
-function TraceFormulaGamma0HeckeALNew(N, k, n, Q)
+function TraceFormulaGamma0HeckeALNew(N, k, n, Q : class_nos := AssociativeArray())
     trace := 0;
     for N_prime in Divisors(N) do
 	    a := alpha(Q, n, N div N_prime);
 	    Q_prime := GCD(N_prime, Q);
-	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
-	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime);
+	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime : class_nos := class_nos);
+	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime :class_nos := class_nos);
 	    trace +:= a*term;
     end for;
     return trace;
 end function;
 
-procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
+procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks : class_nos := AssociativeArray())
     printf "(N,n,Q)=";
     for N in Ns do
 	Qs := [Q : Q in Divisors(N) | GCD(Q, N div Q) eq 1];
@@ -753,7 +753,7 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
 	    for n in ns do
 		printf "(%o,%o,%o),", N, n, Q;
 		for k in ks do
-		    assert TraceFormulaGamma0HeckeALNew(N,k,n,Q) eq get_trace_hecke_AL(N,k,n,Q : New);
+		    assert TraceFormulaGamma0HeckeALNew(N,k,n,Q : class_nos := class_nos) eq get_trace_hecke_AL(N,k,n,Q : New);
 		end for;
 	    end for;
 	end for;

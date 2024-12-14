@@ -1,11 +1,11 @@
 // cached_traces := AssociativeArray();
-
-function NumPointsFpd(X,p, d :cached_traces := AssociativeArray())
+// class_nos := AssociativeArray();
+function NumPointsFpd(X,p, d :cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     D := X`D;
     N := X`N;
     W := X`W;
     if <D,N,2,p^d,W> notin Keys(cached_traces) then
-        cached_traces[<D,N,2,p^d,W>] := TraceDNewALFixed(X`D, X`N, 2, p^d, X`W);
+        cached_traces[<D,N,2,p^d,W>] := TraceDNewALFixed(X`D, X`N, 2, p^d, X`W :class_nos := class_nos);
     end if;
     tpsd := cached_traces[<D,N,2,p^d,W>];
 
@@ -13,7 +13,7 @@ function NumPointsFpd(X,p, d :cached_traces := AssociativeArray())
         if d eq 1 or d eq 2 then
             cached_traces[<D,N,2,p^(d-2),W>] := 0;
         else        
-            cached_traces[<D,N,2,p^(d-2),W>] := TraceDNewALFixed(X`D, X`N, 2, p^(d-2), X`W);
+            cached_traces[<D,N,2,p^(d-2),W>] := TraceDNewALFixed(X`D, X`N, 2, p^(d-2), X`W: class_nos := class_nos);
         end if;
     end if;
     tpsdmin2 := cached_traces[<D,N,2,p^(d-2),W>];
@@ -31,19 +31,20 @@ function modr2(r)
     return 1;
 end function;
 
-function Pp(X, n, p: cached_traces := AssociativeArray())
+function Pp(X, n, p: cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     sum := 0;
     for d in Divisors(n) do
-        sum +:= modr2(MoebiusMu(n div d) * Abs(NumPointsFpd(X,p,d : cached_traces := cached_traces)));
+        sum +:= modr2(MoebiusMu(n div d) * Abs(NumPointsFpd(X,p,d : cached_traces := cached_traces, class_nos := class_nos)));
     end for;
     return sum/n;
 end function;
 
-function involutioncounter(X, p,k :cached_traces := AssociativeArray())
+function involutioncounter(X, p,k :cached_traces := AssociativeArray(), class_nos := AssociativeArray())
     assert X`g gt 2;
     sum := 0;
     for i in [0..k] do
-     sum +:= (2*i+1)* Pp(X, 2*i+1, p :cached_traces := cached_traces);
+     sum +:= (2*i+1)* Pp(X, 2*i+1, p :cached_traces := cached_traces, class_nos := class_nos);
+     print "sum is", sum;
      if sum gt 2*X`g+2 then return false, sum; end if;
     end for;
     return true, sum;
