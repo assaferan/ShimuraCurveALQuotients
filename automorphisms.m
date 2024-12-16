@@ -41,7 +41,9 @@ function Pp(X, n, p)
         numpts := NumPointsFpd(X,p,d);
         sum +:= MoebiusMu(n div d) * Abs(numpts);
     end for;
-    return modr2(sum/n);
+    assert sum mod n eq 0;
+    quot := sum div n;
+    return modr2(quot);
 end function;
 
 intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> RngIntElt
