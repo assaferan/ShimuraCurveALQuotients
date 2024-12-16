@@ -392,7 +392,6 @@ intrinsic ConstructOrders(m  :: RngIntElt) ->SeqEnum
     {}
     b, v := GetCache(m, cached_orders);
     if b then
-        print "succesfully cached";
         return v;
 
     else
