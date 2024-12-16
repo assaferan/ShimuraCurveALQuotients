@@ -1,11 +1,13 @@
 cached_orders := NewStore();
+cached_traces := NewStore();
+class_nos := NewStore();
 
-intrinsic CacheClearOrders()
+intrinsic CacheClear(name)
 {Clear the internal cache for cached_orders}
   // We need to save and restore the id, otherwise horrific things might
   // happen
-  StoreClear(cached_orders);
-  StoreSet(cached_orders, "cache", AssociativeArray());
+  StoreClear(name);
+  StoreSet(name, "cache", AssociativeArray());
 end intrinsic;
 
 procedure SetCache(k,v, name)

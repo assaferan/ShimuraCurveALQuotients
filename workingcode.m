@@ -51,7 +51,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
             VerifyHHProposition1(star_curves);
         end if;
 
-        time curves := GetQuotientsAndGenera(star_curves: cached_orders := cached_orders); // 148.660
+        time curves := GetQuotientsAndGenera(star_curves); // 148.660
 
         // updating classification from the genera we computed
         UpdateByGenus(~curves);
@@ -63,7 +63,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         // Using the fact that if w acts non-trivially ans has more than
         // 4 fixed points on X, then X is non-hyperelliptic
-        FilterByALFixedPointsOnQuotient(~curves : cached_orders := cached_orders);
+        FilterByALFixedPointsOnQuotient(~curves);
 
         // upward closure - if covering a non-hyperelliptic, then non-hyperelliptic
         UpwardClosure(~curves);
@@ -75,7 +75,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         // Using Proposition 6 from [FH] adapted to the Shimura curve situation
 
-        time FilterByComplicatedALFixedPointsOnQuotient(~curves : cached_orders := cached_orders); //long time
+        time FilterByComplicatedALFixedPointsOnQuotient(~curves); //long time
 
         UpwardClosure(~curves);
 

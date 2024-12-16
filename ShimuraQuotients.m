@@ -322,7 +322,7 @@ function LegendreSymbol(R, p)
     return 1;
     end if;
     ZF := MaximalOrder(R);
-    return KroneckerCharacter(Discriminant(ZF))(p);
+    return KroneckerSymbol(Discriminant(ZF),p);
 end function;
 
 // Here R is the quadratic order and
@@ -339,27 +339,27 @@ function NuOgg(p, R, D, F)
     assert Valuation(F, p) ge 2;
     f := Conductor(R);
     ZF := MaximalOrder(R);
-    chi := KroneckerCharacter(Discriminant(ZF));
+    chip := KroneckerSymbol(Discriminant(ZF),p);
     k := Valuation(f, p);
     K := Valuation(F, p);
     if (K ge 2*(1 + k)) then
-    if (chi(p) eq 1) then
+    if (chip eq 1) then
         return 2*PsiOgg(p, f);
     end if;
     return 0;
     end if;
     if (K eq 1 + 2*k) then
-    if (chi(p) eq 1) then
+    if (chip eq 1) then
         return 2*PsiOgg(p, f);
     end if;
-    if (chi(p) eq 0) then
+    if (chip eq 0) then
         return p^k;
     end if;
-    assert chi(p) eq -1;
+    assert chip eq -1;
     return 0;
     end if;
     if (K eq 2*k) then
-    return p^(k-1)*(p+1+chi(p));
+    return p^(k-1)*(p+1+chip);
     end if;
     if (K le 2*k - 1) then
     if IsEven(K) then
@@ -416,15 +416,15 @@ intrinsic ConstructOrders(m  :: RngIntElt) ->SeqEnum
             orders := [sub<O | 1, sqrt_minus_m>];
             // orders := [EquationOrder(x^2+m)];
         end if;
-        class_nos :=[];
+        class_nums :=[];
         for R in orders do
             //compute info about orders and store it
             //let's start with just storing the class numbers
             h := PicardNumber(R);
             // h := #PicardGroup(R);
-            Append(~class_nos, h);
+            Append(~class_nums, h);
         end for;
-        v := [* orders, class_nos *];
+        v := [* orders, class_nums *];
         SetCache(m,v, cached_orders);
         return v;
     end if;
@@ -438,10 +438,10 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RingIntEl
     e := 0;
     pair := ConstructOrders(m);
     orders := pair[1];
-    class_nos := pair[2];
+    class_nums := pair[2];
     for i->R in orders do
         // h := PicardNumber(R);
-        h := class_nos[i];
+        h := class_nums[i];
         // Using formula (4) in [Ogg]
         prod := &*[Integers() |
               NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
@@ -704,7 +704,7 @@ function sum_n_powers(mfs, p, n, BV)
 end function;
 */
 
-function TraceDNew(D,N,k,n,Q :class_nos := AssociativeArray())
+function TraceDNew(D,N,k,n,Q)
     t := 0;
     for dN in Divisors(N) do
         N_prime := D*N div dN;
@@ -719,18 +719,18 @@ function TraceDNew(D,N,k,n,Q :class_nos := AssociativeArray())
             // term *:= MoebiusMu(dd_p);
             // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
             // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p :class_nos := class_nos);
+            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
         end for;
     end for;
     return t;
 end function;
 
-intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum :class_nos := AssociativeArray()) -> RngIntElt
+intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
     {}
     sum := 0;
     for w in W do
         sgn := (-1)^#PrimeDivisors(GCD(w,D));
-        sum +:= sgn*TraceDNew(D, N, k, n, w: class_nos := class_nos);
+        sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
     sum *:= 1/#W;
 
@@ -753,7 +753,7 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-intrinsic CheckHeckeTrace(X ::ShimuraQuot:class_nos := AssociativeArray()) ->BoolElt
+intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
     {}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
@@ -763,10 +763,10 @@ intrinsic CheckHeckeTrace(X ::ShimuraQuot:class_nos := AssociativeArray()) ->Boo
         tps := AssociativeArray([-1..v_max]);
         tps[-1] := 0;
         for v in [1..v_max] do
-            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W:class_nos := class_nos);
+            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
         end for;
         if (v_max gt 1) then
-            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W:class_nos := class_nos);
+            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
             assert tps[0] eq X`g;
         end if;
         for v in [1..v_max] do
