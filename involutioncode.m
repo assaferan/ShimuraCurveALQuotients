@@ -34,7 +34,7 @@ for i->X in potential_curves do
     g := X`g;
     p := 3;
     print g;
-    b, sum, cached_traces := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum, cached_traces := involutioncounter(X,p,2*g:cached_traces := cached_traces, class_nos := class_nos);
     if not b then
         print "success";
         Append(~nonhyp, X);

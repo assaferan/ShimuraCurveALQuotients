@@ -20,9 +20,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         assert #star_curves eq 2342;
 
-         cached_orders := AssociativeArray();
-
-         time UpdateGenera(~star_curves: cached_orders := cached_orders); // time: 12
+        time UpdateGenera(~star_curves); // time: 12
 
         VerifyHHTable1(star_curves);
 
