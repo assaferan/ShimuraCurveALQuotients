@@ -318,10 +318,10 @@ end intrinsic;
 function LegendreSymbol(R, p)
     f := Conductor(R);
     if (f mod p eq 0) then
-    return 1;
+        return 1;
     end if;
     ZF := MaximalOrder(R);
-    return KroneckerCharacter(Discriminant(ZF))(p);
+    return KroneckerSymbol(Discriminant(ZF),p);
 end function;
 
 // Here R is the quadratic order and
@@ -330,35 +330,35 @@ end function;
 // based on Theorem 2 in [Ogg]
 function NuOgg(p, R, D, F)
     if (D mod p eq 0) then
-    return 1 - LegendreSymbol(R, p);
+        return 1 - LegendreSymbol(R, p);
     end if;
     if Valuation(F, p) eq 1 then
-    return 1 + LegendreSymbol(R, p);
+        return 1 + LegendreSymbol(R, p);
     end if;
     assert Valuation(F, p) ge 2;
     f := Conductor(R);
     ZF := MaximalOrder(R);
-    chi := KroneckerCharacter(Discriminant(ZF));
+    chip := KroneckerSymbol(Discriminant(ZF),p);
     k := Valuation(f, p);
     K := Valuation(F, p);
     if (K ge 2*(1 + k)) then
-    if (chi(p) eq 1) then
+    if (chip eq 1) then
         return 2*PsiOgg(p, f);
     end if;
     return 0;
     end if;
     if (K eq 1 + 2*k) then
-    if (chi(p) eq 1) then
+    if (chip eq 1) then
         return 2*PsiOgg(p, f);
     end if;
-    if (chi(p) eq 0) then
+    if (chip eq 0) then
         return p^k;
     end if;
-    assert chi(p) eq -1;
+    assert chip eq -1;
     return 0;
     end if;
     if (K eq 2*k) then
-    return p^(k-1)*(p+1+chi(p));
+    return p^(k-1)*(p+1+chip);
     end if;
     if (K le 2*k - 1) then
     if IsEven(K) then
