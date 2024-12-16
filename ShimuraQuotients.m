@@ -9,6 +9,7 @@ declare verbose ShimuraQuotients, 3;
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
+import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -387,11 +388,12 @@ function SquarePart(m)
     return prod;
 end function;
 
-intrinsic ConstructOrders(m  :: RngIntElt: cached_orders := AssociativeArray()) ->SeqEnum
+intrinsic ConstructOrders(m  :: RngIntElt) ->SeqEnum
     {}
-    //_<x> := PolynomialRing(Integers());
-    if m in Keys(cached_orders) then
-        return cached_orders[m];
+    b, v := GetCache(m, cached_orders);
+    if b then
+        return v;
+
     else
         if (m eq 2) then
             orders := [MaximalOrder(QuadraticField(-1)),
@@ -414,31 +416,32 @@ intrinsic ConstructOrders(m  :: RngIntElt: cached_orders := AssociativeArray()) 
             orders := [sub<O | 1, sqrt_minus_m>];
             // orders := [EquationOrder(x^2+m)];
         end if;
-        class_nos :=[];
+        class_nums :=[];
         for R in orders do
             //compute info about orders and store it
             //let's start with just storing the class numbers
             h := PicardNumber(R);
             // h := #PicardGroup(R);
-            Append(~class_nos, h);
+            Append(~class_nums, h);
         end for;
-        cached_orders[m] := [* orders, class_nos *];
-        return cached_orders[m];
+        v := [* orders, class_nums *];
+        SetCache(m,v, cached_orders);
+        return v;
     end if;
 
 end intrinsic;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt :cached_orders := AssociativeArray())-> RingIntElt
+intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RingIntElt
     {The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
-    pair := ConstructOrders(m :cached_orders:=cached_orders);
+    pair := ConstructOrders(m);
     orders := pair[1];
-    class_nos := pair[2];
+    class_nums := pair[2];
     for i->R in orders do
         // h := PicardNumber(R);
-        h := class_nos[i];
+        h := class_nums[i];
         // Using formula (4) in [Ogg]
         prod := &*[Integers() |
               NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
@@ -452,22 +455,22 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt :cached_orde
     return e;
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt :cached_orders := cached_orders)-> RingIntElt
+intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RingIntElt
     {Genus of X0(D,N)/< w_m>}
-    e := NumFixedPoints(D, N, m :cached_orders := cached_orders);
+    e := NumFixedPoints(D, N, m);
     g_big := GenusShimuraCurve(D, N);
     g := (g_big+1)/2 - e/4;
     assert IsIntegral(g);
     return Floor(g);
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum:cached_orders := cached_orders) -> RingIntElt
+intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -> RingIntElt
     {Genus of X0(D,N)/<als>}
     total_e := 0;
     for al in als do
     assert GCD(al, (D*N) div al) eq 1;
     if (al ne 1) then
-        total_e +:= NumFixedPoints(D, N, al : cached_orders := cached_orders);
+        total_e +:= NumFixedPoints(D, N, al );
     end if;
     end for;
     if #als eq 1 then
@@ -645,14 +648,14 @@ intrinsic ALSubgroups(N::RngIntElt) -> SetEnum
 end intrinsic;
 
 
-intrinsic UpdateGenera(~curves::SeqEnum : cached_orders := cached_orders)
+intrinsic UpdateGenera(~curves::SeqEnum)
     {}
     for i->c in curves do
-	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W : cached_orders := cached_orders);
+	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
     end for;
 end intrinsic;
 
-intrinsic GetQuotientsAndGenera(curves: cached_orders := cached_orders) -> SeqEnum
+intrinsic GetQuotientsAndGenera(curves) -> SeqEnum
     {}
     quots := [];
     for i->c in curves do
@@ -668,7 +671,7 @@ intrinsic GetQuotientsAndGenera(curves: cached_orders := cached_orders) -> SeqEn
         cur_sz := #quots;
         for j->S in allowed_subs do
             als := S[1];
-            g := GenusShimuraCurveQuotient(c`D, c`N, als : cached_orders := cached_orders);
+            g := GenusShimuraCurveQuotient(c`D, c`N, als);
             quot := CreateShimuraQuot(c`D, c`N, als);
             quot`g := g;
             quot`CurveID := cur_sz + j;
@@ -701,7 +704,7 @@ function sum_n_powers(mfs, p, n, BV)
 end function;
 */
 
-function TraceDNew(D,N,k,n,Q :class_nos := AssociativeArray())
+function TraceDNew(D,N,k,n,Q)
     t := 0;
     for dN in Divisors(N) do
         N_prime := D*N div dN;
@@ -716,18 +719,18 @@ function TraceDNew(D,N,k,n,Q :class_nos := AssociativeArray())
             // term *:= MoebiusMu(dd_p);
             // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
             // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p :class_nos := class_nos);
+            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
         end for;
     end for;
     return t;
 end function;
 
-intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum :class_nos := AssociativeArray()) -> RngIntElt
+intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
     {}
     sum := 0;
     for w in W do
         sgn := (-1)^#PrimeDivisors(GCD(w,D));
-        sum +:= sgn*TraceDNew(D, N, k, n, w: class_nos := class_nos);
+        sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
     sum *:= 1/#W;
 
@@ -750,7 +753,7 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-intrinsic CheckHeckeTrace(X ::ShimuraQuot:class_nos := AssociativeArray()) ->BoolElt
+intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
     {}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
@@ -760,10 +763,10 @@ intrinsic CheckHeckeTrace(X ::ShimuraQuot:class_nos := AssociativeArray()) ->Boo
         tps := AssociativeArray([-1..v_max]);
         tps[-1] := 0;
         for v in [1..v_max] do
-            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W:class_nos := class_nos);
+            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
         end for;
         if (v_max gt 1) then
-            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W:class_nos := class_nos);
+            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
             assert tps[0] eq X`g;
         end if;
         for v in [1..v_max] do
@@ -793,9 +796,9 @@ intrinsic FilterByTrace(~curve_list::SeqEnum)
     end for;
 end intrinsic;
 
-intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot : cached_orders := AssociativeArray()) -> RngIntElt
+intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot ) -> RngIntElt
     {}
-    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D) : cached_orders := cached_orders) : m in c`W];
+    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D)) : m in c`W];
 end intrinsic;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
@@ -804,12 +807,12 @@ end intrinsic;
 // and if X is hyperelliptic, has atmost four fixed points.
 // Test returns false if X is non-hyperelliptic
 // If true, X might be hyperelliptic
-intrinsic TestALFixedPointsOnQuotient(X ::ShimuraQuot: cached_orders := AssociativeArray()) -> BoolElt
+intrinsic TestALFixedPointsOnQuotient(X ::ShimuraQuot) -> BoolElt
     {}
     DN := X`D*X`N;
     ws := [d : d in Divisors(DN) | d notin X`W and (GCD(d, DN div d) eq 1)];
     for d in ws do
-    fix := CountFixedPointsOnQuotient(d, X : cached_orders := cached_orders);
+    fix := CountFixedPointsOnQuotient(d, X);
     if IsEven(X`g) and fix gt 2 then
         return false;
     elif IsOdd(X`g) and fix gt 4 then
@@ -819,7 +822,7 @@ intrinsic TestALFixedPointsOnQuotient(X ::ShimuraQuot: cached_orders := Associat
     return true;
 end intrinsic;
 
-intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := AssociativeArray())
+intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     {}
     for lc->c in curves do
     if (assigned c`IsSubhyp) and c`IsSubhyp then
@@ -827,7 +830,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := As
     end if;
     // if testALFixedPointsOnQuotient(c) then
         // Include(~passed_test, c);
-    if not TestALFixedPointsOnQuotient(c : cached_orders := cached_orders) then
+    if not TestALFixedPointsOnQuotient(c) then
         curves[lc]`IsSubhyp := false;
         curves[lc]`IsHyp := false;
     end if;
@@ -840,7 +843,7 @@ end intrinsic;
 
 // implementing Proposition 6 of [FH]
 // returns the W for which X_0(D,N)/W is not hyperelliptic
-intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt :cached_orders := AssociativeArray()) -> SetEnum
+intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> SetEnum
     {}
     cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
     // print "cond_2 = ", cond_2;
@@ -848,7 +851,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt :cach
 				   ((N2 mod 8 eq 3) and IsEven(N)) or
 				   ((N2 mod 8 eq 7) and IsEven(D))];
     // print "cond_1 = ", cond_1;
-    num_fixed := [NumFixedPoints(D, N, N2 : cached_orders := cached_orders) : N2 in cond_1];
+    num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
     good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
 		  (num_fixed[i] mod 3 eq 0) and
 		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
@@ -858,7 +861,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt :cach
     omega := Omega(D*N);
     Ws := ALSubgroups(D*N);
     // !! TODO - Could reuse the data we already have
-    Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1] :cached_orders := cached_orders) ge 3];
+    Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
     non_hyp := {};
     for i->N2 in N2s do
 	r := omega - Valuation(nfixed[i], 2);
@@ -872,7 +875,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt :cach
 	for W in Ws do
 	    is_non_hyp := false;
 	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
-	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1 :cached_orders := cached_orders) eq 2^(omega-r)];
+	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
 /*
 	    if (N2 eq 195) and ({6, 10, 26} subset W) then
 		print "N1s = ", N1s;
@@ -952,7 +955,7 @@ intrinsic UpdateByGenus(~curves :: SeqEnum)
     end for;
 end intrinsic;
 
-intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum : cached_orders := AssociativeArray())
+intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
     {}
     DN_pairs := {<c`D, c`N> : c in curves | not assigned c`IsSubhyp};
     DN_pairs := [pair : pair in DN_pairs];
@@ -965,7 +968,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum : cached_o
 
     for lc->DN in DN_pairs do
     D, N := Explode(DN);
-    Ws := TestComplicatedALFixedPointsOnQuotient(D, N :cached_orders := cached_orders);
+    Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
     for W in Ws do
         if not IsDefined(lut, <D,N,W>) then
         continue;

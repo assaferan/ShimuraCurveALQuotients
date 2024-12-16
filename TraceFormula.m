@@ -1,3 +1,5 @@
+import "Caching.m" : cached_traces, SetCache, GetCache, class_nos;
+
 function Sfast(N, u, t, n)
   fac := Factorization(N*u);
   num_sols := 1;
@@ -110,7 +112,7 @@ function Lemma4_5(N, u, D)
 		ret *:= - p^(Ceiling(i/2)-1);
 	    elif ((i eq b-a) and IsEven(a-i)) then
 		// print "case 3";
-		ret *:= p^(Ceiling(i/2)-1) * KroneckerCharacter(-4)(D div p^b);
+		ret *:= p^(Ceiling(i/2)-1) * KroneckerSymbol(-4,D div p^b);
 	    elif ((i eq b-a+1) and IsOdd(a-i) and ((D div p^b) mod 4 eq 1) ) then
 		// print "case 4";
 		ret *:= p^Floor(i/2) * KroneckerSymbol(D div p^b, p);
@@ -152,7 +154,7 @@ function Hurwitz(n)
     return 2*t_sum;
 end function;
 
-function H(n : class_nos := AssociativeArray())
+function H(n)
   if n lt 0 then
     is_sq, u := IsSquare(-n);
     return (is_sq select -u/2 else 0);
@@ -167,10 +169,12 @@ function H(n : class_nos := AssociativeArray())
   ret := 0;
   for d in Divisors(n) do
     if IsSquare(d) and  (n div d) mod 4 in [0,3] then
-        if -n div d notin Keys(class_nos) then 
-            class_nos[-n div d] := ClassNumber(-n div d);
+        b, v := GetCache(-n div d, class_nos);
+        if not b then
+            v := ClassNumber(-n div d);
+            SetCache(-n div d, v, class_nos); 
         end if;
-        ret +:= class_nos[-n div d];
+        ret +:= v;
     end if;
   end for;
   // ret := &+[ClassNumber(-n div d) : d in Divisors(n)
@@ -207,14 +211,14 @@ function P(k, t, m)
 end function;
 
 // This should yield -2*(A1 + A2)
-function S1Popa(n,N,k : class_nos := AssociativeArray())
+function S1Popa(n,N,k)
     S1 := 0;
     max_abst := Floor(SquareRoot(4*n));
     for t in [-max_abst..max_abst] do
 	for u in Divisors(N) do
 	    if ((4*n-t^2) mod u^2 eq 0) then
 		// print "u = ", u, "t = ", t;
-		S1 +:= P(k,t,n)*H((4*n-t^2) div u^2 : class_nos := class_nos)*C(N,u,t,n);
+		S1 +:= P(k,t,n)*H((4*n-t^2) div u^2)*C(N,u,t,n);
 		// assert H((4*n-t^2) div u^2) eq Hurwitz((4*n-t^2) div u^2);
 		// S1 +:= P(k,t,n)*Hurwitz((4*n-t^2) div u^2)*C(N,u,t,n);
 		// print "S1 = ", S1;
@@ -234,9 +238,9 @@ function S2Popa(n,N,k)
     return S2;
 end function;
 
-function TraceFormulaGamma0(n, N, k :class_nos := AssociativeArray())
-    S1 := S1Popa(n,N,k :class_nos := class_nos);
-    S2 := S2Popa(n,N,k :class_nos := class_nos);
+function TraceFormulaGamma0(n, N, k)
+    S1 := S1Popa(n,N,k);
+    S2 := S2Popa(n,N,k);
     ret := -S1 / 2 - S2 / 2;
     if k eq 2 then
 	ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
@@ -275,7 +279,7 @@ end function;
 // This formula follows Popa - On the Trace Formula for Hecke Operators on Congruence Subgroups, II
 // Theorem 4. 
 // (Also appears in Skoruppa-Zagier, but this way of stating the formula was easier to work with).
-function TraceFormulaGamma0AL(n, N, k :class_nos := AssociativeArray())
+function TraceFormulaGamma0AL(n, N, k)
     if (n eq 0) then return 0; end if; // for compatibility with q-expansions
   S1 := 0;
 //  max_abst := Floor(SquareRoot(4*N*n));
@@ -286,7 +290,7 @@ function TraceFormulaGamma0AL(n, N, k :class_nos := AssociativeArray())
     t := tN*N;
     for u in Divisors(N) do
       if ((4*n*N-t^2) mod u^2 eq 0) then
-	S1 +:= P(k,t,N*n)*H((4*N*n-t^2) div u^2:class_nos := class_nos)*C(1,1,t,N*n)
+	S1 +:= P(k,t,N*n)*H((4*N*n-t^2) div u^2)*C(1,1,t,N*n)
 	       *MoebiusMu(u) / N^(k div 2-1);
       end if;
     end for;
@@ -305,32 +309,32 @@ function TraceFormulaGamma0AL(n, N, k :class_nos := AssociativeArray())
   return ret;
 end function;
 
-function TraceFormulaGamma0ALTrivialNew(N, k :class_nos := AssociativeArray())
+function TraceFormulaGamma0ALTrivialNew(N, k)
     ms := [d : d in Divisors(N) | N mod d^2 eq 0];
-    trace := &+[Integers() | MoebiusMu(m)*TraceFormulaGamma0AL(1, N div m^2, k :class_nos := class_nos) : m in ms];
+    trace := &+[Integers() | MoebiusMu(m)*TraceFormulaGamma0AL(1, N div m^2, k) : m in ms];
     return trace;
 end function;
 
 // At the moment only works for Hecke operators at primes
-function TrivialContribution(N, k, p :class_nos := AssociativeArray())
+function TrivialContribution(N, k, p)
     assert IsPrime(p);
     N_primes_2 := [d : d in Divisors(N) | IsSquare(N*p div d) and ((N div d) mod p^3 ne 0) and (d mod p ne 0)];
     // trace_2 := &+[Integers() | get_trace(N_prime, k, 1 : New) : N_prime in N_primes_2];
-    trace_2 := &+[Integers() | TraceFormulaGamma0ALTrivialNew(N_prime, k :class_nos := class_nos) : N_prime in N_primes_2];
+    trace_2 := &+[Integers() | TraceFormulaGamma0ALTrivialNew(N_prime, k) : N_prime in N_primes_2];
     trace_3 := 0;
     if (N mod p eq 0) then
 	N_primes_3 := [d : d in Divisors(N div p) | IsSquare(N div (d*p))];
-	trace_3 := &+[Integers() | TraceFormulaGamma0ALTrivialNew(N_prime, k:class_nos := class_nos) :  N_prime in N_primes_3];
+	trace_3 := &+[Integers() | TraceFormulaGamma0ALTrivialNew(N_prime, k) :  N_prime in N_primes_3];
     end if;
     return p^(k div 2) * trace_3  - p^(k div 2 - 1)*trace_2;
 end function;
 
 // At the moment only works for Hecke operators at primes
-function TraceFormulaGamma0ALNew(p, N, k : class_nos := AssociativeArray())
-    if (p eq 1) then return TraceFormulaGamma0ALTrivialNew(N, k : class_nos := class_nos); end if;
+function TraceFormulaGamma0ALNew(p, N, k )
+    if (p eq 1) then return TraceFormulaGamma0ALTrivialNew(N, k ); end if;
     assert IsPrime(p);
     ms := [d : d in Divisors(N) | (N mod d^2 eq 0) and (d mod p ne 0)];
-    trace := &+[Integers() | MoebiusMu(m)*(TraceFormulaGamma0AL(p, N div m^2, k:class_nos := class_nos) - TrivialContribution(N div m^2, k, p:class_nos := class_nos)) : m in ms];
+    trace := &+[Integers() | MoebiusMu(m)*(TraceFormulaGamma0AL(p, N div m^2, k) - TrivialContribution(N div m^2, k, p)) : m in ms];
     return trace;
 end function;
 
@@ -441,7 +445,7 @@ procedure testRelationNewSubspacesTrivial(N, k)
     assert trace_1 eq get_trace(N, k, 1);
 end procedure;
 
-function TrivialContribution(N, k, p :class_nos := AssociativeArray())
+function TrivialContribution(N, k, p )
     N_primes_2 := [d : d in Divisors(N) | IsSquare(N*p div d) and ((N div d) mod p^3 ne 0) and (d mod p ne 0)];
     trace_2 := &+[Integers() | get_trace(N_prime, k, 1 : New) : N_prime in N_primes_2];
     trace_3 := 0;
@@ -452,21 +456,21 @@ function TrivialContribution(N, k, p :class_nos := AssociativeArray())
     return p^(k div 2) * trace_3  - p^(k div 2 - 1)*trace_2;
 end function;
 
-procedure testRelationNewSubspaces(N, k, p :class_nos := AssociativeArray())
+procedure testRelationNewSubspaces(N, k, p )
     N_primes_1 := [d : d in Divisors(N) | IsSquare(N div d) and ((N div d) mod p ne 0)];
     trace_1 := &+[ Integers() | get_trace(N_prime, k, p : New) : N_prime in N_primes_1];
-    assert trace_1 + TrivialContribution(N, k, p :class_nos := class_nos) eq get_trace(N, k, p);
+    assert trace_1 + TrivialContribution(N, k, p) eq get_trace(N, k, p);
 end procedure;
 
-procedure testInverseRelationNewSubspaces(N, k, p :class_nos := AssociativeArray())
+procedure testInverseRelationNewSubspaces(N, k, p )
     ms := [d : d in Divisors(N) | (N mod d^2 eq 0) and (d mod p ne 0)];
     // N_primes := [d : d in Divisors(N) | IsSquare(N div d) and ((N div d) mod p ne 0)];
-    trace := &+[Integers() | MoebiusMu(m)*(get_trace(N div m^2, k, p) - TrivialContribution(N div m^2, k, p :class_nos := class_nos)) : m in ms];
+    trace := &+[Integers() | MoebiusMu(m)*(get_trace(N div m^2, k, p) - TrivialContribution(N div m^2, k, p)) : m in ms];
     assert trace eq get_trace(N, k, p : New);
 end procedure;
 
 // Formula from Popa
-function TraceFormulaGamma0HeckeAL(N, k, n, Q :class_nos := AssociativeArray())
+function TraceFormulaGamma0HeckeAL(N, k, n, Q )
     assert k ge 2;
     if (n eq 0) then return 0; end if; // for compatibility with q-expansions
     S1 := 0;
@@ -480,7 +484,7 @@ function TraceFormulaGamma0HeckeAL(N, k, n, Q :class_nos := AssociativeArray())
 	        for u_prime in Divisors(Q_prime) do
 		        if ((4*n*Q-t^2) mod (u*u_prime)^2 eq 0) then
 		            // print "u =", u, " u_prime = ", u_prime, "t = ", t;
-		            S1 +:= P(k,t,Q*n)*H((4*Q*n-t^2) div (u*u_prime)^2 : class_nos := class_nos)*Cfast(Q_prime,u_prime,t,Q*n)
+		            S1 +:= P(k,t,Q*n)*H((4*Q*n-t^2) div (u*u_prime)^2 )*Cfast(Q_prime,u_prime,t,Q*n)
 			                *MoebiusMu(u) / Q^(w div 2);
 		            // print "S1 = ", S1;
 		        end if;
@@ -704,7 +708,7 @@ end function;
 
 forward TraceFormulaGamma0HeckeALNew;
 
-function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q : class_nos := AssociativeArray())
+function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q )
     trace := 0;
     n_Q := GCD(n, Q);
     n_NQ := n div n_Q;
@@ -722,7 +726,7 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q : class_nos := Associati
 		NQ_primes := [NQ_p : NQ_p in Divisors(N div Q) | (GCD(d_NQ, NQ_p) eq 1) and ((N div (Q*NQ_p)) mod d_NQ eq 0)];
 		N_primes := [Q_p * NQ_p : Q_p in Q_primes, NQ_p in NQ_primes];
 		weights := [#[x : x in Divisors(GCD(N div Q, N div N_p)) | GCD(x,n) eq 1] : N_p in N_primes];
-		traces := [TraceFormulaGamma0HeckeALNew(N_p, k, n div n_p, GCD(N_p, Q) :class_nos := class_nos) : N_p in N_primes];
+		traces := [TraceFormulaGamma0HeckeALNew(N_p, k, n div n_p, GCD(N_p, Q) ) : N_p in N_primes];
 		term := &+[Integers() | weights[i]*traces[i] : i in [1..#N_primes]];
 		term *:= n_p^(k div 2) div d;
 		term *:= MoebiusMu(d);
@@ -733,19 +737,19 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q : class_nos := Associati
     return trace;
 end function;
 
-function TraceFormulaGamma0HeckeALNew(N, k, n, Q : class_nos := AssociativeArray())
+function TraceFormulaGamma0HeckeALNew(N, k, n, Q )
     trace := 0;
     for N_prime in Divisors(N) do
 	    a := alpha(Q, n, N div N_prime);
 	    Q_prime := GCD(N_prime, Q);
-	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime : class_nos := class_nos);
-	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime :class_nos := class_nos);
+	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
+	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime );
 	    trace +:= a*term;
     end for;
     return trace;
 end function;
 
-procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks : class_nos := AssociativeArray())
+procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks )
     printf "(N,n,Q)=";
     for N in Ns do
 	Qs := [Q : Q in Divisors(N) | GCD(Q, N div Q) eq 1];
@@ -753,7 +757,7 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks : class_nos := Associ
 	    for n in ns do
 		printf "(%o,%o,%o),", N, n, Q;
 		for k in ks do
-		    assert TraceFormulaGamma0HeckeALNew(N,k,n,Q : class_nos := class_nos) eq get_trace_hecke_AL(N,k,n,Q : New);
+		    assert TraceFormulaGamma0HeckeALNew(N,k,n,Q ) eq get_trace_hecke_AL(N,k,n,Q : New);
 		end for;
 	    end for;
 	end for;

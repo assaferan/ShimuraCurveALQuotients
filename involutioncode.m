@@ -1,6 +1,4 @@
 AttachSpec("shimuraquots.spec");
-cached_traces := AssociativeArray();
-class_nos := AssociativeArray();
 curves := GetHyperellipticCandidates();
 unknown := [c : c in curves | not assigned c`IsSubhyp];
 unknownstar := [ c : c in unknown | IsStarCurve(c)];
@@ -19,7 +17,7 @@ for i->X in testcurves do
     print "doing curve number", i;
     D := X`D; N := X`N;
     p := 3; 
-    b, sum, cached_traces := involutioncounter(X,p,3:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum := InvolutionCounter(X,p,3);
     if sum ne 0 then
         Append(~potential_curves,X);
         print "potential good one", i;
@@ -34,7 +32,7 @@ for i->X in potential_curves do
     g := X`g;
     p := 3;
     print g;
-    b, sum, cached_traces := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum := InvolutionCounter(X,p,2*g);
     if not b then
         print "success";
         Append(~nonhyp, X);
@@ -50,7 +48,7 @@ for i->X in testcurves do
     print "doing curve number", i;
     D := X`D; N := X`N;
     p := 2; 
-    b, sum, cached_traces := involutioncounter(X,p,2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum := InvolutionCounter(X,p,2);
     if sum ne 0 then
         Append(~potential_curves,X);
         print "potential good one", i;
@@ -64,7 +62,7 @@ for i->X in potential_curves do
     g := X`g;
     print g;
     p := 2;
-    b, sum, cached_traces := involutioncounter(X,p,2*g+2:cached_traces := cached_traces, class_nos := class_nos);
+    b, sum := InvolutionCounter(X,p,2*g+2);
     if not b then
         print p;
         print "success";
