@@ -12,7 +12,7 @@ function NumPointsFpd(X,p, d )
     
 
 
-    if d eq 1 or d eq 2 then
+    if d eq 1 then
             tpsdmin2 := 0;
     else 
         b, tpsdmin2 := GetCache(<D,N,2,p^(d-2),W>, cached_traces);
@@ -57,4 +57,37 @@ intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> Rng
     end for;
     return true, sum;
 end intrinsic;
+
+
+
+
+procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p)
+    // {Choose p, if the curve X does not have Fp automorphisms, then update}
+
+    goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
+
+    potential_curves := [];
+
+    for i->X in goodredn do
+        assert IsStarCurve(X);
+        print "curve",i;
+        //in reality we should run up to 2g+2, but this takes too long so we do the following shortcut
+        b, sum := InvolutionCounter(X,p, 3);
+        if sum ne 0 then
+            Append(~potential_curves, X);
+        end if;
+    end for;
+
+    for i->X in potential_curves do
+        print "starting curve", i;
+        g := X`g;
+        b, sum := InvolutionCounter(X,p, 2*g); //only go up to 2g for time reasons
+        if not b then
+            id := X`CurveID;
+            curves[id]`IsSubhyp := false;
+            curves[id]`IsHyp := false;
+        end if;
+    end for;
+
+end procedure;
 
