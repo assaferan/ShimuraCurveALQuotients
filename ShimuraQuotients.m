@@ -1393,11 +1393,11 @@ intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
         require (numerator mod #X`W eq 0) : "Error counting elliptic points, getting non-integral result.";
         return numerator div #X`W;
     elif q eq 3 then
-        numerator := (1-delta_3)*e_3;
+        numerator := (1-delta_3)*e3;
     elif q eq 4 then
-        numerator := 2*delta_2*e_2;
+        numerator := 2*delta_2*e2;
     elif q eq 6 then
-        numerator := 2*delta_3*e_3;
+        numerator := 2*delta_3*e3;
     else    
         numerator := 0;
     end if;
