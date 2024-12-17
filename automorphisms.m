@@ -63,7 +63,7 @@ end intrinsic;
 
 
 
-procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p)
+procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p, k)
     // {Choose p, if the curve X does not have Fp automorphisms, then update}
 
     goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
@@ -83,7 +83,7 @@ procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p)
     for i->X in potential_curves do
         print "starting curve", i;
         g := X`g;
-        b, sum := InvolutionCounter(X,p, 2*g); //only go up to 2g for time reasons
+        b, sum := InvolutionCounter(X,p, k); //only go up to 2g for time reasons
         if not b then
             id := X`CurveID;
             curves[id]`IsSubhyp := false;
