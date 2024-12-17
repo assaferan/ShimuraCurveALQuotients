@@ -266,20 +266,20 @@ end intrinsic;
 intrinsic NumberOfEllipticPoints(D::RngIntElt, N::RngIntElt, order::RngIntElt)-> RngIntElt
     {}
     if order eq 2 then
-    if D eq 1 then
-        return &+[EulerPhi(GCD(d, N div d)) : d in Divisors(N)];
-    else
-        return 0;
-    end if;
+        if D eq 1 then
+            return &+[EulerPhi(GCD(d, N div d)) : d in Divisors(N)];
+        else
+            return 0;
+        end if;
     end if;
     if order eq 4 then
-    Q := 4;
+        Q := 4;
     end if;
     if order eq 3 then
-    Q := 9;
+        Q := 9;
     end if;
     if (N mod Q eq 0) then
-    return 0;
+        return 0;
     end if;
     primesD := PrimeDivisors(D);
     primesN := PrimeDivisors(N);
@@ -433,9 +433,10 @@ end intrinsic;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RingIntElt
-    {The number of the fixed points of w_m on X_0(D,N)}
+intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
+{The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
+    if (m eq 1) then return Infinity(); end if;
     pair := ConstructOrders(m);
     orders := pair[1];
     class_nums := pair[2];
@@ -444,7 +445,7 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RingIntEl
         h := class_nums[i];
         // Using formula (4) in [Ogg]
         prod := &*[Integers() |
-              NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
+                    NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
         e +:= h*prod;
     end for;
     if (D eq 1) and (m eq 4) then
@@ -474,10 +475,10 @@ intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -
     end if;
     end for;
     if #als eq 1 then
-    s := 0;
+        s := 0;
     else
-    is_prime_power, two, s := IsPrimePower(#als);
-    assert is_prime_power and (two eq 2);
+        is_prime_power, two, s := IsPrimePower(#als);
+        assert is_prime_power and (two eq 2);
     end if;
     g_big := GenusShimuraCurve(D, N);
     g := 1 + (g_big - 1)/2^s - total_e/2^(s+1);
@@ -1378,6 +1379,40 @@ intrinsic updatehypfromsubhyp(~curves::SeqEnum)
         end if;
     end for;
 end intrinsic;
+
+intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
+{Return the number of elliptic points of order q on X.}
+    require (q gt 1) : "Elliptic points of order %o are not well-defined.", q;
+    delta_2 := (2 in X`W) select 1 else 0;
+    delta_3 := (3 in X`W) select 1 else 0;
+    e2 := NumberOfEllipticPoints(X`D, X`N, 2);
+    e3 := NumberOfEllipticPoints(X`D, X`N, 3);
+    if q eq 2 then
+        F_W := &+[NumFixedPoints(X`D, X`N, w) : w in X`W | w ne 1];
+        numerator := 2*F_W + (1-3*delta_2)*e2 - 2*delta_3*e3;
+        require (numerator % #X`W eq 0) : "Error counting elliptic points, getting non-integral result.";
+        return numerator div #X`W;
+    elif q eq 3 then
+        numerator := (1-delta_3)*e_3;
+    elif q eq 4 then
+        numerator := 2*delta_2*e_2;
+    elif q eq 6 then
+        numerator := 2*delta_3*e_3;
+    else    
+        numerator := 0;
+    end if;
+    require ((numerator % #X`W) eq 0) : "Error counting elliptic points, getting non-integral result.";
+    return numerator div #X`W;
+end intrinsic;
+
+intrinsic CheckUniversalCover(X::ShimuraQuot) -> BoolElt
+{Returns true if H, the upper half plane, is the universal cover of X.}
+    // If Gamma_W has no elliptic points, 
+    // then any automorphism of the curve is a Mobius transformation.
+    // If the level does not have any square factor dividing 24, they are all Atkin-Lehners.
+    return &+[NumberOfEllipticPoints(X, q) : q in [2,3,4,6]] eq 0;
+end intrinsic;
+
 
 //procedure code_we_ran()
 
