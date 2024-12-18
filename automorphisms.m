@@ -49,7 +49,7 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
             b, Npd := GetCache(<X, p^i>, point_counts);
             if not b then
                 Npd := ComputePointsViaTrace(X, p, i);
-                SetCache(<X, p^d>, Npd, point_counts);
+                SetCache(<X, p^i>, Npd, point_counts);
             end if;
             Append(~Nps, Npd);
         end for;
