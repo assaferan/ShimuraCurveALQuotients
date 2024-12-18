@@ -62,14 +62,14 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
         //S[j] := sum of alpha_i^j where alpha1, ..., alpha2g are roots of reverse P(T)
         c :=[-S[1]];
         for j in [2..g] do
-            Append(~c,(-S[j] + &+[c[i]*S[j-i] : i in [1..j-1]])/j);
+            Append(~c,-(S[j] + &+[c[i]*S[j-i] : i in [1..j-1]]) /j);
         end for;
         //c[i] are signed elementary symmetric polynomials of the alpha
         for j in [g+1..2*g-1] do
             Append(~c,p^(j-g)*c[2*g-j]);
         end for;
         Append(~c, p^g);
-
+        
         for j in [g+1..2*g] do
             Append(~S, -(&+[c[i]*S[j-i] : i in [1..(j-1)]]+j*c[j]));
         end for;
