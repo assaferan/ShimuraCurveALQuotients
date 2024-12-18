@@ -63,12 +63,16 @@ end intrinsic;
 
 
 
-procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p, k)
+procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p, k :prefilter := true)
     // {Choose p, if the curve X does not have Fp automorphisms, then update}
 
     goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
 
-    potential_curves := [];
+    potential_curves := goodredn;
+
+    if prefilter then 
+            potential_curves := [];
+
 
     for i->X in goodredn do
         assert IsStarCurve(X);
@@ -79,6 +83,8 @@ procedure FilterStarCurvesByFpAutomorphisms(starcurves, ~curves, p, k)
             Append(~potential_curves, X);
         end if;
     end for;
+
+    end if;
 
     for i->X in potential_curves do
         print "starting curve", i;
