@@ -1,6 +1,7 @@
 cached_orders := NewStore();
 cached_traces := NewStore();
 class_nos := NewStore();
+point_counts := NewStore(); 
 
 intrinsic CacheClear(name)
 {Clear the internal cache for cached_orders}
