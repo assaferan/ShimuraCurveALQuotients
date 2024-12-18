@@ -52,10 +52,10 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
                 SetCache(<X, p^d>, Npd, point_counts);
             end if;
             Append(~Nps, Npd);
-            if d in [1..g] then
-                return Nps[d];
-            end if;
         end for;
+        if d in [1..g] then
+            return Nps[d];
+        end if;
         //now have computed all number of points up to g
         //https://arxiv.org/pdf/1704.04661
         S := [p^j +1 - Nps[j] : j in [1..g]]; 
