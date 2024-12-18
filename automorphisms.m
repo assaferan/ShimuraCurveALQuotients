@@ -8,7 +8,7 @@ function ComputePointsViaTrace(X, p, d)
     D := X`D;
     N := X`N;
     W := X`W;
-    assert d le g;
+    // assert d le g;
     b, tpsd := GetCache(<D,N,2,p^d,W>, cached_traces);
     if not b then
         tpsd := TraceDNewALFixed(D, N, 2, p^d, W );
@@ -82,11 +82,11 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
         if d in [g+1..2*g] then //we have computed our point count 
             return Nps[d]; 
         else //continue computing
-            for j in [2*g+1, d] do
+            for j in [2*g+1.. d] do
                 Append(~S, -(&+[c[i]*S[j-i]: i in [1..2*g]]));
             end for;
 
-            for j in [2*g+1, d] do
+            for j in [2*g+1..d] do
                 Append(~Nps, p^j +1 -S[j]);
                 SetCache(<X, p^j>,  p^j + 1 -S[j], point_counts);
             end for; //can make all this faster by not looping twice
