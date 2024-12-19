@@ -239,3 +239,27 @@ intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
     end if;
 end intrinsic;
 
+intrinsic HyperellipticWeilPolysAtTwo(f::RngIntElt) -> SeqEnum
+{Returns all mod 2 classes of hyperelliptic Weil polynomials over F_2 of 2-rank f.}
+    ds := RestrictedPartitions(f+1, {j : j in [1..f+1] | IsOdd(j)});
+    _<t> := PolynomialRing(GF(2));
+    ret := [];
+    for d in ds do
+        act_W := &*[t^x - 1 : x in d];
+        Append(~ret, act_W div (t-1));
+    end for;
+    return ret;
+end intrinsic;
+
+intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
+{Returns all mod 2 classes of Weil polynomials over F_p (p odd) of a hyperelliptic curve of genus g.}
+    ds := RestrictedPartitions(2*g+2, {j : j in [1..2*g+2] | IsOdd(j)});
+    _<t> := PolynomialRing(GF(2));
+    ret := [];
+    for d in ds do
+        act_W := &*[t^x - 1 : x in d];
+        Append(~ret, act_W div (t-1)^2);
+    end for;
+    return ret;
+end intrinsic;
+
