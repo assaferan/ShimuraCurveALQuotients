@@ -267,7 +267,7 @@ intrinsic HypWeilPolynomial(X::ShimuraQuot) -> BoolElt
     {check against LMFDB data for g=3}
     assert X`g eq 3;
 
-    for p in [2, 3, 5, 7, 11, 13] do
+    for p in [2, 3, 5, 7, 11, 13, 17, 19, 23] do
         if p in PrimeDivisors(X`D*X`N) then 
             continue;
         end if;
