@@ -98,7 +98,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        unknownstar := [ c : c in unknown | IsStarCurve(c) and not assigned c`IsSubhyp];
+        unknownstar := [ c : c in curves | IsStarCurve(c) and not assigned c`IsSubhyp];
 
         for p in PrimesUpTo(10) do
             FilterStarCurvesByFpAutomorphisms(unknownstar, ~curves, p, 20 );
