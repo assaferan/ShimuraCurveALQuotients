@@ -98,25 +98,19 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        unknown := [c : c in curves | not assigned c`IsSubhyp];
-
-        unknownstar := [ c : c in unknown | IsStarCurve(c)];
+        unknownstar := [ c : c in unknown | IsStarCurve(c) and not assigned c`IsSubhyp];
 
         for p in PrimesUpTo(10) do
             FilterStarCurvesByFpAutomorphisms(unknownstar, ~curves, p, 20 );
         end for;
 
-        unknowng3 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 3];
-
-        unknowng4 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 4];
-
-        FilterByWeilPolynomialG3G4(~unknowng3);
+        FilterByWeilPolynomialG3G4(~curves);
 
         UpdateByIsomorphisms(~curves);
 
         UpwardClosure(~curves);
-        DownwardClosure(~curves);
 
+        DownwardClosure(~curves);
 
         Write("all_curves_progress.dat", "" : Overwrite);
 
