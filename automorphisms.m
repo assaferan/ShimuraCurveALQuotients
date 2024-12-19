@@ -203,7 +203,7 @@ intrinsic CheckWeilPolyg3(X::ShimuraQuot, p::RngIntElt)->BoolElt
 end intrinsic;
 
 intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
-    {}
+    {This is made redundant in small p by later data}
 
     goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
 
@@ -303,3 +303,4 @@ intrinsic FilterByWeilPolynomialG3(~curves::SeqEnum)
             end if;
     end for;
 end intrinsic;
+
