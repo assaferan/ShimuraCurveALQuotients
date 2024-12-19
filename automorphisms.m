@@ -1,7 +1,5 @@
 import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, point_counts;
 
-
-
 function ComputePointsViaTrace(X, p, d)
     //Compute points via trace formula on X(Fp^d) when d is between 1 and g
     g := X`g;
@@ -40,6 +38,10 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
     W := X`W;
     g := X`g;
 
+    assert D mod p ne 0;
+    assert N mod p ne 0;
+    assert g gt 0;
+
     b, Npd := GetCache(<X, p^d>, point_counts);
     if b then
         return Npd;        
@@ -69,7 +71,7 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
             Append(~c,p^(j-g)*c[2*g-j]);
         end for;
         Append(~c, p^g);
-        
+
         for j in [g+1..2*g] do
             Append(~S, -(&+[c[i]*S[j-i] : i in [1..(j-1)]]+j*c[j]));
         end for;
@@ -95,6 +97,45 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
         end if;
 
     end if;
+
+end intrinsic;
+
+intrinsic WeilPolynomial(X::ShimuraQuot,p::RngIntElt) -> RngUPolElt
+    {Return Weil polynomial}
+    D := X`D;
+    N := X`N;
+    W := X`W;
+    g := X`g;
+
+    assert D mod p ne 0;
+    assert N mod p ne 0;
+    assert g gt 0;
+    Nps :=[];
+    for i in [1 .. g] do
+        b, Npd := GetCache(<X, p^i>, point_counts);
+        if not b then
+            Npd := ComputePointsViaTrace(X, p, i);
+            SetCache(<X, p^i>, Npd, point_counts);
+        end if;
+        Append(~Nps, Npd);
+    end for;
+
+    //now have computed all number of points up to g
+    S := [p^j +1 - Nps[j] : j in [1..g]]; 
+    //S[j] := sum of alpha_i^j where alpha1, ..., alpha2g are roots of reverse P(T)
+    c :=[-S[1]];
+    for j in [2..g] do
+        Append(~c,-(S[j] + &+[c[i]*S[j-i] : i in [1..j-1]]) /j);
+    end for;
+    //c[i] are signed elementary symmetric polynomials of the alpha
+    for j in [g+1..2*g-1] do
+        Append(~c,p^(j-g)*c[2*g-j]);
+    end for;
+    Append(~c, p^g);
+
+    _<T>:=PolynomialRing(Integers());
+    wp := &+[c[i]*T^(2*g-i) : i in [1..2*g]] + T^(2*g);
+    return wp;
 
 end intrinsic;
 
@@ -124,14 +165,11 @@ intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> Rng
     for i in [0..k] do
        valp:= Pp(X, 2*i+1, p);
      sum +:= (2*i+1)* valp;
-     print "sum is", sum;
+     vprint ShimuraQuotients, 3: "sum is", sum;
      if sum gt 2*X`g+2 then return false, sum; end if;
     end for;
     return true, sum;
 end intrinsic;
-
-
-
 
 intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEnum, p::RngIntElt, k::RngIntElt)
     {Choose p, if the curve X does not have Fp automorphisms, then update status in curves}
@@ -139,7 +177,7 @@ intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEn
     goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
 
     for i->X in goodredn do
-        print "starting curve", i;
+        vprint ShimuraQuotients, 2: "starting curve", i;
         g := X`g;
         b, sum := InvolutionCounter(X,p, k);
         if not b then
@@ -148,6 +186,56 @@ intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEn
             curves[id]`IsHyp := false;
         end if;
     end for;
+end intrinsic;
 
+intrinsic CheckWeilPolyg3(X::ShimuraQuot, p::RngIntElt)->BoolElt
+    {Apply Theorem 2.8 of arxiv.org/pdf/2002.02067 
+    return false if not hyperelliptic, otherwise return true (unknown)}
+    g:= X`g;
+    assert g eq 3;
+    assert p ne 2;
+    poly := WeilPolynomial(X,p);
+    if Integers()!(Coefficient(poly, 2)/p) mod 2 eq 0 and Coefficient(poly,3) mod 2 eq 1 then
+        return false;
+    else
+        return true;
+    end if;
+end intrinsic;
+
+intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p) -> BoolElt
+    {}
+
+    goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
+
+    for i->X in goodredn do
+        vprint ShimuraQuotients, 2: "starting curve", i;
+        g := X`g;
+        b := CheckWeilPolyg3(X,p);
+        if not b then
+            id := X`CurveID;
+            curves[id]`IsSubhyp := false;
+            curves[id]`IsHyp := false;
+        end if;
+    end for;
+
+end intrinsic;
+
+intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
+    {Check if #Ramification points defined over C(F_p^d) for d odd, d < 2g +2 is odd}
+    g :=X`g;
+    sum := GF(2)!0;
+    for d in [1..2*g+1] do
+        if d eq 1 then
+            pts := NumPointsFpd(X, p, d);
+        else
+            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
+        end if;
+        sum +:=GF(2)!sum; 
+    end for;
+    if sum eq GF(2)!1 then
+        return false; //return false if not hyperelliptic
+    else
+        return true; //unclear if hyperelliptic or not
+    end if;
 end intrinsic;
 
