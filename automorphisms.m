@@ -205,7 +205,7 @@ end intrinsic;
 intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
     {}
 
-    goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
+    goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
 
     for i->X in goodredn do
         vprint ShimuraQuotients, 2: "starting curve", i;
@@ -263,12 +263,43 @@ intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
     return ret;
 end intrinsic;
 
-// intrinsic FilterByWeilPolynomial(X::ShimuraQuot) -> BoolElt
-//     {check against LMFDB data for g=3}
-//     assert X`g eq 3;
-//     for p in [2, 3, 5, 7, 11, 13] do
-//         poly := WeilPolynomial(X, p);
-//     end for;
-    
+intrinsic HypWeilPolynomial(X::ShimuraQuot) -> BoolElt
+    {check against LMFDB data for g=3}
+    assert X`g eq 3;
 
-// end intrinsic;
+    for p in [2, 3, 5, 7, 11, 13] do
+        if p in PrimeDivisors(X`D*X`N) then 
+            continue;
+        end if;
+        f :=  Read("nonhyp" cat Sprint(p) cat ".txt");
+        lines := Split(f, "\n");
+        possible_polys := { eval c : c in lines};
+
+        poly := WeilPolynomial(X, p);
+        wp := Reverse(Coefficients(poly));
+        if wp in possible_polys then
+            vprint  ShimuraQuotients, 3: wp;
+            return false;
+        end if;
+
+    end for;
+    return true;
+
+end intrinsic;
+
+intrinsic FilterByWeilPolynomialG3(~curves::SeqEnum)
+    {Filter by constraints on weil polynomials}
+    for i->c in curves do
+        if i mod 10 eq 0 then
+            print i;
+        end if;
+        if assigned c`IsSubhyp then continue; end if;
+        g:= c`g;
+        assert g eq 3;
+            b := HypWeilPolynomial(c);
+            if not b then
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+            end if;
+    end for;
+end intrinsic;
