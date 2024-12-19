@@ -108,7 +108,9 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         unknowng3 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 3];
 
-        FilterByWeilPolynomialG3(~unknowng3);
+        unknowng4 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 4];
+
+        FilterByWeilPolynomialG3G4(~unknowng3);
 
         UpdateByIsomorphisms(~curves);
 

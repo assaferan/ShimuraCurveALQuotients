@@ -263,7 +263,7 @@ intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
     return ret;
 end intrinsic;
 
-intrinsic HypWeilPolynomial(X::ShimuraQuot) -> BoolElt
+intrinsic HypWeilPolynomialG3(X::ShimuraQuot) -> BoolElt
     {check against LMFDB data for g=3}
     assert X`g eq 3;
 
@@ -287,20 +287,54 @@ intrinsic HypWeilPolynomial(X::ShimuraQuot) -> BoolElt
 
 end intrinsic;
 
-intrinsic FilterByWeilPolynomialG3(~curves::SeqEnum)
-    {Filter by constraints on weil polynomials}
+
+intrinsic HypWeilPolynomialG4(X::ShimuraQuot) -> BoolElt
+    {check against LMFDB data for g=4}
+    assert X`g eq 4;
+
+    for p in [2, 3, 5] do
+        if p in PrimeDivisors(X`D*X`N) then 
+            continue;
+        end if;
+        f :=  Read("nonhypg4q" cat Sprint(p) cat ".txt");
+        lines := Split(f, "\n");
+        possible_polys := { eval c : c in lines};
+
+        poly := WeilPolynomial(X, p);
+        wp := Reverse(Coefficients(poly));
+        if wp in possible_polys then
+            vprint  ShimuraQuotients, 3: wp;
+            return false;
+        end if;
+
+    end for;
+    return true;
+
+end intrinsic;
+
+intrinsic FilterByWeilPolynomialG3G4(~curves::SeqEnum)
+    {Filter by constraints on weil polynomials coming from LMFDB}
     for i->c in curves do
         if i mod 10 eq 0 then
-            print i;
+            vprint ShimuraQuotients, 2: i;
         end if;
         if assigned c`IsSubhyp then continue; end if;
         g:= c`g;
-        assert g eq 3;
-            b := HypWeilPolynomial(c);
+        if g eq 3 then
+            b := HypWeilPolynomialG3(c);
             if not b then
                 curves[i]`IsSubhyp := false;
                 curves[i]`IsHyp := false;
             end if;
+        elif g eq 4 then
+            b := HypWeilPolynomialG4(c);
+            if not b then
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+            end if;
+        else
+            continue;
+        end if;
     end for;
 end intrinsic;
 
