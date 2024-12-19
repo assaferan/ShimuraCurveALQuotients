@@ -9,9 +9,8 @@ for i in [1..#curves] do
     lut[<c`D, c`N, c`W>] := i;
 end for;
 
-load "automorphisms.m";
 //Curves with 3 good
-testcurves := [x : x in unknownstar |3 notin PrimeFactors(x`D*x`N )];
+testcurves := [x : x in unknownstar |3 notin PrimeFactors(x`D*x`N ) and x`g eq 3];
 potential_curves := [];
 for i->X in testcurves do
     print "doing curve number", i;

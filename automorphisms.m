@@ -202,7 +202,7 @@ intrinsic CheckWeilPolyg3(X::ShimuraQuot, p::RngIntElt)->BoolElt
     end if;
 end intrinsic;
 
-intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p) -> BoolElt
+intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
     {}
 
     goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
@@ -263,3 +263,12 @@ intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
     return ret;
 end intrinsic;
 
+// intrinsic FilterByWeilPolynomial(X::ShimuraQuot) -> BoolElt
+//     {check against LMFDB data for g=3}
+//     assert X`g eq 3;
+//     for p in [2, 3, 5, 7, 11, 13] do
+//         poly := WeilPolynomial(X, p);
+//     end for;
+    
+
+// end intrinsic;

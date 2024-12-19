@@ -1,5 +1,4 @@
 // AttachSpec("shimuraquots.spec");
-
 intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -> SeqEnum
 {.}
     SetDebugOnError(true);
@@ -99,6 +98,17 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
+        unknown := [c : c in curves | not assigned c`IsSubhyp];
+
+        unknownstar := [ c : c in unknown | IsStarCurve(c)];
+
+        for p in PrimesUpTo(10) do
+            FilterStarCurvesByFpAutomorphisms(unknownstar, ~curves, p, 20 );
+        end for;
+
+        UpdateByIsomorphisms(~curves);
+
+        UpwardClosure(~curves);
 
         Write("all_curves_progress.dat", "" : Overwrite);
 
