@@ -246,7 +246,7 @@ intrinsic HyperellipticWeilPolysAtTwo(f::RngIntElt) -> SeqEnum
     ret := [];
     for d in ds do
         act_W := &*[t^x - 1 : x in d];
-        Append(~ret, act_W div (t-1));
+        Append(~ret, Reverse(Coefficients(act_W div (t-1))));
     end for;
     return ret;
 end intrinsic;
@@ -258,82 +258,69 @@ intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
     ret := [];
     for d in ds do
         act_W := &*[t^x - 1 : x in d];
-        Append(~ret, act_W div (t-1)^2);
+        Append(~ret, Reverse(Coefficients(act_W div (t-1)^2)));
     end for;
     return ret;
 end intrinsic;
 
-intrinsic HypWeilPolynomialG3(X::ShimuraQuot) -> BoolElt
-    {check against LMFDB data for g=3}
-    assert X`g eq 3;
 
-    for p in [2, 3, 5, 7, 11, 13, 17, 19, 23] do
-        if p in PrimeDivisors(X`D*X`N) then 
-            continue;
-        end if;
-        f :=  Read("nonhyp" cat Sprint(p) cat ".txt");
-        lines := Split(f, "\n");
-        possible_polys := { eval c : c in lines};
-
-        poly := WeilPolynomial(X, p);
-        wp := Reverse(Coefficients(poly));
-        if wp in possible_polys then
-            vprint  ShimuraQuotients, 3: wp;
+intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc) -> BoolElt
+    {Return false if not a hyperellitic Weil Poly at some prime p}
+    g := X`g;
+    assert g in Keys(possible_wps);
+    primes := Keys(possible_wps[g]);
+    for p in primes do
+        if p in PrimeDivisors(X`D*X`N) then continue; end if;
+        wp := Reverse(Coefficients(WeilPolynomial(X,p)));
+        u:= Universe(possible_wps[g][p]);
+        if u!wp notin possible_wps[g][p] then
+            vprint ShimuraQuotients, 2 : u!wp;
             return false;
         end if;
-
     end for;
     return true;
 
 end intrinsic;
 
 
-intrinsic HypWeilPolynomialG4(X::ShimuraQuot) -> BoolElt
-    {check against LMFDB data for g=4}
-    assert X`g eq 4;
+function LMFDBweilpolys(g,p)
+    f :=  Read(Sprintf("hypg%oq%o.txt",g,p));
+    lines := Split(f, "\n");
+    possible_polys := { eval c : c in lines};
+    return possible_polys;
+end function;
 
-    for p in [2, 3, 5] do
-        if p in PrimeDivisors(X`D*X`N) then 
-            continue;
-        end if;
-        f :=  Read("nonhypg4q" cat Sprint(p) cat ".txt");
-        lines := Split(f, "\n");
-        possible_polys := { eval c : c in lines};
-
-        poly := WeilPolynomial(X, p);
-        wp := Reverse(Coefficients(poly));
-        if wp in possible_polys then
-            vprint  ShimuraQuotients, 3: wp;
-            return false;
-        end if;
-
+function createpossiblepolys(genera : bd := 25)
+    possible_wps := AssociativeArray();
+    for g in genera do
+        possible_wps[g] := AssociativeArray();
+        for p in PrimesUpTo(bd) do
+            if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
+                polys := LMFDBweilpolys(g,p);
+            elif p ne 2 then
+                polys := Set(HyperellipticWeilPolysAwayFromTwo(g));
+            end if;
+            possible_wps[g][p] := polys;
+        end for;
     end for;
-    return true;
+    return possible_wps;
 
-end intrinsic;
+end function;
 
-intrinsic FilterByWeilPolynomialG3G4(~curves::SeqEnum)
+
+intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
     {Filter by constraints on weil polynomials coming from LMFDB}
+    genera := [c`g : c in curves];
+    possible_wps := createpossiblepolys(genera :bd := bd);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
         end if;
         if assigned c`IsSubhyp then continue; end if;
-        g:= c`g;
-        if g eq 3 then
-            b := HypWeilPolynomialG3(c);
-            if not b then
-                curves[i]`IsSubhyp := false;
-                curves[i]`IsHyp := false;
-            end if;
-        elif g eq 4 then
-            b := HypWeilPolynomialG4(c);
-            if not b then
-                curves[i]`IsSubhyp := false;
-                curves[i]`IsHyp := false;
-            end if;
-        else
-            continue;
+        b := IsHypWeilPolynomial(c, possible_wps);
+        if not b then
+            curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
         end if;
     end for;
 end intrinsic;

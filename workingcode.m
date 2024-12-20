@@ -104,7 +104,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
             FilterStarCurvesByFpAutomorphisms(unknownstar, ~curves, p, 20 );
         end for;
 
-        FilterByWeilPolynomialG3G4(~curves);
+        FilterByWeilPolynomial(~curves);
 
         UpdateByIsomorphisms(~curves);
 
