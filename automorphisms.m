@@ -274,7 +274,7 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
         if 2 notin PrimeDivisors(X`D*X`N) then
             wp := WeilPolynomial(X,2);
             slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
-            f := [i[2] : i in s | i[1] eq 0][1]; //find multiplicity of 0
+            f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
             u := Universe(poss_wps_at2[f]);
             if u!wp notin poss_wps_at2[f] then
                 vprint ShimuraQuotients, 2 : u!wp;
