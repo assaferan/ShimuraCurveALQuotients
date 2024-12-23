@@ -264,10 +264,25 @@ intrinsic HyperellipticWeilPolysAwayFromTwo(g::RngIntElt) -> SeqEnum
 end intrinsic;
 
 
-intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc) -> BoolElt
+
+
+intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2 ::Assoc) -> BoolElt
     {Return false if not a hyperellitic Weil Poly at some prime p}
     g := X`g;
     assert g in Keys(possible_wps);
+    if g notin [3,4,5,6] then //first check at 2 by f-rank
+        if 2 notin PrimeDivisors(X`D*X`N) then
+            wp := WeilPolynomial(X,2);
+            slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
+            f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
+            u := Universe(poss_wps_at2[f]);
+            if u!wp notin poss_wps_at2[f] then
+                vprint ShimuraQuotients, 2 : u!wp;
+                return false;
+            end if;
+        end if;
+    end if;
+
     primes := Keys(possible_wps[g]);
     for p in primes do
         if p in PrimeDivisors(X`D*X`N) then continue; end if;
@@ -292,19 +307,28 @@ end function;
 
 function createpossiblepolys(genera : bd := 25)
     possible_wps := AssociativeArray();
+    poss_wps_at2 := AssociativeArray();
+    //first do 2
+    largest_g := Maximum(genera);
+    for f in [0..largest_g] do
+        poss_wps_at2[f] := HyperellipticWeilPolysAtTwo(f);
+    end for;
+
+
     for g in genera do
         assert g notin [0,1,2];
         possible_wps[g] := AssociativeArray();
         for p in PrimesUpTo(bd) do
             if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
                 polys := LMFDBweilpolys(g,p);
+                possible_wps[g][p] := polys;
             elif p ne 2 then
                 polys := Set(HyperellipticWeilPolysAwayFromTwo(g));
+                possible_wps[g][p] := polys;
             end if;
-            possible_wps[g][p] := polys;
         end for;
     end for;
-    return possible_wps;
+    return possible_wps, poss_wps_at2;
 
 end function;
 
@@ -312,14 +336,13 @@ end function;
 intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
     {Filter by constraints on weil polynomials coming from LMFDB}
     genera := { c`g : c in curves | not assigned c`IsSubhyp };
-    print genera;
-    possible_wps := createpossiblepolys(genera :bd := bd);
+    possible_wps, poss_wps_at2 := createpossiblepolys(genera :bd := bd);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
         end if;
         if assigned c`IsSubhyp then continue; end if;
-        b := IsHypWeilPolynomial(c, possible_wps);
+        b := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2);
         if not b then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
