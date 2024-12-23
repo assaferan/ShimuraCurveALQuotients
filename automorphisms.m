@@ -293,6 +293,7 @@ end function;
 function createpossiblepolys(genera : bd := 25)
     possible_wps := AssociativeArray();
     for g in genera do
+        assert g notin [0,1,2];
         possible_wps[g] := AssociativeArray();
         for p in PrimesUpTo(bd) do
             if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
@@ -310,7 +311,7 @@ end function;
 
 intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
     {Filter by constraints on weil polynomials coming from LMFDB}
-    genera := [c`g : c in curves];
+    genera := [c`g : c in curves | not assigned`IsSubhyp];
     possible_wps := createpossiblepolys(genera :bd := bd);
     for i->c in curves do
         if i mod 10 eq 0 then
