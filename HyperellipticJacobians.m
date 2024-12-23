@@ -1,4 +1,7 @@
-load "../hyperelliptic/Hyperelliptic3.magma";
+path := GetCurrentDirectory();
+ChangeDirectory("../hyperelliptic/");
+load "Hyperelliptic3.magma";
+ChangeDirectory(path);
 
 function HypWeilPolynomialsGenus3Howe(q)
     L := eightpoints(GF(q));
