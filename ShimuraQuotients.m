@@ -1276,7 +1276,7 @@ procedure Filter_qExpansion(~curves)
     end for;
 end procedure;
 
-intrinsic CheckProgress(curves :: SeqEnum) -> FldRatElt, RingIntElt
+intrinsic CheckProgress(curves :: SeqEnum) -> FldRatElt, RngIntElt
     {}
     total := #curves;
     done := Rationals()!0;
