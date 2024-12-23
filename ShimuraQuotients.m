@@ -409,7 +409,7 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
     return e;
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RingIntElt
+intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
     {Genus of X0(D,N)/< w_m>}
     e := NumFixedPoints(D, N, m);
     g_big := GenusShimuraCurve(D, N);
@@ -418,7 +418,7 @@ intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIn
     return Floor(g);
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -> RingIntElt
+intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -> RngIntElt
     {Genus of X0(D,N)/<als>}
     total_e := 0;
     for al in als do
