@@ -356,7 +356,8 @@ intrinsic ConstructOrders(m  :: RngIntElt) ->SeqEnum
             sqrt_minus_m:= sqm*a;
             O := MaximalOrder(F);
             alpha := (1 + sqrt_minus_m)/2;
-            orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
+            orders := [sub<O | alpha>, sub<O | 2*alpha>];
+            // orders := [sub<O | 1, alpha>, sub<O | 1, 2*alpha>];
             // orders := [EquationOrder(x^2+x+((m+1) div 4)), EquationOrder(x^2+m)];
         else
             F<a> := QuadraticField(-m);
@@ -364,7 +365,8 @@ intrinsic ConstructOrders(m  :: RngIntElt) ->SeqEnum
             sqrt_minus_m:= sqm*a;
             // _, sqrt_minus_m := IsSquare(F!(-m));
             O := MaximalOrder(F);
-            orders := [sub<O | 1, sqrt_minus_m>];
+            orders := [sub<O | sqrt_minus_m>];
+            // orders := [sub<O | 1, sqrt_minus_m>];
             // orders := [EquationOrder(x^2+m)];
         end if;
         class_nums :=[];
@@ -407,7 +409,7 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
     return e;
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RingIntElt
+intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
     {Genus of X0(D,N)/< w_m>}
     e := NumFixedPoints(D, N, m);
     g_big := GenusShimuraCurve(D, N);
@@ -416,14 +418,14 @@ intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIn
     return Floor(g);
 end intrinsic;
 
-intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -> RingIntElt
+intrinsic GenusShimuraCurveQuotient(D::RngIntElt, N::RngIntElt, als ::SetEnum) -> RngIntElt
     {Genus of X0(D,N)/<als>}
     total_e := 0;
     for al in als do
-    assert GCD(al, (D*N) div al) eq 1;
-    if (al ne 1) then
-        total_e +:= NumFixedPoints(D, N, al );
-    end if;
+        assert GCD(al, (D*N) div al) eq 1;
+        if (al ne 1) then
+            total_e +:= NumFixedPoints(D, N, al );
+        end if;
     end for;
     if #als eq 1 then
         s := 0;
@@ -603,7 +605,7 @@ end intrinsic;
 intrinsic UpdateGenera(~curves::SeqEnum)
     {}
     for i->c in curves do
-	curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
+	    curves[i]`g := GenusShimuraCurveQuotient(c`D, c`N, c`W);
     end for;
 end intrinsic;
 
@@ -705,8 +707,9 @@ end function;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
-    {}
+intrinsic CheckHeckeTrace(X ::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
+{Returns false if X is not hyperelliptic, true if this fact cannot be determined from counting points and using a naive inequality.
+If returns false, also returns p, v such that point coutn over GF(p^v) proves non-hyperellipticity.}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
@@ -726,52 +729,53 @@ intrinsic CheckHeckeTrace(X ::ShimuraQuot) ->BoolElt
             num_pts := p^v  + 1 - trace_frob_n;
             if (num_pts gt 2*(1+p^v)) then
                 print "p, v = ", p, v;
-                return false;
+                return false, p, v;
             end if;
         end for;
     end for;
-    return true;
+    return true, _, _;
 end intrinsic;
 
 intrinsic FilterByTrace(~curve_list::SeqEnum)
-    {}
+{Updates curve_list such that curves that fail the HeckeTrace test are denoted as non-hyperelliptic.}
     lut := AssociativeArray();
     for i->X in curve_list do
-	if assigned X`IsSubhyp then
+        if assigned X`IsSubhyp then
             continue;
-	end if;
-	vprint ShimuraQuotients, 2: "i = ", i;
-	if not CheckHeckeTrace(X) then
+        end if;
+        vprint ShimuraQuotients, 2: "i = ", i;
+        is_subhyp, p, v := CheckHeckeTrace(X);
+        if not is_subhyp then
             curve_list[i]`IsSubhyp := false;
             curve_list[i]`IsHyp := false;
-	end if;
+            curve_list[i]`TestInWhichProved := Sprintf("Trace, with p^v = %o^%o", p, v);
+        end if;
     end for;
 end intrinsic;
 
 intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot ) -> RngIntElt
-    {}
+{Returns the number of fixed points of W_w on c.}
     return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D)) : m in c`W];
 end intrinsic;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
 // (so it is either elliptic or hyperelliptic)
 // then any AL involution on X = X_0(N)/W is non-hyperelliptic
-// and if X is hyperelliptic, has atmost four fixed points.
-// Test returns false if X is non-hyperelliptic
-// If true, X might be hyperelliptic
-intrinsic TestALFixedPointsOnQuotient(X ::ShimuraQuot) -> BoolElt
-    {}
+// and if X is hyperelliptic, has at most four fixed points.
+intrinsic TestALFixedPointsOnQuotient(X ::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
+{Returns false if X is non-hyperelliptic. If true, X might be hyperelliptic.
+If it returns false, also returns d, fix where W_d has fix fixed-points on X is a witness to non-hyperellipticity.}
     DN := X`D*X`N;
     ws := [d : d in Divisors(DN) | d notin X`W and (GCD(d, DN div d) eq 1)];
     for d in ws do
-    fix := CountFixedPointsOnQuotient(d, X);
-    if IsEven(X`g) and fix gt 2 then
-        return false;
-    elif IsOdd(X`g) and fix gt 4 then
-        return false;
-    end if;
+        fix := CountFixedPointsOnQuotient(d, X);
+        if IsEven(X`g) and fix gt 2 then
+            return false, d, fix;
+        elif IsOdd(X`g) and fix gt 4 then
+            return false, d, fix;
+        end if;
     end for;
-    return true;
+    return true, _, _;
 end intrinsic;
 
 intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
@@ -780,11 +784,11 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     if (assigned c`IsSubhyp) and c`IsSubhyp then
         continue;
     end if;
-    // if testALFixedPointsOnQuotient(c) then
-        // Include(~passed_test, c);
-    if not TestALFixedPointsOnQuotient(c) then
+    is_subhyp, d, fix := TestALFixedPointsOnQuotient(c);
+    if not is_subhyp then
         curves[lc]`IsSubhyp := false;
         curves[lc]`IsHyp := false;
+        curves[lc]`TestInWhichProved := Sprintf("ALFixedPointsOnQuotient, W_%o has %o fixed points", d, fix);
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
@@ -878,32 +882,34 @@ end intrinsic;
 intrinsic UpdateByGenus(~curves :: SeqEnum)
     {}
     for i in [1..#curves] do
-    if (curves[i]`g eq 0) then
-        curves[i]`IsP1 := true;
-        curves[i]`IsEC := false;
-        curves[i]`IsHyp := false;
-        // check the ones with hyperelliptic AL involution
-        if assigned curves[i]`CoveredBy then
-        for cover in curves[i]`CoveredBy do
-            curves[cover]`IsSubhyp := true;
-            if (curves[cover]`g ge 2) then
-            curves[cover]`IsHyp := true;
+        if (curves[i]`g eq 0) then
+            curves[i]`IsP1 := true;
+            curves[i]`IsEC := false;
+            curves[i]`IsHyp := false;
+            // check the ones with hyperelliptic AL involution
+            if assigned curves[i]`CoveredBy then
+                for cover in curves[i]`CoveredBy do
+                    curves[cover]`IsSubhyp := true;
+                    if (curves[cover]`g ge 2) then
+                        curves[cover]`IsHyp := true;
+                    end if;
+                    curves[cover]`TestInWhichProved := "HyperellipticALInvolution";
+                end for;
             end if;
-        end for;
         end if;
-    end if;
-    if (curves[i]`g eq 1) then
-        curves[i]`IsEC := true;
-        curves[i]`IsHyp := false;
-    else
-        curves[i]`IsEC := false;
-    end if;
-    if (curves[i]`g eq 2) then
-        curves[i]`IsHyp := true;
-    end if;
-    if (curves[i]`g le 2) then
-        curves[i]`IsSubhyp := true;
-    end if;
+        if (curves[i]`g eq 1) then
+            curves[i]`IsEC := true;
+            curves[i]`IsHyp := false;
+        else
+            curves[i]`IsEC := false;
+        end if;
+        if (curves[i]`g eq 2) then
+            curves[i]`IsHyp := true;
+        end if;
+        if (curves[i]`g le 2) then
+            curves[i]`IsSubhyp := true;
+            curves[i]`TestInWhichProved := "GenusLt3";
+        end if;
     end for;
 end intrinsic;
 
@@ -923,12 +929,13 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
     Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
     for W in Ws do
         if not IsDefined(lut, <D,N,W>) then
-        continue;
+            continue;
         end if;
         curves[lut[<D,N,W>]]`IsSubhyp := false;
         if (curves[lut[<D,N,W>]]`g ge 2) then
-        curves[lut[<D,N,W>]]`IsHyp := false;
+            curves[lut[<D,N,W>]]`IsHyp := false;
         end if;
+        curves[lut[<D,N,W>]]`TestInWhichProved := "ComplicatedALFixedPointsOnQuotient";
     end for;
     if (lc mod 100 eq 0) then
         vprint ShimuraQuotients, 2: "lc = ", lc;
@@ -939,43 +946,47 @@ end intrinsic;
 intrinsic DownwardClosure(~curves::SeqEnum)
     {}
     for c in curves do
-    if (assigned c`IsSubhyp) and c`IsSubhyp then
-        for covered in c`Covers do
-        curves[covered]`IsSubhyp := true;
-        if curves[covered]`g eq 0 then
-            curves[covered]`IsP1 := true;
-        elif curves[covered]`g eq 1 then
-            curves[covered]`IsEC := true;
-        else curves[covered]`IsHyp := true;
+        if (assigned c`IsSubhyp) and c`IsSubhyp then
+            for covered in c`Covers do
+                curves[covered]`IsSubhyp := true;
+                if curves[covered]`g eq 0 then
+                    curves[covered]`IsP1 := true;
+                elif curves[covered]`g eq 1 then
+                    curves[covered]`IsEC := true;
+                else 
+                    curves[covered]`IsHyp := true;
+                end if;
+                curves[covered]`TestInWhichProved := Sprintf("DownwardClosure from %o", c`CurveID);
+            end for;
         end if;
-        end for;
-    end if;
     end for;
 end intrinsic;
 
 intrinsic UpwardClosure(~curves::SeqEnum)
     {}
     for c in curves do
-    if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
-        for cover in c`CoveredBy do
-        curves[cover]`IsSubhyp := false;
-        curves[cover]`IsHyp := false;
-        end for;
-    end if;
+        if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
+            for cover in c`CoveredBy do
+                curves[cover]`IsSubhyp := false;
+                curves[cover]`IsHyp := false;
+                curves[cover]`TestInWhichProved := Sprintf("UpwardClosure from %o", c`CurveID);
+            end for;
+        end if;
     end for;
 end intrinsic;
 
 intrinsic Genus3CoversGenus2(~curves::SeqEnum)
     {}
     for c in curves do
-    if c`g eq 2 then
-        for cover in c`CoveredBy do
-        if curves[cover]`g eq 3 then
-            curves[cover]`IsSubhyp := true;
-            curves[cover]`IsHyp := true;
+        if c`g eq 2 then
+            for cover in c`CoveredBy do
+                if curves[cover]`g eq 3 then
+                    curves[cover]`IsSubhyp := true;
+                    curves[cover]`IsHyp := true;
+                    curves[cover]`TestInWhichProved := Sprintf("Genus3CoverGenus2 from %o", c`CurveID);
+                end if;
+            end for;
         end if;
-        end for;
-    end if;
     end for;
 end intrinsic;
 
@@ -1084,27 +1095,28 @@ intrinsic HHProposition1(~curves::SeqEnum)
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
-    lut_DN[<X`D, X`N>] := X`CurveID;
-    if not IsDefined(lut_D, X`D) then
-        lut_D[X`D] := [];
-    end if;
-    lut_D[X`D] := Append(lut_D[X`D], X`N);
+        lut_DN[<X`D, X`N>] := X`CurveID;
+        if not IsDefined(lut_D, X`D) then
+            lut_D[X`D] := [];
+        end if;
+        lut_D[X`D] := Append(lut_D[X`D], X`N);
     end for;
     for i->X in curves do
-    if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
-        Ns := lut_D[X`D];
-        ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
-                     IsPrime(N div X`N)];
-        for p in ps do
-        if IsDefined(lut_DN, <X`D, p*X`N>) then
-            other := lut_DN[<X`D, p*X`N>];
-            if X`g eq curves[other]`g then
-            curves[other]`IsSubhyp := false;
-            curves[other]`IsHyp := false;
-            end if;
+        if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
+            Ns := lut_D[X`D];
+            ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
+                        IsPrime(N div X`N)];
+            for p in ps do
+                if IsDefined(lut_DN, <X`D, p*X`N>) then
+                    other := lut_DN[<X`D, p*X`N>];
+                    if X`g eq curves[other]`g then
+                        curves[other]`IsSubhyp := false;
+                        curves[other]`IsHyp := false;
+                        curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);
+                    end if;
+                end if;
+            end for;
         end if;
-        end for;
-    end if;
     end for;
 end intrinsic;
 
@@ -1146,12 +1158,14 @@ procedure UpdateIsoStatus(~c1, ~c2)
 
     if assigned(c1`IsSubhyp) and not assigned(c2`IsSubhyp) then
         c2`IsSubhyp := c1`IsSubhyp;
+        c2`TestInWhichProved := Sprintf("UpdateIsoStatus, isomorphic to %o", c1`CurveID);
         if assigned c1`IsHyp then
             c2`IsHyp := c1`IsHyp;
         end if;
         vprintf ShimuraQuotients, 2: "Found new isomorphism between level %o with ALs %o and level %o with ALs %o at disc %o.\n", N, WNs, M, WMs, D;
     elif assigned(c2`IsSubhyp) and not assigned(c1`IsSubhyp) then
         c1`IsSubhyp := c2`IsSubhyp;
+        c1`TestInWhichProved := Sprintf("UpdateIsoStatus, isomorphic to %o", c2`CurveID);
         if assigned c2`IsHyp then
             c1`IsHyp := c2`IsHyp;
         end if;
@@ -1167,7 +1181,6 @@ end procedure;
 
 intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
     {}
-
     lut := AssociativeArray();
     for i in [1..#curves] do
         c := curves[i];
@@ -1255,15 +1268,15 @@ end function;
 
 procedure Filter_qExpansion(~curves)
     for i->X in curves do
-	if not assigned X`IsSubhyp then
+        if not assigned X`IsSubhyp then
             curves[i]`IsHyp := qExpansionCheck(X);
             curves[i]`IsSubhyp := curves[i]`IsHyp;
-	end if;
+            curves[i]`TestInWhichProved := "qExpansion";
+        end if;
     end for;
 end procedure;
 
-
-intrinsic CheckProgress(curves :: SeqEnum) -> FldRatElt, RingIntElt
+intrinsic CheckProgress(curves :: SeqEnum) -> FldRatElt, RngIntElt
     {}
     total := #curves;
     done := Rationals()!0;
@@ -1310,6 +1323,7 @@ intrinsic FilterByWSPoints(~curves::SeqEnum)
         if ws gt 2*g + 2 then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := Sprintf("WSPoints, has %o gt 2*%o+2 WS pts", ws, g);
         end if;
     end for;
 end intrinsic;

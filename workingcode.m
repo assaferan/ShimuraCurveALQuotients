@@ -10,6 +10,8 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
     if recompute_data then 
         r := GetLargestPrimeIndex();
 
+        assert r eq 7;
+
         // Find all pairs (D,N) satisfying the inequality of
         // Proposition 1.
         time star_curves := FindPairs(r); // time : 1.980
@@ -55,6 +57,8 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         // updating classification from the genera we computed
         UpdateByGenus(~curves);
 
+        // upward closure - if X-->Y is dominant then gon(X) >= gon(Y). [Poonen, A.1.(vii)]
+        // In particular, if Y is non-hyperelliptic, so is X.
         UpwardClosure(~curves);
 
         // downward closure - if covered by subhyperelliptic, then subhyperelliptic
