@@ -10,6 +10,8 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
     if recompute_data then 
         r := GetLargestPrimeIndex();
 
+        assert r eq 7;
+
         // Find all pairs (D,N) satisfying the inequality of
         // Proposition 1.
         time star_curves := FindPairs(r); // time : 1.980
