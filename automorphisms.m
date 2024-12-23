@@ -311,7 +311,8 @@ end function;
 
 intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
     {Filter by constraints on weil polynomials coming from LMFDB}
-    genera := [c`g : c in curves | not assigned c`IsSubhyp];
+    genera := { c`g : c in curves | not assigned c`IsSubhyp };
+    print genera;
     possible_wps := createpossiblepolys(genera :bd := bd);
     for i->c in curves do
         if i mod 10 eq 0 then
