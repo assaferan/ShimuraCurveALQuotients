@@ -353,3 +353,35 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
     end for;
 end intrinsic;
 
+intrinsic CheckTrigonalByDegeneracy(X::ShimuraQuot) -> BoolElt
+    {}
+    N := X`N;
+    W := X`W;
+    D := X`D;
+    assert N mod 4 eq 0;
+    newW := {w : w in W | w mod 4 ne 0};
+    g := GenusShimuraCurveQuotient(D,N div 4, newW);
+    print g;
+    if g eq 0 then //trigonal
+        return false;
+    else 
+        return true; //don't know
+    end if;
+
+end intrinsic;
+
+intrinsic FilterByDegeneracyMorphism(~curves::SeqEnum)
+    {}
+    for i->c in curves do
+        if assigned c`IsSubhyp then continue; end if;
+        if c`N mod 4 eq 0 then
+            newW := {w : w in c`W | w mod 4 ne 0};
+            b := CheckTrigonalByDegeneracy(c);
+            if not b then //trigonal
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+            end if;
+        end if;
+    end for;
+end intrinsic;
+
