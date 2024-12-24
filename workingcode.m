@@ -28,7 +28,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         UpdateByGenus(~star_curves);
 
 
-        FilterByTrace(~star_curves); // time :
+        FilterByTrace(~star_curves); // time : 2850.270
 
         VerifyHHTable2(star_curves);
 
@@ -37,11 +37,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         // writing to a file, in case we would like to load it directly
 
-        Write("star_curves_point_count.dat", "" : Overwrite);
-
-        for curve in star_curves do
-            Write("star_curves_point_count.dat", Sprint(curve, "Magma"));
-        end for;
+        Write("star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
 
         // testing that reading the file works
         if false then //check data
@@ -52,7 +48,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
             VerifyHHProposition1(star_curves);
         end if;
 
-        time curves := GetQuotientsAndGenera(star_curves); // 148.660
+        time curves := GetQuotientsAndGenera(star_curves); // 61.520
 
         // updating classification from the genera we computed
         UpdateByGenus(~curves);
@@ -78,17 +74,17 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         // Using Proposition 6 from [FH] adapted to the Shimura curve situation
 
-        time FilterByComplicatedALFixedPointsOnQuotient(~curves); //long time
+        time FilterByComplicatedALFixedPointsOnQuotient(~curves); // 64.840
 
         UpwardClosure(~curves);
 
         // Using trace of Hecke operators to count points and show more curves are
         // non-hyperelliptic
-        FilterByTrace(~curves);
+        time FilterByTrace(~curves);
 
         UpwardClosure(~curves);
 
-        UpdateByIsomorphisms(~curves);
+        time UpdateByIsomorphisms(~curves); // 13.750
 
         UpwardClosure(~curves);
 
@@ -116,18 +112,12 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", "" : Overwrite);
-
-        for curve in curves do
-            Write("all_curves_progress.dat", Sprint(curve, "Magma"));
-        end for;
+        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
     end if;
 
     if read_data then
-        f :=  Read("all_curves_progress.dat");
-        lines := Split(f, ";");
-        curves := [ eval c : c in lines];
+        curves := eval Read("all_curves_progress.dat");
     end if;
 
     return curves;
