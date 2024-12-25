@@ -184,6 +184,7 @@ intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEn
             id := X`CurveID;
             curves[id]`IsSubhyp := false;
             curves[id]`IsHyp := false;
+            curves[id]`TestInWhichProved := "FpAutomorphisms";
         end if;
     end for;
 end intrinsic;
@@ -215,6 +216,7 @@ intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
             id := X`CurveID;
             curves[id]`IsSubhyp := false;
             curves[id]`IsHyp := false;
+            curves[id]`TestInWhichProved := "WeilPolynomialg3";
         end if;
     end for;
 
@@ -346,6 +348,7 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
         if not b then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := "WeilPolynomial";
         end if;
     end for;
 end intrinsic;

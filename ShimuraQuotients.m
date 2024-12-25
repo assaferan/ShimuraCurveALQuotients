@@ -247,8 +247,8 @@ intrinsic GenusShimuraCurve(D::RngIntElt, N::RngIntElt) -> RngIntElt
     g := 1 + phiD * P1N / 12;
     e := AssociativeArray();
     for h in [2,3,4] do
-	e[h] := NumberOfEllipticPoints(D, N, h);
-	g -:= e[h] / h;
+	    e[h] := NumberOfEllipticPoints(D, N, h);
+	    g -:= e[h] / h;
     end for;
     assert IsIntegral(g);
     return Floor(g);
