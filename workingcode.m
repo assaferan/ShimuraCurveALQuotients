@@ -39,14 +39,11 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         Write("star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
 
-        // testing that reading the file works
-        if false then //check data
-            read_curves := eval Read("star_curves_point_count.dat");
-            assert #read_curves eq #star_curves;
-            assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
-            HHProposition1(~star_curves);
-            VerifyHHProposition1(star_curves);
-        end if;
+        read_curves := eval Read("star_curves_point_count.dat");
+        assert #read_curves eq #star_curves;
+        assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
+        HHProposition1(~star_curves);
+        VerifyHHProposition1(star_curves);
 
         time curves := GetQuotientsAndGenera(star_curves); // 61.520
 
@@ -90,6 +87,8 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
+        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+
         FilterByWSPoints(~curves);
         
         UpdateByIsomorphisms(~curves);
@@ -98,13 +97,25 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
+        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+
         unknownstar := [ c : c in curves | IsStarCurve(c) and not assigned c`IsSubhyp];
 
         for p in PrimesUpTo(10) do
             FilterStarCurvesByFpAutomorphisms(unknownstar, ~curves, p, 20 );
         end for;
 
-        FilterByWeilPolynomial(~curves);
+        UpdateByIsomorphisms(~curves);
+
+        UpwardClosure(~curves);
+
+        DownwardClosure(~curves);
+
+        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+
+        // Was actually never run!
+        // FilterByWeilPolynomial(~curves);
+        FilterByWeilPolynomial(~curves : genera := {3,4,5});
 
         UpdateByIsomorphisms(~curves);
 
@@ -117,7 +128,13 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
     end if;
 
     if read_data then
-        curves := eval Read("all_curves_progress.dat");
+        read_curves := eval Read("all_curves_progress.dat");
+        if recompute_data then
+            assert #read_curves eq #curves;
+            assert &and[(read_curves[j] eq curves[j]) : j in [1..#curves]];
+        else
+            curves := read_curves;
+        end if;
     end if;
 
     return curves;

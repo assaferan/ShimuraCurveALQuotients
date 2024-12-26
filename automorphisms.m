@@ -335,15 +335,16 @@ function createpossiblepolys(genera : bd := 25)
 end function;
 
 
-intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25)
+intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : c in curves | not assigned c`IsSubhyp })
     {Filter by constraints on weil polynomials coming from LMFDB}
-    genera := { c`g : c in curves | not assigned c`IsSubhyp };
+    // genera := { c`g : c in curves | not assigned c`IsSubhyp };
     possible_wps, poss_wps_at2 := createpossiblepolys(genera :bd := bd);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
         end if;
         if assigned c`IsSubhyp then continue; end if;
+        if c`g notin genera then continue; end if;
         b := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2);
         if not b then
             curves[i]`IsSubhyp := false;

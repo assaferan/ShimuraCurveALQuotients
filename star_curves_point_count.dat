@@ -769,7 +769,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 193>,
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 194>,
 <"W", { IntegerRing() | 1, 2, 97, 194 }>,
-<"g", 3>, <"CurveID", 193>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 97">
+<"g", 3>, <"CurveID", 193>, <"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 195>,
 <"W", { IntegerRing() | 1, 3, 5, 13, 15, 39, 65, 195 }>,
@@ -1445,7 +1445,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 540>,
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 546>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 13, 14, 21, 26, 39, 42, 78, 91, 182, 273, 546 }>,
-<"g", 4>, <"CurveID", 362>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 258">
+<"g", 4>, <"CurveID", 362>, <"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 552>,
 <"W", { IntegerRing() | 1, 3, 8, 23, 24, 69, 184, 552 }>,
@@ -4781,7 +4781,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 33>,
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 34>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 17, 34, 35, 70, 85, 119, 170, 238, 595, 1190 }>,
-<"g", 3>, <"CurveID", 1196>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1185">
+<"g", 3>, <"CurveID", 1196>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 36>,
 <"W", { IntegerRing() | 1, 4, 5, 7, 9, 20, 28, 35, 36, 45, 63, 140, 180, 252, 315, 1260 }>,
@@ -6897,7 +6897,7 @@ CreateShimuraQuot([* <"D", 205>, <"N", 2>,
 *]),
 CreateShimuraQuot([* <"D", 205>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 41, 123, 205, 615 }>,
-<"g", 3>, <"CurveID", 1725>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1723">
+<"g", 3>, <"CurveID", 1725>, <"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 205>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 41, 164, 205, 820 }>,
@@ -7225,7 +7225,7 @@ CreateShimuraQuot([* <"D", 259>, <"N", 1>,
 *]),
 CreateShimuraQuot([* <"D", 259>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 37, 74, 259, 518 }>,
-<"g", 3>, <"CurveID", 1807>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1806">
+<"g", 3>, <"CurveID", 1807>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 259>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 37, 111, 259, 777 }>,
@@ -7265,7 +7265,7 @@ CreateShimuraQuot([* <"D", 267>, <"N", 1>,
 *]),
 CreateShimuraQuot([* <"D", 267>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 89, 178, 267, 534 }>,
-<"g", 3>, <"CurveID", 1817>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1816">
+<"g", 3>, <"CurveID", 1817>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 274>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 137, 274 }>,
@@ -7349,7 +7349,7 @@ CreateShimuraQuot([* <"D", 301>, <"N", 1>,
 *]),
 CreateShimuraQuot([* <"D", 301>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 43, 86, 301, 602 }>,
-<"g", 4>, <"CurveID", 1838>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1837">
+<"g", 4>, <"CurveID", 1838>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 302>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 151, 302 }>,
@@ -8633,7 +8633,7 @@ CreateShimuraQuot([* <"D", 1995>, <"N", 1>,
 *]),
 CreateShimuraQuot([* <"D", 1995>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 19, 21, 30, 35, 38, 42, 57, 70, 95, 105, 114, 133, 190, 210, 266, 285, 399, 570, 665, 798, 1330, 1995, 3990 }>,
-<"g", 3>, <"CurveID", 2159>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HHproposition1 isomorphic to 2158">
+<"g", 3>, <"CurveID", 2159>, <"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 2002>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286, 1001, 2002 }>,
