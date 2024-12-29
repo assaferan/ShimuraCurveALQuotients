@@ -139,3 +139,5 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
     return curves;
 end intrinsic;
+
+// Last timing: 334554 s = 92.93 h = 3.87 d
