@@ -5,4 +5,5 @@ ShimuraQuotients.m
 alquots.m
 workingcode.m
 automorphisms.m
+ModularNonALInvolutions.m
 }
