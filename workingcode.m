@@ -125,6 +125,17 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
+        FilterByDegeneracyMorphism(~curves);
+
+        UpdateByIsomorphisms(~curves);
+
+        UpwardClosure(~curves);
+
+        DownwardClosure(~curves);
+
+        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+
+
     end if;
 
     if read_data then

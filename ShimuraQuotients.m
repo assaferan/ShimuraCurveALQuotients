@@ -948,6 +948,7 @@ intrinsic DownwardClosure(~curves::SeqEnum)
     for c in curves do
         if (assigned c`IsSubhyp) and c`IsSubhyp then
             for covered in c`Covers do
+                if assigned curves[covered]`IsSubhyp then continue; end if; //don't overwrite
                 curves[covered]`IsSubhyp := true;
                 if curves[covered]`g eq 0 then
                     curves[covered]`IsP1 := true;
@@ -967,6 +968,7 @@ intrinsic UpwardClosure(~curves::SeqEnum)
     for c in curves do
         if (assigned c`IsSubhyp) and (not c`IsSubhyp) then
             for cover in c`CoveredBy do
+                if assigned curves[cover]`IsSubhyp then continue; end if; //don't overwrite
                 curves[cover]`IsSubhyp := false;
                 curves[cover]`IsHyp := false;
                 curves[cover]`TestInWhichProved := Sprintf("UpwardClosure from %o", c`CurveID);
