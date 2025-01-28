@@ -360,7 +360,7 @@ intrinsic CheckTrigonalByDegeneracy(X::ShimuraQuot) -> BoolElt
     N := X`N;
     W := X`W;
     D := X`D;
-    assert N mod 4 eq 0 and IsOdd(N div 4) and IsStarCurve(X);
+    assert N mod 4 eq 0 and IsOdd(N div 4) and 4 in W and X`g gt 2;
     newW := {w : w in W | w mod 4 ne 0};
     g := GenusShimuraCurveQuotient(D,N div 4, newW);
     if g eq 0 then //trigonal
@@ -378,7 +378,7 @@ intrinsic FilterByDegeneracyMorphism(~curves::SeqEnum)
 
     for i->c in curves do
         if assigned c`IsSubhyp then continue; end if;
-        if c`N mod 4 eq 0 and IsOdd(c`N div 4) and IsStarCurve(c) then
+        if c`N mod 4 eq 0 and IsOdd(c`N div 4) and 4 in c`W and c`g gt 2 then
             newW := {w : w in c`W | w mod 4 ne 0};
             b := CheckTrigonalByDegeneracy(c);
             if not b then //trigonal
