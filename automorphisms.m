@@ -354,15 +354,15 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : 
     end for;
 end intrinsic;
 
+
 intrinsic CheckTrigonalByDegeneracy(X::ShimuraQuot) -> BoolElt
     {}
     N := X`N;
     W := X`W;
     D := X`D;
-    assert N mod 4 eq 0;
+    assert N mod 4 eq 0 and IsOdd(N div 4) and IsStarCurve(X);
     newW := {w : w in W | w mod 4 ne 0};
     g := GenusShimuraCurveQuotient(D,N div 4, newW);
-    print g;
     if g eq 0 then //trigonal
         return false;
     else 
@@ -372,15 +372,19 @@ intrinsic CheckTrigonalByDegeneracy(X::ShimuraQuot) -> BoolElt
 end intrinsic;
 
 intrinsic FilterByDegeneracyMorphism(~curves::SeqEnum)
-    {}
+    {Check whether the degeneracy morphism X0(N) -> X0(N/4) induces a degree 3 map
+    X0(N)* -> X0(N/4)* to a genus 0 curve, proving the curve is trigonal (and therefore 
+    not hyperelliptic).}
+
     for i->c in curves do
         if assigned c`IsSubhyp then continue; end if;
-        if c`N mod 4 eq 0 then
+        if c`N mod 4 eq 0 and IsOdd(c`N div 4) and IsStarCurve(c) then
             newW := {w : w in c`W | w mod 4 ne 0};
             b := CheckTrigonalByDegeneracy(c);
             if not b then //trigonal
                 curves[i]`IsSubhyp := false;
                 curves[i]`IsHyp := false;
+                curves[i]`TestInWhichProved := "DegeneracyMorphism";
             end if;
         end if;
     end for;
