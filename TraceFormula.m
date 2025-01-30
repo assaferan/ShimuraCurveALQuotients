@@ -823,6 +823,68 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
     printf "\n";
 end procedure;
 
+function BslowS2(N, u, t)
+// Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
+// where tr(M) = t, det(M) = 4 and u = (G(M), N).
+// We compute it as 1/2 * #P1(Z / 2N Z) / #P1(Z / (ZN/u) Z) * #S(N,u,t),
+// where S(N, u, t) = {alpha in (Z / NZ)^* : alpha^2 - (t/2) alpha +1 = 0 (mod Nu/2)}
+    assert t mod 2 eq 0;
+    assert N mod 4 eq 0;
+    assert IsOdd(N div 4);
+    assert (2*N) mod u eq 0;
+    if IsEven(u) then
+        return 0;
+    end if; 
+    S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - (t div 2)*x + 1) mod (N*u div 2)) eq 0)];
+    fib_size := Integers()!(phi1(2*N) /  phi1(2*N div u));
+    // if IsEven(u) then
+    //    fib_size div:= 2; // In this case, every solution modulo Z / NZ lifts to two solutions modulo Z /(2N)Z
+    // end if; 
+    return (fib_size * #S) div 2;
+end function;
+
+function CslowS2(N, u, t)
+    return &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
+end function;
+
+function TraceFormulaGamma0S2(N, k)
+// Returns the trace of S2 = [2,1,0,2] on S_k(N) using [Popa]
+    assert k ge 2;
+    S1 := 0;
+    assert GCD(4, N div 4) eq 1;
+    w := k - 2;
+    max_abst := Floor(SquareRoot(4*4)) div 4; // 1
+    for tQ in [-max_abst..max_abst] do
+	    t := tQ*4;
+	    for u in Divisors(N) do
+		    if ((4*4-t^2) mod u^2 eq 0) then
+		        // print "u =", u, " u_prime = ", u_prime, "t = ", t;
+		        S1 +:= P(k,t,4)*H((4*4-t^2) div u^2 )*CslowS2(N, u, t)
+			            / 4^(w div 2);
+		        // print "S1 = ", S1;
+		    end if;
+	    end for;
+    end for;
+    // S1 seems to work for (20,2)
+    print "S1 = ", S1;
+    // The S2 part is still wrong
+    S2 := 0;
+    for d in Divisors(4) do
+	    a := 4 div d;
+	    if (a+d) mod 4 eq 0 then
+	        // print "a = ", a, "d = ", d;
+	        S2 +:= Minimum(a,d)^(k-1)*Phil(N,4,a,d) / 4^(w div 2);
+	        // print "S2 = ", S2;
+	    end if;
+    end for;
+    // print "S2 = ", S2;
+    ret := -S1 / 2 - S2 / 2;
+    if k eq 2 then
+	    ret +:= 1;
+    end if;
+    return ret;
+end function;
+
 // [Assaf] - E. Assaf, a note on the trace formula
 // [Oesterle] - J. Oesterle - Sur la Trace des Operateurs de Hecke (Thesis)
 // [Popa] - A. Popa, On the trace formula for Hecke operators on congruence subgroups, II
