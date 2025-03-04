@@ -847,6 +847,54 @@ function CslowS2(N, u, t)
     return &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
 end function;
 
+function S_r(r, s)
+    tmp := [x : x in [1..GCD(r,s)] | GCD([x, r, s]) eq 1];
+    for i in [1..#tmp] do
+        while GCD(tmp[i],r) ne 1 do
+            tmp[i] +:= GCD(r,s);
+        end while; 
+    end for;
+    return tmp;
+end function;
+
+function get_reps_C(N)
+    Cs := [];
+    for r in Divisors(N) do
+        s := N div r;
+        for q in S_r(r,s) do
+            _, p, t := XGCD(q,r);
+            C := Matrix([[p,-t],[r,q]]);
+            assert Determinant(C) eq 1;
+            Append(~Cs, C);
+        end for;
+    end for;
+    return Cs;
+end function;
+
+function count_solutions(a,d,C,N)
+    r := C[2,1];
+    s := N div r;
+    omega_C := s div GCD(r,s);
+    g := GCD(a,d);
+    count := 0;
+    for b in [0..omega_C*g -1] do
+        M := Matrix([[a,b],[0,d]]);
+        alpha, beta, gamma, delta := Explode(Eltseq(C*M*C^(-1)));
+        is_in_Sigma := IsEven(alpha) and (gamma mod (2*N) eq 0);
+        is_in_Sigma and:= IsEven(alpha div 2 - beta);
+        is_in_Sigma and:= IsEven(gamma div 2 - delta);
+        if is_in_Sigma then
+            count +:= 1;
+        end if;
+    end for;
+    return count;
+end function;
+
+function phi_N(a,d,N)
+    Cs := get_reps_C(N);
+    return 1/GCD(a,d) * &+[count_solutions(a,d,C,N) : C in Cs];
+end function;
+
 function TraceFormulaGamma0S2(N, k)
 // Returns the trace of S2 = [2,1,0,2] on S_k(N) using [Popa]
     assert k ge 2;
@@ -859,23 +907,20 @@ function TraceFormulaGamma0S2(N, k)
 	    for u in Divisors(N) do
 		    if ((4*4-t^2) mod u^2 eq 0) then
 		        // print "u =", u, " u_prime = ", u_prime, "t = ", t;
-		        S1 +:= P(k,t,4)*H((4*4-t^2) div u^2 )*CslowS2(N, u, t)
-			            / 4^(w div 2);
+		        S1 +:= P(k,t,4)*H((4*4-t^2) div u^2 )*CslowS2(N, u, t);
 		        // print "S1 = ", S1;
 		    end if;
 	    end for;
     end for;
     // S1 seems to work for (20,2)
-    print "S1 = ", S1;
+    // Trace(S2, M_2(20) + S_2(20)^c) = -1 = -S1 + 1,
+    // since k = 2, chi tilde = 1, and Sigma = Gamma S_2 is a single coset.
+    // print "S1 = ", S1;
     // The S2 part is still wrong
     S2 := 0;
     for d in Divisors(4) do
 	    a := 4 div d;
-	    if (a+d) mod 4 eq 0 then
-	        // print "a = ", a, "d = ", d;
-	        S2 +:= Minimum(a,d)^(k-1)*Phil(N,4,a,d) / 4^(w div 2);
-	        // print "S2 = ", S2;
-	    end if;
+        S2 +:= Minimum(a,d)^(k-1)*phi_N(a,d,N);
     end for;
     // print "S2 = ", S2;
     ret := -S1 / 2 - S2 / 2;
@@ -884,6 +929,19 @@ function TraceFormulaGamma0S2(N, k)
     end if;
     return ret;
 end function;
+
+import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
+
+procedure checkTraceS2(N,k)
+    M := ModularSymbols(N,k,0);
+    C := CuspidalSubspace(M);
+    S2_M := ActionOnModularSymbolsBasis([2,1,0,2],M);
+    B := Matrix(Basis(VectorSpace(C)));
+    trace := Trace(Solution(B, B*S2_M));
+    assert IsEven(Integers()!trace);
+    from_formula := TraceFormulaGamma0S2(N,k);
+    assert trace eq 2*from_formula;
+end procedure;
 
 // [Assaf] - E. Assaf, a note on the trace formula
 // [Oesterle] - J. Oesterle - Sur la Trace des Operateurs de Hecke (Thesis)
