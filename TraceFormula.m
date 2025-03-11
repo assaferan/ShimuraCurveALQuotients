@@ -1,3 +1,5 @@
+
+import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
 // This file implements the trace formulas from [Popa] and [Assaf]
 import "Caching.m" : cached_traces, SetCache, GetCache, class_nos;
 
@@ -823,6 +825,7 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
     printf "\n";
 end procedure;
 
+/*
 function BslowS2(N, u, t)
 // Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
 // where tr(M) = t, det(M) = 4 and u = (G(M), N).
@@ -842,11 +845,52 @@ function BslowS2(N, u, t)
     // end if; 
     return (fib_size * #S) div 2;
 end function;
+*/
 
-function CslowS2(N, u, t)
-    return &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
+function is_in_Sigma(g, M, N)
+    M2Q := MatrixAlgebra(Rationals(), 2);
+    M2Z := MatrixAlgebra(Integers(), 2);
+    Mg_inv := M2Q!M * (M2Q!g)^(-1);
+    is_integral, Mg_inv := IsCoercible(M2Z, Mg_inv);
+    if not is_integral then return false; end if;
+    return Mg_inv in Gamma0(N);
 end function;
 
+function Bslowg(g, N, u, t)
+    P1N := ProjectiveLine(Integers(N));
+    M2Z := MatrixAlgebra(Integers(),2);
+    det_g := Determinant(M2Z!g);
+    // We create a matrix M such that det(M) = det_g, tr(M) = t and (G(M), N) = u
+    // We do so by finding an element alpha such that alpha^2 - t*alpha + det_g is divisible by Nu.
+    // Then Matrix([[alpha, v],[-u,t-alpha]]) satisfies these conditions since u | t-2 alpha, u | N
+    nonzero := exists(alpha){x : x in [0..u-1] | ((x^2 - t *x + det_g) mod u^2) eq 0};
+    if not nonzero then return 0; end if;
+    v := (alpha^2 - t*alpha + det_g) div u;
+    M := Matrix([[alpha, v],[-u,t-alpha]]);
+    count := 0;
+    M2Q := MatrixAlgebra(Rationals(), 2);
+    for pt in P1N do
+        c, d := Explode(Eltseq(pt));
+        cd := GCD(c,d);
+        c := Integers()!(c div cd);
+        d := Integers()!(d div cd);
+        // now c and d are coprime
+        _, mb, a := XGCD(c,d);
+        b := -mb;
+        A := Matrix([[a,b],[c,d]]);
+        Mconj := A*M*A^(-1);
+        if is_in_Sigma(g, Mconj, N) then
+            count +:= 1;
+        end if;
+    end for;
+    return count;
+end function;
+
+function Cslowg(g, N, u, t)
+    return &+[Bslowg(g, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
+end function;
+
+// helper function for constructing cusp representatives
 function S_r(r, s)
     tmp := [x : x in [1..GCD(r,s)] | GCD([x, r, s]) eq 1];
     for i in [1..#tmp] do
@@ -857,6 +901,7 @@ function S_r(r, s)
     return tmp;
 end function;
 
+// This returns coset representatives of the cusps
 function get_reps_C(N)
     Cs := [];
     for r in Divisors(N) do
@@ -871,77 +916,55 @@ function get_reps_C(N)
     return Cs;
 end function;
 
-function count_solutions(a,d,C,N)
+function count_solutions_g(g,a,d,C,N)
     r := C[2,1];
     s := N div r;
     omega_C := s div GCD(r,s);
-    g := GCD(a,d);
+    e := GCD(a,d);
     count := 0;
-    for b in [0..omega_C*g -1] do
+    for b in [0..omega_C*e -1] do
         M := Matrix([[a,b],[0,d]]);
-        alpha, beta, gamma, delta := Explode(Eltseq(C*M*C^(-1)));
-        is_in_Sigma := IsEven(alpha) and (gamma mod (2*N) eq 0);
-        is_in_Sigma and:= IsEven(alpha div 2 - beta);
-        is_in_Sigma and:= IsEven(gamma div 2 - delta);
-        if is_in_Sigma then
+        if is_in_Sigma(g, C*M*C^(-1), N) then
             count +:= 1;
         end if;
     end for;
     return count;
 end function;
 
-function phi_N(a,d,N)
+function phi_N_g(g,a,d,N)
     Cs := get_reps_C(N);
-    return 1/GCD(a,d) * &+[count_solutions(a,d,C,N) : C in Cs];
+    return 1/GCD(a,d) * &+[count_solutions_g(g,a,d,C,N) : C in Cs];
 end function;
 
-function TraceFormulaGamma0S2(N, k)
-// Returns the trace of S2 = [2,1,0,2] on S_k(N) using [Popa]
-    assert k ge 2;
+intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntElt
+{Returns the trace of g on S_k(N) using [Popa], assuming g normalizes Gamma0(N).}
+    require k ge 2 : "This formula is only valid for k ge 2";
     S1 := 0;
-    assert GCD(4, N div 4) eq 1;
     w := k - 2;
-    max_abst := Floor(SquareRoot(4*4)) div 4; // 1
-    for tQ in [-max_abst..max_abst] do
-	    t := tQ*4;
-	    for u in Divisors(N) do
-		    if ((4*4-t^2) mod u^2 eq 0) then
-		        // print "u =", u, " u_prime = ", u_prime, "t = ", t;
-		        S1 +:= P(k,t,4)*H((4*4-t^2) div u^2 )*CslowS2(N, u, t);
-		        // print "S1 = ", S1;
+    M2Z := MatrixAlgebra(Integers(),2);
+    det_g := Determinant(M2Z!g);
+    max_abst := Floor(SquareRoot(4*det_g)); // t^2 - 4n <= 0
+    for t in [-max_abst..max_abst] do
+	    for u in Divisors(N*det_g) do
+		    if ((4*det_g-t^2) mod u^2 eq 0) then
+		        vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, Cslowg(g, N, u, t);
+		        S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*Cslowg(g, N, u, t);
 		    end if;
 	    end for;
     end for;
-    // S1 seems to work for (20,2)
-    // Trace(S2, M_2(20) + S_2(20)^c) = -1 = -S1 + 1,
-    // since k = 2, chi tilde = 1, and Sigma = Gamma S_2 is a single coset.
-    // print "S1 = ", S1;
-    // The S2 part is still wrong
+    vprintf ShimuraQuotients, 2: "S1 = %o\n", S1;
     S2 := 0;
     for d in Divisors(4) do
 	    a := 4 div d;
-        S2 +:= Minimum(a,d)^(k-1)*phi_N(a,d,N);
+        S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
     end for;
-    // print "S2 = ", S2;
+    vprintf ShimuraQuotients, 2: "S2 = %o\n", S2;
     ret := -S1 / 2 - S2 / 2;
     if k eq 2 then
 	    ret +:= 1;
     end if;
     return ret;
-end function;
-
-import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
-
-procedure checkTraceS2(N,k)
-    M := ModularSymbols(N,k,0);
-    C := CuspidalSubspace(M);
-    S2_M := ActionOnModularSymbolsBasis([2,1,0,2],M);
-    B := Matrix(Basis(VectorSpace(C)));
-    trace := Trace(Solution(B, B*S2_M));
-    assert IsEven(Integers()!trace);
-    from_formula := TraceFormulaGamma0S2(N,k);
-    assert trace eq 2*from_formula;
-end procedure;
+end intrinsic;
 
 // [Assaf] - E. Assaf, a note on the trace formula
 // [Oesterle] - J. Oesterle - Sur la Trace des Operateurs de Hecke (Thesis)

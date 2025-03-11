@@ -37,9 +37,9 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         // writing to a file, in case we would like to load it directly
 
-        Write("star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
+        Write("data/star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
 
-        read_curves := eval Read("star_curves_point_count.dat");
+        read_curves := eval Read("data/star_curves_point_count.dat");
         assert #read_curves eq #star_curves;
         assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
         HHProposition1(~star_curves);
@@ -133,13 +133,13 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
 
     end if;
 
     if read_data then
-        read_curves := eval Read("all_curves_progress.dat");
+        read_curves := eval Read("data/all_curves_progress.dat");
         if recompute_data then
             assert #read_curves eq #curves;
             assert &and[(read_curves[j] eq curves[j]) : j in [1..#curves]];

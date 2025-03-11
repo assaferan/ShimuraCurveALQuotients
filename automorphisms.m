@@ -301,7 +301,7 @@ end intrinsic;
 
 
 function LMFDBweilpolys(g,p)
-    f :=  Read(Sprintf("hypg%oq%o.txt",g,p));
+    f :=  Read(Sprintf("data/hypg%oq%o.txt",g,p));
     lines := Split(f, "\n");
     possible_polys := { eval c : c in lines};
     return possible_polys;

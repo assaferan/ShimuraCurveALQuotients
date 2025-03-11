@@ -6,4 +6,5 @@ alquots.m
 workingcode.m
 automorphisms.m
 ModularNonALInvolutions.m
+TraceFormula.m
 }
