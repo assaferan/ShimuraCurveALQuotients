@@ -12,6 +12,24 @@ procedure checkTraceg(g, N, k)
     assert trace eq 2*from_formula;
 end procedure;
 
+procedure checkTracegDNew(g, D, N, k)
+    assert GCD(D,N) eq 1;
+    M := ModularSymbols(D*N,k,0);
+    SDN := CuspidalSubspace(M);
+    // We want the D-new subspace
+    ps := PrimeDivisors(D);
+    SDN_new := SDN;
+    for p in ps do
+        SDN_new := NewSubspace(SDN_new, p);
+    end for;
+    g_M := ActionOnModularSymbolsBasis(g,M);
+    B := Matrix(Basis(VectorSpace(SDN_new)));
+    trace := Trace(Solution(B, B*g_M));
+    assert IsEven(Integers()!trace);
+    from_formula := TraceFormulaGamma0gDNew(g,D,N,k);
+    assert trace eq 2*from_formula;
+end procedure;
+
 function al_matrix(Q, N)
     d, x, y := XGCD(Q, N div Q);
     assert d eq 1;
@@ -39,13 +57,17 @@ function get_V3(N)
     return S3*W*S3^2;
 end function;
 
-procedure testS2(bound)
+procedure testS2(bound, Dbound)
     Ns := [N : N in [1..bound] | N mod 8 eq 4];
     ks := [2,4,6];
     S2 := [2,1,0,2];
     for N in Ns do
+        Ds := [D : D in [1..Dbound] | (MoebiusMu(D) eq 1) and (GCD(D, N) eq 1)];
         for k in ks do
             checkTraceg(S2, N, k);
+            for D in Ds do
+                checkTracegDNew(S2, D, N, k);
+            end for;
         end for;
     end for;
 end procedure;

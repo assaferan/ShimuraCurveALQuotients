@@ -966,6 +966,24 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     return ret;
 end intrinsic;
 
+function mu_star_mu(n)
+    fac := Factorization(n);
+    ret := 1;
+    for pa in fac do
+        p,a := Explode(pa);
+        if a ge 3 then return 0; end if;
+        if a eq 1 then ret *:= (-2); end if;
+    end for;
+    return ret;
+end function;
+
+intrinsic TraceFormulaGamma0gDNew(g::SeqEnum[RngIntElt], D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
+{Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
+    trace := &+[TraceFormulaGamma0g(g, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    return trace;
+end intrinsic;
+
+
 // [Assaf] - E. Assaf, a note on the trace formula
 // [Oesterle] - J. Oesterle - Sur la Trace des Operateurs de Hecke (Thesis)
 // [Popa] - A. Popa, On the trace formula for Hecke operators on congruence subgroups, II
