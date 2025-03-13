@@ -825,16 +825,19 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
     printf "\n";
 end procedure;
 
-/*
+
 function BslowS2(N, u, t)
 // Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
 // where tr(M) = t, det(M) = 4 and u = (G(M), N).
-// We compute it as 1/2 * #P1(Z / 2N Z) / #P1(Z / (ZN/u) Z) * #S(N,u,t),
+// We compute it as 1/2 * #P1(Z / 2N Z) / #P1(Z / (2N/u) Z) * #S(N,u,t),
 // where S(N, u, t) = {alpha in (Z / NZ)^* : alpha^2 - (t/2) alpha +1 = 0 (mod Nu/2)}
-    assert t mod 2 eq 0;
+    //assert t mod 2 eq 0;
     assert N mod 4 eq 0;
     assert IsOdd(N div 4);
-    assert (2*N) mod u eq 0;
+    //assert (2*N) mod u eq 0;
+    if ((2*N) mod u ne 0) or (t mod 2 eq 1) then
+        return 0;
+    end if; 
     if IsEven(u) then
         return 0;
     end if; 
@@ -845,7 +848,7 @@ function BslowS2(N, u, t)
     // end if; 
     return (fib_size * #S) div 2;
 end function;
-*/
+
 
 function is_in_Sigma(g, M, N)
     M2Q := MatrixAlgebra(Rationals(), 2);
@@ -853,7 +856,7 @@ function is_in_Sigma(g, M, N)
     Mg_inv := M2Q!M * (M2Q!g)^(-1);
     is_integral, Mg_inv := IsCoercible(M2Z, Mg_inv);
     if not is_integral then return false; end if;
-    return Mg_inv in Gamma0(N);
+    return Mg_inv[2,1] mod N eq 0;
 end function;
 
 function Bslowg(g, N, u, t)
@@ -868,7 +871,6 @@ function Bslowg(g, N, u, t)
     v := (alpha^2 - t*alpha + det_g) div u;
     M := Matrix([[alpha, v],[-u,t-alpha]]);
     count := 0;
-    M2Q := MatrixAlgebra(Rationals(), 2);
     for pt in P1N do
         c, d := Explode(Eltseq(pt));
         cd := GCD(c,d);
@@ -887,8 +889,12 @@ function Bslowg(g, N, u, t)
 end function;
 
 function Cslowg(g, N, u, t)
+    if g eq [2,1,0,2] then 
+        return  &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
+    end if;
     return &+[Bslowg(g, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
 end function;
+
 
 // helper function for constructing cusp representatives
 function S_r(r, s)

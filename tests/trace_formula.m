@@ -42,9 +42,9 @@ function get_V2(N)
     assert alpha ge 3;
     Q := 2^alpha;
     W := al_matrix(Q, N);
-    M2Z := MatrixAlgebra(Integers(),2);
-    S2 := M2Z![2,1,0,2];
-    return S2*W*S2;
+    M2Q := MatrixAlgebra(Rationals(),2);
+    S2 := M2Q![2,1,0,2];
+    return S2*W*S2^(-1);
 end function;
 
 function get_V3(N)
@@ -52,9 +52,9 @@ function get_V3(N)
     assert alpha eq 2;
     Q := 3^alpha;
     W := al_matrix(Q, N);
-    M2Z := MatrixAlgebra(Integers(),2);
-    S3 := M2Z![3,1,0,3];
-    return S3*W*S3^2;
+    M2Q := MatrixAlgebra(Rationals(),2);
+    S3 := M2Q![3,1,0,3];
+    return S3*W*S3^(-2);
 end function;
 
 procedure testS2(bound, Dbound)
