@@ -851,14 +851,9 @@ end function;
 
 
 function BslowV2(N, u, t)
-// Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
-// where tr(M) = t, det(M) = 4 and u = (G(M), N).
-// We compute it as 1/2 * #P1(Z / 2N Z) / #P1(Z / (2N/u) Z) * #S(N,u,t),
-// where S(N, u, t) = {alpha in (Z / NZ)^* : alpha^2 - (t/2) alpha +1 = 0 (mod Nu/2)}
-    //assert t mod 2 eq 0;
+// Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) V_2,
     assert N mod 8 eq 0;
     v := Valuation(N,2);
-    //assert (2*N) mod u eq 0;
     if (N mod u ne 0) or (t mod 2^v ne 0) then
         return 0;
     end if;
@@ -873,6 +868,24 @@ function BslowV2(N, u, t)
     return (fib_size * #S);
 end function;
 
+function BslowV3(N, u, t)
+// Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) V_3,
+    v := Valuation(N,3);
+    assert v eq 2;
+    if (N mod u ne 0) or (t mod 3^v ne 0) then
+        return 0;
+    end if;
+
+    if u mod 3 eq 0 then
+        return 0;
+    end if; 
+
+    S := [x : x in [0..(N div 3 - 1)] | (GCD(x,N) eq 1) and (((x^2 - (t div 3)*x + 1) mod ( u * N div 3^2)) eq 0)];
+    fib_size := Integers()!(phi1(N) /  phi1(N div u));
+    assert #S mod 2 eq 0;
+
+    return fib_size * (#S div 2);
+end function;
 
 function is_in_Sigma(g, M, N)
     M2Q := MatrixAlgebra(Rationals(), 2);
@@ -913,13 +926,19 @@ function Bslowg(g, N, u, t)
 end function;
 
 function Cslowg(g, N, u, t)
+
     if g eq [2,1,0,2] then 
         return  &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
     v := Valuation(N,2);
-    if Determinant(Matrix(Integers(), 2, 2, g)) eq 2^v then //V2 Case
+    if v ge 3 and Determinant(Matrix(Integers(), 2, 2, g)) eq 2^v then //V2 Case
         return &+[BslowV2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
+    v := Valuation(N,3);
+    if Determinant(Matrix(Integers(),2,2,g)) eq 3^2 then //V3 case
+        return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];;
+    end if;
+
     return &+[Bslowg(g, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
 end function;
 

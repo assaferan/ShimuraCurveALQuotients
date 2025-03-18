@@ -43,8 +43,9 @@ function get_V2(N)
     Q := 2^alpha;
     W := al_matrix(Q, N);
     M2Q := MatrixAlgebra(Rationals(),2);
+    M2Z := MatrixAlgebra(Integers(), 2);
     S2 := M2Q![2,1,0,2];
-    return S2*W*S2^(-1);
+    return M2Z!(S2*W*S2^(-1));
 end function;
 
 function get_V3(N)
@@ -53,8 +54,9 @@ function get_V3(N)
     Q := 3^alpha;
     W := al_matrix(Q, N);
     M2Q := MatrixAlgebra(Rationals(),2);
+    M2Z := MatrixAlgebra(Integers(), 2);
     S3 := M2Q![3,1,0,3];
-    return S3*W*S3^(-2);
+    return M2Z!(S3*W*S3^(-1));
 end function;
 
 procedure testS2(bound, Dbound)
@@ -72,24 +74,34 @@ procedure testS2(bound, Dbound)
     end for;
 end procedure;
 
-procedure testV2(bound)
+procedure testV2(bound, Dbound)
     Ns := [N : N in [1..bound] | N mod 8 eq 0];
     ks := [2,4,6];
     for N in Ns do
         V2 := Eltseq(get_V2(N));
+        Ds := [D : D in [1..Dbound] | (MoebiusMu(D) eq 1) and (GCD(D, N) eq 1)];
         for k in ks do
             checkTraceg(V2, N, k);
+            for D in Ds do
+                V2 := Eltseq(get_V2(D*N));
+                checkTracegDNew(V2, D, N, k);
+            end for;
         end for;
     end for;
 end procedure;
 
-procedure testV3(bound)
+procedure testV3(bound, Dbound)
     Ns := [N : N in [1..bound] | Valuation(N,3) eq 2];
-    ks := [2,4,6];
+    ks := [2, 4, 6];
     for N in Ns do
         V3 := Eltseq(get_V3(N));
+        Ds := [D : D in [1..Dbound] | (MoebiusMu(D) eq 1) and (GCD(D, N) eq 1)];
         for k in ks do
             checkTraceg(V3, N, k);
+            for D in Ds do
+                V3 := Eltseq(get_V3(D*N));
+                checkTracegDNew(V3, D, N, k);
+            end for;
         end for;
     end for;
 end procedure;
