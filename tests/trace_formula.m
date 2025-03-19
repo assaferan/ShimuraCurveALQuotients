@@ -146,4 +146,24 @@ procedure testV3VW(bound, Dbound)
     end for;
 end procedure;
 
-
+// Testing Furumoto-Hasegawa theorem 4
+procedure testFH4(curves)
+    NWs := [
+        < 63, {1,9}>,
+        < 72, {1,9}>,
+        <104, {1,104}>,
+        <120, {1,5,24,120}>,
+        <126, {1,9,7,63}>,
+        <126, {1,9,14,126}>,
+        <168, {1,24,56,21}>
+    ];
+    names := ["V3 W7", "V2 V3 W8", "V2 W8", "V2 W8", "V3", "V3 W2", "V2 W8"];
+    for idx->NW in NWs do
+        assert exists(X){X : X in curves | X`D eq 1 and X`N eq NW[1] and X`W eq NW[2]};
+        vname := names[idx];
+        g, name, fix := CheckModularNonALInvolutionTrace(X);
+        assert g eq 0;
+        assert name eq vname; 
+    end for;
+    return;
+end procedure;
