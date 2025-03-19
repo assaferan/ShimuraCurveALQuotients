@@ -168,3 +168,39 @@ procedure testFH4(curves : check_modular := CheckModularNonALInvolutionTrace)
     end for;
     return;
 end procedure;
+
+function benchmark(curves, check_modular, ntimes)
+    timings := [];
+    Ns := Sort([N : N in {X`N : X in curves} | Valuation(N,2) ge 2 or Valuation(N,3) eq 2]);
+    Ds := Sort([D : D in {X`D : X in curves}]);
+    nNs := #Ns div 3;
+    nDs := #Ds div 3;
+    small_Ns := Ns[1..nNs];
+    medium_Ns := Ns[nNs..2*nNs];
+    big_Ns := Ns[2*nNs..#Ns];
+    small_Ds := Ds[1..nDs];
+    medium_Ds := Ds[nDs..2*nDs];
+    big_Ds := Ds[2*nDs..#Ds];
+    N_ranges := [small_Ns, medium_Ns, big_Ns];
+    D_ranges := [small_Ds, medium_Ds, big_Ds];
+    for D_range in D_ranges do
+        time_by_D := [];
+        for N_range in N_ranges do
+            t := 0;
+            DN_curves := [X : X in curves | X`N in N_range and X`D in D_range];
+            if IsEmpty(DN_curves) then
+                Append(~time_by_D, -1);
+                continue;
+            end if;
+            for i in [1..ntimes] do
+                X := Random(DN_curves);
+                t0 := Cputime();
+                b, name, fix := check_modular(X);
+                t +:= Cputime() - t0;
+            end for;
+            Append(~time_by_D, t/ntimes);
+        end for;
+        Append(~timings, time_by_D);
+    end for;
+    return timings;
+end function;

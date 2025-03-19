@@ -1147,7 +1147,7 @@ end intrinsic;
 
 intrinsic TraceFormulaGamma0VWDNew(p::RngIntElt, Q::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
-    trace := &+[TraceFormulaGamma0VW(p, Q, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    trace := &+[TraceFormulaGamma0VW(p, GCD(Q,d*N), d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
     return trace;
 end intrinsic;
 

@@ -72,7 +72,7 @@ Otherwise, returns -1.}
         Append(~V_names, "S2");
     end if;
     if (X`N mod 8 eq 0) then
-        V2 := get_V2(X`N);
+        V2 := get_V2(X`D*X`N);
         Append(~Vs, V2);
         Append(~V_names, "V2");
     end if;
@@ -83,7 +83,7 @@ Otherwise, returns -1.}
             not_commute := exists(w){w : w in X`W | (w div 3^Valuation(w, 3)) mod 3 eq 2};
         end if;
         if not not_commute then
-            V3 := get_V3(X`N);
+            V3 := get_V3(X`D*X`N);
             Append(~Vs, V3);
             Append(~V_names, "V3");
         end if;
@@ -108,7 +108,7 @@ Otherwise, returns -1.}
             if can_apply_trace_formula then
                 trV := TraceFormulaGamma0VWDNew(p,other_w,X`D,X`N,2);
             else
-                W := al_matrix(other_w, X`N);
+                W := al_matrix(other_w, X`D*X`N);
                 g := V_SN*W;
                 trV:= TraceFormulaGamma0gDNew(Eltseq(g),X`D, X`N, 2); 
             end if;
