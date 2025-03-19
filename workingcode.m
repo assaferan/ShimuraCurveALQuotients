@@ -1,8 +1,8 @@
 // AttachSpec("shimuraquots.spec");
 intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -> SeqEnum
 {.}
-    SetDebugOnError(true);
-    SetVerbose("ShimuraQuotients", 3);
+    // SetDebugOnError(true);
+    // SetVerbose("ShimuraQuotients", 3);
 
     // Find the largest prime we need to consider for the
     // inequality in Proposition 1.

@@ -41,13 +41,13 @@ intrinsic TraceDNewQuotient(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt, Ws::Se
         if trformula then
             subtrace := TraceFormulaGamma0VWDNew(p, neww, D, N, 2);
             sum +:= sgn*subtrace; 
-            printf "trace for V = %o, Q = %o, w = %o, is %o", vname, Q, w, subtrace;
+            vprintf ShimuraQuotients, 2: "trace for V = %o, Q = %o, w = %o, is %o\n", vname, Q, w, subtrace;
         else
             wmat := al_matrix(neww, D*N);
             g := V*wmat;
             subtrace := TraceFormulaGamma0gDNew(Eltseq(g), D, N, 2);
             sum +:= sgn*subtrace; 
-            printf "trace for V = %o, Q = %o, w = %o, is %o, \n", vname, Q, w, subtrace;
+            vprintf ShimuraQuotients, 2: "trace for V = %o, Q = %o, w = %o, is %o, \n", vname, Q, w, subtrace;
         end if;
     end for;
     sum *:= 1/#Ws;
@@ -116,7 +116,7 @@ Otherwise, returns -1.}
             tr := TraceDNewQuotient(V_SN, all_names[idx], other_w,X`W,X`D, X`N);
             // print "g = ", g;
             name := all_names[idx] cat " " cat Sprintf("W%o", other_w);
-            print "trace is", tr;
+            vprintf ShimuraQuotients, 2: "trace is %o\n", tr;
             if (tr eq 0) then
                 return 1, name, _;
             end if;
