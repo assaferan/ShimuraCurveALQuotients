@@ -270,6 +270,23 @@ function TraceFormulaGamma0(n, N, k)
     return ret;
 end function;
 
+function mu_star_mu(n)
+    fac := Factorization(n);
+    ret := 1;
+    for pa in fac do
+        p,a := Explode(pa);
+        if a ge 3 then return 0; end if;
+        if a eq 1 then ret *:= (-2); end if;
+    end for;
+    return ret;
+end function;
+
+intrinsic TraceFormulaGamma0DNew(n::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt)-> RngIntElt
+    {}
+    trace := &+[TraceFormulaGamma0(n, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    return trace;
+end intrinsic;
+
 function Phil(N, l, a, d)
 // Returns Phi_{N,l}(a,d) as defined in [Popa, Theorem 4]
     l_prime := N div l;
@@ -327,7 +344,7 @@ function TraceFormulaGamma0AL(n, N, k)
     if k eq 2 then
         ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
     end if;
-    return ret;
+    return Integers()!ret;
 end function;
 
 function TraceFormulaGamma0ALTrivialNew(N, k)
@@ -1094,7 +1111,7 @@ intrinsic TraceFormulaGamma0VW(p::RngIntElt, Q::RngIntElt, N::RngIntElt, k::RngI
     if k eq 2 then
         ret +:= 1;
     end if;
-    return ret;
+    return Integers()!ret;
 end intrinsic;
 
 intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntElt
@@ -1124,19 +1141,8 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     if k eq 2 then
 	    ret +:= 1;
     end if;
-    return ret;
+    return Integers()!ret;
 end intrinsic;
-
-function mu_star_mu(n)
-    fac := Factorization(n);
-    ret := 1;
-    for pa in fac do
-        p,a := Explode(pa);
-        if a ge 3 then return 0; end if;
-        if a eq 1 then ret *:= (-2); end if;
-    end for;
-    return ret;
-end function;
 
 
 intrinsic TraceFormulaGamma0VWDNew(p::RngIntElt, Q::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
