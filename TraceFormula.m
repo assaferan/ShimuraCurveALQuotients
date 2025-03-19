@@ -826,6 +826,50 @@ procedure testBatchTraceFormulaGamma0HeckeALNew(Ns, ns, ks)
 end procedure;
 
 
+intrinsic al_matrix(Q::RngIntElt, N::RngIntElt) ->AlgMatElt
+    {}
+    d, x, y := XGCD(Q, N div Q);
+    assert d eq 1;
+    M2Z := MatrixAlgebra(Integers(), 2);
+    return M2Z![Q*x, -y, N, Q];
+end intrinsic;
+
+intrinsic get_V2(N ::RngIntElt) ->AlgMatElt
+    {}
+    alpha := Valuation(N,2);
+    assert alpha ge 3;
+    Q := 2^alpha;
+    W := al_matrix(Q, N);
+    M2Q := MatrixAlgebra(Rationals(),2);
+    M2Z := MatrixAlgebra(Integers(), 2);
+    S2 := M2Q![2,1,0,2];
+    return M2Z!(S2*W*S2^(-1));
+end intrinsic;
+
+intrinsic get_V3(N::RngIntElt) ->AlgMatElt
+    {}
+    alpha := Valuation(N,3);
+    assert alpha eq 2;
+    Q := 3^alpha;
+    W := al_matrix(Q, N);
+    M2Q := MatrixAlgebra(Rationals(),2);
+    M2Z := MatrixAlgebra(Integers(), 2);
+    S3 := M2Q![3,1,0,3];
+    return M2Z!(S3*W*S3^(-1));
+end intrinsic;
+
+intrinsic get_g(p ::RngIntElt, Q::RngIntElt, N::RngIntElt) ->AlgMatElt
+    {}
+    if p eq 2 then
+        Vp := get_V2(N);
+    elif p eq 3 then
+        Vp := get_V3(N);
+    end if;
+    W := al_matrix(Q, N);
+    return Vp*W;
+end intrinsic;
+
+
 function BslowS2(N, u, t)
 // Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
 // where tr(M) = t, det(M) = 4 and u = (G(M), N).
@@ -887,6 +931,33 @@ function BslowV3(N, u, t)
     return fib_size * (#S div 2);
 end function;
 
+function BslowVW(p, Q, N, u, t)
+// Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) V_p * W_Q
+
+    v := Valuation(N,p);
+    assert p in [2,3];
+
+    if p eq 3 then 
+        assert v eq 2;
+    elif p eq 2 then
+        assert v ge 3;
+    end if;
+
+    if (N mod u ne 0) or (t mod Q*p^v ne 0) then
+        return 0;
+    end if;
+
+    if GCD(u, Q* p^v) ne 1 then
+        return 0;
+    end if; 
+
+    S := [x : x in [0..(N div ( Q* p^(v-1)) ) - 1] | (GCD(x,( Q* p^(v-1)) ) eq 1) and ((Q*p^(v-2)*x^2 - (t div p)*x + 1) mod u * N div (p^v*Q) eq 0)];
+    fib_size := Integers()!(phi1(N) /  phi1(N div u));
+    assert #S mod (p-1) eq 0;
+
+    return fib_size * (#S div (p-1));
+end function;
+
 function is_in_Sigma(g, M, N)
     M2Q := MatrixAlgebra(Rationals(), 2);
     M2Z := MatrixAlgebra(Integers(), 2);
@@ -925,6 +996,11 @@ function Bslowg(g, N, u, t)
     return count;
 end function;
 
+function CslowVW(p, Q, N, u, t)
+    return &+[BslowVW(p, Q, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
+end function;
+
+
 function Cslowg(g, N, u, t)
 
     if g eq [2,1,0,2] then 
@@ -934,7 +1010,6 @@ function Cslowg(g, N, u, t)
     if v ge 3 and Determinant(Matrix(Integers(), 2, 2, g)) eq 2^v then //V2 Case
         return &+[BslowV2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
-    v := Valuation(N,3);
     if Determinant(Matrix(Integers(),2,2,g)) eq 3^2 then //V3 case
         return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];;
     end if;
@@ -988,6 +1063,39 @@ function phi_N_g(g,a,d,N)
     Cs := get_reps_C(N);
     return 1/GCD(a,d) * &+[count_solutions_g(g,a,d,C,N) : C in Cs];
 end function;
+
+
+intrinsic TraceFormulaGamma0VW(p::RngIntElt, Q::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
+{Returns the trace of V_p W_Q on S_k(N) using [Popa].}
+    require k ge 2 : "This formula is only valid for k ge 2";
+    S1 := 0;
+    w := k - 2;
+    M2Z := MatrixAlgebra(Integers(),2);
+    v:= Valuation(N, p);
+    det_g := p^v*Q;
+    max_abst := Floor(SquareRoot(4*det_g)); // t^2 - 4n <= 0
+    for t in [-max_abst..max_abst] do
+        for u in Divisors(N*det_g) do
+            if ((4*det_g-t^2) mod u^2 eq 0) then
+                vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, CslowVW(p, Q, N, u, t);
+                S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*CslowVW(p, Q, N, u, t);
+            end if;
+        end for;
+    end for;
+    vprintf ShimuraQuotients, 2: "S1 = %o\n", S1;
+    S2 := 0;
+    g := get_g(p, Q, N);
+    for d in Divisors(4) do
+        a := 4 div d;
+        S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
+    end for;
+    vprintf ShimuraQuotients, 2: "S2 = %o\n", S2;
+    ret := -S1 / 2 - S2 / 2;
+    if k eq 2 then
+        ret +:= 1;
+    end if;
+    return ret;
+end intrinsic;
 
 intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(N) using [Popa], assuming g normalizes Gamma0(N).}
