@@ -51,7 +51,7 @@ procedure checkTraceVWDNew(p, Q, D, N, k)
     B := Matrix(Basis(VectorSpace(SDN_new)));
     trace := Trace(Solution(B, B*g_M));
     assert IsEven(Integers()!trace);
-    from_formula := TraceFormulaGamma0gDNew(g,D,N,k);
+    from_formula := TraceFormulaGamma0VWDNew(p,Q,D,N,k);
     assert trace eq 2*from_formula;
 end procedure;
 
@@ -120,8 +120,7 @@ procedure testV2VW(bound, Dbound)
             for D in Ds do
                 V2 := Eltseq(get_V2(D*N));
                 hds := Set(HallDivisors(N));
-                v := Valuation(N, 2);
-                hds := hds diff {2^v};
+                hds := {h : h in hds | GCD(h, 2) eq 1};
                 Q := Random(hds);
                 print "Q = ", Q;
                 checkTraceVWDNew(2, Q, D, N, k);

@@ -943,7 +943,7 @@ function BslowVW(p, Q, N, u, t)
         assert v ge 3;
     end if;
 
-    if (N mod u ne 0) or (t mod Q*p^v ne 0) then
+    if (N mod u ne 0) or (t mod (Q*p^v) ne 0) then
         return 0;
     end if;
 
@@ -951,7 +951,7 @@ function BslowVW(p, Q, N, u, t)
         return 0;
     end if; 
 
-    S := [x : x in [0..(N div ( Q* p^(v-1)) ) - 1] | (GCD(x,( Q* p^(v-1)) ) eq 1) and ((Q*p^(v-2)*x^2 - (t div p)*x + 1) mod u * N div (p^v*Q) eq 0)];
+    S := [x : x in [0..(N div ( Q* p^(v-1)) ) - 1] | (GCD(x, N div ( Q* p^(v-1)) ) eq 1) and ((Q*p^(v-2)*x^2 - (t div p)*x + 1) mod (u * (N div (p^v*Q))) eq 0)];
     fib_size := Integers()!(phi1(N) /  phi1(N div u));
     assert #S mod (p-1) eq 0;
 
@@ -1137,6 +1137,13 @@ function mu_star_mu(n)
     end for;
     return ret;
 end function;
+
+
+intrinsic TraceFormulaGamma0VWDNew(p::RngIntElt, Q::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
+{Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
+    trace := &+[TraceFormulaGamma0VW(p, Q, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    return trace;
+end intrinsic;
 
 intrinsic TraceFormulaGamma0gDNew(g::SeqEnum[RngIntElt], D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
