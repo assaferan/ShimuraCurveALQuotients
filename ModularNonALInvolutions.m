@@ -48,8 +48,10 @@ intrinsic TraceDNewQuotient(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt, Ws::Se
             subtrace := TraceFormulaGamma0gDNew(Eltseq(g), D, N, 2);
             sum +:= sgn*subtrace; 
             vprintf ShimuraQuotients, 2: "trace for V = %o, Q = %o, w = %o, is %o, \n", vname, Q, w, subtrace;
+            //print sgn;
         end if;
     end for;
+    //print sum;
     sum *:= 1/#Ws;
 
     tr := TraceDNewALFixed(D,N,2, 1, Ws);
@@ -138,6 +140,11 @@ intrinsic CheckModularNonALInvolutionModSym(X::ShimuraQuot) -> RngIntElt, MonStg
 returns 0 if the curve is non-hyperelliptic, and the involution with too many fixed points.
 Otherwise, returns -1.}
     assert X`g ne 0;
+    has_modularnonALinvolutions := false;
+    if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then has_modularnonALinvolutions eq true; end if;
+    if not has_modularnonALinvolutions then
+        return -1, _, _;
+    end if;
     MDN := ModularSymbols(X`D*X`N, 2, 0);
     SDN := CuspidalSubspace(MDN);
     // We want the D-new subspace
@@ -196,7 +203,7 @@ Otherwise, returns -1.}
             // print "d = ", d;
             assert IsEven(d);
             g := d div 2;
-            // print "g = ", g;
+            //print "g = ", g;
             name := all_names[idx] cat " " cat Sprintf("W%o", other_w);
             if (g eq 0) then
                 return 1, name, _;
