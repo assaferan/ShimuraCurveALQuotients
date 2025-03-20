@@ -141,8 +141,9 @@ returns 0 if the curve is non-hyperelliptic, and the involution with too many fi
 Otherwise, returns -1.}
     assert X`g ne 0;
     has_modularnonALinvolutions := false;
-    if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then has_modularnonALinvolutions eq true; end if;
+    if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then has_modularnonALinvolutions := true; end if;
     if not has_modularnonALinvolutions then
+        vprintf ShimuraQuotients, 2: "The curve %o has no non-AL modular involutions", X;
         return -1, _, _;
     end if;
     MDN := ModularSymbols(X`D*X`N, 2, 0);
