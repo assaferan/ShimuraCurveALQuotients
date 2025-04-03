@@ -32,20 +32,29 @@ intrinsic CanApplyTraceFormula(vname, Q) -> BoolElt, RngIntElt
 end intrinsic;
 
 intrinsic TraceDNewQuotient(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt, Ws::SetEnum, D::RngIntElt, N::RngIntElt) -> RngIntElt
-    {Return the trace on the trace on the subspace of X fixed by Ws and V*W_Q}
+    {Return the trace of V W_Q on the subspace of X fixed by Ws and V*W_Q}
     sum := 0;
     for w in Ws do
         neww := al_mul(Q, w, N*D);
         trformula,p := CanApplyTraceFormula(vname, neww);
         sgn := (-1)^#PrimeDivisors(GCD(neww,D));
+        vprintf ShimuraQuotients, 2: "sgn = %o\n", sgn;
         if trformula then
             subtrace := TraceFormulaGamma0VWDNew(p, neww, D, N, 2);
+            import "tests/trace_formula.m" : checkTraceVWDNew;  
+            checkTraceVWDNew(p, neww, D, N, 2);
             sum +:= sgn*subtrace; 
             vprintf ShimuraQuotients, 2: "trace for V = %o, Q = %o, w = %o, is %o\n", vname, Q, w, subtrace;
         else
             wmat := al_matrix(neww, D*N);
             g := V*wmat;
-            subtrace := TraceFormulaGamma0gDNew(Eltseq(g), D, N, 2);
+            VV, QQ := ModularInvolution(vname, D*N);
+            QQ := al_mul(QQ, neww, D*N);
+            assert VV eq V;
+            g_subspaces := [ModularInvolution(vname, d*N)*al_matrix(GCD(neww, d*N), d*N) : d in Divisors(D)];
+            subtrace := TraceFormulaGamma0gDNew(g_subspaces, QQ, D, N, 2);
+            import "tests/trace_formula.m" : checkTracegDNew;  
+            checkTracegDNew(Eltseq(g), g_subspaces, QQ, D, N, 2);
             sum +:= sgn*subtrace; 
             vprintf ShimuraQuotients, 2: "trace for V = %o, Q = %o, w = %o, is %o, \n", vname, Q, w, subtrace;
             //print sgn;
@@ -106,16 +115,26 @@ Otherwise, returns -1.}
         for other_w in (other_ws diff bad_ws) do
             //two cases
             //we have a trace formula:
+            /*
             can_apply_trace_formula, p := CanApplyTraceFormula(all_names[idx], other_w);
             if can_apply_trace_formula then
                 trV := TraceFormulaGamma0VWDNew(p,other_w,X`D,X`N,2);
             else
                 W := al_matrix(other_w, X`D*X`N);
                 g := V_SN*W;
-                trV:= TraceFormulaGamma0gDNew(Eltseq(g),X`D, X`N, 2); 
+                VV, Q := ModularInvolution(all_names[idx], X`D*X`N);
+                Q := al_mul(Q, other_w, X`D*X`N);
+                assert VV eq V_SN;
+                g_subspaces := [ModularInvolution(all_names[idx], d*X`N)*al_matrix(GCD(other_w, d*X`N), d*X`N) : d in Divisors(X`D)];
+                trV := TraceFormulaGamma0gDNew(g_subspaces, Q, X`D, X`N, 2);
+                import "tests/trace_formula.m" : checkTracegDNew;  
+                checkTracegDNew(Eltseq(g), g_subspaces, Q, X`D, X`N, 2);
+                // trV:= TraceFormulaGamma0gDNew(Eltseq(g),X`D, X`N, 2); 
             end if;
+            */
 
             tr := TraceDNewQuotient(V_SN, all_names[idx], other_w,X`W,X`D, X`N);
+
             // print "g = ", g;
             name := all_names[idx] cat " " cat Sprintf("W%o", other_w);
             vprintf ShimuraQuotients, 2: "trace is %o\n", tr;
@@ -196,7 +215,8 @@ Otherwise, returns -1.}
             for w in ws do
                 W_MDN := AtkinLehnerOperator(MDN, w);
                 W_SN := Solution(SDN_new_basis, SDN_new_basis * W_MDN);
-                al_sign := (X`D mod w eq 0) select -1 else 1;
+                al_sign := (-1)^#PrimeDivisors(GCD(al_mul(w, other_w, D*N),D));
+                // al_sign := (X`D mod w eq 0) select -1 else 1;
                 kerw := Kernel(Matrix(W_SN) - al_sign);
                 fixed_subspace meet:= kerw;
             end for;

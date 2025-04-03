@@ -281,6 +281,20 @@ function mu_star_mu(n)
     return ret;
 end function;
 
+function weights_of_traces(d, Q)
+    g := GCD(d,Q);
+    is_sq := IsSquare(g);
+    if not is_sq then return 0; end if;
+    return #Divisors(d div g);
+end function;
+
+function inverse_weights_of_traces(d, Q)
+    g := GCD(d, Q);
+    is_sq, m := IsSquare(g);
+    if not is_sq then return 0; end if;
+    return MoebiusMu(m) * mu_star_mu(d div g);
+end function;
+
 intrinsic TraceFormulaGamma0DNew(n::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt)-> RngIntElt
     {}
     trace := &+[TraceFormulaGamma0(n, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
@@ -886,6 +900,35 @@ intrinsic get_g(p ::RngIntElt, Q::RngIntElt, N::RngIntElt) ->AlgMatElt
     return Vp*W;
 end intrinsic;
 
+intrinsic ModularInvolution(vname::MonStgElt, N::RngIntElt) -> AlgMatElt
+{Compute the matrix representing the modular involution with name vname on S(N).}
+    gens := Split(vname, " ");
+    mat := MatrixAlgebra(Integers(),2)!1;
+    al_Q := 1;
+    for g in gens do
+        if g[1] eq "V" then
+            if g[2] eq "2" then
+                mat *:= get_V2(N);
+            elif g[2] eq "3" then
+                mat *:= get_V3(N);
+            else
+                require false : "Error in parsing modular involution";
+            end if;
+        elif g[1] eq "S" then
+            require g eq "S2" : "Error in parsing modular involution";
+            mat *:= Parent(mat)![2,1,0,2];
+        elif g[1] eq "W" then
+            Q := eval g[2..#g];
+            W := al_matrix(Q, N);
+            mat *:= W;
+            al_Q := al_mul(al_Q, Q, N);
+        else 
+            require false : "Error in parsing modular involution";
+        end if;
+    end for;
+    return mat, al_Q;
+end intrinsic;
+
 
 function BslowS2(N, u, t)
 // Returns the number of A in Gamma_0(N) \ Gamma_0(1) such that AMA^(-1) is in Gamma_0(N) S_2,
@@ -964,15 +1007,21 @@ function BslowVW(p, Q, N, u, t)
         return 0;
     end if;
 
-    if GCD(u, Q* p^v) ne 1 then
-        return 0;
-    end if; 
-
-    S := [x : x in [0..(N div ( Q* p^(v-1)) ) - 1] | (GCD(x, N div ( Q* p^(v-1)) ) eq 1) and ((Q*p^(v-2)*x^2 - (t div p)*x + 1) mod (u * (N div (p^v*Q))) eq 0)];
+    num_alphas_per_fib := 1;
+    if (Q mod p) eq 0 then
+        if (u mod p^v) ne 0 then return 0; end if; 
+        S := [x : x in [0..(N div Q) - 1] | (GCD(x, N div Q) eq 1) and ((Q*x^2 - (t div p^v)*x + 1) mod (u * (N div Q)) eq 0)];
+    else 
+        if GCD(u, Q* p^v) ne 1 then
+            return 0;
+        end if; 
+        S := [x : x in [0..(N div ( Q* p^(v-1)) ) - 1] | (GCD(x, N div ( Q* p^(v-1)) ) eq 1) and ((Q*p^(v-2)*x^2 - (t div p)*x + 1) mod (u * (N div (p^v*Q))) eq 0)];
+        num_alphas_per_fib := p-1;
+    end if;
     fib_size := Integers()!(phi1(N) /  phi1(N div u));
-    assert #S mod (p-1) eq 0;
+    assert #S mod num_alphas_per_fib eq 0;
 
-    return fib_size * (#S div (p-1));
+    return fib_size * (#S div num_alphas_per_fib);
 end function;
 
 function is_in_Sigma(g, M, N)
@@ -982,6 +1031,26 @@ function is_in_Sigma(g, M, N)
     is_integral, Mg_inv := IsCoercible(M2Z, Mg_inv);
     if not is_integral then return false; end if;
     return Mg_inv[2,1] mod N eq 0;
+end function;
+
+function CGammaSigmaM(g, M, N)
+    P1N := ProjectiveLine(Integers(N));
+    count := 0;
+    for pt in P1N do
+        c, d := Explode(Eltseq(pt));
+        cd := GCD(c,d);
+        c := Integers()!(c div cd);
+        d := Integers()!(d div cd);
+        // now c and d are coprime
+        _, mb, a := XGCD(c,d);
+        b := -mb;
+        A := Matrix([[a,b],[c,d]]);
+        Mconj := A*M*A^(-1);
+        if is_in_Sigma(g, Mconj, N) then
+            count +:= 1;
+        end if;
+    end for;
+    return count;
 end function;
 
 function Bslowg(g, N, u, t)
@@ -1094,19 +1163,22 @@ intrinsic TraceFormulaGamma0VW(p::RngIntElt, Q::RngIntElt, N::RngIntElt, k::RngI
     for t in [-max_abst..max_abst] do
         for u in Divisors(N*det_g) do
             if ((4*det_g-t^2) mod u^2 eq 0) then
-                vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, CslowVW(p, Q, N, u, t);
-                S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*CslowVW(p, Q, N, u, t);
+                cslow := CslowVW(p, Q, N, u, t);
+                if cslow ne 0 then
+                    vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, cslow;
+                    S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*cslow;
+                end if;
             end if;
         end for;
     end for;
-    vprintf ShimuraQuotients, 2: "S1 = %o\n", S1;
+    vprintf ShimuraQuotients, 3: "S1 = %o\n", S1;
     S2 := 0;
     g := get_g(p, Q, N);
     for d in Divisors(4) do
         a := 4 div d;
         S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
     end for;
-    vprintf ShimuraQuotients, 2: "S2 = %o\n", S2;
+    vprintf ShimuraQuotients, 3: "S2 = %o\n", S2;
     ret := -S1 / 2 - S2 / 2;
     if k eq 2 then
         ret +:= 1;
@@ -1125,18 +1197,21 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     for t in [-max_abst..max_abst] do
 	    for u in Divisors(N*det_g) do
 		    if ((4*det_g-t^2) mod u^2 eq 0) then
-		        vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, Cslowg(g, N, u, t);
-		        S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*Cslowg(g, N, u, t);
+                cslow := Cslowg(g, N, u, t);
+                if cslow ne 0 then
+		            vprintf ShimuraQuotients, 3: "u = %o, t = %o, Cslow = %o\n", u, t, cslow;
+		            S1 +:= P(k,t,det_g)*H((4*det_g-t^2) div u^2 )*cslow;
+                end if;
 		    end if;
 	    end for;
     end for;
-    vprintf ShimuraQuotients, 2: "S1 = %o\n", S1;
+    vprintf ShimuraQuotients, 3: "S1 = %o\n", S1;
     S2 := 0;
     for d in Divisors(4) do
 	    a := 4 div d;
         S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
     end for;
-    vprintf ShimuraQuotients, 2: "S2 = %o\n", S2;
+    vprintf ShimuraQuotients, 3: "S2 = %o\n", S2;
     ret := -S1 / 2 - S2 / 2;
     if k eq 2 then
 	    ret +:= 1;
@@ -1147,13 +1222,15 @@ end intrinsic;
 
 intrinsic TraceFormulaGamma0VWDNew(p::RngIntElt, Q::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
-    trace := &+[TraceFormulaGamma0VW(p, GCD(Q,d*N), d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    // trace := &+[TraceFormulaGamma0VW(p, GCD(Q,d*N), d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    trace := &+[TraceFormulaGamma0VW(p, GCD(Q,d*N), d*N, k)*inverse_weights_of_traces(D div d, Q) : d in Divisors(D)];
     return trace;
 end intrinsic;
 
-intrinsic TraceFormulaGamma0gDNew(g::SeqEnum[RngIntElt], D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
+intrinsic TraceFormulaGamma0gDNew(g::SeqEnum[AlgMatElt], Q::RngIntElt, D::RngIntElt, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(DN)^(D-new) by Mobius inversion}
-    trace := &+[TraceFormulaGamma0g(g, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+    // trace := &+[TraceFormulaGamma0g(g, d*N, k)*mu_star_mu(D div d) : d in Divisors(D)];
+     trace := &+[TraceFormulaGamma0g(Eltseq(g[i]), d*N, k)*inverse_weights_of_traces(D div d, Q) : i->d in Divisors(D)];
     return trace;
 end intrinsic;
 

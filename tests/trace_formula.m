@@ -12,7 +12,7 @@ procedure checkTraceg(g, N, k)
     assert trace eq 2*from_formula;
 end procedure;
 
-procedure checkTracegDNew(g, D, N, k)
+function TracegDNewModSym(g, D, N, k)
     assert GCD(D,N) eq 1;
     M := ModularSymbols(D*N,k,0);
     SDN := CuspidalSubspace(M);
@@ -26,8 +26,14 @@ procedure checkTracegDNew(g, D, N, k)
     B := Matrix(Basis(VectorSpace(SDN_new)));
     trace := Trace(Solution(B, B*g_M));
     assert IsEven(Integers()!trace);
-    from_formula := TraceFormulaGamma0gDNew(g,D,N,k);
-    assert trace eq 2*from_formula;
+    return Integers()!(trace / 2);
+end function;
+
+procedure checkTracegDNew(g, g_subspaces, Q, D, N, k)
+    trace := TracegDNewModSym(g, D, N, k);
+    from_formula := TraceFormulaGamma0gDNew(g_subspaces,Q,D,N,k);
+    print "trace = ", trace, "from_formula = ", from_formula;
+    assert trace eq from_formula;
 end procedure;
 
 procedure checkTraceVWDNew(p, Q, D, N, k)
