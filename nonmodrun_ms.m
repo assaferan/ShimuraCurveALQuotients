@@ -14,6 +14,6 @@ end if;
 if is_hyp eq -1 then
     name := "";
 end if;
-printf "%o:%o:%o:%o\n", idx, is_hyp, name, fix;
+printf "%o:%o:%o:%o\n", idx, is_hyp, name, num;
 exit;
 
