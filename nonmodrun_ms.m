@@ -7,7 +7,7 @@ unknown_indices := [ 154, 160, 230, 263, 270, 272, 322, 379, 382, 384, 388, 406,
 // unknown := [X : X in curves | not assigned X`IsSubhyp];
 idx := unknown_indices[eval(index)];
 X := curves[idx];
-is_hyp, inv, num := CheckModularNonALInvolutionModSym(X);
+is_hyp, name, num := CheckModularNonALInvolutionModSym(X);
 if is_hyp ne 0 then
     fix := -1;
 end if;
