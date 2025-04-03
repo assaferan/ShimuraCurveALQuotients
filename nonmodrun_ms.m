@@ -9,7 +9,7 @@ idx := unknown_indices[eval(index)];
 X := curves[idx];
 is_hyp, name, num := CheckModularNonALInvolutionModSym(X);
 if is_hyp ne 0 then
-    fix := -1;
+    num := -1;
 end if;
 if is_hyp eq -1 then
     name := "";
