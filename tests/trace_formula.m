@@ -32,7 +32,7 @@ end function;
 procedure checkTracegDNew(g, g_subspaces, Q, D, N, k)
     trace := TracegDNewModSym(g, D, N, k);
     from_formula := TraceFormulaGamma0gDNew(g_subspaces,Q,D,N,k);
-    print "trace = ", trace, "from_formula = ", from_formula;
+    // print "trace = ", trace, "from_formula = ", from_formula;
     assert trace eq from_formula;
 end procedure;
 
