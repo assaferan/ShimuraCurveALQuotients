@@ -87,7 +87,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
         FilterByWSPoints(~curves);
         
@@ -97,7 +97,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
         unknownstar := [ c : c in curves | IsStarCurve(c) and not assigned c`IsSubhyp];
 
@@ -111,7 +111,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
         // Was actually never run!
         // FilterByWeilPolynomial(~curves);
@@ -123,7 +123,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         DownwardClosure(~curves);
 
-        Write("all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
 
         FilterByDegeneracyMorphism(~curves);
 
