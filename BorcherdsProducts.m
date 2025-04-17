@@ -42,6 +42,14 @@ function what_we_wrote()
     return 0;
 end function;
 
+function get_D0_M_g(D, N)
+    assert IsEven(D) and IsSquarefree(N);
+    D0 := (D*N) div 2^Valuation(D,2);
+    M := 4*D0; // this is 2*D*N
+    g := Genus(Gamma0(M));
+    return D0,M,g;
+end function;
+
 function lhs_integer_programming(M)
     ds := Divisors(M);
     ps := PrimeDivisors(M);
@@ -66,9 +74,7 @@ function lhs_integer_programming(M)
 end function;
 
 function integer_programming_input(D,N)
-    assert IsEven(D) and IsSquarefree(N);
-    D0 := (D*N) div 2^Valuation(D,2);
-    M := 4*D0; // this is 2*D*N
+    D0,M,g := get_D0_M_g(D, N);
     ds := Divisors(M);
     ps := PrimeDivisors(M);
     lhs := lhs_integer_programming(M);
@@ -92,7 +98,6 @@ function integer_programming_input(D,N)
     SetObjectiveFunction(LP, objective); 
     t := Solution(LP);
     // need to define g and D0
-    g := Genus(Gamma0(M));
     n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)],0);
     k := t[1,Ncols(t)]; // the order of pole for t
     n := n0 + k;
@@ -237,4 +242,27 @@ function get_integer_prog_solutions(D,N)
     M := 2*D*N;
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
     return rs;
+end function;
+
+function get_weakly_holomorphic_basis(D,N)
+    D0,M,g := get_D0_M_g(D,N);
+    _<q> := PowerSeriesRing(Rationals());
+    eta<q> := DedekindEta(q);  
+    nor_eta := eta / q^(1/24);
+    rs := get_integer_prog_solutions(D,N);
+    M := 2*D*N;
+    eta_quotients := [&*[(Evaluate(nor_eta,q^d)*q^(d/24))^r[i] : 
+                        i->d in Divisors(M)] : r in rs];
+    min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
+    min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
+    coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
+    E, T := EchelonForm(coeffs);
+    // sanity checks
+    n := -min_v;
+    dim := n + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+    n_gaps := g - &+[d div 4 : d in Divisors(D0)];
+    assert Rank(E) eq dim;
+    pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
+    assert (n + 1 - #pole_orders) eq n_gaps;
+    return E, n;
 end function;
