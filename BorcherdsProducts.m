@@ -226,3 +226,15 @@ procedure write_polymake_scriptfile(D,N)
     Write(fname, output : Overwrite);
     return;
 end procedure;
+
+function get_integer_prog_solutions(D,N)
+    write_polymake_scriptfile(D,N);
+    fname := Sprintf("polymake_script_%o_%o", D, N);
+    polymake := Read(POpen("polymake --script " cat fname, "r"));
+    sol_lines := Split(polymake, "\n");
+    sol_vecs := [Split(line, " ") : line in sol_lines];
+    sols := [[eval(x) : x in vec] : vec in sol_vecs];
+    M := 2*D*N;
+    rs := [sol[2..1 + #Divisors(M)] : sol in sols];
+    return rs;
+end function;
