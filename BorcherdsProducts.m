@@ -135,20 +135,20 @@ function integer_programming_input(D,N)
     */
     /*
     > intbds;
-[
-[ -5, 3 ],
-[ -3, 12 ],
-[ -4, 6 ],
-[ -5, 3 ],
-[ 2, 15 ],
-[ -10, -4 ],
-[ -4, 0 ],
-[ -1, 0 ],
-[ -11, -3 ],
-[ 0, 7 ]
-]
-*/
-/*
+    [
+    [ -5, 3 ],
+    [ -3, 12 ],
+    [ -4, 6 ],
+    [ -5, 3 ],
+    [ 2, 15 ],
+    [ -10, -4 ],
+    [ -4, 0 ],
+    [ -1, 0 ],
+    [ -11, -3 ],
+    [ 0, 7 ]
+    ]
+    */
+    /*
     box_elts := [];
     S := CartesianProduct([{i[1]..i[2]}: i in intbds]);
     j := 0;
@@ -211,3 +211,18 @@ function integer_programming_input(D,N)
     end for;
     return t;*/
 end function;
+
+procedure write_polymake_scriptfile(D,N)
+    eqs, ieqs := integer_programming_input(D,N);
+    output_lines := [];
+    Append(~output_lines, "use application \"polytope\";");
+    Append(~output_lines, "use vars '$ieqs', '$eqs', '$p';");
+    Append(~output_lines, Sprintf("$ieqs = %o;", ieqs));
+    Append(~output_lines, Sprintf("$eqs = %o;", eqs));
+    Append(~output_lines, "$p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);");
+    Append(~output_lines, "print $p->LATTICE_POINTS;");
+    output := Join(output_lines, "\n");
+    fname := Sprintf("polymake_script_%o_%o", D, N);
+    Write(fname, output : Overwrite);
+    return;
+end procedure;
