@@ -65,7 +65,7 @@ function lhs_integer_programming(M)
     return lhs;
 end function;
 
-function integer_programming(D,N)
+function integer_programming_input(D,N)
     assert IsEven(D) and IsSquarefree(N);
     D0 := (D*N) div 2^Valuation(D,2);
     M := 4*D0; // this is 2*D*N
@@ -101,6 +101,12 @@ function integer_programming(D,N)
     rhs[Nrows(rhs)-1,1] := -24*n;
     rhs[1,1] := 1; // admissibility condition
     rhs[2,1] := 1; // discriminant is 2 times a square - equation corresponding to valuation at 2
+    // eqs in a format for polymake / sage
+    eqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[1..n_eq]),Matrix(lhs[1..n_eq])))];
+    // inequalities in format for polymake / sage
+    ieqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[n_eq + 1.. n_eq + #ds]),Matrix(lhs[n_eq+1..n_eq+#ds])))];
+    return eqs, ieqs;
+    /*
     LP := LPProcess(Integers(),Ncols(lhs));
     AddConstraints(LP,Matrix(lhs[1..n_eq]), Matrix(rhs[1..n_eq]) : Rel := "eq");
     AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + #ds]), Matrix(rhs[n_eq + 1..n_eq + #ds]) : Rel := "ge");
@@ -126,6 +132,7 @@ function integer_programming(D,N)
         ub := sol[1,i];
         Append(~intbds,[Ceiling(lb-10^-10),Floor(ub+10^-10)]);
     end for;
+    */
     /*
     > intbds;
 [
@@ -141,6 +148,7 @@ function integer_programming(D,N)
 [ 0, 7 ]
 ]
 */
+/*
     box_elts := [];
     S := CartesianProduct([{i[1]..i[2]}: i in intbds]);
     j := 0;
@@ -201,5 +209,5 @@ function integer_programming(D,N)
         end if;
         j +:= 1;
     end for;
-    return t;
+    return t;*/
 end function;
