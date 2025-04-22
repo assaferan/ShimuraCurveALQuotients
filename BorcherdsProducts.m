@@ -246,7 +246,7 @@ end function;
 
 function get_weakly_holomorphic_basis(D,N)
     D0,M,g := get_D0_M_g(D,N);
-    _<q> := PowerSeriesRing(Rationals());
+    R<q> := PowerSeriesRing(Rationals());
     eta<q> := DedekindEta(q);  
     nor_eta := eta / q^(1/24);
     rs := get_integer_prog_solutions(D,N);
