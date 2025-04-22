@@ -39,6 +39,236 @@ function what_we_wrote()
     end function;
     eq_8 := Matrix([[OrderOfVanishingOfEta(delta, b, M) : b in ds] : delta in ds]);
     eq_8;
+    fm1 := q^(-1)*Parent(t_eta_quotient)!Eltseq(E[1]);
+    f0 := q^(-1)*Parent(t_eta_quotient)!Eltseq(E[2]);
+    f0;
+    f0*t;
+    t;
+    t := t_eta_quotient;
+    t;
+    f0*t;
+    f1;
+    fm1;
+    f0;
+    f0*t - 3*f0;
+    f0*t - 3*f0 - fm1;
+    f0*t^6;
+    [f0*t^n : n in [0..6]];
+    f0*(t^6 - 8*t^5);
+    f0*(t^6 - 8*t^5+17*t^4);
+    f0*(t^6 - 8*t^5+17*t^4-4*t^3);
+    f0*(t^6 - 8*t^5+17*t^4-4*t^3-8*t^2);
+    f0*(t^6 - 8*t^5+17*t^4+4*t^3);
+    f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2);
+    f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2+22*t);
+    fm6 := f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2+22*t);
+    f0*(t^3);
+    f0*(t^3-5*t^2);
+    f0*(t^3-5*t^2+5*t);
+    fm3 := f0*(t^3-5*t^2+5*t);
+    fm6;
+    fm3;
+    f0*(t^2);
+    f0*(t^2-4*t);
+    fm2 := f0*(t^2-4*t);
+    fm6;
+    fm3;
+    fm2;
+    f := fm6 - fm3 + fm2 + fm1;
+    f;
+    psi_s := -2*fm6 + 2*fm1 + 6*f0;
+    psi_y := -4*fm6 + 2*fm3 + 2*fm1 + 10*f0;
+    psi+s;
+    psi_s;
+    psi_y;
+    B<i,j> := QuaternionAlgebra(Rationals(),-1,3);
+    IsSquare(B!(-3));
+    (i*j)^2;
+    (i+i*j)^2;
+    (j+i*j)^2;
+    (j-i*j)^2;
+    (3*ii*j)^2;
+    (3*i+i*j)^2;
+    (2*i+i*j)^2;
+    (2*i+j)^2;
+    (i+2*j)^2;
+    psi_s;
+    psi_s + 6*f0;
+    psi_y;
+    psi_y + 10*f0;
+    B;
+    Units(MaximalOrder(B));
+    k := (1 + i + j + i*j)/2
+    ;
+    k^2;
+    k^2-k-1;
+    (2*k-1)^2;
+    (j + 2*k-1)^2;
+    (j - 2*k-1)^2;
+    (1+i)^2;
+    (i+j)^2;
+    (i-j)^2;
+    (i-i*j)^2;
+    (i+i*j)^2;
+    [<a,b,c,d> : a,b,c,d in [-2..2] | (a+b*i+c*j+d*k)^2 eq -3];
+    -1+2*i+2*k;
+    lambda := -1+2*i+2*k;
+    lambda^2;
+    Trace(lambda);
+    Basis(B);
+    [Trace(x*lambda) : x in Basis(B)];
+    [Trace(x*lambda) : x in Basis(B)[2..4]];
+    Matrix([[Trace(x*lambda) : x in Basis(B)[2..4]]]);
+    Kernel(Transpose(Matrix([[Trace(x*lambda) : x in Basis(B)[2..4]]])));
+    U := Kernel(Transpose(Matrix([[Trace(x*lambda) : x in Basis(B)[2..4]]])));
+    lambda;
+    O := MaximalOrder(B);
+    lambda/2 in O;
+    plus+minus := Matrix([[2,0,1],[2,-1,-1],[-1,0,1]]);
+    plus_minus := Matrix([[2,0,1],[2,-1,-1],[-1,0,1]]);
+    Determinant(plus_minus);
+    basis_O := Basis(O);
+    basis_O;
+    [Trace(x) : x in basis_O];
+    Kernel(Transpose(Matrix([[Trace(x) : x in basis_O]])));
+    L_space := Kernel(Transpose(Matrix([[Trace(x) : x in basis_O]])));
+    Basis(L_space);
+    [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
+    basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
+    lambda;
+    BM_L := Matrix([Eltseq(b) : b in basis_L]);
+    BM_L;
+    Solution(BM_L, Vector(Eltseq(lambda)));
+    lambda_L := Solution(BM_L, Vector(Eltseq(lambda)));
+    [Trace(x*lambda) : x in basis_L];
+    Transpose(Kernel([Trace(x*lambda) : x in basis_L]));
+    Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]]));
+    Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]])));
+    Matrix(Basis(Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]])))));
+    BLplus := Matrix(Basis(Kernel(Transpose(Matrix([[Trace(x*lambda) : x in 
+    basis_L]])))));
+    BLplus;
+    BLplus * BM_L;
+    L;
+    BM_L;
+    Q := Matrix([[Norm(x+y)^2-Norm(x)-Norm(y) : x in basis_L] : y in basis_L]);
+    Q;
+    Lat := LatticeWithGram(Q);
+    LatticeWithGram;
+    Lat := LatticeWithGram(Q : CheckPositive := false);
+    Lat;
+    Dual(Lat);
+    Q;
+    Q^(-1);
+    L;
+    basis_L;
+    Q_O := Matrix([[Norm(x+y)^2-Norm(x)-Norm(y) : x in basis_O] : y in basis_O]);
+    Q_O;
+    Determinant(Q_O);
+    basis_O;
+    Discriminant(O);
+    Q_O := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : x in basis_O] : y in basis_O]);
+    Q_O;
+    Determinant(Q_O);
+    Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : x in basis_L] : y in basis_L]);
+    Determinant(Q);
+    Q;
+    Q^(-1);
+    Q^(-1)*BM_L;
+    BM_Ldual := Q^(-1)*BM_L;
+    eta := B!Eltseq(BM_Ldual[1]);
+    eta;
+    BLplus;
+    BLplus * BM_L;
+    Q;
+    BLplus * Q;
+    Kernel(BLplus * Q);
+    Kernel(Transpose(BLplus * Q));
+    lambda;
+    Solution(BM_L, Vector(Eltseq(lambda)));
+    eta;
+    BM_Ldual[1];
+    Solution(BM_L, BM_Ldual[1]);
+    eta_L := Solution(BM_L, BM_Ldual[1]);
+    eta_L*Transpose(BLplus*Q);
+    eta_L;
+    eta eq 1/6*lambda;
+    eta := B!Eltseq(BM_Ldual[2]);
+    eta_L := Solution(BM_L, BM_Ldual[2]);
+    eta_L*Transpose(BLplus*Q);
+    eta_U := eta_L*Transpose(BLplus*Q);
+    eta_U*BLplus;
+    eta - eta_U*BLplus;
+    eta_L - eta_U*BLplus;
+    eta_L*Q;
+    (eta_L*Q, lambda_L);
+    eta_lambda := ((eta_L*Q, lambda_L)/(lambda*Q,lambda))*lambda;
+    eta_lambda := ((eta_L*Q, lambda_L)/(lambda_L*Q,lambda_L))*lambda_L;
+    eta_lambda;
+    eta - eta_lambda;
+    eta_L - eta_lambda;
+    eta_U := eta_L - eta_lambda;
+    eta_plus := eta_lambda;
+    eta_minus := eta_U;
+    Solution(BM_L, eltseq(i));
+    Solution(BM_L, Eltseq(i));
+    Solution(BM_L, Vector(Eltseq(i)));
+    mu := Solution(BM_L, Vector(Eltseq(i)));
+    mu_plus:= ((mu*Q, lambda_L)/(lambda_L*Q,lambda_L))*lambda_L;
+    mu_plus;
+    eta_plus;
+    mu - mu_plus;
+    mu_minus := mu - mu_plus;
+    eta_plus + mu_plus;
+    lambda_L;
+    (lambda_L*Q, lambda);
+    (lambda_L*Q, lambda_L);
+    SmithForm(Q^(-1));
+    Q^(-1);
+    BM_Ldual;
+    Image(BM_Ldual);
+    Module(Integers(),BM_Ldual);
+    RModule(Integers(),BM_Ldual);
+    RSpaceWithBasis;
+    RSpaceWithBasis(BM_Ldual);
+    tmpdual := RSpaceWithBasis(BM_Ldual);
+    tmp := RSpaceWithBasis(BM_L);
+    tmp;
+    tmpdual / tmp;
+    RSpaceWithBasis(Integers(), BM_Ldual);
+    RSpaceWithBasis(ChangeRing(6*BM_Ldual,Integers()));
+    tmpdual := RSpaceWithBasis(ChangeRing(6*BM_Ldual,Integers()));
+    tmp := RSpaceWithBasis(ChangeRing(6*BM_L,Integers()));
+    tmpdual / tmp;
+    disc_grp, disc_quo := tmpdual / tmp;
+    #disc_grp;
+    Gamma0(12);
+    CosetRepresentatives(Gamma0(12));
+    gammas := CosetRepresentatives(Gamma0(12));
+    gammas := gammas[1];
+    gammas := CosetRepresentatives(Gamma0(12));
+    gamma := gammas[1];
+    gamma;
+    gamma := gammas[2];
+    gamma;
+    gamma^(-1);
+    WordProblem;
+    WordProblem(gamma^(-1));
+    WordProblem;
+    ListSignatures(GrpPSL2Elt);
+    FindWord(PSL2(Integers()), gamma^(-1));
+    FindWord;
+    G := PSL2(Integers());
+    gens := Generators(G);
+    gens;
+    gens[1]*gens[2];
+    gamma^(-1);
+    word := FindWord(PSL2(Integers()), gamma^(-1));
+    &*[gens[Abs(word[i])]^Sign(word[i]) : i in [1..#word]] eq gamma^(-1);
+    gens[1];
+    gens[2];
+    psi_s;
+    psi := psi_s;
     return 0;
 end function;
 
@@ -110,115 +340,11 @@ function integer_programming_input(D,N)
     eqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[1..n_eq]),Matrix(lhs[1..n_eq])))];
     // inequalities in format for polymake / sage
     ieqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[n_eq + 1.. n_eq + #ds]),Matrix(lhs[n_eq+1..n_eq+#ds])))];
-    return eqs, ieqs;
-    /*
-    LP := LPProcess(Integers(),Ncols(lhs));
-    AddConstraints(LP,Matrix(lhs[1..n_eq]), Matrix(rhs[1..n_eq]) : Rel := "eq");
-    AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + #ds]), Matrix(rhs[n_eq + 1..n_eq + #ds]) : Rel := "ge");
-    idx := n_eq + #ds + 1;
-    assert idx eq Nrows(lhs);
-    AddConstraints(LP,Matrix(lhs[idx..idx]), Matrix(rhs[idx..idx]) : Rel := "le");
-    for j in [1..Ncols(lhs)] do
-        SetLowerBound(LP,j,-100);
-    end for;
-    // using Adam's code to find all solutions
-    R := Integers();
-    d := Ncols(lhs);
-    L := LP;
-    rels := [0 : i in [1..n_eq]] cat [1 : i in [1..#ds]] cat [-1];
-    intbds := [];
-    for i in [1..d] do
-        SetObjectiveFunction(L,Matrix([[j eq i select R!1 else R!0: j in [1..d]]]));
-        SetMaximiseFunction(L,false);
-        sol,val := Solution(L); assert val eq 0;
-        lb := sol[1,i];
-        SetMaximiseFunction(L,true);
-        sol,val := Solution(L); assert val eq 0;
-        ub := sol[1,i];
-        Append(~intbds,[Ceiling(lb-10^-10),Floor(ub+10^-10)]);
-    end for;
-    */
-    /*
-    > intbds;
-    [
-    [ -5, 3 ],
-    [ -3, 12 ],
-    [ -4, 6 ],
-    [ -5, 3 ],
-    [ 2, 15 ],
-    [ -10, -4 ],
-    [ -4, 0 ],
-    [ -1, 0 ],
-    [ -11, -3 ],
-    [ 0, 7 ]
-    ]
-    */
-    /*
-    box_elts := [];
-    S := CartesianProduct([{i[1]..i[2]}: i in intbds]);
-    j := 0;
-    for pt in S do
-        if (j mod 100000 eq 0) then
-            print j, "/", #S;
-        end if;
-        v := Vector([pt[i] : i in [1..#pt]]);
-        res := v*Transpose(lhs) - Vector(Transpose(rhs));
-        if [Sign(res[i]) : i in [1..Degree(res)]] eq rels then
-            Append(~box_elts, v);
-        end if;
-        j +:= 1;
-    end for;
-    elim := Matrix(lhs[1..n_eq]);
-    non_elim := Matrix(lhs[n_eq+1..Nrows(lhs)]);
-    H,T := HermiteForm(elim);
-    lhs_sub := non_elim - Submatrix(non_elim,[1..Nrows(non_elim)],[1..4])*Submatrix(H,[1..4],[1..Ncols(H)]);
-    lhs_sub := Submatrix(lhs_sub, [1..Nrows(lhs_sub)], [5..Ncols(lhs_sub)]);
-    elim_rhs := Matrix(rhs[1..n_eq]);
-    H_rhs := T*elim_rhs;
-    non_elim_rhs := Matrix(rhs[n_eq+1..Nrows(rhs)]);
-    rhs_sub := non_elim_rhs - Submatrix(non_elim,[1..Nrows(non_elim)],[1..4])*Submatrix(H_rhs,[1..4],[1..Ncols(H_rhs)]);
-    LP := LPProcess(Integers(),Ncols(lhs_sub));
-    AddConstraints(LP,Matrix(lhs_sub[1..Nrows(lhs_sub)-1]), Matrix(rhs_sub[1..Nrows(lhs_sub)-1]) : Rel := "ge");
-    idx := Nrows(lhs_sub);
-    AddConstraints(LP,Matrix(lhs_sub[idx..idx]), Matrix(rhs_sub[idx..idx]) : Rel := "le");
-    for j in [1..Ncols(lhs_sub)] do
-        SetLowerBound(LP,j,-100);
-    end for;
-    // using Adam's code to find all solutions
-    R := Integers();
-    d := Ncols(lhs_sub);
-    L := LP;
-    rels := [0 : i in [1..n_eq]] cat [1 : i in [1..#ds]] cat [-1];
-    intbds := [];
-    for i in [1..d] do
-        SetObjectiveFunction(L,Matrix([[j eq i select R!1 else R!0: j in [1..d]]]));
-        SetMaximiseFunction(L,false);
-        sol,val := Solution(L); assert val eq 0;
-        lb := sol[1,i];
-        SetMaximiseFunction(L,true);
-        sol,val := Solution(L); assert val eq 0;
-        ub := sol[1,i];
-        Append(~intbds,[Ceiling(lb-10^-10),Floor(ub+10^-10)]);
-    end for;
-    box_elts := [];
-    S := CartesianProduct([{i[1]..i[2]}: i in intbds]);
-    j := 0;
-    for pt in S do
-        if (j mod 100000 eq 0) then
-            print j, "/", #S;
-        end if;
-        v := Vector([pt[i] : i in [1..#pt]]);
-        res := v*Transpose(lhs) - Vector(Transpose(rhs));
-        if [Sign(res[i]) : i in [1..Degree(res)]] eq rels then
-            Append(~box_elts, v);
-        end if;
-        j +:= 1;
-    end for;
-    return t;*/
+    return eqs, ieqs, t;
 end function;
 
-procedure write_polymake_scriptfile(D,N)
-    eqs, ieqs := integer_programming_input(D,N);
+function write_polymake_scriptfile(D,N)
+    eqs, ieqs, t := integer_programming_input(D,N);
     output_lines := [];
     Append(~output_lines, "use application \"polytope\";");
     Append(~output_lines, "use vars '$ieqs', '$eqs', '$p';");
@@ -229,11 +355,11 @@ procedure write_polymake_scriptfile(D,N)
     output := Join(output_lines, "\n");
     fname := Sprintf("polymake_script_%o_%o", D, N);
     Write(fname, output : Overwrite);
-    return;
-end procedure;
+    return t;
+end function;
 
 function get_integer_prog_solutions(D,N)
-    write_polymake_scriptfile(D,N);
+    t := write_polymake_scriptfile(D,N);
     fname := Sprintf("polymake_script_%o_%o", D, N);
     polymake := Read(POpen("polymake --script " cat fname, "r"));
     sol_lines := Split(polymake, "\n");
@@ -241,20 +367,23 @@ function get_integer_prog_solutions(D,N)
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     M := 2*D*N;
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
-    return rs;
+    return rs, Eltseq(t)[1..#Divisors(M)];
 end function;
 
 function get_weakly_holomorphic_basis(D,N)
     D0,M,g := get_D0_M_g(D,N);
-    R<q> := PowerSeriesRing(Rationals());
+    _<q> := PowerSeriesRing(Rationals());
     eta<q> := DedekindEta(q);  
     nor_eta := eta / q^(1/24);
-    rs := get_integer_prog_solutions(D,N);
+    rs, t := get_integer_prog_solutions(D,N);
     M := 2*D*N;
     eta_quotients := [&*[(Evaluate(nor_eta,q^d)*q^(d/24))^r[i] : 
                         i->d in Divisors(M)] : r in rs];
+    t_eta_quotient := &*[(Evaluate(nor_eta,q^d)*q^(d/24))^t[i] : 
+                        i->d in Divisors(M)];
     min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
     min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
+    R<q> := LaurentSeriesRing(Rationals());
     coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
     E, T := EchelonForm(coeffs);
     // sanity checks
@@ -265,4 +394,26 @@ function get_weakly_holomorphic_basis(D,N)
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     assert (n + 1 - #pole_orders) eq n_gaps;
     return E, n;
+end function;
+
+// We woudl like to be able to start with a f,
+// and create the coefficients of the Borcherds form F
+// obtained from it. 
+function SpreadBorcherds(f, L)
+    M := Level(L);
+    G := PSL2(Integers());
+    gens := Generators(G);
+    gammas := CosetRepresentatives(Gamma0(M));
+    T := gens[1];
+    S := gens[2];
+    assert Eltseq(T) eq [1,1,0,1];
+    assert Eltseq(S) eq [0,1,-1,0];
+    s := 0;
+    for gamma in gammas do
+        word := FindWord(PSL2(Integers()), gamma^(-1));
+        assert &*[gens[Abs(word[i])]^Sign(word[i]) : i in [1..#word]] eq gamma^(-1);
+        // compute f|gamma rho_L(gamma^(-1)) e_0 and add to the sum
+        // Probably needs to remember how f is a linear combination of eta quotients
+    end for;
+    return s;
 end function;
