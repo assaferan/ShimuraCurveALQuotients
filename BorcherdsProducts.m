@@ -4,6 +4,7 @@ function OrderOfVanishingOfEta(delta, b, N)
     return N*GCD(b,delta)^2 div (GCD(N,b^2)*delta);
 end function;
 
+/*
 function what_we_wrote()
     Genus(Gamma0(60));
     Cusps(Gamma0(60));
@@ -41,46 +42,12 @@ function what_we_wrote()
     eq_8;
     fm1 := q^(-1)*Parent(t_eta_quotient)!Eltseq(E[1]);
     f0 := q^(-1)*Parent(t_eta_quotient)!Eltseq(E[2]);
-    f0;
-    f0*t;
-    t;
     t := t_eta_quotient;
-    t;
-    f0*t;
-    f1;
-    fm1;
-    f0;
-    f0*t - 3*f0;
-    f0*t - 3*f0 - fm1;
-    f0*t^6;
-    [f0*t^n : n in [0..6]];
-    f0*(t^6 - 8*t^5);
-    f0*(t^6 - 8*t^5+17*t^4);
-    f0*(t^6 - 8*t^5+17*t^4-4*t^3);
-    f0*(t^6 - 8*t^5+17*t^4-4*t^3-8*t^2);
-    f0*(t^6 - 8*t^5+17*t^4+4*t^3);
-    f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2);
-    f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2+22*t);
     fm6 := f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2+22*t);
-    f0*(t^3);
-    f0*(t^3-5*t^2);
-    f0*(t^3-5*t^2+5*t);
     fm3 := f0*(t^3-5*t^2+5*t);
-    fm6;
-    fm3;
-    f0*(t^2);
-    f0*(t^2-4*t);
-    fm2 := f0*(t^2-4*t);
-    fm6;
-    fm3;
-    fm2;
-    f := fm6 - fm3 + fm2 + fm1;
-    f;
+    fm2 := f0*(t^2-4*t);    
     psi_s := -2*fm6 + 2*fm1 + 6*f0;
     psi_y := -4*fm6 + 2*fm3 + 2*fm1 + 10*f0;
-    psi+s;
-    psi_s;
-    psi_y;
     B<i,j> := QuaternionAlgebra(Rationals(),-1,3);
     IsSquare(B!(-3));
     (i*j)^2;
@@ -124,7 +91,6 @@ function what_we_wrote()
     lambda;
     O := MaximalOrder(B);
     lambda/2 in O;
-    plus+minus := Matrix([[2,0,1],[2,-1,-1],[-1,0,1]]);
     plus_minus := Matrix([[2,0,1],[2,-1,-1],[-1,0,1]]);
     Determinant(plus_minus);
     basis_O := Basis(O);
@@ -142,7 +108,6 @@ function what_we_wrote()
     lambda_L := Solution(BM_L, Vector(Eltseq(lambda)));
     [Trace(x*lambda) : x in basis_L];
     Transpose(Kernel([Trace(x*lambda) : x in basis_L]));
-    Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]]));
     Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]])));
     Matrix(Basis(Kernel(Transpose(Matrix([[Trace(x*lambda) : x in basis_L]])))));
     BLplus := Matrix(Basis(Kernel(Transpose(Matrix([[Trace(x*lambda) : x in 
@@ -271,6 +236,7 @@ function what_we_wrote()
     psi := psi_s;
     return 0;
 end function;
+*/
 
 function get_D0_M_g(D, N)
     assert IsEven(D) and IsSquarefree(N);
@@ -372,8 +338,8 @@ end function;
 
 function get_weakly_holomorphic_basis(D,N)
     D0,M,g := get_D0_M_g(D,N);
-    _<q> := PowerSeriesRing(Rationals());
-    eta<q> := DedekindEta(q);  
+    _<q> := PuiseuxSeriesRing(Rationals());
+    eta := DedekindEta(q);  
     nor_eta := eta / q^(1/24);
     rs, t := get_integer_prog_solutions(D,N);
     M := 2*D*N;
@@ -396,11 +362,162 @@ function get_weakly_holomorphic_basis(D,N)
     return E, n;
 end function;
 
-// We woudl like to be able to start with a f,
+function FourthPowerFree(a)
+    ps := PrimeDivisors(Numerator(a)) cat PrimeDivisors(Denominator(a));
+    vals := [Valuation(a,p) : p in ps];
+    v_rad := [v div 4 : v in vals];
+    v_free := [v mod 4 : v in vals];
+    rad := &*[Rationals() | p^v_rad[i] : i->p in ps];
+    free := &*[Rationals() | p^v_free[i] : i->p in ps];
+    assert rad^4 * free eq a;
+    return free, rad;
+end function;
+
+// Returns the q-expansion of eta|[g] where g is a 2x2 matrix
+// with integral entries
+// eta|[g] = eta(gz)/phi_g(z),
+// where phi_g is the multiplier system such that phi_S(z) = sqrt(-iz),
+// phi_T(z) = zeta_{24}, phi_{a*I}(z) = 1 and phi_{Diagonal(d,1)} = d^{-1/4}
+// returns c*eta|[g], c^4 for some constant c.
+function eta_action(g)
+    B, T := HermiteForm(g);
+    assert g eq T^(-1)*B; // so eta|[g] = eta|[B]
+    assert B[2,1] eq 0; // making sure this matrix is Borel
+    a := B[1,1];
+    b := B[1,2];
+    d := B[2,2];
+    n := d div GCD(b,d); // Order of root of unity
+    N := LCM(n, 24);
+    K<zeta> := CyclotomicField(N);
+    zeta_24 := zeta^(N div 24);
+    zeta_n := zeta^(N div n);
+    _<q> := PuiseuxSeriesRing(K);
+    eta<q> := DedekindEta(q);
+    // We use the fact that if q(z) = e^{2 pi i z} then 
+    // q((az+b)/d) = q^{a/d} zeta_d^b
+    nor_eta := eta / q^(1/24);
+    etaB := zeta_n^(b div GCD(b,d)) * q^(a/(24*d)) * Evaluate(nor_eta, q^(a/d));
+    // etaB is eta(Bz)
+    // we need to divide by the multiplier which is (d/a)^(1/4) zeta_24^b
+    free, rad := FourthPowerFree(d/a);
+    return rad^(-1)*zeta_24^(-b)*etaB, free;
+end function;
+
+// Returns the q-expansion of f|[g],
+// where f is the product of eta(dz)^(rz) where (d,r)
+// run over ds and rs repsectively
+function eta_quotient_action(rs, ds, g)
+    ret_ceta := 1;
+    ret_c4 := 1;
+    for i->d in ds do
+        alpha_d := DiagonalMatrix([d,1]); // eta(dz) = d^(-1/4) eta|[alpha_d]
+        c_eta, c4 := eta_action(alpha_d*g);
+        c_eta := c_eta^rs[i];
+        c4 := (c4*d)^rs[i];
+        ret_ceta *:= c_eta;
+        ret_c4 *:= c4;
+    end for;
+    /*
+    is_fourth, c := IsPower(ret_c4, 4);
+    assert is_fourth; // For now we hope this is true for our functions
+    */
+    free, rad := FourthPowerFree(ret_c4);
+    return rad^(-1)*ret_ceta, free;
+    // return ret_ceta / c;
+end function;
+
+// Returns the q-expansion of f|[g],
+// for the functions f described by alphas.
+// alphas describes a linear combination
+// of the eta quotients given by rs
+function linear_comb_eta_quotients_action(alphas, rs, ds, g)
+    L := Rationals();
+    ret_eta := PuiseuxSeriesRing(L)!0;
+    for j->r in rs do
+        ceta, c4 := eta_quotient_action(r, ds, g);
+        ceta := alphas[j]*ceta;
+        Feta := BaseRing(Parent(ceta));
+        Fetax<x> := PolynomialRing(Feta);
+        fac := Factorization(x^4 - c4);
+        min_deg, min_place := Minimum([Degree(fa[1]) : fa in fac]);
+        if min_deg eq 1 then 
+            Leta := Feta;
+            c := -Coefficient(fac[min_place][1],0);
+            assert c^4 eq c4;
+        else
+            Leta<c> := ext<Feta | fac[min_place][1]>;
+        end if;
+        eta := ceta/c;
+        L := CompositeFields(L, Leta)[1];
+        eta := ChangeRing(Parent(eta),L)!eta;
+        ret_eta := ChangeRing(Parent(ret_eta),L)!ret_eta + eta;
+    end for;
+    // return &+[alphas[j]*eta_quotient_action(r, ds, g) : j->r in rs];
+    // free, rad := FourthPowerFree(ret_c4);
+    // return rad^(-1)*ret_ceta, free;
+    return ret_eta;
+end function;
+
+function ShimuraCurveLattice(D,N)
+    B := QuaternionAlgebra(D);
+    O_max := MaximalOrder(B);
+    O := Order(O_max,N);
+    basis_O := Basis(O);
+    L_space := Kernel(Transpose(Matrix([[Trace(x) : x in basis_O]])));
+    basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
+    BM_L := Matrix([Eltseq(b) : b in basis_L]);
+    Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : y in basis_L] : x in basis_L]);
+    BM_Ldual := Q^(-1)*BM_L;
+    // L := LatticeWithGram(Q : CheckPositive := false);
+    // return L;
+    denom := Denominator(BM_Ldual);
+    // We are modifying it to be always with respect to the basis of L.
+    // Ldual := RSpaceWithBasis(ChangeRing(denom*BM_Ldual,Integers()));
+    Ldual := RSpaceWithBasis(ChangeRing(denom*Q^(-1), Integers()));
+    // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
+    L := RSpaceWithBasis(ScalarMatrix(3,denom));
+    disc_grp, to_disc := Ldual / L;
+    return L, Ldual, disc_grp, to_disc, Q^(-1);
+end function;
+
+// assuming v_i is the coefficient of eta_i in Ldual / L
+function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
+    PSL2Z := PSL2(Integers());
+    gens := Generators(PSL2Z);
+    T := gens[1];
+    S := gens[2];
+    assert Eltseq(T) eq [1,1,0,1];
+    assert Eltseq(S) eq [0,1,-1,0];
+    word := FindWord(PSL2Z, gamma);
+    // assert &*[gens[Abs(word[i])]^Sign(word[i]) : i in [1..#word]] eq gamma;
+    w := v;
+    deltas := [delta : delta in discL];
+    B := BasisMatrix(Ldual); // represent in the basis of Ldual, for which the gram matrix is Qdisc
+    delta_lifts := [ChangeRing(Solution(B,delta@@to_disc), Rationals()) : delta in deltas];
+    norms := [-(delta*Qdisc, delta) / 2 : delta in delta_lifts]; // -<delta,delta>/2
+    cycl_order := LCM([Denominator(n) : n in norms] cat [8]);
+    K<zeta> := CyclotomicField(cycl_order);
+    is_sqr, sqrt_disc := IsSquare(K!(#discL));
+    assert is_sqr;
+    for i in [1..#word] do
+        if Abs(word[i]) eq 1 then
+            // rho_L(T)
+            w := [zeta^(Sign(word[i])*Integers()!(norms[j]*cycl_order)) * x : j->x in w];
+        else // Abs(word[i]) eq 2 
+            scalar := zeta^(-cycl_order div 8) / sqrt_disc;
+            w := [ scalar*&+[zeta^(Integers()!(cycl_order*(delta_lifts[k]*Qdisc, delta_lifts[j]))) * w[k] : k in [1..#w]] : j->x in w];
+        end if;
+    end for;
+    return w;
+end function;
+
+// We would like to be able to start with a f,
+// given as a linear combination of Eta quotients
 // and create the coefficients of the Borcherds form F
 // obtained from it. 
-function SpreadBorcherds(f, L)
-    M := Level(L);
+// !! TODO : Not working yet - the constants are off
+function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
+    M := #discL;
     G := PSL2(Integers());
     gens := Generators(G);
     gammas := CosetRepresentatives(Gamma0(M));
@@ -408,12 +525,77 @@ function SpreadBorcherds(f, L)
     S := gens[2];
     assert Eltseq(T) eq [1,1,0,1];
     assert Eltseq(S) eq [0,1,-1,0];
-    s := 0;
+    F := [* PuiseuxSeriesRing(Rationals())!0 : i in [1..M] *];
+    e0 := [1] cat [0 : i in [1..M-1]];
     for gamma in gammas do
-        word := FindWord(PSL2(Integers()), gamma^(-1));
-        assert &*[gens[Abs(word[i])]^Sign(word[i]) : i in [1..#word]] eq gamma^(-1);
         // compute f|gamma rho_L(gamma^(-1)) e_0 and add to the sum
-        // Probably needs to remember how f is a linear combination of eta quotients
+        cf_gamma := linear_comb_eta_quotients_action(alphas, rs, ds, Matrix(gamma));
+        rho_L := WeilRepresentation(gamma^(-1), e0, Ldual, discL, Qdisc, to_disc);
+        for i in [1..M] do
+            coord := rho_L[i]*cf_gamma;
+            L := BaseRing(Parent(coord));
+            F[i] := ChangeRing(Parent(F[i]),L)!F[i] + coord;
+        end for;
+    end for;
+    return F;
+end function;
+
+function FindLambda(Q, d : bound := 10)
+    Q := ChangeRing(Q, Integers());
+    n := Nrows(Q);
+    idxs := CartesianPower([-bound..bound], n);
+    for idx in idxs do
+        v := Vector([idx[j] : j in [1..n]]);
+        v := ChangeRing(v, BaseRing(Q));
+        if (v*Q,v) eq 2*d then
+            return true, v;
+        end if;
+    end for;
+    return false, _;
+end function;
+
+function kappaminus(mu, m, Lminus)
+    ret := 0;
+    if not IsIntegral(m) then
+        return 0;
+    end if;
+    Bminus := BasisMatrix(Lminus);
+    Delta := Determinant(Bminus*Q*Transpose(Bminus));
+    Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(m)};
+    h := ClassNumber(d);
+    w := #UnitGroup(QuadraticField(d));
+    return ret;
+end function;
+
+// Computes kappa0(m) in Schofer's formula
+function kappa0(m, d, Q)
+    Q := ChangeRing(Q, Integers());
+    _, lambda_v := FindLambda(Q,-d);
+    // lambda := &+[lambda_v[i]*basis_L[i] : i in [1..#basis_L]];
+    c_Lplus := Content(lambda_v);
+    Lplus := RSpaceWithBasis(Matrix(lambda_v div c_Lplus));
+    Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
+    L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
+    L_quo, L_quo_map := L / (Lplus + Lminus);
+    s := 0;
+    for mu_bar in L_quo do
+        mu := mu_bar@@L_quo_map;
+        c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
+        mu_plus:= c_mu_plus*ChangeRing(lambda_v, Rationals());
+        mu_minus := mu - mu_plus;
+        // finding the possible range of x in mu_plus + L_plus
+        // use that mu_plus = c_mu_plus * lambda, L_plus = Z * c_Lplus^(-1) * lambda
+        // that <lambda,lambda> = -2d, and we only need x with <x,x> <= 2m
+        // so if x = c_mu_plus + c_Lplus^(-1)*k, we need only those with
+        // (c_mu_plus + c_Lplus^(-1)*k)^2 le m/(-d)
+        // thus k is between the following bounds
+        lb := Ceiling((m/d - c_mu_plus)*c_Lplus);
+        ub := Floor((m/(-d) - c_mu_plus)*c_Lplus);
+        for k in [lb..ub] do
+            x := (c_mu_plus + k * c_Lplus^(-1)) * ChangeRing(lambda_v, Rationals());
+            // s +:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2);
+            print mu_plus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+        end for;
     end for;
     return s;
 end function;
