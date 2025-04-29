@@ -554,7 +554,135 @@ function FindLambda(Q, d : bound := 10)
     return false, _;
 end function;
 
-function kappaminus(mu, m, Lminus)
+function VerticalJoinList(mats)
+    m := mats[1];
+    for i in [2..#mats] do
+        m := VerticalJoin(m, mats[i]);
+    end for;
+    return m;
+end function;
+
+function MyLegendreSymbol(alpha, p)
+    return LegendreSymbol(Integers()!(GF(p)!alpha),p);
+end function;
+
+// W_{m,p}
+// L should be Lminus
+function Wpoly(m,p,mu,L,K,Q)
+    _<sqrtp> := K;
+    F := QNF();
+    S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
+    n := Rank(L);
+    Lnf := NumberFieldLatticeWithGram(ChangeRing(S,F));
+    // l is the sequence of exponents
+    assert p ne 2; // take care of p = 2 later
+    bases, Jblocks, exps := JordanDecomposition(Lnf,p*Integers(F)); 
+    l := &cat[[e : j in [1..Nrows(Jblocks[i])]] : i->e in exps];
+    eps := &cat[[Rationals() | 1/2 * x / p^exps[i] : x in Diagonal(b)]  : i->b in Jblocks]; // so that S is equivalent to (2 eps_1 p^{l_1},..., 2 eps_n p^{l_n})
+    assert &and[Valuation(e,p) eq 0 : e in eps];
+    B := ChangeRing(VerticalJoinList(bases), Rationals());
+    mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
+    Q_mu := 1/2*(mu_wrt_L * ChangeRing(S,Rationals()), mu_wrt_L);
+    if not IsIntegral(m - Q_mu) then
+        return 0;
+    end if;
+    mu_wrt_B := mu_wrt_L*B^(-1);
+    H_mu := {i : i in [1..n] | Valuation(mu_wrt_B[i],p) ge 0};
+    vals := [l[i] + Valuation(mu_wrt_B[i], p) : i in [1..n] | i notin H_mu];
+    if IsEmpty(vals) then
+        K_0 := Infinity();
+    else
+        K_0 := Minimum(vals);
+    end if;
+    L_mu := func<k | {i : i in H_mu | IsOdd(l[i] - k) and (l[i] - k lt 0)}>;
+    l_mu := func<k | #L_mu(k)>;
+    // we compute twice d_mu for technical reasons
+    d2_mu := func<k | 2*k + &+[Minimum(l[i]-k, 0) : i in H_mu]>;
+    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | MyLegendreSymbol(eps[i],p) : i in L_mu(k)]>;
+    f_1 := function(x)
+        a, alpha := Valuation(x,p);
+        return IsEven(l_mu(a+1)) select -1/p else MyLegendreSymbol(alpha,p) / sqrtp;
+    end function;
+    t_mu := m - &+[Rationals() | eps[i]*p^l[i]*mu_wrt_B[i]^2 : i in [1..n] | i notin H_mu];
+    a := Valuation(t_mu, p);
+    R<x> := PolynomialRing(K);
+    if a lt K_0 then
+        ret := 1;
+        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..a] | IsEven(l_mu(k))];
+        ret +:= eps_mu(a+1)*f_1(t_mu)*sqrtp^d2_mu(a+1)*x^(a+1);
+    else
+        ret := 1;
+        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
+    end if;
+    return ret;
+end function;
+
+// This is for p = 2
+function Wpoly2(m,mu,L,K,Q)
+    p := 2;
+    _<sqrtp> := K;
+    F := QNF();
+    S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
+    n := Rank(L);
+    Lnf := NumberFieldLatticeWithGram(ChangeRing(S,F));
+    // l is the sequence of exponents
+    assert p eq 2;
+    bases, Jblocks, exps := JordanDecomposition(Lnf,p*Integers(F)); 
+    l := &cat[[e : j in [1..Nrows(Jblocks[i])]] : i->e in exps];
+    eps := &cat[[Rationals() | 1/2 * x / p^exps[i] : x in Diagonal(b)]  : i->b in Jblocks]; // so that S is equivalent to (2 eps_1 p^{l_1},..., 2 eps_n p^{l_n})
+    assert &and[Valuation(e,p) eq 0 : e in eps];
+    B := ChangeRing(VerticalJoinList(bases), Rationals());
+    mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
+    Q_mu := 1/2*(mu_wrt_L * ChangeRing(S,Rationals()), mu_wrt_L);
+    if not IsIntegral(m - Q_mu) then
+        return 0;
+    end if;
+    mu_wrt_B := mu_wrt_L*B^(-1);
+    H_mu := {i : i in [1..n] | Valuation(mu_wrt_B[i],p) ge 0};
+    vals := [l[i] + Valuation(mu_wrt_B[i], p) : i in [1..n] | i notin H_mu];
+    if IsEmpty(vals) then
+        K_0 := Infinity();
+    else
+        K_0 := Minimum(vals);
+    end if;
+    L_mu := func<k | {i : i in H_mu | IsOdd(l[i] - k) and (l[i] - k lt 0)}>;
+    l_mu := func<k | #L_mu(k)>;
+    // we compute twice d_mu for technical reasons
+    d2_mu := func<k | 2*k + &+[Minimum(l[i]-k, 0) : i in H_mu]>;
+    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | MyLegendreSymbol(eps[i],p) : i in L_mu(k)]>;
+    f_1 := function(x)
+        a, alpha := Valuation(x,p);
+        return IsEven(l_mu(a+1)) select -1/p else MyLegendreSymbol(alpha,p) / sqrtp;
+    end function;
+    t_mu := m - &+[Rationals() | eps[i]*p^l[i]*mu_wrt_B[i]^2 : i in [1..n] | i notin H_mu];
+    a := Valuation(t_mu, p);
+    R<x> := PolynomialRing(K);
+    if a lt K_0 then
+        ret := 1;
+        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..a] | IsEven(l_mu(k))];
+        ret +:= eps_mu(a+1)*f_1(t_mu)*sqrtp^d2_mu(a+1)*x^(a+1);
+    else
+        ret := 1;
+        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
+    end if;
+    return ret;
+end function;
+
+function W(m,p,mu,L,Q)
+    n := Rank(L);
+    s0 := n/2 - 1;
+    s := -s0;
+    s2 := 2 - n; // s2 = 2*s always integral
+    S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
+    D := Determinant(S);
+    vpD := Valuation(D,p);
+    K<sqrtp> := QuadraticField(p);
+    scale := sqrtp^(-vpD);
+    euler := Wpoly(m,p,mu,L,K,Q);
+    return scale*Evaluate(euler, sqrtp^(-s2));
+end function;
+
+function kappaminus(mu, m, Lminus, Q, d)
     ret := 0;
     if not IsIntegral(m) then
         return 0;
