@@ -620,6 +620,7 @@ end function;
 // This is for p = 2
 function Wpoly2(m,mu,L,K,Q)
     p := 2;
+    Zp := pAdicRing(p);
     _<sqrtp> := K;
     F := QNF();
     S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
@@ -628,6 +629,35 @@ function Wpoly2(m,mu,L,K,Q)
     // l is the sequence of exponents
     assert p eq 2;
     bases, Jblocks, exps := JordanDecomposition(Lnf,p*Integers(F)); 
+    bases := [* ChangeRing(B, Rationals()) : B in bases *];
+    Jblocks := [* ChangeRing(J, Rationals()) : J in Jblocks *];
+    for i->Jblock in Jblocks do
+        for j in [2..Nrows(Jblock)] do
+            b := Jblock[j-1,j];
+            if b eq 0 then continue; end if;
+            a := Jblock[j-1,j-1];
+            d := Jblock[j,j];
+            disc := b^2 - a*d;
+            if (Integers(8)!disc eq 5) then disc -:= 2*a; end if;
+            is_sqr, sqrt_disc := IsSquare(Zp!disc);
+            assert is_sqr;
+            // solving the quadratic
+            x1 := (-b + sqrt_disc)/a;
+            x2 := (-b - sqrt_disc)/a;
+            z2 := (-a)/(2*disc); // constant to get scalar product equal to 1
+            // Change of basis matrix
+            B := Matrix([[x1, 1], [z2*x2, z2]]);
+            cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
+            assert B*Matrix([[a,b],[b,d]])*Transpose(B) in cans;
+            B_big := ChangeRing(Parent(Jblock)!1, Zp);
+            B_big[j-1,j-1] := B[1,1];
+            B_big[j-1,j] := B[1,2];
+            B_big[j,j-1] := B[2,1];
+            B_big[j,j] := B[2,2];
+            bases[i] := B_big * bases[i];
+            Jblocks[i] := B_big * Jblocks[i] * Transpose(B_big);
+        end for;
+    end for;
     l := &cat[[e : j in [1..Nrows(Jblocks[i])]] : i->e in exps];
     eps := &cat[[Rationals() | 1/2 * x / p^exps[i] : x in Diagonal(b)]  : i->b in Jblocks]; // so that S is equivalent to (2 eps_1 p^{l_1},..., 2 eps_n p^{l_n})
     assert &and[Valuation(e,p) eq 0 : e in eps];
