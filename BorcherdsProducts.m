@@ -739,7 +739,7 @@ function Wpoly2(m,mu,L,K,Q)
     d2_mu := func<k | 2*k + &+[Minimum(l_list[i]-k, 0) : i in H_mu + 2*&+[Minimum(m_list[i]-k,0) : i in M_mu] + 2*&+[Minimum(n_list[i]-k,0) : i in N_mu]]>;
 
     vals := [l_list[i] + Valuation(mu_list[i], p) : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) lt -1];
-    vals cat:= [[l_list[i] : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) eq -1];
+    vals cat:= [l_list[i] : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) eq -1];
     vals cat:= [m_list[i] + Minimum(Valuation(mu_prime_list[i][1], p), Valuation(mu_prime_list[i][2], p)) : i in [1..M] | i notin M_mu];
     vals cat:= [n_list[i] + Minimum(Valuation(mu_prime_prime_list[i][1], p), Valuation(mu_prime_prime_list[i][2], p)) : i in [1..N] | i notin N_mu];
     if IsEmpty(vals) then
@@ -755,9 +755,9 @@ function Wpoly2(m,mu,L,K,Q)
 
     two_block := func< x | x[1]^2 + x[1]*x[2] + x[2]^2>;
 
-    Q_prime_mu := &+[Rationals() | eps[i]*p^l[i]*mu_list[i]^2 : i in [1..H] | i notin H_mu];
-    Q_prime_mu +:= &+[Rationals() | eps_prime[i]*p^m[i]*(&* mu_prime_list[i]) : i in [1..M] | i notin M_mu];
-    Q_prime_mu +:= &+[Rationals() | eps_prime_prime[i]*p^n[i]*two_block(mu_prime_prime_list[i]) : i in [1..N] | i notin N_mu];
+    Q_prime_mu := &+[Rationals() | eps[i]*p^l_list[i]*mu_list[i]^2 : i in [1..H] | i notin H_mu];
+    Q_prime_mu +:= &+[Rationals() | eps_prime[i]*p^m_list[i]*(&* mu_prime_list[i]) : i in [1..M] | i notin M_mu];
+    Q_prime_mu +:= &+[Rationals() | eps_prime_prime[i]*p^n_list[i]*two_block(mu_prime_prime_list[i]) : i in [1..N] | i notin N_mu];
 
     t_mu := m - Q_prime_mu;
     a := Valuation(t_mu, p);
@@ -793,7 +793,7 @@ function W(m,p,mu,L,Q)
     vpD := Valuation(D,p);
     K<sqrtp> := QuadraticField(p);
     scale := sqrtp^(-vpD);
-    euler := p eq 2 select Wpoly2(mp,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
+    euler := p eq 2 select Wpoly2(m,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
     return scale*Evaluate(euler, sqrtp^(-s2));
 end function;
 
