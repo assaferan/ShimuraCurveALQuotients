@@ -582,11 +582,25 @@ function bp_Kudla_Yang_poly(p, kappam, D)
     return ((1-vp*x)*(1-p^2*x^2)-vp*p^(k+1)*x^(2*k+1)+p^(k+2)*x^(2*k+2)+vp*p^(k+1)*x^(2*k+3)-p^(2*k+2)*x^(2*k+4))/(1-p*x^2);
 end function;
 
-function sigmasp_Kudla_Yang_poly(p, m, chi_p)
+function sigmasp_Kudla_Yang_poly(p, m, kappa, is_even)
     F := Rationals();
-    R<x> := PolynomialRing(F);
-    return &+[(chi_p(p)*x)^r : r in [0..Valuation(m,p)]];
+    R<x> := FunctionField(F);
+    assert IsSquarefree(kappa);
+    chi_p := is_even select KroneckerCharacter(kappa)(p) else KroneckerCharacter(2*kappa)(p);
+    if m eq 0 then
+        return (1 - chi_p*x)^(-1);
+    end if;
+    return &+[(chi_p*x)^r : r in [0..Valuation(m,p)]];
 end function;
+
+procedure test_kronecker_sigma(B)
+    kappas := [kappa : kappa in [1..B] | IsSquarefree(kappa)];
+    for p in PrimesUpTo(B) do
+        for kappa in kappas do
+            assert sigmasp_Kudla_Yang_poly(p,0,kappa,true)*EulerFactor(KroneckerCharacter(kappa),p) eq 1;
+        end for;
+    end for;
+end procedure;
 
 // W_{m,p}
 // L should be Lminus
