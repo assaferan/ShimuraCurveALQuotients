@@ -603,9 +603,17 @@ procedure test_kronecker_sigma(B)
 end procedure;
 
 // Testing Proposition 5.1 in [KY]
-// Should have Wp(s-1/2,m,mu) = 
+// Should have Wp(s-1/2,m,mu) = Lp(s,chi_{kappa m})/zeta_p(2s) bp(kappa m, s) * (m - Q(mu) in Zp)
+// If we set X = p^(-s), and Wp(s) = Wpoly(X) then Wp(s-1/2) = Wpoly(p^(1/2-s)) = Wpoly(sqrtp*X)
+// We also have:
+// zeta_p(2s)^(-1) = 1 - X^2
+// Lp(s, chi_{kappa m}) = (1 - chi_{kappa m}(p) X)^(-1) 
+/*
 procedure test_bp_KY(B)
+      _<x> := PolynomialRing(Rationals());
+     ((1-x^2)/EulerFactor(KroneckerCharacter(2*kappa*m),p))*bp_Kudla_Yang_poly(p, kappa*m,1);
 end procedure;
+*/
 
 // W_{m,p}
 // L should be Lminus
@@ -816,19 +824,54 @@ end function;
 // Lp(s,chi) / Lp(s+1,chi) in the even case, and 
 // zeta_p(2s) / zeta_p(2s+1) in the odd case
 
-function W(m,p,mu,L,Q)
-    n := Rank(L);
-    s0 := n/2 - 1;
-    s := -s0;
-    s2 := 2 - n; // s2 = 2*s always integral
+function Wpoly_scaled(m,p,mu,L,Q)
     S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
     D := Determinant(S);
     vpD := Valuation(D,p);
     K<sqrtp> := QuadraticField(p);
     scale := sqrtp^(-vpD);
     euler := p eq 2 select Wpoly2(m,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
-    return scale*Evaluate(euler, sqrtp^(-s2));
+    return scale*euler;
 end function;
+
+function W(m,p,mu,L,Q)
+    Wpoly := Wpoly_scaled(m,p,mu,L,Q);
+    _<sqrtp> := BaseRing(Wpoly);
+    n := Rank(L);
+    // s0 := n/2 - 1;
+    // s := -s0;
+    s2 := 2 - n; // s2 = 2*s always integral
+    return Evaluate(Wpoly, sqrtp^(-s2));
+end function;
+
+procedure test_W()
+    // testing the few values we know from Yang
+    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(6,1);
+    Q := ChangeRing(Qinv^(-1), Integers());
+    for d in [-3,-4] do
+        _, lambda_v := FindLambda(Q,-d);
+        Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
+        mu := Vector([0,0,0]);
+        if d eq -4 then
+            w32<x> := Wpoly_scaled(3,2,mu,Lminus,Q);
+            assert w32 eq 1/2*(1-x^2);
+            w33<x> := Wpoly_scaled(3,3,mu,Lminus,Q);
+            assert w33 eq 1/3*(1+2*x+x^2);
+            w22<x> := Wpoly_scaled(2,2,mu,Lminus,Q);
+            assert w22 eq 1/2*(1+x^3);
+            w23<x> := Wpoly_scaled(2,3,mu,Lminus,Q);
+            assert w23 eq 1/3*(1-x);
+        end if;
+        if d eq -3 then
+            w12<x> := Wpoly_scaled(1,2,mu,Lminus,Q);
+            assert w12 eq 1/2*(1-x);
+            w13<x> := Wpoly_scaled(1,3,mu,Lminus,Q);
+            _<sqrt3> := BaseRing(w13);
+            assert w13 eq 1/sqrt3*(1+x);
+        end if;
+    end for;
+    return;
+end procedure;
 
 function kappaminus(mu, m, Lminus, Q, d)
     ret := 0;
