@@ -566,6 +566,22 @@ function MyLegendreSymbol(alpha, p)
     return LegendreSymbol(Integers()!(GF(p)!alpha),p);
 end function;
 
+// functions for testing the Wpolys from Kudla Yang paper
+function bp_Kudla_Yang(p, kappam, s, D)
+    d, c := SquarefreeFactorization(4*kappam);
+    k := Valuation(c,p);
+    F := Rationals();
+    R<x> := PolynomialRing(F);
+    vp := LegendreSymbol(d, p);
+    if k lt 0 then return R!1; end if;
+    // k >= 0
+    if (D mod p ne 0) then
+        return (1 - vp*x + p^k*vp*x^(1+2k)-p^(k+1)*x^(2k+2))/(1-p*x^2);
+    end if;
+    // p divides D
+    
+end function;
+
 // W_{m,p}
 // L should be Lminus
 function Wpoly(m,p,mu,L,K,Q)
@@ -631,14 +647,45 @@ function Wpoly2(m,mu,L,K,Q)
     bases, Jblocks, exps := JordanDecomposition(Lnf,p*Integers(F)); 
     bases := [* ChangeRing(B, Rationals()) : B in bases *];
     Jblocks := [* ChangeRing(J, Rationals()) : J in Jblocks *];
+    l_list := [];
+    m_list := [];
+    n_list := [];
+    eps := [];
+    mu_indices := [];
+    // For these we record the first index of two, so that (i, i+1) are the indices
+    mu_prime_indices := [];
+    mu_prime_prime_indices := [];
+    // It seems like eps_prime and eps_prime_prime can always be taken to be 1
+    // eps_prime := [];
+    // eps_prime_prime := [];
+    row_ind := 0;
     for i->Jblock in Jblocks do
         for j in [2..Nrows(Jblock)] do
+            row_ind +:= 1;
             b := Jblock[j-1,j];
-            if b eq 0 then continue; end if;
+            if b eq 0 then
+                Append(~l_list, exps[i]);
+                Append(~eps, Jblock[j-1,j-1] / p^exps[i]);
+                Append(~mu_indices, row_ind);
+                if (j eq Nrows(Jblock)) then
+                    row_ind +:= 1;
+                    Append(~l_list, exps[i]);
+                    Append(~eps, Jblock[j,j] / p^exps[i]);
+                    Append(~mu_indices, row_ind);
+                end if;
+                continue; 
+            end if;
             a := Jblock[j-1,j-1];
             d := Jblock[j,j];
             disc := b^2 - a*d;
-            if (Integers(8)!disc eq 5) then disc -:= 2*a; end if;
+            if (Integers(8)!disc eq 5) then 
+                disc -:= 2*a; 
+                Append(~n_list, exps[i]);
+                Append(~mu_prime_prime_indices, row_ind);
+            else   
+                Append(~m_list, exps[i]);
+                Append(~mu_prime_indices, row_ind);
+            end if;
             is_sqr, sqrt_disc := IsSquare(Zp!disc);
             assert is_sqr;
             // solving the quadratic
@@ -656,10 +703,15 @@ function Wpoly2(m,mu,L,K,Q)
             B_big[j,j] := B[2,2];
             bases[i] := B_big * bases[i];
             Jblocks[i] := B_big * Jblocks[i] * Transpose(B_big);
+            row_ind +:= 1;
         end for;
     end for;
-    l := &cat[[e : j in [1..Nrows(Jblocks[i])]] : i->e in exps];
-    eps := &cat[[Rationals() | 1/2 * x / p^exps[i] : x in Diagonal(b)]  : i->b in Jblocks]; // so that S is equivalent to (2 eps_1 p^{l_1},..., 2 eps_n p^{l_n})
+    eps_prime := [1 for m in m_list];
+    eps_prime_prime := [1 for n in n_list];
+    H := #l_list;
+    M := #m_list;
+    N := #n_list;
+    assert n eq H + 2*M + 2*N;
     assert &and[Valuation(e,p) eq 0 : e in eps];
     B := ChangeRing(VerticalJoinList(bases), Rationals());
     mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
@@ -668,33 +720,53 @@ function Wpoly2(m,mu,L,K,Q)
         return 0;
     end if;
     mu_wrt_B := mu_wrt_L*B^(-1);
-    H_mu := {i : i in [1..n] | Valuation(mu_wrt_B[i],p) ge 0};
-    vals := [l[i] + Valuation(mu_wrt_B[i], p) : i in [1..n] | i notin H_mu];
+    mu_list := [mu_wrt_B[i] : i in mu_indices];
+    mu_prime_list := [[mu_wrt_B[i], mu_wrt_B[i+1]] : i in mu_prime_indices];
+    mu_prime_prime_list := [[mu_wrt_B[i], mu_wrt_B[i+1]] : i in mu_prime_prime_indices];
+    M_mu := {i : i in [1..M] | Valuation(mu_prime_list[i][1],p) ge 0 and Valuation(mu_prime_list[i][2],p) ge 0};
+    N_mu := {i : i in [1..N] | Valuation(mu_prime_prime_list[i][1],p) ge 0 and Valuation(mu_prime_prime_list[i][2],p) ge 0};
+    H_mu := {i : i in [1..H] | Valuation(mu_list[i],p) ge 0};
+
+    L_mu := func<k | {i : i in H_mu | IsOdd(l_list[i] - k) and (l_list[i] - k lt 0)}>;
+    l_mu := func<k | #L_mu(k)>;
+    // we compute twice d_mu for technical reasons
+    d2_mu := func<k | 2*k + &+[Minimum(l_list[i]-k, 0) : i in H_mu + 2*&+[Minimum(m_list[i]-k,0) : i in M_mu] + 2*&+[Minimum(n_list[i]-k,0) : i in N_mu]]>;
+
+    vals := [l_list[i] + Valuation(mu_list[i], p) : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) lt -1];
+    vals cat:= [[l_list[i] : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) eq -1];
+    vals cat:= [m_list[i] + Minimum(Valuation(mu_prime_list[i][1], p), Valuation(mu_prime_list[i][2], p)) : i in [1..M] | i notin M_mu];
+    vals cat:= [n_list[i] + Minimum(Valuation(mu_prime_prime_list[i][1], p), Valuation(mu_prime_prime_list[i][2], p)) : i in [1..N] | i notin N_mu];
     if IsEmpty(vals) then
         K_0 := Infinity();
     else
         K_0 := Minimum(vals);
     end if;
-    L_mu := func<k | {i : i in H_mu | IsOdd(l[i] - k) and (l[i] - k lt 0)}>;
-    l_mu := func<k | #L_mu(k)>;
-    // we compute twice d_mu for technical reasons
-    d2_mu := func<k | 2*k + &+[Minimum(l[i]-k, 0) : i in H_mu]>;
-    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | MyLegendreSymbol(eps[i],p) : i in L_mu(k)]>;
-    f_1 := function(x)
-        a, alpha := Valuation(x,p);
-        return IsEven(l_mu(a+1)) select -1/p else MyLegendreSymbol(alpha,p) / sqrtp;
-    end function;
-    t_mu := m - &+[Rationals() | eps[i]*p^l[i]*mu_wrt_B[i]^2 : i in [1..n] | i notin H_mu];
+    
+    p_mu := func<k | (-1)^(&+[Minimum(n_list[j] - k, 0) : j in N_mu])>;
+    eps_mu := func<k | &*[eps[h] : h in L_mu(k)]>;
+
+    delta_mu := func<k | exists(h){h : h in H_mu | l_list[h] eq k} select 0 else 1>;
+
+    two_block := func< x | x[1]^2 + x[1]*x[2] + x[2]^2>;
+
+    Q_prime_mu := &+[Rationals() | eps[i]*p^l[i]*mu_list[i]^2 : i in [1..H] | i notin H_mu];
+    Q_prime_mu +:= &+[Rationals() | eps_prime[i]*p^m[i]*(&* mu_prime_list[i]) : i in [1..M] | i notin M_mu];
+    Q_prime_mu +:= &+[Rationals() | eps_prime_prime[i]*p^n[i]*two_block(mu_prime_prime_list[i]) : i in [1..N] | i notin N_mu];
+
+    t_mu := m - Q_prime_mu;
     a := Valuation(t_mu, p);
+
+    nu := func< k | t_mu*p^(3-k) - &+[eps[h] : h in H_mu | l_list[h] lt k]>;
+
+    psi_char := func<k | (nu(k) mod 4 eq 0) select (-1)^(nu / 4) else 0>;
+
+    K_0 := Minimum(K_0, a+3);
+
     R<x> := PolynomialRing(K);
-    if a lt K_0 then
-        ret := 1;
-        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..a] | IsEven(l_mu(k))];
-        ret +:= eps_mu(a+1)*f_1(t_mu)*sqrtp^d2_mu(a+1)*x^(a+1);
-    else
-        ret := 1;
-        ret +:= (1 - 1/p)*&+[R | eps_mu(k)*sqrtp^d2_mu(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
-    end if;
+    ret := 1;
+    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-3)*KroneckerSymbol(2,eps_mu(k)*nu(k))*x^k : k in [1..K_0] | IsOdd(l_mu(k))];
+    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-2)*KroneckerSymbol(2,eps_mu(k))*psi_char(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
+
     return ret;
 end function;
 
@@ -708,7 +780,7 @@ function W(m,p,mu,L,Q)
     vpD := Valuation(D,p);
     K<sqrtp> := QuadraticField(p);
     scale := sqrtp^(-vpD);
-    euler := Wpoly(m,p,mu,L,K,Q);
+    euler := p eq 2 select Wpoly2(mp,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
     return scale*Evaluate(euler, sqrtp^(-s2));
 end function;
 
