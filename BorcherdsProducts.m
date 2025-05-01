@@ -567,7 +567,7 @@ function MyLegendreSymbol(alpha, p)
 end function;
 
 // functions for testing the Wpolys from Kudla Yang paper
-function bp_Kudla_Yang(p, kappam, s, D)
+function bp_Kudla_Yang_poly(p, kappam, D)
     d, c := SquarefreeFactorization(4*kappam);
     k := Valuation(c,p);
     F := Rationals();
@@ -576,10 +576,16 @@ function bp_Kudla_Yang(p, kappam, s, D)
     if k lt 0 then return R!1; end if;
     // k >= 0
     if (D mod p ne 0) then
-        return (1 - vp*x + p^k*vp*x^(1+2k)-p^(k+1)*x^(2k+2))/(1-p*x^2);
+        return (1 - vp*x + p^k*vp*x^(1+2*k)-p^(k+1)*x^(2*k+2))/(1-p*x^2);
     end if;
     // p divides D
-    
+    return ((1-vp*x)*(1-p^2*x^2)-vp*p^(k+1)*x^(2*k+1)+p^(k+2)*x^(2*k+2)+vp*p^(k+1)*x^(2*k+3)-p^(2*k+2)*x^(2*k+4))/(1-p*x^2);
+end function;
+
+function sigmasp_Kudla_Yang_poly(p, m, chi_p)
+    F := Rationals();
+    R<x> := PolynomialRing(F);
+    return &+[(chi_p(p)*x)^r : r in [0..Valuation(m,p)]];
 end function;
 
 // W_{m,p}
@@ -706,8 +712,8 @@ function Wpoly2(m,mu,L,K,Q)
             row_ind +:= 1;
         end for;
     end for;
-    eps_prime := [1 for m in m_list];
-    eps_prime_prime := [1 for n in n_list];
+    eps_prime := [1 : m in m_list];
+    eps_prime_prime := [1 : n in n_list];
     H := #l_list;
     M := #m_list;
     N := #n_list;
@@ -769,6 +775,13 @@ function Wpoly2(m,mu,L,K,Q)
 
     return ret;
 end function;
+
+// Prop. 2.1 in [KY] says that if chi_p is unramified and p is odd in the odd dimensional case
+// we have Wmp(s) = sigma_{-s,p}(m,chi)/Lp(s+1,chi) in the even case
+// and Lp(s+1/2,chi_{kappam})/zetap(2s+1)*bp(kappam,s+1/2) in the odd case
+// In particular, when m = 0 this should yield
+// Lp(s,chi) / Lp(s+1,chi) in the even case, and 
+// zeta_p(2s) / zeta_p(2s+1) in the odd case
 
 function W(m,p,mu,L,Q)
     n := Rank(L);
