@@ -662,7 +662,7 @@ function Wpoly2(m,mu,L,K,Q)
     for i->Jblock in Jblocks do
         for j in [2..Nrows(Jblock)] do
             row_ind +:= 1;
-            b := Jblock[j-1,j];
+            b := Jblock[j-1,j] / p^(exps[i]);
             if b eq 0 then
                 Append(~l_list, exps[i]);
                 Append(~eps, Jblock[j-1,j-1] / p^exps[i]);
@@ -675,23 +675,25 @@ function Wpoly2(m,mu,L,K,Q)
                 end if;
                 continue; 
             end if;
-            a := Jblock[j-1,j-1];
-            d := Jblock[j,j];
+            a := Jblock[j-1,j-1] / p^(exps[i]);
+            d := Jblock[j,j] / p^(exps[i]);
             disc := b^2 - a*d;
             if (Integers(8)!disc eq 5) then 
-                disc -:= 2*a; 
+                disc +:= 2*a; 
                 Append(~n_list, exps[i]);
                 Append(~mu_prime_prime_indices, row_ind);
+                change_z2 := 2;
             else   
                 Append(~m_list, exps[i]);
                 Append(~mu_prime_indices, row_ind);
+                change_z2 := 0;
             end if;
             is_sqr, sqrt_disc := IsSquare(Zp!disc);
             assert is_sqr;
             // solving the quadratic
             x1 := (-b + sqrt_disc)/a;
             x2 := (-b - sqrt_disc)/a;
-            z2 := (-a)/(2*disc); // constant to get scalar product equal to 1
+            z2 := (-a)/(2*disc)+change_z2; // constant to get scalar product equal to 1 
             // Change of basis matrix
             B := Matrix([[x1, 1], [z2*x2, z2]]);
             cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
@@ -730,7 +732,7 @@ function Wpoly2(m,mu,L,K,Q)
     L_mu := func<k | {i : i in H_mu | IsOdd(l_list[i] - k) and (l_list[i] - k lt 0)}>;
     l_mu := func<k | #L_mu(k)>;
     // we compute twice d_mu for technical reasons
-    d2_mu := func<k | 2*k + &+[Minimum(l_list[i]-k, 0) : i in H_mu + 2*&+[Minimum(m_list[i]-k,0) : i in M_mu] + 2*&+[Minimum(n_list[i]-k,0) : i in N_mu]]>;
+    d2_mu := func<k | 2*k + &+[Integers()|Minimum(l_list[i]-k, 0) : i in H_mu] + 2*&+[Integers()|Minimum(m_list[i]-k,0) : i in M_mu] + 2*&+[Integers()|Minimum(n_list[i]-k,0) : i in N_mu]>;
 
     vals := [l_list[i] + Valuation(mu_list[i], p) : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) lt -1];
     vals cat:= [l_list[i] : i in [1..H] | i notin H_mu and Valuation(mu_list[i],p) eq -1];
@@ -742,8 +744,8 @@ function Wpoly2(m,mu,L,K,Q)
         K_0 := Minimum(vals);
     end if;
     
-    p_mu := func<k | (-1)^(&+[Minimum(n_list[j] - k, 0) : j in N_mu])>;
-    eps_mu := func<k | &*[eps[h] : h in L_mu(k)]>;
+    p_mu := func<k | (-1)^(&+[Integers()|Minimum(n_list[j] - k, 0) : j in N_mu])>;
+    eps_mu := func<k | &*[Zp|eps[h] : h in L_mu(k)]>;
 
     delta_mu := func<k | exists(h){h : h in H_mu | l_list[h] eq k} select 0 else 1>;
 
@@ -756,16 +758,16 @@ function Wpoly2(m,mu,L,K,Q)
     t_mu := m - Q_prime_mu;
     a := Valuation(t_mu, p);
 
-    nu := func< k | t_mu*p^(3-k) - &+[eps[h] : h in H_mu | l_list[h] lt k]>;
+    nu := func< k | t_mu*p^(3-k) - &+[Zp|eps[h] : h in H_mu | l_list[h] lt k]>;
 
-    psi_char := func<k | (nu(k) mod 4 eq 0) select (-1)^(nu / 4) else 0>;
+    psi_char := func<k | (Valuation(nu(k)) ge 2) select (-1)^(Integers()!(GF(2))!(nu(k)/ 4)) else 0>;
 
     K_0 := Minimum(K_0, a+3);
 
     R<x> := PolynomialRing(K);
     ret := 1;
-    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-3)*KroneckerSymbol(2,eps_mu(k)*nu(k))*x^k : k in [1..K_0] | IsOdd(l_mu(k))];
-    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-2)*KroneckerSymbol(2,eps_mu(k))*psi_char(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
+    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-3)*KroneckerSymbol(2,Integers()!(eps_mu(k)*nu(k)))*x^k : k in [1..K_0] | IsOdd(l_mu(k))];
+    ret +:= &+[R | delta_mu(k)*p_mu(k)*sqrtp^(d2_mu(k)-2)*KroneckerSymbol(2,Integers()!(eps_mu(k)))*psi_char(k)*x^k : k in [1..K_0] | IsEven(l_mu(k))];
 
     return ret;
 end function;
