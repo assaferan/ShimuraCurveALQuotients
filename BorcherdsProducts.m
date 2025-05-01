@@ -572,7 +572,7 @@ function bp_Kudla_Yang_poly(p, kappam, D)
     k := Valuation(c,p);
     F := Rationals();
     R<x> := PolynomialRing(F);
-    vp := LegendreSymbol(d, p);
+    vp := KroneckerSymbol(d, p);
     if k lt 0 then return R!1; end if;
     // k >= 0
     if (D mod p ne 0) then
@@ -601,19 +601,6 @@ procedure test_kronecker_sigma(B)
         end for;
     end for;
 end procedure;
-
-// Testing Proposition 5.1 in [KY]
-// Should have Wp(s-1/2,m,mu) = Lp(s,chi_{kappa m})/zeta_p(2s) bp(kappa m, s) * (m - Q(mu) in Zp)
-// If we set X = p^(-s), and Wp(s) = Wpoly(X) then Wp(s-1/2) = Wpoly(p^(1/2-s)) = Wpoly(sqrtp*X)
-// We also have:
-// zeta_p(2s)^(-1) = 1 - X^2
-// Lp(s, chi_{kappa m}) = (1 - chi_{kappa m}(p) X)^(-1) 
-/*
-procedure test_bp_KY(B)
-      _<x> := PolynomialRing(Rationals());
-     ((1-x^2)/EulerFactor(KroneckerCharacter(2*kappa*m),p))*bp_Kudla_Yang_poly(p, kappa*m,1);
-end procedure;
-*/
 
 // W_{m,p}
 // L should be Lminus
@@ -693,6 +680,12 @@ function Wpoly2(m,mu,L,K,Q)
     // eps_prime_prime := [];
     row_ind := 0;
     for i->Jblock in Jblocks do
+        if Nrows(Jblock) eq 1 then
+            row_ind +:= 1;
+            Append(~l_list, exps[i]);
+            Append(~eps, Jblock[1,1] / p^exps[i]);
+            Append(~mu_indices, row_ind);
+        end if;
         for j in [2..Nrows(Jblock)] do
             row_ind +:= 1;
             b := Jblock[j-1,j] / p^(exps[i]);
@@ -817,13 +810,6 @@ function Wpoly2(m,mu,L,K,Q)
     return ret;
 end function;
 
-// Prop. 2.1 in [KY] says that if chi_p is unramified and p is odd in the odd dimensional case
-// we have Wmp(s) = sigma_{-s,p}(m,chi)/Lp(s+1,chi) in the even case
-// and Lp(s+1/2,chi_{kappam})/zetap(2s+1)*bp(kappam,s+1/2) in the odd case
-// In particular, when m = 0 this should yield
-// Lp(s,chi) / Lp(s+1,chi) in the even case, and 
-// zeta_p(2s) / zeta_p(2s+1) in the odd case
-
 function Wpoly_scaled(m,p,mu,L,Q)
     S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
     D := Determinant(S);
@@ -833,6 +819,44 @@ function Wpoly_scaled(m,p,mu,L,Q)
     euler := p eq 2 select Wpoly2(m,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
     return scale*euler;
 end function;
+
+
+// Testing Proposition 5.1 in [KY]
+// Should have Wp(s-1/2,m,mu) = Lp(s,chi_{kappa m})/zeta_p(2s) bp(kappa m, s) * (m - Q(mu) in Zp)
+// Note that our Wpoly_scaled is evaluated at (s+s_0) and when n = 1, s0 = n/2 - 1 = -1/2
+// We also have:
+// zeta_p(2s)^(-1) = 1 - X^2
+// Lp(s, chi_{kappa m}) = (1 - chi_{kappa m}(p) X)^(-1) 
+// There is a sqrtp factor that I am missing
+
+procedure test_bp_KY(B)
+    _<x> := PolynomialRing(Rationals());
+    kappas := [kappa : kappa in [1..B] | IsSquarefree(kappa)];
+    L := RSpaceWithBasis(IdentityMatrix(Integers(),1));
+    mu := Vector([0]);
+    for m in [1..B] do
+        for kappa in kappas do
+            Q := Matrix([[kappa]]);
+            for P in PrimesUpTo(B, Rationals() : coprime_to := kappa) do
+                p := Norm(P);
+                rhs := ((1-x^2)/EulerFactor(KroneckerCharacter(2*kappa*m),p))*bp_Kudla_Yang_poly(p, kappa*m,1);
+                assert Denominator(rhs) eq 1;
+                rhs := Numerator(rhs);
+                lhs := Wpoly_scaled(m,p,mu,L,Q);
+                assert lhs eq ChangeRing(rhs, Parent(lhs));
+            end for;
+        end for;
+    end for;
+    return;
+end procedure;
+
+// Prop. 2.1 in [KY] says that if chi_p is unramified and p is odd in the odd dimensional case
+// we have Wmp(s) = sigma_{-s,p}(m,chi)/Lp(s+1,chi) in the even case
+// and Lp(s+1/2,chi_{kappam})/zetap(2s+1)*bp(kappam,s+1/2) in the odd case
+// In particular, when m = 0 this should yield
+// Lp(s,chi) / Lp(s+1,chi) in the even case, and 
+// zeta_p(2s) / zeta_p(2s+1) in the odd case
+
 
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
