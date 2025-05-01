@@ -602,6 +602,11 @@ procedure test_kronecker_sigma(B)
     end for;
 end procedure;
 
+// Testing Proposition 5.1 in [KY]
+// Should have Wp(s-1/2,m,mu) = 
+procedure test_bp_KY(B)
+end procedure;
+
 // W_{m,p}
 // L should be Lminus
 function Wpoly(m,p,mu,L,K,Q)
@@ -702,20 +707,32 @@ function Wpoly2(m,mu,L,K,Q)
                 disc +:= 2*a; 
                 Append(~n_list, exps[i]);
                 Append(~mu_prime_prime_indices, row_ind);
-                change_z2 := 2;
+                aniso := true;
             else   
                 Append(~m_list, exps[i]);
                 Append(~mu_prime_indices, row_ind);
-                change_z2 := 0;
+                aniso := false;
             end if;
             is_sqr, sqrt_disc := IsSquare(Zp!disc);
             assert is_sqr;
             // solving the quadratic
             x1 := (-b + sqrt_disc)/a;
             x2 := (-b - sqrt_disc)/a;
-            z2 := (-a)/(2*disc)+change_z2; // constant to get scalar product equal to 1 
-            // Change of basis matrix
-            B := Matrix([[x1, 1], [z2*x2, z2]]);
+            if aniso then
+                inner_product := 2-(2*disc/a);
+                x := Zp!inner_product;
+                beta := Sqrt((4-x^2)/3);
+                alpha := (-beta + x)/2;
+                // if v_1, v2 are a basis for [[2,1],[1,2]], then v_1, alpha v1 + beta v2 are a basis for [[2,x],[x,2]]
+                get_to_x := Matrix([[1,0],[alpha, beta]]);
+                assert &and[IsWeaklyZero(e) : e in Eltseq(get_to_x * Matrix([[2,1],[1,2]]) * Transpose(get_to_x) - Matrix([[2,x],[x,2]]))];
+                B := Matrix([[x1, 1], [x2, 1]]);
+                B := get_to_x^(-1)*B;
+            else
+                z2 := (-a)/(2*disc); // constant to get scalar product equal to 1 
+                // Change of basis matrix
+                B := Matrix([[x1, 1], [z2*x2, z2]]);
+            end if;
             cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
             assert B*Matrix([[a,b],[b,d]])*Transpose(B) in cans;
             B_big := ChangeRing(Parent(Jblock)!1, Zp);
