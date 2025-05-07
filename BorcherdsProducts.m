@@ -359,7 +359,7 @@ function get_weakly_holomorphic_basis(D,N)
     assert Rank(E) eq dim;
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     assert (n + 1 - #pole_orders) eq n_gaps;
-    return E, n;
+    return E, n, t_eta_quotient;
 end function;
 
 function FourthPowerFree(a)
@@ -568,7 +568,7 @@ end function;
 
 // functions for testing the Wpolys from Kudla Yang paper
 function bp_Kudla_Yang_poly(p, kappam, D)
-    d, c := SquarefreeFactorization(4*kappam);
+    d, c := SquarefreeFactorization(Integers()!(4*kappam));
     k := Valuation(c,p);
     F := Rationals();
     R<x> := PolynomialRing(F);
@@ -667,6 +667,8 @@ function Wpoly2(m,mu,L,K,Q)
     bases, Jblocks, exps := JordanDecomposition(Lnf,p*Integers(F)); 
     bases := [* ChangeRing(B, Rationals()) : B in bases *];
     Jblocks := [* ChangeRing(J, Rationals()) : J in Jblocks *];
+    bases := [* ChangeRing(B, Zp) : B in bases *];
+    Jblocks := [* ChangeRing(J, Zp) : J in Jblocks *];
     l_list := [];
     m_list := [];
     n_list := [];
@@ -689,7 +691,7 @@ function Wpoly2(m,mu,L,K,Q)
         for j in [2..Nrows(Jblock)] do
             row_ind +:= 1;
             b := Jblock[j-1,j] / p^(exps[i]);
-            if b eq 0 then
+            if IsWeaklyZero(b) then
                 Append(~l_list, exps[i]);
                 Append(~eps, Jblock[j-1,j-1] / p^exps[i]);
                 Append(~mu_indices, row_ind);
@@ -704,7 +706,7 @@ function Wpoly2(m,mu,L,K,Q)
             a := Jblock[j-1,j-1] / p^(exps[i]);
             d := Jblock[j,j] / p^(exps[i]);
             disc := b^2 - a*d;
-            if (Integers(8)!disc eq 5) then 
+            if (Integers(8)!(Integers()!disc) eq 5) then 
                 disc +:= 2*a; 
                 Append(~n_list, exps[i]);
                 Append(~mu_prime_prime_indices, row_ind);
@@ -714,29 +716,33 @@ function Wpoly2(m,mu,L,K,Q)
                 Append(~mu_prime_indices, row_ind);
                 aniso := false;
             end if;
-            is_sqr, sqrt_disc := IsSquare(Zp!disc);
+            is_sqr, sqrt_disc := IsSquare(disc);
             assert is_sqr;
-            // solving the quadratic
-            x1 := (-b + sqrt_disc)/a;
-            x2 := (-b - sqrt_disc)/a;
-            if aniso then
-                inner_product := 2-(2*disc/a);
-                x := Zp!inner_product;
-                beta := Sqrt((4-x^2)/3);
-                alpha := (-beta + x)/2;
-                // if v_1, v2 are a basis for [[2,1],[1,2]], then v_1, alpha v1 + beta v2 are a basis for [[2,x],[x,2]]
-                get_to_x := Matrix([[1,0],[alpha, beta]]);
-                assert &and[IsWeaklyZero(e) : e in Eltseq(get_to_x * Matrix([[2,1],[1,2]]) * Transpose(get_to_x) - Matrix([[2,x],[x,2]]))];
-                B := Matrix([[x1, 1], [x2, 1]]);
-                B := get_to_x^(-1)*B;
+            if IsWeaklyZero(a) then
+                B := Matrix(Zp, [[1,0],[0,1]]);
             else
-                z2 := (-a)/(2*disc); // constant to get scalar product equal to 1 
-                // Change of basis matrix
-                B := Matrix([[x1, 1], [z2*x2, z2]]);
+                // solving the quadratic
+                x1 := (-b + sqrt_disc) div a;
+                x2 := (-b - sqrt_disc) div a;
+                if aniso then
+                    inner_product := 2-(2*disc div a);
+                    x := Zp!inner_product;
+                    beta := Sqrt((4-x^2)/3);
+                    alpha := (-beta + x)/2;
+                    // if v_1, v2 are a basis for [[2,1],[1,2]], then v_1, alpha v1 + beta v2 are a basis for [[2,x],[x,2]]
+                    get_to_x := Matrix([[1,0],[alpha, beta]]);
+                    assert &and[IsWeaklyZero(e) : e in Eltseq(get_to_x * Matrix([[2,1],[1,2]]) * Transpose(get_to_x) - Matrix([[2,x],[x,2]]))];
+                    B := Matrix([[x1, 1], [x2, 1]]);
+                    B := get_to_x^(-1)*B;
+                else
+                    z2 := (-a)/(2*disc); // constant to get scalar product equal to 1 
+                    // Change of basis matrix
+                    B := Matrix([[x1, 1], [z2*x2, z2]]);
+                end if;
             end if;
             cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
             assert B*Matrix([[a,b],[b,d]])*Transpose(B) in cans;
-            B_big := ChangeRing(Parent(Jblock)!1, Zp);
+            B_big := Parent(Jblock)!1;
             B_big[j-1,j-1] := B[1,1];
             B_big[j-1,j] := B[1,2];
             B_big[j,j-1] := B[2,1];
@@ -752,7 +758,7 @@ function Wpoly2(m,mu,L,K,Q)
     M := #m_list;
     N := #n_list;
     assert n eq H + 2*M + 2*N;
-    assert &and[Valuation(e,p) eq 0 : e in eps];
+    assert &and[Valuation(e) eq 0 : e in eps];
     B := ChangeRing(VerticalJoinList(bases), Rationals());
     mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
     Q_mu := 1/2*(mu_wrt_L * ChangeRing(S,Rationals()), mu_wrt_L);
@@ -789,7 +795,7 @@ function Wpoly2(m,mu,L,K,Q)
 
     two_block := func< x | x[1]^2 + x[1]*x[2] + x[2]^2>;
 
-    Q_prime_mu := &+[Rationals() | eps[i]*p^l_list[i]*mu_list[i]^2 : i in [1..H] | i notin H_mu];
+    Q_prime_mu := &+[Rationals() | eps[i]*p^(l_list[i]-1)*mu_list[i]^2 : i in [1..H] | i notin H_mu];
     Q_prime_mu +:= &+[Rationals() | eps_prime[i]*p^m_list[i]*(&* mu_prime_list[i]) : i in [1..M] | i notin M_mu];
     Q_prime_mu +:= &+[Rationals() | eps_prime_prime[i]*p^n_list[i]*two_block(mu_prime_prime_list[i]) : i in [1..N] | i notin N_mu];
 
@@ -829,26 +835,40 @@ end function;
 // Lp(s, chi_{kappa m}) = (1 - chi_{kappa m}(p) X)^(-1) 
 // There is a sqrtp factor that I am missing
 
-procedure test_bp_KY(B)
+// procedure test_bp_KY(B)
+function test_bp_KY(B)
     _<x> := PolynomialRing(Rationals());
     kappas := [kappa : kappa in [1..B] | IsSquarefree(kappa)];
     L := RSpaceWithBasis(IdentityMatrix(Integers(),1));
-    mu := Vector([0]);
-    for m in [1..B] do
+    failures := [* *];
+    for m0 in [1..B] do
         for kappa in kappas do
-            Q := Matrix([[kappa]]);
+            Q := Matrix([[2*kappa]]);
+            Q_rat := ChangeRing(Q, Rationals());
             for P in PrimesUpTo(B, Rationals() : coprime_to := kappa) do
+                mus := [Vector(Rationals(), [0])];
                 p := Norm(P);
-                rhs := ((1-x^2)/EulerFactor(KroneckerCharacter(2*kappa*m),p))*bp_Kudla_Yang_poly(p, kappa*m,1);
-                assert Denominator(rhs) eq 1;
-                rhs := Numerator(rhs);
-                lhs := Wpoly_scaled(m,p,mu,L,Q);
-                assert lhs eq ChangeRing(rhs, Parent(lhs));
+                if (p eq 2) then Append(~mus, Vector([1/2])); end if;
+                for mu in mus do
+                    m := m0 + 1/2*(mu*Q_rat, mu);
+                    // kappa is NOT replaced by 2*kappa inthe character because the rank is odd - see [KY] (2.9)
+                    rhs := ((1-x^2)/EulerFactor(KroneckerCharacter(Integers()!(kappa*Numerator(m)*Denominator(m))),p))*bp_Kudla_Yang_poly(p, kappa*m,1);
+                    assert Denominator(rhs) eq 1;
+                    rhs := Numerator(rhs);
+                    K<sqrtp> := QuadraticField(p);
+                    lhs := (p eq 2) select Wpoly2(m,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
+                    // assert lhs eq ChangeRing(rhs, BaseRing(lhs));
+                    if lhs ne ChangeRing(rhs, BaseRing(lhs)) then
+                        Append(~failures, [* m0, kappa, p, mu *]);
+                    end if;
+                end for;
             end for;
         end for;
     end for;
-    return;
-end procedure;
+    // return;
+    return failures;
+// end procedure;
+end function;
 
 // Prop. 2.1 in [KY] says that if chi_p is unramified and p is odd in the odd dimensional case
 // we have Wmp(s) = sigma_{-s,p}(m,chi)/Lp(s+1,chi) in the even case
@@ -897,30 +917,70 @@ procedure test_W()
     return;
 end procedure;
 
+// returns x,y such that the answer is x logy
+// No longer - we now return y^x
 function kappaminus(mu, m, Lminus, Q, d)
     ret := 0;
     if not IsIntegral(m) then
-        return 0;
+        return 1;
     end if;
+    m := Integers()!m;
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(m)};
+    Sm_mu := [p : p in Sm_mu];
+    
+    Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
+    assert exists(i){i : i in [1..#Sm_mu] | Evaluate(Wpolys[i],1) eq 0};
+    p_prime := Sm_mu[i];
+    Wpol := Wpolys[i];
+
+    F := BaseRing(Wpolys[1]);
+    sqrtps := [* F.1 *];
+    for j in [2..#Wpolys] do
+        Fj := BaseRing(Wpolys[j]);
+        Append(~sqrtps, Fj.1);
+        composites := CompositeFields(F, Fj);
+        // assert exists(K){K : K in composites | IsTotallyPositive(K!(Fj.1) / K!(F1.1))};
+        F := composites[1];
+    end for;
+
+    W_prod := &*[F | Evaluate(Wpolys[j],1) : j in [1..#Sm_mu] | j ne i];
+    W_prod *:= Evaluate(Derivative(Wpol),1); // this should be multiplied by -log(p_prime)
+
+    kron_prod := &*[F | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
+
     h := ClassNumber(d);
     w := #UnitGroup(QuadraticField(d));
-    return ret;
+
+    assert IsTotallyReal(F);
+    is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+    
+    assert exists(v){v : v in RealPlaces(F) | &and[Evaluate(F!sqrtp, v) gt 0 : sqrtp in sqrtps]};
+    if Evaluate(sqrtd, v) lt 0 then sqrtd := -sqrtd; end if;
+    assert Evaluate(sqrtd, v) gt 0;
+    
+    ret := -sqrtd*w*W_prod / (h*kron_prod);
+
+    assert IsIntegral(ret);
+    ret := Integers()!ret;
+    // return -ret, p_prime; // to get xlogy instead of -xlogy
+    return p_prime^(-ret);
 end function;
 
 // Computes kappa0(m) in Schofer's formula
 function kappa0(m, d, Q)
     Q := ChangeRing(Q, Integers());
-    _, lambda_v := FindLambda(Q,-d);
+    found_lambda, lambda_v := FindLambda(Q,-d);
+    assert found_lambda;
     // lambda := &+[lambda_v[i]*basis_L[i] : i in [1..#basis_L]];
     c_Lplus := Content(lambda_v);
     Lplus := RSpaceWithBasis(Matrix(lambda_v div c_Lplus));
     Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
     L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
     L_quo, L_quo_map := L / (Lplus + Lminus);
-    s := 0;
+    // log_coeffs := AssociativeArray();
+    ret := 1;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
@@ -936,9 +996,56 @@ function kappa0(m, d, Q)
         ub := Floor((m/(-d) - c_mu_plus)*c_Lplus);
         for k in [lb..ub] do
             x := (c_mu_plus + k * c_Lplus^(-1)) * ChangeRing(lambda_v, Rationals());
-            // s +:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2);
-            print mu_plus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+            // a, p := kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
+            ret *:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
+            // if not IsDefined(log_coeffs, p) then log_coeffs[p] := 0; end if;
+            // log_coeffs[p] +:= Integers()!a;
+            // print mu_plus, m - (x*ChangeRing(Q,Rationals()),x)/2;
         end for;
     end for;
-    return s;
+    // return log_coeffs;
+    return ret;
+end function;
+
+function better_code_we_wrote()
+    D := 6;
+    N := 1;
+    E, n, t_eta_quotient := get_weakly_holomorphic_basis(D,N);
+    _<q> := Parent(t_eta_quotient);
+    fm_n := q^(-n)*Parent(t_eta_quotient)!Eltseq(E[1]);
+
+
+    t := t_eta_quotient;
+    f0 := q^(-1)*Parent(t_eta_quotient)!Eltseq(E[2]);
+    fm1 := fm_n;
+    fm6 := f0*(t^6 - 8*t^5+17*t^4+4*t^3-37*t^2+22*t);
+    fm3 := f0*(t^3-5*t^2+5*t);
+    fm2 := f0*(t^2-4*t);
+    // s is such that s(tau_{-4}) = 0, s(tau_{-3}) is rational and s(tau_{-24}) = infty  
+    // P_{-24} is elliptic of order 2, P_{-4} is elliptic of order 4 and P_{-3} is elliptic of order 6.
+    // div(s) = P_{-4} - P_{-24}, 
+    // We choose psi_s such that ([GY, Lemma 22]) div(psi_s) = (-2)*1/2*P_{-24} + 4*1/4*P_{-4}
+    psi_s := -2*fm6 + 4*fm1 + 6*f0;
+    // We look for the div(y^2), where y^2 = bs(s-s(tau_{-3})) is a model for X/w_6
+    // div(y^2) = div s + div (s - s(tau_{-3})) = P_{-3} + P_{-4} - P_{-24}
+    // We choose psi_y2 such that ([GY, Lemma 22]) div(psi_y2) = (-4)*1/2*P_{-24} + 4*1/4*P_{-4} + 6*1/6*P_{-3}
+    psi_y2 := -4*fm6 + 6*fm3 + 4*fm1 + 6*f0;
+    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
+    Q := ChangeRing(Qinv^(-1), Integers());
+    // Q(sqrt(d)) has class number one, so there is a single pt P_{d}
+    // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
+    // There is also a single point P_{-3}
+    psi_s_vals := [];
+    psi_y2_vals := [];
+    for d in [-3,-19,-43,-67] do
+        n_d := 1;
+        psi_s_at_d := (&*[kappa0(m,d,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_d/4);
+        psi_y2_at_d := (&*[kappa0(m,d,Q)^(Integers()!Coefficient(psi_y2,-m)) : m in [1..n]])^(-n_d/4);
+        Append(~psi_s_vals, Integers()!psi_s_at_d);
+        Append(~psi_y2_vals, Integers()!psi_y2_at_d);
+    end for;
+    // psi_s_at_m3 := (&*[kappa0(m,-3,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_m3/4); // 16
+    // Q(sqrt(-19)) has class number one, so there is a single pt P_{-19}
+    // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
+    // psi_s_at_m19 := (&*[kappa0(m,-19,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_m19/4); // 1
 end function;

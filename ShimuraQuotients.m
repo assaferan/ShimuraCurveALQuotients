@@ -409,6 +409,16 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
     return e;
 end intrinsic;
 
+intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h := 0) -> RngIntElt
+{}
+    if h eq 0 then
+        h := PicardNumber(R);
+    end if;
+    prod := &*[Integers() |
+                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | Discriminant(R) mod p ne 0];
+    return h*prod;
+end intrinsic;
+
 intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
     {Genus of X0(D,N)/< w_m>}
     e := NumFixedPoints(D, N, m);
