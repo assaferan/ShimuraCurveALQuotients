@@ -1076,22 +1076,22 @@ procedure test_Kappa0()
     // verifying [Yang, Example 21, p. 24-25]
     // assert Round(1/Kappa0(3,-4,Q)) eq 2^8*3^4;
     log_coeffs := Kappa0(3,-4,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -8>, <3, -4> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -8>, <3, -4> };
     // assert Round(1/Kappa0(1,-3,Q)) eq 2^4;
     log_coeffs := Kappa0(1,-3,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -4> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4> };
     // verifying [Err, p. 850]
     // assert Round(1/Kappa0(1,-24,Q)) eq 2^6;
     log_coeffs := Kappa0(1,-24,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -6> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -6> };
     // assert Round(1/Kappa0(3,-24,Q)) eq 2^8*3^4;
     log_coeffs := Kappa0(3,-24,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -8>, <3, -4> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -8>, <3, -4> };
     // assert Round(1/Kappa0(1,-163,Q)) eq 2^4*3^11*7^4*19^4*23^4;
     log_coeffs := Kappa0(1,-163,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -4>, <3, -11>, <7, -4>, <19,-4>, <23,-4> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, -11>, <7, -4>, <11,0>, <19,-4>, <23,-4> };
     // assert Round(1/Kappa0(3,-163,Q)^3) eq 2^40*3^12*5^12*11^12*17^12;
     log_coeffs := Kappa0(3,-163,Q);
-    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -40/3>, <3, -4>, <5, -4>, <11,-4>, <17,-4> ];
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -40/3>, <3, -4>, <5, -4>, <11,-4>, <17,-4>, <23,0>, <89, 0> };
     return;
 end procedure;
