@@ -919,8 +919,13 @@ end procedure;
 
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
+    if (m eq 0) and (mu ne 0) then
+        return 0, 1;
+    end if;
+    assert m gt 0;  
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
+    
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
@@ -962,6 +967,26 @@ function kappaminus(mu, m, Lminus, Q, d)
     vprintf ShimuraQuotients, 2 : "adding %o log %o\n", -ret, p_prime;
     return -ret, p_prime; // to get xlogy instead of -xlogy
     // return p_prime^(-ret);
+end function;
+
+function kappaminuszero(D,N,d)
+    log_coeffs := AssociativeArray();
+    for p in PrimeDivisors(D div GCD(d,D)) do
+        log_coeffs[p] := (p-1)/(p+1);
+    end for;
+    for p in PrimeDivisors(N div GCD(d,N)) do
+        log_coeffs[p] := 1;
+    end for;
+    // !! TODO := think about precision
+    RR := RealField();
+    pi := Pi(RR);
+    gamma :=  EulerGamma(RR);
+    chi := KroneckerCharacter(d);
+    mu := #UnitGroup(QuadraticField(d));
+    h := ClassNumber(d);
+    chowla_selberg := &+[chi(a)*mu*Log(Gamma(a/AbsoluteValue(d)))/h : a in [1..AbsoluteValue(d)-1]];
+    chowla_selberg +:= Log(4*pi) - 3*Log(AbsoluteValue(d)) + gamma;
+    return log_coeffs, chowla_selberg;
 end function;
 
 // Computes kappa0(m) in Schofer's formula
@@ -1143,7 +1168,7 @@ procedure test_Kappa0()
     return;
 end procedure;
 
-procedure test_Schofer()
+procedure test_Schofer_6()
     _<q> := PuiseuxSeriesRing(Rationals());
     // testing [Errthum, p. 850]
     f6 := -6*q^(-3) + 4*q^(-1) + O(q);
@@ -1160,6 +1185,20 @@ procedure test_Schofer()
     log_coeffs := SchoferFormula(f6, -19, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 1>, <2, -16> };
 
+    log_coeffs := SchoferFormula(f6, -52, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, 1>, <5,-6> };
+
+    log_coeffs := SchoferFormula(f6, -84, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, -9>, <7,2> };
+
+    log_coeffs := SchoferFormula(f6, -88, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -6>, <3, 1>, <5,-6>, <7,4>, <11,-3> };
+
+    // This one needs computation of kappa_minus(0)
+    log_coeffs := SchoferFormula(f6, -100, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -2>, <3, 1>, <5,1>, <7,4>, <11,-6> };
+
+    /*
     f10 := 3*q^(-3) - 2*q^(-2) + O(q);
     log_coeffs := SchoferFormula(f10, -20, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3/2> };
@@ -1167,6 +1206,7 @@ procedure test_Schofer()
     // This still doesn't work
     log_coeffs := SchoferFormula(f10, -68, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 1>, <5, 1/2> };
+*/
 end procedure;
 
 
@@ -1209,7 +1249,4 @@ procedure test_Schofer_10()
 //can't compute this yet
     log_coeffs := SchoferFormula(f10, -27, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
-
-
-
 end procedure;
