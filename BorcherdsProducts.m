@@ -992,6 +992,7 @@ end function;
 // Computes kappa0(m) in Schofer's formula
 intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
 {Computing coefficients Kappa0(m) in Schofers formula}
+    vprintf ShimuraQuotients, 1:"Kappa0 of %o\n", m;
     Q := ChangeRing(Q, Integers());
     bd := 10;
     found_lambda := false;
@@ -1226,7 +1227,7 @@ procedure test_Schofer_10()
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
 
-    //this is the square root of what we want
+//this works!
     log_coeffs := SchoferFormula(f10, -40, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2> };
 
@@ -1234,7 +1235,7 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -52, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 3>, <5, -2> };
 
-//can't compute this yet
+//this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -72, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 2>, <5, -2>, <7,-2> };
 
@@ -1246,7 +1247,7 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -88, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 1>, <5,3>, <7,-2> };
 
-//can't compute this yet
+//this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -27, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
 end procedure;
