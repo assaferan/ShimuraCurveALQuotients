@@ -959,6 +959,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     ret := -sqrtd*w*W_prod / (h*kron_prod);
 
     ret := Rationals()!ret;
+    vprintf ShimuraQuotients, 2 : "adding %o log %o\n", -ret, p_prime;
     return -ret, p_prime; // to get xlogy instead of -xlogy
     // return p_prime^(-ret);
 end function;
@@ -1068,6 +1069,43 @@ function better_code_we_wrote()
     g3 := 2*q^(-26) + 6*q^(-7) - 6*q^(-2) + 2*q^(-1) + 10*q - 8*q^2 + O(q^3);
 end function;
 
+// !! TODO - cache the Kappa0's or do it for a bunch of fs simultaneously
+// We use a combination of the two versions of Schofer's formula from [GY] and [Err]
+// We write sum log|psi|^2 = -|CM(d)|/4 * sum c_m kappa(-m)
+// Note that in [GY] there is no square on the lhs, and 
+// in [Err] there is no division by 4 on the rhs,
+// but this seems to match with the examples in [Err] !?
+intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
+{Return the log of the absolute value of f^2 at the CM point with CM d, as an associative array}
+    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
+    Q := ChangeRing(Qinv^(-1), Integers());
+    n_d := NumberOfOptimalEmbeddings(MaximalOrder(QuadraticField(d)), D, N);
+    W_size := 2^#PrimeDivisors(D*N);
+    // Not sure?? Think this what happens to the number of CM points on the full quotient
+    if (D*N) mod d eq 0 then
+        W_size div:= 2;
+    end if;
+    n := -Valuation(f);
+    log_coeffs := AssociativeArray();
+    for m in [1..n] do
+        if Coefficient(f, -m) eq 0 then continue; end if;
+        log_coeffs_m := Kappa0(m,d,Q);
+        for p in Keys(log_coeffs_m) do
+            if (log_coeffs_m[p] ne 0) then
+                if not IsDefined(log_coeffs, p) then
+                    log_coeffs[p] := 0;
+                end if;
+                log_coeffs[p] +:= Coefficient(f,-m)*log_coeffs_m[p];
+            end if;
+        end for;
+    end for;
+    for p in Keys(log_coeffs) do
+        // We do not understand this 4 factor - discrepancy between [Schofer] and [GY] 
+        log_coeffs[p] *:= -n_d / (4*W_size);
+    end for;
+    return log_coeffs;
+end intrinsic;
+
 procedure test_Kappa0()
     D := 6;
     N := 1;
@@ -1093,5 +1131,39 @@ procedure test_Kappa0()
     // assert Round(1/Kappa0(3,-163,Q)^3) eq 2^40*3^12*5^12*11^12*17^12;
     log_coeffs := Kappa0(3,-163,Q);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -40/3>, <3, -4>, <5, -4>, <11,-4>, <17,-4>, <23,0>, <89, 0> };
+    D := 10;
+    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
+    Q := ChangeRing(Qinv^(-1), Integers());
+    log_coeffs := Kappa0(3,-68,Q);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -8>,  <5, -14/3>};
+    // This does not work
+    log_coeffs := Kappa0(1,-68,Q);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>,  <5, -6>};
     return;
+end procedure;
+
+procedure test_Schofer()
+    _<q> := PuiseuxSeriesRing(Rationals());
+    // testing [Errthum, p. 850]
+    f6 := -6*q^(-3) + 4*q^(-1) + O(q);
+    log_coeffs := SchoferFormula(f6, -24, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, -6>, <2, -6> };
+
+    // |t6| = 6^6 | psi_f6 |^2
+    log_coeffs := SchoferFormula(f6, -163, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 5>, <2, -16>, <7,4>, <5,-6>, <19,4>, <11,-6>, <23,4>, <17,-6> };
+
+    log_coeffs := SchoferFormula(f6, -40, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 1>, <2, -6>, <5,-3> };
+
+    log_coeffs := SchoferFormula(f6, -19, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 1>, <2, -16> };
+
+    f10 := 3*q^(-3) - 2*q^(-2) + O(q);
+    log_coeffs := SchoferFormula(f10, -20, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3/2> };
+
+    // This still doesn't work
+    log_coeffs := SchoferFormula(f10, -68, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 1>, <5, 1/2> };
 end procedure;
