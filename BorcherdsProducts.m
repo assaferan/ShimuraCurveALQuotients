@@ -918,20 +918,14 @@ procedure test_W()
 end procedure;
 
 // returns x,y such that the answer is x logy
-// No longer - we now return y^x
 function kappaminus(mu, m, Lminus, Q, d)
-    ret := 0;
-    /*
-    if not IsIntegral(m) then
-        return 1;
-    end if;
-    m := Integers()!m;
-    */
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
+    vprintf ShimuraQuotients, 2: "Sm_mu := %o\n", Sm_mu;
+
     Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
     assert exists(i){i : i in [1..#Sm_mu] | Evaluate(Wpolys[i],1) eq 0};
     p_prime := Sm_mu[i];
@@ -965,8 +959,8 @@ function kappaminus(mu, m, Lminus, Q, d)
     ret := -sqrtd*w*W_prod / (h*kron_prod);
 
     ret := Rationals()!ret;
-    // return -ret, p_prime; // to get xlogy instead of -xlogy
-    return p_prime^(-ret);
+    return -ret, p_prime; // to get xlogy instead of -xlogy
+    // return p_prime^(-ret);
 end function;
 
 // Computes kappa0(m) in Schofer's formula
@@ -986,8 +980,8 @@ intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
     Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
     L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
     L_quo, L_quo_map := L / (Lplus + Lminus);
-    // log_coeffs := AssociativeArray();
-    ret := 1;
+    log_coeffs := AssociativeArray();
+    // ret := 1;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
@@ -999,20 +993,23 @@ intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
         // so if x = c_mu_plus + c_Lplus^(-1)*k, we need only those with
         // (c_mu_plus + c_Lplus^(-1)*k)^2 le m/(-d)
         // thus k is between the following bounds
-        lb := Ceiling((m/d - c_mu_plus)*c_Lplus);
-        ub := Floor((m/(-d) - c_mu_plus)*c_Lplus);
+        sqr_bd := m/(-d);
+        // lb := Ceiling((m/d - c_mu_plus)*c_Lplus);
+        // ub := Floor((m/(-d) - c_mu_plus)*c_Lplus);
+        lb := Ceiling((-Sqrt(sqr_bd) - c_mu_plus)*c_Lplus);
+        ub := Floor((Sqrt(sqr_bd) - c_mu_plus)*c_Lplus);
         for k in [lb..ub] do
             x := (c_mu_plus + k * c_Lplus^(-1)) * ChangeRing(lambda_v, Rationals());
-            // a, p := kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
+            a, p := kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
             assert (m - (x*ChangeRing(Q,Rationals()),x)/2) ge 0;
-            ret *:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
-            // if not IsDefined(log_coeffs, p) then log_coeffs[p] := 0; end if;
-            // log_coeffs[p] +:= Integers()!a;
+            // ret *:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
+            if not IsDefined(log_coeffs, p) then log_coeffs[p] := 0; end if;
+            log_coeffs[p] +:= Rationals()!a;
             vprintf ShimuraQuotients, 2: "mu_minus = %o, m - Q(x) = %o\n", mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
         end for;
     end for;
-    // return log_coeffs;
-    return ret;
+    return log_coeffs;
+    // return ret;
 end intrinsic;
 
 function better_code_we_wrote()
@@ -1070,3 +1067,31 @@ function better_code_we_wrote()
     g2 := q^(-11) + 2*q^(-7)  -2*q^(-2) + 4*q + 4*q^4 + O(q^5);
     g3 := 2*q^(-26) + 6*q^(-7) - 6*q^(-2) + 2*q^(-1) + 10*q - 8*q^2 + O(q^3);
 end function;
+
+procedure test_Kappa0()
+    D := 6;
+    N := 1;
+    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
+    Q := ChangeRing(Qinv^(-1), Integers());
+    // verifying [Yang, Example 21, p. 24-25]
+    // assert Round(1/Kappa0(3,-4,Q)) eq 2^8*3^4;
+    log_coeffs := Kappa0(3,-4,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -8>, <3, -4> ];
+    // assert Round(1/Kappa0(1,-3,Q)) eq 2^4;
+    log_coeffs := Kappa0(1,-3,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -4> ];
+    // verifying [Err, p. 850]
+    // assert Round(1/Kappa0(1,-24,Q)) eq 2^6;
+    log_coeffs := Kappa0(1,-24,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -6> ];
+    // assert Round(1/Kappa0(3,-24,Q)) eq 2^8*3^4;
+    log_coeffs := Kappa0(3,-24,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -8>, <3, -4> ];
+    // assert Round(1/Kappa0(1,-163,Q)) eq 2^4*3^11*7^4*19^4*23^4;
+    log_coeffs := Kappa0(1,-163,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -4>, <3, -11>, <7, -4>, <19,-4>, <23,-4> ];
+    // assert Round(1/Kappa0(3,-163,Q)^3) eq 2^40*3^12*5^12*11^12*17^12;
+    log_coeffs := Kappa0(3,-163,Q);
+    assert [<p,log_coeffs[p]> : p in Keys(log_coeffs)] eq [ <2, -40/3>, <3, -4>, <5, -4>, <11,-4>, <17,-4> ];
+    return;
+end procedure;
