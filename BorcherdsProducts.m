@@ -1082,7 +1082,8 @@ intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngInt
     n_d := NumberOfOptimalEmbeddings(MaximalOrder(QuadraticField(d)), D, N);
     W_size := 2^#PrimeDivisors(D*N);
     // Not sure?? Think this what happens to the number of CM points on the full quotient
-    if (D*N) mod d eq 0 then
+    sqfree, sq := SquarefreeFactorization(d);
+    if (D*N) mod sqfree eq 0 then
         W_size div:= 2;
     end if;
     n := -Valuation(f);
@@ -1166,4 +1167,49 @@ procedure test_Schofer()
     // This still doesn't work
     log_coeffs := SchoferFormula(f10, -68, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 1>, <5, 1/2> };
+end procedure;
+
+
+procedure test_Schofer_10()
+
+    _<q> := PuiseuxSeriesRing(Rationals());
+
+
+//This works!
+    f10 := 3*q^(-3) - 2*q^(-2) + O(q);
+    log_coeffs := SchoferFormula(f10, -20, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3> };
+
+//This works!
+    log_coeffs := SchoferFormula(f10, -68, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 2>, <5, 1> };
+
+    //t_10 = 2^(-2)*|Psi_f_10|^2
+
+    //this is the square root of what we want
+    log_coeffs := SchoferFormula(f10, -40, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2> };
+
+//this works!
+    log_coeffs := SchoferFormula(f10, -52, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 3>, <5, -2> };
+
+//can't compute this yet
+    log_coeffs := SchoferFormula(f10, -72, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 2>, <5, -2>, <7,-2> };
+
+//this works!
+    log_coeffs := SchoferFormula(f10, -120, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2>,  <7,-2> };
+
+//this works!
+    log_coeffs := SchoferFormula(f10, -88, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 1>, <5,3>, <7,-2> };
+
+//can't compute this yet
+    log_coeffs := SchoferFormula(f10, -27, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
+
+
+
 end procedure;
