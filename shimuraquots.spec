@@ -1,4 +1,5 @@
 {
+BorcherdsProducts.m
 Caching.m
 FundamentalDomain.m
 ShimuraQuotients.m

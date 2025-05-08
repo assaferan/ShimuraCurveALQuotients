@@ -921,13 +921,15 @@ end procedure;
 // No longer - we now return y^x
 function kappaminus(mu, m, Lminus, Q, d)
     ret := 0;
+    /*
     if not IsIntegral(m) then
         return 1;
     end if;
     m := Integers()!m;
+    */
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
-    Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(m)};
+    Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
     Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
@@ -962,16 +964,21 @@ function kappaminus(mu, m, Lminus, Q, d)
     
     ret := -sqrtd*w*W_prod / (h*kron_prod);
 
-    assert IsIntegral(ret);
-    ret := Integers()!ret;
+    ret := Rationals()!ret;
     // return -ret, p_prime; // to get xlogy instead of -xlogy
     return p_prime^(-ret);
 end function;
 
 // Computes kappa0(m) in Schofer's formula
-function kappa0(m, d, Q)
+intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
+{Computing coefficients Kappa0(m) in Schofers formula}
     Q := ChangeRing(Q, Integers());
-    found_lambda, lambda_v := FindLambda(Q,-d);
+    bd := 10;
+    found_lambda := false;
+    while not found_lambda do
+        bd *:= 2;
+        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
+    end while;
     assert found_lambda;
     // lambda := &+[lambda_v[i]*basis_L[i] : i in [1..#basis_L]];
     c_Lplus := Content(lambda_v);
@@ -997,15 +1004,16 @@ function kappa0(m, d, Q)
         for k in [lb..ub] do
             x := (c_mu_plus + k * c_Lplus^(-1)) * ChangeRing(lambda_v, Rationals());
             // a, p := kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
+            assert (m - (x*ChangeRing(Q,Rationals()),x)/2) ge 0;
             ret *:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
             // if not IsDefined(log_coeffs, p) then log_coeffs[p] := 0; end if;
             // log_coeffs[p] +:= Integers()!a;
-            // print mu_plus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+            vprintf ShimuraQuotients, 2: "mu_minus = %o, m - Q(x) = %o\n", mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
         end for;
     end for;
     // return log_coeffs;
     return ret;
-end function;
+end intrinsic;
 
 function better_code_we_wrote()
     D := 6;
@@ -1037,15 +1045,28 @@ function better_code_we_wrote()
     // There is also a single point P_{-3}
     psi_s_vals := [];
     psi_y2_vals := [];
+    epsilon := 10^(-10);
     for d in [-3,-19,-43,-67] do
-        n_d := 1;
-        psi_s_at_d := (&*[kappa0(m,d,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_d/4);
-        psi_y2_at_d := (&*[kappa0(m,d,Q)^(Integers()!Coefficient(psi_y2,-m)) : m in [1..n]])^(-n_d/4);
-        Append(~psi_s_vals, Integers()!psi_s_at_d);
-        Append(~psi_y2_vals, Integers()!psi_y2_at_d);
+        n_d := NumberOfOptimalEmbeddings(MaximalOrder(QuadraticField(d)), D, N);
+        assert n_d gt 0;
+        if (d ne -3) then
+            n_d := n_d div 4;
+        end if;
+        psi_s_at_d := (&*[Kappa0(m,d,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..6]])^(-n_d/4);
+        psi_y2_at_d := (&*[Kappa0(m,d,Q)^(Integers()!Coefficient(psi_y2,-m)) : m in [1..6]])^(-n_d/4);
+        assert AbsoluteValue(psi_s_at_d - Round(psi_s_at_d)) lt epsilon;
+        assert AbsoluteValue(psi_y2_at_d - Round(psi_y2_at_d)) lt epsilon;
+        Append(~psi_s_vals, Round(psi_s_at_d));
+        Append(~psi_y2_vals, Round(psi_y2_at_d));
     end for;
     // psi_s_at_m3 := (&*[kappa0(m,-3,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_m3/4); // 16
     // Q(sqrt(-19)) has class number one, so there is a single pt P_{-19}
     // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
     // psi_s_at_m19 := (&*[kappa0(m,-19,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_m19/4); // 1
+
+    D := 26;
+    N := 1;
+    g1 := 2*q^(-13) - 2*q^(-2) - 4*q^(-1) + 2*q - 2*q^2 - 2*q^3 + O(q^4);
+    g2 := q^(-11) + 2*q^(-7)  -2*q^(-2) + 4*q + 4*q^4 + O(q^5);
+    g3 := 2*q^(-26) + 6*q^(-7) - 6*q^(-2) + 2*q^(-1) + 10*q - 8*q^2 + O(q^3);
 end function;
