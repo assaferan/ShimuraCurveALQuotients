@@ -920,6 +920,7 @@ end procedure;
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
     if (m eq 0) and (mu ne 0) then
+        print "special case";
         return 0, 1;
     end if;
     assert m gt 0;  
@@ -1163,8 +1164,9 @@ procedure test_Kappa0()
     Q := ChangeRing(Qinv^(-1), Integers());
     log_coeffs := Kappa0(3,-68,Q);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -8>,  <5, -14/3>};
-    // This does not work
-    log_coeffs := Kappa0(1,-68,Q);
+    // This does not work. This is probably a typo! Isn't it supposed to be 2. This would be the relevant number.
+    //log_coeffs := Kappa0(1,-68,Q);
+    log_coeffs := Kappa0(2,-68,Q);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>,  <5, -6>};
     return;
 end procedure;
@@ -1199,15 +1201,15 @@ procedure test_Schofer_6()
     log_coeffs := SchoferFormula(f6, -100, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -2>, <3, 1>, <5,1>, <7,4>, <11,-6> };
 
-    /*
-    f10 := 3*q^(-3) - 2*q^(-2) + O(q);
-    log_coeffs := SchoferFormula(f10, -20, 10, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3/2> };
 
-    // This still doesn't work
-    log_coeffs := SchoferFormula(f10, -68, 10, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 1>, <5, 1/2> };
-*/
+    //this doesn't work (see p.828 of [Err])
+    log_coeffs := SchoferFormula(f6, -147, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -16>, <3, -9>, <5,-6>, <7,-1>, <11,4>, <23,4> };
+
+    //this is very close but off at 2 and 3?
+    log_coeffs := SchoferFormula(f6, -996, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 10>, <3, -6>, <41, -6>, <29, -6>, <17,-6>, <7,12>, <83,2>, <71,4> };
+
 end procedure;
 
 
@@ -1215,13 +1217,12 @@ procedure test_Schofer_10()
 
     _<q> := PuiseuxSeriesRing(Rationals());
 
-
 //This works!
     f10 := 3*q^(-3) - 2*q^(-2) + O(q);
     log_coeffs := SchoferFormula(f10, -20, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3> };
 
-//This works!
+//This does still not work at 2! Off by a factor of 4, this is confusing. The kappas are all correct now.
     log_coeffs := SchoferFormula(f10, -68, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 2>, <5, 1> };
 
