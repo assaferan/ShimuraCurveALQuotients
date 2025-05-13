@@ -921,11 +921,11 @@ end procedure;
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
     if (m eq 0) and (mu ne 0) then
-        error Error("Not implemented!");
+        error Error("Not implemented for m = mu = 0!");
         print "special case";
         return 0, 1;
     end if;
-    error if m gt 0, "Not implemented!\n";  
+    error if m eq 0, "Not implemented for m eq 0!\n";  
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     
