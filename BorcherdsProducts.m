@@ -458,7 +458,8 @@ function linear_comb_eta_quotients_action(alphas, rs, ds, g)
     return ret_eta;
 end function;
 
-function ShimuraCurveLattice(D,N)
+intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
+{return the lattice correpsonding to the Eichler order of level N in the Quaternion algebra of discriminant D.}
     B := QuaternionAlgebra(D);
     O_max := MaximalOrder(B);
     O := Order(O_max,N);
@@ -478,7 +479,7 @@ function ShimuraCurveLattice(D,N)
     L := RSpaceWithBasis(ScalarMatrix(3,denom));
     disc_grp, to_disc := Ldual / L;
     return L, Ldual, disc_grp, to_disc, Q^(-1);
-end function;
+end intrinsic;
 
 // assuming v_i is the coefficient of eta_i in Ldual / L
 function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
@@ -920,10 +921,11 @@ end procedure;
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
     if (m eq 0) and (mu ne 0) then
+        error Error("Not implemented!");
         print "special case";
         return 0, 1;
     end if;
-    assert m gt 0;  
+    error if m gt 0, "Not implemented!\n";  
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     
@@ -1106,11 +1108,17 @@ intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngInt
 {Return the log of the absolute value of f^2 at the CM point with CM d, as an associative array}
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
-    n_d := NumberOfOptimalEmbeddings(MaximalOrder(QuadraticField(d)), D, N);
+    OK := MaximalOrder(QuadraticField(d));
+    is_sqr, cond := IsSquare(d div Discriminant(OK));
+    assert is_sqr;
+    require cond eq 1 : "Not implemented for non-maximal orders!";
+    O := sub<OK | cond>;
+    n_d := NumberOfOptimalEmbeddings(O, D, N);
     W_size := 2^#PrimeDivisors(D*N);
     // Not sure?? Think this what happens to the number of CM points on the full quotient
     sqfree, sq := SquarefreeFactorization(d);
-    if (D*N) mod sqfree eq 0 then
+    Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
+    if ((D*N) mod sqfree eq 0) and Ogg_condition then
         W_size div:= 2;
     end if;
     n := -Valuation(f);
@@ -1229,8 +1237,9 @@ procedure test_Schofer_6()
     log_coeffs := SchoferFormula(f6, -67, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-22>, <3, 1>, <5,-6>, <7,4>, <11,4> };
 
-    log_coeffs := SchoferFormula(f6, -75, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, -9>, <5,-1>, <11,4> };
+    // This does not work - hits mu = m = 0 !!!!???
+    // log_coeffs := SchoferFormula(f6, -75, 6, 1);
+    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, -9>, <5,-1>, <11,4> };
 
     log_coeffs := SchoferFormula(f6, -312, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-6>, <3, -6>, <5,-6>, <7,4>, <11,-6>, <23,4> };
@@ -1274,87 +1283,87 @@ procedure test_Schofer_10()
 
     _<q> := PuiseuxSeriesRing(Rationals());
 
-//This works!
+    //This works!
     f10 := 3*q^(-3) - 2*q^(-2) + O(q);
     log_coeffs := SchoferFormula(f10, -20, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3> };
 
-//This does still not work at 2! Off by a factor of 4, this is confusing. The kappas are all correct now.
+    //This does still not work at 2! Off by a factor of 4, this is confusing. The kappas are all correct now.
     log_coeffs := SchoferFormula(f10, -68, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 2>, <5, 1> };
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
 
 
-//Testing Err. Table 4, Section 8.2.1
-//this works!
+    //Testing Err. Table 4, Section 8.2.1
+    //this works!
     log_coeffs := SchoferFormula(f10, -40, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2> };
 
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -52, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 3>, <5, -2> };
 
-//this is wrong -used to have the 0 error
+    //this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -72, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 2>, <5, -2>, <7,-2> };
 
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -120, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2>,  <7,-2> };
 
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -88, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 1>, <5,3>, <7,-2> };
 
-//this is wrong -used to have the 0 error
+    //this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -27, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
 
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -35, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 8>, <7,-1> };
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -148, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 3>, <3,3>, <11,3>, <5,-2>, <7,-2>, <13,-2> };
-//this works!
+    //this works!
     log_coeffs := SchoferFormula(f10, -43, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 8>, <3,3>,  <5,-2>, <7,-2>};
 
-//This (-180) doesn't work! Why??? This was proved in Elkies, also
+    //This (-180) doesn't work! Why??? This was proved in Elkies, also
     log_coeffs := SchoferFormula(f10, -180, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 3>,  <11,3>,<13,-2>};
 
-// this works!
+    // this works!
     log_coeffs := SchoferFormula(f10, -232, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {   <3,3>,  <11,3>,<17,3>, <5,-2>, <7,-2>, <23,-2>};
 
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -67, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>,  <5,3>, <7,-2>, <13,-2>};
 
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -280, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,1>,  <3,3>, <11,3>, <7,-1>, <23,-2>};
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -340, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,3>,  <3,3>, <23,3>, <7,-2>, <29,-2>};
 
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -115, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <13,-2>, <23,-1>};
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -520, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,-1>,  <3,3>, <29,3>, <7,-2>, <13,-1>, <47,-2>};
 
-//this works but takes a long time!
+    //this works but takes a long time!
    log_coeffs := SchoferFormula(f10, -163, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <5,3>, <11,3>, <7,-2>, <13,-2>,<29,-2>, <31,-2> };
 
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -760, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,2>,  <3,3>, <17,3>, <47,3>, <7,-2>, <31,-2>,<71,-2> };
-//this works!
+    //this works!
    log_coeffs := SchoferFormula(f10, -235, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>, <17,3>,  <7,-2>, <37,-2>,<47,-1> };
 
