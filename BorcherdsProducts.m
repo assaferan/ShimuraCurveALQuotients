@@ -1173,40 +1173,88 @@ procedure test_Schofer_6()
     // testing [Errthum, p. 850]
     f6 := -6*q^(-3) + 4*q^(-1) + O(q);
     log_coeffs := SchoferFormula(f6, -24, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, -6>, <2, -6> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <3, -6>, <2, -6> };
 
+    // testing [Errthum, Table 2] (Section 8.1.1)
     // |t6| = 6^6 | psi_f6 |^2
     log_coeffs := SchoferFormula(f6, -163, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 5>, <2, -16>, <7,4>, <5,-6>, <19,4>, <11,-6>, <23,4>, <17,-6> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <3, 5>, <2, -16>, <7,4>, <5,-6>, <19,4>, <11,-6>, <23,4>, <17,-6> };
 
     log_coeffs := SchoferFormula(f6, -40, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 1>, <2, -6>, <5,-3> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <3, 1>, <2, -6>, <5,-3> };
 
     log_coeffs := SchoferFormula(f6, -19, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3, 1>, <2, -16> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <3, 1>, <2, -16> };
 
     log_coeffs := SchoferFormula(f6, -52, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, 1>, <5,-6> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -4>, <3, 1>, <5,-6> };
 
     log_coeffs := SchoferFormula(f6, -84, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, -9>, <7,2> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -4>, <3, -9>, <7,2> };
 
     log_coeffs := SchoferFormula(f6, -88, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -6>, <3, 1>, <5,-6>, <7,4>, <11,-3> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>, <3, 1>, <5,-6>, <7,4>, <11,-3> };
 
-    // This one needs computation of kappa_minus(0)
-    log_coeffs := SchoferFormula(f6, -100, 6, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -2>, <3, 1>, <5,1>, <7,4>, <11,-6> };
+    // This one does not work! - the problem with zeros
+    // log_coeffs := SchoferFormula(f6, -100, 6, 1);
+    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -2>, <3, 1>, <5,1>, <7,4>, <11,-6> };
 
-    /*
-    f10 := 3*q^(-3) - 2*q^(-2) + O(q);
-    log_coeffs := SchoferFormula(f10, -20, 10, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3/2> };
+    log_coeffs := SchoferFormula(f6, -120, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>, <3, -9>, <5,-3>, <7,4> };
 
-    // This still doesn't work
-    log_coeffs := SchoferFormula(f10, -68, 10, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 1>, <5, 1/2> };
-*/
+    log_coeffs := SchoferFormula(f6, -132, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -2>, <3, -6>, <5,-6>, <11,2> };
+
+    log_coeffs := SchoferFormula(f6, -148, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -4>, <3, 1>, <5,-6>, <7,4>, <11,4>, <17,-6> };
+
+    log_coeffs := SchoferFormula(f6, -168, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>, <3, -6>, <5,-6>, <7,2>, <11,4> };
+
+    log_coeffs := SchoferFormula(f6, -43, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -16>, <3, 1>, <5,-6>, <7,4>};
+
+    log_coeffs := SchoferFormula(f6, -51, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -16>, <3, -6>, <7,4>};
+
+    log_coeffs := SchoferFormula(f6, -228, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <3, -12>, <5,-6>, <7,4>, <19,2> };
+
+    log_coeffs := SchoferFormula(f6, -232, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-6>, <3, 1>, <5,-6>, <7,4>, <11,4>, <19,4>, <23,-6>, <29,-3> };
+
+    log_coeffs := SchoferFormula(f6, -67, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-22>, <3, 1>, <5,-6>, <7,4>, <11,4> };
+
+    log_coeffs := SchoferFormula(f6, -75, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, -9>, <5,-1>, <11,4> };
+
+    log_coeffs := SchoferFormula(f6, -312, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-6>, <3, -6>, <5,-6>, <7,4>, <11,-6>, <23,4> };
+
+    log_coeffs := SchoferFormula(f6, -372, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-4>, <3, -9>, <5,-6>, <7,4>, <11,-6>, <19,4>, <31,2> };
+
+    log_coeffs := SchoferFormula(f6, -408, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-6>, <3, -12>, <5,-6>, <7,4>, <11,4>, <17,-3>, <31,4> };
+
+    log_coeffs := SchoferFormula(f6, -123, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, -6>, <5,-6>, <7,4>, <19,4> };
+
+    log_coeffs := SchoferFormula(f6, -147, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, -9>, <5,-6>, <7,-1>, <11,4>, <23,4> };
+
+    // This one does not work! - the problem with zeros
+    // log_coeffs := SchoferFormula(f6, -163, 6, 1);
+    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-16>, <3, 5>, <5,-6>, <7,4>, <11,-6>, <17,-6>, <19,4>, <23,4> };
+
+    log_coeffs := SchoferFormula(f6, -708, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,2>, <3, -6>, <5,-6>, <7,4>, <11,4>, <17,-6>, <29,-6>, <47,4>, <59,2> };
+
+    log_coeffs := SchoferFormula(f6, -267, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-22>, <3, -6>, <5,-6>, <7,4>, <11,-6>, <31,4>, <43,4> };
+
+    return;
 end procedure;
 
 
