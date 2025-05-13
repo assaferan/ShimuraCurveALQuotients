@@ -959,7 +959,10 @@ function kappaminus(mu, m, Lminus, Q, d)
     w := #UnitGroup(QuadraticField(d));
 
     assert IsTotallyReal(F);
-    is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+
+    //is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+    Fz<z> := PolynomialRing(F);
+    sqrtd :=  Roots(z^2 - AbsoluteValue(d))[1][1];
     
     assert exists(v){v : v in RealPlaces(F) | &and[Evaluate(F!sqrtp, v) gt 0 : sqrtp in sqrtps]};
     if Evaluate(sqrtd, v) lt 0 then sqrtd := -sqrtd; end if;
@@ -1406,7 +1409,7 @@ procedure test_Schofer_26()
 
     g1 := 2*q^(-13) - 2*q^(-2) - 4*q^(-1) + O(q);
     g2 := q^(-11) + 2*q^(-7) - 2*q^(-2) + O(q);
-    g3 := 2*q^(-26) + 6*q^(-7)+ 2*q^(-1) + O(q);
+    g3 := 2*q^(-26) + 6*q^(-7)- 6*q^(-2) +2*q^(-1) + O(q);
 
     log_coeffs := SchoferFormula(g1, -11, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {  };
@@ -1440,7 +1443,6 @@ procedure test_Schofer_26()
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>, <5,-2>, <7,1>  };
 
 
-
     log_coeffs := SchoferFormula(g3, -11, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,10>,<11,1>,<13,3> };
 
@@ -1453,8 +1455,8 @@ procedure test_Schofer_26()
     log_coeffs := SchoferFormula(g3, -24, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,13>,<13,3>  };
 
-    log_coeffs := SchoferFormula(g3, -52, 52, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>,<13,8>  };
+    log_coeffs := SchoferFormula(g3, -52, 26, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>,<13,5>  };
 
     log_coeffs := SchoferFormula(g3, -67, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,10>, <5,-6>, <13,3>,<41,2>,<67,1>  };
