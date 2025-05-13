@@ -1067,7 +1067,7 @@ function better_code_we_wrote()
     // We choose psi_s_tilde such that ([GY, Lemma 22]) div(psi_s) = (-2)*1/2*P_{-24} + 6*1/6*P_{-3}
     psi_s_tilde := -2*fm6 + 6*fm3;
     // We look for the div(y^2), where y^2 = bs(s-s(tau_{-3})) is a model for X/w_6
-    // div(y^2) = div s + div (s - s(tau_{-3})) = P_{-3} + P_{-4} - P_{-24}
+    // div(y^2) = div s + div (s - s(tau_{-3})) = P_{-3} + P_{-4} - 2P_{-24}
     // We choose psi_y2 such that ([GY, Lemma 22]) div(psi_y2) = (-4)*1/2*P_{-24} + 4*1/4*P_{-4} + 6*1/6*P_{-3}
     psi_y2 := -4*fm6 + 6*fm3 + 4*fm1 + 6*f0;
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
@@ -1086,12 +1086,15 @@ function better_code_we_wrote()
     psi_y2_vals[-3] := 0;
     psi_y2_vals[-4] := 0;
     psi_s_vals[-24] := Infinity();
+    psi_y2_vals[-24] := Infinity();
     psi_vals := [psi_s_vals, psi_s_tilde_vals, psi_y2_vals];
+    // These should be rational CM points
     for d in [-3,-4,-19,-43,-67] do
         printf "Computing values of s, s_tilde, y^2 at d = %o...\n", d;
         for i->psi_val in psi_vals do
             if not IsDefined(psi_val, d) then
-                psi_vals[i][d] := SchoferFormula(psis[i],d,6,1);
+                schofer := SchoferFormula(psis[i],d,6,1);
+                psi_vals[i][d] := &*[p^(Integers()!schofer[p]) : p in Keys(schofer)];
             end if;
         end for;
     end for;
