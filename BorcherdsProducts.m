@@ -1210,6 +1210,9 @@ procedure test_Schofer_6()
     log_coeffs := SchoferFormula(f6, -996, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 10>, <3, -6>, <41, -6>, <29, -6>, <17,-6>, <7,12>, <83,2>, <71,4> };
 
+
+
+
 end procedure;
 
 
@@ -1228,6 +1231,8 @@ procedure test_Schofer_10()
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
 
+
+//Testing Err. Table 4, Section 8.2.1
 //this works!
     log_coeffs := SchoferFormula(f10, -40, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 2> };
@@ -1251,4 +1256,53 @@ procedure test_Schofer_10()
 //this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -27, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
+
+//this works!
+    log_coeffs := SchoferFormula(f10, -35, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 8>, <7,-1> };
+//this works!
+    log_coeffs := SchoferFormula(f10, -148, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 3>, <3,3>, <11,3>, <5,-2>, <7,-2>, <13,-2> };
+//this works!
+    log_coeffs := SchoferFormula(f10, -43, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 8>, <3,3>,  <5,-2>, <7,-2>};
+
+//This (-180) doesn't work! Why??? This was proved in Elkies, also
+    log_coeffs := SchoferFormula(f10, -180, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 3>,  <11,3>,<13,-2>};
+
+// this works!
+    log_coeffs := SchoferFormula(f10, -232, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {   <3,3>,  <11,3>,<17,3>, <5,-2>, <7,-2>, <23,-2>};
+
+//this works!
+   log_coeffs := SchoferFormula(f10, -67, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>,  <5,3>, <7,-2>, <13,-2>};
+
+//this works!
+   log_coeffs := SchoferFormula(f10, -280, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,1>,  <3,3>, <11,3>, <7,-1>, <23,-2>};
+//this works!
+   log_coeffs := SchoferFormula(f10, -340, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,3>,  <3,3>, <23,3>, <7,-2>, <29,-2>};
+
+//this works!
+   log_coeffs := SchoferFormula(f10, -115, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <13,-2>, <23,-1>};
+//this works!
+   log_coeffs := SchoferFormula(f10, -520, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,-1>,  <3,3>, <29,3>, <7,-2>, <13,-1>, <47,-2>};
+
+//this works but takes a long time!
+   log_coeffs := SchoferFormula(f10, -163, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <5,3>, <11,3>, <7,-2>, <13,-2>,<29,-2>, <31,-2> };
+
+//this works!
+   log_coeffs := SchoferFormula(f10, -760, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,2>,  <3,3>, <17,3>, <47,3>, <7,-2>, <31,-2>,<71,-2> };
+//this works!
+   log_coeffs := SchoferFormula(f10, -235, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>, <17,3>,  <7,-2>, <37,-2>,<47,-1> };
+
+
 end procedure;
