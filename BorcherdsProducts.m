@@ -336,7 +336,8 @@ function get_integer_prog_solutions(D,N)
     return rs, Eltseq(t)[1..#Divisors(M)];
 end function;
 
-function get_weakly_holomorphic_basis(D,N)
+intrinsic GetWeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt) -> .
+{returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
     _<q> := PuiseuxSeriesRing(Rationals());
     eta := DedekindEta(q);  
@@ -360,7 +361,7 @@ function get_weakly_holomorphic_basis(D,N)
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     assert (n + 1 - #pole_orders) eq n_gaps;
     return E, n, t_eta_quotient;
-end function;
+end intrinsic;
 
 function FourthPowerFree(a)
     ps := PrimeDivisors(Numerator(a)) cat PrimeDivisors(Denominator(a));
@@ -1045,7 +1046,7 @@ end intrinsic;
 function better_code_we_wrote()
     D := 6;
     N := 1;
-    E, n, t_eta_quotient := get_weakly_holomorphic_basis(D,N);
+    E, n, t_eta_quotient := GetWeaklyHolomorphicBasis(D,N);
     _<q> := Parent(t_eta_quotient);
     fm_n := q^(-n)*Parent(t_eta_quotient)!Eltseq(E[1]);
 
@@ -1061,6 +1062,10 @@ function better_code_we_wrote()
     // div(s) = P_{-4} - P_{-24}, 
     // We choose psi_s such that ([GY, Lemma 22]) div(psi_s) = (-2)*1/2*P_{-24} + 4*1/4*P_{-4}
     psi_s := -2*fm6 + 4*fm1 + 6*f0;
+    // s_tilde is such that s(tau_{-4}) is rational, s(tau_{-24}) is infinity and s(tau_{-3}) = 0
+    // div(s_tilde) = P_{-3} - P_{-24}
+    // We choose psi_s_tilde such that ([GY, Lemma 22]) div(psi_s) = (-2)*1/2*P_{-24} + 6*1/6*P_{-3}
+    psi_s_tilde := -2*fm6 + 6*fm3;
     // We look for the div(y^2), where y^2 = bs(s-s(tau_{-3})) is a model for X/w_6
     // div(y^2) = div s + div (s - s(tau_{-3})) = P_{-3} + P_{-4} - P_{-24}
     // We choose psi_y2 such that ([GY, Lemma 22]) div(psi_y2) = (-4)*1/2*P_{-24} + 4*1/4*P_{-4} + 6*1/6*P_{-3}
@@ -1070,8 +1075,27 @@ function better_code_we_wrote()
     // Q(sqrt(d)) has class number one, so there is a single pt P_{d}
     // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
     // There is also a single point P_{-3}
-    psi_s_vals := [];
-    psi_y2_vals := [];
+    psis := [psi_s, psi_s_tilde, psi_y2];
+    psi_s_vals := AssociativeArray();
+    psi_s_tilde_vals := AssociativeArray();
+    psi_y2_vals := AssociativeArray();
+    psi_s_vals[-4] := 0;
+    psi_s_vals[-24] := Infinity();
+    psi_s_tilde_vals[-3] := 0;
+    psi_s_tilde_vals[-24] := Infinity();
+    psi_y2_vals[-3] := 0;
+    psi_y2_vals[-4] := 0;
+    psi_s_vals[-24] := Infinity();
+    psi_vals := [psi_s_vals, psi_s_tilde_vals, psi_y2_vals];
+    for d in [-3,-4,-19,-43,-67] do
+        printf "Computing values of s, s_tilde, y^2 at d = %o...\n", d;
+        for i->psi_val in psi_vals do
+            if not IsDefined(psi_val, d) then
+                psi_vals[i][d] := SchoferFormula(psis[i],d,6,1);
+            end if;
+        end for;
+    end for;
+    /*
     epsilon := 10^(-10);
     for d in [-3,-19,-43,-67] do
         n_d := NumberOfOptimalEmbeddings(MaximalOrder(QuadraticField(d)), D, N);
@@ -1086,6 +1110,7 @@ function better_code_we_wrote()
         Append(~psi_s_vals, Round(psi_s_at_d));
         Append(~psi_y2_vals, Round(psi_y2_at_d));
     end for;
+    */
     // psi_s_at_m3 := (&*[kappa0(m,-3,Q)^(Integers()!Coefficient(psi_s,-m)) : m in [1..n]])^(-n_m3/4); // 16
     // Q(sqrt(-19)) has class number one, so there is a single pt P_{-19}
     // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
