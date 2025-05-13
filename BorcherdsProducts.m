@@ -959,7 +959,10 @@ function kappaminus(mu, m, Lminus, Q, d)
     w := #UnitGroup(QuadraticField(d));
 
     assert IsTotallyReal(F);
-    is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+
+    //is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+    Fz<z> := PolynomialRing(F);
+    sqrtd :=  Roots(z^2 - AbsoluteValue(d))[1][1];
     
     assert exists(v){v : v in RealPlaces(F) | &and[Evaluate(F!sqrtp, v) gt 0 : sqrtp in sqrtps]};
     if Evaluate(sqrtd, v) lt 0 then sqrtd := -sqrtd; end if;
