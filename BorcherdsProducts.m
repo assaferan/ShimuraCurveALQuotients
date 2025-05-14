@@ -1168,7 +1168,6 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerPuisElt], d::RngIntElt, D::RngIntElt,
                     if not IsDefined(log_coeffs[i], p) then
                         log_coeffs[i][p] := 0;
                     end if;
-                    print "ADDING to SCHOFER FORMULA, ", Coefficient(f,-m)*log_coeffs_m[p];
                     log_coeffs[i][p] +:= Coefficient(f,-m)*log_coeffs_m[p];
                 end for;
             end if;
