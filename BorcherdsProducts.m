@@ -1104,6 +1104,25 @@ function better_code_we_wrote()
             end if;
         end for;
     end for;
+
+    M := Matrix([[psi_vals[1][-19],psi_vals[1][-43]],[1,1]]);
+
+    v := Solution(M,Vector([psi_vals[2][-19],psi_vals[2][-43]]));
+    b := v[1];
+    c := v[2];
+    (psi_vals[2][-43]- psi_vals[1][-43]*b) eq c;
+    (psi_vals[2][-67] - psi_vals[1][-67]*b) eq c;
+    //this tells us the sign on the values of s, stilde
+    foo := [psi_vals[1][d]*(psi_vals[1][d] - 3^(-6)): d in [-19, -43,-67]];
+    bar := [psi_vals[3][d] : d in [-19, -43,-67]];
+    [foo[i]/bar[i] : i in [1..3]];
+    //maybe you want to scale y^2 by 3, but anyway
+    //to get the sign on y^2 we need to evaluate at another point?
+    log_vals := SchoferFormula(psi_y2_w6,-88,6,1);
+    {<p, log_vals[p]> : p in Keys(log_vals)} ;
+    //so negate y
+    //so then the equation is just y^2 = s*(s - 3^6)
+
     /*
     epsilon := 10^(-10);
     for d in [-3,-19,-43,-67] do
