@@ -1072,7 +1072,10 @@ function better_code_we_wrote()
     // We look for the div(y^2), where y^2 = bs(s-s(tau_{-3})) is a model for X/w_6
     // div(y^2) = div s + div (s - s(tau_{-3})) = P_{-3} + P_{-4} - 2P_{-24}
     // We choose psi_y2 such that ([GY, Lemma 22]) div(psi_y2) = (-4)*1/2*P_{-24} + 4*1/4*P_{-4} + 6*1/6*P_{-3}
-    psi_y2 := -4*fm6 + 6*fm3 + 4*fm1 + 6*f0;
+    psi_y2_w6 := -4*fm6 + 6*fm3 + 4*fm1 + 6*f0;
+    // We look for the div(y^2), where y^2 = c(s-s(tau_{-3})) is a model for X/w_2
+    // div(y^2) = div (s - s(tau_{-3})) = P_{-3} - P_{-24}
+    // We choose psi_y2 such that ([GY, Lemma 22]) div(psi_y2) = (-4)*1/2*P_{-24} + 4*1/4*P_{-4} + 6*1/6*P_{-3}
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
     // Q(sqrt(d)) has class number one, so there is a single pt P_{d}
@@ -1135,8 +1138,8 @@ end function;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
-{Return the log of the absolute value of f^2 at the CM point with CM d, as an associative array}
+intrinsic SchoferFormula(fs::SeqEnum[RngSerPuisElt], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[Assoc]
+{Return the log of the absolute value of f for every f in fs at the CM point with CM d, as a sequence of associative array}
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
     OK := MaximalOrder(QuadraticField(d));
@@ -1152,25 +1155,35 @@ intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngInt
     if ((D*N) mod sqfree eq 0) and Ogg_condition then
         W_size div:= 2;
     end if;
-    n := -Valuation(f);
-    log_coeffs := AssociativeArray();
+    // n := -Valuation(f);
+    ns := [-Valuation(f) : f in fs];
+    log_coeffs := [AssociativeArray() : f in fs];
     for m in [1..n] do
-        if Coefficient(f, -m) eq 0 then continue; end if;
+        if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
         log_coeffs_m := Kappa0(m,d,Q);
         for p in Keys(log_coeffs_m) do
             if (log_coeffs_m[p] ne 0) then
                 if not IsDefined(log_coeffs, p) then
                     log_coeffs[p] := 0;
                 end if;
-                log_coeffs[p] +:= Coefficient(f,-m)*log_coeffs_m[p];
+                for i->f in fs do
+                    log_coeffs[i][p] +:= Coefficient(f,-m)*log_coeffs_m[p];
+                end for;
             end if;
         end for;
     end for;
-    for p in Keys(log_coeffs) do
-        // We do not understand this 4 factor - discrepancy between [Schofer] and [GY] 
-        log_coeffs[p] *:= -n_d / (4*W_size);
+    for i in [1..#fs] do
+        for p in Keys(log_coeffs) do
+            // We do not understand this 4 factor - discrepancy between [Schofer] and [GY] 
+            log_coeffs[i][p] *:= -n_d / (4*W_size);
+        end for;
     end for;
     return log_coeffs;
+end intrinsic;
+
+intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
+{Return the log of the absolute value of f at the CM point with CM d, as an associative array}
+    return SchoferFormula([f], d, D, N)[1];
 end intrinsic;
 
 procedure test_Kappa0()
