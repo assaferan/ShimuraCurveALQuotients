@@ -1123,6 +1123,26 @@ function better_code_we_wrote()
     //so negate y
     //so then the equation is just y^2 = s*(s - 3^6)
 
+
+    //now suppose we want to do the same thing for X/w3
+    //then psi_y2_w3 has divisor
+    // div(y^2) = div (s) = P_{-4} - P_{-24}
+    // how are we supposd to find this constant?? use the fact that the CM point at -3 
+    // is no longer ramified... i.e. the value of y^2 at this point has to belong to 
+    // a certain field so it's -psi_s val or it's -3 times it, which one?
+
+    //now suppose we want to do the same thing for X/w2
+    //then psi_y2_w2 has divisor
+    // div(y^2) =  div (s - s(tau_{-3})) =  P_{-3} - P_{-24}
+    // but this is just stilde, so then we know that 
+    //stilde = b*s + c
+    //y^2 = (s - 3^(-6))d
+    //y^2 = ds - 3^(-6) d
+    //b*s + c =  ds - 3^(-6) d
+    //d = (bs+c)/(s - 3^(-6))
+    [(b*psi_vals[1][d]+c) /(psi_vals[1][d] - 3^(-6)) : d in [-19,-43,-67]];
+    //then d  appears to be [ <2, 6>, <3, 6> ] ?
+
     /*
     epsilon := 10^(-10);
     for d in [-3,-19,-43,-67] do
