@@ -1081,7 +1081,7 @@ function better_code_we_wrote()
     // Q(sqrt(d)) has class number one, so there is a single pt P_{d}
     // There are 4 pts at the top curve X(6,1), but they are not fixed by any AL, so become 1 on the quotient
     // There is also a single point P_{-3}
-    psis := [psi_s, psi_s_tilde, psi_y2];
+    psis := [psi_s, psi_s_tilde, psi_y2_w6];
     psi_s_vals := AssociativeArray();
     psi_s_tilde_vals := AssociativeArray();
     psi_y2_vals := AssociativeArray();
@@ -1157,24 +1157,25 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerPuisElt], d::RngIntElt, D::RngIntElt,
     end if;
     // n := -Valuation(f);
     ns := [-Valuation(f) : f in fs];
+    n := Maximum(ns);
     log_coeffs := [AssociativeArray() : f in fs];
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
         log_coeffs_m := Kappa0(m,d,Q);
         for p in Keys(log_coeffs_m) do
             if (log_coeffs_m[p] ne 0) then
-                if not IsDefined(log_coeffs, p) then
-                    log_coeffs[p] := 0;
-                end if;
                 for i->f in fs do
+                    if not IsDefined(log_coeffs[i], p) then
+                        log_coeffs[i][p] := 0;
+                    end if;
+                    print "ADDING to SCHOFER FORMULA, ", Coefficient(f,-m)*log_coeffs_m[p];
                     log_coeffs[i][p] +:= Coefficient(f,-m)*log_coeffs_m[p];
                 end for;
             end if;
         end for;
     end for;
     for i in [1..#fs] do
-        for p in Keys(log_coeffs) do
-            // We do not understand this 4 factor - discrepancy between [Schofer] and [GY] 
+        for p in Keys(log_coeffs[i]) do
             log_coeffs[i][p] *:= -n_d / (4*W_size);
         end for;
     end for;
@@ -1338,7 +1339,6 @@ procedure test_Schofer_10()
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
 
-
     //Testing Err. Table 4, Section 8.2.1
     //this works!
     log_coeffs := SchoferFormula(f10, -40, 10, 1);
@@ -1348,7 +1348,7 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -52, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 3>, <5, -2> };
 
-    //this is wrong -used to have the 0 error
+    //this is wrong - used to have the 0 error
     log_coeffs := SchoferFormula(f10, -72, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 2>, <5, -2>, <7,-2> };
 
