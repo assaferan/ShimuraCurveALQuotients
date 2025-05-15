@@ -386,7 +386,32 @@ end intrinsic;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
+intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h := 0) -> RngIntElt
+{}
+    if h eq 0 then
+        h := PicardNumber(R);
+    end if;
+    prod := &*[Integers() |
+                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | Discriminant(R) mod p ne 0];
+    return h*prod;
+end intrinsic;
+
+intrinsic NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> Assoc
+{The number of the fixed points of w_m on X_0(D,N) split by CM order.}
+    require m ne 1 : "m should be greater than 1!";
+    e := AssociativeArray();
+    pair := ConstructOrders(m);
+    orders := pair[1];
+    class_nums := pair[2];
+    for i->R in orders do
+        nR := NumberOfOptimalEmbeddings(R,D,N : h := class_nums[i]);
+        e[Discriminant(R)] := nR;
+    end for;
+    return e;
+end intrinsic;
+
+/*
+intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
 {The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
     if (m eq 1) then return Infinity(); end if;
@@ -408,15 +433,22 @@ intrinsic NumFixedPoints(D ::RngIntElt, N ::RngIntElt, m::RngIntElt)-> RngIntElt
     end if;
     return e;
 end intrinsic;
+*/
 
-intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h := 0) -> RngIntElt
-{}
-    if h eq 0 then
-        h := PicardNumber(R);
+intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
+{The number of the fixed points of w_m on X_0(D,N)}
+    e := 0;
+    if (m eq 1) then return Infinity(); end if;
+    cm_by_order := NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt);
+    for k in Keys(cm_by_order) do
+        e +:= cm_by_order[k];
+    end for;
+    if (D eq 1) and (m eq 4) then
+        M := N div 4;
+        num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
+        e +:= num_fixed_cusps;
     end if;
-    prod := &*[Integers() |
-                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | Discriminant(R) mod p ne 0];
-    return h*prod;
+    return e;
 end intrinsic;
 
 intrinsic GenusShimuraCurveQuotientSingleAL(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
@@ -1355,6 +1387,42 @@ intrinsic updatehypfromsubhyp(~curves::SeqEnum)
             end if;
         end if;
     end for;
+end intrinsic;
+
+
+intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot, q::RngIntElt) -> Assoc
+{Return the number of elliptic points of order q on X.}
+    require (q gt 1) : "Elliptic points of order %o are not well-defined.", q;
+    delta_2 := (2 in X`W) select 1 else 0;
+    delta_3 := (3 in X`W) select 1 else 0;
+    e := AssociativeArray();
+    e2 := NumberOfEllipticPoints(X`D, X`N, 2);
+    e3 := NumberOfEllipticPoints(X`D, X`N, 3);
+    F_W := AssociativeArray();
+    if q eq 2 then
+        for w in X`W do
+            if w eq 1 then continue; end if;
+            n_w := NumFixedPointsByCMOrder(X`D,X`N,w);
+            for d in Keys(n_w) do
+                F_W[d] := 2*n_w[d];
+            end for;
+        end for;
+        if not IsDefined(F_W,-3) then F_W[-3] := 0; end if;
+        if not IsDefined(F_W,-4) then F_W[-4] := 0; end if;
+        F_W[-4] +:= (1-3*delta_2)*e2;
+        F_W[-3] -:= 2*delta_3*e3;
+    elif q eq 3 then
+        F_W[-3] := (1-delta_3)*e3;
+    elif q eq 4 then
+        F_W[-4] := 2*delta_2*e2;
+    elif q eq 6 then
+        F_W[-3] := 2*delta_3*e3;
+    end if;
+    for d in Keys(F_W) do
+        require (F_W[d] mod #X`W eq 0) : "Error counting elliptic points, getting non-integral result.";
+        F_W[d] div:= #X`W;
+    end for;
+    return F_W;
 end intrinsic;
 
 intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
