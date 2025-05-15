@@ -439,7 +439,7 @@ intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
 {The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
     if (m eq 1) then return Infinity(); end if;
-    cm_by_order := NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt);
+    cm_by_order := NumFixedPointsByCMOrder(D, N, m);
     for k in Keys(cm_by_order) do
         e +:= cm_by_order[k];
     end for;
