@@ -1419,10 +1419,23 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot, q::RngIntElt) -> Assoc
         F_W[-3] := 2*delta_3*e3;
     end if;
     for d in Keys(F_W) do
+        if F_W[d] eq 0 then
+            Remove(~F_W,d);
+            continue;
+        end if;
         require (F_W[d] mod #X`W eq 0) : "Error counting elliptic points, getting non-integral result.";
         F_W[d] div:= #X`W;
     end for;
     return F_W;
+end intrinsic;
+
+intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
+{Return the number of elliptic points of every CM type on X.}
+    ell := AssociativeArray();
+    for q in [2,3,4,6] do
+        ell[q] := NumberOfEllipticPointsByCMOrder(X,q);
+    end for;
+    return ell;
 end intrinsic;
 
 intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
