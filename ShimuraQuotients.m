@@ -1438,6 +1438,66 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
+intrinsic RationalCMPoints(X::ShimuraQuot) -> SeqEnum
+{returns 3 rational CM points on X for an hauptmodul.}
+    require X`N eq 1 : "only implemented for N = 1.";
+    require #X`W eq 2^#PrimeDivisors(X`D*X`N) : "only works for star quotients.";
+    pts := [];
+    // we prefer to get an elliptic point if we know it is defined over Q.
+    ell := NumberOfEllipticPointsByCMOrder(X);
+    for q in Keys(ell) do
+        for d in Keys(ell[q]) do
+            if d in [-3,-4] then 
+                is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
+                if is_split then
+                    Append(~pts, <d,q,ell[q][d]>); 
+                end if;
+            end if;
+            if ell[q][d] eq 1 then
+                Append(~pts, <d,q,ell[q][d]>);
+            end if;
+        end for;
+    end for;
+    CN1 := [-3,-4,-7,-8,-11,-19,-43,-67,-163];
+    for d in CN1 do
+        if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
+        // [JV, Prop. 14.6.7] K=Q(sqrt(d)) splits B of disc D iff 
+        // every ramified prime in B (prime divisors of D) is not split in K
+        is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
+        if is_split then
+            Append(~pts, <d,2,1>); // class number 1
+        end if;
+    end for;
+    require #pts ge 3 : "Could not find enough rational CM points!";
+    return pts[1..3];
+end intrinsic;
+
+intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
+{Returns ramification points of each of the double covers in curves.}
+    // require #{<X`D, X`N> : X in curves} eq 1 : "All curves must be quotients of the same shimura curve.";
+    // require exists(Xstar){X : X in curves | #X`W eq 2^#PrimeDivisors(X`D*X`N)} : "Did not find star quotient.";
+    // pts := GetRationalCMPoints(Xstar);
+    // s is the hauptmodul with divisr pts[2]-pts[1] having a rational value at pts[3]
+    covers := [curves[i] : i in Xstar`CoveredBy];
+    ell_covers := [NumberOfEllipticPointsByCMOrder(X) : X in covers];
+    ell_bottom := NumberOfEllipticPointsByCMOrder(Xstar);
+    rams := AssociativeArray();
+    for i->ell_cover in ell_covers do
+        ram := [];
+        for q in Keys(ell_bottom) do
+            for d in Keys(ell_bottom[q]) do
+                if not (IsDefined(ell_cover, q) and IsDefined(ell_cover[q], d)) then
+                    Append(~ram, <d, q, ell_bottom[q][d]>);
+                elif ell_cover[q][d] ne 2*ell_bottom[q][d] then
+                    Append(~ram, <d, q, 2*ell_bottom[q][d] - ell_cover[q][d]>);
+                end if;
+            end for;
+        end for;
+        rams[covers[i]`CurveID] := ram;
+    end for;
+    return rams;
+end intrinsic;
+
 intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
 {Return the number of elliptic points of order q on X.}
     require (q gt 1) : "Elliptic points of order %o are not well-defined.", q;

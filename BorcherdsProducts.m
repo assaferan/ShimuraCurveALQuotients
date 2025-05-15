@@ -336,7 +336,7 @@ function get_integer_prog_solutions(D,N)
     return rs, Eltseq(t)[1..#Divisors(M)];
 end function;
 
-intrinsic GetWeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt) -> .
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt) -> .
 {returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
     _<q> := PuiseuxSeriesRing(Rationals());
@@ -1049,7 +1049,7 @@ end intrinsic;
 function better_code_we_wrote()
     D := 6;
     N := 1;
-    E, n, t_eta_quotient := GetWeaklyHolomorphicBasis(D,N);
+    E, n, t_eta_quotient := WeaklyHolomorphicBasis(D,N);
     _<q> := Parent(t_eta_quotient);
     fm_n := q^(-n)*Parent(t_eta_quotient)!Eltseq(E[1]);
 
@@ -1223,6 +1223,71 @@ end intrinsic;
 intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
 {Return the log of the absolute value of f at the CM point with CM d, as an associative array}
     return SchoferFormula([f], d, D, N)[1];
+end intrinsic;
+
+
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
+{Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
+along with two different hauptmoduls.}
+    rams := RamficationPointsOfCovers(Xstar, curves);
+    D0,M,g := get_D0_M_g(Xstar`D,Xstar`N);
+    n0 := Maximum(2*g-2-&+[d div 4 : d in Divisors(D0)],0);
+    E, n, t := WeaklyHolomorphicBasis(Xstar`D, Xstar`N);
+    k := -Valuation(t);
+    E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
+    // _<q> := Parent(t);
+    R<q> := LaurentSeriesRing(Integers());
+    t := R!t;
+    fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
+    pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
+    infty := pts[1];
+    fs := AssociativeArray();
+    for i in Keys(rams) do
+        ram := rams[i];
+        // adding the part at infinity
+        if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
+            assert ram[j] eq infty;
+            Remove(~ram, j);
+        end if;
+        deg := &+[pt[3] : pt in ram];
+        div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
+        Append(~ram, infty);
+        ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
+        min_m := Minimum(ms);
+        V := RSpace(Integers(),-min_m+1);
+        v := &+[div_coeffs[i]*ram[i][2]*V.(m-min_m+1) : i->m in ms];
+        r := (-min_m - n0) div k;
+        s := (-min_m) - r*k;
+        basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
+        init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
+        // full_basis is a basis for M_{-min_m}^!(4D_0)
+        full_basis := [t^r*f + O(q) : f in init_basis[n0+k-s..#init_basis]];
+        full_basis cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis] : j in [0..r-1]];
+        full_basis cat:= [f + O(q) : f in basis_n0];
+        coeffs := Matrix([AbsEltseq(q^(-min_m)*f : FixedLength) : f in full_basis]);
+        ech_basis := EchelonForm(coeffs);
+        ech_fs := [q^min_m*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
+        relevant_ds := [0];
+        for d in [1..-min_m] do
+            discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
+            n_d := 0;
+            for disc in discs do
+                orders, hs := Explode(ConstructOrders(disc));
+                n_d +:= &+[NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N : h := hs[i]) : i->S in orders];
+            end for;
+            if (n_d ne 0) then
+                Append(~relevant_ds, d);
+            end if;
+        end for;
+        cols := Reverse([-d-min_m+1 : d in relevant_ds]);
+        target_v := Vector([v[c] : c in cols]); 
+        // f := &+[div_coeffs[i]*ram[i][2]*ech_basis[m-min_m+1] : i->m in ms | -m ge n0];
+        // coeffs_trunc := Submatrix(coeffs, [1..Nrows(coeffs)],cols);
+        coeffs_trunc := Submatrix(ech_basis, [1..Nrows(coeffs)],cols);
+        sol := Solution(coeffs_trunc, target_v);
+        fs[i] := &+[sol[i]*ech_fs[i] : i in [1..#ech_fs]]; // !! Make sure that f has the correct divisor - right a function for Lemma 22
+    end for;
+    return fs;
 end intrinsic;
 
 procedure test_Kappa0()
