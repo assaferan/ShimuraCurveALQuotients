@@ -1439,7 +1439,8 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             H := HilbertClassField(K);
             // Shimura reciprocity ([Gonzales, Rotger - "non-elliptic Shimura curves of genus 1", Thm 5.8 (1)]) 
             // tells us that H = FK, where F is the field of definition.
-            discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2 and F[1] ne K];
+            discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
+            discs := [disc : disc in discs | disc ne d];
         end if;
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
