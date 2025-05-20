@@ -15,6 +15,13 @@ intrinsic Factorization(x::FldRatElt) -> SeqEnum
     return Sort(fac);
 end intrinsic;
 
+intrinsic SquareFree(x::FldRatElt) -> FldRatElt, FldRatElt
+{.}
+    num_sqfree, num_root := SquareFree(Numerator(x));
+    denom_sqfree, denom_root := SquareFree(Denominator(x));
+    return num_sqfree/denom_sqfree, num_root/denom_root;
+end intrinsic;
+
 intrinsic RationalWithFactorization(x::RngIntElt) -> FldRatFac
 {.}
     return RationalWithFactorization(Rationals()!x);
