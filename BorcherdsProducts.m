@@ -1399,7 +1399,7 @@ function find_signs(s, stilde)
     return s_new, stilde_new;
 end function;
 
-intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
+intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
     {}
     s_idx := Index(keys_fs, -1);
     stilde_idx := Index(keys_fs, -2);
@@ -1479,7 +1479,7 @@ end intrinsic;
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
-    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds);
+    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds, Xstar, curves);
     return table, keys_fs, ds;
 end intrinsic;
 
