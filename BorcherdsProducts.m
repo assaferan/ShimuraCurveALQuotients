@@ -1428,8 +1428,15 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             Append(~scale_factors, AbsoluteValue(scale2));
         end if;
     end for;
-
+   
     for j->d in ds do
+        D := Xstar`D;
+        N := Xstar`N;
+        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
+        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];
+        f := Conductor(QuadraticOrder(BinaryQuadraticForms(d)));
+        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
+        top_is_H := false;
         h := ClassNumber(d);
         if h eq 1 then
             discs := [1,d];
@@ -1440,19 +1447,13 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             // Shimura reciprocity ([Gonzales, Rotger - "non-elliptic Shimura curves of genus 1", Thm 5.8 (1)]) 
             // tells us that H = FK, where F is the field of definition.
             discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
+             // [GR, Theorem 5.12]
+            if (#Xstar`W eq 4) and (D_R*N_star_R ne 1) then
+                // field of definition on top curve is H
+                top_is_H := true;
+            end if;
         end if;
-        D := Xstar`D;
-        N := Xstar`N;
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];
-        f := Conductor(QuadraticOrder(BinaryQuadraticForms(d)));
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        top_is_H := false;
-        // [GR, Theorem 5.12]
-        if (#Xstar`W eq 4) and (D_R*N_star_R ne 1) then
-            // field of definition on top curve is H
-            top_is_H := true;
-        end if;
+       
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             // Using [GR, Lemma 5.9] to determine which subset of discriminants we are in
