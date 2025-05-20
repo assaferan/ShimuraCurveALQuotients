@@ -1459,12 +1459,12 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             // Using [GR, Lemma 5.9] to determine which subset of discriminants we are in
             al_is_gal := exists(m){m : m in curves[keys_fs[i]]`W | ((D*N) div (D_R*N_R)) mod m eq 0 and m ne 1};
             if al_is_gal then
-                discs := top_is_H select [d] else [1,d];
+                cur_discs := top_is_H select [d] else [1,d];
             elif top_is_H then
-                discs := [disc : disc in discs | disc ne d];
+                cur_discs := [disc : disc in discs | disc ne d];
             end if;
-            discs_eps := [<d, eps> : d in discs, eps in [-1,1]];
-            is_sqr := [IsSquare(scale_factors[k]*eps*table[i][j] / d) : d in discs, eps in [-1,1]];
+            discs_eps := [<d, eps> : d in cur_discs, eps in [-1,1]];
+            is_sqr := [IsSquare(scale_factors[k]*eps*table[i][j] / d) : d in cur_discs, eps in [-1,1]];
             require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
             require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
             eps := discs_eps[Index(is_sqr, true)][2];
