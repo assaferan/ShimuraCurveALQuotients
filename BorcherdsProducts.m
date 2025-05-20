@@ -937,8 +937,12 @@ function kappaminus(mu, m, Lminus, Q, d)
     vprintf ShimuraQuotients, 2: "Sm_mu := %o\n", Sm_mu;
 
     Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
-    assert exists(i){i : i in [1..#Sm_mu] | Evaluate(Wpolys[i],1) eq 0};
+    wpolyseval := [* Evaluate(Wpolys[i],1) : i in [1..#Wpolys] *];
+    assert exists(i){i : i in [1..#Sm_mu] | wpolyseval[i] eq 0};
     p_prime := Sm_mu[i];
+    if exists(j){j : j in [1..#Sm_mu] | wpolyseval[j] eq 0 and j ne i} then
+        return 0, p_prime;
+    end if;
     Wpol := Wpolys[i];
 
     F := BaseRing(Wpolys[1]);
