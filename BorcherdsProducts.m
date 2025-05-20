@@ -1402,34 +1402,51 @@ end function;
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
-    s := table[Index(keys_fs, -1)];
-    stilde := table[Index(keys_fs, -2)];
+    s_idx := Index(keys_fs, -1);
+    stilde_idx := Index(keys_fs, -2);
+    s := table[s_idx];
+    stilde := table[stilde_idx];
     s, stilde := find_signs(s, stilde);
-    table[Index(keys_fs, -1)] := s;
-    table[Index(keys_fs, -2)] := stilde;
+    table[s_idx] := s;
+    table[stilde_idx] := stilde;
     k_idxs := [i : i->k in keys_fs | k gt 0];
+    assert exists(j1){j : j->d1 in ds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
+    assert exists(j2){k : k->d2 in ds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ds[j1] ne d2};
+    //now determine the scale factor for each y^2 form
+    scale_factors :=[];
+    for i in k_idxs do
+        d1 := ds[j1];
+        d2 := ds[j2];
+        v1 := table[i][j1];
+        v2 := table[i][j2];
+        scale1, _ := SquareFree(v1/d1); //two possibilities
+        scale2, _ := SquareFree(v1);
+        if IsSquare(scale1*v2/d2) then
+            Append(~scale_factors, AbsoluteValue(scale1));
+        else
+            assert IsSquare(scale2*v2);
+            Append(~scale_factors, AbsoluteValue(scale2));
+        end if;
+    end for;
+
     for j->d in ds do
         h := ClassNumber(d);
         if h eq 1 then
-            for i in k_idxs do
-                if table[i][j] eq Infinity() then continue; end if;
-                table[i][j] := -AbsoluteValue(table[i][j]);
-                require IsSquare(table[i][j] / d) : "Value %o at CM point %o does not lie in field with discriminant %o.", table[i][j], d, d;
-            end for;
+            discs := [1,d];
         else
             require h eq 2 : "Class number larger than 2. How did we get here???";
             H := HilbertClassField(QuadraticField(d));
-            discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
-            for i in k_idxs do
-                if table[i][j] eq Infinity() then continue; end if;
-                discs_eps := [<d, eps> : d in discs, eps in [-1,1]];
-                is_sqr := [IsSquare(eps*table[i][j] / d) : d in discs, eps in [-1,1]];
-                require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
-                require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
-                eps := discs_eps[Index(is_sqr, true)][2];
-                table[i][j] := eps * table[i][j];
-            end for;
+            discs := [1] cat [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
         end if;
+        for k->i in k_idxs do
+            if table[i][j] eq Infinity() then continue; end if;
+            discs_eps := [<d, eps> : d in discs, eps in [-1,1]];
+            is_sqr := [IsSquare(scale_factors[k]*eps*table[i][j] / d) : d in discs, eps in [-1,1]];
+            require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
+            require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
+            eps := discs_eps[Index(is_sqr, true)][2];
+            table[i][j] := eps * table[i][j];
+        end for;
     end for;
     return table, keys_fs, ds;
 end intrinsic;
