@@ -1177,7 +1177,7 @@ end function;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(fs::SeqEnum[RngSerPuisElt], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[Assoc]
+intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[Assoc]
 {Return the log of the absolute value of f for every f in fs at the CM point with CM d, as a sequence of associative array}
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
@@ -1220,7 +1220,7 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerPuisElt], d::RngIntElt, D::RngIntElt,
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerPuisElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
 {Return the log of the absolute value of f at the CM point with CM d, as an associative array}
     return SchoferFormula([f], d, D, N)[1];
 end intrinsic;
@@ -1241,6 +1241,8 @@ along with two different hauptmoduls.}
     fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     infty := pts[1];
+    rams[-1] := [pts[2]];
+    rams[-2] := [pts[3]];
     fs := AssociativeArray();
     for i in Keys(rams) do
         ram := rams[i];
@@ -1270,10 +1272,11 @@ along with two different hauptmoduls.}
         relevant_ds := [0];
         for d in [1..-min_m] do
             discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
+            discs := [disc : disc in discs | disc mod 4 in [0,3]];
             n_d := 0;
             for disc in discs do
-                orders, hs := Explode(ConstructOrders(disc));
-                n_d +:= &+[NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N : h := hs[i]) : i->S in orders];
+                S := QuadraticOrder(BinaryQuadraticForms(-disc));
+                n_d +:= NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
             end for;
             if (n_d ne 0) then
                 Append(~relevant_ds, d);
@@ -1288,6 +1291,52 @@ along with two different hauptmoduls.}
         fs[i] := &+[sol[i]*ech_fs[i] : i in [1..#ech_fs]]; // !! Make sure that f has the correct divisor - right a function for Lemma 22
     end for;
     return fs;
+end intrinsic;
+
+intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnum
+{Return the divisor of the Borcherds form associated to f.}
+    N := Valuation(f);
+    ells := NumberOfEllipticPointsByCMOrder(Xstar);
+    ell_lut := AssociativeArray();
+    for q in Keys(ells) do
+        for d in Keys(ells[q]) do
+            ell_lut[d] := q;
+        end for;
+    end for;
+    divisor := [];
+    for m in [N..-1] do
+        c_m := Coefficient(f,m);
+        if c_m eq 0 then continue; end if;
+        sq_divs := [r2 : r2 in Divisors(-4*m) | IsSquare(r2)];
+        for r2 in sq_divs do
+            d := (4*m) div r2;
+            if (d mod 4 notin [0,1]) then continue; end if;
+            S := QuadraticOrder(BinaryQuadraticForms(-d));
+            n_d := NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
+            if n_d eq 0 then continue; end if;
+            e := 1;
+            if IsDefined(ell_lut, d) then
+                e := ell_lut[d];
+            end if;
+            Append(~divisor, <d, c_m/e>);
+        end for;
+    end for;
+    return divisor;
+end intrinsic;
+
+intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> .
+{Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+    fs := BorcherdsForms(Xstar, curves);
+    keys_fs := Keys(fs);
+    all_fs := [fs[k] : k in keys_fs];
+    // discs := [d : d in [-100..-1] | d mod 4 in [0,1]];
+    discs := [d : d in [-100..-1] | IsFundamentalDiscriminant(d)];
+    table := [];
+    table_col := [];
+    for d in discs do
+        vals := SchoferFormula(all_fs, d, Xstar`D, Xstar`N);
+    end for;
+    return table, keys_fs;
 end intrinsic;
 
 procedure test_Kappa0()
@@ -1328,7 +1377,7 @@ procedure test_Kappa0()
 end procedure;
 
 procedure test_Schofer_6()
-    _<q> := PuiseuxSeriesRing(Rationals());
+    _<q> := LaurentSeriesRing(Rationals());
     // testing [Errthum, p. 850]
     f6 := -6*q^(-3) + 4*q^(-1) + O(q);
     log_coeffs := SchoferFormula(f6, -24, 6, 1);
@@ -1429,7 +1478,7 @@ end procedure;
 
 procedure test_Schofer_10()
 
-    _<q> := PuiseuxSeriesRing(Rationals());
+    _<q> := LaurentSeriesRing(Rationals());
 
     //This works!
     f10 := 3*q^(-3) - 2*q^(-2) + O(q);
@@ -1521,7 +1570,7 @@ end procedure;
 procedure test_Schofer_26()
 
     //Test as in Guo Yang p.25
-    _<q> := PuiseuxSeriesRing(Rationals());
+    _<q> := LaurentSeriesRing(Rationals());
 
     g1 := 2*q^(-13) - 2*q^(-2) - 4*q^(-1) + O(q);
     g2 := q^(-11) + 2*q^(-7) - 2*q^(-2) + O(q);

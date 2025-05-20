@@ -392,7 +392,7 @@ intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h :=
         h := PicardNumber(R);
     end if;
     prod := &*[Integers() |
-                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | Discriminant(R) mod p ne 0];
+                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N)];
     return h*prod;
 end intrinsic;
 
@@ -1465,7 +1465,7 @@ intrinsic RationalCMPoints(X::ShimuraQuot) -> SeqEnum
         // every ramified prime in B (prime divisors of D) is not split in K
         is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
         if is_split then
-            Append(~pts, <d,2,1>); // class number 1
+            Append(~pts, <d,1,1>); // class number 1
         end if;
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
