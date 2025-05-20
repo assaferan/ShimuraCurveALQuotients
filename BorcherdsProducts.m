@@ -1462,6 +1462,8 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
                 cur_discs := top_is_H select [d] else [1,d];
             elif top_is_H then
                 cur_discs := [disc : disc in discs | disc ne d];
+            else
+                cur_discs := discs;
             end if;
             discs_eps := [<d, eps> : d in cur_discs, eps in [-1,1]];
             is_sqr := [IsSquare(scale_factors[k]*eps*table[i][j] / d) : d in cur_discs, eps in [-1,1]];
