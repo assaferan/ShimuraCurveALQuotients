@@ -1399,9 +1399,8 @@ function find_signs(s, stilde)
     return s_new, stilde_new;
 end function;
 
-intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
-{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
+intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
+    {}
     s_idx := Index(keys_fs, -1);
     stilde_idx := Index(keys_fs, -2);
     s := table[s_idx];
@@ -1456,6 +1455,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
        
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
+            if table[i][j] eq 0 then continue; end if;
             // Using [GR, Lemma 5.9] to determine which subset of discriminants we are in
             al_is_gal := exists(m){m : m in curves[keys_fs[i]]`W | ((D*N) div (D_R*N_R)) mod m eq 0 and m ne 1};
             if al_is_gal then
@@ -1473,6 +1473,13 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             table[i][j] := eps * table[i][j];
         end for;
     end for;
+    return table, keys_fs, ds;
+end intrinsic;
+
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
+{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+    table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
+    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds);
     return table, keys_fs, ds;
 end intrinsic;
 
