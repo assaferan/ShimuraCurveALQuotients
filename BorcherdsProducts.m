@@ -1443,10 +1443,10 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
         end if;
         D := Xstar`D;
         N := Xstar`N;
-        D_R := &*[p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];
+        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
+        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];
         f := Conductor(QuadraticOrder(BinaryQuadraticForms(d)));
-        N_star_R := &*[p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
+        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
         top_is_H := false;
         // [GR, Theorem 5.12]
         if (#Xstar`W eq 4) and (D_R*N_star_R ne 1) then
