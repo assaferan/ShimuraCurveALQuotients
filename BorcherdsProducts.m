@@ -1379,6 +1379,55 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     return table, keys_fs, [pt[1] : pt in cm_pts];
 end intrinsic;
 
+function find_signs(s, stilde)
+    inf_zero_indices := [Index(s,0), Index(stilde,0), Index(s,Infinity())];
+    assert stilde[inf_zero_indices[3]] eq Infinity();
+    scale_tilde := stilde[Index(s,0)];
+    scale := s[Index(stilde,0)];
+    idxs := [i : i in [1..#s] | i notin inf_zero_indices];
+    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in idxs];
+    s_new := [ss/scale : ss in s];
+    stilde_new := [sstilde/scale_tilde : sstilde in stilde];
+    for j->idx in idxs do
+        s_new[idx] := signs[j][1]*s_new[idx];
+        stilde_new[idx] := signs[j][2]*stilde_new[idx];
+    end for;
+    return s_new, stilde_new;
+end function;
+
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
+{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+    table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
+    s := table[Index(keys_fs, -1)];
+    stilde := table[Index(keys_fs, -2)];
+    s, stilde := find_signs(s, stilde);
+    table[Index(keys_fs, -1)] := s;
+    table[Index(keys_fs, -2)] := stilde;
+    k_idxs := [i : i->k in keys_fs | k gt 0];
+    for j->d in ds do
+        h := ClassNumber(d);
+        if h eq 1 then
+            for i in k_idxs do
+                table[i][j] := -AbsoluteValue(table[i][j]);
+                require IsSquare(table[i][j] / d) : "Value %o at CM point %o does not lie in field with discriminant %o.", table[i][j], d, d;
+            end for;
+        else
+            require h eq 2 : "Class number larger than 2. How did we get here???";
+            H := HilbertClassField(QuadraticField(d));
+            discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
+            for i in k_idxs do
+                discs_eps := [<d, eps> : d in discs, eps in [-1,1]];
+                is_sqr := [IsSquare(eps*table[i][j] / d) : d in discs, eps in [-1,1]];
+                require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
+                require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
+                eps := discs_eps[Index(is_sqr, true)][2];
+                table[i][j] := eps * table[i][j];
+            end for;
+        end if;
+    end for;
+    return table, keys_fs, ds;
+end intrinsic;
+
 procedure test_Kappa0()
     D := 6;
     N := 1;
