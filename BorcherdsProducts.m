@@ -1456,7 +1456,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             // Using [GR, Lemma 5.9] to determine which subset of discriminants we are in
-            al_is_gal := exists(m){m : m in curves[keys_fs[i]] | ((D*N) div (D_R*N_R)) mod m eq 0};
+            al_is_gal := exists(m){m : m in curves[keys_fs[i]]`W | ((D*N) div (D_R*N_R)) mod m eq 0 and m ne 1};
             if al_is_gal then
                 discs := top_is_H select [d] else [1,d];
             elif top_is_H then
