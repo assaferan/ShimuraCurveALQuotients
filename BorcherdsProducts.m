@@ -1412,6 +1412,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
         h := ClassNumber(d);
         if h eq 1 then
             for i in k_idxs do
+                if table[i][j] eq Infinity() then continue; end if;
                 table[i][j] := -AbsoluteValue(table[i][j]);
                 require IsSquare(table[i][j] / d) : "Value %o at CM point %o does not lie in field with discriminant %o.", table[i][j], d, d;
             end for;
@@ -1420,6 +1421,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
             H := HilbertClassField(QuadraticField(d));
             discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
             for i in k_idxs do
+                if table[i][j] eq Infinity() then continue; end if;
                 discs_eps := [<d, eps> : d in discs, eps in [-1,1]];
                 is_sqr := [IsSquare(eps*table[i][j] / d) : d in discs, eps in [-1,1]];
                 require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
