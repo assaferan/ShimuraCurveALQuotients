@@ -336,11 +336,12 @@ function get_integer_prog_solutions(D,N)
     return rs, Eltseq(t)[1..#Divisors(M)];
 end function;
 
-intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt) -> .
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100) -> .
 {returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
     _<q> := PuiseuxSeriesRing(Rationals());
-    eta := DedekindEta(q);  
+    // eta := DedekindEta(q);  
+    eta := q^(1/24)*(&*[1 - q^n : n in [1..Prec-1]] + O(q^(Prec)));
     nor_eta := eta / q^(1/24);
     rs, t := get_integer_prog_solutions(D,N);
     M := 2*D*N;
@@ -1187,6 +1188,7 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, D::RngIntElt,
     require cond eq 1 : "Not implemented for non-maximal orders!";
     O := sub<OK | cond>;
     n_d := NumberOfOptimalEmbeddings(O, D, N);
+    require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
     W_size := 2^#PrimeDivisors(D*N);
     // Not sure?? Think this what happens to the number of CM points on the full quotient
     sqfree, sq := SquarefreeFactorization(d);
@@ -1225,6 +1227,26 @@ intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngInt
     return SchoferFormula([f], d, D, N)[1];
 end intrinsic;
 
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[ExtReElt]
+{Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
+    vals := [ExtendedReals() | 1 : f in fs];
+    for i->f in fs do
+        div_f := DivisorOfBorcherdsForm(f, Xstar);
+        in_support := exists(pt){pt : pt in div_f | pt[1] eq d};
+        if in_support then
+            if pt[2] lt 0 then vals[i] := Infinity(); end if;
+            if pt[2] gt 0 then vals[i] := 0; end if;
+        end if;
+    end for;
+    rest_idxs := [i : i in [1..#fs] | vals[i] eq 1];
+    if IsEmpty(rest_idxs) then return vals; end if;
+    rest_fs := [fs[i] : i in rest_idxs];
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
+    for i->log_coeff in log_coeffs do
+        vals[rest_idxs[i]] := &*[Rationals() | p^(Integers()!log_coeff[p]) : p in Keys(log_coeff)];
+    end for;
+    return vals;
+end intrinsic;
 
 intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
@@ -1311,7 +1333,7 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
         for r2 in sq_divs do
             d := (4*m) div r2;
             if (d mod 4 notin [0,1]) then continue; end if;
-            S := QuadraticOrder(BinaryQuadraticForms(-d));
+            S := QuadraticOrder(BinaryQuadraticForms(d));
             n_d := NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
             if n_d eq 0 then continue; end if;
             e := 1;
@@ -1324,19 +1346,37 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
     return divisor;
 end intrinsic;
 
-intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> .
+intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     fs := BorcherdsForms(Xstar, curves);
-    keys_fs := Keys(fs);
+    keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
+    /*
     // discs := [d : d in [-100..-1] | d mod 4 in [0,1]];
     discs := [d : d in [-100..-1] | IsFundamentalDiscriminant(d)];
-    table := [];
-    table_col := [];
+    cm_pts := [];
     for d in discs do
-        vals := SchoferFormula(all_fs, d, Xstar`D, Xstar`N);
+        S := QuadraticOrder(BinaryQuadraticForms(d));
+        n_d := NumberOfOptimalEmbeddings(S, Xstar`D, Xstar`N);
+        if n_d gt 0 then
+            Append(~cm_pts, d);
+        end if;
     end for;
-    return table, keys_fs;
+    */
+    cm_pts := RationalCMPoints(Xstar);
+    cm_pts := Reverse(Sort(cm_pts));
+    if #cm_pts gt MaxNum then
+        cm_pts := cm_pts[1..MaxNum];
+    end if;
+    table := [[] : f in all_fs];
+    for pt in cm_pts do
+        d := pt[1];
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        for i->v in vals do
+            Append(~table[i], vals[i]);
+        end for;
+    end for;
+    return table, keys_fs, [pt[1] : pt in cm_pts];
 end intrinsic;
 
 procedure test_Kappa0()

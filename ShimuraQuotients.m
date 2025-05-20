@@ -1458,8 +1458,12 @@ intrinsic RationalCMPoints(X::ShimuraQuot) -> SeqEnum
             end if;
         end for;
     end for;
-    CN1 := [-3,-4,-7,-8,-11,-19,-43,-67,-163];
-    for d in CN1 do
+    CN1 := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
+    CN2 := {-15, -20, -24, -35, -40, -51, -52, -88, -91, -115, -123, -148, -187, -232, -235, -267, -403, -427};
+    CN := CN1;
+    if #X`W ge 4 then CN join:= CN2; end if;
+    CN := Reverse(Sort([x : x in CN]));
+    for d in CN do
         if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
         // [JV, Prop. 14.6.7] K=Q(sqrt(d)) splits B of disc D iff 
         // every ramified prime in B (prime divisors of D) is not split in K
@@ -1469,7 +1473,8 @@ intrinsic RationalCMPoints(X::ShimuraQuot) -> SeqEnum
         end if;
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
-    return pts[1..3];
+    // return pts[1..3];
+    return pts;
 end intrinsic;
 
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
