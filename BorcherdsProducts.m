@@ -1347,7 +1347,16 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
             Append(~divisor, <d, c_m/e>);
         end for;
     end for;
-    return divisor;
+
+    simple_divisor := [];
+    discs := {pair[1] : pair in divisor};
+    for d in discs do
+        mult_d := &+[pair[2] : pair in divisor | pair[1] eq d];
+        if mult_d ne 0 then
+            Append(~simple_divisor, <d, mult_d>);
+        end if;
+    end for;
+    return simple_divisor;
 end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
@@ -1644,9 +1653,9 @@ procedure test_Schofer_6()
     log_coeffs := SchoferFormula(f6, -267, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,-22>, <3, -6>, <5,-6>, <7,4>, <11,-6>, <31,4>, <43,4> };
 
-    //this is very close but off at 2 and 3?
-    // log_coeffs := SchoferFormula(f6, -996, 6, 1);
-    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 10>, <3, -6>, <41, -6>, <29, -6>, <17,-6>, <7,12>, <83,2>, <71,4> };
+    //divide to account for 3 CM points of degree 6
+    log_coeffs := SchoferFormula(f6, -996, 6, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -2>, <3, -18>, <41, -6>, <29, -6>, <17,-6>, <7,12>, <83,2>, <71,4> };
 
     return;
 
@@ -1742,6 +1751,70 @@ procedure test_Schofer_10()
     //this works!
    log_coeffs := SchoferFormula(f10, -235, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>, <17,3>,  <7,-2>, <37,-2>,<47,-1> };
+    //this works! the extra 2^2 comes from the fact that there are 2 points here
+   log_coeffs := SchoferFormula(f10, -420, 10, 1);
+   assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2,6> , <3,6>,<29,3>,<7,-2>,<37,-2> };
+
+
+end procedure;
+
+
+procedure test_Schofer_142()
+
+    _<q> := LaurentSeriesRing(Rationals());
+    f1 := -2*q^(-87)- 2*q^(-71) - 2*q^(-48) - 2*q^(-36) +2*q^(-16) -2*q^(-15)-2*q^(-12)+2*q^(-9)-2*q^(-7) - 2*q^(-3) +2*q^(-2) + 2*q^(-1) + O(q);
+    f3 := q^(-87) - 2*q^(-79) + q^(-76) - 2*q^(-71)+2*q^(-48)-q^(-40)+3*q^(-32)-2*q^(-20)-q^(-19)-2*q^(-12)+2*q^(-10)+q^(-8)-2*q^(-7)-2*q^(-2) + O(q);
+   
+    //GY p.30
+    //then psi_f1 *2^10= x, but I'm getting the reverse...
+    log_coeffs := SchoferFormula(f1, -19, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10> };
+
+    log_coeffs := SchoferFormula(f1, -20, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10> };
+
+    log_coeffs := SchoferFormula(f1, -24, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-11> };
+
+    log_coeffs := SchoferFormula(f1, -40, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-11> };
+
+    log_coeffs := SchoferFormula(f1, -43, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10> };
+
+//long time didn't try
+    log_coeffs := SchoferFormula(f1, -148, 142, 1);
+    {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10>  };
+
+    //long time didn't try.
+    log_coeffs := SchoferFormula(f1, -232, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-11> };
+
+    //psi_f3 *2 = y
+
+//Can't compute this
+    log_coeffs := SchoferFormula(f3, -3, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,1> };
+
+//this works
+    log_coeffs := SchoferFormula(f3, -4, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {  };
+    
+    log_coeffs := SchoferFormula(f3, -19, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-1> };
+
+//this works
+    log_coeffs := SchoferFormula(f3, -24, 142, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,1> };
+
+    log_coeffs := SchoferFormula(f3, -43, 142, 1);
+    assert
+     {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <3,1> };
+
+    log_coeffs := SchoferFormula(f3, -148, 142, 1);
+
+
+    log_coeffs := SchoferFormula(f3, -232, 142, 1);
 
 
 end procedure;
@@ -1755,6 +1828,13 @@ procedure test_Schofer_26()
     g1 := 2*q^(-13) - 2*q^(-2) - 4*q^(-1) + O(q);
     g2 := q^(-11) + 2*q^(-7) - 2*q^(-2) + O(q);
     g3 := 2*q^(-26) + 6*q^(-7)- 6*q^(-2) +2*q^(-1) + O(q);
+
+
+    E, n, t := WeaklyHolomorphicBasis(26,1);
+    E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
+    fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
+
+    f4 := fs_E[8]; // this is the constant 1 function
 
     log_coeffs := SchoferFormula(g1, -11, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {  };
@@ -1801,7 +1881,7 @@ procedure test_Schofer_26()
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,13>,<13,3>  };
 
     log_coeffs := SchoferFormula(g3, -52, 26, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>,<13,5>  };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>,<13,8>  };
 
     log_coeffs := SchoferFormula(g3, -67, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,10>, <5,-6>, <13,3>,<41,2>,<67,1>  };
