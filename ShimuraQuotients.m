@@ -617,7 +617,7 @@ intrinsic ALsToGens(Ws::SetEnum, ND::RngIntElt) -> SetEnum
     {Get gens from ALs}
     ps := PrimeDivisors(ND);
     vals := [Valuation(ND, p) : p in ps];
-    return {p^vals[i] : i->p in ps };
+    return Ws cap {p^vals[i] : i->p in ps };
 end intrinsic;
 
 intrinsic ALSubgroups(N::RngIntElt) -> SetEnum
