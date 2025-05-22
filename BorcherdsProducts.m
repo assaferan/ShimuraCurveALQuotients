@@ -1504,6 +1504,12 @@ intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     return eqn_list, new_keys;
 end intrinsic;
 
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+{Determine the equations of the immediate covers of X.}
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves);
+    return EquationsOfCovers(table, keys_fs, ds, curves);
+end intrinsic;
+
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 {Return possible fields of definition for CM point with CM by d on X.}
@@ -1610,7 +1616,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     if (m eq 1) then
         al_action[1] := sigma_for_later;
     end if;
-    
+
     fixed_by := [al_action[m] : m in X`W meet Keys(al_action)];
 
     sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
@@ -1703,9 +1709,25 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     return table, keys_fs, ds;
 end intrinsic;
 
+function reduce_table(table)
+    scales := [];
+    for t in table do
+        xs := [x : x in t | x notin [0, Infinity()]];
+        ps := &join[Set(PrimeDivisors(Numerator(x))) : x in xs];
+        ps join:= &join[Set(PrimeDivisors(Denominator(x))) : x in xs];
+        ps := [p : p in ps];
+        vals := [[Valuation(x,p) : x in xs ] : p in ps];
+        mins := [Minimum([<AbsoluteValue(v),v> : v in valp]) : valp in vals];
+        scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
+        Append(~scales, scale);
+    end for;
+    return [[x/scales[i] : x in t] : i->t in table];
+end function;
+
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum);
+    table := reduce_table(table);
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds, Xstar, curves);
     return table, keys_fs, ds;
 end intrinsic;
