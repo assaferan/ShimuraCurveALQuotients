@@ -613,6 +613,13 @@ intrinsic AllALsFromGens(Ws::SetEnum, ND::RngIntElt) ->SetEnum
     return allws;
 end intrinsic;
 
+intrinsic ALsToGens(Ws::SetEnum, ND::RngIntElt) -> SetEnum
+    {Get gens from ALs}
+    ps := PrimeDivisors(ND);
+    vals := [Valuation(ND, p) : p in ps];
+    return {p^vals[i] : i->p in ps };
+end intrinsic;
+
 intrinsic ALSubgroups(N::RngIntElt) -> SetEnum
     {All Atkin Lehner subgroups}
     ZZ := Integers();
@@ -1396,7 +1403,7 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot, q::RngIntElt) -> Assoc
     delta_2 := (2 in X`W) select 1 else 0;
     delta_3 := (3 in X`W) select 1 else 0;
     e := AssociativeArray();
-    e2 := NumberOfEllipticPoints(X`D, X`N, 2);
+    e2 := NumberOfEllipticPoints(X`D, X`N, 4);
     e3 := NumberOfEllipticPoints(X`D, X`N, 3);
     F_W := AssociativeArray();
     if q eq 2 then
@@ -1508,7 +1515,7 @@ intrinsic NumberOfEllipticPoints(X::ShimuraQuot, q::RngIntElt) -> RngIntElt
     require (q gt 1) : "Elliptic points of order %o are not well-defined.", q;
     delta_2 := (2 in X`W) select 1 else 0;
     delta_3 := (3 in X`W) select 1 else 0;
-    e2 := NumberOfEllipticPoints(X`D, X`N, 2);
+    e2 := NumberOfEllipticPoints(X`D, X`N, 4);
     e3 := NumberOfEllipticPoints(X`D, X`N, 3);
     if q eq 2 then
         F_W := &+[NumFixedPoints(X`D, X`N, w) : w in X`W | w ne 1];
