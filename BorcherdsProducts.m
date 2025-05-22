@@ -1526,9 +1526,9 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     end if;
 
     rec := ArtinMap(H_R);
-    rec_abs := Components(rec)[1];
-    gal_to_aut := &*Components(rec)[2..#Components(rec)];
-    assert rec_abs*gal_to_aut eq rec;
+    // rec_abs := Components(rec)[1];
+    // gal_to_aut := &*Components(rec)[2..#Components(rec)];
+    // assert rec_abs*gal_to_aut eq rec;
 
     // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
 
@@ -1546,48 +1546,82 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     A, PicR_to_A := PicR / (2*PicR);
     B := QuaternionAlgebra(D);
 
-    // top_is_H := false; // in this case we do not know
+    al_action := AssociativeArray();
+
     // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
     m := D_R*N_star_R;
-    if m in X`W then
-        for a in A do
-            fraka := mPicR(a@@PicR_to_A);
-            B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
-            if IsIsomorphic(B_fraka, B) then
-                break;
-            end if;
-        end for;
-        assert assigned fraka;
-        sigma_a := rec(fraka);
-        abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
-        // _, K_to_abs := IsSubfield(K, abs_H_R);
-        _, cc := HasComplexConjugate(abs_H_R);
-        sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
-        fixed_by := [sigma];
+    //if m in X`W then
+    for a in A do
+        fraka := mPicR(a@@PicR_to_A);
+        B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
+        if IsIsomorphic(B_fraka, B) then
+            break;
+        end if;
+    end for;
+    assert assigned fraka;
+    sigma_a := rec(fraka);
+    abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
+    // _, K_to_abs := IsSubfield(K, abs_H_R);
+    _, cc := HasComplexConjugate(abs_H_R);
+    sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
+    if (m ne 1) then
+        al_action[m] := sigma;
     else
-        fixed_by := [];
+        sigma_for_later := sigma;
     end if;
 
     // Lemma 5.9
     fixed_sub_gens := [];
     unknown_quotients := 0;
-    for m in ALsToGens(X`W, D*N) do
+    // for m in ALsToGens(X`W, D*N) do
+    als_DN := [Q : Q in Divisors(D*N) | GCD(Q, (D*N) div Q) eq 1];
+    for m in als_DN do
         al_is_gal := ((D*N) div (D_R*N_R)) mod m eq 0;
         if al_is_gal then
             frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(m*Integers(K))];
             assert Norm(frakb) eq m;
-            sigma := rec_abs(frakb);
-            Append(~fixed_sub_gens, sigma);
-        else
-            unknown_quotients +:= 1;
+            // sigma := rec_abs(frakb);
+            al_action[m] := H_R_to_abs^(-1)*rec(frakb)*H_R_to_abs;
+            // Append(~fixed_sub_gens, sigma);
+        // else
+            // unknown_quotients +:= 1;
         end if;
         // !! TODO : figure out what to do if it is not Galois
     end for;
 
+    known_al := Keys(al_action);
+    // allws := {Integers()|};
+    S := Subsets(known_al);
+    for s in S do
+        if #s eq 0 then
+            al_action[1] := hom<abs_H_R->abs_H_R | abs_H_R.1>;
+            // Include(~allws, 1);
+        else
+            prod := 1;
+            for w in s do
+                prev_prod := prod;
+                prod := al_mul(w,prod,D*N);
+                al_action[prod] := al_action[prev_prod]*al_action[w];
+            end for;
+            // Include(~allws, prod);
+        end if;
+    end for;
+
+    if (m eq 1) then
+        al_action[1] := sigma_for_later;
+    end if;
+    
+    fixed_by := [al_action[m] : m in X`W meet Keys(al_action)];
+
+    sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
+    sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
+
+    unknown_quotients := n_W - n_fixed;
+
     // fixed_sub := sub<Universe(fixed_sub_gens) | fixed_sub_gens>;
     // Q_P_ext := FixedField(H_R, fixed_sub);
 
-    fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
+    // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
 
     if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
@@ -1638,47 +1672,31 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     end for;
    
     for j->d in ds do
-        D := Xstar`D;
-        N := Xstar`N;
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];
-        f := Conductor(QuadraticOrder(BinaryQuadraticForms(d)));
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        top_is_H := false;
-        h := ClassNumber(d);
-        if h eq 1 then
-            discs := [1,d];
-        else
-            require h eq 2 : "Class number larger than 2. How did we get here???";
-            K := QuadraticField(d);
-            H := HilbertClassField(K);
-            // Shimura reciprocity ([Gonzales, Rotger - "non-elliptic Shimura curves of genus 1", Thm 5.8 (1)]) 
-            // tells us that H = FK, where F is the field of definition.
-            discs := [Discriminant(Integers(F[1])) : F in Subfields(AbsoluteField(H)) | Degree(F[1]) eq 2];
-             // [GR, Theorem 5.12]
-            if (#Xstar`W eq 4) and (D_R*N_star_R ne 1) then
-                // field of definition on top curve is H
-                top_is_H := true;
-            end if;
-        end if;
-       
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             if table[i][j] eq 0 then continue; end if;
-            // Using [GR, Lemma 5.9] to determine which subset of discriminants we are in
-            al_is_gal := exists(m){m : m in curves[keys_fs[i]]`W | ((D*N) div (D_R*N_R)) mod m eq 0 and m ne 1};
-            if al_is_gal then
-                cur_discs := top_is_H select [d] else [1,d];
-            elif top_is_H then
-                cur_discs := [disc : disc in discs | disc ne d];
-            else
-                cur_discs := discs;
-            end if;
-            discs_eps := [<d, eps> : d in cur_discs, eps in [-1,1]];
-            is_sqr := [IsSquare(scale_factors[k]*eps*table[i][j] / d) : d in cur_discs, eps in [-1,1]];
-            require &or is_sqr : "Value %o at CM point %o does not lie in any quadratic subfield.", table[i][j], d;
-            require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
-            eps := discs_eps[Index(is_sqr, true)][2];
+            
+            fields := FieldsOfDefinitionOfCMPoint(curves[keys_fs[i]], d);
+
+            Fs_eps := [* <F, eps> : F in fields, eps in [-1,1] *];
+            possible_answers := [* *];
+            for eps in [-1,1] do
+                y2 := scale_factors[k]*eps*table[i][j];
+                for F in fields do
+                    is_sqr, y := IsSquare(F!y2);
+                    if (is_sqr) then
+                        if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                            Append(~possible_answers, <F,eps,y>);
+                        end if;
+                    end if;
+                end for;
+            end for;
+            // is_sqr := [IsSquare(F!(scale_factors[k]*eps*table[i][j])) : F in fields, eps in [-1,1]];
+            // require &or is_sqr : "Value %o at CM point %o does not lie in any subfield.", table[i][j], d;
+            // require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
+            require #possible_answers eq 1 : "Wrong number of possible signs or CM fields", possible_answers, table[i][j], d;
+            // eps := Fs_eps[Index(is_sqr, true)][2];
+            eps := possible_answers[1][2];
             table[i][j] := eps * table[i][j];
         end for;
     end for;

@@ -616,8 +616,9 @@ end intrinsic;
 intrinsic ALsToGens(Ws::SetEnum, ND::RngIntElt) -> SetEnum
     {Get gens from ALs}
     ps := PrimeDivisors(ND);
-    vals := [Valuation(ND, p) : p in ps];
-    return Ws meet {p^vals[i] : i->p in ps };
+    val_mat := Matrix([[ (Q mod p eq 0) select 1 else 0 : p in ps] : Q in Ws]);
+    basis := Basis(RowSpace(ChangeRing(val_mat, GF(2))));
+    return {exp_to_Q(b, ND, ps) : b in basis};
 end intrinsic;
 
 intrinsic ALSubgroups(N::RngIntElt) -> SetEnum
