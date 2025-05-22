@@ -1527,7 +1527,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
     rec := ArtinMap(H_R);
     rec_abs := Components(rec)[1];
-    gal_to_aut := Components(rec)[2];
+    gal_to_aut := &*Components(rec)[2..#Components(rec)];
+    assert rec_abs*gal_to_aut eq rec;
 
     // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
 
@@ -1568,7 +1569,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // Lemma 5.9
     fixed_sub_gens := [];
     unknown_quotients := 0;
-    for m in ALsToGens(X`W) do
+    for m in ALsToGens(X`W, D*N) do
         al_is_gal := ((D*N) div (D_R*N_R)) mod m eq 0;
         if al_is_gal then
             frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(m*Integers(K))];
