@@ -1521,7 +1521,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     // Proposition 5.6
-    if (Discriminant(R) mod (D*N) div (D_R*N_star_R)) ne 0 then
+    if (Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0 then
         return [* *];
     end if;
 
@@ -1536,23 +1536,23 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // fields := [* F[1] : F in Subfields(AbsoluteField(NumberField(H_R))) *];
     // Q_P_ext := H_R;
 
+    // setting up number fields
     H_R_NF := NumberField(H_R);
     abs_H_R := AbsoluteField(H_R_NF);
     _, H_R_to_abs := IsIsomorphic(H_R_NF, abs_H_R);
 
+    // setting up Picard groups 
+    PicR, mPicR := PicardGroup(R);
+    A, PicR_to_A := PicR / (2*PicR);
+    B := QuaternionAlgebra(D);
+
     // top_is_H := false; // in this case we do not know
-    // Theorem 5.12 (1)
-    if D_R*N_star_R ne 1 then 
-        // Q_P_ext := H_R;
-        // top_is_H := true;
-        fixed_by := [];
-    else // Theorem 5.12 (2)
-        PicR, mPicR := PicardGroup(R);
-        A, PicR_to_A := PicR / (2*PicR);
-        B := QuaternionAlgebra(D);
+    // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
+    m := D_R*N_star_R;
+    if m in X`W then
         for a in A do
             fraka := mPicR(a@@PicR_to_A);
-            B_fraka := QuaternionAlgebra(Rationals(), d, Norm(fraka));
+            B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
             if IsIsomorphic(B_fraka, B) then
                 break;
             end if;
@@ -1564,6 +1564,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
         _, cc := HasComplexConjugate(abs_H_R);
         sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
         fixed_by := [sigma];
+    else
+        fixed_by := [];
     end if;
 
     // Lemma 5.9
@@ -1588,7 +1590,13 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
 
+    if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
+
     Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
+
+    if (Degree(Q_P_ext) le 2^unknown_quotients) then
+        Append(~Q_Ps, Rationals());
+    end if;
     /*
     if top_is_H then 
         Q_Ps := [* Q_P_ext *];
