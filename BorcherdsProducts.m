@@ -920,6 +920,66 @@ procedure test_W()
     return;
 end procedure;
 
+// This is not (!!!) [Err, Lemma 6.1, p. 845] based on [KRY, Lemmas 2.4 and 2.5]
+// [Err only refers to primes not in Sm_mu]
+// This is based on [KRY, Lemma 2.6]
+function Wpolys_self_dual_KRY_2_4(m,p,mu,Lminus,Q)
+    BML := BasisMatrix(Lminus);
+    Delta := -Determinant(BML*Q*Transpose(BML));
+    assert IsZero(mu); // in the self dual case mu is always zero
+    K<sqrt_mp> := QuadraticField(-p);
+    _<x> := PolynomialRing(K);
+    return sqrt_mp * (1 - KroneckerCharacter(p)(Integers()!m) * x^(Valuation(m,p) + 1));
+end function;
+
+// This is based on [KY, Proposition 5.2]
+function Wpolys_KY_5_3(m,p,mu,Lminus,Q)
+    BML := BasisMatrix(Lminus);
+    Qminus := BML*Q*Transpose(BML);
+    lat_minus := LatticeWithGram(-Qminus);
+    lat_minus_d := Dual(lat_minus : Rescale := false);
+    disc_group := lat_minus_d / lat_minus;
+    
+    Delta := -Determinant(Qminus);
+    kappa := SquareFree(Delta);
+
+    // verifications
+    assert Valuation(kappa,p) in [0,1];
+    assert AbelianInvariants(disc_group) eq [2,-2*kappa];
+
+    disc_group_p := pPrimaryComponent(disc_group, p);
+    if (p ne 2) then assert #disc_group_p eq p; end if;
+    if (p eq 2) and IsEven(kappa) then assert #disc_group_p eq 8; end if;
+    if (p eq 2) and IsOdd(kappa) then assert #disc_group_p eq 4; end if;
+
+    K<sqrt_kappa> := QuadraticField(kappa);
+    _<x> := PolynomialRing(K);
+
+    d := Discriminant(Integers(K));
+    f := Valuation(d,p);
+    a := Valuation(m,p);
+
+    assert a ge -f;
+
+    if (a eq -f) then return 1; end if;
+
+    /*
+    norm_form := Matrix([[Norm(x+y) - Norm(x) - Norm(y) : y in [1,sqrt_kappa]] : x in [1,sqrt_kappa]]);
+    eps := (p eq 2) select [1,3,5,7] else [1,Integers()!Nonsquare(GF(p))];
+    can_form_Q := GramMatrix(MinkowskiReduction(LatticeWithGram(-Qminus) : Canonical));
+    a := can_form_Q[1,1] / 2;
+    b := can_form_Q[1,2] / 2;
+    ZK := Integers(K);
+    I := a*ZK + (b-sqrt_kappa)*ZK; // we only do the pricipal ideal case
+    can_forms := [GramMatrix(MinkowskiReduction(LatticeWithGram(e*norm_form) : Canonical)) : e in eps];
+    assert can_form_Q in can_forms; // Not implemented when this is not the case.
+    e := eps[Index(can_forms, can_form_Q)];
+    */
+    val_e := HasseMinkowskiInvariant(lat_minus, p);
+   
+    return 1 + val_e*KroneckerCharacter(kappa)(m)*x^(a+f);
+end function;
+
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
     if (m eq 0) and (mu ne 0) then
@@ -937,6 +997,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     vprintf ShimuraQuotients, 2: "Sm_mu := %o\n", Sm_mu;
 
     Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
+
     wpolyseval := [* Evaluate(Wpolys[i],1) : i in [1..#Wpolys] *];
     assert exists(i){i : i in [1..#Sm_mu] | wpolyseval[i] eq 0};
     p_prime := Sm_mu[i];
@@ -1020,7 +1081,6 @@ intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
     L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
     L_quo, L_quo_map := L / (Lplus + Lminus);
     log_coeffs := AssociativeArray();
-    // ret := 1;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
@@ -1400,7 +1460,7 @@ function find_signs(s, stilde)
 end function;
 
 intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum) -> SeqEnum, SeqEnum
-    {Determine the equations of the covers using the values from Schofer's formula}
+{Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
     y2_idxs := [i:i->k in keys_fs | k gt 0];
     s_idx := Index(keys_fs,-1);
@@ -1433,6 +1493,101 @@ intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     new_keys := [keys_fs[i] : i in y2_idxs];
 
     return eqn_list, new_keys;
+end intrinsic;
+
+// This is following [GR, Section 5]
+intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
+{Return possible fields of definition for CM point with CM by d on X.}
+    R := QuadraticOrder(BinaryQuadraticForms(d));
+    K := NumberField(R);
+    f := Conductor(R);
+    H_R := RingClassField(R); // maybe want NumberField(H_R)
+    D := X`D;
+    N := X`N;
+    D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
+    N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
+    N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
+    W_R := [m : m in X`W | D_R*N_R mod m eq 0];
+    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
+    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
+
+    // Proposition 5.6
+    if (Discriminant(R) mod (D*N) div (D_R*N_star_R)) ne 0 then
+        return [* *];
+    end if;
+
+    rec := ArtinMap(H_R);
+    rec_abs := Components(rec)[1];
+    gal_to_aut := Components(rec)[2];
+
+    // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
+
+    // Theorem 5.8 - Shimura reciprocity
+    // fields := [* F[1] : F in Subfields(AbsoluteField(NumberField(H_R))) *];
+    // Q_P_ext := H_R;
+
+    H_R_NF := NumberField(H_R);
+    abs_H_R := AbsoluteField(H_R_NF);
+    _, H_R_to_abs := IsIsomorphic(H_R_NF, abs_H_R);
+
+    // top_is_H := false; // in this case we do not know
+    // Theorem 5.12 (1)
+    if D_R*N_star_R ne 1 then 
+        // Q_P_ext := H_R;
+        // top_is_H := true;
+        fixed_by := [];
+    else // Theorem 5.12 (2)
+        PicR, mPicR := PicardGroup(R);
+        A, PicR_to_A := PicR / (2*PicR);
+        B := QuaternionAlgebra(D);
+        for a in A do
+            fraka := mPicR(a@@PicR_to_A);
+            B_fraka := QuaternionAlgebra(Rationals(), d, Norm(fraka));
+            if IsIsomorphic(B_fraka, B) then
+                break;
+            end if;
+        end for;
+        assert assigned fraka;
+        sigma_a := rec(fraka);
+        abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
+        // _, K_to_abs := IsSubfield(K, abs_H_R);
+        _, cc := HasComplexConjugate(abs_H_R);
+        sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
+        fixed_by := [sigma];
+    end if;
+
+    // Lemma 5.9
+    fixed_sub_gens := [];
+    unknown_quotients := 0;
+    for m in ALsToGens(X`W) do
+        al_is_gal := ((D*N) div (D_R*N_R)) mod m eq 0;
+        if al_is_gal then
+            frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(m*Integers(K))];
+            assert Norm(frakb) eq m;
+            sigma := rec_abs(frakb);
+            Append(~fixed_sub_gens, sigma);
+        else
+            unknown_quotients +:= 1;
+        end if;
+        // !! TODO : figure out what to do if it is not Galois
+    end for;
+
+    // fixed_sub := sub<Universe(fixed_sub_gens) | fixed_sub_gens>;
+    // Q_P_ext := FixedField(H_R, fixed_sub);
+
+    fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
+    Q_P_ext := FixedField(abs_H_R, fixed_by);
+
+    Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
+    /*
+    if top_is_H then 
+        Q_Ps := [* Q_P_ext *];
+    else
+        Q_Ps := [* Rationals() *] cat [* F[1] : F in Subfields(AbsoluteField(NumberField(Q_P_ext))) *];
+    end if;
+    */
+
+    return Q_Ps;
 end intrinsic;
 
 intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
@@ -1807,3 +1962,7 @@ procedure test_Schofer_26()
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,10>, <5,-6>, <13,3>,<41,2>,<67,1>  };
 
 end procedure;
+
+/* Bibliography
+[GR] - Gonzales, Rotger - non-elliptic shimura curves of genus one
+*/
