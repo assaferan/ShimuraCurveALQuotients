@@ -290,7 +290,6 @@ procedure test_Schofer_142()
 
 end procedure;
 
-
 procedure test_Schofer_26()
 
     //Test as in Guo Yang p.25

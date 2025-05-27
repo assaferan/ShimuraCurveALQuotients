@@ -1154,20 +1154,31 @@ end intrinsic;
 intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
     {Using Riemann Roch, leverage covered equations to get higher cover equations}
     P1s := [<i, keys> : i->keys in new_keys | Degree(eqn_list[i]) eq 1];
+    conics := [<i, keys> : i->keys in new_keys | curves[keys]`g eq 0 and Degree(eqn_list[i]) ne 1];
 
-    curves_above := AssociativeArray();
+    curves_above_P1s := AssociativeArray();
+    curves_above_conics := AssociativeArray();
+
     for pair in P1s do
         for c in curves[pair[2]]`CoveredBy do
-            curves_above[c] := pair[1];
+            curves_above_P1s[c] := pair[1];
+        end for;
+    end for;
+
+    for pair in conics do
+        for c in curves[pair[2]]`CoveredBy do
+            if not IsDefined(curves_above_P1s, c) then
+                curves_above_conics[c] := pair[1];
+            end if;
         end for;
     end for;
 
     cover_eqns := [];
     cover_keys := [];
-    while #curves_above gt 0 do
-        for label in Keys(curves_above) do
+    while (not IsEmpty(Keys(curves_above_P1s))) or (not IsEmpty(Keys(curves_above_conics))) do
+        for label in Keys(curves_above_P1s) do
             g := curves[label]`g;
-            covered_P1 := eqn_list[curves_above[label]];
+            covered_P1 := eqn_list[curves_above_P1s[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 if assigned curves[label]`IsSubhyp then
@@ -1190,12 +1201,50 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
             Append(~cover_eqns, eqn);
             Append(~cover_keys, label);
         end for;
-        curves_above := AssociativeArray();
+        for label in Keys(curves_above_conics) do
+            g := curves[label]`g;
+            covered_conic := eqn_list[curves_above_conics[label]];
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
+            if #allgplus1covers eq 0 then
+                if assigned curves[label]`IsSubhyp then
+                    require curves[label]`IsSubhyp eq false : "Subhyp data doesn't match current cover information";
+                else
+                    curves[label]`IsSubhyp := false;
+                    curves[label]`IsHyp := false;
+                    curves[label]`TestInWhichProved := "BorcherdsProducts";
+                end if;
+                continue;
+            end if;
+            covered_gplus1_key := Representative(allgplus1covers);
+            gplus1idx := Index(new_keys,covered_gplus1_key);
+            covered_gplus1 := eqn_list[gplus1idx];
+            //if this is empty then it's not hyperelliptic
+            assert Degree(covered_conic) eq 2;
+            P2<x,y,z> := ProjectiveSpace(Rationals(),2);
+            C := Curve(P2, y^2-z^2*Evaluate(covered_conic, x/z));
+            C := Conic(C);
+            assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
+            C_to_P1 := Inverse(Parametrization(C));
+            s_param := C_to_P1(x) / C_to_P1(z);
+            _<x> := Parent(covered_gplus1);
+            eqn := Evaluate(covered_gplus1, s_param);
+            Append(~cover_eqns, eqn);
+            Append(~cover_keys, label);
+        end for;
+        curves_above_P1s := AssociativeArray();
         P1s := [<i, keys> : i->keys in cover_keys | Degree(cover_eqns[i]) eq 1];
-        curves_above := AssociativeArray();
+        curves_above_P1s := AssociativeArray();
         for pair in P1s do
             for c in curves[pair[2]]`CoveredBy do
-                curves_above[c] := pair[1];
+                curves_above_P1s[c] := pair[1];
+            end for;
+        end for;
+        curves_above_conics := AssociativeArray();
+        conics := [<i, keys> : i->keys in cover_keys | curves[keys]`g eq 0 and Degree(cover_eqns[i]) ne 1];
+        curves_above_conics := AssociativeArray();
+        for pair in conics do
+            for c in curves[pair[2]]`CoveredBy do
+                curves_above_conics[c] := pair[1];
             end for;
         end for;
     end while;
