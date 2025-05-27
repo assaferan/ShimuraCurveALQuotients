@@ -1466,20 +1466,30 @@ intrinsic RationalCMPoints(X::ShimuraQuot) -> SeqEnum
             end if;
         end for;
     end for;
+
     CN1 := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
     CN2 := {-15, -20, -24, -35, -40, -51, -52, -88, -91, -115, -123, -148, -187, -232, -235, -267, -403, -427};
-    CN := CN1;
-    if #X`W ge 4 then CN join:= CN2; end if;
+    CN := CN1 join CN2;
+    // if #X`W ge 4 then CN join:= CN2; end if;
     CN := Reverse(Sort([x : x in CN]));
     for d in CN do
         if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
         // [JV, Prop. 14.6.7] K=Q(sqrt(d)) splits B of disc D iff 
         // every ramified prime in B (prime divisors of D) is not split in K
-        is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
-        if is_split then
-            Append(~pts, <d,1,1>); // class number 1
+        if d in CN1 then
+            is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
+            if is_split then
+                Append(~pts, <d,1,1>); // class number 1
+            end if;
+        else
+            flds := FieldsOfDefinitionOfCMPoint(X, d);
+            if flds eq [* Rationals() *] then
+                Append(~pts, <d,1,1>);
+            end if;
         end if;
     end for;
+
+
     require #pts ge 3 : "Could not find enough rational CM points!";
     // return pts[1..3];
     return pts;
