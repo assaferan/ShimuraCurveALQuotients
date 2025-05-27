@@ -1208,13 +1208,6 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
             covered_P1 := eqn_list[curves_above_P1s[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
-                if assigned curves[label]`IsSubhyp then
-                    require curves[label]`IsSubhyp eq false : "Subhyp data doesn't match current cover information";
-                else
-                    curves[label]`IsSubhyp := false;
-                    curves[label]`IsHyp := false;
-                    curves[label]`TestInWhichProved := "BorcherdsProducts";
-                end if;
                 continue;
             end if;
             covered_gplus1_key := Representative(allgplus1covers);
@@ -1233,13 +1226,6 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
             covered_conic := eqn_list[curves_above_conics[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
-                if assigned curves[label]`IsSubhyp then
-                    require curves[label]`IsSubhyp eq false : "Subhyp data doesn't match current cover information";
-                else
-                    curves[label]`IsSubhyp := false;
-                    curves[label]`IsHyp := false;
-                    curves[label]`TestInWhichProved := "BorcherdsProducts";
-                end if;
                 continue;
             end if;
             covered_gplus1_key := Representative(allgplus1covers);
