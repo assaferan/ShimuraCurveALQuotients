@@ -1125,7 +1125,13 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     cm_pts := Reverse(Sort(cm_pts));
     if #cm_pts gt MaxNum then
         cm_pts := cm_pts[1..MaxNum];
+    elif #cm_pts lt MaxNum then
+        // fix me
+        quad_cm := QuadraticCMPoints(Xstar);
+        need := #cm_pts - MaxNum;
+        quad_cm := quad_cm[1..need];
     end if;
+
     table := [[] : f in all_fs];
     for pt in cm_pts do
         d := pt[1];
@@ -1134,7 +1140,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
             Append(~table[i], vals[i]);
         end for;
     end for;
-    return table, keys_fs, [pt[1] : pt in cm_pts];
+
+    for pt in quad_cm do
+        d := pt[1];
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        for i->v in vals do
+            Append(~table[i], norm_val[i]);
+        end for;
+    end for;
+
+    return table, keys_fs, [[pt[1] : pt in cm_pts], [ pt[1] : pt in quad_cm ]];
 end intrinsic;
 
 function find_signs(s, stilde)
@@ -1284,7 +1299,9 @@ end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot])-> SeqEnum, SeqEnum
     {Get equations of all covers (not just immediate covers)}
-    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves);
+    genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    num_vals := Maximum([2*g+3 : g in genus_list]);
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : MaxNum := num_vals);
     eqn_list, new_keys := EquationsOfCovers(table, keys_fs, ds, curves);
     cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
     all_eqns := eqn_list cat cover_eqns;
@@ -1432,6 +1449,10 @@ end intrinsic;
 
 intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
     {}
+    ratds := ds[1];
+    quadds := ds[2];
+    allds := ratds cat quadds;
+
     s_idx := Index(keys_fs, -1);
     stilde_idx := Index(keys_fs, -2);
     s := table[s_idx];
@@ -1440,26 +1461,35 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     table[s_idx] := s;
     table[stilde_idx] := stilde;
     k_idxs := [i : i->k in keys_fs | k gt 0];
-    assert exists(j1){j : j->d1 in ds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
-    assert exists(j2){k : k->d2 in ds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ds[j1] ne d2};
+    assert #ratds gt 0;
+    // assert exists(j1){j : j->d1 in ratds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
+    // assert exists(j2){k : k->d2 in ratds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ds[j1] ne d2};
+
     //now determine the scale factor for each y^2 form
-    scale_factors :=[];
+    // scale_factors :=[];
+    // for i in k_idxs do
+    //     d1 := ds[j1];
+    //     d2 := ds[j2];
+    //     v1 := table[i][j1];
+    //     v2 := table[i][j2];
+    //     scale1, _ := SquareFree(v1/d1); //two possibilities
+    //     scale2, _ := SquareFree(v1);
+    //     if IsSquare(scale1*v2/d2) then
+    //         Append(~scale_factors, AbsoluteValue(scale1));
+    //     else
+    //         assert IsSquare(scale2*v2);
+    //         Append(~scale_factors, AbsoluteValue(scale2));
+    //     end if;
+    // end for;
+
     for i in k_idxs do
-        d1 := ds[j1];
-        d2 := ds[j2];
-        v1 := table[i][j1];
-        v2 := table[i][j2];
-        scale1, _ := SquareFree(v1/d1); //two possibilities
-        scale2, _ := SquareFree(v1);
-        if IsSquare(scale1*v2/d2) then
-            Append(~scale_factors, AbsoluteValue(scale1));
-        else
-            assert IsSquare(scale2*v2);
-            Append(~scale_factors, AbsoluteValue(scale2));
-        end if;
+        d := ratds[1];
+        val := table[i][1];
+        scale, _ := SquareFree(val);
+        Append(~scale_factors, AbsoluteValue(scale));
     end for;
    
-    for j->d in ds do
+    for j->d in allds do
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             if table[i][j] eq 0 then continue; end if;
