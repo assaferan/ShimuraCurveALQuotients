@@ -1010,6 +1010,7 @@ along with two different hauptmoduls.}
         Append(~ram, infty);
         ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
         min_m := Minimum(ms);
+        min_m := Minimum(min_m, -(n0 + k - 1));
         V := RSpace(Integers(),-min_m+1);
         v := &+[div_coeffs[i]*ram[i][2]*V.(m-min_m+1) : i->m in ms];
         r := (-min_m - n0) div k;
