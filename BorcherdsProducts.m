@@ -1001,6 +1001,7 @@ along with two different hauptmoduls.}
         infty := pts[infty_idx];
         non_infty := [pt : pt in pts | pt ne infty];
         for other_pts in CartesianPower(non_infty,2) do
+            if other_pts[1] eq other_pts[2] then continue; end if;
             rams[-1] := [other_pts[1]];
             rams[-2] := [other_pts[2]];
             fs := AssociativeArray();
