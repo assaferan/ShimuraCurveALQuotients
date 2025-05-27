@@ -35,7 +35,7 @@ function lhs_integer_programming(M)
     return lhs;
 end function;
 
-function integer_programming_input(D,N)
+function integer_programming_input(D,N : n := -1)
     D0,M,g := get_D0_M_g(D, N);
     ds := Divisors(M);
     ps := PrimeDivisors(M);
@@ -62,7 +62,9 @@ function integer_programming_input(D,N)
     // need to define g and D0
     n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)],0);
     k := t[1,Ncols(t)]; // the order of pole for t
-    n := n0 + k;
+    if n eq -1 then
+        n := n0 + k;
+    end if;
     lhs := Submatrix(lhs, [1..Nrows(lhs)-1], [1..Ncols(lhs)-1]);
     rhs := Submatrix(rhs, [1..Nrows(rhs)-1], [1..1]);
     rhs[Nrows(rhs)-1,1] := -24*n;
@@ -75,8 +77,8 @@ function integer_programming_input(D,N)
     return eqs, ieqs, t;
 end function;
 
-function write_polymake_scriptfile(D,N)
-    eqs, ieqs, t := integer_programming_input(D,N);
+function write_polymake_scriptfile(D,N : n := -1)
+    eqs, ieqs, t := integer_programming_input(D,N : n := n);
     output_lines := [];
     Append(~output_lines, "use application \"polytope\";");
     Append(~output_lines, "use vars '$ieqs', '$eqs', '$p';");
@@ -90,8 +92,8 @@ function write_polymake_scriptfile(D,N)
     return t;
 end function;
 
-function get_integer_prog_solutions(D,N)
-    t := write_polymake_scriptfile(D,N);
+function get_integer_prog_solutions(D,N : n := -1)
+    t := write_polymake_scriptfile(D,N : n := n);
     fname := Sprintf("polymake_script_%o_%o", D, N);
     polymake := Read(POpen("polymake --script " cat fname, "r"));
     sol_lines := Split(polymake, "\n");
@@ -102,29 +104,54 @@ function get_integer_prog_solutions(D,N)
     return rs, Eltseq(t)[1..#Divisors(M)];
 end function;
 
+procedure update_precision_eta(~nor_eta_ds, Prec, M)
+    _<q> := LaurentSeriesRing(Rationals());
+    nor_eta := &*[1 - q^n : n in [1..Prec-1]] + O(q^(Prec));
+    // eta_ds := [Evaluate(nor_eta, q^d)*q^(d/24) : d in Divisors(M)];
+    nor_eta_ds := [Evaluate(nor_eta, q^d) + O(q^Prec) : d in Divisors(M)];
+    return;
+end procedure;
+
 intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100) -> .
 {returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
-    _<q> := PuiseuxSeriesRing(Rationals());
-    // eta := DedekindEta(q);  
-    eta := q^(1/24)*(&*[1 - q^n : n in [1..Prec-1]] + O(q^(Prec)));
-    nor_eta := eta / q^(1/24);
-    rs, t := get_integer_prog_solutions(D,N);
-    M := 2*D*N;
-    eta_quotients := [&*[(Evaluate(nor_eta,q^d)*q^(d/24))^r[i] : 
-                        i->d in Divisors(M)] : r in rs];
-    t_eta_quotient := &*[(Evaluate(nor_eta,q^d)*q^(d/24))^t[i] : 
-                        i->d in Divisors(M)];
-    min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
-    min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
-    R<q> := LaurentSeriesRing(Rationals());
-    coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
-    E, T := EchelonForm(coeffs);
+    update_precision_eta(~nor_eta_ds, Prec, M);
+    R<q> := Universe(nor_eta_ds);
+    rk := -1;
+    dim := 0;
+    n := -1;
+    while (rk lt dim) do
+        print "prec = ", Prec;
+        print "n = ", n;
+        print "rk = ", rk;
+        print "dim = ", dim;
+        rs, t := get_integer_prog_solutions(D,N : n := n);
+        eta_quotients := [&*[nor_eta_ds[i]^r[i] : i->d in Divisors(M)] * q^(&+[d*r[i] : i->d in Divisors(M)] div 24) : r in rs];
+        t_eta_quotient := &*[nor_eta_ds[i]^t[i] : i->d in Divisors(M)] * q^(&+[d*t[i] : i->d in Divisors(M)] div 24);
+        k := -Valuation(t_eta_quotient);
+        min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
+        n := -min_v;
+        min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
+        coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
+        E, T := EchelonForm(coeffs);
+        dim := n + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+        rk := Rank(E);
+        if (dim gt Prec) then
+            Prec := dim;
+            update_precision_eta(~nor_eta_ds, Prec, M);
+        else
+            Prec +:= k;
+            update_precision_eta(~nor_eta_ds, Prec, M);
+            // n *:= 2;
+            // update n
+            n +:= k;
+        end if;
+    end while;
+    // n div:= 2;
+    n -:= k;
     // sanity checks
-    n := -min_v;
-    dim := n + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+    assert rk eq dim;
     n_gaps := g - &+[d div 4 : d in Divisors(D0)];
-    assert Rank(E) eq dim;
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     assert (n + 1 - #pole_orders) eq n_gaps;
     return E, n, t_eta_quotient;
