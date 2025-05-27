@@ -612,14 +612,15 @@ function Wpoly2(m,mu,L,K,Q)
     return ret;
 end function;
 
-function Wpoly_scaled(m,p,mu,L,Q)
+function Wpoly_scaled(m,p,mu,L,Q : scaled := true)
     S := BasisMatrix(L)*Q*Transpose(BasisMatrix(L));
     D := Determinant(S);
     vpD := Valuation(D,p);
     K<sqrtp> := QuadraticField(p);
     scale := sqrtp^(-vpD);
     euler := p eq 2 select Wpoly2(m,mu,L,K,Q) else Wpoly(m,p,mu,L,K,Q);
-    return scale*euler;
+    assert CanChangeRing(euler, Rationals());
+    return (scaled) select scale*euler else ChangeRing(euler, Rationals()), p^(-vpD);
 end function;
 
 
@@ -773,6 +774,103 @@ function Wpolys_KY_5_3(m,p,mu,Lminus,Q)
     return 1 + val_e*KroneckerCharacter(kappa)(m)*x^(a+f);
 end function;
 
+function get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := true)
+    if scaled then 
+        Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
+        wpolyseval := [* Evaluate(Wpolys[i],1) : i in [1..#Wpolys] *];
+        return Wpolys, wpolyseval;
+    end if;
+
+    Wpolys := [];
+    scales_sqr := [Rationals() | ];
+    wpolyseval := [];
+    for p in Sm_mu do
+        Wpol, scale_sqr :=  Wpoly_scaled(m,p,mu,Lminus,Q : scaled := false);
+        Append(~Wpolys, Wpol);
+        Append(~scales_sqr, scale_sqr);
+        Append(~wpolyseval, Evaluate(Wpol, 1));
+    end for;
+    
+    return Wpolys, wpolyseval, scales_sqr;
+end function;
+
+function get_field(Wpolys)
+    F := BaseRing(Wpolys[1]);
+    sqrtps := [* F.1 *];
+    for j in [2..#Wpolys] do
+        Fj := BaseRing(Wpolys[j]);
+        Append(~sqrtps, Fj.1);
+        composites := CompositeFields(F, Fj);
+        // assert exists(K){K : K in composites | IsTotallyPositive(K!(Fj.1) / K!(F1.1))};
+        F := composites[1];
+    end for;
+    return F, sqrtps;
+end function;
+
+function find_v(F, places, sqrtps)
+    // assert exists(v){v : v in places | &and[Evaluate(F!sqrtp, v) gt 0 : sqrtp in sqrtps]};
+    pos := false;
+    for v in places do
+        pos := true;
+        for sqrtp in sqrtps do
+            if Evaluate(F!sqrtp, v) lt 0 then pos := false; break; end if;
+        end for;
+        if pos then v_pos := v; break; end if;
+    end for;
+    assert pos;
+    return v_pos;
+end function;
+
+function get_sqrtd(F, d, sqrtps)
+    assert IsTotallyReal(F);
+    places := RealPlaces(F);
+
+    //is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
+    Fz<z> := PolynomialRing(F);
+    sqrtd :=  Roots(z^2 - AbsoluteValue(d))[1][1];
+    
+    v := find_v(F, places, sqrtps);
+    if Evaluate(sqrtd, v) lt 0 then sqrtd := -sqrtd; end if;
+    assert Evaluate(sqrtd, v) gt 0;
+
+    return sqrtd;
+end function;
+
+function get_kappa_minus(F, d, Wpolys, Wpol, Sm_mu, i, sqrtps)
+    W_prod := &*[F | Evaluate(Wpolys[j],1) : j in [1..#Sm_mu] | j ne i];
+    W_prod *:= Evaluate(Derivative(Wpol),1); // this should be multiplied by -log(p_prime)
+
+    kron_prod := &*[F | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
+
+    h := ClassNumber(d);
+    w := #UnitGroup(QuadraticField(d));
+
+    sqrtd := get_sqrtd(F, d, sqrtps);
+    
+    ret := -sqrtd*w*W_prod / (h*kron_prod);
+
+    return Rationals()!ret;
+end function;
+
+function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
+    W_prod := &*[ Rationals() | Evaluate(Wpolys[j],1) : j in [1..#Sm_mu] | j ne i];
+    W_prod *:= Evaluate(Derivative(Wpol),1); // this should be multiplied by -log(p_prime)
+
+    kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
+
+    h := ClassNumber(d);
+    w := #UnitGroup(QuadraticField(d));
+
+    scale_sqr := &*scales_sqr;
+    
+    W_kron := W_prod / kron_prod;
+    km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
+    km_sign := -Sign(W_kron);
+
+    return km_sqr, km_sign;
+   
+end function;
+
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
     if (m eq 0) and (mu ne 0) then
@@ -789,9 +887,8 @@ function kappaminus(mu, m, Lminus, Q, d)
     
     vprintf ShimuraQuotients, 2: "Sm_mu := %o\n", Sm_mu;
 
-    Wpolys := [* Wpoly_scaled(m,p,mu,Lminus,Q) : p in Sm_mu *];
-
-    wpolyseval := [* Evaluate(Wpolys[i],1) : i in [1..#Wpolys] *];
+    Wpolys, wpolyseval, scales_sqr := get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := false);
+   
     assert exists(i){i : i in [1..#Sm_mu] | wpolyseval[i] eq 0};
     p_prime := Sm_mu[i];
     if exists(j){j : j in [1..#Sm_mu] | wpolyseval[j] eq 0 and j ne i} then
@@ -799,39 +896,18 @@ function kappaminus(mu, m, Lminus, Q, d)
     end if;
     Wpol := Wpolys[i];
 
-    F := BaseRing(Wpolys[1]);
-    sqrtps := [* F.1 *];
-    for j in [2..#Wpolys] do
-        Fj := BaseRing(Wpolys[j]);
-        Append(~sqrtps, Fj.1);
-        composites := CompositeFields(F, Fj);
-        // assert exists(K){K : K in composites | IsTotallyPositive(K!(Fj.1) / K!(F1.1))};
-        F := composites[1];
-    end for;
+    // F, sqrtps := get_field(Wpolys);
 
-    W_prod := &*[F | Evaluate(Wpolys[j],1) : j in [1..#Sm_mu] | j ne i];
-    W_prod *:= Evaluate(Derivative(Wpol),1); // this should be multiplied by -log(p_prime)
+    // ret := get_kappa_minus(F, d, Wpolys, Wpol, Sm_mu, i, sqrtps);
+    // ret_squared, ret_sign := get_kappa_minus_squared(F, d, Wpolys, Wpol, Sm_mu, i, sqrtps);
+    ret_squared, ret_sign := get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr);
+    // assert ret_squared eq ret^2 and ret_sign eq Sign(ret);
+    is_sqr, ret := IsSquare(ret_squared);
+    assert is_sqr;
+    ret := ret_sign*AbsoluteValue(ret);
 
-    kron_prod := &*[F | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
-
-    h := ClassNumber(d);
-    w := #UnitGroup(QuadraticField(d));
-
-    assert IsTotallyReal(F);
-
-    //is_sqr, sqrtd := IsSquare(F!AbsoluteValue(d));
-    Fz<z> := PolynomialRing(F);
-    sqrtd :=  Roots(z^2 - AbsoluteValue(d))[1][1];
-    
-    assert exists(v){v : v in RealPlaces(F) | &and[Evaluate(F!sqrtp, v) gt 0 : sqrtp in sqrtps]};
-    if Evaluate(sqrtd, v) lt 0 then sqrtd := -sqrtd; end if;
-    assert Evaluate(sqrtd, v) gt 0;
-    
-    ret := -sqrtd*w*W_prod / (h*kron_prod);
-
-    ret := Rationals()!ret;
     vprintf ShimuraQuotients, 2 : "adding %o log %o\n", -ret, p_prime;
-    return -ret, p_prime; // to get xlogy instead of -xlogy
+    return -ret, p_prime; // to get x logy instead of -xlogy
     // return p_prime^(-ret);
 end function;
 
