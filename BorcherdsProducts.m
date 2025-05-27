@@ -1476,7 +1476,7 @@ intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
     //force rational point at infinity so equation degree is 2g+1
     //first make a matrix of 1, s(tau), ..., s^(2g+1)(tau), y^2(tau)
-    eqn_list := [* *];
+    eqn_list := [ ];
     for i in y2_idxs do
         g := genus_list[i];
         require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[i];
