@@ -1468,7 +1468,7 @@ function find_signs(s, stilde)
     return s_new, stilde_new;
 end function;
 
-intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum) -> SeqEnum, SeqEnum
+intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
     y2_idxs := [i:i->k in keys_fs | k gt 0];
@@ -1508,6 +1508,68 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) ->
 {Determine the equations of the immediate covers of X.}
     table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves);
     return EquationsOfCovers(table, keys_fs, ds, curves);
+end intrinsic;
+
+intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+    {Using Riemann Roch, leverage covered equations to get higher cover equations}
+    P1s := [<i, keys> : i->keys in new_keys | Degree(eqn_list[i]) eq 1];
+
+    curves_above := AssociativeArray();
+    for pair in P1s do
+        for c in curves[pair[2]]`CoveredBy do
+            curves_above[c] := pair[1];
+        end for;
+    end for;
+
+    cover_eqns := [];
+    cover_keys := [];
+    while #curves_above gt 0 do
+        for label in Keys(curves_above) do
+            g := curves[label]`g;
+            covered_P1 := eqn_list[curves_above[label]];
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
+            if #allgplus1covers eq 0 then
+                if assigned curves[label]`IsSubhyp then
+                    require curves[label]`IsSubhyp eq false : "Subhyp data doesn't match current cover information";
+                else
+                    curves[label]`IsSubhyp := false;
+                    curves[label]`IsHyp := false;
+                    curves[label]`TestInWhichProved := "BorcherdsProducts";
+                end if;
+                continue;
+            end if;
+            covered_gplus1_key := Representative(allgplus1covers);
+            gplus1idx := Index(new_keys,covered_gplus1_key);
+            covered_gplus1 := eqn_list[gplus1idx];
+            //if this is empty then it's not hyperelliptic
+            c0 := Coefficient(covered_P1, 0);
+            c1 := Coefficient(covered_P1, 1);
+            _<x> := Parent(covered_gplus1);
+            eqn := Evaluate(covered_gplus1, (x^2 - c0)/c1);
+            Append(~cover_eqns, eqn);
+            Append(~cover_keys, label);
+        end for;
+        curves_above := AssociativeArray();
+        P1s := [<i, keys> : i->keys in cover_keys | Degree(cover_eqns[i]) eq 1];
+        curves_above := AssociativeArray();
+        for pair in P1s do
+            for c in curves[pair[2]]`CoveredBy do
+                curves_above[c] := pair[1];
+            end for;
+        end for;
+    end while;
+    return cover_eqns, cover_keys;
+
+end intrinsic;
+
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot])-> SeqEnum, SeqEnum
+    {Get equations of all covers (not just immediate covers)}
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves);
+    eqn_list, new_keys := EquationsOfCovers(table, keys_fs, ds, curves);
+    cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
+    all_eqns := eqn_list cat cover_eqns;
+    all_keys := new_keys cat cover_keys;
+    return all_eqns, all_keys;
 end intrinsic;
 
 // This is following [GR, Section 5]
