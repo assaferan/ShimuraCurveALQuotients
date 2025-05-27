@@ -1479,7 +1479,7 @@ intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     eqn_list := [* *];
     for i in y2_idxs do
         g := genus_list[i];
-        require #ds ge 2*g+2 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[i];
+        require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[i];
         //add one because one value will be the infinite value and useless
         //now remove the infinite column
         inf_idx_y2 := Index(table[i], Infinity());
@@ -1489,7 +1489,7 @@ intrinsic EquationsOfCovers(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
         svals := Remove(table[s_idx],inf_idx_s);
         M := [];
         for j->s in svals do
-            Append(~M, [Rationals()!(s)^i : i in [0..2*g+1]] cat [Rationals()!y2vals[j]]);
+            Append(~M, [Rationals()!(s)^i : i in [0..2*g+2]] cat [Rationals()!y2vals[j]]);
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
