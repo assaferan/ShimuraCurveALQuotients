@@ -1009,12 +1009,14 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     return table, keys_fs, [[pt[1] : pt in cm_pts], [ pt[1] : pt in quad_cm ]];
 end intrinsic;
 
-function find_signs(s, stilde)
+function find_signs(s, stilde, ds)
+    ratds := ds[1];
+    quadds := ds[2];
     inf_zero_indices := [Index(s,0), Index(stilde,0), Index(s,Infinity())];
     assert stilde[inf_zero_indices[3]] eq Infinity();
     scale_tilde := stilde[Index(s,0)];
     scale := s[Index(stilde,0)];
-    idxs := [i : i in [1..#s] | i notin inf_zero_indices];
+    idxs := [i : i in [1..#s] | i notin inf_zero_indices and i le #ratds];
     signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in idxs];
     s_new := [ss/scale : ss in s];
     stilde_new := [sstilde/scale_tilde : sstilde in stilde];
@@ -1314,40 +1316,61 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     stilde_idx := Index(keys_fs, -2);
     s := table[s_idx];
     stilde := table[stilde_idx];
+
+    //this part does not work yet : turn the norms at quadratic CM points into actual values
+    //NOTE: we can't get the signs / unit
+    table :=[* [* x : i->x in t | i ne 10 *] : t in table *];
     for i->d in quadds do
         d_idx := #ratds +i;
         //determine the value at s, stilde
         L := FieldsOfDefinitionOfCMPoint(Xstar,d);
-        K := L[1]; //quadratic field we lie in
-        norm1 := table[s_idx][d_idx];
-        norm2 := table[stilde_idx][d_idx];
-        //should be the norm of a quadratic element a + bsqrt(d) = a^2 + b^2d
+        K := L[1]; //quadratic field we lie in, assuming there is only one
+        norm1 := redtable[s_idx][d_idx];
+        norm2 := redtable[stilde_idx][d_idx];
         O := MaximalOrder(K);
         _, sols1 := NormEquation(O, Integers()!norm1);
         _, sols2 := NormEquation(O, Integers()!norm2);
-        assert #sols1 eq 1;
-        assert #sols2 eq 1;
-        table[s_idx][d_idx] :=  K!sols1[1];
-        table[stilde_idx][d_idx] := K!sols2[1];
+        scale_tilde := stilde[Index(s,0)];
+        scale := s[Index(stilde,0)];
+        assert #sols1 eq 1 or #sols2 eq 1;
+        if #sols1 eq 1 then
+            new_table[s_idx][d_idx] :=  K!sols1[1];
+            if Norm(scale_tilde + scale_tilde*K!sols1[1]/scale) eq norm2 then
+                new_table[stilde_idx][d_idx] := scale_tilde + K!sols1[1]/scale;
+            end if;
+        elif #sols2 eq 1 then
+                new_table[stilde_idx][d_idx] :=  K!sols2[1];
+            if Norm(scale +scale*K!sols2[1]/scale_tilde) eq norm1 then
+                new_table[s_idx][d_idx] := scale +scale* K!sols2[1]/scale_tilde;
+            end if;
+        end if;
+        //This can only determine something up to units, and there are many problems
     end for;
 
-    s, stilde := find_signs(s, stilde);
+    s, stilde := find_signs(s, stilde, ds);
     table[s_idx] := s;
     table[stilde_idx] := stilde;
     k_idxs := [i : i->k in keys_fs | k gt 0];
-    assert #ratds gt 1; //one value is infinity
+    assert exists(j1){j : j->d1 in ratds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
+    assert exists(j2){k : k->d2 in ratds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ratds[j1] ne d2};
 
-    scale_factors := [];
+    //now determine the scale factor for each y^2 form
+    scale_factors :=[];
     for i in k_idxs do
-        d := ratds[1];
-        val := table[i][1];
-        if val eq Infinity() then
-            d := ratds[2];
-            val := table[i][2];
+        d1 := ratds[j1];
+        d2 := ratds[j2];
+        v1 := table[i][j1];
+        v2 := table[i][j2];
+        scale1, _ := SquareFree(v1/d1); //two possibilities
+        scale2, _ := SquareFree(v1);
+        if IsSquare(scale1*v2/d2) then
+            Append(~scale_factors, AbsoluteValue(scale1));
+        else
+            assert IsSquare(scale2*v2);
+            Append(~scale_factors, AbsoluteValue(scale2));
         end if;
-        scale, _ := SquareFree(val);
-        Append(~scale_factors, AbsoluteValue(scale));
     end for;
+
    
     for j->d in allds do
         for k->i in k_idxs do
