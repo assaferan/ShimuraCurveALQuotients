@@ -983,7 +983,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     elif #cm_pts lt MaxNum then
         // fix me
         quad_cm := QuadraticCMPoints(Xstar);
-        need := #cm_pts - MaxNum;
+        need := MaxNum - #cm_pts;
         quad_cm := quad_cm[1..need];
     end if;
 
