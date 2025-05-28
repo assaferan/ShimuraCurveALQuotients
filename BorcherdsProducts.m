@@ -849,6 +849,7 @@ along with two different hauptmoduls.}
     t := R!t;
     fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
+    //we do this twice -- we should remember this
     found := false;
     infty_idx := 1;
     while (not found) do
@@ -1312,34 +1313,37 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     stilde_idx := Index(keys_fs, -2);
     s := table[s_idx];
     stilde := table[stilde_idx];
+    for i->d in quadds do
+        d_idx := #ratds +i;
+        //determine the value at s, stilde
+        L := FieldsOfDefinitionOfCMPoint(Xstar,d);
+        K := L[1]; //quadratic field we lie in
+        norm1 := table[s_idx][d_idx];
+        norm2 := table[stilde_idx][d_idx];
+        //should be the norm of a quadratic element a + bsqrt(d) = a^2 + b^2d
+        O := MaximalOrder(K);
+        _, sols1 := NormEquation(O, Integers()!norm1);
+        _, sols2 := NormEquation(O, Integers()!norm2);
+        assert #sols1 eq 1;
+        assert #sols2 eq 1;
+        table[s_idx][d_idx] :=  K!sols1[1];
+        table[stilde_idx][d_idx] := K!sols2[1];
+    end for;
+
     s, stilde := find_signs(s, stilde);
     table[s_idx] := s;
     table[stilde_idx] := stilde;
     k_idxs := [i : i->k in keys_fs | k gt 0];
-    assert #ratds gt 0;
-    // assert exists(j1){j : j->d1 in ratds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
-    // assert exists(j2){k : k->d2 in ratds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ds[j1] ne d2};
+    assert #ratds gt 1; //one value is infinity
 
-    //now determine the scale factor for each y^2 form
-    // scale_factors :=[];
-    // for i in k_idxs do
-    //     d1 := ds[j1];
-    //     d2 := ds[j2];
-    //     v1 := table[i][j1];
-    //     v2 := table[i][j2];
-    //     scale1, _ := SquareFree(v1/d1); //two possibilities
-    //     scale2, _ := SquareFree(v1);
-    //     if IsSquare(scale1*v2/d2) then
-    //         Append(~scale_factors, AbsoluteValue(scale1));
-    //     else
-    //         assert IsSquare(scale2*v2);
-    //         Append(~scale_factors, AbsoluteValue(scale2));
-    //     end if;
-    // end for;
-
+    scale_factors := [];
     for i in k_idxs do
         d := ratds[1];
         val := table[i][1];
+        if val eq Infinity() then
+            d := ratds[2];
+            val := table[i][2];
+        end if;
         scale, _ := SquareFree(val);
         Append(~scale_factors, AbsoluteValue(scale));
     end for;
@@ -1394,7 +1398,7 @@ end function;
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec);
-    table := reduce_table(table);
+    //can reduce table but not until later, with the actual values, TODO
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds, Xstar, curves);
     return table, keys_fs, ds;
 end intrinsic;
