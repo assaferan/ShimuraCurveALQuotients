@@ -962,7 +962,7 @@ end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
     /*
@@ -979,6 +979,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     */
     cm_pts := RationalCMPoints(Xstar);
     cm_pts := Reverse(Sort(cm_pts));
+    quad_cm := [];
     if #cm_pts gt MaxNum then
         cm_pts := cm_pts[1..MaxNum];
     elif #cm_pts lt MaxNum then
@@ -1380,10 +1381,12 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     return table, keys_fs, ds;
 end intrinsic;
 
-function reduce_table(table)
+function reduce_table(table, sep_ds)
     scales := [];
+    num_rat_ds := #sep_ds[1];
     for t in table do
-        xs := [x : x in t | x notin [0, Infinity()]];
+        xs := [x : i->x in t | i le num_rat_ds and x notin [0, Infinity()] ];
+        //xs := [x : x in t | x notin [0, Infinity()]];
         ps := &join[Set(PrimeDivisors(Numerator(x))) : x in xs];
         ps join:= &join[Set(PrimeDivisors(Denominator(x))) : x in xs];
         ps := [p : p in ps];
@@ -1392,14 +1395,15 @@ function reduce_table(table)
         scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
         Append(~scales, scale);
     end for;
-    return [[x/scales[i] : x in t] : i->t in table];
+    degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
+    return [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
 end function;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec);
-    //can reduce table but not until later, with the actual values, TODO
-    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, ds, Xstar, curves);
+    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec);
+    table := reduce_table(table, sep_ds);
+    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
     return table, keys_fs, ds;
 end intrinsic;
 
