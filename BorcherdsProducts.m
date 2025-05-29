@@ -960,36 +960,49 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
     return simple_divisor;
 end intrinsic;
 
-intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
+intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
-    /*
-    // discs := [d : d in [-100..-1] | d mod 4 in [0,1]];
-    discs := [d : d in [-100..-1] | IsFundamentalDiscriminant(d)];
-    cm_pts := [];
-    for d in discs do
-        S := QuadraticOrder(BinaryQuadraticForms(d));
-        n_d := NumberOfOptimalEmbeddings(S, Xstar`D, Xstar`N);
-        if n_d gt 0 then
-            Append(~cm_pts, d);
-        end if;
-    end for;
-    */
-    cm_pts := RationalCMPoints(Xstar);
+    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
     cm_pts := Reverse(Sort(cm_pts));
     quad_cm := [];
-    if #cm_pts gt MaxNum then
-        cm_pts := cm_pts[1..MaxNum];
-    elif #cm_pts lt MaxNum then
-        quad_cm := AtMostQuadraticCMPoints(Xstar);
-        need := MaxNum - #cm_pts;
-        quad_cm := quad_cm[1..need];
+
+    need := MaxNum - #Include;
+    if #cm_pts gt need then
+        pt_list_rat := [p : p in cm_pts | p[1] in Include] cat cm_pts[1..need];
+    else
+        pt_list_rat := [p : p in cm_pts | p[1] in Include] cat cm_pts;
+    end if;
+    Include := SetToSequence(Include);
+    for p in pt_list_rat do
+        pidx := Index(Include, p[1]);
+        if pidx ne 0 then
+            Include := Remove(Include,Index(Include, p[1]));
+        end if;
+    end for;
+    if #Include gt 0 then
+        b := Maximum([ ClassNumber(d) : d in Include]);
+    else
+        b:= 2;
+    end if;
+    pt_list_quad := [];
+    need := MaxNum - #cm_pts;
+    if need gt 0 or #Include gt 0 then
+        quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := b);
+        while #quad_cm lt need or not(Set(Include) subset {p[1] : p in quad_cm}) do
+                bd *:=2;
+                quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+                if bd gt 8 then
+                    error "Can't find enough CM points";
+                end if;
+        end while;
+        pt_list_quad :=[p : p in quad_cm | p[1] in Include] cat quad_cm[1..(need -#Include)];
     end if;
 
     table := [[] : f in all_fs];
-    for pt in cm_pts do
+    for pt in pt_list_rat do
         d := pt[1];
         vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
         for i->v in vals do
@@ -997,7 +1010,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         end for;
     end for;
 
-    for pt in quad_cm do
+    for pt in pt_list_quad do
         d := pt[1];
         norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
         for i->v in vals do
@@ -1005,7 +1018,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         end for;
     end for;
 
-    return table, keys_fs, [[pt[1] : pt in cm_pts], [ pt[1] : pt in quad_cm ]];
+    return table, keys_fs, [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
 end intrinsic;
 
 function find_signs(s, stilde, ds)
@@ -1018,8 +1031,8 @@ function find_signs(s, stilde, ds)
     idxs := [i : i in [1..#s] | i notin inf_zero_indices and i le #ratds];
     signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in idxs];
     degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
-    s_new := [ss/scale^degs[i] : i->ss in s];
-    stilde_new := [sstilde/scale_tilde^degs[i] : i->sstilde in stilde];
+    s_new := [* ss/scale^degs[i] : i->ss in s *];
+    stilde_new := [* sstilde/scale_tilde^degs[i] : i->sstilde in stilde *];
     for j->idx in idxs do
         s_new[idx] := signs[j][1]*s_new[idx];
         stilde_new[idx] := signs[j][2]*stilde_new[idx];
@@ -1288,13 +1301,16 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
 
-    if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
+    // if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
 
-    Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
+    // Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
 
-    if (Degree(Q_P_ext) le 2^unknown_quotients) then
-        Append(~Q_Ps, Rationals());
-    end if;
+    return [* Q_P_ext *];
+
+    // if (Degree(Q_P_ext) le 2^unknown_quotients) then
+    //     Append(~Q_Ps, Rationals());
+    // end if;
+
     /*
     if top_is_H then 
         Q_Ps := [* Q_P_ext *];
@@ -1303,7 +1319,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     end if;
     */
 
-    return Q_Ps;
+    // return Q_Ps;
 end intrinsic;
 
 intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
@@ -1373,13 +1389,37 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
+    for i->d in quadds do
+        d_idx := #ratds+i;
+        norm_s := table[s_idx][d_idx];
+        norm_stilde := table[stilde_idx][d_idx];
+        flds := FieldsOfDefinitionOfCMPoint(Xstar, d);
+        assert #flds eq 1;
+        assert Degree(flds[1]) eq 2;
+        K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
+        _<x> := PolynomialRing(Rationals());
+        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
+        minpolys := [];
+        for eps in signs do
+                trace := 1- eps[1]*norm_stilde +  eps[2]*norm_s;
+                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
+        end for;
+        roots := [Roots(p,K) : p in minpolys];
+        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
+        require #good_inds eq 1 :"We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
+        table[s_idx][d_idx] := minpolys[good_inds[1]];
+        norm_s := Coefficient(minpolys[good_inds[1]], 0);
+        trace_s := - Coefficient(minpolys[good_inds[1]], 1);
+        table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
+    end for;
+
    
    //Find signs on the y2 rows
-    for j->d in allds do
+    for j->d in ratds do
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             if table[i][j] eq 0 then continue; end if;
-            
+
             fields := FieldsOfDefinitionOfCMPoint(curves[keys_fs[i]], d);
 
             Fs_eps := [* <F, eps> : F in fields, eps in [-1,1] *];
@@ -1427,7 +1467,7 @@ end function;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec);
+    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
     table := reduce_table(table, sep_ds);
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
     return table, keys_fs, ds;
