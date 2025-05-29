@@ -5,9 +5,10 @@ function OrderOfVanishingOfEta(delta, b, N)
 end function;
 
 function get_D0_M_g(D, N)
-    assert IsEven(D) and IsSquarefree(N);
+    // assert IsEven(D) and IsSquarefree(N);
+    assert IsSquarefree(N);
     D0 := (D*N) div 2^Valuation(D,2);
-    M := 4*D0; // this is 2*D*N
+    M := 4*D0;
     g := Genus(Gamma0(M));
     return D0,M,g;
 end function;
@@ -35,8 +36,7 @@ function lhs_integer_programming(M)
     return lhs;
 end function;
 
-function integer_programming_input(D,N : n := -1)
-    D0,M,g := get_D0_M_g(D, N);
+function find_t(M)
     ds := Divisors(M);
     ps := PrimeDivisors(M);
     lhs := lhs_integer_programming(M);
@@ -59,26 +59,28 @@ function integer_programming_input(D,N : n := -1)
     end for;
     SetObjectiveFunction(LP, objective); 
     t := Solution(LP);
-    // need to define g and D0
-    n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)],0);
-    k := t[1,Ncols(t)]; // the order of pole for t
-    if n eq -1 then
-        n := n0 + k;
-    end if;
+    return t, lhs, rhs, n_eq, #ds;
+end function;
+
+// n is the order of the pole at infty,
+// m the order of the pole at 0
+function integer_programming_input(lhs, rhs, n_eq, n_ds, n, m)
     lhs := Submatrix(lhs, [1..Nrows(lhs)-1], [1..Ncols(lhs)-1]);
     rhs := Submatrix(rhs, [1..Nrows(rhs)-1], [1..1]);
+    rhs[n_eq+1,1] := -24*m;
     rhs[Nrows(rhs)-1,1] := -24*n;
     rhs[1,1] := 1; // admissibility condition
     rhs[2,1] := 1; // discriminant is 2 times a square - equation corresponding to valuation at 2
     // eqs in a format for polymake / sage
     eqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[1..n_eq]),Matrix(lhs[1..n_eq])))];
     // inequalities in format for polymake / sage
-    ieqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[n_eq + 1.. n_eq + #ds]),Matrix(lhs[n_eq+1..n_eq+#ds])))];
-    return eqs, ieqs, t;
+    ieqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[n_eq + 1.. n_eq + n_ds]),Matrix(lhs[n_eq+1..n_eq+n_ds])))];
+    // return eqs, ieqs, t;
+    return eqs, ieqs;
 end function;
 
-function write_polymake_scriptfile(D,N : n := -1)
-    eqs, ieqs, t := integer_programming_input(D,N : n := n);
+procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m)
+    eqs, ieqs := integer_programming_input(lhs, rhs, n_eq, n_ds, n, m);
     output_lines := [];
     Append(~output_lines, "use application \"polytope\";");
     Append(~output_lines, "use vars '$ieqs', '$eqs', '$p';");
@@ -87,21 +89,21 @@ function write_polymake_scriptfile(D,N : n := -1)
     Append(~output_lines, "$p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);");
     Append(~output_lines, "print $p->LATTICE_POINTS;");
     output := Join(output_lines, "\n");
-    fname := Sprintf("polymake_script_%o_%o", D, N);
+    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
     Write(fname, output : Overwrite);
-    return t;
-end function;
+    return;
+end procedure;
 
-function get_integer_prog_solutions(D,N : n := -1)
-    t := write_polymake_scriptfile(D,N : n := n);
-    fname := Sprintf("polymake_script_%o_%o", D, N);
+function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m)
+    write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m);
+    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname, "r"));
     sol_lines := Split(polymake, "\n");
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
-    M := 2*D*N;
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
-    return rs, Eltseq(t)[1..#Divisors(M)];
+    // return rs, Eltseq(t)[1..#Divisors(M)];
+    return rs;
 end function;
 
 procedure update_precision_eta(~nor_eta_ds, Prec, M)
@@ -112,29 +114,91 @@ procedure update_precision_eta(~nor_eta_ds, Prec, M)
     return;
 end procedure;
 
-intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100) -> .
+function q_expansion_at_infty(r, nor_eta_ds, M)
+    _<q> := Universe(nor_eta_ds);
+    prod_nor_etas := &*[nor_eta_ds[i]^r[i] : i->d in Divisors(M)];
+    prod_etas := prod_nor_etas * q^(&+[d*r[i] : i->d in Divisors(M)] div 24);
+    return prod_etas;
+end function;
+
+// This is Lemma 26 - q-expansion at 0 (multiplied by M if admissible)
+function q_expansion_at_zero(r, nor_eta_ds, disc, M : admissible := true)
+    _<q> := Universe(nor_eta_ds);
+    sqr_factor := &*[d^r[i] : i->d in Divisors(M)];
+    if admissible then
+        sqr_factor *:= disc;
+    end if;
+    is_sqr, scale := IsSquare(sqr_factor);
+    assert is_sqr;
+    prod_nor_etas := &*[nor_eta_ds[#Divisors(M)+1-i]^r[i] : i->d in Divisors(M)];
+    prod_etas := prod_nor_etas *  q^(&+[(M div d)*r[i] : i->d in Divisors(M)] div 24);
+    if admissible then return prod_etas*M/scale; end if;
+    return prod_etas/scale;
+end function;
+
+function odd_case_step_3(D,N,k,n0,Prec)
+    L, Ldual := ShimuraCurveLattice(D,N);
+    disc := #(Ldual/L);
+    D0,M,g := get_D0_M_g(D,N);
+    update_precision_eta(~nor_eta_ds, Prec, M);
+    rs, t := get_integer_prog_solutions(D0,M,g : n := n0, m:= k);
+    scales := [sqrt_s where _, sqrt_s := IsSquare(&*[d^r[i] : i->d in Divisors(M)]*disc) : r in rs];
+    // This is Lemma 26 - q-expansion at 0
+    eta_quotients := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
+    t_eta_quotient := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
+    min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
+    n := -min_v;
+    min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
+    R<q> := Universe(nor_eta_ds);
+    coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
+    E, T := EchelonForm(coeffs);
+    dim := n0 + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+end function;
+
+// When D*N is odd we would need to run it twice - once with Zero true 
+// and once with Zero false
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
 {returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
+    // if IsOdd(D*N) then 
+    if Zero then
+        L, Ldual := ShimuraCurveLattice(D,N);
+        disc := #(Ldual/L);
+    end if;
+    // curious - we are able to update something that does not exist ?
     update_precision_eta(~nor_eta_ds, Prec, M);
     R<q> := Universe(nor_eta_ds);
     rk := -1;
     dim := 0;
-    n := -1;
+    t, lhs, rhs, n_eq, n_ds := find_t(M);
+    t := Eltseq(t);
+    // n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)],0);
+    // Check - maybe in the odd case we should be feeding it n0
+    n_gaps := g - &+[d div 4 : d in Divisors(D0)];
+    k := t[#t]; // the order of pole for t
+    // n := n0;
+    n := n_gaps;
     while (rk lt dim) do
         print "prec = ", Prec;
         print "n = ", n;
+        print "k = ", k;
         print "rk = ", rk;
         print "dim = ", dim;
-        rs, t := get_integer_prog_solutions(D,N : n := n);
-        eta_quotients := [&*[nor_eta_ds[i]^r[i] : i->d in Divisors(M)] * q^(&+[d*r[i] : i->d in Divisors(M)] div 24) : r in rs];
-        t_eta_quotient := &*[nor_eta_ds[i]^t[i] : i->d in Divisors(M)] * q^(&+[d*t[i] : i->d in Divisors(M)] div 24);
-        k := -Valuation(t_eta_quotient);
+        // if IsOdd(D*N) then
+        if Zero then
+            rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, k);
+            eta_quotients := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
+            t_eta_quotient := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
+        else
+            rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + k, 0);
+            eta_quotients := [q_expansion_at_infty(r, nor_eta_ds, M) : r in rs];
+            t_eta_quotient := q_expansion_at_infty(t, nor_eta_ds, M);
+        end if;
         min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
-        n := -min_v;
         min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
         coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
         E, T := EchelonForm(coeffs);
-        dim := n + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+        dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
         if (dim gt Prec) then
             Prec := dim;
@@ -142,19 +206,22 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100) -> .
         else
             Prec +:= k;
             update_precision_eta(~nor_eta_ds, Prec, M);
-            // n *:= 2;
             // update n
             n +:= k;
         end if;
     end while;
-    // n div:= 2;
-    n -:= k;
     // sanity checks
     assert rk eq dim;
-    n_gaps := g - &+[d div 4 : d in Divisors(D0)];
+    n := -min_v;
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
-    assert (n + 1 - #pole_orders) eq n_gaps;
-    return E, n, t_eta_quotient;
+    if Zero then
+        n0 := n_gaps;
+        assert pole_orders eq [-n..0];
+    else
+        assert (n + 1 - #pole_orders) eq n_gaps;
+        n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
+    end if;
+    return E, n, t_eta_quotient, n0;
 end intrinsic;
 
 function FourthPowerFree(a)
@@ -840,14 +907,18 @@ intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec
 along with two different hauptmoduls.}
     rams := RamficationPointsOfCovers(Xstar, curves);
     D0,M,g := get_D0_M_g(Xstar`D,Xstar`N);
-    n0 := Maximum(2*g-2-&+[d div 4 : d in Divisors(D0)],0);
-    E, n, t := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
+    // n0 := Maximum(2*g-2-&+[d div 4 : d in Divisors(D0)],0);
+    E, n, t, n0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
     k := -Valuation(t);
     E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
-    // _<q> := Parent(t);
     R<q> := LaurentSeriesRing(Integers());
     t := R!t;
     fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
+    if IsOdd(Xstar`D*Xstar`N) then
+        E0, nE0, _, _ := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
+        E0 := Submatrix(E0, [1..Rank(E0)], [1..Ncols(E0)]);
+        fs_E0 := [q^(-nE0)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E0)]] : b in Rows(E0)];
+    end if;
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     found := false;
     infty_idx := 1;
@@ -874,8 +945,6 @@ along with two different hauptmoduls.}
                 ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
-                V := RSpace(Integers(),-min_m+1);
-                v := &+[div_coeffs[i]*ram[i][2]*V.(m-min_m+1) : i->m in ms];
                 r := (-min_m - n0) div k;
                 s := (-min_m) - r*k;
                 basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
@@ -888,6 +957,7 @@ along with two different hauptmoduls.}
                 ech_basis := EchelonForm(coeffs);
                 ech_fs := [q^min_m*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
                 relevant_ds := [0];
+                disc_ms := AssociativeArray();
                 for d in [1..-min_m] do
                     discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
                     discs := [disc : disc in discs | disc mod 4 in [0,3]];
@@ -898,19 +968,36 @@ along with two different hauptmoduls.}
                     end for;
                     if (n_d ne 0) then
                         Append(~relevant_ds, d);
+                        for disc in discs do
+                            if not IsDefined(disc_ms, disc) then disc_ms[disc] := []; end if;
+                            Append(~disc_ms[disc], d);
+                        end for;
                     end if;
                 end for;
-                cols := Reverse([-d-min_m+1 : d in relevant_ds]);
-                target_v := Vector([v[c] : c in cols]); 
+                relevant_ds := Sort([d : d in Keys(disc_ms)]);
+                mat := ZeroMatrix(Integers(), Ncols(ech_basis), #relevant_ds);
+                for j->d in relevant_ds do
+                    for m in disc_ms[d] do
+                        mat[1 - min_m - m,j] := 1;
+                    end for;
+                end for;
+                coeffs_trunc :=  ech_basis * mat;
+                V := RSpace(Integers(), #relevant_ds);
+                target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
+                // cols := Reverse([-d-min_m+1 : d in relevant_ds]);
+                // target_v := Vector(Rationals(), [v[c] : c in cols]); 
                 // f := &+[div_coeffs[i]*ram[i][2]*ech_basis[m-min_m+1] : i->m in ms | -m ge n0];
                 // coeffs_trunc := Submatrix(coeffs, [1..Nrows(coeffs)],cols);
-                coeffs_trunc := Submatrix(ech_basis, [1..Nrows(coeffs)],cols);
+                // coeffs_trunc := Submatrix(ech_basis, [1..Nrows(coeffs)],cols);
                 if target_v notin Image(coeffs_trunc) then
                     found := false;
                     break;
                 end if;
                 sol := Solution(coeffs_trunc, target_v);
-                fs[i] := &+[sol[i]*ech_fs[i] : i in [1..#ech_fs]]; // !! Make sure that f has the correct divisor - right a function for Lemma 22
+                fs[i] := &+[sol[i]*ech_fs[i] : i in [1..#ech_fs]]; // !! Make sure that f has the correct divisor - write a function for Lemma 22
+                // check divisor
+                div_f := DivisorOfBorcherdsForm(fs[i], Xstar);
+                assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
             end for;
             if found then break; end if;
         end for;
