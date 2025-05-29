@@ -711,18 +711,10 @@ function kappaminuszero(D,N,d)
 end function;
 
 // Computes kappa0(m) in Schofer's formula
-intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt) -> FldReElt
+intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> FldReElt
 {Computing coefficients Kappa0(m) in Schofers formula}
     vprintf ShimuraQuotients, 1:"Kappa0 of %o\n", m;
     Q := ChangeRing(Q, Integers());
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
-    end while;
-    assert found_lambda;
-    // lambda := &+[lambda_v[i]*basis_L[i] : i in [1..#basis_L]];
     c_Lplus := Content(lambda_v);
     Lplus := RSpaceWithBasis(Matrix(lambda_v div c_Lplus));
     Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
@@ -784,12 +776,20 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, D::RngIntElt,
         W_size div:= 2;
     end if;
     // n := -Valuation(f);
+    bd := 10;
+    found_lambda := false;
+    while not found_lambda do
+        bd *:= 2;
+        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
+    end while;
+    assert found_lambda;
+
     ns := [-Valuation(f) : f in fs];
     n := Maximum(ns);
     log_coeffs := [AssociativeArray() : f in fs];
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
-        log_coeffs_m := Kappa0(m,d,Q);
+        log_coeffs_m := Kappa0(m,d,Q,lambda_v);
         for p in Keys(log_coeffs_m) do
             if (log_coeffs_m[p] ne 0) then
                 for i->f in fs do
@@ -1336,20 +1336,20 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] eq 1 and Degree(FldsOfDefn[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity()} then
+        if exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] eq 1 and Degree(FldsOfDefn[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
             //then we have a rational point on X
             d1 := ratds[j1];
             v1 := table[i][j1];
             scale, _ := SquareFree(v1);
             Append(~scale_factors, AbsoluteValue(scale));
         else 
-            assert exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d1][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity()};
-            assert exists(j2){j : j->d2 in ratds  | #FldsOfDefn[keys_fs[i]][d2] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d2][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and ratds[j1] ne d2};
+            assert exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d1][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
+            assert exists(j2){j : j->d2 in ratds  | #FldsOfDefn[keys_fs[i]][d2] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d2][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
-            d1 := ds[j1];
-            d2 := ds[j2];
+            d1 := ratds[j1];
+            d2 := ratds[j2];
             quad_idx_1 := 1;
             quad_idx_2 := 1;
             if FldsOfDefn[keys_fs[i]][d1][1] eq Rationals() then
