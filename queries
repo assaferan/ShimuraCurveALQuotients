@@ -1,0 +1,28 @@
+\copy (SELECT poly FROM av_fq_isog where q = 2 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q2.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 3 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q3.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 5 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q5.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 7 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q7.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 11 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q11.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 13 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q13.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 17 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q17.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 19 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q19.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 23 AND hyp_count > 0 AND g = 3) to '/scratch/home/sachihashimoto/hypg3q23.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 2 AND hyp_count > 0 AND g = 4) to '/scratch/home/sachihashimoto/hypg4q2.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 3 AND hyp_count > 0 AND g = 4) to '/scratch/home/sachihashimoto/hypg4q3.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 5 AND hyp_count > 0 AND g = 4) to '/scratch/home/sachihashimoto/hypg4q5.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 2 AND hyp_count > 0 AND g = 5) to '/scratch/home/sachihashimoto/hypg5q2.txt';
+
+\copy (SELECT poly FROM av_fq_isog where q = 2 AND hyp_count > 0 AND g = 6) to '/scratch/home/sachihashimoto/hypg6q2.txt';
+

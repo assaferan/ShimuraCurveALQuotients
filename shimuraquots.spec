@@ -1,0 +1,12 @@
+{
+BorcherdsProducts.m
+Caching.m
+FundamentalDomain.m
+ShimuraQuotients.m
+alquots.m
+workingcode.m
+automorphisms.m
+ModularNonALInvolutions.m
+RationalWithFactorization.m
+TraceFormula.m
+}
