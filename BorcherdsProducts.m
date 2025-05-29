@@ -1017,8 +1017,9 @@ function find_signs(s, stilde, ds)
     scale := s[Index(stilde,0)];
     idxs := [i : i in [1..#s] | i notin inf_zero_indices and i le #ratds];
     signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in idxs];
-    s_new := [ss/scale : ss in s];
-    stilde_new := [sstilde/scale_tilde : sstilde in stilde];
+    degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
+    s_new := [ss/scale^degs[i] : i->ss in s];
+    stilde_new := [sstilde/scale_tilde^degs[i] : i->sstilde in stilde];
     for j->idx in idxs do
         s_new[idx] := signs[j][1]*s_new[idx];
         stilde_new[idx] := signs[j][2]*stilde_new[idx];
@@ -1371,6 +1372,7 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     end for;
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
+
    
    //Find signs on the y2 rows
     for j->d in allds do
