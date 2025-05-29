@@ -983,7 +983,6 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     if #cm_pts gt MaxNum then
         cm_pts := cm_pts[1..MaxNum];
     elif #cm_pts lt MaxNum then
-        // fix me
         quad_cm := QuadraticCMPoints(Xstar);
         need := MaxNum - #cm_pts;
         quad_cm := quad_cm[1..need];
@@ -1325,8 +1324,8 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
         //determine the value at s, stilde
         L := FieldsOfDefinitionOfCMPoint(Xstar,d);
         K := L[1]; //quadratic field we lie in, assuming there is only one
-        norm1 := redtable[s_idx][d_idx];
-        norm2 := redtable[stilde_idx][d_idx];
+        norm1 := table[s_idx][d_idx];
+        norm2 := table[stilde_idx][d_idx];
         O := MaximalOrder(K);
         _, sols1 := NormEquation(O, Integers()!norm1);
         _, sols2 := NormEquation(O, Integers()!norm2);
@@ -1334,14 +1333,14 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
         scale := s[Index(stilde,0)];
         assert #sols1 eq 1 or #sols2 eq 1;
         if #sols1 eq 1 then
-            new_table[s_idx][d_idx] :=  K!sols1[1];
+            table[s_idx][d_idx] :=  K!sols1[1];
             if Norm(scale_tilde + scale_tilde*K!sols1[1]/scale) eq norm2 then
-                new_table[stilde_idx][d_idx] := scale_tilde + K!sols1[1]/scale;
+                table[stilde_idx][d_idx] := scale_tilde + K!sols1[1]/scale;
             end if;
         elif #sols2 eq 1 then
-                new_table[stilde_idx][d_idx] :=  K!sols2[1];
+                table[stilde_idx][d_idx] :=  K!sols2[1];
             if Norm(scale +scale*K!sols2[1]/scale_tilde) eq norm1 then
-                new_table[s_idx][d_idx] := scale +scale* K!sols2[1]/scale_tilde;
+                table[s_idx][d_idx] := scale +scale* K!sols2[1]/scale_tilde;
             end if;
         end if;
         //This can only determine something up to units, and there are many problems
@@ -1353,6 +1352,7 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     k_idxs := [i : i->k in keys_fs | k gt 0];
     assert exists(j1){j : j->d1 in ratds  | ClassNumber(d1) eq 1 and table[1][j] ne Infinity()};
     assert exists(j2){k : k->d2 in ratds  | ClassNumber(d2) eq 1 and table[1][k] ne Infinity() and ratds[j1] ne d2};
+    //FIXME : now use fields of definition of point, but ask on the actual curve, not the star curve
 
     //now determine the scale factor for each y^2 form
     scale_factors :=[];
