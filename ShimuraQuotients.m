@@ -1508,8 +1508,8 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 4) -> SeqEnum
     return pts;
 end intrinsic;
 
-intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 4) ->SeqEnum
-    {returns quadratic CM points}
+intrinsic AtMostQuadraticCMPoints(X::ShimuraQuot : bd := 4) ->SeqEnum
+    {returns at most quadratic CM points}
     vprint ShimuraQuotients, 2: "Computing quadratic CM points";
     pts := [];
     CNs := AssociativeArray();
@@ -1543,7 +1543,7 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 4) ->SeqEnum
         if not b then continue; end if;
 
         flds := FieldsOfDefinitionOfCMPoint(X, d);
-        if #flds eq 1 and Degree(flds[1]) eq 2 then
+        if #flds le 2 and {Degree(f) : f in flds} subset {1,2} then
             Append(~pts, <d,1,1>);
         end if;
     end for;
