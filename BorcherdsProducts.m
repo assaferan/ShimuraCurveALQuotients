@@ -1055,18 +1055,16 @@ function find_signs(s, stilde, ds)
     return s_new, stilde_new;
 end function;
 
-intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
-{Determine the equations of the covers using the values from Schofers formula}
-    R<x> := PolynomialRing(Rationals());
+
+intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
+    {Impose constraints on equations given by rational CM points}
     y2_idxs := [i:i->k in keys_fs | k gt 0];
     s_idx := Index(keys_fs,-1);
     genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
-    //force rational point at infinity so equation degree is 2g+1
-    //first make a matrix of 1, s(tau), ..., s^(2g+1)(tau), y^2(tau)
-    eqn_list := [ ];
+    kernels :=[* *];
     for j->idx in y2_idxs do
         g := genus_list[j];
-        require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[i];
+        require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[j];
         //add one because one value will be the infinite value and useless
         //now remove the infinite column
         inf_idx_y2 := Index(table[idx], Infinity());
@@ -1074,21 +1072,40 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
         require inf_idx_y2 eq inf_idx_s : "y^2 and s have poles in different places";
         y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
+        rat_svals := [s :  i->s in svals   | Type(s) ne RngUPolElt];
+        rat_sidxs := [i :  i->s in svals   | Type(s) ne RngUPolElt];
+        rat_y2vals := [ y2vals[i]  : i in rat_sidxs];
+
         M := [];
-        for j->s in svals do
-            Append(~M, [Rationals()!(s)^i : i in [0..2*g+2]] cat [Rationals()!y2vals[j]]);
+        for j->s in rat_svals do
+            Append(~M, [Rationals()!(s)^i : i in [0..2*g+2]] cat [Rationals()!rat_y2vals[j]]);
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
-        require #B eq 1 : "Something went wrong and the values from Schofer's formula over or underdetermine the equation of the curve", keys_fs[i];
+        Append(~kernels, B);
+    end for;
+    return kernels;
+end intrinsic;
+
+
+
+
+intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+{Determine the equations of the covers using the values from Schofers formula}
+    R<x> := PolynomialRing(Rationals());
+    eqn_list := [ ];
+
+    kernels := RationalConstraintsOnEquations(table, keys_fs, ds, curves);
+
+    for B in kernels do
+        require #B eq 1 : "Have not implemented constraints from quadratic points, so this is not determined yet";
         v :=  Eltseq(B[1]);
         monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
         f := R!monic_v;
         Append(~eqn_list, f); 
     end for;
-    new_keys := [keys_fs[i] : i in y2_idxs];
 
-    return eqn_list, new_keys;
+    return eqn_list, [k : k in keys_fs | k gt 0];
 end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, SeqEnum
@@ -1466,7 +1483,7 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
             table[i][j] := eps * table[i][j];
         end for;
     end for;
-    return table, keys_fs, ds;
+    return table, keys_fs, allds;
 end intrinsic;
 
 function reduce_table(table, sep_ds)
