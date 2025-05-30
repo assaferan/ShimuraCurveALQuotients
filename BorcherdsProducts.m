@@ -967,39 +967,56 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     all_fs := [fs[k] : k in keys_fs];
     cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
     cm_pts := Reverse(Sort(cm_pts));
-    quad_cm := [];
+   
 
+    cm_pts_must := [p : p in cm_pts | p[1] in Include];
+    other_cm := [p : p in cm_pts | p[1] notin Include];
     need := MaxNum - #Include;
-    if #cm_pts gt need then
-        pt_list_rat := [p : p in cm_pts | p[1] in Include] cat cm_pts[1..need];
+    if #cm_pts gt need then  
+    //need to make space for include points, but otherwise fill up with rational points as much as possible
+        pt_list_rat := cm_pts_must cat other_cm[1..need];
+        print "adding", cmu_pts_must, other_cm[1..need];
     else
-        pt_list_rat := [p : p in cm_pts | p[1] in Include] cat cm_pts;
+        pt_list_rat := cm_pts_must cat other_cm;
+        print "adding", cm_pts_must, other_cm;
     end if;
+
+    //remove points that we already included
     Include := SetToSequence(Include);
-    for p in pt_list_rat do
+    for p in cm_pts_must do
         pidx := Index(Include, p[1]);
-        if pidx ne 0 then
-            Include := Remove(Include,Index(Include, p[1]));
-        end if;
+        Include := Remove(Include,Index(Include, p[1]));
     end for;
+
     if #Include gt 0 then
-        b := Maximum([ ClassNumber(d) : d in Include]);
+        bd := Maximum([ ClassNumber(d) : d in Include]);
     else
-        b:= 2;
+        bd:= 2;
     end if;
     pt_list_quad := [];
-    need := MaxNum - #cm_pts;
-    if need gt 0 or #Include gt 0 then
-        quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := b);
-        while #quad_cm lt need or not(Set(Include) subset {p[1] : p in quad_cm}) do
-                bd *:=2;
-                quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-                if bd gt 8 then
-                    error "Can't find enough CM points";
-                end if;
-        end while;
-        pt_list_quad :=[p : p in quad_cm | p[1] in Include] cat quad_cm[1..(need -#Include)];
-    end if;
+    quad_cm := [];
+    need := MaxNum - #pt_list_rat;
+    //Whatever is left, we need
+
+    while need gt 0 do
+        if bd gt 8 then
+            error "Can't find enough CM points.";
+        end if;
+        quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+
+        cm_pts_must := [p : p in quad_cm | p[1] in Include];
+        other_cm := [p : p in quad_cm | p[1] notin Include];
+
+        pt_list_quad cat:= cm_pts_must cat other_cm[1..(need -#Include)];
+
+        for p in cm_pts_must do
+            pidx := Index(Include, p[1]);
+            Include := Remove(Include,Index(Include, p[1]));
+        end for;
+
+        need := MaxNum - #pt_list_rat - #pt_list_quad;
+        bd *:=2;
+    end while;
 
     table := [[] : f in all_fs];
     for pt in pt_list_rat do
