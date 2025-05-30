@@ -975,10 +975,8 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     if #cm_pts gt need then  
     //need to make space for include points, but otherwise fill up with rational points as much as possible
         pt_list_rat := cm_pts_must cat other_cm[1..need];
-        print "adding", cmu_pts_must, other_cm[1..need];
     else
         pt_list_rat := cm_pts_must cat other_cm;
-        print "adding", cm_pts_must, other_cm;
     end if;
 
     //remove points that we already included
