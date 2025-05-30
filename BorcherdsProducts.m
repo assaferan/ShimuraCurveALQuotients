@@ -1064,15 +1064,15 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
     //force rational point at infinity so equation degree is 2g+1
     //first make a matrix of 1, s(tau), ..., s^(2g+1)(tau), y^2(tau)
     eqn_list := [ ];
-    for i in y2_idxs do
-        g := genus_list[i];
+    for j->idx in y2_idxs do
+        g := genus_list[j];
         require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[i];
         //add one because one value will be the infinite value and useless
         //now remove the infinite column
-        inf_idx_y2 := Index(table[i], Infinity());
+        inf_idx_y2 := Index(table[idx], Infinity());
         inf_idx_s := Index(table[s_idx], Infinity());
         require inf_idx_y2 eq inf_idx_s : "y^2 and s have poles in different places";
-        y2vals := Remove(table[i], inf_idx_y2);
+        y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
         M := [];
         for j->s in svals do
@@ -1429,7 +1429,14 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     end for;
 
    
-   //Find signs on the y2 rows
+    //Find signs on the y2 rows
+
+    //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
+    //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
+    // where sigma is the unique nontrivial element of Gal(K/Q)
+    // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
+    // so eps* v is a square in Q, and is positive
+
     for j->d in ratds do
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
@@ -1459,7 +1466,7 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
             table[i][j] := eps * table[i][j];
         end for;
     end for;
-    return table, keys_fs, allds;
+    return table, keys_fs, ds;
 end intrinsic;
 
 function reduce_table(table, sep_ds)
