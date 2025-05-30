@@ -1366,7 +1366,7 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     stilde := table[stilde_idx];
 
 
-    table :=[* [* x : i->x in t | i ne 10 *] : t in table *];
+    table :=[* [* x : i->x in t *] : t in table *];
     s, stilde := find_signs(s, stilde, ds);
     table[s_idx] := s;
     table[stilde_idx] := stilde;
