@@ -1200,7 +1200,7 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
 
     for i->B in kernels do
         if #relns[i] eq 0 then
-            require #B eq 1 : "Have not implemented constraints from quadratic points, so this is not determined yet";
+            require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
             v :=  Eltseq(B[1]);
             monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
             f := R!monic_v;
