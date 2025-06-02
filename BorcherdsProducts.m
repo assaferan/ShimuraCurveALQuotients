@@ -1151,7 +1151,7 @@ end function;
 
 
 intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
-    {Impose constraints on equations given by rational CM points}
+    {Impose linear constraints on equations given by rational CM points}
     y2_idxs := [i:i->k in keys_fs | k gt 0];
     s_idx := Index(keys_fs,-1);
     genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
@@ -1176,12 +1176,112 @@ intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqE
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
+        require #B le #ds - #rat_svals : "We don't have enough constraints imposed by the rational points";
         Append(~kernels, B);
     end for;
     return kernels;
 end intrinsic;
 
 
+function power_trace(trace, norm, j)
+    //given trace of alpha^1 get trace alpha^j
+    tr_pvs := 2; //trace of 1 is 2
+    tr_curr := trace;
+    if j eq 0 then
+        return tr_pvs;
+    elif j eq 1 then
+        return tr_curr;
+    else
+        for i in [2..j] do
+            tr_next :=  trace*tr_curr-tr_pvs*norm;
+            tr_pvs := tr_curr;
+            tr_curr := tr_next;
+        end for;
+        return tr_next;
+    end if;
+
+end function;
+
+function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
+    y2_idxs := [i:i->k in keys_fs | k gt 0];
+    s_idx := Index(keys_fs,-1);
+
+    all_relns := [];
+    for j->idx in y2_idxs do
+        B := kernels[j];
+        numcoeffs := #Eltseq(B[1]);
+        R<[x]>:=PolynomialRing(Rationals(),#B);
+        inf_idx_y2 := Index(table[idx], Infinity());
+        inf_idx_s := Index(table[s_idx], Infinity());
+        y2vals := Remove(table[idx], inf_idx_y2);
+        svals := Remove(table[s_idx],inf_idx_s);
+        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_y2vals := [ y2vals[i]  : i in quad_sidxs];
+        coeff_list := [ &+[x[i]*B[i][k]: i in [1..#B]] : k in [1 .. numcoeffs]]; //this is a list of a_k, and also y^2
+        
+
+        relns := [];
+        for l->val in quad_svals do 
+            trace := -Coefficient(val, 1);
+            nm := Coefficient(val, 0);
+            rel :=0;
+            for i in [0 .. numcoeffs-2] do //omit the y2 var
+                for k in [0 .. numcoeffs-2] do //same
+                    if i eq k then
+                        rel +:= coeff_list[i+1]*coeff_list[k+1]*nm^i;
+                    else
+                        if i lt k then
+                            rel +:= coeff_list[i+1]*coeff_list[k+1]*nm^i*power_trace(trace, nm, k-i);
+                        else
+                            continue;
+                        end if;
+                    end if;
+                end for;
+            end for;
+            Append(~relns, rel-quad_y2vals[l] *coeff_list[numcoeffs]^2);
+        end for;
+        Append(~all_relns, relns);
+    end for;
+    return all_relns;
+end function;
+
+// function solve_quadratic_constraints(relns)
+
+//     ans := AssociativeArray();
+
+//     gb := GroebnerBasis(relns);
+//     ans[Ngens(R)] := 1;//choose 1 
+
+//     xsmin1 := [R.i : i in [1.. Ngens(R)-1]] cat [1];
+//     eval1 := [Evaluate(g, xsmin1) : g in gb];
+
+//     assert &and[Degree(g, R.i) eq 0 : i in [1.. Ngens(R)-2]];
+//     _, poly := IsUnivariate(g);
+//     rat_solns := [r[1] : r in Roots(poly)];
+//     ans[Ngens(R) - 1] := rat_solns;
+//     //now we have solved the final equation in gb
+
+//     for i->g in Reverse(eval1) do
+//         if i eq 1 then
+//             continue;
+//         end if;
+//         for k in Keys(ans) do
+//             a := ans[k];
+
+//             Evaluate(eval1, k , a);
+
+//     end for;
+// end function;
+
+
+function solve_quadratic_constraints(relns)
+    R := Universe(relns);
+    P := ProjectiveSpace(R);
+    S := Scheme(P, relns);
+    assert Dimension(S) eq 0;
+    return RationalPoints(S);
+end function;
 
 
 intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
@@ -1190,13 +1290,25 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
     eqn_list := [ ];
 
     kernels := RationalConstraintsOnEquations(table, keys_fs, ds, curves);
+    relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
 
-    for B in kernels do
-        require #B eq 1 : "Have not implemented constraints from quadratic points, so this is not determined yet";
-        v :=  Eltseq(B[1]);
-        monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
-        f := R!monic_v;
-        Append(~eqn_list, f); 
+    for i->B in kernels do
+        if #relns[i] eq 0 then
+            require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
+            v :=  Eltseq(B[1]);
+            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
+            f := R!monic_v;
+            Append(~eqn_list, f);
+        else
+            coeffs := solve_quadratic_constraints(relns[i]);
+            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
+            coeffs := Eltseq(coeffs[1]);
+            v := &+[B[j]*coeffs[j] : j in [1..#B]];
+            v := Eltseq(v);
+            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
+            f := R!monic_v;
+            Append(~eqn_list, f);
+        end if;
     end for;
 
     return eqn_list, [k : k in keys_fs | k gt 0];
