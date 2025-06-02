@@ -730,7 +730,7 @@ function kappaminus(mu, m, Lminus, Q, d)
         print "special case";
         return 0, 1;
     end if;
-    error if m eq 0, "Not implemented for m eq 0!\n";  
+    error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     
@@ -909,7 +909,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntE
     return vals;
 end intrinsic;
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls.}
     rams := RamficationPointsOfCovers(Xstar, curves);
@@ -929,6 +929,7 @@ along with two different hauptmoduls.}
         fs_Eoo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(Eoo)]] : b in Rows(Eoo)];
     end if;
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
+    pts := [p : p in pts | p[1] notin Exclude];
     //we do this twice -- we should remember this
     found := false;
     infty_idx := 1;
@@ -1056,7 +1057,7 @@ end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Exclude := Exclude);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
     cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
@@ -1202,9 +1203,9 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
     return eqn_list, [k : k in keys_fs | k gt 0];
 end intrinsic;
 
-intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, SeqEnum
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum
 {Determine the equations of the immediate covers of X.}
-    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec);
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec, Exclude := Exclude, Include := Include);
     return EquationsOfCovers(table, keys_fs, ds, curves);
 end intrinsic;
 
@@ -1598,9 +1599,9 @@ function reduce_table(table, sep_ds)
     return [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
 end function;
 
-intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
+    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := Exclude, Include := Include);
     table := reduce_table(table, sep_ds);
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
     return table, keys_fs, ds;
