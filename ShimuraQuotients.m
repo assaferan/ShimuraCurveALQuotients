@@ -737,28 +737,9 @@ intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W
         sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
     sum *:= 1/#W;
-
-    //1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
     
     return sum;
 end intrinsic;
-
-
-    //1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
-    
-    return sum;
-end intrinsic;
-
-/*
-function sum_n_powers_trace_formula(D, N, W, p, n)
-    t_p_n := TraceDNewALFixed(D,N,2,p^n,W);
-    if n eq 1 then
-    return t_p_n;
-    end if;
-    t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
-    return t_p_n - p*t_p_n_2;
-end function;
-*/
 
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
