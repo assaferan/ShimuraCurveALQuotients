@@ -959,13 +959,43 @@ along with two different hauptmoduls.}
                 s := (-min_m) - r*k;
                 basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
                 init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
-                // full_basis is a basis for M_{-min_m}^!(4D_0)
+                // full_basis is a basis for M_{-min_m}^!(4D0)
                 full_basis := [t^r*f + O(q) : f in init_basis[n0+k-s..#init_basis]];
                 full_basis cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis] : j in [0..r-1]];
                 full_basis cat:= [f + O(q) : f in basis_n0];
-                coeffs := Matrix([AbsEltseq(q^(-min_m)*f : FixedLength) : f in full_basis]);
+
+                coeffs := Matrix(Integers(), [AbsEltseq(q^(-min_m)*f : FixedLength) : f in full_basis]);
                 ech_basis := EchelonForm(coeffs);
                 ech_fs := [q^min_m*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
+
+                if IsOdd(Xstar`D*Xstar`N) then
+                    pole_order := -D0*Minimum(ms);
+                    r := pole_order div k;
+                    s := pole_order - r*k;
+                    // create a basis for M_{nEoo,-D_0*Minimum(ms)}^{!,!}(4D0)
+                    basis_n0 := fs_E0[#fs_E0..#fs_E0];
+                    init_basis_0 := fs_E0[1..nE0];
+                    full_basis_0 := [t^r*f + O(q) : f in init_basis_0[nE0-s+1..nE0]];
+                    full_basis_0 cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis_0] : j in [0..r-1]];
+                    full_basis_0 cat:= [f + O(q) : f in basis_n0];
+
+                    basis_noo := fs_Eoo[#fs_Eoo..#fs_Eoo];
+                    init_basis_oo := fs_Eoo[1..nE0];
+                    full_basis_oo := [t0^r*f + O(q) : f in init_basis_oo[nE0-s+1..nE0]];
+                    full_basis_oo cat:= &cat[[t0^(r-1-j)*f + O(q) : f in init_basis_oo] : j in [0..r-1]];
+                    full_basis_oo cat:= [f + O(q) : f in basis_noo];
+
+                    coeffs_0 := Matrix(Integers(), [AbsEltseq(q^(pole_order)*f : FixedLength) : f in full_basis_0]);
+                    coeffs_oo := Matrix(Rationals(), [AbsEltseq(q^(nEoo)*f : FixedLength) : f in full_basis_oo]);
+                    ech_basis_0, T0 := EchelonForm(coeffs_0);
+                    ech_basis_oo := ChangeRing(T0, Rationals())*coeffs_oo;
+                    ech_fs_0 := [q^(-pole_order)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis_0)]]+O(q) : b in Rows(ech_basis_0)];
+                    ech_fs_oo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis_oo)]]+O(q) : b in Rows(ech_basis_oo)];
+                    // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
+                end if;
+
+                // !! TODO - stopped here. Should add the equations for the M^{!,!} part when DN is odd
+
                 disc_ms := AssociativeArray();
                 for d in [1..-min_m] do
                     discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
@@ -992,11 +1022,6 @@ along with two different hauptmoduls.}
                 coeffs_trunc :=  ech_basis * mat;
                 V := RSpace(Integers(), #relevant_ds + 1);
                 target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
-                // cols := Reverse([-d-min_m+1 : d in relevant_ds]);
-                // target_v := Vector(Rationals(), [v[c] : c in cols]); 
-                // f := &+[div_coeffs[i]*ram[i][2]*ech_basis[m-min_m+1] : i->m in ms | -m ge n0];
-                // coeffs_trunc := Submatrix(coeffs, [1..Nrows(coeffs)],cols);
-                // coeffs_trunc := Submatrix(ech_basis, [1..Nrows(coeffs)],cols);
                 if target_v notin Image(coeffs_trunc) then
                     found := false;
                     break;
