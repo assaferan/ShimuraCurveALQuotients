@@ -1447,12 +1447,14 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
                 if is_split and d notin Exclude then
                     Append(~pts, <d,q,ell[q][d]>); 
                 end if;
-            end if;
-            if ell[q][d] eq 1 and d notin Exclude then
-                Append(~pts, <d,q,ell[q][d]>);
+            else
+                if ell[q][d] eq 1 and d notin Exclude then
+                    Append(~pts, <d,q,ell[q][d]>);
+                end if;
             end if;
         end for;
     end for;
+    pts := Reverse(Sort(pts));
 
     CNs := AssociativeArray();
     CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};

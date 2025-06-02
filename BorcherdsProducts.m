@@ -184,20 +184,25 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         print "k = ", k;
         print "rk = ", rk;
         print "dim = ", dim;
-        // if IsOdd(D*N) then
+        
         if Zero then
             rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, k);
-            eta_quotients := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
-            t_eta_quotient := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
+            eta_quotients_0 := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
+            t_eta_quotient_0 := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
         else
             rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + k, 0);
-            eta_quotients := [q_expansion_at_infty(r, nor_eta_ds, M) : r in rs];
-            t_eta_quotient := q_expansion_at_infty(t, nor_eta_ds, M);
         end if;
-        min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
-        min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
-        coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
-        E, T := EchelonForm(coeffs);
+        eta_quotients_oo := [q_expansion_at_infty(r, nor_eta_ds, M) : r in rs];
+        t_eta_quotient_oo := q_expansion_at_infty(t, nor_eta_ds, M);
+        all_eta_quotients := (Zero) select [eta_quotients_0, eta_quotients_oo] else [eta_quotients_oo];
+        min_v := [Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]) : eta_quotients in all_eta_quotients];
+        min_prec := [Minimum([RelativePrecision(eta_quot) - min_v[j] + Valuation(eta_quot) : eta_quot in eta_quotients]) : j->eta_quotients in all_eta_quotients];
+        coeffs := [Matrix([AbsEltseq(q^(-min_v[j])*(R!eta_quo) : FixedLength)[1..min_prec[j]] : eta_quo in eta_quotients]) : j->eta_quotients in all_eta_quotients];
+        E, T := EchelonForm(coeffs[1]);
+        if Zero then
+            assert T*coeffs[1] eq E;
+            E_oo := T*coeffs[2];
+        end if;
         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
         if (dim gt Prec) then
@@ -212,7 +217,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     end while;
     // sanity checks
     assert rk eq dim;
-    n := -min_v;
+    n := -min_v[1];
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     if Zero then
         n0 := n_gaps;
@@ -221,7 +226,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         assert (n + 1 - #pole_orders) eq n_gaps;
         n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
     end if;
-    return E, n, t_eta_quotient, n0;
+    if Zero then return E, n, t_eta_quotient_0, E_oo, -min_v[2], t_eta_quotient_oo; end if;
+    return E, n, t_eta_quotient_oo, n0;
 end intrinsic;
 
 function FourthPowerFree(a)
@@ -916,9 +922,11 @@ along with two different hauptmoduls.}
     t := R!t;
     fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
     if IsOdd(Xstar`D*Xstar`N) then
-        E0, nE0, _, _ := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
+        E0, nE0, t0, Eoo, nEoo, too := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
         E0 := Submatrix(E0, [1..Rank(E0)], [1..Ncols(E0)]);
         fs_E0 := [q^(-nE0)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E0)]] : b in Rows(E0)];
+        Eoo := Submatrix(Eoo, [1..Rank(Eoo)], [1..Ncols(Eoo)]);
+        fs_Eoo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(Eoo)]] : b in Rows(Eoo)];
     end if;
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     //we do this twice -- we should remember this
