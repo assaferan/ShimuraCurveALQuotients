@@ -957,33 +957,31 @@ along with two different hauptmoduls.}
                 coeffs := Matrix([AbsEltseq(q^(-min_m)*f : FixedLength) : f in full_basis]);
                 ech_basis := EchelonForm(coeffs);
                 ech_fs := [q^min_m*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
-                relevant_ds := [0];
                 disc_ms := AssociativeArray();
                 for d in [1..-min_m] do
                     discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
                     discs := [disc : disc in discs | disc mod 4 in [0,3]];
-                    n_d := 0;
                     for disc in discs do
                         S := QuadraticOrder(BinaryQuadraticForms(-disc));
-                        n_d +:= NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
-                    end for;
-                    if (n_d ne 0) then
-                        Append(~relevant_ds, d);
-                        for disc in discs do
+                        n_d := NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
+                        if (n_d ne 0) then
                             if not IsDefined(disc_ms, disc) then disc_ms[disc] := []; end if;
                             Append(~disc_ms[disc], d);
-                        end for;
-                    end if;
+                        end if;
+                    end for;
                 end for;
                 relevant_ds := Sort([d : d in Keys(disc_ms)]);
-                mat := ZeroMatrix(Integers(), Ncols(ech_basis), #relevant_ds);
+                mat := ZeroMatrix(Integers(), Ncols(ech_basis), #relevant_ds + 1); // also the constant coefficient
                 for j->d in relevant_ds do
                     for m in disc_ms[d] do
+                        // collecting conributions for all m
                         mat[1 - min_m - m,j] := 1;
                     end for;
                 end for;
+                // consant coefficient
+                mat[Nrows(mat),Ncols(mat)] := 1;
                 coeffs_trunc :=  ech_basis * mat;
-                V := RSpace(Integers(), #relevant_ds);
+                V := RSpace(Integers(), #relevant_ds + 1);
                 target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
                 // cols := Reverse([-d-min_m+1 : d in relevant_ds]);
                 // target_v := Vector(Rationals(), [v[c] : c in cols]); 
