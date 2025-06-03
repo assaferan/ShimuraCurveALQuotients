@@ -909,6 +909,61 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntE
     return vals;
 end intrinsic;
 
+function coeffs_to_divisor_matrix(min_m, D, N, num_coeffs)
+    disc_ms := AssociativeArray();
+    for d in [1..-min_m] do
+        discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
+        discs := [disc : disc in discs | disc mod 4 in [0,3]];
+        for disc in discs do
+            S := QuadraticOrder(BinaryQuadraticForms(-disc));
+            n_d := NumberOfOptimalEmbeddings(S,D,N);
+            if (n_d ne 0) then
+                if not IsDefined(disc_ms, disc) then disc_ms[disc] := []; end if;
+                Append(~disc_ms[disc], d);
+            end if;
+        end for;
+    end for;
+    relevant_ds := Sort([d : d in Keys(disc_ms)]);
+    mat := ZeroMatrix(Integers(), num_coeffs, #relevant_ds + 1); // also the constant coefficient
+    for j->d in relevant_ds do
+        for m in disc_ms[d] do
+            // collecting conributions for all m
+            mat[1 - min_m - m,j] := 1;
+        end for;
+    end for;
+    // consant coefficient
+    mat[Nrows(mat),Ncols(mat)] := 1;
+    return mat, relevant_ds;
+end function;
+
+function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : echelonize := true, k := -1, minval := -1)
+    Rq<q> := Universe(fs_E);
+    R := BaseRing(Rq);
+    if k eq -1 then
+        k := -Valuation(t);
+    end if;
+    r := (pole_order - n0) div k;
+    s := pole_order - r*k;
+    basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
+    init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
+    // full_basis is a basis for M_{pole_order}^!(4D0)
+    full_basis := [t^r*f + O(q) : f in init_basis[n0+k-s..#init_basis]];
+    full_basis cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis] : j in [0..r-1]];
+    full_basis cat:= [f + O(q) : f in basis_n0];
+    if minval eq -1 then
+        minval := pole_order;
+    end if;
+    coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in full_basis]);
+    if Type(echelonize) eq AlgMatElt then
+        T := ChangeRing(echelonize, R);
+        ech_basis := T*coeffs;
+    else
+        ech_basis, T := EchelonForm(coeffs);
+    end if;
+    ech_fs := [q^(-minval)*&+[(R!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
+    return ech_basis, ech_fs, T;
+end function;
+
 intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls.}
@@ -956,72 +1011,21 @@ along with two different hauptmoduls.}
                 ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
-                r := (-min_m - n0) div k;
-                s := (-min_m) - r*k;
-                basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
-                init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
-                // full_basis is a basis for M_{-min_m}^!(4D0)
-                full_basis := [t^r*f + O(q) : f in init_basis[n0+k-s..#init_basis]];
-                full_basis cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis] : j in [0..r-1]];
-                full_basis cat:= [f + O(q) : f in basis_n0];
-
-                coeffs := Matrix(Integers(), [AbsEltseq(q^(-min_m)*f : FixedLength) : f in full_basis]);
-                ech_basis := EchelonForm(coeffs);
-                ech_fs := [q^min_m*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
+                ech_basis, ech_fs := basis_of_weakly_holomorphic_forms(-min_m, fs_E, n0, n, t);
 
                 if IsOdd(Xstar`D*Xstar`N) then
-                    pole_order := -D0*Minimum(ms);
-                    r := pole_order div k;
-                    s := pole_order - r*k;
                     // create a basis for M_{nEoo,-D_0*Minimum(ms)}^{!,!}(4D0)
-                    basis_n0 := fs_E0[#fs_E0..#fs_E0];
-                    init_basis_0 := fs_E0[1..nE0];
-                    full_basis_0 := [t^r*f + O(q) : f in init_basis_0[nE0-s+1..nE0]];
-                    full_basis_0 cat:= &cat[[t^(r-1-j)*f + O(q) : f in init_basis_0] : j in [0..r-1]];
-                    full_basis_0 cat:= [f + O(q) : f in basis_n0];
-
-                    basis_noo := fs_Eoo[#fs_Eoo..#fs_Eoo];
-                    init_basis_oo := fs_Eoo[1..nE0];
-                    full_basis_oo := [t0^r*f + O(q) : f in init_basis_oo[nE0-s+1..nE0]];
-                    full_basis_oo cat:= &cat[[t0^(r-1-j)*f + O(q) : f in init_basis_oo] : j in [0..r-1]];
-                    full_basis_oo cat:= [f + O(q) : f in basis_noo];
-
-                    coeffs_0 := Matrix(Integers(), [AbsEltseq(q^(pole_order)*f : FixedLength) : f in full_basis_0]);
-                    coeffs_oo := Matrix(Rationals(), [AbsEltseq(q^(nEoo)*f : FixedLength) : f in full_basis_oo]);
-                    ech_basis_0, T0 := EchelonForm(coeffs_0);
-                    ech_basis_oo := ChangeRing(T0, Rationals())*coeffs_oo;
-                    ech_fs_0 := [q^(-pole_order)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis_0)]]+O(q) : b in Rows(ech_basis_0)];
-                    ech_fs_oo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(ech_basis_oo)]]+O(q) : b in Rows(ech_basis_oo)];
+                    ech_basis_0, ech_fs_0, T0 := basis_of_weakly_holomorphic_forms(-D0*Minimum(ms), fs_E0, 1, nE0, t);
+                    ech_basis_oo, ech_fs_oo := basis_of_weakly_holomorphic_forms(-D0*Minimum(ms), fs_Eoo, 1, nE0, t0 : echelonize := T0, k := k, minval := nEoo);
+                    
                     // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
                 end if;
 
                 // !! TODO - stopped here. Should add the equations for the M^{!,!} part when DN is odd
 
-                disc_ms := AssociativeArray();
-                for d in [1..-min_m] do
-                    discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
-                    discs := [disc : disc in discs | disc mod 4 in [0,3]];
-                    for disc in discs do
-                        S := QuadraticOrder(BinaryQuadraticForms(-disc));
-                        n_d := NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
-                        if (n_d ne 0) then
-                            if not IsDefined(disc_ms, disc) then disc_ms[disc] := []; end if;
-                            Append(~disc_ms[disc], d);
-                        end if;
-                    end for;
-                end for;
-                relevant_ds := Sort([d : d in Keys(disc_ms)]);
-                mat := ZeroMatrix(Integers(), Ncols(ech_basis), #relevant_ds + 1); // also the constant coefficient
-                for j->d in relevant_ds do
-                    for m in disc_ms[d] do
-                        // collecting conributions for all m
-                        mat[1 - min_m - m,j] := 1;
-                    end for;
-                end for;
-                // consant coefficient
-                mat[Nrows(mat),Ncols(mat)] := 1;
+                mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                 coeffs_trunc :=  ech_basis * mat;
-                V := RSpace(Integers(), #relevant_ds + 1);
+                V := RSpace(Integers(), Ncols(mat));
                 target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
                 if target_v notin Image(coeffs_trunc) then
                     found := false;
@@ -1040,8 +1044,9 @@ along with two different hauptmoduls.}
     return fs;
 end intrinsic;
 
-intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnum
-{Return the divisor of the Borcherds form associated to f.}
+intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot : Zero := false) -> SeqEnum
+{Return the divisor of the Borcherds form associated to the (oo)-Weakly holomorphic modular form f.
+If Zero is set to true, returns the divisor associated to the (0)-Weakly holomorphic modular form with q-expansion f(q^(1/4))}
     N := Valuation(f);
     ells := NumberOfEllipticPointsByCMOrder(Xstar);
     ell_lut := AssociativeArray();
@@ -1051,12 +1056,13 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
         end for;
     end for;
     divisor := [];
+    scale := Zero select (Xstar`N)^2 else 4;
     for m in [N..-1] do
         c_m := Coefficient(f,m);
         if c_m eq 0 then continue; end if;
-        sq_divs := [r2 : r2 in Divisors(-4*m) | IsSquare(r2)];
+        sq_divs := [r2 : r2 in Divisors(-scale*m) | IsSquare(r2)];
         for r2 in sq_divs do
-            d := (4*m) div r2;
+            d := (scale*m) div r2;
             if (d mod 4 notin [0,1]) then continue; end if;
             S := QuadraticOrder(BinaryQuadraticForms(d));
             n_d := NumberOfOptimalEmbeddings(S,Xstar`D,Xstar`N);
@@ -1078,6 +1084,23 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
         end if;
     end for;
     return simple_divisor;
+end intrinsic;
+
+// This is [GY, Lemma 25]
+intrinsic DivisorOfBorcherdsForm(foo::RngSerLaurElt, f0::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnum
+{Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f with q-expansion foo(q) at oo and f0(q^(1/4)) at 0.}
+    div_oo := DivisorOfBorcherdsForm(foo, Xstar);
+    div_0 := DivisorOfBorcherdsForm(f0, Xstar : Zero);
+    // sum the divisors
+    sum_divs := div_oo;
+    for pt in div_0 do
+        if exists(other_pt){x : x in sum_divs | x[1] eq pt[1]} then
+            other_pt[2] +:= pt[2];
+        else
+            Append(~ret, pt);
+        end if;
+    end for;
+    return sum_divs;
 end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
