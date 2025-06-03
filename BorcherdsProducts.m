@@ -1199,6 +1199,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
         else
             coeffs := solve_quadratic_constraints(relns[i]);
             require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
+                
             coeffs := Eltseq(coeffs[1]);
             v := &+[B[j]*coeffs[j] : j in [1..#B]];
             v := Eltseq(v);
@@ -1459,9 +1460,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
-procedure add_remove_column(schofer_tab, d)
-    //add column associated to d2 remove column associated to d1
-    //both d1, d2 are quadratic discriminants
+procedure add_remove_column(schofer_tab, d, dnew)
+    //add column associated to dnew remove column associated to d
     table := schofer_tab`Values;
     ds := schofer_tab`Discs;
     Xstar := schofer_tab`Xstar;
@@ -1469,15 +1469,26 @@ procedure add_remove_column(schofer_tab, d)
     keys_fs := schofer_tab`Keys_fs;
     row_scales := schofer_tab`RowScales;
     all_fs := [fs[k] : k in keys_fs];
-    i := Index(ds[2], d);
-    d_idx := #ds[1]+i;
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+    if d in ds[2] then
+        deg :=2;
+        i := Index(ds[2], d);
+        d_idx := #ds[1]+i;
+        ds[2][i] := dnew;
+    elif d in ds[1] then
+        deg := 1;
+        i := Index(ds[1], d);
+        d_idx := i;
+        ds[1][i] := dnew;
+    end if;
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
-        table[i] := norm_val[i]/row_scales[i]^2;
+        table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
     end for;
     schofer_tab`Values := table;
+    schofer_tab`Discs := [ds[1], ds[2]];
     return;
 end procedure;
+
 
 function find_y2_scales(schofer_table, FldsOfDefn)
     ds := schofer_table`Discs;
@@ -1671,7 +1682,6 @@ intrinsic reduce_table(schofer_tab::SchoferTable)
     degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
     schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
-    return;
 end intrinsic;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
