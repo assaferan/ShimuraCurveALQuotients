@@ -1168,6 +1168,30 @@ function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
     return all_relns;
 end function;
 
+
+procedure add_new_column(schofer_tab, dnew, deg)
+    //add column associated to dnew of degree deg
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    all_fs := [fs[k] : k in keys_fs];
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    for i->v in norm_val do
+        Append(~table[i], norm_val[i]/row_scales[i]^deg);
+    end for;
+    schofer_tab`Values := table;
+    if deg eq 1 then
+        Append(~ds[1],dnew);
+    else
+        Append(~ds[2],dnew);
+    end if;
+    schofer_tab`Discs := [ds[1], ds[2]];
+    return;
+end procedure;
+
 function solve_quadratic_constraints(relns)
     R := Universe(relns);
     P := ProjectiveSpace(R);
@@ -1177,7 +1201,7 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
-intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot], all_cm_pts::SeqEnum) -> SeqEnum, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
     eqn_list := [ ];
@@ -1198,8 +1222,18 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
             Append(~eqn_list, f);
         else
             coeffs := solve_quadratic_constraints(relns[i]);
-            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
-                
+            // require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
+            while #coeffs gt 2 do
+                vprint ShimuraQuotients, 1: "Attempting to add more CM points to narrow down quadratic constraints";
+                candidates := Set([pt[1] : pt in all_cm_pts]) diff Set(ds);
+                d := Representative(candidates);
+                add_new_column(schofer_table,d);
+                new_ds := schofer_table`Discs;
+                ds := new_ds[1] cat new_ds[2];
+                table := schofer_table`Values;
+                relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
+                coeffs := solve_quadratic_constraints(relns[i]);
+            end while;
             coeffs := Eltseq(coeffs[1]);
             v := &+[B[j]*coeffs[j] : j in [1..#B]];
             v := Eltseq(v);
@@ -1214,10 +1248,15 @@ end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, SeqEnum
 {Determine the equations of the immediate covers of X.}
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
-    schofer_table := ValuesAtCMPoints(Xstar, curves : Prec := Prec, MaxNum := num_vals);
-    return EquationsOfCovers(schofer_table, curves);
+    abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    reduce_table(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
+    return EquationsOfCovers(schofer_tab, curves, all_cm_pts);
 end intrinsic;
 
 intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
@@ -1307,12 +1346,17 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot])-> SeqEnum, SeqEnum
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
     {Get equations of all covers (not just immediate covers)}
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    num_vals := Maximum([2*g+3 : g in genus_list]);
-    schofer_table := ValuesAtCMPoints(Xstar, curves : MaxNum := num_vals);
-    eqn_list, new_keys := EquationsOfCovers(schofer_table, curves);
+    num_vals := Maximum([2*g+5 : g in genus_list]);
+    abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    reduce_table(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
+    eqn_list, new_keys := EquationsOfCovers(schofer_tab, curves, all_cm_pts);
     cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
     all_eqns := eqn_list cat cover_eqns;
     all_keys := new_keys cat cover_keys;
