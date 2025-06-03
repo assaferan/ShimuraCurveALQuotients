@@ -830,6 +830,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntE
     rest_fs := [fs[i] : i in rest_idxs];
     log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
     for i->log_coeff in log_coeffs do
+        require &and[IsIntegral(log_coeff[p]) :  p in Keys(log_coeff)] : "Increase the precision on the Borcherds forms";
         vals[rest_idxs[i]] := &*[Rationals() | p^(Integers()!log_coeff[p]) : p in Keys(log_coeff)];
     end for;
     return vals;
@@ -1222,7 +1223,9 @@ end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, SeqEnum
 {Determine the equations of the immediate covers of X.}
-    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec);
+    genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    num_vals := Maximum([2*g+3 : g in genus_list]);
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec, MaxNum := num_vals);
     return EquationsOfCovers(table, keys_fs, ds, curves);
 end intrinsic;
 
