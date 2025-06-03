@@ -924,6 +924,8 @@ function sum_divisors(div1, div2)
             Append(~sum_divs, pt);
         end if;
     end for;
+    nonzero_idxs := [j : j->pt in sum_divs | pt[2] ne 0];
+    sum_divs := [sum_divs[j] : j in nonzero_idxs];
     return sum_divs;
 end function;
 
@@ -977,10 +979,10 @@ along with two different hauptmoduls.}
                 if IsOdd(Xstar`D*Xstar`N) then
                     // create a basis for M_{nEoo,-D_0*Minimum(ms)}^{!,!}(4D0)
                     pole_order := -D0*Minimum(ms);
-                    fs_E0 := [qExpansionAt0(eta, pole_order) : eta in eta_quotients_0];
-                    fs_Eoo := [qExpansionAtoo(eta, pole_order) : eta in eta_quotients_0];
-                    ech_basis_0, ech_fs_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, fs_E0, 1, nE0, qExpansionAtoo(t,pole_order));
-                    t0 := qExpansionAt0(t, pole_order : Admissible := false);
+                    fs_E0 := [qExpansionAt0(eta, pole_order+nE0) : eta in eta_quotients_0];
+                    fs_Eoo := [qExpansionAtoo(eta, pole_order+nEoo) : eta in eta_quotients_0];
+                    ech_basis_0, ech_fs_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, fs_E0, 1, nE0, qExpansionAtoo(t,pole_order+nE0));
+                    t0 := qExpansionAt0(t, pole_order+nEoo : Admissible := false);
                     ech_basis_oo, ech_fs_oo := basis_of_weakly_holomorphic_forms(pole_order, fs_Eoo, 1, nE0, t0
                                                                                 : echelonize := T0, k := k, minval := nEoo);
                     non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
@@ -1046,9 +1048,9 @@ along with two different hauptmoduls.}
                     fsoo[i] := &+[sol[#ech_fs + i]*ech_fs_oo[i] : i in [1..#ech_fs_oo]];
                 end if;
                 // check divisor
-                div_f := DivisorOfBorcherdsForm(fs[i], Xstar);
+                div_f := (fs[i] eq 0) select [] else DivisorOfBorcherdsForm(fs[i], Xstar);
                 if IsOdd(Xstar`D*Xstar`N) then
-                    div_f0_oo := DivisorOfBorcherdsForm(fsoo[i], fs0[i], Xstar);
+                    div_f0_oo := ((fs0[i] eq 0) and (fsoo[i] eq 0)) select [] else DivisorOfBorcherdsForm(fsoo[i], fs0[i], Xstar);
                     div_f := sum_divisors(div_f, div_f0_oo);
                 end if;
                 assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
