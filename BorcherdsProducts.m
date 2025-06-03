@@ -1097,7 +1097,7 @@ intrinsic DivisorOfBorcherdsForm(foo::RngSerLaurElt, f0::RngSerLaurElt, Xstar::S
         if exists(other_pt){x : x in sum_divs | x[1] eq pt[1]} then
             other_pt[2] +:= pt[2];
         else
-            Append(~ret, pt);
+            Append(~sum_divs, pt);
         end if;
     end for;
     return sum_divs;
