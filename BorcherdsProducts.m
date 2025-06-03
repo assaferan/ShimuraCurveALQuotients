@@ -1048,7 +1048,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     ds := [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
 
-    schofer_tab := CreateSchoferTable(table, keys_fs, ds);
+    schofer_tab := CreateSchoferTable(table, keys_fs, ds, curves);
     schofer_tab`Xstar := Xstar;
     schofer_tab`BorcherdsForms := fs;
 
@@ -1082,11 +1082,11 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
     table := schofer_table`Values;
     sep_ds := schofer_table`Discs;
     ds := sep_ds[1] cat sep_ds[2];
-    y2_idxs := [i:i->k in keys_fs | k gt 0];
+    k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
-    genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
+    genus_list := [curves[keys_fs[i]]`g : i in k_idxs];
     kernels :=[* *];
-    for j->idx in y2_idxs do
+    for j->idx in k_idxs do
         g := genus_list[j];
         require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[idx];
         //add one because one value will be the infinite value and useless
@@ -1137,11 +1137,11 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
 
-    y2_idxs := [i:i->k in keys_fs | k gt 0];
+    k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
 
     all_relns := [];
-    for j->idx in y2_idxs do
+    for j->idx in k_idxs do
         B := kernels[j];
         numcoeffs := #Eltseq(B[1]);
         R<[x]>:=PolynomialRing(Rationals(),#B);
@@ -1189,6 +1189,7 @@ procedure add_new_column(schofer_tab, dnew, deg)
     fs := schofer_tab`BorcherdsForms;
     keys_fs := schofer_tab`Keys_fs;
     row_scales := schofer_tab`RowScales;
+    curves := schofer_tab`curves;
     all_fs := [fs[k] : k in keys_fs];
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
@@ -1201,6 +1202,7 @@ procedure add_new_column(schofer_tab, dnew, deg)
         Append(~ds[2],dnew);
     end if;
     schofer_tab`Discs := [ds[1], ds[2]];
+    UpdateFieldsOfDefn(schofer_tab, dnew);
     return;
 end procedure;
 
@@ -1221,11 +1223,12 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
     table := schofer_table`Values;
     ds := schofer_table`Discs;
     ds := ds[1] cat ds[2];
+    k_idxs := schofer_table`K_idxs;
 
     kernels := RationalConstraintsOnEquations(schofer_table, curves);
     relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
-    for i->B in kernels do
+    for i->B in kernels do //indexed by k_idxs
         if #relns[i] eq 0 then
             require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
             v :=  Eltseq(B[1]);
@@ -1234,18 +1237,19 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
             Append(~eqn_list, f);
         else
             coeffs := solve_quadratic_constraints(relns[i]);
-            // require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
-            while #coeffs gt 2 do
-                vprint ShimuraQuotients, 1: "Attempting to add more CM points to narrow down quadratic constraints";
-                candidates := Set([pt[1] : pt in all_cm_pts]) diff Set(ds);
-                d := Representative(candidates);
-                add_new_column(schofer_table,d);
-                new_ds := schofer_table`Discs;
-                ds := new_ds[1] cat new_ds[2];
-                table := schofer_table`Values;
-                relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
-                coeffs := solve_quadratic_constraints(relns[i]);
-            end while;
+            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
+            // while #coeffs gt 2 do
+            //     vprint ShimuraQuotients, 1: "Attempting to add more CM points to narrow down quadratic constraints";
+            //     candidates := Set([pt[1] : pt in all_cm_pts]) diff Set(ds);
+            //     d := Representative(candidates);
+            //     add_new_column(schofer_table,d);
+            //     new_ds := schofer_table`Discs;
+            //     ds := new_ds[1] cat new_ds[2];
+            //     table := schofer_table`Values;
+            //     flds := schofer_table`FldsOfDefn;
+            //     F := flds[keys_fs[k_idxs[k]]][d];
+            //     coeffs := solve_quadratic_constraints(relns[i]);
+            // end while;
             coeffs := Eltseq(coeffs[1]);
             v := &+[B[j]*coeffs[j] : j in [1..#B]];
             v := Eltseq(v);
@@ -1542,29 +1546,32 @@ procedure replace_column(schofer_tab, d, dnew)
     end for;
     schofer_tab`Values := table;
     schofer_tab`Discs := [ds[1], ds[2]];
+    curves := schofer_tab`curves;
+    UpdateFieldsOfDefn(schofer_tab, dnew);  
     return;
 end procedure;
 
 
-function find_y2_scales(schofer_table, FldsOfDefn)
+function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
     ratds := ds[1];
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
-    k_idxs := [i : i->k in keys_fs | k gt 0];
+    k_idxs := schofer_table`K_idxs;
+    fldsofdef := schofer_table`FldsOfDefn;
 
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] eq 1 and Degree(FldsOfDefn[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
+        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
             //then we have a rational point on X
             d1 := ratds[j1];
             v1 := table[i][j1];
             scale, _ := SquareFree(v1);
             Append(~scale_factors, AbsoluteValue(scale));
         else 
-            assert exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d1][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
-            assert exists(j2){j : j->d2 in ratds  | #FldsOfDefn[keys_fs[i]][d2] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d2][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
+            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
+            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -1572,14 +1579,14 @@ function find_y2_scales(schofer_table, FldsOfDefn)
             d2 := ratds[j2];
             quad_idx_1 := 1;
             quad_idx_2 := 1;
-            if FldsOfDefn[keys_fs[i]][d1][1] eq Rationals() then
+            if fldsofdef[keys_fs[i]][d1][1] eq Rationals() then
                 quad_idx_1 := 2;
             end if;
-            if FldsOfDefn[keys_fs[i]][d2][1] eq Rationals() then
+            if fldsofdef[keys_fs[i]][d2][1] eq Rationals() then
                 quad_idx_2 := 2;
             end if;
-            d1 := Discriminant(MaximalOrder(FldsOfDefn[keys_fs[i]][d1][quad_idx_1]));
-            d2 := Discriminant(MaximalOrder(FldsOfDefn[keys_fs[i]][d2][quad_idx_2]));
+            d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
+            d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
             scale1, _ := SquareFree(v1/d1); //two possibilities
             scale2, _ := SquareFree(v1);
             if IsSquare(scale1*v2/d2) then
@@ -1594,7 +1601,7 @@ function find_y2_scales(schofer_table, FldsOfDefn)
 
 end function;
 
-function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, FldsOfDefn, k_idxs)
+function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs)
     //find signs of y^2 for rational CM point d on each y^2
     //in keys_fs, where j is index of column of d in table
     for k->i in k_idxs do
@@ -1602,7 +1609,7 @@ function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, FldsOfDefn, 
         if table[i][j] eq 0 then continue; end if;
 
         // fields := FieldsOfDefinitionOfCMPoint(curves[keys_fs[i]], d);
-        fields := FldsOfDefn[keys_fs[i]][d];
+        fields := flds[keys_fs[i]][d];
         Fs_eps := [* <F, eps> : F in fields, eps in [-1,1] *];
         possible_answers := [* *];
         for eps in [-1,1] do
@@ -1635,6 +1642,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[Shimur
     keys_fs := abs_schofer_tab`Keys_fs;
     Xstar := abs_schofer_tab`Xstar;
     row_scales := abs_schofer_tab`RowScales;
+    flds := abs_schofer_tab`FldsOfDefn;
 
     ratds := ds[1];
     quadds := ds[2];
@@ -1650,18 +1658,10 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[Shimur
     s, stilde := find_signs(s, stilde, ds);
     table[s_idx] := s;
     table[stilde_idx] := stilde;
-    k_idxs := [i : i->k in keys_fs | k gt 0];
-
-    FldsOfDefn := AssociativeArray();
-    for k in k_idxs do
-        FldsOfDefn[keys_fs[k]] :=  AssociativeArray();
-        for d1 in ratds do
-            FldsOfDefn[keys_fs[k]][d1] :=  FieldsOfDefinitionOfCMPoint(curves[keys_fs[k]], d1);
-        end for;
-    end for;
+    k_idxs := abs_schofer_tab`K_idxs;
 
     //Scale the y2 rows of the table
-    scale_factors := find_y2_scales(abs_schofer_tab, FldsOfDefn);
+    scale_factors := find_y2_scales(abs_schofer_tab);
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
@@ -1710,10 +1710,10 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[Shimur
     // so eps* v is a square in Q, and is positive
 
     for j->d in ratds do
-        table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, FldsOfDefn, k_idxs);
+        table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs);
     end for;
 
-    schofer_table := CreateSchoferTable(table, keys_fs, ds);
+    schofer_table := CreateSchoferTable(table, keys_fs, ds, curves);
 
     return schofer_table;
 end intrinsic;
