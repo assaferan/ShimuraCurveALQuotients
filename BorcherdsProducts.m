@@ -830,7 +830,10 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntE
     rest_fs := [fs[i] : i in rest_idxs];
     log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
     for i->log_coeff in log_coeffs do
-        require &and[IsIntegral(log_coeff[p]) :  p in Keys(log_coeff)] : "Increase the precision on the Borcherds forms";
+        // require &and[IsIntegral(log_coeff[p]) :  p in Keys(log_coeff)] : "Increase the precision on the Borcherds forms";
+        if not &and[IsIntegral(log_coeff[p]) :  p in Keys(log_coeff)] then
+            return false;
+        end if;
         vals[rest_idxs[i]] := &*[Rationals() | p^(Integers()!log_coeff[p]) : p in Keys(log_coeff)];
     end for;
     return vals;
@@ -961,8 +964,46 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
     return simple_divisor;
 end intrinsic;
 
+
+function make_table(all_fs, Xstar, curves, pt_list_quad, pt_list_rat, keys_fs, Prec)
+
+    table := [[] : f in all_fs];
+    for pt in pt_list_rat do
+        d := pt[1];
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        if Type(vals) eq BoolElt then
+            Prec := Ceiling(Prec*1.3);
+            fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
+            all_fs := [fs[k] : k in keys_fs];
+            return false, Prec;
+        end if;
+        for i->v in vals do
+            Append(~table[i], vals[i]);
+        end for;
+    end for;
+
+    for pt in pt_list_quad do
+        d := pt[1];
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        if Type(norm_val) eq BoolElt then
+            Prec := Ceiling(Prec*1.3);
+            fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
+            all_fs := [fs[k] : k in keys_fs];
+            return false, Prec;
+        end if;
+        for i->v in vals do
+            Append(~table[i], norm_val[i]);
+        end for;
+    end for;
+
+    return table, Prec;
+
+end function;
+
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+
+
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
@@ -1006,7 +1047,11 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         cm_pts_must := [p : p in quad_cm | p[1] in Include];
         other_cm := [p : p in quad_cm | p[1] notin Include];
 
-        pt_list_quad cat:= cm_pts_must cat other_cm[1..(need -#Include)];
+        if need - #Include lt #other_cm then 
+            pt_list_quad cat:= cm_pts_must cat other_cm[1..(need -#Include)];
+        else
+            pt_list_quad cat:= cm_pts_must cat other_cm;
+        end if;
 
         for p in cm_pts_must do
             pidx := Index(Include, p[1]);
@@ -1017,24 +1062,15 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         bd *:=2;
     end while;
 
-    table := [[] : f in all_fs];
-    for pt in pt_list_rat do
-        d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
-        for i->v in vals do
-            Append(~table[i], vals[i]);
-        end for;
-    end for;
+    table := false;
+    while Type(table) eq BoolElt do
+        table, Prec := make_table(all_fs, Xstar, curves, pt_list_quad, pt_list_rat, keys_fs, Prec);
+        vprint ShimuraQuotients, 2 : "Increasing precision to ", Prec;
+        fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
+        all_fs := [fs[k] : k in keys_fs];
+    end while;
 
-    for pt in pt_list_quad do
-        d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
-        for i->v in vals do
-            Append(~table[i], norm_val[i]);
-        end for;
-    end for;
-
-    return table, keys_fs, [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
+    return table, keys_fs, [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]], Prec;
 end intrinsic;
 
 function find_signs(s, stilde, ds)
@@ -1553,7 +1589,10 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
         end for;
         roots := [Roots(p,K) : p in minpolys];
         good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-        require #good_inds eq 1 :"We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
+        //require #good_inds eq 1 :"We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
+        if #good_inds ne 1 then
+            return false, _ , d; // We need that there is a unique minpoly left after filtering by roots. This is not true at CM point d
+        end if;
         table[s_idx][d_idx] := minpolys[good_inds[1]];
         norm_s := Coefficient(minpolys[good_inds[1]], 0);
         trace_s := - Coefficient(minpolys[good_inds[1]], 1);
@@ -1621,9 +1660,16 @@ end function;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
+    table, keys_fs, sep_ds, Prec := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
     table := reduce_table(table, sep_ds);
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
+    ExcludeSet := {};
+    while Type(table) eq BoolElt do
+        Include(~ExcludeSet,ds);
+        table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := ExcludeSet, Include := {});
+        table := reduce_table(table, sep_ds);
+        table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
+    end while;
     return table, keys_fs, ds;
 end intrinsic;
 
