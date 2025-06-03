@@ -1184,6 +1184,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
     keys_fs := schofer_table`Keys_fs;
     table := schofer_table`Values;
     ds := schofer_table`Discs;
+    ds := ds[1] cat ds[2];
 
     kernels := RationalConstraintsOnEquations(table, keys_fs, ds, curves);
     relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
