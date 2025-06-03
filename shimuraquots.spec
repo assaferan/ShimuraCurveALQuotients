@@ -1,6 +1,7 @@
 {
 BorcherdsProducts.m
 Caching.m
+EtaQuotient.m
 FundamentalDomain.m
 ShimuraQuotients.m
 alquots.m

@@ -106,78 +106,19 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m)
     return rs;
 end function;
 
-procedure update_precision_eta(~nor_eta_ds, Prec, M)
-    _<q> := LaurentSeriesRing(Rationals());
-    nor_eta := &*[1 - q^n : n in [1..Prec-1]] + O(q^(Prec));
-    // eta_ds := [Evaluate(nor_eta, q^d)*q^(d/24) : d in Divisors(M)];
-    nor_eta_ds := [Evaluate(nor_eta, q^d) + O(q^Prec) : d in Divisors(M)];
-    return;
-end procedure;
-
-function q_expansion_at_infty(r, nor_eta_ds, M)
-    _<q> := Universe(nor_eta_ds);
-    prod_nor_etas := &*[nor_eta_ds[i]^r[i] : i->d in Divisors(M)];
-    prod_etas := prod_nor_etas * q^(&+[d*r[i] : i->d in Divisors(M)] div 24);
-    return prod_etas;
-end function;
-
-// This is Lemma 26 - q-expansion at 0 (multiplied by M if admissible)
-function q_expansion_at_zero(r, nor_eta_ds, disc, M : admissible := true)
-    _<q> := Universe(nor_eta_ds);
-    sqr_factor := &*[d^r[i] : i->d in Divisors(M)];
-    if admissible then
-        sqr_factor *:= disc;
-    end if;
-    is_sqr, scale := IsSquare(sqr_factor);
-    assert is_sqr;
-    prod_nor_etas := &*[nor_eta_ds[#Divisors(M)+1-i]^r[i] : i->d in Divisors(M)];
-    prod_etas := prod_nor_etas *  q^(&+[(M div d)*r[i] : i->d in Divisors(M)] div 24);
-    if admissible then return prod_etas*M/scale; end if;
-    return prod_etas/scale;
-end function;
-
-function odd_case_step_3(D,N,k,n0,Prec)
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
+{Returns a weakly holomorphic basis corresponding to D, N.}
+    D0,M,g := get_D0_M_g(D,N);
     L, Ldual := ShimuraCurveLattice(D,N);
     disc := #(Ldual/L);
-    D0,M,g := get_D0_M_g(D,N);
-    update_precision_eta(~nor_eta_ds, Prec, M);
-    rs, t := get_integer_prog_solutions(D0,M,g : n := n0, m:= k);
-    scales := [sqrt_s where _, sqrt_s := IsSquare(&*[d^r[i] : i->d in Divisors(M)]*disc) : r in rs];
-    // This is Lemma 26 - q-expansion at 0
-    eta_quotients := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
-    t_eta_quotient := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
-    min_v := Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]);
-    n := -min_v;
-    min_prec := Minimum([RelativePrecision(eta_quot) - min_v + Valuation(eta_quot) : eta_quot in eta_quotients]);
-    R<q> := Universe(nor_eta_ds);
-    coeffs := Matrix([AbsEltseq(q^(-min_v)*(R!eta_quo) : FixedLength)[1..min_prec] : eta_quo in eta_quotients]);
-    E, T := EchelonForm(coeffs);
-    dim := n0 + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
-end function;
-
-// When D*N is odd we would need to run it twice - once with Zero true 
-// and once with Zero false
-intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
-{returns a weakly holomorphic basis corresponding to D, N.}
-    D0,M,g := get_D0_M_g(D,N);
-    // if IsOdd(D*N) then 
-    if Zero then
-        L, Ldual := ShimuraCurveLattice(D,N);
-        disc := #(Ldual/L);
-    end if;
-    // curious - we are able to update something that does not exist ?
-    update_precision_eta(~nor_eta_ds, Prec, M);
-    R<q> := Universe(nor_eta_ds);
     rk := -1;
     dim := 0;
     t, lhs, rhs, n_eq, n_ds := find_t(M);
     t := Eltseq(t);
-    // n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)],0);
-    // Check - maybe in the odd case we should be feeding it n0
     n_gaps := g - &+[d div 4 : d in Divisors(D0)];
     k := t[#t]; // the order of pole for t
-    // n := n0;
     n := n_gaps;
+    R := EtaQuotientsRing(M, disc);
     while (rk lt dim) do
         print "prec = ", Prec;
         print "n = ", n;
@@ -185,32 +126,37 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         print "rk = ", rk;
         print "dim = ", dim;
         
+        rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
+        
+        eta_quotients := [EtaQuotient(R,r) : r in rs];
+        t_eta_quotient := EtaQuotient(R,t);
+
+        eta_quotients_oo := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
+        t_eta_quotient_oo := qExpansionAtoo(t_eta_quotient, Prec);
+
         if Zero then
-            rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, k);
-            eta_quotients_0 := [q_expansion_at_zero(r, nor_eta_ds, disc, M) : r in rs];
-            t_eta_quotient_0 := q_expansion_at_zero(t, nor_eta_ds, disc, M : admissible := false);
-        else
-            rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + k, 0);
+            eta_quotients_0 := [qExpansionAt0(eta, Prec) : eta in eta_quotients];
+            t_eta_quotient_0 := qExpansionAt0(t_eta_quotient, Prec : Admissible := false);
         end if;
-        eta_quotients_oo := [q_expansion_at_infty(r, nor_eta_ds, M) : r in rs];
-        t_eta_quotient_oo := q_expansion_at_infty(t, nor_eta_ds, M);
-        all_eta_quotients := (Zero) select [eta_quotients_0, eta_quotients_oo] else [eta_quotients_oo];
-        min_v := [Minimum([Valuation(eta_quot) : eta_quot in eta_quotients]) : eta_quotients in all_eta_quotients];
-        min_prec := [Minimum([RelativePrecision(eta_quot) - min_v[j] + Valuation(eta_quot) : eta_quot in eta_quotients]) : j->eta_quotients in all_eta_quotients];
-        coeffs := [Matrix([AbsEltseq(q^(-min_v[j])*(R!eta_quo) : FixedLength)[1..min_prec[j]] : eta_quo in eta_quotients]) : j->eta_quotients in all_eta_quotients];
+
+        all_eta_quotients := Zero select [eta_quotients_0, eta_quotients_oo] else [eta_quotients_oo];
+        S<q> := Universe(all_eta_quotients[1]);
+        min_v := [Minimum([Valuation(eta_quot) : eta_quot in eta_quots]) : eta_quots in all_eta_quotients];
+        min_prec := [Minimum([RelativePrecision(eta_quot) - min_v[j] + Valuation(eta_quot) : eta_quot in eta_quots]) : j->eta_quots in all_eta_quotients];
+        coeffs := [Matrix([AbsEltseq(q^(-min_v[j])*(S!eta_quo) : FixedLength)[1..min_prec[j]] : eta_quo in eta_quots]) : j->eta_quots in all_eta_quotients];
         E, T := EchelonForm(coeffs[1]);
         if Zero then
             assert T*coeffs[1] eq E;
             E_oo := T*coeffs[2];
+            E_oo := Submatrix(E_oo, [1..Rank(E_oo)], [1..Ncols(E_oo)]);
         end if;
+        E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
         if (dim gt Prec) then
             Prec := dim;
-            update_precision_eta(~nor_eta_ds, Prec, M);
         else
             Prec +:= k;
-            update_precision_eta(~nor_eta_ds, Prec, M);
             // update n
             n +:= k;
         end if;
@@ -226,8 +172,9 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         assert (n + 1 - #pole_orders) eq n_gaps;
         n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
     end if;
-    if Zero then return E, n, t_eta_quotient_0, E_oo, -min_v[2], t_eta_quotient_oo; end if;
-    return E, n, t_eta_quotient_oo, n0;
+    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
+    if Zero then return E, n, E_oo, -min_v[2], eta_quotients; end if;
+    return E, n, n0, t_eta_quotient, eta_quotients;
 end intrinsic;
 
 function FourthPowerFree(a)
@@ -909,10 +856,11 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[RngSerLaurElt], d::RngIntE
     return vals;
 end intrinsic;
 
-function coeffs_to_divisor_matrix(min_m, D, N, num_coeffs)
+function coeffs_to_divisor_matrix(min_m, D, N, num_coeffs : Zero := false, const_coeff := true)
     disc_ms := AssociativeArray();
+    scale := Zero select N^2 else 4;
     for d in [1..-min_m] do
-        discs := [4*d div r2: r2 in Divisors(4*d) | IsSquare(r2)];
+        discs := [scale*d div r2: r2 in Divisors(scale*d) | IsSquare(r2)];
         discs := [disc : disc in discs | disc mod 4 in [0,3]];
         for disc in discs do
             S := QuadraticOrder(BinaryQuadraticForms(-disc));
@@ -924,15 +872,17 @@ function coeffs_to_divisor_matrix(min_m, D, N, num_coeffs)
         end for;
     end for;
     relevant_ds := Sort([d : d in Keys(disc_ms)]);
-    mat := ZeroMatrix(Integers(), num_coeffs, #relevant_ds + 1); // also the constant coefficient
+    mat := ZeroMatrix(Integers(), num_coeffs, #relevant_ds + (const_coeff select 1 else 0)); // also the constant coefficient
     for j->d in relevant_ds do
         for m in disc_ms[d] do
             // collecting conributions for all m
             mat[1 - min_m - m,j] := 1;
         end for;
     end for;
+
     // consant coefficient
-    mat[Nrows(mat),Ncols(mat)] := 1;
+    if const_coeff then mat[Nrows(mat),Ncols(mat)] := 1; end if;
+
     return mat, relevant_ds;
 end function;
 
@@ -964,32 +914,38 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : echeloni
     return ech_basis, ech_fs, T;
 end function;
 
+function sum_divisors(div1, div2)
+    // sum the divisors
+    sum_divs := div1;
+    for pt in div2 do
+        if exists(j){j : j->x in sum_divs | x[1] eq pt[1]} then
+            sum_divs[j][2] +:= pt[2];
+        else
+            Append(~sum_divs, pt);
+        end if;
+    end for;
+    return sum_divs;
+end function;
+
 intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls.}
     rams := RamficationPointsOfCovers(Xstar, curves);
     D0,M,g := get_D0_M_g(Xstar`D,Xstar`N);
-    // n0 := Maximum(2*g-2-&+[d div 4 : d in Divisors(D0)],0);
-    E, n, t, n0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
-    k := -Valuation(t);
-    E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
-    R<q> := LaurentSeriesRing(Integers());
-    t := R!t;
-    fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
+    
+    E, n, n0, t, eta_quotients := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
+    k := -Valuation(qExpansionAtoo(t,1));
+   
     if IsOdd(Xstar`D*Xstar`N) then
-        E0, nE0, t0, Eoo, nEoo, too := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
-        E0 := Submatrix(E0, [1..Rank(E0)], [1..Ncols(E0)]);
-        fs_E0 := [q^(-nE0)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E0)]] : b in Rows(E0)];
-        Eoo := Submatrix(Eoo, [1..Rank(Eoo)], [1..Ncols(Eoo)]);
-        fs_Eoo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(Eoo)]] : b in Rows(Eoo)];
+        E0, nE0, Eoo, nEoo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
     end if;
+    //we do this twice -- we should remember this
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     pts := [p : p in pts | p[1] notin Exclude];
-    //we do this twice -- we should remember this
+    
     found := false;
     infty_idx := 1;
     while (not found) do
-        // infty := pts[1];
         infty := pts[infty_idx];
         non_infty := [pt : pt in pts | pt ne infty];
         for other_pts in CartesianPower(non_infty,2) do
@@ -997,6 +953,10 @@ along with two different hauptmoduls.}
             rams[-1] := [other_pts[1]];
             rams[-2] := [other_pts[2]];
             fs := AssociativeArray();
+            if IsOdd(Xstar`D*Xstar`N) then
+                fs0 := AssociativeArray();
+                fsoo := AssociativeArray();
+            end if; 
             found := true;
             for i in Keys(rams) do
                 ram := rams[i];
@@ -1011,21 +971,68 @@ along with two different hauptmoduls.}
                 ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
-                ech_basis, ech_fs := basis_of_weakly_holomorphic_forms(-min_m, fs_E, n0, n, t);
+                fs_E := [qExpansionAtoo(eta, -min_m) : eta in eta_quotients];
+                ech_basis, ech_fs := basis_of_weakly_holomorphic_forms(-min_m, fs_E, n0, n, qExpansionAtoo(t,-min_m));
 
                 if IsOdd(Xstar`D*Xstar`N) then
                     // create a basis for M_{nEoo,-D_0*Minimum(ms)}^{!,!}(4D0)
-                    ech_basis_0, ech_fs_0, T0 := basis_of_weakly_holomorphic_forms(-D0*Minimum(ms), fs_E0, 1, nE0, t);
-                    ech_basis_oo, ech_fs_oo := basis_of_weakly_holomorphic_forms(-D0*Minimum(ms), fs_Eoo, 1, nE0, t0 : echelonize := T0, k := k, minval := nEoo);
-                    
+                    pole_order := -D0*Minimum(ms);
+                    fs_E0 := [qExpansionAt0(eta, pole_order) : eta in eta_quotients_0];
+                    fs_Eoo := [qExpansionAtoo(eta, pole_order) : eta in eta_quotients_0];
+                    ech_basis_0, ech_fs_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, fs_E0, 1, nE0, qExpansionAtoo(t,pole_order));
+                    t0 := qExpansionAt0(t, pole_order : Admissible := false);
+                    ech_basis_oo, ech_fs_oo := basis_of_weakly_holomorphic_forms(pole_order, fs_Eoo, 1, nE0, t0
+                                                                                : echelonize := T0, k := k, minval := nEoo);
+                    non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
+                    div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
+                    good_forms_0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
+                    assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
+                    T := Solution(ech_basis_0, good_forms_0);
+                    assert T*ech_basis_0 eq good_forms_0;
+                    good_forms_oo := ChangeRing(T,Rationals())*ech_basis_oo;
+                    // Passingt o q-expansions with q^(1/4) instead of q^(1/4D0)
+                    good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
                     // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
+                    mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(Minimum(ms), Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
+                    mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-nEoo, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+                    coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
+                    coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
+
+                    _<q> := Universe(ech_fs_0);
+                    ech_fs_0 := [q^(Minimum(ms))*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(good_forms_0)]]+O(q) : b in Rows(good_forms_0)];
+                    ech_fs_oo := [q^(-nEoo)*&+[(Rationals()!b[i])*q^(i-1) : i in [1..Ncols(good_forms_oo)]]+O(q) : b in Rows(good_forms_oo)];
+
+                    // collecting contributions from 0 and oo
+                    relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
+
+                    // !! TODO - stopped here. Should collect everything together to get the equations
+                    ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
+                    for i->d in relevant_ds_0 do
+                        ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+                    end for;
+                    
+                    ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
+                    for i->d in relevant_ds_oo do
+                        ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+                    end for;
+                    
+                    mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
                 end if;
 
-                // !! TODO - stopped here. Should add the equations for the M^{!,!} part when DN is odd
-
                 mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
-                coeffs_trunc :=  ech_basis * mat;
-                V := RSpace(Integers(), Ncols(mat));
+                coeffs_trunc := ech_basis * mat;
+
+                if IsOdd(Xstar`D*Xstar`N) then
+                    ds_0_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_0_oo, #relevant_ds + 1);
+                    for i->d in relevant_ds_0_oo do
+                        ds_0_oo_to_ds[i, Index(relevant_ds, d)] := 1;
+                    end for;
+                    coeffs_0_oo := mat_0_oo*ds_0_oo_to_ds;
+                    coeffs_trunc := VerticalJoin(ChangeRing(coeffs_trunc,Rationals()), coeffs_0_oo);
+                end if;
+
+                // V := RSpace(Integers(), Ncols(mat));
+                V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
                 target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
                 if target_v notin Image(coeffs_trunc) then
                     found := false;
@@ -1033,14 +1040,24 @@ along with two different hauptmoduls.}
                 end if;
                 sol := Solution(coeffs_trunc, target_v);
                 fs[i] := &+[sol[i]*ech_fs[i] : i in [1..#ech_fs]]; // !! Make sure that f has the correct divisor - write a function for Lemma 22
+                
+                if IsOdd(Xstar`D*Xstar`N) then
+                    fs0[i] := &+[sol[#ech_fs + i]*ech_fs_0[i] : i in [1..#ech_fs_0]];
+                    fsoo[i] := &+[sol[#ech_fs + i]*ech_fs_oo[i] : i in [1..#ech_fs_oo]];
+                end if;
                 // check divisor
                 div_f := DivisorOfBorcherdsForm(fs[i], Xstar);
+                if IsOdd(Xstar`D*Xstar`N) then
+                    div_f0_oo := DivisorOfBorcherdsForm(fsoo[i], fs0[i], Xstar);
+                    div_f := sum_divisors(div_f, div_f0_oo);
+                end if;
                 assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
             end for;
             if found then break; end if;
         end for;
         infty_idx +:= 1;
     end while;  
+    if IsOdd(Xstar`D*Xstar`N) then return fs, fs0, fsoo; end if;
     return fs;
 end intrinsic;
 
@@ -1091,16 +1108,8 @@ intrinsic DivisorOfBorcherdsForm(foo::RngSerLaurElt, f0::RngSerLaurElt, Xstar::S
 {Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f with q-expansion foo(q) at oo and f0(q^(1/4)) at 0.}
     div_oo := DivisorOfBorcherdsForm(foo, Xstar);
     div_0 := DivisorOfBorcherdsForm(f0, Xstar : Zero);
-    // sum the divisors
-    sum_divs := div_oo;
-    for pt in div_0 do
-        if exists(other_pt){x : x in sum_divs | x[1] eq pt[1]} then
-            other_pt[2] +:= pt[2];
-        else
-            Append(~sum_divs, pt);
-        end if;
-    end for;
-    return sum_divs;
+   
+    return sum_divisors(div_oo, div_0);
 end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
