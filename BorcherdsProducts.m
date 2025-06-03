@@ -1,6 +1,6 @@
 // Compute the order of vanishing of eta(delta tau) at the cusp a/b in Gamma_0(N)
 // multiplied by 24
-function OrderOfVanishingOfEta(delta, b, N)
+function order_of_vanishing_of_eta(delta, b, N)
     return N*GCD(b,delta)^2 div (GCD(N,b^2)*delta);
 end function;
 
@@ -20,7 +20,7 @@ function lhs_integer_programming(M)
     cond_3 := Matrix(Integers(),[ds]);
     cond_4 := Matrix(Integers(),[[M div d : d in ds]]);
     eq_7 := VerticalJoin(VerticalJoin(VerticalJoin(cond_1, cond_2), cond_3), cond_4);
-    eq_8 := Matrix([[OrderOfVanishingOfEta(delta, b, M) : delta in ds] : b in ds]);
+    eq_8 := Matrix([[order_of_vanishing_of_eta(delta, b, M) : delta in ds] : b in ds]);
     delta_epsilon_n := DiagonalMatrix([-2 : p in ps] cat [-24,-24,0]);
     ncols:= Ncols(delta_epsilon_n);
     r_coeffs := VerticalJoin(eq_7, eq_8);
@@ -157,7 +157,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100) -> .
     return E, n, t_eta_quotient;
 end intrinsic;
 
-function FourthPowerFree(a)
+function fourth_power_free(a)
     ps := PrimeDivisors(Numerator(a)) cat PrimeDivisors(Denominator(a));
     vals := [Valuation(a,p) : p in ps];
     v_rad := [v div 4 : v in vals];
@@ -194,7 +194,7 @@ function eta_action(g)
     etaB := zeta_n^(b div GCD(b,d)) * q^(a/(24*d)) * Evaluate(nor_eta, q^(a/d));
     // etaB is eta(Bz)
     // we need to divide by the multiplier which is (d/a)^(1/4) zeta_24^b
-    free, rad := FourthPowerFree(d/a);
+    free, rad := fourth_power_free(d/a);
     return rad^(-1)*zeta_24^(-b)*etaB, free;
 end function;
 
@@ -216,7 +216,7 @@ function eta_quotient_action(rs, ds, g)
     is_fourth, c := IsPower(ret_c4, 4);
     assert is_fourth; // For now we hope this is true for our functions
     */
-    free, rad := FourthPowerFree(ret_c4);
+    free, rad := fourth_power_free(ret_c4);
     return rad^(-1)*ret_ceta, free;
     // return ret_ceta / c;
 end function;
@@ -248,7 +248,7 @@ function linear_comb_eta_quotients_action(alphas, rs, ds, g)
         ret_eta := ChangeRing(Parent(ret_eta),L)!ret_eta + eta;
     end for;
     // return &+[alphas[j]*eta_quotient_action(r, ds, g) : j->r in rs];
-    // free, rad := FourthPowerFree(ret_c4);
+    // free, rad := fourth_power_free(ret_c4);
     // return rad^(-1)*ret_ceta, free;
     return ret_eta;
 end function;
@@ -275,7 +275,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     disc_grp, to_disc := Ldual / L;
     return L, Ldual, disc_grp, to_disc, Q^(-1);
 end intrinsic;
-
+/*
 // assuming v_i is the coefficient of eta_i in Ldual / L
 function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
     PSL2Z := PSL2(Integers());
@@ -312,6 +312,7 @@ end function;
 // and create the coefficients of the Borcherds form F
 // obtained from it. 
 // !! TODO : Not working yet - the constants are off
+
 function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     M := #discL;
     G := PSL2(Integers());
@@ -334,9 +335,10 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
         end for;
     end for;
     return F;
-end function;
+end function;*/
 
-function FindLambda(Q, d : bound := 10)
+intrinsic FindLambda(Q::., d ::RngIntElt: bound := 10)->.
+    {}
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
     idxs := CartesianPower([-bound..bound], n);
@@ -348,17 +350,18 @@ function FindLambda(Q, d : bound := 10)
         end if;
     end for;
     return false, _;
-end function;
+end intrinsic;
 
-function VerticalJoinList(mats)
+intrinsic VerticalJoinList(mats::.)->.
+    {}
     m := mats[1];
     for i in [2..#mats] do
         m := VerticalJoin(m, mats[i]);
     end for;
     return m;
-end function;
+end intrinsic;
 
-function MyLegendreSymbol(alpha, p)
+function my_legendre_symbol(alpha, p)
     return LegendreSymbol(Integers()!(GF(p)!alpha),p);
 end function;
 
@@ -394,10 +397,10 @@ function Wpoly(m,p,mu,L,K,Q)
     l_mu := func<k | #L_mu(k)>;
     // we compute twice d_mu for technical reasons
     d2_mu := func<k | 2*k + &+[Minimum(l[i]-k, 0) : i in H_mu]>;
-    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | MyLegendreSymbol(eps[i],p) : i in L_mu(k)]>;
+    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | my_legendre_symbol(eps[i],p) : i in L_mu(k)]>;
     f_1 := function(x)
         a, alpha := Valuation(x,p);
-        return IsEven(l_mu(a+1)) select -1/p else MyLegendreSymbol(alpha,p) / sqrtp;
+        return IsEven(l_mu(a+1)) select -1/p else my_legendre_symbol(alpha,p) / sqrtp;
     end function;
     t_mu := m - &+[Rationals() | eps[i]*p^l[i]*mu_wrt_B[i]^2 : i in [1..n] | i notin H_mu];
     a := Valuation(t_mu, p);
@@ -1263,7 +1266,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
-    reduce_table(abs_schofer_tab);
+    ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
     return EquationsOfCovers(schofer_tab, curves, all_cm_pts);
 end intrinsic;
@@ -1363,7 +1366,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
-    reduce_table(abs_schofer_tab);
+    ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
     eqn_list, new_keys := EquationsOfCovers(schofer_tab, curves, all_cm_pts);
     cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
@@ -1715,7 +1718,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[Shimur
     return schofer_table;
 end intrinsic;
 
-intrinsic reduce_table(schofer_tab::SchoferTable)
+intrinsic ReduceTable(schofer_tab::SchoferTable)
     {}
     table := schofer_tab`Values;
     sep_ds := schofer_tab`Discs;
@@ -1743,7 +1746,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
-    reduce_table(abs_schofer_tab);
+    ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
     return schofer_tab;
 end intrinsic;
