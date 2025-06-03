@@ -337,7 +337,7 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     return F;
 end function;*/
 
-intrinsic FindLambda(Q::., d ::RngIntElt: bound := 10)->.
+intrinsic FindLambda(Q::AlgMatElt, d ::RngIntElt: bound := 10)->.
     {}
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
@@ -352,7 +352,7 @@ intrinsic FindLambda(Q::., d ::RngIntElt: bound := 10)->.
     return false, _;
 end intrinsic;
 
-intrinsic VerticalJoinList(mats::.)->.
+intrinsic VerticalJoinList(mats::List)->.
     {}
     m := mats[1];
     for i in [2..#mats] do
