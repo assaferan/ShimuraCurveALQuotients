@@ -1072,8 +1072,13 @@ function find_signs(s, stilde, ds)
 end function;
 
 
-intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
+intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
     {Impose linear constraints on equations given by rational CM points}
+
+    keys_fs := schofer_table`Keys_fs;
+    table := schofer_table`Values;
+    sep_ds := schofer_table`Discs;
+    ds := sep_ds[1] cat sep_ds[2];
     y2_idxs := [i:i->k in keys_fs | k gt 0];
     s_idx := Index(keys_fs,-1);
     genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
@@ -1124,7 +1129,11 @@ function power_trace(trace, norm, j)
 
 end function;
 
-function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
+intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum, kernels::List) -> SeqEnum
+    {}
+    table := schofer_table`Values;
+    keys_fs := schofer_table`Keys_fs;
+
     y2_idxs := [i:i->k in keys_fs | k gt 0];
     s_idx := Index(keys_fs,-1);
 
@@ -1166,7 +1175,7 @@ function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
         Append(~all_relns, relns);
     end for;
     return all_relns;
-end function;
+end intrinsic;
 
 
 procedure add_new_column(schofer_tab, dnew, deg)
@@ -1210,8 +1219,8 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
     ds := schofer_table`Discs;
     ds := ds[1] cat ds[2];
 
-    kernels := RationalConstraintsOnEquations(table, keys_fs, ds, curves);
-    relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
+    kernels := RationalConstraintsOnEquations(schofer_table, curves);
+    relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
     for i->B in kernels do
         if #relns[i] eq 0 then
@@ -1231,7 +1240,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, curves::SeqEnum[Shimura
                 new_ds := schofer_table`Discs;
                 ds := new_ds[1] cat new_ds[2];
                 table := schofer_table`Values;
-                relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
+                relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
                 coeffs := solve_quadratic_constraints(relns[i]);
             end while;
             coeffs := Eltseq(coeffs[1]);
@@ -1504,7 +1513,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
-procedure add_remove_column(schofer_tab, d, dnew)
+procedure replace_column(schofer_tab, d, dnew)
     //add column associated to dnew remove column associated to d
     table := schofer_tab`Values;
     ds := schofer_tab`Discs;
@@ -1680,7 +1689,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[Shimur
             assert #candidates ge 1;
             //"No possible choices of CM points left which we can pin down the correct minpoly";
             newd := Representative(candidates);
-            add_remove_column(abs_schofer_tab, d, newd);
+            replace_column(abs_schofer_tab, d, newd);
             table := abs_schofer_tab`Values;
         end while;
         table[s_idx][d_idx] := minpolys[good_inds[1]];
