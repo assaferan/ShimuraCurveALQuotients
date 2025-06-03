@@ -1459,21 +1459,33 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
-
-function add_remove_column(table, ds, d1, d2, Xstar, row_scales, all_fs)
+procedure add_remove_column(schofer_tab, d)
     //add column associated to d2 remove column associated to d1
     //both d1, d2 are quadratic discriminants
-    i := Index(ds[2], d1);
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    all_fs := [fs[k] : k in keys_fs];
+    i := Index(ds[2], d);
     d_idx := #ds[1]+i;
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d2, Xstar);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
     for i->v in norm_val do
         table[i] := norm_val[i]/row_scales[i]^2;
     end for;
-    return table;
+    schofer_tab`Values := table;
+    return;
+end procedure;
 
-end function;
+function find_y2_scales(schofer_table, FldsOfDefn)
+    ds := schofer_table`Discs;
+    ratds := ds[1];
+    table := schofer_table`Values;
+    keys_fs := schofer_table`Keys_fs;
+    k_idxs := [i : i->k in keys_fs | k gt 0];
 
-function find_y2_scales(table, FldsOfDefn, k_idxs, keys_fs, ratds)
 
     scale_factors :=[];
     for i in k_idxs do
@@ -1549,24 +1561,20 @@ function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, FldsOfDefn, 
     return table;
 end function;
 
-intrinsic ValuesAtCMPoints(schofer_tab::SchoferTable, curves::SeqEnum[ShimuraQuot], all_cm_pts::SeqEnum) -> SchoferTable
+intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, curves::SeqEnum[ShimuraQuot], all_cm_pts::SeqEnum) -> SchoferTable
     {}
-    ds := schofer_tab`Discs;
-    table := schofer_tab`Values;
-    keys_fs := schofer_tab`Keys_fs;
-    Xstar := schofer_tab`Xstar;
-    row_scales := schofer_tab`RowScales;
-
+    ds := abs_schofer_tab`Discs;
+    table := abs_schofer_tab`Values;
+    keys_fs := abs_schofer_tab`Keys_fs;
+    Xstar := abs_schofer_tab`Xstar;
+    row_scales := abs_schofer_tab`RowScales;
 
     ratds := ds[1];
     quadds := ds[2];
     allds := ratds cat quadds;
 
-    fs := schofer_tab`BorcherdsForms;
-    all_fs := [fs[k] : k in keys_fs];
-
-    s_idx := schofer_tab`sIndex;
-    stilde_idx := schofer_tab`sTildeIndex;
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
     s := table[s_idx];
     stilde := table[stilde_idx];
 
@@ -1586,7 +1594,7 @@ intrinsic ValuesAtCMPoints(schofer_tab::SchoferTable, curves::SeqEnum[ShimuraQuo
     end for;
 
     //Scale the y2 rows of the table
-    scale_factors := find_y2_scales(table, FldsOfDefn, k_idxs, keys_fs, ratds);
+    scale_factors := find_y2_scales(abs_schofer_tab, FldsOfDefn);
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
@@ -1617,15 +1625,15 @@ intrinsic ValuesAtCMPoints(schofer_tab::SchoferTable, curves::SeqEnum[ShimuraQuo
             assert #candidates ge 1;
             //"No possible choices of CM points left which we can pin down the correct minpoly";
             newd := Representative(candidates);
-            table := add_remove_column(table, ds, d, newd, Xstar, row_scales, all_fs);
+            add_remove_column(abs_schofer_tab, d, newd);
+            table := abs_schofer_tab`Values;
         end while;
         table[s_idx][d_idx] := minpolys[good_inds[1]];
         norm_s := Coefficient(minpolys[good_inds[1]], 0);
         trace_s := - Coefficient(minpolys[good_inds[1]], 1);
         table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
     end for;
-
-   
+       
     //Find signs on the y2 rows
 
     //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
@@ -1638,12 +1646,13 @@ intrinsic ValuesAtCMPoints(schofer_tab::SchoferTable, curves::SeqEnum[ShimuraQuo
         table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, FldsOfDefn, k_idxs);
     end for;
 
-    schofer_tab`Values := table;
+    schofer_table := CreateSchoferTable(table, keys_fs, ds);
 
-    return schofer_tab;
+    return schofer_table;
 end intrinsic;
 
-function reduce_table(schofer_tab)
+intrinsic reduce_table(schofer_tab::SchoferTable)
+    {}
     table := schofer_tab`Values;
     sep_ds := schofer_tab`Discs;
     scales := [];
@@ -1662,17 +1671,17 @@ function reduce_table(schofer_tab)
     degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
     schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
-    return schofer_tab;
-end function;
+    return;
+end intrinsic;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
-    schofer_tab := reduce_table(schofer_tab);
-    schofer_tab := ValuesAtCMPoints(schofer_tab, curves, all_cm_pts);
+    abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    reduce_table(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, curves, all_cm_pts);
     return schofer_tab;
 end intrinsic;
 
