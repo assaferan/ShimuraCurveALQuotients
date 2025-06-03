@@ -961,14 +961,34 @@ intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot) -> SeqEnu
     return simple_divisor;
 end intrinsic;
 
-intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
+
+
+intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
+    {Returns list of candidate discriminats for Schofer's formula}
+    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
+    cm_pts := Reverse(Sort(cm_pts));
+
+    quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+    quad_cm := Reverse(Sort(quad_cm));
+
+    return [cm_pts, quad_cm];
+
+end intrinsic;
+
+intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+    cm_pts := all_cm_pts[1];
+    quad_cm := all_cm_pts[2];
+
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
-    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
-    cm_pts := Reverse(Sort(cm_pts));
    
+    if #Include gt 0 then
+        bd := Maximum([ ClassNumber(d) : d in Include]);
+    else
+        bd:= 4;
+    end if;
 
     cm_pts_must := [p : p in cm_pts | p[1] in Include];
     other_cm := [p : p in cm_pts | p[1] notin Include];
@@ -992,30 +1012,20 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     else
         bd:= 2;
     end if;
-    pt_list_quad := [];
-    quad_cm := [];
     need := MaxNum - #pt_list_rat;
     //Whatever is left, we need
 
-    while need gt 0 do
-        if bd gt 8 then
-            error "Can't find enough CM points.";
-        end if;
-        quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+    cm_pts_must := [p : p in quad_cm | p[1] in Include];
+    other_cm := [p : p in quad_cm | p[1] notin Include];
 
-        cm_pts_must := [p : p in quad_cm | p[1] in Include];
-        other_cm := [p : p in quad_cm | p[1] notin Include];
+    pt_list_quad := cm_pts_must cat other_cm[1..(need -#Include)];
 
-        pt_list_quad cat:= cm_pts_must cat other_cm[1..(need -#Include)];
+    for p in cm_pts_must do
+        pidx := Index(Include, p[1]);
+        Include := Remove(Include,Index(Include, p[1]));
+    end for;
 
-        for p in cm_pts_must do
-            pidx := Index(Include, p[1]);
-            Include := Remove(Include,Index(Include, p[1]));
-        end for;
-
-        need := MaxNum - #pt_list_rat - #pt_list_quad;
-        bd *:=2;
-    end while;
+    assert #Include eq 0;
 
     table := [[] : f in all_fs];
     for pt in pt_list_rat do
@@ -1065,7 +1075,7 @@ intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqE
     kernels :=[* *];
     for j->idx in y2_idxs do
         g := genus_list[j];
-        require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[j];
+        require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[idx];
         //add one because one value will be the infinite value and useless
         //now remove the infinite column
         inf_idx_y2 := Index(table[idx], Infinity());
@@ -1469,7 +1479,15 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
-intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
+
+function add_remove_column(table, keys_fs, ds, d1, d2, Xstar, curves, scale_factors)
+    //add column associated to d2 remove column associated to d1
+    //both d1, d2 are quadratic discriminants
+    return -1;
+
+end function;
+
+intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar::ShimuraQuot, curves::SeqEnum, all_cm_pts::SeqEnum) -> SeqEnum, SeqEnum, SeqEnum
     {}
     ratds := ds[1];
     quadds := ds[2];
@@ -1621,9 +1639,10 @@ end function;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
+    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
     table := reduce_table(table, sep_ds);
-    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves);
+    table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves, all_cm_pts);
     return table, keys_fs, ds;
 end intrinsic;
 
