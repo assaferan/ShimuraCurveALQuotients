@@ -1366,23 +1366,24 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             s_param := C_to_P1(x) / C_to_P1(z);
             fpoly := HyperellipticPolynomials(covered_gplus1);
             eqn := Evaluate(fpoly,s_param);
-            C := HyperellipticCurve(eqn);
-            Append(~cover_eqns, C);
+            H := HyperellipticCurve(eqn);
+            Append(~cover_eqns, H);
             Append(~cover_keys, label);
             //now update ws
             id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
             assert #id_y eq 1;
             ws[label] := AssociativeArray();
-            ws[label][1] := IdentityMap(C);
+            ws[label][1] := IdentityMap(H);
             ws[label][id_y] := hyp1;
             conic_idx := Index(crv_list,covered_conic);
             id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
             assert #id_x eq 1;
-            inv := Inverse(C_to_P1)*HyperellipticInvolution(C)*C_to_P1;
+            invC := map<C->C | [x,-y,z]>;
+            inv := Inverse(C_to_P1)*invC*C_to_P1;
             //this is a map from P^1 -> P^1, need to construct
             alg_map := AlgebraMap(inv);
-            _<x,y,z> := AmbientSpace(C);
-            hyp2 := map<C->C | [alg_map(x), y, z]>;
+            _<x,y,z> := AmbientSpace(H);
+            hyp2 := map<H->H | [alg_map(x), y, z]>;
             ws[label][id_x[1]] := hyp2;
             N := curves[label]`N;
             D := curves[label]`D;
