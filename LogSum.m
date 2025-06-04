@@ -1,0 +1,108 @@
+declare type LogSm;
+declare attributes LogSm : log_coeffs;
+
+intrinsic LogSum() -> LogSm
+{.}
+    ret := New(LogSm);
+    ret`log_coeffs := AssociativeArray();
+
+    return ret;
+end intrinsic;
+
+intrinsic LogSum(a::FldRatElt, p::RngIntElt) -> LogSm
+{The element a log p.}
+    ret := New(LogSm);
+    ret`log_coeffs := AssociativeArray();
+    ret`log_coeffs[p] := a;
+
+    return ret;
+end intrinsic;
+
+intrinsic LogSum(a::RngIntElt, p::RngIntElt) -> LogSm
+{The element a log p.}
+    return LogSum(Rationals()!a,p);
+end intrinsic;
+
+
+procedure reduce(s)
+    zero_keys := [p : p in Keys(s`log_coeffs) | s`log_coeffs[p] eq 0];
+    for p in zero_keys do
+        Remove(~(s`log_coeffs), p);
+    end for;
+    return;
+end procedure;
+
+intrinsic '+'(s1::LogSm, s2::LogSm) -> LogSm
+{.}
+    s := New(LogSm);
+    s`log_coeffs := AssociativeArray();
+    for p in Keys(s1`log_coeffs) do
+        s`log_coeffs[p] := s1`log_coeffs[p];
+    end for;
+    for p in Keys(s2`log_coeffs) do
+        if not IsDefined(s`log_coeffs,p) then
+            s`log_coeffs[p] := 0;
+        end if;
+        s`log_coeffs[p] +:= s2`log_coeffs[p];
+    end for;
+    reduce(s);
+    return s;
+end intrinsic;
+
+intrinsic '*'(a::FldRatElt, s::LogSm) -> LogSm
+{.}
+    s_a := New(LogSm);
+    s_a`log_coeffs := AssociativeArray();
+    for p in Keys(s`log_coeffs) do
+        s_a`log_coeffs[p] := a*s`log_coeffs[p];
+    end for;
+    
+    reduce(s_a);
+    return s_a;
+end intrinsic;
+
+intrinsic '*'(a::RngIntElt, s::LogSm) -> LogSm
+{.}
+   return Rationals()!a*s;
+end intrinsic;
+
+
+intrinsic '-'(s1::LogSm, s2::LogSm) -> LogSm
+{.}
+    return s1 + (-1)*s2;
+end intrinsic;
+
+intrinsic Print(s::LogSm)
+{.}
+    primes := Sort([k : k in Keys(s`log_coeffs)]);
+    if IsEmpty(primes) then printf "0"; return; end if;
+    for j->p in primes do
+        if (j ne 1) and ( s`log_coeffs[p] gt 0) then
+            printf "+";
+        end if;
+        coeff := Sprintf("%o", s`log_coeffs[p]);
+        if (Abs(s`log_coeffs[p]) eq 1) then
+            coeff := coeff[1..1];
+            if (j eq 1) and (s`log_coeffs[p] eq 1) then coeff := ""; end if;
+        end if;
+        printf "%oLog%o", coeff, p;
+    end for;
+    return;
+end intrinsic;
+
+intrinsic RationalNumber(s::LogSm) -> FldRatElt
+{.}
+    require &and[IsIntegral(coeff) : coeff in s`log_coeffs] : "s does not represent a rational number!";
+    return &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];;
+end intrinsic;
+
+intrinsic IsZero(s::LogSm) -> BoolElt
+{.}
+    reduce(s);
+    return IsEmpty(Keys(s`log_coeffs));
+end intrinsic;
+
+intrinsic 'eq'(s1::LogSm, s2::LogSm) -> BoolElt
+{.}
+    return IsZero(s1-s2);
+end intrinsic;

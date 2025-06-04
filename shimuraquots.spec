@@ -7,6 +7,7 @@ ShimuraQuotients.m
 alquots.m
 workingcode.m
 automorphisms.m
+LogSum.m
 ModularNonALInvolutions.m
 RationalWithFactorization.m
 TraceFormula.m
