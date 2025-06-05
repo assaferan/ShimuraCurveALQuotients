@@ -23,6 +23,11 @@ intrinsic LogSum(a::RngIntElt, p::RngIntElt) -> LogSm
     return LogSum(Rationals()!a,p);
 end intrinsic;
 
+intrinsic LogSum(primes_coeffs::SetEnum[Tup]) -> LogSm
+{The sum of a log p for a set of pairs <p,a>.}
+    if IsEmpty(primes_coeffs) then return LogSum(); end if;
+    return &+[LogSum(pa[2], pa[1]) : pa in primes_coeffs];
+end intrinsic;
 
 procedure reduce(s)
     zero_keys := [p : p in Keys(s`log_coeffs) | s`log_coeffs[p] eq 0];

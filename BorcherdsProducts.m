@@ -292,7 +292,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
     L := RSpaceWithBasis(ScalarMatrix(3,denom));
     disc_grp, to_disc := Ldual / L;
-    return L, Ldual, disc_grp, to_disc, Q^(-1);
+    return L, Ldual, disc_grp, to_disc, Q^(-1), Q;
 end intrinsic;
 
 // assuming v_i is the coefficient of eta_i in Ldual / L
@@ -368,6 +368,19 @@ function FindLambda(Q, d : bound := 10)
     end for;
     return false, _;
 end function;
+
+intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt) -> ModTupRngElt
+{Return element of norm d in the quadratic space with Gram matrix Q.
+Warning - does it in a silly way via enumeration. }
+    bd := 10;
+    found_lambda := false;
+    while not found_lambda do
+        bd *:= 2;
+        found_lambda, lambda := FindLambda(Q, d : bound := bd);
+    end while;
+    assert found_lambda;
+    return lambda;
+end intrinsic;
 
 function VerticalJoinList(mats)
     m := mats[1];
@@ -734,38 +747,7 @@ end function;
 // Computes kappa0(m) in Schofer's formula
 intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa0(m) in Schofers formula}
-    vprintf ShimuraQuotients, 1:"Kappa0 of %o\n", m;
-    Q := ChangeRing(Q, Integers());
-    c_Lplus := Content(lambda_v);
-    Lplus := RSpaceWithBasis(Matrix(lambda_v div c_Lplus));
-    Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
-    L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
-    L_quo, L_quo_map := L / (Lplus + Lminus);
-    log_coeffs := LogSum();
-    for mu_bar in L_quo do
-        mu := mu_bar@@L_quo_map;
-        c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
-        mu_plus:= c_mu_plus*ChangeRing(lambda_v, Rationals());
-        mu_minus := mu - mu_plus;
-        // finding the possible range of x in mu_plus + L_plus
-        // use that mu_plus = c_mu_plus * lambda, L_plus = Z * c_Lplus^(-1) * lambda
-        // that <lambda,lambda> = -2d, and we only need x with <x,x> <= 2m
-        // so if x = c_mu_plus + c_Lplus^(-1)*k, we need only those with
-        // (c_mu_plus + c_Lplus^(-1)*k)^2 le m/(-d)
-        // thus k is between the following bounds
-        sqr_bd := m/(-d);
-       
-        lb := Ceiling((-Sqrt(sqr_bd) - c_mu_plus)*c_Lplus);
-        ub := Floor((Sqrt(sqr_bd) - c_mu_plus)*c_Lplus);
-        for k in [lb..ub] do
-            x := (c_mu_plus + k * c_Lplus^(-1)) * ChangeRing(lambda_v, Rationals());
-            assert (m - (x*ChangeRing(Q,Rationals()),x)/2) ge 0;
-            vprintf ShimuraQuotients, 2: "\n\t mu_minus = %o, m - Q(x) = %o\n", mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
-            a, p := kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
-            log_coeffs +:= LogSum(a,p);
-        end for;
-    end for;
-    return log_coeffs;
+    return Kappa(Parent(lambda_v)!0,Rationals()!m,d,Q,lambda_v);
 end intrinsic;
 
 intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
@@ -781,9 +763,10 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     L_quo, L_quo_map := L / (Lplus + Lminus);
 
     lambda_rat := ChangeRing(lambda_v, Rationals());
-    c_gamma_plus := ((gamma*Qrat, lambda_rat)/(lambda_rat*Qrat,lambda_rat));
+    gamma_rat := ChangeRing(gamma, Rationals());
+    c_gamma_plus := ((gamma_rat*Qrat, lambda_rat)/(lambda_rat*Qrat,lambda_rat));
     gamma_plus:= c_gamma_plus*lambda_rat;
-    gamma_minus := gamma - gamma_plus;
+    gamma_minus := gamma_rat - gamma_plus;
     log_coeffs := LogSum();
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
@@ -817,76 +800,53 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     return log_coeffs;
 end intrinsic;
 
-// !! TODO - cache the Kappa0's or do it for a bunch of fs simultaneously
-// We use a combination of the two versions of Schofer's formula from [GY] and [Err]
-// We write sum log|psi|^2 = -|CM(d)|/4 * sum c_m kappa(-m)
-// Note that in [GY] there is no square on the lhs, and 
-// in [Err] there is no division by 4 on the rhs,
-// but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
-{Return the log of the absolute value of f for every f in fs at the CM point with CM d, as a sequence of associative array}
-    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
-    D0 := D div 2^Valuation(D,2);
-    M := 4*D0;
-    
-    Q := ChangeRing(Qinv^(-1), Integers());
-    OK := MaximalOrder(QuadraticField(d));
-    is_sqr, cond := IsSquare(d div Discriminant(OK));
-    assert is_sqr;
-    require cond eq 1 : "Not implemented for non-maximal orders!";
-    O := sub<OK | cond>;
-    n_d := NumberOfOptimalEmbeddings(O, D, N);
-    require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
-    W_size := 2^#PrimeDivisors(D*N);
-    // Not sure?? Think this what happens to the number of CM points on the full quotient
-    sqfree, sq := SquarefreeFactorization(d);
-    Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
-    if ((D*N) mod sqfree eq 0) and Ogg_condition then
-        W_size div:= 2;
-    end if;
-
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
-    end while;
-    assert found_lambda;
-
-    fs := [qExpansionAtoo(eta,1) : eta in etas];
-    fs_0 := [qExpansionAt0(eta,1) : eta in etas];
-
-    // Taking care of the principal part at infinity
+intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> SeqEnum[LogSm]
+{Assuming that fs are q-expansions of oo-weakly holomorphic modular forms at oo, 
+ returns the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.
+ Here Q is the Gram matrix of the lattice L and lambda is a vecotr of norm -d.}
     ns := [-Valuation(f) : f in fs];
     n := Maximum(ns);
     log_coeffs := [LogSum() : f in fs];
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
-        log_coeffs_m := Kappa(ChangeRing(L!0,Rationals()),Rationals()!m,d,Q,lambda_v);
+        log_coeffs_m := Kappa0(m,d,Q,lambda);
         vprintf ShimuraQuotients, 1 : " is %o\n", log_coeffs_m;
-        // For debugging, seems to be working fine so far
-        // assert log_coeffs_m eq Kappa0(m,d,Q,lambda_v);
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
     end for;
 
-    // Taking care of the principal part at zero
+     // rescaling
+
+    for i in [1..#fs] do
+        log_coeffs[i] := scale * log_coeffs[i];
+    end for;
+
+    return log_coeffs;
+end intrinsic;
+
+function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
+
+    log_coeffs := [LogSum() : f in fs_0];
+
     ns := [-Valuation(f) : f in fs_0];
     n := Maximum(ns);
     
+    // computing norms of elements in the discriminant group
     mod_M_to_vecs := AssociativeArray([0..M-1]);
     for j in [0..M-1] do
         mod_M_to_vecs[j] := [];
     end for;
     for eta in disc_grp do
         v := ChangeRing(eta@@to_disc,Rationals());
-        norm_mod_M := (Integers()!((v*Qinv^-1,v)/(2*M)) mod M);
+        norm_v := (v*Q,v)/(2*M);
+        if not IsIntegral(norm_v) then continue; end if;
+        norm_mod_M := Integers()!norm_v mod M;
         Append(~mod_M_to_vecs[norm_mod_M], eta);
     end for;
+
     for mM in [1..n] do
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
-        // Replace by Kappa_gamma
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+[Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas];
         vprintf ShimuraQuotients, 1 : " is %o\n", log_coeffs_m;
@@ -897,16 +857,94 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
 
     // rescaling
 
-    for i in [1..#fs] do
-        log_coeffs[i] := -n_d / (4*W_size) * log_coeffs[i];
+    for i in [1..#fs_0] do
+        log_coeffs[i] := scale * log_coeffs[i];
+    end for;
+
+    return log_coeffs;
+end function;
+
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
+{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
+ returns the log of the absolute value of Psi_F_f at the CM point with CM d.
+ Here Q is the Gram matrix of the lattice L and lambda is a vecotr of norm -d.}
+    return SchoferFormula([f], d, Q, lambda, scale)[1];
+end intrinsic;
+
+intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
+{Return the scaling factor in Schofer formula for CM(d) on X*(D,N).}
+    D0 := D div 2^Valuation(D,2);
+    M := 4*D0;
+    
+    OK := MaximalOrder(QuadraticField(d));
+    is_sqr, cond := IsSquare(d div Discriminant(OK));
+    assert is_sqr;
+    require cond eq 1 : "Not implemented for non-maximal orders!";
+    O := sub<OK | cond>;
+    n_d := NumberOfOptimalEmbeddings(O, D, N);
+    require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
+    W_size := 2^#PrimeDivisors(D*N);
+
+    // Not sure?? Think this what happens to the number of CM points on the full quotient
+    sqfree, sq := SquarefreeFactorization(d);
+    Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
+    if ((D*N) mod sqfree eq 0) and Ogg_condition then
+        W_size div:= 2;
+    end if;
+
+    scale := -n_d / (4*W_size);
+
+    return scale;
+end intrinsic;
+
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
+ returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
+    _,_,_,_,_,Q := ShimuraCurveLattice(D,N);
+
+    scale := ScaleForSchofer(d,D,N);
+
+    lambda := ElementOfNorm(Q,-d);
+
+    return SchoferFormula(f, d, Q, lambda, scale);
+end intrinsic;
+
+
+// !! TODO - cache the Kappa0's or do it for a bunch of fs simultaneously
+// We use a combination of the two versions of Schofer's formula from [GY] and [Err]
+// We write sum log|psi|^2 = -|CM(d)|/4 * sum c_m kappa(-m)
+// Note that in [GY] there is no square on the lhs, and 
+// in [Err] there is no division by 4 on the rhs,
+// but this seems to match with the examples in [Err] !?
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
+{Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
+    _,_,disc_grp,to_disc,_, Q := ShimuraCurveLattice(D,N);
+    
+    scale := ScaleForSchofer(d,D,N);
+
+    lambda := ElementOfNorm(Q, -d);
+
+    fs := [qExpansionAtoo(eta,1) : eta in etas];
+    fs_0 := [qExpansionAt0(eta,1) : eta in etas];
+
+    // Taking care of the principal part at infinity
+    log_coeffs := SchoferFormula(fs, d, Q, lambda, scale);
+
+    // Taking care of the principal part at zero
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    log_coeffs_0 := SchoferFormula0(fs_0, d, Q, lambda, scale, M, disc_grp, to_disc);
+
+    // summing up
+    for i->s in log_coeffs do
+        log_coeffs[i] +:= log_coeffs_0[i];
     end for;
 
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(f::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> Assoc
-{Return the log of the absolute value of f at the CM point with CM d, as an associative array}
-    return SchoferFormula([f], d, D, N)[1];
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+{Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
+    return SchoferFormula([eta],d,D,N)[1];
 end intrinsic;
 
 intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[ExtReElt]
