@@ -1544,7 +1544,8 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 {Determine the equations of the immediate covers of X.}
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+3 : g in genus_list]);
-    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec, MaxNum := num_vals);
+    // num_vals + 2 to account for 0 and infinity
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec, MaxNum := num_vals + 2);
     return EquationsOfCovers(table, keys_fs, ds, curves);
 end intrinsic;
 
@@ -1639,7 +1640,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     {Get equations of all covers (not just immediate covers)}
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+3 : g in genus_list]);
-    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : MaxNum := num_vals);
+    // num_vals + 2 to account for 0 and infinity
+    table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : MaxNum := num_vals + 2);
     eqn_list, new_keys := EquationsOfCovers(table, keys_fs, ds, curves);
     cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
     all_eqns := eqn_list cat cover_eqns;
