@@ -331,8 +331,7 @@ end function;
 // and create the coefficients of the Borcherds form F
 // obtained from it. 
 // !! TODO : Not working yet - the constants are off
-function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
-    M := #discL;
+function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc, M)
     G := PSL2(Integers());
     gens := Generators(G);
     gammas := CosetRepresentatives(Gamma0(M));
@@ -340,8 +339,8 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     S := gens[2];
     assert Eltseq(T) eq [1,1,0,1];
     assert Eltseq(S) eq [0,1,-1,0];
-    F := [* PuiseuxSeriesRing(Rationals())!0 : i in [1..M] *];
-    e0 := [1] cat [0 : i in [1..M-1]];
+    F := [* PuiseuxSeriesRing(Rationals())!0 : i in [1..#discL] *];
+    e0 := [1] cat [0 : i in [1..#discL-1]];
     for gamma in gammas do
         // compute f|gamma rho_L(gamma^(-1)) e_0 and add to the sum
         cf_gamma := linear_comb_eta_quotients_action(alphas, rs, ds, Matrix(gamma));
