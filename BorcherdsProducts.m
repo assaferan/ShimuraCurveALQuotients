@@ -97,12 +97,12 @@ end procedure;
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m)
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m);
     fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
-    polymake := Read(POpen("polymake --script " cat fname, "r"));
+    polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
     sol_lines := Split(polymake, "\n");
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
-    // return rs, Eltseq(t)[1..#Divisors(M)];
+    
     return rs;
 end function;
 
@@ -119,12 +119,11 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     k := t[#t]; // the order of pole for t
     n := n_gaps;
     R := EtaQuotientsRing(M, disc);
+    pole_string := Zero select "{0,oo}" else "{oo}";
+    vprintf ShimuraQuotients, 1: "Computing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) do
-        print "prec = ", Prec;
-        print "n = ", n;
-        print "k = ", k;
-        print "rk = ", rk;
-        print "dim = ", dim;
+        
+        vprintf ShimuraQuotients, 2: "\n\t prec = %o, n = %o, k = %o, rk = %o, dim=%o\n", Prec, n, k, rk, dim; 
         
         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
         
@@ -158,6 +157,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             n +:= k;
         end if;
     end while;
+    vprintf ShimuraQuotients, 1 : "Done!\n";
     // sanity checks
     assert rk eq dim;
     
