@@ -1070,7 +1070,7 @@ function find_signs(s, stilde, ds)
         s_new[idx] := signs[j][1]*s_new[idx];
         stilde_new[idx] := signs[j][2]*stilde_new[idx];
     end for;
-    return s_new, stilde_new;
+    return s_new, stilde_new, scale, scale_tilde;
 end function;
 
 
@@ -1139,7 +1139,7 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
 
-    all_relns := [];
+    all_relns := [* *];
     for j->idx in k_idxs do
         B := kernels[j];
         numcoeffs := #Eltseq(B[1]);
@@ -1706,7 +1706,9 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
 
 
     table :=[* [* x : i->x in t *] : t in table *];
-    s, stilde := find_signs(s, stilde, ds);
+    s, stilde, scale, scale_tilde := find_signs(s, stilde, ds);
+    row_scales[s_idx] :=  row_scales[s_idx]*scale;
+    row_scales[stilde_idx] :=  row_scales[stilde_idx]*scale_tilde;
     table[s_idx] := s;
     table[stilde_idx] := stilde;
     k_idxs := abs_schofer_tab`K_idxs;
@@ -1758,6 +1760,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
         norm_s := Coefficient(minpolys[good_inds[1]], 0);
         trace_s := - Coefficient(minpolys[good_inds[1]], 1);
         table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
+        abs_schofer_tab`Values := table;
     end for;
        
     //Find signs on the y2 rows
