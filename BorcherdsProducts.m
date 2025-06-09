@@ -997,7 +997,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     need := MaxNum - #Include;
     if #cm_pts gt need then  
     //need to make space for include points, but otherwise fill up with rational points as much as possible
-        pt_list_rat := cm_pts_must cat other_cm[1..need];
+        pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
     else
         pt_list_rat := cm_pts_must cat other_cm;
     end if;
@@ -1586,8 +1586,11 @@ procedure replace_column(schofer_tab, d, dnew)
     deg := Degree(flds[1]);
     if d in ds[1] then
         d_idx := Index(ds[1],d);
+        ds[1][d_idx] := dnew;
     else
-        d_idx := Index(ds[2], d)+#ds[1];
+        qidx := Index(ds[2], d);
+        d_idx := qidx+#ds[1];
+        ds[2][qidx] := dnew;
     end if;
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
@@ -1656,10 +1659,9 @@ function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs
     for k->i in k_idxs do
         if table[i][j] eq Infinity() then continue; end if;
         if table[i][j] eq 0 then continue; end if;
-
         // fields := FieldsOfDefinitionOfCMPoint(curves[keys_fs[i]], d);
         fields := flds[keys_fs[i]][d];
-        Fs_eps := [* <F, eps> : F in fields, eps in [-1,1] *];
+        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
         possible_answers := [* *];
         for eps in [-1,1] do
             y2 := scale_factors[k]*eps*table[i][j];
@@ -1691,7 +1693,6 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     keys_fs := abs_schofer_tab`Keys_fs;
     Xstar := abs_schofer_tab`Xstar;
     row_scales := abs_schofer_tab`RowScales;
-    all_flds := abs_schofer_tab`FldsOfDefn;
     curves := abs_schofer_tab`Curves;
     cid := Xstar`CurveID; 
     ratds := ds[1];
@@ -1719,12 +1720,13 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     for i->d in quadds do
         d_idx := #ratds+i;
         good_inds := [];
-
+        currd := d;
         while #good_inds ne 1 do
+            all_flds := abs_schofer_tab`FldsOfDefn;
             norm_s := table[s_idx][d_idx];
             norm_stilde := table[stilde_idx][d_idx];
             // flds := FieldsOfDefinitionOfCMPoint(Xstar, d);
-            flds := all_flds[cid][d];
+            flds := all_flds[cid][currd];
             assert #flds eq 1;
             assert Degree(flds[1]) eq 2;
             K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
@@ -1738,17 +1740,18 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
             roots := [Roots(p,K) : p in minpolys];
             good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
             // require #good_inds gt 1 : "We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
-            if #good_inds gt 1 then
-                vprintf ShimuraQuotients, 2: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", d;
+            if #good_inds ne 1 then
+                vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+                Include(~bad_ds, currd);
+                candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
+                assert #candidates ge 1;
+                //"No possible choices of CM points left which we can pin down the correct minpoly";
+                newd := Reverse(Sort(SetToSequence(candidates)))[1];
+                replace_column(abs_schofer_tab, currd, newd);
+                currd := newd;
+                table := abs_schofer_tab`Values;
+                table :=[* [* x : i->x in t *] : t in table *];
             end if;
-            Include(~bad_ds, d);
-            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
-            assert #candidates ge 1;
-            //"No possible choices of CM points left which we can pin down the correct minpoly";
-            newd := Reverse(Sort(SetToSequence(candidates)))[1];
-            replace_column(abs_schofer_tab, d, newd);
-            table := abs_schofer_tab`Values;
-            table :=[* [* x : i->x in t *] : t in table *];
         end while;
         table[s_idx][d_idx] := minpolys[good_inds[1]];
         norm_s := Coefficient(minpolys[good_inds[1]], 0);
@@ -1765,7 +1768,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     // so eps* v is a square in Q, and is positive
 
     for j->d in ratds do
-        table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs);
+        table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, all_flds, k_idxs);
     end for;
 
     schofer_table := CreateSchoferTable(table, keys_fs, ds, curves, Xstar);
