@@ -1710,6 +1710,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     table[s_idx] := s;
     table[stilde_idx] := stilde;
     k_idxs := abs_schofer_tab`K_idxs;
+    abs_schofer_tab`Values := table;
 
     //Scale the y2 rows of the table
     scale_factors := find_y2_scales(abs_schofer_tab);
