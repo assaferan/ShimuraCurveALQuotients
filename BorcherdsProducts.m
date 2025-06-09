@@ -1275,7 +1275,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    num_vals := Maximum([2*g+4 : g in genus_list]);
+    num_vals := Maximum([2*g+5 : g in genus_list]);
     abs_schofer_tab := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
