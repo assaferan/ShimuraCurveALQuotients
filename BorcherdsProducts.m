@@ -1771,7 +1771,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
         table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, all_flds, k_idxs);
     end for;
 
-    schofer_table := CreateSchoferTable(table, keys_fs, ds, curves, Xstar);
+    schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
     return schofer_table;
 end intrinsic;
 
