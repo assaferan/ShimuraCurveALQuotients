@@ -1228,7 +1228,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
     for i->B in kernels do //indexed by k_idxs
-        if #relns[i] eq 0 then
+        if #relns[i] eq 0 or #B eq 1 then
             require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
             v :=  Eltseq(B[1]);
             monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
