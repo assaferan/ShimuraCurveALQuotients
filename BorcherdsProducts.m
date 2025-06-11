@@ -980,8 +980,9 @@ end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum, fs::Assoc : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SchoferTable
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    cm_pts := all_cm_pts[1];
-    quad_cm := all_cm_pts[2];
+    
+    cm_pts := [a : a in all_cm_pts[1]| a[1] notin Exclude];
+    quad_cm := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
 
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
