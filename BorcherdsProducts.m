@@ -1749,8 +1749,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
                 vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
                 Include(~bad_ds, currd);
                 candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
-                assert #candidates ge 1;
-                //"No possible choices of CM points left which we can pin down the correct minpoly";
+                require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
                 newd := Reverse(Sort(SetToSequence(candidates)))[1];
                 replace_column(abs_schofer_tab, currd, newd);
                 currd := newd;
