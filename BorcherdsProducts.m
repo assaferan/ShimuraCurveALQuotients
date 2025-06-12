@@ -1150,8 +1150,8 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
         inf_idx_s := Index(table[s_idx], Infinity());
         y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
-        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt];
-        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt ];
+        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt ];
         quad_y2vals := [ y2vals[i]  : i in quad_sidxs];
         coeff_list := [ &+[x[i]*B[i][k]: i in [1..#B]] : k in [1 .. numcoeffs]]; //this is a list of a_k, and also y^2
         
@@ -1722,6 +1722,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
         row_scales[k] := row_scales[k]*scale_factors[i];
     end for;
     abs_schofer_tab`Values := table;
+    abs_schofer_tab`RowScales := row_scales;
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
@@ -1734,7 +1735,6 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
             all_flds := abs_schofer_tab`FldsOfDefn;
             norm_s := table[s_idx][d_idx];
             norm_stilde := table[stilde_idx][d_idx];
-            // flds := FieldsOfDefinitionOfCMPoint(Xstar, d);
             flds := all_flds[cid][currd];
             assert #flds eq 1;
             assert Degree(flds[1]) eq 2;
@@ -1748,7 +1748,6 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
             end for;
             roots := [Roots(p,K) : p in minpolys];
             good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-            // require #good_inds gt 1 : "We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
             if #good_inds ne 1 then
                 vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
                 Include(~bad_ds, currd);
