@@ -1150,8 +1150,8 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
         inf_idx_s := Index(table[s_idx], Infinity());
         y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
-        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt and i ne 10];
-        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt and i ne 10];
+        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt];
         quad_y2vals := [ y2vals[i]  : i in quad_sidxs];
         coeff_list := [ &+[x[i]*B[i][k]: i in [1..#B]] : k in [1 .. numcoeffs]]; //this is a list of a_k, and also y^2
         
