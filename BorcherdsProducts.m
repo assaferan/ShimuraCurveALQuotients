@@ -1360,9 +1360,10 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             covered_gplus1 := crv_list[gplus1idx];
             //if this is empty then it's not hyperelliptic
             // assert Degree(covered_conic) eq 2;
-            P2<x,y,z> := ProjectiveSpace(Rationals(),2);
-            C := Curve(P2, y^2-z^2*Evaluate(covered_conic, x/z));
-            C := Conic(C);
+            // P2<x,y,z> := ProjectiveSpace(Rationals(),2);
+            // C := Curve(P2, y^2-z^2*Evaluate(covered_conic, x/z));
+            C := Conic(covered_conic);
+            P2<x,y,z> := Ambient(C);
             assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
             C_to_P1 := Inverse(Parametrization(C));
             s_param := C_to_P1(x) / C_to_P1(z);
