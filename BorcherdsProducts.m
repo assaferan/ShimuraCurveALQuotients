@@ -1150,8 +1150,8 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
         inf_idx_s := Index(table[s_idx], Infinity());
         y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
-        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt];
-        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt and i ne 10];
+        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt and i ne 10];
         quad_y2vals := [ y2vals[i]  : i in quad_sidxs];
         coeff_list := [ &+[x[i]*B[i][k]: i in [1..#B]] : k in [1 .. numcoeffs]]; //this is a list of a_k, and also y^2
         
@@ -1655,18 +1655,17 @@ function find_y2_scales(schofer_table)
 
 end function;
 
-function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs)
+function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
     //find signs of y^2 for rational CM point d on each y^2
     //in keys_fs, where j is index of column of d in table
     for k->i in k_idxs do
         if table[i][j] eq Infinity() then continue; end if;
         if table[i][j] eq 0 then continue; end if;
-        // fields := FieldsOfDefinitionOfCMPoint(curves[keys_fs[i]], d);
         fields := flds[keys_fs[i]][d];
         Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
         possible_answers := [* *];
         for eps in [-1,1] do
-            y2 := scale_factors[k]*eps*table[i][j];
+            y2 := eps*table[i][j];
             for F in fields do
                 is_sqr, y := IsSquare(F!y2);
                 if (is_sqr) then
@@ -1676,14 +1675,9 @@ function find_y2_signs(table, keys_fs, curves, d, j, scale_factors, flds, k_idxs
                 end if;
             end for;
         end for;
-        // is_sqr := [IsSquare(F!(scale_factors[k]*eps*table[i][j])) : F in fields, eps in [-1,1]];
-        // require &or is_sqr : "Value %o at CM point %o does not lie in any subfield.", table[i][j], d;
-        // require #[a : a in is_sqr | a] eq 1 : "Too many options for value %o at CM point %o", table[i][j], d;
         assert #possible_answers eq 1;
-        // "Wrong number of possible signs or CM fields", possible_answers, table[i][j], d;
-        // eps := Fs_eps[Index(is_sqr, true)][2];
         eps := possible_answers[1][2];
-        table[i][j] := eps * table[i][j];
+        table[i][j] :=  eps * table[i][j];
     end for;
     return table;
 end function;
@@ -1693,6 +1687,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     ds := abs_schofer_tab`Discs;
     table := abs_schofer_tab`Values;
     keys_fs := abs_schofer_tab`Keys_fs;
+    k_idxs := abs_schofer_tab`K_idxs;
     Xstar := abs_schofer_tab`Xstar;
     row_scales := abs_schofer_tab`RowScales;
     curves := abs_schofer_tab`Curves;
@@ -1718,6 +1713,15 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
 
     //Scale the y2 rows of the table
     scale_factors := find_y2_scales(abs_schofer_tab);
+
+    degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
+    for i->k in k_idxs do
+        for j in [1 .. #table[k]] do
+            table[k][j] := table[k][j]/scale_factors[i]^degs[j];
+        end for;
+        row_scales[k] := row_scales[k]*scale_factors[i];
+    end for;
+    abs_schofer_tab`Values := table;
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
@@ -1773,7 +1777,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     // so eps* v is a square in Q, and is positive
 
     for j->d in ratds do
-        table := find_y2_signs(table, keys_fs, curves, d, j, scale_factors, all_flds, k_idxs);
+        table := find_y2_signs(table, keys_fs, curves, d, j, all_flds, k_idxs);
     end for;
 
     schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
