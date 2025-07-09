@@ -1360,16 +1360,21 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             covered_gplus1 := crv_list[gplus1idx];
             //if this is empty then it's not hyperelliptic
             // assert Degree(covered_conic) eq 2;
-            // P2<x,y,z> := ProjectiveSpace(Rationals(),2);
-            // C := Curve(P2, y^2-z^2*Evaluate(covered_conic, x/z));
             C := Conic(covered_conic);
             P2<x,y,z> := Ambient(C);
             assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
-            C_to_P1 := Inverse(Parametrization(C));
+            P1_to_C := Parametrization(C);
+            C_to_P1 := Inverse(P1_to_C);
             s_param := C_to_P1(x) / C_to_P1(z);
             fpoly := HyperellipticPolynomials(covered_gplus1);
+            // amap := AlgebraMap(P1_to_C);
+            // amap(x)/amap(z);
             eqn := Evaluate(fpoly,s_param);
-            H := HyperellipticCurve(eqn);
+            _<t> := PolynomialRing(Rationals());
+            tmp := Evaluate(eqn,[t,1]); 
+            N := Numerator(tmp);
+            D := Denominator(tmp); //under change of equation z = y*sqrt(D) this is the curve
+            H := HyperellipticCurve(N);
             Append(~cover_eqns, H);
             Append(~cover_keys, label);
             //now update ws
@@ -1377,22 +1382,27 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             assert #id_y eq 1;
             ws[label] := AssociativeArray();
             ws[label][1] := IdentityMap(H);
-            ws[label][id_y] := hyp1;
+            hyp1 := HyperellipticInvolution(H);
             conic_idx := Index(crv_list,covered_conic);
-            id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
+            id_x := [m : m in Keys(ws[new_keys[conic_idx]]) diff {1} | ws[new_keys[conic_idx]][m] eq IdentityMap(covered_conic)];
+            ws[label][id_x] := hyp1;
             assert #id_x eq 1;
-            invC := map<C->C | [x,-y,z]>;
-            inv := Inverse(C_to_P1)*invC*C_to_P1;
-            //this is a map from P^1 -> P^1, need to construct
-            alg_map := AlgebraMap(inv);
+            hyp_conic := map<C->C | [x,-y,z]>;
+            inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
+            //this is a map from P^1 -> P^1
+             _<s,t> := Parent(C_to_P1(x));
+            tmp := Inverse(inv);
             _<x,y,z> := AmbientSpace(H);
-            hyp2 := map<H->H | [alg_map(x), y, z]>;
-            ws[label][id_x[1]] := hyp2;
+            im_s := Evaluate(inv(s)/inv(t),[x,z]);
+            denom := Evaluate(SquareRoot(D), im_s);
+            denom_denom := Evaluate(SquareRoot(D), x/z);
+            hyp2 := map<H->H | [ im_s, y/z^(g+1)*denom/denom_denom, 1] >;
+            _, hyp2 := IsAutomorphism(hyp2);
+            ws[label][id_y[1]] := hyp2;
             N := curves[label]`N;
             D := curves[label]`D;
             other_w := al_mul(id_x[1], id_y[1], N*D);
-            ws[label][other_w] := hyp1*hyp2; //TODO TEST THIS , sure this doesnt work
-
+            ws[label][other_w] := hyp1*hyp2; 
         end for;
         curves_above_P1s := AssociativeArray();
         P1s := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
