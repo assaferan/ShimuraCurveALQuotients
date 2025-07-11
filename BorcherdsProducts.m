@@ -36,21 +36,26 @@ function lhs_integer_programming(M)
     return lhs;
 end function;
 
-function find_t(M)
+function create_lhs_rhs(M)
     ds := Divisors(M);
     ps := PrimeDivisors(M);
     lhs := lhs_integer_programming(M);
     n_eq := #ps + 3;
-    rels_seq := [0 : i in [1..n_eq]] cat [1 : i in [1..#ds]] cat [-1,1];
-    rels := Matrix(Integers(), Nrows(lhs), 1, rels_seq);
+    // rels_seq := [0 : i in [1..n_eq]] cat [1 : i in [1..#ds]] cat [-1,1];
+    // rels := Matrix(Integers(), Nrows(lhs), 1, rels_seq);
     rhs := Matrix(Integers(), Nrows(lhs), 1, [0 : i in [1..n_eq + #ds]] cat [-1,1]);
+    return lhs, rhs, n_eq, #ds;
+end function;
+
+function find_t(M)
+    lhs, rhs, n_eq, n_ds := create_lhs_rhs(M);
     objective := Matrix(Integers(), 1, Ncols(lhs), [0 : i in [1..Ncols(lhs)-1]] cat [1]);
     // This is what we want but doesn't work because assumes all variables are nonnegative
     // MinimalIntegerSolution(lhs, rels, rhs, objective);
     LP := LPProcess(Integers(),Ncols(lhs));
     AddConstraints(LP,Matrix(lhs[1..n_eq]), Matrix(rhs[1..n_eq]) : Rel := "eq");
-    AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + #ds]), Matrix(rhs[n_eq + 1..n_eq + #ds]) : Rel := "ge");
-    idx := n_eq + #ds + 1;
+    AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + n_ds]), Matrix(rhs[n_eq + 1..n_eq + n_ds]) : Rel := "ge");
+    idx := n_eq + n_ds + 1;
     assert idx + 1 eq Nrows(lhs);
     AddConstraints(LP,Matrix(lhs[idx..idx]), Matrix(rhs[idx..idx]) : Rel := "le");
     AddConstraints(LP,Matrix(lhs[idx+1..idx+1]), Matrix(rhs[idx+1..idx+1]) : Rel := "ge");
@@ -59,18 +64,23 @@ function find_t(M)
     end for;
     SetObjectiveFunction(LP, objective); 
     t := Solution(LP);
-    return t, lhs, rhs, n_eq, #ds;
+    return t, lhs, rhs, n_eq, n_ds;
 end function;
 
 // n is the order of the pole at infty,
 // m the order of the pole at 0
-function integer_programming_input(lhs, rhs, n_eq, n_ds, n, m)
+function integer_programming_input(lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     lhs := Submatrix(lhs, [1..Nrows(lhs)-1], [1..Ncols(lhs)-1]);
     rhs := Submatrix(rhs, [1..Nrows(rhs)-1], [1..1]);
     rhs[n_eq+1,1] := -24*m;
     rhs[Nrows(rhs)-1,1] := -24*n;
-    rhs[1,1] := 1; // admissibility condition
-    rhs[2,1] := 1; // discriminant is 2 times a square - equation corresponding to valuation at 2
+    rhs[1,1] := 2*k; // admissibility condition
+    rhs[2,1] := (sq_disc select 0 else 1); // discriminant is 2 times a square - equation corresponding to valuation at 2
+    if cuspidal then
+        for j in [1..n_ds] do
+            rhs[n_eq+j,1] := 1;
+        end for;
+    end if;
     // eqs in a format for polymake / sage
     eqs := [Eltseq(row) : row in Rows(HorizontalJoin(-Matrix(rhs[1..n_eq]),Matrix(lhs[1..n_eq])))];
     // inequalities in format for polymake / sage
@@ -79,8 +89,8 @@ function integer_programming_input(lhs, rhs, n_eq, n_ds, n, m)
     return eqs, ieqs;
 end function;
 
-procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m)
-    eqs, ieqs := integer_programming_input(lhs, rhs, n_eq, n_ds, n, m);
+procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+    eqs, ieqs := integer_programming_input(lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     output_lines := [];
     Append(~output_lines, "use application \"polytope\";");
     Append(~output_lines, "use vars '$ieqs', '$eqs', '$p';");
@@ -94,10 +104,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m)
     return;
 end procedure;
 
-function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m)
-    write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m);
+function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+    write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
+    if IsEof(polymake) then return []; end if;
+
     sol_lines := Split(polymake, "\n");
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
@@ -105,6 +117,133 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m)
     
     return rs;
 end function;
+
+intrinsic HolomorphicEtaQuotients(N::RngIntElt, k::RngIntElt : Prec := 100) -> SeqEnum[EtaQuot]
+{Returns a basis of M_k(N) using eta quotients.}
+    R := EtaQuotientsRing(N, 1);
+    lhs, rhs, n_eq, n_ds := create_lhs_rhs(N);
+    rs := get_integer_prog_solutions(N, lhs, rhs, n_eq, n_ds, 0, 0 : k := k, sq_disc := true); // , cuspidal := true);
+    return [EtaQuotient(R,r) : r in rs];
+end intrinsic;
+
+function coeff_height(vec)
+    return &+[Log(AbsoluteValue(Numerator(x)))+Log(AbsoluteValue(Denominator(x))) : x in Eltseq(vec) | x ne 0];
+end function;
+
+function find_minimal_expression_of_length(etas, l, mat, v)
+    min_height := Infinity();
+    found := false;
+    for S in Subsets({1..#etas},l) do
+        S_seq := [j : j in S];
+        sub_mat := [mat[i] : i in S_seq];
+        V := sub< RowSpace(mat) | sub_mat>;
+        if v notin V then continue; end if;
+        found := true;
+        sol := Solution(Matrix(sub_mat), v);
+        height := coeff_height(sol);
+        if height lt min_height then
+            eta := &+[sol[i]*etas[S_seq[i]] : i in [1..#S_seq]];
+            min_height := height;
+        end if;
+    end for;
+    if not found then return false, _; end if;
+    return true, eta;
+end function;
+
+import "EtaQuotient.m" : valuation_at_oo_lb;
+
+intrinsic FindAsEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
+{Returns f as an eta quotient.}
+    found := false;
+    M := N;
+    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    while not found do
+        vprintf ShimuraQuotients,1 : "%o ", M;
+        etas := HolomorphicEtaQuotients(M, k);
+        M *:= 2;
+        if IsEmpty(etas) then continue; end if;
+        vals := [valuation_at_oo_lb(eta) : eta in etas];
+        prec := Maximum(Maximum(vals), #etas) + 2;
+        mat := Matrix([AbsEltseq(qExpansionAtoo(eta,prec) : FixedLength) : eta in etas]);
+        v := Vector(Integers(), AbsEltseq(qExpansion(f,prec) : FixedLength));
+        mat_Q := ChangeRing(mat, Rationals());
+        v_Q := ChangeRing(v, Rationals());
+        found := v_Q in RowSpace(mat_Q);
+    end while;
+
+    sol := Solution(mat_Q, v_Q);
+    length := #[x : x in Eltseq(sol) | x ne 0];
+    height := coeff_height(sol);
+    vprintf ShimuraQuotients,1 : "\nFound a solution with length %o and height %o\n", length, height;
+
+    // Try to find best integral solution first
+    if v in RowSpace(mat) then
+        vprintf ShimuraQuotients, 1 : "Found an integral solution,"; 
+        sol_Z := Solution(mat, v);
+        ker := Kernel(mat);
+        // The 126 < 200 < 262 was set according to performance of ClosestVector
+        if (Dimension(ker) gt 0) and (Dimension(ker) lt 200) then
+            vprintf ShimuraQuotients, 1 : "looking for closest vector to lattice of dimension %o...", Dimension(ker);
+            sol_Z := sol_Z - ClosestVector(Lattice(ker),sol_Z);
+            vprintf ShimuraQuotients,1 : "Done!\n";
+        end if;
+       
+        length_Z := #[x : x in Eltseq(sol_Z) | x ne 0];
+        height_Z := coeff_height(sol_Z);
+        if (length_Z lt length) or ((length_Z eq length) and (height_Z lt height)) then
+            sol := sol_Z;
+            length := length_Z;
+            height := height_Z;
+            vprintf ShimuraQuotients,1 : "Improved to length %o and height %o\n", length, height;
+        end if;
+    end if;
+
+    vprintf ShimuraQuotients, 1 : "Trying to improve the upper bound...";
+
+    length_new := length;
+    height_new := height;
+    count_stable := 0;
+
+    // 10000 is arbitrary here
+    while (count_stable lt 10000) do
+        count_stable +:= 1;
+        eta_idxs := [i : i in RandomSubset({1..#etas}, length-1)];
+        basis := [mat_Q[i] : i in eta_idxs];
+        V := sub<RowSpace(mat_Q) | basis>;
+        if v_Q notin V then continue; end if;
+        sol_new := Solution(Matrix(basis), v_Q);
+        length_new := #[x : x in Eltseq(sol_new) | x ne 0];
+        height_new := coeff_height(sol_new);
+        
+        if (length_new lt length) or ((length_new eq length) and (height_new lt height)) then
+            sol := sol_new;
+            length := length_new;
+            height := height_new;
+            vprintf ShimuraQuotients,1 : "Improved to length %o and height %o\n", length, height;
+            count_stable := 0;
+        end if;
+    end while;
+
+    vprintf ShimuraQuotients, 1 : "Verifying there are no expressions of length ";
+    for l in [1..length-1] do
+        vprintf ShimuraQuotients, 1 : "%o ", l;
+        found, eta := find_minimal_expression_of_length(etas, l, mat_Q, v_Q);
+        if found then return eta; end if;
+    end for;
+    
+    if height eq 0 then
+        // In this case, we know found solution is minimal
+        eta := &+[sol[i]*etas[i] : i in [1..#etas]];
+        return eta; 
+    end if;
+
+    vprintf ShimuraQuotients, 1 : "\nFinding minimal expression of length %o...\n", length;
+    // Now this must work
+    found, eta := find_minimal_expression_of_length(etas, length, mat_Q, v_Q);
+    assert found;
+    return eta;
+
+end intrinsic;
 
 intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
@@ -786,7 +925,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
         for k in [lb..ub] do
             x := (c_gamma_plus + c_mu_plus + k * c_Lplus^(-1)) * lambda_rat;
             assert (m - (x*Qrat,x)/2) ge 0;
-            
+            // if (m - (x*Qrat,x)/2) lt 0 then printf "skipping...\n"; continue; end if;
             vprintf ShimuraQuotients, 2: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 2: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
@@ -1272,7 +1411,7 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
 end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
-{Returns list of candidate discriminats for Schofer's formula}
+{Returns list of candidate discriminats for Schofer's formula} //'
     cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
     cm_pts := Reverse(Sort(cm_pts));
 
