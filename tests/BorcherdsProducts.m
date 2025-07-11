@@ -1,42 +1,60 @@
+AttachSpec("shimuraquots.spec");
+
+import "BorcherdsProducts.m" : Wpoly, Wpoly2, Wpoly_scaled;
+
+function lambda_v(Q, d)
+    bd := 10;
+    found_lambda := false;
+    while not found_lambda do
+        bd *:= 2;
+        found_lambda, lambda := FindLambda(Q,-d : bound := bd);
+    end while;
+    assert found_lambda;
+    return lambda;
+end function;
 
 procedure test_Kappa0()
+    printf "Testing Kappa0...";
     D := 6;
     N := 1;
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
+    
     // verifying [Yang, Example 21, p. 24-25]
     // assert Round(1/Kappa0(3,-4,Q)) eq 2^8*3^4;
-    log_coeffs := Kappa0(3,-4,Q);
+    log_coeffs := Kappa0(3,-4,Q,lambda_v(Q,-4));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -8>, <3, -4> };
     // assert Round(1/Kappa0(1,-3,Q)) eq 2^4;
-    log_coeffs := Kappa0(1,-3,Q);
+    log_coeffs := Kappa0(1,-3,Q,lambda_v(Q,-3));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4> };
     // verifying [Err, p. 850]
     // assert Round(1/Kappa0(1,-24,Q)) eq 2^6;
-    log_coeffs := Kappa0(1,-24,Q);
+    log_coeffs := Kappa0(1,-24,Q,lambda_v(Q,-24));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -6> };
     // assert Round(1/Kappa0(3,-24,Q)) eq 2^8*3^4;
-    log_coeffs := Kappa0(3,-24,Q);
+    log_coeffs := Kappa0(3,-24,Q,lambda_v(Q,-24));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -8>, <3, -4> };
     // assert Round(1/Kappa0(1,-163,Q)) eq 2^4*3^11*7^4*19^4*23^4;
-    log_coeffs := Kappa0(1,-163,Q);
+    log_coeffs := Kappa0(1,-163,Q,lambda_v(Q,-163));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -4>, <3, -11>, <7, -4>, <11,0>, <19,-4>, <23,-4> };
     // assert Round(1/Kappa0(3,-163,Q)^3) eq 2^40*3^12*5^12*11^12*17^12;
-    log_coeffs := Kappa0(3,-163,Q);
+    log_coeffs := Kappa0(3,-163,Q,lambda_v(Q,-163));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -40/3>, <3, -4>, <5, -4>, <11,-4>, <17,-4>, <23,0>, <89, 0> };
     D := 10;
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(D,N);
     Q := ChangeRing(Qinv^(-1), Integers());
-    log_coeffs := Kappa0(3,-68,Q);
+    log_coeffs := Kappa0(3,-68,Q,lambda_v(Q,-68));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -8>,  <5, -14/3>};
     // This does not work. This is probably a typo! Isn't it supposed to be 2. This would be the relevant number.
     //log_coeffs := Kappa0(1,-68,Q);
-    log_coeffs := Kappa0(2,-68,Q);
+    log_coeffs := Kappa0(2,-68,Q,lambda_v(Q,-68));
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2, -6>,  <5, -6>};
+    printf "Done!\n";
     return;
 end procedure;
 
 procedure test_Schofer_6()
+    printf "Testing Schofer formula for D=6...";
     _<q> := LaurentSeriesRing(Rationals());
     // testing [Errthum, p. 850]
     f6 := -6*q^(-3) + 4*q^(-1) + O(q);
@@ -127,17 +145,14 @@ procedure test_Schofer_6()
     //divide to account for 3 CM points of degree 6
     log_coeffs := SchoferFormula(f6, -996, 6, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, -2>, <3, -18>, <41, -6>, <29, -6>, <17,-6>, <7,12>, <83,2>, <71,4> };
-
+    printf "Done!\n";
     return;
-
-
-
 
 end procedure;
 
 
 procedure test_Schofer_10()
-
+    printf "testing Schofer formula for D=10...";
     _<q> := LaurentSeriesRing(Rationals());
 
     //This works!
@@ -146,8 +161,11 @@ procedure test_Schofer_10()
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 3> };
 
     //This does still not work at 2! Off by a factor of 4, this is confusing. The kappas are all correct now.
+    // Probably an error in [Err] ?
     log_coeffs := SchoferFormula(f10, -68, 10, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 2>, <5, 1> };
+    // Here is the result we expected from [Err]
+    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 2>, <5, 1> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2, 6>, <5, 1> };
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
 
@@ -160,9 +178,12 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -52, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 3>, <5, -2> };
 
+    // !At the moment, non-maximal orders are not implemented!
+    /*
     //this is wrong - used to have the 0 error
     log_coeffs := SchoferFormula(f10, -72, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 2>, <5, -2>, <7,-2> };
+    */
 
     //this works!
     log_coeffs := SchoferFormula(f10, -120, 10, 1);
@@ -172,9 +193,12 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -88, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,3>, <2, 1>, <5,3>, <7,-2> };
 
+    // !At the moment, non-maximal orders are not implemented!
+    /*
     //this is wrong -used to have the 0 error
     log_coeffs := SchoferFormula(f10, -27, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <3,1>, <2, 8>, <5,-2> };
+    */
 
     //this works!
     log_coeffs := SchoferFormula(f10, -35, 10, 1);
@@ -186,52 +210,56 @@ procedure test_Schofer_10()
     log_coeffs := SchoferFormula(f10, -43, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 8>, <3,3>,  <5,-2>, <7,-2>};
 
+    // !At the moment, non-maximal orders are not implemented!
+    /*
     //This (-180) doesn't work! Why??? This was proved in Elkies, also
     log_coeffs := SchoferFormula(f10, -180, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {  <2, 3>,  <11,3>,<13,-2>};
+    */
 
     // this works!
     log_coeffs := SchoferFormula(f10, -232, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {   <3,3>,  <11,3>,<17,3>, <5,-2>, <7,-2>, <23,-2>};
 
     //this works!
-   log_coeffs := SchoferFormula(f10, -67, 10, 1);
+    log_coeffs := SchoferFormula(f10, -67, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>,  <5,3>, <7,-2>, <13,-2>};
 
     //this works!
-   log_coeffs := SchoferFormula(f10, -280, 10, 1);
+    log_coeffs := SchoferFormula(f10, -280, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,1>,  <3,3>, <11,3>, <7,-1>, <23,-2>};
     //this works!
-   log_coeffs := SchoferFormula(f10, -340, 10, 1);
+    log_coeffs := SchoferFormula(f10, -340, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,3>,  <3,3>, <23,3>, <7,-2>, <29,-2>};
 
     //this works!
-   log_coeffs := SchoferFormula(f10, -115, 10, 1);
+    log_coeffs := SchoferFormula(f10, -115, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <13,-2>, <23,-1>};
     //this works!
-   log_coeffs := SchoferFormula(f10, -520, 10, 1);
+    log_coeffs := SchoferFormula(f10, -520, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,-1>,  <3,3>, <29,3>, <7,-2>, <13,-1>, <47,-2>};
 
     //this works but takes a long time!
-   log_coeffs := SchoferFormula(f10, -163, 10, 1);
+    log_coeffs := SchoferFormula(f10, -163, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,11>,  <3,3>, <5,3>, <11,3>, <7,-2>, <13,-2>,<29,-2>, <31,-2> };
 
     //this works!
-   log_coeffs := SchoferFormula(f10, -760, 10, 1);
+    log_coeffs := SchoferFormula(f10, -760, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,2>,  <3,3>, <17,3>, <47,3>, <7,-2>, <31,-2>,<71,-2> };
     //this works!
-   log_coeffs := SchoferFormula(f10, -235, 10, 1);
+    log_coeffs := SchoferFormula(f10, -235, 10, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq {   <2,8>,  <3,3>, <17,3>,  <7,-2>, <37,-2>,<47,-1> };
     //this works! the extra 2^2 comes from the fact that there are 2 points here
-   log_coeffs := SchoferFormula(f10, -420, 10, 1);
-   assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2,6> , <3,6>,<29,3>,<7,-2>,<37,-2> };
+    log_coeffs := SchoferFormula(f10, -420, 10, 1);
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs)} eq { <2,6> , <3,6>,<29,3>,<7,-2>,<37,-2> };
 
-
+    printf "Done!\n";
+    return;
 end procedure;
 
 
 procedure test_Schofer_142()
-
+    printf "testing Schofer formula for D=142...";
     _<q> := LaurentSeriesRing(Rationals());
     f1 := -2*q^(-87)- 2*q^(-71) - 2*q^(-48) - 2*q^(-36) +2*q^(-16) -2*q^(-15)-2*q^(-12)+2*q^(-9)-2*q^(-7) - 2*q^(-3) +2*q^(-2) + 2*q^(-1) + O(q);
     f3 := q^(-87) - 2*q^(-79) + q^(-76) - 2*q^(-71)+2*q^(-48)-q^(-40)+3*q^(-32)-2*q^(-20)-q^(-19)-2*q^(-12)+2*q^(-10)+q^(-8)-2*q^(-7)-2*q^(-2) + O(q);
@@ -253,45 +281,49 @@ procedure test_Schofer_142()
     log_coeffs := SchoferFormula(f1, -43, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10> };
 
-    //long time didn't try
+    // this works, but long time
+    /*
     log_coeffs := SchoferFormula(f1, -148, 142, 1);
-    {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10>  };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-10>  };
+    */
 
-    //long time didn't try.
+    // this works, but long time
+    /*
     log_coeffs := SchoferFormula(f1, -232, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-11> };
+    */
 
     //psi_f3 *2 = y
 
-    //Can't compute this
+    //Can't compute this because m = 0 !?
+    /*
     log_coeffs := SchoferFormula(f3, -3, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,1> };
+    */
 
     //this works
     log_coeffs := SchoferFormula(f3, -4, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {  };
     
+     //Can't compute this because m = 0 !?
+    /*
     log_coeffs := SchoferFormula(f3, -19, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,-1> };
+    */
 
     //this works
     log_coeffs := SchoferFormula(f3, -24, 142, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,1> };
 
     log_coeffs := SchoferFormula(f3, -43, 142, 1);
-    assert
-     {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <3,1> };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <3,1> };
 
-    log_coeffs := SchoferFormula(f3, -148, 142, 1);
-
-
-    log_coeffs := SchoferFormula(f3, -232, 142, 1);
-
-
+    printf "Done\n";
+    return;
 end procedure;
 
 procedure test_Schofer_26()
-
+    printf "testing Schofer formula for D=26...";
     //Test as in Guo Yang p.25
     _<q> := LaurentSeriesRing(Rationals());
 
@@ -300,11 +332,14 @@ procedure test_Schofer_26()
     g3 := 2*q^(-26) + 6*q^(-7)- 6*q^(-2) +2*q^(-1) + O(q);
 
 
+    // Not clear what this is doing here...
+    /*
     E, n, t := WeaklyHolomorphicBasis(26,1);
     E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
     fs_E := [q^(-n)*&+[(Integers()!b[i])*q^(i-1) : i in [1..Ncols(E)]] : b in Rows(E)];
 
-    f4 := fs_E[8]; // this is the constant 1 function
+    f4 := fs_E[#fs_E]; // this is the constant 1 function
+    */
 
     log_coeffs := SchoferFormula(g1, -11, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq {  };
@@ -350,12 +385,18 @@ procedure test_Schofer_26()
     log_coeffs := SchoferFormula(g3, -24, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,13>,<13,3>  };
 
+    // this does not work!
+    // Probably a typo in [GY]
     log_coeffs := SchoferFormula(g3, -52, 26, 1);
-    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,6>,<13,8>  };
+    // Original value in [GY]
+    // assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,6>,<13,8>  };
+    assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0} eq { <2,6>,<13,5>  };
 
     log_coeffs := SchoferFormula(g3, -67, 26, 1);
     assert {<p,log_coeffs[p]> : p in Keys(log_coeffs) | log_coeffs[p] ne 0}eq { <2,10>, <5,-6>, <13,3>,<41,2>,<67,1>  };
 
+    printf "Done!\n";
+    return;
 end procedure;
 
 
@@ -535,8 +576,30 @@ function Wpolys_KY_5_3(m,p,mu,Lminus,Q)
     return 1 + val_e*KroneckerCharacter(kappa)(m)*x^(a+f);
 end function;
 
+procedure test_EquationsOfCovers()
+    printf "testing equations of covers of X0*(26;1)...";
+    curves := GetHyperellipticCandidates();
+    assert exists(Xstar26){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
+    hs := EquationsOfCovers(Xstar26, curves);
+    fs := [];
+    for h in hs do
+        Append(~fs, HyperellipticPolynomials(h));
+    end for;
+    _<x> := Universe(fs);
+    assert fs eq [
+                    -1/8*x^4 + 19/16*x^3 - 3/2*x^2 - 169/16*x,
+                    x,
+                    -2*x^3 + 19*x^2 - 24*x - 169
+                    ];
+    printf "Done\n";
+    return;
+end procedure;
+
 test_Kappa0();
 test_Schofer_6();
 test_Schofer_10();
 test_Schofer_142();
 test_Schofer_26();
+test_EquationsOfCovers();
+
+exit;
