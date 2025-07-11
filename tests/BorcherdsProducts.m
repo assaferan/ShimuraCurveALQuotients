@@ -1,6 +1,6 @@
 AttachSpec("shimuraquots.spec");
 
-import "BorcherdsProducts.m" : Wpoly, Wpoly2, Wpoly_scaled, FindLambda;
+import "BorcherdsProducts.m" : Wpoly, Wpoly2, Wpoly_scaled;
 
 function lambda_v(Q, d)
     bd := 10;
@@ -580,9 +580,13 @@ procedure test_EquationsOfCovers()
     printf "testing equations of covers of X0*(26;1)...";
     curves := GetHyperellipticCandidates();
     assert exists(Xstar26){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
-    eqs := EquationsOfCovers(Xstar26, curves);
-    _<x> := Universe(eqs);
-    assert eqs eq [
+    hs := EquationsOfCovers(Xstar26, curves);
+    fs := [];
+    for h in hs do
+        Append(~fs, HyperellipticPolynomials(h));
+    end for;
+    _<x> := Universe(fs);
+    assert fs eq [
                     -1/8*x^4 + 19/16*x^3 - 3/2*x^2 - 169/16*x,
                     x,
                     -2*x^3 + 19*x^2 - 24*x - 169
