@@ -1152,28 +1152,6 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         log_coeffs[i] +:= log_coeffs_0[i];
     end for;
 
-    ns := [-Valuation(f) : f in fs];
-    n := Maximum(ns);
-    log_coeffs := [AssociativeArray() : f in fs];
-    for m in [1..n] do
-        if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
-        log_coeffs_m := Kappa0(m,d,Q,lambda);
-        for p in Keys(log_coeffs_m) do
-            if (log_coeffs_m[p] ne 0) then
-                for i->f in fs do
-                    if not IsDefined(log_coeffs[i], p) then
-                        log_coeffs[i][p] := 0;
-                    end if;
-                    log_coeffs[i][p] +:= Coefficient(f,-m)*log_coeffs_m[p];
-                end for;
-            end if;
-        end for;
-    end for;
-    for i in [1..#fs] do
-        for p in Keys(log_coeffs[i]) do
-            log_coeffs[i][p] *:= -n_d / (4*W_size);
-        end for;
-    end for;
     return log_coeffs;
 end intrinsic;
 
