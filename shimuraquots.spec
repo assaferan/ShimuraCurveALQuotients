@@ -11,4 +11,5 @@ LogSum.m
 ModularNonALInvolutions.m
 RationalWithFactorization.m
 TraceFormula.m
+cmtables.m
 }

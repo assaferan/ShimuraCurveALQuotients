@@ -1,6 +1,6 @@
 // Compute the order of vanishing of eta(delta tau) at the cusp a/b in Gamma_0(N)
 // multiplied by 24
-function OrderOfVanishingOfEta(delta, b, N)
+function order_of_vanishing_of_eta(delta, b, N)
     return N*GCD(b,delta)^2 div (GCD(N,b^2)*delta);
 end function;
 
@@ -21,7 +21,7 @@ function lhs_integer_programming(M)
     cond_3 := Matrix(Integers(),[ds]);
     cond_4 := Matrix(Integers(),[[M div d : d in ds]]);
     eq_7 := VerticalJoin(VerticalJoin(VerticalJoin(cond_1, cond_2), cond_3), cond_4);
-    eq_8 := Matrix([[OrderOfVanishingOfEta(delta, b, M) : delta in ds] : b in ds]);
+    eq_8 := Matrix([[order_of_vanishing_of_eta(delta, b, M) : delta in ds] : b in ds]);
     delta_epsilon_n := DiagonalMatrix([-2 : p in ps] cat [-24,-24,0]);
     ncols:= Ncols(delta_epsilon_n);
     r_coeffs := VerticalJoin(eq_7, eq_8);
@@ -385,7 +385,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     return E, n, n0, t_eta_quotient, eta_quotients; 
 end intrinsic;
 
-function FourthPowerFree(a)
+function fourth_power_free(a)
     ps := PrimeDivisors(Numerator(a)) cat PrimeDivisors(Denominator(a));
     vals := [Valuation(a,p) : p in ps];
     v_rad := [v div 4 : v in vals];
@@ -422,7 +422,7 @@ function eta_action(g)
     etaB := zeta_n^(b div GCD(b,d)) * q^(a/(24*d)) * Evaluate(nor_eta, q^(a/d));
     // etaB is eta(Bz)
     // we need to divide by the multiplier which is (d/a)^(1/4) zeta_24^b
-    free, rad := FourthPowerFree(d/a);
+    free, rad := fourth_power_free(d/a);
     return rad^(-1)*zeta_24^(-b)*etaB, free;
 end function;
 
@@ -444,7 +444,7 @@ function eta_quotient_action(rs, ds, g)
     is_fourth, c := IsPower(ret_c4, 4);
     assert is_fourth; // For now we hope this is true for our functions
     */
-    free, rad := FourthPowerFree(ret_c4);
+    free, rad := fourth_power_free(ret_c4);
     return rad^(-1)*ret_ceta, free;
     // return ret_ceta / c;
 end function;
@@ -476,7 +476,7 @@ function linear_comb_eta_quotients_action(alphas, rs, ds, g)
         ret_eta := ChangeRing(Parent(ret_eta),L)!ret_eta + eta;
     end for;
     // return &+[alphas[j]*eta_quotient_action(r, ds, g) : j->r in rs];
-    // free, rad := FourthPowerFree(ret_c4);
+    // free, rad := fourth_power_free(ret_c4);
     // return rad^(-1)*ret_ceta, free;
     return ret_eta;
 end function;
@@ -503,7 +503,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     disc_grp, to_disc := Ldual / L;
     return L, Ldual, disc_grp, to_disc, Q^(-1), Q;
 end intrinsic;
-
+/*
 // assuming v_i is the coefficient of eta_i in Ldual / L
 function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
     PSL2Z := PSL2(Integers());
@@ -541,6 +541,9 @@ end function;
 // obtained from it. 
 // !! TODO : Not working yet - the constants are off
 function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc, M)
+
+function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
+    M := #discL;
     G := PSL2(Integers());
     gens := Generators(G);
     gammas := CosetRepresentatives(Gamma0(M));
@@ -561,9 +564,10 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc, M)
         end for;
     end for;
     return F;
-end function;
+end function;*/
 
-function FindLambda(Q, d : bound := 10)
+intrinsic FindLambda(Q::AlgMatElt, d ::RngIntElt: bound := 10)->.
+    {}
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
     idxs := CartesianPower([-bound..bound], n);
@@ -575,7 +579,7 @@ function FindLambda(Q, d : bound := 10)
         end if;
     end for;
     return false, _;
-end function;
+end intrinsic;
 
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
@@ -590,15 +594,16 @@ Warning - does it in a silly way via enumeration. }
     return lambda;
 end intrinsic;
 
-function VerticalJoinList(mats)
+intrinsic VerticalJoinList(mats::List)->.
+    {}
     m := mats[1];
     for i in [2..#mats] do
         m := VerticalJoin(m, mats[i]);
     end for;
     return m;
-end function;
+end intrinsic;
 
-function MyLegendreSymbol(alpha, p)
+function my_legendre_symbol(alpha, p)
     return LegendreSymbol(Integers()!(GF(p)!alpha),p);
 end function;
 
@@ -635,10 +640,10 @@ function Wpoly(m,p,mu,L,K,Q)
     l_mu := func<k | #L_mu(k)>;
     // we compute twice d_mu for technical reasons
     d2_mu := func<k | 2*k + &+[Minimum(l[i]-k, 0) : i in H_mu]>;
-    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | MyLegendreSymbol(eps[i],p) : i in L_mu(k)]>;
+    eps_mu := func<k | LegendreSymbol(-1,p)^(l_mu(k) div 2) * &*[Integers() | my_legendre_symbol(eps[i],p) : i in L_mu(k)]>;
     f_1 := function(x)
         a, alpha := Valuation(x,p);
-        return IsEven(l_mu(a+1)) select -1/p else MyLegendreSymbol(alpha,p) / sqrtp;
+        return IsEven(l_mu(a+1)) select -1/p else my_legendre_symbol(alpha,p) / sqrtp;
     end function;
     t_mu := m - &+[Rationals() | eps[i]*p^l[i]*mu_wrt_B[i]^2 : i in [1..n] | i notin H_mu];
     a := Valuation(t_mu, p);
@@ -1147,6 +1152,37 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         log_coeffs[i] +:= log_coeffs_0[i];
     end for;
 
+    // n := -Valuation(f);
+    bd := 10;
+    found_lambda := false;
+    while not found_lambda do
+        bd *:= 2;
+        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
+    end while;
+    assert found_lambda;
+
+    ns := [-Valuation(f) : f in fs];
+    n := Maximum(ns);
+    log_coeffs := [AssociativeArray() : f in fs];
+    for m in [1..n] do
+        if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
+        log_coeffs_m := Kappa0(m,d,Q,lambda_v);
+        for p in Keys(log_coeffs_m) do
+            if (log_coeffs_m[p] ne 0) then
+                for i->f in fs do
+                    if not IsDefined(log_coeffs[i], p) then
+                        log_coeffs[i][p] := 0;
+                    end if;
+                    log_coeffs[i][p] +:= Coefficient(f,-m)*log_coeffs_m[p];
+                end for;
+            end if;
+        end for;
+    end for;
+    for i in [1..#fs] do
+        for p in Keys(log_coeffs[i]) do
+            log_coeffs[i][p] *:= -n_d / (4*W_size);
+        end for;
+    end for;
     return log_coeffs;
 end intrinsic;
 
@@ -1176,6 +1212,8 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
         catch e
             require false:  "Increase the precision on the Borcherds forms";
         end try;
+        require &and[IsIntegral(log_coeff[p]) :  p in Keys(log_coeff)] : "Increase the precision on the Borcherds forms";
+        vals[rest_idxs[i]] := &*[Rationals() | p^(Integers()!log_coeff[p]) : p in Keys(log_coeff)];
     end for;
     return vals;
 end intrinsic;
@@ -1291,6 +1329,7 @@ along with two different hauptmoduls.}
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     pts := [p : p in pts | p[1] notin Exclude];
     
+    //we do this twice -- we should remember this
     found := false;
     infty_idx := 1;
     while (not found) do
@@ -1480,6 +1519,7 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     return DivisorOfBorcherdsForm(foo, f0, Xstar);
 end intrinsic;
 
+
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
     cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
@@ -1492,12 +1532,13 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
 
 end intrinsic;
 
-intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
+intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum, fs::Assoc : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SchoferTable, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
-    cm_pts := all_cm_pts[1];
-    quad_cm := all_cm_pts[2];
+    
+    cm_pts := [a : a in all_cm_pts[1]| a[1] notin Exclude];
+    quad_cm := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
+    all_cm_pts := [cm_pts, quad_cm];
 
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);  
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
    
@@ -1512,7 +1553,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     need := MaxNum - #Include;
     if #cm_pts gt need then  
     //need to make space for include points, but otherwise fill up with rational points as much as possible
-        pt_list_rat := cm_pts_must cat other_cm[1..need];
+        pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
     else
         pt_list_rat := cm_pts_must cat other_cm;
     end if;
@@ -1556,12 +1597,17 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     for pt in pt_list_quad do
         d := pt[1];
         norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
-        for i->v in vals do
+        for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
     end for;
 
-    return table, keys_fs, [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
+    ds := [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
+
+    schofer_tab := CreateSchoferTable(table, keys_fs, ds, curves,Xstar);
+    schofer_tab`BorcherdsForms := fs;
+
+    return schofer_tab, all_cm_pts;
 end intrinsic;
 
 function find_signs(s, stilde, ds)
@@ -1580,17 +1626,24 @@ function find_signs(s, stilde, ds)
         s_new[idx] := signs[j][1]*s_new[idx];
         stilde_new[idx] := signs[j][2]*stilde_new[idx];
     end for;
-    return s_new, stilde_new;
+    return s_new, stilde_new, scale, scale_tilde;
 end function;
 
 
+intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
+
 intrinsic RationalConstraintsOnEquations(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
     {Impose linear constraints on equations given by rational CM points}
-    y2_idxs := [i:i->k in keys_fs | k gt 0];
+
+    keys_fs := schofer_table`Keys_fs;
+    table := schofer_table`Values;
+    sep_ds := schofer_table`Discs;
+    ds := sep_ds[1] cat sep_ds[2];
+    k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
-    genus_list := [curves[keys_fs[i]]`g : i in y2_idxs];
+    genus_list := [curves[keys_fs[i]]`g : i in k_idxs];
     kernels :=[* *];
-    for j->idx in y2_idxs do
+    for j->idx in k_idxs do
         g := genus_list[j];
         require #ds ge 2*g+3 : "We don't have enough values computed to determine the curve equation of curve", keys_fs[idx];
         //add one because one value will be the infinite value and useless
@@ -1636,12 +1689,16 @@ function power_trace(trace, norm, j)
 
 end function;
 
-function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
-    y2_idxs := [i:i->k in keys_fs | k gt 0];
+intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum, kernels::List) -> SeqEnum
+    {}
+    table := schofer_table`Values;
+    keys_fs := schofer_table`Keys_fs;
+
+    k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
 
-    all_relns := [];
-    for j->idx in y2_idxs do
+    all_relns := [* *];
+    for j->idx in k_idxs do
         B := kernels[j];
         numcoeffs := #Eltseq(B[1]);
         R<[x]>:=PolynomialRing(Rationals(),#B);
@@ -1649,8 +1706,8 @@ function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
         inf_idx_s := Index(table[s_idx], Infinity());
         y2vals := Remove(table[idx], inf_idx_y2);
         svals := Remove(table[s_idx],inf_idx_s);
-        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt];
-        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt];
+        quad_svals := [s :  i->s in svals   | Type(s) eq RngUPolElt ];
+        quad_sidxs := [i :  i->s in svals   | Type(s) eq RngUPolElt ];
         quad_y2vals := [ y2vals[i]  : i in quad_sidxs];
         coeff_list := [ &+[x[i]*B[i][k]: i in [1..#B]] : k in [1 .. numcoeffs]]; //this is a list of a_k, and also y^2
         
@@ -1678,36 +1735,32 @@ function QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels)
         Append(~all_relns, relns);
     end for;
     return all_relns;
-end function;
+end intrinsic;
 
-// function solve_quadratic_constraints(relns)
 
-//     ans := AssociativeArray();
-
-//     gb := GroebnerBasis(relns);
-//     ans[Ngens(R)] := 1;//choose 1 
-
-//     xsmin1 := [R.i : i in [1.. Ngens(R)-1]] cat [1];
-//     eval1 := [Evaluate(g, xsmin1) : g in gb];
-
-//     assert &and[Degree(g, R.i) eq 0 : i in [1.. Ngens(R)-2]];
-//     _, poly := IsUnivariate(g);
-//     rat_solns := [r[1] : r in Roots(poly)];
-//     ans[Ngens(R) - 1] := rat_solns;
-//     //now we have solved the final equation in gb
-
-//     for i->g in Reverse(eval1) do
-//         if i eq 1 then
-//             continue;
-//         end if;
-//         for k in Keys(ans) do
-//             a := ans[k];
-
-//             Evaluate(eval1, k , a);
-
-//     end for;
-// end function;
-
+procedure add_new_column(schofer_tab, dnew, deg)
+    //add column associated to dnew of degree deg
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    curves := schofer_tab`Curves;
+    all_fs := [fs[k] : k in keys_fs];
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    for i->v in norm_val do
+        Append(~table[i], norm_val[i]/row_scales[i]^deg);
+    end for;
+    schofer_tab`Values := table;
+    if deg eq 1 then
+        Append(~ds[1],dnew);
+    else
+        Append(~ds[2],dnew);
+    end if;
+    schofer_tab`Discs := [ds[1], ds[2]];
+    return;
+end procedure;
 
 function solve_quadratic_constraints(relns)
     R := Universe(relns);
@@ -1718,16 +1771,22 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
-intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
     eqn_list := [ ];
+    keys_fs := schofer_table`Keys_fs;
+    table := schofer_table`Values;
+    ds := schofer_table`Discs;
+    ds := ds[1] cat ds[2];
+    k_idxs := schofer_table`K_idxs;
+    curves := schofer_table`Curves;
 
-    kernels := RationalConstraintsOnEquations(table, keys_fs, ds, curves);
-    relns := QuadraticConstraintsOnEquations(table, keys_fs, ds, curves, kernels);
+    kernels := RationalConstraintsOnEquations(schofer_table, curves);
+    relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
-    for i->B in kernels do
-        if #relns[i] eq 0 then
+    for i->B in kernels do //indexed by k_idxs
+        if #relns[i] eq 0 or #B eq 1 then
             require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
             v :=  Eltseq(B[1]);
             monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
@@ -1745,22 +1804,53 @@ intrinsic EquationsOfCovers(table::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
         end if;
     end for;
 
+
+    crv_list := [HyperellipticCurve(e) : e in eqn_list];
+    keys :=  [keys_fs[i] : i in k_idxs];
+    Xstar := schofer_table`Xstar;
+    all_W := Xstar`W;
+
+    ws := AssociativeArray();
+    for i->k in keys do
+        my_W := curves[k]`W;
+        nontriv := all_W diff my_W;
+        ws[k] := AssociativeArray();
+        for w in my_W do
+            ws[k][w] := IdentityMap(crv_list[i]);
+        end for;
+        w := Representative(nontriv);
+        for w in nontriv do
+            ws[k][w] := HyperellipticInvolution(crv_list[i]);
+        end for;
+    end for;
+
+    return crv_list, ws, keys;
     return eqn_list, [k : k in keys_fs | k gt 0];
 end intrinsic;
 
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum
 {Determine the equations of the immediate covers of X.}
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    num_vals := Maximum([2*g+5 : g in genus_list]);
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    ReduceTable(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    return EquationsOfCovers(schofer_tab, all_cm_pts);
     num_vals := Maximum([2*g+3 : g in genus_list]);
     // num_vals + 2 to account for 0 and infinity
     table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : Prec := Prec, MaxNum := num_vals + 2);
     return EquationsOfCovers(table, keys_fs, ds, curves);
 end intrinsic;
 
-intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
     {Using Riemann Roch, leverage covered equations to get higher cover equations}
-    P1s := [<i, keys> : i->keys in new_keys | Degree(eqn_list[i]) eq 1];
-    conics := [<i, keys> : i->keys in new_keys | curves[keys]`g eq 0 and Degree(eqn_list[i]) ne 1];
+    
+    P1s := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
+    conics := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
 
     curves_above_P1s := AssociativeArray();
     curves_above_conics := AssociativeArray();
@@ -1784,47 +1874,100 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
     while (not IsEmpty(Keys(curves_above_P1s))) or (not IsEmpty(Keys(curves_above_conics))) do
         for label in Keys(curves_above_P1s) do
             g := curves[label]`g;
-            covered_P1 := eqn_list[curves_above_P1s[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
+            covered_P1 := crv_list[curves_above_P1s[label]];
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 continue;
             end if;
             covered_gplus1_key := Representative(allgplus1covers);
             gplus1idx := Index(new_keys,covered_gplus1_key);
-            covered_gplus1 := eqn_list[gplus1idx];
+            covered_gplus1 := crv_list[gplus1idx];
             //if this is empty then it's not hyperelliptic
-            c0 := Coefficient(covered_P1, 0);
-            c1 := Coefficient(covered_P1, 1);
-            _<x> := Parent(covered_gplus1);
-            eqn := Evaluate(covered_gplus1, (x^2 - c0)/c1);
-            Append(~cover_eqns, eqn);
+            fpoly := HyperellipticPolynomials(covered_P1);
+            c0 := Coefficient(fpoly,0);
+            c1 := Coefficient(fpoly,1);
+            _<x>:=Parent(fpoly);
+            eqn := HyperellipticPolynomials(covered_gplus1);
+            eqn := Evaluate(eqn, (x^2 - c0)/c1);
+            C := HyperellipticCurve(eqn);
+            Append(~cover_eqns, C);
             Append(~cover_keys, label);
+            hyp1 := HyperellipticInvolution(C);
+            //now update ws
+            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
+            assert #id_y eq 1;
+            ws[label] := AssociativeArray();
+            ws[label][1] := IdentityMap(C);
+            ws[label][id_y] := hyp1;
+            P1_idx := Index(crv_list,covered_P1);
+            id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
+            assert #id_x eq 1;
+            _<x,y,z> := AmbientSpace(C);
+            hyp2 := map<C->C | [-x, y, z]>;
+            ws[label][id_x[1]] := hyp2;
+            N := curves[label]`N;
+            D := curves[label]`D;
+            other_w := al_mul(id_x[1], id_y[1], N*D);
+            ws[label][other_w] := hyp1*hyp2;
         end for;
         for label in Keys(curves_above_conics) do
             g := curves[label]`g;
-            covered_conic := eqn_list[curves_above_conics[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(eqn_list[i]) eq g+1 } meet curves[label]`Covers;
+            covered_conic := crv_list[curves_above_conics[label]];
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 continue;
             end if;
             covered_gplus1_key := Representative(allgplus1covers);
             gplus1idx := Index(new_keys,covered_gplus1_key);
-            covered_gplus1 := eqn_list[gplus1idx];
+            covered_gplus1 := crv_list[gplus1idx];
             //if this is empty then it's not hyperelliptic
-            assert Degree(covered_conic) eq 2;
-            P2<x,y,z> := ProjectiveSpace(Rationals(),2);
-            C := Curve(P2, y^2-z^2*Evaluate(covered_conic, x/z));
-            C := Conic(C);
+            // assert Degree(covered_conic) eq 2;
+            C := Conic(covered_conic);
+            P2<x,y,z> := Ambient(C);
             assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
-            C_to_P1 := Inverse(Parametrization(C));
+            P1_to_C := Parametrization(C);
+            C_to_P1 := Inverse(P1_to_C);
             s_param := C_to_P1(x) / C_to_P1(z);
-            _<x> := Parent(covered_gplus1);
-            eqn := Evaluate(covered_gplus1, s_param);
-            Append(~cover_eqns, eqn);
+            fpoly := HyperellipticPolynomials(covered_gplus1);
+            // amap := AlgebraMap(P1_to_C);
+            // amap(x)/amap(z);
+            eqn := Evaluate(fpoly,s_param);
+            _<t> := PolynomialRing(Rationals());
+            tmp := Evaluate(eqn,[t,1]); 
+            N := Numerator(tmp);
+            D := Denominator(tmp); //under change of equation z = y*sqrt(D) this is the curve
+            H := HyperellipticCurve(N);
+            Append(~cover_eqns, H);
             Append(~cover_keys, label);
+            //now update ws
+            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
+            assert #id_y eq 1;
+            ws[label] := AssociativeArray();
+            ws[label][1] := IdentityMap(H);
+            hyp1 := HyperellipticInvolution(H);
+            conic_idx := Index(crv_list,covered_conic);
+            id_x := [m : m in Keys(ws[new_keys[conic_idx]]) diff {1} | ws[new_keys[conic_idx]][m] eq IdentityMap(covered_conic)];
+            ws[label][id_x] := hyp1;
+            assert #id_x eq 1;
+            hyp_conic := map<C->C | [x,-y,z]>;
+            inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
+            //this is a map from P^1 -> P^1
+             _<s,t> := Parent(C_to_P1(x));
+            tmp := Inverse(inv);
+            _<x,y,z> := AmbientSpace(H);
+            im_s := Evaluate(inv(s)/inv(t),[x,z]);
+            denom := Evaluate(SquareRoot(D), im_s);
+            denom_denom := Evaluate(SquareRoot(D), x/z);
+            hyp2 := map<H->H | [ im_s, y/z^(g+1)*denom/denom_denom, 1] >;
+            _, hyp2 := IsAutomorphism(hyp2);
+            ws[label][id_y[1]] := hyp2;
+            N := curves[label]`N;
+            D := curves[label]`D;
+            other_w := al_mul(id_x[1], id_y[1], N*D);
+            ws[label][other_w] := hyp1*hyp2; 
         end for;
         curves_above_P1s := AssociativeArray();
-        P1s := [<i, keys> : i->keys in cover_keys | Degree(cover_eqns[i]) eq 1];
+        P1s := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
         curves_above_P1s := AssociativeArray();
         for pair in P1s do
             for c in curves[pair[2]]`CoveredBy do
@@ -1832,7 +1975,7 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
             end for;
         end for;
         curves_above_conics := AssociativeArray();
-        conics := [<i, keys> : i->keys in cover_keys | curves[keys]`g eq 0 and Degree(cover_eqns[i]) ne 1];
+        conics := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
         curves_above_conics := AssociativeArray();
         for pair in conics do
             for c in curves[pair[2]]`CoveredBy do
@@ -1840,13 +1983,23 @@ intrinsic EquationsAboveP1s(eqn_list::SeqEnum[RngUPolElt[FldRat]], new_keys::Seq
             end for;
         end for;
     end while;
-    return cover_eqns, cover_keys;
+    return cover_eqns, ws, cover_keys;
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot])-> SeqEnum, SeqEnum
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
     {Get equations of all covers (not just immediate covers)}
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    num_vals := Maximum([2*g+4 : g in genus_list]);
+    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    ReduceTable(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
+    cover_eqns, ws, cover_keys := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
+    all_eqns := crv_list cat cover_eqns;
     num_vals := Maximum([2*g+3 : g in genus_list]);
     // num_vals + 2 to account for 0 and infinity
     table, keys_fs, ds := ValuesAtCMPoints(Xstar, curves : MaxNum := num_vals + 2);
@@ -1854,7 +2007,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     cover_eqns, cover_keys := EquationsAboveP1s(eqn_list, new_keys, curves);
     all_eqns := eqn_list cat cover_eqns;
     all_keys := new_keys cat cover_keys;
-    return all_eqns, all_keys;
+    return all_eqns, ws, all_keys;
 end intrinsic;
 
 // This is following [GR, Section 5]
@@ -1998,6 +2151,48 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
+procedure replace_column(schofer_tab, d, dnew)
+    //add column associated to dnew remove column associated to d
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    curveid := Xstar`CurveID;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    all_fs := [fs[k] : k in keys_fs];
+    UpdateFieldsOfDefn(schofer_tab, dnew);
+    flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
+    assert #flds eq 1;
+    deg := Degree(flds[1]);
+    if d in ds[1] then
+        d_idx := Index(ds[1],d);
+        ds[1][d_idx] := dnew;
+    else
+        qidx := Index(ds[2], d);
+        d_idx := qidx+#ds[1];
+        ds[2][qidx] := dnew;
+    end if;
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    for i->v in norm_val do
+        table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
+    end for;
+    schofer_tab`Values := table;
+    schofer_tab`Discs := [ds[1], ds[2]];
+    curves := schofer_tab`Curves;
+    UpdateFieldsOfDefn(schofer_tab, dnew);  
+    return;
+end procedure;
+
+
+function find_y2_scales(schofer_table)
+    ds := schofer_table`Discs;
+    ratds := ds[1];
+    table := schofer_table`Values;
+    keys_fs := schofer_table`Keys_fs;
+    k_idxs := schofer_table`K_idxs;
+    fldsofdef := schofer_table`FldsOfDefn;
+
 
 function add_remove_column(table, keys_fs, ds, d1, d2, Xstar, curves, scale_factors)
     //add column associated to d2 remove column associated to d1
@@ -2036,15 +2231,15 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] eq 1 and Degree(FldsOfDefn[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
+        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
             //then we have a rational point on X
             d1 := ratds[j1];
             v1 := table[i][j1];
             scale, _ := SquareFree(v1);
             Append(~scale_factors, AbsoluteValue(scale));
         else 
-            assert exists(j1){j : j->d1 in ratds  | #FldsOfDefn[keys_fs[i]][d1] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d1][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
-            assert exists(j2){j : j->d2 in ratds  | #FldsOfDefn[keys_fs[i]][d2] le 2 and {Degree(FldsOfDefn[keys_fs[i]][d2][k]) : k in [1..#FldsOfDefn[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
+            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
+            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -2052,14 +2247,14 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
             d2 := ratds[j2];
             quad_idx_1 := 1;
             quad_idx_2 := 1;
-            if FldsOfDefn[keys_fs[i]][d1][1] eq Rationals() then
+            if fldsofdef[keys_fs[i]][d1][1] eq Rationals() then
                 quad_idx_1 := 2;
             end if;
-            if FldsOfDefn[keys_fs[i]][d2][1] eq Rationals() then
+            if fldsofdef[keys_fs[i]][d2][1] eq Rationals() then
                 quad_idx_2 := 2;
             end if;
-            d1 := Discriminant(MaximalOrder(FldsOfDefn[keys_fs[i]][d1][quad_idx_1]));
-            d2 := Discriminant(MaximalOrder(FldsOfDefn[keys_fs[i]][d2][quad_idx_2]));
+            d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
+            d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
             scale1, _ := SquareFree(v1/d1); //two possibilities
             scale2, _ := SquareFree(v1);
             if IsSquare(scale1*v2/d2) then
@@ -2070,34 +2265,122 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
             end if;
         end if;
     end for;
+    return scale_factors;
+
+end function;
+
+function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
+    //find signs of y^2 for rational CM point d on each y^2
+    //in keys_fs, where j is index of column of d in table
+    for k->i in k_idxs do
+        if table[i][j] eq Infinity() then continue; end if;
+        if table[i][j] eq 0 then continue; end if;
+        fields := flds[keys_fs[i]][d];
+        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
+        possible_answers := [* *];
+        for eps in [-1,1] do
+            y2 := eps*table[i][j];
+            for F in fields do
+                is_sqr, y := IsSquare(F!y2);
+                if (is_sqr) then
+                    if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                        Append(~possible_answers, <F,eps,y>);
+                    end if;
+                end if;
+            end for;
+        end for;
+        assert #possible_answers eq 1;
+        eps := possible_answers[1][2];
+        table[i][j] :=  eps * table[i][j];
+    end for;
+    return table;
+end function;
+
+intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -> SchoferTable
+    {}
+    ds := abs_schofer_tab`Discs;
+    table := abs_schofer_tab`Values;
+    keys_fs := abs_schofer_tab`Keys_fs;
+    k_idxs := abs_schofer_tab`K_idxs;
+    Xstar := abs_schofer_tab`Xstar;
+    row_scales := abs_schofer_tab`RowScales;
+    curves := abs_schofer_tab`Curves;
+    cid := Xstar`CurveID; 
+    ratds := ds[1];
+    quadds := ds[2];
+    allds := ratds cat quadds;
+
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
+    s := table[s_idx];
+    stilde := table[stilde_idx];
+
+
+    table :=[* [* x : i->x in t *] : t in table *];
+    s, stilde, scale, scale_tilde := find_signs(s, stilde, ds);
+    row_scales[s_idx] :=  row_scales[s_idx]*scale;
+    row_scales[stilde_idx] :=  row_scales[stilde_idx]*scale_tilde;
+    table[s_idx] := s;
+    table[stilde_idx] := stilde;
+    k_idxs := abs_schofer_tab`K_idxs;
+    abs_schofer_tab`Values := table;
+
+    //Scale the y2 rows of the table
+    scale_factors := find_y2_scales(abs_schofer_tab);
+
+    degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
+    for i->k in k_idxs do
+        for j in [1 .. #table[k]] do
+            table[k][j] := table[k][j]/scale_factors[i]^degs[j];
+        end for;
+        row_scales[k] := row_scales[k]*scale_factors[i];
+    end for;
+    abs_schofer_tab`Values := table;
+    abs_schofer_tab`RowScales := row_scales;
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
+    bad_ds := {};
     for i->d in quadds do
         d_idx := #ratds+i;
-        norm_s := table[s_idx][d_idx];
-        norm_stilde := table[stilde_idx][d_idx];
-        flds := FieldsOfDefinitionOfCMPoint(Xstar, d);
-        assert #flds eq 1;
-        assert Degree(flds[1]) eq 2;
-        K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
-        _<x> := PolynomialRing(Rationals());
-        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-        minpolys := [];
-        for eps in signs do
-                trace := 1- eps[1]*norm_stilde +  eps[2]*norm_s;
-                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-        end for;
-        roots := [Roots(p,K) : p in minpolys];
-        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-        require #good_inds eq 1 :"We need that there is a unique minpoly left after filtering by roots. This is not true at CM point", d;
+        good_inds := [];
+        currd := d;
+        while #good_inds ne 1 do
+            all_flds := abs_schofer_tab`FldsOfDefn;
+            norm_s := table[s_idx][d_idx];
+            norm_stilde := table[stilde_idx][d_idx];
+            flds := all_flds[cid][currd];
+            assert #flds eq 1;
+            assert Degree(flds[1]) eq 2;
+            K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
+            _<x> := PolynomialRing(Rationals());
+            signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
+            minpolys := [];
+            for eps in signs do
+                    trace := 1- eps[1]*norm_stilde +  eps[2]*norm_s;
+                    Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
+            end for;
+            roots := [Roots(p,K) : p in minpolys];
+            good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
+            if #good_inds ne 1 then
+                vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+                Include(~bad_ds, currd);
+                candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
+                require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
+                newd := Reverse(Sort(SetToSequence(candidates)))[1];
+                replace_column(abs_schofer_tab, currd, newd);
+                currd := newd;
+                table := abs_schofer_tab`Values;
+                table :=[* [* x : i->x in t *] : t in table *];
+            end if;
+        end while;
         table[s_idx][d_idx] := minpolys[good_inds[1]];
         norm_s := Coefficient(minpolys[good_inds[1]], 0);
         trace_s := - Coefficient(minpolys[good_inds[1]], 1);
         table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
+        abs_schofer_tab`Values := table;
     end for;
-
-   
+       
     //Find signs on the y2 rows
 
     //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
@@ -2107,6 +2390,11 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     // so eps* v is a square in Q, and is positive
 
     for j->d in ratds do
+        table := find_y2_signs(table, keys_fs, curves, d, j, all_flds, k_idxs);
+    end for;
+
+    schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
+    return schofer_table;
         for k->i in k_idxs do
             if table[i][j] eq Infinity() then continue; end if;
             if table[i][j] eq 0 then continue; end if;
@@ -2138,7 +2426,10 @@ intrinsic ValuesAtCMPoints(table::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, Xstar:
     return table, keys_fs, allds;
 end intrinsic;
 
-function reduce_table(table, sep_ds)
+intrinsic ReduceTable(schofer_tab::SchoferTable)
+    {}
+    table := schofer_tab`Values;
+    sep_ds := schofer_tab`Discs;
     scales := [];
     num_rat_ds := #sep_ds[1];
     for t in table do
@@ -2153,12 +2444,21 @@ function reduce_table(table, sep_ds)
         Append(~scales, scale);
     end for;
     degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
+    schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
+    schofer_tab`RowScales := scales;
+end intrinsic;
     return [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
 end function;
 
 intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    ReduceTable(abs_schofer_tab);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    return schofer_tab;
     table, keys_fs, sep_ds := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := {});
     table := reduce_table(table, sep_ds);
     table, keys_fs, ds := ValuesAtCMPoints(table, keys_fs, sep_ds, Xstar, curves, all_cm_pts);
