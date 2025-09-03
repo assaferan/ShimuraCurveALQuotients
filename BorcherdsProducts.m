@@ -1171,9 +1171,9 @@ intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt)
     return SchoferFormula([eta],d,D,N)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[ExtReElt]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
-    vals := [ExtendedReals() | 1 : f in fs];
+    vals := [LogSum() : f in fs];
     for i->f in fs do
         div_f := DivisorOfBorcherdsForm(f, Xstar);
         in_support := exists(pt){pt : pt in div_f | pt[1] eq d};
@@ -1182,16 +1182,19 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
             if pt[2] gt 0 then vals[i] := 0; end if;
         end if;
     end for;
-    rest_idxs := [i : i in [1..#fs] | vals[i] eq 1];
+    rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
     log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
     for i->log_coeff in log_coeffs do
+        vals[rest_idxs[i]] := log_coeff;
+        /*
         try 
             vals[rest_idxs[i]] := RationalNumber(log_coeff);
         catch e
             require false:  "Increase the precision on the Borcherds forms";
         end try;
+        */
     end for;
     return vals;
 end intrinsic;

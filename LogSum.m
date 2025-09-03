@@ -9,6 +9,29 @@ intrinsic LogSum() -> LogSm
     return ret;
 end intrinsic;
 
+intrinsic LogSum(oo::Infty) -> LogSm
+{.}
+    ret := LogSum();
+    ret`log_coeffs[Infinity()] := (oo lt 0) select 1 else -1;
+
+    return ret;
+end intrinsic;
+
+intrinsic LogSum(a::FldRatElt) -> LogSm
+{.}
+    ret := LogSum();
+    if a eq 0 then
+        ret`log_coeffs[0] := 1;
+        return ret;
+    end if;
+    require a gt 0 : "a must be non-negative";
+    fac := FactorizationOfQuotient(a);
+    for p in fac do
+        ret +:= LogSum(p[2],p[1]);
+    end for;
+    return ret;
+end intrinsic;
+
 intrinsic LogSum(a::FldRatElt, p::RngIntElt) -> LogSm
 {The element a log p.}
     ret := New(LogSm);
