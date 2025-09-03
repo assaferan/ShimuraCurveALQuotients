@@ -1178,8 +1178,8 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
         div_f := DivisorOfBorcherdsForm(f, Xstar);
         in_support := exists(pt){pt : pt in div_f | pt[1] eq d};
         if in_support then
-            if pt[2] lt 0 then vals[i] := Infinity(); end if;
-            if pt[2] gt 0 then vals[i] := 0; end if;
+            if pt[2] lt 0 then vals[i] := LogSum(Infinity()); end if;
+            if pt[2] gt 0 then vals[i] := LogSum(0); end if;
         end if;
     end for;
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];

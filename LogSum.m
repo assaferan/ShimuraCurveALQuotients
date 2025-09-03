@@ -132,5 +132,10 @@ end intrinsic;
 
 intrinsic 'eq'(s1::LogSm, s2::LogSm) -> BoolElt
 {.}
+    for special in [0,Infinity()] do
+        if special in Keys(s1`log_coeffs) and special in Keys(s2`log_coeffs) then
+            return true;
+        end if;
+    end for;
     return IsZero(s1-s2);
 end intrinsic;
