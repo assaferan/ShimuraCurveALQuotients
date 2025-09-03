@@ -566,7 +566,7 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     return F;
 end function;*/
 
-intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt: bound := 10, Order := 0, basis_L := 0)->.
+intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
     {}
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
@@ -575,12 +575,15 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt: bound := 10, Order := 0, basis_
         v := Vector([idx[j] : j in [1..n]]);
         v := ChangeRing(v, BaseRing(Q));
         if (v*Q,v) eq 2*d then
+            // checking whether this is an optimal embedding of the order of discriminant d
+            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
             if d mod 4 ne 3 then
-                return true, v;
+                assert d mod 4 eq 0;
+                if elt/2 in Order then
+                    return true, v;
+                end if;
             end if;
             // d mod 4 eq 3
-            assert ISA(Type(Order), AlgQuatOrd);
-            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
             if (1+elt)/2 in Order then
                 return true, v;
             end if;
@@ -589,14 +592,14 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt: bound := 10, Order := 0, basis_
     return false, _;
 end intrinsic;
 
-intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt : Order := 0, basis_L := 0) -> ModTupRngElt
+intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
     bd := 10;
     found_lambda := false;
     while not found_lambda do
         bd *:= 2;
-        found_lambda, lambda := FindLambda(Q, d : bound := bd, Order := Order, basis_L := basis_L);
+        found_lambda, lambda := FindLambda(Q, d, Order, basis_L : bound := bd);
     end while;
     assert found_lambda;
     return lambda;
@@ -1069,7 +1072,7 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
     for mM in [1..n] do
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
-        log_coeffs_m := &+[Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas];
+        log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
         vprintf ShimuraQuotients, 1 : " is %o\n", log_coeffs_m;
         for i->f in fs_0 do
             log_coeffs[i] +:= Coefficient(f,-mM)*log_coeffs_m;
@@ -1125,7 +1128,7 @@ intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngInt
 
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q,-d : Order := O, basis_L := basis_L);
+    lambda := ElementOfNorm(Q,-d, O, basis_L);
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1143,7 +1146,7 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q, -d : Order := O, basis_L := basis_L);
+    lambda := ElementOfNorm(Q, -d,  O, basis_L);
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
