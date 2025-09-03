@@ -501,7 +501,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
     L := RSpaceWithBasis(ScalarMatrix(3,denom));
     disc_grp, to_disc := Ldual / L;
-    return L, Ldual, disc_grp, to_disc, Q^(-1), Q;
+    return L, Ldual, disc_grp, to_disc, Q^(-1), Q, O, basis_L;
 end intrinsic;
 /*
 // assuming v_i is the coefficient of eta_i in Ldual / L
@@ -566,7 +566,7 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     return F;
 end function;*/
 
-intrinsic FindLambda(Q::AlgMatElt, d ::RngIntElt: bound := 10)->.
+intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt: bound := 10, Order := 0, basis_L := 0)->.
     {}
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
@@ -575,20 +575,28 @@ intrinsic FindLambda(Q::AlgMatElt, d ::RngIntElt: bound := 10)->.
         v := Vector([idx[j] : j in [1..n]]);
         v := ChangeRing(v, BaseRing(Q));
         if (v*Q,v) eq 2*d then
-            return true, v;
+            if d mod 4 ne 3 then
+                return true, v;
+            end if;
+            // d mod 4 eq 3
+            assert ISA(Type(Order), AlgQuatOrd);
+            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
+            if (1+elt)/2 in Order then
+                return true, v;
+            end if;
         end if;
     end for;
     return false, _;
 end intrinsic;
 
-intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt) -> ModTupRngElt
+intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt : Order := 0, basis_L := 0) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
     bd := 10;
     found_lambda := false;
     while not found_lambda do
         bd *:= 2;
-        found_lambda, lambda := FindLambda(Q, d : bound := bd);
+        found_lambda, lambda := FindLambda(Q, d : bound := bd, Order := Order, basis_L := basis_L);
     end while;
     assert found_lambda;
     return lambda;
@@ -1113,11 +1121,11 @@ end intrinsic;
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    _,_,_,_,_,Q := ShimuraCurveLattice(D,N);
+    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
 
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q,-d);
+    lambda := ElementOfNorm(Q,-d : Order := O, basis_L := basis_L);
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1131,11 +1139,11 @@ end intrinsic;
 // but this seems to match with the examples in [Err] !?
 intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
-    _,_,disc_grp,to_disc,_, Q := ShimuraCurveLattice(D,N);
+    _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q, -d);
+    lambda := ElementOfNorm(Q, -d : Order := O, basis_L := basis_L);
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
@@ -1795,7 +1803,7 @@ end intrinsic;
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the immediate covers of X.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
-    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
