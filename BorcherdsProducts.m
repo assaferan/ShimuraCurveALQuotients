@@ -1152,21 +1152,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         log_coeffs[i] +:= log_coeffs_0[i];
     end for;
 
-    // n := -Valuation(f);
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda_v := FindLambda(Q,-d : bound := bd);
-    end while;
-    assert found_lambda;
-
     ns := [-Valuation(f) : f in fs];
     n := Maximum(ns);
     log_coeffs := [AssociativeArray() : f in fs];
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
-        log_coeffs_m := Kappa0(m,d,Q,lambda_v);
+        log_coeffs_m := Kappa0(m,d,Q,lambda);
         for p in Keys(log_coeffs_m) do
             if (log_coeffs_m[p] ne 0) then
                 for i->f in fs do
