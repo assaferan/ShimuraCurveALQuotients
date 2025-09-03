@@ -967,7 +967,7 @@ end intrinsic;
 
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
-    {Returns list of candidate discriminats for Schofer's formula}
+    {Returns list of candidate discriminats for Schofer's formula} //'
     cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
     cm_pts := Reverse(Sort(cm_pts));
 
@@ -1284,7 +1284,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     return EquationsOfCovers(schofer_tab, all_cm_pts);
 end intrinsic;
 
-intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, SeqEnum
+intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, Assoc, SeqEnum
     {Using Riemann Roch, leverage covered equations to get higher cover equations}
     
     P1s := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
@@ -1425,7 +1425,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, Assoc, SeqEnum
     {Get equations of all covers (not just immediate covers)}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls

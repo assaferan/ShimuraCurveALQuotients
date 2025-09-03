@@ -580,17 +580,30 @@ procedure test_EquationsOfCovers()
     printf "testing equations of covers of X0*(26;1)...";
     curves := GetHyperellipticCandidates();
     assert exists(Xstar26){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
-    hs := EquationsOfCovers(Xstar26, curves);
-    fs := [];
-    for h in hs do
-        Append(~fs, HyperellipticPolynomials(h));
+    hs26, ws26, keys26 := EquationsOfCovers(Xstar26, curves);
+    fs26 := [];
+    for h in hs26 do
+        Append(~fs26, HyperellipticPolynomials(h));
     end for;
-    _<x> := Universe(fs);
-    assert fs eq [
+    _<x> := Universe(fs26);
+    assert fs26 eq [
                     -1/8*x^4 + 19/16*x^3 - 3/2*x^2 - 169/16*x,
                     x,
                     -2*x^3 + 19*x^2 - 24*x - 169
                     ];
+    printf "Done\n";
+
+    assert exists(Xstar146){X : X in curves | X`D eq 146 and X`N eq 1 and IsStarCurve(X)};
+    printf "testing equations of covers of X0*(146;1)...";
+    hs146, ws146, keys146:= AllEquationsAboveCovers(Xstar146, curves : Prec := 170);
+    fs146 := [];
+    for h in hs146 do
+        Append(~fs146, HyperellipticPolynomials(h));
+    end for;
+    assert fs146 eq [ 4*x^2 + 4,
+    -11/16*x^8 + 41/16*x^7 - 309/64*x^6 + 197/32*x^5 - 1413/256*x^4 + 929/256*x^3 - 1803/1024*x^2 + 155/256*x - 43/256,
+    -11/4*x^10 + 41/4*x^9 - 353/16*x^8 + 279/8*x^7 - 2649/64*x^6 + 2505/64*x^5 - 7455/256*x^4 + 271/16*x^3 - 1975/256*x^2 + 155/64*x - 43/64, //This one is not verified
+    -43/256*x^16 - 533/128*x^15 - 12799/256*x^14 - 49015/128*x^13 - 265509/128*x^12 - 1069453/128*x^11 - 6584665/256*x^10 - 7863047/128*x^9 - 14642415/128*x^8 - 21125431/128*x^7 - 46103553/256*x^6 - 17906941/128*x^5 - 8341933/128*x^4 - 645927/128*x^3 + 3020281/256*x^2 + 434043/128*x - 317171/256                    ];
     printf "Done\n";
     return;
 end procedure;
