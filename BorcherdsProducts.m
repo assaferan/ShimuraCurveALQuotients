@@ -150,9 +150,67 @@ function find_minimal_expression_of_length(etas, l, mat, v)
     return true, eta;
 end function;
 
+function find_short_expression_using_LP(etas, mat, v : M := 10, R := Rationals(), D := 1)
+
+    // We will create a system in variables x_i, y_i
+    LP := LPProcess(R, 2*#etas);
+    
+    // adding equations Ax = D*b
+    lhs_eq := Transpose(ChangeRing(mat,R));
+    lhs_eq := HorizontalJoin(lhs_eq, Parent(lhs_eq)!0);
+    rhs_eq := Transpose(Matrix([D*ChangeRing(v,R)]));
+    AddConstraints(LP, lhs_eq, rhs_eq : Rel := "eq");
+
+    // assing constraints x_i <= D M y_i
+    one := MatrixAlgebra(R, #etas)!1;
+    lhs_le := HorizontalJoin(one, -D*M*one); 
+    rhs_le := Matrix(R, [[0] : eta in etas]);
+    AddConstraints(LP, lhs_le, rhs_le : Rel := "le");
+
+    // assing constraints x_i >= -D M y_i
+    lhs_ge := HorizontalJoin(one, D*M*one); 
+    rhs_ge := Matrix(R, [[0] : eta in etas]);
+    AddConstraints(LP, lhs_ge, rhs_ge : Rel := "ge");
+
+    // set bounds -D M <= x_i <= D M, 0 <= y_i <= 1
+    for n in [1..#etas] do
+        SetLowerBound(LP, n, -R!(D*M));
+        SetUpperBound(LP, n, R!(D*M));
+        SetLowerBound(LP, n + #etas, R!0);
+        SetUpperBound(LP, n + #etas, R!1);
+    end for;
+
+    if Type(R) ne RngInt then
+        // set the y_i to be integral, so that they are either 0 or 1
+        for n in [(#etas+1)..(2*#etas)] do
+            SetIntegerSolutionVariables(LP, [n], true);      
+        end for;
+    end if;
+
+    // Set the objective to be sum(y_i) (sparsity)
+    objective := Matrix(R, 1, 2*#etas, [0 : i in [1..#etas]] cat [1 : i in [1..#etas]]);
+    SetObjectiveFunction(LP, objective);
+
+    // have LP minimize the number of non-zero entries in a solution    
+    SetMaximiseFunction(LP, false);
+
+    sol := Solution(LP);
+    sol_Q := (1/D)*ChangeRing(sol[1], Rationals());
+    eta := &+[sol_Q[i]*etas[i] : i in [1..#etas]];
+    return eta;
+end function;
+
+intrinsic FindAsShortEtaQuotientLP(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
+{Uses LP to try to find a short expression of f as linear combination of eta quotients.}
+    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    eta, etas, mat, v := FindAsEtaQuotient(f, N, k);
+    sol := Solution(mat, v);
+    return find_short_expression_using_LP(etas, mat, v : R := Integers(), D := Denominator(sol));
+end intrinsic;
+
 import "EtaQuotient.m" : valuation_at_oo_lb;
 
-intrinsic FindAsEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
+intrinsic FindAsEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot, SeqEnum[EtaQuots], Mtrx, Mtrx
 {Returns f as an eta quotient.}
     found := false;
     M := N;
@@ -170,6 +228,18 @@ intrinsic FindAsEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
         v_Q := ChangeRing(v, Rationals());
         found := v_Q in RowSpace(mat_Q);
     end while;
+    sol := Solution(mat_Q, v_Q);
+    eta := &+[sol[i]*etas[i] : i in [1..#etas]];
+    return eta, etas, mat_Q, v_Q;
+end intrinsic;
+
+intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
+{Returns f as an eta quotient.}
+    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    eta, etas, mat_Q, v_Q := FindAsEtaQuotient(f, N, k);
+    
+    v := ChangeRing(v_Q, Integers());
+    mat := ChangeRing(mat_Q, Integers());
 
     sol := Solution(mat_Q, v_Q);
     length := #[x : x in Eltseq(sol) | x ne 0];
