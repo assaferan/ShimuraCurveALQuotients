@@ -567,7 +567,9 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
 end function;*/
 
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
-    {}
+{.}
+    require d gt 0: "d must be positive";
+    
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
     idxs := CartesianPower([-bound..bound], n);
@@ -595,6 +597,7 @@ end intrinsic;
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
+    require d gt 0: "d must be a positive norm";
     bd := 10;
     found_lambda := false;
     while not found_lambda do
@@ -2164,15 +2167,17 @@ function find_y2_scales(schofer_table)
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne Infinity() and table[1][j] ne 0} then
+        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0)} then
             //then we have a rational point on X
             d1 := ratds[j1];
             v1 := table[i][j1];
-            scale, _ := SquareFree(v1);
-            Append(~scale_factors, AbsoluteValue(scale));
+            // scale, _ := SquareFree(v1);
+            log_scale := SquareFree(v1);
+            // Append(~scale_factors, AbsoluteValue(scale));
+            Append(~scale_factors, log_scale);
         else 
-            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne Infinity() and table[1][j] ne 0};
-            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne Infinity() and table[1][j] ne 0 and ratds[j1] ne d2};
+            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0)};
+            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0) and ratds[j1] ne d2};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -2188,13 +2193,19 @@ function find_y2_scales(schofer_table)
             end if;
             d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
             d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
-            scale1, _ := SquareFree(v1/d1); //two possibilities
-            scale2, _ := SquareFree(v1);
-            if IsSquare(scale1*v2/d2) then
-                Append(~scale_factors, AbsoluteValue(scale1));
+            log_scale1 := SquareFree(v1 - LogSum(-d1));
+            log_scale2 := SquareFree(v1);
+            // scale1, _ := SquareFree(v1/d1); //two possibilities
+            // scale2, _ := SquareFree(v1);
+            // if IsSquare(scale1*v2/d2) then
+            if IsSquare(log_scale1 + v2 - LogSum(-d2)) then
+                // Append(~scale_factors, AbsoluteValue(scale1));
+                Append(~scale_factors, log_scale1);
             else
-                assert IsSquare(scale2*v2);
-                Append(~scale_factors, AbsoluteValue(scale2));
+                // assert IsSquare(scale2*v2);
+                assert IsSquare(log_scale2 + v2);
+                // Append(~scale_factors, AbsoluteValue(scale2));
+                 Append(~scale_factors, log_scale2);
             end if;
         end if;
     end for;
@@ -2250,26 +2261,42 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
 
 
     table :=[* [* x : i->x in t *] : t in table *];
-    s, stilde, scale, scale_tilde := find_signs(s, stilde, ds);
-    row_scales[s_idx] :=  row_scales[s_idx]*scale;
-    row_scales[stilde_idx] :=  row_scales[stilde_idx]*scale_tilde;
-    table[s_idx] := s;
-    table[stilde_idx] := stilde;
+    scale_tilde := stilde[Index(s,LogSum(0))];
+    scale := s[Index(stilde,LogSum(0))];
+   
+    row_scales[s_idx] +:= scale;
+    row_scales[stilde_idx] +:= scale_tilde;
+   
     k_idxs := abs_schofer_tab`K_idxs;
     abs_schofer_tab`Values := table;
 
     //Scale the y2 rows of the table
     scale_factors := find_y2_scales(abs_schofer_tab);
 
+    // make table values into rational numbers
+
     degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
     for i->k in k_idxs do
         for j in [1 .. #table[k]] do
-            table[k][j] := table[k][j]/scale_factors[i]^degs[j];
+            // table[k][j] := table[k][j]/scale_factors[i]^degs[j];
+            table[k][j] -:= degs[j]*scale_factors[i];
         end for;
-        row_scales[k] := row_scales[k]*scale_factors[i];
+        // row_scales[k] := row_scales[k]*scale_factors[i];
+        row_scales[k] +:= scale_factors[i];
     end for;
-    abs_schofer_tab`Values := table;
+    // abs_schofer_tab`Values := table;
+    abs_schofer_tab`Values := [[RationalNumber(x) : x in y] : y in table];
     abs_schofer_tab`RowScales := row_scales;
+    
+    table := abs_schofer_tab`Values;
+    table :=[* [* x : i->x in t *] : t in table *];
+
+    s := table[s_idx];
+    stilde := table[stilde_idx];
+    s, stilde := find_signs(s, stilde, ds);
+
+    table[s_idx] := s;
+    table[stilde_idx] := stilde;
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
@@ -2337,18 +2364,25 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
     scales := [];
     num_rat_ds := #sep_ds[1];
     for t in table do
-        xs := [x : i->x in t | i le num_rat_ds and x notin [0, Infinity()] ];
+        // xs := [x : i->x in t | i le num_rat_ds and x notin [0, Infinity()] ];
+        xs := [x : i->x in t | i le num_rat_ds and x notin [LogSum(0), LogSum(Infinity())] ];
         //xs := [x : x in t | x notin [0, Infinity()]];
+        /*
         ps := &join[Set(PrimeDivisors(Numerator(x))) : x in xs];
         ps join:= &join[Set(PrimeDivisors(Denominator(x))) : x in xs];
         ps := [p : p in ps];
-        vals := [[Valuation(x,p) : x in xs ] : p in ps];
+        */
+        ps := [p : p in &join[Keys(x`log_coeffs) : x in xs]];
+        // vals := [[Valuation(x,p) : x in xs ] : p in ps];
+        vals := [[IsDefined(x`log_coeffs, p) select x`log_coeffs[p] else 0 : x in xs ] : p in ps];
         mins := [Minimum([<AbsoluteValue(v),v> : v in valp]) : valp in vals];
-        scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
+        // scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
+        scale := &+[LogSum(mins[i][2], p) : i->p in ps];
         Append(~scales, scale);
     end for;
     degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
-    schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
+    // schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
+    schofer_tab`Values :=  [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
     return;
 end intrinsic;

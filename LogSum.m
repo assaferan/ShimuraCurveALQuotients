@@ -11,8 +11,9 @@ end intrinsic;
 
 intrinsic LogSum(oo::Infty) -> LogSm
 {.}
+    require oo eq Infinity() : "oo must be +Infinity";
     ret := LogSum();
-    ret`log_coeffs[Infinity()] := (oo lt 0) select 1 else -1;
+    ret`log_coeffs[-1] := 1;
 
     return ret;
 end intrinsic;
@@ -30,6 +31,11 @@ intrinsic LogSum(a::FldRatElt) -> LogSm
         ret +:= LogSum(p[2],p[1]);
     end for;
     return ret;
+end intrinsic;
+
+intrinsic LogSum(a::RngIntElt) -> LogSm
+{.}
+    return LogSum(Rationals()!a);
 end intrinsic;
 
 intrinsic LogSum(a::FldRatElt, p::RngIntElt) -> LogSm
@@ -64,6 +70,16 @@ intrinsic '+'(s1::LogSm, s2::LogSm) -> LogSm
 {.}
     s := New(LogSm);
     s`log_coeffs := AssociativeArray();
+    for special in [0, -1] do
+        if IsDefined(s1`log_coeffs, special) then
+            s`log_coeffs := s1`log_coeffs;
+            return s;
+        end if;
+        if IsDefined(s2`log_coeffs, special) then
+            s`log_coeffs := s2`log_coeffs;
+            return s;
+        end if;
+    end for;
     for p in Keys(s1`log_coeffs) do
         s`log_coeffs[p] := s1`log_coeffs[p];
     end for;
@@ -121,7 +137,9 @@ end intrinsic;
 intrinsic RationalNumber(s::LogSm) -> FldRatElt
 {.}
     require &and[IsIntegral(coeff) : coeff in s`log_coeffs] : "s does not represent a rational number!";
-    return &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];;
+    ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
+    if (ret eq -1) then return Infinity(); end if;
+    return ret;
 end intrinsic;
 
 intrinsic IsZero(s::LogSm) -> BoolElt
@@ -132,10 +150,24 @@ end intrinsic;
 
 intrinsic 'eq'(s1::LogSm, s2::LogSm) -> BoolElt
 {.}
-    for special in [0,Infinity()] do
-        if special in Keys(s1`log_coeffs) and special in Keys(s2`log_coeffs) then
-            return true;
+    for special in [0,-1] do
+        if special in Keys(s1`log_coeffs) or special in Keys(s2`log_coeffs) then
+            return special in Keys(s2`log_coeffs) and special in Keys(s1`log_coeffs);
         end if;
     end for;
     return IsZero(s1-s2);
+end intrinsic;
+
+intrinsic SquareFree(s::LogSm) -> LogSm
+{.}
+    ret := LogSum();
+    for p in Keys(s`log_coeffs) do
+        ret`log_coeffs[p] := s`log_coeffs[p] - 2*Floor(s`log_coeffs[p]/2);
+    end for;
+    return ret;
+end intrinsic;
+
+intrinsic IsSquare(s::LogSm) -> BoolElt
+{.}
+    return SquareFree(s) eq LogSum();
 end intrinsic;

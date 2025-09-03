@@ -2,23 +2,14 @@ AttachSpec("shimuraquots.spec");
 
 import "BorcherdsProducts.m" : Wpoly, Wpoly2, Wpoly_scaled;
 
-function lambda_v(Q, d)
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda := FindLambda(Q,-d : bound := bd);
-    end while;
-    assert found_lambda;
-    return lambda;
-end function;
-
 procedure test_Kappa0()
 
     printf "Testing Kappa0...";
     Q := AssociativeArray();
-    _,_,_,_,_, Q[6] := ShimuraCurveLattice(6,1);
-    _,_,_,_,_, Q[10] := ShimuraCurveLattice(10,1);
+    O := AssociativeArray();
+    L := AssociativeArray();
+    _,_,_,_,_, Q[6],O[6],L[6]  := ShimuraCurveLattice(6,1);
+    _,_,_,_,_, Q[10],O[10],L[10] := ShimuraCurveLattice(10,1);
     
     kappa0_data := AssociativeArray();
     // verifying [Yang, Example 21, p. 24-25] and [Err, p. 850]
@@ -37,7 +28,7 @@ procedure test_Kappa0()
     for D in Keys(kappa0_data) do
         for datum in kappa0_data[D] do
             m,d,log_coeffs := Explode(datum);
-            assert Kappa0(m,d,Q[D],lambda_v(Q[D],d)) eq LogSum(log_coeffs);
+            assert Kappa0(m,d,Q[D],ElementOfNorm(Q[D],-d,O[D],L[D])) eq LogSum(log_coeffs);
         end for;
     end for;
 
@@ -342,7 +333,7 @@ procedure test_W()
     L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(6,1);
     Q := ChangeRing(Qinv^(-1), Integers());
     for d in [-3,-4] do
-        _, lambda_v := FindLambda(Q,-d);
+        _, lambda_v := ElementOfNorm(Q,-d);
         Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
         mu := Vector([0,0,0]);
         if d eq -4 then
