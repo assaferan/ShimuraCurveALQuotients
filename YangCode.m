@@ -790,6 +790,7 @@ GetHeight:=function(disc,Lplus,m)
   SS,U:=LLLGram(M0);
   SS:=MatrixAlgebra(Integers(),2)!SS;
   Sgcd:=GCD([SS[1,1],SS[1,2],SS[2,1],SS[2,2]]);
+  printf "\n\t Sgcd = %o\n", Sgcd;
   SS:=Matrix(Integers(),2,2,[SS[1,1] div Sgcd, SS[1,2] div Sgcd,
       SS[2,1] div Sgcd, SS[2,2] div Sgcd]);
   Mminus1:=U[1,1]*V1+U[1,2]*V2;
@@ -856,6 +857,7 @@ GetHeight:=function(disc,Lplus,m)
           else
             cc:=FundamentalDiscriminant(disc);
             ee,dd:=SquarefreeFactorization(disc div cc);
+            
             for p in PrimeDivisors(Sgcd*disc*Numerator(mp)) do
               if not (p in pps) then
                 Include(~pps,p);
@@ -912,6 +914,7 @@ GetHeight:=function(disc,Lplus,m)
 end function;
 
 GetHeight1:=function(disc,Lplus,m)
+  printf "Kappa_eta of %o\n", m;
   Mplus:=LCoefficients(Lplus);
   M:=Matrix(Rationals(),3,3,[LCoefficients(Proj(i,{Lplus})),
      LCoefficients(Proj(j,{Lplus})),LCoefficients(Proj(k,{Lplus}))]);
@@ -964,6 +967,7 @@ if Integers()!(4*m) mod 4 eq 0 or Integers()!(4*m) mod 4 eq 3 then
         for n in [Ceiling(-v-u)..Floor(v-u)] do
           x:=(u+n)*Lplus;
           mp:=m-Norm(x); pp:=0; B:=1;
+          printf "\tm - Q(x) = %o\n", mp;
           if mp eq 0 then
             if IsIntegral(nu[1]) and IsIntegral(nu[2]) then
               if 0 notin pps then
@@ -972,7 +976,7 @@ if Integers()!(4*m) mod 4 eq 0 or Integers()!(4*m) mod 4 eq 3 then
               end if;
               exps[0]:=exps[0]+1;
             end if;
-tt:=true;
+            tt:=true;
             dd:=FundamentalDiscriminant(disc);
             if #PrimeDivisors(disc div dd) eq 1 then
               LL:=Factorization(disc div dd);
@@ -1024,6 +1028,7 @@ tt:=true;
                 end if;
               end if;
             end for;
+            printf "\tadding %o Log %o\n", B*2/ClassNumber(disc), pp;
             exps[pp]:=exps[pp]+B*2/ClassNumber(disc);
           end if;
         end for;
@@ -1038,6 +1043,7 @@ tt:=true;
       if p notin pps then
         Include(~pps,p); exps[p]:=0;
       end if;
+      printf "\tadding %o Log %o\n",4*p^(1-e)/(p-KroneckerSymbol(dd,p)), p;
       exps[p]:=exps[p]+4*p^(1-e)/(p-KroneckerSymbol(dd,p));
     end if;
   end if;

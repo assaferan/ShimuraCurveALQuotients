@@ -569,7 +569,7 @@ end function;*/
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
 {.}
     require d gt 0: "d must be positive";
-    
+
     Q := ChangeRing(Q, Integers());
     n := Nrows(Q);
     idxs := CartesianPower([-bound..bound], n);
@@ -904,7 +904,11 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
     scale_sqr := &*scales_sqr;
     
     W_kron := W_prod / kron_prod;
-    km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
+    // km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
+    // Using Yang's code to try to work the non-maximal case
+    // !!! Not sure why this works !!!
+    _, f := SquarefreeFactorization(d div FundamentalDiscriminant(d));
+    km_sqr := -d*scale_sqr*(w*W_kron / h)^2 / f^2;
     km_sign := -Sign(W_kron);
 
     return km_sqr, km_sign;
@@ -913,11 +917,6 @@ end function;
 
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
-    if (m eq 0) and (mu ne 0) then
-        error Error("Not implemented for m = mu = 0!");
-        print "special case";
-        return 0, 1;
-    end if;
     error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
@@ -995,6 +994,8 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     gamma_plus:= c_gamma_plus*lambda_rat;
     gamma_minus := gamma_rat - gamma_plus;
     log_coeffs := LogSum();
+    // This is the condition from Yang code, if we have a vector with Q(x) = m
+    Yang_tt := false;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
@@ -1018,12 +1019,27 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             vprintf ShimuraQuotients, 2: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 2: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
-
-            a, p := kappaminus(gamma_minus + mu_minus, m - (x*Qrat,x)/2, Lminus, Q, d);
-
-            log_coeffs +:= LogSum(Rationals()!a,p);
+            if (gamma ne 0) and (m - (x*Qrat,x)/2 eq 0) and (gamma_minus + mu_minus ne 0) then
+                Yang_tt := true;
+            else
+                a, p := kappaminus(gamma_minus + mu_minus, m - (x*Qrat,x)/2, Lminus, Q, d);
+                log_coeffs +:= LogSum(Rationals()!a,p);
+            end if;
         end for;
     end for;
+
+    // trying to imitate Yang's code
+    // !!! Don't know why this is working !!!
+    if Yang_tt then
+        d0 := FundamentalDiscriminant(d);
+        f2 := d div d0;
+        is_pp, p, e2 := IsPrimePower(f2);
+        if is_pp then
+            e := e2 div 2;
+            log_coeffs +:= LogSum(-4*p^(1-e)/(p-KroneckerSymbol(d0,p)),p);
+        end if;
+    end if;
+
     return log_coeffs;
 end intrinsic;
 
@@ -1106,16 +1122,26 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     OK := MaximalOrder(QuadraticField(d));
     is_sqr, cond := IsSquare(d div Discriminant(OK));
     assert is_sqr;
-    require cond eq 1 : "Not implemented for non-maximal orders!";
+    // require cond eq 1 : "Not implemented for non-maximal orders!";
     O := sub<OK | cond>;
     n_d := NumberOfOptimalEmbeddings(O, D, N);
     require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
     W_size := 2^#PrimeDivisors(D*N);
 
     // Not sure?? Think this what happens to the number of CM points on the full quotient
+    /*
     sqfree, sq := SquarefreeFactorization(d);
     Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
     if ((D*N) mod sqfree eq 0) and Ogg_condition then
+        W_size div:= 2;
+    end if;
+    */
+    // This follows from Ogg's desxription of the fixed points 
+    // of Atkin-Lehner w_m
+    Ogg_condition := ((d eq -4) and IsEven(D*N)) or
+                     ((d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)) or
+                     ((d mod 4 eq 1) and (D*N mod d eq 0));
+    if Ogg_condition then
         W_size div:= 2;
     end if;
 
@@ -2028,7 +2054,13 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     m := D_R*N_star_R;
     //if m in X`W then
     for a in A do
-        fraka := mPicR(a@@PicR_to_A);
+        alift := a@@PicR_to_A;
+        // circumventing a bug in Magma in mPicR
+        if (alift eq PicR!0) then
+            fraka := 1*R;
+        else
+            fraka := mPicR(alift);
+        end if;
         B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
         if IsIsomorphic(B_fraka, B) then
             break;
@@ -2157,7 +2189,8 @@ end procedure;
 
 function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
-    ratds := ds[1];
+    hauptmodule_idx := schofer_table`sIndex;
+    ratds := ds[hauptmodule_idx];
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
     k_idxs := schofer_table`K_idxs;
@@ -2167,7 +2200,7 @@ function find_y2_scales(schofer_table)
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0)} then
+        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and table[i][j] ne LogSum(0)} then
             //then we have a rational point on X
             d1 := ratds[j1];
             v1 := table[i][j1];
@@ -2176,8 +2209,8 @@ function find_y2_scales(schofer_table)
             // Append(~scale_factors, AbsoluteValue(scale));
             Append(~scale_factors, log_scale);
         else 
-            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0)};
-            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[1][j] ne LogSum(Infinity()) and table[1][j] ne LogSum(0) and ratds[j1] ne d2};
+            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and table[i][j] ne LogSum(0)};
+            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -2205,7 +2238,7 @@ function find_y2_scales(schofer_table)
                 // assert IsSquare(scale2*v2);
                 assert IsSquare(log_scale2 + v2);
                 // Append(~scale_factors, AbsoluteValue(scale2));
-                 Append(~scale_factors, log_scale2);
+                Append(~scale_factors, log_scale2);
             end if;
         end if;
     end for;

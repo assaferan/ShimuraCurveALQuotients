@@ -137,6 +137,8 @@ end intrinsic;
 intrinsic RationalNumber(s::LogSm) -> FldRatElt
 {.}
     require &and[IsIntegral(coeff) : coeff in s`log_coeffs] : "s does not represent a rational number!";
+    if IsLogZero(s) then return 0; end if;
+    if IsLogInfinity(s) then return Infinity(); end if;
     ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
     if (ret eq -1) then return Infinity(); end if;
     return ret;
@@ -146,6 +148,16 @@ intrinsic IsZero(s::LogSm) -> BoolElt
 {.}
     reduce(s);
     return IsEmpty(Keys(s`log_coeffs));
+end intrinsic;
+
+intrinsic IsLogZero(s::LogSm) -> BoolElt
+{.}
+    return 0 in Keys(s`log_coeffs);
+end intrinsic;
+
+intrinsic IsLogInfinity(s::LogSm) -> BoolElt
+{.}
+    return -1 in Keys(s`log_coeffs);
 end intrinsic;
 
 intrinsic 'eq'(s1::LogSm, s2::LogSm) -> BoolElt
