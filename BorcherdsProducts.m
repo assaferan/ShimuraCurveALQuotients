@@ -2190,7 +2190,7 @@ end procedure;
 function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
     hauptmodule_idx := schofer_table`sIndex;
-    ratds := ds[hauptmodule_idx];
+    ratds := ds[1];
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
     k_idxs := schofer_table`K_idxs;
@@ -2226,12 +2226,12 @@ function find_y2_scales(schofer_table)
             end if;
             d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
             d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
-            log_scale1 := SquareFree(v1 - LogSum(-d1));
+            log_scale1 := SquareFree(v1 - LogSum(AbsoluteValue(d1)));
             log_scale2 := SquareFree(v1);
             // scale1, _ := SquareFree(v1/d1); //two possibilities
             // scale2, _ := SquareFree(v1);
             // if IsSquare(scale1*v2/d2) then
-            if IsSquare(log_scale1 + v2 - LogSum(-d2)) then
+            if IsSquare(log_scale1 + v2 - LogSum(AbsoluteValue(d2))) then
                 // Append(~scale_factors, AbsoluteValue(scale1));
                 Append(~scale_factors, log_scale1);
             else
