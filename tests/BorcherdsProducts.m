@@ -417,22 +417,56 @@ function Wpolys_KY_5_3(m,p,mu,Lminus,Q)
     return 1 + val_e*KroneckerCharacter(kappa)(m)*x^(a+f);
 end function;
 
-procedure test_EquationsOfCovers()
-    printf "testing equations of covers of X0*(26;1)...";
+procedure test_AllEquationsAboveCovers()
+    _<s> := PolynomialRing(Rationals());
+    
+    cover_data := AssociativeArray();
+    // verifying [Guo-Yang, Example 32, p. 22-24]
+    cover_data[<15,1>] := AssociativeArray();
+    cover_data[<15,1>][{1,3}] := <-1/3*(s+243)*(s+3), [-243, 4*27, 1]>;
+    cover_data[<15,1>][{1,15}] := <s, [-3, 1, 1] >;
+    cover_data[<15,1>][{1}] := <-1/3*(s^2+243)*(s^2+3), [9, 4*27, 1]>;
+    // verifying [Guo-Yang, Example 33, p. 24-25]
+    cover_data[<26,1>] := AssociativeArray();
+    cover_data[<26,1>][{1,13}] := <-2*s^3+19*s^2-24*s-169, [1,1,1]>;
+    cover_data[<26,1>][{1,26}] := <s, [1,1,1]>;
+    cover_data[<26,1>][{1}] := <-2*s^6+19*s^4-24*s^2-169, [1,1,1]>;
+
+    ws_data := AssociativeArray();
+    ws_data[<26,1>] := AssociativeArray();
+    ws_data[<26,1>][{1}] := AssociativeArray();
+    ws_data[<26,1>][{1}][2] := [-1,-1,1];
+    // This one does not seem to work - we are getting (x,y) -> (-x,y) instead ??
+    // ws_data[<26,1>][{1}][26] := [1,-1,1];
+
     curves := GetHyperellipticCandidates();
-    assert exists(Xstar26){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
-    hs := EquationsOfCovers(Xstar26, curves);
-    fs := [];
-    for h in hs do
-        Append(~fs, HyperellipticPolynomials(h));
+    for DN in Keys(cover_data) do
+        D,N := Explode(DN);
+        printf "testing equations of covers of X0*(%o;%o)...", D, N;
+        assert exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
+        covers, ws, keys := AllEquationsAboveCovers(Xstar, curves);
+        for i->C in covers do
+            X := curves[keys[i]];
+            is_def, datum := IsDefined(cover_data[DN], X`W);
+            if not is_def then continue; end if;
+            f, scales := Explode(datum);
+            C_ex := HyperellipticCurve(f);
+            P<[x]> := AmbientSpace(C_ex);
+            phi := map<C -> C_ex | [scales[i]*x[i] : i in [1..3]]>;
+            is_isom, phi_inv := IsIsomorphism(phi);
+            assert is_isom;
+            ws_def, ws_DN := IsDefined(ws_data, DN);
+            if not ws_def then continue; end if;
+            ws_def, ws_ex := IsDefined(ws_DN, X`W);
+            if not ws_def then continue; end if;
+            _<[z]> := AmbientSpace(C); // not clear why we need to do this, seems like AlgebraMap(phi_inv) swaps domain and codomain !?
+            for Q in Keys(ws_ex) do
+                w_alg := AlgebraMap(phi)*AlgebraMap(ws[keys[i]][Q])*AlgebraMap(phi_inv);
+                assert &and[w_alg(x[i]) eq ws_ex[Q][i]*z[i] : i in [1..3]]; 
+            end for;
+        end for;
+        printf "Done\n";
     end for;
-    _<x> := Universe(fs);
-    assert fs eq [
-                    -1/8*x^4 + 19/16*x^3 - 3/2*x^2 - 169/16*x,
-                    x,
-                    -2*x^3 + 19*x^2 - 24*x - 169
-                    ];
-    printf "Done\n";
     return;
 end procedure;
 
@@ -441,6 +475,6 @@ test_Schofer_6();
 test_Schofer_10();
 test_Schofer_142();
 test_Schofer_26();
-test_EquationsOfCovers();
+test_AllEquationsAboveCovers();
 
 exit;

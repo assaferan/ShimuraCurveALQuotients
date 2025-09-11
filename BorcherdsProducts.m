@@ -1382,7 +1382,8 @@ along with two different hauptmoduls.}
                     t0 := SAction(t : Admissible := false);
                     vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms...";
                     ech_basis_0, ech_etas_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
-                    
+                    vprintf ShimuraQuotients, 2 : "Done\n";
+
                     vprintf ShimuraQuotients, 2 : "\t Building q-expansions at oo...";
                     ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
                     vprintf ShimuraQuotients, 2 : "Done\n";
@@ -1563,7 +1564,9 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     need := MaxNum - #Include;
     if #cm_pts gt need then  
     //need to make space for include points, but otherwise fill up with rational points as much as possible
-        pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
+        // pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
+        // The above does not make sense - we need to complete to MaxNum points
+        pt_list_rat := cm_pts_must cat other_cm[1..need];
     else
         pt_list_rat := cm_pts_must cat other_cm;
     end if;
@@ -1839,10 +1842,16 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 {Determine the equations of the immediate covers of X.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    num_vals := Maximum([2*g+5 : g in genus_list]);
-    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    
+    // num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
+    num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
+    // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
+    // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
+                                                            MaxNum := num_vals, Prec := Prec, 
+                                                            Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
     return EquationsOfCovers(schofer_tab, all_cm_pts);
@@ -2189,7 +2198,6 @@ end procedure;
 
 function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
-    hauptmodule_idx := schofer_table`sIndex;
     ratds := ds[1];
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
@@ -2200,17 +2208,17 @@ function find_y2_scales(schofer_table)
 
     scale_factors :=[];
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and table[i][j] ne LogSum(0)} then
+        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)} then
             //then we have a rational point on X
-            d1 := ratds[j1];
+            // d1 := ratds[j1];
             v1 := table[i][j1];
             // scale, _ := SquareFree(v1);
             log_scale := SquareFree(v1);
             // Append(~scale_factors, AbsoluteValue(scale));
             Append(~scale_factors, log_scale);
         else 
-            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and table[i][j] ne LogSum(0)};
-            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[hauptmodule_idx][j] ne LogSum(Infinity()) and table[hauptmodule_idx][j] ne LogSum(0) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
+            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
+            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -2333,6 +2341,8 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
 
     //Next need to go from norms to values on the hauptmoduls for the quad_cm points
 
+    all_flds := abs_schofer_tab`FldsOfDefn;
+
     bad_ds := {};
     for i->d in quadds do
         d_idx := #ratds+i;
@@ -2410,7 +2420,7 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
         vals := [[IsDefined(x`log_coeffs, p) select x`log_coeffs[p] else 0 : x in xs ] : p in ps];
         mins := [Minimum([<AbsoluteValue(v),v> : v in valp]) : valp in vals];
         // scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
-        scale := &+[LogSum(mins[i][2], p) : i->p in ps];
+        scale := &+([LogSum()] cat [LogSum(mins[i][2], p) : i->p in ps]);
         Append(~scales, scale);
     end for;
     degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
