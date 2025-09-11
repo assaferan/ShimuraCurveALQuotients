@@ -1909,13 +1909,13 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             assert #id_y eq 1;
             ws[label] := AssociativeArray();
             ws[label][1] := IdentityMap(C);
-            ws[label][id_y] := hyp1;
             P1_idx := Index(crv_list,covered_P1);
             id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
             assert #id_x eq 1;
+            ws[label][id_x[1]] := hyp1;
             _<x,y,z> := AmbientSpace(C);
             hyp2 := map<C->C | [-x, y, z]>;
-            ws[label][id_x[1]] := hyp2;
+            ws[label][id_y[1]] := hyp2;
             N := curves[label]`N;
             D := curves[label]`D;
             other_w := al_mul(id_x[1], id_y[1], N*D);
@@ -2004,8 +2004,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    num_vals := Maximum([2*g+4 : g in genus_list]);
-    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := num_vals, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    num_vals := Maximum([2*g+5 : g in genus_list]);
+    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
+                                                           MaxNum := num_vals, Prec := Prec, 
+                                                           Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);

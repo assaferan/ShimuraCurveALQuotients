@@ -437,7 +437,7 @@ procedure test_AllEquationsAboveCovers()
     ws_data[<26,1>][{1}] := AssociativeArray();
     ws_data[<26,1>][{1}][2] := [-1,-1,1];
     // This one does not seem to work - we are getting (x,y) -> (-x,y) instead ??
-    // ws_data[<26,1>][{1}][26] := [1,-1,1];
+    ws_data[<26,1>][{1}][26] := [1,-1,1];
 
     curves := GetHyperellipticCandidates();
     for DN in Keys(cover_data) do
