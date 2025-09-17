@@ -327,10 +327,16 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     n_gaps := g - &+[d div 4 : d in Divisors(D0)];
     k := t[#t]; // the order of pole for t
     n := n_gaps;
+    // Trying n0 here
+    n0 := n_gaps;
+    // The n0 below is guaranteed to work (Lemma 17 and Lemma 27 in [GY]), but might be too large
+    // n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)] - (Zero select 0 else k), 0);
+    n := n0;
     R := EtaQuotientsRing(M, disc);
+    gap_condition := false;
     pole_string := Zero select "{0,oo}" else "{oo}";
     vprintf ShimuraQuotients, 1: "Computing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
-    while (rk lt dim) do
+    while (rk lt dim) or (not gap_condition) do
         
         vprintf ShimuraQuotients, 2: "\n\t prec = %o, n = %o, k = %o, rk = %o, dim=%o\n", Prec, n, k, rk, dim; 
         
@@ -358,28 +364,43 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         end if;
         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
-        if (dim gt Prec) then
-            Prec := dim;
-        else
-            Prec +:= k;
-            // update n
-            n +:= k;
+        pole_orders := [PivotColumn(E,i) + min_v - 1 : i in [1..Rank(E)]];
+        gaps := &cat[[pole_orders[i]+1..pole_orders[i+1]-1] : i in [1..Minimum(#pole_orders-1,1-min_v)] 
+                                                            | pole_orders[i+1] - pole_orders[i] gt 1];
+        max_pole := (#gaps eq 0) select 0 else -gaps[1];
+        gap_condition := Zero select #gaps eq 0 else ((#gaps eq n_gaps) and (n0 ge max_pole));
+        if (rk lt dim) then
+            if (dim gt Prec) then
+                Prec := dim;
+            else
+                Prec +:= k;
+                // update n
+                n +:= k;
+            end if;
+        elif (not gap_condition) then
+            // We might be able to skip this if n0 < max_pole
+            // since we can generate the rest by multiplying by t
+            n0 := (n0 lt max_pole) select max_pole else n + max_pole;
+            n := n0;
         end if;
+       
     end while;
     vprintf ShimuraQuotients, 1 : "Done!\n";
     // sanity checks
     assert rk eq dim;
     
     n := -min_v;
-    pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
+    // This can be removed
+    // pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     if Zero then
-        n0 := n_gaps;
-        assert [-n..0] eq pole_orders[1..n+1];
+        // n0 := n_gaps;
+        // assert [-n..0] eq pole_orders[1..n+1];
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
-        assert (n + 1 - #pole_orders) eq n_gaps;
+        // assert (n + 1 - #pole_orders) eq n_gaps;
         n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
     end if;
+    
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
     
     if Zero then return E, n, n0, eta_quotients_oo, eta_quotients; end if;

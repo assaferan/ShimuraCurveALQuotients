@@ -439,6 +439,13 @@ procedure test_AllEquationsAboveCovers()
     // This one does not seem to work - we are getting (x,y) -> (-x,y) instead ??
     ws_data[<26,1>][{1}][26] := [1,-1,1];
 
+    cover_data[<38,1>] := AssociativeArray();
+    cover_data[<38,1>][{1}] := <-16*s^6-59*s^4-82*s^2-19, [1,16,1]>;
+    ws_data[<38,1>] := AssociativeArray();
+    ws_data[<38,1>][{1}] := AssociativeArray();
+    ws_data[<38,1>][{1}][2] := [-1,-1,1];
+    ws_data[<38,1>][{1}][38] := [1,-1,1];
+
     curves := GetHyperellipticCandidates();
     for DN in Keys(cover_data) do
         D,N := Explode(DN);
@@ -453,7 +460,7 @@ procedure test_AllEquationsAboveCovers()
             C_ex := HyperellipticCurve(f);
             P<[x]> := AmbientSpace(C_ex);
             phi := map<C -> C_ex | [scales[i]*x[i] : i in [1..3]]>;
-            is_isom, phi_inv := IsIsomorphism(phi);
+            is_isom := IsIsomorphism(phi);
             assert is_isom;
             ws_def, ws_DN := IsDefined(ws_data, DN);
             if not ws_def then continue; end if;
@@ -461,8 +468,8 @@ procedure test_AllEquationsAboveCovers()
             if not ws_def then continue; end if;
             _<[z]> := AmbientSpace(C); // not clear why we need to do this, seems like AlgebraMap(phi_inv) swaps domain and codomain !?
             for Q in Keys(ws_ex) do
-                w_alg := AlgebraMap(phi)*AlgebraMap(ws[keys[i]][Q])*AlgebraMap(phi_inv);
-                assert &and[w_alg(x[i]) eq ws_ex[Q][i]*z[i] : i in [1..3]]; 
+                w_alg := AlgebraMap(phi)*AlgebraMap(ws[keys[i]][Q])*AlgebraMap(phi^(-1));
+                assert &and[w_alg(x[i]) eq ws_ex[Q][i]*x[i] : i in [1..3]]; 
             end for;
         end for;
         printf "Done\n";
