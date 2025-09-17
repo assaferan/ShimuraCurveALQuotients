@@ -374,7 +374,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     if Zero then
         n0 := n_gaps;
-        assert pole_orders eq [-n..0];
+        assert [-n..0] eq pole_orders[1..n+1];
+        E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
         assert (n + 1 - #pole_orders) eq n_gaps;
         n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
