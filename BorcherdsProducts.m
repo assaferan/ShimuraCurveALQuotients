@@ -784,7 +784,9 @@ function Wpoly2(m,mu,L,K,Q)
             end if;
             cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
             assert B*Matrix([[a,b],[b,d]])*Transpose(B) in cans;
-            B_big := Parent(Jblock)!1;
+            // !!!! This stopped working in V2.29 !!!!
+            // B_big := Parent(Jblock)!1;
+            B_big := IdentityMatrix(BaseRing(Jblock),Nrows(Jblock));
             B_big[j-1,j-1] := B[1,1];
             B_big[j-1,j] := B[1,2];
             B_big[j,j-1] := B[2,1];
