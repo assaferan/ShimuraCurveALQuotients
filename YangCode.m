@@ -823,6 +823,8 @@ GetHeight:=function(disc,Lplus,m)
           mp:=m-Norm(x); pp:=0; B:=1;
           printf "\n\t mu_minus = %o, m - Q(x) = %o\n", etaminus, mp;
           if mp eq 0 then
+            // If nu is in L_minus, we get kappa_minus_0(0),
+            // giving a Chowla-Selberg period
             if IsIntegral(nu[1]) and IsIntegral(nu[2]) then
               if 0 notin pps then
                 Include(~pps,0);

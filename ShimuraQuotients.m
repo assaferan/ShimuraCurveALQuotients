@@ -1500,7 +1500,7 @@ end intrinsic;
 
 intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
     {returns at most quadratic CM points}
-    vprint ShimuraQuotients, 2: "Computing quadratic CM points";
+    vprint ShimuraQuotients, 2: "Computing quadratic CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     pts := [];
     CNs := AssociativeArray();
@@ -1541,6 +1541,7 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
             Append(~pts, <d,1,2>);
         end if;
     end for;
+    vprintf ShimuraQuotients, 2: "Done!\n";
     return pts;
 end intrinsic;
 

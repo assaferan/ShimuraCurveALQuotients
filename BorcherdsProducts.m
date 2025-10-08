@@ -599,7 +599,7 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::Seq
         v := Vector([idx[j] : j in [1..n]]);
         v := ChangeRing(v, BaseRing(Q));
         if (v*Q,v) eq 2*d then
-            // checking whether this is an optimal embedding of the order of discriminant d
+            // checking whether this is an embedding of the order of discriminant d
             elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
             if d mod 4 ne 3 then
                 assert d mod 4 eq 0;
@@ -941,7 +941,14 @@ end function;
 
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
-    error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
+    // error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
+    if m eq 0 then 
+        vprintf ShimuraQuotients, 2: "m = 0, mu = %o, adding 0\n", mu;
+        if mu eq 0 then
+            vprintf ShimuraQuotients, 2: "Should add kappa0(0)!\n";
+        end if;
+        return 0, 1; 
+    end if;
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     
@@ -1011,6 +1018,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
     L := RSpaceWithBasis(IdentityMatrix(Integers(),3));
     L_quo, L_quo_map := L / (Lplus + Lminus);
+    vprintf ShimuraQuotients, 3: "\nL = %o\n Lplus = %o\n Lminus = %o\n L_quo = %o", L, Lplus, Lminus, L_quo;
 
     lambda_rat := ChangeRing(lambda_v, Rationals());
     gamma_rat := ChangeRing(gamma, Rationals());
@@ -1022,8 +1030,10 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     Yang_tt := false;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
+        vprintf ShimuraQuotients, 3: "\n\t mu = %o, ", mu;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
         mu_plus:= c_mu_plus*ChangeRing(lambda_v, Rationals());
+        vprintf ShimuraQuotients, 3: "mu_plus = %o, ", mu_plus;
         mu_minus := mu - mu_plus;
         // finding the possible range of x in mu_plus + L_plus
         // use that mu_plus = c_mu_plus * lambda, L_plus = Z * c_Lplus^(-1) * lambda
@@ -1038,6 +1048,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
         ub := Floor((Sqrt(sqr_bd) - c_mu_plus - c_gamma_plus)*c_Lplus);
         for k in [lb..ub] do
             x := (c_gamma_plus + c_mu_plus + k * c_Lplus^(-1)) * lambda_rat;
+            vprintf ShimuraQuotients, 3: "x = %o", x;
             assert (m - (x*Qrat,x)/2) ge 0;
             // if (m - (x*Qrat,x)/2) lt 0 then printf "skipping...\n"; continue; end if;
             vprintf ShimuraQuotients, 2: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
@@ -1146,30 +1157,26 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     OK := MaximalOrder(QuadraticField(d));
     is_sqr, cond := IsSquare(d div Discriminant(OK));
     assert is_sqr;
-    // require cond eq 1 : "Not implemented for non-maximal orders!";
-    O := sub<OK | cond>;
-    n_d := NumberOfOptimalEmbeddings(O, D, N);
-    require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
+
     W_size := 2^#PrimeDivisors(D*N);
+    scale := 0;
+    d0 := d div cond^2;
+    for c in Divisors(cond) do
+        O := sub<OK | c>;
+        dc2 := d0 * c^2;
+        n_d := NumberOfOptimalEmbeddings(O, D, N);
+    
+        require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
 
-    // Not sure?? Think this what happens to the number of CM points on the full quotient
-    /*
-    sqfree, sq := SquarefreeFactorization(d);
-    Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
-    if ((D*N) mod sqfree eq 0) and Ogg_condition then
-        W_size div:= 2;
-    end if;
-    */
-    // This follows from Ogg's desxription of the fixed points 
-    // of Atkin-Lehner w_m
-    Ogg_condition := ((d eq -4) and IsEven(D*N)) or
-                     ((d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)) or
-                     ((d mod 4 eq 1) and (D*N mod d eq 0));
-    if Ogg_condition then
-        W_size div:= 2;
-    end if;
+        // This follows from Ogg's description of the fixed points 
+        // of Atkin-Lehner w_m
+        Ogg_condition := ((dc2 eq -4) and IsEven(D*N)) or
+                        ((dc2 mod 4 eq 0) and ((D*N mod (dc2 div 4)) eq 0)) or
+                        ((dc2 mod 4 eq 1) and (D*N mod dc2 eq 0));
 
-    scale := -n_d / (4*W_size);
+        w_scale := Ogg_condition select (W_size div 2) else W_size;
+        scale +:= -n_d / (4*w_scale);
+    end for;
 
     return scale;
 end intrinsic;
@@ -1402,6 +1409,7 @@ along with two different hauptmoduls.}
                 if IsOdd(Xstar`D*Xstar`N) then
                     // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
                     pole_order := -D0*Minimum(ms);
+                    // pole_order := -D0*Maximum(ms);
                    
                     t0 := SAction(t : Admissible := false);
                     vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms...";
@@ -2144,11 +2152,15 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
             for w in s do
                 prev_prod := prod;
                 prod := al_mul(w,prod,D*N);
-                al_action[prod] := al_action[prev_prod]*al_action[w];
+                if not IsDefined(al_action, prod) then
+                    al_action[prod] := al_action[prev_prod]*al_action[w];
+                end if;
             end for;
             // Include(~allws, prod);
         end if;
     end for;
+
+    vprintf ShimuraQuotients, 4: "\t\t\tal_action components = %o\n", [#Components(f) : f in al_action];
 
     if (m eq 1) then
         al_action[1] := sigma_for_later;
@@ -2165,6 +2177,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // Q_P_ext := FixedField(H_R, fixed_sub);
 
     // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
+
+    vprintf ShimuraQuotients, 4: "\t\t\tFixed field of %o elements, with num components %o\n", #fixed_by, [#Components(f) : f in fixed_by];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
 
     // if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
