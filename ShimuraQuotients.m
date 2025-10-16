@@ -1541,6 +1541,7 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
             Append(~pts, <d,1,2>);
         end if;
     end for;
+    vprintf ShimuraQuotients, 2: "Done!\n";
     return pts;
 end intrinsic;
 

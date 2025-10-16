@@ -114,9 +114,13 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt) -> RngSerLaurElt
 
     eta_quots := Exponents(eta);
 
+    // We only store normalized eta quotients, these are the powers of q that we will need to eventually multiply by
+    // to get the original eta quotients
     valuation_shifts := [&+[d*r[i] : i->d in R`ds] div 24 : r in eta_quots];
     prec_shift := Minimum(valuation_shifts);
-    prec := Prec - prec_shift;
+    prec := Maximum(Prec - prec_shift, 1);
+    // If we are not able to compute the q-expansion to the desired precision, we set prec to 1
+    // so that we will not attempt to update the precision of the eta quotients
 
     if prec gt Precision(R) then 
         // curious - we are able to update something that does not exist ?
@@ -128,7 +132,7 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt) -> RngSerLaurElt
     
     coeffs := [eta`coeffs[x] : x in eta_quots];
 
-    prod_nor_etas := [&*[(R`nor_eta_ds[i] + O(q^(Prec-prec_shift)))^r[i] : i->d in R`ds] : r in eta_quots];
+    prod_nor_etas := [&*[(R`nor_eta_ds[i] + O(q^prec))^r[i] : i->d in R`ds] : r in eta_quots];
     prod_etas := [prod_nor_etas[j] * q^valuation_shifts[j] : j->r in eta_quots];
 
     eta`qexp_oo := &+[c*prod_etas[j] : j->c in coeffs];

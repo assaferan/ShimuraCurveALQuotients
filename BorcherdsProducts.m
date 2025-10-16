@@ -1586,7 +1586,8 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     cm_pts_must := [p : p in cm_pts | p[1] in Include];
     other_cm := [p : p in cm_pts | p[1] notin Include];
     need := MaxNum - #Include;
-    if #cm_pts gt need then  
+    // if #cm_pts gt need then  
+    if #other_cm ge need then
     //need to make space for include points, but otherwise fill up with rational points as much as possible
         // pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
         // The above does not make sense - we need to complete to MaxNum points
@@ -2144,7 +2145,9 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
             for w in s do
                 prev_prod := prod;
                 prod := al_mul(w,prod,D*N);
-                al_action[prod] := al_action[prev_prod]*al_action[w];
+                if not IsDefined(al_action, prod) then
+                    al_action[prod] := al_action[prev_prod]*al_action[w];
+                end if;
             end for;
             // Include(~allws, prod);
         end if;
