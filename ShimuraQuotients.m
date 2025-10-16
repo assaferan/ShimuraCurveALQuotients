@@ -488,8 +488,8 @@ function exp_to_Q(e, N, ps)
     return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq P!1];
 end function;
 
-intrinsic al_mul(w::RngIntElt, m::RngIntElt, ND::RngIntElt) -> RngIntElt
-    {multiply Atkin--Lehners w and m in X0(N,D)}
+intrinsic AtkinLehnerMul(w::RngIntElt, m::RngIntElt, ND::RngIntElt) -> RngIntElt
+{multiply Atkin--Lehners w and m in X0(N,D)}
     ps := PrimeDivisors(ND);
     // ps := PrimeDivisors(w*m);
     wvals := Vector(Integers(), [Valuation(w, p) : p in ps]);
@@ -605,7 +605,7 @@ intrinsic AllALsFromGens(Ws::SetEnum, ND::RngIntElt) ->SetEnum
         else
             prod := 1;
             for w in s do
-                prod := al_mul(w,prod, ND);
+                prod := AtkinLehnerMul(w,prod, ND);
             end for;
             Include(~allws, prod);
         end if;
@@ -792,7 +792,7 @@ end intrinsic;
 
 intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot ) -> RngIntElt
 {Returns the number of fixed points of W_w on c.}
-    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D)) : m in c`W];
+    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, AtkinLehnerMul(w, m, c`N*c`D)) : m in c`W];
 end intrinsic;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
@@ -877,7 +877,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 	    for N1 in N1s do
 		a := AssociativeArray();
 		for w in W do
-		    a[al_mul(N1, w,D*N)] := w;
+		    a[AtkinLehnerMul(N1, w,D*N)] := w;
 		end for;
 		/*
 		if (N2 eq 195) and ({6, 10, 26} subset W) then
@@ -888,7 +888,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 		end if;
 */
 		for w in W do
-		    N_prime := al_mul(N2, w, D*N);
+		    N_prime := AtkinLehnerMul(N2, w, D*N);
 		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
 			// print "w = ", w;
 			// print "N2 * w = ", N_prime;
@@ -1263,7 +1263,7 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
             for Ni in WMs do
                 e:= eps(Ni);
                 if e ne 0 then
-                    Include(~WNs, al_mul(Ni, 9, N*D));
+                    Include(~WNs, AtkinLehnerMul(Ni, 9, N*D));
                     WNs := AllALsFromGens(WNs, N*D);
                 else
                     Include(~WNs, Ni);

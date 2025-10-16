@@ -1943,7 +1943,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             ws[label][id_y[1]] := hyp2;
             N := curves[label]`N;
             D := curves[label]`D;
-            other_w := al_mul(id_x[1], id_y[1], N*D);
+            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
             ws[label][other_w] := hyp1*hyp2;
         end for;
         for label in Keys(curves_above_conics) do
@@ -1999,7 +1999,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             ws[label][id_y[1]] := hyp2;
             N := curves[label]`N;
             D := curves[label]`D;
-            other_w := al_mul(id_x[1], id_y[1], N*D);
+            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
             ws[label][other_w] := hyp1*hyp2; 
         end for;
         curves_above_P1s := AssociativeArray();
@@ -2106,7 +2106,14 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     sigma_a := rec(fraka);
     abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
     // _, K_to_abs := IsSubfield(K, abs_H_R);
-    _, cc := HasComplexConjugate(abs_H_R);
+    has_cc, cc := HasComplexConjugate(abs_H_R);
+    if not has_cc then
+        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
+        // elements that restrict to the complex conjugation on K
+        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
+        cc := Representative(cc_candidates);
+        cc := gal_to_auts(cc);
+    end if;
     sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
     if (m ne 1) then
         al_action[m] := sigma;
@@ -2144,7 +2151,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
             prod := 1;
             for w in s do
                 prev_prod := prod;
-                prod := al_mul(w,prod,D*N);
+                prod := AtkinLehnerMul(w,prod,D*N);
                 if not IsDefined(al_action, prod) then
                     al_action[prod] := al_action[prev_prod]*al_action[w];
                 end if;
@@ -2161,6 +2168,9 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
     sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
     sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
+
+    assert sanity_check;
+    assert sanity_check_trivial;
 
     unknown_quotients := n_W - n_fixed;
 

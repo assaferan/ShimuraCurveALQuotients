@@ -921,7 +921,7 @@ intrinsic ModularInvolution(vname::MonStgElt, N::RngIntElt) -> AlgMatElt
             Q := eval g[2..#g];
             W := al_matrix(Q, N);
             mat *:= W;
-            al_Q := al_mul(al_Q, Q, N);
+            al_Q := AtkinLehnerMul(al_Q, Q, N);
         else 
             require false : "Error in parsing modular involution";
         end if;
