@@ -127,9 +127,9 @@ intrinsic Print(s::LogSm)
         coeff := Sprintf("%o", s`log_coeffs[p]);
         if (Abs(s`log_coeffs[p]) eq 1) then
             coeff := coeff[1..1];
-            if (j eq 1) and (s`log_coeffs[p] eq 1) then coeff := ""; end if;
+            if (s`log_coeffs[p] eq 1) then coeff := ""; end if;
         end if;
-        printf "%oLog%o", coeff, p;
+        printf "%oLog%o", coeff, (p ne -1) select p else "oo";
     end for;
     return;
 end intrinsic;
