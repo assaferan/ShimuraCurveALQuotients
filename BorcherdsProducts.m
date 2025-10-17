@@ -368,7 +368,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         gaps := &cat[[pole_orders[i]+1..pole_orders[i+1]-1] : i in [1..Minimum(#pole_orders-1,1-min_v)] 
                                                             | pole_orders[i+1] - pole_orders[i] gt 1];
         max_pole := (#gaps eq 0) select 0 else -gaps[1];
-        gap_condition := Zero select #gaps eq 0 else ((#gaps eq n_gaps) and (n0 ge max_pole));
+        gap_condition := Zero select #gaps eq 0 else (#gaps eq n_gaps);
         if (rk lt dim) then
             if (dim gt Prec) then
                 Prec := dim;
@@ -385,6 +385,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         end if;
        
     end while;
+    
     vprintf ShimuraQuotients, 1 : "Done!\n";
     // sanity checks
     assert rk eq dim;
