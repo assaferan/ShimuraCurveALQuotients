@@ -94,13 +94,14 @@ function valuation_at_oo_lb(eta)
     return Minimum(valuation_shifts);
 end function;
 
-intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt) -> RngSerLaurElt
+intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt : RelPrec := false) -> RngSerLaurElt
 {The q-expansion of eta at oo.}
     R := Parent(eta);
     
     if assigned eta`qexp_oo and Prec le eta`prec_oo then
-         _<q> := Universe(R`nor_eta_ds);
-        return eta`qexp_oo + O(q^Prec);
+        _<q> := Universe(R`nor_eta_ds);
+        prec := RelPrec select Valuation(eta`qexp_oo)+Prec else Prec;
+        return eta`qexp_oo + O(q^prec);
     end if;
 
     reduce(eta);
@@ -109,7 +110,8 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt) -> RngSerLaurElt
         Zq<q> := LaurentSeriesRing(Integers());
         eta`qexp_oo := Zq!0;
         eta`prec_oo := Infinity();
-        return eta`qexp_oo + O(q^Prec);
+        prec := RelPrec select Valuation(eta`qexp_oo)+Prec else Prec;
+        return eta`qexp_oo + O(q^prec);
     end if;
 
     eta_quots := Exponents(eta);
@@ -138,7 +140,9 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt) -> RngSerLaurElt
     eta`qexp_oo := &+[c*prod_etas[j] : j->c in coeffs];
     eta`prec_oo := Prec;
 
-    return eta`qexp_oo + O(q^Prec);
+    prec := RelPrec select Valuation(eta`qexp_oo)+Prec else Prec;
+
+    return eta`qexp_oo + O(q^prec);
 end intrinsic;
 
 intrinsic SAction(eta::EtaQuot : Admissible := true) -> EtaQuot
@@ -176,9 +180,9 @@ end intrinsic;
 
 intrinsic Print(eta::EtaQuot)
 {.}
-    val_lb := valuation_at_oo_lb(eta);
+    // val_lb := valuation_at_oo_lb(eta);
     default_prec := 12;
-    printf "%o", qExpansionAtoo(eta, default_prec + val_lb);
+    printf "%o", qExpansionAtoo(eta, default_prec : RelPrec := true);
 end intrinsic;
 
 intrinsic Print(R::RngEtaQuot)
