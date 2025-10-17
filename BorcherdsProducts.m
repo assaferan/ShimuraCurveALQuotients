@@ -943,7 +943,7 @@ end function;
 function kappaminus(mu, m, Lminus, Q, d)
     // error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
     if m eq 0 then
-        printf "Warning: Adding 0 for m eq 0 at CM point!\n";
+        printf "\nWarning: Adding 0 for m eq 0 at CM point!\n";
         return 0, 1;
     end if;
     Bminus := BasisMatrix(Lminus);
@@ -952,7 +952,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
-    vprintf ShimuraQuotients, 2: "\t Sm_mu = %o\n", Sm_mu;
+    vprintf ShimuraQuotients, 3: "\t Sm_mu = %o\n", Sm_mu;
 
     Wpolys, wpolyseval, scales_sqr := get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := false);
    
@@ -973,7 +973,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     assert is_sqr;
     ret := ret_sign*AbsoluteValue(ret);
 
-    vprintf ShimuraQuotients, 2 : "\t adding %o log %o\n", -ret, p_prime;
+    vprintf ShimuraQuotients, 3 : "\t adding %o log %o\n", -ret, p_prime;
     return -ret, p_prime; // to get x logy instead of -xlogy
     // return p_prime^(-ret);
 end function;
@@ -1006,7 +1006,7 @@ end intrinsic;
 
 intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa(gamma, m) in Schofers formula.}
-    vprintf ShimuraQuotients, 1:"Kappa_%o of %o", gamma, m;
+    vprintf ShimuraQuotients, 2:"Kappa_%o of %o", gamma, m;
     Qrat := ChangeRing(Q, Rationals());
     Q := ChangeRing(Q, Integers());
     
@@ -1044,11 +1044,20 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             x := (c_gamma_plus + c_mu_plus + k * c_Lplus^(-1)) * lambda_rat;
             assert (m - (x*Qrat,x)/2) ge 0;
             // if (m - (x*Qrat,x)/2) lt 0 then printf "skipping...\n"; continue; end if;
-            vprintf ShimuraQuotients, 2: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+            vprintf ShimuraQuotients, 3: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
-            vprintf ShimuraQuotients, 2: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
-            if (gamma ne 0) and (m - (x*Qrat,x)/2 eq 0) and (gamma_minus + mu_minus ne 0) then
-                Yang_tt := true;
+            vprintf ShimuraQuotients, 3: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
+            if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
+                if (gamma ne 0) then
+                    Yang_tt := true;
+                else
+                    m0, m_cond := SquareFreeFactorization(Integers()!m);
+                    fac := Factorization(m_cond);
+                    for pe in fac do
+                        p,e := Explode(pe);
+                        log_coeffs -:= LogSum(Rationals()!2*e,p);
+                    end for;
+                end if;
             else
                 a, p := kappaminus(gamma_minus + mu_minus, m - (x*Qrat,x)/2, Lminus, Q, d);
                 log_coeffs +:= LogSum(Rationals()!a,p);
@@ -1081,7 +1090,7 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
         log_coeffs_m := Kappa0(m,d,Q,lambda);
-        vprintf ShimuraQuotients, 1 : " is %o\n", log_coeffs_m;
+        vprintf ShimuraQuotients, 2 : " is %o\n", log_coeffs_m;
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
@@ -1164,7 +1173,7 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
         W_size div:= 2;
     end if;
     */
-    // This follows from Ogg's desxription of the fixed points 
+    // This follows from Ogg's description of the fixed points 
     // of Atkin-Lehner w_m
     Ogg_condition := ((d eq -4) and IsEven(D*N)) or
                      ((d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)) or
@@ -2030,7 +2039,7 @@ end intrinsic;
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
 {Get equations of all covers (not just immediate covers)}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
-    d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
@@ -2205,7 +2214,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // return Q_Ps;
 end intrinsic;
 
-procedure replace_column(schofer_tab, d, dnew)
+procedure replace_column(schofer_tab, d, dnew, is_log)
     //add column associated to dnew remove column associated to d
     table := schofer_tab`Values;
     ds := schofer_tab`Discs;
@@ -2229,7 +2238,11 @@ procedure replace_column(schofer_tab, d, dnew)
     end if;
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
-        table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
+        // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
+        table[i][d_idx] := deg*(norm_val[i]-row_scales[i]);
+        if not is_log then
+            table[i][d_idx] := RationalNumber(table[i][d_idx]);
+        end if;
     end for;
     schofer_tab`Values := table;
     schofer_tab`Discs := [ds[1], ds[2]];
@@ -2403,7 +2416,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
             signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
             minpolys := [];
             for eps in signs do
-                    trace := 1- eps[1]*norm_stilde +  eps[2]*norm_s;
+                    trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
                     Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
             end for;
             roots := [Roots(p,K) : p in minpolys];
@@ -2414,7 +2427,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
                 candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
                 require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
                 newd := Reverse(Sort(SetToSequence(candidates)))[1];
-                replace_column(abs_schofer_tab, currd, newd);
+                replace_column(abs_schofer_tab, currd, newd, false);
                 currd := newd;
                 table := abs_schofer_tab`Values;
                 table :=[* [* x : i->x in t *] : t in table *];
