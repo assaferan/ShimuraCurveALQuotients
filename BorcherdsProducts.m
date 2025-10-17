@@ -1883,8 +1883,8 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     
-    // num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
-    num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
+    num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
+    // num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
     // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
     // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
@@ -2042,7 +2042,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    num_vals := Maximum([2*g+5 : g in genus_list]);
+    num_vals := Maximum([2*g+3 : g in genus_list]);
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
                                                            Exclude := {}, Include := Set(d_divs));
@@ -2251,6 +2251,40 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     return;
 end procedure;
 
+procedure add_column(schofer_tab, dnew, is_log)
+    //add column associated to dnew
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    curveid := Xstar`CurveID;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    all_fs := [fs[k] : k in keys_fs];
+    UpdateFieldsOfDefn(schofer_tab, dnew);
+    flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
+    assert #flds eq 1;
+    deg := Degree(flds[1]);
+    if deg eq 1 then
+        Append(~ds[1],dnew);
+    elif deg eq 2 then
+        Append(~ds[2],dnew);
+    else
+        error "Degree of field of definition must be 1 or 2";
+    end if;
+    schofer_tab`Discs := [ds[1], ds[2]];
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    for i->v in norm_val do
+        entry := deg*(norm_val[i]-row_scales[i]);
+        if is_log then
+            Append(~table[i], entry);
+        else
+            Append(~table[i], RationalNumber(entry));
+        end if;
+    end for;
+    schofer_tab`Values := table;  
+    return;
+end procedure;
 
 function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
@@ -2273,40 +2307,44 @@ function find_y2_scales(schofer_table)
             // Append(~scale_factors, AbsoluteValue(scale));
             Append(~scale_factors, log_scale);
         else 
-            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
-            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
+            cond1 :=  exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
+            cond2 := exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             //otherwise we find two points that are potentially over quadratic fields
-            v1 := table[i][j1];
-            v2 := table[i][j2];
-            d1 := ratds[j1];
-            d2 := ratds[j2];
-            quad_idx_1 := 1;
-            quad_idx_2 := 1;
-            if fldsofdef[keys_fs[i]][d1][1] eq Rationals() then
-                quad_idx_1 := 2;
-            end if;
-            if fldsofdef[keys_fs[i]][d2][1] eq Rationals() then
-                quad_idx_2 := 2;
-            end if;
-            d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
-            d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
-            log_scale1 := SquareFree(v1 - LogSum(AbsoluteValue(d1)));
-            log_scale2 := SquareFree(v1);
-            // scale1, _ := SquareFree(v1/d1); //two possibilities
-            // scale2, _ := SquareFree(v1);
-            // if IsSquare(scale1*v2/d2) then
-            if IsSquare(log_scale1 + v2 - LogSum(AbsoluteValue(d2))) then
-                // Append(~scale_factors, AbsoluteValue(scale1));
-                Append(~scale_factors, log_scale1);
+            if cond1 and cond2 then
+                v1 := table[i][j1];
+                v2 := table[i][j2];
+                d1 := ratds[j1];
+                d2 := ratds[j2];
+                quad_idx_1 := 1;
+                quad_idx_2 := 1;
+                if fldsofdef[keys_fs[i]][d1][1] eq Rationals() then
+                    quad_idx_1 := 2;
+                end if;
+                if fldsofdef[keys_fs[i]][d2][1] eq Rationals() then
+                    quad_idx_2 := 2;
+                end if;
+                d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
+                d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
+                log_scale1 := SquareFree(v1 - LogSum(AbsoluteValue(d1)));
+                log_scale2 := SquareFree(v1);
+                // scale1, _ := SquareFree(v1/d1); //two possibilities
+                // scale2, _ := SquareFree(v1);
+                // if IsSquare(scale1*v2/d2) then
+                if IsSquare(log_scale1 + v2 - LogSum(AbsoluteValue(d2))) then
+                    // Append(~scale_factors, AbsoluteValue(scale1));
+                    Append(~scale_factors, log_scale1);
+                else
+                    // assert IsSquare(scale2*v2);
+                    assert IsSquare(log_scale2 + v2);
+                    // Append(~scale_factors, AbsoluteValue(scale2));
+                    Append(~scale_factors, log_scale2);
+                end if;
             else
-                // assert IsSquare(scale2*v2);
-                assert IsSquare(log_scale2 + v2);
-                // Append(~scale_factors, AbsoluteValue(scale2));
-                Append(~scale_factors, log_scale2);
+                return false, _; // need to add a column
             end if;
         end if;
     end for;
-    return scale_factors;
+    return true, scale_factors;
 
 end function;
 
@@ -2368,8 +2406,19 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     abs_schofer_tab`Values := table;
 
     //Scale the y2 rows of the table
-    scale_factors := find_y2_scales(abs_schofer_tab);
-
+    b, scale_factors := find_y2_scales(abs_schofer_tab);
+    while not b do
+        rat_candidates := Set([pt[1] : pt in all_cm_pts[1]]) diff Set(ratds);
+        quad_candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds);
+        if #rat_candidates gt 0 then
+            add_column(abs_schofer_tab, rat_candidates[1], true);
+        elif #quad_candidates gt 0 then
+            add_column(abs_schofer_tab, quad_candidates[1], true);
+        else
+            error "No possible choices of CM points left for finding y2 scales";
+        end if;   
+        b, scale_factors := find_y2_scales(abs_schofer_tab);
+    end while;
     // make table values into rational numbers
 
     degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
