@@ -505,7 +505,8 @@ function Wpoly2(m,mu,L,K,Q)
             end if;
             cans := [SymmetricMatrix([0,1,0]), SymmetricMatrix([2,1,2])];
             assert B*Matrix([[a,b],[b,d]])*Transpose(B) in cans;
-            B_big := Parent(Jblock)!1;
+            // B_big := Parent(Jblock)!1;
+            B_big := IdentityMatrix(BaseRing(Jblock),Nrows(Jblock));
             B_big[j-1,j-1] := B[1,1];
             B_big[j-1,j] := B[1,2];
             B_big[j,j-1] := B[2,1];
@@ -667,7 +668,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
-    vprintf ShimuraQuotients, 2: "Sm_mu := %o\n", Sm_mu;
+    vprintf ShimuraQuotients, 3: "Sm_mu := %o\n", Sm_mu;
 
     Wpolys, wpolyseval, scales_sqr := get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := false);
    
@@ -747,7 +748,7 @@ intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngEl
             // ret *:= kappaminus(mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2, Lminus, Q, d);
             if not IsDefined(log_coeffs, p) then log_coeffs[p] := 0; end if;
             log_coeffs[p] +:= Rationals()!a;
-            vprintf ShimuraQuotients, 2: "mu_minus = %o, m - Q(x) = %o\n", mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+            vprintf ShimuraQuotients, 3: "mu_minus = %o, m - Q(x) = %o\n", mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
         end for;
     end for;
     return log_coeffs;
