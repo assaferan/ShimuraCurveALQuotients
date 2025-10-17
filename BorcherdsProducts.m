@@ -941,7 +941,11 @@ end function;
 
 // returns x,y such that the answer is x logy
 function kappaminus(mu, m, Lminus, Q, d)
-    error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
+    // error if m eq 0, "Not implemented for m eq 0 at CM point!\n", d;  
+    if m eq 0 then
+        printf "Warning: Adding 0 for m eq 0 at CM point!\n";
+        return 0, 1;
+    end if;
     Bminus := BasisMatrix(Lminus);
     Delta := Determinant(Bminus*Q*Transpose(Bminus));
     
@@ -2024,7 +2028,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
 end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
-    {Get equations of all covers (not just immediate covers)}
+{Get equations of all covers (not just immediate covers)}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
