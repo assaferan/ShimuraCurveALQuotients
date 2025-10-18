@@ -511,11 +511,19 @@ procedure test_AllEquationsAboveCovers()
 
     // D = 94
     cover_data[<94,1>] := AssociativeArray();
-    cover_data[<94,1>][{1}] := <-8*s^8+69*s^6-234*s^4+381*s^2-256, DiagonalMatrix([1,1,1])>;
+    cover_data[<94,1>][{1}] := <-8*s^8+69*s^6-234*s^4+381*s^2-256, DiagonalMatrix([-4,800,1])>;
     ws_data[<94,1>] := AssociativeArray();
     ws_data[<94,1>][{1}] := AssociativeArray();
     ws_data[<94,1>][{1}][2] := DiagonalMatrix([-1,1,1]);
     ws_data[<94,1>][{1}][94] := DiagonalMatrix([1,-1,1]);
+
+    // D = 134
+    cover_data[<134,1>] := AssociativeArray();
+    cover_data[<134,1>][{1}] := <-16*s^14-347*s^12-2518*s^10-13341*s^8-91876*s^6+32859*s^4-2518*s^2-67, DiagonalMatrix([1,1,1])>;
+    ws_data[<134,1>] := AssociativeArray();
+    ws_data[<134,1>][{1}] := AssociativeArray();
+    ws_data[<134,1>][{1}][2] := DiagonalMatrix([-1,-1,1]);
+    ws_data[<134,1>][{1}][134] := DiagonalMatrix([1,-1,1]);
 
     // verifying [GY, Example 35, p. 27]
     cover_data[<146,1>] := AssociativeArray();

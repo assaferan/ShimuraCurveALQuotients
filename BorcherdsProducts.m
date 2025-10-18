@@ -1562,8 +1562,8 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     _<q> := f0_D0;
     f0 := q^v*&+[coeffs_f0_D0[i]*q^(i-1) : i in [1..#coeffs_f0_D0]];
 
-    vprintf ShimuraQuotients,1 : "Computing divisor of %o,", f;
-    vprintf ShimuraQuotients,1 : " qExpansion at 0 is %o\n", f0;
+    vprintf ShimuraQuotients,2 : "Computing divisor of %o,", f;
+    vprintf ShimuraQuotients,2 : " qExpansion at 0 is %o\n", f0;
 
     return DivisorOfBorcherdsForm(foo, f0, Xstar);
 end intrinsic;
@@ -2040,18 +2040,30 @@ end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
 {Get equations of all covers (not just immediate covers)}
+    vprintf ShimuraQuotients,1 : "Computing Borcherds forms...";
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    vprintf ShimuraQuotients,1 : "Done\n";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    vprintf ShimuraQuotients,1 : "Computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    vprintf ShimuraQuotients,1 : "Done\n";
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
+    vprintf ShimuraQuotients,1 : "Computing absolute values at CM points...";
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
                                                            Exclude := {}, Include := Set(d_divs));
+    vprintf ShimuraQuotients,1 : "Done\n";
     ReduceTable(abs_schofer_tab);
+    vprintf ShimuraQuotients,1 : "Computing actual values at CM points...";
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    vprintf ShimuraQuotients,1 : "Done\n";  
+    vprintf ShimuraQuotients,1 : "Computing equations of covers...";
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
+    vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics...";
     cover_eqns, ws, cover_keys := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
+    vprintf ShimuraQuotients,1 : "Done\n";
     all_eqns := crv_list cat cover_eqns;
     all_keys := new_keys cat cover_keys;
     return all_eqns, ws, all_keys;
