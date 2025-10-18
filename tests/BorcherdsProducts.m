@@ -423,14 +423,15 @@ procedure test_AllEquationsAboveCovers()
     cover_data := AssociativeArray();
     // verifying [Guo-Yang, Example 32, p. 22-24]
     cover_data[<15,1>] := AssociativeArray();
-    cover_data[<15,1>][{1,3}] := <-1/3*(s+243)*(s+3), [-243, 4*27, 1]>;
-    cover_data[<15,1>][{1,15}] := <s, [-3, 1, 1] >;
-    cover_data[<15,1>][{1}] := <-1/3*(s^2+243)*(s^2+3), [9, 4*27, 1]>;
+    cover_data[<15,1>][{1,3}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
+    cover_data[<15,1>][{1,15}] := <s, DiagonalMatrix([-3, 1, 1]) >;
+    cover_data[<15,1>][{1}] := <-1/3*(s^2+243)*(s^2+3), DiagonalMatrix([9, 4*27, 1])>;
+    
     // verifying [Guo-Yang, Example 33, p. 24-25]
     cover_data[<26,1>] := AssociativeArray();
-    cover_data[<26,1>][{1,13}] := <-2*s^3+19*s^2-24*s-169, [1,1,1]>;
-    cover_data[<26,1>][{1,26}] := <s, [1,1,1]>;
-    cover_data[<26,1>][{1}] := <-2*s^6+19*s^4-24*s^2-169, [1,1,1]>;
+    cover_data[<26,1>][{1,13}] := <-2*s^3+19*s^2-24*s-169, DiagonalMatrix([1,1,1])>;
+    cover_data[<26,1>][{1,26}] := <s, DiagonalMatrix([1,1,1])>;
+    cover_data[<26,1>][{1}] := <-2*s^6+19*s^4-24*s^2-169, DiagonalMatrix([1,1,1])>;
 
     ws_data := AssociativeArray();
     ws_data[<26,1>] := AssociativeArray();
@@ -439,12 +440,25 @@ procedure test_AllEquationsAboveCovers()
     // This one does not seem to work - we are getting (x,y) -> (-x,y) instead ??
     ws_data[<26,1>][{1}][26] := [1,-1,1];
 
+    // Verifying [GY, Table A.1, p. 33]
     cover_data[<38,1>] := AssociativeArray();
-    cover_data[<38,1>][{1}] := <-16*s^6-59*s^4-82*s^2-19, [1,16,1]>;
+    cover_data[<38,1>][{1}] := <-16*s^6-59*s^4-82*s^2-19, DiagonalMatrix([1,16,1])>;
     ws_data[<38,1>] := AssociativeArray();
     ws_data[<38,1>][{1}] := AssociativeArray();
     ws_data[<38,1>][{1}][2] := [-1,-1,1];
     ws_data[<38,1>][{1}][38] := [1,-1,1];
+
+    // verifying [GY, Example 35, p. 27]
+    cover_data[<146,1>] := AssociativeArray();
+    cover_data[<146,1>][{1}] := <-11*s^16+82*s^15-221*s^14+214*s^13+133*s^12-360*s^11-170*s^10+676*s^9
+                                 -150*s^8-676*s^7-170*s^6+360*s^5+133*s^4-214*s^3-221*s^2-82*s-11, Matrix([[-1,0,-1],[0,128,0],[-1,0,0]])>;
+    cover_data[<146,1>][{1,73}] := <-11*s^8+82*s^7-309*s^6+788*s^5-1413*s^4+1858*s^3-1803*s^2+1240*s-688, Matrix([[-1,0,0],[0,128,0],[1,0,1]])>;
+    cover_data[<146,1>][{1,146}] := <s^2 + 4, Matrix([[1,0,0],[0,1,0],[-1,0,1]])>;
+
+    ws_data[<146,1>] := AssociativeArray();
+    ws_data[<146,1>][{1}] := AssociativeArray();
+    ws_data[<146,1>][{1}][146] := DiagonalMatrix([1,-1,1]);
+    ws_data[<146,1>][{1}][73] := Matrix([[0,0,1],[0,1,0],[-1,0,0]]);
 
     curves := GetHyperellipticCandidates();
     for DN in Keys(cover_data) do
@@ -459,7 +473,7 @@ procedure test_AllEquationsAboveCovers()
             f, scales := Explode(datum);
             C_ex := HyperellipticCurve(f);
             P<[x]> := AmbientSpace(C_ex);
-            phi := map<C -> C_ex | [scales[i]*x[i] : i in [1..3]]>;
+            phi := map<C -> C_ex | Eltseq(Vector(x)*ChangeRing(scales, Universe(x)))>;
             is_isom := IsIsomorphism(phi);
             assert is_isom;
             ws_def, ws_DN := IsDefined(ws_data, DN);
@@ -469,7 +483,9 @@ procedure test_AllEquationsAboveCovers()
             _<[z]> := AmbientSpace(C); // not clear why we need to do this, seems like AlgebraMap(phi_inv) swaps domain and codomain !?
             for Q in Keys(ws_ex) do
                 w_alg := AlgebraMap(phi)*AlgebraMap(ws[keys[i]][Q])*AlgebraMap(phi^(-1));
-                assert &and[w_alg(x[i]) eq ws_ex[Q][i]*x[i] : i in [1..3]]; 
+                phi1 := map< C_ex -> C_ex | [w_alg(x[j]) : j in [1..#x]]>;
+                phi2 := map< C_ex -> C_ex | Eltseq(Vector(x)*ChangeRing(ws_ex[Q], Universe(x)))>;
+                assert phi1 eq phi2;
             end for;
         end for;
         printf "Done\n";

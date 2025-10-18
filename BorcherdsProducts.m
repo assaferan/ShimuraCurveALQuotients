@@ -1977,7 +1977,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
             P1_to_C := Parametrization(C);
             C_to_P1 := Inverse(P1_to_C);
-            s_param := C_to_P1(x) / C_to_P1(z);
+            s_param := C_to_P1(x) / C_to_P1(z); // conic was constructed such that this is the hauptmodul
             fpoly := HyperellipticPolynomials(covered_gplus1);
             // amap := AlgebraMap(P1_to_C);
             // amap(x)/amap(z);
@@ -2005,10 +2005,11 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
              _<s,t> := Parent(C_to_P1(x));
             tmp := Inverse(inv);
             _<x,y,z> := AmbientSpace(H);
-            im_s := Evaluate(inv(s)/inv(t),[x,z]);
-            denom := Evaluate(SquareRoot(D), im_s);
-            denom_denom := Evaluate(SquareRoot(D), x/z);
-            hyp2 := map<H->H | [ im_s, y/z^(g+1)*denom/denom_denom, 1] >;
+            im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z ??? Does not yield an involution!
+            denom_im_s := Evaluate(SquareRoot(D), im_s);
+            denom_s := Evaluate(SquareRoot(D), Evaluate(s/t, [x,z]));
+            // denom_denom := Evaluate(SquareRoot(D), x/z);
+            hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
             _, hyp2 := IsAutomorphism(hyp2);
             ws[label][id_y[1]] := hyp2;
             N := curves[label]`N;
@@ -2240,7 +2241,7 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
-        table[i][d_idx] := deg*(norm_val[i]-row_scales[i]);
+        table[i][d_idx] := norm_val[i]-deg*row_scales[i];
         if not is_log then
             table[i][d_idx] := RationalNumber(table[i][d_idx]);
         end if;
