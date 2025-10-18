@@ -435,7 +435,6 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
         if not ws_def then continue; end if;
         ws_def, ws_ex := IsDefined(ws_DN, X`W);
         if not ws_def then continue; end if;
-        _<[z]> := AmbientSpace(C); // not clear why we need to do this, seems like AlgebraMap(phi_inv) swaps domain and codomain !?
         for Q in Keys(ws_ex) do
             w_alg := AlgebraMap(phi)*AlgebraMap(ws[keys[i]][Q])*AlgebraMap(phi^(-1));
             phi1 := map< C_ex -> C_ex | [w_alg(x[j]) : j in [1..#x]]>;
@@ -451,6 +450,8 @@ procedure test_AllEquationsAboveCovers()
     _<s> := PolynomialRing(Rationals());
     
     cover_data := AssociativeArray();
+    ws_data := AssociativeArray();
+
     // verifying [Guo-Yang, Example 32, p. 22-24]
     cover_data[<15,1>] := AssociativeArray();
     cover_data[<15,1>][{1,3}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
@@ -463,11 +464,9 @@ procedure test_AllEquationsAboveCovers()
     cover_data[<26,1>][{1,26}] := <s, DiagonalMatrix([1,1,1])>;
     cover_data[<26,1>][{1}] := <-2*s^6+19*s^4-24*s^2-169, DiagonalMatrix([1,1,1])>;
 
-    ws_data := AssociativeArray();
     ws_data[<26,1>] := AssociativeArray();
     ws_data[<26,1>][{1}] := AssociativeArray();
     ws_data[<26,1>][{1}][2] := DiagonalMatrix([-1,-1,1]);
-    // This one does not seem to work - we are getting (x,y) -> (-x,y) instead ??
     ws_data[<26,1>][{1}][26] := DiagonalMatrix([1,-1,1]);
 
     // Verifying [GY, Table A.1, p. 33]
@@ -477,6 +476,14 @@ procedure test_AllEquationsAboveCovers()
     ws_data[<38,1>][{1}] := AssociativeArray();
     ws_data[<38,1>][{1}][2] := DiagonalMatrix([-1,-1,1]);
     ws_data[<38,1>][{1}][38] := DiagonalMatrix([1,-1,1]);
+
+    // Verifying [GY, Table A.1, p. 34]
+    cover_data[<62,1>] := AssociativeArray();
+    cover_data[<62,1>][{1}] := <-64*s^8-99*s^6-90*s^4-43*s^2-8, DiagonalMatrix([1,4,1])>;
+    ws_data[<62,1>] := AssociativeArray();
+    ws_data[<62,1>][{1}] := AssociativeArray();
+    ws_data[<62,1>][{1}][2] := DiagonalMatrix([-1,1,1]);
+    ws_data[<62,1>][{1}][62] := DiagonalMatrix([1,-1,1]);
 
     // verifying [GY, Example 35, p. 27]
     cover_data[<146,1>] := AssociativeArray();
