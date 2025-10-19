@@ -1435,7 +1435,7 @@ end intrinsic;
 
 intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
 {returns rational CM points on X. Excludes those in exclude}
-    vprint ShimuraQuotients, 2: "Computing rational CM points";
+    vprintf ShimuraQuotients, 2: "\n\tComputing rational CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
@@ -1495,12 +1495,13 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
     // return pts[1..3];
+    vprintf ShimuraQuotients, 2: "Done!\n";
     return pts;
 end intrinsic;
 
 intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
     {returns at most quadratic CM points}
-    vprint ShimuraQuotients, 2: "Computing quadratic CM points";
+    vprintf ShimuraQuotients, 2: "\n\tComputing quadratic CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     pts := [];
     CNs := AssociativeArray();

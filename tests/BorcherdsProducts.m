@@ -463,13 +463,13 @@ procedure test_AllEquationsAboveCovers()
     cover_data[<26,1>][{1,13}] := <-2*s^3+19*s^2-24*s-169, DiagonalMatrix([1,1,1])>;
     cover_data[<26,1>][{1,26}] := <s, DiagonalMatrix([1,1,1])>;
     cover_data[<26,1>][{1}] := <-2*s^6+19*s^4-24*s^2-169, DiagonalMatrix([1,1,1])>;
-
     ws_data[<26,1>] := AssociativeArray();
     ws_data[<26,1>][{1}] := AssociativeArray();
     ws_data[<26,1>][{1}][2] := DiagonalMatrix([-1,-1,1]);
     ws_data[<26,1>][{1}][26] := DiagonalMatrix([1,-1,1]);
 
     // Verifying [GY, Table A.1, p. 33]
+    // D = 38
     cover_data[<38,1>] := AssociativeArray();
     cover_data[<38,1>][{1}] := <-16*s^6-59*s^4-82*s^2-19, DiagonalMatrix([1,16,1])>;
     ws_data[<38,1>] := AssociativeArray();
@@ -486,6 +486,7 @@ procedure test_AllEquationsAboveCovers()
     ws_data[<58,1>][{1}][29] := DiagonalMatrix([1,-1,1]);
 
     // Verifying [GY, Table A.1, p. 34]
+    // D = 62
     cover_data[<62,1>] := AssociativeArray();
     cover_data[<62,1>][{1}] := <-64*s^8-99*s^6-90*s^4-43*s^2-8, DiagonalMatrix([1,4,1])>;
     ws_data[<62,1>] := AssociativeArray();
@@ -517,25 +518,47 @@ procedure test_AllEquationsAboveCovers()
     ws_data[<94,1>][{1}][2] := DiagonalMatrix([-1,1,1]);
     ws_data[<94,1>][{1}][94] := DiagonalMatrix([1,-1,1]);
 
+    // Verifying [GY, Table A.1, p. 35]
     // D = 134
     cover_data[<134,1>] := AssociativeArray();
-    cover_data[<134,1>][{1}] := <-16*s^14-347*s^12-2518*s^10-13341*s^8-91876*s^6+32859*s^4-2518*s^2-67, DiagonalMatrix([1,1,1])>;
+    cover_data[<134,1>][{1}] := <-16*s^14-347*s^12-2518*s^10-13341*s^8-91876*s^6+32859*s^4-2518*s^2-67, DiagonalMatrix([-1,-8192,1])>;
     ws_data[<134,1>] := AssociativeArray();
     ws_data[<134,1>][{1}] := AssociativeArray();
     ws_data[<134,1>][{1}][2] := DiagonalMatrix([-1,-1,1]);
     ws_data[<134,1>][{1}][134] := DiagonalMatrix([1,-1,1]);
 
     // verifying [GY, Example 35, p. 27]
+    // D = 146
     cover_data[<146,1>] := AssociativeArray();
     cover_data[<146,1>][{1}] := <-11*s^16+82*s^15-221*s^14+214*s^13+133*s^12-360*s^11-170*s^10+676*s^9
                                  -150*s^8-676*s^7-170*s^6+360*s^5+133*s^4-214*s^3-221*s^2-82*s-11, Matrix([[-1,0,-1],[0,128,0],[-1,0,0]])>;
     cover_data[<146,1>][{1,73}] := <-11*s^8+82*s^7-309*s^6+788*s^5-1413*s^4+1858*s^3-1803*s^2+1240*s-688, Matrix([[-1,0,0],[0,128,0],[1,0,1]])>;
     cover_data[<146,1>][{1,146}] := <s^2 + 4, Matrix([[1,0,0],[0,1,0],[-1,0,1]])>;
-
     ws_data[<146,1>] := AssociativeArray();
     ws_data[<146,1>][{1}] := AssociativeArray();
     ws_data[<146,1>][{1}][146] := DiagonalMatrix([1,-1,1]);
     ws_data[<146,1>][{1}][73] := Matrix([[0,0,1],[0,1,0],[-1,0,0]]);
+
+    // D = 194
+    cover_data[<194,1>] := AssociativeArray();
+    cover_data[<194,1>][{1}] := <-19*s^20-92*s^19-286*s^18-592*s^17-921*s^16-1016*s^15
+                                 -872*s^14+460*s^13+1545*s^12+1752*s^11+34*s^10-1752*s^9
+                                 +1545*s^8-460*s^7-872*s^6+1016*s^5-921*s^4+592*s^3-286*s^2+92*s-19, DiagonalMatrix([-1,1,1])>;
+    ws_data[<194,1>] := AssociativeArray();
+    ws_data[<194,1>][{1}] := AssociativeArray();
+    ws_data[<194,1>][{1}][97] := Matrix([[0,0,1],[0,-1,0],[-1,0,0]]);
+    ws_data[<194,1>][{1}][194] := DiagonalMatrix([1,-1,1]);
+
+    // D = 206 - Not working yet!!!
+    /*
+    cover_data[<206,1>] := AssociativeArray();
+    cover_data[<206,1>][{1}] := <-8*s^20+13*s^18+42*s^16+331*s^14+220*s^12-733*s^10-6646*s^8-19883*s^6-28840*s^4-18224*s^2-4096, 
+                                  Matrix([[0,0,-1],[0,1,0],[-1,0,0]])>;
+    ws_data[<206,1>] := AssociativeArray();
+    ws_data[<206,1>][{1}] := AssociativeArray();
+    ws_data[<206,1>][{1}][2] := DiagonalMatrix([-1,1,1]);
+    ws_data[<206,1>][{1}][206] := DiagonalMatrix([1,-1,1]);
+    */
 
     curves := GetHyperellipticCandidates();
     for DN in Keys(cover_data) do

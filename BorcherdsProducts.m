@@ -335,10 +335,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     R := EtaQuotientsRing(M, disc);
     gap_condition := false;
     pole_string := Zero select "{0,oo}" else "{oo}";
-    vprintf ShimuraQuotients, 1: "Computing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
+    vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
         
-        vprintf ShimuraQuotients, 2: "\n\t prec = %o, n = %o, k = %o, rk = %o, dim=%o\n", Prec, n, k, rk, dim; 
+        vprintf ShimuraQuotients, 3: "\n\t\t prec = %o, n = %o, k = %o, rk = %o, dim=%o\n", Prec, n, k, rk, dim; 
         
         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
         
@@ -386,7 +386,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
        
     end while;
     
-    vprintf ShimuraQuotients, 1 : "Done!\n";
+    vprintf ShimuraQuotients, 2 : "Done!\n";
     // sanity checks
     assert rk eq dim;
     
@@ -399,7 +399,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
         // assert (n + 1 - #pole_orders) eq n_gaps;
-        n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
+        // n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
+        n0 := max_pole;
     end if;
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
@@ -1007,7 +1008,7 @@ end intrinsic;
 
 intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa(gamma, m) in Schofers formula.}
-    vprintf ShimuraQuotients, 2:"Kappa_%o of %o", gamma, m;
+    vprintf ShimuraQuotients, 2:"\tKappa_%o of %o", gamma, m;
     Qrat := ChangeRing(Q, Rationals());
     Q := ChangeRing(Q, Integers());
     
@@ -1562,10 +1563,12 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     _<q> := f0_D0;
     f0 := q^v*&+[coeffs_f0_D0[i]*q^(i-1) : i in [1..#coeffs_f0_D0]];
 
-    vprintf ShimuraQuotients,2 : "Computing divisor of %o,", f;
-    vprintf ShimuraQuotients,2 : " qExpansion at 0 is %o\n", f0;
+    vprintf ShimuraQuotients,2 : "\n\tComputing divisor of %o,", f;
+    vprintf ShimuraQuotients,2 : " qExpansion at 0 is %o...", f0;
 
-    return DivisorOfBorcherdsForm(foo, f0, Xstar);
+    ret := DivisorOfBorcherdsForm(foo, f0, Xstar);
+    vprintf ShimuraQuotients,2 : "Done!\n";
+    return ret;
 end intrinsic;
 
 
