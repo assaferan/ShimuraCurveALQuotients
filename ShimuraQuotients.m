@@ -488,8 +488,8 @@ function exp_to_Q(e, N, ps)
     return &*[ZZ | ps[i]^Valuation(N,ps[i]) : i in [1..#ps] | e[i] eq P!1];
 end function;
 
-intrinsic al_mul(w::RngIntElt, m::RngIntElt, ND::RngIntElt) -> RngIntElt
-    {multiply Atkin--Lehners w and m in X0(N,D)}
+intrinsic AtkinLehnerMul(w::RngIntElt, m::RngIntElt, ND::RngIntElt) -> RngIntElt
+{multiply Atkin--Lehners w and m in X0(N,D)}
     ps := PrimeDivisors(ND);
     // ps := PrimeDivisors(w*m);
     wvals := Vector(Integers(), [Valuation(w, p) : p in ps]);
@@ -605,7 +605,7 @@ intrinsic AllALsFromGens(Ws::SetEnum, ND::RngIntElt) ->SetEnum
         else
             prod := 1;
             for w in s do
-                prod := al_mul(w,prod, ND);
+                prod := AtkinLehnerMul(w,prod, ND);
             end for;
             Include(~allws, prod);
         end if;
@@ -737,22 +737,9 @@ intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W
         sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
     sum *:= 1/#W;
-
-    //1/#W*&+[TraceDNew(D, N, k, n, w) : w in W];
     
     return sum;
 end intrinsic;
-
-/*
-function sum_n_powers_trace_formula(D, N, W, p, n)
-    t_p_n := TraceDNewALFixed(D,N,2,p^n,W);
-    if n eq 1 then
-    return t_p_n;
-    end if;
-    t_p_n_2 := TraceDNewALFixed(D,N,2,p^(n-2),W);
-    return t_p_n - p*t_p_n_2;
-end function;
-*/
 
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
@@ -805,7 +792,7 @@ end intrinsic;
 
 intrinsic CountFixedPointsOnQuotient(w ::RngIntElt, c ::ShimuraQuot ) -> RngIntElt
 {Returns the number of fixed points of W_w on c.}
-    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, al_mul(w, m, c`N*c`D)) : m in c`W];
+    return (1/#c`W) * &+[NumFixedPoints(c`D, c`N, AtkinLehnerMul(w, m, c`N*c`D)) : m in c`W];
 end intrinsic;
 
 // If X_0*(N) is not P1 and is subhyperelliptic
@@ -890,7 +877,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 	    for N1 in N1s do
 		a := AssociativeArray();
 		for w in W do
-		    a[al_mul(N1, w,D*N)] := w;
+		    a[AtkinLehnerMul(N1, w,D*N)] := w;
 		end for;
 		/*
 		if (N2 eq 195) and ({6, 10, 26} subset W) then
@@ -901,7 +888,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 		end if;
 */
 		for w in W do
-		    N_prime := al_mul(N2, w, D*N);
+		    N_prime := AtkinLehnerMul(N2, w, D*N);
 		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
 			// print "w = ", w;
 			// print "N2 * w = ", N_prime;
@@ -1276,7 +1263,7 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
             for Ni in WMs do
                 e:= eps(Ni);
                 if e ne 0 then
-                    Include(~WNs, al_mul(Ni, 9, N*D));
+                    Include(~WNs, AtkinLehnerMul(Ni, 9, N*D));
                     WNs := AllALsFromGens(WNs, N*D);
                 else
                     Include(~WNs, Ni);
@@ -1448,7 +1435,7 @@ end intrinsic;
 
 intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
 {returns rational CM points on X. Excludes those in exclude}
-    vprint ShimuraQuotients, 2: "Computing rational CM points";
+    vprintf ShimuraQuotients, 2: "\n\tComputing rational CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
@@ -1460,12 +1447,14 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
                 if is_split and d notin Exclude then
                     Append(~pts, <d,q,ell[q][d]>); 
                 end if;
-            end if;
-            if ell[q][d] eq 1 and d notin Exclude then
-                Append(~pts, <d,q,ell[q][d]>);
+            else
+                if ell[q][d] eq 1 and d notin Exclude then
+                    Append(~pts, <d,q,ell[q][d]>);
+                end if;
             end if;
         end for;
     end for;
+    pts := Reverse(Sort(pts));
 
     CNs := AssociativeArray();
     CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
@@ -1506,12 +1495,13 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
     // return pts[1..3];
+    vprintf ShimuraQuotients, 2: "Done!\n";
     return pts;
 end intrinsic;
 
 intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
     {returns at most quadratic CM points}
-    vprint ShimuraQuotients, 2: "Computing quadratic CM points";
+    vprintf ShimuraQuotients, 2: "\n\tComputing quadratic CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     pts := [];
     CNs := AssociativeArray();
@@ -1552,6 +1542,7 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
             Append(~pts, <d,1,2>);
         end if;
     end for;
+    vprintf ShimuraQuotients, 2: "Done!\n";
     return pts;
 end intrinsic;
 

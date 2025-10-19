@@ -2,3 +2,5 @@
 *.m~
 *.el
 *.html
+polymake_script*
+.DS_Store

@@ -1,11 +1,13 @@
 {
 BorcherdsProducts.m
 Caching.m
+EtaQuotient.m
 FundamentalDomain.m
 ShimuraQuotients.m
 alquots.m
 workingcode.m
 automorphisms.m
+LogSum.m
 ModularNonALInvolutions.m
 RationalWithFactorization.m
 TraceFormula.m
