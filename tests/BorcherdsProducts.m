@@ -423,7 +423,7 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
     covers, ws, keys := AllEquationsAboveCovers(Xstar, curves);
     for i->C in covers do
         X := curves[keys[i]];
-        is_def, datum := IsDefined(cover_data[DN], X`W);
+        is_def, datum := IsDefined(cover_data[<D,N>], X`W);
         if not is_def then continue; end if;
         f, scales := Explode(datum);
         C_ex := HyperellipticCurve(f);
@@ -431,7 +431,7 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
         phi := map<C -> C_ex | Eltseq(Vector(x)*ChangeRing(scales, Universe(x)))>;
         is_isom := IsIsomorphism(phi);
         assert is_isom;
-        ws_def, ws_DN := IsDefined(ws_data, DN);
+        ws_def, ws_DN := IsDefined(ws_data, <D,N>);
         if not ws_def then continue; end if;
         ws_def, ws_ex := IsDefined(ws_DN, X`W);
         if not ws_def then continue; end if;
@@ -561,7 +561,7 @@ procedure test_AllEquationsAboveCovers()
     */
 
     curves := GetHyperellipticCandidates();
-    for DN in Keys(cover_data) do
+    for DN in Sort([x : x in Keys(cover_data)]) do
         D,N := Explode(DN);
         test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves);
     end for;
