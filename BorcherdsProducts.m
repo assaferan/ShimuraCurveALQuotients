@@ -400,7 +400,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     else
         // assert (n + 1 - #pole_orders) eq n_gaps;
         // n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
-        n0 := max_pole;
+        // print "n0 = ", n0;
+        //print "max_pole = ", max_pole;
+        n0 := max_pole + 1;
+        assert n0 eq -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
     end if;
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];

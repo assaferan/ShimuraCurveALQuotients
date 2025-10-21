@@ -561,8 +561,7 @@ procedure test_AllEquationsAboveCovers()
     */
 
     curves := GetHyperellipticCandidates();
-    DNs := Sort([k : k in Keys(cover_data)]);
-    for DN in DNs do
+    for DN in Sort([x : x in Keys(cover_data)]) do
         D,N := Explode(DN);
         test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves);
     end for;
