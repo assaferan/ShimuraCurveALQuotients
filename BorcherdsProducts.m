@@ -1681,14 +1681,77 @@ function find_signs(s, stilde, ds)
     return s_new, stilde_new, scale, scale_tilde;
 end function;
 
+procedure add_column(schofer_tab, dnew, is_log)
+    //add column associated to dnew
+    vprintf ShimuraQuotients, 2: "Adding column for CM point %o\n", dnew;
+    table := schofer_tab`Values;
+    ds := schofer_tab`Discs;
+    Xstar := schofer_tab`Xstar;
+    curveid := Xstar`CurveID;
+    fs := schofer_tab`BorcherdsForms;
+    keys_fs := schofer_tab`Keys_fs;
+    row_scales := schofer_tab`RowScales;
+    all_fs := [fs[k] : k in keys_fs];
+    UpdateFieldsOfDefn(schofer_tab, dnew);
+    flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
+    assert #flds eq 1;
+    deg := Degree(flds[1]);
+    if deg eq 1 then
+        Append(~ds[1],dnew);
+    elif deg eq 2 then
+        Append(~ds[2],dnew);
+    else
+        error "Degree of field of definition must be 1 or 2";
+    end if;
+    schofer_tab`Discs := [ds[1], ds[2]];
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    for i->v in norm_val do
+        entry := norm_val[i]-deg*row_scales[i];
+        if is_log then
+            Append(~table[i], entry);
+        else
+            Append(~table[i], RationalNumber(entry));
+        end if;
+    end for;
+    schofer_tab`Values := table;  
+    return;
+end procedure;
 
-intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
+function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
+    //find signs of y^2 for rational CM point d on each y^2
+    //in keys_fs, where j is index of column of d in table
+    for k->i in k_idxs do
+        if table[i][j] eq Infinity() then continue; end if;
+        if table[i][j] eq 0 then continue; end if;
+        fields := flds[keys_fs[i]][d];
+        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
+        possible_answers := [* *];
+        for eps in [-1,1] do
+            y2 := eps*table[i][j];
+            for F in fields do
+                is_sqr, y := IsSquare(F!y2);
+                if (is_sqr) then
+                    if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                        Append(~possible_answers, <F,eps,y>);
+                    end if;
+                end if;
+            end for;
+        end for;
+        assert #possible_answers eq 1;
+        eps := possible_answers[1][2];
+        table[i][j] :=  eps * table[i][j];
+    end for;
+    return table;
+end function;
+
+intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::SeqEnum[ShimuraQuot], all_cm_pts::SeqEnum) -> SeqEnum
 {Impose linear constraints on equations given by rational CM points}
 
     keys_fs := schofer_table`Keys_fs;
     table := schofer_table`Values;
     sep_ds := schofer_table`Discs;
     ds := sep_ds[1] cat sep_ds[2];
+    ratds := sep_ds[1];
     k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
     genus_list := [curves[keys_fs[i]]`g : i in k_idxs];
@@ -1713,7 +1776,21 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
-        require #B le #ds - #rat_svals : "We don't have enough constraints imposed by the rational points";
+        if #B le #ds - #rat_svals then
+        // "We don't have enough constraints imposed by the rational points";
+            all_cm_pts_rat := {pt[1] : pt in all_cm_pts[1]} diff Set(ratds);
+            require #all_cm_pts_rat gt 0 : "We don't have enough constraints imposed by the rational points.\n";
+            d := SetToSequence(all_cm_pts_rat)[1];
+            vprintf ShimuraQuotients, 2: "Need to add point in order to have enough constraints imposed by rational points.\n";
+            add_column(schofer_table, d, false);
+            Append(~ratds, d);
+            flds := schofer_table`FldsOfDefn;
+            table := find_y2_signs(schofer_table`Values, keys_fs, curves, d, #ratds, flds, k_idxs);
+            schofer_table`Values := table;
+            ds := schofer_table`Discs[1] cat schofer_table`Discs[2];
+            svals := Remove(table[s_idx],inf_idx_s);
+            rat_svals := [s :  i->s in svals   | Type(s) ne RngUPolElt];
+        end if;
         Append(~kernels, B);
     end for;
     return kernels;
@@ -1787,31 +1864,6 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     return all_relns;
 end intrinsic;
 
-
-procedure add_new_column(schofer_tab, dnew, deg)
-    //add column associated to dnew of degree deg
-    table := schofer_tab`Values;
-    ds := schofer_tab`Discs;
-    Xstar := schofer_tab`Xstar;
-    fs := schofer_tab`BorcherdsForms;
-    keys_fs := schofer_tab`Keys_fs;
-    row_scales := schofer_tab`RowScales;
-    curves := schofer_tab`Curves;
-    all_fs := [fs[k] : k in keys_fs];
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
-    for i->v in norm_val do
-        Append(~table[i], norm_val[i]/row_scales[i]^deg);
-    end for;
-    schofer_tab`Values := table;
-    if deg eq 1 then
-        Append(~ds[1],dnew);
-    else
-        Append(~ds[2],dnew);
-    end if;
-    schofer_tab`Discs := [ds[1], ds[2]];
-    return;
-end procedure;
-
 function solve_quadratic_constraints(relns)
     R := Universe(relns);
     P := ProjectiveSpace(R);
@@ -1820,31 +1872,62 @@ function solve_quadratic_constraints(relns)
     return RationalPoints(S);
 end function;
 
-
 intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
     eqn_list := [ ];
     keys_fs := schofer_table`Keys_fs;
     table := schofer_table`Values;
-    ds := schofer_table`Discs;
-    ds := ds[1] cat ds[2];
+
     k_idxs := schofer_table`K_idxs;
     curves := schofer_table`Curves;
 
-    kernels := RationalConstraintsOnEquations(schofer_table, curves);
+    kernels := RationalConstraintsOnEquations(schofer_table, curves, all_cm_pts);
     relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
+    coeffs := [#relns[i] ne 0 select solve_quadratic_constraints(relns[i]) else {} : i in [1..#kernels]];
+
+    solvable_from_constraints := &and[#kernels[i] eq 1 or #coeffs[i] eq 1 : i in [1..#kernels]];
+    while not solvable_from_constraints do
+        ratds := schofer_table`Discs[1];
+        quadds := schofer_table`Discs[2];
+        rat_candidates := Reverse(Sort(SetToSequence(Set([pt[1] : pt in all_cm_pts[1]]) diff Set(ratds))));
+        quad_candidates := Reverse(Sort(SetToSequence(Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds))));
+        if #rat_candidates gt 0 then
+            vprintf ShimuraQuotients, 2: "Adding point to narrow down constraints on equations";
+            add_column(schofer_table, rat_candidates[1], false);
+            Append(~ratds, rat_candidates[1]);
+            flds := schofer_table`FldsOfDefn;
+            table := find_y2_signs(schofer_table`Values, keys_fs, curves, rat_candidates[1], #ratds, flds, k_idxs);
+            schofer_table`Values := table;
+        elif #quad_candidates gt 0 then
+            vprintf ShimuraQuotients, 2: "Adding point to narrow down constraints on equations";
+            add_column(schofer_table, quad_candidates[1], false);
+            Append(~quadds, quad_candidates[1]);
+            flds := schofer_table`FldsOfDefn;
+            table := find_y2_signs(schofer_table`Values, keys_fs, curves, quad_candidates[1], #quadds, flds, k_idxs);
+            schofer_table`Values := table;
+        else
+            error "No possible choices of CM points left for solving the equations";
+        end if;
+        kernels := RationalConstraintsOnEquations(schofer_table, curves, all_cm_pts);
+        relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
+        coeffs := [#relns[i] ne 0 select solve_quadratic_constraints(relns[i]) else {} : i in [1..#kernels]];
+        solvable_from_constraints := &and[#kernels[i] eq 1 or #coeffs[i] eq 1 : i in [1..#kernels]];
+        if not solvable_from_constraints then
+            print kernels;
+        end if;
+    end while;
 
     for i->B in kernels do //indexed by k_idxs
         if #relns[i] eq 0 or #B eq 1 then
-            require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
+            // require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
             v :=  Eltseq(B[1]);
             monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
             f := R!monic_v;
             Append(~eqn_list, f);
         else
             coeffs := solve_quadratic_constraints(relns[i]);
-            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
+            // require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
             coeffs := Eltseq(coeffs[1]);
             v := &+[B[j]*coeffs[j] : j in [1..#B]];
             v := Eltseq(v);
@@ -1881,10 +1964,9 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 {Determine the equations of the immediate covers of X.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Exclude := {-91, -148}); // !!! This is slow, figure out why !!!
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    
-    num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
+    num_vals := Maximum([2*g+3 : g in genus_list]); // This is what we need for the equation part, but
     // num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
     // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
     // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
@@ -2041,7 +2123,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
 {Get equations of all covers (not just immediate covers)}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Exclude := {-91, -148, -232});
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+3 : g in genus_list]);
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
@@ -2240,7 +2322,7 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
-        table[i][d_idx] := deg*(norm_val[i]-row_scales[i]);
+        table[i][d_idx] := norm_val[i]-deg*row_scales[i];
         if not is_log then
             table[i][d_idx] := RationalNumber(table[i][d_idx]);
         end if;
@@ -2249,41 +2331,6 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     schofer_tab`Discs := [ds[1], ds[2]];
     curves := schofer_tab`Curves;
     UpdateFieldsOfDefn(schofer_tab, dnew);  
-    return;
-end procedure;
-
-procedure add_column(schofer_tab, dnew, is_log)
-    //add column associated to dnew
-    table := schofer_tab`Values;
-    ds := schofer_tab`Discs;
-    Xstar := schofer_tab`Xstar;
-    curveid := Xstar`CurveID;
-    fs := schofer_tab`BorcherdsForms;
-    keys_fs := schofer_tab`Keys_fs;
-    row_scales := schofer_tab`RowScales;
-    all_fs := [fs[k] : k in keys_fs];
-    UpdateFieldsOfDefn(schofer_tab, dnew);
-    flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
-    assert #flds eq 1;
-    deg := Degree(flds[1]);
-    if deg eq 1 then
-        Append(~ds[1],dnew);
-    elif deg eq 2 then
-        Append(~ds[2],dnew);
-    else
-        error "Degree of field of definition must be 1 or 2";
-    end if;
-    schofer_tab`Discs := [ds[1], ds[2]];
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
-    for i->v in norm_val do
-        entry := deg*(norm_val[i]-row_scales[i]);
-        if is_log then
-            Append(~table[i], entry);
-        else
-            Append(~table[i], RationalNumber(entry));
-        end if;
-    end for;
-    schofer_tab`Values := table;  
     return;
 end procedure;
 
@@ -2349,33 +2396,6 @@ function find_y2_scales(schofer_table)
 
 end function;
 
-function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
-    //find signs of y^2 for rational CM point d on each y^2
-    //in keys_fs, where j is index of column of d in table
-    for k->i in k_idxs do
-        if table[i][j] eq Infinity() then continue; end if;
-        if table[i][j] eq 0 then continue; end if;
-        fields := flds[keys_fs[i]][d];
-        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
-        possible_answers := [* *];
-        for eps in [-1,1] do
-            y2 := eps*table[i][j];
-            for F in fields do
-                is_sqr, y := IsSquare(F!y2);
-                if (is_sqr) then
-                    if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
-                        Append(~possible_answers, <F,eps,y>);
-                    end if;
-                end if;
-            end for;
-        end for;
-        assert #possible_answers eq 1;
-        eps := possible_answers[1][2];
-        table[i][j] :=  eps * table[i][j];
-    end for;
-    return table;
-end function;
-
 intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -> SchoferTable
     {}
     ds := abs_schofer_tab`Discs;
@@ -2409,11 +2429,13 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     //Scale the y2 rows of the table
     b, scale_factors := find_y2_scales(abs_schofer_tab);
     while not b do
-        rat_candidates := Set([pt[1] : pt in all_cm_pts[1]]) diff Set(ratds);
-        quad_candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds);
+        rat_candidates := Reverse(Sort(SetToSequence(Set([pt[1] : pt in all_cm_pts[1]]) diff Set(ratds))));
+        quad_candidates := Reverse(Sort(SetToSequence(Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds))));
         if #rat_candidates gt 0 then
+            vprintf ShimuraQuotients, 2: "Need to add point in order to find y2 scales";
             add_column(abs_schofer_tab, rat_candidates[1], true);
         elif #quad_candidates gt 0 then
+            vprintf ShimuraQuotients, 2: "Need to add point in order to find y2 scales";
             add_column(abs_schofer_tab, quad_candidates[1], true);
         else
             error "No possible choices of CM points left for finding y2 scales";
@@ -2503,6 +2525,8 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     end for;
 
     schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
+    schofer_table`BorcherdsForms := abs_schofer_tab`BorcherdsForms;
+    schofer_table`RowScales := abs_schofer_tab`RowScales;
     return schofer_table;
 end intrinsic;
 
