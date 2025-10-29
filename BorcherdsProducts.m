@@ -324,7 +324,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     dim := 0;
     t, lhs, rhs, n_eq, n_ds := find_t(M);
     t := Eltseq(t);
-    n_gaps := g - &+[d div 4 : d in Divisors(D0)];
+    n_gaps := Zero select 0 else g - &+[d div 4 : d in Divisors(D0)];
     k := t[#t]; // the order of pole for t
     n := n_gaps;
     // Trying n0 here
@@ -368,7 +368,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         gaps := &cat[[pole_orders[i]+1..pole_orders[i+1]-1] : i in [1..Minimum(#pole_orders-1,1-min_v)] 
                                                             | pole_orders[i+1] - pole_orders[i] gt 1];
         max_pole := (#gaps eq 0) select 0 else -gaps[1];
-        gap_condition := Zero select #gaps eq 0 else (#gaps eq n_gaps);
+        
         if (rk lt dim) then
             if (dim gt Prec) then
                 Prec := dim;
@@ -377,13 +377,16 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
                 // update n
                 n +:= k;
             end if;
-        elif (not gap_condition) then
-            // We might be able to skip this if n0 < max_pole
-            // since we can generate the rest by multiplying by t
+        else
             n0 := (n0 lt max_pole) select max_pole else n + max_pole;
-            n := n0;
+            gap_condition := (#gaps eq n_gaps) and (n ge max_pole + k);
+            if (#gaps ne n_gaps) then
+                n := n0;
+            end if;
+            if (n lt max_pole + k) then
+                n := max_pole + k;
+            end if;
         end if;
-       
     end while;
     
     vprintf ShimuraQuotients, 2 : "Done!\n";
@@ -391,19 +394,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     assert rk eq dim;
     
     n := -min_v;
-    // This can be removed
-    // pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     if Zero then
-        // n0 := n_gaps;
-        // assert [-n..0] eq pole_orders[1..n+1];
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
-        // assert (n + 1 - #pole_orders) eq n_gaps;
-        // n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
-        // print "n0 = ", n0;
-        //print "max_pole = ", max_pole;
         n0 := max_pole + 1;
-        // assert n0 eq -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
     end if;
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
@@ -514,7 +508,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     O_max := MaximalOrder(B);
     O := Order(O_max,N);
     basis_O := Basis(O);
-    L_space := Kernel(Transpose(Matrix([[Trace(x) : x in basis_O]])));
+    L_space := Kernel(Transpose(Matrix(Integers(),[[Trace(x) : x in basis_O]])));
     basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
     BM_L := Matrix([Eltseq(b) : b in basis_L]);
     Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : y in basis_L] : x in basis_L]);
@@ -1313,6 +1307,10 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     //end if;
     r := (pole_order - n0) div k;
     s := pole_order - r*k;
+
+    assert n+2 gt n0+k; // making sure we have enough forms to complete to a basis
+
+    assert n + 1 - n0 lt #fs_E; // Making sure the value of n makes sense
 
     basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
     init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
