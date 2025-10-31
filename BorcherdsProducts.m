@@ -1377,7 +1377,7 @@ along with two different hauptmoduls.}
     end if;
     // we do this twice -- we should remember this
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
-    pts := [p : p in pts | p[1] notin Exclude];
+    pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
     
     //we do this twice -- we should remember this
     found := false;
@@ -1904,7 +1904,9 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
     {Using Riemann Roch, leverage covered equations to get higher cover equations}
     
     P1s := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
-    conics := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
+    conics := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2 and HasRationalPoint(Conic(crv_list[i]))];
+
+    require not IsEmpty(conics) : "No conics with rational points found";
 
     curves_above_P1s := AssociativeArray();
     curves_above_conics := AssociativeArray();
@@ -1929,7 +1931,8 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
         for label in Keys(curves_above_P1s) do
             g := curves[label]`g;
             covered_P1 := crv_list[curves_above_P1s[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_P1s[label] and 
+                                                Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 continue;
             end if;
@@ -1948,26 +1951,40 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             Append(~cover_keys, label);
             hyp1 := HyperellipticInvolution(C);
             //now update ws
-            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
-            assert #id_y eq 1;
+            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff curves[label]`W | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
+            // id_y are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
+            // act trivially on the doubly covered curve covered_gplus1. 
+            // Therefore they induce the involution x -> -x, y-> y on the curve.
             ws[label] := AssociativeArray();
-            ws[label][1] := IdentityMap(C);
+            for m in curves[label]`W do
+                ws[label][m] := IdentityMap(C);
+            end for;
             P1_idx := Index(crv_list,covered_P1);
-            id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
-            assert #id_x eq 1;
-            ws[label][id_x[1]] := hyp1;
+            id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff curves[label]`W | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
+            // id_x are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
+            // act trivially on the covered P1. Therefore they induce the hyperelliptic involution on the curve.
+            for m in id_x do
+                ws[label][m] := hyp1;
+            end for;
             _<x,y,z> := AmbientSpace(C);
             hyp2 := map<C->C | [-x, y, z]>;
-            ws[label][id_y[1]] := hyp2;
+            for m in id_y do
+                ws[label][m] := hyp2;
+            end for;
             N := curves[label]`N;
             D := curves[label]`D;
-            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
-            ws[label][other_w] := hyp1*hyp2;
+            for m1 in id_x do
+                for m2 in id_y do
+                    other_w := AtkinLehnerMul(m1, m2, N*D);
+                    ws[label][other_w] := hyp1*hyp2;
+                end for;
+            end for;
         end for;
         for label in Keys(curves_above_conics) do
             g := curves[label]`g;
             covered_conic := crv_list[curves_above_conics[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
+            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_conics[label] and 
+                                                Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 continue;
             end if;
@@ -1994,15 +2011,17 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             Append(~cover_eqns, H);
             Append(~cover_keys, label);
             //now update ws
-            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
-            assert #id_y eq 1;
+            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff curves[label]`W | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
             ws[label] := AssociativeArray();
-            ws[label][1] := IdentityMap(H);
+            for m in curves[label]`W do
+                ws[label][m] := IdentityMap(H);
+            end for;
             hyp1 := HyperellipticInvolution(H);
             conic_idx := Index(crv_list,covered_conic);
-            id_x := [m : m in Keys(ws[new_keys[conic_idx]]) diff {1} | ws[new_keys[conic_idx]][m] eq IdentityMap(covered_conic)];
-            ws[label][id_x] := hyp1;
-            assert #id_x eq 1;
+            id_x := [m : m in Keys(ws[new_keys[conic_idx]]) diff curves[label]`W | ws[new_keys[conic_idx]][m] eq IdentityMap(covered_conic)];
+            for m in id_x do
+                ws[label][m] := hyp1;
+            end for;
             hyp_conic := map<C->C | [x,-y,z]>;
             inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
             //this is a map from P^1 -> P^1
@@ -2015,11 +2034,17 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             // denom_denom := Evaluate(SquareRoot(D), x/z);
             hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
             _, hyp2 := IsAutomorphism(hyp2);
-            ws[label][id_y[1]] := hyp2;
+            for m in id_y do
+                ws[label][m] := hyp2;
+            end for;
             N := curves[label]`N;
             D := curves[label]`D;
-            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
-            ws[label][other_w] := hyp1*hyp2; 
+            for m1 in id_x do
+                for m2 in id_y do
+                    other_w := AtkinLehnerMul(m1, m2, N*D);
+                    ws[label][other_w] := hyp1*hyp2;
+                end for;
+            end for;
         end for;
         curves_above_P1s := AssociativeArray();
         P1s := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
@@ -2054,6 +2079,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients,1 : "Computing absolute values at CM points...";
+    Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
                                                            Exclude := {}, Include := Set(d_divs));
