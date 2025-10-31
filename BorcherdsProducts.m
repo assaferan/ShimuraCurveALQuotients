@@ -1927,8 +1927,13 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
 
     cover_eqns := [];
     cover_keys := [];
+
+    vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics... \n";
+
     while (not IsEmpty(Keys(curves_above_P1s))) or (not IsEmpty(Keys(curves_above_conics))) do
+        vprintf ShimuraQuotients,1 : "Remaining curves above P1s: %o, remaining curves above conics: %o\n", Keys(curves_above_P1s), Keys(curves_above_conics);
         for label in Keys(curves_above_P1s) do
+            vprintf ShimuraQuotients,1 : "Processing curve covering a P1 %o\n", label;
             g := curves[label]`g;
             covered_P1 := crv_list[curves_above_P1s[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_P1s[label] and 
@@ -1947,6 +1952,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             eqn := HyperellipticPolynomials(covered_gplus1);
             eqn := Evaluate(eqn, (x^2 - c0)/c1);
             C := HyperellipticCurve(eqn);
+            vprintf ShimuraQuotients,1 : "Found equation above P1 %o\n", label;
             Append(~cover_eqns, C);
             Append(~cover_keys, label);
             hyp1 := HyperellipticInvolution(C);
@@ -1981,6 +1987,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             end for;
         end for;
         for label in Keys(curves_above_conics) do
+            vprintf ShimuraQuotients,1 : "Processing curve covering aconic %o\n", label;
             g := curves[label]`g;
             covered_conic := crv_list[curves_above_conics[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_conics[label] and 
@@ -2000,21 +2007,34 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             C_to_P1 := Inverse(P1_to_C);
             s_param := C_to_P1(x) / C_to_P1(z); // conic was constructed such that this is the hauptmodul
             fpoly := HyperellipticPolynomials(covered_gplus1);
-            // amap := AlgebraMap(P1_to_C);
-            // amap(x)/amap(z);
-            eqn := Evaluate(fpoly,s_param);
+            Cpoly := HyperellipticPolynomials(covered_conic);
+            gcd_poly := GCD(fpoly, Cpoly);
             _<t> := PolynomialRing(Rationals());
-            tmp := Evaluate(eqn,[t,1]); 
-            N := Numerator(tmp);
-            D := Denominator(tmp); //under change of equation z = y*sqrt(D) this is the curve
-            H := HyperellipticCurve(N);
+            s_of_t := Evaluate(s_param, [t,1]);
+            s_num := Numerator(s_of_t);
+            s_denom := Denominator(s_of_t);
+            // homogenized gcd poly, after substituion -
+            // if s = F(t)/G(t), then hom_gcd = G^deg(gcd_poly)*gcd_poly(F(t)/G(t))
+            hom_gcd := s_denom^Degree(gcd_poly)*Evaluate(Evaluate(gcd_poly, s_param), [t, 1]);
+            assert Denominator(hom_gcd) eq 1;
+            hom_gcd := Numerator(hom_gcd);
+            is_sqr, root_gcd := IsSquare(hom_gcd);
+            require is_sqr : "GCD of hyperelliptic polynomials is not a square";
+            f_prime := fpoly div gcd_poly;
+            target_poly := s_denom^Degree(f_prime)*Evaluate(Evaluate(f_prime, s_param), [t, 1]);
+            assert Denominator(target_poly) eq 1;
+            target_poly := Numerator(target_poly);
+            eps := Degree(fpoly) mod 2;
+            target_poly := target_poly * s_denom^eps;
+            // We have (y*s_denom^([d/2])/root_gcd)^2 = target_poly,
+            // where y is the y variable of covered_gplus1, and d is the degree (g+1) of the polynomial.
+            H := HyperellipticCurve(target_poly);
+            vprintf ShimuraQuotients,1 : "Found equation above conic %o\n", label;
             Append(~cover_eqns, H);
             Append(~cover_keys, label);
-            //now update ws
-            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff curves[label]`W | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
             ws[label] := AssociativeArray();
             for m in curves[label]`W do
-                ws[label][m] := IdentityMap(H);
+                ws[label][m] := IdentityMap(C);
             end for;
             hyp1 := HyperellipticInvolution(H);
             conic_idx := Index(crv_list,covered_conic);
@@ -2028,10 +2048,11 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
              _<s,t> := Parent(C_to_P1(x));
             tmp := Inverse(inv);
             _<x,y,z> := AmbientSpace(H);
-            im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z ??? Does not yield an involution!
-            denom_im_s := Evaluate(SquareRoot(D), im_s);
-            denom_s := Evaluate(SquareRoot(D), Evaluate(s/t, [x,z]));
-            // denom_denom := Evaluate(SquareRoot(D), x/z);
+            im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z
+            y_factor := s_denom^((Degree(fpoly) + 1) div 2) / root_gcd;
+            denom_im_s := Evaluate(y_factor, im_s);
+            denom_s := Evaluate(y_factor, Evaluate(s/t, [x,z]));
+            // denom_denom := Evaluate(y_factor, x/z);
             hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
             _, hyp2 := IsAutomorphism(hyp2);
             for m in id_y do
