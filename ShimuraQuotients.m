@@ -284,7 +284,8 @@ function NuOgg(p, R, D, F)
     if p eq 2 and F mod 4 eq 0 then
         //Ogg doesn't consider this case, correction coming from Voight 30.6.12
         f_gamma := MinimalPolynomial(R.2);
-        pp := Factorization(p*R)[1][1];
+        OK := MaximalOrder(R);
+        pp := Factorization(p*OK)[1][1];
         e := Valuation(F,p);
         Rpe, m := quo<R | pp^e>;
         M_e := {x : x in Rpe | Evaluate(f_gamma, x) eq 0 };
