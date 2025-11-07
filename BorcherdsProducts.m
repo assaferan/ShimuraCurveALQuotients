@@ -1927,6 +1927,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
 
     cover_eqns := [];
     cover_keys := [];
+    new_cover_keys := [];
 
     vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics... \n";
 
@@ -1937,7 +1938,8 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             g := curves[label]`g;
             covered_P1 := crv_list[curves_above_P1s[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_P1s[label] and 
-                                                Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
+                                                Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } 
+                                                meet curves[label]`Covers;
             if #allgplus1covers eq 0 then
                 continue;
             end if;
@@ -1950,11 +1952,14 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             c1 := Coefficient(fpoly,1);
             _<x>:=Parent(fpoly);
             eqn := HyperellipticPolynomials(covered_gplus1);
+            gcd_poly := GCD(eqn, fpoly);
+            eqn div:= gcd_poly;
             eqn := Evaluate(eqn, (x^2 - c0)/c1);
             C := HyperellipticCurve(eqn);
             vprintf ShimuraQuotients,1 : "Found equation above P1 %o\n", label;
             Append(~cover_eqns, C);
             Append(~cover_keys, label);
+            Append(~new_cover_keys, label);
             hyp1 := HyperellipticInvolution(C);
             //now update ws
             id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff curves[label]`W | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
@@ -1973,7 +1978,8 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
                 ws[label][m] := hyp1;
             end for;
             _<x,y,z> := AmbientSpace(C);
-            hyp2 := map<C->C | [-x, y, z]>;
+            // If we have a gcd, our equation is (y/x)^2 = f_g(s(x)), so y/x maps to -y/x
+            hyp2 := gcd_poly eq 1 select map<C->C | [-x, y, z]> else map<C->C | [-x, -y, z]>;
             for m in id_y do
                 ws[label][m] := hyp2;
             end for;
@@ -1987,7 +1993,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             end for;
         end for;
         for label in Keys(curves_above_conics) do
-            vprintf ShimuraQuotients,1 : "Processing curve covering aconic %o\n", label;
+            vprintf ShimuraQuotients,1 : "Processing curve covering a conic %o\n", label;
             g := curves[label]`g;
             covered_conic := crv_list[curves_above_conics[label]];
             allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | i ne curves_above_conics[label] and 
@@ -2032,6 +2038,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             vprintf ShimuraQuotients,1 : "Found equation above conic %o\n", label;
             Append(~cover_eqns, H);
             Append(~cover_keys, label);
+            Append(~new_cover_keys, label);
             ws[label] := AssociativeArray();
             for m in curves[label]`W do
                 ws[label][m] := IdentityMap(C);
@@ -2083,6 +2090,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
                 curves_above_conics[c] := pair[1];
             end for;
         end for;
+        new_keys := new_cover_keys;
     end while;
     return cover_eqns, ws, cover_keys;
 
@@ -2103,7 +2111,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
-                                                           Exclude := {}, Include := Set(d_divs));
+                                                           Exclude := Exclude, Include := Set(d_divs));
     vprintf ShimuraQuotients,1 : "Done\n";
     ReduceTable(abs_schofer_tab);
     vprintf ShimuraQuotients,1 : "Computing actual values at CM points...";
