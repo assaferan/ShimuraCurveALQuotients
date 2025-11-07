@@ -1928,6 +1928,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
     cover_eqns := [];
     cover_keys := [];
     new_cover_keys := [];
+    new_cover_eqns := [];
 
     vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics... \n";
 
@@ -1958,6 +1959,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             C := HyperellipticCurve(eqn);
             vprintf ShimuraQuotients,1 : "Found equation above P1 %o\n", label;
             Append(~cover_eqns, C);
+            Append(~new_cover_eqns, C);
             Append(~cover_keys, label);
             Append(~new_cover_keys, label);
             hyp1 := HyperellipticInvolution(C);
@@ -2008,6 +2010,9 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             // assert Degree(covered_conic) eq 2;
             C := Conic(covered_conic);
             P2<x,y,z> := Ambient(C);
+            if not HasRationalPoint(C) then
+                continue;
+            end if;
             assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
             P1_to_C := Parametrization(C);
             C_to_P1 := Inverse(P1_to_C);
@@ -2039,6 +2044,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             Append(~cover_eqns, H);
             Append(~cover_keys, label);
             Append(~new_cover_keys, label);
+            Append(~new_cover_eqns, H);
             ws[label] := AssociativeArray();
             for m in curves[label]`W do
                 ws[label][m] := IdentityMap(C);
@@ -2074,8 +2080,10 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
                 end for;
             end for;
         end for;
+        new_keys := new_cover_keys;
+        crv_list := new_cover_eqns;
         curves_above_P1s := AssociativeArray();
-        P1s := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
+        P1s := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
         curves_above_P1s := AssociativeArray();
         for pair in P1s do
             for c in curves[pair[2]]`CoveredBy do
@@ -2083,14 +2091,13 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqE
             end for;
         end for;
         curves_above_conics := AssociativeArray();
-        conics := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
+        conics := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
         curves_above_conics := AssociativeArray();
         for pair in conics do
             for c in curves[pair[2]]`CoveredBy do
                 curves_above_conics[c] := pair[1];
             end for;
         end for;
-        new_keys := new_cover_keys;
     end while;
     return cover_eqns, ws, cover_keys;
 
