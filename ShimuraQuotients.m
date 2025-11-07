@@ -281,6 +281,22 @@ end function;
 // the quaternion algebra B of discriminant D.
 // based on Theorem 2 in [Ogg]
 function NuOgg(p, R, D, F)
+    if p eq 2 and F mod 4 eq 0 then
+        //Ogg doesn't consider this case, correction coming from Voight 30.6.12
+        f_gamma := MinimalPolynomial(R.2);
+        pp := Factorization(p*R)[1][1];
+        e := Valuation(F,p);
+        Rpe, m := quo<R | pp^e>;
+        M_e := {x : x in Rpe | Evaluate(f_gamma, x) eq 0 };
+        if IsUnit(Discriminant(R)) then
+            print #M_e;
+        else 
+            Rpe1, m1 := quo<R | pp^(e+1)>;
+            M_eplus1 := {x : x in Rpe1 | Evaluate(f_gamma, x) eq 0 };
+            imgM_eplus := {m1(x@@m): x in M_eplus1 };
+            print #M_e + #imgM_eplus;            
+        end if;
+    end if;
     if (D mod p eq 0) then
         return 1 - LegendreSymbol(R, p);
     end if;
