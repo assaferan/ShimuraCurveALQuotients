@@ -105,6 +105,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+    print "Making polymake file for ", M, n, m;
+    if FileExists(Sprintf("polymake_solution_%o_%o_%o", M, n, m)) then
+        print "File found";
+        return eval Read(Sprintf("polymake_solution_%o_%o_%o", M, n, m));
+    end if;
+    print "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
@@ -114,7 +120,9 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
-    
+
+    Write(Sprintf("polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
+
     return rs;
 end function;
 
