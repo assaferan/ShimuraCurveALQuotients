@@ -280,7 +280,11 @@ end function;
 // O is a fixed quaternion Eichler order of level F in
 // the quaternion algebra B of discriminant D.
 // based on Theorem 2 in [Ogg]
+
+
+
 function NuOgg(p, R, D, F)
+    
     if (D mod p eq 0) then
         return 1 - LegendreSymbol(R, p);
     end if;
@@ -322,7 +326,6 @@ function NuOgg(p, R, D, F)
     // Should not reach here
     assert false;
 end function;
-
 
 function SquarePart(m)
     fac := Factorization(m);
@@ -386,13 +389,12 @@ end intrinsic;
 
 // Quotient by w_m, m divides DN, following [Ogg]
 
-intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h := 0) -> RngIntElt
-{}
+intrinsic NumberOfOptimalEmbeddings(R::RngOrd, D::RngIntElt, N::RngIntElt : h := 0, m := 1) -> RngIntElt
+{ Counts the number of optimal embeddings of R. When m is not 1, adds the condition that muO is the ideal I such that I^2 =  m O}
     if h eq 0 then
         h := PicardNumber(R);
     end if;
-    prod := &*[Integers() |
-                NuOgg(p, R, D, N) : p in PrimeDivisors(D*N)];
+    prod := &*[Integers() | NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
     return h*prod;
 end intrinsic;
 
@@ -404,7 +406,7 @@ intrinsic NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> As
     orders := pair[1];
     class_nums := pair[2];
     for i->R in orders do
-        nR := NumberOfOptimalEmbeddings(R,D,N : h := class_nums[i]);
+        nR := NumberOfOptimalEmbeddings(R,D,N : h := class_nums[i], m := m);
         e[Discriminant(R)] := nR;
     end for;
     return e;

@@ -615,6 +615,49 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::Seq
     return false, _;
 end intrinsic;
 
+
+intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
+{.}
+    require &and[d gt 0 : d in ds]: "All ds must be positive";
+    lambdas := AssociativeArray();
+    Q := ChangeRing(Q, Integers());
+    n := Nrows(Q);
+    idxs := CartesianPower([-bound..bound], n);
+    twice_ds := [2*d : d in ds];
+    for idx in idxs do
+        v := Vector([idx[j] : j in [1..n]]);
+        v := ChangeRing(v, BaseRing(Q));
+        if (v*Q,v) in twice_ds then
+            d := (v*Q,v) div 2;
+            // checking whether this is an optimal embedding of the order of discriminant d
+            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
+            if d mod 4 ne 3 then
+                assert d mod 4 eq 0;
+                if elt/2 in Order then
+                    lambdas[d] := v;
+                     if Keys(lambdas) eq Set(ds) then
+                        return true, lambdas;
+                    end if;
+                end if;
+            end if;
+            // d mod 4 eq 3
+            if (1+elt)/2 in Order then
+                lambdas[d] := v;
+                if Keys(lambdas) eq Set(ds) then
+                    return true, lambdas;
+                end if;
+            end if;
+        end if;
+    end for;
+    if Keys(lambdas) eq Set(ds) then
+        return true, lambdas;
+    else
+        vprint ShimuraQuotients, 2 : "Could not find all lambdas";
+        vprint ShimuraQuotients, 2 : Set(ds) diff Keys(lambdas);
+        return false, _;
+    end if;
+end intrinsic;
+
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
@@ -627,6 +670,21 @@ Warning - does it in a silly way via enumeration. }
     end while;
     assert found_lambda;
     return lambda;
+end intrinsic;
+
+intrinsic ElementsOfNorm(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
+{Return elements of norm in the list of ds in the quadratic space with Gram matrix Q.
+Warning - does it in a silly way via enumeration. }
+    require &and[d gt 0 : d in ds]: "All ds must be positive";
+    bd := 80;
+    found_lambdas := false;
+    while not found_lambdas do
+        bd +:= 20;
+        found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd);
+        vprintf ShimuraQuotients, 3 : "Increasing lambda bound to %o\n", bd;
+    end while;
+    assert found_lambdas;
+    return lambdas;
 end intrinsic;
 
 intrinsic VerticalJoinList(mats::List)->.
@@ -1047,7 +1105,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 3: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
             if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
-                if (gamma ne 0) then
+                if (gamma ne Parent(gamma)!0) then
                     Yang_tt := true;
                 else
                     m0, m_cond := SquareFreeFactorization(Integers()!m);
@@ -1186,14 +1244,17 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     return scale;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
     _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
 
+    if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q,-d, O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
     scale := ScaleForSchofer(d,D,N);
-
-    lambda := ElementOfNorm(Q,-d, O, basis_L);
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1205,13 +1266,17 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
     _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
@@ -1231,12 +1296,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
 {Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    return SchoferFormula([eta],d,D,N)[1];
+    return SchoferFormula([eta],d,D,N : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot : Lambda := false) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1250,7 +1315,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N : Lambda := Lambda);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
         /*
@@ -1642,9 +1707,12 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     assert #Include eq 0;
 
     table := [[] : f in all_fs];
+    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+
+    lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
@@ -1652,7 +1720,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     for pt in pt_list_quad do
         d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
@@ -1791,7 +1859,7 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     return all_relns;
 end intrinsic;
 
-
+/*
 procedure add_new_column(schofer_tab, dnew, deg)
     //add column associated to dnew of degree deg
     table := schofer_tab`Values;
@@ -1815,6 +1883,7 @@ procedure add_new_column(schofer_tab, dnew, deg)
     schofer_tab`Discs := [ds[1], ds[2]];
     return;
 end procedure;
+*/
 
 function solve_quadratic_constraints(relns)
     R := Universe(relns);
