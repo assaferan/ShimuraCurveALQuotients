@@ -1430,7 +1430,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
         ech_basis, T := EchelonForm(coeffs);
     end if;*/
     ech_basis, T := EchelonForm(coeffs);
-    ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)]] : i in [1..Nrows(T)]];
+    ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
     // ech_fs := [q^(-minval)*&+[(R!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
     // return ech_basis, ech_fs, T;
     return ech_basis, ech_etas, T;
