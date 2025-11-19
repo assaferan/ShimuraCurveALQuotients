@@ -635,19 +635,19 @@ intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, b
         v := ChangeRing(v, BaseRing(Q));
         if (v*Q,v) in twice_ds then
             d := (v*Q,v) div 2;
+            if d in Keys(lambdas) then continue; end if; //already found
             // checking whether this is an optimal embedding of the order of discriminant d
             elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
             if d mod 4 ne 3 then
                 assert d mod 4 eq 0;
-                if elt/2 in Order then
+                if elt/2 in Order and (elt/2 +1)/2 notin Order then
                     lambdas[d] := v;
                      if Keys(lambdas) eq Set(ds) then
                         return true, lambdas;
                     end if;
                 end if;
-            end if;
             // d mod 4 eq 3
-            if (1+elt)/2 in Order then
+            elif (1+elt)/2 in Order then
                 lambdas[d] := v;
                 if Keys(lambdas) eq Set(ds) then
                     return true, lambdas;
@@ -682,12 +682,13 @@ intrinsic ElementsOfNorm(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd
 {Return elements of norm in the list of ds in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
     require &and[d gt 0 : d in ds]: "All ds must be positive";
-    bd := 80;
+    max_d := Maximum(ds);
+    bd := Ceiling(SquareRoot(max_d));
     found_lambdas := false;
     while not found_lambdas do
-        bd +:= 20;
         found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd);
         vprintf ShimuraQuotients, 3 : "Increasing lambda bound to %o\n", bd;
+        bd +:= 10;
     end while;
     assert found_lambdas;
     return lambdas;
