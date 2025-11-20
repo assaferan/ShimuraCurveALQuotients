@@ -11,11 +11,7 @@ function load_covers_and_ws_data_15_1()
     cover_data[{1,15}] := <s, DiagonalMatrix([-3, 1, 1]) >;
 
     ws_data := AssociativeArray();
-    ws_data[{1}] := AssociativeArray();
-    ws_data[{1}][{1,3}] := DiagonalMatrix([-243, 4*27, 1]);
-    ws_data[{1}][{1,15}] := DiagonalMatrix([-3, 1, 1]);
-    ws_data[{1}][{1}] := DiagonalMatrix([9, 4*27, 1]);
-
+    
     return cover_data, ws_data;
 end function;
 

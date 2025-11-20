@@ -148,14 +148,17 @@ function load_covers_and_ws_data()
 end function;
 
 procedure test_AllEquationsAboveCovers()
+    // we split it into smaller tests to allow parallelization
+    /*
     cover_data, ws_data := load_covers_and_ws_data();
     curves := GetHyperellipticCandidates();
     for DN in Sort([x : x in Keys(cover_data)]) do
         D,N := Explode(DN);
         test_AllEquationsAboveCoversSingleCurve(D, N, cover_data[DN], ws_data[DN], curves);
     end for;
+    */
     return;
 end procedure;
 
 // we split it into smaller tests to allow parallelization
-// test_AllEquationsAboveCovers();
+test_AllEquationsAboveCovers();
