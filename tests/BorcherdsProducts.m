@@ -1,5 +1,6 @@
 procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves)
-    printf "testing equations of covers of X0*(%o;%o)...", D, N;
+    // no longer needed as we now have a test for each curve
+    // printf "testing equations of covers of X0*(%o;%o)...", D, N;
     assert exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
     covers, ws := AllEquationsAboveCovers(Xstar, curves);
     for label in Keys(covers) do
@@ -24,7 +25,8 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
             end for;
         end for;
     end for;
-    printf "Done\n";
+    // no longer needed as we now have a test for each curve
+    // printf "Done\n";
     return;
 end procedure;
 

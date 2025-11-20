@@ -5,7 +5,7 @@ if assigned filename then
   end if;
   tests := [filename];
 else
-  tests := Split(Pipe("ls tests", ""), "\n");
+  tests := Split(Pipe("cd tests && ls *.m && cd ..", ""), "\n");
 end if;
 if assigned debug then
   SetDebugOnError(true);

@@ -105,12 +105,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
-    vprint ShimuraQuotients, 1 : "Making polymake file for ", M, n, m;
+    vprintf ShimuraQuotients, 2 : "\n\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
-        vprint ShimuraQuotients, 1 : "File found";
+        vprintf ShimuraQuotients, 2 : "File found";
         return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
     end if;
-    vprint ShimuraQuotients, 1 : "File not found, computing...";
+    vprintf ShimuraQuotients, 2 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
@@ -122,7 +122,7 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
 
     Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
-
+    vprintf ShimuraQuotients, 2 : "\n";
     return rs;
 end function;
 
@@ -2182,7 +2182,7 @@ function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, 
 end function;
 
 function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
-    vprintf ShimuraQuotients,1 : "Processing curve covering a P1 %o\n", label;
+    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a P1...", label;
     g := curves[label]`g;
     crv_eqns_label := AssociativeArray();
     crv_ws_label := AssociativeArray();
@@ -2208,7 +2208,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
         covered_P1 := crv_eqns[P1_label][common_base];
         covered_gplus1 := crv_eqns[gplus1_label][common_base];
         H := equation_above_P1(covered_gplus1, covered_P1);
-        vprintf ShimuraQuotients,1 : "Found equation above P1 %o\n", label;
+        vprintf ShimuraQuotients,3 : "Found equation.";
         ws_H := ws_above_P1(H, label, P1_label, gplus1_label, curves, common_base, crv_ws);
         crv_eqns_label[P1_label] := H;
         crv_ws_label[P1_label] := ws_H;
@@ -2217,7 +2217,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
 end function;
 
 function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_ws)
-    vprintf ShimuraQuotients,1 : "Processing curve covering a conic %o\n", label;
+    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a conic...", label;
     g := curves[label]`g;
     crv_eqns_label := AssociativeArray();
     crv_ws_label := AssociativeArray();
@@ -2243,7 +2243,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
         covered_conic := crv_eqns[conic_label][common_base];
         covered_gplus1 := crv_eqns[gplus1_label][common_base];
         H, C_to_P1, yfactor := equation_above_conic(covered_gplus1, covered_conic);
-        vprintf ShimuraQuotients,1 : "Found equation above conic %o\n", label;
+        vprintf ShimuraQuotients,3 : "Found equation.";
         ws_H := ws_above_conic(H, C_to_P1, yfactor, label, conic_label, gplus1_label, curves, common_base, crv_ws);
         crv_eqns_label[conic_label] := H;
         crv_ws_label[conic_label] := ws_H;
@@ -2270,13 +2270,11 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
     curves_above_P1s, curves_above_conics := curves_above_P1_and_conics(crv_eqns, keys, curves);
 
-    vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics... \n";
-
     new_keys := Keys(curves_above_P1s) join Keys(curves_above_conics);
 
     while not IsEmpty(new_keys) do
-        vprintf ShimuraQuotients,1 : "Remaining curves above P1s: %o, remaining curves above conics: %o\n", Keys(curves_above_P1s), Keys(curves_above_conics);
-    
+        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above P1s: %o,", Keys(curves_above_P1s);
+        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above conics... %o", Keys(curves_above_conics);
         for label in Keys(curves_above_P1s) do
             crv_eqns_label, crv_ws_label := process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws);
             crv_eqns[label] := crv_eqns_label;
