@@ -105,6 +105,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+    vprint ShimuraQuotients, 1 : "Making polymake file for ", M, n, m;
+    if FileExists(Sprintf("polymake_solution_%o_%o_%o", M, n, m)) then
+        vprint ShimuraQuotients, 1 : "File found";
+        return eval Read(Sprintf("polymake_solution_%o_%o_%o", M, n, m));
+    end if;
+    vprint ShimuraQuotients, 1 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
@@ -114,7 +120,9 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
-    
+
+    Write(Sprintf("polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
+
     return rs;
 end function;
 
@@ -615,6 +623,55 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::Seq
     return false, _;
 end intrinsic;
 
+intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
+{.}
+    require &and[d gt 0 : d in ds]: "All ds must be positive";
+    lambdas := lambda_array;
+    Q := ChangeRing(Q, Integers());
+    n := Nrows(Q);
+    idxs := CartesianPower([-bound..bound], n);
+    twice_ds := [2*d : d in ds];
+    for idx in idxs do
+        v := Vector([idx[j] : j in [1..n]]);
+        v := ChangeRing(v, BaseRing(Q));
+        if (v*Q,v) in twice_ds then
+            d := (v*Q,v) div 2;
+            if d in Keys(lambdas) then continue; end if; //already found
+            // checking whether this is an optimal embedding of the order of discriminant d
+            if d mod 4 ne 3 then
+                assert d mod 4 eq 0;
+                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]; //checking elt/2 embedding
+            // d mod 4 eq 3
+            elif d mod 4 eq 3 then
+            //(1+elt)/2 now
+                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]+Parent(basis_L[1])!1/2;
+            end if;
+            //check that this gives an optimal embedding
+            B_O := Basis(Order);
+            Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
+            CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))), Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
+            den := Denominator(CoB);
+            CoBZZ := ChangeRing(den*CoB, Integers());
+            S, _, _ := SmithForm(CoBZZ);
+            Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
+            if S eq Sprime then
+                lambdas[d] := v;
+                if Keys(lambdas) eq Set(ds) then
+                    //then we found all the lambdas
+                        return true, lambdas;
+                end if;
+            end if;
+        end if;
+    end for;
+    if Keys(lambdas) eq Set(ds) then
+        return true, lambdas;
+    else
+        vprint ShimuraQuotients, 2 : "Could not find all lambdas";
+        vprint ShimuraQuotients, 2 : Set(ds) diff Keys(lambdas);
+        return false, lambdas; //return the partial progress
+    end if;
+end intrinsic;
+
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
 {Return element of norm d in the quadratic space with Gram matrix Q.
 Warning - does it in a silly way via enumeration. }
@@ -627,6 +684,27 @@ Warning - does it in a silly way via enumeration. }
     end while;
     assert found_lambda;
     return lambda;
+end intrinsic;
+
+intrinsic ElementsOfNorm(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
+{Return elements of norm in the list of ds in the quadratic space with Gram matrix Q.
+Warning - does it in a silly way via enumeration. }
+    require &and[d gt 0 : d in ds]: "All ds must be positive";
+    max_d := Maximum(ds);
+    bd := max_d div 2;
+    lambdas := AssociativeArray();
+    found_lambdas := false;
+    vprintf ShimuraQuotients, 2 : "Finding lambdas for norms in %o...", ds;
+    while not found_lambdas do
+        found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd, lambda_array := lambdas);
+        if not found_lambdas then
+            bd *:=2;
+            vprintf ShimuraQuotients, 2 : "Increasing lambda bound to %o\n", bd;
+        end if;
+    end while;
+    vprintf ShimuraQuotients, 2 : "Found lambdas.\n";
+    assert found_lambdas;
+    return lambdas;
 end intrinsic;
 
 intrinsic VerticalJoinList(mats::List)->.
@@ -1342,7 +1420,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
         ech_basis, T := EchelonForm(coeffs);
     end if;*/
     ech_basis, T := EchelonForm(coeffs);
-    ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)]] : i in [1..Nrows(T)]];
+    ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
     // ech_fs := [q^(-minval)*&+[(R!b[i])*q^(i-1) : i in [1..Ncols(ech_basis)]]+O(q) : b in Rows(ech_basis)];
     // return ech_basis, ech_fs, T;
     return ech_basis, ech_etas, T;
@@ -1642,6 +1720,9 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     assert #Include eq 0;
 
     table := [[] : f in all_fs];
+    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+
+    lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
         vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
