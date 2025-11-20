@@ -18,7 +18,7 @@ if assigned verbose then
   catch e
     verbose := 1;
   end try;
-  SetVerbose("HilbertModularForms", verbose);
+  SetVerbose("ShimuraQuotients", verbose);
 end if;
 failed := [];
 if not assigned target then
