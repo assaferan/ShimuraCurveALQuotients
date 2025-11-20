@@ -128,7 +128,7 @@ jobs:
         id: magmacache
         env:
           # Increase this value to reset cache when MAGMA_URL changes
-          CACHE_NUMBER: 2.27-6
+          CACHE_NUMBER: 2.28-26
         with:
           path: |
             ./magma
@@ -138,10 +138,12 @@ jobs:
       - name: Install magma
         env:
           MAGMA_URL: ${{ secrets.MAGMA_URL }}
+          MAGMA_USERNAME: ${{ secrets.MAGMA_USERNAME }}
+          MAGMA_PASSWORD: ${{ secrets.MAGMA_PASSWORD }}
         shell: bash
         if: steps.magmacache.outputs.cache-hit != 'true'
         run: |
-          wget "$MAGMA_URL" -O magma.tar.gz --quiet --no-check-certificate
+          wget "$MAGMA_URL" -O magma.tar.gz --quiet --user=$MAGMA_USERNAME --password=$MAGMA_PASSWORD
           tar xf magma.tar.gz
 
       - name: Create dummy network device
