@@ -10,7 +10,7 @@ end if;
 if assigned debug then
   SetDebugOnError(true);
 end if;
-AttachSpec("shimuraquots.spec");
+AttachSpec("ShimuraQuotients.spec");
 
 if assigned verbose then
   try

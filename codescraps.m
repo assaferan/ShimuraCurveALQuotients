@@ -1,4 +1,4 @@
-AttachSpec("shimuraquots.spec");
+AttachSpec("ShimuraQuotients.spec");
 curves := GetHyperellipticCandidates();
 unknown := [c : c in curves | not assigned c`IsSubhyp];
 unknownmod := [c : c in unknown | c`D eq 1];
