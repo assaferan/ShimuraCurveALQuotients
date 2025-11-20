@@ -1,4 +1,4 @@
-import "BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
+import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 function load_covers_and_ws_data_15_1()
     _<s> := PolynomialRing(Rationals());
@@ -22,9 +22,9 @@ end function;
 procedure test_15_1()
     cover_data, ws_data := load_covers_and_ws_data_15_1();
     curves := GetHyperellipticCandidates();
-    test_AllEquationsAboveCoversSingleCurve(15, 1, cover_data, ws_data, curves);
+    // Not yet working
+    // test_AllEquationsAboveCoversSingleCurve(15, 1, cover_data, ws_data, curves);
     return;
 end procedure;
 
-// Not yet working
-// test_15_1();
+test_15_1();

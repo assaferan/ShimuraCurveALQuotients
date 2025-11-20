@@ -1,4 +1,4 @@
-import "BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
+import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 function load_covers_and_ws_data_86_1()
     _<s> := PolynomialRing(Rationals());
