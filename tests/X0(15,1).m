@@ -1,0 +1,30 @@
+import "BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
+
+function load_covers_and_ws_data_15_1()
+    _<s> := PolynomialRing(Rationals());
+
+    // verifying [Guo-Yang, Example 32, p. 22-24]
+    // D = 15
+    cover_data := AssociativeArray();
+    cover_data[{1}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
+    cover_data[{1,3}] := <-1/3*(s^2+243)*(s^2+3), DiagonalMatrix([9, 4*27, 1])>;
+    cover_data[{1,15}] := <s, DiagonalMatrix([-3, 1, 1]) >;
+
+    ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][{1,3}] := DiagonalMatrix([-243, 4*27, 1]);
+    ws_data[{1}][{1,15}] := DiagonalMatrix([-3, 1, 1]);
+    ws_data[{1}][{1}] := DiagonalMatrix([9, 4*27, 1]);
+
+    return cover_data, ws_data;
+end function;
+
+procedure test_15_1()
+    cover_data, ws_data := load_covers_and_ws_data_15_1();
+    curves := GetHyperellipticCandidates();
+    test_AllEquationsAboveCoversSingleCurve(15, 1, cover_data, ws_data, curves);
+    return;
+end procedure;
+
+// Not yet working
+// test_15_1();
