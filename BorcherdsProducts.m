@@ -323,7 +323,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
 
 end intrinsic;
 
-intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false, n0 := 0) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
     L, Ldual := ShimuraCurveLattice(D,N);
@@ -335,8 +335,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     n_gaps := Zero select 0 else g - &+[d div 4 : d in Divisors(D0)];
     k := t[#t]; // the order of pole for t
     n := n_gaps;
-    // Trying n0 here
-    n0 := n_gaps;
+    if not Zero then
+        // Trying n0 here
+        n0 := n_gaps;
+    end if;
     // The n0 below is guaranteed to work (Lemma 17 and Lemma 27 in [GY]), but might be too large
     // n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)] - (Zero select 0 else k), 0);
     n := n0;
@@ -386,12 +388,12 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
                 n +:= k;
             end if;
         else
-            n0 := (n0 lt max_pole) select max_pole else n + max_pole;
-            gap_condition := (#gaps eq n_gaps) and (n ge max_pole + k);
+            n0 := (n0 le max_pole) select max_pole else n + max_pole;
+            gap_condition := (#gaps eq n_gaps) and (n ge max_pole);
             if (#gaps ne n_gaps) then
                 n := n0;
             end if;
-            if (n lt max_pole + k) then
+            if (n lt max_pole) then
                 n := max_pole + k;
             end if;
         end if;
@@ -405,7 +407,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     if Zero then
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
-        n0 := max_pole + 1;
+        n0 := max_pole;
     end if;
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
@@ -1386,7 +1388,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     r := (pole_order - n0) div k;
     s := pole_order - r*k;
 
-    assert n+2 gt n0+k; // making sure we have enough forms to complete to a basis
+    assert n + 2 gt n0 + k; // making sure we have enough forms to complete to a basis
 
     assert n + 1 - n0 lt #fs_E; // Making sure the value of n makes sense
 
@@ -1410,6 +1412,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     end if;
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
+    assert minval eq -Minimum([Valuation(f) : f in qexps]);
     // coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in full_basis]);
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
     /*
@@ -1451,7 +1454,7 @@ along with two different hauptmoduls.}
     k := -Valuation(qExpansionAtoo(t,1));
    
     if IsOdd(Xstar`D*Xstar`N) then
-        E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
+        E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
@@ -1488,8 +1491,8 @@ along with two different hauptmoduls.}
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
                 
-                vprintf ShimuraQuotients, 2 : "\t Computing basis of {oo}-weakly holomorphic forms...";
-                ech_basis, ech_etas, T := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0, n, t);
+                vprintf ShimuraQuotients, 2 : "\t Computing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
+                ech_basis, ech_etas, T := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
                 
                 vprintf ShimuraQuotients, 2 : "Done\n";
 
@@ -1498,7 +1501,7 @@ along with two different hauptmoduls.}
                     pole_order := -D0*Minimum(ms);
                    
                     t0 := SAction(t : Admissible := false);
-                    vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms...";
+                    vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
                     ech_basis_0, ech_etas_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
                     vprintf ShimuraQuotients, 2 : "Done\n";
 
