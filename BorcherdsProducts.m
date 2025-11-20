@@ -99,20 +99,20 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     Append(~output_lines, "$p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);");
     Append(~output_lines, "print $p->LATTICE_POINTS;");
     output := Join(output_lines, "\n");
-    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
+    fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     Write(fname, output : Overwrite);
     return;
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     vprint ShimuraQuotients, 1 : "Making polymake file for ", M, n, m;
-    if FileExists(Sprintf("polymake_solution_%o_%o_%o", M, n, m)) then
+    if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprint ShimuraQuotients, 1 : "File found";
-        return eval Read(Sprintf("polymake_solution_%o_%o_%o", M, n, m));
+        return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
     end if;
     vprint ShimuraQuotients, 1 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
-    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
+    fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
     if IsEof(polymake) then return []; end if;
 
@@ -121,7 +121,7 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
 
-    Write(Sprintf("polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
+    Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
 
     return rs;
 end function;
