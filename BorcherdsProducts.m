@@ -1208,7 +1208,7 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
-        vprintf ShimuraQuotients, 1 : " is %o\n", log_coeffs_m;
+        vprintf ShimuraQuotients, 2 : " is %o\n", log_coeffs_m;
         for i->f in fs_0 do
             log_coeffs[i] +:= Coefficient(f,-mM)*log_coeffs_m;
         end for;
