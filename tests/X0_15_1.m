@@ -6,8 +6,13 @@ function load_covers_and_ws_data_15_1()
     // verifying [Guo-Yang, Example 32, p. 22-24]
     // D = 15
     cover_data := AssociativeArray();
+<<<<<<< HEAD
     cover_data[{1}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
     cover_data[{1,3}] := <-1/3*(s^2+243)*(s^2+3), DiagonalMatrix([9, 4*27, 1])>;
+=======
+    cover_data[{1}] := <-1/3*(s^2+243)*(s^2+3), DiagonalMatrix([9, 4*27, 1])>;
+    cover_data[{1,3}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
+>>>>>>> 35739b488118f3df479c072f9e0bce4fe0080686
     cover_data[{1,15}] := <s, DiagonalMatrix([-3, 1, 1]) >;
 
     ws_data := AssociativeArray();

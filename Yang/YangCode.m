@@ -1,10 +1,19 @@
-a:=-3; b:=5; Eichler:=1;
+a:=3; b:=-1; Eichler:=11;
 NMax:=70;
 
 A<i,j,k>:=QuaternionAlgebra<Rationals()|a,b>;
 D:=Discriminant(A);
 L:=AssociativeArray();
 DualL:=AssociativeArray();
+
+if (D eq 6) and (Eichler eq 11) then
+  divs := [[1,3,4,5,6,9,11,12,22], [2,5,6,9,22,33], [2,3,4,5,6,7,11,12,33,66]];
+  wts := [[-2,-2,-2,-2,2,-2,-2,2,-2], [-6,2,-4,2,2,2], [-10,-2,-2,-2,-6,6,-2,2,2,2]];
+  divs1 := [[],[],[]];
+  wts1 := [[],[],[]];
+  offs := [[],[],[]];
+  offsets := [[],[],[]];
+end if;
 
 /* D=119 (-7,17) */
 if D eq 119 then

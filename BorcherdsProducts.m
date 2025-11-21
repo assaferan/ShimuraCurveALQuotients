@@ -99,20 +99,20 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     Append(~output_lines, "$p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);");
     Append(~output_lines, "print $p->LATTICE_POINTS;");
     output := Join(output_lines, "\n");
-    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
+    fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     Write(fname, output : Overwrite);
     return;
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
-    vprint ShimuraQuotients, 1 : "Making polymake file for ", M, n, m;
-    if FileExists(Sprintf("polymake_solution_%o_%o_%o", M, n, m)) then
-        vprint ShimuraQuotients, 1 : "File found";
-        return eval Read(Sprintf("polymake_solution_%o_%o_%o", M, n, m));
+    vprintf ShimuraQuotients, 2 : "\n\tMaking polymake file for (%o, %o, %o)...", M, n, m;
+    if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
+        vprintf ShimuraQuotients, 2 : "File found";
+        return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
     end if;
-    vprint ShimuraQuotients, 1 : "File not found, computing...";
+    vprintf ShimuraQuotients, 2 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
-    fname := Sprintf("polymake_script_%o_%o_%o", M, n, m);
+    fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
     if IsEof(polymake) then return []; end if;
 
@@ -121,8 +121,8 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
 
-    Write(Sprintf("polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
-
+    Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
+    vprintf ShimuraQuotients, 2 : "\n";
     return rs;
 end function;
 
@@ -323,7 +323,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
 
 end intrinsic;
 
-intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false) -> .
+intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false, n0 := 0) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
     L, Ldual := ShimuraCurveLattice(D,N);
@@ -332,11 +332,13 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     dim := 0;
     t, lhs, rhs, n_eq, n_ds := find_t(M);
     t := Eltseq(t);
-    n_gaps := g - &+[d div 4 : d in Divisors(D0)];
+    n_gaps := Zero select 0 else g - &+[d div 4 : d in Divisors(D0)];
     k := t[#t]; // the order of pole for t
     n := n_gaps;
-    // Trying n0 here
-    n0 := n_gaps;
+    if not Zero then
+        // Trying n0 here
+        n0 := n_gaps;
+    end if;
     // The n0 below is guaranteed to work (Lemma 17 and Lemma 27 in [GY]), but might be too large
     // n0 := Maximum(2*g-2 - &+[d div 4 : d in Divisors(D0)] - (Zero select 0 else k), 0);
     n := n0;
@@ -376,7 +378,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         gaps := &cat[[pole_orders[i]+1..pole_orders[i+1]-1] : i in [1..Minimum(#pole_orders-1,1-min_v)] 
                                                             | pole_orders[i+1] - pole_orders[i] gt 1];
         max_pole := (#gaps eq 0) select 0 else -gaps[1];
-        gap_condition := Zero select #gaps eq 0 else (#gaps eq n_gaps);
+        
         if (rk lt dim) then
             if (dim gt Prec) then
                 Prec := dim;
@@ -385,13 +387,16 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
                 // update n
                 n +:= k;
             end if;
-        elif (not gap_condition) then
-            // We might be able to skip this if n0 < max_pole
-            // since we can generate the rest by multiplying by t
-            n0 := (n0 lt max_pole) select max_pole else n + max_pole;
-            n := n0;
+        else
+            n0 := (n0 le max_pole) select max_pole else n + max_pole;
+            gap_condition := (#gaps eq n_gaps) and (n ge max_pole);
+            if (#gaps ne n_gaps) then
+                n := n0;
+            end if;
+            if (n lt max_pole) then
+                n := max_pole + k;
+            end if;
         end if;
-       
     end while;
     
     vprintf ShimuraQuotients, 2 : "Done!\n";
@@ -399,19 +404,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     assert rk eq dim;
     
     n := -min_v;
-    // This can be removed
-    // pole_orders := [PivotColumn(E,i) - n - 1 : i in [1..Rank(E)]];
     if Zero then
-        // n0 := n_gaps;
-        // assert [-n..0] eq pole_orders[1..n+1];
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
-        // assert (n + 1 - #pole_orders) eq n_gaps;
-        // n0 := -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
-        // print "n0 = ", n0;
-        //print "max_pole = ", max_pole;
-        n0 := max_pole + 1;
-        // assert n0 eq -[pole_orders[i] : i in [1..#pole_orders-1] | pole_orders[i+1] - pole_orders[i] gt 1][1];
+        n0 := max_pole;
     end if;
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
@@ -522,7 +518,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
     O_max := MaximalOrder(B);
     O := Order(O_max,N);
     basis_O := Basis(O);
-    L_space := Kernel(Transpose(Matrix([[Trace(x) : x in basis_O]])));
+    L_space := Kernel(Transpose(Matrix(Integers(),[[Trace(x) : x in basis_O]])));
     basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
     BM_L := Matrix([Eltseq(b) : b in basis_L]);
     Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : y in basis_L] : x in basis_L]);
@@ -628,7 +624,6 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::Seq
     end for;
     return false, _;
 end intrinsic;
-
 
 intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
 {.}
@@ -1132,7 +1127,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 3: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
             if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
-                if (gamma ne Parent(gamma)!0) then
+                if (gamma ne 0) then
                     Yang_tt := true;
                 else
                     m0, m_cond := SquareFreeFactorization(Integers()!m);
@@ -1271,17 +1266,14 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     return scale;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
     _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
 
-    if Type(Lambda) eq BoolElt then 
-        lambda := ElementOfNorm(Q,-d, O, basis_L);
-    else
-        lambda := Lambda;
-    end if;
     scale := ScaleForSchofer(d,D,N);
+
+    lambda := ElementOfNorm(Q,-d, O, basis_L);
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1293,17 +1285,13 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
     _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     
     scale := ScaleForSchofer(d,D,N);
 
-    if Type(Lambda) eq BoolElt then 
-        lambda := ElementOfNorm(Q, -d,  O, basis_L);
-    else
-        lambda := Lambda;
-    end if;
+    lambda := ElementOfNorm(Q, -d,  O, basis_L);
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
@@ -1323,12 +1311,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
 {Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    return SchoferFormula([eta],d,D,N : Lambda := Lambda)[1];
+    return SchoferFormula([eta],d,D,N)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot : Lambda := false) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1342,7 +1330,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N : Lambda := Lambda);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
         /*
@@ -1400,6 +1388,10 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     r := (pole_order - n0) div k;
     s := pole_order - r*k;
 
+    assert n + 2 gt n0 + k; // making sure we have enough forms to complete to a basis
+
+    assert n + 1 - n0 lt #fs_E; // Making sure the value of n makes sense
+
     basis_n0 := fs_E[n+2-n0..#fs_E]; // basis for M_{n0-1}^!
     init_basis := fs_E[n+2-n0-k..n+1-n0]; // completing to a basis for M_{n_0+k-1}^!
     // full_basis is a basis for M_{pole_order}^!(4D0)
@@ -1420,6 +1412,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     end if;
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
+    assert minval eq -Minimum([Valuation(f) : f in qexps]);
     // coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in full_basis]);
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
     /*
@@ -1461,11 +1454,11 @@ along with two different hauptmoduls.}
     k := -Valuation(qExpansionAtoo(t,1));
    
     if IsOdd(Xstar`D*Xstar`N) then
-        E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero);
+        E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
-    pts := [p : p in pts | p[1] notin Exclude];
+    pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
     
     //we do this twice -- we should remember this
     found := false;
@@ -1498,8 +1491,8 @@ along with two different hauptmoduls.}
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
                 
-                vprintf ShimuraQuotients, 2 : "\t Computing basis of {oo}-weakly holomorphic forms...";
-                ech_basis, ech_etas, T := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0, n, t);
+                vprintf ShimuraQuotients, 2 : "\t Computing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
+                ech_basis, ech_etas, T := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
                 
                 vprintf ShimuraQuotients, 2 : "Done\n";
 
@@ -1508,7 +1501,7 @@ along with two different hauptmoduls.}
                     pole_order := -D0*Minimum(ms);
                    
                     t0 := SAction(t : Admissible := false);
-                    vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms...";
+                    vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
                     ech_basis_0, ech_etas_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
                     vprintf ShimuraQuotients, 2 : "Done\n";
 
@@ -1735,7 +1728,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
@@ -1743,7 +1736,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     for pt in pt_list_quad do
         d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
@@ -1882,7 +1875,7 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     return all_relns;
 end intrinsic;
 
-/*
+
 procedure add_new_column(schofer_tab, dnew, deg)
     //add column associated to dnew of degree deg
     table := schofer_tab`Values;
@@ -1906,7 +1899,6 @@ procedure add_new_column(schofer_tab, dnew, deg)
     schofer_tab`Discs := [ds[1], ds[2]];
     return;
 end procedure;
-*/
 
 function solve_quadratic_constraints(relns)
     R := Universe(relns);
@@ -1992,149 +1984,317 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     return EquationsOfCovers(schofer_tab, all_cm_pts);
 end intrinsic;
 
-intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, new_keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> SeqEnum, Assoc, SeqEnum
-    {Using Riemann Roch, leverage covered equations to get higher cover equations}
-    
-    P1s := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
-    conics := [<i, keys> : i->keys in new_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
+function curves_above_P1_and_conics(crv_eqns, labels, curves)
+    P1s := AssociativeArray();
+    conics := AssociativeArray();
+    for label in labels do
+        eqns := crv_eqns[label];
+        P1s[label] := {base : base in Keys(eqns) | Degree(crv_eqns[label][base]) eq 1};
+        conics[label] := {base : base in Keys(eqns) | Degree(crv_eqns[label][base]) eq 2 and HasRationalPoint(Conic(crv_eqns[label][base]))};
+    end for;
 
     curves_above_P1s := AssociativeArray();
     curves_above_conics := AssociativeArray();
 
-    for pair in P1s do
-        for c in curves[pair[2]]`CoveredBy do
-            curves_above_P1s[c] := pair[1];
-        end for;
-    end for;
-
-    for pair in conics do
-        for c in curves[pair[2]]`CoveredBy do
+    for P1_label in Keys(P1s) do
+        for c in curves[P1_label]`CoveredBy do
             if not IsDefined(curves_above_P1s, c) then
-                curves_above_conics[c] := pair[1];
+                curves_above_P1s[c] := AssociativeArray();
             end if;
+            curves_above_P1s[c][P1_label] := P1s[P1_label];
         end for;
     end for;
 
-    cover_eqns := [];
-    cover_keys := [];
-    while (not IsEmpty(Keys(curves_above_P1s))) or (not IsEmpty(Keys(curves_above_conics))) do
+    for conic_label in Keys(conics) do
+        for c in curves[conic_label]`CoveredBy do
+            if not IsDefined(curves_above_conics, c) then
+                curves_above_conics[c] := AssociativeArray();
+            end if;
+            curves_above_conics[c][conic_label] := conics[conic_label];
+        end for;
+    end for;
+
+    return curves_above_P1s, curves_above_conics;
+end function;
+
+function equation_above_P1(covered_gplus1, covered_P1)
+    fpoly := HyperellipticPolynomials(covered_P1);
+    c0 := Coefficient(fpoly,0);
+    c1 := Coefficient(fpoly,1);
+    _<x>:=Parent(fpoly);
+    eqn := HyperellipticPolynomials(covered_gplus1);
+    gcd_poly := GCD(eqn, fpoly);
+    eqn div:= gcd_poly;
+    eqn := Evaluate(eqn, (x^2 - c0)/c1);
+    C := HyperellipticCurve(eqn);
+    return C, gcd_poly;
+end function;
+
+function ws_above_P1(H, label, P1_label, gplus1_label, curves, common_base, crv_ws)
+/*
+    hyp1 := HyperellipticInvolution(C);
+    //now update ws
+    id_y := [m : m in curves[gplus1_label]`W diff curves[label]`W];
+    // id_y are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
+    // act trivially on the doubly covered curve covered_gplus1. 
+    // Therefore they induce the involution x -> -x, y-> y on the curve.
+    ws_label := AssociativeArray();
+    for m in curves[label]`W do
+        ws_label[m] := IdentityMap(C);
+    end for;
+    id_x := [m : m in curves[P1_label]`W diff curves[label]`W];
+    // id_x are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
+    // act trivially on the covered P1. Therefore they induce the hyperelliptic involution on the curve.
+    for m in id_x do
+        ws_label[m] := hyp1;
+    end for;
+    _<x,y,z> := AmbientSpace(C);
+    // If we have a gcd, our equation is (y/x)^2 = f_g(s(x)), so y/x maps to -y/x
+    hyp2 := gcd_poly eq 1 select map<C->C | [-x, y, z]> else map<C->C | [-x, -y, z]>;
+    for m in id_y do
+        ws_label[m] := hyp2;
+    end for;
+    N := curves[label]`N;
+    D := curves[label]`D;
+    for m1 in id_x do
+        for m2 in id_y do
+            other_w := AtkinLehnerMul(m1, m2, N*D);
+            ws_label[other_w] := hyp1*hyp2;
+        end for;
+    end for;
+    */
+    ws_label := AssociativeArray();
+    C := Domain(crv_ws[P1_label][common_base][1]);
+    Cpoly := HyperellipticPolynomials(C);
+    c0 := Coefficient(Cpoly,0);
+    c1 := Coefficient(Cpoly,1);
+    P1<s,t> := ProjectiveSpace(Rationals(), 1);
+    _<x,y,z> := Ambient(C);
+    C_to_P1 := iso<C -> P1 | [y, z], [s^2-c0*t^2, c1*s*t, c1*t^2]>;
+    deg_H := Degree(H);
+    for m in Keys(crv_ws[P1_label][common_base]) do
+        wm_crv := crv_ws[P1_label][common_base][m];
+        assert m in Keys(crv_ws[gplus1_label][common_base]);
+        wm_gplus1 := crv_ws[gplus1_label][common_base][m];
+        deg_f := Degree(Domain(wm_gplus1));
+        wm_P1 := Inverse(C_to_P1)*wm_crv*C_to_P1;
+        wm_param := wm_P1(s)/wm_P1(t);
+        _<x,y,z> := Ambient(H);
+        wm_x_top := Evaluate(wm_param, [x,z]);
+        wm_y_top := Evaluate(wm_gplus1(y)/wm_gplus1(z)^((deg_f+1) div 2), [((x/z)^2 - c0)/c1, y/z^((deg_H + 1) div 2), 1]);
+        ws_label[m] := iso< H -> H | [wm_x_top, wm_y_top, 1], [wm_x_top, wm_y_top, 1]>;
+    end for;
+    return ws_label;
+end function;
+
+function equation_above_conic(covered_gplus1, covered_conic)
+    C := Conic(covered_conic);
+    P2<x,y,z> := Ambient(C);
+    assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
+    P1_to_C := Parametrization(C);
+    C_to_P1 := Inverse(P1_to_C);
+    s_param := C_to_P1(x) / C_to_P1(z); // conic was constructed such that this is the hauptmodul
+    fpoly := HyperellipticPolynomials(covered_gplus1);
+    Cpoly := HyperellipticPolynomials(covered_conic);
+    gcd_poly := GCD(fpoly, Cpoly);
+    _<t> := PolynomialRing(Rationals());
+    s_of_t := Evaluate(s_param, [t,1]);
+    s_num := Numerator(s_of_t);
+    s_denom := Denominator(s_of_t);
+    // homogenized gcd poly, after substituion -
+    // if s = F(t)/G(t), then hom_gcd = G^deg(gcd_poly)*gcd_poly(F(t)/G(t))
+    hom_gcd := s_denom^Degree(gcd_poly)*Evaluate(Evaluate(gcd_poly, s_param), [t, 1]);
+    assert Denominator(hom_gcd) eq 1;
+    hom_gcd := Numerator(hom_gcd);
+    lc := LeadingCoefficient(hom_gcd);
+    monic_hom_gcd := hom_gcd / lc;
+    is_sqr, root_gcd := IsSquare(monic_hom_gcd);
+    error if not is_sqr, "GCD of hyperelliptic polynomials is not a square";
+    f_prime := fpoly div gcd_poly;
+    target_poly := s_denom^Degree(f_prime)*Evaluate(Evaluate(f_prime, s_param), [t, 1]);
+    assert Denominator(target_poly) eq 1;
+    target_poly := Numerator(target_poly);
+    eps := Degree(fpoly) mod 2;
+    target_poly := target_poly * s_denom^eps;
+    // We have (y*s_denom^([d/2])/root_gcd)^2 = lc*target_poly,
+    // where y is the y variable of covered_gplus1, and d is the degree (g+1) of the polynomial.
+    H := HyperellipticCurve(lc*target_poly);
+    y_factor := s_denom^((Degree(fpoly) + 1) div 2) / root_gcd;
+    return H, C_to_P1, y_factor;
+end function;
+
+function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, curves, common_base, crv_ws)
+/*
+    P2<x,y,z> := Ambient(C);
+    ws_label := AssociativeArray();
+    for m in curves[label]`W do
+        ws_label[m] := IdentityMap(H);
+    end for;
+    hyp1 := HyperellipticInvolution(H);
+    id_x := [m : m in curves[conic_label]`W diff curves[label]`W];
+    id_y := [m : m in curves[gplus1_label]`W diff curves[label]`W];
+    for m in id_x do
+        ws_label[m] := hyp1;
+    end for;
+    hyp_conic := map<C->C | [x,-y,z]>;
+    inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
+    //this is a map from P^1 -> P^1
+    _<s,t> := Parent(C_to_P1(x));
+    _ := Inverse(inv);
+    _<x,y,z> := AmbientSpace(H);
+    im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z
+    y_factor := s_denom^((Degree(fpoly) + 1) div 2) / root_gcd;
+    denom_im_s := Evaluate(y_factor, im_s);
+    denom_s := Evaluate(y_factor, Evaluate(s/t, [x,z]));
+    // denom_denom := Evaluate(y_factor, x/z);
+    hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
+    _, hyp2 := IsAutomorphism(hyp2);
+    for m in id_y do
+        ws_label[m] := hyp2;
+    end for;
+    N := curves[label]`N;
+    D := curves[label]`D;
+    for m1 in id_x do
+        for m2 in id_y do
+            other_w := AtkinLehnerMul(m1, m2, N*D);
+            ws_label[other_w] := hyp1*hyp2;
+        end for;
+    end for;
+    */
+    ws_label := AssociativeArray();
+    deg_H := Degree(H);
+    for m in Keys(crv_ws[conic_label][common_base]) do
+        wm_conic := crv_ws[conic_label][common_base][m];
+        assert m in Keys(crv_ws[gplus1_label][common_base]);
+        wm_gplus1 := crv_ws[gplus1_label][common_base][m];
+        deg_f := Degree(Domain(wm_gplus1));
+        wm_P1 := Inverse(C_to_P1)*wm_conic*C_to_P1;
+        _<s,t>  := Codomain(C_to_P1);
+        wm_param := wm_P1(s)/wm_P1(t);
+        _<x,y,z> := Ambient(H);
+        wm_x_top := Evaluate(wm_param, [x,z]);
+        wm_y_factor := Evaluate(y_factor, Evaluate(wm_param, [x/z,1]))/Evaluate(y_factor, x/z);
+        s_param := C_to_P1(x) / C_to_P1(z);
+        wm_y_top := wm_y_factor*Evaluate(wm_gplus1(y)/wm_gplus1(z)^((deg_f+1) div 2), [Evaluate(s_param, [x/z,1]), y/z^((deg_H + 1) div 2), 1]);
+        ws_label[m] := iso< H -> H | [wm_x_top, wm_y_top, 1], [wm_x_top, wm_y_top, 1]>;
+    end for;
+    return ws_label;
+end function;
+
+function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
+    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a P1...", label;
+    g := curves[label]`g;
+    crv_eqns_label := AssociativeArray();
+    crv_ws_label := AssociativeArray();
+    covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
+    for P1_label in Keys(curves_above_P1s[label]) do
+        covered_others := covered_curves diff {P1_label};
+        for other_label in covered_others do
+            common_bases := Keys(crv_eqns[other_label]) meet curves_above_P1s[label][P1_label];
+            found_base := false;
+            for base in common_bases do
+                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) then
+                    common_base := base;
+                    found_base := true;
+                    break;
+                end if;
+            end for;
+            if found_base then
+                gplus1_label := other_label;
+                break;
+            end if;
+        end for;
+        if not found_base then continue; end if;
+        covered_P1 := crv_eqns[P1_label][common_base];
+        covered_gplus1 := crv_eqns[gplus1_label][common_base];
+        H := equation_above_P1(covered_gplus1, covered_P1);
+        vprintf ShimuraQuotients,3 : "Found equation.";
+        ws_H := ws_above_P1(H, label, P1_label, gplus1_label, curves, common_base, crv_ws);
+        crv_eqns_label[P1_label] := H;
+        crv_ws_label[P1_label] := ws_H;
+    end for;
+    return crv_eqns_label, crv_ws_label;
+end function;
+
+function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_ws)
+    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a conic...", label;
+    g := curves[label]`g;
+    crv_eqns_label := AssociativeArray();
+    crv_ws_label := AssociativeArray();
+    covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
+    for conic_label in Keys(curves_above_conics[label]) do
+        covered_others := covered_curves diff {conic_label};
+        for other_label in covered_others do
+            common_bases := Keys(crv_eqns[other_label]) meet curves_above_conics[label][conic_label];
+            found_base := false;
+            for base in common_bases do
+                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) then
+                    common_base := base;
+                    found_base := true;
+                    break;
+                end if;
+            end for;
+            if found_base then
+                gplus1_label := other_label;
+                break;
+            end if;
+        end for;
+        if not found_base then continue; end if;
+        covered_conic := crv_eqns[conic_label][common_base];
+        covered_gplus1 := crv_eqns[gplus1_label][common_base];
+        H, C_to_P1, yfactor := equation_above_conic(covered_gplus1, covered_conic);
+        vprintf ShimuraQuotients,3 : "Found equation.";
+        ws_H := ws_above_conic(H, C_to_P1, yfactor, label, conic_label, gplus1_label, curves, common_base, crv_ws);
+        crv_eqns_label[conic_label] := H;
+        crv_ws_label[conic_label] := ws_H;
+    end for;
+    return crv_eqns_label, crv_ws_label;
+end function;
+
+intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> Assoc, Assoc
+{Using Riemann Roch, leverage covered equations to get higher cover equations}
+
+    // initializing data structures to store for each curve all equations and the corresponding ws,
+    // depending on the P1s (and conics) that it covers
+    crv_eqns := AssociativeArray();
+    crv_ws := AssociativeArray();
+    for i->key in keys do
+        crv_eqns[key] := AssociativeArray();
+        crv_ws[key] := AssociativeArray();
+        covered_P1s := curves[key]`Covers;
+        assert #covered_P1s eq 1;
+        star_key := Representative(covered_P1s);
+        crv_eqns[key][star_key] := crv_list[i];
+        crv_ws[key][star_key] := ws[key];
+    end for;
+
+    curves_above_P1s, curves_above_conics := curves_above_P1_and_conics(crv_eqns, keys, curves);
+
+    new_keys := Keys(curves_above_P1s) join Keys(curves_above_conics);
+
+    while not IsEmpty(new_keys) do
+        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above P1s: %o,", Keys(curves_above_P1s);
+        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above conics... %o", Keys(curves_above_conics);
         for label in Keys(curves_above_P1s) do
-            g := curves[label]`g;
-            covered_P1 := crv_list[curves_above_P1s[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
-            if #allgplus1covers eq 0 then
-                continue;
-            end if;
-            covered_gplus1_key := Representative(allgplus1covers);
-            gplus1idx := Index(new_keys,covered_gplus1_key);
-            covered_gplus1 := crv_list[gplus1idx];
-            //if this is empty then it's not hyperelliptic
-            fpoly := HyperellipticPolynomials(covered_P1);
-            c0 := Coefficient(fpoly,0);
-            c1 := Coefficient(fpoly,1);
-            _<x>:=Parent(fpoly);
-            eqn := HyperellipticPolynomials(covered_gplus1);
-            eqn := Evaluate(eqn, (x^2 - c0)/c1);
-            C := HyperellipticCurve(eqn);
-            Append(~cover_eqns, C);
-            Append(~cover_keys, label);
-            hyp1 := HyperellipticInvolution(C);
-            //now update ws
-            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
-            assert #id_y eq 1;
-            ws[label] := AssociativeArray();
-            ws[label][1] := IdentityMap(C);
-            P1_idx := Index(crv_list,covered_P1);
-            id_x := [m : m in Keys(ws[new_keys[P1_idx]]) diff {1} | ws[new_keys[P1_idx]][m] eq IdentityMap(covered_P1)];
-            assert #id_x eq 1;
-            ws[label][id_x[1]] := hyp1;
-            _<x,y,z> := AmbientSpace(C);
-            hyp2 := map<C->C | [-x, y, z]>;
-            ws[label][id_y[1]] := hyp2;
-            N := curves[label]`N;
-            D := curves[label]`D;
-            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
-            ws[label][other_w] := hyp1*hyp2;
+            crv_eqns_label, crv_ws_label := process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws);
+            crv_eqns[label] := crv_eqns_label;
+            crv_ws[label] := crv_ws_label;
         end for;
+
         for label in Keys(curves_above_conics) do
-            g := curves[label]`g;
-            covered_conic := crv_list[curves_above_conics[label]];
-            allgplus1covers := { new_keys[i] :  i in [1..#new_keys] | Degree(HyperellipticPolynomials(crv_list[i])) eq g+1 } meet curves[label]`Covers;
-            if #allgplus1covers eq 0 then
-                continue;
-            end if;
-            covered_gplus1_key := Representative(allgplus1covers);
-            gplus1idx := Index(new_keys,covered_gplus1_key);
-            covered_gplus1 := crv_list[gplus1idx];
-            //if this is empty then it's not hyperelliptic
-            // assert Degree(covered_conic) eq 2;
-            C := Conic(covered_conic);
-            P2<x,y,z> := Ambient(C);
-            assert HasRationalPoint(C); // for now not implemented if C does not have a rational point
-            P1_to_C := Parametrization(C);
-            C_to_P1 := Inverse(P1_to_C);
-            s_param := C_to_P1(x) / C_to_P1(z); // conic was constructed such that this is the hauptmodul
-            fpoly := HyperellipticPolynomials(covered_gplus1);
-            // amap := AlgebraMap(P1_to_C);
-            // amap(x)/amap(z);
-            eqn := Evaluate(fpoly,s_param);
-            _<t> := PolynomialRing(Rationals());
-            tmp := Evaluate(eqn,[t,1]); 
-            N := Numerator(tmp);
-            D := Denominator(tmp); //under change of equation z = y*sqrt(D) this is the curve
-            H := HyperellipticCurve(N);
-            Append(~cover_eqns, H);
-            Append(~cover_keys, label);
-            //now update ws
-            id_y := [m : m in Keys(ws[new_keys[gplus1idx]]) diff {1} | ws[covered_gplus1_key][m] eq IdentityMap(covered_gplus1)];
-            assert #id_y eq 1;
-            ws[label] := AssociativeArray();
-            ws[label][1] := IdentityMap(H);
-            hyp1 := HyperellipticInvolution(H);
-            conic_idx := Index(crv_list,covered_conic);
-            id_x := [m : m in Keys(ws[new_keys[conic_idx]]) diff {1} | ws[new_keys[conic_idx]][m] eq IdentityMap(covered_conic)];
-            ws[label][id_x] := hyp1;
-            assert #id_x eq 1;
-            hyp_conic := map<C->C | [x,-y,z]>;
-            inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
-            //this is a map from P^1 -> P^1
-             _<s,t> := Parent(C_to_P1(x));
-            tmp := Inverse(inv);
-            _<x,y,z> := AmbientSpace(H);
-            im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z ??? Does not yield an involution!
-            denom_im_s := Evaluate(SquareRoot(D), im_s);
-            denom_s := Evaluate(SquareRoot(D), Evaluate(s/t, [x,z]));
-            // denom_denom := Evaluate(SquareRoot(D), x/z);
-            hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
-            _, hyp2 := IsAutomorphism(hyp2);
-            ws[label][id_y[1]] := hyp2;
-            N := curves[label]`N;
-            D := curves[label]`D;
-            other_w := AtkinLehnerMul(id_x[1], id_y[1], N*D);
-            ws[label][other_w] := hyp1*hyp2; 
+            crv_eqns_label, crv_ws_label := process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_ws);
+            crv_eqns[label] := crv_eqns_label;
+            crv_ws[label] := crv_ws_label;
         end for;
-        curves_above_P1s := AssociativeArray();
-        P1s := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 1];
-        curves_above_P1s := AssociativeArray();
-        for pair in P1s do
-            for c in curves[pair[2]]`CoveredBy do
-                curves_above_P1s[c] := pair[1];
-            end for;
-        end for;
-        curves_above_conics := AssociativeArray();
-        conics := [<i, keys> : i->keys in cover_keys | Genus(crv_list[i]) eq 0 and Degree(crv_list[i]) eq 2];
-        curves_above_conics := AssociativeArray();
-        for pair in conics do
-            for c in curves[pair[2]]`CoveredBy do
-                curves_above_conics[c] := pair[1];
-            end for;
-        end for;
+
+        curves_above_P1s, curves_above_conics := curves_above_P1_and_conics(crv_eqns, new_keys, curves);
+        new_keys := Keys(curves_above_P1s) join Keys(curves_above_conics);
     end while;
-    return cover_eqns, ws, cover_keys;
+    return crv_eqns, crv_ws;
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> SeqEnum, SeqEnum
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     vprintf ShimuraQuotients,1 : "Computing Borcherds forms...";
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
@@ -2146,9 +2306,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients,1 : "Computing absolute values at CM points...";
+    Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
-                                                           Exclude := {}, Include := Set(d_divs));
+                                                           Exclude := Exclude, Include := Set(d_divs));
     vprintf ShimuraQuotients,1 : "Done\n";
     ReduceTable(abs_schofer_tab);
     vprintf ShimuraQuotients,1 : "Computing actual values at CM points...";
@@ -2158,11 +2319,9 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
     vprintf ShimuraQuotients,1 : "Done\n";
     vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics...";
-    cover_eqns, ws, cover_keys := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
+    all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
     vprintf ShimuraQuotients,1 : "Done\n";
-    all_eqns := crv_list cat cover_eqns;
-    all_keys := new_keys cat cover_keys;
-    return all_eqns, ws, all_keys;
+    return all_eqns, all_ws;
 end intrinsic;
 
 // This is following [GR, Section 5]

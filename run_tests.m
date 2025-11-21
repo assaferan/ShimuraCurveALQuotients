@@ -1,16 +1,16 @@
-// usage: magma target:=SUBSTRING exitsignal:=BOOL run_tests.m
+// usage: magma [target:=SUBSTRING] [exitsignal:=BOOL] [verbose:=INT] [debug:=BOOL] run_tests.m
 if assigned filename then
   if "tests/" eq filename[1..6] then
     filename := filename[7..#filename];
   end if;
   tests := [filename];
 else
-  tests := Split(Pipe("ls tests", ""), "\n");
+  tests := Split(Pipe("cd tests && ls *.m && cd ..", ""), "\n");
 end if;
 if assigned debug then
   SetDebugOnError(true);
 end if;
-AttachSpec("shimuraquots.spec");
+AttachSpec("ShimuraQuotients.spec");
 
 if assigned verbose then
   try
