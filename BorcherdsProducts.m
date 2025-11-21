@@ -1127,7 +1127,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 3: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
             if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
-                if (gamma ne 0) then
+                if (gamma ne Parent(gamma)!0) then
                     Yang_tt := true;
                 else
                     m0, m_cond := SquareFreeFactorization(Integers()!m);
