@@ -1,4 +1,4 @@
-// AttachSpec("shimuraquots.spec");
+// AttachSpec("ShimuraQuotients.spec");
 intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -> SeqEnum
 {.}
     // SetDebugOnError(true);
