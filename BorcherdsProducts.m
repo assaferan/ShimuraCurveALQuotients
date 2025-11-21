@@ -107,7 +107,7 @@ end procedure;
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     vprintf ShimuraQuotients, 2 : "\n\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
-        vprintf ShimuraQuotients, 2 : "File found";
+        vprintf ShimuraQuotients, 2 : "File found...";
         return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
     end if;
     vprintf ShimuraQuotients, 2 : "File not found, computing...";
@@ -1446,10 +1446,15 @@ along with two different hauptmoduls.}
     found := false;
     infty_idx := 1;
 
-    max_pole_order := 0;
-    ech_basis_all :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
-    ech_etas_all := [];
-    T_all := MatrixAlgebra(Rationals(),0)!0; // zero matrix
+    max_pole_order_oo := 0;
+    ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
+    ech_etas_all_oo := [];
+    T_all_oo := MatrixAlgebra(Rationals(),0)!0; // zero matrix
+
+    max_pole_order_0 := 0;
+    ech_basis_all_0 :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
+    ech_etas_all_0 := [];
+    T_all_0 := MatrixAlgebra(Rationals(),0)!0; // zero matrix
 
     while (not found) do
         infty := pts[infty_idx];
@@ -1479,31 +1484,40 @@ along with two different hauptmoduls.}
                 min_m := Minimum(ms);
                 min_m := Minimum(min_m, -(n0 + k - 1));
                 
-                if (max_pole_order lt -min_m) then
-                    max_pole_order := -min_m;
+                if (max_pole_order_oo lt -min_m) then
+                    max_pole_order_oo := -min_m;
                     vprintf ShimuraQuotients, 2 : "\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
-                    ech_basis_all, ech_etas_all, T_all := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
+                    ech_basis_all_oo, ech_etas_all_oo, T_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
                     vprintf ShimuraQuotients, 2 : "Done";
                 end if;
                 
-                first_idx := min_m+max_pole_order+1;
-                ech_basis := SubmatrixRange(ech_basis_all, first_idx, first_idx, Nrows(ech_basis_all), Ncols(ech_basis_all));
-                ech_etas := ech_etas_all[first_idx..#ech_etas_all];
-                assert SubmatrixRange(T_all, first_idx, 1, Nrows(T_all), first_idx-1) eq 0;
-                T := SubmatrixRange(T_all, first_idx, first_idx, Nrows(T_all), Ncols(T_all));
+                first_idx := min_m+max_pole_order_oo+1;
+                ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
+                ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
+                assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
+                T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
 
                 if IsOdd(Xstar`D*Xstar`N) then
                     // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
                     pole_order := -D0*Minimum(ms);
                    
-                    t0 := SAction(t : Admissible := false);
-                    vprintf ShimuraQuotients, 2 : "\t Computing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
-                    ech_basis_0, ech_etas_0, T0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
-                    vprintf ShimuraQuotients, 2 : "Done\n";
+                    if (max_pole_order_0 lt pole_order) then
+                        max_pole_order_0 := pole_order;
+                        t0 := SAction(t : Admissible := false);
+                        vprintf ShimuraQuotients, 2 : "\n\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
+                        ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
+                        vprintf ShimuraQuotients, 2 : "Done";
+                    end if;
 
-                    vprintf ShimuraQuotients, 2 : "\t Building q-expansions at oo...";
+                    first_idx := -pole_order+max_pole_order_0+1;
+                    ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx, first_idx, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
+                    ech_etas_0 := ech_etas_all_0[first_idx..#ech_etas_all_0];
+                    assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
+                    T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
+
+                    vprintf ShimuraQuotients, 2 : "\n\tBuilding q-expansions at oo...";
                     ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
-                    vprintf ShimuraQuotients, 2 : "Done\n";
+                    vprintf ShimuraQuotients, 2 : "Done";
 
                     Rq<q> := Universe(ech_fs_oo);
                     R := BaseRing(Rq);
