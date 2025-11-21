@@ -1,5 +1,6 @@
 // Compute the order of vanishing of eta(delta tau) at the cusp a/b in Gamma_0(N)
 // multiplied by 24
+
 function order_of_vanishing_of_eta(delta, b, N)
     return N*GCD(b,delta)^2 div (GCD(N,b^2)*delta);
 end function;
@@ -412,7 +413,9 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
     
-    if Zero then return E, n, n0, eta_quotients_oo, eta_quotients; end if;
+    if Zero then 
+        return E, n, n0, eta_quotients_oo, eta_quotients; 
+    end if;
     return E, n, n0, t_eta_quotient, eta_quotients; 
 end intrinsic;
 
@@ -2293,6 +2296,32 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
     return crv_eqns, crv_ws;
 
 end intrinsic;
+
+// function equations_above_pointless_conics(all_eqns, all_ws, curves)
+//     all_keys := Keys(all_eqns);
+//     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
+//     pointless_conics := [k : k in not_done | exists(C){C : C in curves[k]`Covers | curves[C]`g eq 0}]; //cover genus 0 curve
+//     starcurve := Maximum(all_keys);
+//     assert IsStarCurve(curves[starcurve]);
+//     known_conics := [k : k in pointless_conics | k not in not_done]; 
+//     //now find all curves lying over a pointless conic with an equation
+//     curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
+//     for k in curves_to_do do
+//         g := curves[k]`g;
+//         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))};
+//         for other_curve in curves[k]`Covers do
+//             if exists{base}{b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
+//                 if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
+//                     gplus1key := other_curve; //found the gplus1
+//                     break;
+//                 end if;
+//             end if;
+//         end for;
+
+
+//     end for;
+
+// end function;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
