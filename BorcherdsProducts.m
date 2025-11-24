@@ -1266,14 +1266,18 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     return scale;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
     _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
 
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q,-d, O, basis_L);
+     if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q,-d, O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1285,13 +1289,16 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
     _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     
     scale := ScaleForSchofer(d,D,N);
-
-    lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
@@ -1311,12 +1318,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
 {Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    return SchoferFormula([eta],d,D,N)[1];
+    return SchoferFormula([eta],d,D,N : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot : Lambda := false) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1330,16 +1337,9 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N : Lambda := Lambda);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
-        /*
-        try 
-            vals[rest_idxs[i]] := RationalNumber(log_coeff);
-        catch e
-            require false:  "Increase the precision on the Borcherds forms";
-        end try;
-        */
     end for;
     return vals;
 end intrinsic;
@@ -1758,7 +1758,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
@@ -1766,7 +1766,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     for pt in pt_list_quad do
         d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
