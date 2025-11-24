@@ -2137,6 +2137,7 @@ function equation_above_conic(covered_gplus1, covered_conic)
     return H, C_to_P1, y_factor;
 end function;
 
+
 function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, curves, common_base, crv_ws)
 /*
     P2<x,y,z> := Ambient(C);
@@ -2265,6 +2266,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
     return crv_eqns_label, crv_ws_label;
 end function;
 
+
 intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> Assoc, Assoc
 {Using Riemann Roch, leverage covered equations to get higher cover equations}
 
@@ -2308,31 +2310,67 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
 end intrinsic;
 
-// function equations_above_pointless_conics(all_eqns, all_ws, curves)
-//     all_keys := Keys(all_eqns);
-//     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
-//     pointless_conics := [k : k in not_done | exists(C){C : C in curves[k]`Covers | curves[C]`g eq 0}]; //cover genus 0 curve
-//     starcurve := Maximum(all_keys);
-//     assert IsStarCurve(curves[starcurve]);
-//     known_conics := [k : k in pointless_conics | k not in not_done]; 
-//     //now find all curves lying over a pointless conic with an equation
-//     curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
-//     for k in curves_to_do do
-//         g := curves[k]`g;
-//         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))};
-//         for other_curve in curves[k]`Covers do
-//             if exists{base}{b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
-//                 if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
-//                     gplus1key := other_curve; //found the gplus1
-//                     break;
-//                 end if;
-//             end if;
-//         end for;
+intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> Assoc, Assoc
+    {Find equations above pointless conics, as a last step}
+    all_keys := Keys(all_eqns);
+    not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
+    starcurve := Representative(curves[Maximum(all_keys)]`Covers);
+    assert IsStarCurve(curves[starcurve]);
+    known_conics := [k : k in all_keys | k notin not_done and curves[k]`g eq 0]; 
+    //now find all curves lying over a conic without an equation
+    curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
+    for k in curves_to_do do
+        g := curves[k]`g;
+        assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
+        for other_curve in curves[k]`Covers do
+            if exists(base){b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
+                if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
+                    gplus1key := other_curve; //found the gplus1
+                    break;
+                end if;
+            end if;
+        end for;
 
+        //combine equations to get the equation for the curve
+        covered_gplus1 := all_eqns[gplus1key][base];
+        covered_conic:= all_eqns[conic_key][base];
+        wt := curves[gplus1key]`g +1;
+        P3<x,y,s,z> := WeightedProjectiveSpace(Rationals(),[1,wt,1,1]);
+        fconic := HyperellipticPolynomials(covered_conic);
+        fgplus1 := HyperellipticPolynomials(covered_gplus1);
+        eqn1 := Evaluate(fconic, s);
+        eqn2 := Evaluate(fgplus1,s);
+        eqn2 := Homogenization(eqn2,z);
+        eqn1 := Homogenization(eqn1,z);
+        C := Curve(P3, [y^2 - eqn2, x^2 - eqn1]);
+        all_eqns[k][conic_key] := {C};
 
-//     end for;
+        all_ws[k][conic_key] := AssociativeArray(); 
+        //now find the ws
+       ws_to_do := Keys(all_ws[gplus1key][base]);
+        for w in ws_to_do do
+            w_mapgplus1 := all_ws[gplus1key][base][w];
+            alg_map_gplus1 := AlgebraMap(w_mapgplus1);
+            y_var := Domain(alg_map_gplus1).2;
+            s_var := Domain(alg_map_gplus1).1;
+            im_y := Evaluate(alg_map_gplus1(y_var), [s,y,z]);
+            im_s1 := Evaluate(alg_map_gplus1(s_var), [s,y,z]);
+            w_mapconic := all_ws[conic_key][base][w];
+            alg_map_conic := AlgebraMap(w_mapconic);
+            s_var := Domain(alg_map_conic).1;
+            x_var := Domain(alg_map_conic).2;
+            im_x :=  Evaluate(alg_map_conic(x_var), [s,x,z]);
+            im_s2 := Evaluate(alg_map_conic(s_var), [s,y,z]);
+            assert im_s1 eq im_s2; //acts the same way
+            wmap := map<C->C | [im_x, im_y, im_s1, z]>;
+            b, inv := IsIsomorphism(wmap);
+            assert b;
+            all_ws[k][conic_key][w] := inv^(-1);
+        end for;
+    end for;
+    return all_eqns, all_ws;
 
-// end function;
+end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
@@ -2361,6 +2399,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
     vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients,1 :"Computing equations above pointless conics...";
+    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves);
     return all_eqns, all_ws;
 end intrinsic;
 
