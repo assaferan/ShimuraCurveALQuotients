@@ -18,7 +18,7 @@ function load_covers_and_ws_data_6_31()
 end function;
 
 procedure test_6_31()
-    cover_data := load_covers_and_ws_data_6_31();
+    cover_data, ws_data := load_covers_and_ws_data_6_31();
     curves := GetHyperellipticCandidates();
     
     test_AllEquationsAboveCoversSingleCurve(6, 31, cover_data, ws_data, curves);
