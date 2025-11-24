@@ -6,7 +6,7 @@ function load_covers_and_ws_data_6_11()
     // verifying [Guo-Yang, Table A.2, p. 36]
     // D = 6, N = 11
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-19*s^8-166*s^7-439*s^6-166*s^5+612*s^4+166*s^3-439*s^2+166*s-19, DiagonalMatrix([1, 3, 1])>;
+    cover_data[{1}] := <-19*s^8-166*s^7-439*s^6-166*s^5+612*s^4+166*s^3-439*s^2+166*s-19, DiagonalMatrix([-1, 3, 1])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();

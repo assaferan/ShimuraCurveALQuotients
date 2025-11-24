@@ -7,8 +7,8 @@ function load_covers_and_ws_data_15_1()
     // D = 15
     cover_data := AssociativeArray();
     cover_data[{1}] := <-1/3*(s^2+243)*(s^2+3), DiagonalMatrix([9, 4*27, 1])>;
-    cover_data[{1,3}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-243, 4*27, 1])>;
-    cover_data[{1,15}] := <s, DiagonalMatrix([-3, 1, 1]) >;
+    cover_data[{1,3}] := <-1/3*(s+243)*(s+3), DiagonalMatrix([-81/2, 4*27, 1])>;
+    cover_data[{1,15}] := <s, DiagonalMatrix([-1/2, 1, 1]) >;
 
     ws_data := AssociativeArray();
 
