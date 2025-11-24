@@ -326,7 +326,9 @@ end intrinsic;
 intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false, n0 := 0) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
-    L, Ldual := ShimuraCurveLattice(D,N);
+    Ldata := ShimuraCurveLattice(D,N);
+    L := Ldata`L;
+    Ldual := Ldata`Ldual;
     disc := #(Ldual/L);
     rk := -1;
     dim := 0;
@@ -512,28 +514,6 @@ function linear_comb_eta_quotients_action(alphas, rs, ds, g)
     return ret_eta;
 end function;
 
-intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
-{return the lattice correpsonding to the Eichler order of level N in the Quaternion algebra of discriminant D.}
-    B := QuaternionAlgebra(D);
-    O_max := MaximalOrder(B);
-    O := Order(O_max,N);
-    basis_O := Basis(O);
-    L_space := Kernel(Transpose(Matrix(Integers(),[[Trace(x) : x in basis_O]])));
-    basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
-    BM_L := Matrix([Eltseq(b) : b in basis_L]);
-    Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : y in basis_L] : x in basis_L]);
-    BM_Ldual := Q^(-1)*BM_L;
-    // L := LatticeWithGram(Q : CheckPositive := false);
-    // return L;
-    denom := Denominator(BM_Ldual);
-    // We are modifying it to be always with respect to the basis of L.
-    // Ldual := RSpaceWithBasis(ChangeRing(denom*BM_Ldual,Integers()));
-    Ldual := RSpaceWithBasis(ChangeRing(denom*Q^(-1), Integers()));
-    // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
-    L := RSpaceWithBasis(ScalarMatrix(3,denom));
-    disc_grp, to_disc := Ldual / L;
-    return L, Ldual, disc_grp, to_disc, Q^(-1), Q, O, basis_L;
-end intrinsic;
 /*
 // assuming v_i is the coefficient of eta_i in Ldual / L
 function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
@@ -1266,10 +1246,13 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     return scale;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
+    // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
 
     scale := ScaleForSchofer(d,D,N);
 
@@ -1289,10 +1272,15 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
-    _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
-    
+    // _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
+    disc_grp := Ldata`disc_grp;
+    to_disc := Ldata`to_disc;
+
     scale := ScaleForSchofer(d,D,N);
     if Type(Lambda) eq BoolElt then 
         lambda := ElementOfNorm(Q, -d,  O, basis_L);
@@ -1318,12 +1306,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt : Lambda := false) -> LogSm
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> LogSm
 {Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    return SchoferFormula([eta],d,D,N : Lambda := Lambda)[1];
+    return SchoferFormula([eta], d, D, N, Ldata : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot : Lambda := false) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1337,7 +1325,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N : Lambda := Lambda);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
     end for;
@@ -1459,7 +1447,6 @@ along with two different hauptmoduls.}
     found_all := false;
     
     while (not found_all) do
-        vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", all_ms[m_idx];
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\tWorking on infinity = %o\n", infty;
             non_infty := [pt : pt in pts | pt ne infty];
@@ -1511,6 +1498,7 @@ along with two different hauptmoduls.}
                         end if;
                         assert m_idx le #all_ms;
                         m_choice := all_ms[m_idx];
+                        vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", m_choice;
                         pole_order := -D0*m_choice;
                     
                         if (max_pole_order_0 lt pole_order) then
@@ -1753,12 +1741,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     assert #Include eq 0;
 
     table := [[] : f in all_fs];
-    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
 
     lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
@@ -1766,7 +1758,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     for pt in pt_list_quad do
         d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar : Lambda := lambdas[-d]);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;

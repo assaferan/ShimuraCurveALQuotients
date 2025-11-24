@@ -9,6 +9,7 @@ workingcode.m
 automorphisms.m
 LogSum.m
 ModularNonALInvolutions.m
+QuaternionLatticeData.m
 RationalWithFactorization.m
 TraceFormula.m
 cmtables.m
