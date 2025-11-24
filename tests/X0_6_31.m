@@ -14,7 +14,7 @@ function load_covers_and_ws_data_6_31()
     ws_data[{1}][3] := DiagonalMatrix([-1, 1, 1]);
     ws_data[{1}][186] := DiagonalMatrix([1, -1, 1]);
 
-    return cover_data;
+    return cover_data, ws_data;
 end function;
 
 procedure test_6_31()
