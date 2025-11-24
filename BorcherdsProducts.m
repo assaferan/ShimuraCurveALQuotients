@@ -1435,6 +1435,7 @@ along with two different hauptmoduls.}
     rams := RamficationPointsOfCovers(Xstar, curves);
     D0,M,g := get_D0_M_g(Xstar`D,Xstar`N);
     
+    // !!! For D = 35, this takes about 13 minutes on lava....
     E, n, n0, t, eta_quotients := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
     k := -Valuation(qExpansionAtoo(t,1));
    
@@ -1444,10 +1445,6 @@ along with two different hauptmoduls.}
     // we do this twice -- we should remember this
     pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
     pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
-    
-    // we do this twice -- we should remember this
-    found := false;
-    infty_idx := 1;
 
     max_pole_order_oo := 0;
     ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
@@ -1459,141 +1456,163 @@ along with two different hauptmoduls.}
     ech_etas_all_0 := [];
     T_all_0 := MatrixAlgebra(Rationals(),0)!0; // zero matrix
 
-    while (not found) do
-        infty := pts[infty_idx];
-        non_infty := [pt : pt in pts | pt ne infty];
-        for other_pts in CartesianPower(non_infty,2) do
-            if other_pts[1] eq other_pts[2] then continue; end if;
-            rams[-1] := [other_pts[1]];
-            rams[-2] := [other_pts[2]];
-            
-            etas := AssociativeArray();
-            
-            found := true;
-            for i in Keys(rams) do
-                ram := rams[i];
-                // adding the part at infinity
-                if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
-                    assert ram[j] eq infty;
-                    Remove(~ram, j);
-                end if;
-                deg := &+[pt[3] : pt in ram];
-                div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
-                Append(~ram, infty);
+    all_ms := [];
+    m_idx := 1;
 
-                vprintf ShimuraQuotients, 2 : "\tworking on ramification divisor %o\n", [<pt[1], div_coeffs[j]> : j->pt in ram];
-
-                ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
-                min_m := Minimum(ms);
-                min_m := Minimum(min_m, -(n0 + k - 1));
+    found_all := false;
+    
+    while (not found_all) do
+        vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", all_ms[m_idx];
+        for infty in pts do
+            vprintf ShimuraQuotients, 2 : "\tWorking on infinity = %o\n", infty;
+            non_infty := [pt : pt in pts | pt ne infty];
+            for other_pts in CartesianPower(non_infty,2) do
+                vprintf ShimuraQuotients, 2 : "\tWorking on other points = %o\n", other_pts;
+                if other_pts[1] eq other_pts[2] then continue; end if;
+                rams[-1] := [other_pts[1]];
+                rams[-2] := [other_pts[2]];
                 
-                if (max_pole_order_oo lt -min_m) then
-                    max_pole_order_oo := -min_m;
-                    vprintf ShimuraQuotients, 2 : "\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
-                    ech_basis_all_oo, ech_etas_all_oo, T_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
-                    vprintf ShimuraQuotients, 2 : "Done";
-                end if;
+                etas := AssociativeArray();
                 
-                first_idx := min_m+max_pole_order_oo+1;
-                ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
-                ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
-                assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
-                T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
+                found_all := true;
+                for i in Keys(rams) do
+                    ram := rams[i];
+                    // adding the part at infinity
+                    if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
+                        assert ram[j] eq infty;
+                        Remove(~ram, j);
+                    end if;
+                    deg := &+[pt[3] : pt in ram];
+                    div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
+                    Append(~ram, infty);
 
-                if IsOdd(Xstar`D*Xstar`N) then
-                    // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
-                    pole_order := -D0*Minimum(ms);
-                   
-                    if (max_pole_order_0 lt pole_order) then
-                        max_pole_order_0 := pole_order;
-                        t0 := SAction(t : Admissible := false);
-                        vprintf ShimuraQuotients, 2 : "\n\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
-                        ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
+                    vprintf ShimuraQuotients, 2 : "\tworking on ramification divisor %o\n", [<pt[1], div_coeffs[j]> : j->pt in ram];
+
+                    ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
+                    min_m := Minimum(ms);
+                    min_m := Minimum(min_m, -(n0 + k - 1));
+                    
+                    if (max_pole_order_oo lt -min_m) then
+                        max_pole_order_oo := -min_m;
+                        vprintf ShimuraQuotients, 2 : "\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
+                        ech_basis_all_oo, ech_etas_all_oo, T_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
                         vprintf ShimuraQuotients, 2 : "Done";
                     end if;
+                    
+                    first_idx := min_m+max_pole_order_oo+1;
+                    ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
+                    ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
+                    assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
+                    T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
 
-                    first_idx := -pole_order+max_pole_order_0+1;
-                    ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx, first_idx, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
-                    ech_etas_0 := ech_etas_all_0[first_idx..#ech_etas_all_0];
-                    assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
-                    T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
+                    if IsOdd(Xstar`D*Xstar`N) then
+                        // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
+                        // print "\n\tms =", ms;
+                         // updating all_ms
+                        if (m_idx eq 1) then
+                            all_ms := Reverse(Sort([m : m in Set(ms cat all_ms)]));
+                        end if;
+                        assert m_idx le #all_ms;
+                        m_choice := all_ms[m_idx];
+                        pole_order := -D0*m_choice;
+                    
+                        if (max_pole_order_0 lt pole_order) then
+                            max_pole_order_0 := pole_order;
+                            t0 := SAction(t : Admissible := false);
+                            vprintf ShimuraQuotients, 2 : "\n\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
+                            ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
+                            vprintf ShimuraQuotients, 2 : "Done";
+                        end if;
 
-                    vprintf ShimuraQuotients, 2 : "\n\tBuilding q-expansions at oo...";
-                    ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
-                    vprintf ShimuraQuotients, 2 : "Done";
+                        first_idx := -pole_order+max_pole_order_0+1;
+                        ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx, first_idx, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
+                        ech_etas_0 := ech_etas_all_0[first_idx..#ech_etas_all_0];
+                        assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
+                        T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
 
-                    Rq<q> := Universe(ech_fs_oo);
-                    R := BaseRing(Rq);
-               
-                    ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+                        vprintf ShimuraQuotients, 2 : "\n\tBuilding q-expansions at oo...";
+                        ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
+                        vprintf ShimuraQuotients, 2 : "Done";
+
+                        Rq<q> := Universe(ech_fs_oo);
+                        R := BaseRing(Rq);
+                
+                        ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+                        
+                        non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
+                        div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
+                        // good_forms_0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
+                        T := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
+                        good_forms_0 := T*ech_basis_0;
+                        assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
+                        // T := Solution(ech_basis_0, good_forms_0);
+                        // assert T*ech_basis_0 eq good_forms_0;
+                        good_forms_oo := ChangeRing(T,Rationals())*ech_basis_oo;
+                        // Passingt o q-expansions with q^(1/4) instead of q^(1/4D0)
+                        good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
+                        // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
+                        mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
+                        mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+                        coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
+                        coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
+
+                        ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0]] : i in [1..Nrows(T)]];
+
+                        // collecting contributions from 0 and oo
+                        relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
+
+                        ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
+                        for i->d in relevant_ds_0 do
+                            ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+                        end for;
+                        
+                        ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
+                        for i->d in relevant_ds_oo do
+                            ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+                        end for;
+                        
+                        mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
+                    end if;
+
+                    mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
+                    coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
+
+                    if IsOdd(Xstar`D*Xstar`N) then
+                        ds_0_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_0_oo, #relevant_ds + 1);
+                        for i->d in relevant_ds_0_oo do
+                            ds_0_oo_to_ds[i, Index(relevant_ds, d)] := 1;
+                        end for;
+                        coeffs_0_oo := mat_0_oo*ds_0_oo_to_ds;
+                        coeffs_trunc := VerticalJoin(ChangeRing(coeffs_trunc,Rationals()), coeffs_0_oo);
+                    end if;
+
+                    V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
+                    target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
+                    
+                    found_v := target_v in Image(coeffs_trunc);
                    
-                    non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
-                    div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
-                    good_forms_0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
-                    assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
-                    T := Solution(ech_basis_0, good_forms_0);
-                    assert T*ech_basis_0 eq good_forms_0;
-                    good_forms_oo := ChangeRing(T,Rationals())*ech_basis_oo;
-                    // Passingt o q-expansions with q^(1/4) instead of q^(1/4D0)
-                    good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
-                    // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
-                    mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(Minimum(ms), Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
-                    mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
-                    coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
-                    coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
-
-                    ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0]] : i in [1..Nrows(T)]];
-
-                    // collecting contributions from 0 and oo
-                    relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
-
-                    ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
-                    for i->d in relevant_ds_0 do
-                        ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                    end for;
+                    if not found_v then found_all := false; break; end if;
+                    sol := Solution(coeffs_trunc, target_v);
                     
-                    ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
-                    for i->d in relevant_ds_oo do
-                        ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                    end for;
+                    etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
+                    if IsOdd(Xstar`D*Xstar`N) then
+                        etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
+                    end if;
+                    // check divisor
+                    div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                     
-                    mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
-                end if;
-
-                mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
-                coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
-
-                if IsOdd(Xstar`D*Xstar`N) then
-                    ds_0_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_0_oo, #relevant_ds + 1);
-                    for i->d in relevant_ds_0_oo do
-                        ds_0_oo_to_ds[i, Index(relevant_ds, d)] := 1;
-                    end for;
-                    coeffs_0_oo := mat_0_oo*ds_0_oo_to_ds;
-                    coeffs_trunc := VerticalJoin(ChangeRing(coeffs_trunc,Rationals()), coeffs_0_oo);
-                end if;
-
-                V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
-                target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
-                
-                if target_v notin Image(coeffs_trunc) then
-                    found := false;
-                    break;
-                end if;
-                sol := Solution(coeffs_trunc, target_v);
-                
-                etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
-                if IsOdd(Xstar`D*Xstar`N) then
-                    etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
-                end if;
-                // check divisor
-                div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
-                
-                assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
+                    assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
+                end for;
+                if found_all then break; end if;
             end for;
-            if found then break; end if;
+            if found_all then break; end if;
         end for;
-        infty_idx +:= 1;
+        m_idx +:= 1;
+        if (m_idx gt #all_ms) then break; end if;
     end while;  
+    if not found_all then
+        error "Failed to find all Borcherds forms";
+    end if;
     return etas;
 end intrinsic;
 
@@ -2045,38 +2064,6 @@ function equation_above_P1(covered_gplus1, covered_P1)
 end function;
 
 function ws_above_P1(H, label, P1_label, gplus1_label, curves, common_base, crv_ws)
-/*
-    hyp1 := HyperellipticInvolution(C);
-    //now update ws
-    id_y := [m : m in curves[gplus1_label]`W diff curves[label]`W];
-    // id_y are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
-    // act trivially on the doubly covered curve covered_gplus1. 
-    // Therefore they induce the involution x -> -x, y-> y on the curve.
-    ws_label := AssociativeArray();
-    for m in curves[label]`W do
-        ws_label[m] := IdentityMap(C);
-    end for;
-    id_x := [m : m in curves[P1_label]`W diff curves[label]`W];
-    // id_x are the Atkin-Lehner involutions that do not act trivially on the curve curves[label] and
-    // act trivially on the covered P1. Therefore they induce the hyperelliptic involution on the curve.
-    for m in id_x do
-        ws_label[m] := hyp1;
-    end for;
-    _<x,y,z> := AmbientSpace(C);
-    // If we have a gcd, our equation is (y/x)^2 = f_g(s(x)), so y/x maps to -y/x
-    hyp2 := gcd_poly eq 1 select map<C->C | [-x, y, z]> else map<C->C | [-x, -y, z]>;
-    for m in id_y do
-        ws_label[m] := hyp2;
-    end for;
-    N := curves[label]`N;
-    D := curves[label]`D;
-    for m1 in id_x do
-        for m2 in id_y do
-            other_w := AtkinLehnerMul(m1, m2, N*D);
-            ws_label[other_w] := hyp1*hyp2;
-        end for;
-    end for;
-    */
     ws_label := AssociativeArray();
     C := Domain(crv_ws[P1_label][common_base][1]);
     Cpoly := HyperellipticPolynomials(C);
@@ -2139,43 +2126,6 @@ end function;
 
 
 function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, curves, common_base, crv_ws)
-/*
-    P2<x,y,z> := Ambient(C);
-    ws_label := AssociativeArray();
-    for m in curves[label]`W do
-        ws_label[m] := IdentityMap(H);
-    end for;
-    hyp1 := HyperellipticInvolution(H);
-    id_x := [m : m in curves[conic_label]`W diff curves[label]`W];
-    id_y := [m : m in curves[gplus1_label]`W diff curves[label]`W];
-    for m in id_x do
-        ws_label[m] := hyp1;
-    end for;
-    hyp_conic := map<C->C | [x,-y,z]>;
-    inv := Inverse(C_to_P1)*hyp_conic*C_to_P1;
-    //this is a map from P^1 -> P^1
-    _<s,t> := Parent(C_to_P1(x));
-    _ := Inverse(inv);
-    _<x,y,z> := AmbientSpace(H);
-    im_s := Evaluate(inv(s)/inv(t),[x,z]); // image of involution on P1 on x/z
-    y_factor := s_denom^((Degree(fpoly) + 1) div 2) / root_gcd;
-    denom_im_s := Evaluate(y_factor, im_s);
-    denom_s := Evaluate(y_factor, Evaluate(s/t, [x,z]));
-    // denom_denom := Evaluate(y_factor, x/z);
-    hyp2 := map<H->H | [ im_s*z, y*denom_im_s/denom_s, z] >;
-    _, hyp2 := IsAutomorphism(hyp2);
-    for m in id_y do
-        ws_label[m] := hyp2;
-    end for;
-    N := curves[label]`N;
-    D := curves[label]`D;
-    for m1 in id_x do
-        for m2 in id_y do
-            other_w := AtkinLehnerMul(m1, m2, N*D);
-            ws_label[other_w] := hyp1*hyp2;
-        end for;
-    end for;
-    */
     ws_label := AssociativeArray();
     deg_H := Degree(H);
     for m in Keys(crv_ws[conic_label][common_base]) do
@@ -2299,8 +2249,10 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
         for label in Keys(curves_above_conics) do
             crv_eqns_label, crv_ws_label := process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_ws);
-            crv_eqns[label] := crv_eqns_label;
-            crv_ws[label] := crv_ws_label;
+            for base in Keys(crv_eqns_label) do
+                crv_eqns[label][base] := crv_eqns_label[base];
+                crv_ws[label][base] := crv_ws_label[base];
+            end for;
         end for;
 
         curves_above_P1s, curves_above_conics := curves_above_P1_and_conics(crv_eqns, new_keys, curves);
