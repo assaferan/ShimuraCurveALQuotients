@@ -18,7 +18,7 @@ end function;
 procedure test_15_1()
     cover_data, ws_data := load_covers_and_ws_data_15_1();
     curves := GetHyperellipticCandidates();
-    // Not yet working
+    
     test_AllEquationsAboveCoversSingleCurve(15, 1, cover_data, ws_data, curves);
     return;
 end procedure;
