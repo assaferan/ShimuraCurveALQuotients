@@ -2472,7 +2472,8 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
         d_idx := qidx+#ds[1];
         ds[2][qidx] := dnew;
     end if;
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
         table[i][d_idx] := norm_val[i]-deg*row_scales[i];
