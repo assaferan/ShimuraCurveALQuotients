@@ -1188,7 +1188,7 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
-        vprintf ShimuraQuotients, 2 : " is %o\n", log_coeffs_m;
+        vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs_0 do
             log_coeffs[i] +:= Coefficient(f,-mM)*log_coeffs_m;
         end for;
@@ -1443,11 +1443,15 @@ along with two different hauptmoduls.}
 
     all_ms := [];
     m_idx := 1;
-    m_choice := 0;
+    all_ms := &cat[[(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in pts] : pt in pts];
+    all_ms := Reverse(Sort([m : m in Set(all_ms)]));
 
     found_all := false;
     
     while (not found_all) do
+        if IsOdd(Xstar`D*Xstar`N) then
+            vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
+        end if;
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
             non_infty := [pt : pt in pts | pt ne infty];
@@ -1491,16 +1495,6 @@ along with two different hauptmoduls.}
                     T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
 
                     if IsOdd(Xstar`D*Xstar`N) then
-                        // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
-                        // print "\n\tms =", ms;
-                         // updating all_ms
-                        if (m_idx eq 1) then
-                            all_ms := Reverse(Sort([m : m in Set(ms cat all_ms)]));
-                            // making sure that when we encounter smaller ms, we still use the same m_choice
-                            if m_choice in all_ms then 
-                                m_idx := Index(all_ms, m_choice);
-                            end if;
-                        end if;
                         assert m_idx le #all_ms;
                         m_choice := all_ms[m_idx];
                         vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
