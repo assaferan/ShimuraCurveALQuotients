@@ -1914,7 +1914,8 @@ procedure add_new_column(schofer_tab, dnew, deg)
     row_scales := schofer_tab`RowScales;
     curves := schofer_tab`Curves;
     all_fs := [fs[k] : k in keys_fs];
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         Append(~table[i], norm_val[i]/row_scales[i]^deg);
     end for;
