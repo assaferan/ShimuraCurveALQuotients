@@ -1,4 +1,4 @@
-a:=-7; b:=5; Eichler:=1;
+a:=-13; b:=6; Eichler:=1;
 NMax:=70;
 
 A<i,j,k>:=QuaternionAlgebra<Rationals()|a,b>;
