@@ -2275,13 +2275,16 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         g := curves[k]`g;
         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
         for other_curve in curves[k]`Covers do
+            found_gplus1 := false;
             if exists(base){b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
                 if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
                     gplus1key := other_curve; //found the gplus1
+                    found_gplus1 := true;
                     break;
                 end if;
             end if;
         end for;
+        if not found_gplus1 then continue; end if;
 
         //combine equations to get the equation for the curve
         covered_gplus1 := all_eqns[gplus1key][base];
@@ -2295,7 +2298,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         eqn2 := Homogenization(eqn2,z);
         eqn1 := Homogenization(eqn1,z);
         C := Curve(P3, [y^2 - eqn2, x^2 - eqn1]);
-        all_eqns[k][conic_key] := {C};
+        all_eqns[k][conic_key] := C;
 
         all_ws[k][conic_key] := AssociativeArray(); 
         //now find the ws
