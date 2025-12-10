@@ -4,8 +4,9 @@ procedure test_Kappa0()
     Q := AssociativeArray();
     O := AssociativeArray();
     L := AssociativeArray();
-    _,_,_,_,_, Q[6],O[6],L[6]  := ShimuraCurveLattice(6,1);
-    _,_,_,_,_, Q[10],O[10],L[10] := ShimuraCurveLattice(10,1);
+    SCL := AssociativeArray();
+    SCL[6] := ShimuraCurveLattice(6,1);
+    SCL[10] := ShimuraCurveLattice(10,1);
     
     kappa0_data := AssociativeArray();
     // verifying [Yang, Example 21, p. 24-25] and [Err, p. 850]
@@ -24,7 +25,7 @@ procedure test_Kappa0()
     for D in Keys(kappa0_data) do
         for datum in kappa0_data[D] do
             m,d,log_coeffs := Explode(datum);
-            assert Kappa0(m,d,Q[D],ElementOfNorm(Q[D],-d,O[D],L[D])) eq LogSum(log_coeffs);
+            assert Kappa0(m,d,SCL[D]`Q,ElementOfNorm(SCL[D]`Q,-d,SCL[D]`O,SCL[D]`basis_L)) eq LogSum(log_coeffs);
         end for;
     end for;
 

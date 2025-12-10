@@ -1,8 +1,9 @@
 
 procedure test_Schofer(f, vals, D, N)
+    L := ShimuraCurveLattice(D,N);
     for datum in vals do
         d, val := Explode(datum);
-        assert SchoferFormula(f, d, D, N) eq LogSum(val);
+        assert SchoferFormula(f, d, D, N, L) eq LogSum(val);
     end for;
 end procedure;
 

@@ -4,7 +4,7 @@
 // Committed to Geometrically Hyperelliptic curves
 
 
-declare verbose ShimuraQuotients, 3;
+declare verbose ShimuraQuotients, 5;
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
@@ -1495,7 +1495,7 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
     // return pts[1..3];
-    vprintf ShimuraQuotients, 2: "Done!\n";
+    vprintf ShimuraQuotients, 2: "Done!";
     return pts;
 end intrinsic;
 

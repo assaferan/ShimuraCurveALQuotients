@@ -106,12 +106,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
 end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
-    vprintf ShimuraQuotients, 2 : "\n\tMaking polymake file for (%o, %o, %o)...", M, n, m;
+    vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
-        vprintf ShimuraQuotients, 2 : "File found...";
+        vprintf ShimuraQuotients, 3 : "File found.";
         return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
     end if;
-    vprintf ShimuraQuotients, 2 : "File not found, computing...";
+    vprintf ShimuraQuotients, 3 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
@@ -123,7 +123,6 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
 
     Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
-    vprintf ShimuraQuotients, 2 : "\n";
     return rs;
 end function;
 
@@ -211,7 +210,7 @@ end function;
 
 intrinsic FindAsShortEtaQuotientLP(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
 {Uses LP to try to find a short expression of f as linear combination of eta quotients.}
-    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    vprintf ShimuraQuotients, 1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
     eta, etas, mat, v := FindAsEtaQuotient(f, N, k);
     sol := Solution(mat, v);
     return find_short_expression_using_LP(etas, mat, v : R := Integers(), D := Denominator(sol));
@@ -223,9 +222,9 @@ intrinsic FindAsEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
 {Returns f as an eta quotient.}
     found := false;
     M := N;
-    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    vprintf ShimuraQuotients, 1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
     while not found do
-        vprintf ShimuraQuotients,1 : "%o ", M;
+        vprintf ShimuraQuotients, 1 : "%o ", M;
         etas := HolomorphicEtaQuotients(M, k);
         M *:= 2;
         if IsEmpty(etas) then continue; end if;
@@ -244,7 +243,7 @@ end intrinsic;
 
 intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> EtaQuot
 {Returns f as an eta quotient.}
-    vprintf ShimuraQuotients,1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
+    vprintf ShimuraQuotients, 1 : "Trying to find form as a linear combination of holomorphic eta quotients of weight %o and level ", k;
     eta, etas, mat_Q, v_Q := FindAsEtaQuotient(f, N, k);
     
     v := ChangeRing(v_Q, Integers());
@@ -253,7 +252,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
     sol := Solution(mat_Q, v_Q);
     length := #[x : x in Eltseq(sol) | x ne 0];
     height := coeff_height(sol);
-    vprintf ShimuraQuotients,1 : "\nFound a solution with length %o and height %o\n", length, height;
+    vprintf ShimuraQuotients, 1 : "\nFound a solution with length %o and height %o\n", length, height;
 
     // Try to find best integral solution first
     if v in RowSpace(mat) then
@@ -264,7 +263,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
         if (Dimension(ker) gt 0) and (Dimension(ker) lt 200) then
             vprintf ShimuraQuotients, 1 : "looking for closest vector to lattice of dimension %o...", Dimension(ker);
             sol_Z := sol_Z - ClosestVector(Lattice(ker),sol_Z);
-            vprintf ShimuraQuotients,1 : "Done!\n";
+            vprintf ShimuraQuotients, 1 : "Done!\n";
         end if;
        
         length_Z := #[x : x in Eltseq(sol_Z) | x ne 0];
@@ -273,7 +272,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
             sol := sol_Z;
             length := length_Z;
             height := height_Z;
-            vprintf ShimuraQuotients,1 : "Improved to length %o and height %o\n", length, height;
+            vprintf ShimuraQuotients, 1 : "Improved to length %o and height %o\n", length, height;
         end if;
     end if;
 
@@ -298,7 +297,7 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
             sol := sol_new;
             length := length_new;
             height := height_new;
-            vprintf ShimuraQuotients,1 : "Improved to length %o and height %o\n", length, height;
+            vprintf ShimuraQuotients, 1 : "Improved to length %o and height %o\n", length, height;
             count_stable := 0;
         end if;
     end while;
@@ -327,7 +326,9 @@ end intrinsic;
 intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false, n0 := 0) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
-    L, Ldual := ShimuraCurveLattice(D,N);
+    Ldata := ShimuraCurveLattice(D,N);
+    L := Ldata`L;
+    Ldual := Ldata`Ldual;
     disc := #(Ldual/L);
     rk := -1;
     dim := 0;
@@ -349,7 +350,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
         
-        vprintf ShimuraQuotients, 3: "\n\t\t prec = %o, n = %o, k = %o, rk = %o, dim=%o\n", Prec, n, k, rk, dim; 
+        vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim; 
         
         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
         
@@ -399,8 +400,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             end if;
         end if;
     end while;
-    
-    vprintf ShimuraQuotients, 2 : "Done!\n";
+    vprintf ShimuraQuotients, 3 : "\n";
+    vprintf ShimuraQuotients, 2 : "Done!";
     // sanity checks
     assert rk eq dim;
     
@@ -515,28 +516,6 @@ function linear_comb_eta_quotients_action(alphas, rs, ds, g)
     return ret_eta;
 end function;
 
-intrinsic ShimuraCurveLattice(D::RngIntElt,N::RngIntElt) -> .
-{return the lattice correpsonding to the Eichler order of level N in the Quaternion algebra of discriminant D.}
-    B := QuaternionAlgebra(D);
-    O_max := MaximalOrder(B);
-    O := Order(O_max,N);
-    basis_O := Basis(O);
-    L_space := Kernel(Transpose(Matrix(Integers(),[[Trace(x) : x in basis_O]])));
-    basis_L := [&+[b[i]*basis_O[i] : i in [1..4]] : b in Basis(L_space)];
-    BM_L := Matrix([Eltseq(b) : b in basis_L]);
-    Q := Matrix([[Norm(x+y)-Norm(x)-Norm(y) : y in basis_L] : x in basis_L]);
-    BM_Ldual := Q^(-1)*BM_L;
-    // L := LatticeWithGram(Q : CheckPositive := false);
-    // return L;
-    denom := Denominator(BM_Ldual);
-    // We are modifying it to be always with respect to the basis of L.
-    // Ldual := RSpaceWithBasis(ChangeRing(denom*BM_Ldual,Integers()));
-    Ldual := RSpaceWithBasis(ChangeRing(denom*Q^(-1), Integers()));
-    // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
-    L := RSpaceWithBasis(ScalarMatrix(3,denom));
-    disc_grp, to_disc := Ldual / L;
-    return L, Ldual, disc_grp, to_disc, Q^(-1), Q, O, basis_L;
-end intrinsic;
 /*
 // assuming v_i is the coefficient of eta_i in Ldual / L
 function WeilRepresentation(gamma, v, Ldual, discL, Qdisc, to_disc)
@@ -699,7 +678,7 @@ Warning - does it in a silly way via enumeration. }
     bd := max_d div 2;
     lambdas := AssociativeArray();
     found_lambdas := false;
-    vprintf ShimuraQuotients, 2 : "Finding lambdas for norms in %o...", ds;
+    vprintf ShimuraQuotients, 2 : "\n\tFinding lambdas for norms in %o...", ds;
     while not found_lambdas do
         found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd, lambda_array := lambdas);
         if not found_lambdas then
@@ -707,7 +686,7 @@ Warning - does it in a silly way via enumeration. }
             vprintf ShimuraQuotients, 2 : "Increasing lambda bound to %o\n", bd;
         end if;
     end while;
-    vprintf ShimuraQuotients, 2 : "Found lambdas.\n";
+    vprintf ShimuraQuotients, 2 : "Found lambdas.";
     assert found_lambdas;
     return lambdas;
 end intrinsic;
@@ -1034,7 +1013,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     Sm_mu := {p : p in PrimeDivisors(Delta)} join {p : p in PrimeDivisors(Numerator(m))};
     Sm_mu := [p : p in Sm_mu];
     
-    vprintf ShimuraQuotients, 3: "\t Sm_mu = %o\n", Sm_mu;
+    vprintf ShimuraQuotients, 5: "\t\t\tSm_mu = %o\n", Sm_mu;
 
     Wpolys, wpolyseval, scales_sqr := get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := false);
    
@@ -1055,7 +1034,7 @@ function kappaminus(mu, m, Lminus, Q, d)
     assert is_sqr;
     ret := ret_sign*AbsoluteValue(ret);
 
-    vprintf ShimuraQuotients, 3 : "\t adding %o log %o\n", -ret, p_prime;
+    vprintf ShimuraQuotients, 5 : "\t\t\tadding %o log %o\n", -ret, p_prime;
     return -ret, p_prime; // to get x logy instead of -xlogy
     // return p_prime^(-ret);
 end function;
@@ -1088,7 +1067,7 @@ end intrinsic;
 
 intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa(gamma, m) in Schofers formula.}
-    vprintf ShimuraQuotients, 2:"\tKappa_%o of %o", gamma, m;
+    vprintf ShimuraQuotients, 4: "\n\t\t\tKappa_%o of %o", gamma, m;
     Qrat := ChangeRing(Q, Rationals());
     Q := ChangeRing(Q, Integers());
     
@@ -1126,9 +1105,9 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             x := (c_gamma_plus + c_mu_plus + k * c_Lplus^(-1)) * lambda_rat;
             assert (m - (x*Qrat,x)/2) ge 0;
             // if (m - (x*Qrat,x)/2) lt 0 then printf "skipping...\n"; continue; end if;
-            vprintf ShimuraQuotients, 3: "\n\t mu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+            vprintf ShimuraQuotients, 5: "\n\t\t\tmu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
-            vprintf ShimuraQuotients, 3: "\t Q(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
+            vprintf ShimuraQuotients, 5: "\t\t\tQ(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
             if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
                 if (gamma ne 0) then
                     Yang_tt := true;
@@ -1172,7 +1151,8 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
         log_coeffs_m := Kappa0(m,d,Q,lambda);
-        vprintf ShimuraQuotients, 2 : " is %o\n", log_coeffs_m;
+        vprintf ShimuraQuotients, 5 : "\t\t";
+        vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
@@ -1211,7 +1191,7 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
-        vprintf ShimuraQuotients, 2 : " is %o\n", log_coeffs_m;
+        vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs_0 do
             log_coeffs[i] +:= Coefficient(f,-mM)*log_coeffs_m;
         end for;
@@ -1269,14 +1249,21 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     return scale;
 end intrinsic;
 
-intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
+    // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
 
     scale := ScaleForSchofer(d,D,N);
 
-    lambda := ElementOfNorm(Q,-d, O, basis_L);
+     if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q,-d, O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
 
     return SchoferFormula(f, d, Q, lambda, scale);
 end intrinsic;
@@ -1288,13 +1275,21 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
-    _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
-    
-    scale := ScaleForSchofer(d,D,N);
+    // _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
+    disc_grp := Ldata`disc_grp;
+    to_disc := Ldata`to_disc;
 
-    lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    scale := ScaleForSchofer(d,D,N);
+    if Type(Lambda) eq BoolElt then 
+        lambda := ElementOfNorm(Q, -d,  O, basis_L);
+    else
+        lambda := Lambda;
+    end if;
 
     fs := [qExpansionAtoo(eta,1) : eta in etas];
     fs_0 := [qExpansionAt0(eta,1) : eta in etas];
@@ -1314,12 +1309,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     return log_coeffs;
 end intrinsic;
 
-intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt) -> LogSm
+intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> LogSm
 {Return the log of the absolute value of Psi_F_f at the CM point with CM d.}
-    return SchoferFormula([eta],d,D,N)[1];
+    return SchoferFormula([eta], d, D, N, Ldata : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1333,16 +1328,9 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
-        /*
-        try 
-            vals[rest_idxs[i]] := RationalNumber(log_coeff);
-        catch e
-            require false:  "Increase the precision on the Borcherds forms";
-        end try;
-        */
     end for;
     return vals;
 end intrinsic;
@@ -1458,19 +1446,21 @@ along with two different hauptmoduls.}
 
     all_ms := [];
     m_idx := 1;
+    all_ms := &cat[[(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in pts] : pt in pts];
+    all_ms := Reverse(Sort([m : m in Set(all_ms)]));
 
     found_all := false;
     
     while (not found_all) do
-        if #all_ms ne 0 then
-            vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", all_ms[m_idx];
+        if IsOdd(Xstar`D*Xstar`N) then
+            vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
         end if;
         for infty in pts do
-            vprintf ShimuraQuotients, 2 : "\tWorking on infinity = %o\n", infty;
+            vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
             non_infty := [pt : pt in pts | pt ne infty];
             for other_pts in CartesianPower(non_infty,2) do
-                vprintf ShimuraQuotients, 2 : "\tWorking on other points = %o\n", other_pts;
                 if other_pts[1] eq other_pts[2] then continue; end if;
+                vprintf ShimuraQuotients, 3 : "\n\t\tTrying other points = %o...", other_pts;
                 rams[-1] := [other_pts[1]];
                 rams[-2] := [other_pts[2]];
                 
@@ -1488,7 +1478,7 @@ along with two different hauptmoduls.}
                     div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
                     Append(~ram, infty);
 
-                    vprintf ShimuraQuotients, 2 : "\tworking on ramification divisor %o\n", [<pt[1], div_coeffs[j]> : j->pt in ram];
+                    vprintf ShimuraQuotients, 4 : "\n\t\t\tWorking on ramification divisor %o...", [<pt[1], div_coeffs[j]> : j->pt in ram];
 
                     ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                     min_m := Minimum(ms);
@@ -1496,9 +1486,9 @@ along with two different hauptmoduls.}
                     
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;
-                        vprintf ShimuraQuotients, 2 : "\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
+                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
                         ech_basis_all_oo, ech_etas_all_oo, T_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
-                        vprintf ShimuraQuotients, 2 : "Done";
+                        vprintf ShimuraQuotients, 5 : "Done!";
                     end if;
                     
                     first_idx := min_m+max_pole_order_oo+1;
@@ -1508,22 +1498,17 @@ along with two different hauptmoduls.}
                     T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
 
                     if IsOdd(Xstar`D*Xstar`N) then
-                        // create a basis for M_{n0,-D_0*Minimum(ms)}^{!,!}(4D0)
-                        // print "\n\tms =", ms;
-                         // updating all_ms
-                        if (m_idx eq 1) then
-                            all_ms := Reverse(Sort([m : m in Set(ms cat all_ms)]));
-                        end if;
                         assert m_idx le #all_ms;
                         m_choice := all_ms[m_idx];
+                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
                         pole_order := -D0*m_choice;
                     
                         if (max_pole_order_0 lt pole_order) then
                             max_pole_order_0 := pole_order;
                             t0 := SAction(t : Admissible := false);
-                            vprintf ShimuraQuotients, 2 : "\n\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
+                            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
                             ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
-                            vprintf ShimuraQuotients, 2 : "Done";
+                            vprintf ShimuraQuotients, 5 : "Done!";
                         end if;
 
                         first_idx := -pole_order+max_pole_order_0+1;
@@ -1532,9 +1517,9 @@ along with two different hauptmoduls.}
                         assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
                         T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
 
-                        vprintf ShimuraQuotients, 2 : "\n\tBuilding q-expansions at oo...";
+                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
                         ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
-                        vprintf ShimuraQuotients, 2 : "Done";
+                        vprintf ShimuraQuotients, 5 : "Done!";
 
                         Rq<q> := Universe(ech_fs_oo);
                         R := BaseRing(Rq);
@@ -1612,6 +1597,7 @@ along with two different hauptmoduls.}
         m_idx +:= 1;
         if (m_idx gt #all_ms) then break; end if;
     end while;  
+    vprintf ShimuraQuotients, 2 : "\n";
     if not found_all then
         error "Failed to find all Borcherds forms";
     end if;
@@ -1672,19 +1658,19 @@ end intrinsic;
 
 intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
 {Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f.}
-    foo := qExpansionAtoo(f,1);
-    f0_D0 := qExpansionAt0(f,1);
+    foo := qExpansionAtoo(f,0);
+    f0_D0 := qExpansionAt0(f,0);
     D0 := Xstar`D div 2^Valuation(Xstar`D,2);
     v := Valuation(f0_D0) div D0;
-    coeffs_f0_D0 := [Coefficient(f0_D0,m*D0) : m in [v..0]];
-    _<q> := f0_D0;
-    f0 := q^v*&+[coeffs_f0_D0[i]*q^(i-1) : i in [1..#coeffs_f0_D0]];
+    coeffs_f0_D0 := [Coefficient(f0_D0,m*D0) : m in [v..-1]];
+    R<q> := Parent(f0_D0);
+    f0 := q^v*&+[R | coeffs_f0_D0[i]*q^(i-1) : i in [1..#coeffs_f0_D0]];
 
-    vprintf ShimuraQuotients,2 : "\n\tComputing divisor of %o,", f;
-    vprintf ShimuraQuotients,2 : " qExpansion at 0 is %o...", f0;
+    vprintf ShimuraQuotients, 4 : "\n\t\t\tComputing divisor of %o,", f;
+    vprintf ShimuraQuotients, 4 : " qExpansion at 0 is %o...", f0;
 
     ret := DivisorOfBorcherdsForm(foo, f0, Xstar);
-    vprintf ShimuraQuotients,2 : "Done!\n";
+    vprintf ShimuraQuotients, 4 : "Done!";
     return ret;
 end intrinsic;
 
@@ -1758,12 +1744,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     assert #Include eq 0;
 
     table := [[] : f in all_fs];
-    _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    Q := Ldata`Q;
+    O := Ldata`O;
+    basis_L := Ldata`basis_L;
 
     lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
     for pt in pt_list_rat do
         d := pt[1];
-        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
@@ -1771,7 +1761,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     for pt in pt_list_quad do
         d := pt[1];
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
@@ -1921,7 +1911,8 @@ procedure add_new_column(schofer_tab, dnew, deg)
     row_scales := schofer_tab`RowScales;
     curves := schofer_tab`Curves;
     all_fs := [fs[k] : k in keys_fs];
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         Append(~table[i], norm_val[i]/row_scales[i]^deg);
     end for;
@@ -2149,7 +2140,7 @@ function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, 
 end function;
 
 function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
-    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a P1...", label;
+    vprintf ShimuraQuotients, 3 : "\n\t\tProcessing curve %o covering a P1...", label;
     g := curves[label]`g;
     crv_eqns_label := AssociativeArray();
     crv_ws_label := AssociativeArray();
@@ -2175,7 +2166,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
         covered_P1 := crv_eqns[P1_label][common_base];
         covered_gplus1 := crv_eqns[gplus1_label][common_base];
         H := equation_above_P1(covered_gplus1, covered_P1);
-        vprintf ShimuraQuotients,3 : "Found equation.";
+        vprintf ShimuraQuotients, 3 : "Found equation.";
         ws_H := ws_above_P1(H, label, P1_label, gplus1_label, curves, common_base, crv_ws);
         crv_eqns_label[P1_label] := H;
         crv_ws_label[P1_label] := ws_H;
@@ -2184,7 +2175,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
 end function;
 
 function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_ws)
-    vprintf ShimuraQuotients,3 : "\n\t\tProcessing curve %o covering a conic...", label;
+    vprintf ShimuraQuotients, 3 : "\n\t\tProcessing curve %o covering a conic...", label;
     g := curves[label]`g;
     crv_eqns_label := AssociativeArray();
     crv_ws_label := AssociativeArray();
@@ -2210,7 +2201,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
         covered_conic := crv_eqns[conic_label][common_base];
         covered_gplus1 := crv_eqns[gplus1_label][common_base];
         H, C_to_P1, yfactor := equation_above_conic(covered_gplus1, covered_conic);
-        vprintf ShimuraQuotients,3 : "Found equation.";
+        vprintf ShimuraQuotients, 3 : "Found equation.";
         ws_H := ws_above_conic(H, C_to_P1, yfactor, label, conic_label, gplus1_label, curves, common_base, crv_ws);
         crv_eqns_label[conic_label] := H;
         crv_ws_label[conic_label] := ws_H;
@@ -2242,7 +2233,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
     while not IsEmpty(new_keys) do
         vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above P1s: %o,", Keys(curves_above_P1s);
-        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above conics... %o", Keys(curves_above_conics);
+        vprintf ShimuraQuotients, 2 : "\n\tRemaining curves above conics: %o...", Keys(curves_above_conics);
         for label in Keys(curves_above_P1s) do
             crv_eqns_label, crv_ws_label := process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws);
             crv_eqns[label] := crv_eqns_label;
@@ -2260,6 +2251,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
         curves_above_P1s, curves_above_conics := curves_above_P1_and_conics(crv_eqns, new_keys, curves);
         new_keys := Keys(curves_above_P1s) join Keys(curves_above_conics);
     end while;
+    vprintf ShimuraQuotients, 2 : "\n";
     return crv_eqns, crv_ws;
 
 end intrinsic;
@@ -2332,34 +2324,38 @@ end intrinsic;
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
-    vprintf ShimuraQuotients,1 : "Computing Borcherds forms...";
+    vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
-    vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients, 1 : "Done!\n";
+    vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    vprintf ShimuraQuotients,1 : "Computing candidate discriminants...";
+    vprintf ShimuraQuotients, 4 : "\n";
+    vprintf ShimuraQuotients, 1 : "Done!\n";
+    vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients, 1 : "Done!\n";
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
-    vprintf ShimuraQuotients,1 : "Computing absolute values at CM points...";
+    vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
     Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
                                                            Exclude := Exclude, Include := Set(d_divs));
-    vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients, 2 : "\n";
+    vprintf ShimuraQuotients, 1 : "Done!\n";
     ReduceTable(abs_schofer_tab);
-    vprintf ShimuraQuotients,1 : "Computing actual values at CM points...";
+    vprintf ShimuraQuotients, 1 : "Computing actual values at CM points...";
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
-    vprintf ShimuraQuotients,1 : "Done\n";  
-    vprintf ShimuraQuotients,1 : "Computing equations of covers...";
+    vprintf ShimuraQuotients, 1 : "Done!\n";  
+    vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
-    vprintf ShimuraQuotients,1 : "Done\n";
-    vprintf ShimuraQuotients,1 : "Computing equations above P1s and conics...";
+    vprintf ShimuraQuotients, 1 : "Done!\n";
+    vprintf ShimuraQuotients, 1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
-    vprintf ShimuraQuotients,1 : "Done\n";
-    vprintf ShimuraQuotients,1 :"Computing equations above pointless conics...";
+    vprintf ShimuraQuotients, 1 : "Done\n";
+    vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves);
-    vprintf ShimuraQuotients,1 : "Done\n";
+    vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
 end intrinsic;
 
@@ -2550,7 +2546,8 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
         d_idx := qidx+#ds[1];
         ds[2][qidx] := dnew;
     end if;
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar);
+    Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
         table[i][d_idx] := norm_val[i]-deg*row_scales[i];
