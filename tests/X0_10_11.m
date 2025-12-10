@@ -6,7 +6,7 @@ function load_covers_and_ws_data_10_11()
     // verifying [Guo-Yang, Table A.2, p. 37]
     // D = 10, N = 11
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-8*x^12-35*x^10+30*x^8+277*x^6+120*x^4-560*x^2-512, Matrix([[-1,0,0],[0,1,0],[-1,0,1]])>;
+    cover_data[{1}] := <HyperellipticCurve(-8*x^12-35*x^10+30*x^8+277*x^6+120*x^4-560*x^2-512), Matrix([[-1,0,0],[0,1,0],[-1,0,1]])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
