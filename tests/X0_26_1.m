@@ -5,9 +5,9 @@ function load_covers_and_ws_data_26_1()
 
     // verifying [Guo-Yang, Example 33, p. 24-25]
     cover_data := AssociativeArray();
-    cover_data[{1,13}] := <-2*s^3+19*s^2-24*s-169, DiagonalMatrix([1,1,1])>;
-    cover_data[{1,26}] := <s, DiagonalMatrix([1,1,1])>;
-    cover_data[{1}] := <-2*s^6+19*s^4-24*s^2-169, DiagonalMatrix([1,1,1])>;
+    cover_data[{1,13}] := <HyperellipticCurve(-2*s^3+19*s^2-24*s-169), DiagonalMatrix([1,1,1])>;
+    cover_data[{1,26}] := <HyperellipticCurve(s), DiagonalMatrix([1,1,1])>;
+    cover_data[{1}] := <HyperellipticCurve(-2*s^6+19*s^4-24*s^2-169), DiagonalMatrix([1,1,1])>;
 
     ws_data:= AssociativeArray();
     ws_data[{1}] := AssociativeArray();

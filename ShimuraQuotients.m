@@ -9,7 +9,7 @@ declare verbose ShimuraQuotients, 5;
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
-import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders;
+import "Caching.m" : CacheClear, SetCache, GetCache, cached_orders;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
