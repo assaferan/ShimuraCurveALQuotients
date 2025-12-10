@@ -1462,7 +1462,9 @@ along with two different hauptmoduls.}
     found_all := false;
     
     while (not found_all) do
-        vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", all_ms[m_idx];
+        if #all_ms ne 0 then
+            vprintf ShimuraQuotients, 2 : "\n\tWorking on m = %o for q-expansion at 0\n", all_ms[m_idx];
+        end if;
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\tWorking on infinity = %o\n", infty;
             non_infty := [pt : pt in pts | pt ne infty];
