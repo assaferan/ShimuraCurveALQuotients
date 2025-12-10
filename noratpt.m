@@ -44,7 +44,7 @@ end function;
 
 // This is to find maps between the conics that are the identity on the P1
 // equivalent to finding an isometry between the quadratic forms
-function maps_identify_conics(D, C)
+function maps_identify_conics(D, C : B := 10)
     C0 := UnderlyingConic(C);
     D0 := UnderlyingConic(D);
     R<X,Y,Z> := CoordinateRing(Ambient(C0));
@@ -58,6 +58,6 @@ function maps_identify_conics(D, C)
     eqns := [Y2_eqn, Z2_eqn, YZ_eqn];
     A4<[t]> := AffineSpace(Rationals(),4);
     SS := Scheme(A4, [Evaluate(e, t) : e in eqns]);
-    pts := PointSearch(SS, 10);
+    pts := PointSearch(SS, B);
     return [map<D -> Ambient(C) | [x,y,pt[1]*z+pt[2]*s,pt[3]*z+pt[4]*s]> : pt in pts];
 end function;

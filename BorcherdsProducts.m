@@ -2256,7 +2256,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
 end intrinsic;
 
-intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> Assoc, Assoc
+intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
     {Find equations above pointless conics, as a last step}
     all_keys := Keys(all_eqns);
     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
@@ -2270,12 +2270,14 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
         for other_curve in curves[k]`Covers do
             found_gplus1 := false;
-            if exists(base){b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
-                if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
-                    gplus1key := other_curve; //found the gplus1
-                    found_gplus1 := true;
-                    break;
-                end if;
+            bases := Keys(all_eqns[other_curve]);
+            if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
+            if (base_label ne 0) and base_label notin bases then continue; end if;
+            base := (base_label eq 0) select Representative(bases) else base_label;
+            if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
+                gplus1key := other_curve; //found the gplus1
+                found_gplus1 := true;
+                break;
             end if;
         end for;
         if not found_gplus1 then continue; end if;
@@ -2296,7 +2298,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
         all_ws[k][conic_key] := AssociativeArray(); 
         //now find the ws
-       ws_to_do := Keys(all_ws[gplus1key][base]);
+        ws_to_do := Keys(all_ws[gplus1key][base]);
         for w in ws_to_do do
             w_mapgplus1 := all_ws[gplus1key][base][w];
             alg_map_gplus1 := AlgebraMap(w_mapgplus1);
@@ -2321,7 +2323,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
@@ -2354,7 +2356,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
     vprintf ShimuraQuotients, 1 : "Done\n";
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
-    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves);
+    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
 end intrinsic;
