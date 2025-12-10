@@ -5,7 +5,7 @@ function load_covers_and_ws_data_94_1()
 
     // D = 94
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-8*s^8+69*s^6-234*s^4+381*s^2-256, DiagonalMatrix([-4,800,1])>;
+    cover_data[{1}] := <HyperellipticCurve(-8*s^8+69*s^6-234*s^4+381*s^2-256), DiagonalMatrix([-4,800,1])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();

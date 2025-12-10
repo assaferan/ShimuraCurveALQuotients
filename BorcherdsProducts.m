@@ -2329,6 +2329,7 @@ end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
+    require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients,1 : "Computing Borcherds forms...";
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     vprintf ShimuraQuotients,1 : "Done\n";
@@ -2356,7 +2357,14 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients,1 : "Done\n";
     vprintf ShimuraQuotients,1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves);
+    vprintf ShimuraQuotients,1 : "Done\n";
     return all_eqns, all_ws;
+end intrinsic;
+
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
+{Get equations of all covers (not just immediate covers)}
+    _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec);
 end intrinsic;
 
 // This is following [GR, Section 5]
