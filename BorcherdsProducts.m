@@ -1674,10 +1674,10 @@ end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
+    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true);
     cm_pts := Reverse(Sort(cm_pts));
 
-    quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+    quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
     quad_cm := Reverse(Sort(quad_cm));
 
     return [cm_pts, quad_cm];
@@ -1689,7 +1689,6 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     
     cm_pts_rat := [a : a in all_cm_pts[1]| a[1] notin Exclude];
     quad_cm := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
-    all_cm_pts := [cm_pts_rat, quad_cm];
 
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
@@ -1709,36 +1708,46 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         pt_list_quad := cm_pts_must_quad;
     else
         need := need - #other_cm_rat; //update how many we need, after adding rational points
-        vprintf ShimuraQuotients, 5: "Still need %o rational points\n", need;
+        vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         pt_list_quad := cm_pts_must_quad; //first add quadratic points
         if #other_cm_quad ge need then
             pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
         else
             need := need - #other_cm_quad; //update how many we need, after adding quadratic points
-            vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
+            vprintf ShimuraQuotients, 3: "Still need %o points\n", need;
             pt_list_quad := pt_list_quad cat other_cm_quad; //now go search for more points
             bd := Maximum(include_bd, 4);
-            vprintf ShimuraQuotients, 5: "increasing bound to %o\n", bd;
-            Exclude := Exclude join {d : d in [pt[1] : pt in pt_list_quad]}; //update exclude list to include already used points
-            vprintf ShimuraQuotients, 5: "Exclude list is now %o\n", Exclude;
-            new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-            vprintf ShimuraQuotients, 5: "Found %o quadratic points\n", #new_quad_cm;
-            while need gt 0 do
-                if #new_quad_cm ge need then
-                    pt_list_quad := pt_list_quad cat new_quad_cm[1..need];
+            vprintf ShimuraQuotients, 3: "increasing bound to %o\n", bd;
+            Exclude := Exclude join {d : d in [pt[1] : pt in pt_list_quad] cat [pt[1] : pt in pt_list_rat]}; //update exclude list to include already used points
+            vprintf ShimuraQuotients, 3: "Exclude list is now %o\n", Exclude;
+            new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
+            new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+            vprintf ShimuraQuotients, 3: "Found %o quadratic points and %o rational points\n", #new_quad_cm, #new_rat_cm;
+            while need gt 0 and bd lt 8 do
+                if #new_quad_cm + #new_rat_cm ge need then
+                    numratpts := Minimum([#new_rat_cm, need]);
+                    pt_list_rat := pt_list_rat cat new_rat_cm[1..numratpts];
+                    pt_list_quad := pt_list_quad cat new_quad_cm[1..need - numratpts];
+                    vprintf ShimuraQuotients, 3: "points are now %o and %o\n", pt_list_rat, pt_list_quad;
                     need := 0;
                 else
+                    pt_list_rat := pt_list_rat cat new_rat_cm;
                     pt_list_quad := pt_list_quad cat new_quad_cm;
-                    need := need - #new_quad_cm;
-                    vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
+                    need := need - #new_quad_cm - #new_rat_cm;
+                    vprintf ShimuraQuotients, 3: "Still need %o points\n", need;
                     bd := bd+2;
-                    vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
-                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-                    Exclude := Exclude join {d : d in [pt[1] : pt in new_quad_cm]}; //update exclude list to include already used points
-                    vprintf ShimuraQuotients, 5:"Found %o quadratic points\n", #new_quad_cm;
+                    vprintf ShimuraQuotients, 3: "Increasing bound to %o\n", bd;
+                    new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
+                    vprintf ShimuraQuotients, 3: "points are now %o and %o\n", pt_list_rat, pt_list_quad;
+                    Exclude := Exclude join {d : d in [pt[1] : pt in new_quad_cm]} join {d : d in [pt[1] : pt in new_rat_cm]}; //update exclude list to include already used points
+                    vprintf ShimuraQuotients, 3:"Found %o quadratic points\n", #new_quad_cm + #new_rat_cm;
                 end if;
             end while;
+            if need gt 0 then
+                error "Could not find enough points, sorry!";
+            end if;
         end if;
     end if;
 
@@ -1766,6 +1775,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         end for;
     end for;
 
+    all_cm_pts := [pt_list_rat, pt_list_quad];
     ds := [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
 
     schofer_tab := CreateSchoferTable(table, keys_fs, ds, curves,Xstar);
@@ -2268,15 +2278,15 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
-    Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
+    // Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
-                                                           Exclude := Exclude, Include := Set(d_divs));
+                                                           Exclude := {}, Include := Set(d_divs));
     vprintf ShimuraQuotients, 2 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
     ReduceTable(abs_schofer_tab);
     vprintf ShimuraQuotients, 1 : "Computing actual values at CM points...";
-    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := {});
     vprintf ShimuraQuotients, 1 : "Done!\n";  
     vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
@@ -2422,6 +2432,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     // fixed_sub := sub<Universe(fixed_sub_gens) | fixed_sub_gens>;
     // Q_P_ext := FixedField(H_R, fixed_sub);
 
+   fixed_by := [hom<abs_H_R -> abs_H_R | f(abs_H_R.1)> : f in fixed_by]; //Eran's attempt to keep the segfault at bay
+    
     // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
 
@@ -2570,7 +2582,7 @@ function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
     return table;
 end function;
 
-intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -> SchoferTable
+intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
     {}
     ds := abs_schofer_tab`Discs;
     table := abs_schofer_tab`Values;
@@ -2658,7 +2670,25 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
                 vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
                 Include(~bad_ds, currd);
                 candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
-                require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
+                if #candidates le 1 then
+                    vprintf ShimuraQuotients, 2: "No possible choices of CM points left which we can pin down the correct minpoly";
+                    bd := Maximum([ClassNumber(p[1]) : p in all_cm_pts[2]])+2;
+                    if bd gt 8 then 
+                        error "Could not find enough quadratic CM points with class number less than 8, sorry!";
+                    end if;
+                end if;
+                while #candidates le 1 do
+                    Exclude := Exclude join bad_ds join Set(quadds);
+                    new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
+                    vprintf ShimuraQuotients, 5:"Found %o quadratic points\n", #new_quad_cm;
+                    candidates := Set([pt[1] : pt in new_quad_cm ]) join Set([pt[1] : pt in new_rat_cm]);
+                    bd := bd + 2;
+                    vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
+                    if bd gt 8 then 
+                        error "Could not find enough quadratic CM points with class number less than 8, sorry!";
+                    end if;
+                end while;
                 newd := Reverse(Sort(SetToSequence(candidates)))[1];
                 replace_column(abs_schofer_tab, currd, newd, false);
                 currd := newd;
@@ -2726,7 +2756,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
-    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
     return schofer_tab;
 end intrinsic;
 

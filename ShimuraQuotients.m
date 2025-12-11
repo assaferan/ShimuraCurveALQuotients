@@ -1433,7 +1433,7 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
+intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}, coprime_to_level := true) -> SeqEnum
 {returns rational CM points on X. Excludes those in exclude}
     vprintf ShimuraQuotients, 2: "\n\tComputing rational CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
@@ -1474,19 +1474,19 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     N := X`N;
     for d in allCN do
         if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
-        R := QuadraticOrder(BinaryQuadraticForms(d));
-        K := NumberField(R);
-        f := Conductor(R);
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
-        if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
-        if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
-        H_R := RingClassField(R);
-        H_R_NF := NumberField(H_R);
-        abs_H_R := AbsoluteField(H_R_NF);
-        b, _ := HasComplexConjugate(abs_H_R);;
-        if not b then continue; end if;
+        // R := QuadraticOrder(BinaryQuadraticForms(d));
+        // K := NumberField(R);
+        // f := Conductor(R);
+        // N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
+        // D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
+        // N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
+        // if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
+        // if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
+        // H_R := RingClassField(R);
+        // H_R_NF := NumberField(H_R);
+        // abs_H_R := AbsoluteField(H_R_NF);
+        // b, _ := HasComplexConjugate(abs_H_R);;
+        // if not b then continue; end if;
         
         flds := FieldsOfDefinitionOfCMPoint(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
@@ -1494,12 +1494,20 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
         end if;
     end for;
     require #pts ge 3 : "Could not find enough rational CM points!";
-    // return pts[1..3];
     vprintf ShimuraQuotients, 2: "Done!";
+
+    if not coprime_to_level then
+        return pts;
+    end if;
+    for p in pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~pts, Index(pts, p));
+        end if;
+    end for;
     return pts;
 end intrinsic;
 
-intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
+intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}, coprime_to_level := true) ->SeqEnum
     {returns at most quadratic CM points}
     vprintf ShimuraQuotients, 2: "\n\tComputing quadratic CM points...";
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
@@ -1544,6 +1552,14 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
         end if;
     end for;
     vprintf ShimuraQuotients, 2: "Done!\n";
+    if not coprime_to_level then
+        return pts;
+    end if;
+    for p in pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~pts, Index(pts, p));
+        end if;
+    end for;
     return pts;
 end intrinsic;
 
