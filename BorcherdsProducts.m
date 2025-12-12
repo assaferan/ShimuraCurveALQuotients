@@ -363,6 +363,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             t_eta_quotient := SAction(t_eta_quotient : Admissible := false);
         end if;
 
+        qexps := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
             min_v := Minimum([Valuation(f) : f in qexps]);
