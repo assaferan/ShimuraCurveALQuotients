@@ -7,7 +7,7 @@ end function;
 
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
-    assert IsSquarefree(N);
+    // assert IsSquarefree(N);
     D0 := (D*N) div 2^Valuation(D,2);
     M := 4*D0;
     g := Genus(Gamma0(M));
@@ -365,9 +365,14 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         end if;
 
         qexps := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
-        _<q> := Universe(qexps);
-        min_v := Minimum([Valuation(f) : f in qexps]);
-        coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+
+        if not IsEmpty(qexps) then
+            _<q> := Universe(qexps);
+            min_v := Minimum([Valuation(f) : f in qexps]);
+            coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+        else
+            coeffs := MatrixAlgebra(Rationals(), 0)!0;
+        end if;
         
         E, T := EchelonForm(coeffs);
         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
@@ -1687,61 +1692,64 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
 
 end intrinsic;
 
+
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum, fs::Assoc : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SchoferTable, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     
-    cm_pts := [a : a in all_cm_pts[1]| a[1] notin Exclude];
+    cm_pts_rat := [a : a in all_cm_pts[1]| a[1] notin Exclude];
     quad_cm := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
-    all_cm_pts := [cm_pts, quad_cm];
+    all_cm_pts := [cm_pts_rat, quad_cm];
 
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
    
     if #Include gt 0 then
-        bd := Maximum([ ClassNumber(d) : d in Include]);
-    else
-        bd:= 4;
+        include_bd := Maximum([ ClassNumber(d) : d in Include]);
     end if;
 
-    cm_pts_must := [p : p in cm_pts | p[1] in Include];
-    other_cm := [p : p in cm_pts | p[1] notin Include];
+    cm_pts_must_rational := [p : p in cm_pts_rat | p[1] in Include];
+    cm_pts_must_quad := [p : p in quad_cm | p[1] in Include];
+    other_cm_rat := [p : p in cm_pts_rat | p[1] notin Include];
+    other_cm_quad := [p : p in quad_cm | p[1] notin Include];
     need := MaxNum - #Include;
-    // if #cm_pts gt need then  
-    if #other_cm ge need then
+    if #other_cm_rat ge need then
     //need to make space for include points, but otherwise fill up with rational points as much as possible
-        // pt_list_rat := cm_pts_must cat other_cm[1..(need - #cm_pts_must)];
-        // The above does not make sense - we need to complete to MaxNum points
-        pt_list_rat := cm_pts_must cat other_cm[1..need];
+        pt_list_rat := cm_pts_must_rational cat other_cm_rat[1..need];
+        pt_list_quad := cm_pts_must_quad;
     else
-        pt_list_rat := cm_pts_must cat other_cm;
+        need := need - #other_cm_rat; //update how many we need, after adding rational points
+        vprintf ShimuraQuotients, 5: "Still need %o rational points\n", need;
+        pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
+        pt_list_quad := cm_pts_must_quad; //first add quadratic points
+        if #other_cm_quad ge need then
+            pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
+        else
+            need := need - #other_cm_quad; //update how many we need, after adding quadratic points
+            vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
+            pt_list_quad := pt_list_quad cat other_cm_quad; //now go search for more points
+            bd := Maximum(include_bd, 4);
+            vprintf ShimuraQuotients, 5: "increasing bound to %o\n", bd;
+            Exclude := Exclude join {d : d in [pt[1] : pt in pt_list_quad]}; //update exclude list to include already used points
+            vprintf ShimuraQuotients, 5: "Exclude list is now %o\n", Exclude;
+            new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+            vprintf ShimuraQuotients, 5: "Found %o quadratic points\n", #new_quad_cm;
+            while need gt 0 do
+                if #new_quad_cm ge need then
+                    pt_list_quad := pt_list_quad cat new_quad_cm[1..need];
+                    need := 0;
+                else
+                    pt_list_quad := pt_list_quad cat new_quad_cm;
+                    need := need - #new_quad_cm;
+                    vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
+                    bd := bd+2;
+                    vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
+                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
+                    Exclude := Exclude join {d : d in [pt[1] : pt in new_quad_cm]}; //update exclude list to include already used points
+                    vprintf ShimuraQuotients, 5:"Found %o quadratic points\n", #new_quad_cm;
+                end if;
+            end while;
+        end if;
     end if;
-
-    //remove points that we already included
-    Include := SetToSequence(Include);
-    for p in cm_pts_must do
-        pidx := Index(Include, p[1]);
-        Include := Remove(Include,Index(Include, p[1]));
-    end for;
-
-    if #Include gt 0 then
-        bd := Maximum([ ClassNumber(d) : d in Include]);
-    else
-        bd:= 2;
-    end if;
-    need := MaxNum - #pt_list_rat;
-    //Whatever is left, we need
-
-    cm_pts_must := [p : p in quad_cm | p[1] in Include];
-    other_cm := [p : p in quad_cm | p[1] notin Include];
-
-    pt_list_quad := cm_pts_must cat other_cm[1..(need -#Include)];
-
-    for p in cm_pts_must do
-        pidx := Index(Include, p[1]);
-        Include := Remove(Include,Index(Include, p[1]));
-    end for;
-
-    assert #Include eq 0;
 
     table := [[] : f in all_fs];
     // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(Xstar`D,Xstar`N);
@@ -2256,7 +2264,7 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
 end intrinsic;
 
-intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> Assoc, Assoc
+intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
     {Find equations above pointless conics, as a last step}
     all_keys := Keys(all_eqns);
     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
@@ -2270,12 +2278,14 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
         for other_curve in curves[k]`Covers do
             found_gplus1 := false;
-            if exists(base){b : b in Keys(all_eqns[other_curve])} then // all eqns for all bases have the same degree
-                if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
-                    gplus1key := other_curve; //found the gplus1
-                    found_gplus1 := true;
-                    break;
-                end if;
+            bases := Keys(all_eqns[other_curve]);
+            if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
+            if (base_label ne 0) and base_label notin bases then continue; end if;
+            base := (base_label eq 0) select Representative(bases) else base_label;
+            if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
+                gplus1key := other_curve; //found the gplus1
+                found_gplus1 := true;
+                break;
             end if;
         end for;
         if not found_gplus1 then continue; end if;
@@ -2296,7 +2306,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
         all_ws[k][conic_key] := AssociativeArray(); 
         //now find the ws
-       ws_to_do := Keys(all_ws[gplus1key][base]);
+        ws_to_do := Keys(all_ws[gplus1key][base]);
         for w in ws_to_do do
             w_mapgplus1 := all_ws[gplus1key][base][w];
             alg_map_gplus1 := AlgebraMap(w_mapgplus1);
@@ -2321,7 +2331,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
@@ -2354,7 +2364,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
     vprintf ShimuraQuotients, 1 : "Done\n";
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
-    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves);
+    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
 end intrinsic;
@@ -2606,12 +2616,12 @@ function find_y2_scales(schofer_table)
             // scale1, _ := SquareFree(v1/d1); //two possibilities
             // scale2, _ := SquareFree(v1);
             // if IsSquare(scale1*v2/d2) then
-            if IsSquare(log_scale1 + v2 - LogSum(AbsoluteValue(d2))) then
+            if IsSquare( v2 - LogSum(AbsoluteValue(d2)) - log_scale1) then
                 // Append(~scale_factors, AbsoluteValue(scale1));
                 Append(~scale_factors, log_scale1);
             else
                 // assert IsSquare(scale2*v2);
-                assert IsSquare(log_scale2 + v2);
+                assert IsSquare(v2 - log_scale2);
                 // Append(~scale_factors, AbsoluteValue(scale2));
                 Append(~scale_factors, log_scale2);
             end if;
