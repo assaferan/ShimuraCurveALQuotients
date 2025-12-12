@@ -7,7 +7,7 @@ end function;
 
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
-    assert IsSquarefree(N);
+    // assert IsSquarefree(N);
     D0 := (D*N) div 2^Valuation(D,2);
     M := 4*D0;
     g := Genus(Gamma0(M));
@@ -365,9 +365,14 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         end if;
 
         qexps := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
-        _<q> := Universe(qexps);
-        min_v := Minimum([Valuation(f) : f in qexps]);
-        coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+
+        if not IsEmpty(qexps) then
+            _<q> := Universe(qexps);
+            min_v := Minimum([Valuation(f) : f in qexps]);
+            coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+        else
+            coeffs := MatrixAlgebra(Rationals(), 0)!0;
+        end if;
         
         E, T := EchelonForm(coeffs);
         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
