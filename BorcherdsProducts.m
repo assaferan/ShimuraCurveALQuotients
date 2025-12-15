@@ -1706,6 +1706,8 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
    
     if #Include gt 0 then
         include_bd := Maximum([ ClassNumber(d) : d in Include]);
+    else
+        include_bd := 0;
     end if;
 
     cm_pts_must_rational := [p : p in cm_pts_rat | p[1] in Include];
