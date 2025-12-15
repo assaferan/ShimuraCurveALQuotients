@@ -371,6 +371,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             min_v := Minimum([Valuation(f) : f in qexps]);
             coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
         else
+            min_v := 0;
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
         end if;
         
