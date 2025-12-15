@@ -2194,7 +2194,8 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_conics[label][conic_label];
             found_base := false;
             for base in common_bases do
-                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) then
+                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) 
+                    or (g eq 0 and other_label in Keys(curves_above_conics[label])) then
                     common_base := base;
                     found_base := true;
                     break;
@@ -2312,16 +2313,20 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
             alg_map_gplus1 := AlgebraMap(w_mapgplus1);
             y_var := Domain(alg_map_gplus1).2;
             s_var := Domain(alg_map_gplus1).1;
+            z_var := Domain(alg_map_gplus1).3;
             im_y := Evaluate(alg_map_gplus1(y_var), [s,y,z]);
             im_s1 := Evaluate(alg_map_gplus1(s_var), [s,y,z]);
+            im_z1 := Evaluate(alg_map_gplus1(z_var), [s,y,z]);
             w_mapconic := all_ws[conic_key][base][w];
             alg_map_conic := AlgebraMap(w_mapconic);
             s_var := Domain(alg_map_conic).1;
             x_var := Domain(alg_map_conic).2;
+            z_var := Domain(alg_map_conic).3;
             im_x :=  Evaluate(alg_map_conic(x_var), [s,x,z]);
             im_s2 := Evaluate(alg_map_conic(s_var), [s,y,z]);
-            assert im_s1 eq im_s2; //acts the same way
-            wmap := map<C->C | [im_x, im_y, im_s1, z]>;
+            im_z2 := Evaluate(alg_map_conic(z_var), [s,y,z]);
+            assert im_s1*im_z2 eq im_s2*im_z1; //acts the same way
+            wmap := map<C->C | [im_x, im_y, im_s1, im_z1]>;
             b, inv := IsIsomorphism(wmap);
             assert b;
             all_ws[k][conic_key][w] := inv^(-1);
@@ -2560,9 +2565,10 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
-        table[i][d_idx] := norm_val[i]-deg*row_scales[i];
-        if not is_log then
-            table[i][d_idx] := RationalNumber(table[i][d_idx]);
+         if is_log then
+            table[i][d_idx] := norm_val[i]-deg*row_scales[i];
+        else
+            table[i][d_idx] := RationalNumber(norm_val[i]-deg*row_scales[i]);
         end if;
     end for;
     schofer_tab`Values := table;
