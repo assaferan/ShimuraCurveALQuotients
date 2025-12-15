@@ -2492,15 +2492,15 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
-        table[i][d_idx] := norm_val[i]-deg*row_scales[i];
-        if not is_log then
-            table[i][d_idx] := RationalNumber(table[i][d_idx]);
+        if is_log then
+            table[i][d_idx] := norm_val[i]-deg*row_scales[i];
+        else
+            table[i][d_idx] := RationalNumber(norm_val[i]-deg*row_scales[i]);
         end if;
     end for;
     schofer_tab`Values := table;
     schofer_tab`Discs := [ds[1], ds[2]];
     curves := schofer_tab`Curves;
-    UpdateFieldsOfDefn(schofer_tab, dnew);  
     return;
 end procedure;
 
@@ -2563,17 +2563,17 @@ function find_y2_scales(schofer_table)
 
 end function;
 
-function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
+function find_y2_signs_rational(table, keys_fs, d, d_idx, flds, k_idxs)
     //find signs of y^2 for rational CM point d on each y^2
-    //in keys_fs, where j is index of column of d in table
+    //in keys_fs, where d_idx is index of column of d in table
     for k->i in k_idxs do
-        if table[i][j] eq Infinity() then continue; end if;
-        if table[i][j] eq 0 then continue; end if;
+        if table[i][d_idx] eq Infinity() then continue; end if;
+        if table[i][d_idx] eq 0 then continue; end if;
         fields := flds[keys_fs[i]][d];
         Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
         possible_answers := [* *];
         for eps in [-1,1] do
-            y2 := eps*table[i][j];
+            y2 := eps*table[i][d_idx];
             for F in fields do
                 is_sqr, y := IsSquare(F!y2);
                 if (is_sqr) then
@@ -2585,9 +2585,55 @@ function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
         end for;
         assert #possible_answers eq 1;
         eps := possible_answers[1][2];
-        table[i][j] :=  eps * table[i][j];
+        table[i][d_idx] :=  eps * table[i][d_idx];
     end for;
     return table;
+end function;
+
+function find_y2_signs_quadratic(table, keys_fs, d, d_idx, flds, k_idxs, s_idx, stilde_idx)
+    //find signs of y^2 for quadratic CM point d on each y^2
+    //in keys_fs, where d_idx is index of column of d in table
+    for k->i in k_idxs do
+        if table[i][d_idx] eq Infinity() then continue; end if;
+        if table[i][d_idx] eq 0 then continue; end if;
+        K := flds[keys_fs[i]][d][1];
+        norm_s := table[s_idx][d_idx];
+        norm_stilde := table[stilde_idx][d_idx];
+         _<x> := PolynomialRing(Rationals());
+        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
+        minpolys := [];
+        for eps in signs do
+                trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
+                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
+        end for;
+        roots := [Roots(p,K) : p in minpolys];
+        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
+        if #good_inds eq 1 then
+            table[s_idx][d_idx] := minpolys[good_inds[1]];
+            norm_s := Coefficient(minpolys[good_inds[1]], 0);
+            trace_s := - Coefficient(minpolys[good_inds[1]], 1);
+            table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
+            return table;
+        else
+            return false;
+        end if;
+    end for;
+end function;
+
+function find_y2_signs(table, keys_fs, d, d_idx, all_flds, k_idxs, s_idx, stilde_idx, curve_id)
+    //Find signs on the y2 rows
+    //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
+    //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
+    // where sigma is the unique nontrivial element of Gal(K/Q)
+    // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
+    // so eps* v is a square in Q, and is positive
+
+    if Degree(all_flds[curve_id][d][1]) eq 1 then
+        return find_y2_signs_rational(table, keys_fs, d, d_idx, all_flds, k_idxs);
+    else
+        assert Degree(all_flds[curve_id][d][1]) eq 2;
+        return find_y2_signs_quadratic(table, keys_fs, d, d_idx, all_flds, k_idxs, s_idx, stilde_idx);
+    end if;
 end function;
 
 intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
@@ -2652,29 +2698,15 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
 
     all_flds := abs_schofer_tab`FldsOfDefn;
 
-    bad_ds := {};
-    for i->d in quadds do
-        d_idx := #ratds+i;
-        good_inds := [];
-        currd := d;
-        while #good_inds ne 1 do
-            all_flds := abs_schofer_tab`FldsOfDefn;
-            norm_s := table[s_idx][d_idx];
-            norm_stilde := table[stilde_idx][d_idx];
-            flds := all_flds[cid][currd];
-            assert #flds eq 1;
-            assert Degree(flds[1]) eq 2;
-            K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
-            _<x> := PolynomialRing(Rationals());
-            signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-            minpolys := [];
-            for eps in signs do
-                    trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
-                    Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-            end for;
-            roots := [Roots(p,K) : p in minpolys];
-            good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-            if #good_inds ne 1 then
+    cid := Xstar`CurveID;
+    for i in [1..#allds] do
+        currd := allds[i];
+        fld := all_flds[cid][currd];
+        assert #fld eq 1;
+        new_table := find_y2_signs(table, keys_fs, currd, i, all_flds, k_idxs, s_idx, stilde_idx, cid);
+        //table, keys_fs, d, d_idx, all_flds, k_idxs, s_idx, stilde_idx, curve_id
+        bad_ds := {};
+        while Type(new_table) eq BoolElt do
                 vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
                 Include(~bad_ds, currd);
                 candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
@@ -2685,42 +2717,24 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
                         error "Could not find enough quadratic CM points with class number less than 8, sorry!";
                     end if;
                 end if;
-                while #candidates le 1 do
-                    Exclude := Exclude join bad_ds join Set(quadds);
-                    new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
-                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
-                    vprintf ShimuraQuotients, 5:"Found %o quadratic points\n", #new_quad_cm;
-                    candidates := Set([pt[1] : pt in new_quad_cm ]) join Set([pt[1] : pt in new_rat_cm]);
-                    bd := bd + 2;
-                    vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
-                    if bd gt 8 then 
-                        error "Could not find enough quadratic CM points with class number less than 8, sorry!";
-                    end if;
-                end while;
+            while #candidates le 1 do
+                Exclude := Exclude join bad_ds join Set(quadds);
+                new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+                new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
+                vprintf ShimuraQuotients, 5:"Found %o new points\n", #new_quad_cm + #new_rat_cm;
+                candidates := Set([pt[1] : pt in new_quad_cm ]) join Set([pt[1] : pt in new_rat_cm]);
+                bd := bd + 2;
+                vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
+                if bd gt 8 then 
+                    error "Could not find enough quadratic CM points with class number less than 8, sorry!";
+                end if;
                 newd := Reverse(Sort(SetToSequence(candidates)))[1];
                 replace_column(abs_schofer_tab, currd, newd, false);
                 currd := newd;
-                table := abs_schofer_tab`Values;
-                table :=[* [* x : i->x in t *] : t in table *];
-            end if;
+                new_table := find_y2_signs(table, keys_fs, currd, i, all_flds, k_idxs, s_idx, stilde_idx, cid); 
+            end while;
         end while;
-        table[s_idx][d_idx] := minpolys[good_inds[1]];
-        norm_s := Coefficient(minpolys[good_inds[1]], 0);
-        trace_s := - Coefficient(minpolys[good_inds[1]], 1);
-        table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
-        abs_schofer_tab`Values := table;
-    end for;
-       
-    //Find signs on the y2 rows
-
-    //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
-    //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
-    // where sigma is the unique nontrivial element of Gal(K/Q)
-    // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
-    // so eps* v is a square in Q, and is positive
-
-    for j->d in ratds do
-        table := find_y2_signs(table, keys_fs, curves, d, j, all_flds, k_idxs);
+        table := new_table;
     end for;
 
     schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
