@@ -2377,10 +2377,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     return all_eqns, all_ws;
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
-    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec);
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label);
 end intrinsic;
 
 // This is following [GR, Section 5]
