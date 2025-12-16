@@ -2732,6 +2732,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
             end for;
             roots := [Roots(p,K) : p in minpolys];
             good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
+            require #good_inds gt 0: "Error in quadratic points - no possible minpoly found!";
             if #good_inds ne 1 then
                 vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
                 Include(~bad_ds, currd);
