@@ -2380,8 +2380,15 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     has_cc, cc := HasComplexConjugate(abs_H_R);
     if not has_cc then
         gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // elements that restrict to the complex conjugation on K
-        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
+        // Finding maximal CM subfield
+        // First find maximal totally real subfield
+        tot_real := [e : e in SubfieldLattice(abs_H_R) | IsTotallyReal(NumberField(e))];
+        max_deg, max_ind := Maximum([Degree(e) : e in tot_real]);
+        maximal_cm_fields := [f : f in MinimalOverfields(tot_real[max_ind]) | IsTotallyComplex(NumberField(f))];
+        assert #maximal_cm_fields eq 1;
+        L := NumberField(maximal_cm_fields[1]);
+        // elements that restrict to the complex conjugation on maximal CM subfield
+        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(L.1) eq ComplexConjugate(L.1)];  
         cc := Representative(cc_candidates);
         cc := gal_to_auts(cc);
     end if;
@@ -2751,7 +2758,7 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
     allds := schofer_tab`Discs;
     degs := find_degs(schofer_tab);
     scales := [];
-    rat_idxs := [i : i in [1..#table] | degs[i] eq 1];
+    rat_idxs := [i : i in [1..#degs] | degs[i] eq 1];
     for t in table do
         // xs := [x : i->x in t | i le num_rat_ds and x notin [0, Infinity()] ];
         xs := [x : i->x in t | i in rat_idxs and x notin [LogSum(0), LogSum(Infinity())] ];
