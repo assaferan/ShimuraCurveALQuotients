@@ -2619,6 +2619,9 @@ function find_y2_signs_quadratic(table, keys_fs, d, d_idx, flds, k_idxs, s_idx, 
             return true, table;
         else
             vprintf ShimuraQuotients, 3: "We need that there is a unique minpoly left after filtering by roots, but we found %o good indices\n", #good_inds;
+            if #good_inds eq 0 then
+                error "No good indices found after filtering by roots";
+            end if;
             return false, _;
         end if;
     end for;
