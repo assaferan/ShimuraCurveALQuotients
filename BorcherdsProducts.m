@@ -2741,7 +2741,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
         abs_schofer_tab`Values := new_table;
     end for;
 
-    schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
+    schofer_table := CreateSchoferTable(abs_schofer_tab`Values, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
     return schofer_table;
 end intrinsic;
 
