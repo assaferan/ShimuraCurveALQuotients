@@ -1432,8 +1432,10 @@ along with two different hauptmoduls.}
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
+    pts, _ := RationalandQuadraticCMPoints(Xstar); // pts <-> infty, 0, rational
     pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
+    require #pts ge 3 : "Could not find enough rational CM points!";
+
 
     max_pole_order_oo := 0;
     ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
@@ -1678,14 +1680,8 @@ end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true);
-    cm_pts := Reverse(Sort(cm_pts));
-
-    quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
-    quad_cm := Reverse(Sort(quad_cm));
-
-    return [cm_pts, quad_cm];
-
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd);
+    return [rat_pts, quad_pts];
 end intrinsic;
 
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum, fs::Assoc : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SchoferTable, SeqEnum
@@ -1706,54 +1702,28 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     other_cm_rat := [p : p in cm_pts_rat | p[1] notin Include];
     other_cm_quad := [p : p in cm_pts_quad | p[1] notin Include];
     need := MaxNum - #Include;
+    pt_list_quad := [];
     if #other_cm_rat ge need then
     //need to make space for include points, but otherwise fill up with rational points as much as possible
         pt_list_rat := cm_pts_must_rational cat other_cm_rat[1..need];
-        pt_list_quad := cm_pts_must_quad;
+        pt_list_quad cat:= cm_pts_must_quad;
     else
         need := need - #other_cm_rat; //update how many we need, after adding rational points
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
-        pt_list_quad := cm_pts_must_quad; //first add quadratic points
-        if #other_cm_quad ge need then
-            pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
-        else
-            need := need - #other_cm_quad; //update how many we need, after adding quadratic points
-            vprintf ShimuraQuotients, 3: "Still need %o points\n", need;
-            pt_list_quad := pt_list_quad cat other_cm_quad; //now go search for more points
-            bd := Maximum(include_bd, 4);
-            vprintf ShimuraQuotients, 3: "increasing bound to %o\n", bd;
-            Exclude := Exclude join {d : d in [pt[1] : pt in pt_list_quad] cat [pt[1] : pt in pt_list_rat]}; //update exclude list to include already used points
-            vprintf ShimuraQuotients, 3: "Exclude list is now %o\n", Exclude;
-            new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
-            cm_pts_rat := cm_pts_rat cat new_rat_cm;
-            new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
-            cm_pts_quad := cm_pts_quad cat new_quad_cm;
-            vprintf ShimuraQuotients, 3: "Found %o quadratic points and %o rational points\n", #new_quad_cm, #new_rat_cm;
-            while need gt 0 and bd lt 8 do
-                if #new_quad_cm + #new_rat_cm ge need then
-                    numratpts := Minimum([#new_rat_cm, need]);
-                    pt_list_rat := pt_list_rat cat new_rat_cm[1..numratpts];
-                    pt_list_quad := pt_list_quad cat new_quad_cm[1..need - numratpts];
-                    vprintf ShimuraQuotients, 3: "points are now %o and %o\n", pt_list_rat, pt_list_quad;
-                    need := 0;
-                else
-                    pt_list_rat := pt_list_rat cat new_rat_cm;
-                    pt_list_quad := pt_list_quad cat new_quad_cm;
-                    need := need - #new_quad_cm - #new_rat_cm;
-                    vprintf ShimuraQuotients, 3: "Still need %o points\n", need;
-                    bd := bd+2;
-                    vprintf ShimuraQuotients, 3: "Increasing bound to %o\n", bd;
-                    new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
-                    cm_pts_rat := cm_pts_rat cat new_rat_cm;
-                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
-                    cm_pts_quad := cm_pts_quad cat new_quad_cm;
-                    vprintf ShimuraQuotients, 3: "points are now %o and %o\n", pt_list_rat, pt_list_quad;
-                    Exclude := Exclude join {d : d in [pt[1] : pt in new_quad_cm]} join {d : d in [pt[1] : pt in new_rat_cm]}; //update exclude list to include already used points
-                    vprintf ShimuraQuotients, 3:"Found %o quadratic points\n", #new_quad_cm + #new_rat_cm;
-                end if;
-            end while;
-            if need gt 0 then
+        Exclude := Exclude join {pt[1] : pt in pt_list_rat};
+        bd := Maximum(include_bd*2, 8); //go up to 8 from 4
+        if bd le 8 then 
+            new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+            pt_list_rat := pt_list_rat cat new_rat_cm;
+            need := need - #new_rat_cm;
+        end if;
+        if need gt 0 then
+        //now add quadratic points
+            other_cm_quad := other_cm_quad cat new_quad_cm;
+            if #other_cm_quad ge need then
+                pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
+            else
                 error "Could not find enough points, sorry!";
             end if;
         end if;
@@ -2290,7 +2260,6 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    vprintf ShimuraQuotients, 1 : "Done!\n";
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
@@ -2573,36 +2542,61 @@ function find_y2_scales(schofer_table)
 
 end function;
 
-function find_y2_signs_rational(table, keys_fs, d, d_idx, flds, k_idxs)
+function find_y2_signs(abs_schofer_tab)
     //find signs of y^2 for rational CM point d on each y^2
     //in keys_fs, where d_idx is index of column of d in table
-    for k->i in k_idxs do
-        if table[i][d_idx] eq Infinity() then continue; end if;
-        if table[i][d_idx] eq 0 then continue; end if;
-        fields := flds[keys_fs[i]][d];
-        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
-        possible_answers := [* *];
-        for eps in [-1,1] do
-            y2 := eps*table[i][d_idx];
-            for F in fields do
-                is_sqr, y := IsSquare(F!y2);
-                if (is_sqr) then
-                    if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
-                        Append(~possible_answers, <F,eps,y>);
+    table := abs_schofer_tab`Values;
+    keys_fs := abs_schofer_tab`Keys_fs;
+    k_idxs := abs_schofer_tab`K_idxs;
+    flds := abs_schofer_tab`FldsOfDefn;
+    ds := abs_schofer_tab`Discs;
+    degs := find_degs(abs_schofer_tab);
+    rat_idxs := [i : i in [1..#ds] | degs[i] eq 1];
+    quad_idxs := [i : i in [1..#ds] | degs[i] eq 2];
+
+    for d_idx->d in ds do
+        for k->i in k_idxs do
+            if table[i][d_idx] eq Infinity() then continue; end if;
+            if table[i][d_idx] eq 0 then continue; end if;
+            fields := flds[keys_fs[i]][d];
+            possible_answers := [* *];
+            for eps in [-1,1] do
+                y2 := eps*table[i][d_idx];
+                for F in fields do
+                    is_sqr, y := IsSquare(F!y2);
+                    if (is_sqr) then
+                        if d_idx in rat_idxs then
+                            if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                                Append(~possible_answers, <F,eps,y>);
+                            end if;
+                        elif d_idx in quad_idxs then
+                            if Degree(MinimalPolynomial(y)) eq 1 then
+                                if NormEquation(F, y2) then
+                                    Append(~possible_answers, <F,eps,y>); //this is just a norm value
+                                end if;
+                            end if;
+                        end if;
                     end if;
-                end if;
+                end for;
             end for;
+            assert #possible_answers eq 1;
+            eps := possible_answers[1][2];
+            table[i][d_idx] :=  eps * table[i][d_idx];
         end for;
-        assert #possible_answers eq 1;
-        eps := possible_answers[1][2];
-        table[i][d_idx] :=  eps * table[i][d_idx];
     end for;
-    return true, table;
+    return table;
 end function;
 
-function find_y2_signs_quadratic(table, keys_fs, d, d_idx, flds, k_idxs, s_idx, stilde_idx)
-    //find signs of y^2 for quadratic CM point d on each y^2
+function find_hauptmodul_signs_quadratic(abs_schofer_tab, d, d_idx)
+    //find signs of hauptmodul for quadratic CM point d on each hauptmodul
     //in keys_fs, where d_idx is index of column of d in table
+    table := abs_schofer_tab`Values;
+    keys_fs := abs_schofer_tab`Keys_fs;
+    k_idxs := abs_schofer_tab`K_idxs;
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
+    flds := abs_schofer_tab`FldsOfDefn;
+
     for k->i in k_idxs do
         if table[i][d_idx] eq Infinity() then continue; end if;
         if table[i][d_idx] eq 0 then continue; end if;
@@ -2634,30 +2628,30 @@ function find_y2_signs_quadratic(table, keys_fs, d, d_idx, flds, k_idxs, s_idx, 
     end for;
 end function;
 
-intrinsic Findy2Signs(abs_schofer_tab::SchoferTable, d::RngIntElt, d_idx::RngIntElt) -> BoolElt, List
-    {Find signs on the y2 rows}
-    //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
-    //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
-    // where sigma is the unique nontrivial element of Gal(K/Q)
-    // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
-    // so eps* v is a square in Q, and is positive
-    keys_fs := abs_schofer_tab`Keys_fs;
-    k_idxs := abs_schofer_tab`K_idxs;
-    s_idx := abs_schofer_tab`sIndex;
-    stilde_idx := abs_schofer_tab`sTildeIndex;
-    curve_id := abs_schofer_tab`Xstar`CurveID;
-    all_flds := abs_schofer_tab`FldsOfDefn;
-    fld := all_flds[curve_id][d];
-    table := abs_schofer_tab`Values;
-    assert #fld eq 1;
+// intrinsic FindSigns(abs_schofer_tab::SchoferTable, d::RngIntElt, d_idx::RngIntElt) -> BoolElt, List
+//     {Find signs on the y2 rows}
+//     //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
+//     //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
+//     // where sigma is the unique nontrivial element of Gal(K/Q)
+//     // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
+//     // so eps* v is a square in Q, and is positive
+//     keys_fs := abs_schofer_tab`Keys_fs;
+//     k_idxs := abs_schofer_tab`K_idxs;
+//     s_idx := abs_schofer_tab`sIndex;
+//     stilde_idx := abs_schofer_tab`sTildeIndex;
+//     curve_id := abs_schofer_tab`Xstar`CurveID;
+//     all_flds := abs_schofer_tab`FldsOfDefn;
+//     fld := all_flds[curve_id][d];
+//     table := abs_schofer_tab`Values;
+//     assert #fld eq 1;
 
-    if Degree(fld[1]) eq 1 then
-        return find_y2_signs_rational(table, keys_fs, d, d_idx, all_flds, k_idxs);
-    else
-        assert Degree(fld[1]) eq 2;
-        return find_y2_signs_quadratic(table, keys_fs, d, d_idx, all_flds, k_idxs, s_idx, stilde_idx);
-    end if;
-end intrinsic;
+//     if Degree(fld[1]) eq 1 then
+//         return find_y2_signs_rational(table, keys_fs, d, d_idx, all_flds, k_idxs);
+//     else
+//         assert Degree(fld[1]) eq 2;
+//         return find_y2_signs_quadratic(abs_schofer_tab,d,d_idx);
+//     end if;
+// end intrinsic;
 
 intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
     {}
@@ -2709,46 +2703,32 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     table[stilde_idx] := stilde;
     abs_schofer_tab`Values := table;
 
-    //Next need to get values on the y2 rows for the rational and quadratic CM points
-
-    bad_ds := {};
+    quad_idxs := [i : i in [1..#allds] | degs[i] eq 2];
     used_ds := Set(allds);
     for i in [1..#allds] do
+        if i notin quad_idxs then continue; end if; //only do quadratic points
         currd := allds[i];
-        success, new_table := Findy2Signs(abs_schofer_tab, currd, i);
+        success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
         while not success do
             vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
-            Include(~bad_ds, currd);
-            candidates := Set([pt[1] : pt in all_cm_pts[2] cat all_cm_pts[1]]) diff used_ds diff bad_ds diff Exclude;
+            Include(~used_ds, currd);
+            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
             if #candidates eq 0 then
-                bd := Maximum([ClassNumber(p[1]) : p in all_cm_pts[2]])+2; //Set Bound
-                if bd gt 8 then 
-                    error "Could not find enough CM points with class number less than 8, sorry!"; //In this case, we already tried our best
-                end if;
+                error "No possible choices of CM points left which we can pin down the correct minpoly";
             end if;
-            while #candidates eq 0 do
-                bd := bd + 2;
-                vprintf ShimuraQuotients, 2: "No possible choices of CM points left which we can pin down the correct minpoly, increasing bound to %o\n", bd;
-                 if bd gt 8 then 
-                     error "Could not find enough quadratic CM points with class number less than 8, sorry!";
-                 end if;
-                Exclude := Exclude join bad_ds join used_ds;
-                new_rat_cm := RationalCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
-                new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd, coprime_to_level := true);
-                vprintf ShimuraQuotients, 3:"Found %o new points\n", #new_quad_cm + #new_rat_cm;
-                candidates := Set([pt[1] : pt in new_quad_cm ]) join Set([pt[1] : pt in new_rat_cm]) diff Exclude; 
-            end while;
             newd := Reverse(Sort(SetToSequence(candidates)))[1];
-            printf "Replacing %o with %o\n", currd, newd;
+            vprintf ShimuraQuotients, 1: "Replacing %o with %o\n", currd, newd;
             replace_column(abs_schofer_tab, currd, newd, false);
             Include(~used_ds, newd);
             currd := newd;
-            success, new_table := Findy2Signs(abs_schofer_tab, currd, i);
+            success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
         end while;
         abs_schofer_tab`Values := new_table;
     end for;
 
-    schofer_table := CreateSchoferTable(abs_schofer_tab`Values, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
+    table := find_y2_signs(abs_schofer_tab);
+
+    schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
     return schofer_table;
 end intrinsic;
 
