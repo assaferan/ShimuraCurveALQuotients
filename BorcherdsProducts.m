@@ -1720,11 +1720,9 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
         bd := Maximum(include_bd*2, 8); //go up to 8 from 4
-        if bd le 8 then 
-            new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
-            pt_list_rat := pt_list_rat cat new_rat_cm;
-            need := need - #new_rat_cm;
-        end if;
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+        pt_list_rat := pt_list_rat cat new_rat_cm;
+        need := need - #new_rat_cm;
         if need gt 0 then
         //now add quadratic points
             other_cm_quad := other_cm_quad cat new_quad_cm;
@@ -2430,30 +2428,6 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     require #frakas gt 0 : "Error in field of definition - could not find a fractional ideal for complex conjugation!";
     sigma_as := [rec(fraka) : fraka in frakas];
     abs_sig_as := [H_R_to_abs^(-1)*sigma_a*H_R_to_abs : sigma_a in sigma_as];
-   
-    /*
-    has_cc, cc := HasComplexConjugate(abs_H_R);
-    if not has_cc then
-        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // Finding maximal CM subfield
-        // First find maximal totally real subfield
-        tot_real := [e : e in SubfieldLattice(abs_H_R) | IsTotallyReal(NumberField(e))];
-        max_deg, max_ind := Maximum([Degree(e) : e in tot_real]);
-        maximal_cm_fields := [f : f in MinimalOverfields(tot_real[max_ind]) | IsTotallyComplex(NumberField(f))];
-        assert #maximal_cm_fields eq 1;
-        L := NumberField(maximal_cm_fields[1]);
-        // elements that restrict to the complex conjugation on maximal CM subfield
-        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(L.1) eq ComplexConjugate(L.1)];  
-        cc := Representative(cc_candidates);
-        cc := gal_to_auts(cc);
-    end if;
-    sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
-    if (m ne 1) then
-        al_action[m] := sigma;
-    else
-        sigma_for_later := sigma;
-    end if;
-    */
 
     // Lemma 5.9
     fixed_sub_gens := [];
@@ -2487,31 +2461,10 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
         end if;
     end for;
 
-    /*
-    if (m eq 1) then
-        al_action[1] := sigma_for_later;
-    end if;
-    */
-
     fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
 
-    sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
-    sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
-
-    assert sanity_check;
-    assert sanity_check_trivial;
-
-    unknown_quotients := n_W - n_fixed;
-
-    Q_P_ext := FixedField(abs_H_R, fixed_by);
-    Q_Ps := [* *];
-    if Degree(Q_P_ext) le 2^unknown_quotients then 
-        Append(~Q_Ps, Rationals());
-    end if;
-    if Degree(Q_P_ext) gt 1 then 
-        Q_Ps cat:= [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
-    end if;
-    
+    Q_P := FixedField(abs_H_R, fixed_by);
+    Q_Ps := [* Q_P *];
 
     // Handle complex conjugation 
     has_cc, cc := HasComplexConjugate(abs_H_R);
@@ -2536,23 +2489,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
             al_action[prod] := al_action[m]*al_action[w];
         end for;
         fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
-        
-        sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
-        sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
-
-        assert sanity_check;
-        assert sanity_check_trivial;
-
-        unknown_quotients := n_W - n_fixed;
-
-        Q_P_ext := FixedField(abs_H_R, fixed_by);
-        if Degree(Q_P_ext) le 2^unknown_quotients then 
-            Append(~Q_Ps, Rationals()); 
-        end if;
-        if Degree(Q_P_ext) gt 1 then
-            Q_Ps cat:= [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
-        end if;
-        
+        Q_P := FixedField(abs_H_R, fixed_by);
+        Append(~Q_Ps, Q_P);
     end for;
 
     return Q_Ps;
