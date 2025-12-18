@@ -18,7 +18,7 @@ end function;
 procedure test_6_17()
     cover_data, ws_data := load_covers_and_ws_data_6_17();
     curves := GetHyperellipticCandidates();
-    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_label := 1557);
+    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_label := 1557, manual_isomorphism);
     return;
 end procedure;
 
