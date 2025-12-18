@@ -1486,7 +1486,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         end if;
 
     end for;
-    vprintf ShimuraQuotients, 2: "Done!";
+    vprintf ShimuraQuotients, 2: "Done!\n";
 
     if not coprime_to_level then
         return rat_pts, quad_pts;
