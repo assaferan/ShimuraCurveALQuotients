@@ -1433,11 +1433,11 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
-{returns rational CM points on X. Excludes those in exclude}
-    vprintf ShimuraQuotients, 2: "\n\tComputing rational CM points...";
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true) -> SeqEnum, SeqEnum
+{returns rational and quadratic CM points on X. Excludes those in exclude}
+    vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
-    pts := [];
+    rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
     ell := NumberOfEllipticPointsByCMOrder(X);
     for q in Keys(ell) do
@@ -1445,16 +1445,17 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
             if d in [-3,-4] then 
                 is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
                 if is_split and d notin Exclude then
-                    Append(~pts, <d,q,ell[q][d]>); 
+                    Append(~rat_pts, <d,q,ell[q][d]>); 
                 end if;
             else
                 if ell[q][d] eq 1 and d notin Exclude then
-                    Append(~pts, <d,q,ell[q][d]>);
+                    Append(~rat_pts, <d,q,ell[q][d]>);
                 end if;
             end if;
         end for;
     end for;
-    pts := Reverse(Sort(pts));
+
+    rat_pts := Reverse(Sort(rat_pts));
 
     CNs := AssociativeArray();
     CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
@@ -1470,22 +1471,29 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     end while;
     allCN := Reverse(Sort([x : x in allCN]));
 
+
+    quad_pts := [];
     D := X`D;
     N := X`N;
     for d in allCN do
+<<<<<<< HEAD
         if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
         
+=======
+        if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
+
+>>>>>>> 206and51
         flds := FieldsOfDefinitionOfCMPoint(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
-            Append(~pts, <d,1,1>);
+            Append(~rat_pts, <d,1,1>);
+        elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
+            Append(~quad_pts, <d,1,2>);
         end if;
-    end for;
-    require #pts ge 3 : "Could not find enough rational CM points!";
-    // return pts[1..3];
-    vprintf ShimuraQuotients, 2: "Done!";
-    return pts;
-end intrinsic;
 
+    end for;
+    vprintf ShimuraQuotients, 2: "Done!";
+
+<<<<<<< HEAD
 intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
     {returns at most quadratic CM points}
     vprintf ShimuraQuotients, 2: "\n\tComputing quadratic CM points...";
@@ -1511,10 +1519,24 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
         
         if #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
             Append(~pts, <d,1,2>);
+=======
+    if not coprime_to_level then
+        return rat_pts, quad_pts;
+    end if;
+    for p in rat_pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~rat_pts, Index(rat_pts, p));
+>>>>>>> 206and51
         end if;
     end for;
-    vprintf ShimuraQuotients, 2: "Done!\n";
-    return pts;
+
+    for p in quad_pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~quad_pts, Index(quad_pts, p));
+        end if;
+    end for;
+    return rat_pts, quad_pts;
+
 end intrinsic;
 
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc

@@ -156,5 +156,5 @@ jobs:
       - name: Run tests
         shell: bash
         run: |
-          ./magma/magma -b verbose:=5 target:=${{matrix.target}} exitsignal:="" run_tests.m
+          ./magma/magma -b verbose:=3 target:=${{matrix.target}} exitsignal:="" run_tests.m
 

@@ -365,7 +365,6 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         end if;
 
         qexps := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
-
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
             min_v := Minimum([Valuation(f) : f in qexps]);
@@ -1437,8 +1436,10 @@ along with two different hauptmoduls.}
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts := RationalCMPoints(Xstar); // pts <-> infty, 0, rational
+    pts, _ := RationalandQuadraticCMPoints(Xstar); // pts <-> infty, 0, rational
     pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
+    require #pts ge 3 : "Could not find enough rational CM points!";
+
 
     max_pole_order_oo := 0;
     ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
@@ -1683,14 +1684,8 @@ end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude, bd := bd);
-    cm_pts := Reverse(Sort(cm_pts));
-
-    quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-    quad_cm := Reverse(Sort(quad_cm));
-
-    return [cm_pts, quad_cm];
-
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd);
+    return [rat_pts, quad_pts];
 end intrinsic;
 
 
@@ -1698,8 +1693,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     
     cm_pts_rat := [a : a in all_cm_pts[1]| a[1] notin Exclude];
-    quad_cm := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
-    all_cm_pts := [cm_pts_rat, quad_cm];
+    cm_pts_quad := [a : a in  all_cm_pts[2] | a[1] notin Exclude];
 
     keys_fs := [k : k in Keys(fs)];
     all_fs := [fs[k] : k in keys_fs];
@@ -1711,46 +1705,34 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     end if;
 
     cm_pts_must_rational := [p : p in cm_pts_rat | p[1] in Include];
-    cm_pts_must_quad := [p : p in quad_cm | p[1] in Include];
+    cm_pts_must_quad := [p : p in cm_pts_quad | p[1] in Include];
     other_cm_rat := [p : p in cm_pts_rat | p[1] notin Include];
-    other_cm_quad := [p : p in quad_cm | p[1] notin Include];
+    other_cm_quad := [p : p in cm_pts_quad | p[1] notin Include];
     need := MaxNum - #Include;
+    pt_list_quad := [];
     if #other_cm_rat ge need then
     //need to make space for include points, but otherwise fill up with rational points as much as possible
         pt_list_rat := cm_pts_must_rational cat other_cm_rat[1..need];
-        pt_list_quad := cm_pts_must_quad;
+        pt_list_quad cat:= cm_pts_must_quad;
     else
         need := need - #other_cm_rat; //update how many we need, after adding rational points
-        vprintf ShimuraQuotients, 5: "Still need %o rational points\n", need;
+        vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
-        pt_list_quad := cm_pts_must_quad; //first add quadratic points
-        if #other_cm_quad ge need then
-            pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
-        else
-            need := need - #other_cm_quad; //update how many we need, after adding quadratic points
-            vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
-            pt_list_quad := pt_list_quad cat other_cm_quad; //now go search for more points
-            bd := Maximum(include_bd, 4);
-            vprintf ShimuraQuotients, 5: "increasing bound to %o\n", bd;
-            Exclude := Exclude join {d : d in [pt[1] : pt in pt_list_quad]}; //update exclude list to include already used points
-            vprintf ShimuraQuotients, 5: "Exclude list is now %o\n", Exclude;
-            new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-            vprintf ShimuraQuotients, 5: "Found %o quadratic points\n", #new_quad_cm;
-            while need gt 0 do
-                if #new_quad_cm ge need then
-                    pt_list_quad := pt_list_quad cat new_quad_cm[1..need];
-                    need := 0;
-                else
-                    pt_list_quad := pt_list_quad cat new_quad_cm;
-                    need := need - #new_quad_cm;
-                    vprintf ShimuraQuotients, 5: "Still need %o quadratic points\n", need;
-                    bd := bd+2;
-                    vprintf ShimuraQuotients, 5: "Increasing bound to %o\n", bd;
-                    new_quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
-                    Exclude := Exclude join {d : d in [pt[1] : pt in new_quad_cm]}; //update exclude list to include already used points
-                    vprintf ShimuraQuotients, 5:"Found %o quadratic points\n", #new_quad_cm;
-                end if;
-            end while;
+        Exclude := Exclude join {pt[1] : pt in pt_list_rat};
+        bd := Maximum(include_bd*2, 8); //go up to 8 from 4
+        if bd le 8 then 
+            new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+            pt_list_rat := pt_list_rat cat new_rat_cm;
+            need := need - #new_rat_cm;
+        end if;
+        if need gt 0 then
+        //now add quadratic points
+            other_cm_quad := other_cm_quad cat new_quad_cm;
+            if #other_cm_quad ge need then
+                pt_list_quad := pt_list_quad cat other_cm_quad[1..need];
+            else
+                error "Could not find enough points, sorry!";
+            end if;
         end if;
     end if;
 
@@ -1778,7 +1760,8 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         end for;
     end for;
 
-    ds := [[pt[1] : pt in pt_list_rat], [ pt[1] : pt in pt_list_quad ]];
+    all_cm_pts := [cm_pts_rat, cm_pts_quad];
+    ds := [pt[1] : pt in pt_list_rat] cat [ pt[1] : pt in pt_list_quad ];
 
     schofer_tab := CreateSchoferTable(table, keys_fs, ds, curves,Xstar);
     schofer_tab`BorcherdsForms := fs;
@@ -1786,19 +1769,29 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     return schofer_tab, all_cm_pts;
 end intrinsic;
 
-function find_signs(s, stilde, ds)
-    ratds := ds[1];
-    quadds := ds[2];
+function find_degs(abs_schofer_tab)
+//returns list of degrees of fields of definition for each d, on the star curve
+    ds := abs_schofer_tab`Discs;
+    fldsofdef := abs_schofer_tab`FldsOfDefn;
+    cid := abs_schofer_tab`Xstar`CurveID;
+    degs := [];
+    for d in ds do
+        Append(~degs, Degree(fldsofdef[cid][d][1]));
+    end for;
+    return degs;
+end function;
+
+function find_signs_hauptmodul(s, stilde, ds, degs)
     inf_zero_indices := [Index(s,0), Index(stilde,0), Index(s,Infinity())];
     assert stilde[inf_zero_indices[3]] eq Infinity();
     scale_tilde := stilde[Index(s,0)];
     scale := s[Index(stilde,0)];
-    idxs := [i : i in [1..#s] | i notin inf_zero_indices and i le #ratds];
-    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in idxs];
-    degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
+
+    rat_idxs := [i : i in [1..#s] | i notin inf_zero_indices and degs[i] eq 1];
+    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in rat_idxs];
     s_new := [* ss/scale^degs[i] : i->ss in s *];
     stilde_new := [* sstilde/scale_tilde^degs[i] : i->sstilde in stilde *];
-    for j->idx in idxs do
+    for j->idx in rat_idxs do
         s_new[idx] := signs[j][1]*s_new[idx];
         stilde_new[idx] := signs[j][2]*stilde_new[idx];
     end for;
@@ -1811,8 +1804,7 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
 
     keys_fs := schofer_table`Keys_fs;
     table := schofer_table`Values;
-    sep_ds := schofer_table`Discs;
-    ds := sep_ds[1] cat sep_ds[2];
+    ds := schofer_table`Discs;
     k_idxs := schofer_table`K_idxs;
     s_idx := Index(keys_fs,-1);
     genus_list := [curves[keys_fs[i]]`g : i in k_idxs];
@@ -1954,7 +1946,6 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     keys_fs := schofer_table`Keys_fs;
     table := schofer_table`Values;
     ds := schofer_table`Discs;
-    ds := ds[1] cat ds[2];
     k_idxs := schofer_table`K_idxs;
     curves := schofer_table`Curves;
 
@@ -2352,19 +2343,18 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    vprintf ShimuraQuotients, 1 : "Done!\n";
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
-    Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
+    // Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
-                                                           Exclude := Exclude, Include := Set(d_divs));
+                                                           Exclude := {}, Include := Set(d_divs));
     vprintf ShimuraQuotients, 2 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
     ReduceTable(abs_schofer_tab);
     vprintf ShimuraQuotients, 1 : "Computing actual values at CM points...";
-    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := {});
     vprintf ShimuraQuotients, 1 : "Done!\n";  
     vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
     crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
@@ -2531,8 +2521,6 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     has_cc, cc := HasComplexConjugate(abs_H_R);
     if not has_cc then
         gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // elements that restrict to the complex conjugation on Q_P_ext
-        // cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(Q_P_ext.1) eq ComplexConjugate(Q_P_ext.1)];
         // elements that restrict to the complex conjugation on K
         cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
         cc_reps := [gal_to_auts(cc) : cc in cc_candidates];
@@ -2589,35 +2577,29 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
     assert #flds eq 1;
     deg := Degree(flds[1]);
-    if d in ds[1] then
-        d_idx := Index(ds[1],d);
-        ds[1][d_idx] := dnew;
-    else
-        qidx := Index(ds[2], d);
-        d_idx := qidx+#ds[1];
-        ds[2][qidx] := dnew;
-    end if;
+    d_idx := Index(ds,d);
+    ds[d_idx] := dnew;
     Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
     norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
-         if is_log then
+        if is_log then
             table[i][d_idx] := norm_val[i]-deg*row_scales[i];
         else
             table[i][d_idx] := RationalNumber(norm_val[i]-deg*row_scales[i]);
         end if;
     end for;
     schofer_tab`Values := table;
-    schofer_tab`Discs := [ds[1], ds[2]];
+    schofer_tab`Discs := ds;
     curves := schofer_tab`Curves;
-    UpdateFieldsOfDefn(schofer_tab, dnew);  
     return;
 end procedure;
 
 
 function find_y2_scales(schofer_table)
     ds := schofer_table`Discs;
-    ratds := ds[1];
+    degs := find_degs(schofer_table);
+    ratds := [d : i->d in ds | degs[i] eq 1];
     table := schofer_table`Values;
     keys_fs := schofer_table`Keys_fs;
     k_idxs := schofer_table`K_idxs;
@@ -2673,52 +2655,129 @@ function find_y2_scales(schofer_table)
 
 end function;
 
-function find_y2_signs(table, keys_fs, curves, d, j, flds, k_idxs)
+function find_y2_signs(abs_schofer_tab)
     //find signs of y^2 for rational CM point d on each y^2
-    //in keys_fs, where j is index of column of d in table
-    for k->i in k_idxs do
-        if table[i][j] eq Infinity() then continue; end if;
-        if table[i][j] eq 0 then continue; end if;
-        fields := flds[keys_fs[i]][d];
-        Fs_eps := [* <F, eps> : F in flds, eps in [-1,1] *];
-        possible_answers := [* *];
-        for eps in [-1,1] do
-            y2 := eps*table[i][j];
-            for F in fields do
-                is_sqr, y := IsSquare(F!y2);
-                if (is_sqr) then
-                    if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
-                        Append(~possible_answers, <F,eps,y>);
+    //in keys_fs, where d_idx is index of column of d in table
+    table := abs_schofer_tab`Values;
+    keys_fs := abs_schofer_tab`Keys_fs;
+    k_idxs := abs_schofer_tab`K_idxs;
+    flds := abs_schofer_tab`FldsOfDefn;
+    ds := abs_schofer_tab`Discs;
+    degs := find_degs(abs_schofer_tab);
+    rat_idxs := [i : i in [1..#ds] | degs[i] eq 1];
+    quad_idxs := [i : i in [1..#ds] | degs[i] eq 2];
+
+    for d_idx->d in ds do
+        for k->i in k_idxs do
+            if table[i][d_idx] eq Infinity() then continue; end if;
+            if table[i][d_idx] eq 0 then continue; end if;
+            fields := flds[keys_fs[i]][d];
+            possible_answers := [* *];
+            for eps in [-1,1] do
+                y2 := eps*table[i][d_idx];
+                for F in fields do
+                    is_sqr, y := IsSquare(F!y2);
+                    if (is_sqr) then
+                        if d_idx in rat_idxs then
+                            if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                                Append(~possible_answers, <F,eps,y>);
+                            end if;
+                        elif d_idx in quad_idxs then
+                            if Degree(MinimalPolynomial(y)) eq 1 then
+                                if NormEquation(F, y2) then
+                                    Append(~possible_answers, <F,eps,y>); //this is just a norm value
+                                end if;
+                            end if;
+                        end if;
                     end if;
-                end if;
+                end for;
             end for;
+            assert #possible_answers eq 1;
+            eps := possible_answers[1][2];
+            table[i][d_idx] :=  eps * table[i][d_idx];
         end for;
-        assert #possible_answers eq 1;
-        eps := possible_answers[1][2];
-        table[i][j] :=  eps * table[i][j];
     end for;
     return table;
 end function;
 
-intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -> SchoferTable
-    {}
-    ds := abs_schofer_tab`Discs;
+function find_hauptmodul_signs_quadratic(abs_schofer_tab, d, d_idx)
+    //find signs of hauptmodul for quadratic CM point d on each hauptmodul
+    //in keys_fs, where d_idx is index of column of d in table
     table := abs_schofer_tab`Values;
     keys_fs := abs_schofer_tab`Keys_fs;
     k_idxs := abs_schofer_tab`K_idxs;
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
+    flds := abs_schofer_tab`FldsOfDefn;
+
+    for k->i in k_idxs do
+        if table[i][d_idx] eq Infinity() then continue; end if;
+        if table[i][d_idx] eq 0 then continue; end if;
+        K := flds[keys_fs[i]][d][1];
+        norm_s := table[s_idx][d_idx];
+        norm_stilde := table[stilde_idx][d_idx];
+         _<x> := PolynomialRing(Rationals());
+        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
+        minpolys := [];
+        for eps in signs do
+                trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
+                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
+        end for;
+        roots := [Roots(p,K) : p in minpolys];
+        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
+        if #good_inds eq 1 then
+            table[s_idx][d_idx] := minpolys[good_inds[1]];
+            norm_s := Coefficient(minpolys[good_inds[1]], 0);
+            trace_s := - Coefficient(minpolys[good_inds[1]], 1);
+            table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
+            return true, table;
+        else
+            vprintf ShimuraQuotients, 3: "We need that there is a unique minpoly left after filtering by roots, but we found %o good indices\n", #good_inds;
+            if #good_inds eq 0 then
+                error "No good indices found after filtering by roots";
+            end if;
+            return false, _;
+        end if;
+    end for;
+end function;
+
+// intrinsic FindSigns(abs_schofer_tab::SchoferTable, d::RngIntElt, d_idx::RngIntElt) -> BoolElt, List
+//     {Find signs on the y2 rows}
+//     //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
+//     //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
+//     // where sigma is the unique nontrivial element of Gal(K/Q)
+//     // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
+//     // so eps* v is a square in Q, and is positive
+//     keys_fs := abs_schofer_tab`Keys_fs;
+//     k_idxs := abs_schofer_tab`K_idxs;
+//     s_idx := abs_schofer_tab`sIndex;
+//     stilde_idx := abs_schofer_tab`sTildeIndex;
+//     curve_id := abs_schofer_tab`Xstar`CurveID;
+//     all_flds := abs_schofer_tab`FldsOfDefn;
+//     fld := all_flds[curve_id][d];
+//     table := abs_schofer_tab`Values;
+//     assert #fld eq 1;
+
+//     if Degree(fld[1]) eq 1 then
+//         return find_y2_signs_rational(table, keys_fs, d, d_idx, all_flds, k_idxs);
+//     else
+//         assert Degree(fld[1]) eq 2;
+//         return find_y2_signs_quadratic(abs_schofer_tab,d,d_idx);
+//     end if;
+// end intrinsic;
+
+intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
+    {}
+    allds := abs_schofer_tab`Discs;
+    table := abs_schofer_tab`Values;
     Xstar := abs_schofer_tab`Xstar;
     row_scales := abs_schofer_tab`RowScales;
-    curves := abs_schofer_tab`Curves;
-    cid := Xstar`CurveID; 
-    ratds := ds[1];
-    quadds := ds[2];
-    allds := ratds cat quadds;
 
+    //scale the hauptmodul rows
     s_idx := abs_schofer_tab`sIndex;
     stilde_idx := abs_schofer_tab`sTildeIndex;
     s := table[s_idx];
     stilde := table[stilde_idx];
-
 
     table :=[* [* x : i->x in t *] : t in table *];
     scale_tilde := stilde[Index(s,LogSum(0))];
@@ -2733,9 +2792,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
     //Scale the y2 rows of the table
     scale_factors := find_y2_scales(abs_schofer_tab);
 
-    // make table values into rational numbers
-
-    degs := [1 : i in ds[1] ] cat [ 2 : i in ds[2]];
+    degs := find_degs(abs_schofer_tab);
     for i->k in k_idxs do
         for j in [1 .. #table[k]] do
             // table[k][j] := table[k][j]/scale_factors[i]^degs[j];
@@ -2744,91 +2801,60 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum) -
         // row_scales[k] := row_scales[k]*scale_factors[i];
         row_scales[k] +:= scale_factors[i];
     end for;
-    // abs_schofer_tab`Values := table;
-    abs_schofer_tab`Values := [[RationalNumber(x) : x in y] : y in table];
+
+    // make table values into rational numbers
+    abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
     abs_schofer_tab`RowScales := row_scales;
     
+    //find signs on the hauptmodul rows
     table := abs_schofer_tab`Values;
-    table :=[* [* x : i->x in t *] : t in table *];
-
     s := table[s_idx];
     stilde := table[stilde_idx];
-    s, stilde := find_signs(s, stilde, ds);
-
+    degs := find_degs(abs_schofer_tab);
+    s, stilde := find_signs_hauptmodul(s, stilde, allds, degs);
     table[s_idx] := s;
     table[stilde_idx] := stilde;
+    abs_schofer_tab`Values := table;
 
-    //Next need to go from norms to values on the hauptmoduls for the quad_cm points
-
-    all_flds := abs_schofer_tab`FldsOfDefn;
-
-    bad_ds := {};
-    for i->d in quadds do
-        d_idx := #ratds+i;
-        good_inds := [];
-        currd := d;
-        while #good_inds ne 1 do
-            all_flds := abs_schofer_tab`FldsOfDefn;
-            norm_s := table[s_idx][d_idx];
-            norm_stilde := table[stilde_idx][d_idx];
-            flds := all_flds[cid][currd];
-            assert #flds eq 1;
-            assert Degree(flds[1]) eq 2;
-            K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
-            _<x> := PolynomialRing(Rationals());
-            signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-            minpolys := [];
-            for eps in signs do
-                    trace := 1 - eps[1]*norm_stilde + eps[2]*norm_s;
-                    Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-            end for;
-            roots := [Roots(p,K) : p in minpolys];
-            good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-            require #good_inds gt 0 : "Error in quadratic points - no possible signs!";
-            if #good_inds ne 1 then
-                vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
-                Include(~bad_ds, currd);
-                candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
-                require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
-                newd := Reverse(Sort(SetToSequence(candidates)))[1];
-                replace_column(abs_schofer_tab, currd, newd, false);
-                currd := newd;
-                table := abs_schofer_tab`Values;
-                table :=[* [* x : i->x in t *] : t in table *];
+    quad_idxs := [i : i in [1..#allds] | degs[i] eq 2];
+    used_ds := Set(allds);
+    for i in [1..#allds] do
+        if i notin quad_idxs then continue; end if; //only do quadratic points
+        currd := allds[i];
+        success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
+        while not success do
+            vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+            Include(~used_ds, currd);
+            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
+            if #candidates eq 0 then
+                error "No possible choices of CM points left which we can pin down the correct minpoly";
             end if;
+            newd := Reverse(Sort(SetToSequence(candidates)))[1];
+            vprintf ShimuraQuotients, 1: "Replacing %o with %o\n", currd, newd;
+            replace_column(abs_schofer_tab, currd, newd, false);
+            Include(~used_ds, newd);
+            currd := newd;
+            success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
         end while;
-        table[s_idx][d_idx] := minpolys[good_inds[1]];
-        norm_s := Coefficient(minpolys[good_inds[1]], 0);
-        trace_s := - Coefficient(minpolys[good_inds[1]], 1);
-        table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
-        abs_schofer_tab`Values := table;
-    end for;
-       
-    //Find signs on the y2 rows
-
-    //Note that when we are at a quadratic CM point, K the quadratic field the norm is always positive
-    //Write v = | y^2(tau)y^2(taubar)|. Then y(tau)y(taubar) = sqrt(eps*norm). Since the fields Q(y(tau)) = Q(y(tau))^sigma
-    // where sigma is the unique nontrivial element of Gal(K/Q)
-    // y(tau)y(taubar) lies in the fixed field by sigma, i.e. in Q
-    // so eps* v is a square in Q, and is positive
-
-    for j->d in ratds do
-        table := find_y2_signs(table, keys_fs, curves, d, j, all_flds, k_idxs);
+        abs_schofer_tab`Values := new_table;
     end for;
 
-    schofer_table := CreateSchoferTable(table, keys_fs, abs_schofer_tab`Discs, curves, Xstar);
+    table := find_y2_signs(abs_schofer_tab);
+
+    schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
     return schofer_table;
 end intrinsic;
 
 intrinsic ReduceTable(schofer_tab::SchoferTable)
     {}
     table := schofer_tab`Values;
-    sep_ds := schofer_tab`Discs;
+    allds := schofer_tab`Discs;
+    degs := find_degs(schofer_tab);
     scales := [];
-    num_rat_ds := #sep_ds[1];
+    rat_idxs := [i : i in [1..#degs] | degs[i] eq 1];
     for t in table do
         // xs := [x : i->x in t | i le num_rat_ds and x notin [0, Infinity()] ];
-        xs := [x : i->x in t | i le num_rat_ds and x notin [LogSum(0), LogSum(Infinity())] ];
+        xs := [x : i->x in t | i in rat_idxs and x notin [LogSum(0), LogSum(Infinity())] ];
         //xs := [x : x in t | x notin [0, Infinity()]];
         /*
         ps := &join[Set(PrimeDivisors(Numerator(x))) : x in xs];
@@ -2839,12 +2865,9 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
         // vals := [[Valuation(x,p) : x in xs ] : p in ps];
         vals := [[IsDefined(x`log_coeffs, p) select x`log_coeffs[p] else 0 : x in xs ] : p in ps];
         mins := [Minimum([<AbsoluteValue(v),v> : v in valp]) : valp in vals];
-        // scale := &*[Rationals() | p^mins[i][2] : i->p in ps];
         scale := &+([LogSum()] cat [LogSum(mins[i][2], p) : i->p in ps]);
         Append(~scales, scale);
     end for;
-    degs := [1 : i in sep_ds[1] ] cat [ 2 : i in sep_ds[2]];
-    // schofer_tab`Values :=  [[x/scales[i]^degs[j] : j->x in t] : i->t in table ];
     schofer_tab`Values :=  [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
     return;
@@ -2857,7 +2880,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
-    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+    schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
     return schofer_tab;
 end intrinsic;
 
