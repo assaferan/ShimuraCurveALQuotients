@@ -1,5 +1,6 @@
 // Compute the order of vanishing of eta(delta tau) at the cusp a/b in Gamma_0(N)
 // multiplied by 24
+
 function order_of_vanishing_of_eta(delta, b, N)
     return N*GCD(b,delta)^2 div (GCD(N,b^2)*delta);
 end function;
@@ -369,9 +370,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             min_v := Minimum([Valuation(f) : f in qexps]);
             coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
         else
+            min_v := 0;
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
         end if;
-
+        
         E, T := EchelonForm(coeffs);
         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
         if Zero then
@@ -417,7 +419,9 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
     
-    if Zero then return E, n, n0, eta_quotients_oo, eta_quotients; end if;
+    if Zero then 
+        return E, n, n0, eta_quotients_oo, eta_quotients; 
+    end if;
     return E, n, n0, t_eta_quotient, eta_quotients; 
 end intrinsic;
 
@@ -1684,6 +1688,7 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     return [rat_pts, quad_pts];
 end intrinsic;
 
+
 intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], all_cm_pts ::SeqEnum, fs::Assoc : MaxNum := 7, Prec := 100,  Exclude := {}, Include := {}) -> SchoferTable, SeqEnum
 {Returns the absolute values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     
@@ -1695,6 +1700,8 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
    
     if #Include gt 0 then
         include_bd := Maximum([ ClassNumber(d) : d in Include]);
+    else
+        include_bd := 0;
     end if;
 
     cm_pts_must_rational := [p : p in cm_pts_rat | p[1] in Include];
@@ -1859,6 +1866,7 @@ intrinsic QuadraticConstraintsOnEquations(schofer_table::SchoferTable, curves::S
     all_relns := [* *];
     for j->idx in k_idxs do
         B := kernels[j];
+        require not IsEmpty(B) : "Error in Schofer table values at rational points - no solution found!";
         numcoeffs := #Eltseq(B[1]);
         R<[x]>:=PolynomialRing(Rationals(),#B);
         inf_idx_y2 := Index(table[idx], Infinity());
@@ -1913,12 +1921,8 @@ procedure add_new_column(schofer_tab, dnew, deg)
         Append(~table[i], norm_val[i]/row_scales[i]^deg);
     end for;
     schofer_tab`Values := table;
-    if deg eq 1 then
-        Append(~ds[1],dnew);
-    else
-        Append(~ds[2],dnew);
-    end if;
-    schofer_tab`Discs := [ds[1], ds[2]];
+    Append(~ds, dnew);
+    schofer_tab`Discs := ds;
     return;
 end procedure;
 
@@ -2112,6 +2116,7 @@ function equation_above_conic(covered_gplus1, covered_conic)
     return H, C_to_P1, y_factor;
 end function;
 
+
 function ws_above_conic(H, C_to_P1, y_factor, label, conic_label, gplus1_label, curves, common_base, crv_ws)
     ws_label := AssociativeArray();
     deg_H := Degree(H);
@@ -2180,7 +2185,8 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_conics[label][conic_label];
             found_base := false;
             for base in common_bases do
-                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) then
+                if (Degree(HyperellipticPolynomials(crv_eqns[other_label][base])) eq g+1) 
+                    or (g eq 0 and other_label in Keys(curves_above_conics[label])) then
                     common_base := base;
                     found_base := true;
                     break;
@@ -2202,6 +2208,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
     end for;
     return crv_eqns_label, crv_ws_label;
 end function;
+
 
 intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[RngIntElt], curves::SeqEnum[ShimuraQuot]) -> Assoc, Assoc
 {Using Riemann Roch, leverage covered equations to get higher cover equations}
@@ -2249,8 +2256,80 @@ intrinsic EquationsAboveP1s(crv_list::SeqEnum[CrvHyp], ws::Assoc, keys::SeqEnum[
 
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100)-> Assoc, Assoc
+intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
+    {Find equations above pointless conics, as a last step}
+    all_keys := Keys(all_eqns);
+    not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
+    starcurve := Representative(curves[Maximum(all_keys)]`Covers);
+    assert IsStarCurve(curves[starcurve]);
+    known_conics := [k : k in all_keys | k notin not_done and curves[k]`g eq 0]; 
+    //now find all curves lying over a conic without an equation
+    curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
+    for k in curves_to_do do
+        g := curves[k]`g;
+        assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
+        for other_curve in curves[k]`Covers do
+            found_gplus1 := false;
+            bases := Keys(all_eqns[other_curve]);
+            if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
+            if (base_label ne 0) and base_label notin bases then continue; end if;
+            base := (base_label eq 0) select Representative(bases) else base_label;
+            if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
+                gplus1key := other_curve; //found the gplus1
+                found_gplus1 := true;
+                break;
+            end if;
+        end for;
+        if not found_gplus1 then continue; end if;
+
+        //combine equations to get the equation for the curve
+        covered_gplus1 := all_eqns[gplus1key][base];
+        covered_conic:= all_eqns[conic_key][base];
+        wt := curves[gplus1key]`g +1;
+        P3<x,y,s,z> := WeightedProjectiveSpace(Rationals(),[1,wt,1,1]);
+        fconic := HyperellipticPolynomials(covered_conic);
+        fgplus1 := HyperellipticPolynomials(covered_gplus1);
+        eqn1 := Evaluate(fconic, s);
+        eqn2 := Evaluate(fgplus1,s);
+        eqn2 := Homogenization(eqn2,z);
+        eqn1 := Homogenization(eqn1,z);
+        C := Curve(P3, [y^2 - eqn2, x^2 - eqn1]);
+        all_eqns[k][conic_key] := C;
+
+        all_ws[k][conic_key] := AssociativeArray(); 
+        //now find the ws
+        ws_to_do := Keys(all_ws[gplus1key][base]);
+        for w in ws_to_do do
+            w_mapgplus1 := all_ws[gplus1key][base][w];
+            alg_map_gplus1 := AlgebraMap(w_mapgplus1);
+            y_var := Domain(alg_map_gplus1).2;
+            s_var := Domain(alg_map_gplus1).1;
+            z_var := Domain(alg_map_gplus1).3;
+            im_y := Evaluate(alg_map_gplus1(y_var), [s,y,z]);
+            im_s1 := Evaluate(alg_map_gplus1(s_var), [s,y,z]);
+            im_z1 := Evaluate(alg_map_gplus1(z_var), [s,y,z]);
+            w_mapconic := all_ws[conic_key][base][w];
+            alg_map_conic := AlgebraMap(w_mapconic);
+            s_var := Domain(alg_map_conic).1;
+            x_var := Domain(alg_map_conic).2;
+            z_var := Domain(alg_map_conic).3;
+            im_x :=  Evaluate(alg_map_conic(x_var), [s,x,z]);
+            im_s2 := Evaluate(alg_map_conic(s_var), [s,y,z]);
+            im_z2 := Evaluate(alg_map_conic(z_var), [s,y,z]);
+            assert im_s1*im_z2 eq im_s2*im_z1; //acts the same way
+            wmap := map<C->C | [im_x, im_y, im_s1, im_z1]>;
+            b, inv := IsIsomorphism(wmap);
+            assert b;
+            all_ws[k][conic_key][w] := inv^(-1);
+        end for;
+    end for;
+    return all_eqns, all_ws;
+
+end intrinsic;
+
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
+    require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     vprintf ShimuraQuotients, 1 : "Done!\n";
@@ -2263,7 +2342,6 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
-    // Exclude := {pt[1] : pt in all_cm_pts[1] cat all_cm_pts[2] | GCD(pt[1], Xstar`N) ne 1};
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                            MaxNum := num_vals, Prec := Prec, 
                                                            Exclude := {}, Include := Set(d_divs));
@@ -2278,23 +2356,32 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
-    vprintf ShimuraQuotients, 1 : "Done!\n";
+    vprintf ShimuraQuotients, 1 : "Done\n";
+    vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
+    all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
+    vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
+end intrinsic;
+
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
+{Get equations of all covers (not just immediate covers)}
+    _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label);
 end intrinsic;
 
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 {Return possible fields of definition for CM point with CM by d on X.}
+    // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
     f := Conductor(R);
-    H_R := RingClassField(R); // maybe want NumberField(H_R)
+    H_R := RingClassField(R);
     D := X`D;
     N := X`N;
     D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-    N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
+    N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1 or (f mod p eq 0)];   
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-    W_R := [m : m in X`W | D_R*N_R mod m eq 0];
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
@@ -2304,16 +2391,11 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     end if;
 
     rec := ArtinMap(H_R);
-    // rec_abs := Components(rec)[1];
-    // gal_to_aut := &*Components(rec)[2..#Components(rec)];
-    // assert rec_abs*gal_to_aut eq rec;
 
     // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
 
     // Theorem 5.8 - Shimura reciprocity
-    // fields := [* F[1] : F in Subfields(AbsoluteField(NumberField(H_R))) *];
-    // Q_P_ext := H_R;
-
+    
     // setting up number fields
     H_R_NF := NumberField(H_R);
     abs_H_R := AbsoluteField(H_R_NF);
@@ -2328,7 +2410,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
     // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
     m := D_R*N_star_R;
-    //if m in X`W then
+    
+    frakas := [];
     for a in A do
         alift := a@@PicR_to_A;
         // circumventing a bug in Magma in mPicR
@@ -2339,61 +2422,34 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
         end if;
         B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
         if IsIsomorphic(B_fraka, B) then
-            break;
+            Append(~frakas, fraka);
+            if IsFundamentalDiscriminant(d) then break; end if; // see [GR], Remark 5.11
         end if;
     end for;
-    assert assigned fraka;
-    sigma_a := rec(fraka);
-    abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
-    // _, K_to_abs := IsSubfield(K, abs_H_R);
-    has_cc, cc := HasComplexConjugate(abs_H_R);
-    if not has_cc then
-        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // Finding maximal CM subfield
-        // First find maximal totally real subfield
-        tot_real := [e : e in SubfieldLattice(abs_H_R) | IsTotallyReal(NumberField(e))];
-        max_deg, max_ind := Maximum([Degree(e) : e in tot_real]);
-        maximal_cm_fields := [f : f in MinimalOverfields(tot_real[max_ind]) | IsTotallyComplex(NumberField(f))];
-        assert #maximal_cm_fields eq 1;
-        L := NumberField(maximal_cm_fields[1]);
-        // elements that restrict to the complex conjugation on maximal CM subfield
-        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(L.1) eq ComplexConjugate(L.1)];  
-        cc := Representative(cc_candidates);
-        cc := gal_to_auts(cc);
-    end if;
-    sigma := hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))>;
-    if (m ne 1) then
-        al_action[m] := sigma;
-    else
-        sigma_for_later := sigma;
-    end if;
+    require #frakas gt 0 : "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    sigma_as := [rec(fraka) : fraka in frakas];
+    abs_sig_as := [H_R_to_abs^(-1)*sigma_a*H_R_to_abs : sigma_a in sigma_as];
 
     // Lemma 5.9
     fixed_sub_gens := [];
     unknown_quotients := 0;
-    // for m in ALsToGens(X`W, D*N) do
     als_DN := [Q : Q in Divisors(D*N) | GCD(Q, (D*N) div Q) eq 1];
-    for m in als_DN do
-        al_is_gal := ((D*N) div (D_R*N_R)) mod m eq 0;
+    // we already have m so use mm just to be safe
+    for mm in als_DN do
+        al_is_gal := ((D*N) div (D_R*N_R)) mod mm eq 0;
         if al_is_gal then
-            frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(m*Integers(K))];
-            assert Norm(frakb) eq m;
-            // sigma := rec_abs(frakb);
-            al_action[m] := H_R_to_abs^(-1)*rec(frakb)*H_R_to_abs;
-            // Append(~fixed_sub_gens, sigma);
-        // else
-            // unknown_quotients +:= 1;
+            frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(mm*Integers(K))];
+            assert Norm(frakb) eq mm;
+            al_action[mm] := H_R_to_abs^(-1)*rec(frakb)*H_R_to_abs;
         end if;
         // !! TODO : figure out what to do if it is not Galois
     end for;
 
     known_al := Keys(al_action);
-    // allws := {Integers()|};
     S := Subsets(known_al);
     for s in S do
         if #s eq 0 then
             al_action[1] := hom<abs_H_R->abs_H_R | abs_H_R.1>;
-            // Include(~allws, 1);
         else
             prod := 1;
             for w in s do
@@ -2403,51 +2459,43 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
                     al_action[prod] := al_action[prev_prod]*al_action[w];
                 end if;
             end for;
-            // Include(~allws, prod);
         end if;
     end for;
 
-    if (m eq 1) then
-        al_action[1] := sigma_for_later;
-    end if;
+    fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
 
-    fixed_by := [al_action[m] : m in X`W meet Keys(al_action)];
+    Q_P := FixedField(abs_H_R, fixed_by);
+    Q_Ps := [* Q_P *];
 
-    sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
-    sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
-
-    assert sanity_check;
-    assert sanity_check_trivial;
-
-    unknown_quotients := n_W - n_fixed;
-
-    // fixed_sub := sub<Universe(fixed_sub_gens) | fixed_sub_gens>;
-    // Q_P_ext := FixedField(H_R, fixed_sub);
-
-   fixed_by := [hom<abs_H_R -> abs_H_R | f(abs_H_R.1)> : f in fixed_by]; //Eran's attempt to keep the segfault at bay
-    
-    // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
-    Q_P_ext := FixedField(abs_H_R, fixed_by);
-
-    // if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
-
-    // Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
-
-    return [* Q_P_ext *];
-
-    // if (Degree(Q_P_ext) le 2^unknown_quotients) then
-    //     Append(~Q_Ps, Rationals());
-    // end if;
-
-    /*
-    if top_is_H then 
-        Q_Ps := [* Q_P_ext *];
+    // Handle complex conjugation 
+    has_cc, cc := HasComplexConjugate(abs_H_R);
+    if not has_cc then
+        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
+        // elements that restrict to the complex conjugation on K
+        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
+        cc_reps := [gal_to_auts(cc) : cc in cc_candidates];
     else
-        Q_Ps := [* Rationals() *] cat [* F[1] : F in Subfields(AbsoluteField(NumberField(Q_P_ext))) *];
+        cc_reps := [cc];
     end if;
-    */
+    sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
+    if m eq 1 then 
+        return [* FixedField(Q_P, [sigma]) : Q_P in Q_Ps, sigma in sigmas *];
+    end if;
+    Q_Ps := [* *];
+    known_al := Keys(al_action);
+    for sigma in sigmas do
+        al_action[m] := sigma;
+        for w in known_al do
+            prod := AtkinLehnerMul(w,m,D*N);
+            al_action[prod] := al_action[m]*al_action[w];
+        end for;
+        fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
+        Q_P := FixedField(abs_H_R, fixed_by);
+        Append(~Q_Ps, Q_P);
+    end for;
 
-    // return Q_Ps;
+    return Q_Ps;
+
 end intrinsic;
 
 procedure replace_column(schofer_tab, d, dnew, is_log)
@@ -2527,7 +2575,7 @@ function find_y2_scales(schofer_table)
             // scale1, _ := SquareFree(v1/d1); //two possibilities
             // scale2, _ := SquareFree(v1);
             // if IsSquare(scale1*v2/d2) then
-            if IsSquare( v2 - LogSum(AbsoluteValue(d2))- log_scale1) then
+            if IsSquare( v2 - LogSum(AbsoluteValue(d2)) - log_scale1) then
                 // Append(~scale_factors, AbsoluteValue(scale1));
                 Append(~scale_factors, log_scale1);
             else

@@ -6,7 +6,7 @@ function load_covers_and_ws_data_38_1()
     // Verifying [GY, Table A.1, p. 33]
     // D = 38
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-16*s^6-59*s^4-82*s^2-19, DiagonalMatrix([1,16,1])>;
+    cover_data[{1}] := <HyperellipticCurve(-16*s^6-59*s^4-82*s^2-19), DiagonalMatrix([1,16,1])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();

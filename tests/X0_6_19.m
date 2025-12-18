@@ -6,7 +6,7 @@ function load_covers_and_ws_data_6_19()
     // verifying [Guo-Yang, Table A.2, p. 36]
     // D = 6, N = 19
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-19*s^8+210*s^6-625*s^4+210*s^2-19, Matrix([[1,0,-1], [0,256,0], [1,0,1]])>;
+    cover_data[{1}] := <HyperellipticCurve(-19*s^8+210*s^6-625*s^4+210*s^2-19), Matrix([[1,0,-1], [0,256,0], [1,0,1]])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
