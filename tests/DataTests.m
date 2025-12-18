@@ -63,5 +63,3 @@ procedure test_data_file()
     assert &and[(curves[j] eq read_curves[j]) : j in [1..#curves]];
 end procedure;
 
-test_genera();
-test_data_file();

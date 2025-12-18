@@ -6,7 +6,7 @@ function load_covers_and_ws_data_39_1()
     // verifying [Guo-Yang, Table A.1, p. 33]
     // D = 39
     cover_data := AssociativeArray();
-    cover_data[{1}] := <-(x^4-x^3-x^2+x+1)*(7*x^4-23*x^3+5*x^2+23*x+7), Transpose(Matrix([[0,0,-1],[0,3,0],[-1,0,0]]))>;
+    cover_data[{1}] := <HyperellipticCurve(-(x^4-x^3-x^2+x+1)*(7*x^4-23*x^3+5*x^2+23*x+7)), Transpose(Matrix([[0,0,-1],[0,3,0],[-1,0,0]]))>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
