@@ -1683,7 +1683,7 @@ end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude);
+    cm_pts := RationalCMPoints(Xstar : Exclude := Exclude, bd := bd);
     cm_pts := Reverse(Sort(cm_pts));
 
     quad_cm := QuadraticCMPoints(Xstar : Exclude := Exclude, bd := bd);
@@ -2387,16 +2387,16 @@ end intrinsic;
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 {Return possible fields of definition for CM point with CM by d on X.}
+    // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
     f := Conductor(R);
-    H_R := RingClassField(R); // maybe want NumberField(H_R)
+    H_R := RingClassField(R);
     D := X`D;
     N := X`N;
     D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-    N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
+    N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1 or (f mod p eq 0)];   
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-    W_R := [m : m in X`W | D_R*N_R mod m eq 0];
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
@@ -2406,16 +2406,11 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     end if;
 
     rec := ArtinMap(H_R);
-    // rec_abs := Components(rec)[1];
-    // gal_to_aut := &*Components(rec)[2..#Components(rec)];
-    // assert rec_abs*gal_to_aut eq rec;
 
     // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
 
     // Theorem 5.8 - Shimura reciprocity
-    // fields := [* F[1] : F in Subfields(AbsoluteField(NumberField(H_R))) *];
-    // Q_P_ext := H_R;
-
+    
     // setting up number fields
     H_R_NF := NumberField(H_R);
     abs_H_R := AbsoluteField(H_R_NF);
@@ -2430,7 +2425,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
     // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
     m := D_R*N_star_R;
-    //if m in X`W then
+    
+    frakas := [];
     for a in A do
         alift := a@@PicR_to_A;
         // circumventing a bug in Magma in mPicR
@@ -2441,13 +2437,15 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
         end if;
         B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
         if IsIsomorphic(B_fraka, B) then
-            break;
+            Append(~frakas, fraka);
+            if IsFundamentalDiscriminant(d) then break; end if; // see [GR], Remark 5.11
         end if;
     end for;
-    assert assigned fraka;
-    sigma_a := rec(fraka);
-    abs_sig_a := H_R_to_abs^(-1)*sigma_a*H_R_to_abs;
-    // _, K_to_abs := IsSubfield(K, abs_H_R);
+    require #frakas gt 0 : "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    sigma_as := [rec(fraka) : fraka in frakas];
+    abs_sig_as := [H_R_to_abs^(-1)*sigma_a*H_R_to_abs : sigma_a in sigma_as];
+   
+    /*
     has_cc, cc := HasComplexConjugate(abs_H_R);
     if not has_cc then
         gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
@@ -2469,33 +2467,28 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     else
         sigma_for_later := sigma;
     end if;
+    */
 
     // Lemma 5.9
     fixed_sub_gens := [];
     unknown_quotients := 0;
-    // for m in ALsToGens(X`W, D*N) do
     als_DN := [Q : Q in Divisors(D*N) | GCD(Q, (D*N) div Q) eq 1];
-    for m in als_DN do
-        al_is_gal := ((D*N) div (D_R*N_R)) mod m eq 0;
+    // we already have m so use mm just to be safe
+    for mm in als_DN do
+        al_is_gal := ((D*N) div (D_R*N_R)) mod mm eq 0;
         if al_is_gal then
-            frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(m*Integers(K))];
-            assert Norm(frakb) eq m;
-            // sigma := rec_abs(frakb);
-            al_action[m] := H_R_to_abs^(-1)*rec(frakb)*H_R_to_abs;
-            // Append(~fixed_sub_gens, sigma);
-        // else
-            // unknown_quotients +:= 1;
+            frakb := &*[Parent(1*Integers(K)) | pa[1]^(pa[2] div 2) : pa in Factorization(mm*Integers(K))];
+            assert Norm(frakb) eq mm;
+            al_action[mm] := H_R_to_abs^(-1)*rec(frakb)*H_R_to_abs;
         end if;
         // !! TODO : figure out what to do if it is not Galois
     end for;
 
     known_al := Keys(al_action);
-    // allws := {Integers()|};
     S := Subsets(known_al);
     for s in S do
         if #s eq 0 then
             al_action[1] := hom<abs_H_R->abs_H_R | abs_H_R.1>;
-            // Include(~allws, 1);
         else
             prod := 1;
             for w in s do
@@ -2505,15 +2498,16 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
                     al_action[prod] := al_action[prev_prod]*al_action[w];
                 end if;
             end for;
-            // Include(~allws, prod);
         end if;
     end for;
 
+    /*
     if (m eq 1) then
         al_action[1] := sigma_for_later;
     end if;
+    */
 
-    fixed_by := [al_action[m] : m in X`W meet Keys(al_action)];
+    fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
 
     sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
     sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
@@ -2523,31 +2517,62 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
     unknown_quotients := n_W - n_fixed;
 
-    // fixed_sub := sub<Universe(fixed_sub_gens) | fixed_sub_gens>;
-    // Q_P_ext := FixedField(H_R, fixed_sub);
-
-    // fixed_by cat:= [H_R_to_abs^(-1)*gal_to_aut(s)*H_R_to_abs : s in fixed_sub_gens];
     Q_P_ext := FixedField(abs_H_R, fixed_by);
-
-    // if Type(Q_P_ext) eq FldRat then return [* Q_P_ext *]; end if;
-
-    // Q_Ps := [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
-
-    return [* Q_P_ext *];
-
-    // if (Degree(Q_P_ext) le 2^unknown_quotients) then
-    //     Append(~Q_Ps, Rationals());
-    // end if;
-
-    /*
-    if top_is_H then 
-        Q_Ps := [* Q_P_ext *];
-    else
-        Q_Ps := [* Rationals() *] cat [* F[1] : F in Subfields(AbsoluteField(NumberField(Q_P_ext))) *];
+    Q_Ps := [* *];
+    if Degree(Q_P_ext) le 2^unknown_quotients then 
+        Append(~Q_Ps, Rationals());
     end if;
-    */
+    if Degree(Q_P_ext) gt 1 then 
+        Q_Ps cat:= [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
+    end if;
+    
 
-    // return Q_Ps;
+    // Handle complex conjugation 
+    has_cc, cc := HasComplexConjugate(abs_H_R);
+    if not has_cc then
+        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
+        // elements that restrict to the complex conjugation on Q_P_ext
+        // cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(Q_P_ext.1) eq ComplexConjugate(Q_P_ext.1)];
+        // elements that restrict to the complex conjugation on K
+        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
+        cc_reps := [gal_to_auts(cc) : cc in cc_candidates];
+    else
+        cc_reps := [cc];
+    end if;
+    sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
+    if m eq 1 then 
+        return [* FixedField(Q_P, [sigma]) : Q_P in Q_Ps, sigma in sigmas *];
+    end if;
+    Q_Ps := [* *];
+    known_al := Keys(al_action);
+    for sigma in sigmas do
+        al_action[m] := sigma;
+        for w in known_al do
+            prod := AtkinLehnerMul(w,m,D*N);
+            al_action[prod] := al_action[m]*al_action[w];
+        end for;
+        fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
+        
+        sanity_check, n_fixed := IsPowerOf(#fixed_by, 2);
+        sanity_check_trivial, n_W := IsPowerOf(#X`W, 2);
+
+        assert sanity_check;
+        assert sanity_check_trivial;
+
+        unknown_quotients := n_W - n_fixed;
+
+        Q_P_ext := FixedField(abs_H_R, fixed_by);
+        if Degree(Q_P_ext) le 2^unknown_quotients then 
+            Append(~Q_Ps, Rationals()); 
+        end if;
+        if Degree(Q_P_ext) gt 1 then
+            Q_Ps cat:= [* F[1] : F in Subfields(Q_P_ext) | Degree(Q_P_ext) le 2^unknown_quotients * Degree(F[1]) *];
+        end if;
+        
+    end for;
+
+    return Q_Ps;
+
 end intrinsic;
 
 procedure replace_column(schofer_tab, d, dnew, is_log)

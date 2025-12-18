@@ -1,0 +1,135 @@
+procedure test_FieldOfDefinition()
+    QQ := Rationals();
+    _<x> := PolynomialRing(QQ);
+    // testing against Appendix B in [GY]
+    // Current errors - 
+    // 1. D = 206, N = 1, d = -132
+    // 2. D = 26, N = 3, d = -267
+    // 3. D = 26, N = 3, d = -708
+    data := [
+        <26, 1, {1,2,13,26}, [* <-8, QQ>, <-11, QQ>, <-19, QQ>, <-20, QQ>, <-24, QQ>, <-52, QQ>, <-67, QQ> *] >,
+        <26, 1, {1,26}, [* <-8, QQ>, <-11, QQ>, <-19, QQ>, <-20, QuadraticField(5)>, <-24, QuadraticField(-3)>, <-52, QQ>, <-67, QQ> *]>,
+        <38, 1, {1,2,19,38}, [* <-4, QQ>, <-11, QQ>, <-19, QQ>, <-20, QQ>, <-24, QQ>, <-43, QQ>, <-163, QQ>, <-228, QQ>, <-232, QQ>, <-532, QQ>, <-760, QQ> *] >,
+        <38, 1, {1,38}, [* <-4, QQ>, <-11, QQ>, <-19, QQ>, <-20, QuadraticField(-1)>, <-24, QuadraticField(-3)>, <-43, QQ>, <-163, QQ>, <-228, QuadraticField(-19)>, <-232, QuadraticField(29)>, <-532, QuadraticField(-1)>, <-760, QuadraticField(-19)> *] >,
+        <39, 1, {1,3,13,39}, [* <-7, QQ>, <-15, QQ>, <-19, QQ>, <-24, QQ>, <-28, QQ>, <-60, QQ>, <-67, QQ>, <-91, QQ>, <-123, QQ>, <-163, QQ>, <-195, QQ>, <-267, QQ>, <-312, QQ>, <-403, QQ> *]>,
+        // Here, there is an error in [GY] for the value at -123, but if one solves for the parameter they exhibit, we get the right answer
+        <39, 1, {1,39}, [* <-7, QQ>, <-15, QuadraticField(5)>, <-19, QQ>, <-24, QuadraticField(2)>, <-28, QQ>, <-60, QuadraticField(5)>, <-67, QQ>, <-91, QuadraticField(13)>, <-123, QuadraticField(41)>, <-163, QQ>, <-195, QuadraticField(5)>, <-267, QuadraticField(89)>, <-312, QuadraticField(2)>, <-403, QuadraticField(13)> *] >,
+        <51, 1, {1,3,17,51}, [* <-3, QQ>, <-7, QQ>, <-12, QQ>, <-24, QQ>, <-28, QQ>, <-51, QQ>, <-163, QQ>, <-187, QQ>, <-267, QQ>, <-408, QQ> *] >,
+        <51, 1, {1,51}, [* <-3, QQ>, <-7, QQ>, <-12, QQ>, <-24, QuadraticField(-3)>, <-28, QQ>, <-51, QuadraticField(-3)>, <-163, QQ>, <-187, QuadraticField(-11)>, <-267, QuadraticField(-3)>, <-408, QuadraticField(-6)> *] >,
+        <55, 1, {1,5,11,55}, [* <-3, QQ>, <-12, QQ>, <-15, QQ>, <-27, QQ>, <-60, QQ>, <-67, QQ>, <-88, QQ>, <-115, QQ>, <-163, QQ>, <-187, QQ>, <-235, QQ>, <-715, QQ> *] >, 
+        <55, 1, {1,55}, [* <-3, QQ>, <-12, QQ>, <-15, QuadraticField(5)>, <-27, QQ>, <-60, QuadraticField(5)>, <-67, QQ>, <-88, QuadraticField(2)>, <-115, QuadraticField(5)>, <-163, QQ>, <-187, QuadraticField(17)>, <-235, QuadraticField(5)>, <-715, QuadraticField(13)> *] >,
+        <57, 1, {1,3,19,57}, [* <-4, QQ>, <-7, QQ>, <-16, QQ>, <-19, QQ>, <-24, QQ>, <-28, QQ>, <-43, QQ>, <-123, QQ>, <-163, QQ>, <-267, QQ> *] >,
+        // Something is wrong here - [GY] write the full quotient also for the second curve,
+        // but it seems it should be quotient by w_{19}. Also it seems that at s = infty, x = pmsqrt(-1)
+        <57, 1, {1,19}, [* <-4, QuadraticField(-1)>, <-7, QuadraticField(-7)>, <-16, QuadraticField(-1)>, <-19, QuadraticField(-19)>, <-24, QuadraticField(-3)>, <-28, QuadraticField(-7)>, <-43, QuadraticField(-43)>, <-123, QuadraticField(-3)>, <-163, QuadraticField(-163)>, <-267, QuadraticField(-3)> *] >,
+        <58, 1, {1,2,29,58}, [* <-3, QQ>, <-8, QQ>, <-11, QQ>, <-19, QQ>, <-27, QQ>, <-40, QQ>, <-43, QQ>, <-148, QQ>, <-163, QQ>, <-232, QQ> *] >,
+        <58, 1, {1,29}, [* <-3, QuadraticField(-3)>, <-8, QQ>, <-11, QuadraticField(-11)>, <-19, QuadraticField(-19)>, <-27, QuadraticField(-3)>, <-40, QuadraticField(5)>, <-43, QuadraticField(-43)>, <-148, QuadraticField(-1)>, <-163, QuadraticField(-163)>, <-232, QQ> *] >,
+        <62, 1, {1,2,31,62}, [* <-4, QQ>, <-8, QQ>, <-19, QQ>, <-20, QQ>, <-40, QQ>, <-67, QQ>, <-163, QQ>, <-372, QQ>, <-403, QQ> *] >,
+        <62, 1, {1,62}, [* <-4, QQ>, <-8, QQ>, <-19, QQ>, <-20, QuadraticField(-1)>, <-40, QuadraticField(-2)>, <-67, QQ>, <-163, QQ>, <-372, QuadraticField(-1)>, <-403, QuadraticField(13)> *] >,
+        <69, 1, {1,3,23,69}, [* <-3, QQ>, <-4, QQ>, <-12, QQ>, <-24, QQ>, <-75, QQ>, <-115, QQ>, <-123, QQ>, <-147, QQ>, <-163, QQ>, <-483, QQ> *] >,
+        <69, 1, {1,69}, [* <-3, QQ>, <-4, QQ>, <-12, QQ>, <-24, QuadraticField(-3)>, <-75, QuadraticField(5)>, <-115, QuadraticField(5)>, <-123, QuadraticField(-3)>, <-147, QuadraticField(-7)>, <-163, QQ>, <-483, QuadraticField(-3)> *] >,
+        <74, 1, {1,2,37,74}, [* <-8, QQ>, <-19, QQ>, <-20, QQ>, <-24, QQ>, <-35, QuadraticField(5)>, <-43, QQ>, <-51, QuadraticField(-3)>, <-52, QQ>, <-88, QQ>, <-91, QuadraticField(13)>, <-148, QQ>, <-163, QQ> *] >,
+        <74, 1, {1,74}, [* <-8, QQ>, <-19, QQ>, <-20, QuadraticField(5)>, <-24, QuadraticField(-3)>, <-35, QuadraticField(5)>, <-43, QQ>, <-51, QuadraticField(-3)>, <-52, QuadraticField(13)>, <-88, QuadraticField(-11)>, <-91, QuadraticField(13)>, <-148, QQ>, <-163, QQ> *] >,
+        <82, 1, {1,2,41,82}, [* <-3, QQ>, <-11, QQ>, <-19, QQ>, <-24, QQ>, <-27, QQ>, <-52, QQ>, <-67, QQ>, <-88, QQ>, <-123, QQ>, <-232, QQ> *] >,
+        // Here again, there is an error at the point above infinity - plugging in the formula for the curve yields the correct field
+        <82, 1, {1,41}, [* <-3, QuadraticField(-3)>, <-11, QuadraticField(-11)>, <-19, QuadraticField(-19)>, <-24, QuadraticField(-3)>, <-27, QuadraticField(-3)>, <-52, QuadraticField(-1)>, <-67, QuadraticField(-67)>, <-88, QuadraticField(-11)>, <-123, QuadraticField(-123)>, <-232, QuadraticField(-2)> *] >,
+        <86, 1, {1,2,43,86}, [* <-4, QQ>, <-11, QQ>, <-24, QQ>, <-35, QuadraticField(5)>, <-40, QQ>, <-43, QQ>, <-52, QQ>, <-56, QuadraticField(2)>, <-67, QQ>, <-68, QuadraticField(17)>, <-228, QuadraticField(57)>, <-232, QQ> *] >,
+        // Here there is a typo in the value at d = -228, that should be sqrt(-19) instead of sqrt(19)
+        <86, 1, {1,86}, [* <-4, QQ>, <-11, QQ>, <-24, QuadraticField(-3)>, <-35, QuadraticField(5)>, <-40, QuadraticField(5)>, <-43, QQ>, <-52, QuadraticField(-1)>, <-56, NumberField((x^2 - 5)^2-32) >, <-67, QQ>, <-68, NumberField((x^2 - 4)^2 - 17)>, <-228, ext<QuadraticField(-19) | x^2+3> >, <-232, QuadraticField(29)> *] >,
+        <87, 1, {1,3,29,87}, [* <-3, QQ>, <-12, QQ>, <-15, QQ>, <-19, QQ>, <-43, QQ>, <-48, QQ>, <-60, QQ>, <-147, QQ>, <-435, QQ> *] >,
+        <87, 1, {1,87}, [* <-3, QQ>, <-12, QQ>, <-15, QuadraticField(-3)>, <-19, QQ>, <-43, QQ>, <-48, QuadraticField(-1)>, <-60, QuadraticField(-3)>, <-147, QuadraticField(-7)>, <-435, QuadraticField(-15)> *] >,
+        <93, 1, {1,3,31,93}, [* <-4, QQ>, <-7, QQ>, <-16, QQ>, <-19, QQ>, <-28, QQ>, <-51, QQ>, <-67, QQ>, <-163, QQ>, <-267, QQ>, <-403, QQ> *] >,
+        // Again an error at the point above at infinity (d = -4)
+        <93, 1, {1,31}, [* <-4, QuadraticField(-1)>, <-7, QuadraticField(-7)>, <-16, QuadraticField(-1)>, <-19, QuadraticField(-19)>, <-28, QuadraticField(-7)>, <-51, QuadraticField(-3)>, <-67, QuadraticField(-67)>, <-163, QuadraticField(-163)>, <-267, QuadraticField(-3)>, <-403, QuadraticField(-403)> *] >,
+        <94, 1, {1,2,47,94}, [* <-3, QQ>, <-4, QQ>, <-8, QQ>, <-24, QQ>, <-27, QQ>, <-51, QuadraticField(17)>, <-56, QuadraticField(-7)>, <-84, QuadraticField(-7)>, <-115, QuadraticField(5)>, <-148, QQ>, <-168, QuadraticField(-7)>, <-235, QQ> *] >,
+        <94, 1, {1,94}, [* <-3, QQ>, <-4, QQ>, <-8, QQ>, <-24, QuadraticField(2)>, <-27, QQ>, <-51, QuadraticField(17)>, <-56, NumberField((x^2 - 10)^2 + 28)>, <-84, ext<QuadraticField(-1) | x^2 - 7> >, <-115, QuadraticField(5)>, <-148, QuadraticField(-1)>, <-168, NumberField((x^2 - 3)^2 + 7) >, <-235, QuadraticField(5)> *] >,
+        <95, 1, {1,5,19,95}, [* <-7, QQ>, <-20, QuadraticField(-1)>, <-28, QQ>, <-35, QQ>, <-43, QQ>, <-115, QQ>, <-163, QQ>, <-235, QQ>, <-760, QQ> *] >,
+        <95, 1, {1,95}, [* <-7, QQ>, <-20, QuadraticField(-1)>, <-28, QQ>, <-35, QuadraticField(5)>, <-43, QQ>, <-115, QuadraticField(5)>, <-163, QQ>, <-235, QuadraticField(5)>, <-760, QuadraticField(2)> *] >,
+        <111, 1, {1,3,37,111}, [* <-15, QQ>, <-19, QQ>, <-24, QQ>, <-43, QQ>, <-51, QQ>, <-52, QuadraticField(-1)>, <-60, QQ>, <-148, QuadraticField(-1)>, <-163, QQ>, <-267, QQ>, <-555, QQ> *] >,
+        <111, 1, {1, 111}, [* <-15, QuadraticField(5)>, <-19, QQ>, <-24, QuadraticField(2)>, <-43, QQ>, <-51, QuadraticField(17)>, <-52, QuadraticField(-1)>, <-60, QuadraticField(5)>, <-148, QuadraticField(-1)>, <-163, QQ>, <-267, QuadraticField(89)>, <-555, QuadraticField(5)> *] >,
+        <119, 1, {1,7,17,119}, [* <-7, QQ>, <-11, QQ>, <-28, QQ>, <-51, QQ>, <-56, QuadraticField(2)>, <-63, QuadraticField(-3)>, <-91, QQ>, <-99, QuadraticField(-3)>, <-112, QQ>, <-163, QQ>, <-232, QuadraticField(-2)>, <-595, QQ> *] >,
+        // For the next one, at d = -99, note that sqrt(1+4sqrt(-3)) is actually 2 + sqrt(-3) in QuadraticField(-3)
+        <119, 1, {1,119}, [* <-7, QQ>, <-11, QQ>, <-28, QQ>, <-51, QuadraticField(-3)>, <-56, NumberField((x^2 - 5)^2 - 32) >, <-63, NumberField((x^2 + 9)^2 + 108) >, <-91, QuadraticField(-7)>, <-99, QuadraticField(-3)>, <-112, QuadraticField(-1)>, <-163, QQ>, <-232, QuadraticField(-2)>, <-595, QuadraticField(5)> *] >,
+        <134, 1, {1,2,67,134}, [* <-4, QQ>, <-19, QQ>, <-24, QQ>, <-35, QuadraticField(5)>, <-40, QQ>, <-67, QQ>, <-88, QQ>, <-91, QuadraticField(13)>, <-148, QQ>, <-163, QQ> *] >,
+        <134, 1, {1, 134}, [* <-4, QQ>, <-19, QQ>, <-24, QuadraticField(-3)>, <-35, QuadraticField(5)>, <-40, QuadraticField(5)>, <-67, QQ>, <-88, QuadraticField(-11)>, <-91, QuadraticField(13)>, <-148, QuadraticField(-1)>, <-163, QQ> *] >,
+        <146, 1, {1,2,73,146}, [* <-11, QQ>, <-20, QQ>, <-40, QQ>, <-43, QQ>, <-51, QuadraticField(-3)>, <-52, QQ>, <-88, QQ>, <-132, QuadraticField(-1)>, <-232, QQ>, <-292, QuadraticField(-1)> *] >,
+        <146, 1, {1,146}, [* <-11, QQ>, <-20, QuadraticField(5)>, <-40, QuadraticField(5)>, <-43, QQ>, <-51, QuadraticField(-3)>, <-52, QuadraticField(13)>, <-88, QuadraticField(2)>, <-132, ext<QuadraticField(-1) | x^2 - 3 > >, <-232, QuadraticField(29)>, <-292, QuadraticField(-1)> *] >,
+        // In the next two ones, [GY] write -57 for the discriminant, but this is probably (??) -51, as -57 is not a discriminant
+        <159, 1, {1,3,53,159}, [* <-3, QQ>, <-12, QQ>, <-19, QQ>, <-39, QuadraticField(13)>, <-48, QQ>, <-51, QQ>, <-67, QQ>, <-75, QQ>, <-84, QuadraticField(7)>, <-120, QuadraticField(10)>, <-132, QuadraticField(3)>, <-156, QuadraticField(13)>, <-232, QuadraticField(-2)>, <-267, QQ>, <-795, QQ> *] >,
+        // For the next one, at -232, note that sqrt(-7+4sqrtm2) is actually in QuadraticField(-2), as it is 2sqrt(m2) + 1
+        <159, 1, {1,159}, [* <-3, QQ>, <-12, QQ>, <-19, QQ>, <-39, NumberField((x^2 + 21)^2 - 36*13)>, <-48, QuadraticField(-1)>, <-51, QuadraticField(-3)>, <-67, QQ>, <-75, QuadraticField(5)>, <-84, ext< QuadraticField(-1) | x^2 + 7> >, <-120, ext< QuadraticField(2) | x^2 - 5 > >, <-132, ext< QuadraticField(-1) | x^2 + 3 > >, <-156, NumberField((x^2 - 15)^2 - 36*13) >, <-232, QuadraticField(-2) >, <-267, QuadraticField(-3)>, <-795, QuadraticField(5)> *] >,
+        <194, 1, {1,2,97,194}, [* <-19, QQ>, <-20, QQ>, <-40, QQ>, <-51, QuadraticField(-3)>, <-52, QQ>, <-67, QQ>, <-123, QuadraticField(-3)>, <-148, QQ>, <-232, QQ>, <-235, QuadraticField(5)>, <-388, QuadraticField(-1)> *] >,
+        <194, 1, {1,194}, [* <-19, QQ>, <-20, QuadraticField(5)>, <-40, QuadraticField(5)>, <-51, QuadraticField(-3)>, <-52, QuadraticField(13)>, <-67, QQ>, <-123, QuadraticField(-3)>, <-148, QuadraticField(37)>, <-232, QuadraticField(29)>, <-235, QuadraticField(5)>, <-388, QuadraticField(-1)> *] >,
+        <206, 1, {1,2,103,206}, [* <-4, QQ>, <-8, QQ>, <-19, QQ>, <-52, QQ>, <-56, QuadraticField(-7)>, <-91, QuadraticField(-7)>, <-120, QuadraticField(-15)>, <-132, QuadraticField(33)>, <-163, QQ>, <-184, QuadraticField(-23)>, <-232, QQ>, <-235, QuadraticField(5)>, <-267, QuadraticField(-3)>, <-328, QuadraticField(41)>, <-372, QuadraticField(3)> *] >,
+        // for the next one, at d = -91 note that -6 + 2 sqrt(-7) is a square in Q(sqrtm7) and 
+        // at d = -267 note that -2 + 2sqrtm3 is a square in Q(sqrt(-3))
+        // !!!! The point at d = -132 does not seem to work - this contradicts theory, and in particular [GR, Corollary 15.4] !!!!!
+        <206, 1, {1,206}, [* <-4, QQ>, <-8, QQ>, <-19, QQ>, <-52, QuadraticField(-1)>, <-56, NumberField((x^2 + 2)^2 + 28)>, <-91, QuadraticField(-7)>, <-120, NumberField((x^2 - 2)^2 + 60)>, /*<-132, ext<QuadraticField(3) | x^2 - 11> >, */ <-163, QQ>, <-184, NumberField((x^2 + 6)^2 + 92)>, <-232, QuadraticField(-2)>, <-235, QuadraticField(5)>, <-267, QuadraticField(-3)>, <-328, NumberField((x^2 + 6)^2 - 164)>, <-372, ext<QuadraticField(-1) | x^2 + 3> > *] >,
+        <6, 11, {1,2,3,6,11,22,33,66}, [* <-19, QQ>, <-24, QQ>, <-40, QQ>, <-43, QQ>, <-51, QQ>, <-52, QQ>, <-84, QQ>, <-88, QQ>, <-120, QQ>, <-123, QQ>, <-132, QQ> *] >,
+        <6, 11, {1,6,11,66}, [* <-19, QQ>, <-24, QuadraticField(2)>, <-40, QuadraticField(5)>, <-43, QQ>, <-51, QuadraticField(17)>, <-52, QuadraticField(13)>, <-84, QuadraticField(21)>, <-88, QQ>, <-120, QuadraticField(5)>, <-123, QuadraticField(41)>, <-132, QQ> *] >,
+        <6, 11, {1,66}, [* <-19, QQ>, <-24, QuadraticField(2)>, <-40, QuadraticField(5)>, <-43, QQ>, <-51, QuadraticField(17)>, <-52, QuadraticField(13)>, <-84, ext<QuadraticField(-3) | x^2 + 7> >, <-88, QuadraticField(2)>, <-120, ext<QuadraticField(5) | x^2 + 3> >, <-123, QuadraticField(41)>, <-132, QuadraticField(-1)> *] >,
+        <6, 17, {1,2,3,6,17,34,51,102}, [* <-4, QQ>, <-19, QQ>, <-43, QQ>, <-51, QQ>, <-52, QQ>, <-67, QQ>, <-84, QQ>, <-120, QQ>, <-123, QQ>, <-132, QQ>, <-408, QQ> *] >,
+        <6, 17, {1,3,34,102}, [* <-4, QQ>, <-19, QQ>, <-43, QQ>, <-51, QQ>, <-52, QuadraticField(-1)>, <-67, QQ>, <-84, QuadraticField(-3)>, <-120, QuadraticField(-3)>, <-123, QQ>, <-132, QuadraticField(3)>, <-408, QuadraticField(-3)> *] >,
+        <6, 19, {1,2,3,6,19,38,57,114}, [* <-3, QQ>, <-19, QQ>, <-40, QQ>, <-51, QQ>, <-52, QQ>, <-67, QQ>, <-84, QQ>, <-88, QQ>, <-132, QQ>, <-148, QQ>, <-228, QQ> *] >,
+        <6, 19, {1,2,57,114}, [* <-3, QQ>, <-19, QQ>, <-40, QQ>, <-51, QuadraticField(-3)>, <-52, QQ>, <-67, QQ>, <-84, QuadraticField(3)>, <-88, QQ>, <-132, QuadraticField(-1)>, <-148, QQ>, <-228, QuadraticField(-1)> *] >,
+        <6, 19, {1,114}, [* <-3, QQ>, <-19, QQ>, <-40, QuadraticField(5)>, <-51, QuadraticField(-3)>, <-52, QuadraticField(13)>, <-67, QQ>, <-84, ext<QuadraticField(3) | x^2 - 7> >, <-88, QuadraticField(2)>, <-132, ext<QuadraticField(-1) | x^2 - 3 > >, <-148, QuadraticField(37)>, <-228, QuadraticField(-1)> *] >,
+        <6, 29, {1,2,3,6,29,58,87,174}, [* <-4, QQ>, <-24, QQ>, <-51, QQ>, <-52, QQ>, <-67, QQ>, <-88, QQ>, <-120, QQ>, <-123, QQ>, <-132, QQ>, <-168, QQ>, <-228, QQ>, <-232, QQ>, <-267, QQ> *] >,
+        <6, 29, {1,3,58,174}, [* <-4, QQ>, <-24, QQ>, <-51, QQ>, <-52, QuadraticField(-1)>, <-67, QQ>, <-88, QuadraticField(2)>, <-120, QuadraticField(-3)>, <-123, QQ>, <-132, QuadraticField(3)>, <-168, QuadraticField(-2)>, <-228, QuadraticField(-3)>, <-232, QuadraticField(-2)>, <-267, QQ> *] >,
+        <6, 29, {1,174}, [* <-4, QQ>, <-24, QuadraticField(2)>, <-51, QuadraticField(17)>, <-52, QuadraticField(-1)>, <-67, QQ>, <-88, QuadraticField(2)>, <-120, ext<QuadraticField(-3) | x^2 - 5> >, <-123, QuadraticField(41)>, <-132, ext<QuadraticField(3) | x^2 - 11> >, <-168, ext<QuadraticField(-2) | x^2 - 14 > >, <-228, ext<QuadraticField(-3) | x^2 + 19> >, <-232, QuadraticField(-2)>, <-267, QuadraticField(89)> *] >,
+        <6, 31, {1,2,3,6,31,62,93,186}, [* <-3, QQ>, <-24, QQ>, <-43, QQ>, <-52, QQ>, <-84, QQ>, <-88, QQ>, <-120, QQ>, <-123, QQ>, <-148, QQ>, <-168, QQ>, <-228, QQ>, <-232, QQ>, <-372, QQ>, <-403, QQ> *] >,
+        <6, 31, {1,6,31,186}, [* <-3, QQ>, <-24, QuadraticField(-3)>, <-43, QQ>, <-52, QuadraticField(13)>, <-84, QuadraticField(21)>, <-88, QuadraticField(-11)>, <-120, QuadraticField(5)>, <-123, QuadraticField(-3)>, <-148, QuadraticField(37)>, <-168, QuadraticField(-3)>, <-228, QuadraticField(-19)>, <-232, QuadraticField(-2)>, <-372, QQ>, <-403, QQ> *] >,
+        <6, 31, {1,186}, [* <-3, QQ>, <-24, QuadraticField(-3)>, <-43, QQ>, <-52, QuadraticField(13)>, <-84, ext<QuadraticField(21) | x^2 - 3> >, <-88, QuadraticField(-11)>, <-120, ext<QuadraticField(2) | x^2 - 5> >, <-123, QuadraticField(-3)>, <-148, QuadraticField(37)>, <-168, ext<QuadraticField(-2) | x^2 + 3> >, <-228, ext<QuadraticField(-1) | x^2 + 19> >, <-232, QuadraticField(-2)>, <-372, QuadraticField(3)>, <-403, QuadraticField(13)> *] >,
+        <6, 37, {1,2,3,6,37,74,111,222}, [* <-3, QQ>, <-4, QQ>, <-40, QQ>, <-67, QQ>, <-84, QQ>, <-120, QQ>, <-123, QQ>, <-132, QQ>, <-148, QQ>, <-232, QQ>, <-312, QQ>, <-408, QQ>, <-555, QQ> *] >,
+        <6, 37, {1,6,37,222}, [* <-3, QQ>, <-4, QQ>, <-40, QuadraticField(-2)>, <-67, QQ>, <-84, QuadraticField(-1)>, <-120, QuadraticField(-6)>, <-123, QuadraticField(-3)>, <-132, QuadraticField(-3)>, <-148, QuadraticField(-1)>, <-232, QuadraticField(-2)>, <-312, QuadraticField(-3)>, <-408, QuadraticField(2)>, <-555, QuadraticField(-3)> *] >,
+        <6, 37, {1,222}, [* <-3, QQ>, <-4, QQ>, <-40, QuadraticField(-2)>, <-67, QQ>, <-84, ext<QuadraticField(-1) | x^2 - 7> >, <-120, ext<QuadraticField(-6) | x^2 - 10> >, <-123, QuadraticField(-3)>, <-132, ext<QuadraticField(-3) | x^2 + 11> >, <-148, QuadraticField(-1)>, <-232, QuadraticField(-2)>, <-312, ext<QuadraticField(13) | x^2 + 3> >, <-408, ext<QuadraticField(2) | x^2 - 17> >, <-555, ext<QuadraticField(-3) | x^2 - 37> > *] >,
+        <10, 11, {1,2,5,10,11,22,55,110}, [* <-8, QQ>, <-35, QQ>, <-40, QQ>, <-43, QQ>, <-52, QQ>, <-88, QQ>, <-120, QQ>, <-132, QQ>, <-187, QQ>, <-340, QQ>, <-660, QQ>, <-715, QQ> *] >,
+        <10, 11, {1,10,11,110}, [* <-8, QQ>, <-35, QuadraticField(-7)>, <-40, QuadraticField(-2)>, <-43, QQ>, <-52, QuadraticField(-1)>, <-88, QQ>, <-120, QuadraticField(-3)>, <-132, QuadraticField(-11)>, <-187, QQ>, <-340, QuadraticField(-17)>, <-660, QuadraticField(-33)>, <-715, QuadraticField(-143)> *] >,
+        <10, 11, {1,110}, [* <-8, QQ>, <-35, QuadraticField(-7)>, <-40, QuadraticField(-2)>, <-43, QQ>, <-52, QuadraticField(-1)>, <-88, QuadraticField(2)>, <-120, ext<QuadraticField(5) | x^2 + 3> >, <-132, ext<QuadraticField(-3) | x^2 + 11> >, <-187, QuadraticField(17)>, <-340, ext<QuadraticField(-1) | x^2 + 17> >, <-660, ext<QuadraticField(-1) | x^2 + 33> >, <-715, ext<QuadraticField(-143) | x^2 - 65> > *] >,
+        <10, 13, {1,2,5,10,13,26,65,130}, [* <-3, QQ>, <-35, QQ>, <-40, QQ>, <-43, QQ>, <-52, QQ>, <-88, QQ>, <-120, QQ>, <-195, QQ>, <-235, QQ>, <-312, QQ> *] >,
+        <10, 13, {1,2,65,130}, [* <-3, QQ>, <-35, QuadraticField(5)>, <-40, QQ>, <-43, QQ>, <-52, QQ>, <-88, QQ>, <-120, QuadraticField(-15)>, <-195, QuadraticField(-15)>, <-235, QuadraticField(5)>, <-312, QuadraticField(-39)> *] >,
+        // In the next one d = -52 appears twice, I think the first one should be d = -40
+        <10, 19, {1,2,5,10,19,38,95,190}, [* <-3, QQ>, <-8, QQ>, <-40, QQ>, <-52, QQ>, <-67, QQ>, <-88, QQ>, <-148, QQ>, <-228, QQ>, <-280, QQ>, <-532, QQ>, <-760, QQ> *] >,
+        <10, 19, {1,5,38,190}, [* <-3, QQ>, <-8, QQ>, <-40, QQ>, <-52, QuadraticField(-1)>, <-67, QQ>, <-88, QuadraticField(2)>, <-148, QuadraticField(-1)>, <-228, QuadraticField(3)>, <-280, QuadraticField(5)>, <-532, QuadraticField(-1)>, <-760, QuadraticField(10)> *] >,
+        <10, 23, {1,2,5,10,23,46,115,230}, [* <-20, QQ>, <-40, QQ>, <-43, QQ>, <-67, QQ>, <-88, QQ>, <-115, QQ>, <-120, QQ>, <-148, QQ>, <-235, QQ>, <-520, QQ> *] >,
+        <10, 23, {1,10,23,230}, [* <-20, QQ>, <-40, QuadraticField(5)>, <-43, QQ>, <-67, QQ>, <-88, QuadraticField(-11)>, <-115, QQ>, <-120, QuadraticField(-3)>, <-148, QuadraticField(-1)>, <-235, QuadraticField(5)>, <-520, QuadraticField(13)> *] >,
+        // In the next one, the value at d = -120 at [GY, Table 42] does not make sense. 
+        // If one solves for x from the parameter t = 5/sqrt(-3), we get x = (1+sqrt(-3))(1+sqrt(2))/2
+        <10, 23, {1,230}, [* <-20, QuadraticField(-1)>, <-40, QuadraticField(5)>, <-43, QQ>, <-67, QQ>, <-88, QuadraticField(-11)>, <-115, QuadraticField(5)>, <-120, ext< QuadraticField(-3) | x^2 - 2> >, <-148, QuadraticField(-1)>, <-235, QuadraticField(5)>, <-520, ext< QuadraticField(13) | x^2 + 2> > *] >,
+        <14, 3, {1,2,3,6,7,14,21,42}, [* <-8, QQ>, <-11, QQ>, <-35, QQ>, <-51, QQ>, <-84, QQ>, <-120, QQ>, <-123, QQ>, <-168, QQ>, <-228, QQ>, <-267, QQ>, <-312, QQ> *] >,
+        <14, 3, {1,3,14,42}, [* <-8, QQ>, <-11, QQ>, <-35, QuadraticField(-7)>, <-51, QQ>, <-84, QQ>, <-120, QuadraticField(-3)>, <-123, QQ>, <-168, QuadraticField(-2)>, <-228, QuadraticField(-3)>, <-267, QQ>, <-312, QuadraticField(13)> *] >,
+        <14, 5, {1,2,5,7,10,14,35,70}, [* <-4, QQ>, <-11, QQ>, <-35, QQ>, <-84, QQ>, <-91, QQ>, <-120, QQ>, <-235, QQ>, <-280, QQ>, <-340, QQ>, <-420, QQ>, <-520, QQ>, <-840, QQ> *] >,
+        <14, 5, {1,5,14,70}, [* <-4, QQ>, <-11, QQ>, <-35, QQ>, <-84, QuadraticField(-1)>, <-91, QuadraticField(-7)>, <-120, QuadraticField(5)>, <-235, QQ>, <-280, QuadraticField(5)>, <-340, QuadraticField(-1)>, <-420, QuadraticField(5)>, <-520, QuadraticField(5)>, <-840, QuadraticField(-35)> *] >,
+        <14, 5, {1,14}, [* <-4, QuadraticField(-1)>, <-11, QuadraticField(-11)>, <-35, QuadraticField(5)>, <-84, ext< QuadraticField(-1) | x^2 - 21 > >, <-91, ext< QuadraticField(-7) | x^2 - 13> >, <-120, ext< QuadraticField(5) | x^2 + 3> >, <-235, QuadraticField(5)>, <-280, QuadraticField(5)>, <-340, ext< QuadraticField(-1) | x^2 - 5> >, <-420, ext< QuadraticField(5) | x^2 + 7> >, <-520, ext< QuadraticField(5) | x^2 - 13> >, <-840, ext< QuadraticField(-35) | x^2 - 5> > *] >,
+        <21, 2, {1,2,3,6,7,14,21,42}, [* <-4, QQ>, <-7, QQ>, <-15, QQ>, <-16, QQ>, <-28, QQ>, <-60, QQ>, <-84, QQ>, <-100, QQ>, <-112, QQ>, <-120, QQ>, <-148, QQ>, <-168, QQ>, <-228, QQ>, <-232, QQ>, <-280, QQ>, <-312, QQ>, <-372, QQ>, <-408, QQ>, <-420, QQ>, <-532, QQ>, <-708, QQ>, <-840, QQ> *] >,
+        // In the next one, at d = -708, [GY, Table 46] has the sign wrong, as is clear from taking the square root of s = 25/48
+        <21, 2, {1,3,7,21}, [* <-4, QQ>, <-7, QuadraticField(-7)>, <-15, QuadraticField(-15)>, <-16, QQ>, <-28, QQ>, <-60, QQ>, <-84, QuadraticField(-3)>, <-100, QuadraticField(5)>, <-112, QQ>, <-120, QuadraticField(-3)>, <-148, QuadraticField(37)>, <-168, QQ>, <-228, QuadraticField(-3)>, <-232, QuadraticField(-2)>, <-280, QuadraticField(-35)>, <-312, QuadraticField(-6)>, <-372, QuadraticField(-3)>, <-408, QuadraticField(-3)>, <-420, QuadraticField(21)>, <-532, QuadraticField(-19)>, <-708, QuadraticField(3)>, <-840, QuadraticField(-3)> *] >,
+        <22, 3, {1,2,3,6,11,22,33,66}, [* <-3, QQ>, <-11, QQ>, <-20, QQ>, <-132, QQ>, <-168, QQ>, <-267, QQ>, <-312, QQ>, <-372, QQ>, <-408, QQ>, <-627, QQ>, <-660, QQ>, <-708, QQ> *] >,
+        <22, 3, {1,2,33,66}, [* <-3, QQ>, <-11, QQ>, <-20, QQ>, <-132, QuadraticField(-1)>, <-168, QuadraticField(-7)>, <-267, QuadraticField(-3)>, <-312, QuadraticField(-39)>, <-372, QuadraticField(3)>, <-408, QuadraticField(17)>, <-627, QuadraticField(-3)>, <-660, QuadraticField(11)>, <-708, QuadraticField(-1)> *] >,
+        <22, 3, {1,66}, [* <-3, QQ>, <-11, QQ>, <-20, QuadraticField(5)>, <-132, QuadraticField(-1)>, <-168, ext< QuadraticField(-7) | x^2 + 3 > >, <-267, QuadraticField(-3)>, <-312, ext< QuadraticField(-39) | x^2 + 3> >, <-372, ext< QuadraticField(3) | x^2 - 31> >, <-408, ext< QuadraticField(17) | x^2 - 2> >, <-627, ext< QuadraticField(-3) | x^2 + 11> >, <-660, ext< QuadraticField(11) | x^2 - 5> >, <-708, ext< QuadraticField(-1) | x^2 + 3> > *] >,
+        <22, 5, {1,2,5,10,11,22,55,110}, [* <-4, QQ> , <-11, QQ>, <-20, QQ>, <-115, QQ>, <-235, QQ>, <-280, QQ>, <-520, QQ>, <-660, QQ>, <-715, QQ>, <-760, QQ> *] >,
+        <22, 5, {1,5,22,110}, [* <-4, QQ> , <-11, QQ>, <-20, QuadraticField(-1)>, <-115, QQ>, <-235, QQ>, <-280, QuadraticField(-14)>, <-520, QuadraticField(-26)>, <-660, QuadraticField(-1)>, <-715, QuadraticField(-11)>, <-760, QuadraticField(-19)> *] >,
+        <22, 5, {1,110}, [* <-4, QQ> , <-11, QQ>, <-20, QuadraticField(-1)>, <-115, QuadraticField(5)>, <-235, QuadraticField(5)>, <-280, ext< QuadraticField(-14) | x^2 + 7> >, <-520, ext< QuadraticField(-26) | x^2 - 65> >, <-660, ext< QuadraticField(-1) | x^2 + 5> >, <-715, ext< QuadraticField(-11) | x^2 - 5> >, <-760, ext< QuadraticField(-19) | x^2 - 5> > *] >,
+        <26, 3, {1,2,3,6,13,26,39,78}, [* <-8, QQ>, <-11, QQ>, <-20, QQ>, <-24, QQ>, <-84, QQ>, <-123, QQ>, <-132, QQ>, <-195, QQ>, <-228, QQ>, <-267, QQ>, <-312, QQ>, <-372, QQ>, <-408, QQ>, <-708, QQ> *] >,
+        // !!!! In the next one, we are getting for d = -267 the rational field - something is wrong !!!!
+        // !!!! Also, for d = -708, we are getting Q(sqrt(3)) instead of Q(sqrt(-3)) !!!!
+        <26, 3, {1,3,26,78}, [* <-8, QQ>, <-11, QQ>, <-20, QuadraticField(-1)>, <-24, QQ>, <-84, QuadraticField(-3)>, <-123, QQ>, <-132, QuadraticField(3)>, <-195, QuadraticField(-15)>, <-228, QuadraticField(-3)>, /* <-267, QuadraticField(-1)>, */ <-312, QuadraticField(-6)>, <-372, QuadraticField(-3)>, <-408, QuadraticField(-3)>, /* <-708, QuadraticField(-3)> */ *] >,
+        <39, 2, {1,2,3,6,13,26,39,78}, [* <-7, QQ>, <-15, QQ>, <-24, QQ>, <-28, QQ>, <-52, QQ>, <-60, QQ>, <-84, QQ>, <-132, QQ>, <-148, QQ>, <-228, QQ>, <-232, QQ>, <-312, QQ>, <-372, QQ>, <-408, QQ>, <-520, QQ>, <-708, QQ>, <-1092, QQ> *] >,
+        <39, 2, {1,3,13,39}, [* <-7, QuadraticField(-7)>, <-15, QuadraticField(-15)>, <-24, QQ>, <-28, QQ>, <-52, QuadraticField(-1)>, <-60, QQ>, <-84, QuadraticField(-3)>, <-132, QuadraticField(-11)>, <-148, QuadraticField(-1)>, <-228, QuadraticField(-3)>, <-232, QuadraticField(-2)>, <-312, QQ>, <-372, QuadraticField(-3)>, <-408, QuadraticField(-3)>, <-520, QuadraticField(-10)>, <-708, QuadraticField(-59)>, <-1092, QuadraticField(-3)> *] >,
+        // In the next one, there is an error in [GY, Table 50] at d = -372, solving the equation one gets the correct field
+        <39, 2, {1,39}, [* <-7, QuadraticField(-7)>, <-15, ext< QuadraticField(-15) | x^2 + 3> >, <-24, QuadraticField(2)>, <-28, QQ>, <-52, QuadraticField(-1)>, <-60, QuadraticField(5)>, <-84, ext< QuadraticField(-3) | x^2 + 1> >, <-132, ext< QuadraticField(-11) | x^2 + 1> >, <-148, QuadraticField(-1)>, <-228, ext< QuadraticField(-3) | x^2 + 1> >, <-232, QuadraticField(-2)>, <-312, QuadraticField(2)>, <-372, ext< QuadraticField(-3) | x^2 + 1> >, <-408, ext< QuadraticField(-3) | x^2 - 2> >, <-520, ext< QuadraticField(-10) | x^2 + 2> >, <-708, ext< QuadraticField(-59) | x^2 + 1> >, <-1092, ext< QuadraticField(-3) | x^2 + 13> > *] >,
+    ];
+    curves := GetHyperellipticCandidates();
+    for datum in data do
+        D, N, W, cm := Explode(datum);
+        assert exists(X){X : X in curves | X`D eq D and X`N eq N and X`W eq W};
+        vprintf ShimuraQuotients, 1: "testing points on %o...", X;
+        for pt in cm do
+            d, K := Explode(pt);
+            Fs := FieldsOfDefinitionOfCMPoint(X, d);
+            assert exists(F){F : F in Fs | IsIsomorphic(F,K)};
+        end for;
+        vprintf ShimuraQuotients, 1: "Done!\n";
+    end for;
+end procedure;
+
+// test_FieldOfDefinition();

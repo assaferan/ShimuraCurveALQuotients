@@ -1474,19 +1474,6 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     N := X`N;
     for d in allCN do
         if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
-        R := QuadraticOrder(BinaryQuadraticForms(d));
-        K := NumberField(R);
-        f := Conductor(R);
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
-        if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
-        if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
-        H_R := RingClassField(R);
-        H_R_NF := NumberField(H_R);
-        abs_H_R := AbsoluteField(H_R_NF);
-        b, _ := HasComplexConjugate(abs_H_R);;
-        if not b then continue; end if;
         
         flds := FieldsOfDefinitionOfCMPoint(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
@@ -1520,25 +1507,8 @@ intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
     D := X`D;
     N := X`N;
     for d in allCN do
-    //duplicated and wrong
-        // R := QuadraticOrder(BinaryQuadraticForms(d));
-        // K := NumberField(R);
-        // f := Conductor(R);
-        // N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        // D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        // N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
-        // if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
-        // if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
-        // H_R := RingClassField(R);
-        // H_R_NF := NumberField(H_R);
-        // abs_H_R := AbsoluteField(H_R_NF);
-        // b, _ := HasComplexConjugate(abs_H_R);;
-        // if not b then continue; end if;
-
         flds := FieldsOfDefinitionOfCMPoint(X, d);
-        // if #flds le 2 and {Degree(f) : f in flds} subset {1,2} then
-        //     Append(~pts, <d,1,{Degree(f) : f in flds}>);
-        // end if;
+        
         if #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
             Append(~pts, <d,1,2>);
         end if;
