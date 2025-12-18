@@ -4,7 +4,7 @@ function load_covers_and_ws_data_6_17()
     P3<x,y,z,s> := WeightedProjectiveSpace(Rationals(), [1,2,1,1]);
      // D = 82
     cover_data := AssociativeArray();
-    cover_data[{1}] := <Curve(P3, [y^2 - 17*x^4 + 10*x^2*s^2 - 9*s^4, z^2 + 3*x^2 + 16*s^2]), Matrix([[0,0,3,0],[0,4,0,0],[0,0,0,1],[1,0,0,0]])>;
+    cover_data[{1}] := <Curve(P3, [y^2 - 17*x^4 + 10*x^2*s^2 - 9*s^4, z^2 + 3*x^2 + 16*s^2]), Matrix([[0,0,1,0],[0,16,0,0],[0,0,0,3],[1,0,0,0]])>;
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
