@@ -1921,12 +1921,8 @@ procedure add_new_column(schofer_tab, dnew, deg)
         Append(~table[i], norm_val[i]/row_scales[i]^deg);
     end for;
     schofer_tab`Values := table;
-    if deg eq 1 then
-        Append(~ds[1],dnew);
-    else
-        Append(~ds[2],dnew);
-    end if;
-    schofer_tab`Discs := [ds[1], ds[2]];
+    Append(~ds, dnew);
+    schofer_tab`Discs := ds;
     return;
 end procedure;
 
