@@ -9,7 +9,7 @@ declare verbose ShimuraQuotients, 5;
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
-import "Caching.m" : CacheClear, SetCache, GetCache, cached_orders;
+import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -1433,11 +1433,11 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
-{returns rational CM points on X. Excludes those in exclude}
-    vprintf ShimuraQuotients, 2: "\n\tComputing rational CM points...";
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true) -> SeqEnum, SeqEnum
+{returns rational and quadratic CM points on X. Excludes those in exclude}
+    vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
-    pts := [];
+    rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
     ell := NumberOfEllipticPointsByCMOrder(X);
     for q in Keys(ell) do
@@ -1445,16 +1445,17 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
             if d in [-3,-4] then 
                 is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
                 if is_split and d notin Exclude then
-                    Append(~pts, <d,q,ell[q][d]>); 
+                    Append(~rat_pts, <d,q,ell[q][d]>); 
                 end if;
             else
                 if ell[q][d] eq 1 and d notin Exclude then
-                    Append(~pts, <d,q,ell[q][d]>);
+                    Append(~rat_pts, <d,q,ell[q][d]>);
                 end if;
             end if;
         end for;
     end for;
-    pts := Reverse(Sort(pts));
+
+    rat_pts := Reverse(Sort(rat_pts));
 
     CNs := AssociativeArray();
     CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
@@ -1470,80 +1471,39 @@ intrinsic RationalCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) -> SeqEnum
     end while;
     allCN := Reverse(Sort([x : x in allCN]));
 
+
+    quad_pts := [];
     D := X`D;
     N := X`N;
     for d in allCN do
-        if exists(pt){p : p in pts | p[1] eq d} then continue; end if;
-        R := QuadraticOrder(BinaryQuadraticForms(d));
-        K := NumberField(R);
-        f := Conductor(R);
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
-        if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
-        if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
-        H_R := RingClassField(R);
-        H_R_NF := NumberField(H_R);
-        abs_H_R := AbsoluteField(H_R_NF);
-        b, _ := HasComplexConjugate(abs_H_R);;
-        if not b then continue; end if;
-        
+        if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
+
         flds := FieldsOfDefinitionOfCMPoint(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
-            Append(~pts, <d,1,1>);
+            Append(~rat_pts, <d,1,1>);
+        elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
+            Append(~quad_pts, <d,1,2>);
         end if;
-    end for;
-    require #pts ge 3 : "Could not find enough rational CM points!";
-    // return pts[1..3];
-    vprintf ShimuraQuotients, 2: "Done!";
-    return pts;
-end intrinsic;
 
-intrinsic QuadraticCMPoints(X::ShimuraQuot : bd := 2, Exclude := {}) ->SeqEnum
-    {returns at most quadratic CM points}
-    vprintf ShimuraQuotients, 2: "\n\tComputing quadratic CM points...";
-    require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
-    pts := [];
-    CNs := AssociativeArray();
-    CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
-    CNs[2] := {-15, -20, -24, -35, -40, -51, -52, -88, -91, -115, -123, -148, -187, -232, -235, -267, -403, -427};
-    CNs[4] := {-39, -55, -56, -68, -84, -120, -132, -136, -155, -168, -184, -195, -203, -219, -228, -259, -280, -291, -292, -312, -323, -328, -340, -355, -372, -388, -408, -435, -483, -520, -532, -555, -568, -595, -627, -667, -708, -715, -723, -760, -763, -772, -795, -955, -1003, -1012, -1027, -1227, -1243, -1387, -1411, -1435, -1507, -1555};
-    CNs[8] := {-95, -111, -164, -183, -248, -260, -264, -276, -295, -299, -308, -371, -376, -395, -420, -452, -456, -548, -552, -564, -579, -580, -583, -616, -632, -651, -660, -712, -820, -840, -852, -868, -904, -915, -939, -952, -979, -987, -995, -1032, -1043, -1060, -1092, -1128, -1131, -1155, -1195, -1204, -1240, -1252, -1288, -1299, -1320, -1339, -1348, -1380, -1428, -1443, -1528, -1540, -1635, -1651, -1659, -1672, -1731, -1752, -1768, -1771, -1780, -1795, -1803, -1828, -1848, -1864, -1912, -1939, -1947, -1992, -1995, -2020, -2035, -2059, -2067, -2139, -2163, -2212, -2248, -2307, -2308, -2323, -2392, -2395, -2419, -2451, -2587, -2611, -2632, -2667, -2715, -2755, -2788, -2827, -2947, -2968, -2995, -3003, -3172, -3243, -3315, -3355, -3403, -3448, -3507, -3595, -3787, -3883, -3963, -4123, -4195, -4267, -4323, -4387, -4747, -4843, -4867, -5083, -5467, -5587, -5707, -5947, -6307};
-    
-    i := 1;
-    allCN := {};
-    while i le bd do
-        allCN join:= CNs[i];
-        i *:=2;
-    end while;
-    allCN := Reverse(Sort([x : x in allCN]));
-    D := X`D;
-    N := X`N;
-    for d in allCN do
-        R := QuadraticOrder(BinaryQuadraticForms(d));
-        K := NumberField(R);
-        f := Conductor(R);
-        N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-        D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
-        N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1];   
-        if GCD(D_R * N_star_R, Discriminant(R)) ne 1 then continue; end if;
-        if GCD(D_R*N_R, Discriminant(R)) ne GCD(N,f) then continue; end if;
-        H_R := RingClassField(R);
-        H_R_NF := NumberField(H_R);
-        abs_H_R := AbsoluteField(H_R_NF);
-        b, _ := HasComplexConjugate(abs_H_R);;
-        if not b then continue; end if;
-
-        flds := FieldsOfDefinitionOfCMPoint(X, d);
-        // if #flds le 2 and {Degree(f) : f in flds} subset {1,2} then
-        //     Append(~pts, <d,1,{Degree(f) : f in flds}>);
-        // end if;
-        if #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
-            Append(~pts, <d,1,2>);
-        end if;
     end for;
     vprintf ShimuraQuotients, 2: "Done!\n";
-    return pts;
+
+    if not coprime_to_level then
+        return rat_pts, quad_pts;
+    end if;
+    for p in rat_pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~rat_pts, Index(rat_pts, p));
+        end if;
+    end for;
+
+    for p in quad_pts do
+        if GCD(p[1], X`N) ne 1 then
+            Remove(~quad_pts, Index(quad_pts, p));
+        end if;
+    end for;
+    return rat_pts, quad_pts;
+
 end intrinsic;
 
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
