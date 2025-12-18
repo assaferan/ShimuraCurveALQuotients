@@ -62,3 +62,6 @@ procedure test_data_file()
     read_curves := eval Read("data/all_curves_progress.dat");
     assert &and[(curves[j] eq read_curves[j]) : j in [1..#curves]];
 end procedure;
+
+test_genera();
+test_data_file();
