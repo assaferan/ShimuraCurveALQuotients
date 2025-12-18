@@ -132,4 +132,4 @@ procedure test_FieldOfDefinition()
     end for;
 end procedure;
 
-// test_FieldOfDefinition();
+test_FieldOfDefinition();
