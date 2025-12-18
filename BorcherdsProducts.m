@@ -2749,43 +2749,18 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     table[stilde_idx] := stilde;
     abs_schofer_tab`Values := table;
 
-    //Next need to go from norms to values on the hauptmoduls for the quad_cm points
-
-    all_flds := abs_schofer_tab`FldsOfDefn;
-
-    bad_ds := {};
-    for i->d in quadds do
-        d_idx := #ratds+i;
-        good_inds := [];
-        currd := d;
-        while #good_inds ne 1 do
-            all_flds := abs_schofer_tab`FldsOfDefn;
-            norm_s := table[s_idx][d_idx];
-            norm_stilde := table[stilde_idx][d_idx];
-            flds := all_flds[cid][currd];
-            assert #flds eq 1;
-            assert Degree(flds[1]) eq 2;
-            K := flds[1]; //assume fields of definition are exactly quadratic on Xstar
-            _<x> := PolynomialRing(Rationals());
-            signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-            minpolys := [];
-            for eps in signs do
-                    trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
-                    Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-            end for;
-            roots := [Roots(p,K) : p in minpolys];
-            good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-            require #good_inds gt 0: "Error in quadratic points - no possible minpoly found!";
-            if #good_inds ne 1 then
-                vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
-                Include(~bad_ds, currd);
-                candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff Set(quadds) diff bad_ds;
-                require #candidates ge 1: "No possible choices of CM points left which we can pin down the correct minpoly";
-                newd := Reverse(Sort(SetToSequence(candidates)))[1];
-                replace_column(abs_schofer_tab, currd, newd, false);
-                currd := newd;
-                table := abs_schofer_tab`Values;
-                table :=[* [* x : i->x in t *] : t in table *];
+    quad_idxs := [i : i in [1..#allds] | degs[i] eq 2];
+    used_ds := Set(allds);
+    for i in [1..#allds] do
+        if i notin quad_idxs then continue; end if; //only do quadratic points
+        currd := allds[i];
+        success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
+        while not success do
+            vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+            Include(~used_ds, currd);
+            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
+            if #candidates eq 0 then
+                error "No possible choices of CM points left which we can pin down the correct minpoly";
             end if;
             newd := Reverse(Sort(SetToSequence(candidates)))[1];
             vprintf ShimuraQuotients, 1: "Replacing %o with %o\n", currd, newd;
