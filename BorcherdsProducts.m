@@ -391,8 +391,12 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             end if;
         else
            
+            vprintf ShimuraQuotients, 3 : "\n\t\tComputing Echelon form...";
             E, T := EchelonForm(coeffs);
+            vprintf ShimuraQuotients, 3 : "Done!";
             E := Submatrix(E, [1..rk], [1..Ncols(E)]);
+            // This should be a basis for the kernel, saves some computation afterwards
+            BMK := Submatrix(T, [rk+1..Nrows(T)], [1..Ncols(T)]);
             T := Submatrix(T, [1..rk], [1..Ncols(T)]);
 
             pole_orders := [PivotColumn(E,i) + min_v - 1 : i in [1..rk]];
@@ -411,8 +415,6 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             end if;
         end if;
     end while;
-    vprintf ShimuraQuotients, 3 : "\n";
-    vprintf ShimuraQuotients, 2 : "Done!";
     // sanity checks
     assert rk eq dim;
     
@@ -424,17 +426,26 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     end if;
     
     // reducing T
-    BMK := BasisMatrix(Kernel(coeffs));
+    vprintf ShimuraQuotients, 3 : "\n\t\tReducing linear relations...";
+    // BMK := BasisMatrix(Kernel(coeffs));
+    BMK := EchelonForm(BMK);
     pivots := [PivotColumn(BMK,i) : i in [1..Nrows(BMK)]];
-    T2 := Matrix([rT - &+[rT[pivots[i]]*BMK[i] : i in [1..Nrows(BMK)]] : rT in Rows(T)]);
-    assert T2*coeffs eq E; // check that this didn't change the result
-    T := T2;
+    // T2 := Matrix([rT - &+[rT[pivots[i]]*BMK[i] : i in [1..Nrows(BMK)]] : rT in Rows(T)]);
+    // assert T2*coeffs eq E; // check that this didn't change the result
+    // T := T2;
+    Tpivots := Submatrix(T, [1..Nrows(T)], pivots);
+    T -:= Tpivots*BMK;
+    vprintf ShimuraQuotients, 3 : "Done!";
 
+    vprintf ShimuraQuotients, 3 : "\n\t\tComputing echelonized eta quotients...";
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
     if Zero then
         eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo]] : i in [1..Nrows(E)] ];
     end if;
-    
+    vprintf ShimuraQuotients, 3 : "Done!\n";
+
+    vprintf ShimuraQuotients, 2 : "Done!";
+
     if Zero then 
         return E, n, n0, eta_quotients_oo, eta_quotients; 
     end if;
