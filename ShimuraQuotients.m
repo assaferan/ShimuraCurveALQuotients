@@ -1491,19 +1491,11 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     if not coprime_to_level then
         return rat_pts, quad_pts;
     end if;
-    for p in rat_pts do
-        if GCD(p[1], X`N) ne 1 then
-            Remove(~rat_pts, Index(rat_pts, p));
-        end if;
-    end for;
+    
+    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1];
 
-    for p in quad_pts do
-        if GCD(p[1], X`N) ne 1 then
-            Remove(~quad_pts, Index(quad_pts, p));
-        end if;
-    end for;
     return rat_pts, quad_pts;
-
 end intrinsic;
 
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc

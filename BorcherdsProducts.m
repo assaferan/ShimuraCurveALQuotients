@@ -1436,8 +1436,8 @@ along with two different hauptmoduls.}
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts, _ := RationalandQuadraticCMPoints(Xstar); // pts <-> infty, 0, rational
-    pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
+    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 1); // pts <-> infty, 0, rational
+    // pts := [p : p in pts | p[1] notin Exclude and GCD(p[1], Xstar`N) eq 1];
     require #pts ge 3 : "Could not find enough rational CM points!";
 
 
