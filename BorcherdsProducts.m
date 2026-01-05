@@ -368,6 +368,9 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         by_pole_order := Sort([<f,i> : i->f in qexps]);
         qexps := [fi[1] : fi in by_pole_order];
         eta_quotients := [eta_quotients[fi[2]] : fi in by_pole_order];
+        if Zero then
+            eta_quotients_oo := [eta_quotients_oo[fi[2]] : fi in by_pole_order];
+        end if;
 
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
@@ -418,24 +421,22 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     // sanity checks
     assert rk eq dim;
     
+    // reducing T
+    vprintf ShimuraQuotients, 3 : "\n\t\tReducing linear relations...";
+    // BMK := BasisMatrix(Kernel(coeffs));
+    BMK := EchelonForm(BMK);
+    pivots := [PivotColumn(BMK,i) : i in [1..Nrows(BMK)]];
+    Tpivots := Submatrix(T, [1..Nrows(T)], pivots);
+    T -:= Tpivots*BMK;
+    assert T*coeffs eq E;
+    vprintf ShimuraQuotients, 3 : "Done!";
+
     n := -min_v;
     if Zero then
         E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
         n0 := max_pole;
     end if;
-    
-    // reducing T
-    vprintf ShimuraQuotients, 3 : "\n\t\tReducing linear relations...";
-    // BMK := BasisMatrix(Kernel(coeffs));
-    BMK := EchelonForm(BMK);
-    pivots := [PivotColumn(BMK,i) : i in [1..Nrows(BMK)]];
-    // T2 := Matrix([rT - &+[rT[pivots[i]]*BMK[i] : i in [1..Nrows(BMK)]] : rT in Rows(T)]);
-    // assert T2*coeffs eq E; // check that this didn't change the result
-    // T := T2;
-    Tpivots := Submatrix(T, [1..Nrows(T)], pivots);
-    T -:= Tpivots*BMK;
-    vprintf ShimuraQuotients, 3 : "Done!";
 
     vprintf ShimuraQuotients, 3 : "\n\t\tComputing echelonized eta quotients...";
     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
