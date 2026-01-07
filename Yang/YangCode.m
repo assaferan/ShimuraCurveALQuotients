@@ -1,10 +1,19 @@
-a:=-3; b:=17; Eichler:=1;
+a:=-1; b:=3; Eichler:=1;
 NMax:=70;
 
 A<i,j,k>:=QuaternionAlgebra<Rationals()|a,b>;
 D:=Discriminant(A);
 L:=AssociativeArray();
 DualL:=AssociativeArray();
+
+if (D eq 6) and (Eichler eq 1) then
+  divs := [[1,3]];
+  wts := [[4,-6]];
+  divs1 := [[]];
+  wts1 := [[]];
+  offs := [[]];
+  offsets := [[]];
+end if;
 
 if (D eq 6) and (Eichler eq 11) then
   divs := [[1,3,4,5,6,9,11,12,22], [2,5,6,9,22,33], [2,3,4,5,6,7,11,12,33,66]];
@@ -846,6 +855,7 @@ GetHeight:=function(disc,Lplus,m)
               if p notin pps then
                 Include(~pps,p); exps[p]:=0;
               end if;
+              printf "\tadding %o Log %o\n",2*p^(1-e)/(p-KroneckerSymbol(dd,p)), p;
               exps[p]:=exps[p]+2*p^(1-e)/(p-KroneckerSymbol(dd,p));
             end if;
             cc:=disc;
@@ -860,6 +870,7 @@ GetHeight:=function(disc,Lplus,m)
                   Include(~pps,p);
                   exps[p]:=0;
                 end if;
+                printf "\tadding %o Log %o\n",2*L[2], p;
                 exps[p]:=exps[p]+2*L[2];
               end for;
             end if;
@@ -1208,7 +1219,8 @@ SingularModuli:=procedure(disc)
   end for;
 end procedure;
 
-for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
+// for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
+for disc in [75,100] do
   SingularModuli(-disc);
 end for;
 

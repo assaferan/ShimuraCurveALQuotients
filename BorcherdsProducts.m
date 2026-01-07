@@ -612,6 +612,27 @@ function SpreadBorcherds(alphas, rs, ds, Ldual, discL, Qdisc, to_disc)
     return F;
 end function;*/
 
+function is_optimal_embedding(v, d, basis_L, O)
+    // checking whether this is an optimal embedding of the order of discriminant d
+    if d mod 4 ne 3 then
+        assert d mod 4 eq 0;
+        elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]; //checking elt/2 embedding
+    // d mod 4 eq 3
+    elif d mod 4 eq 3 then
+        //(1+elt)/2 now
+        elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]+Parent(basis_L[1])!1/2;
+    end if;
+    //check that this gives an optimal embedding
+    B_O := Basis(O);
+    Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
+    CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))), Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
+    den := Denominator(CoB);
+    CoBZZ := ChangeRing(den*CoB, Integers());
+    S, _, _ := SmithForm(CoBZZ);
+    Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
+    return S eq Sprime;
+end function;
+
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
 {.}
     require d gt 0: "d must be positive";
@@ -623,16 +644,7 @@ intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::Seq
         v := Vector([idx[j] : j in [1..n]]);
         v := ChangeRing(v, BaseRing(Q));
         if (v*Q,v) eq 2*d then
-            // checking whether this is an optimal embedding of the order of discriminant d
-            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                if elt/2 in Order then
-                    return true, v;
-                end if;
-            end if;
-            // d mod 4 eq 3
-            if (1+elt)/2 in Order then
+            if is_optimal_embedding(v, d, basis_L, Order) then
                 return true, v;
             end if;
         end if;
@@ -655,27 +667,11 @@ intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, b
             d := (v*Q,v) div 2;
             if d in Keys(lambdas) then continue; end if; //already found
             // checking whether this is an optimal embedding of the order of discriminant d
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]; //checking elt/2 embedding
-            // d mod 4 eq 3
-            elif d mod 4 eq 3 then
-            //(1+elt)/2 now
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]+Parent(basis_L[1])!1/2;
-            end if;
-            //check that this gives an optimal embedding
-            B_O := Basis(Order);
-            Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
-            CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))), Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
-            den := Denominator(CoB);
-            CoBZZ := ChangeRing(den*CoB, Integers());
-            S, _, _ := SmithForm(CoBZZ);
-            Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
-            if S eq Sprime then
+            if is_optimal_embedding(v, d, basis_L, Order) then
                 lambdas[d] := v;
                 if Keys(lambdas) eq Set(ds) then
                     //then we found all the lambdas
-                        return true, lambdas;
+                    return true, lambdas;
                 end if;
             end if;
         end if;
@@ -1016,8 +1012,9 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    h := ClassNumber(d);
+    // h := ClassNumber(d);
     w := #UnitGroup(QuadraticField(d));
+    // w := (d eq -4) select 4 else (d eq -3) select 6 else 2;
 
     scale_sqr := &*scales_sqr;
     
@@ -1025,8 +1022,12 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
     // km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
     // Using Yang's code to try to work the non-maximal case
     // !!! Not sure why this works !!!
-    _, f := SquarefreeFactorization(d div FundamentalDiscriminant(d));
+    d0 := FundamentalDiscriminant(d);
+    _, f := SquarefreeFactorization(d div d0);
+    h := ClassNumber(d0);
     km_sqr := -d*scale_sqr*(w*W_kron / h)^2 / f^2;
+    // cond_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in PrimeDivisors(f)];
+    // km_sqr *:= cond_prod^2;
     km_sign := -Sign(W_kron);
 
     return km_sqr, km_sign;
@@ -1050,6 +1051,8 @@ function kappaminus(mu, m, Lminus, Q, d)
 
     Wpolys, wpolyseval, scales_sqr := get_Wpolys(m,mu,Lminus,Q, Sm_mu : scaled := false);
    
+    // vprintf ShimuraQuotients, 5: "\t\t\tWpolys = %o\n", Wpolys;
+
     assert exists(i){i : i in [1..#Sm_mu] | wpolyseval[i] eq 0};
     p_prime := Sm_mu[i];
     if exists(j){j : j in [1..#Sm_mu] | wpolyseval[j] eq 0 and j ne i} then
@@ -1145,10 +1148,18 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
                 if (gamma ne 0) then
                     Yang_tt := true;
                 else
+                    d0:=FundamentalDiscriminant(d);
+                    _, f := SquarefreeFactorization(d div d0);
+                    is_pp, p, e := IsPrimePower(f);
+                    if is_pp then
+                        vprintf ShimuraQuotients, 5: "\n\t\t\tadding %o log %o", -2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p;
+                        log_coeffs -:= LogSum(2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p);
+                    end if;
                     m0, m_cond := SquareFreeFactorization(Integers()!m);
                     fac := Factorization(m_cond);
                     for pe in fac do
                         p,e := Explode(pe);
+                        vprintf ShimuraQuotients, 5: "\n\t\t\tadding %o log %o", -2*e, p;
                         log_coeffs -:= LogSum(Rationals()!2*e,p);
                     end for;
                 end if;
@@ -1248,8 +1259,6 @@ end intrinsic;
 
 intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
 {Return the scaling factor in Schofer formula for CM(d) on X*(D,N).}
-    D0 := D div 2^Valuation(D,2);
-    M := 4*D0;
     
     OK := MaximalOrder(QuadraticField(d));
     is_sqr, cond := IsSquare(d div Discriminant(OK));
@@ -1257,17 +1266,9 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     // require cond eq 1 : "Not implemented for non-maximal orders!";
     O := sub<OK | cond>;
     n_d := NumberOfOptimalEmbeddings(O, D, N);
-    require n_d gt 0 : "Curve does not have a CM point of discirminant d!";
+    require n_d gt 0 : "Curve does not have a CM point of discriminant d!";
     W_size := 2^#PrimeDivisors(D*N);
 
-    // Not sure?? Think this what happens to the number of CM points on the full quotient
-    /*
-    sqfree, sq := SquarefreeFactorization(d);
-    Ogg_condition := (cond eq 1) or (((sqfree mod 4 eq 1) and (cond eq 2)));
-    if ((D*N) mod sqfree eq 0) and Ogg_condition then
-        W_size div:= 2;
-    end if;
-    */
     // This follows from Ogg's description of the fixed points 
     // of Atkin-Lehner w_m
     Ogg_condition := ((d eq -4) and IsEven(D*N)) or
