@@ -1012,22 +1012,16 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    // h := ClassNumber(d);
     w := #UnitGroup(QuadraticField(d));
-    // w := (d eq -4) select 4 else (d eq -3) select 6 else 2;
 
     scale_sqr := &*scales_sqr;
     
     W_kron := W_prod / kron_prod;
-    // km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
-    // Using Yang's code to try to work the non-maximal case
-    // !!! Not sure why this works !!!
+    
     d0 := FundamentalDiscriminant(d);
     _, f := SquarefreeFactorization(d div d0);
     h := ClassNumber(d0);
-    km_sqr := -d*scale_sqr*(w*W_kron / h)^2 / f^2;
-    // cond_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in PrimeDivisors(f)];
-    // km_sqr *:= cond_prod^2;
+    km_sqr := -d0 *scale_sqr*(w*W_kron / h)^2;
     km_sign := -Sign(W_kron);
 
     return km_sqr, km_sign;
@@ -1185,7 +1179,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     end if;
 
     vprintf ShimuraQuotients, 5 : "\t\t";
-    vprintf ShimuraQuotients, 4 : " is %o\n", log_coeffs;
+    vprintf ShimuraQuotients, 4 : " is %o", log_coeffs;
     return log_coeffs;
 end intrinsic;
 
@@ -1209,6 +1203,8 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     for i in [1..#fs] do
         log_coeffs[i] := scale * log_coeffs[i];
     end for;
+
+    vprintf ShimuraQuotients, 4 : "\n";
 
     return log_coeffs;
 end intrinsic;
@@ -1248,6 +1244,7 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
         log_coeffs[i] := scale * log_coeffs[i];
     end for;
 
+    vprintf ShimuraQuotients, 4 : "\n";
     return log_coeffs;
 end function;
 
