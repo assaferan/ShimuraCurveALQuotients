@@ -1185,7 +1185,7 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     end if;
 
     vprintf ShimuraQuotients, 5 : "\t\t";
-    vprintf ShimuraQuotients, 4 : " is %o", log_coeffs;
+    vprintf ShimuraQuotients, 4 : " is %o\n", log_coeffs;
     return log_coeffs;
 end intrinsic;
 
