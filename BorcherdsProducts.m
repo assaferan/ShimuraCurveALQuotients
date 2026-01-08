@@ -1182,6 +1182,8 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
         end if;
     end if;
 
+    vprintf ShimuraQuotients, 5 : "\t\t";
+    vprintf ShimuraQuotients, 4 : " is %o", log_coeffs;
     return log_coeffs;
 end intrinsic;
 
@@ -1195,8 +1197,6 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     for m in [1..n] do
         if &and[Coefficient(f, -m) eq 0 : f in fs] then continue; end if;
         log_coeffs_m := Kappa0(m,d,Q,lambda);
-        vprintf ShimuraQuotients, 5 : "\t\t";
-        vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
@@ -1235,7 +1235,6 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
         gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
-        vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs_0 do
             log_coeffs[i] +:= Coefficient(f,-mM)*log_coeffs_m;
         end for;
