@@ -1,5 +1,7 @@
 {
-BorcherdsProducts.m
+BorcherdsForms.m
+SchoferFormula.m
+EquationsCovers.m
 Caching.m
 EtaQuotient.m
 FundamentalDomain.m
