@@ -1150,10 +1150,12 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
                 else
                     d0:=FundamentalDiscriminant(d);
                     _, f := SquarefreeFactorization(d div d0);
-                    is_pp, p, e := IsPrimePower(f);
-                    if is_pp then
-                        vprintf ShimuraQuotients, 5: "\n\t\t\tadding %o log %o", -2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p;
-                        log_coeffs -:= LogSum(2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p);
+                    if (f ne 1) then
+                        is_pp, p, e := IsPrimePower(f);
+                        if is_pp then
+                            vprintf ShimuraQuotients, 5: "\n\t\t\tadding %o log %o", -2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p;
+                            log_coeffs -:= LogSum(2*p^(1-e)/(p-KroneckerSymbol(d0,p)), p);
+                        end if;
                     end if;
                     m0, m_cond := SquareFreeFactorization(Integers()!m);
                     fac := Factorization(m_cond);
