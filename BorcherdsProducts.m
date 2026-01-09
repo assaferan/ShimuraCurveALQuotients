@@ -375,13 +375,13 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
             min_v := Minimum([Valuation(f) : f in qexps]);
-            coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f + O(q^(-min_v+1)) : FixedLength) : f in qexps]);
+            coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f + O(q^(-min_v+(Zero select 0 else 1))) : FixedLength) : f in qexps]);
         else
             min_v := 0;
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
         end if;
     
-        dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+        dim := Zero select k else n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(coeffs);
         
         if (rk lt dim) then
@@ -433,7 +433,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
 
     n := -min_v;
     if Zero then
-        E := Submatrix(E, [1..n], [1..Ncols(E)]);
+        assert n eq Nrows(E);
+        // E := Submatrix(E, [1..n], [1..Ncols(E)]);
     else
         n0 := max_pole;
     end if;
