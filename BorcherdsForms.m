@@ -8,7 +8,7 @@ end function;
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
     assert IsSquarefree(N);
-    D0 := (D*N) div 2^Valuation(D,2);
+    D0 := (D*N) div 2^Valuation(D*N,2);
     M := 4*D0;
     g := Genus(Gamma0(M));
     return D0,M,g;
@@ -606,8 +606,7 @@ function sum_divisors(div1, div2)
     return sum_divs;
 end function;
 
-
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, InfZeroOne := []) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls.}
     rams := RamficationPointsOfCovers(Xstar, curves);
@@ -621,7 +620,7 @@ along with two different hauptmoduls.}
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2); // pts <-> infty, 0, rational 
+    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := false, bd := 2); // pts <-> infty, 0, rational 
     require #pts ge 3 : "Could not find enough rational CM points!";
 
 
@@ -647,13 +646,24 @@ along with two different hauptmoduls.}
             vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
         end if;
         for infty in pts do
-            vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
-            non_infty := [pt : pt in pts | pt ne infty];
+            if #InfZeroOne gt 0 then
+                new_infty := InfZeroOne[1];
+                vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", new_infty;
+                non_infty := [pt : pt in pts | pt ne new_infty];
+
+            else
+                vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
+                non_infty := [pt : pt in pts | pt ne infty];
+            end if;
             for other_pts in CartesianPower(non_infty,2) do
                 if other_pts[1] eq other_pts[2] then continue; end if;
                 vprintf ShimuraQuotients, 3 : "\n\t\tTrying other points = %o...", other_pts;
                 rams[-1] := [other_pts[1]];
                 rams[-2] := [other_pts[2]];
+                if #InfZeroOne gt 0 then
+                    rams[-1] := [InfZeroOne[2]];
+                    rams[-2] := [InfZeroOne[3]];
+                end if;
                 
                 etas := AssociativeArray();
                 
@@ -661,13 +671,25 @@ along with two different hauptmoduls.}
                 for i in Keys(rams) do
                     ram := rams[i];
                     // adding the part at infinity
-                    if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
-                        assert ram[j] eq infty;
-                        Remove(~ram, j);
+                    if #InfZeroOne gt 0 then
+                        if exists(j){j : j->pt in ram | pt[1] eq new_infty[1]} then
+                            assert ram[j] eq new_infty;
+                            Remove(~ram, j);
+                        end if;
+                        deg := &+[pt[3] : pt in ram];
+                        div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
+                        Append(~ram, new_infty);
+                    else
+                        if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
+                            assert ram[j] eq infty;
+                            Remove(~ram, j);
+                        end if;
+                        deg := &+[pt[3] : pt in ram];
+                        div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
+                        Append(~ram, infty);
                     end if;
-                    deg := &+[pt[3] : pt in ram];
-                    div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
-                    Append(~ram, infty);
+
+
 
                     vprintf ShimuraQuotients, 4 : "\n\t\t\tWorking on ramification divisor %o...", [<pt[1], div_coeffs[j]> : j->pt in ram];
 
@@ -793,6 +815,40 @@ along with two different hauptmoduls.}
         error "Failed to find all Borcherds forms";
     end if;
     return etas;
+end intrinsic;
+
+intrinsic GetBorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, InfZeroOne := []) -> Assoc
+{Return the Borcherds forms for the given star curve and curves}
+    fname := Sprintf("BorcherdsForms/BorcherdsForms_%o_%o", Xstar`D, Xstar`N);
+    if FileExists(fname) then
+        vprintf ShimuraQuotients, 1 : "File found";
+        // Load data: <M, disc, [[key, [[coeffkey, coeffval], ...]], ...]>
+        data := eval Read(fname);
+        R := EtaQuotientsRing(data[1], data[2]);
+        fs := AssociativeArray();
+        for entry in data[3] do
+            coeffs := AssociativeArray();
+            for pair in entry[2] do
+                coeffs[pair[1]] := pair[2];
+            end for;
+            fs[entry[1]] := EtaQuotient(R, coeffs);
+        end for;
+        return fs;
+    else
+        vprintf ShimuraQuotients, 1 : "File not found, computing...";
+        fs := BorcherdsForms(Xstar, curves : Prec := Prec, Exclude := Exclude, InfZeroOne := InfZeroOne);
+        M := Parent(fs[-1])`M;
+        disc := Parent(fs[-1])`disc;
+        // Save as <M, disc, [[key, [[coeffkey, coeffval], ...]], ...]>
+        entries := [];
+        for i in Keys(fs) do
+            coeffs_list := [[* k, fs[i]`coeffs[k] *] : k in Keys(fs[i]`coeffs)];
+            Append(~entries, [* i, coeffs_list *]);
+        end for;
+        data := <M, disc, entries>;
+        Write(fname, Sprint(data, "Magma") : Overwrite);
+        return fs;
+    end if;
 end intrinsic;
 
 intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot : Zero := false) -> SeqEnum

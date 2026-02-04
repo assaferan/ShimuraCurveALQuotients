@@ -1,10 +1,23 @@
-a:=-115; b:=5; Eichler:=1;
+a:=7; b:=-2; Eichler:=3;
 NMax:=70;
 
 A<i,j,k>:=QuaternionAlgebra<Rationals()|a,b>;
 D:=Discriminant(A);
 L:=AssociativeArray();
 DualL:=AssociativeArray();
+
+
+//-2*q^-21 - 2*q^-6 + 2*q^-5 + 2*q^-2 - 2*q^-1 + O(q)
+
+if D eq 14 and Eichler eq 3 then //(7,-2)
+  divs := [[1,2,5,6,21]];
+  wts := [[-2,2,2,-2,-2]];
+  divs1 := [[]];
+  wts1 := [[]];
+  offs := [[]];
+  offsets :=[[]];
+
+end if;
 
 /* D=119 (-7,17) */
 if D eq 119 then

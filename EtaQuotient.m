@@ -65,6 +65,11 @@ intrinsic EtaQuotient(R::RngEtaQuot, exps::SeqEnum[RngIntElt]) -> EtaQuot
     return eta;
 end intrinsic;
 
+intrinsic EtaQuotient(R::RngEtaQuot, coeffs::Assoc) -> EtaQuot
+{Return the eta quotient \prod eta(d*t)^coeffs[d] where d runs over the keys of coeffs}
+    return &+[coeffs[k]*EtaQuotient(R, k) : k in Keys(coeffs)];
+end intrinsic;
+
 intrinsic Parent(eta::EtaQuot) -> RngEtaQuot
 {.}
     return eta`parent;

@@ -172,7 +172,7 @@ end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the immediate covers of X.}
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    fs := GetBorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
@@ -183,7 +183,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
     // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
                                                             MaxNum := num_vals, Prec := Prec, 
-                                                            Exclude := {}, Include := Set(d_divs));
+                                                            Exclude := {}, Include := Set(d_divs), coprime_to_level := true);
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
     return EquationsOfCovers(schofer_tab, all_cm_pts);
@@ -511,7 +511,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    fs := GetBorcherdsForms(Xstar, curves : Prec := Prec);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
