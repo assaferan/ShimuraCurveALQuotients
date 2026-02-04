@@ -28,8 +28,15 @@ function UnderlyingConic(D)
 end function;
 
 function HyperellipticOverQuadraticExtension(D)
-    D0_con, f1 := UnderlyingConic(D);
+    D0_cons, projs := UnderlyingConic(D);
+    D0_con := D0_cons[1];
     P2<X,Y,Z> := Ambient(D0_con);
+    
+    // Extract f1 (the non-quadratic defining equation) from D
+    fs := DefiningEquations(D);
+    assert #fs eq 2;
+    assert exists(f2){f : f in fs | Degree(f) eq 2};
+    f1 := [f : f in fs | f ne f2][1];
 
     disc := -Discriminant(D0_con);
     K := QuadraticField(Numerator(disc)*Denominator(disc));

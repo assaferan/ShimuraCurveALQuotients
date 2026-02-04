@@ -1491,17 +1491,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     if not coprime_to_level then
         return rat_pts, quad_pts;
     end if;
-    for p in rat_pts do
-        if GCD(p[1], X`N) ne 1 then
-            Remove(~rat_pts, Index(rat_pts, p));
-        end if;
-    end for;
-
-    for p in quad_pts do
-        if GCD(p[1], X`N) ne 1 then
-            Remove(~quad_pts, Index(quad_pts, p));
-        end if;
-    end for;
+    // Filter out points where p[1] is not coprime to N
+    // Build new lists instead of modifying during iteration
+    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1];
     return rat_pts, quad_pts;
 
 end intrinsic;
