@@ -1220,7 +1220,8 @@ SingularModuli:=procedure(disc)
   end for;
 end procedure;
 
-for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
+// for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
+for disc in [r: r in [1..2000]| -r in Discs] do
 // for disc in [75,100] do
   SingularModuli(-disc);
 end for;

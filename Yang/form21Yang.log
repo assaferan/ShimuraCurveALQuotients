@@ -1,0 +1,7873 @@
+====================================================
+The discriminant is -4 with class number 1 and embedding i - 1/2*j - 1/2*k
+Kappa_eta of 7/4
+	m - Q(x) = 3/4
+	adding 1/4 Log 7
+	m - Q(x) = 7/4
+	adding 1/2 Log 3
+	m - Q(x) = 3/4
+	adding 1/4 Log 7
+	m - Q(x) = 3/2
+	adding 1/2 Log 7
+	m - Q(x) = 3/2
+	adding 1/2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 0
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 0
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+Kappa_0 of 2
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 7/4
+	 adding 1 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 7/4
+	 adding 1 log 3
+Kappa_0 of 3
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+Kappa_0 of 5
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 4
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 4
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 15/4
+	 adding 1 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 23/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 23/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 15/4
+	 adding 1 log 7
+Kappa_0 of 7
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 27/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 27/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 0
+	adding 2 Log 3
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 8
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 8
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 0
+	adding 2 Log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 27/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 35/4
+	 adding 2 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 35/4
+	 adding 2 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 27/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 11/4
+	 adding 0 log 3
+Kappa_0 of 21
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 12
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 17
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 20
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 8 log 2
+
+	 mu_minus = 0, m - Q(x) = 20
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 17
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 12
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 35/4
+	 adding 2 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 59/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 75/4
+	 adding 3/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 83/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 83/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 75/4
+	 adding 3/2 log 7
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 59/4
+	 adding 0 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 35/4
+	 adding 2 log 3
+
+	 mu_minus = -21/2*i + 21/4*j + 25/4*k, m - Q(x) = 3/4
+	 adding 1/2 log 7
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<3, 1/2>,
+<7, 3/2>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+0
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1/2>,
+<7, 3/2>
+]
+the denominator is
+[]
+====================================================
+The discriminant is -7 with class number 1 and embedding i
+Kappa_eta of 7/4
+	m - Q(x) = 0
+	m - Q(x) = 0
+Kappa_0 of 1
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1 log 3
+Kappa_0 of 2
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 2 log 3
+Kappa_0 of 3
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 2 log 7
+Kappa_0 of 5
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 4 log 7
+Kappa_0 of 7
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 0
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = 0, m - Q(x) = 0
+Kappa_0 of 9
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 2 log 3
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 5 log 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 2 log 3
+Kappa_0 of 21
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 14
+	 adding 2 log 3
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 7
+
+	 mu_minus = 0, m - Q(x) = 14
+	 adding 2 log 3
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+Infinity
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+Infinity
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+Infinity
+====================================================
+The discriminant is -15 with class number 1 and embedding 3*i - 4*j
+Kappa_eta of 7/4
+	m - Q(x) = 8/5
+	adding 1 Log 7
+	m - Q(x) = 2/5
+	adding 1/2 Log 7
+	m - Q(x) = 2/5
+	adding 1/2 Log 7
+	m - Q(x) = 8/5
+	adding 1 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1/2 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 2/5
+	 adding 1/2 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 2/5
+	 adding 1/2 log 7
+Kappa_0 of 2
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 3
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 7/5
+	 adding 1 log 3
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 7/5
+	 adding 1 log 3
+Kappa_0 of 3
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 12/5
+	 adding 3/4 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 12/5
+	 adding 3/4 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+Kappa_0 of 5
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 13/5
+	 adding 0 log 3
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 22/5
+	 adding 0 log 3
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 22/5
+	 adding 0 log 3
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 13/5
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 18/5
+	 adding 1/2 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 27/5
+	 adding 1/4 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 27/5
+	 adding 1/4 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 18/5
+	 adding 1/2 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+Kappa_0 of 7
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 5
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 8/5
+	 adding 1 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 23/5
+	 adding 1/2 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 32/5
+	 adding 3/2 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 32/5
+	 adding 3/2 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 23/5
+	 adding 1/2 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 8/5
+	 adding 1 log 7
+Kappa_0 of 9
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 1/2 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 18/5
+	 adding 1/2 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 33/5
+	 adding 0 log 3
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 42/5
+	 adding 4 log 3
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 42/5
+	 adding 4 log 3
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 33/5
+	 adding 0 log 3
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 18/5
+	 adding 1/2 log 7
+Kappa_0 of 21
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 78/5
+	 adding 0 log 3
+
+	 mu_minus = -6/5*i + 21/10*j + 1/2*k, m - Q(x) = 93/5
+	 adding 1/2 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 102/5
+	 adding 1 log 7
+
+	 mu_minus = -12/5*i + 21/5*j + k, m - Q(x) = 57/5
+	 adding 1/2 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 57/5
+	 adding 1/2 log 7
+
+	 mu_minus = -18/5*i + 63/10*j + 3/2*k, m - Q(x) = 102/5
+	 adding 1 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 93/5
+	 adding 1/2 log 7
+
+	 mu_minus = -24/5*i + 42/5*j + 2*k, m - Q(x) = 78/5
+	 adding 0 log 3
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<5, 1>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[ <2, 2> ]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[ <2, 4>, <3, 1> ]
+the denominator is
+[]
+====================================================
+The discriminant is -16 with class number 1 and embedding i - j
+Kappa_eta of 7/4
+	m - Q(x) = 3/16
+	adding 1/4 Log 7
+	m - Q(x) = 19/16
+	adding 0 Log 3
+	m - Q(x) = 3/2
+	adding 1/2 Log 7
+	m - Q(x) = 27/16
+	adding 1/4 Log 7
+	m - Q(x) = 3/4
+	adding 1/2 Log 7
+	m - Q(x) = 3/4
+	adding 1/2 Log 7
+	m - Q(x) = 27/16
+	adding 1/4 Log 7
+	m - Q(x) = 3/2
+	adding 1/2 Log 7
+	m - Q(x) = 19/16
+	adding 0 Log 3
+	m - Q(x) = 3/16
+	adding 1/4 Log 7
+	m - Q(x) = 7/4
+	adding 1 Log 3
+Kappa_0 of 1
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 7/16
+	 adding 1/2 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 15/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 15/16
+	 adding 1/2 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 7/16
+	 adding 1/2 log 3
+Kappa_0 of 2
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 7/16
+	 adding 1/2 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 7/4
+	 adding 1/2 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 7/4
+	 adding 1/2 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 7/16
+	 adding 1/2 log 3
+Kappa_0 of 3
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 39/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 39/16
+	 adding 1/2 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+Kappa_0 of 5
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 55/16
+	 adding 0 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 71/16
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 79/16
+	 adding 0 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 4
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 4
+	 adding 0 log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 79/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 71/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 55/16
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 71/16
+	 adding 0 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 87/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 23/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 15/4
+	 adding 1/2 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 95/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 15/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 15/16
+	 adding 1/2 log 7
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 95/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 15/4
+	 adding 1/2 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 23/4
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 87/16
+	 adding 1/2 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 71/16
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 87/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 103/16
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 27/4
+	 adding 1/4 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 63/16
+	 adding 5/2 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 111/16
+	 adding 1/2 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 6
+	 adding 1 log 7
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 31/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 111/16
+	 adding 1/2 log 7
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 63/16
+	 adding 5/2 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 19/4
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 27/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 103/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 87/16
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 119/16
+	 adding 1 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 135/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 35/4
+	 adding 1 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 27/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 95/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 143/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 63/16
+	 adding 5/2 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 8
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 8
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 63/16
+	 adding 5/2 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 143/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 95/16
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 27/4
+	 adding 1/4 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 35/4
+	 adding 1 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 11/4
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 23/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 135/16
+	 adding 1/2 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 119/16
+	 adding 1 log 3
+Kappa_0 of 21
+
+	 Sgcd = 42
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 17
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 2
+
+	 mu_minus = 0, m - Q(x) = 17
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 167/16
+	 adding 0 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 311/16
+	 adding 0 log 3
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 327/16
+	 adding 1/2 log 7
+
+	 mu_minus = -3/8*i + 7/8*j + 1/2*k, m - Q(x) = 215/16
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 59/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 83/4
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 75/4
+	 adding 3/4 log 7
+
+	 mu_minus = -3/4*i + 7/4*j + k, m - Q(x) = 35/4
+	 adding 1 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 111/16
+	 adding 1/2 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 287/16
+	 adding 1 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 335/16
+	 adding 0 log 3
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 255/16
+	 adding 1 log 7
+
+	 mu_minus = -9/8*i + 21/8*j + 3/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 12
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 20
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 20
+	 adding 0 log 2
+
+	 mu_minus = -3/2*i + 7/2*j + 2*k, m - Q(x) = 12
+	 adding 0 log 2
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 47/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 255/16
+	 adding 1 log 7
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 335/16
+	 adding 0 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 287/16
+	 adding 1 log 3
+
+	 mu_minus = -15/8*i + 35/8*j + 5/2*k, m - Q(x) = 111/16
+	 adding 1/2 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 35/4
+	 adding 1 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 75/4
+	 adding 3/4 log 7
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 83/4
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 59/4
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 21/4*j + 3*k, m - Q(x) = 3/4
+	 adding 1/4 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 215/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 327/16
+	 adding 1/2 log 7
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 311/16
+	 adding 0 log 3
+
+	 mu_minus = -21/8*i + 49/8*j + 7/2*k, m - Q(x) = 167/16
+	 adding 0 log 3
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<3, 2>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 3>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 6>
+]
+the denominator is
+[]
+====================================================
+The discriminant is -28 with class number 1 and embedding 2*i - k
+Kappa_eta of 7/4
+	m - Q(x) = 7/4
+	adding 1 Log 3
+	m - Q(x) = 0
+	m - Q(x) = 0
+	adding 4 Log 2
+Kappa_0 of 1
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1 log 3
+Kappa_0 of 2
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 1/4
+	 adding 1 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 1/4
+	 adding 1 log 3
+Kappa_0 of 3
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 2 log 7
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 5/4
+	 adding 0 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 5/4
+	 adding 0 log 3
+Kappa_0 of 5
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 13/4
+	 adding 0 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 13/4
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 17/4
+	 adding 0 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 17/4
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 0
+	adding 2 Log 2
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = 0, m - Q(x) = 0
+	adding 2 Log 2
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 21/4
+	 adding 4 log 7
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 21/4
+	 adding 4 log 7
+Kappa_0 of 9
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 5 log 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 29/4
+	 adding 2 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 29/4
+	 adding 2 log 3
+Kappa_0 of 21
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 14
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 7
+
+	 mu_minus = 0, m - Q(x) = 14
+	 adding 0 log 2
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 21/4
+	 adding 4 log 7
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 77/4
+	 adding 2 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 77/4
+	 adding 2 log 3
+
+	 mu_minus = -3*i + 1/2*j + 2*k, m - Q(x) = 21/4
+	 adding 4 log 7
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+0
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<7, 3>
+]
+the denominator is
+[]
+====================================================
+The discriminant is -43 with class number 1 and embedding 5*i - 4*j - 2*k
+Kappa_eta of 7/4
+	m - Q(x) = 3/43
+	adding 1/4 Log 7
+	m - Q(x) = 19/43
+	adding 0 Log 3
+	m - Q(x) = 33/43
+	adding 1/2 Log 7
+	m - Q(x) = 45/43
+	adding 0 Log 3
+	m - Q(x) = 55/43
+	adding 0 Log 3
+	m - Q(x) = 63/43
+	adding 5/2 Log 3
+	m - Q(x) = 69/43
+	adding 1/2 Log 7
+	m - Q(x) = 73/43
+	adding 0 Log 3
+	m - Q(x) = 75/43
+	adding 1/4 Log 7
+	m - Q(x) = 75/43
+	adding 1/4 Log 7
+	m - Q(x) = 73/43
+	adding 0 Log 3
+	m - Q(x) = 69/43
+	adding 1/2 Log 7
+	m - Q(x) = 63/43
+	adding 5/2 Log 3
+	m - Q(x) = 55/43
+	adding 0 Log 3
+	m - Q(x) = 45/43
+	adding 0 Log 3
+	m - Q(x) = 33/43
+	adding 1/2 Log 7
+	m - Q(x) = 19/43
+	adding 0 Log 3
+	m - Q(x) = 3/43
+	adding 1/4 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 3
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 42/43
+	 adding 2 log 2
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 39/43
+	 adding 1/2 log 7
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 34/43
+	 adding 0 log 2
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 27/43
+	 adding 1/4 log 7
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 18/43
+	 adding 0 log 2
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 7/43
+	 adding 1/2 log 3
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 7/43
+	 adding 1/2 log 3
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 18/43
+	 adding 0 log 2
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 27/43
+	 adding 1/4 log 7
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 34/43
+	 adding 0 log 2
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 39/43
+	 adding 1/2 log 7
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 42/43
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 85/43
+	 adding 0 log 3
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 82/43
+	 adding 0 log 2
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 77/43
+	 adding 1 log 3
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 70/43
+	 adding 0 log 2
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 61/43
+	 adding 0 log 3
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 50/43
+	 adding 0 log 2
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 37/43
+	 adding 0 log 3
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 22/43
+	 adding 0 log 2
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 5/43
+	 adding 0 log 3
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 5/43
+	 adding 0 log 3
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 22/43
+	 adding 0 log 2
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 37/43
+	 adding 0 log 3
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 50/43
+	 adding 0 log 2
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 61/43
+	 adding 0 log 3
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 70/43
+	 adding 0 log 2
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 77/43
+	 adding 1 log 3
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 82/43
+	 adding 0 log 2
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 85/43
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 128/43
+	 adding 0 log 2
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 125/43
+	 adding 0 log 3
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 120/43
+	 adding 0 log 2
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 113/43
+	 adding 0 log 3
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 104/43
+	 adding 0 log 2
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 93/43
+	 adding 1/2 log 7
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 80/43
+	 adding 0 log 3
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 65/43
+	 adding 0 log 3
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 48/43
+	 adding 1/4 log 7
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 29/43
+	 adding 0 log 3
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 8/43
+	 adding 0 log 2
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 8/43
+	 adding 0 log 2
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 29/43
+	 adding 0 log 3
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 48/43
+	 adding 1/4 log 7
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 65/43
+	 adding 0 log 3
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 80/43
+	 adding 0 log 3
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 93/43
+	 adding 1/2 log 7
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 104/43
+	 adding 0 log 2
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 113/43
+	 adding 0 log 3
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 120/43
+	 adding 0 log 2
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 125/43
+	 adding 0 log 3
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 128/43
+	 adding 0 log 2
+Kappa_0 of 5
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 214/43
+	 adding 0 log 2
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 211/43
+	 adding 0 log 3
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 206/43
+	 adding 0 log 2
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 199/43
+	 adding 0 log 3
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 190/43
+	 adding 0 log 2
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 179/43
+	 adding 0 log 3
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 166/43
+	 adding 0 log 2
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 151/43
+	 adding 0 log 3
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 134/43
+	 adding 0 log 2
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 115/43
+	 adding 0 log 3
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 94/43
+	 adding 0 log 2
+
+	 mu_minus = -2520/43*i + 2016/43*j + 1524/43*k, m - Q(x) = 71/43
+	 adding 0 log 3
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 46/43
+	 adding 0 log 2
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 19/43
+	 adding 0 log 3
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 19/43
+	 adding 0 log 3
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 46/43
+	 adding 0 log 2
+
+	 mu_minus = -6510/43*i + 5208/43*j + 3937/43*k, m - Q(x) = 71/43
+	 adding 0 log 3
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 94/43
+	 adding 0 log 2
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 115/43
+	 adding 0 log 3
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 134/43
+	 adding 0 log 2
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 151/43
+	 adding 0 log 3
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 166/43
+	 adding 0 log 2
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 179/43
+	 adding 0 log 3
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 190/43
+	 adding 0 log 2
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 199/43
+	 adding 0 log 3
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 206/43
+	 adding 0 log 2
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 211/43
+	 adding 0 log 3
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 214/43
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 257/43
+	 adding 0 log 3
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 254/43
+	 adding 0 log 2
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 249/43
+	 adding 1/2 log 7
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 242/43
+	 adding 0 log 2
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 233/43
+	 adding 0 log 3
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 222/43
+	 adding 0 log 2
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 209/43
+	 adding 0 log 3
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 194/43
+	 adding 0 log 2
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 177/43
+	 adding 1/2 log 7
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 158/43
+	 adding 0 log 2
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 137/43
+	 adding 0 log 3
+
+	 mu_minus = -2520/43*i + 2016/43*j + 1524/43*k, m - Q(x) = 114/43
+	 adding 0 log 2
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 89/43
+	 adding 0 log 3
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 62/43
+	 adding 0 log 2
+
+	 mu_minus = -3150/43*i + 2520/43*j + 1905/43*k, m - Q(x) = 33/43
+	 adding 1/2 log 7
+
+	 mu_minus = -3360/43*i + 2688/43*j + 2032/43*k, m - Q(x) = 2/43
+	 adding 0 log 2
+
+	 mu_minus = -5670/43*i + 4536/43*j + 3429/43*k, m - Q(x) = 2/43
+	 adding 0 log 2
+
+	 mu_minus = -5880/43*i + 4704/43*j + 3556/43*k, m - Q(x) = 33/43
+	 adding 1/2 log 7
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 62/43
+	 adding 0 log 2
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 89/43
+	 adding 0 log 3
+
+	 mu_minus = -6510/43*i + 5208/43*j + 3937/43*k, m - Q(x) = 114/43
+	 adding 0 log 2
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 137/43
+	 adding 0 log 3
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 158/43
+	 adding 0 log 2
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 177/43
+	 adding 1/2 log 7
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 194/43
+	 adding 0 log 2
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 209/43
+	 adding 0 log 3
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 222/43
+	 adding 0 log 2
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 233/43
+	 adding 0 log 3
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 242/43
+	 adding 0 log 2
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 249/43
+	 adding 1/2 log 7
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 254/43
+	 adding 0 log 2
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 257/43
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 300/43
+	 adding 1/4 log 7
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 297/43
+	 adding 1/2 log 7
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 292/43
+	 adding 0 log 3
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 285/43
+	 adding 0 log 5
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 276/43
+	 adding 1/2 log 7
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 265/43
+	 adding 0 log 3
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 252/43
+	 adding 5/2 log 3
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 237/43
+	 adding 1/2 log 7
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 220/43
+	 adding 0 log 3
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 201/43
+	 adding 1/2 log 7
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 180/43
+	 adding 0 log 3
+
+	 mu_minus = -2520/43*i + 2016/43*j + 1524/43*k, m - Q(x) = 157/43
+	 adding 0 log 3
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 132/43
+	 adding 1/2 log 7
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 105/43
+	 adding 2 log 5
+
+	 mu_minus = -3150/43*i + 2520/43*j + 1905/43*k, m - Q(x) = 76/43
+	 adding 0 log 3
+
+	 mu_minus = -3360/43*i + 2688/43*j + 2032/43*k, m - Q(x) = 45/43
+	 adding 0 log 3
+
+	 mu_minus = -3570/43*i + 2856/43*j + 2159/43*k, m - Q(x) = 12/43
+	 adding 1/4 log 7
+
+	 mu_minus = -5460/43*i + 4368/43*j + 3302/43*k, m - Q(x) = 12/43
+	 adding 1/4 log 7
+
+	 mu_minus = -5670/43*i + 4536/43*j + 3429/43*k, m - Q(x) = 45/43
+	 adding 0 log 3
+
+	 mu_minus = -5880/43*i + 4704/43*j + 3556/43*k, m - Q(x) = 76/43
+	 adding 0 log 3
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 105/43
+	 adding 2 log 5
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 132/43
+	 adding 1/2 log 7
+
+	 mu_minus = -6510/43*i + 5208/43*j + 3937/43*k, m - Q(x) = 157/43
+	 adding 0 log 3
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 180/43
+	 adding 0 log 3
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 201/43
+	 adding 1/2 log 7
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 220/43
+	 adding 0 log 3
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 237/43
+	 adding 1/2 log 7
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 252/43
+	 adding 5/2 log 3
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 265/43
+	 adding 0 log 3
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 276/43
+	 adding 1/2 log 7
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 285/43
+	 adding 0 log 5
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 292/43
+	 adding 0 log 3
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 297/43
+	 adding 1/2 log 7
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 300/43
+	 adding 1/4 log 7
+Kappa_0 of 9
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 3
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 386/43
+	 adding 0 log 2
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 383/43
+	 adding 0 log 3
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 378/43
+	 adding 2 log 2
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 371/43
+	 adding 1 log 3
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 362/43
+	 adding 0 log 2
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 351/43
+	 adding 1/2 log 7
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 338/43
+	 adding 0 log 2
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 323/43
+	 adding 0 log 3
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 306/43
+	 adding 0 log 2
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 287/43
+	 adding 1 log 3
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 266/43
+	 adding 0 log 2
+
+	 mu_minus = -2520/43*i + 2016/43*j + 1524/43*k, m - Q(x) = 243/43
+	 adding 1/4 log 7
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 218/43
+	 adding 0 log 2
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 191/43
+	 adding 0 log 3
+
+	 mu_minus = -3150/43*i + 2520/43*j + 1905/43*k, m - Q(x) = 162/43
+	 adding 0 log 2
+
+	 mu_minus = -3360/43*i + 2688/43*j + 2032/43*k, m - Q(x) = 131/43
+	 adding 0 log 3
+
+	 mu_minus = -3570/43*i + 2856/43*j + 2159/43*k, m - Q(x) = 98/43
+	 adding 0 log 2
+
+	 mu_minus = -3780/43*i + 3024/43*j + 2286/43*k, m - Q(x) = 63/43
+	 adding 5/2 log 3
+
+	 mu_minus = -3990/43*i + 3192/43*j + 2413/43*k, m - Q(x) = 26/43
+	 adding 0 log 2
+
+	 mu_minus = -5040/43*i + 4032/43*j + 3048/43*k, m - Q(x) = 26/43
+	 adding 0 log 2
+
+	 mu_minus = -5250/43*i + 4200/43*j + 3175/43*k, m - Q(x) = 63/43
+	 adding 5/2 log 3
+
+	 mu_minus = -5460/43*i + 4368/43*j + 3302/43*k, m - Q(x) = 98/43
+	 adding 0 log 2
+
+	 mu_minus = -5670/43*i + 4536/43*j + 3429/43*k, m - Q(x) = 131/43
+	 adding 0 log 3
+
+	 mu_minus = -5880/43*i + 4704/43*j + 3556/43*k, m - Q(x) = 162/43
+	 adding 0 log 2
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 191/43
+	 adding 0 log 3
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 218/43
+	 adding 0 log 2
+
+	 mu_minus = -6510/43*i + 5208/43*j + 3937/43*k, m - Q(x) = 243/43
+	 adding 1/4 log 7
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 266/43
+	 adding 0 log 2
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 287/43
+	 adding 1 log 3
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 306/43
+	 adding 0 log 2
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 323/43
+	 adding 0 log 3
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 338/43
+	 adding 0 log 2
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 351/43
+	 adding 1/2 log 7
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 362/43
+	 adding 0 log 2
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 371/43
+	 adding 1 log 3
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 378/43
+	 adding 2 log 2
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 383/43
+	 adding 0 log 3
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 386/43
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 2 log 43
+
+	 mu_minus = -210/43*i + 168/43*j + 127/43*k, m - Q(x) = 902/43
+	 adding 0 log 2
+
+	 mu_minus = -420/43*i + 336/43*j + 254/43*k, m - Q(x) = 899/43
+	 adding 0 log 3
+
+	 mu_minus = -630/43*i + 504/43*j + 381/43*k, m - Q(x) = 894/43
+	 adding 0 log 2
+
+	 mu_minus = -840/43*i + 672/43*j + 508/43*k, m - Q(x) = 887/43
+	 adding 0 log 3
+
+	 mu_minus = -1050/43*i + 840/43*j + 635/43*k, m - Q(x) = 878/43
+	 adding 0 log 2
+
+	 mu_minus = -1260/43*i + 1008/43*j + 762/43*k, m - Q(x) = 867/43
+	 adding 3/4 log 7
+
+	 mu_minus = -1470/43*i + 1176/43*j + 889/43*k, m - Q(x) = 854/43
+	 adding 0 log 2
+
+	 mu_minus = -1680/43*i + 1344/43*j + 1016/43*k, m - Q(x) = 839/43
+	 adding 0 log 3
+
+	 mu_minus = -1890/43*i + 1512/43*j + 1143/43*k, m - Q(x) = 822/43
+	 adding 0 log 2
+
+	 mu_minus = -2100/43*i + 1680/43*j + 1270/43*k, m - Q(x) = 803/43
+	 adding 0 log 3
+
+	 mu_minus = -2310/43*i + 1848/43*j + 1397/43*k, m - Q(x) = 782/43
+	 adding 0 log 2
+
+	 mu_minus = -2520/43*i + 2016/43*j + 1524/43*k, m - Q(x) = 759/43
+	 adding 1 log 7
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 734/43
+	 adding 0 log 2
+
+	 mu_minus = -2730/43*i + 2184/43*j + 1651/43*k, m - Q(x) = 3/43
+	 adding 1/4 log 7
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 707/43
+	 adding 1 log 3
+
+	 mu_minus = -2940/43*i + 2352/43*j + 1778/43*k, m - Q(x) = 62/43
+	 adding 0 log 2
+
+	 mu_minus = -3150/43*i + 2520/43*j + 1905/43*k, m - Q(x) = 678/43
+	 adding 0 log 2
+
+	 mu_minus = -3150/43*i + 2520/43*j + 1905/43*k, m - Q(x) = 119/43
+	 adding 1 log 3
+
+	 mu_minus = -3360/43*i + 2688/43*j + 2032/43*k, m - Q(x) = 647/43
+	 adding 0 log 3
+
+	 mu_minus = -3360/43*i + 2688/43*j + 2032/43*k, m - Q(x) = 174/43
+	 adding 0 log 2
+
+	 mu_minus = -3570/43*i + 2856/43*j + 2159/43*k, m - Q(x) = 614/43
+	 adding 0 log 2
+
+	 mu_minus = -3570/43*i + 2856/43*j + 2159/43*k, m - Q(x) = 227/43
+	 adding 0 log 3
+
+	 mu_minus = -3780/43*i + 3024/43*j + 2286/43*k, m - Q(x) = 579/43
+	 adding 1/2 log 7
+
+	 mu_minus = -3780/43*i + 3024/43*j + 2286/43*k, m - Q(x) = 278/43
+	 adding 0 log 2
+
+	 mu_minus = -3990/43*i + 3192/43*j + 2413/43*k, m - Q(x) = 542/43
+	 adding 0 log 2
+
+	 mu_minus = -3990/43*i + 3192/43*j + 2413/43*k, m - Q(x) = 327/43
+	 adding 1/2 log 7
+
+	 mu_minus = -4200/43*i + 3360/43*j + 2540/43*k, m - Q(x) = 503/43
+	 adding 0 log 3
+
+	 mu_minus = -4200/43*i + 3360/43*j + 2540/43*k, m - Q(x) = 374/43
+	 adding 0 log 2
+
+	 mu_minus = -4410/43*i + 3528/43*j + 2667/43*k, m - Q(x) = 462/43
+	 adding 4 log 2
+
+	 mu_minus = -4410/43*i + 3528/43*j + 2667/43*k, m - Q(x) = 419/43
+	 adding 0 log 3
+
+	 mu_minus = -4620/43*i + 3696/43*j + 2794/43*k, m - Q(x) = 419/43
+	 adding 0 log 3
+
+	 mu_minus = -4620/43*i + 3696/43*j + 2794/43*k, m - Q(x) = 462/43
+	 adding 4 log 2
+
+	 mu_minus = -4830/43*i + 3864/43*j + 2921/43*k, m - Q(x) = 374/43
+	 adding 0 log 2
+
+	 mu_minus = -4830/43*i + 3864/43*j + 2921/43*k, m - Q(x) = 503/43
+	 adding 0 log 3
+
+	 mu_minus = -5040/43*i + 4032/43*j + 3048/43*k, m - Q(x) = 327/43
+	 adding 1/2 log 7
+
+	 mu_minus = -5040/43*i + 4032/43*j + 3048/43*k, m - Q(x) = 542/43
+	 adding 0 log 2
+
+	 mu_minus = -5250/43*i + 4200/43*j + 3175/43*k, m - Q(x) = 278/43
+	 adding 0 log 2
+
+	 mu_minus = -5250/43*i + 4200/43*j + 3175/43*k, m - Q(x) = 579/43
+	 adding 1/2 log 7
+
+	 mu_minus = -5460/43*i + 4368/43*j + 3302/43*k, m - Q(x) = 227/43
+	 adding 0 log 3
+
+	 mu_minus = -5460/43*i + 4368/43*j + 3302/43*k, m - Q(x) = 614/43
+	 adding 0 log 2
+
+	 mu_minus = -5670/43*i + 4536/43*j + 3429/43*k, m - Q(x) = 174/43
+	 adding 0 log 2
+
+	 mu_minus = -5670/43*i + 4536/43*j + 3429/43*k, m - Q(x) = 647/43
+	 adding 0 log 3
+
+	 mu_minus = -5880/43*i + 4704/43*j + 3556/43*k, m - Q(x) = 119/43
+	 adding 1 log 3
+
+	 mu_minus = -5880/43*i + 4704/43*j + 3556/43*k, m - Q(x) = 678/43
+	 adding 0 log 2
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 62/43
+	 adding 0 log 2
+
+	 mu_minus = -6090/43*i + 4872/43*j + 3683/43*k, m - Q(x) = 707/43
+	 adding 1 log 3
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 3/43
+	 adding 1/4 log 7
+
+	 mu_minus = -6300/43*i + 5040/43*j + 3810/43*k, m - Q(x) = 734/43
+	 adding 0 log 2
+
+	 mu_minus = -6510/43*i + 5208/43*j + 3937/43*k, m - Q(x) = 759/43
+	 adding 1 log 7
+
+	 mu_minus = -6720/43*i + 5376/43*j + 4064/43*k, m - Q(x) = 782/43
+	 adding 0 log 2
+
+	 mu_minus = -6930/43*i + 5544/43*j + 4191/43*k, m - Q(x) = 803/43
+	 adding 0 log 3
+
+	 mu_minus = -7140/43*i + 5712/43*j + 4318/43*k, m - Q(x) = 822/43
+	 adding 0 log 2
+
+	 mu_minus = -7350/43*i + 5880/43*j + 4445/43*k, m - Q(x) = 839/43
+	 adding 0 log 3
+
+	 mu_minus = -7560/43*i + 6048/43*j + 4572/43*k, m - Q(x) = 854/43
+	 adding 0 log 2
+
+	 mu_minus = -7770/43*i + 6216/43*j + 4699/43*k, m - Q(x) = 867/43
+	 adding 3/4 log 7
+
+	 mu_minus = -7980/43*i + 6384/43*j + 4826/43*k, m - Q(x) = 878/43
+	 adding 0 log 2
+
+	 mu_minus = -8190/43*i + 6552/43*j + 4953/43*k, m - Q(x) = 887/43
+	 adding 0 log 3
+
+	 mu_minus = -8400/43*i + 6720/43*j + 5080/43*k, m - Q(x) = 894/43
+	 adding 0 log 2
+
+	 mu_minus = -8610/43*i + 6888/43*j + 5207/43*k, m - Q(x) = 899/43
+	 adding 0 log 3
+
+	 mu_minus = -8820/43*i + 7056/43*j + 5334/43*k, m - Q(x) = 902/43
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<5, 2>
+]
+the denominator is
+[
+<3, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>
+]
+the denominator is
+[
+<3, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<43, 1>
+]
+the denominator is
+[
+<3, 4>
+]
+====================================================
+The discriminant is -51 with class number 1 and embedding 3*i - 2*j
+Kappa_eta of 7/4
+	m - Q(x) = 11/17
+	adding 1/2 Log 7
+	m - Q(x) = 23/17
+	adding 1/2 Log 7
+	m - Q(x) = 29/17
+	adding 1/2 Log 7
+	m - Q(x) = 29/17
+	adding 1/2 Log 7
+	m - Q(x) = 23/17
+	adding 1/2 Log 7
+	m - Q(x) = 11/17
+	adding 1/2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1/2 log 7
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 14/17
+	 adding 2 log 2
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 5/17
+	 adding 1/2 log 7
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 5/17
+	 adding 1/2 log 7
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 14/17
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 31/17
+	 adding 0 log 3
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 22/17
+	 adding 0 log 2
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 7/17
+	 adding 1 log 3
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 7/17
+	 adding 1 log 3
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 22/17
+	 adding 0 log 2
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 31/17
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 48/17
+	 adding 1/4 log 7
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 39/17
+	 adding 1/2 log 7
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 24/17
+	 adding 0 log 2
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 3/17
+	 adding 1/4 log 7
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 3/17
+	 adding 1/4 log 7
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 24/17
+	 adding 0 log 2
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 39/17
+	 adding 1/2 log 7
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 48/17
+	 adding 1/4 log 7
+Kappa_0 of 5
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 82/17
+	 adding 0 log 2
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 73/17
+	 adding 0 log 3
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 58/17
+	 adding 0 log 2
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 37/17
+	 adding 0 log 3
+
+	 mu_minus = -15/17*i + 105/34*j + 5/2*k, m - Q(x) = 10/17
+	 adding 0 log 2
+
+	 mu_minus = -36/17*i + 126/17*j + 6*k, m - Q(x) = 10/17
+	 adding 0 log 2
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 37/17
+	 adding 0 log 3
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 58/17
+	 adding 0 log 2
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 73/17
+	 adding 0 log 3
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 82/17
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 99/17
+	 adding 1/2 log 7
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 90/17
+	 adding 0 log 2
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 75/17
+	 adding 3/4 log 7
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 54/17
+	 adding 0 log 2
+
+	 mu_minus = -15/17*i + 105/34*j + 5/2*k, m - Q(x) = 27/17
+	 adding 1/4 log 7
+
+	 mu_minus = -36/17*i + 126/17*j + 6*k, m - Q(x) = 27/17
+	 adding 1/4 log 7
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 54/17
+	 adding 0 log 2
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 75/17
+	 adding 3/4 log 7
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 90/17
+	 adding 0 log 2
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 99/17
+	 adding 1/2 log 7
+Kappa_0 of 7
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 17
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 116/17
+	 adding 1/2 log 7
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 107/17
+	 adding 1/2 log 7
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 92/17
+	 adding 1/2 log 7
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 71/17
+	 adding 1/2 log 7
+
+	 mu_minus = -15/17*i + 105/34*j + 5/2*k, m - Q(x) = 44/17
+	 adding 1/2 log 7
+
+	 mu_minus = -18/17*i + 63/17*j + 3*k, m - Q(x) = 11/17
+	 adding 1/2 log 7
+
+	 mu_minus = -33/17*i + 231/34*j + 11/2*k, m - Q(x) = 11/17
+	 adding 1/2 log 7
+
+	 mu_minus = -36/17*i + 126/17*j + 6*k, m - Q(x) = 44/17
+	 adding 1/2 log 7
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 71/17
+	 adding 1/2 log 7
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 92/17
+	 adding 1/2 log 7
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 107/17
+	 adding 1/2 log 7
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 116/17
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 1/2 log 7
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 150/17
+	 adding 0 log 2
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 141/17
+	 adding 0 log 3
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 126/17
+	 adding 2 log 2
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 105/17
+	 adding 4 log 3
+
+	 mu_minus = -15/17*i + 105/34*j + 5/2*k, m - Q(x) = 78/17
+	 adding 0 log 2
+
+	 mu_minus = -18/17*i + 63/17*j + 3*k, m - Q(x) = 45/17
+	 adding 1/2 log 7
+
+	 mu_minus = -21/17*i + 147/34*j + 7/2*k, m - Q(x) = 6/17
+	 adding 0 log 2
+
+	 mu_minus = -30/17*i + 105/17*j + 5*k, m - Q(x) = 6/17
+	 adding 0 log 2
+
+	 mu_minus = -33/17*i + 231/34*j + 11/2*k, m - Q(x) = 45/17
+	 adding 1/2 log 7
+
+	 mu_minus = -36/17*i + 126/17*j + 6*k, m - Q(x) = 78/17
+	 adding 0 log 2
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 105/17
+	 adding 4 log 3
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 126/17
+	 adding 2 log 2
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 141/17
+	 adding 0 log 3
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 150/17
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = -3/17*i + 21/34*j + 1/2*k, m - Q(x) = 354/17
+	 adding 0 log 2
+
+	 mu_minus = -6/17*i + 21/17*j + k, m - Q(x) = 345/17
+	 adding 1 log 7
+
+	 mu_minus = -9/17*i + 63/34*j + 3/2*k, m - Q(x) = 330/17
+	 adding 0 log 2
+
+	 mu_minus = -12/17*i + 42/17*j + 2*k, m - Q(x) = 309/17
+	 adding 1/2 log 7
+
+	 mu_minus = -15/17*i + 105/34*j + 5/2*k, m - Q(x) = 282/17
+	 adding 0 log 2
+
+	 mu_minus = -18/17*i + 63/17*j + 3*k, m - Q(x) = 249/17
+	 adding 0 log 3
+
+	 mu_minus = -21/17*i + 147/34*j + 7/2*k, m - Q(x) = 57/17
+	 adding 1/2 log 7
+
+	 mu_minus = -21/17*i + 147/34*j + 7/2*k, m - Q(x) = 210/17
+	 adding 4 log 2
+
+	 mu_minus = -24/17*i + 84/17*j + 4*k, m - Q(x) = 114/17
+	 adding 0 log 2
+
+	 mu_minus = -24/17*i + 84/17*j + 4*k, m - Q(x) = 165/17
+	 adding 1 log 7
+
+	 mu_minus = -27/17*i + 189/34*j + 9/2*k, m - Q(x) = 165/17
+	 adding 1 log 7
+
+	 mu_minus = -27/17*i + 189/34*j + 9/2*k, m - Q(x) = 114/17
+	 adding 0 log 2
+
+	 mu_minus = -30/17*i + 105/17*j + 5*k, m - Q(x) = 210/17
+	 adding 4 log 2
+
+	 mu_minus = -30/17*i + 105/17*j + 5*k, m - Q(x) = 57/17
+	 adding 1/2 log 7
+
+	 mu_minus = -33/17*i + 231/34*j + 11/2*k, m - Q(x) = 249/17
+	 adding 0 log 3
+
+	 mu_minus = -36/17*i + 126/17*j + 6*k, m - Q(x) = 282/17
+	 adding 0 log 2
+
+	 mu_minus = -39/17*i + 273/34*j + 13/2*k, m - Q(x) = 309/17
+	 adding 1/2 log 7
+
+	 mu_minus = -42/17*i + 147/17*j + 7*k, m - Q(x) = 330/17
+	 adding 0 log 2
+
+	 mu_minus = -45/17*i + 315/34*j + 15/2*k, m - Q(x) = 345/17
+	 adding 1 log 7
+
+	 mu_minus = -48/17*i + 168/17*j + 8*k, m - Q(x) = 354/17
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<17, 1>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>
+]
+the denominator is
+[]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1>
+]
+the denominator is
+[]
+====================================================
+The discriminant is -60 with class number 1 and embedding 3*i - 1/2*j - 3/2*k
+Kappa_eta of 7/4
+	m - Q(x) = 7/4
+	adding 2 Log 5
+	m - Q(x) = 8/5
+	adding 1/2 Log 7
+	m - Q(x) = 23/20
+	adding 1/2 Log 7
+	m - Q(x) = 2/5
+	adding 1/2 Log 7
+	m - Q(x) = 2/5
+	adding 1/2 Log 7
+	m - Q(x) = 23/20
+	adding 1/2 Log 7
+	m - Q(x) = 8/5
+	adding 1/2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1/2 log 7
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 17/20
+	 adding 1/2 log 7
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 2/5
+	 adding 0 log 2
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 2/5
+	 adding 0 log 2
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 17/20
+	 adding 1/2 log 7
+Kappa_0 of 2
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 37/20
+	 adding 0 log 3
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 7/5
+	 adding 1 log 3
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 13/20
+	 adding 0 log 3
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 13/20
+	 adding 0 log 3
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 7/5
+	 adding 1 log 3
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 37/20
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 57/20
+	 adding 1/2 log 7
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 12/5
+	 adding 1/4 log 7
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 33/20
+	 adding 0 log 3
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 33/20
+	 adding 0 log 3
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 12/5
+	 adding 1/4 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 57/20
+	 adding 1/2 log 7
+Kappa_0 of 5
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 97/20
+	 adding 0 log 3
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 22/5
+	 adding 0 log 2
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 73/20
+	 adding 0 log 3
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 13/5
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 5/4
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 5/4
+	 adding 0 log 3
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 13/5
+	 adding 0 log 3
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 73/20
+	 adding 0 log 3
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 22/5
+	 adding 0 log 2
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 97/20
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 117/20
+	 adding 0 log 3
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 27/5
+	 adding 1/4 log 7
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 93/20
+	 adding 1/2 log 7
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 18/5
+	 adding 0 log 2
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 9/4
+	 adding 1/2 log 7
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 9/4
+	 adding 1/2 log 7
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 18/5
+	 adding 0 log 2
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 3/5
+	 adding 1/4 log 7
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 93/20
+	 adding 1/2 log 7
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 27/5
+	 adding 1/4 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 117/20
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 5
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 137/20
+	 adding 1/2 log 7
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 32/5
+	 adding 1 log 7
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 113/20
+	 adding 1/2 log 7
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 8/5
+	 adding 1/2 log 7
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 23/5
+	 adding 1/2 log 7
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 13/4
+	 adding 0 log 5
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 13/4
+	 adding 0 log 5
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 23/5
+	 adding 1/2 log 7
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 8/5
+	 adding 1/2 log 7
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 113/20
+	 adding 1/2 log 7
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 32/5
+	 adding 1 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 137/20
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 1/2 log 7
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 177/20
+	 adding 0 log 3
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 42/5
+	 adding 0 log 2
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 33/20
+	 adding 0 log 3
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 153/20
+	 adding 1/2 log 7
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 18/5
+	 adding 0 log 2
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 33/5
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 21/4
+	 adding 4 log 3
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 21/4
+	 adding 4 log 3
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 33/5
+	 adding 0 log 3
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 18/5
+	 adding 0 log 2
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 153/20
+	 adding 1/2 log 7
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 33/20
+	 adding 0 log 3
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 42/5
+	 adding 0 log 2
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 177/20
+	 adding 0 log 3
+Kappa_0 of 21
+
+	 Sgcd = 14
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 177/20
+	 adding 0 log 3
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 417/20
+	 adding 1/2 log 7
+
+	 mu_minus = -63/10*i + 21/20*j + 83/20*k, m - Q(x) = 57/20
+	 adding 1/2 log 7
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 57/5
+	 adding 1/2 log 7
+
+	 mu_minus = -63/5*i + 21/10*j + 83/10*k, m - Q(x) = 102/5
+	 adding 0 log 2
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 273/20
+	 adding 2 log 13
+
+	 mu_minus = -189/10*i + 63/20*j + 249/20*k, m - Q(x) = 393/20
+	 adding 0 log 3
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 78/5
+	 adding 0 log 2
+
+	 mu_minus = -126/5*i + 21/5*j + 83/5*k, m - Q(x) = 93/5
+	 adding 1/2 log 7
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 69/4
+	 adding 1 log 7
+
+	 mu_minus = -63/2*i + 21/4*j + 83/4*k, m - Q(x) = 69/4
+	 adding 1 log 7
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 93/5
+	 adding 1/2 log 7
+
+	 mu_minus = -189/5*i + 63/10*j + 249/10*k, m - Q(x) = 78/5
+	 adding 0 log 2
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 393/20
+	 adding 0 log 3
+
+	 mu_minus = -441/10*i + 147/20*j + 581/20*k, m - Q(x) = 273/20
+	 adding 2 log 13
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 102/5
+	 adding 0 log 2
+
+	 mu_minus = -252/5*i + 42/5*j + 166/5*k, m - Q(x) = 57/5
+	 adding 1/2 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 57/20
+	 adding 1/2 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 417/20
+	 adding 1/2 log 7
+
+	 mu_minus = -567/10*i + 189/20*j + 747/20*k, m - Q(x) = 177/20
+	 adding 0 log 3
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[]
+the denominator is
+[
+<5, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 2>
+]
+the denominator is
+[
+<5, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 4>,
+<3, 1>,
+<13, 2>
+]
+the denominator is
+[
+<5, 2>
+]
+====================================================
+The discriminant is -67 with class number 1 and embedding 5*i - 6*j
+Kappa_eta of 7/4
+	m - Q(x) = 61/67
+	adding 0 Log 3
+	m - Q(x) = 115/67
+	adding 0 Log 3
+	m - Q(x) = 7/67
+	adding 1/2 Log 3
+	m - Q(x) = 111/67
+	adding 1/2 Log 7
+	m - Q(x) = 75/67
+	adding 1/4 Log 7
+	m - Q(x) = 75/67
+	adding 1/4 Log 7
+	m - Q(x) = 111/67
+	adding 1/2 Log 7
+	m - Q(x) = 7/67
+	adding 1/2 Log 3
+	m - Q(x) = 115/67
+	adding 0 Log 3
+	m - Q(x) = 61/67
+	adding 0 Log 3
+	m - Q(x) = 87/67
+	adding 1/2 Log 7
+	m - Q(x) = 105/67
+	adding 2 Log 5
+	m - Q(x) = 27/67
+	adding 1/4 Log 7
+	m - Q(x) = 117/67
+	adding 0 Log 3
+	m - Q(x) = 45/67
+	adding 0 Log 3
+	m - Q(x) = 97/67
+	adding 0 Log 3
+	m - Q(x) = 97/67
+	adding 0 Log 3
+	m - Q(x) = 45/67
+	adding 0 Log 3
+	m - Q(x) = 117/67
+	adding 0 Log 3
+	m - Q(x) = 27/67
+	adding 1/4 Log 7
+	m - Q(x) = 105/67
+	adding 2 Log 5
+	m - Q(x) = 87/67
+	adding 1/2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 3
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 51/67
+	 adding 1/2 log 7
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 42/67
+	 adding 2 log 2
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 3/67
+	 adding 1/4 log 7
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 66/67
+	 adding 0 log 2
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 58/67
+	 adding 0 log 2
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 31/67
+	 adding 0 log 3
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 18/67
+	 adding 0 log 2
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 63/67
+	 adding 5/2 log 3
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 63/67
+	 adding 5/2 log 3
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 18/67
+	 adding 0 log 2
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 31/67
+	 adding 0 log 3
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 58/67
+	 adding 0 log 2
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 66/67
+	 adding 0 log 2
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 3/67
+	 adding 1/4 log 7
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 42/67
+	 adding 2 log 2
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 51/67
+	 adding 1/2 log 7
+Kappa_0 of 2
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 53/67
+	 adding 0 log 3
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 118/67
+	 adding 0 log 2
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 109/67
+	 adding 0 log 3
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 70/67
+	 adding 0 log 2
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 133/67
+	 adding 1 log 3
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 34/67
+	 adding 0 log 2
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 125/67
+	 adding 0 log 3
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 98/67
+	 adding 0 log 2
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 85/67
+	 adding 0 log 3
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 130/67
+	 adding 0 log 2
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 13/67
+	 adding 0 log 3
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 13/67
+	 adding 0 log 3
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 130/67
+	 adding 0 log 2
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 85/67
+	 adding 0 log 3
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 98/67
+	 adding 0 log 2
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 125/67
+	 adding 0 log 3
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 34/67
+	 adding 0 log 2
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 133/67
+	 adding 1 log 3
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 70/67
+	 adding 0 log 2
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 109/67
+	 adding 0 log 3
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 118/67
+	 adding 0 log 2
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 53/67
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 120/67
+	 adding 0 log 2
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 32/67
+	 adding 0 log 2
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 185/67
+	 adding 0 log 3
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 176/67
+	 adding 0 log 3
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 5/67
+	 adding 0 log 3
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 137/67
+	 adding 0 log 3
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 200/67
+	 adding 0 log 2
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 101/67
+	 adding 0 log 3
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 57/67
+	 adding 1/2 log 7
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 192/67
+	 adding 1/4 log 7
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 165/67
+	 adding 0 log 5
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 152/67
+	 adding 0 log 2
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 197/67
+	 adding 0 log 3
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 80/67
+	 adding 0 log 3
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 80/67
+	 adding 0 log 3
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 197/67
+	 adding 0 log 3
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 152/67
+	 adding 0 log 2
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 165/67
+	 adding 0 log 5
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 192/67
+	 adding 1/4 log 7
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 57/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 101/67
+	 adding 0 log 3
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 200/67
+	 adding 0 log 2
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 137/67
+	 adding 0 log 3
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 5/67
+	 adding 0 log 3
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 176/67
+	 adding 0 log 3
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 185/67
+	 adding 0 log 3
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 32/67
+	 adding 0 log 2
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 120/67
+	 adding 0 log 2
+Kappa_0 of 5
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 254/67
+	 adding 0 log 2
+
+	 mu_minus = -90/67*i + 175/67*j + k, m - Q(x) = 11/67
+	 adding 0 log 3
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 166/67
+	 adding 0 log 2
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 319/67
+	 adding 0 log 3
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 310/67
+	 adding 0 log 2
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 139/67
+	 adding 0 log 3
+
+	 mu_minus = -585/67*i + 2275/134*j + 13/2*k, m - Q(x) = 46/67
+	 adding 0 log 2
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 271/67
+	 adding 0 log 3
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 334/67
+	 adding 0 log 2
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 235/67
+	 adding 0 log 3
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 191/67
+	 adding 0 log 3
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 326/67
+	 adding 0 log 2
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 299/67
+	 adding 0 log 3
+
+	 mu_minus = -1080/67*i + 2100/67*j + 12*k, m - Q(x) = 110/67
+	 adding 0 log 2
+
+	 mu_minus = -1260/67*i + 2450/67*j + 14*k, m - Q(x) = 79/67
+	 adding 0 log 3
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 286/67
+	 adding 0 log 2
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 331/67
+	 adding 0 log 3
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 214/67
+	 adding 0 log 2
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 214/67
+	 adding 0 log 2
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 331/67
+	 adding 0 log 3
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 286/67
+	 adding 0 log 2
+
+	 mu_minus = -1755/67*i + 6825/134*j + 39/2*k, m - Q(x) = 79/67
+	 adding 0 log 3
+
+	 mu_minus = -1935/67*i + 7525/134*j + 43/2*k, m - Q(x) = 110/67
+	 adding 0 log 2
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 299/67
+	 adding 0 log 3
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 326/67
+	 adding 0 log 2
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 191/67
+	 adding 0 log 3
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 235/67
+	 adding 0 log 3
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 334/67
+	 adding 0 log 2
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 271/67
+	 adding 0 log 3
+
+	 mu_minus = -2430/67*i + 4725/67*j + 27*k, m - Q(x) = 46/67
+	 adding 0 log 2
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 139/67
+	 adding 0 log 3
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 310/67
+	 adding 0 log 2
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 319/67
+	 adding 0 log 3
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 166/67
+	 adding 0 log 2
+
+	 mu_minus = -2925/67*i + 11375/134*j + 65/2*k, m - Q(x) = 11/67
+	 adding 0 log 3
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 254/67
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 321/67
+	 adding 1/2 log 7
+
+	 mu_minus = -90/67*i + 175/67*j + k, m - Q(x) = 78/67
+	 adding 0 log 2
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 233/67
+	 adding 0 log 3
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 386/67
+	 adding 0 log 2
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 377/67
+	 adding 0 log 3
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 206/67
+	 adding 0 log 2
+
+	 mu_minus = -585/67*i + 2275/134*j + 13/2*k, m - Q(x) = 113/67
+	 adding 0 log 3
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 338/67
+	 adding 0 log 2
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 401/67
+	 adding 0 log 3
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 302/67
+	 adding 0 log 2
+
+	 mu_minus = -765/67*i + 2975/134*j + 17/2*k, m - Q(x) = 41/67
+	 adding 0 log 3
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 258/67
+	 adding 0 log 2
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 393/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 366/67
+	 adding 0 log 2
+
+	 mu_minus = -1080/67*i + 2100/67*j + 12*k, m - Q(x) = 177/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1260/67*i + 2450/67*j + 14*k, m - Q(x) = 146/67
+	 adding 0 log 2
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 353/67
+	 adding 0 log 3
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 398/67
+	 adding 0 log 2
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 281/67
+	 adding 0 log 3
+
+	 mu_minus = -1440/67*i + 2800/67*j + 16*k, m - Q(x) = 2/67
+	 adding 0 log 2
+
+	 mu_minus = -1575/67*i + 6125/134*j + 35/2*k, m - Q(x) = 2/67
+	 adding 0 log 2
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 281/67
+	 adding 0 log 3
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 398/67
+	 adding 0 log 2
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 353/67
+	 adding 0 log 3
+
+	 mu_minus = -1755/67*i + 6825/134*j + 39/2*k, m - Q(x) = 146/67
+	 adding 0 log 2
+
+	 mu_minus = -1935/67*i + 7525/134*j + 43/2*k, m - Q(x) = 177/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 366/67
+	 adding 0 log 2
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 393/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 258/67
+	 adding 0 log 2
+
+	 mu_minus = -2250/67*i + 4375/67*j + 25*k, m - Q(x) = 41/67
+	 adding 0 log 3
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 302/67
+	 adding 0 log 2
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 401/67
+	 adding 0 log 3
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 338/67
+	 adding 0 log 2
+
+	 mu_minus = -2430/67*i + 4725/67*j + 27*k, m - Q(x) = 113/67
+	 adding 0 log 3
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 206/67
+	 adding 0 log 2
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 377/67
+	 adding 0 log 3
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 386/67
+	 adding 0 log 2
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 233/67
+	 adding 0 log 3
+
+	 mu_minus = -2925/67*i + 11375/134*j + 65/2*k, m - Q(x) = 78/67
+	 adding 0 log 2
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 321/67
+	 adding 1/2 log 7
+Kappa_0 of 7
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 388/67
+	 adding 0 log 3
+
+	 mu_minus = -90/67*i + 175/67*j + k, m - Q(x) = 145/67
+	 adding 0 log 3
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 300/67
+	 adding 1/4 log 7
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 453/67
+	 adding 1/2 log 7
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 444/67
+	 adding 1/2 log 7
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 273/67
+	 adding 2 log 13
+
+	 mu_minus = -585/67*i + 2275/134*j + 13/2*k, m - Q(x) = 180/67
+	 adding 0 log 3
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 405/67
+	 adding 0 log 3
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 468/67
+	 adding 0 log 3
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 369/67
+	 adding 0 log 3
+
+	 mu_minus = -765/67*i + 2975/134*j + 17/2*k, m - Q(x) = 108/67
+	 adding 1/4 log 7
+
+	 mu_minus = -900/67*i + 1750/67*j + 10*k, m - Q(x) = 28/67
+	 adding 1/2 log 3
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 325/67
+	 adding 0 log 3
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 460/67
+	 adding 0 log 3
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 433/67
+	 adding 0 log 3
+
+	 mu_minus = -1080/67*i + 2100/67*j + 12*k, m - Q(x) = 244/67
+	 adding 0 log 3
+
+	 mu_minus = -1260/67*i + 2450/67*j + 14*k, m - Q(x) = 213/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 420/67
+	 adding 2 log 5
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 465/67
+	 adding 0 log 5
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 348/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1440/67*i + 2800/67*j + 16*k, m - Q(x) = 69/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1575/67*i + 6125/134*j + 35/2*k, m - Q(x) = 69/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 348/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 465/67
+	 adding 0 log 5
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 420/67
+	 adding 2 log 5
+
+	 mu_minus = -1755/67*i + 6825/134*j + 39/2*k, m - Q(x) = 213/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1935/67*i + 7525/134*j + 43/2*k, m - Q(x) = 244/67
+	 adding 0 log 3
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 433/67
+	 adding 0 log 3
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 460/67
+	 adding 0 log 3
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 325/67
+	 adding 0 log 3
+
+	 mu_minus = -2115/67*i + 8225/134*j + 47/2*k, m - Q(x) = 28/67
+	 adding 1/2 log 3
+
+	 mu_minus = -2250/67*i + 4375/67*j + 25*k, m - Q(x) = 108/67
+	 adding 1/4 log 7
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 369/67
+	 adding 0 log 3
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 468/67
+	 adding 0 log 3
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 405/67
+	 adding 0 log 3
+
+	 mu_minus = -2430/67*i + 4725/67*j + 27*k, m - Q(x) = 180/67
+	 adding 0 log 3
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 273/67
+	 adding 2 log 13
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 444/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 453/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 300/67
+	 adding 1/4 log 7
+
+	 mu_minus = -2925/67*i + 11375/134*j + 65/2*k, m - Q(x) = 145/67
+	 adding 0 log 3
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 388/67
+	 adding 0 log 3
+Kappa_0 of 9
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 3
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 522/67
+	 adding 0 log 2
+
+	 mu_minus = -90/67*i + 175/67*j + k, m - Q(x) = 279/67
+	 adding 0 log 3
+
+	 mu_minus = -225/67*i + 875/134*j + 5/2*k, m - Q(x) = 119/67
+	 adding 1 log 3
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 434/67
+	 adding 0 log 2
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 587/67
+	 adding 0 log 3
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 578/67
+	 adding 0 log 2
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 407/67
+	 adding 0 log 3
+
+	 mu_minus = -450/67*i + 875/67*j + 5*k, m - Q(x) = 74/67
+	 adding 0 log 2
+
+	 mu_minus = -585/67*i + 2275/134*j + 13/2*k, m - Q(x) = 314/67
+	 adding 0 log 2
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 539/67
+	 adding 0 log 3
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 602/67
+	 adding 0 log 2
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 503/67
+	 adding 0 log 3
+
+	 mu_minus = -765/67*i + 2975/134*j + 17/2*k, m - Q(x) = 242/67
+	 adding 0 log 2
+
+	 mu_minus = -900/67*i + 1750/67*j + 10*k, m - Q(x) = 162/67
+	 adding 0 log 2
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 459/67
+	 adding 1/2 log 7
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 594/67
+	 adding 0 log 2
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 567/67
+	 adding 9/2 log 3
+
+	 mu_minus = -1080/67*i + 2100/67*j + 12*k, m - Q(x) = 378/67
+	 adding 2 log 2
+
+	 mu_minus = -1125/67*i + 4375/134*j + 25/2*k, m - Q(x) = 27/67
+	 adding 1/4 log 7
+
+	 mu_minus = -1260/67*i + 2450/67*j + 14*k, m - Q(x) = 347/67
+	 adding 0 log 3
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 554/67
+	 adding 0 log 2
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 599/67
+	 adding 0 log 3
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 482/67
+	 adding 0 log 2
+
+	 mu_minus = -1440/67*i + 2800/67*j + 16*k, m - Q(x) = 203/67
+	 adding 1 log 3
+
+	 mu_minus = -1575/67*i + 6125/134*j + 35/2*k, m - Q(x) = 203/67
+	 adding 1 log 3
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 482/67
+	 adding 0 log 2
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 599/67
+	 adding 0 log 3
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 554/67
+	 adding 0 log 2
+
+	 mu_minus = -1755/67*i + 6825/134*j + 39/2*k, m - Q(x) = 347/67
+	 adding 0 log 3
+
+	 mu_minus = -1890/67*i + 3675/67*j + 21*k, m - Q(x) = 27/67
+	 adding 1/4 log 7
+
+	 mu_minus = -1935/67*i + 7525/134*j + 43/2*k, m - Q(x) = 378/67
+	 adding 2 log 2
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 567/67
+	 adding 9/2 log 3
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 594/67
+	 adding 0 log 2
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 459/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2115/67*i + 8225/134*j + 47/2*k, m - Q(x) = 162/67
+	 adding 0 log 2
+
+	 mu_minus = -2250/67*i + 4375/67*j + 25*k, m - Q(x) = 242/67
+	 adding 0 log 2
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 503/67
+	 adding 0 log 3
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 602/67
+	 adding 0 log 2
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 539/67
+	 adding 0 log 3
+
+	 mu_minus = -2430/67*i + 4725/67*j + 27*k, m - Q(x) = 314/67
+	 adding 0 log 2
+
+	 mu_minus = -2565/67*i + 9975/134*j + 57/2*k, m - Q(x) = 74/67
+	 adding 0 log 2
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 407/67
+	 adding 0 log 3
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 578/67
+	 adding 0 log 2
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 587/67
+	 adding 0 log 3
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 434/67
+	 adding 0 log 2
+
+	 mu_minus = -2790/67*i + 5425/67*j + 31*k, m - Q(x) = 119/67
+	 adding 1 log 3
+
+	 mu_minus = -2925/67*i + 11375/134*j + 65/2*k, m - Q(x) = 279/67
+	 adding 0 log 3
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 522/67
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 2 log 67
+
+	 mu_minus = -45/67*i + 175/134*j + 1/2*k, m - Q(x) = 1326/67
+	 adding 0 log 2
+
+	 mu_minus = -90/67*i + 175/67*j + k, m - Q(x) = 1083/67
+	 adding 3/4 log 7
+
+	 mu_minus = -135/67*i + 525/134*j + 3/2*k, m - Q(x) = 678/67
+	 adding 0 log 2
+
+	 mu_minus = -180/67*i + 350/67*j + 2*k, m - Q(x) = 446/67
+	 adding 0 log 2
+
+	 mu_minus = -180/67*i + 350/67*j + 2*k, m - Q(x) = 111/67
+	 adding 1/2 log 7
+
+	 mu_minus = -225/67*i + 875/134*j + 5/2*k, m - Q(x) = 923/67
+	 adding 0 log 3
+
+	 mu_minus = -270/67*i + 525/67*j + 3*k, m - Q(x) = 1238/67
+	 adding 0 log 2
+
+	 mu_minus = -315/67*i + 1225/134*j + 7/2*k, m - Q(x) = 1391/67
+	 adding 0 log 3
+
+	 mu_minus = -360/67*i + 700/67*j + 4*k, m - Q(x) = 1382/67
+	 adding 0 log 2
+
+	 mu_minus = -405/67*i + 1575/134*j + 9/2*k, m - Q(x) = 1211/67
+	 adding 1 log 3
+
+	 mu_minus = -450/67*i + 875/67*j + 5*k, m - Q(x) = 878/67
+	 adding 0 log 2
+
+	 mu_minus = -495/67*i + 1925/134*j + 11/2*k, m - Q(x) = 182/67
+	 adding 0 log 2
+
+	 mu_minus = -495/67*i + 1925/134*j + 11/2*k, m - Q(x) = 383/67
+	 adding 0 log 3
+
+	 mu_minus = -540/67*i + 1050/67*j + 6*k, m - Q(x) = 731/67
+	 adding 0 log 3
+
+	 mu_minus = -585/67*i + 2275/134*j + 13/2*k, m - Q(x) = 1118/67
+	 adding 0 log 2
+
+	 mu_minus = -630/67*i + 1225/67*j + 7*k, m - Q(x) = 1343/67
+	 adding 0 log 3
+
+	 mu_minus = -675/67*i + 2625/134*j + 15/2*k, m - Q(x) = 1406/67
+	 adding 0 log 2
+
+	 mu_minus = -720/67*i + 1400/67*j + 8*k, m - Q(x) = 1307/67
+	 adding 0 log 3
+
+	 mu_minus = -765/67*i + 2975/134*j + 17/2*k, m - Q(x) = 1046/67
+	 adding 0 log 2
+
+	 mu_minus = -810/67*i + 1575/67*j + 9*k, m - Q(x) = 623/67
+	 adding 1 log 3
+
+	 mu_minus = -855/67*i + 3325/134*j + 19/2*k, m - Q(x) = 507/67
+	 adding 1/4 log 7
+
+	 mu_minus = -855/67*i + 3325/134*j + 19/2*k, m - Q(x) = 38/67
+	 adding 0 log 2
+
+	 mu_minus = -900/67*i + 1750/67*j + 10*k, m - Q(x) = 966/67
+	 adding 4 log 2
+
+	 mu_minus = -945/67*i + 3675/134*j + 21/2*k, m - Q(x) = 1263/67
+	 adding 1/2 log 7
+
+	 mu_minus = -990/67*i + 1925/67*j + 11*k, m - Q(x) = 1398/67
+	 adding 0 log 2
+
+	 mu_minus = -1035/67*i + 4025/134*j + 23/2*k, m - Q(x) = 1371/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1080/67*i + 2100/67*j + 12*k, m - Q(x) = 1182/67
+	 adding 0 log 2
+
+	 mu_minus = -1125/67*i + 4375/134*j + 25/2*k, m - Q(x) = 831/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1170/67*i + 2275/67*j + 13*k, m - Q(x) = 251/67
+	 adding 0 log 3
+
+	 mu_minus = -1170/67*i + 2275/67*j + 13*k, m - Q(x) = 318/67
+	 adding 0 log 2
+
+	 mu_minus = -1215/67*i + 4725/134*j + 27/2*k, m - Q(x) = 782/67
+	 adding 0 log 2
+
+	 mu_minus = -1260/67*i + 2450/67*j + 14*k, m - Q(x) = 1151/67
+	 adding 0 log 3
+
+	 mu_minus = -1305/67*i + 5075/134*j + 29/2*k, m - Q(x) = 1358/67
+	 adding 0 log 2
+
+	 mu_minus = -1350/67*i + 2625/67*j + 15*k, m - Q(x) = 1403/67
+	 adding 0 log 3
+
+	 mu_minus = -1395/67*i + 5425/134*j + 31/2*k, m - Q(x) = 1286/67
+	 adding 0 log 2
+
+	 mu_minus = -1440/67*i + 2800/67*j + 16*k, m - Q(x) = 1007/67
+	 adding 0 log 3
+
+	 mu_minus = -1485/67*i + 5775/134*j + 33/2*k, m - Q(x) = 566/67
+	 adding 0 log 2
+
+	 mu_minus = -1530/67*i + 2975/67*j + 17*k, m - Q(x) = 566/67
+	 adding 0 log 2
+
+	 mu_minus = -1575/67*i + 6125/134*j + 35/2*k, m - Q(x) = 1007/67
+	 adding 0 log 3
+
+	 mu_minus = -1620/67*i + 3150/67*j + 18*k, m - Q(x) = 1286/67
+	 adding 0 log 2
+
+	 mu_minus = -1665/67*i + 6475/134*j + 37/2*k, m - Q(x) = 1403/67
+	 adding 0 log 3
+
+	 mu_minus = -1710/67*i + 3325/67*j + 19*k, m - Q(x) = 1358/67
+	 adding 0 log 2
+
+	 mu_minus = -1755/67*i + 6825/134*j + 39/2*k, m - Q(x) = 1151/67
+	 adding 0 log 3
+
+	 mu_minus = -1800/67*i + 3500/67*j + 20*k, m - Q(x) = 782/67
+	 adding 0 log 2
+
+	 mu_minus = -1845/67*i + 7175/134*j + 41/2*k, m - Q(x) = 318/67
+	 adding 0 log 2
+
+	 mu_minus = -1845/67*i + 7175/134*j + 41/2*k, m - Q(x) = 251/67
+	 adding 0 log 3
+
+	 mu_minus = -1890/67*i + 3675/67*j + 21*k, m - Q(x) = 831/67
+	 adding 1/2 log 7
+
+	 mu_minus = -1935/67*i + 7525/134*j + 43/2*k, m - Q(x) = 1182/67
+	 adding 0 log 2
+
+	 mu_minus = -1980/67*i + 3850/67*j + 22*k, m - Q(x) = 1371/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2025/67*i + 7875/134*j + 45/2*k, m - Q(x) = 1398/67
+	 adding 0 log 2
+
+	 mu_minus = -2070/67*i + 4025/67*j + 23*k, m - Q(x) = 1263/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2115/67*i + 8225/134*j + 47/2*k, m - Q(x) = 966/67
+	 adding 4 log 2
+
+	 mu_minus = -2160/67*i + 4200/67*j + 24*k, m - Q(x) = 38/67
+	 adding 0 log 2
+
+	 mu_minus = -2160/67*i + 4200/67*j + 24*k, m - Q(x) = 507/67
+	 adding 1/4 log 7
+
+	 mu_minus = -2205/67*i + 8575/134*j + 49/2*k, m - Q(x) = 623/67
+	 adding 1 log 3
+
+	 mu_minus = -2250/67*i + 4375/67*j + 25*k, m - Q(x) = 1046/67
+	 adding 0 log 2
+
+	 mu_minus = -2295/67*i + 8925/134*j + 51/2*k, m - Q(x) = 1307/67
+	 adding 0 log 3
+
+	 mu_minus = -2340/67*i + 4550/67*j + 26*k, m - Q(x) = 1406/67
+	 adding 0 log 2
+
+	 mu_minus = -2385/67*i + 9275/134*j + 53/2*k, m - Q(x) = 1343/67
+	 adding 0 log 3
+
+	 mu_minus = -2430/67*i + 4725/67*j + 27*k, m - Q(x) = 1118/67
+	 adding 0 log 2
+
+	 mu_minus = -2475/67*i + 9625/134*j + 55/2*k, m - Q(x) = 731/67
+	 adding 0 log 3
+
+	 mu_minus = -2520/67*i + 4900/67*j + 28*k, m - Q(x) = 383/67
+	 adding 0 log 3
+
+	 mu_minus = -2520/67*i + 4900/67*j + 28*k, m - Q(x) = 182/67
+	 adding 0 log 2
+
+	 mu_minus = -2565/67*i + 9975/134*j + 57/2*k, m - Q(x) = 878/67
+	 adding 0 log 2
+
+	 mu_minus = -2610/67*i + 5075/67*j + 29*k, m - Q(x) = 1211/67
+	 adding 1 log 3
+
+	 mu_minus = -2655/67*i + 10325/134*j + 59/2*k, m - Q(x) = 1382/67
+	 adding 0 log 2
+
+	 mu_minus = -2700/67*i + 5250/67*j + 30*k, m - Q(x) = 1391/67
+	 adding 0 log 3
+
+	 mu_minus = -2745/67*i + 10675/134*j + 61/2*k, m - Q(x) = 1238/67
+	 adding 0 log 2
+
+	 mu_minus = -2790/67*i + 5425/67*j + 31*k, m - Q(x) = 923/67
+	 adding 0 log 3
+
+	 mu_minus = -2835/67*i + 11025/134*j + 63/2*k, m - Q(x) = 111/67
+	 adding 1/2 log 7
+
+	 mu_minus = -2835/67*i + 11025/134*j + 63/2*k, m - Q(x) = 446/67
+	 adding 0 log 2
+
+	 mu_minus = -2880/67*i + 5600/67*j + 32*k, m - Q(x) = 678/67
+	 adding 0 log 2
+
+	 mu_minus = -2925/67*i + 11375/134*j + 65/2*k, m - Q(x) = 1083/67
+	 adding 3/4 log 7
+
+	 mu_minus = -2970/67*i + 5775/67*j + 33*k, m - Q(x) = 1326/67
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<13, 2>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>,
+<3, 2>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<67, 1>
+]
+the denominator is
+[
+<5, 4>
+]
+====================================================
+The discriminant is -91 with class number 1 and embedding 5*i - 2*k
+Kappa_eta of 7/4
+	m - Q(x) = 7/13
+	adding 1/2 Log 3
+	m - Q(x) = 7/13
+	adding 1/2 Log 3
+	m - Q(x) = 21/13
+	adding 2 Log 7
+	m - Q(x) = 21/13
+	adding 2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1 log 3
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 6/13
+	 adding 2 log 2
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 6/13
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 19/13
+	 adding 1 log 3
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 19/13
+	 adding 1 log 3
+Kappa_0 of 3
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 2 log 7
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 32/13
+	 adding 0 log 2
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 11/13
+	 adding 0 log 3
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 11/13
+	 adding 0 log 3
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 32/13
+	 adding 0 log 2
+Kappa_0 of 5
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 58/13
+	 adding 0 log 2
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 37/13
+	 adding 0 log 3
+
+	 mu_minus = -180/13*i + 150/13*k, m - Q(x) = 2/13
+	 adding 0 log 2
+
+	 mu_minus = -210/13*i + 175/13*k, m - Q(x) = 2/13
+	 adding 0 log 2
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 37/13
+	 adding 0 log 3
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 58/13
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 71/13
+	 adding 0 log 3
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 50/13
+	 adding 0 log 2
+
+	 mu_minus = -180/13*i + 150/13*k, m - Q(x) = 15/13
+	 adding 2 log 7
+
+	 mu_minus = -210/13*i + 175/13*k, m - Q(x) = 15/13
+	 adding 2 log 7
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 50/13
+	 adding 0 log 2
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 71/13
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 0 log 3
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 84/13
+	 adding 2 log 7
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 63/13
+	 adding 5/2 log 3
+
+	 mu_minus = -180/13*i + 150/13*k, m - Q(x) = 28/13
+	 adding 1/2 log 3
+
+	 mu_minus = -210/13*i + 175/13*k, m - Q(x) = 28/13
+	 adding 1/2 log 3
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 63/13
+	 adding 5/2 log 3
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 84/13
+	 adding 2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 5 log 3
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 110/13
+	 adding 0 log 2
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 89/13
+	 adding 1 log 3
+
+	 mu_minus = -150/13*i + 125/13*k, m - Q(x) = 5/13
+	 adding 1 log 3
+
+	 mu_minus = -180/13*i + 150/13*k, m - Q(x) = 54/13
+	 adding 2 log 2
+
+	 mu_minus = -210/13*i + 175/13*k, m - Q(x) = 54/13
+	 adding 2 log 2
+
+	 mu_minus = -240/13*i + 200/13*k, m - Q(x) = 5/13
+	 adding 1 log 3
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 89/13
+	 adding 1 log 3
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 110/13
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 2 log 13
+
+	 mu_minus = -30/13*i + 25/13*k, m - Q(x) = 21/13
+	 adding 2 log 7
+
+	 mu_minus = -60/13*i + 50/13*k, m - Q(x) = 266/13
+	 adding 0 log 2
+
+	 mu_minus = -90/13*i + 75/13*k, m - Q(x) = 98/13
+	 adding 0 log 2
+
+	 mu_minus = -120/13*i + 100/13*k, m - Q(x) = 245/13
+	 adding 1 log 3
+
+	 mu_minus = -150/13*i + 125/13*k, m - Q(x) = 161/13
+	 adding 1 log 3
+
+	 mu_minus = -180/13*i + 150/13*k, m - Q(x) = 210/13
+	 adding 4 log 2
+
+	 mu_minus = -210/13*i + 175/13*k, m - Q(x) = 210/13
+	 adding 4 log 2
+
+	 mu_minus = -240/13*i + 200/13*k, m - Q(x) = 161/13
+	 adding 1 log 3
+
+	 mu_minus = -270/13*i + 225/13*k, m - Q(x) = 245/13
+	 adding 1 log 3
+
+	 mu_minus = -300/13*i + 250/13*k, m - Q(x) = 98/13
+	 adding 0 log 2
+
+	 mu_minus = -330/13*i + 275/13*k, m - Q(x) = 266/13
+	 adding 0 log 2
+
+	 mu_minus = -360/13*i + 300/13*k, m - Q(x) = 21/13
+	 adding 2 log 7
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<3, 2>
+]
+the denominator is
+[
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>
+]
+the denominator is
+[
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<13, 1>
+]
+the denominator is
+[
+<7, 1>
+]
+====================================================
+The discriminant is -112 with class number 1 and embedding 4*i - 7/2*j - 3/2*k
+Kappa_eta of 7/4
+	m - Q(x) = 0
+	m - Q(x) = 21/16
+	adding 2 Log 7
+	m - Q(x) = 7/4
+	adding 1 Log 3
+	m - Q(x) = 21/16
+	adding 2 Log 7
+	m - Q(x) = 0
+	adding 2 Log 2
+Kappa_0 of 1
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 9/16
+	 adding 5/2 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 9/16
+	 adding 5/2 log 3
+Kappa_0 of 2
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 25/16
+	 adding 1/2 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 1/4
+	 adding 1/2 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 1/4
+	 adding 1/2 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 25/16
+	 adding 1/2 log 3
+Kappa_0 of 3
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 2 log 7
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 41/16
+	 adding 0 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 5/4
+	 adding 0 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 5/4
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 41/16
+	 adding 0 log 3
+Kappa_0 of 5
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 73/16
+	 adding 0 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 13/4
+	 adding 0 log 3
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 17/16
+	 adding 0 log 3
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 17/16
+	 adding 0 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 13/4
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 73/16
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 89/16
+	 adding 0 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 17/4
+	 adding 0 log 3
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 33/16
+	 adding 2 log 7
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 33/16
+	 adding 2 log 7
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 17/4
+	 adding 0 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 89/16
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 105/16
+	 adding 2 log 5
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 21/4
+	 adding 2 log 7
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 49/16
+	 adding 1/2 log 3
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 0
+	adding 1 Log 2
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 49/16
+	 adding 1/2 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 21/4
+	 adding 2 log 7
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 105/16
+	 adding 2 log 5
+Kappa_0 of 9
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 137/16
+	 adding 1 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 29/4
+	 adding 1 log 3
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 81/16
+	 adding 9/2 log 3
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 81/16
+	 adding 9/2 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 29/4
+	 adding 1 log 3
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 137/16
+	 adding 1 log 3
+Kappa_0 of 21
+
+	 Sgcd = 6
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 0 log 2
+
+	 mu_minus = -9/2*i + 63/16*j + 43/16*k, m - Q(x) = 329/16
+	 adding 0 log 3
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 21/4
+	 adding 2 log 7
+
+	 mu_minus = -9*i + 63/8*j + 43/8*k, m - Q(x) = 77/4
+	 adding 1 log 3
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 161/16
+	 adding 1 log 3
+
+	 mu_minus = -27/2*i + 189/16*j + 129/16*k, m - Q(x) = 273/16
+	 adding 2 log 13
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 14
+	 adding 0 log 2
+
+	 mu_minus = -18*i + 63/4*j + 43/4*k, m - Q(x) = 14
+	 adding 0 log 2
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 273/16
+	 adding 2 log 13
+
+	 mu_minus = -45/2*i + 315/16*j + 215/16*k, m - Q(x) = 161/16
+	 adding 1 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 77/4
+	 adding 1 log 3
+
+	 mu_minus = -27*i + 189/8*j + 129/8*k, m - Q(x) = 21/4
+	 adding 2 log 7
+
+	 mu_minus = -63/2*i + 441/16*j + 301/16*k, m - Q(x) = 329/16
+	 adding 0 log 3
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<5, 2>
+]
+the denominator is
+[
+<2, 1>,
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 1>,
+<3, 2>
+]
+the denominator is
+[
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 2>,
+<13, 2>
+]
+the denominator is
+[
+<7, 1>
+]
+====================================================
+The discriminant is -123 with class number 1 and embedding 9*i - 6*j - 4*k
+Kappa_eta of 7/4
+	m - Q(x) = 35/41
+	adding 2 Log 5
+	m - Q(x) = 65/41
+	adding 0 Log 5
+	m - Q(x) = 71/41
+	adding 1/2 Log 7
+	m - Q(x) = 53/41
+	adding 1/2 Log 7
+	m - Q(x) = 11/41
+	adding 1/2 Log 7
+	m - Q(x) = 11/41
+	adding 1/2 Log 7
+	m - Q(x) = 53/41
+	adding 1/2 Log 7
+	m - Q(x) = 71/41
+	adding 1/2 Log 7
+	m - Q(x) = 65/41
+	adding 0 Log 5
+	m - Q(x) = 35/41
+	adding 2 Log 5
+Kappa_0 of 1
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1/2 log 7
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 29/41
+	 adding 1/2 log 7
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 14/41
+	 adding 2 log 2
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 38/41
+	 adding 0 log 2
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 38/41
+	 adding 0 log 2
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 14/41
+	 adding 2 log 2
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 29/41
+	 adding 1/2 log 7
+Kappa_0 of 2
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 70/41
+	 adding 0 log 2
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 34/41
+	 adding 0 log 2
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 7/41
+	 adding 1 log 3
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 55/41
+	 adding 0 log 3
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 79/41
+	 adding 0 log 3
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 79/41
+	 adding 0 log 3
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 55/41
+	 adding 0 log 3
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 7/41
+	 adding 1 log 3
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 34/41
+	 adding 0 log 2
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 70/41
+	 adding 0 log 2
+Kappa_0 of 3
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 111/41
+	 adding 1/2 log 7
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 75/41
+	 adding 1/4 log 7
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 15/41
+	 adding 0 log 3
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 48/41
+	 adding 1/4 log 7
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 96/41
+	 adding 0 log 2
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 120/41
+	 adding 0 log 2
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 120/41
+	 adding 0 log 2
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 96/41
+	 adding 0 log 2
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 48/41
+	 adding 1/4 log 7
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 15/41
+	 adding 0 log 3
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 75/41
+	 adding 1/4 log 7
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 111/41
+	 adding 1/2 log 7
+Kappa_0 of 5
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 193/41
+	 adding 0 log 3
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 157/41
+	 adding 0 log 3
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 97/41
+	 adding 0 log 3
+
+	 mu_minus = -2520/41*i + 1680/41*j + 1530/41*k, m - Q(x) = 58/41
+	 adding 0 log 2
+
+	 mu_minus = -3024/41*i + 2016/41*j + 1836/41*k, m - Q(x) = 13/41
+	 adding 0 log 3
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 130/41
+	 adding 0 log 2
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 178/41
+	 adding 0 log 2
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 202/41
+	 adding 0 log 2
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 202/41
+	 adding 0 log 2
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 178/41
+	 adding 0 log 2
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 130/41
+	 adding 0 log 2
+
+	 mu_minus = -7308/41*i + 4872/41*j + 4437/41*k, m - Q(x) = 13/41
+	 adding 0 log 3
+
+	 mu_minus = -7812/41*i + 5208/41*j + 4743/41*k, m - Q(x) = 58/41
+	 adding 0 log 2
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 97/41
+	 adding 0 log 3
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 157/41
+	 adding 0 log 3
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 193/41
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 234/41
+	 adding 0 log 2
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 198/41
+	 adding 0 log 2
+
+	 mu_minus = -1764/41*i + 1176/41*j + 1071/41*k, m - Q(x) = 3/41
+	 adding 1/4 log 7
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 138/41
+	 adding 0 log 2
+
+	 mu_minus = -2520/41*i + 1680/41*j + 1530/41*k, m - Q(x) = 99/41
+	 adding 1/2 log 7
+
+	 mu_minus = -3024/41*i + 2016/41*j + 1836/41*k, m - Q(x) = 54/41
+	 adding 0 log 2
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 171/41
+	 adding 0 log 3
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 219/41
+	 adding 1/2 log 7
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 243/41
+	 adding 1/4 log 7
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 243/41
+	 adding 1/4 log 7
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 219/41
+	 adding 1/2 log 7
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 171/41
+	 adding 0 log 3
+
+	 mu_minus = -7308/41*i + 4872/41*j + 4437/41*k, m - Q(x) = 54/41
+	 adding 0 log 2
+
+	 mu_minus = -7812/41*i + 5208/41*j + 4743/41*k, m - Q(x) = 99/41
+	 adding 1/2 log 7
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 138/41
+	 adding 0 log 2
+
+	 mu_minus = -8568/41*i + 5712/41*j + 5202/41*k, m - Q(x) = 3/41
+	 adding 1/4 log 7
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 198/41
+	 adding 0 log 2
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 234/41
+	 adding 0 log 2
+Kappa_0 of 7
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 41
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 275/41
+	 adding 1/2 log 7
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 239/41
+	 adding 1/2 log 7
+
+	 mu_minus = -1764/41*i + 1176/41*j + 1071/41*k, m - Q(x) = 44/41
+	 adding 1/2 log 7
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 179/41
+	 adding 1/2 log 7
+
+	 mu_minus = -2520/41*i + 1680/41*j + 1530/41*k, m - Q(x) = 140/41
+	 adding 2 log 5
+
+	 mu_minus = -3024/41*i + 2016/41*j + 1836/41*k, m - Q(x) = 95/41
+	 adding 0 log 5
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 212/41
+	 adding 1/2 log 7
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 260/41
+	 adding 0 log 5
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 284/41
+	 adding 1/2 log 7
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 284/41
+	 adding 1/2 log 7
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 260/41
+	 adding 0 log 5
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 212/41
+	 adding 1/2 log 7
+
+	 mu_minus = -7308/41*i + 4872/41*j + 4437/41*k, m - Q(x) = 95/41
+	 adding 0 log 5
+
+	 mu_minus = -7812/41*i + 5208/41*j + 4743/41*k, m - Q(x) = 140/41
+	 adding 2 log 5
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 179/41
+	 adding 1/2 log 7
+
+	 mu_minus = -8568/41*i + 5712/41*j + 5202/41*k, m - Q(x) = 44/41
+	 adding 1/2 log 7
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 239/41
+	 adding 1/2 log 7
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 275/41
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 1/2 log 7
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 357/41
+	 adding 4 log 3
+
+	 mu_minus = -1008/41*i + 672/41*j + 612/41*k, m - Q(x) = 6/41
+	 adding 0 log 2
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 321/41
+	 adding 0 log 3
+
+	 mu_minus = -1764/41*i + 1176/41*j + 1071/41*k, m - Q(x) = 126/41
+	 adding 2 log 2
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 261/41
+	 adding 1/2 log 7
+
+	 mu_minus = -2520/41*i + 1680/41*j + 1530/41*k, m - Q(x) = 222/41
+	 adding 0 log 2
+
+	 mu_minus = -3024/41*i + 2016/41*j + 1836/41*k, m - Q(x) = 177/41
+	 adding 0 log 3
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 294/41
+	 adding 0 log 2
+
+	 mu_minus = -3780/41*i + 2520/41*j + 2295/41*k, m - Q(x) = 69/41
+	 adding 0 log 3
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 342/41
+	 adding 0 log 2
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 366/41
+	 adding 0 log 2
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 366/41
+	 adding 0 log 2
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 342/41
+	 adding 0 log 2
+
+	 mu_minus = -6552/41*i + 4368/41*j + 3978/41*k, m - Q(x) = 69/41
+	 adding 0 log 3
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 294/41
+	 adding 0 log 2
+
+	 mu_minus = -7308/41*i + 4872/41*j + 4437/41*k, m - Q(x) = 177/41
+	 adding 0 log 3
+
+	 mu_minus = -7812/41*i + 5208/41*j + 4743/41*k, m - Q(x) = 222/41
+	 adding 0 log 2
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 261/41
+	 adding 1/2 log 7
+
+	 mu_minus = -8568/41*i + 5712/41*j + 5202/41*k, m - Q(x) = 126/41
+	 adding 2 log 2
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 321/41
+	 adding 0 log 3
+
+	 mu_minus = -9324/41*i + 6216/41*j + 5661/41*k, m - Q(x) = 6/41
+	 adding 0 log 2
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 357/41
+	 adding 4 log 3
+Kappa_0 of 21
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = -252/41*i + 168/41*j + 153/41*k, m - Q(x) = 354/41
+	 adding 0 log 2
+
+	 mu_minus = -504/41*i + 336/41*j + 306/41*k, m - Q(x) = 186/41
+	 adding 0 log 2
+
+	 mu_minus = -756/41*i + 504/41*j + 459/41*k, m - Q(x) = 849/41
+	 adding 1/2 log 7
+
+	 mu_minus = -1008/41*i + 672/41*j + 612/41*k, m - Q(x) = 498/41
+	 adding 0 log 2
+
+	 mu_minus = -1512/41*i + 1008/41*j + 918/41*k, m - Q(x) = 813/41
+	 adding 1/2 log 7
+
+	 mu_minus = -1764/41*i + 1176/41*j + 1071/41*k, m - Q(x) = 618/41
+	 adding 0 log 2
+
+	 mu_minus = -2268/41*i + 1512/41*j + 1377/41*k, m - Q(x) = 753/41
+	 adding 0 log 3
+
+	 mu_minus = -2520/41*i + 1680/41*j + 1530/41*k, m - Q(x) = 714/41
+	 adding 4 log 2
+
+	 mu_minus = -3024/41*i + 2016/41*j + 1836/41*k, m - Q(x) = 669/41
+	 adding 1/2 log 7
+
+	 mu_minus = -3276/41*i + 2184/41*j + 1989/41*k, m - Q(x) = 786/41
+	 adding 0 log 2
+
+	 mu_minus = -3780/41*i + 2520/41*j + 2295/41*k, m - Q(x) = 561/41
+	 adding 1 log 7
+
+	 mu_minus = -4032/41*i + 2688/41*j + 2448/41*k, m - Q(x) = 834/41
+	 adding 0 log 2
+
+	 mu_minus = -4284/41*i + 2856/41*j + 2601/41*k, m - Q(x) = 93/41
+	 adding 1/2 log 7
+
+	 mu_minus = -4536/41*i + 3024/41*j + 2754/41*k, m - Q(x) = 429/41
+	 adding 0 log 3
+
+	 mu_minus = -4788/41*i + 3192/41*j + 2907/41*k, m - Q(x) = 858/41
+	 adding 0 log 2
+
+	 mu_minus = -5040/41*i + 3360/41*j + 3060/41*k, m - Q(x) = 273/41
+	 adding 2 log 13
+
+	 mu_minus = -5292/41*i + 3528/41*j + 3213/41*k, m - Q(x) = 273/41
+	 adding 2 log 13
+
+	 mu_minus = -5544/41*i + 3696/41*j + 3366/41*k, m - Q(x) = 858/41
+	 adding 0 log 2
+
+	 mu_minus = -5796/41*i + 3864/41*j + 3519/41*k, m - Q(x) = 429/41
+	 adding 0 log 3
+
+	 mu_minus = -6048/41*i + 4032/41*j + 3672/41*k, m - Q(x) = 93/41
+	 adding 1/2 log 7
+
+	 mu_minus = -6300/41*i + 4200/41*j + 3825/41*k, m - Q(x) = 834/41
+	 adding 0 log 2
+
+	 mu_minus = -6552/41*i + 4368/41*j + 3978/41*k, m - Q(x) = 561/41
+	 adding 1 log 7
+
+	 mu_minus = -7056/41*i + 4704/41*j + 4284/41*k, m - Q(x) = 786/41
+	 adding 0 log 2
+
+	 mu_minus = -7308/41*i + 4872/41*j + 4437/41*k, m - Q(x) = 669/41
+	 adding 1/2 log 7
+
+	 mu_minus = -7812/41*i + 5208/41*j + 4743/41*k, m - Q(x) = 714/41
+	 adding 4 log 2
+
+	 mu_minus = -8064/41*i + 5376/41*j + 4896/41*k, m - Q(x) = 753/41
+	 adding 0 log 3
+
+	 mu_minus = -8568/41*i + 5712/41*j + 5202/41*k, m - Q(x) = 618/41
+	 adding 0 log 2
+
+	 mu_minus = -8820/41*i + 5880/41*j + 5355/41*k, m - Q(x) = 813/41
+	 adding 1/2 log 7
+
+	 mu_minus = -9324/41*i + 6216/41*j + 5661/41*k, m - Q(x) = 498/41
+	 adding 0 log 2
+
+	 mu_minus = -9576/41*i + 6384/41*j + 5814/41*k, m - Q(x) = 849/41
+	 adding 1/2 log 7
+
+	 mu_minus = -9828/41*i + 6552/41*j + 5967/41*k, m - Q(x) = 186/41
+	 adding 0 log 2
+
+	 mu_minus = -10080/41*i + 6720/41*j + 6120/41*k, m - Q(x) = 354/41
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<41, 1>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1>,
+<13, 2>
+]
+the denominator is
+[
+<5, 4>
+]
+====================================================
+The discriminant is -163 with class number 1 and embedding 5*i - 2*j
+Kappa_eta of 7/4
+	m - Q(x) = 13/163
+	adding 0 Log 3
+	m - Q(x) = 103/163
+	adding 0 Log 3
+	m - Q(x) = 175/163
+	adding 1/2 Log 3
+	m - Q(x) = 229/163
+	adding 0 Log 3
+	m - Q(x) = 265/163
+	adding 0 Log 3
+	m - Q(x) = 283/163
+	adding 0 Log 3
+	m - Q(x) = 283/163
+	adding 0 Log 3
+	m - Q(x) = 265/163
+	adding 0 Log 3
+	m - Q(x) = 229/163
+	adding 0 Log 3
+	m - Q(x) = 175/163
+	adding 1/2 Log 3
+	m - Q(x) = 103/163
+	adding 0 Log 3
+	m - Q(x) = 13/163
+	adding 0 Log 3
+	m - Q(x) = 75/163
+	adding 1/4 Log 7
+	m - Q(x) = 153/163
+	adding 0 Log 3
+	m - Q(x) = 213/163
+	adding 1/2 Log 7
+	m - Q(x) = 255/163
+	adding 0 Log 5
+	m - Q(x) = 279/163
+	adding 0 Log 3
+	m - Q(x) = 285/163
+	adding 0 Log 5
+	m - Q(x) = 273/163
+	adding 2 Log 13
+	m - Q(x) = 243/163
+	adding 1/4 Log 7
+	m - Q(x) = 195/163
+	adding 0 Log 5
+	m - Q(x) = 129/163
+	adding 1/2 Log 7
+	m - Q(x) = 45/163
+	adding 0 Log 3
+	m - Q(x) = 45/163
+	adding 0 Log 3
+	m - Q(x) = 129/163
+	adding 1/2 Log 7
+	m - Q(x) = 195/163
+	adding 0 Log 5
+	m - Q(x) = 243/163
+	adding 1/4 Log 7
+	m - Q(x) = 273/163
+	adding 2 Log 13
+	m - Q(x) = 285/163
+	adding 0 Log 5
+	m - Q(x) = 279/163
+	adding 0 Log 3
+	m - Q(x) = 255/163
+	adding 0 Log 5
+	m - Q(x) = 213/163
+	adding 1/2 Log 7
+	m - Q(x) = 153/163
+	adding 0 Log 3
+	m - Q(x) = 75/163
+	adding 1/4 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 0 log 3
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 154/163
+	 adding 0 log 2
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 127/163
+	 adding 0 log 3
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 82/163
+	 adding 0 log 2
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 19/163
+	 adding 0 log 3
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 63/163
+	 adding 5/2 log 3
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 114/163
+	 adding 0 log 2
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 147/163
+	 adding 9/4 log 7
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 162/163
+	 adding 0 log 2
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 159/163
+	 adding 1/2 log 7
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 138/163
+	 adding 0 log 2
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 99/163
+	 adding 0 log 3
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 42/163
+	 adding 2 log 2
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 42/163
+	 adding 2 log 2
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 99/163
+	 adding 0 log 3
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 138/163
+	 adding 0 log 2
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 159/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 162/163
+	 adding 0 log 2
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 147/163
+	 adding 9/4 log 7
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 114/163
+	 adding 0 log 2
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 63/163
+	 adding 5/2 log 3
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 19/163
+	 adding 0 log 3
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 82/163
+	 adding 0 log 2
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 127/163
+	 adding 0 log 3
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 154/163
+	 adding 0 log 2
+Kappa_0 of 2
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 317/163
+	 adding 0 log 3
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 290/163
+	 adding 0 log 2
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 245/163
+	 adding 0 log 3
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 182/163
+	 adding 0 log 2
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 101/163
+	 adding 0 log 3
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 2/163
+	 adding 0 log 2
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 70/163
+	 adding 0 log 2
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 157/163
+	 adding 0 log 3
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 226/163
+	 adding 0 log 2
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 277/163
+	 adding 0 log 3
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 310/163
+	 adding 0 log 2
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 325/163
+	 adding 0 log 3
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 322/163
+	 adding 0 log 2
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 301/163
+	 adding 1 log 3
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 262/163
+	 adding 0 log 2
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 205/163
+	 adding 0 log 3
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 130/163
+	 adding 0 log 2
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 37/163
+	 adding 0 log 3
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 37/163
+	 adding 0 log 3
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 130/163
+	 adding 0 log 2
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 205/163
+	 adding 0 log 3
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 262/163
+	 adding 0 log 2
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 301/163
+	 adding 1 log 3
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 322/163
+	 adding 0 log 2
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 325/163
+	 adding 0 log 3
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 310/163
+	 adding 0 log 2
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 277/163
+	 adding 0 log 3
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 226/163
+	 adding 0 log 2
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 157/163
+	 adding 0 log 3
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 70/163
+	 adding 0 log 2
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 2/163
+	 adding 0 log 2
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 101/163
+	 adding 0 log 3
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 182/163
+	 adding 0 log 2
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 245/163
+	 adding 0 log 3
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 290/163
+	 adding 0 log 2
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 317/163
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 1/2 log 7
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 480/163
+	 adding 0 log 2
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 453/163
+	 adding 1/2 log 7
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 408/163
+	 adding 0 log 2
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 345/163
+	 adding 0 log 5
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 264/163
+	 adding 0 log 2
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 165/163
+	 adding 0 log 5
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 48/163
+	 adding 1/4 log 7
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 5/163
+	 adding 0 log 3
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 128/163
+	 adding 0 log 2
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 233/163
+	 adding 0 log 3
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 320/163
+	 adding 0 log 3
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 389/163
+	 adding 0 log 3
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 440/163
+	 adding 0 log 2
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 473/163
+	 adding 0 log 3
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 488/163
+	 adding 0 log 2
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 485/163
+	 adding 0 log 3
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 464/163
+	 adding 0 log 3
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 425/163
+	 adding 0 log 3
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 368/163
+	 adding 0 log 3
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 293/163
+	 adding 0 log 3
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 200/163
+	 adding 0 log 2
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 89/163
+	 adding 0 log 3
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 89/163
+	 adding 0 log 3
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 200/163
+	 adding 0 log 2
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 293/163
+	 adding 0 log 3
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 368/163
+	 adding 0 log 3
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 425/163
+	 adding 0 log 3
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 464/163
+	 adding 0 log 3
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 485/163
+	 adding 0 log 3
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 488/163
+	 adding 0 log 2
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 473/163
+	 adding 0 log 3
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 440/163
+	 adding 0 log 2
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 389/163
+	 adding 0 log 3
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 320/163
+	 adding 0 log 3
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 233/163
+	 adding 0 log 3
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 128/163
+	 adding 0 log 2
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 5/163
+	 adding 0 log 3
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 48/163
+	 adding 1/4 log 7
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 165/163
+	 adding 0 log 5
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 264/163
+	 adding 0 log 2
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 345/163
+	 adding 0 log 5
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 408/163
+	 adding 0 log 2
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 453/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 480/163
+	 adding 0 log 2
+Kappa_0 of 5
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 806/163
+	 adding 0 log 2
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 779/163
+	 adding 0 log 3
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 734/163
+	 adding 0 log 2
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 671/163
+	 adding 0 log 3
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 590/163
+	 adding 0 log 2
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 491/163
+	 adding 0 log 3
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 374/163
+	 adding 0 log 2
+
+	 mu_minus = -120/163*i + 700/163*j + 4*k, m - Q(x) = 239/163
+	 adding 0 log 3
+
+	 mu_minus = -135/163*i + 1575/326*j + 9/2*k, m - Q(x) = 86/163
+	 adding 0 log 2
+
+	 mu_minus = -675/163*i + 7875/326*j + 45/2*k, m - Q(x) = 31/163
+	 adding 0 log 3
+
+	 mu_minus = -690/163*i + 4025/163*j + 23*k, m - Q(x) = 190/163
+	 adding 0 log 2
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 331/163
+	 adding 0 log 3
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 454/163
+	 adding 0 log 2
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 559/163
+	 adding 0 log 3
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 646/163
+	 adding 0 log 2
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 715/163
+	 adding 0 log 3
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 766/163
+	 adding 0 log 2
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 799/163
+	 adding 0 log 3
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 814/163
+	 adding 0 log 2
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 811/163
+	 adding 0 log 3
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 790/163
+	 adding 0 log 2
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 751/163
+	 adding 0 log 3
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 694/163
+	 adding 0 log 2
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 619/163
+	 adding 0 log 3
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 526/163
+	 adding 0 log 2
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 415/163
+	 adding 0 log 3
+
+	 mu_minus = -930/163*i + 5425/163*j + 31*k, m - Q(x) = 286/163
+	 adding 0 log 2
+
+	 mu_minus = -945/163*i + 11025/326*j + 63/2*k, m - Q(x) = 139/163
+	 adding 0 log 3
+
+	 mu_minus = -1500/163*i + 8750/163*j + 50*k, m - Q(x) = 139/163
+	 adding 0 log 3
+
+	 mu_minus = -1515/163*i + 17675/326*j + 101/2*k, m - Q(x) = 286/163
+	 adding 0 log 2
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 415/163
+	 adding 0 log 3
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 526/163
+	 adding 0 log 2
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 619/163
+	 adding 0 log 3
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 694/163
+	 adding 0 log 2
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 751/163
+	 adding 0 log 3
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 790/163
+	 adding 0 log 2
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 811/163
+	 adding 0 log 3
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 814/163
+	 adding 0 log 2
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 799/163
+	 adding 0 log 3
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 766/163
+	 adding 0 log 2
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 715/163
+	 adding 0 log 3
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 646/163
+	 adding 0 log 2
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 559/163
+	 adding 0 log 3
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 454/163
+	 adding 0 log 2
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 331/163
+	 adding 0 log 3
+
+	 mu_minus = -1755/163*i + 20475/326*j + 117/2*k, m - Q(x) = 190/163
+	 adding 0 log 2
+
+	 mu_minus = -1770/163*i + 10325/163*j + 59*k, m - Q(x) = 31/163
+	 adding 0 log 3
+
+	 mu_minus = -2310/163*i + 13475/163*j + 77*k, m - Q(x) = 86/163
+	 adding 0 log 2
+
+	 mu_minus = -2325/163*i + 27125/326*j + 155/2*k, m - Q(x) = 239/163
+	 adding 0 log 3
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 374/163
+	 adding 0 log 2
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 491/163
+	 adding 0 log 3
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 590/163
+	 adding 0 log 2
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 671/163
+	 adding 0 log 3
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 734/163
+	 adding 0 log 2
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 779/163
+	 adding 0 log 3
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 806/163
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 969/163
+	 adding 0 log 7
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 942/163
+	 adding 0 log 2
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 897/163
+	 adding 0 log 7
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 834/163
+	 adding 0 log 2
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 753/163
+	 adding 1/2 log 7
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 654/163
+	 adding 0 log 2
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 537/163
+	 adding 1/2 log 7
+
+	 mu_minus = -120/163*i + 700/163*j + 4*k, m - Q(x) = 402/163
+	 adding 0 log 2
+
+	 mu_minus = -135/163*i + 1575/326*j + 9/2*k, m - Q(x) = 249/163
+	 adding 1/2 log 7
+
+	 mu_minus = -150/163*i + 875/163*j + 5*k, m - Q(x) = 78/163
+	 adding 0 log 2
+
+	 mu_minus = -660/163*i + 3850/163*j + 22*k, m - Q(x) = 17/163
+	 adding 0 log 3
+
+	 mu_minus = -675/163*i + 7875/326*j + 45/2*k, m - Q(x) = 194/163
+	 adding 0 log 2
+
+	 mu_minus = -690/163*i + 4025/163*j + 23*k, m - Q(x) = 353/163
+	 adding 0 log 3
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 494/163
+	 adding 0 log 2
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 617/163
+	 adding 0 log 3
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 722/163
+	 adding 0 log 2
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 809/163
+	 adding 0 log 3
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 878/163
+	 adding 0 log 2
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 929/163
+	 adding 0 log 3
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 962/163
+	 adding 0 log 2
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 977/163
+	 adding 0 log 3
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 974/163
+	 adding 0 log 2
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 953/163
+	 adding 0 log 3
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 914/163
+	 adding 0 log 2
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 857/163
+	 adding 0 log 3
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 782/163
+	 adding 0 log 2
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 689/163
+	 adding 0 log 3
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 578/163
+	 adding 0 log 2
+
+	 mu_minus = -930/163*i + 5425/163*j + 31*k, m - Q(x) = 449/163
+	 adding 0 log 3
+
+	 mu_minus = -945/163*i + 11025/326*j + 63/2*k, m - Q(x) = 302/163
+	 adding 0 log 2
+
+	 mu_minus = -960/163*i + 5600/163*j + 32*k, m - Q(x) = 137/163
+	 adding 0 log 3
+
+	 mu_minus = -1485/163*i + 17325/326*j + 99/2*k, m - Q(x) = 137/163
+	 adding 0 log 3
+
+	 mu_minus = -1500/163*i + 8750/163*j + 50*k, m - Q(x) = 302/163
+	 adding 0 log 2
+
+	 mu_minus = -1515/163*i + 17675/326*j + 101/2*k, m - Q(x) = 449/163
+	 adding 0 log 3
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 578/163
+	 adding 0 log 2
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 689/163
+	 adding 0 log 3
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 782/163
+	 adding 0 log 2
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 857/163
+	 adding 0 log 3
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 914/163
+	 adding 0 log 2
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 953/163
+	 adding 0 log 3
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 974/163
+	 adding 0 log 2
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 977/163
+	 adding 0 log 3
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 962/163
+	 adding 0 log 2
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 929/163
+	 adding 0 log 3
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 878/163
+	 adding 0 log 2
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 809/163
+	 adding 0 log 3
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 722/163
+	 adding 0 log 2
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 617/163
+	 adding 0 log 3
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 494/163
+	 adding 0 log 2
+
+	 mu_minus = -1755/163*i + 20475/326*j + 117/2*k, m - Q(x) = 353/163
+	 adding 0 log 3
+
+	 mu_minus = -1770/163*i + 10325/163*j + 59*k, m - Q(x) = 194/163
+	 adding 0 log 2
+
+	 mu_minus = -1785/163*i + 20825/326*j + 119/2*k, m - Q(x) = 17/163
+	 adding 0 log 3
+
+	 mu_minus = -2295/163*i + 26775/326*j + 153/2*k, m - Q(x) = 78/163
+	 adding 0 log 2
+
+	 mu_minus = -2310/163*i + 13475/163*j + 77*k, m - Q(x) = 249/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2325/163*i + 27125/326*j + 155/2*k, m - Q(x) = 402/163
+	 adding 0 log 2
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 537/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 654/163
+	 adding 0 log 2
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 753/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 834/163
+	 adding 0 log 2
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 897/163
+	 adding 0 log 7
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 942/163
+	 adding 0 log 2
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 969/163
+	 adding 0 log 7
+Kappa_0 of 7
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 1 log 3
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 1132/163
+	 adding 0 log 3
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 1105/163
+	 adding 0 log 3
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 1060/163
+	 adding 0 log 3
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 997/163
+	 adding 0 log 3
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 916/163
+	 adding 0 log 3
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 817/163
+	 adding 0 log 3
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 700/163
+	 adding 1/2 log 3
+
+	 mu_minus = -120/163*i + 700/163*j + 4*k, m - Q(x) = 565/163
+	 adding 0 log 3
+
+	 mu_minus = -135/163*i + 1575/326*j + 9/2*k, m - Q(x) = 412/163
+	 adding 0 log 3
+
+	 mu_minus = -150/163*i + 875/163*j + 5*k, m - Q(x) = 241/163
+	 adding 0 log 3
+
+	 mu_minus = -165/163*i + 1925/326*j + 11/2*k, m - Q(x) = 52/163
+	 adding 0 log 3
+
+	 mu_minus = -660/163*i + 3850/163*j + 22*k, m - Q(x) = 180/163
+	 adding 0 log 3
+
+	 mu_minus = -675/163*i + 7875/326*j + 45/2*k, m - Q(x) = 357/163
+	 adding 2 log 17
+
+	 mu_minus = -690/163*i + 4025/163*j + 23*k, m - Q(x) = 516/163
+	 adding 1/2 log 7
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 657/163
+	 adding 0 log 3
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 780/163
+	 adding 0 log 5
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 885/163
+	 adding 0 log 5
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 972/163
+	 adding 1/4 log 7
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 1041/163
+	 adding 1/2 log 7
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 1092/163
+	 adding 2 log 13
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 1125/163
+	 adding 0 log 3
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 1140/163
+	 adding 0 log 5
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 1137/163
+	 adding 1/2 log 7
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 1116/163
+	 adding 0 log 3
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 1077/163
+	 adding 1/2 log 7
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 1020/163
+	 adding 0 log 5
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 945/163
+	 adding 2 log 5
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 852/163
+	 adding 1/2 log 7
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 741/163
+	 adding 0 log 7
+
+	 mu_minus = -930/163*i + 5425/163*j + 31*k, m - Q(x) = 612/163
+	 adding 0 log 3
+
+	 mu_minus = -945/163*i + 11025/326*j + 63/2*k, m - Q(x) = 465/163
+	 adding 0 log 5
+
+	 mu_minus = -960/163*i + 5600/163*j + 32*k, m - Q(x) = 300/163
+	 adding 1/4 log 7
+
+	 mu_minus = -975/163*i + 11375/326*j + 65/2*k, m - Q(x) = 117/163
+	 adding 0 log 3
+
+	 mu_minus = -1470/163*i + 8575/163*j + 49*k, m - Q(x) = 117/163
+	 adding 0 log 3
+
+	 mu_minus = -1485/163*i + 17325/326*j + 99/2*k, m - Q(x) = 300/163
+	 adding 1/4 log 7
+
+	 mu_minus = -1500/163*i + 8750/163*j + 50*k, m - Q(x) = 465/163
+	 adding 0 log 5
+
+	 mu_minus = -1515/163*i + 17675/326*j + 101/2*k, m - Q(x) = 612/163
+	 adding 0 log 3
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 741/163
+	 adding 0 log 7
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 852/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 945/163
+	 adding 2 log 5
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 1020/163
+	 adding 0 log 5
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 1077/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 1116/163
+	 adding 0 log 3
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 1137/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 1140/163
+	 adding 0 log 5
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 1125/163
+	 adding 0 log 3
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 1092/163
+	 adding 2 log 13
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 1041/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 972/163
+	 adding 1/4 log 7
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 885/163
+	 adding 0 log 5
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 780/163
+	 adding 0 log 5
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 657/163
+	 adding 0 log 3
+
+	 mu_minus = -1755/163*i + 20475/326*j + 117/2*k, m - Q(x) = 516/163
+	 adding 1/2 log 7
+
+	 mu_minus = -1770/163*i + 10325/163*j + 59*k, m - Q(x) = 357/163
+	 adding 2 log 17
+
+	 mu_minus = -1785/163*i + 20825/326*j + 119/2*k, m - Q(x) = 180/163
+	 adding 0 log 3
+
+	 mu_minus = -2280/163*i + 13300/163*j + 76*k, m - Q(x) = 52/163
+	 adding 0 log 3
+
+	 mu_minus = -2295/163*i + 26775/326*j + 153/2*k, m - Q(x) = 241/163
+	 adding 0 log 3
+
+	 mu_minus = -2310/163*i + 13475/163*j + 77*k, m - Q(x) = 412/163
+	 adding 0 log 3
+
+	 mu_minus = -2325/163*i + 27125/326*j + 155/2*k, m - Q(x) = 565/163
+	 adding 0 log 3
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 700/163
+	 adding 1/2 log 3
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 817/163
+	 adding 0 log 3
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 916/163
+	 adding 0 log 3
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 997/163
+	 adding 0 log 3
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 1060/163
+	 adding 0 log 3
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 1105/163
+	 adding 0 log 3
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 1132/163
+	 adding 0 log 3
+Kappa_0 of 9
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 0 log 3
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 1458/163
+	 adding 0 log 2
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 1431/163
+	 adding 1/2 log 7
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 1386/163
+	 adding 0 log 2
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 1323/163
+	 adding 9/4 log 7
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 1242/163
+	 adding 0 log 2
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 1143/163
+	 adding 0 log 3
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 1026/163
+	 adding 0 log 2
+
+	 mu_minus = -120/163*i + 700/163*j + 4*k, m - Q(x) = 891/163
+	 adding 0 log 3
+
+	 mu_minus = -135/163*i + 1575/326*j + 9/2*k, m - Q(x) = 738/163
+	 adding 0 log 2
+
+	 mu_minus = -150/163*i + 875/163*j + 5*k, m - Q(x) = 567/163
+	 adding 9/2 log 3
+
+	 mu_minus = -165/163*i + 1925/326*j + 11/2*k, m - Q(x) = 378/163
+	 adding 2 log 2
+
+	 mu_minus = -180/163*i + 1050/163*j + 6*k, m - Q(x) = 171/163
+	 adding 0 log 3
+
+	 mu_minus = -630/163*i + 3675/163*j + 21*k, m - Q(x) = 98/163
+	 adding 0 log 2
+
+	 mu_minus = -645/163*i + 7525/326*j + 43/2*k, m - Q(x) = 311/163
+	 adding 0 log 3
+
+	 mu_minus = -660/163*i + 3850/163*j + 22*k, m - Q(x) = 506/163
+	 adding 0 log 2
+
+	 mu_minus = -675/163*i + 7875/326*j + 45/2*k, m - Q(x) = 683/163
+	 adding 0 log 3
+
+	 mu_minus = -690/163*i + 4025/163*j + 23*k, m - Q(x) = 842/163
+	 adding 0 log 2
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 983/163
+	 adding 0 log 3
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 1106/163
+	 adding 0 log 2
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 1211/163
+	 adding 1 log 3
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 1298/163
+	 adding 0 log 2
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 1367/163
+	 adding 0 log 3
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 1418/163
+	 adding 0 log 2
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 1451/163
+	 adding 0 log 3
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 1466/163
+	 adding 0 log 2
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 1463/163
+	 adding 0 log 3
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 1442/163
+	 adding 0 log 2
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 1403/163
+	 adding 0 log 3
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 1346/163
+	 adding 0 log 2
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 1271/163
+	 adding 0 log 3
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 1178/163
+	 adding 0 log 2
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 1067/163
+	 adding 0 log 3
+
+	 mu_minus = -930/163*i + 5425/163*j + 31*k, m - Q(x) = 938/163
+	 adding 0 log 2
+
+	 mu_minus = -945/163*i + 11025/326*j + 63/2*k, m - Q(x) = 791/163
+	 adding 1 log 3
+
+	 mu_minus = -960/163*i + 5600/163*j + 32*k, m - Q(x) = 626/163
+	 adding 0 log 2
+
+	 mu_minus = -975/163*i + 11375/326*j + 65/2*k, m - Q(x) = 443/163
+	 adding 0 log 3
+
+	 mu_minus = -990/163*i + 5775/163*j + 33*k, m - Q(x) = 242/163
+	 adding 0 log 2
+
+	 mu_minus = -1005/163*i + 11725/326*j + 67/2*k, m - Q(x) = 23/163
+	 adding 0 log 3
+
+	 mu_minus = -1440/163*i + 8400/163*j + 48*k, m - Q(x) = 23/163
+	 adding 0 log 3
+
+	 mu_minus = -1455/163*i + 16975/326*j + 97/2*k, m - Q(x) = 242/163
+	 adding 0 log 2
+
+	 mu_minus = -1470/163*i + 8575/163*j + 49*k, m - Q(x) = 443/163
+	 adding 0 log 3
+
+	 mu_minus = -1485/163*i + 17325/326*j + 99/2*k, m - Q(x) = 626/163
+	 adding 0 log 2
+
+	 mu_minus = -1500/163*i + 8750/163*j + 50*k, m - Q(x) = 791/163
+	 adding 1 log 3
+
+	 mu_minus = -1515/163*i + 17675/326*j + 101/2*k, m - Q(x) = 938/163
+	 adding 0 log 2
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 1067/163
+	 adding 0 log 3
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 1178/163
+	 adding 0 log 2
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 1271/163
+	 adding 0 log 3
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 1346/163
+	 adding 0 log 2
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 1403/163
+	 adding 0 log 3
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 1442/163
+	 adding 0 log 2
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 1463/163
+	 adding 0 log 3
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 1466/163
+	 adding 0 log 2
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 1451/163
+	 adding 0 log 3
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 1418/163
+	 adding 0 log 2
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 1367/163
+	 adding 0 log 3
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 1298/163
+	 adding 0 log 2
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 1211/163
+	 adding 1 log 3
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 1106/163
+	 adding 0 log 2
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 983/163
+	 adding 0 log 3
+
+	 mu_minus = -1755/163*i + 20475/326*j + 117/2*k, m - Q(x) = 842/163
+	 adding 0 log 2
+
+	 mu_minus = -1770/163*i + 10325/163*j + 59*k, m - Q(x) = 683/163
+	 adding 0 log 3
+
+	 mu_minus = -1785/163*i + 20825/326*j + 119/2*k, m - Q(x) = 506/163
+	 adding 0 log 2
+
+	 mu_minus = -1800/163*i + 10500/163*j + 60*k, m - Q(x) = 311/163
+	 adding 0 log 3
+
+	 mu_minus = -1815/163*i + 21175/326*j + 121/2*k, m - Q(x) = 98/163
+	 adding 0 log 2
+
+	 mu_minus = -2265/163*i + 26425/326*j + 151/2*k, m - Q(x) = 171/163
+	 adding 0 log 3
+
+	 mu_minus = -2280/163*i + 13300/163*j + 76*k, m - Q(x) = 378/163
+	 adding 2 log 2
+
+	 mu_minus = -2295/163*i + 26775/326*j + 153/2*k, m - Q(x) = 567/163
+	 adding 9/2 log 3
+
+	 mu_minus = -2310/163*i + 13475/163*j + 77*k, m - Q(x) = 738/163
+	 adding 0 log 2
+
+	 mu_minus = -2325/163*i + 27125/326*j + 155/2*k, m - Q(x) = 891/163
+	 adding 0 log 3
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 1026/163
+	 adding 0 log 2
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 1143/163
+	 adding 0 log 3
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 1242/163
+	 adding 0 log 2
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 1323/163
+	 adding 9/4 log 7
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 1386/163
+	 adding 0 log 2
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 1431/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 1458/163
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 21
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 2 log 163
+
+	 mu_minus = -15/163*i + 175/326*j + 1/2*k, m - Q(x) = 3414/163
+	 adding 0 log 2
+
+	 mu_minus = -30/163*i + 175/163*j + k, m - Q(x) = 3387/163
+	 adding 1/2 log 7
+
+	 mu_minus = -45/163*i + 525/326*j + 3/2*k, m - Q(x) = 3342/163
+	 adding 0 log 2
+
+	 mu_minus = -60/163*i + 350/163*j + 2*k, m - Q(x) = 3279/163
+	 adding 1/2 log 7
+
+	 mu_minus = -75/163*i + 875/326*j + 5/2*k, m - Q(x) = 3198/163
+	 adding 0 log 2
+
+	 mu_minus = -90/163*i + 525/163*j + 3*k, m - Q(x) = 3099/163
+	 adding 1/2 log 7
+
+	 mu_minus = -105/163*i + 1225/326*j + 7/2*k, m - Q(x) = 2982/163
+	 adding 4 log 2
+
+	 mu_minus = -120/163*i + 700/163*j + 4*k, m - Q(x) = 2847/163
+	 adding 0 log 7
+
+	 mu_minus = -135/163*i + 1575/326*j + 9/2*k, m - Q(x) = 2694/163
+	 adding 0 log 2
+
+	 mu_minus = -150/163*i + 875/163*j + 5*k, m - Q(x) = 2523/163
+	 adding 1/4 log 7
+
+	 mu_minus = -165/163*i + 1925/326*j + 11/2*k, m - Q(x) = 2334/163
+	 adding 0 log 2
+
+	 mu_minus = -180/163*i + 1050/163*j + 6*k, m - Q(x) = 2127/163
+	 adding 1/2 log 7
+
+	 mu_minus = -195/163*i + 2275/326*j + 13/2*k, m - Q(x) = 1902/163
+	 adding 0 log 2
+
+	 mu_minus = -210/163*i + 1225/163*j + 7*k, m - Q(x) = 1659/163
+	 adding 2 log 79
+
+	 mu_minus = -225/163*i + 2625/326*j + 15/2*k, m - Q(x) = 1398/163
+	 adding 0 log 2
+
+	 mu_minus = -240/163*i + 1400/163*j + 8*k, m - Q(x) = 1119/163
+	 adding 1/2 log 7
+
+	 mu_minus = -255/163*i + 2975/326*j + 17/2*k, m - Q(x) = 822/163
+	 adding 0 log 2
+
+	 mu_minus = -270/163*i + 1575/163*j + 9*k, m - Q(x) = 507/163
+	 adding 1/4 log 7
+
+	 mu_minus = -285/163*i + 3325/326*j + 19/2*k, m - Q(x) = 174/163
+	 adding 0 log 2
+
+	 mu_minus = -525/163*i + 6125/326*j + 35/2*k, m - Q(x) = 59/163
+	 adding 0 log 3
+
+	 mu_minus = -540/163*i + 3150/163*j + 18*k, m - Q(x) = 398/163
+	 adding 0 log 2
+
+	 mu_minus = -555/163*i + 6475/326*j + 37/2*k, m - Q(x) = 719/163
+	 adding 0 log 3
+
+	 mu_minus = -570/163*i + 3325/163*j + 19*k, m - Q(x) = 1022/163
+	 adding 0 log 2
+
+	 mu_minus = -585/163*i + 6825/326*j + 39/2*k, m - Q(x) = 1307/163
+	 adding 0 log 3
+
+	 mu_minus = -600/163*i + 3500/163*j + 20*k, m - Q(x) = 1574/163
+	 adding 0 log 2
+
+	 mu_minus = -615/163*i + 7175/326*j + 41/2*k, m - Q(x) = 1823/163
+	 adding 0 log 3
+
+	 mu_minus = -630/163*i + 3675/163*j + 21*k, m - Q(x) = 2054/163
+	 adding 0 log 2
+
+	 mu_minus = -645/163*i + 7525/326*j + 43/2*k, m - Q(x) = 2267/163
+	 adding 0 log 3
+
+	 mu_minus = -660/163*i + 3850/163*j + 22*k, m - Q(x) = 2462/163
+	 adding 0 log 2
+
+	 mu_minus = -675/163*i + 7875/326*j + 45/2*k, m - Q(x) = 2639/163
+	 adding 0 log 3
+
+	 mu_minus = -690/163*i + 4025/163*j + 23*k, m - Q(x) = 2798/163
+	 adding 0 log 2
+
+	 mu_minus = -705/163*i + 8225/326*j + 47/2*k, m - Q(x) = 2939/163
+	 adding 0 log 3
+
+	 mu_minus = -720/163*i + 4200/163*j + 24*k, m - Q(x) = 3062/163
+	 adding 0 log 2
+
+	 mu_minus = -735/163*i + 8575/326*j + 49/2*k, m - Q(x) = 3167/163
+	 adding 0 log 3
+
+	 mu_minus = -750/163*i + 4375/163*j + 25*k, m - Q(x) = 3254/163
+	 adding 0 log 2
+
+	 mu_minus = -765/163*i + 8925/326*j + 51/2*k, m - Q(x) = 3323/163
+	 adding 0 log 3
+
+	 mu_minus = -780/163*i + 4550/163*j + 26*k, m - Q(x) = 3374/163
+	 adding 0 log 2
+
+	 mu_minus = -795/163*i + 9275/326*j + 53/2*k, m - Q(x) = 3407/163
+	 adding 0 log 3
+
+	 mu_minus = -810/163*i + 4725/163*j + 27*k, m - Q(x) = 3422/163
+	 adding 0 log 2
+
+	 mu_minus = -825/163*i + 9625/326*j + 55/2*k, m - Q(x) = 3419/163
+	 adding 0 log 3
+
+	 mu_minus = -840/163*i + 4900/163*j + 28*k, m - Q(x) = 3398/163
+	 adding 0 log 2
+
+	 mu_minus = -855/163*i + 9975/326*j + 57/2*k, m - Q(x) = 3359/163
+	 adding 0 log 3
+
+	 mu_minus = -870/163*i + 5075/163*j + 29*k, m - Q(x) = 3302/163
+	 adding 0 log 2
+
+	 mu_minus = -885/163*i + 10325/326*j + 59/2*k, m - Q(x) = 3227/163
+	 adding 1 log 3
+
+	 mu_minus = -900/163*i + 5250/163*j + 30*k, m - Q(x) = 3134/163
+	 adding 0 log 2
+
+	 mu_minus = -915/163*i + 10675/326*j + 61/2*k, m - Q(x) = 3023/163
+	 adding 0 log 3
+
+	 mu_minus = -930/163*i + 5425/163*j + 31*k, m - Q(x) = 2894/163
+	 adding 0 log 2
+
+	 mu_minus = -945/163*i + 11025/326*j + 63/2*k, m - Q(x) = 2747/163
+	 adding 0 log 3
+
+	 mu_minus = -960/163*i + 5600/163*j + 32*k, m - Q(x) = 2582/163
+	 adding 0 log 2
+
+	 mu_minus = -975/163*i + 11375/326*j + 65/2*k, m - Q(x) = 2399/163
+	 adding 0 log 3
+
+	 mu_minus = -990/163*i + 5775/163*j + 33*k, m - Q(x) = 2198/163
+	 adding 0 log 2
+
+	 mu_minus = -1005/163*i + 11725/326*j + 67/2*k, m - Q(x) = 1979/163
+	 adding 0 log 3
+
+	 mu_minus = -1020/163*i + 5950/163*j + 34*k, m - Q(x) = 1742/163
+	 adding 0 log 2
+
+	 mu_minus = -1035/163*i + 12075/326*j + 69/2*k, m - Q(x) = 1487/163
+	 adding 0 log 3
+
+	 mu_minus = -1050/163*i + 6125/163*j + 35*k, m - Q(x) = 1214/163
+	 adding 0 log 2
+
+	 mu_minus = -1065/163*i + 12425/326*j + 71/2*k, m - Q(x) = 923/163
+	 adding 0 log 3
+
+	 mu_minus = -1080/163*i + 6300/163*j + 36*k, m - Q(x) = 614/163
+	 adding 0 log 2
+
+	 mu_minus = -1095/163*i + 12775/326*j + 73/2*k, m - Q(x) = 287/163
+	 adding 1 log 3
+
+	 mu_minus = -1350/163*i + 7875/163*j + 45*k, m - Q(x) = 287/163
+	 adding 1 log 3
+
+	 mu_minus = -1365/163*i + 15925/326*j + 91/2*k, m - Q(x) = 614/163
+	 adding 0 log 2
+
+	 mu_minus = -1380/163*i + 8050/163*j + 46*k, m - Q(x) = 923/163
+	 adding 0 log 3
+
+	 mu_minus = -1395/163*i + 16275/326*j + 93/2*k, m - Q(x) = 1214/163
+	 adding 0 log 2
+
+	 mu_minus = -1410/163*i + 8225/163*j + 47*k, m - Q(x) = 1487/163
+	 adding 0 log 3
+
+	 mu_minus = -1425/163*i + 16625/326*j + 95/2*k, m - Q(x) = 1742/163
+	 adding 0 log 2
+
+	 mu_minus = -1440/163*i + 8400/163*j + 48*k, m - Q(x) = 1979/163
+	 adding 0 log 3
+
+	 mu_minus = -1455/163*i + 16975/326*j + 97/2*k, m - Q(x) = 2198/163
+	 adding 0 log 2
+
+	 mu_minus = -1470/163*i + 8575/163*j + 49*k, m - Q(x) = 2399/163
+	 adding 0 log 3
+
+	 mu_minus = -1485/163*i + 17325/326*j + 99/2*k, m - Q(x) = 2582/163
+	 adding 0 log 2
+
+	 mu_minus = -1500/163*i + 8750/163*j + 50*k, m - Q(x) = 2747/163
+	 adding 0 log 3
+
+	 mu_minus = -1515/163*i + 17675/326*j + 101/2*k, m - Q(x) = 2894/163
+	 adding 0 log 2
+
+	 mu_minus = -1530/163*i + 8925/163*j + 51*k, m - Q(x) = 3023/163
+	 adding 0 log 3
+
+	 mu_minus = -1545/163*i + 18025/326*j + 103/2*k, m - Q(x) = 3134/163
+	 adding 0 log 2
+
+	 mu_minus = -1560/163*i + 9100/163*j + 52*k, m - Q(x) = 3227/163
+	 adding 1 log 3
+
+	 mu_minus = -1575/163*i + 18375/326*j + 105/2*k, m - Q(x) = 3302/163
+	 adding 0 log 2
+
+	 mu_minus = -1590/163*i + 9275/163*j + 53*k, m - Q(x) = 3359/163
+	 adding 0 log 3
+
+	 mu_minus = -1605/163*i + 18725/326*j + 107/2*k, m - Q(x) = 3398/163
+	 adding 0 log 2
+
+	 mu_minus = -1620/163*i + 9450/163*j + 54*k, m - Q(x) = 3419/163
+	 adding 0 log 3
+
+	 mu_minus = -1635/163*i + 19075/326*j + 109/2*k, m - Q(x) = 3422/163
+	 adding 0 log 2
+
+	 mu_minus = -1650/163*i + 9625/163*j + 55*k, m - Q(x) = 3407/163
+	 adding 0 log 3
+
+	 mu_minus = -1665/163*i + 19425/326*j + 111/2*k, m - Q(x) = 3374/163
+	 adding 0 log 2
+
+	 mu_minus = -1680/163*i + 9800/163*j + 56*k, m - Q(x) = 3323/163
+	 adding 0 log 3
+
+	 mu_minus = -1695/163*i + 19775/326*j + 113/2*k, m - Q(x) = 3254/163
+	 adding 0 log 2
+
+	 mu_minus = -1710/163*i + 9975/163*j + 57*k, m - Q(x) = 3167/163
+	 adding 0 log 3
+
+	 mu_minus = -1725/163*i + 20125/326*j + 115/2*k, m - Q(x) = 3062/163
+	 adding 0 log 2
+
+	 mu_minus = -1740/163*i + 10150/163*j + 58*k, m - Q(x) = 2939/163
+	 adding 0 log 3
+
+	 mu_minus = -1755/163*i + 20475/326*j + 117/2*k, m - Q(x) = 2798/163
+	 adding 0 log 2
+
+	 mu_minus = -1770/163*i + 10325/163*j + 59*k, m - Q(x) = 2639/163
+	 adding 0 log 3
+
+	 mu_minus = -1785/163*i + 20825/326*j + 119/2*k, m - Q(x) = 2462/163
+	 adding 0 log 2
+
+	 mu_minus = -1800/163*i + 10500/163*j + 60*k, m - Q(x) = 2267/163
+	 adding 0 log 3
+
+	 mu_minus = -1815/163*i + 21175/326*j + 121/2*k, m - Q(x) = 2054/163
+	 adding 0 log 2
+
+	 mu_minus = -1830/163*i + 10675/163*j + 61*k, m - Q(x) = 1823/163
+	 adding 0 log 3
+
+	 mu_minus = -1845/163*i + 21525/326*j + 123/2*k, m - Q(x) = 1574/163
+	 adding 0 log 2
+
+	 mu_minus = -1860/163*i + 10850/163*j + 62*k, m - Q(x) = 1307/163
+	 adding 0 log 3
+
+	 mu_minus = -1875/163*i + 21875/326*j + 125/2*k, m - Q(x) = 1022/163
+	 adding 0 log 2
+
+	 mu_minus = -1890/163*i + 11025/163*j + 63*k, m - Q(x) = 719/163
+	 adding 0 log 3
+
+	 mu_minus = -1905/163*i + 22225/326*j + 127/2*k, m - Q(x) = 398/163
+	 adding 0 log 2
+
+	 mu_minus = -1920/163*i + 11200/163*j + 64*k, m - Q(x) = 59/163
+	 adding 0 log 3
+
+	 mu_minus = -2160/163*i + 12600/163*j + 72*k, m - Q(x) = 174/163
+	 adding 0 log 2
+
+	 mu_minus = -2175/163*i + 25375/326*j + 145/2*k, m - Q(x) = 507/163
+	 adding 1/4 log 7
+
+	 mu_minus = -2190/163*i + 12775/163*j + 73*k, m - Q(x) = 822/163
+	 adding 0 log 2
+
+	 mu_minus = -2205/163*i + 25725/326*j + 147/2*k, m - Q(x) = 1119/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2220/163*i + 12950/163*j + 74*k, m - Q(x) = 1398/163
+	 adding 0 log 2
+
+	 mu_minus = -2235/163*i + 26075/326*j + 149/2*k, m - Q(x) = 1659/163
+	 adding 2 log 79
+
+	 mu_minus = -2250/163*i + 13125/163*j + 75*k, m - Q(x) = 1902/163
+	 adding 0 log 2
+
+	 mu_minus = -2265/163*i + 26425/326*j + 151/2*k, m - Q(x) = 2127/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2280/163*i + 13300/163*j + 76*k, m - Q(x) = 2334/163
+	 adding 0 log 2
+
+	 mu_minus = -2295/163*i + 26775/326*j + 153/2*k, m - Q(x) = 2523/163
+	 adding 1/4 log 7
+
+	 mu_minus = -2310/163*i + 13475/163*j + 77*k, m - Q(x) = 2694/163
+	 adding 0 log 2
+
+	 mu_minus = -2325/163*i + 27125/326*j + 155/2*k, m - Q(x) = 2847/163
+	 adding 0 log 7
+
+	 mu_minus = -2340/163*i + 13650/163*j + 78*k, m - Q(x) = 2982/163
+	 adding 4 log 2
+
+	 mu_minus = -2355/163*i + 27475/326*j + 157/2*k, m - Q(x) = 3099/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2370/163*i + 13825/163*j + 79*k, m - Q(x) = 3198/163
+	 adding 0 log 2
+
+	 mu_minus = -2385/163*i + 27825/326*j + 159/2*k, m - Q(x) = 3279/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2400/163*i + 14000/163*j + 80*k, m - Q(x) = 3342/163
+	 adding 0 log 2
+
+	 mu_minus = -2415/163*i + 28175/326*j + 161/2*k, m - Q(x) = 3387/163
+	 adding 1/2 log 7
+
+	 mu_minus = -2430/163*i + 14175/163*j + 81*k, m - Q(x) = 3414/163
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<5, 2>,
+<17, 2>
+]
+the denominator is
+[
+<13, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>,
+<3, 2>,
+<7, 2>
+]
+the denominator is
+[
+<13, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<79, 2>,
+<163, 1>
+]
+the denominator is
+[
+<13, 4>
+]
+====================================================
+The discriminant is -168 with class number 1 and embedding 3*i - k
+Kappa_eta of 7/4
+	m - Q(x) = 7/4
+	adding 4 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 6 log 2
+Kappa_0 of 2
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 2 log 3
+Kappa_0 of 3
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 2
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 3/8
+	 adding 1 log 7
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 3/8
+	 adding 1 log 7
+Kappa_0 of 5
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 19/8
+	 adding 0 log 3
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 19/8
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 2 log 7
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 27/8
+	 adding 1 log 7
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 27/8
+	 adding 1 log 7
+Kappa_0 of 7
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 4 log 7
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 35/8
+	 adding 2 log 5
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 35/8
+	 adding 2 log 5
+Kappa_0 of 9
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 6 log 2
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 51/8
+	 adding 4 log 3
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 51/8
+	 adding 4 log 3
+Kappa_0 of 21
+
+	 Sgcd = 2
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = -3/2*i + 3/2*k, m - Q(x) = 21/2
+	 adding 4 log 2
+
+	 mu_minus = -3/2*i + 3/2*k, m - Q(x) = 21/2
+	 adding 4 log 2
+
+	 mu_minus = -3/4*i + 1/2*j + 3/4*k, m - Q(x) = 147/8
+	 adding 3 log 7
+
+	 mu_minus = -9/4*i + 1/2*j + 9/4*k, m - Q(x) = 147/8
+	 adding 3 log 7
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<5, 2>
+]
+the denominator is
+[
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 5>
+]
+the denominator is
+[
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1>
+]
+the denominator is
+[]
+====================================================
+The discriminant is -267 with class number 1 and embedding 9*i - 10*j
+Kappa_eta of 7/4
+	m - Q(x) = 29/89
+	adding 1/2 Log 7
+	m - Q(x) = 149/89
+	adding 1/2 Log 7
+	m - Q(x) = 119/89
+	adding 2 Log 17
+	m - Q(x) = 65/89
+	adding 0 Log 5
+	m - Q(x) = 155/89
+	adding 0 Log 5
+	m - Q(x) = 95/89
+	adding 0 Log 5
+	m - Q(x) = 95/89
+	adding 0 Log 5
+	m - Q(x) = 155/89
+	adding 0 Log 5
+	m - Q(x) = 65/89
+	adding 0 Log 5
+	m - Q(x) = 119/89
+	adding 2 Log 17
+	m - Q(x) = 149/89
+	adding 1/2 Log 7
+	m - Q(x) = 29/89
+	adding 1/2 Log 7
+	m - Q(x) = 137/89
+	adding 1/2 Log 7
+	m - Q(x) = 137/89
+	adding 1/2 Log 7
+Kappa_0 of 1
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1/2 log 7
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 14/89
+	 adding 2 log 2
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 41/89
+	 adding 1/2 log 7
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 86/89
+	 adding 0 log 2
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 62/89
+	 adding 0 log 2
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 77/89
+	 adding 2 log 11
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 77/89
+	 adding 2 log 11
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 62/89
+	 adding 0 log 2
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 86/89
+	 adding 0 log 2
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 41/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 14/89
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 103/89
+	 adding 0 log 3
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 130/89
+	 adding 0 log 2
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 175/89
+	 adding 1 log 3
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 70/89
+	 adding 0 log 2
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 151/89
+	 adding 0 log 3
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 166/89
+	 adding 0 log 2
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 31/89
+	 adding 0 log 3
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 31/89
+	 adding 0 log 3
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 166/89
+	 adding 0 log 2
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 151/89
+	 adding 0 log 3
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 70/89
+	 adding 0 log 2
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 175/89
+	 adding 1 log 3
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 130/89
+	 adding 0 log 2
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 103/89
+	 adding 0 log 3
+Kappa_0 of 3
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 192/89
+	 adding 1/4 log 7
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 24/89
+	 adding 0 log 2
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 219/89
+	 adding 1/2 log 7
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 264/89
+	 adding 0 log 2
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 159/89
+	 adding 0 log 3
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 75/89
+	 adding 1/4 log 7
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 240/89
+	 adding 0 log 3
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 255/89
+	 adding 0 log 5
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 120/89
+	 adding 0 log 2
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 120/89
+	 adding 0 log 2
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 255/89
+	 adding 0 log 5
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 240/89
+	 adding 0 log 3
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 75/89
+	 adding 1/4 log 7
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 159/89
+	 adding 0 log 3
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 264/89
+	 adding 0 log 2
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 219/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 24/89
+	 adding 0 log 2
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 192/89
+	 adding 1/4 log 7
+Kappa_0 of 5
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 370/89
+	 adding 0 log 2
+
+	 mu_minus = -90/89*i + 189/89*j + k, m - Q(x) = 145/89
+	 adding 0 log 3
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 202/89
+	 adding 0 log 2
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 397/89
+	 adding 0 log 3
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 442/89
+	 adding 0 log 2
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 337/89
+	 adding 0 log 3
+
+	 mu_minus = -900/89*i + 1890/89*j + 10*k, m - Q(x) = 82/89
+	 adding 0 log 2
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 253/89
+	 adding 0 log 3
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 418/89
+	 adding 0 log 2
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 433/89
+	 adding 0 log 3
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 298/89
+	 adding 0 log 2
+
+	 mu_minus = -1710/89*i + 3591/89*j + 19*k, m - Q(x) = 13/89
+	 adding 0 log 3
+
+	 mu_minus = -2295/89*i + 9639/178*j + 51/2*k, m - Q(x) = 13/89
+	 adding 0 log 3
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 298/89
+	 adding 0 log 2
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 433/89
+	 adding 0 log 3
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 418/89
+	 adding 0 log 2
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 253/89
+	 adding 0 log 3
+
+	 mu_minus = -3105/89*i + 13041/178*j + 69/2*k, m - Q(x) = 82/89
+	 adding 0 log 2
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 337/89
+	 adding 0 log 3
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 442/89
+	 adding 0 log 2
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 397/89
+	 adding 0 log 3
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 202/89
+	 adding 0 log 2
+
+	 mu_minus = -3915/89*i + 16443/178*j + 87/2*k, m - Q(x) = 145/89
+	 adding 0 log 3
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 370/89
+	 adding 0 log 2
+Kappa_0 of 6
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 459/89
+	 adding 0 log 3
+
+	 mu_minus = -90/89*i + 189/89*j + k, m - Q(x) = 234/89
+	 adding 0 log 2
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 291/89
+	 adding 1/2 log 7
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 486/89
+	 adding 0 log 2
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 531/89
+	 adding 1/2 log 7
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 426/89
+	 adding 0 log 2
+
+	 mu_minus = -900/89*i + 1890/89*j + 10*k, m - Q(x) = 171/89
+	 adding 0 log 3
+
+	 mu_minus = -1485/89*i + 6237/178*j + 33/2*k, m - Q(x) = 27/89
+	 adding 1/4 log 7
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 342/89
+	 adding 0 log 2
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 507/89
+	 adding 1/4 log 7
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 522/89
+	 adding 0 log 2
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 387/89
+	 adding 0 log 3
+
+	 mu_minus = -1710/89*i + 3591/89*j + 19*k, m - Q(x) = 102/89
+	 adding 0 log 2
+
+	 mu_minus = -2295/89*i + 9639/178*j + 51/2*k, m - Q(x) = 102/89
+	 adding 0 log 2
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 387/89
+	 adding 0 log 3
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 522/89
+	 adding 0 log 2
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 507/89
+	 adding 1/4 log 7
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 342/89
+	 adding 0 log 2
+
+	 mu_minus = -2520/89*i + 5292/89*j + 28*k, m - Q(x) = 27/89
+	 adding 1/4 log 7
+
+	 mu_minus = -3105/89*i + 13041/178*j + 69/2*k, m - Q(x) = 171/89
+	 adding 0 log 3
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 426/89
+	 adding 0 log 2
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 531/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 486/89
+	 adding 0 log 2
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 291/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3915/89*i + 16443/178*j + 87/2*k, m - Q(x) = 234/89
+	 adding 0 log 2
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 459/89
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 2 log 89
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 548/89
+	 adding 1/2 log 7
+
+	 mu_minus = -90/89*i + 189/89*j + k, m - Q(x) = 323/89
+	 adding 0 log 7
+
+	 mu_minus = -675/89*i + 2835/178*j + 15/2*k, m - Q(x) = 35/89
+	 adding 2 log 5
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 380/89
+	 adding 0 log 5
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 575/89
+	 adding 1/2 log 7
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 620/89
+	 adding 0 log 5
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 515/89
+	 adding 0 log 5
+
+	 mu_minus = -900/89*i + 1890/89*j + 10*k, m - Q(x) = 260/89
+	 adding 0 log 5
+
+	 mu_minus = -1485/89*i + 6237/178*j + 33/2*k, m - Q(x) = 116/89
+	 adding 1/2 log 7
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 431/89
+	 adding 1/2 log 7
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 596/89
+	 adding 1/2 log 7
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 611/89
+	 adding 0 log 7
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 476/89
+	 adding 2 log 17
+
+	 mu_minus = -1710/89*i + 3591/89*j + 19*k, m - Q(x) = 191/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2295/89*i + 9639/178*j + 51/2*k, m - Q(x) = 191/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 476/89
+	 adding 2 log 17
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 611/89
+	 adding 0 log 7
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 596/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 431/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2520/89*i + 5292/89*j + 28*k, m - Q(x) = 116/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3105/89*i + 13041/178*j + 69/2*k, m - Q(x) = 260/89
+	 adding 0 log 5
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 515/89
+	 adding 0 log 5
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 620/89
+	 adding 0 log 5
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 575/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 380/89
+	 adding 0 log 5
+
+	 mu_minus = -3330/89*i + 6993/89*j + 37*k, m - Q(x) = 35/89
+	 adding 2 log 5
+
+	 mu_minus = -3915/89*i + 16443/178*j + 87/2*k, m - Q(x) = 323/89
+	 adding 0 log 7
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 548/89
+	 adding 1/2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 1/2 log 7
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 726/89
+	 adding 0 log 2
+
+	 mu_minus = -90/89*i + 189/89*j + k, m - Q(x) = 501/89
+	 adding 0 log 3
+
+	 mu_minus = -135/89*i + 567/178*j + 3/2*k, m - Q(x) = 126/89
+	 adding 2 log 2
+
+	 mu_minus = -675/89*i + 2835/178*j + 15/2*k, m - Q(x) = 213/89
+	 adding 0 log 3
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 558/89
+	 adding 0 log 2
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 753/89
+	 adding 0 log 3
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 798/89
+	 adding 0 log 2
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 693/89
+	 adding 2 log 11
+
+	 mu_minus = -900/89*i + 1890/89*j + 10*k, m - Q(x) = 438/89
+	 adding 0 log 2
+
+	 mu_minus = -945/89*i + 3969/178*j + 21/2*k, m - Q(x) = 33/89
+	 adding 0 log 3
+
+	 mu_minus = -1485/89*i + 6237/178*j + 33/2*k, m - Q(x) = 294/89
+	 adding 0 log 2
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 609/89
+	 adding 4 log 3
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 774/89
+	 adding 0 log 2
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 789/89
+	 adding 0 log 3
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 654/89
+	 adding 0 log 2
+
+	 mu_minus = -1710/89*i + 3591/89*j + 19*k, m - Q(x) = 369/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2295/89*i + 9639/178*j + 51/2*k, m - Q(x) = 369/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 654/89
+	 adding 0 log 2
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 789/89
+	 adding 0 log 3
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 774/89
+	 adding 0 log 2
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 609/89
+	 adding 4 log 3
+
+	 mu_minus = -2520/89*i + 5292/89*j + 28*k, m - Q(x) = 294/89
+	 adding 0 log 2
+
+	 mu_minus = -3060/89*i + 6426/89*j + 34*k, m - Q(x) = 33/89
+	 adding 0 log 3
+
+	 mu_minus = -3105/89*i + 13041/178*j + 69/2*k, m - Q(x) = 438/89
+	 adding 0 log 2
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 693/89
+	 adding 2 log 11
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 798/89
+	 adding 0 log 2
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 753/89
+	 adding 0 log 3
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 558/89
+	 adding 0 log 2
+
+	 mu_minus = -3330/89*i + 6993/89*j + 37*k, m - Q(x) = 213/89
+	 adding 0 log 3
+
+	 mu_minus = -3870/89*i + 8127/89*j + 43*k, m - Q(x) = 126/89
+	 adding 2 log 2
+
+	 mu_minus = -3915/89*i + 16443/178*j + 87/2*k, m - Q(x) = 501/89
+	 adding 0 log 3
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 726/89
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 7
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = -45/89*i + 189/178*j + 1/2*k, m - Q(x) = 1794/89
+	 adding 0 log 2
+
+	 mu_minus = -90/89*i + 189/89*j + k, m - Q(x) = 1569/89
+	 adding 1/2 log 7
+
+	 mu_minus = -135/89*i + 567/178*j + 3/2*k, m - Q(x) = 1194/89
+	 adding 0 log 2
+
+	 mu_minus = -180/89*i + 378/89*j + 2*k, m - Q(x) = 669/89
+	 adding 1/2 log 7
+
+	 mu_minus = -585/89*i + 2457/178*j + 13/2*k, m - Q(x) = 141/89
+	 adding 0 log 3
+
+	 mu_minus = -630/89*i + 1323/89*j + 7*k, m - Q(x) = 786/89
+	 adding 0 log 2
+
+	 mu_minus = -675/89*i + 2835/178*j + 15/2*k, m - Q(x) = 1281/89
+	 adding 2 log 61
+
+	 mu_minus = -720/89*i + 1512/89*j + 8*k, m - Q(x) = 1626/89
+	 adding 0 log 2
+
+	 mu_minus = -765/89*i + 3213/178*j + 17/2*k, m - Q(x) = 1821/89
+	 adding 1/2 log 7
+
+	 mu_minus = -810/89*i + 1701/89*j + 9*k, m - Q(x) = 1866/89
+	 adding 0 log 2
+
+	 mu_minus = -855/89*i + 3591/178*j + 19/2*k, m - Q(x) = 1761/89
+	 adding 0 log 3
+
+	 mu_minus = -900/89*i + 1890/89*j + 10*k, m - Q(x) = 1506/89
+	 adding 0 log 2
+
+	 mu_minus = -945/89*i + 3969/178*j + 21/2*k, m - Q(x) = 1101/89
+	 adding 1/2 log 7
+
+	 mu_minus = -990/89*i + 2079/89*j + 11*k, m - Q(x) = 546/89
+	 adding 0 log 2
+
+	 mu_minus = -1395/89*i + 5859/178*j + 31/2*k, m - Q(x) = 282/89
+	 adding 0 log 2
+
+	 mu_minus = -1440/89*i + 3024/89*j + 16*k, m - Q(x) = 897/89
+	 adding 0 log 3
+
+	 mu_minus = -1485/89*i + 6237/178*j + 33/2*k, m - Q(x) = 1362/89
+	 adding 0 log 2
+
+	 mu_minus = -1530/89*i + 3213/89*j + 17*k, m - Q(x) = 1677/89
+	 adding 0 log 7
+
+	 mu_minus = -1575/89*i + 6615/178*j + 35/2*k, m - Q(x) = 1842/89
+	 adding 0 log 2
+
+	 mu_minus = -1620/89*i + 3402/89*j + 18*k, m - Q(x) = 1857/89
+	 adding 1/2 log 7
+
+	 mu_minus = -1665/89*i + 6993/178*j + 37/2*k, m - Q(x) = 1722/89
+	 adding 4 log 2
+
+	 mu_minus = -1710/89*i + 3591/89*j + 19*k, m - Q(x) = 1437/89
+	 adding 0 log 3
+
+	 mu_minus = -1755/89*i + 7371/178*j + 39/2*k, m - Q(x) = 1002/89
+	 adding 0 log 2
+
+	 mu_minus = -1800/89*i + 3780/89*j + 20*k, m - Q(x) = 417/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2205/89*i + 9261/178*j + 49/2*k, m - Q(x) = 417/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2250/89*i + 4725/89*j + 25*k, m - Q(x) = 1002/89
+	 adding 0 log 2
+
+	 mu_minus = -2295/89*i + 9639/178*j + 51/2*k, m - Q(x) = 1437/89
+	 adding 0 log 3
+
+	 mu_minus = -2340/89*i + 4914/89*j + 26*k, m - Q(x) = 1722/89
+	 adding 4 log 2
+
+	 mu_minus = -2385/89*i + 10017/178*j + 53/2*k, m - Q(x) = 1857/89
+	 adding 1/2 log 7
+
+	 mu_minus = -2430/89*i + 5103/89*j + 27*k, m - Q(x) = 1842/89
+	 adding 0 log 2
+
+	 mu_minus = -2475/89*i + 10395/178*j + 55/2*k, m - Q(x) = 1677/89
+	 adding 0 log 7
+
+	 mu_minus = -2520/89*i + 5292/89*j + 28*k, m - Q(x) = 1362/89
+	 adding 0 log 2
+
+	 mu_minus = -2565/89*i + 10773/178*j + 57/2*k, m - Q(x) = 897/89
+	 adding 0 log 3
+
+	 mu_minus = -2610/89*i + 5481/89*j + 29*k, m - Q(x) = 282/89
+	 adding 0 log 2
+
+	 mu_minus = -3015/89*i + 12663/178*j + 67/2*k, m - Q(x) = 546/89
+	 adding 0 log 2
+
+	 mu_minus = -3060/89*i + 6426/89*j + 34*k, m - Q(x) = 1101/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3105/89*i + 13041/178*j + 69/2*k, m - Q(x) = 1506/89
+	 adding 0 log 2
+
+	 mu_minus = -3150/89*i + 6615/89*j + 35*k, m - Q(x) = 1761/89
+	 adding 0 log 3
+
+	 mu_minus = -3195/89*i + 13419/178*j + 71/2*k, m - Q(x) = 1866/89
+	 adding 0 log 2
+
+	 mu_minus = -3240/89*i + 6804/89*j + 36*k, m - Q(x) = 1821/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3285/89*i + 13797/178*j + 73/2*k, m - Q(x) = 1626/89
+	 adding 0 log 2
+
+	 mu_minus = -3330/89*i + 6993/89*j + 37*k, m - Q(x) = 1281/89
+	 adding 2 log 61
+
+	 mu_minus = -3375/89*i + 14175/178*j + 75/2*k, m - Q(x) = 786/89
+	 adding 0 log 2
+
+	 mu_minus = -3420/89*i + 7182/89*j + 38*k, m - Q(x) = 141/89
+	 adding 0 log 3
+
+	 mu_minus = -3825/89*i + 16065/178*j + 85/2*k, m - Q(x) = 669/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3870/89*i + 8127/89*j + 43*k, m - Q(x) = 1194/89
+	 adding 0 log 2
+
+	 mu_minus = -3915/89*i + 16443/178*j + 87/2*k, m - Q(x) = 1569/89
+	 adding 1/2 log 7
+
+	 mu_minus = -3960/89*i + 8316/89*j + 44*k, m - Q(x) = 1794/89
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<89, 1>,
+<5, 2>
+]
+the denominator is
+[
+<17, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>,
+<11, 2>
+]
+the denominator is
+[
+<17, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1>,
+<61, 2>
+]
+the denominator is
+[
+<17, 4>
+]
+====================================================
+The discriminant is -427 with class number 1 and embedding 13*i - 6*k
+Kappa_eta of 7/4
+	m - Q(x) = 91/61
+	adding 0 Log 3
+	m - Q(x) = 63/61
+	adding 5/2 Log 3
+	m - Q(x) = 105/61
+	adding 2 Log 5
+	m - Q(x) = 21/61
+	adding 2 Log 7
+	m - Q(x) = 21/61
+	adding 2 Log 7
+	m - Q(x) = 105/61
+	adding 2 Log 5
+	m - Q(x) = 63/61
+	adding 5/2 Log 3
+	m - Q(x) = 91/61
+	adding 0 Log 3
+Kappa_0 of 1
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 1 log 3
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 54/61
+	 adding 2 log 2
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 33/61
+	 adding 2 log 11
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 33/61
+	 adding 2 log 11
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 54/61
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 10/61
+	 adding 0 log 2
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 59/61
+	 adding 1 log 3
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 115/61
+	 adding 0 log 3
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 94/61
+	 adding 0 log 2
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 94/61
+	 adding 0 log 2
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 115/61
+	 adding 0 log 3
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 59/61
+	 adding 1 log 3
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 10/61
+	 adding 0 log 2
+Kappa_0 of 3
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 2 log 7
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 71/61
+	 adding 0 log 3
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 120/61
+	 adding 0 log 2
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 176/61
+	 adding 0 log 3
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 8/61
+	 adding 0 log 2
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 155/61
+	 adding 0 log 3
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 155/61
+	 adding 0 log 3
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 8/61
+	 adding 0 log 2
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 176/61
+	 adding 0 log 3
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 120/61
+	 adding 0 log 2
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 71/61
+	 adding 0 log 3
+Kappa_0 of 5
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 193/61
+	 adding 0 log 3
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 242/61
+	 adding 0 log 2
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 298/61
+	 adding 0 log 2
+
+	 mu_minus = -4680/61*i + 3380/61*k, m - Q(x) = 53/61
+	 adding 0 log 3
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 130/61
+	 adding 0 log 2
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 277/61
+	 adding 0 log 3
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 277/61
+	 adding 0 log 3
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 130/61
+	 adding 0 log 2
+
+	 mu_minus = -9594/61*i + 6929/61*k, m - Q(x) = 53/61
+	 adding 0 log 3
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 298/61
+	 adding 0 log 2
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 242/61
+	 adding 0 log 2
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 193/61
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -702/61*i + 507/61*k, m - Q(x) = 23/61
+	 adding 0 log 3
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 254/61
+	 adding 0 log 2
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 303/61
+	 adding 2 log 7
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 359/61
+	 adding 0 log 3
+
+	 mu_minus = -4680/61*i + 3380/61*k, m - Q(x) = 114/61
+	 adding 0 log 2
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 191/61
+	 adding 0 log 3
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 338/61
+	 adding 0 log 2
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 338/61
+	 adding 0 log 2
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 191/61
+	 adding 0 log 3
+
+	 mu_minus = -9594/61*i + 6929/61*k, m - Q(x) = 114/61
+	 adding 0 log 2
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 359/61
+	 adding 0 log 3
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 303/61
+	 adding 2 log 7
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 254/61
+	 adding 0 log 2
+
+	 mu_minus = -13572/61*i + 9802/61*k, m - Q(x) = 23/61
+	 adding 0 log 3
+Kappa_0 of 7
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 0 log 3
+
+	 mu_minus = -702/61*i + 507/61*k, m - Q(x) = 84/61
+	 adding 2 log 7
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 315/61
+	 adding 0 log 3
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 364/61
+	 adding 0 log 3
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 420/61
+	 adding 2 log 5
+
+	 mu_minus = -4680/61*i + 3380/61*k, m - Q(x) = 175/61
+	 adding 1/2 log 3
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 252/61
+	 adding 5/2 log 3
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 399/61
+	 adding 2 log 19
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 399/61
+	 adding 2 log 19
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 252/61
+	 adding 5/2 log 3
+
+	 mu_minus = -9594/61*i + 6929/61*k, m - Q(x) = 175/61
+	 adding 1/2 log 3
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 420/61
+	 adding 2 log 5
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 364/61
+	 adding 0 log 3
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 315/61
+	 adding 0 log 3
+
+	 mu_minus = -13572/61*i + 9802/61*k, m - Q(x) = 84/61
+	 adding 2 log 7
+Kappa_0 of 9
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 5 log 3
+
+	 mu_minus = -702/61*i + 507/61*k, m - Q(x) = 206/61
+	 adding 0 log 2
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 437/61
+	 adding 0 log 3
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 486/61
+	 adding 2 log 2
+
+	 mu_minus = -3276/61*i + 2366/61*k, m - Q(x) = 101/61
+	 adding 1 log 3
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 542/61
+	 adding 0 log 2
+
+	 mu_minus = -4680/61*i + 3380/61*k, m - Q(x) = 297/61
+	 adding 2 log 11
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 374/61
+	 adding 0 log 2
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 521/61
+	 adding 1 log 3
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 521/61
+	 adding 1 log 3
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 374/61
+	 adding 0 log 2
+
+	 mu_minus = -9594/61*i + 6929/61*k, m - Q(x) = 297/61
+	 adding 2 log 11
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 542/61
+	 adding 0 log 2
+
+	 mu_minus = -10998/61*i + 7943/61*k, m - Q(x) = 101/61
+	 adding 1 log 3
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 486/61
+	 adding 2 log 2
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 437/61
+	 adding 0 log 3
+
+	 mu_minus = -13572/61*i + 9802/61*k, m - Q(x) = 206/61
+	 adding 0 log 2
+Kappa_0 of 21
+
+	 Sgcd = 3
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 2 log 61
+
+	 mu_minus = -702/61*i + 507/61*k, m - Q(x) = 938/61
+	 adding 0 log 2
+
+	 mu_minus = -936/61*i + 676/61*k, m - Q(x) = 434/61
+	 adding 0 log 2
+
+	 mu_minus = -1638/61*i + 1183/61*k, m - Q(x) = 1169/61
+	 adding 0 log 3
+
+	 mu_minus = -2340/61*i + 1690/61*k, m - Q(x) = 1218/61
+	 adding 0 log 2
+
+	 mu_minus = -3042/61*i + 2197/61*k, m - Q(x) = 581/61
+	 adding 0 log 3
+
+	 mu_minus = -3276/61*i + 2366/61*k, m - Q(x) = 833/61
+	 adding 1 log 3
+
+	 mu_minus = -3978/61*i + 2873/61*k, m - Q(x) = 1274/61
+	 adding 0 log 2
+
+	 mu_minus = -4680/61*i + 3380/61*k, m - Q(x) = 1029/61
+	 adding 4 log 7
+
+	 mu_minus = -4914/61*i + 3549/61*k, m - Q(x) = 273/61
+	 adding 2 log 13
+
+	 mu_minus = -5382/61*i + 3887/61*k, m - Q(x) = 98/61
+	 adding 0 log 2
+
+	 mu_minus = -5616/61*i + 4056/61*k, m - Q(x) = 1106/61
+	 adding 0 log 2
+
+	 mu_minus = -6318/61*i + 4563/61*k, m - Q(x) = 1253/61
+	 adding 1 log 3
+
+	 mu_minus = -7020/61*i + 5070/61*k, m - Q(x) = 714/61
+	 adding 4 log 2
+
+	 mu_minus = -7254/61*i + 5239/61*k, m - Q(x) = 714/61
+	 adding 4 log 2
+
+	 mu_minus = -7956/61*i + 5746/61*k, m - Q(x) = 1253/61
+	 adding 1 log 3
+
+	 mu_minus = -8658/61*i + 6253/61*k, m - Q(x) = 1106/61
+	 adding 0 log 2
+
+	 mu_minus = -8892/61*i + 6422/61*k, m - Q(x) = 98/61
+	 adding 0 log 2
+
+	 mu_minus = -9360/61*i + 6760/61*k, m - Q(x) = 273/61
+	 adding 2 log 13
+
+	 mu_minus = -9594/61*i + 6929/61*k, m - Q(x) = 1029/61
+	 adding 4 log 7
+
+	 mu_minus = -10296/61*i + 7436/61*k, m - Q(x) = 1274/61
+	 adding 0 log 2
+
+	 mu_minus = -10998/61*i + 7943/61*k, m - Q(x) = 833/61
+	 adding 1 log 3
+
+	 mu_minus = -11232/61*i + 8112/61*k, m - Q(x) = 581/61
+	 adding 0 log 3
+
+	 mu_minus = -11934/61*i + 8619/61*k, m - Q(x) = 1218/61
+	 adding 0 log 2
+
+	 mu_minus = -12636/61*i + 9126/61*k, m - Q(x) = 1169/61
+	 adding 0 log 3
+
+	 mu_minus = -13338/61*i + 9633/61*k, m - Q(x) = 434/61
+	 adding 0 log 2
+
+	 mu_minus = -13572/61*i + 9802/61*k, m - Q(x) = 938/61
+	 adding 0 log 2
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<19, 2>
+]
+the denominator is
+[
+<3, 2>,
+<5, 2>,
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<2, 4>,
+<11, 2>
+]
+the denominator is
+[
+<3, 2>,
+<5, 2>,
+<7, 1>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<7, 1>,
+<13, 2>,
+<61, 1>
+]
+the denominator is
+[
+<3, 4>,
+<5, 4>
+]
+====================================================
+The discriminant is -483 with class number 1 and embedding 9*i - 2*k
+Kappa_eta of 7/4
+	m - Q(x) = 35/23
+	adding 2 Log 5
+	m - Q(x) = 35/23
+	adding 2 Log 5
+Kappa_0 of 1
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 1
+	 adding 2 log 23
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 2/23
+	 adding 2 log 2
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 2/23
+	 adding 2 log 2
+Kappa_0 of 2
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 2
+	 adding 0 log 2
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 25/23
+	 adding 1 log 3
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 25/23
+	 adding 1 log 3
+Kappa_0 of 3
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 3
+	 adding 0 log 3
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 48/23
+	 adding 1 log 7
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 48/23
+	 adding 1 log 7
+Kappa_0 of 5
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 5
+	 adding 0 log 3
+
+	 mu_minus = -18/23*i + 27/23*k, m - Q(x) = 31/23
+	 adding 0 log 3
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 94/23
+	 adding 0 log 2
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 94/23
+	 adding 0 log 2
+
+	 mu_minus = -396/23*i + 594/23*k, m - Q(x) = 31/23
+	 adding 0 log 3
+Kappa_0 of 6
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 6
+	 adding 0 log 2
+
+	 mu_minus = -18/23*i + 27/23*k, m - Q(x) = 54/23
+	 adding 0 log 2
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 117/23
+	 adding 0 log 3
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 117/23
+	 adding 0 log 3
+
+	 mu_minus = -396/23*i + 594/23*k, m - Q(x) = 54/23
+	 adding 0 log 2
+Kappa_0 of 7
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 7
+	 adding 4 log 7
+
+	 mu_minus = -18/23*i + 27/23*k, m - Q(x) = 77/23
+	 adding 4 log 7
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 140/23
+	 adding 2 log 5
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 140/23
+	 adding 2 log 5
+
+	 mu_minus = -396/23*i + 594/23*k, m - Q(x) = 77/23
+	 adding 4 log 7
+Kappa_0 of 9
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 9
+	 adding 2 log 23
+
+	 mu_minus = -18/23*i + 27/23*k, m - Q(x) = 123/23
+	 adding 4 log 3
+
+	 mu_minus = -180/23*i + 270/23*k, m - Q(x) = 18/23
+	 adding 2 log 2
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 186/23
+	 adding 0 log 2
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 186/23
+	 adding 0 log 2
+
+	 mu_minus = -234/23*i + 351/23*k, m - Q(x) = 18/23
+	 adding 2 log 2
+
+	 mu_minus = -396/23*i + 594/23*k, m - Q(x) = 123/23
+	 adding 4 log 3
+Kappa_0 of 21
+
+	 Sgcd = 1
+
+	 mu_minus = 0, m - Q(x) = 21
+	 adding 4 log 3
+
+	 mu_minus = -18/23*i + 27/23*k, m - Q(x) = 399/23
+	 adding 4 log 7
+
+	 mu_minus = -36/23*i + 54/23*k, m - Q(x) = 147/23
+	 adding 3 log 7
+
+	 mu_minus = -180/23*i + 270/23*k, m - Q(x) = 294/23
+	 adding 0 log 2
+
+	 mu_minus = -198/23*i + 297/23*k, m - Q(x) = 462/23
+	 adding 4 log 2
+
+	 mu_minus = -216/23*i + 324/23*k, m - Q(x) = 462/23
+	 adding 4 log 2
+
+	 mu_minus = -234/23*i + 351/23*k, m - Q(x) = 294/23
+	 adding 0 log 2
+
+	 mu_minus = -378/23*i + 567/23*k, m - Q(x) = 147/23
+	 adding 3 log 7
+
+	 mu_minus = -396/23*i + 594/23*k, m - Q(x) = 399/23
+	 adding 4 log 7
+For the divisor [ 1, 2, 3, 6, 7, 9 ]
+with weight [ -2, 4, 4, 4, 2, 2 ]
+the numerator is
+[
+<7, 3>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 6, 9 ]
+with weight [ 2/3, 7/3, 1, 1, 4/3 ]
+the numerator is
+[
+<23, 1>,
+<2, 4>
+]
+the denominator is
+[
+<5, 2>
+]
+--------------------------------------------------
+For the divisor [ 1, 2, 3, 5, 6, 9, 21 ]
+with weight [ -2/3, 2/3, 2, -2, 4, 2/3, 2 ]
+the numerator is
+[
+<2, 8>,
+<3, 1>,
+<7, 4>
+]
+the denominator is
+[
+<5, 4>
+]
