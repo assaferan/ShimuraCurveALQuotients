@@ -1,4 +1,4 @@
-a:=-1; b:=3; Eichler:=1;
+a:=-13; b:=6; Eichler:=1;
 NMax:=70;
 
 A<i,j,k>:=QuaternionAlgebra<Rationals()|a,b>;
@@ -6,6 +6,7 @@ D:=Discriminant(A);
 L:=AssociativeArray();
 DualL:=AssociativeArray();
 
+// (-1,3)
 if (D eq 6) and (Eichler eq 1) then
   divs := [[1,3]];
   wts := [[4,-6]];
@@ -1219,8 +1220,8 @@ SingularModuli:=procedure(disc)
   end for;
 end procedure;
 
-// for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
-for disc in [75,100] do
+for disc in [r: r in [1..2000]| (-r in Discs and ClassNos[-r] le 1)] do
+// for disc in [75,100] do
   SingularModuli(-disc);
 end for;
 

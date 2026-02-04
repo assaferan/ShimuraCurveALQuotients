@@ -8,7 +8,7 @@ end function;
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
     // assert IsSquarefree(N);
-    D0 := (D*N) div 2^Valuation(D,2);
+    D0 := (D*N) div 2^Valuation(D*N,2);
     M := 4*D0;
     g := Genus(Gamma0(M));
     return D0,M,g;
@@ -1460,7 +1460,7 @@ along with two different hauptmoduls.}
     E, n, n0, t, eta_quotients := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
     k := -Valuation(qExpansionAtoo(t,1));
    
-    if IsOdd(Xstar`D*Xstar`N) then
+    if IsOdd(Xstar`D) then
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
 
@@ -1493,7 +1493,7 @@ along with two different hauptmoduls.}
         all_ms := Reverse(Sort([m : m in Set(all_ms)]));
         
         while (not found_all) do
-            if IsOdd(Xstar`D*Xstar`N) then
+            if IsOdd(Xstar`D) then
                 vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
             end if;
             for infty in pts do
@@ -1538,7 +1538,7 @@ along with two different hauptmoduls.}
                         assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
                         T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
 
-                        if IsOdd(Xstar`D*Xstar`N) then
+                        if IsOdd(Xstar`D) then
                             assert m_idx le #all_ms;
                             m_choice := all_ms[m_idx];
                             vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
@@ -1605,10 +1605,12 @@ along with two different hauptmoduls.}
                         mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                         coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
 
-                        if IsOdd(Xstar`D*Xstar`N) then
+                        if IsOdd(Xstar`D) then
                             ds_0_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_0_oo, #relevant_ds + 1);
                             for i->d in relevant_ds_0_oo do
-                                ds_0_oo_to_ds[i, Index(relevant_ds, d)] := 1;
+                                col_ind := Index(relevant_ds, d);
+                                if col_ind eq 0 then continue; end if; // we need d to appear in the divisor
+                                ds_0_oo_to_ds[i,col_ind] := 1;
                             end for;
                             coeffs_0_oo := mat_0_oo*ds_0_oo_to_ds;
                             coeffs_trunc := VerticalJoin(ChangeRing(coeffs_trunc,Rationals()), coeffs_0_oo);
@@ -1623,7 +1625,7 @@ along with two different hauptmoduls.}
                         sol := Solution(coeffs_trunc, target_v);
                         
                         etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
-                        if IsOdd(Xstar`D*Xstar`N) then
+                        if IsOdd(Xstar`D) then
                             etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
                         end if;
                         // check divisor
@@ -1702,7 +1704,7 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
 {Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f.}
     foo := qExpansionAtoo(f,0);
     f0_D0 := qExpansionAt0(f,0);
-    D0 := Xstar`D div 2^Valuation(Xstar`D,2);
+    D0 := (Xstar`D * Xstar`N) div 2^Valuation(Xstar`D * Xstar`N,2);
     v := Valuation(f0_D0) div D0;
     coeffs_f0_D0 := [Coefficient(f0_D0,m*D0) : m in [v..-1]];
     R<q> := Parent(f0_D0);
