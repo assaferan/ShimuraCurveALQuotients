@@ -61,10 +61,12 @@ function find_t(M)
     AddConstraints(LP,Matrix(lhs[idx..idx]), Matrix(rhs[idx..idx]) : Rel := "le");
     AddConstraints(LP,Matrix(lhs[idx+1..idx+1]), Matrix(rhs[idx+1..idx+1]) : Rel := "ge");
     for n in [1..Ncols(lhs)] do
-        SetLowerBound(LP,n,-100);
+        SetLowerBound(LP,n,-1000);
     end for;
     SetObjectiveFunction(LP, objective); 
-    t := Solution(LP);
+    t, success := Solution(LP);
+    // making sure this is a feasible problem
+    assert success eq 0;
     return t, lhs, rhs, n_eq, n_ds;
 end function;
 

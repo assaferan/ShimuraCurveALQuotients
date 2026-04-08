@@ -129,9 +129,25 @@ function get_cm_pts(D,N,p, W, models, elliptic_pts, embeddings)
     ell_pts := [pt : pt in elliptic_pts[<D,N,W>] | IsPrime(p*Integers(NumberField(AbsolutePolynomial(L)))) where _, L := PointsOverSplittingField(pt)];
     cm_pts := [ChangeRing(pt,GF(p)) : pt in ell_pts];
     cm_pts := &cat[[*pt : pt in Points(BaseChange(cm_pt,GF(p^2)))*] : cm_pt in cm_pts];
-    A := 19/24;
-    B := 23/24;
-    C := 3/2;
+    if p mod 24 in [19,23] then
+        A := 19/24;
+        B := 23/24;
+        C := 3/2;
+    elif p mod 24 in [1,5] then
+        A := 1/24;
+        B := 5/24;
+        C := 1/2;
+    elif p mod 24 in [7,11] then
+        A := 7/24;
+        B := 11/24;
+        C := 1/2;
+    elif p mod 24 in [13,17] then
+        A := 13/24;
+        B := 17/24;
+        C := 3/2;
+    else
+        error "p should be an prime not dividing 6!";
+    end if;
     deg := p div 24;
     _<t> := PolynomialRing(GF(p^2));
     f := &+[ &*[GF(p^2) | (A+l)*(B+l)/(C+l) : l in [0..j-1]]/Factorial(j) *t^j : j in [0..deg]];
@@ -148,11 +164,13 @@ function get_cm_pts(D,N,p, W, models, elliptic_pts, embeddings)
     if not IsEmpty(additional_cm) then
         cm_pts cat:= additional_cm;
     end if;
+    cm_pts := [X!Eltseq(cm_pt) : cm_pt in cm_pts];
     return cm_pts;
 end function;
 
 
 // Disprove hyperellipticity using the special fiber of X_0(D, pN) at p
+// If returns true we know nothing, if returns false it is not hyperelliptic
 function special_fiber_method(D, N, p, W, models, elliptic_pts, embeddings)
     // At the moment only works for the case of X_0(6,p) with D = 6, N = 1, p = prime
     // This is the case [FH] refers to as Figure 2, where the 
