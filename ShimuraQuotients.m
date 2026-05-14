@@ -410,7 +410,6 @@ intrinsic NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> As
     return e;
 end intrinsic;
 
-/*
 intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
 {The number of the fixed points of w_m on X_0(D,N)}
     e := 0;
@@ -425,23 +424,6 @@ intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
         prod := &*[Integers() |
                     NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
         e +:= h*prod;
-    end for;
-    if (D eq 1) and (m eq 4) then
-        M := N div 4;
-        num_fixed_cusps := &+[Integers() | EulerPhi(GCD(d, M div d)) : d in Divisors(M)];
-        e +:= num_fixed_cusps;
-    end if;
-    return e;
-end intrinsic;
-*/
-
-intrinsic NumFixedPoints(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> RngIntElt
-{The number of the fixed points of w_m on X_0(D,N)}
-    e := 0;
-    if (m eq 1) then return Infinity(); end if;
-    cm_by_order := NumFixedPointsByCMOrder(D, N, m);
-    for k in Keys(cm_by_order) do
-        e +:= cm_by_order[k];
     end for;
     if (D eq 1) and (m eq 4) then
         M := N div 4;
