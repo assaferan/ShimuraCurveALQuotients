@@ -747,7 +747,7 @@ If returns false, also returns p, v such that point coutn over GF(p^v) proves no
             trace_frob_n := tps[v] - p*tps[v-2];
             num_pts := p^v  + 1 - trace_frob_n;
             if (num_pts gt 2*(1+p^v)) then
-                print "p, v = ", p, v;
+		vprint ShimuraQuotients, 2: "p, v = ", p, v;
                 return false, p, v;
             end if;
         end for;
