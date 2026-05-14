@@ -1199,6 +1199,72 @@ procedure UpdateIsoStatus(~c1, ~c2)
     end if;
 end procedure;
 
+intrinsic FindIsomorphicCurveProp4(X::ShimuraQuot, curves::SeqEnum, lut::Assoc) -> ShimuraQuot
+    {Find an isomorphic curve to X using Hasegawa Furomoto prop 4 if it exists. We only do this for the smaller level, because we will iterate through all curves, I guess.}
+        M := X`N;
+        W := X`W;
+        badcurve := false; //check all ALs belong to the right level
+        for w in W do
+            if w mod 2 eq 0 then
+                badcurve := true;
+            end if;
+        end for;
+        if badcurve then
+            return false;
+        end if;
+        D := X`D;
+        if IsEven(M) and GCD(2, M div 2) eq 1 then
+            N := 2*M;
+            gens := ALsToGens(W, N*D);
+            Include(~gens, 4);
+            WNs := AllALsFromGens(gens, N*D);
+            if <D,N,WNs> in Keys(lut) then 
+                curve2 := curves[lut[<D, N, WNs>]];
+                return curve2;
+            end if;
+        end if;
+        return false;
+end intrinsic;
+
+intrinsic FindIsomorphicCurveProp5(X::ShimuraQuot, curves::SeqEnum, lut::Assoc) -> ShimuraQuot
+    {Find an isomorphic curve to X using Hasegawa Furomoto prop 5 if it exists}
+    M := X`N;
+    D := X`D;
+    W := X`W;
+
+    function eps(Ni)
+        if (Ni eq 1 mod 3) or ((Ni mod 9 eq 0) and (Ni div 9) mod 9 eq 1) then
+            return 0;
+        else
+            return 1;
+        end if;
+    end function;
+
+    if M mod 9 eq 0 and GCD(9, M div 9) eq 1 then
+        gens := ALsToGens(W, M*D);
+
+        WNs := {};
+        for Ni in gens do
+            e:= eps(Ni);
+            if e ne 0 then
+                Include(~WNs, AtkinLehnerMul(Ni, 9, M*D));
+                WNs := AllALsFromGens(WNs, M*D);
+            else
+                Include(~WNs, Ni);
+                WNs := AllALsFromGens(WNs, M*D);
+            end if;
+        end for;
+        if WNs eq W then
+            return false;
+        end if;
+        if <D,M,WNs> in Keys(lut) then 
+            curve2 := curves[lut[<D, M, WNs>]];
+            return curve2;
+        end if;
+    end if;
+    return false;
+end intrinsic;
+
 
 intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
     {}
@@ -1207,59 +1273,21 @@ intrinsic UpdateByIsomorphisms(~curves::SeqEnum)
         c := curves[i];
         lut[<c`D, c`N, c`W>] := i;
     end for;
-
     for i in [1..#curves] do
         curve := curves[i];
-        M := curve`N;
-        WMs := curve`W;
-        badcurve := false; //check all ALs belong to the right level
-        for w in WMs do
-            if w mod 2 eq 0 then
-                badcurve := true;
-            end if;
-        end for;
-        if badcurve then
-            continue;
-        end if;
-        D := curve`D;
-        if IsEven(M) and GCD(2, M div 2) eq 1 then
-            N := 2*M;
-            WNs := Include(WMs, 4);
-            WNs := AllALsFromGens(WNs, N*D);
-            if <D,N,WNs> in Keys(lut) then 
-                curve2 := curves[lut[<D, N, WNs>]];
-                UpdateIsoStatus(~curve, ~curve2);
-            end if;
-        end if;
-	
-        function eps(Ni)
-            if (Ni eq 1 mod 3) or ((Ni mod 9 eq 0) and (Ni div 9) mod 9 eq 1) then
-                return 1;
-            else
-                return 0;
-            end if;
-        end function;
-
-        if M mod 9 eq 0 and GCD(9, M div 9) eq 1 then
-            WNs := {};
-            for Ni in WMs do
-                e:= eps(Ni);
-                if e ne 0 then
-                    Include(~WNs, AtkinLehnerMul(Ni, 9, N*D));
-                    WNs := AllALsFromGens(WNs, N*D);
-                else
-                    Include(~WNs, Ni);
-                    WNs := AllALsFromGens(WNs, N*D);
-                end if;
-            end for;
-            if <D,N,WNs> in Keys(lut) then 
-                curve2 := curves[lut[<D, N, WNs>]];
+        curve2 := FindIsomorphicCurveProp4(curve, curves, lut);
+        if Type(curve2) eq ShimuraQuot then
+            UpdateIsoStatus(~curve, ~curve2);
+        else
+            curve2 := FindIsomorphicCurveProp5(curve, curves, lut);
+            if Type(curve2) eq ShimuraQuot then
                 UpdateIsoStatus(~curve, ~curve2);
             end if;
         end if;
     end for;
-
 end intrinsic;
+
+
 // Although this is not a canonical model over Q,
 // it still yields a geometrical model over C,
 // so we can use the q-expansions to check
