@@ -184,7 +184,7 @@ intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEn
             id := X`CurveID;
             curves[id]`IsSubhyp := false;
             curves[id]`IsHyp := false;
-            curves[id]`TestInWhichProved := "FpAutomorphisms";
+            curves[id]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o", p);
         end if;
     end for;
 end intrinsic;
@@ -216,7 +216,7 @@ intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
             id := X`CurveID;
             curves[id]`IsSubhyp := false;
             curves[id]`IsHyp := false;
-            curves[id]`TestInWhichProved := "WeilPolynomialg3";
+            curves[id]`TestInWhichProved := Sprintf("WeilPolynomialg3 with p = %o", p);
         end if;
     end for;
 
@@ -280,7 +280,7 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
             u := Universe(poss_wps_at2[f]);
             if u!wp notin poss_wps_at2[f] then
                 vprint ShimuraQuotients, 2 : u!wp;
-                return false;
+                return false, 2;
             end if;
         end if;
     end if;
@@ -292,10 +292,10 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
         u:= Universe(possible_wps[g][p]);
         if u!wp notin possible_wps[g][p] then
             vprint ShimuraQuotients, 2 : u!wp;
-            return false;
+            return false, p;
         end if;
     end for;
-    return true;
+    return true, _;
 
 end intrinsic;
 
@@ -345,11 +345,11 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : 
         end if;
         if assigned c`IsSubhyp then continue; end if;
         if c`g notin genera then continue; end if;
-        b := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2);
+        b, p := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2);
         if not b then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
-            curves[i]`TestInWhichProved := "WeilPolynomial";
+            curves[i]`TestInWhichProved := Sprintf("WeilPolynomial with p = %o", p);
         end if;
     end for;
 end intrinsic;
@@ -372,8 +372,8 @@ intrinsic CheckTrigonalByDegeneracy(X::ShimuraQuot) -> BoolElt
 end intrinsic;
 
 intrinsic FilterByDegeneracyMorphism(~curves::SeqEnum)
-    {Check whether the degeneracy morphism X0(N) -> X0(N/4) induces a degree 3 map
-    X0(N)* -> X0(N/4)* to a genus 0 curve, proving the curve is trigonal (and therefore 
+{Check whether the degeneracy morphism X0(D,N) -> X0(D,N/4) induces a degree 3 map
+    X0(D,N)/W -> X0(D,N/4)/W to a genus 0 curve, proving the curve is trigonal (and therefore 
     not hyperelliptic).}
 
     for i->c in curves do
@@ -384,7 +384,7 @@ intrinsic FilterByDegeneracyMorphism(~curves::SeqEnum)
             if not b then //trigonal
                 curves[i]`IsSubhyp := false;
                 curves[i]`IsHyp := false;
-                curves[i]`TestInWhichProved := "DegeneracyMorphism";
+                curves[i]`TestInWhichProved := Sprintf("DegeneracyMorphism to X0(%o, %o)/W is trigonal", c`D, c`N div 4);
             end if;
         end if;
     end for;

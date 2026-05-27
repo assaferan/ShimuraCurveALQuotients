@@ -27,7 +27,6 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
 
         UpdateByGenus(~star_curves);
 
-
         FilterByTrace(~star_curves); // time : 2850.270
 
         VerifyHHTable2(star_curves);
@@ -57,7 +56,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         // downward closure - if covered by subhyperelliptic, then subhyperelliptic
         DownwardClosure(~curves);
 
-        // Using the fact that if w acts non-trivially ans has more than
+        // Using the fact that if w acts non-trivially and has more than
         // 4 fixed points on X, then X is non-hyperelliptic
         FilterByALFixedPointsOnQuotient(~curves);
 
