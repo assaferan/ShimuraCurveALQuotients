@@ -837,7 +837,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
     Ws := ALSubgroups(D*N);
     // !! TODO - Could reuse the data we already have
     Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
-    non_hyp := AssoicativeArray();
+    non_hyp := AssociativeArray();
     for i->N2 in N2s do
 	r := omega - Valuation(nfixed[i], 2);
         // Why is this line here ???
