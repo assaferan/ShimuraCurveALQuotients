@@ -15,3 +15,4 @@ unknowng4 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 4];
 unknowng5 := [c : c in curves | not assigned c`IsSubhyp and c`g eq 5];
 genera := {*  c`g : c in unknown*};
 generastar := {*  c`g : c in unknownstar*};
+unknowngbig := [c : c in curves | not assigned c`IsSubhyp and c`g gt 5];
