@@ -788,9 +788,9 @@ If it returns false, also returns d, fix where W_d has fix fixed-points on X is 
     ws := [d : d in Divisors(DN) | d notin X`W and (GCD(d, DN div d) eq 1)];
     for d in ws do
         fix := CountFixedPointsOnQuotient(d, X);
-        if IsEven(X`g) and fix gt 2 then
+        if IsEven(X`g) and fix ne 2 then
             return false, d, fix;
-        elif IsOdd(X`g) and fix gt 4 then
+        elif IsOdd(X`g) and fix notin {0,4} then
             return false, d, fix;
         end if;
     end for;
