@@ -666,7 +666,7 @@ intrinsic GetQuotientsAndGenera(curves) -> SeqEnum
             Append(~quots, quot);
         end for;
         if (i mod 100 eq 0) then
-            print "i = ", i, "/", #curves;
+	    vprint ShimuraQuotients, 1: "i = ", i, "/", #curves;
         end if;
     end for;
     return quots;
@@ -747,7 +747,7 @@ If returns false, also returns p, v such that point coutn over GF(p^v) proves no
             trace_frob_n := tps[v] - p*tps[v-2];
             num_pts := p^v  + 1 - trace_frob_n;
             if (num_pts gt 2*(1+p^v)) then
-                print "p, v = ", p, v;
+		vprint ShimuraQuotients, 2: "p, v = ", p, v;
                 return false, p, v;
             end if;
         end for;
@@ -811,7 +811,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
-        print "lc = ", lc;
+        vprint ShimuraQuotietns, 1 : "lc = ", lc;
     end if;
     end for;
 end intrinsic;
@@ -837,53 +837,25 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
     Ws := ALSubgroups(D*N);
     // !! TODO - Could reuse the data we already have
     Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
-    non_hyp := {};
+    non_hyp := AssociativeArray();
     for i->N2 in N2s do
 	r := omega - Valuation(nfixed[i], 2);
+        // Why is this line here ???
 	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
-/*
-	if (N2 eq 195) then
-	    print "N2 = ", 195;
-	    print "Ws = ", Ws;
-	end if;
-*/
 	for W in Ws do
 	    is_non_hyp := false;
 	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
 	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
-/*
-	    if (N2 eq 195) and ({6, 10, 26} subset W) then
-		print "N1s = ", N1s;
-	    end if;
-*/
 	    for N1 in N1s do
 		a := AssociativeArray();
 		for w in W do
 		    a[AtkinLehnerMul(N1, w,D*N)] := w;
 		end for;
-		/*
-		if (N2 eq 195) and ({6, 10, 26} subset W) then
-		    print "N1 = ", N1;
-		    for k in Keys(a) do
-			print "a[", k, "] = ", a[k];
-		    end for;
-		end if;
-*/
 		for w in W do
 		    N_prime := AtkinLehnerMul(N2, w, D*N);
-		    //if (N2 eq 195) and ({6, 10, 26} subset W) then
-			// print "w = ", w;
-			// print "N2 * w = ", N_prime;
-		    //end if;
 		    if IsDefined(a, N_prime) then
-			/*
-			print "N_prime = ", N_prime;
-			print "N_double_prime = ", a[N_prime];
-			print "N_triple_prime = ", w;
-			print "h(-4N_1) = ", ClassNumber(-4*N1);
-			print "h(-4N_2) = ", ClassNumber(-4*N2);
-		       */
-			Include(~non_hyp, W);
+			// Include(~non_hyp, W);
+		        non_hyp[W] := [N1, N2, N_prime];
 			Ws := [WW : WW in Ws | WW ne W]; 
 			is_non_hyp := true;
 			break;
@@ -912,7 +884,7 @@ intrinsic UpdateByGenus(~curves :: SeqEnum)
                     if (curves[cover]`g ge 2) then
                         curves[cover]`IsHyp := true;
                     end if;
-                    curves[cover]`TestInWhichProved := "HyperellipticALInvolution";
+                    curves[cover]`TestInWhichProved := Sprintf("HyperellipticALInvolution to curve #%o", i);
                 end for;
             end if;
         end if;
@@ -946,7 +918,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
     for lc->DN in DN_pairs do
     D, N := Explode(DN);
     Ws := TestComplicatedALFixedPointsOnQuotient(D, N);
-    for W in Ws do
+    for W in Keys(Ws) do
         if not IsDefined(lut, <D,N,W>) then
             continue;
         end if;
@@ -954,7 +926,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
         if (curves[lut[<D,N,W>]]`g ge 2) then
             curves[lut[<D,N,W>]]`IsHyp := false;
         end if;
-        curves[lut[<D,N,W>]]`TestInWhichProved := "ComplicatedALFixedPointsOnQuotient";
+        curves[lut[<D,N,W>]]`TestInWhichProved := Sprintf("ComplicatedALFixedPointsOnQuotient with N1 = %o, N2 = %o, Nprime = %o",Ws[W][1], Ws[W][2], Ws[W][3]);
     end for;
     if (lc mod 100 eq 0) then
         vprint ShimuraQuotients, 2: "lc = ", lc;
@@ -1315,6 +1287,7 @@ function qExpansionCheck(X)
     return IsHyperelliptic(qexps_V, prec);
 end function;
 
+// This one is not being used at the moment. Consider removing!
 procedure Filter_qExpansion(~curves)
     for i->X in curves do
         if not assigned X`IsSubhyp then
@@ -1345,22 +1318,24 @@ intrinsic IsStarCurve(X ::ShimuraQuot) -> BoolElt
 
 end intrinsic;
 
-
-intrinsic NumWeierstrassPoints(X :: ShimuraQuot, curves::SeqEnum) -> RngIntElt
-    {}
-    g := X`g;
+intrinsic NumWeierstrassPoints(X::ShimuraQuot, curves::SeqEnum) -> RngIntElt
+{The fixed points of Atkin-Lehners are Weierstrass points. This gives a lower bound on the number of Weierstrass points.}
     WPs := 0;
     for id in X`Covers do
         C := curves[id];
-        gq := C`g;
-        if gq eq Floor(g/2) then
-            continue;
-        else
-            ws := C`W diff X`W;
-            WPs +:= &+[NumFixedPoints(X`N, X`D, w) : w in ws]; 
-        end if;
+        ws := C`W diff X`W;
+        WPs +:= &+[NumFixedPoints(X`D, X`N, w) : w in ws]; 
     end for;
-    return WPs;
+    // we counted the number of fixed points of each AL on X0(D,N)
+    // On X this number has to be divided by the size of W
+    if #X`W eq 1 then
+        s := 0;
+    else
+        is_prime_power, two, s := IsPrimePower(#X`W);
+        assert is_prime_power and (two eq 2);
+    end if;
+    assert WPs mod 2^s eq 0;
+    return WPs div 2^s;
 end intrinsic;
 
 intrinsic FilterByWSPoints(~curves::SeqEnum)
