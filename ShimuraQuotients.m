@@ -1341,6 +1341,10 @@ intrinsic NumWeierstrassPoints(X::ShimuraQuot, curves::SeqEnum) -> RngIntElt
     return WPs div 2^s;
 end intrinsic;
 
+// This test is actually not useful, given TestALFixedPointsOnQuotient.
+// Indeed, if genus of the quotient is not floor(g/2),
+// it means that the AL involution has no fixed points.
+// Therefore we cannot hope to filter any new curves this way.
 intrinsic FilterByWSPoints(~curves::SeqEnum)
     {}
     for i->c in curves do
