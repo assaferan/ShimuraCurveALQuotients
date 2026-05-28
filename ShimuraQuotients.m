@@ -1319,10 +1319,13 @@ intrinsic IsStarCurve(X ::ShimuraQuot) -> BoolElt
 end intrinsic;
 
 intrinsic NumWeierstrassPoints(X::ShimuraQuot, curves::SeqEnum) -> RngIntElt
-{The fixed points of Atkin-Lehners are Weierstrass points. This gives a lower bound on the number of Weierstrass points.}
+{By Schoenberg's Theorem, the fixed points of Atkin-Lehners where the genus of the quotient is not g/2 are Weierstrass points. This gives a lower bound on the number of Weierstrass points.}
+    g := X`g;
     WPs := 0;
     for id in X`Covers do
         C := curves[id];
+        gq := C`g;
+        if gq eq Floor(g/2) then continue; end if;
         ws := C`W diff X`W;
         WPs +:= &+[NumFixedPoints(X`D, X`N, w) : w in ws]; 
     end for;
@@ -1338,10 +1341,14 @@ intrinsic NumWeierstrassPoints(X::ShimuraQuot, curves::SeqEnum) -> RngIntElt
     return WPs div 2^s;
 end intrinsic;
 
+// This test is actually not useful, given TestALFixedPointsOnQuotient.
+// Indeed, if genus of the quotient is not floor(g/2),
+// it means that the AL involution has no fixed points.
+// Therefore we cannot hope to filter any new curves this way.
 intrinsic FilterByWSPoints(~curves::SeqEnum)
     {}
     for i->c in curves do
-        if assigned curves[i]`IsSubhyp then continue; end if;
+	if assigned curves[i]`IsSubhyp then continue; end if;
         ws := NumWeierstrassPoints(c, curves);
         g := c`g;
         if ws gt 2*g + 2 then
