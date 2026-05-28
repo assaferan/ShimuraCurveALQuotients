@@ -326,7 +326,7 @@ function createpossiblepolys(genera : bd := 25)
                 possible_wps[g][p] := polys;
             elif p ne 2 then
                 polys := Set(HyperellipticWeilPolysAwayFromTwo(g));
-                possible_wps[g][p] := polys;
+                possible_wps[g][p] := polys; //this is independent of p
             end if;
         end for;
     end for;
