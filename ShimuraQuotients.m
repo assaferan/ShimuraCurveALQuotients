@@ -1324,6 +1324,7 @@ intrinsic NumWeierstrassPoints(X::ShimuraQuot, curves::SeqEnum) -> RngIntElt
     WPs := 0;
     for id in X`Covers do
         C := curves[id];
+        gq := C`g;
         if gq eq Floor(g/2) then continue; end if;
         ws := C`W diff X`W;
         WPs +:= &+[NumFixedPoints(X`D, X`N, w) : w in ws]; 
@@ -1343,7 +1344,7 @@ end intrinsic;
 intrinsic FilterByWSPoints(~curves::SeqEnum)
     {}
     for i->c in curves do
-        if assigned curves[i]`IsSubhyp then continue; end if;
+	if assigned curves[i]`IsSubhyp then continue; end if;
         ws := NumWeierstrassPoints(c, curves);
         g := c`g;
         if ws gt 2*g + 2 then
