@@ -64,18 +64,12 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         time UpdateCurves(~curves); // 13.750
         Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
         Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-
-
-        UpdateCurves(~curves);
-
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-        // Was actually never run!
-        FilterByWeilPolynomial(~curves);
-        // FilterByWeilPolynomial(~curves : genera := {3,4,5});
-
         UpdateCurves(~curves);
         Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-        FilterByDegeneracyMorphism(~curves);
+        time FilterByWeilPolynomial(~curves);
+        UpdateCurves(~curves);
+        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        time FilterByDegeneracyMorphism(~curves);
         UpdateCurves(~curves);
         Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
     end if;
