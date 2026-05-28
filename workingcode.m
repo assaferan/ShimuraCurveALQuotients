@@ -42,10 +42,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
         HHProposition1(~star_curves);
         VerifyHHProposition1(star_curves);
-        unknownstar := [ c : c in star_curves | not assigned c`IsSubhyp];
-        for p in PrimesUpTo(10) do
-            FilterStarCurvesByFpAutomorphisms(unknownstar, ~star_curves, p, 20 );
-        end for;
+        FilterStarCurvesByFpAutomorphisms(~star_curves, 10, 20);
 
         time curves := GetQuotientsAndGenera(star_curves); // 61.520
         // updating classification from the genera we computed

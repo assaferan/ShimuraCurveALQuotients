@@ -172,11 +172,13 @@ intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> Rng
 end intrinsic;
 
 intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum, B::RngIntElt, k::RngIntElt)
-    {Choose p leq B prime bound, if the curve X does not have Fp automorphisms, then update status in curves. Input should be starcurves.s}
+    {Choose p leq B prime bound, if the curve X does not have Fp automorphisms, then update status in curves. Input should be starcurves.}
     ps := PrimesUpTo(B);
     for p in ps do
-        goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
-        for i->X in goodredn do
+        for i->X in curves do
+	    if assigned X`IsSubhyp then continue; end if;
+            // Only works for good reduction primes
+            if (X`D*X`N) mod p eq 0 then continue; end if;
             vprint ShimuraQuotients, 2: "starting curve", i;
             g := X`g;
             b, sum := InvolutionCounter(X,p, k);
