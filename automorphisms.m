@@ -1,12 +1,11 @@
 import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, point_counts;
 
-function ComputePointsViaTrace(X, p, d)
-    //Compute points via trace formula on X(Fp^d) when d is between 1 and g
+intrinsic ComputePointsViaTrace(X::ShimuraQuot, p::RngIntElt, d::RngIntElt) -> RngIntElt
+    {Compute points via trace formula on X(Fp^d) }
     g := X`g;
     D := X`D;
     N := X`N;
     W := X`W;
-    // assert d le g;
     b, tpsd := GetCache(<D,N,2,p^d,W>, cached_traces);
     if not b then
         tpsd := TraceDNewALFixed(D, N, 2, p^d, W );
@@ -28,7 +27,7 @@ function ComputePointsViaTrace(X, p, d)
     num_points := p^d + 1 - trace_frob_n;
     num_points := Integers()!num_points;
     return num_points;
-end function;
+end intrinsic;
 
 
 intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
