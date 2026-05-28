@@ -801,7 +801,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
-        vprint ShimuraQuotietns, 1 : "lc = ", lc;
+        vprint ShimuraQuotients, 1 : "lc = ", lc;
     end if;
     end for;
 end intrinsic;

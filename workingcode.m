@@ -25,25 +25,25 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         // Find all pairs (D,N) satisfying the inequality of
         // Proposition 1.
         t0 := Realtime();
-        star_curves := FindPairs(r); // time : 1.980
+        star_curves := FindPairs(r); // time (lava, 05/28/26) : 1.570
         print "FindPairs took ", Realtime() - t0;
         // I added some code that just
         // focuses on the star quotients X_0^*(D,N)
         assert #star_curves eq 2342;
         t0 := Realtime();
-        UpdateGenera(~star_curves); // time: 12
+        UpdateGenera(~star_curves); // time (lava, 05/28/26) : 0.900
         print "UpdateGenera for star curves took ", Realtime() - t0;
         VerifyHHTable1(star_curves);
         UpdateByGenus(~star_curves);
         t0 := Realtime();
-        FilterByTrace(~star_curves); // time : 2850.270
+        FilterByTrace(~star_curves); // time (lava, 05/28/26) : 6124.790
         print "FilterByTrace for star curves took ", Realtime() - t0;
         Write("data/star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
         VerifyHHTable2(star_curves);
         HHProposition1(~star_curves);
         VerifyHHProposition1(star_curves);
         t0 := Realtime();
-        FilterStarCurvesByFpAutomorphisms(~star_curves, 10, 20);
+        FilterStarCurvesByFpAutomorphisms(~star_curves, 10, 20); // time (lava, 05/28/26) : 8919.220
         print "FilterStarCurvesByFpAutomorphisms took ", Realtime() - t0;
         // Create a list of all Atkin-Lehner quotients
         // compute their genera, and store the covering structure.
@@ -53,11 +53,11 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -
         assert #read_curves eq #star_curves;
         assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
         t0 := Realtime();
-        curves := GetQuotientsAndGenera(star_curves); // 61.520
+        curves := GetQuotientsAndGenera(star_curves); // time (lava, 05/28/26) : 131.360
         print "GetQuotientsAndGenera took ", Realtime() - t0;
         // updating classification from the genera we computed
         t0 := Realtime();
-        UpdateByGenus(~curves);
+        UpdateByGenus(~curves); // time (lava, 05/28/26) : 0.030
         print "UpdateByGenus took ", Realtime() - t0;
         UpdateCurves(~curves);
         Write("data/all_curves_after_genus.dat", Sprint(curves, "Magma") : Overwrite);
