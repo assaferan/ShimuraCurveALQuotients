@@ -728,7 +728,7 @@ end intrinsic;
 
 intrinsic CheckHeckeTrace(X::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
 {Returns false if X is not hyperelliptic, true if this fact cannot be determined from counting points and using a naive inequality.
-If returns false, also returns p, v such that point coutn over GF(p^v) proves non-hyperellipticity.}
+If returns false, also returns p, v such that point counts over GF(p^v) proves non-hyperellipticity.}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
