@@ -171,21 +171,22 @@ intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> Rng
     return true, sum;
 end intrinsic;
 
-intrinsic FilterStarCurvesByFpAutomorphisms(starcurves ::SeqEnum, ~curves::SeqEnum, p::RngIntElt, k::RngIntElt)
-    {Choose p, if the curve X does not have Fp automorphisms, then update status in curves}
-
-    goodredn := [x : x in starcurves |p notin PrimeFactors(x`D*x`N )];
-
-    for i->X in goodredn do
-        vprint ShimuraQuotients, 2: "starting curve", i;
-        g := X`g;
-        b, sum := InvolutionCounter(X,p, k);
-        if not b then
-            id := X`CurveID;
-            curves[id]`IsSubhyp := false;
-            curves[id]`IsHyp := false;
-            curves[id]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o", p);
-        end if;
+intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum, B::RngIntElt, k::RngIntElt)
+    {Choose p leq B prime bound, if the curve X does not have Fp automorphisms, then update status in curves. Input should be starcurves.s}
+    ps := PrimesUpTo(B);
+    for p in ps do
+        goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
+        for i->X in goodredn do
+            vprint ShimuraQuotients, 2: "starting curve", i;
+            g := X`g;
+            b, sum := InvolutionCounter(X,p, k);
+            if not b then
+                id := X`CurveID;
+                curves[id]`IsSubhyp := false;
+                curves[id]`IsHyp := false;
+                curves[id]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o, k = %o", p, k);
+            end if;
+        end for;
     end for;
 end intrinsic;
 
