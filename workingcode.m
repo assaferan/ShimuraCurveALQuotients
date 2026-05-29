@@ -12,10 +12,10 @@ procedure UpdateCurves(~curves)
 end procedure;
 
     // The different stages of filtering
-FILTER_STAGES := [ // <"FindPairs", FindPairs>,
+FILTER_STAGES := [* // <"FindPairs", FindPairs>,
 	    <"UpdateGenera", UpdateGenera>,
 	    // <"VerifyHHTable1", VerifyHHTable1>,
-	    <"UpdateByGenusStar",UpdateByGenus>,
+	    <"UpdateByGenusStar", UpdateByGenus>,
 	    <"FilterByTraceStar", FilterByTrace>,
 	    <"VerifyHHTable2", VerifyHHTable2>,
 	    <"HHProposition1", HHProposition1>,
@@ -38,7 +38,7 @@ FILTER_STAGES := [ // <"FindPairs", FindPairs>,
        	    <"UpdateCurves7", UpdateCurves>,
 	    <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
 	    <"UpdateCurves8", UpdateCurves>
-	 ];
+	 *];
 
 function compute_data(start_stage, stages)
 
@@ -83,7 +83,7 @@ function compute_data(start_stage, stages)
         curves := GetQuotientsAndGenera(curves);
         // time (lava, 05/28/26) : 131.360
         print "GetQuotientsAndGenera took ", Realtime() - t0;
-      end for;
+      end if;
 
       // run filtering stage
       run_stage(stage[1], stage[2], ~curves);
@@ -108,7 +108,7 @@ intrinsic GetHyperellipticCandidates(:recompute_data:=false,
 				     stages:=FILTER_STAGES) -> SeqEnum
 {.}
     if read_data then
-      fname := Sprintf("data/all_curves_after_%o.dat", stages[#stages]);
+      fname := Sprintf("data/all_curves_after_%o.dat", stages[#stages][1]);
       read_curves := eval Read(fname);
     end if;
 
