@@ -11,34 +11,35 @@ procedure UpdateCurves(~curves)
   DownwardClosure(~curves);
 end procedure;
 
-    // The different stages of filtering
-FILTER_STAGES := [* // <"FindPairs", FindPairs>,
-	    <"UpdateGenera", UpdateGenera>,
-	    // <"VerifyHHTable1", VerifyHHTable1>,
-	    <"UpdateByGenusStar", UpdateByGenus>,
-	    <"FilterByTraceStar", FilterByTrace>,
-	    <"VerifyHHTable2", VerifyHHTable2>,
-	    <"HHProposition1", HHProposition1>,
-	    <"VerifyHHProposition1", VerifyHHProposition1>,
-	    <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
-	   // <"GetQuotientsAndGenera", GetQuotientsAndGenera>,
-	    <"UpdateByGenus", UpdateByGenus>,
-	    <"UpdateCurves1", UpdateCurves>,
-	    <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
-	    <"UpdateCurves2", UpdateCurves>,
-	    <"Genus3CoversGenus2", Genus3CoversGenus2>,
-      	    <"UpdateCurves3", UpdateCurves>,
-            <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
-       	    <"UpdateCurves4", UpdateCurves>,
-	    <"FilterByComplicatedALFixedPointsOnQuotient", FilterByComplicatedALFixedPointsOnQuotient>,
-   	    <"UpdateCurves5", UpdateCurves>,
-	    <"FilterByTrace", FilterByTrace>,
-       	    <"UpdateCurves6", UpdateCurves>,
-            <"FilterByWeilPolynomial",FilterByWeilPolynomial>,
-       	    <"UpdateCurves7", UpdateCurves>,
-	    <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
-	    <"UpdateCurves8", UpdateCurves>
-	 *];
+// The different stages of filtering
+FILTER_STAGES := [*
+    // <"FindPairs", FindPairs>,
+    <"UpdateGenera", UpdateGenera>,
+    // <"VerifyHHTable1", VerifyHHTable1>,
+    <"UpdateByGenusStar", UpdateByGenus>,
+    <"FilterByTraceStar", FilterByTrace>,
+    // <"VerifyHHTable2", VerifyHHTable2>,
+    <"HHProposition1", HHProposition1>,
+    // <"VerifyHHProposition1", VerifyHHProposition1>,
+    <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
+    // <"GetQuotientsAndGenera", GetQuotientsAndGenera>,
+    <"UpdateByGenus", UpdateByGenus>,
+    <"UpdateCurves1", UpdateCurves>,
+    <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
+    <"UpdateCurves2", UpdateCurves>,
+    <"Genus3CoversGenus2", Genus3CoversGenus2>,
+    <"UpdateCurves3", UpdateCurves>,
+    <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
+    <"UpdateCurves4", UpdateCurves>,
+    <"FilterByComplicatedALFixedPointsOnQuotient", FilterByComplicatedALFixedPointsOnQuotient>,
+    <"UpdateCurves5", UpdateCurves>,
+    <"FilterByTrace", FilterByTrace>,
+    <"UpdateCurves6", UpdateCurves>,
+    <"FilterByWeilPolynomial",FilterByWeilPolynomial>,
+    <"UpdateCurves7", UpdateCurves>,
+    <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
+    <"UpdateCurves8", UpdateCurves>
+*];
 
 function compute_data(start_stage, stages)
 
