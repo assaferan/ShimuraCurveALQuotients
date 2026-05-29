@@ -831,8 +831,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
     for i->N2 in N2s do
 	r := omega - Valuation(nfixed[i], 2);
 	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
-    Ws := Ws_N2;
-	for W in Ws do
+	for W in Ws_N2 do
 	    is_non_hyp := false;
 	    N1s := [N1 : N1 in Divisors(D*N) | (N1 notin W) and (N1 ne N2) and GCD(N1, D*N div N1) eq 1];
 	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
