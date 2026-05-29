@@ -78,7 +78,7 @@ function compute_data(start_stage, stages)
       stage := stages[i];
       // between FilterByFpAutomorphisms and UpdateByGenus,
       // we need to generate all curves from the star curves
-      if (stage eq "UpdateByGenus") then
+      if (stage[1] eq "UpdateByGenus") then
 	t0 := Realtime();
         curves := GetQuotientsAndGenera(curves);
         // time (lava, 05/28/26) : 131.360
