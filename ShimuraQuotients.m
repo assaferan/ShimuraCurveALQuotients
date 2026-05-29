@@ -726,26 +726,16 @@ end intrinsic;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
-intrinsic CheckHeckeTrace(X ::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
+intrinsic CheckHeckeTrace(X::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
 {Returns false if X is not hyperelliptic, true if this fact cannot be determined from counting points and using a naive inequality.
-If returns false, also returns p, v such that point coutn over GF(p^v) proves non-hyperellipticity.}
+If returns false, also returns p, v such that point counts over GF(p^v) proves non-hyperellipticity.}
     assert X`g ge 3;
     ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
         v_max := Floor(Log(p,4*X`g^2));
-        tps := AssociativeArray([-1..v_max]);
-        tps[-1] := 0;
         for v in [1..v_max] do
-            tps[v] := TraceDNewALFixed(X`D, X`N, 2, p^v, X`W);
-        end for;
-        if (v_max gt 1) then
-            tps[0] := TraceDNewALFixed(X`D, X`N, 2, 1, X`W);
-            assert tps[0] eq X`g;
-        end if;
-        for v in [1..v_max] do
-            trace_frob_n := tps[v] - p*tps[v-2];
-            num_pts := p^v  + 1 - trace_frob_n;
+	    num_pts := ComputePointsViaTrace(X, p, v);
             if (num_pts gt 2*(1+p^v)) then
 		vprint ShimuraQuotients, 2: "p, v = ", p, v;
                 return false, p, v;
@@ -811,7 +801,7 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     end if;
     // lc +:= 1;
     if (lc mod 100 eq 0) then
-        vprint ShimuraQuotietns, 1 : "lc = ", lc;
+        vprint ShimuraQuotients, 1 : "lc = ", lc;
     end if;
     end for;
 end intrinsic;

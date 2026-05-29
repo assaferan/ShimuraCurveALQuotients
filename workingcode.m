@@ -11,83 +11,113 @@ procedure UpdateCurves(~curves)
   DownwardClosure(~curves);
 end procedure;
 
-intrinsic GetHyperellipticCandidates(:recompute_data:=false, read_data :=true) -> SeqEnum
-{.}
-    // SetDebugOnError(true);
-    // SetVerbose("ShimuraQuotients", 3);
+    // The different stages of filtering
+FILTER_STAGES := [* // <"FindPairs", FindPairs>,
+	    <"UpdateGenera", UpdateGenera>,
+	    // <"VerifyHHTable1", VerifyHHTable1>,
+	    <"UpdateByGenusStar", UpdateByGenus>,
+	    <"FilterByTraceStar", FilterByTrace>,
+	    <"VerifyHHTable2", VerifyHHTable2>,
+	    <"HHProposition1", HHProposition1>,
+	    <"VerifyHHProposition1", VerifyHHProposition1>,
+	    <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
+	   // <"GetQuotientsAndGenera", GetQuotientsAndGenera>,
+	    <"UpdateByGenus", UpdateByGenus>,
+	    <"UpdateCurves1", UpdateCurves>,
+	    <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
+	    <"UpdateCurves2", UpdateCurves>,
+	    <"Genus3CoversGenus2", Genus3CoversGenus2>,
+      	    <"UpdateCurves3", UpdateCurves>,
+            <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
+       	    <"UpdateCurves4", UpdateCurves>,
+	    <"FilterByComplicatedALFixedPointsOnQuotient", FilterByComplicatedALFixedPointsOnQuotient>,
+   	    <"UpdateCurves5", UpdateCurves>,
+	    <"FilterByTrace", FilterByTrace>,
+       	    <"UpdateCurves6", UpdateCurves>,
+            <"FilterByWeilPolynomial",FilterByWeilPolynomial>,
+       	    <"UpdateCurves7", UpdateCurves>,
+	    <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
+	    <"UpdateCurves8", UpdateCurves>
+	 *];
 
-    // Find the largest prime we need to consider for the
-    // inequality in Proposition 1.
+function compute_data(start_stage, stages)
 
-    if recompute_data then 
+    procedure run_stage(name, func, ~curves)
+      t0 := Realtime();
+      func(~curves);
+      print name, " took ", Realtime() - t0;
+      fname := Sprintf("data/curves_after_%o.dat", name);
+      Write(fname, Sprint(curves, "Magma") : Overwrite);
+      return;
+    end procedure;
+
+    // finding where to start
+    start := 1;
+    for i->stage in stages do
+      if stage[1] eq start_stage then
+        fname := Sprintf("data/curves_after_%o.dat", stage[1]);
+        curves := eval Read(fname);
+        start := i + 1;
+      end if;
+    end for;
+
+    if (start eq 1) then
+	// Find the largest prime we need to consider for the
+	// inequality in Proposition 1.
         r := GetLargestPrimeIndex();
         assert r eq 7;
         // Find all pairs (D,N) satisfying the inequality of
         // Proposition 1.
-        time star_curves := FindPairs(r); // time : 1.980
-        // I added some code that just
-        // focuses on the star quotients X_0^*(D,N)
-        assert #star_curves eq 2342;
-        time UpdateGenera(~star_curves); // time: 12
-        VerifyHHTable1(star_curves);
-        UpdateByGenus(~star_curves);
-        FilterByTrace(~star_curves); // time : 2850.270
-        VerifyHHTable2(star_curves);
-        // Create a list of all Atkin-Lehner quotients
-        // compute their genera, and store the covering structure.
-        // writing to a file, in case we would like to load it directly
-        Write("data/star_curves_point_count.dat", Sprint(star_curves, "Magma") : Overwrite);
-        read_curves := eval Read("data/star_curves_point_count.dat");
-        assert #read_curves eq #star_curves;
-        assert &and[(read_curves[j] eq star_curves[j]) : j in [1..#star_curves]];
-        HHProposition1(~star_curves);
-        VerifyHHProposition1(star_curves);
-        FilterStarCurvesByFpAutomorphisms(~star_curves, 10, 20);
-
-        time curves := GetQuotientsAndGenera(star_curves); // 61.520
-        // updating classification from the genera we computed
-        UpdateByGenus(~curves);
-        UpdateCurves(~curves);
-        // Using the fact that if w acts non-trivially and has more than
-        // 4 fixed points on X, then X is non-hyperelliptic
-        FilterByALFixedPointsOnQuotient(~curves);
-        UpdateCurves(~curves);
-        // if a genus 3 covers a genus 2 curve, then it is hyperelliptic
-        Genus3CoversGenus2(~curves);
-        UpdateCurves(~curves);
-        // Using Proposition 6 from [FH] adapted to the Shimura curve situation
-        time FilterByComplicatedALFixedPointsOnQuotient(~curves); // 64.840
-        UpdateCurves(~curves);
-        // Using trace of Hecke operators to count points and show more curves are
-        // non-hyperelliptic
-        time FilterByTrace(~curves);
-        time UpdateCurves(~curves); // 13.750
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-
-
-        UpdateCurves(~curves);
-
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-        // Was actually never run!
-        FilterByWeilPolynomial(~curves);
-        // FilterByWeilPolynomial(~curves : genera := {3,4,5});
-
-        UpdateCurves(~curves);
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
-        FilterByDegeneracyMorphism(~curves);
-        UpdateCurves(~curves);
-        Write("data/all_curves_progress.dat", Sprint(curves, "Magma") : Overwrite);
+        t0 := Realtime();
+        curves := FindPairs(r); // time (lava, 05/28/26) : 1.570
+        print "FindPairs took ", Realtime() - t0;
+        assert #curves eq 2342;
     end if;
 
+    for i := start to #stages do
+      stage := stages[i];
+      // between FilterByFpAutomorphisms and UpdateByGenus,
+      // we need to generate all curves from the star curves
+      if (stage[1] eq "UpdateByGenus") then
+	t0 := Realtime();
+        curves := GetQuotientsAndGenera(curves);
+        // time (lava, 05/28/26) : 131.360
+        print "GetQuotientsAndGenera took ", Realtime() - t0;
+      end if;
+
+      // run filtering stage
+      run_stage(stage[1], stage[2], ~curves);
+
+      // in certain cases, we add verifications
+      case stage[1]:
+        when "UpdateGenera":
+	  VerifyHHTable1(curves);
+        when "FilterByTrace":
+	  VerifyHHTable2(curves);
+        when "HHProposition1":
+    	  VerifyHHProposition1(curves);
+      end case;
+   end for;
+
+   return curves;
+end function;
+
+intrinsic GetHyperellipticCandidates(:recompute_data:=false,
+				     read_data:=true,
+				     start_stage:="",
+				     stages:=FILTER_STAGES) -> SeqEnum
+{.}
     if read_data then
-        read_curves := eval Read("data/all_curves_progress.dat");
-        if recompute_data then
-            assert #read_curves eq #curves;
-            assert &and[(read_curves[j] eq curves[j]) : j in [1..#curves]];
-        else
-            curves := read_curves;
-        end if;
+      fname := Sprintf("data/all_curves_after_%o.dat", stages[#stages][1]);
+      read_curves := eval Read(fname);
+    end if;
+
+    if recompute_data then
+      curves := compute_data(start_stage, stages);
+      assert #read_curves eq #curves;
+      assert &and[(read_curves[j] eq curves[j]) : j in [1..#curves]];
+    else
+      curves := read_curves;
     end if;
 
     return curves;
