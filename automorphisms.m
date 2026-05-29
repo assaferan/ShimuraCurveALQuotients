@@ -1,7 +1,7 @@
 import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, point_counts;
 
 intrinsic ComputePointsViaTrace(X::ShimuraQuot, p::RngIntElt, d::RngIntElt) -> RngIntElt
-    {Compute points via trace formula on X(Fp^d) }
+    {Compute points via trace formula on X(Fp^d) (this is better if d < g) }
     g := X`g;
     D := X`D;
     N := X`N;
@@ -31,7 +31,7 @@ end intrinsic;
 
 
 intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
-    {Count the number of points X(F_p^d)}
+    {Count the number of points X(F_p^d) this extrapolates the trace for d >g }
     D := X`D;
     N := X`N;
     W := X`W;

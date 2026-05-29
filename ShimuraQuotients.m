@@ -820,7 +820,7 @@ end intrinsic;
 // returns the W for which X_0(D,N)/W is not hyperelliptic
 intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> SetEnum
     {}
-    cond_2 := [N2 : N2 in Divisors(N) | ClassNumber(-4*N2) mod 3 eq 0];
+    cond_2 := [N2 : N2 in Divisors(D*N) | ClassNumber(-4*N2) mod 3 eq 0 and GCD(N2, D*N div N2) eq 1];
     // print "cond_2 = ", cond_2;
     cond_1 := [N2 : N2 in cond_2 | (N2 mod 4 ne 3) or
 				   ((N2 mod 8 eq 3) and IsEven(N)) or
@@ -842,9 +842,9 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 	r := omega - Valuation(nfixed[i], 2);
         // Why is this line here ???
 	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
-	for W in Ws do
+	for W in Ws_N2 do
 	    is_non_hyp := false;
-	    N1s := [N1 : N1 in Divisors(N) | (N1 notin W) and (N1 ne N2)];
+	    N1s := [N1 : N1 in Divisors(D*N) | (N1 notin W) and (N1 ne N2) and GCD(N1, D*N div N1) eq 1];
 	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
 	    for N1 in N1s do
 		a := AssociativeArray();
