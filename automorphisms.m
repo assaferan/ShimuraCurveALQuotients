@@ -170,7 +170,7 @@ intrinsic InvolutionCounter(X ::ShimuraQuot, p ::RngIntElt,k ::RngIntElt) -> Rng
     return true, sum;
 end intrinsic;
 
-intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum, B::RngIntElt, k::RngIntElt)
+intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum : B:=10, k:=20)
     {Choose p leq B prime bound, if the curve X does not have Fp automorphisms, then update status in curves. Input should be starcurves.}
     ps := PrimesUpTo(B);
     for p in ps do
