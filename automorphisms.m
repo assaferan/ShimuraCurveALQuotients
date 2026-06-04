@@ -182,10 +182,9 @@ intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum : B:=10, k:=20)
             g := X`g;
             b, sum := InvolutionCounter(X,p, k);
             if not b then
-                id := X`CurveID;
-                curves[id]`IsSubhyp := false;
-                curves[id]`IsHyp := false;
-                curves[id]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o, k = %o", p, k);
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+                curves[i]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o, k = %o", p, k);
             end if;
         end for;
     end for;
@@ -208,17 +207,14 @@ end intrinsic;
 intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
     {This is made redundant in small p by later data}
 
-    goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
-
-    for i->X in goodredn do
+    for i->X in curves do
+        if p in PrimeFactors(X`D*X`N) then continue; end if;
         vprint ShimuraQuotients, 2: "starting curve", i;
-        g := X`g;
         b := CheckWeilPolyg3(X,p);
         if not b then
-            id := X`CurveID;
-            curves[id]`IsSubhyp := false;
-            curves[id]`IsHyp := false;
-            curves[id]`TestInWhichProved := Sprintf("WeilPolynomialg3 with p = %o", p);
+            curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := Sprintf("WeilPolynomialg3 with p = %o", p);
         end if;
     end for;
 

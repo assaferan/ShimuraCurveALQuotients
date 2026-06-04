@@ -1,7 +1,8 @@
 // This small procedure is used to update
 // the curves after every filter by using
 // upward and downward closures, as well as isomorphisms
-procedure UpdateCurves(~curves)
+intrinsic UpdateCurves(~curves::SeqEnum)
+{Propagate hyperellipticity knowledge via isomorphisms and the coverage lattice.}
   UpdateByIsomorphisms(~curves);
   // upward closure - if X-->Y is dominant then gon(X) >= gon(Y).
   // [Poonen, A.1.(vii)]
@@ -9,7 +10,7 @@ procedure UpdateCurves(~curves)
   UpwardClosure(~curves);
   // downward closure - if covered by subhyperelliptic, then subhyperelliptic
   DownwardClosure(~curves);
-end procedure;
+end intrinsic;
 
 // The different stages of filtering
 FILTER_STAGES := [*
