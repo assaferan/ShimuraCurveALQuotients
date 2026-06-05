@@ -305,7 +305,7 @@ function LMFDBweilpolys(g,p)
     return possible_polys;
 end function;
 
-function createpossiblepolys(genera : bd := 25)
+function createpossiblepolys(genera, genus_bounds)
     possible_wps := AssociativeArray();
     poss_wps_at2 := AssociativeArray();
     //first do 2
@@ -318,7 +318,7 @@ function createpossiblepolys(genera : bd := 25)
     for g in genera do
         assert g notin [0,1,2];
         possible_wps[g] := AssociativeArray();
-        for p in PrimesUpTo(bd) do
+        for p in PrimesUpTo(genus_bounds[g]) do
             if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
                 polys := LMFDBweilpolys(g,p);
                 possible_wps[g][p] := polys;
@@ -333,10 +333,14 @@ function createpossiblepolys(genera : bd := 25)
 end function;
 
 
-intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : c in curves | not assigned c`IsSubhyp })
+intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genus_bounds := AssociativeArray(), genera := { c`g : c in curves | not assigned c`IsSubhyp })
     {Filter by constraints on weil polynomials coming from LMFDB}
-    // genera := { c`g : c in curves | not assigned c`IsSubhyp };
-    possible_wps, poss_wps_at2 := createpossiblepolys(genera :bd := bd);
+    // Build per-genus bound map: start with uniform bd, then apply genus_bounds overrides
+    bds := AssociativeArray();
+    for g in genera do
+        bds[g] := IsDefined(genus_bounds, g) select genus_bounds[g] else bd;
+    end for;
+    possible_wps, poss_wps_at2 := createpossiblepolys(genera, bds);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
@@ -350,6 +354,17 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : 
             curves[i]`TestInWhichProved := Sprintf("WeilPolynomial with p = %o", p);
         end if;
     end for;
+end intrinsic;
+
+
+intrinsic FilterByWeilPolynomialGenusScaled(~curves::SeqEnum)
+    {FilterByWeilPolynomial with prime bound 25 for g <= 6, decreasing by 3 per genus for g >= 7 (minimum 7).}
+    genera := { c`g : c in curves | not assigned c`IsSubhyp };
+    bds := AssociativeArray();
+    for g in genera do
+        bds[g] := g le 6 select 25 else Maximum(7, 25 - 3*(g - 6));
+    end for;
+    FilterByWeilPolynomial(~curves : genus_bounds := bds);
 end intrinsic;
 
 

@@ -36,7 +36,7 @@ FILTER_STAGES := [*
     <"UpdateCurves5", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
-    <"FilterByWeilPolynomial",FilterByWeilPolynomial>,
+    <"FilterByWeilPolynomial",FilterByWeilPolynomialGenusScaled>,
     <"UpdateCurves7", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>

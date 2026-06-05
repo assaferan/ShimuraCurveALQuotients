@@ -58,7 +58,7 @@ case stage:
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial":
-        FilterByWeilPolynomial(~subseq);
+        FilterByWeilPolynomialGenusScaled(~subseq);
     when "FilterByNonALInvolutions":
         FilterByNonALInvolutions(~subseq);
     else
