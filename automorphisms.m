@@ -335,6 +335,7 @@ end function;
 
 intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genus_bounds := AssociativeArray(), genera := { c`g : c in curves | not assigned c`IsSubhyp })
     {Filter by constraints on weil polynomials coming from LMFDB}
+    if IsEmpty(genera) then return; end if;
     // Build per-genus bound map: start with uniform bd, then apply genus_bounds overrides
     bds := AssociativeArray();
     for g in genera do
