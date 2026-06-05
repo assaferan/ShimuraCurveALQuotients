@@ -226,9 +226,9 @@ intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
     sum := GF(2)!0;
     for d in [1..2*g+1] do
         if d eq 1 then
-            pts := NumPointsFpd(X, p, d);
+            sum := NumPointsFpd(X, p, d);
         else
-            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
+            sum := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
         end if;
         sum +:=GF(2)!sum; 
     end for;
@@ -273,10 +273,10 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
     if g notin [3,4,5,6] then //first check at 2 by f-rank
         if 2 notin PrimeDivisors(X`D*X`N) then
             wp := WeilPolynomial(X,2);
-            wp := Reverse(Coefficients(wp));
             slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
             f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
             u := Universe(poss_wps_at2[f]);
+            wp := Reverse(Coefficients(wp));
             if u!wp notin poss_wps_at2[f] then
                 vprint ShimuraQuotients, 2 : u!wp;
                 return false, 2;
