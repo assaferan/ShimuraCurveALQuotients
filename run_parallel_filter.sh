@@ -3,17 +3,20 @@
 # using GNU parallel.
 #
 # Usage:
-#   ./run_parallel_filter.sh <stage> [num_workers] [data_dir]
+#   ./run_parallel_filter.sh <stage> [num_workers] [data_dir] [num_chunks]
 #
-# data_dir defaults to "data".  The output is written to
-# <data_dir>/curves_after_<stage>.dat and inputs are read from the same
-# directory.
+# num_workers  - number of Magma processes to run simultaneously (default: 8)
+# num_chunks   - number of pieces to split the curve list into (default: num_workers)
+#                Set num_chunks > num_workers to allow finer-grained checkpointing.
+# data_dir     - defaults to "data".  The output is written to
+#                <data_dir>/curves_after_<stage>.dat
 
 set -euo pipefail
 
 STAGE="${1:-FilterByTrace}"
 NUM_WORKERS="${2:-8}"
 DATA_DIR="${3:-data}"
+NUM_CHUNKS="${4:-${NUM_WORKERS}}"
 
 MAGMA_CMD="${MAGMA_CMD:-magma}"
 
@@ -69,10 +72,11 @@ mkdir -p "${CHUNKS_DIR}"
 
 echo "========================================"
 echo "Stage:    ${STAGE}"
-echo "Workers:  ${NUM_WORKERS}"
+echo "Workers:  ${NUM_WORKERS} (parallel jobs)"
+echo "Chunks:   ${NUM_CHUNKS} (data splits)"
 echo "Input:    ${INPUT_DAT}"
 echo "Output:   ${OUTPUT_DAT}"
-echo "Chunks:   ${CHUNKS_DIR}"
+echo "ChunkDir: ${CHUNKS_DIR}"
 echo "========================================"
 
 T_START=$(date +%s)
@@ -85,18 +89,18 @@ parallel \
     "${MAGMA_CMD}" \
         "input_dat:=${INPUT_DAT}" \
         "chunk:={}" \
-        "total_chunks:=${NUM_WORKERS}" \
+        "total_chunks:=${NUM_CHUNKS}" \
         "stage:=${STAGE}" \
-        "output_dat:=${CHUNKS_DIR}/chunk_{}_of_${NUM_WORKERS}.dat" \
+        "output_dat:=${CHUNKS_DIR}/chunk_{}_of_${NUM_CHUNKS}.dat" \
         parallel_filter_worker.m \
-    ::: $(seq 1 "${NUM_WORKERS}")
+    ::: $(seq 1 "${NUM_CHUNKS}")
 
 echo ""
 echo "All workers finished. Verifying chunk files..."
 
 MISSING=0
-for c in $(seq 1 "${NUM_WORKERS}"); do
-    CHUNK_FILE="${CHUNKS_DIR}/chunk_${c}_of_${NUM_WORKERS}.dat"
+for c in $(seq 1 "${NUM_CHUNKS}"); do
+    CHUNK_FILE="${CHUNKS_DIR}/chunk_${c}_of_${NUM_CHUNKS}.dat"
     if [ ! -f "${CHUNK_FILE}" ]; then
         echo "  ERROR: missing chunk file: ${CHUNK_FILE}" >&2
         MISSING=$((MISSING + 1))
@@ -107,9 +111,9 @@ if [ "${MISSING}" -gt 0 ]; then
     exit 1
 fi
 
-echo "All ${NUM_WORKERS} chunk files present. Merging..."
+echo "All ${NUM_CHUNKS} chunk files present. Merging..."
 
-python3 parallel_merge.py "${CHUNKS_DIR}" "${NUM_WORKERS}" "${OUTPUT_DAT}"
+python3 parallel_merge.py "${CHUNKS_DIR}" "${NUM_CHUNKS}" "${OUTPUT_DAT}"
 
 T_END=$(date +%s)
 ELAPSED=$((T_END - T_START))
