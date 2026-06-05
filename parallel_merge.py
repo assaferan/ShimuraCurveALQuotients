@@ -5,9 +5,8 @@
 #
 # Each chunk file is a Magma sequence literal:
 #   [ PowerStructure(ShimuraQuot) | CreateShimuraQuot(...), ..., CreateShimuraQuot(...) ]
-#
-# We strip the closing ] from all but the last chunk, and strip the
-# opening header from all but the first chunk, joining them with commas.
+# or empty:
+#   [ PowerStructure(ShimuraQuot) | ]
 
 import sys
 
@@ -21,21 +20,26 @@ for c in range(1, total_chunks + 1):
     chunks.append(open(path).read())
     print(f"  read chunk {c}: {path}")
 
-# First chunk: keep as-is except strip the trailing ']'
-first = chunks[0]
-last_bracket = first.rfind(']')
-body = first[:last_bracket].rstrip('\n')  # ends with *])
+def extract_elements(chunk):
+    """Return the elements string (between '| ' and the final ']'), or '' if empty."""
+    pipe = chunk.find('| ')
+    last = chunk.rfind(']')
+    if pipe == -1 or last == -1:
+        return ''
+    return chunk[pipe + 2:last].strip()
 
-# Middle + last chunks: skip the header line, strip trailing ']' (except for the last)
-for i, chunk in enumerate(chunks[1:], start=1):
-    after_header = chunk.split('\n', 1)[1]   # drop "[ PowerStructure(ShimuraQuot) |"
-    if i < total_chunks - 1:
-        # Not the final chunk: strip its trailing ']' too
-        last_bracket = after_header.rfind(']')
-        body += ',\n' + after_header[:last_bracket].rstrip('\n')
-    else:
-        # Final chunk: keep the trailing ']'
-        body += ',\n' + after_header
+header = chunks[0].split('\n', 1)[0]  # "[ PowerStructure(ShimuraQuot) |"
+
+parts = []
+for c in chunks:
+    e = extract_elements(c)
+    if e:
+        parts.append(e)
+
+if parts:
+    body = header + '\n' + ',\n'.join(parts) + ' ]'
+else:
+    body = header + ' ]'
 
 with open(output_dat, 'w') as f:
     f.write(body)
