@@ -62,13 +62,13 @@ run_seq() {
     echo ""
     echo "=== [sequential] ${stage} ==="
     if [ -n "${input_dat}" ]; then
-        "${MAGMA_CMD}" \
+        ${MAGMA_CMD} \
             "stage:=${stage}" \
             "input_dat:=${input_dat}" \
             "output_dat:=${output_dat}" \
             run_sequential_stage.m
     else
-        "${MAGMA_CMD}" \
+        ${MAGMA_CMD} \
             "stage:=${stage}" \
             "output_dat:=${output_dat}" \
             run_sequential_stage.m

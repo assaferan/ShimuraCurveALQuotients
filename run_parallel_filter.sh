@@ -86,7 +86,7 @@ parallel \
     --joblog "${CHUNKS_DIR}/joblog.txt" \
     --halt now,fail=1 \
     --eta \
-    "${MAGMA_CMD}" \
+    ${MAGMA_CMD} \
         "input_dat:=${INPUT_DAT}" \
         "chunk:={}" \
         "total_chunks:=${NUM_CHUNKS}" \
