@@ -85,7 +85,7 @@ parallel \
     --jobs "${NUM_WORKERS}" \
     --joblog "${CHUNKS_DIR}/joblog.txt" \
     --halt now,fail=1 \
-    --progress \
+    --eta \
     "${MAGMA_CMD}" \
         "input_dat:=${INPUT_DAT}" \
         "chunk:={}" \
