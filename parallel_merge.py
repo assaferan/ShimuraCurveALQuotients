@@ -21,12 +21,20 @@ for c in range(1, total_chunks + 1):
     print(f"  read chunk {c}: {path}")
 
 def extract_elements(chunk):
-    """Return the elements string (between '| ' and the final ']'), or '' if empty."""
-    pipe = chunk.find('| ')
+    """Return the elements string (between the header line and the final ']'), or '' if empty."""
+    # The header line ends with '|\n' — search for that to avoid matching '| '
+    # inside field values like { IntegerRing() | 1 }.
+    pipe_nl = chunk.find('|\n')
     last = chunk.rfind(']')
-    if pipe == -1 or last == -1:
+    if last == -1:
         return ''
-    return chunk[pipe + 2:last].strip()
+    if pipe_nl != -1:
+        return chunk[pipe_nl + 2:last].strip()
+    # Fallback for single-line format (e.g. empty sequence "[ PowerStructure(...) | ]")
+    pipe_sp = chunk.find('| ')
+    if pipe_sp == -1:
+        return ''
+    return chunk[pipe_sp + 2:last].strip()
 
 header = chunks[0].split('\n', 1)[0]  # "[ PowerStructure(ShimuraQuot) |"
 
