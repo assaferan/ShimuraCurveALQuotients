@@ -39,9 +39,6 @@ chunk_size := (n + total_chunks_i - 1) div total_chunks_i;
 start_idx  := (chunk_i - 1) * chunk_size + 1;
 end_idx    := Minimum(chunk_i * chunk_size, n);
 
-printf "Worker %o/%o: stage=%o, indices %o..%o of %o total\n",
-    chunk_i, total_chunks_i, stage, start_idx, end_idx, n;
-
 subseq := curves[start_idx .. end_idx];
 
 t0 := Realtime();
@@ -65,8 +62,6 @@ case stage:
         error Sprintf("Unknown or unsupported stage: %o", stage);
 end case;
 
-printf "Worker %o/%o: filter took %o s\n", chunk_i, total_chunks_i, Realtime() - t0;
-
 Write(output_dat, Sprint(subseq, "Magma") : Overwrite);
-printf "Worker %o/%o: wrote %o curves to %o\n", chunk_i, total_chunks_i, #subseq, output_dat;
+printf "Worker %o/%o [%o..%o]: %o curves, %o s\n", chunk_i, total_chunks_i, start_idx, end_idx, #subseq, Realtime() - t0;
 quit;

@@ -41,7 +41,7 @@ set -euo pipefail
 NUM_WORKERS="${1:-8}"
 DATA_DIR="${2:-data/par}"
 NUM_CHUNKS="${3:-${NUM_WORKERS}}"
-MAGMA_CMD="${MAGMA_CMD:-magma}"
+MAGMA_CMD="${MAGMA_CMD:-magma -b}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"
 
