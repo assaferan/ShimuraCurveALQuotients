@@ -225,14 +225,15 @@ intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
     g :=X`g;
     sum := GF(2)!0;
     for d in [1..2*g+1] do
+        if IsOdd(d) then continue; end if;
         if d eq 1 then
             pts := NumPointsFpd(X, p, d);
         else
             pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
         end if;
-        sum +:=GF(2)!pts; 
+        sum +:=modr2(pts); 
     end for;
-    if sum eq GF(2)!1 then
+    if GF(2)!sum eq GF(2)!1 then
         return false; //return false if not hyperelliptic
     else
         return true; //unclear if hyperelliptic or not
