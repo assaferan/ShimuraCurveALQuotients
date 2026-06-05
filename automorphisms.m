@@ -223,17 +223,21 @@ end intrinsic;
 intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
     {Check if #Ramification points defined over C(F_p^d) for d odd, d < 2g +2 is odd}
     g :=X`g;
-    sum := GF(2)!0;
+    sum := 0;
     for d in [1..2*g+1] do
-        if IsOdd(d) then continue; end if;
+        if IsEven(d) then continue; end if;
         if d eq 1 then
             pts := NumPointsFpd(X, p, d);
         else
-            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
+            r := Maximum(Remove(Divisors(d), Index(Divisors(d),d)));
+            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,r);
         end if;
-        sum +:=modr2(pts); 
+        // print "d is", d;
+        // print GF(2)!pts;
+        // if IsEven(d) then assert GF(2)!pts eq 0; end if;
+        sum +:=GF(2)!(pts); 
     end for;
-    if GF(2)!sum eq GF(2)!1 then
+    if sum eq GF(2)!1 then
         return false; //return false if not hyperelliptic
     else
         return true; //unclear if hyperelliptic or not
