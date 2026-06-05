@@ -3,10 +3,13 @@
 # but with all FilterBy* stages run in parallel across NUM_WORKERS Magma processes.
 #
 # Usage:
-#   ./run_pipeline.sh [num_workers] [data_dir]
+#   ./run_pipeline.sh [num_workers] [data_dir] [num_chunks]
 #
-# data_dir defaults to "data/par".  All intermediate and final .dat files are
-# written there, leaving the sequential pipeline's "data/" directory untouched.
+# num_workers - parallel Magma jobs at once (default: 8)
+# num_chunks  - pieces to split the curve list into (default: num_workers)
+# data_dir    - defaults to "data/par".  All intermediate and final .dat files
+#               are written there, leaving the sequential pipeline's "data/"
+#               directory untouched.
 #
 # Stages and their parallelisation:
 #
@@ -37,6 +40,7 @@ set -euo pipefail
 
 NUM_WORKERS="${1:-8}"
 DATA_DIR="${2:-data/par}"
+NUM_CHUNKS="${3:-${NUM_WORKERS}}"
 MAGMA_CMD="${MAGMA_CMD:-magma}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"
@@ -81,8 +85,8 @@ run_par() {
     fi
 
     echo ""
-    echo "=== [parallel x${NUM_WORKERS}] ${stage} ==="
-    MAGMA_CMD="${MAGMA_CMD}" ./run_parallel_filter.sh "${stage}" "${NUM_WORKERS}" "${DATA_DIR}"
+    echo "=== [parallel jobs=${NUM_WORKERS} chunks=${NUM_CHUNKS}] ${stage} ==="
+    MAGMA_CMD="${MAGMA_CMD}" ./run_parallel_filter.sh "${stage}" "${NUM_WORKERS}" "${DATA_DIR}" "${NUM_CHUNKS}"
 }
 
 # ── star-curve stages (2342 curves) ──────────────────────────────────────────
