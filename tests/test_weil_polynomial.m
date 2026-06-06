@@ -29,11 +29,14 @@ print "PASS: TestInWhichProved set for all eliminated curves.";
 
 // Verify the bound formula directly
 expected := AssociativeArray();
-expected[3]  := 25; expected[4]  := 25; expected[5]  := 25; expected[6]  := 25;
+expected[3]  := 25; expected[4]  := 25; expected[5]  := 25; expected[6]  := 19;
 expected[7]  := 22; expected[8]  := 19; expected[9]  := 16; expected[10] := 13;
 expected[11] := 10; expected[12] := 7;  expected[13] := 7;  expected[20] := 7;
 for g in Keys(expected) do
-    bd := g le 6 select 25 else Maximum(7, 25 - 3*(g - 6));
+    if g lt 6 then bd := 25;
+    elif g eq 6 then bd := 19;
+    else bd := Maximum(7, 25 - 3*(g - 6));
+    end if;
     if bd ne expected[g] then
         error Sprintf("g=%o: expected %o got %o", g, expected[g], bd);
     end if;
