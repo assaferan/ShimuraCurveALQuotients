@@ -369,10 +369,10 @@ intrinsic FilterByWeilPolynomialGenusScaled(~curves::SeqEnum)
     genera := { c`g : c in curves | not assigned c`IsSubhyp };
     bds := AssociativeArray();
     for g in genera do
-        if g lt 6 then
+        if g lt 5 then
             bds[g] := 25;
         else
-            bds[g] := Maximum(7, 24 - 3*(g - 5));
+            bds[g] := Maximum(7, 25 - 3*(g - 4));
         end if;
     end for;
     FilterByWeilPolynomial(~curves : genus_bounds := bds);
