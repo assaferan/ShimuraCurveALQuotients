@@ -365,14 +365,21 @@ end intrinsic;
 
 
 intrinsic FilterByWeilPolynomialGenusScaled(~curves::SeqEnum)
-    {FilterByWeilPolynomial with prime bound 25 for g <= 5, decreasing by 3 per genus for g >= 6 (minimum 7).}
+    {FilterByWeilPolynomial with per-genus prime bounds: g=3,4 -> 23, g=5,6 -> 19, g=7 -> 11, g=8 -> 7, g>=9 -> 5.}
     genera := { c`g : c in curves | not assigned c`IsSubhyp };
+    bound_by_genus := AssociativeArray();
+    bound_by_genus[3] := 23;
+    bound_by_genus[4] := 23;
+    bound_by_genus[5] := 19;
+    bound_by_genus[6] := 19;
+    bound_by_genus[7] := 11;
+    bound_by_genus[8] := 7;
     bds := AssociativeArray();
     for g in genera do
-        if g lt 5 then
-            bds[g] := 25;
+        if IsDefined(bound_by_genus, g) then
+            bds[g] := bound_by_genus[g];
         else
-            bds[g] := Maximum(7, 25 - 3*(g - 4));
+            bds[g] := 5;
         end if;
     end for;
     FilterByWeilPolynomial(~curves : genus_bounds := bds);

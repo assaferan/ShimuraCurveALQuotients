@@ -29,6 +29,7 @@ if not assigned stage then
     stage := "FilterByTrace";
 end if;
 
+SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
 SetVerbose("ShimuraQuotients", 0);
 
