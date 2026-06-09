@@ -51,6 +51,14 @@ tables (overrides the CLASS_GROUPS_DIR environment variable and the default).}
     StoreSet(CL_STORE, "dir", dir);
 end intrinsic;
 
+intrinsic ClassNumberDataMaxAbsDisc() -> RngIntElt
+{The exclusive upper bound on |d| covered by the precomputed class-group tables:
+file indices run 0..4095 and file k covers k*2^28 <= |d| < (k+1)*2^28, so |d| < 2^40.
+A discriminant of absolute value >= this bound is not in the tables and ClassNumberLU
+falls back to a direct computation.}
+    return 4096 * CL_FILE_SPAN;
+end intrinsic;
+
 // Congruence class <subdirectory/prefix, residue r, modulus m> of a negative
 // fundamental discriminant with |d0| = m0.
 function clResidue(m0)

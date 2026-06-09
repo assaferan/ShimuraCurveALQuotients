@@ -271,12 +271,38 @@ end intrinsic;
 
 
 
-intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2 ::Assoc) -> BoolElt
-    {Return false if not a hyperellitic Weil Poly at some prime p}
+intrinsic WeilClassNumberPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt
+{The largest integer b such that the Weil-polynomial trace formula at a prime p on a
+genus-g Atkin-Lehner quotient whose largest involution is Qmax only requests Hurwitz
+class numbers of |discriminant| <= 4*Qmax*p^g that lie within the precomputed
+class-group tables (|d| < 2^40), for all p <= b. Primes p <= b are therefore served
+entirely from the tables. Returns 0 if even p = 2 would exceed the tables.}
+    DB := ClassNumberDataMaxAbsDisc();
+    cap := DB div (4*Qmax);              // need b^g <= cap
+    if cap lt 1 then return 0; end if;
+    b := Iroot(cap, g);
+    while b ge 1 and 4*Qmax*b^g gt DB do b -:= 1; end while;   // correct any Iroot rounding
+    while 4*Qmax*(b+1)^g le DB do b +:= 1; end while;          // make maximal
+    return b;
+end intrinsic;
+
+// Largest integer prime bound used for curve c: the database-tight bound, optionally
+// lowered by a per-genus practical ceiling (to keep runtime reasonable at low genus,
+// where the tables would otherwise permit hundreds of primes).
+function EffectiveWeilPrimeBound(c, ceiling)
+    b := WeilClassNumberPrimeBound(Maximum(c`W), c`g);
+    if IsDefined(ceiling, c`g) and ceiling[c`g] lt b then
+        b := ceiling[c`g];
+    end if;
+    return b;
+end function;
+
+intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2 ::Assoc, bound::RngIntElt) -> BoolElt, RngIntElt
+    {Return false if not a hyperelliptic Weil Poly at some good prime p <= bound.}
     g := X`g;
     assert g in Keys(possible_wps);
     if g notin [3,4,5,6] then //first check at 2 by f-rank
-        if 2 notin PrimeDivisors(X`D*X`N) then
+        if (2 le bound) and (2 notin PrimeDivisors(X`D*X`N)) then
             wp := WeilPolynomial(X,2);
             slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
             f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
@@ -289,7 +315,7 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
         end if;
     end if;
 
-    primes := Keys(possible_wps[g]);
+    primes := Sort([p : p in Keys(possible_wps[g]) | p le bound]);
     for p in primes do
         if p in PrimeDivisors(X`D*X`N) then continue; end if;
         wp := Reverse(Coefficients(WeilPolynomial(X,p)));
@@ -324,13 +350,12 @@ function createpossiblepolys(genera, genus_bounds)
     for g in genera do
         assert g notin [0,1,2];
         possible_wps[g] := AssociativeArray();
+        away := Set(HyperellipticWeilPolysAwayFromTwo(g)); // independent of p, compute once
         for p in PrimesUpTo(genus_bounds[g]) do
             if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
-                polys := LMFDBweilpolys(g,p);
-                possible_wps[g][p] := polys;
+                possible_wps[g][p] := LMFDBweilpolys(g,p);
             elif p ne 2 then
-                polys := Set(HyperellipticWeilPolysAwayFromTwo(g));
-                possible_wps[g][p] := polys; //this is independent of p
+                possible_wps[g][p] := away;
             end if;
         end for;
     end for;
@@ -339,22 +364,34 @@ function createpossiblepolys(genera, genus_bounds)
 end function;
 
 
-intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genus_bounds := AssociativeArray(), genera := { c`g : c in curves | not assigned c`IsSubhyp })
-    {Filter by constraints on weil polynomials coming from LMFDB}
+intrinsic FilterByWeilPolynomial(~curves::SeqEnum : genera := { c`g : c in curves | not assigned c`IsSubhyp }, prime_ceiling := AssociativeArray())
+    {Filter by constraints on Weil polynomials coming from LMFDB. Each curve is checked
+    at every good prime up to its own bound: the largest prime keeping all trace-formula
+    class numbers inside the precomputed class-group tables (|d| < 2^40), optionally
+    further lowered by the per-genus practical ceiling prime_ceiling[g]. With no
+    prime_ceiling supplied a default ceiling is used (g=3,4->53, 5->37, 6->29, 7->23,
+    8->17; higher genera are bounded by the tables alone).}
     if IsEmpty(genera) then return; end if;
-    // Build per-genus bound map: start with uniform bd, then apply genus_bounds overrides
-    bds := AssociativeArray();
-    for g in genera do
-        bds[g] := IsDefined(genus_bounds, g) select genus_bounds[g] else bd;
+    if IsEmpty(Keys(prime_ceiling)) then
+        prime_ceiling[3] := 53; prime_ceiling[4] := 53; prime_ceiling[5] := 37;
+        prime_ceiling[6] := 29; prime_ceiling[7] := 23; prime_ceiling[8] := 17;
+    end if;
+    // Precompute possible Weil polynomials up to the largest per-curve bound per genus.
+    precompute_bd := AssociativeArray();
+    for g in genera do precompute_bd[g] := 0; end for;
+    for c in curves do
+        if assigned c`IsSubhyp or c`g notin genera then continue; end if;
+        eb := EffectiveWeilPrimeBound(c, prime_ceiling);
+        if eb gt precompute_bd[c`g] then precompute_bd[c`g] := eb; end if;
     end for;
-    possible_wps, poss_wps_at2 := createpossiblepolys(genera, bds);
+    possible_wps, poss_wps_at2 := createpossiblepolys(genera, precompute_bd);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
         end if;
         if assigned c`IsSubhyp then continue; end if;
         if c`g notin genera then continue; end if;
-        b, p := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2);
+        b, p := IsHypWeilPolynomial(c, possible_wps, poss_wps_at2, EffectiveWeilPrimeBound(c, prime_ceiling));
         if not b then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
@@ -365,24 +402,11 @@ end intrinsic;
 
 
 intrinsic FilterByWeilPolynomialGenusScaled(~curves::SeqEnum)
-    {FilterByWeilPolynomial with per-genus prime bounds: g=3,4 -> 23, g=5,6 -> 19, g=7 -> 11, g=8 -> 7, g>=9 -> 5.}
-    genera := { c`g : c in curves | not assigned c`IsSubhyp };
-    bound_by_genus := AssociativeArray();
-    bound_by_genus[3] := 23;
-    bound_by_genus[4] := 23;
-    bound_by_genus[5] := 19;
-    bound_by_genus[6] := 19;
-    bound_by_genus[7] := 11;
-    bound_by_genus[8] := 7;
-    bds := AssociativeArray();
-    for g in genera do
-        if IsDefined(bound_by_genus, g) then
-            bds[g] := bound_by_genus[g];
-        else
-            bds[g] := 5;
-        end if;
-    end for;
-    FilterByWeilPolynomial(~curves : genus_bounds := bds);
+    {Filter by Weil polynomials with tight per-curve prime bounds. Each curve uses every
+    good prime up to the largest value that keeps all trace-formula class numbers within
+    the precomputed class-group tables (|d| < 2^40), capped by per-genus practical
+    ceilings (g=3,4->53, 5->37, 6->29, 7->23, 8->17; higher genera tables-bounded).}
+    FilterByWeilPolynomial(~curves);
 end intrinsic;
 
 

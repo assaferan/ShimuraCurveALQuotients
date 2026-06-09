@@ -27,20 +27,17 @@ for c in curves do
 end for;
 print "PASS: TestInWhichProved set for all eliminated curves.";
 
-// Verify the bound formula directly
-expected := AssociativeArray();
-expected[3]  := 25; expected[4]  := 25; expected[5]  := 25; expected[6]  := 21;
-expected[7]  := 18; expected[8]  := 15; expected[9]  := 12; expected[10] := 9;
-expected[11] := 7;  expected[12] := 7;  expected[13] := 7;  expected[20] := 7;
-for g in Keys(expected) do
-    if g lt 6 then bd := 25;
-    else bd := Maximum(7, 24 - 3*(g - 5));
-    end if;
-    if bd ne expected[g] then
-        error Sprintf("g=%o: expected %o got %o", g, expected[g], bd);
-    end if;
+// Verify the per-curve database-tight prime bound: WeilClassNumberPrimeBound(Qmax, g)
+// is the largest b with 4*Qmax*b^g <= 2^40 (the range covered by the class-group tables).
+DB := ClassNumberDataMaxAbsDisc();
+for g in [3..10] do
+    for Qmax in [1, 2, 37, 1000, 14430, 2*10^6] do
+        b := WeilClassNumberPrimeBound(Qmax, g);
+        assert 4*Qmax*b^g le DB;          // bound stays within the tables
+        assert 4*Qmax*(b+1)^g gt DB;      // and is maximal
+    end for;
 end for;
-print "PASS: genus-bound formula correct.";
+print "PASS: WeilClassNumberPrimeBound is database-tight.";
 
 print "All tests passed.";
 quit;

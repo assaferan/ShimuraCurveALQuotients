@@ -51,7 +51,10 @@ procedure test_data_file()
     UpdateByIsomorphisms(~curves);
     UpwardClosure(~curves);
     DownwardClosure(~curves);
-    FilterByWeilPolynomial(~curves : genera := {3,4,5});
+    // Pin to the historical p<=25 bound that produced all_curves_progress.dat
+    // (production now uses tight per-curve bounds via FilterByWeilPolynomialGenusScaled).
+    ceil25 := AssociativeArray(); ceil25[3] := 25; ceil25[4] := 25; ceil25[5] := 25;
+    FilterByWeilPolynomial(~curves : genera := {3,4,5}, prime_ceiling := ceil25);
     UpdateByIsomorphisms(~curves);
     UpwardClosure(~curves);
     DownwardClosure(~curves);
