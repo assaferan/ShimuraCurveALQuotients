@@ -1,7 +1,8 @@
 // This small procedure is used to update
 // the curves after every filter by using
 // upward and downward closures, as well as isomorphisms
-procedure UpdateCurves(~curves)
+intrinsic UpdateCurves(~curves::SeqEnum)
+{Propagate hyperellipticity knowledge via isomorphisms and the coverage lattice.}
   UpdateByIsomorphisms(~curves);
   // upward closure - if X-->Y is dominant then gon(X) >= gon(Y).
   // [Poonen, A.1.(vii)]
@@ -9,7 +10,7 @@ procedure UpdateCurves(~curves)
   UpwardClosure(~curves);
   // downward closure - if covered by subhyperelliptic, then subhyperelliptic
   DownwardClosure(~curves);
-end procedure;
+end intrinsic;
 
 // The different stages of filtering
 FILTER_STAGES := [*
@@ -35,7 +36,7 @@ FILTER_STAGES := [*
     <"UpdateCurves5", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
-    <"FilterByWeilPolynomial",FilterByWeilPolynomial>,
+    <"FilterByWeilPolynomial",FilterByWeilPolynomialGenusScaled>,
     <"UpdateCurves7", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>
@@ -63,8 +64,9 @@ function compute_data(start_stage, stages)
     end for;
 
     if (start eq 1) then
-	// Find the largest prime we need to consider for the
-	// inequality in Proposition 1.
+        // Find the largest prime we need to consider for the
+        // inequality in Proposition 1.
+        // TODO: Make this configurable
         r := GetLargestPrimeIndex();
         assert r eq 7;
         // Find all pairs (D,N) satisfying the inequality of
@@ -80,7 +82,7 @@ function compute_data(start_stage, stages)
       // between FilterByFpAutomorphisms and UpdateByGenus,
       // we need to generate all curves from the star curves
       if (stage[1] eq "UpdateByGenus") then
-	t0 := Realtime();
+	      t0 := Realtime();
         curves := GetQuotientsAndGenera(curves);
         // time (lava, 05/28/26) : 131.360
         print "GetQuotientsAndGenera took ", Realtime() - t0;
@@ -92,11 +94,11 @@ function compute_data(start_stage, stages)
       // in certain cases, we add verifications
       case stage[1]:
         when "UpdateGenera":
-	  VerifyHHTable1(curves);
-        when "FilterByTrace":
-	  VerifyHHTable2(curves);
+	        VerifyHHTable1(curves);
+        when "FilterByTraceStar":
+	        VerifyHHTable2(curves);
         when "HHProposition1":
-    	  VerifyHHProposition1(curves);
+    	    VerifyHHProposition1(curves);
       end case;
    end for;
 
@@ -106,10 +108,12 @@ end function;
 intrinsic GetHyperellipticCandidates(:recompute_data:=false,
 				     read_data:=true,
 				     start_stage:="",
+             read_stage:="",
 				     stages:=FILTER_STAGES) -> SeqEnum
 {.}
     if read_data then
-      fname := Sprintf("data/all_curves_after_%o.dat", stages[#stages][1]);
+      if read_stage eq "" then read_stage := stages[#stages][1]; end if;
+      fname := Sprintf("data/curves_after_%o.dat", read_stage);
       read_curves := eval Read(fname);
     end if;
 

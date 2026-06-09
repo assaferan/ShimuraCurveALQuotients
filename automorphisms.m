@@ -182,10 +182,9 @@ intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum : B:=10, k:=20)
             g := X`g;
             b, sum := InvolutionCounter(X,p, k);
             if not b then
-                id := X`CurveID;
-                curves[id]`IsSubhyp := false;
-                curves[id]`IsHyp := false;
-                curves[id]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o, k = %o", p, k);
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+                curves[i]`TestInWhichProved := Sprintf("FpAutomorphisms with p = %o, k = %o", p, k);
             end if;
         end for;
     end for;
@@ -208,17 +207,14 @@ end intrinsic;
 intrinsic FilterByWeilPolynomialg3(~curves::SeqEnum, p)
     {This is made redundant in small p by later data}
 
-    goodredn := [x : x in curves |p notin PrimeFactors(x`D*x`N )];
-
-    for i->X in goodredn do
+    for i->X in curves do
+        if p in PrimeFactors(X`D*X`N) then continue; end if;
         vprint ShimuraQuotients, 2: "starting curve", i;
-        g := X`g;
         b := CheckWeilPolyg3(X,p);
         if not b then
-            id := X`CurveID;
-            curves[id]`IsSubhyp := false;
-            curves[id]`IsHyp := false;
-            curves[id]`TestInWhichProved := Sprintf("WeilPolynomialg3 with p = %o", p);
+            curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := Sprintf("WeilPolynomialg3 with p = %o", p);
         end if;
     end for;
 
@@ -227,14 +223,19 @@ end intrinsic;
 intrinsic PointCountParity(X::ShimuraQuot, p::RngIntElt) ->BoolElt
     {Check if #Ramification points defined over C(F_p^d) for d odd, d < 2g +2 is odd}
     g :=X`g;
-    sum := GF(2)!0;
+    sum := 0;
     for d in [1..2*g+1] do
+        if IsEven(d) then continue; end if;
         if d eq 1 then
             pts := NumPointsFpd(X, p, d);
         else
-            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,d-1);
+            r := Maximum(Remove(Divisors(d), Index(Divisors(d),d)));
+            pts := NumPointsFpd(X, p, d) - NumPointsFpd(X,p,r);
         end if;
-        sum +:=GF(2)!sum; 
+        // print "d is", d;
+        // print GF(2)!pts;
+        // if IsEven(d) then assert GF(2)!pts eq 0; end if;
+        sum +:=GF(2)!(pts); 
     end for;
     if sum eq GF(2)!1 then
         return false; //return false if not hyperelliptic
@@ -280,6 +281,7 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
             slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
             f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
             u := Universe(poss_wps_at2[f]);
+            wp := Reverse(Coefficients(wp));
             if u!wp notin poss_wps_at2[f] then
                 vprint ShimuraQuotients, 2 : u!wp;
                 return false, 2;
@@ -309,7 +311,7 @@ function LMFDBweilpolys(g,p)
     return possible_polys;
 end function;
 
-function createpossiblepolys(genera : bd := 25)
+function createpossiblepolys(genera, genus_bounds)
     possible_wps := AssociativeArray();
     poss_wps_at2 := AssociativeArray();
     //first do 2
@@ -322,7 +324,7 @@ function createpossiblepolys(genera : bd := 25)
     for g in genera do
         assert g notin [0,1,2];
         possible_wps[g] := AssociativeArray();
-        for p in PrimesUpTo(bd) do
+        for p in PrimesUpTo(genus_bounds[g]) do
             if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
                 polys := LMFDBweilpolys(g,p);
                 possible_wps[g][p] := polys;
@@ -337,10 +339,15 @@ function createpossiblepolys(genera : bd := 25)
 end function;
 
 
-intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : c in curves | not assigned c`IsSubhyp })
+intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genus_bounds := AssociativeArray(), genera := { c`g : c in curves | not assigned c`IsSubhyp })
     {Filter by constraints on weil polynomials coming from LMFDB}
-    // genera := { c`g : c in curves | not assigned c`IsSubhyp };
-    possible_wps, poss_wps_at2 := createpossiblepolys(genera :bd := bd);
+    if IsEmpty(genera) then return; end if;
+    // Build per-genus bound map: start with uniform bd, then apply genus_bounds overrides
+    bds := AssociativeArray();
+    for g in genera do
+        bds[g] := IsDefined(genus_bounds, g) select genus_bounds[g] else bd;
+    end for;
+    possible_wps, poss_wps_at2 := createpossiblepolys(genera, bds);
     for i->c in curves do
         if i mod 10 eq 0 then
             vprint ShimuraQuotients, 2: i;
@@ -354,6 +361,28 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : bd := 25, genera := { c`g : 
             curves[i]`TestInWhichProved := Sprintf("WeilPolynomial with p = %o", p);
         end if;
     end for;
+end intrinsic;
+
+
+intrinsic FilterByWeilPolynomialGenusScaled(~curves::SeqEnum)
+    {FilterByWeilPolynomial with per-genus prime bounds: g=3,4 -> 23, g=5,6 -> 19, g=7 -> 11, g=8 -> 7, g>=9 -> 5.}
+    genera := { c`g : c in curves | not assigned c`IsSubhyp };
+    bound_by_genus := AssociativeArray();
+    bound_by_genus[3] := 23;
+    bound_by_genus[4] := 23;
+    bound_by_genus[5] := 19;
+    bound_by_genus[6] := 19;
+    bound_by_genus[7] := 11;
+    bound_by_genus[8] := 7;
+    bds := AssociativeArray();
+    for g in genera do
+        if IsDefined(bound_by_genus, g) then
+            bds[g] := bound_by_genus[g];
+        else
+            bds[g] := 5;
+        end if;
+    end for;
+    FilterByWeilPolynomial(~curves : genus_bounds := bds);
 end intrinsic;
 
 
