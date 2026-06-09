@@ -66,12 +66,15 @@ procedure testS2(bound, Dbound)
     Ns := [N : N in [1..bound] | N mod 8 eq 4];
     ks := [2,4,6];
     S2 := [2,1,0,2];
+    S2mat := MatrixAlgebra(Integers(),2)!S2;
     for N in Ns do
         Ds := [D : D in [1..Dbound] | (MoebiusMu(D) eq 1) and (GCD(D, N) eq 1)];
         for k in ks do
             checkTraceg(S2, N, k);
             for D in Ds do
-                checkTracegDNew(S2, D, N, k);
+                // S2 is the same matrix on every level; pure modular involution (Q = 1)
+                g_subspaces := [S2mat : d in Divisors(D)];
+                checkTracegDNew(S2, g_subspaces, 1, D, N, k);
             end for;
         end for;
     end for;
@@ -86,8 +89,10 @@ procedure testV2(bound, Dbound)
         for k in ks do
             checkTraceg(V2, N, k);
             for D in Ds do
-                V2 := Eltseq(get_V2(D*N));
-                checkTracegDNew(V2, D, N, k);
+                V2DN := Eltseq(get_V2(D*N));
+                // pure V2 on each level d*N (no Atkin-Lehner part, Q = 1)
+                g_subspaces := [get_V2(d*N) : d in Divisors(D)];
+                checkTracegDNew(V2DN, g_subspaces, 1, D, N, k);
             end for;
         end for;
     end for;
@@ -102,8 +107,10 @@ procedure testV3(bound, Dbound)
         for k in ks do
             checkTraceg(V3, N, k);
             for D in Ds do
-                V3 := Eltseq(get_V3(D*N));
-                checkTracegDNew(V3, D, N, k);
+                V3DN := Eltseq(get_V3(D*N));
+                // pure V3 on each level d*N (no Atkin-Lehner part, Q = 1)
+                g_subspaces := [get_V3(d*N) : d in Divisors(D)];
+                checkTracegDNew(V3DN, g_subspaces, 1, D, N, k);
             end for;
         end for;
     end for;
@@ -210,3 +217,16 @@ function benchmark(curves, check_modular, ntimes)
     end for;
     return timings;
 end function;
+
+// ── CI entry points (executed by run_tests.m) ───────────────────────────────
+// These compare trace-formula values against direct modular-symbol
+// computations.  The trace formula obtains class numbers through
+// ClassNumberLU (the precomputed LMFDB class-group tables, with a fallback to
+// Magma's ClassNumber when the tables are unavailable, e.g. in CI), so these
+// tests also exercise that lookup on both the full and the D-new paths.
+testS2(40, 6);
+testV2(48, 6);
+testV3(45, 6);
+testV2VW(48, 6);
+testV3VW(45, 6);
+printf "trace_formula.m: all trace-formula tests passed\n";

@@ -188,8 +188,8 @@ function H(n)
         if IsSquare(d) and  (n div d) mod 4 in [0,3] then
             b, v := GetCache(-n div d, class_nos);
             if not b then
-                v := ClassNumber(-n div d);
-                SetCache(-n div d, v, class_nos); 
+                v := ClassNumberLU(-n div d);
+                SetCache(-n div d, v, class_nos);
             end if;
             ret +:= v;
         end if;

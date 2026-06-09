@@ -3,6 +3,7 @@ BorcherdsForms.m
 SchoferFormula.m
 EquationsCovers.m
 Caching.m
+ClassNumberData.m
 EtaQuotient.m
 FundamentalDomain.m
 ShimuraQuotients.m
