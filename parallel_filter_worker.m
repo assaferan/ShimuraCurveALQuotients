@@ -33,6 +33,8 @@ SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
 SetVerbose("ShimuraQuotients", 0);
 
+try
+
 curves := eval Read(input_dat);
 n := #curves;
 
@@ -62,6 +64,12 @@ case stage:
     else
         error Sprintf("Unknown or unsupported stage: %o", stage);
 end case;
+
+catch e
+    WriteStderr(Sprintf("ERROR in worker stage %o chunk %o/%o:\n", stage, chunk_i, total_chunks_i));
+    WriteStderr(e);
+    error e;  // re-raise so SetQuitOnError exits non-zero
+end try;
 
 Write(output_dat, Sprint(subseq, "Magma") : Overwrite);
 printf "Worker %o/%o [%o..%o]: %o curves, %o s\n", chunk_i, total_chunks_i, start_idx, end_idx, #subseq, Realtime() - t0;

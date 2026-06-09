@@ -4,6 +4,7 @@ SchoferFormula.m
 EquationsCovers.m
 Caching.m
 ClassNumberData.m
+Utils.m
 EtaQuotient.m
 FundamentalDomain.m
 ShimuraQuotients.m

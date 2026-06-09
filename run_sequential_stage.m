@@ -9,6 +9,9 @@
 
 AttachSpec("ShimuraQuotients.spec");
 SetVerbose("ShimuraQuotients", 0);
+SetQuitOnError(true);
+
+try
 
 // Read input unless this is the first stage
 if stage ne "FindPairs" then
@@ -69,6 +72,12 @@ case stage:
         VerifyHHProposition1(curves);
         printf "VerifyHHProposition1 passed\n";
 end case;
+
+catch e
+    WriteStderr(Sprintf("ERROR in sequential stage %o:\n", stage));
+    WriteStderr(e);
+    error e;  // re-raise so SetQuitOnError exits non-zero
+end try;
 
 Write(output_dat, Sprint(curves, "Magma") : Overwrite);
 printf "%o: wrote %o curves to %o\n", stage, #curves, output_dat;
