@@ -68,7 +68,10 @@ if [ ! -f "${INPUT_DAT}" ]; then
     exit 1
 fi
 
-mkdir -p "${CHUNKS_DIR}"
+JOBLOG="${CHUNKS_DIR}/joblog.txt"
+RESULTS_DIR="${CHUNKS_DIR}/results"
+
+mkdir -p "${CHUNKS_DIR}" "${RESULTS_DIR}"
 
 echo "========================================"
 echo "Stage:    ${STAGE}"
@@ -77,13 +80,16 @@ echo "Chunks:   ${NUM_CHUNKS} (data splits)"
 echo "Input:    ${INPUT_DAT}"
 echo "Output:   ${OUTPUT_DAT}"
 echo "ChunkDir: ${CHUNKS_DIR}"
+echo "JobLog:   ${JOBLOG}"
+echo "Results:  ${RESULTS_DIR}/ (per-chunk stdout/stderr)"
 echo "========================================"
 
 T_START=$(date +%s)
 
 parallel \
     --jobs "${NUM_WORKERS}" \
-    --joblog "${CHUNKS_DIR}/joblog.txt" \
+    --joblog "${JOBLOG}" \
+    --results "${RESULTS_DIR}/chunk_{}" \
     --halt now,fail=1 \
     --eta \
     ${MAGMA_CMD} \
