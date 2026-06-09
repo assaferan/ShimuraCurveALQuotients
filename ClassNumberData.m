@@ -102,7 +102,12 @@ function clFundClassNo(m0)
             end if;
             return false, _;
         end if;
-        F := POpen("zcat " cat path, "r");
+        // 2>/dev/null suppresses zcat's harmless "stdout: Broken pipe" SIGPIPE
+        // notice, which it prints whenever we stop reading the stream early (the
+        // normal case: we break as soon as the target |d| is found, and abandon
+        // the still-open pipe at process exit). The file's existence was already
+        // checked above, so this does not mask a missing-file error.
+        F := POpen("zcat " cat path cat " 2>/dev/null", "r");
         st := rec<recformat<F, cum, done> | F := F, cum := 0, done := false>;
     end if;
 
