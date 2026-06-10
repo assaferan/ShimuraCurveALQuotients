@@ -24,7 +24,7 @@ heavy curves are always dispatched early.}
     g := X`g; DN := X`D * X`N; nW := #X`W;
     if g lt 3 then return R!0; end if;
 
-    if stage eq "FilterByNonALInvolutions" then
+    if stage in {"FilterByNonALInvolutions", "FilterByNonALInvolutionsStar"} then
         // cost ~ ModularSymbols(D*N); only curves with non-AL involutions do work
         if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then return R!(DN*DN); end if;
         return R!0;

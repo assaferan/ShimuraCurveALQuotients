@@ -19,7 +19,9 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]
-#   GetQuotientsAndGenera + UpdateByGenus  [sequential]
+#   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
+#   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
+#                                                         onto the full-W entries)
 #   UpdateCurves1                          [sequential]
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
@@ -101,11 +103,15 @@ run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"              
 run_par "FilterByTraceStar"
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
 run_par "FilterStarCurvesByFpAutomorphisms"
+# Non-AL involution filter on the star curves themselves: a star curve proven
+# non-subhyperelliptic here prunes its entire cover-tree (via UpwardClosure) right
+# after expansion, sparing all its quotients the heavy per-curve stages below.
+run_par "FilterByNonALInvolutionsStar"
 
 # ── expand to all AL quotients ────────────────────────────────────────────────
 
 run_seq "GetQuotientsAndGenera_UpdateByGenus" \
-                              "${D}/curves_after_FilterStarCurvesByFpAutomorphisms.dat" \
+                              "${D}/curves_after_FilterByNonALInvolutionsStar.dat" \
                               "${D}/curves_after_UpdateByGenus.dat"
 
 # ── all-quotients stages (~18 000+ curves) ────────────────────────────────────

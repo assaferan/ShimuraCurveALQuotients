@@ -663,6 +663,18 @@ intrinsic GetQuotientsAndGenera(curves) -> SeqEnum
             quot`CurveID := cur_sz + j;
             quot`CoveredBy := {cur_sz + idx : idx in S[2]};
             quot`Covers := {cur_sz + idx : idx in S[3]};
+            // The input curve `c` is a star curve (full AL group); the regenerated
+            // entry whose AL group equals c`W is that same star curve.  Carry over any
+            // determinations already computed on it (e.g. by the star-curve filters)
+            // so UpwardClosure/DownwardClosure can propagate them through the lattice
+            // instead of re-deriving from scratch on every quotient.
+            if als eq c`W then
+                for attr in ["IsP1", "IsEC", "IsHyp", "IsSubhyp", "TestInWhichProved"] do
+                    if assigned c``attr then
+                        quot``attr := c``attr;
+                    end if;
+                end for;
+            end if;
             Append(~quots, quot);
         end for;
         if (i mod 100 eq 0) then

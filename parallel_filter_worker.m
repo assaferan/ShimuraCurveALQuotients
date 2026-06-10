@@ -64,7 +64,7 @@ case stage:
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial":
         FilterByWeilPolynomialGenusScaled(~subseq);
-    when "FilterByNonALInvolutions":
+    when "FilterByNonALInvolutions", "FilterByNonALInvolutionsStar":
         FilterByNonALInvolutions(~subseq);
     else
         error Sprintf("Unknown or unsupported stage: %o", stage);

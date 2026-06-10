@@ -35,6 +35,12 @@ case "${STAGE}" in
     FilterStarCurvesByFpAutomorphisms)
         INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
         ;;
+    FilterByNonALInvolutionsStar)
+        # Non-AL involution filter run on the star curves (full AL group), before they
+        # are expanded into all quotients.  A star curve proven non-subhyperelliptic
+        # propagates to its whole cover-tree via UpwardClosure after expansion.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
+        ;;
     FilterByALFixedPointsOnQuotient)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
         ;;
@@ -58,7 +64,8 @@ case "${STAGE}" in
         echo "Supported: FilterByTraceStar, FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient, FilterByTrace," >&2
-        echo "           FilterByWeilPolynomial, FilterByNonALInvolutions" >&2
+        echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2
+        echo "           FilterByNonALInvolutionsStar" >&2
         exit 1
         ;;
 esac
