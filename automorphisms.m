@@ -175,7 +175,7 @@ intrinsic FilterStarCurvesByFpAutomorphisms(~curves ::SeqEnum : B:=10, k:=20)
     ps := PrimesUpTo(B);
     for p in ps do
         for i->X in curves do
-	    if assigned X`IsSubhyp then continue; end if;
+	        if assigned X`IsSubhyp then continue; end if;
             // Only works for good reduction primes
             if (X`D*X`N) mod p eq 0 then continue; end if;
             vprint ShimuraQuotients, 2: "starting curve", i;

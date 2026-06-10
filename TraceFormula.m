@@ -1088,16 +1088,20 @@ end function;
 
 
 function Cslowg(g, N, u, t)
-
-    if g eq [2,1,0,2] then 
+    // The fast specializations BslowS2/BslowV2/BslowV3 are valid only for the exact
+    // matrices S2, V2 = get_V2(N), V3 = get_V3(N).  Dispatching on the determinant alone
+    // is wrong, because other operators share these determinants (e.g. S2 * W_{2^v} has
+    // determinant 2^v after reduction but is not V2); those must use the general Bslowg.
+    if g eq [2,1,0,2] then
         return  &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
+    detg := Determinant(Matrix(Integers(), 2, 2, g));
     v := Valuation(N,2);
-    if v ge 3 and Determinant(Matrix(Integers(), 2, 2, g)) eq 2^v then //V2 Case
+    if v ge 3 and detg eq 2^v and g eq Eltseq(get_V2(N)) then //V2 Case
         return &+[BslowV2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
-    if Determinant(Matrix(Integers(),2,2,g)) eq 3^2 then //V3 case
-        return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];;
+    if detg eq 3^2 and Valuation(N,3) eq 2 and g eq Eltseq(get_V3(N)) then //V3 case
+        return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
 
     return &+[Bslowg(g, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
@@ -1189,6 +1193,13 @@ end intrinsic;
 intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(N) using [Popa], assuming g normalizes Gamma0(N).}
     require k ge 2 : "This formula is only valid for k ge 2";
+    // g acts on S_k(N) only up to a scalar: a scalar c*I acts as c^(k-2).  Reduce g
+    // to its primitive representative (content 1) so det_g below is the determinant of
+    // the actual operator, and re-apply the scalar c^(k-2) at the end.  Without this,
+    // matrices such as V_p * W_{p^a} (whose content is the shared p-power) yield a wrong
+    // determinant and hence a wrong trace.
+    content := GCD([Integers() | x : x in g]);
+    g := [x div content : x in g];
     S1 := 0;
     w := k - 2;
     M2Z := MatrixAlgebra(Integers(),2);
@@ -1207,8 +1218,12 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     end for;
     vprintf ShimuraQuotients, 3: "S1 = %o\n", S1;
     S2 := 0;
-    for d in Divisors(4) do
-	    a := 4 div d;
+    // Hyperbolic/parabolic term: sum over factorisations a*d = det_g (the determinant of
+    // the operator).  Using a fixed Divisors(4) only captures det-4 operators and silently
+    // drops contributions for e.g. S2 * W_{2^v} (det 2^v); other operators (V2, V3) happen
+    // to have no contribution here, which is why this was not noticed before.
+    for d in Divisors(det_g) do
+	    a := det_g div d;
         S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
     end for;
     vprintf ShimuraQuotients, 3: "S2 = %o\n", S2;
@@ -1216,7 +1231,7 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     if k eq 2 then
 	    ret +:= 1;
     end if;
-    return Integers()!ret;
+    return content^(k-2) * Integers()!ret;
 end intrinsic;
 
 
