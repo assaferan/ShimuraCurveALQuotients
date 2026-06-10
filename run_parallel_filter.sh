@@ -14,9 +14,11 @@
 set -euo pipefail
 
 STAGE="${1:-FilterByTrace}"
-NUM_WORKERS="${2:-8}"
+NUM_WORKERS="${2:-128}"
 DATA_DIR="${3:-data}"
-NUM_CHUNKS="${4:-${NUM_WORKERS}}"
+# Many more chunks than workers: with the cost-aware worker, fine chunks isolate the heavy
+# curves so the makespan approaches the slowest single curve rather than the slowest cluster.
+NUM_CHUNKS="${4:-1024}"
 
 MAGMA_CMD="${MAGMA_CMD:-magma}"
 
@@ -117,9 +119,14 @@ if [ "${MISSING}" -gt 0 ]; then
     exit 1
 fi
 
-echo "All ${NUM_CHUNKS} chunk files present. Merging..."
+echo "All ${NUM_CHUNKS} chunk files present. Merging (by original index)..."
 
-python3 parallel_merge.py "${CHUNKS_DIR}" "${NUM_CHUNKS}" "${OUTPUT_DAT}"
+# The chunk files are index-tagged, so the merge reorders by original index (done in Magma).
+${MAGMA_CMD} \
+    "chunks_dir:=${CHUNKS_DIR}" \
+    "total_chunks:=${NUM_CHUNKS}" \
+    "output_dat:=${OUTPUT_DAT}" \
+    parallel_merge.m
 
 T_END=$(date +%s)
 ELAPSED=$((T_END - T_START))

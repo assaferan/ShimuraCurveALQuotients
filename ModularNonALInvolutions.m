@@ -220,8 +220,10 @@ Otherwise, returns -1.}
                 return 1, name, _;
             end if;
             fix := 2*X`g - 4*g + 2;
+            // If X`g is even, fix = 2 mod 4, and so fix ne 2 is equivalent to fix gt 2
             if IsEven(X`g) and fix gt 2 then
                 return 0, name, fix;
+            // If X`g is odd fix = 0 mod 4, so fix gt 4 is equivalent to fix notin {0,4}
             elif IsOdd(X`g) and fix gt 4 then
                 return 0, name, fix;
             end if;

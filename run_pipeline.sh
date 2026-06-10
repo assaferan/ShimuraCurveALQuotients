@@ -38,9 +38,11 @@
 
 set -euo pipefail
 
-NUM_WORKERS="${1:-8}"
+# 128 workers per policy on this shared machine; many fine chunks so the cost-aware worker
+# can isolate the heavy tail curves (makespan -> slowest single curve, not slowest cluster).
+NUM_WORKERS="${1:-128}"
 DATA_DIR="${2:-data/par}"
-NUM_CHUNKS="${3:-${NUM_WORKERS}}"
+NUM_CHUNKS="${3:-1024}"
 MAGMA_CMD="${MAGMA_CMD:-magma -b}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"

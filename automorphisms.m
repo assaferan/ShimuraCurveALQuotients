@@ -13,7 +13,7 @@ intrinsic ComputePointsViaTrace(X::ShimuraQuot, p::RngIntElt, d::RngIntElt) -> R
     end if;
 
     if d eq 1 then
-            tpsdmin2 := 0;
+        tpsdmin2 := 0;
     else 
         b, tpsdmin2 := GetCache(<D,N,2,p^(d-2),W>, cached_traces);
         if not b then 
@@ -40,6 +40,10 @@ intrinsic NumPointsFpd(X::ShimuraQuot,p::RngIntElt, d::RngIntElt) ->RngIntElt
     assert D mod p ne 0;
     assert N mod p ne 0;
     assert g gt 0;
+
+    if (d le g) then
+        return ComputePointsViaTrace(X, p, d);
+    end if;
 
     b, Npd := GetCache(<X, p^d>, point_counts);
     if b then
