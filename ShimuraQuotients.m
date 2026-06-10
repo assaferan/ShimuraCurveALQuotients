@@ -692,6 +692,7 @@ end function;
 
 function TraceDNew(D,N,k,n,Q)
     t := 0;
+    vprint ShimuraQuotients, 3: "in TraceDNew with n = ,", n, "Q = ", Q;
     for dN in Divisors(N) do
         N_prime := D*N div dN;
         ds := get_ds(D*N, Q, N_prime, n);
@@ -714,7 +715,9 @@ end function;
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
     {}
     sum := 0;
+    vprint ShimuraQuotients, 3: "in TraceDNewALFixed with n = ", n, ", w = ";
     for w in W do
+        vprint ShimuraQuotients, 3: w;
         sgn := (-1)^#PrimeDivisors(GCD(w,D));
         sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
@@ -860,7 +863,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 end intrinsic;
 
 intrinsic UpdateByGenus(~curves :: SeqEnum)
-    {}
+{Updates hyperellipticity according to genus if genus <= 2. If genus = 0 also updates hyperellipticity of covering curves.}
     for i in [1..#curves] do
         if (curves[i]`g eq 0) then
             curves[i]`IsP1 := true;
