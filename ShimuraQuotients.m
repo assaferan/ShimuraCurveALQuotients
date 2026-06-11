@@ -734,11 +734,14 @@ intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W
     // when already collecting -- an outer prefetch will gather our discriminants too.
     if (not IsCollecting()) and (4*Max(W)*n ge ClassNumberTableMaxDisc()) then
         StartCollecting();
+        SetAssertions(false);   // dry run uses dummy coefficients; skip validation asserts
+                                // (and their expensive reference re-computations)
         // per-w try/catch so a dummy-value error in one term still leaves the others'
         // discriminants recorded (each term's class-number loop runs before any coercion).
         for w in W do
             try _ := TraceDNew(D, N, k, n, w); catch e tmp := 0; end try;
         end for;
+        SetAssertions(true);
         StopCollecting();
         _ := ClassNumberBatchLU(GetCollectedDiscs());
     end if;
