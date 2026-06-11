@@ -19,7 +19,7 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]
-#   GetQuotientsAndGenera + UpdateByGenus  [sequential]
+#   GetQuotientsAndGenera + UpdateByGenus  [sequential]  + VerifyFHTheorem3, VerifyFHProposition4/5, VerifyFHTable3
 #   UpdateCurves1                          [sequential]
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]

@@ -1069,6 +1069,189 @@ intrinsic VerifyHHProposition1(starcurves::SeqEnum)
     assert Table2 eq by_genus;
 end intrinsic;
 
+intrinsic VerifyFHTheorem3(curves::SeqEnum)
+    {Verify Theorem 3 of [FH99]: there are exactly 32 pairs (N, W') for which
+    X_0(N)/W' is a hyperelliptic curve of genus g >= 3 whose hyperelliptic
+    involution v is of Atkin-Lehner type. Run after UpdateByGenus on the full
+    quotient list.}
+    // Entries are <N, generators of W', g, v>, transcribed from the table
+    // on p. 110 of [FH99].
+    Table3 := [
+        <46, {2}, 3, 23>,
+        <51, {3}, 3, 17>,
+        <55, {5}, 3, 11>,
+        <56, {8}, 3, 7>,
+        <60, {4}, 3, 15>,
+        <60, {12}, 4, 20>,
+        <60, {60}, 3, 4>,
+        <62, {2}, 4, 31>,
+        <66, {6}, 4, 11>,
+        <66, {66}, 3, 6>,
+        <69, {3}, 4, 23>,
+        <70, {10}, 4, 14>,
+        <70, {14}, 3, 10>,
+        <78, {6}, 6, 26>,
+        <78, {26}, 3, 6>,
+        <78, {2, 3}, 3, 13>,
+        <78, {13, 6}, 3, 3>,
+        <87, {3}, 5, 29>,
+        <92, {4}, 5, 23>,
+        <92, {92}, 4, 4>,
+        <94, {2}, 6, 47>,
+        <94, {94}, 4, 2>,
+        <95, {5}, 5, 19>,
+        <95, {19}, 3, 5>,
+        <105, {3, 5}, 3, 7>,
+        <105, {3, 7}, 3, 5>,
+        <105, {7, 15}, 3, 3>,
+        <110, {2, 5}, 4, 11>,
+        <110, {2, 11}, 3, 5>,
+        <110, {5, 22}, 3, 2>,
+        <119, {7}, 6, 17>,
+        <119, {17}, 4, 7>
+    ];
+    expected := {<t[1], AllALsFromGens(t[2], t[1]), t[3],
+                  AllALsFromGens(t[2] join {t[4]}, t[1])> : t in Table3};
+    assert #expected eq 32;
+    // X_0(N)/W' has an AL involution as hyperelliptic involution iff
+    // some quotient by an index-2 overgroup <W', v> has genus 0
+    actual := {};
+    for c in curves do
+        if (c`D ne 1) or (c`g lt 3) then continue; end if;
+        for j in c`Covers do
+            if curves[j]`g eq 0 then
+                // UpdateByGenus must have marked it hyperelliptic
+                assert c`IsHyp;
+                Include(~actual, <c`N, c`W, c`g, curves[j]`W>);
+            end if;
+        end for;
+    end for;
+    // Theorem 3 only covers nontrivial W'; the curves with W' = {1} are
+    // the hyperelliptic X_0(N) themselves ([FH99] Theorem 1, due to Ogg).
+    // Of those, exactly the following have g >= 3 with hyperelliptic
+    // involution of AL type (in particular X_0(37), X_0(40), X_0(48),
+    // whose hyperelliptic involutions are not AL, do not show up here).
+    expected1 := {<30, 3, {1, 15}>, <33, 3, {1, 11}>, <35, 3, {1, 35}>,
+                  <39, 3, {1, 39}>, <41, 3, {1, 41}>, <46, 5, {1, 23}>,
+                  <47, 4, {1, 47}>, <59, 5, {1, 59}>, <71, 6, {1, 71}>};
+    assert expected1 eq {<t[1], t[3], t[4]> : t in actual | t[2] eq {1}};
+    assert expected eq {t : t in actual | t[2] ne {1}};
+end intrinsic;
+
+intrinsic VerifyFHProposition4(curves::SeqEnum)
+    {Verify that FindIsomorphicCurveProp4 finds the isomorphisms listed
+    after Proposition 4 of [FH99] (p. 114). The list there is not
+    comprehensive, so we only check that each listed isomorphism is found.}
+    // Entries are <M, generators of W on X_0(M), N = 2M, generators of W'
+    // on X_0(N)> with X_0(M)/W isomorphic to X_0(N)/W'. The curves listed
+    // as X_0^*(N) in the paper are spelled out by generators of W(N).
+    isos := [
+        <34, {Integers()|}, 68, {4}>,
+        <82, {41}, 164, {4, 41}>,
+        <42, {7}, 84, {4, 7}>,
+        <98, {49}, 196, {4, 49}>,
+        <106, {53}, 212, {4, 53}>,
+        <118, {59}, 236, {4, 59}>,
+        <154, {7, 11}, 308, {4, 7, 11}>,
+        <174, {3, 29}, 348, {4, 3, 29}>,
+        <90, {9}, 180, {4, 9}>,
+        <90, {5}, 180, {4, 5}>,
+        <90, {45}, 180, {4, 45}>,
+        <198, {9, 11}, 396, {4, 9, 11}>,
+        <102, {51}, 204, {4, 51}>,
+        <210, {3, 5, 7}, 420, {4, 3, 5, 7}>,
+        <238, {7, 17}, 476, {4, 7, 17}>,
+        <138, {23}, 276, {4, 23}>
+    ];
+    lut := AssociativeArray();
+    for i in [1..#curves] do
+        lut[<curves[i]`D, curves[i]`N, curves[i]`W>] := i;
+    end for;
+    for iso in isos do
+        M, gensM, N, gensN := Explode(iso);
+        X := curves[lut[<1, M, AllALsFromGens(gensM, M)>]];
+        Y := FindIsomorphicCurveProp4(X, curves, lut);
+        assert Type(Y) eq ShimuraQuot;
+        assert Y`N eq N;
+        assert Y`W eq AllALsFromGens(gensN, N);
+        // isomorphic curves have the same genus
+        assert X`g eq Y`g;
+    end for;
+end intrinsic;
+
+intrinsic VerifyFHProposition5(curves::SeqEnum)
+    {Verify that FindIsomorphicCurveProp5 finds the isomorphisms listed
+    after Proposition 5 of [FH99] (p. 114). The list there is not
+    comprehensive, so we only check that each listed isomorphism is found.}
+    // Entries are <N, generators of W', generators of W''> with
+    // X_0(N)/W' isomorphic to X_0(N)/W''.
+    isos := [
+        <90, {18, 10}, {2, 5}>,
+        <99, {99}, {11}>,
+        <180, {36, 20}, {5, 36}>,
+        <198, {11, 18}, {2, 99}>
+    ];
+    lut := AssociativeArray();
+    for i in [1..#curves] do
+        lut[<curves[i]`D, curves[i]`N, curves[i]`W>] := i;
+    end for;
+    for iso in isos do
+        N, gensW, gensW2 := Explode(iso);
+        X := curves[lut[<1, N, AllALsFromGens(gensW, N)>]];
+        Y := FindIsomorphicCurveProp5(X, curves, lut);
+        assert Type(Y) eq ShimuraQuot;
+        assert Y`N eq N;
+        assert Y`W eq AllALsFromGens(gensW2, N);
+        // isomorphic curves have the same genus
+        assert X`g eq Y`g;
+    end for;
+end intrinsic;
+
+intrinsic VerifyFHTable3()
+    {Verify that TestComplicatedALFixedPointsOnQuotient (implementing
+    [FH99] Prop. 6) proves non-hyperellipticity for all 34 pairs (N, W')
+    of [FH99] Table 3 (p. 116). Our search is not restricted to the
+    paper's candidate list and may choose different witnesses N1, N2,
+    so we only check that each listed pair is found.}
+    // Entries are <N, generators of W'>
+    Table3 := [
+        <58, {2}>, <58, {58}>,
+        <76, {19}>, <76, {76}>,
+        <86, {86}>,
+        <102, {2, 17}>, <102, {17, 6}>,
+        <106, {106}>,
+        <114, {2, 57}>,
+        <122, {122}>,
+        <124, {31}>,
+        <130, {2, 65}>,
+        <132, {3, 44}>, <132, {11, 12}>,
+        <134, {134}>,
+        <140, {7, 20}>, <140, {20, 28}>,
+        <150, {2, 75}>, <150, {3, 50}>,
+        <170, {2, 17}>, <170, {10, 34}>,
+        <174, {2, 87}>,
+        <182, {14, 26}>,
+        <186, {6, 62}>,
+        <190, {2, 95}>, <190, {10, 38}>,
+        <198, {2, 99}>,
+        <204, {3, 68}>, <204, {12, 68}>,
+        <210, {5, 6, 14}>,
+        <222, {6, 74}>,
+        <230, {5, 46}>,
+        <330, {5, 11, 6}>,
+        <390, {6, 10, 26}>
+    ];
+    assert #Table3 eq 34;
+    for N in {t[1] : t in Table3} do
+        found := TestComplicatedALFixedPointsOnQuotient(1, N);
+        for t in Table3 do
+            if t[1] eq N then
+                assert AllALsFromGens(t[2], N) in Keys(found);
+            end if;
+        end for;
+    end for;
+end intrinsic;
+
 // Apply the observation from [HH96] Proposition 1,
 // that if X_0^*(D, pN) and X_0^*(D, N) have the same genus,
 // they will be isomorphic in characteristic p
@@ -1193,8 +1376,10 @@ intrinsic FindIsomorphicCurveProp5(X::ShimuraQuot, curves::SeqEnum, lut::Assoc) 
     D := X`D;
     W := X`W;
 
+    // [FH99] Prop. 5: eps(M) = 0 if M = 1 mod 3, or if 9 || M and
+    // M/9 = 1 mod 3; eps(M) = 1 otherwise
     function eps(Ni)
-        if (Ni eq 1 mod 3) or ((Ni mod 9 eq 0) and (Ni div 9) mod 9 eq 1) then
+        if (Ni mod 3 eq 1) or ((Ni mod 9 eq 0) and ((Ni div 9) mod 3 eq 1)) then
             return 0;
         else
             return 1;

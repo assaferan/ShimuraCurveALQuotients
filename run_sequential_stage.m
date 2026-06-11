@@ -71,6 +71,15 @@ case stage:
     when "HHProposition1":
         VerifyHHProposition1(curves);
         printf "VerifyHHProposition1 passed\n";
+    when "GetQuotientsAndGenera_UpdateByGenus":
+        VerifyFHTheorem3(curves);
+        printf "VerifyFHTheorem3 passed\n";
+        VerifyFHProposition4(curves);
+        printf "VerifyFHProposition4 passed\n";
+        VerifyFHProposition5(curves);
+        printf "VerifyFHProposition5 passed\n";
+        VerifyFHTable3();
+        printf "VerifyFHTable3 passed\n";
 end case;
 
 catch e
