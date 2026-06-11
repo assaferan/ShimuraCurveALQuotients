@@ -22,7 +22,7 @@
 #   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
 #   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
 #                                                         onto the full-W entries)
-#                                                         + VerifyFHTheorem3, VerifyFHProposition4/5, VerifyFHTable3 (post)
+#                                                         + VerifyFHTheorem3 (post)
 #   UpdateCurves1                          [sequential]
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
@@ -31,7 +31,7 @@
 #   FilterByDegeneracyMorphism             [PARALLEL]
 #   UpdateCurves4                          [sequential]
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
-#   UpdateCurves5                          [sequential]
+#   UpdateCurves5                          [sequential]  + VerifyFHTable3 (post)
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]

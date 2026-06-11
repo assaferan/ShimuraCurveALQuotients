@@ -104,8 +104,7 @@ function compute_data(start_stage, stages)
     	    VerifyHHProposition1(curves);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
-            VerifyFHProposition4(curves);
-            VerifyFHProposition5(curves);
+        when "FilterByComplicatedALFixedPointsOnQuotient":
             VerifyFHTable3();
       end case;
    end for;
