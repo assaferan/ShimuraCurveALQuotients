@@ -727,25 +727,9 @@ end function;
 
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
     {}
-    // This trace sums Hurwitz class numbers up to ~4*Max(W)*n.  For wide ranges, prefetch them
-    // in a single batched, sorted, request-only streaming pass (memory-safe) so the real sum
-    // below hits warm values instead of streaming-and-caching the whole range (which OOMs) or
-    // recomputing each value live.  A dry "collect" run records the discriminants.  Skip this
-    // when already collecting -- an outer prefetch will gather our discriminants too.
-    if (not IsCollecting()) and (4*Max(W)*n ge ClassNumberTableMaxDisc()) then
-        StartCollecting();
-        SetAssertions(false);   // dry run uses dummy coefficients; skip validation asserts
-                                // (and their expensive reference re-computations)
-        // per-w try/catch so a dummy-value error in one term still leaves the others'
-        // discriminants recorded (each term's class-number loop runs before any coercion).
-        for w in W do
-            try _ := TraceDNew(D, N, k, n, w); catch e tmp := 0; end try;
-        end for;
-        SetAssertions(true);
-        StopCollecting();
-        _ := ClassNumberBatchLU(GetCollectedDiscs());
-    end if;
-
+    // Class numbers are served per-disc by ClassNumberLU: tables for |d| < ClassNumberTableMaxDisc
+    // and a direct ClassNumber above it.  This keeps memory bounded without the batch/collect
+    // dry-run, whose re-traversal of this trace was the dominant cost.
     sum := 0;
     vprint ShimuraQuotients, 3: "in TraceDNewALFixed with n = ", n, ", w = ";
     for w in W do

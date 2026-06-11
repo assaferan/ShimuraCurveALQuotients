@@ -85,7 +85,6 @@ end function;
 
 function C(N, u, t, n)
 // Returns C_{N,1}(u,t,n) as defined in [Popa, (2.18)]
-    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     return &+[B(N, u div d, t, n) * MoebiusMu(d) : d in Divisors(u)];
 end function;
 
@@ -143,7 +142,6 @@ end function;
 
 function Cfast(N, u, t, n)
 // Returns C_N(u,t,n), computed using [Popa, Lemma 4.5]
-    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     // S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
     // nS1 := #S(N, 1, t, n);
     nS2 := Sfast(N, 1, t, n);
@@ -183,17 +181,6 @@ function H(n)
         return -1/12;
     end if;
     if n mod 4 in [1,2] then
-        return 0;
-    end if;
-
-    // Collect mode: record the discriminants this H would request, return a dummy value.
-    // (The summation only ever multiplies H into a sum, so the dummy is harmless on the dry run.)
-    if IsCollecting() then
-        for d in Divisors(n) do
-            if IsSquare(d) and (n div d) mod 4 in [0,3] then
-                CollectDisc(-n div d);
-            end if;
-        end for;
         return 0;
     end if;
 
@@ -1097,13 +1084,11 @@ function Bslowg(g, N, u, t)
 end function;
 
 function CslowVW(p, Q, N, u, t)
-    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     return &+[BslowVW(p, Q, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
 end function;
 
 
 function Cslowg(g, N, u, t)
-    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     // The fast specializations BslowS2/BslowV2/BslowV3 are valid only for the exact
     // matrices S2, V2 = get_V2(N), V3 = get_V3(N).  Dispatching on the determinant alone
     // is wrong, because other operators share these determinants (e.g. S2 * W_{2^v} has
@@ -1220,19 +1205,6 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     w := k - 2;
     M2Z := MatrixAlgebra(Integers(),2);
     det_g := Determinant(M2Z!g);
-    // For wide discriminant ranges, prefetch the Hurwitz class numbers in one batched, sorted,
-    // request-only streaming pass.  A recursive call under collect mode traverses the same loop
-    // (H records discriminants and returns a dummy); the guard prevents further recursion.  The
-    // try/catch shields against the dummy values breaking the final integrality coercion: the
-    // class-number loop has already run (so all discriminants are recorded) before any such error.
-    if (not IsCollecting()) and (4*det_g ge ClassNumberTableMaxDisc()) then
-        StartCollecting();
-        SetAssertions(false);   // dry run uses dummy coefficients; skip validation asserts
-        try _ := TraceFormulaGamma0g(g, N, k); catch e tmp := 0; end try;
-        SetAssertions(true);
-        StopCollecting();
-        _ := ClassNumberBatchLU(GetCollectedDiscs());
-    end if;
     max_abst := Floor(SquareRoot(4*det_g)); // t^2 - 4n <= 0
     for t in [-max_abst..max_abst] do
 	    for u in Divisors(N*det_g) do

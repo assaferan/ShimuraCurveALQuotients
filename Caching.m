@@ -46,7 +46,6 @@ intrinsic CacheClear(name)
 end intrinsic;
 
 procedure SetCache(k,v, name)
-  if IsCollecting() then return; end if;     // don't cache dummy dry-run values
   bool, cache := StoreIsDefined(name, "cache");
   if not bool then
     cache := AssociativeArray();
@@ -56,7 +55,6 @@ procedure SetCache(k,v, name)
 end procedure;
 
 function GetCache(k, name)
-  if IsCollecting() then return false, _; end if;   // force full traversal while collecting
   bool, cache := StoreIsDefined(name, "cache");
   if not bool then
     cache := AssociativeArray();
