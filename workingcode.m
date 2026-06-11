@@ -4,6 +4,10 @@
 intrinsic UpdateCurves(~curves::SeqEnum)
 {Propagate hyperellipticity knowledge via isomorphisms and the coverage lattice.}
   UpdateByIsomorphisms(~curves);
+  // special fiber isomorphism - reduce X_0(D,Np)/W mod p to X_0(D,N)/W' and
+  // carry non-hyperellipticity upward. Run before the closures so newly proven
+  // non-subhyperelliptic curves propagate through the coverage lattice.
+  SpecialFiberIsomorphism(~curves);
   // upward closure - if X-->Y is dominant then gon(X) >= gon(Y).
   // [Poonen, A.1.(vii)]
   // In particular, if Y is non-hyperelliptic, so is X.
@@ -22,6 +26,7 @@ FILTER_STAGES := [*
     // <"VerifyHHTable2", VerifyHHTable2>,
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
+    <"SpecialFiberIsomorphismStar", SpecialFiberIsomorphism>,
     <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
     // Non-AL involution filter on the star curves before expansion; determinations are
     // carried onto the full-W entries by GetQuotientsAndGenera and then propagated.

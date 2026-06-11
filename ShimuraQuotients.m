@@ -1040,6 +1040,72 @@ intrinsic HHProposition1(~curves::SeqEnum)
     end for;
 end intrinsic;
 
+
+intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
+    {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p |m. 
+    Then the normalization of X_0(D,Np)/W over Fp is isomorphic to X_0(D,N)/W' over Fp where 
+    W' = all w_m in W such that p does not divide m. If X_0(D,N)/W' is not hyperelliptic, then 
+    X_0(D,Np)/W  is also not hyperelliptic. This filters all curves by starting with all known non-hyperelliptic curves
+    and multiply by primes p such that Np is still a level in curves, and considering all possible W = W' union w_m where m divisible by p  }
+
+    // Lookup from (D, N, W) to the curve's position in `curves`
+    // (CurveID coincides with the index, as built by GetQuotientsAndGenera).
+    lut := AssociativeArray();
+    for X in curves do
+        lut[<X`D, X`N, X`W>] := X`CurveID;
+    end for;
+
+    for i->tgt in curves do
+        D := tgt`D;
+        M := tgt`N;
+        W := tgt`W;
+        for p in PrimeDivisors(M) do
+            // Need (N, p) = 1 with M = N*p, i.e. p exactly divides M.
+            if Valuation(M, p) ne 1 then
+                continue;
+            end if;
+            // W must contain some w_m with p | m.
+            if not exists{w : w in W | w mod p eq 0} then
+                continue;
+            end if;
+            N := M div p;
+            // W' = the w_m in W with p not dividing m.  These are exactly
+            // the Atkin-Lehner involutions of X_0(D, N) and form the source
+            // AL group W' (= W intersect the prime-to-p AL group).
+            Wprime := {w : w in W | w mod p ne 0};
+            key := <D, N, Wprime>;
+            if not IsDefined(lut, key) then
+                continue;
+            end if;
+            src := curves[lut[key]];
+            // Is the source X_0(D, N)/W' known to be NOT subhyperelliptic?
+            // The reduction argument only gives information here: if the target
+            // were hyperelliptic, its hyperelliptic involution would descend
+            // through the special fiber to the normalization, forcing the source
+            // to be subhyperelliptic. 
+            if not (assigned src`IsSubhyp and not src`IsSubhyp) then
+                continue;
+            end if;
+            // The normalization of X_0(D, Np)/W over F_p is isomorphic to the
+            // non-subhyperelliptic X_0(D, N)/W', so X_0(D, Np)/W is not hyperelliptic.
+            error if assigned curves[i]`IsHyp and curves[i]`IsHyp,
+                Sprintf("SpecialFiberIsomorphism: curve %o was proven hyperelliptic "
+                    cat "but its special fiber source %o is not subhyperelliptic at prime %o",
+                    curves[i]`CurveID, src`CurveID, p);
+            curves[i]`IsSubhyp := false;
+            // Non-hyperelliptic with genus >= 2 means not P1, not elliptic and
+            // not hyperelliptic, hence not subhyperelliptic.
+            if assigned curves[i]`g and curves[i]`g ge 2 then
+                curves[i]`IsSubhyp := false;
+            end if;
+            curves[i]`TestInWhichProved := Sprintf(
+                "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
+                p, src`CurveID);
+            break;
+        end for;
+    end for;
+end intrinsic;
+
 // Get a hyperelliptic curve from q-expansions
 function IsHyperelliptic(qexps, prec)
     R<q> := Universe(qexps);

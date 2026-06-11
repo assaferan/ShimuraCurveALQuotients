@@ -18,6 +18,7 @@
 #   UpdateByGenusStar                      [sequential]
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
+#   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]
 #   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
 #   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
@@ -103,6 +104,9 @@ run_seq "UpdateGenera"        "${D}/curves_after_FindPairs.dat"                 
 run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"                 "${D}/curves_after_UpdateByGenusStar.dat"
 run_par "FilterByTraceStar"
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
+# Special fiber reduction on the star curves: X_0(D,Np)/W reduces mod p to
+# X_0(D,N)/W'; a non-subhyperelliptic source makes the target non-hyperelliptic.
+run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_HHProposition1.dat"        "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
 run_par "FilterStarCurvesByFpAutomorphisms"
 # Non-AL involution filter on the star curves themselves: a star curve proven
 # non-subhyperelliptic here prunes its entire cover-tree (via UpwardClosure) right

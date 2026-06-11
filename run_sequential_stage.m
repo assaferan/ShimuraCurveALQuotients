@@ -42,6 +42,9 @@ case stage:
         printf "VerifyHHTable2 passed\n";
         HHProposition1(~curves);
 
+    when "SpecialFiberIsomorphismStar":
+        SpecialFiberIsomorphism(~curves);
+
     when "GetQuotientsAndGenera_UpdateByGenus":
         // Expand star curves into all AL quotients, then classify by genus
         t1 := Realtime();

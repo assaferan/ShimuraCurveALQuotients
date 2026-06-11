@@ -33,7 +33,7 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateByGenusStar.dat"
         ;;
     FilterStarCurvesByFpAutomorphisms)
-        INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
         ;;
     FilterByNonALInvolutionsStar)
         # Non-AL involution filter run on the star curves (full AL group), before they
