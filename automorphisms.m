@@ -290,11 +290,38 @@ entirely from the tables. Returns 0 if even p = 2 would exceed the tables.}
     return b;
 end intrinsic;
 
-// Largest integer prime bound used for curve c: the database-tight bound, optionally
-// lowered by a per-genus practical ceiling (to keep runtime reasonable at low genus,
-// where the tables would otherwise permit hundreds of primes).
+intrinsic WeilDiscBudget() -> RngIntElt
+{Affordability budget on the Hurwitz-class-number streaming depth 4*Qmax*p^g used by
+the Weil-polynomial point count.  ClassNumberLU streams the gzipped tables front-to-back
+to |d|, so the per-prime cost is ~linear in 4*Qmax*p^g; this bounds it.  The Weil prime
+bound for a curve is the largest p keeping 4*Qmax*p^g <= this value.  Curves whose
+smallest good prime already exceeds it are skipped entirely by the Weil filter, which is
+safe because that filter only ever *rules curves out* (a skipped curve simply proceeds to
+the other filters).  Tunable; 2^30 keeps each good prime to ~minutes at observed rates.}
+    return 2^30;
+end intrinsic;
+
+intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt
+{The largest integer b with 4*Qmax*b^g <= WeilDiscBudget(), so that every prime p <= b
+keeps the class-number streaming depth within the affordability budget. Returns 0 if even
+p = 2 (indeed b = 1) would exceed it, signalling that the Weil filter should be skipped.}
+    B := WeilDiscBudget();
+    cap := B div (4*Qmax);               // need b^g <= cap
+    if cap lt 1 then return 0; end if;
+    b := Iroot(cap, g);
+    while b ge 1 and 4*Qmax*b^g gt B do b -:= 1; end while;   // correct Iroot rounding
+    while 4*Qmax*(b+1)^g le B do b +:= 1; end while;          // make maximal
+    return b;
+end intrinsic;
+
+// Largest integer prime bound used for curve c: the smaller of the database-tight bound
+// (all class numbers within the |d| < 2^40 tables) and the affordability bound (streaming
+// depth 4*Qmax*p^g <= WeilDiscBudget()), optionally lowered further by a per-genus
+// practical ceiling.  Returns 0 when even the smallest prime is unaffordable -> Weil skip.
 function EffectiveWeilPrimeBound(c, ceiling)
     b := WeilClassNumberPrimeBound(Maximum(c`W), c`g);
+    bb := WeilBudgetPrimeBound(Maximum(c`W), c`g);
+    if bb lt b then b := bb; end if;
     if IsDefined(ceiling, c`g) and ceiling[c`g] lt b then
         b := ceiling[c`g];
     end if;
