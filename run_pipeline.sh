@@ -31,7 +31,7 @@
 #   FilterByDegeneracyMorphism             [PARALLEL]
 #   UpdateCurves4                          [sequential]
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
-#   UpdateCurves5                          [sequential]  + VerifyFHTable3 (post)
+#   UpdateCurves5                          [sequential]  + VerifyFHTable3 (pre)
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]

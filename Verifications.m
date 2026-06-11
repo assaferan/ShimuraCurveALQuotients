@@ -272,12 +272,10 @@ intrinsic VerifyFHProposition5(curves::SeqEnum)
     end for;
 end intrinsic;
 
-intrinsic VerifyFHTable3()
-    {Verify that TestComplicatedALFixedPointsOnQuotient (implementing
-    [FH99] Prop. 6) proves non-hyperellipticity for all 34 pairs (N, W')
-    of [FH99] Table 3 (p. 116). Our search is not restricted to the
-    paper's candidate list and may choose different witnesses N1, N2,
-    so we only check that each listed pair is found.}
+intrinsic VerifyFHTable3(curves::SeqEnum)
+    {Verify that FilterByComplicatedALFixedPointsOnQuotient (implementing
+    [FH99] Prop. 6) proved non-hyperellipticity for all 34 pairs (N, W')
+    of [FH99] Table 3 (p. 116), by checking the actual curve data.}
     // Entries are <N, generators of W'>
     Table3 := [
         <58, {2}>, <58, {58}>,
@@ -307,12 +305,18 @@ intrinsic VerifyFHTable3()
         <390, {6, 10, 26}>
     ];
     assert #Table3 eq 34;
-    for N in {t[1] : t in Table3} do
-        found := TestComplicatedALFixedPointsOnQuotient(1, N);
-        for t in Table3 do
-            if t[1] eq N then
-                assert AllALsFromGens(t[2], N) in Keys(found);
-            end if;
-        end for;
+    lut := AssociativeArray();
+    for c in curves do
+        lut[<c`D, c`N, c`W>] := c;
+    end for;
+    for t in Table3 do
+        N := t[1]; W := AllALsFromGens(t[2], N);
+        if not IsDefined(lut, <1, N, W>) then
+            error Sprintf("Table 3 curve D=1, N=%o, W=%o not found in curves", N, W);
+        end if;
+        c := lut[<1, N, W>];
+        if not (assigned c`IsHyp and not c`IsHyp) then
+            error Sprintf("Table 3 curve D=1, N=%o, W=%o not proved non-hyperelliptic", N, W);
+        end if;
     end for;
 end intrinsic;

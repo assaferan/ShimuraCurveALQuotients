@@ -50,8 +50,13 @@ case stage:
         t0 := Realtime();
         UpdateByGenus(~curves);
 
+    when "UpdateCurves5":
+        VerifyFHTable3(curves);
+        printf "VerifyFHTable3 passed\n";
+        UpdateCurves(~curves);
+
     when "UpdateCurves1", "UpdateCurves2", "UpdateCurves3", "UpdateCurves4",
-         "UpdateCurves5", "UpdateCurves6", "UpdateCurves7", "UpdateCurves8":
+         "UpdateCurves6", "UpdateCurves7", "UpdateCurves8":
         UpdateCurves(~curves);
 
     when "Genus3CoversGenus2":
@@ -74,9 +79,6 @@ case stage:
     when "GetQuotientsAndGenera_UpdateByGenus":
         VerifyFHTheorem3(curves);
         printf "VerifyFHTheorem3 passed\n";
-    when "UpdateCurves5":
-        VerifyFHTable3();
-        printf "VerifyFHTable3 passed\n";
 end case;
 
 catch e

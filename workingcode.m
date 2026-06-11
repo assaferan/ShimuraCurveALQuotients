@@ -105,7 +105,7 @@ function compute_data(start_stage, stages)
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByComplicatedALFixedPointsOnQuotient":
-            VerifyFHTable3();
+            VerifyFHTable3(curves);
       end case;
    end for;
 
