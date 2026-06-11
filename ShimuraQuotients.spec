@@ -17,4 +17,5 @@ QuaternionLatticeData.m
 RationalWithFactorization.m
 TraceFormula.m
 cmtables.m
+Verifications.m
 }
