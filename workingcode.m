@@ -23,6 +23,9 @@ FILTER_STAGES := [*
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
     <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
+    // Non-AL involution filter on the star curves before expansion; determinations are
+    // carried onto the full-W entries by GetQuotientsAndGenera and then propagated.
+    <"FilterByNonALInvolutionsStar", FilterByNonALInvolutions>,
     // <"GetQuotientsAndGenera", GetQuotientsAndGenera>,
     <"UpdateByGenus", UpdateByGenus>,
     <"UpdateCurves1", UpdateCurves>,

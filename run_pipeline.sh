@@ -19,7 +19,10 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]
-#   GetQuotientsAndGenera + UpdateByGenus  [sequential]  + VerifyFHTheorem3, VerifyFHProposition4/5, VerifyFHTable3
+#   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
+#   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
+#                                                         onto the full-W entries)
+#                                                         + VerifyFHTheorem3, VerifyFHProposition4/5, VerifyFHTable3 (post)
 #   UpdateCurves1                          [sequential]
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
@@ -38,9 +41,11 @@
 
 set -euo pipefail
 
-NUM_WORKERS="${1:-8}"
+# 128 workers per policy on this shared machine; many fine chunks so the cost-aware worker
+# can isolate the heavy tail curves (makespan -> slowest single curve, not slowest cluster).
+NUM_WORKERS="${1:-128}"
 DATA_DIR="${2:-data/par}"
-NUM_CHUNKS="${3:-${NUM_WORKERS}}"
+NUM_CHUNKS="${3:-1024}"
 MAGMA_CMD="${MAGMA_CMD:-magma -b}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"
@@ -99,11 +104,15 @@ run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"              
 run_par "FilterByTraceStar"
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
 run_par "FilterStarCurvesByFpAutomorphisms"
+# Non-AL involution filter on the star curves themselves: a star curve proven
+# non-subhyperelliptic here prunes its entire cover-tree (via UpwardClosure) right
+# after expansion, sparing all its quotients the heavy per-curve stages below.
+run_par "FilterByNonALInvolutionsStar"
 
 # ── expand to all AL quotients ────────────────────────────────────────────────
 
 run_seq "GetQuotientsAndGenera_UpdateByGenus" \
-                              "${D}/curves_after_FilterStarCurvesByFpAutomorphisms.dat" \
+                              "${D}/curves_after_FilterByNonALInvolutionsStar.dat" \
                               "${D}/curves_after_UpdateByGenus.dat"
 
 # ── all-quotients stages (~18 000+ curves) ────────────────────────────────────

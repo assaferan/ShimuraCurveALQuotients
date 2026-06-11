@@ -7,10 +7,10 @@
 // so do NOT wrap path/stage values in Magma string quotes when calling.
 // Integer args are converted with StringToInteger() below.
 //
-// The worker loads the full curve list, extracts its assigned contiguous slice
-// curves[start..end], runs the named filter on that slice, then writes the
-// (possibly modified) slice to output_dat.  The merge script reassembles the
-// slices in order.
+// The worker loads the full curve list, selects its cost-balanced subset of curves
+// (see the assignment below), runs the named filter on them, then writes the (possibly
+// modified) curves tagged with their original indices to output_dat.  parallel_merge.m
+// reassembles all chunks back into the original order by index.
 //
 // Safe stages (per-curve computation, no global index access):
 //   FilterByTrace, FilterByTraceStar,
@@ -38,11 +38,16 @@ try
 curves := eval Read(input_dat);
 n := #curves;
 
-chunk_size := (n + total_chunks_i - 1) div total_chunks_i;
-start_idx  := (chunk_i - 1) * chunk_size + 1;
-end_idx    := Minimum(chunk_i * chunk_size, n);
-
-subseq := curves[start_idx .. end_idx];
+// Cost-aware assignment: order all curves by descending cost estimate (CurveCostProxy),
+// then deal them round-robin into total_chunks groups.  This (a) spreads the heavy curves
+// across distinct chunks so no chunk gets several of them, and (b) puts the heaviest curves
+// in the lowest-numbered chunks, which GNU parallel dispatches first.  Each worker computes
+// the same ordering deterministically, so the chunks partition the curves with no overlap.
+proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
+perm := [1..n];
+Sort(~perm, func<i, j | proxy[i] gt proxy[j] select -1 else (proxy[i] lt proxy[j] select 1 else i - j)>);
+my_idx := [perm[k] : k in [chunk_i .. n by total_chunks_i]];   // strided slice of the sorted order
+subseq := [curves[i] : i in my_idx];
 
 t0 := Realtime();
 
@@ -59,7 +64,7 @@ case stage:
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial":
         FilterByWeilPolynomialGenusScaled(~subseq);
-    when "FilterByNonALInvolutions":
+    when "FilterByNonALInvolutions", "FilterByNonALInvolutionsStar":
         FilterByNonALInvolutions(~subseq);
     else
         error Sprintf("Unknown or unsupported stage: %o", stage);
@@ -71,6 +76,7 @@ catch e
     error e;  // re-raise so SetQuitOnError exits non-zero
 end try;
 
-Write(output_dat, Sprint(subseq, "Magma") : Overwrite);
-printf "Worker %o/%o [%o..%o]: %o curves, %o s\n", chunk_i, total_chunks_i, start_idx, end_idx, #subseq, Realtime() - t0;
+// Tag each curve with its original index so the (index-aware) merge can restore order.
+Write(output_dat, Sprint([<my_idx[j], subseq[j]> : j in [1..#subseq]], "Magma") : Overwrite);
+printf "Worker %o/%o: %o curves, %o s\n", chunk_i, total_chunks_i, #subseq, Realtime() - t0;
 quit;

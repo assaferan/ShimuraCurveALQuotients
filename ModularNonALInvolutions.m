@@ -196,12 +196,17 @@ Otherwise, returns -1.}
         for other_w in (other_ws diff bad_ws) do
             other_W_MDN := AtkinLehnerOperator(MDN, other_w);
             other_W_SN := Solution(SDN_new_basis, SDN_new_basis * other_W_MDN);
-            fixed_subspace := Kernel(Matrix(V_SN * other_W_SN) - 1);
+            // Atkin-Lehner operators at primes dividing D act with opposite signs on the
+            // Shimura and modular Jacobians, so the Shimura-side invariants are the
+            // chi(m) = (-1)^#PD(gcd(m,D)) eigenspaces here.  chi is a *character* of the
+            // AL group, so the sign of each W_w is chi(w) (not chi(w*other_w)), and the
+            // V W_{other} involution is taken in its chi(other_w) eigenspace.
+            chiQ := (-1)^#PrimeDivisors(GCD(other_w, X`D));
+            fixed_subspace := Kernel(Matrix(V_SN * other_W_SN) - chiQ);
             for w in ws do
                 W_MDN := AtkinLehnerOperator(MDN, w);
                 W_SN := Solution(SDN_new_basis, SDN_new_basis * W_MDN);
-                al_sign := (-1)^#PrimeDivisors(GCD(AtkinLehnerMul(w, other_w, X`D*X`N),X`D));
-                // al_sign := (X`D mod w eq 0) select -1 else 1;
+                al_sign := (-1)^#PrimeDivisors(GCD(w, X`D));
                 kerw := Kernel(Matrix(W_SN) - al_sign);
                 fixed_subspace meet:= kerw;
             end for;
@@ -215,8 +220,10 @@ Otherwise, returns -1.}
                 return 1, name, _;
             end if;
             fix := 2*X`g - 4*g + 2;
+            // If X`g is even, fix = 2 mod 4, and so fix ne 2 is equivalent to fix gt 2
             if IsEven(X`g) and fix gt 2 then
                 return 0, name, fix;
+            // If X`g is odd fix = 0 mod 4, so fix gt 4 is equivalent to fix notin {0,4}
             elif IsOdd(X`g) and fix gt 4 then
                 return 0, name, fix;
             end if;

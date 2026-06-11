@@ -1,7 +1,8 @@
 
 import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
 // This file implements the trace formulas from [Popa] and [Assaf]
-import "Caching.m" : cached_traces, SetCache, GetCache, class_nos;
+import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
+                     StartCollecting, StopCollecting, GetCollectedDiscs;
 
 function Sfast(N, u, t, n)
 // Returns |S_N(u,t,n)| as defined in [Popa, 4.1]
@@ -84,6 +85,7 @@ end function;
 
 function C(N, u, t, n)
 // Returns C_{N,1}(u,t,n) as defined in [Popa, (2.18)]
+    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     return &+[B(N, u div d, t, n) * MoebiusMu(d) : d in Divisors(u)];
 end function;
 
@@ -141,6 +143,7 @@ end function;
 
 function Cfast(N, u, t, n)
 // Returns C_N(u,t,n), computed using [Popa, Lemma 4.5]
+    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     // S := [x : x in [0..N-1] | (GCD(x,N) eq 1) and (((x^2 - t*x + n) mod N) eq 0)];
     // nS1 := #S(N, 1, t, n);
     nS2 := Sfast(N, 1, t, n);
@@ -180,6 +183,17 @@ function H(n)
         return -1/12;
     end if;
     if n mod 4 in [1,2] then
+        return 0;
+    end if;
+
+    // Collect mode: record the discriminants this H would request, return a dummy value.
+    // (The summation only ever multiplies H into a sum, so the dummy is harmless on the dry run.)
+    if IsCollecting() then
+        for d in Divisors(n) do
+            if IsSquare(d) and (n div d) mod 4 in [0,3] then
+                CollectDisc(-n div d);
+            end if;
+        end for;
         return 0;
     end if;
 
@@ -1083,21 +1097,27 @@ function Bslowg(g, N, u, t)
 end function;
 
 function CslowVW(p, Q, N, u, t)
+    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
     return &+[BslowVW(p, Q, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
 end function;
 
 
 function Cslowg(g, N, u, t)
-
-    if g eq [2,1,0,2] then 
+    if IsCollecting() then return 1; end if;   // collect dry-run only needs H's disc-recording
+    // The fast specializations BslowS2/BslowV2/BslowV3 are valid only for the exact
+    // matrices S2, V2 = get_V2(N), V3 = get_V3(N).  Dispatching on the determinant alone
+    // is wrong, because other operators share these determinants (e.g. S2 * W_{2^v} has
+    // determinant 2^v after reduction but is not V2); those must use the general Bslowg.
+    if g eq [2,1,0,2] then
         return  &+[BslowS2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
+    detg := Determinant(Matrix(Integers(), 2, 2, g));
     v := Valuation(N,2);
-    if v ge 3 and Determinant(Matrix(Integers(), 2, 2, g)) eq 2^v then //V2 Case
+    if v ge 3 and detg eq 2^v and g eq Eltseq(get_V2(N)) then //V2 Case
         return &+[BslowV2(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
-    if Determinant(Matrix(Integers(),2,2,g)) eq 3^2 then //V3 case
-        return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];;
+    if detg eq 3^2 and Valuation(N,3) eq 2 and g eq Eltseq(get_V3(N)) then //V3 case
+        return &+[BslowV3(N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
     end if;
 
     return &+[Bslowg(g, N, u div d, t)*MoebiusMu(d) : d in Divisors(u)];
@@ -1189,10 +1209,30 @@ end intrinsic;
 intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntElt
 {Returns the trace of g on S_k(N) using [Popa], assuming g normalizes Gamma0(N).}
     require k ge 2 : "This formula is only valid for k ge 2";
+    // g acts on S_k(N) only up to a scalar: a scalar c*I acts as c^(k-2).  Reduce g
+    // to its primitive representative (content 1) so det_g below is the determinant of
+    // the actual operator, and re-apply the scalar c^(k-2) at the end.  Without this,
+    // matrices such as V_p * W_{p^a} (whose content is the shared p-power) yield a wrong
+    // determinant and hence a wrong trace.
+    content := GCD([Integers() | x : x in g]);
+    g := [x div content : x in g];
     S1 := 0;
     w := k - 2;
     M2Z := MatrixAlgebra(Integers(),2);
     det_g := Determinant(M2Z!g);
+    // For wide discriminant ranges, prefetch the Hurwitz class numbers in one batched, sorted,
+    // request-only streaming pass.  A recursive call under collect mode traverses the same loop
+    // (H records discriminants and returns a dummy); the guard prevents further recursion.  The
+    // try/catch shields against the dummy values breaking the final integrality coercion: the
+    // class-number loop has already run (so all discriminants are recorded) before any such error.
+    if (not IsCollecting()) and (4*det_g ge ClassNumberTableMaxDisc()) then
+        StartCollecting();
+        SetAssertions(false);   // dry run uses dummy coefficients; skip validation asserts
+        try _ := TraceFormulaGamma0g(g, N, k); catch e tmp := 0; end try;
+        SetAssertions(true);
+        StopCollecting();
+        _ := ClassNumberBatchLU(GetCollectedDiscs());
+    end if;
     max_abst := Floor(SquareRoot(4*det_g)); // t^2 - 4n <= 0
     for t in [-max_abst..max_abst] do
 	    for u in Divisors(N*det_g) do
@@ -1207,8 +1247,12 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     end for;
     vprintf ShimuraQuotients, 3: "S1 = %o\n", S1;
     S2 := 0;
-    for d in Divisors(4) do
-	    a := 4 div d;
+    // Hyperbolic/parabolic term: sum over factorisations a*d = det_g (the determinant of
+    // the operator).  Using a fixed Divisors(4) only captures det-4 operators and silently
+    // drops contributions for e.g. S2 * W_{2^v} (det 2^v); other operators (V2, V3) happen
+    // to have no contribution here, which is why this was not noticed before.
+    for d in Divisors(det_g) do
+	    a := det_g div d;
         S2 +:= Minimum(a,d)^(k-1)*phi_N_g(g,a,d,N);
     end for;
     vprintf ShimuraQuotients, 3: "S2 = %o\n", S2;
@@ -1216,7 +1260,7 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     if k eq 2 then
 	    ret +:= 1;
     end if;
-    return Integers()!ret;
+    return content^(k-2) * Integers()!ret;
 end intrinsic;
 
 

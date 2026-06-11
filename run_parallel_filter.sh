@@ -14,9 +14,11 @@
 set -euo pipefail
 
 STAGE="${1:-FilterByTrace}"
-NUM_WORKERS="${2:-8}"
+NUM_WORKERS="${2:-128}"
 DATA_DIR="${3:-data}"
-NUM_CHUNKS="${4:-${NUM_WORKERS}}"
+# Many more chunks than workers: with the cost-aware worker, fine chunks isolate the heavy
+# curves so the makespan approaches the slowest single curve rather than the slowest cluster.
+NUM_CHUNKS="${4:-1024}"
 
 MAGMA_CMD="${MAGMA_CMD:-magma}"
 
@@ -32,6 +34,12 @@ case "${STAGE}" in
         ;;
     FilterStarCurvesByFpAutomorphisms)
         INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
+        ;;
+    FilterByNonALInvolutionsStar)
+        # Non-AL involution filter run on the star curves (full AL group), before they
+        # are expanded into all quotients.  A star curve proven non-subhyperelliptic
+        # propagates to its whole cover-tree via UpwardClosure after expansion.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
         ;;
     FilterByALFixedPointsOnQuotient)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
@@ -56,7 +64,8 @@ case "${STAGE}" in
         echo "Supported: FilterByTraceStar, FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient, FilterByTrace," >&2
-        echo "           FilterByWeilPolynomial, FilterByNonALInvolutions" >&2
+        echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2
+        echo "           FilterByNonALInvolutionsStar" >&2
         exit 1
         ;;
 esac
@@ -117,9 +126,14 @@ if [ "${MISSING}" -gt 0 ]; then
     exit 1
 fi
 
-echo "All ${NUM_CHUNKS} chunk files present. Merging..."
+echo "All ${NUM_CHUNKS} chunk files present. Merging (by original index)..."
 
-python3 parallel_merge.py "${CHUNKS_DIR}" "${NUM_CHUNKS}" "${OUTPUT_DAT}"
+# The chunk files are index-tagged, so the merge reorders by original index (done in Magma).
+${MAGMA_CMD} \
+    "chunks_dir:=${CHUNKS_DIR}" \
+    "total_chunks:=${NUM_CHUNKS}" \
+    "output_dat:=${OUTPUT_DAT}" \
+    parallel_merge.m
 
 T_END=$(date +%s)
 ELAPSED=$((T_END - T_START))
