@@ -1,7 +1,8 @@
 
 import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
 // This file implements the trace formulas from [Popa] and [Assaf]
-import "Caching.m" : cached_traces, SetCache, GetCache, class_nos;
+import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
+                     StartCollecting, StopCollecting, GetCollectedDiscs;
 
 function Sfast(N, u, t, n)
 // Returns |S_N(u,t,n)| as defined in [Popa, 4.1]
@@ -180,6 +181,17 @@ function H(n)
         return -1/12;
     end if;
     if n mod 4 in [1,2] then
+        return 0;
+    end if;
+
+    // Collect mode: record the discriminants this H would request, return a dummy value.
+    // (The summation only ever multiplies H into a sum, so the dummy is harmless on the dry run.)
+    if IsCollecting() then
+        for d in Divisors(n) do
+            if IsSquare(d) and (n div d) mod 4 in [0,3] then
+                CollectDisc(-n div d);
+            end if;
+        end for;
         return 0;
     end if;
 
@@ -1204,6 +1216,17 @@ intrinsic TraceFormulaGamma0g(g::SeqEnum, N::RngIntElt, k::RngIntElt) -> RngIntE
     w := k - 2;
     M2Z := MatrixAlgebra(Integers(),2);
     det_g := Determinant(M2Z!g);
+    // For wide discriminant ranges, prefetch the Hurwitz class numbers in one batched, sorted,
+    // request-only streaming pass.  A recursive call under collect mode traverses the same loop
+    // (H records discriminants and returns a dummy); the guard prevents further recursion.  The
+    // try/catch shields against the dummy values breaking the final integrality coercion: the
+    // class-number loop has already run (so all discriminants are recorded) before any such error.
+    if (not IsCollecting()) and (4*det_g ge ClassNumberTableMaxDisc()) then
+        StartCollecting();
+        try _ := TraceFormulaGamma0g(g, N, k); catch e tmp := 0; end try;
+        StopCollecting();
+        _ := ClassNumberBatchLU(GetCollectedDiscs());
+    end if;
     max_abst := Floor(SquareRoot(4*det_g)); // t^2 - 4n <= 0
     for t in [-max_abst..max_abst] do
 	    for u in Divisors(N*det_g) do

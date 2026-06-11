@@ -6,6 +6,9 @@ intrinsic ComputePointsViaTrace(X::ShimuraQuot, p::RngIntElt, d::RngIntElt) -> R
     D := X`D;
     N := X`N;
     W := X`W;
+
+    // Class-number prefetch/batching now happens inside TraceDNewALFixed, so every caller
+    // (point counts, FilterByTrace, Weil, the non-AL trace path) is covered by one wrap.
     b, tpsd := GetCache(<D,N,2,p^d,W>, cached_traces);
     if not b then
         tpsd := TraceDNewALFixed(D, N, 2, p^d, W );

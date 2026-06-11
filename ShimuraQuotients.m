@@ -9,7 +9,8 @@ declare verbose ShimuraQuotients, 5;
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
-import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders;
+import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders,
+                     IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -726,6 +727,22 @@ end function;
 
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
     {}
+    // This trace sums Hurwitz class numbers up to ~4*Max(W)*n.  For wide ranges, prefetch them
+    // in a single batched, sorted, request-only streaming pass (memory-safe) so the real sum
+    // below hits warm values instead of streaming-and-caching the whole range (which OOMs) or
+    // recomputing each value live.  A dry "collect" run records the discriminants.  Skip this
+    // when already collecting -- an outer prefetch will gather our discriminants too.
+    if (not IsCollecting()) and (4*Max(W)*n ge ClassNumberTableMaxDisc()) then
+        StartCollecting();
+        // per-w try/catch so a dummy-value error in one term still leaves the others'
+        // discriminants recorded (each term's class-number loop runs before any coercion).
+        for w in W do
+            try _ := TraceDNew(D, N, k, n, w); catch e tmp := 0; end try;
+        end for;
+        StopCollecting();
+        _ := ClassNumberBatchLU(GetCollectedDiscs());
+    end if;
+
     sum := 0;
     vprint ShimuraQuotients, 3: "in TraceDNewALFixed with n = ", n, ", w = ";
     for w in W do
@@ -734,7 +751,7 @@ intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W
         sum +:= sgn*TraceDNew(D, N, k, n, w);
     end for;
     sum *:= 1/#W;
-    
+
     return sum;
 end intrinsic;
 
