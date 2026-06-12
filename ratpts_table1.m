@@ -26,23 +26,24 @@ SetVerbose("ShimuraQuotients", 1);
 //   gens = set of AL subscripts generating W  (e.g. <w10,w42>  ->  {10,42})
 // ---------------------------------------------------------------------------
 TABLE1 := [*
-    // ---- priority batch: N>=5, moderate D, D*N <= ~1000 ----
-    <34,  5,  {10,34},     "DN=170">,
-    <6,   35, {10,42},     "DN=210; user-anchored, run first">,
-    <10,  21, {5,21},      "DN=210">,
-    <15,  14, {2,5,7},     "DN=210">,
-    <34,  7,  {2,17},      "DN=238">,
-    <10,  33, {2,55},      "DN=330">,
-    <74,  5,  {10,74},     "DN=370">,
-    <10,  39, {3,5,13},    "DN=390">,
-    <10,  51, {2,15,51},   "DN=510">,
-    <6,   85, {2,15,51},   "DN=510">,
-    <21,  26, {2,21,39},   "DN=546">,
-    <10,  61, {10,122},    "DN=610">,
-    <6,   115,{5,6,46},    "DN=690">,
-    <14,  57, {2,21,57},   "DN=798">,
-    <10,  93, {3,10,62},   "DN=930">,
-    <6,   161,{2,21,69},   "DN=966">,
+    // ---- TRACTABLE batch: #div(M)<=12 (M=4*p*q), the only rows that complete ----
+    <34,  5,  {10,34},     "DN=170; #div(M=340)=12">,
+    <34,  7,  {2,17},      "DN=238; #div(M=476)=12">,
+    <74,  5,  {10,74},     "DN=370; #div(M=740)=12">,
+    <10,  61, {10,122},    "DN=610; #div(M=1220)=12">,
+    // ---- #div(M)>=24: OOM wall, skipped by DIV_CUTOFF (kept for record) ----
+    <6,   35, {10,42},     "DN=210; #div(M=420)=24 OOM">,
+    <10,  21, {5,21},      "DN=210; #div24 OOM">,
+    <15,  14, {2,5,7},     "DN=210; #div(M=840)=32 OOM">,
+    <10,  33, {2,55},      "DN=330; #div24 OOM">,
+    <10,  39, {3,5,13},    "DN=390; #div24 OOM">,
+    <10,  51, {2,15,51},   "DN=510; #div24 OOM">,
+    <6,   85, {2,15,51},   "DN=510; #div24 OOM">,
+    <21,  26, {2,21,39},   "DN=546; #div(M=2184)=32 OOM">,
+    <6,   115,{5,6,46},    "DN=690; #div24 OOM">,
+    <14,  57, {2,21,57},   "DN=798; #div24 OOM">,
+    <10,  93, {3,10,62},   "DN=930; #div24 OOM">,
+    <6,   161,{2,21,69},   "DN=966; #div24 OOM">,
     // ---- deprioritized: N=1/2 (sparse CM, huge LP) and/or very large D*N ----
     <210, 1,  {7,15},      "DN=210 but N=1: sparse CM, likely intractable">,
     <330, 1,  {2,33},      "N=1">,
@@ -75,11 +76,27 @@ procedure check_group(C, gens, D, N)
     end if;
 end procedure;
 
+// polymake LP dimension guard (see ratpts_table6.m / HANDOFF_table6.md for the
+// full #div(M) tractability law). The Borcherds-form step enumerates lattice
+// points of a polytope of dimension #Divisors(M), M = 4*(D*N)/2^v2(D). Cost is
+// driven by #div(M), NOT by the pole order n (so LP_SIZE_CUTOFF misses it: the
+// killed M=420 case had n=145). #div<=12 completes; #div>=24 (3 odd primes in M)
+// OOMs even at minimum forced n. Skip those cleanly instead of `Killed: 9`.
+DIV_CUTOFF := 24;
+polymake_level := func< D, N | 4 * ((D*N) div 2^Valuation(D, 2)) >;  // = M
+
 procedure run_entry(entry, curves)
     D := entry[1]; N := entry[2]; gens := entry[3]; note := entry[4];
     printf "\n==== D=%o N=%o (D*N=%o) W=<%o>  [%o] ====\n", D, N, D*N, gens, note;
     if not IsSquarefree(N) then
         printf "  N=%o is not squarefree; method N/A; skipping\n", N;
+        return;
+    end if;
+    M := polymake_level(D, N);
+    ndiv := #Divisors(M);
+    if ndiv ge DIV_CUTOFF then
+        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+            M, ndiv, DIV_CUTOFF;
         return;
     end if;
     t0 := Realtime();

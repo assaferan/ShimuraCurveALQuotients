@@ -85,11 +85,30 @@ procedure check_group(C, gens, D, N)
     end if;
 end procedure;
 
+// polymake LP dimension guard. The Borcherds-form step enumerates lattice
+// points of a polytope of dimension #Divisors(M), M = 4*D0 = 4*(D*N)/2^v2(D)
+// (the level of the {oo}-weakly-holomorphic forms ring). Cost is driven by
+// #Divisors(M), NOT by LP_SIZE_CUTOFF (which bounds the pole order n only):
+// the OOM-killed M=420 case had n=145 << 10000. Empirically (completed vs
+// Killed:9 polymake artifacts): #div<=12 completes reliably (proven to M=1212,
+// n=499); #div=16-20 only at small n; #div>=24 (3 odd prime factors of M) OOMs
+// even at its minimum forced n. So skip #div(M) >= DIV_CUTOFF up front -- this
+// turns the kills into clean skips; it does NOT make new cases tractable.
+DIV_CUTOFF := 24;
+polymake_level := func< D, N | 4 * ((D*N) div 2^Valuation(D, 2)) >;  // = M
+
 for entry in CANDIDATES do
     D := entry[1]; N := entry[2]; gensets := entry[3];
     printf "\n==== D=%o N=%o (D*N=%o) ====\n", D, N, D*N;
     if not IsSquarefree(N) then
         printf "  N=%o is not squarefree; method N/A; skipping\n", N;
+        continue;
+    end if;
+    M := polymake_level(D, N);
+    ndiv := #Divisors(M);
+    if ndiv ge DIV_CUTOFF then
+        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+            M, ndiv, DIV_CUTOFF;
         continue;
     end if;
     t0 := Realtime();

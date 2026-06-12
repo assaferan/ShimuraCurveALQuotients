@@ -7,11 +7,15 @@
 //   1. Build the genus-2 model C = X_0^D(N)/W (same pipeline as ratpts_table6.m
 //      / ratpts_table1.m: find the star curve for (D,N), EquationsOfCovers, then
 //      pull out the cover whose group W = AllALsFromGens(gens, D*N)).
-//   2. Run CHIMP's HeuristicDecompositionFactors(C) on Jac(C).
+//   2. Take CHIMP's HeuristicDecomposition(C)[4][1] (the GEOMETRIC decomposition
+//      descriptor: [dim,exp] pairs over Qbar) and flatten exp to a dimension multiset.
 //        dims = [1,1]  => Jac splits geometrically into two elliptic factors
 //                         => X is (geometrically) BIELLIPTIC.
 //        dims = [2]    => Jac stays 2-dimensional (simple)
 //                         => X is NOT bielliptic.
+//   NB: the library intrinsic HeuristicDecompositionFactors uses the decomposition
+//   over the BASE field Q (entry [3]), which misses splittings that only occur over
+//   an extension -- so we read entry [4] (over the closure) directly instead.
 //   (D=6,N=29 W=<w3,w29> is the user-anchored example; expected BIELLIPTIC.)
 //
 // METHOD CONSTRAINT: the equation pipeline requires N squarefree. The 40 rows of
@@ -39,10 +43,22 @@
 // ============================================================================
 
 AttachSpec("ShimuraQuotients.spec");
-AttachSpec("/home/sachihashimoto/CHIMP/CHIMP.spec");
+AttachSpec("/Users/sachihashimoto/Repos/CHIMP/CHIMP.spec");
 SetVerbose("ShimuraQuotients", 1);
 
 LOGFILE := "ratpts_table10_results.txt";
+
+// polymake LP dimension guard (ported from ratpts_table6.m -- SAME EquationsOfCovers
+// pipeline, same feasibility wall). The Borcherds-form step enumerates lattice points
+// of a polytope of dimension #Divisors(M), M = 4*D0 = 4*(D*N)/2^v2(D). Cost is driven
+// by #Divisors(M), NOT by the pole-order bound n (BorcherdsForms.m's LP_SIZE_CUTOFF,
+// default 10000, only bounds n). Empirically: #div<=12 completes reliably; #div=16-20
+// only at small n; #div>=24 (3 odd prime factors of M) OOM-kills polymake (Killed:9)
+// even at its minimum forced n -- and that kill takes down the whole magma process,
+// aborting a sweep. So skip #div(M) >= DIV_CUTOFF up front: clean skip, not a crash.
+// (For Table 10's 228 groups: 58 are #div<=12, 10 are #div 16-20, 160 are #div>=24.)
+DIV_CUTOFF := 24;
+polymake_level := func< D, N | 4 * ((D*N) div 2^Valuation(D, 2)) >;  // = M
 
 // Each entry: <D, N, [ set-of-AL-subscripts generating W, ... ]>, D*N ascending.
 TABLE10 := [*
@@ -277,6 +293,40 @@ TABLE10 := [*
 *];
 
 // ---------------------------------------------------------------------------
+// Resume support: never recompute a settled (D,N,W). EVERY outcome -- a verdict
+// OR a failure/skip reason -- is logged, and at startup load_settled() reads all
+// logged (D,N,W) keys so a later sweep auto-skips them (and skips the whole group's
+// EquationsOfCovers when all its W are done). Each TABLE10 (D,N,W) is unique, so a
+// startup-only read-only SETTLED set is sufficient (no mid-run mutation needed).
+// Key = <"D","N","gens"> exactly as the three leading tab fields are written.
+// ---------------------------------------------------------------------------
+function settled_key(D, N, gens)
+    return <Sprintf("%o", D), Sprintf("%o", N), Sprintf("%o", gens)>;
+end function;
+
+function load_settled()
+    keys := {};
+    try
+        for line in Split(Read(LOGFILE), "\n") do
+            if #line eq 0 or line[1] eq "#" then continue; end if;
+            fld := Split(line, "\t");
+            if #fld ge 3 then Include(~keys, <fld[1], fld[2], fld[3]>); end if;
+        end for;
+    catch e
+        ;  // log file absent/empty -> nothing settled yet
+    end try;
+    return keys;
+end function;
+
+SETTLED := {};  // populated once at dispatch, before any computation
+
+procedure log_row(D, N, gens, verdict, model)
+    fh := Open(LOGFILE, "a");
+    fprintf fh, "%o\t%o\t%o\t%o\ty^2=%o\n", D, N, gens, verdict, model;
+    delete fh;  // flush/close
+end procedure;
+
+// ---------------------------------------------------------------------------
 // Classify one genus-2 model via CHIMP's heuristic Jacobian decomposition.
 // ---------------------------------------------------------------------------
 procedure check_group(C, gens, D, N)
@@ -284,12 +334,21 @@ procedure check_group(C, gens, D, N)
     g := Genus(C);
     if g ne 2 then
         printf "  [%o] WARNING genus = %o (expected 2); skipping bielliptic test\n", desc, g;
+        log_row(D, N, gens, Sprintf("SKIP-genus=%o", g), "n/a");
         return;
     end if;
     f := HyperellipticPolynomials(C);
     printf "  [%o] model y^2 = %o\n", desc, f;
-    facts := HeuristicDecompositionFactors(C);
-    dims := Sort([ tup[1] : tup in facts ]);
+    // CHIMP HeuristicDecomposition(C) returns [* Kiso, Kdecinfo, base-dec, geo-dec *].
+    // Entry [4][1] is the GEOMETRIC descriptor: a list of [dim, exp] pairs, one per
+    // distinct simple factor of Jac over Qbar (dim = #Rows = factor dimension, exp =
+    // multiplicity). Geometric biellipticity needs the decomposition over the CLOSURE
+    // (entry [4]), not over the base field Q (which is what the library
+    // HeuristicDecompositionFactors uses via entry [3]). Flatten exp to get the
+    // dimension multiset: [[1,1],[1,1]] and [[1,2]] both -> [1,1] (E1xE2 / E^2);
+    // [[2,1]] -> [2] (geometrically simple).
+    decgeodesc := HeuristicDecomposition(C)[4][1];
+    dims := Sort(&cat[ [ pair[1] : i in [1..pair[2]] ] : pair in decgeodesc ]);
     if dims eq [1,1] then
         verdict := "BIELLIPTIC";
         printf "  [%o] Jac splits (dims %o) => %o\n", desc, dims, verdict;
@@ -300,9 +359,7 @@ procedure check_group(C, gens, D, N)
         verdict := Sprintf("UNCLEAR(dims=%o)", dims);
         printf "  [%o] unexpected decomposition dims %o\n", desc, dims;
     end if;
-    fh := Open(LOGFILE, "a");
-    fprintf fh, "%o\t%o\t%o\t%o\ty^2=%o\n", D, N, gens, verdict, f;
-    delete fh;  // flush/close
+    log_row(D, N, gens, verdict, f);
 end procedure;
 
 // ---------------------------------------------------------------------------
@@ -315,26 +372,57 @@ procedure run_group(entry, curves)
         printf "  N=%o is not squarefree; method N/A; skipping\n", N;
         return;
     end if;
+    M := polymake_level(D, N);
+    ndiv := #Divisors(M);
+    if ndiv ge DIV_CUTOFF then
+        // Permanent, instant skip (no EquationsOfCovers cost) -- the guard fires every
+        // run, so no need to log these (logging 160 such groups would just be noise).
+        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+            M, ndiv, DIV_CUTOFF;
+        return;
+    end if;
+    // Resume: drop W already in the log; if none remain, skip EquationsOfCovers too.
+    unsettled := [ gens : gens in gensets | settled_key(D,N,gens) notin SETTLED ];
+    if #unsettled eq 0 then
+        printf "  all %o W-group(s) already settled in log; skipping (no recompute)\n", #gensets;
+        return;
+    end if;
+    if #unsettled lt #gensets then
+        printf "  %o of %o W-group(s) already settled; computing the remaining %o\n",
+            #gensets - #unsettled, #gensets, #unsettled;
+    end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;
+        for gens in unsettled do log_row(D, N, gens, "SKIP-no-star-curve", "n/a"); end for;
         return;
     end if;
+    logged := {};  // W logged during THIS run (SETTLED is only the startup snapshot)
     try
         crv_list, ws, keys := EquationsOfCovers(Xstar, curves);
         printf "  computed %o cover equations in %o s\n", #crv_list, Realtime()-t0;
-        for gens in gensets do
+        for gens in unsettled do
             W := AllALsFromGens(gens, D*N);
             if not exists(k){k : k in keys | curves[k]`W eq W} then
                 printf "  [D=%o N=%o W=<%o>] not among computed covers (keys); skipping\n", D, N, gens;
+                log_row(D, N, gens, "SKIP-not-in-covers", "n/a");
+                Include(~logged, gens);
                 continue;
             end if;
             idx := Index(keys, k);
             C := crv_list[idx];
-            check_group(C, gens, D, N);
+            check_group(C, gens, D, N);  // logs its own verdict/skip row
+            Include(~logged, gens);
         end for;
     catch e
         printf "  ERROR on (D,N)=(%o,%o): %o\n", D, N, e`Object;
+        // Log the failure for each W not already logged this run, so the expensive
+        // EquationsOfCovers attempt (e.g. LP-cutoff bail on hard N=2 levels) is not
+        // retried next sweep.
+        reason := Sprintf("FAILED:%o", e`Object);
+        for gens in unsettled do
+            if gens notin logged then log_row(D, N, gens, reason, "n/a"); end if;
+        end for;
     end try;
     printf "  ---- group (D=%o,N=%o) done in %o s ----\n", D, N, Realtime()-t0;
 end procedure;
@@ -343,6 +431,14 @@ end procedure;
 // Entry point: pick what to run via command-line assignments.
 // ---------------------------------------------------------------------------
 printf "Table 10 driver: %o (D,N) groups, sorted by D*N ascending.\n", #TABLE10;
+
+// Load already-settled (D,N,W) keys so we never recompute a logged row. Only matters
+// in the compute branches below (table-only printing leaves SETTLED empty/unused).
+if assigned idx or assigned lo or assigned maxdn then
+    SETTLED := load_settled();
+    printf "Loaded %o already-settled (D,N,W) row(s) from %o; these will be skipped.\n",
+        #SETTLED, LOGFILE;
+end if;
 
 if assigned idx then
     i := StringToInteger(idx);

@@ -1,6 +1,6 @@
 # Table 10 bielliptic verdicts  (X = X_0^D(N)/W, genus 2, NOT AL-bielliptic)
-# Driver: ratpts_table10.m   Method: CHIMP HeuristicDecompositionFactors(Jac C)
-#   dims [1,1] => BIELLIPTIC ; dims [2] => NOT-bielliptic.
+# Driver: ratpts_table10.m   Method: CHIMP HeuristicDecomposition(Jac C)[4][1]
+#   (GEOMETRIC decomposition over Qbar). dims [1,1] => BIELLIPTIC ; dims [2] => NOT.
 # Verdict rows (appended by the driver), tab-separated:
 #   D <tab> N <tab> {gens} <tab> verdict <tab> y^2=<model>
 # -----------------------------------------------------------------------------
@@ -8,9 +8,20 @@
 #   * Method requires N squarefree. The 40 non-squarefree-N rows of Table 10 are
 #     NOT in the driver (out of scope for this pipeline).
 #   * Anchor case to verify first: group #15, D=6 N=29 W=<w3,w29> -> expect BIELLIPTIC.
-#   * TODO(timing): confirm CHIMP attach + HeuristicDecompositionFactors wall time
-#     on a quiet machine. First smoke test on this (heavily shared) box did not
-#     finish y^2=x^6+1 within 300s -- almost certainly machine load, not the code;
-#     re-measure after migrating.
+#   * TIMING (measured 2026-06-12, new quiet Mac): ~4.5 min/group end-to-end; cost is
+#     EquationsOfCovers (~180s), CHIMP endo step is fast (<10s). The old box's
+#     ">300s, didn't finish" was machine load, not the code.
+#   * VERDICT LOGIC FIX (2026-06-12): the planned HeuristicDecompositionFactors call
+#     was wrong twice -- (a) the intrinsic already extracts tup[1] internally, and
+#     (b) it decomposes over the BASE field Q (entry [3]), missing geometric splits.
+#     Driver now reads HeuristicDecomposition(C)[4][1] (GEOMETRIC [dim,exp] descriptor)
+#     and flattens exp. Anchor D=6,N=29 confirmed BIELLIPTIC.
+#   * FEASIBILITY WALL (ported from Table 6 handoff -- SAME EquationsOfCovers/polymake
+#     pipeline): cost ~ #div(M), M = 4*(D*N)/2^v2(D). #div<=12 reliable; 16-20 small-n
+#     only; #div>=24 OOM-kills polymake (Killed:9) -> takes down the whole magma run.
+#     Driver now has DIV_CUTOFF:=24 guard (skips up front). Of Table 10's 228 groups:
+#     ONLY 58 are #div<=12 (tractable, 69 W-tests), 10 are #div 16-20, 160 are #div>=24
+#     (hard wall on this hardware). So a realistic full sweep is ~58 groups, NOT 228.
 # -----------------------------------------------------------------------------
 # === verdicts below ===
+6	29	{ 3, 29 }	BIELLIPTIC	y^2=-1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
