@@ -4,7 +4,10 @@
 *.html
 .DS_Store
 
-# parallel-pipeline run output (reproducible; large)
-data/par_run/
+# parallel-pipeline run scratch (chunks/logs/status); keep curves_after_*.dat trackable
+data/par_run/parallel_chunks_*/
+data/par_run/*.log
+data/par_run/STATUS.txt
+data/par_run/_statuswriter.sh
 # local Claude Code agent config
 .claude/
