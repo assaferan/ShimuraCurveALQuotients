@@ -3,3 +3,8 @@
 *.el
 *.html
 .DS_Store
+
+# parallel-pipeline run output (reproducible; large)
+data/par_run/
+# local Claude Code agent config
+.claude/
