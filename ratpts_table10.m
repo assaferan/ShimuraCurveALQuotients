@@ -318,8 +318,6 @@ function load_settled()
     return keys;
 end function;
 
-SETTLED := {};  // populated once at dispatch, before any computation
-
 procedure log_row(D, N, gens, verdict, model)
     fh := Open(LOGFILE, "a");
     fprintf fh, "%o\t%o\t%o\t%o\ty^2=%o\n", D, N, gens, verdict, model;
@@ -365,7 +363,7 @@ end procedure;
 // ---------------------------------------------------------------------------
 // Run one (D,N) group: compute cover equations once, then test each W.
 // ---------------------------------------------------------------------------
-procedure run_group(entry, curves)
+procedure run_group(entry, curves, settled)
     D := entry[1]; N := entry[2]; gensets := entry[3];
     printf "\n==== D=%o N=%o (D*N=%o) ====\n", D, N, D*N;
     if not IsSquarefree(N) then
@@ -382,7 +380,7 @@ procedure run_group(entry, curves)
         return;
     end if;
     // Resume: drop W already in the log; if none remain, skip EquationsOfCovers too.
-    unsettled := [ gens : gens in gensets | settled_key(D,N,gens) notin SETTLED ];
+    unsettled := [ gens : gens in gensets | settled_key(D,N,gens) notin settled ];
     if #unsettled eq 0 then
         printf "  all %o W-group(s) already settled in log; skipping (no recompute)\n", #gensets;
         return;
@@ -397,7 +395,7 @@ procedure run_group(entry, curves)
         for gens in unsettled do log_row(D, N, gens, "SKIP-no-star-curve", "n/a"); end for;
         return;
     end if;
-    logged := {};  // W logged during THIS run (SETTLED is only the startup snapshot)
+    logged := {};  // W logged during THIS run (`settled` is only the startup snapshot)
     try
         crv_list, ws, keys := EquationsOfCovers(Xstar, curves);
         printf "  computed %o cover equations in %o s\n", #crv_list, Realtime()-t0;
@@ -432,26 +430,27 @@ end procedure;
 // ---------------------------------------------------------------------------
 printf "Table 10 driver: %o (D,N) groups, sorted by D*N ascending.\n", #TABLE10;
 
-// Load already-settled (D,N,W) keys so we never recompute a logged row. Only matters
-// in the compute branches below (table-only printing leaves SETTLED empty/unused).
+// Load already-settled (D,N,W) keys so we never recompute a logged row (passed into
+// run_group by value -- a top-level global is NOT reliably seen by a procedure defined
+// earlier in the script). Only the compute branches need it.
 if assigned idx or assigned lo or assigned maxdn then
-    SETTLED := load_settled();
+    settled := load_settled();
     printf "Loaded %o already-settled (D,N,W) row(s) from %o; these will be skipped.\n",
-        #SETTLED, LOGFILE;
+        #settled, LOGFILE;
 end if;
 
 if assigned idx then
     i := StringToInteger(idx);
     curves := GetHyperellipticCandidates();
     printf "Loaded %o candidate curves. Running single group #%o.\n", #curves, i;
-    run_group(TABLE10[i], curves);
+    run_group(TABLE10[i], curves, settled);
 elif assigned lo then
     a := StringToInteger(lo);
     b := assigned hi select StringToInteger(hi) else #TABLE10;
     curves := GetHyperellipticCandidates();
     printf "Loaded %o candidate curves. Running groups #%o..#%o.\n", #curves, a, b;
     for i in [a..b] do
-        run_group(TABLE10[i], curves);
+        run_group(TABLE10[i], curves, settled);
     end for;
 elif assigned maxdn then
     cap := StringToInteger(maxdn);
@@ -459,7 +458,7 @@ elif assigned maxdn then
     printf "Loaded %o candidate curves. Running groups with D*N <= %o.\n", #curves, cap;
     for entry in TABLE10 do
         if entry[1]*entry[2] le cap then
-            run_group(entry, curves);
+            run_group(entry, curves, settled);
         end if;
     end for;
 else
