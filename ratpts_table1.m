@@ -15,6 +15,8 @@
 // are appended to ratpts_table1_output.txt as runs complete. Once a (D,N,W) has
 // a recorded MODEL or a recorded reason-it-fails, do NOT re-run it.
 
+//Errors:
+//  ERROR on (D,N)=(34,5): Could not find enough points, sorry!
 AttachSpec("ShimuraQuotients.spec");
 SetVerbose("ShimuraQuotients", 1);
 
@@ -94,11 +96,11 @@ procedure run_entry(entry, curves)
     end if;
     M := polymake_level(D, N);
     ndiv := #Divisors(M);
-    if ndiv ge DIV_CUTOFF then
-        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
-            M, ndiv, DIV_CUTOFF;
-        return;
-    end if;
+    // if ndiv ge DIV_CUTOFF then
+    //     printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+    //         M, ndiv, DIV_CUTOFF;
+    //     return;
+    // end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;
@@ -121,6 +123,7 @@ procedure run_entry(entry, curves)
     printf "  ---- (D=%o,N=%o) done in %o s ----\n", D, N, Realtime()-t0;
 end procedure;
 
+SetVerbose("ShimuraQuotients",5);
 curves := GetHyperellipticCandidates();
 printf "Loaded %o candidate curves.\n", #curves;
 

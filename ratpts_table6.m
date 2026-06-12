@@ -8,7 +8,7 @@
 LP_SIZE_CUTOFF := 10000;
 
 AttachSpec("ShimuraQuotients.spec");
-SetVerbose("ShimuraQuotients", 1);
+SetVerbose("ShimuraQuotients", 5);
 
 curves := GetHyperellipticCandidates();
 printf "Loaded %o candidate curves.\n", #curves;
@@ -105,12 +105,12 @@ for entry in CANDIDATES do
         continue;
     end if;
     M := polymake_level(D, N);
-    ndiv := #Divisors(M);
-    if ndiv ge DIV_CUTOFF then
-        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
-            M, ndiv, DIV_CUTOFF;
-        continue;
-    end if;
+    // ndiv := #Divisors(M);
+    // if ndiv ge DIV_CUTOFF then
+    //     printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+    //         M, ndiv, DIV_CUTOFF;
+    //     continue;
+    // end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;
