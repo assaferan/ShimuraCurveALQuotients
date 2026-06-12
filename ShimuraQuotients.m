@@ -1093,11 +1093,7 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
                     cat "but its special fiber source %o is not subhyperelliptic at prime %o",
                     curves[i]`CurveID, src`CurveID, p);
             curves[i]`IsSubhyp := false;
-            // Non-hyperelliptic with genus >= 2 means not P1, not elliptic and
-            // not hyperelliptic, hence not subhyperelliptic.
-            if assigned curves[i]`g and curves[i]`g ge 2 then
-                curves[i]`IsSubhyp := false;
-            end if;
+            curves[i]`IsHyp := false;
             curves[i]`TestInWhichProved := Sprintf(
                 "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
                 p, src`CurveID);
