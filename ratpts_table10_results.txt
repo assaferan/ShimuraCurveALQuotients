@@ -1,0 +1,16 @@
+# Table 10 bielliptic verdicts  (X = X_0^D(N)/W, genus 2, NOT AL-bielliptic)
+# Driver: ratpts_table10.m   Method: CHIMP HeuristicDecompositionFactors(Jac C)
+#   dims [1,1] => BIELLIPTIC ; dims [2] => NOT-bielliptic.
+# Verdict rows (appended by the driver), tab-separated:
+#   D <tab> N <tab> {gens} <tab> verdict <tab> y^2=<model>
+# -----------------------------------------------------------------------------
+# RESULTS LOG / running notes (edit by hand; do NOT re-run a settled (D,N,W)):
+#   * Method requires N squarefree. The 40 non-squarefree-N rows of Table 10 are
+#     NOT in the driver (out of scope for this pipeline).
+#   * Anchor case to verify first: group #15, D=6 N=29 W=<w3,w29> -> expect BIELLIPTIC.
+#   * TODO(timing): confirm CHIMP attach + HeuristicDecompositionFactors wall time
+#     on a quiet machine. First smoke test on this (heavily shared) box did not
+#     finish y^2=x^6+1 within 300s -- almost certainly machine load, not the code;
+#     re-measure after migrating.
+# -----------------------------------------------------------------------------
+# === verdicts below ===

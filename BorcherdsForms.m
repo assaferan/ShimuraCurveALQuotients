@@ -107,11 +107,20 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     return;
 end procedure;
 
+// Default cutoff for LP size (n parameter); override by setting LP_SIZE_CUTOFF
+// before loading this file. 24*n is the bounding polytope coefficient —
+// max solved so far is n=499; D=51 N=2 hits n~78M and is intractable.
+if not assigned LP_SIZE_CUTOFF then LP_SIZE_CUTOFF := 10000; end if;
+
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprintf ShimuraQuotients, 3 : "File found.";
         return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
+    end if;
+    if n gt LP_SIZE_CUTOFF then
+        vprintf ShimuraQuotients, 2 : "\n\t\tLP too large (n=%o > %o); skipping.\n", n, LP_SIZE_CUTOFF;
+        return [];
     end if;
     vprintf ShimuraQuotients, 3 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);

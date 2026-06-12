@@ -1,0 +1,25 @@
+=== Table 1 genus-1 rational-point runs (started Fri Jun 12 03:19:35 PM EDT 2026) ===
+Magma V2.29-8     Fri Jun 12 2026 15:19:35 on lovelace [Seed = 1048057182]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Running single TABLE1 entry 2.
+
+==== D=6 N=35 (D*N=210) W=<{ 10, 42 }>  [DN=210; user-anchored, run first] ====
+
+[ABORTED] D=6 N=35 W=<{10,42}>: killed after ~29 min at 99.9% CPU, still inside
+EquationsOfCovers. NOT a math/resource verdict -- abandoned only because this
+shared server was overloaded (load avg ~18, 128-way parallel pipeline running).
+RETRY on a quieter/faster machine; do not mark intractable.

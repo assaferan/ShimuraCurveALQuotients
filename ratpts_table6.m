@@ -3,6 +3,10 @@
 // then for each target subgroup W (given by generator subscripts) check
 // whether the genus-0 model has a rational point.
 
+// Skip polymake LP instances that are too large to enumerate in reasonable time.
+// 24*n is the bounding polytope coefficient; max solved n=499, D=51 N=2 hits n~78M.
+LP_SIZE_CUTOFF := 10000;
+
 AttachSpec("ShimuraQuotients.spec");
 SetVerbose("ShimuraQuotients", 1);
 
@@ -13,15 +17,50 @@ printf "Loaded %o candidate curves.\n", #curves;
 // CANDIDATES is set externally before loading, else defaults below.
 if not assigned CANDIDATES then
     // squarefree-N only (method requires squarefree N); small-N batch.
+    // DONE: D=10, N=7 — all three groups have rational points (genus 0 = conic ~ P^1):
+    //   W=<{2,5}>:   27/16*x^2 + 47/64*x*z + y^2 + 5/64*z^2 = 0,  pt (-6/31 : 7/248 : 1)
+    //   W=<{5,7}>:   27*x^2 - 22*x*z + y^2 - 5*z^2 = 0,            pt (-5/27 : 0 : 1)
+    //   W=<{10,14}>: 27/64*x^2 + 5/64*x*z + y^2 = 0,               pt (-5/27 : 0 : 1)
+    // NOTE: D=34, N=3 was attempted but failed — not enough CM points.
+    // NOTE: D=26, N=5 was attempted but failed — "Could not find enough points".
     CANDIDATES := [*
-        <51, 2, [ {6,34} ]>,
+        // --- priority cases to try next ---
+        <21, 10, [ {2,15,21} ]>,
+        // D*N = 102-255 (small-N batch)
+        // N=2 cases deprioritized: D=51,N=2 was intractable (LP n~78M) and the
+        // other N=2 cases likely share the same sparse-CM / huge-LP problem.
         <55, 2, [ {2,55} ]>,
         <87, 2, [ {2,87} ]>,
         <95, 2, [ {10,38} ]>,
         <111, 2, [ {2,111} ]>,
-        <26, 5, [ {10,26} ]>,
         <51, 5, [ {5,51} ]>,
-        <35, 6, [ {2,15,21} ]>
+        <35, 6, [ {2,15,21} ]>,
+        // D*N = 210
+        <15, 14, [ {6,7,10} ]>,
+        <14, 15, [ {3,10,14}, {5,6,14} ]>,
+        <10, 21, [ {3,5,7}, {3,10,14} ]>,
+        <6,  35, [ {5,6,14}, {6,7,10} ]>,
+        // D*N = 330
+        <33, 10, [ {2,15,33} ]>,
+        <22, 15, [ {6,10,11} ]>,
+        <15, 22, [ {3,10,22} ]>,
+        <10, 33, [ {2,15,33} ]>,
+        <6,  55, [ {3,10,22}, {6,10,11} ]>,
+        // D*N = 462
+        <21, 22, [ {6,7,22} ]>,
+        <22, 21, [ {3,14,22} ]>,
+        <6,  77, [ {2,21,33}, {6,11,14} ]>,
+        // D*N = 510
+        <15, 34, [ {2,15,17} ]>,
+        // D*N = 546
+        <14, 39, [ {3,13,14} ]>,
+        <26, 21, [ {3,7,26} ]>,
+        // D*N = 690
+        <10, 69, [ {3,5,46} ]>,
+        // D*N = 770
+        <10, 77, [ {7,10,11} ]>,
+        // D*N = 2730 (likely too large; LP cutoff will bail quickly)
+        <390, 7, [ {3,7,10,13} ]>
     *];
 end if;
 

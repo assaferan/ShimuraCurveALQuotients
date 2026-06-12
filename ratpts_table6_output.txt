@@ -1,0 +1,18 @@
+Magma V2.29-8     Fri Jun 12 2026 15:31:19 on lovelace [Seed = 4599694]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "ratpts_table6.m"
+Loaded 18379 candidate curves.
+
+==== D=21 N=10 (D*N=210) ====
