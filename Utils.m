@@ -25,8 +25,11 @@ heavy curves are always dispatched early.}
     if g lt 3 then return R!0; end if;
 
     if stage in {"FilterByNonALInvolutions", "FilterByNonALInvolutionsStar"} then
-        // cost ~ ModularSymbols(D*N); only curves with non-AL involutions do work
-        if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then return R!(DN*DN); end if;
+        // cost ~ ModularSymbols(D*N); only curves with non-AL involutions do work, and only
+        // those within the level cap (larger levels are skipped, so they cost ~nothing).
+        if ((X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2)) and (DN le NonALModSymMaxLevel()) then
+            return R!(DN*DN);
+        end if;
         return R!0;
     end if;
 

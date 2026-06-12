@@ -118,7 +118,7 @@ intrinsic VerifyHasegawaTable3(starcurves::SeqEnum[ShimuraQuot])
             invs2 := [v cat " W1" : v in invs];
             assert assigned inv;
             if (inv notin (invs cat invs2)) then
-                print "row = ", row, "v = ", v, ", invs = ", invs;
+                vprintf ShimuraQuotients, 3: "row = ", row, "inv = ", inv, ", invs = ", invs;
                 break;
             end if;
             assert (inv in invs) or (inv in invs2);

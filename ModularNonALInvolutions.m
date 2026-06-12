@@ -139,6 +139,14 @@ end intrinsic;
 
 
 // Start with an implmentation based on modular symbols
+intrinsic NonALModSymMaxLevel() -> RngIntElt
+{Maximum level D*N for which the modular non-AL involution check runs ModularSymbols(D*N).
+Above this, CheckModularNonALInvolutionModSym returns "undetermined" instead, because the
+modular-symbols computation at large highly-composite levels costs many hours and GB; those
+few large-level curves are determined/pruned by the other stages. Tunable.}
+    return 3000;
+end intrinsic;
+
 intrinsic CheckModularNonALInvolutionModSym(X::ShimuraQuot) -> RngIntElt, MonStgElt, RngIntElt
 {Returns 1 if any of the non-AL modular involutions is hyperelliptic, in which case also returns the hyperelliptic involution,
 returns 0 if the curve is non-hyperelliptic, and the involution with too many fixed points.
@@ -148,6 +156,14 @@ Otherwise, returns -1.}
     if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then has_modularnonALinvolutions := true; end if;
     if not has_modularnonALinvolutions then
         vprintf ShimuraQuotients, 2: "The curve %o has no non-AL modular involutions\n", X;
+        return -1, _, _;
+    end if;
+    // Skip curves whose level D*N is too large for an affordable ModularSymbols computation.
+    // At D*N ~ 7000-8000 the modular-symbols space plus its new-subspace/Atkin-Lehner linear
+    // algebra runs for many hours and many GB; such curves are left undetermined here and are
+    // handled (and pruned) by the cheaper filtering stages instead.
+    if X`D*X`N gt NonALModSymMaxLevel() then
+        vprintf ShimuraQuotients, 2: "The curve %o exceeds the non-AL ModSym level cap\n", X;
         return -1, _, _;
     end if;
     MDN := ModularSymbols(X`D*X`N, 2, 0);
