@@ -384,7 +384,20 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
             min_v := Minimum([Valuation(f) : f in qexps]);
-            coeffs := Matrix(Rationals(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+            // Build over integers first; the eta q-expansion coefficients are integers.
+            // Then use a cheap Fp echelon on the transposed matrix (Prec x #qexps, few rows)
+            // to identify pivot rows before doing the expensive Q echelon on just those rows.
+            coeffs_Z := Matrix(Integers(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+            if Nrows(coeffs_Z) gt Ncols(coeffs_Z) then
+                _p := NextPrime(2^30);
+                E_tr, _ := EchelonForm(Transpose(ChangeRing(coeffs_Z, GF(_p))));
+                pivot_rows := [PivotColumn(E_tr, i) : i in [1..Rank(E_tr)]];
+                coeffs := Matrix(Rationals(), [Eltseq(coeffs_Z[i]) : i in pivot_rows]);
+                if Zero then eta_quotients_oo := [eta_quotients_oo[i] : i in pivot_rows]; end if;
+                eta_quotients := [eta_quotients[i] : i in pivot_rows];
+            else
+                coeffs := ChangeRing(coeffs_Z, Rationals());
+            end if;
         else
             min_v := 0;
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
