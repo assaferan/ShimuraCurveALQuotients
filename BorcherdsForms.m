@@ -339,6 +339,13 @@ intrinsic FindMinimalEtaQuotient(f::ModFrmElt, N::RngIntElt, k::RngIntElt) -> Et
 
 end intrinsic;
 
+function qexp_abseltseq_int(f, min_v, q)
+    seq := AbsEltseq(q^(-min_v)*f : FixedLength);
+    dens := [Denominator(c) : c in seq | c ne 0];
+    mult := IsEmpty(dens) select 1 else LCM(dens);
+    return [Integers()!(mult*c) : c in seq];
+end function;
+
 intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero := false, n0 := 0) -> .
 {Returns a weakly holomorphic basis corresponding to D, N.}
     D0,M,g := get_D0_M_g(D,N);
@@ -384,10 +391,10 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         if not IsEmpty(qexps) then
             _<q> := Universe(qexps);
             min_v := Minimum([Valuation(f) : f in qexps]);
-            // Build over integers first; the eta q-expansion coefficients are integers.
+            // Build over integers first (clear denominators after SAction when Zero:=true).
             // Then use a cheap Fp echelon on the transposed matrix (Prec x #qexps, few rows)
             // to identify pivot rows before doing the expensive Q echelon on just those rows.
-            coeffs_Z := Matrix(Integers(), [AbsEltseq(q^(-min_v)*f : FixedLength) : f in qexps]);
+            coeffs_Z := Matrix(Integers(), [qexp_abseltseq_int(f, min_v, q) : f in qexps]);
             if Nrows(coeffs_Z) gt Ncols(coeffs_Z) then
                 _p := NextPrime(2^30);
                 E_tr, _ := EchelonForm(Transpose(ChangeRing(coeffs_Z, GF(_p))));
