@@ -12469,4 +12469,5 @@ CreateShimuraQuot([* <"D", 39270>, <"N", 1>,
 13090, 19635, 39270 }>,
 <"g", 5>, <"CurveID", 2342>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "Trace, with p^v = 13^1">
-*]) ]
+*])
+]
