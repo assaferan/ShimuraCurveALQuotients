@@ -300,8 +300,9 @@ to |d|, so the per-prime cost is ~linear in 4*Qmax*p^g; this bounds it.  The Wei
 bound for a curve is the largest p keeping 4*Qmax*p^g <= this value.  Curves whose
 smallest good prime already exceeds it are skipped entirely by the Weil filter, which is
 safe because that filter only ever *rules curves out* (a skipped curve simply proceeds to
-the other filters).  Tunable; 2^30 keeps each good prime to ~minutes at observed rates.}
-    return 2^30;
+the other filters).  Tunable; set to ClassNumberTableMaxDisc so every requested |d| stays
+within the cached file-0 tables (no slow live ClassNumber lookups).}
+    return 2^28;
 end intrinsic;
 
 intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt
