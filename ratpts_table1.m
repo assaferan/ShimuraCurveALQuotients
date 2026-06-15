@@ -58,6 +58,70 @@ TABLE1 := [*
     <210, 19, {6,7,10,19}, "DN=3990: too large">
 *];
 
+// ---------------------------------------------------------------------------
+// Table 7 (from OanaFreddy.pdf): 54 genus-1 curves X = X_0^D(N)/W with Jac of
+// positive rank, authors unsure if X(Q)=empty. SAME check as Table 1 -- only
+// (D,N,gens) is needed (the model is computed, not read), so no f column.
+// Ordered tractable-first (#div(M)<=12, squarefree N), then the OOM-wall rest.
+// Most rows are #div(M)>=24 and will be skipped by the DIV_CUTOFF guard.
+// ---------------------------------------------------------------------------
+TABLE7 := [*
+    <134, 3, {3,134}, "T7 DN=402; M=804 #div12">,
+    <122, 7, {2,7,61}, "T7 DN=854; M=1708 #div12">,
+    <34, 29, {2,17,29}, "T7 DN=986; M=1972 #div12">,
+    <26, 9, {9,26}, "T7 DN=234; M=468 #div18 NOT-sqfree">,
+    <95, 3, {3,95}, "T7 DN=285; M=1140 #div24">,
+    <159, 2, {2,159}, "T7 DN=318; M=1272 #div16">,
+    <14, 25, {14,25}, "T7 DN=350; M=700 #div18 NOT-sqfree">,
+    <39, 10, {2,5,39}, "T7 DN=390; M=1560 #div32">,
+    <15, 26, {2,13,15}, "T7 DN=390; M=1560 #div32">,
+    <215, 2, {2,5,43}, "T7 DN=430; M=1720 #div16">,
+    <77, 6, {2,3,7,11}, "T7 DN=462; M=1848 #div32">,
+    <33, 14, {2,7,33}, "T7 DN=462; M=1848 #div32">,
+    <10, 49, {5,98}, "T7 DN=490; M=980 #div18 NOT-sqfree">,
+    <85, 6, {2,3,5,17}, "T7 DN=510; M=2040 #div32">,
+    <51, 10, {2,5,51}, "T7 DN=510; M=2040 #div32">,
+    <95, 6, {2,3,5,19}, "T7 DN=570; M=2280 #div32">,
+    <15, 38, {2,3,5,19}, "T7 DN=570; M=2280 #div32">,
+    <22, 35, {5,7,22}, "T7 DN=770; M=1540 #div24">,
+    <35, 26, {2,5,7,13}, "T7 DN=910; M=3640 #div32">,
+    <6, 155, {2,5,93}, "T7 DN=930; M=1860 #div24">,
+    <6, 155, {5,6,31}, "T7 DN=930; M=1860 #div24">,
+    <6, 169, {2,3,169}, "T7 DN=1014; M=2028 #div18 NOT-sqfree">,
+    <22, 51, {2,3,11,17}, "T7 DN=1122; M=2244 #div24">,
+    <21, 55, {3,5,7,11}, "T7 DN=1155; M=4620 #div48">,
+    <6, 203, {3,7,58}, "T7 DN=1218; M=2436 #div24">,
+    <15, 82, {2,3,5,41}, "T7 DN=1230; M=4920 #div32">,
+    <14, 95, {2,5,7,19}, "T7 DN=1330; M=2660 #div24">,
+    <10, 141, {2,3,5,47}, "T7 DN=1410; M=2820 #div24">,
+    <38, 39, {2,3,13,19}, "T7 DN=1482; M=2964 #div24">,
+    <10, 159, {2,3,5,53}, "T7 DN=1590; M=3180 #div24">,
+    <10, 161, {2,5,7,23}, "T7 DN=1610; M=3220 #div24">,
+    <6, 287, {2,3,7,41}, "T7 DN=1722; M=3444 #div24">,
+    <1155, 2, {2,3,5,7,11}, "T7 DN=2310; M=9240 #div64">,
+    <770, 3, {2,3,5,77}, "T7 DN=2310; M=4620 #div48">,
+    <770, 3, {2,3,7,55}, "T7 DN=2310; M=4620 #div48">,
+    <770, 3, {3,5,11,14}, "T7 DN=2310; M=4620 #div48">,
+    <770, 3, {3,7,10,11}, "T7 DN=2310; M=4620 #div48">,
+    <770, 3, {3,10,14,22}, "T7 DN=2310; M=4620 #div48">,
+    <10, 231, {2,3,5,7,11}, "T7 DN=2310; M=4620 #div48">,
+    <546, 5, {2,3,5,91}, "T7 DN=2730; M=5460 #div48">,
+    <546, 5, {2,5,13,21}, "T7 DN=2730; M=5460 #div48">,
+    <546, 5, {3,5,7,26}, "T7 DN=2730; M=5460 #div48">,
+    <546, 5, {3,5,13,14}, "T7 DN=2730; M=5460 #div48">,
+    <546, 5, {5,6,14,26}, "T7 DN=2730; M=5460 #div48">,
+    <390, 7, {2,3,7,65}, "T7 DN=2730; M=5460 #div48">,
+    <390, 7, {2,5,7,39}, "T7 DN=2730; M=5460 #div48">,
+    <390, 7, {2,7,13,15}, "T7 DN=2730; M=5460 #div48">,
+    <6, 455, {2,3,5,7,13}, "T7 DN=2730; M=5460 #div48">,
+    <1190, 3, {2,3,5,7,17}, "T7 DN=3570; M=7140 #div48">,
+    <570, 7, {2,3,7,95}, "T7 DN=3990; M=7980 #div48">,
+    <1430, 3, {2,3,5,11,13}, "T7 DN=4290; M=8580 #div48">,
+    <858, 5, {2,3,5,11,13}, "T7 DN=4290; M=8580 #div48">,
+    <510, 11, {2,3,5,11,17}, "T7 DN=5610; M=11220 #div48">,
+    <546, 11, {2,3,7,11,13}, "T7 DN=6006; M=12012 #div48">
+*];
+
 procedure check_group(C, gens, D, N)
     desc := Sprintf("D=%o N=%o W=<%o>", D, N, gens);
     g := Genus(C);
@@ -96,26 +160,41 @@ procedure run_entry(entry, curves)
     end if;
     M := polymake_level(D, N);
     ndiv := #Divisors(M);
-    // if ndiv ge DIV_CUTOFF then
-    //     printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
-    //         M, ndiv, DIV_CUTOFF;
-    //     return;
-    // end if;
+    if ndiv ge DIV_CUTOFF then
+        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+            M, ndiv, DIV_CUTOFF;
+        return;
+    end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;
         return;
     end if;
     try
-        crv_list, ws, keys := EquationsOfCovers(Xstar, curves);
-        printf "  computed %o cover equations in %o s\n", #crv_list, Realtime()-t0;
         W := AllALsFromGens(gens, D*N);
-        if not exists(k){k : k in keys | curves[k]`W eq W} then
-            printf "  [D=%o N=%o W=<%o>] not among computed covers (keys); skipping\n", D, N, gens;
+        tgts := { W };
+        // If the target W isn't an immediate cover of X* in the candidate data, skip
+        // cleanly (don't let the Targets require throw) -- nothing to compute.
+        if not exists(k0){i : i in Xstar`CoveredBy | curves[i]`W eq W} then
+            printf "  [D=%o N=%o W=<%o>] not an immediate cover of X* (not in candidate data); skipping\n", D, N, gens;
         else
-            idx := Index(keys, k);
-            C := crv_list[idx];
-            check_group(C, gens, D, N);
+            // Cheap predict-and-skip on CM-point count, restricted to this target.
+            enough, need, have := EnoughCMPointsForTargets(Xstar, curves, tgts);
+            if not enough then
+                printf "  insufficient CM points (need=%o, have=%o); skipping before Borcherds work\n", need, have;
+            else
+                // Targets-restricted: build only this cover (lower num_vals, rescues a
+                // genus-1 target inflated by genus-2 siblings; speedup otherwise).
+                crv_list, ws, keys := EquationsOfCovers(Xstar, curves : Targets := tgts);
+                printf "  computed %o cover equations (targets-restricted) in %o s\n", #crv_list, Realtime()-t0;
+                if not exists(k){k : k in keys | curves[k]`W eq W} then
+                    printf "  [D=%o N=%o W=<%o>] not among computed covers (keys); skipping\n", D, N, gens;
+                else
+                    idx := Index(keys, k);
+                    C := crv_list[idx];
+                    check_group(C, gens, D, N);
+                end if;
+            end if;
         end if;
     catch e
         printf "  ERROR on (D,N)=(%o,%o): %o\n", D, N, e`Object;
@@ -127,12 +206,21 @@ SetVerbose("ShimuraQuotients",5);
 curves := GetHyperellipticCandidates();
 printf "Loaded %o candidate curves.\n", #curves;
 
+// Table 1 and Table 7 use the identical check; run them as one ordered list.
+ALL := TABLE1 cat TABLE7;
+printf "Loaded %o Table 1 + %o Table 7 = %o entries.\n", #TABLE1, #TABLE7, #ALL;
+
 if assigned idx then
     i := StringToInteger(idx);
-    printf "Running single TABLE1 entry %o.\n", i;
-    run_entry(TABLE1[i], curves);
+    printf "Running single entry %o (of %o).\n", i, #ALL;
+    run_entry(ALL[i], curves);
+elif assigned table and StringToInteger(table) eq 7 then
+    printf "Running TABLE7 only (%o entries).\n", #TABLE7;
+    for entry in TABLE7 do
+        run_entry(entry, curves);
+    end for;
 else
-    for entry in TABLE1 do
+    for entry in ALL do
         run_entry(entry, curves);
     end for;
 end if;

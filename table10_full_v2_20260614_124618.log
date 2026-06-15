@@ -1,0 +1,328 @@
+Magma V2.29-4     Sun Jun 14 2026 12:46:18 on MacBook-Pro-222 [Seed = 
+3970456593]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table10.m"
+Table 10 driver: 228 (D,N) groups, sorted by D*N ascending.
+Loaded 18379 candidate curves. Reprioritized to 73 group(s) (single-prime N, N notin {2,3}); small N first.
+
+==== D=26 N=5 (D*N=130) ====
+  insufficient CM points (need=9, have=5); skipping before Borcherds work
+  ---- group (D=26,N=5) done in 46.430 s ----
+
+==== D=34 N=5 (D*N=170) ====
+  insufficient CM points (need=9, have=4); skipping before Borcherds work
+  ---- group (D=34,N=5) done in 29.850 s ----
+
+==== D=39 N=5 (D*N=195) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=58 N=5 (D*N=290) ====
+  insufficient CM points (need=9, have=3); skipping before Borcherds work
+  ---- group (D=58,N=5) done in 41.230 s ----
+
+==== D=123 N=5 (D*N=615) ====
+  polymake level M=2460 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=134 N=5 (D*N=670) ====
+  ERROR on (D,N)=(134,5): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=134,N=5) done in 0.020 s ----
+
+==== D=142 N=5 (D*N=710) ====
+  ERROR on (D,N)=(142,5): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=142,N=5) done in 0.010 s ----
+
+==== D=462 N=5 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=546 N=5 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=1122 N=5 (D*N=5610) ====
+  polymake level M=11220 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=1254 N=5 (D*N=6270) ====
+  polymake level M=12540 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=26 N=7 (D*N=182) ====
+  insufficient CM points (need=9, have=8); skipping before Borcherds work
+  ---- group (D=26,N=7) done in 35.500 s ----
+
+==== D=34 N=7 (D*N=238) ====
+  insufficient CM points (need=9, have=5); skipping before Borcherds work
+  ---- group (D=34,N=7) done in 37.000 s ----
+
+==== D=39 N=7 (D*N=273) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=57 N=7 (D*N=399) ====
+  polymake level M=1596 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=62 N=7 (D*N=434) ====
+  insufficient CM points (need=9, have=5); skipping before Borcherds work
+  ---- group (D=62,N=7) done in 51.110 s ----
+
+==== D=111 N=7 (D*N=777) ====
+  polymake level M=3108 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=146 N=7 (D*N=1022) ====
+  ERROR on (D,N)=(146,7): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=146,N=7) done in 0.020 s ----
+
+==== D=330 N=7 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=390 N=7 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=510 N=7 (D*N=3570) ====
+  polymake level M=7140 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=570 N=7 (D*N=3990) ====
+  polymake level M=7980 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=858 N=7 (D*N=6006) ====
+  polymake level M=12012 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=870 N=7 (D*N=6090) ====
+  polymake level M=12180 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=930 N=7 (D*N=6510) ====
+  polymake level M=13020 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=1110 N=7 (D*N=7770) ====
+  polymake level M=15540 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=65 N=11 (D*N=715) ====
+  polymake level M=2860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=210 N=11 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=690 N=11 (D*N=7590) ====
+  polymake level M=15180 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=714 N=11 (D*N=7854) ====
+  polymake level M=15708 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=14 N=13 (D*N=182) ====
+  computed 2 cover equations (targets-restricted) in 872.790 s
+  [D=14 N=13 W=<{ 2, 13 }>] model y^2 = -3136*x^6 + 7539/2*x^5 - 15555/16*x^4 - 75*x^3 + 303/32*x^2 + 29/32*x + 5/256
+  [D=14 N=13 W=<{ 2, 13 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  [D=14 N=13 W=<{ 7, 13 }>] model y^2 = -56*x^5 + 965/16*x^4 - 275/28*x^3 - 575/224*x^2 - 17/112*x - 5/1792
+  [D=14 N=13 W=<{ 7, 13 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=14,N=13) done in 1157.810 s ----
+
+==== D=15 N=13 (D*N=195) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=21 N=13 (D*N=273) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=22 N=13 (D*N=286) ====
+  insufficient CM points (need=9, have=8); skipping before Borcherds work
+  ---- group (D=22,N=13) done in 55.180 s ----
+
+==== D=38 N=13 (D*N=494) ====
+  insufficient CM points (need=9, have=8); skipping before Borcherds work
+  ---- group (D=38,N=13) done in 54.820 s ----
+
+==== D=210 N=13 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=330 N=13 (D*N=4290) ====
+  polymake level M=8580 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=10 N=17 (D*N=170) ====
+  computed 1 cover equations (targets-restricted) in 262.380 s
+  [D=10 N=17 W=<{ 10, 34 }>] model y^2 = -125/512*x^5 + 1125/4096*x^4 - 165/512*x^3 + 41/512*x^2 - 3/128*x - 7/256
+  [D=10 N=17 W=<{ 10, 34 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=10,N=17) done in 404.800 s ----
+
+==== D=26 N=17 (D*N=442) ====
+  ERROR on (D,N)=(26,17): Failed to find all Borcherds forms
+  ---- group (D=26,N=17) done in 1740.970 s ----
+
+==== D=33 N=17 (D*N=561) ====
+  polymake level M=2244 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=58 N=17 (D*N=986) ====
+  ERROR on (D,N)=(58,17): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=58,N=17) done in 0.030 s ----
+
+==== D=210 N=17 (D*N=3570) ====
+  polymake level M=7140 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=390 N=17 (D*N=6630) ====
+  polymake level M=13260 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=462 N=17 (D*N=7854) ====
+  polymake level M=15708 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=35 N=19 (D*N=665) ====
+  polymake level M=2660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=46 N=19 (D*N=874) ====
+  ERROR on (D,N)=(46,19): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=46,N=19) done in 0.010 s ----
+
+==== D=210 N=19 (D*N=3990) ====
+  polymake level M=7980 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=14 N=23 (D*N=322) ====
+  ERROR on (D,N)=(14,23): Failed to find all Borcherds forms
+  ---- group (D=14,N=23) done in 1755.070 s ----
+
+==== D=6 N=29 (D*N=174) ====
+  computed 1 cover equations (targets-restricted) in 266.900 s
+  [D=6 N=29 W=<{ 3, 29 }>] model y^2 = -1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+  [D=6 N=29 W=<{ 3, 29 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=6,N=29) done in 405.120 s ----
+
+==== D=14 N=29 (D*N=406) ====
+We need that there is a unique minpoly left after filtering by roots so we are replacing -120.
+Replacing -120 with -228
+  computed 2 cover equations (targets-restricted) in 1957.740 s
+  [D=14 N=29 W=<{ 7, 29 }>] model y^2 = 131072/2401*x^5 - 2054912/2401*x^4 + 1746944/343*x^3 - 696832/49*x^2 + 18432*x - 8960
+  [D=14 N=29 W=<{ 7, 29 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  [D=14 N=29 W=<{ 7, 58 }>] model y^2 = -8/2401*x^5 + 365/9604*x^4 - 97/686*x^3 + 27/112*x^2 - 11/56*x + 1/16
+  [D=14 N=29 W=<{ 7, 58 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=14,N=29) done in 2235.260 s ----
+
+==== D=26 N=31 (D*N=806) ====
+  ERROR on (D,N)=(26,31): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=26,N=31) done in 0.010 s ----
+
+==== D=6 N=37 (D*N=222) ====
+  computed 1 cover equations (targets-restricted) in 446.550 s
+  [D=6 N=37 W=<{ 6, 74 }>] model y^2 = 27/128*x^5 - 9643/9216*x^4 + 4489/2304*x^3 - 3715/2304*x^2 + 1/2*x
+  [D=6 N=37 W=<{ 6, 74 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=6,N=37) done in 584.490 s ----
+
+==== D=6 N=41 (D*N=246) ====
+  computed 2 cover equations (targets-restricted) in 616.730 s
+  [D=6 N=41 W=<{ 2, 3 }>] model y^2 = -729*x^6 - 156411/64*x^5 - 735399/256*x^4 - 111213/64*x^3 - 74439/64*x^2 - 1539/2*x - 405/2
+  [D=6 N=41 W=<{ 2, 3 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  [D=6 N=41 W=<{ 3, 41 }>] model y^2 = -729/4*x^5 - 98091/256*x^4 - 15309/64*x^3 - 8667/64*x^2 - 243/2*x - 81/2
+  [D=6 N=41 W=<{ 3, 41 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=6,N=41) done in 894.960 s ----
+
+==== D=14 N=41 (D*N=574) ====
+  ERROR on (D,N)=(14,41): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=14,N=41) done in 0.060 s ----
+
+==== D=6 N=43 (D*N=258) ====
+  computed 2 cover equations (targets-restricted) in 756.610 s
+  [D=6 N=43 W=<{ 2, 3 }>] model y^2 = -1/192*x^6 + 12307/746496*x^5 - 66727/2985984*x^4 + 5999/373248*x^3 - 2363/373248*x^2 + 119/93312*x - 19/186624
+  ERROR on (D,N)=(6,43): Failed to algebraize one of g4 and g6. Try increasing the precision.
+  ---- group (D=6,N=43) done in 894.900 s ----
+
+==== D=15 N=43 (D*N=645) ====
+  polymake level M=2580 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=210 N=43 (D*N=9030) ====
+  polymake level M=18060 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=14 N=47 (D*N=658) ====
+  ERROR on (D,N)=(14,47): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=14,N=47) done in 0.010 s ----
+
+==== D=22 N=47 (D*N=1034) ====
+  ERROR on (D,N)=(22,47): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=22,N=47) done in 0.010 s ----
+
+==== D=10 N=53 (D*N=530) ====
+  computed 1 cover equations (targets-restricted) in 8780.320 s
+  [D=10 N=53 W=<{ 5, 106 }>] model y^2 = 5/8*x^5 - 99/64*x^4 + 71/16*x^3 - 63/16*x^2 + 9/2*x + 1
+  [D=10 N=53 W=<{ 5, 106 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=10,N=53) done in 8918.700 s ----
+
+==== D=6 N=59 (D*N=354) ====
+  computed 1 cover equations (targets-restricted) in 1300.210 s
+  [D=6 N=59 W=<{ 2, 59 }>] model y^2 = 12*x^5 + 65*x^4 - 180*x^3 - 412*x^2 + 2688*x - 2560
+  [D=6 N=59 W=<{ 2, 59 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=6,N=59) done in 1468.970 s ----
+
+==== D=15 N=59 (D*N=885) ====
+  polymake level M=3540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=61 (D*N=366) ====
+  computed 1 cover equations (targets-restricted) in 1866.060 s
+  [D=6 N=61 W=<{ 2, 3 }>] model y^2 = -27/16384*x^6 - 9283/2359296*x^5 + 1511/589824*x^4 + 1781/393216*x^3 - 3109/589824*x^2 + 4589/2359296*x - 1/4096
+  [D=6 N=61 W=<{ 2, 3 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=6,N=61) done in 2004.190 s ----
+
+==== D=14 N=71 (D*N=994) ====
+  ERROR on (D,N)=(14,71): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=14,N=71) done in 0.010 s ----
+
+==== D=6 N=73 (D*N=438) ====
+  ERROR on (D,N)=(6,73): BorcherdsForms: 110020 lattice points (M=876, n=503) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=6,N=73) done in 527.320 s ----
+
+==== D=10 N=83 (D*N=830) ====
+  ERROR on (D,N)=(10,83): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=10,N=83) done in 0.010 s ----
+
+==== D=10 N=101 (D*N=1010) ====
+  ERROR on (D,N)=(10,101): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=10,N=101) done in 0.010 s ----
+
+==== D=14 N=109 (D*N=1526) ====
+  ERROR on (D,N)=(14,109): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=14,N=109) done in 0.010 s ----
+
+==== D=6 N=157 (D*N=942) ====
+  ERROR on (D,N)=(6,157): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=6,N=157) done in 0.010 s ----
+
+==== D=6 N=173 (D*N=1038) ====
+  ERROR on (D,N)=(6,173): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=6,N=173) done in 0.000 s ----
+
+==== D=6 N=239 (D*N=1434) ====
+  ERROR on (D,N)=(6,239): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=6,N=239) done in 0.010 s ----
+
+==== D=6 N=251 (D*N=1506) ====
+  ERROR on (D,N)=(6,251): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=6,N=251) done in 0.010 s ----
+
+==== D=6 N=263 (D*N=1578) ====
+  ERROR on (D,N)=(6,263): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=6,N=263) done in 0.010 s ----
+
+DONE.
+
+Total time: 23330.320 seconds, Total memory usage: 5710.59MB

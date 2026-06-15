@@ -1,0 +1,34 @@
+Magma V2.29-4     Fri Jun 12 2026 21:25:31 on MacBook-Pro-222 [Seed = 
+3019204705]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table10.m"
+Table 10 driver: 228 (D,N) groups, sorted by D*N ascending.
+Loaded 18379 candidate curves. Reprioritized to 73 group(s) (single-prime N, N notin {2,3}); small N, large D first.
+
+==== D=1254 N=5 (D*N=6270) ====
+  polymake level M=12540 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=1122 N=5 (D*N=5610) ====
+  polymake level M=11220 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=546 N=5 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=462 N=5 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=142 N=5 (D*N=710) ====

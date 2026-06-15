@@ -1,0 +1,41 @@
+Magma V2.29-4     Sun Jun 14 2026 11:45:21 on MacBook-Pro-222 [Seed = 
+3381489529]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table10.m"
+Table 10 driver: 228 (D,N) groups, sorted by D*N ascending.
+Loaded 18379 candidate curves. Reprioritized to 73 group(s) (single-prime N, N notin {2,3}); small N first.
+
+==== D=26 N=5 (D*N=130) ====
+  ERROR on (D,N)=(26,5): Could not find enough points, sorry!
+  ---- group (D=26,N=5) done in 886.030 s ----
+
+==== D=34 N=5 (D*N=170) ====
+  ERROR on (D,N)=(34,5): Could not find enough points, sorry!
+  ---- group (D=34,N=5) done in 36.630 s ----
+
+==== D=39 N=5 (D*N=195) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=58 N=5 (D*N=290) ====
+  ERROR on (D,N)=(58,5): Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+
+  ---- group (D=58,N=5) done in 951.670 s ----
+
+==== D=123 N=5 (D*N=615) ====
+  polymake level M=2460 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=134 N=5 (D*N=670) ====

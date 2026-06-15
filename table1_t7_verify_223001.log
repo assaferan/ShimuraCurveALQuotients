@@ -1,0 +1,40 @@
+Magma V2.29-4     Sun Jun 14 2026 22:30:01 on MacBook-Pro-222 [Seed = 
+2581368844]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 26 (of 79).
+
+==== D=134 N=3 (D*N=402) W=<{ 3, 134 }>  [T7 DN=402; M=804 #div12] ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 804...
+		prec = 100, n = 65, k = 132, rk = -1, dim = 0...
+		Making polymake file for (804, 197, 0)...File not found, computing...
+		prec = 133, n = 65, k = 132, rk = 55, dim = 133...
+		Making polymake file for (804, 197, 0)...File found.
+		prec = 265, n = 197, k = 132, rk = 55, dim = 133...
+		Making polymake file for (804, 329, 0)...File not found, computing...
+Done!
+	Computing CM points up to class number 2...Done!
+  ERROR on (D,N)=(134,3): Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+
+  ---- (D=134,N=3) done in 841.710 s ----
+
+DONE.
+
+Total time: 842.049 seconds, Total memory usage: 2462.41MB

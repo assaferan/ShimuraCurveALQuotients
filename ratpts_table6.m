@@ -64,6 +64,17 @@ if not assigned CANDIDATES then
     *];
 end if;
 
+// Ordered, indexable view of the Table 6 groups (D*N ascending), for run_table.sh.
+TABLE6 := [ x : x in CANDIDATES ];  // convert List to SeqEnum for Sort
+Sort(~TABLE6, func< a, b | (a[1]*a[2]) ne (b[1]*b[2]) select (a[1]*a[2])-(b[1]*b[2])
+                           else (a[2] ne b[2] select a[2]-b[2] else a[1]-b[1]) >);
+
+if assigned idx then
+    i := StringToInteger(idx);
+    printf "Running single TABLE6 group #%o of %o.\n", i, #TABLE6;
+    CANDIDATES := [* TABLE6[i] *];   // restrict the main loop to this one group
+end if;
+
 procedure check_group(C, gens, D, N)
     g := Genus(C);
     desc := Sprintf("D=%o N=%o W=<%o>", D, N, gens);
@@ -105,12 +116,12 @@ for entry in CANDIDATES do
         continue;
     end if;
     M := polymake_level(D, N);
-    // ndiv := #Divisors(M);
-    // if ndiv ge DIV_CUTOFF then
-    //     printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
-    //         M, ndiv, DIV_CUTOFF;
-    //     continue;
-    // end if;
+    ndiv := #Divisors(M);
+    if ndiv ge DIV_CUTOFF then
+        printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
+            M, ndiv, DIV_CUTOFF;
+        continue;
+    end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;

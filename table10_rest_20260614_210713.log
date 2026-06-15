@@ -1,0 +1,540 @@
+Magma V2.29-4     Sun Jun 14 2026 21:07:13 on MacBook-Pro-222 [Seed = 
+2884538837]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table10.m"
+Table 10 driver: 228 (D,N) groups, sorted by D*N ascending.
+Loaded 18379 candidate curves. Running the REST: 155 group(s) not in the default reprioritized set (N in {2,3} or composite N); D*N ascending.
+
+==== D=57 N=1 (D*N=57) ====
+  ERROR on (D,N)=(57,1): Runtime error in 'RationalNumber': s does not represent a rational number!
+
+  ---- group (D=57,N=1) done in 3055.950 s ----
+
+==== D=39 N=2 (D*N=78) ====
+  insufficient CM points (need=9, have=2); skipping before Borcherds work
+  ---- group (D=39,N=2) done in 15.230 s ----
+
+==== D=26 N=3 (D*N=78) ====
+  insufficient CM points (need=9, have=3); skipping before Borcherds work
+  ---- group (D=26,N=3) done in 27.470 s ----
+
+==== D=51 N=2 (D*N=102) ====
+  insufficient CM points (need=9, have=1); skipping before Borcherds work
+  ---- group (D=51,N=2) done in 16.420 s ----
+
+==== D=106 N=1 (D*N=106) ====
+  computed 1 cover equations (targets-restricted) in 409.440 s
+  [D=106 N=1 W=<{ 2 }>] model y^2 = -19683/1024*x^6 - 17253/512*x^5 - 19683/4096*x^4 + 4131/512*x^3 - 3663/2048*x^2 + 39/256*x - 19/4096
+  [D=106 N=1 W=<{ 2 }>] Jac splits (dims [ 1, 1 ]) => BIELLIPTIC
+  ---- group (D=106,N=1) done in 412.780 s ----
+
+==== D=57 N=2 (D*N=114) ====
+  insufficient CM points (need=9, have=1); skipping before Borcherds work
+  ---- group (D=57,N=2) done in 14.320 s ----
+
+==== D=38 N=3 (D*N=114) ====
+  insufficient CM points (need=9, have=3); skipping before Borcherds work
+  ---- group (D=38,N=3) done in 28.910 s ----
+
+==== D=118 N=1 (D*N=118) ====
+We need that there is a unique minpoly left after filtering by roots so we are replacing -51.
+Replacing -51 with -84
+  computed 1 cover equations (targets-restricted) in 646.860 s
+  [D=118 N=1 W=<{ 2 }>] model y^2 = -688675/16*x^6 + 1519313/8*x^5 - 5591559/16*x^4 + 686641/2*x^3 - 189920*x^2 + 56096*x - 6912
+  [D=118 N=1 W=<{ 2 }>] Jac simple (dims [ 2 ]) => NOT-bielliptic
+  ---- group (D=118,N=1) done in 648.490 s ----
+
+==== D=69 N=2 (D*N=138) ====
+  insufficient CM points (need=9, have=0); skipping before Borcherds work
+  ---- group (D=69,N=2) done in 11.730 s ----
+
+==== D=77 N=2 (D*N=154) ====
+  insufficient CM points (need=9, have=1); skipping before Borcherds work
+  ---- group (D=77,N=2) done in 16.430 s ----
+
+==== D=58 N=3 (D*N=174) ====
+  insufficient CM points (need=9, have=2); skipping before Borcherds work
+  ---- group (D=58,N=3) done in 14.140 s ----
+
+==== D=65 N=3 (D*N=195) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=35 N=6 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=21 N=10 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=15 N=14 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=14 N=15 (D*N=210) ====
+  polymake level M=420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=82 N=3 (D*N=246) ====
+  insufficient CM points (need=9, have=2); skipping before Borcherds work
+  ---- group (D=82,N=3) done in 155.800 s ----
+
+==== D=86 N=3 (D*N=258) ====
+  insufficient CM points (need=9, have=2); skipping before Borcherds work
+  ---- group (D=86,N=3) done in 22.800 s ----
+
+==== D=91 N=3 (D*N=273) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=143 N=2 (D*N=286) ====
+  insufficient CM points (need=9, have=1); skipping before Borcherds work
+  ---- group (D=143,N=2) done in 10.340 s ----
+
+==== D=302 N=1 (D*N=302) ====
+  ERROR on (D,N)=(302,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=302,N=1) done in 0.030 s ----
+
+==== D=303 N=1 (D*N=303) ====
+  ERROR on (D,N)=(303,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=303,N=1) done in 0.010 s ----
+
+==== D=33 N=10 (D*N=330) ====
+  polymake level M=1320 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=22 N=15 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=15 N=22 (D*N=330) ====
+  polymake level M=1320 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=33 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=55 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=339 N=1 (D*N=339) ====
+  ERROR on (D,N)=(339,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=339,N=1) done in 0.030 s ----
+
+==== D=39 N=10 (D*N=390) ====
+  polymake level M=1560 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=26 N=15 (D*N=390) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=15 N=26 (D*N=390) ====
+  polymake level M=1560 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=39 (D*N=390) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=65 (D*N=390) ====
+  polymake level M=780 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=201 N=2 (D*N=402) ====
+  ERROR on (D,N)=(201,2): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=201,N=2) done in 0.010 s ----
+
+==== D=203 N=2 (D*N=406) ====
+  ERROR on (D,N)=(203,2): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=203,N=2) done in 0.020 s ----
+
+==== D=33 N=14 (D*N=462) ====
+  polymake level M=1848 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=22 N=21 (D*N=462) ====
+  polymake level M=924 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=21 N=22 (D*N=462) ====
+  polymake level M=1848 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=6 N=77 (D*N=462) ====
+  polymake level M=924 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=155 N=3 (D*N=465) ====
+  polymake level M=1860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=235 N=2 (D*N=470) ====
+  ERROR on (D,N)=(235,2): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=235,N=2) done in 0.010 s ----
+
+==== D=51 N=10 (D*N=510) ====
+  polymake level M=2040 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=15 N=34 (D*N=510) ====
+  polymake level M=2040 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=51 (D*N=510) ====
+  polymake level M=1020 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=85 (D*N=510) ====
+  polymake level M=1020 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=514 N=1 (D*N=514) ====
+  ERROR on (D,N)=(514,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=514,N=1) done in 0.010 s ----
+
+==== D=546 N=1 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=91 N=6 (D*N=546) ====
+  polymake level M=2184 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=26 N=21 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=21 N=26 (D*N=546) ====
+  polymake level M=2184 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=14 N=39 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=91 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=570 N=1 (D*N=570) ====
+  polymake level M=1140 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=57 (D*N=570) ====
+  polymake level M=1140 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=95 (D*N=570) ====
+  polymake level M=1140 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=586 N=1 (D*N=586) ====
+  ERROR on (D,N)=(586,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=586,N=1) done in 0.020 s ----
+
+==== D=614 N=1 (D*N=614) ====
+  ERROR on (D,N)=(614,1): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=614,N=1) done in 0.020 s ----
+
+==== D=214 N=3 (D*N=642) ====
+  ERROR on (D,N)=(214,3): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=214,N=3) done in 0.010 s ----
+
+==== D=327 N=2 (D*N=654) ====
+  ERROR on (D,N)=(327,2): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=327,N=2) done in 0.010 s ----
+
+==== D=218 N=3 (D*N=654) ====
+  ERROR on (D,N)=(218,3): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=218,N=3) done in 0.010 s ----
+
+==== D=226 N=3 (D*N=678) ====
+  ERROR on (D,N)=(226,3): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=226,N=3) done in 0.010 s ----
+
+==== D=690 N=1 (D*N=690) ====
+  polymake level M=1380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=69 N=10 (D*N=690) ====
+  polymake level M=2760 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=69 (D*N=690) ====
+  polymake level M=1380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=115 (D*N=690) ====
+  polymake level M=1380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=714 N=1 (D*N=714) ====
+  polymake level M=1428 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=119 N=6 (D*N=714) ====
+  polymake level M=2856 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=6 N=119 (D*N=714) ====
+  polymake level M=1428 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=254 N=3 (D*N=762) ====
+  ERROR on (D,N)=(254,3): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=254,N=3) done in 0.030 s ----
+
+==== D=770 N=1 (D*N=770) ====
+  polymake level M=1540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=55 N=14 (D*N=770) ====
+  polymake level M=3080 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=35 N=22 (D*N=770) ====
+  polymake level M=3080 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=22 N=35 (D*N=770) ====
+  polymake level M=1540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=77 (D*N=770) ====
+  polymake level M=1540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=798 N=1 (D*N=798) ====
+  polymake level M=1596 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=14 N=57 (D*N=798) ====
+  polymake level M=1596 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=858 N=1 (D*N=858) ====
+  polymake level M=1716 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=39 N=22 (D*N=858) ====
+  polymake level M=3432 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=26 N=33 (D*N=858) ====
+  polymake level M=1716 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=143 (D*N=858) ====
+  polymake level M=1716 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=870 N=1 (D*N=870) ====
+  polymake level M=1740 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=145 (D*N=870) ====
+  polymake level M=1740 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=910 N=1 (D*N=910) ====
+  polymake level M=1820 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=65 N=14 (D*N=910) ====
+  polymake level M=3640 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=26 N=35 (D*N=910) ====
+  polymake level M=1820 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=930 N=1 (D*N=930) ====
+  polymake level M=1860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=62 N=15 (D*N=930) ====
+  polymake level M=1860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=15 N=62 (D*N=930) ====
+  polymake level M=3720 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=93 (D*N=930) ====
+  polymake level M=1860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=155 (D*N=930) ====
+  polymake level M=1860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=966 N=1 (D*N=966) ====
+  polymake level M=1932 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=161 (D*N=966) ====
+  polymake level M=1932 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=326 N=3 (D*N=978) ====
+  ERROR on (D,N)=(326,3): Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+
+  ---- group (D=326,N=3) done in 0.010 s ----
+
+==== D=1110 N=1 (D*N=1110) ====
+  polymake level M=2220 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1122 N=1 (D*N=1122) ====
+  polymake level M=2244 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=33 N=35 (D*N=1155) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=1190 N=1 (D*N=1190) ====
+  polymake level M=2380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=34 N=35 (D*N=1190) ====
+  polymake level M=2380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1218 N=1 (D*N=1218) ====
+  polymake level M=2436 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=58 N=21 (D*N=1218) ====
+  polymake level M=2436 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=203 (D*N=1218) ====
+  polymake level M=2436 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1230 N=1 (D*N=1230) ====
+  polymake level M=2460 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=82 N=15 (D*N=1230) ====
+  polymake level M=2460 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1254 N=1 (D*N=1254) ====
+  polymake level M=2508 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=38 N=33 (D*N=1254) ====
+  polymake level M=2508 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1290 N=1 (D*N=1290) ====
+  polymake level M=2580 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=129 (D*N=1290) ====
+  polymake level M=2580 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1302 N=1 (D*N=1302) ====
+  polymake level M=2604 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=62 N=21 (D*N=1302) ====
+  polymake level M=2604 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=51 N=26 (D*N=1326) ====
+  polymake level M=5304 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=34 N=39 (D*N=1326) ====
+  polymake level M=2652 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=38 N=35 (D*N=1330) ====
+  polymake level M=2660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1410 N=1 (D*N=1410) ====
+  polymake level M=2820 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=235 (D*N=1410) ====
+  polymake level M=2820 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=26 N=55 (D*N=1430) ====
+  polymake level M=2860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=26 N=57 (D*N=1482) ====
+  polymake level M=2964 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=22 N=69 (D*N=1518) ====
+  polymake level M=3036 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=14 N=111 (D*N=1554) ====
+  polymake level M=3108 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1590 N=1 (D*N=1590) ====
+  polymake level M=3180 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=46 N=35 (D*N=1610) ====
+  polymake level M=3220 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=14 N=115 (D*N=1610) ====
+  polymake level M=3220 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1722 N=1 (D*N=1722) ====
+  polymake level M=3444 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1770 N=1 (D*N=1770) ====
+  polymake level M=3540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=177 (D*N=1770) ====
+  polymake level M=3540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1794 N=1 (D*N=1794) ====
+  polymake level M=3588 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=14 N=129 (D*N=1806) ====
+  polymake level M=3612 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1870 N=1 (D*N=1870) ====
+  polymake level M=3740 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1914 N=1 (D*N=1914) ====
+  polymake level M=3828 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=319 (D*N=1914) ====
+  polymake level M=3828 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1938 N=1 (D*N=1938) ====
+  polymake level M=3876 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1974 N=1 (D*N=1974) ====
+  polymake level M=3948 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=329 (D*N=1974) ====
+  polymake level M=3948 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=2010 N=1 (D*N=2010) ====
+  polymake level M=4020 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=335 (D*N=2010) ====
+  polymake level M=4020 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=2130 N=1 (D*N=2130) ====
+  polymake level M=4260 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=221 (D*N=2210) ====
+  polymake level M=4420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=770 N=3 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=14 N=165 (D*N=2310) ====
+  polymake level M=4620 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=6 N=391 (D*N=2346) ====
+  polymake level M=4692 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1365 N=2 (D*N=2730) ====
+  polymake level M=10920 has #div=64 >= 24; OOM-doomed, skipping
+
+==== D=10 N=273 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=6 N=473 (D*N=2838) ====
+  polymake level M=5676 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=497 (D*N=2982) ====
+  polymake level M=5964 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=3210 N=1 (D*N=3210) ====
+  polymake level M=6420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=3458 N=1 (D*N=3458) ====
+  polymake level M=6916 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=3486 N=1 (D*N=3486) ====
+  polymake level M=6972 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=3542 N=1 (D*N=3542) ====
+  polymake level M=7084 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=3930 N=1 (D*N=3930) ====
+  polymake level M=7860 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=1330 N=3 (D*N=3990) ====
+  polymake level M=7980 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=6 N=665 (D*N=3990) ====
+  polymake level M=7980 has #div=48 >= 24; OOM-doomed, skipping
+
+==== D=4002 N=1 (D*N=4002) ====
+  polymake level M=8004 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=4278 N=1 (D*N=4278) ====
+  polymake level M=8556 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=4326 N=1 (D*N=4326) ====
+  polymake level M=8652 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=4710 N=1 (D*N=4710) ====
+  polymake level M=9420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=4890 N=1 (D*N=4890) ====
+  polymake level M=9780 has #div=24 >= 24; OOM-doomed, skipping
+
+DONE.
+
+Total time: 4449.159 seconds, Total memory usage: 1775.19MB

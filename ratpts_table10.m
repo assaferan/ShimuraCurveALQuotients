@@ -292,32 +292,6 @@ TABLE10 := [*
     <210, 43, [ {2,3,5,7,43} ]>   // DN=9030
 *];
 
-// ---------------------------------------------------------------------------
-// Resume support: never recompute a settled (D,N,W). EVERY outcome -- a verdict
-// OR a failure/skip reason -- is logged, and at startup load_settled() reads all
-// logged (D,N,W) keys so a later sweep auto-skips them (and skips the whole group's
-// EquationsOfCovers when all its W are done). Each TABLE10 (D,N,W) is unique, so a
-// startup-only read-only SETTLED set is sufficient (no mid-run mutation needed).
-// Key = <"D","N","gens"> exactly as the three leading tab fields are written.
-// ---------------------------------------------------------------------------
-function settled_key(D, N, gens)
-    return <Sprintf("%o", D), Sprintf("%o", N), Sprintf("%o", gens)>;
-end function;
-
-function load_settled()
-    keys := {};
-    try
-        for line in Split(Read(LOGFILE), "\n") do
-            if #line eq 0 or line[1] eq "#" then continue; end if;
-            fld := Split(line, "\t");
-            if #fld ge 3 then Include(~keys, <fld[1], fld[2], fld[3]>); end if;
-        end for;
-    catch e
-        ;  // log file absent/empty -> nothing settled yet
-    end try;
-    return keys;
-end function;
-
 procedure log_row(D, N, gens, verdict, model)
     fh := Open(LOGFILE, "a");
     fprintf fh, "%o\t%o\t%o\t%o\ty^2=%o\n", D, N, gens, verdict, model;
@@ -363,7 +337,7 @@ end procedure;
 // ---------------------------------------------------------------------------
 // Run one (D,N) group: compute cover equations once, then test each W.
 // ---------------------------------------------------------------------------
-procedure run_group(entry, curves, settled)
+procedure run_group(entry, curves)
     D := entry[1]; N := entry[2]; gensets := entry[3];
     printf "\n==== D=%o N=%o (D*N=%o) ====\n", D, N, D*N;
     if not IsSquarefree(N) then
@@ -373,54 +347,45 @@ procedure run_group(entry, curves, settled)
     M := polymake_level(D, N);
     ndiv := #Divisors(M);
     if ndiv ge DIV_CUTOFF then
-        // Permanent, instant skip (no EquationsOfCovers cost) -- the guard fires every
-        // run, so no need to log these (logging 160 such groups would just be noise).
         printf "  polymake level M=%o has #div=%o >= %o; OOM-doomed, skipping\n",
             M, ndiv, DIV_CUTOFF;
         return;
     end if;
-    // Resume: drop W already in the log; if none remain, skip EquationsOfCovers too.
-    unsettled := [ gens : gens in gensets | settled_key(D,N,gens) notin settled ];
-    if #unsettled eq 0 then
-        printf "  all %o W-group(s) already settled in log; skipping (no recompute)\n", #gensets;
-        return;
-    end if;
-    if #unsettled lt #gensets then
-        printf "  %o of %o W-group(s) already settled; computing the remaining %o\n",
-            #gensets - #unsettled, #gensets, #unsettled;
-    end if;
     t0 := Realtime();
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o); skipping\n", D, N;
-        for gens in unsettled do log_row(D, N, gens, "SKIP-no-star-curve", "n/a"); end for;
+        for gens in gensets do log_row(D, N, gens, "SKIP-no-star-curve", "n/a"); end for;
         return;
     end if;
-    logged := {};  // W logged during THIS run (`settled` is only the startup snapshot)
     try
-        crv_list, ws, keys := EquationsOfCovers(Xstar, curves);
-        printf "  computed %o cover equations in %o s\n", #crv_list, Realtime()-t0;
-        for gens in unsettled do
-            W := AllALsFromGens(gens, D*N);
-            if not exists(k){k : k in keys | curves[k]`W eq W} then
-                printf "  [D=%o N=%o W=<%o>] not among computed covers (keys); skipping\n", D, N, gens;
-                log_row(D, N, gens, "SKIP-not-in-covers", "n/a");
-                Include(~logged, gens);
-                continue;
-            end if;
-            idx := Index(keys, k);
-            C := crv_list[idx];
-            check_group(C, gens, D, N);  // logs its own verdict/skip row
-            Include(~logged, gens);
-        end for;
+        tgts := { AllALsFromGens(gens, D*N) : gens in gensets };
+        // Cheap predict-and-skip: if X* lacks the CM points the targets need (e.g. a
+        // genus-2 target needs 2g+5=9 but only 4 exist), no amount of Borcherds work
+        // can determine the equation. Skip in ~tens of seconds instead of ~15 min.
+        enough, need, have := EnoughCMPointsForTargets(Xstar, curves, tgts);
+        if not enough then
+            printf "  insufficient CM points (need=%o, have=%o); skipping before Borcherds work\n", need, have;
+            reason := Sprintf("SKIP-insufficient-CM(need=%o,have=%o)", need, have);
+            for gens in gensets do log_row(D, N, gens, reason, "n/a"); end for;
+        else
+            crv_list, ws, keys := EquationsOfCovers(Xstar, curves : Targets := tgts);
+            printf "  computed %o cover equations (targets-restricted) in %o s\n", #crv_list, Realtime()-t0;
+            for gens in gensets do
+                W := AllALsFromGens(gens, D*N);
+                if not exists(k){k : k in keys | curves[k]`W eq W} then
+                    printf "  [D=%o N=%o W=<%o>] not among computed covers (keys); skipping\n", D, N, gens;
+                    log_row(D, N, gens, "SKIP-not-in-covers", "n/a");
+                    continue;
+                end if;
+                idx := Index(keys, k);
+                C := crv_list[idx];
+                check_group(C, gens, D, N);  // logs its own verdict/skip row
+            end for;
+        end if;
     catch e
         printf "  ERROR on (D,N)=(%o,%o): %o\n", D, N, e`Object;
-        // Log the failure for each W not already logged this run, so the expensive
-        // EquationsOfCovers attempt (e.g. LP-cutoff bail on hard N=2 levels) is not
-        // retried next sweep.
         reason := Sprintf("FAILED:%o", e`Object);
-        for gens in unsettled do
-            if gens notin logged then log_row(D, N, gens, reason, "n/a"); end if;
-        end for;
+        for gens in gensets do log_row(D, N, gens, reason, "n/a"); end for;
     end try;
     printf "  ---- group (D=%o,N=%o) done in %o s ----\n", D, N, Realtime()-t0;
 end procedure;
@@ -430,27 +395,18 @@ end procedure;
 // ---------------------------------------------------------------------------
 printf "Table 10 driver: %o (D,N) groups, sorted by D*N ascending.\n", #TABLE10;
 
-// Load already-settled (D,N,W) keys so we never recompute a logged row (passed into
-// run_group by value -- a top-level global is NOT reliably seen by a procedure defined
-// earlier in the script). Only the compute branches need it.
-if assigned idx or assigned lo or assigned maxdn then
-    settled := load_settled();
-    printf "Loaded %o already-settled (D,N,W) row(s) from %o; these will be skipped.\n",
-        #settled, LOGFILE;
-end if;
-
 if assigned idx then
     i := StringToInteger(idx);
     curves := GetHyperellipticCandidates();
     printf "Loaded %o candidate curves. Running single group #%o.\n", #curves, i;
-    run_group(TABLE10[i], curves, settled);
+    run_group(TABLE10[i], curves);
 elif assigned lo then
     a := StringToInteger(lo);
     b := assigned hi select StringToInteger(hi) else #TABLE10;
     curves := GetHyperellipticCandidates();
     printf "Loaded %o candidate curves. Running groups #%o..#%o.\n", #curves, a, b;
     for i in [a..b] do
-        run_group(TABLE10[i], curves, settled);
+        run_group(TABLE10[i], curves);
     end for;
 elif assigned maxdn then
     cap := StringToInteger(maxdn);
@@ -458,14 +414,33 @@ elif assigned maxdn then
     printf "Loaded %o candidate curves. Running groups with D*N <= %o.\n", #curves, cap;
     for entry in TABLE10 do
         if entry[1]*entry[2] le cap then
-            run_group(entry, curves, settled);
+            run_group(entry, curves);
         end if;
     end for;
+elif assigned rest then
+    curves := GetHyperellipticCandidates();
+    // Complement of the default reprioritized run: everything we did NOT do by default,
+    // i.e. N in {2,3} or N composite. Sorted D*N ascending so the fast #div/insufficient-CM
+    // skips come first. With the DIV_CUTOFF + point-cap + CM pre-check guards this is safe.
+    comp := [ e : e in TABLE10 | not (#PrimeDivisors(e[2]) eq 1 and e[2] notin {2, 3}) ];
+    Sort(~comp, func< a, b | (a[1]*a[2]) ne (b[1]*b[2]) select (a[1]*a[2]) - (b[1]*b[2])
+                             else (a[2] ne b[2] select a[2] - b[2] else a[1] - b[1]) >);
+    printf "Loaded %o candidate curves. Running the REST: %o group(s) not in the default reprioritized set (N in {2,3} or composite N); D*N ascending.\n",
+        #curves, #comp;
+    for entry in comp do
+        run_group(entry, curves);
+    end for;
 else
-    printf "No idx/lo/maxdn given -> printing table only (nothing computed).\n";
-    for i in [1..#TABLE10] do
-        e := TABLE10[i];
-        printf "  #%3o  D=%o N=%o (D*N=%o)  %o W-group(s)\n", i, e[1], e[2], e[1]*e[2], #e[3];
+    curves := GetHyperellipticCandidates();
+    // Reprioritized run order: keep only N with a SINGLE prime factor (N prime, since N
+    // is squarefree here) and drop N in {2,3}. Then sort small-N-first (D ascending as a
+    // stable tiebreaker within an N).
+    prio := [ e : e in TABLE10 | #PrimeDivisors(e[2]) eq 1 and e[2] notin {2, 3} ];
+    Sort(~prio, func< a, b | a[2] ne b[2] select a[2] - b[2] else a[1] - b[1] >);
+    printf "Loaded %o candidate curves. Reprioritized to %o group(s) (single-prime N, N notin {2,3}); small N first.\n",
+        #curves, #prio;
+    for entry in prio do
+        run_group(entry, curves);
     end for;
 end if;
 

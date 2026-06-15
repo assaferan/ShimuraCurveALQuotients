@@ -170,22 +170,44 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     return crv_list, ws, keys;
 end intrinsic;
 
-intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
-{Determine the equations of the immediate covers of X.}
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}) -> SeqEnum, Assoc, SeqEnum
+{Determine the equations of the immediate covers of X. If Targets (a set of W
+ subgroups, each a set of AL involutions, as produced by AllALsFromGens) is
+ non-empty, restrict both the CM-point demand (num_vals) and the per-cover solve
+ to just those target covers; otherwise behave exactly as before (all of
+ Xstar`CoveredBy). The equation produced for a target is identical either way --
+ we just stop over-collecting CM points for, and solving, the siblings.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
-    genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    
+
+    // Restrict the demand to the target covers when Targets is given. This is the
+    // ONLY place MaxNum for AbsoluteValuesAtCMPoints is set, so lowering num_vals
+    // is what shrinks the CM-point demand (rescues a lower-genus target that a
+    // higher-genus sibling would otherwise inflate). Empty Targets => all covers.
+    target_keys := [i : i in Xstar`CoveredBy | IsEmpty(Targets) or curves[i]`W in Targets];
+    require not IsEmpty(target_keys) : "None of Xstar`CoveredBy matches Targets";
+    genus_list := [curves[i]`g : i in target_keys];
+
     // num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
     num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
     // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
-    // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
-    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
-                                                            MaxNum := num_vals, Prec := Prec, 
+    // We would need two other CM pts to determine the correct scaling, based on the fields of definition.
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
+                                                            MaxNum := num_vals, Prec := Prec,
                                                             Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
+
+    // Restrict the solve set to the targets: RationalConstraintsOnEquations /
+    // QuadraticConstraintsOnEquations iterate schofer_tab`K_idxs (positions in
+    // Keys_fs of the covers). A non-target high-genus sibling left underdetermined
+    // by the reduced CM-point set would throw (#ds ge 2g+3); drop them here so the
+    // returned keys/crv_list contain exactly the targets.
+    if not IsEmpty(Targets) then
+        schofer_tab`K_idxs := [i : i in schofer_tab`K_idxs | curves[schofer_tab`Keys_fs[i]]`W in Targets];
+        require not IsEmpty(schofer_tab`K_idxs) : "No target covers survived in the Schofer table";
+    end if;
     return EquationsOfCovers(schofer_tab, all_cm_pts);
 end intrinsic;
 

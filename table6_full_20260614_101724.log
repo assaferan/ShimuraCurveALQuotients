@@ -1,0 +1,128 @@
+Magma V2.29-4     Sun Jun 14 2026 10:17:24 on MacBook-Pro-222 [Seed = 
+3869391665]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table6.m"
+Loaded 18379 candidate curves.
+
+==== D=21 N=10 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=55 N=2 (D*N=110) ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 440...
+		prec = 100, n = 15, k = 74, rk = -1, dim = 0...
+		Making polymake file for (440, 89, 0)...File found.
+		prec = 174, n = 89, k = 74, rk = 57, dim = 75...
+		Making polymake file for (440, 163, 0)...File found.  ERROR on (D,N)=(55,2): BorcherdsForms: 69459 lattice points (M=440, n=163) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=55,N=2) done in 5.970 s ----
+
+==== D=87 N=2 (D*N=174) ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 696...
+		prec = 100, n = 27, k = 112, rk = -1, dim = 0...
+		Making polymake file for (696, 139, 0)...File not found, computing...
+		prec = 113, n = 27, k = 112, rk = 49, dim = 113...
+		Making polymake file for (696, 139, 0)...File found.
+		prec = 225, n = 139, k = 112, rk = 49, dim = 113...
+		Making polymake file for (696, 251, 0)...File not found, computing...  ERROR on (D,N)=(87,2): BorcherdsForms: 45293 lattice points (M=696, n=251) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=87,N=2) done in 709.220 s ----
+
+==== D=95 N=2 (D*N=190) ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 760...
+		prec = 100, n = 27, k = 130, rk = -1, dim = 0...
+		Making polymake file for (760, 157, 0)...File not found, computing...
+		prec = 131, n = 27, k = 130, rk = 58, dim = 131...
+		Making polymake file for (760, 157, 0)...File found.
+		prec = 261, n = 157, k = 130, rk = 58, dim = 131...
+		Making polymake file for (760, 287, 0)...File not found, computing...  ERROR on (D,N)=(95,2): BorcherdsForms: 72264 lattice points (M=760, n=287) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=95,N=2) done in 633.240 s ----
+
+==== D=111 N=2 (D*N=222) ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 888...
+		prec = 100, n = 35, k = 144, rk = -1, dim = 0...
+		Making polymake file for (888, 179, 0)...File not found, computing...
+		prec = 145, n = 35, k = 144, rk = 45, dim = 145...
+		Making polymake file for (888, 179, 0)...File found.
+		prec = 289, n = 179, k = 144, rk = 45, dim = 145...
+		Making polymake file for (888, 323, 0)...File not found, computing...  ERROR on (D,N)=(111,2): BorcherdsForms: 42999 lattice points (M=888, n=323) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=111,N=2) done in 734.560 s ----
+
+==== D=51 N=5 (D*N=255) ====
+  polymake level M=1020 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=35 N=6 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=15 N=14 (D*N=210) ====
+  polymake level M=840 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=14 N=15 (D*N=210) ====
+  polymake level M=420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=21 (D*N=210) ====
+  polymake level M=420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=35 (D*N=210) ====
+  polymake level M=420 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=33 N=10 (D*N=330) ====
+  polymake level M=1320 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=22 N=15 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=15 N=22 (D*N=330) ====
+  polymake level M=1320 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=10 N=33 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=55 (D*N=330) ====
+  polymake level M=660 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=21 N=22 (D*N=462) ====
+  polymake level M=1848 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=22 N=21 (D*N=462) ====
+  polymake level M=924 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=6 N=77 (D*N=462) ====
+  polymake level M=924 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=15 N=34 (D*N=510) ====
+  polymake level M=2040 has #div=32 >= 24; OOM-doomed, skipping
+
+==== D=14 N=39 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=26 N=21 (D*N=546) ====
+  polymake level M=1092 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=69 (D*N=690) ====
+  polymake level M=1380 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=10 N=77 (D*N=770) ====
+  polymake level M=1540 has #div=24 >= 24; OOM-doomed, skipping
+
+==== D=390 N=7 (D*N=2730) ====
+  polymake level M=5460 has #div=48 >= 24; OOM-doomed, skipping
+
+DONE.
+
+Total time: 2082.669 seconds, Total memory usage: 330.62MB

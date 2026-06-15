@@ -117,11 +117,26 @@ end procedure;
 // max solved so far is n=499; D=51 N=2 hits n~78M and is intractable.
 if not assigned LP_SIZE_CUTOFF then LP_SIZE_CUTOFF := 10000; end if;
 
+// Cap on the number of lattice points (polymake solutions) we will hand to the
+// downstream Borcherds-form step. polymake can succeed (its own memory is fine)
+// yet return so many points that building #rs eta-quotients + q-expansions and
+// echelonizing the resulting (#rs x Prec) rational matrix (see line ~393) OOMs
+// the whole magma process. Observed: 17092 points processed fine; 69461 (M=440,
+// n=163) OOM-killed the process and aborted the sweep. We `error` past this cap
+// so the per-group try/catch in the driver records FAILED and moves on, instead
+// of an uncatchable Killed:9. Override by setting BORCHERDS_POINT_CUTOFF before
+// loading this file.
+if not assigned BORCHERDS_POINT_CUTOFF then BORCHERDS_POINT_CUTOFF := 30000; end if;
+
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprintf ShimuraQuotients, 3 : "File found.";
-        return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
+        rs := eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
+        if #rs gt BORCHERDS_POINT_CUTOFF then
+            error Sprintf("BorcherdsForms: %o lattice points (M=%o, n=%o) exceeds BORCHERDS_POINT_CUTOFF=%o; the (#pts x Prec) echelonization would OOM. Skipping this cover.", #rs, M, n, BORCHERDS_POINT_CUTOFF);
+        end if;
+        return rs;
     end if;
     if n gt LP_SIZE_CUTOFF then
         vprintf ShimuraQuotients, 2 : "\n\t\tLP too large (n=%o > %o); skipping.\n", n, LP_SIZE_CUTOFF;
@@ -138,7 +153,12 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
     rs := [sol[2..1 + #Divisors(M)] : sol in sols];
 
+    // Cache the polymake result (cheap, ~MB) even if we then bail, so raising the
+    // cutoff later reuses it instead of recomputing the enumeration.
     Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
+    if #rs gt BORCHERDS_POINT_CUTOFF then
+        error Sprintf("BorcherdsForms: %o lattice points (M=%o, n=%o) exceeds BORCHERDS_POINT_CUTOFF=%o; the (#pts x Prec) echelonization would OOM. Skipping this cover.", #rs, M, n, BORCHERDS_POINT_CUTOFF);
+    end if;
     return rs;
 end function;
 

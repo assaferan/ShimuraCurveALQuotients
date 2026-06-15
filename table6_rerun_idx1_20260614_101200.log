@@ -1,0 +1,33 @@
+Magma V2.29-4     Sun Jun 14 2026 10:12:00 on MacBook-Pro-222 [Seed = 
+1225627098]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table6.m"
+Loaded 18379 candidate curves.
+Running single TABLE6 group #1 of 25.
+
+==== D=55 N=2 (D*N=110) ====
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 440...
+		prec = 100, n = 15, k = 74, rk = -1, dim = 0...
+		Making polymake file for (440, 89, 0)...File found.
+		prec = 174, n = 89, k = 74, rk = 57, dim = 75...
+		Making polymake file for (440, 163, 0)...File found.  ERROR on (D,N)=(55,2): BorcherdsForms: 69459 lattice points (M=440, n=163) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.
+  ---- group (D=55,N=2) done in 6.130 s ----
+
+DONE.
+
+Total time: 6.790 seconds, Total memory usage: 330.62MB

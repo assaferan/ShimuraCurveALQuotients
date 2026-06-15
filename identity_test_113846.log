@@ -1,0 +1,23 @@
+Magma V2.29-4     Sun Jun 14 2026 11:38:46 on MacBook-Pro-222 [Seed = 
+3819389636]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "/tmp/identity_test.m"
+TARGETS  #covers=1  model_{3,29}: -1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+FULL     #covers=7  model_{3,29}: -1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+IDENTICAL MODEL: true
+
+Total time: 338.439 seconds, Total memory usage: 1202.31MB

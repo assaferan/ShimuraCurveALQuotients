@@ -25,3 +25,139 @@
 # -----------------------------------------------------------------------------
 # === verdicts below ===
 6	29	{ 3, 29 }	BIELLIPTIC	y^2=-1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+26	5	{ 2, 5 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+26	5	{ 10, 13 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+34	5	{ 2, 5 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+34	5	{ 5, 17 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+58	5	{ 5, 58 }	FAILED:Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+	y^2=n/a
+6	29	{ 3, 29 }	BIELLIPTIC	y^2=-1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+26	5	{ 2, 5 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+26	5	{ 10, 13 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+34	5	{ 2, 5 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+34	5	{ 5, 17 }	FAILED:Could not find enough points, sorry!	y^2=n/a
+58	5	{ 5, 58 }	FAILED:Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+	y^2=n/a
+34	5	{ 2, 5 }	SKIP-insufficient-CM(need=9,have=4)	y^2=n/a
+34	5	{ 5, 17 }	SKIP-insufficient-CM(need=9,have=4)	y^2=n/a
+26	5	{ 2, 5 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+26	5	{ 10, 13 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+26	5	{ 2, 5 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+26	5	{ 10, 13 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+34	5	{ 2, 5 }	SKIP-insufficient-CM(need=9,have=4)	y^2=n/a
+34	5	{ 5, 17 }	SKIP-insufficient-CM(need=9,have=4)	y^2=n/a
+58	5	{ 5, 58 }	SKIP-insufficient-CM(need=9,have=3)	y^2=n/a
+134	5	{ 2, 5, 67 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+142	5	{ 2, 5, 71 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+26	7	{ 7, 13 }	SKIP-insufficient-CM(need=9,have=8)	y^2=n/a
+34	7	{ 2, 7 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+34	7	{ 2, 119 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+62	7	{ 2, 217 }	SKIP-insufficient-CM(need=9,have=5)	y^2=n/a
+146	7	{ 2, 7, 73 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+14	13	{ 2, 13 }	BIELLIPTIC	y^2=-3136*x^6 + 7539/2*x^5 - 15555/16*x^4 - 75*x^3 + 303/32*x^2 + 29/32*x + 5/256
+14	13	{ 7, 13 }	BIELLIPTIC	y^2=-56*x^5 + 965/16*x^4 - 275/28*x^3 - 575/224*x^2 - 17/112*x - 5/1792
+22	13	{ 2, 11 }	SKIP-insufficient-CM(need=9,have=8)	y^2=n/a
+38	13	{ 2, 247 }	SKIP-insufficient-CM(need=9,have=8)	y^2=n/a
+10	17	{ 10, 34 }	BIELLIPTIC	y^2=-125/512*x^5 + 1125/4096*x^4 - 165/512*x^3 + 41/512*x^2 - 3/128*x - 7/256
+26	17	{ 2, 221 }	FAILED:Failed to find all Borcherds forms	y^2=n/a
+58	17	{ 2, 17, 29 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+46	19	{ 2, 19, 23 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+14	23	{ 7, 23 }	FAILED:Failed to find all Borcherds forms	y^2=n/a
+14	23	{ 7, 46 }	FAILED:Failed to find all Borcherds forms	y^2=n/a
+6	29	{ 3, 29 }	BIELLIPTIC	y^2=-1/4*x^5 - 467/2304*x^4 + 83/1152*x^3 + 85/2304*x^2 - 1/96*x
+14	29	{ 7, 29 }	BIELLIPTIC	y^2=131072/2401*x^5 - 2054912/2401*x^4 + 1746944/343*x^3 - 696832/49*x^2 + 18432*x - 8960
+14	29	{ 7, 58 }	BIELLIPTIC	y^2=-8/2401*x^5 + 365/9604*x^4 - 97/686*x^3 + 27/112*x^2 - 11/56*x + 1/16
+26	31	{ 2, 13, 31 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	37	{ 6, 74 }	BIELLIPTIC	y^2=27/128*x^5 - 9643/9216*x^4 + 4489/2304*x^3 - 3715/2304*x^2 + 1/2*x
+6	41	{ 2, 3 }	BIELLIPTIC	y^2=-729*x^6 - 156411/64*x^5 - 735399/256*x^4 - 111213/64*x^3 - 74439/64*x^2 - 1539/2*x - 405/2
+6	41	{ 3, 41 }	BIELLIPTIC	y^2=-729/4*x^5 - 98091/256*x^4 - 15309/64*x^3 - 8667/64*x^2 - 243/2*x - 81/2
+14	41	{ 2, 7, 41 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	43	{ 2, 3 }	FAILED:Failed to algebraize one of g4 and g6. Try increasing the precision.	y^2=n/a
+6	43	{ 2, 43 }	FAILED:Failed to algebraize one of g4 and g6. Try increasing the precision.	y^2=n/a
+14	47	{ 2, 7, 47 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+22	47	{ 2, 11, 47 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+10	53	{ 5, 106 }	BIELLIPTIC	y^2=5/8*x^5 - 99/64*x^4 + 71/16*x^3 - 63/16*x^2 + 9/2*x + 1
+6	59	{ 2, 59 }	BIELLIPTIC	y^2=12*x^5 + 65*x^4 - 180*x^3 - 412*x^2 + 2688*x - 2560
+6	61	{ 2, 3 }	BIELLIPTIC	y^2=-27/16384*x^6 - 9283/2359296*x^5 + 1511/589824*x^4 + 1781/393216*x^3 - 3109/589824*x^2 + 4589/2359296*x - 1/4096
+14	71	{ 2, 7, 71 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	73	{ 2, 3 }	FAILED:BorcherdsForms: 110020 lattice points (M=876, n=503) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.	y^2=n/a
+6	73	{ 3, 146 }	FAILED:BorcherdsForms: 110020 lattice points (M=876, n=503) exceeds BORCHERDS_POINT_CUTOFF=30000; the (#pts x Prec) echelonization would OOM. Skipping this cover.	y^2=n/a
+10	83	{ 2, 5, 83 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+10	101	{ 2, 5, 101 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+14	109	{ 2, 7, 109 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	157	{ 2, 3, 157 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	173	{ 2, 3, 173 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	239	{ 2, 3, 239 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	251	{ 2, 3, 251 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+6	263	{ 2, 3, 263 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+57	1	{ 3 }	FAILED:Runtime error in 'RationalNumber': s does not represent a rational number!
+	y^2=n/a
+39	2	{ 2, 13 }	SKIP-insufficient-CM(need=9,have=2)	y^2=n/a
+26	3	{ 3, 13 }	SKIP-insufficient-CM(need=9,have=3)	y^2=n/a
+51	2	{ 2, 3 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+106	1	{ 2 }	BIELLIPTIC	y^2=-19683/1024*x^6 - 17253/512*x^5 - 19683/4096*x^4 + 4131/512*x^3 - 3663/2048*x^2 + 39/256*x - 19/4096
+57	2	{ 2, 3 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+57	2	{ 3, 38 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+57	2	{ 6, 38 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+38	3	{ 2, 3 }	SKIP-insufficient-CM(need=9,have=3)	y^2=n/a
+38	3	{ 3, 19 }	SKIP-insufficient-CM(need=9,have=3)	y^2=n/a
+118	1	{ 2 }	NOT-bielliptic	y^2=-688675/16*x^6 + 1519313/8*x^5 - 5591559/16*x^4 + 686641/2*x^3 - 189920*x^2 + 56096*x - 6912
+69	2	{ 2, 3 }	SKIP-insufficient-CM(need=9,have=0)	y^2=n/a
+77	2	{ 2, 11 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+77	2	{ 2, 77 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+77	2	{ 14, 22 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+58	3	{ 2, 3 }	SKIP-insufficient-CM(need=9,have=2)	y^2=n/a
+82	3	{ 2, 41 }	SKIP-insufficient-CM(need=9,have=2)	y^2=n/a
+82	3	{ 3, 82 }	SKIP-insufficient-CM(need=9,have=2)	y^2=n/a
+86	3	{ 2, 43 }	SKIP-insufficient-CM(need=9,have=2)	y^2=n/a
+143	2	{ 2, 143 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+143	2	{ 11, 13 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+143	2	{ 22, 26 }	SKIP-insufficient-CM(need=9,have=1)	y^2=n/a
+302	1	{ 2, 151 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+303	1	{ 3, 101 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+339	1	{ 3, 113 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+201	2	{ 2, 3, 67 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+203	2	{ 2, 7, 29 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+235	2	{ 2, 5, 47 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+514	1	{ 2, 257 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+586	1	{ 2, 293 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+614	1	{ 2, 307 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+214	3	{ 2, 3, 107 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+327	2	{ 2, 3, 109 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+218	3	{ 2, 3, 109 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+226	3	{ 2, 3, 113 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+254	3	{ 2, 3, 127 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
+326	3	{ 2, 3, 163 }	FAILED:Runtime error in 'EnoughCMPointsForTargets': None of Xstar`CoveredBy matches Targets
+	y^2=n/a
