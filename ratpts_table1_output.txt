@@ -23,3 +23,45 @@ Running single TABLE1 entry 2.
 EquationsOfCovers. NOT a math/resource verdict -- abandoned only because this
 shared server was overloaded (load avg ~18, 128-way parallel pipeline running).
 RETRY on a quieter/faster machine; do not mark intractable.
+=== plausible sweep: driver=ratpts_table1.m timeout=900s indices=[1 2 3 4 24 26 27 28 31 35] start=Mon Jun 15 13:49:56 EDT 2026 ===
+
+########## idx=1  2026-06-15 13:49:56 ########## (dur=27s exit=0)
+==== D=34 N=5 (D*N=170) W=<{ 10, 34 }>  [DN=170; #div(M=340)=12] ====
+  insufficient CM points (need=7, have=4); skipping before Borcherds work
+
+########## idx=2  2026-06-15 13:50:23 ########## (dur=34s exit=0)
+==== D=34 N=7 (D*N=238) W=<{ 2, 17 }>  [DN=238; #div(M=476)=12] ====
+  insufficient CM points (need=7, have=5); skipping before Borcherds work
+
+########## idx=3  2026-06-15 13:50:58 ########## (dur=43s exit=0)
+==== D=74 N=5 (D*N=370) W=<{ 10, 74 }>  [DN=370; #div(M=740)=12] ====
+  insufficient CM points (need=7, have=4); skipping before Borcherds work
+
+########## idx=4  2026-06-15 13:51:41 ########## (dur=900s exit=124)
+==== D=10 N=61 (D*N=610) W=<{ 10, 122 }>  [DN=610; #div(M=1220)=12] ====
+  TIMEOUT(>900s) -- killed, recorded, not retried
+
+########## idx=24  2026-06-15 14:06:41 ########## (dur=16s exit=0)
+==== D=119 N=2 (D*N=238) W=<{ 7, 17 }>  [N=2: huge LP per Table 6] ====
+  insufficient CM points (need=7, have=1); skipping before Borcherds work
+
+########## idx=26  2026-06-15 14:06:57 ########## (dur=21s exit=0)
+==== D=134 N=3 (D*N=402) W=<{ 3, 134 }>  [T7 DN=402; M=804 #div12] ====
+  insufficient CM points (need=7, have=1); skipping before Borcherds work
+
+########## idx=27  2026-06-15 14:07:18 ########## (dur=1s exit=0)
+==== D=122 N=7 (D*N=854) W=<{ 2, 7, 61 }>  [T7 DN=854; M=1708 #div12] ====
+  [D=122 N=7 W=<{ 2, 7, 61 }>] not an immediate cover of X* (not in candidate data); skipping
+
+########## idx=28  2026-06-15 14:07:19 ########## (dur=0s exit=0)
+==== D=34 N=29 (D*N=986) W=<{ 2, 17, 29 }>  [T7 DN=986; M=1972 #div12] ====
+  [D=34 N=29 W=<{ 2, 17, 29 }>] not an immediate cover of X* (not in candidate data); skipping
+
+########## idx=31  2026-06-15 14:07:19 ########## (dur=19s exit=0)
+==== D=159 N=2 (D*N=318) W=<{ 2, 159 }>  [T7 DN=318; M=1272 #div16] ====
+  insufficient CM points (need=7, have=0); skipping before Borcherds work
+
+########## idx=35  2026-06-15 14:07:38 ########## (dur=1s exit=0)
+==== D=215 N=2 (D*N=430) W=<{ 2, 5, 43 }>  [T7 DN=430; M=1720 #div16] ====
+  [D=215 N=2 W=<{ 2, 5, 43 }>] not an immediate cover of X* (not in candidate data); skipping
+=== sweep done Mon Jun 15 14:07:39 EDT 2026 ===

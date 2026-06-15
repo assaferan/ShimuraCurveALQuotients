@@ -29,10 +29,10 @@ SetVerbose("ShimuraQuotients", 1);
 // ---------------------------------------------------------------------------
 TABLE1 := [*
     // ---- TRACTABLE batch: #div(M)<=12 (M=4*p*q), the only rows that complete ----
-    <34,  5,  {10,34},     "DN=170; #div(M=340)=12">,
-    <34,  7,  {2,17},      "DN=238; #div(M=476)=12">,
-    <74,  5,  {10,74},     "DN=370; #div(M=740)=12">,
-    <10,  61, {10,122},    "DN=610; #div(M=1220)=12">,
+    <34,  5,  {10,34},     "DN=170; #div(M=340)=12 | 2026-06-15 SKIP insufficient CM (need 7, have 4)">,
+    <34,  7,  {2,17},      "DN=238; #div(M=476)=12 | 2026-06-15 SKIP insufficient CM (need 7, have 5)">,
+    <74,  5,  {10,74},     "DN=370; #div(M=740)=12 | 2026-06-15 SKIP insufficient CM (need 7, have 4)">,
+    <10,  61, {10,122},    "DN=610; #div(M=1220)=12 | 2026-06-15 TIMEOUT@900s (reached polymake (1220,513,0); UNRESOLVED, retry w/ bigger budget)">,
     // ---- #div(M)>=24: OOM wall, skipped by DIV_CUTOFF (kept for record) ----
     <6,   35, {10,42},     "DN=210; #div(M=420)=24 OOM">,
     <10,  21, {5,21},      "DN=210; #div24 OOM">,
@@ -54,7 +54,7 @@ TABLE1 := [*
     <798, 1,  {2,3,19},    "N=1">,
     <1230,1,  {3,10,82},   "N=1, large D">,
     <1722,1,  {6,14,41},   "N=1, large D">,
-    <119, 2,  {7,17},      "N=2: huge LP per Table 6">,
+    <119, 2,  {7,17},      "N=2: huge LP per Table 6 | 2026-06-15 SKIP insufficient CM (need 7, have 1)">,
     <210, 19, {6,7,10,19}, "DN=3990: too large">
 *];
 
@@ -66,16 +66,16 @@ TABLE1 := [*
 // Most rows are #div(M)>=24 and will be skipped by the DIV_CUTOFF guard.
 // ---------------------------------------------------------------------------
 TABLE7 := [*
-    <134, 3, {3,134}, "T7 DN=402; M=804 #div12">,
-    <122, 7, {2,7,61}, "T7 DN=854; M=1708 #div12">,
-    <34, 29, {2,17,29}, "T7 DN=986; M=1972 #div12">,
+    <134, 3, {3,134}, "T7 DN=402; M=804 #div12 | 2026-06-15 SKIP insufficient CM (need 7, have 1)">,
+    <122, 7, {2,7,61}, "T7 DN=854; M=1708 #div12 | 2026-06-15 SKIP: W not an immediate cover of X* (not in candidate data)">,
+    <34, 29, {2,17,29}, "T7 DN=986; M=1972 #div12 | 2026-06-15 SKIP: W not an immediate cover of X* (not in candidate data)">,
     <26, 9, {9,26}, "T7 DN=234; M=468 #div18 NOT-sqfree">,
     <95, 3, {3,95}, "T7 DN=285; M=1140 #div24">,
-    <159, 2, {2,159}, "T7 DN=318; M=1272 #div16">,
+    <159, 2, {2,159}, "T7 DN=318; M=1272 #div16 | 2026-06-15 SKIP insufficient CM (need 7, have 0)">,
     <14, 25, {14,25}, "T7 DN=350; M=700 #div18 NOT-sqfree">,
     <39, 10, {2,5,39}, "T7 DN=390; M=1560 #div32">,
     <15, 26, {2,13,15}, "T7 DN=390; M=1560 #div32">,
-    <215, 2, {2,5,43}, "T7 DN=430; M=1720 #div16">,
+    <215, 2, {2,5,43}, "T7 DN=430; M=1720 #div16 | 2026-06-15 SKIP: W not an immediate cover of X* (not in candidate data)">,
     <77, 6, {2,3,7,11}, "T7 DN=462; M=1848 #div32">,
     <33, 14, {2,7,33}, "T7 DN=462; M=1848 #div32">,
     <10, 49, {5,98}, "T7 DN=490; M=980 #div18 NOT-sqfree">,

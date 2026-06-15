@@ -1,0 +1,335 @@
+=== plausible sweep: driver=ratpts_table1.m timeout=900s indices=[1 2 3 4 24 26 27 28 31 35] start=Mon Jun 15 13:49:56 EDT 2026 ===
+
+########## idx=1  2026-06-15 13:49:56 ##########
+Magma V2.29-4     Mon Jun 15 2026 13:49:56 on MacBook-Pro-222 [Seed = 
+3515580566]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 1 (of 79).
+
+==== D=34 N=5 (D*N=170) W=<{ 10, 34 }>  [DN=170; #div(M=340)=12] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=4); skipping before Borcherds work
+  ---- (D=34,N=5) done in 27.040 s ----
+
+DONE.
+
+Total time: 27.629 seconds, Total memory usage: 330.62MB
+  >>> idx=1 exit=0 dur=27s
+
+########## idx=2  2026-06-15 13:50:23 ##########
+Magma V2.29-4     Mon Jun 15 2026 13:50:24 on MacBook-Pro-222 [Seed = 
+3904027019]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 2 (of 79).
+
+==== D=34 N=7 (D*N=238) W=<{ 2, 17 }>  [DN=238; #div(M=476)=12] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=5); skipping before Borcherds work
+  ---- (D=34,N=7) done in 33.680 s ----
+
+DONE.
+
+Total time: 34.320 seconds, Total memory usage: 330.62MB
+  >>> idx=2 exit=0 dur=34s
+
+########## idx=3  2026-06-15 13:50:58 ##########
+Magma V2.29-4     Mon Jun 15 2026 13:50:58 on MacBook-Pro-222 [Seed = 257253005]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 3 (of 79).
+
+==== D=74 N=5 (D*N=370) W=<{ 10, 74 }>  [DN=370; #div(M=740)=12] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=4); skipping before Borcherds work
+  ---- (D=74,N=5) done in 42.360 s ----
+
+DONE.
+
+Total time: 43.009 seconds, Total memory usage: 330.62MB
+  >>> idx=3 exit=0 dur=43s
+
+########## idx=4  2026-06-15 13:51:41 ##########
+Magma V2.29-4     Mon Jun 15 2026 13:51:41 on MacBook-Pro-222 [Seed = 629109896]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 4 (of 79).
+
+==== D=10 N=61 (D*N=610) W=<{ 10, 122 }>  [DN=610; #div(M=1220)=12] ====
+
+	Computing CM points up to class number 8...Done!
+
+	Computing generators for the ring of {oo}-weakly holomorphic modular forms of level 1220...
+		prec = 100, n = 89, k = 212, rk = -1, dim = 0...
+		Making polymake file for (1220, 301, 0)...File found.
+		prec = 213, n = 89, k = 212, rk = 79, dim = 213...
+		Making polymake file for (1220, 301, 0)...File found.
+		prec = 425, n = 301, k = 212, rk = 79, dim = 213...
+		Making polymake file for (1220, 513, 0)...File found.  >>> idx=4 TIMEOUT after 900s (>900s) -- killed group, moving on
+
+########## idx=24  2026-06-15 14:06:41 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:06:41 on MacBook-Pro-222 [Seed = 
+2596327339]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 24 (of 79).
+
+==== D=119 N=2 (D*N=238) W=<{ 7, 17 }>  [N=2: huge LP per Table 6] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=1); skipping before Borcherds work
+  ---- (D=119,N=2) done in 15.450 s ----
+
+DONE.
+
+Total time: 16.089 seconds, Total memory usage: 330.62MB
+  >>> idx=24 exit=0 dur=16s
+
+########## idx=26  2026-06-15 14:06:57 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:06:57 on MacBook-Pro-222 [Seed = 
+2952133358]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 26 (of 79).
+
+==== D=134 N=3 (D*N=402) W=<{ 3, 134 }>  [T7 DN=402; M=804 #div12] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=1); skipping before Borcherds work
+  ---- (D=134,N=3) done in 20.030 s ----
+
+DONE.
+
+Total time: 20.699 seconds, Total memory usage: 330.62MB
+  >>> idx=26 exit=0 dur=21s
+
+########## idx=27  2026-06-15 14:07:18 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:07:18 on MacBook-Pro-222 [Seed = 
+3281622677]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 27 (of 79).
+
+==== D=122 N=7 (D*N=854) W=<{ 2, 7, 61 }>  [T7 DN=854; M=1708 #div12] ====
+  [D=122 N=7 W=<{ 2, 7, 61 }>] not an immediate cover of X* (not in candidate data); skipping
+  ---- (D=122,N=7) done in 0.010 s ----
+
+DONE.
+
+Total time: 0.640 seconds, Total memory usage: 330.62MB
+  >>> idx=27 exit=0 dur=1s
+
+########## idx=28  2026-06-15 14:07:19 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:07:19 on MacBook-Pro-222 [Seed = 
+3616375424]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 28 (of 79).
+
+==== D=34 N=29 (D*N=986) W=<{ 2, 17, 29 }>  [T7 DN=986; M=1972 #div12] ====
+  [D=34 N=29 W=<{ 2, 17, 29 }>] not an immediate cover of X* (not in candidate data); skipping
+  ---- (D=34,N=29) done in 0.000 s ----
+
+DONE.
+
+Total time: 0.660 seconds, Total memory usage: 330.62MB
+  >>> idx=28 exit=0 dur=0s
+
+########## idx=31  2026-06-15 14:07:19 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:07:20 on MacBook-Pro-222 [Seed = 
+3954294451]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 31 (of 79).
+
+==== D=159 N=2 (D*N=318) W=<{ 2, 159 }>  [T7 DN=318; M=1272 #div16] ====
+
+	Computing CM points up to class number 8...Done!
+  insufficient CM points (need=7, have=0); skipping before Borcherds work
+  ---- (D=159,N=2) done in 17.900 s ----
+
+DONE.
+
+Total time: 18.589 seconds, Total memory usage: 330.62MB
+  >>> idx=31 exit=0 dur=19s
+
+########## idx=35  2026-06-15 14:07:38 ##########
+Magma V2.29-4     Mon Jun 15 2026 14:07:38 on MacBook-Pro-222 [Seed = 73290095]
+
++-------------------------------------------------------------------+
+|       This copy of Magma has been made available through a        |
+|                   generous initiative of the                      |
+|                                                                   |
+|                         Simons Foundation                         |
+|                                                                   |
+| covering U.S. Colleges, Universities, Nonprofit Research entities,|
+|               and their students, faculty, and staff              |
++-------------------------------------------------------------------+
+
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading startup file "/Users/sachihashimoto/.magmarc"
+
+Loading file "ratpts_table1.m"
+Loaded 18379 candidate curves.
+Loaded 25 Table 1 + 54 Table 7 = 79 entries.
+Running single entry 35 (of 79).
+
+==== D=215 N=2 (D*N=430) W=<{ 2, 5, 43 }>  [T7 DN=430; M=1720 #div16] ====
+  [D=215 N=2 W=<{ 2, 5, 43 }>] not an immediate cover of X* (not in candidate data); skipping
+  ---- (D=215,N=2) done in 0.010 s ----
+
+DONE.
+
+Total time: 0.670 seconds, Total memory usage: 330.62MB
+  >>> idx=35 exit=0 dur=1s
+
+=== sweep done Mon Jun 15 14:07:39 EDT 2026 ===
