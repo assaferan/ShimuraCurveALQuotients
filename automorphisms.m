@@ -300,9 +300,13 @@ to |d|, so the per-prime cost is ~linear in 4*Qmax*p^g; this bounds it.  The Wei
 bound for a curve is the largest p keeping 4*Qmax*p^g <= this value.  Curves whose
 smallest good prime already exceeds it are skipped entirely by the Weil filter, which is
 safe because that filter only ever *rules curves out* (a skipped curve simply proceeds to
-the other filters).  Tunable; set to ClassNumberTableMaxDisc so every requested |d| stays
-within the cached file-0 tables (no slow live ClassNumber lookups).}
-    return 2^28;
+the other filters).  Tunable.  Set to 2^30 (above ClassNumberTableMaxDisc = 2^28): this
+lets the sweep reach a handful of low-genus, high-Qmax quotients whose ruling witness sits
+just past 2^28 (e.g. (30030,1)/g3 at p=17, (210,71)/g4 at p=11, (6,685)/g5 at p=7).  The
+requested |d| in (2^28, 2^30] are served by direct ClassNumber (slower per lookup but
+memory-safe, no table caching) rather than the cached file-0 tables; depth stays well
+within the 2^40 data range.}
+    return 2^30;
 end intrinsic;
 
 intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt
