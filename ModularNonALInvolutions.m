@@ -232,7 +232,7 @@ Otherwise, returns -1.}
             g := d div 2;
             //print "g = ", g;
             name := all_names[idx] cat " " cat Sprintf("W%o", other_w);
-            if (g eq 0) then
+            if (g eq 0) or ((X`g eq 3) and (g eq 2)) then
                 return 1, name, _;
             end if;
             fix := 2*X`g - 4*g + 2;
