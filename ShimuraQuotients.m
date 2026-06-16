@@ -1072,15 +1072,21 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
             end if;
             // The normalization of X_0(D, Np)/W over F_p is isomorphic to the
             // non-subhyperelliptic X_0(D, N)/W', so X_0(D, Np)/W is not hyperelliptic.
+            // The consistency assertion runs regardless, catching a genuine
+            // contradiction (target already proved hyperelliptic).
             error if assigned curves[i]`IsHyp and curves[i]`IsHyp,
                 Sprintf("SpecialFiberIsomorphism: curve %o was proven hyperelliptic "
                     cat "but its special fiber source %o is not subhyperelliptic at prime %o",
                     curves[i]`CurveID, src`CurveID, p);
-            curves[i]`IsSubhyp := false;
-            curves[i]`IsHyp := false;
-            curves[i]`TestInWhichProved := Sprintf(
-                "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
-                p, src`CurveID);
+            // Don't overwrite an existing determination: a curve already ruled out
+            // by another (cheaper) test keeps that test as its recorded reason.
+            if not assigned curves[i]`IsSubhyp then
+                curves[i]`IsSubhyp := false;
+                curves[i]`IsHyp := false;
+                curves[i]`TestInWhichProved := Sprintf(
+                    "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
+                    p, src`CurveID);
+            end if;
             break;
         end for;
     end for;
