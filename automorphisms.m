@@ -294,15 +294,16 @@ entirely from the tables. Returns 0 if even p = 2 would exceed the tables.}
 end intrinsic;
 
 intrinsic WeilDiscBudget() -> RngIntElt
-{Affordability budget on the Hurwitz-class-number streaming depth 4*Qmax*p^g used by
-the Weil-polynomial point count.  ClassNumberLU streams the gzipped tables front-to-back
-to |d|, so the per-prime cost is ~linear in 4*Qmax*p^g; this bounds it.  The Weil prime
-bound for a curve is the largest p keeping 4*Qmax*p^g <= this value.  Curves whose
-smallest good prime already exceeds it are skipped entirely by the Weil filter, which is
-safe because that filter only ever *rules curves out* (a skipped curve simply proceeds to
-the other filters).  Tunable; set to ClassNumberTableMaxDisc so every requested |d| stays
-within the cached file-0 tables (no slow live ClassNumber lookups).}
-    return 2^28;
+{Affordability budget on the Hurwitz-class-number disc depth 4*Qmax*p^g used by the
+Weil-polynomial point count.  ClassNumberLU now answers each lookup by binary search in the
+extracted tables (O(1) memory, ~70 us, no streaming and no cache-everything), so the disc
+depth no longer costs memory or grows lookup time -- it is therefore set to the full
+downloaded table range (|d| < 2^40).  Every curve is then filtered up to its data-tight
+prime bound, lowered only by the per-genus practical ceiling in FilterByWeilPolynomial.  The
+filter only ever *rules curves out*, and IsHypWeilPolynomial early-stops at the first prime
+that does, so the average cost stays low even though the bound is high.  Tunable: lower it to
+cap the disc depth (and so the per-curve prime bound) when compute time must be bounded.}
+    return ClassNumberDataMaxAbsDisc();
 end intrinsic;
 
 intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt
