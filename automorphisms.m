@@ -302,7 +302,9 @@ downloaded table range (|d| < 2^40).  Every curve is then filtered up to its dat
 prime bound, lowered only by the per-genus practical ceiling in FilterByWeilPolynomial.  The
 filter only ever *rules curves out*, and IsHypWeilPolynomial early-stops at the first prime
 that does, so the average cost stays low even though the bound is high.  Tunable: lower it to
-cap the disc depth (and so the per-curve prime bound) when compute time must be bounded.}
+cap the disc depth (and so the per-curve prime bound) when compute time must be bounded.
+(Supersedes the earlier 2^30 streaming budget: the binary-search lookup removes the slow
+direct-ClassNumber path that 2^30 was bounding, so the full 2^40 range is now affordable.)}
     return ClassNumberDataMaxAbsDisc();
 end intrinsic;
 
