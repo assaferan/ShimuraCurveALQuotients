@@ -112,10 +112,13 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     return;
 end procedure;
 
-// Default cutoff for LP size (n parameter); override by setting LP_SIZE_CUTOFF
-// before loading this file. 24*n is the bounding polytope coefficient —
-// max solved so far is n=499; D=51 N=2 hits n~78M and is intractable.
-if not assigned LP_SIZE_CUTOFF then LP_SIZE_CUTOFF := 10000; end if;
+// Optional cap on LP size (n parameter). The function does NOT decide to skip on
+// its own: by default there is no cap (LP_SIZE_CUTOFF = Infinity), so every LP is
+// attempted. A caller that wants to skip large LPs must opt in by setting
+// LP_SIZE_CUTOFF to a finite value before loading this file. 24*n is the bounding
+// polytope coefficient — max solved so far is n=499; D=51 N=2 hits n~78M and is
+// intractable, so set a finite cutoff if you want to avoid those.
+if not assigned LP_SIZE_CUTOFF then LP_SIZE_CUTOFF := Infinity(); end if;
 
 // Cap on the number of lattice points (polymake solutions) we will hand to the
 // downstream Borcherds-form step. polymake can succeed (its own memory is fine)
