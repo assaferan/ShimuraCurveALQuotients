@@ -294,19 +294,18 @@ entirely from the tables. Returns 0 if even p = 2 would exceed the tables.}
 end intrinsic;
 
 intrinsic WeilDiscBudget() -> RngIntElt
-{Affordability budget on the Hurwitz-class-number streaming depth 4*Qmax*p^g used by
-the Weil-polynomial point count.  ClassNumberLU streams the gzipped tables front-to-back
-to |d|, so the per-prime cost is ~linear in 4*Qmax*p^g; this bounds it.  The Weil prime
-bound for a curve is the largest p keeping 4*Qmax*p^g <= this value.  Curves whose
-smallest good prime already exceeds it are skipped entirely by the Weil filter, which is
-safe because that filter only ever *rules curves out* (a skipped curve simply proceeds to
-the other filters).  Tunable.  Set to 2^30 (above ClassNumberTableMaxDisc = 2^28): this
-lets the sweep reach a handful of low-genus, high-Qmax quotients whose ruling witness sits
-just past 2^28 (e.g. (30030,1)/g3 at p=17, (210,71)/g4 at p=11, (6,685)/g5 at p=7).  The
-requested |d| in (2^28, 2^30] are served by direct ClassNumber (slower per lookup but
-memory-safe, no table caching) rather than the cached file-0 tables; depth stays well
-within the 2^40 data range.}
-    return 2^30;
+{Affordability budget on the Hurwitz-class-number disc depth 4*Qmax*p^g used by the
+Weil-polynomial point count.  ClassNumberLU now answers each lookup by binary search in the
+extracted tables (O(1) memory, ~70 us, no streaming and no cache-everything), so the disc
+depth no longer costs memory or grows lookup time -- it is therefore set to the full
+downloaded table range (|d| < 2^40).  Every curve is then filtered up to its data-tight
+prime bound, lowered only by the per-genus practical ceiling in FilterByWeilPolynomial.  The
+filter only ever *rules curves out*, and IsHypWeilPolynomial early-stops at the first prime
+that does, so the average cost stays low even though the bound is high.  Tunable: lower it to
+cap the disc depth (and so the per-curve prime bound) when compute time must be bounded.
+(Supersedes the earlier 2^30 streaming budget: the binary-search lookup removes the slow
+direct-ClassNumber path that 2^30 was bounding, so the full 2^40 range is now affordable.)}
+    return ClassNumberDataMaxAbsDisc();
 end intrinsic;
 
 intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt

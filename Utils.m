@@ -33,7 +33,7 @@ heavy curves are always dispatched early.}
         return R!0;
     end if;
 
-    if stage eq "FilterByWeilPolynomial" then
+    if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // Weil cost is dominated by class-number streaming: each good prime p streams the
         // tables to depth 4*Qmax*p^g.  Bound p by the database, the affordability budget,
         // and the per-genus ceiling, then sum those depths over the good primes.

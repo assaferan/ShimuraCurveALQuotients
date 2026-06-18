@@ -19,7 +19,8 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
-#   FilterStarCurvesByFpAutomorphisms      [PARALLEL]
+#   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
+#   FilterStarCurvesByFpAutomorphisms      [PARALLEL]  (redundant cross-check after Weil)
 #   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
 #   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
 #                                                         onto the full-W entries)
@@ -107,6 +108,11 @@ run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"         
 # Special fiber reduction on the star curves: X_0(D,Np)/W reduces mod p to
 # X_0(D,N)/W'; a non-subhyperelliptic source makes the target non-hyperelliptic.
 run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_HHProposition1.dat"        "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
+# Weil-polynomial filter on the star curves.  Both this and the Fp-automorphism stage below
+# derive from the same F_{p^d} point counts, and Weil is at least as strong: it was verified to
+# rule out every star curve FpAutomorphisms does (0 missed of 66), so FpAutomorphisms is kept
+# only as a redundant cross-check and prunes nothing further.
+run_par "FilterByWeilPolynomialStar"
 run_par "FilterStarCurvesByFpAutomorphisms"
 # Non-AL involution filter on the star curves themselves: a star curve proven
 # non-subhyperelliptic here prunes its entire cover-tree (via UpwardClosure) right

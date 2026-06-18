@@ -141,74 +141,103 @@ function clFundClassNo(m0)
     return false, _;
 end function;
 
-intrinsic ClassNumberTableMaxDisc() -> RngIntElt
-{Fundamental discriminants with |d0| at or above this value are served by a direct
-ClassNumber computation instead of the streaming LMFDB tables.  The table lookup caches
-every class number it streams past (~750 MB of memory per 2^28-sized data file, per
-residue class), which is a large win for the small, frequently-reused discriminants that
-dominate -- but pure cost for large discriminants, which are touched roughly once with no
-reuse.  Capping the table range therefore bounds the per-process cache: at the default
-2^28 it stays ~3 GB even when a high-genus point count reaches |d| ~ 10^10.  Tunable; raise
-it to keep more lookups on the (faster, but memory-hungry) tables when memory permits.}
-    return 2^28;
+// ===========================================================================
+// Fast random-access lookup.
+//
+// The streaming path above caches every class number it reads past, which makes
+// repeated small-|d| lookups very cheap but costs ~750 MB of memory per 2^28-sized
+// file -- so ClassNumberTableMaxDisc has to cap the table range to bound memory.
+//
+// The path below instead extracts each data file once into a fixed-width, sorted
+// (|d|, h) record file and answers each lookup by binary search: O(log n) seeks and
+// O(1) memory, no cache-everything.  That removes the memory pressure, so the tables
+// can serve the entire downloaded range (|d| < 2^40) and the Weil disc-depth budget
+// can be raised freely.  Extraction is one-time (~30 s/file) and persisted on disk
+// (CLASS_GROUPS_FAST_DIR), shared across runs.
+// ===========================================================================
+CL_FAST_DW := 13;                            // |d| field width (|d| < 10^13 > 2^40)
+CL_FAST_HW := 8;                             // h field width   (h   < 10^8)
+CL_FAST_RW := CL_FAST_DW + CL_FAST_HW + 1;   // record width including the newline
+
+function clFastDir()
+    b, dir := StoreIsDefined(CL_STORE, "fastdir");
+    if b then return dir; end if;
+    env := GetEnv("CLASS_GROUPS_FAST_DIR");
+    return (env ne "") select env else "/scratch/class-groups-fast";
+end function;
+
+intrinsic SetClassNumberFastDir(dir::MonStgElt)
+{Set the directory holding the extracted fixed-width (|d|,h) record files used by the
+fast binary-search class-number lookup (overrides the CLASS_GROUPS_FAST_DIR environment
+variable and the built-in default).}
+    StoreSet(CL_STORE, "fastdir", dir);
 end intrinsic;
 
-intrinsic ClassNumberLU(D::RngIntElt) -> RngIntElt
-{The class number of the imaginary quadratic order of discriminant D (D < 0 and
-D = 0 or 1 mod 4), using the precomputed LMFDB fundamental class-group tables for small
-fundamental discriminants and a direct ClassNumber computation for large ones (see
-ClassNumberTableMaxDisc) or whenever the tables do not cover D.}
-    require D lt 0 and (D mod 4 in [0, 1]):
-        "D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
+// Extract the fixed-width record file for (prefix, file k) from the gzipped LMFDB table,
+// reconstructing |d| = base + m*(running gap sum) and writing "%013d%08d\n" per line (the
+// source is already ascending in |d|).  Atomic via a temp file + rename, so concurrent
+// workers are safe.  Returns the path on success, or "" if the source data file is missing.
+function clExtractFastFile(prefix, k, r, m, fwdir, fwpath)
+    gzpath := clDataDir() cat "/" cat prefix cat "/" cat prefix cat "."
+              cat IntegerToString(k) cat ".gz";
+    if not FileExists(gzpath) then return ""; end if;
+    base := k * CL_FILE_SPAN + r;
+    cmd := "mkdir -p " cat fwdir cat " && tmp=$(mktemp " cat fwdir cat "/.tmpXXXXXX) && zcat "
+        cat gzpath cat " 2>/dev/null | awk -F'\\t' -v base=" cat IntegerToString(base)
+        cat " -v m=" cat IntegerToString(m)
+        cat " 'BEGIN{cum=0} {cum+=$1; d=base+m*cum; if($2>=100000000){print \"HOVERFLOW\">\"/dev/stderr\"; exit 1} printf \"%013d%08d\\n\", d, $2}' > $tmp && mv -f $tmp "
+        cat fwpath;
+    _ := System(cmd);
+    if FileExists(fwpath) then return fwpath; end if;
+    return "";
+end function;
 
-    order := clGetAssoc(CL_ORDER);
-    cached, h := IsDefined(order, D);
-    if cached then return h; end if;
-
-    D0 := FundamentalDiscriminant(D);
-
-    // Large fundamental discriminants are served by a direct ClassNumber rather than the
-    // streaming tables.  clFundClassNo caches every class number it streams past (~750 MB
-    // per 2^28-sized file per residue class), so a single high-genus point count -- which
-    // scatters lookups across |d| up to ~4*Qmax*p^g, i.e. tens of GB of files -- would
-    // exhaust memory (this is what OOM'd FilterStarCurvesByFpAutomorphisms on a g=8 curve).
-    // Such large discriminants are touched ~once with no reuse, so a direct computation is
-    // both memory-safe and, in aggregate, cheaper than streaming+caching that whole range.
-    if -D0 ge ClassNumberTableMaxDisc() then
-        h := ClassNumber(D);
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
-        return h;
+// Return <open handle, record count> for the fixed-width file of (prefix, file k), extracting
+// it on first use.  Caches the handle + count in CL_STORE.  Returns false if data is missing.
+function clFastFile(prefix, k, r, m)
+    fkey := "fast:" cat prefix cat "." cat IntegerToString(k);
+    have, st := StoreIsDefined(CL_STORE, fkey);
+    if have then
+        if st`missing then return false, _, _; end if;
+        return true, st`F, st`nrec;
     end if;
-
-    f := Isqrt(D div D0);                 // conductor; D = D0 * f^2
-
-    ok, h0 := clFundClassNo(-D0);
-    if not ok then
-        h := ClassNumber(D);              // fallback (also covers non-maximal)
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
-        return h;
+    fwdir := clFastDir() cat "/" cat prefix;
+    fwpath := fwdir cat "/" cat prefix cat "." cat IntegerToString(k) cat ".fw";
+    if not FileExists(fwpath) then
+        _ := clExtractFastFile(prefix, k, r, m, fwdir, fwpath);
     end if;
+    if not FileExists(fwpath) then
+        StoreSet(CL_STORE, fkey, rec<recformat<F, nrec, missing> | missing := true>);
+        return false, _, _;
+    end if;
+    nrec := StringToInteger(Pipe("stat -c%s " cat fwpath cat " | tr -dc 0-9", "")) div CL_FAST_RW;
+    F := Open(fwpath, "r");
+    StoreSet(CL_STORE, fkey, rec<recformat<F, nrec, missing> | F := F, nrec := nrec, missing := false>);
+    return true, F, nrec;
+end function;
 
-    if f eq 1 then
-        h := h0;
-    else
-        ui := 1;
-        if   D0 eq -3 then ui := 3;
-        elif D0 eq -4 then ui := 2;
+// h(d0) for a negative fundamental d0 with |d0| = m0, by binary search in the extracted file.
+// O(log n) seeks, O(1) memory, no caching.  Returns false if unavailable (missing file / |d|
+// beyond the downloaded range / line absent), so the caller can fall back to a direct compute.
+function clFundClassNoFast(m0)
+    prefix, r, m := clResidue(m0);
+    k := m0 div CL_FILE_SPAN;
+    ok, F, nrec := clFastFile(prefix, k, r, m);
+    if not ok then return false, _; end if;
+    lo := 0; hi := nrec - 1;
+    while lo le hi do
+        mid := (lo + hi) div 2;
+        Seek(F, mid * CL_FAST_RW, 0);
+        s := Read(F, CL_FAST_DW + CL_FAST_HW);
+        d := StringToInteger(Substring(s, 1, CL_FAST_DW));
+        if d eq m0 then
+            return true, StringToInteger(Substring(s, CL_FAST_DW + 1, CL_FAST_HW));
+        elif d lt m0 then lo := mid + 1;
+        else hi := mid - 1;
         end if;
-        prod := 1;
-        for p in PrimeDivisors(f) do
-            prod *:= (1 - KroneckerSymbol(D0, p) / p);
-        end for;
-        h := Integers()!(h0 * f / ui * prod);
-    end if;
-
-    order[D] := h;
-    StoreSet(CL_ORDER, "cache", order);
-    return h;
-end intrinsic;
+    end while;
+    return false, _;
+end function;
 
 // Order class number h(D0*f^2) from the fundamental h(D0)  [Cox, Primes ..., Thm 7.24].
 function clOrderFromFund(D0, f, h0)
@@ -223,6 +252,61 @@ function clOrderFromFund(D0, f, h0)
     end for;
     return Integers()!(h0 * f / ui * prod);
 end function;
+
+intrinsic ClassNumberTableMaxDisc() -> RngIntElt
+{Fundamental discriminants with |d0| at or above this value are served by a direct
+ClassNumber computation instead of the streaming LMFDB tables.  The table lookup caches
+every class number it streams past (~750 MB of memory per 2^28-sized data file, per
+residue class), which is a large win for the small, frequently-reused discriminants that
+dominate -- but pure cost for large discriminants, which are touched roughly once with no
+reuse.  Capping the table range therefore bounds the per-process cache: at the default
+2^28 it stays ~3 GB even when a high-genus point count reaches |d| ~ 10^10.  Tunable; raise
+it to keep more lookups on the (faster, but memory-hungry) tables when memory permits.}
+    return 2^28;
+end intrinsic;
+
+intrinsic ClassNumberLU(D::RngIntElt) -> RngIntElt
+{The class number of the imaginary quadratic order of discriminant D (D < 0 and
+D = 0 or 1 mod 4).  Fundamental discriminants within the downloaded LMFDB table range
+(|d0| < 2^40) are served by a binary-search lookup in the extracted tables (O(1) memory,
+no cache-everything); larger ones, or any the tables do not cover, use a direct ClassNumber
+computation.  The order class number is recovered from the fundamental one via the conductor
+formula [Cox, Primes ..., Thm 7.24].}
+    require D lt 0 and (D mod 4 in [0, 1]):
+        "D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
+
+    order := clGetAssoc(CL_ORDER);
+    cached, h := IsDefined(order, D);
+    if cached then return h; end if;
+
+    D0 := FundamentalDiscriminant(D);
+
+    // The fast lookup binary-searches an extracted file -- O(1) memory, no cache-everything --
+    // so it serves the whole downloaded range without the memory blow-up that forced the
+    // streaming path's ClassNumberTableMaxDisc cap (this is what OOM'd
+    // FilterStarCurvesByFpAutomorphisms on a g=8 curve).  Only fall back to a direct
+    // ClassNumber for fundamental discriminants beyond the tables entirely, or missing data.
+    if -D0 ge ClassNumberDataMaxAbsDisc() then
+        h := ClassNumber(D);
+        order[D] := h;
+        StoreSet(CL_ORDER, "cache", order);
+        return h;
+    end if;
+
+    ok, h0 := clFundClassNoFast(-D0);
+    if not ok then
+        h := ClassNumber(D);              // fallback (missing data file / line absent)
+        order[D] := h;
+        StoreSet(CL_ORDER, "cache", order);
+        return h;
+    end if;
+
+    f := Isqrt(D div D0);                 // conductor; D = D0 * f^2
+    h := clOrderFromFund(D0, f, h0);
+    order[D] := h;
+    StoreSet(CL_ORDER, "cache", order);
+    return h;
+end intrinsic;
 
 // Batched fundamental class numbers.  m0s must be a sorted (ascending) sequence of positive
 // |d0| for negative fundamental discriminants below the table range.  Streams each required

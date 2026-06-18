@@ -405,8 +405,14 @@ intrinsic NumFixedPointsByCMOrder(D::RngIntElt, N::RngIntElt, m::RngIntElt)-> As
     orders := pair[1];
     class_nums := pair[2];
     for i->R in orders do
-        nR := NumberOfOptimalEmbeddings(R,D,N : h := class_nums[i]);
-        e[Discriminant(R)] := nR;
+        // Fixed points of w_m: Ogg's formula products the local embedding numbers over the
+        // primes p | D*N with p NOT dividing m (the primes dividing m are absorbed by w_m).
+        // NB: do NOT use NumberOfOptimalEmbeddings here -- that products over ALL p | D*N, i.e.
+        // counts every CM point of the order (independently of m), over-counting the w_m-fixed
+        // points by the factor prod_{p|m} NuOgg(p, R, D, N).  This must agree with NumFixedPoints.
+        prod := &*[Integers() |
+                    NuOgg(p, R, D, N) : p in PrimeDivisors(D*N) | m mod p ne 0];
+        e[Discriminant(R)] := class_nums[i] * prod;
     end for;
     return e;
 end intrinsic;
