@@ -32,8 +32,15 @@ case "${STAGE}" in
     FilterByTraceStar)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateByGenusStar.dat"
         ;;
-    FilterStarCurvesByFpAutomorphisms)
+    FilterByWeilPolynomialStar)
+        # Weil-polynomial filter run on the star curves, before FilterStarCurvesByFpAutomorphisms.
+        # The Fp-automorphism ramification count and the Weil polynomial both derive from the same
+        # F_{p^d} point counts, and the Weil filter is at least as strong (verified: it rules out
+        # every star curve FpAut does), so this stage subsumes the FpAut stage that follows.
         INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
+        ;;
+    FilterStarCurvesByFpAutomorphisms)
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByWeilPolynomialStar.dat"
         ;;
     FilterByNonALInvolutionsStar)
         # Non-AL involution filter run on the star curves (full AL group), before they
@@ -61,7 +68,8 @@ case "${STAGE}" in
         ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
-        echo "Supported: FilterByTraceStar, FilterStarCurvesByFpAutomorphisms," >&2
+        echo "Supported: FilterByTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient, FilterByTrace," >&2
         echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2

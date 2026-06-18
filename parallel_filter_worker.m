@@ -16,7 +16,7 @@
 //   FilterByTrace, FilterByTraceStar,
 //   FilterByALFixedPointsOnQuotient,
 //   FilterByComplicatedALFixedPointsOnQuotient,
-//   FilterByWeilPolynomial,
+//   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
 //   FilterByDegeneracyMorphism
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
@@ -62,7 +62,7 @@ case stage:
         FilterByComplicatedALFixedPointsOnQuotient(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
-    when "FilterByWeilPolynomial":
+    when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":
         FilterByWeilPolynomialGenusScaled(~subseq);
     when "FilterByNonALInvolutions", "FilterByNonALInvolutionsStar":
         FilterByNonALInvolutions(~subseq);
