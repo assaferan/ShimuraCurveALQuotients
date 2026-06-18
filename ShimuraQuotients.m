@@ -1412,7 +1412,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
+    vprintf ShimuraQuotients, 2: "\n\tcounting elliptic points by CM order...";
+    tt := Realtime();
     ell := NumberOfEllipticPointsByCMOrder(X);
+    vprintf ShimuraQuotients, 2: " done (%os).", Realtime() - tt;
     for q in Keys(ell) do
         for d in Keys(ell[q]) do
             if d in [-3,-4] then 
@@ -1448,7 +1451,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     quad_pts := [];
     D := X`D;
     N := X`N;
-    for d in allCN do
+    vprintf ShimuraQuotients, 2: "\n\tchecking fields of definition for %o candidate discriminant(s)...\n", #allCN;
+    tt := Realtime();
+    for ctr->d in allCN do
+        vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
 
         flds := FieldsOfDefinitionOfCMPoint(X, d);
@@ -1459,6 +1465,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         end if;
 
     end for;
+    vprintf ShimuraQuotients, 2: "\tdone checking fields of definition (%os).\n", Realtime() - tt;
     vprintf ShimuraQuotients, 2: "Done!\n";
 
     if not coprime_to_level then

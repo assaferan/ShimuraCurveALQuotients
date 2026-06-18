@@ -172,21 +172,49 @@ end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the immediate covers of X.}
+    t0 := Realtime();
+    vprintf ShimuraQuotients, 1 : "EquationsOfCovers for X(%o,%o)* (g = %o):\n", Xstar`D, Xstar`N, Xstar`g;
+
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [1/6] computing Borcherds forms (Prec = %o)...", Prec;
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
+
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [2/6] computing divisors of hauptmoduls...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
+    vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
+
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [3/6] computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
+    vprintf ShimuraQuotients, 1 : " done (%os): %o rational, %o quadratic CM points.\n",
+                                  Realtime() - t, #all_cm_pts[1], #all_cm_pts[2];
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
-    
+
     // num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
     num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
     // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
-    // We would need two other CM pts to determine the correct scaling, based on the fields of definition. 
-    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
-                                                            MaxNum := num_vals, Prec := Prec, 
+    // We would need two other CM pts to determine the correct scaling, based on the fields of definition.
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [4/6] computing absolute values at up to %o CM points...\n", num_vals;
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
+                                                            MaxNum := num_vals, Prec := Prec,
                                                             Exclude := {}, Include := Set(d_divs));
+    vprintf ShimuraQuotients, 1 : "  [4/6] done (%os).\n", Realtime() - t;
+
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [5/6] reducing table and computing values at CM points...";
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
-    return EquationsOfCovers(schofer_tab, all_cm_pts);
+    vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
+
+    t := Realtime();
+    vprintf ShimuraQuotients, 1 : "  [6/6] solving for equations of covers...";
+    crv_list, ws, keys := EquationsOfCovers(schofer_tab, all_cm_pts);
+    vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
+    vprintf ShimuraQuotients, 1 : "EquationsOfCovers total: %os.\n", Realtime() - t0;
+    return crv_list, ws, keys;
 end intrinsic;
 
 function curves_above_P1_and_conics(crv_eqns, labels, curves)

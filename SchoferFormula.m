@@ -814,21 +814,30 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     O := Ldata`O;
     basis_L := Ldata`basis_L;
 
+    vprintf ShimuraQuotients, 2: "\tfinding elements of norm for %o CM point(s)...", #pt_list_rat + #pt_list_quad;
+    tt := Realtime();
     lambdas := ElementsOfNorm(Q, [-pt[1] : pt in pt_list_rat cat pt_list_quad], O, basis_L);
-    for pt in pt_list_rat do
+    vprintf ShimuraQuotients, 2: " done (%os).\n", Realtime() - tt;
+    for j->pt in pt_list_rat do
         d := pt[1];
+        tt := Realtime();
+        vprintf ShimuraQuotients, 2: "\tabsolute values at rational CM point %o/%o (d = %o)...", j, #pt_list_rat, d;
         vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in vals do
             Append(~table[i], vals[i]);
         end for;
+        vprintf ShimuraQuotients, 2: " done (%os).\n", Realtime() - tt;
     end for;
 
-    for pt in pt_list_quad do
+    for j->pt in pt_list_quad do
         d := pt[1];
+        tt := Realtime();
+        vprintf ShimuraQuotients, 2: "\tabsolute values at quadratic CM point %o/%o (d = %o)...", j, #pt_list_quad, d;
         norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
+        vprintf ShimuraQuotients, 2: " done (%os).\n", Realtime() - tt;
     end for;
 
     all_cm_pts := [cm_pts_rat, cm_pts_quad];
