@@ -163,8 +163,30 @@ function clFastDir()
     b, dir := StoreIsDefined(CL_STORE, "fastdir");
     if b then return dir; end if;
     env := GetEnv("CLASS_GROUPS_FAST_DIR");
+    // Portable default next to the source tables; set CLASS_GROUPS_FAST_DIR to a roomy writable
+    // location (the extracted cache can reach hundreds of GB / TB).  run_pipeline.sh sets it.
     return (env ne "") select env else "/scratch/class-groups-fast";
 end function;
+
+// Keep the fast-cache filesystem from filling up.  Before extracting a new record file, if free
+// space on the cache directory has dropped below CLASS_GROUPS_FAST_MIN_FREE_GB (default 300 GB),
+// delete the highest-index (largest-|d|, coldest, least-reused) extracted files until the headroom
+// is restored -- a bounded LRU-by-disc-size cache.  Serialized across concurrent workers by an
+// flock so only one evicts at a time (auto-released on exit, no stale lock).  Deleting a file
+// another worker still has open is safe on Linux (the inode survives until the handle closes), and
+// any evicted file is simply re-extracted on its next lookup.
+procedure clEvictIfNeeded()
+    dir := clFastDir();
+    env := GetEnv("CLASS_GROUPS_FAST_MIN_FREE_GB");
+    minBytes := ((env ne "") select StringToInteger(env) else 300) * 1073741824;
+    cmd := "d='" cat dir cat "'; [ -d \"$d\" ] || exit 0; "
+        cat "( flock -n 9 || exit 0; "
+        cat "while [ \"$(df -B1 --output=avail \"$d\" 2>/dev/null | tail -1)\" -lt " cat IntegerToString(minBytes) cat " ]; do "
+        cat "f=$(ls -1 \"$d\"/*/*.fw 2>/dev/null | sort -t. -k2 -rn | head -1); "
+        cat "[ -z \"$f\" ] && break; rm -f \"$f\"; "
+        cat "done ) 9>\"$d/.evict.lock\"";
+    _ := System(cmd);
+end procedure;
 
 intrinsic SetClassNumberFastDir(dir::MonStgElt)
 {Set the directory holding the extracted fixed-width (|d|,h) record files used by the
@@ -181,6 +203,7 @@ function clExtractFastFile(prefix, k, r, m, fwdir, fwpath)
     gzpath := clDataDir() cat "/" cat prefix cat "/" cat prefix cat "."
               cat IntegerToString(k) cat ".gz";
     if not FileExists(gzpath) then return ""; end if;
+    clEvictIfNeeded();                   // make room before extracting (bounded cache)
     base := k * CL_FILE_SPAN + r;
     cmd := "mkdir -p " cat fwdir cat " && tmp=$(mktemp " cat fwdir cat "/.tmpXXXXXX) && zcat "
         cat gzpath cat " 2>/dev/null | awk -F'\\t' -v base=" cat IntegerToString(base)
@@ -210,7 +233,16 @@ function clFastFile(prefix, k, r, m)
         StoreSet(CL_STORE, fkey, rec<recformat<F, nrec, missing> | missing := true>);
         return false, _, _;
     end if;
-    nrec := StringToInteger(Pipe("stat -c%s " cat fwpath cat " | tr -dc 0-9", "")) div CL_FAST_RW;
+    // The file may have been evicted by a concurrent worker's bounded cache between the
+    // existence check above and here.  Guard the stat/open: a vanished or zero-size file falls
+    // back to a direct computation for this lookup (WITHOUT caching "missing", so a later lookup
+    // re-extracts it) rather than crashing the worker on StringToInteger("") / Open of a gone file.
+    nrecstr := Pipe("stat -c%s " cat fwpath cat " | tr -dc 0-9", "");
+    if (nrecstr eq "") or (not FileExists(fwpath)) then
+        return false, _, _;
+    end if;
+    nrec := StringToInteger(nrecstr) div CL_FAST_RW;
+    if nrec eq 0 then return false, _, _; end if;
     F := Open(fwpath, "r");
     StoreSet(CL_STORE, fkey, rec<recformat<F, nrec, missing> | F := F, nrec := nrec, missing := false>);
     return true, F, nrec;

@@ -57,6 +57,10 @@ case "${STAGE}" in
     FilterByComplicatedALFixedPointsOnQuotient)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves4.dat"
         ;;
+    FilterByGeneralizedComplicatedFixedPoints)
+        # Generalized [FH] Prop 6 via mixed groups <W_odd, V_p>; additive to the AL version above.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByComplicatedALFixedPointsOnQuotient.dat"
+        ;;
     FilterByTrace)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves5.dat"
         ;;
@@ -71,7 +75,8 @@ case "${STAGE}" in
         echo "Supported: FilterByTraceStar, FilterByWeilPolynomialStar," >&2
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
-        echo "           FilterByComplicatedALFixedPointsOnQuotient, FilterByTrace," >&2
+        echo "           FilterByComplicatedALFixedPointsOnQuotient," >&2
+        echo "           FilterByGeneralizedComplicatedFixedPoints, FilterByTrace," >&2
         echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2
         echo "           FilterByNonALInvolutionsStar" >&2
         exit 1

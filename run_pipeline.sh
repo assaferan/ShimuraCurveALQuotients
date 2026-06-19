@@ -33,6 +33,7 @@
 #   FilterByDegeneracyMorphism             [PARALLEL]
 #   UpdateCurves4                          [sequential]
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
+#   FilterByGeneralizedComplicatedFixedPoints  [PARALLEL]  (generalized Prop 6, mixed groups)
 #   UpdateCurves5                          [sequential]  + VerifyFHTable3 (pre)
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
@@ -49,6 +50,10 @@ NUM_WORKERS="${1:-128}"
 DATA_DIR="${2:-data/par}"
 NUM_CHUNKS="${3:-1024}"
 MAGMA_CMD="${MAGMA_CMD:-magma -b}"
+# Fast class-number cache: extracted LMFDB tables, can grow to hundreds of GB / TB.  Point it at
+# a roomy writable filesystem; exported so every parallel worker (ClassNumberData.m) inherits it.
+# Override per machine via the environment; default suits this host (/var/tmp is the 3.1 T nvme).
+export CLASS_GROUPS_FAST_DIR="${CLASS_GROUPS_FAST_DIR:-/var/tmp/class-groups-fast}"
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "${REPO_DIR}"
 
@@ -136,7 +141,11 @@ run_seq "UpdateCurves3"       "${D}/curves_after_Genus3CoversGenus2.dat"        
 run_par "FilterByDegeneracyMorphism"
 run_seq "UpdateCurves4"       "${D}/curves_after_FilterByDegeneracyMorphism.dat"   "${D}/curves_after_UpdateCurves4.dat"
 run_par "FilterByComplicatedALFixedPointsOnQuotient"
-run_seq "UpdateCurves5"       "${D}/curves_after_FilterByComplicatedALFixedPointsOnQuotient.dat" \
+# Generalized [FH] Prop 6: replaces the AL group by a mixed group <W_odd, V_p> (non-AL modular
+# involution V_p at a split prime p | N); additive to the AL version above, reaches star/full-W
+# quotients it cannot.  Validated: 0 contradictions, +4 determinations.
+run_par "FilterByGeneralizedComplicatedFixedPoints"
+run_seq "UpdateCurves5"       "${D}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat" \
                                                                                    "${D}/curves_after_UpdateCurves5.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"

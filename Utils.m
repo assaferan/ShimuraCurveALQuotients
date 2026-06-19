@@ -33,6 +33,15 @@ heavy curves are always dispatched early.}
         return R!0;
     end if;
 
+    if stage eq "FilterByGeneralizedComplicatedFixedPoints" then
+        // Only applicable curves (4|N or 9||N, within the level cap) do work; cost ~ the non-AL
+        // fixed-point trace-formula sums over W.  Everything else the stage skips for free.
+        if ((X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2)) and (DN le GeneralizedComplicatedMaxLevel()) then
+            return R!(nW * g * Sqrt(R!DN));
+        end if;
+        return R!0;
+    end if;
+
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // Weil cost is dominated by class-number streaming: each good prime p streams the
         // tables to depth 4*Qmax*p^g.  Bound p by the database, the affordability budget,

@@ -60,6 +60,8 @@ case stage:
         FilterByALFixedPointsOnQuotient(~subseq);
     when "FilterByComplicatedALFixedPointsOnQuotient":
         FilterByComplicatedALFixedPointsOnQuotient(~subseq);
+    when "FilterByGeneralizedComplicatedFixedPoints":
+        FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":

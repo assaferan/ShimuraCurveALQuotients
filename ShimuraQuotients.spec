@@ -18,4 +18,5 @@ RationalWithFactorization.m
 TraceFormula.m
 cmtables.m
 Verifications.m
+GeneralizedComplicatedFixedPoints.m
 }
