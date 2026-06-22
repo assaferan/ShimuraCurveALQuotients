@@ -1,1 +1,10 @@
-
+cff-version: 1.2
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Assaf
+    given-names: Eran
+  - family-names: Hashimoto
+    given-names: Sachi
+title: "Shimura Curve Atkin--Lehner Quotients"
+version: 1.2
+date-released: 2026-06-22
