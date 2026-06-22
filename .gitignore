@@ -9,5 +9,8 @@ data/par_run/parallel_chunks_*/
 data/par_run/*.log
 data/par_run/STATUS.txt
 data/par_run/_statuswriter.sh
+data/par/
+data/par256/
+data/par.*
 # local Claude Code agent config
 .claude/
