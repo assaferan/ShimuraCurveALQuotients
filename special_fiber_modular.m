@@ -1,56 +1,51 @@
 // Special-fiber (reduction mod p) test for non-hyperellipticity of AL quotients of
 // modular curves, generalizing Furumoto-Hasegawa, "Hyperelliptic Quotients of Modular
 // Curves", Section 5.  Currently for D = 1 (classical modular curves) with a genus-0
-// special-fiber component.  NOT yet wired into the pipeline.
+// special-fiber component.
 //
 // Method.  Fix a prime p with p | N.  X_0(N)/W reduces mod p to a curve whose components
-// are copies of X_0(N/p)/W''  where  W'' = { w / p^{v_p(w)} : w in W }  is the p-coprime
+// are copies of X_0(N/p)/W''  where  W'' = { w / p^v_p(w) : w in W }  is the p-coprime
 // image of W (the component group).  Two cases:
 //
 //   Case 1 (no w in W is divisible by p):  the special fiber is two components, each
 //     isomorphic to X_0(N/p)/W'', crossing at the supersingular points.  If X_0(N)/W is
 //     hyperelliptic with involution u, then g = w_p * u fixes each component and acts on
 //     it as Frobenius on the supersingular points: it fixes the F_p-rational ones and
-//     conjugates the others.  We constrain ALL supersingular points.
+//     conjugates the others.  ALL supersingular points are constrained.
 //
 //   Case 2 (some w in W is divisible by p):  the special fiber is a single component
 //     X_0(N/p)/W'', self-intersecting at the supersingular points.  Here the hyperelliptic
 //     involution u itself acts as Frobenius on the supersingular points that are NOT
-//     F_p-rational (the F_p-rational ones are left free).  We constrain only the non-F_p ss.
+//     F_p-rational (the F_p-rational ones are free).  Only the non-F_p ss are constrained.
 //
 // In both cases the action on the genus-0 component is a Mobius transformation g, pinned
-// down by its values on >= 3 of the constrained points.  If the unique such g fails to
-// send every constrained point to its Frobenius image, no compatible involution exists and
-// the curve is NOT hyperelliptic.  If g comes out as the identity (Frobenius acts trivially
-// on the constrained points) the test is inconclusive; in case 1 g = id corresponds to the
-// admissible possibility u = w_p.  A non-rational g also yields "not hyperelliptic" (the
-// canonical involution is defined over the base field).
+// down by its values on >= 3 of the constrained points.  If the unique such g fails to send
+// every constrained point to its Frobenius image, no compatible involution exists and the
+// curve is NOT hyperelliptic.  If g comes out as the identity (Frobenius acts trivially on
+// the constrained points) the test is inconclusive; in case 1 g = id is the admissible
+// possibility u = w_p.  A non-rational g also yields "not hyperelliptic".
 //
-// Validation (data/curves_after_UpdateCurves8.dat, D = 1, genus >= 3):
-//   * reproduces FH on X_0(42)/<w_2> (case 1) and X_0(42)/<w_7> (case 2);
-//   * 0 contradictions against the 59 known-hyperelliptic curves;
-//   * proves 14 of the 43 then-undetermined curves non-hyperelliptic, every one of which
-//     was independently confirmed by verify_d1_hyperelliptic.m (canonical-model oracle).
-
-SetQuitOnError(true);
-AttachSpec("ShimuraQuotients.spec");
+// Validation (data/curves_after_UpdateCurves8.dat, D = 1, genus >= 3): reproduces FH on
+// X_0(42)/<w_2> (case 1) and X_0(42)/<w_7> (case 2); 0 contradictions against the 59
+// known-hyperelliptic curves; proves 14 of the 43 then-undetermined curves non-hyperelliptic,
+// every one independently confirmed by verify_d1_hyperelliptic.m (canonical-model oracle).
 
 // ---- P^1 helpers ----
-// Mobius matrix sending the ordered triple (0,1,oo)-preimages; aut01oo(t) maps 0,1,oo to t.
-aut01oo := function(t)
+// Mobius matrix sending the standard frame to the ordered triple t.
+function aut01oo(t)
   p0:=t[1]; p1:=t[2]; poo:=t[3];
   c0:=p1[1]*p0[2]-p0[1]*p1[2]; d0:=poo[1]*p1[2]-p1[1]*poo[2];
   return Matrix([[c0*poo[1], p0[1]*d0],[c0*poo[2], d0*p0[2]]]);
 end function;
 // Mobius matrix sending ordered triple o to ordered triple d.
-mobm := function(o,d) return aut01oo(d)*aut01oo(o)^(-1); end function;
+function mobm(o,d) return aut01oo(d)*aut01oo(o)^(-1); end function;
 // apply Mobius matrix g to a projective point pt = [x:y].
 app := func<g,pt | [g[1,1]*pt[1]+g[1,2]*pt[2], g[2,1]*pt[1]+g[2,2]*pt[2]]>;
 // projective equality of two points on P^1.
 eqP := func<a,b | a[1]*b[2]-a[2]*b[1] eq 0>;
 
 // supersingular points of X_0(M) over F_{p^2} (the special-fiber crossing points).
-ss_points := function(M, p, F)
+function ss_points(M, p, F)
   X := SmallModularCurve(M); j := jInvariant(X,M);
   Xp := ChangeRing(X,F); RR := CoordinateRing(Ambient(Xp));
   jn := RR!Numerator(j); jd := RR!Denominator(j);
@@ -62,7 +57,7 @@ ss_points := function(M, p, F)
 end function;
 
 // push ss points through the quotient by a single AL involution w_q on X_0(M).
-push_single := function(ss, M, q, F)
+function push_single(ss, M, q, F)
   X := SmallModularCurve(M); R := CoordinateRing(Ambient(X));
   dp := DefiningPolynomials(AtkinLehnerInvolution(X, M, q));
   a:=F!MonomialCoefficient(dp[1],R.1); b:=F!MonomialCoefficient(dp[1],R.2);
@@ -76,7 +71,7 @@ end function;
 // Does a compatible (order-2, rational, = Frobenius-on-ss) Mobius involution exist?
 // Returns "yes" (compatible -> inconclusive), "no" (none -> NOT hyperelliptic), or
 // "underdet" (fewer than 3 constrained points, or g = identity -> inconclusive).
-has_compat := function(qss, p, F, case2)
+function has_compat(qss, p, F, case2)
   frob := func<pt | [Frobenius(pt[1]),Frobenius(pt[2])]>;
   pts := case2 select [Q : Q in qss | not eqP(frob(Q),Q)] else qss;   // case 2: non-F_p ss only
   if #pts lt 3 then return "underdet"; end if;
@@ -88,22 +83,43 @@ has_compat := function(qss, p, F, case2)
   return "yes";
 end function;
 
-GENUS0 := [M : M in [1..50] | GenusShimuraCurveQuotient(1,M,{1}) eq 0];
+intrinsic SpecialFiberNotHyperelliptic(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
+{Special-fiber reduction-mod-p test for X_0(N)/W (D = 1).  Returns true with a witness
+string if the curve is proven NOT hyperelliptic, otherwise false.  Only curves possessing a
+genus-0 special-fiber component at some prime p | N with component group of order at most 2
+are reached; for all others it returns false.}
+    for p in PrimeDivisors(N) do
+        M := N div p;
+        if GenusShimuraCurveQuotient(1, M, {Integers()|1}) ne 0 then continue; end if;   // need X_0(M) = P^1
+        Wpp := {w div p^Valuation(w,p) : w in W};            // p-coprime image of W = component group
+        if GenusShimuraCurveQuotient(1, M, Wpp) ne 0 then continue; end if;
+        if #Wpp gt 2 then continue; end if;                  // group-quotient component: TODO
+        case2 := exists{w : w in W | w mod p eq 0};
+        F := GF(p^2);
+        ss := ss_points(M, p, F);
+        if #Wpp eq 1 then qss := ss; else qss := push_single(ss, M, Rep(Wpp diff {Integers()|1}), F); end if;
+        if has_compat(qss, p, F, case2) eq "no" then
+            return true, Sprintf("SpecialFiber p=%o case=%o component=X_0(%o)/%o", p, case2 select 2 else 1, M, Wpp);
+        end if;
+    end for;
+    return false, _;
+end intrinsic;
 
-// Special-fiber test for X_0(N)/W (D = 1).  Returns true with a witness tuple
-// <p, case, M, W''> if proven NOT hyperelliptic; otherwise false.
-SpecialFiberNotHyperelliptic := function(N, W)
-  for p in PrimeDivisors(N) do
-    M := N div p;
-    if M notin GENUS0 then continue; end if;            // need X_0(M) = P^1
-    Wpp := {w div p^Valuation(w,p) : w in W};            // p-coprime image of W = component group
-    if GenusShimuraCurveQuotient(1, M, Wpp) ne 0 then continue; end if;
-    if #Wpp gt 2 then continue; end if;                 // group quotient component: TODO
-    case2 := exists{w : w in W | w mod p eq 0};
-    F := GF(p^2);
-    ss := ss_points(M, p, F);
-    if #Wpp eq 1 then qss := ss; else qss := push_single(ss, M, Rep(Wpp diff {1}), F); end if;
-    if has_compat(qss, p, F, case2) eq "no" then return true, <p, case2 select 2 else 1, M, Wpp>; end if;
-  end for;
-  return false, _;
-end function;
+intrinsic FilterBySpecialFiber(~curves::SeqEnum)
+{Mark D = 1 AL quotients proven non-hyperelliptic by the special-fiber reduction-mod-p test
+(Furumoto-Hasegawa Section 5, generalized).  Only curves with a genus-0 special-fiber
+component are reached; everything else is left untouched.}
+    for i->X in curves do
+        if assigned X`IsSubhyp then continue; end if;
+        if X`D ne 1 or X`g lt 3 then continue; end if;
+        ok, witness := SpecialFiberNotHyperelliptic(X`N, X`W);
+        if ok then
+            curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := witness;
+        end if;
+        if (i mod 200 eq 0) then
+            vprintf ShimuraQuotients, 1: "i = %o/%o\n", i, #curves;
+        end if;
+    end for;
+end intrinsic;

@@ -42,6 +42,13 @@ heavy curves are always dispatched early.}
         return R!0;
     end if;
 
+    if stage eq "FilterBySpecialFiber" then
+        // Only D=1 curves do any work (a few primes, supersingular points, a Mobius check);
+        // Shimura curves D>1 are skipped for free.  Cost is light and roughly per-prime.
+        if X`D ne 1 then return R!0; end if;
+        return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N));
+    end if;
+
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // Weil cost is dominated by class-number streaming: each good prime p streams the
         // tables to depth 4*Qmax*p^g.  Bound p by the database, the affordability budget,

@@ -34,6 +34,7 @@
 #   UpdateCurves4                          [sequential]
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
 #   FilterByGeneralizedComplicatedFixedPoints  [PARALLEL]  (generalized Prop 6, mixed groups)
+#   FilterBySpecialFiber                   [PARALLEL]  (special fiber mod p, [FH] Section 5; D=1)
 #   UpdateCurves5                          [sequential]  + VerifyFHTable3 (pre)
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
@@ -145,7 +146,10 @@ run_par "FilterByComplicatedALFixedPointsOnQuotient"
 # involution V_p at a split prime p | N); additive to the AL version above, reaches star/full-W
 # quotients it cannot.  Validated: 0 contradictions, +4 determinations.
 run_par "FilterByGeneralizedComplicatedFixedPoints"
-run_seq "UpdateCurves5"       "${D}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat" \
+# Special-fiber reduction mod p ([FH] Section 5, generalized): proves D=1 quotients with a
+# genus-0 special-fiber component non-hyperelliptic.  Additive to the fixed-point provers above.
+run_par "FilterBySpecialFiber"
+run_seq "UpdateCurves5"       "${D}/curves_after_FilterBySpecialFiber.dat" \
                                                                                    "${D}/curves_after_UpdateCurves5.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"
