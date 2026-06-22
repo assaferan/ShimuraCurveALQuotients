@@ -40,6 +40,17 @@
  > #unknown_not_modular;
  784
  ```
+# The sets in Theorem 1.2.2
+ The sets $$\mathcal{S}_h$$ and $$\mathcal{S}_u$$ from the paper can be obtained as follows.
+ ```
+ > S_h := [X : X in curves | assigned X`IsSubhyp and X`IsHyp];
+ > #S_h;
+ 3423;
+ > S_u := S_h cat unknown_not_modular;
+ > #S_u;
+ 4207
+ ```
+# Additional functionality
  The package also includes some functionality to assist with more complicated queries,
  such as the intrinsic `IsStarCurve`, and each curve has attributes `Covers` and `CoveredBy`,
  which list the id numbers `CurveID` of the corresponding curves.
