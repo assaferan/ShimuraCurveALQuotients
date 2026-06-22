@@ -190,7 +190,8 @@ cIso := (fullIso diff coversOpen) diff fpIso;
 W(Sprintf("  cover another open curve (closure may apply)         : %o", #coversOpen));
 W(Sprintf("  + isomorphic over F_p to another open curve          : %o", #bIso));
 W(Sprintf("  + fully isomorphic (FH99 Prop 4/5) to another open   : %o", #cIso));
-W(Sprintf("  none of the above (need individual resolution)       : %o",
+W("");
+W(Sprintf("  open curves with NO such lifeline -> must be resolved individually : %o",
     #open - #(coversOpen join fpIso join fullIso)));
 W("");
 

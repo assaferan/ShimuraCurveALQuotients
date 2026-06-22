@@ -1105,5 +1105,6 @@ RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES
   cover another open curve (closure may apply)         : 32
   + isomorphic over F_p to another open curve          : 38
   + fully isomorphic (FH99 Prop 4/5) to another open   : 21
-  none of the above (need individual resolution)       : 693
+
+  open curves with NO such lifeline -> must be resolved individually : 693
 
