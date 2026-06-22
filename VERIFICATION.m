@@ -15,6 +15,15 @@
 // (The genus-2 non-bielliptic rows are all immediate; the two (6,17) bielliptic
 //  rows sit two rungs above X* and need the climb.)
 //
+// Rows are GROUPED per star curve (D,N): all of a curve's immediate targets are
+// solved in ONE EquationsOfCovers call, and its deep targets in ONE
+// AllEquationsAboveCovers call. This runs the expensive Borcherds-form build once
+// per star curve instead of once per row.
+//
+// At the end, the geometric automorphism group of each computed model is checked:
+// |Aut| = 2 generically, and 4 for the bielliptic curves -- X(14,29)/<w7,w29> and
+// both D=6,N=17 rows.
+//
 // USAGE:
 //   magma VERIFICATION.m            // verify all rows
 //   magma row:=7 VERIFICATION.m     // verify only row #7
@@ -23,9 +32,10 @@
 // Uses the cached polymake solutions in polymake/, so polymake/libnormaliz is
 // not required to run this.
 //
-// RUNTIME: ~3-9 min per row (dominated by the per-star-curve Borcherds-form
-// build), so the full 17-row sweep takes on the order of 1-2 hours. Use the
-// row:= / lo:= / hi:= selectors to verify a subset.
+// RUNTIME: the cost is one Borcherds-form build per distinct star curve (the
+// 17 rows cover 13 star curves), ranging from ~2 min to ~25 min each (heaviest:
+// levels M=812 and M=1060), so the full grouped sweep takes on the order of
+// 2-3 hours. Use the row:= / lo:= / hi:= selectors to verify a subset.
 // ============================================================================
 
 AttachSpec("ShimuraQuotients.spec");
@@ -69,77 +79,138 @@ else
     SEL := [1..#ROWS];
 end if;
 
-curves := GetHyperellipticCandidates();
-printf "Loaded %o candidate curves. Verifying %o row(s).\n\n", #curves, #SEL;
-
-// Compute the model curve C for a single row, or return false + reason.
-// Returns < ok, C, reason >.
-function compute_model(D, N, gens, curves)
-    if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
-        return false, _, "no star curve found";
-    end if;
-    W := AllALsFromGens(gens, D*N);
-    imm_W := { curves[i]`W : i in Xstar`CoveredBy };
-    if W in imm_W then
-        // Immediate cover: target-restricted EquationsOfCovers.
-        crv_list, ws, keys := EquationsOfCovers(Xstar, curves : Targets := {W});
-        if not exists(k){k : k in keys | curves[k]`W eq W} then
-            return false, _, "immediate cover not among computed keys";
-        end if;
-        return true, crv_list[Index(keys, k)], "immediate";
-    else
-        // Deeper cover: build upward.
-        all_eqns, all_ws := AllEquationsAboveCovers(D, N, curves);
-        if not exists(k){k : k in Keys(all_eqns) |
-                         curves[k]`D eq D and curves[k]`N eq N and curves[k]`W eq W} then
-            return false, _, "no curve id with this W in all_eqns";
-        end if;
-        if #Keys(all_eqns[k]) eq 0 then
-            return false, _, "cover not reachable by climbing (no base eqn)";
-        end if;
-        return true, all_eqns[k][Representative(Keys(all_eqns[k]))], "climb";
-    end if;
+// Short label for a row (used in all reporting).
+function row_desc(i)
+    rr := ROWS[i];
+    d := Sprintf("#%o X(%o,%o)/<%o>", i, rr[1], rr[2], rr[3]);
+    if rr[6] ne "" then d cat:= Sprintf(" [%o]", rr[6]); end if;
+    return d;
 end function;
 
+// Expected geometric automorphism group size: 2 generically (just the
+// hyperelliptic involution), 4 for the bielliptic curves -- X(14,29)/<w7,w29>
+// and both D=6,N=17 rows (which carry an extra, bielliptic involution).
+function expected_aut(i)
+    rr := ROWS[i]; D := rr[1]; N := rr[2]; gens := rr[3];
+    return ((D eq 14 and N eq 29 and gens eq {7,29}) or (D eq 6 and N eq 17))
+           select 4 else 2;
+end function;
+
+curves := GetHyperellipticCandidates();
+printf "Loaded %o candidate curves. Verifying %o row(s).\n", #curves, #SEL;
+
+// Group selected rows by star curve (D,N), preserving first-seen order.
+group_order := [];                  // ordered list of <D,N> keys
+group_rows  := AssociativeArray();  // <D,N> -> [ row indices ]
+for i in SEL do
+    key := <ROWS[i][1], ROWS[i][2]>;
+    if not IsDefined(group_rows, key) then
+        group_rows[key] := []; Append(~group_order, key);
+    end if;
+    Append(~group_rows[key], i);
+end for;
+printf "Grouped into %o star curve(s).\n\n", #group_order;
+
+// Per-row computed model + status, filled in group by group.
+computed := AssociativeArray();   // i -> true/false
+curve_of := AssociativeArray();   // i -> CrvHyp (only when computed)
+reason_of := AssociativeArray();  // i -> string
+
+// ---- compute every group's models ----
+for key in group_order do
+    D := key[1]; N := key[2]; idxs := group_rows[key];
+    printf "================ star curve X(%o,%o)*  (rows %o) ================\n",
+           D, N, [i : i in idxs];
+    t0 := Realtime();
+
+    if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
+        printf "  no star curve found for (D,N)=(%o,%o)\n", D, N;
+        for i in idxs do computed[i] := false; reason_of[i] := "no star curve found"; end for;
+        printf "\n"; continue;
+    end if;
+
+    imm_W := { curves[j]`W : j in Xstar`CoveredBy };
+    imm_idxs  := [i : i in idxs | AllALsFromGens(ROWS[i][3], D*N) in imm_W];
+    deep_idxs := [i : i in idxs | AllALsFromGens(ROWS[i][3], D*N) notin imm_W];
+
+    // Immediate covers: one target-restricted EquationsOfCovers for all of them.
+    if #imm_idxs gt 0 then
+        try
+            tgts := { AllALsFromGens(ROWS[i][3], D*N) : i in imm_idxs };
+            crv_list, ws, keys := EquationsOfCovers(Xstar, curves : Targets := tgts);
+            for i in imm_idxs do
+                W := AllALsFromGens(ROWS[i][3], D*N);
+                if exists(k){k : k in keys | curves[k]`W eq W} then
+                    computed[i] := true; curve_of[i] := crv_list[Index(keys, k)];
+                    reason_of[i] := "immediate";
+                else
+                    computed[i] := false; reason_of[i] := "immediate cover not among computed keys";
+                end if;
+            end for;
+        catch e
+            for i in imm_idxs do computed[i] := false; reason_of[i] := Sprintf("ERROR: %o", e`Object); end for;
+        end try;
+    end if;
+
+    // Deep covers: one build-upward computation for all of them.
+    if #deep_idxs gt 0 then
+        try
+            all_eqns, all_ws := AllEquationsAboveCovers(D, N, curves);
+            for i in deep_idxs do
+                W := AllALsFromGens(ROWS[i][3], D*N);
+                if exists(k){k : k in Keys(all_eqns) |
+                             curves[k]`D eq D and curves[k]`N eq N and curves[k]`W eq W} then
+                    if #Keys(all_eqns[k]) eq 0 then
+                        computed[i] := false; reason_of[i] := "cover not reachable by climbing";
+                    else
+                        computed[i] := true; reason_of[i] := "climb";
+                        curve_of[i] := all_eqns[k][Representative(Keys(all_eqns[k]))];
+                    end if;
+                else
+                    computed[i] := false; reason_of[i] := "no curve id with this W in all_eqns";
+                end if;
+            end for;
+        catch e
+            for i in deep_idxs do computed[i] := false; reason_of[i] := Sprintf("ERROR: %o", e`Object); end for;
+        end try;
+    end if;
+
+    printf "  ---- star curve X(%o,%o)* done in %o s ----\n\n", D, N, Realtime()-t0;
+end for;
+
+// ---- per-row isomorphism check ----
 n_match := 0;
 verdicts := [];   // < idx, desc, tag >
 models := [* *];  // < idx, desc, C > for every row whose model was computed
 
 for i in SEL do
-    rrow := ROWS[i];
-    D := rrow[1]; N := rrow[2]; gens := rrow[3]; h := rrow[4]; f := rrow[5]; note := rrow[6];
-    desc := Sprintf("#%o X(%o,%o)/<%o>", i, D, N, gens);
-    if note ne "" then desc cat:= Sprintf(" [%o]", note); end if;
+    rr := ROWS[i]; h := rr[4]; f := rr[5];
+    desc := row_desc(i);
     Ctab := HyperellipticCurve(f, h);   // y^2 + h*y = f
     printf "==== %o ====\n", desc;
-    t0 := Realtime();
-    try
-        ok, C, reason := compute_model(D, N, gens, curves);
-        if ok then Append(~models, <i, desc, C>); end if;
-        if not ok then
-            printf "  COULD-NOT-COMPUTE: %o\n", reason;
-            Append(~verdicts, <i, desc, "NO-MODEL">);
-        elif IsIsomorphic(C, Ctab) then
-            printf "  MATCH (%o) in %o s\n", reason, Realtime()-t0;
+    if not computed[i] then
+        printf "  COULD-NOT-COMPUTE: %o\n", reason_of[i];
+        Append(~verdicts, <i, desc, "NO-MODEL">);
+    else
+        C := curve_of[i];
+        Append(~models, <i, desc, C>);
+        if IsIsomorphic(C, Ctab) then
+            printf "  MATCH (%o)\n", reason_of[i];
             n_match +:= 1;
             Append(~verdicts, <i, desc, "MATCH">);
         else
             same := G2Invariants(C) eq G2Invariants(Ctab);
-            printf "  MISMATCH (%o); G2Invariants %o\n", reason,
+            printf "  MISMATCH (%o); G2Invariants %o\n", reason_of[i],
                    same select "agree (Qbar-isomorphic)" else "differ";
             printf "    computed: y^2 + (%o)*y = %o\n", HyperellipticPolynomials(C);
             Append(~verdicts, <i, desc, same select "MISMATCH(geom-iso)" else "MISMATCH">);
         end if;
-    catch e
-        printf "  ERROR: %o\n", e`Object;
-        Append(~verdicts, <i, desc, "ERROR">);
-    end try;
-    printf "\n";
+    end if;
 end for;
 
-printf "================ SUMMARY ================\n";
+printf "\n================ SUMMARY ================\n";
 for v in verdicts do
-    printf "  %-7o %o\n", v[3], v[2];
+    printf "  %-9o %o\n", v[3], v[2];
 end for;
 printf "----------------------------------------\n";
 printf "  %o / %o matched\n", n_match, #SEL;
@@ -151,10 +222,7 @@ printf "========================================\n";
 printf "\n========= GEOMETRIC AUTOMORPHISM GROUPS =========\n";
 aut_all_ok := true;
 for m in models do
-    rrow := ROWS[m[1]];
-    D := rrow[1]; N := rrow[2]; gens := rrow[3];
-    exp_aut := ((D eq 14 and N eq 29 and gens eq {7,29}) or (D eq 6 and N eq 17))
-               select 4 else 2;
+    exp_aut := expected_aut(m[1]);
     naut := #GeometricAutomorphismGroup(m[3]);
     ok := naut eq exp_aut;
     aut_all_ok := aut_all_ok and ok;
