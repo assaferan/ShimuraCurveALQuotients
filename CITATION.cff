@@ -1,4 +1,4 @@
-cff-version: 1.2
+cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
   - family-names: Assaf
@@ -8,3 +8,5 @@ authors:
 title: "Shimura Curve Atkin--Lehner Quotients"
 version: 1.2
 date-released: 2026-06-22
+repository-code: "https://github.com/assaferan/ShimuraCurveALQuotients"
+license: MIT
