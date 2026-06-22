@@ -136,19 +136,19 @@ have empty CoveredBy in the stored lattice, so UpwardClosure produces no knock-o
 
 NOTE on attribution: the per-step "newly-ruled" deltas above count when a curve's
 OPEN status first changed in the pipeline ordering. The attribution census below
-counts curves by the TEST whose proof was *recorded* on the curve
-(TestInWhichProved). These differ, and the per-tag split at intermediate stages
-is NOT stable, because SpecialFiberIsomorphism RE-STAMPS the reason on curves that
-were already ruled out. UpwardClosure guards against this ("if assigned ...
-continue // don't overwrite"), but SpecialFiberIsomorphism has no such guard: it
-sets IsSubhyp:=false and rewrites TestInWhichProved whenever it finds a valid
-special-fiber witness, even for a curve already ruled out by Trace/HH/FpAuto (its
-only guard is an assertion that the curve was not previously proved
-*hyperelliptic*, which would be a contradiction). This is verdict-preserving
-(false -> false) but moves the recorded reason. So the final tags reflect the LAST
-test that touched a curve, not the first/cheapest one that ruled it out. Treat the
-stage table as the makespan view and the FINAL attribution census as the
-(last-writer) "who recorded it" view.
+counts curves by the TEST whose proof is recorded on the curve (TestInWhichProved).
+Every filter that records a verdict guards with "if assigned IsSubhyp then continue"
+(don't overwrite), so TestInWhichProved holds the FIRST/cheapest test that
+determined each curve -- the census and the stage-table deltas agree where a tag
+corresponds to a single step (e.g. FilterByALFixedPointsOnQuotient: 8781 newly-ruled
+= 8781 recorded; Genus3CoversGenus2: +16 proved = 16 recorded; FilterByComplicated-
+ALFixedPointsOnQuotient: 368 = 368). The two views still differ where a tag
+aggregates work across phases or via lattice propagation rather than a single step:
+the "Trace" tag (1375) collects both the Phase-A FilterByTraceStar and the Phase-B
+FilterByTrace rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags
+are assigned in UpdateByGenus/UpdateCurves and then propagated through the cover
+lattice. Treat the stage table as the makespan ("when first determined") view and
+the census as the first-writer "which test determined it" view.
 
 
 ================================================================================
@@ -208,24 +208,24 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
 
 Attribution: which test recorded the determination (ruled-out curves)
 --------------------------------------------------------------------
-  ALFixedPointsOnQuotient,                      : 9094
-  Trace,                                        : 1371
+  ALFixedPointsOnQuotient,                      : 8781
+  Trace,                                        : 1375
+  UpwardClosure                                 : 496
   WeilPolynomial                                : 385
-  ComplicatedALFixedPointsOnQuotient            : 369
-  UpwardClosure                                 : 236
-  SpecialFiberIsomorphism,                      : 95
-  UpdateIsoStatus,                              : 64
+  ComplicatedALFixedPointsOnQuotient            : 368
+  UpdateIsoStatus,                              : 109
+  SpecialFiberIsomorphism,                      : 104
   ModularNonALInvolution                        : 60
   DegeneracyMorphism                            : 19
-  HHproposition1                                : 8
   GeneralizedComplicatedFixedPoints:            : 5
+  HHproposition1                                : 4
 
 Attribution: which test recorded the determination (proved subhyp)
 ------------------------------------------------------------------
-  HyperellipticALInvolution                     : 4033
+  HyperellipticALInvolution                     : 4466
   GenusLt3                                      : 1330
-  Genus3CoverGenus2                             : 449
   ModularNonALInvolution                        : 33
+  Genus3CoverGenus2                             : 16
   UpdateIsoStatus,                              : 1
 
 OPEN (undetermined) cases — full list

@@ -53,7 +53,7 @@
 % \testbar normalises log-scaled bars to the largest count; drop this line if
 % the macro is already defined in your preamble.
 \newcommand{\testbar}[2]{%
-  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(9094))}%
+  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(8781))}%
   \begin{tikzpicture}[baseline=-0.55ex]
     \fill[#1!10] (0,0) rectangle (2.7,0.16);
     \draw[black!45, line width=0.2pt] (0,0) rectangle (2.7,0.16);
@@ -78,16 +78,16 @@
 \addlinespace[0.2em]
 
 Hyperelliptic Atkin--Lehner involution
-  & 4033 & \testbar{StatusSub}{4033} \\
+  & 4466 & \testbar{StatusSub}{4466} \\
 
 Genus $\leq 2$
   & 1330 & \testbar{StatusSub}{1330} \\
 
-Genus 3 cover of genus 2
-  & 449 & \testbar{StatusSub}{449} \\
-
 Modular non-Atkin--Lehner involution
   & 33 & \testbar{StatusSub}{33} \\
+
+Genus 3 cover of genus 2
+  & 16 & \testbar{StatusSub}{16} \\
 
 Isomorphism
   & 1 & \testbar{StatusSub}{1} \\
@@ -98,25 +98,25 @@ Isomorphism
 \addlinespace[0.2em]
 
 Atkin--Lehner fixed points
-  & 9094 & \testbar{StatusNot}{9094} \\
+  & 8781 & \testbar{StatusNot}{8781} \\
 
 Finite field point count
-  & 1371 & \testbar{StatusNot}{1371} \\
+  & 1375 & \testbar{StatusNot}{1375} \\
+
+Upward closure
+  & 496 & \testbar{StatusNot}{496} \\
 
 Weil polynomial
   & 385 & \testbar{StatusNot}{385} \\
 
 Refined Atkin--Lehner fixed points
-  & 374 & \testbar{StatusNot}{374} \\
-
-Upward closure
-  & 236 & \testbar{StatusNot}{236} \\
-
-Special fiber isomorphism
-  & 103 & \testbar{StatusNot}{103} \\
+  & 373 & \testbar{StatusNot}{373} \\
 
 Isomorphism
-  & 64 & \testbar{StatusNot}{64} \\
+  & 109 & \testbar{StatusNot}{109} \\
+
+Special fiber isomorphism
+  & 108 & \testbar{StatusNot}{108} \\
 
 Modular non-Atkin--Lehner involution
   & 60 & \testbar{StatusNot}{60} \\

@@ -815,7 +815,7 @@ end intrinsic;
 intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     {}
     for lc->c in curves do
-    if (assigned c`IsSubhyp) and c`IsSubhyp then
+    if assigned c`IsSubhyp then //don't overwrite an existing determination
         continue;
     end if;
     is_subhyp, d, fix := TestALFixedPointsOnQuotient(c);
@@ -894,6 +894,7 @@ intrinsic UpdateByGenus(~curves :: SeqEnum)
             // check the ones with hyperelliptic AL involution
             if assigned curves[i]`CoveredBy then
                 for cover in curves[i]`CoveredBy do
+                    if assigned curves[cover]`IsSubhyp then continue; end if; //don't overwrite; genus <= 2 covers are claimed by the GenusLt3 block below
                     curves[cover]`IsSubhyp := true;
                     if (curves[cover]`g ge 2) then
                         curves[cover]`IsHyp := true;
@@ -936,6 +937,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
         if not IsDefined(lut, <D,N,W>) then
             continue;
         end if;
+        if assigned curves[lut[<D,N,W>]]`IsSubhyp then continue; end if; //don't overwrite
         curves[lut[<D,N,W>]]`IsSubhyp := false;
         if (curves[lut[<D,N,W>]]`g ge 2) then
             curves[lut[<D,N,W>]]`IsHyp := false;
@@ -988,6 +990,7 @@ intrinsic Genus3CoversGenus2(~curves::SeqEnum)
         if c`g eq 2 then
             for cover in c`CoveredBy do
                 if curves[cover]`g eq 3 then
+                    if assigned curves[cover]`IsSubhyp then continue; end if; //don't overwrite
                     curves[cover]`IsSubhyp := true;
                     curves[cover]`IsHyp := true;
                     curves[cover]`TestInWhichProved := Sprintf("Genus3CoverGenus2 from %o", c`CurveID);
@@ -1019,7 +1022,7 @@ intrinsic HHProposition1(~curves::SeqEnum)
             for p in ps do
                 if IsDefined(lut_DN, <X`D, p*X`N>) then
                     other := lut_DN[<X`D, p*X`N>];
-                    if X`g eq curves[other]`g then
+                    if (X`g eq curves[other]`g) and (not assigned curves[other]`IsSubhyp) then
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);
