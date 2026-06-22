@@ -49,6 +49,25 @@ for w in Sort(SetToSequence({#X`W : X in open})) do
 end for;
 W("");
 
+// ---- by number of AL involutions still acting non-trivially on the quotient ----
+// The full AL group has order 2^omega(DN); quotienting by W leaves a group of order
+// 2^omega(DN)/|W| acting on X/W, i.e. 2^omega(DN)/|W| - 1 non-trivial involutions.
+W("By # AL involutions still acting non-trivially on the quotient (2^omega(DN)/|W| - 1)");
+W("-----------------------------------------------------------------------------------");
+actmult := AssociativeArray();
+for X in open do
+    k := (2^#PrimeDivisors(X`D * X`N) div #X`W) - 1;
+    if not IsDefined(actmult, k) then actmult[k] := 0; end if;
+    actmult[k] +:= 1;
+end for;
+actkeys := Sort([k : k in Keys(actmult)]);
+W(Sprintf("  multiset: { %o }",
+    Join([Sprintf("%o^%o", k, actmult[k]) : k in actkeys], ", ")));
+for k in actkeys do
+    W(Sprintf("  %o acting : %o", k, actmult[k]));
+end for;
+W("");
+
 // ---- by D (indefinite quaternion discriminant) ----
 W("By D (indefinite quaternion discriminant)");
 W("-----------------------------------------");
@@ -123,6 +142,56 @@ W(Sprintf("  open curves that COVER a proved sub-hyperelliptic quotient : %o", c
 W(Sprintf("  open curves COVERED BY a proved sub-hyperelliptic quotient : %o", covered_by_a_proved));
 W(Sprintf("  open curves all of whose further quotients are ruled out   : %o", covers_only_ruled));
 W(Sprintf("  open curves with no recorded cover relations (isolated)    : %o", isolated));
+W("");
+
+// ---- relations of open curves to OTHER open curves ----
+// How many open curves could still be resolved "for free" by relating them to
+// another open curve, rather than by an individual computation:
+//   (a) it covers another open curve            -> upward closure may apply;
+//   (b) it is isomorphic over F_p to an open curve (SpecialFiberIsomorphism: the
+//       bigger level X_0(D,Np)/W whose normalization mod p is the open source
+//       X_0(D,N)/W', W' = the AL in W prime to p);
+//   (c) it is fully isomorphic (FH99 Prop 4/5) to an open curve.
+// Counts are of distinct open curves, disjoint, taken in the order (a), (b), (c).
+W("================================================================");
+W("RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES");
+W("================================================================");
+lut := AssociativeArray();
+for i in [1..#curves] do c := curves[i]; lut[<c`D, c`N, c`W>] := i; end for;
+openids := {X`CurveID : X in open};
+
+coversOpen := {X`CurveID : X in open
+                | assigned X`Covers and exists{id : id in X`Covers | id in openids}};
+
+fpIso := {};
+for X in open do
+    for p in PrimeDivisors(X`N) do
+        if Valuation(X`N, p) ne 1 then continue; end if;
+        if not exists{w : w in X`W | w mod p eq 0} then continue; end if;
+        key := <X`D, X`N div p, {w : w in X`W | w mod p ne 0}>;
+        if IsDefined(lut, key) and curves[lut[key]]`CurveID in openids then
+            Include(~fpIso, X`CurveID); break;
+        end if;
+    end for;
+end for;
+
+fullIso := {};
+for X in open do
+    for finder in [FindIsomorphicCurveProp4, FindIsomorphicCurveProp5] do
+        Y := finder(X, curves, lut);
+        if Type(Y) eq ShimuraQuot and Y`CurveID in openids then
+            Include(~fullIso, X`CurveID);
+        end if;
+    end for;
+end for;
+
+bIso := fpIso diff coversOpen;
+cIso := (fullIso diff coversOpen) diff fpIso;
+W(Sprintf("  cover another open curve (closure may apply)         : %o", #coversOpen));
+W(Sprintf("  + isomorphic over F_p to another open curve          : %o", #bIso));
+W(Sprintf("  + fully isomorphic (FH99 Prop 4/5) to another open   : %o", #cIso));
+W(Sprintf("  none of the above (need individual resolution)       : %o",
+    #open - #(coversOpen join fpIso join fullIso)));
 W("");
 
 printf "wrote %o\n", out;
