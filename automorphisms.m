@@ -305,7 +305,12 @@ that does, so the average cost stays low even though the bound is high.  Tunable
 cap the disc depth (and so the per-curve prime bound) when compute time must be bounded.
 (Supersedes the earlier 2^30 streaming budget: the binary-search lookup removes the slow
 direct-ClassNumber path that 2^30 was bounding, so the full 2^40 range is now affordable.)}
-    return ClassNumberDataMaxAbsDisc();
+    // 2^36: the disc depth then stays cacheable (file indices k <= 255, ~150 GB) so every lookup
+    // is on the fast binary-search path with no eviction/thrash -- unlike 2^40, whose ~10 TB
+    // working set cannot be cached on any local filesystem and which thrashes/crashes the heavy
+    // curves.  2^36 captures essentially all the extra coverage (45 of 46 newly-processable
+    // curves vs 2^32's 38; 2^40 adds just 1 more) at a fraction of the runtime and risk.
+    return 2^36;
 end intrinsic;
 
 intrinsic WeilBudgetPrimeBound(Qmax::RngIntElt, g::RngIntElt) -> RngIntElt

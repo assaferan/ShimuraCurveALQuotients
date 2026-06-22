@@ -632,7 +632,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 1>, <"N", 127>,
 <"W", { IntegerRing() | 1, 127 }>,
 <"g", 3>, <"CurveID", 127>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 129>,
 <"W", { IntegerRing() | 1, 3, 43, 129 }>,
@@ -711,7 +711,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 144>,
 <"W", { IntegerRing() | 1, 9, 16, 144 }>,
-<"g", 3>, <"CurveID", 143>, <"IsEC", false>
+<"g", 3>, <"CurveID", 143>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 145>,
 <"W", { IntegerRing() | 1, 5, 29, 145 }>,
@@ -750,7 +751,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 152>,
 <"W", { IntegerRing() | 1, 8, 19, 152 }>,
-<"g", 3>, <"CurveID", 151>, <"IsEC", false>
+<"g", 3>, <"CurveID", 151>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 153>,
 <"W", { IntegerRing() | 1, 9, 17, 153 }>,
@@ -789,7 +791,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 160>,
 <"W", { IntegerRing() | 1, 5, 32, 160 }>,
-<"g", 4>, <"CurveID", 159>, <"IsEC", false>
+<"g", 4>, <"CurveID", 159>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 161>,
 <"W", { IntegerRing() | 1, 7, 23, 161 }>,
@@ -798,7 +801,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 162>,
 <"W", { IntegerRing() | 1, 2, 81, 162 }>,
-<"g", 3>, <"CurveID", 161>, <"IsEC", false>
+<"g", 3>, <"CurveID", 161>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 163>,
 <"W", { IntegerRing() | 1, 163 }>,
@@ -900,7 +904,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 183>,
 <"W", { IntegerRing() | 1, 3, 61, 183 }>,
-<"g", 3>, <"CurveID", 182>, <"IsEC", false>
+<"g", 3>, <"CurveID", 182>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 184>,
 <"W", { IntegerRing() | 1, 8, 23, 184 }>,
@@ -1068,7 +1073,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 216>,
 CreateShimuraQuot([* <"D", 1>, <"N", 217>,
 <"W", { IntegerRing() | 1, 7, 31, 217 }>,
 <"g", 3>, <"CurveID", 216>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 218>,
 <"W", { IntegerRing() | 1, 2, 109, 218 }>,
@@ -1175,7 +1180,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 246>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 41, 82, 123, 246 }>,
-<"g", 3>, <"CurveID", 238>, <"IsEC", false>
+<"g", 3>, <"CurveID", 238>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 247>,
 <"W", { IntegerRing() | 1, 13, 19, 247 }>,
@@ -1219,7 +1225,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 258>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 43, 86, 129, 258 }>,
-<"g", 3>, <"CurveID", 247>, <"IsEC", false>
+<"g", 3>, <"CurveID", 247>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 259>,
 <"W", { IntegerRing() | 1, 7, 37, 259 }>,
@@ -1268,7 +1275,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 270>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 27, 54, 135, 270 }>,
-<"g", 3>, <"CurveID", 257>, <"IsEC", false>
+<"g", 3>, <"CurveID", 257>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 273>,
 <"W", { IntegerRing() | 1, 3, 7, 13, 21, 39, 91, 273 }>,
@@ -1303,11 +1311,12 @@ true>, <"TestInWhichProved", "ModularNonALInvolution V3 W1">
 CreateShimuraQuot([* <"D", 1>, <"N", 280>,
 <"W", { IntegerRing() | 1, 5, 7, 8, 35, 40, 56, 280 }>,
 <"g", 4>, <"CurveID", 264>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "ModularNonALInvolution V2 W1 6">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 282>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 47, 94, 141, 282 }>,
-<"g", 3>, <"CurveID", 265>, <"IsEC", false>
+<"g", 3>, <"CurveID", 265>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 284>,
 <"W", { IntegerRing() | 1, 4, 71, 284 }>,
@@ -1331,7 +1340,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 290>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 29, 58, 145, 290 }>,
-<"g", 3>, <"CurveID", 270>, <"IsEC", false>
+<"g", 3>, <"CurveID", 270>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 291>,
 <"W", { IntegerRing() | 1, 3, 97, 291 }>,
@@ -1403,11 +1413,13 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 310>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 31, 62, 155, 310 }>,
-<"g", 3>, <"CurveID", 285>, <"IsEC", false>
+<"g", 3>, <"CurveID", 285>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 312>,
 <"W", { IntegerRing() | 1, 3, 8, 13, 24, 39, 104, 312 }>,
-<"g", 3>, <"CurveID", 286>, <"IsEC", false>
+<"g", 3>, <"CurveID", 286>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 315>,
 <"W", { IntegerRing() | 1, 5, 7, 9, 35, 45, 63, 315 }>,
@@ -1416,7 +1428,8 @@ true>, <"TestInWhichProved", "ModularNonALInvolution V3 W1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 318>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 53, 106, 159, 318 }>,
-<"g", 3>, <"CurveID", 288>, <"IsEC", false>
+<"g", 3>, <"CurveID", 288>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 319>,
 <"W", { IntegerRing() | 1, 11, 29, 319 }>,
@@ -1430,7 +1443,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 322>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 23, 46, 161, 322 }>,
-<"g", 4>, <"CurveID", 291>, <"IsEC", false>
+<"g", 4>, <"CurveID", 291>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 323>,
 <"W", { IntegerRing() | 1, 17, 19, 323 }>,
@@ -1476,15 +1490,17 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 1>, <"N", 342>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 19, 38, 171, 342 }>,
 <"g", 4>, <"CurveID", 300>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "ModularNonALInvolution V3 W1 6">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 345>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 23, 69, 115, 345 }>,
-<"g", 4>, <"CurveID", 301>, <"IsEC", false>
+<"g", 4>, <"CurveID", 301>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 348>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 29, 87, 116, 348 }>,
-<"g", 3>, <"CurveID", 302>, <"IsEC", false>
+<"g", 3>, <"CurveID", 302>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 350>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 25, 50, 175, 350 }>,
@@ -1664,7 +1680,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 450>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 25, 50, 225, 450 }>,
 <"g", 7>, <"CurveID", 338>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 223">
+\n\n\n\n\n\ncurve 223">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 455>,
 <"W", { IntegerRing() | 1, 5, 7, 13, 35, 65, 91, 455 }>,
@@ -1684,7 +1700,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 1>, <"N", 462>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 21, 22, 33, 42, 66, 77, 154, 231,
 462 }>,
-<"g", 3>, <"CurveID", 342>, <"IsEC", false>
+<"g", 3>, <"CurveID", 342>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 465>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 31, 93, 155, 465 }>,
@@ -1978,7 +1995,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 2310>,
 }>,
 <"g", 12>, <"CurveID", 396>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
-\n\n\n\ncurve 376">
+\n\n\n\n\n\ncurve 376">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 2730>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -2489,7 +2506,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 283>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 283, 566, 849, 1698 }>,
-<"g", 3>, <"CurveID", 492>, <"IsEC", false>
+<"g", 3>, <"CurveID", 492>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 
@@ -2503,7 +2521,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 289>,
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 293>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 293, 586, 879, 1758 }>,
-<"g", 3>, <"CurveID", 495>, <"IsEC", false>
+<"g", 3>, <"CurveID", 495>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 295>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 59, 118, 177, 295, 354, 590, 
@@ -2536,16 +2555,18 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 311>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 311, 622, 933, 1866 }>,
-<"g", 3>, <"CurveID", 501>, <"IsEC", false>
+<"g", 3>, <"CurveID", 501>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 313>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 313, 626, 939, 1878 }>,
-<"g", 3>, <"CurveID", 502>, <"IsEC", false>
+<"g", 3>, <"CurveID", 502>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 317>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 317, 634, 951, 1902 }>,
 <"g", 3>, <"CurveID", 503>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 29, 33, 58, 66, 87, 174, 319, 638, 
@@ -2583,7 +2604,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 337>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 337, 674, 1011, 2022 }>,
-<"g", 3>, <"CurveID", 510>, <"IsEC", false>
+<"g", 3>, <"CurveID", 510>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 341>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 31, 33, 62, 66, 93, 186, 341, 682, 
@@ -2599,7 +2621,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 347>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 347, 694, 1041, 2082 }>,
 <"g", 3>, <"CurveID", 513>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 349>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 349, 698, 1047, 2094 }>,
@@ -2608,7 +2630,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 353>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 353, 706, 1059, 2118 }>,
-<"g", 3>, <"CurveID", 515>, <"IsEC", false>
+<"g", 3>, <"CurveID", 515>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 355>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 71, 142, 213, 355, 426, 710, 
@@ -2618,17 +2641,19 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 359>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 359, 718, 1077, 2154 }>,
-<"g", 3>, <"CurveID", 517>, <"IsEC", false>
+<"g", 3>, <"CurveID", 517>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 361>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 361, 722, 1083, 2166 }>,
 <"g", 4>, <"CurveID", 518>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 365>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 73, 146, 219, 365, 438, 730, 
 1095, 2190 }>,
-<"g", 3>, <"CurveID", 519>, <"IsEC", false>
+<"g", 3>, <"CurveID", 519>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 367>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 367, 734, 1101, 2202 }>,
@@ -2658,7 +2683,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 379>,
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 383>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 383, 766, 1149, 2298 }>,
-<"g", 3>, <"CurveID", 525>, <"IsEC", false>
+<"g", 3>, <"CurveID", 525>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 385>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
@@ -2691,7 +2717,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 401>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 401, 802, 1203, 2406 }>,
-<"g", 3>, <"CurveID", 531>, <"IsEC", false>
+<"g", 3>, <"CurveID", 531>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 403>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 
@@ -2708,7 +2735,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 6>, <"N", 409>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 409, 818, 1227, 2454 }>,
 <"g", 4>, <"CurveID", 534>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 413>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 59, 118, 177, 354, 413, 826, 
@@ -2723,7 +2750,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 419>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 419, 838, 1257, 2514 }>,
-<"g", 4>, <"CurveID", 537>, <"IsEC", false>
+<"g", 4>, <"CurveID", 537>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 421>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 421, 842, 1263, 2526 }>,
@@ -2733,17 +2761,19 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 425>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 25, 34, 50, 51, 75, 102, 150, 425, 850, 
 1275, 2550 }>,
-<"g", 3>, <"CurveID", 539>, <"IsEC", false>
+<"g", 3>, <"CurveID", 539>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 427>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 61, 122, 183, 366, 427, 854, 
 1281, 2562 }>,
-<"g", 3>, <"CurveID", 540>, <"IsEC", false>
+<"g", 3>, <"CurveID", 540>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 431>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 431, 862, 1293, 2586 }>,
 <"g", 4>, <"CurveID", 541>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 433>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 433, 866, 1299, 2598 }>,
@@ -2779,7 +2809,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 6>, <"N", 451>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 41, 66, 82, 123, 246, 451, 902, 
 1353, 2706 }>,
-<"g", 3>, <"CurveID", 548>, <"IsEC", false>
+<"g", 3>, <"CurveID", 548>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 455>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -2806,7 +2837,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 467>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 467, 934, 1401, 2802 }>,
 <"g", 4>, <"CurveID", 553>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 469>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 67, 134, 201, 402, 469, 938, 
@@ -2845,7 +2876,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 493>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 29, 34, 51, 58, 87, 102, 174, 493, 986, 
 1479, 2958 }>,
 <"g", 3>, <"CurveID", 560>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 497>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 71, 142, 213, 426, 497, 994, 
@@ -2856,7 +2887,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 6>, <"N", 505>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 101, 202, 303, 505, 606, 
 1010, 1515, 3030 }>,
-<"g", 3>, <"CurveID", 562>, <"IsEC", false>
+<"g", 3>, <"CurveID", 562>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 511>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 73, 146, 219, 438, 511, 1022,
@@ -2867,12 +2899,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 515>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 103, 206, 309, 515, 618, 
 1030, 1545, 3090 }>,
-<"g", 3>, <"CurveID", 564>, <"IsEC", false>
+<"g", 3>, <"CurveID", 564>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 517>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 47, 66, 94, 141, 282, 517, 1034,
 1551, 3102 }>,
-<"g", 3>, <"CurveID", 565>, <"IsEC", false>
+<"g", 3>, <"CurveID", 565>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 527>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 31, 34, 51, 62, 93, 102, 186, 527, 1054,
@@ -2883,7 +2917,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 6>, <"N", 533>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 41, 78, 82, 123, 246, 533, 1066,
 1599, 3198 }>,
-<"g", 3>, <"CurveID", 567>, <"IsEC", false>
+<"g", 3>, <"CurveID", 567>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 535>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 107, 214, 321, 535, 642, 
@@ -2893,23 +2928,26 @@ CreateShimuraQuot([* <"D", 6>, <"N", 535>,
 CreateShimuraQuot([* <"D", 6>, <"N", 539>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 49, 66, 98, 147, 294, 539, 1078,
 1617, 3234 }>,
-<"g", 3>, <"CurveID", 569>, <"IsEC", false>
+<"g", 3>, <"CurveID", 569>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 545>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 109, 218, 327, 545, 654, 
 1090, 1635, 3270 }>,
-<"g", 3>, <"CurveID", 570>, <"IsEC", false>
+<"g", 3>, <"CurveID", 570>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 551>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 29, 38, 57, 58, 87, 114, 174, 551, 1102,
 1653, 3306 }>,
-<"g", 3>, <"CurveID", 571>, <"IsEC", false>
+<"g", 3>, <"CurveID", 571>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 553>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 79, 158, 237, 474, 553, 1106,
 1659, 3318 }>,
 <"g", 3>, <"CurveID", 572>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 559>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 43, 78, 86, 129, 258, 559, 1118,
@@ -2937,13 +2975,13 @@ CreateShimuraQuot([* <"D", 6>, <"N", 583>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 53, 66, 106, 159, 318, 583, 
 1166, 1749, 3498 }>,
 <"g", 3>, <"CurveID", 577>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 589>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 31, 38, 57, 62, 93, 114, 186, 589, 1178,
 1767, 3534 }>,
 <"g", 3>, <"CurveID", 578>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 595>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 17, 21, 30, 34, 35, 42, 
@@ -2960,7 +2998,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 605>,
 CreateShimuraQuot([* <"D", 6>, <"N", 611>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 47, 78, 94, 141, 282, 611, 1222,
 1833, 3666 }>,
-<"g", 3>, <"CurveID", 581>, <"IsEC", false>
+<"g", 3>, <"CurveID", 581>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 623>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 89, 178, 267, 534, 623, 1246,
@@ -2970,7 +3009,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 623>,
 CreateShimuraQuot([* <"D", 6>, <"N", 629>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 37, 51, 74, 102, 111, 222, 629, 
 1258, 1887, 3774 }>,
-<"g", 4>, <"CurveID", 583>, <"IsEC", false>
+<"g", 4>, <"CurveID", 583>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 635>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 127, 254, 381, 635, 762, 
@@ -3011,7 +3051,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 671>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 61, 66, 122, 183, 366, 671, 
 1342, 2013, 4026 }>,
 <"g", 4>, <"CurveID", 590>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 679>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 97, 194, 291, 582, 679, 1358,
@@ -3022,7 +3062,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 685>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 137, 274, 411, 685, 822, 
 1370, 2055, 4110 }>,
-<"g", 5>, <"CurveID", 592>, <"IsEC", false>
+<"g", 5>, <"CurveID", 592>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 689>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 53, 78, 106, 159, 318, 689, 
@@ -3033,12 +3074,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 7^1">
 CreateShimuraQuot([* <"D", 6>, <"N", 695>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 139, 278, 417, 695, 834, 
 1390, 2085, 4170 }>,
-<"g", 4>, <"CurveID", 594>, <"IsEC", false>
+<"g", 4>, <"CurveID", 594>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 37">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 697>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 41, 51, 82, 102, 123, 246, 697, 
 1394, 2091, 4182 }>,
-<"g", 4>, <"CurveID", 595>, <"IsEC", false>
+<"g", 4>, <"CurveID", 595>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 703>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 37, 38, 57, 74, 111, 114, 222, 703, 
@@ -3096,12 +3139,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 745>,
 CreateShimuraQuot([* <"D", 6>, <"N", 749>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 107, 214, 321, 642, 749, 
 1498, 2247, 4494 }>,
-<"g", 4>, <"CurveID", 605>, <"IsEC", false>
+<"g", 4>, <"CurveID", 605>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 755>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 151, 302, 453, 755, 906, 
 1510, 2265, 4530 }>,
-<"g", 5>, <"CurveID", 606>, <"IsEC", false>
+<"g", 5>, <"CurveID", 606>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 763>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 109, 218, 327, 654, 763, 
@@ -3113,7 +3158,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 767>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 59, 78, 118, 177, 354, 767, 
 1534, 2301, 4602 }>,
 <"g", 4>, <"CurveID", 608>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 775>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 25, 31, 50, 62, 75, 93, 150, 186, 775, 1550,
@@ -3124,13 +3169,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 7^2">
 CreateShimuraQuot([* <"D", 6>, <"N", 779>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 38, 41, 57, 82, 114, 123, 246, 779, 
 1558, 2337, 4674 }>,
-<"g", 4>, <"CurveID", 610>, <"IsEC", false>
+<"g", 4>, <"CurveID", 610>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 781>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66, 71, 142, 213, 426, 781, 
 1562, 2343, 4686 }>,
 <"g", 4>, <"CurveID", 611>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 785>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 157, 314, 471, 785, 942, 
@@ -3148,7 +3194,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 793>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 61, 78, 122, 183, 366, 793, 
 1586, 2379, 4758 }>,
 <"g", 5>, <"CurveID", 614>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 799>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 47, 51, 94, 102, 141, 282, 799, 
@@ -3213,7 +3259,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 1001>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 13, 14, 21, 22, 26, 33, 39, 42, 66, 
 77, 78, 91, 143, 154, 182, 231, 273, 286, 429, 462, 546, 858, 1001, 2002, 3003, 
 6006 }>,
-<"g", 4>, <"CurveID", 625>, <"IsEC", false>
+<"g", 4>, <"CurveID", 625>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 1015>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 29, 30, 35, 42, 58, 
@@ -3551,7 +3598,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 10>, <"N", 131>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 131, 262, 655, 1310 }>,
 <"g", 3>, <"CurveID", 687>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 19, 35, 38, 70, 95, 133, 190, 266, 
@@ -3567,7 +3614,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 10>, <"N", 139>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 139, 278, 695, 1390 }>,
 <"g", 3>, <"CurveID", 690>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 141>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 47, 94, 141, 235, 282, 470, 
@@ -3595,7 +3642,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 10>, <"N", 151>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 151, 302, 755, 1510 }>,
 <"g", 3>, <"CurveID", 695>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 17, 18, 34, 45, 85, 90, 153, 170, 306, 
@@ -3643,7 +3690,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 171>,
 CreateShimuraQuot([* <"D", 10>, <"N", 173>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 173, 346, 865, 1730 }>,
 <"g", 3>, <"CurveID", 704>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 177>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 59, 118, 177, 295, 354, 590, 
@@ -3670,7 +3717,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 10>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 17, 22, 34, 55, 85, 110, 170, 187, 374,
 935, 1870 }>,
-<"g", 3>, <"CurveID", 709>, <"IsEC", false>
+<"g", 3>, <"CurveID", 709>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 189>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 27, 35, 54, 70, 135, 189, 270, 378, 
@@ -3700,7 +3748,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 10>, <"N", 201>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 67, 134, 201, 335, 402, 670, 
 1005, 2010 }>,
-<"g", 3>, <"CurveID", 715>, <"IsEC", false>
+<"g", 3>, <"CurveID", 715>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 203>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 29, 35, 58, 70, 145, 203, 290, 406, 
@@ -3727,12 +3776,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 10>, <"N", 213>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 71, 142, 213, 355, 426, 710, 
 1065, 2130 }>,
-<"g", 3>, <"CurveID", 720>, <"IsEC", false>
+<"g", 3>, <"CurveID", 720>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 31, 35, 62, 70, 155, 217, 310, 434, 
 1085, 2170 }>,
-<"g", 3>, <"CurveID", 721>, <"IsEC", false>
+<"g", 3>, <"CurveID", 721>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 219>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 73, 146, 219, 365, 438, 730, 
@@ -3776,7 +3827,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 10>, <"N", 237>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 79, 158, 237, 395, 474, 790, 
 1185, 2370 }>,
-<"g", 3>, <"CurveID", 729>, <"IsEC", false>
+<"g", 3>, <"CurveID", 729>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 239>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 239, 478, 1195, 2390 }>,
@@ -3787,7 +3839,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 247>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 19, 26, 38, 65, 95, 130, 190, 247, 494,
 1235, 2470 }>,
 <"g", 3>, <"CurveID", 731>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 249>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 83, 166, 249, 415, 498, 830, 
@@ -3797,12 +3849,14 @@ CreateShimuraQuot([* <"D", 10>, <"N", 249>,
 CreateShimuraQuot([* <"D", 10>, <"N", 253>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 22, 23, 46, 55, 110, 115, 230, 253, 
 506, 1265, 2530 }>,
-<"g", 3>, <"CurveID", 733>, <"IsEC", false>
+<"g", 3>, <"CurveID", 733>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 259>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 37, 70, 74, 185, 259, 370, 518, 
 1295, 2590 }>,
-<"g", 3>, <"CurveID", 734>, <"IsEC", false>
+<"g", 3>, <"CurveID", 734>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 261>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 18, 29, 45, 58, 90, 145, 261, 290, 522, 
@@ -3883,12 +3937,13 @@ CreateShimuraQuot([* <"D", 10>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 17, 19, 34, 38, 85, 95, 170, 190, 323, 646,
 1615, 3230 }>,
 <"g", 4>, <"CurveID", 748>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 327>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 109, 218, 327, 545, 654, 
 1090, 1635, 3270 }>,
-<"g", 5>, <"CurveID", 749>, <"IsEC", false>
+<"g", 5>, <"CurveID", 749>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 329>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 47, 70, 94, 235, 329, 470, 658, 
@@ -3904,7 +3959,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 333>,
 CreateShimuraQuot([* <"D", 10>, <"N", 339>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 113, 226, 339, 565, 678, 
 1130, 1695, 3390 }>,
-<"g", 4>, <"CurveID", 752>, <"IsEC", false>
+<"g", 4>, <"CurveID", 752>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 341>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 22, 31, 55, 62, 110, 155, 310, 341, 
@@ -3916,7 +3972,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 357>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 17, 21, 30, 34, 35, 42, 
 51, 70, 85, 102, 105, 119, 170, 210, 238, 255, 357, 510, 595, 714, 1190, 1785, 
 3570 }>,
-<"g", 3>, <"CurveID", 754>, <"IsEC", false>
+<"g", 3>, <"CurveID", 754>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 371>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 53, 70, 106, 265, 371, 530, 742,
@@ -4181,7 +4238,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 81>,
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 83>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 83, 166, 581, 1162 }>,
-<"g", 3>, <"CurveID", 803>, <"IsEC", false>
+<"g", 3>, <"CurveID", 803>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 85>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 17, 34, 35, 70, 85, 119, 170, 238, 
@@ -4267,7 +4325,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 117>,
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 121>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 121, 242, 847, 1694 }>,
-<"g", 4>, <"CurveID", 819>, <"IsEC", false>
+<"g", 4>, <"CurveID", 819>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 123>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 
@@ -4314,7 +4373,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 14>, <"N", 141>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 47, 94, 141, 282, 329, 658, 
 987, 1974 }>,
-<"g", 3>, <"CurveID", 828>, <"IsEC", false>
+<"g", 3>, <"CurveID", 828>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 143>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286,
@@ -4345,7 +4405,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 14>, <"N", 155>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 31, 35, 62, 70, 155, 217, 310, 434, 
 1085, 2170 }>,
-<"g", 3>, <"CurveID", 834>, <"IsEC", false>
+<"g", 3>, <"CurveID", 834>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 157>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 157, 314, 1099, 2198 }>,
@@ -4355,7 +4416,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 14>, <"N", 159>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 53, 106, 159, 318, 371, 742, 
 1113, 2226 }>,
-<"g", 4>, <"CurveID", 836>, <"IsEC", false>
+<"g", 4>, <"CurveID", 836>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 165>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
@@ -4367,7 +4429,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 14>, <"N", 171>,
 <"W", { IntegerRing() | 1, 2, 7, 9, 14, 18, 19, 38, 63, 126, 133, 171, 266, 342,
 1197, 2394 }>,
-<"g", 4>, <"CurveID", 838>, <"IsEC", false>
+<"g", 4>, <"CurveID", 838>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 177>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 59, 118, 177, 354, 413, 826, 
@@ -4378,7 +4441,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 14>, <"N", 183>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 61, 122, 183, 366, 427, 854, 
 1281, 2562 }>,
-<"g", 3>, <"CurveID", 840>, <"IsEC", false>
+<"g", 3>, <"CurveID", 840>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 19">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 37, 70, 74, 185, 259, 370, 518, 
@@ -4396,7 +4460,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 195>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
 42, 65, 70, 78, 91, 105, 130, 182, 195, 210, 273, 390, 455, 546, 910, 1365, 2730
 }>,
-<"g", 3>, <"CurveID", 843>, <"IsEC", false>
+<"g", 3>, <"CurveID", 843>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 201>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 67, 134, 201, 402, 469, 938, 
@@ -4420,7 +4485,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 19, 22, 38, 77, 133, 154, 209, 266, 
 418, 1463, 2926 }>,
 <"g", 5>, <"CurveID", 847>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 213>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 71, 142, 213, 426, 497, 994, 
@@ -4765,7 +4830,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 7^1">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 97>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 97, 291, 485, 1455 }>,
-<"g", 4>, <"CurveID", 910>, <"IsEC", false>
+<"g", 4>, <"CurveID", 910>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 98>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 49, 98, 147, 245, 294, 490, 
@@ -4823,7 +4889,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 116>,
 CreateShimuraQuot([* <"D", 15>, <"N", 118>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 59, 118, 177, 295, 354, 590, 
 885, 1770 }>,
-<"g", 3>, <"CurveID", 921>, <"IsEC", false>
+<"g", 3>, <"CurveID", 921>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 119>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 17, 21, 35, 51, 85, 105, 119, 255, 357, 
@@ -4833,7 +4900,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 119>,
 CreateShimuraQuot([* <"D", 15>, <"N", 122>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 61, 122, 183, 305, 366, 610, 
 915, 1830 }>,
-<"g", 3>, <"CurveID", 923>, <"IsEC", false>
+<"g", 3>, <"CurveID", 923>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 124>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 20, 31, 60, 93, 124, 155, 372, 465, 
@@ -4845,7 +4913,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 133>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 19, 21, 35, 57, 95, 105, 133, 285, 399, 
 665, 1995 }>,
 <"g", 4>, <"CurveID", 925>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 134>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 67, 134, 201, 335, 402, 670, 
@@ -4892,7 +4960,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 154>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
 42, 55, 66, 70, 77, 105, 110, 154, 165, 210, 231, 330, 385, 462, 770, 1155, 2310
 }>,
-<"g", 3>, <"CurveID", 933>, <"IsEC", false>
+<"g", 3>, <"CurveID", 933>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 158>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 79, 158, 237, 395, 474, 790, 
@@ -5065,7 +5134,8 @@ true>, <"TestInWhichProved", "ModularNonALInvolution V2 W1">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 41>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 41, 123, 287, 861 }>,
-<"g", 3>, <"CurveID", 965>, <"IsEC", false>
+<"g", 3>, <"CurveID", 965>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 43>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 43, 129, 301, 903 }>,
@@ -5119,7 +5189,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 58>,
 CreateShimuraQuot([* <"D", 21>, <"N", 59>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 59, 177, 413, 1239 }>,
 <"g", 4>, <"CurveID", 975>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 61>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 61, 183, 427, 1281 }>,
@@ -5134,7 +5204,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 62>,
 CreateShimuraQuot([* <"D", 21>, <"N", 65>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 13, 15, 21, 35, 39, 65, 91, 105, 195, 273, 
 455, 1365 }>,
-<"g", 3>, <"CurveID", 978>, <"IsEC", false>
+<"g", 3>, <"CurveID", 978>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 19">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 67>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 67, 201, 469, 1407 }>,
@@ -5217,7 +5288,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 95>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 19, 21, 35, 57, 95, 105, 133, 285, 399, 
 665, 1995 }>,
 <"g", 4>, <"CurveID", 993>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 110>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
@@ -5354,7 +5425,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 49>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 49, 98, 539, 1078 }>,
-<"g", 4>, <"CurveID", 1019>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1019>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 51>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 17, 22, 33, 34, 51, 66, 102, 187, 374, 
@@ -5364,7 +5436,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 53>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 53, 106, 583, 1166 }>,
-<"g", 3>, <"CurveID", 1021>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1021>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 57>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 19, 22, 33, 38, 57, 66, 114, 209, 418, 
@@ -5438,7 +5511,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 22>, <"N", 87>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 29, 33, 58, 66, 87, 174, 319, 638, 
 957, 1914 }>,
-<"g", 3>, <"CurveID", 1035>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1035>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 89>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 89, 178, 979, 1958 }>,
@@ -5459,7 +5533,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 93>,
 CreateShimuraQuot([* <"D", 22>, <"N", 95>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 19, 22, 38, 55, 95, 110, 190, 209, 418,
 1045, 2090 }>,
-<"g", 3>, <"CurveID", 1039>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1039>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 105>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
@@ -5650,7 +5725,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 26>, <"N", 47>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 47, 94, 611, 1222 }>,
 <"g", 4>, <"CurveID", 1074>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 49>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 49, 98, 637, 1274 }>,
@@ -5665,7 +5740,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 53>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 53, 106, 689, 1378 }>,
-<"g", 3>, <"CurveID", 1077>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1077>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 55>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 13, 22, 26, 55, 65, 110, 130, 143, 286,
@@ -5702,7 +5778,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 26>, <"N", 69>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 23, 26, 39, 46, 69, 78, 138, 299, 598, 
 897, 1794 }>,
-<"g", 4>, <"CurveID", 1084>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1084>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 71>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 71, 142, 923, 1846 }>,
@@ -5722,7 +5799,8 @@ CreateShimuraQuot([* <"D", 26>, <"N", 75>,
 CreateShimuraQuot([* <"D", 26>, <"N", 77>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286,
 1001, 2002 }>,
-<"g", 3>, <"CurveID", 1088>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1088>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 79>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 79, 158, 1027, 2054 }>,
@@ -5761,7 +5839,8 @@ CreateShimuraQuot([* <"D", 26>, <"N", 105>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
 42, 65, 70, 78, 91, 105, 130, 182, 195, 210, 273, 390, 455, 546, 910, 1365, 2730
 }>,
-<"g", 3>, <"CurveID", 1095>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1095>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 23">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 111>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 37, 39, 74, 78, 111, 222, 481, 962, 
@@ -5843,7 +5922,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 14>,
 CreateShimuraQuot([* <"D", 33>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 11, 16, 33, 48, 176, 528 }>,
 <"g", 4>, <"CurveID", 1110>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "ModularNonALInvolution V2 W1 6">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 11, 17, 33, 51, 187, 561 }>,
@@ -5853,7 +5932,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 33>, <"N", 19>,
 <"W", { IntegerRing() | 1, 3, 11, 19, 33, 57, 209, 627 }>,
 <"g", 3>, <"CurveID", 1112>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 11, 12, 15, 20, 33, 44, 55, 60, 132, 165, 
@@ -5885,7 +5964,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 33>, <"N", 29>,
 <"W", { IntegerRing() | 1, 3, 11, 29, 33, 87, 319, 957 }>,
 <"g", 3>, <"CurveID", 1118>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 31>,
 <"W", { IntegerRing() | 1, 3, 11, 31, 33, 93, 341, 1023 }>,
@@ -5900,7 +5979,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 33>, <"N", 34>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 17, 22, 33, 34, 51, 66, 102, 187, 374, 
 561, 1122 }>,
-<"g", 3>, <"CurveID", 1121>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1121>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 35>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 11, 15, 21, 33, 35, 55, 77, 105, 165, 231, 
@@ -5938,7 +6018,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 33>, <"N", 46>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 23, 33, 46, 66, 69, 138, 253, 506, 
 759, 1518 }>,
-<"g", 3>, <"CurveID", 1128>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1128>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 47>,
 <"W", { IntegerRing() | 1, 3, 11, 33, 47, 141, 517, 1551 }>,
@@ -5984,7 +6065,8 @@ CreateShimuraQuot([* <"D", 33>, <"N", 70>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
 42, 55, 66, 70, 77, 105, 110, 154, 165, 210, 231, 330, 385, 462, 770, 1155, 2310
 }>,
-<"g", 3>, <"CurveID", 1136>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1136>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 17, 34 }>,
@@ -6058,7 +6140,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 31>,
 <"W", { IntegerRing() | 1, 2, 17, 31, 34, 62, 527, 1054 }>,
-<"g", 3>, <"CurveID", 1151>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1151>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 33>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 17, 22, 33, 34, 51, 66, 102, 187, 374, 
@@ -6085,7 +6168,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 41>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 41, 82, 697, 1394 }>,
-<"g", 3>, <"CurveID", 1156>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1156>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 43>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 43, 86, 731, 1462 }>,
@@ -6116,12 +6200,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 34>, <"N", 55>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 17, 22, 34, 55, 85, 110, 170, 187, 374,
 935, 1870 }>,
-<"g", 4>, <"CurveID", 1162>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1162>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 57>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 19, 34, 38, 51, 57, 102, 114, 323, 646, 
 969, 1938 }>,
-<"g", 4>, <"CurveID", 1163>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1163>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 59>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 59, 118, 1003, 2006 }>,
@@ -6159,7 +6245,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 34>, <"N", 87>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 29, 34, 51, 58, 87, 102, 174, 493, 986, 
 1479, 2958 }>,
-<"g", 6>, <"CurveID", 1170>, <"IsEC", false>
+<"g", 6>, <"CurveID", 1170>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 91>,
 <"W", { IntegerRing() | 1, 2, 7, 13, 14, 17, 26, 34, 91, 119, 182, 221, 238, 
@@ -6361,7 +6448,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 66>,
 }>,
 <"g", 5>, <"CurveID", 1206>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 1195">
+\n\n\n\n\n\ncurve 1195">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 78>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -6428,7 +6515,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 25>,
 <"W", { IntegerRing() | 1, 2, 19, 25, 38, 50, 475, 950 }>,
-<"g", 3>, <"CurveID", 1219>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1219>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 19, 27, 38, 54, 513, 1026 }>,
@@ -6437,7 +6525,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 19, 29, 38, 58, 551, 1102 }>,
-<"g", 4>, <"CurveID", 1221>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1221>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 31>,
 <"W", { IntegerRing() | 1, 2, 19, 31, 38, 62, 589, 1178 }>,
@@ -6457,7 +6546,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 37>,
 <"W", { IntegerRing() | 1, 2, 19, 37, 38, 74, 703, 1406 }>,
-<"g", 3>, <"CurveID", 1225>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1225>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 39>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 19, 26, 38, 39, 57, 78, 114, 247, 494, 
@@ -6489,7 +6579,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 38>, <"N", 51>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 19, 34, 38, 51, 57, 102, 114, 323, 646, 
 969, 1938 }>,
-<"g", 4>, <"CurveID", 1231>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1231>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 55>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 19, 22, 38, 55, 95, 110, 190, 209, 418,
@@ -6506,7 +6597,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 38>, <"N", 65>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 19, 26, 38, 65, 95, 130, 190, 247, 494,
 1235, 2470 }>,
-<"g", 4>, <"CurveID", 1234>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1234>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 69>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 23, 38, 46, 57, 69, 114, 138, 437, 874, 
@@ -6715,7 +6807,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 17>,
 <"W", { IntegerRing() | 1, 2, 17, 23, 34, 46, 391, 782 }>,
-<"g", 3>, <"CurveID", 1274>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1274>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 19, 23, 38, 46, 437, 874 }>,
@@ -6766,7 +6859,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 46>, <"N", 39>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 23, 26, 39, 46, 69, 78, 138, 299, 598, 
 897, 1794 }>,
-<"g", 3>, <"CurveID", 1284>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1284>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 41>,
 <"W", { IntegerRing() | 1, 2, 23, 41, 46, 82, 943, 1886 }>,
@@ -6861,7 +6955,7 @@ false>, <"TestInWhichProved", "ModularNonALInvolution V2 W1 12">
 CreateShimuraQuot([* <"D", 51>, <"N", 19>,
 <"W", { IntegerRing() | 1, 3, 17, 19, 51, 57, 323, 969 }>,
 <"g", 4>, <"CurveID", 1302>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 17, 20, 51, 60, 68, 85, 204, 255, 
@@ -6905,7 +6999,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 51>, <"N", 35>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 17, 21, 35, 51, 85, 105, 119, 255, 357, 
 595, 1785 }>,
-<"g", 5>, <"CurveID", 1310>, <"IsEC", false>
+<"g", 5>, <"CurveID", 1310>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 38>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 19, 34, 38, 51, 57, 102, 114, 323, 646, 
@@ -6994,7 +7089,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 55>, <"N", 21>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 11, 15, 21, 33, 35, 55, 77, 105, 165, 231, 
 385, 1155 }>,
-<"g", 4>, <"CurveID", 1327>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1327>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 23>,
 <"W", { IntegerRing() | 1, 5, 11, 23, 55, 115, 253, 1265 }>,
@@ -7113,7 +7209,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 57>, <"N", 28>,
 <"W", { IntegerRing() | 1, 3, 4, 7, 12, 19, 21, 28, 57, 76, 84, 133, 228, 399, 
 532, 1596 }>,
-<"g", 3>, <"CurveID", 1349>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1349>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 35>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 19, 21, 35, 57, 95, 105, 133, 285, 399, 
@@ -7169,7 +7266,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 58>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 19, 29, 38, 58, 551, 1102 }>,
-<"g", 4>, <"CurveID", 1360>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1360>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 58>, <"N", 21>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 
@@ -7200,7 +7298,8 @@ CreateShimuraQuot([* <"D", 58>, <"N", 33>,
 CreateShimuraQuot([* <"D", 58>, <"N", 35>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 29, 35, 58, 70, 145, 203, 290, 406, 
 1015, 2030 }>,
-<"g", 3>, <"CurveID", 1366>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1366>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 58>, <"N", 39>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 29, 39, 58, 78, 87, 174, 377, 754, 
@@ -7282,7 +7381,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 62>, <"N", 33>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 31, 33, 62, 66, 93, 186, 341, 682, 
 1023, 2046 }>,
-<"g", 3>, <"CurveID", 1382>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1382>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 62>, <"N", 35>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 31, 35, 62, 70, 155, 217, 310, 434, 
@@ -7293,7 +7393,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 62>, <"N", 39>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 
 1209, 2418 }>,
-<"g", 4>, <"CurveID", 1384>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1384>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 1>,
 <"W", { IntegerRing() | 1, 5, 13, 65 }>,
@@ -7441,7 +7542,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 69>, <"N", 14>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 23, 42, 46, 69, 138, 161, 322, 
 483, 966 }>,
-<"g", 3>, <"CurveID", 1412>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1412>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 69>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 17, 23, 51, 69, 391, 1173 }>,
@@ -7462,7 +7564,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 11^1">
 CreateShimuraQuot([* <"D", 69>, <"N", 22>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 23, 33, 46, 66, 69, 138, 253, 506, 
 759, 1518 }>,
-<"g", 4>, <"CurveID", 1416>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1416>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 69>, <"N", 26>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 23, 26, 39, 46, 69, 78, 138, 299, 598, 
@@ -7497,7 +7600,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 37, 74, 407, 814 }>,
-<"g", 3>, <"CurveID", 1423>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1423>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 13>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 37, 74, 481, 962 }>,
@@ -7512,7 +7616,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 17>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 37, 74, 629, 1258 }>,
-<"g", 4>, <"CurveID", 1426>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1426>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 19, 37, 38, 74, 703, 1406 }>,
@@ -7522,7 +7627,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 74>, <"N", 21>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 37, 42, 74, 111, 222, 259, 518, 
 777, 1554 }>,
-<"g", 3>, <"CurveID", 1428>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1428>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 23>,
 <"W", { IntegerRing() | 1, 2, 23, 37, 46, 74, 851, 1702 }>,
@@ -7599,7 +7705,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 77>, <"N", 15>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 11, 15, 21, 33, 35, 55, 77, 105, 165, 231, 
 385, 1155 }>,
-<"g", 4>, <"CurveID", 1443>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1443>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 77>, <"N", 18>,
 <"W", { IntegerRing() | 1, 2, 7, 9, 11, 14, 18, 22, 63, 77, 99, 126, 154, 198, 
@@ -7666,7 +7773,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 82>, <"N", 21>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 
 861, 1722 }>,
-<"g", 4>, <"CurveID", 1456>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1456>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 23>,
 <"W", { IntegerRing() | 1, 2, 23, 41, 46, 82, 943, 1886 }>,
@@ -7702,7 +7810,8 @@ CreateShimuraQuot([* <"D", 85>, <"N", 3>,
 *]),
 CreateShimuraQuot([* <"D", 85>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 5, 17, 20, 68, 85, 340 }>,
-<"g", 3>, <"CurveID", 1463>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1463>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 85>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 17, 30, 34, 51, 85, 102, 170, 
@@ -7803,7 +7912,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 86>, <"N", 21>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 43, 86, 129, 258, 301, 602, 
 903, 1806 }>,
-<"g", 3>, <"CurveID", 1483>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1483>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 87>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 29, 87 }>,
@@ -7832,7 +7942,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 87>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 8, 24, 29, 87, 232, 696 }>,
-<"g", 3>, <"CurveID", 1489>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1489>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 87>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 29, 30, 58, 87, 145, 174, 290, 
@@ -7871,7 +7982,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 91>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 7, 13, 28, 52, 91, 364 }>,
-<"g", 3>, <"CurveID", 1497>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1497>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 91>, <"N", 5>,
 <"W", { IntegerRing() | 1, 5, 7, 13, 35, 65, 91, 455 }>,
@@ -7897,7 +8009,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 91>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 13, 14, 26, 35, 65, 70, 91, 130, 182, 
 455, 910 }>,
-<"g", 3>, <"CurveID", 1502>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1502>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 91>, <"N", 11>,
 <"W", { IntegerRing() | 1, 7, 11, 13, 77, 91, 143, 1001 }>,
@@ -8012,7 +8125,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 94>, <"N", 15>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 47, 94, 141, 235, 282, 470, 
 705, 1410 }>,
-<"g", 3>, <"CurveID", 1524>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1524>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 94>, <"N", 17>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 47, 94, 799, 1598 }>,
@@ -8103,16 +8217,18 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 106>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 53, 106, 371, 742 }>,
-<"g", 3>, <"CurveID", 1542>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1542>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 106>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 53, 106, 477, 954 }>,
 <"g", 4>, <"CurveID", 1543>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "ModularNonALInvolution V3 W1 6">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 106>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 53, 106, 583, 1166 }>,
-<"g", 4>, <"CurveID", 1544>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1544>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 106>, <"N", 13>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 53, 106, 689, 1378 }>,
@@ -8169,7 +8285,8 @@ false>, <"TestInWhichProved", "ModularNonALInvolution V2 W1 6">
 CreateShimuraQuot([* <"D", 111>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 37, 74, 111, 185, 222, 370, 
 555, 1110 }>,
-<"g", 3>, <"CurveID", 1555>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1555>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 111>, <"N", 11>,
 <"W", { IntegerRing() | 1, 3, 11, 33, 37, 111, 407, 1221 }>,
@@ -8257,7 +8374,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 118>, <"N", 15>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 59, 118, 177, 295, 354, 590, 
 885, 1770 }>,
-<"g", 3>, <"CurveID", 1572>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1572>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 118>, <"N", 21>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 59, 118, 177, 354, 413, 826, 
@@ -8288,7 +8406,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 119>, <"N", 5>,
 <"W", { IntegerRing() | 1, 5, 7, 17, 35, 85, 119, 595 }>,
 <"g", 3>, <"CurveID", 1578>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 119>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 17, 21, 34, 42, 51, 102, 119, 238, 
@@ -8331,7 +8449,7 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 122>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 61, 122, 549, 1098 }>,
 <"g", 4>, <"CurveID", 1586>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "ModularNonALInvolution V3 W1 6">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 122>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 61, 122, 671, 1342 }>,
@@ -8386,7 +8504,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 123>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 41, 82, 123, 205, 246, 410, 
 615, 1230 }>,
-<"g", 3>, <"CurveID", 1597>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1597>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 123>, <"N", 11>,
 <"W", { IntegerRing() | 1, 3, 11, 33, 41, 123, 451, 1353 }>,
@@ -8415,11 +8534,13 @@ CreateShimuraQuot([* <"D", 129>, <"N", 4>,
 *]),
 CreateShimuraQuot([* <"D", 129>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 43, 129, 215, 645 }>,
-<"g", 3>, <"CurveID", 1603>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1603>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 129>, <"N", 7>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 43, 129, 301, 903 }>,
-<"g", 3>, <"CurveID", 1604>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1604>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 129>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 
@@ -8438,7 +8559,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 133>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 7, 19, 21, 57, 133, 399 }>,
-<"g", 3>, <"CurveID", 1608>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1608>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 133>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 7, 19, 28, 76, 133, 532 }>,
@@ -8447,12 +8569,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 *]),
 CreateShimuraQuot([* <"D", 133>, <"N", 5>,
 <"W", { IntegerRing() | 1, 5, 7, 19, 35, 95, 133, 665 }>,
-<"g", 3>, <"CurveID", 1610>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1610>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 133>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 19, 21, 38, 42, 57, 114, 133, 266, 
 399, 798 }>,
-<"g", 3>, <"CurveID", 1611>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1611>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 134>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 67, 134 }>,
@@ -8471,7 +8595,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 134>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 67, 134, 469, 938 }>,
-<"g", 4>, <"CurveID", 1615>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1615>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 134>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 67, 134, 603, 1206 }>,
@@ -8522,7 +8647,7 @@ CreateShimuraQuot([* <"D", 141>, <"N", 10>,
 705, 1410 }>,
 <"g", 5>, <"CurveID", 1625>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 1623">
+\n\n\n\n\n\ncurve 1623">
 *]),
 CreateShimuraQuot([* <"D", 142>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 71, 142 }>,
@@ -8587,7 +8712,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 143>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 13, 22, 26, 33, 39, 66, 78, 143, 286, 
 429, 858 }>,
-<"g", 3>, <"CurveID", 1638>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1638>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 143>, <"N", 7>,
 <"W", { IntegerRing() | 1, 7, 11, 13, 77, 91, 143, 1001 }>,
@@ -8799,7 +8925,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 166>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 83, 166, 415, 830 }>,
-<"g", 3>, <"CurveID", 1680>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1680>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 166>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 83, 166, 581, 1162 }>,
@@ -8843,7 +8970,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 178>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 89, 178, 445, 890 }>,
-<"g", 3>, <"CurveID", 1689>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1689>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 178>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 89, 178, 623, 1246 }>,
@@ -8862,7 +8990,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 183>, <"N", 4>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 61, 183, 244, 732 }>,
-<"g", 3>, <"CurveID", 1693>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1693>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 183>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 61, 183, 305, 915 }>,
@@ -8983,7 +9112,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 202>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 101, 202, 505, 1010 }>,
-<"g", 3>, <"CurveID", 1717>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1717>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 202>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 101, 202, 707, 1414 }>,
@@ -9049,7 +9179,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 206>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 103, 206, 515, 1030 }>,
-<"g", 3>, <"CurveID", 1730>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1730>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 206>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 103, 206, 721, 1442 }>,
@@ -9063,7 +9194,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 209>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 11, 19, 22, 38, 209, 418 }>,
-<"g", 3>, <"CurveID", 1733>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1733>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 209>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 11, 19, 33, 57, 209, 627 }>,
@@ -9156,7 +9288,8 @@ CreateShimuraQuot([* <"D", 210>, <"N", 47>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 47, 70, 
 94, 105, 141, 210, 235, 282, 329, 470, 658, 705, 987, 1410, 1645, 1974, 3290, 
 4935, 9870 }>,
-<"g", 3>, <"CurveID", 1747>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1747>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 53>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 53, 70, 
@@ -9168,25 +9301,29 @@ CreateShimuraQuot([* <"D", 210>, <"N", 59>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 59, 70, 
 105, 118, 177, 210, 295, 354, 413, 590, 826, 885, 1239, 1770, 2065, 2478, 4130, 
 6195, 12390 }>,
-<"g", 4>, <"CurveID", 1749>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1749>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 61>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 61, 70, 
 105, 122, 183, 210, 305, 366, 427, 610, 854, 915, 1281, 1830, 2135, 2562, 4270, 
 6405, 12810 }>,
-<"g", 3>, <"CurveID", 1750>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1750>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 67>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 67, 70, 
 105, 134, 201, 210, 335, 402, 469, 670, 938, 1005, 1407, 2010, 2345, 2814, 4690,
 7035, 14070 }>,
-<"g", 4>, <"CurveID", 1751>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1751>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 71>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 70, 71, 
 105, 142, 210, 213, 355, 426, 497, 710, 994, 1065, 1491, 2130, 2485, 2982, 4970,
 7455, 14910 }>,
-<"g", 4>, <"CurveID", 1752>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1752>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 73>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 70, 73, 
@@ -9198,7 +9335,8 @@ CreateShimuraQuot([* <"D", 210>, <"N", 79>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 70, 79, 
 105, 158, 210, 237, 395, 474, 553, 790, 1106, 1185, 1659, 2370, 2765, 3318, 
 5530, 8295, 16590 }>,
-<"g", 5>, <"CurveID", 1754>, <"IsEC", false>
+<"g", 5>, <"CurveID", 1754>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 213>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 71, 213 }>,
@@ -9252,22 +9390,24 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 215>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 43, 129, 215, 645 }>,
-<"g", 3>, <"CurveID", 1765>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1765>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 215>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 
 645, 1290 }>,
-<"g", 6>, <"CurveID", 1766>, <"IsEC", false>
+<"g", 6>, <"CurveID", 1766>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 217>, <"N", 1>,
 <"W", { IntegerRing() | 1, 7, 31, 217 }>,
 <"g", 3>, <"CurveID", 1767>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 217>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 31, 62, 217, 434 }>,
 <"g", 3>, <"CurveID", 1768>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 217>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 31, 93, 217, 651 }>,
@@ -9373,7 +9513,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 235>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 47, 141, 235, 705 }>,
-<"g", 4>, <"CurveID", 1789>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1789>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 235>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 47, 94, 141, 235, 282, 470, 
@@ -9393,7 +9534,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 237>, <"N", 4>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 79, 237, 316, 948 }>,
-<"g", 4>, <"CurveID", 1793>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1793>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 237>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 79, 237, 395, 1185 }>,
@@ -9403,11 +9545,12 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 247>, <"N", 1>,
 <"W", { IntegerRing() | 1, 13, 19, 247 }>,
 <"g", 3>, <"CurveID", 1795>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 247>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 13, 19, 26, 38, 247, 494 }>,
-<"g", 3>, <"CurveID", 1796>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1796>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 247>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 13, 19, 39, 57, 247, 741 }>,
@@ -9522,7 +9665,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 274>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 137, 274, 411, 822 }>,
-<"g", 3>, <"CurveID", 1819>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1819>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 274>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 137, 274, 685, 1370 }>,
@@ -9536,7 +9680,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 278>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 139, 278, 417, 834 }>,
-<"g", 3>, <"CurveID", 1822>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1822>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 278>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 139, 278, 695, 1390 }>,
@@ -9550,7 +9695,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 287>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 41, 82, 287, 574 }>,
-<"g", 3>, <"CurveID", 1825>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1825>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 287>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 41, 123, 287, 861 }>,
@@ -9570,7 +9716,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 295>, <"N", 1>,
 <"W", { IntegerRing() | 1, 5, 59, 295 }>,
 <"g", 3>, <"CurveID", 1829>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 295>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 59, 118, 295, 590 }>,
@@ -9589,7 +9735,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 298>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 149, 298, 447, 894 }>,
-<"g", 3>, <"CurveID", 1833>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1833>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 298>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 149, 298, 745, 1490 }>,
@@ -9623,7 +9770,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 302>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 151, 302, 453, 906 }>,
-<"g", 3>, <"CurveID", 1840>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1840>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 302>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 151, 302, 755, 1510 }>,
@@ -9637,7 +9785,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 303>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 101, 202, 303, 606 }>,
-<"g", 3>, <"CurveID", 1843>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1843>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 305>, <"N", 1>,
 <"W", { IntegerRing() | 1, 5, 61, 305 }>,
@@ -9661,7 +9810,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 309>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 103, 206, 309, 618 }>,
-<"g", 3>, <"CurveID", 1848>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1848>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 314>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 157, 314 }>,
@@ -9670,7 +9820,8 @@ CreateShimuraQuot([* <"D", 314>, <"N", 1>,
 *]),
 CreateShimuraQuot([* <"D", 314>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 157, 314, 471, 942 }>,
-<"g", 3>, <"CurveID", 1850>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1850>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 314>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 157, 314, 785, 1570 }>,
@@ -9782,7 +9933,8 @@ CreateShimuraQuot([* <"D", 330>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 29, 30, 33, 55, 58, 66, 
 87, 110, 145, 165, 174, 290, 319, 330, 435, 638, 870, 957, 1595, 1914, 3190, 
 4785, 9570 }>,
-<"g", 3>, <"CurveID", 1870>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1870>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 330>, <"N", 31>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 31, 33, 55, 62, 66, 
@@ -9794,7 +9946,8 @@ CreateShimuraQuot([* <"D", 330>, <"N", 37>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 37, 55, 66, 74, 
 110, 111, 165, 185, 222, 330, 370, 407, 555, 814, 1110, 1221, 2035, 2442, 4070, 
 6105, 12210 }>,
-<"g", 4>, <"CurveID", 1872>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1872>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 330>, <"N", 41>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 41, 55, 66, 82, 
@@ -9807,7 +9960,8 @@ CreateShimuraQuot([* <"D", 330>, <"N", 43>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 43, 55, 66, 86, 
 110, 129, 165, 215, 258, 330, 430, 473, 645, 946, 1290, 1419, 2365, 2838, 4730, 
 7095, 14190 }>,
-<"g", 4>, <"CurveID", 1874>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1874>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 330>, <"N", 47>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 47, 55, 66, 94, 
@@ -9843,7 +9997,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 339>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 113, 226, 339, 678 }>,
-<"g", 3>, <"CurveID", 1881>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1881>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 341>, <"N", 1>,
 <"W", { IntegerRing() | 1, 11, 31, 341 }>,
@@ -9891,7 +10046,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 362>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 181, 362, 543, 1086 }>,
-<"g", 4>, <"CurveID", 1891>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1891>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 365>, <"N", 1>,
 <"W", { IntegerRing() | 1, 5, 73, 365 }>,
@@ -9945,7 +10101,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 386>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 193, 386, 579, 1158 }>,
-<"g", 4>, <"CurveID", 1902>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1902>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 390>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 13, 15, 26, 30, 39, 65, 78, 130, 195,
@@ -9993,7 +10150,7 @@ CreateShimuraQuot([* <"D", 390>, <"N", 29>,
 87, 130, 145, 174, 195, 290, 377, 390, 435, 754, 870, 1131, 1885, 2262, 3770, 
 5655, 11310 }>,
 <"g", 4>, <"CurveID", 1909>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 390>, <"N", 31>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 13, 15, 26, 30, 31, 39, 62, 65, 78, 
@@ -10066,7 +10223,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 411>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 137, 411 }>,
 <"g", 3>, <"CurveID", 1923>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 411>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 137, 274, 411, 822 }>,
@@ -10131,7 +10288,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^2">
 CreateShimuraQuot([* <"D", 447>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 149, 447 }>,
 <"g", 3>, <"CurveID", 1936>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 2, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 2">
 *]),
 CreateShimuraQuot([* <"D", 447>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 149, 298, 447, 894 }>,
@@ -10362,7 +10519,7 @@ CreateShimuraQuot([* <"D", 510>, <"N", 23>,
 102, 115, 138, 170, 230, 255, 345, 391, 510, 690, 782, 1173, 1955, 2346, 3910, 
 5865, 11730 }>,
 <"g", 4>, <"CurveID", 1977>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 510>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 17, 29, 30, 34, 51, 58, 85, 87, 
@@ -10465,20 +10622,21 @@ CreateShimuraQuot([* <"D", 546>, <"N", 17>,
 91, 102, 119, 182, 221, 238, 273, 357, 442, 546, 663, 714, 1326, 1547, 3094, 
 4641, 9282 }>,
 <"g", 3>, <"CurveID", 1996>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 546>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 13, 14, 19, 21, 26, 38, 39, 42, 57, 78, 
 91, 114, 133, 182, 247, 266, 273, 399, 494, 546, 741, 798, 1482, 1729, 3458, 
 5187, 10374 }>,
 <"g", 4>, <"CurveID", 1997>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 546>, <"N", 23>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 13, 14, 21, 23, 26, 39, 42, 46, 69, 78, 
 91, 138, 161, 182, 273, 299, 322, 483, 546, 598, 897, 966, 1794, 2093, 4186, 
 6279, 12558 }>,
-<"g", 4>, <"CurveID", 1998>, <"IsEC", false>
+<"g", 4>, <"CurveID", 1998>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 553>, <"N", 1>,
 <"W", { IntegerRing() | 1, 7, 79, 553 }>,
@@ -10536,7 +10694,8 @@ CreateShimuraQuot([* <"D", 570>, <"N", 17>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 17, 19, 30, 34, 38, 51, 57, 85, 
 95, 102, 114, 170, 190, 255, 285, 323, 510, 570, 646, 969, 1615, 1938, 3230, 
 4845, 9690 }>,
-<"g", 3>, <"CurveID", 2008>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2008>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 570>, <"N", 23>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 19, 23, 30, 38, 46, 57, 69, 95, 
@@ -10562,7 +10721,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 591>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 197, 591 }>,
-<"g", 3>, <"CurveID", 2013>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2013>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 597>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 199, 597 }>,
@@ -10650,7 +10810,7 @@ CreateShimuraQuot([* <"D", 690>, <"N", 17>,
 102, 115, 138, 170, 230, 255, 345, 391, 510, 690, 782, 1173, 1955, 2346, 3910, 
 5865, 11730 }>,
 <"g", 4>, <"CurveID", 2029>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 690>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 19, 23, 30, 38, 46, 57, 69, 95, 
@@ -10703,7 +10863,7 @@ CreateShimuraQuot([* <"D", 714>, <"N", 13>,
 91, 102, 119, 182, 221, 238, 273, 357, 442, 546, 663, 714, 1326, 1547, 3094, 
 4641, 9282 }>,
 <"g", 3>, <"CurveID", 2038>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 714>, <"N", 19>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 17, 19, 21, 34, 38, 42, 51, 57, 102, 
@@ -10730,7 +10890,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 CreateShimuraQuot([* <"D", 734>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 367, 734 }>,
 <"g", 3>, <"CurveID", 2043>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 746>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 373, 746 }>,
@@ -11018,7 +11178,8 @@ CreateShimuraQuot([* <"D", 1110>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 37, 55, 66, 74, 
 110, 111, 165, 185, 222, 330, 370, 407, 555, 814, 1110, 1221, 2035, 2442, 4070, 
 6105, 12210 }>,
-<"g", 4>, <"CurveID", 2092>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2092>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 1122>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 17, 22, 33, 34, 51, 66, 102, 187, 374, 
@@ -11037,7 +11198,8 @@ CreateShimuraQuot([* <"D", 1122>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 17, 21, 22, 33, 34, 42, 51, 66, 
 77, 102, 119, 154, 187, 231, 238, 357, 374, 462, 561, 714, 1122, 1309, 2618, 
 3927, 7854 }>,
-<"g", 4>, <"CurveID", 2095>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2095>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1155>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 11, 15, 21, 33, 35, 55, 77, 105, 165, 231, 
@@ -11094,7 +11256,8 @@ CreateShimuraQuot([* <"D", 1230>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 41, 42, 70, 
 82, 105, 123, 205, 210, 246, 287, 410, 574, 615, 861, 1230, 1435, 1722, 2870, 
 4305, 8610 }>,
-<"g", 3>, <"CurveID", 2104>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2104>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 1230>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 30, 33, 41, 55, 66, 82, 
@@ -11120,7 +11283,8 @@ CreateShimuraQuot([* <"D", 1254>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 19, 21, 22, 33, 38, 42, 57, 66, 
 77, 114, 133, 154, 209, 231, 266, 399, 418, 462, 627, 798, 1254, 1463, 2926, 
 4389, 8778 }>,
-<"g", 4>, <"CurveID", 2108>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2108>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1290>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 
@@ -11144,7 +11308,8 @@ CreateShimuraQuot([* <"D", 1302>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 31, 35, 42, 62, 
 70, 93, 105, 155, 186, 210, 217, 310, 434, 465, 651, 930, 1085, 1302, 2170, 
 3255, 6510 }>,
-<"g", 3>, <"CurveID", 2112>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2112>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 1326>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 
@@ -11163,7 +11328,7 @@ CreateShimuraQuot([* <"D", 1326>, <"N", 7>,
 91, 102, 119, 182, 221, 238, 273, 357, 442, 546, 663, 714, 1326, 1547, 3094, 
 4641, 9282 }>,
 <"g", 4>, <"CurveID", 2115>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1330>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 19, 35, 38, 70, 95, 133, 190, 266, 
@@ -11208,7 +11373,8 @@ CreateShimuraQuot([* <"D", 1410>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 47, 70, 
 94, 105, 141, 210, 235, 282, 329, 470, 658, 705, 987, 1410, 1645, 1974, 3290, 
 4935, 9870 }>,
-<"g", 4>, <"CurveID", 2122>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2122>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 29">
 *]),
 CreateShimuraQuot([* <"D", 1430>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 13, 22, 26, 55, 65, 110, 130, 143, 286,
@@ -11259,7 +11425,8 @@ CreateShimuraQuot([* <"D", 1518>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 11, 15, 22, 23, 30, 33, 46, 55, 66, 
 69, 110, 115, 138, 165, 230, 253, 330, 345, 506, 690, 759, 1265, 1518, 2530, 
 3795, 7590 }>,
-<"g", 4>, <"CurveID", 2130>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2130>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 1518>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 21, 22, 23, 33, 42, 46, 66, 69, 
@@ -11326,7 +11493,8 @@ CreateShimuraQuot([* <"D", 1770>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 59, 70, 
 105, 118, 177, 210, 295, 354, 413, 590, 826, 885, 1239, 1770, 2065, 2478, 4130, 
 6195, 12390 }>,
-<"g", 4>, <"CurveID", 2141>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2141>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 1785>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 17, 21, 35, 51, 85, 105, 119, 255, 357, 
@@ -11362,7 +11530,8 @@ CreateShimuraQuot([* <"D", 1806>, <"N", 5>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 43, 70, 
 86, 105, 129, 210, 215, 258, 301, 430, 602, 645, 903, 1290, 1505, 1806, 3010, 
 4515, 9030 }>,
-<"g", 3>, <"CurveID", 2147>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2147>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 1830>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 61, 122, 183, 305, 366, 610, 
@@ -11374,7 +11543,8 @@ CreateShimuraQuot([* <"D", 1830>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 30, 35, 42, 61, 70, 
 105, 122, 183, 210, 305, 366, 427, 610, 854, 915, 1281, 1830, 2135, 2562, 4270, 
 6405, 12810 }>,
-<"g", 5>, <"CurveID", 2149>, <"IsEC", false>
+<"g", 5>, <"CurveID", 2149>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 1870>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 17, 22, 34, 55, 85, 110, 170, 187, 374,
@@ -11448,7 +11618,8 @@ CreateShimuraQuot([* <"D", 2002>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 13, 14, 21, 22, 26, 33, 39, 42, 66, 
 77, 78, 91, 143, 154, 182, 231, 273, 286, 429, 462, 546, 858, 1001, 2002, 3003, 
 6006 }>,
-<"g", 4>, <"CurveID", 2161>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2161>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 2010>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 67, 134, 201, 335, 402, 670, 
@@ -11585,7 +11756,8 @@ CreateShimuraQuot([* <"D", 2415>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 23, 30, 35, 42, 46, 
 69, 70, 105, 115, 138, 161, 210, 230, 322, 345, 483, 690, 805, 966, 1610, 2415, 
 4830 }>,
-<"g", 3>, <"CurveID", 2183>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2183>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 13">
 *]),
 CreateShimuraQuot([* <"D", 2418>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 
@@ -11603,7 +11775,7 @@ CreateShimuraQuot([* <"D", 2470>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 19, 26, 38, 65, 95, 130, 190, 247, 494,
 1235, 2470 }>,
 <"g", 3>, <"CurveID", 2186>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 2470>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 13, 15, 19, 26, 30, 38, 39, 57, 65, 
@@ -11655,13 +11827,13 @@ CreateShimuraQuot([* <"D", 2590>, <"N", 3>,
 3885, 7770 }>,
 <"g", 5>, <"CurveID", 2194>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
-\n\n\n\ncurve 2193">
+\n\n\n\n\n\ncurve 2193">
 *]),
 CreateShimuraQuot([* <"D", 2618>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 17, 22, 34, 77, 119, 154, 187, 238, 
 374, 1309, 2618 }>,
 <"g", 3>, <"CurveID", 2195>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 2618>, <"N", 3>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 17, 21, 22, 33, 34, 42, 51, 66, 
@@ -11747,7 +11919,7 @@ CreateShimuraQuot([* <"D", 2958>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 29, 34, 51, 58, 87, 102, 174, 493, 986, 
 1479, 2958 }>,
 <"g", 3>, <"CurveID", 2209>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 2982>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 71, 142, 213, 426, 497, 994, 
@@ -11828,7 +12000,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 3198>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 41, 78, 82, 123, 246, 533, 1066,
 1599, 3198 }>,
-<"g", 3>, <"CurveID", 2223>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2223>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 3210>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 107, 214, 321, 535, 642, 
@@ -11840,7 +12013,7 @@ CreateShimuraQuot([* <"D", 3230>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 17, 19, 34, 38, 85, 95, 170, 190, 323, 646,
 1615, 3230 }>,
 <"g", 3>, <"CurveID", 2225>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 3255>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 21, 31, 35, 93, 105, 155, 217, 465, 651,
@@ -11876,13 +12049,13 @@ CreateShimuraQuot([* <"D", 3318>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 79, 158, 237, 474, 553, 1106,
 1659, 3318 }>,
 <"g", 3>, <"CurveID", 2231>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 3354>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 43, 78, 86, 129, 258, 559, 1118,
 1677, 3354 }>,
 <"g", 3>, <"CurveID", 2232>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 3390>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 113, 226, 339, 565, 678, 
@@ -11894,7 +12067,7 @@ CreateShimuraQuot([* <"D", 3410>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 22, 31, 55, 62, 110, 155, 310, 341, 
 682, 1705, 3410 }>,
 <"g", 4>, <"CurveID", 2234>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 3458>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 13, 14, 19, 26, 38, 91, 133, 182, 247, 266, 
@@ -11912,13 +12085,13 @@ CreateShimuraQuot([* <"D", 3498>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 53, 66, 106, 159, 318, 583, 
 1166, 1749, 3498 }>,
 <"g", 3>, <"CurveID", 2237>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 3534>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 31, 38, 57, 62, 93, 114, 186, 589, 1178,
 1767, 3534 }>,
 <"g", 3>, <"CurveID", 2238>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 3542>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 22, 23, 46, 77, 154, 161, 253, 322, 
@@ -11929,7 +12102,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 3666>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 47, 78, 94, 141, 282, 611, 1222,
 1833, 3666 }>,
-<"g", 3>, <"CurveID", 2240>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2240>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 3705>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 5, 13, 15, 19, 39, 57, 65, 95, 195, 247, 285, 741,
@@ -11957,7 +12131,8 @@ CreateShimuraQuot([* <"D", 3770>, <"N", 1>,
 CreateShimuraQuot([* <"D", 3774>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 37, 51, 74, 102, 111, 222, 629, 
 1258, 1887, 3774 }>,
-<"g", 4>, <"CurveID", 2245>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2245>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 3795>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 5, 11, 15, 23, 33, 55, 69, 115, 165, 253, 345, 
@@ -12011,7 +12186,7 @@ CreateShimuraQuot([* <"D", 4026>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 61, 66, 122, 183, 366, 671, 
 1342, 2013, 4026 }>,
 <"g", 3>, <"CurveID", 2254>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 4030>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 26, 31, 62, 65, 130, 155, 310, 403, 
@@ -12023,12 +12198,13 @@ CreateShimuraQuot([* <"D", 4070>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 22, 37, 55, 74, 110, 185, 370, 407, 
 814, 2035, 4070 }>,
 <"g", 4>, <"CurveID", 2256>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 3, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
 *]),
 CreateShimuraQuot([* <"D", 4074>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 97, 194, 291, 582, 679, 1358,
 2037, 4074 }>,
-<"g", 3>, <"CurveID", 2257>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2257>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 4110>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 137, 274, 411, 685, 822, 
@@ -12044,7 +12220,8 @@ CreateShimuraQuot([* <"D", 4130>, <"N", 1>,
 CreateShimuraQuot([* <"D", 4134>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 53, 78, 106, 159, 318, 689, 
 1378, 2067, 4134 }>,
-<"g", 3>, <"CurveID", 2260>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2260>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4170>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 139, 278, 417, 695, 834, 
@@ -12130,7 +12307,7 @@ CreateShimuraQuot([* <"D", 4494>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 107, 214, 321, 642, 749, 
 1498, 2247, 4494 }>,
 <"g", 3>, <"CurveID", 2275>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4510>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 22, 41, 55, 82, 110, 205, 410, 451, 
@@ -12159,18 +12336,19 @@ CreateShimuraQuot([* <"D", 4602>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 59, 78, 118, 177, 354, 767, 
 1534, 2301, 4602 }>,
 <"g", 4>, <"CurveID", 2280>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4674>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 38, 41, 57, 82, 114, 123, 246, 779, 
 1558, 2337, 4674 }>,
-<"g", 3>, <"CurveID", 2281>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2281>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4686>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66, 71, 142, 213, 426, 781, 
 1562, 2343, 4686 }>,
 <"g", 4>, <"CurveID", 2282>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4690>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 67, 70, 134, 335, 469, 670, 938,
@@ -12193,13 +12371,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 4746>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 113, 226, 339, 678, 791, 
 1582, 2373, 4746 }>,
-<"g", 3>, <"CurveID", 2286>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2286>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 4758>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 61, 78, 122, 183, 366, 793, 
 1586, 2379, 4758 }>,
 <"g", 4>, <"CurveID", 2287>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4774>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 22, 31, 62, 77, 154, 217, 341, 434, 
@@ -12211,7 +12390,7 @@ CreateShimuraQuot([* <"D", 4794>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 47, 51, 94, 102, 141, 282, 799, 
 1598, 2397, 4794 }>,
 <"g", 3>, <"CurveID", 2289>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4810>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 26, 37, 65, 74, 130, 185, 370, 481, 
@@ -12222,7 +12401,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 4818>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66, 73, 146, 219, 438, 803, 
 1606, 2409, 4818 }>,
-<"g", 3>, <"CurveID", 2291>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2291>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 4862>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 11, 13, 17, 22, 26, 34, 143, 187, 221, 286, 374, 
@@ -12239,7 +12419,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 CreateShimuraQuot([* <"D", 4902>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 19, 38, 43, 57, 86, 114, 129, 258, 817, 
 1634, 2451, 4902 }>,
-<"g", 5>, <"CurveID", 2294>, <"IsEC", false>
+<"g", 5>, <"CurveID", 2294>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 4930>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 17, 29, 34, 58, 85, 145, 170, 290, 493, 
@@ -12256,7 +12437,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 5010>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 167, 334, 501, 835, 1002, 
 1670, 2505, 5010 }>,
-<"g", 3>, <"CurveID", 2297>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2297>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 5106>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 23, 37, 46, 69, 74, 111, 138, 222, 851, 
@@ -12279,12 +12461,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 5190>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 173, 346, 519, 865, 1038, 
 1730, 2595, 5190 }>,
-<"g", 3>, <"CurveID", 2301>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2301>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 5214>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66, 79, 158, 237, 474, 869, 
 1738, 2607, 5214 }>,
-<"g", 4>, <"CurveID", 2302>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2302>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 5226>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 67, 78, 134, 201, 402, 871, 
@@ -12319,17 +12503,20 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 5370>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 179, 358, 537, 895, 1074, 
 1790, 2685, 5370 }>,
-<"g", 4>, <"CurveID", 2308>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2308>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 5394>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 29, 31, 58, 62, 87, 93, 174, 186, 899, 1798,
 2697, 5394 }>,
-<"g", 5>, <"CurveID", 2309>, <"IsEC", false>
+<"g", 5>, <"CurveID", 2309>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 5406>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 51, 53, 102, 106, 159, 318, 901, 
 1802, 2703, 5406 }>,
-<"g", 5>, <"CurveID", 2310>, <"IsEC", false>
+<"g", 5>, <"CurveID", 2310>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 5430>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 181, 362, 543, 905, 1086, 
@@ -12340,13 +12527,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 11^1">
 CreateShimuraQuot([* <"D", 5478>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66, 83, 166, 249, 498, 913, 
 1826, 2739, 5478 }>,
-<"g", 4>, <"CurveID", 2312>, <"IsEC", false>
+<"g", 4>, <"CurveID", 2312>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 5502>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 131, 262, 393, 786, 917, 
 1834, 2751, 5502 }>,
 <"g", 3>, <"CurveID", 2313>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 5530>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 70, 79, 158, 395, 553, 790, 
@@ -12375,13 +12563,14 @@ false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 CreateShimuraQuot([* <"D", 5730>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 191, 382, 573, 955, 1146, 
 1910, 2865, 5730 }>,
-<"g", 3>, <"CurveID", 2318>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2318>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 11">
 *]),
 CreateShimuraQuot([* <"D", 5754>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 137, 274, 411, 822, 959, 
 1918, 2877, 5754 }>,
 <"g", 4>, <"CurveID", 2319>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 5, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 5790>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 193, 386, 579, 965, 1158, 
@@ -12417,7 +12606,7 @@ CreateShimuraQuot([* <"D", 5970>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 199, 398, 597, 995, 1194, 
 1990, 2985, 5970 }>,
 <"g", 4>, <"CurveID", 2325>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6018>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 51, 59, 102, 118, 177, 354, 1003, 
@@ -12476,7 +12665,7 @@ CreateShimuraQuot([* <"D", 6690>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 223, 446, 669, 1115, 1338, 
 2230, 3345, 6690 }>,
 <"g", 4>, <"CurveID", 2335>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 6810>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 227, 454, 681, 1135, 1362, 
@@ -12500,7 +12689,7 @@ CreateShimuraQuot([* <"D", 7170>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 239, 478, 717, 1195, 1434, 
 2390, 3585, 7170 }>,
 <"g", 4>, <"CurveID", 2339>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "FpAutomorphisms with p = 7, k = 20">
+false>, <"TestInWhichProved", "WeilPolynomial with p = 7">
 *]),
 CreateShimuraQuot([* <"D", 7230>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 241, 482, 723, 1205, 1446, 
@@ -12514,7 +12703,8 @@ CreateShimuraQuot([* <"D", 30030>, <"N", 1>,
 195, 210, 231, 273, 286, 330, 385, 390, 429, 455, 462, 546, 715, 770, 858, 910, 
 1001, 1155, 1365, 1430, 2002, 2145, 2310, 2730, 3003, 4290, 5005, 6006, 10010, 
 15015, 30030 }>,
-<"g", 3>, <"CurveID", 2341>, <"IsEC", false>
+<"g", 3>, <"CurveID", 2341>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "WeilPolynomial with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 39270>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 17, 21, 22, 30, 33, 
