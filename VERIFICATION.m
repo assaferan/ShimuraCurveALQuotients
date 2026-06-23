@@ -20,9 +20,11 @@
 // AllEquationsAboveCovers call. This runs the expensive Borcherds-form build once
 // per star curve instead of once per row.
 //
-// At the end, the geometric automorphism group of each computed model is checked:
-// |Aut| = 2 generically, and 4 for the bielliptic curves -- X(14,29)/<w7,w29> and
-// both D=6,N=17 rows.
+// Each row's isomorphism to the table model is checked inline, right after its
+// star curve is built (verdicts appear incrementally). Then a SEPARATE final pass
+// checks ALL computed models for biellipticity via the geometric automorphism
+// group: |Aut| = 2 (non-bielliptic) generically, and |Aut| = 4 (bielliptic) for
+// X(14,29)/<w7,w29> and both D=6,N=17 rows.
 //
 // USAGE:
 //   magma VERIFICATION.m            // verify all rows
@@ -47,7 +49,7 @@ R<x> := PolynomialRing(Rationals());
 // `gens` is the set of Atkin-Lehner subscripts generating W.
 // NOTE: row (6,37) is published as <w_6, w_34>, but w_34 is not a valid AL
 // involution of X^6(37) (34 is not a Hall divisor of 222); read as a typo for
-// w_37 here -- see `note`.
+// w_74 here -- <w_6,w_74> is the genus-2 cover, whereas <w_6,w_37> is genus 0.
 ROWS := [*
     < 6,  29, {3,29},   -x^2-x,            -144*x^5-117*x^4+41*x^3+21*x^2-6*x,                                          "" >,
     < 14, 13, {2,13},   2*x^3-3*x^2+x,     -44*x^6-626*x^5-3296*x^4-8298*x^3-10950*x^2-7306*x-1950,                    "" >,
@@ -55,7 +57,7 @@ ROWS := [*
     < 10, 17, {10,34},  x^2-1,             -4*x^5+11*x^4-33*x^3+21*x^2-15*x-44,                                         "" >,
     < 14, 29, {7,29},   -x^2+x-2,          1792*x^5-6487*x^4+9347*x^3-6701*x^2+2390*x-340,                             "" >,
     < 14, 29, {7,58},   -x-1,              -224*x^5+365*x^4-194*x^3+47*x^2-6*x,                                         "" >,
-    < 6,  37, {6,37},   -x^2-x,            972*x^5-2411*x^4+2244*x^3-929*x^2+144*x,                                     "table prints w_34 (invalid); read as w_37" >,
+    < 6,  37, {6,74},   -x^2-x,            972*x^5-2411*x^4+2244*x^3-929*x^2+144*x,                                     "table prints w_34 (invalid); read as w_74 (genus 2; w_37 gives genus 0)" >,
     < 6,  41, {2,3},    -x^2-x,            -2304*x^6-3862*x^5-2270*x^4-687*x^3-230*x^2-76*x-10,                        "" >,
     < 6,  41, {3,41},   -x^2-x,            -288*x^5-303*x^4-95*x^3-27*x^2-12*x-2,                                       "" >,
     < 6,  43, {2,3},    -x^2-1,            -15552*x^6+24614*x^5-16682*x^4+5999*x^3-1182*x^2+119*x-5,                   "" >,
@@ -77,6 +79,13 @@ elif assigned lo then
     SEL := [StringToInteger(lo)..hi_];
 else
     SEL := [1..#ROWS];
+end if;
+// Optional: skip:=11 (or skip:="11,7") removes those rows from the selection.
+// Row 11, X(10,53) (M=1060), is impractically slow in its [4/6] step (>13h),
+// so skip:=11 lets the other rows complete.
+if assigned skip then
+    skipset := { StringToInteger(s) : s in Split(skip, ",") };
+    SEL := [i : i in SEL | i notin skipset];
 end if;
 
 // Short label for a row (used in all reporting).
@@ -116,7 +125,13 @@ computed := AssociativeArray();   // i -> true/false
 curve_of := AssociativeArray();   // i -> CrvHyp (only when computed)
 reason_of := AssociativeArray();  // i -> string
 
-// ---- compute every group's models ----
+// Verdicts accumulate as each group is verified inline (verify-after-each-row),
+// so earlier rows report even if a later group hangs or errors.
+n_match := 0;
+verdicts := [];   // < idx, desc, tag >
+models := [* *];  // < idx, desc, C > for every computed model (used in the final biellipticity pass)
+
+// ---- per group: build the models, then verify that group's rows immediately ----
 for key in group_order do
     D := key[1]; N := key[2]; idxs := group_rows[key];
     printf "================ star curve X(%o,%o)*  (rows %o) ================\n",
@@ -125,7 +140,10 @@ for key in group_order do
 
     if not exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)} then
         printf "  no star curve found for (D,N)=(%o,%o)\n", D, N;
-        for i in idxs do computed[i] := false; reason_of[i] := "no star curve found"; end for;
+        for i in idxs do
+            computed[i] := false; reason_of[i] := "no star curve found";
+            Append(~verdicts, <i, row_desc(i), "NO-MODEL">);
+        end for;
         printf "\n"; continue;
     end if;
 
@@ -175,38 +193,46 @@ for key in group_order do
         end try;
     end if;
 
-    printf "  ---- star curve X(%o,%o)* done in %o s ----\n\n", D, N, Realtime()-t0;
-end for;
+    printf "  ---- star curve X(%o,%o)* built in %o s; verifying its row(s) ----\n", D, N, Realtime()-t0;
 
-// ---- per-row isomorphism check ----
-n_match := 0;
-verdicts := [];   // < idx, desc, tag >
-models := [* *];  // < idx, desc, C > for every row whose model was computed
-
-for i in SEL do
-    rr := ROWS[i]; h := rr[4]; f := rr[5];
-    desc := row_desc(i);
-    Ctab := HyperellipticCurve(f, h);   // y^2 + h*y = f
-    printf "==== %o ====\n", desc;
-    if not computed[i] then
-        printf "  COULD-NOT-COMPUTE: %o\n", reason_of[i];
-        Append(~verdicts, <i, desc, "NO-MODEL">);
-    else
+    // Verify this group's rows NOW (isomorphism to the published table model), so
+    // verdicts appear incrementally and a later slow/bad group can't hide them.
+    for i in idxs do
+        rr := ROWS[i]; h := rr[4]; f := rr[5]; desc := row_desc(i);
+        Ctab := HyperellipticCurve(f, h);   // y^2 + h*y = f
+        if not computed[i] then
+            printf "  [%o] COULD-NOT-COMPUTE: %o\n", desc, reason_of[i];
+            Append(~verdicts, <i, desc, "NO-MODEL">);
+            continue;
+        end if;
         C := curve_of[i];
         Append(~models, <i, desc, C>);
-        if IsIsomorphic(C, Ctab) then
-            printf "  MATCH (%o)\n", reason_of[i];
-            n_match +:= 1;
-            Append(~verdicts, <i, desc, "MATCH">);
-        else
-            same := G2Invariants(C) eq G2Invariants(Ctab);
-            printf "  MISMATCH (%o); G2Invariants %o\n", reason_of[i],
-                   same select "agree (Qbar-isomorphic)" else "differ";
-            printf "    computed: y^2 + (%o)*y = %o\n", HyperellipticPolynomials(C);
-            Append(~verdicts, <i, desc, same select "MISMATCH(geom-iso)" else "MISMATCH">);
-        end if;
-    end if;
+        try
+            gC := Genus(C);
+            if gC ne 2 then
+                printf "  [%o] NOT GENUS 2: computed model has genus %o (%o)\n", desc, gC, reason_of[i];
+                Append(~verdicts, <i, desc, Sprintf("NOT-GENUS-2 (g=%o)", gC)>);
+            elif IsIsomorphic(C, Ctab) then
+                printf "  [%o] MATCH (%o)\n", desc, reason_of[i];
+                n_match +:= 1;
+                Append(~verdicts, <i, desc, "MATCH">);
+            else
+                same := G2Invariants(C) eq G2Invariants(Ctab);
+                printf "  [%o] MISMATCH (%o); G2Invariants %o\n", desc, reason_of[i],
+                       same select "agree (Qbar-isomorphic)" else "differ";
+                printf "      computed: y^2 + (%o)*y = %o\n", HyperellipticPolynomials(C);
+                Append(~verdicts, <i, desc, same select "MISMATCH(geom-iso)" else "MISMATCH">);
+            end if;
+        catch e
+            printf "  [%o] ERROR during check: %o\n", desc, e`Object;
+            Append(~verdicts, <i, desc, "ERROR-CHECK">);
+        end try;
+    end for;
+    printf "\n";
 end for;
+
+// Sort verdicts back into row order for the summary.
+Sort(~verdicts, func< a, b | a[1] - b[1] >);
 
 printf "\n================ SUMMARY ================\n";
 for v in verdicts do
@@ -216,22 +242,38 @@ printf "----------------------------------------\n";
 printf "  %o / %o matched\n", n_match, #SEL;
 printf "========================================\n";
 
-// ---- Geometric automorphism groups (brief check over the computed models) ----
-// |Aut| is 2 generically (just the hyperelliptic involution) and 4 for the
-// bielliptic curves: X(14,29)/<w7,w29> and both D=6,N=17 rows.
-printf "\n========= GEOMETRIC AUTOMORPHISM GROUPS =========\n";
-aut_all_ok := true;
+// ---- Biellipticity check over ALL computed models (separate final pass) ----
+// A genus-2 curve is bielliptic iff it has an involution besides the
+// hyperelliptic one, i.e. iff its geometric automorphism group has order > 2.
+// Expected bielliptic (|Aut| = 4): X(14,29)/<w7,w29> and both D=6,N=17 rows;
+// every other model is non-bielliptic (|Aut| = 2).
+printf "\n========= BIELLIPTICITY CHECK (all models) =========\n";
+biell_all_ok := true;
 for m in models do
     exp_aut := expected_aut(m[1]);
-    naut := #GeometricAutomorphismGroup(m[3]);
-    ok := naut eq exp_aut;
-    aut_all_ok := aut_all_ok and ok;
-    printf "  %-6o %o : |Aut| = %o (expected %o)\n", ok select "OK" else "WRONG",
-           m[2], naut, exp_aut;
+    exp_bi := exp_aut eq 4;
+    try
+        if Genus(m[3]) ne 2 then
+            printf "  SKIP   %o : model not genus 2\n", m[2];
+            biell_all_ok := false;
+            continue;
+        end if;
+        naut := #GeometricAutomorphismGroup(m[3]);
+        is_bi := naut gt 2;
+        ok := naut eq exp_aut;
+        biell_all_ok := biell_all_ok and ok;
+        printf "  %-6o %o : |Aut| = %o -> %o (expected %o)\n",
+               ok select "OK" else "WRONG", m[2], naut,
+               is_bi select "BIELLIPTIC" else "not bielliptic",
+               exp_bi select "bielliptic" else "not bielliptic";
+    catch e
+        printf "  ERROR  %o : %o\n", m[2], e`Object;
+        biell_all_ok := false;
+    end try;
 end for;
-printf "-------------------------------------------------\n";
-assert aut_all_ok;
-printf "  all geometric automorphism group sizes as expected.\n";
-printf "=================================================\n";
+printf "---------------------------------------------------\n";
+assert biell_all_ok;
+printf "  all biellipticity results as expected.\n";
+printf "===================================================\n";
 
 exit;
