@@ -137,9 +137,13 @@ end intrinsic;
 // is asserted to equal genus(X_0(6,p)) + 1 (the number of nodes of the two-
 // component special fiber), which is a complete arithmetic self-check.
 //
-// Currently the Mobius test runs on the W'' = {1} component (X_0(6,1), the conic
-// x^2+3y^2+z^2) and on the full-Atkin-Lehner star component (the tau-line); the
-// intermediate quotients X_0(6,1)/<w_q> need their covering maps and are a TODO.
+// The Mobius test runs on the W'' = {1} component (X_0(6,1), the conic x^2+3y^2+z^2),
+// on the full-Atkin-Lehner star component (the tau-line), and on the three intermediate
+// quotients X_0(6,1)/<w_q>, q in {2,3,6}.  Each w_q acts on the conic as a diagonal sign
+// flip (w_2 flips y, w_3 flips x, w_6 flips x and y == flips z projectively), so its two
+// linear invariant coordinates give the quotient map conic -> P^1 directly: w_2 -> (x:z),
+// w_3 -> (y:z), w_6 -> (x:y).  The pushed supersingular-point count is checked against
+// genus(X_0(6,p)/<w_q>) + 1 on every call (the same self-check as the conic case).
 // Validated on data/curves_after_UpdateCurves8.dat: 0 contradictions against the
 // known-hyperelliptic D=6 curves; proves X_0(6,23)/<w_23> non-hyperelliptic.
 
@@ -166,6 +170,17 @@ function d6_ss_conic(p, F)
   return pts;
 end function;
 
+// push conic SS points to an intermediate quotient X_0(6,1)/<w_q>, q in {2,3,6}.  w_q is a
+// diagonal sign flip, so the quotient map to P^1 is the pair of linear invariant coordinates:
+// w_2 (flip y) -> (x:z), w_3 (flip x) -> (y:z), w_6 (flip x,y) -> (x:y).
+function d6_proj_quot(ss, q, F)
+  idx := case< q | 2: [1,3], 3: [2,3], 6: [1,2], default: [Integers()|] >;
+  qss := [];
+  for P in ss do Q := [P[idx[1]], P[idx[2]]];
+    if Q ne [F!0,F!0] and not exists{T:T in qss|eqP(Q,T)} then Append(~qss,Q); end if; end for;
+  return qss;
+end function;
+
 // supersingular points of the star X_0^*(6,1) in the hypergeometric tau-coordinate (P^1).
 function d6_ss_star(p, F)
   pts := [[r[1],F!1] : r in Roots(d6_hypg(p,F))];
@@ -189,9 +204,11 @@ end function;
 intrinsic SpecialFiberNotHyperellipticD6(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
 {Special-fiber reduction-mod-p test for the discriminant-6 Shimura curve quotient
 X_0(6,N)/W.  Returns true with a witness if proven NOT hyperelliptic, otherwise
-false.  Implemented for N = p prime with component group equal to the trivial group
-or the full Atkin-Lehner group; other cases return false.  The supersingular-point
-count is checked against genus of X_0(6,p) plus 1 on every call.}
+false.  Implemented for N = p prime with p-coprime component group W'' equal to the
+trivial group, an intermediate single-involution quotient by w_q (q = 2, 3 or 6), or
+the full Atkin-Lehner group; other cases return false.  Except for the full-star case
+the pushed supersingular-point count is checked against genus of X_0(6,p)/w_q plus 1
+on every call.}
     for p in PrimeDivisors(N) do
         if 6 mod p eq 0 or N div p ne 1 then continue; end if;
         Wpp := {w div p^Valuation(w,p) : w in W};
@@ -201,10 +218,14 @@ count is checked against genus of X_0(6,p) plus 1 on every call.}
             ss := d6_ss_conic(p, F);
             assert #ss eq GenusShimuraCurveQuotient(6, p, {Integers()|1}) + 1;   // arithmetic self-check
             qss := d6_proj_P1(p, ss);
+        elif Wpp in {{Integers()|1,2},{Integers()|1,3},{Integers()|1,6}} then
+            ss := d6_ss_conic(p, F);
+            qss := d6_proj_quot(ss, Rep(Wpp diff {Integers()|1}), F);
+            assert #qss eq GenusShimuraCurveQuotient(6, p, Wpp) + 1;             // arithmetic self-check
         elif Wpp eq {1,2,3,6} then
             qss := d6_ss_star(p, F);
         else
-            continue;                            // intermediate quotients: TODO (need covering map)
+            continue;                            // remaining cases (composite N etc.): TODO
         end if;
         if has_compat(qss, p, F, case2) eq "no" then
             return true, Sprintf("SpecialFiberD6 p=%o case=%o component=X_0(6,1)/%o", p, case2 select 2 else 1, Wpp);
