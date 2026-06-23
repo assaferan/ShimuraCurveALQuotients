@@ -3,6 +3,16 @@
 // Curves", Section 5.  Currently for D = 1 (classical modular curves) with a genus-0
 // special-fiber component.
 //
+// The conclusion is GEOMETRIC non-hyperellipticity (not just over Q).  For genus >= 2 the
+// hyperelliptic involution is unique, hence Galois-stable, hence defined over Q regardless
+// of whether the curve is hyperelliptic over Q or only over Qbar; it therefore reduces mod p
+// to an F_p-rational automorphism inducing an F_p-rational, Frobenius-compatible Mobius
+// involution on the genus-0 component.  Ruling out the existence of such an involution (below)
+// rules out the reduction of any geometric hyperelliptic involution.  Cross-checked for D = 1
+// against the canonical-model (Petri) oracle in verify_d1_hyperelliptic.m, which likewise
+// decides geometric hyperellipticity; consistent with the geometric IsHyp flag used pipeline-
+// wide (see ShimuraQuotients.m, "Committed to Geometrically Hyperelliptic curves").
+//
 // Method.  Fix a prime p with p | N.  X_0(N)/W reduces mod p to a curve whose components
 // are copies of X_0(N/p)/W''  where  W'' = { w / p^v_p(w) : w in W }  is the p-coprime
 // image of W (the component group).  Two cases:
@@ -21,9 +31,10 @@
 // In both cases the action on the genus-0 component is a Mobius transformation g, pinned
 // down by its values on >= 3 of the constrained points.  If the unique such g fails to send
 // every constrained point to its Frobenius image, no compatible involution exists and the
-// curve is NOT hyperelliptic.  If g comes out as the identity (Frobenius acts trivially on
-// the constrained points) the test is inconclusive; in case 1 g = id is the admissible
-// possibility u = w_p.  A non-rational g also yields "not hyperelliptic".
+// curve is NOT geometrically hyperelliptic.  If g comes out as the identity (Frobenius acts
+// trivially on the constrained points) the test is inconclusive; in case 1 g = id is the
+// admissible possibility u = w_p.  A non-F_p-rational g also yields "not geometrically
+// hyperelliptic" (the geometric hyperelliptic involution would reduce to an F_p-rational g).
 //
 // Validation (data/curves_after_UpdateCurves8.dat, D = 1, genus >= 3): reproduces FH on
 // X_0(42)/<w_2> (case 1) and X_0(42)/<w_7> (case 2); 0 contradictions against the 59
@@ -85,9 +96,10 @@ end function;
 
 intrinsic SpecialFiberNotHyperelliptic(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
 {Special-fiber reduction-mod-p test for X_0(N)/W (D = 1).  Returns true with a witness
-string if the curve is proven NOT hyperelliptic, otherwise false.  Only curves possessing a
-genus-0 special-fiber component at some prime p | N with component group of order at most 2
-are reached; for all others it returns false.}
+string if the curve is proven NOT geometrically hyperelliptic (a fortiori not hyperelliptic
+over Q), otherwise false.  Only curves possessing a genus-0 special-fiber component at some
+prime p | N with component group of order at most 2 are reached; for all others it returns
+false.}
     for p in PrimeDivisors(N) do
         M := N div p;
         if GenusShimuraCurveQuotient(1, M, {Integers()|1}) ne 0 then continue; end if;   // need X_0(M) = P^1
@@ -106,9 +118,9 @@ are reached; for all others it returns false.}
 end intrinsic;
 
 intrinsic FilterBySpecialFiber(~curves::SeqEnum)
-{Mark D = 1 AL quotients proven non-hyperelliptic by the special-fiber reduction-mod-p test
-(Furumoto-Hasegawa Section 5, generalized).  Only curves with a genus-0 special-fiber
-component are reached; everything else is left untouched.}
+{Mark D = 1 AL quotients proven (geometrically) non-hyperelliptic by the special-fiber
+reduction-mod-p test (Furumoto-Hasegawa Section 5, generalized).  Only curves with a genus-0
+special-fiber component are reached; everything else is left untouched.}
     for i->X in curves do
         if assigned X`IsSubhyp then continue; end if;
         if X`D ne 1 or X`g lt 3 then continue; end if;
@@ -144,8 +156,17 @@ end intrinsic;
 // linear invariant coordinates give the quotient map conic -> P^1 directly: w_2 -> (x:z),
 // w_3 -> (y:z), w_6 -> (x:y).  The pushed supersingular-point count is checked against
 // genus(X_0(6,p)/<w_q>) + 1 on every call (the same self-check as the conic case).
-// Validated on data/curves_after_UpdateCurves8.dat: 0 contradictions against the
-// known-hyperelliptic D=6 curves; proves X_0(6,23)/<w_23> non-hyperelliptic.
+// As in the D=1 case the conclusion is GEOMETRIC non-hyperellipticity: the (unique, hence
+// Q-rational) hyperelliptic involution would reduce to an F_p-rational Frobenius-compatible
+// Mobius involution, and the test rules such out.  For D=6 this is intrinsic -- the genus-0
+// components are pointless conics over Q (x^2+3y^2+z^2 has no Q-point), yet the test works on
+// their reduction mod p where every conic acquires a rational point, so it cannot be sensing
+// a mere Q-rationality obstruction.
+//
+// Validated on data/curves_after_UpdateCurves8.dat (D=6, genus >= 3): proves X_0(6,23)/<w_23>
+// non-hyperelliptic (conic case); the intermediate-quotient branch proves 112 curves, with 0
+// contradictions against the 59 reached geometrically-hyperelliptic curves (zero false
+// positives), and newly settles X_0(6,229)/<w_6,w_229>.
 
 d6_inert := func<p,d | not IsSplit(p, MaximalOrder(QuadraticField(d)))>;
 
@@ -203,8 +224,9 @@ end function;
 
 intrinsic SpecialFiberNotHyperellipticD6(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
 {Special-fiber reduction-mod-p test for the discriminant-6 Shimura curve quotient
-X_0(6,N)/W.  Returns true with a witness if proven NOT hyperelliptic, otherwise
-false.  Implemented for N = p prime with p-coprime component group W'' equal to the
+X_0(6,N)/W.  Returns true with a witness if proven NOT geometrically hyperelliptic
+(a fortiori not hyperelliptic over Q), otherwise false.  Implemented for N = p prime
+with p-coprime component group W'' equal to the
 trivial group, an intermediate single-involution quotient by w_q (q = 2, 3 or 6), or
 the full Atkin-Lehner group; other cases return false.  Except for the full-star case
 the pushed supersingular-point count is checked against genus of X_0(6,p)/w_q plus 1
