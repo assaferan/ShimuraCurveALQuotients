@@ -128,7 +128,10 @@ function get_cm_pts(D,N,p, W, models, elliptic_pts, embeddings)
     // L := Universe(Eltseq(RepresentativePoint(Support(Divisor(models[<D,N>],t))[1])));
     ell_pts := [pt : pt in elliptic_pts[<D,N,W>] | IsPrime(p*Integers(NumberField(AbsolutePolynomial(L)))) where _, L := PointsOverSplittingField(pt)];
     cm_pts := [ChangeRing(pt,GF(p)) : pt in ell_pts];
-    cm_pts := &cat[[*pt : pt in Points(BaseChange(cm_pt,GF(p^2)))*] : cm_pt in cm_pts];
+    // keep cm_pts a List even when there are no elliptic ss points (else cat with the
+    // List additional_cm below throws "Bad argument types" for such primes)
+    cm_lists := [[*pt : pt in Points(BaseChange(cm_pt,GF(p^2)))*] : cm_pt in cm_pts];
+    cm_pts := IsEmpty(cm_lists) select [* *] else &cat cm_lists;
     if p mod 24 in [19,23] then
         A := 19/24;
         B := 23/24;

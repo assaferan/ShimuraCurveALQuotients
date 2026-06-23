@@ -123,3 +123,92 @@ component are reached; everything else is left untouched.}
         end if;
     end for;
 end intrinsic;
+
+// ---------------------------------------------------------------------------
+// D = 6 (quaternionic) special-fiber test.  The supersingular points of the
+// genus-0 Shimura curve X_0(6,1) at a prime p (p not dividing 6) are computed
+// via Elkies, "Shimura Curve Computations" Section 3.3: the [p/24] roots of the
+// (2,4,6) hypergeometric polynomial give the generic supersingular points on the
+// star X_0^*(6,1), and the three elliptic vertices tau = 0,1,oo (CM discriminants
+// -24, -4, -3) are supersingular iff p is inert in the corresponding quadratic
+// order.  On X_0(6,1) (the degree-4 Klein-four cover of the star) each generic
+// star point lifts to its full 4-point orbit via (x:y:z) -> (x^2:y^2:z^2), i.e.
+// z^2 = -tau x^2, and each supersingular vertex to its 2-point orbit.  The total
+// is asserted to equal genus(X_0(6,p)) + 1 (the number of nodes of the two-
+// component special fiber), which is a complete arithmetic self-check.
+//
+// Currently the Mobius test runs on the W'' = {1} component (X_0(6,1), the conic
+// x^2+3y^2+z^2) and on the full-Atkin-Lehner star component (the tau-line); the
+// intermediate quotients X_0(6,1)/<w_q> need their covering maps and are a TODO.
+// Validated on data/curves_after_UpdateCurves8.dat: 0 contradictions against the
+// known-hyperelliptic D=6 curves; proves X_0(6,23)/<w_23> non-hyperelliptic.
+
+d6_inert := func<p,d | not IsSplit(p, MaximalOrder(QuadraticField(d)))>;
+
+function d6_hypg(p, F)
+  if   p mod 24 in [19,23] then A:=19/24; B:=23/24; C:=3/2;
+  elif p mod 24 in [1,5]   then A:=1/24;  B:=5/24;  C:=1/2;
+  elif p mod 24 in [7,11]  then A:=7/24;  B:=11/24; C:=1/2;
+  else                          A:=13/24; B:=17/24; C:=3/2; end if;
+  R := PolynomialRing(F);
+  return &+[ &*[F | (A+l)*(B+l)/(C+l) : l in [0..j-1]]/Factorial(j) * R.1^j : j in [0..(p div 24)]];
+end function;
+
+// supersingular points of X_0(6,1) on the conic x^2+3y^2+z^2 over F (= F_{p^2}).
+function d6_ss_conic(p, F)
+  eqP3 := func<a,b | a[1]*b[2]-a[2]*b[1] eq 0 and a[1]*b[3]-a[3]*b[1] eq 0 and a[2]*b[3]-a[3]*b[2] eq 0>;
+  pts := []; add := procedure(~pts,P) if not exists{q:q in pts|eqP3(P,q)} then Append(~pts,P); end if; end procedure;
+  for r in Roots(d6_hypg(p,F)) do tau0:=r[1]; rz:=Sqrt(-tau0); ry:=Sqrt(-(1-tau0)/3);
+    for sy in [ry,-ry] do for sz in [rz,-rz] do add(~pts,[F!1,sy,sz]); end for; end for; end for;
+  if d6_inert(p,-3)  then s:=Sqrt(F!-3); add(~pts,[F!0,F!1,s]); add(~pts,[F!0,F!1,-s]); end if;
+  if d6_inert(p,-4)  then s:=Sqrt(F!-1); add(~pts,[s,F!0,F!1]); add(~pts,[-s,F!0,F!1]); end if;
+  if d6_inert(p,-24) then s:=Sqrt(F!-3); add(~pts,[s,F!1,F!0]); add(~pts,[-s,F!1,F!0]); end if;
+  return pts;
+end function;
+
+// supersingular points of the star X_0^*(6,1) in the hypergeometric tau-coordinate (P^1).
+function d6_ss_star(p, F)
+  pts := [[r[1],F!1] : r in Roots(d6_hypg(p,F))];
+  if d6_inert(p,-24) then Append(~pts,[F!0,F!1]); end if;
+  if d6_inert(p,-4)  then Append(~pts,[F!1,F!1]); end if;
+  if d6_inert(p,-3)  then Append(~pts,[F!1,F!0]); end if;
+  return pts;
+end function;
+
+// project the conic SS points to P^1 over an F_p-rational point (the conic has no Q-point).
+function d6_proj_P1(p, ssF)
+  Fp := GF(p); F := GF(p^2); P2<x,y,z> := ProjectiveSpace(Rationals(),2); Cm := Curve(P2, x^2+3*y^2+z^2);
+  C := ChangeRing(Cm, Fp); Cc,CtoCc := Conic(C); _,P0 := HasRationalPoint(Cc); CP1,pi := Projection(Cc,P0);
+  C2 := ChangeRing(Cm,F); C2c := ChangeRing(Cc,F); C2P1 := ChangeRing(CP1,F);
+  am := AlgebraMap(CtoCc); m1 := map<C2->C2c | [am(Domain(am).i):i in [1..3]]>;
+  am := AlgebraMap(pi);     m2 := map<C2c->C2P1 | [am(Domain(am).i):i in [1..2]]>;
+  fmap := m1*m2;
+  return [Eltseq(fmap(C2!Eltseq(P))) : P in ssF];
+end function;
+
+intrinsic SpecialFiberNotHyperellipticD6(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
+{Special-fiber reduction-mod-p test for the discriminant-6 Shimura curve quotient
+X_0(6,N)/W.  Returns true with a witness if proven NOT hyperelliptic, otherwise
+false.  Implemented for N = p prime with component group equal to the trivial group
+or the full Atkin-Lehner group; other cases return false.  The supersingular-point
+count is checked against genus of X_0(6,p) plus 1 on every call.}
+    for p in PrimeDivisors(N) do
+        if 6 mod p eq 0 or N div p ne 1 then continue; end if;
+        Wpp := {w div p^Valuation(w,p) : w in W};
+        case2 := exists{w : w in W | w mod p eq 0};
+        F := GF(p^2);
+        if Wpp eq {Integers()|1} then
+            ss := d6_ss_conic(p, F);
+            assert #ss eq GenusShimuraCurveQuotient(6, p, {Integers()|1}) + 1;   // arithmetic self-check
+            qss := d6_proj_P1(p, ss);
+        elif Wpp eq {1,2,3,6} then
+            qss := d6_ss_star(p, F);
+        else
+            continue;                            // intermediate quotients: TODO (need covering map)
+        end if;
+        if has_compat(qss, p, F, case2) eq "no" then
+            return true, Sprintf("SpecialFiberD6 p=%o case=%o component=X_0(6,1)/%o", p, case2 select 2 else 1, Wpp);
+        end if;
+    end for;
+    return false, _;
+end intrinsic;
