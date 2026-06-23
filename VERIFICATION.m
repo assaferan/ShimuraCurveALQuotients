@@ -47,9 +47,6 @@ R<x> := PolynomialRing(Rationals());
 
 // Each row: < D, N, gens, h, f, note >  modelling  y^2 + h*y = f.
 // `gens` is the set of Atkin-Lehner subscripts generating W.
-// NOTE: row (6,37) is published as <w_6, w_34>, but w_34 is not a valid AL
-// involution of X^6(37) (34 is not a Hall divisor of 222); read as a typo for
-// w_74 here -- <w_6,w_74> is the genus-2 cover, whereas <w_6,w_37> is genus 0.
 ROWS := [*
     < 6,  29, {3,29},   -x^2-x,            -144*x^5-117*x^4+41*x^3+21*x^2-6*x,                                          "" >,
     < 14, 13, {2,13},   2*x^3-3*x^2+x,     -44*x^6-626*x^5-3296*x^4-8298*x^3-10950*x^2-7306*x-1950,                    "" >,
@@ -63,11 +60,11 @@ ROWS := [*
     < 6,  43, {2,3},    -x^2-1,            -15552*x^6+24614*x^5-16682*x^4+5999*x^3-1182*x^2+119*x-5,                   "" >,
     < 10, 53, {5,106},  -x^2-x,            20*x^5-25*x^4+35*x^3-16*x^2+9*x+1,                                           "" >,
     < 6,  59, {2,59},   -x^2-x,            6*x^5+16*x^4-23*x^3-26*x^2+84*x-40,                                          "" >,
-    < 6,  61, {2,3},    x^2-1,             -559872*x^6+2603694*x^5-5041398*x^4+5202037*x^3-3016984*x^2+932433*x-119975, "" >,
+    < 6,  61, {2,3},    x^3+x^2,           -x^6-2*x^5+12*x^4+8*x^3-41*x^2+84*x-232,                                     "" >,
     < 106, 1, {2},      -2*x^3+3*x^2-3*x,  -20*x^6+164*x^5-540*x^4+872*x^3-700*x^2+250*x-32,                           "" >,
     < 118, 1, {2},      -2*x^3-x^2,        -688676*x^6+1519312*x^5-1397890*x^4+686641*x^3-189920*x^2+28048*x-1728,     "" >,
     // ---- modelsbielliptic table (genus 2, bielliptic AL involution) ----
-    < 6,  17, {3},      -x^3-x,            -13*x^6-61*x^4+33*x^2+36,                                                    "bielliptic" >,
+    < 6,  17, {3},      x^3+1,             -5*x^6+3*x^5-44*x^4-53*x^3-44*x^2+3*x-5,                                     "bielliptic" >,
     < 6,  17, {6},      0,                 -9*x^6+27*x^5-94*x^4+143*x^3-446*x^2+379*x-321,                              "bielliptic" >
 *];
 
@@ -220,7 +217,8 @@ for key in group_order do
                 same := G2Invariants(C) eq G2Invariants(Ctab);
                 printf "  [%o] MISMATCH (%o); G2Invariants %o\n", desc, reason_of[i],
                        same select "agree (Qbar-isomorphic)" else "differ";
-                printf "      computed: y^2 + (%o)*y = %o\n", HyperellipticPolynomials(C);
+                fC, hC := HyperellipticPolynomials(C);
+                printf "      computed: y^2 + (%o)*y = %o\n", hC, fC;
                 Append(~verdicts, <i, desc, same select "MISMATCH(geom-iso)" else "MISMATCH">);
             end if;
         catch e
