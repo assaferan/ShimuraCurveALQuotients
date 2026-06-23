@@ -262,3 +262,79 @@ on every call.}
     end for;
     return false, _;
 end intrinsic;
+
+// ---------------------------------------------------------------------------
+// Quaternionic (Brandt-module) supersingular layer, general discriminant D.
+//
+// For a quaternionic discriminant D (squarefree, even number of prime factors) and a prime
+// p not dividing D, the supersingular points of the Shimura curve X_0(D,1) in characteristic
+// p are the left-ideal classes of a maximal order in the DEFINITE quaternion algebra of
+// discriminant D*p (ramified at the primes of D, at p, and at infinity).  The Brandt module
+// B(D*p) realises this:
+//
+//   * dim B(D*p) = #supersingular points = genus(X_0(D,p)) + 1  (the node count of the two-
+//     component special fiber);
+//   * the geometric Frobenius at p acts on the supersingular points as the Atkin-Lehner
+//     involution w_p of B(D*p)  (Deuring/Eichler);
+//   * each Atkin-Lehner involution w_q of X_0(D,1) (q | D a Hall divisor) acts as the w_q of
+//     B(D*p).
+//
+// Magma's AtkinLehnerOperator on the Brandt module returns, at each ramified prime power, a
+// signed permutation matrix (uniform sign -1 here); the underlying point permutation is read
+// off from the support, so the sign is irrelevant for the permutation itself (it only flips
+// the trace).  Composite involutions (w_6, w_10, ...) are products of the prime ones.
+//
+// Validated against the D=6 geometric layer (d6_ss_conic + sign-flip AL involutions): for all
+// primes 7..59 the Brandt fixed-point counts of w_2, w_3, w_6 AND of Frobenius agree exactly
+// with the geometric counts.  This layer supplies the supersingular SET with its Frobenius and
+// Atkin-Lehner action for discriminants beyond D=6 (e.g. D=10, whose star is the (2,2,2,3)
+// quadrilateral orbifold and so has no Elkies hypergeometric model); the remaining ingredient
+// for a full non-hyperellipticity test -- the points' coordinates on a genus-0 model -- is a
+// separate (harder) step.
+
+// permutation in Sym(n) carried by a permutation matrix Mx (one nonzero entry per row).
+function ss_perm_of_matrix(Mx, n)
+  return Sym(n) ! [ [j : j in [1..n] | Mx[i][j] ne 0][1] : i in [1..n] ];
+end function;
+
+intrinsic SupersingularALData(D::RngIntElt, p::RngIntElt) -> RngIntElt, GrpPermElt, Assoc
+{Supersingular points of the discriminant-D Shimura curve X_0(D,1) in characteristic p,
+computed via the Brandt module of the definite quaternion algebra of discriminant D*p
+(p prime, p not dividing D; D squarefree with an even number of prime factors).  Returns:
+(1) the number n of supersingular points; (2) the geometric Frobenius at p as a permutation
+in Sym(n); (3) an associative array sending each Hall divisor q | D, q > 1, to the
+Atkin-Lehner involution w_q as a permutation in Sym(n).  The count is checked against
+genus(X_0(D,p)) + 1, and the involution/commutation relations are asserted, on every call.}
+    require IsPrime(p): "p must be prime";
+    require D gt 1 and IsSquarefree(D) and IsEven(#PrimeDivisors(D)):
+        "D must be a quaternionic discriminant (squarefree, even number of primes)";
+    require D mod p ne 0: "p must not divide D";
+
+    M := BrandtModule(D*p);
+    n := Dimension(M);
+    assert n eq GenusShimuraCurveQuotient(D, p, {Integers()|1}) + 1;        // arithmetic self-check
+
+    // prime building blocks: Frobenius = w_p, and w_q for each prime q | D
+    primeperm := AssociativeArray();
+    for q in PrimeDivisors(D) cat [p] do
+        primeperm[q] := ss_perm_of_matrix(Matrix(AtkinLehnerOperator(M, q)), n);
+        assert primeperm[q]^2 eq Id(Sym(n));                                // each w_q is an involution
+    end for;
+    frob := primeperm[p];
+
+    // Atkin-Lehner involutions of X_0(D,1): w_q for every Hall divisor q | D, q > 1.
+    al := AssociativeArray();
+    for q in [d : d in Divisors(D) | d gt 1] do
+        al[q] := &*[Sym(n) | primeperm[r] : r in PrimeDivisors(q)];          // composite = product of primes
+        assert al[q]^2 eq Id(Sym(n));
+    end for;
+
+    // the curve is defined over Q, so its Atkin-Lehner involutions commute with Frobenius,
+    // and the Atkin-Lehner group is abelian.
+    for q in Keys(al) do
+        assert al[q]*frob eq frob*al[q];
+        for r in Keys(al) do assert al[q]*al[r] eq al[r]*al[q]; end for;
+    end for;
+
+    return n, frob, al;
+end intrinsic;
