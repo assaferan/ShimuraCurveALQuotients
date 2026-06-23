@@ -49,7 +49,9 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
         ;;
     FilterByALFixedPointsOnQuotient)
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
+        # Preceded by FilterBySpecialFiber (moved to the front of the all-quotients block so its
+        # cheap determinations prune every downstream filter), hence reads its output.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterBySpecialFiber.dat"
         ;;
     FilterByDegeneracyMorphism)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves3.dat"
@@ -63,8 +65,10 @@ case "${STAGE}" in
         ;;
     FilterBySpecialFiber)
         # Special-fiber (reduction mod p) non-hyperellipticity test, [FH] Section 5 generalized.
-        # D=1 curves with a genus-0 special-fiber component; additive to the stages above.
-        INPUT_DAT="${DATA_DIR}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat"
+        # D=1 and D=6 curves with a genus-0 special-fiber component.  Runs first in the
+        # all-quotients block (right after UpdateCurves1): it is by far the cheapest filter, so
+        # its determinations prune all the heavier filters that follow.
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
         ;;
     FilterByTrace)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves5.dat"

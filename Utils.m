@@ -43,10 +43,14 @@ heavy curves are always dispatched early.}
     end if;
 
     if stage eq "FilterBySpecialFiber" then
-        // Only D=1 curves do any work (a few primes, supersingular points, a Mobius check);
-        // Shimura curves D>1 are skipped for free.  Cost is light and roughly per-prime.
-        if X`D ne 1 then return R!0; end if;
-        return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N));
+        // D=1 and D=6 curves do work (a few primes, supersingular points, a Mobius check);
+        // other discriminants are skipped for free.  Cost is roughly per-prime.  For D=6 the
+        // supersingular points come from a degree ~p/24 hypergeometric polynomial whose roots
+        // are found over F_{p^2}, so the dominant prime p|N enters linearly rather than via
+        // Sqrt; weight accordingly.
+        if X`D eq 1 then return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N)); end if;
+        if X`D eq 6 then return R!(#PrimeDivisors(X`N) * R!X`N); end if;
+        return R!0;
     end if;
 
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
