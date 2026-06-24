@@ -189,24 +189,86 @@ function d10cm_inter_P1(p, q, starcoords)
   return qss;
 end function;
 
+// lift the star supersingular coordinates to the BASE conic X_0(10,1) and project to P^1.
+// The base is the Klein-four cover of the star (deck group <w_2,w_5>): a star coordinate s lifts
+// to (z:w:t) on the conic z^2 + 25 w^2 + 2 t^2 = 0 via  w^2 = s/(s-1),  z = 2 y_2/(s-1)  with
+// y_2^2 = f_2(s) = -1/4 (27s-2)(s-1)  (one verifies z^2+25w^2+2 = 0 identically); the four sign
+// choices give the four base points over a generic s, collapsing to two at the order-2 cone
+// points (s = 0, 1, 2/27) and to four order-3 points over s = oo.  Returns the base supersingular
+// points as P^1 coordinates over F = F_{p^2}.
+function d10cm_base_P1(p, starcoords)
+  Fp := GF(p); F := GF(p^2);
+  P2<Z,W,T> := ProjectiveSpace(Rationals(),2);
+  Cm := Curve(P2, Z^2 + 25*W^2 + 2*T^2);
+  C := ChangeRing(Cm,Fp); Cc,CtoCc := Conic(C); _,P0 := HasRationalPoint(Cc); CP1,pi := Projection(Cc,P0);
+  C2 := ChangeRing(Cm,F); C2c := ChangeRing(Cc,F); C2P1 := ChangeRing(CP1,F);
+  am := AlgebraMap(CtoCc); m1 := map<C2->C2c | [am(Domain(am).i):i in [1..3]]>;
+  am := AlgebraMap(pi);     m2 := map<C2c->C2P1 | [am(Domain(am).i):i in [1..2]]>;
+  fmap := m1*m2;
+  f2 := func<s | -1/4*(27*s-2)*(s-1)>;
+  cands := [];
+  for sc in starcoords do
+    if sc[2] then                                        // s = oo : w^2 -> 1, z = +-sqrt(-27)
+      r := Sqrt(F!-27);
+      for a in [r,-r] do for b in [F!1,F!-1] do Append(~cands, [a, b, F!1]); end for; end for;
+    elif sc[1] eq 1 then                                 // s = 1 : w = oo, point at T = 0
+      r := Sqrt(F!-1); Append(~cands, [5*r,F!1,F!0]); Append(~cands, [-5*r,F!1,F!0]);
+    else
+      s := sc[1]; w2 := s/(s-1); z0 := 2*Sqrt(f2(s))/(s-1);
+      if w2 eq 0 then                                    // s = 0 : double w-root
+        Append(~cands, [z0,F!0,F!1]); Append(~cands, [-z0,F!0,F!1]);
+      else
+        w0 := Sqrt(w2);
+        if z0 eq 0 then                                  // s = 2/27 : double z-root
+          Append(~cands, [F!0,w0,F!1]); Append(~cands, [F!0,-w0,F!1]);
+        else
+          for zz in [z0,-z0] do for ww in [w0,-w0] do Append(~cands, [zz,ww,F!1]); end for; end for;
+        end if;
+      end if;
+    end if;
+  end for;
+  qss := [];
+  for cp in cands do
+    e := Eltseq(fmap(C2!cp));
+    if not exists{TT:TT in qss | cm_eqP(e,TT)} then Append(~qss, e); end if;
+  end for;
+  return qss;
+end function;
+
+// star component X_0(10,1)* itself: the Hauptmodul s IS the P^1 coordinate on the star, so the
+// supersingular points are the star coordinates directly (no lift).  Returns them as P^1 points
+// over F = F_{p^2}.
+function d10cm_star_P1(p, starcoords)
+  F := GF(p^2);
+  return [ sc[2] select [F!1, F!0] else [F!sc[1], F!1] : sc in starcoords ];
+end function;
+
 intrinsic SpecialFiberNotHyperellipticD10(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
 {Special-fiber reduction-mod-p test for the discriminant-10 Shimura curve quotient X_0(10,N)/W.
 Returns true with a witness if proven NOT geometrically hyperelliptic (a fortiori not
 hyperelliptic over Q), otherwise false.  Implemented for N = p prime with the p-coprime component
-group W'' an intermediate single-involution quotient by w_q (q = 2, 5 or 10); other cases return
-false.  The star supersingular points are computed in closed form from the (2,2,2,3) Heun
-Picard-Fuchs equation (full coverage, no prime ceiling), with the accessory eigenvalue pinned by
-the precomputed rational CM data and the count checked against the Brandt module on every call.}
+group W'' the trivial group (the base X_0(10,1), the full degree-4 Klein-four cover), an intermediate
+single-involution quotient by w_q (q = 2, 5 or 10), or the full Atkin-Lehner group (the star
+X_0(10,1)*); other cases return false.  The
+star supersingular points are computed in closed form from the (2,2,2,3) Heun Picard-Fuchs equation
+(full coverage, no prime ceiling), with the accessory eigenvalue pinned by the precomputed rational
+CM data and the count checked against the Brandt module on every call; they are then lifted to the
+relevant genus-0 component (base or intermediate) and the Mobius test applied.}
     for p in PrimeDivisors(N) do
         if 10 mod p eq 0 or N div p ne 1 then continue; end if;
         Wpp := {w div p^Valuation(w,p) : w in W};
-        if Wpp notin {{Integers()|1,2},{Integers()|1,5},{Integers()|1,10}} then continue; end if;
-        q := Rep(Wpp diff {Integers()|1});
+        if Wpp notin {{Integers()|1},{Integers()|1,2},{Integers()|1,5},{Integers()|1,10},{Integers()|1,2,5,10}} then continue; end if;
         ok, sc := d10cm_star_coords(p);
         if not ok then continue; end if;                   // Heun eigenvalue could not be pinned
         case2 := exists{w : w in W | w mod p eq 0};
         F := GF(p^2);
-        qss := d10cm_inter_P1(p, q, sc);
+        if Wpp eq {Integers()|1} then
+            qss := d10cm_base_P1(p, sc);                   // base component X_0(10,1)
+        elif Wpp eq {Integers()|1,2,5,10} then
+            qss := d10cm_star_P1(p, sc);                   // star component X_0(10,1)*
+        else
+            qss := d10cm_inter_P1(p, Rep(Wpp diff {Integers()|1}), sc);   // intermediate X_0(10,1)/<w_q>
+        end if;
         if cm_has_compat(qss, p, F, case2) eq "no" then
             return true, Sprintf("SpecialFiberD10 p=%o case=%o component=X_0(10,1)/%o", p, case2 select 2 else 1, Wpp);
         end if;
