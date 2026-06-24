@@ -43,13 +43,15 @@ heavy curves are always dispatched early.}
     end if;
 
     if stage eq "FilterBySpecialFiber" then
-        // D=1 and D=6 curves do work (a few primes, supersingular points, a Mobius check);
+        // D=1, D=6 and D=10 curves do work (a few primes, supersingular points, a Mobius check);
         // other discriminants are skipped for free.  Cost is roughly per-prime.  For D=6 the
         // supersingular points come from a degree ~p/24 hypergeometric polynomial whose roots
-        // are found over F_{p^2}, so the dominant prime p|N enters linearly rather than via
-        // Sqrt; weight accordingly.
-        if X`D eq 1 then return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N)); end if;
-        if X`D eq 6 then return R!(#PrimeDivisors(X`N) * R!X`N); end if;
+        // are found over F_{p^2}, so the dominant prime p|N enters linearly rather than via Sqrt.
+        // For D=10 the cost is dominated by the Brandt module of discriminant 10p (~ class number,
+        // linear in p) plus the Heun eigenvalue solve; weight it like D=6, slightly heavier.
+        if X`D eq 1  then return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N)); end if;
+        if X`D eq 6  then return R!(#PrimeDivisors(X`N) * R!X`N); end if;
+        if X`D eq 10 then return R!(#PrimeDivisors(X`N) * R!X`N * 2); end if;
         return R!0;
     end if;
 
