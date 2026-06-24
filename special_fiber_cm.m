@@ -29,7 +29,7 @@
 //   Xstar := the D=10,N=1 star;  ValuesAtCMPoints(Xstar, curves)  gives the disc->s table
 //   (key -1) and the intermediate cover y^2 values (the cover-label keys), from which f_q is
 //   interpolated.  Validated (tests/SpecialFiberD10.m): the Heun supersingular set matches the
-//   Brandt count on every call and the CM-value supersingular set exactly where both are
+//   star count (genus formula) on every call and the CM-value supersingular set exactly where both are
 //   available; 0 contradictions against the known-hyperelliptic D=10 curves; proves 69 of the
 //   reached intermediate-quotient curves non-hyperelliptic, including X_0(10,71)/<w_10,w_71>
 //   (g=3), previously undetermined -- the first new D=10 determination from this test.
@@ -141,11 +141,12 @@ end function;
 
 // full star supersingular coordinates over F_{p^2} (set of <coord,isInf>): generic points from
 // the Heun polynomial plus the cone points 0, 1, 2/27, oo when supersingular.  Returns ok (false
-// if the Heun eigenvalue cannot be pinned), checked against the Brandt count on success.
+// if the Heun eigenvalue cannot be pinned), checked against the star count on success.  The star
+// count = genus(X_0(10,p)/full-AL) + 1 (the node count of the two-component special fiber), via the
+// cheap genus formula rather than a Brandt-module computation.
 function d10cm_star_coords(p)
   F2 := GF(p^2);
-  n, _, al := SupersingularALData(10, p);
-  star_n := #Orbits(sub<Sym(n) | al[2], al[5]>);
+  star_n := GenusShimuraCurveQuotient(10, p, {Integers()|1,2,5,10}) + 1;
   ncone := #[d : d in [Integers()| -3,-8,-20,-40] | KroneckerSymbol(d,p) ne 1];
   known := d10cm_known_generic(p);
   if (star_n - ncone) gt 0 and #known eq 0 then return false, {}; end if;
@@ -156,16 +157,16 @@ function d10cm_star_coords(p)
   if KroneckerSymbol(-20,p) ne 1 then Include(~star, <F2!1, false>); end if;
   if KroneckerSymbol(-40,p) ne 1 then Include(~star, <F2!(2/27), false>); end if;
   if KroneckerSymbol(-3,p)  ne 1 then Include(~star, <F2!0, true>); end if;
-  assert #star eq star_n;                                        // Heun + Brandt self-check
+  assert #star eq star_n;                                        // Heun + star-count self-check
   return true, star;
 end function;
 
-// lift the star supersingular coordinates to the intermediate conic y^2 = f_q(s) and project
-// to P^1; returns the intermediate supersingular points as P^1 coordinates over F = F_{p^2}.
-function d10cm_inter_P1(p, q, starcoords)
-  cf := d10cm_fq[q]; c:=cf[1]; b:=cf[2]; a:=cf[3];
+// lift the star supersingular coordinates through an intermediate cover y^2 = a s^2 + b s + c
+// (s = X/Z) and project the resulting conic to P^1; returns the intermediate supersingular points
+// as P^1 coordinates over F = F_{p^2}.  Shared by all discriminants (D=10, D=22, ...).
+function cm_inter_conic_P1(p, a, b, c, starcoords)
   P2<X,Y,Z> := ProjectiveSpace(Rationals(),2);
-  Cm := Curve(P2, Y^2 - a*X^2 - b*X*Z - c*Z^2);            // s = X/Z
+  Cm := Curve(P2, Y^2 - a*X^2 - b*X*Z - c*Z^2);
   Fp := GF(p); F := GF(p^2);
   C := ChangeRing(Cm,Fp); Cc,CtoCc := Conic(C); _,P0 := HasRationalPoint(Cc); CP1,pi := Projection(Cc,P0);
   C2 := ChangeRing(Cm,F); C2c := ChangeRing(Cc,F); C2P1 := ChangeRing(CP1,F);
@@ -178,7 +179,7 @@ function d10cm_inter_P1(p, q, starcoords)
       val := F!a;
       cand := (val ne 0) select [[F!1, Sqrt(val), F!0],[F!1, -Sqrt(val), F!0]] else [[F!1, F!0, F!0]];
     else
-      s0 := F!sc[1]; val := a*s0^2 + b*s0 + c;
+      s0 := F!sc[1]; val := (F!a)*s0^2 + (F!b)*s0 + (F!c);
       cand := (val ne 0) select [[s0, Sqrt(val), F!1],[s0, -Sqrt(val), F!1]] else [[s0, F!0, F!1]];
     end if;
     for cp in cand do
@@ -187,6 +188,12 @@ function d10cm_inter_P1(p, q, starcoords)
     end for;
   end for;
   return qss;
+end function;
+
+// D=10 intermediate X_0(10,1)/<w_q> via its cover equation f_q.
+function d10cm_inter_P1(p, q, starcoords)
+  cf := d10cm_fq[q];
+  return cm_inter_conic_P1(p, cf[3], cf[2], cf[1], starcoords);
 end function;
 
 // lift the star supersingular coordinates to the BASE conic X_0(10,1) and project to P^1.
@@ -252,7 +259,7 @@ single-involution quotient by w_q (q = 2, 5 or 10), or the full Atkin-Lehner gro
 X_0(10,1)*); other cases return false.  The
 star supersingular points are computed in closed form from the (2,2,2,3) Heun Picard-Fuchs equation
 (full coverage, no prime ceiling), with the accessory eigenvalue pinned by the precomputed rational
-CM data and the count checked against the Brandt module on every call; they are then lifted to the
+CM data and the count checked against the genus formula on every call; they are then lifted to the
 relevant genus-0 component (base or intermediate) and the Mobius test applied.}
     for p in PrimeDivisors(N) do
         if 10 mod p eq 0 or N div p ne 1 then continue; end if;
@@ -271,6 +278,71 @@ relevant genus-0 component (base or intermediate) and the Mobius test applied.}
         end if;
         if cm_has_compat(qss, p, F, case2) eq "no" then
             return true, Sprintf("SpecialFiberD10 p=%o case=%o component=X_0(10,1)/%o", p, case2 select 2 else 1, Wpp);
+        end if;
+    end for;
+    return false, _;
+end intrinsic;
+
+// ===========================================================================
+// D = 22 (= 2*11).  Structurally identical to D=10: genus-0 base X_0(22,1), star (2,2,3,3,3,3),
+// Klein-four Atkin-Lehner group <w_2, w_11>, three intermediate quotients.  Its star is NOT a
+// triangle group (D=6) nor a single-accessory Heun (D=10) -- it has six cone points -- so there
+// is no closed-form supersingular polynomial; this is the GENERAL CM-value method.  Coverage is
+// therefore limited to the primes the rational CM discriminants reach (here p <= 17); the
+// quadratic discriminants would extend it but currently crash (see the quadratic-cm-points note).
+//
+// Data from ValuesAtCMPoints on the D=22 star (12 rational CM discriminants); cover equations
+// y^2 = f_q(s) interpolated and cross-checked on all 11 finite CM points.
+
+d22cm_discs := [Integers()| -4,-11,-88,-3,-20,-67,-132,-148,-163,-187,-232,-1012];
+d22cm_s := [* Infinity(), 0, 1, -16/11, 16/11, -784/891, -16/9, 2704/891, -92416/26411, 64/81,
+  -1421/891, 8624/42849 *];
+// intermediate cover equations y^2 = f_q(s) = a s^2 + b s + c, stored as [c, b, a]:
+d22cm_fq := AssociativeArray();
+d22cm_fq[2]  := [Rationals()|     0, 121/16, -121/16];   // X_0(22,1)/<w_2>
+d22cm_fq[11] := [Rationals()|   -11,     11,       0];   // X_0(22,1)/<w_11>
+d22cm_fq[22] := [Rationals()|     0, -11/16,       0];   // X_0(22,1)/<w_22>
+
+assert d22cm_discs[2] eq -11 and d22cm_s[2] eq 0;        // sanity cross-check
+
+// star supersingular coordinates over F_p (as <coord,isInf>) from the rational CM disc->s table,
+// with the star-count (genus-formula) coverage check.  Returns ok = false when the rational discs do not cover all
+// star supersingular points at p (no Heun fallback for D=22), in which case the prime is skipped.
+function d22cm_star_coords(p)
+  cs := {};
+  for i in [1..#d22cm_discs] do
+    if KroneckerSymbol(d22cm_discs[i], p) ne 1 then Include(~cs, d10cm_redP1(d22cm_s[i], p)); end if;
+  end for;
+  // star count = genus(X_0(22,p)/full-AL) + 1, via the genus formula (no Brandt module).
+  star_n := GenusShimuraCurveQuotient(22, p, {Integers()|1,2,11,22}) + 1;
+  if #cs ne star_n then return false, {}; end if;
+  return true, cs;
+end function;
+
+intrinsic SpecialFiberNotHyperellipticD22(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
+{Special-fiber reduction-mod-p test for the discriminant-22 Shimura curve quotient X_0(22,N)/W,
+via the general CM-value method.  Returns true with a witness if proven NOT geometrically
+hyperelliptic (a fortiori not hyperelliptic over Q), otherwise false.  Implemented for N = p prime
+with the p-coprime component group W'' an intermediate single-involution quotient by w_q
+(q = 2, 11 or 22) or the full Atkin-Lehner group (the star); the trivial-group base case is a TODO.
+Coverage is limited to primes the rational CM discriminants reach (the star is six-cone-point, so
+there is no Heun closed form); uncovered primes are skipped, checked against the genus formula.}
+    for p in PrimeDivisors(N) do
+        if 22 mod p eq 0 or N div p ne 1 then continue; end if;
+        Wpp := {w div p^Valuation(w,p) : w in W};
+        if Wpp notin {{Integers()|1,2},{Integers()|1,11},{Integers()|1,22},{Integers()|1,2,11,22}} then continue; end if;
+        ok, sc := d22cm_star_coords(p);
+        if not ok then continue; end if;                   // rational CM discs do not cover all ss points
+        case2 := exists{w : w in W | w mod p eq 0};
+        F := GF(p^2);
+        if Wpp eq {Integers()|1,2,11,22} then
+            qss := d10cm_star_P1(p, sc);                   // star component X_0(22,1)*
+        else
+            cf := d22cm_fq[Rep(Wpp diff {Integers()|1})];
+            qss := cm_inter_conic_P1(p, cf[3], cf[2], cf[1], sc);   // intermediate X_0(22,1)/<w_q>
+        end if;
+        if cm_has_compat(qss, p, F, case2) eq "no" then
+            return true, Sprintf("SpecialFiberD22 p=%o case=%o component=X_0(22,1)/%o", p, case2 select 2 else 1, Wpp);
         end if;
     end for;
     return false, _;

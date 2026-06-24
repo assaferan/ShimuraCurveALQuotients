@@ -118,10 +118,11 @@ false.}
 end intrinsic;
 
 intrinsic FilterBySpecialFiber(~curves::SeqEnum)
-{Mark D = 1, 6 and 10 AL quotients proven (geometrically) non-hyperelliptic by the special-fiber
-reduction-mod-p test (Furumoto-Hasegawa Section 5, generalized).  D = 1 uses
+{Mark D = 1, 6, 10 and 22 AL quotients proven (geometrically) non-hyperelliptic by the
+special-fiber reduction-mod-p test (Furumoto-Hasegawa Section 5, generalized).  D = 1 uses
 SpecialFiberNotHyperelliptic (classical modular curves), D = 6 uses SpecialFiberNotHyperellipticD6
-(hypergeometric), D = 10 uses SpecialFiberNotHyperellipticD10 (Heun); only curves with a genus-0
+(hypergeometric), D = 10 uses SpecialFiberNotHyperellipticD10 (Heun), D = 22 uses
+SpecialFiberNotHyperellipticD22 (general CM-value, coverage-limited); only curves with a genus-0
 special-fiber component are reached, everything else is left untouched.}
     for i->X in curves do
         if assigned X`IsSubhyp then continue; end if;
@@ -132,6 +133,8 @@ special-fiber component are reached, everything else is left untouched.}
             ok, witness := SpecialFiberNotHyperellipticD6(X`N, X`W);
         elif X`D eq 10 then
             ok, witness := SpecialFiberNotHyperellipticD10(X`N, X`W);
+        elif X`D eq 22 then
+            ok, witness := SpecialFiberNotHyperellipticD22(X`N, X`W);
         else
             continue;                            // other discriminants: not yet implemented
         end if;

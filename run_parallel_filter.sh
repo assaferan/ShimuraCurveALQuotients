@@ -65,7 +65,7 @@ case "${STAGE}" in
         ;;
     FilterBySpecialFiber)
         # Special-fiber (reduction mod p) non-hyperellipticity test, [FH] Section 5 generalized.
-        # D=1, D=6 and D=10 curves with a genus-0 special-fiber component.  Runs first in the
+        # D=1, D=6, D=10 and D=22 curves with a genus-0 special-fiber component.  Runs first in the
         # all-quotients block (right after UpdateCurves1): it is by far the cheapest filter, so
         # its determinations prune all the heavier filters that follow.
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"

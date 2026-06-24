@@ -52,6 +52,7 @@ heavy curves are always dispatched early.}
         if X`D eq 1  then return R!(#PrimeDivisors(X`N) * Sqrt(R!X`N)); end if;
         if X`D eq 6  then return R!(#PrimeDivisors(X`N) * R!X`N); end if;
         if X`D eq 10 then return R!(#PrimeDivisors(X`N) * R!X`N * 2); end if;
+        if X`D eq 22 then return R!(#PrimeDivisors(X`N) * R!X`N * 2); end if;   // Brandt(22p) + CM lift
         return R!0;
     end if;
 

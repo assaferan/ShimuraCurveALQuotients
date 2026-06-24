@@ -26,7 +26,7 @@
 #                                                         onto the full-W entries)
 #                                                         + VerifyFHTheorem3 (post)
 #   UpdateCurves1                          [sequential]
-#   FilterBySpecialFiber                   [PARALLEL]  (special fiber mod p, [FH] Section 5; D=1, D=6, D=10;
+#   FilterBySpecialFiber                   [PARALLEL]  (special fiber mod p, [FH] Section 5; D=1,6,10,22;
 #                                                       cheapest filter, run first to prune the rest)
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
@@ -135,7 +135,7 @@ run_seq "GetQuotientsAndGenera_UpdateByGenus" \
 # ── all-quotients stages (~18 000+ curves) ────────────────────────────────────
 
 run_seq "UpdateCurves1"       "${D}/curves_after_UpdateByGenus.dat"                "${D}/curves_after_UpdateCurves1.dat"
-# Special-fiber reduction mod p ([FH] Section 5, generalized): proves D=1, D=6 and D=10 quotients
+# Special-fiber reduction mod p ([FH] Section 5, generalized): proves D=1, D=6, D=10, D=22 quotients
 # with a genus-0 special-fiber component (geometrically) non-hyperelliptic.  Placed first in
 # the all-quotients block — it is by far the cheapest filter (~sub-second over the whole list),
 # so running it up front lets its determinations prune every heavier filter below.  Additive
