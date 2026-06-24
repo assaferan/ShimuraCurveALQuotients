@@ -79,6 +79,40 @@ function push_single(ss, M, q, F)
   return qss;
 end function;
 
+// push ss points through the quotient by the whole component group W'' (order 1, 2 or 4) on
+// X_0(M).  For |W''| = 2 this is the single-involution quotient; for the Klein-four case |W''| = 4
+// we quotient by one generator, then by the second generator's INDUCED involution on the first
+// quotient (the AL involutions commute, so w_q2 descends; its matrix is fitted from 3 image pairs).
+function push_group(ss, M, Wpp, F)
+  if #Wpp eq 1 then return ss; end if;
+  X := SmallModularCurve(M); R := CoordinateRing(Ambient(X));
+  almat := function(q)
+    dp := DefiningPolynomials(AtkinLehnerInvolution(X, M, q));
+    return Matrix(F,2,2,[MonomialCoefficient(dp[1],R.1),MonomialCoefficient(dp[1],R.2),
+                         MonomialCoefficient(dp[2],R.1),MonomialCoefficient(dp[2],R.2)]);
+  end function;
+  // quotient X_0(M) -> X_0(M)/<involution m> on P^1 coordinates:
+  qmap := func< m,P | [m[2,1]*P[1]^2+(m[1,1]+m[2,2])*P[1]*P[2]+m[1,2]*P[2]^2, m[2,1]*P[1]*P[2]+m[2,2]*P[2]^2] >;
+  gens := Sort([q : q in Setseq(Wpp) | q ne 1]);
+  m1 := almat(gens[1]);
+  cur := [];
+  for P in ss do Q := qmap(m1,P);
+    if Q ne [F!0,F!0] and not exists{T:T in cur|eqP(Q,T)} then Append(~cur,Q); end if; end for;
+  if #Wpp eq 2 then return cur; end if;
+  // |W''| = 4 : induced second involution h on X_0(M)/<gens[1]>, fitted from 3 image pairs
+  m2 := almat(gens[2]);
+  pairs := [];
+  for P in ss do sv := qmap(m1,P); dv := qmap(m1, app(m2,P));
+    if sv ne [F!0,F!0] and dv ne [F!0,F!0] and not exists{pr:pr in pairs|eqP(pr[1],sv)} then
+      Append(~pairs, <sv,dv>); end if; end for;
+  assert #pairs ge 3;
+  h := mobm([pairs[1][1],pairs[2][1],pairs[3][1]], [pairs[1][2],pairs[2][2],pairs[3][2]]);
+  cur2 := [];
+  for Q in cur do QQ := qmap(h,Q);
+    if QQ ne [F!0,F!0] and not exists{T:T in cur2|eqP(QQ,T)} then Append(~cur2,QQ); end if; end for;
+  return cur2;
+end function;
+
 // Does a compatible (order-2, rational, = Frobenius-on-ss) Mobius involution exist?
 // Returns "yes" (compatible -> inconclusive), "no" (none -> NOT hyperelliptic), or
 // "underdet" (fewer than 3 constrained points, or g = identity -> inconclusive).
@@ -97,19 +131,21 @@ end function;
 intrinsic SpecialFiberNotHyperelliptic(N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
 {Special-fiber reduction-mod-p test for X_0(N)/W (D = 1).  Returns true with a witness
 string if the curve is proven NOT geometrically hyperelliptic (a fortiori not hyperelliptic
-over Q), otherwise false.  Only curves possessing a genus-0 special-fiber component at some
-prime p | N with component group of order at most 2 are reached; for all others it returns
-false.}
+over Q), otherwise false.  Reaches any prime p | N (including composite N) for which X_0(N/p) is
+genus 0 and the special-fiber component X_0(N/p)/W'' is genus 0; the component group W'' may be
+trivial, an involution, or a Klein-four group (order up to 4).  Returns false otherwise.  (The
+case where X_0(N/p) has positive genus but X_0(N/p)/W'' is genus 0 needs supersingular points on
+the quotient and is a TODO.)}
     for p in PrimeDivisors(N) do
         M := N div p;
         if GenusShimuraCurveQuotient(1, M, {Integers()|1}) ne 0 then continue; end if;   // need X_0(M) = P^1
         Wpp := {w div p^Valuation(w,p) : w in W};            // p-coprime image of W = component group
         if GenusShimuraCurveQuotient(1, M, Wpp) ne 0 then continue; end if;
-        if #Wpp gt 2 then continue; end if;                  // group-quotient component: TODO
+        if #Wpp gt 4 then continue; end if;                  // larger group quotients: TODO
         case2 := exists{w : w in W | w mod p eq 0};
         F := GF(p^2);
         ss := ss_points(M, p, F);
-        if #Wpp eq 1 then qss := ss; else qss := push_single(ss, M, Rep(Wpp diff {Integers()|1}), F); end if;
+        qss := push_group(ss, M, Wpp, F);
         if has_compat(qss, p, F, case2) eq "no" then
             return true, Sprintf("SpecialFiber p=%o case=%o component=X_0(%o)/%o", p, case2 select 2 else 1, M, Wpp);
         end if;
