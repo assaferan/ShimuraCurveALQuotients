@@ -125,7 +125,7 @@ procedure test_FieldOfDefinition()
         vprintf ShimuraQuotients, 1: "testing points on %o...", X;
         for pt in cm do
             d, K := Explode(pt);
-            Fs := FieldsOfDefinitionOfCMPoint(X, d);
+            Fs := FieldsOfDefinitionOfCMPointFast(X, d);
             assert exists(F){F : F in Fs | IsIsomorphic(F,K)};
         end for;
         vprintf ShimuraQuotients, 1: "Done!\n";

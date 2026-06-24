@@ -28,12 +28,12 @@ intrinsic CreateSchoferTable(vals::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     for k in x`K_idxs do
         flds[keys_fs[k]] :=  AssociativeArray();
         for d in x`Discs do
-            flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPoint(curves[keys_fs[k]], d);
+            flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPointFast(curves[keys_fs[k]], d);
         end for;
     end for;
     flds[curveid] := AssociativeArray();
     for d in x`Discs do
-        flds[curveid][d] :=  FieldsOfDefinitionOfCMPoint(curves[curveid], d);
+        flds[curveid][d] :=  FieldsOfDefinitionOfCMPointFast(curves[curveid], d);
     end for;
     x`FldsOfDefn := flds;
 
@@ -57,12 +57,12 @@ intrinsic CreateSchoferTable(vals::List, keys_fs::SeqEnum, ds::SeqEnum, curves::
     for k in x`K_idxs do
         flds[keys_fs[k]] :=  AssociativeArray();
         for d in x`Discs do
-            flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPoint(curves[keys_fs[k]], d);
+            flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPointFast(curves[keys_fs[k]], d);
         end for;
     end for;
     flds[curveid] := AssociativeArray();
     for d in x`Discs do
-        flds[curveid][d] :=  FieldsOfDefinitionOfCMPoint(curves[curveid], d);
+        flds[curveid][d] :=  FieldsOfDefinitionOfCMPointFast(curves[curveid], d);
     end for;
 
     x`FldsOfDefn := flds;
@@ -77,8 +77,8 @@ intrinsic UpdateFieldsOfDefn(x::SchoferTable, d::RngIntElt)
     keys_fs := x`Keys_fs;
     curveid := (x`Xstar)`CurveID;
     for k in k_idxs do
-        flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPoint(curves[keys_fs[k]], d);
+        flds[keys_fs[k]][d] :=  FieldsOfDefinitionOfCMPointFast(curves[keys_fs[k]], d);
     end for;
-    flds[curveid][d] :=  FieldsOfDefinitionOfCMPoint(curves[curveid], d);
+    flds[curveid][d] :=  FieldsOfDefinitionOfCMPointFast(curves[curveid], d);
     x`FldsOfDefn := flds;
 end intrinsic;

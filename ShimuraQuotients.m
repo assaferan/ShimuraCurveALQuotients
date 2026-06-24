@@ -1466,7 +1466,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
 
-        flds := FieldsOfDefinitionOfCMPoint(X, d);
+        flds := FieldsOfDefinitionOfCMPointFast(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
         elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
