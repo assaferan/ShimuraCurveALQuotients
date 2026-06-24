@@ -1077,9 +1077,18 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
         return [* Aabs *];   // field of definition contains K
     end if;
 
-    // Complex conjugation candidate(s) on A_abs.
-    has_cc, cc := HasComplexConjugate(Aabs);
-    if has_cc then
+    // Complex-conjugation candidate(s).  The slow function uses HasComplexConjugate on the
+    // FULL ring class field H_R: a single canonical conjugation when H_R is CM, else every
+    // order-2 automorphism restricting to complex conjugation on K.  H_R is CM iff complex
+    // conjugation is central iff cc acts trivially by inversion on Gal(H_R/K) = Pic(R), i.e.
+    // iff Pic(R) has exponent <= 2 (here G = Domain(mG) ~ Pic(R)).  We reproduce that on the
+    // smaller A_abs (whose cc-candidates restrict from those of H_R, giving the same fixed
+    // fields):
+    //   exponent <= 2  ->  H_R CM  ->  the unique canonical conjugation (one field per a);
+    //   exponent  > 2  ->  enumerate all cc-candidates (multiple genuine fields).
+    if Exponent(G) le 2 then
+        has_cc, cc := HasComplexConjugate(Aabs);   // A_abs (subfield of CM H_R, contains K) is CM
+        assert has_cc;
         ccs := [* cc *];
     else
         gal, _, gal_to_auts := AutomorphismGroup(Aabs);
