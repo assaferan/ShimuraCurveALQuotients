@@ -68,6 +68,13 @@
  > X`TestInWhichProved;
  ALFixedPointsOnQuotient, W_46 has 8 fixed points
  ```
- 
+ The package also produces models of curves via the method of Guo--Yang.
 
- 
+ For example, the models in Tables 3 and 4 can be reproduced by running the verification files VERIFICATION.m and VERIFICATION_genus0.m.
+ More generally, to produce a desired model above a genus 0 star quotient one can run the following code.
+ ```
+ assert exists(Xstar){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
+ covers, ws := AllEquationsAboveCovers(Xstar, curves);
+```
+
+ This returns the equations for the fovers of X0*(26,1) in an asssociative array whose keys are the CurveIDs of curves.
