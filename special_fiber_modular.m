@@ -158,8 +158,10 @@ intrinsic FilterBySpecialFiber(~curves::SeqEnum)
 special-fiber reduction-mod-p test (Furumoto-Hasegawa Section 5, generalized).  D = 1 uses
 SpecialFiberNotHyperelliptic (classical modular curves), D = 6 uses SpecialFiberNotHyperellipticD6
 (hypergeometric), D = 10 uses SpecialFiberNotHyperellipticD10 (Heun), D = 22 uses
-SpecialFiberNotHyperellipticD22 (general CM-value, coverage-limited); only curves with a genus-0
-special-fiber component are reached, everything else is left untouched.}
+SpecialFiberNotHyperellipticD22 (general CM-value, coverage-limited); these handle the base level
+M = 1.  For any D, the generic SpecialFiberNotHyperellipticCM then handles level-M > 1 components
+X_0(D,M)/W'' (Phase B) for bases registered in CM_BASE_DATA.  Only curves with a genus-0 special-fiber
+component are reached, everything else is left untouched.}
     for i->X in curves do
         if assigned X`IsSubhyp then continue; end if;
         if X`g lt 3 then continue; end if;
@@ -172,7 +174,10 @@ special-fiber component are reached, everything else is left untouched.}
         elif X`D eq 22 then
             ok, witness := SpecialFiberNotHyperellipticD22(X`N, X`W);
         else
-            continue;                            // other discriminants: not yet implemented
+            ok := false;
+        end if;
+        if not ok then                           // generic level-M > 1 CM-value test (Phase B)
+            ok, witness := SpecialFiberNotHyperellipticCM(X`D, X`N, X`W);
         end if;
         if ok then
             curves[i]`IsSubhyp := false;

@@ -384,3 +384,79 @@ there is no Heun closed form); uncovered primes are skipped, checked against the
     end for;
     return false, _;
 end intrinsic;
+
+// ===========================================================================
+// GENERIC level-M CM-value test (Phase B).  A curve X_0(D,Mp)/W reduces at a prime p (p|N, p coprime
+// to D, M = N/p > 1) to the genus-0 component X_0(D,M)/W''.  This is the level-1 CM-value machinery
+// (D=10, D=22 above) lifted one level: it is driven by a per-(D,M) registry holding the star
+// X_0(D,M)* CM disc->s table and the genus-0 conic cover equations f_q (one [c,b,a] per immediate
+// cover W'').  Coverage is bounded by the CM discriminants available for X_0(D,M)* -- fewer at higher
+// level -- and is checked against the genus formula on every call; uncovered primes are skipped.
+// (Higher-genus covers of the star are not data-reachable this way and are simply absent from fq.)
+
+CMBaseData := recformat< discs : SeqEnum, svals : List, fq : Assoc >;
+CM_BASE_DATA := AssociativeArray();             // <D,M> -> CMBaseData ; populated per base below.
+
+// D = 22, M = 1: register the hardcoded level-1 D=22 data (above) in the generic registry.  Both a
+// self-test (the generic driver reproduces SpecialFiberNotHyperellipticD22, which runs first in
+// dispatch) and direct service of D=22 M=1 via the generic path.  (Registrations must precede the
+// intrinsic below: Magma does not execute top-level code after the final intrinsic in a package.)
+d22fq := AssociativeArray();
+d22fq[[Integers()|1,2]]  := d22cm_fq[2];
+d22fq[[Integers()|1,11]] := d22cm_fq[11];
+d22fq[[Integers()|1,22]] := d22cm_fq[22];
+CM_BASE_DATA[<22,1>] := rec< CMBaseData | discs := d22cm_discs, svals := d22cm_s, fq := d22fq >;
+
+// star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced
+// in F_p, quadratic discs to their Frobenius-conjugate pair), with the genus-formula coverage check.
+function cm_star_coords_general(D, M, discs, svals, p)
+  F := GF(p^2);
+  cs := {};
+  for i in [1..#discs] do
+    if KroneckerSymbol(discs[i], p) ne 1 then     // inert or ramified -> supersingular
+      sv := svals[i];
+      if Type(sv) eq RngUPolElt then
+        cs join:= cm_red_minpoly(sv, p, F);        // quadratic disc: conjugate pair
+      else
+        r := d10cm_redP1(sv, p); Include(~cs, <F!r[1], r[2]>);   // rational disc (or oo)
+      end if;
+    end if;
+  end for;
+  fullAL := {Integers()| d : d in Divisors(D*M) | GCD(d, (D*M) div d) eq 1};
+  star_n := GenusShimuraCurveQuotient(D, M*p, fullAL) + 1;
+  if #cs ne star_n then return false, {}; end if;
+  return true, cs;
+end function;
+
+intrinsic SpecialFiberNotHyperellipticCM(D::RngIntElt, N::RngIntElt, W::SetEnum) -> BoolElt, MonStgElt
+{Generic level-M CM-value special-fiber test (Phase B).  For a prime p | N with p coprime to D and
+M = N/p > 1, X_0(D,N)/W reduces at p to the genus-0 component X_0(D,M)/W''; using the precomputed
+CM disc->s table and conic cover equations for (D,M) in CM_BASE_DATA, returns true with a witness if
+that component admits no Frobenius-compatible Mobius involution (so NOT geometrically hyperelliptic,
+a fortiori not hyperelliptic over Q), otherwise false.  Returns false when (D,M) has no registry
+data, the component W'' is not in the registry, or the prime is not covered by the available discs.}
+    for p in PrimeDivisors(N) do
+        if D mod p eq 0 then continue; end if;
+        M := N div p;
+        if not IsDefined(CM_BASE_DATA, <D,M>) then continue; end if;
+        data := CM_BASE_DATA[<D,M>];
+        fullAL := {Integers()| d : d in Divisors(D*M) | GCD(d, (D*M) div d) eq 1};
+        Wpp := {w div p^Valuation(w,p) : w in W};
+        wkey := Sort([w : w in Wpp]);
+        if Wpp ne fullAL and not IsDefined(data`fq, wkey) then continue; end if;
+        ok, sc := cm_star_coords_general(D, M, data`discs, data`svals, p);
+        if not ok then continue; end if;            // available discs do not cover all ss points at p
+        case2 := exists{w : w in W | w mod p eq 0};
+        F := GF(p^2);
+        if Wpp eq fullAL then
+            qss := d10cm_star_P1(p, sc);             // star component X_0(D,M)*
+        else
+            cf := data`fq[wkey];
+            qss := cm_inter_conic_P1(p, cf[3], cf[2], cf[1], sc);   // intermediate conic X_0(D,M)/W''
+        end if;
+        if cm_has_compat(qss, p, F, case2) eq "no" then
+            return true, Sprintf("SpecialFiberCM D=%o p=%o M=%o component=X_0(%o,%o)/%o", D, p, M, D, M, Wpp);
+        end if;
+    end for;
+    return false, _;
+end intrinsic;
