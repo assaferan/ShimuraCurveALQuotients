@@ -291,12 +291,21 @@ end intrinsic;
 // therefore limited to the primes the rational CM discriminants reach (here p <= 17); the
 // quadratic discriminants would extend it but currently crash (see the quadratic-cm-points note).
 //
-// Data from ValuesAtCMPoints on the D=22 star (12 rational CM discriminants); cover equations
-// y^2 = f_q(s) interpolated and cross-checked on all 11 finite CM points.
-
-d22cm_discs := [Integers()| -4,-11,-88,-3,-20,-67,-132,-148,-163,-187,-232,-1012];
+// Data from ValuesAtCMPoints on the D=22 star: 12 rational CM discriminants (s rational or oo) plus
+// 12 quadratic ones (s = a degree-2 min poly, stored as a polynomial in sx).  The quadratic discs
+// were generated after the quadratic-CM bug fix (Embed-based ElementsOfNorm) and extend the prime
+// coverage from p<=17 (rational only) to p<=37 (+43).  Cover equations y^2 = f_q(s) below.
+Qsx<sx> := PolynomialRing(Rationals());
+d22cm_discs := [Integers()| -4,-11,-88,-3,-20,-67,-132,-148,-163,-187,-232,-1012,
+  -91,-115,-168,-235,-267,-280,-312,-372,-408,-427,-520,-532];
 d22cm_s := [* Infinity(), 0, 1, -16/11, 16/11, -784/891, -16/9, 2704/891, -92416/26411, 64/81,
-  -1421/891, 8624/42849 *];
+  -1421/891, 8624/42849,
+  sx^2 + 1984/891*sx + 4096/9801,         sx^2 - 1712/891*sx + 173056/9801,
+  sx^2 + 1120/99*sx + 12544/9801,         sx^2 - 200672/2139291*sx + 73984/480249,
+  sx^2 + 49348880/161051*sx + 39337984/1771561,   sx^2 - 82208/891*sx + 2119936/9801,
+  sx^2 + 866528/26411*sx + 12503296/290521,       sx^2 - 26905/105644*sx + 6724/290521,
+  sx^2 - 405280/237699*sx + 62220544/23532201,    sx^2 + 1754498080/116116011*sx + 72726784/3538161,
+  sx^2 + 15484768/13045131*sx + 79995136/143496441, sx^2 - 271520/891*sx + 275294464/793881 *];
 // intermediate cover equations y^2 = f_q(s) = a s^2 + b s + c, stored as [c, b, a]:
 d22cm_fq := AssociativeArray();
 d22cm_fq[2]  := [Rationals()|     0, 121/16, -121/16];   // X_0(22,1)/<w_2>
@@ -305,13 +314,41 @@ d22cm_fq[22] := [Rationals()|     0, -11/16,       0];   // X_0(22,1)/<w_22>
 
 assert d22cm_discs[2] eq -11 and d22cm_s[2] eq 0;        // sanity cross-check
 
-// star supersingular coordinates over F_p (as <coord,isInf>) from the rational CM disc->s table,
-// with the star-count (genus-formula) coverage check.  Returns ok = false when the rational discs do not cover all
-// star supersingular points at p (no Heun fallback for D=22), in which case the prime is skipped.
+// reduce a quadratic CM s-value (its degree-2 min poly m) to the conjugate pair of P^1(F_{p^2})
+// coordinates: clear denominators to a binary form A X^2 + B XY + C Y^2, reduce mod p, read off the
+// roots (a root at infinity when p divides the leading denominator).
+function cm_red_minpoly(m, p, F)
+  b := Coefficient(m,1); c := Coefficient(m,0);
+  D := LCM(Denominator(b), Denominator(c));
+  A := F!(Integers()!D); B := F!(Integers()!(D*b)); C := F!(Integers()!(D*c));
+  cs := {};
+  if A eq 0 then
+    Include(~cs, <F!0, true>);
+    if B ne 0 then Include(~cs, <-C/B, false>); end if;
+  else
+    R := PolynomialRing(F);
+    for r in Roots(A*R.1^2 + B*R.1 + C) do Include(~cs, <r[1], false>); end for;
+  end if;
+  return cs;
+end function;
+
+// star supersingular coordinates over F_{p^2} (as <coord,isInf>) from the CM disc->s table (rational
+// AND quadratic discs), with the star-count (genus-formula) coverage check.  Returns ok = false when
+// the available discs do not cover all star supersingular points at p (no Heun fallback for D=22), in
+// which case the prime is skipped.
 function d22cm_star_coords(p)
+  F := GF(p^2);
   cs := {};
   for i in [1..#d22cm_discs] do
-    if KroneckerSymbol(d22cm_discs[i], p) ne 1 then Include(~cs, d10cm_redP1(d22cm_s[i], p)); end if;
+    if KroneckerSymbol(d22cm_discs[i], p) ne 1 then          // inert or ramified -> supersingular
+      sv := d22cm_s[i];
+      if Type(sv) eq RngUPolElt then                          // quadratic disc: conjugate pair
+        cs join:= cm_red_minpoly(sv, p, F);
+      else                                                    // rational disc (or oo)
+        r := d10cm_redP1(sv, p);
+        Include(~cs, <F!r[1], r[2]>);
+      end if;
+    end if;
   end for;
   // star count = genus(X_0(22,p)/full-AL) + 1, via the genus formula (no Brandt module).
   star_n := GenusShimuraCurveQuotient(22, p, {Integers()|1,2,11,22}) + 1;

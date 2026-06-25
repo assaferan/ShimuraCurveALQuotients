@@ -41,7 +41,7 @@ as explicit P^1 coordinates. Everything below is about that.
 | 1  | `SpecialFiberNotHyperelliptic` | classical `ss_points` via `SupersingularPolynomial` on genus-0 `X_0(M)`; `push_group` to `X_0(M)/W''` | composite N; `\|W''\| ≤ 4` (Klein-four) | done |
 | 6  | `SpecialFiberNotHyperellipticD6` | (2,4,6) **hypergeometric** `d6_hypg` (star is a triangle group) + cone vertices | N=p prime, intermediate quotients | done |
 | 10 | `SpecialFiberNotHyperellipticD10` | (2,2,2,3) **Heun** closed form `d10cm_heun_generic` + cone points; base/intermediate/star lifts | N=p prime; full prime coverage (Heun) | done; **proved new: X_0(10,71)/⟨w_10,w_71⟩** |
-| 22 | `SpecialFiberNotHyperellipticD22` | **general CM-value** (rational CM disc → s table); intermediate/star | N=p prime; p≤17 *with the current rational-disc tables* — the p-ceiling is now liftable since the quadratic-CM bug is fixed (§6: regenerate the tables) | feasibility only, 0 new; base case TODO |
+| 22 | `SpecialFiberNotHyperellipticD22` | **general CM-value** (rational+quadratic CM disc → s table); intermediate/star | N=p prime; **p≤43** (12 rational + 12 quadratic discs, added 2026-06 via the now-fixed `ValuesAtCMPoints`) | proves 33 (0 contradictions) — but **0 NEW**: all 23 undetermined D=22 curves are composite-N (Phase B), unreachable by this N=p method. base case still TODO |
 
 Files: `special_fiber_modular.m` (D=1 classical + D=6 hypergeometric + the Brandt layer
 `SupersingularALData` + `FilterBySpecialFiber` dispatch), `special_fiber_cm.m` (D=10 Heun + D=22
@@ -133,13 +133,18 @@ quotient models are the new ingredient — investigate `EquationsCovers.m` /
   (`v.Q.v = 2d`); a non-embeddable disc (e.g. 1000: conductor 5, 5 ramified in B) now **errors cleanly**
   instead of looping forever. Sub-second even for disc 10^6. Validated: `Kappa0` + `InternalBorcherds`
   regression tests pass (identical Schofer values to the old box); `ElementsOfNorm([40,235,10^6])` correct
-  in <1 s. **NEXT (the payoff, not yet done):** regenerate the precomputed `disc->s` tables (`d10cm_fq`,
-  `d22cm_fq` in `special_fiber_cm.m`) by re-running `ValuesAtCMPoints` *with* the quadratic discs (now no
-  crash) — extends D=22 past p≤17, D=10 past p≤61, and supplies the quadratic-disc coordinates Phase B
-  needs. That is the end-to-end Borcherds/Schofer run (`EquationsOfCovers`/`ValuesAtCMPoints`); it shells
-  to polymake (an uncached LP may need `dangerouslyDisableSandbox`). To reduce a (degree-2) quadratic
-  value mod p in the special-fiber test: factor its min poly over `F_{p^2}` (roots = the Frobenius-
-  conjugate ss pair).
+  in <1 s. **PAYOFF — DEMONSTRATED end-to-end for D=22 (2026-06, staged on `special_fiber_cm.m`):**
+  `ValuesAtCMPoints(D=22 star, curves : MaxNum:=24)` now runs (209 s, no crash; polymake LPs cached so
+  sandboxed was fine) and yields **12 quadratic discs** alongside the 12 rational ones. `d22cm_discs`/
+  `d22cm_s`/`d22cm_star_coords` extended to use them: a quadratic s-value is stored as its degree-2 min
+  poly and reduced mod p by `cm_red_minpoly` (clear denominators to a binary form, factor over `F_{p^2}`
+  = the Frobenius-conjugate ss pair, with a root at infinity when p|denom). This lifts D=22 from p≤17 to
+  **p≤43** (SpecialFiberD22 test: reached=90, proven=33, **contradictions=0**). CAVEAT: it gives **0 new**
+  determinations — all 23 undetermined D=22 curves are composite-N (Phase B), which the N=p method can't
+  touch. So the real value is the **validated end-to-end CM-value pipeline** (the exact machinery Phase B
+  needs). To push D=22 further: larger `MaxNum` adds more discs (gap grows ~8 by p=97); D=10 could be
+  extended past p≤61 the same way (less pressing — it has the Heun closed form). The generic recipe to
+  reduce a quadratic value mod p in any special-fiber test: factor its min poly over `F_{p^2}`.
 - **Genus-0-quotient criterion** (already exploited in Phase A's design, central to Phase B): the
   test applies whenever `GenusShimuraCurveQuotient(D, M, W'') = 0`, NOT only when the base
   `X_0(D,M)` is genus 0. Enumerate on the quotient genus.
