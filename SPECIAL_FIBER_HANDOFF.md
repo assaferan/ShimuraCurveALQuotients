@@ -41,7 +41,7 @@ as explicit P^1 coordinates. Everything below is about that.
 | 1  | `SpecialFiberNotHyperelliptic` | classical `ss_points` via `SupersingularPolynomial` on genus-0 `X_0(M)`; `push_group` to `X_0(M)/W''` | composite N; `\|W''\| ≤ 4` (Klein-four) | done |
 | 6  | `SpecialFiberNotHyperellipticD6` | (2,4,6) **hypergeometric** `d6_hypg` (star is a triangle group) + cone vertices | N=p prime, intermediate quotients | done |
 | 10 | `SpecialFiberNotHyperellipticD10` | (2,2,2,3) **Heun** closed form `d10cm_heun_generic` + cone points; base/intermediate/star lifts | N=p prime; full prime coverage (Heun) | done; **proved new: X_0(10,71)/⟨w_10,w_71⟩** |
-| 22 | `SpecialFiberNotHyperellipticD22` | **general CM-value** (rational CM disc → s table); intermediate/star | N=p prime; only p≤17 (no Heun, see §6) | feasibility only, 0 new; base case TODO |
+| 22 | `SpecialFiberNotHyperellipticD22` | **general CM-value** (rational CM disc → s table); intermediate/star | N=p prime; p≤17 *with the current rational-disc tables* — the p-ceiling is now liftable since the quadratic-CM bug is fixed (§6: regenerate the tables) | feasibility only, 0 new; base case TODO |
 
 Files: `special_fiber_modular.m` (D=1 classical + D=6 hypergeometric + the Brandt layer
 `SupersingularALData` + `FilterBySpecialFiber` dispatch), `special_fiber_cm.m` (D=10 Heun + D=22
@@ -106,7 +106,9 @@ determinations**, 0 contradictions.
 2. **coordinates** on the genus-0 quotient `X_0(D,M)/W''`. This is the real work. The level-1
    coordinate methods generalize: CM points of `X_0(D,M)` have Hauptmodul values (repo's
    Borcherds/Schofer pipeline already computes level-N>1 models — the dataset has them), reduce mod
-   p, lift/push to the quotient. No Heun shortcut in general (only D=6/D=10 level-1 had one).
+   p, lift/push to the quotient. No Heun shortcut in general (only D=6/D=10 level-1 had one). NB: the
+   quadratic-CM-disc enumeration crash that would otherwise block this (and limit coverage to rational
+   discs) is now **fixed** — see §6; re-running `ValuesAtCMPoints` now yields the quadratic-disc values.
 3. `has_compat` (shared), with `case2` as in §2.
 
 Suggested Phase B order: start with the discriminants with the most reachable curves (D=6: 138,
@@ -116,12 +118,28 @@ quotient models are the new ingredient — investigate `EquationsCovers.m` /
 
 ## 6. Known issues / TODOs (carry these forward)
 
-- **Quadratic-CM-points bug** (the coverage limiter). `ValuesAtCMPoints` with quadratic CM discs
-  (class number ≥ 2, value = a degree-2 min poly) hits a hard **Magma internal error** (uncatchable)
-  and an 80 GB blowup on large ones. Rational discs only → coverage caps (D=10 ~p≤61 patchily,
-  D=22 only p≤17). The quadratic points SHOULD work (some repo models were built from them), so this
-  is a **bug to fix**; fixing it unblocks full coverage for every D without a Heun ODE. To reduce a
-  quadratic value mod p: factor its min poly over F_{p^2} (roots = the Frobenius-conjugate ss pair).
+- **Quadratic-CM-points bug — FIXED (2026-06; staged on `SchoferFormula.m`, uncommitted).** This was
+  the coverage limiter: `ValuesAtCMPoints` blew up (80 GB / "Magma internal error") on large quadratic
+  CM discs, capping the general CM-value method to rational discs (D=10 ~p≤61 patchily, D=22 only p≤17).
+  Root cause was NOT the min-poly recognition (`find_hauptmodul_signs_quadratic` was fine) but
+  `ElementsOfNorm`/`FindLambdas`: they found the CM element by brute-forcing `CartesianPower([-bound..
+  bound], n)` with `bound` starting at `d/2` and **doubling** — `O(d^3/d^4)` on the **indefinite**
+  ternary norm-form (a solution has coordinates only `~sqrt(d)`). Fixed by replacing the box with
+  Magma's `Embed` (an exact optimal embedding of the disc-(-d) CM order into the quaternion order `O`)
+  in all four functions `FindLambdas`, `FindLambda`, `ElementsOfNorm`, `ElementOfNorm`. Subtleties that
+  bit: the indefinite form rules out `ShortVectors`; the CM order is **disc -d** (`Z[sqrt(-d/4)]` for
+  `d = 0 mod 4`, the maximal order for `d = 3 mod 4`), NOT disc `-4d` (else `elt = lam/2` leaves `O` and
+  the Smith-form optimality test rejects it); the coordinate vector is `v = `coords of `lam` directly
+  (`v.Q.v = 2d`); a non-embeddable disc (e.g. 1000: conductor 5, 5 ramified in B) now **errors cleanly**
+  instead of looping forever. Sub-second even for disc 10^6. Validated: `Kappa0` + `InternalBorcherds`
+  regression tests pass (identical Schofer values to the old box); `ElementsOfNorm([40,235,10^6])` correct
+  in <1 s. **NEXT (the payoff, not yet done):** regenerate the precomputed `disc->s` tables (`d10cm_fq`,
+  `d22cm_fq` in `special_fiber_cm.m`) by re-running `ValuesAtCMPoints` *with* the quadratic discs (now no
+  crash) — extends D=22 past p≤17, D=10 past p≤61, and supplies the quadratic-disc coordinates Phase B
+  needs. That is the end-to-end Borcherds/Schofer run (`EquationsOfCovers`/`ValuesAtCMPoints`); it shells
+  to polymake (an uncached LP may need `dangerouslyDisableSandbox`). To reduce a (degree-2) quadratic
+  value mod p in the special-fiber test: factor its min poly over `F_{p^2}` (roots = the Frobenius-
+  conjugate ss pair).
 - **Genus-0-quotient criterion** (already exploited in Phase A's design, central to Phase B): the
   test applies whenever `GenusShimuraCurveQuotient(D, M, W'') = 0`, NOT only when the base
   `X_0(D,M)` is genus 0. Enumerate on the quotient genus.

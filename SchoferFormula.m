@@ -1,70 +1,66 @@
 
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
-{.}
+{Coordinate vector (in basis_L) of an optimal embedding of the discriminant-d CM order into
+Order, delegating to FindLambdas (Magma's Embed).  Returns false if d does not embed.  The
+`bound' parameter is retained for interface compatibility and is unused.}
     require d gt 0: "d must be positive";
-
-    Q := ChangeRing(Q, Integers());
-    n := Nrows(Q);
-    idxs := CartesianPower([-bound..bound], n);
-    for idx in idxs do
-        v := Vector([idx[j] : j in [1..n]]);
-        v := ChangeRing(v, BaseRing(Q));
-        if (v*Q,v) eq 2*d then
-            // checking whether this is an optimal embedding of the order of discriminant d
-            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                if elt/2 in Order then
-                    return true, v;
-                end if;
-            end if;
-            // d mod 4 eq 3
-            if (1+elt)/2 in Order then
-                return true, v;
-            end if;
-        end if;
-    end for;
-    return false, _;
+    found, lams := FindLambdas(Q, [d], Order, basis_L);
+    if found then return true, lams[d]; else return false, _; end if;
 end intrinsic;
 
 intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
-{.}
+{For each d in ds, return the integer coordinate vector v (in the basis basis_L) of an
+optimal embedding of the discriminant-d CM order into Order, i.e. the element elt = sum_i
+v_i/2 basis_L[i] (+ 1/2 when d = 3 mod 4) generates O cap Q(sqrt(-d)).  Computed with Magma's
+Embed (an exact optimal-embedding solve), replacing the old O(bound^n) box enumeration that
+blew up (80 GB) on large quadratic-CM discs.  Returns true with the lambdas iff all d found.
+The `bound' parameter is retained for interface compatibility and is unused.}
     require &and[d gt 0 : d in ds]: "All ds must be positive";
     lambdas := lambda_array;
-    Q := ChangeRing(Q, Integers());
-    n := Nrows(Q);
-    idxs := CartesianPower([-bound..bound], n);
-    twice_ds := [2*d : d in ds];
-    for idx in idxs do
-        v := Vector([idx[j] : j in [1..n]]);
-        v := ChangeRing(v, BaseRing(Q));
-        if (v*Q,v) in twice_ds then
-            d := (v*Q,v) div 2;
-            if d in Keys(lambdas) then continue; end if; //already found
-            // checking whether this is an optimal embedding of the order of discriminant d
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]; //checking elt/2 embedding
-            // d mod 4 eq 3
-            elif d mod 4 eq 3 then
-            //(1+elt)/2 now
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]+Parent(basis_L[1])!1/2;
+    QZ := ChangeRing(Q, Integers());
+    A := Algebra(Order);
+    // express algebra elements in the (trace-zero) basis basis_L
+    ML := Matrix([Eltseq(A!b) : b in basis_L]);
+    coordsL := func< el | Solution(ML, Vector(Eltseq(A!el))) >;
+    R<x> := PolynomialRing(Rationals());
+    B_O := Basis(Order);
+    Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
+    Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
+    for d in ds do
+        if d in Keys(lambdas) then continue; end if;       //already found
+        // The CM point has fundamental quantity discriminant -d.  mu := image of the generator of
+        // the disc-(-d) order under an OPTIMAL embedding into Order; lam := image of sqrt(-d) (norm
+        // d, trace 0), the box's stored element (sum_i v_i basis_L[i] = lam).
+        //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
+        //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
+        // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
+        embeds := true; lam := A!0;
+        try
+            if d mod 4 eq 3 then
+                lam := 2*(A!Embed(MaximalOrder(NumberField(x^2+d)), Order)) - 1;
+            else
+                lam := 2*(A!Embed(EquationOrder(NumberField(x^2+(d div 4))), Order));
             end if;
-            //check that this gives an optimal embedding
-            B_O := Basis(Order);
-            Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
-            CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))), Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
-            den := Denominator(CoB);
-            CoBZZ := ChangeRing(den*CoB, Integers());
-            S, _, _ := SmithForm(CoBZZ);
-            Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
-            if S eq Sprime then
-                lambdas[d] := v;
-                if Keys(lambdas) eq Set(ds) then
-                    //then we found all the lambdas
-                        return true, lambdas;
-                end if;
-            end if;
+        catch e
+            embeds := false;                                // K does not embed -> no lambda for this d
+        end try;
+        if not embeds then continue; end if;
+        // box coordinate vector: sum_i v_i basis_L[i] = lam, so v = coords of lam in basis_L.
+        cv := coordsL(lam);
+        if not &and[IsCoercible(Integers(), c) : c in Eltseq(cv)] then continue; end if;
+        v := Vector([Integers()| c : c in Eltseq(cv)]);
+        if (v*QZ, v) ne 2*d then continue; end if;          // self-check: correct norm
+        // verify optimality (same Smith-form test as the original)
+        if d mod 4 eq 3 then
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]] + Parent(basis_L[1])!1/2;
+        else
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]];
+        end if;
+        CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))),
+                       Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
+        CoBZZ := ChangeRing(Denominator(CoB)*CoB, Integers());
+        if SmithForm(CoBZZ) eq Sprime then
+            lambdas[d] := v;
         end if;
     end for;
     if Keys(lambdas) eq Set(ds) then
@@ -77,37 +73,27 @@ intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, b
 end intrinsic;
 
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
-{Return element of norm d in the quadratic space with Gram matrix Q.
-Warning - does it in a silly way via enumeration. }
+{Coordinate vector (in basis_L) of an optimal embedding of the disc-d CM order into Order,
+via FindLambda (Magma's Embed).  Errors if d does not embed.}
     require d gt 0: "d must be a positive norm";
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda := FindLambda(Q, d, Order, basis_L : bound := bd);
-    end while;
-    assert found_lambda;
+    found_lambda, lambda := FindLambda(Q, d, Order, basis_L);
+    if not found_lambda then
+        error Sprintf("ElementOfNorm: no optimal embedding of discriminant %o into the order", d);
+    end if;
     return lambda;
 end intrinsic;
 
 intrinsic ElementsOfNorm(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
-{Return elements of norm in the list of ds in the quadratic space with Gram matrix Q.
-Warning - does it in a silly way via enumeration. }
+{For each d in ds, return the coordinate vector (in basis_L) of an optimal embedding of the
+disc-d CM order into Order, via FindLambdas (Magma's Embed).  Errors if some d does not embed.}
     require &and[d gt 0 : d in ds]: "All ds must be positive";
-    max_d := Maximum(ds);
-    bd := max_d div 2;
-    lambdas := AssociativeArray();
-    found_lambdas := false;
-    vprintf ShimuraQuotients, 2 : "\n\tFinding lambdas for norms in %o...", ds;
-    while not found_lambdas do
-        found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd, lambda_array := lambdas);
-        if not found_lambdas then
-            bd *:=2;
-            vprintf ShimuraQuotients, 2 : "Increasing lambda bound to %o\n", bd;
-        end if;
-    end while;
+    vprintf ShimuraQuotients, 2 : "\n\tFinding lambdas for norms in %o (optimal embeddings)...", ds;
+    found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L);
+    if not found_lambdas then
+        error Sprintf("ElementsOfNorm: no optimal embedding found for discriminant(s) %o",
+                      Set(ds) diff Keys(lambdas));
+    end if;
     vprintf ShimuraQuotients, 2 : "Found lambdas.";
-    assert found_lambdas;
     return lambdas;
 end intrinsic;
 
