@@ -77,7 +77,7 @@
  > covers, ws := AllEquationsAboveCovers(Xstar, curves);
 ```
 
- This returns the equations for the covers of X0*(26,1) in an asssociative array whose keys are the CurveIDs of curves.
+ This returns the equations for the covers of X0*(26,1) in an asssociative array whose keys are the CurveIDs of curves, as well as the Atkin-Lehners.
  For example:
  ```
 > Keys(covers);
@@ -93,7 +93,7 @@ Hyperelliptic Curve defined by y^2 = -2*x^3 + 19*x^2 - 24*x - 169 over Rational 
 > curves[8089];
 Shimura quotient of level 1, and discriminant 26 by Atkin-Lehners { 1, 2, 13, 26 }
 ```
-The above output shows us that the cover of the star curve X_0(26,1)/<w13> can be accessed by `covers[8088]`. 
+The above output shows us that the cover of the star curve X_0(26,1)/\<w13\> can be accessed by `covers[8088]`. 
 This gives another associative array whose keys are the hauptmoduls that the equation is written in.
 In this case, there is only one option, the hauptmodul for the star curve itself.
 
