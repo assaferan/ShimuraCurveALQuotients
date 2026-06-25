@@ -73,8 +73,27 @@
  For example, the models in Tables 3 and 4 can be reproduced by running the verification files VERIFICATION.m and VERIFICATION_genus0.m.
  More generally, to produce a desired model above a genus 0 star quotient one can run the following code.
  ```
- assert exists(Xstar){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
- covers, ws := AllEquationsAboveCovers(Xstar, curves);
+ > assert exists(Xstar){X : X in curves | X`D eq 26 and X`N eq 1 and IsStarCurve(X)};
+ > covers, ws := AllEquationsAboveCovers(Xstar, curves);
 ```
 
- This returns the equations for the fovers of X0*(26,1) in an asssociative array whose keys are the CurveIDs of curves.
+ This returns the equations for the covers of X0*(26,1) in an asssociative array whose keys are the CurveIDs of curves.
+ For example:
+ ```
+> Keys(covers);
+{ 8085, 8086, 8087, 8088 }
+> curves[8088];
+Shimura quotient of level 1, and discriminant 26 by Atkin-Lehners { 1, 13 }
+> covers[8088];
+Associative Array with index universe Integer Ring
+> Keys(covers[8088]);
+{ 8089 }
+> covers[8088][8089];;
+Hyperelliptic Curve defined by y^2 = -2*x^3 + 19*x^2 - 24*x - 169 over Rational Field
+> curves[8089];
+Shimura quotient of level 1, and discriminant 26 by Atkin-Lehners { 1, 2, 13, 26 }
+```
+The above output shows us that the cover of the star curve X_0(26,1)/<w13> can be accessed by `covers[8088]`. 
+This gives another associative array whose keys are the hauptmoduls that the equation is written in.
+In this case, there is only one option, the hauptmodul for the star curve itself.
+
