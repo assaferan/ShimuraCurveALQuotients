@@ -121,8 +121,12 @@ quotient models are the new ingredient — investigate `EquationsCovers.m` /
   (`special_fiber_cm.m`, committed 60bac2b), dispatched in `FilterBySpecialFiber` after the M=1 tests.
   Reuses every level-1 helper; validated to reproduce `SpecialFiberNotHyperellipticD22` exactly
   (400 curves, 0 mismatches).
-- **First base `<6,5>` registered** (staged): X_0(6,5)* — 5 rational discs + 6 genus-0 conic covers.
-  D=6 M=5 prototype: **reached=391, proven=3, contradictions=0, 3 NEW** undetermined curves resolved.
+- **First base `<6,5>` registered** (staged): X_0(6,5)* — 5 rational + 1 quadratic disc + 6 genus-0
+  conic covers.  D=6 M=5 prototype: **reached=391, proven=32, contradictions=0, 7 NEW** undetermined
+  curves resolved.  (Adding the quadratic disc -91 — a Frobenius-conjugate pair via `cm_red_minpoly` —
+  lifted the prime ceiling p≤37→~p≤53 and took proven 3→32, new 3→7.  X_0(6,5)* has only these 6 CM
+  discs of class number ≤2; the pipeline's `RationalandQuadraticCMPoints` is h≤2 only and bugs out at
+  high bd, so going further needs h≥3 CM points + a general degree-h `cm_red_minpoly`.)
 - Per-base data generator: replicate `EquationsOfCovers`'s body but filter `Xstar`CoveredBy` to
   genus-0 covers (drops the data-starved higher-genus cover that forces `num_vals` too high) and set
   `Include := {}` (the Hauptmodul-divisor Include triggers a giant `bd=include_bd*2` CM search — ~80s+).
