@@ -407,6 +407,22 @@ d22fq[[Integers()|1,11]] := d22cm_fq[11];
 d22fq[[Integers()|1,22]] := d22cm_fq[22];
 CM_BASE_DATA[<22,1>] := rec< CMBaseData | discs := d22cm_discs, svals := d22cm_s, fq := d22fq >;
 
+// D = 6, M = 5 (first Phase-B base): 5 rational CM discs of X_0(6,5)* with their star Hauptmodul
+// values, and the 6 genus-0 immediate (Klein-four, |W''| = 4) conic covers y^2 = f_q(s) = a s^2+b s+c
+// stored as [c,b,a].  Generated 2026-06 via the hybrid embedder (the Embed hang previously blocked
+// this).  Coverage reaches the primes the 5 rational discs cover (checked against the genus formula).
+d65fq := AssociativeArray();
+d65fq[[Integers()|1,2,5,10]]  := [Rationals()|     0,     -3,    -16];   // y^2 = -16s^2 - 3s
+d65fq[[Integers()|1,5,6,30]]  := [Rationals()|   1/2,   1/16,      0];   // y^2 = s/16 + 1/2
+d65fq[[Integers()|1,2,3,6]]   := [Rationals()|  -8/3, -131/9, -16/9];
+d65fq[[Integers()|1,2,15,30]] := [Rationals()|     0,   1/18, 1/144];
+d65fq[[Integers()|1,3,10,30]] := [Rationals()|     0,    1/4,      0];   // y^2 = s/4
+d65fq[[Integers()|1,6,10,15]] := [Rationals()|    -3,    -16,      0];   // y^2 = -16s - 3
+CM_BASE_DATA[<6,5>] := rec< CMBaseData |
+  discs := [Integers()| -4, -24, -19, -51, -84],
+  svals := [* Infinity(), 0, 1, 9, -12 *],
+  fq := d65fq >;
+
 // star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced
 // in F_p, quadratic discs to their Frobenius-conjugate pair), with the genus-formula coverage check.
 function cm_star_coords_general(D, M, discs, svals, p)

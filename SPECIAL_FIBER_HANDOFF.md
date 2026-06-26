@@ -116,6 +116,21 @@ D=10: 57) and the smallest M, reusing the level-1 lift/push machinery one level 
 quotient models are the new ingredient — investigate `EquationsCovers.m` /
 `AllEquationsAboveCovers` at level M > 1 (it produced the level-1 cover conics `f_q` we used).
 
+**Phase B status (2026-06): the machinery is built, validated, and demonstrated.**
+- Generic driver `SpecialFiberNotHyperellipticCM(D,N,W)` + per-`(D,M)` `CM_BASE_DATA` registry
+  (`special_fiber_cm.m`, committed 60bac2b), dispatched in `FilterBySpecialFiber` after the M=1 tests.
+  Reuses every level-1 helper; validated to reproduce `SpecialFiberNotHyperellipticD22` exactly
+  (400 curves, 0 mismatches).
+- **First base `<6,5>` registered** (staged): X_0(6,5)* — 5 rational discs + 6 genus-0 conic covers.
+  D=6 M=5 prototype: **reached=391, proven=3, contradictions=0, 3 NEW** undetermined curves resolved.
+- Per-base data generator: replicate `EquationsOfCovers`'s body but filter `Xstar`CoveredBy` to
+  genus-0 covers (drops the data-starved higher-genus cover that forces `num_vals` too high) and set
+  `Include := {}` (the Hauptmodul-divisor Include triggers a giant `bd=include_bd*2` CM search — ~80s+).
+  Script lives at `/tmp/gen_base.m` in the working session; X_0(6,5) generated in 89s.
+- TWO Phase-B cost limits to keep in mind: (i) **coverage** — bases have few CM discs (X_0(6,5)* only
+  6), so the prime ceiling is low (add discs via higher MaxNum / the quadratic disc); (ii) **the Embed
+  hang** (now fixed by the hybrid `FindLambdas`, §6) — without it, generation stalled 13–38 min.
+
 ## 6. Known issues / TODOs (carry these forward)
 
 - **Quadratic-CM-points bug — FIXED (2026-06; staged on `SchoferFormula.m`, uncommitted).** This was
@@ -133,7 +148,18 @@ quotient models are the new ingredient — investigate `EquationsCovers.m` /
   (`v.Q.v = 2d`); a non-embeddable disc (e.g. 1000: conductor 5, 5 ramified in B) now **errors cleanly**
   instead of looping forever. Sub-second even for disc 10^6. Validated: `Kappa0` + `InternalBorcherds`
   regression tests pass (identical Schofer values to the old box); `ElementsOfNorm([40,235,10^6])` correct
-  in <1 s. **PAYOFF — DEMONSTRATED end-to-end for D=22 (2026-06, staged on `special_fiber_cm.m`):**
+  in <1 s. **UPDATE — pure-Embed HANGS; now HYBRID (2026-06, staged on `SchoferFormula.m`).** During
+  Phase-B prototyping on X_0(6,5)* the Embed-only `FindLambdas` was found to be non-deterministic and to
+  HANG: `ShimuraCurveLattice` returns a RANDOM order representative, and for some, Magma's `Embed` enters
+  a non-terminating CPU-bound search (100% CPU, flat ~64 MB RSS — a hang, not a memory blowup; e.g. disc
+  -24 on X_0(6,5)*). That, not the Schofer/Borcherds work, made Phase-B generation stall 13–38 min.
+  `FindLambdas` is now HYBRID: PRIMARY is a BOUNDED box (start 16, double to a hard cap 128, so no 80 GB
+  blowup — the old box exploded only because it started at max_d/2 and doubled unbounded), with Embed as
+  FALLBACK for discs whose optimal vector exceeds the cap. This routes the small hang-prone discs through
+  the deterministic box. Re-validated: Kappa0/Schofer(D6,10,26,142)/CMPoints/X0_6_11/X0_26_1 all pass;
+  D=22 `ValuesAtCMPoints` regenerated → 24 discs, 0 mismatches vs committed `d22cm_s`; X_0(6,5) now 89 s.
+  (A cleaner long-term fix is our OWN bounded indefinite-ternary `Embed`.)
+  **PAYOFF — DEMONSTRATED end-to-end for D=22 (2026-06, staged on `special_fiber_cm.m`):**
   `ValuesAtCMPoints(D=22 star, curves : MaxNum:=24)` now runs (209 s, no crash; polymake LPs cached so
   sandboxed was fine) and yields **12 quadratic discs** alongside the 12 rational ones. `d22cm_discs`/
   `d22cm_s`/`d22cm_star_coords` extended to use them: a quadratic s-value is stored as its degree-2 min

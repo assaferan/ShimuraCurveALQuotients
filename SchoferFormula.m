@@ -1,23 +1,28 @@
 
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
 {Coordinate vector (in basis_L) of an optimal embedding of the discriminant-d CM order into
-Order, delegating to FindLambdas (Magma's Embed).  Returns false if d does not embed.  The
-`bound' parameter is retained for interface compatibility and is unused.}
+Order, delegating to FindLambdas (hybrid bounded-box / Embed).  Returns false if d does not embed.
+The `bound' parameter is the box start bound.}
     require d gt 0: "d must be positive";
     found, lams := FindLambdas(Q, [d], Order, basis_L);
     if found then return true, lams[d]; else return false, _; end if;
 end intrinsic;
 
-intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
+intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 16, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
 {For each d in ds, return the integer coordinate vector v (in the basis basis_L) of an
 optimal embedding of the discriminant-d CM order into Order, i.e. the element elt = sum_i
-v_i/2 basis_L[i] (+ 1/2 when d = 3 mod 4) generates O cap Q(sqrt(-d)).  Computed with Magma's
-Embed (an exact optimal-embedding solve), replacing the old O(bound^n) box enumeration that
-blew up (80 GB) on large quadratic-CM discs.  Returns true with the lambdas iff all d found.
-The `bound' parameter is retained for interface compatibility and is unused.}
+v_i/2 basis_L[i] (+ 1/2 when d = 3 mod 4) generates O cap Q(sqrt(-d)).
+HYBRID strategy: PRIMARY is a BOUNDED box enumeration of the (indefinite ternary) norm form
+v.Q.v = 2d -- deterministic and, unlike Magma's Embed, it never hangs; the box bound starts at
+`bound' and doubles only up to a hard cap, so it can never blow up (the old unbounded box started at
+max_d/2 and 80 GB-exploded).  FALLBACK is Magma's Embed, used only for discs whose optimal vector
+exceeds the box cap (large quadratic-CM discs).  This keeps the small rational discs -- where Embed is
+the one that intermittently hangs on unlucky ShimuraCurveLattice order representatives -- on the safe
+box path.  Returns true with the lambdas iff all d found.}
     require &and[d gt 0 : d in ds]: "All ds must be positive";
     lambdas := lambda_array;
     QZ := ChangeRing(Q, Integers());
+    n := Nrows(QZ);
     A := Algebra(Order);
     // express algebra elements in the (trace-zero) basis basis_L
     ML := Matrix([Eltseq(A!b) : b in basis_L]);
@@ -26,14 +31,61 @@ The `bound' parameter is retained for interface compatibility and is unused.}
     B_O := Basis(Order);
     Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
     Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
+    e1col := Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0])));
+
+    // does the integer coordinate vector v give an OPTIMAL embedding of the disc-(-d) order?
+    // elt = sum v_i/2 basis_L[i] (+1/2 for d = 3 mod 4) must generate O cap Q(sqrt(-d)); the
+    // Smith-form test below checks that {1, elt} is part of a Z-basis of O.
+    is_optimal := function(v, d)
+        if d mod 4 eq 3 then
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]] + Parent(basis_L[1])!1/2;
+        else
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]];
+        end if;
+        CoB := Matrix([e1col, Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
+        CoBZZ := ChangeRing(Denominator(CoB)*CoB, Integers());
+        return SmithForm(CoBZZ) eq Sprime;
+    end function;
+
+    // ---- PRIMARY: bounded box enumeration of v.Q.v = 2d (deterministic; never hangs) ----
+    // Trace-zero space is 3-dimensional for a quaternion order; evaluate the ternary form directly.
+    if n eq 3 then
+        twice := {Integers()| 2*d : d in ds};
+        q11 := QZ[1,1]; q22 := QZ[2,2]; q33 := QZ[3,3];
+        q12 := QZ[1,2]+QZ[2,1]; q13 := QZ[1,3]+QZ[3,1]; q23 := QZ[2,3]+QZ[3,2];
+        cap := 128;
+        bd := Maximum(bound, 8);
+        while (bd le cap) and not (Set(ds) subset Keys(lambdas)) do
+            for a in [-bd..bd] do
+                for b in [-bd..bd] do
+                    pab := q11*a^2 + q22*b^2 + q12*a*b;
+                    qc  := q13*a + q23*b;
+                    for c in [-bd..bd] do
+                        nv := pab + q33*c^2 + qc*c;
+                        if nv in twice then
+                            d := nv div 2;
+                            if d notin Keys(lambdas) then
+                                v := Vector([Integers()| a, b, c]);
+                                if is_optimal(v, d) then
+                                    lambdas[d] := v;
+                                    vprintf ShimuraQuotients, 3 : "\t  box: d = %o at bound <= %o\n", d, bd;
+                                end if;
+                            end if;
+                        end if;
+                    end for;
+                end for;
+            end for;
+            bd *:= 2;
+        end while;
+    end if;
+
+    // ---- FALLBACK: Magma's Embed for any d the bounded box did not reach ----
+    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
+    //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
+    // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
     for d in ds do
-        if d in Keys(lambdas) then continue; end if;       //already found
-        // The CM point has fundamental quantity discriminant -d.  mu := image of the generator of
-        // the disc-(-d) order under an OPTIMAL embedding into Order; lam := image of sqrt(-d) (norm
-        // d, trace 0), the box's stored element (sum_i v_i basis_L[i] = lam).
-        //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
-        //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
-        // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
+        if d in Keys(lambdas) then continue; end if;
+        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; Embed fallback (may hang -- see FindLambdas)\n", d;
         embeds := true; lam := A!0;
         try
             if d mod 4 eq 3 then
@@ -45,25 +97,14 @@ The `bound' parameter is retained for interface compatibility and is unused.}
             embeds := false;                                // K does not embed -> no lambda for this d
         end try;
         if not embeds then continue; end if;
-        // box coordinate vector: sum_i v_i basis_L[i] = lam, so v = coords of lam in basis_L.
         cv := coordsL(lam);
-        if not &and[IsCoercible(Integers(), c) : c in Eltseq(cv)] then continue; end if;
-        v := Vector([Integers()| c : c in Eltseq(cv)]);
+        if not &and[IsCoercible(Integers(), cc) : cc in Eltseq(cv)] then continue; end if;
+        v := Vector([Integers()| cc : cc in Eltseq(cv)]);
         if (v*QZ, v) ne 2*d then continue; end if;          // self-check: correct norm
-        // verify optimality (same Smith-form test as the original)
-        if d mod 4 eq 3 then
-            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]] + Parent(basis_L[1])!1/2;
-        else
-            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]];
-        end if;
-        CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))),
-                       Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
-        CoBZZ := ChangeRing(Denominator(CoB)*CoB, Integers());
-        if SmithForm(CoBZZ) eq Sprime then
-            lambdas[d] := v;
-        end if;
+        if is_optimal(v, d) then lambdas[d] := v; end if;
     end for;
-    if Keys(lambdas) eq Set(ds) then
+
+    if Set(ds) eq Keys(lambdas) then
         return true, lambdas;
     else
         vprint ShimuraQuotients, 2 : "Could not find all lambdas";
