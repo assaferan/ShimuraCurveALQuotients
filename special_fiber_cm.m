@@ -430,6 +430,28 @@ CM_BASE_DATA[<6,5>] := rec< CMBaseData |
     sx^2 + 362601/153664*sx + 70227/38416 *],
   fq := d65fq >;
 
+// D = 6, M = 7 (Phase-B base): X_0(6,7)* genus 0, 6 rational + 12 quadratic CM discs, and the 6
+// genus-0 |W''| = 4 conic covers y^2 = a s^2 + b s + c stored as [c,b,a].  Generated 2026-06 (cc-
+// pinned FieldsOfDefinitionOfCMPointFast + find_y2_signs skip; full disc->s table at MaxNum=18).
+d67fq := AssociativeArray();
+d67fq[[Integers()|1,2,3,6]]   := [Rationals()|  -1/6, 113/144,   -3/4];   // y^2 = -3/4 s^2 + 113/144 s - 1/6
+d67fq[[Integers()|1,2,21,42]] := [Rationals()|     0,     1/4,      0];   // y^2 = s/4
+d67fq[[Integers()|1,3,14,42]] := [Rationals()|     0,    -3/4,      1];   // y^2 = s^2 - 3/4 s
+d67fq[[Integers()|1,6,14,21]] := [Rationals()|   1/2,  -27/16,      0];   // y^2 = -27/16 s + 1/2
+d67fq[[Integers()|1,6,7,42]]  := [Rationals()| -1/12,     1/9,      0];   // y^2 = s/9 - 1/12
+d67fq[[Integers()|1,3,7,21]]  := [Rationals()|     0,     1/2, -27/16];   // y^2 = -27/16 s^2 + 1/2 s
+CM_BASE_DATA[<6,7>] := rec< CMBaseData |
+  discs := [Integers()| -3, -24, -19, -40, -52, -132,
+    -115, -136, -187, -195, -264, -276, -292, -328, -388, -552, -852, -1032],
+  svals := [* Infinity(), 0, 1, 1/4, 4, -9/4,
+    sx^2 - 257/1024*sx + 169/1024,        sx^2 - 137/4*sx + 4,
+    sx^2 - 79817/1024*sx + 61009/1024,    sx^2 + 154/27*sx + 1,
+    sx^2 + 39/4*sx - 18,                  sx^2 - 113/108*sx + 1/3,
+    sx^2 - 16856/15625*sx + 4624/15625,   sx^2 - 60641/62500*sx + 2116/15625,
+    sx^2 + 12137/31250*sx + 48841/250000, sx^2 - 4553/2916*sx + 338/243,
+    sx^2 - 159723/62500*sx + 87723/15625, sx^2 + 6261048/15625*sx - 1752192/15625 *],
+  fq := d67fq >;
+
 // star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced
 // in F_p, quadratic discs to their Frobenius-conjugate pair), with the genus-formula coverage check.
 function cm_star_coords_general(D, M, discs, svals, p)
@@ -460,6 +482,10 @@ a fortiori not hyperelliptic over Q), otherwise false.  Returns false when (D,M)
 data, the component W'' is not in the registry, or the prime is not covered by the available discs.}
     for p in PrimeDivisors(N) do
         if D mod p eq 0 then continue; end if;
+        if Valuation(N, p) ne 1 then continue; end if;   // need p || N: the reduction is clean only
+                                                          // when M = N/p is coprime to p (else the
+                                                          // p-part of the AL group is not w_p and the
+                                                          // squarefree-level coordinate logic breaks)
         M := N div p;
         if not IsDefined(CM_BASE_DATA, <D,M>) then continue; end if;
         data := CM_BASE_DATA[<D,M>];
