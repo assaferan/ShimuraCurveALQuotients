@@ -349,10 +349,19 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     R := EtaQuotientsRing(M, disc);
     gap_condition := false;
     pole_string := Zero select "{0,oo}" else "{oo}";
+    // Guardrail: a legitimate n (pole order of the eta-quotient generators) is small -- O(100), and
+    // < ~500 across every known base.  For some larger/harder bases the form-ring loop never reaches
+    // rk = dim, so n climbs without bound and each iteration writes one polymake_script file (this
+    // produced ~10^7 junk files before being caught).  Fail fast and informatively instead of looping
+    // forever.  (The proper fix -- why rk < dim persists for these bases -- is separate.)
+    BORCHERDS_N_CAP := 10000;
     vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
-        
-        vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim; 
+        error if n gt BORCHERDS_N_CAP,
+            Sprintf("BorcherdsForms non-convergence: n=%o exceeded cap %o (M=%o, rk=%o, dim=%o); the " *
+                    "form-ring loop is diverging, this base is not generable by the current method", n, BORCHERDS_N_CAP, M, rk, dim);
+
+        vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim;
         
         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
         
