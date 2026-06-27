@@ -452,6 +452,82 @@ CM_BASE_DATA[<6,7>] := rec< CMBaseData |
     sx^2 - 159723/62500*sx + 87723/15625, sx^2 + 6261048/15625*sx - 1752192/15625 *],
   fq := d67fq >;
 
+// D = 6, M = 11 (Phase-B base, batch-generated 2026-06).  4 genus-0 |W''|=4 conic covers; 10 rational
+// + 7 quadratic CM discs.
+d611fq := AssociativeArray();
+d611fq[[Integers()|1,6,11,66]] := [Rationals()|   1/9,   4/3, 32/9];   // y^2 = 32/9 s^2 + 4/3 s + 1/9
+d611fq[[Integers()|1,2,33,66]] := [Rationals()|     1,     8,    0];   // y^2 = 8 s + 1
+d611fq[[Integers()|1,3,22,66]] := [Rationals()|   1/9,   4/9,    0];   // y^2 = 4/9 s + 1/9
+d611fq[[Integers()|1,6,22,33]] := [Rationals()| -19/9,  14/9, -1/3];   // y^2 = -1/3 s^2 + 14/9 s - 19/9
+CM_BASE_DATA[<6,11>] := rec< CMBaseData |
+  discs := [Integers()| -24, -19, -40, -43, -51, -52, -84, -120, -123, -228,
+    -184, -435, -219, -292, -340, -403, -483],
+  svals := [* Infinity(), 0, 1, 6, 2, 3, -1, -1/3, 4/9, -13/4,
+    sx^2 - 11/8*sx + 39/8,                  sx^2 - 634/169*sx + 2356/169,
+    sx^2 - 10/3*sx + 52/9,                  sx^2 + 54/169*sx + 9/13,
+    sx^2 - 1698/169*sx - 171/169,           sx^2 - 237822/152881*sx + 40716/152881,
+    sx^2 + 74/1521*sx + 464/1521 *],
+  fq := d611fq >;
+
+// D = 6, M = 13 (Phase-B base, batch-generated 2026-06).  6 genus-0 |W''|=4 conic covers; 8 rational
+// + 14 quadratic CM discs.
+d613fq := AssociativeArray();
+d613fq[[Integers()|1,2,39,78]] := [Rationals()|     0,    -144,     225];   // y^2 = 225 s^2 - 144 s
+d613fq[[Integers()|1,3,26,78]] := [Rationals()|     4,   -41/4,    25/4];   // y^2 = 25/4 s^2 - 41/4 s + 4
+d613fq[[Integers()|1,2,13,26]] := [Rationals()|     0,   243/4,  -387/4];   // y^2 = -387/4 s^2 + 243/4 s
+d613fq[[Integers()|1,6,13,78]] := [Rationals()|     0,    -9/4,     9/4];   // y^2 = 9/4 s^2 - 9/4 s
+d613fq[[Integers()|1,3,13,39]] := [Rationals()|  -243,     630,    -387];   // y^2 = -387 s^2 + 630 s - 243
+d613fq[[Integers()|1,2,3,6]]   := [Rationals()|  -972, 12267/4, -9675/4];   // y^2 = -9675/4 s^2 + 12267/4 s - 972
+CM_BASE_DATA[<6,13>] := rec< CMBaseData |
+  discs := [Integers()| -3, -4, -40, -43, -51, -88, -120, -168,
+    -235, -264, -276, -328, -420, -456, -532, -555, -568, -627, -660, -1128, -1752, -1992],
+  svals := [* 0, 1, 2/3, Infinity(), 4/7, -2/7, 2/5, 16/19,
+    sx^2 - 1489/1008*sx + 256/441,          sx^2 - 70/29*sx + 32/29,
+    sx^2 - 32/37*sx + 4/37,                 sx^2 - 23/25*sx - 2/225,
+    sx^2 - 8/5*sx + 108/175,                sx^2 - 299/427*sx + 16/427,
+    sx^2 - 167264/111325*sx + 2500/4453,    sx^2 - 328/511*sx + 432/18907,
+    sx^2 - 14369/11571*sx + 31250/80997,    sx^2 - 164/175*sx + 16384/83125,
+    sx^2 - 19/35*sx + 16/1225,              sx^2 - 574/445*sx + 23328/55625,
+    sx^2 - 185468/254737*sx + 62500/254737, sx^2 - 2855734/2334125*sx + 4000/18673 *],
+  fq := d613fq >;
+
+// D = 6, M = 17 (Phase-B base, batch-generated 2026-06).  4 genus-0 |W''|=4 conic covers; 11 rational
+// + 16 quadratic CM discs.
+d617fq := AssociativeArray();
+d617fq[[Integers()|1,2,17,34]]  := [Rationals()|  -19,  280/9, -1024/81];  // y^2 = -1024/81 s^2 + 280/9 s - 19
+d617fq[[Integers()|1,2,51,102]] := [Rationals()|    1,   -4/9,     4/9];   // y^2 = 4/9 s^2 - 4/9 s + 1
+d617fq[[Integers()|1,3,34,102]] := [Rationals()|    1,   -8/9,       0];   // y^2 = -8/9 s + 1
+d617fq[[Integers()|1,6,34,51]]  := [Rationals()|  -19,  128/9,       0];   // y^2 = 128/9 s - 19
+CM_BASE_DATA[<6,17>] := rec< CMBaseData |
+  discs := [Integers()| -4, -19, -43, -52, -67, -84, -120, -123, -132, -168, -372,
+    -115, -195, -219, -264, -276, -280, -291, -427, -552, -627, -723, -795, -852, -1012, -1092, -1752],
+  svals := [* Infinity(), 0, 1, 9/4, -27/8, 3/2, 9/2, -9, 3/4, -3/2, 39/2,
+    sx^2 - 17/8*sx + 27/8,                  sx^2 - 21/8*sx + 9/4,
+    sx^2 - 3*sx + 9,                        sx^2 - 3/2*sx + 27/16,
+    sx^2 - 3/4*sx + 27/8,                   sx^2 - 29/2*sx + 351/16,
+    sx^2 - 3/4*sx + 117/64,                 sx^2 + 6113/81*sx - 247/3,
+    sx^2 - 291/128*sx + 351/256,            sx^2 + 1239/8*sx - 261/4,
+    sx^2 - 4437/2401*sx + 2511/2401,        sx^2 - 6429/2401*sx + 4329/2401,
+    sx^2 - 681/512*sx + 783/1024,           sx^2 - 67369/41472*sx + 15457/18432,
+    sx^2 - 249/2*sx + 5301/16,              sx^2 - 20241/4802*sx + 253287/38416 *],
+  fq := d617fq >;
+
+// D = 6, M = 19 (Phase-B base, batch-generated 2026-06).  4 genus-0 |W''|=4 conic covers; 10 rational
+// + 6 quadratic CM discs.
+d619fq := AssociativeArray();
+d619fq[[Integers()|1,3,38,114]] := [Rationals()|   5/4,    -3,  16/9];   // y^2 = 16/9 s^2 - 3 s + 5/4
+d619fq[[Integers()|1,6,19,114]] := [Rationals()|     5, -16/3,     0];   // y^2 = -16/3 s + 5
+d619fq[[Integers()|1,3,19,57]]  := [Rationals()|  -1/2,  11/6, -27/16];  // y^2 = -27/16 s^2 + 11/6 s - 1/2
+d619fq[[Integers()|1,2,57,114]] := [Rationals()|   1/4,  -1/3,     0];   // y^2 = -1/3 s + 1/4
+CM_BASE_DATA[<6,19>] := rec< CMBaseData |
+  discs := [Integers()| -3, -40, -51, -52, -67, -84, -88, -132, -148, -312,
+    -388, -136, -184, -420, -276, -483],
+  svals := [* Infinity(), 0, 1, 2/3, 5/12, 1/2, 9/16, 3/2, -6, 4,
+    sx^2 - 7/3*sx + 85/36,                  sx^2 - 5/3*sx + 3/4,
+    sx^2 - 83/48*sx + 3/4,                  sx^2 - 23/16*sx + 17/32,
+    sx^2 - 19/16*sx + 3/8,                  sx^2 - 88/81*sx + 31/81 *],
+  fq := d619fq >;
+
 // star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced
 // in F_p, quadratic discs to their Frobenius-conjugate pair), with the genus-formula coverage check.
 function cm_star_coords_general(D, M, discs, svals, p)
