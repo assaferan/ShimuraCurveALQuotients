@@ -421,8 +421,13 @@ d65fq[[Integers()|1,2,15,30]] := [Rationals()|     0,   1/18, 1/144];
 d65fq[[Integers()|1,3,10,30]] := [Rationals()|     0,    1/4,      0];   // y^2 = s/4
 d65fq[[Integers()|1,6,10,15]] := [Rationals()|    -3,    -16,      0];   // y^2 = -16s - 3
 CM_BASE_DATA[<6,5>] := rec< CMBaseData |
-  discs := [Integers()| -4, -24, -19, -51, -84, -91],
-  svals := [* Infinity(), 0, 1, 9, -12, sx^2 - 2242/81*sx + 289/81 *],
+  discs := [Integers()| -4, -24, -19, -51, -84, -91, -136, -184, -219, -264, -276, -291, -456, -564],
+  svals := [* Infinity(), 0, 1, 9, -12,
+    sx^2 - 2242/81*sx + 289/81,        sx^2 + 283/16*sx - 169/2,
+    sx^2 + 3475/1296*sx + 338/81,      sx^2 + 2526/2401*sx + 1521/2401,
+    sx^2 + 987/16*sx + 9,              sx^2 + 153/64*sx + 243/16,
+    sx^2 + 33414/2401*sx + 549081/2401, sx^2 - 101160/2401*sx - 10368/2401,
+    sx^2 + 362601/153664*sx + 70227/38416 *],
   fq := d65fq >;
 
 // star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced

@@ -1463,7 +1463,11 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
 
-        flds := FieldsOfDefinitionOfCMPoint(X, d);
+        // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
+        // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
+        // plain #flds = 1 test below then accepts the deg-2 multi-orbit discs the slow routine used to
+        // over-split.  It is also faster (no AutomorphismGroup blowup).
+        flds := FieldsOfDefinitionOfCMPointFast(X, d);
         if flds eq [* Rationals() *] and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
         elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
