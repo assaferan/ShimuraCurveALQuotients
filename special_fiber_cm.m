@@ -528,6 +528,24 @@ CM_BASE_DATA[<6,19>] := rec< CMBaseData |
     sx^2 - 19/16*sx + 3/8,                  sx^2 - 88/81*sx + 31/81 *],
   fq := d619fq >;
 
+// D = 14, M = 11 (Phase-B base, generated 2026-06-29 via `sage -sh` polymake).  This base proved the
+// earlier "empty eta-quotient lattice" verdict was a missing-polymake artifact, not a real limitation.
+// Its level 308 (12 divisors) is tractable; the other previously-"empty" bases have levels 420/660/
+// 780/840 (24-32 divisors) where polymake LATTICE_POINTS is too slow (>40 min/call) to generate.
+// 4 rational + 10 quadratic CM discs; 1 genus-0 |W''| = 4 conic cover.
+d1411fq := AssociativeArray();
+d1411fq[[Integers()|1,2,77,154]] := [Rationals()| 20, -12, 1];   // y^2 = s^2 - 12s + 20
+CM_BASE_DATA[<14,11>] := rec< CMBaseData |
+  discs := [Integers()| -8, -35, -43, -84,
+    -568, -772, -123, -868, -228, -259, -340, -403, -420, -483],
+  svals := [* Infinity(), 0, 1, -2,
+    sx^2 - 20*sx - 62,              sx^2 + 78/25*sx + 82/25,
+    sx^2 + 9*sx + 10,               sx^2 - 48/25*sx + 28/25,
+    sx^2 - 6*sx + 10,               sx^2 - 3*sx + 4,
+    sx^2 + 15/4*sx - 19/2,          sx^2 + 51/25*sx + 38/5,
+    sx^2 + 28,                      sx^2 - 14/25*sx - 56/25 *],
+  fq := d1411fq >;
+
 // star supersingular coordinates over F_{p^2} from a (D,M) CM disc->s table (rational discs reduced
 // in F_p, quadratic discs to their Frobenius-conjugate pair), with the genus-formula coverage check.
 function cm_star_coords_general(D, M, discs, svals, p)
