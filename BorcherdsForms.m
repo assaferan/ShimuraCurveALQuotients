@@ -111,7 +111,10 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprintf ShimuraQuotients, 3 : "File found.";
-        return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
+        // Sort canonically so the eta-quotient basis (and hence all downstream models) is independent
+        // of polymake's lattice-point output order (which is not stable across polymake versions).
+        // Applied on cache read too, so pre-existing (unsorted) cache files give the same result.
+        return Sort(eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)));
     end if;
     vprintf ShimuraQuotients, 3 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
@@ -122,7 +125,7 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     sol_lines := Split(polymake, "\n");
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
-    rs := [sol[2..1 + #Divisors(M)] : sol in sols];
+    rs := Sort([sol[2..1 + #Divisors(M)] : sol in sols]);   // canonical order (version-independent)
 
     Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
     return rs;
