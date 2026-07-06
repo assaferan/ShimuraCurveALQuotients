@@ -110,7 +110,8 @@ function solve_quadratic_constraints(relns)
     R := Universe(relns);
     P := ProjectiveSpace(R);
     S := Scheme(P, relns);
-    assert Dimension(S) eq 0;
+    error if Dimension(S) ne 0,
+        Sprintf("quadratic CM constraints do not cut out a 0-dimensional scheme (Dimension = %o)", Dimension(S));
     return RationalPoints(S);
 end function;
 
@@ -128,28 +129,45 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     kernels := RationalConstraintsOnEquations(schofer_table, curves);
     relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
+    // A cover whose CM constraints are insufficient/inconsistent (e.g. a hard intermediate cover
+    // that is not on the path to the top curve) is DEFERRED rather than aborting the whole run;
+    // AllEquationsAboveCovers recovers it later as a quotient of a curve lying above it.
+    good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
+    deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
-        if #relns[i] eq 0 or #B eq 1 then
-            require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
-            v :=  Eltseq(B[1]);
-            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
-            f := R!monic_v;
+        determined := true;
+        f := R!0;
+        try
+            if #relns[i] eq 0 or #B eq 1 then
+                error if #B ne 1, "not enough constraints from the rational points";
+                v :=  Eltseq(B[1]);
+                monic_v := [-v[j]/v[#v] : j in [1..#v-1]];
+                f := R!monic_v;
+            else
+                coeffs := solve_quadratic_constraints(relns[i]);
+                error if #coeffs ne 1, "quadratic+rational constraints do not give a unique solution";
+                coeffs := Eltseq(coeffs[1]);
+                v := &+[B[j]*coeffs[j] : j in [1..#B]];
+                v := Eltseq(v);
+                monic_v := [-v[j]/v[#v] : j in [1..#v-1]];
+                f := R!monic_v;
+            end if;
+        catch e
+            determined := false;
+        end try;
+        if determined then
             Append(~eqn_list, f);
+            Append(~good_kidxs, i);
         else
-            coeffs := solve_quadratic_constraints(relns[i]);
-            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
-            coeffs := Eltseq(coeffs[1]);
-            v := &+[B[j]*coeffs[j] : j in [1..#B]];
-            v := Eltseq(v);
-            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
-            f := R!monic_v;
-            Append(~eqn_list, f);
+            Append(~deferred, keys_fs[k_idxs[i]]);
+            vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) not determined from CM constraints; deferring to recover as a quotient.\n",
+                curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
         end if;
     end for;
 
 
     crv_list := [HyperellipticCurve(e) : e in eqn_list];
-    keys :=  [keys_fs[i] : i in k_idxs];
+    keys :=  [keys_fs[k_idxs[i]] : i in good_kidxs];
     Xstar := schofer_table`Xstar;
     all_W := Xstar`W;
 
@@ -167,7 +185,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
         end for;
     end for;
 
-    return crv_list, ws, keys;
+    return crv_list, ws, keys, deferred;
 end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100) -> SeqEnum, Assoc, SeqEnum
@@ -550,8 +568,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
-    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
-                                                           MaxNum := num_vals, Prec := Prec, 
+    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
+                                                           MaxNum := num_vals, Prec := Prec,
                                                            Exclude := {}, Include := Set(d_divs));
     vprintf ShimuraQuotients, 2 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
