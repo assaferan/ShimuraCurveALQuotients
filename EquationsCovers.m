@@ -553,6 +553,46 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
 end intrinsic;
 
+// Recover covers that EquationsOfCovers could not determine from CM constraints, by quotienting a
+// computed curve lying above them by the appropriate Atkin-Lehner involution. For a deferred cover
+// X/W_k, an immediate parent X/W_above (W_above subset W_k) that IS computed is quotiented by the
+// involution w in W_k \ W_above, giving X/W_k = (X/W_above)/w.
+function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
+    all_W := Xstar`W;
+    for k in deferred do
+        if IsDefined(all_eqns, k) and not IsEmpty(Keys(all_eqns[k])) then continue; end if; // already have it
+        recovered := false;
+        for above in curves[k]`CoveredBy do
+            if not IsDefined(all_eqns, above) then continue; end if;
+            hyp_bases := [b : b in Keys(all_eqns[above]) | Type(all_eqns[above][b]) eq CrvHyp];
+            if IsEmpty(hyp_bases) then continue; end if;
+            extra := curves[k]`W diff curves[above]`W;      // the involution(s) to quotient by
+            if IsEmpty(extra) then continue; end if;
+            base := hyp_bases[1];
+            w := Representative(extra);
+            if not (IsDefined(all_ws, above) and IsDefined(all_ws[above], base)
+                    and IsDefined(all_ws[above][base], w)) then continue; end if;
+            C_above := all_eqns[above][base];
+            w_map := all_ws[above][base][w];
+            Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
+            if not IsDefined(all_eqns, k) then all_eqns[k] := AssociativeArray(); end if;
+            if not IsDefined(all_ws, k) then all_ws[k] := AssociativeArray(); end if;
+            all_eqns[k][base] := Cq;
+            all_ws[k][base] := AssociativeArray();
+            for u in curves[k]`W do all_ws[k][base][u] := IdentityMap(Cq); end for;
+            for u in (all_W diff curves[k]`W) do all_ws[k][base][u] := HyperellipticInvolution(Cq); end for;
+            vprintf ShimuraQuotients, 1 : "  Recovered deferred cover W=%o (g=%o) as (%o)/w_%o.\n",
+                curves[k]`W, curves[k]`g, curves[above]`W, w;
+            recovered := true;
+            break;
+        end for;
+        if not recovered then
+            vprintf ShimuraQuotients, 1 : "  WARNING: could not recover deferred cover W=%o.\n", curves[k]`W;
+        end if;
+    end for;
+    return all_eqns, all_ws;
+end function;
+
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
@@ -578,7 +618,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := {});
     vprintf ShimuraQuotients, 1 : "Done!\n";  
     vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
-    crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
+    crv_list, ws, new_keys, deferred := EquationsOfCovers(schofer_tab, all_cm_pts);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
@@ -586,6 +626,11 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
+    if not IsEmpty(deferred) then
+        vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
+        all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
+        vprintf ShimuraQuotients, 1 : "Done\n";
+    end if;
     return all_eqns, all_ws;
 end intrinsic;
 
