@@ -372,6 +372,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
     covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
     for P1_label in Keys(curves_above_P1s[label]) do
         covered_others := covered_curves diff {P1_label};
+        found_base := false;   // define even if covered_others is empty (can happen with deferred covers)
         for other_label in covered_others do
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_P1s[label][P1_label];
             found_base := false;
@@ -407,6 +408,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
     covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
     for conic_label in Keys(curves_above_conics[label]) do
         covered_others := covered_curves diff {conic_label};
+        found_base := false;   // define even if covered_others is empty (can happen with deferred covers)
         for other_label in covered_others do
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_conics[label][conic_label];
             found_base := false;
@@ -496,6 +498,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
         for other_curve in curves[k]`Covers do
             found_gplus1 := false;
+            if not IsDefined(all_eqns, other_curve) then continue; end if;  // deferred cover, not computed
             bases := Keys(all_eqns[other_curve]);
             if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
             if (base_label ne 0) and base_label notin bases then continue; end if;
