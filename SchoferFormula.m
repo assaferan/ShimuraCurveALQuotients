@@ -50,17 +50,50 @@ box path.  Returns true with the lambdas iff all d found.}
     // ---- PRIMARY: bounded box enumeration of v.Q.v = 2d (deterministic; never hangs) ----
     // Trace-zero space is 3-dimensional for a quaternion order; evaluate the ternary form directly.
     if n eq 3 then
+        // Reduce the (indefinite) ternary form so the box finds every d at a TINY bound,
+        // independent of the (non-canonical, often badly-scaled) order representative Magma
+        // hands us -- max|Q| ~ 7000 unreduced but ~60 reduced, dropping the needed box bound
+        // from ~256 to <=32. Reduce w.r.t. a positive-definite majorant coming from the real
+        // splitting B (x) R = M_2(R) (Frobenius norm on trace-zero 2x2 matrices), giving a
+        // unimodular Tred; enumerate on Qred = Tred*QZ*Tred^t and map solutions back via
+        // v = v_red*Tred. Pure optimization: any hiccup falls back to the raw form (Tred = I),
+        // and the conjugation fallback below still covers whatever the (then-uncapped) box misses.
+        Tred := IdentityMatrix(Integers(), 3);
+        QB := QZ;
+        try
+            av := Rationals()!(A.1^2); bv := Rationals()!(A.2^2);   // i^2, j^2
+            RR := RealField(60);
+            ok := true;
+            if av gt 0 then
+                sa := Sqrt(RR!av);
+                ri := Matrix(RR,2,2,[sa,0,0,-sa]); rj := Matrix(RR,2,2,[0,1,bv,0]);
+            elif bv gt 0 then
+                sb := Sqrt(RR!bv);
+                rj := Matrix(RR,2,2,[sb,0,0,-sb]); ri := Matrix(RR,2,2,[0,1,av,0]);
+            else
+                ok := false;                                        // definite algebra: no real split
+            end if;
+            if ok then
+                rk := ri*rj;
+                RL := [];
+                for bb in basis_L do e := Eltseq(A!bb); Append(~RL, e[2]*ri + e[3]*rj + e[4]*rk); end for;
+                Maj := ZeroMatrix(Integers(),3,3);
+                for i in [1..3] do for j in [1..3] do
+                    P := RL[i]*Transpose(RL[j]); Maj[i,j] := Round(10^6*(P[1,1]+P[2,2]));
+                end for; end for;
+                _, Tred := LLLGram(Maj);
+                QB := Tred*QZ*Transpose(Tred);
+            end if;
+        catch e
+            Tred := IdentityMatrix(Integers(), 3); QB := QZ;
+        end try;
+
         twice := {Integers()| 2*d : d in ds};
-        q11 := QZ[1,1]; q22 := QZ[2,2]; q33 := QZ[3,3];
-        q12 := QZ[1,2]+QZ[2,1]; q13 := QZ[1,3]+QZ[3,1]; q23 := QZ[2,3]+QZ[3,2];
-        // cap must clear the LARGEST box bound any required d needs. This depends on the
-        // (non-canonical) order representative Magma hands us, so a borderline d found right
-        // at the cap on a lucky run can spill past it on an unlucky one -- the box then misses
-        // it and the flaky Embed fallback may fail to recover it (observed intermittently for
-        // d = 280 in X0(10,19), found at bound 128 on lucky runs). Keep the cap generous so the
-        // deterministic box always wins; the loop exits as soon as all d are found, so the
-        // higher cap costs nothing on the common (small-bound) case.
-        cap := 512;
+        q11 := QB[1,1]; q22 := QB[2,2]; q33 := QB[3,3];
+        q12 := QB[1,2]+QB[2,1]; q13 := QB[1,3]+QB[3,1]; q23 := QB[2,3]+QB[3,2];
+        // On the reduced form the box needs only a tiny bound; keep the cap modest, and let the
+        // conjugation fallback below cover anything past it (e.g. on an unreduced fall-through).
+        cap := 64;
         bd := Maximum(bound, 8);
         while (bd le cap) and not (Set(ds) subset Keys(lambdas)) do
             for a in [-bd..bd] do
@@ -72,7 +105,7 @@ box path.  Returns true with the lambdas iff all d found.}
                         if nv in twice then
                             d := nv div 2;
                             if d notin Keys(lambdas) then
-                                v := Vector([Integers()| a, b, c]);
+                                v := Vector([Integers()| a, b, c]) * Tred;   // map back to original coords
                                 if is_optimal(v, d) then
                                     lambdas[d] := v;
                                     vprintf ShimuraQuotients, 3 : "\t  box: d = %o at bound <= %o\n", d, bd;
@@ -86,29 +119,45 @@ box path.  Returns true with the lambdas iff all d found.}
         end while;
     end if;
 
-    // ---- FALLBACK: Magma's Embed for any d the bounded box did not reach ----
-    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
-    //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
-    // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
+    // ---- FALLBACK: maximal-order embedding + small level-N conjugation into Order ----
+    // Magma's Embed(Oc, Order) THROWS ("IsRightIsomorphic: same right order") for a level-N
+    // EICHLER order, so it is useless here.  But Embed(Oc, Omax) into the MAXIMAL order is
+    // robust (it solves a conic).  The only obstruction to landing in the smaller Eichler
+    // order Order is purely local at the primes p | N (it shows up as a denominator N in the
+    // basis_L coordinates), so a *small* conjugating element nu in Omax fixes it -- the search
+    // scales with N, not d, so it never has the box's O(bd^3) blow-up.  Any optimal embedding
+    // gives the same Schofer/Kappa value (verified: two distinct optimal lambdas agree on every
+    // Kappa0), so which representative we land on is immaterial.
+    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] -> lam = 2*mu-1;  d = 0 mod 4: Z[sqrt(-d/4)] -> lam = 2*mu.
+    Omax := MaximalOrder(A);
+    bO := [A!b : b in Basis(Omax)];
+    conj_cap := 8;                                          // conjugator size; scales with N, not d
     for d in ds do
         if d in Keys(lambdas) then continue; end if;
-        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; Embed fallback (may hang -- see FindLambdas)\n", d;
-        embeds := true; lam := A!0;
+        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; maximal-embed + level-N conjugation\n", d;
+        embeds := true; e2 := A!0;
         try
-            if d mod 4 eq 3 then
-                lam := 2*(A!Embed(MaximalOrder(NumberField(x^2+d)), Order)) - 1;
-            else
-                lam := 2*(A!Embed(EquationOrder(NumberField(x^2+(d div 4))), Order));
-            end if;
+            Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
+                                  else EquationOrder(NumberField(x^2+(d div 4)));
+            e2 := A ! Embed(Oc, Omax);
         catch e
             embeds := false;                                // K does not embed -> no lambda for this d
         end try;
         if not embeds then continue; end if;
-        cv := coordsL(lam);
-        if not &and[IsCoercible(Integers(), cc) : cc in Eltseq(cv)] then continue; end if;
-        v := Vector([Integers()| cc : cc in Eltseq(cv)]);
-        if (v*QZ, v) ne 2*d then continue; end if;          // self-check: correct norm
-        if is_optimal(v, d) then lambdas[d] := v; end if;
+        lam0 := (d mod 4 eq 3) select 2*e2 - 1 else 2*e2;
+        found_conj := false;
+        for K in [1..conj_cap] do
+            for cc in CartesianPower([-K..K], 4) do
+                nu := &+[cc[i]*bO[i] : i in [1..4]];
+                if Norm(nu) eq 0 then continue; end if;     // must be invertible
+                cv := coordsL(nu*lam0*nu^(-1));
+                if not &and[IsCoercible(Integers(), z) : z in Eltseq(cv)] then continue; end if;
+                v := Vector([Integers()| z : z in Eltseq(cv)]);
+                if (v*QZ, v) ne 2*d then continue; end if;  // correct norm
+                if is_optimal(v, d) then lambdas[d] := v; found_conj := true; break; end if;
+            end for;
+            if found_conj then break; end if;
+        end for;
     end for;
 
     if Set(ds) eq Keys(lambdas) then
