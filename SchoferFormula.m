@@ -53,7 +53,14 @@ box path.  Returns true with the lambdas iff all d found.}
         twice := {Integers()| 2*d : d in ds};
         q11 := QZ[1,1]; q22 := QZ[2,2]; q33 := QZ[3,3];
         q12 := QZ[1,2]+QZ[2,1]; q13 := QZ[1,3]+QZ[3,1]; q23 := QZ[2,3]+QZ[3,2];
-        cap := 128;
+        // cap must clear the LARGEST box bound any required d needs. This depends on the
+        // (non-canonical) order representative Magma hands us, so a borderline d found right
+        // at the cap on a lucky run can spill past it on an unlucky one -- the box then misses
+        // it and the flaky Embed fallback may fail to recover it (observed intermittently for
+        // d = 280 in X0(10,19), found at bound 128 on lucky runs). Keep the cap generous so the
+        // deterministic box always wins; the loop exits as soon as all d are found, so the
+        // higher cap costs nothing on the common (small-bound) case.
+        cap := 512;
         bd := Maximum(bound, 8);
         while (bd le cap) and not (Set(ds) subset Keys(lambdas)) do
             for a in [-bd..bd] do
