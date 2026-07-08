@@ -33,3 +33,9 @@ magma analysis_open.m
 # 3. assemble: hand front-matter (ends at the "DETAILED CENSUS" header) + census + open
 cat "$FRONT" "$CENSUS" "$OPEN" > "$OUT"
 echo "wrote $OUT  ($(wc -l < "$OUT") lines)"
+
+# 4. paper LaTeX filtering tables (star curves; all quotients after expansion)
+magma make_latex_tables.m
+
+# 5. paper LaTeX figures (genus distribution; test attribution)
+magma make_latex_figures.m

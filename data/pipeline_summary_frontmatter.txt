@@ -3,9 +3,11 @@
 ================================================================================
  Generated from the completed run in data/ (curves_after_*.dat).
  Source: run_pipeline.sh  /  run_sequential_stage.m  /  run_parallel_filter.sh
- Regenerated 2026-06-16 from the "finished new run" data (commit 84c7a70).
- Updated 2026-06-17: +4 Weil rulings on star curves missed by the bounded sweep
- (210,59),(210,79),(1410,7),(1770,7) ruled via explicit witness primes 17,11,29,17.
+ Regenerated 2026-06-22 from the run with WeilDiscBudget = 2^36 and the new
+ generalized-complicated fixed-point filter (commit 8b38802). This run adds two
+ stages vs. the 2026-06-17 data: FilterByWeilPolynomialStar (Phase A, before the
+ redundant FpAutomorphisms cross-check) and FilterByGeneralizedComplicatedFixed-
+ Points (Phase B, after the Prop-6 filter).
 ================================================================================
 
 WHAT THE ALGORITHM DOES
@@ -38,74 +40,76 @@ PHASE A — STAR CURVES ONLY (X* = X_0(D,N)/W*) : 2342 curves
  4  FilterByTraceStar                      504    815    1023    815  (#X*(F_p) <= 2p+2)
  5  HHProposition1                         500    819    1023    4    (Hasegawa-Hashimoto Prop.1)
  6  SpecialFiberIsomorphismStar            495    824    1023    5    (mod-p reduction of X*)
- 7  FilterStarCurvesByFpAutomorphisms      429    890    1023    66   (extra F_p-automorphisms)
- 8  FilterByNonALInvolutionsStar           384    920    1038    30   (non-AL involution; proved +15)
+ 7  FilterByWeilPolynomialStar             234   1085    1023    261  (admissible Weil polys on X*)
+ 8  FilterStarCurvesByFpAutomorphisms      234   1085    1023    0    (redundant cross-check; 0 missed)
+ 9  FilterByNonALInvolutionsStar           194   1110    1038    25   (non-AL involution; proved +15)
 
 End of Phase A: of 2342 star curves -> 1038 proved sub-hyperelliptic,
-                920 ruled out, 384 still open.
+                1110 ruled out, 194 still open.
 Ruling out a star curve prunes its entire cover-tree after expansion (UpwardClosure).
 
 
 EXPANSION  (clean breakdown — one Magma call, three logical operations)
 ----------------------------------------------------------------------
-Step 9 (GetQuotientsAndGenera + UpdateByGenus) is a single call that does three
-distinct things. Counts below are exact (total is always 18379; ruled stays 920
+Step 10 (GetQuotientsAndGenera + UpdateByGenus) is a single call that does three
+distinct things. Counts below are exact (total is always 18379; ruled stays 1110
 throughout because no new per-curve filter runs yet — see note).
 
- 9a  GENERATE.  Each (D,N) is expanded into all its 2^k AL quotients
+10a  GENERATE.  Each (D,N) is expanded into all its 2^k AL quotients
      X_0(D,N)/W, giving 18379 curves.  The 2342 star curves are themselves in
      this list and carry their Phase-A verdicts; every newly-created non-star
      quotient starts open.
-        open 16421 | ruled 920 | proved 1038     (proved/ruled = inherited stars)
+        open 16231 | ruled 1110 | proved 1038     (proved/ruled = inherited stars)
 
- 9b  CLASSIFY BY GENUS (Sec. genus).  Any quotient of genus <= 2 is automatically
+10b  CLASSIFY BY GENUS (Sec. genus).  Any quotient of genus <= 2 is automatically
      sub-hyperelliptic (P^1 / elliptic / genus-2 hyperelliptic).  4148 curves are
      genus <= 2; 1023 were already proved (the genus-<=2 stars), so this proves
      +3125 more.
-        open 13296 | ruled 920 | proved 4163      (+3125 proved)
+        open 13106 | ruled 1110 | proved 4163      (+3125 proved)
 
- 9c  AL-AS-HYPERELLIPTIC (Sec. ALashyp).  A genus->=3 quotient that double-covers
+10c  AL-AS-HYPERELLIPTIC (Sec. ALashyp).  A genus->=3 quotient that double-covers
      an elliptic/hyperelliptic maximal quotient X* via an Atkin-Lehner involution
      is itself hyperelliptic.  This proves +1648 genus->=3 curves.
-        open 11648 | ruled 920 | proved 5811      (+1648 proved)
+        open 11458 | ruled 1110 | proved 5811      (+1648 proved)
 
- END OF STEP 9:  18379 total = 11648 open + 920 ruled + 5811 proved
+ END OF STEP 10:  18379 total = 11458 open + 1110 ruled + 5811 proved
    proved 5811 = 4148 (genus <= 2, free) + 1663 (genus >= 3 via AL double-cover,
                  of which 15 came from a star-level modular non-AL involution)
-   ruled   920 = exactly the 920 star curves eliminated in Phase A
+   ruled  1110 = exactly the 1110 star curves eliminated in Phase A
                  (no non-star quotient is ruled out yet)
-   open  11648 = the remainder, ALL genus >= 3
+   open  11458 = the remainder, ALL genus >= 3
 
 
 PHASE B — ALL AL QUOTIENTS : 18379 curves
 -----------------------------------------
  #  Step                                        open   ruled  proved  newly-ruled
-10  UpdateCurves1                              11246    1321    5812   401  (propagate verdicts; +1 proved)
+11  UpdateCurves1                              10906    1661    5812   551  (propagate verdicts; +1 proved)
        Pushes EXISTING verdicts through the cover lattice -- no new per-curve
        computation. Two mechanisms: (i) closure (Def. closure / UpwardClosure):
        a curve forced non-sub-hyperelliptic by its position relative to a ruled
        curve; (ii) cross-level isomorphisms (Sec. isomorphism: SpecialFiber-
        Isomorphism + UpdateIsoStatus) copy a verdict to an isomorphic curve at
        another level.
-11  FilterByALFixedPointsOnQuotient             2377   10190    5812   8869 (AL fixed pts via class nos.)
-12  UpdateCurves2                               2311   10256    5812   66   (propagate)
-13  Genus3CoversGenus2                          2295   10256    5828   0    (g3->g2 cover; proved +16)
-14  UpdateCurves3                               2295   10256    5828   0    (propagate)
-15  FilterByDegeneracyMorphism                  2272   10279    5828   23   (degeneracy maps)
-16  UpdateCurves4                               2234   10317    5828   38   (propagate)
-17  FilterByComplicatedALFixedPointsOnQuotient  1855   10696    5828   379  (generalized Prop-6 filter)
-18  UpdateCurves5                               1837   10714    5828   18   (propagate)
-19  FilterByTrace                               1247   11304    5828   590  (point-count / trace bound)
-20  UpdateCurves6                               1210   11341    5828   37   (propagate)
-21  FilterByWeilPolynomial                       910   11641    5828   300  (admissible Weil polys, 2^30 budget + 6 explicit star witnesses)
-22  UpdateCurves7                                892   11659    5828   18   (propagate)
-23  FilterByNonALInvolutions                     838   11695    5846   36   (non-AL involution; proved +18)
-24  UpdateCurves8                                837   11696    5846   1    (propagate)
+12  FilterByALFixedPointsOnQuotient             2125   10442    5812   8781 (AL fixed pts via class nos.)
+13  UpdateCurves2                               2067   10500    5812   58   (propagate)
+14  Genus3CoversGenus2                          2051   10500    5828   0    (g3->g2 cover; proved +16)
+15  UpdateCurves3                               2051   10500    5828   0    (propagate)
+16  FilterByDegeneracyMorphism                  2032   10519    5828   19   (degeneracy maps)
+17  UpdateCurves4                               2002   10549    5828   30   (propagate)
+18  FilterByComplicatedALFixedPointsOnQuotient  1634   10917    5828   368  (Prop-6 fixed-point filter)
+19  FilterByGeneralizedComplicatedFixedPoints   1629   10922    5828   5    (generalized Prop-6, mixed groups)
+20  UpdateCurves5                               1613   10938    5828   16   (propagate)
+21  FilterByTrace                               1053   11498    5828   560  (point-count / trace bound)
+22  UpdateCurves6                               1016   11535    5828   37   (propagate)
+23  FilterByWeilPolynomial                       892   11659    5828   124  (admissible Weil polys, 2^36 budget)
+24  UpdateCurves7                                881   11670    5828   11   (propagate)
+25  FilterByNonALInvolutions                     828   11705    5846   35   (non-AL involution; proved +18)
+26  UpdateCurves8                                827   11706    5846   1    (propagate)
 
-END OF PIPELINE: 18379 total = 837 open + 11696 ruled + 5846 proved.
+END OF PIPELINE: 18379 total = 827 open + 11706 ruled + 5846 proved.
 
-The single most powerful filter is FilterByALFixedPointsOnQuotient (step 11),
-which alone rules out 8869 curves.  Trace, generalized fixed-point, and Weil-
+The single most powerful filter is FilterByALFixedPointsOnQuotient (step 12),
+which alone rules out 8781 curves.  Trace, generalized fixed-point, and Weil-
 polynomial filters clean up most of the remainder.
 
 NOTE on the Weil budget (2026-06-16 fix): the original "finished new run" data
@@ -132,19 +136,19 @@ have empty CoveredBy in the stored lattice, so UpwardClosure produces no knock-o
 
 NOTE on attribution: the per-step "newly-ruled" deltas above count when a curve's
 OPEN status first changed in the pipeline ordering. The attribution census below
-counts curves by the TEST whose proof was *recorded* on the curve
-(TestInWhichProved). These differ, and the per-tag split at intermediate stages
-is NOT stable, because SpecialFiberIsomorphism RE-STAMPS the reason on curves that
-were already ruled out. UpwardClosure guards against this ("if assigned ...
-continue // don't overwrite"), but SpecialFiberIsomorphism has no such guard: it
-sets IsSubhyp:=false and rewrites TestInWhichProved whenever it finds a valid
-special-fiber witness, even for a curve already ruled out by Trace/HH/FpAuto (its
-only guard is an assertion that the curve was not previously proved
-*hyperelliptic*, which would be a contradiction). This is verdict-preserving
-(false -> false) but moves the recorded reason. So the final tags reflect the LAST
-test that touched a curve, not the first/cheapest one that ruled it out. Treat the
-stage table as the makespan view and the FINAL attribution census as the
-(last-writer) "who recorded it" view.
+counts curves by the TEST whose proof is recorded on the curve (TestInWhichProved).
+Every filter that records a verdict guards with "if assigned IsSubhyp then continue"
+(don't overwrite), so TestInWhichProved holds the FIRST/cheapest test that
+determined each curve -- the census and the stage-table deltas agree where a tag
+corresponds to a single step (e.g. FilterByALFixedPointsOnQuotient: 8781 newly-ruled
+= 8781 recorded; Genus3CoversGenus2: +16 proved = 16 recorded; FilterByComplicated-
+ALFixedPointsOnQuotient: 368 = 368). The two views still differ where a tag
+aggregates work across phases or via lattice propagation rather than a single step:
+the "Trace" tag (1375) collects both the Phase-A FilterByTraceStar and the Phase-B
+FilterByTrace rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags
+are assigned in UpdateByGenus/UpdateCurves and then propagated through the cover
+lattice. Treat the stage table as the makespan ("when first determined") view and
+the census as the first-writer "which test determined it" view.
 
 
 ================================================================================

@@ -100,7 +100,12 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     Append(~output_lines, Sprintf("$ieqs = %o;", ieqs));
     Append(~output_lines, Sprintf("$eqs = %o;", eqs));
     Append(~output_lines, "$p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);");
-    Append(~output_lines, "print $p->LATTICE_POINTS;");
+    // Route lattice-point enumeration through normaliz: the default LATTICE_POINTS
+    // rule does a full convex-hull/vertex enumeration first, which is exponential in
+    // the (~16) dimension and dwarfs the actual point count. LATTICE_POINTS_GENERATORS
+    // via libnormaliz skips that and is ~18x+ faster with identical output.
+    Append(~output_lines, "prefer_now \"libnormaliz\";");
+    Append(~output_lines, "print $p->LATTICE_POINTS_GENERATORS->[0];");
     output := Join(output_lines, "\n");
     fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
     Write(fname, output : Overwrite);
@@ -629,10 +634,21 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
-along with two different hauptmoduls.}
+along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
+Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
+This means an unrealizable sibling cover (one whose Borcherds form cannot be found) no longer aborts the whole call --
+the targets we actually need are determined as long as THEIR forms exist. Empty Targets => all covers (unchanged).}
     rams := RamficationPointsOfCovers(Xstar, curves);
+    // Restrict to the target covers (the two hauptmoduls, keys -1/-2, are added below and always kept). rams is
+    // keyed by CurveID and curves is indexed by CurveID, so curves[k]`W is the cover's AL group.
+    if not IsEmpty(Targets) then
+        for k in [j : j in Keys(rams) | curves[j]`W notin Targets] do
+            Remove(~rams, k);
+        end for;
+        require #Keys(rams) gt 0 : "BorcherdsForms: no cover matches Targets";
+    end if;
     D0,M,g := get_D0_M_g(Xstar`D,Xstar`N);
     
     // !!! For D = 35, this takes about 13 minutes on lava....

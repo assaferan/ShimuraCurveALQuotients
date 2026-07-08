@@ -1,16 +1,16 @@
 ================================================================
 OPEN (UNDETERMINED) CASES — ANALYSIS
 ================================================================
-open before final step                 : 837
-  resolved: D=1 modular curves known   : 44
-GENUINELY OPEN (D>1 quaternion Shimura) : 793
+open before final step                 : 827
+  resolved: D=1 modular curves known   : 43
+GENUINELY OPEN (D>1 quaternion Shimura) : 784
 ================================================================
 
 By genus
 --------
   genus 3 : 519
-  genus 4 : 89
-  genus 5 : 170
+  genus 4 : 87
+  genus 5 : 163
   genus 6 : 10
   genus 7 : 5
 
@@ -19,19 +19,26 @@ By |W| (number of AL involutions in the quotient group, incl. identity)
   |W|=1   : 1
   |W|=2   : 19
   |W|=4   : 183
-  |W|=8   : 332
-  |W|=16  : 199
-  |W|=32  : 59
+  |W|=8   : 328
+  |W|=16  : 195
+  |W|=32  : 58
+
+By # AL involutions still acting non-trivially on the quotient (2^omega(DN)/|W| - 1)
+-----------------------------------------------------------------------------------
+  multiset: { 0^157, 1^464, 3^163 }
+  0 acting : 157
+  1 acting : 464
+  3 acting : 163
 
 By D (indefinite quaternion discriminant)
 -----------------------------------------
-  D=6      : 154
-  D=10     : 68
+  D=6      : 152
+  D=10     : 66
   D=14     : 61
   D=15     : 37
   D=21     : 24
-  D=22     : 24
-  D=26     : 17
+  D=22     : 23
+  D=26     : 16
   D=33     : 14
   D=34     : 27
   D=35     : 4
@@ -104,7 +111,7 @@ By D (indefinite quaternion discriminant)
   D=1785   : 1
   D=1794   : 1
   D=1806   : 3
-  D=1830   : 2
+  D=1830   : 1
   D=1870   : 3
   D=1914   : 1
   D=1938   : 1
@@ -125,7 +132,7 @@ By D (indefinite quaternion discriminant)
   D=2814   : 1
   D=2870   : 1
   D=2910   : 1
-  D=2982   : 2
+  D=2982   : 1
   D=3045   : 1
   D=3066   : 1
   D=3094   : 1
@@ -138,10 +145,9 @@ By D (indefinite quaternion discriminant)
   D=4422   : 1
   D=4470   : 1
   D=4510   : 1
-  D=4902   : 1
   D=6042   : 1
 
-Distinct (D,N) families with at least one open quotient : 417
+Distinct (D,N) families with at least one open quotient : 412
   (D, N, #open, total quotients of this (D,N), genus of X_0(D,N))
     D=6     N=23     open=1   / 16  quotients
     D=6     N=35     open=6   / 67  quotients
@@ -200,10 +206,8 @@ Distinct (D,N) families with at least one open quotient : 417
     D=6     N=649    open=1   / 1   quotients
     D=6     N=655    open=1   / 1   quotients
     D=6     N=665    open=2   / 32  quotients
-    D=6     N=695    open=1   / 1   quotients
     D=6     N=725    open=1   / 1   quotients
     D=6     N=745    open=1   / 1   quotients
-    D=6     N=755    open=1   / 1   quotients
     D=6     N=803    open=1   / 1   quotients
     D=6     N=805    open=1   / 1   quotients
     D=6     N=935    open=1   / 1   quotients
@@ -232,7 +236,7 @@ Distinct (D,N) families with at least one open quotient : 417
     D=10    N=123    open=2   / 16  quotients
     D=10    N=143    open=1   / 16  quotients
     D=10    N=147    open=1   / 16  quotients
-    D=10    N=153    open=2   / 16  quotients
+    D=10    N=153    open=1   / 16  quotients
     D=10    N=159    open=1   / 16  quotients
     D=10    N=171    open=3   / 16  quotients
     D=10    N=189    open=1   / 1   quotients
@@ -244,7 +248,6 @@ Distinct (D,N) families with at least one open quotient : 417
     D=10    N=279    open=1   / 1   quotients
     D=10    N=297    open=1   / 1   quotients
     D=10    N=321    open=1   / 1   quotients
-    D=10    N=327    open=1   / 1   quotients
     D=10    N=333    open=1   / 1   quotients
     D=10    N=399    open=1   / 1   quotients
     D=10    N=429    open=1   / 1   quotients
@@ -311,7 +314,7 @@ Distinct (D,N) families with at least one open quotient : 417
     D=22    N=25     open=1   / 8   quotients
     D=22    N=27     open=1   / 8   quotients
     D=22    N=39     open=2   / 16  quotients
-    D=22    N=45     open=3   / 16  quotients
+    D=22    N=45     open=2   / 16  quotients
     D=22    N=51     open=5   / 16  quotients
     D=22    N=57     open=1   / 16  quotients
     D=22    N=63     open=1   / 16  quotients
@@ -325,7 +328,7 @@ Distinct (D,N) families with at least one open quotient : 417
     D=26    N=33     open=1   / 16  quotients
     D=26    N=35     open=4   / 16  quotients
     D=26    N=41     open=1   / 1   quotients
-    D=26    N=45     open=2   / 16  quotients
+    D=26    N=45     open=1   / 16  quotients
     D=26    N=51     open=1   / 16  quotients
     D=26    N=63     open=1   / 1   quotients
     D=26    N=75     open=1   / 1   quotients
@@ -522,7 +525,6 @@ Distinct (D,N) families with at least one open quotient : 417
     D=1794  N=5      open=1   / 1   quotients
     D=1806  N=1      open=3   / 16  quotients
     D=1830  N=1      open=1   / 51  quotients
-    D=1830  N=7      open=1   / 1   quotients
     D=1870  N=1      open=2   / 16  quotients
     D=1870  N=3      open=1   / 1   quotients
     D=1914  N=5      open=1   / 1   quotients
@@ -545,7 +547,7 @@ Distinct (D,N) families with at least one open quotient : 417
     D=2814  N=1      open=1   / 16  quotients
     D=2870  N=3      open=1   / 1   quotients
     D=2910  N=1      open=1   / 16  quotients
-    D=2982  N=1      open=2   / 16  quotients
+    D=2982  N=1      open=1   / 16  quotients
     D=3045  N=1      open=1   / 1   quotients
     D=3066  N=1      open=1   / 16  quotients
     D=3094  N=1      open=1   / 1   quotients
@@ -558,7 +560,6 @@ Distinct (D,N) families with at least one open quotient : 417
     D=4422  N=1      open=1   / 1   quotients
     D=4470  N=1      open=1   / 1   quotients
     D=4510  N=1      open=1   / 1   quotients
-    D=4902  N=1      open=1   / 1   quotients
     D=6042  N=1      open=1   / 1   quotients
 
 ================================================================
@@ -1093,8 +1094,17 @@ COVER-LATTICE CONTEXT OF OPEN CURVES
 For each open curve, look at the curves it covers (its further
 quotients) and the curves that cover it (its parents).
 ================================================================
-  open curves that COVER a proved sub-hyperelliptic quotient : 624
+  open curves that COVER a proved sub-hyperelliptic quotient : 620
   open curves COVERED BY a proved sub-hyperelliptic quotient : 0
   open curves all of whose further quotients are ruled out   : 0
-  open curves with no recorded cover relations (isolated)    : 150
+  open curves with no recorded cover relations (isolated)    : 145
+
+================================================================
+RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES
+================================================================
+  cover another open curve (closure may apply)         : 32
+  + isomorphic over F_p to another open curve          : 38
+  + fully isomorphic (FH99 Prop 4/5) to another open   : 21
+
+  open curves with NO such lifeline -> must be resolved individually : 693
 
