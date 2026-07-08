@@ -62,6 +62,8 @@ case stage:
         FilterByComplicatedALFixedPointsOnQuotient(~subseq);
     when "FilterByGeneralizedComplicatedFixedPoints":
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
+    when "FilterBySpecialFiber":
+        FilterBySpecialFiber(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":

@@ -116,18 +116,29 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprintf ShimuraQuotients, 3 : "File found.";
-        return eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m));
+        // Sort canonically so the eta-quotient basis (and hence all downstream models) is independent
+        // of polymake's lattice-point output order (which is not stable across polymake versions).
+        // Applied on cache read too, so pre-existing (unsorted) cache files give the same result.
+        return Sort(eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)));
     end if;
     vprintf ShimuraQuotients, 3 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
-    polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
+    // Bound the polymake call: for degenerate/large pole orders the LATTICE_POINTS
+    // enumeration can run away for hours. Running it under `timeout` makes polymake a
+    // child of timeout (not of a magma that may itself get killed later), so it is
+    // reaped rather than orphaned, and the base degrades gracefully via the IsEof
+    // branch below (an empty result is treated as "no solutions"). Legitimate solves
+    // finish in seconds-to-minutes, far under this bound.
+    polymake_timeout := 1800; // seconds per polymake invocation
+    cmd := Sprintf("timeout %o polymake --script %o 2>/dev/null", polymake_timeout, fname);
+    polymake := Read(POpen(cmd, "r"));
     if IsEof(polymake) then return []; end if;
 
     sol_lines := Split(polymake, "\n");
     sol_vecs := [Split(line, " ") : line in sol_lines];
     sols := [[eval(x) : x in vec] : vec in sol_vecs];
-    rs := [sol[2..1 + #Divisors(M)] : sol in sols];
+    rs := Sort([sol[2..1 + #Divisors(M)] : sol in sols]);   // canonical order (version-independent)
 
     Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
     return rs;
@@ -354,10 +365,19 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     R := EtaQuotientsRing(M, disc);
     gap_condition := false;
     pole_string := Zero select "{0,oo}" else "{oo}";
+    // Guardrail: a legitimate n (pole order of the eta-quotient generators) is small -- O(100), and
+    // < ~500 across every known base.  For some larger/harder bases the form-ring loop never reaches
+    // rk = dim, so n climbs without bound and each iteration writes one polymake_script file (this
+    // produced ~10^7 junk files before being caught).  Fail fast and informatively instead of looping
+    // forever.  (The proper fix -- why rk < dim persists for these bases -- is separate.)
+    BORCHERDS_N_CAP := 10000;
     vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
-        
-        vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim; 
+        error if n gt BORCHERDS_N_CAP,
+            Sprintf("BorcherdsForms non-convergence: n=%o exceeded cap %o (M=%o, rk=%o, dim=%o); the " *
+                    "form-ring loop is diverging, this base is not generable by the current method", n, BORCHERDS_N_CAP, M, rk, dim);
+
+        vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim;
         
         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
         

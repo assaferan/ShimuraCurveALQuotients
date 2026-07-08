@@ -23,5 +23,4 @@ $eqs = [
 [ 0, 516, 258, 172, 129, 86, 43, 12, 6, 4, 3, 2, 1, 0, 0, 0, 0, -24 ]
 ];
 $p = new Polytope(INEQUALITIES=>$ieqs, EQUATIONS=>$eqs);
-prefer_now "libnormaliz";
-print $p->LATTICE_POINTS_GENERATORS->[0];
+print $p->LATTICE_POINTS;

@@ -34,6 +34,10 @@ FILTER_STAGES := [*
     // <"GetQuotientsAndGenera", GetQuotientsAndGenera>,
     <"UpdateByGenus", UpdateByGenus>,
     <"UpdateCurves1", UpdateCurves>,
+    // Special-fiber (reduction mod p) test, [FH] Section 5 generalized (D=1 and D=6).  Placed
+    // first in the all-quotients block: it is by far the cheapest filter, so its determinations
+    // prune every heavier filter below.  Mirrors run_pipeline.sh.
+    <"FilterBySpecialFiber", FilterBySpecialFiber>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
@@ -41,6 +45,9 @@ FILTER_STAGES := [*
     <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
     <"UpdateCurves4", UpdateCurves>,
     <"FilterByComplicatedALFixedPointsOnQuotient", FilterByComplicatedALFixedPointsOnQuotient>,
+    // Generalized [FH] Prop 6 via mixed groups <W_odd, V_p>; additive to the AL version above.
+    // Mirrors run_pipeline.sh.
+    <"FilterByGeneralizedComplicatedFixedPoints", FilterByGeneralizedComplicatedFixedPoints>,
     <"UpdateCurves5", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
@@ -109,7 +116,9 @@ function compute_data(start_stage, stages)
     	    VerifyHHProposition1(curves);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
-        when "FilterByComplicatedALFixedPointsOnQuotient":
+        when "FilterByGeneralizedComplicatedFixedPoints":
+            // matches run_pipeline.sh, where VerifyFHTable3 is the UpdateCurves5 pre-check
+            // (i.e. after both Complicated and Generalized fixed-point stages)
             VerifyFHTable3(curves);
       end case;
    end for;

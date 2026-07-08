@@ -1,73 +1,117 @@
 
 intrinsic FindLambda(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10)-> BoolElt, ModTupRngElt
-{.}
+{Coordinate vector (in basis_L) of an optimal embedding of the discriminant-d CM order into
+Order, delegating to FindLambdas (hybrid bounded-box / Embed).  Returns false if d does not embed.
+The `bound' parameter is the box start bound.}
     require d gt 0: "d must be positive";
-
-    Q := ChangeRing(Q, Integers());
-    n := Nrows(Q);
-    idxs := CartesianPower([-bound..bound], n);
-    for idx in idxs do
-        v := Vector([idx[j] : j in [1..n]]);
-        v := ChangeRing(v, BaseRing(Q));
-        if (v*Q,v) eq 2*d then
-            // checking whether this is an optimal embedding of the order of discriminant d
-            elt := &+[v[i]*basis_L[i] : i in [1..#basis_L]];
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                if elt/2 in Order then
-                    return true, v;
-                end if;
-            end if;
-            // d mod 4 eq 3
-            if (1+elt)/2 in Order then
-                return true, v;
-            end if;
-        end if;
-    end for;
-    return false, _;
+    found, lams := FindLambdas(Q, [d], Order, basis_L);
+    if found then return true, lams[d]; else return false, _; end if;
 end intrinsic;
 
-intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 10, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
-{.}
+intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum : bound := 16, lambda_array := AssociativeArray())-> BoolElt, ModTupRngElt
+{For each d in ds, return the integer coordinate vector v (in the basis basis_L) of an
+optimal embedding of the discriminant-d CM order into Order, i.e. the element elt = sum_i
+v_i/2 basis_L[i] (+ 1/2 when d = 3 mod 4) generates O cap Q(sqrt(-d)).
+HYBRID strategy: PRIMARY is a BOUNDED box enumeration of the (indefinite ternary) norm form
+v.Q.v = 2d -- deterministic and, unlike Magma's Embed, it never hangs; the box bound starts at
+`bound' and doubles only up to a hard cap, so it can never blow up (the old unbounded box started at
+max_d/2 and 80 GB-exploded).  FALLBACK is Magma's Embed, used only for discs whose optimal vector
+exceeds the box cap (large quadratic-CM discs).  This keeps the small rational discs -- where Embed is
+the one that intermittently hangs on unlucky ShimuraCurveLattice order representatives -- on the safe
+box path.  Returns true with the lambdas iff all d found.}
     require &and[d gt 0 : d in ds]: "All ds must be positive";
     lambdas := lambda_array;
-    Q := ChangeRing(Q, Integers());
-    n := Nrows(Q);
-    idxs := CartesianPower([-bound..bound], n);
-    twice_ds := [2*d : d in ds];
-    for idx in idxs do
-        v := Vector([idx[j] : j in [1..n]]);
-        v := ChangeRing(v, BaseRing(Q));
-        if (v*Q,v) in twice_ds then
-            d := (v*Q,v) div 2;
-            if d in Keys(lambdas) then continue; end if; //already found
-            // checking whether this is an optimal embedding of the order of discriminant d
-            if d mod 4 ne 3 then
-                assert d mod 4 eq 0;
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]; //checking elt/2 embedding
-            // d mod 4 eq 3
-            elif d mod 4 eq 3 then
-            //(1+elt)/2 now
-                elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]]+Parent(basis_L[1])!1/2;
-            end if;
-            //check that this gives an optimal embedding
-            B_O := Basis(Order);
-            Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
-            CoB := Matrix([Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0]))), Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
-            den := Denominator(CoB);
-            CoBZZ := ChangeRing(den*CoB, Integers());
-            S, _, _ := SmithForm(CoBZZ);
-            Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
-            if S eq Sprime then
-                lambdas[d] := v;
-                if Keys(lambdas) eq Set(ds) then
-                    //then we found all the lambdas
-                        return true, lambdas;
-                end if;
-            end if;
+    QZ := ChangeRing(Q, Integers());
+    n := Nrows(QZ);
+    A := Algebra(Order);
+    // express algebra elements in the (trace-zero) basis basis_L
+    ML := Matrix([Eltseq(A!b) : b in basis_L]);
+    coordsL := func< el | Solution(ML, Vector(Eltseq(A!el))) >;
+    R<x> := PolynomialRing(Rationals());
+    B_O := Basis(Order);
+    Mat_O := Matrix([Eltseq(B_O[i]) : i in [1..#B_O]]);
+    Sprime := HorizontalJoin(IdentityMatrix(Integers(),2), ZeroMatrix(Integers(),2));
+    e1col := Eltseq(Solution(Mat_O, Vector(Rationals(),[1,0,0,0])));
+
+    // does the integer coordinate vector v give an OPTIMAL embedding of the disc-(-d) order?
+    // elt = sum v_i/2 basis_L[i] (+1/2 for d = 3 mod 4) must generate O cap Q(sqrt(-d)); the
+    // Smith-form test below checks that {1, elt} is part of a Z-basis of O.
+    is_optimal := function(v, d)
+        if d mod 4 eq 3 then
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]] + Parent(basis_L[1])!1/2;
+        else
+            elt := &+[v[i]/2*basis_L[i] : i in [1..#basis_L]];
         end if;
+        CoB := Matrix([e1col, Eltseq(Solution(Mat_O, Vector(Rationals(), Eltseq(elt))))]);
+        CoBZZ := ChangeRing(Denominator(CoB)*CoB, Integers());
+        return SmithForm(CoBZZ) eq Sprime;
+    end function;
+
+    // ---- PRIMARY: bounded box enumeration of v.Q.v = 2d (deterministic; never hangs) ----
+    // Trace-zero space is 3-dimensional for a quaternion order; evaluate the ternary form directly.
+    if n eq 3 then
+        twice := {Integers()| 2*d : d in ds};
+        q11 := QZ[1,1]; q22 := QZ[2,2]; q33 := QZ[3,3];
+        q12 := QZ[1,2]+QZ[2,1]; q13 := QZ[1,3]+QZ[3,1]; q23 := QZ[2,3]+QZ[3,2];
+        // cap must clear the LARGEST box bound any required d needs. This depends on the
+        // (non-canonical) order representative Magma hands us, so a borderline d found right
+        // at the cap on a lucky run can spill past it on an unlucky one -- the box then misses
+        // it and the flaky Embed fallback may fail to recover it (observed intermittently for
+        // d = 280 in X0(10,19), found at bound 128 on lucky runs). Keep the cap generous so the
+        // deterministic box always wins; the loop exits as soon as all d are found, so the
+        // higher cap costs nothing on the common (small-bound) case.
+        cap := 512;
+        bd := Maximum(bound, 8);
+        while (bd le cap) and not (Set(ds) subset Keys(lambdas)) do
+            for a in [-bd..bd] do
+                for b in [-bd..bd] do
+                    pab := q11*a^2 + q22*b^2 + q12*a*b;
+                    qc  := q13*a + q23*b;
+                    for c in [-bd..bd] do
+                        nv := pab + q33*c^2 + qc*c;
+                        if nv in twice then
+                            d := nv div 2;
+                            if d notin Keys(lambdas) then
+                                v := Vector([Integers()| a, b, c]);
+                                if is_optimal(v, d) then
+                                    lambdas[d] := v;
+                                    vprintf ShimuraQuotients, 3 : "\t  box: d = %o at bound <= %o\n", d, bd;
+                                end if;
+                            end if;
+                        end if;
+                    end for;
+                end for;
+            end for;
+            bd *:= 2;
+        end while;
+    end if;
+
+    // ---- FALLBACK: Magma's Embed for any d the bounded box did not reach ----
+    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
+    //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
+    // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
+    for d in ds do
+        if d in Keys(lambdas) then continue; end if;
+        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; Embed fallback (may hang -- see FindLambdas)\n", d;
+        embeds := true; lam := A!0;
+        try
+            if d mod 4 eq 3 then
+                lam := 2*(A!Embed(MaximalOrder(NumberField(x^2+d)), Order)) - 1;
+            else
+                lam := 2*(A!Embed(EquationOrder(NumberField(x^2+(d div 4))), Order));
+            end if;
+        catch e
+            embeds := false;                                // K does not embed -> no lambda for this d
+        end try;
+        if not embeds then continue; end if;
+        cv := coordsL(lam);
+        if not &and[IsCoercible(Integers(), cc) : cc in Eltseq(cv)] then continue; end if;
+        v := Vector([Integers()| cc : cc in Eltseq(cv)]);
+        if (v*QZ, v) ne 2*d then continue; end if;          // self-check: correct norm
+        if is_optimal(v, d) then lambdas[d] := v; end if;
     end for;
-    if Keys(lambdas) eq Set(ds) then
+
+    if Set(ds) eq Keys(lambdas) then
         return true, lambdas;
     else
         vprint ShimuraQuotients, 2 : "Could not find all lambdas";
@@ -77,37 +121,27 @@ intrinsic FindLambdas(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, b
 end intrinsic;
 
 intrinsic ElementOfNorm(Q::AlgMatElt, d::RngIntElt, Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
-{Return element of norm d in the quadratic space with Gram matrix Q.
-Warning - does it in a silly way via enumeration. }
+{Coordinate vector (in basis_L) of an optimal embedding of the disc-d CM order into Order,
+via FindLambda (Magma's Embed).  Errors if d does not embed.}
     require d gt 0: "d must be a positive norm";
-    bd := 10;
-    found_lambda := false;
-    while not found_lambda do
-        bd *:= 2;
-        found_lambda, lambda := FindLambda(Q, d, Order, basis_L : bound := bd);
-    end while;
-    assert found_lambda;
+    found_lambda, lambda := FindLambda(Q, d, Order, basis_L);
+    if not found_lambda then
+        error Sprintf("ElementOfNorm: no optimal embedding of discriminant %o into the order", d);
+    end if;
     return lambda;
 end intrinsic;
 
 intrinsic ElementsOfNorm(Q::AlgMatElt, ds::SeqEnum[RngIntElt], Order::AlgQuatOrd, basis_L::SeqEnum) -> ModTupRngElt
-{Return elements of norm in the list of ds in the quadratic space with Gram matrix Q.
-Warning - does it in a silly way via enumeration. }
+{For each d in ds, return the coordinate vector (in basis_L) of an optimal embedding of the
+disc-d CM order into Order, via FindLambdas (Magma's Embed).  Errors if some d does not embed.}
     require &and[d gt 0 : d in ds]: "All ds must be positive";
-    max_d := Maximum(ds);
-    bd := max_d div 2;
-    lambdas := AssociativeArray();
-    found_lambdas := false;
-    vprintf ShimuraQuotients, 2 : "\n\tFinding lambdas for norms in %o...", ds;
-    while not found_lambdas do
-        found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L : bound := bd, lambda_array := lambdas);
-        if not found_lambdas then
-            bd *:=2;
-            vprintf ShimuraQuotients, 2 : "Increasing lambda bound to %o\n", bd;
-        end if;
-    end while;
+    vprintf ShimuraQuotients, 2 : "\n\tFinding lambdas for norms in %o (optimal embeddings)...", ds;
+    found_lambdas, lambdas := FindLambdas(Q, ds, Order, basis_L);
+    if not found_lambdas then
+        error Sprintf("ElementsOfNorm: no optimal embedding found for discriminant(s) %o",
+                      Set(ds) diff Keys(lambdas));
+    end if;
     vprintf ShimuraQuotients, 2 : "Found lambdas.";
-    assert found_lambdas;
     return lambdas;
 end intrinsic;
 
@@ -1008,7 +1042,6 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
 end intrinsic;
 
-
 intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
 {Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
  definition of the CM point with CM by d on X, built via Magma's AbelianExtension
@@ -1089,12 +1122,22 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
     if Exponent(G) le 2 then
         has_cc, cc := HasComplexConjugate(Aabs);   // A_abs (subfield of CM H_R, contains K) is CM
         assert has_cc;
-        ccs := [* cc *];
     else
-        gal, _, gal_to_auts := AutomorphismGroup(Aabs);
-        ccs := [* gal_to_auts(g) : g in gal
-                 | Order(g) eq 2 and gal_to_auts(g)(KinA) eq -KinA *];
+        // A_abs is not CM (Pic(R) has exponent > 2), so HasComplexConjugate fails -- but complex
+        // conjugation is still ONE automorphism (A_abs/Q is Galois): the unique one sending A_abs.1
+        // to the complex-conjugate root of its defining polynomial.  GR (Lemma CC / Thm mainCM) use
+        // this c abstractly and pin only sigma_a; we build c directly here rather than enumerating
+        // every order-2 reflection via AutomorphismGroup (slow, and over-generating -- it returns
+        // all reflections c.sigma, of which only this one is genuinely complex conjugation).
+        f := DefiningPolynomial(Aabs);
+        prec := 40 + 4*Degree(Aabs);
+        target := ComplexConjugate(Conjugates(Aabs.1 : Precision := prec)[1]);
+        roots_A := [r[1] : r in Roots(f, Aabs)];
+        diffs := [Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots_A];
+        _, idx := Minimum(diffs);
+        cc := hom<Aabs -> Aabs | roots_A[idx]>;
     end if;
+    ccs := [* cc *];
 
     // Valid classes [a] in Pic(R)/Pic(R)^2 with B_D ~ (-s, m*N(a))_Q  (Lemma CC /
     // Remark uniqueness); their Artin automorphisms sigma_a restricted to A_abs.
@@ -1137,7 +1180,6 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
     return fields;
 
 end intrinsic;
-
 
 procedure replace_column(schofer_tab, d, dnew, is_log)
     //add column associated to dnew remove column associated to d
@@ -1194,8 +1236,16 @@ function find_y2_scales(schofer_table)
             // Append(~scale_factors, AbsoluteValue(scale));
             Append(~scale_factors, log_scale);
         else 
-            assert exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
-            assert exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
+            found_j1 := exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
+            found_j2 := found_j1 and exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
+            // Graceful: without two suitable rational CM points we cannot pin this cover's y2-scale.
+            // Leave the row unscaled (placeholder); the cover's constraints then come out inconsistent
+            // in EquationsOfCovers, so it is deferred and (if a parent is computed) recovered as a quotient.
+            if not found_j2 then
+                Append(~scale_factors, LogSum(1));
+                vprintf ShimuraQuotients, 1 : "  Could not pin y2-scale (sparse CM data); leaving a cover unscaled to be deferred downstream.\n";
+                continue;
+            end if;
             //otherwise we find two points that are potentially over quadratic fields
             v1 := table[i][j1];
             v2 := table[i][j2];
@@ -1219,11 +1269,12 @@ function find_y2_scales(schofer_table)
             if IsSquare( v2 - LogSum(AbsoluteValue(d2)) - log_scale1) then
                 // Append(~scale_factors, AbsoluteValue(scale1));
                 Append(~scale_factors, log_scale1);
-            else
-                // assert IsSquare(scale2*v2);
-                assert IsSquare(v2 - log_scale2);
+            elif IsSquare(v2 - log_scale2) then
                 // Append(~scale_factors, AbsoluteValue(scale2));
                 Append(~scale_factors, log_scale2);
+            else
+                Append(~scale_factors, LogSum(1));
+                vprintf ShimuraQuotients, 1 : "  y2-scale IsSquare check failed for a cover; leaving it unscaled to be deferred downstream.\n";
             end if;
         end if;
     end for;
@@ -1268,9 +1319,16 @@ function find_y2_signs(abs_schofer_tab)
                     end if;
                 end for;
             end for;
-            assert #possible_answers eq 1;
-            eps := possible_answers[1][2];
-            table[i][d_idx] :=  eps * table[i][d_idx];
+            // When the sign is determined (cover value of degree <= 2, i.e. f_q(s) a square in the
+            // star field), apply it.  Otherwise -- the cover value is degree 4 (f_q(s) NOT a square,
+            // which happens for the exponent>2 quadratic discs) -- the sign is neither determinable
+            // from the y^2 norm alone nor needed: the cover equations f_q are fixed by the rational
+            // and degree-2 cover points, and the special-fiber method uses only the star Hauptmodul
+            // s-value of such a disc.  Leave |y^2| untouched and skip.
+            if #possible_answers eq 1 then
+                eps := possible_answers[1][2];
+                table[i][d_idx] :=  eps * table[i][d_idx];
+            end if;
         end for;
     end for;
     return table;

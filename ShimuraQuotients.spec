@@ -19,4 +19,6 @@ TraceFormula.m
 cmtables.m
 Verifications.m
 GeneralizedComplicatedFixedPoints.m
+special_fiber_modular.m
+special_fiber_cm.m
 }

@@ -110,7 +110,8 @@ function solve_quadratic_constraints(relns)
     R := Universe(relns);
     P := ProjectiveSpace(R);
     S := Scheme(P, relns);
-    assert Dimension(S) eq 0;
+    error if Dimension(S) ne 0,
+        Sprintf("quadratic CM constraints do not cut out a 0-dimensional scheme (Dimension = %o)", Dimension(S));
     return RationalPoints(S);
 end function;
 
@@ -128,28 +129,45 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     kernels := RationalConstraintsOnEquations(schofer_table, curves);
     relns := QuadraticConstraintsOnEquations(schofer_table, curves, kernels);
 
+    // A cover whose CM constraints are insufficient/inconsistent (e.g. a hard intermediate cover
+    // that is not on the path to the top curve) is DEFERRED rather than aborting the whole run;
+    // AllEquationsAboveCovers recovers it later as a quotient of a curve lying above it.
+    good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
+    deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
-        if #relns[i] eq 0 or #B eq 1 then
-            require #B eq 1 : "Try adding quadratic points -- not enough constraints from the rational points";
-            v :=  Eltseq(B[1]);
-            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
-            f := R!monic_v;
+        determined := true;
+        f := R!0;
+        try
+            if #relns[i] eq 0 or #B eq 1 then
+                error if #B ne 1, "not enough constraints from the rational points";
+                v :=  Eltseq(B[1]);
+                monic_v := [-v[j]/v[#v] : j in [1..#v-1]];
+                f := R!monic_v;
+            else
+                coeffs := solve_quadratic_constraints(relns[i]);
+                error if #coeffs ne 1, "quadratic+rational constraints do not give a unique solution";
+                coeffs := Eltseq(coeffs[1]);
+                v := &+[B[j]*coeffs[j] : j in [1..#B]];
+                v := Eltseq(v);
+                monic_v := [-v[j]/v[#v] : j in [1..#v-1]];
+                f := R!monic_v;
+            end if;
+        catch e
+            determined := false;
+        end try;
+        if determined then
             Append(~eqn_list, f);
+            Append(~good_kidxs, i);
         else
-            coeffs := solve_quadratic_constraints(relns[i]);
-            require #coeffs eq 1 : "We do not have enough constraints coming from quadratic and rational points";
-            coeffs := Eltseq(coeffs[1]);
-            v := &+[B[j]*coeffs[j] : j in [1..#B]];
-            v := Eltseq(v);
-            monic_v := [-v[i]/v[#v] : i in [1..#v-1]];
-            f := R!monic_v;
-            Append(~eqn_list, f);
+            Append(~deferred, keys_fs[k_idxs[i]]);
+            vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) not determined from CM constraints; deferring to recover as a quotient.\n",
+                curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
         end if;
     end for;
 
 
     crv_list := [HyperellipticCurve(e) : e in eqn_list];
-    keys :=  [keys_fs[i] : i in k_idxs];
+    keys :=  [keys_fs[k_idxs[i]] : i in good_kidxs];
     Xstar := schofer_table`Xstar;
     all_W := Xstar`W;
 
@@ -167,7 +185,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
         end for;
     end for;
 
-    return crv_list, ws, keys;
+    return crv_list, ws, keys, deferred;
 end intrinsic;
 
 intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}) -> SeqEnum, Assoc, SeqEnum
@@ -375,6 +393,7 @@ function process_P1_cover(label, curves_above_P1s, curves, crv_eqns, crv_ws)
     covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
     for P1_label in Keys(curves_above_P1s[label]) do
         covered_others := covered_curves diff {P1_label};
+        found_base := false;   // define even if covered_others is empty (can happen with deferred covers)
         for other_label in covered_others do
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_P1s[label][P1_label];
             found_base := false;
@@ -410,6 +429,7 @@ function process_conic_cover(label, curves_above_conics, curves, crv_eqns, crv_w
     covered_curves := Keys(crv_eqns) meet curves[label]`Covers;
     for conic_label in Keys(curves_above_conics[label]) do
         covered_others := covered_curves diff {conic_label};
+        found_base := false;   // define even if covered_others is empty (can happen with deferred covers)
         for other_label in covered_others do
             common_bases := Keys(crv_eqns[other_label]) meet curves_above_conics[label][conic_label];
             found_base := false;
@@ -499,6 +519,7 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
         assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
         for other_curve in curves[k]`Covers do
             found_gplus1 := false;
+            if not IsDefined(all_eqns, other_curve) then continue; end if;  // deferred cover, not computed
             bases := Keys(all_eqns[other_curve]);
             if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
             if (base_label ne 0) and base_label notin bases then continue; end if;
@@ -556,6 +577,46 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
 
 end intrinsic;
 
+// Recover covers that EquationsOfCovers could not determine from CM constraints, by quotienting a
+// computed curve lying above them by the appropriate Atkin-Lehner involution. For a deferred cover
+// X/W_k, an immediate parent X/W_above (W_above subset W_k) that IS computed is quotiented by the
+// involution w in W_k \ W_above, giving X/W_k = (X/W_above)/w.
+function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
+    all_W := Xstar`W;
+    for k in deferred do
+        if IsDefined(all_eqns, k) and not IsEmpty(Keys(all_eqns[k])) then continue; end if; // already have it
+        recovered := false;
+        for above in curves[k]`CoveredBy do
+            if not IsDefined(all_eqns, above) then continue; end if;
+            hyp_bases := [b : b in Keys(all_eqns[above]) | Type(all_eqns[above][b]) eq CrvHyp];
+            if IsEmpty(hyp_bases) then continue; end if;
+            extra := curves[k]`W diff curves[above]`W;      // the involution(s) to quotient by
+            if IsEmpty(extra) then continue; end if;
+            base := hyp_bases[1];
+            w := Representative(extra);
+            if not (IsDefined(all_ws, above) and IsDefined(all_ws[above], base)
+                    and IsDefined(all_ws[above][base], w)) then continue; end if;
+            C_above := all_eqns[above][base];
+            w_map := all_ws[above][base][w];
+            Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
+            if not IsDefined(all_eqns, k) then all_eqns[k] := AssociativeArray(); end if;
+            if not IsDefined(all_ws, k) then all_ws[k] := AssociativeArray(); end if;
+            all_eqns[k][base] := Cq;
+            all_ws[k][base] := AssociativeArray();
+            for u in curves[k]`W do all_ws[k][base][u] := IdentityMap(Cq); end for;
+            for u in (all_W diff curves[k]`W) do all_ws[k][base][u] := HyperellipticInvolution(Cq); end for;
+            vprintf ShimuraQuotients, 1 : "  Recovered deferred cover W=%o (g=%o) as (%o)/w_%o.\n",
+                curves[k]`W, curves[k]`g, curves[above]`W, w;
+            recovered := true;
+            break;
+        end for;
+        if not recovered then
+            vprintf ShimuraQuotients, 1 : "  WARNING: could not recover deferred cover W=%o.\n", curves[k]`W;
+        end if;
+    end for;
+    return all_eqns, all_ws;
+end function;
+
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
@@ -571,8 +632,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
-    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : 
-                                                           MaxNum := num_vals, Prec := Prec, 
+    abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
+                                                           MaxNum := num_vals, Prec := Prec,
                                                            Exclude := {}, Include := Set(d_divs));
     vprintf ShimuraQuotients, 2 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
@@ -581,7 +642,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := {});
     vprintf ShimuraQuotients, 1 : "Done!\n";  
     vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
-    crv_list, ws, new_keys := EquationsOfCovers(schofer_tab, all_cm_pts);
+    crv_list, ws, new_keys, deferred := EquationsOfCovers(schofer_tab, all_cm_pts);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
@@ -589,6 +650,11 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
+    if not IsEmpty(deferred) then
+        vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
+        all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
+        vprintf ShimuraQuotients, 1 : "Done\n";
+    end if;
     return all_eqns, all_ws;
 end intrinsic;
 

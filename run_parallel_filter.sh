@@ -49,7 +49,9 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
         ;;
     FilterByALFixedPointsOnQuotient)
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
+        # Preceded by FilterBySpecialFiber (moved to the front of the all-quotients block so its
+        # cheap determinations prune every downstream filter), hence reads its output.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterBySpecialFiber.dat"
         ;;
     FilterByDegeneracyMorphism)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves3.dat"
@@ -60,6 +62,13 @@ case "${STAGE}" in
     FilterByGeneralizedComplicatedFixedPoints)
         # Generalized [FH] Prop 6 via mixed groups <W_odd, V_p>; additive to the AL version above.
         INPUT_DAT="${DATA_DIR}/curves_after_FilterByComplicatedALFixedPointsOnQuotient.dat"
+        ;;
+    FilterBySpecialFiber)
+        # Special-fiber (reduction mod p) non-hyperellipticity test, [FH] Section 5 generalized.
+        # D=1, D=6, D=10 and D=22 curves with a genus-0 special-fiber component.  Runs first in the
+        # all-quotients block (right after UpdateCurves1): it is by far the cheapest filter, so
+        # its determinations prune all the heavier filters that follow.
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
         ;;
     FilterByTrace)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves5.dat"
@@ -76,7 +85,8 @@ case "${STAGE}" in
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient," >&2
-        echo "           FilterByGeneralizedComplicatedFixedPoints, FilterByTrace," >&2
+        echo "           FilterByGeneralizedComplicatedFixedPoints, FilterBySpecialFiber," >&2
+        echo "           FilterByTrace," >&2
         echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2
         echo "           FilterByNonALInvolutionsStar" >&2
         exit 1
