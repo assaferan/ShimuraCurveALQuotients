@@ -119,7 +119,15 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     vprintf ShimuraQuotients, 3 : "File not found, computing...";
     write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
     fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
-    polymake := Read(POpen("polymake --script " cat fname cat " 2>/dev/null", "r"));
+    // Bound the polymake call: for degenerate/large pole orders the LATTICE_POINTS
+    // enumeration can run away for hours. Running it under `timeout` makes polymake a
+    // child of timeout (not of a magma that may itself get killed later), so it is
+    // reaped rather than orphaned, and the base degrades gracefully via the IsEof
+    // branch below (an empty result is treated as "no solutions"). Legitimate solves
+    // finish in seconds-to-minutes, far under this bound.
+    polymake_timeout := 1800; // seconds per polymake invocation
+    cmd := Sprintf("timeout %o polymake --script %o 2>/dev/null", polymake_timeout, fname);
+    polymake := Read(POpen(cmd, "r"));
     if IsEof(polymake) then return []; end if;
 
     sol_lines := Split(polymake, "\n");
