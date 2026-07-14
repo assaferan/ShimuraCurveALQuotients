@@ -978,8 +978,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
-    // Proposition 5.6
-    if (Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0 then
+    // Proposition 5.6 + correction (adding GCD(D,f) = 1)
+    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
 
@@ -1110,8 +1110,14 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
     N_R      := &*[Integers()| p : p in PrimeDivisors(N) | chi(p) eq 1 or (f mod p eq 0)];
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | chi(p) eq 1 and (f mod p ne 0)];
 
-    // Proposition 5.6
-    if (Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0 then
+    // Proposition 5.6 + correction: also require GCD(D, f) = 1. There is a CM point by R on X only
+    // if R optimally embeds into the Eichler order; an order NON-MAXIMAL at a prime p | D (ramified
+    // in the quaternion algebra) has embedding number 0 -- only the maximal order embeds optimally at
+    // a ramified prime -- so it is not a CM point. The congruence alone MISSES this (e.g. d = -656 on
+    // X0(34,5)*: 2 | D and 2 | f), and without the guard the al_gen loop hands `frakb @@ mG` a prime
+    // ramified in the ring class field and Magma throws "not in the codomain". This combined test is
+    // verified equivalent to NumberOfOptimalEmbeddings(R,D,N) = 0 (0 mismatches over 2000 discs).
+    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
 
