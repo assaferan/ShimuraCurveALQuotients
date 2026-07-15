@@ -875,8 +875,15 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
-        bd := Maximum(include_bd*2, 8); //go up to 8 from 4
-        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the incremental early-stop below keeps it cheap
+        // Fetch INCREMENTALLY: scan discriminants (smallest |d| first) only until we have enough --
+        // the demand MaxNum plus a margin of spare quadratic points for the hauptmodul sign-finding
+        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8] and never pay for
+        // CNs[16]; CM-starved bases reach into CNs[16] just far enough. Bounds the expensive
+        // per-discriminant ring-class-field field-of-definition to ~target real CM points.
+        fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
+                                      // the early-stop fires well before exhausting the (expensive) h=16 points
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true, target := fetch_target);
         pt_list_rat := pt_list_rat cat new_rat_cm;
         need := need - #new_rat_cm;
         if need gt 0 then
@@ -1091,12 +1098,19 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
 end intrinsic;
 
-intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
+intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
 {Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
  definition of the CM point with CM by d on X, built via Magma's AbelianExtension
  inside the (smaller) Atkin-Lehner-fixed field A_abs rather than the full ring class
  field H_R + ArtinMap(H_R).  Returns the same set of fields (up to isomorphism) as
- FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.}
+ FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.
+ If MaxDegree > 0, callers that only want small-degree fields (e.g. the rational/quadratic
+ CM-point fetch) can cap the work: the field-of-definition DEGREE is known cheaply from A_abs
+ (it is Degree(A_abs) when complex conjugation is inactive on the quotient, else Degree(A_abs)/2,
+ because every returned field is the fixed field of an order-2 reflection).  When that degree
+ exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
+ complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
+ high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
     D := X`D;
     N := X`N;
     W := X`W;
@@ -1135,20 +1149,18 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
         Append(~al_gen, frakb @@ mG);
     end for;
 
-    // A_abs = H_R fixed by alSub_W, as an abelian extension of K.
-    _, pi_quo := quo<G | sub<G | al_gen>>;
-    Aext := AbelianExtension(Inverse(pi_quo)*mG);
-    NFA  := NumberField(Aext);
-    Aabs := AbsoluteField(NFA);
-    _, NFA_to_abs := IsIsomorphic(NFA, Aabs);
-    KinA := Aabs!K.1;
+    // A_abs = H_R fixed by alSub_W is an abelian extension of K of degree #G/#alSub_W;
+    // over Q it has degree 2*#G/#alSub_W.  We keep alSub_W to both read that degree off the
+    // group orders and (below) build the quotient.
+    alSub := sub<G | al_gen>;
 
     // Is complex conjugation active on this quotient?  Lemma (CC): complex conjugation
     // is realised by w_m . sigma_a with m = D_R*N_star_R; it identifies P with bar P on
     // the quotient iff some mm in W is a reflection m * w0 with w0 al_is_gal.  In that
     // case the reflection restricts to A_abs as c . sigma_a . sigma_{w0}, so we must
     // include the extra Atkin-Lehner twist sigma_{w0} (trivial only when w0 = 1, e.g.
-    // for the full quotient).
+    // for the full quotient).  This depends only on W and the ramification data, not on A_abs,
+    // so we compute it before building any number field.
     m := D_R*N_star_R;
     cc_active := false;
     w0 := 1;
@@ -1160,6 +1172,30 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
             break;
         end if;
     end for;
+
+    // The field of definition DEGREE is known from GROUP ORDERS alone, with no number field built:
+    // Degree(A_abs/Q) = 2 * #G div #alSub_W, and every returned field is either A_abs itself (cc
+    // inactive) or the fixed field of an order-2 reflection c.sigma_a.sigma_{w0} (cc active, degree
+    // halved).  A caller that only keeps degree <= MaxDegree points can bail HERE -- before the
+    // AbelianExtension / AbsoluteField build (~1s/disc) AND the far more expensive cc pinning (a
+    // Roots() over the degree-[A_abs] field, ~1min for high-Picard-exponent CNs[16] discriminants) --
+    // because the point is discarded regardless of WHICH fields those steps would name.  Verified
+    // deg_def below equals the actual returned field degree on the deg-1/deg-2 discs that survive.
+    deg_Aabs := 2 * #G div #alSub;
+    if MaxDegree gt 0 then
+        deg_def := cc_active select (deg_Aabs div 2) else deg_Aabs;
+        if deg_def gt MaxDegree then
+            return [* *];
+        end if;
+    end if;
+
+    // Build A_abs = H_R fixed by alSub_W, as an abelian extension of K.
+    _, pi_quo := quo<G | alSub>;
+    Aext := AbelianExtension(Inverse(pi_quo)*mG);
+    NFA  := NumberField(Aext);
+    Aabs := AbsoluteField(NFA);
+    _, NFA_to_abs := IsIsomorphic(NFA, Aabs);
+    KinA := Aabs!K.1;
 
     if not cc_active then
         return [* Aabs *];   // field of definition contains K

@@ -1415,8 +1415,14 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true) -> SeqEnum, SeqEnum
-{returns rational and quadratic CM points on X. Excludes those in exclude}
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0) -> SeqEnum, SeqEnum
+{returns rational and quadratic CM points on X. Excludes those in exclude.
+ INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
+ points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
+ "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
+ (ring class field) computation to ~target real CM points instead of the whole class-number table.
+ Easy bases finish inside CNs[<=8] and never pay for CNs[16]; starved bases reach into it only as far
+ as needed. target = 0 means no early stop (scan everything, as before).}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     rat_pts := [];
@@ -1463,15 +1469,27 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     N := X`N;
     vprintf ShimuraQuotients, 2: "\n\tchecking fields of definition for %o candidate discriminant(s)...\n", #allCN;
     tt := Realtime();
+    // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
+    // (they are appended before the loop); the loop below only appends already-coprime points.
+    if coprime_to_level then
+        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+    end if;
     for ctr->d in allCN do
+        // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
+        // so this keeps the nicest ones and avoids the expensive field-of-def on the rest).
+        if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
+        if coprime_to_level and (GCD(d, X`N) ne 1) then continue; end if;
 
         // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
         // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
         // plain #flds = 1 test below then accepts the deg-2 multi-orbit discs the slow routine used to
         // over-split.  It is also faster (no AutomorphismGroup blowup).
-        flds := FieldsOfDefinitionOfCMPointFast(X, d);
+        // MaxDegree := 2: this loop only keeps rational (deg 1) or quadratic (deg 2) CM points, so
+        // cap the field-of-definition work -- discriminants whose field of definition has degree > 2
+        // are discarded anyway, and the cap skips their (expensive) complex-conjugation pinning.
+        flds := FieldsOfDefinitionOfCMPointFast(X, d : MaxDegree := 2);
         if flds eq [* Rationals() *] and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
         elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
