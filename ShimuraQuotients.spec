@@ -17,6 +17,7 @@ QuaternionLatticeData.m
 RationalWithFactorization.m
 TraceFormula.m
 cmtables.m
+ModelVerification.m
 Verifications.m
 GeneralizedComplicatedFixedPoints.m
 special_fiber_modular.m
