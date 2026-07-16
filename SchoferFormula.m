@@ -1425,46 +1425,56 @@ function find_y2_signs(abs_schofer_tab)
     return table;
 end function;
 
-function find_hauptmodul_signs_quadratic(abs_schofer_tab, d, d_idx)
-    //find signs of hauptmodul for quadratic CM point d on each hauptmodul
-    //in keys_fs, where d_idx is index of column of d in table
+function hauptmodul_sign_candidates(abs_schofer_tab, d, d_idx)
+    //Return the list of ADMISSIBLE minpolys of the star hauptmodul s at the quadratic CM point d
+    //(column d_idx). From Schofer we know only the absolute norms |N(s(P))|, |N(s~(P))| (s~ = 1 - s);
+    //the four sign choices give four candidate minpolys and the true s(P) is among the admissible ones.
+    //
+    //KEY: s is the STAR hauptmodul, so s(P) lies in the STAR curve's (degree-2) field of definition of
+    //d -- NOT a covering curve's field, which is frequently DEGREE 4 (e.g. d=-264 on X0(22,7)*: every
+    //cover is degree 4). The old code filtered "has a root in K" against the cover field; a quadratic
+    //minpoly having a root in a degree-4 field is a far looser test, so many spurious candidates
+    //survived and the point was declared ambiguous and discarded ("No possible choices of CM points
+    //left"). Filtering against the tight, correct degree-2 star field resolves the vast majority
+    //uniquely; the residual genuine degree-2 ambiguities (two sign choices whose discriminants are both
+    //disc(K)*square) are returned as a >1-element list and disambiguated at the solve stage.
+    //Return values: [] (no admissible -- bad data / wrong point), [mp] (unique), [mp1,mp2,..] (ambiguous).
     table := abs_schofer_tab`Values;
-    keys_fs := abs_schofer_tab`Keys_fs;
-    k_idxs := abs_schofer_tab`K_idxs;
     s_idx := abs_schofer_tab`sIndex;
     stilde_idx := abs_schofer_tab`sTildeIndex;
     flds := abs_schofer_tab`FldsOfDefn;
+    cid := abs_schofer_tab`Xstar`CurveID;
 
-    for k->i in k_idxs do
-        if table[i][d_idx] eq Infinity() then continue; end if;
-        if table[i][d_idx] eq 0 then continue; end if;
-        K := flds[keys_fs[i]][d][1];
-        norm_s := table[s_idx][d_idx];
-        norm_stilde := table[stilde_idx][d_idx];
-         _<x> := PolynomialRing(Rationals());
-        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-        minpolys := [];
-        for eps in signs do
-                trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
-                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-        end for;
-        roots := [Roots(p,K) : p in minpolys];
-        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-        if #good_inds eq 1 then
-            table[s_idx][d_idx] := minpolys[good_inds[1]];
-            norm_s := Coefficient(minpolys[good_inds[1]], 0);
-            trace_s := - Coefficient(minpolys[good_inds[1]], 1);
-            table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
-            return true, table;
-        else
-            vprintf ShimuraQuotients, 3: "We need that there is a unique minpoly left after filtering by roots, but we found %o good indices\n", #good_inds;
-            if #good_inds eq 0 then
-                error "No good indices found after filtering by roots";
-            end if;
-            return false, _;
-        end if;
+    K := flds[cid][d][1];                          // star field of definition: exactly where s(P) lives
+    K_imaginary := not IsTotallyReal(K);
+    norm_s := table[s_idx][d_idx];
+    norm_stilde := table[stilde_idx][d_idx];
+    _<x> := PolynomialRing(Rationals());
+    signs := [[1,1], [1,-1], [-1,1], [-1,-1]];
+    minpolys := [];
+    for eps in signs do
+        trace := 1 - eps[1]*norm_stilde + eps[2]*norm_s;
+        Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
     end for;
+    roots := [Roots(p, K) : p in minpolys];
+    // Admissible iff the candidate has a NON-rational root in K (so s(P) genuinely generates the
+    // quadratic K). For an IMAGINARY K the norms N(s(P)) = |s(P)|^2 and N(s~(P)) = |1-s(P)|^2 are
+    // positive, so only the (+,+) sign choice is physical -- enforce it (never drops the true
+    // candidate, and pins the imaginary case outright).
+    good_inds := [j : j->r in roots |
+                    (#r ne 0) and not(&and[rt[1] in Rationals() : rt in r])
+                    and ((not K_imaginary) or (signs[j][1] eq 1 and signs[j][2] eq 1))];
+    return [minpolys[j] : j in good_inds];
 end function;
+
+// Set the s and s~ = 1 - s minpoly cells (columns d_idx) of `table` to the chosen s-minpoly `mp`.
+procedure apply_hauptmodul_minpoly(~table, s_idx, stilde_idx, d_idx, mp)
+    R := Parent(mp); x := R.1;
+    norm_s := Coefficient(mp, 0);
+    trace_s := - Coefficient(mp, 1);
+    table[s_idx][d_idx] := mp;
+    table[stilde_idx][d_idx] := x^2 - (2 - trace_s)*x + (1 - trace_s + norm_s);
+end procedure;
 
 intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
     {}
@@ -1518,30 +1528,52 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
 
     quad_idxs := [i : i in [1..#allds] | degs[i] eq 2];
     used_ds := Set(allds);
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
+    // Genuine degree-2 sign ambiguities that no spare point can replace: (column index, candidate
+    // s-minpolys, and the induced s~-minpolys).  These are resolved at the solve stage by choosing the
+    // sign combination that makes the cover equations consistent (see AllEquationsAboveCovers).
+    ambiguous := [* *];
     for i in [1..#allds] do
         if i notin quad_idxs then continue; end if; //only do quadratic points
         currd := allds[i];
-        success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
-        while not success do
-            vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+        cands := hauptmodul_sign_candidates(abs_schofer_tab, currd, i);
+        // Prefer to swap an ambiguous (>=2) or empty (0) point for a spare unambiguous one -- cheap and
+        // exact.  Only when no spare remains do we keep the point and defer to the solve-stage search.
+        while #cands ne 1 do
             Include(~used_ds, currd);
-            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
-            if #candidates eq 0 then
-                error "No possible choices of CM points left which we can pin down the correct minpoly";
-            end if;
-            newd := Reverse(Sort(SetToSequence(candidates)))[1];
-            vprintf ShimuraQuotients, 1: "Replacing %o with %o\n", currd, newd;
+            spares := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
+            if #spares eq 0 then break; end if;
+            newd := Reverse(Sort(SetToSequence(spares)))[1];
+            vprintf ShimuraQuotients, 1: "sign of %o unresolved (%o candidates); trying spare %o.\n", currd, #cands, newd;
             replace_column(abs_schofer_tab, currd, newd, false);
             Include(~used_ds, newd);
             currd := newd;
-            success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
+            cands := hauptmodul_sign_candidates(abs_schofer_tab, currd, i);
         end while;
-        abs_schofer_tab`Values := new_table;
+        require #cands ge 1 :
+            "No admissible hauptmodul minpoly for a quadratic CM point (Schofer norm data inconsistent with the star field of definition)";
+        table := abs_schofer_tab`Values;
+        apply_hauptmodul_minpoly(~table, s_idx, stilde_idx, i, cands[1]);   // candidate 1 as placeholder
+        abs_schofer_tab`Values := table;
+        if #cands ge 2 then
+            // record the induced (s, s~) minpoly pair for each candidate so the solve stage can swap
+            // cells without re-deriving (and without needing this file's helpers).
+            pairs := [* *];
+            for mp in cands do
+                ns := Coefficient(mp, 0); ts := - Coefficient(mp, 1);
+                Rp := Parent(mp); xp := Rp.1;
+                Append(~pairs, <mp, xp^2 - (2 - ts)*xp + (1 - ts + ns)>);
+            end for;
+            Append(~ambiguous, <i, pairs>);
+            vprintf ShimuraQuotients, 2: "quadratic CM point %o has %o genuinely ambiguous sign choices; deferring to solve stage.\n", currd, #cands;
+        end if;
     end for;
 
     table := find_y2_signs(abs_schofer_tab);
 
     schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
+    schofer_table`AmbiguousSigns := ambiguous;
     return schofer_table;
 end intrinsic;
 

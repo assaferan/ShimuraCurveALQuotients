@@ -581,6 +581,51 @@ end intrinsic;
 // computed curve lying above them by the appropriate Atkin-Lehner involution. For a deferred cover
 // X/W_k, an immediate parent X/W_above (W_above subset W_k) that IS computed is quotiented by the
 // involution w in W_k \ W_above, giving X/W_k = (X/W_above)/w.
+// Quotient of a hyperelliptic curve C: y^2 = f(x) by an explicit coordinate involution
+// w: (x,y) -> (mu(x), rho(x)*y), computed DIRECTLY from the map -- no AutomorphismGroup, hence no
+// "genus greater than one" restriction (Magma's AutomorphismGroup rejects genus <= 1 over Q).
+// Construction: U = a non-constant symmetric invariant of the orbit {x, mu(x)} generates Q(x)^mu;
+// V = (1+rho)*y is w-invariant (since w^2 = id forces rho(mu(x))*rho(x) = 1), and V^2 = (1+rho)^2*f(x)
+// is mu-invariant, hence V^2 = G(U).  Q(U,V) has index 2 in Q(x,y), so it IS the invariant field and
+// V^2 = G(U) is a model of C/<w>.  Verified against CurveQuotient(AutomorphismGroup(...)) on a
+// genus-2 example (y^2 = x^6+1 by (x,y)->(-x,y)): both give the j=0 elliptic curve, IsIsomorphic true.
+function direct_involution_quotient(C, w)
+    f := HyperellipticPolynomials(C);
+    d := Degree(f);
+    wy := (d + 1) div 2;                       // weight of y in the ambient P(1,wy,1)
+    dp := DefiningPolynomials(w);
+    Qx<xx> := RationalFunctionField(Rationals());
+    imX_x := Evaluate(dp[1], [xx, 0, 1]);      // affine (z=1) images; mu must not involve y
+    imZ_x := Evaluate(dp[3], [xx, 0, 1]);
+    aY    := Evaluate(dp[2], [xx, 1, 1]);      // imY = a(x)*y  =>  coefficient of y
+    error if Evaluate(dp[2], [xx, 0, 1]) ne 0, "involution y-image is not homogeneous-linear in y";
+    mu  := imX_x / imZ_x;
+    rho := aY / imZ_x^wy;
+    error if Evaluate(Numerator(mu), mu)/Evaluate(Denominator(mu), mu) ne xx,
+        "x-image of the involution is not an involution";
+    ssum := xx + mu;  sprod := xx * mu;
+    U := (not IsCoercible(Rationals(), ssum)) select ssum else sprod;
+    error if IsCoercible(Rationals(), U), "no non-constant symmetric invariant of {x, mu(x)}";
+    onep := 1 + rho;
+    error if onep eq 0, "rho = -1 (y anti-invariant) is not handled by direct_involution_quotient";
+    V2 := onep^2 * Evaluate(f, xx);
+    pU := Numerator(U); qU := Denominator(U);
+    QU<u> := RationalFunctionField(Rationals());
+    RX<XX> := PolynomialRing(QU);
+    rel := Evaluate(pU, XX) - u*Evaluate(qU, XX);
+    error if Degree(rel) ne 2, Sprintf("x is not degree 2 over Q(U) (degree %o)", Degree(rel));
+    Fx := ext<QU | rel>;
+    xe := Fx.1;
+    V2e := Evaluate(Numerator(V2), xe) / Evaluate(Denominator(V2), xe);
+    ok, G := IsCoercible(QU, V2e);
+    error if not ok, "V^2 is not a function of U -- invariance failed";
+    A := Numerator(G); B := Denominator(G);
+    quot_poly := A*B;                          // (V*B)^2 = A*B
+    error if Degree(quot_poly) lt 3,
+        Sprintf("quotient has genus 0 (deg %o); no hyperelliptic model", Degree(quot_poly));
+    return HyperellipticCurve(quot_poly);
+end function;
+
 function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     all_W := Xstar`W;
     for k in deferred do
@@ -598,7 +643,19 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
                     and IsDefined(all_ws[above][base], w)) then continue; end if;
             C_above := all_eqns[above][base];
             w_map := all_ws[above][base][w];
-            Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
+            // AutomorphismGroup needs genus > 1 (over Q); for a genus <= 1 curve above, build the
+            // quotient directly from the coordinate involution instead.
+            if Genus(C_above) le 1 then
+                try
+                    Cq := direct_involution_quotient(C_above, w_map);
+                catch e
+                    vprintf ShimuraQuotients, 1 : "  direct quotient of (%o) by w_%o failed: %o\n",
+                        curves[above]`W, w, e`Object;
+                    continue;
+                end try;
+            else
+                Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
+            end if;
             if not IsDefined(all_eqns, k) then all_eqns[k] := AssociativeArray(); end if;
             if not IsDefined(all_ws, k) then all_ws[k] := AssociativeArray(); end if;
             all_eqns[k][base] := Cq;
@@ -642,7 +699,65 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := {});
     vprintf ShimuraQuotients, 1 : "Done!\n";  
     vprintf ShimuraQuotients, 1 : "Computing equations of covers...";
-    crv_list, ws, new_keys, deferred := EquationsOfCovers(schofer_tab, all_cm_pts);
+    ambiguous := (assigned schofer_tab`AmbiguousSigns) select schofer_tab`AmbiguousSigns else [* *];
+    if #ambiguous eq 0 then
+        crv_list, ws, new_keys, deferred := EquationsOfCovers(schofer_tab, all_cm_pts);
+    else
+        // Some quadratic CM points had a GENUINE degree-2 sign ambiguity (two candidate hauptmodul
+        // minpolys, both with a root in the star field) that no spare point could replace. The true
+        // global sign assignment is the one making the cover equations consistent: a wrong sign turns a
+        // quadratic constraint inconsistent, so that cover is deferred rather than determined. Search
+        // the (small) product of per-point candidate choices and keep the assignment that determines
+        // the most covers OF THE CORRECT GENUS.
+        s_idx := schofer_tab`sIndex;
+        stilde_idx := schofer_tab`sTildeIndex;
+        choice_counts := [#a[2] : a in ambiguous];
+        nchoices := &*choice_counts;
+        vprintf ShimuraQuotients, 1 : "\n  %o quadratic point(s) with genuinely ambiguous sign; searching %o combination(s)...\n", #ambiguous, nchoices;
+        // All index combinations (one choice per ambiguous point), robust for any count including 1.
+        combos := [[Integers()|]];
+        for c in choice_counts do
+            combos := [Append(pre, j) : pre in combos, j in [1..c]];
+        end for;
+        base_vals := schofer_tab`Values;
+        best_score := -2;
+        best_combo := [1 : a in ambiguous];
+        crv_list := []; ws := AssociativeArray(); new_keys := []; deferred := [];
+        if nchoices le 1024 then
+            for combo in combos do
+                tab := base_vals;
+                for t->a in ambiguous do
+                    pair := a[2][combo[t]];
+                    tab[s_idx][a[1]] := pair[1];
+                    tab[stilde_idx][a[1]] := pair[2];
+                end for;
+                schofer_tab`Values := tab;
+                try
+                    cl, w, nk, df := EquationsOfCovers(schofer_tab, all_cm_pts);
+                    score := #[m : m->k in nk | Genus(cl[m]) eq curves[k]`g];
+                catch e
+                    score := -1; cl := []; w := AssociativeArray(); nk := []; df := [];
+                end try;
+                if score gt best_score then
+                    best_score := score;
+                    crv_list := cl; ws := w; new_keys := nk; deferred := df;
+                    best_combo := combo;
+                end if;
+            end for;
+        else
+            vprintf ShimuraQuotients, 1 : "  (too many combinations; using placeholder signs)\n";
+            crv_list, ws, new_keys, deferred := EquationsOfCovers(schofer_tab, all_cm_pts);
+        end if;
+        // Bake the winning sign assignment into the table for the downstream stages.
+        tab := base_vals;
+        for t->a in ambiguous do
+            pair := a[2][best_combo[t]];
+            tab[s_idx][a[1]] := pair[1];
+            tab[stilde_idx][a[1]] := pair[2];
+        end for;
+        schofer_tab`Values := tab;
+        vprintf ShimuraQuotients, 1 : "  best sign combination determines %o cover(s) of correct genus.\n", best_score;
+    end if;
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing equations above P1s and conics...";
     all_eqns, all_ws := EquationsAboveP1s(crv_list, ws, new_keys, curves); //still adding ws here in the conic case
