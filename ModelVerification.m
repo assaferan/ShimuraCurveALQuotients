@@ -34,45 +34,20 @@ function model_lpoly(C, p)
     end try;
 end function;
 
-// The D-new space S_2(D*N)^{D-new} of modular symbols. By Jacquet-Langlands this is the
-// Hecke module attached to Jac(X_0(D,N)), so it is an oracle COMPLETELY independent of the
-// Borcherds/Schofer construction that produced the models.
-function Dnew_modsym_space(D, N)
-    M := ModularSymbols(D*N, 2, 0);
-    S := CuspidalSubspace(M);
-    for q in PrimeDivisors(D) do S := NewSubspace(S, q); end for;
-    return S;
-end function;
+// The expected point count #(X_0(D,N)/W)(F_p) comes from ComputePointsViaTrace, which evaluates
+// the Eichler-Selberg trace formula on the W-fixed part of the D-new space (TraceDNewALFixed) --
+// no modular-symbol space is ever built.  This is the codebase's own trace-formula point count
+// (the same routine behind the Weil/automorphism filters), and it is completely independent of
+// the Borcherds/Schofer CM machinery that produced the models, so it is a genuine cross-check.
 
-// a_p of Jac(X_0(D,N)/W) predicted from S (= the D-new space).
-// X/W corresponds to the W-invariant part; the projector is (1/|W|)*sum_{Q in W} sgn(Q)*W_Q,
-// where sgn(Q) = (-1)^#primes(gcd(Q,D)) is the Jacquet-Langlands sign relating the Atkin-Lehner
-// eigenvalue on the Shimura curve to the classical one (cf. ModularNonALInvolutions.m).
-// The final /2 is the modular-symbol doubling (cf. tests/trace_formula.m: trace = 2*from_formula).
-function predicted_ap(S, D, W, p)
-    if Dimension(S) eq 0 then return 0; end if;
-    Tp := HeckeOperator(S, p);
-    tot := 0;
-    for Q in W do
-        sgn := (-1)^(#PrimeDivisors(GCD(Q, D)));
-        if Q eq 1 then
-            AQ := Parent(Tp) ! 1;
-        else
-            AQ := AtkinLehnerOperator(S, Q);
-        end if;
-        tot +:= sgn * Trace(Tp * AQ);
-    end for;
-    return tot / (2 * #W);
-end function;
-
-intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 4, Verbose := true, CheckZeta := true, MaxZetaLevel := 400) -> RngIntElt, RngIntElt
+intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 4, Verbose := true, CheckZeta := true) -> RngIntElt, RngIntElt
 {Run independent checks on a model set for X_0(D,N)*. Returns (#checks, #failures).
- CheckZeta runs the Jacquet-Langlands a_p check (skipped when D*N exceeds MaxZetaLevel, where
- the modular-symbol space gets expensive).}
+ CheckZeta runs the trace-formula point-count check.}
     nchk := 0; nfail := 0;
     curves := GetHyperellipticCandidates();
 
     Cs := AssociativeArray();     // W-set -> model curve
+    Xs := AssociativeArray();     // W-set -> the ShimuraQuot X_0(D,N)/W (for the trace-formula check)
     for k in Keys(models) do
         ents := models[k];
         if #ents eq 0 then continue; end if;
@@ -95,6 +70,7 @@ intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 
                     if Verbose then printf "  [2] FAIL W=%o: theory genus %o, model genus %o\n", k, X`g, gc; end if;
                     nfail +:= 1;
                 end if;
+                Xs[Wset] := X;
             end if;
             Cs[Wset] := C;
         end for;
@@ -139,50 +115,32 @@ intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 
         end for;
     end for;
 
-    c, f := VerifyModelZeta(models, D, N : Verbose := Verbose, CheckZeta := CheckZeta, MaxZetaLevel := MaxZetaLevel);
-    nchk +:= c; nfail +:= f;
-    return nchk, nfail;
-end intrinsic;
-
-intrinsic VerifyModelZeta(models::Assoc, D::RngIntElt, N::RngIntElt : Verbose := true, CheckZeta := true, MaxZetaLevel := 400) -> RngIntElt, RngIntElt
-{[4] Check each model's a_p against the Jacquet-Langlands prediction from the D-new subspace
- of S_2(D*N): #(X/W)(F_p) = p + 1 - a_p for every prime p of good reduction. This verifies each
- model INDIVIDUALLY (no nested cover pairs needed), so it reaches the sparse model sets that the
- Weil-divisibility check cannot. Returns (#checks, #failures).}
-    nchk := 0; nfail := 0;
-    if (not CheckZeta) or (D*N gt MaxZetaLevel) then
-        if Verbose then printf "  [4] skipped (level %o)\n", D*N; end if;
-        return nchk, nfail;
-    end if;
-    S := Dnew_modsym_space(D, N);
-    if Verbose then printf "  [4] dim S_2(%o)^{%o-new} = %o\n", D*N, D, Dimension(S); end if;
-    for k in Keys(models) do
-        ents := models[k];
-        if #ents eq 0 then continue; end if;
-        for e in ents do
-            if Type(e[2]) eq MonStgElt then continue; end if;
-            C := HyperellipticCurve(e[2], e[3]);
-            W := Set(k);
+    // [4] trace-formula point counts
+    if CheckZeta then
+        for W in Wsets do
+            if not IsDefined(Xs, W) then continue; end if;   // no ShimuraQuot found for this W
+            X := Xs[W]; C := Cs[W];
             for p in [3,5,7,11,13,17,19,23] do
                 if (D*N mod p eq 0) then continue; end if;
                 good := true; actual := 0;
                 try
                     Cp := ChangeRing(C, GF(p));
-                    if IsNonsingular(Cp) then actual := p + 1 - #Points(Cp); else good := false; end if;
+                    if IsNonsingular(Cp) then actual := #Points(Cp); else good := false; end if;
                 catch err
                     good := false;
                 end try;
                 if not good then continue; end if;
+                expected := ComputePointsViaTrace(X, p, 1);
                 nchk +:= 1;
-                if predicted_ap(S, D, W, p) ne actual then
+                if expected ne actual then
                     if Verbose then
-                        printf "  [4] FAIL W=%o p=%o: predicted a_p = %o, model gives %o\n",
-                            Sort(SetToSequence(W)), p, predicted_ap(S, D, W, p), actual;
+                        printf "  [4] FAIL W=%o p=%o: trace formula predicts #X(F_p) = %o, model gives %o\n",
+                            Sort(SetToSequence(W)), p, expected, actual;
                     end if;
                     nfail +:= 1;
                 end if;
             end for;
         end for;
-    end for;
+    end if;
     return nchk, nfail;
 end intrinsic;
