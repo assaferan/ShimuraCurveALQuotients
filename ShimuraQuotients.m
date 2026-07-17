@@ -1415,8 +1415,14 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true) -> SeqEnum, SeqEnum
-{returns rational and quadratic CM points on X. Excludes those in exclude}
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0) -> SeqEnum, SeqEnum
+{returns rational and quadratic CM points on X. Excludes those in exclude.
+ INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
+ points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
+ "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
+ (ring class field) computation to ~target real CM points instead of the whole class-number table.
+ Easy bases finish inside CNs[<=8] and never pay for CNs[16]; starved bases reach into it only as far
+ as needed. target = 0 means no early stop (scan everything, as before).}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     rat_pts := [];
@@ -1447,6 +1453,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     CNs[2] := {-15, -20, -24, -35, -40, -51, -52, -88, -91, -115, -123, -148, -187, -232, -235, -267, -403, -427};
     CNs[4] := {-39, -55, -56, -68, -84, -120, -132, -136, -155, -168, -184, -195, -203, -219, -228, -259, -280, -291, -292, -312, -323, -328, -340, -355, -372, -388, -408, -435, -483, -520, -532, -555, -568, -595, -627, -667, -708, -715, -723, -760, -763, -772, -795, -955, -1003, -1012, -1027, -1227, -1243, -1387, -1411, -1435, -1507, -1555};
     CNs[8] := {-95, -111, -164, -183, -248, -260, -264, -276, -295, -299, -308, -371, -376, -395, -420, -452, -456, -548, -552, -564, -579, -580, -583, -616, -632, -651, -660, -712, -820, -840, -852, -868, -904, -915, -939, -952, -979, -987, -995, -1032, -1043, -1060, -1092, -1128, -1131, -1155, -1195, -1204, -1240, -1252, -1288, -1299, -1320, -1339, -1348, -1380, -1428, -1443, -1528, -1540, -1635, -1651, -1659, -1672, -1731, -1752, -1768, -1771, -1780, -1795, -1803, -1828, -1848, -1864, -1912, -1939, -1947, -1992, -1995, -2020, -2035, -2059, -2067, -2139, -2163, -2212, -2248, -2307, -2308, -2323, -2392, -2395, -2419, -2451, -2587, -2611, -2632, -2667, -2715, -2755, -2788, -2827, -2947, -2968, -2995, -3003, -3172, -3243, -3315, -3355, -3403, -3448, -3507, -3595, -3787, -3883, -3963, -4123, -4195, -4267, -4323, -4387, -4747, -4843, -4867, -5083, -5467, -5587, -5707, -5947, -6307};
+    CNs[16] := {-399,-407,-471,-495,-559,-584,-644,-656,-663,-735,-740,-799,-855,-884,-895,-896,-903,-943,-975,-992,-1015,-1016,-1023,-1028,-1040,-1047,-1056,-1088,-1104,-1139,-1140,-1159,-1220,-1224,-1232,-1280,-1344,-1379,-1400,-1412,-1416,-1440,-1476,-1504,-1508,-1520,-1536,-1560,-1568,-1595,-1596,-1608,-1624,-1628,-1636,-1640,-1656,-1680,-1716,-1764,-1776,-1808,-1824,-1860,-1872,-1876,-1884,-1920,-1924,-1980,-1983,-2004,-2016,-2019,-2040,-2048,-2056,-2072,-2095,-2100,-2112,-2176,-2192,-2195,-2208,-2211,-2232,-2236,-2244,-2256,-2280,-2292,-2296,-2304,-2312,-2320,-2328,-2331,-2340,-2356,-2379,-2400,-2436,-2448,-2464,-2496,-2499,-2520,-2528,-2560,-2568,-2580,-2584,-2628,-2640,-2652,-2688,-2691,-2739,-2760,-2772,-2811,-2848,-2868,-2880,-2884,-2928,-2940,-2944,-2952,-2980,-3060,-3063,-3072,-3108,-3136,-3140,-3144,-3160,-3168,-3171,-3192,-3195,-3196,-3220,-3280,-3328,-3336,-3339,-3360,-3363,-3379,-3400,-3408,-3420,-3432,-3435,-3443,-3460,-3472,-3480,-3492,-3520,-3528,-3531,-3555,-3556,-3580,-3588,-3600,-3603,-3612,-3616,-3640,-3648,-3732,-3752,-3772,-3784,-3795,-3808,-3819,-3828,-3832,-3840,-3844,-3900,-3939,-3976,-4008,-4020,-4032,-4043,-4060,-4068,-4092,-4096,-4128,-4171,-4179,-4180,-4188,-4216,-4228,-4240,-4251,-4260,-4275,-4312,-4324,-4368,-4379,-4420,-4427,-4440,-4452,-4480,-4488,-4512,-4515,-4516,-4596,-4600,-4608,-4612,-4624,-4636,-4672,-4680,-4683,-4687,-4712,-4720,-4740,-4788,-4804,-4816,-4851,-4899,-4900,-4932,-4939,-4960,-4971,-4984,-4992,-5008,-5112,-5115,-5152,-5160,-5187,-5195,-5208,-5248,-5280,-5328,-5355,-5363,-5380,-5392,-5403,-5412,-5428,-5440,-5460,-5475,-5491,-5520,-5572,-5632,-5668,-5688,-5712,-5752,-5848,-5860,-5883,-5896,-5907,-5908,-5952,-5992,-5995,-6003,-6027,-6040,-6052,-6099,-6112,-6123,-6148,-6160,-6195,-6208,-6312,-6315,-6328,-6355,-6395,-6400,-6420,-6435,-6475,-6528,-6532,-6580,-6595,-6612,-6627,-6628,-6688,-6708,-6747,-6771,-6792,-6820,-6840,-6867,-6868,-6923,-6948,-6952,-7003,-7008,-7035,-7051,-7072,-7120,-7168,-7195,-7252,-7275,-7288,-7312,-7315,-7347,-7368,-7392,-7395,-7456,-7480,-7491,-7540,-7579,-7588,-7648,-7672,-7707,-7747,-7755,-7780,-7795,-7819,-7828,-7843,-7923,-7932,-7968,-7995,-8008,-8043,-8052,-8080,-8083,-8283,-8299,-8308,-8320,-8352,-8380,-8452,-8512,-8515,-8547,-8548,-8595,-8635,-8643,-8680,-8683,-8715,-8835,-8848,-8859,-8932,-8955,-8968,-8992,-9027,-9088,-9108,-9208,-9219,-9232,-9243,-9328,-9387,-9412,-9472,-9483,-9507,-9508,-9568,-9595,-9640,-9763,-9835,-9867,-9955,-10132,-10168,-10195,-10203,-10227,-10312,-10387,-10420,-10528,-10563,-10587,-10635,-10803,-10843,-10948,-10963,-11067,-11092,-11107,-11152,-11179,-11187,-11203,-11328,-11368,-11512,-11515,-11523,-11563,-11572,-11635,-11715,-11848,-11872,-11995,-12027,-12160,-12252,-12259,-12352,-12387,-12427,-12483,-12523,-12595,-12688,-12699,-12747,-12772,-12835,-12859,-12868,-12915,-13083,-13123,-13192,-13195,-13288,-13323,-13363,-13507,-13563,-13792,-13795,-13819,-13827,-13995,-14008,-14155,-14371,-14403,-14547,-14707,-14763,-14848,-14995,-15067,-15387,-15403,-15547,-15715,-16027,-16192,-16195,-16347,-16531,-16555,-16723,-17227,-17323,-17347,-17427,-17515,-18403,-18715,-18748,-18883,-18907,-19147,-19195,-19363,-19747,-19947,-19987,-20155,-20395,-21403,-21715,-21835,-22243,-22843,-23395,-23587,-24403,-25027,-25267,-27307,-27787,-28963,-31243,-35275};
 
     i := 1;
     allCN := {};
@@ -1462,15 +1469,27 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     N := X`N;
     vprintf ShimuraQuotients, 2: "\n\tchecking fields of definition for %o candidate discriminant(s)...\n", #allCN;
     tt := Realtime();
+    // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
+    // (they are appended before the loop); the loop below only appends already-coprime points.
+    if coprime_to_level then
+        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+    end if;
     for ctr->d in allCN do
+        // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
+        // so this keeps the nicest ones and avoids the expensive field-of-def on the rest).
+        if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
+        if coprime_to_level and (GCD(d, X`N) ne 1) then continue; end if;
 
         // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
         // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
         // plain #flds = 1 test below then accepts the deg-2 multi-orbit discs the slow routine used to
         // over-split.  It is also faster (no AutomorphismGroup blowup).
-        flds := FieldsOfDefinitionOfCMPointFast(X, d);
+        // MaxDegree := 2: this loop only keeps rational (deg 1) or quadratic (deg 2) CM points, so
+        // cap the field-of-definition work -- discriminants whose field of definition has degree > 2
+        // are discarded anyway, and the cap skips their (expensive) complex-conjugation pinning.
+        flds := FieldsOfDefinitionOfCMPointFast(X, d : MaxDegree := 2);
         if flds eq [* Rationals() *] and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
         elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then

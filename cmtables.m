@@ -1,6 +1,6 @@
 declare type SchoferTable;
 
-declare attributes SchoferTable: Values, Keys_fs, sIndex, sTildeIndex, Discs, Xstar, BorcherdsForms, RowScales, FldsOfDefn, K_idxs, Curves;
+declare attributes SchoferTable: Values, Keys_fs, sIndex, sTildeIndex, Discs, Xstar, BorcherdsForms, RowScales, FldsOfDefn, K_idxs, Curves, AmbiguousSigns;
 
 intrinsic Print(x::SchoferTable, L::MonStgElt)
     {Print X at level L}

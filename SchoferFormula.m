@@ -50,17 +50,50 @@ box path.  Returns true with the lambdas iff all d found.}
     // ---- PRIMARY: bounded box enumeration of v.Q.v = 2d (deterministic; never hangs) ----
     // Trace-zero space is 3-dimensional for a quaternion order; evaluate the ternary form directly.
     if n eq 3 then
+        // Reduce the (indefinite) ternary form so the box finds every d at a TINY bound,
+        // independent of the (non-canonical, often badly-scaled) order representative Magma
+        // hands us -- max|Q| ~ 7000 unreduced but ~60 reduced, dropping the needed box bound
+        // from ~256 to <=32. Reduce w.r.t. a positive-definite majorant coming from the real
+        // splitting B (x) R = M_2(R) (Frobenius norm on trace-zero 2x2 matrices), giving a
+        // unimodular Tred; enumerate on Qred = Tred*QZ*Tred^t and map solutions back via
+        // v = v_red*Tred. Pure optimization: any hiccup falls back to the raw form (Tred = I),
+        // and the conjugation fallback below still covers whatever the (then-uncapped) box misses.
+        Tred := IdentityMatrix(Integers(), 3);
+        QB := QZ;
+        try
+            av := Rationals()!(A.1^2); bv := Rationals()!(A.2^2);   // i^2, j^2
+            RR := RealField(60);
+            ok := true;
+            if av gt 0 then
+                sa := Sqrt(RR!av);
+                ri := Matrix(RR,2,2,[sa,0,0,-sa]); rj := Matrix(RR,2,2,[0,1,bv,0]);
+            elif bv gt 0 then
+                sb := Sqrt(RR!bv);
+                rj := Matrix(RR,2,2,[sb,0,0,-sb]); ri := Matrix(RR,2,2,[0,1,av,0]);
+            else
+                ok := false;                                        // definite algebra: no real split
+            end if;
+            if ok then
+                rk := ri*rj;
+                RL := [];
+                for bb in basis_L do e := Eltseq(A!bb); Append(~RL, e[2]*ri + e[3]*rj + e[4]*rk); end for;
+                Maj := ZeroMatrix(Integers(),3,3);
+                for i in [1..3] do for j in [1..3] do
+                    P := RL[i]*Transpose(RL[j]); Maj[i,j] := Round(10^6*(P[1,1]+P[2,2]));
+                end for; end for;
+                _, Tred := LLLGram(Maj);
+                QB := Tred*QZ*Transpose(Tred);
+            end if;
+        catch e
+            Tred := IdentityMatrix(Integers(), 3); QB := QZ;
+        end try;
+
         twice := {Integers()| 2*d : d in ds};
-        q11 := QZ[1,1]; q22 := QZ[2,2]; q33 := QZ[3,3];
-        q12 := QZ[1,2]+QZ[2,1]; q13 := QZ[1,3]+QZ[3,1]; q23 := QZ[2,3]+QZ[3,2];
-        // cap must clear the LARGEST box bound any required d needs. This depends on the
-        // (non-canonical) order representative Magma hands us, so a borderline d found right
-        // at the cap on a lucky run can spill past it on an unlucky one -- the box then misses
-        // it and the flaky Embed fallback may fail to recover it (observed intermittently for
-        // d = 280 in X0(10,19), found at bound 128 on lucky runs). Keep the cap generous so the
-        // deterministic box always wins; the loop exits as soon as all d are found, so the
-        // higher cap costs nothing on the common (small-bound) case.
-        cap := 512;
+        q11 := QB[1,1]; q22 := QB[2,2]; q33 := QB[3,3];
+        q12 := QB[1,2]+QB[2,1]; q13 := QB[1,3]+QB[3,1]; q23 := QB[2,3]+QB[3,2];
+        // On the reduced form the box needs only a tiny bound; keep the cap modest, and let the
+        // conjugation fallback below cover anything past it (e.g. on an unreduced fall-through).
+        cap := 64;
         bd := Maximum(bound, 8);
         while (bd le cap) and not (Set(ds) subset Keys(lambdas)) do
             for a in [-bd..bd] do
@@ -72,7 +105,7 @@ box path.  Returns true with the lambdas iff all d found.}
                         if nv in twice then
                             d := nv div 2;
                             if d notin Keys(lambdas) then
-                                v := Vector([Integers()| a, b, c]);
+                                v := Vector([Integers()| a, b, c]) * Tred;   // map back to original coords
                                 if is_optimal(v, d) then
                                     lambdas[d] := v;
                                     vprintf ShimuraQuotients, 3 : "\t  box: d = %o at bound <= %o\n", d, bd;
@@ -86,29 +119,45 @@ box path.  Returns true with the lambdas iff all d found.}
         end while;
     end if;
 
-    // ---- FALLBACK: Magma's Embed for any d the bounded box did not reach ----
-    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] (disc -d), generator (1+sqrt(-d))/2 -> lam = 2*mu-1.
-    //   d = 0 mod 4: order Z[sqrt(-d/4)]    (disc -d), generator sqrt(-d/4)     -> lam = 2*mu.
-    // (Embedding Z[sqrt(-d)] (disc -4d) instead would make elt = lam/2 fall outside Order.)
+    // ---- FALLBACK: maximal-order embedding + small level-N conjugation into Order ----
+    // Magma's Embed(Oc, Order) THROWS ("IsRightIsomorphic: same right order") for a level-N
+    // EICHLER order, so it is useless here.  But Embed(Oc, Omax) into the MAXIMAL order is
+    // robust (it solves a conic).  The only obstruction to landing in the smaller Eichler
+    // order Order is purely local at the primes p | N (it shows up as a denominator N in the
+    // basis_L coordinates), so a *small* conjugating element nu in Omax fixes it -- the search
+    // scales with N, not d, so it never has the box's O(bd^3) blow-up.  Any optimal embedding
+    // gives the same Schofer/Kappa value (verified: two distinct optimal lambdas agree on every
+    // Kappa0), so which representative we land on is immaterial.
+    //   d = 3 mod 4: order Z[(1+sqrt(-d))/2] -> lam = 2*mu-1;  d = 0 mod 4: Z[sqrt(-d/4)] -> lam = 2*mu.
+    Omax := MaximalOrder(A);
+    bO := [A!b : b in Basis(Omax)];
+    conj_cap := 8;                                          // conjugator size; scales with N, not d
     for d in ds do
         if d in Keys(lambdas) then continue; end if;
-        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; Embed fallback (may hang -- see FindLambdas)\n", d;
-        embeds := true; lam := A!0;
+        vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; maximal-embed + level-N conjugation\n", d;
+        embeds := true; e2 := A!0;
         try
-            if d mod 4 eq 3 then
-                lam := 2*(A!Embed(MaximalOrder(NumberField(x^2+d)), Order)) - 1;
-            else
-                lam := 2*(A!Embed(EquationOrder(NumberField(x^2+(d div 4))), Order));
-            end if;
+            Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
+                                  else EquationOrder(NumberField(x^2+(d div 4)));
+            e2 := A ! Embed(Oc, Omax);
         catch e
             embeds := false;                                // K does not embed -> no lambda for this d
         end try;
         if not embeds then continue; end if;
-        cv := coordsL(lam);
-        if not &and[IsCoercible(Integers(), cc) : cc in Eltseq(cv)] then continue; end if;
-        v := Vector([Integers()| cc : cc in Eltseq(cv)]);
-        if (v*QZ, v) ne 2*d then continue; end if;          // self-check: correct norm
-        if is_optimal(v, d) then lambdas[d] := v; end if;
+        lam0 := (d mod 4 eq 3) select 2*e2 - 1 else 2*e2;
+        found_conj := false;
+        for K in [1..conj_cap] do
+            for cc in CartesianPower([-K..K], 4) do
+                nu := &+[cc[i]*bO[i] : i in [1..4]];
+                if Norm(nu) eq 0 then continue; end if;     // must be invertible
+                cv := coordsL(nu*lam0*nu^(-1));
+                if not &and[IsCoercible(Integers(), z) : z in Eltseq(cv)] then continue; end if;
+                v := Vector([Integers()| z : z in Eltseq(cv)]);
+                if (v*QZ, v) ne 2*d then continue; end if;  // correct norm
+                if is_optimal(v, d) then lambdas[d] := v; found_conj := true; break; end if;
+            end for;
+            if found_conj then break; end if;
+        end for;
     end for;
 
     if Set(ds) eq Keys(lambdas) then
@@ -826,8 +875,15 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
-        bd := Maximum(include_bd*2, 8); //go up to 8 from 4
-        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true);
+        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the incremental early-stop below keeps it cheap
+        // Fetch INCREMENTALLY: scan discriminants (smallest |d| first) only until we have enough --
+        // the demand MaxNum plus a margin of spare quadratic points for the hauptmodul sign-finding
+        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8] and never pay for
+        // CNs[16]; CM-starved bases reach into CNs[16] just far enough. Bounds the expensive
+        // per-discriminant ring-class-field field-of-definition to ~target real CM points.
+        fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
+                                      // the early-stop fires well before exhausting the (expensive) h=16 points
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true, target := fetch_target);
         pt_list_rat := pt_list_rat cat new_rat_cm;
         need := need - #new_rat_cm;
         if need gt 0 then
@@ -929,8 +985,8 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
-    // Proposition 5.6
-    if (Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0 then
+    // Proposition 5.6 + correction (adding GCD(D,f) = 1)
+    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
 
@@ -1042,12 +1098,19 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 
 end intrinsic;
 
-intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
+intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
 {Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
  definition of the CM point with CM by d on X, built via Magma's AbelianExtension
  inside the (smaller) Atkin-Lehner-fixed field A_abs rather than the full ring class
  field H_R + ArtinMap(H_R).  Returns the same set of fields (up to isomorphism) as
- FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.}
+ FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.
+ If MaxDegree > 0, callers that only want small-degree fields (e.g. the rational/quadratic
+ CM-point fetch) can cap the work: the field-of-definition DEGREE is known cheaply from A_abs
+ (it is Degree(A_abs) when complex conjugation is inactive on the quotient, else Degree(A_abs)/2,
+ because every returned field is the fixed field of an order-2 reflection).  When that degree
+ exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
+ complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
+ high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
     D := X`D;
     N := X`N;
     W := X`W;
@@ -1061,8 +1124,14 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
     N_R      := &*[Integers()| p : p in PrimeDivisors(N) | chi(p) eq 1 or (f mod p eq 0)];
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | chi(p) eq 1 and (f mod p ne 0)];
 
-    // Proposition 5.6
-    if (Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0 then
+    // Proposition 5.6 + correction: also require GCD(D, f) = 1. There is a CM point by R on X only
+    // if R optimally embeds into the Eichler order; an order NON-MAXIMAL at a prime p | D (ramified
+    // in the quaternion algebra) has embedding number 0 -- only the maximal order embeds optimally at
+    // a ramified prime -- so it is not a CM point. The congruence alone MISSES this (e.g. d = -656 on
+    // X0(34,5)*: 2 | D and 2 | f), and without the guard the al_gen loop hands `frakb @@ mG` a prime
+    // ramified in the ring class field and Magma throws "not in the codomain". This combined test is
+    // verified equivalent to NumberOfOptimalEmbeddings(R,D,N) = 0 (0 mismatches over 2000 discs).
+    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
 
@@ -1080,20 +1149,18 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
         Append(~al_gen, frakb @@ mG);
     end for;
 
-    // A_abs = H_R fixed by alSub_W, as an abelian extension of K.
-    _, pi_quo := quo<G | sub<G | al_gen>>;
-    Aext := AbelianExtension(Inverse(pi_quo)*mG);
-    NFA  := NumberField(Aext);
-    Aabs := AbsoluteField(NFA);
-    _, NFA_to_abs := IsIsomorphic(NFA, Aabs);
-    KinA := Aabs!K.1;
+    // A_abs = H_R fixed by alSub_W is an abelian extension of K of degree #G/#alSub_W;
+    // over Q it has degree 2*#G/#alSub_W.  We keep alSub_W to both read that degree off the
+    // group orders and (below) build the quotient.
+    alSub := sub<G | al_gen>;
 
     // Is complex conjugation active on this quotient?  Lemma (CC): complex conjugation
     // is realised by w_m . sigma_a with m = D_R*N_star_R; it identifies P with bar P on
     // the quotient iff some mm in W is a reflection m * w0 with w0 al_is_gal.  In that
     // case the reflection restricts to A_abs as c . sigma_a . sigma_{w0}, so we must
     // include the extra Atkin-Lehner twist sigma_{w0} (trivial only when w0 = 1, e.g.
-    // for the full quotient).
+    // for the full quotient).  This depends only on W and the ramification data, not on A_abs,
+    // so we compute it before building any number field.
     m := D_R*N_star_R;
     cc_active := false;
     w0 := 1;
@@ -1105,6 +1172,30 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt) -> List
             break;
         end if;
     end for;
+
+    // The field of definition DEGREE is known from GROUP ORDERS alone, with no number field built:
+    // Degree(A_abs/Q) = 2 * #G div #alSub_W, and every returned field is either A_abs itself (cc
+    // inactive) or the fixed field of an order-2 reflection c.sigma_a.sigma_{w0} (cc active, degree
+    // halved).  A caller that only keeps degree <= MaxDegree points can bail HERE -- before the
+    // AbelianExtension / AbsoluteField build (~1s/disc) AND the far more expensive cc pinning (a
+    // Roots() over the degree-[A_abs] field, ~1min for high-Picard-exponent CNs[16] discriminants) --
+    // because the point is discarded regardless of WHICH fields those steps would name.  Verified
+    // deg_def below equals the actual returned field degree on the deg-1/deg-2 discs that survive.
+    deg_Aabs := 2 * #G div #alSub;
+    if MaxDegree gt 0 then
+        deg_def := cc_active select (deg_Aabs div 2) else deg_Aabs;
+        if deg_def gt MaxDegree then
+            return [* *];
+        end if;
+    end if;
+
+    // Build A_abs = H_R fixed by alSub_W, as an abelian extension of K.
+    _, pi_quo := quo<G | alSub>;
+    Aext := AbelianExtension(Inverse(pi_quo)*mG);
+    NFA  := NumberField(Aext);
+    Aabs := AbsoluteField(NFA);
+    _, NFA_to_abs := IsIsomorphic(NFA, Aabs);
+    KinA := Aabs!K.1;
 
     if not cc_active then
         return [* Aabs *];   // field of definition contains K
@@ -1334,46 +1425,56 @@ function find_y2_signs(abs_schofer_tab)
     return table;
 end function;
 
-function find_hauptmodul_signs_quadratic(abs_schofer_tab, d, d_idx)
-    //find signs of hauptmodul for quadratic CM point d on each hauptmodul
-    //in keys_fs, where d_idx is index of column of d in table
+function hauptmodul_sign_candidates(abs_schofer_tab, d, d_idx)
+    //Return the list of ADMISSIBLE minpolys of the star hauptmodul s at the quadratic CM point d
+    //(column d_idx). From Schofer we know only the absolute norms |N(s(P))|, |N(s~(P))| (s~ = 1 - s);
+    //the four sign choices give four candidate minpolys and the true s(P) is among the admissible ones.
+    //
+    //KEY: s is the STAR hauptmodul, so s(P) lies in the STAR curve's (degree-2) field of definition of
+    //d -- NOT a covering curve's field, which is frequently DEGREE 4 (e.g. d=-264 on X0(22,7)*: every
+    //cover is degree 4). The old code filtered "has a root in K" against the cover field; a quadratic
+    //minpoly having a root in a degree-4 field is a far looser test, so many spurious candidates
+    //survived and the point was declared ambiguous and discarded ("No possible choices of CM points
+    //left"). Filtering against the tight, correct degree-2 star field resolves the vast majority
+    //uniquely; the residual genuine degree-2 ambiguities (two sign choices whose discriminants are both
+    //disc(K)*square) are returned as a >1-element list and disambiguated at the solve stage.
+    //Return values: [] (no admissible -- bad data / wrong point), [mp] (unique), [mp1,mp2,..] (ambiguous).
     table := abs_schofer_tab`Values;
-    keys_fs := abs_schofer_tab`Keys_fs;
-    k_idxs := abs_schofer_tab`K_idxs;
     s_idx := abs_schofer_tab`sIndex;
     stilde_idx := abs_schofer_tab`sTildeIndex;
     flds := abs_schofer_tab`FldsOfDefn;
+    cid := abs_schofer_tab`Xstar`CurveID;
 
-    for k->i in k_idxs do
-        if table[i][d_idx] eq Infinity() then continue; end if;
-        if table[i][d_idx] eq 0 then continue; end if;
-        K := flds[keys_fs[i]][d][1];
-        norm_s := table[s_idx][d_idx];
-        norm_stilde := table[stilde_idx][d_idx];
-         _<x> := PolynomialRing(Rationals());
-        signs := [[1,1], [1,-1],[-1,1],[-1,-1]];
-        minpolys := [];
-        for eps in signs do
-                trace := 1 - eps[1]*norm_stilde +  eps[2]*norm_s;
-                Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
-        end for;
-        roots := [Roots(p,K) : p in minpolys];
-        good_inds := [i : i->r in roots | #r ne 0 and not(&and[rt[1] in Rationals() : rt in r])];
-        if #good_inds eq 1 then
-            table[s_idx][d_idx] := minpolys[good_inds[1]];
-            norm_s := Coefficient(minpolys[good_inds[1]], 0);
-            trace_s := - Coefficient(minpolys[good_inds[1]], 1);
-            table[stilde_idx][d_idx] := x^2 - (2- trace_s)*x + (1- trace_s + norm_s);
-            return true, table;
-        else
-            vprintf ShimuraQuotients, 3: "We need that there is a unique minpoly left after filtering by roots, but we found %o good indices\n", #good_inds;
-            if #good_inds eq 0 then
-                error "No good indices found after filtering by roots";
-            end if;
-            return false, _;
-        end if;
+    K := flds[cid][d][1];                          // star field of definition: exactly where s(P) lives
+    K_imaginary := not IsTotallyReal(K);
+    norm_s := table[s_idx][d_idx];
+    norm_stilde := table[stilde_idx][d_idx];
+    _<x> := PolynomialRing(Rationals());
+    signs := [[1,1], [1,-1], [-1,1], [-1,-1]];
+    minpolys := [];
+    for eps in signs do
+        trace := 1 - eps[1]*norm_stilde + eps[2]*norm_s;
+        Append(~minpolys, x^2 - trace*x + eps[2]*norm_s);
     end for;
+    roots := [Roots(p, K) : p in minpolys];
+    // Admissible iff the candidate has a NON-rational root in K (so s(P) genuinely generates the
+    // quadratic K). For an IMAGINARY K the norms N(s(P)) = |s(P)|^2 and N(s~(P)) = |1-s(P)|^2 are
+    // positive, so only the (+,+) sign choice is physical -- enforce it (never drops the true
+    // candidate, and pins the imaginary case outright).
+    good_inds := [j : j->r in roots |
+                    (#r ne 0) and not(&and[rt[1] in Rationals() : rt in r])
+                    and ((not K_imaginary) or (signs[j][1] eq 1 and signs[j][2] eq 1))];
+    return [minpolys[j] : j in good_inds];
 end function;
+
+// Set the s and s~ = 1 - s minpoly cells (columns d_idx) of `table` to the chosen s-minpoly `mp`.
+procedure apply_hauptmodul_minpoly(~table, s_idx, stilde_idx, d_idx, mp)
+    R := Parent(mp); x := R.1;
+    norm_s := Coefficient(mp, 0);
+    trace_s := - Coefficient(mp, 1);
+    table[s_idx][d_idx] := mp;
+    table[stilde_idx][d_idx] := x^2 - (2 - trace_s)*x + (1 - trace_s + norm_s);
+end procedure;
 
 intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {}) -> SchoferTable
     {}
@@ -1427,30 +1528,52 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
 
     quad_idxs := [i : i in [1..#allds] | degs[i] eq 2];
     used_ds := Set(allds);
+    s_idx := abs_schofer_tab`sIndex;
+    stilde_idx := abs_schofer_tab`sTildeIndex;
+    // Genuine degree-2 sign ambiguities that no spare point can replace: (column index, candidate
+    // s-minpolys, and the induced s~-minpolys).  These are resolved at the solve stage by choosing the
+    // sign combination that makes the cover equations consistent (see AllEquationsAboveCovers).
+    ambiguous := [* *];
     for i in [1..#allds] do
         if i notin quad_idxs then continue; end if; //only do quadratic points
         currd := allds[i];
-        success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
-        while not success do
-            vprintf ShimuraQuotients, 1: "We need that there is a unique minpoly left after filtering by roots so we are replacing %o.\n", currd;
+        cands := hauptmodul_sign_candidates(abs_schofer_tab, currd, i);
+        // Prefer to swap an ambiguous (>=2) or empty (0) point for a spare unambiguous one -- cheap and
+        // exact.  Only when no spare remains do we keep the point and defer to the solve-stage search.
+        while #cands ne 1 do
             Include(~used_ds, currd);
-            candidates := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
-            if #candidates eq 0 then
-                error "No possible choices of CM points left which we can pin down the correct minpoly";
-            end if;
-            newd := Reverse(Sort(SetToSequence(candidates)))[1];
-            vprintf ShimuraQuotients, 1: "Replacing %o with %o\n", currd, newd;
+            spares := Set([pt[1] : pt in all_cm_pts[2]]) diff used_ds diff Exclude;
+            if #spares eq 0 then break; end if;
+            newd := Reverse(Sort(SetToSequence(spares)))[1];
+            vprintf ShimuraQuotients, 1: "sign of %o unresolved (%o candidates); trying spare %o.\n", currd, #cands, newd;
             replace_column(abs_schofer_tab, currd, newd, false);
             Include(~used_ds, newd);
             currd := newd;
-            success, new_table := find_hauptmodul_signs_quadratic(abs_schofer_tab, currd, i);
+            cands := hauptmodul_sign_candidates(abs_schofer_tab, currd, i);
         end while;
-        abs_schofer_tab`Values := new_table;
+        require #cands ge 1 :
+            "No admissible hauptmodul minpoly for a quadratic CM point (Schofer norm data inconsistent with the star field of definition)";
+        table := abs_schofer_tab`Values;
+        apply_hauptmodul_minpoly(~table, s_idx, stilde_idx, i, cands[1]);   // candidate 1 as placeholder
+        abs_schofer_tab`Values := table;
+        if #cands ge 2 then
+            // record the induced (s, s~) minpoly pair for each candidate so the solve stage can swap
+            // cells without re-deriving (and without needing this file's helpers).
+            pairs := [* *];
+            for mp in cands do
+                ns := Coefficient(mp, 0); ts := - Coefficient(mp, 1);
+                Rp := Parent(mp); xp := Rp.1;
+                Append(~pairs, <mp, xp^2 - (2 - ts)*xp + (1 - ts + ns)>);
+            end for;
+            Append(~ambiguous, <i, pairs>);
+            vprintf ShimuraQuotients, 2: "quadratic CM point %o has %o genuinely ambiguous sign choices; deferring to solve stage.\n", currd, #cands;
+        end if;
     end for;
 
     table := find_y2_signs(abs_schofer_tab);
 
     schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
+    schofer_table`AmbiguousSigns := ambiguous;
     return schofer_table;
 end intrinsic;
 
