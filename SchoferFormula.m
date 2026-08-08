@@ -1067,16 +1067,28 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     Q_P := FixedField(abs_H_R, fixed_by);
     Q_Ps := [* Q_P *];
 
-    // Handle complex conjugation 
+    // Handle complex conjugation.  If abs_H_R is CM (<=> Pic(R) has exponent <= 2) there is a unique
+    // complex conjugation and HasComplexConjugate returns it.  Otherwise abs_H_R is NOT a CM field:
+    // Gal(abs_H_R/Q) = Pic(R) : <c> with c inverting Pic(R), so c is non-central and there are
+    // several order-2 automorphisms restricting to complex conjugation on K -- one per archimedean
+    // place, splitting into distinct conjugacy classes with distinct fixed fields.  Only THE complex
+    // conjugation of the embedding realizing P governs its field of definition ([GR] Lemma CC gives it
+    // as a single w_m . sigma_a); enumerating all of them (as this routine used to, via
+    // AutomorphismGroup) over-generates spurious fields (e.g. it returned {Q(sqrt(-3)), Q(sqrt(13))}
+    // for d = -39 where the true field is Q(sqrt(13)) alone).  So we pin the single genuine cc exactly
+    // as FieldsOfDefinitionOfCMPointFast does: the unique automorphism sending abs_H_R.1 to the
+    // complex-conjugate root of its defining polynomial.
     has_cc, cc := HasComplexConjugate(abs_H_R);
     if not has_cc then
-        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // elements that restrict to the complex conjugation on K
-        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
-        cc_reps := [gal_to_auts(cc) : cc in cc_candidates];
-    else
-        cc_reps := [cc];
+        f_abs := DefiningPolynomial(abs_H_R);
+        prec := 40 + 4*Degree(abs_H_R);
+        target := ComplexConjugate(Conjugates(abs_H_R.1 : Precision := prec)[1]);
+        roots_abs := [r[1] : r in Roots(f_abs, abs_H_R)];
+        diffs := [Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots_abs];
+        _, idx := Minimum(diffs);
+        cc := hom<abs_H_R -> abs_H_R | roots_abs[idx]>;
     end if;
+    cc_reps := [cc];
     sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
     if m eq 1 then 
         return [* FixedField(Q_P, [sigma]) : Q_P in Q_Ps, sigma in sigmas *];
