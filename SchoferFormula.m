@@ -969,6 +969,48 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
 end function;
 
 
+// Complex conjugation of a totally imaginary Galois number field L (as used for CM fields of
+// definition: L is the ring class field H_R, or its Atkin-Lehner-fixed subfield A_abs, both of which
+// contain the imaginary quadratic K and are Galois over Q).  Returns the automorphism realizing
+// complex conjugation.
+//
+// When L is CM (<=> Pic(R) has exponent <= 2) HasComplexConjugate returns the unique one.  Otherwise
+// Gal(L/Q) has several order-2 automorphisms restricting to complex conjugation on K, and we must pick
+// a GENUINE one (a Frobenius at infinity); the wrong ones give spurious fields of definition.  We pick
+// the root of L's defining polynomial closest to conj(L.1) numerically -- but rather than trust a fixed
+// precision (two conjugates can be close under the chosen place, so Minimum can latch onto the wrong
+// root), we CERTIFY the pick algebraically and raise precision until it certifies:
+//
+//   an involution tau of a totally imaginary Galois L is a genuine complex conjugation (Frobenius at
+//   infinity) <=> its fixed field is not totally imaginary, i.e. r1(Fix tau) > 0.
+//
+// (=> a real place of Fix tau becomes complex in the totally imaginary L, with tau the local
+// conjugation; <= a real Frobenius is real at that place of its fixed field.)  All complex conjugations
+// of a Galois field are conjugate, so every certified pick lies in the same class and yields the same
+// field of definition up to isomorphism -- we need not match a specific embedding.
+function pin_complex_conjugation(L)
+    has_cc, cc := HasComplexConjugate(L);
+    if has_cc then return cc; end if;
+    f := DefiningPolynomial(L);
+    roots := [r[1] : r in Roots(f, L)];
+    prec := 40 + 4*Degree(L);
+    while true do
+        target := ComplexConjugate(Conjugates(L.1 : Precision := prec)[1]);
+        _, idx := Minimum([Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots]);
+        cc := hom<L -> L | roots[idx]>;
+        // certificate: a genuine complex conjugation is an involution (cc(cc(L.1)) = L.1) whose fixed
+        // field has a real place (r1 > 0).  The identity pick is rejected here since Fix = L is totally
+        // imaginary (r1 = 0), as is any wrong-class reflection.
+        if cc(cc(L.1)) eq L.1 and Signature(FixedField(L, [cc])) gt 0 then
+            return cc;
+        end if;
+        error if prec gt 2^20,
+            "pin_complex_conjugation: precision exceeded 2^20 without certifying a complex conjugation";
+        prec *:= 2;
+    end while;
+end function;
+
+
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 {Return possible fields of definition for CM point with CM by d on X.}
@@ -1067,27 +1109,12 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     Q_P := FixedField(abs_H_R, fixed_by);
     Q_Ps := [* Q_P *];
 
-    // Handle complex conjugation.  If abs_H_R is CM (<=> Pic(R) has exponent <= 2) there is a unique
-    // complex conjugation and HasComplexConjugate returns it.  Otherwise abs_H_R is NOT a CM field:
-    // Gal(abs_H_R/Q) = Pic(R) : <c> with c inverting Pic(R), so c is non-central and there are
-    // several order-2 automorphisms restricting to complex conjugation on K -- one per archimedean
-    // place, splitting into distinct conjugacy classes with distinct fixed fields.  Only THE complex
-    // conjugation of the embedding realizing P governs its field of definition ([GR] Lemma CC gives it
-    // as a single w_m . sigma_a); enumerating all of them (as this routine used to, via
-    // AutomorphismGroup) over-generates spurious fields (e.g. it returned {Q(sqrt(-3)), Q(sqrt(13))}
-    // for d = -39 where the true field is Q(sqrt(13)) alone).  So we pin the single genuine cc exactly
-    // as FieldsOfDefinitionOfCMPointFast does: the unique automorphism sending abs_H_R.1 to the
-    // complex-conjugate root of its defining polynomial.
-    has_cc, cc := HasComplexConjugate(abs_H_R);
-    if not has_cc then
-        f_abs := DefiningPolynomial(abs_H_R);
-        prec := 40 + 4*Degree(abs_H_R);
-        target := ComplexConjugate(Conjugates(abs_H_R.1 : Precision := prec)[1]);
-        roots_abs := [r[1] : r in Roots(f_abs, abs_H_R)];
-        diffs := [Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots_abs];
-        _, idx := Minimum(diffs);
-        cc := hom<abs_H_R -> abs_H_R | roots_abs[idx]>;
-    end if;
+    // Handle complex conjugation.  Enumerating every order-2 automorphism restricting to complex
+    // conjugation on K (as this routine used to, via AutomorphismGroup) over-generates spurious fields
+    // when Pic(R) has exponent > 2 -- e.g. it returned {Q(sqrt(-3)), Q(sqrt(13))} for d = -39 where the
+    // true field is Q(sqrt(13)) alone.  pin_complex_conjugation returns the single genuine, certified
+    // complex conjugation.
+    cc := pin_complex_conjugation(abs_H_R);
     cc_reps := [cc];
     sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
     if m eq 1 then 
@@ -1213,33 +1240,13 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
         return [* Aabs *];   // field of definition contains K
     end if;
 
-    // Complex-conjugation candidate(s).  The slow function uses HasComplexConjugate on the
-    // FULL ring class field H_R: a single canonical conjugation when H_R is CM, else every
-    // order-2 automorphism restricting to complex conjugation on K.  H_R is CM iff complex
-    // conjugation is central iff cc acts trivially by inversion on Gal(H_R/K) = Pic(R), i.e.
-    // iff Pic(R) has exponent <= 2 (here G = Domain(mG) ~ Pic(R)).  We reproduce that on the
-    // smaller A_abs (whose cc-candidates restrict from those of H_R, giving the same fixed
-    // fields):
-    //   exponent <= 2  ->  H_R CM  ->  the unique canonical conjugation (one field per a);
-    //   exponent  > 2  ->  enumerate all cc-candidates (multiple genuine fields).
-    if Exponent(G) le 2 then
-        has_cc, cc := HasComplexConjugate(Aabs);   // A_abs (subfield of CM H_R, contains K) is CM
-        assert has_cc;
-    else
-        // A_abs is not CM (Pic(R) has exponent > 2), so HasComplexConjugate fails -- but complex
-        // conjugation is still ONE automorphism (A_abs/Q is Galois): the unique one sending A_abs.1
-        // to the complex-conjugate root of its defining polynomial.  GR (Lemma CC / Thm mainCM) use
-        // this c abstractly and pin only sigma_a; we build c directly here rather than enumerating
-        // every order-2 reflection via AutomorphismGroup (slow, and over-generating -- it returns
-        // all reflections c.sigma, of which only this one is genuinely complex conjugation).
-        f := DefiningPolynomial(Aabs);
-        prec := 40 + 4*Degree(Aabs);
-        target := ComplexConjugate(Conjugates(Aabs.1 : Precision := prec)[1]);
-        roots_A := [r[1] : r in Roots(f, Aabs)];
-        diffs := [Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots_A];
-        _, idx := Minimum(diffs);
-        cc := hom<Aabs -> Aabs | roots_A[idx]>;
-    end if;
+    // Complex conjugation on A_abs.  When A_abs is CM (Pic(R) exponent <= 2) it is canonical; otherwise
+    // Gal(A_abs/Q) has several order-2 automorphisms restricting to complex conjugation on K and only a
+    // genuine Frobenius-at-infinity gives the right field of definition.  pin_complex_conjugation
+    // returns the single certified complex conjugation (HasComplexConjugate in the CM case, else the
+    // closest-root pick certified by r1(Fix) > 0 with precision raised until it certifies) -- avoiding
+    // the AutomorphismGroup enumeration entirely.
+    cc := pin_complex_conjugation(Aabs);
     ccs := [* cc *];
 
     // Valid classes [a] in Pic(R)/Pic(R)^2 with B_D ~ (-s, m*N(a))_Q  (Lemma CC /
