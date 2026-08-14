@@ -23,9 +23,12 @@ jobs:
 
       - id: set-matrix
         run: |
+          # Files starting with _ are helpers, not test targets.  run_filters.m is the full
+          # end-to-end pipeline (runs for 6h+, exceeding GitHub's hard 6h job limit); it is meant
+          # to be run locally / on a large machine, so it is excluded from the CI matrix.
           matrix=$((
             echo '{ "target" : ['
-            ls -1 tests | grep -v '^_' | sed -r 's/^([^,]*)(,?)$/"\1"\2/'  | paste -sd "," -
+            ls -1 tests | grep -vE '^_|^run_filters\.m$' | sed -r 's/^([^,]*)(,?)$/"\1"\2/'  | paste -sd "," -
             echo " ]}"
           ) | jq -c .)
           echo $matrix
