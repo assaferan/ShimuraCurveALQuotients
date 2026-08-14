@@ -1129,7 +1129,7 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
             al_action[prod] := al_action[m]*al_action[w];
         end for;
         fixed_by := [al_action[mm] : mm in X`W meet Keys(al_action)];
-        Q_P := FixedField(abs_H_R, fixed_by);
+        Q_P := FixedField(abs_H_R, fixed_by); 
         Append(~Q_Ps, Q_P);
     end for;
 
@@ -1149,7 +1149,7 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
  because every returned field is the fixed field of an order-2 reflection).  When that degree
  exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
  complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
- high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
+ high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.} //'
     D := X`D;
     N := X`N;
     W := X`W;
@@ -1532,6 +1532,19 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     end for;
 
     // make table values into rational numbers
+    // Diagnose non-integral LogSum coeffs before converting (graceful skip of bad cells
+    // is not safe here — fail with a precise location instead of a bare RationalNumber error).
+    for i->y in table do
+        for j->x in y do
+            if Type(x) eq LogSm then
+                bad := [<p, c> : p -> c in x`log_coeffs | not IsIntegral(c)];
+                if not IsEmpty(bad) then
+                    error Sprintf("ValuesAtCMPoints: LogSum at row %o col %o (disc %o, key %o) is not rational; bad coeffs %o; value %o",
+                        i, j, allds[j], (i le #abs_schofer_tab`Keys_fs select abs_schofer_tab`Keys_fs[i] else "n/a"), bad, x);
+                end if;
+            end if;
+        end for;
+    end for;
     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
     abs_schofer_tab`RowScales := row_scales;
     
