@@ -119,6 +119,18 @@ procedure test_FieldOfDefinition()
         <39, 2, {1,39}, [* <-7, QuadraticField(-7)>, <-15, ext< QuadraticField(-15) | x^2 + 3> >, <-24, QuadraticField(2)>, <-28, QQ>, <-52, QuadraticField(-1)>, <-60, QuadraticField(5)>, <-84, ext< QuadraticField(-3) | x^2 + 1> >, <-132, ext< QuadraticField(-11) | x^2 + 1> >, <-148, QuadraticField(-1)>, <-228, ext< QuadraticField(-3) | x^2 + 1> >, <-232, QuadraticField(-2)>, <-312, QuadraticField(2)>, <-372, ext< QuadraticField(-3) | x^2 + 1> >, <-408, ext< QuadraticField(-3) | x^2 - 2> >, <-520, ext< QuadraticField(-10) | x^2 + 2> >, <-708, ext< QuadraticField(-59) | x^2 + 1> >, <-1092, ext< QuadraticField(-3) | x^2 + 13> > *] >,
     ];
     curves := GetHyperellipticCandidates();
+    // Two lists of number fields are equal as SETS up to isomorphism (order/multiplicity ignored).
+    // Depends only on its arguments (no closure over outer variables) to avoid the Magma 2.29
+    // eval/closure segfault quirk.
+    same_fields := function(A, B)
+        for F in A do
+            if not exists{G : G in B | IsIsomorphic(F, G)} then return false; end if;
+        end for;
+        for G in B do
+            if not exists{F : F in A | IsIsomorphic(F, G)} then return false; end if;
+        end for;
+        return true;
+    end function;
     for datum in data do
         D, N, W, cm := Explode(datum);
         assert exists(X){X : X in curves | X`D eq D and X`N eq N and X`W eq W};
@@ -126,7 +138,17 @@ procedure test_FieldOfDefinition()
         for pt in cm do
             d, K := Explode(pt);
             Fs := FieldsOfDefinitionOfCMPoint(X, d);
+            // [GY] ground truth: the expected field K must be among the computed fields of definition.
             assert exists(F){F : F in Fs | IsIsomorphic(F,K)};
+            // Regression guard (added after the exponent>2 over-generation bug): the fast and slow
+            // routines must agree as SETS up to isomorphism, and fast must also contain the ground
+            // truth. The slow routine used to enumerate every order-2 automorphism restricting to
+            // complex conjugation on K (spurious extra fields for Pic(R) of exponent > 2) instead of
+            // the single genuine complex conjugation; the membership check above tolerated that, so it
+            // went unnoticed. Asserting set-equality keeps either routine from silently drifting.
+            Fs_fast := FieldsOfDefinitionOfCMPointFast(X, d);
+            assert exists(F){F : F in Fs_fast | IsIsomorphic(F,K)};
+            assert same_fields(Fs, Fs_fast);
         end for;
         vprintf ShimuraQuotients, 1: "Done!\n";
     end for;
