@@ -989,7 +989,17 @@ end function;
 // of a Galois field are conjugate, so every certified pick lies in the same class and yields the same
 // field of definition up to isomorphism -- we need not match a specific embedding.
 function pin_complex_conjugation(L)
-    has_cc, cc := HasComplexConjugate(L);
+    // HasComplexConjugate is a Magma builtin that, for some fields (e.g. certain degree-4 fields),
+    // throws an internal error ("Sequence must have length 4 to lift into this algebraic field",
+    // from RepThry/ModGrp/LLL.m) instead of returning false. Guard it: on any failure fall through
+    // to the numeric certified pinning below, which never needs it and finds a genuine complex
+    // conjugation regardless of whether L is CM.
+    has_cc := false; cc := 0;
+    try
+        has_cc, cc := HasComplexConjugate(L);
+    catch e
+        has_cc := false;
+    end try;
     if has_cc then return cc; end if;
     f := DefiningPolynomial(L);
     roots := [r[1] : r in Roots(f, L)];
