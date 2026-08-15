@@ -670,29 +670,39 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     return log_coeffs;
 end intrinsic;
 
-function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
+function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc, denom)
 
     log_coeffs := [LogSum() : f in fs_0];
 
     ns := [-Valuation(f) : f in fs_0];
     n := Maximum(ns);
-    
-    // computing norms of elements in the discriminant group
+
+    // Bucket discriminant-group elements by the Guo-Yang cusp-0 condition (arXiv:1510.06193,
+    // Lemma "P(F_f)"): the coefficient b_n at q^{-n/M} is distributed to every eta in L^vee/L with
+    //   nm(eta) in n/M + Z,      i.e.   nm(eta) = n/M  (mod 1),
+    // where nm(eta) = <eta,eta>/2 is the discriminant-form norm (well-defined mod 1 since L is even)
+    // and M is the level of L. A disc-group element eta lifts (via to_disc) to a representative
+    // v = denom*w in the SCALED dual Ldual = denom*L^vee, so the invariant norm is
+    //   nm(eta) = (w*Q*w)/2 = (v*Q*v)/(2*denom^2).
+    // (The previous code used (v*Q*v)/(2*M) with an integer-mod-M match -- a representative-DEPENDENT
+    // quantity that dropped valid eta whenever denom != M, breaking isometry invariance.)
+    // Index buckets by the invariant residue  M*nm(eta) mod M in {0..M-1}.
     mod_M_to_vecs := AssociativeArray([0..M-1]);
     for j in [0..M-1] do
         mod_M_to_vecs[j] := [];
     end for;
     for eta in disc_grp do
         v := ChangeRing(eta@@to_disc,Rationals());
-        norm_v := (v*Q,v)/(2*M);
-        if not IsIntegral(norm_v) then continue; end if;
-        norm_mod_M := Integers()!norm_v mod M;
-        Append(~mod_M_to_vecs[norm_mod_M], eta);
+        nm_eta := (v*Q,v)/(2*denom^2);          // invariant discriminant-form norm, well-defined mod 1
+        res := M*nm_eta;                          // = M*nm(eta); eta lands in bucket iff this is an integer mod M
+        if not IsIntegral(res) then continue; end if;   // nm(eta) not in (1/M)Z => matches no n/M
+        Append(~mod_M_to_vecs[Integers()!res mod M], eta);
     end for;
 
     for mM in [1..n] do
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
-        gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
+        // gamma is eta's representative in L^vee (L-coordinates): w = v/denom  (NOT (1/M)*v).
+        gammas:= [ChangeRing(gammaM@@to_disc, Rationals())/denom : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
         vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs_0 do
@@ -802,7 +812,7 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
 
     // Taking care of the principal part at zero
     M := IsOdd(D*N) select 4*D*N else 2*D*N;
-    log_coeffs_0 := SchoferFormula0(fs_0, d, Q, lambda, scale, M, disc_grp, to_disc);
+    log_coeffs_0 := SchoferFormula0(fs_0, d, Q, lambda, scale, M, disc_grp, to_disc, Ldata`denom);
 
     // summing up
     for i->s in log_coeffs do
