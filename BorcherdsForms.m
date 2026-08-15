@@ -8,7 +8,7 @@ end function;
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
     assert IsSquarefree(N);
-    D0 := (D*N) div 2^Valuation(D,2);
+    D0 := (D*N) div 2^Valuation(D*N,2);  // odd part of DN (was 2^Valuation(D,2), wrong for even N)
     M := 4*D0;
     g := Genus(Gamma0(M));
     return D0,M,g;
