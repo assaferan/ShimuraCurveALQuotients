@@ -1511,6 +1511,22 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
 
 end intrinsic;
 
+intrinsic EnoughCMPointsForTargets(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], Targets::SetEnum)
+          -> BoolElt, RngIntElt, RngIntElt
+{Cheap predict-and-skip guard for the ratpts sweeps. Returns (available ge required),
+ required, available, where required = Maximum(2g+5) over the target immediate covers
+ (the same CM-point demand EquationsOfCovers(... : Targets) imposes) and available =
+ #rational + #quadratic CM points at bd=8 (the highest bd the pipeline reaches). When
+ this returns false the target equation cannot be determined no matter the work spent,
+ so the caller should skip before paying WeaklyHolomorphicBasis / polymake / Borcherds.}
+    target_keys := [i : i in Xstar`CoveredBy | IsEmpty(Targets) or curves[i]`W in Targets];
+    require not IsEmpty(target_keys) : "None of Xstar`CoveredBy matches Targets";
+    required := Maximum([2*curves[i]`g + 5 : i in target_keys]);
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : coprime_to_level := true, bd := 8);
+    available := #rat_pts + #quad_pts;
+    return available ge required, required, available;
+end intrinsic;
+
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc
 {Returns ramification points of each of the double covers in curves.}
     // require #{<X`D, X`N> : X in curves} eq 1 : "All curves must be quotients of the same shimura curve.";
