@@ -371,7 +371,10 @@ function Wpoly2(m,mu,L,K,Q)
     mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
     Q_mu := 1/2*(mu_wrt_L * ChangeRing(S,Rationals()), mu_wrt_L);
     R<x> := PolynomialRing(K);
-    if not IsIntegral(m - Q_mu) then
+    // Yang's coset condition m in Q(mu) + Z_2: the local density vanishes iff m - Q(mu) is NOT
+    // 2-integral. (Was IsIntegral, i.e. rational-integrality -- too strict: it spuriously killed the
+    // p=2 factor whenever m - Q(mu) had an odd denominator, e.g. at odd-fundamental CM discs.)
+    if Valuation(m - Q_mu, 2) lt 0 then
         return R!0;
     end if;
     mu_wrt_B := mu_wrt_L*B^(-1);
@@ -435,6 +438,17 @@ function Wpoly_scaled(m,p,mu,L,Q : scaled := true)
     assert CanChangeRing(euler, Rationals());
     return (scaled) select scale*euler else ChangeRing(euler, Rationals()), p^(-vpD);
 end function;
+
+intrinsic LocalWhittakerAtOne(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng, Q::AlgMatElt) -> FldRatElt
+{The unnormalized local Whittaker (representation-density) polynomial W_m,p(mu) for the sublattice L
+ with ambient Gram matrix Q and coset representative mu, evaluated at X = 1 -- i.e. its value at s = 0
+ up to the p^(-v_p(det)) scaling. This is exactly the quantity kappaminus tests for vanishing. Exposed
+ so tests/Whittaker2.m can cross-check the internal Wpoly/Wpoly2 against Yang's explicit local density
+ formula (Yang, J. Number Theory 72 (1998); the p = 2 factor is the delicate case, cf. Kudla-Rapoport-
+ Yang, IMRN 1999).}
+    Wpol := Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+    return Evaluate(Wpol, 1);
+end intrinsic;
 
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
