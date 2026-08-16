@@ -28,11 +28,12 @@ procedure test_Schofer_15_2_table45()
     raw := func<Ld, d | RationalNumber(AbsoluteValuesAtRationalCMPoint([s], d, star, Ld : Lambda := lam(Ld, d))[1])>;
     normval := func<Ld, d | AbsoluteValue(raw(Ld, d)) / AbsoluteValue(raw(Ld, -120))>;
 
-    // (1) CORRECTNESS vs Table 45, s-column / 2, for the discs with EVEN fundamental discriminant.
-    // (The odd-fundamental-disc discs -7,-15,-60 are omitted here: their p=2 local density is still
-    //  off by a power of 2 -- a separate, documented Wpoly2 bug -- though the fix does make them
-    //  isometry-invariant, which part (2) checks.)
-    table45_half := [ <-52,1>, <-88,4>, <-120,2>, <-132,-1>, <-148,1/25>, <-168,2/3>,
+    // (1) CORRECTNESS vs Table 45, s-column / 2. Includes the odd-fundamental (2-split) discs
+    // -7,-15,-60: their level-prime (2|N) contribution -- the outer m=0 term kappa_0(0)'s N-part,
+    // sum_{p|N/(N,d_fund)} log p (Yifan Yang arXiv:1503.07971 Lemma 20) -- is now restored, fixing the
+    // former +4 log 2 (factor 16) discrepancy at 2-unramified CM discs.
+    table45_half := [ <-7,1/4>, <-15,5/4>, <-60,-1/12>,
+                      <-52,1>, <-88,4>, <-120,2>, <-132,-1>, <-148,1/25>, <-168,2/3>,
                       <-228,-1/9>, <-232,144/121>, <-280,10>, <-312,2/25>, <-340,9/17>,
                       <-372,-31/9>, <-408,68/25>, <-520,-8/121>, <-708,-841/121>, <-760,450/529> ];
     for t in table45_half do

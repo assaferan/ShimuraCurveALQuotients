@@ -833,6 +833,27 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         log_coeffs[i] +:= log_coeffs_0[i];
     end for;
 
+    // ----- outer m=0 term (Yifan Yang, arXiv:1503.07971, Sec 4, eq (11)-(12) + Lemma 20) -----
+    // Schofer's sum runs over m >= 0; the loops above only cover m >= 1, dropping the constant term
+    // sum_eta c_eta(0) kappa_eta(0). By (11), kappa^-_mu(0) = 0 for mu != 0, so every nonzero
+    // kappa_eta(0) equals the single number kappa^-_0(0) whose value (Lemma 20) is
+    //   kappa_0(0) = 2 Lambda'/Lambda + sum_{p|D/(D,d)} (p-1)/(p+1) log p + sum_{p|N/(N,d)} log p.
+    // Its transcendental (2 Lambda'/Lambda) and fractional D-parts cancel against the period / the
+    // m>0 Diff-derivatives (which is why dropping the whole term still gives the D-primes correctly);
+    // the ONLY uncanceled rational survivor is the N-part sum_{p|N/(N,d)} log p. It is carried by the
+    // width-N (zero) cusp (c_0(0) = weight kills the eta=0 / infinity side), so it enters with the
+    // zero-cusp constant coefficient. This restores the level-prime contribution missing at 2|N for
+    // CM discs where 2 is unramified (split or inert) -- e.g. the +4 log 2 on X0^15(2), d = -7,-15,-60.
+    // Ramification of p is a property of the FIELD, so test against the fundamental discriminant
+    // (Yang's d is fundamental): p contributes iff p is unramified in Q(sqrt d), i.e. p does not
+    // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
+    // d_fund = -15, even though 2 | 60).
+    d_fund := FundamentalDiscriminant(d);
+    kzero_N := &+([LogSum(Rationals()!1, p) : p in PrimeDivisors(N div GCD(N, d_fund))] cat [LogSum()]);
+    for i->s in log_coeffs do
+        log_coeffs[i] +:= Coefficient(fs_0[i], 0) * kzero_N;
+    end for;
+
     return log_coeffs;
 end intrinsic;
 
