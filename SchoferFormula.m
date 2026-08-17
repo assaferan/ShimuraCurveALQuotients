@@ -850,9 +850,20 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
     kzero_N := &+([LogSum(Rationals()!1, p) : p in PrimeDivisors(N div GCD(N, d_fund))] cat [LogSum()]);
-    for i->s in log_coeffs do
-        log_coeffs[i] +:= Coefficient(fs_0[i], 0) * kzero_N;
-    end for;
+    // INTERIM GUARD (2026-08-17): the multiplier Coefficient(fs_0[i],0) is a CALIBRATED handle for the
+    // true m=0 coefficient sum_eta c_eta(0), validated ONLY on the even-level base X0^15(2) (all 19
+    // Table-45 discs). It is wrong on other bases: on X0^21(2) it gives -4886, and on the odd-level
+    // D=10 bases N in {11,19,23} it injected a spurious, per-disc-inconsistent multiple of log(N) that
+    // corrupted the Schofer values and broke ValuesAtCMPoints (regression vs main, confirmed by
+    // disabling this block). Until the principled replacement lands (sum_eta c_eta(0) via the
+    // Eisenstein/obstruction route -- see plan fluffy-chasing-newt.md / memory phase2-slash-obstruction),
+    // restrict the calibrated term to where it is validated: the even-level base(s). This reverts every
+    // odd-N base to the (correct) main behavior while keeping X0^15(2) correct.
+    if IsEven(N) then
+        for i->s in log_coeffs do
+            log_coeffs[i] +:= Coefficient(fs_0[i], 0) * kzero_N;
+        end for;
+    end if;
 
     return log_coeffs;
 end intrinsic;
