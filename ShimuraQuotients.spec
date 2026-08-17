@@ -1,6 +1,7 @@
 {
 BorcherdsForms.m
 SchoferFormula.m
+WeilRepresentation.m
 EquationsCovers.m
 Caching.m
 ClassNumberData.m
