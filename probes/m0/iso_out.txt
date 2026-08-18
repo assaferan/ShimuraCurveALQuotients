@@ -1,0 +1,38 @@
+START
+=== X0^15(2):  |A| = det Q = 1800,  M = 60,  denom = 60 ===
+  |A| enumerated = 1800,  #isotropic beta (Q(beta) in Z) = 3
+  multiset of N_beta = {* 1, 2^^2 *}
+    beta = [ 0, 0, 0 ]             N_beta = 1     #chi mod N_beta = 1    #primitive = 1    2*beta=0? true
+    beta = [ 0, 0, 1/2 ]           N_beta = 2     #chi mod N_beta = 1    #primitive = 0    2*beta=0? true
+    beta = [ 0, -1/2, 1/2 ]        N_beta = 2     #chi mod N_beta = 1    #primitive = 0    2*beta=0? true
+=== X0^21(2):  |A| = det Q = 3528,  M = 84,  denom = 42 ===
+  |A| enumerated = 3528,  #isotropic beta (Q(beta) in Z) = 3
+  multiset of N_beta = {* 1, 2^^2 *}
+    beta = [ 0, 0, 0 ]             N_beta = 1     #chi mod N_beta = 1    #primitive = 1    2*beta=0? true
+    beta = [ 0, 1/2, 0 ]           N_beta = 2     #chi mod N_beta = 1    #primitive = 0    2*beta=0? true
+    beta = [ -1/2, -1, 1/2 ]       N_beta = 2     #chi mod N_beta = 1    #primitive = 0    2*beta=0? true
+=== X0^10(11):  |A| = det Q = 24200,  M = 220,  denom = 660 ===
+  |A| enumerated = 24200,  #isotropic beta (Q(beta) in Z) = 21
+  multiset of N_beta = {* 1, 11^^20 *}
+    beta = [ 0, 0, 0 ]             N_beta = 1     #chi mod N_beta = 1    #primitive = 1    2*beta=0? true
+    beta = [ 0, 0, 1/11 ]          N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ -10/11, 0, 1/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, 2/11 ]          N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ -20/11, 0, 2/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, 3/11 ]          N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ -30/11, 0, 3/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, 4/11 ]          N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ -40/11, 0, 4/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, 5/11 ]          N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ -50/11, 0, 5/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, -5/11 ]         N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 50/11, 0, -5/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, -4/11 ]         N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 40/11, 0, -4/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, -3/11 ]         N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 30/11, 0, -3/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, -2/11 ]         N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 20/11, 0, -2/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 0, 0, -1/11 ]         N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+    beta = [ 10/11, 0, -1/11 ]     N_beta = 11    #chi mod N_beta = 10   #primitive = 9    2*beta=0? false
+DONE
