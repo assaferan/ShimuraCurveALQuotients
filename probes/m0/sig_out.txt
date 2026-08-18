@@ -1,0 +1,10 @@
+X0^15(2): det(Q_code)=1800
+   Q_code  signature (b+,b-) = (1,2)   => kappa = 3/2 - 2/2 + 1/2 = 1
+  -Q_code  signature (b+,b-) = (2,1)   => kappa = 3/2 - 1/2 + 2/2 = 2
+X0^21(2): det(Q_code)=3528
+   Q_code  signature (b+,b-) = (1,2)   => kappa = 3/2 - 2/2 + 1/2 = 1
+  -Q_code  signature (b+,b-) = (2,1)   => kappa = 3/2 - 1/2 + 2/2 = 2
+X0^10(11): det(Q_code)=24200
+   Q_code  signature (b+,b-) = (1,2)   => kappa = 3/2 - 2/2 + 1/2 = 1
+  -Q_code  signature (b+,b-) = (2,1)   => kappa = 3/2 - 1/2 + 2/2 = 2
+DONE
