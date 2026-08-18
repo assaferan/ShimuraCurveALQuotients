@@ -659,7 +659,15 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2); // pts <-> infty, 0, rational 
+    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2); // pts <-> infty, 0, rational
+    if #pts lt 3 then
+        // CM-starved bases (e.g. the even-level X0^15(2), which has only 2 coprime-to-N rational CM
+        // points) do not have enough coprime points to pin the infty/0/rational divisor structure.
+        // Fall back to admitting NON-coprime rational CM points here: these are used ONLY as divisor
+        // support (zeros/poles of the Borcherds form), never Schofer-evaluated, so coprimality to N is
+        // irrelevant for them. Bases that already have >= 3 coprime points are untouched by this.
+        pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2, coprime_to_level := false);
+    end if;
     require #pts ge 3 : "Could not find enough rational CM points!";
 
 

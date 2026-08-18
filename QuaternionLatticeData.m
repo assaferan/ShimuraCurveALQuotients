@@ -1,6 +1,6 @@
 declare type QuaternionLatticeData;
 
-declare attributes QuaternionLatticeData: D, N, Q, O, L, Ldual, Qinv, basis_L, disc_grp, to_disc;
+declare attributes QuaternionLatticeData: D, N, Q, O, L, Ldual, Qinv, basis_L, disc_grp, to_disc, denom;
 
 function get_lattice_data(D, N)
     B := QuaternionAlgebra(D);
@@ -21,13 +21,13 @@ function get_lattice_data(D, N)
     // L := RSpaceWithBasis(ChangeRing(denom*BM_L,Integers()));
     L := RSpaceWithBasis(ScalarMatrix(3,denom));
     disc_grp, to_disc := Ldual / L;
-    return L, Ldual, disc_grp, to_disc, Q^(-1), Q, O, basis_L;
+    return L, Ldual, disc_grp, to_disc, Q^(-1), Q, O, basis_L, denom;
 end function;
 
 intrinsic ShimuraCurveLattice(D::RngIntElt, N::RngIntElt) -> QuaternionLatticeData
 {Return the quaternion lattice data for the lattice of trace zero elements in the
  Eichler order of level N in the quaternion algebra of discriminant D.}
-    L, Ldual, disc_grp, to_disc, Qinv, Q, O, basis_L := get_lattice_data(D,N);
+    L, Ldual, disc_grp, to_disc, Qinv, Q, O, basis_L, denom := get_lattice_data(D,N);
     data := New(QuaternionLatticeData);
     data`D := D;
     data`N := N;
@@ -39,6 +39,7 @@ intrinsic ShimuraCurveLattice(D::RngIntElt, N::RngIntElt) -> QuaternionLatticeDa
     data`basis_L := basis_L;
     data`disc_grp := disc_grp;
     data`to_disc := to_disc;
+    data`denom := denom;
     return data;
 end intrinsic;
 
