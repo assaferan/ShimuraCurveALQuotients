@@ -814,6 +814,16 @@ function m0_multiplier(foo, f0, Q, disc_grp, to_disc, denom, M, D, N)
     return -96 * T / (D*N);
 end function;
 
+intrinsic M0Multiplier(foo::RngSerLaurElt, f0::RngSerLaurElt, D::RngIntElt, N::RngIntElt,
+                       Ldata::QuaternionLatticeData) -> FldRatElt
+{The principled outer-m=0 multiplier sum_eta c_eta(0) of Schofer's formula, for an input whose
+ q-expansions at the cusps oo and 0 are foo and f0 (only their principal parts are used). Computed via
+ the Kudla-Yang weight-3/2 dual Eisenstein obstruction; see m0_multiplier. Exposed so tests/M0Multiplier.m
+ can pin the coefficient's normalization independently of the full Borcherds/CM pipeline.}
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    return m0_multiplier(foo, f0, Ldata`Q, Ldata`disc_grp, Ldata`to_disc, Ldata`denom, M, D, N);
+end intrinsic;
+
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo,
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.
