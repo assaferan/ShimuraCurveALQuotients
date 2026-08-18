@@ -733,8 +733,89 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc, deno
     return log_coeffs;
 end function;
 
+// ---- Principled multiplier for the outer m=0 term: sum_{eta} c_eta(0) --------------------------
+// The m=0 term of Schofer's sum is sum_eta c_eta(0) kappa_eta(0) = (sum_{eta} c_eta(0)) * kappa^-_0(0)
+// (Yang, arXiv:1503.07971, eq (11)-(12): kappa_eta(0) = kappa^-_0(0) for the valid/isotropic eta,
+// 0 otherwise). The multiplier sum_eta c_eta(0) is the constant term of the vector-valued Borcherds
+// input F_f. By the Borcherds/Eisenstein obstruction (pairing F_f, weight 1/2 rho_L, against the
+// holomorphic weight-3/2 Eisenstein series G for the dual rho_L^* with constant term 1_isotropic),
+//   sum_eta c_eta(0) = - sum_{eta, m>0} c_eta(-m) b_eta(m),
+// where b_eta(m) is the weight-3/2 dual Eisenstein coefficient. By Kudla-Yang (Sci China Math 53
+// (2010), Prop 2.6(ii) odd case + Prop 5.3, B = indefinite quaternion of disc D: split at p ! D,
+// ramified at p | D), at the critical point s0 = n/2 - 1 = 1/2 (i.e. X = 1, where LocalWhittakerAtOne
+// evaluates),
+//   b_eta(m) = C * m^{1/2} * L(1, chi_{kappa_m}) / zeta(2) * prod_{p in S_c} W_p(1/2, m, eta),
+// with kappa_m = -m (since det Q = 2(DN)^2 => -2 det Q = -(2DN)^2 is minus a square => the space
+// character is chi_{-m}; a purely imaginary quadratic character), S_c = { p | det Q } u { p | num(m) },
+// and W_p(1/2,m,eta) = LocalWhittakerAtOne(m,p,eta,-Q). The archimedean m^{1/2} cancels the sqrt|d|
+// in the class-number formula L(1,chi_d) = 2*pi*h_d/(w_d sqrt|d|) via sqrt(m)/sqrt|d| = cond/2, making
+// each b_eta(m) rational; all pi's, sqrt2's (from |det S|^{-1/2} = 1/(DN sqrt2)) and the archimedean
+// constant collapse into the single rational prefactor -96/(D*N). Validated: X0^15(2) -> 4 (all 19
+// Table-45 discs), X0^10(11) -> 0 (matches main, no m=0 contribution). See memory route-c-obstruction.
+function m0_multiplier(foo, f0, Q, disc_grp, to_disc, denom, M, D, N)
+    Qint := ChangeRing(Q, Integers());
+    Qr := ChangeRing(Q, Rationals());
+    negQ := -Qint;
+    dQ := Determinant(Qint);
+    detprimes := Set(PrimeDivisors(dQ));
+    Lfull := RSpaceWithBasis(IdentityMatrix(Integers(), 3));
+
+    // bucket disc-group elements by the invariant norm residue M*nm(eta) mod M (as in SchoferFormula0)
+    mod_M_to_vecs := AssociativeArray([0..M-1]);
+    for j in [0..M-1] do mod_M_to_vecs[j] := []; end for;
+    i0 := 0;
+    for eta in disc_grp do
+        if IsZero(eta) then i0 := eta; end if;
+        v := ChangeRing(eta@@to_disc, Rationals());
+        nm_eta := (v*Qr, v)/(2*denom^2);
+        res := M*nm_eta;
+        if not IsIntegral(res) then continue; end if;
+        Append(~mod_M_to_vecs[Integers()!res mod M], eta);
+    end for;
+
+    // per-(eta, r) contribution c_eta(-r) * b_eta(r) / (archimedean+global collapse)
+    // term = c * (sqrt(r)/sqrt|d|) * (h/w) * (prod(1-chi(p)/p)/prod(1-1/p^2)) * g,  g = prod_{S_c} W_p
+    contrib := function(eta, r, c)
+        w_eta := ChangeRing(eta@@to_disc, Rationals())/denom;
+        D0 := -(Numerator(r)*Denominator(r));      // kappa_m = -r  (up to rational square)
+        K := QuadraticField(D0);
+        dd := Discriminant(Integers(K));
+        chi := KroneckerCharacter(dd);
+        h := ClassNumber(K);
+        wr := #TorsionSubgroup(UnitGroup(K));
+        is_sq, cond_half := IsSquare(Rationals()!(r/AbsoluteValue(dd)));   // = sqrt(r)/sqrt|d|
+        assert is_sq;
+        Sc := Sort([p : p in detprimes join Set(PrimeDivisors(Numerator(r)))]);
+        g := Rationals()!1;
+        for p in Sc do
+            g *:= LocalWhittakerAtOne(r, p, Vector(Rationals(), Eltseq(w_eta)), Lfull, negQ);
+        end for;
+        en := &*[Rationals() | 1 - Evaluate(chi, p)/p : p in Sc];
+        ed := &*[Rationals() | 1 - 1/(Rationals()!p)^2 : p in Sc];
+        return c * cond_half * (Rationals()!h/wr) * (en/ed) * g;
+    end function;
+
+    T := Rationals()!0;
+    // oo-block: principal part at oo lives on eta = 0
+    for m in [1..-Valuation(foo)] do
+        c := Coefficient(foo, -m);
+        if c ne 0 then T +:= contrib(i0, Rationals()!m, Rationals()!c); end if;
+    end for;
+    // 0-block: coefficient at q^{-j} of the cusp-0 expansion distributes to bucket(j/M mod 1)
+    for j in [1..-Valuation(f0)] do
+        c := Coefficient(f0, -j);
+        if c eq 0 then continue; end if;
+        r := (Rationals()!j)/M;
+        for eta in mod_M_to_vecs[j mod M] do
+            T +:= contrib(eta, r, Rationals()!c);
+        end for;
+    end for;
+
+    return -96 * T / (D*N);
+end function;
+
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
-{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
+{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo,
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.
  Here Q is the Gram matrix of the lattice L and lambda is a vecotr of norm -d.}
     return SchoferFormula([f], d, Q, lambda, scale)[1];
@@ -840,28 +921,34 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     //   kappa_0(0) = 2 Lambda'/Lambda + sum_{p|D/(D,d)} (p-1)/(p+1) log p + sum_{p|N/(N,d)} log p.
     // Its transcendental (2 Lambda'/Lambda) and fractional D-parts cancel against the period / the
     // m>0 Diff-derivatives (which is why dropping the whole term still gives the D-primes correctly);
-    // the ONLY uncanceled rational survivor is the N-part sum_{p|N/(N,d)} log p. It is carried by the
-    // width-N (zero) cusp (c_0(0) = weight kills the eta=0 / infinity side), so it enters with the
-    // zero-cusp constant coefficient. This restores the level-prime contribution missing at 2|N for
-    // CM discs where 2 is unramified (split or inert) -- e.g. the +4 log 2 on X0^15(2), d = -7,-15,-60.
+    // the ONLY uncanceled rational survivor is the N-part sum_{p|N/(N,d)} log p, whose multiplier is
+    // the input's constant term sum_eta c_eta(0) (computed by m0_multiplier below). This restores the
+    // level-prime contribution missing at 2|N for CM discs where 2 is unramified (split or inert) --
+    // e.g. the +4 log 2 on X0^15(2), d = -7,-15,-60.
     // Ramification of p is a property of the FIELD, so test against the fundamental discriminant
     // (Yang's d is fundamental): p contributes iff p is unramified in Q(sqrt d), i.e. p does not
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
-    kzero_N := &+([LogSum(Rationals()!1, p) : p in PrimeDivisors(N div GCD(N, d_fund))] cat [LogSum()]);
-    // INTERIM GUARD (2026-08-17): the multiplier Coefficient(fs_0[i],0) is a CALIBRATED handle for the
-    // true m=0 coefficient sum_eta c_eta(0), validated ONLY on the even-level base X0^15(2) (all 19
-    // Table-45 discs). It is wrong on other bases: on X0^21(2) it gives -4886, and on the odd-level
-    // D=10 bases N in {11,19,23} it injected a spurious, per-disc-inconsistent multiple of log(N) that
-    // corrupted the Schofer values and broke ValuesAtCMPoints (regression vs main, confirmed by
-    // disabling this block). Until the principled replacement lands (sum_eta c_eta(0) via the
-    // Eisenstein/obstruction route -- see plan fluffy-chasing-newt.md / memory phase2-slash-obstruction),
-    // restrict the calibrated term to where it is validated: the even-level base(s). This reverts every
-    // odd-N base to the (correct) main behavior while keeping X0^15(2) correct.
-    if IsEven(N) then
-        for i->s in log_coeffs do
-            log_coeffs[i] +:= Coefficient(fs_0[i], 0) * kzero_N;
+    Nprimes := PrimeDivisors(N div GCD(N, d_fund));
+    // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
+    // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
+    // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
+    // the old 15_2-calibrated handle Coefficient(fs_0[i],0) by a derived value.
+    //
+    // PARTIAL: m0_multiplier is VALIDATED only on the single-surviving-term base X0^15(2) (-> 4, all 19
+    // Table-45 discs). On MULTI-term inputs it is still wrong: X0^21(2) -> -20/3, and on the odd-level
+    // X0^10(11) pipeline some forms come out non-integer -> the CM value loses rationality
+    // (RationalNumber crash in ValuesAtCMPoints). The true multiplier is 0 on all odd-N bases main
+    // handles (main passes them with NO m=0 term), so we retain the even-N guard: it forces the correct
+    // 0 there while letting X0^15(2) use the principled term. Full guard removal awaits the multi-term
+    // fix (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing
+    // over several isotropic eta0). See memory route-c-obstruction-formula.
+    if IsEven(N) and not IsEmpty(Nprimes) then
+        kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
+        for i->eta in etas do
+            mult := m0_multiplier(fs[i], fs_0[i], Q, disc_grp, to_disc, Ldata`denom, M, D, N);
+            log_coeffs[i] +:= mult * kzero_N;
         end for;
     end if;
 
