@@ -55,6 +55,28 @@ procedure test_Schofer_15_2_table45()
         assert normval(Ldata, d) eq normval(Ld2, d);
     end for;
 
+    // (3) CUSP-SUPPORT INVARIANT. The entire Schofer path -- SchoferFormula (principal part at oo),
+    // SchoferFormula0 (principal part at 0) and the outer m=0 multiplier -- assumes every Borcherds
+    // form has poles ONLY at the cusps oo and 0. Nothing enforces that, and a form with a pole at a
+    // third cusp would be silently mis-evaluated rather than rejected. Check it with Ligozat's order
+    // formula: for prod_{delta | M} eta(delta*tau)^{r_delta} the order at the cusp of denominator
+    // c | M is (M/(24 gcd(c^2,M))) * sum_{delta|M} gcd(c,delta)^2 r_delta/delta. (Sanity: at c = M
+    // this reduces to (sum delta*r_delta)/24, the convention used in EtaQuotient.m.) The forms are
+    // linear COMBINATIONS of eta quotients and ord(sum) >= min ord(term), so min >= 0 PROVES no pole.
+    for k in Keys(fs) do
+        f := fs[k];
+        Rf := Parent(f);
+        Mf := Rf`M;
+        exps := [r : r in Exponents(f)];
+        assert not IsEmpty(exps);
+        for c in Divisors(Mf) do
+            if (c eq 1) or (c eq Mf) then continue; end if;    // cusps 0 and oo may have poles
+            ord := Minimum([(Rationals()!Mf/(24*GCD(c^2, Mf)))
+                            * (&+[Rationals() | GCD(c, d)^2*r[i]/d : i->d in Rf`ds]) : r in exps]);
+            assert ord ge 0;
+        end for;
+    end for;
+
     printf "Done!\n";
 end procedure;
 
