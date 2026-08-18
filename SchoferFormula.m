@@ -988,12 +988,24 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
     end for;
+    // ---- EXPERIMENT ONLY (scratch branch): test the hypothesis that the outer m=0 multiplier for the
+    // SECOND hauptmodul s~ (= fs[-2], table row 9 in the 15_2 layout) should be 2, not the 4 that
+    // m0_multiplier returns. Removing 2*kzero_N from that row is exactly "multiplier 4 -> 2", and it
+    // only fires where the m=0 term itself fired (IsEven(N) and the level-prime set nonempty).
+    if #fs ge 9 then
+        d_fund := FundamentalDiscriminant(d);
+        Nprimes := PrimeDivisors(Xstar`N div GCD(Xstar`N, d_fund));
+        if IsEven(Xstar`N) and not IsEmpty(Nprimes) then
+            vals[9] -:= 2*(&+[LogSum(Rationals()!1, p) : p in Nprimes]);
+            printf "[EXP] d=%o: halved m=0 multiplier on s~ row (removed 2*kzero_N)\n", d;
+        end if;
+    end if;
     return vals;
 end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd);
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := false, bd := bd);
     return [rat_pts, quad_pts];
 end intrinsic;
 
@@ -1105,6 +1117,12 @@ function find_degs(abs_schofer_tab)
 end function;
 
 function find_signs_hauptmodul(s, stilde, ds, degs)
+    printf "\n[find_signs] ds = %o\n", ds;
+    printf "[find_signs] degs = %o\n", degs;
+    printf "[find_signs] s = %o\n", s;
+    printf "[find_signs] stilde = %o\n", stilde;
+    printf "[find_signs] Index(s,0)=%o Index(stilde,0)=%o Index(s,oo)=%o Index(stilde,oo)=%o\n",
+           Index(s,0), Index(stilde,0), Index(s,Infinity()), Index(stilde,Infinity());
     inf_zero_indices := [Index(s,0), Index(stilde,0), Index(s,Infinity())];
     assert stilde[inf_zero_indices[3]] eq Infinity();
     scale_tilde := stilde[Index(s,0)];
@@ -1672,6 +1690,11 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     stilde := table[stilde_idx];
 
     table :=[* [* x : i->x in t *] : t in table *];
+    printf "\n[VACM] allds = %o\n", allds;
+    printf "[VACM] s_idx=%o stilde_idx=%o  #table=%o  #s=%o\n", s_idx, stilde_idx, #table, #s;
+    printf "[VACM] s      = %o\n", s;
+    printf "[VACM] stilde = %o\n", stilde;
+    printf "[VACM] Index(s,0)=%o  Index(stilde,0)=%o\n", Index(s,LogSum(0)), Index(stilde,LogSum(0));
     scale_tilde := stilde[Index(s,LogSum(0))];
     scale := s[Index(stilde,LogSum(0))];
    

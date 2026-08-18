@@ -234,7 +234,9 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [5/6] reducing table and computing values at CM points...";
+    printf "[AEC] discs BEFORE ReduceTable = %o\n", abs_schofer_tab`Discs;
     ReduceTable(abs_schofer_tab);
+    printf "[AEC] discs AFTER  ReduceTable = %o\n", abs_schofer_tab`Discs;
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts);
     vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
 
@@ -684,8 +686,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     vprintf ShimuraQuotients, 4 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
+    printf "\n[AEC] d_divs = %o\n", d_divs;
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
     all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    printf "[AEC] #all_cm_pts = %o, discs = %o\n", #all_cm_pts, [pt[1] : pt in all_cm_pts];
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
