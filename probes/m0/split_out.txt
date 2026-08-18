@@ -1,0 +1,13 @@
+START
+=========== X0^15(2) ===========
+  #forms = 9, keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  form[-2 ]: OLD tot=4        (oo=0        zero=4       ) | dens tot=4        (oo=0        zero=4       )
+  form[-1 ]: OLD tot=4        (oo=4        zero=0       ) | dens tot=8        (oo=4        zero=4       )
+  form[9  ]: OLD tot=16       (oo=0        zero=16      ) | dens tot=16       (oo=0        zero=16      )
+  form[10 ]: OLD tot=20       (oo=4        zero=16      ) | dens tot=20       (oo=4        zero=16      )
+  form[11 ]: OLD tot=12       (oo=4        zero=8       ) | dens tot=12       (oo=4        zero=8       )
+  form[12 ]: OLD tot=24       (oo=4        zero=20      ) | dens tot=24       (oo=4        zero=20      )
+  form[13 ]: OLD tot=4        (oo=4        zero=0       ) | dens tot=8        (oo=4        zero=4       )
+  form[14 ]: OLD tot=12       (oo=0        zero=12      ) | dens tot=12       (oo=0        zero=12      )
+  form[15 ]: OLD tot=4        (oo=0        zero=4       ) | dens tot=4        (oo=0        zero=4       )
+DONE
