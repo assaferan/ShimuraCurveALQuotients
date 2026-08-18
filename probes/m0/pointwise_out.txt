@@ -1,0 +1,6 @@
+START
+=== X0^15(2), det primes [ 2, 3, 5 ] ===
+  gamma=0: agree=46 differ=0 skipped=0
+=== X0^21(2), det primes [ 2, 3, 7 ] ===
+  gamma=0: agree=46 differ=0 skipped=0
+DONE
