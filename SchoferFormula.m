@@ -992,14 +992,11 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     // SECOND hauptmodul s~ (= fs[-2], table row 9 in the 15_2 layout) should be 2, not the 4 that
     // m0_multiplier returns. Removing 2*kzero_N from that row is exactly "multiplier 4 -> 2", and it
     // only fires where the m=0 term itself fired (IsEven(N) and the level-prime set nonempty).
-    if #fs ge 9 then
-        d_fund := FundamentalDiscriminant(d);
-        Nprimes := PrimeDivisors(Xstar`N div GCD(Xstar`N, d_fund));
-        if IsEven(Xstar`N) and not IsEmpty(Nprimes) then
-            vals[9] -:= 2*(&+[LogSum(Rationals()!1, p) : p in Nprimes]);
-            printf "[EXP] d=%o: halved m=0 multiplier on s~ row (removed 2*kzero_N)\n", d;
-        end if;
-    end if;
+    d_fund := FundamentalDiscriminant(d);
+    Nprimes := PrimeDivisors(Xstar`N div GCD(Xstar`N, d_fund));
+    printf "[EXP] d=%-5o #fs=%-3o d_fund=%-5o Nprimes=%-8o fires=%o  vals[9]=%o\n",
+           d, #fs, d_fund, Nprimes, (IsEven(Xstar`N) and not IsEmpty(Nprimes)),
+           (#fs ge 9) select vals[9] else "n/a";
     return vals;
 end intrinsic;
 

@@ -19,6 +19,7 @@ intrinsic CreateSchoferTable(vals::SeqEnum, keys_fs::SeqEnum, ds::SeqEnum, curve
     x`Discs := ds;
     x`sIndex := Index(keys_fs, -1);
     x`sTildeIndex := Index(keys_fs, -2);
+    printf "[MAP] keys_fs = %o  sIndex = %o  sTildeIndex = %o\n", keys_fs, x`sIndex, x`sTildeIndex;
     x`K_idxs := [i : i->k in keys_fs | k gt 0];
     x`Curves := curves;
     x`Xstar := Xstar;
