@@ -1,0 +1,66 @@
+
+[AEC] d_divs = [ -40, -12, -120, -12 ]
+[AEC] #all_cm_pts = 2, discs = [ <-12, 2, 1>, <-55, 1, 2> ]
+[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[]       fires=false  
+vals[9]=5Log2-Log3
+[EXP] d=-120  #fs=9   d_fund=-120  Nprimes=[]       fires=false  vals[9]=Log0
+[EXP] d=-15   #fs=9   d_fund=-15   Nprimes=[ 2 ]    fires=true  vals[9]=2Log2
+[EXP] d=-60   #fs=9   d_fund=-15   Nprimes=[ 2 ]    fires=true  
+vals[9]=2Log2-2Log3+2Log5
+[EXP] d=-7    #fs=9   d_fund=-7    Nprimes=[ 2 ]    fires=true  
+vals[9]=2Log2-Log3+Log7
+[EXP] d=-52   #fs=9   d_fund=-52   Nprimes=[]       fires=false  
+vals[9]=4Log2-Log3
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -12, -40, -120, -15, -60, -7, -52 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+3Log2,
+Log5,
+-Log3,
+0,
+2Log2
+]
+[VACM] stilde = [
+Logoo,
+3Log2-Log3,
+Log0,
+0,
+-2Log3+2Log5,
+-Log3+Log7,
+2Log2-Log3
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -12, -40, -120, -15, -60, -7, -52 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 8, 5, 1/3, 1, 4 *]
+[find_signs] stilde = [* Infinity, 8/3, 0, 1, 25/9, 7/3, 4/3 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[RCE] cover key=11 g=0 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ 0, 0, -5/3, 25/81, -7/9, -16/9 ]
+[RCE] cover key=12 g=1 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ 0, 0, 0, 0, -7, -13 ]
+[RCE] cover key=13 g=0 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ 0, 8, 5, -1/3, 1, 4 ]
+[RCE] cover key=14 g=0 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ 5/144, -25/48, 0, 0, 1/9, 13/144 ]
+[RCE] cover key=15 g=0 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ -8/9, 0, -1/3, -25/27, -7/9, -4/9 ]
+[RCE] cover key=9 g=1 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ -5/2, 0, 0, 0, -7, -13/4 ]
+[RCE] cover key=10 g=1 #rat=6 dim(ker)=1
+[RCE]    s   = [ 0, 1, 5/8, -1/24, 1/8, 1/2 ]
+[RCE]    y2  = [ 0, -25/6, 0, 0, 1/9, 13/36 ]
+  model curves: 15
+  [3] 35 nested pair(s); good primes [ 7, 13, 19, 31 ]

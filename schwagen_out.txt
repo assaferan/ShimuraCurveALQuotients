@@ -1,0 +1,48 @@
+START
+selfcheck p=2 w=3: hist=32 brute=32 OK
+selfcheck p=3 w=1: hist=0 brute=0 OK
+selfcheck p=5 w=1: hist=50 brute=50 OK
+=== 15_2 OLD (LocalWhittakerAtOne) ===
+      p=2    loc = 2
+      p=3    loc = 0
+      p=5    loc = 0
+    term(N_gam=1, n=1, c=2): h=1 w=4 cond=1/2 g=0 -> 0
+      p=2    loc = 1/2
+      p=3    loc = 2
+      p=5    loc = 2
+    term(N_gam=1, n=2, c=-2): h=1 w=2 cond=1/2 g=2 -> -5/4
+      p=2    loc = 1/2
+      p=3    loc = 0
+      p=5    loc = 6/5
+    term(N_gam=1, n=10, c=2): h=2 w=2 cond=1/2 g=0 -> 0
+15_2 OLD multiplier = 4   (validated target 4)
+=== 15_2 NEW, Eisenstein Gram = -Q_code ===
+      p=2    loc = 1/2
+      p=3    loc = 2
+      p=5    loc = 0
+    term(N_gam=1, n=1, c=2): h=1 w=4 cond=1/2 g=0 -> 0
+      p=2    loc = 1/2
+      p=3    loc = 0
+      p=5    loc = 2
+    term(N_gam=1, n=2, c=-2): h=1 w=2 cond=1/2 g=0 -> 0
+      p=2    loc = 1/2
+      p=3    loc = 2
+      p=5    loc = 6/5
+    term(N_gam=1, n=10, c=2): h=2 w=2 cond=1/2 g=6/5 -> 5/2
+15_2 NEW(-Q) multiplier = -8
+=== 15_2 NEW, Eisenstein Gram = +Q_code ===
+      p=2    loc = 2
+      p=3    loc = 0
+      p=5    loc = 0
+    term(N_gam=1, n=1, c=2): h=1 w=4 cond=1/2 g=0 -> 0
+      p=2    loc = 1/2
+      p=3    loc = 2
+      p=5    loc = 2
+    term(N_gam=1, n=2, c=-2): h=1 w=2 cond=1/2 g=2 -> -5/4
+      p=2    loc = 1/2
+      p=3    loc = 0
+      p=5    loc = 6/5
+    term(N_gam=1, n=10, c=2): h=2 w=2 cond=1/2 g=0 -> 0
+15_2 NEW(+Q) multiplier = 4
+SUMMARY: old=4  new(-Q)=-8  new(+Q)=4  target 4
+DONE

@@ -1,0 +1,13 @@
+START
+=========== X0^10(11) ===========
+  #forms = 9, keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  form[-2 ]: OLD tot=0        (oo=0        zero=0       ) | dens tot=0        (oo=0        zero=0       )
+  form[-1 ]: OLD tot=0        (oo=0        zero=0       ) | dens tot=0        (oo=0        zero=0       )
+  form[9  ]: OLD tot=-12/5    (oo=-12/5    zero=0       ) | dens tot=-12/5    (oo=-12/5    zero=0       )
+  form[10 ]: OLD tot=4/5      (oo=4/5      zero=0       ) | dens tot=4/5      (oo=4/5      zero=0       )
+  form[11 ]: OLD tot=-8/5     (oo=-8/5     zero=0       ) | dens tot=-8/5     (oo=-8/5     zero=0       )
+  form[12 ]: OLD tot=-8/5     (oo=-8/5     zero=0       ) | dens tot=-8/5     (oo=-8/5     zero=0       )
+  form[13 ]: OLD tot=4/5      (oo=4/5      zero=0       ) | dens tot=4/5      (oo=4/5      zero=0       )
+  form[14 ]: OLD tot=0        (oo=0        zero=0       ) | dens tot=0        (oo=0        zero=0       )
+  form[15 ]: OLD tot=-12/5    (oo=-12/5    zero=0       ) | dens tot=-12/5    (oo=-12/5    zero=0       )
+DONE

@@ -1,0 +1,20 @@
+=== building X0^15(2) ===
+curves: 16  (star genus 0)
+SUCCESS: #equation entries = 15
+  [1] -> Associative Array with index universe Integer Ring
+  [2] -> Associative Array with index universe Integer Ring
+  [3] -> Associative Array with index universe Integer Ring
+  [4] -> Associative Array with index universe Integer Ring
+  [5] -> Associative Array with index universe Integer Ring
+  [6] -> Associative Array with index universe Integer Ring
+  [7] -> Associative Array with index universe Integer Ring
+  [8] -> Associative Array with index universe Integer Ring
+  [9] -> Associative Array with index universe Integer Ring
+  [10] -> Associative Array with index universe Integer Ring
+  [11] -> Associative Array with index universe Integer Ring
+  [12] -> Associative Array with index universe Integer Ring
+  [13] -> Associative Array with index universe Integer Ring
+  [14] -> Associative Array with index universe Integer Ring
+  [15] -> Associative Array with index universe Integer Ring
+elapsed 12.940 s
+DONE

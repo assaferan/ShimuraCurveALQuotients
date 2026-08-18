@@ -1,0 +1,13 @@
+START
+=========== X0^10(11) ===========
+  #forms = 9, keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  form[-2 ]: OLD = 0          dens(+Q,-j) = 0          dens(-Q,+j) = 0        
+  form[-1 ]: OLD = 0          dens(+Q,-j) = 0          dens(-Q,+j) = 0        
+  form[9  ]: OLD = -12/5      dens(+Q,-j) = -12/5      dens(-Q,+j) = 0        
+  form[10 ]: OLD = 4/5        dens(+Q,-j) = 4/5        dens(-Q,+j) = 0        
+  form[11 ]: OLD = -8/5       dens(+Q,-j) = -8/5       dens(-Q,+j) = 0        
+  form[12 ]: OLD = -8/5       dens(+Q,-j) = -8/5       dens(-Q,+j) = 0        
+  form[13 ]: OLD = 4/5        dens(+Q,-j) = 4/5        dens(-Q,+j) = 0        
+  form[14 ]: OLD = 0          dens(+Q,-j) = 0          dens(-Q,+j) = 0        
+  form[15 ]: OLD = -12/5      dens(+Q,-j) = -12/5      dens(-Q,+j) = 0        
+DONE

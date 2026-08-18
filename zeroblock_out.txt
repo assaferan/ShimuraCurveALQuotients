@@ -1,0 +1,31 @@
+START
+keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+=========== form[-1] ===========
+    M = 60, |disc_grp| = 1800
+    val(foo) = -10, val(f0) = -45
+    -- oo-block (eta = 0) --
+      m=1    c=2        term=0           (x pre = 0)
+      m=2    c=-2       term=-5/4        (x pre = 4)
+      m=10   c=2        term=0           (x pre = 0)
+    oo total = 4
+    -- 0-block --
+      j=45   c=-2       r=3/4      |bucket(45)| = 3
+        -> j=45 subtotal = 0  (nonzero etas: 0 of 3)
+    0-block total = 0
+    GRAND TOTAL = 4
+=========== form[-2] ===========
+    M = 60, |disc_grp| = 1800
+    val(foo) = -30, val(f0) = -30
+    -- oo-block (eta = 0) --
+      m=1    c=-4       term=0           (x pre = 0)
+      m=2    c=-2       term=-5/4        (x pre = 4)
+      m=3    c=-2       term=-5/4        (x pre = 4)
+      m=30   c=2        term=5/2         (x pre = -8)
+    oo total = 0
+    -- 0-block --
+      j=30   c=-2       r=1/2      |bucket(30)| = 1
+         eta = [ -1/2, -1/2, -7/2 ]     nonzero term = -5/4       (x pre = 4       ) 2-torsion=true
+        -> j=30 subtotal = 4  (nonzero etas: 1 of 1)
+    0-block total = 4
+    GRAND TOTAL = 4
+DONE

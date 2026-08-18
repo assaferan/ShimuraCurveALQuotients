@@ -29,6 +29,9 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
+        printf "[RCE] cover key=%o g=%o #rat=%o dim(ker)=%o\n", keys_fs[idx], g, #rat_svals, #B;
+        printf "[RCE]    s   = %o\n", rat_svals;
+        printf "[RCE]    y2  = %o\n", rat_y2vals;
         require #B le #ds - #rat_svals : "We don't have enough constraints imposed by the rational points";
         Append(~kernels, B);
     end for;

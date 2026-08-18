@@ -1,0 +1,22 @@
+START
+=========== X0^15(2) ===========
+  form[-2 ] M=60   #terms=70   min-ord: oo=-35      0=-30      | other cusps with min<0: NONE
+  form[-1 ] M=60   #terms=58   min-ord: oo=-11      0=-45      | other cusps with min<0: NONE
+  form[9  ] M=60   #terms=70   min-ord: oo=-35      0=-30      | other cusps with min<0: NONE
+  form[10 ] M=60   #terms=52   min-ord: oo=-19      0=-30      | other cusps with min<0: NONE
+  form[11 ] M=60   #terms=70   min-ord: oo=-35      0=-30      | other cusps with min<0: NONE
+  form[12 ] M=60   #terms=70   min-ord: oo=-35      0=-30      | other cusps with min<0: NONE
+  form[13 ] M=60   #terms=58   min-ord: oo=-11      0=-45      | other cusps with min<0: NONE
+  form[14 ] M=60   #terms=52   min-ord: oo=-19      0=-30      | other cusps with min<0: NONE
+  form[15 ] M=60   #terms=70   min-ord: oo=-35      0=-30      | other cusps with min<0: NONE
+=========== X0^10(11) ===========
+  form[-2 ] M=220  #terms=76   min-ord: oo=-90      0=0        | other cusps with min<0: NONE
+  form[-1 ] M=220  #terms=76   min-ord: oo=-90      0=0        | other cusps with min<0: NONE
+  form[9  ] M=220  #terms=228  min-ord: oo=-164     0=0        | other cusps with min<0: NONE
+  form[10 ] M=220  #terms=76   min-ord: oo=-90      0=0        | other cusps with min<0: NONE
+  form[11 ] M=220  #terms=228  min-ord: oo=-164     0=0        | other cusps with min<0: NONE
+  form[12 ] M=220  #terms=228  min-ord: oo=-164     0=0        | other cusps with min<0: NONE
+  form[13 ] M=220  #terms=76   min-ord: oo=-90      0=0        | other cusps with min<0: NONE
+  form[14 ] M=220  #terms=76   min-ord: oo=-90      0=0        | other cusps with min<0: NONE
+  form[15 ] M=220  #terms=228  min-ord: oo=-164     0=0        | other cusps with min<0: NONE
+DONE

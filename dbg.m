@@ -1,0 +1,10 @@
+AttachSpec("ShimuraQuotients.spec");
+Ld := ShimuraCurveLattice(15, 2);
+printf "O set: %o, basis_L set: %o\n", assigned Ld`O, assigned Ld`basis_L;
+d := -7;
+lams := ElementsOfNorm(Ld`Q, [-d], Ld`O, Ld`basis_L);
+printf "keys: %o\n", Keys(lams);
+lam := lams[-d];
+printf "lambda(d=-7) = %o\n", lam;
+Q := ChangeRing(Ld`Q, Integers());
+printf "<lam,lam> via Q = %o (expect -2d = %o)\n", (lam*Q, lam), 2*d;

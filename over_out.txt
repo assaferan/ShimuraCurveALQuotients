@@ -1,0 +1,36 @@
+START
+=== X0^15(2), det L = 1800 ===
+  beta = [ 0, 1/2, 0 ]         det L_beta = 450 (expect 450)  even-integral? true
+  beta = [ 0, -1/2, 1/2 ]      det L_beta = 450 (expect 450)  even-integral? true
+  #overlattices built = 2
+  n :  g_L (en/ed)_L  |  sum over overlattices  |  ratio  b^G_0(n)/b^L_0(n)
+  n=1    b^L = 0             b^G = 0             both 0
+  n=2    b^L = 5/2           b^G = 25/2          ratio = 5
+  n=3    b^L = 15/4          b^G = 75/4          ratio = 5
+  n=4    b^L = 0             b^G = 0             both 0
+  n=5    b^L = 5/2           b^G = 15/2          ratio = 3
+  n=6    b^L = 0             b^G = 0             both 0
+  n=7    b^L = 0             b^G = 0             both 0
+  n=8    b^L = 25/4          b^G = 65/4          ratio = 13/5
+  n=9    b^L = 0             b^G = 0             both 0
+  n=10   b^L = 0             b^G = 0             both 0
+  n=11   b^L = 0             b^G = 0             both 0
+  n=12   b^L = 75/8          b^G = 195/8         ratio = 13/5
+=== X0^21(2), det L = 3528 ===
+  beta = [ 0, 0, 1/2 ]         det L_beta = 882 (expect 882)  even-integral? true
+  beta = [ -1/2, -1/2, 1/2 ]   det L_beta = 882 (expect 882)  even-integral? true
+  #overlattices built = 2
+  n :  g_L (en/ed)_L  |  sum over overlattices  |  ratio  b^G_0(n)/b^L_0(n)
+  n=1    b^L = 0             b^G = 0             both 0
+  n=2    b^L = 0             b^G = 0             both 0
+  n=3    b^L = 21/8          b^G = 105/8         ratio = 5
+  n=4    b^L = 0             b^G = 0             both 0
+  n=5    b^L = 7/2           b^G = 21/2          ratio = 3
+  n=6    b^L = 7/4           b^G = 35/4          ratio = 5
+  n=7    b^L = 0             b^G = 0             both 0
+  n=8    b^L = 0             b^G = 0             both 0
+  n=9    b^L = 0             b^G = 0             both 0
+  n=10   b^L = 0             b^G = 0             both 0
+  n=11   b^L = 0             b^G = 0             both 0
+  n=12   b^L = 105/16        b^G = 273/16        ratio = 13/5
+DONE

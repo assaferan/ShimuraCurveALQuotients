@@ -1,0 +1,25 @@
+START
+=== X0^15(2), det Q = 1800 ===
+  d=-7     glue=7     moduli=[ 7 ]  <lam,lam>=14 (expect -14)
+  d=-15    glue=1     moduli=[]  <lam,lam>=30 (expect -30)
+  d=-52    glue=13    moduli=[ 13 ]  <lam,lam>=104 (expect -104)
+  d=-60    glue=1     moduli=[]  <lam,lam>=120 (expect -120)
+  d=-88    glue=22    moduli=[ 22 ]  <lam,lam>=176 (expect -176)
+  d=-120   glue=2     moduli=[ 2 ]  <lam,lam>=240 (expect -240)
+  d=-148   glue=37    moduli=[ 37 ]  <lam,lam>=296 (expect -296)
+  d=-168   glue=14    moduli=[ 14 ]  <lam,lam>=336 (expect -336)
+  d=-228   glue=19    moduli=[ 19 ]  <lam,lam>=456 (expect -456)
+  d=-232   glue=58    moduli=[ 58 ]  <lam,lam>=464 (expect -464)
+=== X0^21(2), det Q = 3528 ===
+  d=-7     glue=1     moduli=[]  <lam,lam>=14 (expect -14)
+  d=-15    glue=5     moduli=[ 5 ]  <lam,lam>=30 (expect -30)
+  d=-16    glue=4     moduli=[ 4 ]  <lam,lam>=32 (expect -32)
+  d=-28    glue=1     moduli=[]  <lam,lam>=56 (expect -56)
+  d=-60    glue=5     moduli=[ 5 ]  <lam,lam>=120 (expect -120)
+  d=-120   glue=10    moduli=[ 10 ]  <lam,lam>=240 (expect -240)
+  d=-148   glue=37    moduli=[ 37 ]  <lam,lam>=296 (expect -296)
+  d=-168   glue=2     moduli=[ 2 ]  <lam,lam>=336 (expect -336)
+  d=-228   glue=19    moduli=[ 19 ]  <lam,lam>=456 (expect -456)
+  d=-232   glue=58    moduli=[ 58 ]  <lam,lam>=464 (expect -464)
+  d=-408   glue=34    moduli=[ 34 ]  <lam,lam>=816 (expect -816)
+DONE
