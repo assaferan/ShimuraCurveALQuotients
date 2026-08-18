@@ -1,0 +1,9 @@
+found different rep: true
+Q1 = [ -34, 0, 32, 0, 60, 30, 32, 30, -16 ]
+Q2 = [ 14, 60, 8, 60, 240, 30, 8, 30, -4 ]
+  d=-7     glue(rep1)=7     glue(rep2)=7     STABLE
+  d=-15    glue(rep1)=1     glue(rep2)=1     STABLE
+  d=-60    glue(rep1)=1     glue(rep2)=1     STABLE
+  d=-52    glue(rep1)=13    glue(rep2)=13    STABLE
+  d=-88    glue(rep1)=22    glue(rep2)=22    STABLE
+DONE

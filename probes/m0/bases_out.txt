@@ -1,0 +1,24 @@
+START
+=========== X0^15(2) ===========
+  #forms = 9, keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  form[-2 ]: OLD = 4          dens(+Q,-j) = 4          dens(-Q,+j) = 0        
+  form[-1 ]: OLD = 4          dens(+Q,-j) = 8          dens(-Q,+j) = 0        
+  form[9  ]: OLD = 16         dens(+Q,-j) = 16         dens(-Q,+j) = 0        
+  form[10 ]: OLD = 20         dens(+Q,-j) = 20         dens(-Q,+j) = 0        
+  form[11 ]: OLD = 12         dens(+Q,-j) = 12         dens(-Q,+j) = 0        
+  form[12 ]: OLD = 24         dens(+Q,-j) = 24         dens(-Q,+j) = 0        
+  form[13 ]: OLD = 4          dens(+Q,-j) = 8          dens(-Q,+j) = 0        
+  form[14 ]: OLD = 12         dens(+Q,-j) = 12         dens(-Q,+j) = 0        
+  form[15 ]: OLD = 4          dens(+Q,-j) = 4          dens(-Q,+j) = 0        
+=========== X0^21(2) ===========
+  #forms = 9, keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  form[-2 ]: OLD = -52/3      dens(+Q,-j) = -52/3      dens(-Q,+j) = 0        
+  form[-1 ]: OLD = -20/3      dens(+Q,-j) = -20/3      dens(-Q,+j) = 0        
+  form[9  ]: OLD = -24        dens(+Q,-j) = -24        dens(-Q,+j) = 0        
+  form[10 ]: OLD = -20/3      dens(+Q,-j) = -20/3      dens(-Q,+j) = 0        
+  form[11 ]: OLD = -52/3      dens(+Q,-j) = -52/3      dens(-Q,+j) = 0        
+  form[12 ]: OLD = -30        dens(+Q,-j) = -30        dens(-Q,+j) = 0        
+  form[13 ]: OLD = -6         dens(+Q,-j) = -6         dens(-Q,+j) = 0        
+  form[14 ]: OLD = -38/3      dens(+Q,-j) = -38/3      dens(-Q,+j) = 0        
+  form[15 ]: OLD = -70/3      dens(+Q,-j) = -70/3      dens(-Q,+j) = 0        
+DONE
