@@ -1,0 +1,77 @@
+
+[ORACLE] ===== X0^6(11) =====
+
+[AEC] d_divs = [ -24, -19, -24, -40 ]
+[AEC] #all_cm_pts = 2, discs = [ <-24, 2, 1>, <-184, 1, 2> ]
+[EXP] d=-19   #fs=9   d_fund=-19   Nprimes=[ 11 ]   fires=false  
+vals[9]=5Log2-Log3
+[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[ 11 ]   fires=false  vals[9]=Log0
+[EXP] d=-88   #fs=9   d_fund=-88   Nprimes=[]       fires=false  
+vals[9]=2Log2+Log3
+[EXP] d=-132  #fs=9   d_fund=-132  Nprimes=[]       fires=false  
+vals[9]=3Log2-Log3+Log5
+[EXP] d=-43   #fs=9   d_fund=-43   Nprimes=[ 11 ]   fires=false  
+vals[9]=5Log2-Log3+Log5
+[EXP] d=-51   #fs=9   d_fund=-51   Nprimes=[ 11 ]   fires=false  
+vals[9]=5Log2-Log3
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -24, -19, -40, -88, -132, -43, -51 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+3Log2-Log3,
+-Log3,
+Log2-Log3,
+4Log2,
+4Log2-Log3
+]
+[VACM] stilde = [
+Logoo,
+3Log2,
+Log0,
+2Log3,
+Log2+Log5,
+3Log2+Log5,
+3Log2
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -24, -19, -40, -88, -132, -43, -51 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 8/3, 1/3, 2/3, 16, 16/3 *]
+[find_signs] stilde = [* Infinity, 8, 0, 9, 10, 40, 8 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[RCE] cover key=11 g=1 #rat=6 dim(ker)=0
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ -304/9, -128, 0, 214358881/3, -33712/9, -272/3 ]
+[RCE] cover key=12 g=1 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ -19/81, -40/9, 0, 0, -52675/81, -17/3 ]
+[RCE] cover key=13 g=0 #rat=6 dim(ker)=0
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ 1, 9, 0, 1331, 49, 17 ]
+[RCE] cover key=14 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ 1/9, 5/9, 1/18, 0, 25/9, 1 ]
+[RCE] cover key=15 g=0 #rat=6 dim(ker)=0
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ -1216/9, -512/9, 1771561/9, 644204/3, -2752/9, -64/3 ]
+[RCE] cover key=9 g=1 #rat=6 dim(ker)=0
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ -1216/81, -2560/81, 1771561/162, 0, -68800/81, -64/3 ]
+[RCE] cover key=10 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -40, -88, -132, -43, -51 ]
+[RCE]    s   = [ 0, 1, -1/8, -1/4, 6, 2 ]
+[RCE]    y2  = [ 1/9, 5, 0, 0, 1225/9, 17 ]
+[ORACLE] 6 11 BUILD_FAIL Runtime error in 'QuadraticConstraintsOnEquations': 
+Error in Schofer table  | values at rational points - no solution found!
+[ORACLE] 6 11 elapsed 170.220 s

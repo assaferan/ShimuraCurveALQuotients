@@ -1004,8 +1004,7 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // 0 there while letting X0^15(2) use the principled term. Full guard removal awaits the multi-term
     // fix (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing
     // over several isotropic eta0). See memory route-c-obstruction-formula.
-    // EXPERIMENT: allow the term on X0^10(11) too, to test the measured odd-N multipliers.
-    if (IsEven(N) or (D eq 10 and N eq 11)) and not IsEmpty(Nprimes) then
+    if IsEven(N) and not IsEmpty(Nprimes) then
         kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
         for i->eta in etas do
             mult := m0_multiplier(fs[i], fs_0[i], Q, disc_grp, to_disc, Ldata`denom, M, D, N);
@@ -1053,7 +1052,7 @@ end intrinsic;
 
 intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4, Keep := {}) -> SeqEnum
 {Returns list of candidate discriminats for Schofer's formula} //'
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd, Keep := Keep);
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := false, bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
 end intrinsic;
 
