@@ -991,9 +991,14 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     return vals;
 end intrinsic;
 
-intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
-{Returns list of candidate discriminats for Schofer's formula} //'
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd);
+intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4, Keep := {}) -> SeqEnum
+{Returns list of candidate discriminats for Schofer's formula. Keep lists discriminants that must be
+ offered as candidates even if they fail the coprime-to-level filter -- typically the zeros and poles
+ of the two hauptmoduls, which the pipeline needs as anchors. Without this, AbsoluteValuesAtCMPoints'
+ Include (must-use) set is selected FROM this list and so comes out empty whenever an anchor is not
+ coprime to N, e.g. on X0^15(2), whose four divisor discriminants are all even.} //'
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true,
+                                                              bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
 end intrinsic;
 
@@ -1791,7 +1796,7 @@ intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Ma
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
