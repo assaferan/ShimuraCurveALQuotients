@@ -29,7 +29,10 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
         end for;
         M := Matrix(M);
         B :=  Basis(Kernel(Transpose(M)));
+        ds_noinf := Remove(ds, inf_idx_s);
+        rat_ds := [ds_noinf[i] : i in rat_sidxs];
         printf "[RCE] cover key=%o g=%o #rat=%o dim(ker)=%o\n", keys_fs[idx], g, #rat_svals, #B;
+        printf "[RCE]    ds  = %o\n", rat_ds;
         printf "[RCE]    s   = %o\n", rat_svals;
         printf "[RCE]    y2  = %o\n", rat_y2vals;
         require #B le #ds - #rat_svals : "We don't have enough constraints imposed by the rational points";
@@ -213,7 +216,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [3/6] computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs)); // !!! This is slow, figure out why !!!
     vprintf ShimuraQuotients, 1 : " done (%os): %o rational, %o quadratic CM points.\n",
                                   Realtime() - t, #all_cm_pts[1], #all_cm_pts[2];
     // Restrict the demand to the target covers when Targets is given. This is the
@@ -691,7 +694,7 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 : "Done!\n";
     printf "\n[AEC] d_divs = %o\n", d_divs;
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
     printf "[AEC] #all_cm_pts = %o, discs = %o\n", #all_cm_pts, [pt[1] : pt in all_cm_pts];
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);

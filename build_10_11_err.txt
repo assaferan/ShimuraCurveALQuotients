@@ -1,0 +1,79 @@
+Computing Borcherds forms...Done!
+Computing divisors of hauptmodules...Done!
+
+[AEC] d_divs = [ -8, -40, -35, -8 ]
+Computing candidate discriminants...[AEC] #all_cm_pts = 2, discs = [ <-8, 2, 1>, <-68, 1, 2> ]
+Computing absolute values at CM points...[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[ 11 ]   fires=false  vals[9]=5Log2
+[EXP] d=-35   #fs=9   d_fund=-35   Nprimes=[ 11 ]   fires=false  vals[9]=Log0
+[EXP] d=-43   #fs=9   d_fund=-43   Nprimes=[ 11 ]   fires=false  vals[9]=8Log2
+[EXP] d=-52   #fs=9   d_fund=-52   Nprimes=[ 11 ]   fires=false  vals[9]=6Log2
+[EXP] d=-120  #fs=9   d_fund=-120  Nprimes=[ 11 ]   fires=false  vals[9]=7Log2
+[EXP] d=-340  #fs=9   d_fund=-340  Nprimes=[ 11 ]   fires=false  
+vals[9]=6Log2+Log5
+[EXP] d=-88   #fs=9   d_fund=-88   Nprimes=[]       fires=false  
+vals[9]=5Log2+Log7
+[EXP] d=-132  #fs=9   d_fund=-132  Nprimes=[]       fires=false  vals[9]=7Log2
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+Done!
+Computing actual values at CM points...
+[VACM] allds = [ -8, -40, -35, -43, -52, -120, -340, -88, -132 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=9
+[VACM] s      = [
+Logoo,
+Log0,
+0,
+2Log3,
+0,
+Log5,
+2Log3,
+3Log2,
+Log3
+]
+[VACM] stilde = [
+Logoo,
+0,
+Log0,
+3Log2,
+Log2,
+2Log2,
+Log2+Log5,
+Log7,
+2Log2
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -8, -40, -35, -43, -52, -120, -340, -88, -132 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 1, 9, 1, 5, 9, 8, 3 *]
+[find_signs] stilde = [* Infinity, 1, 0, 8, 2, 4, 10, 7, 4 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+Done!
+Computing equations of covers...[RCE] cover key=11 g=2 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ 0, -35/16, -387/16, 117/64, -75/2, 404685/64, 0, 43923/4 ]
+[RCE] cover key=12 g=1 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ -1/10, -7/5, -43/25, -117/100, -24/5, -8993/20, 0, -58564/25 ]
+[RCE] cover key=13 g=0 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ 0, -7/25, 9/25, 9/25, -3/5, 153/25, 0, 363/25 ]
+[RCE] cover key=14 g=0 #rat=8 dim(ker)=1
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE] cover key=15 g=1 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ 5, 80, -688, 52, 640, 10580, 121, 7744 ]
+[RCE] cover key=9 g=1 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ 0, 20, -1548, -13, 800, -23805, 242, 5808 ]
+[RCE] cover key=10 g=0 #rat=8 dim(ker)=0
+[RCE]    ds  = [ -40, -35, -43, -52, -120, -340, -88, -132 ]
+[RCE]    s   = [ 0, 1, 9, -1, 5, -9, 8, -3 ]
+[RCE]    y2  = [ -8, -7, 1, -9, -3, -17, 0, 121 ]

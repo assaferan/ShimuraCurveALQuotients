@@ -1,0 +1,57 @@
+
+[AEC] d_divs = [ -40, -12, -120, -12 ]
+[AEC] #all_cm_pts = 2, discs = [ <-12, 2, 1>, <-55, 1, 2> ]
+[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[]       fires=false  
+vals[9]=5Log2-Log3
+[EXP] d=-120  #fs=9   d_fund=-120  Nprimes=[]       fires=false  vals[9]=Log0
+[EXP] d=-15   #fs=9   d_fund=-15   Nprimes=[ 2 ]    fires=true  vals[9]=2Log2
+[EXP] d=-7    #fs=9   d_fund=-7    Nprimes=[ 2 ]    fires=true  
+vals[9]=2Log2-Log3+Log7
+[EXP] d=-55   #fs=9   d_fund=-55   Nprimes=[ 2 ]    fires=true  
+vals[9]=2Log2-2Log3+3Log5
+[EXP] d=-55   #fs=9   d_fund=-55   Nprimes=[ 2 ]    fires=true  
+vals[9]=2Log2-2Log3+3Log5
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -12, -40, -120, -15, -7, -55, -55 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+3Log2,
+Log5,
+0,
+-4Log2+2Log3+Log5,
+-4Log2+2Log3+Log5
+]
+[VACM] stilde = [
+Logoo,
+3Log2-Log3,
+Log0,
+0,
+-Log3+Log7,
+-2Log2-2Log3+3Log5,
+-2Log2-2Log3+3Log5
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -12, -40, -120, -15, -7, -55, -55 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 2, 2 ]
+[find_signs] s = [* Infinity, 0, 8, 5, 1, 45/16, 45/16 *]
+[find_signs] stilde = [* Infinity, 8/3, 0, 1, 7/3, 125/36, 125/36 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+
+AllEquationsAboveCovers(
+    Xstar: ,
+    curves: [ , , , , , , , , , , , , , , ,  ]
+)
+In file "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurve\
+ALQuotients/fe0e5880-9d7a-4747-9e91-68091e8d7211/scratchpad/m0-multiterm/Equati\
+onsCovers.m", line 706, column 36:
+>>     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude :
+                                      ^
+Runtime error in 'ValuesAtCMPoints': No admissible hauptmodul minpoly for a 
+quadratic CM point (Schofer norm data inconsistent with the star field of 
+definition)
+

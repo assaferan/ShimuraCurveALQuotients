@@ -1,0 +1,8 @@
+=== building X0^10(11) ===
+curves: 16  (star genus 0)
+CRASH:
+Runtime error in 'QuadraticConstraintsOnEquations': Error in Schofer table 
+values at rational points - no solution found!
+
+elapsed 743.740 s
+DONE
