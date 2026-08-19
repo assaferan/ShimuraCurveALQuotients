@@ -210,7 +210,9 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [3/6] computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
+    // Keep := d_divs so the hauptmoduls' own zeros/poles survive the coprime-to-level filter;
+    // AbsoluteValuesAtCMPoints' Include (must-use) set is selected from this list.
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs)); // !!! This is slow, figure out why !!!
     vprintf ShimuraQuotients, 1 : " done (%os): %o rational, %o quadratic CM points.\n",
                                   Realtime() - t, #all_cm_pts[1], #all_cm_pts[2];
     // Restrict the demand to the target covers when Targets is given. This is the
@@ -685,7 +687,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 4 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
+    // Keep := d_divs: see the note at the other CandidateDiscriminants call site.
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
     genus_list := [curves[i]`g: i in Xstar`CoveredBy];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";

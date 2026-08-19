@@ -1415,8 +1415,12 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0) -> SeqEnum, SeqEnum
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}) -> SeqEnum, SeqEnum
 {returns rational and quadratic CM points on X. Excludes those in exclude.
+ Keep: discriminants exempt from the coprime_to_level filter. The filter exists to keep out CM points
+ whose Schofer values misbehave, but it is a blunt instrument: on even-level bases it drops every even
+ discriminant, including the zeros/poles of the hauptmoduls themselves, which the caller REQUIRES as
+ anchors. Listing those in Keep admits exactly them without relaxing the filter globally.
  INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
  points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
  "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
@@ -1472,7 +1476,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
     // (they are appended before the loop); the loop below only appends already-coprime points.
     if coprime_to_level then
-        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
     end if;
     for ctr->d in allCN do
         // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
@@ -1480,7 +1484,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
-        if coprime_to_level and (GCD(d, X`N) ne 1) then continue; end if;
+        if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
         // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
         // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
@@ -1503,10 +1507,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     if not coprime_to_level then
         return rat_pts, quad_pts;
     end if;
-    // Filter out points where p[1] is not coprime to N
+    // Filter out points where p[1] is not coprime to N (except those the caller pinned via Keep)
     // Build new lists instead of modifying during iteration
-    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
-    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1];
+    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
+    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
     return rat_pts, quad_pts;
 
 end intrinsic;
