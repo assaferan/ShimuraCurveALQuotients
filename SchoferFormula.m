@@ -795,6 +795,40 @@ function m0_multiplier(foo, f0, Q, disc_grp, to_disc, denom, M, D, N)
         return c * cond_half * (Rationals()!h/wr) * (en/ed) * g;
     end function;
 
+    // ---- EXPERIMENT: THE LEVEL SUPPORT RULE.  u_m is nonzero only when N | m; the weights below are
+    // the (unique) solution of the measured multipliers under that rule.  See memory
+    // m0-level-support-rule: 8 bases, 32 spare conditions, 51/0/3 leave-one-out.
+    // The point of this branch is a NON-CIRCULAR end-to-end test: on 6_17 and 6_19 the rule PREDICTS
+    // multipliers for covers the oracle sweep could not measure at all (6_19: forms 10, 12, 14;
+    // 6_17: forms 9, 12), so a passing model test is real evidence, not a refit.
+    // CALIBRATED per-base weights -- must NOT ship; the general VALUE formula is still open.
+    levelfit := AssociativeArray();
+    levelfit[<6, 5>]   := [<10, 3/2>, <15, 1/2>, <30, 3/2>];
+    levelfit[<6, 17>]  := [<34, 3/2>, <51, 0>, <102, 3/2>];
+    levelfit[<6, 19>]  := [<19, 1/2>, <57, -1/2>, <114, 1/2>];
+    levelfit[<10, 3>]  := [<3, 1/2>, <12, 1/2>, <30, 3/2>];
+    if IsDefined(levelfit, <D, N>) then
+        uw := AssociativeArray();
+        for pr in levelfit[<D, N>] do uw[pr[1]] := Rationals()!pr[2]; end for;
+        Tfit := Rationals()!0;
+        for m in [1..-Valuation(foo)] do
+            c := Coefficient(foo, -m);
+            if c eq 0 or m mod N ne 0 then continue; end if;   // the level rule: only N | m contributes
+            error if not IsDefined(uw, m), "level fit: unexpected oo index with N | m", m;
+            Tfit +:= c * uw[m];
+        end for;
+        for j in [1..-Valuation(f0)] do
+            c := Coefficient(f0, -j);
+            if c eq 0 then continue; end if;
+            // cusp-0 index j corresponds to r = j/M; its square class is sqfree(num*den)
+            r := (Rationals()!j)/M;
+            sq := Numerator(r) * Denominator(r);
+            sqf := &*([Integers() | pr[1] : pr in Factorization(sq) | IsOdd(pr[2])] cat [1]);
+            error if sqf mod N eq 0, "level fit: cusp-0 index in the support, weight not fitted", j;
+        end for;
+        return Tfit;
+    end if;
+
     // ---- EXPERIMENT ONLY: the 9 ground-truth multipliers for X0^15(2), recovered by fitting the
     // per-cover kernel consistency in RationalConstraintsOnEquations (each cover's required correction
     // came out an exact power of 2, and the genus-0 covers were overdetermined). Expressed as the
@@ -1004,7 +1038,10 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // 0 there while letting X0^15(2) use the principled term. Full guard removal awaits the multi-term
     // fix (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing
     // over several isotropic eta0). See memory route-c-obstruction-formula.
-    if IsEven(N) and not IsEmpty(Nprimes) then
+    // EXPERIMENT: the even-N guard is what hides the term on odd-N bases.  Open it for exactly the
+    // bases whose level-rule weights are tabulated above, so the end-to-end test can run.
+    level_bases := {<6, 5>, <6, 17>, <6, 19>, <10, 3>};
+    if (IsEven(N) or <D, N> in level_bases) and not IsEmpty(Nprimes) then
         kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
         for i->eta in etas do
             mult := m0_multiplier(fs[i], fs_0[i], Q, disc_grp, to_disc, Ldata`denom, M, D, N);

@@ -1,0 +1,97 @@
+X0_6_17.m: 
+[AEC] d_divs = [ -4, -19, -4, -43 ]
+[AEC] #all_cm_pts = 2, discs = [ <-4, 4, 1>, <-115, 1, 2> ]
+[EXP] d=-19   #fs=9   d_fund=-19   Nprimes=[ 17 ]   fires=false  vals[9]=-4Log2
+[EXP] d=-43   #fs=9   d_fund=-43   Nprimes=[ 17 ]   fires=false  vals[9]=Log0
+[EXP] d=-51   #fs=9   d_fund=-51   Nprimes=[]       fires=false  vals[9]=-7Log2
+[EXP] d=-408  #fs=9   d_fund=-408  Nprimes=[]       fires=false  
+vals[9]=-11Log2+Log43
+[EXP] d=-52   #fs=9   d_fund=-52   Nprimes=[ 17 ]   fires=false  
+vals[9]=-6Log2+Log5
+[EXP] d=-67   #fs=9   d_fund=-67   Nprimes=[ 17 ]   fires=false  
+vals[9]=-7Log2+Log5+Log7
+[MAP] keys_fs = [ 1552, 1553, 1554, 1555, 1556, 1557, 1558, -1, -2 ]  sIndex = 8
+sTildeIndex = 9
+
+[VACM] allds = [ -4, -19, -43, -51, -408, -52, -67 ]
+[VACM] s_idx=8 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+-3Log3,
+-3Log2-Log3,
+-7Log2-Log3+Log19,
+-2Log2-Log3,
+-3Log2
+]
+[VACM] stilde = [
+Logoo,
+0,
+Log0,
+-3Log2,
+-7Log2+Log43,
+-2Log2+Log5,
+-3Log2+Log5+Log7
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -4, -19, -43, -51, -408, -52, -67 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 1/27, 1/24, 19/384, 1/12, 1/8 *]
+[find_signs] stilde = [* Infinity, 1, 0, 1/8, 43/128, 5/4, 35/8 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[RCE] cover key=1552 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ -19, -43/81, 0, 0, -13, -268 ]
+[RCE] cover key=1553 g=1 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ 1/9, 1/81, 0, -4913/196608, -1/4, 121/36 ]
+[RCE] cover key=1554 g=1 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ -19/9, -43/81, -17/48, 0, 13/4, -8107/144 ]
+[RCE] cover key=1555 g=1 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ -19/9, -43/729, 0, 0, -13/4, -8107/36 ]
+[RCE] cover key=1556 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ 1, 1, 17/16, 4913/4096, 9/4, 121/16 ]
+[RCE] cover key=1557 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ 1/9, 1/81, 0, -1/48, -1/9, 4/9 ]
+[RCE] cover key=1558 g=0 #rat=6 dim(ker)=1
+[RCE]    ds  = [ -19, -43, -51, -408, -52, -67 ]
+[RCE]    s   = [ 0, 1, 9/8, 171/128, 9/4, -27/8 ]
+[RCE]    y2  = [ -19/9, -43/81, -1/3, 0, 13/9, -67/9 ]
+[CMP] label=1544 base=1546
+      computed = Curve over Rational Field defined by
+y^2 - 729/16*s^4 + 45/8*s^2*z^2 - 17/16*z^4,
+x^2 + 16*s^2 + 1/3*z^2
+      expected = Curve over Rational Field defined by
+-17*x[1]^4 + 10*x[1]^2*x[4]^2 + x[2]^2 - 9*x[4]^4,
+3*x[1]^2 + x[3]^2 + 16*x[4]^2
+Fail! 
+[<string>:1](
+)
+test_6_17(
+)
+test_AllEquationsAboveCoversSingleCurve(
+    D: 6,
+    N: 17,
+    cover_data: Associative Array with index universe Set of subsets of Inte...,
+    ws_data: Associative Array with index universe Set of subsets of Inte...,
+    curves: [ , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ...
+)
+In file "tests/BorcherdsProducts.m", line 20, column 31:
+>>                     phi := map<C -> C_ex | Eltseq(Vector(x)*ChangeRing(scal
+                                 ^
+Runtime error in map< ... >: Polynomials do not define a map into the codomain
+ s
+ 313.820
+Tests failed:
+X0_6_17.m
