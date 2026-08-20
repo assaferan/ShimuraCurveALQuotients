@@ -1,0 +1,21 @@
+Magma V2.29-7     Fri Aug 21 2026 01:35:25 on LR43Q9LVQJ [Seed = 1020385196]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "etalambda.m"
+
+d = -7    |L/(L_+ + L_-)| = 7     |L^v/L| = 1800
+  surviving-lambda count per eta: [ <0, 1799>, <1, 1> ]
+  eta with at least one surviving lambda: total pairs 1, nonzero eta 0, 
+isotropic 1
+
+d = -15   |L/(L_+ + L_-)| = 1     |L^v/L| = 1800
+  surviving-lambda count per eta: [ <0, 1799>, <1, 1> ]
+  eta with at least one surviving lambda: total pairs 1, nonzero eta 0, 
+isotropic 1
+
+d = -40   |L/(L_+ + L_-)| = 2     |L^v/L| = 1800
+  surviving-lambda count per eta: [ <0, 1799>, <1, 1> ]
+  eta with at least one surviving lambda: total pairs 1, nonzero eta 0, 
+isotropic 1
+
+Total time: 0.300 seconds, Total memory usage: 32.09MB
