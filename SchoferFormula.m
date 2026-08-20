@@ -450,6 +450,15 @@ intrinsic LocalWhittakerAtOne(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::M
     return Evaluate(Wpol, 1);
 end intrinsic;
 
+intrinsic WhittakerPolynomial(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng, Q::AlgMatElt) -> RngUPolElt
+{The local Whittaker polynomial W_(m,p)(mu)(X) itself, in X = p^(-s), BEFORE the evaluation at X = 1
+ that LocalWhittakerAtOne performs. The s-derivative of the Whittaker function is what produces the
+ log p terms in Schofer's formula, so W'(1) -- which Evaluate(.,1) discards -- is exactly the datum the
+ m = 0 term needs. Exposed for the m0 investigation; see memory m0-level-support-rule.}
+    Wpol := Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+    return Wpol;
+end intrinsic;
+
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
     _<sqrtp> := BaseRing(Wpoly);
