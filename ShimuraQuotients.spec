@@ -2,6 +2,7 @@
 BorcherdsForms.m
 SchoferFormula.m
 WeilRepresentation.m
+VectorValuedForm.m
 EquationsCovers.m
 Caching.m
 ClassNumberData.m
