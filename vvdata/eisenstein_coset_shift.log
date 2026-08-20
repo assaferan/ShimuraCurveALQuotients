@@ -1,0 +1,42 @@
+Magma V2.29-7     Thu Aug 20 2026 22:53:13 on LR43Q9LVQJ [Seed = 2457838288]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "m0fit.m"
+
+======== X0^15(2)   #nonzero isotropic = 2 ========
+  zero   star=1  zeros [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] vs oracle [ 1, 1, 0, 0, 1, 
+1, 1, 1, 1 ]  zeros differ  ratios=6 distinct: []
+  minus  star=1  zeros [ 0, 1, 0, 1, 1, 1, 1, 0, 0 ] vs oracle [ 1, 1, 0, 0, 1, 
+1, 1, 1, 1 ]  zeros differ  ratios=4 distinct: [ -16/15, 0, -8/5, -4/5 ]
+  minus  star=2  zeros [ 0, 1, 0, 1, 1, 1, 1, 0, 0 ] vs oracle [ 1, 1, 0, 0, 1, 
+1, 1, 1, 1 ]  zeros differ  ratios=4 distinct: [ -16/15, 0, -8/5, -4/5 ]
+  plus   star=1  zeros [ 0, 1, 0, 1, 1, 1, 1, 0, 0 ] vs oracle [ 1, 1, 0, 0, 1, 
+1, 1, 1, 1 ]  zeros differ  ratios=4 distinct: [ -16/15, 0, -8/5, -4/5 ]
+  plus   star=2  zeros [ 0, 1, 0, 1, 1, 1, 1, 0, 0 ] vs oracle [ 1, 1, 0, 0, 1, 
+1, 1, 1, 1 ]  zeros differ  ratios=4 distinct: [ -16/15, 0, -8/5, -4/5 ]
+
+======== X0^6(5)   #nonzero isotropic = 8 ========
+  zero   star=1  zeros [ 0, 1, 1, 0, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=5 distinct: []
+  minus  star=1  zeros [ 0, 1, 1, 0, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=6 distinct: []
+  minus  star=2  zeros [ 0, 1, 1, 0, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=6 distinct: []
+  plus   star=1  zeros [ 0, 1, 1, 0, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=6 distinct: []
+  plus   star=2  zeros [ 0, 1, 1, 0, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=6 distinct: []
+
+======== X0^10(3)   #nonzero isotropic = 4 ========
+  zero   star=1  zeros [ 0, 0, 1, 1, 1, 1, 1, 0, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  ZEROS MATCH  ratios=3 distinct: [ 4/5, 8/15, 16/25 ]
+  minus  star=1  zeros [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=7 distinct: []
+  minus  star=2  zeros [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=7 distinct: []
+  plus   star=1  zeros [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=7 distinct: []
+  plus   star=2  zeros [ 1, 1, 1, 1, 1, 1, 1, 1, 1 ] vs oracle [ 0, 0, 1, 1, 1, 
+1, 1, 0, 1 ]  zeros differ  ratios=7 distinct: []
+
+Total time: 20.289 seconds, Total memory usage: 32.09MB

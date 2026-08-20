@@ -951,9 +951,24 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // X0^10(11) pipeline some forms come out non-integer -> the CM value loses rationality
     // (RationalNumber crash in ValuesAtCMPoints). The true multiplier is 0 on all odd-N bases main
     // handles (main passes them with NO m=0 term), so we retain the even-N guard: it forces the correct
-    // 0 there while letting X0^15(2) use the principled term. Full guard removal awaits the multi-term
-    // fix (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing
-    // over several isotropic eta0). See memory route-c-obstruction-formula.
+    // 0 there while letting X0^15(2) use the principled term.
+    //
+    // WHAT THE MULTIPLIER ACTUALLY IS (measured; see VectorValuedForm.m and tests/VectorValuedForm.m).
+    // Evaluating the Guo-Yang coset sum F_f = sum_gamma (f|gamma) rho(gamma^{-1}) e_0 directly, rather
+    // than reading its constant terms off the two scalar q-expansions, gives
+    //        multiplier = (1/2) * c_eta(0)   at any NONZERO ISOTROPIC eta,   and   c_0(0) = 0.
+    // All 2N-2 nonzero isotropic cosets carry the same c_eta(0); the isotropic cosets number exactly
+    // 2N-1 and all come from the level-N hyperbolic plane, which is why this term carries log N.
+    // Verified against the independently measured ground truth on 19 forms: X0^15(2) (9/9),
+    // X0^6(5) (5/5) and X0^10(3) (5/5).
+    // So "sum_eta c_eta(0)" above names the wrong functional, and the guess previously recorded here
+    // (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing over
+    // several isotropic eta0) was RIGHT IN SUBSTANCE: the relevant Eisenstein series is the one
+    // attached to a nonzero ISOTROPIC coset, not the one attached to 0 that the b_eta(m) below are
+    // built from. That is the concrete defect to repair.
+    // The numeric route is an ORACLE only -- minutes per base, and out of reach for the larger
+    // discriminant groups -- so it cannot replace m0_multiplier; it is what m0_multiplier must
+    // reproduce. See memory m0-multiplier-solved and route-c-obstruction-formula.
     if IsEven(N) and not IsEmpty(Nprimes) then
         kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
         for i->eta in etas do
