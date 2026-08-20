@@ -1792,12 +1792,18 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
     return;
 end intrinsic;
 
-intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
-{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}, Keep := {}) -> SeqEnum, SeqEnum, SeqEnum
+{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.
+ Keep: extra discriminants that must appear in the table, beyond the hauptmoduls' own zeros and poles.
+ They bypass the coprime-to-level filter (same mechanism as CandidateDiscriminants' Keep) and are pinned
+ as must-use points. This lets a caller evaluate at a CM point the filter would otherwise discard -- in
+ particular at a discriminant DIVISIBLE by the level. Such a value is not absorbed by ReduceTable's
+ per-row rescaling, which is what makes it usable as an external check; see tests/ExternalCMValues.m.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
-    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    must_use := Set(d_divs) join Keep;
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := must_use);
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := must_use);
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
     return schofer_tab;
