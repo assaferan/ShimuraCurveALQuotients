@@ -1,0 +1,12 @@
+Magma V2.29-7     Thu Aug 20 2026 23:23:45 on LR43Q9LVQJ [Seed = 1803969040]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "p53check.m"
+base     p    kind  m      LocalWhittaker Prop 5.3       agree
+15_2: good primes -- 54 agree, 0 disagree
+6_5: good primes -- 54 agree, 0 disagree
+10_3: good primes -- 54 agree, 0 disagree
+6_7: good primes -- 54 agree, 0 disagree
+10_11: good primes -- 91 agree, 0 disagree
+
+Total time: 0.800 seconds, Total memory usage: 32.09MB
