@@ -1,0 +1,65 @@
+
+[ORACLE] ===== X0^14(5) =====
+[PP] 14 5 form=-2 oo=[ <1, -1>, <2, 2>, <4, -1>, <6, -1>, <15, -2>, <16, -2>, 
+<91, 1> ] zero=[]
+[PP] 14 5 form=-1 oo=[ <1, -1>, <2, 2>, <4, -1>, <11, 1>, <15, -2>, <16, -2> ] 
+zero=[]
+[PP] 14 5 form=9 oo=[ <1, -6>, <2, 6>, <3, 2>, <4, -2>, <7, 2>, <35, 2>, <70, 2>
+] zero=[]
+[PP] 14 5 form=10 oo=[ <1, -4>, <2, 4>, <3, 2>, <4, -4>, <6, -2>, <7, 2>, <10, 
+2>, <14, 2>, <15, -2>, <16, -4>, <35, 2> ] zero=[]
+[PP] 14 5 form=11 oo=[ <1, -6>, <2, 6>, <4, -2>, <6, 2>, <10, -2>, <14, 2>, <15,
+-2>, <16, -4>, <70, 2> ] zero=[]
+[PP] 14 5 form=12 oo=[ <1, -8>, <2, 8>, <3, 2>, <4, -4>, <7, 2>, <14, 2>, <15, 
+-2>, <16, -4>, <35, 2>, <70, 2> ] zero=[]
+[PP] 14 5 form=13 oo=[ <1, -2>, <2, 2>, <4, -2>, <14, 2>, <15, -2>, <16, -4> ] 
+zero=[]
+[PP] 14 5 form=14 oo=[ <1, -2>, <2, 2>, <3, 2>, <4, -2>, <6, -2>, <7, 2>, <10, 
+2>, <35, 2> ] zero=[]
+[PP] 14 5 form=15 oo=[ <1, -4>, <2, 4>, <6, 2>, <10, -2>, <70, 2> ] zero=[]
+
+[AEC] d_divs = [ -4, -11, -91, -4 ]
+[AEC] #all_cm_pts = 2, discs = [ <-4, 4, 1>, <-51, 1, 2> ]
+[EXP] d=-11   #fs=9   d_fund=-11   Nprimes=[ 5 ]    fires=false  vals[9]=-4Log2
+[EXP] d=-91   #fs=9   d_fund=-91   Nprimes=[ 5 ]    fires=false  vals[9]=Log0
+[EXP] d=-35   #fs=9   d_fund=-35   Nprimes=[]       fires=false  
+vals[9]=-7Log2+Log5+Log7
+[EXP] d=-280  #fs=9   d_fund=-280  Nprimes=[]       fires=false  
+vals[9]=-11Log2+2Log3+Log5+Log13
+[EXP] d=-84   #fs=9   d_fund=-84   Nprimes=[ 5 ]    fires=false  
+vals[9]=-6Log2+Log3
+[EXP] d=-120  #fs=9   d_fund=-120  Nprimes=[]       fires=false  
+vals[9]=-5Log2+Log3+Log5
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -4, -11, -91, -35, -280, -84, -120 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+0,
+-3Log2+Log5,
+-7Log2+Log5+Log11,
+-2Log2,
+-Log2+Log5
+]
+[VACM] stilde = [
+Logoo,
+0,
+Log0,
+-3Log2+Log5+Log7,
+-7Log2+2Log3+Log5+Log13,
+-2Log2+Log3,
+-Log2+Log3+Log5
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -4, -11, -91, -35, -280, -84, -120 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 1, 5/8, 55/128, 1/4, 5/2 *]
+[find_signs] stilde = [* Infinity, 1, 0, 35/8, 585/128, 3/4, 15/2 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[ORACLE] 14 5 BUILD_FAIL Runtime error in '[]': Sequence index 2 should be in 
+the range 1 to 1
+[ORACLE] 14 5 elapsed 1650.610 s

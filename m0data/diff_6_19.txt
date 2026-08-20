@@ -1,0 +1,170 @@
+[SIG] 6 19 sgn=1   diag=[ -262, -114/131, 114 ] det=25992 signature=(1,2)
+[DIFF] 6 19 sgn=1   m=1    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=4    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=7    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=9    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=10   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=13   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=14   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=16   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=19   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=22   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=25   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=28   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=30   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=31   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=34   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=36   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=37   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=40   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=43   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=46   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=49   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=52   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=55   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=56   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=58   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=61   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=62   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=63   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=64   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=67   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=70   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=73   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=76   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=78   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=79   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=81   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=82   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=85   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=88   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=90   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=91   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=94   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=97   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=100  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=103  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=106  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=109  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=110  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=112  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=115  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=117  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=118  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=120  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=121  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=124  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=126  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=127  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=130  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=133  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=136  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=139  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=142  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=144  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=145  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=148  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=151  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=154  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=157  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=158  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=160  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=163  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=166  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=169  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=171  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=172  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=174  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=175  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=178  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=181  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=184  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=187  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=190  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=193  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=196  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=198  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=1   m=199  finite_fail=[ 3 ] arch_fail=false
+[SIG] 6 19 sgn=-1  diag=[ 262, 114/131, -114 ] det=-25992 signature=(2,1)
+[DIFF] 6 19 sgn=-1  m=2    finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=5    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=8    finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=11   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=14   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=17   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=18   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=20   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=23   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=26   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=29   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=32   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=34   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=35   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=38   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=41   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=44   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=45   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=47   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=50   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=53   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=56   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=59   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=62   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=65   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=66   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=68   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=71   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=72   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=74   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=77   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=80   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=82   finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=83   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=86   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=89   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=92   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=95   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=98   finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=99   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=101  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=104  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=107  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=110  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=113  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=114  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=116  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=119  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=122  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=125  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=126  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=128  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=130  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=131  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=134  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=136  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=137  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=140  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=143  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=146  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=149  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=152  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=153  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=155  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=158  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=161  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=162  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=164  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=167  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=170  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=173  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=176  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=178  finite_fail=[ 2 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=179  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=180  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=182  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=185  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=188  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=191  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=194  finite_fail=[ 2, 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=197  finite_fail=[ 3 ] arch_fail=false
+[DIFF] 6 19 sgn=-1  m=200  finite_fail=[ 2, 3 ] arch_fail=false

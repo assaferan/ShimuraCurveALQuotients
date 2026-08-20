@@ -1,0 +1,47 @@
+
+[ORACLE] ===== X0^6(13) =====
+
+[AEC] d_divs = [ -3, -43, -4, -43 ]
+[AEC] #all_cm_pts = 2, discs = [ <-3, 6, 1>, <-235, 1, 2> ]
+[EXP] d=-3    #fs=9   d_fund=-3    Nprimes=[ 13 ]   fires=false  vals[9]=0
+[EXP] d=-4    #fs=9   d_fund=-4    Nprimes=[ 13 ]   fires=false  vals[9]=Log0
+[EXP] d=-52   #fs=9   d_fund=-52   Nprimes=[]       fires=false  
+vals[9]=2Log3-2Log5
+[EXP] d=-312  #fs=9   d_fund=-312  Nprimes=[]       fires=false  
+vals[9]=4Log2-Log43
+[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[ 13 ]   fires=false  vals[9]=-Log3
+[EXP] d=-51   #fs=9   d_fund=-51   Nprimes=[ 13 ]   fires=false  
+vals[9]=Log3-Log7
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -3, -4, -43, -52, -312, -40, -51 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Log0,
+Log3,
+Logoo,
+4Log2+Log3-2Log5+3Log13,
+4Log3+3Log13-Log43,
+Log2,
+2Log2+Log3-Log7
+]
+[VACM] stilde = [
+0,
+Log0,
+Logoo,
+2Log3-2Log5,
+4Log2-Log43,
+-Log3,
+Log3-Log7
+]
+[VACM] Index(s,0)=1  Index(stilde,0)=2
+
+[find_signs] ds = [ -3, -4, -43, -52, -312, -40, -51 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* 0, 3, Infinity, 105456/25, 177957/43, 2, 12/7 *]
+[find_signs] stilde = [* 1, 0, Infinity, 9/25, 16/43, 1/3, 3/7 *]
+[find_signs] Index(s,0)=1 Index(stilde,0)=2 Index(s,oo)=3 Index(stilde,oo)=3
+[ORACLE] 6 13 BUILD_FAIL Runtime error in '[]': Sequence index 3 should be in 
+the range 1 to 2
+[ORACLE] 6 13 elapsed 137.540 s

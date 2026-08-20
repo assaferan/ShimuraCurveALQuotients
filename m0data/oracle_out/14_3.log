@@ -1,0 +1,59 @@
+
+[ORACLE] ===== X0^14(3) =====
+[PP] 14 3 form=-2 oo=[ <1, 2>, <2, -2>, <5, -1>, <15, 2>, <35, 1> ] zero=[]
+[PP] 14 3 form=-1 oo=[ <1, 2>, <2, -2>, <11, 1>, <15, 2> ] zero=[]
+[PP] 14 3 form=9 oo=[ <1, 4>, <2, -4>, <5, 2>, <21, 2>, <42, 2> ] zero=[]
+[PP] 14 3 form=10 oo=[ <1, 8>, <2, -6>, <6, 2>, <14, 2>, <15, 6>, <21, 2> ] 
+zero=[]
+[PP] 14 3 form=11 oo=[ <1, 8>, <2, -6>, <5, 6>, <6, -2>, <14, 2>, <15, 6>, <42, 
+2> ] zero=[]
+[PP] 14 3 form=12 oo=[ <1, 10>, <2, -8>, <5, 4>, <14, 2>, <15, 6>, <21, 2>, <42,
+2> ] zero=[]
+[PP] 14 3 form=13 oo=[ <1, 6>, <2, -4>, <5, 2>, <14, 2>, <15, 6> ] zero=[]
+[PP] 14 3 form=14 oo=[ <1, 2>, <2, -2>, <5, -2>, <6, 2>, <21, 2> ] zero=[]
+[PP] 14 3 form=15 oo=[ <1, 2>, <2, -2>, <5, 4>, <6, -2>, <42, 2> ] zero=[]
+
+[AEC] d_divs = [ -11, -8, -35, -8 ]
+[AEC] #all_cm_pts = 2, discs = [ <-8, 2, 1>, <-56, 1, 2> ]
+[EXP] d=-11   #fs=9   d_fund=-11   Nprimes=[ 3 ]    fires=false  vals[9]=6Log2
+[EXP] d=-35   #fs=9   d_fund=-35   Nprimes=[ 3 ]    fires=false  vals[9]=Log0
+[EXP] d=-84   #fs=9   d_fund=-84   Nprimes=[]       fires=false  
+vals[9]=3Log2+Log3+Log7
+[EXP] d=-168  #fs=9   d_fund=-168  Nprimes=[]       fires=false  
+vals[9]=2Log2+Log3+Log5
+[EXP] d=-51   #fs=9   d_fund=-51   Nprimes=[]       fires=false  
+vals[9]=7Log2+Log3
+[EXP] d=-120  #fs=9   d_fund=-120  Nprimes=[]       fires=false  
+vals[9]=5Log2+Log3+Log5
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -8, -11, -35, -84, -168, -51, -120 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+4Log2,
+Log2+Log3,
+Log3+Log11,
+4Log2+Log3,
+3Log2+Log3+Log7
+]
+[VACM] stilde = [
+Logoo,
+4Log2,
+Log0,
+Log2+Log3+Log7,
+Log3+Log5,
+5Log2+Log3,
+3Log2+Log3+Log5
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -8, -11, -35, -84, -168, -51, -120 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 16, 6, 33, 48, 168 *]
+[find_signs] stilde = [* Infinity, 16, 0, 42, 15, 96, 120 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[ORACLE] 14 3 BUILD_FAIL Runtime error in '[]': Illegal null sequence
+[ORACLE] 14 3 elapsed 133.930 s

@@ -1,0 +1,66 @@
+
+[ORACLE] ===== X0^10(7) =====
+[PP] 10 7 form=-2 oo=[ <2, -8>, <3, -1>, <5, 3>, <6, -1>, <7, -4>, <10, 2>, <12,
+-2>, <20, -3>, <28, 4> ] zero=[]
+[PP] 10 7 form=-1 oo=[ <2, -6>, <3, -1>, <5, 3>, <6, 1>, <7, -4>, <12, -2>, <20,
+-1>, <28, 2> ] zero=[]
+[PP] 10 7 form=9 oo=[ <1, -6>, <2, -20>, <3, -4>, <4, -2>, <5, 10>, <7, -14>, 
+<10, 2>, <12, -8>, <20, -8>, <28, 10>, <35, 2>, <70, 2> ] zero=[]
+[PP] 10 7 form=10 oo=[ <1, -2>, <2, -8>, <3, -2>, <4, -2>, <5, 4>, <7, -6>, <12,
+-4>, <20, -2>, <28, 2>, <35, 2> ] zero=[]
+[PP] 10 7 form=11 oo=[ <1, -4>, <2, -12>, <3, -2>, <5, 6>, <7, -8>, <10, 2>, 
+<12, -4>, <20, -6>, <28, 8>, <70, 2> ] zero=[]
+[PP] 10 7 form=12 oo=[ <1, -6>, <2, -6>, <3, -2>, <4, -2>, <5, 4>, <7, -6>, <12,
+-4>, <20, -4>, <28, 4>, <35, 2>, <70, 2> ] zero=[]
+[PP] 10 7 form=13 oo=[ <2, -14>, <3, -2>, <5, 6>, <7, -8>, <10, 2>, <12, -4>, 
+<20, -4>, <28, 6> ] zero=[]
+[PP] 10 7 form=14 oo=[ <1, -2>, <2, -10>, <3, -2>, <4, -2>, <5, 4>, <6, -2>, <7,
+-6>, <10, 2>, <12, -4>, <20, -4>, <28, 4>, <35, 2> ] zero=[]
+[PP] 10 7 form=15 oo=[ <1, -4>, <2, -10>, <3, -2>, <5, 6>, <6, 2>, <7, -8>, <12,
+-4>, <20, -4>, <28, 6>, <70, 2> ] zero=[]
+
+[AEC] d_divs = [ -3, -20, -3, -40 ]
+[AEC] #all_cm_pts = 2, discs = [ <-3, 3, 1>, <-68, 1, 2> ]
+[EXP] d=-20   #fs=9   d_fund=-20   Nprimes=[ 7 ]    fires=false  vals[9]=-3Log2
+[EXP] d=-40   #fs=9   d_fund=-40   Nprimes=[ 7 ]    fires=false  vals[9]=Log0
+[EXP] d=-35   #fs=9   d_fund=-35   Nprimes=[]       fires=false  
+vals[9]=-5Log2+Log5-4Log7
+[EXP] d=-280  #fs=9   d_fund=-280  Nprimes=[]       fires=false  
+vals[9]=2Log2-3Log3-4Log7
+[EXP] d=-52   #fs=9   d_fund=-52   Nprimes=[ 7 ]    fires=false  
+vals[9]=-6Log2+2Log3
+[EXP] d=-115  #fs=9   d_fund=-115  Nprimes=[ 7 ]    fires=false  
+vals[9]=-5Log2+2Log3
+[MAP] keys_fs = [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ]  sIndex = 7  sTildeIndex =
+9
+
+[VACM] allds = [ -3, -20, -40, -35, -280, -52, -115 ]
+[VACM] s_idx=7 stilde_idx=9  #table=9  #s=7
+[VACM] s      = [
+Logoo,
+Log0,
+0,
+-2Log2-3Log7,
+-3Log3+Log5-3Log7,
+-3Log2,
+-2Log2+Log5
+]
+[VACM] stilde = [
+Logoo,
+-5Log2,
+Log0,
+-7Log2+Log5-4Log7,
+-3Log3-4Log7,
+-8Log2+2Log3,
+-7Log2+2Log3
+]
+[VACM] Index(s,0)=2  Index(stilde,0)=3
+
+[find_signs] ds = [ -3, -20, -40, -35, -280, -52, -115 ]
+[find_signs] degs = [ 1, 1, 1, 1, 1, 1, 1 ]
+[find_signs] s = [* Infinity, 0, 1, 1/1372, 5/9261, 1/8, 5/4 *]
+[find_signs] stilde = [* Infinity, 1/32, 0, 5/307328, 1/64827, 9/256, 9/128 *]
+[find_signs] Index(s,0)=2 Index(stilde,0)=3 Index(s,oo)=1 Index(stilde,oo)=1
+[ORACLE] 10 7 BUILD_FAIL Runtime error in '[]': Sequence index 3 should be in 
+the range 1 to 2
+[ORACLE] 10 7 elapsed 1622.820 s

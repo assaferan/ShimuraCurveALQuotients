@@ -1,0 +1,87 @@
+START
+=========== X0^6(7) ===========
+det Q = 3528 = [ <2, 3>, <3, 2>, <7, 2> ], M = 84
+keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+--------- form[-2] ---------
+    oo m=1     c=4      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=3     c=-2     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-3     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=7     c=-4     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=19    c=1      contrib=0        | d=-19 h=1 w=2 cond/2=1 en/ed=2527/960 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 0, 0>, <19, 360/361, 1> ]
+    ==> oo = 0 , zero = 0 , TOTAL = 0
+--------- form[-1] ---------
+    oo m=1     c=2      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=3     c=-2     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-4     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=6     c=2      contrib=0        | d=-24 h=2 w=2 cond/2=1/2 en/ed=21/16 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-2     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    ==> oo = 0 , zero = 0 , TOTAL = 0
+--------- form[9] ---------
+    oo m=1     c=12     contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-4     contrib=16       | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-8     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-8     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=6     c=2      contrib=0        | d=-24 h=2 w=2 cond/2=1/2 en/ed=21/16 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-8     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-10    contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=21    c=2      contrib=-8       | d=-84 h=4 w=2 cond/2=1/2 en/ed=49/32 g=8/7 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    oo m=42    c=2      contrib=-12      | d=-168 h=4 w=2 cond/2=1/2 en/ed=49/32 g=12/7 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = -4 , zero = 0 , TOTAL = -4
+--------- form[10] ---------
+    oo m=1     c=6      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-2     contrib=8        | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-4     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=7     c=-4     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-2     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=21    c=2      contrib=-8       | d=-84 h=4 w=2 cond/2=1/2 en/ed=49/32 g=8/7 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = 0 , zero = 0 , TOTAL = 0
+--------- form[11] ---------
+    oo m=1     c=6      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-2     contrib=8        | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-4     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=6     c=2      contrib=0        | d=-24 h=2 w=2 cond/2=1/2 en/ed=21/16 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-4     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-8     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=42    c=2      contrib=-12      | d=-168 h=4 w=2 cond/2=1/2 en/ed=49/32 g=12/7 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = -4 , zero = 0 , TOTAL = -4
+--------- form[12] ---------
+    oo m=1     c=10     contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-4     contrib=16       | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-6     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-4     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=7     c=-6     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-6     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=21    c=2      contrib=-8       | d=-84 h=4 w=2 cond/2=1/2 en/ed=49/32 g=8/7 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    oo m=42    c=2      contrib=-12      | d=-168 h=4 w=2 cond/2=1/2 en/ed=49/32 g=12/7 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = -4 , zero = 0 , TOTAL = -4
+--------- form[13] ---------
+    oo m=1     c=2      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=3     c=-2     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-4     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=6     c=2      contrib=0        | d=-24 h=2 w=2 cond/2=1/2 en/ed=21/16 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-2     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    ==> oo = 0 , zero = 0 , TOTAL = 0
+--------- form[14] ---------
+    oo m=1     c=8      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-2     contrib=8        | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-6     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=5     c=-8     contrib=0        | d=-20 h=2 w=2 cond/2=1/2 en/ed=175/192 g=0 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 2, 0>, <5, 24/25, 1>, <7, 0, 0> ]
+    oo m=6     c=2      contrib=0        | d=-24 h=2 w=2 cond/2=1/2 en/ed=21/16 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-6     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-6     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=21    c=2      contrib=-8       | d=-84 h=4 w=2 cond/2=1/2 en/ed=49/32 g=8/7 locs(p,W,v_p(r))=[ <2, 1, 0>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = 0 , zero = 0 , TOTAL = 0
+--------- form[15] ---------
+    oo m=1     c=4      contrib=0        | d=-4 h=1 w=4 cond/2=1/2 en/ed=7/3 g=0 locs(p,W,v_p(r))=[ <2, 0, 0>, <3, 0, 0>, <7, 2, 0> ]
+    oo m=2     c=-2     contrib=8        | d=-8 h=1 w=2 cond/2=1/2 en/ed=7/6 g=6 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 2, 0>, <7, 2, 0> ]
+    oo m=3     c=-2     contrib=0        | d=-3 h=1 w=6 cond/2=1 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=7     c=-2     contrib=0        | d=-7 h=1 w=2 cond/2=1 en/ed=49/48 g=0 locs(p,W,v_p(r))=[ <2, 3/2, 0>, <3, 0, 0>, <7, 6/7, 1> ]
+    oo m=12    c=-4     contrib=0        | d=-3 h=1 w=6 cond/2=2 en/ed=63/32 g=0 locs(p,W,v_p(r))=[ <2, 3/4, 2>, <3, 4/3, 1>, <7, 0, 0> ]
+    oo m=42    c=2      contrib=-12      | d=-168 h=4 w=2 cond/2=1/2 en/ed=49/32 g=12/7 locs(p,W,v_p(r))=[ <2, 3/2, 1>, <3, 4/3, 1>, <7, 6/7, 1> ]
+    ==> oo = -4 , zero = 0 , TOTAL = -4
+DONE

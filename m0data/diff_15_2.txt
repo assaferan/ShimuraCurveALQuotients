@@ -1,0 +1,59 @@
+[SIG] 15 2 sgn=1   diag=[ 14, -120/7, -15/2 ] det=1800 signature=(1,2)
+[DIFF] 15 2 sgn=1   m=1    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=2    finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=3    finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=4    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=7    finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=8    finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=9    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=10   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=12   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=13   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=16   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=17   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=18   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=19   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=22   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=23   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=25   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=27   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=28   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=31   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=32   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=33   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=34   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=36   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=37   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=38   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=40   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=42   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=1   m=43   finite_fail=[ 3, 5 ] arch_fail=false
+[SIG] 15 2 sgn=-1  diag=[ -14, 120/7, 15/2 ] det=-1800 signature=(2,1)
+[DIFF] 15 2 sgn=-1  m=2    finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=3    finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=5    finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=7    finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=8    finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=11   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=12   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=13   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=14   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=17   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=18   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=20   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=22   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=23   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=26   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=27   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=28   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=29   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=32   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=33   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=35   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=37   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=38   finite_fail=[ 3, 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=41   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=42   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=43   finite_fail=[ 5 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=44   finite_fail=[ 3 ] arch_fail=false
+[DIFF] 15 2 sgn=-1  m=45   finite_fail=[ 3 ] arch_fail=false
