@@ -69,6 +69,36 @@ procedure test_weil_complex()
     printf " ok\n";
 end procedure;
 
+procedure test_weil_fft()
+    printf "  S-action as a Fourier transform on the discriminant group...";
+    CC := ComplexField(40);
+    for DN in [ <6,1>, <10,1>, <15,2> ] do
+        D := DN[1]; N := DN[2];
+        Ld := ShimuraCurveLattice(D, N);
+        S, Tdiag, elts, i0 := WeilRepresentationComplex(Ld, CC : Dual := true);
+        n := #elts;
+        data := VVWeilFFT(Ld, CC : Dual := true);
+        assert data[7] eq elts and data[8] eq i0;
+        assert Maximum([Abs(data[6][i] - Tdiag[i]) : i in [1..n]]) lt 1e-25;
+        // the factorised S must agree with the dense matrix on arbitrary vectors, not just on e_0
+        for trial in [1..3] do
+            v := [CC | ((i*trial) mod 7) - 3 + CC.1*(((i+trial) mod 5) - 2) : i in [1..n]];
+            dense := S * Matrix(CC, n, 1, v);
+            fast := VVApplyS(data, v);
+            assert Maximum([Abs(dense[i][1] - fast[i]) : i in [1..n]]) lt 1e-25;
+        end for;
+        // and on the actual coset words, which is how it is used
+        M := IsOdd(D*N) select 4*D*N else 2*D*N;
+        for g in VVCosetReps(M)[1..Minimum(6, #VVCosetReps(M))] do
+            w := VVSTWord(g);
+            a := VVRhoInvE0(S, Tdiag, w, i0);
+            b := VVRhoInvE0FFT(data, w);
+            assert Maximum([Abs(a[i][1] - b[i]) : i in [1..n]]) lt 1e-22;
+        end for;
+    end for;
+    printf " ok\n";
+end procedure;
+
 procedure test_isotropic_count()
     printf "  isotropic cosets number 2N-1...";
     for DN in [ [6,1], [15,2], [21,2], [10,3], [6,5] ] do
@@ -160,6 +190,7 @@ procedure test_VectorValuedForm()
     printf "Testing the vector-valued Borcherds input form F_f...\n";
     test_cosets_and_words();
     test_weil_complex();
+    test_weil_fft();
     test_isotropic_count();
     test_slash_against_qexpansion_at_0();
     test_Ff_on_6_1();

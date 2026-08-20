@@ -221,7 +221,10 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
     CC := ComplexField(Prec);
     ii := CC.1; twopii := 2*Pi(CC)*ii;
 
-    S, Tdiag, elts, i0 := WeilRepresentationComplex(Ld, CC : Dual := true);
+    // The S-action goes through the Fourier factorisation (VVWeilFFT): the dense |G| x |G| matrix
+    // is what confined this oracle to D*N <= 42, and it is unnecessary.
+    fftdata := VVWeilFFT(Ld, CC : Dual := true);
+    elts := fftdata[7]; i0 := fftdata[8];
     n := #elts;
     Q := ChangeRing(Ld`Q, Rationals()); dn := Ld`denom;
     vs := [ChangeRing(g@@Ld`to_disc, Rationals()) : g in elts];
@@ -234,8 +237,8 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
     words := [VVSTWord(g) : g in reps];
     U := ZeroMatrix(CC, #reps, n);
     for k in [1..#reps] do
-        v := VVRhoInvE0(S, Tdiag, words[k], i0);
-        for i in [1..n] do U[k][i] := v[i][1]; end for;
+        v := VVRhoInvE0FFT(fftdata, words[k]);
+        for i in [1..n] do U[k][i] := v[i]; end for;
     end for;
 
     // form-independent: the pulled-back point and the eta values there, per (sample, coset)
@@ -274,14 +277,27 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
             end for;
         end for;
         Fv := A*U;                                        // Fv[t][i] = F_{eta_i}(tau_t)
-        coef := function(i, nn)
-            s := CC!0;
-            for t in [1..KS] do s +:= Fv[t][i] * Exp(-twopii*CC!nn*taus[t]); end for;
-            return s/KS;
-        end function;
+        // Extract every needed Fourier coefficient in ONE matrix product.  Done naively this is
+        // |G| x K transcendental evaluations per form (4.6 million at |G| = 24200), which becomes the
+        // bottleneck once the S-action is no longer dense; batched it is a single compiled multiply.
+        v0 := Minimum(0, Valuation(f0));
+        exps := Sort(Setseq( {Rationals() | 0}
+                    join {Rationals() | -(Rationals()!j)/M : j in [1..-v0]}
+                    join {Rationals() | nn : nn in [Valuation(foo)..-1]} ));
+        pos := AssociativeArray();
+        for a->e in exps do pos[e] := a; end for;
+        // NB: build this with an explicit loop.  Magma's multi-index comprehension varies the FIRST
+        // index fastest, so [f(a,t) : a in .., t in ..] fills a matrix COLUMN-major -- which silently
+        // transposes any non-symmetric matrix built that way.
+        E := ZeroMatrix(CC, #exps, KS);
+        for a in [1..#exps] do
+            for t in [1..KS] do E[a][t] := Exp(-twopii*CC!exps[a]*taus[t]); end for;
+        end for;
+        Coefs := (E*Fv)/KS;                               // Coefs[a][i] = c_{eta_i}(exps[a])
+        coef := func<i, nn | Coefs[pos[Rationals()!nn]][i]>;
 
         // the gate: F_f's principal part against [GY, Lemma 24] as the pipeline normalises it
-        err := 0.0; v0 := Minimum(0, Valuation(f0));
+        err := 0.0;
         for i in [1..n] do
             for j in [1..-v0] do
                 if (j mod M) ne res[i] then continue; end if;
@@ -322,4 +338,108 @@ intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D
                                              Height := Height);
     // entry 1 is the trivial coset (whose constant term is 0); any other will do
     return [ c[2]/2 : c in consts ], errs;
+end intrinsic;
+
+// ---------------------------------------------------------------------------------------------
+// The S-action as a finite Fourier transform on the discriminant group
+// ---------------------------------------------------------------------------------------------
+// rho(S)_{i,j} = c * e(-sgn <v_i, v_j>) and the pairing is a PERFECT pairing on the finite abelian
+// group G = L^v/L, so rho(S) is (up to a relabelling) the Fourier transform on G.  Writing
+// G = Z/d_1 x ... x Z/d_k via Moduli, and A_rs = <g_r, g_s> for the generators, put
+//         z(y)_r = sum_s (d_r A_rs) y_s   mod d_r      (a bijection of G, by nondegeneracy)
+// so that <x, y> = sum_r x_r z(y)_r / d_r.  Then S is a relabelling followed by the standard
+// multidimensional DFT, which factors into one small matrix product per axis.
+//
+// This replaces an |G| x |G| dense matrix by k matrices of sizes d_r x d_r:
+//     time   |G|^2            ->  |G| * sum_r d_r
+//     memory |G|^2            ->  |G|
+// On |G| = 1800 (D*N = 30) that is ~30x fewer operations; on |G| = 24200 (X0^10(11)) it is ~100x,
+// and the dense matrix -- 5.9e8 complex entries -- does not have to exist at all.  Without this the
+// oracle is confined to D*N <= 42.
+
+intrinsic VVWeilFFT(Ld::QuaternionLatticeData, CC::FldCom : Dual := true) -> List
+{Precomputed data for applying rho(S) as a Fourier transform on the discriminant group.  Returns a
+ list holding ds, gatherflat, scatterflat, Fmats, c, Tdiag, elts, i0, to be passed to VVApplyS.}
+    G := Ld`disc_grp;
+    Q := ChangeRing(Ld`Q, Rationals()); dn := Ld`denom;
+    mods := Moduli(G);
+    keep := [r : r in [1..#mods] | mods[r] gt 1];
+    ds := [mods[r] : r in keep];
+    k := #ds;
+    n := &*ds;
+    require n eq #G : "Moduli do not account for the whole discriminant group.";
+
+    elts := [g : g in G];
+    require #elts eq n : "Element enumeration disagrees with the group order.";
+    i0 := rep{i : i in [1..n] | IsZero(elts[i])};
+
+    // pairing of the generators, A[r][s] = <g_r, g_s> in Q/Z
+    gens := [G.(keep[r]) : r in [1..k]];
+    wg := [ChangeRing(g@@Ld`to_disc, Rationals()) : g in gens];
+    A := [[ (wg[r]*Q, wg[s])/dn^2 : s in [1..k] ] : r in [1..k]];
+
+    strides := [1 : r in [1..k]];
+    for r := k-1 to 1 by -1 do strides[r] := strides[r+1]*ds[r+1]; end for;
+    flat := func<c | 1 + &+[ (c[r] mod ds[r]) * strides[r] : r in [1..k] ]>;
+
+    coords := [ [ (Eltseq(e)[keep[r]]) mod ds[r] : r in [1..k] ] : e in elts ];
+    gatherflat := [ flat([ &+[ Integers()!(ds[r]*A[r][s]) * coords[i][s] : s in [1..k] ]
+                           : r in [1..k] ]) : i in [1..n] ];
+    scatterflat := [ flat(coords[i]) : i in [1..n] ];
+    require #Set(gatherflat) eq n : "The pairing is degenerate: z(y) is not a bijection.";
+
+    ii := CC.1; twopii := 2*Pi(CC)*ii;
+    sgn := Dual select -1 else 1;
+    Fmats := [* *];
+    for r in [1..k] do
+        d := ds[r];
+        zt := [ Exp(twopii*CC!(-sgn*t/d)) : t in [0..d-1] ];
+        Append(~Fmats, Matrix(CC, d, d, [ zt[((x*z) mod d) + 1] : x in [0..d-1], z in [0..d-1] ]));
+    end for;
+    c := Exp(twopii*CC!(sgn/8)) / Sqrt(CC!n);
+    nm := [ (ChangeRing(elts[i]@@Ld`to_disc, Rationals())*Q,
+             ChangeRing(elts[i]@@Ld`to_disc, Rationals()))/(2*dn^2) : i in [1..n] ];
+    Tdiag := [ Exp(twopii*CC!(sgn*nm[i] - Floor(sgn*nm[i]))) : i in [1..n] ];
+    return [* ds, gatherflat, scatterflat, Fmats, c, Tdiag, elts, i0 *];
+end intrinsic;
+
+intrinsic VVApplyS(data::List, v::SeqEnum) -> SeqEnum
+{Apply rho(S) to a vector indexed in the order of the discriminant-group element list, using the
+ Fourier factorisation of VVWeilFFT.}
+    ds := data[1]; gatherflat := data[2]; scatterflat := data[3];
+    Fmats := data[4]; c := data[5];
+    k := #ds; n := &*ds;
+    CC := Parent(c);
+    w := [CC | 0 : t in [1..n]];
+    for i in [1..n] do w[gatherflat[i]] := v[i]; end for;
+    // multidimensional DFT: one matrix product per axis, rotating the axes by a transpose so that
+    // after k rounds the flat ordering is back where it started.
+    W := Matrix(CC, ds[1], n div ds[1], w);
+    for r in [1..k] do
+        W := Fmats[r] * W;
+        nxt := (r eq k) select ds[1] else ds[r+1];
+        W := Matrix(CC, nxt, n div nxt, Eltseq(Transpose(W)));
+    end for;
+    out := Eltseq(W);
+    return [ c*out[scatterflat[i]] : i in [1..n] ];
+end intrinsic;
+
+intrinsic VVRhoInvE0FFT(data::List, word::SeqEnum) -> SeqEnum
+{rho(gamma inverse) applied to e_0 via the Fourier factorisation.  Same convention as VVRhoInvE0:
+ the inverse of rho(g_1) is applied first, and S inverse = conj(S) is used (rho is unitary and S is
+ symmetric).}
+    Tdiag := data[6]; i0 := data[8];
+    CC := Parent(data[5]);
+    n := #Tdiag;
+    v := [CC | 0 : i in [1..n]];  v[i0] := 1;
+    for t in word do
+        if t[1] eq "S" then
+            v := [ComplexConjugate(x) : x in v];
+            v := VVApplyS(data, v);
+            v := [ComplexConjugate(x) : x in v];
+        else
+            for i in [1..n] do v[i] *:= Tdiag[i]^(-t[2]); end for;
+        end if;
+    end for;
+    return v;
 end intrinsic;
