@@ -157,11 +157,23 @@ procedure test_Ff_on_6_1()
     forms := [fs[k] : k in ks];
     // N = 1, so the only isotropic coset is the trivial one and there is no m = 0 multiplier;
     // what this pins is the CONSTRUCTION -- the principal part, and the vanishing of c_0(0).
-    consts, isoelts, errs := VVConstantTerms(forms, Ld, M : Prec := 60, NumSamples := 64);
+    // PosDepth = 2M also requests the positive coefficients c_eta(j/M) up to j = 2M.  NOTE there is
+    // no exact external target for these: GY Lemma 24 pins only the PRINCIPAL parts, and F_f's
+    // positive coefficients differ from the scalar expansions' (c_0(0) = 0 vs Coefficient(foo, 0)
+    // already shows this at n = 0).  What IS forced structurally is the support: the trivial
+    // coset's component has integer exponents only, so every off-grid fractional exponent must
+    // extract to numerical zero -- that checks the new extraction path end to end.
+    consts, isoelts, errs, poscs := VVConstantTerms(forms, Ld, M
+                                                    : Prec := 60, NumSamples := 64, PosDepth := 2*M);
     assert #isoelts eq 1 and IsZero(isoelts[1]);
     for i in [1..#forms] do
         assert errs[i] lt 1e-30;            // principal part reproduces GY Lemma 24
         assert Abs(consts[i][1]) lt 1e-30;  // c_0(0) = 0
+        // plumbing: the right shape, and genuinely nonzero on-grid values.  (The off-grid noise
+        // floor scales with the PRINCIPAL-part magnitudes, so a sharp off-grid zero test needs the
+        // production parameters -- see the aliasing caveat in the intrinsic's documentation.)
+        assert #poscs[i][1] eq 2*M;
+        assert Maximum([Abs(poscs[i][1][j]) : j in [M, 2*M]]) gt 1e-10;
     end for;
     printf " ok\n";
 end procedure;
