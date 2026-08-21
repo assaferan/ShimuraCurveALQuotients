@@ -1,0 +1,96 @@
+Magma V2.29-7     Fri Aug 21 2026 07:34:51 on LR43Q9LVQJ [Seed = 1653595638]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "lminusN.m"
+
+=========== X0^15(2), N = 2 ===========
+  --- d = -7    (d_fund -7, N is SPLIT) : Delta(L_-) = 6300 = [ <2, 2>, <3, 2>, 
+<5, 2>, <7, 1> ], ord_2 = 2
+      m = 2    (N | m)  W(L_-) = [ <2, 1>, <3, 0>, <5, 0>, <7, 0> ] vanishing at
+[ 3, 5, 7 ]
+      m = 10   (N | m)  W(L_-) = [ <2, 1>, <3, 0>, <5, 6>, <7, 2> ] vanishing at
+[ 3 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 1>, <3, 4>, <5, 6>, <7, 0> ] vanishing at
+[ 7 ]
+      m = 1             W(L_-) = [ <2, 0>, <3, 0>, <5, 0>, <7, 0> ] vanishing at
+[ 2, 3, 5, 7 ]
+      m = 3             W(L_-) = [ <2, 0>, <3, 4>, <5, 0>, <7, 2> ] vanishing at
+[ 2, 5 ]
+      m = 5             W(L_-) = [ <2, 0>, <3, 0>, <5, 6>, <7, 2> ] vanishing at
+[ 2, 3 ]
+  --- d = -15   (d_fund -15, N is SPLIT) : Delta(L_-) = 60 = [ <2, 2>, <3, 1>, 
+<5, 1> ], ord_2 = 2
+      m = 2    (N | m)  W(L_-) = [ <2, 1>, <3, 0>, <5, 2> ]         vanishing at
+[ 3 ]
+      m = 10   (N | m)  W(L_-) = [ <2, 1>, <3, 2>, <5, 0> ]         vanishing at
+[ 5 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 1>, <3, 0>, <5, 2> ]         vanishing at
+[ 3 ]
+      m = 1             W(L_-) = [ <2, 0>, <3, 2>, <5, 0> ]         vanishing at
+[ 2, 5 ]
+      m = 3             W(L_-) = [ <2, 0>, <3, 0>, <5, 2> ]         vanishing at
+[ 2, 3 ]
+      m = 5             W(L_-) = [ <2, 0>, <3, 0>, <5, 2> ]         vanishing at
+[ 2, 3 ]
+
+=========== X0^6(5), N = 5 ===========
+  --- d = -19   (d_fund -19, N is SPLIT) : Delta(L_-) = 17100 = [ <2, 2>, <3, 
+2>, <5, 2>, <19, 1> ], ord_5 = 2
+      m = 10   (N | m)  W(L_-) = [ <2, 3>, <3, 0>, <5, 4>, <19, 2> ] vanishing 
+at [ 3 ]
+      m = 15   (N | m)  W(L_-) = [ <2, 0>, <3, 4>, <5, 4>, <19, 2> ] vanishing 
+at [ 2 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 3>, <3, 4>, <5, 4>, <19, 0> ] vanishing 
+at [ 19 ]
+      m = 1             W(L_-) = [ <2, 0>, <3, 0>, <5, 0>, <19, 0> ] vanishing 
+at [ 2, 3, 5, 19 ]
+      m = 2             W(L_-) = [ <2, 3>, <3, 0>, <5, 0>, <19, 2> ] vanishing 
+at [ 3, 5 ]
+      m = 3             W(L_-) = [ <2, 0>, <3, 4>, <5, 0>, <19, 2> ] vanishing 
+at [ 2, 5 ]
+  --- d = -24   (d_fund -24, N is SPLIT) : Delta(L_-) = 600 = [ <2, 3>, <3, 1>, 
+<5, 2> ], ord_5 = 2
+      m = 10   (N | m)  W(L_-) = [ <2, 0>, <3, 2>, <5, 4> ]         vanishing at
+[ 2 ]
+      m = 15   (N | m)  W(L_-) = [ <2, 0>, <3, 2>, <5, 4> ]         vanishing at
+[ 2 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 2>, <3, 0>, <5, 4> ]         vanishing at
+[ 3 ]
+      m = 1             W(L_-) = [ <2, 0>, <3, 2>, <5, 0> ]         vanishing at
+[ 2, 5 ]
+      m = 2             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+      m = 3             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+
+=========== X0^10(3), N = 3 ===========
+  --- d = -8    (d_fund -8, N is SPLIT) : Delta(L_-) = 1800 = [ <2, 3>, <3, 2>, 
+<5, 2> ], ord_3 = 2
+      m = 3    (N | m)  W(L_-) = [ <2, 2>, <3, 2>, <5, 0> ]         vanishing at
+[ 5 ]
+      m = 12   (N | m)  W(L_-) = [ <2, 2>, <3, 2>, <5, 0> ]         vanishing at
+[ 5 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 0>, <3, 2>, <5, 6> ]         vanishing at
+[ 2 ]
+      m = 1             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+      m = 2             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+      m = 5             W(L_-) = [ <2, 0>, <3, 0>, <5, 6> ]         vanishing at
+[ 2, 3 ]
+  --- d = -20   (d_fund -20, N is SPLIT) : Delta(L_-) = 180 = [ <2, 2>, <3, 2>, 
+<5, 1> ], ord_3 = 2
+      m = 3    (N | m)  W(L_-) = [ <2, 0>, <3, 2>, <5, 2> ]         vanishing at
+[ 2 ]
+      m = 12   (N | m)  W(L_-) = [ <2, 0>, <3, 2>, <5, 2> ]         vanishing at
+[ 2 ]
+      m = 30   (N | m)  W(L_-) = [ <2, 2>, <3, 2>, <5, 0> ]         vanishing at
+[ 5 ]
+      m = 1             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+      m = 2             W(L_-) = [ <2, 0>, <3, 0>, <5, 2> ]         vanishing at
+[ 2, 3 ]
+      m = 5             W(L_-) = [ <2, 2>, <3, 0>, <5, 0> ]         vanishing at
+[ 3, 5 ]
+
+Total time: 0.269 seconds, Total memory usage: 32.09MB

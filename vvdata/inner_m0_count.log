@@ -1,0 +1,15 @@
+Magma V2.29-7     Fri Aug 21 2026 01:50:09 on LR43Q9LVQJ [Seed = 2056754248]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "innerm0.m"
+X0^15(2) at d = -7 : |L/(L_+ + L_-)| = 7, N-part of k_0(0) = 1 * log 2
+  m     count      count/2    target A_m
+  2     0          0          -1
+  10    0          0          1
+  30    0          0          0
+  1     0          0          0
+  3     0          0          0
+  5     0          0          0
+  15    0          0          0
+
+Total time: 0.090 seconds, Total memory usage: 32.09MB
