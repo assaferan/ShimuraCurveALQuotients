@@ -426,15 +426,29 @@ Three structural facts corroborate the identification.
       coefficient formula carries over unchanged in shape.
 \end{enumerate}
 
-Two cautions. The identity \eqref{eq:oldform} is proven in \cite{Schwag} for weight
-$k\ge5/2$; at $k=3/2$ both sides require analytic continuation, and the pairing argument assumes
-the continued series remains holomorphic at the special point, where Zagier-type non-holomorphic
-contributions are possible in principle. And at rank $3$ and weight $3/2$ the local factors of
-$b^{B,0}$ collapse to plain representation densities of $L_1$ (the Bruinier--Kuss local
-polynomial is evaluated where its factor $1-p^{m-1}X$ vanishes, leaving only the stabilised
-leading term), so the formula is elementary to evaluate; its direct numerical confrontation with
-the nine measured multipliers of $X_0^{15}(2)$ is the immediate next step, in progress at the
-time of writing.
+Two cautions, the first of which the data has since promoted to a finding. The identity
+\eqref{eq:oldform} is proven in \cite{Schwag} for weight $k\ge5/2$; at $k=3/2$ both sides require
+analytic continuation, and the naive pairing argument assumes the continued series is holomorphic
+at the special point, where Zagier-type non-holomorphic contributions are possible. That
+assumption \emph{fails}, and it fails in a way one can measure without any of the machinery of
+this section: for the true seed-$0$ series on $A$ itself, the constant-term pairing forces
+$\sum_{n>0,\gamma}c_\gamma(-n)\,b^{A,0}_\gamma(n)$ to equal $-c_0(0)$ minus a spread term
+proportional to the multiplier --- so on a form with $\mathrm{mult}=0$ and $c_0(0)=0$ it must
+vanish outright. Evaluating the left side with the na\"ive weight-$3/2$ coefficient formula
+(rank~$3$ collapses the Bruinier--Kuss local polynomials to plain representation densities, since
+they are evaluated where the factor $1-p^{m-1}X$ vanishes) gives $-5$, not $0$, on such a form of
+$X_0^{15}(2)$. The na\"ive recipe therefore violates its own constant-term identity,
+independently of everything specific to \eqref{eq:multformula} --- and this, rather than any
+defect of \eqref{eq:oldform}, is where the computation currently stops. The discrepancy is
+exactly the shape of the harmonic completion: the $\xi$-image of the weight-$3/2$ Eisenstein
+series is a weight-$1/2$ theta on $A$ (supported, by Serre--Stark, on the isotropic lines ---
+the same level-$N$ structure that carries everything else in this note), and its contribution to
+the pairing is, for weakly holomorphic input, a \emph{finite} Weyl-vector-type functional of the
+principal part in the sense of \cite[\S10]{Borcherds}. Calibrating that functional --- for which
+the $\mathrm{mult}=0$ forms give equations free of every other unknown --- is the immediate next
+step. We note the required care: the lattices here are anisotropic over $\Q$, so the unfolding
+of \cite[\S10]{Borcherds} does not apply verbatim and the evaluation must proceed through the
+finite quadratic module.
 
 \section{The open question}\label{sec:open}
 
@@ -516,6 +530,9 @@ The computations were carried out in Magma against the codebase accompanying thi
 \end{itemize}
 
 \begin{thebibliography}{99}
+
+\bibitem{Borcherds} R.~E.~Borcherds, \emph{Automorphic forms with singularities on Grassmannians},
+Invent.\ Math.\ \textbf{132} (1998), 491--562.
 
 \bibitem{BK} J.~H.~Bruinier and M.~Kuss, \emph{Eisenstein series attached to lattices and modular
 forms on orthogonal groups}, Manuscripta Math.\ \textbf{106} (2001), 443--459.
