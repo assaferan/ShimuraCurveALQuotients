@@ -111,20 +111,24 @@ procedure test_binary_level_whittaker()
         assert Valuation(Determinant(Bm*Q*Transpose(Bm)), N) eq 2;
         zero := Vector(Rationals(), [0,0,0]);
         R<X> := PolynomialRing(Rationals());
-        for m in [1..12] do
+        // The closed form, for EVERY valuation j = ord_N(m):
+        //     W_N(X) = 1 + (N-1)(X + X^2 + ... + X^j) - X^(j+1)
+        // so  W_N(1) = (N-1)*ord_N(m)  -- vanishing exactly when N does not divide m, which IS the
+        // empirical level support rule -- and W_N'(1) = (j+1)((N-1)j/2 - 1).
+        // At j = 0 this is 1 - X = 1 - N^(-s), the inverse local zeta factor, whose zero at s = 0 is
+        // a normalisation artifact rather than a failure to represent m.
+        for m in [1..60] do
+            j := Valuation(m, N);
             W := R ! LocalWhittakerPolynomial(Rationals()!m, N, zero, Lminus, Q);
-            if m mod N ne 0 then
-                assert W eq 1 - X;                       // = 1 - N^(-s), the inverse zeta factor
-            elif (m div N) mod N ne 0 then
-                assert W eq 1 + (N-1)*X - X^2;
-            else
-                continue;                                 // ord_N(m) >= 2 not pinned here
-            end if;
+            pred := 1 - X^(j+1) + (N-1)*&+[R | X^i : i in [1..j]];
+            assert W eq pred;
+            assert Evaluate(W, 1) eq (N-1)*j;
             assert Evaluate(W, 1) eq LocalWhittakerAtOne(Rationals()!m, N, zero, Lminus, Q);
+            assert Evaluate(Derivative(W), 1) eq (j+1)*((N-1)*j/2 - 1);
             checked +:= 1;
         end for;
     end for;
-    assert checked ge 25;
+    assert checked ge 150;
     printf " ok (%o checks)\n", checked;
 end procedure;
 
