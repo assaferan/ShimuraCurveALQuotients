@@ -1,0 +1,8 @@
+X0^46(3): non-firing rational candidates [ -3, -24, -123, -312, -372, -483, -708
+]; admitting [ -24, -312, -372 ] beyond the anchors
+
+In file "vvdata/gtsweep.m", line 52, column 27:
+>> s     := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sIndex] *];
+                             ^
+Runtime error in 'RationalNumber': s does not represent a rational number!
+

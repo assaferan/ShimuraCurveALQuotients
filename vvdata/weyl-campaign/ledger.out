@@ -1,0 +1,63 @@
+
+X0^10(3)  [9 eqs, 3 classes]  truths: -2:0, -1:0, 9:6, 10:3, 11:3, 12:3, 13:3, 14:0, 15:6
+   w(1, 1) = 1/2   <-- FORCED
+   w(1, 2) = 1/2   <-- FORCED
+   w(10, 1) = 3/2   <-- FORCED
+
+X0^15(2)  [9 eqs, 3 classes]  truths: -2:2, -1:4, 9:0, 10:0, 11:4, 12:2, 13:4, 14:-2, 15:2
+   w(1, 1) = -1   <-- FORCED
+   w(5, 1) = 1   <-- FORCED
+   w(15, 1) = 0   <-- FORCED
+
+X0^6(5)  [9 eqs, 3 classes]  truths: -2:0, -1:0, 9:6, 10:3, 11:12, 12:9, 13:3, 14:0, 15:3
+   w(2, 1) = 3/2   <-- FORCED
+   w(3, 1) = 1/2   <-- FORCED
+   w(6, 1) = 3/2   <-- FORCED
+
+X0^10(11)  [2 eqs, 0 classes]  truths: -2:0, -1:0
+   (no supported indices; all multipliers must be 0)  OK
+
+X0^10(7)  [2 eqs, 2 classes]  truths: -2:-4, -1:-3
+   w(1, 1) = 1/2   <-- FORCED
+   w(1, 2) = -1/2   <-- FORCED
+
+X0^14(3)  [2 eqs, 1 classes]  truths: -2:1, -1:1
+   w(5, 1) = 1/2   <-- FORCED
+
+X0^14(5)  [2 eqs, 1 classes]  truths: -2:1, -1:1
+   w(3, 1) = -1/2   <-- FORCED
+
+X0^22(3)  [2 eqs, 5 classes]  truths: -2:3, -1:3
+   w(1, 1) = -1/2 - 2/3*w(2, 1) - 1/3*w(5, 1) + 2/3*w(11, 1)
+   w(1, 2) = -1/2 + 1/3*w(2, 1) - 1/3*w(5, 1) - 1/3*w(11, 1)
+   w(2, 1) free
+   w(5, 1) free
+   w(11, 1) free
+
+X0^22(7)  [2 eqs, 0 classes]  truths: -2:0, -1:0
+   (no supported indices; all multipliers must be 0)  OK
+
+X0^34(5)  [2 eqs, 3 classes]  truths: -2:0, -1:0
+   w(1, 1) = 0 + 1*w(1, 4)
+   w(1, 2) = 0 + 1*w(1, 4)
+   w(1, 4) free
+
+X0^38(3)  [2 eqs, 6 classes]  truths: -2:-1, -1:-1
+   w(1, 2) = 1/2 - 1*w(2, 2) - 1*w(5, 1) + 1*w(6, 1) - 1*w(19, 1)
+   w(2, 1) = 1 - 1*w(2, 2)
+   w(2, 2) free
+   w(5, 1) free
+   w(6, 1) free
+   w(19, 1) free
+
+X0^6(11)  [2 eqs, 0 classes]  truths: -2:0, -1:0
+   (no supported indices; all multipliers must be 0)  OK
+
+X0^6(13)  [2 eqs, 1 classes]  truths: -2:0, -1:3
+   w(3, 1) = 1/2   <-- FORCED
+
+X0^6(19)  [2 eqs, 0 classes]  truths: -2:0, -1:0
+   (no supported indices; all multipliers must be 0)  OK
+
+X0^6(7)  [2 eqs, 1 classes]  truths: -2:2, -1:1
+   w(1, 1) = -1/2   <-- FORCED

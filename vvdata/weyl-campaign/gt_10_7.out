@@ -1,0 +1,23 @@
+X0^10(7): non-firing rational candidates [ -35, -280, -168, -427, -532, -595, 
+-1435 ]; admitting [ -35, -280, -168 ] beyond the anchors
+table built (848.430 s)
+  ds     = [ -3, -20, -35, -40, -280, -168, -52, -115 ]
+  s      = [* Infinity, 0, 1/2744, 1/2, 5/18522, 1/343, 1/16, 5/8 *]
+  stilde = [* Infinity, 1/32, 5/307328, 0, 1/64827, 3/76832, 9/256, 9/128 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 1 ]
+    d = -3       deg 1  fires true
+    d = -20      deg 1  fires true
+    d = -35      deg 1  fires false
+    d = -40      deg 1  fires true
+    d = -280     deg 1  fires false
+    d = -168     deg 1  fires false
+    d = -52      deg 1  fires true
+    d = -115     deg 1  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <-3, -4> }
+the pipeline applies m0_multiplier here: false
+  form -1 : residual -3    closed form 27       TRUE multiplier -3     *** 
+closed form WRONG ***
+  form -2 : residual -4    closed form 32       TRUE multiplier -4     *** 
+closed form WRONG ***
+TOTAL 849.050 s

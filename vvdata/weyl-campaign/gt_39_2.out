@@ -1,0 +1,9 @@
+X0^39(2): non-firing rational candidates [ -24, -52, -312, -84, -132, -148, 
+-228, -232, -372, -408, -520, -708 ]; admitting [ -84, -132, -148 ] beyond the 
+anchors
+
+In file "vvdata/gtsweep.m", line 53, column 27:
+>> stild := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sTildeIndex] *]
+                             ^
+Runtime error in 'RationalNumber': s does not represent a rational number!
+

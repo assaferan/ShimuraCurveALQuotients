@@ -1,0 +1,8 @@
+X0^22(5): non-firing rational candidates [ -20, -115, -235, -280, -520, -715, 
+-760 ]; admitting [ -20, -235, -280 ] beyond the anchors
+
+In file "vvdata/gtsweep.m", line 52, column 27:
+>> s     := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sIndex] *];
+                             ^
+Runtime error in 'RationalNumber': s does not represent a rational number!
+

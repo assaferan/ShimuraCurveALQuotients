@@ -1,0 +1,100 @@
+Magma V2.29-7     Fri Aug 21 2026 12:53:53 on LR43Q9LVQJ [Seed = 3560349328]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-Shimura\
+CurveALQuotients/a8c95df8-bb7c-4234-a11d-1108c951f4a5/scratchpad/ppdump2.m"
+BASEINFO 10 3 60 1800
+FORM 10 3 -2 0
+COEF 10 3 -2 oo 3 3 -2
+COEF 10 3 -2 oo 5 5 2
+COEF 10 3 -2 oo 12 12 2
+COEF 10 3 -2 oo 35 35 -1
+FORM 10 3 -1 0
+COEF 10 3 -1 oo 2 2 1
+COEF 10 3 -1 oo 8 8 1
+COEF 10 3 -1 oo 35 35 -1
+FORM 10 3 9 6
+COEF 10 3 9 oo 1 1 -4
+COEF 10 3 9 oo 2 2 -3
+COEF 10 3 9 oo 3 3 2
+COEF 10 3 9 oo 8 8 3
+COEF 10 3 9 oo 12 12 4
+COEF 10 3 9 oo 30 30 2
+COEF 10 3 9 oo 35 35 -2
+FORM 10 3 10 3
+COEF 10 3 10 oo 2 2 -1
+COEF 10 3 10 oo 3 3 2
+COEF 10 3 10 oo 8 8 3
+COEF 10 3 10 oo 12 12 4
+COEF 10 3 10 oo 35 35 -2
+FORM 10 3 11 3
+COEF 10 3 11 oo 1 1 -4
+COEF 10 3 11 oo 8 8 2
+COEF 10 3 11 oo 30 30 2
+COEF 10 3 11 oo 35 35 -2
+FORM 10 3 12 3
+COEF 10 3 12 oo 1 1 -4
+COEF 10 3 12 oo 2 2 -1
+COEF 10 3 12 oo 3 3 -2
+COEF 10 3 12 oo 5 5 2
+COEF 10 3 12 oo 8 8 1
+COEF 10 3 12 oo 12 12 2
+COEF 10 3 12 oo 30 30 2
+COEF 10 3 12 oo 35 35 -2
+FORM 10 3 13 3
+COEF 10 3 13 oo 2 2 -2
+COEF 10 3 13 oo 5 5 2
+COEF 10 3 13 oo 8 8 2
+COEF 10 3 13 oo 12 12 6
+COEF 10 3 13 oo 35 35 -2
+FORM 10 3 14 0
+COEF 10 3 14 oo 2 2 1
+COEF 10 3 14 oo 3 3 -2
+COEF 10 3 14 oo 5 5 2
+COEF 10 3 14 oo 8 8 1
+COEF 10 3 14 oo 12 12 2
+COEF 10 3 14 oo 35 35 -2
+FORM 10 3 15 6
+COEF 10 3 15 oo 1 1 -4
+COEF 10 3 15 oo 2 2 -2
+COEF 10 3 15 oo 5 5 2
+COEF 10 3 15 oo 8 8 4
+COEF 10 3 15 oo 12 12 6
+COEF 10 3 15 oo 30 30 2
+COEF 10 3 15 oo 35 35 -4
+PREF 10 3 oo 1 0 1 1/2 1 4 16/15 16/25
+LOCW 10 3 oo 1 0 2 0 -5/2
+LOCW 10 3 oo 1 0 3 2 1
+LOCW 10 3 oo 1 0 5 0 -1
+PREF 10 3 oo 2 0 2 1/2 1 2 4/5 16/25
+LOCW 10 3 oo 2 0 2 3/2 1
+LOCW 10 3 oo 2 0 3 0 -1
+LOCW 10 3 oo 2 0 5 2 1
+PREF 10 3 oo 3 0 3 1 1 6 9/5 16/25
+LOCW 10 3 oo 3 0 2 3/2 1
+LOCW 10 3 oo 3 0 3 2/3 -2/3
+LOCW 10 3 oo 3 0 5 2 1
+PREF 10 3 oo 5 0 5 1/2 2 2 2/3 16/25
+LOCW 10 3 oo 5 0 2 1 1/2
+LOCW 10 3 oo 5 0 3 0 -1
+LOCW 10 3 oo 5 0 5 6/5 2/5
+PREF 10 3 oo 8 0 8 1 1 2 4/5 16/25
+LOCW 10 3 oo 8 0 2 3/4 0
+LOCW 10 3 oo 8 0 3 0 -1
+LOCW 10 3 oo 8 0 5 2 1
+PREF 10 3 oo 12 0 12 2 1 6 9/5 16/25
+LOCW 10 3 oo 12 0 2 3/4 0
+LOCW 10 3 oo 12 0 3 2/3 -2/3
+LOCW 10 3 oo 12 0 5 2 1
+PREF 10 3 oo 30 0 30 1/2 4 2 1 16/25
+LOCW 10 3 oo 30 0 2 3/2 1
+LOCW 10 3 oo 30 0 3 2/3 -2/3
+LOCW 10 3 oo 30 0 5 6/5 2/5
+PREF 10 3 oo 35 0 35 1 2 2 1 768/1225
+LOCW 10 3 oo 35 0 2 3/2 1
+LOCW 10 3 oo 35 0 3 0 -1
+LOCW 10 3 oo 35 0 5 6/5 2/5
+LOCW 10 3 oo 35 0 7 48/49 -2/49
+DONE
+
+Total time: 5.000 seconds, Total memory usage: 32.09MB

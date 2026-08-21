@@ -1,0 +1,117 @@
+BASEINFO 6 7 84 3528
+FORM 6 7 -2 2
+COEF 6 7 -2 oo 1 1 4
+COEF 6 7 -2 oo 3 3 -2
+COEF 6 7 -2 oo 5 5 -3
+COEF 6 7 -2 oo 7 7 -4
+COEF 6 7 -2 oo 12 12 -4
+COEF 6 7 -2 oo 19 19 1
+FORM 6 7 -1 1
+COEF 6 7 -1 oo 1 1 2
+COEF 6 7 -1 oo 3 3 -2
+COEF 6 7 -1 oo 5 5 -4
+COEF 6 7 -1 oo 6 6 2
+COEF 6 7 -1 oo 7 7 -2
+COEF 6 7 -1 oo 12 12 -4
+FORM 6 7 9 ?
+COEF 6 7 9 oo 1 1 12
+COEF 6 7 9 oo 2 2 -4
+COEF 6 7 9 oo 3 3 -8
+COEF 6 7 9 oo 5 5 -8
+COEF 6 7 9 oo 6 6 2
+COEF 6 7 9 oo 7 7 -8
+COEF 6 7 9 oo 12 12 -10
+COEF 6 7 9 oo 21 21 2
+COEF 6 7 9 oo 42 42 2
+FORM 6 7 10 ?
+COEF 6 7 10 oo 1 1 6
+COEF 6 7 10 oo 2 2 -2
+COEF 6 7 10 oo 3 3 -4
+COEF 6 7 10 oo 5 5 -4
+COEF 6 7 10 oo 7 7 -4
+COEF 6 7 10 oo 12 12 -2
+COEF 6 7 10 oo 21 21 2
+FORM 6 7 11 ?
+COEF 6 7 11 oo 1 1 6
+COEF 6 7 11 oo 2 2 -2
+COEF 6 7 11 oo 3 3 -4
+COEF 6 7 11 oo 5 5 -4
+COEF 6 7 11 oo 6 6 2
+COEF 6 7 11 oo 7 7 -4
+COEF 6 7 11 oo 12 12 -8
+COEF 6 7 11 oo 42 42 2
+FORM 6 7 12 ?
+COEF 6 7 12 oo 1 1 10
+COEF 6 7 12 oo 2 2 -4
+COEF 6 7 12 oo 3 3 -6
+COEF 6 7 12 oo 5 5 -4
+COEF 6 7 12 oo 7 7 -6
+COEF 6 7 12 oo 12 12 -6
+COEF 6 7 12 oo 21 21 2
+COEF 6 7 12 oo 42 42 2
+FORM 6 7 13 ?
+COEF 6 7 13 oo 1 1 2
+COEF 6 7 13 oo 3 3 -2
+COEF 6 7 13 oo 5 5 -4
+COEF 6 7 13 oo 6 6 2
+COEF 6 7 13 oo 7 7 -2
+COEF 6 7 13 oo 12 12 -4
+FORM 6 7 14 ?
+COEF 6 7 14 oo 1 1 8
+COEF 6 7 14 oo 2 2 -2
+COEF 6 7 14 oo 3 3 -6
+COEF 6 7 14 oo 5 5 -8
+COEF 6 7 14 oo 6 6 2
+COEF 6 7 14 oo 7 7 -6
+COEF 6 7 14 oo 12 12 -6
+COEF 6 7 14 oo 21 21 2
+FORM 6 7 15 ?
+COEF 6 7 15 oo 1 1 4
+COEF 6 7 15 oo 2 2 -2
+COEF 6 7 15 oo 3 3 -2
+COEF 6 7 15 oo 7 7 -2
+COEF 6 7 15 oo 12 12 -4
+COEF 6 7 15 oo 42 42 2
+PREF 6 7 oo 1 0 1 1/2 1 4 32/21 32/49
+LOCW 6 7 oo 1 0 2 0 -5/2
+LOCW 6 7 oo 1 0 3 0 -1
+LOCW 6 7 oo 1 0 7 2 1
+PREF 6 7 oo 2 0 2 1/2 1 2 16/21 32/49
+LOCW 6 7 oo 2 0 2 3/2 1
+LOCW 6 7 oo 2 0 3 2 1
+LOCW 6 7 oo 2 0 7 2 1
+PREF 6 7 oo 3 0 3 1 1 6 9/7 32/49
+LOCW 6 7 oo 3 0 2 3/2 1
+LOCW 6 7 oo 3 0 3 4/3 2/3
+LOCW 6 7 oo 3 0 7 0 -1
+PREF 6 7 oo 5 0 5 1/2 2 2 4/7 768/1225
+LOCW 6 7 oo 5 0 2 1 1/2
+LOCW 6 7 oo 5 0 3 2 1
+LOCW 6 7 oo 5 0 5 24/25 -2/25
+LOCW 6 7 oo 5 0 7 0 -1
+PREF 6 7 oo 6 0 6 1/2 2 2 6/7 32/49
+LOCW 6 7 oo 6 0 2 3/2 1
+LOCW 6 7 oo 6 0 3 4/3 2/3
+LOCW 6 7 oo 6 0 7 0 -1
+PREF 6 7 oo 7 0 7 1 1 2 2/3 32/49
+LOCW 6 7 oo 7 0 2 3/2 1
+LOCW 6 7 oo 7 0 3 0 -1
+LOCW 6 7 oo 7 0 7 6/7 -2/7
+PREF 6 7 oo 12 0 12 2 1 6 9/7 32/49
+LOCW 6 7 oo 12 0 2 3/4 0
+LOCW 6 7 oo 12 0 3 4/3 2/3
+LOCW 6 7 oo 12 0 7 0 -1
+PREF 6 7 oo 19 0 19 1 1 2 12/7 11520/17689
+LOCW 6 7 oo 19 0 2 3/2 1
+LOCW 6 7 oo 19 0 3 0 -1
+LOCW 6 7 oo 19 0 7 0 -1
+LOCW 6 7 oo 19 0 19 360/361 -2/361
+PREF 6 7 oo 21 0 21 1/2 4 2 1 32/49
+LOCW 6 7 oo 21 0 2 1 1/2
+LOCW 6 7 oo 21 0 3 4/3 2/3
+LOCW 6 7 oo 21 0 7 6/7 -2/7
+PREF 6 7 oo 42 0 42 1/2 4 2 1 32/49
+LOCW 6 7 oo 42 0 2 3/2 1
+LOCW 6 7 oo 42 0 3 4/3 2/3
+LOCW 6 7 oo 42 0 7 6/7 -2/7
+DONE
