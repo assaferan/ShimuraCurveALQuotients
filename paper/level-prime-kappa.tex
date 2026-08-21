@@ -1,0 +1,390 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{computation}[theorem]{Computation}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Diff}{Diff}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\nrd}{nrd}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\Ldual}{L^{\vee}}
+\newcommand{\Lm}{L_{-}}
+\newcommand{\Lp}{L_{+}}
+
+\begin{document}
+
+\title[The local Whittaker factor at a split level prime]
+{The local Whittaker factor at a split level prime, and an incompleteness
+in the standard recipe for Schofer's $\kappa$}
+
+\author{}
+\date{\today}
+
+\begin{abstract}
+Schofer's formula expresses averages of $\log\lVert\Psi_F\rVert$ over CM points on a Shimura
+curve in terms of quantities $\kappa_\eta(m)$ built from derivatives of Fourier coefficients of an
+incoherent Eisenstein series. The recipe used in practice to evaluate $\kappa_\eta(m)$ descends
+from Kudla--Rapoport--Yang, through Schofer and Errthum, to Yang; its central step enumerates the
+configurations that contribute to the derivative at the centre. We observe that this enumeration is
+derived under a restriction which Kudla--Rapoport--Yang state explicitly --- that the Eisenstein
+series be built from sections given by the characteristic functions of the completions of
+$\mathcal{O}_k$ --- and which is not satisfied by the lattices arising for an Eichler order of
+squarefree level $N$ at a \emph{split} level prime.
+
+We compute the local Whittaker factor of the relevant $N$-scaled binary lattice at the level prime
+in closed form for every valuation, and show that its value at the critical point is
+$(N-1)\ord_N(m)$. We then re-run the case analysis with this factor in place and find that it
+produces no additional contributing configuration, so that no $\log N$ can arise from
+$\kappa_\eta(m)$ for $m>0$. Independently, a numerical evaluation of the vector-valued input form
+determines, exactly, a correction of the form $A_m\log N$ that the CM values demonstrably require.
+We record the resulting tension, the exact data any corrected formula must reproduce, and the
+routes we have eliminated.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+
+Let $B$ be an indefinite quaternion algebra over $\Q$ of reduced discriminant $D$, let
+$\mathcal{O}\subset B$ be an Eichler order of squarefree level $N$ with $(N,D)=1$, and let
+$L=\{\alpha\in\mathcal{O}:\tr\alpha=0\}$ be the associated lattice of signature $(1,2)$, so that
+$\Ldual/L\cong \Z/2\times\Z/DN\times\Z/DN$ has order $2(DN)^2$ \cite[Lemma 8]{GY}. For a weakly
+holomorphic vector-valued modular form $F$ of weight $1/2$ and type $\rho_L$, Borcherds' lift
+$\Psi_F$ is a meromorphic modular form on $X_0^D(N)/W_{D,N}$, and Schofer's formula
+\cite{Schofer,GY} evaluates
+\[
+  \sum_{\tau\in \mathrm{CM}(d)}\log\lvert\psi_F(\tau)\rvert
+  \;=\;-\frac{\lvert \mathrm{CM}(d)\rvert}{4}\sum_{\eta\in\Ldual/L}\ \sum_{m\ge 0}
+     c_\eta(-m)\,\kappa_\eta(m),
+\]
+valid under the hypotheses $O^+_{L,F}=O^+_L$, $c_0(0)=0$ and $c_\eta(m)\in\Z$ for $m\le 0$.
+
+The quantities $\kappa_\eta(m)$ are not given in \cite{GY}; the reader is referred to
+\cite{Errthum} and \cite{Yang} for their evaluation. Both go back to the computation of
+Kudla--Rapoport--Yang \cite{KRY}, whose Proposition 2.8 identifies the configurations contributing
+to the derivative of an incoherent Eisenstein series at the centre and asserts that
+\emph{these are the only cases which contribute}.
+
+\subsection*{What this note contains}
+Section~\ref{sec:chain} traces that assertion to its stated scope. Section~\ref{sec:closed}
+computes the missing local ingredient: the local Whittaker factor of the $N$-scaled binary lattice
+at a split level prime, in closed form (Theorem~\ref{thm:closed}), with the corollary that the
+empirical ``level support rule'' of the computational literature is exactly the vanishing of that
+factor (Corollary~\ref{cor:support}). Section~\ref{sec:reenum} re-runs the case analysis with this
+factor and finds no new case (Proposition~\ref{prop:reenum}). Section~\ref{sec:data} records the
+correction that the CM values require, computed exactly, and Section~\ref{sec:elim} lists the
+explanations we have eliminated. Section~\ref{sec:open} states what remains open.
+
+All numerical statements below are exact rational computations, carried out in Magma; the
+supporting scripts are described in Appendix~\ref{app:repro}.
+
+\section{The chain, and the scope of its central step}\label{sec:chain}
+
+Write $U=\lambda^\perp$ for the negative definite plane attached to a CM point of discriminant $d$,
+$\Lp=L\cap\Q\lambda$ and $\Lm=L\cap U$. Following \cite[(11),(12)]{Yang}, one sets
+\[
+  \kappa_\eta(m)=\sum_{\mu\in L/(\Lp+\Lm)}\ \sum_{x\in \eta_++\mu_++\Lp}
+     \kappa^-_{\eta_-+\mu_-}\!\bigl(m-\langle x,x\rangle/2\bigr),
+\]
+where $\kappa^-_\mu(m)$ is the $s$-linear coefficient of the $m$-th Fourier coefficient
+$A_\mu(s,m,v)$ of an incoherent Eisenstein series of weight $1$ attached to $\Lm$, and
+$\kappa^-_\mu(0)=0$ unless $\mu=0$.
+
+For $m>0$ one has, with $S_{m,\mu}=\{p: p\mid \Delta \text{ or } v_p(m)>0\}$ and
+$\Delta=\disc(\Lm)$,
+\begin{equation}\label{eq:euler}
+  A_\mu(s,m,v)=-\frac{2\pi}{L(s+1,\chi_d)}\prod_{p\in S_{m,\mu}}
+    \frac{W_{m,p}(s,\varphi_{\mu,p})}{1-\chi_d(p)p^{-1-s}},
+\end{equation}
+a genuine Euler product because $\varphi_\mu=\mathrm{char}(\mu+\widehat{\Lm})$ is a pure tensor.
+Since $A_\mu(s,m,v)$ vanishes at $s=0$, some factor must vanish there, and differentiating
+\eqref{eq:euler} yields \cite[Lemma 16]{Yang}: the derivative is the single term at the vanishing
+place, and vanishes outright if two or more factors vanish.
+
+That step is correct as an identity. What it inherits from \cite{KRY} is the identification of the
+vanishing of a local factor with a \emph{representability} obstruction, i.e.\ with membership of
+$\Diff(m)$. Kudla--Rapoport--Yang state the scope of their computation plainly:
+
+\begin{quote}
+``in section 2, we have considered only those Eisenstein series built from sections which are
+defined by the characteristic functions of the completions of $\mathcal{O}_k$. More general sections
+could be considered at the cost of (i) more elaborate calculations of Whittaker functions and their
+derivatives used in computing the Fourier expansion of the central derivative, and (ii)
+incorporation of a level structure in the moduli problem.'' \cite[\S6]{KRY}
+\end{quote}
+
+\noindent
+(They also fix a maximal order $\mathcal{O}_B$.) The lattice $\Lm$ arising here is not of that
+shape. Write $\Delta=\disc(\Lm)$. For a discriminant $d$ with $N\nmid d$ --- the case in which the
+level prime is \emph{unramified} in $k=\Q(\sqrt d)$, and hence, by Eichler's condition on optimal
+embeddings, necessarily \emph{split} --- one has $\ord_N(\Delta)=2$: the binary lattice is
+$N$-scaled at the level prime, not unimodular. This is exactly a ``more general section''.
+
+\begin{remark}
+The distinction is invisible in the maximal-order setting: there $\Lm$ is unimodular at every split
+prime, no split prime can obstruct representability, and correspondingly the logarithms produced by
+\cite[Theorem 4.1]{Schofer} run over ramified and inert places only. Every discriminant admitting a
+CM point on $X_0^D(N)$ with $N\nmid d$ has $N$ split, so this configuration is precisely the one the
+maximal-order theory never meets.
+\end{remark}
+
+\section{The local Whittaker factor at a split level prime}\label{sec:closed}
+
+Part (i) of the programme quoted above, at the level prime, is the following computation. Let
+$X=N^{-s}$.
+
+\begin{theorem}\label{thm:closed}
+Let $d<0$ be a discriminant with $N\nmid d$ and let $\Lm$ be the negative definite binary lattice
+attached to a CM point of discriminant $d$, so $\ord_N(\disc \Lm)=2$. Then for every $m\ge 1$, with
+$j=\ord_N(m)$,
+\[
+  W_{m,N}(X)\;=\;1+(N-1)\bigl(X+X^2+\cdots+X^{j}\bigr)-X^{\,j+1}.
+\]
+In particular
+\[
+  W_{m,N}(1)=(N-1)\,\ord_N(m),
+  \qquad
+  W_{m,N}'(1)=(j+1)\Bigl(\tfrac{(N-1)j}{2}-1\Bigr).
+\]
+\end{theorem}
+
+The statement is a computation rather than a proof: it has been verified in exact arithmetic for
+$N=2,3,5$ and all $1\le m\le 60$, on the lattices $\Lm$ of $X_0^{15}(2)$, $X_0^{6}(5)$ and
+$X_0^{10}(3)$ at firing discriminants, giving $180$ independent checks. It is pinned as a regression
+test in the accompanying code.
+
+\begin{corollary}\label{cor:support}
+$W_{m,N}(1)=0$ if and only if $N\nmid m$.
+\end{corollary}
+
+This identifies, and explains, an empirical rule that has been observed repeatedly in computations
+with these curves: the correction discussed in Section~\ref{sec:data} is supported exactly on the
+indices $m$ with $N\mid m$. That rule is the vanishing of the level-prime factor.
+
+\begin{remark}
+At $j=0$ the factor is $W_{m,N}(X)=1-X=1-N^{-s}$, the inverse local zeta factor. Its vanishing at
+$s=0$ is therefore of a different nature from a representability obstruction: it holds identically
+for all $m$ with $N\nmid m$, and at a split $N$ the local quadratic space represents every $m$.
+\end{remark}
+
+\begin{remark}
+The value $W_{m,N}(1)=(N-1)\ord_N(m)$ coincides with the local factor Kudla--Yang obtain at $p\mid N$
+for the \emph{quaternary} Eichler lattice \cite[(9.1)]{KY}. The agreement appears to be a genuine
+coincidence of shape between the quaternary lattice and the binary $\Lm$; we do not have an
+explanation for it.
+\end{remark}
+
+\section{Re-running the case analysis}\label{sec:reenum}
+
+With Theorem~\ref{thm:closed} in hand one can redo the enumeration of \cite[Prop.~2.8]{KRY} for the
+$N$-scaled section. Normalising as in \eqref{eq:euler}, put
+$f_p(s)=W_{m,p}(s)/(1-\chi_d(p)p^{-1-s})$.
+
+\begin{proposition}\label{prop:reenum}
+At a firing discriminant, $f_N$ has a simple zero at $s=0$ exactly when $N\nmid m$, and this zero is
+not a $\Diff$ zero. Consequently
+\[
+  \ord_{s=0}A_\mu(s,m,v)\;=\;\lvert\Diff(m)\rvert+[\,N\nmid m\,],
+\]
+and since incoherence forces $\lvert\Diff(m)\rvert\ge 1$:
+\begin{enumerate}
+\item if $N\mid m$, the order is $\lvert\Diff(m)\rvert$, and the derivative is nonzero precisely when
+      $\lvert\Diff(m)\rvert=1$, contributing a logarithm at the ramified or inert place of $\Diff(m)$;
+\item if $N\nmid m$, the order is at least $2$ and the derivative vanishes.
+\end{enumerate}
+In neither case does a $\log N$ occur.
+\end{proposition}
+
+So the level structure only ever raises the order of vanishing: it removes contributions, and
+creates no new contributing configuration. The three cases of \cite[Prop.~2.8]{KRY} stand, with no
+fourth. This is confirmed computationally: over roughly $190$ terms $(\mu,x)$ arising in the
+evaluation of $\kappa_0(m)$ on three bases, the level prime is \emph{never} the unique vanishing
+place, while it lies among two or more in $60$--$80\%$ of terms.
+
+\begin{corollary}\label{cor:onlyplace}
+Within this framework, a $\log N$ can enter a CM value only through the $m=0$ term
+$c_0(0)\kappa_0(0)$, where $\kappa_0(0)$ carries the summand $\sum_{p\mid N/(N,d)}\log p$ of
+\cite[Remark 15(2), Lemma 20]{Yang}.
+\end{corollary}
+
+\section{The correction the CM values require}\label{sec:data}
+
+Against this stands a computation of the input form itself. Following \cite[eq.~(6)]{GY} one may
+form
+$F_f=\sum_{\gamma\in\Gamma_0(M)\backslash SL_2(\Z)}(f\vert_{1/2}\gamma)\,\rho(\gamma^{-1})e_0$
+and evaluate it numerically; the metaplectic phase is handled by evaluating both the slash and
+$\rho$ along one and the same $ST$-word, so that they share a single metaplectic lift. Every such
+evaluation is gated on reproducing the principal part of $F_f$ predicted by \cite[Lemma 24]{GY} from
+the two scalar $q$-expansions of $f$; on the runs reported here that gate is met to $10^{-103}$.
+
+\begin{observation}\label{obs:c00}
+For every Borcherds form produced by the pipeline on $X_0^{15}(2)$, $X_0^{6}(5)$, $X_0^{10}(3)$ and
+$X_0^{21}(2)$ one finds $c_0(0)=0$ (to $10^{-103}$), so the hypothesis $c_0(0)=0$ of
+\cite[Thm.~B]{GY} is satisfied and, by Corollary~\ref{cor:onlyplace}, no $\log N$ can arise.
+\end{observation}
+
+\begin{observation}\label{obs:iso}
+The isotropic cosets of $\Ldual/L$ number exactly $2N-1$; the $D$-part of the discriminant form is
+anisotropic, so all of them come from the level-$N$ hyperbolic plane. All $2N-2$ nonzero isotropic
+cosets carry the same constant term $c_\eta(0)$.
+\end{observation}
+
+\begin{observation}\label{obs:mult}
+Let $\mathrm{mult}(f)=\tfrac12 c_\eta(0)$ for any nonzero isotropic $\eta$. Then adding
+$\mathrm{mult}(f)\cdot\sum_{p\mid N/(N,d_{\mathrm{fund}})}\log p$ to the computed CM value
+reproduces, exactly, the corrections independently measured by kernel-consistency on
+$X_0^{15}(2)$ ($9$ values), $X_0^{6}(5)$ ($5$) and $X_0^{10}(3)$ ($5$): $19$ of $19$.
+A fourth base $X_0^{21}(2)$ supplies nine further values, with no prior ground truth against which
+to check them.
+\end{observation}
+
+That the correction is genuinely required, and not an artefact of a normalisation, is visible on
+$X_0^{6}(19)$: on a set of CM points including discriminants divisible by $N$, the uncorrected
+values are mutually \emph{inconsistent} --- the associated system has no solution --- whereas with
+the correction the published model is recovered.
+
+Writing $\mathrm{mult}(f)=\sum_m c(-m)A_m$ and using Borcherds' obstruction to set
+$A_m=-b(m)/4$ with $b$ the relevant weight $3/2$ Eisenstein coefficient, the linear functional is
+uniquely determined per base by the measured multipliers, with $4$--$6$ spare conditions in each
+case. Table~\ref{tab:A} records it.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{llll}
+\toprule
+base & \multicolumn{3}{l}{$A_m$ (equivalently $b(m)=-4A_m$)}\\
+\midrule
+$X_0^{15}(2)$ & $A_2=-1$   & $A_{10}=1$   & $A_{30}=0$\\
+$X_0^{6}(5)$  & $A_{10}=3/2$ & $A_{15}=1/2$ & $A_{30}=3/2$\\
+$X_0^{10}(3)$ & $A_3=1/2$  & $A_{12}=1/2$ & $A_{30}=3/2$\\
+$X_0^{21}(2)$ & $A_2=-2$, $A_6=-4$ & $A_{18}=2$, $A_{42}=-8$ & ($0$-block: $B_{21}=-5$)\\
+\bottomrule
+\end{tabular}
+\medskip
+\caption{The correction, per index, as a linear functional of the principal part. The
+values are $d$-independent: at every firing discriminant the coefficient of $\log N$ in
+$\kappa_0(m)$ must equal $A_m$, whereas the recipe of \S\ref{sec:chain} returns $0$.}
+\label{tab:A}
+\end{table}
+
+\section{Explanations eliminated}\label{sec:elim}
+
+Each of the following was tested against the data of Section~\ref{sec:data} and is inconsistent
+with it. We record them because several are natural first guesses.
+
+\begin{enumerate}
+\item $\mathrm{mult}=c_0(0)$, or any linear combination of the two scalar constant terms
+      $\mathrm{Coeff}(f_\infty,0)$ and $\mathrm{Coeff}(f_0,0)$: inconsistent on three bases.
+\item Evaluating the local Whittaker at a nonzero isotropic coset $\eta^*$ rather than at $0$:
+      destroys the pattern of vanishing indices on all three bases.
+\item Replacing the local factor at $p\mid D$ by the anisotropic branch of \cite[Prop.~5.3]{KY}:
+      does not reproduce $b$, under either sign of $\kappa m$. (The implementation of
+      \cite[Props.~5.3, 5.4]{KY} agrees with the pipeline's own factor at every good prime,
+      $470$ checks, and at the level prime, $150$ checks.)
+\item The incoherent support condition $\lvert\Diff(m)\rvert=1$: scores $8/9$ on the exact
+      coefficients and is the only rule that predicts $b(30)=0$ on $X_0^{15}(2)$, but is far too
+      permissive --- for $r\le 60$ it holds at $15$, $19$ and $20$ indices with $N\nmid r$, where
+      the coefficient must vanish.
+\item Cancelling the zeta factor $1-X$ at the level prime before counting vanishing places: the
+      recovered terms differentiate at ramified and inert primes, never at $N$.
+\item The inner $m=0$ of $\kappa_\eta$, i.e.\ terms with $\langle x,x\rangle/2=m$: never occurs, in
+      all $60$ (discriminant, index) pairs over every firing discriminant of the three bases.
+\item Schofer's outer $m=0$ term: vanishes by Observation~\ref{obs:c00}.
+\item The re-enumeration of \S\ref{sec:reenum}: adds no case.
+\end{enumerate}
+
+\section{The open question}\label{sec:open}
+
+Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
+Observation~\ref{obs:mult} and with the failure of the uncorrected computation on $X_0^{6}(19)$. We
+see two possibilities and cannot presently distinguish them.
+
+\begin{enumerate}
+\item The constant term $c_0(0)$ of the form $F$ actually attached to $\psi_F$ differs from that of
+      the coset sum $F_f$. The principal parts agree to $10^{-103}$, but the principal part alone
+      does not determine $c_0(0)$.
+\item The correction compensates an error elsewhere in the computation of the CM values, outside
+      Schofer's formula. It is a $d$-independent linear functional of the principal part, which is
+      the shape of a per-form normalisation.
+\end{enumerate}
+
+In either case Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand, and part (ii) of
+the Kudla--Rapoport--Yang programme --- the incorporation of a level structure --- remains to be
+carried out. Table~\ref{tab:A} is what any corrected formula must reproduce, index by index.
+
+A third reading should be recorded, because it is not excluded by anything above. The evaluation of
+$\kappa^-_\mu(m)$ for $m>0$ has never been checked against an independent computation at $N>1$ ---
+neither here nor, as far as we can determine, in the literature. Yang's worked examples
+\cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a \emph{maximal} order, and
+indeed $L=\Lp+\Lm$ there; the corresponding regression tests in the accompanying code likewise cover
+only $N=1$. So the step on which everything here turns is unverified precisely in the range where we
+claim it to be incomplete. Constructing such a check --- for instance by comparing against a
+published CM value on a base with $N>1$ and a nonvanishing correction, of which
+$X_0^{14}(5)$ with $s(\tau_{-280})=5/16$ \cite[Ex.~36]{GY} appears to be the only available
+instance --- would be the natural next step.
+
+\appendix
+\section{Reproducibility}\label{app:repro}
+
+The computations were carried out in Magma against the codebase accompanying this note.
+
+\begin{itemize}
+\item \texttt{VectorValuedForm.m} constructs $F_f$: coset representatives for
+      $\Gamma_0(M)\backslash SL_2(\Z)$, $ST$-words, the weight $1/2$ metaplectic slash, the Weil
+      representation over $\C$, and the Fourier extraction. The action of $\rho(S)$ is implemented
+      as a finite Fourier transform on $\Ldual/L$, which reduces the cost from $\lvert G\rvert^2$ to
+      $\lvert G\rvert\sum_r d_r$ and the memory from $\lvert G\rvert^2$ to $\lvert G\rvert$; without
+      this the case $\lvert G\rvert=24200$ is out of reach.
+\item \texttt{EisensteinLocalFactors.m} implements \cite[(2.16),(2.17), Props.~5.3, 5.4]{KY} and
+      exposes \texttt{LocalWhittakerPolynomial}, the Whittaker polynomial whose $s$-derivative
+      produces the logarithms.
+\item Numerical parameters matter. The horocycle height must satisfy $\Im\tau\ge1$, or some coset
+      is carried into the pole at $\infty$ and the terms overwhelm their sum. The number of sample
+      points must beat the positive Fourier coefficients, which grow like $\exp(4\pi\sqrt{pm})$ for
+      pole order $p$: on the pole-order-$30$ forms of $X_0^{15}(2)$ the principal-part gate reads
+      $5.8\cdot10^{73}$, $1.2\cdot10^{62}$, $2.7\cdot10^{28}$ and $8.7\cdot10^{-103}$ at $K=48$,
+      $64$, $96$ and $192$ respectively. Raising the working precision without raising $K$ has no
+      effect.
+\item Every reported value is gated on the principal-part check; a run failing that gate is
+      discarded.
+\end{itemize}
+
+\begin{thebibliography}{99}
+
+\bibitem{Errthum} E.~Errthum, \emph{Singular moduli of Shimura curves},
+Canad.\ J.\ Math.\ \textbf{63} (2011), 826--861.
+
+\bibitem{GY} J.-W.~Guo and Y.~Yang, \emph{Equations of hyperelliptic Shimura curves},
+Proc.\ Lond.\ Math.\ Soc.\ (2017), doi:10.1112/S0010437X16007739.
+
+\bibitem{KRY} S.~Kudla, M.~Rapoport and T.~Yang, \emph{On the derivative of an Eisenstein series of
+weight one}, Internat.\ Math.\ Res.\ Notices (1999), no.~7, 347--385.
+
+\bibitem{KY} S.~Kudla and T.~Yang, \emph{Eisenstein series for $SL(2)$},
+Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
+
+\bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
+J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
+
+\bibitem{Yang} Y.~Yang, \emph{Special values of hypergeometric functions and periods of CM elliptic
+curves}, arXiv:1503.07971.
+
+\end{thebibliography}
+
+\end{document}

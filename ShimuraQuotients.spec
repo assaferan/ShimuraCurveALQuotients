@@ -2,6 +2,7 @@
 BorcherdsForms.m
 SchoferFormula.m
 WeilRepresentation.m
+EisensteinLocalFactors.m
 VectorValuedForm.m
 EquationsCovers.m
 Caching.m

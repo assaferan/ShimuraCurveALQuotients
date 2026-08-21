@@ -450,6 +450,16 @@ intrinsic LocalWhittakerAtOne(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::M
     return Evaluate(Wpol, 1);
 end intrinsic;
 
+intrinsic LocalWhittakerPolynomial(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng,
+                                   Q::AlgMatElt) -> RngUPolElt
+{The local Whittaker POLYNOMIAL W_m,p(mu)(X) in X = p^(-s), unscaled -- the object LocalWhittakerAtOne
+ evaluates at X = 1 and then discards.  Exposed because the s-DERIVATIVE is what produces the log p
+ terms of Schofer's kappa, and because the level prime needs its order of vanishing, not just its
+ value: at a firing discriminant the binary lattice L_- is N-scaled (ord_N of disc(L_-) is 2), so
+ W_N can vanish at X = 1 for reasons of LEVEL rather than of representability.}
+    return Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+end intrinsic;
+
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
     _<sqrtp> := BaseRing(Wpoly);
@@ -577,6 +587,29 @@ function kappaminuszero(D,N,d)
 end function;
 
 // Computes kappa0(m) in Schofer's formula
+// KNOWN DEFECT, with an exact specification (probe vv/kappaN.m; see memory schofer-m0-term-vanishes).
+// At a FIRING discriminant -- one with N not dividing the fundamental discriminant -- Kappa0(m,d)
+// returns log-N coefficient ZERO for every m.  It should be nonzero exactly when N | m, and the
+// correct value is INDEPENDENT of d:
+//        coefficient of log N in Kappa0(m, d)  =  A_m     for every firing d,
+//    X0^15(2): A_2 = -1,   A_10 = 1,   A_30 = 0
+//    X0^6(5) : A_10 = 3/2, A_15 = 1/2, A_30 = 3/2
+//    X0^10(3): A_3  = 1/2, A_12 = 1/2, A_30 = 3/2
+//    X0^21(2): A_2  = -2,  A_6  = -4,  A_18 = 2,   A_42 = -8
+// These are solved exactly (uniquely, with 4-6 spare conditions per base) from the vector-valued
+// oracle in VectorValuedForm.m, via A_m = -b(m)/4 with b the weight-3/2 Eisenstein coefficient.
+// Verified d-independent on three firing discs per base, and the controls (N not dividing m) are
+// correctly zero already.
+//
+// WHY IT IS ZERO: kappaminus emits the coefficient of log p' only at a VANISHING place p'.  At a
+// firing disc with N | m one has W_N(1) = (N-1)/N which is nonzero, so N is never the vanishing
+// place and no log N can ever be produced.  The other primes are fine -- the code returns perfectly
+// good log 3, log 5, log 7, log 19 coefficients alongside the missing log N.
+//
+// This is where the correction currently bolted on as an "outer m = 0 term" below actually belongs.
+// Schofer's own m = 0 term is 2*c_0(0)*k_0(0) with a single (eta, lambda) = (0,0) -- derived from
+// Thm 3.3 and verified by direct enumeration on this very lattice (1799 of 1800 cosets keep no
+// lambda at all) -- and c_0(0) is measured to be 0, so that term contributes nothing here.
 intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa0(m) in Schofers formula}
     return Kappa(Parent(lambda_v)!0,Rationals()!m,d,Q,lambda_v);
@@ -1131,12 +1164,37 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
     scale := s[Index(stilde,0)];
 
     rat_idxs := [i : i in [1..#s] | i notin inf_zero_indices and degs[i] eq 1];
-    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in rat_idxs];
+    // For each rational CM point the signs are pinned by
+    //     eps1*s[i]/scale + eps2*stilde[i]/scale_tilde = 1.
+    // Keep the solutions PER INDEX.  The previous version flattened them with &cat and then indexed
+    // the flat list in step with rat_idxs, which is only correct if every index contributes exactly
+    // one pair.  An index contributing none shifts everything after it -- giving either an
+    // index-out-of-range or, worse, silently correct-looking signs attached to the wrong
+    // discriminants when a later index contributes two.
+    per_idx := [ [ [eps1, eps2] : eps1, eps2 in [-1,1]
+                   | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1 ] : i in rat_idxs ];
+
+    // No sign choice at some discriminant is NOT an indexing accident: the two Hauptmodul values
+    // there are inconsistent with the relation that holds at the normalising points.  Say which.
+    bad := [ ds[rat_idxs[j]] : j in [1..#rat_idxs] | IsEmpty(per_idx[j]) ];
+    error if not IsEmpty(bad),
+        Sprintf("find_signs_hauptmodul: no choice of signs satisfies "
+                * "s/scale + stilde/scale_tilde = 1 at discriminant(s) %o.  The Hauptmodul values "
+                * "there are inconsistent with those at the normalising points.\n"
+                * "  ds     = %o\n  s      = %o\n  stilde = %o\n  degs   = %o",
+                bad, ds, s, stilde, degs);
+
     s_new := [* ss/scale^degs[i] : i->ss in s *];
     stilde_new := [* sstilde/scale_tilde^degs[i] : i->sstilde in stilde *];
     for j->idx in rat_idxs do
-        s_new[idx] := signs[j][1]*s_new[idx];
-        stilde_new[idx] := signs[j][2]*stilde_new[idx];
+        if #per_idx[j] gt 1 then
+            // both sign choices satisfy the relation; the value cannot distinguish them
+            vprintf ShimuraQuotients, 1:
+                "\tfind_signs_hauptmodul: sign choice not unique at d = %o; taking %o\n",
+                ds[idx], per_idx[j][1];
+        end if;
+        s_new[idx] := per_idx[j][1][1]*s_new[idx];
+        stilde_new[idx] := per_idx[j][1][2]*stilde_new[idx];
     end for;
     return s_new, stilde_new, scale, scale_tilde;
 end function;

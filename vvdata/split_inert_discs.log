@@ -1,0 +1,30 @@
+Magma V2.29-7     Fri Aug 21 2026 07:26:47 on LR43Q9LVQJ [Seed = 1989922591]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "splitinert.m"
+
+=== X0^15(2), N = 2 : 29 CM discs ===
+  ramified         24  : [ -1012, -772, -760, -708, -568, -532, -520, -408, 
+-388, -372, -340, -328 ]
+  split (FIRING)   4   : [ -60, -55, -15, -7 ]
+  inert (FIRING)   1   : [ -12 ]
+
+=== X0^6(5), N = 5 : 28 CM discs ===
+  ramified         18  : [ -1555, -1435, -955, -795, -760, -715, -595, -555, 
+-520, -435, -355, -340 ]
+  split (FIRING)   10  : [ -291, -219, -184, -136, -91, -84, -51, -24, -19, -4 ]
+  inert (FIRING)   0   : []
+
+=== X0^10(3), N = 3 : 24 CM discs ===
+  ramified         19  : [ -1227, -795, -723, -708, -627, -555, -483, -435, 
+-408, -372, -312, -267 ]
+  split (FIRING)   5   : [ -155, -68, -35, -20, -8 ]
+  inert (FIRING)   0   : []
+
+=== X0^21(2), N = 2 : 25 CM discs ===
+  ramified         21  : [ -1012, -772, -760, -708, -568, -532, -520, -408, 
+-372, -340, -312, -280 ]
+  split (FIRING)   4   : [ -39, -28, -15, -7 ]
+  inert (FIRING)   0   : []
+
+Total time: 1.340 seconds, Total memory usage: 32.09MB
