@@ -91,12 +91,50 @@ procedure test_ramified_branch_differs()
     printf " ok (%o of 60 indices differ)\n", ndiff;
 end procedure;
 
+// The local Whittaker of the N-SCALED binary lattice L_- at the level prime, in closed form.
+// This is the ingredient a level-N analogue of Schofer's Thm 4.1 needs, and the reason that theorem
+// cannot simply be transplanted: at ord_N(m) = 0 the factor is 1 - X = 1 - N^(-s), the INVERSE LOCAL
+// ZETA FACTOR, whose zero at s = 0 is a normalisation artifact and not a failure of the space to
+// represent m.  Schofer Thm 4.1 / Yang Lemma 16 / kappaminus all treat a vanishing local factor as a
+// representability obstruction, which is why they discard these terms.
+procedure test_binary_level_whittaker()
+    printf "  W_N of the N-scaled binary L_- in closed form...";
+    checked := 0;
+    for DN in [ <10,3,-8>, <15,2,-7>, <6,5,-19> ] do
+        D := DN[1]; N := DN[2]; d := DN[3];
+        Ld := ShimuraCurveLattice(D, N);
+        Q := ChangeRing(Ld`Q, Integers());
+        lam := ElementOfNorm(Ld`Q, -d, Ld`O, Ld`basis_L);
+        Lminus := Kernel(Transpose(Matrix(lam*Q)));
+        Bm := BasisMatrix(Lminus);
+        // at a firing discriminant L_- is N-scaled, not unimodular, at the level prime
+        assert Valuation(Determinant(Bm*Q*Transpose(Bm)), N) eq 2;
+        zero := Vector(Rationals(), [0,0,0]);
+        R<X> := PolynomialRing(Rationals());
+        for m in [1..12] do
+            W := R ! LocalWhittakerPolynomial(Rationals()!m, N, zero, Lminus, Q);
+            if m mod N ne 0 then
+                assert W eq 1 - X;                       // = 1 - N^(-s), the inverse zeta factor
+            elif (m div N) mod N ne 0 then
+                assert W eq 1 + (N-1)*X - X^2;
+            else
+                continue;                                 // ord_N(m) >= 2 not pinned here
+            end if;
+            assert Evaluate(W, 1) eq LocalWhittakerAtOne(Rationals()!m, N, zero, Lminus, Q);
+            checked +:= 1;
+        end for;
+    end for;
+    assert checked ge 25;
+    printf " ok (%o checks)\n", checked;
+end procedure;
+
 procedure test_EisensteinLocalFactors()
     printf "Testing Kudla-Yang local Eisenstein factors...\n";
     test_bp_special_values();
     test_prop53_matches_pipeline_at_good_primes();
     test_prop54_matches_pipeline_at_the_level_prime();
     test_ramified_branch_differs();
+    test_binary_level_whittaker();
     printf "Done!\n";
 end procedure;
 

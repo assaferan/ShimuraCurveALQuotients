@@ -450,6 +450,16 @@ intrinsic LocalWhittakerAtOne(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::M
     return Evaluate(Wpol, 1);
 end intrinsic;
 
+intrinsic LocalWhittakerPolynomial(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng,
+                                   Q::AlgMatElt) -> RngUPolElt
+{The local Whittaker POLYNOMIAL W_m,p(mu)(X) in X = p^(-s), unscaled -- the object LocalWhittakerAtOne
+ evaluates at X = 1 and then discards.  Exposed because the s-DERIVATIVE is what produces the log p
+ terms of Schofer's kappa, and because the level prime needs its order of vanishing, not just its
+ value: at a firing discriminant the binary lattice L_- is N-scaled (ord_N of disc(L_-) is 2), so
+ W_N can vanish at X = 1 for reasons of LEVEL rather than of representability.}
+    return Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+end intrinsic;
+
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
     _<sqrtp> := BaseRing(Wpoly);
