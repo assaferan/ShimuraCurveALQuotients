@@ -1164,12 +1164,37 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
     scale := s[Index(stilde,0)];
 
     rat_idxs := [i : i in [1..#s] | i notin inf_zero_indices and degs[i] eq 1];
-    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in rat_idxs];
+    // For each rational CM point the signs are pinned by
+    //     eps1*s[i]/scale + eps2*stilde[i]/scale_tilde = 1.
+    // Keep the solutions PER INDEX.  The previous version flattened them with &cat and then indexed
+    // the flat list in step with rat_idxs, which is only correct if every index contributes exactly
+    // one pair.  An index contributing none shifts everything after it -- giving either an
+    // index-out-of-range or, worse, silently correct-looking signs attached to the wrong
+    // discriminants when a later index contributes two.
+    per_idx := [ [ [eps1, eps2] : eps1, eps2 in [-1,1]
+                   | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1 ] : i in rat_idxs ];
+
+    // No sign choice at some discriminant is NOT an indexing accident: the two Hauptmodul values
+    // there are inconsistent with the relation that holds at the normalising points.  Say which.
+    bad := [ ds[rat_idxs[j]] : j in [1..#rat_idxs] | IsEmpty(per_idx[j]) ];
+    error if not IsEmpty(bad),
+        Sprintf("find_signs_hauptmodul: no choice of signs satisfies "
+                * "s/scale + stilde/scale_tilde = 1 at discriminant(s) %o.  The Hauptmodul values "
+                * "there are inconsistent with those at the normalising points.\n"
+                * "  ds     = %o\n  s      = %o\n  stilde = %o\n  degs   = %o",
+                bad, ds, s, stilde, degs);
+
     s_new := [* ss/scale^degs[i] : i->ss in s *];
     stilde_new := [* sstilde/scale_tilde^degs[i] : i->sstilde in stilde *];
     for j->idx in rat_idxs do
-        s_new[idx] := signs[j][1]*s_new[idx];
-        stilde_new[idx] := signs[j][2]*stilde_new[idx];
+        if #per_idx[j] gt 1 then
+            // both sign choices satisfy the relation; the value cannot distinguish them
+            vprintf ShimuraQuotients, 1:
+                "\tfind_signs_hauptmodul: sign choice not unique at d = %o; taking %o\n",
+                ds[idx], per_idx[j][1];
+        end if;
+        s_new[idx] := per_idx[j][1][1]*s_new[idx];
+        stilde_new[idx] := per_idx[j][1][2]*stilde_new[idx];
     end for;
     return s_new, stilde_new, scale, scale_tilde;
 end function;
