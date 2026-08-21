@@ -1,0 +1,29 @@
+Magma V2.29-7     Fri Aug 21 2026 12:58:10 on LR43Q9LVQJ [Seed = 250365310]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "vvdata/gtsweep.m"
+X0^14(5): non-firing rational candidates [ -35, -280, -120, -235, -340, -520, 
+-595, -760, -1435 ]; admitting [ -35, -280, -120 ] beyond the anchors
+table built (794.550 s)
+  ds     = [ -4, -35, -280, -11, -91, -120, -84, -51 ]
+  s      = [* Infinity, 5/8, 55/128, 0, 1, 5/2, 1/4, 1/8 *]
+  stilde = [* Infinity, 35/8, 585/128, 1, 0, 15/2, 3/4, 9/4 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 2 ]
+    d = -4       deg 1  fires true
+    d = -35      deg 1  fires false
+    d = -280     deg 1  fires false
+    d = -11      deg 1  fires true
+    d = -91      deg 1  fires true
+    d = -120     deg 1  fires false
+    d = -84      deg 1  fires true
+    d = -51      deg 2  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <1, 1> }
+the pipeline applies m0_multiplier here: false
+  form -1 : residual 1     closed form 0        TRUE multiplier 1      *** 
+closed form WRONG ***
+  form -2 : residual 1     closed form -4       TRUE multiplier 1      *** 
+closed form WRONG ***
+TOTAL 795.120 s
+
+Total time: 795.139 seconds, Total memory usage: 7022.28MB

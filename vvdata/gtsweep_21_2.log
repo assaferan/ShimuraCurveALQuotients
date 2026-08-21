@@ -1,0 +1,15 @@
+Magma V2.29-7     Fri Aug 21 2026 12:45:18 on LR43Q9LVQJ [Seed = 469331793]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "vvdata/gtsweep.m"
+X0^21(2): non-firing rational candidates [ -4, -84, -168, -88, -120, -148, -228,
+-232, -280, -312, -372, -408, -532, -708 ]; admitting [ -88, -120, -148 ] beyond
+the anchors
+
+In file "vvdata/gtsweep.m", line 52, column 27:
+>> s     := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sIndex] *];
+                             ^
+Runtime error in 'RationalNumber': s does not represent a rational number!
+
+
+Total time: 71.450 seconds, Total memory usage: 1439.81MB
