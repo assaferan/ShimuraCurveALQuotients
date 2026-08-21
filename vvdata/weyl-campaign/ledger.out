@@ -56,6 +56,9 @@ X0^6(11)  [2 eqs, 0 classes]  truths: -2:0, -1:0
 X0^6(13)  [2 eqs, 1 classes]  truths: -2:0, -1:3
    w(3, 1) = 1/2   <-- FORCED
 
+X0^6(17)  [2 eqs, 0 classes]  truths: -2:0, -1:0
+   (no supported indices; all multipliers must be 0)  OK
+
 X0^6(19)  [2 eqs, 0 classes]  truths: -2:0, -1:0
    (no supported indices; all multipliers must be 0)  OK
 
