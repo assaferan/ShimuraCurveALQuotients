@@ -13,7 +13,7 @@
 // complete test of the formula at N = 5.  Form 13 has the same pole order and rides along for free
 // (no ground truth for it -- it is a prediction).
 //
-//   magma run145.m
+//   magma vvdata/run145.m
 AttachSpec("ShimuraQuotients.spec");
 
 D := 14; N := 5;

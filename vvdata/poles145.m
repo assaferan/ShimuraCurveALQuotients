@@ -1,5 +1,5 @@
 // Size the vector-valued oracle run on a base, WITHOUT guessing the numerical budget.
-//   magma DD:=14 NN:=5 poles145.m
+//   magma DD:=14 NN:=5 vvdata/poles145.m
 // Prints, per Borcherds form: the pole order at oo and the eta-quotient exponent spread, then the
 // implied (Prec, NumSamples) from the two calibrated rules
 //   * aliasing error ~ exp(4 pi sqrt(p K) - 2 pi K y),  y = 1   ->  choose K with that <= 1e-100
