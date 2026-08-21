@@ -1199,6 +1199,81 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
     return s_new, stilde_new, scale, scale_tilde;
 end function;
 
+intrinsic HauptmodulM0Residuals(s::List, stilde::List, ds::SeqEnum, degs::SeqEnum, N::RngIntElt
+                                : Bound := 12) -> SetEnum
+{The outer-m=0 multipliers of the two Hauptmodul forms (rows -1 and -2), read off the consistency
+ relation that find_signs_hauptmodul imposes -- no vector-valued oracle run.  Returns the set of
+ admissible pairs <r_1, r_2>; a single element means the pair is DETERMINED, and the empty set means
+ no multiple of log N explains the table.  The inputs are the rows as find_signs_hauptmodul receives
+ them: the absolute values with Infinity() at the poles, the discriminants, and their degrees.
+
+ What is returned is the RESIDUAL r = true - applied.  On an odd-N base the pipeline applies no m=0
+ term (the guard in SchoferFormula), so the residual IS the multiplier; on an even-N base add back
+ M0Multiplier to recover it.
+
+ THE ARGUMENT.  find_signs_hauptmodul requires, at each rational CM point d,
+     eps_1(d) s(d)/s(d_A)  +  eps_2(d) stilde(d)/stilde(d_B)  =  1,
+ with d_A the discriminant at which stilde vanishes and d_B the one at which s does.  Writing
+ k(d) = 1 when the outer m=0 term fires at d (N does not divide the fundamental discriminant; see the
+ Nprimes computation in SchoferFormula) and 0 otherwise, restoring that term scales |psi_f(d)| by
+ N^(r_f k(d)), so the TRUE normalised value is the pipeline's times N^(r_f (k(d) - k(d_ref))).  Each
+ rational d therefore contributes one equation with exponent -1, 0 or +1, two informative ones
+ determine the pair, and any further ones are consistency checks.
+
+ TWO THINGS THAT LOOK LIKE BUGS IF YOU ASSUME THEM AWAY.
+  * The signs eps are PER DISCRIMINANT.  Folding them into the unknowns makes X0^6(5) report a
+    multiplier of -1 (i.e. not a power of N at all) when the truth there is 0 with signs (-,+).  So
+    the search below quantifies over the signs and keeps only integer exponents.
+  * BOTH firing regimes occur and they invert the argument.  On X0^14(5) the normalising points fire
+    and the information sits at the non-firing discriminants; on X0^15(2) the normalisers (-120, -40)
+    are themselves non-firing and it sits at the firing ones.  The exponent k(d) - k(d_ref) covers
+    both without a case split.
+ Note also that CandidateDiscriminants' coprime-to-level filter removes exactly the discriminants
+ divisible by N, so on most bases no non-firing point reaches the table at all; admit some through the
+ documented Keep hook of ValuesAtCMPoints when this returns "not measurable".}
+    require #s eq #ds and #stilde eq #ds and #degs eq #ds : "the rows, ds and degs must agree in length";
+    require N gt 1 : "N must exceed 1";
+    i_s0  := Index(s, 0);
+    i_st0 := Index(stilde, 0);
+    require i_s0 ne 0 and i_st0 ne 0 : "each Hauptmodul must vanish somewhere in the table";
+    scale       := s[i_st0];
+    scale_tilde := stilde[i_s0];
+    require scale cmpne Infinity() and scale_tilde cmpne Infinity() : "a normalising value is infinite";
+
+    fires := func<d | not IsEmpty(PrimeDivisors(N div GCD(N, FundamentalDiscriminant(d))))>;
+    kA := fires(ds[i_st0]) select 1 else 0;
+    kB := fires(ds[i_s0])  select 1 else 0;
+
+    rows := [];  exps := [];
+    for i->d in ds do
+        if degs[i] ne 1 or i eq i_s0 or i eq i_st0 then continue; end if;
+        if s[i] cmpeq Infinity() or stilde[i] cmpeq Infinity() then continue; end if;
+        k := fires(d) select 1 else 0;
+        Append(~rows, [Rationals() | s[i]/scale, stilde[i]/scale_tilde]);
+        Append(~exps, [k - kA, k - kB]);
+    end for;
+    // Fewer than two INFORMATIVE points and the pair is not pinned: every remaining discriminant
+    // shares the normalisers' firing status, so the correction cancels and nothing can be seen.
+    if #[j : j in [1..#rows] | exps[j] ne [0,0]] lt 2 then return {}; end if;
+
+    sols := {};
+    for r1 in [-Bound..Bound] do
+        for r2 in [-Bound..Bound] do
+            X1 := (Rationals()!N)^r1;  X2 := (Rationals()!N)^r2;
+            good := true;
+            for j := 1 to #rows do
+                a := rows[j][1] * X1^exps[j][1];
+                b := rows[j][2] * X2^exps[j][2];
+                if not exists{ <g1,g2> : g1, g2 in [1,-1] | g1*a + g2*b eq 1 } then
+                    good := false; break;
+                end if;
+            end for;
+            if good then Include(~sols, <r1, r2>); end if;
+        end for;
+    end for;
+    return sols;
+end intrinsic;
+
 
 // Complex conjugation of a totally imaginary Galois number field L (as used for CM fields of
 // definition: L is the ring class field H_R, or its Atkin-Lehner-fixed subfield A_abs, both of which

@@ -1,0 +1,50 @@
+Magma V2.29-7     Fri Aug 21 2026 11:26:50 on LR43Q9LVQJ [Seed = 2642410704]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-Shimura\
+CurveALQuotients/a8c95df8-bb7c-4234-a11d-1108c951f4a5/scratchpad/run145.m"
+X0^14(5)  firing discs: [ -4, -11, -91, -84, -51 ]   non-firing: [ -35, -280 ]
+  d = -35    : (5/8) u + (35/8) v = 1
+  d = -280   : (55/128) u + (585/128) v = 1
+  => u = 1/5, v = 1/5
+  GROUND TRUTH: mult(form -1) = 1, mult(form -2) = 1
+
+forms built (820.100 s): keys = [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ], M = 140, 
+|G| = 9800
+
+form   pole       m0_multiplier      vs ground truth
+-2     91         -4                 1  *** MISMATCH ***
+-1     16         0                  1  *** MISMATCH ***
+9      70         -40/3              
+10     35         -44/3              
+11     70         -20                
+12     70         -24                
+13     16         -32/3              
+14     35         -4                 
+15     70         -28/3              
+
+oracle on forms [ -1, 13 ] at Prec = 200, NumSamples = 128 ...
+done (1000.630 s).  #isotropic = 9 (2N-1 = 9)
+
+form   max|PPerr|     c_0(0)                 (1/2)c_eta(0)          vs ground 
+truth
+-1     2.25352E-37    1.003360930E-34 + 5.606717082E-35*$.1 1.00000000000       
+1
+       c_eta(0) at all nonzero isotropic: [ 2.000000000 + 5.606717082E-35*$.1, 
+2.000000000 + 5.606717082E-35*$.1, 2.000000000 + 5.606717082E-35*$.1, 
+2.000000000 + 5.606717082E-35*$.1, 2.000000000 + 5.606717082E-35*$.1, 
+2.000000000 + 5.606717082E-35*$.1, 2.000000000 + 5.606717082E-35*$.1, 
+2.000000000 + 5.606717082E-35*$.1 ]
+13     3.64778E-37    1.624142656E-34 + 9.075572486E-35*$.1 1.00000000000       
+(prediction)
+       c_eta(0) at all nonzero isotropic: [ 2.000000000 + 9.075572486E-35*$.1, 
+2.000000000 + 9.075572486E-35*$.1, 2.000000000 + 9.075572486E-35*$.1, 
+2.000000000 + 9.075572486E-35*$.1, 2.000000000 + 9.075572486E-35*$.1, 
+2.000000000 + 9.075572486E-35*$.1, 2.000000000 + 9.075572486E-35*$.1, 
+2.000000000 + 9.075572486E-35*$.1 ]
+
+GATE: discard any row whose max|PPerr| is not small -- see memory 
+m0-multiplier-solved.
+TOTAL 1823.290 s
+
+Total time: 1823.309 seconds, Total memory usage: 7022.28MB
