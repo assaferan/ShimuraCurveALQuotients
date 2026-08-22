@@ -53,8 +53,15 @@ $(N-1)\ord_N(m)$. We then re-run the case analysis with this factor in place and
 produces no additional contributing configuration, so that no $\log N$ can arise from
 $\kappa_\eta(m)$ for $m>0$. Independently, a numerical evaluation of the vector-valued input form
 determines, exactly, a correction of the form $A_m\log N$ that the CM values demonstrably require.
-We record the resulting tension, the exact data any corrected formula must reproduce, and the
-routes we have eliminated.
+The rule producing it --- half the constant term of the input form at a nonzero isotropic coset ---
+is verified against ground truth on four bases with $N\in\{2,3,5\}$, including a base with $N=5$
+where the ground truth is forced by an over-determined consistency relation measured independently
+of any Eisenstein computation. We identify the correction as the constant-term pairing of the input
+form with the Eisenstein series attached to a nonzero isotropic coset of the discriminant form ---
+an object the maximal-order literature does not compute --- and reduce it, by an oldform relation
+of Schwagenscheidt, to ordinary seed-$0$ data of an enlarged lattice whose level-prime part is
+unimodular; this explains structurally both the support rule and the observed normalisation. We
+record the exact data any corrected formula must reproduce, and the routes we have eliminated.
 \end{abstract}
 
 \maketitle
@@ -249,8 +256,9 @@ cosets carry the same constant term $c_\eta(0)$.
 Let $\mathrm{mult}(f)=\tfrac12 c_\eta(0)$ for any nonzero isotropic $\eta$. Then adding
 $\mathrm{mult}(f)\cdot\sum_{p\mid N/(N,d_{\mathrm{fund}})}\log p$ to the computed CM value
 reproduces, exactly, the corrections independently measured by kernel-consistency on
-$X_0^{15}(2)$ ($9$ values), $X_0^{6}(5)$ ($5$) and $X_0^{10}(3)$ ($5$): $19$ of $19$.
-A fourth base $X_0^{21}(2)$ supplies nine further values, with no prior ground truth against which
+$X_0^{15}(2)$ ($9$ values), $X_0^{6}(5)$ ($5$) and $X_0^{10}(3)$ ($5$), and by the consistency
+relation of Observation~\ref{obs:haupt} below on $X_0^{14}(5)$ ($1$, at eleven digits): $20$ of
+$20$. A further base $X_0^{21}(2)$ supplies nine values with no prior ground truth against which
 to check them.
 \end{observation}
 
@@ -259,10 +267,47 @@ $X_0^{6}(19)$: on a set of CM points including discriminants divisible by $N$, t
 values are mutually \emph{inconsistent} --- the associated system has no solution --- whereas with
 the correction the published model is recovered.
 
+\subsection*{Ground truth without an Eisenstein computation}
+The pipeline imposes, at every rational CM point $d$, the consistency relation
+\begin{equation}\label{eq:haupt}
+  \varepsilon_1(d)\,\frac{s(d)}{s(d_A)}+\varepsilon_2(d)\,\frac{\tilde s(d)}{\tilde s(d_B)}=1,
+  \qquad \varepsilon_i(d)\in\{\pm1\},
+\end{equation}
+between the two Hauptmodul rows, normalised at the discriminants $d_A$, $d_B$ where they vanish.
+Restoring a correction $r_f\log N$ to $\log\lvert\psi_f\rvert$ multiplies the normalised value at
+$d$ by $N^{\,r_f(k(d)-k(d_{\mathrm{ref}}))}$, where $k(d)\in\{0,1\}$ records whether the term
+fires at $d$. Each rational CM point whose firing status differs from the reference's therefore
+contributes one equation in $(N^{r_1},N^{r_2})$; two determine the pair and any further points are
+consistency checks. This measures the multipliers of the two Hauptmodul forms on any base the
+pipeline reaches, in seconds, with no Eisenstein series evaluated.
+
+\begin{observation}\label{obs:haupt}
+On nine bases the relation \eqref{eq:haupt} determines the pair $(r_{-1},r_{-2})$ uniquely:
+\[
+\begin{array}{llll}
+X_0^{15}(2)\colon (4,2) & X_0^{14}(5)\colon (1,1) & X_0^{6}(7)\colon (1,2) & X_0^{6}(5)\colon (0,0)\\
+X_0^{10}(3)\colon (0,0) & X_0^{10}(11)\colon (0,0) & X_0^{6}(19)\colon (0,0) & X_0^{22}(7)\colon (0,0)\\
+X_0^{34}(5)\colon (0,0) & & &
+\end{array}
+\]
+Every value with an independent determination is reproduced --- $X_0^{15}(2)$ against the
+kernel-consistency measurement, $X_0^{6}(5)$ and $X_0^{10}(3)$ against the numerical evaluation of
+$F_f$, and $X_0^{6}(7)$, the one \emph{nonzero} cross-check, against an earlier independent
+measurement. Conversely, on $X_0^{14}(5)$ the pair $(1,1)$ was measured first by
+\eqref{eq:haupt} and \emph{then} confirmed by the numerical evaluation of $F_f$:
+$\tfrac12 c_\eta(0)=1.00000000000$ on the form with pole order $16$, with the principal-part gate
+met to $2.3\cdot10^{-37}$ and all eight nonzero isotropic cosets agreeing. This is the first
+verification of the rule of Observation~\ref{obs:mult} at $N>2$ against ground truth obtained by
+an entirely independent method.
+\end{observation}
+
 Writing $\mathrm{mult}(f)=\sum_m c(-m)A_m$ and using Borcherds' obstruction to set
 $A_m=-b(m)/4$ with $b$ the relevant weight $3/2$ Eisenstein coefficient, the linear functional is
-uniquely determined per base by the measured multipliers, with $4$--$6$ spare conditions in each
-case. Table~\ref{tab:A} records it.
+determined per base by the measured multipliers. Without further hypotheses the system leaves four
+free directions on each base; imposing the support rule of Corollary~\ref{cor:support} (the weight
+vanishes unless $N\mid m$) removes them all, and the resulting weights are \emph{unique} with six
+spare conditions satisfied on each of the three bases --- eighteen independent chances to falsify
+the support rule, none taken. Table~\ref{tab:A} records the result.
 
 \begin{table}[ht]
 \centering
@@ -292,7 +337,11 @@ with it. We record them because several are natural first guesses.
 \item $\mathrm{mult}=c_0(0)$, or any linear combination of the two scalar constant terms
       $\mathrm{Coeff}(f_\infty,0)$ and $\mathrm{Coeff}(f_0,0)$: inconsistent on three bases.
 \item Evaluating the local Whittaker at a nonzero isotropic coset $\eta^*$ rather than at $0$:
-      destroys the pattern of vanishing indices on all three bases.
+      destroys the pattern of vanishing indices on all three bases. The mechanism is now clear:
+      the nonzero isotropic cosets live in the level-$N$ hyperbolic plane, so changing the coset
+      changes \emph{only} the level-prime factor (measured: from $1-X^2/N$ to the constant $1$,
+      with the factors at $p\mid D$ byte-identical) and can never repair an index whose defect is
+      at a ramified prime.
 \item Replacing the local factor at $p\mid D$ by the anisotropic branch of \cite[Prop.~5.3]{KY}:
       does not reproduce $b$, under either sign of $\kappa m$. (The implementation of
       \cite[Props.~5.3, 5.4]{KY} agrees with the pipeline's own factor at every good prime,
@@ -307,7 +356,99 @@ with it. We record them because several are natural first guesses.
       all $60$ (discriminant, index) pairs over every firing discriminant of the three bases.
 \item Schofer's outer $m=0$ term: vanishes by Observation~\ref{obs:c00}.
 \item The re-enumeration of \S\ref{sec:reenum}: adds no case.
+\item Any re-weighting of the existing local data: every combination of a subset of the
+      prefactors $\{\sqrt{m}/\sqrt{\lvert d\rvert},\,h/w,\,\prod(1-\chi(p)/p),\,
+      \prod(1-1/p^2)^{-1}\}$ with a local rule drawn from \{the product of the $W_p(1)$; the
+      derivative of that product; the derivative taken at $N$, at the primes $p\mid D$, at each
+      single prime, or at the vanishing places\}, times an arbitrary constant per base, fails to
+      reproduce the nine measured multipliers of $X_0^{15}(2)$.
+\item More strongly, \emph{no multiplicative correction of any kind} can succeed: at two of the
+      nine determined indices (both with $m=10$) the product of the code's local factors vanishes
+      while the true weight does not, so the discrepancy is infinite there. The missing
+      contribution is a \emph{term}, not a factor.
+\item Differentiating at the place where the ternary \emph{space} fails to represent $m$
+      (Kudla's $\Diff$, computed at the level of quadratic spaces rather than lattice densities):
+      reproduces $A_2=-1$ and $A_{30}=0$ on $X_0^{15}(2)$ exactly --- the only rule found that
+      \emph{explains} $A_{30}=0$ --- but fails on $7$ of $9$ indices, and is refuted as a support
+      rule by $X_0^{6}(5)$ at $m=15$, where $\Diff$ is empty but $A_{15}=1/2\ne0$. The support is
+      $N\mid m$; whether $\Diff$ supplies the correct place to differentiate is a separate
+      question.
 \end{enumerate}
+
+\section{The correction identified}\label{sec:ident}
+
+The rule of Observation~\ref{obs:mult} reads off the constant term $c_{\eta^*}(0)$ of the input
+form at a nonzero isotropic coset $\eta^*$. By the constant-term pairing (pair $F$ against a
+holomorphic Eisenstein series of the complementary weight $3/2$ and take the constant term of the
+resulting weight-$2$ invariant), that quantity is determined by the principal part of $F$ paired
+against the coefficients of $E_{A,\eta^*}$, the Eisenstein series attached to the coset $\eta^*$
+of the discriminant form $A=\Ldual/L$. This is precisely the object the maximal-order literature
+does not compute: \cite{BK}, \cite[\S8--9]{KY} and the recipe of \S\ref{sec:chain} all work with
+the series attached to the \emph{zero} coset (equivalently, with sections
+$\mathrm{char}(\mu+\widehat L)$ seeded at $0$), and Kudla--Yang explicitly leave the general
+Eichler-order case open at the end of their \S9.
+
+The coefficients of $E_{A,\beta}$ for isotropic $\beta\ne0$ are computed by Schwagenscheidt
+\cite{Schwag}. For our purposes the essential ingredient is not the main formula but the oldform
+relation \cite[Prop.~1.4]{Schwag} applied to the trivial character: for $\beta=\eta^*$ of prime
+order $N_\beta=N$,
+\begin{equation}\label{eq:oldform}
+  E_{A,\eta^*,\chi_0}\;=\;E_{B,0}\!\uparrow_B^A\;-\;E_{A,0},
+  \qquad
+  B=\langle\eta^*\rangle^{\perp}/\langle\eta^*\rangle\;\cong\;L_1^{\vee}/L_1,
+\end{equation}
+where $L_1$ is the even lattice generated by $L$ and $\eta^*$. Pairing $F$ against
+\eqref{eq:oldform} and using Observations~\ref{obs:c00} and~\ref{obs:iso} --- $c_0(0)=0$, the
+constant $c_\eta(0)$ shared by all $2N-2$ nonzero isotropic cosets, and the vanishing of the
+constant-term pairing for every nontrivial character twist --- gives
+\begin{equation}\label{eq:multformula}
+  \mathrm{mult}(f)\;=\;-\frac{1}{4(N-1)}\ \sum_{n>0}\ \sum_{\gamma\in(\eta^*)^{\perp}}
+     c_\gamma(-n)\,b^{B,0}_{\gamma+H}(n),
+  \qquad H=\langle\eta^*\rangle,
+\end{equation}
+in which every object on the right is a \emph{seed-$0$} Eisenstein coefficient of the smaller
+module $B$ --- the territory of \cite{BK}, computable by the same machinery as the existing
+recipe, applied to $L_1$ in place of $L$.
+
+Three structural facts corroborate the identification.
+\begin{enumerate}
+\item The pairing constant in \eqref{eq:multformula} is $4(N-1)$ --- exactly the normalisation
+      measured in Observation~\ref{obs:mult} (the sum of $c_\eta(0)$ over the $2N-2$ nonzero
+      isotropic cosets equals $4(N-1)\cdot\mathrm{mult}$).
+\item $\det L_1=\det L/N^2$: the level-prime part of $L_1$ is \emph{unimodular}, so the
+      coefficients $b^{B,0}$ have no vanishing level-prime factor. The zero
+      $W_{m,N}(1)=0$ at $N\nmid m$ (Corollary~\ref{cor:support}), which removes the majority of
+      terms from the seed-$0$ pairing on $A$, never occurs on $B$ --- the structural mechanism by
+      which \eqref{eq:multformula} can produce the $\log N$ terms that \S\ref{sec:reenum} shows
+      the seed-$0$ recipe cannot.
+\item $2\lvert\det L_1\rvert$ remains a perfect square (e.g.\ $2\cdot450=30^2$ on
+      $X_0^{15}(2)$), so the discriminant and character bookkeeping of the weight-$3/2$
+      coefficient formula carries over unchanged in shape.
+\end{enumerate}
+
+Two cautions, the first of which the data has since promoted to a finding. The identity
+\eqref{eq:oldform} is proven in \cite{Schwag} for weight $k\ge5/2$; at $k=3/2$ both sides require
+analytic continuation, and the naive pairing argument assumes the continued series is holomorphic
+at the special point, where Zagier-type non-holomorphic contributions are possible. That
+assumption \emph{fails}, and it fails in a way one can measure without any of the machinery of
+this section: for the true seed-$0$ series on $A$ itself, the constant-term pairing forces
+$\sum_{n>0,\gamma}c_\gamma(-n)\,b^{A,0}_\gamma(n)$ to equal $-c_0(0)$ minus a spread term
+proportional to the multiplier --- so on a form with $\mathrm{mult}=0$ and $c_0(0)=0$ it must
+vanish outright. Evaluating the left side with the na\"ive weight-$3/2$ coefficient formula
+(rank~$3$ collapses the Bruinier--Kuss local polynomials to plain representation densities, since
+they are evaluated where the factor $1-p^{m-1}X$ vanishes) gives $-5$, not $0$, on such a form of
+$X_0^{15}(2)$. The na\"ive recipe therefore violates its own constant-term identity,
+independently of everything specific to \eqref{eq:multformula} --- and this, rather than any
+defect of \eqref{eq:oldform}, is where the computation currently stops. The discrepancy is
+exactly the shape of the harmonic completion: the $\xi$-image of the weight-$3/2$ Eisenstein
+series is a weight-$1/2$ theta on $A$ (supported, by Serre--Stark, on the isotropic lines ---
+the same level-$N$ structure that carries everything else in this note), and its contribution to
+the pairing is, for weakly holomorphic input, a \emph{finite} Weyl-vector-type functional of the
+principal part in the sense of \cite[\S10]{Borcherds}. Calibrating that functional --- for which
+the $\mathrm{mult}=0$ forms give equations free of every other unknown --- is the immediate next
+step. We note the required care: the lattices here are anisotropic over $\Q$, so the unfolding
+of \cite[\S10]{Borcherds} does not apply verbatim and the evaluation must proceed through the
+finite quadratic module.
 
 \section{The open question}\label{sec:open}
 
@@ -324,6 +465,15 @@ see two possibilities and cannot presently distinguish them.
       the shape of a per-form normalisation.
 \end{enumerate}
 
+The identification of \S\ref{sec:ident} sharpens the second reading. The $m=0$ term of the
+formula, as transmitted through \cite{Schofer,Yang}, collapses the sum $\sum_\eta c_\eta(0)
+\kappa_\eta(0)$ to the single term $c_0(0)\kappa_0(0)$ via a condition of the form
+$\delta_{0,\mu}$. But the collapse condition constrains only the \emph{negative-definite} part of
+the coset, so a nonzero isotropic $\eta$ with $\eta_-=0$ is not excluded by it --- and by
+Observations~\ref{obs:iso} and~\ref{obs:mult} it is exactly those cosets, with their shared
+nonzero constant term, that carry the correction. On this reading nothing outside Schofer's
+formula is being compensated; rather, terms inside it were dropped.
+
 In either case Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand, and part (ii) of
 the Kudla--Rapoport--Yang programme --- the incorporation of a level structure --- remains to be
 carried out. Table~\ref{tab:A} is what any corrected formula must reproduce, index by index.
@@ -333,11 +483,25 @@ $\kappa^-_\mu(m)$ for $m>0$ has never been checked against an independent comput
 neither here nor, as far as we can determine, in the literature. Yang's worked examples
 \cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a \emph{maximal} order, and
 indeed $L=\Lp+\Lm$ there; the corresponding regression tests in the accompanying code likewise cover
-only $N=1$. So the step on which everything here turns is unverified precisely in the range where we
-claim it to be incomplete. Constructing such a check --- for instance by comparing against a
-published CM value on a base with $N>1$ and a nonvanishing correction, of which
-$X_0^{14}(5)$ with $s(\tau_{-280})=5/16$ \cite[Ex.~36]{GY} appears to be the only available
-instance --- would be the natural next step.
+only $N=1$. What Observation~\ref{obs:haupt} now supplies is a verification at $N>1$ of the
+\emph{correction rule} --- the multiplier $\tfrac12 c_\eta(0)$, confirmed at $N=5$ against ground
+truth measured by an independent method --- but the evaluation of $\kappa^-_\mu(m)$ itself, which
+sits upstream in the $m>0$ terms, remains unverified at $N>1$.
+
+\begin{remark}[Published CM values need not discriminate]\label{rem:gy36}
+A natural-seeming check is to compare against a published CM value on a base with $N>1$ and a
+nonvanishing correction; $X_0^{14}(5)$ with $s(\tau_{-280})=5/16$ \cite[Ex.~36]{GY} appears to be
+the only available instance. It cannot work. The Hauptmodul there is normalised by
+$s(\tau_{-4})=\infty$, $s(\tau_{-11})=1$, $s(\tau_{-35})=0$, so the published value depends only on
+the ratio $s(-280)/s(-35)$ --- and $-35$ and $-280$ are both non-firing ($5\mid d$), so any
+correction multiplies both by the same power of $N$ and cancels; the remaining anchors sit at $0$
+and $\infty$, where a multiplicative factor is invisible. Indeed the pipeline reproduces $5/16$
+exactly both with and without the correction. A published value can only test the correction if
+its normalising anchors and the tested point lie on opposite sides of the firing rule; this should
+be checked, at a cost of nothing, before any such comparison is attempted. The consistency
+relation \eqref{eq:haupt}, by contrast, is sensitive exactly where \cite[Ex.~36]{GY} is blind, and
+is what supplied the $X_0^{14}(5)$ ground truth here.
+\end{remark}
 
 \appendix
 \section{Reproducibility}\label{app:repro}
@@ -367,6 +531,12 @@ The computations were carried out in Magma against the codebase accompanying thi
 
 \begin{thebibliography}{99}
 
+\bibitem{Borcherds} R.~E.~Borcherds, \emph{Automorphic forms with singularities on Grassmannians},
+Invent.\ Math.\ \textbf{132} (1998), 491--562.
+
+\bibitem{BK} J.~H.~Bruinier and M.~Kuss, \emph{Eisenstein series attached to lattices and modular
+forms on orthogonal groups}, Manuscripta Math.\ \textbf{106} (2001), 443--459.
+
 \bibitem{Errthum} E.~Errthum, \emph{Singular moduli of Shimura curves},
 Canad.\ J.\ Math.\ \textbf{63} (2011), 826--861.
 
@@ -381,6 +551,9 @@ Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
 
 \bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
 J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
+
+\bibitem{Schwag} M.~Schwagenscheidt, \emph{Eisenstein series for the Weil representation},
+J.\ Number Theory \textbf{193} (2018), 74--101.
 
 \bibitem{Yang} Y.~Yang, \emph{Special values of hypergeometric functions and periods of CM elliptic
 curves}, arXiv:1503.07971.
