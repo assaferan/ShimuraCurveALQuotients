@@ -137,7 +137,7 @@ for wi->w in words do
                 : i in [1..#ds] | r[i] ne 0 ] >;
         k0 := num0 / sfun(tau0);
         k1 := num1 / sfun(tau1);
-        error if Abs(k0 - k1) gt 10^(-PREC+25), "kappa not constant", wi, ri, Abs(k0-k1);
+        error if Abs(k0 - k1) gt 10^(-30), "kappa not constant", wi, ri, Abs(k0-k1);
         a0tab[wi][ri] := k0 * c0;
     end for;
 end for;
