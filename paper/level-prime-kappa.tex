@@ -62,6 +62,14 @@ an object the maximal-order literature does not compute --- and reduce it, by an
 of Schwagenscheidt, to ordinary seed-$0$ data of an enlarged lattice whose level-prime part is
 unimodular; this explains structurally both the support rule and the observed normalisation. We
 record the exact data any corrected formula must reproduce, and the routes we have eliminated.
+Finally, a finite exact evaluation of the constant term --- expansions of the input form at all
+cusps of $\Gamma_0(M)$ against exact Weil-representation data, with no Fourier sampling ---
+extends the measurements to bases beyond the numerical oracle's reach and shows that the
+correction carries a \emph{second channel}, supported on the perfect-square indices of the
+principal part, invisible on every base where the level-support rule had been tested. The space
+of weight-$1/2$ forms for the Weil representation of the discriminant form is shown to vanish,
+so this channel is scalar --- Zagier's square-class structure entering through the cusps ---
+and not a harmonic completion on the discriminant form.
 \end{abstract}
 
 \maketitle
@@ -439,16 +447,186 @@ vanish outright. Evaluating the left side with the na\"ive weight-$3/2$ coeffici
 they are evaluated where the factor $1-p^{m-1}X$ vanishes) gives $-5$, not $0$, on such a form of
 $X_0^{15}(2)$. The na\"ive recipe therefore violates its own constant-term identity,
 independently of everything specific to \eqref{eq:multformula} --- and this, rather than any
-defect of \eqref{eq:oldform}, is where the computation currently stops. The discrepancy is
-exactly the shape of the harmonic completion: the $\xi$-image of the weight-$3/2$ Eisenstein
-series is a weight-$1/2$ theta on $A$ (supported, by Serre--Stark, on the isotropic lines ---
-the same level-$N$ structure that carries everything else in this note), and its contribution to
-the pairing is, for weakly holomorphic input, a \emph{finite} Weyl-vector-type functional of the
-principal part in the sense of \cite[\S10]{Borcherds}. Calibrating that functional --- for which
-the $\mathrm{mult}=0$ forms give equations free of every other unknown --- is the immediate next
-step. We note the required care: the lattices here are anisotropic over $\Q$, so the unfolding
-of \cite[\S10]{Borcherds} does not apply verbatim and the evaluation must proceed through the
-finite quadratic module.
+defect of \eqref{eq:oldform}, is where the computation of \eqref{eq:multformula} currently stops.
+
+One natural reading of that violation --- that the weight-$3/2$ series is merely harmonic, and
+the missing term is the pairing against its $\xi$-image, a weight-$1/2$ theta on $A$ --- is
+\emph{refuted} by the following observation, which seems worth recording in its own right.
+
+\begin{proposition}\label{prop:nohalf}
+For the discriminant forms $A=\Ldual/L$ arising here (and for their rescalings
+$\bigl(2L\bigr)^{\vee}\!/2L$), the space of holomorphic vector-valued modular forms of weight
+$1/2$ for $\rho_A$ (and for $\rho_A^*$) is zero.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+By the Serre--Stark theorem in its vector-valued form \cite{SeSt,Skoruppa}, every such form is a
+linear combination of unary theta functions; each arises from a cyclic nondegenerate orthogonal
+summand $Z$ of a quotient $H^{\perp}/H$ of $A$ by an isotropic subgroup $H$, tensored with a
+$\rho_C$-invariant vector on the complement $C$, and invariant vectors are supported on
+self-dual isotropic subgroups of $C$. The $D$-part of $A$ is anisotropic of shape
+$(\Z/p)^2$ at each odd $p\mid D$ (Observation~\ref{obs:iso}); an isotropic subgroup cannot meet
+it, a cyclic summand cannot absorb both $\Z/p$ factors, and passage to $H^{\perp}/H$ preserves
+it. Hence at least one anisotropic $\Z/p$ survives into every complement, no invariant vector
+exists, and every candidate theta vanishes.
+\end{proof}
+
+In particular $E_{A,0}$ of weight $3/2$ has no shadow, the completion reading is closed, and the
+input form $F_f$ is determined by its principal part alone --- a fact the computations of
+\S\ref{sec:exact} confirm to seventy digits on pairs of forms with equal principal parts. What
+the failed identity signals is therefore not a non-holomorphic correction on $A$ but a missing
+\emph{channel} in the ansatz for the functional itself, which the exact evaluation of the next
+section locates.
+
+\section{The constant term evaluated exactly, and the two channels of the correction}
+\label{sec:exact}
+
+The constant term that Observation~\ref{obs:mult} reads off admits a finite evaluation which
+replaces the Fourier extraction of \S\ref{sec:data} entirely. For a coset word $w$ with matrix
+$g$ and an eta monomial $\prod_d\eta(d\tau)^{r_d}$ of $f$, triangularising
+$\left(\begin{smallmatrix}d&0\\0&1\end{smallmatrix}\right)g=g_d
+\left(\begin{smallmatrix}a_d&b_d\\0&e_d\end{smallmatrix}\right)$ exhibits
+$(f\vert_{1/2}w)$ as a constant multiple of a $q$-series with \emph{exact rational exponents}
+and coefficients that are roots of unity; the single constant per (monomial, word) is pinned
+numerically at one point of $\HH$ and verified at a second, so no eta-multiplier or metaplectic
+bookkeeping enters. The coefficient of $q^0$ in $f\vert_{1/2}w$ is then a finite sum, and
+\[
+  c_{\eta^*}(0)\;=\;\sum_{w}\bigl(\rho(w^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w)
+\]
+is evaluated in minutes per base, with no horocycle sampling, no aliasing, and none of the
+cancellation constraints of \S\ref{app:repro}. The same series supply the full principal part of
+$F_f$ at every coset and exponent; on $X_0^{22}(3)$ this reproduces \cite[Lemma 24]{GY}
+coefficient by coefficient to $10^{-70}$, and on $X_0^{15}(2)$ the nine multipliers of
+Observation~\ref{obs:mult} are reproduced exactly, the two zero multipliers to $10^{-71}$.
+
+Two panels beyond the reach of the numerical oracle result. On $X_0^{22}(3)$ the nine
+multipliers are
+\[
+(r_{-2},r_{-1},r_9,\dots,r_{15})=(3,\,3,\,-6,\,3,\,-3,\,-9,\,3,\,6,\,-6),
+\]
+and on $X_0^{21}(2)$ --- a base on which no ground truth of any kind existed ---
+\[
+(2,\,2,\,4,\,2,\,2,\,2,\,-4,\,-4,\,0).
+\]
+
+\subsection*{The second channel}
+The nine $X_0^{22}(3)$ values are \emph{inconsistent} with any linear functional of the
+principal part supported on the indices $N\mid m$: the combinations of forms
+$(f_{-2}-f_9+f_{11})$ and $(-f_{-1}-f_9+f_{12})$ cancel every $N$-divisible index of the
+principal parts identically, yet their multipliers sum to $6$ and $-6$. The residual support of
+both combinations is the set $m\in\{1,4,16,25\}$ --- perfect squares --- with residual
+coefficients $(4,4,2,2)$ and $(-4,-4,-2,-2)$, so both reduce to the single equation
+$12\,w_{\square}=6$. The correction therefore carries a second channel:
+\begin{equation}\label{eq:twochannel}
+  \mathrm{mult}(f)\;=\;\underbrace{\sum_{N\mid m}c_0(-m)\,w(m)}_{\text{level channel}}
+  \;+\;w_{\square}(D,N)\,\sum_{k\ge1}c_0(-k^2),
+\end{equation}
+with $w(m)$ depending on $m$ only through the square class of $m/N$. With both channels present,
+the measured multipliers of \emph{every} base are consistent, with spare conditions throughout;
+the data force
+\[
+w_{\square}=0\ \text{on}\ X_0^{15}(2),\,X_0^{6}(5),\,X_0^{6}(13),\,X_0^{6}(17);\qquad
+w_{\square}=\tfrac12\ \text{on}\ X_0^{22}(3);\qquad
+w_{\square}=1\ \text{on}\ X_0^{21}(2).
+\]
+The square-class sum is the signature of the \emph{scalar} Zagier weight-$3/2$ structure ---
+which is consistent with Proposition~\ref{prop:nohalf}: no vector-valued shadow exists on $A$,
+but the scalar theta enters through the cusp expansions of $f$ itself. The bases with
+$w_{\square}=0$ are exactly those on which the level-support rule appeared exact, which is why
+this channel escaped notice through eighteen bases of fitted corrections.
+
+\begin{conjecture}\label{conj:sq}
+$w_{\square}(D,N)\neq0$ if and only if no prime of $DN$ splits in $\Q(i)$ --- the embedding
+criterion for the orders of discriminant $-4k^2$ --- and in that case
+$w_{\square}=1/(N-1)$.
+\end{conjecture}
+
+The condition matches all six determined values above ($DN$ contains a prime
+$\equiv1\bmod4$ precisely on the four bases with $w_{\square}=0$), and the magnitude matches
+$N=2,3$. We record, in advance of the measurements, the values the conjecture predicts on the
+panels currently being computed: $1$ on $X_0^{33}(2)$; $\tfrac12$ on $X_0^{38}(3)$ and
+$X_0^{14}(3)$; $0$ on $X_0^{35}(2)$, $X_0^{22}(5)$ and $X_0^{34}(5)$; $\tfrac16$ on
+$X_0^{22}(7)$; $\tfrac1{10}$ on $X_0^{6}(11)$.
+
+\emph{Scorecard at the time of writing.} The panels for $X_0^{33}(2)$, $X_0^{35}(2)$,
+$X_0^{22}(5)$, $X_0^{38}(3)$, $X_0^{14}(3)$, $X_0^{6}(11)$, $X_0^{10}(11)$ and $X_0^{14}(5)$
+have since been measured. Every one is consistent with the two-channel
+form~\eqref{eq:twochannel}, with spare conditions; $X_0^{14}(5)$ \emph{pins}
+$w_{\square}=0$, as predicted ($5\mid DN$ splits in $\Q(i)$). On the remaining seven the
+nine-form panel leaves $w_{\square}$ undetermined: the square-class column of the
+principal-part profile matrix lies in the span of the level-channel columns, so no value of
+$w_{\square}$ is forced either way. This aliasing is \emph{intrinsic} rather than an
+accident of the panel --- see the assembly analysis below --- so the outstanding predictions
+must be decided by the derivation, not by further panels of the same kind.
+
+\subsection*{The level channel}
+Within the first channel the data pin two further structural facts. The weight at
+$m=N d k^2$ ($d$ squarefree) depends on $k$ through a sign: on $X_0^{10}(7)$ the two Hauptmodul
+rows force $w(7)=+\tfrac12$ and $w(28)=-\tfrac12$, and across all bases the $k$-dependence is
+consistent with the twist $\lambda(k)\left(\tfrac kN\right)$ (Liouville times Legendre), while
+$k$-independence and $k$-linearity are refuted. And no assignment of the weights by a fixed
+product of Legendre symbols in $(D,N,d)$ covers all bases: three successive such laws, each
+consistent with all data available when it was formulated, were refuted by the next base
+measured ($X_0^{6}(13)$, then $X_0^{10}(7)$, then $X_0^{22}(3)$ and $X_0^{38}(3)$). The surviving
+magnitudes $0,\pm\tfrac12,\pm1,\pm\tfrac32$ vary with the base in the manner of representation
+numbers rather than characters. Since the coset sum above evaluates $c_{\eta^*}(0)$ as a finite
+sum of Weil-representation entries --- quadratic Gauss sums --- against the cusp expansions of
+$f$, grouping it by cusp class is a finite, exact route to the closed form; we have executed
+it, with the following results.
+
+\subsection*{The cusp-class assembly}
+Group the cosets by the class $g=\gcd(c,M)$ of their lower-left entry. On every base dumped
+($X_0^{10}(7)$, $X_0^{15}(2)$, $X_0^{21}(2)$, $X_0^{33}(2)$, $X_0^{35}(2)$, $X_0^{6}(11)$;
+570 checks in \texttt{vvdata/weyl-campaign/cuspclass2.py}) the per-coset product
+$(\rho(w^{-1})e_0)_{\eta^*}\,a_0(f\vert_{1/2}w)$ is \emph{constant on each class}, for every
+form: the eta-multiplier twist of $a_0$ along a class is always exactly cancelled by the
+Weil-representation phase. Hence
+\[
+  c_{\eta^*}(0)\;=\;\sum_{g\mid M}\frac{M}{g}\,
+  \bigl(\rho(w_g^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w_g)
+\]
+at one canonical coset $w_g$ per class. The $\rho$-entry obeys base-independent laws: the
+class is dead iff $g\equiv2\bmod4$ (no eta-quotient constant term) or $N\mid g$ (the
+$e_{\eta^*}$ entry vanishes); $\lvert\rho\rvert=g\sqrt2/M$ at odd $g$ and $g/M$ at $4\mid g$
+(real, with sign $\mu(g/4)$); and at odd $g$ the phase is $e(\theta_g)$ with, in the
+canonical metaplectic normalisation,
+\[
+  8\theta_g\;\equiv\;2+4\,r(g)-4\,\omega(g)+\arg_8 G_2(-g)\pmod 8,\qquad
+  \arg_8 G_2(x)=x+4\,\bigl[\bigl(\tfrac2x\bigr)=-1\bigr],
+\]
+where $r(g)=\#\{p\mid g:p\equiv3\bmod4\}$ and $\omega(g)$ is the number of prime factors
+--- derived from Str\"omberg's explicit formula for the Weil representation
+\cite{Stromberg2013} instantiated on the Jordan decomposition of $A$: the anisotropic
+pairs at $p\mid D$ each contribute $-1$, the hyperbolic pairs at $p\mid N$ contribute
+$+1$, and the base-independence is itself a theorem (the $2$-adic genus flips sign
+exactly when $2\mid D$, while $\omega_{\mathrm{odd}}(D)$ flips parity exactly then,
+because an indefinite quaternion algebra ramifies at an even number of primes; the two
+cancel). The formula reproduces all nine measured classes; on $\omega(g)\le2$ --- every
+measurable class on these bases --- it coincides with the symbol form
+$1+6r(g)+4s(g)$, $s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$, but the two laws
+diverge from $\omega(g)=3$ onward, so the symbol form is only the low-complexity shadow
+of the derived one (\texttt{rho5.m}, \texttt{thetag-derivation.md}). The pinned constants of the evaluation are
+themselves closed-form: they equal $\zeta_w\prod_d\bigl[\varepsilon(g_d)\,
+e(b_d/24e_d)\,e_d^{-1/2}\bigr]^{r_d}$ with $\varepsilon$ the Dedekind-sum eta multiplier and
+$\zeta_w$ the metaplectic cocycle unit of the word, certified on all $144$ cosets of
+$X_0^{15}(2)$ and all $288$ of $X_0^{10}(7)$ (\texttt{cusp4.m}), so nothing in the assembly
+remains numerical.
+
+Because $c_{\eta^*}(0)$ is linear in $f$, the assembly can be probed one eta monomial at a
+time --- each monomial of the $X_0^{15}(2)$ forms is itself a weakly holomorphic weight-$1/2$
+form of the same multiplier character, holomorphic at every intermediate cusp, and there are
+$86$ of them, extended to $158$ by monomials appearing in no form of the panel
+(\texttt{cusp5.m}--\texttt{cusp7.m}). On this space the functional does \emph{not} factor
+through the $\infty$-side principal part (residual $2.08$): the $0$-side principal part
+genuinely enters, and the joint $(\infty,0)$-side factorisation holds to $10^{-11}$ with
+eighty independent quotient conditions. The ledger's ``$0$-block weight $0$'' finding, and
+the $\infty$-only shape of~\eqref{eq:twochannel} itself, are therefore \emph{representatives}
+of the true functional modulo the relation ideal of the form space: the joint principal-part
+coordinates of this character's forms span only $78$ of the $128$ channel slots, and the
+$50$ leftover combinations are identities of the space, unremovable by further probes. This
+is the structural origin of the $w_{\square}$ aliasing reported above, and it sharpens what
+the derivation must produce: the functional as an element of the quotient, with the
+square-class channel as its panel-span shadow.
 
 \section{The open question}\label{sec:open}
 
@@ -527,6 +705,10 @@ The computations were carried out in Magma against the codebase accompanying thi
       effect.
 \item Every reported value is gated on the principal-part check; a run failing that gate is
       discarded.
+\item The exact constant-term evaluation of \S\ref{sec:exact} (\texttt{cusp1.m},
+      \texttt{cusp2.m}, and the two-channel solver \texttt{ledger2.py}) and the complete
+      campaign data --- principal-part dumps, ground-truth sweeps, and the constraints ledger
+      --- are banked on the branch \texttt{m0-theta-campaign} of the accompanying repository.
 \end{itemize}
 
 \begin{thebibliography}{99}
@@ -549,11 +731,20 @@ weight one}, Internat.\ Math.\ Res.\ Notices (1999), no.~7, 347--385.
 \bibitem{KY} S.~Kudla and T.~Yang, \emph{Eisenstein series for $SL(2)$},
 Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
 
+\bibitem{Stromberg2013} F.~Str\"omberg, \emph{Weil representations associated with finite
+quadratic modules}, Math.~Z.\ \textbf{275} (2013), 509--527.
+
 \bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
 J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
 
 \bibitem{Schwag} M.~Schwagenscheidt, \emph{Eisenstein series for the Weil representation},
 J.\ Number Theory \textbf{193} (2018), 74--101.
+
+\bibitem{SeSt} J.-P.~Serre and H.~M.~Stark, \emph{Modular forms of weight $1/2$}, in: Modular
+Functions of One Variable VI, Lecture Notes in Math.\ \textbf{627}, Springer (1977), 27--67.
+
+\bibitem{Skoruppa} N.-P.~Skoruppa, \emph{Jacobi forms of critical weight and Weil
+representations}, in: Modular Forms on Schiermonnikoog, Cambridge Univ.\ Press (2008), 239--266.
 
 \bibitem{Yang} Y.~Yang, \emph{Special values of hypergeometric functions and periods of CM elliptic
 curves}, arXiv:1503.07971.
