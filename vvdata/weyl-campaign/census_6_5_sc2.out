@@ -1,0 +1,543 @@
+BASE 6 5 SCALE 2  |A| = 14400  invariants [ 4, 60, 60 ]
+cyclic nondegenerate orthogonal summands: 424
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 15  q(g) reps [ 15, 60 ]  scales c^2 q = [ 15, 60 ]  C = [ 4, 4, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 5  q(g) reps [ 10, 15 ]  scales c^2 q = [ 10, 15 ]  C = [ 4, 12, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+  |Z| = 3  q(g) reps [ 2/3 ]  scales c^2 q = [ 6 ]  C = [ 4, 20, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1830, 3270 ]  scales c^2 q = [ 1830, 3270 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 870, 3030 ]  scales c^2 q = [ 870, 3030 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 70, 230 ]  scales c^2 q = [ 70, 230 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 30, 120 ]  scales c^2 q = [ 30, 120 ]  C = [ 4, 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 15, 60 ]  scales c^2 q = [ 15, 60 ]  C = [ 4, 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 30, 120 ]  scales c^2 q = [ 30, 120 ]  C = [ 4, 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 570, 2730 ]  scales c^2 q = [ 570, 2730 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 930, 2370 ]  scales c^2 q = [ 930, 2370 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 30, 120 ]  scales c^2 q = [ 30, 120 ]  C = [ 4, 4, 60 ]
+  |Z| = 15  q(g) reps [ 165, 210 ]  scales c^2 q = [ 165, 210 ]  C = [ 4, 4, 60 
+]
+  |Z| = 15  q(g) reps [ 105, 195 ]  scales c^2 q = [ 105, 195 ]  C = [ 4, 4, 60 
+]
+  |Z| = 15  q(g) reps [ 105, 195 ]  scales c^2 q = [ 105, 195 ]  C = [ 4, 4, 60 
+]
+  |Z| = 15  q(g) reps [ 165, 210 ]  scales c^2 q = [ 165, 210 ]  C = [ 4, 4, 60 
+]
+  |Z| = 15  q(g) reps [ 30, 120 ]  scales c^2 q = [ 30, 120 ]  C = [ 4, 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 390, 1110 ]  scales c^2 q = [ 390, 1110 ]  C = [ 4, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 17/24 ]  scales c^2 q = [ 102 ]  C = [ 20, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 15  q(g) reps [ 105, 195 ]  scales c^2 q = [ 105, 195 ]  C = [ 4, 4, 60 
+]
+  |Z| = 15  q(g) reps [ 105, 195 ]  scales c^2 q = [ 105, 195 ]  C = [ 4, 4, 60 
+]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 130, 370 ]  scales c^2 q = [ 130, 370 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 170, 330 ]  scales c^2 q = [ 170, 330 ]  C = [ 12, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 15, 60 ]  scales c^2 q = [ 15, 60 ]  C = [ 4, 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 330, 1770 ]  scales c^2 q = [ 330, 1770 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2130, 3570 ]  scales c^2 q = [ 2130, 3570 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 5  q(g) reps [ 5, 20 ]  scales c^2 q = [ 5, 20 ]  C = [ 4, 12, 60 ]
+  |Z| = 5  q(g) reps [ 10, 15 ]  scales c^2 q = [ 10, 15 ]  C = [ 4, 12, 60 ]
+  |Z| = 5  q(g) reps [ 5, 20 ]  scales c^2 q = [ 5, 20 ]  C = [ 4, 12, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1590, 2310 ]  scales c^2 q = [ 1590, 2310 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 310, 390 ]  scales c^2 q = [ 310, 390 ]  C = [ 12, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 3/8 ]  scales c^2 q = [ 6 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 3/8 ]  scales c^2 q = [ 6 ]  C = [ 60, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 1/24 ]  scales c^2 q = [ 6 ]  C = [ 20, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 3/8 ]  scales c^2 q = [ 6 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 3/8 ]  scales c^2 q = [ 6 ]  C = [ 60, 60 ]
+  |Z| = 3  q(g) reps [ 2/3 ]  scales c^2 q = [ 6 ]  C = [ 4, 20, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 165, 210 ]  scales c^2 q = [ 165, 210 ]  C = [ 4, 4, 60 
+]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 15  q(g) reps [ 165, 210 ]  scales c^2 q = [ 165, 210 ]  C = [ 4, 4, 60 
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 1290, 2010 ]  scales c^2 q = [ 1290, 2010 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 210, 3090 ]  scales c^2 q = [ 210, 3090 ]  C = [ 4, 60 ]
+  |Z| = 15  q(g) reps [ 15, 60 ]  scales c^2 q = [ 15, 60 ]  C = [ 4, 4, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 3  q(g) reps [ 1/3 ]  scales c^2 q = [ 3 ]  C = [ 4, 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 11/24 ]  scales c^2 q = [ 66 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 23/24 ]  scales c^2 q = [ 138 ]  C = [ 20, 60 ]
+  |Z| = 3  q(g) reps [ 1/3 ]  scales c^2 q = [ 3 ]  C = [ 4, 20, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 690, 1410 ]  scales c^2 q = [ 690, 1410 ]  C = [ 4, 60 ]
+  |Z| = 60  q(g) reps [ 2490, 3210 ]  scales c^2 q = [ 2490, 3210 ]  C = [ 4, 60
+]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 10, 90 ]  scales c^2 q = [ 10, 90 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 20  q(g) reps [ 210, 290 ]  scales c^2 q = [ 210, 290 ]  C = [ 12, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 19/24 ]  scales c^2 q = [ 114 ]  C = [ 20, 60 ]
+  |Z| = 12  q(g) reps [ 7/24 ]  scales c^2 q = [ 42 ]  C = [ 20, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 5/8 ]  scales c^2 q = [ 10 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+  |Z| = 4  q(g) reps [ 1/8 ]  scales c^2 q = [ 2 ]  C = [ 60, 60 ]
+LEDGER-RELEVANT: scales t with t = N*d, d squarefree, t <= 120:
+  integer scales available: [ 2, 3, 5, 6, 10, 15, 20, 30, 42, 60, 66, 70, 90, 
+102, 105, 114, 120, 130, 138, 165, 170, 195, 210, 230, 290, 310, 330, 370, 390, 
+570, 690, 870, 930, 1110, 1290, 1410, 1590, 1770, 1830, 2010, 2130, 2310, 2370, 
+2490, 2730, 3030, 3090, 3210, 3270, 3570 ]
