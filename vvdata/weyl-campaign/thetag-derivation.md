@@ -147,3 +147,21 @@ The 2-part of Dbar is one of exactly TWO Jordan types, constant within parity:
 Measured G2 phases match on every base (args (1,-1,1,-1) vs (-3,3,-3,3) at c=1,3,5,7).
 The genus flip G2b = -G2a is therefore DERIVED, and with the quaternion parity theorem
 the base-independence of E0 is complete at lemma level.
+
+## Step (iii) CLOSED: the 4|g classes derive the same way
+For 4 | c the level-4 component A_2^1 is killed (4 Q(y) integral on the 2-part), so
+x_c = 0 again and the fiber phase collapses as before; magnitude sqrt(|D[c]|/|D|) = g/M
+(established). The phase at the canonical rep (a = 1, c = -g):
+  e_4(-1) [-2]  +  xi_0 = ((-1)/(-g))(-1,-g)_infty  +  xi_2 = -2(c_2 - 1 + s_2),
+  c_2 = -g/4 (signed odd part), s_2 = sign of the 2-part (1 for A+C, 5 for A+B)
+  +  4 #{p | D odd, p not | g}   [anisotropic pairs; hyperbolic give 0; p | g give 0;
+                                  the 2-part Gauss factors are 1 by Lemmas 3.7/3.8 at 4|c].
+All terms are EVEN: the entry is real, as measured. Verified against all four measured
+4|g classes: 10_7 g=4 (arg 0 = mu(1)), g=20 (arg 4 = mu(5)); 6_11 g=4 (arg 0), g=12
+(arg 4 = mu(3)); in each case with the word unit u = 4 (u = 4[g>1] holds for 4|g too).
+The mu(g/4) sign is the anisotropic-pair count plus xi_0/xi_2 odd-part bookkeeping.
+
+STATUS: the ENTIRE rho-side class law (support, magnitudes, odd-g phase E0, 4|g sign)
+is now derived from Stromberg's formula, with only the Kubota word unit u = 4[g>1]
+(convention-only; cancels in contrib) and the c = 2 mod 4 x_c convention (dead classes)
+left as bookkeeping.
