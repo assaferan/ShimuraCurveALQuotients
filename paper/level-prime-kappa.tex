@@ -588,10 +588,24 @@ Weil-representation phase. Hence
 at one canonical coset $w_g$ per class. The $\rho$-entry obeys base-independent laws: the
 class is dead iff $g\equiv2\bmod4$ (no eta-quotient constant term) or $N\mid g$ (the
 $e_{\eta^*}$ entry vanishes); $\lvert\rho\rvert=g\sqrt2/M$ at odd $g$ and $g/M$ at $4\mid g$
-(real, with sign $\mu(g/4)$); and at odd $g$ the phase is
-$e(\theta_g)$ with $8\theta_g\equiv1+6\,r(g)+4\,s(g)\bmod 8$, where $r(g)=\#\{p\mid g:
-p\equiv3\bmod4\}$ and $s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$ --- nine distinct
-classes across the six bases, no exceptions. The pinned constants of the evaluation are
+(real, with sign $\mu(g/4)$); and at odd $g$ the phase is $e(\theta_g)$ with, in the
+canonical metaplectic normalisation,
+\[
+  8\theta_g\;\equiv\;2+4\,r(g)-4\,\omega(g)+\arg_8 G_2(-g)\pmod 8,\qquad
+  \arg_8 G_2(x)=x+4\,\bigl[\bigl(\tfrac2x\bigr)=-1\bigr],
+\]
+where $r(g)=\#\{p\mid g:p\equiv3\bmod4\}$ and $\omega(g)$ is the number of prime factors
+--- derived from Str\"omberg's explicit formula for the Weil representation
+\cite{Stromberg2013} instantiated on the Jordan decomposition of $A$: the anisotropic
+pairs at $p\mid D$ each contribute $-1$, the hyperbolic pairs at $p\mid N$ contribute
+$+1$, and the base-independence is itself a theorem (the $2$-adic genus flips sign
+exactly when $2\mid D$, while $\omega_{\mathrm{odd}}(D)$ flips parity exactly then,
+because an indefinite quaternion algebra ramifies at an even number of primes; the two
+cancel). The formula reproduces all nine measured classes; on $\omega(g)\le2$ --- every
+measurable class on these bases --- it coincides with the symbol form
+$1+6r(g)+4s(g)$, $s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$, but the two laws
+diverge from $\omega(g)=3$ onward, so the symbol form is only the low-complexity shadow
+of the derived one (\texttt{rho5.m}, \texttt{thetag-derivation.md}). The pinned constants of the evaluation are
 themselves closed-form: they equal $\zeta_w\prod_d\bigl[\varepsilon(g_d)\,
 e(b_d/24e_d)\,e_d^{-1/2}\bigr]^{r_d}$ with $\varepsilon$ the Dedekind-sum eta multiplier and
 $\zeta_w$ the metaplectic cocycle unit of the word, certified on all $144$ cosets of
@@ -716,6 +730,9 @@ weight one}, Internat.\ Math.\ Res.\ Notices (1999), no.~7, 347--385.
 
 \bibitem{KY} S.~Kudla and T.~Yang, \emph{Eisenstein series for $SL(2)$},
 Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
+
+\bibitem{Stromberg2013} F.~Str\"omberg, \emph{Weil representations associated with finite
+quadratic modules}, Math.~Z.\ \textbf{275} (2013), 509--527.
 
 \bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
 J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
