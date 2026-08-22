@@ -422,9 +422,32 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
     monos := {@ @};
     for f in fs do for r in Exponents(f) do Include(~monos, r); end for; end for;
 
+    // Cusp-class shortcut: the per-coset product rho(w^-1)e_0[eta] * a0(f|w) is CONSTANT
+    // on each class g = gcd(c, M) for every isotropic component (e_0 is a
+    // rho(Gamma_0(lev))-eigenvector whose character is f's eta multiplier, and the
+    // isotropic components are T-invariant; verified on 570 class/form/base checks and
+    // derived in vvdata/weyl-campaign/thetag-derivation.md).  So evaluate ONE canonical
+    // coset per class, VERIFY the constancy on up to two more cosets of the class, and
+    // multiply by the true class size.  This replaces #cosets FFT applications by
+    // ~3 * #classes -- the difference between minutes and hours at M ~ 400.
+    classof := [ GCD(VVWordMatrix(w)[2][1] mod M, M) : w in words ];
+    classes := Sort(Setseq(Set(classof)));
+    Ng := AssociativeArray();
+    canon := AssociativeArray();   // class -> [canonical wi, up to 2 verification wi's]
+    for g0 in classes do
+        idxs := [ wi : wi in [1..#words] | classof[wi] eq g0 ];
+        Ng[g0] := #idxs;
+        picks := [ idxs[1] ];
+        if #idxs ge 2 then Append(~picks, idxs[1 + (#idxs div 2)]); end if;
+        if #idxs ge 3 then Append(~picks, idxs[#idxs]); end if;
+        canon[g0] := picks;
+    end for;
+    selected := Sort(Setseq(&join{ Set(canon[g0]) : g0 in classes }));
+
     SS := PowerSeriesRing(CC); t := SS.1;
     a0tab := [ [ CC!0 : r in monos ] : w in words ];
-    for wi->w in words do
+    for wi in selected do
+        w := words[wi];
         g := VVWordMatrix(w);
         tri := [ ];
         for d in ds do
@@ -469,15 +492,30 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
         end for;
     end for;
 
+    rvtab := AssociativeArray();
+    for wi in selected do rvtab[wi] := VVRhoInvE0FFT(fftdata, words[wi]); end for;
+
     mults := [ Rationals() | ];
     for f in fs do
-        a0w := [ &+[ CC | f`coeffs[r] * a0tab[wi][Index(monos, r)] : r in Exponents(f) ]
-                 : wi in [1..#words] ];
+        a0w := AssociativeArray();
+        for wi in selected do
+            a0w[wi] := &+[ CC | f`coeffs[r] * a0tab[wi][Index(monos, r)]
+                           : r in Exponents(f) ];
+        end for;
         cvals := [ CC!0 : i in isoidx ];
-        for wi->w in words do
-            if Abs(a0w[wi]) lt 10^(-Prec+10) then continue; end if;
-            rv := VVRhoInvE0FFT(fftdata, w);
-            for j->i in isoidx do cvals[j] +:= rv[i] * a0w[wi]; end for;
+        for g0 in classes do
+            picks := canon[g0];
+            contribs := [ [ rvtab[wi][i] * a0w[wi] : i in isoidx ] : wi in picks ];
+            // constancy check across the class's sampled cosets, per component
+            for k := 2 to #picks do
+                for j := 1 to #isoidx do
+                    error if Abs(contribs[k][j] - contribs[1][j]) gt 10^(-25),
+                        "M0MultiplierExact: class-constancy violated";
+                end for;
+            end for;
+            for j := 1 to #isoidx do
+                cvals[j] +:= Ng[g0] * contribs[1][j];
+            end for;
         end for;
         // the nonzero isotropic components must agree, be real, and snap to a rational
         vals := [ cvals[j] : j->i in isoidx | i ne i0 ];
