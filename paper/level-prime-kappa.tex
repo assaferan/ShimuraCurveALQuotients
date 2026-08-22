@@ -575,42 +575,135 @@ $f$, grouping it by cusp class is a finite, exact route to the closed form; we h
 it, with the following results.
 
 \subsection*{The cusp-class assembly}
-Group the cosets by the class $g=\gcd(c,M)$ of their lower-left entry. On every base dumped
-($X_0^{10}(7)$, $X_0^{15}(2)$, $X_0^{21}(2)$, $X_0^{33}(2)$, $X_0^{35}(2)$, $X_0^{6}(11)$;
-570 checks in \texttt{vvdata/weyl-campaign/cuspclass2.py}) the per-coset product
-$(\rho(w^{-1})e_0)_{\eta^*}\,a_0(f\vert_{1/2}w)$ is \emph{constant on each class}, for every
-form: the eta-multiplier twist of $a_0$ along a class is always exactly cancelled by the
-Weil-representation phase. Hence
+Throughout this subsection $A=\Ldual/L$ carries the \emph{negated} quadratic form
+$\bar q=-q$ (the dual Weil representation of the evaluation above is the representation
+$\rho_{\bar A}$ of \cite{Stromberg2013} attached to $\bar A=(A,\bar q)$; the identification
+is verified coset by coset in \texttt{rho5.m}), $\eta^*$ denotes a nonzero isotropic
+element, $M$ is the lattice level, and for $\gamma\in\mathrm{SL}_2(\Z)$ with lower row
+$(c,d)$ we write $g=\gcd(c,M)$ for its cusp class. We assume $DN$ even, the case of all
+computations in this paper.
+
+\begin{proposition}[local structure]\label{prop:jordan}
+The Jordan components of $\bar A$ are as follows. For each odd $p\mid D$ the $p$-part is
+the anisotropic plane $(\Z/p)^2$; for each odd $p\mid N$ it is the hyperbolic plane; the
+$2$-part has order $8$ and equals $A_2^1\oplus C_2$ if $2\mid N$, and $A_2^1\oplus B_2$ if
+$2\mid D$, in the notation of \cite[\S2]{Stromberg2013}. Consequently the Gauss function
+of the $2$-part on odd arguments is
 \[
-  c_{\eta^*}(0)\;=\;\sum_{g\mid M}\frac{M}{g}\,
-  \bigl(\rho(w_g^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w_g)
+  G_2(x)\;=\;\epsilon_D\,\bigl(\tfrac2x\bigr)e_8(x),\qquad
+  \epsilon_D=\begin{cases}+1,&2\mid N,\\ -1,&2\mid D,\end{cases}
 \]
-at one canonical coset $w_g$ per class. The $\rho$-entry obeys base-independent laws: the
-class is dead iff $g\equiv2\bmod4$ (no eta-quotient constant term) or $N\mid g$ (the
-$e_{\eta^*}$ entry vanishes); $\lvert\rho\rvert=g\sqrt2/M$ at odd $g$ and $g/M$ at $4\mid g$
-(real, with sign $\mu(g/4)$); and at odd $g$ the phase is $e(\theta_g)$ with, in the
-canonical metaplectic normalisation,
+by \cite[Lemmas 3.7, 3.8]{Stromberg2013} (the $B_2$ factor contributes the constant
+$(\tfrac32)=-1$).
+\end{proposition}
+
+\begin{proof}
+The completion $L\otimes\Z_p$ depends, up to isometry, only on the local type of the
+order: at $p\mid D$ the maximal order of the ramified quaternion algebra over $\Q_p$ is
+unique up to conjugation, and at $p\mid N$ so is the Eichler order of level $p$ in
+$M_2(\Q_p)$. Hence the $p$-part of the discriminant form is a single isomorphism class
+determined by the case, and one computation per case identifies it: the odd parts are the
+standard anisotropic (ramified) and hyperbolic (split Eichler) planes, and for $p=2$ the
+$\bar q$-value multisets $\{0,0,0,\tfrac14,\tfrac14,\tfrac14,\tfrac12,\tfrac34\}$
+($2\mid N$) and $\{0,\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac34,\tfrac34,\tfrac34\}$
+($2\mid D$), computed in \texttt{g2jordan.m} and constant across ten bases, identify
+$A_2^1\oplus C_2$ and $A_2^1\oplus B_2$ respectively.
+\end{proof}
+
+\begin{theorem}[the $\rho$-entry at a cusp class]\label{thm:rhoentry}
+Let $\gamma$ have lower row $(c,d)$ with class $g$, and let
+$\widetilde\gamma$ be its canonical metaplectic lift. Then
+$(\rho_{\bar A}(\widetilde\gamma)e_0)_{\eta^*}$:
+\begin{enumerate}
+\item vanishes iff $N\mid g$;
+\item has absolute value $g/\sqrt{|A|}$ for odd $g$ and $g/M$ for $4\mid g$;
+\item for odd $g$ and the canonical representative ($a=d=1$, $c=-g$) equals
+$(g/\sqrt{|A|})\,e_8(E_0(g))$ with
 \[
-  8\theta_g\;\equiv\;2+4\,r(g)-4\,\omega(g)+\arg_8 G_2(-g)\pmod 8,\qquad
+  E_0(g)\;=\;2+4\,r(g)-4\,\omega(g)+\arg_8 G_2(-g)\ \bmod 8,\qquad
   \arg_8 G_2(x)=x+4\,\bigl[\bigl(\tfrac2x\bigr)=-1\bigr],
 \]
-where $r(g)=\#\{p\mid g:p\equiv3\bmod4\}$ and $\omega(g)$ is the number of prime factors
---- derived from Str\"omberg's explicit formula for the Weil representation
-\cite{Stromberg2013} instantiated on the Jordan decomposition of $A$: the anisotropic
-pairs at $p\mid D$ each contribute $-1$, the hyperbolic pairs at $p\mid N$ contribute
-$+1$, and the base-independence is itself a theorem (the $2$-adic genus flips sign
-exactly when $2\mid D$, while $\omega_{\mathrm{odd}}(D)$ flips parity exactly then,
-because an indefinite quaternion algebra ramifies at an even number of primes; the two
-cancel). The formula reproduces all nine measured classes; on $\omega(g)\le2$ --- every
-measurable class on these bases --- it coincides with the symbol form
-$1+6r(g)+4s(g)$, $s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$, but the two laws
-diverge from $\omega(g)=3$ onward, so the symbol form is only the low-complexity shadow
-of the derived one (\texttt{rho5.m}, \texttt{thetag-derivation.md}). The pinned constants of the evaluation are
-themselves closed-form: they equal $\zeta_w\prod_d\bigl[\varepsilon(g_d)\,
-e(b_d/24e_d)\,e_d^{-1/2}\bigr]^{r_d}$ with $\varepsilon$ the Dedekind-sum eta multiplier and
-$\zeta_w$ the metaplectic cocycle unit of the word, certified on all $144$ cosets of
-$X_0^{15}(2)$ and all $288$ of $X_0^{10}(7)$ (\texttt{cusp4.m}), so nothing in the assembly
-remains numerical.
+where $r(g)=\#\{p\mid g:p\equiv3\bmod4\}$ and $\omega(g)$ the number of prime divisors;
+in particular $E_0$ is independent of the base $(D,N)$;
+\item for $4\mid g$ and the canonical representative it is real, of sign $\mu(g/4)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By \cite[Thm.~6.4]{Stromberg2013}, for $x=0$ the $\eta^*$-component of
+$\rho_{\bar A}(\widetilde\gamma)e_0$ is the \emph{single} term
+$\xi(a,c)\sqrt{|A[c]|/|A|}\;e(ac\,\bar q(y_0)+B(x_c,y_0))$ if
+$\eta^*\in cA+x_c$ (with $cy_0+x_c=\eta^*$), and $0$ otherwise. (i): the element $x_c$ is
+$2$-adic, and for $N\mid c$ the $N$-part of $cA$ is trivial while $\eta^*$ has nonzero
+$N$-part, so the support condition fails; conversely for $N\nmid g$ it holds. (ii):
+$|A[c]|=\prod_{p\mid g\ \mathrm{odd}}p^2$ times $8$ if $4\mid c$, and
+$|A|=M^2/2$. (iii): choose $y_0$ inside the $N$-part; then
+$\bar q(y_0)=c^{-2}\bar q(\eta^*)=0$ and (for odd $c$) $x_c=0$, so the phase is exactly
+$\xi(a,c)$, which \cite[Def.~6.1]{Stromberg2013} factors as
+$e_4(-\mathrm{sign})\,\xi_0\,\xi_2\prod_J\xi(J)$ over the Jordan components of
+Proposition~\ref{prop:jordan}. At the canonical representative: $\xi_2=1$;
+$\xi_0=(\tfrac{-1}{-g})(-1,-g)_\infty=e_8(4+4r(g))$; each anisotropic pair with
+$p\nmid g$ contributes $(\tfrac{t_1t_2}p)e_8(2-2p)=-1$ and each hyperbolic pair $+1$
+(\cite[Lem.~3.6]{Stromberg2013}, independently of the argument); the components at
+$p\mid g$ contribute $1$; and the $2$-part contributes $G_2(-g)$ of
+Proposition~\ref{prop:jordan}. Collecting, and using
+$e_4(-\mathrm{sign}(\bar A))=e_8(-2)$ together with the two Gauss-sum factors
+$e_8(-3)$ and $e_8(1)$ arising from the normalisation of
+\cite[eq.~(6.6)]{Stromberg2013} (the latter because the auxiliary $d'\equiv1\bmod 8$
+forces its Kronecker symbol to $+1$), gives
+$E_0(g)=2+4r-4\omega(g)+\arg_8G_2(-g)+4\,\omega_{\mathrm{odd}}(D)+4\,[2\mid D]$. The last
+two terms cancel: an indefinite quaternion algebra ramifies at an even number of finite
+primes, so $\omega_{\mathrm{odd}}(D)$ is odd exactly when $2\mid D$, which is exactly when
+$\epsilon_D=-1$ shifts $\arg_8G_2$ by $4$. This proves (iii) and the base-independence.
+(iv): for $4\mid c$ the level-$4$ component is annihilated, $x_c=0$ again, and every
+factor of $\xi$ is real ($\xi_2=e_8(-2(c_2-1+s_2))$ with $c_2$ the odd part of $c$ and
+$s_2$ the $2$-part signature contributes a sign, as do $\xi_0$ and the anisotropic pairs
+prime to $g$); the product of signs is $\mu(g/4)$ by the same bookkeeping.
+\end{proof}
+
+The theorem reproduces all nine measured odd classes ($g=1,3,5,7,11,15,21,33,35$ across
+six bases) and all four measured $4\mid g$ classes. On $\omega(g)\le2$ --- every class
+measurable on these bases --- $E_0$ coincides with the symbol form $1+6r(g)+4s(g)$,
+$s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$, but the two diverge from $\omega(g)=3$
+onward: the symbol form is only the low-complexity shadow of $E_0$
+(\texttt{rho5.m}, \texttt{thetag-derivation.md}). Word-based evaluations differ from the
+canonical lift by the metaplectic centre ($\pm1$ per word, the Kubota cocycle product of
+the letters), which cancels in the pairing below.
+
+\begin{proposition}[class constancy]\label{prop:constancy}
+Let $f$ be weakly holomorphic of weight $1/2$ for $\Gamma_0(M)$ whose multiplier
+restricted to $\Gamma_0(\mathrm{lev}(\bar A))$ equals the character $\chi$ by which that
+group acts on $e_0$ (the case of all Borcherds inputs here, forced by well-definedness of
+the coset average of \cite[Lem.~24]{GY}). Then
+$(\rho(w^{-1})e_0)_{\eta}\,a_0(f\vert_{1/2}w)$ is, for every isotropic $\eta$, constant
+as $w$ ranges over a cusp class, and consequently
+\[
+  c_{\eta^*}(0)\;=\;\sum_{g}\,N_g\,
+  \bigl(\rho(w_g^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w_g)
+\]
+with one arbitrary coset $w_g$ per class and $N_g$ the number of cosets in the class.
+\end{proposition}
+
+\begin{proof}
+Replacing $w$ by $\gamma wT^k$ with $\gamma\in\Gamma_0(M)$ multiplies
+$a_0(f\vert_{1/2}w)$ by $\chi(\gamma)$ (the $T$-shift fixes the $q^0$ coefficient), while
+$e_0$ is a $\rho(\Gamma_0(\mathrm{lev}))$-eigenvector with character $\chi$
+(\cite[Lem.~5.5, 5.6]{Stromberg2013}; verified to $10^{-59}$ in \texttt{rho6.m}), so the
+$\rho$-side acquires $\overline{\chi(\gamma)}$, and the isotropy of $\eta$ makes its
+component $T$-invariant. The factors cancel.
+\end{proof}
+
+The constancy is verified on $570$ class/form/base checks
+(\texttt{cuspclass2.py}), and Theorem~\ref{thm:rhoentry} with
+Proposition~\ref{prop:constancy} make the evaluation of $c_{\eta^*}(0)$ a sum over
+\emph{classes} rather than cosets --- the form in which it is deployed in production
+(\texttt{M0MultiplierExact}), with the constancy re-verified at runtime on sampled
+cosets. The remaining ingredient, $a_0(f\vert_{1/2}w_g)$, is itself closed-form: the
+pinned constants of the evaluation equal $\zeta_w\prod_d\bigl[\varepsilon(g_d)\,
+e(b_d/24e_d)\,e_d^{-1/2}\bigr]^{r_d}$ with $\varepsilon$ the Dedekind-sum eta multiplier
+and $\zeta_w$ the metaplectic cocycle unit of the word, certified on all $144$ cosets of
+$X_0^{15}(2)$ and all $288$ of $X_0^{10}(7)$ (\texttt{cusp4.m}), so nothing in the
+assembly remains numerical.
 
 Because $c_{\eta^*}(0)$ is linear in $f$, the assembly can be probed one eta monomial at a
 time --- each monomial of the $X_0^{15}(2)$ forms is itself a weakly holomorphic weight-$1/2$
