@@ -979,12 +979,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
     // the old 15_2-calibrated handle Coefficient(fs_0[i],0) by a derived value.
     //
-    // PARTIAL: m0_multiplier is VALIDATED only on the single-surviving-term base X0^15(2) (-> 4, all 19
-    // Table-45 discs). On MULTI-term inputs it is still wrong: X0^21(2) -> -20/3, and on the odd-level
-    // X0^10(11) pipeline some forms come out non-integer -> the CM value loses rationality
-    // (RationalNumber crash in ValuesAtCMPoints). The true multiplier is 0 on all odd-N bases main
-    // handles (main passes them with NO m=0 term), so we retain the even-N guard: it forces the correct
-    // 0 there while letting X0^15(2) use the principled term.
+    // HISTORY: m0_multiplier was validated only on the single-surviving-term base X0^15(2) (-> 4,
+    // all 19 Table-45 discs) and wrong on multi-term inputs (X0^21(2) -> -20/3); an even-N guard
+    // once forced 0 on odd-N bases. Both are superseded by the exact evaluation below.
     //
     // WHAT THE MULTIPLIER ACTUALLY IS (measured; see VectorValuedForm.m and tests/VectorValuedForm.m).
     // Evaluating the Guo-Yang coset sum F_f = sum_gamma (f|gamma) rho(gamma^{-1}) e_0 directly, rather
@@ -999,14 +996,26 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // several isotropic eta0) was RIGHT IN SUBSTANCE: the relevant Eisenstein series is the one
     // attached to a nonzero ISOTROPIC coset, not the one attached to 0 that the b_eta(m) below are
     // built from. That is the concrete defect to repair.
-    // The numeric route is an ORACLE only -- minutes per base, and out of reach for the larger
-    // discriminant groups -- so it cannot replace m0_multiplier; it is what m0_multiplier must
-    // reproduce. See memory m0-multiplier-solved and route-c-obstruction-formula.
-    if IsEven(N) and not IsEmpty(Nprimes) then
+    // RESOLVED (2026-08-22): the multiplier is now computed EXACTLY by M0MultiplierExact
+    // (VectorValuedForm.m) -- the finite Gamma_0(M)-coset evaluation of (1/2) c_eta(0), minutes
+    // per base with no Fourier sampling and no CM table, validated against the measured ground
+    // truth on 21 bases (vvdata/weyl-campaign, branch m0-theta-campaign).  It replaces
+    // m0_multiplier (kept above: it is the Kudla-Yang Route-C closed form, correct on 15_2 only)
+    // and applies at EVERY level parity: the old even-N guard existed because m0_multiplier was
+    // wrong on multi-term inputs, while odd-N bases got no term at all -- the exact value is
+    // nonzero on some odd-N bases (X0^10(11) reproduces Guo-Yang Table A.2 with it).
+    // The evaluation does not depend on d, so it runs once per form and is cached on the form.
+    if not IsEmpty(Nprimes) then
         kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
+        if exists{eta : eta in etas | not assigned eta`m0mult} then
+            mults := M0MultiplierExact(etas, Ldata, D, N);
+            for i in [1..#etas] do
+                e := etas[i];
+                e`m0mult := mults[i];
+            end for;
+        end if;
         for i->eta in etas do
-            mult := m0_multiplier(fs[i], fs_0[i], Q, disc_grp, to_disc, Ldata`denom, M, D, N);
-            log_coeffs[i] +:= mult * kzero_N;
+            log_coeffs[i] +:= eta`m0mult * kzero_N;
         end for;
     end if;
 
