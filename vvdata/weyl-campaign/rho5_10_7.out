@@ -1,0 +1,57 @@
+BASE 10 7  M = 140  |D| = 9800
+level(Dbar) = 140
+#cosets = 288
+Dc/xc tables built (11 residues)
+STROMBERG vs FFT: 287 pass, 0 fail (up to a global 8th-root unit per word)
+word-unit distribution <class, arg8(u)> -> count:
+  <1, 0> -> 139
+  <1, 4> -> 1
+  <2, 0> -> 35
+  <4, 0> -> 17
+  <4, 4> -> 18
+  <5, 0> -> 11
+  <5, 4> -> 17
+  <7, 0> -> 8
+  <7, 4> -> 12
+  <10, 0> -> 2
+  <10, 4> -> 5
+  <14, 0> -> 1
+  <14, 4> -> 4
+  <20, 0> -> 2
+  <20, 4> -> 5
+  <28, 0> -> 1
+  <28, 4> -> 4
+  <35, 4> -> 4
+  <70, 4> -> 1
+CANON g=1 (a,b,c,d)=(1,1,-1,0) m=207 n=-537 dp=537
+  meas arg8 = 1.000000000   |meas| = 0.01010152545
+  u = (1.000000000, 5.211799108E-79) arg8 6.635868724E-79
+  eps = (-1.000000000, 0.0000000000) arg8 4.000000000;  g3 arg8 -3.000000000;  
+gm arg8 -1.000000000;  gd arg8 1.000000000;  xi arg8 1.000000000
+  fiberphase arg8 0.0000000000
+CANON g=2 DEAD at eta*
+CANON g=4 (a,b,c,d)=(1,0,-4,1) m=4 n=-560 dp=2239
+  meas arg8 = -1.234892384E-79   |meas| = 0.02857142857
+  u = (-1.000000000, -7.259841247E-79) arg8 -4.000000000
+  eps = (-1.000000000, 0.0000000000) arg8 4.000000000;  g3 arg8 -3.000000000;  
+gm arg8 4.000000000;  gd arg8 -1.000000000;  xi arg8 4.000000000
+  fiberphase arg8 0.0000000000
+CANON g=5 (a,b,c,d)=(1,0,-5,1) m=235 n=-554 dp=2769
+  meas arg8 = 1.000000000   |meas| = 0.05050762723
+  u = (-1.000000000, -3.099406195E-79) arg8 -4.000000000
+  eps = (-1.000000000, 0.0000000000) arg8 4.000000000;  g3 arg8 -3.000000000;  
+gm arg8 3.000000000;  gd arg8 1.000000000;  xi arg8 -3.000000000
+  fiberphase arg8 0.0000000000
+CANON g=7 DEAD at eta*
+CANON g=10 DEAD at eta*
+CANON g=14 DEAD at eta*
+CANON g=20 (a,b,c,d)=(1,0,-20,1) m=20 n=-560 dp=11199
+  meas arg8 = 4.000000000   |meas| = 0.1428571429
+  u = (-1.000000000, -5.723741085E-79) arg8 -4.000000000
+  eps = (-1.000000000, -1.057709767E-80) arg8 -4.000000000;  g3 arg8 
+-3.000000000;  gm arg8 3.927111186E-81;  gd arg8 -1.000000000;  xi arg8 
+-9.263521309E-79
+  fiberphase arg8 0.0000000000
+CANON g=28 DEAD at eta*
+CANON g=35 DEAD at eta*
+CANON g=70 DEAD at eta*
