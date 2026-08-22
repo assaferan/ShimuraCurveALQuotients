@@ -165,3 +165,11 @@ STATUS: the ENTIRE rho-side class law (support, magnitudes, odd-g phase E0, 4|g 
 is now derived from Stromberg's formula, with only the Kubota word unit u = 4[g>1]
 (convention-only; cancels in contrib) and the c = 2 mod 4 x_c convention (dead classes)
 left as bookkeeping.
+
+## The constancy character CONFIRMED (rho6.m)
+For every gamma in Gamma_0(lev) tested (16 matrices incl. -I, T-conjugates, k = +-1, 2),
+rho~(gamma) e_0 has off-diagonal mass < 1e-59: e_0 IS an eigenvector, with chi(gamma) in
+{+-1, +-i} recorded per gamma. Class-constancy of contrib = [chi = eta-multiplier of f,
+forced by well-definedness of the Guo-Yang average] + [T-invariance at eta* from isotropy].
+The Kubota unit is definitional (Thm 4.1); its canonical-word value 4[g>1] is a finite
+continued-fraction computation (still open as explicit casework, convention-only).

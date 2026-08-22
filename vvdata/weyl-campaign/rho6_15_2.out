@@ -1,0 +1,179 @@
+BASE 15 2  M = 60  |D| = 1800
+KUBOTA units (word for w; unit for the INVERSE-letter word):
+KUB c=0 d=1 gcd=60 unit=1
+KUB c=1 d=0 gcd=1 unit=1
+KUB c=1 d=1 gcd=1 unit=1
+KUB c=1 d=2 gcd=1 unit=1
+KUB c=1 d=3 gcd=1 unit=1
+KUB c=1 d=4 gcd=1 unit=1
+KUB c=1 d=5 gcd=1 unit=1
+KUB c=1 d=6 gcd=1 unit=1
+KUB c=1 d=7 gcd=1 unit=1
+KUB c=1 d=8 gcd=1 unit=1
+KUB c=1 d=9 gcd=1 unit=1
+KUB c=1 d=10 gcd=1 unit=1
+KUB c=1 d=11 gcd=1 unit=1
+KUB c=1 d=12 gcd=1 unit=1
+KUB c=1 d=13 gcd=1 unit=1
+KUB c=1 d=14 gcd=1 unit=1
+KUB c=1 d=15 gcd=1 unit=1
+KUB c=1 d=16 gcd=1 unit=1
+KUB c=1 d=17 gcd=1 unit=1
+KUB c=1 d=18 gcd=1 unit=1
+KUB c=1 d=19 gcd=1 unit=1
+KUB c=1 d=20 gcd=1 unit=1
+KUB c=1 d=21 gcd=1 unit=1
+KUB c=1 d=22 gcd=1 unit=1
+KUB c=1 d=23 gcd=1 unit=1
+KUB c=1 d=24 gcd=1 unit=1
+KUB c=1 d=25 gcd=1 unit=1
+KUB c=1 d=26 gcd=1 unit=1
+KUB c=1 d=27 gcd=1 unit=1
+KUB c=1 d=28 gcd=1 unit=1
+KUB c=1 d=29 gcd=1 unit=1
+KUB c=1 d=30 gcd=1 unit=1
+KUB c=1 d=31 gcd=1 unit=1
+KUB c=1 d=32 gcd=1 unit=1
+KUB c=1 d=33 gcd=1 unit=1
+KUB c=1 d=34 gcd=1 unit=1
+KUB c=1 d=35 gcd=1 unit=1
+KUB c=1 d=36 gcd=1 unit=1
+KUB c=1 d=37 gcd=1 unit=1
+KUB c=1 d=38 gcd=1 unit=1
+KUB c=1 d=39 gcd=1 unit=1
+KUB c=1 d=40 gcd=1 unit=1
+KUB c=1 d=41 gcd=1 unit=1
+KUB c=1 d=42 gcd=1 unit=1
+KUB c=1 d=43 gcd=1 unit=1
+KUB c=1 d=44 gcd=1 unit=1
+KUB c=1 d=45 gcd=1 unit=1
+KUB c=1 d=46 gcd=1 unit=1
+KUB c=1 d=47 gcd=1 unit=1
+KUB c=1 d=48 gcd=1 unit=1
+KUB c=1 d=49 gcd=1 unit=1
+KUB c=1 d=50 gcd=1 unit=1
+KUB c=1 d=51 gcd=1 unit=1
+KUB c=1 d=52 gcd=1 unit=1
+KUB c=1 d=53 gcd=1 unit=1
+KUB c=1 d=54 gcd=1 unit=1
+KUB c=1 d=55 gcd=1 unit=1
+KUB c=1 d=56 gcd=1 unit=1
+KUB c=1 d=57 gcd=1 unit=1
+KUB c=1 d=58 gcd=1 unit=1
+KUB c=1 d=59 gcd=1 unit=1
+KUB c=2 d=1 gcd=2 unit=1
+KUB c=2 d=3 gcd=2 unit=1
+KUB c=2 d=5 gcd=2 unit=1
+KUB c=2 d=7 gcd=2 unit=1
+KUB c=2 d=9 gcd=2 unit=1
+KUB c=2 d=11 gcd=2 unit=1
+KUB c=2 d=13 gcd=2 unit=1
+KUB c=2 d=15 gcd=2 unit=1
+KUB c=2 d=17 gcd=2 unit=1
+KUB c=2 d=19 gcd=2 unit=1
+KUB c=2 d=21 gcd=2 unit=1
+KUB c=2 d=23 gcd=2 unit=1
+KUB c=2 d=25 gcd=2 unit=1
+KUB c=2 d=27 gcd=2 unit=1
+KUB c=2 d=29 gcd=2 unit=1
+KUB c=3 d=1 gcd=3 unit=-1
+KUB c=3 d=2 gcd=3 unit=1
+KUB c=3 d=4 gcd=3 unit=-1
+KUB c=3 d=5 gcd=3 unit=1
+KUB c=3 d=7 gcd=3 unit=-1
+KUB c=3 d=8 gcd=3 unit=1
+KUB c=3 d=10 gcd=3 unit=-1
+KUB c=3 d=11 gcd=3 unit=1
+KUB c=3 d=13 gcd=3 unit=-1
+KUB c=3 d=14 gcd=3 unit=1
+KUB c=3 d=16 gcd=3 unit=-1
+KUB c=3 d=17 gcd=3 unit=1
+KUB c=3 d=19 gcd=3 unit=-1
+KUB c=3 d=20 gcd=3 unit=1
+KUB c=3 d=23 gcd=3 unit=1
+KUB c=3 d=26 gcd=3 unit=1
+KUB c=3 d=29 gcd=3 unit=1
+KUB c=3 d=32 gcd=3 unit=1
+KUB c=3 d=35 gcd=3 unit=1
+KUB c=3 d=38 gcd=3 unit=1
+KUB c=4 d=1 gcd=4 unit=-1
+KUB c=4 d=3 gcd=4 unit=1
+KUB c=4 d=5 gcd=4 unit=-1
+KUB c=4 d=7 gcd=4 unit=1
+KUB c=4 d=9 gcd=4 unit=-1
+KUB c=4 d=11 gcd=4 unit=1
+KUB c=4 d=13 gcd=4 unit=-1
+KUB c=4 d=15 gcd=4 unit=1
+KUB c=4 d=17 gcd=4 unit=-1
+KUB c=4 d=19 gcd=4 unit=1
+KUB c=4 d=21 gcd=4 unit=-1
+KUB c=4 d=23 gcd=4 unit=1
+KUB c=4 d=25 gcd=4 unit=-1
+KUB c=4 d=27 gcd=4 unit=1
+KUB c=4 d=29 gcd=4 unit=-1
+KUB c=5 d=1 gcd=5 unit=-1
+KUB c=5 d=2 gcd=5 unit=1
+KUB c=5 d=3 gcd=5 unit=-1
+KUB c=5 d=4 gcd=5 unit=1
+KUB c=5 d=6 gcd=5 unit=-1
+KUB c=5 d=7 gcd=5 unit=1
+KUB c=5 d=8 gcd=5 unit=-1
+KUB c=5 d=9 gcd=5 unit=1
+KUB c=5 d=11 gcd=5 unit=-1
+KUB c=5 d=12 gcd=5 unit=1
+KUB c=5 d=17 gcd=5 unit=1
+KUB c=5 d=22 gcd=5 unit=1
+KUB c=6 d=1 gcd=6 unit=-1
+KUB c=6 d=5 gcd=6 unit=1
+KUB c=6 d=7 gcd=6 unit=-1
+KUB c=6 d=13 gcd=6 unit=-1
+KUB c=6 d=19 gcd=6 unit=-1
+KUB c=10 d=1 gcd=10 unit=-1
+KUB c=10 d=3 gcd=10 unit=-1
+KUB c=10 d=11 gcd=10 unit=-1
+KUB c=12 d=1 gcd=12 unit=-1
+KUB c=12 d=5 gcd=12 unit=-1
+KUB c=12 d=7 gcd=12 unit=-1
+KUB c=12 d=13 gcd=12 unit=-1
+KUB c=12 d=19 gcd=12 unit=-1
+KUB c=15 d=1 gcd=15 unit=-1
+KUB c=15 d=2 gcd=15 unit=-1
+KUB c=15 d=4 gcd=15 unit=-1
+KUB c=15 d=7 gcd=15 unit=1
+KUB c=20 d=1 gcd=20 unit=-1
+KUB c=20 d=3 gcd=20 unit=-1
+KUB c=20 d=11 gcd=20 unit=-1
+KUB c=30 d=1 gcd=30 unit=-1
+level = 60
+CHI values on Gamma_0(60) (gamma = [a b; lev*k d]):
+  gamma=(1,0;0,1): offdiag 0.0000  chi=(1.0000000,0.00000000) arg8=0.00000000
+  gamma=(-1,0;0,-1): offdiag 7.641E-61  chi=(0.00000000,1.0000000) 
+arg8=2.0000000
+  gamma=(1,0;60,1): offdiag 1.835E-59  chi=(-1.0000000,-6.3059888E-60) 
+arg8=-4.0000000
+  gamma=(-1,0;60,-1): offdiag 1.776E-59  chi=(6.6378829E-60,1.0000000) 
+arg8=2.0000000
+  gamma=(-17,-2;60,7): offdiag 4.245E-60  chi=(-2.6551532E-60,-1.0000000) 
+arg8=-2.0000000
+  gamma=(11,2;60,11): offdiag 2.101E-60  chi=(3.3189415E-61,-1.0000000) 
+arg8=-2.0000000
+  gamma=(-23,-5;60,13): offdiag 4.304E-60  chi=(1.0000000,-2.6551532E-60) 
+arg8=-3.3806460E-60
+  gamma=(1,0;-60,1): offdiag 1.775E-59  chi=(-1.0000000,8.2973537E-60) 
+arg8=4.0000000
+  gamma=(-1,0;-60,-1): offdiag 1.824E-59  chi=(-6.3059888E-60,1.0000000) 
+arg8=2.0000000
+  gamma=(-17,2;-60,7): offdiag 2.819E-60  chi=(-6.6378829E-61,-1.0000000) 
+arg8=-2.0000000
+  gamma=(11,-2;-60,11): offdiag 1.772E-60  chi=(1.9913649E-60,1.0000000) 
+arg8=2.0000000
+  gamma=(-23,5;-60,13): offdiag 1.741E-60  chi=(-1.0000000,1.3275766E-60) 
+arg8=4.0000000
+  gamma=(1,0;120,1): offdiag 3.646E-59  chi=(-1.0000000,-1.2943872E-59) 
+arg8=-4.0000000
+  gamma=(-1,0;120,-1): offdiag 3.546E-59  chi=(1.2943872E-59,1.0000000) 
+arg8=2.0000000
+  gamma=(-17,-1;120,7): offdiag 5.010E-60  chi=(0.00000000,-1.0000000) 
+arg8=-2.0000000
+  gamma=(11,1;120,11): offdiag 3.984E-60  chi=(0.00000000,1.0000000) 
+arg8=2.0000000
