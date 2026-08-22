@@ -137,3 +137,13 @@ phase table should be restated via E0; "1 + 6r + 4s" is its omega <= 2 shadow
 (iii) The 4|g classes (x_c nonzero, Lemma 6.10): same program, gives mu(g/4) g/M.
 (iv) The 15_2 c = 2 mod 4 coset mismatches in rho5 (20 cosets; dead classes, no
     effect on the law) -- likely the x_c convention at 2||c; 10_7 has no failures.
+
+## Step (i) CLOSED (g2jordan.m, ten bases): the 2-adic genera identified
+The 2-part of Dbar is one of exactly TWO Jordan types, constant within parity:
+* 2|N (15_2, 21_2, 33_2, 35_2):  Q-multiset {0,0,0, 1/4 x3, 1/2, 3/4} = A_2^1 + C_2,
+  whence G2(c) = [(c/2)e_8(c)] * [1] = (2/c) e_8(c)          (Lemmas 3.7, 3.8);
+* 2|D (10_7, 6_11, 6_5, 22_3, 34_5, 14_3): {0, 1/4, 1/2 x3, 3/4 x3} = A_2^1 + B_2,
+  whence G2(c) = [(c/2)e_8(c)] * [(3/2)] = -(2/c) e_8(c).
+Measured G2 phases match on every base (args (1,-1,1,-1) vs (-3,3,-3,3) at c=1,3,5,7).
+The genus flip G2b = -G2a is therefore DERIVED, and with the quaternion parity theorem
+the base-independence of E0 is complete at lemma level.
