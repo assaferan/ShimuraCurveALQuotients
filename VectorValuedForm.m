@@ -195,8 +195,8 @@ end intrinsic;
 // ---------------------------------------------------------------------------------------------
 
 intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::RngIntElt :
-                          Prec := 200, NumSamples := 192, Height := 1)
-      -> SeqEnum, SeqEnum, SeqEnum
+                          Prec := 200, NumSamples := 192, Height := 1, PosDepth := 0)
+      -> SeqEnum, SeqEnum, SeqEnum, SeqEnum
 {For each f in fs, the constant terms c_eta(0) of F_f at the ISOTROPIC cosets eta.  Returns, per form,
  that sequence of constant terms; then the isotropic cosets themselves (in the matching order, with
  the trivial coset first); then, per form, the maximum deviation of F_f's numerically computed
@@ -205,6 +205,14 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
 
  The transcendental work (the coset rho-vectors and the eta values at the pulled-back points) does not
  depend on the form, so passing all the forms of a base at once is far cheaper than one call each.
+
+ With PosDepth = P > 0, a fourth return value gives, per form and per ISOTROPIC coset, the
+ POSITIVE coefficients c_eta(j/M) for j = 1..P (so integer index n corresponds to j = n*M).  These
+ are the coefficients no scalar q-expansion can supply at a nonzero coset -- the input of the
+ weight-3/2 shadow calibration.  ALIASING CAVEAT: the extraction aliases c(nn - K) and c(nn + K),
+ so the error at a positive exponent nn grows like exp(4 pi sqrt(p(nn + K)) - 2 pi K + 2 pi nn)
+ relative to the constant term; raise NumSamples accordingly and treat the returned gate as
+ covering the PRINCIPAL part only.
 
  CHOOSING THE PARAMETERS -- getting these wrong looks exactly like a wrong answer:
   * Height must be >= 1.  Then Im(gamma tau) <= Im(tau) for every coset, so no coset is pushed up
@@ -258,7 +266,7 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
         end for;
     end for;
 
-    consts := []; errs := [];
+    consts := []; errs := []; poscs := [];
     for f in fs do
         require Parent(f)`M eq M : "All forms must live in the eta-quotient ring of level M.";
         foo := qExpansionAtoo(f, 80); f0 := qExpansionAt0(f, 80);
@@ -283,7 +291,8 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
         v0 := Minimum(0, Valuation(f0));
         exps := Sort(Setseq( {Rationals() | 0}
                     join {Rationals() | -(Rationals()!j)/M : j in [1..-v0]}
-                    join {Rationals() | nn : nn in [Valuation(foo)..-1]} ));
+                    join {Rationals() | nn : nn in [Valuation(foo)..-1]}
+                    join {Rationals() | (Rationals()!j)/M : j in [1..PosDepth]} ));
         pos := AssociativeArray();
         for a->e in exps do pos[e] := a; end for;
         // NB: build this with an explicit loop.  Magma's multi-index comprehension varies the FIRST
@@ -314,8 +323,9 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
 
         Append(~consts, [coef(i, 0) : i in iso]);
         Append(~errs, err);
+        Append(~poscs, [ [coef(i, (Rationals()!j)/M) : j in [1..PosDepth]] : i in iso ]);
     end for;
-    return consts, [elts[i] : i in iso], errs;
+    return consts, [elts[i] : i in iso], errs, poscs;
 end intrinsic;
 
 intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
