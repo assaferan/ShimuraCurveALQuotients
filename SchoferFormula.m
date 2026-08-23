@@ -926,7 +926,7 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false, PointDegree := 1) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
     // _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     Q := Ldata`Q;
@@ -1014,8 +1014,14 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
                 e`m0mult := mults[i];
             end for;
         end if;
+        // The correction multiplies the VALUE at each point of the CM cycle by
+        // N^mult, so a table cell holding the norm over a degree-PointDegree star
+        // point carries N^(PointDegree * mult) -- the degree weighting that every
+        // other Schofer term inherits from the cycle structure. Flat addition is
+        // correct only at PointDegree = 1 (where all prior validation lived); the
+        // quadratic points of X0^10(23) were the first to expose the difference.
         for i->eta in etas do
-            log_coeffs[i] +:= eta`m0mult * kzero_N;
+            log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
         end for;
     end if;
 
@@ -1027,7 +1033,7 @@ intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt,
     return SchoferFormula([eta], d, D, N, Ldata : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false, PointDegree := 1) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -1041,7 +1047,7 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda, PointDegree := PointDegree);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
     end for;
@@ -1138,7 +1144,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         d := pt[1];
         tt := Realtime();
         vprintf ShimuraQuotients, 2: "\tabsolute values at quadratic CM point %o/%o (d = %o)...", j, #pt_list_quad, d;
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d], PointDegree := 2);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
@@ -1633,7 +1639,7 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     d_idx := Index(ds,d);
     ds[d_idx] := dnew;
     Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata : PointDegree := 2);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
         if is_log then
