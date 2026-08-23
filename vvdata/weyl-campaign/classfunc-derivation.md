@@ -109,3 +109,19 @@ its expansion are already visible); (ii) same solve on 22_3 (w_sq = 1/2) and
   rerun in flight.  If the gap persists, the missing direction needs an
   honest (non-eta) Eisenstein series -- itself a sharp structural fact.
 * Panel square class t = 2 on ALL bases tried (15_2, 22_3, 21_2).
+
+## THE TRILOGY COMPLETE (end of the evening): three bases, three w_sq regimes
+
+22_3's first-pool miss was INCOMPLETENESS, not structure (the exact |rho|/2
+was a numerical coincidence of the projection): with support <= 6 / R = 12
+(24 quotients at level 132), rho lands exactly (resid 5e-42), and the
+END-TO-END acceptance gives A_f = 0 to ~68 digits on all nine 22_3 forms.
+Scoreboard: 15_2 (w_sq 0), 21_2 (w_sq 1), 22_3 (w_sq 1/2) -- ALL validated:
+rho in the holomorphic eta span, residue sum zero end-to-end, c_eta* exact.
+The m=0 functional at every measured w_sq regime IS an explicit holomorphic
+weight-3/2 eta-quotient pairing.  Next sitting: exact rationalization of the
+three E*'s over Q (integer eta lattices + cusp ideal), read w_sq off their
+Zagier components, and the general-M existence proof for the preprint.
+Enumeration guidance: pool completeness matters -- widen support/exponents
+until the solve residual collapses; the RESCLASS diagnostic in eis32.m
+localizes any true miss by class.
