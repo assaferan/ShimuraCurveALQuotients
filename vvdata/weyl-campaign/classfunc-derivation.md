@@ -93,3 +93,19 @@ explicit holomorphic form.  Next: (i) rationalize E* (project modulo the
 cusp subspace / recognize the Eisenstein part -- the exact integers -4/-8 in
 its expansion are already visible); (ii) same solve on 22_3 (w_sq = 1/2) and
 21_2 (w_sq = 1); (iii) the general-M statement + proof for the preprint.
+
+## SECOND AND THIRD BASE (later the same evening)
+
+* **21_2 fully validated**: rho in the 15-quotient span (resid 4e-41,
+  eis32_21_2.out); END-TO-END acceptance A_f = 0 to 70 digits on all nine
+  forms with c_eta*(0) = (4,4,8,4,4,4,-8,-8,0) = 2 x the measured panel
+  (eis32b_21_2.out).  The w_sq = 1 base and the -4886-handle base is a
+  weight-3/2 pairing.
+* **22_3 at the first pool size FAILED with exact structure**: 14 quotients,
+  resid = |rho|/2 EXACTLY (0.3693 vs 0.7385) -- half the norm-square missed,
+  suggesting one class's component absent from the holomorphic eta span
+  (22_3 is the kappa_11 = 3/2 base).  Pool widened (support <= 6, R = 12:
+  24 quotients) + RESCLASS per-class residual diagnostic added to eis32.m;
+  rerun in flight.  If the gap persists, the missing direction needs an
+  honest (non-eta) Eisenstein series -- itself a sharp structural fact.
+* Panel square class t = 2 on ALL bases tried (15_2, 22_3, 21_2).

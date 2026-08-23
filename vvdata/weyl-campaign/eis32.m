@@ -212,6 +212,22 @@ if ok then
     resid := Sqrt(&+[ Abs(&+[ beta[a]*Emat[a][wi] : a in [1..nE] ] - rhov[wi])^2 : wi in [1..nw] ]);
     rhonorm := Sqrt(&+[ Abs(rhov[wi])^2 : wi in [1..nw] ]);
     printf "SOLVE resid = %o  (|rho| = %o)\n", RealField(10)!resid, RealField(10)!rhonorm;
+    if resid gt 10^(-20)*rhonorm then
+        // where does the miss live?  residual and rho norms by cusp class
+        clsres := AssociativeArray(); clsrho := AssociativeArray();
+        for wi->w in words do
+            g := VVWordMatrix(w);
+            cls := GCD(g[2][1] mod M, M);
+            dv := Abs(&+[ beta[a]*Emat[a][wi] : a in [1..nE] ] - rhov[wi])^2;
+            rv2 := Abs(rhov[wi])^2;
+            if IsDefined(clsres, cls) then clsres[cls] +:= dv; clsrho[cls] +:= rv2;
+            else clsres[cls] := dv; clsrho[cls] := rv2; end if;
+        end for;
+        for cls in Sort([ c : c in Keys(clsres) ]) do
+            printf "RESCLASS g=%o  |resid|^2 = %o   |rho|^2 = %o\n", cls,
+                RealField(10)!clsres[cls], RealField(10)!clsrho[cls];
+        end for;
+    end if;
     if resid lt 10^(-20)*rhonorm then
         printf "RHO IS IN THE SPAN: E* found\n";
         for a in [1..nE] do

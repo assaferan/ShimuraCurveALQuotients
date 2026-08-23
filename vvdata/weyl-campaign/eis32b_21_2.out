@@ -1,0 +1,158 @@
+BASE 21 2  M = 84
+#panel monomials = 101, #E pool = 14
+pass 1: constants
+  coset 24/192
+  coset 48/192
+  coset 72/192
+  coset 96/192
+  coset 120/192
+  coset 144/192
+  coset 168/192
+  coset 192/192
+SOLVE resid = 3.059872283E-41
+pass 2: convolutions
+E0COEF g=84 W=1 24/24 -1.60000000000000000000000000000 
+-1.20164149741279018323406583865E-38
+  conv coset 1/192 class 84 done
+E0COEF g=1 W=84 0/2016 0.0119047619047619047619047619048 
+0.0119047619047619047619047619048
+E0COEF g=1 W=84 24/2016 0.0476190476190476190476190476190 
+0.0476190476190476190476190476190
+E0COEF g=1 W=84 48/2016 0.0476190476190476190476190476190 
+0.0476190476190476190476190476190
+E0COEF g=1 W=84 72/2016 -0.0380952380952380952380952380953 
+-0.0380952380952380952380952380953
+E0COEF g=1 W=84 96/2016 -0.0476190476190476190476190476190 
+-0.0476190476190476190476190476190
+E0COEF g=1 W=84 144/2016 0.00952380952380952380952380952381 
+0.00952380952380952380952380952381
+E0COEF g=1 W=84 192/2016 -0.0476190476190476190476190476190 
+-0.0476190476190476190476190476190
+E0COEF g=1 W=84 216/2016 0.0285714285714285714285714285714 
+0.0285714285714285714285714285714
+E0COEF g=1 W=84 264/2016 -0.0952380952380952380952380952381 
+-0.0952380952380952380952380952381
+E0COEF g=1 W=84 288/2016 -0.00952380952380952380952380952381 
+-0.00952380952380952380952380952381
+E0COEF g=1 W=84 384/2016 -0.0476190476190476190476190476190 
+-0.0476190476190476190476190476190
+E0COEF g=1 W=84 408/2016 0.0952380952380952380952380952381 
+0.0952380952380952380952380952381
+E0COEF g=1 W=84 432/2016 0.0285714285714285714285714285714 
+0.0285714285714285714285714285714
+E0COEF g=1 W=84 456/2016 -0.0952380952380952380952380952381 
+-0.0952380952380952380952380952381
+E0COEF g=1 W=84 504/2016 -0.0142857142857142857142857142857 
+-0.0142857142857142857142857142857
+  conv coset 2/192 class 1 done
+  conv coset 3/192 class 1 done
+  conv coset 4/192 class 1 done
+  conv coset 5/192 class 1 done
+  conv coset 6/192 class 1 done
+  conv coset 7/192 class 1 done
+  conv coset 8/192 class 1 done
+  conv coset 9/192 class 1 done
+  conv coset 10/192 class 1 done
+  conv coset 11/192 class 1 done
+  conv coset 12/192 class 1 done
+  conv coset 13/192 class 1 done
+  conv coset 14/192 class 1 done
+  conv coset 15/192 class 1 done
+  conv coset 16/192 class 1 done
+  conv coset 17/192 class 1 done
+  conv coset 18/192 class 1 done
+  conv coset 19/192 class 1 done
+  conv coset 20/192 class 1 done
+  conv coset 21/192 class 1 done
+  conv coset 22/192 class 1 done
+  conv coset 23/192 class 1 done
+  conv coset 24/192 class 1 done
+  conv coset 25/192 class 1 done
+  conv coset 26/192 class 1 done
+  conv coset 27/192 class 1 done
+  conv coset 28/192 class 1 done
+  conv coset 29/192 class 1 done
+  conv coset 30/192 class 1 done
+  conv coset 31/192 class 1 done
+  conv coset 32/192 class 1 done
+  conv coset 33/192 class 1 done
+  conv coset 34/192 class 1 done
+  conv coset 35/192 class 1 done
+  conv coset 36/192 class 1 done
+  conv coset 37/192 class 1 done
+  conv coset 38/192 class 1 done
+  conv coset 39/192 class 1 done
+  conv coset 40/192 class 1 done
+  conv coset 41/192 class 1 done
+  conv coset 42/192 class 1 done
+  conv coset 43/192 class 1 done
+  conv coset 44/192 class 1 done
+  conv coset 45/192 class 1 done
+  conv coset 46/192 class 1 done
+  conv coset 47/192 class 1 done
+  conv coset 48/192 class 1 done
+  conv coset 49/192 class 1 done
+  conv coset 50/192 class 1 done
+  conv coset 51/192 class 1 done
+  conv coset 52/192 class 1 done
+  conv coset 53/192 class 1 done
+  conv coset 54/192 class 1 done
+  conv coset 55/192 class 1 done
+  conv coset 56/192 class 1 done
+  conv coset 57/192 class 1 done
+  conv coset 58/192 class 1 done
+  conv coset 59/192 class 1 done
+  conv coset 60/192 class 1 done
+  conv coset 61/192 class 1 done
+  conv coset 62/192 class 1 done
+  conv coset 63/192 class 1 done
+  conv coset 64/192 class 1 done
+  conv coset 65/192 class 1 done
+  conv coset 66/192 class 1 done
+  conv coset 67/192 class 1 done
+  conv coset 68/192 class 1 done
+  conv coset 69/192 class 1 done
+  conv coset 70/192 class 1 done
+  conv coset 71/192 class 1 done
+  conv coset 72/192 class 1 done
+  conv coset 73/192 class 1 done
+  conv coset 74/192 class 1 done
+  conv coset 75/192 class 1 done
+  conv coset 76/192 class 1 done
+  conv coset 77/192 class 1 done
+  conv coset 78/192 class 1 done
+  conv coset 79/192 class 1 done
+  conv coset 80/192 class 1 done
+  conv coset 81/192 class 1 done
+  conv coset 82/192 class 1 done
+  conv coset 83/192 class 1 done
+  conv coset 84/192 class 1 done
+  conv coset 85/192 class 1 done
+FORM -2  A_f = (7.33848766144911E-71, 6.77795865181366E-73)  INTERM = 
+(-2.00000000000000, 2.15182740684802E-72)  CONV = (2.00000000000000, 
+-1.47403154166665E-72)  c_eta*(0) = (4.00000000000000, 2.90274237581009E-72)
+FORM -1  A_f = (2.59517768654845E-72, 2.84732782140718E-72)  INTERM = 
+(4890.00000000000, -4.31205901864159E-72)  CONV = (-4890.00000000000, 
+7.15938684004877E-72)  c_eta*(0) = (4.00000000000000, -3.72019273383031E-72)
+FORM 9  A_f = (7.77825823766114E-71, 3.48496926787194E-72)  INTERM = 
+(-2.00000000000000, 2.02193368509116E-72)  CONV = (2.00000000000000, 
+1.46303558278078E-72)  c_eta*(0) = (8.00000000000000, 3.54578973153507E-72)
+FORM 10  A_f = (2.59517768654845E-72, 2.84732782140718E-72)  INTERM = 
+(4890.00000000000, -4.31205901864159E-72)  CONV = (-4890.00000000000, 
+7.15938684004877E-72)  c_eta*(0) = (4.00000000000000, -3.72019273383031E-72)
+FORM 11  A_f = (7.33848766144911E-71, 6.77795865181366E-73)  INTERM = 
+(-2.00000000000000, 2.15182740684802E-72)  CONV = (2.00000000000000, 
+-1.47403154166665E-72)  c_eta*(0) = (4.00000000000000, 2.90274237581009E-72)
+FORM 12  A_f = (8.13750285475381E-71, 6.25715771731567E-72)  INTERM = 
+(-8.00000000000000, 1.99843171298713E-72)  CONV = (8.00000000000000, 
+4.25872600432854E-72)  c_eta*(0) = (4.00000000000000, 4.32976453186381E-72)
+FORM 13  A_f = (1.15685523751734E-74, -5.14073647919501E-75)  INTERM = 
+(-6.00000000000000, -2.63095373799858E-74)  CONV = (6.00000000000000, 
+2.11688009007908E-74)  c_eta*(0) = (-8.00000000000000, -2.60854148562030E-74)
+FORM 14  A_f = (9.80836574587821E-73, 1.12062134786231E-74)  INTERM = 
+(-10.0000000000000, -1.97700168150617E-73)  CONV = (10.0000000000000, 
+2.08906381629240E-73)  c_eta*(0) = (-8.00000000000000, -2.05704600615176E-73)
+FORM 15  A_f = (7.69533119428524E-71, 3.44998431462510E-72)  INTERM = 
+(-8.00000000000000, 2.12832543474399E-72)  CONV = (8.00000000000000, 
+1.32165887988111E-72)  c_eta*(0) = (3.16147629501704E-72, 3.69131224923759E-72)
+DONE
