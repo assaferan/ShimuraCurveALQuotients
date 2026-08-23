@@ -67,3 +67,29 @@ First targets with full acceptance data: 15_2 (level weights -1, +1, 0 and
 w_sq = 0), 22_3 (w_sq = 1/2, kappa_11 = 3/2), 21_2 (w_sq = 1), then the
 forced singles (10_3, 6_5, 10_7, 6_13, ...). The multiplier bookkeeping
 (eta character of each panel's forms) is in the cusp1/cusp4 machinery.
+
+## THE ACCEPTANCE (same evening, second sitting): the pairing holds END-TO-END
+
+eis32.m + enum32.py + eis32b.m (+ eis32b_15_2.out). On 15_2:
+* enum32.py enumerates ALL holomorphic weight-3/2 eta quotients at level 60
+  with the panel character (Ligozat cone + both 24-congruences + square class
+  t = 2, support <= 5 divisors, exponents in [-8,8]): 21 of them, in 2 s.
+  (Triples of panel monomials are almost never holomorphic: 1 in ~109k.)
+* eis32: rho_w = a0(E*|w) at ALL 144 cosets for an explicit combination E*
+  of the 21 -- least-squares residual 4e-42 vs |rho| = 0.89.  RHO IS IN THE
+  HOLOMORPHIC ETA SPAN.
+* eis32b: A_f = sum_w a0((f E*)|w) = 0 to 7e1 digits on all NINE panel forms
+  (residue theorem live end-to-end), c_eta*(0) exact through the same data.
+  E*'s 0-class expansion (the ledger's 0-side weights) dumped as E0COEF.
+* The multiplier check chitest.m: f*E has EXACTLY trivial multiplier on
+  Gamma_0(60); the control f*f shows Newman's (-1/d) -- conventions proven.
+* LESSON (cost one debug cycle): at cosets where a panel monomial has lead
+  L = 0 exactly, its contribution kappa * Eser(0) to the convolution block
+  is nonzero -- dropping it produced exact-integer A_f defects (12410 etc.).
+
+Consequences: W(m) = -a_{E*}(m) mod the cusp ideal IS the m=0 functional on
+15_2; w_sq and the level-channel kappas are Fourier coefficients of an
+explicit holomorphic form.  Next: (i) rationalize E* (project modulo the
+cusp subspace / recognize the Eisenstein part -- the exact integers -4/-8 in
+its expansion are already visible); (ii) same solve on 22_3 (w_sq = 1/2) and
+21_2 (w_sq = 1); (iii) the general-M statement + proof for the preprint.
