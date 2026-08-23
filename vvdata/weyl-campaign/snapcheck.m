@@ -29,10 +29,10 @@ printf "star field at -68: %o\n", K;
 // scale      = s(-43)   [anchor: disc where stilde = 0]
 // scaletilde = stilde(-40) [anchor: disc where s = 0]
 // ns68, nst68 = the -68 cells for s, stilde (raw, BEFORE anchor division)
-scale := Rationals()!0;      // FILL
-scaletilde := Rationals()!0; // FILL
-ns68 := Rationals()!0;       // FILL
-nst68 := Rationals()!0;      // FILL
+scale := 23/(2^17*5);
+scaletilde := 1/5;
+ns68 := 23/(2^34*5^2);
+nst68 := 1/(2^2*5^2);
 error if scale eq 0, "fill in the four values from the experiment log first";
 
 R<x> := PolynomialRing(Rationals());
