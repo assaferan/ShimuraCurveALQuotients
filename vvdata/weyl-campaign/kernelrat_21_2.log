@@ -1,0 +1,18 @@
+# 15 pool members, 160 cosets with nonzero constants
+# rank 7, kernel dim 8
+K0: snap_err 3.5e-46  exact_dev 3.41e-77  den 4
+    [1, 4, -9, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+K1: snap_err 1.75e-46  exact_dev 3.87e-48  den 12
+    [-1, -8, 9, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 0]
+K2: snap_err 0.0  exact_dev 0.0  den 2
+    [0, 0, 0, -1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0]
+K3: snap_err 8.76e-47  exact_dev 9.68e-49  den 12
+    [-1, 4, -3, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0]
+K4: snap_err 0.0  exact_dev 2.3e-77  den 1
+    [1, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0]
+K5: snap_err 0.0  exact_dev 1.41e-77  den 1
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 1, 0, 0]
+K6: snap_err 7.01e-46  exact_dev 3.0e-77  den 3
+    [2, 4, -9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0]
+K7: snap_err 1.4e-45  exact_dev 1.05e-76  den 1
+    [0, 8, -9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1]

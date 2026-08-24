@@ -1,0 +1,31 @@
+BASE 2: DN = 42, level 168
+dim M = 22, dim S = 11 (Eis 11)
+E in M: true
+definite structures: [ <2, 1>, <2, 3>, <2, 7>, <2, 21>, <3, 1>, <3, 2>, <3, 7>, 
+<3, 14>, <7, 1>, <7, 2>, <7, 3>, <7, 6>, <42, 1> ]
+  built GROSS(2,1) disc 4, 1 cls
+  built GROSS(2,3) disc 36, 1 cls
+  built GROSS(2,7) disc 196, 1 cls
+  built GROSS(2,21) disc 1764, 2 cls
+  built GROSS(3,1) disc 9, 1 cls
+  built GROSS(3,2) disc 36, 1 cls
+  built GROSS(3,7) disc 441, 2 cls
+  built GROSS(3,14) disc 1764, 2 cls
+  built GROSS(7,1) disc 49, 1 cls
+  built GROSS(7,2) disc 196, 2 cls
+  built GROSS(7,3) disc 441, 1 cls
+  built GROSS(7,6) disc 1764, 2 cls
+  built GROSS(42,1) disc 1764, 1 cls
+Gross-average+cusp span: rank 18 vs 18 -> E in span: true
+E_eis =
+      -1/2 * GROSS(7,2) disc 196, 2 cls
+         1 * GROSS(7,6) disc 1764, 2 cls
+      -1/2 * GROSS(42,1) disc 1764, 1 cls
+      -2/3 * CUSP_1
+        -2 * CUSP_2
+       2/3 * CUSP_4
+      -2/3 * CUSP_7
+         2 * CUSP_8
+      10/3 * CUSP_9
+aliasing dim 6
+exit 0

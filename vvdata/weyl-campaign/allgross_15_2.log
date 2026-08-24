@@ -1,0 +1,27 @@
+BASE 1: DN = 30, level 120
+dim M = 18, dim S = 7 (Eis 11)
+E in M: true
+definite structures: [ <2, 1>, <2, 3>, <2, 5>, <2, 15>, <3, 1>, <3, 2>, <3, 5>, 
+<3, 10>, <5, 1>, <5, 2>, <5, 3>, <5, 6>, <30, 1> ]
+  built GROSS(2,1) disc 4, 1 cls
+  built GROSS(2,3) disc 36, 1 cls
+  built GROSS(2,5) disc 100, 1 cls
+  built GROSS(2,15) disc 900, 1 cls
+  built GROSS(3,1) disc 9, 1 cls
+  built GROSS(3,2) disc 36, 1 cls
+  built GROSS(3,5) disc 225, 1 cls
+  built GROSS(3,10) disc 900, 2 cls
+  built GROSS(5,1) disc 25, 1 cls
+  built GROSS(5,2) disc 100, 1 cls
+  built GROSS(5,3) disc 225, 2 cls
+  built GROSS(5,6) disc 900, 2 cls
+  built GROSS(30,1) disc 900, 1 cls
+Gross-average+cusp span: rank 14 vs 14 -> E in span: true
+E_eis =
+      -1/2 * GROSS(5,2) disc 100, 1 cls
+         1 * GROSS(5,6) disc 900, 2 cls
+      -1/2 * GROSS(30,1) disc 900, 1 cls
+         2 * CUSP_3
+        -4 * CUSP_6
+aliasing dim 6
+exit 0
