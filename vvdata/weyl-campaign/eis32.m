@@ -179,6 +179,23 @@ for Ei->rE in Epool do
     if Ei mod 10 eq 0 then printf "  E %o/%o done\n", Ei, #Epool; end if;
 end for;
 printf "E constant table built\n";
+// full constants dump for the offline rationalization of the cusp subspace:
+// EMAT <E index> <coset index> <class> re im   (50 digits)
+R50 := RealField(50);
+for Ei in [1..#Epool] do
+    for wi->w in words do
+        v := Emat[Ei][wi];
+        if Abs(v) lt 10^(-40) then continue; end if;
+        g := VVWordMatrix(w);
+        printf "EMAT %o %o %o %o %o\n", Ei, wi, GCD(g[2][1] mod M, M), R50!Re(v), R50!Im(v);
+    end for;
+end for;
+// rho too, same grid
+for wi->w in words do
+    if Abs(rhov[wi]) lt 10^(-40) then continue; end if;
+    g := VVWordMatrix(w);
+    printf "RHOV %o %o %o %o\n", wi, GCD(g[2][1] mod M, M), R50!Re(rhov[wi]), R50!Im(rhov[wi]);
+end for;
 
 // ---- least-squares solve: sum_E beta_E a0(E|w) = rho_w -------------------
 // realified least squares (beta = u + i v): columns [Re E; Im E] and

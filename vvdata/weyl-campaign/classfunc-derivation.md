@@ -125,3 +125,31 @@ Zagier components, and the general-M existence proof for the preprint.
 Enumeration guidance: pool completeness matters -- widen support/exponents
 until the solve residual collapses; the RESCLASS diagnostic in eis32.m
 localizes any true miss by class.
+
+## THE RATIONAL CLOSED FORM ON 15_2 (2026-08-24 morning): E_eis is explicit
+
+Pipeline: eis32.m now dumps EMAT/RHOV (constants of every pool member at
+every coset, 50 digits; eis32e_15_2.out.gz); kernelrat.py rationalizes the
+cusp subspace; eisrat.py solves the pivot-supported particular solution;
+wm.py computes the exact expansion.
+
+* **The cusp subspace of the 22-member pool is RATIONAL**: rank of the
+  constants map = 7, kernel dim 15, all 15 kernel vectors integer with
+  denominators <= 180, verified against the 50-digit data (dev ~1e-46).
+  Pool members 11 and 13 are cusp forms outright.
+* **The pivot-supported solution of constants = rho is RATIONAL** (snap err
+  1e-45):  E_eis = (4/5) P1 - 4 P3 - (4/5) P5 + 4 P7,  with
+  P1 = eta(2t)^15/(eta(t) eta(4t))^6 = THETA(t)^3 (the Gauss r_3 form!),
+  P3 = [-3,7,0,-3,1,0,0,0,0,1,0,0], P5 = [-1,0,0,4,-1,0,3,0,0,-2,0,0],
+  P7 = [-1,2,0,0,0,0,0,0,-3,0,7,-2]  (exponents over ds = divisors(60)).
+* **Exact expansion (wm.py), all coefficients in 4Z**: a_E(0) = 0 (dead oo
+  class), and -a_E(m)/4 for m = 1..43 =
+  0,0,0,0,0,0,1,1,0,1,0,1,2,0,1,0,0,0,0,-1,0,2,-1,0,0,0,1,2,0,1,0,-1,2,0,1,
+  0,2,0,0,2,0,2,3 -- support starts at m = 7, small signed integers:
+  class-number / representation-number arithmetic, to be recognized (next:
+  match against H(.), r_3, and the lattice's local data; NOTE the ledger's
+  w-values are the panel-span representative in the BorcherdsForms
+  c-normalization -- compare only invariant combinations, or redo the
+  ledger against this canonical representative including the 0-side block).
+* Same procedure now runs verbatim on 21_2 and 22_3 (their EMAT dumps are
+  one eis32 rerun each away).
