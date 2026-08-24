@@ -132,9 +132,19 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     // A cover whose CM constraints are insufficient/inconsistent (e.g. a hard intermediate cover
     // that is not on the path to the top curve) is DEFERRED rather than aborting the whole run;
     // AllEquationsAboveCovers recovers it later as a quotient of a curve lying above it.
+    // A cover whose y2-scale could not be pinned (find_y2_scales placeholder) must ALSO be
+    // deferred even when its constraints happen to be consistent: the solved equation is then
+    // off by an unknown quadratic twist (issue #36 -- four wrong-twist covers emitted on 22_3).
+    unscaled := (assigned schofer_table`UnscaledKeys) select schofer_table`UnscaledKeys else [];
     good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
     deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
+        if keys_fs[k_idxs[i]] in unscaled then
+            Append(~deferred, keys_fs[k_idxs[i]]);
+            vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) has an unpinned y2-scale; deferring to recover as a quotient (twist untrusted).\n",
+                curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
+            continue;
+        end if;
         determined := true;
         f := R!0;
         try
@@ -658,6 +668,9 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
             else
                 Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
             end if;
+            // CurveQuotient returns a CrvEll for a genus-1 quotient with a rational point;
+            // downstream (HyperellipticInvolution, the models file) expects CrvHyp (issue #34).
+            if Type(Cq) eq CrvEll then Cq := HyperellipticCurve(Cq); end if;
             if not IsDefined(all_eqns, k) then all_eqns[k] := AssociativeArray(); end if;
             if not IsDefined(all_ws, k) then all_ws[k] := AssociativeArray(); end if;
             all_eqns[k][base] := Cq;
