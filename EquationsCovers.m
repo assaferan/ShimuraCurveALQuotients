@@ -528,21 +528,35 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
     curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
     for k in curves_to_do do
         g := curves[k]`g;
-        assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
+        // The degree-(g+1) curve AND the conic must both have an equation (and AL data) over the
+        // SAME base: a conic deferred upstream (unpinned y2-scale) may miss some bases, so pick
+        // the (gplus1key, conic_key, base) combination jointly and degrade to the deferred path
+        // when none exists, instead of indexing all_eqns[conic_key][base] blind (issue #33, 21_2).
+        conic_cands := [x : x in curves[k]`Covers | x in Set(known_conics)];
+        found_gplus1 := false;
         for other_curve in curves[k]`Covers do
-            found_gplus1 := false;
             if not IsDefined(all_eqns, other_curve) then continue; end if;  // deferred cover, not computed
             bases := Keys(all_eqns[other_curve]);
             if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
             if (base_label ne 0) and base_label notin bases then continue; end if;
-            base := (base_label eq 0) select Representative(bases) else base_label;
-            if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
-                gplus1key := other_curve; //found the gplus1
-                found_gplus1 := true;
-                break;
-            end if;
+            cand_bases := (base_label eq 0) select [b : b in bases] else [base_label];
+            for b in cand_bases do
+                if Type(all_eqns[other_curve][b]) ne CrvHyp then continue; end if;
+                if Degree(HyperellipticPolynomials(all_eqns[other_curve][b])) ne g+1 then continue; end if;
+                if exists(ck){c : c in conic_cands | IsDefined(all_eqns[c], b) and
+                        IsDefined(all_ws, c) and IsDefined(all_ws[c], b)} then
+                    conic_key := ck; base := b;
+                    gplus1key := other_curve; //found the gplus1
+                    found_gplus1 := true;
+                    break;
+                end if;
+            end for;
+            if found_gplus1 then break; end if;
         end for;
-        if not found_gplus1 then continue; end if;
+        if not found_gplus1 then
+            vprintf ShimuraQuotients, 1 : "  No (degree g+1, conic) pair over a common base for W=%o; leaving it deferred.\n", curves[k]`W;
+            continue;
+        end if;
 
         //combine equations to get the equation for the curve
         covered_gplus1 := all_eqns[gplus1key][base];
