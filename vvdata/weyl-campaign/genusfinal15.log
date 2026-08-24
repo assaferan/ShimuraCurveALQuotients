@@ -1,0 +1,18 @@
+Gross(D'=30,R=1) is GENUS 12 (disc 900)
+Gross(D'=2,R=15) is GENUS 13 (disc 900)
+Gross(D'=3,R=10) is GENUS 6 (disc 900)
+Gross(D'=5,R=6) is GENUS 10 (disc 900)
+genus-average+cusp span rank 10 vs 10; E in it: true
+E_eis over the Siegel-Weil basis:
+      -1/2 * AVG_G9(disc 100)
+         1 * AVG_G10(disc 900)
+      -1/2 * AVG_G12(disc 900)
+         2 * CUSP_3
+aliasing dim 6
+  reln: [ 1, 0, 0, 0, 0, -9, 0, -8, -6, 24, 4, 0, -6, 0, 0, 0 ]
+  reln: [ 0, 1, 0, 0, 0, -9, 0, 0, -6, 12, 2, 0, 0, 0, 0, 0 ]
+  reln: [ 0, 0, 1, 0, 0, -3, 0, 0, -2, 4, 0, 0, 0, 0, 0, 0 ]
+  reln: [ 0, 0, 0, 1, 0, -3, 0, 0, -1, 2, 2/3, 1/3, 0, 0, 0, 0 ]
+  reln: [ 0, 0, 0, 0, 1, -3, 0, 0, -2, 4, 4/3, 2/3, -2, 0, 0, 0 ]
+  reln: [ 0, 0, 0, 0, 0, 0, 1, -4, 0, 6, 0, 0, -3, 0, 0, 0 ]
+exit 0
