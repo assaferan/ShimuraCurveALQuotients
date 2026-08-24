@@ -506,11 +506,21 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
         for g0 in classes do
             picks := canon[g0];
             contribs := [ [ rvtab[wi][i] * a0w[wi] : i in isoidx ] : wi in picks ];
-            // constancy check across the class's sampled cosets, per component
+            // constancy check across the class's sampled cosets, per component.
+            // RELATIVE tolerance with a 1e-15 floor: 39_2 (M = 156, the deepest
+            // base, fractional-pp family) shows measured class-1 deviation
+            // 1.1e-22 at Prec 80 -- honest deep-series roundoff, while its
+            // cusp3 dump passes every class-constancy check (cuspclass2.py,
+            // 42/42), so constancy itself is exact.  A genuine violation is
+            // O(scale), so 1e-15 relative keeps 15 digits of margin.  Max(1, .)
+            // keeps an absolute floor at small scales.
             for k := 2 to #picks do
                 for j := 1 to #isoidx do
-                    error if Abs(contribs[k][j] - contribs[1][j]) gt 10^(-25),
-                        "M0MultiplierExact: class-constancy violated";
+                    dev := Abs(contribs[k][j] - contribs[1][j]);
+                    tol := 10^(-15) * Maximum(1, Abs(contribs[1][j]));
+                    error if dev gt tol,
+                        Sprintf("M0MultiplierExact: class-constancy violated (class %o, dev %o, scale %o)",
+                                g0, RealField(6)!dev, RealField(6)!Abs(contribs[1][j]));
                 end for;
             end for;
             for j := 1 to #isoidx do
@@ -518,14 +528,18 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
             end for;
         end for;
         // the nonzero isotropic components must agree, be real, and snap to a rational
+        // (same relative-tolerance reasoning as the constancy check above)
         vals := [ cvals[j] : j->i in isoidx | i ne i0 ];
+        vscale := Maximum(1, Abs(vals[1]));
         for v in vals do
-            error if Abs(v - vals[1]) gt 10^(-25),
-                "M0MultiplierExact: isotropic components disagree";
+            error if Abs(v - vals[1]) gt 10^(-15) * vscale,
+                Sprintf("M0MultiplierExact: isotropic components disagree (dev %o, scale %o)",
+                        RealField(6)!Abs(v - vals[1]), RealField(6)!vscale);
         end for;
-        error if Abs(Im(vals[1])) gt 10^(-25), "M0MultiplierExact: constant term not real";
+        error if Abs(Im(vals[1])) gt 10^(-15) * vscale,
+            "M0MultiplierExact: constant term not real";
         mult := BestApproximation(Re(vals[1])/2, 10^4);
-        error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-25),
+        error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-15) * vscale,
             "M0MultiplierExact: multiplier does not snap to a rational";
         Append(~mults, mult);
     end for;
