@@ -350,6 +350,188 @@ intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D
     return [ c[2]/2 : c in consts ], errs;
 end intrinsic;
 
+intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
+                            N::RngIntElt : Prec := 80) -> SeqEnum
+{The m = 0 multipliers of Schofer's formula for the forms fs, evaluated EXACTLY as a finite sum
+ over Gamma_0(M) cosets -- no Fourier sampling, no CM table, minutes per base.  The multiplier is
+
+     (1/2) * c_eta(0)   for any NONZERO ISOTROPIC eta
+
+ (all such eta carry the same value, and c_0(0) = 0), and c_eta(0) is assembled coset by coset:
+ for each coset word w and eta monomial prod_d eta(d tau)^(r_d), triangularising
+ [d 0; 0 1] g = g_d [a_d b_d; 0 e_d] exhibits f|w as a constant multiple of a q-series with
+ exact rational exponents and root-of-unity coefficients; the constant per (monomial, word) is
+ pinned numerically at one point of the upper half plane and verified at a second (its closed
+ form -- the Dedekind-sum eta multiplier system -- is certified in vvdata/weyl-campaign/cusp4.m).
+ Then c_eta(0) = sum_w rho(w^-1)e_0[eta] * a0(f|w).
+
+ Validated against the measured ground truth on 21 bases (vvdata/weyl-campaign, branch
+ m0-theta-campaign): the 15_2 full panel 9/9 exactly, 21_2, 22_3, and every base of the
+ constraints ledger.  Returns one rational per form; raises an error rather than return an
+ unverified value (kappa two-point check, isotropic-component agreement, rational snap).}
+    require N gt 1 : "There are no nonzero isotropic cosets when N = 1, so no m = 0 multiplier.";
+    require #fs gt 0 : "Empty form sequence.";
+    R := Parent(fs[1]); ds := R`ds;
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    require R`M eq M : "The forms live at the wrong level for (D, N).";
+
+    CC := ComplexField(Prec); ii := CC.1; pi := Pi(CC);
+    ee := func< z | Exp(2*pi*ii*z) >;
+
+    fftdata := VVWeilFFT(Ld, CC : Dual := true);
+    elts := fftdata[7]; i0 := fftdata[8];
+    Qr := ChangeRing(Ld`Q, Rationals()); dn := Ld`denom;
+    isoidx := [];
+    for i in [1..#elts] do
+        v := ChangeRing(elts[i]@@Ld`to_disc, Rationals());
+        r := (v*Qr, v)/(2*dn^2);
+        if r eq Floor(r) then Append(~isoidx, i); end if;
+    end for;
+    require #isoidx ge 2 : "No nonzero isotropic coset found.";
+
+    reps := VVCosetReps(M);
+    words := [ VVSTWord(g) : g in reps ];
+
+    triang := function(g, d)
+        g2 := Matrix(Integers(), 2, 2, [d*g[1][1], d*g[1][2], g[2][1], g[2][2]]);
+        c1 := g2[1][1]; c2 := g2[2][1];
+        h := GCD(c1, c2);
+        p1 := c1 div h; p2 := c2 div h;
+        gg, u, v := XGCD(p1, p2);
+        error if gg ne 1, "triangularisation: row not primitive";
+        gd := Matrix(Integers(), 2, 2, [p1, -v, p2, u]);
+        sd := gd^(-1) * g2;
+        a := sd[1][1]; b := sd[1][2]; e := sd[2][2];
+        if a lt 0 then a := -a; b := -b; e := -e; end if;
+        if e lt 0 then gd := -gd; sd := -sd; a := sd[1][1]; b := sd[1][2]; e := sd[2][2]; end if;
+        return a, b, e;
+    end function;
+
+    slashdata := function(word, tau)
+        z := tau; factor := CC!1;
+        for i := #word to 1 by -1 do
+            if word[i][1] eq "S" then factor /:= Sqrt(z); z := -1/z;
+            else z := z + word[i][2]; end if;
+        end for;
+        return factor, z;
+    end function;
+
+    tau0 := CC!0.31 + CC!1.31*ii;
+    tau1 := CC!(-0.57) + CC!1.73*ii;
+
+    monos := {@ @};
+    for f in fs do for r in Exponents(f) do Include(~monos, r); end for; end for;
+
+    // Cusp-class shortcut: the per-coset product rho(w^-1)e_0[eta] * a0(f|w) is CONSTANT
+    // on each class g = gcd(c, M) for every isotropic component (e_0 is a
+    // rho(Gamma_0(lev))-eigenvector whose character is f's eta multiplier, and the
+    // isotropic components are T-invariant; verified on 570 class/form/base checks and
+    // derived in vvdata/weyl-campaign/thetag-derivation.md).  So evaluate ONE canonical
+    // coset per class, VERIFY the constancy on up to two more cosets of the class, and
+    // multiply by the true class size.  This replaces #cosets FFT applications by
+    // ~3 * #classes -- the difference between minutes and hours at M ~ 400.
+    classof := [ GCD(VVWordMatrix(w)[2][1] mod M, M) : w in words ];
+    classes := Sort(Setseq(Set(classof)));
+    Ng := AssociativeArray();
+    canon := AssociativeArray();   // class -> [canonical wi, up to 2 verification wi's]
+    for g0 in classes do
+        idxs := [ wi : wi in [1..#words] | classof[wi] eq g0 ];
+        Ng[g0] := #idxs;
+        picks := [ idxs[1] ];
+        if #idxs ge 2 then Append(~picks, idxs[1 + (#idxs div 2)]); end if;
+        if #idxs ge 3 then Append(~picks, idxs[#idxs]); end if;
+        canon[g0] := picks;
+    end for;
+    selected := Sort(Setseq(&join{ Set(canon[g0]) : g0 in classes }));
+
+    SS := PowerSeriesRing(CC); t := SS.1;
+    a0tab := [ [ CC!0 : r in monos ] : w in words ];
+    for wi in selected do
+        w := words[wi];
+        g := VVWordMatrix(w);
+        tri := [ ];
+        for d in ds do
+            a, b, e := triang(g, d);
+            Append(~tri, <a, b, e>);
+        end for;
+        W := LCM([ tri[i][3] : i in [1..#ds] ]);
+        leads := [ &+[ Integers() | r[i]*tri[i][1]*(W div tri[i][3]) : i in [1..#ds] ]
+                   : r in monos ];
+        depth := Maximum([ 0 ] cat [ -L : L in leads ]) + 1;
+        units := [ ];
+        for i->d in ds do
+            a, b, e := Explode(tri[i]);
+            step := 24*a*(W div e);
+            u := SS!1 + O(t^depth);
+            n := 1;
+            while n*step lt depth do
+                u *:= 1 - ee(CC!(n*b/e))*t^(n*step);
+                n +:= 1;
+            end while;
+            Append(~units, u);
+        end for;
+        fac0, z0 := slashdata(w, tau0);
+        fac1, z1 := slashdata(w, tau1);
+        for ri->r in monos do
+            L := leads[ri];
+            if L gt 0 then continue; end if;
+            produ := &*[ SS | units[i]^(r[i]) : i in [1..#ds] | r[i] ne 0 ];
+            c0 := Coefficient(produ, -L);
+            if c0 eq 0 then a0tab[wi][ri] := CC!0; continue; end if;
+            num0 := fac0 * &*[ CC | DedekindEta(d*z0)^(r[i]) : i->d in ds | r[i] ne 0 ];
+            num1 := fac1 * &*[ CC | DedekindEta(d*z1)^(r[i]) : i->d in ds | r[i] ne 0 ];
+            sfun := func< tau | ee(tau*L/(24*W)) *
+                &*[ CC | ( DedekindEta((tri[i][1]*tau + tri[i][2])/tri[i][3]) *
+                           ee(-(tri[i][1]*tau + tri[i][2])/(24*tri[i][3])) )^(r[i])
+                    : i in [1..#ds] | r[i] ne 0 ] >;
+            k0 := num0 / sfun(tau0);
+            k1 := num1 / sfun(tau1);
+            error if Abs(k0 - k1) gt 10^(-30),
+                "M0MultiplierExact: slash constant failed its two-point check";
+            a0tab[wi][ri] := k0 * c0;
+        end for;
+    end for;
+
+    rvtab := AssociativeArray();
+    for wi in selected do rvtab[wi] := VVRhoInvE0FFT(fftdata, words[wi]); end for;
+
+    mults := [ Rationals() | ];
+    for f in fs do
+        a0w := AssociativeArray();
+        for wi in selected do
+            a0w[wi] := &+[ CC | f`coeffs[r] * a0tab[wi][Index(monos, r)]
+                           : r in Exponents(f) ];
+        end for;
+        cvals := [ CC!0 : i in isoidx ];
+        for g0 in classes do
+            picks := canon[g0];
+            contribs := [ [ rvtab[wi][i] * a0w[wi] : i in isoidx ] : wi in picks ];
+            // constancy check across the class's sampled cosets, per component
+            for k := 2 to #picks do
+                for j := 1 to #isoidx do
+                    error if Abs(contribs[k][j] - contribs[1][j]) gt 10^(-25),
+                        "M0MultiplierExact: class-constancy violated";
+                end for;
+            end for;
+            for j := 1 to #isoidx do
+                cvals[j] +:= Ng[g0] * contribs[1][j];
+            end for;
+        end for;
+        // the nonzero isotropic components must agree, be real, and snap to a rational
+        vals := [ cvals[j] : j->i in isoidx | i ne i0 ];
+        for v in vals do
+            error if Abs(v - vals[1]) gt 10^(-25),
+                "M0MultiplierExact: isotropic components disagree";
+        end for;
+        error if Abs(Im(vals[1])) gt 10^(-25), "M0MultiplierExact: constant term not real";
+        mult := BestApproximation(Re(vals[1])/2, 10^4);
+        error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-25),
+            "M0MultiplierExact: multiplier does not snap to a rational";
+        Append(~mults, mult);
+    end for;
+    return mults;
+end intrinsic;
+
 // ---------------------------------------------------------------------------------------------
 // The S-action as a finite Fourier transform on the discriminant group
 // ---------------------------------------------------------------------------------------------
