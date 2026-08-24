@@ -618,9 +618,18 @@ function direct_involution_quotient(C, w)
     ssum := xx + mu;  sprod := xx * mu;
     U := (not IsCoercible(Rationals(), ssum)) select ssum else sprod;
     error if IsCoercible(Rationals(), U), "no non-constant symmetric invariant of {x, mu(x)}";
+    // Invariant lift of y: for rho <> -1, V = (1+rho)*y works (rho(mu)*rho = 1 makes it
+    // w-invariant).  For rho = -1 (y anti-invariant, issue #35) take V = (x - mu)*y instead:
+    // (x - mu) is mu-ANTI-symmetric, so the two signs cancel; mu = x is excluded below since
+    // that w is the hyperelliptic involution itself and the quotient is the genus-0 x-line.
     onep := 1 + rho;
-    error if onep eq 0, "rho = -1 (y anti-invariant) is not handled by direct_involution_quotient";
-    V2 := onep^2 * Evaluate(f, xx);
+    if onep eq 0 then
+        delta := xx - mu;
+        error if delta eq 0, "w is the hyperelliptic involution; the quotient is the x-line";
+        V2 := delta^2 * Evaluate(f, xx);
+    else
+        V2 := onep^2 * Evaluate(f, xx);
+    end if;
     pU := Numerator(U); qU := Denominator(U);
     QU<u> := RationalFunctionField(Rationals());
     RX<XX> := PolynomialRing(QU);
