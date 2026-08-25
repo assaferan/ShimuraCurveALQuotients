@@ -58,6 +58,11 @@ ordvec := function(r)  // 24*ord at cusp c, up to positive width factors
 end function;
 mvecs := [ [ Integers() | r[i] : i in [1..nd] ] : r in monos ];
 Epool := {@ @};
+// The triple enumeration below is CUBIC in #monomials (nm^3/6 ordvec calls):
+// fine at nm ~ 200-500, lethal at nm ~ 2000+ (77_2: 1.5e9 iterations, 10+ h).
+// Set NOTRIPLES:=1 to skip it and rely entirely on the external EF pool.
+skiptriples := assigned NOTRIPLES;
+if not skiptriples then
 for i in [1..nm] do
     for j in [i..nm] do
         rij := [ mvecs[i][t] + mvecs[j][t] : t in [1..nd] ];
@@ -70,6 +75,7 @@ for i in [1..nm] do
         end for;
     end for;
 end for;
+end if;
 printf "#holomorphic triple E's = %o (cap %o)\n", #Epool, MAXE;
 // optional external pool (python-enumerated holomorphic quotients): EF := path
 // to a file containing a Magma sequence literal [ [r_1,...,r_nd], ... ]
