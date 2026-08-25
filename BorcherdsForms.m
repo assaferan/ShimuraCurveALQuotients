@@ -122,26 +122,24 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
         return Sort(eval Read(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)));
     end if;
     vprintf ShimuraQuotients, 3 : "File not found, computing...";
-    write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := k, sq_disc := sq_disc, cuspidal := cuspidal);
-    fname := Sprintf("polymake/polymake_script_%o_%o_%o", M, n, m);
-    // Bound the polymake call: for degenerate/large pole orders the LATTICE_POINTS
-    // enumeration can run away for hours. Running it under `timeout` makes polymake a
-    // child of timeout (not of a magma that may itself get killed later), so it is
-    // reaped rather than orphaned, and the base degrades gracefully via the IsEof
-    // branch below (an empty result is treated as "no solutions"). Legitimate solves
-    // finish in seconds-to-minutes, far under this bound.
-    polymake_timeout := 1800; // seconds per polymake invocation
-    cmd := Sprintf("timeout %o polymake --script %o 2>/dev/null", polymake_timeout, fname);
-    polymake := Read(POpen(cmd, "r"));
-    if IsEof(polymake) then return []; end if;
-
-    sol_lines := Split(polymake, "\n");
-    sol_vecs := [Split(line, " ") : line in sol_lines];
-    sols := [[eval(x) : x in vec] : vec in sol_vecs];
-    rs := Sort([sol[2..1 + #Divisors(M)] : sol in sols]);   // canonical order (version-independent)
-
-    Write(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m), Sprint(rs, "Magma"));
-    return rs;
+    // The polytope is solved by standalone Normaliz via nmzsolve.py (polymake, the
+    // previous backend, silently broke under Homebrew perl/flint upgrades and its
+    // formula is disabled upstream; every polymake call returned empty, which this
+    // function reported as "no solutions").  nmzsolve.py rebuilds the same
+    // constraint system from (M, n, m, 24k, sq_disc, cuspidal) and writes the
+    // solution file directly in the polymake_solution (Magma-evaluable) format --
+    // validated point-for-point against 11 cached polymake outputs across levels
+    // 132/204/308/616, m = 0 and m > 0.  It bounds its own runtime (NMZ_TIMEOUT,
+    // default 1800 s); on timeout/failure no file is written and we degrade to []
+    // exactly as before.
+    solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
+    nmz := GetEnv("NMZSOLVE");
+    if nmz eq "" then nmz := "nmzsolve.py"; end if;
+    cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
+                   M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
+    _ := System(cmd);
+    if not FileExists(solname) then return []; end if;
+    return Sort(eval Read(solname));
 end function;
 
 intrinsic HolomorphicEtaQuotients(N::RngIntElt, k::RngIntElt : Prec := 100) -> SeqEnum[EtaQuot]
