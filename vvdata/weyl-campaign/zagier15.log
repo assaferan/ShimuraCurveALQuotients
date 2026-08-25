@@ -1,0 +1,30 @@
+dim M = 18, dim S = 7 (Eis 11)
+genus classes among the 13 Gross lattices:
+  { GROSS(2,1) }  disc 4
+  { GROSS(2,3) }  disc 36
+  { GROSS(2,5) }  disc 100
+  { GROSS(2,15) }  disc 900
+  { GROSS(3,1) }  disc 9
+  { GROSS(3,2) }  disc 36
+  { GROSS(3,5) }  disc 225
+  { GROSS(3,10) }  disc 900
+  { GROSS(5,1) }  disc 25
+  { GROSS(5,2) }  disc 100
+  { GROSS(5,3) }  disc 225
+  { GROSS(5,6) }  disc 900
+  { GROSS(30,1) }  disc 900
+rank(Zagier) = 8 (of 8), rank(Zagier+cusp) = 15, E in Zagier+cusp: false
+  GROSS(2,1) in Zagier+cusp: false
+  GROSS(2,3) in Zagier+cusp: false
+  GROSS(2,5) in Zagier+cusp: false
+  GROSS(2,15) in Zagier+cusp: false
+  GROSS(3,1) in Zagier+cusp: false
+  GROSS(3,2) in Zagier+cusp: false
+  GROSS(3,5) in Zagier+cusp: false
+  GROSS(3,10) in Zagier+cusp: false
+  GROSS(5,1) in Zagier+cusp: false
+  GROSS(5,2) in Zagier+cusp: false
+  GROSS(5,3) in Zagier+cusp: false
+  GROSS(5,6) in Zagier+cusp: false
+  GROSS(30,1) in Zagier+cusp: false
+rank(Gross+Zagier+cusp) = 22 (Gross+cusp alone was 14)
