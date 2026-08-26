@@ -22,7 +22,18 @@ head -4 $SCI/mono210_1.log
 UK=$(grep -a "^USEDKEYS" $SCI/mono210_1.log | sed 's/USEDKEYS //; s/,$//; s/ //g')
 echo "keys: $UK"
 # 4. eta pool via the MITM enumerator (nd=24: use enum32m, NOT the old grid sweep)
-python3 $CW/enum32m.py $SCI/mono210_1.log $SCI/epool_210_1.txt 8 7
+VENV=${VENV:-/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurveALQuotients/dbce22ad-34ec-4786-94b9-f6da57354d63/scratchpad/sci/venv/bin/python}
+# Magma wraps stdout at 80 cols with bare newlines; flatten before parsing
+python3 -c "
+import sys
+out=[]
+for line in open(sys.argv[1]):
+    line=line.rstrip(chr(10))
+    if out and line and not (line[0].isalpha() or line[0]=='#'): out[-1]+=line
+    else: out.append(line)
+open(sys.argv[1]+'.flat','w').write(chr(10).join(out)+chr(10))
+" $SCI/mono210_1.log
+$VENV $CW/enum32m.py $SCI/mono210_1.log.flat $SCI/epool_210_1.txt 8 7
 # 5. eis32 with the cubic triple-loop DISABLED (nm at M=420 would make it lethal)
 magma -b DD:=210 NN:=1 NOTRIPLES:=1 KEYS:=$UK EF:=$SCI/epool_210_1.txt $CW/eis32.m > $SCI/eis32e_210_1.out 2>&1
 grep -a "SOLVE resid" $SCI/eis32e_210_1.out
