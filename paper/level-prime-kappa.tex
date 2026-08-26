@@ -104,7 +104,11 @@ empirical ``level support rule'' of the computational literature is exactly the 
 factor (Corollary~\ref{cor:support}). Section~\ref{sec:reenum} re-runs the case analysis with this
 factor and finds no new case (Proposition~\ref{prop:reenum}). Section~\ref{sec:data} records the
 correction that the CM values require, computed exactly, and Section~\ref{sec:elim} lists the
-explanations we have eliminated. Section~\ref{sec:open} states what remains open.
+explanations we have eliminated. Section~\ref{sec:slaw} records the measured derivation of the
+correction's Eisenstein part: on nine bases, each preregistered against the last, it is a fixed
+Siegel--Weil combination of Gross genus averages whose apparent base-dependence (the ``$s$-law'')
+is entirely mass normalisation; a tenth base, the first with composite $s$, is preregistered
+against three competing extensions. Section~\ref{sec:open} states what remains open.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -725,6 +729,101 @@ is the structural origin of the $w_{\square}$ aliasing reported above, and it sh
 the derivation must produce: the functional as an element of the quotient, with the
 square-class channel as its panel-span shadow.
 
+\section{The Eisenstein part as ternary theta arithmetic: the $s$-law and its
+Siegel--Weil origin}\label{sec:slaw}
+
+The assembly of the previous subsection makes the functional a finite exact pairing
+against the cusp constants of $f$; the derivation it calls for has since been carried out
+in measured stages, each preregistered before the next base was computed. We record here
+the state of that campaign. Throughout, $D=qs$ with $q>s$ its two prime factors, and
+$\mathrm{Gr}(D',R)$ denotes the \emph{genus} of the ternary lattice
+$\{\alpha\in\mathcal{O}':\tr\alpha=0\}$ with the reduced-norm form, $\mathcal{O}'$ an
+Eichler order of level $R$ in the \emph{definite} quaternion algebra of discriminant $D'$
+(for $D'R=DN$ this is the Jacquet--Langlands partner of $(D,N)$); $\bar\theta(D',R)$ is
+its mass-weighted average theta series and $\Theta(D',R)=\mathrm{mass}\cdot\bar\theta$
+the corresponding genus sum.
+
+\begin{observation}[the weight-$3/2$ residue pairing]\label{obs:eis32}
+On every base measured, the class-assembled $\rho$-vector of
+Theorem~\ref{thm:rhoentry} lies in the span of the $0$-cusp constant vectors of the
+holomorphic weight-$3/2$ eta monomials with the conjugate panel character (residuals
+$\sim10^{-42}$ at working precision $80$), so the functional is represented by a
+weight-$3/2$ form $E^*$; its Eisenstein component $E_{\mathrm{eis}}\in
+M_{3/2}(\Gamma_0(4DN))$ is exactly rational. Three constants are base-independent across
+all nine bases: the Eisenstein dimension of $M_{3/2}(\Gamma_0(4DN))$ is $11$, the rank of
+the constants map is $7$, and the aliasing kernel of the Gross-average fit has dimension
+$6$.
+\end{observation}
+
+\begin{observation}[the $s$-law; nine bases]\label{obs:slaw}
+On every base, $E_{\mathrm{eis}}$ lies in the span of the $\bar\theta(D',R)$ over the
+definite structures with $D'R\mid DN$, modulo cusp forms, with support
+$\{(q,N),\,(q,sN),\,(DN,1)\}$ and weights
+\[
+  w_1=-\frac{1}{s-1},\qquad w_2=\frac{\psi(s)}{2\varphi(s)}=\frac{s+1}{2(s-1)},\qquad
+  w_3=-\frac12 ,
+\]
+depending on the base only through $s$. The nine bases are $X_0^{15}(2)$, $X_0^{21}(2)$,
+$X_0^{33}(2)$ ($s=3$: weights $-\tfrac12,1,-\tfrac12$); $X_0^{22}(3)$, $X_0^{34}(3)$,
+$X_0^{10}(7)$ ($s=2$: $-1,\tfrac32,-\tfrac12$); $X_0^{35}(2)$, $X_0^{55}(2)$ ($s=5$:
+$-\tfrac14,\tfrac34,-\tfrac12$); and $X_0^{77}(2)$ ($s=7$: $-\tfrac16,\tfrac23,-\tfrac12$).
+The law was found on the first six and \emph{preregistered} on the last three, each of
+which extended its range ($s=3$ at a new $q$; $s=5$ at a new $q$; $s=7$ new): all three
+hit. Two simpler laws were killed by preregistered bases along the way: weights following
+$N$ alone (killed by $X_0^{35}(2)$), and weights following $r=DN/q$ (killed by
+$X_0^{10}(7)$, which also fixed $q$ as the largest \emph{ramified} prime: there $N=7>q=5$
+and the support remains at $(5,\ast)$).
+\end{observation}
+
+\begin{observation}[Siegel--Weil identification]\label{obs:sw}
+On $X_0^{15}(2)$ the identification is complete. The $16$ ternary lattices whose thetas
+span the relevant subspace of $M_{3/2}(\Gamma_0(60))$ fall into $13$ genera, and each
+genus in the support is quaternionic: the assignment $(D',R)\mapsto\mathrm{Gr}(D',R)$
+sends the four definite factorizations $30=D'R$ bijectively onto the four genera of
+discriminant $900$, distinguishes same-discriminant genera by which prime ramifies
+(e.g.\ $\mathrm{Gr}(2,5)$ and $\mathrm{Gr}(5,2)$ are the two genera of discriminant
+$100$), and is inert under level structure at an already-ramified prime. The independent
+decomposition of $E_{\mathrm{eis}}$ over the $13$ genus averages plus cusp forms
+reproduces the fitted weights term by term:
+$E_{\mathrm{eis}}=-\tfrac12\,\bar\theta(5,2)+\bar\theta(5,6)-\tfrac12\,\bar\theta(30,1)$
+modulo cusp forms. The $s$-law weights are coefficients of genuine Siegel--Weil genus
+averages, not of single-class thetas.
+\end{observation}
+
+\begin{observation}[the mass identities; the $s$-dependence is normalisation]\label{obs:mass}
+On all nine bases the genus masses of the support obey
+\[
+  \mathrm{mass}(q,N)=\frac{(q-1)(N+1)}{96},\qquad
+  \frac{\mathrm{mass}(q,sN)}{\mathrm{mass}(q,N)}=\frac{s+1}{2},\qquad
+  \mathrm{mass}(DN,1)=\frac{(q-1)(s-1)(N-1)}{192},
+\]
+so that, over the genus \emph{sums}, the $s$-dependence of the weights disappears:
+\[
+  E_{\mathrm{eis}}\;=\;\frac{96}{(q-1)(s-1)(N+1)}
+  \Bigl[-\Theta(q,N)+\Theta(q,sN)-\frac{N+1}{N-1}\,\Theta(DN,1)\Bigr]
+  \quad\text{mod cusp forms},
+\]
+an identity verified on all nine bases; the second factor of the middle mass ratio is
+multiplicative, $\prod_{p\mid s}(p+1)/2$, over the primes of $s$. The bracket depends on
+the base only through $N$, and the fitted ``$s$-law'' is exactly the mass normalisation
+of a fixed Siegel--Weil combination.
+\end{observation}
+
+\begin{remark}[preregistration: the first composite $s$]\label{rem:210}
+The base $X_0^{210}(1)$ ($q=7$, $s=30$, $N=1$) separates three extensions of the law
+that agree on all nine prime-$s$ bases, and we record their predictions in advance of the
+measurement, which is in flight at the time of writing. (A) The reciprocal reading of
+Observation~\ref{obs:slaw} verbatim: $w_1=-\tfrac1{29}$, $w_2=\tfrac{31}{58}$,
+$w_3=-\tfrac12$. (B) The $\psi/\varphi$ reading ($\psi$ the Dedekind psi):
+$w_1=\tfrac12-\psi(30)/2\varphi(30)=-4$, $w_2=\psi(30)/16=\tfrac92$. (C) The mass reading of Observation~\ref{obs:mass}:
+$\mathrm{mass}(7,30)/\mathrm{mass}(7,1)=9=\prod_{p\mid30}\tfrac{p+1}2$, hence
+$w_1=-\tfrac1{29}$, $w_2=+\tfrac9{29}$, and \emph{no third term}: the structure
+$(210,1)$ is indefinite (four ramified places would be required), and its formal mass
+$(q-1)(s-1)(N-1)/192$ vanishes at $N=1$. Reading (C) is the only one coherent about the
+third term; readings (A) and (C) agree on $w_1$. The discriminating ratio is
+$\lvert w_2/w_1\rvert=\tfrac{31}2,\ \tfrac98,\ 9$ respectively.
+\end{remark}
+
 \section{The open question}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
@@ -806,6 +905,15 @@ The computations were carried out in Magma against the codebase accompanying thi
       \texttt{cusp2.m}, and the two-channel solver \texttt{ledger2.py}) and the complete
       campaign data --- principal-part dumps, ground-truth sweeps, and the constraints ledger
       --- are banked on the branch \texttt{m0-theta-campaign} of the accompanying repository.
+\item The campaign of \S\ref{sec:slaw} is banked on the same branch under
+      \texttt{vvdata/weyl-campaign}: the residue-pairing solver (\texttt{eis32.m}), the exact
+      rationalisers (\texttt{kernelrat.py}, \texttt{eisrat.py}), the genus-average drivers
+      (\texttt{allgross.m}, \texttt{genallgross.py}), the dictionary and mass probes
+      (\texttt{grossid100.m}, \texttt{grossid900.m}, \texttt{swapprobe.m},
+      \texttt{massprobe.m}, \texttt{genusfit15sw.m}), the per-base evidence records
+      (\texttt{mono}/\texttt{epool}/\texttt{eis32e}/\texttt{kernelrat}/\texttt{eisrat}/%
+      \texttt{allgross} per base), and the composite-$s$ preregistration
+      (\texttt{thetasum-form.md}, \texttt{mass210.log}).
 \end{itemize}
 
 \begin{thebibliography}{99}
