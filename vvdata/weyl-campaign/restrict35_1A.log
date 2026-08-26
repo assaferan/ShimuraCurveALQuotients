@@ -1,0 +1,16 @@
+BASE 35_1: DN = 35, level 140
+dim M = 16, dim S = 9 (Eis 7)
+E in M: true
+definite structures: [ <7, 1>, <7, 5> ]
+  built GROSS(7,1) disc 49, 1 cls
+  built GROSS(7,5) disc 1225, 2 cls
+Gross-average+cusp span: rank 11 vs 11 -> E in span: true
+E_eis =
+      -1/2 * GROSS(7,1) disc 49, 1 cls
+       3/2 * GROSS(7,5) disc 1225, 2 cls
+     -16/3 * CUSP_2
+        -8 * CUSP_3
+     -22/3 * CUSP_5
+      34/3 * CUSP_7
+         6 * CUSP_9
+aliasing dim 0
