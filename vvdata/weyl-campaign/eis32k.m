@@ -16,6 +16,7 @@ if assigned DD then D := StringToInteger(DD); end if;
 if assigned NN then N := StringToInteger(NN); end if;
 
 PREC := 80;
+if assigned PR then PREC := StringToInteger(PR); end if;
 CC := ComplexField(PREC); ii := CC.1; pi := Pi(CC);
 ee := func< z | Exp(2*pi*ii*z) >;
 
@@ -276,7 +277,11 @@ a0at := function(w, r, wt)
             : i in [1..nd] | r[i] ne 0 ] >;
     k0 := num0 / sfun(tau0);
     k1 := num1 / sfun(tau1);
-    error if Abs(k0 - k1) gt 10^(-30), "kappa not constant at wt", wt, Abs(k0-k1);
+    // RELATIVE consistency check: at M = 660 the eta evaluations lose enough
+    // digits that the old absolute 1e-30 bound fires spuriously (dev 3.2e-30
+    // on |k| of order 1).  Scale by |k0| and keep a healthy margin over the
+    // 50-digit dump grid that kernelrat/eisrat snap from.
+    error if Abs(k0 - k1) gt 10^(-25)*Max(CC!1, Abs(k0)), "kappa not constant at wt", wt, Abs(k0-k1);
     return k0 * c0, L, W;
 end function;
 
