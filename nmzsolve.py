@@ -85,7 +85,12 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
             if core: base = core
         if base and shifts:
             tp = max(_pole(t) for t in shifts)                     # shift pole k
-            J = -(-(n_pole - base_n) // tp)                        # ceil
+            # the cache accumulates rungs THIS fallback wrote (shifted, not
+            # enumerated), so the filename's n overstates the reach of `base`
+            # once it has been swapped for the core: compute J from the actual
+            # max pole of the vectors being shifted, never from base_n.
+            base_n = max(_pole(list(r)) for r in base)
+            J = max(0, -(-(n_pole - base_n) // tp))                # ceil
             if use_core:
                 pts = set()
                 for j in range(J + 1):
