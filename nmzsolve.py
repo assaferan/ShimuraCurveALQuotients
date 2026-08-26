@@ -58,7 +58,7 @@ for b in ds:
 # the cache, answer tall requests by shifting + thinning instead of normaliz.
 import glob as _glob, re as _re
 def _load_magma_seq(path):
-    return [ [int(x) for x in m.split(',')] for m in _re.findall(r'\\?\[ ([-\d, ]+) \]', open(path).read()) ]
+    return [ [int(x) for x in m.split(',')] for m in _re.findall(r'\\?\[ ([-\d, ]+) \]', open(path).read().replace('\\\n', '').replace('\n', ' ')) ]
 def _pole(r):
     s24 = sum(d*x for d, x in zip(ds, r))
     assert s24 % 24 == 0
@@ -74,30 +74,53 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
         base_n = max(cands)
         base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_0')
         shifts = [ t for t in _load_magma_seq(w0p) if any(t) ]
+        # a rank-preserving CORE (same span as the full rung, ~dim vectors) beats
+        # thinning by pole order: 42 of sol(420,145)'s 105 pivots come from
+        # cancellations between same-leading-order vectors, which order-thinning
+        # destroys.  If a core file exists, shift it verbatim (no thinning).
+        corep = f'polymake/tshift_core_{M}.txt'
+        use_core = os.path.exists(corep)
+        if use_core:
+            core = _load_magma_seq(corep)
+            if core: base = core
         if base and shifts:
             tp = max(_pole(t) for t in shifts)                     # shift pole k
             J = -(-(n_pole - base_n) // tp)                        # ceil
-            byorder = {}
-            layer = [ tuple(r) for r in base ]
-            seen = set(layer)
-            def _absorb(vs):
-                for v in vs:
-                    pl = _pole(list(v))
-                    if pl > n_pole: continue
-                    b = byorder.setdefault(pl, [])
-                    if len(b) < 4:
-                        b.append(v)
-            _absorb(layer)
-            for j in range(J):
-                nxt = []
-                for t in shifts:
-                    for r in layer:
-                        v = tuple(a + b for a, b in zip(r, t))
-                        if v not in seen:
-                            seen.add(v); nxt.append(v)
-                _absorb(nxt)
-                layer = nxt
-            pts = sorted({ v for b in byorder.values() for v in b })
+            if use_core:
+                pts = set()
+                for j in range(J + 1):
+                    for r in base:
+                        v = tuple(a + j*b for a, b in zip(r, shifts[0])) if len(shifts) == 1 else None
+                        if v is not None: pts.add(v)
+                if len(shifts) > 1:
+                    layer = [ tuple(r) for r in base ]
+                    pts = set(layer)
+                    for j in range(J):
+                        layer = [ tuple(a + b for a, b in zip(r, t)) for t in shifts for r in layer ]
+                        pts.update(layer)
+                pts = sorted(pts)
+            else:
+                byorder = {}
+                layer = [ tuple(r) for r in base ]
+                seen = set(layer)
+                def _absorb(vs):
+                    for v in vs:
+                        pl = _pole(list(v))
+                        if pl > n_pole: continue
+                        b = byorder.setdefault(pl, [])
+                        if len(b) < 4:
+                            b.append(v)
+                _absorb(layer)
+                for j in range(J):
+                    nxt = []
+                    for t in shifts:
+                        for r in layer:
+                            v = tuple(a + b for a, b in zip(r, t))
+                            if v not in seen:
+                                seen.add(v); nxt.append(v)
+                    _absorb(nxt)
+                    layer = nxt
+                pts = sorted({ v for b in byorder.values() for v in b })
             residues = { _pole(list(r)) % tp for r in base }
             if len(residues) < tp:
                 print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
