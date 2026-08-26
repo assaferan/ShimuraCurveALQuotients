@@ -1,0 +1,5 @@
+# SYNTHETIC mono dump for enum32m at 330_1: the character key is the
+# universal one measured across all seven banked bases (s1=s2=0 mod 24,
+# parity bit 1 at p=2 only); the carrier MONO vector below satisfies it.
+BASE 330 1  M = 660  ds = [ 1, 2, 3, 4, 5, 6, 10, 11, 12, 15, 20, 22, 30, 33, 44, 55, 60, 66, 110, 132, 165, 220, 330, 660 ]
+MONO 1 [ -2, -3, 0, 0, 0, 0, 0, 0, 0, 0, -2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
