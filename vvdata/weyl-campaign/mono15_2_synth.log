@@ -1,0 +1,2 @@
+# synthetic BASE line for genallgross (weights come from the eisrat log)
+BASE 15 2  M = 60  ds = [ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60 ]

@@ -43,6 +43,14 @@ isoidx := [ i : i in [1..n] | Qbar[i] eq 0 ];
 // #iso = 2N-1: at N=1 the zero coset is the ONLY isotropic element, so track
 // it; for N>1 keep the first nonzero isotropic coset (unchanged behavior).
 est := #isoidx ge 2 select isoidx[2] else isoidx[1];
+// EST override for the tracked-coset experiment: EST:=0 forces the ZERO
+// coset (i0) -- what the N=1 branch is forced to use -- so an N>1 base can
+// be refitted in the N=1 regime.  EST:=k picks isoidx[k].
+if assigned EST then
+    estk := StringToInteger(EST);
+    est := estk eq 0 select i0 else isoidx[estk];
+    printf "EST OVERRIDE: %o -> tracking coset index %o (i0 = %o)\n", estk, est, i0;
+end if;
 printf "#isotropic = %o, tracking coset index %o\n", #isoidx, est;
 
 levD := M;
@@ -132,8 +140,11 @@ rhov := [ CC | 0 : wi in [1..nw] ];
 YTab := AssociativeArray();  // <cm, xci> -> <y0 index or 0, dcn>
 for wi->w in words do
     if #w eq 0 or VVWordMatrix(w)[2][1] eq 0 then
-        // T^k coset: rho^{-1} diagonal, e(k Q(est)) = 1 (est isotropic)
-        rhov[wi] := CC!1;
+        // T^k coset: rho(T^k)^{-1} e_0 = e_0 (diagonal action, Q(0) = 0), so
+        // the tracked component is 1 at the ZERO coset and 0 at any nonzero
+        // one.  (Setting it to 1 unconditionally is correct at N=1, where
+        // est = i0, but injects a spurious unit entry at N>1.)
+        rhov[wi] := (est eq i0) select CC!1 else CC!0;
         continue;
     end if;
     gmat := VVWordMatrix(w);
