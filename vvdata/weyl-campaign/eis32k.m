@@ -281,7 +281,8 @@ a0at := function(w, r, wt)
     // digits that the old absolute 1e-30 bound fires spuriously (dev 3.2e-30
     // on |k| of order 1).  Scale by |k0| and keep a healthy margin over the
     // 50-digit dump grid that kernelrat/eisrat snap from.
-    error if Abs(k0 - k1) gt 10^(-25)*Max(CC!1, Abs(k0)), "kappa not constant at wt", wt, Abs(k0-k1);
+    kscale := Abs(k0); if kscale lt 1 then kscale := Parent(kscale)!1; end if;
+    error if Abs(k0 - k1) gt 10^(-25)*kscale, "kappa not constant at wt", wt, Abs(k0-k1);
     return k0 * c0, L, W;
 end function;
 
