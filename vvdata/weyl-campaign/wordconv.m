@@ -1,0 +1,22 @@
+AttachSpec("ShimuraQuotients.spec");
+reps := VVCosetReps(60);
+words := [ VVSTWord(g) : g in reps ];
+w := words[3];
+printf "word 3 letters: %o\n", w;
+g := VVWordMatrix(w);
+printf "VVWordMatrix = %o\n", Eltseq(g);
+S := Matrix(Integers(),2,2,[0,-1,1,0]);
+T := func< k | Matrix(Integers(),2,2,[1,k,0,1]) >;
+fwd := Identity(MatrixRing(Integers(),2)); rev := fwd;
+fwdI := fwd; revI := fwd;
+for t in w do
+    m := t[1] eq "S" select S else T(t[2]);
+    mi := t[1] eq "S" select S^(-1) else T(-t[2]);
+    fwd := fwd*m; rev := m*rev; fwdI := fwdI*mi; revI := mi*revI;
+end for;
+printf "fwd(letters L->R)      = %o\n", Eltseq(fwd);
+printf "rev(letters R->L)      = %o\n", Eltseq(rev);
+printf "fwd inverse-letters    = %o\n", Eltseq(fwdI);
+printf "rev inverse-letters    = %o\n", Eltseq(revI);
+printf "g^-1 = %o\n", Eltseq(g^(-1));
+quit;

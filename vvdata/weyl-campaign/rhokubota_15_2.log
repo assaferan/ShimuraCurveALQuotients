@@ -1,0 +1,27 @@
+BASE 15 2  M = 60  |D| = 1800
+level(Dbar) = 60
+#cosets = 144
+Dc/xc tables built (11 residues)
+...word 16
+...word 32
+...word 48
+...word 64
+...word 80
+...word 96
+...word 112
+...word 128
+...word 144
+words tested 143 (skipped 1)
+hypothesis scorecard (hyp, verdict) -> count:
+  <1, "ANTI"> -> 1
+  <1, "HIT"> -> 125
+  <1, "OTHER"> -> 17
+  <2, "ANTI"> -> 1
+  <2, "HIT"> -> 125
+  <2, "OTHER"> -> 17
+  <3, "ANTI"> -> 37
+  <3, "HIT"> -> 89
+  <3, "OTHER"> -> 17
+  <4, "ANTI"> -> 37
+  <4, "HIT"> -> 89
+  <4, "OTHER"> -> 17
