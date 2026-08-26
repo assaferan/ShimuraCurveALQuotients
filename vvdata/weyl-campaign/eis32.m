@@ -40,7 +40,10 @@ qofidx := function(i)
     r := (v*Qr, v)/(2*dn^2); return r - Floor(r);
 end function;
 isoidx := [ i : i in [1..#elts] | qofidx(i) eq 0 ];
-est := isoidx[2];
+// #iso = 2N-1: at N=1 the zero coset is the ONLY isotropic element, so track
+// it; for N>1 keep the first nonzero isotropic coset (unchanged behavior).
+est := #isoidx ge 2 select isoidx[2] else isoidx[1];
+printf "#isotropic = %o, tracking coset index %o\n", #isoidx, est;
 
 reps := VVCosetReps(M);
 words := [ VVSTWord(g) : g in reps ];
