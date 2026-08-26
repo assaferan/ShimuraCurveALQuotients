@@ -1,0 +1,15 @@
+IDENTICAL
+M =   84:   192 cosets  VVCosetReps    0.110 s   fastCosetReps    0.000 s   
+IDENTICAL
+M =  132:   288 cosets  VVCosetReps    0.430 s   fastCosetReps    0.010 s   
+IDENTICAL
+M =  140:   288 cosets  VVCosetReps    0.510 s   fastCosetReps    0.000 s   
+IDENTICAL
+M =  420:  1152 cosets  VVCosetReps    9.800 s   fastCosetReps    0.050 s   
+IDENTICAL
+M =  660:  1728 cosets  VVCosetReps   39.630 s   fastCosetReps    0.100 s   
+IDENTICAL
+FASTCOSETS VERDICT: PASS
+M = 4620: 13824 cosets in 4.170 s (expected 13824)
+M = 4620: 13824 distinct P^1(Z/M) classes among 13824 reps  OK
+DONE

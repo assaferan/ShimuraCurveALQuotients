@@ -238,9 +238,15 @@ if assigned VERIFY then
     error if bad ne 0 or badB ne 0, "coordinate model disagrees with the library";
 end if;
 
-reps := VVCosetReps(M);
+// VVCosetReps is O(M^3) -- measured 40 s at M = 660, so ~3.8 h at M = 4620
+// before the driver computes anything.  fastCosetReps emits the IDENTICAL
+// sequence of matrices in O(psi(M)*phi(M)); see fastcosets.m and the
+// fastcosets_check.m gate.
+load "vvdata/weyl-campaign/fastcosets.m";
+tcr := Cputime();
+reps := fastCosetReps(M);
 words := [ VVSTWord(g) : g in reps ];
-printf "#cosets = %o\n", #words;
+printf "#cosets = %o (fastCosetReps, %o s)\n", #words, Cputime(tcr);
 
 hilb := func< x, y | (x lt 0 and y lt 0) select -1 else 1 >;
 oddpart := function(c) c2 := AbsoluteValue(c); while IsEven(c2) do c2 := c2 div 2; end while; return c2; end function;
