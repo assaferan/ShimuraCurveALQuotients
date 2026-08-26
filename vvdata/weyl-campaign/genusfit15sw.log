@@ -1,0 +1,22 @@
+exit 0
+16 lattices fall into 13 genera
+  genus 1: disc 4, members [ 1 ], classes in genus 1
+  genus 2: disc 9, members [ 2 ], classes in genus 1
+  genus 3: disc 36, members [ 3 ], classes in genus 1
+  genus 4: disc 225, members [ 4 ], classes in genus 1
+  genus 5: disc 100, members [ 5 ], classes in genus 1
+  genus 6: disc 900, members [ 6, 15 ], classes in genus 2
+  genus 7: disc 36, members [ 7 ], classes in genus 1
+  genus 8: disc 225, members [ 8, 12 ], classes in genus 2
+  genus 9: disc 100, members [ 9 ], classes in genus 1
+  genus 10: disc 900, members [ 10, 13 ], classes in genus 2
+  genus 11: disc 144, members [ 11 ], classes in genus 1
+  genus 12: disc 900, members [ 14 ], classes in genus 1
+  genus 13: disc 900, members [ 16 ], classes in genus 1
+genus-average span rank 10 vs 10; E in it: true
+E_eis over the Siegel-Weil basis:
+      -1/2 * GENUS9(disc 100)
+         1 * GENUS10(disc 900)
+      -1/2 * GENUS12(disc 900)
+         2 * CUSP_3
+aliasing dim 6
