@@ -1,0 +1,8 @@
+BASE 10 7  M = 140  |D| = 9800
+level(Dbar) = 140
+#cosets = 288
+Dc/xc tables built (11 residues)
+BAD-word table: wi (a,b,c,d) | v2(c) codd%8 a%8 d%8 | arg8(u) |u| u8dev | 
+propdev | ksign conv | arg8(u/ks)
+ANTI wi=2 (a,b,c,d)=(0,1,-1,0) v2c=0 codd8=1 a8=0 d8=0 ks=1 conv=1
+SUMMARY: HIT 286  ANTI 1  BAD 0  skipped 1 (of 288)

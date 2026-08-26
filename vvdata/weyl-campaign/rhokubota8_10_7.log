@@ -1,0 +1,14 @@
+BASE 10 7  M = 140  |D| = 9800
+level(Dbar) = 140
+p = 2: |J_p| = 8
+p = 5: |J_p| = 25
+p = 7: |J_p| = 49
+sign(Dbar) = 1 mod 8 (2-part 5)
+Jordan basis of J_2: [ 71, 4902, 4971 ]  Q-values *4: [ 3, 3, 3 ]
+x_c (k=1) = index 2 coords [ 1, 0, 0 ]
+#cosets = 288
+ANTI wi=2 (a,b,c,d)=(0,1,-1,0) k2=0 ks=1
+SUMMARY: HIT 286  ANTI 1  BAD 0  skipped 1 (of 288)
+census <60*arg(u/ks), propOK> -> count:
+  <0, 1> -> 286
+  <30, 1> -> 1

@@ -1,0 +1,16 @@
+BASE 10 7  M = 140  |D| = 9800
+level(Dbar) = 140
+p = 2: |J_p| = 8
+p = 5: |J_p| = 25
+p = 7: |J_p| = 49
+sign(Dbar) = 1 mod 8 (2-part 5)
+#cosets = 288
+t0 = 2 coords [ 1, 0, 0 ]
+census <60*arg(xi_meas/xi_def61), ksign, evenc> -> count:
+  <0, -1, 1> -> 4
+  <0, 1, 0> -> 158
+  <0, 1, 1> -> 40
+  <30, -1, 0> -> 33
+  <30, -1, 1> -> 33
+  <30, 1, 0> -> 1
+  <30, 1, 1> -> 18

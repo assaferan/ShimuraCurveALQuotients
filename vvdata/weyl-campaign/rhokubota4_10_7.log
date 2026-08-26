@@ -1,0 +1,31 @@
+BASE 10 7  M = 140  |D| = 9800
+level(Dbar) = 140
+#cosets = 288
+Dc/xc tables built (11 residues)
+t0 = 2 (coords [ 1, 0, 0 ]), trivial correction iff t0 = identity: false
+BAD-word table: wi (a,b,c,d) | v2(c) codd%8 a%8 d%8 | arg8(u) |u| u8dev | 
+propdev | ksign conv | arg8(u/ks)
+ANTI wi=2 (a,b,c,d)=(0,1,-1,0) v2c=0 codd8=1 a8=0 d8=0 ks=1 conv=1
+ANTI wi=143 (a,b,c,d)=(3,-1,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=145 (a,b,c,d)=(7,-3,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=147 (a,b,c,d)=(11,-5,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=149 (a,b,c,d)=(15,-7,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=151 (a,b,c,d)=(19,-9,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=153 (a,b,c,d)=(23,-11,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=155 (a,b,c,d)=(27,-13,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=157 (a,b,c,d)=(31,-15,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=159 (a,b,c,d)=(35,-17,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=161 (a,b,c,d)=(39,-19,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=163 (a,b,c,d)=(43,-21,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=165 (a,b,c,d)=(47,-23,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=167 (a,b,c,d)=(51,-25,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=169 (a,b,c,d)=(55,-27,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=171 (a,b,c,d)=(59,-29,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=173 (a,b,c,d)=(63,-31,-2,1) v2c=1 codd8=1 a8=7 d8=1 ks=1 conv=1
+ANTI wi=175 (a,b,c,d)=(67,-33,-2,1) v2c=1 codd8=1 a8=3 d8=1 ks=1 conv=1
+ANTI wi=261 (a,b,c,d)=(3,1,-10,-3) v2c=1 codd8=5 a8=3 d8=5 ks=-1 conv=1
+ANTI wi=262 (a,b,c,d)=(7,-2,-10,3) v2c=1 codd8=5 a8=7 d8=3 ks=-1 conv=1
+ANTI wi=264 (a,b,c,d)=(11,-1,-10,1) v2c=1 codd8=5 a8=3 d8=1 ks=-1 conv=1
+ANTI wi=266 (a,b,c,d)=(19,2,-10,-1) v2c=1 codd8=5 a8=3 d8=7 ks=1 conv=1
+ANTI wi=268 (a,b,c,d)=(3,-1,-14,5) v2c=1 codd8=7 a8=3 d8=5 ks=-1 conv=1
+SUMMARY: HIT 264  ANTI 23  BAD 0  skipped 1 (of 288)
