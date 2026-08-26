@@ -1,7 +1,7 @@
 // Mass of genus(Gross(D',R)) for every s-law support triple, vs the weights.
 // Triple at base (q,s,N): (q,N) w=-1/(s-1); (q,N*s) w=(s+1)/(2(s-1)); (q*s*N,1) w=-1/2.
-// Bases: [q, s, N] for the nine banked bases.
-bases := [ [5,3,2], [7,3,2], [11,2,3], [2,5,7], [17,2,3], [7,5,2], [11,3,2], [11,5,2], [11,7,2] ];
+// Bases: [q, s, N], q = LARGEST ramified prime of D (banked supports).
+bases := [ [5,3,2], [7,3,2], [11,2,3], [5,2,7], [17,2,3], [7,5,2], [11,3,2], [11,5,2], [11,7,2] ];
 bnames := [ "15_2", "21_2", "22_3", "10_7", "34_3", "35_2", "33_2", "55_2", "77_2" ];
 grossmass := function(Dp, Rl)
     Bq := QuaternionAlgebra(Dp);

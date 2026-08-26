@@ -11,9 +11,9 @@
   (11,6): disc 4356, cls 3, mass 5/8   w = 3/2   w*mass = 15/16   w/mass = 12/5
   (66,1): disc 4356, cls 2, mass 5/48   w = -1/2   w*mass = -5/96   w/mass = 
 -24/5
-== 10_7 (q=2, s=5, N=7)
-  (2,7): disc 196, cls 1, mass 1/12   w = -1/4   w*mass = -1/48   w/mass = -3
-  (2,35): disc 4900, cls 2, mass 1/4   w = 3/4   w*mass = 3/16   w/mass = 3
+== 10_7 (q=5, s=2, N=7)
+  (5,7): disc 1225, cls 3, mass 1/3   w = -1   w*mass = -1/3   w/mass = -3
+  (5,14): disc 4900, cls 3, mass 1/2   w = 3/2   w*mass = 3/4   w/mass = 3
   (70,1): disc 4900, cls 1, mass 1/8   w = -1/2   w*mass = -1/16   w/mass = -4
 == 34_3 (q=17, s=2, N=3)
   (17,3): disc 2601, cls 4, mass 2/3   w = -1   w*mass = -2/3   w/mass = -3/2
