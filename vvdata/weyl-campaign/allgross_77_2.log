@@ -1,0 +1,49 @@
+BASE 77_2: DN = 154, level 616
+dim M = 54, dim S = 43 (Eis 11)
+E in M: true
+definite structures: [ <2, 1>, <2, 7>, <2, 11>, <2, 77>, <7, 1>, <7, 2>, <7, 
+11>, <7, 22>, <11, 1>, <11, 2>, <11, 7>, <11, 14>, <154, 1> ]
+  built GROSS(2,1) disc 4, 1 cls
+  built GROSS(2,7) disc 196, 1 cls
+  built GROSS(2,11) disc 484, 1 cls
+  built GROSS(2,77) disc 23716, 2 cls
+  built GROSS(7,1) disc 49, 1 cls
+  built GROSS(7,2) disc 196, 2 cls
+  built GROSS(7,11) disc 5929, 4 cls
+  built GROSS(7,22) disc 23716, 5 cls
+  built GROSS(11,1) disc 121, 2 cls
+  built GROSS(11,2) disc 484, 2 cls
+  built GROSS(11,7) disc 5929, 3 cls
+  built GROSS(11,14) disc 23716, 4 cls
+  built GROSS(154,1) disc 23716, 3 cls
+Gross-average+cusp span: rank 50 vs 50 -> E in span: true
+E_eis =
+      -1/6 * GROSS(11,2) disc 484, 2 cls
+       2/3 * GROSS(11,14) disc 23716, 4 cls
+      -1/2 * GROSS(154,1) disc 23716, 3 cls
+     -2/15 * CUSP_1
+      -2/5 * CUSP_2
+      2/15 * CUSP_4
+      -2/5 * CUSP_7
+      -6/5 * CUSP_8
+      2/15 * CUSP_9
+      -4/5 * CUSP_11
+     -2/15 * CUSP_14
+      4/15 * CUSP_15
+     -2/15 * CUSP_16
+        -2 * CUSP_18
+      -4/5 * CUSP_21
+     -4/15 * CUSP_22
+      2/15 * CUSP_25
+      -2/5 * CUSP_28
+       8/5 * CUSP_29
+      12/5 * CUSP_30
+      14/5 * CUSP_32
+      16/5 * CUSP_35
+     -2/15 * CUSP_36
+     -8/15 * CUSP_37
+      12/5 * CUSP_39
+      4/15 * CUSP_41
+     -14/5 * CUSP_42
+      -8/5 * CUSP_43
+aliasing dim 6
