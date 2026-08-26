@@ -46,8 +46,19 @@ line plus one carrier MONO vector satisfying that key.
 
 so roughly **18x the 660 pool time** and **8.5x its peak memory** --
 the A-cache alone is order 2 GB of int64 at `nd = 48`, which is the
-likelier failure mode. Calibrate by re-running the 660 pool
-(`enum32m.py mono330_1_synth.log <out> 8 7`) and multiplying.
+likelier failure mode.
+
+**Partial calibration, measured.** `enum32m.py mono330_1_synth.log <out>
+8 7` at `M = 660` ran **>25 minutes without finishing** and was killed
+(no output file). So `R=8, K=7` at `M = 4620` is **>7 hours** on the
+same machine, and plausibly far worse once the A-cache starts swapping.
+Caveat: the parameters the banked `epool_330_1.txt` was actually
+generated with are not recorded, so this may be a harsher setting than
+was ever used in production -- re-derive from a completed 660 run
+before trusting the multiplier.
+
+**Conclusion: do not attempt `R=8, K=7` at 4620.** Start from the
+reduced settings below and only widen if the pool fails to span.
 
 **If it is too big**, the cheap levers in order: drop `R` from 8 to 6
 (`nv` 17 -> 13, B-loop x0.34); drop `K` from 7 to 6 (`NA=3, NB=3`,
