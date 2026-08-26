@@ -1,0 +1,7 @@
+# 4 pool, 70 cosets in system
+# pivots (0-based pool cols): [0, 1, 2]; residual beyond rank: 2.1e-78
+# pivot beta snap err: 6.57e-47
+  beta[1] = -1/6   r = [-6, 15, -6, 0, 0, 0]
+  beta[2] = 7/6   r = [-2, 5, -2, -4, 10, -4]
+  beta[3] = 0   r = [-1, 2, 0, -1, 1, 2]
+RATIONAL E_eis FOUND

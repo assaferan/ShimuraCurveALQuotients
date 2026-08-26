@@ -1,0 +1,11 @@
+BASE 14_1: DN = 14, level 56
+dim M = 7, dim S = 2 (Eis 5)
+E in M: true
+definite structures: [ <2, 1>, <2, 7> ]
+  built GROSS(2,1) disc 4, 1 cls
+  built GROSS(2,7) disc 196, 1 cls
+Gross-average+cusp span: rank 4 vs 4 -> E in span: true
+E_eis =
+      -1/3 * GROSS(2,1) disc 4, 1 cls
+       4/3 * GROSS(2,7) disc 196, 1 cls
+aliasing dim 0

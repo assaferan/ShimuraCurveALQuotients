@@ -1,0 +1,6 @@
+# 5 pool members, 60 cosets with nonzero constants
+# rank 3, kernel dim 2
+K0: snap_err 0.0  exact_dev 0.0  den 1
+    [0, 0, 0, 1, 0]
+K1: snap_err 0.0  exact_dev 6.94e-79  den 1
+    [0, -1, 4, 0, 1]

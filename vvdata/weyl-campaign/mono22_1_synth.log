@@ -1,0 +1,3 @@
+# SYNTHETIC mono dump for enum32m at 22_1 (universal character key)
+BASE 22 1  M = 44  ds = [ 1, 2, 4, 11, 22, 44 ]
+MONO 1 [ -6, -1, 2, 0, 0, 0 ]

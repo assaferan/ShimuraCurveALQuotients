@@ -1,0 +1,4 @@
+# 4 pool members, 70 cosets with nonzero constants
+# rank 3, kernel dim 1
+K0: snap_err 6.57e-47  exact_dev 1.09e-47  den 6
+    [1, -7, -24, 6]
