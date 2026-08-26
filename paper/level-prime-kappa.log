@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  26 AUG 2026 18:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  26 AUG 2026 22:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -473,11 +473,11 @@ Overfull \vbox (1.23816pt too high) has occurred while \output is active []
 
 [1{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 
-[2{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
-}]
+[2]
 
-[3]
-Overfull \hbox (5.90308pt too wide) in paragraph at lines 287--295
+[3{/usr/local/texlive/2025/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}]
+Overfull \hbox (5.90308pt too wide) in paragraph at lines 292--300
 \OT1/cmr/m/n/10.95 Restor-ing a cor-rec-tion $\OML/cmm/m/it/10.95 r[] [] N$ \OT
 1/cmr/m/n/10.95 to $[]\OMS/cmsy/m/n/10.95 j\OML/cmm/m/it/10.95  []\OMS/cmsy/m/n
 /10.95 j$ \OT1/cmr/m/n/10.95 mul-ti-plies the nor-malised value at $\OML/cmm/m/
@@ -491,12 +491,12 @@ it/10.95 d$ \OT1/cmr/m/n/10.95 by $\OML/cmm/m/it/10.95 N[]$\OT1/cmr/m/n/10.95 ,
 
 [5]
 LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 3
-73.
+78.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2024/11/19 v2.5n Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 373.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 378.
 
 
 [6]
@@ -506,7 +506,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 [8]
 
 [9]
-Overfull \hbox (5.82901pt too wide) in paragraph at lines 628--630
+Overfull \hbox (5.82901pt too wide) in paragraph at lines 633--635
 []\OT1/cmr/m/it/10.95 for odd $\OML/cmm/m/it/10.95 g$ \OT1/cmr/m/it/10.95 and t
 he canon-i-cal rep-re-sen-ta-tive ($\OML/cmm/m/it/10.95 a \OT1/cmr/m/n/10.95 = 
 \OML/cmm/m/it/10.95 d \OT1/cmr/m/n/10.95 = 1$\OT1/cmr/m/it/10.95 , $\OML/cmm/m/
@@ -517,7 +517,7 @@ r/m/n/10.95 ) \OML/cmm/m/it/10.95 e[]\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 E[
  []
 
 
-Overfull \hbox (73.8511pt too wide) in paragraph at lines 641--670
+Overfull \hbox (73.8511pt too wide) in paragraph at lines 646--675
 []\OT1/cmr/m/n/10.95 By [[], Thm. 6.4], for $\OML/cmm/m/it/10.95 x \OT1/cmr/m/n
 /10.95 = 0$ the $\OML/cmm/m/it/10.95 ^^Q[]$\OT1/cmr/m/n/10.95 -component of $\O
 ML/cmm/m/it/10.95 ^^Z[]\OT1/cmr/m/n/10.95 ([])\OML/cmm/m/it/10.95 e[]$ \OT1/cmr
@@ -532,33 +532,25 @@ ML/cmm/m/it/10.95 ^^Z[]\OT1/cmr/m/n/10.95 ([])\OML/cmm/m/it/10.95 e[]$ \OT1/cmr
 [10]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 733.
+(hyperref)                removing `math shift' on input line 738.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 733.
+(hyperref)                removing `math shift' on input line 738.
 
 
-Overfull \hbox (6.344pt too wide) in paragraph at lines 747--756
-[][]\OT1/cmr/bx/n/10.95 Observation 9.1 \OT1/cmr/m/n/10.95 (the weight-$3\OML/c
+
+[11]
+Overfull \hbox (6.344pt too wide) in paragraph at lines 788--800
+[][]\OT1/cmr/bx/n/10.95 Observation 9.2 \OT1/cmr/m/n/10.95 (the weight-$3\OML/c
 mm/m/it/10.95 =\OT1/cmr/m/n/10.95 2$ residue pair-ing)\OT1/cmr/bx/n/10.95 . []\
 OT1/cmr/m/n/10.95 On ev-ery base mea-sured, the class-assembled
  []
 
 
 
-[11]
-Overfull \hbox (39.6112pt too wide) in paragraph at lines 759--762
-\OT1/cmr/m/n/10.95 over the def-i-nite struc-tures with $\OML/cmm/m/it/10.95 D[
-]R \OMS/cmsy/m/n/10.95 j \OML/cmm/m/it/10.95 DN$\OT1/cmr/m/n/10.95 , mod-ulo cu
-sp forms, with sup-port $\OMS/cmsy/m/n/10.95 f\OT1/cmr/m/n/10.95 (\OML/cmm/m/it
-/10.95 q; N\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ;  \OT1/cmr/m/n/10.95 (\OML/
-cmm/m/it/10.95 q; sN\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 ;  \OT1/cmr/m/n/10.
-95 (\OML/cmm/m/it/10.95 DN; \OT1/cmr/m/n/10.95 1)\OMS/cmsy/m/n/10.95 g$
- []
-
-
-Overfull \hbox (28.21663pt too wide) detected at line 799
+[12]
+Overfull \hbox (28.21663pt too wide) detected at line 844
 []\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 q; N\OT1/cmr/m/n/10.95 ) = []\OML/cmm
 /m/it/10.95 ;  [] \OT1/cmr/m/n/10.95 = []\OML/cmm/m/it/10.95 ;  []\OT1/cmr/m/n/
 10.95 (\OML/cmm/m/it/10.95 DN; \OT1/cmr/m/n/10.95 1) = []\OML/cmm/m/it/10.95 ;
@@ -566,16 +558,18 @@ Overfull \hbox (28.21663pt too wide) detected at line 799
 
 
 
-[12]
-
 [13]
-Overfull \hbox (8.26279pt too wide) in paragraph at lines 924--928
+
+[14]
+
+[15]
+Overfull \hbox (8.26279pt too wide) in paragraph at lines 1014--1018
 \OT1/cmr/m/n/10.95 truth sweeps, and the con-straints ledger --- are banked on 
 the branch \OT1/cmtt/m/n/10.95 m0-theta-campaign
  []
 
 
-Overfull \hbox (1.59857pt too wide) in paragraph at lines 928--937
+Overfull \hbox (1.59857pt too wide) in paragraph at lines 1018--1027
 \OT1/cmr/m/n/10.95 probes (\OT1/cmtt/m/n/10.95 grossid100.m\OT1/cmr/m/n/10.95 ,
  \OT1/cmtt/m/n/10.95 grossid900.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 swapp
 robe.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 massprobe.m\OT1/cmr/m/n/10.95 , 
@@ -584,9 +578,7 @@ robe.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 massprobe.m\OT1/cmr/m/n/10.95 ,
 
 
 
-[14]
-
-[15] (./level-prime-kappa.aux)
+[16] (./level-prime-kappa.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -595,13 +587,13 @@ Package rerunfilecheck Info: File `level-prime-kappa.out' has not changed.
 (rerunfilecheck)             Checksum: C373A0AD44BC173BBE5555982B4FB21D;3974.
  ) 
 Here is how much of TeX's memory you used:
- 11646 strings out of 473190
- 176765 string characters out of 5715801
- 599701 words of memory out of 5000000
- 34502 multiletter control sequences out of 15000+600000
+ 11651 strings out of 473190
+ 176813 string characters out of 5715801
+ 600880 words of memory out of 5000000
+ 34504 multiletter control sequences out of 15000+600000
  568093 words of font info for 71 fonts, out of 8000000 for 9000
  1302 hyphenation exceptions out of 8191
- 75i,10n,79p,606b,677s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,10n,79p,606b,614s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx9.pfb><
 /usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><
@@ -624,10 +616,10 @@ mf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></usr/local/texlive/2025/texmf
 dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/202
 5/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on level-prime-kappa.pdf (15 pages, 378784 bytes).
+Output written on level-prime-kappa.pdf (16 pages, 387209 bytes).
 PDF statistics:
- 452 PDF objects out of 1000 (max. 8388607)
- 387 compressed objects within 4 object streams
- 95 named destinations out of 1000 (max. 500000)
+ 476 PDF objects out of 1000 (max. 8388607)
+ 409 compressed objects within 5 object streams
+ 98 named destinations out of 1000 (max. 500000)
  137 words of extra memory for PDF output out of 10000 (max. 10000000)
 
