@@ -111,9 +111,10 @@ is entirely mass normalisation. Six further bases, all preregistered, then test 
 it could break: at composite $s$ the support re-splits (and the three readings we had recorded
 in advance are all refuted as stated), while the doubling of the weights that accompanies the
 re-split turns out to be no law at all but the choice of isotropic coset at which the functional
-is read (Remark~\ref{rem:coset}). What survives across all fifteen bases, in both
-normalisations, is the support and a mass-ratio identity. Section~\ref{sec:open} states what
-remains open.
+is read (Remark~\ref{rem:coset}). Four more, at odd level, then separate the last confound and
+show the $N=1$ weights following $s$ after all. What survives across all nineteen bases, in
+both normalisations, is the support and a mass-ratio identity. Section~\ref{sec:open} states
+what remains open.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -794,9 +795,11 @@ M_{3/2}(\Gamma_0(4DN))$ is exactly rational. Three constants are shared by all n
 of Observation~\ref{obs:slaw}: the Eisenstein dimension of $M_{3/2}(\Gamma_0(4DN))$ is
 $11$, the rank of the constants map is $7$, and the aliasing kernel of the Gross-average
 fit has dimension $6$. They are constants of that family of levels rather than of the
-phenomenon: the aliasing is $25$ at $X_0^{210}(1)$ and $X_0^{330}(1)$, and the triple
+phenomenon: the aliasing is $25$ at $X_0^{210}(1)$ and $X_0^{330}(1)$; the triple
 degenerates to $(5,3,1)$ at the four small bases $D=2q$, $N=1$ of
-Observation~\ref{obs:n1} (levels $40$--$104$).
+Observation~\ref{obs:n1} (levels $40$--$104$); and the odd-level family of
+Observation~\ref{obs:oddlev} has its own uniform pair, Eisenstein dimension $7$ and
+constants-rank $7$, at all four of its levels $60,84,132,140$.
 \end{observation}
 
 \begin{observation}[the $s$-law; nine bases, all with $N>1$]\label{obs:slaw}
@@ -859,9 +862,10 @@ The scale-free part of this,
   \frac{\mathrm{mass}(q,sN)}{\mathrm{mass}(q,N)},
 \]
 is the one statement here untouched by Remark~\ref{rem:coset}, and it is the widest-held:
-it holds on all \emph{fifteen} bases measured --- the nine above, the two composite-$D$
-bases and the four $N=1$ bases below --- in both normalisations, and, where the support is
-degenerate, on both competing supports simultaneously (Observation~\ref{obs:n1}). It is
+it holds on all \emph{nineteen} bases measured --- the nine above, the two composite-$D$
+bases, the four $N=1$ bases and the four odd-level bases below --- in both normalisations,
+in both parities of $DN$, and, where the support is degenerate, on both competing supports
+simultaneously (Observations~\ref{obs:n1} and~\ref{obs:oddlev}). It is
 therefore the form in which we expect these fits to enter a Siegel--Weil derivation.
 \end{observation}
 
@@ -933,6 +937,53 @@ survived two successive explanations (composite $D$, then $N=1$ itself) before t
 test --- forcing $\eta=0$ at $X_0^{15}(2)$ and $X_0^{22}(3)$ --- identified it as the
 tracked coset and dissolved it. The surviving arithmetic is the support (including the
 re-split $q=D/2$ at four-prime $D$) and the mass-ratio law.
+
+One confound remained. All six of those bases have $s=2$ --- the four small ones outright,
+$X_0^{210}(1)$ and $X_0^{330}(1)$ after the re-split --- so ``the $N=1$ weights are the
+constant $(-2,+3)$'' and ``the $N=1$ weights are twice the $s$-law'' agree on every one of
+them and nowhere else. Separating them needs $N=1$ with $s>2$, hence odd $D$, hence odd
+$DN$: a regime with level $4DN$ rather than $2DN$, which the computation had never entered.
+It turns out to require only that the $2$-part of the discriminant form, there a single
+$\mathbb{Z}/2$ of odd type rather than $(\Z/2)^3$, be admitted into the closed form of
+Theorem~\ref{thm:rhoentry}; the four smallest such bases are then cheap.
+
+\begin{observation}[the odd-level quartet; the $N=1$ weights follow $s$]\label{obs:oddlev}
+At $X_0^{15}(1)$, $X_0^{21}(1)$, $X_0^{33}(1)$ ($s=3$) and $X_0^{35}(1)$ ($s=5$), all
+preregistered, the residue pairing holds (residuals $8.0\cdot10^{-42}$, $6.1\cdot10^{-41}$,
+$3.2\cdot10^{-42}$, $9.7\cdot10^{-43}$) and
+\[
+\begin{array}{lll}
+\toprule
+\text{base} & E_{\mathrm{eis}}\ \text{mod cusp} & \lvert w_2/w_1\rvert\\
+\midrule
+X_0^{15}(1) & -\bar\theta(5,1)+2\,\bar\theta(5,3) & 2\\
+X_0^{21}(1) & -\bar\theta(7,1)+2\,\bar\theta(7,3) & 2\\
+X_0^{33}(1) & -\bar\theta(11,1)+2\,\bar\theta(11,3) & 2\\
+X_0^{35}(1) & -\tfrac12\bar\theta(7,1)+\tfrac32\bar\theta(7,5) & 3\\
+\bottomrule
+\end{array}
+\]
+each restricted support carrying $E_{\mathrm{eis}}$ with aliasing dimension $0$. These are
+$2\bigl(-\tfrac1{s-1},\tfrac{s+1}{2(s-1)}\bigr)$ exactly, so the $N=1$ weights follow $s$
+and the constant reading is refuted. Two further facts, neither predicted. First, the
+support is \emph{degenerate}: the other ramified prime also carries $E_{\mathrm{eis}}$, at
+aliasing dimension $0$, with weights obeying the same formula read with its own
+$(q',s')$ --- $(3,5)\mapsto(-\tfrac12,\tfrac32)$, $(3,7)\mapsto(-\tfrac13,\tfrac43)$,
+$(3,11)\mapsto(-\tfrac15,\tfrac65)$, $(5,7)\mapsto(-\tfrac13,\tfrac43)$. The law is thus
+not attached to a choice of $q$ at all when $D$ has two primes. Second, the mass-ratio
+identity holds on all eight of these fits, canonical and competing, from masses computed
+in advance; it now stands at \emph{nineteen} bases, across both normalisations, both
+parities of $DN$, and every support that carries $E_{\mathrm{eis}}$.
+\end{observation}
+
+The degeneracy is worth isolating, because it locates where the re-split rule has content.
+A two-prime discriminant cannot select a support: either factorisation works, and the
+choice ``$q$ = the larger ramified prime'' is a convention. A four-prime discriminant
+does select --- at $X_0^{210}(1)$ and $X_0^{330}(1)$ the competing span genuinely fails
+the rank test. This is why the rule is tested only at four primes, and why the case that
+would distinguish ``odd part'' from ``largest definite divisor'' must have all four primes
+odd: the minimal such base is $D=1155$, where the odd part is the whole of $D$ and hence
+indefinite, so the two candidate rules diverge for the first time.
 
 \section{The open question}\label{sec:open}
 
@@ -1030,8 +1081,13 @@ The computations were carried out in Magma against the codebase accompanying thi
       end-to-end at $X_0^{210}(1)$: $960$ of $960$ words, identical solve residual
       $1.0087\cdot10^{-42}$). Its \texttt{EST} switch selects the tracked isotropic coset
       and is what produces the $\eta=0$ rows of Remark~\ref{rem:coset}; the corresponding
-      control runs reproduce the banked $\eta^*$ fits exactly. Restricted-support gauge
-      checks (the rank exclusions quoted above) are generated by \texttt{genrestrict.py}.
+      control runs reproduce the banked $\eta^*$ fits exactly. Its \texttt{CTL} switch
+      recomputes every $\rho$-entry by the numerical route and reports the worst
+      deviation; this is the gate through which the odd-level $2$-part of
+      Observation~\ref{obs:oddlev} was admitted (worst $1.3\cdot10^{-79}$ over all $144$
+      words of $X_0^{15}(1)$, against $7.3\cdot10^{-80}$ for the unchanged even-level path
+      at $X_0^{15}(2)$), run before any fit. Restricted-support gauge checks (the rank
+      exclusions and the degeneracy quoted above) are generated by \texttt{genrestrict.py}.
 \end{itemize}
 
 \begin{thebibliography}{99}
