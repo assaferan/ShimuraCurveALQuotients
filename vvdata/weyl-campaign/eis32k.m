@@ -6,9 +6,10 @@
 //   0 otherwise for an elementary (Z/2)^r 2-part), xi(a,c) per Def 6.1.
 // The tracked coefficient is rv[est]: need y with c y = elts[est] - x_c;
 // no solution => 0.  c = 0 words (only T^0 among Gamma_0 reps) => 1.
-// Requires an ELEMENTARY (Z/2)^3 2-part of the discriminant group (errors
-// out otherwise -- extend Def 2.15 handling before odd-D/4-component bases).
+// The 2-part must be elementary: (Z/2)^3 (even DN, level 2DN) or Z/2 of odd
+// type (odd DN, level 4DN); any other shape errors out.
 //   magma -b DD:=330 NN:=1 EF:=<pool> eis32k.m
+// CTL:=1 adds the word-by-word FFT control (small |D| only).
 AttachSpec("ShimuraQuotients.spec");
 
 D := 15; N := 2;
@@ -86,9 +87,18 @@ printf "sign(Dbar) = %o mod 8 (2-part %o)\n", signD, sign2;
 tor2nz := [ i : i in Syl[2] | not IsZero(elts[i]) and IsZero(2*elts[i]) ];
 r2 := Valuation(#[ i : i in Syl[2] | IsZero(2*elts[i]) ], 2);
 error if #tor2nz ne 2^r2 - 1, "2-torsion count mismatch";
-error if r2 ne 3, "unexpected 2-rank";
+error if r2 notin {1, 3}, "unexpected 2-rank", r2;
 basis2 := [ ]; found := false;
-for i1 in tor2nz do
+if r2 eq 1 then
+    // ODD DN: level 4DN, and the 2-part is a single Z/2 of ODD type
+    // (4*Qbar = 1 mod 4 on all four bases probed).  The Jordan basis is that
+    // one generator, so x_c is it.  The r2 = 3 search below is left exactly
+    // as banked -- every even-DN result was measured with it.
+    basis2 := [ tor2nz[1] ]; found := true;
+    error if IsEven(Integers()!(4*Qbar[tor2nz[1]])),
+        "2-part is EVEN type: x_c rule not established here";
+end if;
+for i1 in (found select [ ] else tor2nz) do
     for i2 in tor2nz do
         if i2 eq i1 then continue; end if;
         if frac(BB(i1, i2)) ne 0 then continue; end if;
@@ -103,10 +113,10 @@ for i1 in tor2nz do
     if found then break; end if;
 end for;
 error if not found, "no Jordan basis for J_2";
-xc2 := elts[basis2[1]] + elts[basis2[2]] + elts[basis2[3]];
+xc2 := &+[ elts[i] : i in basis2 ];
 xc2i := idx[xc2];
-printf "Jordan basis J_2: %o  Q*4: %o  x_c = %o\n",
-    basis2, [ Integers()!(4*Qbar[i]) mod 4 : i in basis2 ], xc2i;
+printf "Jordan basis J_2 (2-rank %o): %o  Q*4: %o  x_c = %o\n",
+    r2, basis2, [ Integers()!(4*Qbar[i]) mod 4 : i in basis2 ], xc2i;
 
 reps := VVCosetReps(M);
 words := [ VVSTWord(g) : g in reps ];
@@ -199,6 +209,23 @@ for wi->w in words do
     if wi mod 128 eq 0 then printf "rho %o/%o (closed form)\n", wi, nw; end if;
 end for;
 printf "rhov done (closed form, %o YTab keys)\n", #Keys(YTab);
+
+// ---- CTL: word-by-word FFT control (affordable only at small |D|) --------
+// CTL:=1 recomputes EVERY rhov entry by VVRhoInvE0FFT and reports the worst
+// deviation.  This is the validation gate for any change to the closed form
+// (the 2-rank branch above was gated this way at 15_1 before use at 1155_1).
+if assigned CTL then
+    worst := RealField(30)!0; wworst := 0; nnz := 0;
+    for wi->w in words do
+        rvF := VVRhoInvE0FFT(fftdata, w);
+        dev := Abs(rvF[est] - rhov[wi]);
+        if Abs(rvF[est]) gt 10^(-30) then nnz +:= 1; end if;
+        if dev gt worst then worst := RealField(30)!dev; wworst := wi; end if;
+    end for;
+    printf "CTL: worst |closed - FFT| = %o at word %o  (%o/%o FFT entries nonzero)\n",
+        worst, wworst, nnz, nw;
+    printf "CTL VERDICT: %o\n", worst lt 10^(-25) select "PASS" else "FAIL";
+end if;
 
 // ---- E pool (external only) ---------------------------------------------
 cs := Divisors(M);
