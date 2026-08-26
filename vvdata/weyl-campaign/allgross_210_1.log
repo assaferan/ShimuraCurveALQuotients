@@ -1,0 +1,111 @@
+BASE 210_1: DN = 210, level 840
+dim M = 108, dim S = 85 (Eis 23)
+E in M: true
+definite structures: [ <2, 1>, <2, 3>, <2, 5>, <2, 7>, <2, 15>, <2, 21>, <2, 
+35>, <2, 105>, <3, 1>, <3, 2>, <3, 5>, <3, 7>, <3, 10>, <3, 14>, <3, 35>, <3, 
+70>, <5, 1>, <5, 2>, <5, 3>, <5, 6>, <5, 7>, <5, 14>, <5, 21>, <5, 42>, <7, 1>, 
+<7, 2>, <7, 3>, <7, 5>, <7, 6>, <7, 10>, <7, 15>, <7, 30>, <30, 1>, <30, 7>, 
+<42, 1>, <42, 5>, <70, 1>, <70, 3>, <105, 1>, <105, 2> ]
+  built GROSS(2,1) disc 4, 1 cls
+  built GROSS(2,3) disc 36, 1 cls
+  built GROSS(2,5) disc 100, 1 cls
+  built GROSS(2,7) disc 196, 1 cls
+  built GROSS(2,15) disc 900, 1 cls
+  built GROSS(2,21) disc 1764, 2 cls
+  built GROSS(2,35) disc 4900, 2 cls
+  built GROSS(2,105) disc 44100, 3 cls
+  built GROSS(3,1) disc 9, 1 cls
+  built GROSS(3,2) disc 36, 1 cls
+  built GROSS(3,5) disc 225, 1 cls
+  built GROSS(3,7) disc 441, 2 cls
+  built GROSS(3,10) disc 900, 2 cls
+  built GROSS(3,14) disc 1764, 2 cls
+  built GROSS(3,35) disc 11025, 2 cls
+  built GROSS(3,70) disc 44100, 3 cls
+  built GROSS(5,1) disc 25, 1 cls
+  built GROSS(5,2) disc 100, 1 cls
+  built GROSS(5,3) disc 225, 2 cls
+  built GROSS(5,6) disc 900, 2 cls
+  built GROSS(5,7) disc 1225, 3 cls
+  built GROSS(5,14) disc 4900, 3 cls
+  built GROSS(5,21) disc 11025, 4 cls
+  built GROSS(5,42) disc 44100, 4 cls
+  built GROSS(7,1) disc 49, 1 cls
+  built GROSS(7,2) disc 196, 2 cls
+  built GROSS(7,3) disc 441, 1 cls
+  built GROSS(7,5) disc 1225, 2 cls
+  built GROSS(7,6) disc 1764, 2 cls
+  built GROSS(7,10) disc 4900, 3 cls
+  built GROSS(7,15) disc 11025, 4 cls
+  built GROSS(7,30) disc 44100, 5 cls
+  built GROSS(30,1) disc 900, 1 cls
+  built GROSS(30,7) disc 44100, 2 cls
+  built GROSS(42,1) disc 1764, 1 cls
+  built GROSS(42,5) disc 44100, 2 cls
+  built GROSS(70,1) disc 4900, 1 cls
+  built GROSS(70,3) disc 44100, 2 cls
+  built GROSS(105,1) disc 11025, 2 cls
+  built GROSS(105,2) disc 44100, 3 cls
+Gross-average+cusp span: rank 100 vs 100 -> E in span: true
+E_eis =
+        -2 * GROSS(105,1) disc 11025, 2 cls
+         3 * GROSS(105,2) disc 44100, 3 cls
+       -12 * CUSP_1
+         6 * CUSP_2
+        -8 * CUSP_3
+        12 * CUSP_4
+        -6 * CUSP_5
+        12 * CUSP_6
+        14 * CUSP_8
+       -12 * CUSP_9
+        10 * CUSP_10
+         8 * CUSP_12
+        -4 * CUSP_13
+        -8 * CUSP_15
+       -12 * CUSP_16
+        -6 * CUSP_18
+       -14 * CUSP_20
+        24 * CUSP_21
+        -8 * CUSP_23
+       -12 * CUSP_24
+        12 * CUSP_25
+        12 * CUSP_27
+       -18 * CUSP_30
+       -26 * CUSP_32
+         8 * CUSP_33
+       -24 * CUSP_34
+        20 * CUSP_35
+        12 * CUSP_36
+       -12 * CUSP_38
+        24 * CUSP_39
+       -14 * CUSP_40
+       -14 * CUSP_42
+         6 * CUSP_45
+       -24 * CUSP_46
+         8 * CUSP_47
+        16 * CUSP_48
+        36 * CUSP_49
+         6 * CUSP_50
+        -4 * CUSP_52
+        12 * CUSP_53
+        12 * CUSP_54
+        24 * CUSP_55
+       -12 * CUSP_57
+        -8 * CUSP_60
+        12 * CUSP_64
+       -24 * CUSP_66
+       -24 * CUSP_68
+        30 * CUSP_69
+       -14 * CUSP_71
+         8 * CUSP_72
+        -8 * CUSP_74
+        12 * CUSP_77
+       -48 * CUSP_78
+        26 * CUSP_79
+       -12 * CUSP_80
+         8 * CUSP_81
+       -20 * CUSP_82
+        12 * CUSP_83
+        28 * CUSP_84
+       -28 * CUSP_85
+aliasing dim 25
