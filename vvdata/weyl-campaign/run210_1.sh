@@ -12,13 +12,9 @@ export NORMALIZ_BIN=${NORMALIZ_BIN:-$HOME/Documents/GitHub/normaliz-3.11.1/norma
 
 # 1. seed the enumerated first rung
 cp $SOL145 $CAMP/polymake/polymake_solution_420_145_0
-# 2. generate higher rungs by t-shifting (spanning subsets, validated at 308)
-prev=$CAMP/polymake/polymake_solution_420_145_0
-for j in 1 2 3 4 5 6 7 8; do
-    n=$((145 + 104*j))
-    python3 $CW/tshift_gen.py $prev $W0 $CAMP/polymake/polymake_solution_420_${n}_0
-    prev=$CAMP/polymake/polymake_solution_420_${n}_0
-done
+# 2. install the weight-0 shift set; nmzsolve's t-shift fallback answers ALL
+#    higher m=0 rung requests from the cache (thinned), whatever n the loop asks
+cp $W0 $CAMP/polymake/tshift_w0_420.txt
 # 3. mono stage (BorcherdsForms panel dump); Zero-side polytopes solve live via nmzsolve
 cd $CAMP
 magma -b DD:=210 NN:=1 $CW/monobase.m > $SCI/mono210_1.log 2>&1
