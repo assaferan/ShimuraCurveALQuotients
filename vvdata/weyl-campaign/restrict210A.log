@@ -1,0 +1,7 @@
+BASE 210_1: DN = 210, level 840
+dim M = 108, dim S = 85 (Eis 23)
+E in M: true
+definite structures: [ <7, 1>, <7, 30> ]
+  built GROSS(7,1) disc 49, 1 cls
+  built GROSS(7,30) disc 44100, 5 cls
+Gross-average+cusp span: rank 87 vs 88 -> E in span: false

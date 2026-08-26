@@ -1,0 +1,69 @@
+BASE 210_1: DN = 210, level 840
+dim M = 108, dim S = 85 (Eis 23)
+E in M: true
+definite structures: [ <105, 1>, <105, 2> ]
+  built GROSS(105,1) disc 11025, 2 cls
+  built GROSS(105,2) disc 44100, 3 cls
+Gross-average+cusp span: rank 87 vs 87 -> E in span: true
+E_eis =
+        -2 * GROSS(105,1) disc 11025, 2 cls
+         3 * GROSS(105,2) disc 44100, 3 cls
+       -12 * CUSP_1
+         6 * CUSP_2
+        -8 * CUSP_3
+        12 * CUSP_4
+        -6 * CUSP_5
+        12 * CUSP_6
+        14 * CUSP_8
+       -12 * CUSP_9
+        10 * CUSP_10
+         8 * CUSP_12
+        -4 * CUSP_13
+        -8 * CUSP_15
+       -12 * CUSP_16
+        -6 * CUSP_18
+       -14 * CUSP_20
+        24 * CUSP_21
+        -8 * CUSP_23
+       -12 * CUSP_24
+        12 * CUSP_25
+        12 * CUSP_27
+       -18 * CUSP_30
+       -26 * CUSP_32
+         8 * CUSP_33
+       -24 * CUSP_34
+        20 * CUSP_35
+        12 * CUSP_36
+       -12 * CUSP_38
+        24 * CUSP_39
+       -14 * CUSP_40
+       -14 * CUSP_42
+         6 * CUSP_45
+       -24 * CUSP_46
+         8 * CUSP_47
+        16 * CUSP_48
+        36 * CUSP_49
+         6 * CUSP_50
+        -4 * CUSP_52
+        12 * CUSP_53
+        12 * CUSP_54
+        24 * CUSP_55
+       -12 * CUSP_57
+        -8 * CUSP_60
+        12 * CUSP_64
+       -24 * CUSP_66
+       -24 * CUSP_68
+        30 * CUSP_69
+       -14 * CUSP_71
+         8 * CUSP_72
+        -8 * CUSP_74
+        12 * CUSP_77
+       -48 * CUSP_78
+        26 * CUSP_79
+       -12 * CUSP_80
+         8 * CUSP_81
+       -20 * CUSP_82
+        12 * CUSP_83
+        28 * CUSP_84
+       -28 * CUSP_85
+aliasing dim 0
