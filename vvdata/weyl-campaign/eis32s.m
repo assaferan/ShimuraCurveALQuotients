@@ -502,7 +502,26 @@ end function;
 //
 // ETCTL:=1 re-runs the original a0at on a sample of cosets and reports the
 // worst disagreement -- the gate for this rewrite.
-Emat := [ [ CC | 0 : wi in [1..nw] ] : Ei in [1..#Epool] ];
+// PERFORMANCE.  Once PREC is raised to 600 for the eta underflow, the eta
+// evaluations stop being the bottleneck and the PER-MEMBER arithmetic becomes
+// ~95% of the cost (measured 4.3 s/coset at 1155, i.e. ~14 h).  None of that
+// arithmetic needs 600 digits: the high precision is required only INSIDE
+// DedekindEta, to survive the cancellation, and the ratios that come out are
+// ordinary-sized.  So the ratios are downcast to CW = ComplexField(SPREC) and
+// every per-member operation runs there.  Four more cuts, all exact:
+//   * depth = 1 (i.e. L = 0)  =>  produ = 1 + O(t) and c0 = 1 identically,
+//     so the whole power-series construction is skipped -- it was 354*7
+//     series objects per coset doing nothing;
+//   * L = 0  =>  e(-tau L/(24W)) = 1, so two Exp calls per member disappear;
+//   * L and the ratio product run over each member's SUPPORT (~7 entries),
+//     precomputed once, not over all 48 divisors;
+//   * the kappa check compares SQUARED norms, avoiding two Abs (sqrt) per
+//     member per coset.
+// Emat is stored in CW as well, which also cuts its 3 GB by a factor of 4.
+CW := ComplexField(SPREC);
+supp := [ [ i : i in [1..nd] | rE[i] ne 0 ] : rE in Epool ];
+ktol2 := (RealField(SPREC)!10)^(-50);   // (1e-25)^2, compared against squared norms
+Emat := [ [ CW | 0 : wi in [1..nw] ] : Ei in [1..#Epool] ];
 tET := Cputime();
 for wi->w in words do
     g := VVWordMatrix(w);
@@ -515,45 +534,55 @@ for wi->w in words do
     fac0, z0 := slashdata(w, tau0);
     fac1, z1 := slashdata(w, tau1);
     // the shared per-divisor eta ratios (a > 0 and e > 0 after triang, and z0,
-    // z1 lie in H, so every argument is in H and no eta value vanishes)
-    rat0 := [ CC | ]; rat1 := [ CC | ];
+    // z1 lie in H, so every argument is in H and no eta value vanishes).
+    // Computed at full PREC, kept at SPREC.
+    rat0 := [ CW | ]; rat1 := [ CW | ];
     for i->d in ds do
         a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
         s0 := DedekindEta((a*tau0 + b)/e) * ee(-(a*tau0 + b)/(24*e));
         s1 := DedekindEta((a*tau1 + b)/e) * ee(-(a*tau1 + b)/(24*e));
-        Append(~rat0, DedekindEta(d*z0)/s0);
-        Append(~rat1, DedekindEta(d*z1)/s1);
+        Append(~rat0, CW!(DedekindEta(d*z0)/s0));
+        Append(~rat1, CW!(DedekindEta(d*z1)/s1));
     end for;
-    f0w := fac0^3; f1w := fac1^3;
+    f0w := CW!(fac0^3); f1w := CW!(fac1^3);
+    // L = sum_i r_i * a_i * (W/e_i): the per-divisor factor is member-independent
+    Lc := [ Integers() | tri[i][1]*(W div tri[i][3]) : i in [1..nd] ];
     for Ei->rE in Epool do
-        L := &+[ Integers() | rE[i]*tri[i][1]*(W div tri[i][3]) : i in [1..nd] ];
+        sp := supp[Ei];
+        L := &+[ Integers() | rE[i]*Lc[i] : i in sp ];
         if L gt 0 then continue; end if;
-        depth := -L + 1;
-        // kept general even though depth = 1 wherever it has been sampled
-        produ := SS!1 + O(t^depth);
-        for i in [1..nd] do
-            if rE[i] eq 0 then continue; end if;
-            a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
-            step := 24*a*(W div e);
-            u := SS!1 + O(t^depth);
-            nn := 1;
-            while nn*step lt depth do
-                u *:= 1 - ee(CC!(nn*b/e))*t^(nn*step); nn +:= 1;
-            end while;
-            produ *:= u^(rE[i]);
-        end for;
-        c0 := Coefficient(produ, -L);
-        if c0 eq 0 then continue; end if;
-        p0 := CC!1; p1 := CC!1;
-        for i in [1..nd] do
-            if rE[i] eq 0 then continue; end if;
+        p0 := CW!1; p1 := CW!1;
+        for i in sp do
             p0 *:= rat0[i]^(rE[i]); p1 *:= rat1[i]^(rE[i]);
         end for;
-        k0 := f0w * ee(-tau0*L/(24*W)) * p0;
-        k1 := f1w * ee(-tau1*L/(24*W)) * p1;
-        kscale := Abs(k0); if kscale lt 1 then kscale := Parent(kscale)!1; end if;
-        error if Abs(k0 - k1) gt 10^(-25)*kscale,
-            "kappa not constant", wi, Ei, Abs(k0 - k1);
+        if L eq 0 then
+            // depth = 1: produ = 1 + O(t), c0 = Coefficient(produ, 0) = 1,
+            // and e(-tau L/(24W)) = 1
+            k0 := f0w * p0; k1 := f1w * p1;
+            c0 := CW!1;
+        else
+            depth := -L + 1;
+            produ := SS!1 + O(t^depth);
+            for i in sp do
+                a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
+                step := 24*a*(W div e);
+                u := SS!1 + O(t^depth);
+                nn := 1;
+                while nn*step lt depth do
+                    u *:= 1 - ee(CC!(nn*b/e))*t^(nn*step); nn +:= 1;
+                end while;
+                produ *:= u^(rE[i]);
+            end for;
+            c0 := CW!Coefficient(produ, -L);
+            if c0 eq 0 then continue; end if;
+            k0 := f0w * CW!ee(-tau0*L/(24*W)) * p0;
+            k1 := f1w * CW!ee(-tau1*L/(24*W)) * p1;
+        end if;
+        // |k0 - k1| <= 1e-25 * max(|k0|, 1), squared to avoid the sqrt
+        n0 := Re(k0)^2 + Im(k0)^2;
+        dk := k0 - k1; nd2 := Re(dk)^2 + Im(dk)^2;
+        error if nd2 gt ktol2 * (n0 lt 1 select 1 else n0),
+            "kappa not constant", wi, Ei, nd2;
         Emat[Ei][wi] := k0 * c0;
     end for;
     if wi mod 500 eq 0 then printf "  coset %o/%o (%o s)\n", wi, nw, Cputime(tET); end if;
@@ -573,7 +602,7 @@ if assigned ETCTL then
     for wi in samp do
         for Ei->rE in Epool do
             v := a0at(words[wi], rE, 3);
-            dev := Abs(v - Emat[Ei][wi]);
+            dev := Abs(CW!v - Emat[Ei][wi]);
             if dev gt worst then worst := RealField(30)!dev; wat := <wi, Ei>; end if;
         end for;
     end for;
@@ -626,17 +655,18 @@ for a in [1..ncol] do G2[a][a] +:= tr*10^(-45); end for;
 cvec := Matrix(RR, 1, ncol, [ &+[ cols[a][i]*rvec[i] : i in [1..2*nw] ] : a in [1..ncol] ]);
 ok, X := IsConsistent(G2, cvec);
 if ok then
-    beta := [ CC!X[1][a] + ii*CC!X[1][nE+a] : a in [1..nE] ];
-    resid := Sqrt(&+[ Abs(&+[ beta[a]*Emat[a][wi] : a in [1..nE] ] - rhov[wi])^2 : wi in [1..nw] ]);
-    rhonorm := Sqrt(&+[ Abs(rhov[wi])^2 : wi in [1..nw] ]);
+    beta := [ CW!X[1][a] + CW.1*CW!X[1][nE+a] : a in [1..nE] ];
+    rhoW := [ CW | rhov[wi] : wi in [1..nw] ];
+    resid := Sqrt(&+[ Abs(&+[ CW | beta[a]*Emat[a][wi] : a in [1..nE] ] - rhoW[wi])^2 : wi in [1..nw] ]);
+    rhonorm := Sqrt(&+[ Abs(rhoW[wi])^2 : wi in [1..nw] ]);
     printf "SOLVE resid = %o  (|rho| = %o)\n", RealField(10)!resid, RealField(10)!rhonorm;
     if resid gt 10^(-20)*rhonorm then
         clsres := AssociativeArray(); clsrho := AssociativeArray();
         for wi->w in words do
             g := VVWordMatrix(w);
             cls := GCD(g[2][1] mod M, M);
-            dv := Abs(&+[ beta[a]*Emat[a][wi] : a in [1..nE] ] - rhov[wi])^2;
-            rv2 := Abs(rhov[wi])^2;
+            dv := Abs(&+[ CW | beta[a]*Emat[a][wi] : a in [1..nE] ] - rhoW[wi])^2;
+            rv2 := Abs(rhoW[wi])^2;
             if IsDefined(clsres, cls) then clsres[cls] +:= dv; clsrho[cls] +:= rv2;
             else clsres[cls] := dv; clsrho[cls] := rv2; end if;
         end for;
