@@ -562,7 +562,13 @@ printf "E constant table built (coset-outer, %o s)\n", Cputime(tET);
 
 if assigned ETCTL then
     // compare against the original per-(member,coset) a0at on a coset sample
-    samp := [ wi : wi in [1..nw] | wi mod (nw div 40 + 1) eq 1 ];
+    // ALWAYS include the first few cosets.  A stride-only sample (wi = 1 mod
+    // 44) never hits coset 2 -- the S-coset, where every triangulation is
+    // (1,0,d) and the eta underflow is worst -- so the stride sample passed
+    // at 330_1 while the real run died there at 1155.  Sample the extremes,
+    // not just a stride.
+    samp := [ 1, 2, 3, 4, nw-1, nw ] cat [ wi : wi in [1..nw] | wi mod (nw div 40 + 1) eq 1 ];
+    samp := Sort(Setseq(Seqset([ wi : wi in samp | wi ge 1 and wi le nw ])));
     worst := RealField(30)!0; wat := <0,0>;
     for wi in samp do
         for Ei->rE in Epool do
