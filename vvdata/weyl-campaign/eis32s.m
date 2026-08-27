@@ -50,13 +50,14 @@ if assigned SPR then SPREC := Minimum(StringToInteger(SPR), PREC); end if;
 M := IsOdd(D*N) select 4*D*N else 2*D*N;
 ds := Divisors(M); nd := #ds;
 printf "BASE %o %o  M = %o  ds = %o\n", D, N, M, ds;
-// guard the precision rule above, in digits: 0.0868*M for the worst eta plus
-// working room.  Advisory at build time beats a kappa error 40 minutes in.
+// With etaRed (fundamental-domain reduction) the 0.0868*M rule no longer
+// BINDS: the tiny values now arise as a product of MODERATE factors, each
+// carrying full relative precision, instead of from a catastrophically
+// cancelling series.  Kept as an advisory so the old failure mode stays
+// recognisable in the logs.
 PNEED := Ceiling(0.0868*M) + 60;
-printf "PRECISION: PREC = %o (need >= %o for M = %o), SPREC = %o\n",
-    PREC, PNEED, M, SPREC;
-error if PREC lt PNEED,
-    "PREC too low for this level: eta(tau0/M) will underflow to noise; need", PNEED;
+printf "PRECISION: PREC = %o, SPREC = %o  (unreduced eta would have needed >= %o at M = %o)\n",
+    PREC, SPREC, PNEED, M;
 Ld := ShimuraCurveLattice(D, N);
 
 // ---- the coordinate model ------------------------------------------------
@@ -268,6 +269,7 @@ end if;
 // sequence of matrices in O(psi(M)*phi(M)); see fastcosets.m and the
 // fastcosets_check.m gate.
 load "vvdata/weyl-campaign/fastcosets.m";
+load "vvdata/weyl-campaign/etared.m";
 tcr := Cputime();
 reps := fastCosetReps(M);
 words := [ VVSTWord(g) : g in reps ];
@@ -466,10 +468,10 @@ a0at := function(w, r, wt)
     if c0 eq 0 then return CC!0, L, W; end if;
     fac0, z0 := slashdata(w, tau0);
     fac1, z1 := slashdata(w, tau1);
-    num0 := fac0^wt * &*[ CC | DedekindEta(d*z0)^(r[i]) : i->d in ds | r[i] ne 0 ];
-    num1 := fac1^wt * &*[ CC | DedekindEta(d*z1)^(r[i]) : i->d in ds | r[i] ne 0 ];
+    num0 := fac0^wt * &*[ CC | etaRed(d*z0)^(r[i]) : i->d in ds | r[i] ne 0 ];
+    num1 := fac1^wt * &*[ CC | etaRed(d*z1)^(r[i]) : i->d in ds | r[i] ne 0 ];
     sfun := func< tau | ee(tau*L/(24*W)) *
-        &*[ CC | ( DedekindEta((tri[i][1]*tau + tri[i][2])/tri[i][3]) *
+        &*[ CC | ( etaRed((tri[i][1]*tau + tri[i][2])/tri[i][3]) *
                    ee(-(tri[i][1]*tau + tri[i][2])/(24*tri[i][3])) )^(r[i])
             : i in [1..nd] | r[i] ne 0 ] >;
     k0 := num0 / sfun(tau0);
@@ -539,10 +541,10 @@ for wi->w in words do
     rat0 := [ CW | ]; rat1 := [ CW | ];
     for i->d in ds do
         a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
-        s0 := DedekindEta((a*tau0 + b)/e) * ee(-(a*tau0 + b)/(24*e));
-        s1 := DedekindEta((a*tau1 + b)/e) * ee(-(a*tau1 + b)/(24*e));
-        Append(~rat0, CW!(DedekindEta(d*z0)/s0));
-        Append(~rat1, CW!(DedekindEta(d*z1)/s1));
+        s0 := etaRed((a*tau0 + b)/e) * ee(-(a*tau0 + b)/(24*e));
+        s1 := etaRed((a*tau1 + b)/e) * ee(-(a*tau1 + b)/(24*e));
+        Append(~rat0, CW!(etaRed(d*z0)/s0));
+        Append(~rat1, CW!(etaRed(d*z1)/s1));
     end for;
     f0w := CW!(fac0^3); f1w := CW!(fac1^3);
     // L = sum_i r_i * a_i * (W/e_i): the per-divisor factor is member-independent

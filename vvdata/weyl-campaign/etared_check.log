@@ -1,0 +1,12 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+PREC 120: worst RELATIVE |etaRed - DedekindEta@2000| = 
+8.2648259399885647129E-115   (at coset 13800, d = 4620)
+PREC 120 VERDICT: PASS
+PREC 200: worst RELATIVE |etaRed - DedekindEta@2000| = 
+8.0733184404683278026E-195   (at coset 13800, d = 4620)
+PREC 200 VERDICT: PASS
+coset     3: etaRed 0.000000 ms   DedekindEta 0.000000 ms
+coset  1000: etaRed 0.000000 ms   DedekindEta 10.0000 ms
+coset  2500: etaRed 0.000000 ms   DedekindEta 20.0000 ms
+DONE
