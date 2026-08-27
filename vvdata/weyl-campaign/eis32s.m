@@ -456,18 +456,100 @@ a0at := function(w, r, wt)
     return k0 * c0, L, W;
 end function;
 
-// ---- E constant-term vectors --------------------------------------------
-Emat := [ ];  // rows: E's, cols: cosets
-for Ei->rE in Epool do
-    row := [ CC | 0 : wi in [1..nw] ];
-    for wi->w in words do
-        v, L, W := a0at(w, rE, 3);
-        row[wi] := v;
+// ---- E constant-term vectors, coset-outer -------------------------------
+// a0at above is correct but calls DedekindEta about 28 times per (member,
+// coset), and PROFILING SAYS THAT IS ESSENTially THE WHOLE COST: at 1155,
+// 48 eta evaluations take 37 ms while the 48 triangulations take 1.7 ms, and
+// the power series is free -- the depth was 1 at all 755 sampled
+// (member, coset) pairs, i.e. L = 0 and c0 = 1.  Measured that way the naive
+// loop is ~10.5 min per pool member, so ~50 h for this base.
+//
+// But every eta value depends only on the COSET, not on the pool member:
+//   num0 = fac0^wt * prod_i eta(d_i z0)^{r_i}
+//   sfun(tau0) = e(tau0 L/(24W)) * prod_i [eta((a_i tau0 + b_i)/e_i)
+//                                          e(-(a_i tau0+b_i)/(24 e_i))]^{r_i}
+// so with rat0[i] := eta(d_i z0) / [eta((a_i tau0+b_i)/e_i) e(-...)],
+//   k0 = num0/sfun(tau0) = fac0^wt * e(-tau0 L/(24W)) * prod_i rat0[i]^{r_i}
+// and likewise at tau1.  Hoisting the loop over cosets to the OUTSIDE makes
+// the eta work 4*48 = 192 evaluations PER COSET, shared by the whole pool,
+// after which each member costs only its exponent-weighted product.
+// The eta cost stops depending on the pool size altogether.
+//
+// ETCTL:=1 re-runs the original a0at on a sample of cosets and reports the
+// worst disagreement -- the gate for this rewrite.
+Emat := [ [ CC | 0 : wi in [1..nw] ] : Ei in [1..#Epool] ];
+tET := Cputime();
+for wi->w in words do
+    g := VVWordMatrix(w);
+    tri := [ ];
+    for d in ds do
+        a, b, e, gd := triang(g, d);
+        Append(~tri, <a, b, e, gd>);
     end for;
-    Append(~Emat, row);
-    if Ei mod 10 eq 0 then printf "  E %o/%o done\n", Ei, #Epool; end if;
+    W := LCM([ tri[i][3] : i in [1..nd] ]);
+    fac0, z0 := slashdata(w, tau0);
+    fac1, z1 := slashdata(w, tau1);
+    // the shared per-divisor eta ratios (a > 0 and e > 0 after triang, and z0,
+    // z1 lie in H, so every argument is in H and no eta value vanishes)
+    rat0 := [ CC | ]; rat1 := [ CC | ];
+    for i->d in ds do
+        a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
+        s0 := DedekindEta((a*tau0 + b)/e) * ee(-(a*tau0 + b)/(24*e));
+        s1 := DedekindEta((a*tau1 + b)/e) * ee(-(a*tau1 + b)/(24*e));
+        Append(~rat0, DedekindEta(d*z0)/s0);
+        Append(~rat1, DedekindEta(d*z1)/s1);
+    end for;
+    f0w := fac0^3; f1w := fac1^3;
+    for Ei->rE in Epool do
+        L := &+[ Integers() | rE[i]*tri[i][1]*(W div tri[i][3]) : i in [1..nd] ];
+        if L gt 0 then continue; end if;
+        depth := -L + 1;
+        // kept general even though depth = 1 wherever it has been sampled
+        produ := SS!1 + O(t^depth);
+        for i in [1..nd] do
+            if rE[i] eq 0 then continue; end if;
+            a := tri[i][1]; b := tri[i][2]; e := tri[i][3];
+            step := 24*a*(W div e);
+            u := SS!1 + O(t^depth);
+            nn := 1;
+            while nn*step lt depth do
+                u *:= 1 - ee(CC!(nn*b/e))*t^(nn*step); nn +:= 1;
+            end while;
+            produ *:= u^(rE[i]);
+        end for;
+        c0 := Coefficient(produ, -L);
+        if c0 eq 0 then continue; end if;
+        p0 := CC!1; p1 := CC!1;
+        for i in [1..nd] do
+            if rE[i] eq 0 then continue; end if;
+            p0 *:= rat0[i]^(rE[i]); p1 *:= rat1[i]^(rE[i]);
+        end for;
+        k0 := f0w * ee(-tau0*L/(24*W)) * p0;
+        k1 := f1w * ee(-tau1*L/(24*W)) * p1;
+        kscale := Abs(k0); if kscale lt 1 then kscale := Parent(kscale)!1; end if;
+        error if Abs(k0 - k1) gt 10^(-25)*kscale,
+            "kappa not constant", wi, Ei, Abs(k0 - k1);
+        Emat[Ei][wi] := k0 * c0;
+    end for;
+    if wi mod 500 eq 0 then printf "  coset %o/%o (%o s)\n", wi, nw, Cputime(tET); end if;
 end for;
-printf "E constant table built\n";
+printf "E constant table built (coset-outer, %o s)\n", Cputime(tET);
+
+if assigned ETCTL then
+    // compare against the original per-(member,coset) a0at on a coset sample
+    samp := [ wi : wi in [1..nw] | wi mod (nw div 40 + 1) eq 1 ];
+    worst := RealField(30)!0; wat := <0,0>;
+    for wi in samp do
+        for Ei->rE in Epool do
+            v := a0at(words[wi], rE, 3);
+            dev := Abs(v - Emat[Ei][wi]);
+            if dev gt worst then worst := RealField(30)!dev; wat := <wi, Ei>; end if;
+        end for;
+    end for;
+    printf "ETCTL: %o cosets x %o E's, worst |hoisted - a0at| = %o at %o\n",
+        #samp, #Epool, worst, wat;
+    printf "ETCTL VERDICT: %o\n", worst lt 10^(-25) select "PASS" else "FAIL";
+end if;
 // full constants dump for the offline rationalization of the cusp subspace:
 // EMAT <E index> <coset index> <class> re im   (50 digits)
 R50 := RealField(50);
