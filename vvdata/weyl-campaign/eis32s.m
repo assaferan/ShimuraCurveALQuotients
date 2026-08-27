@@ -24,14 +24,39 @@ D := 15; N := 2;
 if assigned DD then D := StringToInteger(DD); end if;
 if assigned NN then N := StringToInteger(NN); end if;
 
+// PRECISION.  The E-table evaluates eta(tau/d) for every d | M, and at the
+// S-coset the triangulation is (a,b,e) = (1,0,d), so the argument sits at
+// height Im(tau0)/d -- hard against the real axis for the large divisors.
+// There |eta| ~ exp(-pi d / (12 Im tau0)), i.e.
+//     log10|eta(tau0/M)| ~ -pi*M / (12 * Im(tau0) * ln 10) = -0.0868*M ,
+// so anything below the working precision UNDERFLOWS TO NOISE.  Measured:
+//     eta(tau0/660)  = 1.2587e-53    PREC 120 fine (67 digits left)
+//     eta(tau0/2310) = 5.7377e-189   PREC 120 returns 4.15e-121  -- GARBAGE
+//     eta(tau0/4620) = 1.1239e-378   PREC 120 returns 6.90e-121  -- GARBAGE
+// This is why "PR:=120 at M >= 660" (the banked guidance) does not scale: at
+// M = 660 the requirement is ~117 digits, so 120 was correct with almost no
+// margin; at M = 4620 it is ~460 and PREC 120 silently produces a kappa that
+// is not constant (|k0| = 2.2e64 against |k1| = 1.5e11).  PR := 600 at 4620.
 PREC := 80;
 if assigned PR then PREC := StringToInteger(PR); end if;
 CC := ComplexField(PREC); ii := CC.1; pi := Pi(CC);
 ee := func< z | Exp(2*pi*ii*z) >;
+// The least squares does NOT need that precision -- the residual is compared
+// at 1e-20 relative and the dump is 50 digits -- and a 600-digit Gram over
+// 2*nE columns would dominate everything.  Solve in SPREC instead.
+SPREC := Minimum(PREC, 150);
+if assigned SPR then SPREC := Minimum(StringToInteger(SPR), PREC); end if;
 
 M := IsOdd(D*N) select 4*D*N else 2*D*N;
 ds := Divisors(M); nd := #ds;
 printf "BASE %o %o  M = %o  ds = %o\n", D, N, M, ds;
+// guard the precision rule above, in digits: 0.0868*M for the worst eta plus
+// working room.  Advisory at build time beats a kappa error 40 minutes in.
+PNEED := Ceiling(0.0868*M) + 60;
+printf "PRECISION: PREC = %o (need >= %o for M = %o), SPREC = %o\n",
+    PREC, PNEED, M, SPREC;
+error if PREC lt PNEED,
+    "PREC too low for this level: eta(tau0/M) will underflow to noise; need", PNEED;
 Ld := ShimuraCurveLattice(D, N);
 
 // ---- the coordinate model ------------------------------------------------
@@ -572,7 +597,7 @@ end for;
 nE := #Epool;
 // no pool supplied: this is a rho-only run (regression / RHOV dump)
 if nE eq 0 then printf "no E pool supplied -- rho only\nDONE\n"; quit; end if;
-RR := RealField(PREC);
+RR := RealField(SPREC);   // see the PRECISION note at the top
 ncol := 2*nE;
 col := function(a)  // real 2nw-vector of column a (a <= ne: E_a; else i*E_{a-ne})
     if a le nE then
