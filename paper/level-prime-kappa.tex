@@ -286,6 +286,35 @@ anisotropic, so all of them come from the level-$N$ hyperbolic plane. All $2N-2$
 cosets carry the same constant term $c_\eta(0)$.
 \end{observation}
 
+Both counts in Observation~\ref{obs:iso} are counts for \emph{prime} $N$, which is the only case
+that occurs here --- every base in this project, and every entry of the model set, has $N$ prime
+or $N=1$. It is worth recording what they become in general, both because the agreement of the
+nonzero cosets is then a theorem rather than a coincidence, and because it fails as soon as $N$ is
+composite. Theorem~\ref{thm:Ngeneral} gives, for $\mu$ isotropic with support
+$S=\{p\mid N:\mu_p\neq0\}$,
+\[
+  \rho^{S}\;=\;\rho^{0}\cdot\prod_{p\in S}\bigl[\,p\nmid c\,\bigr],
+\]
+since $\prod_{p\in S}\tfrac12(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}})
+=\prod_{p\in S}c_p^{\mathrm{Eich}}[p\nmid c]$ and the remaining factors reassemble
+$\mathrm{ct}_L(\gamma,0)$. So distinct tracked cosets do not give unrelated functionals: they give
+one vector restricted to nested sets of cosets, and the functional depends on $\mu$ only through
+$S$. Consequently the number of isotropic cosets is $\prod_{p\mid N}(2p-1)$, those with support
+exactly $S$ number $\prod_{p\in S}(2p-2)$, and the number of \emph{distinct} functionals is
+$2^{\omega(N)}-1$. For $N$ prime that last count is $1$ --- which is exactly the agreement
+Observation~\ref{obs:iso} records, now with a reason --- while for composite $N$ it is not, and
+the normalisation $4(N-1)=2(2N-2)$ implicit in the equivalent form
+$\mathrm{mult}=\sum_\eta c_\eta(0)/(4(N-1))$ is correct only when $\omega(N)=1$; in general
+\[
+  \sum_{\eta\neq0}\rho^{\,\eta}
+  \;=\;\rho^{0}\Bigl(\prod_{p\mid N}\bigl(1+(2p-2)[p\nmid c]\bigr)-1\Bigr).
+\]
+Measured at $X_0^{22}(3)$ ($\omega=1$: one functional, all four nonzero cosets agreeing),
+$X_0^{35}(6)$ and $X_0^{15}(14)$ ($\omega=2$: three functionals each, class sizes $2,4,8$ and
+$2,12,24$), with the restriction law holding at $4$, $14$ and $38$ of $4$, $14$ and $38$ cosets.
+Which of the $2^{\omega(N)}-1$ functionals would be the multiplier at composite $N$ is not decided
+here, and cannot be until a composite-$N$ base with independent ground truth exists.
+
 \begin{observation}\label{obs:mult}
 Let $\mathrm{mult}(f)=\tfrac12 c_\eta(0)$ for any nonzero isotropic $\eta$. Then adding
 $\mathrm{mult}(f)\cdot\sum_{p\mid N/(N,d_{\mathrm{fund}})}\log p$ to the computed CM value
