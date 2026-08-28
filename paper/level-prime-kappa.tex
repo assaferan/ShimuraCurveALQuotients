@@ -1214,6 +1214,99 @@ of order $2.9\cdot10^7$: both $s=2$ and $s=3$, two tracked cosets each, all conf
 $2\cdot10^{-118}$. (Incidentally the count of isotropic cosets, $2N-1$ in
 Observation~\ref{obs:iso}, is in general $\prod_{p\mid N}(2p-1)$.)
 
+\subsection*{The multiplicity as a residue pairing}
+
+The assembly of \S\ref{sec:exact} expresses the $m=0$ multiplier as a sum of
+constant terms of $f$ against the $\rho$-entries. That sum is one half of a residue
+identity, and the other half is a pairing against the Fourier coefficients of \emph{any}
+weight-$3/2$ form carrying those constants --- in particular against the explicit
+combination of ternary genus thetas supplied by Theorem~\ref{thm:Ngeneral}. Write
+$a_n(h\mid w)$ for the coefficient of $q^n$ in the expansion at $\infty$ of $h$ slashed by
+a coset representative $w$.
+
+\begin{theorem}[the residue pairing]\label{thm:respair}
+Let $M\ge1$, let $f$ be a weakly holomorphic modular form of weight $\tfrac12$ on
+$\Gamma_0(M)$ with multiplier $\chi$, holomorphic on $\HH$, and let $E$ be a
+\emph{holomorphic} modular form of weight $\tfrac32$ on $\Gamma_0(M)$ whose multiplier is
+\emph{conjugate} to $\chi$ --- by which we mean precisely that the product $fE$ has
+trivial multiplier on $\Gamma_0(M)$. (In half-integral weight this is a condition on the
+theta factors as well as on $\chi$, and it is verified, not assumed, in the cases used
+below.) Then
+\[
+  \sum_{w\in\Gamma_0(M)\backslash\mathrm{SL}_2(\Z)}\ \sum_{n\ge0}
+      a_{-n}(f\mid w)\,a_n(E\mid w)\;=\;0,
+\]
+each inner sum being finite. Separating the term $n=0$,
+\[
+  \sum_w a_0(f\mid w)\,a_0(E\mid w)
+  \;=\;-\sum_w\sum_{n>0} a_{-n}(f\mid w)\,a_n(E\mid w). \tag{$\ast$}
+\]
+If $a_0(E\mid w)=\rho_w$ for every $w$, the left-hand side of $(\ast)$ is the assembly,
+i.e.\ $c_{\eta^*}(0)$; and the right-hand side is unchanged if $E$ is replaced by any
+other holomorphic weight-$\tfrac32$ form with the same constants.
+\end{theorem}
+
+\begin{proof}
+Put $h=fE$. It is holomorphic on $\HH$, of weight $2$, and by hypothesis has trivial
+multiplier, so $h$ is a meromorphic modular form of weight $2$ on $\Gamma_0(M)$ with
+poles only at the cusps; hence $\omega=h(\tau)\,d\tau$ is a meromorphic differential on
+$X_0(M)$, holomorphic away from the cusps. By the residue theorem on a compact Riemann
+surface, $\sum_s\mathrm{Res}_s\,\omega=0$.
+
+Fix a cusp $s$ of width $h_s$ with scaling matrix $\sigma_s$, and set
+$q_s=e^{2\pi i\tau/h_s}$. Then $(h\mid\sigma_s)(\tau)=\sum_n a_n(h\mid\sigma_s)q_s^{\,n}$
+and $\omega=\frac{h_s}{2\pi i}\bigl(\sum_n a_n(h\mid\sigma_s)q_s^{\,n}\bigr)\frac{dq_s}{q_s}$,
+so $\mathrm{Res}_s\,\omega=\frac{h_s}{2\pi i}\,a_0(h\mid\sigma_s)$. The cosets lying over
+$s$ are $\sigma_sT^{\,j}$ for $0\le j<h_s$, and slashing by $T^{\,j}$ multiplies the
+$n$-th coefficient by $e^{2\pi i n j/h_s}$, which fixes $n=0$; hence each of those $h_s$
+cosets contributes the same $a_0$. Summing over all cosets therefore supplies the width
+factor automatically:
+\[
+  \sum_{w} a_0(h\mid w)\;=\;\sum_s h_s\,a_0(h\mid\sigma_s)
+  \;=\;2\pi i\sum_s \mathrm{Res}_s\,\omega\;=\;0 .
+\]
+Finally $h\mid w=(f\mid w)(E\mid w)$, and $E\mid w$ has no negative coefficients while
+$f\mid w$ has only finitely many, so
+$a_0(h\mid w)=\sum_{n\ge0}a_{-n}(f\mid w)\,a_n(E\mid w)$ is a finite sum. This is the
+displayed identity, and $(\ast)$ is the case $n=0$ separated off.
+
+For the last statement, let $E'$ be another such form and $g=E-E'$. Then $g$ is
+holomorphic of weight $\tfrac32$ with $a_0(g\mid w)=0$ for every $w$ --- a cusp form ---
+so applying the identity to the pair $(f,g)$ makes its $n=0$ block vanish, leaving
+$\sum_w\sum_{n>0}a_{-n}(f\mid w)a_n(g\mid w)=0$.
+\end{proof}
+
+The independence in the last paragraph is worth isolating, because it is the reason the
+cuspidal ambiguity of Theorem~\ref{thm:Ngeneral} costs nothing. Every method used here
+determines a weight-$3/2$ form only through its constant terms, hence only modulo
+$S_{3/2}$; by Theorem~\ref{thm:respair} that ambiguity is annihilated by the pairing.
+(This is Borcherds' obstruction principle in the present setting, and it also accounts for
+the two-sided shape of the pairing: the sum runs over \emph{all} cosets, so principal
+parts at $0$ enter on the same footing as those at $\infty$.)
+
+\begin{corollary}\label{cor:multgross}
+Let $E$ be the combination of genus theta series furnished by Theorem~\ref{thm:Ngeneral}.
+Then the $m=0$ multiplier is
+\[
+  c_{\eta^*}(0)\;=\;-\sum_w\sum_{n>0}a_{-n}(f\mid w)\,a_n(E\mid w),
+\]
+a pairing of the principal parts of $f$ against Fourier coefficients of an explicit
+mass-weighted combination of ternary genus theta series --- that is, against
+representation numbers of definite ternary quadratic forms.
+\end{corollary}
+
+The hypotheses were verified rather than assumed. That $fE$ has trivial multiplier on
+$\Gamma_0(60)$ is checked directly at $X_0^{15}(2)$, with $f\cdot f$ as a control
+exhibiting Newman's $(-1/d)$. The vanishing $\sum_w a_0(fE\mid w)=0$ is confirmed to some
+$70$ digits on all nine panel forms at each of $X_0^{15}(2)$, $X_0^{21}(2)$ and
+$X_0^{22}(3)$ --- the three distinct $w_{\mathrm{sq}}$ regimes. And at $X_0^{15}(2)$ the
+substitution of Corollary~\ref{cor:multgross} was carried out: the genus combination lies
+in the space of holomorphic weight-$3/2$ eta quotients of level $60$ with the panel
+character, reproduces $\rho$ at all $288$ cosets to $6\cdot10^{-77}$ --- computed along a
+different route than Theorem~\ref{thm:Ngeneral} uses --- and returns the same pairing as
+the fitted representative on every panel form, to every digit printed, although the two
+forms differ.
+
 \section{The open question}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
