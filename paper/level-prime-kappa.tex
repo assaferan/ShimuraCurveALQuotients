@@ -1404,8 +1404,8 @@ densities, and the combination collapses --- at odd primes --- into one elementa
 per prime of $DN$ against a Hurwitz class number.
 
 \begin{proposition}[the multiplicity coefficients]\label{prop:closedcoef}
-Let $D$ be squarefree and odd with $\omega(D)=2$, let $N$ be $1$ or an odd prime coprime
-to $D$, and let $m\ge1$. Write $-4m=D_0c^2$ with $D_0$ fundamental, and for a prime $p$ set
+Let $D$ be squarefree with $\omega(D)=2$, let $N$ be $1$ or a prime coprime to $D$ (the
+prime $2$ is allowed in either slot), and let $m\ge1$. Write $-4m=D_0c^2$ with $D_0$ fundamental, and for a prime $p$ set
 $k_p=v_p(c)$, $\chi_p=\bigl(\tfrac{D_0}{p}\bigr)$ and
 $\sigma_j(p)=1+p+\dots+p^{\,j}$ (with $\sigma_{-1}=0$). Then, with $H$ the Hurwitz class
 number,
@@ -1438,27 +1438,36 @@ statement holds for \emph{every} $m<400$ at all six bases --- $156$ of them non-
 --- and, pushed to $m<800$ at $X_0^{15}(7)$ to reach $k=3$, for all $799$ values, $310$ of
 them non-squarefree. So the $k$-dependence is verified one step beyond where it was fitted.
 
-The case $N=1$ is not a limit of the others --- the Eichler factor would read $0/0$ --- but
+Two of the regimes deserve a word. The case $N=1$ is not a limit of the others --- the Eichler factor would read $0/0$ --- but
 it is the empty product, and this is where the constant $12$ shows itself as global rather
 than as part of the level factor. It was checked on \emph{all six} bases of the model set
 with $DN$ odd, namely $D=15,35,39,55,65,87$ (each a product of two primes), with both
 choices of which prime is $s$: the residual after dividing out the ramified product and the
 conductor corrections is exactly $12$, for every $m<250$, in all twelve runs.
 
-That last point is worth stating plainly rather than leaving to inference. Of the $76$
-bases in the model set only those six have $DN$ odd; every other one has $2\mid DN$. So the
-proposition as stated covers the $N=1$ odd-discriminant bases and, beyond them, a family of
-$(D,N)$ constructed here to isolate the odd-prime behaviour --- $X_0^{15}(7)$,
-$X_0^{35}(3)$, $X_0^{21}(5)$, $X_0^{33}(5)$, $X_0^{15}(11)$, $X_0^{15}(13)$ --- which are
-legitimate Shimura curves but are not among the bases computed elsewhere in this project.
-Reaching those requires the remaining regime.
+Finally $p=2$, which carries no exception: the two products above are taken over
+\emph{all} primes of $D$ and of $N$, the prime $2$ included, with the same two expressions.
+Read off in the three regimes separately --- $2\mid D$ with $N=1$, $2\mid D$ with $N$ odd,
+and $N=2$ --- the $2$-adic factors are exactly $\mathrm{ram}_2$ and $\mathrm{eich}_2$: for
+instance $\mathrm{ram}_2$ gives $\tfrac12,\tfrac17,\tfrac1{11}$ at
+$(k,\chi)=(1,-1),(2,0),(3,-1)$ and $\mathrm{eich}_2$ gives $\tfrac23,\tfrac49,\tfrac13$ at
+$(0,0),(1,0),(2,1)$. The two $2\mid D$ regimes produce identical tables, as they must if
+``ramified at $2$'' is one local factor.
 
-That regime is $p=2$, which does not follow the odd law. When $2\mid D$ the displayed formula holds
-verbatim for the odd primes and the odd Eichler prime, multiplied by a factor
-$\delta_2(m)=1,\tfrac12,0$ according as $m\equiv1,2,5,6$, $3$, or $7 \pmod 8$ --- and the
-$0$ at $m\equiv7$ is again exactly the condition that $2$ split in $\Q(\sqrt{-m})$. When
-instead $N=2$, the Eichler factor is not $12(N-(\tfrac{-m}{N}))/(N^2-1)$ but
-$8,8,6,8,8,4$ for $m\equiv1,2,3,5,6,7\pmod 8$; both are recorded as measured.
+It is worth saying how this looked before the conductor parametrisation, because the
+appearance of an exception at $2$ was an artefact. Restricted to squarefree $m$ and keyed
+on $m\bmod 8$, the same data reads as $\delta_2=1,\tfrac12,0$ for $m\equiv1,2,5,6$, $3$,
+$7\pmod 8$ when $2\mid D$, and as $8,8,6,8,8,4$ when $N=2$ --- neither of which resembles
+the odd law. Both are just its shadow: for $m$ squarefree, $m\equiv1,2\pmod4$ forces
+$k_2=0,\chi_2=0$, while $m\equiv3\pmod4$ forces $k_2=1$ with $\chi_2=\mp1$ according as
+$m\equiv3,7\pmod 8$, and substituting reproduces the tables.
+
+The proposition therefore covers every base in the model set. It was verified on nineteen
+of them spanning all four regimes --- $X_0^{15}(1)$, $X_0^{35}(1)$, $X_0^{39}(1)$,
+$X_0^{55}(1)$; $X_0^{10}(1)$, $X_0^{14}(1)$, $X_0^{22}(1)$, $X_0^{26}(1)$; $X_0^{15}(2)$,
+$X_0^{21}(2)$, $X_0^{33}(2)$, $X_0^{35}(2)$; $X_0^{10}(3)$, $X_0^{22}(3)$, $X_0^{10}(7)$,
+$X_0^{6}(5)$, $X_0^{14}(5)$, $X_0^{34}(3)$, and $X_0^{15}(7)$ --- at every $m<250$: $4731$
+of $4731$ values.
 
 \section{The open question}\label{sec:open}
 
