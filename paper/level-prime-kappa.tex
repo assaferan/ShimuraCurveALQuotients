@@ -1108,6 +1108,109 @@ $\omega(DN)\in\{2,4\}$ at $X_0^{15}(1)$, $X_0^{210}(1)$, $X_0^{330}(1)$, none of
 At $N=1$ the algebra $B_D$ is indefinite, which forces $\omega(D)$ even; the absence of a
 third term at $N=1$ is therefore a corollary of indefiniteness, not an independent fact.
 
+\subsection*{Every level at once}
+
+Theorem~\ref{thm:noresplit} is the $N=1$ case of a single identity that also covers the
+$N>1$ fits of Observations~\ref{obs:slaw} and~\ref{obs:mass}, at any tracked coset.
+Throughout, $\mathrm{mass}(\Delta,R)=\mathrm{mass}(\Delta,1)\prod_{p\mid R}(p+1)/2$ is
+multiplicative in the level, as in Observation~\ref{obs:mass}.
+
+\begin{theorem}[the Eisenstein part at every level]\label{thm:Ngeneral}
+Let $D$ be squarefree with $\omega(D)$ even, write $D=D's$ with $s$ any one of its primes,
+and let $N$ be squarefree with $\gcd(D,N)=1$. Let $\mu$ be an isotropic coset of the
+discriminant form of the Shimura curve lattice of $(D,N)$, and put
+$S=\{p\mid N:\mu_p\neq0\}$. With
+\[
+  \mathrm{Tel}_s(\Delta;R)\;=\;\frac{\Theta(\Delta,Rs)-\Theta(\Delta,R)}
+                                    {\mathrm{mass}(\Delta,Rs)-\mathrm{mass}(\Delta,R)},
+\]
+the $\rho$-vector read at $\mu$ satisfies, at every coset,
+\[
+  \rho_\mu\;=\;2^{-\lvert S\rvert}\sum_{T\subseteq S}(-1)^{\lvert T\rvert}\,\mathrm{Term}(T),
+  \qquad
+  \mathrm{Term}(T)=
+  \begin{cases}
+    \bar\theta\bigl(D's{\textstyle\prod}T,\;N/{\textstyle\prod}T\bigr)
+      & \lvert T\rvert\ \text{odd},\\[2pt]
+    \mathrm{Tel}_s\bigl(D'{\textstyle\prod}T;\;N/{\textstyle\prod}T\bigr)
+      & \lvert T\rvert\ \text{even},
+  \end{cases}
+\]
+and the right-hand side does not depend on which prime is $s$. The case $S=\varnothing$ is
+Theorem~\ref{thm:noresplit}.
+\end{theorem}
+
+\begin{proof}
+Beyond the ingredients of Theorem~\ref{thm:noresplit} the proof needs two things.
+
+\emph{The prime factorisation is exact, and its global factor does not see the lattice.}
+The closed form of Theorem~\ref{thm:rhoentry} splits as
+$\mathrm{ct}_L=\mathrm{glob}(\gamma)\prod_p\mathrm{loc}^L_p(\gamma)$, where
+$\mathrm{glob}=u\cdot(-a\mid\lvert c\rvert)\cdot(-a,c)_\infty$ collects the Kubota sign
+and the Kronecker and Hilbert symbols, and
+$\mathrm{loc}_p=e(-\sigma_p/4)\,G_p\,\sqrt{\lvert A_p[c]\rvert/\lvert A_p\rvert}$ collects
+the local signature, Gauss sum and index. Only $\mathrm{loc}_p$ depends on $L$, so
+telescopings between lattices may be carried out prime by prime.
+
+\emph{The tracked coset contributes an indicator, not a phase.} The coset enters the
+closed form only through the solvability of $c\,y=\mu$ and the resulting phase
+$e(ac\,Q(y))$. The hyperbolic plane at $p$ has exponent $p$, so a solution exists iff no
+$p\in S$ divides $c$; and then $y=c^{-1}\mu$ has $Q(y)=c^{-2}Q(\mu)=0$ because $\mu$ is
+\emph{isotropic}. Hence $\rho_\mu=\kappa\,\rho_0$ with
+$\kappa=\prod_{p\in S}\bigl[p\nmid c\bigr]$, with no phase at all.
+
+Now $\rho_0=\prod_{p\mid D}c_p^{\mathrm{ram}}\prod_{p\mid N}c_p^{\mathrm{Eich}}$, and the
+two local values displayed in the proof of Theorem~\ref{thm:noresplit} give, at every
+prime, $\tfrac12\bigl(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}}\bigr)
+=c_p^{\mathrm{Eich}}\bigl[p\nmid c\bigr]$. Therefore
+\[
+  \rho_\mu=\prod_{p\mid D}c_p^{\mathrm{ram}}
+    \prod_{p\mid N,\,p\notin S}c_p^{\mathrm{Eich}}
+    \prod_{p\in S}\tfrac12\bigl(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}}\bigr),
+\]
+and expanding the last product over subsets $T\subseteq S$ gives $2^{-\lvert S\rvert}
+(-1)^{\lvert T\rvert}$ times $\prod_{p\mid D}c_p^{\mathrm{ram}}\prod_{p\in T}
+c_p^{\mathrm{ram}}\prod_{p\mid N,\,p\notin T}c_p^{\mathrm{Eich}}$. It remains to identify
+that with $\mathrm{Term}(T)$. If $\lvert T\rvert$ is odd then
+$\omega(D's\prod T)=\omega(D)+\lvert T\rvert$ is odd, the algebra of that discriminant is
+definite, and $\mathrm{Gr}(D's\prod T,\,N/\prod T)$ --- ramified at the primes of $D$ and
+of $T$, Eichler at the remaining primes of $N$ --- has exactly that constant term. If
+$\lvert T\rvert$ is even that discriminant is indefinite and no such genus exists;
+instead the two levels $N/\prod T$ and $(N/\prod T)s$ over $D'\prod T$ differ at $s$
+alone, all common factors cancel from the quotient because the mass is multiplicative in
+the level, and $g_s=\tfrac12 f_s$ restores the missing $c_s^{\mathrm{ram}}$ exactly as in
+Theorem~\ref{thm:noresplit} --- which is also why the answer is independent of $s$.
+Finally, as at $N=1$, the $2$-adic normalisations of the lattices involved must agree
+after telescoping; the per-prime factorisation exhibits this directly (at $X_0^{22}(3)$
+and $c$ prime to the level, $\mathrm{loc}_2=(1+i)/4$ for the Shimura lattice and for
+$\mathrm{Gr}(66,1)$ alike, and the telescoped $2$-part of the $\mathrm{Gr}(11,\cdot)$ pair
+is the same).
+\end{proof}
+
+Two consequences are worth recording. First, Theorem~\ref{thm:Ngeneral} promotes
+Observation~\ref{obs:mass} to an identity: for $N$ prime and $\mu\neq0$ the set
+$S=\{N\}$ has two subsets, and the theorem reads
+$\rho_\mu=\tfrac12\mathrm{Tel}_s(D';N)-\tfrac12\bar\theta(DN,1)$, which is the displayed
+formula of that observation term for term, including the coefficient
+$-\tfrac{N+1}{N-1}$ of the third slot. Second, the right-hand side is symmetric in
+$D'\leftrightarrow s$, so at $N>1$ as at $N=1$ \emph{the support is not selected}: both
+choices of which prime of $D$ plays the role of $s$ give the same Eisenstein series. This
+is Observation~\ref{obs:nosel} again, now at every level and with a reason.
+
+The identity was checked at every coset of the level $4DN$, with nothing fitted --- both
+sides evaluated from the lattices alone. On the eight banked $N>1$ bases the derived
+weights agree with the fitted ones exactly (worst residual $3\cdot10^{-119}$). It was then
+used \emph{predictively} at eight bases that had never been looked at ---
+$X_0^{6}(5)$, $X_0^{10}(3)$, $X_0^{14}(3)$, $X_0^{6}(7)$, $X_0^{14}(5)$, $X_0^{26}(3)$,
+$X_0^{39}(2)$, $X_0^{34}(3)$ --- with \emph{both} choices of $s$ at each: sixteen
+instances, all confirmed to $\sim10^{-119}$, with weights ranging from $-\tfrac1{16}$ to
+$\tfrac32$; dropping the third term fails at relative size $1.4$ to $3.5$ at every one of
+them. Composite $N$, where $\lvert S\rvert$ can be $2$ and the combination has four terms,
+was checked at $X_0^{35}(6)$ and $X_0^{15}(14)$ at \emph{every} nonzero isotropic coset
+rather than the default one --- $14$ and $38$ of them, both choices of $s$ --- for a
+further $112$ confirmed instances. (Incidentally the count of isotropic cosets, $2N-1$ in
+Observation~\ref{obs:iso}, is in general $\prod_{p\mid N}(2p-1)$.)
+
 \section{The open question}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
