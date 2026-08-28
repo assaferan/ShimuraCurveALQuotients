@@ -1,0 +1,36 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+DN = 1155, primes [ 3, 5, 7, 11 ], 13824 cosets
+
+c_p^Eich, sampled (should be a simple local quantity):
+  p= 3: 30 distinct values; first few: [ 1.00000000000, 0.333333333333 - 
+1.69595764343E-240*$.1, 0.333333333333 - 7.76535357925E-121*$.1, 1.00000000000 -
+5.82401518444E-121*$.1 ]
+  p= 5: 34 distinct values; first few: [ 1.00000000000, 0.200000000000 - 
+3.66326850981E-241*$.1, 0.200000000000 - 4.01857047726E-121*$.1, 0.200000000000 
+- 4.89217275493E-121*$.1 ]
+  p= 7: 29 distinct values; first few: [ 1.00000000000, 0.142857142857 + 
+7.13144716462E-122*$.1, 0.142857142857 - 7.66630570197E-121*$.1, 0.142857142857 
+- 9.50859621950E-121*$.1 ]
+  p=11: 27 distinct values; first few: [ 1.00000000000, 0.0909090909091 + 
+2.88794141377E-122*$.1, 0.0909090909091 - 5.05389747411E-122*$.1, 
+0.0909090909091 + 1.34770599309E-121*$.1 ]
+
+local identity test:  g_p / [(p-1) c_p^ram]  for each p, at sample cosets
+  (equal across p at each coset  <=>  no re-split rule)
+  coset     3: lambda = 0.500000000000 - 0.500000000000*$.1   spread = 
+1.1929846E-119  (rel 1.6871350E-119)
+  coset  1731: lambda = 0.500000000000 - 0.500000000000*$.1   spread = 
+1.1929846E-119  (rel 1.6871350E-119)
+  coset  3459: lambda = 0.500000000000 - 0.500000000000*$.1   spread = 
+1.1929846E-119  (rel 1.6871350E-119)
+  coset  6915: lambda = -0.500000000000 - 0.500000000000*$.1   spread = 
+2.3900513E-119  (rel 3.3800429E-119)
+  coset  8643: lambda = 0.500000000000 - 0.500000000000*$.1   spread = 
+1.5490368E-119  (rel 2.1906688E-119)
+  coset 10371: lambda = -0.500000000000 - 0.500000000000*$.1   spread = 
+8.7626752E-120  (rel 1.2392294E-119)
+  coset 12099: lambda = -0.500000000000 - 2.81407814142E-118*$.1   spread = 
+3.1919627E-120  (rel 6.3839254E-120)
+DONE

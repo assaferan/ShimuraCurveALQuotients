@@ -1,0 +1,25 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+=== c_p^Eich: predicted 1 if p|c, 1/p otherwise ===
+  p= 3: 11520/13824 cosets tested, 0 mismatches
+  p= 5: 11520/13824 cosets tested, 0 mismatches
+  p= 7: 11520/13824 cosets tested, 0 mismatches
+  p=11: 11520/13824 cosets tested, 0 mismatches
+
+=== c_p^ram / c_q^ram: predicted from  1 (p|c) / -1/p (p not| c) ===
+  c_3^ram / c_5^ram : 11520 cosets, 0 mismatches
+  c_5^ram / c_7^ram : 11520 cosets, 0 mismatches
+  c_7^ram / c_11^ram : 11520 cosets, 0 mismatches
+
+=== lambda = g_p/f_p, after dividing out the (p-independent) 2-part ===
+   predicted EXACTLY 1/2 times a p-independent factor
+   coset     3: g_p/f_p over p = [ 0.5000000000, 0.5000000000, 0.5000000000, 
+0.5000000000 ]
+   coset  1731: g_p/f_p over p = [ 0.5000000000, 0.5000000000, 0.5000000000, 
+0.5000000000 ]
+   coset  6915: g_p/f_p over p = [ 0.5000000000, 0.5000000000, 0.5000000000, 
+0.5000000000 ]
+   coset 12099: g_p/f_p over p = [ 0.5000000000, 0.5000000000, 0.5000000000, 
+0.5000000000 ]
+DONE

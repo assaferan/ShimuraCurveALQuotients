@@ -52,31 +52,62 @@ At the S-coset `ct(theta_L) = e(sig/8)/sqrt|A|` with `|A| = 2 (D'R)^2`, so
 Across ALL cosets the numerator agrees between supports to **1.8e-120**
 (1155) and **2.6e-118** (330), relative.
 
-## 4. What remains, and it is ONE LOCAL IDENTITY
+## 4. The local identity, in closed form -- PROVEN
 
-The Weil representation factors over the orthogonal decomposition of the
-discriminant form, and `(rho_A tensor rho_B)_{00} = (rho_A)_{00} (rho_B)_{00}`,
-so the constant terms factor over primes. The two lattices of a support differ
-at EXACTLY ONE prime -- at `p | D'` both are ramified; at `s` one is the
-maximal split order and the other Eichler of level `s`. Hence
+Constant terms factor over primes: the Weil rep is multiplicative on
+orthogonal sums and `(rho_A ox rho_B)_00 = (rho_A)_00 (rho_B)_00`.  The two
+lattices of a support differ at EXACTLY ONE prime (at `p | D'` both ramified;
+at `s` maximal vs Eichler level `s`), so
 
-    m_s ct(theta_s) - m1 ct(theta_1) = (1/C) * prod_{p != s} f_p * g_s
+    m_s ct_s - m1 ct_1 = (c_2/C) * prod_{p != s} f_p * g_s
+    f_p := (p-1) c_p^ram ,   g_p := (p+1)/2 c_p^Eich - 1 ,   C := 48*2^(w-1)
 
-    f_p(g) := (p-1) * ct_p^ram(g)             [ramified factor at p]
-    g_p(g) := (p+1)/2 * ct_p^Eich(g) - 1      [level-raising at p]
-    C      := 48 * 2^(w-1)
+**The local forms.**  At odd `p | DN`, both local discriminant groups are
+`(Z/p)^2`, but the forms differ:
 
-Dividing by `prod_{all p} f_p`, D'-independence of the left side is
-EQUIVALENT to
+    Eichler level p (split, O = {c = 0 mod p}):  Q(v) = -x^2 - p yz
+        => L*/L = (Z/p)^2 with  Qbar(b,c) = -bc/p      HYPERBOLIC
+    Ramified (B = (u,p), u a nonsquare unit):    Nm(v) = -ux^2 - py^2 + upz^2
+        => L*/L = (Z/p)^2 with  Qbar(b,c) = (uc^2 - b^2)/p   ANISOTROPIC
 
-        g_p(g) = lambda(g) * f_p(g),     lambda independent of p.          (**)
+Verified by isotropic-vector counts on the actual Gross lattices: 1 for
+ramified, `2p-1` for Eichler, at every prime and every support.
 
-That is the theorem. (**) is established numerically by section 3 (the global
-constancy holds to 120 digits, and the reduction above is exact algebra). What
-is NOT yet done is deriving (**) in closed form from the local Whittaker /
-local density formulas -- `EisensteinLocalFactors.m`, Kudla-Yang, with the
-conventions pinned in `whittaker-sign-convention`. That is a finite,
-prime-by-prime computation and it is the honest remaining gap.
+**The local Weil entries**, from the Gauss sums:
+
+    hyperbolic:   sum_{b,c} e(-t bc/p) = p            => signature 0
+    anisotropic:  sum e(t(uc^2-b^2)/p) = (u|p)(-1|p) g(1)^2 = -p
+                  (u nonsquare so (u|p) = -1, and g(1)^2 = (-1|p) p)
+                                                      => signature 4
+
+so, with `c` the lower-left entry of the coset representative,
+
+    c_p^Eich(g) =  1  if p | c ,   1/p  otherwise
+    c_p^ram (g) =  1  if p | c ,  -1/p  otherwise
+
+i.e. `c_p^ram = eps_p c_p^Eich` with `eps_p = +1` if `p | c`, `-1` otherwise.
+Both verified against the lattices at 11520 cosets per prime, **0 mismatches**.
+
+**Hence, in both cases at once,**
+
+    g_p = (p+1)/2 c_p^Eich - 1 = (p-1)/2 * eps_p * c_p^Eich
+    f_p = (p-1) c_p^ram        = (p-1)   * eps_p * c_p^Eich
+
+        =>   g_p = (1/2) f_p ,   for EVERY p and EVERY coset.
+
+(Measured: `g_p/f_p = [0.5, 0.5, 0.5, 0.5]` across `p = 3,5,7,11`.)
+
+Therefore `prod_{p != s} f_p * g_s = (1/2) prod_{p | DN} f_p`, which does not
+mention `s` at all.  **QED.**
+
+## Why one-prime D' cannot join
+
+For `D' = p` a single prime the partner is `(p, DN/p)`, Eichler at THREE
+primes, so the bracket is `prod_q [(q+1)/2 c_q^Eich] - 1` -- a product of
+three local factors minus one, which does NOT factor into `g_q`'s.  No
+telescoping, no shared value, and indeed `m_s - m1` takes four different
+values (71/24, 47/12, 35/8, 115/24 at 1155).  The one-prime/three-prime split
+is thus derived, not observed.
 
 ## What this changes
 
