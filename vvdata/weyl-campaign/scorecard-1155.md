@@ -118,8 +118,21 @@ on its own authority.  Two independent confirmations:
        aliasing dim 0
 
    Identical weights, and `aliasing dim 0` says the decomposition is unique
-   for that support.  So the non-uniqueness of the SUPPORT is confirmed by
-   the method the campaign has used all along.
+   for that support.
+
+   Extended to ALL FOUR passing supports at 330_1, every one by the original
+   q-expansion machinery, every one on a support the campaign never tested:
+
+       (30,1)+(30,11)   rank 135 vs 135  true  -1/5 * G(30,1) + 6/5 * G(30,11)
+       (66,1)+(66,5)    rank 135 vs 135  true  -1/2 * G(66,1) + 3/2 * G(66,5)
+       (110,1)+(110,3)  rank 135 vs 135  true   -1  * G(110,1) +  2  * G(110,3)
+       (165,1)+(165,2)  rank 135 vs 135  true   -2  * G(165,1) +  3  * G(165,2)   [banked]
+
+   all with `aliasing dim 0` and all matching the constant-term weights
+   exactly.  So the non-uniqueness of the SUPPORT is confirmed four times over
+   by the method the campaign has used all along, and does not rest on the new
+   route.  Note what `aliasing dim 0` means here: given a support the weights
+   are UNIQUE.  The non-uniqueness is in WHICH SUPPORT, not in the fit.
 
 Degeneracy was also ruled out before drawing any conclusion: the ten
 ct(theta) vectors at 1155 have **rank 7 of 10**, so the four passing supports
