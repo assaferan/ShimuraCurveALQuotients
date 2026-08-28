@@ -69,7 +69,13 @@ correction carries a \emph{second channel}, supported on the perfect-square indi
 principal part, invisible on every base where the level-support rule had been tested. The space
 of weight-$1/2$ forms for the Weil representation of the discriminant form is shown to vanish,
 so this channel is scalar --- Zagier's square-class structure entering through the cusps ---
-and not a harmonic completion on the discriminant form.
+and not a harmonic completion on the discriminant form. Finally we determine the Eisenstein
+part of the correction outright: it is
+$[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$ in Gross genus sums,
+for \emph{any} splitting $D=D's$ with $D'$ definite, the independence of the choice following
+from a local identity $g_p=\tfrac12f_p$ at every prime together with a telescoping of the mass
+formula. Twenty bases had suggested a ``re-split rule'' selecting one such splitting; there is
+none to find, and the competing readings recorded in the literature name a single object.
 \end{abstract}
 
 \maketitle
@@ -112,8 +118,17 @@ it could break: at composite $s$ the support re-splits (and the three readings w
 in advance are all refuted as stated), while the doubling of the weights that accompanies the
 re-split turns out to be no law at all but the choice of isotropic coset at which the functional
 is read (Remark~\ref{rem:coset}). Four more, at odd level, then separate the last confound and
-show the $N=1$ weights following $s$ after all. What survives across all nineteen bases, in
-both normalisations, is the support and a mass-ratio identity. Section~\ref{sec:open} states
+show the $N=1$ weights following $s$ after all. The twentieth base, $X_0^{1155}(1)$, was
+computed to adjudicate between the candidate re-split rules and instead removed the question:
+testing \emph{every} candidate support, rather than the single competitor each earlier base had
+been given, shows that the rank test separates a one-prime $D'$ from a three-prime one and
+never selects among the composites (Observation~\ref{obs:nosel}). Theorem~\ref{thm:noresplit}
+then derives this: the two empirical laws are one identity,
+$\rho=[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$, whose two sides
+are independent of $D'$ because a local computation gives $g_p=\tfrac12f_p$ at every prime and
+the mass difference telescopes. So the ``re-split rule'' was never a rule: the competing
+readings name one object. What survives, now with a proof, is the identity itself, of which the
+mass-ratio law is the shadow in normalised coordinates. Section~\ref{sec:open} states
 what remains open.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
@@ -893,7 +908,8 @@ stated}, in an instructive way: their shared support assumption was wrong. The m
 and the support is genuine, not a pivot artifact of the $25$-dimensional aliasing:
 $E_{\mathrm{eis}}$ lies in the span of $\{\bar\theta(105,1),\bar\theta(105,2)\}$ plus cusp
 forms, and does \emph{not} lie in the span of $\{\bar\theta(7,1),\bar\theta(7,30)\}$ plus cusp
-forms (rank $87$ against $88$). Thus at a four-prime discriminant the law re-splits
+forms (rank $87$ against $88$; but see Observation~\ref{obs:nosel} --- $(7,1)$ has one prime,
+and the three-prime competitors are not excluded). Thus at a four-prime discriminant the law re-splits
 $D=210$ as $q=105$ --- the full odd ramified part, itself a definite discriminant --- and
 $s=2$: the weights are twice the prime-$s$ law at $s=2$, the mass-ratio law of
 Observation~\ref{obs:mass} extends to ten bases
@@ -917,7 +933,9 @@ advance-computed $\mathrm{mass}(165,1)=\tfrac5{12}$, $\mathrm{mass}(165,2)=\tfra
 (the same $2^{\omega-1}$ factor), and rank $15$ with aliasing $25$. Its falsifier fired:
 the competing largest-prime support $\{(11,1),(11,30)\}$ is excluded (rank $135$ against
 $136$), while the winner carries $E_{\mathrm{eis}}$ with aliasing dimension $0$ --- the
-weights are pinned with no gauge freedom at all. We record that $330$ cannot separate
+weights are pinned with no gauge freedom at all. (That competitor has a \emph{single}
+prime; Observation~\ref{obs:nosel} shows the three-prime competitors, never tested at the
+time, are \emph{not} excluded, so this exclusion does not establish a choice of $q$.) We record that $330$ cannot separate
 ``odd part'' from ``largest definite divisor'': those coincide on every even $D$, so
 $X_0^{330}(1)$ replicates the $X_0^{210}(1)$ re-split at fresh primes rather than testing
 it. (ii) Composite $q$ and $N=1$ are perfectly confounded across all eleven bases above;
@@ -935,8 +953,10 @@ $q$ as the largest ramified prime.
 These six $N=1$ bases are what forced Remark~\ref{rem:coset}: the doubling they exhibit
 survived two successive explanations (composite $D$, then $N=1$ itself) before the direct
 test --- forcing $\eta=0$ at $X_0^{15}(2)$ and $X_0^{22}(3)$ --- identified it as the
-tracked coset and dissolved it. The surviving arithmetic is the support (including the
-re-split $q=D/2$ at four-prime $D$) and the mass-ratio law.
+tracked coset and dissolved it. What looked at this stage like the surviving arithmetic ---
+the support, including the re-split $q=D/2$ at four-prime $D$, together with the mass-ratio
+law --- is reduced further below: Theorem~\ref{thm:noresplit} shows the support is not
+determined at all, and that the mass-ratio law is one half of a single identity.
 
 One confound remained. All six of those bases have $s=2$ --- the four small ones outright,
 $X_0^{210}(1)$ and $X_0^{330}(1)$ after the re-split --- so ``the $N=1$ weights are the
@@ -976,14 +996,117 @@ in advance; it now stands at \emph{nineteen} bases, across both normalisations, 
 parities of $DN$, and every support that carries $E_{\mathrm{eis}}$.
 \end{observation}
 
-The degeneracy is worth isolating, because it locates where the re-split rule has content.
-A two-prime discriminant cannot select a support: either factorisation works, and the
-choice ``$q$ = the larger ramified prime'' is a convention. A four-prime discriminant
-does select --- at $X_0^{210}(1)$ and $X_0^{330}(1)$ the competing span genuinely fails
-the rank test. This is why the rule is tested only at four primes, and why the case that
-would distinguish ``odd part'' from ``largest definite divisor'' must have all four primes
-odd: the minimal such base is $D=1155$, where the odd part is the whole of $D$ and hence
-indefinite, so the two candidate rules diverge for the first time.
+The degeneracy at two primes appeared to locate where the re-split rule has content: a
+two-prime discriminant cannot select a support, but at $X_0^{210}(1)$ and $X_0^{330}(1)$
+a competing span genuinely fails the rank test, so four primes looked as though they did
+select. That reading was wrong, and the error is instructive: \emph{one} competitor was
+tested per base, and in both cases it was a $D'$ with a \emph{single} prime
+($\{(7,1),(7,30)\}$ at $210$, $\{(11,1),(11,30)\}$ at $330$). Those exclusions are correct
+and reproduce here; they are simply not the discriminating test they were taken for. The
+composite competitors were never run.
+
+\begin{observation}[the support is never selected]\label{obs:nosel}
+Testing \emph{every} candidate support $\{(D',1),(D',DN/D')\}$ over the definite $D'$ (an
+odd number of primes) gives the same verdict at all three four-prime bases:
+\[
+\begin{array}{lll}
+\toprule
+\text{base} & D'\ \text{with one prime} & D'\ \text{with three primes}\\
+\midrule
+X_0^{210}(1) & 2,3,5,7\ \text{fail} & 30,42,70,105\ \text{all carry }E_{\mathrm{eis}}\\
+X_0^{330}(1) & 2,3,5,11\ \text{fail} & 30,66,110,165\ \text{all carry }E_{\mathrm{eis}}\\
+X_0^{1155}(1) & 11\ \text{fails} & 105,165,231,385\ \text{all carry }E_{\mathrm{eis}}\\
+\bottomrule
+\end{array}
+\]
+each with the weights $\bigl(\tfrac1{1-\rho},\tfrac{\rho}{\rho-1}\bigr)$ read off its
+\emph{own} mass ratio $\rho$, and each at aliasing dimension $0$. What the rank test
+separates is one prime from three, not one composite from another. The confirmations are
+by the same $q$-expansion machinery used throughout: at $X_0^{330}(1)$ the three supports
+never previously tested return
+$-\tfrac15\Theta(30,1)+\tfrac65\Theta(30,11)$,
+$-\tfrac12\Theta(66,1)+\tfrac32\Theta(66,5)$ and
+$-\Theta(110,1)+2\,\Theta(110,3)$, all at rank $135$ against $135$.
+\end{observation}
+
+So ``$q$ = the larger ramified prime'', ``odd part of $D$'', ``drop the smallest prime''
+and ``largest definite divisor'' are not competing rules that $D=1155$ was to adjudicate.
+They are four names for one object, and the reason is arithmetic rather than accidental.
+
+\begin{theorem}[the Eisenstein part, and why no re-split rule exists]\label{thm:noresplit}
+Let $D$ be squarefree with $\omega$ prime factors and $N=1$. For any $D'$ a product of
+$\omega-1$ of them, with $s=D/D'$,
+\[
+  \rho\;=\;\frac{\Theta(D',s)-\Theta(D',1)}{\mathrm{mass}(D',s)-\mathrm{mass}(D',1)},
+\]
+and neither side depends on which prime is $s$.
+\end{theorem}
+
+\begin{proof}
+Both sides factor over primes: the Weil representation is multiplicative on orthogonal
+sums and $(\rho_A\otimes\rho_B)_{00}=(\rho_A)_{00}(\rho_B)_{00}$, and at $N=1$ the tracked
+coset is $\eta=0$, so $\rho$ is exactly such an entry (Remark~\ref{rem:coset}).
+
+At each $p\mid DN$ the local discriminant group is $(\Z/p)^2$, and the two relevant forms
+are the \emph{hyperbolic} plane $\bar Q(b,c)=-bc/p$ (Eichler level $p$, from
+$Q=-x^2-pyz$) and the \emph{anisotropic} plane $\bar Q(b,c)=(uc^2-b^2)/p$ with $u$ a
+nonsquare unit (ramified, from $\nrd=-ux^2-py^2+upz^2$). Their Gauss sums are $p$ and
+$(u\mid p)(-1\mid p)g(1)^2=-p$, so the signatures are $0$ and $4$ and, with $c$ the
+lower-left entry of the coset representative,
+\[
+  c_p^{\mathrm{Eich}}=\begin{cases}1&p\mid c\\ +1/p&\text{else,}\end{cases}
+  \qquad
+  c_p^{\mathrm{ram}}=\begin{cases}1&p\mid c\\ -1/p&\text{else,}\end{cases}
+\]
+whence $c_p^{\mathrm{ram}}=\varepsilon_p\,c_p^{\mathrm{Eich}}$ with $\varepsilon_p=\pm1$.
+Setting $f_p=(p-1)c_p^{\mathrm{ram}}$ and $g_p=\tfrac{p+1}2c_p^{\mathrm{Eich}}-1$, both
+cases give $g_p=\tfrac{p-1}2\varepsilon_p c_p^{\mathrm{Eich}}$ and
+$f_p=(p-1)\varepsilon_p c_p^{\mathrm{Eich}}$, so
+\[
+  g_p=\tfrac12 f_p \qquad\text{at every prime, including }p=2.
+\]
+The two lattices of a support differ at exactly one prime, so with
+$C=48\cdot2^{\omega-2}$,
+\[
+  \mathrm{mass}_s\,\mathrm{ct}_s-\mathrm{mass}_1\,\mathrm{ct}_1
+   =\frac{c_2}{C}\prod_{p\neq s}f_p\cdot g_s
+   =\frac{c_2}{2C}\prod_{p\mid D}(p-1)\prod_{p\mid D}c_p^{\mathrm{ram}},
+\]
+while $\mathrm{mass}(D',s)-\mathrm{mass}(D',1)=\mathrm{mass}_1(s-1)/2
+=\prod_{p\mid D'}(p-1)(s-1)/(2C)$, and this \emph{telescopes}: $D'$ and $s$ partition the
+primes of $D$, so $\prod_{p\mid D'}(p-1)(s-1)=\prod_{p\mid D}(p-1)$, independent of which
+prime is omitted. Dividing, the right-hand side is $c_2\prod_{p\mid D}c_p^{\mathrm{ram}}$.
+
+For the left-hand side, $B_D$ is ramified exactly at the primes of $D$, and ramification
+is a \emph{local} condition --- it does not see the archimedean place --- so the
+(indefinite) Shimura curve lattice carries the same anisotropic plane at each $p\mid D$ as
+the definite Gross lattices do, and $\rho=c_2^{L}\prod_{p\mid D}c_p^{\mathrm{ram}}$. The
+$2$-parts agree ($\Z/2$ with $4\bar Q=1$ for odd $D$; the same $(\Z/2)^3$ otherwise), so
+$c_2^L=c_2$ and the two sides coincide.
+\end{proof}
+
+The one-prime failures follow from the same computation: there the partner is Eichler at
+$\omega-1$ primes at once, so the bracket is $\prod_q\bigl(\tfrac{q+1}2
+c_q^{\mathrm{Eich}}\bigr)-1$, which does not factor into $g_q$'s. Nothing telescopes and
+the mass difference takes $\omega$ distinct values instead of one.
+
+Theorem~\ref{thm:noresplit} was then used \emph{predictively}, on bases the computation had
+never seen and with nothing fitted --- no eta pool, no constant-term table, no least
+squares, both sides evaluated from the lattices alone. At $D=39,51,55$ (odd) and $D=46,390$
+(even) all ten support-instances agree with $\rho$ to $\sim10^{-120}$; at $D=390=2\cdot3\cdot5\cdot13$
+the four supports have mass pairs $(\tfrac12,\tfrac34)$, $(\tfrac14,\tfrac12)$,
+$(\tfrac18,\tfrac38)$, $(\tfrac1{24},\tfrac7{24})$ and the identical difference $\tfrac14$
+--- the telescoping in the output rather than on paper.
+
+Finally, the theorem explains the ``no third term'' of Remark~\ref{rem:coset}. A third
+slot $\Theta(DN,1)$ exists precisely when $DN$ is itself a definite discriminant, i.e.\
+when $\omega(DN)$ is odd; and it is present in exactly those cases, always with
+coefficient $-\tfrac12$. Across the twelve bases measured, $\omega(DN)=3$ at
+$X_0^{15}(2)$, $X_0^{21}(2)$, $X_0^{22}(3)$, $X_0^{33}(2)$, $X_0^{35}(2)$, $X_0^{55}(2)$,
+$X_0^{77}(2)$, $X_0^{10}(7)$, $X_0^{34}(3)$ --- all carry the third term --- and
+$\omega(DN)\in\{2,4\}$ at $X_0^{15}(1)$, $X_0^{210}(1)$, $X_0^{330}(1)$, none of which do.
+At $N=1$ the algebra $B_D$ is indefinite, which forces $\omega(D)$ even; the absence of a
+third term at $N=1$ is therefore a corollary of indefiniteness, not an independent fact.
 
 \section{The open question}\label{sec:open}
 
