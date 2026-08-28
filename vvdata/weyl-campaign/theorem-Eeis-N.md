@@ -1,27 +1,48 @@
-# THEOREM (N > 1 prime): the three-term identity, proven — and lambda was a bug
+# THEOREM (N > 1): the identity, proven — and lambda was a bug
 
 Companion to `theorem-Eeis.md` (the `N = 1` theorem). Same method, same local
-inputs; the new content is the tracked coset and the third theta term.
+inputs; the new content is the tracked coset and the extra theta terms. The
+general form below **subsumes the `N = 1` theorem** as its `S = {}` case.
 
-## Statement
+## Statement (general form)
 
-Let `D = D' * s` be squarefree with exactly two prime factors (forced at
-`N = 1` by indefiniteness of `B_D`, and the case of every banked `N > 1` base),
-and let `N` be a prime with `gcd(D, N) = 1`. Let `L = L(D,N)` be the Shimura
-curve lattice — ramified at `D'` and `s`, Eichler at `N` — and let `mu` be a
-nonzero isotropic coset of `A_L`, which lives in the hyperbolic plane at `N`.
-Write `Theta(D'',R) = mass(D'',R) * theta(D'',R)` with the **multiplicative**
-mass
+Let `D` be squarefree with `omega(D)` even, written `D = D' * s` with `s` any
+one of its primes; let `N` be squarefree with `gcd(D,N) = 1`. Let `L = L(D,N)`
+be the Shimura curve lattice — ramified at the primes of `D`, Eichler at the
+primes of `N` — let `mu` be an isotropic coset of `A_L`, and put
 
-    mass(D'', R) = mass(D'', 1) * prod_{p | R, p prime} (p+1)/2 .
+    S = { p | N : mu_p != 0 } .
 
-Then, at every coset,
+Write `Theta(Delta,R) = mass(Delta,R) * theta(Delta,R)` with the
+**multiplicative** mass, and let `Tel_s` be the telescoped pair over `s`:
 
-    ct_L(gamma, mu)  =  1/2 * [Theta(D',Ns) - Theta(D',N)]
-                             / (mass(D',Ns) - mass(D',N))
-                        - 1/2 * theta(DN, 1) .
+    mass(Delta, R) = mass(Delta, 1) * prod_{p | R, p prime} (p+1)/2
 
-Nothing is fitted: both weights come out of the mass formula.
+    Tel_s(Delta; R) = [Theta(Delta,Rs) - Theta(Delta,R)]
+                      / (mass(Delta,Rs) - mass(Delta,R))
+
+Then, at every coset of the level `4DN`,
+
+    ct_L(gamma, mu)  =  2^(-|S|) * sum_{T subset S} (-1)^|T| Term(T) ,
+
+    Term(T)  =  theta( D' s prod T , N / prod T )      |T| ODD
+             =  Tel_s( D' prod T ; N / prod T )        |T| EVEN
+
+Nothing is fitted: every weight comes out of the mass formula. `|T|` even is
+exactly when `omega(D' s prod T)` is even — the algebra is INDEFINITE, there is
+no Gross lattice — and that is precisely when telescoping over `s` is what
+supplies the missing ramified factor.
+
+Special cases:
+
+* `N = 1`: the only isotropic coset is `0`, `S` is empty, and the formula reads
+  `ct_L = Tel_s(D'; 1)` — the `N = 1` theorem of `theorem-Eeis.md`.
+* `N` prime, `mu != 0`: `S = {N}`, and the two subsets give
+
+      ct_L(gamma, mu) = 1/2 Tel_s(D'; N) - 1/2 theta(DN, 1) ,
+
+  the banked three-term identity. That `theta(DN,1)` shape is special to `N`
+  prime: in general the odd-`|T|` term is `theta(D' s prod T, N/prod T)`.
 
 ## First: lambda = 2N/(N+1) was NOT arithmetic
 
@@ -58,49 +79,56 @@ trivial; that is where the whole question lives.)
 
 **(2) The tracked coset contributes 1 or 0 — no phase.** `mu` enters the closed
 form only through the solvability of `c*y = mu` and the phase `e(a c Q(y))`;
-`dcn` does not depend on it. The hyperbolic plane at `N` has exponent `N`, so
-`mu in cA` iff `N` does not divide `c`; and then `y = c^{-1} mu` gives
+`dcn` does not depend on it. The hyperbolic plane at `p` has exponent `p`, so
+`mu in cA` iff no `p in S` divides `c`; and then `y = c^{-1} mu` gives
 `Q(y) = c^{-2} Q(mu) = 0` because `mu` is ISOTROPIC. Hence
 
-    kappa := ct_L(gamma, mu) / ct_L(gamma, 0)  =  1  (N not| c),  0  (N | c).
+    kappa := ct_L(gamma, mu) / ct_L(gamma, 0)  =  prod_{p in S} [ p not| c ] .
 
 Measured: **exactly `1.0000000`**, not merely modulus 1, at 22_3 / 15_2 / 10_7
 (`ctn1local.log`).
 
-**(3) The right-hand side telescopes to one product.** `G(D',N)` is Eichler at
-`N` only; `G(D',Ns)` is Eichler at `N` and at `s`. With the multiplicative mass
-their common factors `(N+1)/2` and `c_N^Eich` cancel out of the quotient, and
-with `g_s = f_s/2` from the `N = 1` theorem (valid at every prime, `2`
-included),
+**(3) The Eichler-minus-ramified difference IS the tracked-coset indicator.**
+By (1), `ct_L(gamma, 0) = prod_{p|D} c_p^ram * prod_{p|N} c_p^Eich`. The two
+local values are `c_p^Eich = 1` if `p | c` else `1/p`, and `c_p^ram = 1` if
+`p | c` else `-1/p`, so at every prime
 
-    T := [Theta(D',Ns) - Theta(D',N)] / (mass_Ns - mass_N)
-       = c_{D'}^ram c_N^Eich * [ ((s+1)/2) c_s^Eich - 1 ] / ((s-1)/2)
-       = c_{D'}^ram c_N^Eich * g_s / ((s-1)/2)
-       = c_{D'}^ram c_N^Eich c_s^ram ,
+    ( c_p^Eich - c_p^ram ) / 2  =  c_p^Eich * [ p not| c ] .
 
-while `theta(DN,1) = c_{D'}^ram c_s^ram c_N^ram`, all three primes being
-ramified. So
+Multiplying that over `p in S` and using (2),
 
-    pred = 1/2 * c_{D'}^ram c_s^ram * ( c_N^Eich - c_N^ram ) .
+    ct_L(gamma, mu) = kappa * ct_L(gamma, 0)
+      = prod_{p|D} c_p^ram * prod_{p|N, p notin S} c_p^Eich
+        * prod_{p in S} ( c_p^Eich - c_p^ram ) / 2 .
 
-**(4) That difference IS the tracked-coset indicator.** `c_N^Eich = 1` if
-`N | c` else `1/N`; `c_N^ram = 1` if `N | c` else `-1/N`. Hence
+**(4) Expanding that product over subsets gives exactly the right-hand side.**
+The `T`-term of the expansion is
+`prod_{p|D} c_p^ram * prod_{p in T} c_p^ram * prod_{p|N, p notin T} c_p^Eich`,
+with sign `(-1)^|T|` and weight `2^-|S|`. It remains to see that this is
+`Term(T)`:
 
-    c_N^Eich - c_N^ram = 0 (N | c),   2/N (N not| c) ,
+* `|T|` ODD: `omega(D' s prod T) = omega(D) + |T|` is odd, so
+  `G(D' s prod T, N/prod T)` exists — ramified at the primes of `D` and of `T`,
+  Eichler at the rest of `N` — and its `ct` is exactly that product.
+* `|T|` EVEN: that discriminant is indefinite. Instead take the pair
+  `(D' prod T, N/prod T)` and `(D' prod T, (N/prod T) s)`, which differ at `s`
+  alone. With the multiplicative mass all common factors cancel out of the
+  quotient, and with `g_s = f_s/2` from the `N = 1` theorem (valid at every
+  prime, `2` included),
 
-so `pred = 0` when `N | c`, and when `N` does not divide `c`
+      Tel_s(D' prod T; N/prod T)
+        = [prod_{p|D'} c_p^ram prod_T c_p^ram prod_rest c_p^Eich]
+          * [ ((s+1)/2) c_s^Eich - 1 ] / ((s-1)/2)
+        = [ ... ] * g_s / ((s-1)/2)  =  [ ... ] * c_s^ram ,
 
-    pred = c_{D'}^ram c_s^ram / N = c_{D'}^ram c_s^ram c_N^Eich = ct_L(gamma,0) .
+  which restores the missing `c_s^ram` and gives the same product. QED.
 
-Comparing with (2): `ct_L(gamma,mu) = kappa * ct_L(gamma,0) = pred` in **both**
-cases. QED.
+So the extra theta terms are not decoration: they are what makes the right-hand
+side vanish on exactly the cosets the tracked coset kills.
 
-The third term is not decoration: it is what makes the right-hand side vanish
-on exactly the cosets the tracked coset kills.
-
-**(5) The 2-parts.** As at `N = 1` the argument needs the four lattices'
-2-adic normalisations to agree after telescoping. `ctsplit` shows it directly —
-at 22_3, class 1: `L` and `G(66,1)` both give `loc_2 = (1+i)/4`, and the
+**(5) The 2-parts.** As at `N = 1` the argument needs the lattices' 2-adic
+normalisations to agree after telescoping. `ctsplit` shows it directly — at
+22_3, class 1: `L` and `G(66,1)` both give `loc_2 = (1+i)/4`, and the
 telescoped 2-part of the `(11,·)` pair is `(1+i)/4` as well.
 
 ## Evidence
@@ -140,20 +168,30 @@ and `N` prime, `omega(DN) = 3` always, so at `N > 1` in this family the third
 term is always present — matching all twelve banked bases and confirming the
 `N = 1` explanation (`B_D` indefinite forces `omega(D)` even).
 
+**COMPOSITE `N` AND EVERY ISOTROPIC COSET — 112 of 112** (`ctn1general.log`).
+The general form was then tested at `35_6` (`N = 2*3`) and `15_14`
+(`N = 2*7`), both `s` choices, and — crucially — at **every** nonzero isotropic
+coset, not only the convention's `iso[2]`: 14 and 38 of them respectively, plus
+`22_3` as an `N`-prime regression. Worst 2.7e-119. The term count follows `|S|`
+exactly as predicted:
+
+    S = {2,3} at 35_6, s=7:  1/4 Tel(5;6,42) - 1/4 T(70,3)
+                             - 1/4 T(105,2) + 1/4 Tel(30;1,7)
+    S = {3}   at 35_6, s=7:  1/2 Tel(5;6,42) - 1/2 T(105,2)
+    S = {2}   at 35_6, s=7:  1/2 Tel(5;6,42) - 1/2 T(70,3)
+
+Note `#iso = prod_{p|N} (2p-1)` (15 at `N = 6`, 39 at `N = 14`), generalising
+the banked `2N-1`.
+
 ## Scope, honestly
 
-* `omega(D) = 2` and `N` PRIME. Not tested: `omega(D) = 4` with `N` prime, and
-  `N` COMPOSITE.
-* `N` composite is a genuinely different regime and the identity as stated
-  **cannot** hold there: with two Eichler primes `N_1 N_2`, `omega(DN)` is even
-  so `theta(DN,1)` does not exist, yet `kappa` still vanishes when `N_i | c`.
-  The derivation says what to expect instead — a FOUR-term combination
-
-      1/4 [ Tel(D'; N, Ns) - theta(D' N_1 s, N_2) - theta(D' N_2 s, N_1)
-            + Tel(D' N_1 N_2; 1, s) ]
-
-  since `prod_i (c_{N_i}^Eich - c_{N_i}^ram)/2` is `c_{N_1}^Eich c_{N_2}^Eich`
-  off the bad cosets and `0` on them, and each of the four sign patterns is
-  realised by a lattice with an ODD number of ramified primes. Untested.
+* Tested at `omega(D) = 2` only. `omega(D) = 4` with `N > 1` is untested; the
+  telescoping step is the same one the `N = 1` theorem already runs at
+  `omega(D) = 4` (1155), so nothing in the argument depends on it, but the
+  smallest instance is `D = 210, N = 11`, level 9240, and it has not been run.
+* `mu` is assumed ISOTROPIC. That is the only place `Q(c^{-1}mu) = 0` is used;
+  an anisotropic tracked coset would pick up a genuine phase and is outside the
+  statement.
 * This is still the EISENSTEIN part only. `W(m) = a_{E*}(m)` modulo the cusp
-  ideal remains the open piece ([[theorem-Eeis-odd-D]] item 3).
+  ideal remains the open piece ([[theorem-Eeis-odd-D]] item 3) — and it is now
+  the ONLY remaining piece between the identity and the Weyl vector.
