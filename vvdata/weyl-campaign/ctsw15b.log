@@ -1,0 +1,34 @@
+Loading "vvdata/weyl-campaign/ctlat.m"
+Hurwitz gate: 0 failures
+
+SUPPORT: a_E(m) = 0 whenever (-m|3) = 1 or (-m|5) = 1 : 0 violations in m < 300
+  of the 119 admissible m, 107 are nonzero
+
+=== squarefree m: a_E(m)/H(4m) keyed by (m mod 8, (-m|3), (-m|5)) ===
+  m=1 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -4 ]
+  m=1 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -2 ]
+  m=1 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -2 ]
+  m=1 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -1 ]
+  m=2 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -4 ]
+  m=2 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -2 ]
+  m=2 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -2 ]
+  m=2 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -1 ]
+  m=3 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -3 ]
+  m=3 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -3/2 ]
+  m=3 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -3/2 ]
+  m=3 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -3/4 ]
+  m=5 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -4 ]
+  m=5 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -2 ]
+  m=5 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -2 ]
+  m=5 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -1 ]
+  m=6 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -4 ]
+  m=6 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -2 ]
+  m=6 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -2 ]
+  m=6 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -1 ]
+  m=7 mod 8, (-m|3)=-1, (-m|5)=-1 :  1 distinct  [ -2 ]
+  m=7 mod 8, (-m|3)=-1, (-m|5)= 0 :  1 distinct  [ -1 ]
+  m=7 mod 8, (-m|3)= 0, (-m|5)=-1 :  1 distinct  [ -1 ]
+  m=7 mod 8, (-m|3)= 0, (-m|5)= 0 :  1 distinct  [ -1/2 ]
+
+24 of 24 refined classes carry a CONSTANT ratio
+DONE
