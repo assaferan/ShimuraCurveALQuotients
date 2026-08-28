@@ -1,0 +1,15 @@
+Loading "vvdata/weyl-campaign/ctlat.m"
+ds = [ 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30, 60 ]
+#pool = 21
+
+E* (eisrat)          in the eta pool span: true
+   coefficients: [ 8, -12/5, -2, 5/2, -11/5, 4, 9/10, 4/5 ]
+   on pool rows: [ 11, 13, 14, 15, 18, 19, 20, 21 ]
+   reconstruction exact: true
+
+Gross combination    in the eta pool span: true
+   coefficients: [ 2, -12/5, -1, 1/2, -6/5, 6, 9/10, 4/5 ]
+   on pool rows: [ 12, 13, 14, 15, 18, 19, 20, 21 ]
+   reconstruction exact: true
+pool span rank = 10 of 21
+DONE
