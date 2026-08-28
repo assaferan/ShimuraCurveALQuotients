@@ -324,9 +324,18 @@ for wi->w in words do
         // measurement on all eleven banked bases (|A| from 200 to 217800, both
         // parities of DN, both 2-ranks) -- including 15_2, where est is
         // NONZERO, which is what pins the coset-independence.
+        // The constant is e(sig/8)/sqrt|A| with sig the SIGNATURE of the
+        // discriminant form mod 8, i.e. signD as measured from the Gauss sums
+        // -- NOT a universal e(1/8).  Every Shimura-curve lattice in this
+        // campaign reports sign(Dbar) = 1 (checked on all 18 banked logs), so
+        // e(signD/8) = e(1/8) here and this change is a NO-OP on every current
+        // base; the gates below prove that.  It matters for any future base
+        // with another signature.  Diagnosed while building ctlat.m, where the
+        // Gross lattices are negative definite (sig = 5) and hardcoding e(1/8)
+        // left exactly one coset of 3456 wrong.
         error if #[ t : t in w | t[1] eq "S" ] ne 1,
             "a = 0 word has more than one S: closed form not established", wi;
-        rhov[wi] := ee(CC!1/8) / Sqrt(CC!n);
+        rhov[wi] := ee(CC!signD/8) / Sqrt(CC!n);
         continue;
     end if;
     k2 := Valuation(c, 2);
