@@ -1512,16 +1512,35 @@ Two readings suggest themselves, and both can now be excluded.
       is assembled from, not the signature of a misnormalisation.
 \end{enumerate}
 
-What survives is the reading that the identification of \S\ref{sec:ident} points to: terms
-\emph{inside} Schofer's formula were dropped. The $m=0$ term, as transmitted through
-\cite{Schofer,Yang}, collapses the sum $\sum_\eta c_\eta(0)\kappa_\eta(0)$ to the single term
-$c_0(0)\kappa_0(0)$ via a condition of the form $\delta_{0,\mu}$. But that condition constrains
-only the \emph{negative-definite} part of the coset, so a nonzero isotropic $\eta$ with $\eta_-=0$
-survives it --- and it is exactly those cosets that carry the correction, while $c_0(0)=0$ removes
-the term that was kept. That the nonzero isotropic cosets share one constant term, which
-Observation~\ref{obs:iso} recorded empirically, is now a consequence of $N$ being prime: by the
-discussion after that observation the number of distinct functionals is $2^{\omega(N)}-1$, which is
-$1$ exactly when $\omega(N)=1$.
+What survives is that terms \emph{inside} Schofer's formula were dropped, and his statement locates
+them precisely. In \cite[Thm.~3.3]{SchoferThesis} the coefficient attached to a pair
+$(\eta,\lambda)$ is
+$\kappa_{\eta,\lambda}(m_1)=\sum_{0\le m\le m_1}d_{\eta_++\lambda_+}(m_1-m)\,
+\kappa_{\eta_-+\lambda_-}(m)$, where $d_{\eta_++\lambda_+}(m)=\#\{x_1\in\eta_++\lambda_++L_+:
+Q(x_1)=m\}$ and, at $m=0$,
+\[
+  \kappa_{\eta_-+\lambda_-}(0)\;=\;k_0(0)\,\varphi_{\eta_-+\lambda_-+L_-}(0),
+\]
+a \emph{characteristic function} of the coset. Since $L_+$ is positive definite, $Q(x_1)=0$ forces
+$x_1=0$, so $d_{\eta_++\lambda_+}(0)$ is $1$ when $\eta_++\lambda_+\equiv0$ and $0$ otherwise.
+Hence
+\[
+  \kappa_{\eta,\lambda}(0)\;=\;k_0(0)\cdot
+  \bigl[\eta_++\lambda_+\equiv0\bigr]\bigl[\eta_-+\lambda_-\equiv0\bigr],
+\]
+and the $m=0$ part of the formula is $k_0(0)\sum_{\eta}\sum_{\lambda}c_\eta(0)$ over the pairs
+satisfying both congruences, with $\lambda$ running over $L/(L_++L_-)$.
+
+The collapse to $c_0(0)k_0(0)$ is therefore valid exactly when $L=L_++L_-$. There
+$\lambda=0$ is the only class, the two congruences read $\eta_+\equiv0$ and $\eta_-\equiv0$, and
+only $\eta=0$ survives. That is the maximal-order situation, and it is the one in which the recipe
+was checked --- Yang's worked examples have $L=L_++L_-$. For an Eichler order of level $N>1$ the
+index $[L:L_++L_-]$ exceeds $1$, the $\lambda$-sum is nontrivial, and cosets $\eta\neq0$ whose two
+components are matched by some $\lambda$ contribute. Those are the dropped terms; $c_0(0)=0$
+removes the one that was kept, so they carry the whole correction. That the surviving cosets share
+one constant term, which Observation~\ref{obs:iso} recorded empirically, is now a consequence of
+$N$ being prime: the number of distinct functionals is $2^{\omega(N)}-1$, which is $1$ exactly when
+$\omega(N)=1$.
 
 The scope violation is visible in the sources' own terms. Kudla--Rapoport--Yang state that they
 consider only Eisenstein series built from sections given by the characteristic functions of the
@@ -1656,6 +1675,9 @@ quadratic modules}, Math.~Z.\ \textbf{275} (2013), 509--527.
 
 \bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
 J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
+
+\bibitem{SchoferThesis} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
+Ph.D.\ thesis, University of Maryland, College Park, 2005.
 
 \bibitem{Schwag} M.~Schwagenscheidt, \emph{Eisenstein series for the Weil representation},
 J.\ Number Theory \textbf{193} (2018), 74--101.
