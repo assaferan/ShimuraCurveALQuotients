@@ -7,6 +7,7 @@
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{conjecture}[theorem]{Conjecture}
 \theoremstyle{definition}
@@ -1213,6 +1214,65 @@ instance is $X_0^{210}(11)$ at level $9240$ with $27648$ cosets and a discrimina
 of order $2.9\cdot10^7$: both $s=2$ and $s=3$, two tracked cosets each, all confirmed to
 $2\cdot10^{-118}$. (Incidentally the count of isotropic cosets, $2N-1$ in
 Observation~\ref{obs:iso}, is in general $\prod_{p\mid N}(2p-1)$.)
+
+For the combination of Theorem~\ref{thm:Ngeneral} to be usable as an $E$ in what follows,
+it must be a holomorphic form of weight $\tfrac32$ on $\Gamma_0(4DN)$ carrying a single
+multiplier. Both are consequences of the local structure already in hand.
+
+\begin{lemma}[level and multiplier of the Gross thetas]\label{lem:levelchar}
+Let $\Delta$ be squarefree with $\omega(\Delta)$ odd, let $R$ be squarefree and coprime to
+$\Delta$ with $\Delta R\mid DN$, and let $L$ be the trace-zero part of an Eichler order of
+level $R$ in the definite quaternion algebra of discriminant $\Delta$, with $Q=\nrd$. Then
+\begin{enumerate}
+\item[(i)] the Gram matrix has determinant $2(\Delta R)^2$, and the level of $Q$ is
+      $4\cdot\mathrm{odd}(\Delta R)$, which divides $4DN$;
+\item[(ii)] $\theta_L$ is a holomorphic modular form of weight $\tfrac32$ on
+      $\Gamma_0(4DN)$;
+\item[(iii)] all the $\theta_L$ occurring in Theorem~\ref{thm:Ngeneral} carry the same
+      multiplier, namely the one governing $\rho$; hence their combination is a modular
+      form, and $fE$ has trivial multiplier for $E$ that combination.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By the local analysis in the proof of Theorem~\ref{thm:noresplit}, the discriminant
+form of $L$ is an anisotropic plane $(\Z/p)^2$ at each $p\mid\Delta$, a hyperbolic plane
+$(\Z/p)^2$ at each $p\mid R$, and $\Z/2$ with $4\bar Q=1$ at $2$ when $\Delta R$ is odd
+(the same $\Z/2$ that makes $c_2^L=c_2^G$ there). Multiplying orders gives
+$|A_L|=2(\Delta R)^2=\det$. The level of an even lattice is the exponent of $\bar Q$ as a
+$\Q/\Z$-valued form: each odd $p\mid\Delta R$ contributes $p$, and the $2$-part
+contributes $4$, since $4\bar Q=1$ there. Hence the level is
+$4\cdot\mathrm{odd}(\Delta R)$. As $DN$ is squarefree and $\Delta R\mid DN$, we get
+$\mathrm{odd}(\Delta R)\mid DN$ and so the level divides $4DN$.
+
+(ii) A positive definite ternary theta series is holomorphic of weight $\tfrac32$ on
+$\Gamma_0$ of its level, and by (i) that group contains $\Gamma_0(4DN)$; the genus average
+is a convex combination of such.
+
+(iii) The identity of Theorem~\ref{thm:Ngeneral} is an identity of Weil-representation
+entries in closed form, and its proof nowhere uses that $\gamma$ belongs to any chosen set
+of coset representatives: it holds for every $\gamma$. Now fix $\gamma_0\in\Gamma_0(4DN)$
+and a representative $w$. Each side is a weight-$\tfrac32$ object slashed by a matrix, so
+evaluating at $\gamma_0w$ multiplies the left side by $\nu_{\mathrm{Shim}}(\gamma_0)$ and
+the right by $\nu_{\mathrm{Gross}}(\gamma_0)$. Since the identity holds at $\gamma_0w$ as
+well as at $w$, and the common value is not identically zero,
+$\nu_{\mathrm{Gross}}=\nu_{\mathrm{Shim}}$. The same argument applied to the individual
+terms shows they share that multiplier. Finally the panel character is by definition the
+one for which $E^*$ reproduces $\rho$, i.e.\ the conjugate of $\nu_{\mathrm{Shim}}$, so
+$fE$ has trivial multiplier.
+\end{proof}
+
+Each clause was checked. The determinant and level of (i) were computed for all $100$
+Gross lattices arising at the bases treated here, agreeing with
+$2(\Delta R)^2$ and $4\cdot\mathrm{odd}(\Delta R)$ in every case and dividing $4DN$ in
+every case. For (iii), the identity was re-evaluated \emph{off} the representative list,
+at $\gamma_0w$ for four or five $\gamma_0\in\Gamma_0(4DN)$ against a spread of twelve
+representatives, at $X_0^{21}(2)$, $X_0^{22}(3)$, $X_0^{55}(2)$, $X_0^{77}(2)$,
+$X_0^{34}(3)$ and $X_0^{15}(2)$: it holds at all $48$--$60$ matrices per base, to
+$4\cdot10^{-96}$. Independently, at seven of the bases the combination is exhibited
+inside the space of holomorphic weight-$3/2$ eta quotients with the panel character,
+which gives (iii) there directly; at the remaining bases that space is too small to
+decide, which is why the argument above is the one used.
 
 \subsection*{The multiplicity as a residue pairing}
 
