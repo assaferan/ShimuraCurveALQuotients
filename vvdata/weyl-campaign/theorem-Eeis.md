@@ -82,8 +82,26 @@ two predicted values `1` and `(1+i)/2`.
 
 ## What this does NOT cover
 
-* **`N > 1`.** The tracked coset is no longer the zero coset and absolute
-  normalisations shift (see the tracked-coset remark). The Eichler-at-`N`
-  structure should enter the same local framework.
+* **`N > 1` -- and it is NOT a small extension.** Three things change at once:
+  the tracked coset is no longer the zero coset; the Shimura lattice is
+  Eichler-at-`p` for `p | N`, so the left side acquires HYPERBOLIC local
+  factors where the `N = 1` case had only anisotropic ones; and the identity
+  gains a THIRD theta term with weights summing to 0 instead of 1:
+
+      15_2 (DN=30):  -1/2 G(5,2)  + 1   G(5,6)  - 1/2 G(30,1)
+      22_3 (DN=66):  -1   G(11,3) + 3/2 G(11,6) - 1/2 G(66,1)
+
+  BUT the third term is now UNDERSTOOD, and it settles the preregistration's
+  Q2. Across all twelve banked bases the third term is present exactly when
+  `omega(DN)` is ODD, and it is always `-1/2 * GROSS(DN, 1)`:
+
+      omega(DN) = 3 : 15_2 21_2 22_3 33_2 35_2 55_2 77_2 10_7 34_3  -> present
+      omega(DN) = 2,4,4 : 15_1 210_1 330_1                          -> absent
+
+  `omega(DN)` odd is exactly the condition for `DN` ITSELF to be a definite
+  quaternion discriminant, i.e. for `Theta(DN,1)` to exist at all. And at
+  `N = 1` the algebra `B_D` is INDEFINITE, which FORCES `omega(D)` even -- so
+  the absence of a third term at `N = 1` is a corollary of indefiniteness, not
+  a separate fact. Q2 is thereby explained rather than merely observed.
 * **The Weyl vector itself.** This is the EISENSTEIN part. `W(m) = a_{E*}(m)`
   holds only modulo the cusp ideal, and aliasing is nonzero at some bases.
