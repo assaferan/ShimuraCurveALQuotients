@@ -183,12 +183,13 @@ exactly as predicted:
 Note `#iso = prod_{p|N} (2p-1)` (15 at `N = 6`, 39 at `N = 14`), generalising
 the banked `2N-1`.
 
+**`omega(D) = 4` at `N > 1` — 4 of 4** (`ctn1omega4.log`). The smallest instance,
+`D = 210`, `N = 11`, level **9240**, 27648 cosets, `|A| = 2.9e7`: both `s = 2`
+(`D' = 105`) and `s = 3` (`D' = 70`), two tracked cosets each, worst 2.2e-118.
+So the theorem's `omega(D)` is genuinely arbitrary even, not `2` in disguise.
+
 ## Scope, honestly
 
-* Tested at `omega(D) = 2` only. `omega(D) = 4` with `N > 1` is untested; the
-  telescoping step is the same one the `N = 1` theorem already runs at
-  `omega(D) = 4` (1155), so nothing in the argument depends on it, but the
-  smallest instance is `D = 210, N = 11`, level 9240, and it has not been run.
 * `mu` is assumed ISOTROPIC. That is the only place `Q(c^{-1}mu) = 0` is used;
   an anisotropic tracked coset would pick up a genuine phase and is outside the
   statement.

@@ -1,0 +1,19 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+Loading "vvdata/weyl-campaign/ctlatat.m"
+
+===== D=210 N=11  DN=2310  lev=9240  27648 cosets  #iso=21 =====
+  --- s = 2, D' = 105 ---
+   mu=[ 0, 0, 210 ]    S=[ 11 ]     [ 1/2 Tel(105;11,22), -1/2 T(2310,1) ]   
+worst 2.23949E-118  HOLDS
+   mu=[ 0, 2100, 210 ] S=[ 11 ]     [ 1/2 Tel(105;11,22), -1/2 T(2310,1) ]   
+worst 2.23949E-118  HOLDS
+  --- s = 3, D' = 70 ---
+   mu=[ 0, 0, 210 ]    S=[ 11 ]     [ 1/2 Tel(70;11,33), -1/2 T(2310,1) ]   
+worst 1.68007E-120  HOLDS
+   mu=[ 0, 2100, 210 ] S=[ 11 ]     [ 1/2 Tel(70;11,33), -1/2 T(2310,1) ]   
+worst 1.68007E-120  HOLDS
+
+4 of 4 (base, s, mu) instances HOLD
+DONE
