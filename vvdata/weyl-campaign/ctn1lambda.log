@@ -1,0 +1,64 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+Loading "vvdata/weyl-campaign/ctlatat.m"
+base     N    2N/(N+1)   measured         verdict
+15_2      N=2 lambda=4/3 measured=1.333333333 - 3.549875922E-120*$.1 MISMATCH 
+rel 0.333333
+    disagree on 84 of 288 cosets; by cusp class gcd(c,120): [ <3, 40>, <4, 15>, 
+<8, 15>, <15, 8>, <20, 3>, <40, 3> ]
+    agree by class: [ <1, 120>, <2, 30>, <5, 24>, <6, 10>, <10, 6>, <12, 5>, 
+<24, 5>, <30, 2>, <60, 1>, <120, 1> ]
+    rho/pred on the failing cosets: 3 distinct, first few [ 0.75000000 + 
+5.9904156E-120*$.1, 0.00000000, 0.75000000 + 4.9375547E-120*$.1 ]
+21_2      N=2 lambda=4/3 measured=1.333333333 - 2.936715535E-120*$.1 MISMATCH 
+rel 0.333333
+    disagree on 112 of 384 cosets; by cusp class gcd(c,168): [ <3, 56>, <4, 21>,
+<8, 21>, <21, 8>, <28, 3>, <56, 3> ]
+    agree by class: [ <1, 168>, <2, 42>, <6, 14>, <7, 24>, <12, 7>, <14, 6>, 
+<24, 7>, <42, 2>, <84, 1>, <168, 1> ]
+    rho/pred on the failing cosets: 3 distinct, first few [ 0.75000000 + 
+4.9557075E-120*$.1, 0.00000000, 0.75000000 + 3.4853327E-120*$.1 ]
+22_3      N=3 lambda=3/2 measured=1.500000000 - 4.193290933E-120*$.1 MISMATCH 
+rel 0.530330
+    disagree on 168 of 576 cosets; by cusp class gcd(c,264): [ <3, 88>, <4, 33>,
+<8, 33>, <33, 8>, <44, 3>, <88, 3> ]
+    agree by class: [ <1, 264>, <2, 66>, <6, 22>, <11, 24>, <12, 11>, <22, 6>, 
+<24, 11>, <66, 2>, <132, 1>, <264, 1> ]
+    rho/pred on the failing cosets: 70 distinct, first few [ 0.00000000, 
+0.66666666 + 1.7103736E-120*$.1, 0.66666666 - 3.1293672E-121*$.1, 0.66666666 - 
+3.3689382E-120*$.1 ]
+33_2      N=2 lambda=4/3 measured=1.333333333 - 3.194888330E-120*$.1 MISMATCH 
+rel 0.333333
+    disagree on 168 of 576 cosets; by cusp class gcd(c,264): [ <3, 88>, <4, 33>,
+<8, 33>, <33, 8>, <44, 3>, <88, 3> ]
+    agree by class: [ <1, 264>, <2, 66>, <6, 22>, <11, 24>, <12, 11>, <22, 6>, 
+<24, 11>, <66, 2>, <132, 1>, <264, 1> ]
+    rho/pred on the failing cosets: 3 distinct, first few [ 0.75000000 + 
+3.8937702E-120*$.1, 0.00000000, 0.75000000 + 3.4853327E-120*$.1 ]
+35_2      N=2 lambda=4/3 measured=1.333333333 - 3.953270913E-120*$.1 MISMATCH 
+rel 0.333333
+    disagree on 144 of 576 cosets; by cusp class gcd(c,280): [ <4, 35>, <5, 56>,
+<8, 35>, <28, 5>, <35, 8>, <56, 5> ]
+    agree by class: [ <1, 280>, <2, 70>, <7, 40>, <10, 14>, <14, 10>, <20, 7>, 
+<40, 7>, <70, 2>, <140, 1>, <280, 1> ]
+    rho/pred on the failing cosets: 3 distinct, first few [ 0.00000000, 
+0.75000000 + 4.5744992E-120*$.1, 0.75000000 + 3.4853327E-120*$.1 ]
+55_2      N=2 lambda=4/3 measured=1.333333333 - 3.845698916E-120*$.1 MISMATCH 
+rel 0.333333
+    disagree on 216 of 864 cosets; by cusp class gcd(c,440): [ <4, 55>, <5, 88>,
+<8, 55>, <44, 5>, <55, 8>, <88, 5> ]
+    agree by class: [ <1, 440>, <2, 110>, <10, 22>, <11, 40>, <20, 11>, <22, 
+10>, <40, 11>, <110, 2>, <220, 1>, <440, 1> ]
+    rho/pred on the failing cosets: 3 distinct, first few [ 0.00000000, 
+0.75000000 + 3.0950481E-120*$.1, 0.75000000 + 3.6305549E-120*$.1 ]
+10_7      N=7 lambda=7/4 measured=1.750000000 - 4.447429777E-120*$.1 MISMATCH 
+rel 1.85616
+    disagree on 132 of 576 cosets; by cusp class gcd(c,280): [ <4, 35>, <7, 40>,
+<8, 35>, <20, 7>, <35, 8>, <40, 7> ]
+    agree by class: [ <1, 280>, <2, 70>, <5, 56>, <10, 14>, <14, 10>, <28, 5>, 
+<56, 5>, <70, 2>, <140, 1>, <280, 1> ]
+    rho/pred on the failing cosets: 85 distinct, first few [ 0.57142857 - 
+1.0684518E-120*$.1, 0.57142857 - 2.8027178E-120*$.1, 0.57142857 - 
+5.4221477E-120*$.1, 0.57142857 - 6.2712499E-120*$.1 ]
+DONE
