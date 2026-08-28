@@ -1550,8 +1550,28 @@ problem''; they also fix a maximal order. At a firing discriminant our $L_-$ is 
 such a more general section, so the case-completeness assertion that becomes Schofer's Theorem~4.1
 and Yang's Lemma~16 is being applied outside its stated hypotheses.
 
-One step of this reading is not derived. Redoing the case analysis with the $N$-scaled section adds
-no fourth case --- the level factor only ever raises the order of vanishing, so $\kappa$ cannot
+The vanishing at $\eta\neq0$ has a second guard in \cite{SchoferThesis}, and it fails the same way.
+Lemma~2.18 there concludes $b_\varphi(0,t)=0$ for $\varphi\neq\varphi_0$, citing a local statement:
+$W_{0,p}(s,\varphi_p)=0$ whenever $\varphi_p$ is not the characteristic function of the local
+lattice. For a unimodular $L_p$ that is vacuous --- $L_p^\vee/L_p$ is trivial, so the only such
+$\varphi_p$ is $\mathrm{char}(L_p)$ and there is nothing else to test. At a $p$-scaled $L_p$ there
+is. Evaluating $W_{0,p}$ directly on the cosets of $L_p^\vee/L_p\cong(\Z/p)^2$ for
+$A=p\cdot(\text{unimodular})$, at a \emph{split} $p$ --- the case a firing discriminant forces ---
+gives
+\[
+  \#\{\mu\neq0: W_{0,p}(0,\mu)\neq0\}\;=\;4,\;8,\;12 \quad\text{at } p=3,5,7,
+\]
+each with value $1$; that is $2(p-1)$, which is exactly the number of nonzero \emph{isotropic}
+cosets of a hyperbolic plane over $\mathbb{F}_p$. So at the level prime the $m=0$ local Whittaker is
+nonzero on precisely the $2N-2$ nonzero isotropic cosets, with equal weight, and Lemma~2.18 sets
+all of them to zero on the strength of a statement established where no such coset exists. Those
+are the dropped terms, and their count and equal weighting are exactly the structure the
+measurements report: all nonzero isotropic $\eta$ carry the same $c_\eta(0)$, and the multiplier is
+$\sum_\eta c_\eta(0)/(4(N-1))=\tfrac12c_\eta(0)$ over the $2N-2$ of them.
+
+What is still not derived is the normalising constant: recovering the measured $\tfrac12$ requires
+$k_0(0)$ of Lemma~2.18 against the count above, and we have not carried that out. Redoing the case
+analysis with the $N$-scaled section adds no fourth case --- the level factor only ever raises the order of vanishing, so $\kappa$ cannot
 supply the $\log N$ from the $m>0$ terms (Proposition~\ref{prop:reenum}) --- which leaves the whole
 correction in the $m=0$ term at $\eta\neq0$. Evaluating $\kappa_\eta(0)$ there from Schofer's own
 definition, and recovering the measured factor $\tfrac12$, remains to be done. Theorem~\ref{thm:closed}
