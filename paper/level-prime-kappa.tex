@@ -1396,6 +1396,39 @@ different route than Theorem~\ref{thm:Ngeneral} uses --- and returns the same pa
 the fitted representative on every panel form, to every digit printed, although the two
 forms differ.
 
+\subsection*{The coefficients in closed form}
+
+Corollary~\ref{cor:multgross} makes $W(m)=-a_E(m)$ a combination of representation numbers
+of definite ternary forms. Siegel--Weil turns each of those into a product of local
+densities, and the combination collapses --- at odd primes --- into one elementary factor
+per prime of $DN$ against a Hurwitz class number.
+
+\begin{proposition}[the multiplicity coefficients]\label{prop:closedcoef}
+Let $D$ be squarefree and odd with $\omega(D)=2$, let $N$ be an odd prime coprime to $D$,
+and let $m$ be squarefree. Then, with $H$ the Hurwitz class number,
+\[
+  -a_E(m)\;=\;H(4m)\,\prod_{p\mid D}\frac{1-\bigl(\tfrac{-m}{p}\bigr)}{p-1}
+    \;\cdot\;\frac{12\bigl(N-\bigl(\tfrac{-m}{N}\bigr)\bigr)}{N^2-1}.
+\]
+In particular $a_E(m)=0$ unless every $p\mid D$ is non-split in $\Q(\sqrt{-m})$, i.e.\
+unless $\Q(\sqrt{-m})$ embeds in $B_D$: the support rule is part of the formula rather
+than a side condition.
+\end{proposition}
+
+The shape was read off at $N=3$ and $N=7$ and then tested at $N=5$ (on $X_0^{21}(5)$ and
+$X_0^{33}(5)$), $N=11$ and $N=13$, none of which entered the fit: $75$ of $75$ squarefree
+$m$ agree at every base, and the two fitted bases reproduce. The vanishing was checked
+separately to $m<300$ at $X_0^{15}(2)$ with no violation.
+
+Two caveats, both real. The statement is for $m$ \emph{squarefree}; for imprimitive $m$ the
+$f$-sum inside $H$ must be reconciled against the local geometric series, which is not done
+here. And $p=2$ does not follow the odd law. When $2\mid D$ the displayed formula holds
+verbatim for the odd primes and the odd Eichler prime, multiplied by a factor
+$\delta_2(m)=1,\tfrac12,0$ according as $m\equiv1,2,5,6$, $3$, or $7 \pmod 8$ --- and the
+$0$ at $m\equiv7$ is again exactly the condition that $2$ split in $\Q(\sqrt{-m})$. When
+instead $N=2$, the Eichler factor is not $12(N-(\tfrac{-m}{N}))/(N^2-1)$ but
+$8,8,6,8,8,4$ for $m\equiv1,2,3,5,6,7\pmod 8$; both are recorded as measured.
+
 \section{The open question}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
