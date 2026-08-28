@@ -1,0 +1,13 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+DN = 1155 : comparing the 2-adic factors
+  c_2^L = rho / prod_{p|DN} c_p^ram        (all four primes ramified in L)
+  c_2^G = ct(theta(385,1)) / prod_{p|385} c_p^ram
+
+  13824 cosets compared, 0 mismatches, worst |c_2^L - c_2^G| = 
+1.4450331365735782371E-119
+  VERDICT: c_2^L = c_2^G  ==>  THE IDENTITY IS PROVEN at this base
+  c_2 takes 2 distinct values; first few: [ 1.000000000, 0.5000000000 + 
+0.5000000000*$.1 ]
+DONE

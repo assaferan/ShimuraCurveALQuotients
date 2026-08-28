@@ -1,0 +1,44 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+
+===== DN = 1155 =====
+SHIMURA CURVE LATTICE (indefinite, sig (1,2)), QSIGN = -1 as eis32s uses:
+  L(1155,1)              |A| = 2668050   invariants [ 1155, 2310 ]
+      p=2: |J_2|=2, 4*Qbar on the nonzero element(s) = [ 1 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+      p= 7: |J_p|=  49, 1 isotropic -> ANISOTROPIC
+      p=11: |J_p|= 121, 1 isotropic -> ANISOTROPIC
+GROSS LATTICES of the support (105,1)+(105,11), QSIGN = -1:
+  G(105,1)               |A| = 22050     invariants [ 105, 210 ]
+      p=2: |J_2|=2, 4*Qbar on the nonzero element(s) = [ 1 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+      p= 7: |J_p|=  49, 1 isotropic -> ANISOTROPIC
+  G(105,11)              |A| = 2668050   invariants [ 1155, 2310 ]
+      p=2: |J_2|=2, 4*Qbar on the nonzero element(s) = [ 1 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+      p= 7: |J_p|=  49, 1 isotropic -> ANISOTROPIC
+      p=11: |J_p|= 121, 21 isotropic -> HYPERBOLIC
+
+===== DN = 330 =====
+SHIMURA CURVE LATTICE (indefinite, sig (1,2)), QSIGN = -1 as eis32s uses:
+  L(330,1)               |A| = 217800    invariants [ 2, 330, 330 ]
+      p=2: |J_2|=8, 4*Qbar on the nonzero element(s) = [ 1, 3, 2, 3, 2, 2, 3 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+      p=11: |J_p|= 121, 1 isotropic -> ANISOTROPIC
+GROSS LATTICES of the support (30,1)+(30,11), QSIGN = -1:
+  G(30,1)                |A| = 1800      invariants [ 2, 30, 30 ]
+      p=2: |J_2|=8, 4*Qbar on the nonzero element(s) = [ 2, 3, 3, 2, 2, 1, 3 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+  G(30,11)               |A| = 217800    invariants [ 2, 330, 330 ]
+      p=2: |J_2|=8, 4*Qbar on the nonzero element(s) = [ 1, 2, 3, 3, 2, 3, 2 ]
+      p= 3: |J_p|=   9, 1 isotropic -> ANISOTROPIC
+      p= 5: |J_p|=  25, 1 isotropic -> ANISOTROPIC
+      p=11: |J_p|= 121, 21 isotropic -> HYPERBOLIC
+
+DONE
