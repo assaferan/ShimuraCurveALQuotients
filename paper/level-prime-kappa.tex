@@ -1569,8 +1569,25 @@ are the dropped terms, and their count and equal weighting are exactly the struc
 measurements report: all nonzero isotropic $\eta$ carry the same $c_\eta(0)$, and the multiplier is
 $\sum_\eta c_\eta(0)/(4(N-1))=\tfrac12c_\eta(0)$ over the $2N-2$ of them.
 
-What is still not derived is the normalising constant: recovering the measured $\tfrac12$ requires
-$k_0(0)$ of Lemma~2.18 against the count above, and we have not carried that out. Redoing the case
+This also changes what should replace the dropped term, and the replacement is not
+$k_0(0)$ times a count. In \cite[Lem.~2.18]{SchoferThesis} the $m=0$ Fourier coefficient is
+\[
+  E_0(\tau,s;\varphi,+1)\;=\;v^{s/2}\varphi(0)
+  \;-\;\sqrt{\pi}\,i\,v^{-s/2}\,
+  \frac{\Gamma\bigl(\tfrac{s+1}{2}\bigr)}{\Gamma\bigl(\tfrac{s}{2}+1\bigr)}
+  \prod_p W_{0,p}(s,\varphi_p),
+\]
+and for a nonzero coset $\varphi_\mu$ one has $\varphi_\mu(0)=0$, since $0\notin\mu+L$. The first
+term therefore drops, the value at $s=0$ is the Whittaker product, and that product vanishes by
+incoherence. What survives at $\mu\neq0$ is thus the \emph{$s$-derivative} of
+$\prod_pW_{0,p}(s,\varphi_\mu)$ --- a term of exactly the shape of the $m>0$ contributions, a
+product of local values against one derivative at a vanishing place, rather than the regularised
+constant $k_0(0)$ that Theorem~3.3 attaches to $\varphi_0$. Our measurement says the level prime is
+\emph{not} that vanishing place: $W_{0,N}=1$ there on each of the $2N-2$ isotropic cosets, so the
+derivative is taken at a place of $\mathrm{Diff}$, as in the $m>0$ terms.
+
+We have not evaluated that derivative, and so have not recovered the measured $\tfrac12$; the
+identification above fixes which object must be computed, not its value. Redoing the case
 analysis with the $N$-scaled section adds no fourth case --- the level factor only ever raises the order of vanishing, so $\kappa$ cannot
 supply the $\log N$ from the $m>0$ terms (Proposition~\ref{prop:reenum}) --- which leaves the whole
 correction in the $m=0$ term at $\eta\neq0$. Evaluating $\kappa_\eta(0)$ there from Schofer's own
