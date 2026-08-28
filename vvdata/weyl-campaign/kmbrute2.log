@@ -1,0 +1,18 @@
+=== calibration: p = 2, the blocks tests/Whittaker2.m validates ===
+  v = 0 : 12 of 12 agree EXACTLY (W(1) = alpha, no constant)
+  v = 1 : 12 of 12 agree EXACTLY (W(1) = alpha, no constant)
+
+=== the untested regime: ODD p, and p-SCALED (ord_p(det) = 2) ===
+  p=3 scale=1  hyperbolic (p split)   : 14 of 14 agree   OK
+  p=3 scale=1  diagonal   (p inert)   : 14 of 14 agree   OK
+  p=3 scale=3  hyperbolic (p split)   : 14 of 14 agree   OK
+  p=3 scale=3  diagonal   (p inert)   : 14 of 14 agree   OK
+  p=5 scale=1  hyperbolic (p split)   : 14 of 14 agree   OK
+  p=5 scale=1  diagonal   (p inert)   : 14 of 14 agree   OK
+  p=5 scale=5  hyperbolic (p split)   : 14 of 14 agree   OK
+  p=5 scale=5  diagonal   (p inert)   : 14 of 14 agree   OK
+  p=7 scale=1  hyperbolic (p split)   : 10 of 10 agree   OK
+  p=7 scale=1  diagonal   (p inert)   : 10 of 10 agree   OK
+  p=7 scale=7  hyperbolic (p split)   : 10 of 10 agree   OK
+  p=7 scale=7  diagonal   (p inert)   : 10 of 10 agree   OK
+DONE
