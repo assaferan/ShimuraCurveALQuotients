@@ -1405,24 +1405,39 @@ per prime of $DN$ against a Hurwitz class number.
 
 \begin{proposition}[the multiplicity coefficients]\label{prop:closedcoef}
 Let $D$ be squarefree and odd with $\omega(D)=2$, let $N$ be an odd prime coprime to $D$,
-and let $m$ be squarefree. Then, with $H$ the Hurwitz class number,
+and let $m\ge1$. Write $-4m=D_0c^2$ with $D_0$ fundamental, and for a prime $p$ set
+$k_p=v_p(c)$, $\chi_p=\bigl(\tfrac{D_0}{p}\bigr)$ and
+$\sigma_j(p)=1+p+\dots+p^{\,j}$ (with $\sigma_{-1}=0$). Then, with $H$ the Hurwitz class
+number,
 \[
-  -a_E(m)\;=\;H(4m)\,\prod_{p\mid D}\frac{1-\bigl(\tfrac{-m}{p}\bigr)}{p-1}
-    \;\cdot\;\frac{12\bigl(N-\bigl(\tfrac{-m}{N}\bigr)\bigr)}{N^2-1}.
+  -a_E(m)\;=\;H(4m)\;
+  \prod_{p\mid D}\frac{1-\chi_p}{(p-1)\bigl(\sigma_{k_p}(p)-\chi_p\sigma_{k_p-1}(p)\bigr)}
+  \;\cdot\;
+  \frac{12\,(N-\chi_N)\,N^{k_N}}{(N^2-1)\bigl(\sigma_{k_N}(N)-\chi_N\sigma_{k_N-1}(N)\bigr)} .
 \]
 In particular $a_E(m)=0$ unless every $p\mid D$ is non-split in $\Q(\sqrt{-m})$, i.e.\
 unless $\Q(\sqrt{-m})$ embeds in $B_D$: the support rule is part of the formula rather
 than a side condition.
 \end{proposition}
 
-The shape was read off at $N=3$ and $N=7$ and then tested at $N=5$ (on $X_0^{21}(5)$ and
-$X_0^{33}(5)$), $N=11$ and $N=13$, none of which entered the fit: $75$ of $75$ squarefree
-$m$ agree at every base, and the two fitted bases reproduce. The vanishing was checked
-separately to $m<300$ at $X_0^{15}(2)$ with no violation.
+The conductor factors are the only place $c$ enters, and they have the same denominator
+$\sigma_{k}-\chi\sigma_{k-1}$ at both kinds of prime, with numerator $1$ at a ramified
+prime and $p^{k}$ at the Eichler prime. For $m$ squarefree every $k_p$ is $0$, both
+$\sigma$-factors are $1$, and the statement collapses to
+\[
+  -a_E(m)\;=\;H(4m)\,\prod_{p\mid D}\frac{1-\bigl(\tfrac{-m}{p}\bigr)}{p-1}
+    \;\cdot\;\frac{12\bigl(N-\bigl(\tfrac{-m}{N}\bigr)\bigr)}{N^2-1},
+\]
+which is how it was found.
 
-Two caveats, both real. The statement is for $m$ \emph{squarefree}; for imprimitive $m$ the
-$f$-sum inside $H$ must be reconciled against the local geometric series, which is not done
-here. And $p=2$ does not follow the odd law. When $2\mid D$ the displayed formula holds
+The squarefree shape was read off at $N=3$ and $N=7$ and tested at $N=5$ (on $X_0^{21}(5)$
+and $X_0^{33}(5)$), $N=11$ and $N=13$, none of which entered the fit; the conductor factors
+were then read off at $X_0^{15}(7)$, $X_0^{35}(3)$, $X_0^{21}(5)$ with $k\le2$. The full
+statement holds for \emph{every} $m<400$ at all six bases --- $156$ of them non-squarefree
+--- and, pushed to $m<800$ at $X_0^{15}(7)$ to reach $k=3$, for all $799$ values, $310$ of
+them non-squarefree. So the $k$-dependence is verified one step beyond where it was fitted.
+
+One regime is still missing: $p=2$ does not follow the odd law. When $2\mid D$ the displayed formula holds
 verbatim for the odd primes and the odd Eichler prime, multiplied by a factor
 $\delta_2(m)=1,\tfrac12,0$ according as $m\equiv1,2,5,6$, $3$, or $7 \pmod 8$ --- and the
 $0$ at $m\equiv7$ is again exactly the condition that $2$ split in $\Q(\sqrt{-m})$. When
