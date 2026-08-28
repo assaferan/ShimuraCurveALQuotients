@@ -1,0 +1,27 @@
+Loading "vvdata/weyl-campaign/ctlat.m"
+Hurwitz gate: passed
+
+=== D = 15 = [ 3, 5 ],  N = 1 ===
+  s = 3   D' = 5   :  residual constant?  1 distinct value  [ 12 ]
+  s = 5   D' = 3   :  residual constant?  1 distinct value  [ 12 ]
+
+=== D = 35 = [ 5, 7 ],  N = 1 ===
+  s = 5   D' = 7   :  residual constant?  1 distinct value  [ 12 ]
+  s = 7   D' = 5   :  residual constant?  1 distinct value  [ 12 ]
+
+=== D = 39 = [ 3, 13 ],  N = 1 ===
+  s = 3   D' = 13  :  residual constant?  1 distinct value  [ 12 ]
+  s = 13  D' = 3   :  residual constant?  1 distinct value  [ 12 ]
+
+=== D = 55 = [ 5, 11 ],  N = 1 ===
+  s = 5   D' = 11  :  residual constant?  1 distinct value  [ 12 ]
+  s = 11  D' = 5   :  residual constant?  1 distinct value  [ 12 ]
+
+=== D = 65 = [ 5, 13 ],  N = 1 ===
+  s = 5   D' = 13  :  residual constant?  1 distinct value  [ 12 ]
+  s = 13  D' = 5   :  residual constant?  1 distinct value  [ 12 ]
+
+=== D = 87 = [ 3, 29 ],  N = 1 ===
+  s = 3   D' = 29  :  residual constant?  1 distinct value  [ 12 ]
+  s = 29  D' = 3   :  residual constant?  1 distinct value  [ 12 ]
+DONE
