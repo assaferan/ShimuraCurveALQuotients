@@ -1,0 +1,56 @@
+Loading "vvdata/weyl-campaign/ctlat.m"
+
+=== 15_2  M = 60  #pool = 21 ===
+  s=3   1/2 Tel_3(5;2) - 1/2 tb(30,1)      in pool span: true   (exact: true, 8 nonzero coords)
+  s=5   1/2 Tel_5(3;2) - 1/2 tb(30,1)      in pool span: true   (exact: true, 8 nonzero coords)
+
+=== 21_2  M = 84  #pool = 14 ===
+  s=3   1/2 Tel_3(7;2) - 1/2 tb(42,1)      in pool span: false
+  s=7   1/2 Tel_7(3;2) - 1/2 tb(42,1)      in pool span: false
+
+=== 22_3  M = 132  #pool = 24 ===
+  s=2   1/2 Tel_2(11;3) - 1/2 tb(66,1)     in pool span: false
+  s=11  1/2 Tel_11(2;3) - 1/2 tb(66,1)     in pool span: false
+
+=== 33_2  M = 132  #pool = 38 ===
+  s=3   1/2 Tel_3(11;2) - 1/2 tb(66,1)     in pool span: true   (exact: true, 14 nonzero coords)
+  s=11  1/2 Tel_11(3;2) - 1/2 tb(66,1)     in pool span: true   (exact: true, 14 nonzero coords)
+
+=== 35_2  M = 140  #pool = 35 ===
+  s=5   1/2 Tel_5(7;2) - 1/2 tb(70,1)      in pool span: true   (exact: true, 15 nonzero coords)
+  s=7   1/2 Tel_7(5;2) - 1/2 tb(70,1)      in pool span: true   (exact: true, 15 nonzero coords)
+
+=== 55_2  M = 220  #pool = 30 ===
+  s=5   1/2 Tel_5(11;2) - 1/2 tb(110,1)    in pool span: false
+  s=11  1/2 Tel_11(5;2) - 1/2 tb(110,1)    in pool span: false
+
+=== 77_2  M = 308  #pool = 21 ===
+  s=7   1/2 Tel_7(11;2) - 1/2 tb(154,1)    in pool span: false
+  s=11  1/2 Tel_11(7;2) - 1/2 tb(154,1)    in pool span: false
+
+=== 10_7  M = 140  #pool = 35 ===
+  s=2   1/2 Tel_2(5;7) - 1/2 tb(70,1)      in pool span: true   (exact: true, 14 nonzero coords)
+  s=5   1/2 Tel_5(2;7) - 1/2 tb(70,1)      in pool span: true   (exact: true, 14 nonzero coords)
+
+=== 34_3  M = 204  #pool = 32 ===
+  s=2   1/2 Tel_2(17;3) - 1/2 tb(102,1)    in pool span: false
+  s=17  1/2 Tel_17(2;3) - 1/2 tb(102,1)    in pool span: false
+
+=== 10_1  M = 20  #pool = 10 ===
+  s=2   Tel_2(5;1)                         in pool span: true   (exact: true, 3 nonzero coords)
+  s=5   Tel_5(2;1)                         in pool span: true   (exact: true, 3 nonzero coords)
+
+=== 14_1  M = 28  #pool = 8 ===
+  s=2   Tel_2(7;1)                         in pool span: true   (exact: true, 2 nonzero coords)
+  s=7   Tel_7(2;1)                         in pool span: true   (exact: true, 2 nonzero coords)
+
+=== 22_1  M = 44  #pool = 5 ===
+  s=2   Tel_2(11;1)                        in pool span: false
+  s=11  Tel_11(2;1)                        in pool span: false
+
+=== 26_1  M = 52  #pool = 4 ===
+  s=2   Tel_2(13;1)                        in pool span: true   (exact: true, 2 nonzero coords)
+  s=13  Tel_13(2;1)                        in pool span: true   (exact: true, 2 nonzero coords)
+
+14 of 26 (base, s) instances lie in the panel-character pool
+DONE

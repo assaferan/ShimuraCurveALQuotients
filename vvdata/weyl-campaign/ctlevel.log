@@ -1,0 +1,238 @@
+Loading "vvdata/weyl-campaign/ctlat.m"
+
+=== D=15 N=2   4DN = 120 ===
+  Gr(5,2): det = 200        (2(DR)^2 = 200        ok)  level = 20       | 4DN  
+(4DN/lev = 6)
+  Gr(5,6): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+  Gr(30,1): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+  Gr(3,2): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 10)
+  Gr(3,10): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+
+=== D=21 N=2   4DN = 168 ===
+  Gr(7,2): det = 392        (2(DR)^2 = 392        ok)  level = 28       | 4DN  
+(4DN/lev = 6)
+  Gr(7,6): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 2)
+  Gr(42,1): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 2)
+  Gr(3,2): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 14)
+  Gr(3,14): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 2)
+
+=== D=22 N=3   4DN = 264 ===
+  Gr(11,3): det = 2178       (2(DR)^2 = 2178       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+  Gr(11,6): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+  Gr(66,1): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+  Gr(2,3): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 22)
+  Gr(2,33): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+
+=== D=33 N=2   4DN = 264 ===
+  Gr(11,2): det = 968        (2(DR)^2 = 968        ok)  level = 44       | 4DN  
+(4DN/lev = 6)
+  Gr(11,6): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+  Gr(66,1): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+  Gr(3,2): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 22)
+  Gr(3,22): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 2)
+
+=== D=35 N=2   4DN = 280 ===
+  Gr(7,2): det = 392        (2(DR)^2 = 392        ok)  level = 28       | 4DN  
+(4DN/lev = 10)
+  Gr(7,10): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+  Gr(70,1): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+  Gr(5,2): det = 200        (2(DR)^2 = 200        ok)  level = 20       | 4DN  
+(4DN/lev = 14)
+  Gr(5,14): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+
+=== D=55 N=2   4DN = 440 ===
+  Gr(11,2): det = 968        (2(DR)^2 = 968        ok)  level = 44       | 4DN  
+(4DN/lev = 10)
+  Gr(11,10): det = 24200      (2(DR)^2 = 24200      ok)  level = 220      | 4DN 
+(4DN/lev = 2)
+  Gr(110,1): det = 24200      (2(DR)^2 = 24200      ok)  level = 220      | 4DN 
+(4DN/lev = 2)
+  Gr(5,2): det = 200        (2(DR)^2 = 200        ok)  level = 20       | 4DN  
+(4DN/lev = 22)
+  Gr(5,22): det = 24200      (2(DR)^2 = 24200      ok)  level = 220      | 4DN  
+(4DN/lev = 2)
+
+=== D=77 N=2   4DN = 616 ===
+  Gr(11,2): det = 968        (2(DR)^2 = 968        ok)  level = 44       | 4DN  
+(4DN/lev = 14)
+  Gr(11,14): det = 47432      (2(DR)^2 = 47432      ok)  level = 308      | 4DN 
+(4DN/lev = 2)
+  Gr(154,1): det = 47432      (2(DR)^2 = 47432      ok)  level = 308      | 4DN 
+(4DN/lev = 2)
+  Gr(7,2): det = 392        (2(DR)^2 = 392        ok)  level = 28       | 4DN  
+(4DN/lev = 22)
+  Gr(7,22): det = 47432      (2(DR)^2 = 47432      ok)  level = 308      | 4DN  
+(4DN/lev = 2)
+
+=== D=10 N=7   4DN = 280 ===
+  Gr(5,7): det = 2450       (2(DR)^2 = 2450       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+  Gr(5,14): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+  Gr(70,1): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+  Gr(2,7): det = 392        (2(DR)^2 = 392        ok)  level = 28       | 4DN  
+(4DN/lev = 10)
+  Gr(2,35): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 2)
+
+=== D=34 N=3   4DN = 408 ===
+  Gr(17,3): det = 5202       (2(DR)^2 = 5202       ok)  level = 204      | 4DN  
+(4DN/lev = 2)
+  Gr(17,6): det = 20808      (2(DR)^2 = 20808      ok)  level = 204      | 4DN  
+(4DN/lev = 2)
+  Gr(102,1): det = 20808      (2(DR)^2 = 20808      ok)  level = 204      | 4DN 
+(4DN/lev = 2)
+  Gr(2,3): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 34)
+  Gr(2,51): det = 20808      (2(DR)^2 = 20808      ok)  level = 204      | 4DN  
+(4DN/lev = 2)
+
+=== D=6 N=5   4DN = 120 ===
+  Gr(3,5): det = 450        (2(DR)^2 = 450        ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+  Gr(3,10): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+  Gr(30,1): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+  Gr(2,5): det = 200        (2(DR)^2 = 200        ok)  level = 20       | 4DN  
+(4DN/lev = 6)
+  Gr(2,15): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 2)
+
+=== D=26 N=3   4DN = 312 ===
+  Gr(13,3): det = 3042       (2(DR)^2 = 3042       ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+  Gr(13,6): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+  Gr(78,1): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+  Gr(2,3): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 26)
+  Gr(2,39): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+
+=== D=39 N=2   4DN = 312 ===
+  Gr(13,2): det = 1352       (2(DR)^2 = 1352       ok)  level = 52       | 4DN  
+(4DN/lev = 6)
+  Gr(13,6): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+  Gr(78,1): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+  Gr(3,2): det = 72         (2(DR)^2 = 72         ok)  level = 12       | 4DN  
+(4DN/lev = 26)
+  Gr(3,26): det = 12168      (2(DR)^2 = 12168      ok)  level = 156      | 4DN  
+(4DN/lev = 2)
+
+=== D=35 N=6   4DN = 840 ===
+  Gr(7,6): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 10)
+  Gr(7,30): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(70,3): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(105,2): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN 
+(4DN/lev = 2)
+  Gr(42,1): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 10)
+  Gr(42,5): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(5,6): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 14)
+  Gr(5,42): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(30,1): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 14)
+  Gr(30,7): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+
+=== D=15 N=14   4DN = 840 ===
+  Gr(5,14): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 6)
+  Gr(5,42): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(30,7): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(70,1): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 6)
+  Gr(70,3): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(105,2): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN 
+(4DN/lev = 2)
+  Gr(3,14): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 10)
+  Gr(3,70): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(42,1): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 10)
+  Gr(42,5): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+
+=== D=15 N=1   4DN = 60 ===
+  Gr(5,1): det = 50         (2(DR)^2 = 50         ok)  level = 20       | 4DN  
+(4DN/lev = 3)
+  Gr(5,3): det = 450        (2(DR)^2 = 450        ok)  level = 60       | 4DN  
+(4DN/lev = 1)
+  Gr(3,1): det = 18         (2(DR)^2 = 18         ok)  level = 12       | 4DN  
+(4DN/lev = 5)
+  Gr(3,5): det = 450        (2(DR)^2 = 450        ok)  level = 60       | 4DN  
+(4DN/lev = 1)
+
+=== D=210 N=1   4DN = 840 ===
+  Gr(105,1): det = 22050      (2(DR)^2 = 22050      ok)  level = 420      | 4DN 
+(4DN/lev = 2)
+  Gr(105,2): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN 
+(4DN/lev = 2)
+  Gr(70,1): det = 9800       (2(DR)^2 = 9800       ok)  level = 140      | 4DN  
+(4DN/lev = 6)
+  Gr(70,3): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(42,1): det = 3528       (2(DR)^2 = 3528       ok)  level = 84       | 4DN  
+(4DN/lev = 10)
+  Gr(42,5): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+  Gr(30,1): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 14)
+  Gr(30,7): det = 88200      (2(DR)^2 = 88200      ok)  level = 420      | 4DN  
+(4DN/lev = 2)
+
+=== D=330 N=1   4DN = 1320 ===
+  Gr(165,1): det = 54450      (2(DR)^2 = 54450      ok)  level = 660      | 4DN 
+(4DN/lev = 2)
+  Gr(165,2): det = 217800     (2(DR)^2 = 217800     ok)  level = 660      | 4DN 
+(4DN/lev = 2)
+  Gr(110,1): det = 24200      (2(DR)^2 = 24200      ok)  level = 220      | 4DN 
+(4DN/lev = 6)
+  Gr(110,3): det = 217800     (2(DR)^2 = 217800     ok)  level = 660      | 4DN 
+(4DN/lev = 2)
+  Gr(66,1): det = 8712       (2(DR)^2 = 8712       ok)  level = 132      | 4DN  
+(4DN/lev = 10)
+  Gr(66,5): det = 217800     (2(DR)^2 = 217800     ok)  level = 660      | 4DN  
+(4DN/lev = 2)
+  Gr(30,1): det = 1800       (2(DR)^2 = 1800       ok)  level = 60       | 4DN  
+(4DN/lev = 22)
+  Gr(30,11): det = 217800     (2(DR)^2 = 217800     ok)  level = 660      | 4DN 
+(4DN/lev = 2)
+
+100 of 100 lattices have level dividing 4DN
+DONE

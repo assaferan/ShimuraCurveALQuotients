@@ -1,0 +1,19 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+Loading "vvdata/weyl-campaign/ctlatat.m"
+21_2    4 gamma x 12 reps = 48 matrices OFF the representative list   worst 
+9.93508E-97   HOLDS -> nu_Gross = nu_Shim
+22_3    4 gamma x 12 reps = 48 matrices OFF the representative list   worst 
+9.30999E-98   HOLDS -> nu_Gross = nu_Shim
+55_2    5 gamma x 12 reps = 60 matrices OFF the representative list   worst 
+3.72948E-97   HOLDS -> nu_Gross = nu_Shim
+77_2    4 gamma x 12 reps = 48 matrices OFF the representative list   worst 
+3.10294E-98   HOLDS -> nu_Gross = nu_Shim
+34_3    4 gamma x 12 reps = 48 matrices OFF the representative list   worst 
+3.86807E-96   HOLDS -> nu_Gross = nu_Shim
+15_2    5 gamma x 12 reps = 60 matrices OFF the representative list   worst 
+7.56866E-98   HOLDS -> nu_Gross = nu_Shim
+
+6 of 6 bases hold off the representative list
+DONE
