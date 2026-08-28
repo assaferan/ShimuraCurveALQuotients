@@ -1,0 +1,28 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+
+===== DN = 1155, form level 4620, 13824 cosets =====
+  D'= 385 s= 3  m1=5/4      ms=5/2      ms-m1=5/4     [reference]
+  D'= 105 s=11  m1=1/4      ms=3/2      ms-m1=5/4     max|num - num(385,3)| = 
+2.2580897E-120  (rel 1.8064718E-120)
+  D'= 231 s= 5  m1=5/8      ms=15/8     ms-m1=5/4     max|num - num(385,3)| = 
+1.9362960E-120  (rel 1.5490368E-120)
+  D'= 165 s= 7  m1=5/12     ms=5/3      ms-m1=5/4     max|num - num(385,3)| = 
+2.2580897E-120  (rel 1.8064718E-120)
+  prod_{p|DN}(p-1) = 480 ; predicted S-cusp numerator magnitude = 
+0.000765267079206
+  measured at the S-coset (word 2): 0.000765267079206
+
+===== DN = 330, form level 1320, 3456 cosets =====
+  D'= 165 s= 2  m1=5/12     ms=5/8      ms-m1=5/24    [reference]
+  D'=  30 s=11  m1=1/24     ms=1/4      ms-m1=5/24    max|num - num(165,2)| = 
+5.4835766E-119  (rel 2.6321167E-118)
+  D'=  66 s= 5  m1=5/48     ms=5/16     ms-m1=5/24    max|num - num(165,2)| = 
+5.4835424E-119  (rel 2.6321003E-118)
+  D'= 110 s= 3  m1=5/24     ms=5/12     ms-m1=5/24    max|num - num(165,2)| = 
+5.4835766E-119  (rel 2.6321167E-118)
+  prod_{p|DN}(p-1) = 80 ; predicted S-cusp numerator magnitude = 
+0.000446405796203
+  measured at the S-coset (word 2): 0.000446405796203
+DONE
