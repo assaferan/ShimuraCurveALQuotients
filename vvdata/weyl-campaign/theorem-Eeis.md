@@ -1,6 +1,6 @@
-# THEOREM (odd D, N = 1): the identity is proven
+# THEOREM (all squarefree D, N = 1): the identity is proven
 
-Let `D` be odd squarefree with `w` prime factors (`w` even, since the Shimura
+Let `D` be squarefree with `w` prime factors (`w` even, since the Shimura
 curve algebra `B_D` is indefinite), `N = 1`. Let `D'` be any product of `w-1`
 of those primes and `s = D/D'`. Write `Theta(D',R) = mass(D',R) * theta(D',R)`
 for the unnormalized mass-weighted genus sum. Then
@@ -30,7 +30,13 @@ groups are `(Z/p)^2`:
 
 Verified on the actual lattices by isotropic counts (1 vs 2p-1).
 
-**(3) The local Weil entries**, from the Gauss sums
+**(3) The local Weil entries** -- and these hold at `p = 2` TOO, so `D` need
+not be odd. Measured at `DN = 330`, where 2 is ramified in some supports and
+the Eichler prime in others: `c_2^Eich in {1, 1/2}`, `c_2^ram in {1, -1/2}`,
+and `g_2 = f_2/2` over 2880 cosets with 0 mismatches. The formulas were never
+about `p` being odd.
+
+, from the Gauss sums
 `sum e(-tbc/p) = p` and `sum e(t(uc^2-b^2)/p) = (u|p)(-1|p) g(1)^2 = -p`
 (using `(u|p) = -1` and `g(1)^2 = (-1|p)p`), i.e. signatures 0 and 4:
 
@@ -76,10 +82,6 @@ two predicted values `1` and `(1+i)/2`.
 
 ## What this does NOT cover
 
-* **Even `D`.** Then `2 | D` is itself a ramified prime and step (3), derived
-  for odd `p`, does not apply to it. The 2-parts still match at 330 (both
-  `(Z/2)^3`, value multiset `[1,2,2,2,3,3,3]`), but a genuine 2-adic version
-  of (3) is needed.
 * **`N > 1`.** The tracked coset is no longer the zero coset and absolute
   normalisations shift (see the tracked-coset remark). The Eichler-at-`N`
   structure should enter the same local framework.

@@ -1,0 +1,16 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+DN = 330, 3456 cosets.  Testing g_2 = f_2/2 at the prime 2.
+
+  c_2^Eich takes 25 distinct values: [ 1.000000000, 0.5000000000, 0.5000000000 -
+9.984026030E-121*$.1, 1.000000000 - 5.492039443E-121*$.1, 0.5000000000 - 
+3.993610412E-121*$.1 ]
+  c_2^ram  takes 285 distinct values: [ 1.000000000, -0.5000000000 + 
+1.936295957E-121*$.1, -0.5000000000 - 9.681479787E-122*$.1, -0.5000000000 + 
+3.872591915E-121*$.1, 1.000000000 - 8.135313424E-120*$.1 ]
+
+  g_2 vs f_2/2 : 2880 cosets, 0 mismatches, worst |g_2 - f_2/2| = 
+6.3802598614400193641E-118
+  VERDICT: g_2 = f_2/2 HOLDS -- the proof extends verbatim to even D
+DONE
