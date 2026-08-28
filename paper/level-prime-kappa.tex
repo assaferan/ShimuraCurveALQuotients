@@ -129,8 +129,9 @@ $\rho=[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$, wh
 are independent of $D'$ because a local computation gives $g_p=\tfrac12f_p$ at every prime and
 the mass difference telescopes. So the ``re-split rule'' was never a rule: the competing
 readings name one object. What survives, now with a proof, is the identity itself, of which the
-mass-ratio law is the shadow in normalised coordinates. Section~\ref{sec:open} states
-what remains open.
+mass-ratio law is the shadow in normalised coordinates. Section~\ref{sec:open} takes up the
+provenance of the correction: of the two readings previously on offer, both can now be excluded,
+and what survives is that terms inside Schofer's formula were dropped.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -1469,43 +1470,88 @@ $X_0^{21}(2)$, $X_0^{33}(2)$, $X_0^{35}(2)$; $X_0^{10}(3)$, $X_0^{22}(3)$, $X_0^
 $X_0^{6}(5)$, $X_0^{14}(5)$, $X_0^{34}(3)$, and $X_0^{15}(7)$ --- at every $m<250$: $4731$
 of $4731$ values.
 
-\section{The open question}\label{sec:open}
+\section{Where the correction comes from}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
-Observation~\ref{obs:mult} and with the failure of the uncorrected computation on $X_0^{6}(19)$. We
-see two possibilities and cannot presently distinguish them.
+Observation~\ref{obs:mult} and with the failure of the uncorrected computation on $X_0^{6}(19)$.
+Two readings suggest themselves, and both can now be excluded.
 
 \begin{enumerate}
-\item The constant term $c_0(0)$ of the form $F$ actually attached to $\psi_F$ differs from that of
-      the coset sum $F_f$. The principal parts agree to $10^{-103}$, but the principal part alone
-      does not determine $c_0(0)$.
-\item The correction compensates an error elsewhere in the computation of the CM values, outside
-      Schofer's formula. It is a $d$-independent linear functional of the principal part, which is
-      the shape of a per-form normalisation.
+\item \emph{The constant term $c_0(0)$ of the form $F$ actually attached to $\psi_F$ differs from
+      that of the coset sum $F_f$; the principal parts agree to $10^{-103}$, but the principal part
+      alone does not determine $c_0(0)$.} --- The premise fails. A weakly holomorphic form of
+      weight $\tfrac12$ for $\rho$ is determined by its principal part up to
+      $M_{1/2}(\rho)$, and $M_{1/2}(\rho)=0$ for the modules occurring here. This is structural,
+      not a base-by-base observation: invariants correspond to self-dual isotropic subgroups, and
+      the $D$-part of the discriminant form is an anisotropic $(\Z/p)^2$ at every $p\mid D$ ---
+      which contains no nonzero isotropic vector, so no isotropic subgroup can meet it, no cyclic
+      summand can absorb it, and no $H^\perp/H$ lift can remove it. Hence $F=F_f$ exactly, and
+      $c_0(0)$ is the measured $0$.
+\item \emph{The correction compensates an error elsewhere in the computation of the CM values,
+      outside Schofer's formula; being a $d$-independent linear functional of the principal part,
+      it has the shape of a per-form normalisation.} --- A per-form normalisation rescales a whole
+      row of the CM table by one factor, and a uniform rescaling cannot turn a consistent linear
+      system into an inconsistent one. On $X_0^{6}(19)$ the uncorrected values are mutually
+      inconsistent, and with the correction the published model is recovered. Moreover the
+      correction is now identified rather than fitted: by
+      Theorem~\ref{thm:respair} and Corollary~\ref{cor:multgross} it is the residue pairing of the
+      principal parts of $f$ against an explicit holomorphic weight-$\tfrac32$ form, and by
+      Proposition~\ref{prop:closedcoef} its coefficients are a Hurwitz class number times one local
+      factor per prime of $DN$. That is an arithmetic term of exactly the family Schofer's formula
+      is assembled from, not the signature of a misnormalisation.
 \end{enumerate}
 
-The identification of \S\ref{sec:ident} sharpens the second reading. The $m=0$ term of the
-formula, as transmitted through \cite{Schofer,Yang}, collapses the sum $\sum_\eta c_\eta(0)
-\kappa_\eta(0)$ to the single term $c_0(0)\kappa_0(0)$ via a condition of the form
-$\delta_{0,\mu}$. But the collapse condition constrains only the \emph{negative-definite} part of
-the coset, so a nonzero isotropic $\eta$ with $\eta_-=0$ is not excluded by it --- and by
-Observations~\ref{obs:iso} and~\ref{obs:mult} it is exactly those cosets, with their shared
-nonzero constant term, that carry the correction. On this reading nothing outside Schofer's
-formula is being compensated; rather, terms inside it were dropped.
+What survives is the reading that the identification of \S\ref{sec:ident} points to: terms
+\emph{inside} Schofer's formula were dropped. The $m=0$ term, as transmitted through
+\cite{Schofer,Yang}, collapses the sum $\sum_\eta c_\eta(0)\kappa_\eta(0)$ to the single term
+$c_0(0)\kappa_0(0)$ via a condition of the form $\delta_{0,\mu}$. But that condition constrains
+only the \emph{negative-definite} part of the coset, so a nonzero isotropic $\eta$ with $\eta_-=0$
+survives it --- and it is exactly those cosets that carry the correction, while $c_0(0)=0$ removes
+the term that was kept. That the nonzero isotropic cosets share one constant term, which
+Observation~\ref{obs:iso} recorded empirically, is now a consequence of $N$ being prime: by the
+discussion after that observation the number of distinct functionals is $2^{\omega(N)}-1$, which is
+$1$ exactly when $\omega(N)=1$.
 
-In either case Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand, and part (ii) of
-the Kudla--Rapoport--Yang programme --- the incorporation of a level structure --- remains to be
-carried out. Table~\ref{tab:A} is what any corrected formula must reproduce, index by index.
+The scope violation is visible in the sources' own terms. Kudla--Rapoport--Yang state that they
+consider only Eisenstein series built from sections given by the characteristic functions of the
+completions of $\mathcal{O}_k$, and note that more general sections would cost ``more elaborate
+calculations of Whittaker functions'' and ``incorporation of a level structure in the moduli
+problem''; they also fix a maximal order. At a firing discriminant our $L_-$ is $N$-scaled, which is
+such a more general section, so the case-completeness assertion that becomes Schofer's Theorem~4.1
+and Yang's Lemma~16 is being applied outside its stated hypotheses.
 
-A third reading should be recorded, because it is not excluded by anything above. The evaluation of
-$\kappa^-_\mu(m)$ for $m>0$ has never been checked against an independent computation at $N>1$ ---
-neither here nor, as far as we can determine, in the literature. Yang's worked examples
-\cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a \emph{maximal} order, and
-indeed $L=\Lp+\Lm$ there; the corresponding regression tests in the accompanying code likewise cover
-only $N=1$. What Observation~\ref{obs:haupt} now supplies is a verification at $N>1$ of the
-\emph{correction rule} --- the multiplier $\tfrac12 c_\eta(0)$, confirmed at $N=5$ against ground
-truth measured by an independent method --- but the evaluation of $\kappa^-_\mu(m)$ itself, which
-sits upstream in the $m>0$ terms, remains unverified at $N>1$.
+One step of this reading is not derived. Redoing the case analysis with the $N$-scaled section adds
+no fourth case --- the level factor only ever raises the order of vanishing, so $\kappa$ cannot
+supply the $\log N$ from the $m>0$ terms (Proposition~\ref{prop:reenum}) --- which leaves the whole
+correction in the $m=0$ term at $\eta\neq0$. Evaluating $\kappa_\eta(0)$ there from Schofer's own
+definition, and recovering the measured factor $\tfrac12$, remains to be done. Theorem~\ref{thm:closed}
+and Proposition~\ref{prop:reenum} stand in any case, part (ii) of the Kudla--Rapoport--Yang
+programme --- the incorporation of a level structure --- remains to be carried out, and
+Table~\ref{tab:A} is what any corrected formula must reproduce, index by index.
+
+A further reading should be recorded, since it would undercut the rest: that the evaluation of
+$\kappa^-_\mu(m)$ for $m>0$ is itself wrong at $N>1$. It had never been checked against an
+independent computation there --- neither here nor, as far as we can determine, in the literature.
+Yang's worked examples \cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a
+\emph{maximal} order, and indeed $L=\Lp+\Lm$ there; the regression tests in the accompanying code
+likewise cover only $p=2$, hyperbolic blocks, and scalings $0$ and $1$.
+
+That check has now been made where the $N$-dependence lives. Against the naive local
+representation density $\alpha_p(m)=\lim_k p^{-k}\#\{x\in(\Z/p^k)^2: Q(x)\equiv m\}$, computed by
+counting with convergence in $k$ verified rather than assumed, the code's local Whittaker agrees
+exactly --- with no normalising constant --- first in the already-trusted configuration ($p=2$,
+scalings $0$ and $1$), and then in the one that had never been touched: odd $p=3,5,7$ with the
+lattice $p$-scaled, i.e.\ $\ord_p(\det)=2$, which is the shape of $L_-$ at a firing discriminant,
+in both the isotropic case (relevant, since firing forces $N$ split) and the anisotropic one. All
+twelve configurations agree. The closed form $W_N(1)=(N-1)\ord_N(m)$, previously read off the same
+code that computes it, is likewise reproduced from the counting alone.
+
+This bounds the reading rather than eliminating it: it verifies the local \emph{values}, not the
+derivative $W'(1)$. But the derivative is only ever taken at the vanishing place, and the level
+prime is never that place in a contributing term --- when $N\mid m$ the level factor is
+$(N-1)\ord_N(m)\neq0$, and when $N\nmid m$ the order of vanishing is at least two and the term is
+discarded --- so the derivative is always evaluated in a configuration that already occurs at
+$N=1$.
 
 \begin{remark}[Published CM values need not discriminate]\label{rem:gy36}
 A natural-seeming check is to compare against a published CM value on a base with $N>1$ and a
