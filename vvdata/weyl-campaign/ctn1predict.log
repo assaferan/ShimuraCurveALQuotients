@@ -1,0 +1,63 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+Loading "vvdata/weyl-campaign/ctlatat.m"
+
+6_5  DN=30 lev=120  288 cosets  |A|=1800  #iso=9  tracked order 5 (= N, in the 
+Eichler plane)
+   D'=2   s=3    -1/2*T(2,5) 1*T(2,15) -1/2*T(30,1)  worst 1.25039E-120  
+PREDICTED   [control, no third term: rel 2.50000]
+   D'=3   s=2    -1*T(3,5) 3/2*T(3,10) -1/2*T(30,1)  worst 7.19701E-120  
+PREDICTED   [control, no third term: rel 2.50000]
+
+10_3  DN=30 lev=120  288 cosets  |A|=1800  #iso=5  tracked order 3 (= N, in the 
+Eichler plane)
+   D'=2   s=5    -1/4*T(2,3) 3/4*T(2,15) -1/2*T(30,1)  worst 1.55593E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+   D'=5   s=2    -1*T(5,3) 3/2*T(5,6) -1/2*T(30,1)  worst 5.92191E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+
+14_3  DN=42 lev=168  384 cosets  |A|=3528  #iso=5  tracked order 3 (= N, in the 
+Eichler plane)
+   D'=2   s=7    -1/6*T(2,3) 2/3*T(2,21) -1/2*T(42,1)  worst 1.69435E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+   D'=7   s=2    -1*T(7,3) 3/2*T(7,6) -1/2*T(42,1)  worst 7.68207E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+
+6_7  DN=42 lev=168  384 cosets  |A|=3528  #iso=13  tracked order 7 (= N, in the 
+Eichler plane)
+   D'=2   s=3    -1/2*T(2,7) 1*T(2,21) -1/2*T(42,1)  worst 1.16683E-120  
+PREDICTED   [control, no third term: rel 3.50000]
+   D'=3   s=2    -1*T(3,7) 3/2*T(3,14) -1/2*T(42,1)  worst 7.74284E-120  
+PREDICTED   [control, no third term: rel 3.50000]
+
+14_5  DN=70 lev=280  576 cosets  |A|=9800  #iso=9  tracked order 5 (= N, in the 
+Eichler plane)
+   D'=2   s=7    -1/6*T(2,5) 2/3*T(2,35) -1/2*T(70,1)  worst 1.10967E-120  
+PREDICTED   [control, no third term: rel 2.50000]
+   D'=7   s=2    -1*T(7,5) 3/2*T(7,10) -1/2*T(70,1)  worst 7.68207E-120  
+PREDICTED   [control, no third term: rel 2.50000]
+
+26_3  DN=78 lev=312  672 cosets  |A|=12168  #iso=5  tracked order 3 (= N, in the
+Eichler plane)
+   D'=2   s=13   -1/12*T(2,3) 7/12*T(2,39) -1/2*T(78,1)  worst 1.55593E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+   D'=13  s=2    -1*T(13,3) 3/2*T(13,6) -1/2*T(78,1)  worst 7.68207E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+
+39_2  DN=78 lev=312  672 cosets  |A|=12168  #iso=3  tracked order 2 (= N, in the
+Eichler plane)
+   D'=3   s=13   -1/12*T(3,2) 7/12*T(3,26) -1/2*T(78,1)  worst 7.68207E-120  
+PREDICTED   [control, no third term: rel 1.41421]
+   D'=13  s=3    -1/2*T(13,2) 1*T(13,6) -1/2*T(78,1)  worst 7.69184E-120  
+PREDICTED   [control, no third term: rel 1.41421]
+
+34_3  DN=102 lev=408  864 cosets  |A|=20808  #iso=5  tracked order 3 (= N, in 
+the Eichler plane)
+   D'=2   s=17   -1/16*T(2,3) 9/16*T(2,51) -1/2*T(102,1)  worst 1.55593E-120  
+PREDICTED   [control, no third term: rel 1.50000]
+   D'=17  s=2    -1*T(17,3) 3/2*T(17,6) -1/2*T(102,1)  worst 1.71025E-119  
+PREDICTED   [control, no third term: rel 1.50000]
+
+16 of 16 support-instances PREDICTED
+DONE

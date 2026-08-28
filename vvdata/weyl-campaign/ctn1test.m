@@ -1,3 +1,7 @@
+// *** SUPERSEDED by ctn1exact.m.  The identity below is RIGHT, but the mass
+// *** call mass([Dp], [Rls]) passes the COMPOSITE level as one element and so
+// *** gets the weights wrong; that near-miss is what produced the phantom
+// *** lambda = 2N/(N+1) in ctn1lambda.m.  See theorem-Eeis-N.md.
 // N > 1: test the conjectured three-term identity, BOTH SIDES at the FORM level 4DN.
 //    rho_est =?= 1/2 [Theta(D',Rs) - Theta(D',R)]/(mass_Rs - mass_R) - 1/2 thetabar(DN,1)
 // rho_est via ctThetaAt on the Shimura lattice at the tracked (nonzero) coset;

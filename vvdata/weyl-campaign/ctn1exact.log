@@ -1,0 +1,22 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+Loading "vvdata/weyl-campaign/ctlatat.m"
+15_2    weights  -1/2*T(5,2) 1*T(5,6) -1/2*T(30,1)   288 cosets  worst 
+7.10526E-120  HOLDS
+21_2    weights  -1/2*T(7,2) 1*T(7,6) -1/2*T(42,1)   384 cosets  worst 
+7.69184E-120  HOLDS
+22_3    weights  -1*T(11,3) 3/2*T(11,6) -1/2*T(66,1)   576 cosets  worst 
+1.71025E-119  HOLDS
+33_2    weights  -1/2*T(11,2) 1*T(11,6) -1/2*T(66,1)   576 cosets  worst 
+1.71025E-119  HOLDS
+35_2    weights  -1/4*T(7,2) 3/4*T(7,10) -1/2*T(70,1)   576 cosets  worst 
+7.68207E-120  HOLDS
+55_2    weights  -1/4*T(11,2) 3/4*T(11,10) -1/2*T(110,1)   864 cosets  worst 
+1.71025E-119  HOLDS
+77_2    weights  -1/6*T(11,2) 2/3*T(11,14) -1/2*T(154,1)   1152 cosets  worst 
+3.24667E-119  HOLDS
+10_7    weights  -1*T(5,7) 3/2*T(5,14) -1/2*T(70,1)   576 cosets  worst 
+7.68207E-120  HOLDS
+8 of 8 bases HOLD
+DONE

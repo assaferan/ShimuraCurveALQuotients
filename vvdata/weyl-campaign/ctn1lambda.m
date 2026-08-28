@@ -1,3 +1,10 @@
+// *** WITHDRAWN -- this script's conclusion is an ARTEFACT of its own mass call.
+// *** mass([Dp], [Rls]) passes the COMPOSITE level Rls as ONE element, so it
+// *** contributes (Rls+1)/2 instead of prod_{p|Rls} (p+1)/2.  lambda = 2N/(N+1)
+// *** is exactly the fudge that hides that, and being a scalar it cannot hide a
+// *** class-dependent error -- hence the "failing classes" reported below.
+// *** With the multiplicative mass there is NO lambda: see ctn1exact.m,
+// *** ctn1predict.m and theorem-Eeis-N.md.  Kept for the record only.
 // N > 1: the three-term identity, with the scalar pinned.
 //   rho_est  =?=  lambda(N) * { 1/2 [Theta(D',Rs)-Theta(D',R)]/(mass_Rs-mass_R)
 //                               - 1/2 thetabar(DN,1) },   lambda(N) = 2N/(N+1).
