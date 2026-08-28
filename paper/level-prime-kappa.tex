@@ -40,43 +40,42 @@ in the standard recipe for Schofer's $\kappa$}
 \begin{abstract}
 Schofer's formula expresses averages of $\log\lVert\Psi_F\rVert$ over CM points on a Shimura
 curve in terms of quantities $\kappa_\eta(m)$ built from derivatives of Fourier coefficients of an
-incoherent Eisenstein series. The recipe used in practice to evaluate $\kappa_\eta(m)$ descends
-from Kudla--Rapoport--Yang, through Schofer and Errthum, to Yang; its central step enumerates the
-configurations that contribute to the derivative at the centre. We observe that this enumeration is
-derived under a restriction which Kudla--Rapoport--Yang state explicitly --- that the Eisenstein
-series be built from sections given by the characteristic functions of the completions of
-$\mathcal{O}_k$ --- and which is not satisfied by the lattices arising for an Eichler order of
-squarefree level $N$ at a \emph{split} level prime.
+incoherent Eisenstein series. The recipe used in practice descends from Kudla--Rapoport--Yang
+through Schofer and Errthum to Yang, and its central step enumerates the configurations that
+contribute to the derivative at the centre. That enumeration is derived under a restriction which
+Kudla--Rapoport--Yang state explicitly --- that the Eisenstein series be built from sections given
+by the characteristic functions of the completions of $\mathcal{O}_k$ --- and which fails for the
+lattices arising from an Eichler order of squarefree level $N$ at a \emph{split} level prime.
 
-We compute the local Whittaker factor of the relevant $N$-scaled binary lattice at the level prime
-in closed form for every valuation, and show that its value at the critical point is
-$(N-1)\ord_N(m)$. We then re-run the case analysis with this factor in place and find that it
-produces no additional contributing configuration, so that no $\log N$ can arise from
-$\kappa_\eta(m)$ for $m>0$. Independently, a numerical evaluation of the vector-valued input form
-determines, exactly, a correction of the form $A_m\log N$ that the CM values demonstrably require.
-The rule producing it --- half the constant term of the input form at a nonzero isotropic coset ---
-is verified against ground truth on four bases with $N\in\{2,3,5\}$, including a base with $N=5$
-where the ground truth is forced by an over-determined consistency relation measured independently
-of any Eisenstein computation. We identify the correction as the constant-term pairing of the input
-form with the Eisenstein series attached to a nonzero isotropic coset of the discriminant form ---
-an object the maximal-order literature does not compute --- and reduce it, by an oldform relation
-of Schwagenscheidt, to ordinary seed-$0$ data of an enlarged lattice whose level-prime part is
-unimodular; this explains structurally both the support rule and the observed normalisation. We
-record the exact data any corrected formula must reproduce, and the routes we have eliminated.
-Finally, a finite exact evaluation of the constant term --- expansions of the input form at all
-cusps of $\Gamma_0(M)$ against exact Weil-representation data, with no Fourier sampling ---
-extends the measurements to bases beyond the numerical oracle's reach and shows that the
-correction carries a \emph{second channel}, supported on the perfect-square indices of the
-principal part, invisible on every base where the level-support rule had been tested. The space
-of weight-$1/2$ forms for the Weil representation of the discriminant form is shown to vanish,
-so this channel is scalar --- Zagier's square-class structure entering through the cusps ---
-and not a harmonic completion on the discriminant form. Finally we determine the Eisenstein
-part of the correction outright: it is
-$[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$ in Gross genus sums,
-for \emph{any} splitting $D=D's$ with $D'$ definite, the independence of the choice following
-from a local identity $g_p=\tfrac12f_p$ at every prime together with a telescoping of the mass
-formula. Twenty bases had suggested a ``re-split rule'' selecting one such splitting; there is
-none to find, and the competing readings recorded in the literature name a single object.
+We compute the local Whittaker factor of the $N$-scaled binary lattice at the level prime in closed
+form for every valuation; its value at the centre is $(N-1)\ord_N(m)$. Re-running the case analysis
+with this factor in place produces no additional contributing configuration, so no $\log N$ can
+arise from $\kappa_\eta(m)$ with $m>0$. The CM values nevertheless require a correction
+$A_m\log N$, which we measure exactly and check against ground truth on bases with
+$N\in\{2,3,5\}$, one of them forced by a consistency relation independent of any Eisenstein
+computation.
+
+We then determine that correction outright. Its Eisenstein part is an explicit alternating sum of
+Gross genus theta series indexed by the subsets of the primes of $N$ at which the tracked isotropic
+coset is supported --- genus sums where the discriminant admits one, telescoped mass-weighted pairs
+where it does not --- valid for every squarefree $D$ and $N$ and every isotropic coset, and
+independent of which prime of $D$ is split off. A residue identity on $X_0(M)$ makes the correction
+the pairing of the principal parts of the input form against the Fourier coefficients of that
+combination, independently of the representative chosen. Those coefficients are, in closed form, a
+Hurwitz class number times one elementary factor per prime of $DN$, with conductor corrections read
+off the fundamental decomposition $-4m=D_0c^2$; the rule that the correction vanishes unless
+$\Q(\sqrt{-m})$ embeds in $B_D$ is part of the formula rather than a side condition. Twenty bases
+had suggested a ``re-split rule'' selecting one splitting of $D$; there is none to find.
+
+Finally we locate where the transmitted recipe loses the term. The space of weight-$1/2$ forms for
+the Weil representation vanishes, so the input form is determined by its principal part and its
+constant term at the zero coset is genuinely zero; and no per-form normalisation can produce the
+observed failure, since the uncorrected values are mutually inconsistent on a base where a uniform
+rescaling could not make them so. What remains is that the $m=0$ term collapses a sum over
+isotropic cosets to the zero coset by a condition constraining only the negative-definite part of
+the coset: the surviving nonzero cosets carry the whole correction. We record the exact data any
+corrected formula must reproduce, the routes we have eliminated, and the one step --- the value of
+$\kappa_\eta(0)$ at those cosets --- that we have not derived.
 \end{abstract}
 
 \maketitle
@@ -129,7 +128,19 @@ $\rho=[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$, wh
 are independent of $D'$ because a local computation gives $g_p=\tfrac12f_p$ at every prime and
 the mass difference telescopes. So the ``re-split rule'' was never a rule: the competing
 readings name one object. What survives, now with a proof, is the identity itself, of which the
-mass-ratio law is the shadow in normalised coordinates. Section~\ref{sec:open} takes up the
+mass-ratio law is the shadow in normalised coordinates.
+
+The remainder of Section~\ref{sec:slaw} determines the correction rather than merely locating it.
+Theorem~\ref{thm:Ngeneral} generalises the identity to every level and every isotropic tracked
+coset, as an alternating sum over the subsets of the primes of $N$ at which the coset is supported,
+with Theorem~\ref{thm:noresplit} the empty-subset case; Lemma~\ref{lem:levelchar} supplies the level
+and multiplier that make its terms usable. Theorem~\ref{thm:respair} is a residue identity on
+$X_0(M)$ --- summing over cosets rather than cusps, which supplies the width factor automatically
+--- from which the correction is the pairing of the input form's principal parts against the
+Fourier coefficients of that combination (Corollary~\ref{cor:multgross}), independently of which
+representative is used; the same identity, applied to a difference of representatives, is why the
+choice cannot matter. Proposition~\ref{prop:closedcoef} then evaluates those coefficients in closed
+form. Section~\ref{sec:open} takes up the
 provenance of the correction: of the two readings previously on offer, both can now be excluded,
 and what survives is that terms inside Schofer's formula were dropped.
 
