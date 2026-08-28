@@ -5,7 +5,17 @@
 // fractional grids) live.  Also prints the block decomposition
 //   INTERM_f = sum over cosets where every panel monomial is holomorphic,
 //   CONV_f   = the convolution blocks (cosets with monomial poles: oo/0 class)
-// so INTERM_f = c_eta*(0) and CONV_f = -c_eta*(0) exhibit the functional.
+// CORRECTION (2026-08-28): the claim that used to stand here -- "so INTERM_f =
+// c_eta*(0) and CONV_f = -c_eta*(0) exhibit the functional" -- is WRONG, and
+// was wrong in every run ever made with this script.  The INTERM/CONV split is
+// by PANEL-MONOMIAL pole support, a property of the panel and not of f: a coset
+// can carry a monomial pole while f itself is holomorphic there.  Every log
+// disagrees with the old claim (15_2 FORM -2: INTERM ~ 0 against c_eta*(0) = 4;
+// FORM 9: INTERM = -8 against 0).  The identity that DOES hold is the
+// n = 0 / n > 0 split of the residue sum,
+//   c_eta*(0) = sum_w a_0(f|w) a_0(E|w) = - sum_w sum_{n>0} a_{-n}(f|w) a_n(E|w),
+// proved as "the residue pairing" in the preprint.  A_f = 0 is the residue
+// theorem itself and is untouched by this correction.
 // Finally dumps E*'s expansion at one canonical coset per class (E0COEF lines)
 // -- the 0-class lines are the ledger's 0-side weights.
 //
