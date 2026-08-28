@@ -1,0 +1,28 @@
+Loading "vvdata/weyl-campaign/fastcosets.m"
+Loading "vvdata/weyl-campaign/etared.m"
+Loading "vvdata/weyl-campaign/ctlat.m"
+330_1 gate: form level 1320 (3456 cosets), eta level 660 (24 divisors)
+E_eis: 11 monomials
+ct(E_eis) built
+
+==== CONTROL at 330_1: all eight candidate supports ====
+SUPPORT (2,1)+(2,165): rel resid 0.95476838  IN SPAN: false
+SUPPORT (3,1)+(3,110): rel resid 0.97959802  IN SPAN: false
+SUPPORT (5,1)+(5,66): rel resid 0.98781334  IN SPAN: false
+SUPPORT (11,1)+(11,30): rel resid 0.99014755  IN SPAN: false
+SUPPORT (30,1)+(30,11): rel resid 3.4375040E-115  IN SPAN: true   w = (-0.200000000000 + 1.53175781440E-117*$.1, 1.20000000000 - 
+5.37960454706E-117*$.1)  sum 1.00000000000 - 3.84784673265E-117*$.1  ratio 
+6.00000000000
+SUPPORT (66,1)+(66,5): rel resid 3.4318590E-115  IN SPAN: true   w = (-0.500000000000 + 1.07173826157E-116*$.1, 1.50000000000 - 
+6.72477278215E-117*$.1)  sum 1.00000000000 + 3.99260983351E-117*$.1  ratio 
+3.00000000000
+SUPPORT (110,1)+(110,3): rel resid 3.4359384E-115  IN SPAN: true   w = (-1.00000000000 - 1.80505385955E-117*$.1, 2.00000000000 - 
+8.96610218006E-117*$.1)  sum 1.00000000000 - 1.07711560396E-116*$.1  ratio 
+2.00000000000
+SUPPORT (165,1)+(165,2): rel resid 3.4374353E-115  IN SPAN: true   w = (-2.00000000000 + 7.45170576484E-117*$.1, 3.00000000000 - 
+1.36581750848E-116*$.1)  sum 1.00000000000 - 6.20646931999E-117*$.1  ratio 
+1.50000000000
+
+CONTROL VERDICT: 4 of 8 supports pass at 330_1 (banked: only 165)
+  => the constant-term test does NOT discriminate
+DONE
