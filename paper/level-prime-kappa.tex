@@ -76,9 +76,14 @@ constant term at the zero coset is genuinely zero; and no per-form normalisation
 observed failure, since the uncorrected values are mutually inconsistent on a base where a uniform
 rescaling could not make them so. What remains is that the $m=0$ term collapses a sum over
 isotropic cosets to the zero coset by a condition constraining only the negative-definite part of
-the coset: the surviving nonzero cosets carry the whole correction. We record the exact data any
-corrected formula must reproduce, the routes we have eliminated, and the one step --- the value of
-$\kappa_\eta(0)$ at those cosets --- that we have not derived.
+the coset: the surviving nonzero cosets carry the whole correction. We then evaluate the
+coefficient they carry, obtaining $\kappa_\eta(0)=-\log N/(N-1)$ at each of the $2N-2$ of them, and
+summing recovers the measured correction exactly, the factor $\tfrac12$ appearing as
+$\tfrac14\cdot\tfrac{2N-2}{N-1}$ and hence independently of $N$. The $\log N$ arises at the level
+prime, not at a place of $\mathrm{Diff}$ --- not because the local factor there vanishes, but
+because at the zero coset it has a pole, which the passage to a nonzero coset converts into the
+zero whose derivative is taken. That mechanism is invisible to a case analysis tracking orders of
+vanishing, which is why the term was lost.
 \end{abstract}
 
 \maketitle
@@ -162,7 +167,11 @@ because the panels determine the functional only modulo a relation ideal --- so 
 rule, and the square-class channel of Section~\ref{sec:exact} with it, are properties of a chosen
 representative rather than of the correction. Section~\ref{sec:open} takes up the
 provenance of the correction: of the two readings previously on offer, both can now be excluded,
-and what survives is that terms inside Schofer's formula were dropped.
+and what survives is that terms inside Schofer's formula were dropped. Those terms are then
+evaluated. Lemma~\ref{lem:m0loc} supplies the one missing local ingredient, the $m=0$ Whittaker
+factor of a $p$-scaled plane, by calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis}
+itself; Proposition~\ref{prop:kappa0} gives $\kappa_\eta(0)=-\log N/(N-1)$ and recovers the measured
+correction, factor $\tfrac12$ included.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -303,6 +312,12 @@ Within this framework, a $\log N$ can enter a CM value only through the $m=0$ te
 $c_0(0)\kappa_0(0)$, where $\kappa_0(0)$ carries the summand $\sum_{p\mid N/(N,d)}\log p$ of
 \cite[Remark 15(2), Lemma 20]{Yang}.
 \end{corollary}
+
+\noindent
+``Within this framework'' is the operative clause: the term the framework drops also carries a
+$\log N$, and from the same prime, but at the \emph{nonzero} isotropic cosets rather than at $0$
+(Proposition~\ref{prop:kappa0}). Since $c_0(0)=0$ in our situation, the term retained here
+vanishes and the dropped ones carry the whole correction.
 
 \section{The correction the CM values require}\label{sec:data}
 
@@ -1667,25 +1682,99 @@ $k_0(0)$ times a count. In \cite[Lem.~2.18]{SchoferThesis} the $m=0$ Fourier coe
   \prod_p W_{0,p}(s,\varphi_p),
 \]
 and for a nonzero coset $\varphi_\mu$ one has $\varphi_\mu(0)=0$, since $0\notin\mu+L$. The first
-term therefore drops, the value at $s=0$ is the Whittaker product, and that product vanishes by
-incoherence. What survives at $\mu\neq0$ is thus the \emph{$s$-derivative} of
-$\prod_pW_{0,p}(s,\varphi_\mu)$ --- a term of exactly the shape of the $m>0$ contributions, a
-product of local values against one derivative at a vanishing place, rather than the regularised
-constant $k_0(0)$ that Theorem~3.3 attaches to $\varphi_0$. Our measurement says the level prime is
-\emph{not} that vanishing place: $W_{0,N}=1$ there on each of the $2N-2$ isotropic cosets, so the
-derivative is taken at a place of $\mathrm{Diff}$, as in the $m>0$ terms.
+term therefore drops, so what survives at $\mu\neq0$ is the \emph{$s$-derivative} of
+$\prod_pW_{0,p}(s,\varphi_\mu)$ rather than the regularised constant $k_0(0)$ that Theorem~3.3
+attaches to $\varphi_0$. We now evaluate it. The one ingredient not already in hand is the
+level-prime factor at the \emph{zero} coset, which the recipe of \S\ref{sec:chain} never needs and
+which the accompanying code cannot return, its defining series failing to terminate. It is fixed by
+calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis} itself.
 
-We have not evaluated that derivative, and so have not recovered the measured $\tfrac12$; the
-identification above fixes which object must be computed, not its value. Redoing the case
-analysis with the $N$-scaled section adds no fourth case --- the level factor only ever raises the order of vanishing, so $\kappa$ cannot
-supply the $\log N$ from the $m>0$ terms (Proposition~\ref{prop:reenum}) --- which leaves the whole
-correction in the $m=0$ term at $\eta\neq0$. Evaluating $\kappa_\eta(0)$ there from Schofer's own
-definition, and recovering the measured factor $\tfrac12$, remains to be done. Theorem~\ref{thm:closed}
-and Proposition~\ref{prop:reenum} stand in any case, and part (ii) of the Kudla--Rapoport--Yang
-programme --- the incorporation of a level structure --- remains to be carried out. What a
-corrected formula must reproduce is the multipliers of Observation~\ref{obs:mult}, equivalently
-the coefficients of Proposition~\ref{prop:closedcoef}; not Table~\ref{tab:A} index by index, which
-fixes the functional only modulo the relation ideal of the panel (Remark~\ref{rem:gauge}).
+\begin{lemma}[the $m=0$ local factor of a $p$-scaled plane]\label{lem:m0loc}
+For a binary $\Z_p$-lattice $L$ and $\varphi=\mathrm{char}(\mu+L)$, put
+$\alpha_k=p^{-k}\#\{x\in(\mu+L)/p^kL: Q(x)\equiv0 \bmod p^k\}$ and
+$G(X)=\sum_{k\ge0}\alpha_kX^k$ with $X=p^{-s}$. Then $W_{0,p}(s,\varphi)=(1-X)\,G(X)$, and
+\[
+\begin{array}{llll}
+\toprule
+\text{$L_p$} & \text{$\mu$} & \alpha_k & W_{0,p}(s,\varphi)\\
+\midrule
+\text{unimodular, split} & 0 & 1+k\tfrac{p-1}{p} & (1-X/p)/(1-X)\\
+\text{unimodular, inert} & 0 & 1,\tfrac1p,1,\tfrac1p,\dots & (1+X/p)/(1+X)\\
+\text{$p$-scaled, split} & \neq0 \text{ isotropic} & 1 & 1\\
+\text{$p$-scaled, split} & 0 & (k-1)(p-1)+p & \bigl(1+(p-2)X\bigr)/(1-X)\\
+\bottomrule
+\end{array}
+\]
+In particular the last has a \emph{simple pole} at $s=0$:
+$W_{0,p}(s,\varphi_0)=\tfrac{p-1}{s\log p}+O(1)$.
+\end{lemma}
+
+\begin{proof}
+The two unimodular rows are forced: \cite[Lem.~2.18]{SchoferThesis} evaluates
+$\prod_pW_{0,p}(s,\varphi_0)=c_0\,L(s,\chi_d)/L(s+1,\chi_d)$ in the unimodular case, so the local
+factor there must be the $p$-factor of that ratio, which is $(1-\chi_d(p)X/p)/(1-\chi_d(p)X)$; the
+displayed $\alpha_k$ are elementary counts, and $(1-X)G(X)$ returns exactly those two expressions.
+This determines the normalisation. The third and fourth rows are the same counts for the $p$-scaled
+plane $Q=pxy$: at an isotropic $\mu=(a/p,0)$ with $a$ a unit, $Q(x)\equiv0$ forces $y\equiv0$ and
+$\alpha_k=1$; at $\mu=0$ one has $xy\equiv0\bmod p^{k-1}$, giving $\alpha_k=(k-1)(p-1)+p$. Summing
+and multiplying by $1-X$ gives the last two entries.
+\end{proof}
+
+The third row is a check rather than an input: it is the object the code \emph{can} compute, and it
+returns the constant $1$, in agreement (\texttt{km0poly.m}). All four rows were verified against
+brute-force counts at $p=3,5,7$ (\texttt{km0whit.py}).
+
+\begin{proposition}[the dropped coefficient]\label{prop:kappa0}
+Let $N$ be prime and $\mu$ a nonzero isotropic coset. Then
+\[
+  \kappa_\mu(0)\;=\;-\,\frac{\log N}{N-1},
+\]
+and summing over the $2N-2$ such cosets reproduces the correction of
+Observation~\ref{obs:mult}: in the normalisation of \S\ref{sec:chain} the dropped $m=0$ terms
+contribute $\tfrac12c_\eta(0)\log N$ per CM point, i.e.\ exactly
+$\mathrm{mult}(f)\sum_{p\mid N/(N,d)}\log p$.
+\end{proposition}
+
+\begin{proof}
+At a firing discriminant a nonzero isotropic $\mu$ is supported at the level prime alone --- the
+$D$-part of the discriminant form is anisotropic (Observation~\ref{obs:iso}), and this is verified
+for $L_-$ itself in \texttt{km0places.m}, where the nonzero isotropic cosets of $L_-^\vee/L_-$
+number $4,2,8$ at $N=3,2,5$, that is $2N-2$. Hence every local factor other than the one at $N$
+agrees for $\varphi_\mu$ and $\varphi_0$, and with $P(s)=\prod_pW_{0,p}(s,\varphi_0)$,
+\[
+  \prod_p W_{0,p}(s,\varphi_\mu)\;=\;\frac{P(s)}{W_{0,N}(s,\varphi_0)} ,
+\]
+using $W_{0,N}(s,\varphi_\mu)=1$ from Lemma~\ref{lem:m0loc}. Individual factors have poles at
+$s=0$ and only the product converges, so this ratio, and not any single place, is the object to
+evaluate. Writing $A(s)$ for the archimedean factor displayed above, with $A(0)=i\pi$, the
+vanishing of the $m=0$ coefficient at $\varphi_0$ --- which is the functional equation, not
+incoherence --- reads $1=A(0)P(0)$. At $\mu\neq0$ the term $v^{s/2}\varphi_\mu(0)$ is absent, and
+by Lemma~\ref{lem:m0loc} the denominator has a simple pole, so the ratio has a simple zero:
+$\prod_pW_{0,p}(s,\varphi_\mu)=P(0)\,s\log N/(N-1)+O(s^2)$. Therefore
+$\kappa_\mu(0)=-A(0)P(0)\log N/(N-1)=-\log N/(N-1)$, every transcendental constant cancelling.
+Finally the $2N-2$ cosets carry a common $c_\eta(0)$ (Observation~\ref{obs:iso}), so the prefactor
+$-\tfrac14$ of \S\ref{sec:chain} gives
+$-\tfrac14(2N-2)c_\eta(0)\bigl(-\log N/(N-1)\bigr)=\tfrac12c_\eta(0)\log N$.
+\end{proof}
+
+Two things are worth drawing out. The factor $\tfrac12$ is
+$\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same
+$\tfrac12$ was measured at $N=2$, $3$ and $5$ and why Observation~\ref{obs:mult} could be stated
+without an $N$-dependent constant. And the $\log N$ comes from the level prime, not from a place of
+$\mathrm{Diff}$: not because the level factor \emph{vanishes} --- it does not, being identically
+$1$ at every nonzero isotropic coset --- but because at the zero coset it has a \emph{pole}, so
+that replacing it by $1$ converts that pole into the zero whose derivative is taken. This is why
+searching for a vanishing place does not find it, and it is the reason the correction eluded the
+case analysis of \S\ref{sec:reenum}, which tracks orders of vanishing only.
+
+Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand in any case: the level factor at
+$m>0$ only ever raises the order of vanishing, so $\kappa$ cannot supply the $\log N$ from the
+$m>0$ terms, which is what leaves the whole correction in the $m=0$ term at $\eta\neq0$. Part (ii)
+of the Kudla--Rapoport--Yang programme --- the incorporation of a level structure into the moduli
+problem --- remains to be carried out. And what a corrected formula must reproduce is the
+multipliers of Observation~\ref{obs:mult}, equivalently the coefficients of
+Proposition~\ref{prop:closedcoef}; not Table~\ref{tab:A} index by index, which fixes the functional
+only modulo the relation ideal of the panel (Remark~\ref{rem:gauge}).
 
 A further reading should be recorded, since it would undercut the rest: that the evaluation of
 $\kappa^-_\mu(m)$ for $m>0$ is itself wrong at $N>1$. It had never been checked against an
@@ -1770,6 +1859,14 @@ The computations were carried out in Magma against the codebase accompanying thi
       out to the measured multipliers ($39$ of $39$, Remark~\ref{rem:gauge}) and
       \texttt{gauge152.py} exhibits the rank deficiency that separates it from
       Table~\ref{tab:A}.
+\item For \S\ref{sec:open}: \texttt{km0poly.m} computes the level-prime factor at $m=0$ as a
+      \emph{polynomial} rather than a value, giving the constant $1$ of Lemma~\ref{lem:m0loc};
+      \texttt{km0places.m} exhibits the nonzero isotropic cosets of $L_-^\vee/L_-$ at firing
+      discriminants, $2N-2$ of them, supported at the level prime alone; and \texttt{km0whit.py}
+      carries out the calibration of Lemma~\ref{lem:m0loc} against brute-force counts at
+      $p=3,5,7$ and assembles Proposition~\ref{prop:kappa0}. The distinction between a local
+      factor's value and its polynomial matters twice over in this section, and both scripts
+      report the polynomial.
 \item The bases with $M\ge660$ are reachable only through \texttt{eis32k.m}, which replaces
       the numerical Weil-representation loop of \texttt{eis32.m} by the closed form of
       \cite[Thm.~6.4]{Stromberg2013} (agreement with the numerical driver checked
