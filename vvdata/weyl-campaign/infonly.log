@@ -1,0 +1,15 @@
+X_0^15(2), 86 eta monomials
+  infinity-only closed form matches ground truth: 38/86
+  disagreements: 48
+
+    mono   1: truth +121.381333  pred +1.000000  diff +120.381333
+    mono   2: truth +119.348800  pred +1.000000  diff +118.348800
+    mono   3: truth +118.518400  pred +1.000000  diff +117.518400
+    mono   4: truth +11.264000  pred +0.000000  diff +11.264000
+    mono   5: truth +10.620000  pred +0.000000  diff +10.620000
+    mono   6: truth +106.864000  pred +1.000000  diff +105.864000
+
+  => the infinity-only truncation is NOT a general identity.
+     It holds on genuine Borcherds inputs (41/41 over ten bases) but
+     fails on individual monomials, whose 0-side principal parts the
+     pairing sees and the truncation ignores.
