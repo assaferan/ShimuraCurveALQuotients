@@ -1,0 +1,14 @@
+mult(f) == (1/2) sum_m c_oo(-m) W(m),  W from the Prop 9.15 closed form
+(forms carrying an independently measured multiplier)
+
+  X_0^6(5):  9/9
+  X_0^6(7):  2/2
+  X_0^6(19):  2/2
+  X_0^10(3):  9/9
+  X_0^10(11):  2/2
+  X_0^14(5):  2/2
+  X_0^15(2):  9/9
+  X_0^22(7):  2/2
+  X_0^34(5):  2/2
+
+  TOTAL: 39/39

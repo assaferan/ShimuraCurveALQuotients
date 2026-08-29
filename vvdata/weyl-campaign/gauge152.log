@@ -1,0 +1,27 @@
+X_0^15(2): infinity-side principal parts, indices [1, 2, 3, 10, 15, 30] 
+
+ form   measured   Table 5.6   (1/2)W  [Prop 9.15]
+   -2          2           2        2   agree
+   -1          4           4        4   agree
+    9          0           0        0   agree
+   10          0           0        0   agree
+   11          4           4        4   agree
+   12          2           2        2   agree
+   13          4           4        4   agree
+   14         -2          -2       -2   agree
+   15          2           2        2   agree
+
+the two representatives, index by index:
+    m  :  A_m     (1/2)W(m)
+    1  :     0           0
+    2  :    -1           0
+    3  :     0           1
+   10  :     1           2
+   15  :     0           1
+   30  :     0           2
+
+  panel matrix 9 x 6, rank 4  =>  2 free directions
+  both vectors lie in the same coset of that space, which is why they
+  agree on every panel form and disagree at almost every index.
+
+  Prop 9.15 nonzero at N nmid m, m < 40:  [3, 7, 13, 15, 27, 33, 37]
