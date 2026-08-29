@@ -74,15 +74,31 @@ end if;
 
 sol := Rep(sols);
 res := AssociativeArray();  res[-1] := sol[1];  res[-2] := sol[2];
-// The residual is r = true - applied, and the pipeline applies m0_multiplier only at even N.
+// The residual is r = true - applied.  TWO CORRECTIONS, 2026-08-29:
+//
+//  (1) `applied := IsEven(N)` was STALE.  The even-N guard existed because the old
+//      m0_multiplier was wrong on multi-term inputs; M0MultiplierExact replaced it and
+//      applies at EVERY level parity (SchoferFormula.m, the Nprimes branch).  The old line
+//      mis-scored every ODD-N base, reporting a true multiplier of 0 + res instead of
+//      applied + res.
+//
+//  (2) the verdict `mm eq tot` was VACUOUS.  With tot := mm + res and res = 0 it compares
+//      mm to itself and always prints OK.  It also used M0Multiplier, the superseded
+//      Route-C form that is correct on 15_2 only, rather than the M0MultiplierExact the
+//      pipeline actually applies.
+//
+// The real test is res = 0: since res = true - applied and `applied` IS the value the
+// pipeline used, res = 0 says exactly that the shipped multiplier is right on this base.
 Ld := ShimuraCurveLattice(D, N);
-applied := IsEven(N);
-printf "the pipeline applies m0_multiplier here: %o\n", applied;
-for k in [-1, -2] do
-    mm  := M0Multiplier(qExpansionAtoo(fs[k], 1), qExpansionAt0(fs[k], 1), D, N, Ld);
-    tot := (applied select mm else 0) + res[k];
-    printf "  form %-3o: residual %-5o closed form %-8o TRUE multiplier %-6o %o\n",
-           k, res[k], mm, tot, mm eq tot select "closed form OK" else "*** closed form WRONG ***";
+applied := (N gt 1);
+printf "the pipeline applies m0_multiplier here: %o  (every parity)\n", applied;
+mexact := applied select M0MultiplierExact([fs[k] : k in [-1,-2]], Ld, D, N)
+                 else [Rationals()!0, Rationals()!0];
+for i -> k in [-1, -2] do
+    ok := res[k] eq 0;
+    printf "  form %-3o: residual %-6o applied %-8o TRUE multiplier %-8o %o\n",
+           k, res[k], mexact[i], mexact[i] + res[k],
+           ok select "pipeline OK" else "*** PIPELINE WRONG: true = applied + residual ***";
 end for;
 printf "TOTAL %o s\n", Cputime(t0);
 quit;

@@ -1,0 +1,121 @@
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key -1 kerdim 8 solden 1
+PROBE key 10 kerdim 10 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key -1 kerdim 8 solden 1
+PROBE key 10 kerdim 10 solden 1
+PROBE key 11 kerdim 22 solden 1
+PROBE key 12 kerdim 22 solden 1
+PROBE key 13 kerdim 8 solden 1
+PROBE key 14 kerdim 10 solden 1
+PROBE key 15 kerdim 22 solden 1
+PROBE key 9 kerdim 22 solden 1
+PROBE key -1 kerdim 8 solden 1
+PROBE key 10 kerdim 10 solden 1
+PROBE key -2 kerdim 22 solden 1
+BASE 15 2 9
+PP -2 30 2
+PP -2 3 -2
+PP -2 2 -2
+PP -2 1 -4
+VERD -2 30 4 1 0 INTEGRAL
+PP -1 10 2
+PP -1 2 -2
+PP -1 1 2
+VERD -1 10 3 1 0 INTEGRAL
+PP 9 30 2
+PP 9 15 2
+PP 9 3 -6
+PP 9 1 -6
+VERD 9 30 4 1 0 INTEGRAL
+PP 10 15 2
+PP 10 10 2
+PP 10 3 -6
+PP 10 2 2
+VERD 10 15 4 1 0 INTEGRAL
+PP 11 30 2
+PP 11 10 2
+PP 11 3 -4
+PP 11 2 -2
+PP 11 1 -2
+VERD 11 30 5 1 0 INTEGRAL
+PP 12 30 2
+PP 12 15 2
+PP 12 10 2
+PP 12 3 -8
+PP 12 1 -4
+VERD 12 30 5 1 0 INTEGRAL
+PP 13 10 2
+PP 13 2 -2
+PP 13 1 2
+VERD 13 10 3 1 0 INTEGRAL
+PP 14 15 2
+PP 14 3 -4
+PP 14 2 2
+PP 14 1 -2
+VERD 14 15 4 1 0 INTEGRAL
+PP 15 30 2
+PP 15 3 -2
+PP 15 2 -2
+PP 15 1 -4
+VERD 15 30 4 1 0 INTEGRAL
+BASEVERD 15 2 INTEGRAL
+DONE
