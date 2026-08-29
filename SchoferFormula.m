@@ -1667,6 +1667,7 @@ function find_y2_scales(schofer_table)
     //Scale the y2 rows of the table
 
     scale_factors :=[];
+    unscaled_keys := [];   // covers whose y2-scale is a placeholder; their twist is NOT trusted
     for i in k_idxs do
         if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)} then
             //then we have a rational point on X
@@ -1680,10 +1681,12 @@ function find_y2_scales(schofer_table)
             found_j1 := exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
             found_j2 := found_j1 and exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             // Graceful: without two suitable rational CM points we cannot pin this cover's y2-scale.
-            // Leave the row unscaled (placeholder); the cover's constraints then come out inconsistent
-            // in EquationsOfCovers, so it is deferred and (if a parent is computed) recovered as a quotient.
+            // Leave the row unscaled (placeholder) and RECORD the cover: the constraints may still
+            // come out consistent and produce a model with the wrong quadratic twist (issue #36, 22_3),
+            // so EquationsOfCovers must force-defer it; a computed parent then recovers it as a quotient.
             if not found_j2 then
                 Append(~scale_factors, LogSum(1));
+                Append(~unscaled_keys, keys_fs[i]);
                 vprintf ShimuraQuotients, 1 : "  Could not pin y2-scale (sparse CM data); leaving a cover unscaled to be deferred downstream.\n";
                 continue;
             end if;
@@ -1715,11 +1718,12 @@ function find_y2_scales(schofer_table)
                 Append(~scale_factors, log_scale2);
             else
                 Append(~scale_factors, LogSum(1));
+                Append(~unscaled_keys, keys_fs[i]);
                 vprintf ShimuraQuotients, 1 : "  y2-scale IsSquare check failed for a cover; leaving it unscaled to be deferred downstream.\n";
             end if;
         end if;
     end for;
-    return scale_factors;
+    return scale_factors, unscaled_keys;
 
 end function;
 
@@ -1850,7 +1854,8 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     abs_schofer_tab`Values := table;
 
     //Scale the y2 rows of the table
-    scale_factors := find_y2_scales(abs_schofer_tab);
+    scale_factors, unscaled_keys := find_y2_scales(abs_schofer_tab);
+    abs_schofer_tab`UnscaledKeys := unscaled_keys;
 
     degs := find_degs(abs_schofer_tab);
     for i->k in k_idxs do
@@ -1924,6 +1929,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
 
     schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
     schofer_table`AmbiguousSigns := ambiguous;
+    schofer_table`UnscaledKeys := unscaled_keys;   // covers with a placeholder y2-scale (twist untrusted)
     return schofer_table;
 end intrinsic;
 
