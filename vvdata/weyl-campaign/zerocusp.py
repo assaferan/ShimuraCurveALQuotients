@@ -4,8 +4,9 @@
 infonly.py showed the infinity-only truncation is not a general identity
 (38/86 on the eta monomials). Corollary 9.14 pairs over ALL cosets, so the
 missing piece is a pairing against E's coefficients at the other cusps. At
-15_2 only two cusp classes occur, g = 60 (infinity, width 1) and g = 1, so the
-correction is a single extra block:
+15_2 eight cusp classes occur, but only TWO carry POLES -- g = 60 (infinity,
+width 1) and g = 1 -- the monomials being holomorphic at the intermediate
+cusps. So the correction is a single extra block:
 
     mult(f) = (1/2) [ sum_m c_oo(-m) W(m) + sum_n c_0(-n) a_n ]
 
