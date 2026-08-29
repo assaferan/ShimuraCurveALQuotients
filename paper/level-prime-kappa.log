@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  29 AUG 2026 09:53
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  29 AUG 2026 10:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -612,7 +612,7 @@ ly. Eval-u-at-ing $[] [][] \OML/cmm/m/it/10.95 c[]\OT1/cmr/m/n/10.95 (\OMS/cmsy
 [24]
 
 [25]
-Overfull \hbox (36.47205pt too wide) in paragraph at lines 1713--1721
+Overfull \hbox (36.47205pt too wide) in paragraph at lines 1717--1725
 []\OT1/cmr/m/n/10.95 The two uni-mod-u-lar rows are forced: [[], Lem. 2.18] eva
 l-u-ates $[][] \OML/cmm/m/it/10.95 W[]\OT1/cmr/m/n/10.95 (\OML/cmm/m/it/10.95 s
 ; '[]\OT1/cmr/m/n/10.95 ) = \OML/cmm/m/it/10.95 c[] L\OT1/cmr/m/n/10.95 (\OML/c
@@ -625,13 +625,15 @@ mm/m/it/10.95 s; ^^_[]\OT1/cmr/m/n/10.95 )\OML/cmm/m/it/10.95 =L\OT1/cmr/m/n/10
 [26]
 
 [27]
-Overfull \hbox (8.26279pt too wide) in paragraph at lines 1842--1846
+Overfull \hbox (8.26279pt too wide) in paragraph at lines 1849--1853
 \OT1/cmr/m/n/10.95 truth sweeps, and the con-straints ledger --- are banked on 
 the branch \OT1/cmtt/m/n/10.95 m0-theta-campaign
  []
 
 
-Overfull \hbox (1.59857pt too wide) in paragraph at lines 1846--1855
+
+[28]
+Overfull \hbox (1.59857pt too wide) in paragraph at lines 1853--1862
 \OT1/cmr/m/n/10.95 probes (\OT1/cmtt/m/n/10.95 grossid100.m\OT1/cmr/m/n/10.95 ,
  \OT1/cmtt/m/n/10.95 grossid900.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 swapp
 robe.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 massprobe.m\OT1/cmr/m/n/10.95 , 
@@ -640,9 +642,9 @@ robe.m\OT1/cmr/m/n/10.95 , \OT1/cmtt/m/n/10.95 massprobe.m\OT1/cmr/m/n/10.95 ,
 
 
 
-[28]
+[29]
 
-[29] (./level-prime-kappa.aux)
+[30] (./level-prime-kappa.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -651,8 +653,8 @@ Package rerunfilecheck Info: File `level-prime-kappa.out' has not changed.
 (rerunfilecheck)             Checksum: 7625B0F69D02809E3D6A0633454F3F8C;4815.
  ) 
 Here is how much of TeX's memory you used:
- 11707 strings out of 473190
- 177440 string characters out of 5715801
+ 11708 strings out of 473190
+ 177447 string characters out of 5715801
  598821 words of memory out of 5000000
  34528 multiletter control sequences out of 15000+600000
  569175 words of font info for 74 fonts, out of 8000000 for 9000
@@ -681,10 +683,10 @@ dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/202
 5/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb></usr/local/texlive/2025/
 texmf-dist/fonts/type1/public/cm-super/sfti1095.pfb>
-Output written on level-prime-kappa.pdf (29 pages, 474774 bytes).
+Output written on level-prime-kappa.pdf (30 pages, 475878 bytes).
 PDF statistics:
- 682 PDF objects out of 1000 (max. 8388607)
- 599 compressed objects within 6 object streams
- 127 named destinations out of 1000 (max. 500000)
+ 690 PDF objects out of 1000 (max. 8388607)
+ 605 compressed objects within 7 object streams
+ 128 named destinations out of 1000 (max. 500000)
  161 words of extra memory for PDF output out of 10000 (max. 10000000)
 

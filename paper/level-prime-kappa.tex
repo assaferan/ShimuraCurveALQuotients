@@ -1274,7 +1274,7 @@ $\mathrm{Gr}(66,1)$ alike, and the telescoped $2$-part of the $\mathrm{Gr}(11,\c
 is the same).
 \end{proof}
 
-Two consequences are worth recording. First, Theorem~\ref{thm:Ngeneral} promotes
+Three consequences are worth recording. First, Theorem~\ref{thm:Ngeneral} promotes
 Observation~\ref{obs:mass} to an identity: for $N$ prime and $\mu\neq0$ the set
 $S=\{N\}$ has two subsets, and the theorem reads
 $\rho_\mu=\tfrac12\mathrm{Tel}_s(D';N)-\tfrac12\bar\theta(DN,1)$, which is the displayed
@@ -1666,7 +1666,10 @@ gives
   \#\{\mu\neq0: W_{0,p}(0,\mu)\neq0\}\;=\;4,\;8,\;12 \quad\text{at } p=3,5,7,
 \]
 each with value $1$; that is $2(p-1)$, which is exactly the number of nonzero \emph{isotropic}
-cosets of a hyperbolic plane over $\mathbb{F}_p$. So at the level prime the $m=0$ local Whittaker is
+cosets of a hyperbolic plane over $\mathbb{F}_p$. (Lemma~\ref{lem:m0loc} below sharpens this from a
+value to an identity of polynomials: the factor is the constant $1$, so its $s$-derivative vanishes
+too. The distinction matters, and is what fixes where the derivative of the product is taken.)
+So at the level prime the $m=0$ local Whittaker is
 nonzero on precisely the $2N-2$ nonzero isotropic cosets, with equal weight, and Lemma~2.18 sets
 all of them to zero on the strength of a statement established where no such coset exists. Those
 are the dropped terms, and their count and equal weighting are exactly the structure the
@@ -1682,9 +1685,10 @@ $k_0(0)$ times a count. In \cite[Lem.~2.18]{SchoferThesis} the $m=0$ Fourier coe
   \prod_p W_{0,p}(s,\varphi_p),
 \]
 and for a nonzero coset $\varphi_\mu$ one has $\varphi_\mu(0)=0$, since $0\notin\mu+L$. The first
-term therefore drops, so what survives at $\mu\neq0$ is the \emph{$s$-derivative} of
-$\prod_pW_{0,p}(s,\varphi_\mu)$ rather than the regularised constant $k_0(0)$ that Theorem~3.3
-attaches to $\varphi_0$. We now evaluate it. The one ingredient not already in hand is the
+term therefore drops. The Whittaker product does still vanish at $s=0$ --- though not for the
+reason one would expect, as the proof of Proposition~\ref{prop:kappa0} shows --- so what survives
+at $\mu\neq0$ is its \emph{$s$-derivative}, rather than the regularised constant $k_0(0)$ that
+Theorem~3.3 attaches to $\varphi_0$. We now evaluate it. The one ingredient not already in hand is the
 level-prime factor at the \emph{zero} coset, which the recipe of \S\ref{sec:chain} never needs and
 which the accompanying code cannot return, its defining series failing to terminate. It is fixed by
 calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis} itself.
@@ -1794,11 +1798,14 @@ twelve configurations agree. The closed form $W_{m,N}(1)=(N-1)\ord_N(m)$, previo
 code that computes it, is likewise reproduced from the counting alone.
 
 This bounds the reading rather than eliminating it: it verifies the local \emph{values}, not the
-derivative $W'(1)$. But the derivative is only ever taken at the vanishing place, and the level
-prime is never that place in a contributing term --- when $N\mid m$ the level factor is
-$(N-1)\ord_N(m)\neq0$, and when $N\nmid m$ the order of vanishing is at least two and the term is
-discarded --- so the derivative is always evaluated in a configuration that already occurs at
-$N=1$.
+derivative $W'(1)$. But among the $m>0$ terms the derivative is only ever taken at a vanishing
+place, and the level prime is never that place in a contributing term --- when $N\mid m$ the level
+factor is $(N-1)\ord_N(m)\neq0$, and when $N\nmid m$ the order of vanishing is at least two and the
+term is discarded --- so there the derivative is always evaluated in a configuration that already
+occurs at $N=1$. This is a statement about $m>0$ only, and the contrast with $m=0$ is the point of
+Proposition~\ref{prop:kappa0}: there the level prime \emph{is} where the derivative is taken, and it
+gets there through a pole rather than a zero, which is exactly the configuration the $m>0$ analysis
+never meets.
 
 \begin{remark}[Published CM values need not discriminate]\label{rem:gy36}
 A natural-seeming check is to compare against a published CM value on a base with $N>1$ and a
