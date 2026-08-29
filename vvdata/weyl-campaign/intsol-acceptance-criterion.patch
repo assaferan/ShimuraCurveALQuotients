@@ -1,0 +1,86 @@
+commit 95bd5021685fd1a2f65ec963a80c30b561878291
+Author: Eran Assaf <assaferan@gmail.com>
+Date:   Sat Aug 29 13:01:43 2026 +0300
+
+    PROTOTYPE (do not merge): integrality as an acceptance criterion in the form search
+    
+    Makes the Borcherds form search reject an (infty, other_pts) triple whose solve has
+    no INTEGRAL solution, and take the solution from IsConsistent over Z rather than
+    Solution over Q.  ~8 lines at the Solution call.
+    
+    33_2 goes from NONINTEGRAL to oo:INTEGRAL all:INTEGRAL.  The trace shows the search
+    walking past the bad divisors instead of committing to the first one:
+    
+        key -1:  [-12,-4] false -> [-88,-4] false -> [-132,-4] TRUE  accepted
+        key -2:  [-12,-4] false -> [-88,-4] false -> [-148,-4] TRUE  accepted
+    
+    A valid choice existed all along; the old search accepted the first divisor
+    admitting a merely rational solution and never looked further.  Keys 9..15 are
+    intsol true on every triple, confirming again that only the free-choice divisors
+    were ever at fault.  The divisor assertion below still passes, so the forms this
+    builds have correct divisors AND integral principal parts.
+    
+    BUT INTEGRALITY IS NOT SUFFICIENT.  Sweeping 33_2 against the fixed forms fails
+    EARLIER than before -- "RationalNumber: s does not represent a rational number" at
+    gtsweep.m:52, before HauptmodulM0Residuals.  Unfixed 33_2 gave a rational but
+    inconsistent table; fixed 33_2 gives a table that is not rational at all.  So
+    non-integrality predicts failure, but integrality does not predict success, and
+    33_2 carries a second independent defect.  Do not read this as unblocking the
+    backlog.
+    
+    Why this is not merge-ready:
+      * it recomputes keys 9..15 identically for every candidate triple (visible as the
+        repetition in fix_33_2.log) -- correct but wasteful, hoist before shipping;
+      * the PROBE printf is unconditional and must become a vprintf.  Note that
+        `assigned` does NOT see top-level variables from inside a package intrinsic, so
+        a `magma PROBE:=1` flag silently never fires here.
+    
+    Next diagnostic, not yet done: dump the raw abs_tab values for fixed 33_2 before
+    RationalNumber and test whether they are quadratic irrationalities.  A sqrt(2)
+    would point at a half-integral m=0 multiplier for the new forms -- a different bug.
+    Measure it rather than assuming it.
+    
+    Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 3bd5749..9c3600d 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -815,7 +815,36 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                    
+                     if not found_v then found_all := false; break; end if;
+                     sol := Solution(coeffs_trunc, target_v);
+-                    
++                    // PROBE (campaign only, 2026-08-29): 33_2/39_2/46_3 produce forms whose
++                    // infinity-side principal parts are NOT INTEGRAL, violating Schofer's
++                    // c_eta(m) in Z.  Solution() returns ONE point of the affine space
++                    // sol + Kernel(coeffs_trunc); if that kernel is nonzero there is freedom to
++                    // pick an integral representative, and if it is zero the divisor itself
++                    // admits no integral form and the CHOICE OF DIVISOR is what must change.
++                    // Unconditional: `assigned` does not see top-level variables from inside a
++                    // package intrinsic, so a PROBE flag would never fire here.
++                    // intsol: does the SAME divisor admit an INTEGRAL solution?  Clearing
++                    // denominators on both sides preserves the solution set, so this asks exactly
++                    // whether sol + Kernel meets Z^n.  true => the non-integrality is an artifact
++                    // of which point Solution() returned; false => the divisor itself is at fault.
++                    ctQ := ChangeRing(coeffs_trunc, Rationals());
++                    tvQ := ChangeRing(target_v, Rationals());
++                    dM := LCM([Denominator(x) : x in Eltseq(ctQ)] cat
++                              [Denominator(x) : x in Eltseq(tvQ)]);
++                    okZ, solZ := IsConsistent(ChangeRing(dM*ctQ, Integers()),
++                                              ChangeRing(dM*tvQ, Integers()));
++                    printf "PROBE key %o infty %o ram %o intsol %o solden %o\n", i, infty[1],
++                           [pt[1] : pt in ram], okZ,
++                           LCM([Denominator(Rationals()!x) : x in Eltseq(sol)]);
++                    // EXPERIMENT: make integrality an ACCEPTANCE CRITERION.  Keys -1,-2 take their
++                    // divisors from CM points picked arbitrarily just above, and the search breaks
++                    // at the first triple admitting a RATIONAL solution -- so a triple whose only
++                    // forms are non-integral is accepted and never revisited.  Rejecting it here
++                    // sends the search on to the next triple, and the PROBE lines record every
++                    // triple tried, which is what decides whether any triple works at all.
++                    if not okZ then found_all := false; break; end if;
++                    sol := ChangeRing(solZ, Rationals());
++
+                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
+                     if IsOdd(Xstar`D) then
+                         etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
