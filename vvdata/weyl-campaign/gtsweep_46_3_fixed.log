@@ -1,0 +1,78 @@
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -3 ram [ -552, -24, -8, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -552, -276, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -8 ram [ -552, -24, -8 ] intsol true solden 1
+PROBE key 12 infty -8 ram [ -552, -276, -8 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -24 ram [ -552, -8, -24 ] intsol true solden 1
+PROBE key 12 infty -24 ram [ -552, -276, -24 ] intsol true solden 1
+PROBE key 13 infty -24 ram [ -3, -24 ] intsol true solden 1
+PROBE key 11 infty -123 ram [ -552, -24, -8, -123 ] intsol true solden 1
+PROBE key 12 infty -123 ram [ -552, -276, -123 ] intsol true solden 1
+PROBE key 13 infty -123 ram [ -24, -3, -123 ] intsol true solden 4
+PROBE key 14 infty -123 ram [ -24, -276, -8, -123 ] intsol true solden 4
+PROBE key 15 infty -123 ram [ -552, -8, -3, -123 ] intsol true solden 1
+PROBE key 9 infty -123 ram [ -552, -24, -276, -3, -123 ] intsol true solden 1
+PROBE key -1 infty -123 ram [ -3, -123 ] intsol true solden 8
+PROBE key 10 infty -123 ram [ -276, -8, -3, -123 ] intsol true solden 4
+PROBE key -2 infty -123 ram [ -8, -123 ] intsol true solden 8
+X0^46(3): non-firing rational candidates [ -3, -24, -123, -312, -372, -483, -708
+]; admitting [ -24, -312, -372 ] beyond the anchors
+table built (934.950 s)
+  ds     = [ -3, -8, -24, -123, -312, -372, -35, -35 ]
+  s      = [* 0, 1, 36, Infinity, 216/7, 18, 16/7, 16/7 *]
+  stilde = [* 1, 0, 1/3, Infinity, 1/7, 1/3, 2/7, 2/7 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 2, 2 ]
+    d = -3       deg 1  fires false
+    d = -8       deg 1  fires true
+    d = -24      deg 1  fires false
+    d = -123     deg 1  fires false
+    d = -312     deg 1  fires false
+    d = -372     deg 1  fires false
+    d = -35      deg 2  fires true
+    d = -35      deg 2  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <3, 1>, <3, 4>, <3, -6>, <3, -10>, 
+<3, 6>, <3, -2>, <3, 11>, <3, 0>, <3, -9>, <3, -5>, <3, 2>, <3, -12>, <3, -8>, 
+<3, -1>, <3, 12>, <3, -4>, <3, 7>, <3, 9>, <3, -11>, <3, -7>, <3, 3>, <3, 8>, 
+<3, -3>, <3, 10>, <3, 5> }
+NOT DETERMINED: 25 pairs survive; more informative points are needed.

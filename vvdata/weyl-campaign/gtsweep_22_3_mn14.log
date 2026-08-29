@@ -1,0 +1,12 @@
+PROBE key 11 infty -3 ram [ -264, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -264, -11, -132, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -11, -3 ] intsol true solden 1
+PROBE key 14 infty -3 ram [ -11, -132, -3 ] intsol true solden 1
+PROBE key 15 infty -3 ram [ -264, -11, -3 ] intsol true solden 1
+PROBE key 9 infty -3 ram [ -264, -132, -3 ] intsol true solden 1
+PROBE key -1 infty -3 ram [ -11, -3 ] intsol true solden 1
+PROBE key 10 infty -3 ram [ -132, -3 ] intsol true solden 1
+PROBE key -2 infty -3 ram [ -132, -3 ] intsol true solden 1
+X0^22(3): non-firing rational candidates [ -3, -132, -168, -267, -312, -372, 
+-408, -627, -708 ]; admitting [ -168, -267, -312 ] beyond the anchors
+Runtime error: Could not find enough points, sorry!

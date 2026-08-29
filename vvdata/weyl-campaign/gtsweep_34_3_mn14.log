@@ -1,0 +1,36 @@
+PROBE key 11 infty -3 ram [ -24, -408, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -408, -68, -51, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -24, -68, -3 ] intsol true solden 1
+PROBE key 14 infty -3 ram [ -24, -68, -51, -3 ] intsol true solden 1
+PROBE key 15 infty -3 ram [ -408, -68, -3 ] intsol true solden 1
+PROBE key 9 infty -3 ram [ -24, -408, -51, -3 ] intsol true solden 1
+PROBE key -1 infty -3 ram [ -24, -3 ] intsol true solden 1
+PROBE key 10 infty -3 ram [ -51, -3 ] intsol true solden 1
+PROBE key -2 infty -3 ram [ -51, -3 ] intsol true solden 1
+X0^34(3): non-firing rational candidates [ -3, -24, -51, -408, -228, -267, -312,
+-708 ]; admitting [ -408, -228, -267 ] beyond the anchors
+table built (298.950 s)
+  ds     = [ -3, -24, -51, -408, -228, -267, -11, -20, -56, -68, -323, -56, -68,
+-323 ]
+  s      = [* Infinity, 0, 1/576, 1/729, 1/288, 1/72, 1/16, 1/32, 1/128, 1/512, 
+19/1024, 1/128, 1/512, 19/1024 *]
+  stilde = [* Infinity, 1/153, 0, 1/729, 1/153, 1/17, 1/17, 1/17, 7/289, 1/1156,
+4/289, 7/289, 1/1156, 4/289 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2 ]
+    d = -3       deg 1  fires false
+    d = -24      deg 1  fires false
+    d = -51      deg 1  fires false
+    d = -408     deg 1  fires false
+    d = -228     deg 1  fires false
+    d = -267     deg 1  fires false
+    d = -11      deg 1  fires true
+    d = -20      deg 1  fires true
+    d = -56      deg 2  fires true
+    d = -68      deg 2  fires true
+    d = -323     deg 2  fires true
+    d = -56      deg 2  fires true
+    d = -68      deg 2  fires true
+    d = -323     deg 2  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <-3, -3>, <-2, -1> }
+NOT DETERMINED: 2 pairs survive; more informative points are needed.

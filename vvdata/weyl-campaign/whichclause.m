@@ -16,6 +16,12 @@ Append(~cases, <46, 3, [-3,-8,-24,-123,-312,-372,-35,-35],
 Append(~cases, <35, 2, [-8,-280,-88,-120,-148,-168,-7,-15],
     [* Infinity(), 0, 11/5, 1, 5, 3/5, 7/5, 3 *],
     [* Infinity(), 11/4, 0, 4, 7/2, 2, 1, 1 *], [1,1,1,1,1,1,1,1]>);
+// 33_2 AFTER the integrality fix, run against the MAIN package (which has
+// M0MultiplierExact -- the campaign branch does not).  Before the fix this base was
+// clause (b), genuinely inconsistent; the question is whether the fix moved it to (a).
+Append(~cases, <33, 2, [-4,-88,-132,-148,-168,-232,-15,-55],
+    [* Infinity(), 11/9, 0, 4, 2, 2/9, 1, 11 *],
+    [* Infinity(), 25/9, 4, 0, 2, 34/9, 5, 29 *], [1,1,1,1,1,1,1,2]>);
 Append(~cases, <21, 2, [-4,-84,-168,-88,-120,-148,-7,-15],
     [* Infinity(), 0, 9, 24, 8, 64/3, 12, 4 *],
     [* Infinity(), 9, 0, 33, 1, 37/3, 21, 5 *], [1,1,1,1,1,1,1,1]>);

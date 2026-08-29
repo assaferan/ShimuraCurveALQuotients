@@ -134,6 +134,126 @@ table is self-consistent, and it never got that far.
 `sqrt(2)` would point at a half-integral m=0 multiplier for the new forms, which is a
 different bug from the one fixed here. Do NOT assume that without measuring it.
 
+## 39_2 REFUTES THE FIX, AND NARROWS THE ROOT-CAUSE STORY
+
+Running the fix on `39_2` (`ppint/fix_39_2.log`):
+
+    PROBE key -1  ram [-52,-24]   intsol true  solden 1
+    PROBE key -2  ram [-312,-24]  intsol true  solden 16384
+    PROBE key 9   ...             intsol true  solden 8192
+    ... intsol TRUE on every key ...
+
+    VERD -2 oo 78 13 denom 4  1e48  NONINTEGRAL
+    VERD -1 oo 14 13 denom 32 1e53  NONINTEGRAL
+    ... every key oo:NONINTEGRAL, every key 0:INTEGRAL ...
+    BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL
+
+Two things follow, both correcting what is written above.
+
+1. **`intsol` is the WRONG CRITERION.** An integral solution vector in the eta basis does
+   not give an integral principal part -- the echelon basis `ech_etas` has non-integral
+   q-expansions, so the map `sol -> principal part` is not integral. At `33_2` the two
+   denominators happened to coincide, which is the only reason the fix looked right there.
+   The correct condition is integrality of the **q-expansion principal part**: find `x`
+   with `x*coeffs_trunc = target_v` AND `x*P` integral, where `P` sends a basis vector to
+   its principal-part coefficients. Still a lattice problem, but a different one.
+
+2. **The free-choice-divisor story is 33_2-specific.** At `39_2` EVERY key is
+   oo-non-integral, including `9..15` whose divisors are forced by ramification. So there
+   is no arbitrary choice to blame; the whole weakly-holomorphic basis is bad, at magnitude
+   1e48. `39_2` and `33_2` are two different failure modes that both surface as
+   "non-integral principal part".
+
+**But 46_3 IS rescued.** Running the fix on `46_3` gives `oo:INTEGRAL all:INTEGRAL` --
+`solden 8` at keys `-1,-2`, replaced by the integral solution, and the principal parts come
+out integral. So the fix repairs **2 of the 3** non-integral bases:
+
+    33_2  NONINTEGRAL -> INTEGRAL   (base still fails downstream, separate defect)
+    46_3  NONINTEGRAL -> INTEGRAL
+    39_2  NONINTEGRAL -> NONINTEGRAL
+
+and the two failure modes separate cleanly:
+
+* **33_2, 46_3** -- an integral coefficient vector DOES give an integral principal part, so
+  `intsol` is the right criterion and the fix works.
+* **39_2** -- it does not, because the weakly-holomorphic BASIS has non-integral
+  q-expansions (denominators 4 and 32, magnitude 1e48). No choice of coefficient vector can
+  repair that; the target is `basis_of_weakly_holomorphic_forms` / `WeaklyHolomorphicBasis`.
+
+The predictor itself is untouched: non-integrality still tracks failure. What is refuted is
+that `intsol` is the criterion IN GENERAL, and that one cause explains every base.
+
+## WARNING: THE CAMPAIGN BRANCH HAS NO M0MultiplierExact
+
+`grep -c "intrinsic M0MultiplierExact" VectorValuedForm.m` is **0 on this branch** and 1 on
+`tier1-models`. So a `gtsweep` run launched from THIS worktree applies a different m=0 term,
+and dies outright at `gtsweep.m:114` if it ever reaches the multiplier stage. That is why
+the previous session ran gtsweep from the main worktree and merely wrote its logs here.
+
+This **confounds every fixed-form comparison below that was run from the campaign worktree**
+(`gtsweep_33_2_fixed.log`, `gtsweep_34_3_mn14.log`, `gtsweep_46_3_fixed.log`,
+`gtsweep_22_3_mn10.log`), because the fix lives here but the multiplier does not:
+
+* "33_2 still fails downstream in RationalNumber, a second independent defect" -- **suspect.**
+  A `RationalNumber` failure is exactly the signature of a MISSING m=0 term, which is what
+  this branch has. Re-running with the patch applied to the main worktree instead.
+* "46_3's r(-1) moved 0 -> 3 with the fixed forms" -- **not established**; the applied
+  multiplier differed too.
+* the uniform `(-3,-3)` re-basing at `34_3`/`22_3`, attributed above to `MaxNum` -- more
+  simply explained by the absent `M0MultiplierExact`.
+
+Runs launched from the MAIN worktree (`21_2`, `22_3`, `38_3`, `26_3`, `34_3`) are unaffected.
+**Lesson: the two worktrees are not interchangeable packages. Check which intrinsics a
+branch actually defines before attributing a result to the thing you changed.**
+
+## RE-RUN WITH THE CORRECT PACKAGE: THE FIX DOES REPAIR 33_2
+
+Applying the prototype to the MAIN worktree (patch via `git diff`/`git apply`, reverted
+after) and sweeping there:
+
+* **`33_2` no longer crashes in `RationalNumber`** -- that crash was entirely the campaign
+  branch's missing `M0MultiplierExact`. The "second independent defect" was my artifact.
+* **`33_2` moved from clause (b) to clause (a)** -- i.e. from INCONSISTENT to merely
+  under-sampled. Replayed through `whichclause.m`:
+
+      d = -88   exps [0,0]  row [11/36, 25/36]  satisfiable   (sums to exactly 1)
+      d = -168  exps [0,0]  row [1/2, 1/2]      satisfiable
+      d = -232  exps [0,0]  row [1/18, 17/18]   satisfiable
+      d = -15   exps [1,1]  row [1/4, 5/4]      satisfiable   (-1/4 + 5/4 = 1)
+
+  Before the fix, `d = -15` was unsatisfiable for EVERY `r1`. Now **all four rows satisfy
+  the find_signs relation exactly at (0,0)**, three of them as consistency checks that
+  pass. The sweep still declines only because it needs TWO informative rows and there is
+  one. So the multiplier is not formally determined, but the table is now consistent and
+  everything points at `(0,0)`.
+* **`46_3`** gives 25 pairs all with `r(-1) = 0` -- identical to the ORIGINAL unfixed run,
+  so the fix leaves its residual unchanged. The `0 -> 3` shift reported earlier was the
+  package confound, not the forms.
+
+So the corrected scorecard for the fix: **33_2 repaired** (inconsistent -> consistent),
+**46_3 well-formed but unchanged**, **39_2 untouched** (different failure mode).
+
+## WHAT REMAINS: NOT ENOUGH DEGREE-1 FIRING DISCRIMINANTS
+
+`33_2`, `46_3` and `34_3` now share one limitation:
+
+`46_3`'s underdetermination is STRUCTURAL, not a sampling shortfall. With `i_s0 = -3`
+(non-firing, `kB = 0`) and `i_st0 = -8` (firing, `kA = 1`), the three usable degree-1 rows
+are `-24, -312, -372`, all non-firing, all with `exps = [k-kA, k-kB] = [-1, 0]`. **`r2`
+appears in no row at all**, so it is free by construction -- hence exactly 25 surviving
+values, one per allowed exponent. The only firing degree-1 discriminant is the normaliser
+`-8` itself; `-35` fires but is degree 2, and `HauptmodulM0Residuals` skips `degs ne 1`.
+
+`34_3` has the same shape (2 informative rows, both `[1,1]`), and repaired `33_2` has ONE
+informative row (`-15`), its only other firing discriminant `-55` being degree 2. So the
+lever for all three is **degree-1 FIRING discriminants specifically** -- and `MN`/`MaxNum`
+cannot ask for that: at `34_3` it spent the entire extra budget on degree-2 points and
+changed nothing. Selecting for degree-1 firing discriminants is the concrete fix to the
+sweep, and it would potentially determine three bases at once.
+
+Note also that the 0-side is INTEGRAL throughout at `39_2` while the oo-side is not --
+which is why splitting the verdict into `oo:` and `all:` was worth doing.
+
 Also not established: that a sweep passing means a model can be BUILT. `gtsweep` drives the
 pipeline only as far as the Hauptmodul table and the multiplier; it validates the m=0 term,
 not model generation. `22_3`'s `(3,3)` says the multiplier is right there, nothing more.

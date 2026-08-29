@@ -1,0 +1,127 @@
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 10 infty -4 ram [ -88, -12, -132, -4 ] intsol true solden 1
+PROBE key -2 infty -4 ram [ -12, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 10 infty -4 ram [ -88, -12, -132, -4 ] intsol true solden 1
+PROBE key -2 infty -4 ram [ -88, -4 ] intsol false solden 2
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 10 infty -4 ram [ -88, -12, -132, -4 ] intsol true solden 1
+PROBE key 11 infty -4 ram [ -88, -264, -4 ] intsol true solden 1
+PROBE key 12 infty -4 ram [ -88, -264, -132, -4 ] intsol true solden 1
+PROBE key 13 infty -4 ram [ -88, -12, -4 ] intsol true solden 1
+PROBE key 14 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 15 infty -4 ram [ -264, -12, -4 ] intsol true solden 1
+PROBE key 9 infty -4 ram [ -264, -12, -132, -4 ] intsol true solden 1
+PROBE key -1 infty -4 ram [ -132, -4 ] intsol true solden 1
+PROBE key 10 infty -4 ram [ -88, -12, -132, -4 ] intsol true solden 1
+PROBE key -2 infty -4 ram [ -148, -4 ] intsol true solden 1
+X0^33(2): non-firing rational candidates [ -4, -88, -132, -148, -168, -232, 
+-312, -372, -408, -708, -1012 ]; admitting [ -88, -168, -232 ] beyond the 
+anchors
+table built (230.410 s)
+  ds     = [ -4, -88, -132, -148, -168, -232, -15, -55 ]
+  s      = [* Infinity, 11/9, 0, 4, 2, 2/9, 1, 11 *]
+  stilde = [* Infinity, 25/9, 4, 0, 2, 34/9, 5, 29 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 2 ]
+    d = -4       deg 1  fires false
+    d = -88      deg 1  fires false
+    d = -132     deg 1  fires false
+    d = -148     deg 1  fires false
+    d = -168     deg 1  fires false
+    d = -232     deg 1  fires false
+    d = -15      deg 1  fires true
+    d = -55      deg 2  fires true
+
+NOT MEASURABLE on this base: either no discriminant differs in firing status 
+from the
+normalising ones, or no multiple of log N explains the table.  Admit more 
+N-divisible
+discriminants through Keep and retry.

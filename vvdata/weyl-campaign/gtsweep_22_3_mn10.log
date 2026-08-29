@@ -1,0 +1,40 @@
+PROBE key 11 infty -3 ram [ -264, -3 ] intsol true solden 1
+PROBE key 12 infty -3 ram [ -264, -11, -132, -3 ] intsol true solden 1
+PROBE key 13 infty -3 ram [ -11, -3 ] intsol true solden 1
+PROBE key 14 infty -3 ram [ -11, -132, -3 ] intsol true solden 1
+PROBE key 15 infty -3 ram [ -264, -11, -3 ] intsol true solden 1
+PROBE key 9 infty -3 ram [ -264, -132, -3 ] intsol true solden 1
+PROBE key -1 infty -3 ram [ -11, -3 ] intsol true solden 1
+PROBE key 10 infty -3 ram [ -132, -3 ] intsol true solden 1
+PROBE key -2 infty -3 ram [ -132, -3 ] intsol true solden 1
+X0^22(3): non-firing rational candidates [ -3, -132, -168, -267, -312, -372, 
+-408, -627, -708 ]; admitting [ -168, -267, -312 ] beyond the anchors
+table built (167.000 s)
+  ds     = [ -3, -11, -132, -168, -267, -312, -20, -56, -56, -308 ]
+  s      = [* Infinity, 0, 1/108, 7/27, 49/729, 13/729, 1, 1/4, 1/4, 11/4 *]
+  stilde = [* Infinity, 1, 0, 1, 169/729, 25/729, 5, 2, 2, 44 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 2, 2, 2 ]
+    d = -3       deg 1  fires false
+    d = -11      deg 1  fires true
+    d = -132     deg 1  fires false
+    d = -168     deg 1  fires false
+    d = -267     deg 1  fires false
+    d = -312     deg 1  fires false
+    d = -20      deg 1  fires true
+    d = -56      deg 2  fires true
+    d = -56      deg 2  fires true
+    d = -308     deg 2  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <-3, -3> }
+the pipeline applies m0_multiplier here: true  (every parity)
+
+In file "vvdata/gtsweep.m", line 114, column 26:
+>> mexact := applied select M0MultiplierExact([fs[k] : k in [-1,-2]], Ld, D, N
+                            ^
+User error: Identifier 'M0MultiplierExact' has not been declared or assigned
+
+In file "vvdata/gtsweep.m", line 119, column 23:
+>>            k, res[k], mexact[i], mexact[i] + res[k],
+                         ^
+User error: Identifier 'mexact' has not been declared or assigned
+TOTAL 167.020 s
