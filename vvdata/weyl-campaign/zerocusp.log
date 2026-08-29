@@ -1,0 +1,4 @@
+X_0^15(2): mult = (1/2)[ oo-pairing + 0-cusp pairing ]
+  monomials with 0-cusp support inside the determined head: 49
+  reproduced exactly: 49/49
+  (infinity-only alone: 38/86 overall -- see infonly.py)
