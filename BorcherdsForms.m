@@ -399,10 +399,42 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
         end if;
         
-        E, T := EchelonForm(coeffs);
+        // The eta-quotient pool carries far more rows than its rank -- 12784 rows for a row
+        // space of rank <= 258 at X0^38(5) -- and echelonising all of them over Q dominated the
+        // whole routine (755 s of 810 s there).  Independent ROWS of `coeffs` are independent
+        // COLUMNS of its transpose, so one cheap EchelonForm over GF(p) picks a spanning subset;
+        // only those rows are then echelonised exactly.  The row space is unchanged, so E is as
+        // before and T is the small transform padded with zero columns at the discarded rows
+        // (downstream indexes T against the full eta_quotients list, so the padding matters).
+        //
+        // Safe by construction: rank mod p can only UNDER-estimate the rational rank, never
+        // over-estimate it, so an unlucky prime yields rk < dim and the enclosing loop simply
+        // iterates again (or the `assert rk eq dim` below fires).  It cannot silently return a
+        // short basis as though it were complete.
+        if Nrows(coeffs) gt 2*Ncols(coeffs) + 8 then
+            sel_p := 1073741789;
+            sel_den := LCM([Denominator(x) : x in Eltseq(coeffs)]);
+            sel_cp := ChangeRing(ChangeRing(sel_den*coeffs, Integers()), GF(sel_p));
+            sel_E := EchelonForm(Transpose(sel_cp));
+            sel := [PivotColumn(sel_E, i) : i in [1..Rank(sel_E)]];
+            sel_Es, sel_Ts := EchelonForm(Submatrix(coeffs, sel, [1..Ncols(coeffs)]));
+            E := sel_Es;
+            T := ZeroMatrix(Rationals(), Nrows(sel_Ts), Nrows(coeffs));
+            for si in [1..Nrows(sel_Ts)] do
+                for sj in [1..#sel] do
+                    if sel_Ts[si][sj] ne 0 then T[si][sel[sj]] := sel_Ts[si][sj]; end if;
+                end for;
+            end for;
+        else
+            E, T := EchelonForm(coeffs);
+        end if;
         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
         if Zero then
-            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo]] : i in [1..Nrows(E)] ];
+            // Skip the zero terms: T is overwhelmingly zero (and after the row selection above it
+            // is zero outside the selected columns), so summing over every eta quotient costs
+            // ~#basis x #pool EtaQuot additions.  basis_of_weakly_holomorphic_forms already uses
+            // this idiom.
+            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo] | T[i][j] ne 0] : i in [1..Nrows(E)] ];
         end if;
         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
@@ -442,7 +474,11 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         n0 := max_pole;
     end if;
     
-    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
+    // Skip the zero terms -- see the note at the EchelonForm above.  This reconstruction was the
+    // real bulk of the cost: without the filter it sums each of the ~132 basis forms over all
+    // ~12784 pool elements at X0^38(5).
+    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients] | T[i][j] ne 0]
+                      : i in [1..Nrows(E)] ];
     
     if Zero then 
         return E, n, n0, eta_quotients_oo, eta_quotients; 
