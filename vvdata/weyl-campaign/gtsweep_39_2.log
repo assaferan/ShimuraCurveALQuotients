@@ -1,0 +1,4 @@
+X0^39(2): non-firing rational candidates [ -24, -52, -312, -84, -132, -148, 
+-228, -232, -372, -408, -520, -708 ]; admitting [ -84, -132, -148 ] beyond the 
+anchors
+Runtime error: M0MultiplierExact: class-constancy violated
