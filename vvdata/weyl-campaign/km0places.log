@@ -1,0 +1,105 @@
+
+===== X0^10(3), d = -8 : disc(L_-) = 1800 = [ <2, 3>, <3, 2>, <5, 2> ], 
+|L_-^v/L_-| = 1800 =====
+      (firing: N does not divide d.  N = 3)
+      places examined: [ 2, 3, 5 ]
+  mu = [ 0, 8/3, -21 ]   Q(mu) = -1290
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=5   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+  mu = [ 0, 16/3, -42 ]   Q(mu) = -5160
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=5   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+  mu = [ 5/3, 14/3, -103/3 ]   Q(mu) = -3495
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=5   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+      isotropic nonzero cosets: 4
+      vanishing-set multiset over all of them: {* []^^4 *}
+
+===== X0^15(2), d = -7 : disc(L_-) = 6300 = [ <2, 2>, <3, 2>, <5, 2>, <7, 1> ], 
+|L_-^v/L_-| = 6300 =====
+      (firing: N does not divide d.  N = 2)
+      places examined: [ 2, 3, 5, 7 ]
+  mu = [ 1, 11/2, -161/2 ]   Q(mu) = -22920
+      p=2   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=3   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=5   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=7   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+  mu = [ 0, 13/2, -90 ]   Q(mu) = -28680
+      p=2   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=3   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=5   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=7   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+      isotropic nonzero cosets: 2
+      vanishing-set multiset over all of them: {* []^^2 *}
+
+===== X0^6(5), d = -19 : disc(L_-) = 17100 = [ <2, 2>, <3, 2>, <5, 2>, <19, 1> 
+], |L_-^v/L_-| = 17100 =====
+      (firing: N does not divide d.  N = 5)
+      places examined: [ 2, 3, 5, 19 ]
+  mu = [ 2/5, 51, -109/5 ]   Q(mu) = -5934
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=5   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=19  W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+  mu = [ 4/5, 102, -218/5 ]   Q(mu) = -23736
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=5   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=19  W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+  mu = [ 6/5, 153, -327/5 ]   Q(mu) = -53406
+      p=2   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=3   W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      p=5   W(X) = 1                                      W(1) = 1        W'(1) 
+= 0          <-- LEVEL PRIME
+      p=19  W(X) = non-terminating series (NOT COMPUTED)  W(1) = ?        W'(1) 
+= ?       
+      vanishing places: []  ==> no zero among the places we could compute -- the
+rest are UNDETERMINED
+      isotropic nonzero cosets: 8
+      vanishing-set multiset over all of them: {* []^^8 *}
+
+DONE
