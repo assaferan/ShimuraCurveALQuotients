@@ -815,7 +815,36 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                    
                     if not found_v then found_all := false; break; end if;
                     sol := Solution(coeffs_trunc, target_v);
-                    
+                    // PROBE (campaign only, 2026-08-29): 33_2/39_2/46_3 produce forms whose
+                    // infinity-side principal parts are NOT INTEGRAL, violating Schofer's
+                    // c_eta(m) in Z.  Solution() returns ONE point of the affine space
+                    // sol + Kernel(coeffs_trunc); if that kernel is nonzero there is freedom to
+                    // pick an integral representative, and if it is zero the divisor itself
+                    // admits no integral form and the CHOICE OF DIVISOR is what must change.
+                    // Unconditional: `assigned` does not see top-level variables from inside a
+                    // package intrinsic, so a PROBE flag would never fire here.
+                    // intsol: does the SAME divisor admit an INTEGRAL solution?  Clearing
+                    // denominators on both sides preserves the solution set, so this asks exactly
+                    // whether sol + Kernel meets Z^n.  true => the non-integrality is an artifact
+                    // of which point Solution() returned; false => the divisor itself is at fault.
+                    ctQ := ChangeRing(coeffs_trunc, Rationals());
+                    tvQ := ChangeRing(target_v, Rationals());
+                    dM := LCM([Denominator(x) : x in Eltseq(ctQ)] cat
+                              [Denominator(x) : x in Eltseq(tvQ)]);
+                    okZ, solZ := IsConsistent(ChangeRing(dM*ctQ, Integers()),
+                                              ChangeRing(dM*tvQ, Integers()));
+                    printf "PROBE key %o infty %o ram %o intsol %o solden %o\n", i, infty[1],
+                           [pt[1] : pt in ram], okZ,
+                           LCM([Denominator(Rationals()!x) : x in Eltseq(sol)]);
+                    // EXPERIMENT: make integrality an ACCEPTANCE CRITERION.  Keys -1,-2 take their
+                    // divisors from CM points picked arbitrarily just above, and the search breaks
+                    // at the first triple admitting a RATIONAL solution -- so a triple whose only
+                    // forms are non-integral is accepted and never revisited.  Rejecting it here
+                    // sends the search on to the next triple, and the PROBE lines record every
+                    // triple tried, which is what decides whether any triple works at all.
+                    if not okZ then found_all := false; break; end if;
+                    sol := ChangeRing(solZ, Rationals());
+
                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
                     if IsOdd(Xstar`D) then
                         etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
