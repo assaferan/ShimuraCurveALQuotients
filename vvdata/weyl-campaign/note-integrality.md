@@ -8,9 +8,12 @@ Final position, after all the reversals:
   counterexample. `ppint.m` is a minutes-per-base triage that runs where the pipeline dies.
 * **33_2: repaired AND determined**, multiplier `(0,0)`, residual 0. It began the session
   NON-INTEGRAL with a table no multiplier could fit.
-* **46_3**: forms repaired to integral, but **undeterminable at `bd=4`** -- it has ONE
-  firing degree-1 discriminant and that one is the normaliser, so no informative row for
-  `r2` can exist. Its original NOT DETERMINED was never a sampling shortfall.
+* **46_3 and 34_3**: forms repaired to integral (46_3), but **undeterminable by this sweep
+  at ANY `bd`** -- measured, not assumed: `bd=8` adds only NON-firing points. 46_3 has ONE
+  firing degree-1 discriminant and it is the normaliser, so no informative row for `r2` can
+  exist; 34_3 has two and both are already in the table. Their NOT DETERMINED was never a
+  sampling shortfall. To reach them the sweep's ARGUMENT must change (use the degree-2 rows
+  it currently discards).
 * **39_2**: untouched. A **different failure mode** -- the weakly-holomorphic BASIS has
   non-integral q-expansions, which no choice of coefficient vector repairs.
 * **`intsol` is NOT the right criterion in general** (39_2 has `intsol true` everywhere and
