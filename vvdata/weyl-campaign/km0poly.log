@@ -1,0 +1,79 @@
+
+===== p = 2 : p-scaled hyperbolic (p SPLIT) =====
+   mu=(0/2,1/2)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(1/2,0/2)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   2 of 3 nonzero cosets have W(1) != 0   (2(p-1) = 2)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 2 : p-scaled diagonal  (p inert) =====
+   0 of 3 nonzero cosets have W(1) != 0   (2(p-1) = 2)
+   DISTINCT polynomials among them: {@ @}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 3 : p-scaled hyperbolic (p SPLIT) =====
+   mu=(0/3,1/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(0/3,2/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(1/3,0/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   4 of 8 nonzero cosets have W(1) != 0   (2(p-1) = 4)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 3 : p-scaled diagonal  (p inert) =====
+   mu=(1/3,1/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(1/3,2/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(2/3,1/3)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   4 of 8 nonzero cosets have W(1) != 0   (2(p-1) = 4)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 5 : p-scaled hyperbolic (p SPLIT) =====
+   mu=(0/5,1/5)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(0/5,2/5)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(0/5,3/5)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   8 of 24 nonzero cosets have W(1) != 0   (2(p-1) = 8)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 5 : p-scaled diagonal  (p inert) =====
+   0 of 24 nonzero cosets have W(1) != 0   (2(p-1) = 8)
+   DISTINCT polynomials among them: {@ @}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 7 : p-scaled hyperbolic (p SPLIT) =====
+   mu=(0/7,1/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(0/7,2/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(0/7,3/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   12 of 48 nonzero cosets have W(1) != 0   (2(p-1) = 12)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+===== p = 7 : p-scaled diagonal  (p inert) =====
+   mu=(1/7,3/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(1/7,4/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   mu=(2/7,1/7)  W(X) = 1                        W(1) = 1      W'(1) = 0
+   12 of 48 nonzero cosets have W(1) != 0   (2(p-1) = 12)
+   DISTINCT polynomials among them: {@
+1
+@}
+   >>> level-prime factor is CONSTANT in X  ==>  NO log p can come from this 
+place
+
+DONE
