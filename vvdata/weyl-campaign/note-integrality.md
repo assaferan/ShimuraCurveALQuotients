@@ -301,3 +301,29 @@ first end-to-end payoff of the integrality fix.
 Session scorecard for the fix: **33_2 repaired and determined**, **46_3 well-formed but
 undeterminable at bd=4 for want of firing degree-1 discriminants**, **39_2 untouched
 (basis-level failure)**.
+
+## CLOSED, NEGATIVELY: `bd` is not a lever either
+
+`firepool.m BDD:=8` (`firepool_bd8.log`) vs `bd=4`: the FIRING degree-1 pools are
+**identical on every base**.
+
+    33_2  [-12,-15]        unchanged   (13 -> 16 rational pts)
+    34_3  [-11,-20]        unchanged   (10 -> 11)
+    46_3  [-8]             unchanged   ( 8 ->  9)
+    22_3  [-11,-20]        unchanged   (11 -> 14)
+    21_2  [-7,-28,-15]     unchanged   (17 -> 22)
+    15_2  [-12,-15,-60,-7] unchanged   (21 -> 26)
+
+Every point the higher bound adds is NON-firing (`-660, -1320, -1848, -1428, -1380, -420,
+-840, -1092`, ...), i.e. an `exps = [0,0]` row that constrains nothing. Structurally
+expected: firing means `N` does not divide the fundamental discriminant, and the large-|d|
+high-class-number discriminants are exactly the ones divisible by small primes.
+
+**Therefore `34_3` and `46_3` cannot be determined by this sweep at any `bd`.** `46_3` has
+one firing degree-1 discriminant and it is the normaliser; `34_3` has two and both are
+already in the table. Neither `FIRE`, nor `MN`, nor `bd` can change that. Measuring the
+pool first cost seconds and saved two sweeps of 15-30 minutes each.
+
+To measure those two bases, the sweep's ARGUMENT would have to change -- e.g. use the
+degree-2 rows that `HauptmodulM0Residuals` currently discards (`degs ne 1`), which is where
+`-35` at 46_3 and `-56`/`-68` at 34_3 actually live.
