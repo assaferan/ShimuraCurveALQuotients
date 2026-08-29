@@ -260,3 +260,22 @@ not model generation. `22_3`'s `(3,3)` says the multiplier is right there, nothi
 
 Related: [[base-39-2-malformed-form]], [[post-m0-backlog-sweep-plan]],
 [[handoff-2026-08-29-evening]].
+
+## RESOLVED: 33_2 IS DETERMINED
+
+`FIRE:=3` admits `-12` (a firing degree-1 discriminant that was an anchor of the OLD
+malformed forms and dropped out when the repaired forms moved the divisors to `-132/-148`),
+giving the second informative row the solver needed:
+
+    admissible residual pairs <r(-1), r(-2)>: { <0, 0> }
+    form -1 : residual 0  applied 0  TRUE multiplier 0  pipeline OK
+    form -2 : residual 0  applied 0  TRUE multiplier 0  pipeline OK
+    TOTAL 313.320 s
+
+So `33_2` -- INCONSISTENT at the start of the session -- is now well-formed, consistent and
+DETERMINED at `(0,0)`, and the pipeline's applied multiplier is correct there. This is the
+first end-to-end payoff of the integrality fix.
+
+Session scorecard for the fix: **33_2 repaired and determined**, **46_3 well-formed but
+undeterminable at bd=4 for want of firing degree-1 discriminants**, **39_2 untouched
+(basis-level failure)**.
