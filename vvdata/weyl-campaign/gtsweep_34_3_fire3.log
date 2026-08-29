@@ -1,0 +1,23 @@
+X0^34(3): non-firing rational candidates [ -3, -24, -51, -408, -228, -267, -312,
+-708 ]; admitting [ -408, -228, -267 ] beyond the anchors
+  firing degree-1 candidates [ -11, -20 ]; admitting [ -11, -20 ]
+table built (446.890 s)
+  ds     = [ -3, -24, -51, -408, -11, -20, -228, -267, -56, -68 ]
+  s      = [* Infinity, 0, 81/64, 1, 27/16, 27/32, 81/32, 81/8, 729/128, 729/512
+*]
+  stilde = [* Infinity, 81/17, 0, 1, 27/17, 27/17, 81/17, 729/17, 5103/289, 
+729/1156 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 1, 2, 2 ]
+    d = -3       deg 1  fires false
+    d = -24      deg 1  fires false
+    d = -51      deg 1  fires false
+    d = -408     deg 1  fires false
+    d = -11      deg 1  fires true
+    d = -20      deg 1  fires true
+    d = -228     deg 1  fires false
+    d = -267     deg 1  fires false
+    d = -56      deg 2  fires true
+    d = -68      deg 2  fires true
+
+admissible residual pairs <r(-1), r(-2)>: { <1, 2>, <0, 0> }
+NOT DETERMINED: 2 pairs survive; more informative points are needed.

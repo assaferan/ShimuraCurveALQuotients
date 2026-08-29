@@ -1,5 +1,27 @@
 # Non-integral principal parts: a predictor of failure, and where they come from
 
+## READ THIS FIRST -- the note below is CHRONOLOGICAL and corrects itself twice
+
+Final position, after all the reversals:
+
+* **The predictor holds**: non-integral principal part => pipeline failure, 13 bases, no
+  counterexample. `ppint.m` is a minutes-per-base triage that runs where the pipeline dies.
+* **33_2: repaired AND determined**, multiplier `(0,0)`, residual 0. It began the session
+  NON-INTEGRAL with a table no multiplier could fit.
+* **46_3**: forms repaired to integral, but **undeterminable at `bd=4`** -- it has ONE
+  firing degree-1 discriminant and that one is the normaliser, so no informative row for
+  `r2` can exist. Its original NOT DETERMINED was never a sampling shortfall.
+* **39_2**: untouched. A **different failure mode** -- the weakly-holomorphic BASIS has
+  non-integral q-expansions, which no choice of coefficient vector repairs.
+* **`intsol` is NOT the right criterion in general** (39_2 has `intsol true` everywhere and
+  is still non-integral); the right one is `x*P` integral, `P` mapping a basis vector to
+  its principal-part coefficients.
+
+Two sections below are **superseded and wrong as written**, kept for the reasoning:
+"BUT INTEGRALITY IS NOT SUFFICIENT -- 33_2 still fails" (that crash was the campaign
+branch's missing `M0MultiplierExact`, not a defect of 33_2) and the `r(-1) 0 -> 3` claim
+about 46_3 (same cause). See "WARNING: THE CAMPAIGN BRANCH HAS NO M0MultiplierExact".
+
 2026-08-29. Tools: `ppint.m` (integrality of every form's principal part, both cusps),
 `whichclause.m` (replays a logged Hauptmodul table through `HauptmodulM0Residuals`).
 Logs under `vvdata/weyl-campaign/ppint/`.
