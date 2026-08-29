@@ -1,0 +1,133 @@
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 3bd5749..6687896 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -399,7 +399,32 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+             coeffs := MatrixAlgebra(Rationals(), 0)!0;
+         end if;
+         
+-        E, T := EchelonForm(coeffs);
++        // EXPERIMENT: integral echelon instead of RREF over Q.  EchelonForm divides each row
++        // by its pivot, which is what creates the denominators (T_den ~1e30 at 74_3) that
++        // propagate into the eta-quotient pool at :445 and out into the principal parts.
++        // HermiteForm over Z spans the SAME Q-row-space with a UNIMODULAR (hence integral)
++        // transform, so the pool stays integral.  E = T*coeffs holds either way.
++        // NB: `assigned` does not see top-level variables from inside a package intrinsic,
++        // so this is an env var, not a `magma FLAG:=1` argument.
++        // Two variants.  "hnf" is the canonical one but HermiteForm on a large integer matrix
++        // with big entries can be prohibitively slow.  "scale" is the cheap one: keep RREF,
++        // then multiply each row of T (and of E) by the LCM of that row's denominators.  It is
++        // not canonical, but it spans the same Q-row-space with an integral transform, which
++        // is the only property the pool needs.
++        ie := GetEnv("INTEGRAL_ECHELON");
++        if (ie eq "hnf") and not IsEmpty(qexps) then
++            cden := LCM([Denominator(x) : x in Eltseq(coeffs)] cat [1]);
++            Hz, Uz := HermiteForm(Matrix(Integers(), cden*coeffs));
++            E := Matrix(Rationals(), Hz) / cden;
++            T := Matrix(Rationals(), Uz);
++        elif (ie eq "scale") and not IsEmpty(qexps) then
++            E, T := EchelonForm(coeffs);
++            rs_scale := [LCM([Denominator(T[i][j]) : j in [1..Ncols(T)]] cat [1]) : i in [1..Nrows(T)]];
++            T := Matrix(Rationals(), [[rs_scale[i]*T[i][j] : j in [1..Ncols(T)]] : i in [1..Nrows(T)]]);
++            E := Matrix(Rationals(), [[rs_scale[i]*E[i][j] : j in [1..Ncols(E)]] : i in [1..Nrows(E)]]);
++        else
++            E, T := EchelonForm(coeffs);
++        end if;
+         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
+         if Zero then
+             eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo]] : i in [1..Nrows(E)] ];
+@@ -442,9 +467,19 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+         n0 := max_pole;
+     end if;
+     
++    // PROBE: T comes from EchelonForm(coeffs) at line 402 -- a REDUCED row echelon form over
++    // Q, which divides each row by its pivot.  The raw EtaQuotient(R,r) all have coefficient
++    // 1, so if the denominators appear here, RREF pivot normalisation is the origin of the
++    // non-integral principal parts -- and it is a basis CHOICE, not arithmetic.
++    predens := {LCM([Denominator(c) : c in [eta`coeffs[x] : x in Exponents(eta)]] cat [1]) : eta in eta_quotients};
++    printf "PROBE_WHB zero %o T_den %o eta_den_before %o\n",
++           Zero select 1 else 0,
++           LCM([Denominator(x) : x in Eltseq(T)] cat [1]), Sort(SetToSequence(predens));
+     eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
+-    
+-    if Zero then 
++    postdens := {LCM([Denominator(c) : c in [eta`coeffs[x] : x in Exponents(eta)]] cat [1]) : eta in eta_quotients};
++    printf "PROBE_WHB zero %o eta_den_after %o\n", Zero select 1 else 0, Sort(SetToSequence(postdens));
++
++    if Zero then
+         return E, n, n0, eta_quotients_oo, eta_quotients; 
+     end if;
+     return E, n, n0, t_eta_quotient, eta_quotients; 
+@@ -578,7 +613,37 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero :=
+    
+     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
+     
++    // The SECOND EchelonForm.  Fixing only the one at :402 leaves this one re-introducing
++    // denominators (measured: coeff_den 1 but ech_den 4 at 82_3), and ech_etas -- the basis
++    // the divisor solve actually multiplies -- is built from THIS transform.  An integral
++    // coefficient vector times a non-integral basis is still non-integral, which is why
++    // pool-fix + integral-solve failed at 82_3.  Same row-scaling, applied here too.
+     ech_basis, T := EchelonForm(coeffs);
++    if GetEnv("INTEGRAL_ECHELON") eq "scale" then
++        rsc := [LCM([Denominator(T[i][j]) : j in [1..Ncols(T)]] cat [1]) : i in [1..Nrows(T)]];
++        T := Matrix(BaseRing(T), [[rsc[i]*T[i][j] : j in [1..Ncols(T)]] : i in [1..Nrows(T)]]);
++        ech_basis := Matrix(BaseRing(ech_basis),
++                            [[rsc[i]*ech_basis[i][j] : j in [1..Ncols(ech_basis)]] : i in [1..Nrows(ech_basis)]]);
++    end if;
++    // PROBE: is the INPUT integral and the echelon OUTPUT not?  EchelonForm is a reduced
++    // row echelon form over Q, so it divides each row by its pivot; that is a basis choice,
++    // not arithmetic, and it is the suspected source of the small denominators (2,3,4,6)
++    // seen in the principal parts.
++    // Which of the three constituents of full_basis carries it?  full_basis is built from
++    // t^r*init_basis, t^(r-1-j)*init_basis, and basis_n0 (lines 564-566), so isolating the
++    // non-integral elements says whether the culprit is the hauptmodul power t^r or the
++    // eta-quotient pool fs_E itself.
++    // NOTE: an earlier version of this probe called qExpansionAt0 on the raw fs_E elements
++    // and on t.  That triggers SAction on eta quotients that were never meant to be S-acted,
++    // and 39_2 (odd D, so the Zero path) then dies on `assert is_sqr` at EtaQuotient.m:160 --
++    // a failure of the INSTRUMENTATION which I twice mistook for a failure of the change
++    // under test.  Those two blocks are removed; what remains touches only matrices and
++    // stored coefficients.
++    cden := LCM([Denominator(x) : x in Eltseq(coeffs)] cat [1]);
++    eden := LCM([Denominator(x) : x in Eltseq(ech_basis)] cat [1]);
++    tden := LCM([Denominator(x) : x in Eltseq(T)] cat [1]);
++    printf "PROBE_BASIS zero %o rows %o cols %o coeff_den %o ech_den %o T_den %o\n",
++           Zero select 1 else 0, Nrows(coeffs), Ncols(coeffs), cden, eden, tden;
+     ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
+    
+     return ech_basis, ech_etas, T;
+@@ -813,8 +878,34 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                     
+                     found_v := target_v in Image(coeffs_trunc);
+                    
++                    // PROBE: "Failed to find all Borcherds forms" means EVERY (infinity, pair)
++                    // triple had some key whose divisor target left the span.  Characterise it:
++                    // which key fails, and is the span one dimension short or hopelessly short?
++                    // Adjoining target_v raises the rank by exactly 1 when it is outside.
++                    if not found_v then
++                        printf "PROBE_SPAN key %o rows %o cols %o rank %o rank_with_target %o\n",
++                               i, Nrows(coeffs_trunc), Ncols(coeffs_trunc), Rank(coeffs_trunc),
++                               Rank(VerticalJoin(coeffs_trunc, Matrix(BaseRing(coeffs_trunc), 1,
++                                                 Ncols(coeffs_trunc), Eltseq(target_v))));
++                    end if;
+                     if not found_v then found_all := false; break; end if;
++                    // EXPERIMENT: prefer an INTEGRAL solution of x*coeffs_trunc = target_v.
++                    // Solution() returns an arbitrary particular point of an 18-42 dimensional
++                    // space and never checks integrality; on an INTEGRAL pool (INTEGRAL_ECHELON
++                    // =scale) an integral x is exactly what makes the principal part integral.
++                    // This is the DO-NOT-MERGE prototype's idea (95bd502, keys -1,-2 only)
++                    // generalised to EVERY key -- 7 of 8 fresh non-integral bases have a bad
++                    // ramification-forced key the prototype cannot reach.
+                     sol := Solution(coeffs_trunc, target_v);
++                    if GetEnv("INTEGRAL_SOLVE") ne "" then
++                        cd := LCM([Denominator(x) : x in Eltseq(coeffs_trunc)] cat [1]);
++                        td := LCM([Denominator(x) : x in Eltseq(target_v)] cat [1]);
++                        sc := LCM(cd, td);
++                        okz, solz := IsConsistent(Matrix(Integers(), sc*coeffs_trunc),
++                                                  Vector(Integers(), sc*target_v));
++                        printf "PROBE_ISOLVE key %o integral_solution %o\n", i, okz select 1 else 0;
++                        if okz then sol := ChangeRing(solz, Rationals()); end if;
++                    end if;
+                     
+                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
+                     if IsOdd(Xstar`D) then
