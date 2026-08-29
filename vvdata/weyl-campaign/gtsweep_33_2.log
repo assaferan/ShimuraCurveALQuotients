@@ -1,0 +1,22 @@
+X0^33(2): non-firing rational candidates [ -4, -88, -132, -148, -168, -232, 
+-312, -372, -408, -708, -1012 ]; admitting [ -132, -148, -168 ] beyond the 
+anchors
+table built (262.980 s)
+  ds     = [ -4, -12, -88, -132, -148, -168, -15, -55 ]
+  s      = [* Infinity, 0, 16/9, 3, 1, 1, 4, 16 *]
+  stilde = [* Infinity, 64, 0, 11, 25, 7, 20, 176 *]
+  degs   = [ 1, 1, 1, 1, 1, 1, 1, 2 ]
+    d = -4       deg 1  fires false
+    d = -12      deg 1  fires true
+    d = -88      deg 1  fires false
+    d = -132     deg 1  fires false
+    d = -148     deg 1  fires false
+    d = -168     deg 1  fires false
+    d = -15      deg 1  fires true
+    d = -55      deg 2  fires true
+
+NOT MEASURABLE on this base: either no discriminant differs in firing status 
+from the
+normalising ones, or no multiple of log N explains the table.  Admit more 
+N-divisible
+discriminants through Keep and retry.
