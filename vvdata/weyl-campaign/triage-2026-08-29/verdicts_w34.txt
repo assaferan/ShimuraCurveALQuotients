@@ -1,0 +1,13 @@
+51_2 297s BASEVERD 51 2 oo:NONINTEGRAL all:NONINTEGRAL
+14_17 1269s ERROR: Runtime error: Failed to find all Borcherds forms
+94_3 1370s ERROR: Runtime error: Failed to find all Borcherds forms
+106_3 806s ERROR: Runtime error: Failed to find all Borcherds forms
+118_3 956s ERROR: Runtime error: Failed to find all Borcherds forms
+22_17 1072s BASEVERD 22 17 oo:NONINTEGRAL all:NONINTEGRAL
+82_5 313s TIMEOUT_OR_NOOUTPUT
+86_5 2401s TIMEOUT_OR_NOOUTPUT
+26_17 1575s ERROR: Runtime error: Failed to find all Borcherds forms
+94_5 2403s TIMEOUT_OR_NOOUTPUT
+38_13 2157s BASEVERD 38 13 oo:INTEGRAL all:INTEGRAL
+14_37 2403s TIMEOUT_OR_NOOUTPUT
+BATCH_w34_COMPLETE

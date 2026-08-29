@@ -1,0 +1,15 @@
+=== SELF-TEST: trivial rep (d=1) vs classical dim M_k(SL_2(Z)) ===
+  k = 4 formula = 1.000000000 classical = 1  ok
+  k = 6 formula = 1.000000000 classical = 1  ok
+  k = 8 formula = 1.000000000 classical = 1  ok
+  k = 10 formula = 1.000000000 classical = 1  ok
+  k = 12 formula = 2.000000000 classical = 2  ok
+  k = 14 formula = 1.000000000 classical = 1  ok
+  k = 16 formula = 2.000000000 classical = 2  ok
+  k = 18 formula = 2.000000000 classical = 2  ok
+  k = 20 formula = 2.000000000 classical = 2  ok
+  k = 22 formula = 2.000000000 classical = 2  ok
+  k = 26 formula = 2.000000000 classical = 2  ok
+SELFTEST PASS (0 mismatches)
+
+=== PER-BASE, k = 3/2 (route A truth in parentheses) ===

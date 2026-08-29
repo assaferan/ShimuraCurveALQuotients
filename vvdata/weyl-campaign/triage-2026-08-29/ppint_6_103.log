@@ -1,0 +1,4 @@
+Runtime error: BorcherdsForms non-convergence: n=10097 exceeded cap 10000 
+(M=1236, rk=0, 
+dim=9997); the form-ring loop is diverging, this base is not generable by the 
+current method

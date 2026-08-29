@@ -1,0 +1,76 @@
+# ppint triage, 2026-08-29, production pipeline (tier1-models a924e1a)
+# Controls: 15_2 22_3 58_3 INTEGRAL; 33_2 39_2 46_3 NONINTEGRAL -- all reproduce.
+# 82_5's TIMEOUT is spurious (killed as collateral of an experiment); re-run it.
+
+6_73 2403s TIMEOUT_OR_NOOUTPUT
+10_43 2402s TIMEOUT_OR_NOOUTPUT
+10_47 2403s TIMEOUT_OR_NOOUTPUT
+14_17 1269s ERROR: Runtime error: Failed to find all Borcherds forms
+14_23 1682s ERROR: Runtime error: Failed to find all Borcherds forms
+14_31 1365s ERROR: Runtime error: Failed to find all Borcherds forms
+14_37 2403s TIMEOUT_OR_NOOUTPUT
+15_2 16s BASEVERD 15 2 oo:INTEGRAL all:INTEGRAL
+22_17 1072s BASEVERD 22 17 oo:NONINTEGRAL all:NONINTEGRAL
+22_19 1571s ERROR: Runtime error: Failed to find all Borcherds forms
+22_23 2402s TIMEOUT_OR_NOOUTPUT
+22_3 166s BASEVERD 22 3 oo:INTEGRAL all:INTEGRAL
+26_11 906s ERROR: Runtime error: Failed to find all Borcherds forms
+26_17 1575s ERROR: Runtime error: Failed to find all Borcherds forms
+26_19 2104s ERROR: Runtime error: Failed to find all Borcherds forms
+26_7 549s BASEVERD 26 7 oo:NONINTEGRAL all:NONINTEGRAL
+33_2 176s BASEVERD 33 2 oo:NONINTEGRAL all:NONINTEGRAL
+34_11 1077s BASEVERD 34 11 oo:NONINTEGRAL all:NONINTEGRAL
+34_13 1471s ERROR: Runtime error: Failed to find all Borcherds forms
+38_11 1460s ERROR: Runtime error: Failed to find all Borcherds forms
+38_13 2157s BASEVERD 38 13 oo:INTEGRAL all:INTEGRAL
+38_5 856s ERROR: Runtime error: Failed to find all Borcherds forms
+39_2 161s BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL
+46_11 2400s TIMEOUT_OR_NOOUTPUT
+46_3 946s BASEVERD 46 3 oo:NONINTEGRAL all:NONINTEGRAL
+46_5 2372s BASEVERD 46 5 oo:NONINTEGRAL all:NONINTEGRAL
+46_7 1223s ERROR: Runtime error: Failed to find all Borcherds forms
+51_2 297s BASEVERD 51 2 oo:NONINTEGRAL all:NONINTEGRAL
+55_2 791s BASEVERD 55 2 oo:NONINTEGRAL all:NONINTEGRAL
+57_2 181s BASEVERD 57 2 oo:NONINTEGRAL all:NONINTEGRAL
+58_3 146s BASEVERD 58 3 oo:INTEGRAL all:INTEGRAL
+58_5 1068s BASEVERD 58 5 oo:NONINTEGRAL all:NONINTEGRAL
+58_7 1525s ERROR: Runtime error: Failed to find all Borcherds forms
+62_3 328s BASEVERD 62 3 oo:NONINTEGRAL all:NONINTEGRAL
+62_5 1360s ERROR: Runtime error: Failed to find all Borcherds forms
+62_7 1325s BASEVERD 62 7 oo:NONINTEGRAL all:NONINTEGRAL
+65_2 2402s TIMEOUT_OR_NOOUTPUT
+69_2 972s BASEVERD 69 2 oo:NONINTEGRAL all:NONINTEGRAL
+74_3 302s BASEVERD 74 3 oo:NONINTEGRAL all:NONINTEGRAL
+74_5 1747s BASEVERD 74 5 oo:NONINTEGRAL all:NONINTEGRAL
+74_7 2401s TIMEOUT_OR_NOOUTPUT
+77_2 2402s TIMEOUT_OR_NOOUTPUT
+82_3 418s BASEVERD 82 3 oo:NONINTEGRAL all:NONINTEGRAL
+82_5 313s TIMEOUT_OR_NOOUTPUT
+85_2 2402s TIMEOUT_OR_NOOUTPUT
+86_3 413s BASEVERD 86 3 oo:NONINTEGRAL all:NONINTEGRAL
+86_5 2401s TIMEOUT_OR_NOOUTPUT
+87_2 221s BASEVERD 87 2 oo:NONINTEGRAL all:NONINTEGRAL
+91_2 2402s TIMEOUT_OR_NOOUTPUT
+93_2 610s ERROR: Runtime error in assert: Assertion failed
+94_3 1370s ERROR: Runtime error: Failed to find all Borcherds forms
+94_5 2403s TIMEOUT_OR_NOOUTPUT
+95_2 1727s ERROR: Runtime error in assert: Assertion failed
+106_3 806s ERROR: Runtime error: Failed to find all Borcherds forms
+111_2 1319s BASEVERD 111 2 oo:NONINTEGRAL all:NONINTEGRAL
+115_2 2401s TIMEOUT_OR_NOOUTPUT
+118_3 956s ERROR: Runtime error: Failed to find all Borcherds forms
+119_2 2402s TIMEOUT_OR_NOOUTPUT
+122_3 891s ERROR: Runtime error: Failed to find all Borcherds forms
+123_2 1263s ERROR: Runtime error in assert: Assertion failed
+129_2 569s ERROR: Runtime error in assert: Assertion failed
+134_3 881s ERROR: Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+142_3 2403s TIMEOUT_OR_NOOUTPUT
+146_3 2403s TIMEOUT_OR_NOOUTPUT
+158_3 1842s ERROR: Runtime error: Failed to find all Borcherds forms
+166_3 2191s ERROR: Runtime error: Failed to find all Borcherds forms
+
+TOTAL 66 : INTEGRAL 4  NONINTEGRAL 20  ERROR 24  TIMEOUT 18
+  19 Failed to find all Borcherds forms
+   4 in assert: Assertion failed
+   1 in 'BorcherdsForms': Could not find enough rational CM 
+preserved       88 files

@@ -1,0 +1,13 @@
+38_5 856s ERROR: Runtime error: Failed to find all Borcherds forms
+46_5 2372s BASEVERD 46 5 oo:NONINTEGRAL all:NONINTEGRAL
+69_2 972s BASEVERD 69 2 oo:NONINTEGRAL all:NONINTEGRAL
+62_5 1360s ERROR: Runtime error: Failed to find all Borcherds forms
+87_2 221s BASEVERD 87 2 oo:NONINTEGRAL all:NONINTEGRAL
+93_2 610s ERROR: Runtime error in assert: Assertion failed
+58_7 1525s ERROR: Runtime error: Failed to find all Borcherds forms
+10_43 2402s TIMEOUT_OR_NOOUTPUT
+6_73 2403s TIMEOUT_OR_NOOUTPUT
+10_47 2403s TIMEOUT_OR_NOOUTPUT
+26_19 2104s ERROR: Runtime error: Failed to find all Borcherds forms
+129_2 569s ERROR: Runtime error in assert: Assertion failed
+BATCH_w33_COMPLETE

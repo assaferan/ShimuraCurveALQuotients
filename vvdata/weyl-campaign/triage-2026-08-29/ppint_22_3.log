@@ -1,0 +1,105 @@
+BASE 22 3 9
+PP -2 oo 33 2
+PP -2 oo 25 2
+PP -2 oo 23 -2
+PP -2 oo 15 -2
+PP -2 oo 12 -2
+PP -2 oo 6 -2
+PP -2 oo 4 -2
+PP -2 oo 3 -4
+PP -2 oo 2 -4
+PP -2 oo 1 2
+VERD -2 oo 33 10 1 0 INTEGRAL
+PP -1 oo 25 2
+PP -1 oo 23 -2
+PP -1 oo 15 -2
+PP -1 oo 12 -4
+PP -1 oo 11 2
+PP -1 oo 3 -2
+PP -1 oo 2 2
+PP -1 oo 1 4
+VERD -1 oo 25 8 1 0 INTEGRAL
+PP 9 oo 66 2
+PP 9 oo 44 -4
+PP 9 oo 33 2
+PP 9 oo 23 -8
+PP 9 oo 16 -8
+PP 9 oo 15 -10
+PP 9 oo 12 -14
+PP 9 oo 11 4
+PP 9 oo 4 -16
+PP 9 oo 3 -4
+PP 9 oo 2 -2
+PP 9 oo 1 4
+VERD 9 oo 66 12 1 1 INTEGRAL
+PP 10 oo 33 2
+PP 10 oo 25 2
+PP 10 oo 23 -2
+PP 10 oo 15 -2
+PP 10 oo 12 -2
+PP 10 oo 6 -2
+PP 10 oo 4 -2
+PP 10 oo 3 -4
+PP 10 oo 2 -4
+PP 10 oo 1 2
+VERD 10 oo 33 10 1 0 INTEGRAL
+PP 11 oo 66 2
+PP 11 oo 44 -4
+PP 11 oo 23 -6
+PP 11 oo 16 -6
+PP 11 oo 15 -8
+PP 11 oo 12 -12
+PP 11 oo 11 4
+PP 11 oo 6 2
+PP 11 oo 4 -10
+PP 11 oo 2 2
+PP 11 oo 1 6
+VERD 11 oo 66 11 1 1 INTEGRAL
+PP 12 oo 66 2
+PP 12 oo 44 -4
+PP 12 oo 33 2
+PP 12 oo 23 -10
+PP 12 oo 16 -10
+PP 12 oo 15 -12
+PP 12 oo 12 -18
+PP 12 oo 11 6
+PP 12 oo 4 -20
+PP 12 oo 3 -6
+PP 12 oo 1 4
+VERD 12 oo 66 11 1 1 INTEGRAL
+PP 13 oo 25 2
+PP 13 oo 23 -2
+PP 13 oo 15 -2
+PP 13 oo 12 -4
+PP 13 oo 11 2
+PP 13 oo 3 -2
+PP 13 oo 2 2
+PP 13 oo 1 4
+VERD 13 oo 25 8 1 0 INTEGRAL
+PP 14 oo 33 2
+PP 14 oo 25 4
+PP 14 oo 23 -4
+PP 14 oo 15 -4
+PP 14 oo 12 -6
+PP 14 oo 11 2
+PP 14 oo 6 -2
+PP 14 oo 4 -2
+PP 14 oo 3 -6
+PP 14 oo 2 -2
+PP 14 oo 1 6
+VERD 14 oo 33 11 1 0 INTEGRAL
+PP 15 oo 66 2
+PP 15 oo 44 -4
+PP 15 oo 23 -8
+PP 15 oo 16 -8
+PP 15 oo 15 -10
+PP 15 oo 12 -16
+PP 15 oo 11 6
+PP 15 oo 6 2
+PP 15 oo 4 -14
+PP 15 oo 3 -2
+PP 15 oo 2 4
+PP 15 oo 1 6
+VERD 15 oo 66 12 1 1 INTEGRAL
+BASEVERD 22 3 oo:INTEGRAL all:INTEGRAL
+DONE

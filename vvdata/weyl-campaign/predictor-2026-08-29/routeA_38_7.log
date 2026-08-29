@@ -1,0 +1,14 @@
+DEFICIT BASE 38 7
+WHPROF iter n 37 k 93 Prec 100 nsol 123 t_ip 0.010s t_eta 0.000s
+WHPROF   qexp 123 forms at Prec 100: 0.250s
+WHPROF   echelon 123x230: 0.040s
+WHPROF iter n 135 k 93 Prec 100 nsol 11964 t_ip 0.020s t_eta 0.040s
+WHPROF   qexp 11964 forms at Prec 100: 4.140s
+WHPROF   echelon 11964x328 via 192 selected rows: 2.630s
+DEFICIT TIMING WeaklyHolomorphicBasis 33.730s  (n = 228, n0 = 42, #eta = 192)
+DEFICIT k 93
+DEFICIT P 134 rows 98 cols 25 nds 24 rank 25 deficit 0  (0.170s)
+DEFICIT P 190 rows 154 cols 35 nds 34 rank 35 deficit 0  (18.790s)
+DEFICIT P 266 rows 230 cols 49 nds 48 rank 49 deficit 0  (56.680s)
+DEFICIT TOTAL 109.380s
+DONE

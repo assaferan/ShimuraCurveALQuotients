@@ -1,0 +1,193 @@
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 3bd5749..0ec626b 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -377,10 +377,15 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+ 
+         vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim;
+         
++        _pt := Realtime();
+         rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
+-        
++        _t_ip := Realtime() - _pt;
++
++        _pt := Realtime();
+         eta_quotients := [EtaQuotient(R,r) : r in rs];
+         t_eta_quotient := EtaQuotient(R,t[1..n_ds]);
++        _t_eta := Realtime() - _pt;
++        printf "WHPROF iter n %o k %o Prec %o nsol %o t_ip %os t_eta %os\n", n, k, Prec, #rs, _t_ip, _t_eta;
+ 
+         if Zero then
+             eta_quotients_oo := eta_quotients;
+@@ -389,7 +394,9 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+             t_eta_quotient := SAction(t_eta_quotient : Admissible := false);
+         end if;
+ 
++        _pt := Realtime();
+         qexps := [qExpansionAtoo(eta, Prec) : eta in eta_quotients];
++        printf "WHPROF   qexp %o forms at Prec %o: %os\n", #eta_quotients, Prec, Realtime() - _pt;
+         if not IsEmpty(qexps) then
+             _<q> := Universe(qexps);
+             min_v := Minimum([Valuation(f) : f in qexps]);
+@@ -399,10 +406,43 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+             coeffs := MatrixAlgebra(Rationals(), 0)!0;
+         end if;
+         
+-        E, T := EchelonForm(coeffs);
++        _pt := Realtime();
++        // ROUTE A: `coeffs` carries far more rows than its rank (12784 rows for rank <= 258 at
++        // 38_5), and echelonising all of them is 755 s of the 810 s total.  Pick a spanning
++        // subset of ROWS mod p first -- independent rows of `coeffs` are independent COLUMNS of
++        // its transpose, and echelon over GF(p) is cheap -- then echelonise only those exactly
++        // over Q.  The row space is unchanged, so E is as before and T is the small transform
++        // padded with zero columns at the discarded rows (downstream uses T[i][j] against the
++        // full eta_quotients list, so the padding keeps indices valid).
++        //
++        // SAFETY: rank mod p can only UNDER-estimate the rational rank, never over-estimate, so
++        // a bad prime yields rk < dim and the enclosing loop simply iterates again (or the
++        // `assert rk eq dim` below fires).  It cannot silently return a too-small basis as if
++        // it were complete.
++        if Nrows(coeffs) gt 2*Ncols(coeffs) + 8 then
++            _p := 1073741789;
++            _den := LCM([Denominator(x) : x in Eltseq(coeffs)]);
++            _cp := ChangeRing(ChangeRing(_den*coeffs, Integers()), GF(_p));
++            _Ep := EchelonForm(Transpose(_cp));
++            _sel := [PivotColumn(_Ep, i) : i in [1..Rank(_Ep)]];
++            _Csel := Submatrix(coeffs, _sel, [1..Ncols(coeffs)]);
++            _Es, _Ts := EchelonForm(_Csel);
++            E := _Es;
++            T := ZeroMatrix(Rationals(), Nrows(_Ts), Nrows(coeffs));
++            for _i in [1..Nrows(_Ts)] do
++                for _j in [1..#_sel] do
++                    if _Ts[_i][_j] ne 0 then T[_i][_sel[_j]] := _Ts[_i][_j]; end if;
++                end for;
++            end for;
++            printf "WHPROF   echelon %ox%o via %o selected rows: %os\n",
++                   Nrows(coeffs), Ncols(coeffs), #_sel, Realtime() - _pt;
++        else
++            E, T := EchelonForm(coeffs);
++            printf "WHPROF   echelon %ox%o: %os\n", Nrows(coeffs), Ncols(coeffs), Realtime() - _pt;
++        end if;
+         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
+         if Zero then
+-            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo]] : i in [1..Nrows(E)] ];
++            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo] | T[i][j] ne 0] : i in [1..Nrows(E)] ];
+         end if;
+         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
+         rk := Rank(E);
+@@ -442,7 +482,12 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
+         n0 := max_pole;
+     end if;
+     
+-    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
++    // ROUTE A: skip the zero terms.  T is mostly zero (and after the row-selection above it is
++    // zero on all but the selected columns), so summing over all #eta_quotients terms costs
++    // ~132 x 12784 EtaQuot additions at 38_5.  basis_of_weakly_holomorphic_forms already uses
++    // this `| T[i][j] ne 0` idiom; matching it here.
++    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients] | T[i][j] ne 0]
++                      : i in [1..Nrows(E)] ];
+     
+     if Zero then 
+         return E, n, n0, eta_quotients_oo, eta_quotients; 
+@@ -616,6 +661,23 @@ function coeffs_to_divisor_matrix(min_m, D, N, num_coeffs : Zero := false, const
+ end function;
+ 
+ 
++intrinsic ProbeWHBasis(pole_order::RngIntElt, fs_E::SeqEnum, n0::RngIntElt, n::RngIntElt, t::EtaQuot
++                       : Zero := false) -> ., ., .
++{PROBE_SPAN (throwaway worktree only): expose basis_of_weakly_holomorphic_forms.}
++    a, b, c := basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := Zero);
++    return a, b, c;
++end intrinsic;
++
++
++intrinsic ProbeDivisorMatrix(min_m::RngIntElt, D::RngIntElt, N::RngIntElt, num_coeffs::RngIntElt
++                             : Zero := false, const_coeff := true) -> ., .
++{PROBE_SPAN (throwaway worktree only): expose coeffs_to_divisor_matrix so the rank of the
++ divisor map can be measured WITHOUT building the weakly holomorphic basis. Returns mat, relevant_ds.}
++    mat, rds := coeffs_to_divisor_matrix(min_m, D, N, num_coeffs : Zero := Zero, const_coeff := const_coeff);
++    return mat, rds;
++end intrinsic;
++
++
+ function sum_divisors(div1, div2)
+     // sum the divisors
+     sum_divs := div1;
+@@ -638,6 +700,18 @@ along with two different hauptmoduls. If Targets (a set of W subgroups) is non-e
+ Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
+ This means an unrealizable sibling cover (one whose Borcherds form cannot be found) no longer aborts the whole call --
+ the targets we actually need are determined as long as THEIR forms exist. Empty Targets => all covers (unchanged).}
++    // ===== PROBE_SPAN (throwaway worktree only; never merge) =====
++    // Two knobs, both inert by default so PROBE_BUMP=0 reproduces production exactly:
++    //   PROBE_BUMP -- deepen EVERY requested pole order by this many units, to test whether
++    //                 "Failed to find all Borcherds forms" is merely a too-small weakly
++    //                 holomorphic space rather than a genuine obstruction.
++    //   the printf at found_v -- reports span geometry (rank vs rank-with-target) at every key
++    //                 of every divisor triple.
++    PROBE_BUMP := 0;
++    probe_env := GetEnv("PROBE_BUMP");
++    if probe_env ne "" then PROBE_BUMP := StringToInteger(probe_env); end if;
++    PROBE_TRIPLE := 0;
++    // ===== end PROBE_SPAN =====
+     rams := RamficationPointsOfCovers(Xstar, curves);
+     // Restrict to the target covers (the two hauptmoduls, keys -1/-2, are added below and always kept). rams is
+     // keyed by CurveID and curves is indexed by CurveID, so curves[k]`W is the cover's AL group.
+@@ -695,6 +769,7 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+             non_infty := [pt : pt in pts | pt ne infty];
+             for other_pts in CartesianPower(non_infty,2) do
+                 if other_pts[1] eq other_pts[2] then continue; end if;
++                PROBE_TRIPLE +:= 1;
+                 vprintf ShimuraQuotients, 3 : "\n\t\tTrying other points = %o...", other_pts;
+                 rams[-1] := [other_pts[1]];
+                 rams[-2] := [other_pts[2]];
+@@ -718,6 +793,7 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                     ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
+                     min_m := Minimum(ms);
+                     min_m := Minimum(min_m, -(n0 + k - 1));
++                    min_m -:= PROBE_BUMP;   // PROBE_SPAN: deepen the requested pole order
+                     
+                     if (max_pole_order_oo lt -min_m) then
+                         max_pole_order_oo := -min_m;
+@@ -812,7 +888,41 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
+                     
+                     found_v := target_v in Image(coeffs_trunc);
+-                   
++
++                    // ===== PROBE_SPAN: report the geometry of this solve =====
++                    // rank vs rank_t distinguishes "the target is one direction outside the span"
++                    // (rank_t = rank + 1) from a deeper deficiency.
++                    probe_ct := ChangeRing(coeffs_trunc, Rationals());
++                    probe_tv := Matrix(Rationals(), 1, Ncols(probe_ct),
++                                       [Rationals()!x : x in Eltseq(target_v)]);
++                    printf "PROBESPAN triple %o key %o bump %o poleord %o rows %o cols %o rank %o rank_t %o found %o infty %o pts %o %o\n",
++                           PROBE_TRIPLE, i, PROBE_BUMP, -min_m, Nrows(probe_ct), Ncols(probe_ct),
++                           Rank(probe_ct), Rank(VerticalJoin(probe_ct, probe_tv)), found_v,
++                           infty[1], other_pts[1][1], other_pts[2][1];
++                    // The image is a proper subspace, so there is a functional phi annihilating it
++                    // with phi(target) != 0.  Identify phi against the discriminant list: if it is
++                    // an arithmetic functional (a degree, a class-number-weighted sum) then the
++                    // defect is in the TARGET divisor, not in the space of forms.
++                    if (not found_v) and (PROBE_TRIPLE le 2) then
++                        ann := Kernel(Transpose(probe_ct));
++                        printf "PROBEANN triple %o key %o anndim %o ncols %o nds %o\n",
++                               PROBE_TRIPLE, i, Dimension(ann), Ncols(probe_ct), #relevant_ds;
++                        printf "PROBEANN_DS %o\n", relevant_ds;
++                        printf "PROBEANN_TGT %o\n", [Rationals()!x : x in Eltseq(target_v)];
++                        printf "PROBEANN_RAM %o\n", [<pt[1], div_coeffs[j]> : j->pt in ram];
++                        for b in Basis(ann) do
++                            phi := [Rationals()!x : x in Eltseq(b)];
++                            dl := LCM([Denominator(x) : x in phi]);
++                            phiz := [Integers()!(dl*x) : x in phi];
++                            g := GCD(phiz);
++                            if g ne 0 then phiz := [x div g : x in phiz]; end if;
++                            printf "PROBEANN_PHI %o\n", phiz;
++                            printf "PROBEANN_VAL %o\n",
++                                   &+[phiz[j]*(Rationals()!Eltseq(target_v)[j]) : j in [1..#phiz]];
++                        end for;
++                    end if;
++                    // ===== end PROBE_SPAN =====
++
+                     if not found_v then found_all := false; break; end if;
+                     sol := Solution(coeffs_trunc, target_v);
+                     

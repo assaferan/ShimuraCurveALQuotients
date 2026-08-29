@@ -1,0 +1,35 @@
+=== CROSS-CHECK O(d) formulas vs explicit Weil matrices at 6_1 (d = 72) ===
+  tr rho(S)^1  matrix 2.1810930E-40 + 1.1479437E-40*$.1   formula -2.9999595E-39
++ 6.7346030E-40*$.1   ok
+  tr rho(S)^2  matrix -3.0275102E-38 + 8.0000000*$.1   formula 8.0000000*$.1   
+ok
+  tr rho(S)^3  matrix 8.7817693E-40 - 1.3775324E-40*$.1   formula 2.9999595E-39 
++ 6.7346030E-40*$.1   ok
+  tr rho(S)^4  matrix -72.000000 - 2.9255501E-38*$.1   formula -72.000000   ok
+  tr rho(ST)^1 matrix 9.0687552E-40 + 1.0000000*$.1   formula 1.6530389E-39 + 
+1.0000000*$.1   ok
+  tr rho(ST)^2 matrix -3.0000000 + 1.3775324E-40*$.1   formula -3.0000000 - 
+6.4284847E-39*$.1   ok
+  tr rho(ST)^3 matrix -4.5077191E-38 + 8.0000000*$.1   formula 8.0000000*$.1   
+ok
+  tr rho(ST)^4 matrix 3.0000000 + 3.0994480E-40*$.1   formula 3.0000000 - 
+1.4693679E-39*$.1   ok
+  tr rho(ST)^5 matrix 3.3433860E-39 + 1.0000000*$.1   formula -3.3060779E-39 + 
+1.0000000*$.1   ok
+  tr rho(ST)^6 matrix -72.000000 - 4.4315056E-38*$.1   formula -72.000000   ok
+CROSSCHECK PASS
+
+=== dim M_{3/2} per base (route A measured deficit in parens) ===
+WEILDIM 34_3 dual false d 20808 dimM -3465.000000 (a1 7802.0000 a2 8671.0000 aT 
+10401.000) truth 0 [1.5700s]
+WEILDIM 34_3 dual true d 20808 dimM -3467.000000 (a1 7804.0000 a2 8670.0000 aT 
+10402.000) truth 0 [1.5600s]
+WEILDIM 38_5 dual false d 72200 dimM -12204.00000 (a1 27074.000 a2 30084.000 aT 
+36271.000) truth 1 [5.3200s]
+WEILDIM 38_5 dual true d 72200 dimM -11854.00000 (a1 27076.000 a2 30083.000 aT 
+35920.000) truth 1 [5.1800s]
+WEILDIM 38_7 dual false d 141512 dimM -23598.00000 (a1 53066.000 a2 58964.000 aT
+70769.000) truth 0 [10.540s]
+WEILDIM 38_7 dual true d 141512 dimM -23560.00000 (a1 53068.000 a2 58963.000 aT 
+70730.000) truth 0 [10.300s]
+DONE

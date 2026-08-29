@@ -1,0 +1,13 @@
+
+BorcherdsForms(
+    Xstar: ,
+    curves: [ , , , , , , ,  ]
+)
+AbsEltseq(
+    f: 31053301/30960*q^-84 - 102709463/7740*q^-83 + 69761693/3096*...
+)
+In file "/Applications/Magma/package/Ring/GaloisGrp/GalFldFun.m", line 305, 
+column 3:
+>>   assert vx ge 0;
+     ^
+Runtime error in assert: Assertion failed

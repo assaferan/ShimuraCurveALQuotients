@@ -1,0 +1,196 @@
+SPANPROBE BASE 38 5 bumpenv [1]
+PROBESPAN triple 1 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -19 -11
+PROBESPAN triple 2 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -19 -24
+PROBESPAN triple 3 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -11 -19
+PROBESPAN triple 4 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -11 -24
+PROBESPAN triple 5 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -24 -19
+PROBESPAN triple 6 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -4 pts -24 -11
+PROBESPAN triple 7 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -19 pts -4 -11
+PROBESPAN triple 8 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -19 pts -4 -24
+PROBESPAN triple 9 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36 
+found false infty -19 pts -11 -4
+PROBESPAN triple 10 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -24
+PROBESPAN triple 11 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -4
+PROBESPAN triple 12 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -11
+PROBESPAN triple 13 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -19
+PROBESPAN triple 14 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -24
+PROBESPAN triple 15 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -4
+PROBESPAN triple 16 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -24
+PROBESPAN triple 17 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -4
+PROBESPAN triple 18 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -19
+PROBESPAN triple 19 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -19
+PROBESPAN triple 20 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -11
+PROBESPAN triple 21 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -4
+PROBESPAN triple 22 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -11
+PROBESPAN triple 23 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -4
+PROBESPAN triple 24 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -19
+PROBESPAN triple 25 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -11
+PROBESPAN triple 26 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -24
+PROBESPAN triple 27 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -19
+PROBESPAN triple 28 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -24
+PROBESPAN triple 29 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -19
+PROBESPAN triple 30 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -11
+PROBESPAN triple 31 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -11
+PROBESPAN triple 32 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -24
+PROBESPAN triple 33 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -4
+PROBESPAN triple 34 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -24
+PROBESPAN triple 35 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -4
+PROBESPAN triple 36 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -11
+PROBESPAN triple 37 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -19
+PROBESPAN triple 38 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -24
+PROBESPAN triple 39 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -4
+PROBESPAN triple 40 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -24
+PROBESPAN triple 41 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -4
+PROBESPAN triple 42 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -19
+PROBESPAN triple 43 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -19
+PROBESPAN triple 44 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -11
+PROBESPAN triple 45 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -4
+PROBESPAN triple 46 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -11
+PROBESPAN triple 47 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -4
+PROBESPAN triple 48 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -19
+PROBESPAN triple 49 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -11
+PROBESPAN triple 50 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -24
+PROBESPAN triple 51 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -19
+PROBESPAN triple 52 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -24
+PROBESPAN triple 53 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -19
+PROBESPAN triple 54 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -11
+PROBESPAN triple 55 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -11
+PROBESPAN triple 56 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -24
+PROBESPAN triple 57 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -4
+PROBESPAN triple 58 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -24
+PROBESPAN triple 59 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -4
+PROBESPAN triple 60 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -11
+PROBESPAN triple 61 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -19
+PROBESPAN triple 62 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -24
+PROBESPAN triple 63 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -4
+PROBESPAN triple 64 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -24
+PROBESPAN triple 65 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -4
+PROBESPAN triple 66 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -19
+PROBESPAN triple 67 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -19
+PROBESPAN triple 68 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -11
+PROBESPAN triple 69 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -4
+PROBESPAN triple 70 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -11
+PROBESPAN triple 71 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -4
+PROBESPAN triple 72 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -19
+PROBESPAN triple 73 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -11
+PROBESPAN triple 74 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -19 -24
+PROBESPAN triple 75 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -19
+PROBESPAN triple 76 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -11 -24
+PROBESPAN triple 77 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -19
+PROBESPAN triple 78 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -4 pts -24 -11
+PROBESPAN triple 79 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -11
+PROBESPAN triple 80 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -4 -24
+PROBESPAN triple 81 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -4
+PROBESPAN triple 82 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -11 -24
+PROBESPAN triple 83 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -4
+PROBESPAN triple 84 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -19 pts -24 -11
+PROBESPAN triple 85 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -19
+PROBESPAN triple 86 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -4 -24
+PROBESPAN triple 87 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -4
+PROBESPAN triple 88 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -19 -24
+PROBESPAN triple 89 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -4
+PROBESPAN triple 90 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -11 pts -24 -19
+PROBESPAN triple 91 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -19
+PROBESPAN triple 92 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -4 -11
+PROBESPAN triple 93 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -4
+PROBESPAN triple 94 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -19 -11
+PROBESPAN triple 95 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -4
+PROBESPAN triple 96 key 11 bump 1 poleord 191 rows 165 cols 36 rank 35 rank_t 36
+found false infty -24 pts -11 -19
+SPANPROBE RESULT 38 5 FAIL Failed to find all Borcherds forms
+DONE
+ELAPSED 860s
