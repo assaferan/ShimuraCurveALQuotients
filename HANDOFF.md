@@ -62,24 +62,51 @@ erroring, so a split cache produces confusing "why is this slow" sessions.
 
 ---
 
+## 6. The odd-D branch, PROFILED — and one line was 93% of it
+
+`BorcherdsForms.m:817` on `main` was the **last** `T[i][j]*` recombination in the file lacking
+the `| T[i][j] ne 0` guard (others: ~437, ~480, ~618). It sits in the **odd-D-only** 0-side
+block — exactly why the 66× speedup helped even D and left odd D untouched.
+
+    stage             65_2    77_2    85_2
+    oo basis           9.3     8.4     4.0
+    0-cusp basis       3.6     2.4     4.0    <- REFUTED as the cause, <=3%
+    CM points          0.10    0.11    0.09   <- REFUTED, negligible
+    everything after  1787    1789    1792
+
+`T` there is a pure SELECTION matrix (measured `nnz(T) = Nrows(T)`, one 1 per row), so the
+unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed on branch
+`odd-d-zeroskip` (`b7067c3`), measured ~140×**: `etarecomb` 1.515 s → 0.0106 s per call;
+`zside` 1539 s / 3 passes → 45.0 s / 4 passes. Tests green (incl. `15_2`, odd D).
+
+**It does not make `65_2` / `85_2` complete.** The dominant cost is now
+`basis_of_weakly_holomorphic_forms(... : Zero)` — real work, steep in pole order: 2.25 s @130,
+26.45 @325, 72.85 @455, **556.12 @845**; `65_2`'s last m implies pole order 8450. Constant
+factor removed, ceiling unmoved.
+
+**The larger win, NOT yet done**: the entire 0-side block is invariant across triples *and*
+keys — checksummed, one distinct signature across all 336 triples of `65_2` — yet recomputed
+per key per triple. That is 336× redundancy at `65_2`, 210× at `85_2`. Before hoisting, resolve
+that the ∞-side `T` (~line 844) is shadowed by the 0-side kernel matrix (~line 885); nobody has
+verified the shadowing is harmless.
+
+**Reclassify**: `133_2` is **not** a TIMEOUT — it fails an assertion at 168 s.
+
+---
+
 ## NEXT — in this order
 
-**1. PROFILE THE ODD-D BRANCH. This gates most of what remains.**
-Odd D runs an entire extra path that even D skips: a second `WeaklyHolomorphicBasis` for the
-0-cusp, the 0-side machinery in the triple loop, and the `m_idx` retry loop. Measured: the
-*basis* is fast on odd D (`65_2` 9.5 s, `133_2` 35.7 s), so **~1150 s of a 1200 s cap is in that
-branch or in the CM points**, and nobody has profiled it. Evidence it is the discriminator:
-**10 of the 11 bases recovered in wave 4 are even D; 5 of the 7 stubborn timeouts are odd.**
-If it yields the way the basis did, it unblocks the larger half of the backlog.
-Instrument in the `-spanprobe` worktree — the `WHPROF` printfs are the template.
+**1. Merge `odd-d-zeroskip` once CI is green.** Then re-run the 7 remaining TIMEOUT bases.
 
-**2. Decide the even-correction escape hatch.** Now worth it: the obstructed class is 28.
+**2. The invariant hoist (336×)** — the biggest remaining lever on odd D. Resolve the `T`
+shadowing first.
+
+**3. Decide the even-correction escape hatch.** Worth it now: the obstructed class is 28.
 The twist question and the exact-divisor assert are the two unknowns.
 
-**3. Re-run wave 4b (the 122 never-started bases) — ONLY after step 1**, at ≤ 4 streams and the
-original 2400 s cap.
+**4. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
 
-**4. Route B's k = 3/2 phase.** Low priority; route A already measures directly.
+**5. Route B's k = 3/2 phase.** Low priority; route A measures directly.
 
 ---
 
@@ -102,6 +129,14 @@ original 2400 s cap.
 * `git -C <repo> worktree add <relative-path>` resolves the path against the **repo**, not your
   cwd — it will silently create a worktree *inside* the repo. Use absolute paths.
 * `magma | head` / `| tail` can hang; redirect to a file instead.
+* **The `PROBESPAN` printf in `-spanprobe` ran two `Rank()` calls per key.** Any timing taken in
+  that worktree before 2026-08-30 is inflated. Now gated behind `PROBE_SPAN=1` (default off).
+* **Measure the thing you changed, not the whole pipeline.** The 817 fix was first tested
+  end-to-end with a 2400 s cap: both bases timed out before *and* after, so the test could not
+  have detected the 140× win it actually produced. For partial speedups use the `BFPROF`
+  per-stage timers in `-spanprobe` against the recorded baselines.
+* `ppint.m`'s first `printf` fires only *after* `BorcherdsForms` returns, so an empty log tells
+  you nothing about where a run is — instrument if you need progress.
 
 ## Tools (campaign branch, `vvdata/weyl-campaign/`)
 
