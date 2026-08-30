@@ -9,6 +9,7 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
     tier1-models       73095a8   unchanged; carries the unmerged paper work
     m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
     odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
+    odd-d-invariant-hoist 4c29d1e the hoist -- correctness/clarity, ~2%; awaiting CI
     whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
 
 Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
@@ -86,11 +87,34 @@ MERGED to main as `619051a`, measured ~140×**: `etarecomb` 1.515 s → 0.0106 s
 26.45 @325, 72.85 @455, **556.12 @845**; `65_2`'s last m implies pole order 8450. Constant
 factor removed, ceiling unmoved.
 
-**The larger win, NOT yet done**: the entire 0-side block is invariant across triples *and*
-keys — checksummed, one distinct signature across all 336 triples of `65_2` — yet recomputed
-per key per triple. That is 336× redundancy at `65_2`, 210× at `85_2`. Before hoisting, resolve
-that the ∞-side `T` (~line 844) is shadowed by the 0-side kernel matrix (~line 885); nobody has
-verified the shadowing is harmless.
+**~~The larger win, NOT yet done~~ — DONE, and REFUTED as a lever** (`odd-d-invariant-hoist`,
+`4c29d1e`). The invariance is real: the 0-side block was recomputed 336× per `m_idx` pass at
+`65_2` (= 8·7·6 triples, one key each before the break) and 210× at `85_2`, and it now runs
+once. **But what repeats is cheap.** Instrumenting the *pre-hoist* code directly at `65_2`:
+
+    pass 1   336 executions    1.75 s   (mean 0.0052)
+    pass 2   336 executions    5.97 s   (mean 0.0178)
+    pass 3   336 executions   10.02 s   (mean 0.0298)
+
+≈ 17.7 s over three passes against an 1800 s cap, versus ≈ 0.9 s hoisted — **about 2%.**
+
+**Why the "336× lever" claim was wrong, and the lesson.** That judgment was formed when the
+block cost 1539 s / 3 passes — but *that* cost was the unguarded recombination line, and the
+zero-skip removed it (140×), collapsing the block to 1.75 s/pass. The redundancy framing
+outlived the fix that made it irrelevant, because nobody re-measured the block after changing
+it. **A multiplier (336×) is only a lever when multiplied by something expensive; re-measure
+the multiplicand after any fix that touches it.**
+
+**The `T`-shadowing worry was vacuous.** The ∞-side `T` was never *read* — on odd D the 0-side
+kernel overwrote it immediately, on even D nothing below touches `T` at all. It was dead code,
+now deleted; the 0-side matrix is renamed `T_ker0` so the question cannot recur. One real trap
+found while moving it: the hoisted lines must stay together, since `ech_etas_0` is sliced out of
+`ech_etas_all_0` and then *replaced in place* by its own recombination — hoisting the
+recombination without the slice recombines an already-recombined list on the second key, a
+silent wrong answer rather than a crash.
+
+⇒ **The odd-D constant factors are now exhausted. Everything left is the
+`basis_of_weakly_holomorphic_forms(... : Zero)` ceiling above.** Do not spend more time here.
 
 **Reclassify**: `133_2` is **not** a TIMEOUT — it fails an assertion at 168 s.
 
@@ -136,26 +160,29 @@ silent-full-resolve mode `f90c441` set out to close. Cache on main: **378 files*
 
 ## NEXT — in this order
 
-**1. The invariant hoist (336×)** — the biggest remaining lever on odd D. The whole 0-side
-block is invariant across triples *and* keys yet recomputed per key per triple. **Resolve the
-`T` shadowing first** (the ∞-side `T` at ~844 is shadowed by the 0-side kernel matrix at ~885;
-nobody has verified that is harmless). Measure with `bfprof.m`, not end-to-end — see the
-measurement trap below.
+**~~1. The invariant hoist~~ — DONE and merged-pending on `odd-d-invariant-hoist` (`4c29d1e`).
+Worth ~2%, not the lever. See section 6. Nothing further to do on odd-D constant factors.**
 
-**2. Re-run the 7 remaining TIMEOUT bases** now that the zero-skip is on main. Expect this to
-*confirm* rather than clear them: the fix removed a constant factor, not the ceiling.
-`basis_of_weakly_holomorphic_forms(... : Zero)` is now dominant and steep in pole order
-(556 s @ 845; `65_2`'s last m implies 8450), and `77_2` is structurally out of reach.
+**1. Decide the even-correction escape hatch** — now the largest open item by reach: the
+obstructed class is **28 bases**, and per [[borcherds-obstruction-is-real]] neither more divisor
+triples nor deeper poles can ever help them. φ(target) is **even** and gcd(φ) = 1, and a double
+cover depends on its branch divisor only mod 2, so an even correction kills the pairing without
+changing the cover. The two unknowns are whether it introduces an unramified quadratic twist,
+and relaxing the exact-divisor `assert`.
 
-**3. Decide the even-correction escape hatch.** Worth it now: the obstructed class is 28.
-The twist question and the exact-divisor assert are the two unknowns.
+**2. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+**Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
+committed M ≤ 2260 frontier and 23 do not — but those 23 share only **11 distinct M** (the cache
+key), so it is ~22–33 solves, a bounded batch to run *ahead* of the wave rather than a silent
+per-base tax inside it. That cohort is also the high-genus tail (g up to 17, CM demand
+`max(2g+5)` = 39), so run `cmsupply.m` over it first — see `note-missing-targets.md`.
 
-**4. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
-**Before launching**, note from `note-missing-targets.md`: of the 351 bases in the broad target
-list, 328 sit inside the committed M ≤ 2260 cache frontier and **23 do not** (max M = 4830).
-Those 23 each pay a full Normaliz solve, silently. Pre-solve them or expect them to dominate.
+**3. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
+clear them: both odd-D constant-factor fixes are in and the ceiling is untouched.
+`basis_of_weakly_holomorphic_forms(... : Zero)` is steep in pole order (556 s @ 845; `65_2`'s
+last m implies 8450) and `77_2` is structurally out of reach.
 
-**5. Route B's k = 3/2 phase.** Low priority; route A measures directly.
+**4. Route B's k = 3/2 phase.** Low priority; route A measures directly.
 
 ---
 
@@ -180,6 +207,10 @@ Those 23 each pay a full Normaliz solve, silently. Pre-solve them or expect them
 * `magma | head` / `| tail` can hang; redirect to a file instead.
 * **The `PROBESPAN` printf in `-spanprobe` ran two `Rank()` calls per key.** Any timing taken in
   that worktree before 2026-08-30 is inflated. Now gated behind `PROBE_SPAN=1` (default off).
+* **A multiplier is only a lever when the multiplicand is expensive.** The "336x redundancy"
+  claim was formed when the 0-side block cost 1539 s / 3 passes, survived the zero-skip that
+  collapsed it to 1.75 s/pass, and was still being quoted as "the biggest remaining lever" a
+  session later. Re-measure the multiplicand after any fix that touches it.
 * **Measure the thing you changed, not the whole pipeline.** The 817 fix was first tested
   end-to-end with a 2400 s cap: both bases timed out before *and* after, so the test could not
   have detected the 140× win it actually produced. For partial speedups use the `BFPROF`
