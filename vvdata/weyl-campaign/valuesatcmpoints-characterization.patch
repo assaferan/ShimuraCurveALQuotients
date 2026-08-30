@@ -1,0 +1,39 @@
+diff --git a/SchoferFormula.m b/SchoferFormula.m
+index 156dcdd..16484d6 100644
+--- a/SchoferFormula.m
++++ b/SchoferFormula.m
+@@ -1534,17 +1534,32 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum :
+     // make table values into rational numbers
+     // Diagnose non-integral LogSum coeffs before converting (graceful skip of bad cells
+     // is not safe here — fail with a precise location instead of a bare RationalNumber error).
++    // CHARACTERIZATION MODE: collect EVERY bad cell (not just the first) so we can correlate
++    // non-rationality with gcd(disc, N) across all admitted CM points in a single run.
++    bad_cells := [];
+     for i->y in table do
+         for j->x in y do
+             if Type(x) eq LogSm then
+                 bad := [<p, c> : p -> c in x`log_coeffs | not IsIntegral(c)];
+                 if not IsEmpty(bad) then
+-                    error Sprintf("ValuesAtCMPoints: LogSum at row %o col %o (disc %o, key %o) is not rational; bad coeffs %o; value %o",
+-                        i, j, allds[j], (i le #abs_schofer_tab`Keys_fs select abs_schofer_tab`Keys_fs[i] else "n/a"), bad, x);
++                    Append(~bad_cells, <i, j, allds[j], GCD(allds[j], Xstar`N), bad>);
+                 end if;
+             end if;
+         end for;
+     end for;
++    if not IsEmpty(bad_cells) then
++        printf "\n=== ValuesAtCMPoints CHARACTERIZATION: %o non-rational cell(s) ===\n", #bad_cells;
++        printf "  N = %o, D = %o\n", Xstar`N, Xstar`D;
++        for c in bad_cells do
++            printf "  row %o col %o disc %o gcd(disc,N)=%o bad_coeffs %o\n", c[1], c[2], c[3], c[4], c[5];
++        end for;
++        bad_discs := Sort(SetToSequence({c[3] : c in bad_cells}));
++        for d in bad_discs do
++            printf "  DISC %o : gcd(d,N)=%o, ramified-at-N-primes %o\n", d, GCD(d, Xstar`N),
++                [<p, KroneckerSymbol(d, p)> : p in PrimeDivisors(Xstar`N)];
++        end for;
++        error Sprintf("ValuesAtCMPoints: %o non-rational cell(s); discs %o", #bad_cells, bad_discs);
++    end if;
+     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
+     abs_schofer_tab`RowScales := row_scales;
+     
