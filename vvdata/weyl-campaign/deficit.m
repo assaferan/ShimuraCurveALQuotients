@@ -12,6 +12,12 @@
 // Ground truth from the spanprobe runs:
 //   38_5 poleord 190 -> deficit 1     38_7 poleord 134/266 -> 0     34_3 poleord 51/102 -> 0
 AttachSpec("ShimuraQuotients.spec");
+// VALIDITY: EVEN D ONLY.  For odd D, BorcherdsForms vertically joins a 0-side block
+// (coeffs_0_oo) into coeffs_trunc; this script computes only the infinity part, so the extra
+// rows are missing and the reported deficit is an OVERESTIMATE.  The symptom is that it drifts
+// with the pole order instead of staying invariant -- 65_2 gives 5, 6, 6, 9 at P = 62, 102,
+// 134, 190, where a genuine deficit is constant (38_5: 1 at every P).  Do not read odd-D
+// numbers from this script until the 0-side block is included.
 D := 38; N := 5;
 if assigned DD then D := StringToInteger(DD); end if;
 if assigned NN then N := StringToInteger(NN); end if;

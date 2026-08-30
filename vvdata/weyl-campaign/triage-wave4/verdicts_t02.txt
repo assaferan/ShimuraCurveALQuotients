@@ -1,0 +1,7 @@
+77_2 1204s TIMEOUT_OR_NOOUTPUT
+82_5 488s ERROR: Runtime error: Failed to find all Borcherds forms
+85_2 1204s TIMEOUT_OR_NOOUTPUT
+86_5 523s ERROR: Runtime error: Failed to find all Borcherds forms
+91_2 1204s TIMEOUT_OR_NOOUTPUT
+94_5 756s ERROR: Runtime error: Failed to find all Borcherds forms
+BATCH_t02_COMPLETE

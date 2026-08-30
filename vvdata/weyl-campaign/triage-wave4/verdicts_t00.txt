@@ -1,0 +1,7 @@
+10_43 630s ERROR: Runtime error: Failed to find all Borcherds forms
+10_47 941s ERROR: Runtime error: Failed to find all Borcherds forms
+115_2 146s ERROR: Runtime error in assert: Assertion failed
+119_2 1203s TIMEOUT_OR_NOOUTPUT
+142_3 539s ERROR: Runtime error: Failed to find all Borcherds forms
+146_3 1203s TIMEOUT_OR_NOOUTPUT
+BATCH_t00_COMPLETE
