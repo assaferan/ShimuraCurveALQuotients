@@ -5,13 +5,15 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
-    main               f90c441   66x WeaklyHolomorphicBasis speedup (04f1d7b) + unified solution cache
-    tier1-models       a924e1a   unchanged; carries the unmerged paper work
-    m0-theta-campaign  eb700b1   research branch: triage results, probes, predictors
-    whbasis-speedup    624b68e   the speedup branch (CI green: 57 jobs, 0 failures)
+    main               619051a   speedup (04f1d7b) + odd-D zero-skip (b7067c3, merged) + cache
+    tier1-models       73095a8   unchanged; carries the unmerged paper work
+    m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
+    odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
+    whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
 
-Worktrees: `-whspeed` (speedup), `-spanprobe` (**THROWAWAY**, carries all instrumentation —
-this is the template for the next profiling pass), `-campaign`, `-diagnostic`.
+Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
+instrumentation — the template for the next profiling pass). `-whspeed`, `-oddd` and
+`-diagnostic` were removed on 08-30; see "Housekeeping" below for what was rescued first.
 
 ---
 
@@ -75,8 +77,8 @@ block — exactly why the 66× speedup helped even D and left odd D untouched.
     everything after  1787    1789    1792
 
 `T` there is a pure SELECTION matrix (measured `nnz(T) = Nrows(T)`, one 1 per row), so the
-unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed on branch
-`odd-d-zeroskip` (`b7067c3`), measured ~140×**: `etarecomb` 1.515 s → 0.0106 s per call;
+unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed in `b7067c3`, now
+MERGED to main as `619051a`, measured ~140×**: `etarecomb` 1.515 s → 0.0106 s per call;
 `zside` 1539 s / 3 passes → 45.0 s / 4 passes. Tests green (incl. `15_2`, odd D).
 
 **It does not make `65_2` / `85_2` complete.** The dominant cost is now
@@ -94,17 +96,64 @@ verified the shadowing is harmless.
 
 ---
 
+## Housekeeping — 2026-08-30 (later)
+
+`odd-d-zeroskip` went CI-green (1h37m, 0 failures) and is **merged to main as `619051a`**.
+Verified before the merge: all four `T[i][j]` recombination sites (437, 480, 618, 826) now
+carry the zero-skip guard, and the merge brought one commit touching one file — the
+`tier1-models` merge trap did not apply, because this branch was cut from `main`.
+
+Three worktrees were retired. Everything single-copy in them was rescued to
+`vvdata/weyl-campaign/` on the campaign branch first (`4b752d8`, `9059bb0`):
+
+    bfprof.m  dsmall.m  diag_15_2.m         drivers that existed nowhere else
+    bfprof-instrumentation.patch            BFPROF/BFINV timers  -- see note-probes.md
+    valuesatcmpoints-characterization.patch the non-rationality probe        "
+    MISSING_TARGETS.txt                     351 bases -- see note-missing-targets.md
+    note-probes.md  note-missing-targets.md the caveats, which matter more than the code
+
+**Two caveats worth carrying forward** (both in `note-probes.md`): the bfprof patch does **not**
+apply to current main — its hunks mix the timers with a superseded inline prototype of the
+speedup, so lift the timers by hand; and the characterization probe **cannot have run as
+written**, since it patches the two-argument `ValuesAtCMPoints` at `SchoferFormula.m:1498`,
+which has no `Xstar` in scope while the added lines reference `` Xstar`N ``. Any conclusion
+attributed to that probe is unevidenced.
+
+**`-whspeed`'s 61 uncommitted files were discarded, having been shown worthless**: 43 were
+polymake solutions byte-identical to main's, and the 17 `data/curves_after_*.dat` were an
+*incomplete* pipeline re-run — same 18379 records, but **strictly fewer** `IsHyp`/`IsSubhyp`
+determinations at every stage (−190 UpdateByGenus, −340 UpdateCurves1, −95 UpdateCurves6).
+`git diff HEAD origin/main -- data/` was empty, so main was never affected.
+*Method note:* `grep -v TestInWhichProved` does **not** strip the attribution — the string sits
+on a continuation line, which makes that diff look like ~58k lines of content change when it is
+almost entirely attribution. Parse by splitting on `*])` and keying on `CurveID`.
+
+Also harvested: two M = 532 Normaliz solutions left behind in `-spanprobe` (`9cc771e`). The
+other two at that level were already tracked, so the cache was partial exactly there — the
+silent-full-resolve mode `f90c441` set out to close. Cache on main: **378 files**.
+
+---
+
 ## NEXT — in this order
 
-**1. Merge `odd-d-zeroskip` once CI is green.** Then re-run the 7 remaining TIMEOUT bases.
+**1. The invariant hoist (336×)** — the biggest remaining lever on odd D. The whole 0-side
+block is invariant across triples *and* keys yet recomputed per key per triple. **Resolve the
+`T` shadowing first** (the ∞-side `T` at ~844 is shadowed by the 0-side kernel matrix at ~885;
+nobody has verified that is harmless). Measure with `bfprof.m`, not end-to-end — see the
+measurement trap below.
 
-**2. The invariant hoist (336×)** — the biggest remaining lever on odd D. Resolve the `T`
-shadowing first.
+**2. Re-run the 7 remaining TIMEOUT bases** now that the zero-skip is on main. Expect this to
+*confirm* rather than clear them: the fix removed a constant factor, not the ceiling.
+`basis_of_weakly_holomorphic_forms(... : Zero)` is now dominant and steep in pole order
+(556 s @ 845; `65_2`'s last m implies 8450), and `77_2` is structurally out of reach.
 
 **3. Decide the even-correction escape hatch.** Worth it now: the obstructed class is 28.
 The twist question and the exact-divisor assert are the two unknowns.
 
 **4. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+**Before launching**, note from `note-missing-targets.md`: of the 351 bases in the broad target
+list, 328 sit inside the committed M ≤ 2260 cache frontier and **23 do not** (max M = 4830).
+Those 23 each pay a full Normaliz solve, silently. Pre-solve them or expect them to dominate.
 
 **5. Route B's k = 3/2 phase.** Low priority; route A measures directly.
 
@@ -141,8 +190,15 @@ The twist question and the exact-divisor assert are the two unknowns.
 ## Tools (campaign branch, `vvdata/weyl-campaign/`)
 
     spanprobe.m  deficit.m  matrank.m  dsize.m    route A (measured deficit)
-    weildim.m  weildim2.m                        route B (Weil representation)
+    weildim.m  weildim2.m  dsmall.m              route B (Weil rep) + its #disc_grp table
+    bfprof.m                                     per-stage odd-D profiler — USE THIS to
+                                                 measure the invariant hoist
+    diag_15_2.m                                  non-rationality characterization driver
     span-obstruction-probe.patch                 instrumentation — THROWAWAY WORKTREE ONLY
+    bfprof-instrumentation.patch                 BFPROF/BFINV timers — DOES NOT APPLY to main
+    valuesatcmpoints-characterization.patch      probe — CANNOT HAVE RUN as written
+    note-probes.md                               the caveats on both patches. Read first.
+    MISSING_TARGETS.txt  note-missing-targets.md 351-base target list + cache-frontier analysis
     retriage.sh  wave4_*.txt                     triage driver + stream lists
     ppint.m  cmsupply.m  genmodels.m  backlog.m  earlier triage tooling
 
