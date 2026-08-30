@@ -814,7 +814,17 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                         coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
                         coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
 
-                        ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0]] : i in [1..Nrows(T)]];
+                        // Skip the zero terms.  T here is the kernel basis computed just above, and
+                        // it is a pure SELECTION matrix -- measured nnz(T) = Nrows(T) exactly, one
+                        // 1 per row -- so the unguarded sum did 79-426x more EtaQuot arithmetic
+                        // than necessary.  This is the LAST recombination in the file still
+                        // lacking the guard (the others are at ~437, ~480, ~618), and it sits in
+                        // the odd-D-only 0-side block, which is exactly why the earlier
+                        // WeaklyHolomorphicBasis speedup helped even D and left odd D untouched.
+                        // Profiling attributes 93% of an m_idx pass at X0^65(2), and 84% at
+                        // X0^85(2), to this single line.
+                        ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0] | T[i][j] ne 0]
+                                       : i in [1..Nrows(T)]];
 
                         // collecting contributions from 0 and oo
                         relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
