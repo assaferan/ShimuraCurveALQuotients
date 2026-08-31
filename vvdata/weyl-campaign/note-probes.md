@@ -39,7 +39,8 @@ Turns the first-failure `error` in `ValuesAtCMPoints` into a **characterization 
 `gcd(disc, N)` and `KroneckerSymbol(d, p)` at the primes of `N`. The intent was to test whether
 non-rationality tracks ramification at the level prime — see [[embedding-selection-root-cause]].
 
-**CAVEAT — this probe cannot have run successfully as written.** It patches the two-argument
+**CAVEAT — this probe cannot have run successfully as written**, though the reason is narrower
+than "ValuesAtCMPoints has no Xstar": it patches the two-argument
 intrinsic
 
     ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : Exclude := {})
@@ -49,3 +50,9 @@ intrinsic at `:1655`. The added lines reference `Xstar`N` and `Xstar`D`, so the 
 an undefined identifier the moment a bad cell is found. **Any conclusion attributed to this
 probe should be treated as unevidenced.** To revive it, thread `D` and `N` through the
 signature, or move the characterization up to the four-argument caller.
+
+**But do not generalise the caveat to the file.** The FOUR-argument `ValuesAtCMPoints` at
+`SchoferFormula.m:1655` does have `Xstar` in scope (it sets `Xstar := abs_schofer_tab`Xstar` at
+:1837), and that is where the `RationalNumber` failure of the even-correction work actually
+fires (:1871) — a different call from the one this patch instruments. The working diagnostic for
+that site is `even-correction/nonrat-diagnostic.patch`; use it rather than reviving this one.
