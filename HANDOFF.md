@@ -5,11 +5,12 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
-    main               619051a   speedup (04f1d7b) + odd-D zero-skip (b7067c3, merged) + cache
+    main               afb80b2   speedup + odd-D zero-skip + invariant hoist + cache
     tier1-models       73095a8   unchanged; carries the unmerged paper work
     m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
     odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
-    odd-d-invariant-hoist 4c29d1e the hoist -- correctness/clarity, ~2%; awaiting CI
+    odd-d-invariant-hoist 4c29d1e MERGED to main (afb80b2); correctness/clarity, ~2%
+    intsol-optin       4cdf1fb   IntegralSolution + Targets threading; CI clean, unmerged
     whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
 
 Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
@@ -194,21 +195,44 @@ intersection. Until that exists this hatch cannot be finished, so **do not re-at
 implementation task** — and note the same defect is what the `coprime_to_level` filter
 (`ShimuraQuotients.m:1420`, self-described as "a blunt instrument") already works around.
 
-**1. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+**1. The NONINTEGRAL class is mapped, and blocked at a THIRD gate.** Full account and tooling:
+`vvdata/weyl-campaign/intsol/` on the campaign branch (`fe39373`, `c27707c`, `144b20f`); code on
+branch `intsol-optin` (`6a6267c` the opt-in parameter, `4cdf1fb` the `Targets` threading), CI
+clean. What was established:
+
+* `IntegralSolution := false` makes the reverted August `intsol` finding usable — the prototype
+  only ever failed because it shipped *unconditionally* and changed `fs[-1]` on working bases.
+  It rescues **7 of 18** measured bases, so **≈39% of the class was a choice artifact** (which
+  point `Solution` returned from `sol + Kernel`), not a divisor defect.
+* **But none of the seven yields a model.** Six die of CM starvation, and **`cmsupply.m`
+  predicted every one** at `ppint` cost — a 7/7 validation. **Run `cmsupply` FIRST on this
+  class.**
+* Genus-capping via `Targets` **clears** the CM gate (`58_5`, `74_5` ran 18 and 37 min instead of
+  dying at it), but then `34_11`, `58_5` and `74_5` all fail the **`M0MultiplierExact`
+  slash-constant two-point check** — three bases by two independent routes.
+
+    integrality  →  CM supply  →  M0MultiplierExact slash-constant check
+
+⇒ **Resume at the slash-constant check, not at integrality.** Two caveats carried in the note:
+`IntegralSolution` is **not monotone** (`69_2` gets four orders of magnitude worse) so it must
+stay per-base opt-in; and `74_3`'s failure is **unlocalised** because the driver truncated the
+error and had no verbosity — a bug in the `Targets` threading is not excluded there.
+
+**2. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
 **Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
 committed M ≤ 2260 frontier and 23 do not — but those 23 share only **11 distinct M** (the cache
 key), so it is ~22–33 solves, a bounded batch to run *ahead* of the wave rather than a silent
 per-base tax inside it. That cohort is also the high-genus tail (g up to 17, CM demand
 `max(2g+5)` = 39), so run `cmsupply.m` over it first — see `note-missing-targets.md`.
 
-**2. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
+**3. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
 clear them: both odd-D constant-factor fixes are in and the ceiling is untouched.
 `basis_of_weakly_holomorphic_forms(... : Zero)` is steep in pole order (556 s @ 845; `65_2`'s
 last m implies 8450) and `77_2` is structurally out of reach.
 
-**3. Route B's k = 3/2 phase.**
+**4. Route B's k = 3/2 phase.**
 
-**4. The theory item, if the paper is the priority:** state and prove the general-`m` analogue of
+**5. The theory item, if the paper is the priority:** state and prove the general-`m` analogue of
 `prop:kappa0` — the vector-valued weight-3/2 Eisenstein coefficient at a nonzero isotropic coset.
 It is the one object standing between the obstructed class (28 bases) and a model, and the exact
 values are already known at `15_2`, `6_5`, `10_3`, `21_2` as a regression set. Low priority; route A measures directly.
