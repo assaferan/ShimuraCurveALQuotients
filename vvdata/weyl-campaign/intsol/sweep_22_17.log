@@ -1,0 +1,4 @@
+INTSOL BASE 22_17
+INTSOL 22_17 DEFAULT OK nforms 9 integral false maxden 3 time 354.600s
+INTSOL 22_17 INTSOL OK nforms 9 integral false maxden 3 time 360.210s
+INTSOL DONE 22_17

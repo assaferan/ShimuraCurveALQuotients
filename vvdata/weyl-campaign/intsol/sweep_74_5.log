@@ -1,0 +1,4 @@
+INTSOL BASE 74_5
+INTSOL 74_5 DEFAULT OK nforms 9 integral false maxden 2 time 455.650s
+INTSOL 74_5 INTSOL OK nforms 9 integral true maxden 1 time 401.710s
+INTSOL DONE 74_5

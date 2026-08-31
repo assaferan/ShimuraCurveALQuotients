@@ -1,0 +1,4 @@
+INTSOL BASE 26_7
+INTSOL 26_7 DEFAULT OK nforms 9 integral false maxden 2 time 29.130s
+INTSOL 26_7 INTSOL FAIL time 115.490s :: Failed to find all Borcherds forms
+INTSOL DONE 26_7

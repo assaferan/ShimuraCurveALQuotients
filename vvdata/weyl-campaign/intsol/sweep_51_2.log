@@ -1,0 +1,4 @@
+INTSOL BASE 51_2
+INTSOL 51_2 DEFAULT OK nforms 9 integral false maxden 6 time 48.250s
+INTSOL 51_2 INTSOL OK nforms 9 integral false maxden 6 time 75.960s
+INTSOL DONE 51_2

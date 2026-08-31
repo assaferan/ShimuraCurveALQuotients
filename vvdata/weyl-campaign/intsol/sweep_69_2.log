@@ -1,0 +1,4 @@
+INTSOL BASE 69_2
+INTSOL 69_2 DEFAULT OK nforms 9 integral false maxden 64 time 83.880s
+INTSOL 69_2 INTSOL OK nforms 9 integral false maxden 1048576 time 2390.720s
+INTSOL DONE 69_2
