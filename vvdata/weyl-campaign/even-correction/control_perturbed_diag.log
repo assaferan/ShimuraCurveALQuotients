@@ -1,0 +1,55 @@
+PROBEEVEN key 8791 perturb disc 296 by 2
+PROBEEVEN key 8791 div_f [ <-408, 1>, <-296, 2>, <-51, 1>, <-24, 1>, <-3, -3> ]
+PROBEEVEN key 8791 expected [ <-408, 1>, <-296, 2>, <-51, 1>, <-24, 1>, <-3, -3> ]
+PROBEEVEN key 8792 perturb disc 164 by 2
+PROBEEVEN key 8792 div_f [ <-164, 2>, <-51, 1>, <-3, -1> ]
+PROBEEVEN key 8792 expected [ <-164, 2>, <-51, 1>, <-3, -1> ]
+PROBEEVEN key 8793 perturb disc 296 by 2
+PROBEEVEN key 8793 div_f [ <-408, 1>, <-296, 2>, <-24, 1>, <-3, -2> ]
+PROBEEVEN key 8793 expected [ <-408, 1>, <-296, 2>, <-24, 1>, <-3, -2> ]
+PROBEEVEN key 8794 perturb disc 296 by 2
+PROBEEVEN key 8794 div_f [ <-408, 1>, <-296, 2>, <-68, 1>, <-51, 1>, <-3, -4> ]
+PROBEEVEN key 8794 expected [ <-408, 1>, <-296, 2>, <-68, 1>, <-51, 1>, <-3, -4> ]
+PROBEEVEN key 8795 perturb disc 164 by 2
+PROBEEVEN key 8795 div_f [ <-164, 2>, <-68, 1>, <-24, 1>, <-3, -3> ]
+PROBEEVEN key 8795 expected [ <-164, 2>, <-68, 1>, <-24, 1>, <-3, -3> ]
+PROBEEVEN key 8796 perturb disc 164 by 2
+PROBEEVEN key 8796 div_f [ <-164, 2>, <-68, 1>, <-51, 1>, <-24, 1>, <-3, -4> ]
+PROBEEVEN key 8796 expected [ <-164, 2>, <-68, 1>, <-51, 1>, <-24, 1>, <-3, -4> ]
+PROBEEVEN key 8797 perturb disc 296 by 2
+PROBEEVEN key 8797 div_f [ <-408, 1>, <-296, 2>, <-68, 1>, <-3, -3> ]
+PROBEEVEN key 8797 expected [ <-408, 1>, <-296, 2>, <-68, 1>, <-3, -3> ]
+PROBEEVEN key -1 SKIPPED (hauptmodul; PROBE_EVEN_KEYS=covers)
+PROBEEVEN key -2 SKIPPED (hauptmodul; PROBE_EVEN_KEYS=covers)
+NONRAT row 1 col 4 disc -11 gcd(disc,N)=1 inK true
+NONRAT row 1 col 6 disc -56 gcd(disc,N)=1 inK true
+NONRAT row 1 col 7 disc -68 gcd(disc,N)=1 inK true
+NONRAT row 2 col 7 disc -68 gcd(disc,N)=1 inK true
+NONRAT row 3 col 3 disc -51 gcd(disc,N)=3 inK true
+NONRAT row 3 col 4 disc -11 gcd(disc,N)=1 inK true
+NONRAT row 3 col 5 disc -20 gcd(disc,N)=1 inK true
+NONRAT row 3 col 6 disc -56 gcd(disc,N)=1 inK true
+NONRAT row 4 col 2 disc -24 gcd(disc,N)=3 inK true
+NONRAT row 4 col 5 disc -20 gcd(disc,N)=1 inK true
+NONRAT row 4 col 6 disc -56 gcd(disc,N)=1 inK true
+NONRAT row 5 col 3 disc -51 gcd(disc,N)=3 inK true
+NONRAT row 7 col 2 disc -24 gcd(disc,N)=3 inK true
+NONRAT row 7 col 3 disc -51 gcd(disc,N)=3 inK true
+NONRAT row 7 col 4 disc -11 gcd(disc,N)=1 inK true
+NONRAT row 7 col 5 disc -20 gcd(disc,N)=1 inK true
+NONRAT row 7 col 6 disc -56 gcd(disc,N)=1 inK true
+NONRAT TOTAL 17 cells; nrows 9 ndiscs 7 N 3
+
+AllEquationsAboveCovers(
+Xstar: ,
+curves: [ , , , , , , , , , , , , , , , , , , , , , , , , , , , , , ...
+)
+ValuesAtCMPoints(
+abs_schofer_tab: ,
+all_cm_pts: [ [ <-3, 6, 1>, <-24, 2, 1>, <-51, 2, 1>, <-11, 1, 1>, <-20,...
+)
+In file "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients-control/SchoferFormula.m", line 1903, column 49:
+>>     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table
+                                                   ^
+Runtime error in 'RationalNumber': s does not represent a rational number!
+

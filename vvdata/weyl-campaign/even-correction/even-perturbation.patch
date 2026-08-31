@@ -1,0 +1,123 @@
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 0481c84..6a54a23 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -856,20 +856,112 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+ 
+                     V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
+                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
+-                    
++
++                    // ===== PROBE_EVEN (throwaway branch; never merge) =====
++                    // POSITIVE CONTROL for the even-correction escape hatch.  The hatch claims a
++                    // double cover depends on its branch divisor only MOD 2, so adding an EVEN
++                    // divisor changes the Borcherds form but not the cover.  Obstructed bases have
++                    // no model to compare against, so test the claim HERE instead, on a base that
++                    // already works and has a committed model: perturb the target by an even
++                    // amount at a discriminant NOT in the ramification divisor, and see whether
++                    // the pipeline still lands on the same curve.
++                    // CONFOUND CONTROL: by default perturb only the COVER keys (i > 0), never the
++                    // two hauptmoduls (keys -1, -2).  EquationsCovers.m:218 builds d_divs from the
++                    // hauptmodul divisors' SUPPORT (it keeps T[1] and discards the multiplicity
++                    // T[2]), and d_divs then drives CandidateDiscriminants' Keep set and
++                    // AbsoluteValuesAtCMPoints' Include set.  Perturbing a hauptmodul would
++                    // therefore change which CM points are selected, so a failure could not be
++                    // attributed to the cover-invariance claim under test -- it might just be CM
++                    // starvation.  PROBE_EVEN_KEYS=all opts into the confounded variant on purpose.
++                    probe_pert := [];
++                    probe_even := GetEnv("PROBE_EVEN");
++                    probe_keys := GetEnv("PROBE_EVEN_KEYS");
++                    if probe_keys eq "" then probe_keys := "covers"; end if;
++                    if (probe_even ne "") and (probe_keys eq "covers") and (i lt 0) then
++                        printf "PROBEEVEN key %o SKIPPED (hauptmodul; PROBE_EVEN_KEYS=covers)\n", i;
++                        probe_even := "";
++                    end if;
++                    if probe_even ne "" then
++                        amt := StringToInteger(probe_even);
++                        ram_ds := {-pt[1] : pt in ram};
++                        // AVOID THE CM EVALUATION SET.  Placing the even correction at a
++                        // discriminant that is later used as a Schofer evaluation point makes the
++                        // form VANISH there, so ValuesAtCMPoints hits log|0| and dies in
++                        // RationalNumber ("s does not represent a rational number").  That is
++                        // exactly what the first run of this control did -- it picked cand[1] =
++                        // disc 11, which was one of the five CM points {3,11,20,24,51} -- so the
++                        // failure was self-inflicted, not evidence against the hatch.
++                        // PROBE_EVEN_AVOID is a comma-separated list of |disc| to steer clear of;
++                        // PROBE_EVEN_DISC pins the choice outright.
++                        avoid := {};
++                        av := GetEnv("PROBE_EVEN_AVOID");
++                        if av ne "" then
++                            avoid := {StringToInteger(s) : s in Split(av, ",")};
++                        end if;
++                        // HYPOTHESIS UNDER TEST: the correction discriminant must be COPRIME TO N.
++                        // Avoiding the CM evaluation set was not sufficient -- the rerun placed the
++                        // correction at disc 180 and 360, neither of them an evaluation point, and
++                        // ValuesAtCMPoints still died in RationalNumber.  Both are divisible by 9,
++                        // and N = 3 for the control base, so they are non-coprime to the level --
++                        // the axis that [[embedding-selection-root-cause]] ties to non-rational
++                        // Schofer values.  Worse, the "prefer the largest |disc|" heuristic
++                        // actively SELECTED such discriminants.  PROBE_EVEN_COPRIME=0 disables.
++                        require_cop := GetEnv("PROBE_EVEN_COPRIME") ne "0";
++                        cand := [j : j in [1..#relevant_ds] | (relevant_ds[j] notin ram_ds)
++                                                          and (AbsoluteValue(relevant_ds[j]) notin avoid)
++                                                          and ((not require_cop)
++                                                               or (GCD(AbsoluteValue(relevant_ds[j]), Xstar`N) eq 1))];
++                        pinned := GetEnv("PROBE_EVEN_DISC");
++                        if pinned ne "" then
++                            pd := StringToInteger(pinned);
++                            cand := [j : j in cand | AbsoluteValue(relevant_ds[j]) eq pd];
++                        end if;
++                        if not IsEmpty(cand) then
++                            // prefer the LARGEST |disc|: the CM evaluation set is built at small
++                            // bd, so large discriminants are the least likely to collide.
++                            _, mi := Maximum([AbsoluteValue(relevant_ds[j]) : j in cand]);
++                            jj := cand[mi];
++                            target_v +:= amt*V.jj;
++                            probe_pert := [<-relevant_ds[jj], amt>];
++                            printf "PROBEEVEN key %o perturb disc %o by %o\n",
++                                   i, relevant_ds[jj], amt;
++                        else
++                            printf "PROBEEVEN key %o NO free discriminant available\n", i;
++                        end if;
++                    end if;
++                    // ===== end PROBE_EVEN =====
++
+                     found_v := target_v in Image(coeffs_trunc);
+-                   
+-                    if not found_v then found_all := false; break; end if;
++
++                    if not found_v then
++                        printf "PROBEEVEN key %o TARGET NOT IN IMAGE after perturbation\n", i;
++                        found_all := false; break;
++                    end if;
+                     sol := Solution(coeffs_trunc, target_v);
+-                    
++
+                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
+                     if IsOdd(Xstar`D) then
+                         etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
+                     end if;
+                     // check divisor
+                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
+-                    
+-                    assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
++
++                    // ===== PROBE_EVEN: the exact-divisor assert, relaxed =====
++                    // With a perturbation the divisor is deliberately ram + (even part), so the
++                    // exact-equality assert must become "equals ram plus exactly the perturbation".
++                    // This is the assert the handoff names as the thing to relax; the control
++                    // tests whether relaxing it is SAFE, i.e. whether the cover survives.
++                    if not IsEmpty(probe_pert) then
++                        expected := {<pt[1], div_coeffs[j]> : j->pt in ram} join {<p[1], p[2]> : p in probe_pert};
++                        printf "PROBEEVEN key %o div_f %o\n", i, Sort(div_f);
++                        printf "PROBEEVEN key %o expected %o\n", i, Sort(SetToSequence(expected));
++                        if Set(div_f) ne expected then
++                            printf "PROBEEVEN key %o DIVISOR MISMATCH\n", i;
++                        end if;
++                    else
++                        assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
++                    end if;
++                    // ===== end PROBE_EVEN =====
+                 end for;
+                 if found_all then break; end if;
+             end for;

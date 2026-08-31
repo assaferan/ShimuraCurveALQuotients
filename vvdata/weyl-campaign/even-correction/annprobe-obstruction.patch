@@ -1,0 +1,47 @@
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 0481c84..bb81fdb 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -858,7 +858,41 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
+                     
+                     found_v := target_v in Image(coeffs_trunc);
+-                   
++
++                    // ===== PROBE_ANN (throwaway branch; never merge) =====
++                    // Report the annihilator phi of the image and its pairing against the
++                    // target, at the FIRST failing key only, then abort.  The deficit is
++                    // invariant across triples (measured at 38_5: identical over all 96),
++                    // so triple 1 carries all the information and aborting there turns a
++                    // 900-1700 s exhaustive failure into a single-key probe.
++                    if not found_v then
++                        probe_ct := ChangeRing(coeffs_trunc, Rationals());
++                        probe_tv := Matrix(Rationals(), 1, Ncols(probe_ct),
++                                           [Rationals()!x : x in Eltseq(target_v)]);
++                        ann := Kernel(Transpose(probe_ct));
++                        printf "PROBEANN key %o anndim %o ncols %o rank %o rank_t %o nds %o\n",
++                               i, Dimension(ann), Ncols(probe_ct), Rank(probe_ct),
++                               Rank(VerticalJoin(probe_ct, probe_tv)), #relevant_ds;
++                        printf "PROBEANN_RAM %o\n", [<pt[1], div_coeffs[j]> : j->pt in ram];
++                        for b in Basis(ann) do
++                            phi := [Rationals()!x : x in Eltseq(b)];
++                            dl := LCM([Denominator(x) : x in phi]);
++                            phiz := [Integers()!(dl*x) : x in phi];
++                            g := GCD(phiz);
++                            if g ne 0 then phiz := [x div g : x in phiz]; end if;
++                            val := &+[phiz[j]*(Rationals()!Eltseq(target_v)[j]) : j in [1..#phiz]];
++                            printf "PROBEANN_PHI %o\n", phiz;
++                            printf "PROBEANN_GCD %o\n", GCD(phiz);
++                            printf "PROBEANN_VAL %o\n", val;
++                            // The whole escape hatch turns on this parity.
++                            printf "PROBEANN_PARITY %o\n",
++                                   (IsIntegral(val) and IsEven(Integers()!val)) select "EVEN" else
++                                   (IsIntegral(val) select "ODD" else "NONINTEGRAL");
++                        end for;
++                        error "PROBE_STOP";
++                    end if;
++                    // ===== end PROBE_ANN =====
++
+                     if not found_v then found_all := false; break; end if;
+                     sol := Solution(coeffs_trunc, target_v);
+                     

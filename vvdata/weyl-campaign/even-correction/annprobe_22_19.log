@@ -1,0 +1,17 @@
+ANNPROBE BASE 22_19
+PROBEANN key 12 anndim 2 ncols 43 rank 41 rank_t 42 nds 42
+PROBEANN_RAM [ <-88, 1>, <-152, 1>, <-3, -4> ]
+PROBEANN_PHI [ 1, 0, 3, -7, 3, 0, -5, -7, 0, 3, -7, 0, -2, 6, 6, 3, 3, 3, 0, 3, 
+-4, -4, 6, 3, -4, 3, -4, -7, 3, -4, -1, 3, 3, -4, -4, -1, -4, 2, 0, 3, 0, -2, 0 
+]
+PROBEANN_GCD 1
+PROBEANN_VAL -26
+PROBEANN_PARITY EVEN
+PROBEANN_PHI [ 0, 1, 1, -3, 0, 2, -2, -4, 1, 1, -4, 1, -2, 2, 3, 3, 2, 3, 2, 1, 
+-2, -1, 0, 2, -3, 1, -2, -2, 0, -3, 0, 1, 1, -2, -1, -2, -2, -1, 1, 1, 3, -1, 0 
+]
+PROBEANN_GCD 1
+PROBEANN_VAL -8
+PROBEANN_PARITY EVEN
+ANNPROBE RESULT 22_19 OBSTRUCTED time 500.550s
+ANNPROBE DONE 22_19

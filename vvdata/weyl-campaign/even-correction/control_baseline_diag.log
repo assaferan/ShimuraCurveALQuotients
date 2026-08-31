@@ -1,0 +1,4 @@
+NONRAT TOTAL 0 cells; nrows 9 ndiscs 7 N 3
+computed AllEquationsAboveCovers in 202.870s
+WROTE /tmp/control/diagbase/models_34_3.m (15 cover-keys)
+GENMODELS_DONE 34 3 keys 15

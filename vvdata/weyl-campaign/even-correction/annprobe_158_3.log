@@ -1,0 +1,13 @@
+ANNPROBE BASE 158_3
+PROBEANN key 1 anndim 1 ncols 99 rank 98 rank_t 99 nds 98
+PROBEANN_RAM [ <-948, 1>, <-1896, 1>, <-8, -8> ]
+PROBEANN_PHI [ 2, 0, 2, -1, -2, -3, 4, 1, 0, -2, -4, 0, 0, -4, 3, -2, -4, -3, 
+-6, 4, 0, 2, 0, 0, 4, 0, -4, -2, -1, 4, -6, 0, 2, -6, -2, 1, 2, 0, 2, 4, -3, -8,
+0, -4, 3, 0, 4, -2, 4, 5, -1, -2, 4, 0, 3, -1, 4, 5, 4, 3, -3, -8, -10, -2, -8, 
+2, -2, 7, 6, -1, 4, -3, 6, 2, 1, 4, -2, -10, 4, 0, 1, 0, 4, 0, -3, 1, 2, -2, 2, 
+2, -3, -3, 0, 3, 0, 9, 0, -3, 0 ]
+PROBEANN_GCD 1
+PROBEANN_VAL -44
+PROBEANN_PARITY EVEN
+ANNPROBE RESULT 158_3 OBSTRUCTED time 866.810s
+ANNPROBE DONE 158_3

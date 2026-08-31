@@ -1,0 +1,11 @@
+ANNPROBE BASE 26_11
+PROBEANN key 11 anndim 1 ncols 51 rank 50 rank_t 51 nds 50
+PROBEANN_RAM [ <-1144, 1>, <-52, 1>, <-8, -4> ]
+PROBEANN_PHI [ 2, 1, -2, 0, -2, -6, 0, -2, -3, 8, 1, 0, 2, 4, 3, -2, -6, 0, -6, 
+0, 6, 2, -5, -2, 6, -10, 6, -2, 3, 2, 4, -6, -4, 0, 3, -4, 2, -4, 4, -12, 2, 2, 
+4, -2, -4, 4, 10, 2, -2, -1, 0 ]
+PROBEANN_GCD 1
+PROBEANN_VAL -22
+PROBEANN_PARITY EVEN
+ANNPROBE RESULT 26_11 OBSTRUCTED time 114.430s
+ANNPROBE DONE 26_11

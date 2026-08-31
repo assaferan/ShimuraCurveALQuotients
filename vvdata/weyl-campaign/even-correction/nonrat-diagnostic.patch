@@ -1,0 +1,48 @@
+diff --git a/SchoferFormula.m b/SchoferFormula.m
+index 1da266e..fed38bf 100644
+--- a/SchoferFormula.m
++++ b/SchoferFormula.m
+@@ -1867,10 +1867,42 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum :
+         row_scales[k] +:= scale_factors[i];
+     end for;
+ 
++    // ===== PROBE_EVEN diagnostic (throwaway branch; never merge) =====
++    // Three guesses at why an even divisor correction breaks this conversion have now failed
++    // (CM-point collision, then coprimality to N).  Stop guessing: report exactly WHICH cells
++    // are non-rational and at which discriminant, so the pattern is read off rather than
++    // predicted.  NOTE this is a DIFFERENT RationalNumber call from the one the rescued
++    // valuesatcmpoints-characterization.patch instruments (that one is in the 2-argument
++    // intrinsic at ~1534, which indeed has no Xstar); here Xstar is in scope via the table.
++    if GetEnv("PROBE_NONRAT") ne "" then
++        allds := abs_schofer_tab`Discs;
++        nbad := 0;
++        for i->y in table do
++            for j->x in y do
++                ok := true;
++                try
++                    _ := RationalNumber(x);
++                catch e
++                    ok := false;
++                end try;
++                if not ok then
++                    nbad +:= 1;
++                    dj := (j le #allds) select allds[j] else 0;
++                    printf "NONRAT row %o col %o disc %o gcd(disc,N)=%o inK %o\n",
++                           i, j, dj, GCD(AbsoluteValue(dj), Xstar`N),
++                           i in abs_schofer_tab`K_idxs;
++                end if;
++            end for;
++        end for;
++        printf "NONRAT TOTAL %o cells; nrows %o ndiscs %o N %o\n",
++               nbad, #table, #allds, Xstar`N;
++    end if;
++    // ===== end PROBE_EVEN diagnostic =====
++
+     // make table values into rational numbers
+     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
+     abs_schofer_tab`RowScales := row_scales;
+-    
++
+     //find signs on the hauptmodul rows
+     table := abs_schofer_tab`Values;
+     s := table[s_idx];
