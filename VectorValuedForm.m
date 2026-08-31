@@ -486,7 +486,22 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
                     : i in [1..#ds] | r[i] ne 0 ] >;
             k0 := num0 / sfun(tau0);
             k1 := num1 / sfun(tau1);
-            error if Abs(k0 - k1) gt 10^(-30),
+            // The two-point check must SCALE WITH THE CONSTANT.  This was the last absolute
+            // tolerance in the intrinsic; the other four guards are relative
+            // (10^(-15)*vscale at the value checks, 10^(-15)*Max(1,|.|) on the contributions),
+            // converted by the merged m0exact-relative-tolerance work, which did not reach here.
+            //
+            // MEASURED on X0^58(5), 1446 evaluations of this line:
+            //     |k| ranges from 1 to 2.5e10 -- ten orders of magnitude
+            //     the two points agree to reldiff <= 5.9e-33 EVERYWHERE
+            //     but absdiff = reldiff * |k|, so 290 of 1446 exceeded the absolute 1e-30
+            // i.e. the check was failing on LARGE constants while their actual agreement was
+            // unchanged.  It measured the wrong thing.  Relative 1e-30 passes all 1446 with
+            // three orders of margin (and the siblings' 1e-15 with eighteen); Maximum(1, .)
+            // keeps it exactly as strict as before for |k| <= 1, so this only ever relaxes the
+            // case that was miscalibrated.
+            kscale := Maximum(Abs(k0), Abs(k1));
+            error if Abs(k0 - k1) gt 10^(-30) * Maximum(1, kscale),
                 "M0MultiplierExact: slash constant failed its two-point check";
             a0tab[wi][ri] := k0 * c0;
         end for;
