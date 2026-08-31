@@ -47,7 +47,12 @@ try
                "P<x> := PolynomialRing(Rationals());", "models := AssociativeArray();" ];
     for Wkey in Keys(agg) do
       for e in agg[Wkey] do
-        Append(~lines, Sprintf("models[%o] := [* <%o, %o> *];", Wkey, e[1], e[2]));
+        // Write <g, f, h>, NOT the curve object: "%o" on a CrvHyp prints Magma's
+        // human-readable DESCRIPTION ("Hyperelliptic Curve defined by y^2 = ...") which is
+        // not evaluable, so the file will not load.  genmodels.m gets this right; the first
+        // version of this driver did not, and nearly cost a 2.7 h run.
+        cf, ch := HyperellipticPolynomials(e[2]);
+        Append(~lines, Sprintf("models[%o] := [* <%o, %o, %o> *];", Wkey, e[1], cf, ch));
       end for;
     end for;
     Write(Sprintf("%o/capped_%o_%o.m", outdir, D, N), Join(lines, "\n") : Overwrite);
