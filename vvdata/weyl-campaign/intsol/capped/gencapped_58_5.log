@@ -1,0 +1,3 @@
+GENCAP base 58_5 gcap 2 : genera [ 0, 1, 2, 2, 3, 3, 4 ] -> keeping 4 of 7 covers, demand 13 -> 9
+GENCAP RESULT 58_5 FAIL time 1090.650s :: M0MultiplierExact: slash constant failed its two-point check
+GENCAP DONE 58_5

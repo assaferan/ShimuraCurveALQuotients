@@ -1,0 +1,3 @@
+GENCAP base 74_3 gcap 2 : genera [ 0, 1, 1, 2, 2, 3, 4 ] -> keeping 5 of 7 covers, demand 13 -> 9
+GENCAP RESULT 74_3 FAIL time 4228.530s :: Runtime error in 'Maximum': Argument 1 is not non-empty
+GENCAP DONE 74_3

@@ -135,3 +135,65 @@ deliberately abandoned and still need more CM points, not a different method.
 in `EquationsCovers.m` (vprintf level 1) never printed and the logs stayed empty until the run
 ended — making "is it progressing or stuck?" unanswerable. `gencapped.m` now sets verbosity 1 by
 default (`VERB:=0` to mute). **Do not launch a long run without progress output.**
+
+---
+
+# CAPPED RUNS: the cap works, and a THIRD gate appears
+
+`gencapped.m` on the three bases the `Targets` arithmetic said were worth running
+(`capped/gencapped_<base>.log`). **No models.**
+
+    58_5  g<=2  FAIL 1091 s  M0MultiplierExact: slash constant failed its two-point check
+    74_5  g<=3  FAIL 2205 s  M0MultiplierExact: slash constant failed its two-point check
+    74_3  g<=2  FAIL 4229 s  Maximum: Argument 1 is not non-empty   <- UNLOCALISED, see below
+
+## The cap does what it was designed to do
+
+`58_5` and `74_5` did **not** die of "Could not find enough points" — the failure that killed
+them before. They cleared that gate and ran 18 and 37 minutes. The demand reduction worked
+exactly as the arithmetic predicted, so genus-capping is validated as a technique even though it
+did not produce models here.
+
+## A third gate, reached by two different routes
+
+`34_11`, `58_5` and `74_5` fail identically. `34_11` got there by having enough CM points
+natively (`cmsupply` OK, margin 0); the other two by having their demand lowered. Three bases and
+two routes make this a real gate rather than a quirk:
+
+    integrality  ->  CM supply  ->  M0MultiplierExact slash-constant two-point check
+
+That check is now the binding constraint for this class, and nothing in the integrality or
+CM-supply direction will move it.
+
+## `74_3` is UNLOCALISED, and that is an instrumentation failure of mine
+
+The error `Maximum: Argument 1 is not non-empty` carries no location, because:
+
+* `gencapped.m`'s `try`/`catch` truncated `e`Object` to 120 characters, discarding the traceback;
+* verbosity was added to `gencapped.m` only AFTER these three had launched, so there are no
+  `[n/6]` stage markers either.
+
+So **I cannot rule out that this is a bug in the `Targets` threading** (`4cdf1fb`) rather than a
+property of the base. What is ruled out: the `Maximum` at `EquationsCovers.m:734`, which the
+`require not IsEmpty(aeac_keys)` guard protects. The leading candidate is
+**`EquationsCovers.m:524`**, `Maximum(all_keys)` inside `EquationsAbovePointlessConics` —
+assembly code that may assume the full cover set and would see an empty list once `Targets`
+restricts it. **That is a hypothesis, not a finding.** Re-running with verbosity and an untruncated
+error costs ~70 min and would not change the class verdict, since the class is blocked at the
+`M0MultiplierExact` gate regardless.
+
+Fixed for next time: `gencapped.m` now sets verbosity 1 by default. **The catch should also print
+the full `e`Object` rather than a truncation** — a 120-character error is worth almost nothing
+when the location is what you need.
+
+## Net result of this line of work
+
+**No new models.** What was gained instead:
+
+* `IntegralSolution` as a correct, opt-in, CI-clean capability (7 of 18 bases past gate 1);
+* `cmsupply.m` validated as an exact predictor of gate 2, at `ppint` cost (7 of 7);
+* `Targets`/genus-capping threaded end to end and demonstrated to clear gate 2;
+* gate 3 identified and named.
+
+The failure chain for this class is now mapped, with a cheap predictor at gate 2. Anyone
+resuming should start at the `M0MultiplierExact` slash-constant check, not at integrality.
