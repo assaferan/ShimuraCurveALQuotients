@@ -712,11 +712,11 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     return all_eqns, all_ws;
 end function;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution, Targets := Targets);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
@@ -725,7 +725,12 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
     // Keep := d_divs: see the note at the other CandidateDiscriminants call site.
     all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
-    genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    // Restrict the demand to the target covers when Targets is given: num_vals below is
+    // max(2g+5) over the RETAINED covers, so one high-genus sibling inflates the CM-point
+    // demand for everyone.  Dropping it is the documented rescue lever for a SHORT base.
+    aeac_keys := [i : i in Xstar`CoveredBy | IsEmpty(Targets) or curves[i]`W in Targets];
+    require not IsEmpty(aeac_keys) : "None of Xstar`CoveredBy matches Targets";
+    genus_list := [curves[i]`g: i in aeac_keys];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
@@ -812,8 +817,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     return all_eqns, all_ws;
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
-    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label, IntegralSolution := IntegralSolution);
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label, IntegralSolution := IntegralSolution, Targets := Targets);
 end intrinsic;
