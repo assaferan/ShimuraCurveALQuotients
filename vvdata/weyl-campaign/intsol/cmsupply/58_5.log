@@ -1,0 +1,5 @@
+BASE 58 5 demand 13 genera [ 0, 1, 2, 2, 3, 3, 4 ]
+POOL rat 4 quad 3 include 3
+TOPUP need 10 after_rat 1 after_fetch 1 after_quad 7
+CMVERD 58 5 SHORT margin -3
+DONE

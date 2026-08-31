@@ -75,3 +75,63 @@ must not be quoted.** Use `xargs -P N` for a limit that actually holds.
 
     intsol.m           the two-pass driver (default vs IntegralSolution)
     sweep_<base>.log   all runs
+
+---
+
+# FOLLOW-UP: integrality was NOT the binding constraint — CM supply is
+
+All seven rescued bases were run end to end with `IntegralSolution := true`
+(`cmsupply/genmodels_<base>.log`). **None produced a model.**
+
+    33_2 46_3 57_2 58_5 74_3 74_5   Could not find enough points, sorry!
+    34_11                           M0MultiplierExact: slash constant failed its two-point check
+
+`cmsupply.m` predicted this exactly, at `ppint` cost rather than full-pipeline cost:
+
+    base    demand  margin  verdict          genera
+    34_11     13       0    OK               0,1,1,3,4,4,4
+    33_2       7      -1    SHORT            0,0,1,1,1,1,1
+    57_2       9      -3    SHORT            0,1,1,1,2,2,2
+    58_5      13      -3    SHORT            0,1,2,2,3,3,4
+    46_3       9      -4    SHORT            0,1,1,1,1,1,2
+    74_3      13      -4    SHORT            0,1,1,2,2,3,4
+    74_5      15      -4    SHORT            1,1,2,3,3,4,5
+
+Six SHORT, six died of CM starvation; the one called OK died of something else entirely.
+**A clean validation of the predictor** — and it means this class can be triaged at `ppint` cost
+from here on, instead of a full pipeline run per base.
+
+**So `IntegralSolution` moves bases past a real gate but not to a model.** The finding stands and
+the code is worth having, but the gate behind it is CM supply. Anyone continuing this class
+should run `cmsupply.m` FIRST and only then think about integrality.
+
+## The `Targets` lever, quantified
+
+Demand is `max(2g+5)` over the RETAINED covers, so one high-genus sibling inflates it for
+everyone. Capping the genus lowers demand while keeping most covers:
+
+    74_3  g<=2  demand 13 ->  9  (supply  9)  keeps 5/7 covers
+    74_5  g<=3  demand 15 -> 11  (supply 11)  keeps 5/7 covers
+    58_5  g<=2  demand 13 ->  9  (supply 10)  keeps 4/7 covers
+    33_2  g<=0  demand  7 ->  5  (supply  6)  keeps 2/7   -- not worth it
+    46_3  g<=0  demand  9 ->  5  (supply  5)  keeps 1/7   -- not worth it
+    57_2  g<=0  demand  9 ->  5  (supply  6)  keeps 1/7   -- not worth it
+
+Only the first three retain enough covers to be worth running. Note two of them sit at **margin
+0**, so they succeed only if `cmsupply`'s accounting is exact rather than approximately right —
+a sharper test of the predictor than any of its SHORT calls.
+
+Driver: `gencapped.m` (`GCAP` = genus cap; `Targets` restricted to covers with `g <= GCAP`;
+`IntegralSolution := true`). Requires the `Targets` threading through
+`AllEquationsAboveCovers` added in `4cdf1fb` — it must reach the `num_vals` computation, not
+just the form search, or the cap changes nothing.
+
+**Results are PARTIAL by construction**: 5/7, 5/7 and 4/7 covers. The high-genus covers are
+deliberately abandoned and still need more CM points, not a different method.
+
+## Method note (third occurrence tonight)
+
+`genmodels.m` and the first `gencapped.m` did not call `SetVerbose`, so the `[n/6]` stage markers
+in `EquationsCovers.m` (vprintf level 1) never printed and the logs stayed empty until the run
+ended — making "is it progressing or stuck?" unanswerable. `gencapped.m` now sets verbosity 1 by
+default (`VERB:=0` to mute). **Do not launch a long run without progress output.**
