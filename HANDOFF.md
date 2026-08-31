@@ -163,26 +163,55 @@ silent-full-resolve mode `f90c441` set out to close. Cache on main: **378 files*
 **~~1. The invariant hoist~~ — DONE and merged-pending on `odd-d-invariant-hoist` (`4c29d1e`).
 Worth ~2%, not the lever. See section 6. Nothing further to do on odd-D constant factors.**
 
-**1. Decide the even-correction escape hatch** — now the largest open item by reach: the
-obstructed class is **28 bases**, and per [[borcherds-obstruction-is-real]] neither more divisor
-triples nor deeper poles can ever help them. φ(target) is **even** and gcd(φ) = 1, and a double
-cover depends on its branch divisor only mod 2, so an even correction kills the pairing without
-changing the cover. The two unknowns are whether it introduces an unramified quadratic twist,
-and relaxing the exact-divisor `assert`.
+**~~1. Decide the even-correction escape hatch~~ — MEASURED, and BLOCKED on open theory.**
+Full account and tooling: `vvdata/weyl-campaign/even-correction/` on the campaign branch
+(`e8d68f5`). Three results:
 
-**2. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+* **The precondition holds 28/28.** `φ(target)` is EVEN with `gcd(φ) = 1` at *every* obstructed
+  base. Nothing is out of reach on parity grounds. The probe aborts at the first failing key
+  (the deficit is invariant across triples), turning each base from a 900–1700 s exhaustive
+  failure into one key — `38_5` reproduced exactly in **29.8 s instead of 860 s**.
+* **CORRECTION to "the deficit is exactly 1"**, which was measured at `38_5` alone: `166_3`,
+  `22_19` and `74_7` have a **2-dimensional** obstruction space and need a simultaneous
+  2-condition solve, not a single shift. Both values are even in all three.
+* **The correction is constructible but unusable.** A positive control at `34_3` (whose baseline
+  reproduces the committed model exactly) builds forms with `div_f` exactly `ram + <disc,2>` at
+  every key, then dies in `ValuesAtCMPoints`. Diagnostic: baseline **0** non-rational cells,
+  perturbed **17**.
+
+**Why it is blocked.** The mechanism is the `KNOWN DEFECT` at `SchoferFormula.m:589` — `Kappa0`
+returns a zero log-`N` coefficient at firing discriminants where it should return `A_m`. **The
+preprint does NOT supply `A_m`**: `prop:closedcoef` gives the *scalar* `a_E(m)` for all `m`, but
+it reproduces only **1 of 13** measured `A_m`, and structurally so — `a_E` carries the embedding
+support rule and vanishes exactly where `A_m` is nonzero (`15_2` m=2; `21_2` m=2,6,18). Per
+[[b-eisenstein-coefficients-solved]] the relation is `A_r = -b^{η*}_0(r)/4` with `b` the
+**vector-valued** coefficient at a **nonzero isotropic coset** (support `N | r`) — a different
+object, and one that no product of local densities reproduces under any convention.
+
+⇒ **The next theorem is: general `m` at a nonzero isotropic coset.** The preprint has `m = 0`
+there (`prop:kappa0`) and all-`m` for the scalar (`prop:closedcoef`); `A_m` needs the
+intersection. Until that exists this hatch cannot be finished, so **do not re-attempt it as an
+implementation task** — and note the same defect is what the `coprime_to_level` filter
+(`ShimuraQuotients.m:1420`, self-described as "a blunt instrument") already works around.
+
+**1. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
 **Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
 committed M ≤ 2260 frontier and 23 do not — but those 23 share only **11 distinct M** (the cache
 key), so it is ~22–33 solves, a bounded batch to run *ahead* of the wave rather than a silent
 per-base tax inside it. That cohort is also the high-genus tail (g up to 17, CM demand
 `max(2g+5)` = 39), so run `cmsupply.m` over it first — see `note-missing-targets.md`.
 
-**3. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
+**2. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
 clear them: both odd-D constant-factor fixes are in and the ceiling is untouched.
 `basis_of_weakly_holomorphic_forms(... : Zero)` is steep in pole order (556 s @ 845; `65_2`'s
 last m implies 8450) and `77_2` is structurally out of reach.
 
-**4. Route B's k = 3/2 phase.** Low priority; route A measures directly.
+**3. Route B's k = 3/2 phase.**
+
+**4. The theory item, if the paper is the priority:** state and prove the general-`m` analogue of
+`prop:kappa0` — the vector-valued weight-3/2 Eisenstein coefficient at a nonzero isotropic coset.
+It is the one object standing between the obstructed class (28 bases) and a model, and the exact
+values are already known at `15_2`, `6_5`, `10_3`, `21_2` as a regression set. Low priority; route A measures directly.
 
 ---
 
