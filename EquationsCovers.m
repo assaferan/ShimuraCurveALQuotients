@@ -198,7 +198,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     return crv_list, ws, keys, deferred;
 end intrinsic;
 
-intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}) -> SeqEnum, Assoc, SeqEnum
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}, IntegralSolution := false) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the immediate covers of X. If Targets (a set of W
  subgroups, each a set of AL involutions, as produced by AllALsFromGens) is
  non-empty, restrict both the CM-point demand (num_vals) and the per-cover solve
@@ -210,7 +210,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [1/6] computing Borcherds forms (Prec = %o)...", Prec;
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Targets := Targets);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Targets := Targets, IntegralSolution := IntegralSolution);
     vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
 
     t := Realtime();
@@ -712,11 +712,11 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     return all_eqns, all_ws;
 end function;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
@@ -812,8 +812,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     return all_eqns, all_ws;
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false)-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
-    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label);
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label, IntegralSolution := IntegralSolution);
 end intrinsic;

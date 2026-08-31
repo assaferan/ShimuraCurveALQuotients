@@ -668,7 +668,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -861,7 +861,45 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                    
                     if not found_v then found_all := false; break; end if;
                     sol := Solution(coeffs_trunc, target_v);
-                    
+
+                    // IntegralSolution (default false => this whole block is inert and the
+                    // behaviour below is bit-for-bit what it always was).
+                    //
+                    // Schofer requires c_eta(m) in Z, but `Solution` returns ONE point of the
+                    // affine space sol + Kernel(coeffs_trunc), chosen arbitrarily.  When that
+                    // kernel is nonzero there may be an INTEGRAL representative of the very same
+                    // divisor that Solution simply did not pick -- in which case the base's
+                    // "non-integral principal parts" verdict is an artifact of the choice, not a
+                    // property of the divisor.  Clearing denominators on both sides preserves the
+                    // solution set, so IsConsistent over Z decides exactly whether
+                    // sol + Kernel meets Z^n.
+                    //
+                    // Two distinct effects, and the second is why the 2026-08-29 prototype
+                    // (preserved as vvdata/weyl-campaign/intsol-acceptance-criterion.patch) could
+                    // not ship unconditionally:
+                    //   * it REPLACES sol by the integral representative, so fs[-1] becomes a
+                    //     different form -- which broke the reference comparisons in
+                    //     tests/SchoferIsometry.m (Guo-Yang Table 45) and tests/VectorValuedForm.m
+                    //     (the 15_2 multiplier), both of which run on bases that are already fine;
+                    //   * it REJECTS a triple admitting no integral solution, sending the divisor
+                    //     search on instead of accepting the first merely-rational one.
+                    // Behind an opt-in parameter both are available to the bases that need them
+                    // and invisible to the ones that do not.
+                    if IntegralSolution then
+                        ctQ := ChangeRing(coeffs_trunc, Rationals());
+                        tvQ := ChangeRing(target_v, Rationals());
+                        dM := LCM([Denominator(x) : x in Eltseq(ctQ)] cat
+                                  [Denominator(x) : x in Eltseq(tvQ)]);
+                        okZ, solZ := IsConsistent(ChangeRing(dM*ctQ, Integers()),
+                                                  ChangeRing(dM*tvQ, Integers()));
+                        vprintf ShimuraQuotients, 3 :
+                            "\n\t\t\tIntegralSolution: key %o intsol %o (solden %o)",
+                            i, okZ, LCM([Denominator(Rationals()!x) : x in Eltseq(sol)]);
+                        if not okZ then found_all := false; break; end if;
+                        sol := ChangeRing(solZ, Rationals());
+                    end if;
+
+
                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
                     if IsOdd(Xstar`D) then
                         etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
