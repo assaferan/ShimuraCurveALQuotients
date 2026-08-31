@@ -725,6 +725,91 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
     while (not found_all) do
         if IsOdd(Xstar`D) then
             vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
+
+            // ---------------- the 0-side block, HOISTED ----------------
+            // Everything here depends only on m_idx (through m_choice, hence pole_order) and
+            // on data fixed before the while loop -- D0, n0, nE0, t, eta_quotients_oo, Xstar.
+            // Nothing in it reads `ram`, `min_m`, the key i, or the divisor triple
+            // (infty, other_pts).  It used to sit inside the key loop inside the triple loop,
+            // so it was recomputed identically 336 times per m_idx at X0^65(2) and 210 times
+            // at X0^85(2) -- verified by checksumming T, mat_0_oo and relevant_ds_0_oo across
+            // all 336 triples of 65_2 and finding ONE distinct signature.  The memo on
+            // max_pole_order_0 already held the expensive basis_of_weakly_holomorphic_forms
+            // call to once per m_idx; what repeated is everything after it -- the submatrix
+            // extraction, the qExpansionAtoo pass, the kernel solve, the two
+            // coeffs_to_divisor_matrix calls and the assembly.
+            //
+            // These lines must move TOGETHER: ech_etas_0 is sliced out of ech_etas_all_0 and
+            // then REPLACED in place by its recombination below, so hoisting the recombination
+            // without the slice would recombine an already-recombined list on the second key.
+            assert m_idx le #all_ms;
+            m_choice := all_ms[m_idx];
+            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
+            pole_order := -D0*m_choice;
+
+            if (max_pole_order_0 lt pole_order) then
+                max_pole_order_0 := pole_order;
+                t0 := SAction(t : Admissible := false);
+                vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
+                ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
+                vprintf ShimuraQuotients, 5 : "Done!";
+            end if;
+
+            first_idx_0 := -pole_order+max_pole_order_0+1;
+            ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx_0, first_idx_0, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
+            ech_etas_0 := ech_etas_all_0[first_idx_0..#ech_etas_all_0];
+            assert SubmatrixRange(T_all_0, first_idx_0, 1, Nrows(T_all_0), first_idx_0-1) eq 0;
+            T0 := SubmatrixRange(T_all_0, first_idx_0, first_idx_0, Nrows(T_all_0), Ncols(T_all_0));
+
+            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
+            ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
+            vprintf ShimuraQuotients, 5 : "Done!";
+
+            Rq<q> := Universe(ech_fs_oo);
+            R := BaseRing(Rq);
+
+            ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+
+            non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
+            div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
+            // This kernel basis used to be called `T`, which SHADOWED the {oo}-side T extracted
+            // in the key loop.  That shadowing is what blocked this hoist; it was in fact
+            // harmless, because the {oo}-side T is never read anywhere in this intrinsic.
+            // Renamed so the question cannot be asked a third time.
+            T_ker0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
+            good_forms_0 := T_ker0*ech_basis_0;
+            assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
+            good_forms_oo := ChangeRing(T_ker0,Rationals())*ech_basis_oo;
+            // Passing to q-expansions with q^(1/4) instead of q^(1/4D0)
+            good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
+            // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20
+            mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
+            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+            coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
+            coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
+
+            // Skip the zero terms.  T_ker0 is a pure SELECTION matrix -- measured
+            // nnz(T_ker0) = Nrows(T_ker0) exactly, one 1 per row -- so the unguarded sum did
+            // 79-426x more EtaQuot arithmetic than needed.  Profiling attributed 93% of an
+            // m_idx pass at X0^65(2), and 84% at X0^85(2), to this single line.
+            ech_etas_0 := [&+[T_ker0[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0] | T_ker0[i][j] ne 0]
+                           : i in [1..Nrows(T_ker0)]];
+
+            // collecting contributions from 0 and oo
+            relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
+
+            ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
+            for i->d in relevant_ds_0 do
+                ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+            end for;
+
+            ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
+            for i->d in relevant_ds_oo do
+                ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+            end for;
+
+            mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
+            // -------------- end of the hoisted 0-side block --------------
         end if;
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
@@ -766,81 +851,19 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                     ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
                     ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
                     assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
-                    T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
+                    // The {oo}-side transform used to be extracted here as
+                    //     T := SubmatrixRange(T_all_oo, first_idx, first_idx, ...);
+                    // and was NEVER READ -- not on the odd-D path, where the 0-side kernel
+                    // immediately overwrote it, and not on the even-D path, where nothing below
+                    // touches T at all.  Its apparent shadowing by the 0-side matrix is what
+                    // blocked the hoist above; the assignment is simply dead, so it is gone and
+                    // the 0-side matrix is now named T_ker0.  The assert on T_all_oo above is
+                    // kept: it is the real check, and it does not depend on the extraction.
 
-                    if IsOdd(Xstar`D) then
-                        assert m_idx le #all_ms;
-                        m_choice := all_ms[m_idx];
-                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
-                        pole_order := -D0*m_choice;
-                    
-                        if (max_pole_order_0 lt pole_order) then
-                            max_pole_order_0 := pole_order;
-                            t0 := SAction(t : Admissible := false);
-                            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
-                            ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
-                            vprintf ShimuraQuotients, 5 : "Done!";
-                        end if;
+                    // The 0-side block that stood here is now hoisted to the top of the while
+                    // loop -- it is invariant across both this key loop and the triple loop.
+                    // It leaves ech_etas_0, mat_0_oo and relevant_ds_0_oo ready for use below.
 
-                        first_idx := -pole_order+max_pole_order_0+1;
-                        ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx, first_idx, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
-                        ech_etas_0 := ech_etas_all_0[first_idx..#ech_etas_all_0];
-                        assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
-                        T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
-
-                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
-                        ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
-                        vprintf ShimuraQuotients, 5 : "Done!";
-
-                        Rq<q> := Universe(ech_fs_oo);
-                        R := BaseRing(Rq);
-                
-                        ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
-                        
-                        non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
-                        div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
-                        // good_forms_0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
-                        T := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
-                        good_forms_0 := T*ech_basis_0;
-                        assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
-                        // T := Solution(ech_basis_0, good_forms_0);
-                        // assert T*ech_basis_0 eq good_forms_0;
-                        good_forms_oo := ChangeRing(T,Rationals())*ech_basis_oo;
-                        // Passingt o q-expansions with q^(1/4) instead of q^(1/4D0)
-                        good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
-                        // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
-                        mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
-                        mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
-                        coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
-                        coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
-
-                        // Skip the zero terms.  T here is the kernel basis computed just above, and
-                        // it is a pure SELECTION matrix -- measured nnz(T) = Nrows(T) exactly, one
-                        // 1 per row -- so the unguarded sum did 79-426x more EtaQuot arithmetic
-                        // than necessary.  This is the LAST recombination in the file still
-                        // lacking the guard (the others are at ~437, ~480, ~618), and it sits in
-                        // the odd-D-only 0-side block, which is exactly why the earlier
-                        // WeaklyHolomorphicBasis speedup helped even D and left odd D untouched.
-                        // Profiling attributes 93% of an m_idx pass at X0^65(2), and 84% at
-                        // X0^85(2), to this single line.
-                        ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0] | T[i][j] ne 0]
-                                       : i in [1..Nrows(T)]];
-
-                        // collecting contributions from 0 and oo
-                        relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
-
-                        ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
-                        for i->d in relevant_ds_0 do
-                            ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                        end for;
-                        
-                        ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
-                        for i->d in relevant_ds_oo do
-                            ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                        end for;
-                        
-                        mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
-                    end if;
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                     coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
