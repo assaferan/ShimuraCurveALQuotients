@@ -5,12 +5,13 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
-    main               afb80b2   speedup + odd-D zero-skip + invariant hoist + cache
+    main               3a50fa6   speedup + zero-skip + hoist + cache + IntegralSolution
+                                 + the slash-constant tolerance + models_58_5.m
     tier1-models       73095a8   unchanged; carries the unmerged paper work
     m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
     odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
     odd-d-invariant-hoist 4c29d1e MERGED to main (afb80b2); correctness/clarity, ~2%
-    intsol-optin       4cdf1fb   IntegralSolution + Targets threading; CI clean, unmerged
+    intsol-optin       969fa85   MERGED to main (499c29b, 79d4e89); CI green
     whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
 
 Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
@@ -213,10 +214,40 @@ clean. What was established:
 
     integrality  →  CM supply  →  M0MultiplierExact slash-constant check
 
-⇒ **Resume at the slash-constant check, not at integrality.** Two caveats carried in the note:
-`IntegralSolution` is **not monotone** (`69_2` gets four orders of magnitude worse) so it must
-stay per-base opt-in; and `74_3`'s failure is **unlocalised** because the driver truncated the
-error and had no verbosity — a bug in the `Targets` threading is not excluded there.
+* **GATE 3 IS FIXED, and it was a miscalibrated tolerance** (`79d4e89` on main). The
+  slash-constant check compared two evaluations with an **absolute** `1e-30` while the other four
+  guards in `M0MultiplierExact` are relative — the one site the merged
+  `m0exact-relative-tolerance` work never reached. Since `absdiff = reldiff * |k|` and `|k|`
+  spans ten orders, it failed on LARGE constants whose agreement was unchanged.
+
+⇒ **FOUR VERIFIED MODELS EXIST**: `data/models/models_58_5.m` (`3a50fa6`), the first output of
+this entire line of work. `ModelChecks`: **48 checks, 0 failures**. `X_0(58,5)*` needed all three
+fixes together — `IntegralSolution`, the `g ≤ 2` genus cap, and the tolerance — and fails without
+any one. It is a **partial set by construction** (4 of 7 covers; the header says so).
+
+**⇒ THE NEXT GATE IS 4, NOT 3.** `34_11` clears gates 1–3 and then fails
+**class-constancy** (`dev 0.0186, scale 0.0430` — a 43% deviation). That is **NOT** another
+tolerance: the check's own comment records roundoff at `1e-22` for the deepest known base and
+states that *a genuine violation is O(scale)*. Loosening it would manufacture a multiplier wrong
+by 43%. Treat as a real defect in the m=0 assembly at that base.
+
+    integrality → CM supply → slash-constant (FIXED) → class-constancy (open, real)
+
+**THE LESSON, and I got this wrong twice.** *Achievable precision is base-dependent*: at the same
+`Prec := 80` the two evaluation points agree to **33 digits at `58_5` but only 18 at `34_11`**
+(longer eta products, more accumulated rounding). I first made the guard relative but kept
+`1e-30`, calibrated on `58_5` alone — that passed `58_5` and still blocked `34_11` and `74_5`,
+which were otherwise ready. The siblings' `1e-15` is the right calibration and still catches what
+the guard is for (a wrong constant differs at O(1), not in the 19th digit).
+**Do not re-tighten a tolerance on the evidence of one base.**
+
+Also worth carrying: losing 60 of 80 digits at `34_11` is real precision attrition — the first
+place to look if a model from these bases ever appears suspect.
+
+Two caveats from the earlier work still stand: `IntegralSolution` is **not monotone** (`69_2`
+gets four orders of magnitude worse) so it must stay per-base opt-in; and `74_3`'s failure is
+**unlocalised** because the driver truncated the error and had no verbosity — a bug in the
+`Targets` threading is not excluded there.
 
 **2. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
 **Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
