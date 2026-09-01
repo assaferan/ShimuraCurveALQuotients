@@ -197,3 +197,65 @@ when the location is what you need.
 
 The failure chain for this class is now mapped, with a cheap predictor at gate 2. Anyone
 resuming should start at the `M0MultiplierExact` slash-constant check, not at integrality.
+
+---
+
+# GATE 3 SOLVED, and GATE 4 named
+
+## Gate 3 was a miscalibrated tolerance (fixed, `79d4e89` on main)
+
+`M0MultiplierExact`'s slash-constant two-point check used an **absolute** `10^(-30)` where the
+other four guards in the same intrinsic are relative — the one site the already-merged
+`m0exact-relative-tolerance` work never reached. Measured by reporting instead of erroring:
+
+    X0^58(5)   1446 evaluations   |k| 1 .. 2.5e10    reldiff <= 5.9e-33   (290 would fail)
+    X0^34(11)   319 failures      |k| 1e8 .. 1e12    reldiff <= 1.07e-18
+
+Since `absdiff = reldiff * |k|`, it failed on LARGE constants whose agreement was unchanged.
+
+**⇒ FOUR VERIFIED MODELS**: `data/models/models_58_5.m` (`3a50fa6`), `ModelChecks` 48/0. The
+first output of this line of work. `X_0(58,5)*` needed **all three** fixes — `IntegralSolution`,
+the `g <= 2` cap, the tolerance — and fails without any one. Partial by construction (4 of 7).
+
+### The lesson, learned the hard way
+
+**Achievable precision is BASE-DEPENDENT**: 33 digits at `58_5`, 18 at `34_11`, same
+`Prec := 80` (longer eta products, more accumulated rounding). A first fix made the guard
+relative but kept `10^(-30)`, calibrated on `58_5` alone — it passed `58_5` and still blocked
+`34_11` and `74_5`, which were otherwise ready. The siblings' `10^(-15)` is correct.
+**Never re-tighten a tolerance on the evidence of one base.**
+
+Carry forward: losing 60 of 80 digits at `34_11` is real precision attrition — the first place
+to look if a model from these bases ever appears suspect.
+
+## Gate 4: class-constancy, and it is NOT a tolerance
+
+`34_11` clears gates 1-3 and then fails:
+
+    M0MultiplierExact: class-constancy violated (class 1, dev 0.0185658, scale 0.0430097)
+
+**43% of scale.** The check's own comment records the empirical roundoff floor as `1.1e-22` at
+the deepest known base (`39_2`, M = 156), whose independent dump passes every class-constancy
+check (42/42) — *so constancy itself is exact* — and states outright that **a genuine violation
+is O(scale)**. This is twenty orders past that floor. Loosening the guard would manufacture a
+multiplier wrong by 43%.
+
+**What the check compares.** `contribs[k][j] = rvtab[wi][i] * a0w[wi]` — the contribution of
+coset `wi` to isotropic component `j`. Theory says this is constant across all cosets of a cusp
+class (the result [[cusp-class-assembly-closed]] established at 570/570). The check samples
+several cosets per class (`picks`) and compares each against the first. So a violation means
+**two cosets of the same class give materially different contributions** — structural, not
+numerical.
+
+**Two candidate explanations, both testable cheaply:**
+
+1. the cusp-class **partition** (`classes` / `canon`) is wrong for this base — cosets grouped
+   into one class that do not actually share one;
+2. `rvtab` or `a0w` is wrong for particular cosets — in which case the deviation tracks specific
+   `wi` rather than the class.
+
+Printing `dev` per `(class, wi, j)` instead of erroring on the first would separate these
+immediately. That is the same report-instead-of-error technique that cracked gate 3, and it is
+the obvious next step if this base is pursued.
+
+    integrality -> CM supply -> slash-constant (FIXED) -> class-constancy (open, real)
