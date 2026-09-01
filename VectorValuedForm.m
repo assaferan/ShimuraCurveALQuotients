@@ -486,22 +486,27 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
                     : i in [1..#ds] | r[i] ne 0 ] >;
             k0 := num0 / sfun(tau0);
             k1 := num1 / sfun(tau1);
-            // The two-point check must SCALE WITH THE CONSTANT.  This was the last absolute
-            // tolerance in the intrinsic; the other four guards are relative
-            // (10^(-15)*vscale at the value checks, 10^(-15)*Max(1,|.|) on the contributions),
-            // converted by the merged m0exact-relative-tolerance work, which did not reach here.
+            // The two-point check must SCALE WITH THE CONSTANT, at the same 10^(-15) the other
+            // four guards in this intrinsic use (10^(-15)*vscale on the value checks,
+            // 10^(-15)*Max(1,|.|) on the contributions).  This was the last absolute tolerance
+            // here; the merged m0exact-relative-tolerance work converted the others but not this.
             //
-            // MEASURED on X0^58(5), 1446 evaluations of this line:
-            //     |k| ranges from 1 to 2.5e10 -- ten orders of magnitude
-            //     the two points agree to reldiff <= 5.9e-33 EVERYWHERE
-            //     but absdiff = reldiff * |k|, so 290 of 1446 exceeded the absolute 1e-30
-            // i.e. the check was failing on LARGE constants while their actual agreement was
-            // unchanged.  It measured the wrong thing.  Relative 1e-30 passes all 1446 with
-            // three orders of margin (and the siblings' 1e-15 with eighteen); Maximum(1, .)
-            // keeps it exactly as strict as before for |k| <= 1, so this only ever relaxes the
-            // case that was miscalibrated.
+            // MEASURED, two bases, reporting instead of erroring:
+            //   X0^58(5)   1446 evaluations   |k| 1 .. 2.5e10   reldiff <= 5.9e-33
+            //   X0^34(11)   319 failures      |k| 1e8 .. 1e12   reldiff <= 1.07e-18
+            // The absolute 1e-30 failed on LARGE constants whose agreement was unchanged
+            // (absdiff = reldiff * |k|), which is why it had to become relative.  But the
+            // ACHIEVABLE relative precision is base-dependent: 33 digits at 58_5, 18 at 34_11,
+            // at the same Prec := 80 -- longer eta products accumulate more rounding.  So the
+            // threshold must be the siblings' 10^(-15), not something tuned to the best base.
+            // (A first attempt used 10^(-30) relative, calibrated on 58_5 alone; that passed
+            // 58_5 and still blocked 34_11 and 74_5.  Do not re-tighten it on one base.)
+            //
+            // 10^(-15) still catches what this guard is for: a wrong slash constant differs at
+            // O(1), not in the 19th digit.  Maximum(1, .) keeps it exactly as strict as the
+            // original absolute test for |k| <= 1.
             kscale := Maximum(Abs(k0), Abs(k1));
-            error if Abs(k0 - k1) gt 10^(-30) * Maximum(1, kscale),
+            error if Abs(k0 - k1) gt 10^(-15) * Maximum(1, kscale),
                 "M0MultiplierExact: slash constant failed its two-point check";
             a0tab[wi][ri] := k0 * c0;
         end for;
