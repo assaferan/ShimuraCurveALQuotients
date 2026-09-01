@@ -9,6 +9,12 @@
 SetQuitOnError(true);
 SetColumns(0);
 AttachSpec("ShimuraQuotients.spec");
+// Progress ON by default.  The [n/6] stage markers in EquationsCovers.m are vprintf level 1,
+// so without this a multi-hour run logs nothing until it ends and "is it progressing or stuck?"
+// is unanswerable.  That cost visibility four separate times on 2026-08-31.  VERB:=0 to mute.
+verb := 1;
+if assigned VERB then verb := StringToInteger(VERB); end if;
+SetVerbose("ShimuraQuotients", verb);
 Px<x> := PolynomialRing(Rationals());
 D := StringToInteger(D_s); N := StringToInteger(N_s);
 outdir := "data/models";
