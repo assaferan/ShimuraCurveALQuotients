@@ -249,7 +249,30 @@ gets four orders of magnitude worse) so it must stay per-base opt-in; and `74_3`
 **unlocalised** because the driver truncated the error and had no verbosity — a bug in the
 `Targets` threading is not excluded there.
 
-**2. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+**~~2. Re-run wave 4b (the 122 never-started bases)~~ — DONE.** Predictor sweep on **lovelace**
+(256 cores, idle; `galois`/`verne` irrelevant, `legendre` busy and has no Normaliz, `lava` needs a
+jump host). Full account: `vvdata/weyl-campaign/sweep122/` on the campaign branch (`a5d018f`).
+
+     81 CAPPED-1h   21 OBSTRUCTED   13 VX-ASSERT   3 ASSERT
+      2 NONINTEGRAL  1 CM-STARVED    1 INTEGRAL     = 122
+
+* **TWO runnable candidates of 122**: `10_61` (INTEGRAL, CM OK margin 0) and `14_43`
+  (NONINTEGRAL — the *fixable* gate — CM OK margin 0). Both at margin 0, the position `34_11`
+  was in when it cleared gates 1–3.
+* **⚠ THE OBSTRUCTED CLASS IS 49, NOT 28** — 21 more bases fail "Failed to find all Borcherds
+  forms", which neither more triples nor deeper poles can help. **This raises the priority of the
+  theory item (5) substantially: it is now worth 49 bases.**
+* **`ppint`/`cmsupply` are NOT cheap predictors on large bases.** 81 of 122 gave no verdict in a
+  full hour — `ppint` must build Borcherds forms before it can speak. My earlier advice "run
+  `cmsupply` first, it is `ppint`-cost" holds only for bases earlier waves already reached. A
+  600 s cap was strictly worse than useless: **the cap was bounding the measurement itself.**
+  The remaining 81 need a genuinely cheaper predictor, not more wall-clock.
+
+**Remote-run notes** (lovelace): Magma 2.29-9, Normaliz 3.10.2 at `/usr/bin/normaliz` — verified
+to produce lattice points identical to local 3.11.1. Clone at `~/shimura/ShimuraCurveALQuotients`.
+`pkill -x magma` matches NOTHING there (the binary is `magma.exe` behind a wrapper) — and
+verifying a kill with the same pattern used to kill reports false success, which caused a
+double-launch here. **Verify with a different pattern.**
 **Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
 committed M ≤ 2260 frontier and 23 do not — but those 23 share only **11 distinct M** (the cache
 key), so it is ~22–33 solves, a bounded batch to run *ahead* of the wave rather than a silent
@@ -265,8 +288,9 @@ last m implies 8450) and `77_2` is structurally out of reach.
 
 **5. The theory item, if the paper is the priority:** state and prove the general-`m` analogue of
 `prop:kappa0` — the vector-valued weight-3/2 Eisenstein coefficient at a nonzero isotropic coset.
-It is the one object standing between the obstructed class (28 bases) and a model, and the exact
-values are already known at `15_2`, `6_5`, `10_3`, `21_2` as a regression set. Low priority; route A measures directly.
+It is the one object standing between the obstructed class (**49 bases** — see item 2) and a model, and the exact
+values are already known at `15_2`, `6_5`, `10_3`, `21_2` as a regression set. **No longer low
+priority: at 49 bases this is the largest single blocker in the backlog.**
 
 ---
 
