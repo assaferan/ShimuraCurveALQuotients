@@ -5,13 +5,46 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
-    main               f90c441   66x WeaklyHolomorphicBasis speedup (04f1d7b) + unified solution cache
-    tier1-models       a924e1a   unchanged; carries the unmerged paper work
-    m0-theta-campaign  eb700b1   research branch: triage results, probes, predictors
-    whbasis-speedup    624b68e   the speedup branch (CI green: 57 jobs, 0 failures)
+    main               1c53865   speedup + zero-skip + hoist + IntegralSolution + Targets
+                                 + slash-constant tolerance + pointless-conics guard
+                                 + models_58_5.m + 3 new tests + cache (394 files)
+    tier1-models       (merged)  carries the paper work; `origin/main` merged IN on 2026-09-02,
+                                 so it now has the full code side too. The two had diverged
+                                 27/27 on a clean split: paper/ on this side, all code on main.
+    m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
+    odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
+    odd-d-invariant-hoist 4c29d1e MERGED to main (afb80b2); correctness/clarity, ~2%
+    intsol-optin       969fa85   MERGED to main; CI green
+    fix-pointless-conics-empty 6071772  MERGED to main (133de9c); CI green
+    whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
 
-Worktrees: `-whspeed` (speedup), `-spanprobe` (**THROWAWAY**, carries all instrumentation —
-this is the template for the next profiling pass), `-campaign`, `-diagnostic`.
+### Where the model pipeline actually stands (2026-09-02)
+
+**Four verified models exist** — `data/models/models_58_5.m`, `ModelChecks` 48/0. That is the
+*only* base that has produced models. Everything else attempted since failed:
+
+    34_11   gates 1-3 OK, then class-constancy (GENUINE, 43% of scale -- see below)
+    74_5    gates 1-3 OK, capped at 5 h in the CM-value stage, no verdict
+    74_3    no longer crashes (guard merged), but yields 0 keys
+    10_61   slash-constant check, at the 1e-15 calibration
+    14_43   slash-constant check, at the 1e-15 calibration
+
+**⚠ Gate 3 is NOT fully solved.** The absolute→relative fix unblocked `58_5` decisively, but
+`10_61` and `14_43` still fail at `1e-15` — the siblings' own calibration. **Do not make a third
+tolerance change**: either their constants genuinely disagree (real mathematics) or something
+else is wrong. A `GATE3B=1` measurement on `10_61` was running on lovelace when this was written;
+its output lands at `~/shimura/models/10_61.gate3b.log` there.
+
+**Gate 4 is a genuine violation** and is characterised: `vvdata/weyl-campaign/gate4/` on the
+campaign branch. Deviation tracks the CLASS, pointing at the cusp-class partition.
+
+**Both cheap-predictor routes are closed by measurement** for the 81 unclassified bases: route A
+still costs a full `WeaklyHolomorphicBasis` (20-24 min and rising), route B's `k = 3/2` phase is
+known wrong. `deficit.m` has been REPAIRED and validated (`38_5` -> 1 at every pole order).
+
+Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
+instrumentation — the template for the next profiling pass). `-whspeed`, `-oddd` and
+`-diagnostic` were removed on 08-30; see "Housekeeping" below for what was rescued first.
 
 ---
 
@@ -75,8 +108,8 @@ block — exactly why the 66× speedup helped even D and left odd D untouched.
     everything after  1787    1789    1792
 
 `T` there is a pure SELECTION matrix (measured `nnz(T) = Nrows(T)`, one 1 per row), so the
-unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed on branch
-`odd-d-zeroskip` (`b7067c3`), measured ~140×**: `etarecomb` 1.515 s → 0.0106 s per call;
+unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed in `b7067c3`, now
+MERGED to main as `619051a`, measured ~140×**: `etarecomb` 1.515 s → 0.0106 s per call;
 `zside` 1539 s / 3 passes → 45.0 s / 4 passes. Tests green (incl. `15_2`, odd D).
 
 **It does not make `65_2` / `85_2` complete.** The dominant cost is now
@@ -84,29 +117,208 @@ unguarded sum did 79–426× more `EtaQuot` arithmetic than needed. **Fixed on b
 26.45 @325, 72.85 @455, **556.12 @845**; `65_2`'s last m implies pole order 8450. Constant
 factor removed, ceiling unmoved.
 
-**The larger win, NOT yet done**: the entire 0-side block is invariant across triples *and*
-keys — checksummed, one distinct signature across all 336 triples of `65_2` — yet recomputed
-per key per triple. That is 336× redundancy at `65_2`, 210× at `85_2`. Before hoisting, resolve
-that the ∞-side `T` (~line 844) is shadowed by the 0-side kernel matrix (~line 885); nobody has
-verified the shadowing is harmless.
+**~~The larger win, NOT yet done~~ — DONE, and REFUTED as a lever** (`odd-d-invariant-hoist`,
+`4c29d1e`). The invariance is real: the 0-side block was recomputed 336× per `m_idx` pass at
+`65_2` (= 8·7·6 triples, one key each before the break) and 210× at `85_2`, and it now runs
+once. **But what repeats is cheap.** Instrumenting the *pre-hoist* code directly at `65_2`:
+
+    pass 1   336 executions    1.75 s   (mean 0.0052)
+    pass 2   336 executions    5.97 s   (mean 0.0178)
+    pass 3   336 executions   10.02 s   (mean 0.0298)
+
+≈ 17.7 s over three passes against an 1800 s cap, versus ≈ 0.9 s hoisted — **about 2%.**
+
+**Why the "336× lever" claim was wrong, and the lesson.** That judgment was formed when the
+block cost 1539 s / 3 passes — but *that* cost was the unguarded recombination line, and the
+zero-skip removed it (140×), collapsing the block to 1.75 s/pass. The redundancy framing
+outlived the fix that made it irrelevant, because nobody re-measured the block after changing
+it. **A multiplier (336×) is only a lever when multiplied by something expensive; re-measure
+the multiplicand after any fix that touches it.**
+
+**The `T`-shadowing worry was vacuous.** The ∞-side `T` was never *read* — on odd D the 0-side
+kernel overwrote it immediately, on even D nothing below touches `T` at all. It was dead code,
+now deleted; the 0-side matrix is renamed `T_ker0` so the question cannot recur. One real trap
+found while moving it: the hoisted lines must stay together, since `ech_etas_0` is sliced out of
+`ech_etas_all_0` and then *replaced in place* by its own recombination — hoisting the
+recombination without the slice recombines an already-recombined list on the second key, a
+silent wrong answer rather than a crash.
+
+⇒ **The odd-D constant factors are now exhausted. Everything left is the
+`basis_of_weakly_holomorphic_forms(... : Zero)` ceiling above.** Do not spend more time here.
 
 **Reclassify**: `133_2` is **not** a TIMEOUT — it fails an assertion at 168 s.
 
 ---
 
+## Housekeeping — 2026-08-30 (later)
+
+`odd-d-zeroskip` went CI-green (1h37m, 0 failures) and is **merged to main as `619051a`**.
+Verified before the merge: all four `T[i][j]` recombination sites (437, 480, 618, 826) now
+carry the zero-skip guard, and the merge brought one commit touching one file — the
+`tier1-models` merge trap did not apply, because this branch was cut from `main`.
+
+Three worktrees were retired. Everything single-copy in them was rescued to
+`vvdata/weyl-campaign/` on the campaign branch first (`4b752d8`, `9059bb0`):
+
+    bfprof.m  dsmall.m  diag_15_2.m         drivers that existed nowhere else
+    bfprof-instrumentation.patch            BFPROF/BFINV timers  -- see note-probes.md
+    valuesatcmpoints-characterization.patch the non-rationality probe        "
+    MISSING_TARGETS.txt                     351 bases -- see note-missing-targets.md
+    note-probes.md  note-missing-targets.md the caveats, which matter more than the code
+
+**Two caveats worth carrying forward** (both in `note-probes.md`): the bfprof patch does **not**
+apply to current main — its hunks mix the timers with a superseded inline prototype of the
+speedup, so lift the timers by hand; and the characterization probe **cannot have run as
+written**, since it patches the two-argument `ValuesAtCMPoints` at `SchoferFormula.m:1498`,
+which has no `Xstar` in scope while the added lines reference `` Xstar`N ``. Any conclusion
+attributed to that probe is unevidenced.
+
+**`-whspeed`'s 61 uncommitted files were discarded, having been shown worthless**: 43 were
+polymake solutions byte-identical to main's, and the 17 `data/curves_after_*.dat` were an
+*incomplete* pipeline re-run — same 18379 records, but **strictly fewer** `IsHyp`/`IsSubhyp`
+determinations at every stage (−190 UpdateByGenus, −340 UpdateCurves1, −95 UpdateCurves6).
+`git diff HEAD origin/main -- data/` was empty, so main was never affected.
+*Method note:* `grep -v TestInWhichProved` does **not** strip the attribution — the string sits
+on a continuation line, which makes that diff look like ~58k lines of content change when it is
+almost entirely attribution. Parse by splitting on `*])` and keying on `CurveID`.
+
+Also harvested: two M = 532 Normaliz solutions left behind in `-spanprobe` (`9cc771e`). The
+other two at that level were already tracked, so the cache was partial exactly there — the
+silent-full-resolve mode `f90c441` set out to close. Cache on main: **378 files**.
+
+---
+
 ## NEXT — in this order
 
-**1. Merge `odd-d-zeroskip` once CI is green.** Then re-run the 7 remaining TIMEOUT bases.
+**~~1. The invariant hoist~~ — DONE and merged-pending on `odd-d-invariant-hoist` (`4c29d1e`).
+Worth ~2%, not the lever. See section 6. Nothing further to do on odd-D constant factors.**
 
-**2. The invariant hoist (336×)** — the biggest remaining lever on odd D. Resolve the `T`
-shadowing first.
+**~~1. Decide the even-correction escape hatch~~ — MEASURED, and BLOCKED on open theory.**
+Full account and tooling: `vvdata/weyl-campaign/even-correction/` on the campaign branch
+(`e8d68f5`). Three results:
 
-**3. Decide the even-correction escape hatch.** Worth it now: the obstructed class is 28.
-The twist question and the exact-divisor assert are the two unknowns.
+* **The precondition holds 28/28.** `φ(target)` is EVEN with `gcd(φ) = 1` at *every* obstructed
+  base. Nothing is out of reach on parity grounds. The probe aborts at the first failing key
+  (the deficit is invariant across triples), turning each base from a 900–1700 s exhaustive
+  failure into one key — `38_5` reproduced exactly in **29.8 s instead of 860 s**.
+* **CORRECTION to "the deficit is exactly 1"**, which was measured at `38_5` alone: `166_3`,
+  `22_19` and `74_7` have a **2-dimensional** obstruction space and need a simultaneous
+  2-condition solve, not a single shift. Both values are even in all three.
+* **The correction is constructible but unusable.** A positive control at `34_3` (whose baseline
+  reproduces the committed model exactly) builds forms with `div_f` exactly `ram + <disc,2>` at
+  every key, then dies in `ValuesAtCMPoints`. Diagnostic: baseline **0** non-rational cells,
+  perturbed **17**.
 
-**4. Re-run wave 4b (the 122 never-started bases)** at ≤ 4 streams and the original 2400 s cap.
+**Why it is blocked.** The mechanism is the `KNOWN DEFECT` at `SchoferFormula.m:589` — `Kappa0`
+returns a zero log-`N` coefficient at firing discriminants where it should return `A_m`. **The
+preprint does NOT supply `A_m`**: `prop:closedcoef` gives the *scalar* `a_E(m)` for all `m`, but
+it reproduces only **1 of 13** measured `A_m`, and structurally so — `a_E` carries the embedding
+support rule and vanishes exactly where `A_m` is nonzero (`15_2` m=2; `21_2` m=2,6,18). Per
+[[b-eisenstein-coefficients-solved]] the relation is `A_r = -b^{η*}_0(r)/4` with `b` the
+**vector-valued** coefficient at a **nonzero isotropic coset** (support `N | r`) — a different
+object, and one that no product of local densities reproduces under any convention.
 
-**5. Route B's k = 3/2 phase.** Low priority; route A measures directly.
+⇒ **The next theorem is: general `m` at a nonzero isotropic coset.** The preprint has `m = 0`
+there (`prop:kappa0`) and all-`m` for the scalar (`prop:closedcoef`); `A_m` needs the
+intersection. Until that exists this hatch cannot be finished, so **do not re-attempt it as an
+implementation task** — and note the same defect is what the `coprime_to_level` filter
+(`ShimuraQuotients.m:1420`, self-described as "a blunt instrument") already works around.
+
+**1. The NONINTEGRAL class is mapped, and blocked at a THIRD gate.** Full account and tooling:
+`vvdata/weyl-campaign/intsol/` on the campaign branch (`fe39373`, `c27707c`, `144b20f`); code on
+branch `intsol-optin` (`6a6267c` the opt-in parameter, `4cdf1fb` the `Targets` threading), CI
+clean. What was established:
+
+* `IntegralSolution := false` makes the reverted August `intsol` finding usable — the prototype
+  only ever failed because it shipped *unconditionally* and changed `fs[-1]` on working bases.
+  It rescues **7 of 18** measured bases, so **≈39% of the class was a choice artifact** (which
+  point `Solution` returned from `sol + Kernel`), not a divisor defect.
+* **But none of the seven yields a model.** Six die of CM starvation, and **`cmsupply.m`
+  predicted every one** at `ppint` cost — a 7/7 validation. **Run `cmsupply` FIRST on this
+  class.**
+* Genus-capping via `Targets` **clears** the CM gate (`58_5`, `74_5` ran 18 and 37 min instead of
+  dying at it), but then `34_11`, `58_5` and `74_5` all fail the **`M0MultiplierExact`
+  slash-constant two-point check** — three bases by two independent routes.
+
+    integrality  →  CM supply  →  M0MultiplierExact slash-constant check
+
+* **GATE 3 IS FIXED, and it was a miscalibrated tolerance** (`79d4e89` on main). The
+  slash-constant check compared two evaluations with an **absolute** `1e-30` while the other four
+  guards in `M0MultiplierExact` are relative — the one site the merged
+  `m0exact-relative-tolerance` work never reached. Since `absdiff = reldiff * |k|` and `|k|`
+  spans ten orders, it failed on LARGE constants whose agreement was unchanged.
+
+⇒ **FOUR VERIFIED MODELS EXIST**: `data/models/models_58_5.m` (`3a50fa6`), the first output of
+this entire line of work. `ModelChecks`: **48 checks, 0 failures**. `X_0(58,5)*` needed all three
+fixes together — `IntegralSolution`, the `g ≤ 2` genus cap, and the tolerance — and fails without
+any one. It is a **partial set by construction** (4 of 7 covers; the header says so).
+
+**⇒ THE NEXT GATE IS 4, NOT 3.** `34_11` clears gates 1–3 and then fails
+**class-constancy** (`dev 0.0186, scale 0.0430` — a 43% deviation). That is **NOT** another
+tolerance: the check's own comment records roundoff at `1e-22` for the deepest known base and
+states that *a genuine violation is O(scale)*. Loosening it would manufacture a multiplier wrong
+by 43%. Treat as a real defect in the m=0 assembly at that base.
+
+    integrality → CM supply → slash-constant (FIXED) → class-constancy (open, real)
+
+**THE LESSON, and I got this wrong twice.** *Achievable precision is base-dependent*: at the same
+`Prec := 80` the two evaluation points agree to **33 digits at `58_5` but only 18 at `34_11`**
+(longer eta products, more accumulated rounding). I first made the guard relative but kept
+`1e-30`, calibrated on `58_5` alone — that passed `58_5` and still blocked `34_11` and `74_5`,
+which were otherwise ready. The siblings' `1e-15` is the right calibration and still catches what
+the guard is for (a wrong constant differs at O(1), not in the 19th digit).
+**Do not re-tighten a tolerance on the evidence of one base.**
+
+Also worth carrying: losing 60 of 80 digits at `34_11` is real precision attrition — the first
+place to look if a model from these bases ever appears suspect.
+
+Two caveats from the earlier work still stand: `IntegralSolution` is **not monotone** (`69_2`
+gets four orders of magnitude worse) so it must stay per-base opt-in; and `74_3`'s failure is
+**unlocalised** because the driver truncated the error and had no verbosity — a bug in the
+`Targets` threading is not excluded there.
+
+**~~2. Re-run wave 4b (the 122 never-started bases)~~ — DONE.** Predictor sweep on **lovelace**
+(256 cores, idle; `galois`/`verne` irrelevant, `legendre` busy and has no Normaliz, `lava` needs a
+jump host). Full account: `vvdata/weyl-campaign/sweep122/` on the campaign branch (`a5d018f`).
+
+     81 CAPPED-1h   21 OBSTRUCTED   13 VX-ASSERT   3 ASSERT
+      2 NONINTEGRAL  1 CM-STARVED    1 INTEGRAL     = 122
+
+* **TWO runnable candidates of 122**: `10_61` (INTEGRAL, CM OK margin 0) and `14_43`
+  (NONINTEGRAL — the *fixable* gate — CM OK margin 0). Both at margin 0, the position `34_11`
+  was in when it cleared gates 1–3.
+* **⚠ THE OBSTRUCTED CLASS IS 49, NOT 28** — 21 more bases fail "Failed to find all Borcherds
+  forms", which neither more triples nor deeper poles can help. **This raises the priority of the
+  theory item (5) substantially: it is now worth 49 bases.**
+* **`ppint`/`cmsupply` are NOT cheap predictors on large bases.** 81 of 122 gave no verdict in a
+  full hour — `ppint` must build Borcherds forms before it can speak. My earlier advice "run
+  `cmsupply` first, it is `ppint`-cost" holds only for bases earlier waves already reached. A
+  600 s cap was strictly worse than useless: **the cap was bounding the measurement itself.**
+  The remaining 81 need a genuinely cheaper predictor, not more wall-clock.
+
+**Remote-run notes** (lovelace): Magma 2.29-9, Normaliz 3.10.2 at `/usr/bin/normaliz` — verified
+to produce lattice points identical to local 3.11.1. Clone at `~/shimura/ShimuraCurveALQuotients`.
+`pkill -x magma` matches NOTHING there (the binary is `magma.exe` behind a wrapper) — and
+verifying a kill with the same pattern used to kill reports false success, which caused a
+double-launch here. **Verify with a different pattern.**
+**Pre-solve the cache first**: of the 351 bases in `MISSING_TARGETS.txt`, 328 sit inside the
+committed M ≤ 2260 frontier and 23 do not — but those 23 share only **11 distinct M** (the cache
+key), so it is ~22–33 solves, a bounded batch to run *ahead* of the wave rather than a silent
+per-base tax inside it. That cohort is also the high-genus tail (g up to 17, CM demand
+`max(2g+5)` = 39), so run `cmsupply.m` over it first — see `note-missing-targets.md`.
+
+**3. Re-run the 7 remaining TIMEOUT bases.** Low value, and expect it to *confirm* rather than
+clear them: both odd-D constant-factor fixes are in and the ceiling is untouched.
+`basis_of_weakly_holomorphic_forms(... : Zero)` is steep in pole order (556 s @ 845; `65_2`'s
+last m implies 8450) and `77_2` is structurally out of reach.
+
+**4. Route B's k = 3/2 phase.**
+
+**5. The theory item, if the paper is the priority:** state and prove the general-`m` analogue of
+`prop:kappa0` — the vector-valued weight-3/2 Eisenstein coefficient at a nonzero isotropic coset.
+It is the one object standing between the obstructed class (**49 bases** — see item 2) and a model, and the exact
+values are already known at `15_2`, `6_5`, `10_3`, `21_2` as a regression set. **No longer low
+priority: at 49 bases this is the largest single blocker in the backlog.**
 
 ---
 
@@ -131,6 +343,10 @@ The twist question and the exact-divisor assert are the two unknowns.
 * `magma | head` / `| tail` can hang; redirect to a file instead.
 * **The `PROBESPAN` printf in `-spanprobe` ran two `Rank()` calls per key.** Any timing taken in
   that worktree before 2026-08-30 is inflated. Now gated behind `PROBE_SPAN=1` (default off).
+* **A multiplier is only a lever when the multiplicand is expensive.** The "336x redundancy"
+  claim was formed when the 0-side block cost 1539 s / 3 passes, survived the zero-skip that
+  collapsed it to 1.75 s/pass, and was still being quoted as "the biggest remaining lever" a
+  session later. Re-measure the multiplicand after any fix that touches it.
 * **Measure the thing you changed, not the whole pipeline.** The 817 fix was first tested
   end-to-end with a 2400 s cap: both bases timed out before *and* after, so the test could not
   have detected the 140× win it actually produced. For partial speedups use the `BFPROF`
@@ -141,8 +357,15 @@ The twist question and the exact-divisor assert are the two unknowns.
 ## Tools (campaign branch, `vvdata/weyl-campaign/`)
 
     spanprobe.m  deficit.m  matrank.m  dsize.m    route A (measured deficit)
-    weildim.m  weildim2.m                        route B (Weil representation)
+    weildim.m  weildim2.m  dsmall.m              route B (Weil rep) + its #disc_grp table
+    bfprof.m                                     per-stage odd-D profiler — USE THIS to
+                                                 measure the invariant hoist
+    diag_15_2.m                                  non-rationality characterization driver
     span-obstruction-probe.patch                 instrumentation — THROWAWAY WORKTREE ONLY
+    bfprof-instrumentation.patch                 BFPROF/BFINV timers — DOES NOT APPLY to main
+    valuesatcmpoints-characterization.patch      probe — CANNOT HAVE RUN as written
+    note-probes.md                               the caveats on both patches. Read first.
+    MISSING_TARGETS.txt  note-missing-targets.md 351-base target list + cache-frontier analysis
     retriage.sh  wave4_*.txt                     triage driver + stream lists
     ppint.m  cmsupply.m  genmodels.m  backlog.m  earlier triage tooling
 

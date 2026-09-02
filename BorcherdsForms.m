@@ -399,10 +399,42 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
             coeffs := MatrixAlgebra(Rationals(), 0)!0;
         end if;
         
-        E, T := EchelonForm(coeffs);
+        // The eta-quotient pool carries far more rows than its rank -- 12784 rows for a row
+        // space of rank <= 258 at X0^38(5) -- and echelonising all of them over Q dominated the
+        // whole routine (755 s of 810 s there).  Independent ROWS of `coeffs` are independent
+        // COLUMNS of its transpose, so one cheap EchelonForm over GF(p) picks a spanning subset;
+        // only those rows are then echelonised exactly.  The row space is unchanged, so E is as
+        // before and T is the small transform padded with zero columns at the discarded rows
+        // (downstream indexes T against the full eta_quotients list, so the padding matters).
+        //
+        // Safe by construction: rank mod p can only UNDER-estimate the rational rank, never
+        // over-estimate it, so an unlucky prime yields rk < dim and the enclosing loop simply
+        // iterates again (or the `assert rk eq dim` below fires).  It cannot silently return a
+        // short basis as though it were complete.
+        if Nrows(coeffs) gt 2*Ncols(coeffs) + 8 then
+            sel_p := 1073741789;
+            sel_den := LCM([Denominator(x) : x in Eltseq(coeffs)]);
+            sel_cp := ChangeRing(ChangeRing(sel_den*coeffs, Integers()), GF(sel_p));
+            sel_E := EchelonForm(Transpose(sel_cp));
+            sel := [PivotColumn(sel_E, i) : i in [1..Rank(sel_E)]];
+            sel_Es, sel_Ts := EchelonForm(Submatrix(coeffs, sel, [1..Ncols(coeffs)]));
+            E := sel_Es;
+            T := ZeroMatrix(Rationals(), Nrows(sel_Ts), Nrows(coeffs));
+            for si in [1..Nrows(sel_Ts)] do
+                for sj in [1..#sel] do
+                    if sel_Ts[si][sj] ne 0 then T[si][sel[sj]] := sel_Ts[si][sj]; end if;
+                end for;
+            end for;
+        else
+            E, T := EchelonForm(coeffs);
+        end if;
         E := Submatrix(E, [1..Rank(E)], [1..Ncols(E)]);
         if Zero then
-            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo]] : i in [1..Nrows(E)] ];
+            // Skip the zero terms: T is overwhelmingly zero (and after the row selection above it
+            // is zero outside the selected columns), so summing over every eta quotient costs
+            // ~#basis x #pool EtaQuot additions.  basis_of_weakly_holomorphic_forms already uses
+            // this idiom.
+            eta_quotients_oo := [&+[T[i][j]*eta_quotients_oo[j] : j in [1..#eta_quotients_oo] | T[i][j] ne 0] : i in [1..Nrows(E)] ];
         end if;
         dim := n + k + &+[d div 4 : d in Divisors(D0)] + 1 - g;
         rk := Rank(E);
@@ -442,7 +474,11 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         n0 := max_pole;
     end if;
     
-    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients]] : i in [1..Nrows(E)] ];
+    // Skip the zero terms -- see the note at the EchelonForm above.  This reconstruction was the
+    // real bulk of the cost: without the filter it sums each of the ~132 basis forms over all
+    // ~12784 pool elements at X0^38(5).
+    eta_quotients := [&+[T[i][j]*eta_quotients[j] : j in [1..#eta_quotients] | T[i][j] ne 0]
+                      : i in [1..Nrows(E)] ];
     
     if Zero then 
         return E, n, n0, eta_quotients_oo, eta_quotients; 
@@ -632,7 +668,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -689,6 +725,91 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
     while (not found_all) do
         if IsOdd(Xstar`D) then
             vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
+
+            // ---------------- the 0-side block, HOISTED ----------------
+            // Everything here depends only on m_idx (through m_choice, hence pole_order) and
+            // on data fixed before the while loop -- D0, n0, nE0, t, eta_quotients_oo, Xstar.
+            // Nothing in it reads `ram`, `min_m`, the key i, or the divisor triple
+            // (infty, other_pts).  It used to sit inside the key loop inside the triple loop,
+            // so it was recomputed identically 336 times per m_idx at X0^65(2) and 210 times
+            // at X0^85(2) -- verified by checksumming T, mat_0_oo and relevant_ds_0_oo across
+            // all 336 triples of 65_2 and finding ONE distinct signature.  The memo on
+            // max_pole_order_0 already held the expensive basis_of_weakly_holomorphic_forms
+            // call to once per m_idx; what repeated is everything after it -- the submatrix
+            // extraction, the qExpansionAtoo pass, the kernel solve, the two
+            // coeffs_to_divisor_matrix calls and the assembly.
+            //
+            // These lines must move TOGETHER: ech_etas_0 is sliced out of ech_etas_all_0 and
+            // then REPLACED in place by its recombination below, so hoisting the recombination
+            // without the slice would recombine an already-recombined list on the second key.
+            assert m_idx le #all_ms;
+            m_choice := all_ms[m_idx];
+            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
+            pole_order := -D0*m_choice;
+
+            if (max_pole_order_0 lt pole_order) then
+                max_pole_order_0 := pole_order;
+                t0 := SAction(t : Admissible := false);
+                vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
+                ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
+                vprintf ShimuraQuotients, 5 : "Done!";
+            end if;
+
+            first_idx_0 := -pole_order+max_pole_order_0+1;
+            ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx_0, first_idx_0, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
+            ech_etas_0 := ech_etas_all_0[first_idx_0..#ech_etas_all_0];
+            assert SubmatrixRange(T_all_0, first_idx_0, 1, Nrows(T_all_0), first_idx_0-1) eq 0;
+            T0 := SubmatrixRange(T_all_0, first_idx_0, first_idx_0, Nrows(T_all_0), Ncols(T_all_0));
+
+            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
+            ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
+            vprintf ShimuraQuotients, 5 : "Done!";
+
+            Rq<q> := Universe(ech_fs_oo);
+            R := BaseRing(Rq);
+
+            ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+
+            non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
+            div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
+            // This kernel basis used to be called `T`, which SHADOWED the {oo}-side T extracted
+            // in the key loop.  That shadowing is what blocked this hoist; it was in fact
+            // harmless, because the {oo}-side T is never read anywhere in this intrinsic.
+            // Renamed so the question cannot be asked a third time.
+            T_ker0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
+            good_forms_0 := T_ker0*ech_basis_0;
+            assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
+            good_forms_oo := ChangeRing(T_ker0,Rationals())*ech_basis_oo;
+            // Passing to q-expansions with q^(1/4) instead of q^(1/4D0)
+            good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
+            // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20
+            mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
+            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+            coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
+            coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
+
+            // Skip the zero terms.  T_ker0 is a pure SELECTION matrix -- measured
+            // nnz(T_ker0) = Nrows(T_ker0) exactly, one 1 per row -- so the unguarded sum did
+            // 79-426x more EtaQuot arithmetic than needed.  Profiling attributed 93% of an
+            // m_idx pass at X0^65(2), and 84% at X0^85(2), to this single line.
+            ech_etas_0 := [&+[T_ker0[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0] | T_ker0[i][j] ne 0]
+                           : i in [1..Nrows(T_ker0)]];
+
+            // collecting contributions from 0 and oo
+            relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
+
+            ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
+            for i->d in relevant_ds_0 do
+                ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+            end for;
+
+            ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
+            for i->d in relevant_ds_oo do
+                ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
+            end for;
+
+            mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
+            // -------------- end of the hoisted 0-side block --------------
         end if;
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
@@ -730,71 +851,19 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                     ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
                     ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
                     assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
-                    T := SubmatrixRange(T_all_oo, first_idx, first_idx, Nrows(T_all_oo), Ncols(T_all_oo));
+                    // The {oo}-side transform used to be extracted here as
+                    //     T := SubmatrixRange(T_all_oo, first_idx, first_idx, ...);
+                    // and was NEVER READ -- not on the odd-D path, where the 0-side kernel
+                    // immediately overwrote it, and not on the even-D path, where nothing below
+                    // touches T at all.  Its apparent shadowing by the 0-side matrix is what
+                    // blocked the hoist above; the assignment is simply dead, so it is gone and
+                    // the 0-side matrix is now named T_ker0.  The assert on T_all_oo above is
+                    // kept: it is the real check, and it does not depend on the extraction.
 
-                    if IsOdd(Xstar`D) then
-                        assert m_idx le #all_ms;
-                        m_choice := all_ms[m_idx];
-                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
-                        pole_order := -D0*m_choice;
-                    
-                        if (max_pole_order_0 lt pole_order) then
-                            max_pole_order_0 := pole_order;
-                            t0 := SAction(t : Admissible := false);
-                            vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {0,oo}-weakly holomorphic forms with pole orders (%o, %o)...", pole_order/(4*D0), nE0;
-                            ech_basis_all_0, ech_etas_all_0, T_all_0 := basis_of_weakly_holomorphic_forms(pole_order, eta_quotients_oo, 1, nE0, t0 : Zero);
-                            vprintf ShimuraQuotients, 5 : "Done!";
-                        end if;
+                    // The 0-side block that stood here is now hoisted to the top of the while
+                    // loop -- it is invariant across both this key loop and the triple loop.
+                    // It leaves ech_etas_0, mat_0_oo and relevant_ds_0_oo ready for use below.
 
-                        first_idx := -pole_order+max_pole_order_0+1;
-                        ech_basis_0 := SubmatrixRange(ech_basis_all_0, first_idx, first_idx, Nrows(ech_basis_all_0), Ncols(ech_basis_all_0));
-                        ech_etas_0 := ech_etas_all_0[first_idx..#ech_etas_all_0];
-                        assert SubmatrixRange(T_all_0, first_idx, 1, Nrows(T_all_0), first_idx-1) eq 0;
-                        T0 := SubmatrixRange(T_all_0, first_idx, first_idx, Nrows(T_all_0), Ncols(T_all_0));
-
-                        vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
-                        ech_fs_oo := [qExpansionAtoo(eta,1) : eta in ech_etas_0];
-                        vprintf ShimuraQuotients, 5 : "Done!";
-
-                        Rq<q> := Universe(ech_fs_oo);
-                        R := BaseRing(Rq);
-                
-                        ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
-                        
-                        non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
-                        div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
-                        // good_forms_0 := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
-                        T := BasisMatrix(Kernel(Submatrix(ech_basis_0, [1..Nrows(ech_basis_0)], non_div_idxs)));
-                        good_forms_0 := T*ech_basis_0;
-                        assert Submatrix(good_forms_0,[1..Nrows(good_forms_0)], non_div_idxs) eq 0;
-                        // T := Solution(ech_basis_0, good_forms_0);
-                        // assert T*ech_basis_0 eq good_forms_0;
-                        good_forms_oo := ChangeRing(T,Rationals())*ech_basis_oo;
-                        // Passingt o q-expansions with q^(1/4) instead of q^(1/4D0)
-                        good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
-                        // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20 
-                        mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
-                        mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
-                        coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
-                        coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
-
-                        ech_etas_0 := [&+[T[i][j]*ech_etas_0[j] : j in [1..#ech_etas_0]] : i in [1..Nrows(T)]];
-
-                        // collecting contributions from 0 and oo
-                        relevant_ds_0_oo := Sort([x : x in Set(relevant_ds_0) join Set(relevant_ds_oo)]);
-
-                        ds_0_to_ds := ZeroMatrix(Integers(), #relevant_ds_0, #relevant_ds_0_oo);
-                        for i->d in relevant_ds_0 do
-                            ds_0_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                        end for;
-                        
-                        ds_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_oo, #relevant_ds_0_oo);
-                        for i->d in relevant_ds_oo do
-                            ds_oo_to_ds[i, Index(relevant_ds_0_oo, d)] := 1;
-                        end for;
-                        
-                        mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
-                    end if;
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                     coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
@@ -815,7 +884,45 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
                    
                     if not found_v then found_all := false; break; end if;
                     sol := Solution(coeffs_trunc, target_v);
-                    
+
+                    // IntegralSolution (default false => this whole block is inert and the
+                    // behaviour below is bit-for-bit what it always was).
+                    //
+                    // Schofer requires c_eta(m) in Z, but `Solution` returns ONE point of the
+                    // affine space sol + Kernel(coeffs_trunc), chosen arbitrarily.  When that
+                    // kernel is nonzero there may be an INTEGRAL representative of the very same
+                    // divisor that Solution simply did not pick -- in which case the base's
+                    // "non-integral principal parts" verdict is an artifact of the choice, not a
+                    // property of the divisor.  Clearing denominators on both sides preserves the
+                    // solution set, so IsConsistent over Z decides exactly whether
+                    // sol + Kernel meets Z^n.
+                    //
+                    // Two distinct effects, and the second is why the 2026-08-29 prototype
+                    // (preserved as vvdata/weyl-campaign/intsol-acceptance-criterion.patch) could
+                    // not ship unconditionally:
+                    //   * it REPLACES sol by the integral representative, so fs[-1] becomes a
+                    //     different form -- which broke the reference comparisons in
+                    //     tests/SchoferIsometry.m (Guo-Yang Table 45) and tests/VectorValuedForm.m
+                    //     (the 15_2 multiplier), both of which run on bases that are already fine;
+                    //   * it REJECTS a triple admitting no integral solution, sending the divisor
+                    //     search on instead of accepting the first merely-rational one.
+                    // Behind an opt-in parameter both are available to the bases that need them
+                    // and invisible to the ones that do not.
+                    if IntegralSolution then
+                        ctQ := ChangeRing(coeffs_trunc, Rationals());
+                        tvQ := ChangeRing(target_v, Rationals());
+                        dM := LCM([Denominator(x) : x in Eltseq(ctQ)] cat
+                                  [Denominator(x) : x in Eltseq(tvQ)]);
+                        okZ, solZ := IsConsistent(ChangeRing(dM*ctQ, Integers()),
+                                                  ChangeRing(dM*tvQ, Integers()));
+                        vprintf ShimuraQuotients, 3 :
+                            "\n\t\t\tIntegralSolution: key %o intsol %o (solden %o)",
+                            i, okZ, LCM([Denominator(Rationals()!x) : x in Eltseq(sol)]);
+                        if not okZ then found_all := false; break; end if;
+                        sol := ChangeRing(solZ, Rationals());
+                    end if;
+
+
                     etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
                     if IsOdd(Xstar`D) then
                         etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
