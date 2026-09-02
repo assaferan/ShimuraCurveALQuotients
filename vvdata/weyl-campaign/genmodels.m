@@ -26,7 +26,12 @@ if <D,N> in vx_skip then WriteStderr(Sprintf("SKIP vx base %o_%o\n", D, N)); qui
 curves := GetHyperellipticCandidates();
 Xstar := rep{X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
 t0 := Realtime();
-covers, ws := AllEquationsAboveCovers(Xstar, curves : Prec := 100);
+// INTSOL=1 turns on IntegralSolution for an UNCAPPED run.  gencapped.m hardwires it together
+// with the genus cap, so this is the way to vary integrality alone and keep every cover --
+// which is what separates "integrality rescued this base" from "the genus cap did".
+intsol := GetEnv("INTSOL") ne "";
+WriteStderr(Sprintf("IntegralSolution = %o\n", intsol));
+covers, ws := AllEquationsAboveCovers(Xstar, curves : Prec := 100, IntegralSolution := intsol);
 WriteStderr(Sprintf("computed AllEquationsAboveCovers in %os\n", Realtime()-t0));
 agg := AssociativeArray();
 for label in Keys(covers) do
