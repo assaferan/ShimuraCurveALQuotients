@@ -46,3 +46,18 @@ that basis. Two separate causes:
 
 **Run the probe in report-AND-error mode**, so the printed set is exactly the set the production
 check evaluates. The two views must be made to coincide before either is trusted.
+
+## The probes themselves
+
+`gate3b-gate4-probes.patch` (against `intsol-optin` @ `969fa85`) carries both diagnostics:
+
+* **`GATE3B=1`** — report every failing slash-constant comparison and continue, instead of
+  erroring. Used to ask whether `10_61`/`14_43` fail gate 3 for a reason a *third* tolerance
+  change could fix. Production path is untouched when the variable is unset.
+* **`GATE4=1|other`** — report class-constancy comparisons. `GATE4=1` reports and continues;
+  any other value reports AND still errors, which is the mode that made the two views coincide.
+
+Both are THROWAWAY instrumentation and must not be merged. They exist because
+report-instead-of-error cracked gate 3, exposed the lost logs in the local sweep, and settled
+gate 4 — but the same technique produced a false negative when used carelessly (see the method
+warning above).

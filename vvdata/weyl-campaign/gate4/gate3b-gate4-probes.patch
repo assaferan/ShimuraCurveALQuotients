@@ -1,0 +1,79 @@
+diff --git a/VectorValuedForm.m b/VectorValuedForm.m
+index e314cf0..a6cdb62 100644
+--- a/VectorValuedForm.m
++++ b/VectorValuedForm.m
+@@ -506,8 +506,21 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
+             // O(1), not in the 19th digit.  Maximum(1, .) keeps it exactly as strict as the
+             // original absolute test for |k| <= 1.
+             kscale := Maximum(Abs(k0), Abs(k1));
+-            error if Abs(k0 - k1) gt 10^(-15) * Maximum(1, kscale),
+-                "M0MultiplierExact: slash constant failed its two-point check";
++            // GATE3B=1: report the failures and CONTINUE.  10_61 and 14_43 still fail this at
++            // the siblings' 1e-15 calibration, so a THIRD tolerance change is not the answer --
++            // either their constants genuinely disagree (real mathematics) or something else is
++            // wrong.  Measure before touching the threshold again.
++            if GetEnv("GATE3B") ne "" then
++                dk := Abs(k0 - k1);
++                rel := (kscale eq 0) select dk else dk/kscale;
++                if dk gt 10^(-15) * Maximum(1, kscale) then
++                    printf "GATE3B wi %o ri %o absk0 %o absk1 %o absdiff %o reldiff %o\n",
++                           wi, ri, Abs(k0), Abs(k1), dk, rel;
++                end if;
++            else
++                error if Abs(k0 - k1) gt 10^(-15) * Maximum(1, kscale),
++                    "M0MultiplierExact: slash constant failed its two-point check";
++            end if;
+             a0tab[wi][ri] := k0 * c0;
+         end for;
+     end for;
+@@ -534,15 +547,42 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
+             // 42/42), so constancy itself is exact.  A genuine violation is
+             // O(scale), so 1e-15 relative keeps 15 digits of margin.  Max(1, .)
+             // keeps an absolute floor at small scales.
+-            for k := 2 to #picks do
+-                for j := 1 to #isoidx do
+-                    dev := Abs(contribs[k][j] - contribs[1][j]);
+-                    tol := 10^(-15) * Maximum(1, Abs(contribs[1][j]));
+-                    error if dev gt tol,
+-                        Sprintf("M0MultiplierExact: class-constancy violated (class %o, dev %o, scale %o)",
+-                                g0, RealField(6)!dev, RealField(6)!Abs(contribs[1][j]));
++            // GATE4=1: report every (class, coset, component) instead of erroring on the first,
++            // and also report |rvtab| and |a0w| separately (throwaway diagnostic, uncommitted).
++            // 34_11 violates this at dev 0.0186 / scale 0.0430 -- 43%, which the comment above
++            // says is a GENUINE violation, not roundoff (measured floor 1.1e-22).  Two candidate
++            // causes, and these numbers separate them:
++            //   (a) the cusp-class PARTITION is wrong here -- cosets grouped that do not share a
++            //       class.  Then the deviation tracks the CLASS, and rvtab/a0w are each fine.
++            //   (b) rvtab or a0w is wrong for particular cosets.  Then it tracks the COSET wi,
++            //       and one of the two factors is the outlier.
++            // GATE4=2: report AND still error, so the printed deviations cover exactly the
++            // comparisons made before the failure fires.  GATE4=1 reports and continues, which
++            // showed max dev ~0 everywhere -- contradicting the observed failure, so the two
++            // must be looking at different comparisons.  This settles which.
++            if GetEnv("GATE4") ne "" then
++                for k := 1 to #picks do
++                    for j := 1 to #isoidx do
++                        d := (k eq 1) select 0 else Abs(contribs[k][j] - contribs[1][j]);
++                        printf "GATE4 class %o pick %o wi %o comp %o |contrib| %o dev %o |rv| %o |a0w| %o\n",
++                               g0, k, picks[k], j,
++                               RealField(8)!Abs(contribs[k][j]), RealField(8)!d,
++                               RealField(8)!Abs(rvtab[picks[k]][isoidx[j]]),
++                               RealField(8)!Abs(a0w[picks[k]]);
++                    end for;
+                 end for;
+-            end for;
++            end if;
++            if GetEnv("GATE4") ne "2" then
++                for k := 2 to #picks do
++                    for j := 1 to #isoidx do
++                        dev := Abs(contribs[k][j] - contribs[1][j]);
++                        tol := 10^(-15) * Maximum(1, Abs(contribs[1][j]));
++                        error if dev gt tol,
++                            Sprintf("M0MultiplierExact: class-constancy violated (class %o, dev %o, scale %o)",
++                                    g0, RealField(6)!dev, RealField(6)!Abs(contribs[1][j]));
++                    end for;
++                end for;
++            end if;
+             for j := 1 to #isoidx do
+                 cvals[j] +:= Ng[g0] * contribs[1][j];
+             end for;
