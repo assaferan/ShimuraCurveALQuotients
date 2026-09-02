@@ -12,6 +12,13 @@
 // Ground truth from the spanprobe runs:
 //   38_5 poleord 190 -> deficit 1     38_7 poleord 134/266 -> 0     34_3 poleord 51/102 -> 0
 AttachSpec("ShimuraQuotients.spec");
+// REPAIRED 2026-09-02.  This script used to call two helpers that existed ONLY in the
+// -spanprobe worktree's patched BorcherdsForms.m.  That worktree was retired on 2026-08-30
+// (content preserved as bfprof-instrumentation.patch), so the script had been dead since --
+// and it died AFTER paying the full WeaklyHolomorphicBasis cost, 20+ minutes on a large base.
+// The production functions are file-local, so import them directly rather than depending on a
+// patch or a deleted worktree.
+import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
 // VALIDITY: EVEN D ONLY.  For odd D, BorcherdsForms vertically joins a 0-side block
 // (coeffs_0_oo) into coeffs_trunc; this script computes only the infinity part, so the extra
 // rows are missing and the reported deficit is an OVERESTIMATE.  The symptom is that it drifts
@@ -47,8 +54,8 @@ Sort(~poles);
 for P in poles do
     tt := Realtime();
     try
-        ech, etas, T := ProbeWHBasis(P, eta_quotients, n0 + 1, n, t);
-        mat, rds := ProbeDivisorMatrix(-P, D, N, Ncols(ech));
+        ech, etas, T := basis_of_weakly_holomorphic_forms(P, eta_quotients, n0 + 1, n, t);
+        mat, rds := coeffs_to_divisor_matrix(-P, D, N, Ncols(ech));
         ct := ChangeRing(ech, Rationals()) * ChangeRing(mat, Rationals());
         r := Rank(ct);
         printf "DEFICIT P %o rows %o cols %o nds %o rank %o deficit %o  (%os)\n",
