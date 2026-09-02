@@ -1,0 +1,17 @@
+
+BorcherdsForms(
+    Xstar: ,
+    curves: [  ]
+)
+WeaklyHolomorphicBasis(
+    D: 6,
+    N: 263
+)
+find_t(
+    M: 3156
+)
+In file "/home/assaferan/shimura/ShimuraCurveALQuotients/BorcherdsForms.m", line
+69, column 5:
+>>     assert success eq 0;
+       ^
+Runtime error in assert: Assertion failed

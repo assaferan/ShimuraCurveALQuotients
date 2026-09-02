@@ -1,0 +1,147 @@
+# 122 never-started bases: predictor sweep (lovelace, 2026-09-01/02)
+#   ppint (gate 1) then cmsupply (gate 2), 3600 s cap each, 64 concurrent
+
+## TALLY
+    81  CAPPED-1h
+    21  OBSTRUCTED
+    13  VX-ASSERT
+     3  ASSERT
+     2  NONINTEGRAL
+     1  CM-STARVED
+     1  INTEGRAL
+   122  TOTAL
+
+## RUNNABLE CANDIDATES (a gate-1 verdict AND a gate-2 verdict)
+  10_61    INTEGRAL     OK margin 0
+  14_43    NONINTEGRAL  OK margin 0
+
+## NEWLY OBSTRUCTED (Borcherds obstruction; adds to the known 28)
+  106_5 10_59 118_5 122_5 14_41 14_47 202_3 214_3 218_3 226_3 22_29 254_3 26_23 34_19 38_17 46_13 58_11 6_103 82_7 86_7 94_7
+  count: 21
+
+## VX-ASSERT (method boundary, cap-independent)
+  133_2 141_2 143_2 145_2 155_2 159_2 161_2 177_2 201_2 203_2 213_2 235_2 237_2
+
+## FULL TABLE
+  106_5    OBSTRUCTED   
+  10_101   CAPPED-1h    
+  10_107   CAPPED-1h    
+  10_109   CAPPED-1h    
+  10_113   CAPPED-1h    
+  10_137   CAPPED-1h    
+  10_59    OBSTRUCTED   
+  10_61    INTEGRAL     OK margin 0
+  10_67    CAPPED-1h    
+  10_71    CAPPED-1h    
+  10_73    CAPPED-1h    
+  10_79    CAPPED-1h    
+  10_83    CAPPED-1h    
+  10_89    CAPPED-1h    
+  10_97    CAPPED-1h    
+  118_5    OBSTRUCTED   
+  118_7    CAPPED-1h    
+  122_5    OBSTRUCTED   
+  122_7    CAPPED-1h    
+  133_2    VX-ASSERT    
+  134_5    CAPPED-1h    
+  141_2    VX-ASSERT    
+  142_5    CAPPED-1h    
+  143_2    VX-ASSERT    
+  145_2    VX-ASSERT    
+  146_5    CAPPED-1h    
+  146_7    CAPPED-1h    
+  14_109   CAPPED-1h    
+  14_41    OBSTRUCTED   
+  14_43    NONINTEGRAL  OK margin 0
+  14_47    OBSTRUCTED   
+  14_53    CAPPED-1h    
+  14_59    CAPPED-1h    
+  14_61    CAPPED-1h    
+  14_67    CAPPED-1h    
+  14_71    CAPPED-1h    
+  14_79    CAPPED-1h    
+  155_2    VX-ASSERT    
+  159_2    VX-ASSERT    
+  161_2    VX-ASSERT    
+  177_2    VX-ASSERT    
+  178_3    CAPPED-1h    
+  183_2    CAPPED-1h    
+  187_2    CAPPED-1h    
+  194_3    CAPPED-1h    
+  194_5    CAPPED-1h    
+  201_2    VX-ASSERT    
+  202_3    OBSTRUCTED   
+  203_2    VX-ASSERT    
+  206_3    CM-STARVED   
+  213_2    VX-ASSERT    
+  214_3    OBSTRUCTED   
+  215_2    CAPPED-1h    
+  218_3    OBSTRUCTED   
+  226_3    OBSTRUCTED   
+  22_29    OBSTRUCTED   
+  22_31    CAPPED-1h    
+  22_41    CAPPED-1h    
+  22_43    CAPPED-1h    
+  22_47    CAPPED-1h    
+  235_2    VX-ASSERT    
+  237_2    VX-ASSERT    
+  254_3    OBSTRUCTED   
+  26_23    OBSTRUCTED   
+  26_29    CAPPED-1h    
+  26_31    CAPPED-1h    
+  26_37    CAPPED-1h    
+  26_43    CAPPED-1h    
+  326_3    CAPPED-1h    
+  327_2    CAPPED-1h    
+  34_19    OBSTRUCTED   
+  34_23    CAPPED-1h    
+  34_29    CAPPED-1h    
+  34_37    CAPPED-1h    
+  38_17    OBSTRUCTED   
+  38_23    CAPPED-1h    
+  46_13    OBSTRUCTED   
+  46_19    CAPPED-1h    
+  58_11    OBSTRUCTED   
+  58_13    CAPPED-1h    
+  58_17    CAPPED-1h    
+  62_11    CAPPED-1h    
+  62_13    CAPPED-1h    
+  6_101    CAPPED-1h    
+  6_103    OBSTRUCTED   
+  6_107    NONINTEGRAL  
+  6_109    CAPPED-1h    
+  6_113    CAPPED-1h    
+  6_127    CAPPED-1h    
+  6_131    ASSERT       
+  6_137    ASSERT       
+  6_139    CAPPED-1h    
+  6_149    CAPPED-1h    
+  6_151    CAPPED-1h    
+  6_157    CAPPED-1h    
+  6_163    CAPPED-1h    
+  6_167    CAPPED-1h    
+  6_173    CAPPED-1h    
+  6_179    CAPPED-1h    
+  6_181    CAPPED-1h    
+  6_191    CAPPED-1h    
+  6_193    CAPPED-1h    
+  6_197    CAPPED-1h    
+  6_199    CAPPED-1h    
+  6_211    CAPPED-1h    
+  6_227    CAPPED-1h    
+  6_229    CAPPED-1h    
+  6_233    CAPPED-1h    
+  6_239    CAPPED-1h    
+  6_241    CAPPED-1h    
+  6_251    CAPPED-1h    
+  6_257    CAPPED-1h    
+  6_263    ASSERT       
+  6_281    CAPPED-1h    
+  6_89     CAPPED-1h    
+  6_97     CAPPED-1h    
+  74_13    CAPPED-1h    
+  82_11    CAPPED-1h    
+  82_7     OBSTRUCTED   
+  86_7     OBSTRUCTED   
+  94_11    CAPPED-1h    
+  94_7     OBSTRUCTED   

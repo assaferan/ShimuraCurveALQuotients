@@ -1,0 +1,6 @@
+
+In file "ppint.m", line 29, column 21:
+>> fs := BorcherdsForms(star, curves : Prec := 100);
+                       ^
+Runtime error in 'BorcherdsForms': Could not find enough rational CM points!
+
