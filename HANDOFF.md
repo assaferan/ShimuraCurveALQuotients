@@ -5,14 +5,40 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
-    main               3a50fa6   speedup + zero-skip + hoist + cache + IntegralSolution
-                                 + the slash-constant tolerance + models_58_5.m
+    main               1c53865   speedup + zero-skip + hoist + IntegralSolution + Targets
+                                 + slash-constant tolerance + pointless-conics guard
+                                 + models_58_5.m + 3 new tests + cache (394 files)
     tier1-models       73095a8   unchanged; carries the unmerged paper work
     m0-theta-campaign  9059bb0   research branch: triage results, probes, predictors
     odd-d-zeroskip     b7067c3   MERGED to main; branch kept as the CI-green record
     odd-d-invariant-hoist 4c29d1e MERGED to main (afb80b2); correctness/clarity, ~2%
-    intsol-optin       969fa85   MERGED to main (499c29b, 79d4e89); CI green
+    intsol-optin       969fa85   MERGED to main; CI green
+    fix-pointless-conics-empty 6071772  MERGED to main (133de9c); CI green
     whbasis-speedup    624b68e   MERGED (cherry-picked as 04f1d7b); branch kept likewise
+
+### Where the model pipeline actually stands (2026-09-02)
+
+**Four verified models exist** — `data/models/models_58_5.m`, `ModelChecks` 48/0. That is the
+*only* base that has produced models. Everything else attempted since failed:
+
+    34_11   gates 1-3 OK, then class-constancy (GENUINE, 43% of scale -- see below)
+    74_5    gates 1-3 OK, capped at 5 h in the CM-value stage, no verdict
+    74_3    no longer crashes (guard merged), but yields 0 keys
+    10_61   slash-constant check, at the 1e-15 calibration
+    14_43   slash-constant check, at the 1e-15 calibration
+
+**⚠ Gate 3 is NOT fully solved.** The absolute→relative fix unblocked `58_5` decisively, but
+`10_61` and `14_43` still fail at `1e-15` — the siblings' own calibration. **Do not make a third
+tolerance change**: either their constants genuinely disagree (real mathematics) or something
+else is wrong. A `GATE3B=1` measurement on `10_61` was running on lovelace when this was written;
+its output lands at `~/shimura/models/10_61.gate3b.log` there.
+
+**Gate 4 is a genuine violation** and is characterised: `vvdata/weyl-campaign/gate4/` on the
+campaign branch. Deviation tracks the CLASS, pointing at the cusp-class partition.
+
+**Both cheap-predictor routes are closed by measurement** for the 81 unclassified bases: route A
+still costs a full `WeaklyHolomorphicBasis` (20-24 min and rising), route B's `k = 3/2` phase is
+known wrong. `deficit.m` has been REPAIRED and validated (`38_5` -> 1 at every pole order).
 
 Worktrees: `-campaign`, `-mainport` (main), `-spanprobe` (**THROWAWAY**, carries the live
 instrumentation — the template for the next profiling pass). `-whspeed`, `-oddd` and
