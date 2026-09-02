@@ -1,0 +1,11 @@
+DEFICIT BASE 10 71
+DEFICIT TIMING WeaklyHolomorphicBasis 1429.830s  (n = 599, n0 = 121, #eta = 495)
+DEFICIT k 247
+
+In file "deficit.m", line 50, column 25:
+>>         ech, etas, T := ProbeWHBasis(P, eta_quotients, n0 + 1, n, t);
+                           ^
+User error: Identifier 'ProbeWHBasis' has not been declared or assigned
+DEFICIT TOTAL 1429.870s
+DONE
+WALL 1429.94 s
