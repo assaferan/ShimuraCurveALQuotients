@@ -520,6 +520,15 @@ end intrinsic;
 intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
     {Find equations above pointless conics, as a last step}
     all_keys := Keys(all_eqns);
+    // Nothing upstream found an equation, so there is nothing to lie above: return unchanged.
+    // Without this, Maximum(all_keys) below throws "Argument 1 is not non-empty" -- a latent
+    // crash on the empty case that predates Targets, but which restricting Targets makes far
+    // more likely to reach, since fewer retained covers means a higher chance that
+    // EquationsAboveP1s produced nothing at all.  Observed at X0^74(3) under a g <= 2 cap.
+    if IsEmpty(all_keys) then
+        vprintf ShimuraQuotients, 2 : "\n\tNo equations found upstream; nothing above pointless conics.";
+        return all_eqns, all_ws;
+    end if;
     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
     starcurve := Representative(curves[Maximum(all_keys)]`Covers);
     assert IsStarCurve(curves[starcurve]);
