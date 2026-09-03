@@ -5,6 +5,11 @@
 //       constant term (L + j = 0), 50 digits. Exponents reported as (L+j) in
 //       the 1/(24 W_g) grid together with W_g, so analysis can match slots
 //       across monomials.
+//   Dedup is per <class, monomial>, not per class alone: a class's
+//   first-encountered coset word need not have L<=0 for every monomial, so
+//   gating on the class alone silently drops any monomial for which that one
+//   word is regular (L>0) -- this is why g=2,6,10,30 were missing from an
+//   earlier run of this script on 15_2 even though those classes do occur.
 // Per-MONOMIAL class sums: the derivation lever the kappa closed form unlocks.
 // c_{eta*}(0) is linear in f, so evaluate the cusp-class sums T_g on each eta
 // monomial m_r separately (86 on 15_2, vs 9 panel forms): together they pin the
@@ -101,8 +106,6 @@ ppdumped := {};
 for wi->w in words do
     g := VVWordMatrix(w);
     cls0 := GCD(g[2][1] mod M, M);
-    dopp := cls0 notin ppdumped;
-    if dopp then Include(~ppdumped, cls0); end if;
     tri := [ ];
     for d in ds do
         a, b, e, gd := triang(g, d);
@@ -144,6 +147,8 @@ for wi->w in words do
         k1 := num1 / sfun(tau1);
         error if Abs(k0 - k1) gt 10^(-30), "kappa not constant", wi, ri, Abs(k0-k1);
         a0tab[wi][ri] := k0 * c0;
+        dopp := <cls0, ri> notin ppdumped;
+        if dopp then Include(~ppdumped, <cls0, ri>); end if;
         if dopp then
             R50 := RealField(50);
             for j := 0 to -L do
