@@ -20,7 +20,9 @@ Three items are ready to start immediately, in decreasing order of value:
    Needs a real `DedekindEta` with full `SL2` reduction — do **not** reuse `tauwindow.m`'s
    one-`S`-step `logeta`, which is invalid in exactly that regime (see its README).
 
-Worktrees are `tier1-models` (here), `-campaign` (research data), `-mainport` (`main`).
+Worktrees: `tier1-models` (here, `.`), `worktrees/campaign` (`m0-theta-campaign`, research data),
+`worktrees/mainport` (`main`) — nested under this checkout, not siblings; see CLAUDE.md for the
+convention on new worktrees.
 Probes live at `vvdata/weyl-campaign/tau-precision/` on the campaign branch.
 
 ## State of play

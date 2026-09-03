@@ -55,7 +55,20 @@ output fails on identical content; compare as vector sets.
     main           code only
     m0-theta-campaign   research data, probes and triage tooling (vvdata/weyl-campaign/)
 
-Worktrees: `.` (`tier1-models`), `-campaign`, `-mainport` (`main`).
+Worktrees live under `worktrees/` inside this repo checkout, not as siblings of it — deliberate,
+to keep the `GitHub/` directory tidy:
+
+    .                    tier1-models (this checkout)
+    worktrees/campaign   m0-theta-campaign
+    worktrees/mainport   main
+
+**When adding a new worktree, put it under `worktrees/<name>` here**, e.g.:
+
+    git worktree add worktrees/<name> <branch>
+
+Older material (`HANDOFF.md`, memory) may still call these `-campaign` / `-mainport`, a shorthand
+from when they were sibling directories next to this one. That naming is historical only — use the
+table above for actual paths.
 
 **Triage tooling lives on the campaign branch under `vvdata/weyl-campaign/`, never at the repo
 root.** So `git log --all -- cmsupply.m` reports "not in any branch" for a file that is committed.
