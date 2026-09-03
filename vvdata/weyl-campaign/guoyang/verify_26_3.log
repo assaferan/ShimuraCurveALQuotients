@@ -1,0 +1,5 @@
+VERIFY D=26 N=3 : 14 gy rows, table has 14 discs
+  reference discs -8 -11 -20
+  FAIL disc -267: got 25/8, want 25/17 (published -9/25)
+  FAIL disc -708: got 49/11, want 49/38 (published -27/49)
+RESULT D=26 N=3 checked=11 failed=2 time=271.520s

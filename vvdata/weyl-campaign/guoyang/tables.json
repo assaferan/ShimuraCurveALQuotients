@@ -1,0 +1,10694 @@
+[
+ {
+  "D": 26,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{26}(1)/W_{26,1}}$",
+   "${X_{0}^{26}(1)/w_{26}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       81,
+       25
+      ],
+      "raw": "$81/25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm9/5",
+      "raw": "$\\pm {9}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-9/7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt-7",
+      "raw": "$\\pm {3/\\sqrt{-7}}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       333,
+       25
+      ],
+      "raw": "$333/25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt37/5",
+      "raw": "$\\pm {3\\sqrt{37}}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4761,
+       1225
+      ],
+      "raw": "$4761/1225$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm69/35",
+      "raw": "$\\pm {69}/{35}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -225,
+       98
+      ],
+      "raw": "$-225/98$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm15\\sqrt-2/14",
+      "raw": "$\\pm {15\\sqrt{-2}}/{14}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -75,
+       2
+      ],
+      "raw": "$-75/2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-6/2",
+      "raw": "$\\pm {5\\sqrt{-6}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -403,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1521,
+       775
+      ],
+      "raw": "$-1521/775$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm39\\sqrt-31/155",
+      "raw": "$\\pm {39\\sqrt{-31}}/{155}$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1521,
+       245
+      ],
+      "raw": "$1521/245$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm39\\sqrt5/35",
+      "raw": "$\\pm39\\sqrt{5}/35$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 35,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{35}(1)/W_{35,1}}$",
+   "${X_{0}^{35}(1)/w_{35}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm \\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/3",
+      "raw": "$\\pm {\\sqrt{-3}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "${1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$ \\pm{1}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       81,
+       25
+      ],
+      "raw": "${81}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm9/5",
+      "raw": "$ \\pm{9}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -47,
+       9
+      ],
+      "raw": "$-{47}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-47/3",
+      "raw": "$ \\pm{\\sqrt{-47}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-{9}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-7/7",
+      "raw": "$ \\pm{3\\sqrt{-7}}/{7}$"
+     }
+    ]
+   },
+   {
+    "disc": -315,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       7
+      ],
+      "raw": "$-{1}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7/7",
+      "raw": "$ \\pm {\\sqrt{-7}}/{7}$"
+     }
+    ]
+   },
+   {
+    "disc": -427,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -175,
+       9
+      ],
+      "raw": "$-{175}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-7/3",
+      "raw": "$ \\pm{{5\\sqrt{ -7}}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -595,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       17,
+       9
+      ],
+      "raw": "${17}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt17/3",
+      "raw": "$ \\pm{\\sqrt{17}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -1435,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -369,
+       7
+      ],
+      "raw": "$-{369}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-41/7",
+      "raw": "$ \\pm{3\\sqrt{-41}}/{7}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 38,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{38}(1)/W_{38,1}}$",
+   "${X_{0}^{38}(1)/w_{38}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       81
+      ],
+      "raw": "${4}/{81}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2/9",
+      "raw": "$\\pm {2}/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -19,
+       9
+      ],
+      "raw": "$-{19}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19/3",
+      "raw": "$ \\pm{\\sqrt{-19}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       29,
+       81
+      ],
+      "raw": "${29}/{81}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt29/9",
+      "raw": "$ \\pm{\\sqrt{29}}/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -532,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       49
+      ],
+      "raw": "$-{9}/{49}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1/7",
+      "raw": "$ \\pm{3\\sqrt{-1}}/{7}$"
+     }
+    ]
+   },
+   {
+    "disc": -760,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -171,
+       16
+      ],
+      "raw": "$-{171}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-19/4",
+      "raw": "$ \\pm{3\\sqrt{-19}}/{4}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 39,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{39}(1)/W_{39,1}}$",
+   "${X_{0}^{39}(1)/w_{39}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(2x^2-3x-2)/{x})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "1\\pm\\sqrt2",
+      "raw": "$1\\pm\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/2,2",
+      "raw": "$-{1}/{2},2$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       1
+      ],
+      "raw": "$-5$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/2$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       7,
+       3
+      ],
+      "raw": "${7}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/3,3",
+      "raw": "$-{1}/{3},3$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(2\\pm\\sqrt13)/3",
+      "raw": "$ (2\\pm\\sqrt{13})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       5
+      ],
+      "raw": "${1}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(4\\pm\\sqrt11)/5",
+      "raw": "$ (4\\pm\\sqrt{11})/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -57,
+       35
+      ],
+      "raw": "$-{57}/{35}$"
+     },
+     {
+      "kind": "other",
+      "val": "-5/7,7/5",
+      "raw": "$ -{5}/{7},{7}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -195,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "2\\pm\\sqrt5",
+      "raw": "$ 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -47,
+       5
+      ],
+      "raw": "$-{47}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-8\\pm\\sqrt89)/5",
+      "raw": "$ (-8\\pm\\sqrt{89})/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -17,
+       7
+      ],
+      "raw": "$-{17}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm5\\sqrt2)/7",
+      "raw": "$(1\\pm 5\\sqrt{2})/{7}$"
+     }
+    ]
+   },
+   {
+    "disc": -403,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -75,
+       17
+      ],
+      "raw": "$-{75}/{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-6\\pm5\\sqrt13)/17",
+      "raw": "$ (-6\\pm5\\sqrt{13})/{17}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 51,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{51}(1)/W_{51,1}}$",
+   "${X_{0}^{51}(1)/w_{51}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$ 0$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm{1}/{\\sqrt{-3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "${1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm{1}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       16
+      ],
+      "raw": "${1}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/4",
+      "raw": "$ \\pm{1}/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -187,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -11,
+       9
+      ],
+      "raw": "$-{11}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11/3",
+      "raw": "$\\pm{\\sqrt{-11}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       3
+      ],
+      "raw": "$-{25}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm{5}/{\\sqrt{-3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       6
+      ],
+      "raw": "$-{1}/{6}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-6",
+      "raw": "$ \\pm{1}/{\\sqrt{-6}}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 55,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{55}(1)/W_{55,1}}$",
+   "${X_{0}^{55}(1)/w_{55}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-1)/{x})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       2
+      ],
+      "raw": "$-{3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "1/2,-2",
+      "raw": "${1}/{2},-2$"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -27,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$ \\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       8,
+       3
+      ],
+      "raw": "${8}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/3,3",
+      "raw": "$-{1}/{3},3$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       1
+      ],
+      "raw": "$-2$"
+     },
+     {
+      "kind": "other",
+      "val": "-1\\pm\\sqrt2",
+      "raw": "$-1\\pm\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -4,
+       1
+      ],
+      "raw": "$-4$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt5",
+      "raw": "$ -2\\pm\\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       6
+      ],
+      "raw": "$-{5}/{6}$"
+     },
+     {
+      "kind": "other",
+      "val": "-3/2,2/3",
+      "raw": "$-{3}/{2},{2}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -187,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       2
+      ],
+      "raw": "${1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt17)/4",
+      "raw": "$(1\\pm\\sqrt{17})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -4,
+       11
+      ],
+      "raw": "$-{4}/{11}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-2\\pm5\\sqrt5)/11",
+      "raw": "$(-2\\pm5\\sqrt{5})/{11}$"
+     }
+    ]
+   },
+   {
+    "disc": -715,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -4,
+       3
+      ],
+      "raw": "$-{4}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-2\\pm\\sqrt13)/3",
+      "raw": "$(-2\\pm\\sqrt{13})/{3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 57,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{57}(1)/W_{57,1}}$",
+   "${X_{0}^{57}(1)/W_{57,1}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -16,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19/3",
+      "raw": "$ \\pm\\sqrt{-19}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       3
+      ],
+      "raw": "${1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7/3",
+      "raw": "$\\pm\\sqrt{-7}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-43",
+      "raw": "$\\pm\\sqrt{-43}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       2
+      ],
+      "raw": "$-{1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$ \\pm\\sqrt{ -3}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -11,
+       6
+      ],
+      "raw": "$-{11}/{6}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-163/3",
+      "raw": "$\\pm\\sqrt{-163}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -11,
+       1
+      ],
+      "raw": "$-11$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm13\\sqrt-3",
+      "raw": "$\\pm13\\sqrt{-3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 58,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{58}(1)/W_{58,1}}$",
+   "${X_{0}^{58}(1)/w_{29}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s={-x^2}/{19})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       27,
+       19
+      ],
+      "raw": "${27}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3",
+      "raw": "$\\pm 3\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       11,
+       19
+      ],
+      "raw": "${11}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11",
+      "raw": "$\\pm \\sqrt{-11}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19",
+      "raw": "$\\pm \\sqrt{-19}$"
+     }
+    ]
+   },
+   {
+    "disc": -27,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       19
+      ],
+      "raw": "${3}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       19
+      ],
+      "raw": "$-{5}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       43,
+       19
+      ],
+      "raw": "${43}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-43",
+      "raw": "$\\pm \\sqrt{-43}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       19
+      ],
+      "raw": "${25}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-1",
+      "raw": "$\\pm 5\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       163,
+       475
+      ],
+      "raw": "${163}/{475}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-163/5",
+      "raw": "$ \\pm{\\sqrt{-163}}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$ 0$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 62,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{62}(1)/W_{62,1}}$",
+   "${X_{0}^{62}(1)/w_{62}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       2
+      ],
+      "raw": "$-{1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-2",
+      "raw": "$\\pm 1/\\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       4
+      ],
+      "raw": "${1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2",
+      "raw": "$\\pm {1}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       1
+      ],
+      "raw": "$25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5",
+      "raw": "$\\pm 5$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -4,
+       9
+      ],
+      "raw": "$-{4}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1/3",
+      "raw": "$\\pm {2\\sqrt{-1}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -403,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       13,
+       4
+      ],
+      "raw": "${13}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt13/2",
+      "raw": "$ \\pm{\\sqrt{13}}/{2}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 69,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{69}(1)/W_{69,1}}$",
+   "${X_{0}^{69}(1)/w_{69}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$ \\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -75,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       5
+      ],
+      "raw": "${9}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt5",
+      "raw": "$\\pm{3/\\sqrt{5}}$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm\\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm 1/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -147,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-{9}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt-7",
+      "raw": "$\\pm{3}/{\\sqrt{-7}}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       9
+      ],
+      "raw": "${25}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/3",
+      "raw": "$\\pm{{5}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -483,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -27,
+       1
+      ],
+      "raw": "$-27$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3",
+      "raw": "$\\pm3\\sqrt{-3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 74,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{74}(1)/W_{74,1}}$",
+   "${X_{0}^{74}(1)/w_{74}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-9)/{4})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       1
+      ],
+      "raw": "$-2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm\\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt-3",
+      "raw": "$-2\\pm \\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt-3",
+      "raw": "$\\pm 2\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt13",
+      "raw": "$\\pm \\sqrt{13}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       1
+      ],
+      "raw": "$-5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11",
+      "raw": "$\\pm \\sqrt{-11}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "2\\pm\\sqrt13",
+      "raw": "$2\\pm \\sqrt{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt13",
+      "raw": "$\\pm 2\\pm \\sqrt{13}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       4
+      ],
+      "raw": "$-{9}/{4}$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       10,
+       1
+      ],
+      "raw": "$10$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm7",
+      "raw": "$\\pm 7$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 82,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{82}(1)/W_{82,1}}$",
+   "${X_{0}^{82}(1)/w_{41}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       2
+      ],
+      "raw": "${1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3/2",
+      "raw": "$ \\pm{3\\sqrt{-3}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11",
+      "raw": "$ \\pm\\sqrt{-11}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-3",
+      "raw": "$\\pm2\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -27,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-3",
+      "raw": "$\\pm4\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       3
+      ],
+      "raw": "${1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm8\\sqrt-1/3",
+      "raw": "$ \\pm8\\sqrt{-1}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       3
+      ],
+      "raw": "${2}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-67/3",
+      "raw": "$\\pm\\sqrt{-67}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       2
+      ],
+      "raw": "$-{1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-11/2",
+      "raw": "$ \\pm3\\sqrt{-11}/2$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       4
+      ],
+      "raw": "${1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-123/4",
+      "raw": "$ \\pm\\sqrt{-123}/4$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       7,
+       13
+      ],
+      "raw": "${7}/{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm24\\sqrt-2/13",
+      "raw": "$ \\pm24\\sqrt{-2}/13$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 86,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{86}(1)/W_{86,1}}$",
+   "${X_{0}^{86}(1)/w_{86}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(-x^2+9)/{4})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$ \\pm{\\sqrt{-3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       4
+      ],
+      "raw": "${9}/{4} $"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0 $"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       2
+      ],
+      "raw": "${5}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -56,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "1\\pm\\sqrt2",
+      "raw": "$1\\pm \\sqrt{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5\\pm4\\sqrt2",
+      "raw": "$\\pm \\sqrt{5\\pm 4\\sqrt{2}}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -68,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(5\\pm\\sqrt17)/4",
+      "raw": "$(5\\pm\\sqrt{17})/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt4\\pm\\sqrt17",
+      "raw": "$\\pm \\sqrt{4\\pm \\sqrt{17}}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "10\\pm\\sqrt57",
+      "raw": "$10\\pm \\sqrt{57}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt19\\pm2\\sqrt-3",
+      "raw": "$\\pm\\sqrt{19}\\pm 2\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       1
+      ],
+      "raw": "$-5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt29",
+      "raw": "$ \\pm\\sqrt{29}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 87,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{87}(1)/W_{87,1}}$",
+   "${X_{0}^{87}(1)/w_{87}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$ \\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -48,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/3",
+      "raw": "$\\pm {\\sqrt{-3}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -147,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-{9}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt-7",
+      "raw": "$\\pm{3/\\sqrt{-7}}$"
+     }
+    ]
+   },
+   {
+    "disc": -435,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       3
+      ],
+      "raw": "$-{5}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15/3",
+      "raw": "$\\pm {\\sqrt{-15}}/{3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 93,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{93}(1)/W_{93,1}}$",
+   "${X_{0}^{93}(1)/w_{31}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -16,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1",
+      "raw": "$\\pm3\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19",
+      "raw": "$\\pm\\sqrt{-19}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-7",
+      "raw": "$\\pm3\\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3",
+      "raw": "$\\pm3\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-67/3",
+      "raw": "$\\pm\\sqrt{-67}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-163",
+      "raw": "$\\pm\\sqrt{-163}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       2
+      ],
+      "raw": "${3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3",
+      "raw": "$\\pm3\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -403,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       7,
+       3
+      ],
+      "raw": "${7}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-403/3",
+      "raw": "$\\pm\\sqrt{-403}/3$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 94,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{94}(1)/W_{94,1}}$",
+   "${X_{0}^{94}(1)/w_{94}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=2x^2-9)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     }
+    ]
+   },
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       1
+      ],
+      "raw": "$-9$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       1
+      ],
+      "raw": "$-5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -27,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt17",
+      "raw": "$\\pm\\sqrt{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt17)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{17})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -56,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-4\\pm\\sqrt-7",
+      "raw": "$-4\\pm\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt10\\pm2\\sqrt-7/%2",
+      "raw": "${\\pm \\sqrt{10\\pm 2\\sqrt{-7}}}/{% 2}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-6\\pm\\sqrt-7",
+      "raw": "$-6\\pm\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-1\\pm\\sqrt7)/2",
+      "raw": "$(\\pm\\sqrt{-1}\\pm\\sqrt{7})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "3\\pm4\\sqrt5",
+      "raw": "$3\\pm 4\\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1\\pm\\sqrt5",
+      "raw": "$\\pm 1\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -17,
+       1
+      ],
+      "raw": "$-17$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-3\\pm2\\sqrt-7",
+      "raw": "$-3\\pm2\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt3\\pm\\sqrt-7",
+      "raw": "$\\pm \\sqrt{3\\pm \\sqrt{-7}}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -13,
+       5
+      ],
+      "raw": "$-{13}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4/\\sqrt5",
+      "raw": "$\\pm {4/\\sqrt{5}}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 95,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{95}(1)/W_{95,1}}$",
+   "${X_{0}^{95}(1)/w_{95}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-1)/2x)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0, \\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       4
+      ],
+      "raw": "$-{3}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "-2,1/2",
+      "raw": "$-2,{1}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       2
+      ],
+      "raw": "${1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       2
+      ],
+      "raw": "$-{1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       3
+      ],
+      "raw": "${4}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/3,3",
+      "raw": "$-{1}/{3},3$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       1
+      ],
+      "raw": "$-2$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt5",
+      "raw": "$-2\\pm\\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -760,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       7
+      ],
+      "raw": "${1}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm5\\sqrt2)/7",
+      "raw": "$(1\\pm5\\sqrt{2})/{7}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 111,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{111}(1)/W_{111,1}}$",
+   "${X_{0}^{111}(1)/w_{111}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-2x-1)/(x^2+x-1))$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/{2} $"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "1\\pm\\sqrt2",
+      "raw": "$1\\pm\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       1
+      ],
+      "raw": "$-2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt17)/4",
+      "raw": "$(1\\pm\\sqrt{17})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt-1)/2,1\\pm\\sqrt-1",
+      "raw": "$(-1\\pm \\sqrt{-1})/{2},1\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       2
+      ],
+      "raw": "$-{1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(2\\pm6\\sqrt-1)/5",
+      "raw": "$(2\\pm6\\sqrt{-1})/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       5
+      ],
+      "raw": "$-{1}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/2,2",
+      "raw": "$-{1}/{2},2$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(5\\pm\\sqrt89)/8",
+      "raw": "$(5\\pm\\sqrt{89})/{8}$"
+     }
+    ]
+   },
+   {
+    "disc": -555,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt5",
+      "raw": "$-2\\pm\\sqrt{5}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 119,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{119}(1)/W_{119,1}}$",
+   "${X_{0}^{119}(1)/w_{119}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-5)/{4})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       4
+      ],
+      "raw": "$-{5}/{4}$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       1
+      ],
+      "raw": "$-2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -56,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm\\sqrt{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5\\pm4\\sqrt2",
+      "raw": "$\\pm\\sqrt{5\\pm4\\sqrt{2}}$"
+     }
+    ]
+   },
+   {
+    "disc": -63,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(-9\\pm\\sqrt-3)/6",
+      "raw": "$(-9\\pm\\sqrt{-3})/{6}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-9\\pm6\\sqrt-3/3",
+      "raw": "${\\pm\\sqrt{-9\\pm6\\sqrt{-3}}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -99,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-1\\pm\\sqrt-3",
+      "raw": "$-1\\pm\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt1\\pm4\\sqrt-3",
+      "raw": "$\\pm\\sqrt{1\\pm4\\sqrt{-3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -112,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       2
+      ],
+      "raw": "$-{3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm3$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(-13\\pm\\sqrt-2)/9",
+      "raw": "$(-13\\pm\\sqrt{-2})/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm2\\sqrt-2)/3",
+      "raw": "$(\\pm 1\\pm 2\\sqrt{-2})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -595,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 134,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{134}(1)/W_{134,1}}$",
+   "${X_{0}^{134}(1)/w_{134}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(2x^2-5x+2)/(x^2-2x+1))$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1 $"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt-3)/2",
+      "raw": "$(1\\pm\\sqrt{-3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt5)/2",
+      "raw": "$(\\pm 1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm\\sqrt5)/2",
+      "raw": "$(3\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       4
+      ],
+      "raw": "${9}/{4}$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "(5\\pm\\sqrt-11)/6",
+      "raw": "$(5\\pm\\sqrt{-11})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-5\\pm2\\sqrt13",
+      "raw": "$-5\\pm 2\\sqrt{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt13)/2,(1\\pm\\sqrt13)/6",
+      "raw": "$(- 1\\pm\\sqrt{13})/{2},({1\\pm\\sqrt{13}})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       2
+      ],
+      "raw": "${5}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "1/2,2",
+      "raw": "${1}/{2},2$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 146,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{146}(1)/W_{146,1}}$",
+   "${X_{0}^{146}(1)/w_{146}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-1)/{x})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm 1\\pm\\sqrt{-3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm\\sqrt13)/2",
+      "raw": "$(3\\pm \\sqrt{13})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "1\\pm\\sqrt2",
+      "raw": "$1\\pm\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-1\\pm\\sqrt3)/2",
+      "raw": "$(\\pm\\sqrt{-1}\\pm\\sqrt{3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "(5\\pm\\sqrt29)/2",
+      "raw": "$(5\\pm \\sqrt{29})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -292,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 159,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{159}(1)/W_{159,1}}$",
+   "${X_{0}^{159}(1)/w_{159}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(3x^2+7)/{2})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       7,
+       2
+      ],
+      "raw": "${7}/{2}$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm1$"
+     }
+    ]
+   },
+   {
+    "disc": -39,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt13",
+      "raw": "$\\pm\\sqrt{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-21\\pm6\\sqrt13/3",
+      "raw": "${\\pm\\sqrt{-21\\pm6\\sqrt{13}}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -48,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -57,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm1/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       11,
+       3
+      ],
+      "raw": "${11}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm{1}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -75,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       19,
+       5
+      ],
+      "raw": "${19}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt5",
+      "raw": "$\\pm1/\\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(5\\pm2\\sqrt7)/3",
+      "raw": "$(5\\pm2\\sqrt{7})/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt-1\\pm\\sqrt-7)/3",
+      "raw": "$(\\pm 2\\sqrt{-1}\\pm\\sqrt{-7})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(17\\pm2\\sqrt10)/3",
+      "raw": "$(17\\pm2\\sqrt{10})/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt2\\pm\\sqrt5)/3",
+      "raw": "$(\\pm2\\sqrt{2}\\pm\\sqrt{5})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-7\\pm6\\sqrt3",
+      "raw": "$-7\\pm6\\sqrt{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1\\pm\\sqrt-3",
+      "raw": "$\\pm2\\sqrt{-1}\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -156,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(34\\pm\\sqrt13)/9",
+      "raw": "$(34\\pm\\sqrt{13})/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt15\\pm6\\sqrt13/9",
+      "raw": "$\\pm\\sqrt{15\\pm6\\sqrt{13}}/{9} $"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(91\\pm2\\sqrt-2)/27",
+      "raw": "$(91\\pm2\\sqrt{-2})/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7\\pm4\\sqrt-2/9",
+      "raw": "$\\pm\\sqrt{-7\\pm4\\sqrt{-2}}/{9} $"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -795,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       11,
+       1
+      ],
+      "raw": "$11$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm\\sqrt{5}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 194,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{194}(1)/W_{194,1}}$",
+   "${X_{0}^{194}(1)/w_{194}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=(x^2-1)/{x})$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm 1\\pm\\sqrt{-3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt13)/2",
+      "raw": "$(-3\\pm\\sqrt{13})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "(-3\\pm2\\sqrt-3)/3",
+      "raw": "$(-3\\pm 2\\sqrt{-3})/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt-3)/2,(3\\pm\\sqrt-3)/6",
+      "raw": "$(-3\\pm\\sqrt{-3})/{2},(3\\pm\\sqrt{-3})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt37)/6",
+      "raw": "$(-1\\pm\\sqrt{37})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "(5\\pm\\sqrt29)/2",
+      "raw": "$(5\\pm \\sqrt{29})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm\\sqrt5)/2",
+      "raw": "$(\\pm 3\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -388,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 206,
+  "N": 1,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{206}(1)/W_{206,1}}$",
+   "${X_{0}^{206}(1)/w_{206}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=2x^2+1)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -56,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2\\pm2\\sqrt-7/2",
+      "raw": "$\\pm \\sqrt{-2\\pm 2\\sqrt{-7}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt-7",
+      "raw": "$-2\\pm\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-6\\pm2\\sqrt-7/2",
+      "raw": "$\\pm \\sqrt{-6\\pm 2\\sqrt{-7}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "2\\pm\\sqrt-15",
+      "raw": "$2\\pm\\sqrt{-15}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2\\pm2\\sqrt-15%/2",
+      "raw": "${\\pm \\sqrt{2\\pm 2\\sqrt{-15}}% }/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "8\\pm\\sqrt33",
+      "raw": "$8\\pm\\sqrt{33}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt3\\pm\\sqrt11)/2",
+      "raw": "$(\\pm\\sqrt{3}\\pm\\sqrt{11})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -163,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     }
+    ]
+   },
+   {
+    "disc": -184,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt-23",
+      "raw": "$-2\\pm\\sqrt{-23}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-6\\pm2\\sqrt-23%/2",
+      "raw": "$\\pm \\sqrt{-6\\pm 2\\sqrt{-23}% }/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm \\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "19\\pm8\\sqrt5",
+      "raw": "$19\\pm 8\\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2\\pm2\\sqrt-3%/2",
+      "raw": "${\\pm \\sqrt{-2\\pm 2\\sqrt{-3}}% }/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -328,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt41",
+      "raw": "$-2\\pm\\sqrt{41}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-6\\pm2\\sqrt41%/2",
+      "raw": "${\\pm \\sqrt{-6\\pm 2\\sqrt{41}}% }/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "other",
+      "val": "-13\\pm8\\sqrt3",
+      "raw": "$-13\\pm 8\\sqrt{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1\\pm\\sqrt-3",
+      "raw": "$\\pm 2\\sqrt{-1}\\pm\\sqrt{-3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 11,
+  "header1": [
+   "CM-point",
+   "${X_{0}^{6}(11)/W_{6,11}}$",
+   "${X_{0}^{6}(11)/\\langle w_{6},w_{11}\\rangle}$",
+   "${X_{0}^{6}(11)}/w_{66}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=(-t^2+2)/{2})$",
+   "$x (t=(2x^2+2)/(x^2-2x-1))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     },
+     {
+      "kind": "other",
+      "val": "-1,0,1,\\infty",
+      "raw": "$-1,0,1,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm \\sqrt{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1\\pm\\sqrt2",
+      "raw": "$- 1\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       9
+      ],
+      "raw": "$-{1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt5/3",
+      "raw": "$\\pm 2\\sqrt{5}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt5,%(-1\\pm\\sqrt5)/2",
+      "raw": "$-2\\pm \\sqrt{5},% (-1\\pm \\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       49
+      ],
+      "raw": "$-{1}/{49}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm10/7",
+      "raw": "$\\pm 10/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "-3,-2,1/3,%1/2",
+      "raw": "$-3,-2,{1}/{3},% {1}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       17
+      ],
+      "raw": "$-{1}/{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm6/\\sqrt17",
+      "raw": "$\\pm6/\\sqrt{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt17)/4,(-3\\pm\\sqrt17)/2",
+      "raw": "$(-3\\pm \\sqrt{17})/{4},(-3\\pm \\sqrt{17})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       25
+      ],
+      "raw": "$-{1}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt13/5",
+      "raw": "$\\pm2 \\sqrt{13}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt13)/2,(-2\\pm\\sqrt13)/3",
+      "raw": "$(-3\\pm \\sqrt{13})/{2},(-2\\pm \\sqrt{13})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       7
+      ],
+      "raw": "${1}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt21/7",
+      "raw": "$\\pm 2\\sqrt{21}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\sqrt21\\pm\\sqrt-7)/(\\sqrt21\\pm7)",
+      "raw": "$(\\sqrt{21}\\pm \\sqrt{-7})/(\\sqrt{21}\\pm 7)$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "1\\pm\\sqrt2",
+      "raw": "$1\\pm\\sqrt{2} $"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       5
+      ],
+      "raw": "${3}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2/\\sqrt5",
+      "raw": "$\\pm{ 2/\\sqrt{5}}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\sqrt5%\\pm\\sqrt-15/(5\\pm\\sqrt5)",
+      "raw": "$(\\sqrt{5}% \\pm \\sqrt{-15}/({5\\pm \\sqrt{5}})$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       41
+      ],
+      "raw": "$-{9}/{41}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm10/\\sqrt41",
+      "raw": "$\\pm 10/\\sqrt{41}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-5\\pm\\sqrt41)/2,(-5\\pm\\sqrt41)/8",
+      "raw": "$ (-5\\pm \\sqrt{41})/{2},(-5\\pm \\sqrt{41})/{8}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 17,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{6}\\left( 17\\right) /W_{6,17}$",
+   "$X_{0}^{6}\\left( 17\\right) /<w_{3},w_{34}>$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       4
+      ],
+      "raw": "${1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2",
+      "raw": "$\\pm {1}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-{1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm 1/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "${1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm {1}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt3",
+      "raw": "$\\pm\\sqrt{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -16,
+       3
+      ],
+      "raw": "$-{16}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4/\\sqrt-3",
+      "raw": "$\\pm{4/\\sqrt{-3}}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 19,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{6}\\left( 19\\right) /W_{6,19}$",
+   "$X_{0}^{6}\\left( 19\\right) /\\langle w_2,w_{57} \\rangle$",
+   "$X_{0}^{6}\\left( 19\\right) /w_{_{114}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=-t^2/{4})$",
+   "$x (t=(x^2-1)/{x})$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -19,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       4
+      ],
+      "raw": "$-{1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm1$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt5)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{5}) /{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       4
+      ],
+      "raw": "${3}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{-3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       4
+      ],
+      "raw": "$-{9}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm3$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm\\sqrt13)/2",
+      "raw": "$(\\pm 3\\pm \\sqrt{13})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       16
+      ],
+      "raw": "$-{9}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/2",
+      "raw": "$\\pm{ 3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2,\\pm1/%2",
+      "raw": "$\\pm 2,\\pm{ 1}/{% 2}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       4
+      ],
+      "raw": "$-{3}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt3",
+      "raw": "$\\pm\\sqrt{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt%3\\pm\\sqrt7)/2",
+      "raw": "$(\\pm \\sqrt{% 3}\\pm \\sqrt{7})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1\\pm\\sqrt2",
+      "raw": "$\\pm 1\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       4
+      ],
+      "raw": "${1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-1\\pm\\sqrt3)/2",
+      "raw": "$(\\pm \\sqrt{-1}\\pm \\sqrt{3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       36
+      ],
+      "raw": "$-{1}/{36}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm{ 1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "%(\\pm1\\pm\\sqrt37)/6",
+      "raw": "$% (\\pm 1\\pm \\sqrt{37})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 29,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{6}\\left( 29\\right) /W_{6,29}$",
+   "$X_{0}^{6}\\left( 29\\right) /\\langle w_3,w_{58}\\rangle$",
+   "$% X_{0}^{6}\\left( 29\\right) /w_{174}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s={18}/(t^2+18))$",
+   "$x (t={-12x}/(x^2-2))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       17
+      ],
+      "raw": "${9}/{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4",
+      "raw": "$\\pm4$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm\\sqrt17)/2",
+      "raw": "$(\\pm 3\\pm \\sqrt{17})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-1",
+      "raw": "$\\pm4\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1,\\pm2\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1},\\pm 2\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "${1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm12",
+      "raw": "$\\pm 12$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1,\\pm2",
+      "raw": "$\\pm 1,\\pm 2$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       25
+      ],
+      "raw": "${9}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt2",
+      "raw": "$\\pm4\\sqrt{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2%/2,\\pm2\\sqrt2",
+      "raw": "$\\pm{ \\sqrt{2}% }/{2},\\pm 2\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       5
+      ],
+      "raw": "$-{3}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-3",
+      "raw": "$\\pm4\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-3\\pm\\sqrt5)/2",
+      "raw": "$(\\pm\\sqrt{-3}\\pm\\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       41
+      ],
+      "raw": "${9}/{41}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm8",
+      "raw": "$\\pm8$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm\\sqrt41)/%4",
+      "raw": "$(\\pm 3\\pm \\sqrt{41})/{% 4}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       11
+      ],
+      "raw": "${3}/{11}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt3",
+      "raw": "$\\pm4\\sqrt{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt3\\pm\\sqrt11)/2",
+      "raw": "$(\\pm\\sqrt{3}\\pm\\sqrt{11})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-{9}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-2",
+      "raw": "$\\pm4\\sqrt{-2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt-2\\pm\\sqrt14)/4",
+      "raw": "$(\\pm 3\\sqrt{-2}\\pm\\sqrt{14})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       27,
+       19
+      ],
+      "raw": "${27}/{19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4/\\sqrt-3",
+      "raw": "$\\pm{ 4/\\sqrt{-3}}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt-3\\pm\\sqrt-19)/2",
+      "raw": "$(\\pm 3\\sqrt{-3}\\pm\\sqrt{-19})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-2",
+      "raw": "$\\pm 3\\sqrt{-2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm \\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       81,
+       89
+      ],
+      "raw": "${81}/{89}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4/3",
+      "raw": "$\\pm{4}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm9\\pm\\sqrt89)/2",
+      "raw": "$(\\pm 9\\pm \\sqrt{89})/{2}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 31,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{6}\\left( 31\\right) /W_{6,31}$",
+   "$X_{0}^{6}\\left( 31\\right)/\\langle w_6,w_{31} \\rangle $",
+   "$% X_{0}^{6}\\left( 31\\right) /w_{186}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=(t^2+3)/{3})$",
+   "$x (t=(x^2-3)/{2x})$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       3
+      ],
+      "raw": "${4}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3,\\pm1",
+      "raw": "$\\pm 3,\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       16,
+       3
+      ],
+      "raw": "${16}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt13",
+      "raw": "$\\pm \\sqrt{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\pm\\sqrt13",
+      "raw": "$\\pm 4\\pm \\sqrt{13}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       16,
+       9
+      ],
+      "raw": "${16}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt21/3",
+      "raw": "$\\pm \\sqrt{21}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm4\\sqrt3%\\pm\\sqrt21)/3",
+      "raw": "$(\\pm 4\\sqrt{3}% \\pm \\sqrt{21})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       16,
+       27
+      ],
+      "raw": "${16}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11/3",
+      "raw": "$\\pm{ \\sqrt{-11}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm4\\pm\\sqrt-11)/3",
+      "raw": "$(\\pm 4\\pm \\sqrt{-11})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       8,
+       3
+      ],
+      "raw": "${8}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\sqrt{2}\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -16,
+       9
+      ],
+      "raw": "$-{16}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm {5/\\sqrt{-3}}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3,\\pm\\sqrt-3/3",
+      "raw": "$\\pm 3\\sqrt{-3}, \\pm {\\sqrt{-3}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       64,
+       27
+      ],
+      "raw": "${64}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt37/3",
+      "raw": "$\\pm{ \\sqrt{37}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm8\\pm\\sqrt37)/3",
+      "raw": "$(\\pm 8\\pm \\sqrt{37})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       8,
+       9
+      ],
+      "raw": "${8}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/3",
+      "raw": "$\\pm{ \\sqrt{-3}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt6%\\pm\\sqrt-3)/3",
+      "raw": "$(\\pm 2\\sqrt{6}% \\pm \\sqrt{-3})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -16,
+       3
+      ],
+      "raw": "$-{16}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19",
+      "raw": "$\\pm \\sqrt{-19}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-1\\pm\\sqrt-19",
+      "raw": "$\\pm 4\\sqrt{-1}\\pm \\sqrt{-19}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       3
+      ],
+      "raw": "${1}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm \\sqrt{-2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1\\pm\\sqrt-2",
+      "raw": "$\\pm 1\\pm \\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt3",
+      "raw": "$ \\pm\\sqrt{3} $"
+     }
+    ]
+   },
+   {
+    "disc": -403,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       52,
+       27
+      ],
+      "raw": "${52}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/3",
+      "raw": "$\\pm{ 5}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm5\\pm2\\sqrt13%)/3",
+      "raw": "$(\\pm 5\\pm 2\\sqrt{13}% )/{3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 6,
+  "N": 37,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{6}\\left( 37\\right) /W_{6,37}$",
+   "$X_{0}^{6}\\left( 37\\right) /{\\langle w_6,w_{37}\\rangle}$",
+   "$X_{0}^{6}\\left( 37\\right) /w_{222}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s={t^2}/(t^2+4))$",
+   "$x (t=(x^2-1)/{x})$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt-2",
+      "raw": "$\\pm{3/\\sqrt{-2}}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2/2,\\pm\\sqrt-2",
+      "raw": "$\\pm{ \\sqrt{-2}}/{2},\\pm \\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       25
+      ],
+      "raw": "${9}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/2",
+      "raw": "$\\pm{ 3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2,\\pm2",
+      "raw": "$\\pm{ 1}/{2},\\pm 2$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       7
+      ],
+      "raw": "$-{9}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1/2",
+      "raw": "$\\pm{ 3\\sqrt{-1}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt7\\pm3\\sqrt-1)/%4",
+      "raw": "$(\\pm \\sqrt{7}\\pm 3\\sqrt{-1})/{% 4}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -27,
+       5
+      ],
+      "raw": "$-{27}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-6/4",
+      "raw": "$\\pm{ 3\\sqrt{-6}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt%10\\pm3\\sqrt-6)/8",
+      "raw": "$(\\pm \\sqrt{% 10}\\pm 3\\sqrt{-6})/{8}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{-3})/{2} $"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       27,
+       11
+      ],
+      "raw": "${27}/{11}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3/2",
+      "raw": "$\\pm{ 3\\sqrt{-3}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3%\\sqrt-3\\pm\\sqrt-11)/4",
+      "raw": "$(\\pm 3% \\sqrt{-3}\\pm \\sqrt{-11})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm2\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       81,
+       49
+      ],
+      "raw": "${81}/{49}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm9\\sqrt-2/4",
+      "raw": "$\\pm{ 9\\sqrt{-2}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt%-2/4,\\pm2\\sqrt-2",
+      "raw": "$\\pm{ \\sqrt{% -2}}/{4},\\pm 2\\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       13
+      ],
+      "raw": "$-{3}/{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/2",
+      "raw": "$\\pm{ \\sqrt{-3}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt%13\\pm\\sqrt-3)/4",
+      "raw": "$(\\pm \\sqrt{% 13}\\pm \\sqrt{-3})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       17
+      ],
+      "raw": "${9}/{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt2/2",
+      "raw": "$\\pm{ 3\\sqrt{2}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt2%\\pm\\sqrt34)/4",
+      "raw": "$(\\pm 3\\sqrt{2% }\\pm \\sqrt{34})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -555,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -27,
+       37
+      ],
+      "raw": "$-{27}/{37}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3/4",
+      "raw": "$\\pm{ 3\\sqrt{-3}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt37\\pm3\\sqrt-3)/8",
+      "raw": "$(\\pm \\sqrt{37}\\pm 3\\sqrt{-3})/{8}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 10,
+  "N": 11,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{10}\\left( 11\\right) /W_{10,11}$",
+   "$X_{0}^{10}\\left( 11\\right) /\\langle w_{10},w_{11}\\rangle$",
+   "$X_{0}^{10}\\left( 11\\right) /w_{110}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s={-t^2}/{2})$",
+   "$x (t=(x^2-2)/{2x})$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       7,
+       8
+      ],
+      "raw": "${7}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7/2",
+      "raw": "$\\pm{ \\sqrt{-7}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-7)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{-7})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm \\sqrt{-2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm \\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       8
+      ],
+      "raw": "$-{1}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2",
+      "raw": "$\\pm{ 1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2,\\pm1",
+      "raw": "$\\pm 2,\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       8
+      ],
+      "raw": "${9}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1/2",
+      "raw": "$\\pm{ 3\\sqrt{-1}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1,\\pm\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1},\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       8
+      ],
+      "raw": "${3}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/2",
+      "raw": "$\\pm{ \\sqrt{-3}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt5\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm \\sqrt{5}\\pm \\sqrt{-3})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       11,
+       8
+      ],
+      "raw": "${11}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11/2",
+      "raw": "$\\pm{ \\sqrt{-11}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-3\\pm\\sqrt-11)/2",
+      "raw": "$(\\pm \\sqrt{-3}\\pm \\sqrt{-11})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -187,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       8
+      ],
+      "raw": "$-{9}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/2",
+      "raw": "$\\pm{ 3}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm\\sqrt17)/2",
+      "raw": "$(\\pm 3\\pm \\sqrt{17})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -340,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       17,
+       8
+      ],
+      "raw": "${17}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-17/2",
+      "raw": "$\\pm{ \\sqrt{-17}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt-1\\pm\\sqrt-17)/2",
+      "raw": "$(\\pm 3\\sqrt{-1}\\pm \\sqrt{-17})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -660,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       33,
+       32
+      ],
+      "raw": "${33}/{32}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-33/4",
+      "raw": "$\\pm{ \\sqrt{-33}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-1\\pm\\sqrt-33)/4",
+      "raw": "$(\\pm \\sqrt{-1}\\pm \\sqrt{-33})/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -715,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       99,
+       104
+      ],
+      "raw": "${99}/{104}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-143%/26",
+      "raw": "$\\pm{ 3\\sqrt{-143}% }/{26}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt-143\\pm\\sqrt65)/26",
+      "raw": "$(\\pm 3\\sqrt{-143}\\pm \\sqrt{65})/{26}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 10,
+  "N": 13,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{10}\\left( 13\\right) /W_{10,13}$",
+   "$X_{0}^{10}\\left( 13\\right)/\\langle w_{2}, w_{65} \\rangle $"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm\\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       9
+      ],
+      "raw": "${25}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/3",
+      "raw": "$\\pm{5}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -15,
+       1
+      ],
+      "raw": "$-15$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15",
+      "raw": "$\\pm \\sqrt{-15}$"
+     }
+    ]
+   },
+   {
+    "disc": -195,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       3
+      ],
+      "raw": "$-{5}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15/3",
+      "raw": "$\\pm{ \\sqrt{-15}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       9
+      ],
+      "raw": "${5}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5/3",
+      "raw": "$\\pm{ \\sqrt{5}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -13,
+       3
+      ],
+      "raw": "$-{13}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-39/3",
+      "raw": "$\\pm{ \\sqrt{-39}}/{3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 10,
+  "N": 19,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{10}\\left( 19\\right) /W_{10,19}$",
+   "$X_{0}^{10}\\left( 19\\right)/\\langle w_{5}, w_{38} \\rangle $"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0 $"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -4,
+       1
+      ],
+      "raw": "$-4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1",
+      "raw": "$\\pm 2\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       27
+      ],
+      "raw": "${4}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2/3",
+      "raw": "$\\pm {2}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm \\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       3
+      ],
+      "raw": "${4}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2/\\sqrt3",
+      "raw": "$\\pm {2/\\sqrt{3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       5
+      ],
+      "raw": "${4}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2/\\sqrt5",
+      "raw": "$\\pm {2/\\sqrt{5}}$"
+     }
+    ]
+   },
+   {
+    "disc": -532,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       4
+      ],
+      "raw": "$-{1}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1/2",
+      "raw": "$\\pm {\\sqrt{-1}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -760,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       32,
+       5
+      ],
+      "raw": "${32}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt10/5",
+      "raw": "$\\pm {4\\sqrt{10}}/{5}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 10,
+  "N": 23,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{10}\\left( 23\\right) /W_{10,23}$",
+   "$X_{0}^{10}\\left( 23\\right) /\\langle w_{10},w_{23}\\rangle$",
+   "$X_{0}^{10}\\left( 23\\right) /w_{230}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s={t^2}/(t^2-5))$",
+   "$x (t=(5x^2+5)/(x^2-4x-1))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt5)/2",
+      "raw": "$(-1\\pm \\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -43,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       4
+      ],
+      "raw": "${5}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5",
+      "raw": "$\\pm 5$"
+     },
+     {
+      "kind": "other",
+      "val": "-1/2,0,2,\\infty",
+      "raw": "$-{1}/{2},0,2,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -67,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/2",
+      "raw": "$\\pm{ 5}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "-3,-1,1/3,1",
+      "raw": "$-3,-1,{1}/{3},1$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       16
+      ],
+      "raw": "${5}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-11",
+      "raw": "$\\pm{ 5/\\sqrt{-11}}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt-11)/6,(1\\pm\\sqrt-11)/2",
+      "raw": "$(-1\\pm \\sqrt{-11})/{6},(1\\pm \\sqrt{-11})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "2\\pm\\sqrt5",
+      "raw": "$2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       8
+      ],
+      "raw": "${5}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm{ 5/\\sqrt{-3}}$"
+     },
+     {
+      "kind": "other",
+      "val": "(2\\sqrt-1%\\pm2\\sqrt-2)/(\\sqrt-1\\pm\\sqrt3)",
+      "raw": "$(2\\sqrt{-1}% \\pm 2\\sqrt{-2})/({\\sqrt{-1}\\pm \\sqrt{3}})$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       9
+      ],
+      "raw": "${5}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-1/2",
+      "raw": "$\\pm{ 5\\sqrt{-1}}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm2\\sqrt-1)/5,1\\pm2\\sqrt-1",
+      "raw": "$(-1\\pm 2\\sqrt{-1})/{5},1\\pm 2\\sqrt{-1} $"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       16
+      ],
+      "raw": "${25}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt5/3",
+      "raw": "$\\pm{ 5\\sqrt{5}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-11\\pm5%\\sqrt5)/2,(1\\pm\\sqrt5)/2",
+      "raw": "$(-11\\pm 5% \\sqrt{5})/{2},(1\\pm \\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       8
+      ],
+      "raw": "$-{5}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt13",
+      "raw": "$\\pm {5/\\sqrt{13}}$"
+     },
+     {
+      "kind": "other",
+      "val": "2(1\\pm\\sqrt-2)/(1\\pm\\sqrt13)",
+      "raw": "${2(1\\pm\\sqrt{-2})}/({1\\pm\\sqrt{13}})$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 14,
+  "N": 3,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{14}\\left( 3\\right) /W_{14,3}$",
+   "$X_{0}^{14}\\left( 3\\right)/\\langle w_3,w_{14}\\rangle $"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$ x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0 $"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       7
+      ],
+      "raw": "$-{1}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-7",
+      "raw": "$\\pm{1/ \\sqrt{-7}}$"
+     }
+    ]
+   },
+   {
+    "disc": -51,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "${1}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm {1}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       27
+      ],
+      "raw": "$-{1}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/9",
+      "raw": "$\\pm {\\sqrt{-3}}/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       9
+      ],
+      "raw": "${25}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/3",
+      "raw": "$\\pm{ 5}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -2,
+       9
+      ],
+      "raw": "$-{2}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2/3",
+      "raw": "$\\pm{\\sqrt{-2}}/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       27
+      ],
+      "raw": "$-{25}/{27}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm{ 5/\\sqrt{-3}}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       1521
+      ],
+      "raw": "${25}/{1521}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/39",
+      "raw": "$\\pm{ 5}/{39}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       49,
+       117
+      ],
+      "raw": "${49}/{117}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm7\\sqrt13/39",
+      "raw": "$\\pm{ 7\\sqrt{13}}/{39}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 14,
+  "N": 5,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{14}\\left( 5\\right)/ W_{14,5}$",
+   "$X_{0}^{14}\\left( 5\\right)/\\langle w_{5},w_{14}\\rangle $",
+   "$% X_{0}^{14}\\left( 5\\right) /w_{14}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=t^2)$",
+   "$x (t=(x^2-x-1)/(2x^2+2))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1} $"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     },
+     {
+      "kind": "other",
+      "val": "(-1\\pm\\sqrt-11)/2,%(1\\pm\\sqrt-11)/6",
+      "raw": "$(-1\\pm \\sqrt{-11})/{2},% (1\\pm \\sqrt{-11})/{6}$"
+     }
+    ]
+   },
+   {
+    "disc": -35,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt5)/2",
+      "raw": "$(1\\pm \\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm2\\sqrt-1)(1\\pm\\sqrt21)/10",
+      "raw": "${(1\\pm 2\\sqrt{-1})(1\\pm\\sqrt{21})}/{10}$"
+     }
+    ]
+   },
+   {
+    "disc": -91,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm \\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm3\\sqrt13)/(2\\pm4\\sqrt-7)",
+      "raw": "$({1\\pm 3\\sqrt{13}})/{(2\\pm 4\\sqrt{-7})}$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5",
+      "raw": "$\\pm \\sqrt{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm5\\sqrt-3)/(2\\pm4\\sqrt5)",
+      "raw": "$(1\\pm 5\\sqrt{-3})/{(2\\pm 4\\sqrt{5})}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       81
+      ],
+      "raw": "${25}/{81}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/9",
+      "raw": "$\\pm {5}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-9\\pm\\sqrt5)/2,(9\\pm\\sqrt5)/3",
+      "raw": "$(-9\\pm\\sqrt{5})/{2},(9\\pm\\sqrt{5})/{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       16
+      ],
+      "raw": "${5}/{16} $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5/4",
+      "raw": "$\\pm{\\sqrt{5}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt5",
+      "raw": "$-2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -340,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       1
+      ],
+      "raw": "$-25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-1",
+      "raw": "$\\pm 5\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm10\\sqrt-1)(1\\pm9\\sqrt5)/202",
+      "raw": "${(1\\pm 10\\sqrt{-1})(1\\pm 9\\sqrt{5})}/{202}$"
+     }
+    ]
+   },
+   {
+    "disc": -420,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       9
+      ],
+      "raw": "${5}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5/3",
+      "raw": "$\\pm {\\sqrt{5}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm\\sqrt-35)/(6\\pm4\\sqrt5)",
+      "raw": "$(3\\pm\\sqrt{-35})/{(6\\pm4\\sqrt{5})}$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       81
+      ],
+      "raw": "${5}/{81}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5/9",
+      "raw": "$\\pm {\\sqrt{5}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(9\\pm5\\sqrt13)/(18\\pm4\\sqrt5)",
+      "raw": "$(9\\pm 5\\sqrt{13})/{(18\\pm4\\sqrt{5})}$"
+     }
+    ]
+   },
+   {
+    "disc": -840,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -35,
+       9
+      ],
+      "raw": "$-{35}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-35/3",
+      "raw": "$\\pm {\\sqrt{-35}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "%(3\\pm11\\sqrt5)/(6\\pm4\\sqrt-35)",
+      "raw": "$% (3\\pm11\\sqrt{5})/{(6\\pm4\\sqrt{-35})}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 15,
+  "N": 2,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{15}(2) /W_{15,2}$",
+   "$X_{0}^{15}(2)/\\gen{w_2,w_{15}}$",
+   "$X_0^{15}(2)/\\gen{w_{15}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=t^2)$",
+   "$x (t=(x^2+2)/2x)$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       4
+      ],
+      "raw": "$1/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2",
+      "raw": "$\\pm 1/2$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt-7)/2",
+      "raw": "$(\\pm 1\\pm\\sqrt{-7})/2$"
+     }
+    ]
+   },
+   {
+    "disc": -12,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "other",
+      "val": "\\infty,0",
+      "raw": "$\\infty,0$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       4
+      ],
+      "raw": "$5/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt5/2",
+      "raw": "$\\pm\\sqrt5/2$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt5\\pm\\sqrt-3)/2",
+      "raw": "$(\\pm\\sqrt5\\pm\\sqrt{-3})/2$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       4
+      ],
+      "raw": "$9/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/2",
+      "raw": "$\\pm3/2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1,\\pm2",
+      "raw": "$\\pm1,\\pm2$"
+     }
+    ]
+   },
+   {
+    "disc": -40,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-2",
+      "raw": "$\\pm\\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -48,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       4
+      ],
+      "raw": "$-1/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1/2",
+      "raw": "$\\pm\\sqrt{-1}/2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1,\\pm2\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1},\\pm2\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1\\pm\\sqrt-1",
+      "raw": "$\\pm1\\pm\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       12
+      ],
+      "raw": "$-1/12$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2\\sqrt-3",
+      "raw": "$\\pm1/2\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3,\\pm2/\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3},\\pm2/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -88,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       4,
+       1
+      ],
+      "raw": "$4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt2",
+      "raw": "$\\pm2\\pm\\sqrt2$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       1
+      ],
+      "raw": "$2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm\\sqrt2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm\\sqrt2$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-1}\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       25
+      ],
+      "raw": "$1/25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/5",
+      "raw": "$\\pm1/5$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm7\\sqrt-1)/5",
+      "raw": "$(\\pm1\\pm7\\sqrt{-1})/5$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       3
+      ],
+      "raw": "$2/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt6/3",
+      "raw": "$\\pm\\sqrt{6}/3$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt6\\pm2\\sqrt-3)/3",
+      "raw": "$(\\pm\\sqrt6\\pm2\\sqrt{-3})/3$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       9
+      ],
+      "raw": "$-1/9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1/3",
+      "raw": "$\\pm\\sqrt{-1}/3$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-1\\pm\\sqrt-19)/3",
+      "raw": "$(\\pm\\sqrt{-1}\\pm\\sqrt{-19})/3$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       144,
+       121
+      ],
+      "raw": "$144/121$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm12/11",
+      "raw": "$\\pm 12/11$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm12\\pm7\\sqrt-2)/11",
+      "raw": "$(\\pm12\\pm7\\sqrt{-2})/11$"
+     }
+    ]
+   },
+   {
+    "disc": -240,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       12
+      ],
+      "raw": "$-25/12$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/2\\sqrt-3",
+      "raw": "$\\pm5/2\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-3,\\pm\\sqrt-3/3",
+      "raw": "$\\pm2\\sqrt{-3},\\pm\\sqrt{-3}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       10,
+       1
+      ],
+      "raw": "$10$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt10",
+      "raw": "$\\pm\\sqrt{10}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt2\\pm\\sqrt10",
+      "raw": "$\\pm2\\sqrt2\\pm\\sqrt{10}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       2,
+       25
+      ],
+      "raw": "$2/25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2/5",
+      "raw": "$\\pm\\sqrt2/5$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt2\\pm4\\sqrt-3)/5",
+      "raw": "$(\\pm\\sqrt2\\pm4\\sqrt{-3})/5$"
+     }
+    ]
+   },
+   {
+    "disc": -340,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       17
+      ],
+      "raw": "$9/17$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt17",
+      "raw": "$\\pm3/\\sqrt{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\pm5\\sqrt-1)/\\sqrt17",
+      "raw": "$(\\pm3\\pm5\\sqrt{-1})/\\sqrt{17}$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -31,
+       9
+      ],
+      "raw": "$-31/9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-31/3",
+      "raw": "$\\pm\\sqrt{-31}/3$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm7\\sqrt-1\\pm\\sqrt-31)/3",
+      "raw": "$(\\pm7\\sqrt{-1}\\pm\\sqrt{-31})/3$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       68,
+       25
+      ],
+      "raw": "$68/25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt17/5",
+      "raw": "$\\pm2\\sqrt{17}/5$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt2\\pm2\\sqrt17)/5",
+      "raw": "$(\\pm3\\sqrt2\\pm2\\sqrt{17})/5$"
+     }
+    ]
+   },
+   {
+    "disc": -420,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       3
+      ],
+      "raw": "$5/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt15/3",
+      "raw": "$\\pm\\sqrt{15}/3$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt15\\pm\\sqrt-3)/3",
+      "raw": "$(\\pm\\sqrt{15}\\pm\\sqrt{-3})/3$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -8,
+       121
+      ],
+      "raw": "$-8/121$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-2/11",
+      "raw": "$\\pm2\\sqrt{-2}/11$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt-2\\pm5\\sqrt-10)/11",
+      "raw": "$(\\pm2\\sqrt{-2}\\pm5\\sqrt{-10})/11$"
+     }
+    ]
+   },
+   {
+    "disc": -660,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       11
+      ],
+      "raw": "$-5/11$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-55/11",
+      "raw": "$\\pm\\sqrt{-55}/11$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm\\sqrt-55\\pm3\\sqrt-33)/11",
+      "raw": "$(\\pm\\sqrt{-55}\\pm3\\sqrt{-33})/11$"
+     }
+    ]
+   },
+   {
+    "disc": -708,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -841,
+       121
+      ],
+      "raw": "$-841/121$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm29\\sqrt-1/11",
+      "raw": "$\\pm 29\\sqrt{-1}/11$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm29\\sqrt-1\\pm19\\sqrt-3)/11",
+      "raw": "$(\\pm29\\sqrt{-1}\\pm19\\sqrt{-3})/11$"
+     }
+    ]
+   },
+   {
+    "disc": -760,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       450,
+       529
+      ],
+      "raw": "$450/529$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm15\\sqrt2/23",
+      "raw": "$\\pm15\\sqrt2/23$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm15\\sqrt2\\pm4\\sqrt-38)/23",
+      "raw": "$(\\pm15\\sqrt2\\pm4\\sqrt{-38})/23$"
+     }
+    ]
+   },
+   {
+    "disc": -840,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       40,
+       27
+      ],
+      "raw": "$40/27$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt30/9",
+      "raw": "$\\pm2\\sqrt{30}/9$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt30\\pm\\sqrt-42)/9",
+      "raw": "$(\\pm2\\sqrt{30}\\pm\\sqrt{-42})/9$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 21,
+  "N": 2,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{21}(2) /W_{21,2}$",
+   "$X_{0}^{21}(2)/\\gen{w_3,w_7}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       3
+      ],
+      "raw": "$-5/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15/3",
+      "raw": "$\\pm\\sqrt{-15}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -16,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       9
+      ],
+      "raw": "$1/9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/3",
+      "raw": "$\\pm1/3$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm3$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -100,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       5
+      ],
+      "raw": "$1/5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt5",
+      "raw": "$\\pm1/\\sqrt5$"
+     }
+    ]
+   },
+   {
+    "disc": -112,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       1
+      ],
+      "raw": "$25$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5",
+      "raw": "$\\pm5$"
+     }
+    ]
+   },
+   {
+    "disc": -120,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-1/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm1/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       37,
+       9
+      ],
+      "raw": "$37/9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt37/3",
+      "raw": "$\\pm\\sqrt{37}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       3
+      ],
+      "raw": "$-25/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm5/\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -32,
+       1
+      ],
+      "raw": "$-32$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-2",
+      "raw": "$\\pm4\\sqrt{-2}$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -35,
+       9
+      ],
+      "raw": "$-35/9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-35/3",
+      "raw": "$\\pm\\sqrt{-35}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -8,
+       3
+      ],
+      "raw": "$-8/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-6/3",
+      "raw": "$\\pm2\\sqrt{-6}/3$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       4
+      ],
+      "raw": "$-3/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/2",
+      "raw": "$\\pm\\sqrt{-3}/2$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -75,
+       1
+      ],
+      "raw": "$-75$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5\\sqrt-3",
+      "raw": "$\\pm5\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -420,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       21,
+       1
+      ],
+      "raw": "$21$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt21",
+      "raw": "$\\pm\\sqrt{21}$"
+     }
+    ]
+   },
+   {
+    "disc": -532,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -19,
+       4
+      ],
+      "raw": "$-19/4$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-19/2",
+      "raw": "$\\pm\\sqrt{-19}/2$"
+     }
+    ]
+   },
+   {
+    "disc": -708,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       48
+      ],
+      "raw": "$25/48$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/4\\sqrt-3",
+      "raw": "$\\pm5/4\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -840,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -16,
+       3
+      ],
+      "raw": "$-16/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4/\\sqrt-3",
+      "raw": "$\\pm4/\\sqrt{-3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 22,
+  "N": 3,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{22}\\left( 3\\right) /W_{22,3}$",
+   "$X_{0}^{22}\\left( 3\\right) /\\langle w_2,w_{33}\\rangle$",
+   "$X_{0}^{22}\\left( 3\\right) /w_{66}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=(t^2+1)/{t^2})$",
+   "$x (t=(x^2-1)/2x)$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -3,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       4
+      ],
+      "raw": "${5}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -168,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       27,
+       28
+      ],
+      "raw": "${27}/{28}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-7",
+      "raw": "$\\pm 2\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-7\\pm3\\sqrt-3%",
+      "raw": "$\\pm 2\\sqrt{-7}\\pm 3\\sqrt{-3% }$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       169,
+       196
+      ],
+      "raw": "${169}/{196}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm14\\sqrt-3/9",
+      "raw": "$\\pm{ 14\\sqrt{-3}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/9,\\pm3\\sqrt-3",
+      "raw": "$\\pm{ \\sqrt{-3}}/{9},\\pm 3\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       25,
+       52
+      ],
+      "raw": "${25}/{52}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-39/9",
+      "raw": "$\\pm{ 2\\sqrt{-39}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2%\\sqrt-39\\pm5\\sqrt-3)/9",
+      "raw": "$(\\pm 2% \\sqrt{-39}\\pm 5\\sqrt{-3})/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       31,
+       4
+      ],
+      "raw": "${31}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt3/9",
+      "raw": "$\\pm{ 2\\sqrt{3}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt3%\\pm\\sqrt93)/9",
+      "raw": "$(\\pm 2\\sqrt{3% }\\pm \\sqrt{93})/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       18,
+       17
+      ],
+      "raw": "${18}/{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt17",
+      "raw": "$\\pm \\sqrt{17}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt17\\pm3\\sqrt2",
+      "raw": "$\\pm \\sqrt{17}\\pm 3\\sqrt{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -627,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -11,
+       16
+      ],
+      "raw": "$-{11}/{16}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm4\\sqrt-3/9",
+      "raw": "$\\pm{ 4\\sqrt{-3}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm4%\\sqrt-3\\pm\\sqrt33)/9",
+      "raw": "$(\\pm 4% \\sqrt{-3}\\pm \\sqrt{33})/{9}$"
+     }
+    ]
+   },
+   {
+    "disc": -660,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       45,
+       44
+      ],
+      "raw": "${45}/{44}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt11",
+      "raw": "$\\pm 2\\sqrt{11}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt11\\pm3\\sqrt5%",
+      "raw": "$\\pm 2\\sqrt{11}\\pm 3\\sqrt{5% }$"
+     }
+    ]
+   },
+   {
+    "disc": -708,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       675,
+       676
+      ],
+      "raw": "${675}/{676}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm26\\sqrt-1",
+      "raw": "$\\pm 26\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm26\\sqrt-1\\pm15\\sqrt-3",
+      "raw": "$\\pm 26\\sqrt{-1}\\pm 15\\sqrt{-3}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 22,
+  "N": 5,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{22}\\left( 5\\right) /W_{22,5}$",
+   "$X_{0}^{22}\\left( 5\\right) /\\langle w_{5},w_{22}\\rangle$",
+   "$X_{0}^{22}\\left( 5\\right) /w_{110}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=(t^2+1)/{t^2})$",
+   "$x (t={-2x}/(x^2-1))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -4,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "0,\\infty",
+      "raw": "$0,\\infty$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -115,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       4
+      ],
+      "raw": "${5}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2",
+      "raw": "$\\pm 2$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm1\\pm\\sqrt5)/2",
+      "raw": "$(\\pm 1\\pm \\sqrt{5})/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -235,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       1
+      ],
+      "raw": "$5$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/2",
+      "raw": "$\\pm{ 1}/{2}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\pm\\sqrt5",
+      "raw": "$\\pm 2\\pm \\sqrt{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -280,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       7
+      ],
+      "raw": "$-{1}/{7}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-14/4",
+      "raw": "$\\pm{ \\sqrt{-14}}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt%-14\\pm\\sqrt-7)/7",
+      "raw": "$(\\pm 2\\sqrt{% -14}\\pm \\sqrt{-7})/{7}$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       5,
+       13
+      ],
+      "raw": "${5}/{13}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-26/4",
+      "raw": "$\\pm \\sqrt{-26}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm2\\sqrt%-26\\pm\\sqrt65)/13",
+      "raw": "$(\\pm 2\\sqrt{% -26}\\pm \\sqrt{65})/{13}$"
+     }
+    ]
+   },
+   {
+    "disc": -660,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       4
+      ],
+      "raw": "$-{5}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-1/3",
+      "raw": "$\\pm{ 2\\sqrt{-1}}/{3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm3\\sqrt-1\\pm\\sqrt-5%)/2",
+      "raw": "$(\\pm 3\\sqrt{-1}\\pm \\sqrt{-5}% )/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -715,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       11
+      ],
+      "raw": "$-{5}/{11}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11/4",
+      "raw": "$\\pm \\sqrt{-11}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm4%\\sqrt-11\\pm\\sqrt-55)/11",
+      "raw": "$(\\pm 4% \\sqrt{-11}\\pm \\sqrt{-55})/{11}$"
+     }
+    ]
+   },
+   {
+    "disc": -760,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -5,
+       76
+      ],
+      "raw": "$-{5}/{76}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-19/9",
+      "raw": "$\\pm{ 2\\sqrt{-19}}/{9}$"
+     },
+     {
+      "kind": "other",
+      "val": "(\\pm9%\\sqrt-19\\pm\\sqrt-95)/38",
+      "raw": "$(\\pm 9% \\sqrt{-19}\\pm \\sqrt{-95})/{38}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 26,
+  "N": 3,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{26}\\left( 3\\right) /W_{26,3}$",
+   "$X_{0}^{26}\\left( 3\\right)/\\langle w_{3},w_{26}\\rangle $"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$x (s=x^2)$"
+  ],
+  "ncols": 2,
+  "rows": [
+   {
+    "disc": -8,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty $"
+     }
+    ]
+   },
+   {
+    "disc": -11,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     }
+    ]
+   },
+   {
+    "disc": -20,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm \\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm \\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -123,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm 3$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       3,
+       1
+      ],
+      "raw": "$3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt3",
+      "raw": "$\\pm \\sqrt{3}$"
+     }
+    ]
+   },
+   {
+    "disc": -195,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       5
+      ],
+      "raw": "$-{3}/{5}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15/5",
+      "raw": "$\\pm{ \\sqrt{-15}}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       4
+      ],
+      "raw": "$-{3}/{4}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/2",
+      "raw": "$\\pm {\\sqrt{-3}}/{2}$"
+     }
+    ]
+   },
+   {
+    "disc": -267,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       25
+      ],
+      "raw": "$-{9}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1/5",
+      "raw": "$\\pm{3 \\sqrt{-1}}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       8
+      ],
+      "raw": "$-{3}/{8}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-6/4",
+      "raw": "$\\pm{\\sqrt{-6}}/{4}$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -12,
+       1
+      ],
+      "raw": "$-12$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-3",
+      "raw": "$\\pm 2\\sqrt{-3}$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       25
+      ],
+      "raw": "$-{3}/{25}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3/5",
+      "raw": "$\\pm{ \\sqrt{-3}}/{5}$"
+     }
+    ]
+   },
+   {
+    "disc": -708,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -27,
+       49
+      ],
+      "raw": "$-{27}/{49}$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3/7",
+      "raw": "$\\pm{ 3\\sqrt{-3}}/{7}$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ },
+ {
+  "D": 39,
+  "N": 2,
+  "header1": [
+   "CM-point",
+   "$X_{0}^{39}(2) /W_{39,2}$",
+   "$X_{0}^{39}(2)/\\gen{w_3,w_{13}}$",
+   "$X_0^{39}(2)/\\gen{w_{39}}$"
+  ],
+  "header2": [
+   "discriminant",
+   "$s$",
+   "$t (s=t^2)$",
+   "$x (t=3(x^2+4x+2)/(x^2-2))$"
+  ],
+  "ncols": 3,
+  "rows": [
+   {
+    "disc": -7,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -7,
+       1
+      ],
+      "raw": "$-7$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-7",
+      "raw": "$\\pm\\sqrt{-7}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt-7)/2,(-3\\pm\\sqrt-7)/4",
+      "raw": "$(-3\\pm\\sqrt{-7})/2,(-3\\pm\\sqrt{-7})/4$"
+     }
+    ]
+   },
+   {
+    "disc": -15,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -15,
+       1
+      ],
+      "raw": "$-15$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-15",
+      "raw": "$\\pm\\sqrt{-15}$"
+     },
+     {
+      "kind": "other",
+      "val": "(-3\\pm\\sqrt-3)(3\\pm\\sqrt-15)/12",
+      "raw": "$(-3\\pm\\sqrt{-3})(3\\pm\\sqrt{-15})/12$"
+     }
+    ]
+   },
+   {
+    "disc": -24,
+    "vals": [
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "oo",
+      "val": null,
+      "raw": "$\\infty$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt2",
+      "raw": "$\\pm\\sqrt2$"
+     }
+    ]
+   },
+   {
+    "disc": -28,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       9,
+       1
+      ],
+      "raw": "$9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3",
+      "raw": "$\\pm3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\infty,0,-1,-2",
+      "raw": "$\\infty,0,-1,-2$"
+     }
+    ]
+   },
+   {
+    "disc": -52,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       1
+      ],
+      "raw": "$-9$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-1",
+      "raw": "$\\pm3\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "-1\\pm\\sqrt-1",
+      "raw": "$-1\\pm\\sqrt{-1}$"
+     }
+    ]
+   },
+   {
+    "disc": -60,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       1,
+       1
+      ],
+      "raw": "$1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1",
+      "raw": "$\\pm 1$"
+     },
+     {
+      "kind": "other",
+      "val": "-3\\pm\\sqrt5,(-3\\pm\\sqrt5)/2",
+      "raw": "$-3\\pm\\sqrt5,(-3\\pm\\sqrt5)/2$"
+     }
+    ]
+   },
+   {
+    "disc": -84,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -3,
+       1
+      ],
+      "raw": "$-3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-3",
+      "raw": "$\\pm\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm\\sqrt3)(-3\\pm\\sqrt-3)/6",
+      "raw": "$(3\\pm\\sqrt3)(-3\\pm\\sqrt{-3})/6$"
+     }
+    ]
+   },
+   {
+    "disc": -132,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -11,
+       1
+      ],
+      "raw": "$-11$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-11",
+      "raw": "$\\pm\\sqrt{-11}$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm\\sqrt-1)(-3\\pm\\sqrt-11)/10",
+      "raw": "$(3\\pm\\sqrt{-1})(-3\\pm\\sqrt{-11})/10$"
+     }
+    ]
+   },
+   {
+    "disc": -148,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       1
+      ],
+      "raw": "$-1$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-1",
+      "raw": "$\\pm\\sqrt{-1}$"
+     },
+     {
+      "kind": "other",
+      "val": "-3\\pm\\sqrt-1,(-3\\pm\\sqrt-1)/5",
+      "raw": "$-3\\pm\\sqrt{-1},(-3\\pm\\sqrt{-1})/5$"
+     }
+    ]
+   },
+   {
+    "disc": -228,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -27,
+       1
+      ],
+      "raw": "$-27$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3\\sqrt-3",
+      "raw": "$\\pm3\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(1\\pm\\sqrt-1)(-1\\pm\\sqrt-3)/2",
+      "raw": "$(1\\pm\\sqrt{-1})(-1\\pm\\sqrt{-3})/2$"
+     }
+    ]
+   },
+   {
+    "disc": -232,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -9,
+       2
+      ],
+      "raw": "$-9/2$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm3/\\sqrt-2",
+      "raw": "$\\pm3/\\sqrt{-2}$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt-2,(-2\\pm\\sqrt-2)/3",
+      "raw": "$-2\\pm\\sqrt{-2},(-2\\pm\\sqrt{-2})/3$"
+     }
+    ]
+   },
+   {
+    "disc": -312,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "rat",
+      "val": [
+       0,
+       1
+      ],
+      "raw": "$0$"
+     },
+     {
+      "kind": "other",
+      "val": "-2\\pm\\sqrt2",
+      "raw": "$-2\\pm\\sqrt2$"
+     }
+    ]
+   },
+   {
+    "disc": -372,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -25,
+       3
+      ],
+      "raw": "$-25/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm5/\\sqrt-3",
+      "raw": "$\\pm 5/\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(9\\pm\\sqrt-3)(-9\\pm5\\sqrt-3)/78",
+      "raw": "$(9\\pm\\sqrt{-3})(-9\\pm5\\sqrt{-3})/78$"
+     }
+    ]
+   },
+   {
+    "disc": -408,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -12,
+       1
+      ],
+      "raw": "$-12$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm2\\sqrt-3",
+      "raw": "$\\pm2\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(6\\pm\\sqrt-6)(-3\\pm2\\sqrt-3)/21",
+      "raw": "$(6\\pm\\sqrt{-6})(-3\\pm2\\sqrt{-3})/21$"
+     }
+    ]
+   },
+   {
+    "disc": -520,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -10,
+       1
+      ],
+      "raw": "$-10$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-10",
+      "raw": "$\\pm\\sqrt{-10}$"
+     },
+     {
+      "kind": "other",
+      "val": "(6\\pm\\sqrt-2)(-3\\pm\\sqrt-10)/19",
+      "raw": "$(6\\pm\\sqrt{-2})(-3\\pm\\sqrt{-10})/19$"
+     }
+    ]
+   },
+   {
+    "disc": -708,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -59,
+       1
+      ],
+      "raw": "$-59$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm\\sqrt-59",
+      "raw": "$\\pm\\sqrt{-59}$"
+     },
+     {
+      "kind": "other",
+      "val": "(3\\pm5\\sqrt-1)(-3\\pm\\sqrt-59)/34",
+      "raw": "$(3\\pm5\\sqrt{-1})(-3\\pm\\sqrt{-59})/34$"
+     }
+    ]
+   },
+   {
+    "disc": -1092,
+    "vals": [
+     {
+      "kind": "rat",
+      "val": [
+       -1,
+       3
+      ],
+      "raw": "$-1/3$"
+     },
+     {
+      "kind": "other",
+      "val": "\\pm1/\\sqrt-3",
+      "raw": "$\\pm1/\\sqrt{-3}$"
+     },
+     {
+      "kind": "other",
+      "val": "(9\\pm\\sqrt39)(-9\\pm\\sqrt-3)/42",
+      "raw": "$(9\\pm\\sqrt{39})(-9\\pm\\sqrt{-3})/42$"
+     }
+    ]
+   }
+  ],
+  "parse_issues": []
+ }
+]
