@@ -74,17 +74,20 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
 
 New as of 2026-09-02, sharply localized, and it may free the last two runnable bases.
 
-- [ ] **Kill the `10_61` run** (PID 2803742 on lovelace). The result is in; it is 10 h deep, RSS
-      climbing 940 MB → 3.6 GB, and now grinding with poisoned `a0tab` entries, so anything it
-      writes is untrustworthy.
-- [ ] **Find what distinguishes `wi = 2` and `wi = 1221`.** Exactly two cosets fail, each at *all*
-      462 discriminants (924 = 2 x 462), and they fail in *opposite* directions: `k0` overflows to
-      `+inf` at one and collapses to `~1e-10` at the other, while `k1` stays sane
-      (1.1e4 – 2.4e12) at both. Chase that reciprocal symmetry — an exponent sign flip, or a coset
-      and its negative.
-- [ ] **Cross-check against the `39_2` malformed-form pathology.** Same family — a non-integral
-      principal part poisoning `M0MultiplierExact` by catastrophic cancellation — but far more
-      extreme: there the magnitude was 0.026, here it overflows the real field.
+- [x] **Kill the `10_61` run.** *(done 2026-09-02)* Stopped at 17 h 26 m, RSS 5.6 GB and still
+      climbing. Nothing flushed on exit, so the 924 recorded failures are all we have — expected,
+      per the Magma-buffering trap.
+- [x] **Find what distinguishes `wi = 2` and `wi = 1221`.** *(largely answered — see
+      "What this turned out to be", below)* Both sit at the **extremes** of the `Im(z0)`
+      distribution: `wi = 1221` is rank 1 of 2232 (smallest, 8.81e-7), `wi = 2` is rank 2231
+      (0.7229, nearly the largest).
+- [ ] **Close the remaining half: why does `wi = 2` fail?** Its `Im(z0) = 0.72` is perfectly
+      healthy, so the small-`Im` mechanism does not cover it. `eta` is not evaluated at `z0`
+      itself — `num0` uses `DedekindEta(d*z0)` for `d` in `ds`, and `sfun` uses
+      `DedekindEta((a_i*tau0 + b_i)/e_i)` from `triang(g, d)`. **Check the imaginary parts of
+      those points at `wi = 2`.**
+- [x] ~~Cross-check against the `39_2` malformed-form pathology.~~ **Superseded.** This is not a
+      malformed form. It is an evaluation-point failure of the harness — see below.
 - [ ] **Re-run GATE3B on `14_43` once the cause is understood.** Its log ends identically to
       `10_61`'s, so expect the same defect; one root cause probably covers both.
 - [ ] **Reclassify both bases in the sweep record.** `10_61` was one of the "two runnable
@@ -92,6 +95,36 @@ New as of 2026-09-02, sharply localized, and it may free the last two runnable b
       problem.
 
 Raw evidence: `~/shimura/models/10_61.gate3b.log` on lovelace (353 KB, 926 lines).
+
+### What this turned out to be: precision is `M^2`
+
+`M0MultiplierExact` evaluates the slash constant at two HARDCODED points
+(`VectorValuedForm.m:419-420`) and pushes every coset word through them. Measured 2026-09-02:
+
+    base     M      #words   min Im(z0)   Im(tau0)/M^2   ratio    known precision
+    15_2      60      144     3.7222e-4     3.6389e-4    1.0229   exact
+    58_5     580     1080     3.9034e-6     3.8942e-6    1.0024   33 digits
+    34_11    748     1296     2.3457e-6     2.3414e-6    1.0018   18 digits
+    10_61   1220     2232     8.8114e-7     8.8014e-7    1.0011   CATASTROPHIC
+
+**`min Im(z0) = Im(tau0)/M^2 * (1 + O(1/M))`.** Elementary cause:
+`Im((a*tau+b)/(c*tau+d)) = Im(tau)/|c*tau+d|^2`, and the coset reps carry `c, d` up to `O(M)`.
+Not word length — `maxlen` saturates at 13 across all three large bases while `Im` keeps falling.
+
+The precision column is this repo's own recorded numbers, measured independently and earlier. They
+track the `Im` collapse in lockstep, so **"achievable precision is base-dependent" now has a cause:
+`M = 2DN` (`4DN` odd), through the coset denominators.** Three consequences:
+
+* **Predictive with no pipeline run.** `VVCosetReps`/`VVSTWord`/`slashdata` depend only on `M`, not
+  on the Borcherds forms — 7 min at `M = 1220`. A new cheap triage axis.
+* **The fix is not a tolerance.** The slash constant is *independent of the evaluation point* —
+  that independence is exactly what the two-point check tests — so `tau` is a FREE CHOICE. Pick it
+  per coset so `Im(w*tau)` stays in a safe band, instead of forcing two global constants through
+  2232 words.
+* **`10_61` is not defective arithmetic**, so the "two runnable candidates of 122" count is wrong
+  on other grounds too.
+
+Probes: `tauprobe.m`, `tauscale.m` (scratchpad; worth committing to the campaign branch).
 
 ---
 
@@ -112,22 +145,27 @@ exactly. Only the half-integral phase is wrong.
 
 ## HOUSEKEEPING — about an hour, once
 
-- [ ] **Delete the 12 merged local branches:** `even-control`, `even-correction`,
+- [x] **Delete the 12 merged local branches.** *(done 2026-09-02)* Local 23 -> 11. Used `-d`, so
+      git would have refused anything not genuinely merged. Was: `even-control`, `even-correction`,
       `fix-pointless-conics-empty`, `intsol-optin`, `m0-exact-oracle`,
       `m0exact-relative-tolerance`, `odd-d-invariant-hoist`, `odd-d-zeroskip`,
       `preprint-assembly-theorem`, `preprint-two-channel`, `tier1-model-data`,
       `y2-unscaled-deferral`.
-- [ ] **Delete the 7 merged remote-only branches:** `add-external-cm-value-tests`,
+- [x] **Delete the merged remote branches.** *(done 2026-09-02)* Remote 31 -> 13. This split was
+      wrong in the original plan: there were **17**, not 7 — the other 10 were the remotes of the
+      local branches above, which only became remote-only once those were deleted. Was: `add-external-cm-value-tests`,
       `add-kudla-yang-local-tests`, `add-m0-local-density-tests`, `fix-cm-supply-divisor-discs`,
       `fix-wpoly2-p2-local-density`, `m0-vv-constant-term`, `preprint-n5-validation`.
 - [ ] **Retire or tag the three stale ones:** `non_optimal` (Oct 2025, 429 behind), `odd_DN`,
       `pointlessconics`.
-- [ ] **Clean the `-control` worktree:** `git clean -fd && git checkout VectorValuedForm.m`.
-      Everything in it is provably duplicated elsewhere; the one single-copy item was carried over
-      as `f3fcf1e` on the campaign branch.
-- [ ] **Resolve the `deficit.m` contradiction.** Memory says broken, `HANDOFF.md` says repaired and
-      validated. The handoff is newer and authoritative — but memory is what a fresh session reads
-      first, so fix whichever is wrong.
+- [x] **Retire the merged worktrees.** *(done 2026-09-02)* `-fix`, `-hoist` and `-control` removed;
+      worktrees 6 -> 3 (`tier1-models`, `-campaign`, `-mainport`). `-control` needed `--force` for
+      its 23 untracked files, all previously verified as duplicates; its one single-copy item was
+      carried over as `f3fcf1e` on the campaign branch.
+- [x] **Resolve the `deficit.m` contradiction.** *(done 2026-09-02)* `HANDOFF.md` was right and
+      memory was stale. Campaign `0bc7f28` already made the fix; the file has no `Probe*` reference
+      and calls only public intrinsics, so the three validated results stand unpatched. Memory
+      corrected. Still **even-D only**.
 - [ ] **Pull the lovelace clone up to `main`.** Its hand-applied pointless-conics guard is now
       upstream as `127b044`, byte-identical, so the local modification is redundant.
 
