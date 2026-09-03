@@ -216,6 +216,24 @@ local change to `M0MultiplierExact` and needs no theory.
       `Im(w*tau)` in `[1e-3, 1e-2)`. Validate on `15_2` (must stay exact, `tests/M0MultiplierExact.m`
       9/9) and `58_5` (must keep its four verified models, `ModelChecks` 48/0) before trying
       `34_11` / `10_61`.
+      **2026-09-03: first attempt tried and reverted (not committed).** Picked two fixed target
+      points `z0targ, z1targ` in the safe band and set each word's `tau0, tau1` to be the
+      PREIMAGE of those targets under the word's own SL2(Z) matrix (`tau := g^-1.ztarg`), reusing
+      `slashdata`/`sfun` unchanged. Passed `15_2` 9/9 exactly. But on `58_5` the run (just
+      `M0MultiplierExact`, not the full pipeline) did not finish in 35+ minutes where the OLD
+      fixed-tau version completed as part of an 18-minute full pipeline run — a real slowdown, not
+      just noise. Suspected cause, UNVERIFIED: `sfun`'s own argument is `(tri[i][1]*tau+tri[i][2])/
+      tri[i][3]`, evaluated at the SAME `tau` (not at `z`) — fixing `z` in the safe band by taking a
+      preimage under the word's full matrix can push `Im(tau)` itself to extreme values (small or
+      huge) depending on that word's own `(c,d)`, and `DedekindEta` at extreme `Im` may need much
+      more internal work to hit `Prec := 80`. **Next attempt should control `Im(tau)` directly**
+      instead of deriving it as a free variable: fix `Re(tau) = x0` and solve the exact quadratic
+      `t = y/((c x0+d)^2 + c^2 y^2)` for `y = Im(tau)` on the LARGE-`y` branch (`y = [1 +
+      sqrt(1-4c^2t^2(cx0+d)^2)] / (2c^2t)`, `t` the target `Im(z)`), so both `Im(z)` (via `t`) and
+      `Im(tau)` stay in a controlled, moderate range simultaneously — never solved this way and
+      never measured. Reverted file kept at hand in case useful:
+      `/private/tmp/claude-501/.../scratchpad/VectorValuedForm.m.new` (session-local, may not
+      survive) — re-derive from this note rather than relying on that path.
 
 Probes: `vvdata/weyl-campaign/tau-precision/` on the campaign branch — `tauprobe.m` (per-coset
 `Im`), `tauscale.m` (the `M^2` law), `tauwindow.m` (the dynamic range and the band table), plus
