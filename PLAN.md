@@ -81,11 +81,20 @@ New as of 2026-09-02, sharply localized, and it may free the last two runnable b
       "What this turned out to be", below)* Both sit at the **extremes** of the `Im(z0)`
       distribution: `wi = 1221` is rank 1 of 2232 (smallest, 8.81e-7), `wi = 2` is rank 2231
       (0.7229, nearly the largest).
-- [ ] **Close the remaining half: why does `wi = 2` fail?** Its `Im(z0) = 0.72` is perfectly
-      healthy, so the small-`Im` mechanism does not cover it. `eta` is not evaluated at `z0`
-      itself — `num0` uses `DedekindEta(d*z0)` for `d` in `ds`, and `sfun` uses
-      `DedekindEta((a_i*tau0 + b_i)/e_i)` from `triang(g, d)`. **Check the imaginary parts of
-      those points at `wi = 2`.**
+- [x] **Why does `wi = 2` fail? CLOSED, quantitatively.** *(done 2026-09-03)* `eta` is evaluated
+      at `d*z0` for `d` in `ds = Divisors(M)`, so `d` runs to 1220. A LARGE `Im(z0)` is therefore
+      just as fatal as a small one: `Im(d*z0)` reaches `1220 * 0.7229 = 882`, and since
+      `log10|eta(z)| ~ -0.11374*Im(z)`, that predicts `-100.31`. **Measured `-100.272`** — a
+      four-figure match. The `eta` values span `[10^-100.27, 10^-0.08]`, i.e. a **100.19-digit
+      dynamic range at `Prec := 80`**, so the ratio is destroyed in floating point even though it
+      is mathematically fine.
+- [ ] **NOW THE OPEN HALF: why does `wi = 1221` fail?** The roles have swapped. Its measured
+      spread is **1.39 digits — identical to typical cosets** (`wi` 300, 611, 900 all give
+      1.39436), so the dynamic-range mechanism does *not* explain it.
+      ⚠ **But that number is not trustworthy**: at `Im(z0) = 8.8e-7`, *both* `z` and `-1/z` have
+      small imaginary part, so the one-`S`-step approximation used in `tauwindow.m`'s `logeta` is
+      invalid there. **Re-measure with a real `DedekindEta` (full `SL2` reduction) before
+      concluding anything about this coset.**
 - [x] ~~Cross-check against the `39_2` malformed-form pathology.~~ **Superseded.** This is not a
       malformed form. It is an evaluation-point failure of the harness — see below.
 - [ ] **Re-run GATE3B on `14_43` once the cause is understood.** Its log ends identically to
@@ -124,7 +133,39 @@ track the `Im` collapse in lockstep, so **"achievable precision is base-dependen
 * **`10_61` is not defective arithmetic**, so the "two runnable candidates of 122" count is wrong
   on other grounds too.
 
-Probes: `tauprobe.m`, `tauscale.m` (scratchpad; worth committing to the campaign branch).
+### The safe window, measured
+
+Worst `eta` dynamic range per `Im(z0)` band, over all 2232 cosets of `M = 1220`:
+
+    Im(z0) band          #cosets   worst spread (digits)
+    [0,      1e-5)         1137          92.17
+    [1e-5,   1e-4)          669          37.45
+    [1e-4,   1e-3)          307           9.90
+    [1e-3,   1e-2)           91           3.55   <- SAFE
+    [1e-2,   1e-1)           22           9.25
+    [1e-1,   1e0 )            5         100.26
+    [1e0,    1e2 )            1         181.56
+
+**Both ends are fatal and the middle is safe** — the usable band is roughly
+`Im(z0)` in `[1e-3, 1e-2)`, where the worst case over 91 cosets is 3.55 digits against `Prec := 80`.
+Only **six** cosets have `Im(z0) > 0.1`, and they carry the worst spreads in the whole set.
+
+⇒ **The fix, concretely.** `tau` is a free choice (the slash constant is `tau`-independent — that
+independence is exactly what the two-point check tests). So instead of forcing two global constants
+through 2232 words, choose `tau` per coset so that `Im(w*tau)` lands in the safe band. This is a
+local change to `M0MultiplierExact` and needs no theory.
+
+- [ ] **Implement per-coset `tau` selection** in `M0MultiplierExact`, targeting
+      `Im(w*tau)` in `[1e-3, 1e-2)`. Validate on `15_2` (must stay exact, `tests/M0MultiplierExact.m`
+      9/9) and `58_5` (must keep its four verified models, `ModelChecks` 48/0) before trying
+      `34_11` / `10_61`.
+
+Probes: `vvdata/weyl-campaign/tau-precision/` on the campaign branch — `tauprobe.m` (per-coset
+`Im`), `tauscale.m` (the `M^2` law), `tauwindow.m` (the dynamic range and the band table), plus
+`amtest.m` (the scalar-`a_E` comparison). ⚠ `tauwindow.m`'s `logeta` is a **one-`S`-step
+approximation**: valid when `Im(z)` is large or one `S` makes it large, INVALID when both `z` and
+`-1/z` sit near the real axis. That is exactly the `wi = 1221` regime, so its small-`Im` numbers
+are provisional.
 
 ---
 
@@ -168,6 +209,9 @@ exactly. Only the half-integral phase is wrong.
       corrected. Still **even-D only**.
 - [ ] **Pull the lovelace clone up to `main`.** Its hand-applied pointless-conics guard is now
       upstream as `127b044`, byte-identical, so the local modification is redundant.
+- [ ] **Commit the `tau-precision` probes to the campaign branch.** Staged at
+      `vvdata/weyl-campaign/tau-precision/`; they are currently scratchpad-only, which is the exact
+      failure mode that lost the original `genmodels.m` to a nightly `/tmp` purge.
 
 ---
 
