@@ -8,12 +8,17 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ## Picking this up cold
 
-As of 2026-09-03 everything is committed and pushed, no worktree is dirty, and nothing is running.
-Three items are ready to start immediately, in decreasing order of value:
+As of 2026-09-03 (evening) everything is committed and pushed, no worktree is dirty, and nothing
+is running. Three items are ready to start immediately, in decreasing order of value:
 
-1. **The `A_m` theorem** (MAIN LINE). Mathematical work, not implementation. Start from the two
-   propositions named below; the 13-value regression set is the acceptance test. This is the item
-   that unblocks 49 bases — the other two are tidy-up by comparison.
+1. **The `A_m` theorem** (MAIN LINE). Three more routes were closed today (KY Prop 5.4/5.5
+   insertion, Schwagenscheidt's oldform relation, the `s`-law/genus-theta closed form) — see that
+   section for what NOT to re-attempt. What's actually open now is narrower than "state and prove
+   a theorem": the `rem:gauge` ambiguity between `-a_E` and Table A is *provably resolvable* (full
+   rank 6 on the 158-monomial data), and the concrete blocker is a **missing data dump** —
+   constant-term data at 4 intermediate cusp classes (`g = 2,6,10,30`) that a `cusp7.m`-style pass
+   never recorded. Get that, and the reachable-subspace solve for `A_m` should go through. This is
+   the item that unblocks 49 bases — the other two are tidy-up by comparison.
 2. **Per-coset `tau` in `M0MultiplierExact`** (REPAIR). Fully specified and needs no theory: target
    `Im(w*tau)` in `[1e-3, 1e-2)`, gate on `15_2` 9/9 and `58_5` `ModelChecks` 48/0. Self-contained.
 3. **Re-measure `wi = 1221`** (REPAIR). Small, and the last gap in an otherwise closed result.
@@ -56,18 +61,51 @@ One object blocks disproportionately much. Everything below this section is seco
 - [x] **Confirm the scalar route is closed.** *(done 2026-09-02)* Re-run with the repo's own
       `Hurwitz`: still 1 of 13. And structurally dead — at `15_2`, `m=10` and `m=30` give the
       *same* `a_E` but different `A_m`, so no sign convention or rescaling can rescue it.
-- [ ] **Work the intersection of the two propositions you already have.** `prop:kappa0` gives
-      `m = 0` at a nonzero isotropic coset; `prop:closedcoef` gives all `m` for the scalar.
-      `A_m` is the missing corner of that square.
-- [ ] **Hold the success criterion: all 13, or it isn't the theorem.**
+- [x] **Three more routes closed, 2026-09-03 — all now dead ends, with reasons on record.**
+    - *Insert KY Prop 5.4/5.5 into a level-`N` analogue of Theorem 8.1.* REFUTED, and now a
+      permanent CI check (`tests/KudlaYangLocal.m`, `test_prop55_nonzero_isotropic_coset`, 1440
+      checks): the level-prime local Whittaker *value* at a nonzero isotropic, `N`-only-supported
+      coset is the constant polynomial `1` — no pole, no `m`-dependence — for every `m` and every
+      base tested, including `N = 2`. Whatever produces `A_m`, it is not a local-factor product at
+      `N`.
+    - *Reduce `E_{A,eta*}` to zero-coset data via Schwagenscheidt's oldform relation
+      (`eq:oldform`, `sec:ident`).* Already tried **in the paper itself** — re-read `sec:ident`
+      before re-attempting this. It fails at weight 3/2 (needs analytic continuation, hits a
+      non-holomorphic Zagier-type term; witnessed numerically as `-5` where the constant-term
+      identity forces `0`).
+    - *Push the `s`-law / genus-theta closed form (`sec:slaw`, `Theorem thm:rhoentry` +
+      Siegel–Weil) to a closed form for `A_m`.* This is the derivation **behind** `prop:closedcoef`
+      (`-a_E(m)`) — already refuted above under a different name. Don't re-derive it a second time.
+- [ ] **The gauge ambiguity (`rem:gauge`) is real but resolvable — resolving it needs one more
+      piece of data.** `-a_E(m)` and "Table A" (the `N|r`-restricted oracle fit) disagree at 6
+      indices on `15_2` (`m = 1,2,3,10,15,30`) yet both fit the 9-form panel exactly, because that
+      panel's principal-part matrix has rank 4 there (2-dim kernel; `gauge152.py`). **New
+      2026-09-03: the 158-monomial data already computed in `cusp7_15_2.out` (campaign branch)
+      gives that same 6-index matrix full rank 6** — the ambiguity is *not* one of the "50
+      unremovable" directions `sec:exact` describes; it is a real gap the 9-form panel just didn't
+      probe.
+      ⚠ Using raw monomials as test inputs does NOT work directly: `c_{eta*}(0)` sums over *every*
+      cusp class (`sum_w (rho(w^-1)e_0)_{eta*} a_0(f|w)`), and unlike a genuine Borcherds
+      principal part (protected by [GY, Lemma 24] / `prop:nohalf`), an individual eta-monomial can
+      have a nonzero constant term at *intermediate* cusps that a plain `(A_m, B_j)`-only model
+      never sees. Restricting to monomial combinations with zero constant term at the intermediate
+      classes actually on record in `cusp7_15_2.out` (`g = 3,4,5,12,15,20`, via its `PP` dump)
+      still gives rank 6 at the gauge indices (152-dim reachable subspace) — but the numeric solve
+      against real `c_{eta*}(0)` values is *still* inconsistent, because that dump is missing
+      constant-term data at four more intermediate classes: `g = 2, 6, 10, 30`.
+      **Concrete next step:** re-run (or extend) a `cusp7.m`-style dump so every intermediate cusp
+      class gets its constant term recorded — not just the first one encountered while iterating
+      cosets — then redo the reachable-subspace solve. That is a scoped implementation task, not
+      another open-ended search.
 
 **Why this one.** It *is* the `Kappa0` log-`N` defect at `SchoferFormula.m:589` — the same defect
 `coprime_to_level` (`ShimuraQuotients.m:1420`) papers over with what the code itself calls "a blunt
 instrument". Closing it unblocks the 49 obstructed bases in a single move.
 
 **Honest risk.** No product of local densities reproduces `b` under any sign convention, with KY
-Props 5.3/5.4 validated at 470+150 checks. This may need new mathematics rather than a derivation
-from what is in hand.
+Props 5.3/5.4 validated at 470+150 checks (now including Prop 5.4/5.5 at nonzero isotropic cosets,
+2026-09-03). Three separate derivation routes are now closed (above). This may need new
+mathematics — or, more likely given the gauge finding, one more piece of cusp-class data.
 
 ---
 
@@ -216,8 +254,25 @@ exactly. Only the half-integral phase is wrong.
       local branches above, which only became remote-only once those were deleted. Was: `add-external-cm-value-tests`,
       `add-kudla-yang-local-tests`, `add-m0-local-density-tests`, `fix-cm-supply-divisor-discs`,
       `fix-wpoly2-p2-local-density`, `m0-vv-constant-term`, `preprint-n5-validation`.
-- [ ] **Retire or tag the three stale ones:** `non_optimal` (Oct 2025, 429 behind), `odd_DN`,
-      `pointlessconics`.
+- [ ] **Retire or tag the three stale ones:** `non_optimal` (Oct 2025, 429 behind main), `odd_DN`
+      (279 behind, 12 ahead), `pointlessconics` (277 behind, 2 ahead). Still open as of 2026-09-03;
+      `odd_DN`'s non-mergeability was already investigated (memory: `odd-dn-branch-not-mergeable`).
+      Recommend: `git tag archive/<name> origin/<name>` for each (preserves the commits under a
+      permanent pointer), then delete the branch, local and remote.
+- [ ] **NEW 2026-09-03: six more local branches are stale and unmerged into either `tier1-models`
+      or `main`**, all predating the 09-02 cleanup and missed by it (`git branch -d` correctly
+      refused them — they're genuinely unmerged): `m0-hauptmodul-ground-truth`,
+      `m0-prop53-anisotropic`, `m0-level-rule-e2e`, `fix-m0-multiterm`,
+      `valuesatcmpoints-diagnostic` (all 2026-08-14 to 08-21, commit messages mostly prefixed
+      `SCRATCH:`), and `fix-15-2-find-signs` (2026-08-19, and **has 3 commits not even on its own
+      remote** — `origin/fix-15-2-find-signs` is 3 commits behind the local branch). All look like
+      superseded intermediate stages of the m=0 investigation that shipped a different way (via
+      `prop:kappa0` in the paper) — worth a skim before deleting, since `m0-level-rule-e2e` in
+      particular touches the same KY Prop 5.3/5.4 territory as this session's CI test and might
+      have relevant scratch notes. `whbasis-speedup` is *not* in this list — it's deliberately kept
+      as the CI-green record for a cherry-picked commit (see HANDOFF.md); leave it.
+- [ ] **`worktrees/campaign` has one untracked stray file:** `polymake/nmzsolve.err` (136 bytes,
+      2026-08-29, Normaliz solver log debris). Harmless; safe to `rm` whenever convenient.
 - [x] **Retire the merged worktrees.** *(done 2026-09-02)* `-fix`, `-hoist` and `-control` removed;
       worktrees 6 -> 3 (`tier1-models`, `-campaign`, `-mainport`). `-control` needed `--force` for
       its 23 untracked files, all previously verified as duplicates; its one single-copy item was

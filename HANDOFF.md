@@ -9,6 +9,53 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
 
+## Update — 2026-09-03 (evening)
+
+Not a full rewrite; the record below (08-30) still stands for the model-pipeline arc. This adds
+what happened on the `A_m` theorem (`MAIN LINE`) and two pieces of housekeeping.
+
+**Worktree layout changed.** `worktrees/campaign` and `worktrees/mainport`, nested inside this
+checkout — not sibling directories (`-campaign`, `-mainport`) as everywhere below still calls
+them. See `CLAUDE.md` for the convention on new worktrees. Committed `827266b`.
+
+**New CI test, `tests/KudlaYangLocal.m` (`a2e888c`).** Extends the existing Prop 5.4 check
+(`mu = 0`) to Prop 5.5 (nonzero isotropic, `N`-only-supported coset): the level-prime local
+Whittaker *value* there is the constant polynomial `1` for every `m` tested, every base tested
+(1440 checks, including `N = 2`). This is a load-bearing negative result, not a tidy-up: it rules
+out "insert KY Prop 5.4/5.5 into a level-`N` analogue of Theorem 8.1" as the source of `A_m`.
+
+**Three derivation routes for `A_m` closed, all with reasons now on record (see `PLAN.md`, MAIN
+LINE, for the full writeup):**
+1. KY Prop 5.4/5.5 insertion — refuted above.
+2. Schwagenscheidt's oldform relation (`eq:oldform`, `sec:ident`) — **the paper itself already
+   tried this and documents why it fails** at weight 3/2 (needs analytic continuation, hits a
+   non-holomorphic term; numerically witnessed as `-5` where the identity forces `0`). Missed on
+   first read this session; re-read `sec:ident` before re-attempting anything like it.
+3. The `s`-law / genus-theta closed form (`sec:slaw`) — this is the derivation *behind*
+   `prop:closedcoef` (`-a_E(m)`), i.e. the already-refuted scalar route under a different name.
+
+**The `rem:gauge` ambiguity is real, and provably resolvable — but the resolution needs data that
+doesn't exist yet.** `-a_E(m)` and "Table A" disagree at 6 indices on `X_0^{15}(2)`
+(`m=1,2,3,10,15,30`) while both fit the 9-form panel (rank 4 of 6, 2-dim kernel; `gauge152.py`).
+The 158-monomial data already computed in `cusp7_15_2.out` (campaign branch) gives that same
+6-index matrix **full rank 6** — this specific ambiguity is not one of `sec:exact`'s "50
+unremovable" directions. But a naive per-monomial solve is invalid: `c_{eta*}(0)` sums over every
+cusp class, and individual eta-monomials — unlike genuine Borcherds principal parts, protected by
+[GY, Lemma 24] / `prop:nohalf` — can carry a nonzero constant term at *intermediate* cusps that an
+`(A_m, B_j)`-only model never sees. Restricting to combinations with zero constant term at the
+intermediate classes `cusp7_15_2.out` actually recorded (`g=3,4,5,12,15,20`, from its `PP` dump)
+still gives rank 6, but the numeric solve against real `c_{eta*}(0)` remains inconsistent — because
+that dump is missing 4 more intermediate classes (`g=2,6,10,30`), never captured by `cusp7.m`'s
+first-encountered-per-class logic. **Next step: re-run a `cusp7.m`-style pass that guarantees every
+intermediate class gets dumped, then redo the reachable-subspace solve.**
+
+**Worktree/branch housekeeping, surveyed but not executed** (see `PLAN.md`, HOUSEKEEPING, for the
+full list): the three stale remote-only branches (`non_optimal`, `odd_DN`, `pointlessconics`) are
+still there, plus six more local branches missed by the 09-02 cleanup because they're genuinely
+unmerged (mostly `SCRATCH:`-prefixed, predate 09-02) — `fix-15-2-find-signs` notably has 3 commits
+that never even reached its own remote. One untracked stray file in `worktrees/campaign`
+(`polymake/nmzsolve.err`, harmless).
+
     main               1c53865   speedup + zero-skip + hoist + IntegralSolution + Targets
                                  + slash-constant tolerance + pointless-conics guard
                                  + models_58_5.m + 3 new tests + cache (394 files)
