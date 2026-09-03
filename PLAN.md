@@ -235,6 +235,68 @@ local change to `M0MultiplierExact` and needs no theory.
       `/private/tmp/claude-501/.../scratchpad/VectorValuedForm.m.new` (session-local, may not
       survive) — re-derive from this note rather than relying on that path.
 
+      **2026-09-03, SECOND attempt — WORKS, and the diagnosis above was WRONG.** Two corrections
+      to the paragraph above, both measured:
+      1. **`DedekindEta` at small `Im` is NOT slow.** Timed directly at `34_11`'s own points:
+         `DedekindEta` at the old `tau` (Im 1.31) and at the new one (Im 0.0057) both take
+         0.000s, individually and across all 12 divisors. The whole "extreme `Im(tau)` makes
+         `DedekindEta` expensive" theory is refuted; do not re-derive it.
+      2. **The real cost is ONE word, and it is `tau`-INDEPENDENT.** With `M0PROGRESS=1` (new,
+         see below): at `34_11`, word `wi=1` — the IDENTITY coset — has `W=1, depth=13993`,
+         while *every other selected word* has `depth=1`. With `W=1` the triangularisation does
+         no reduction, so `leads = sum r_i d_i` runs to -13992 (divisors to 748, exponents to
+         29) and the code raises ~14000-term power series to powers up to 29, once per monomial,
+         over 799 monomials. `W`, `leads`, `depth`, `units` are all computed from `tri` BEFORE
+         any `tau` logic runs, so this cost is identical in the unmodified code. `58_5` is the
+         same shape (`wi=1`, `W=1`, `depth=10585`, 603 monomials).
+         ⇒ The first attempt was never "slow because of the preimage"; it was slow because
+         **fixing the evaluation points lets the computation actually RUN TO COMPLETION**, where
+         the old code aborted early on the two-point check. There is an obvious optimisation
+         here (`units[i]^(r[i])` is recomputed per monomial; cache by `<i, exponent>`), NOT done.
+
+      **What the working fix is.** Keep the global `tau0/tau1` for most words; fall back to the
+      per-word preimage ONLY where the default lands `z = w.tau` outside the safe range. The
+      threshold must SCALE WITH `M` on the upper side: `Abs(Im(z)) ge 1e-5 and M*Abs(Im(z)) < 100`.
+      Using the raw `M = 1220`-calibrated absolute band `[1e-5, 1e-1)` is a real bug — at `15_2`
+      (`M = 60`) it flags the DEFAULT `tau0` itself (`Im = 1.31`) as unsafe, on a base that has
+      always been exact with that `tau0`. Mechanism: `eta` is evaluated at `d*z` for `d` up to
+      `M`, so large-side risk is about `M*Im(z)`, and the `M = 1220` measurement's boundary
+      `Im(z) ~ 0.1` is `M*Im(z) ~ 122`. The small side is about the word's own S-structure, not
+      `d`-scaling, so it stays an absolute floor. Fallback rates measured: `15_2` 1/64,
+      `58_5` 8/64, `34_11` 13/64 (triggered on BOTH mechanisms — `wi=1` at Im 1.31/1.73 on the
+      high side, `wi=376,749,936,1123,1296` at Im ~ 2-9e-6 on the low side).
+
+- [x] **`34_11` PASSES, and its multipliers are confirmed by an INDEPENDENT route.**
+      *(2026-09-03)* With the fix, `34_11` completes `M0MultiplierExact` (8604 s) and returns
+      `-1/2, 1/2, -5, -2, -3, -8, 0, -2, -6` for keys `-2,-1,8..14`, clearing all five internal
+      guards. Cross-checked against the Prop 9.15 closed form (`closedcoef.py`'s `W(D,N,m)`,
+      `mult = (1/2) sum_m c(-m) W(m)` on the oo-side principal parts): **9/9 exact, fractions
+      included.** The closed form is exact rational arithmetic with no complex numbers, no
+      evaluation points and no `tau` at all, so this is a genuinely independent confirmation that
+      the fix produces CORRECT values, not merely self-consistent ones. Method validated first on
+      `15_2`, where the same comparison also gives 9/9 against the known panel.
+      ⚠ Scope: the oo-only closed form is itself "verified on nine bases / 39 forms but NOT known
+      to be valid in general" (`note-39_2.md`), so this corroborates `34_11`, it does not prove
+      the fix universally correct.
+
+- [ ] **⚠ REVISIT: "gate 4 is a GENUINE violation" is probably WRONG.** This file and `HANDOFF.md`
+      both record `34_11` as clearing gates 1-3 and then failing class-constancy at
+      `dev 0.0186, scale 0.0430` — "a 43% deviation... NOT another tolerance... Loosening it would
+      manufacture a multiplier wrong by 43%." But with per-coset `tau` and the SAME `1e-15`
+      tolerance (no guard was touched), `34_11` passes class-constancy and lands on the closed
+      form 9/9. Class-constancy compares up to 3 sampled cosets per class, and at `34_11` several
+      sampled cosets sit at `Im(z) ~ 1e-6`, where the measured loss is ~92 digits — i.e. the old
+      fixed `tau` fed the check numerically meaningless values at exactly those representatives,
+      which is precisely how a spurious O(scale) spread appears. Working hypothesis: gate 4 was
+      never real; it was the gate-3 evaluation-point defect resurfacing one gate later. Confirm
+      (or refute) before relying on the "gate 4 is real" framing anywhere else.
+
+- [ ] **New diagnostic: `M0PROGRESS=1`.** Env-gated, silent by default, `WriteStderr` (NOT
+      `printf` — buffered output is lost when a run is killed, which cost this session a 78-byte
+      log after 90 minutes). Prints words selected, per-word `W`/`depth`, every fallback with its
+      `Im(z)`, per-monomial progress, and a final fallback tally. Use it before assuming a long
+      `M0MultiplierExact` run is stuck.
+
 Probes: `vvdata/weyl-campaign/tau-precision/` on the campaign branch — `tauprobe.m` (per-coset
 `Im`), `tauscale.m` (the `M^2` law), `tauwindow.m` (the dynamic range and the band table), plus
 `amtest.m` (the scalar-`a_E` comparison). ⚠ `tauwindow.m`'s `logeta` is a **one-`S`-step
