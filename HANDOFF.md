@@ -5,6 +5,10 @@
 
 Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
 
+**➡ For what to do next, see `PLAN.md`** — five tracks, a do-not list, and the recurring traps.
+This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
+disagree about state, this file wins.
+
     main               1c53865   speedup + zero-skip + hoist + IntegralSolution + Targets
                                  + slash-constant tolerance + pointless-conics guard
                                  + models_58_5.m + 3 new tests + cache (394 files)
