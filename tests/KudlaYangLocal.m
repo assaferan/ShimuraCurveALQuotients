@@ -67,6 +67,87 @@ function ky_prop54_at_one(m, p)
     return total;
 end function;
 
+// Nonzero isotropic cosets of the FULL rank-3 lattice L^v/L that are supported only at the level
+// prime N: mirrors km0places.m's coset search (Smith form of the Gram matrix) but on the full 3x3
+// Q rather than the L_- restriction, and keeps only cosets whose denominators are powers of N.
+function LevelIsotropicCosets(Q, N)
+    Qrat := ChangeRing(Q, Rationals());
+    Qz := ChangeRing(Q, Integers());
+    Sm, P, R := SmithForm(Qz);
+    e1 := Sm[1][1]; e2 := Sm[2][2]; e3 := Sm[3][3];
+    Qi := Qrat^(-1);
+    cands := [];
+    for i in [0..Abs(e1)-1] do for j in [0..Abs(e2)-1] do for k in [0..Abs(e3)-1] do
+        if i eq 0 and j eq 0 and k eq 0 then continue; end if;
+        coef := Vector([Rationals()| i, j, k]) * ChangeRing(R^(-1), Rationals());
+        cL := coef * Qi;
+        cL := Vector([Rationals()| x - Floor(x) : x in Eltseq(cL)]);
+        if IsZero(cL) then continue; end if;
+        dens := [Denominator(x) : x in Eltseq(cL)];
+        if exists{d : d in dens | d ne 1 and (d mod N ne 0 or exists{p : p in PrimeDivisors(d) | p ne N})} then
+            continue;
+        end if;
+        q := (cL*Qrat, cL)/2;
+        if not IsIntegral(q) then continue; end if;
+        Append(~cands, cL);
+    end for; end for; end for;
+    return cands;
+end function;
+
+// Kudla-Yang Proposition 5.5 (mu in L*_e - L_e, i.e. the nonzero cosets Prop 5.4 does not cover),
+// specialised to e = 1 and x1 = 0 -- the shape of the nonzero isotropic, N-only-supported cosets
+// found above (one off-diagonal coordinate a unit over N, the other and the diagonal coordinate 0).
+// There t_mu(m) = m - kappa*p*x2*x3 = m (since x3 = 0), so a = ord_p(t_mu(m)) is just ord_p of the
+// USUAL conductor exponent k_p, and K_e = min(e + ord_p(x2), e + ord_p(x3)) = min(0, infinity) = 0.
+// With K_e = 0 the sum 1 <= l <= min(k_p, K_e/2) is empty and BOTH tail conditions (2k_p+1 < 0 and
+// 2k_p < 0) are vacuous for k_p >= 0, so Prop 5.5 collapses to the constant polynomial 1 -- no m
+// dependence, no pole -- for every m and every conductor. This is the closed-form prediction the
+// test below checks against the actual lattice.
+//
+// WHY THIS TEST EXISTS.  It is the mu != 0 counterpart of the mu = 0 check above (Prop 5.4).  Unlike
+// that case, Prop 5.5 predicts total triviality: no m-dependence at all at the level prime, for a
+// nonzero isotropic N-only-supported coset. That is a real, checkable structural claim -- and it
+// falsifies the hope that inserting Prop 5.4/5.5 into a level-N analogue of Theorem 8.1 (KY section 8)
+// could reproduce the b^{eta*} Eisenstein coefficients (memory: b-eisenstein-coefficients-solved),
+// since those are supported exactly on N | r and vary nontrivially with N -- neither of which a
+// constant local factor can produce. See PLAN.md, MAIN LINE.
+procedure test_prop55_nonzero_isotropic_coset()
+    printf "Testing Prop 5.5 (nonzero isotropic coset) vs LocalWhittakerAtOne...";
+
+    bases := [ <15,2>, <6,5>, <10,3>, <21,2>, <34,11> ];
+    Lfull := RSpaceWithBasis(IdentityMatrix(Integers(), 3));
+    nchecked := 0;
+    ncosets_total := 0;
+
+    for b in bases do
+        D, N := Explode(b);
+        Ld := ShimuraCurveLattice(D, N);
+        Q := ChangeRing(Ld`Q, Integers());
+        negQ := -Q;
+
+        cosets := LevelIsotropicCosets(Q, N);
+        error if IsEmpty(cosets),
+            Sprintf("X0^%o(%o): found no nonzero isotropic N-supported coset -- test is vacuous", D, N);
+        ncosets_total +:= #cosets;
+
+        for eta in cosets do
+            error if IsZero(eta), Sprintf("X0^%o(%o): coset search returned the zero vector", D, N);
+            Qeta := (eta*ChangeRing(Q, Rationals()), eta)/2;
+            error if not IsIntegral(Qeta),
+                Sprintf("X0^%o(%o): coset %o is not isotropic (Q = %o)", D, N, eta, Qeta);
+            for m in [1..40] do
+                got := LocalWhittakerAtOne(Rationals()!m, N, eta, Lfull, negQ);
+                error if got ne 1,
+                    Sprintf("X0^%o(%o): eta=%o m=%o gives W=%o, Kudla-Yang Prop 5.5 predicts 1",
+                            D, N, eta, m, got);
+                nchecked +:= 1;
+            end for;
+        end for;
+    end for;
+
+    printf " OK (%o checks, %o cosets over %o bases)\n", nchecked, ncosets_total, #bases;
+end procedure;
+
 procedure test_KudlaYangLocal()
     printf "Testing the level-prime local Whittaker vs Kudla-Yang Prop 5.4...";
 
@@ -114,3 +195,4 @@ procedure test_KudlaYangLocal()
 end procedure;
 
 test_KudlaYangLocal();
+test_prop55_nonzero_isotropic_coset();
