@@ -6,6 +6,23 @@ do*. When they disagree about state, `HANDOFF.md` wins.
 
 Five tracks. One is the main line; the rest run in parallel and **none of them blocks it**.
 
+## Picking this up cold
+
+As of 2026-09-03 everything is committed and pushed, no worktree is dirty, and nothing is running.
+Three items are ready to start immediately, in decreasing order of value:
+
+1. **The `A_m` theorem** (MAIN LINE). Mathematical work, not implementation. Start from the two
+   propositions named below; the 13-value regression set is the acceptance test. This is the item
+   that unblocks 49 bases — the other two are tidy-up by comparison.
+2. **Per-coset `tau` in `M0MultiplierExact`** (REPAIR). Fully specified and needs no theory: target
+   `Im(w*tau)` in `[1e-3, 1e-2)`, gate on `15_2` 9/9 and `58_5` `ModelChecks` 48/0. Self-contained.
+3. **Re-measure `wi = 1221`** (REPAIR). Small, and the last gap in an otherwise closed result.
+   Needs a real `DedekindEta` with full `SL2` reduction — do **not** reuse `tauwindow.m`'s
+   one-`S`-step `logeta`, which is invalid in exactly that regime (see its README).
+
+Worktrees are `tier1-models` (here), `-campaign` (research data), `-mainport` (`main`).
+Probes live at `vvdata/weyl-campaign/tau-precision/` on the campaign branch.
+
 ## State of play
 
      4   verified models, from one base (58_5, partial set by construction)
