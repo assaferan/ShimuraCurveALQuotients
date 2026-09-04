@@ -73,6 +73,20 @@ one commit was already in `main` via the `04f1d7b` cherry-pick.
 before being merged up on 2026-09-04; **merge `main` into it before trusting any measurement
 taken there.**
 
+**The invariant that keeps this from biting again — check it, don't rely on discipline.** The
+gaps above happened in files at **SHARED PATHS**: paths that exist on *both* branches and can
+therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). Anything under
+`vvdata/weyl-campaign/` can never diverge, because `main` does not have it. So:
+
+    git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
+
+**should print nothing but doc files.** Anything else is a silent divergence — run it before
+trusting either branch's code. Had this existed, the nine-day `nmzsolve.py` gap would have shown
+up immediately. Corollary: **make a change to a shared-path file on `main` and merge it down.**
+If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
+why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
+`vvdata/gtsweep.m`.
+
 `nmzsolve.py` used to conflict on that merge, because campaign carried the **t-shift fallback**
 and `main` did not. **Resolved 2026-09-04: the fallback is now IN `main`** (with the two files it
 reads at runtime, `polymake/tshift_{core,w0}_420.txt`); the two copies are identical, so that
