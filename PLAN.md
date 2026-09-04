@@ -125,11 +125,11 @@ One object blocks disproportionately much. Everything below this section is seco
         every one of the 158 monomials** — measured, `minlead` 12–36, `#le0 = 0` at every such
         word. The monomials are simply holomorphic there. All 12 divisor-classes of `M = 60` DO
         occur among the 144 words, so the classes exist; the POOL has no support at them.
-      ✅ **The premise behind this, at least, is now VERIFIED** *(2026-09-04)*: the six-index
-      matrix really does have **rank 6** on the 158-monomial data (rank 4 on the panel), so the
-      ambiguity is genuinely resolvable and not one of `sec:exact`'s 50 identities — see SHIP.
-      That makes the search below worth doing rather than possibly chasing an identity of the
-      space.
+      ⚠ **The "provably resolvable" premise is NOT established** *(checked 2026-09-04)*. The
+      rank-6 figure is real but is computed over MONOMIALS, which are not valid probes of
+      `c_{eta*}(0)` — exactly the caveat the paragraph above states. Whether the six-index gap is
+      resolvable over the FORM space is uncomputed. Treat this section's premise as open, not
+      verified, and see SHIP.
       ⇒ It is a **search problem, not a dump fix**: it needs eta-monomials that actually carry a
       pole or constant term at cusp classes 2, 6, 10 and 30. `extraseqs`' 69 hand-picked vectors
       came from an earlier session with no surviving generator, so that pool has to be
@@ -163,33 +163,28 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       statement about that representative". So the answer to "is it still well-posed?" is: it is
       well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
       tested predictions stand unfalsified (`14_5` and `34_5` both hit).
-- [ ] **⚠ A CLAIM IN THE PAPER IS WRONG — fix `rem:gauge` before submitting.** *(measured
-      2026-09-04, `vvdata/weyl-campaign/rankcheck_gauge.py` on the campaign branch)*
-      `rem:gauge` says its six-index `-a_E` vs Table A disagreement "**is** the `w_square`
-      aliasing of \S`sec:exact`", and that this aliasing "is not something a derivation could
-      remove"; `sec:exact` calls the 50 leftover combinations "**unremovable by further probes**"
-      and the scorecard concludes "**no computation can be expected to settle the rest**".
-      **Measured on the paper's OWN data** (`cusp7_15_2.out`, the 158 monomials that `sec:exact`
-      cites): the `oo`-side matrix at `m = 1,2,3,10,15,30` has **rank 6, zero free directions** —
-      against **rank 4** for the nine-form panel, which the script reproduces as a validation.
-      ⇒ The six-index ambiguity is **RESOLVED by probing beyond the panel**, i.e. by exactly the
-      "further probe" the paper says cannot help. `-a_E` and Table A cannot both represent an
-      `oo`-only functional on the monomial space. **PLAN's MAIN LINE claim is CONFIRMED and
-      `rem:gauge`'s identification is not.**
-      ⚠ **Scope — what this does NOT overturn.** It does not touch `sec:exact`'s own count (the
-      joint `(oo,0)` coordinates spanning 78 of 128 slots, 50 identities): that is a larger,
-      different object, and this computation says nothing about it. Nor does it contradict the
-      separate finding that the functional is **not** `oo`-only on that space (residual 2.08) —
-      which is why "which `oo`-only representative is right" may still be the wrong question. The
-      precise defect is the CONFLATION in `rem:gauge`: a resolvable six-index gap presented as an
-      instance of the unremovable 50.
-      **Suggested minimal fix:** keep `sec:exact` as is; in `rem:gauge`, stop identifying the
-      six-index gap with that aliasing, and soften the scorecard's "no computation can be expected
-      to settle the rest" to apply to the 50 identities rather than to this ambiguity.
-      ⚠ **Trust note on the measurement:** the FIRST run of this check also printed "rank 6" — from
-      corrupted data (two silent parse traps: Magma line-wrapping in `FORMC`, and rational
-      coefficients dropped by an integer regex). The number is only believable because the script
-      now hard-asserts two independent validations first. Re-run it, do not quote it from here.
+- [ ] **The `rem:gauge` / MAIN LINE tension: STILL OPEN. My 2026-09-04 "the paper is wrong"
+      claim was RETRACTED the same day — do not act on it.** What was measured is solid:
+      `vvdata/weyl-campaign/rankcheck_gauge.py` (campaign) shows the `oo`-side matrix over the
+      **158 MONOMIALS** at `m = 1,2,3,10,15,30` has **rank 6**, against **rank 4** for the
+      nine-form panel, with two hard-assert validations (form `-1`'s principal part; the panel's
+      rank 4).
+      ⚠ **But that does not bear on the paper's claim, because the two are about DIFFERENT
+      OBJECTS.** `sec:exact` counts the span of *this character's* **FORMS** (78 of 128 joint
+      `(oo,0)` slots, 50 identities). I ranked **MONOMIALS**. Monomials are not valid probes of
+      this functional at all — `c_{eta*}(0)` sums over every cusp class, and unlike a genuine
+      Borcherds principal part (protected by `prop:nohalf` / [GY, Lemma 24]) an individual
+      eta-monomial can carry a nonzero constant term at *intermediate* cusps that an
+      `(A_m, B_j)`-only model never sees. See the same warning in MAIN LINE, which also records
+      that the numeric solve against real `c_{eta*}(0)` values **is still inconsistent**.
+      ⇒ **`rem:gauge` is NOT known to be wrong, and the paper should NOT be edited on this basis.**
+      The question it answers — can more FORMS separate `-a_E` from Table A? — is one nobody has
+      computed. **That is the actual open item**: rank the joint `(oo,0)` coordinates over the
+      form space, not over monomials, and see whether the six-index gap survives there.
+      **Method note worth keeping:** the two validations that made the rank number trustworthy
+      (they caught Magma line-wrapping and dropped rational coefficients) said nothing about
+      whether the right OBJECT was being measured. A validated computation of the wrong thing is
+      still the wrong thing.
 - [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
       **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
       moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
