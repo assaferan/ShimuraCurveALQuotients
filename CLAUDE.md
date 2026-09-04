@@ -71,9 +71,30 @@ one commit was already in `main` via the `04f1d7b` cherry-pick.
 **⚠ The campaign branch carries a FULL CODE TREE, not just data.** So a probe run from
 `worktrees/campaign` uses *that branch's* code, not `main`'s. It had drifted 103 commits behind
 before being merged up on 2026-09-04; **merge `main` into it before trusting any measurement
-taken there.** One conflict recurs: `nmzsolve.py`, where the campaign copy is a strict superset
-(the t-shift fallback plus its `tshift` helper files, which `main` has never received) — keep the
-campaign side.
+taken there.**
+
+**The invariant that keeps this from biting again — check it, don't rely on discipline.** The
+gaps above happened in files at **SHARED PATHS**: paths that exist on *both* branches and can
+therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). Anything under
+`vvdata/weyl-campaign/` can never diverge, because `main` does not have it. So:
+
+    git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
+
+**should print nothing but doc files.** Anything else is a silent divergence — run it before
+trusting either branch's code. Had this existed, the nine-day `nmzsolve.py` gap would have shown
+up immediately. Corollary: **make a change to a shared-path file on `main` and merge it down.**
+If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
+why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
+`vvdata/gtsweep.m`.
+
+`nmzsolve.py` used to conflict on that merge, because campaign carried the **t-shift fallback**
+and `main` did not. **Resolved 2026-09-04: the fallback is now IN `main`** (with the two files it
+reads at runtime, `polymake/tshift_{core,w0}_420.txt`); the two copies are identical, so that
+conflict should not recur. Its generator and probe stay on campaign
+(`vvdata/weyl-campaign/tshift_gen.py`, `tshift308.m`) per the tooling convention. The fallback is
+guarded — it needs `m_pole==0 && k24==12 && cuspidal==0`, a `polymake/tshift_w0_<M>.txt`, and a
+lower cached rung — so it is inert at levels without those files, and it is validated at
+**M = 420 only**.
 
 **⚠ `tier1-models` is RETIRED (2026-09-04) and `main` carries everything it had.** It was
 fast-forwarded into `main` — the two were the same commit — and then deleted, local and remote,
