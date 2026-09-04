@@ -8,35 +8,45 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ## Picking this up cold
 
-As of 2026-09-03 (evening) everything is committed and pushed, no worktree is dirty, and nothing
-is running. Three items are ready to start immediately, in decreasing order of value:
+As of **2026-09-04** everything is committed and pushed, both branches and lovelace are in sync,
+and the housekeeping list is empty. **The ordering below CHANGED on 2026-09-04** — the per-coset
+`tau` fix landed, and it moved the frontier. In decreasing order of value:
 
-1. **The `A_m` theorem** (MAIN LINE). Three more routes were closed today (KY Prop 5.4/5.5
-   insertion, Schwagenscheidt's oldform relation, the `s`-law/genus-theta closed form) — see that
-   section for what NOT to re-attempt. What's actually open now is narrower than "state and prove
-   a theorem": the `rem:gauge` ambiguity between `-a_E` and Table A is *provably resolvable* (full
-   rank 6 on the 158-monomial data), and the concrete blocker is a **missing data dump** —
-   constant-term data at 4 intermediate cusp classes (`g = 2,6,10,30`) that a `cusp7.m`-style pass
-   never recorded. Get that, and the reachable-subspace solve for `A_m` should go through. This is
-   the item that unblocks 49 bases — the other two are tidy-up by comparison.
-2. **Per-coset `tau` in `M0MultiplierExact`** (REPAIR). Fully specified and needs no theory: target
-   `Im(w*tau)` in `[1e-3, 1e-2)`, gate on `15_2` 9/9 and `58_5` `ModelChecks` 48/0. Self-contained.
-3. **Re-measure `wi = 1221`** (REPAIR). Small, and the last gap in an otherwise closed result.
-   Needs a real `DedekindEta` with full `SL2` reduction — do **not** reuse `tauwindow.m`'s
-   one-`S`-step `logeta`, which is invalid in exactly that regime (see its README).
+1. **Run the full model pipeline on `34_11`** (NEW, and the best-value thing here). It was
+   blocked at class-constancy; with the `tau` fix it now clears **every** gate in
+   `M0MultiplierExact` and returns multipliers confirmed 9/9 against the closed form. Nothing is
+   known to stand between it and models. **The project has produced models from exactly ONE base
+   ever** (`58_5`, 4 models) — a second would be the largest single change to the state of play in
+   months. Bounded, needs no theory. Cost: `AllEquationsAboveCovers` on a base this size ran 18–37
+   min for its siblings, and its `M0MultiplierExact` alone took 2.4 h, so budget hours not minutes.
+2. **Re-test `10_61` and `14_43`** (cheap, and directly implied by the fix). Both died at the
+   gate-3 slash-constant check — *exactly* the failure the per-coset `tau` addresses, and `10_61`'s
+   two poisoned cosets (`wi = 2`, `wi = 1221`) sit at precisely the two `Im(z)` extremes the
+   fallback now catches. They may simply run. If they do, the "two runnable candidates of 122"
+   count and the 49-base obstructed class both need revisiting.
+3. **The `A_m` theorem** (MAIN LINE). Still the biggest prize — 49 bases — but ⚠ **its "concrete
+   next step" as written was FALSIFIED on 2026-09-04**: the missing cusp classes are NOT a dump
+   bug, so there is no quick implementation task waiting. See that section; it is a search problem
+   again.
 
-Worktrees: `main` (here, `.`) and `worktrees/campaign` (`m0-theta-campaign`, research data),
-nested under this checkout, not siblings; see CLAUDE.md. **`tier1-models` was RETIRED 2026-09-04**
-— fast-forwarded into `main` and deleted, along with the redundant `worktrees/mainport`. There is
-one code branch now, `main`, and it carries `paper/` too.
-Probes live at `vvdata/weyl-campaign/tau-precision/` on the campaign branch.
+⚠ **Also newly in doubt: "gate 4 is a genuine violation."** `34_11` now passes class-constancy
+with the guard untouched, which suggests that 43% deviation was the same evaluation-point defect
+as gate 3, one gate later. Not yet confirmed — see REPAIR.
+
+Worktrees: `main` (here, `.`) and `worktrees/campaign` (`m0-theta-campaign`, research data);
+`tier1-models` and `whbasis-speedup` are retired, 10 `archive/*` tags on origin. Probes live at
+`vvdata/weyl-campaign/tau-precision/` on the campaign branch.
+⚠ Before trusting either branch's code, run the shared-path check in `CLAUDE.md` — two capability
+gaps hid there for days.
 
 ## State of play
 
      4   verified models, from one base (58_5, partial set by construction)
-    49   Borcherds-obstructed bases
+     1   more base now CLEARING every M0MultiplierExact gate (34_11) -- pipeline not yet run
+    49   Borcherds-obstructed bases (unchanged; A_m still gates these)
     81   of 122 still unclassified
-   924   gate-3 failures at 10_61, zero near-misses
+   924   gate-3 failures at 10_61 -- may now be FIXED, untested (see REPAIR)
+    34   Guo-Yang CM-value tables now verified as offline tests, 254 checks, 0 failures
     30   pages of paper; the theory arc is closed
 
 Two arcs running at different speeds. The theory arc is essentially closed — the multiplicity
@@ -44,9 +54,18 @@ formula end to end, `kappa_mu(0)` derived, N>1 subsuming N=1, the support rule c
 as a gauge. The model arc is blocked, and not by engineering.
 
 Across the record, most proposed levers were refuted once measured: the 336x hoist worth 2%, the
-odd-D eta-quotient explosion that wasn't, three successive symbol laws, and now the scalar `a_E`
-at 1 of 13. That is discipline, not failure — but the cumulative message is that the engineering
-levers are spent and the binding constraint is mathematical. Plan around that.
+odd-D eta-quotient explosion that wasn't, three successive symbol laws, and the scalar `a_E` at
+1 of 13. That is discipline, not failure.
+
+⚠ **But the conclusion this file used to draw from it — "the engineering levers are spent and the
+binding constraint is mathematical" — took a real hit on 2026-09-04.** The per-coset `tau` fix is
+an *engineering* fix, and it unblocked `34_11`, a base this file had recorded as failing on
+"real mathematics" (a GENUINE 43% class-constancy violation, explicitly "NOT another tolerance").
+That diagnosis now looks wrong. The honest version: **the binding constraint is mathematical for
+the 49 Borcherds-obstructed bases, where the deficit is invariant and `A_m` is genuinely missing.
+It was NOT binding for the gate-3/gate-4 bases — those were numerical all along.** Do not
+generalise "it must be mathematics" from one class to the other; that framing cost `34_11` a
+month.
 
 ---
 
@@ -94,10 +113,23 @@ One object blocks disproportionately much. Everything below this section is seco
       still gives rank 6 at the gauge indices (152-dim reachable subspace) — but the numeric solve
       against real `c_{eta*}(0)` values is *still* inconsistent, because that dump is missing
       constant-term data at four more intermediate classes: `g = 2, 6, 10, 30`.
-      **Concrete next step:** re-run (or extend) a `cusp7.m`-style dump so every intermediate cusp
-      class gets its constant term recorded — not just the first one encountered while iterating
-      cosets — then redo the reachable-subspace solve. That is a scoped implementation task, not
-      another open-ended search.
+      ⚠⚠ **THAT "CONCRETE NEXT STEP" WAS FALSIFIED, 2026-09-04. Do not spend a session on it.**
+      The step used to read: "re-run a `cusp7.m`-style dump so every intermediate cusp class gets
+      its constant term recorded — not just the first one encountered — a scoped implementation
+      task, not another open-ended search." Both halves are wrong:
+      * The first-encountered-per-class dedup in `cusp7.m` IS a real latent bug and is now fixed
+        (campaign `3d0720f`, keyed on `<class, monomial>` instead of class alone) — **but fixing
+        it changed nothing.** The re-run produces a BYTE-IDENTICAL `PP` section, still missing
+        `g = 2,6,10,30`.
+      * The actual reason those classes are absent: **every coset word in them has `lead > 0` for
+        every one of the 158 monomials** — measured, `minlead` 12–36, `#le0 = 0` at every such
+        word. The monomials are simply holomorphic there. All 12 divisor-classes of `M = 60` DO
+        occur among the 144 words, so the classes exist; the POOL has no support at them.
+      ⇒ It is a **search problem, not a dump fix**: it needs eta-monomials that actually carry a
+      pole or constant term at cusp classes 2, 6, 10 and 30. `extraseqs`' 69 hand-picked vectors
+      came from an earlier session with no surviving generator, so that pool has to be
+      reconstructed or extended first. Write-up:
+      `vvdata/weyl-campaign/note-cusp7-missing-classes.md` on the campaign branch.
 
 **Why this one.** It *is* the `Kappa0` log-`N` defect at `SchoferFormula.m:589` — the same defect
 `coprime_to_level` (`ShimuraQuotients.m:1420`) papers over with what the code itself calls "a blunt
@@ -156,7 +188,12 @@ New as of 2026-09-02, sharply localized, and it may free the last two runnable b
       four-figure match. The `eta` values span `[10^-100.27, 10^-0.08]`, i.e. a **100.19-digit
       dynamic range at `Prec := 80`**, so the ratio is destroyed in floating point even though it
       is mathematically fine.
-- [ ] **NOW THE OPEN HALF: why does `wi = 1221` fail?** The roles have swapped. Its measured
+- [~] **Why does `wi = 1221` fail? — LARGELY MOOT as of 2026-09-04.** The per-coset `tau`
+      fallback now *routes around* both extremes rather than needing them explained: `wi = 1221`
+      sits at `Im(z) ~ 1e-6`, below the `1e-5` floor, so it gets a corrected evaluation point
+      automatically. The question below is still of scientific interest but is no longer on the
+      critical path, and the measurement it asks for is no longer a prerequisite for anything.
+- [ ] *(original item, kept for the caveat it carries)* **why does `wi = 1221` fail?** The roles have swapped. Its measured
       spread is **1.39 digits — identical to typical cosets** (`wi` 300, 611, 900 all give
       1.39436), so the dynamic-range mechanism does *not* explain it.
       ⚠ **But that number is not trustworthy**: at `Im(z0) = 8.8e-7`, *both* `z` and `-1/z` have
@@ -165,11 +202,16 @@ New as of 2026-09-02, sharply localized, and it may free the last two runnable b
       concluding anything about this coset.**
 - [x] ~~Cross-check against the `39_2` malformed-form pathology.~~ **Superseded.** This is not a
       malformed form. It is an evaluation-point failure of the harness — see below.
-- [ ] **Re-run GATE3B on `14_43` once the cause is understood.** Its log ends identically to
-      `10_61`'s, so expect the same defect; one root cause probably covers both.
-- [ ] **Reclassify both bases in the sweep record.** `10_61` was one of the "two runnable
-      candidates of 122". It is not runnable — it has a real upstream defect, not a threshold
-      problem.
+- [ ] **Re-run `14_43` AND `10_61` — but now with the fix, not with GATE3B.** *(reframed
+      2026-09-04)* The cause IS understood: extreme `Im(z)` at a handful of cosets, and the
+      per-coset `tau` fallback addresses exactly it. So the useful run is no longer a GATE3B
+      report-and-continue measurement — it is the ordinary pipeline, to see whether they now pass.
+      `10_61`'s two poisoned cosets are at the two extremes the fallback catches. ⚠ `10_61` is
+      `M = 1220` with 2232 cosets and previously ran 17 h before being killed; budget accordingly,
+      and use `M0PROGRESS=1` so a stall is diagnosable instead of a silent buffered log.
+- [ ] **Reclassify both bases in the sweep record — but wait for the re-run above.** `10_61` was
+      called "not runnable, a real upstream defect". With the `tau` fix that verdict may simply be
+      wrong; do not rewrite the sweep record until the re-run says which.
 
 Raw evidence: `~/shimura/models/10_61.gate3b.log` on lovelace (353 KB, 926 lines).
 
@@ -223,10 +265,12 @@ independence is exactly what the two-point check tests). So instead of forcing t
 through 2232 words, choose `tau` per coset so that `Im(w*tau)` lands in the safe band. This is a
 local change to `M0MultiplierExact` and needs no theory.
 
-- [ ] **Implement per-coset `tau` selection** in `M0MultiplierExact`, targeting
-      `Im(w*tau)` in `[1e-3, 1e-2)`. Validate on `15_2` (must stay exact, `tests/M0MultiplierExact.m`
-      9/9) and `58_5` (must keep its four verified models, `ModelChecks` 48/0) before trying
-      `34_11` / `10_61`.
+- [x] **Implement per-coset `tau` selection — DONE 2026-09-04 (`475e72b`).** Validated three
+      ways: `15_2` stays exact (9/9), `58_5` keeps its models (full suite clean, `ModelChecks`
+      8241 checks 0 failures), and BOTH `34_11` and `58_5` match the Prop 9.15 closed form 9/9 —
+      an independent route with no complex arithmetic, no evaluation points and no `tau` at all
+      (`58_5`'s was a PRE-REGISTERED prediction). `34_11` went from failing to passing. Details
+      and the two hypotheses it refuted along the way are below.
       **2026-09-03: first attempt tried and reverted (not committed).** Picked two fixed target
       points `z0targ, z1targ` in the safe band and set each word's `tau0, tau1` to be the
       PREIMAGE of those targets under the word's own SL2(Z) matrix (`tau := g^-1.ztarg`), reusing
