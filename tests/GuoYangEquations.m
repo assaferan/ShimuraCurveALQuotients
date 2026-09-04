@@ -34,6 +34,10 @@
 // EACH cover, the quotients as well as the full curve, each with its own matrix. Establishing the
 // quotients first is what makes the full-curve isomorphism findable.
 //
+// COST: the hyperelliptic comparisons are ~0.03s each; the single PAIRED case (21_2) is a genus-3
+// complete intersection and IsIsomorphic there takes ~100s, dominating the file. Still fine for
+// CI, but do not assume more paired bases are free.
+//
 // The comparison is `IsIsomorphic` on the curves, not coefficient equality: a model is only
 // defined up to isomorphism, and ours generally differs from the published one by a coordinate
 // change (51_1's is x -> 3x, y -> (27/16)y).
@@ -92,4 +96,45 @@ for c in gy_cases do
                 gy_D, gy_N, gy_key);
     gy_checked +:= 1;
 end for;
+// ---- PAIRED / CONIC PRESENTATIONS -------------------------------------------------------------
+// Some bases are published, and stored by us, as a PAIR of equations rather than a single
+// y^2=f(x) -- the curve is a complete intersection in a weighted projective space. Our model file
+// stores these as <genus, "CRV", [Strings() | eq1, eq2]> with coordinates (x,y,z,s) and y of
+// weight 2, i.e. P(1,2,1,1). Guo-Yang's own presentation may use different weights (21_2's second
+// equation is degree 6, so its y has weight 3), which is fine -- IsIsomorphic compares the curves,
+// not the embeddings.
+Pours<x,y,z,s> := WeightedProjectiveSpace(Rationals(), [1,2,1,1]);
+
+// <D, N, key, GY ambient weights, GY equations as a function of that space's coordinates>
+gy_pairs := [*
+    // X_0^21(2):  z^2 = -x^2-3  and  y^2 = -(3x-1)(3x+1)(x^2+7)(x^2+3)
+    // homogenised with d; GY's y has weight 3 since its second equation has degree 6.  [genus 3]
+    <21, 2, [Integers()|1], [1,3,1,1],
+     func<a,b,c,d | [c^2 + a^2 + 3*d^2,
+                     b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>
+*];
+
+for c in gy_pairs do
+    gp_D, gp_N, gp_key, gp_w, gp_eqs := Explode(c);
+    gp_mf := Sprintf("data/models/models_%o_%o.m", gp_D, gp_N);
+    gp_models := eval (Read(gp_mf) cat "\nreturn models;");
+    gp_ok, gp_entry := IsDefined(gp_models, gp_key);
+    error if not gp_ok,
+        Sprintf("X0^%o(%o): model file has no cover key %o", gp_D, gp_N, gp_key);
+    gp_g, gp_tag, gp_strs := Explode(gp_entry[1]);
+    error if Type(gp_tag) ne MonStgElt,
+        Sprintf("X0^%o(%o) cover %o: expected a stored CRV pair, found a hyperelliptic model",
+                gp_D, gp_N, gp_key);
+    gp_Cours := Curve(Pours, [ eval ("return " cat str cat ";") : str in gp_strs ]);
+    gp_Q<a,b,cc,d> := WeightedProjectiveSpace(Rationals(), gp_w);
+    gp_Cgy := Curve(gp_Q, gp_eqs(a, b, cc, d));
+    error if Genus(gp_Cours) ne Genus(gp_Cgy),
+        Sprintf("X0^%o(%o) cover %o: our genus %o vs Guo-Yang's %o -- wrong object",
+                gp_D, gp_N, gp_key, Genus(gp_Cours), Genus(gp_Cgy));
+    error if not IsIsomorphic(gp_Cours, gp_Cgy),
+        Sprintf("X0^%o(%o) cover %o: our CRV model is NOT isomorphic to Guo-Yang's published pair",
+                gp_D, gp_N, gp_key);
+    gy_checked +:= 1;
+end for;
+
 printf " ok (%o base(s))\n", gy_checked;
