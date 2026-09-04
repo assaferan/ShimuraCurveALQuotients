@@ -125,6 +125,11 @@ One object blocks disproportionately much. Everything below this section is seco
         every one of the 158 monomials** — measured, `minlead` 12–36, `#le0 = 0` at every such
         word. The monomials are simply holomorphic there. All 12 divisor-classes of `M = 60` DO
         occur among the 144 words, so the classes exist; the POOL has no support at them.
+      ✅ **The premise behind this, at least, is now VERIFIED** *(2026-09-04)*: the six-index
+      matrix really does have **rank 6** on the 158-monomial data (rank 4 on the panel), so the
+      ambiguity is genuinely resolvable and not one of `sec:exact`'s 50 identities — see SHIP.
+      That makes the search below worth doing rather than possibly chasing an identity of the
+      space.
       ⇒ It is a **search problem, not a dump fix**: it needs eta-monomials that actually carry a
       pole or constant term at cusp classes 2, 6, 10 and 30. `extraseqs`' 69 hand-picked vectors
       came from an earlier session with no surviving generator, so that pool has to be
@@ -158,37 +163,33 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       statement about that representative". So the answer to "is it still well-posed?" is: it is
       well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
       tested predictions stand unfalsified (`14_5` and `34_5` both hit).
-- [ ] **⚠ BUT A TENSION SURFACED WHILE READING IT — reconcile before submitting.** The paper makes
-      an **impossibility** claim: the `w_square` aliasing is "*intrinsic* rather than an accident
-      of the panel", the 50 leftover combinations are "identities of the space, **unremovable by
-      further probes**" (`sec:exact`, ~line 834), and so "**no computation can be expected to
-      settle the rest**" (~line 675). `rem:gauge` then identifies its own 6-index `-a_E` vs
-      Table A disagreement AS that same aliasing ("this is the `w_square` aliasing of
-      \S`sec:exact`... aliasing is not something a derivation could remove").
-      **This file's own MAIN LINE says the opposite**: that the `rem:gauge` ambiguity is
-      *provably resolvable*, because the 158-monomial data gives that 6-index matrix **full rank
-      6**, i.e. it is NOT one of the 50 unremovable directions. Both cannot be right.
-      Neither claim has been re-verified this session, so I am flagging, not adjudicating. But
-      "unremovable by further probes" and "no computation can settle this" are strong negative
-      claims to publish, and if the MAIN LINE analysis is correct then `rem:gauge` conflates a
-      *resolvable* 6-index gap with the genuinely unremovable 50. **Check which before submitting.**
-      (Related, and it does not settle the question either way: the reachable-subspace solve is
-      currently BLOCKED for a different reason — the monomial pool has no support at cusp classes
-      `g = 2,6,10,30` — so "resolvable in principle" is not "resolved in practice".)
-- [x] **Merge `paper/` into `main`.** *(done 2026-09-04)* **THE SPLIT IS OVER: `main` and
-      `tier1-models` are now the SAME commit** (`475e72b`). It was a clean fast-forward — `main`
-      was a strict ancestor, 40 commits behind, nothing on `main` that was not already here, so
-      no conflict was possible. 46 files, +2855/−208, including `paper/` (+1417/−194) and the PDF.
-      `main` is therefore **no longer "code only"** — every description of it that way is now
-      stale.
-      ⚠ **The merge-trap habit still applies to any FEATURE branch**: check
-      `git log origin/main..origin/<branch>` before merging one, so you see what it really drags.
-      **RESOLVED 2026-09-04: `tier1-models` was RETIRED** — deleted local and remote (it was a
-      strict ancestor of `main`, so `-d` accepted it and nothing was lost), and
-      `worktrees/mainport` removed as redundant. Commit to `main` directly; do not recreate it.
-      Verified after the merge: CI's matrix generator emits **zero** `_offline`/`GuoYang` targets
-      (checked in the job log, not just read off the workflow), so the 34 offline tests stay out
-      of CI as designed.
+- [ ] **⚠ A CLAIM IN THE PAPER IS WRONG — fix `rem:gauge` before submitting.** *(measured
+      2026-09-04, `vvdata/weyl-campaign/rankcheck_gauge.py` on the campaign branch)*
+      `rem:gauge` says its six-index `-a_E` vs Table A disagreement "**is** the `w_square`
+      aliasing of \S`sec:exact`", and that this aliasing "is not something a derivation could
+      remove"; `sec:exact` calls the 50 leftover combinations "**unremovable by further probes**"
+      and the scorecard concludes "**no computation can be expected to settle the rest**".
+      **Measured on the paper's OWN data** (`cusp7_15_2.out`, the 158 monomials that `sec:exact`
+      cites): the `oo`-side matrix at `m = 1,2,3,10,15,30` has **rank 6, zero free directions** —
+      against **rank 4** for the nine-form panel, which the script reproduces as a validation.
+      ⇒ The six-index ambiguity is **RESOLVED by probing beyond the panel**, i.e. by exactly the
+      "further probe" the paper says cannot help. `-a_E` and Table A cannot both represent an
+      `oo`-only functional on the monomial space. **PLAN's MAIN LINE claim is CONFIRMED and
+      `rem:gauge`'s identification is not.**
+      ⚠ **Scope — what this does NOT overturn.** It does not touch `sec:exact`'s own count (the
+      joint `(oo,0)` coordinates spanning 78 of 128 slots, 50 identities): that is a larger,
+      different object, and this computation says nothing about it. Nor does it contradict the
+      separate finding that the functional is **not** `oo`-only on that space (residual 2.08) —
+      which is why "which `oo`-only representative is right" may still be the wrong question. The
+      precise defect is the CONFLATION in `rem:gauge`: a resolvable six-index gap presented as an
+      instance of the unremovable 50.
+      **Suggested minimal fix:** keep `sec:exact` as is; in `rem:gauge`, stop identifying the
+      six-index gap with that aliasing, and soften the scorecard's "no computation can be expected
+      to settle the rest" to apply to the 50 identities rather than to this ambiguity.
+      ⚠ **Trust note on the measurement:** the FIRST run of this check also printed "rank 6" — from
+      corrupted data (two silent parse traps: Magma line-wrapping in `FORMC`, and rational
+      coefficients dropped by an integer regex). The number is only believable because the script
+      now hard-asserts two independent validations first. Re-run it, do not quote it from here.
 - [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
       **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
       moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
