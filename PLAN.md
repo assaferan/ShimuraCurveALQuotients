@@ -50,7 +50,9 @@ gaps hid there for days.
      1   more base now CLEARING every M0MultiplierExact gate (34_11) -- pipeline not yet run
     49   Borcherds-obstructed bases (unchanged; A_m still gates these)
     81   of 122 still unclassified
-   924   gate-3 failures at 10_61 -- may now be FIXED, untested (see REPAIR)
+   ---   gate-3 failures at 10_61: FIXED. Confirmed 2026-09-04/05 -- 10_61 and 14_43 both
+         completed their a0 tables (27 and 22 fallback points of 64), so the two-point check
+         never fired. Do NOT quote the old "924 failures, zero near-misses" as current.
     34   Guo-Yang CM-value tables now verified as offline tests, 254 checks, 0 failures
     30   pages of paper; the theory arc is closed
 
