@@ -464,6 +464,69 @@ exactly. Only the half-integral phase is wrong.
 
 ---
 
+## COVERAGE — reproducing Guo-Yang's published equations
+
+*(stock-take 2026-09-04. Distinct from the CM-value tables in `tests/_offline/` — this is about
+the paper's headline output, the EQUATIONS.)*
+
+    43   (D,N) bases with published equations in Guo-Yang
+    34   we have a model for            <- was 32; 51_1 and 57_1 added 2026-09-04
+    24   ...and a test comparing it to Guo-Yang
+    10   model exists but NO GY comparison test  <- the gap this section closes
+     9   no model: the real blockers
+    47   models we have BEYOND Guo-Yang's list entirely (79 model files total)
+
+**The 10 with models but no GY test:** `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`.
+Not blocked — we reproduce them and nobody wrote the comparison.
+
+**The 9 remaining blockers, with the classification CORRECTED 2026-09-04:**
+* `15_4` — **structural**, and the only one of its kind: `N = 4` is not squarefree, and the method
+  boundary is literally `assert IsSquarefree(N)`. The sole non-squarefree `N` in Guo-Yang's list.
+* `93_1`, `95_1`, `159_1` — **RE-CLASSIFIED**. Previously filed under the `IsSquarefree(N)`
+  boundary, which **cannot** be right: all three have `N = 1`, which IS squarefree. Measured
+  traceback at `93_1` is Magma's OWN assert:
+  `GalFldFun.m:305  assert vx ge 0`, reached via `AbsEltseq` on a `q^-60` pole — the **vx class**.
+  `genmodels.m` already fails fast on it via `vx_skip = {<95,1>,<115,1>,<123,1>,<129,1>}`, but
+  **that list is incomplete — `93_1` belongs in it** (`159_1` under test). See
+  [[assert-failed-is-squarefree-n]], now corrected. ⚠ `genmodels.m` cites "memory
+  vx-laurent-n0-circular", which **does not exist** — dangling reference.
+* `39_2` — NONINTEGRAL (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`), the malformed-form base.
+  Its CM-value table passes **11/11**, so the Schofer side is fine; the blocker is upstream.
+* `69_1` — non-rational value (`RationalNumber` failure), the embedding-selection class.
+* `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
+  40 GB, stuck inside `BorcherdsForms`.
+* `26_3` — **open anomaly**: CM table runs, but 2 of 11 values are off by exactly the Mobius
+  involution `z -> z/(z-1)`. Unexplained.
+
+**⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
+ANY triage record — no `INTSOL`, no `BASEVERD`, nothing. They had simply never been run. One
+`genmodels` run each produced 4 cover-keys apiece, and `51_1` reproduces Guo-Yang's
+`y^2 = -(x^2+3)(243x^6+235x^4-31x^2+1)` **exactly** under `x -> 3x, y -> (27/16)y` (over-determined
+and consistent across all five coefficients). **Before filing a base as blocked, check whether it
+was ever attempted.**
+
+### The two-tier test plan (adopted 2026-09-04)
+
+- [ ] **TIER 1 — one cheap test, all 34 bases at once. DO THIS FIRST.** `ModelChecks` validates the
+      79 model files structurally (genus, Weil-polynomial divisibility, point counts) but **never
+      compares them to Guo-Yang**. So nothing in CI would notice a committed model silently
+      disagreeing with the paper. A test that checks the **STORED** model against the **published**
+      equation, up to the hyperelliptic isomorphism, needs **no pipeline run** — milliseconds — and
+      covers every base where both exist. Best value per unit of CI time available here.
+- [ ] **TIER 2 — pipeline tests for the FAST bases only.** The existing `X0_D_N.m` pattern calls
+      `AllEquationsAboveCovers` and re-derives the curve, which is the stronger test (it exercises
+      the computation, not the stored data). Measured: `51_1` takes **240 s** — comfortably CI-able.
+      But `87_1` is likely hours (its CM-value run was ~7000 s) and GitHub caps a job at 6 h, so
+      slow bases go to `tests/_offline/`, reusing the split already set up for the CM-value tables.
+      ⚠ **Per-base cost is NOT just CI time.** Each `X0_D_N.m` needs an **isomorphism matrix**
+      between our model and the published one — that is **not in the paper** and must be derived
+      per base (`51_1`'s is `x -> 3x, y -> (27/16)y`) — plus the Atkin-Lehner involutions as
+      matrices in our coordinates. Budget 30-60 min of careful work each, and note that a
+      plausible-but-wrong matrix would make the test **vacuously pass**. Derive it the way `51_1`
+      was done: solve the transformation from two coefficients and CHECK the rest agree.
+
+---
+
 ## HOUSEKEEPING — about an hour, once
 
 - [x] **Delete the 12 merged local branches.** *(done 2026-09-02)* Local 23 -> 11. Used `-d`, so
