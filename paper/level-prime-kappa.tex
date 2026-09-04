@@ -7,6 +7,7 @@
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{corollary}[theorem]{Corollary}
 \newtheorem{conjecture}[theorem]{Conjecture}
 \theoremstyle{definition}
@@ -39,22 +40,50 @@ in the standard recipe for Schofer's $\kappa$}
 \begin{abstract}
 Schofer's formula expresses averages of $\log\lVert\Psi_F\rVert$ over CM points on a Shimura
 curve in terms of quantities $\kappa_\eta(m)$ built from derivatives of Fourier coefficients of an
-incoherent Eisenstein series. The recipe used in practice to evaluate $\kappa_\eta(m)$ descends
-from Kudla--Rapoport--Yang, through Schofer and Errthum, to Yang; its central step enumerates the
-configurations that contribute to the derivative at the centre. We observe that this enumeration is
-derived under a restriction which Kudla--Rapoport--Yang state explicitly --- that the Eisenstein
-series be built from sections given by the characteristic functions of the completions of
-$\mathcal{O}_k$ --- and which is not satisfied by the lattices arising for an Eichler order of
-squarefree level $N$ at a \emph{split} level prime.
+incoherent Eisenstein series. The recipe used in practice descends from Kudla--Rapoport--Yang
+through Schofer and Errthum to Yang, and its central step enumerates the configurations that
+contribute to the derivative at the centre. That enumeration is derived under a restriction which
+Kudla--Rapoport--Yang state explicitly --- that the Eisenstein series be built from sections given
+by the characteristic functions of the completions of $\mathcal{O}_k$ --- and which fails for the
+lattices arising from an Eichler order of squarefree level $N$ at a \emph{split} level prime.
 
-We compute the local Whittaker factor of the relevant $N$-scaled binary lattice at the level prime
-in closed form for every valuation, and show that its value at the critical point is
-$(N-1)\ord_N(m)$. We then re-run the case analysis with this factor in place and find that it
-produces no additional contributing configuration, so that no $\log N$ can arise from
-$\kappa_\eta(m)$ for $m>0$. Independently, a numerical evaluation of the vector-valued input form
-determines, exactly, a correction of the form $A_m\log N$ that the CM values demonstrably require.
-We record the resulting tension, the exact data any corrected formula must reproduce, and the
-routes we have eliminated.
+We compute the local Whittaker factor of the $N$-scaled binary lattice at the level prime in closed
+form for every valuation; its value at the centre is $(N-1)\ord_N(m)$. Re-running the case analysis
+with this factor in place produces no additional contributing configuration, so no $\log N$ can
+arise from $\kappa_\eta(m)$ with $m>0$. The CM values nevertheless require a correction
+$A_m\log N$, which we measure exactly and check against ground truth on bases with
+$N\in\{2,3,5\}$, one of them forced by a consistency relation independent of any Eisenstein
+computation.
+
+We then determine that correction outright. Its Eisenstein part is an explicit alternating sum of
+Gross genus theta series indexed by the subsets of the primes of $N$ at which the tracked isotropic
+coset is supported --- genus sums where the discriminant admits one, telescoped mass-weighted pairs
+where it does not --- valid for every squarefree $D$ and $N$ and every isotropic coset, and
+independent of which prime of $D$ is split off. A residue identity on $X_0(M)$ makes the correction
+the pairing of the principal parts of the input form against the Fourier coefficients of that
+combination, independently of the representative chosen. For $D$ a product of two primes and $N$ prime or $1$
+--- the range of the model set --- those coefficients are, in closed form, a Hurwitz class number
+times one elementary factor per prime of $DN$, with conductor corrections read off the fundamental
+decomposition $-4m=D_0c^2$; the rule that the correction vanishes unless $\Q(\sqrt{-m})$ embeds in
+$B_D$ is part of the formula rather than a side condition, and the empirical rule that it is
+supported on $N\mid m$ turns out to describe a chosen representative rather than the correction.
+Twenty bases had suggested a ``re-split rule'' selecting one splitting of $D$; there is none to
+find.
+
+Finally we locate where the transmitted recipe loses the term. The space of weight-$1/2$ forms for
+the Weil representation vanishes, so the input form is determined by its principal part and its
+constant term at the zero coset is genuinely zero; and no per-form normalisation can produce the
+observed failure, since the uncorrected values are mutually inconsistent on a base where a uniform
+rescaling could not make them so. What remains is that the $m=0$ term collapses a sum over
+isotropic cosets to the zero coset by a condition constraining only the negative-definite part of
+the coset: the surviving nonzero cosets carry the whole correction. We then evaluate the
+coefficient they carry, obtaining $\kappa_\eta(0)=-\log N/(N-1)$ at each of the $2N-2$ of them, and
+summing recovers the measured correction exactly, the factor $\tfrac12$ appearing as
+$\tfrac14\cdot\tfrac{2N-2}{N-1}$ and hence independently of $N$. The $\log N$ arises at the level
+prime, not at a place of $\mathrm{Diff}$ --- not because the local factor there vanishes, but
+because at the zero coset it has a pole, which the passage to a nonzero coset converts into the
+zero whose derivative is taken. That mechanism is invisible to a case analysis tracking orders of
+vanishing, which is why the term was lost.
 \end{abstract}
 
 \maketitle
@@ -65,11 +94,11 @@ Let $B$ be an indefinite quaternion algebra over $\Q$ of reduced discriminant $D
 $\mathcal{O}\subset B$ be an Eichler order of squarefree level $N$ with $(N,D)=1$, and let
 $L=\{\alpha\in\mathcal{O}:\tr\alpha=0\}$ be the associated lattice of signature $(1,2)$, so that
 $\Ldual/L\cong \Z/2\times\Z/DN\times\Z/DN$ has order $2(DN)^2$ \cite[Lemma 8]{GY}. For a weakly
-holomorphic vector-valued modular form $F$ of weight $1/2$ and type $\rho_L$, Borcherds' lift
+holomorphic vector-valued modular form $F$ of weight $1/2$ and type $\rho_L$, Borcherds' lift \cite{Borcherds}
 $\Psi_F$ is a meromorphic modular form on $X_0^D(N)/W_{D,N}$, and Schofer's formula
 \cite{Schofer,GY} evaluates
 \[
-  \sum_{\tau\in \mathrm{CM}(d)}\log\lvert\psi_F(\tau)\rvert
+  \sum_{\tau\in \mathrm{CM}(d)}\log\lvert\Psi_F(\tau)\rvert
   \;=\;-\frac{\lvert \mathrm{CM}(d)\rvert}{4}\sum_{\eta\in\Ldual/L}\ \sum_{m\ge 0}
      c_\eta(-m)\,\kappa_\eta(m),
 \]
@@ -86,10 +115,63 @@ Section~\ref{sec:chain} traces that assertion to its stated scope. Section~\ref{
 computes the missing local ingredient: the local Whittaker factor of the $N$-scaled binary lattice
 at a split level prime, in closed form (Theorem~\ref{thm:closed}), with the corollary that the
 empirical ``level support rule'' of the computational literature is exactly the vanishing of that
-factor (Corollary~\ref{cor:support}). Section~\ref{sec:reenum} re-runs the case analysis with this
+factor (Corollary~\ref{cor:support}) --- a rule which, as emerges later, governs a convenient
+representative of the correction rather than the correction itself
+(Remark~\ref{rem:gauge}). Section~\ref{sec:reenum} re-runs the case analysis with this
 factor and finds no new case (Proposition~\ref{prop:reenum}). Section~\ref{sec:data} records the
 correction that the CM values require, computed exactly, and Section~\ref{sec:elim} lists the
-explanations we have eliminated. Section~\ref{sec:open} states what remains open.
+explanations we have eliminated.
+
+Section~\ref{sec:ident} then identifies what the correction reads off --- the constant term of
+the input form at a nonzero isotropic coset --- and reduces it, along a route we do not finally
+take, to seed-$0$ Eisenstein coefficients of a smaller module; the route stalls on a
+constant-term identity that the naive weight-$3/2$ recipe violates, and
+Proposition~\ref{prop:nohalf} shows the natural repair is unavailable, since
+$M_{1/2}(\rho_A)=0$ for the modules occurring here. Section~\ref{sec:exact} replaces the
+Fourier extraction by a finite exact evaluation of that constant term, which reaches bases the
+numerical oracle cannot and turns up a second, square-class channel in the correction; it ends
+by locating the aliasing that channel is subject to, in the relation ideal of the space of input
+forms. Section~\ref{sec:slaw} records the measured derivation of the
+correction's Eisenstein part: on nine bases, each preregistered against the last, it is a fixed
+Siegel--Weil combination of Gross genus averages whose apparent base-dependence (the ``$s$-law'')
+is entirely mass normalisation. Six further bases, all preregistered, then test the law where
+it could break: at composite $s$ the support re-splits (and the three readings we had recorded
+in advance are all refuted as stated), while the doubling of the weights that accompanies the
+re-split turns out to be no law at all but the choice of isotropic coset at which the functional
+is read (Remark~\ref{rem:coset}). Four more, at odd level, then separate the last confound and
+show the $N=1$ weights following $s$ after all. The twentieth base, $X_0^{1155}(1)$, was
+computed to adjudicate between the candidate re-split rules and instead removed the question:
+testing \emph{every} candidate support, rather than the single competitor each earlier base had
+been given, shows that the rank test separates a one-prime $D'$ from a three-prime one and
+never selects among the composites (Observation~\ref{obs:nosel}). Theorem~\ref{thm:noresplit}
+then derives this: the two empirical laws are one identity,
+$\rho=[\Theta(D',s)-\Theta(D',1)]/[\mathrm{mass}(D',s)-\mathrm{mass}(D',1)]$, whose two sides
+are independent of $D'$ because a local computation gives $g_p=\tfrac12f_p$ at every prime and
+the mass difference telescopes. So the ``re-split rule'' was never a rule: the competing
+readings name one object. What survives, now with a proof, is the identity itself, of which the
+mass-ratio law is the shadow in normalised coordinates.
+
+Section~\ref{sec:determined} determines the correction rather than merely locating it.
+Theorem~\ref{thm:Ngeneral} generalises the identity to every level and every isotropic tracked
+coset, as an alternating sum over the subsets of the primes of $N$ at which the coset is supported,
+with Theorem~\ref{thm:noresplit} the empty-subset case; Lemma~\ref{lem:levelchar} supplies the level
+and multiplier that make its terms usable. Theorem~\ref{thm:respair} is a residue identity on
+$X_0(M)$ --- summing over cosets rather than cusps, which supplies the width factor automatically
+--- from which the correction is the pairing of the input form's principal parts against the
+Fourier coefficients of that combination (Corollary~\ref{cor:multgross}), independently of which
+representative is used; the same identity, applied to a difference of representatives, is why the
+choice cannot matter. Proposition~\ref{prop:closedcoef} then evaluates those coefficients in closed
+form, and Remark~\ref{rem:gauge} settles how they stand to the fitted weights of
+Table~\ref{tab:A}: the two agree on every measured multiplier and disagree at almost every index,
+because the panels determine the functional only modulo a relation ideal --- so the level support
+rule, and the square-class channel of Section~\ref{sec:exact} with it, are properties of a chosen
+representative rather than of the correction. Section~\ref{sec:open} takes up the
+provenance of the correction: of the two readings previously on offer, both can now be excluded,
+and what survives is that terms inside Schofer's formula were dropped. Those terms are then
+evaluated. Lemma~\ref{lem:m0loc} supplies the one missing local ingredient, the $m=0$ Whittaker
+factor of a $p$-scaled plane, by calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis}
+itself; Proposition~\ref{prop:kappa0} gives $\kappa_\eta(0)=-\log N/(N-1)$ and recovers the measured
+correction, factor $\tfrac12$ included.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -167,15 +249,23 @@ In particular
 The statement is a computation rather than a proof: it has been verified in exact arithmetic for
 $N=2,3,5$ and all $1\le m\le 60$, on the lattices $\Lm$ of $X_0^{15}(2)$, $X_0^{6}(5)$ and
 $X_0^{10}(3)$ at firing discriminants, giving $180$ independent checks. It is pinned as a regression
-test in the accompanying code.
+test in the accompanying code. That test alone would establish only that the code is
+self-consistent, since the closed form was read off the same implementation; the value
+$W_{m,N}(1)=(N-1)\ord_N(m)$ is recovered independently at the end of \S\ref{sec:open}, from
+brute-force local representation densities computed by counting.
 
 \begin{corollary}\label{cor:support}
 $W_{m,N}(1)=0$ if and only if $N\nmid m$.
 \end{corollary}
 
 This identifies, and explains, an empirical rule that has been observed repeatedly in computations
-with these curves: the correction discussed in Section~\ref{sec:data} is supported exactly on the
-indices $m$ with $N\mid m$. That rule is the vanishing of the level-prime factor.
+with these curves: the correction discussed in Section~\ref{sec:data} admits a representative
+supported exactly on the indices $m$ with $N\mid m$. That rule is the vanishing of the level-prime
+factor. It is a statement about a representative rather than about the correction itself --- the
+coefficients determined in closed form in Proposition~\ref{prop:closedcoef} are supported by an
+embedding condition at the primes of $D$, and are nonzero at many $m$ with $N\nmid m$. Why the two
+are nevertheless compatible, and why no panel of the kind used below can tell them apart, is
+Remark~\ref{rem:gauge}.
 
 \begin{remark}
 At $j=0$ the factor is $W_{m,N}(X)=1-X=1-N^{-s}$, the inverse local zeta factor. Its vanishing at
@@ -223,6 +313,12 @@ $c_0(0)\kappa_0(0)$, where $\kappa_0(0)$ carries the summand $\sum_{p\mid N/(N,d
 \cite[Remark 15(2), Lemma 20]{Yang}.
 \end{corollary}
 
+\noindent
+``Within this framework'' is the operative clause: the term the framework drops also carries a
+$\log N$, and from the same prime, but at the \emph{nonzero} isotropic cosets rather than at $0$
+(Proposition~\ref{prop:kappa0}). Since $c_0(0)=0$ in our situation, the term retained here
+vanishes and the dropped ones carry the whole correction.
+
 \section{The correction the CM values require}\label{sec:data}
 
 Against this stands a computation of the input form itself. Following \cite[eq.~(6)]{GY} one may
@@ -245,13 +341,21 @@ anisotropic, so all of them come from the level-$N$ hyperbolic plane. All $2N-2$
 cosets carry the same constant term $c_\eta(0)$.
 \end{observation}
 
+Both counts in Observation~\ref{obs:iso} are counts for \emph{prime} $N$, which is the only case
+that occurs here --- every base in this project, and every entry of the model set, has $N$ prime
+or $N=1$. The agreement of the nonzero cosets, recorded here as an observation, becomes a theorem
+in \S\ref{sec:determined}, where the general-$N$ counts are given; it fails as soon as $N$ is
+composite.
+
 \begin{observation}\label{obs:mult}
 Let $\mathrm{mult}(f)=\tfrac12 c_\eta(0)$ for any nonzero isotropic $\eta$. Then adding
 $\mathrm{mult}(f)\cdot\sum_{p\mid N/(N,d_{\mathrm{fund}})}\log p$ to the computed CM value
 reproduces, exactly, the corrections independently measured by kernel-consistency on
-$X_0^{15}(2)$ ($9$ values), $X_0^{6}(5)$ ($5$) and $X_0^{10}(3)$ ($5$): $19$ of $19$.
-A fourth base $X_0^{21}(2)$ supplies nine further values, with no prior ground truth against which
-to check them.
+$X_0^{15}(2)$ ($9$ values), $X_0^{6}(5)$ ($5$) and $X_0^{10}(3)$ ($5$), and by the consistency
+relation of Observation~\ref{obs:haupt} below on $X_0^{14}(5)$ ($1$, at eleven digits): $20$ of
+$20$. A further base $X_0^{21}(2)$ supplies nine values with no prior ground truth against which
+to check them. Ground truth here has to be produced rather than looked up: a published CM value
+cannot in general test the correction, for the reason set out in Remark~\ref{rem:gy36}.
 \end{observation}
 
 That the correction is genuinely required, and not an artefact of a normalisation, is visible on
@@ -259,10 +363,51 @@ $X_0^{6}(19)$: on a set of CM points including discriminants divisible by $N$, t
 values are mutually \emph{inconsistent} --- the associated system has no solution --- whereas with
 the correction the published model is recovered.
 
+\subsection*{Ground truth without an Eisenstein computation}
+The pipeline imposes, at every rational CM point $d$, the consistency relation
+\begin{equation}\label{eq:haupt}
+  \varepsilon_1(d)\,\frac{s(d)}{s(d_A)}+\varepsilon_2(d)\,\frac{\tilde s(d)}{\tilde s(d_B)}=1,
+  \qquad \varepsilon_i(d)\in\{\pm1\},
+\end{equation}
+between the two Hauptmodul rows, normalised at the discriminants $d_A$, $d_B$ where they vanish.
+Restoring a correction $r_f\log N$ to $\log\lvert\Psi_f\rvert$ multiplies the normalised value at
+$d$ by $N^{\,r_f(k(d)-k(d_{\mathrm{ref}}))}$, where $k(d)\in\{0,1\}$ records whether the term
+fires at $d$. Each rational CM point whose firing status differs from the reference's therefore
+contributes one equation in $(N^{r_1},N^{r_2})$; two determine the pair and any further points are
+consistency checks. This measures the multipliers of the two Hauptmodul forms on any base the
+pipeline reaches, in seconds, with no Eisenstein series evaluated.
+
+\begin{observation}\label{obs:haupt}
+On nine bases the relation \eqref{eq:haupt} determines the pair $(r_{-1},r_{-2})$ uniquely:
+\[
+\begin{array}{llll}
+X_0^{15}(2)\colon (4,2) & X_0^{14}(5)\colon (1,1) & X_0^{6}(7)\colon (1,2) & X_0^{6}(5)\colon (0,0)\\
+X_0^{10}(3)\colon (0,0) & X_0^{10}(11)\colon (0,0) & X_0^{6}(19)\colon (0,0) & X_0^{22}(7)\colon (0,0)\\
+X_0^{34}(5)\colon (0,0) & & &
+\end{array}
+\]
+Every value with an independent determination is reproduced --- $X_0^{15}(2)$ against the
+kernel-consistency measurement, $X_0^{6}(5)$ and $X_0^{10}(3)$ against the numerical evaluation of
+$F_f$, and $X_0^{6}(7)$, the one \emph{nonzero} cross-check, against an earlier independent
+measurement. Conversely, on $X_0^{14}(5)$ the pair $(1,1)$ was measured first by
+\eqref{eq:haupt} and \emph{then} confirmed by the numerical evaluation of $F_f$:
+$\tfrac12 c_\eta(0)=1.00000000000$ on the form with pole order $16$, with the principal-part gate
+met to $2.3\cdot10^{-37}$ and all eight nonzero isotropic cosets agreeing. This is the first
+verification of the rule of Observation~\ref{obs:mult} at $N>2$ against ground truth obtained by
+an entirely independent method.
+\end{observation}
+
 Writing $\mathrm{mult}(f)=\sum_m c(-m)A_m$ and using Borcherds' obstruction to set
 $A_m=-b(m)/4$ with $b$ the relevant weight $3/2$ Eisenstein coefficient, the linear functional is
-uniquely determined per base by the measured multipliers, with $4$--$6$ spare conditions in each
-case. Table~\ref{tab:A} records it.
+determined per base by the measured multipliers. Without further hypotheses the system leaves four
+free directions on each base; imposing the support rule of Corollary~\ref{cor:support} (the weight
+vanishes unless $N\mid m$) removes them all, and the resulting weights are then unique, with six
+spare conditions satisfied on each of the three bases. Table~\ref{tab:A} records the result. Those
+spare conditions say that the $N\mid m$ ansatz \emph{lies inside} the solution space, not that it
+is forced: the underlying system is underdetermined, and this is a choice of representative within
+it. Remark~\ref{rem:gauge} makes that precise once the coefficients are known in closed form, and
+exhibits a second representative --- the true one --- agreeing with Table~\ref{tab:A} on every
+measured multiplier while differing from it at almost every index.
 
 \begin{table}[ht]
 \centering
@@ -277,9 +422,10 @@ $X_0^{21}(2)$ & $A_2=-2$, $A_6=-4$ & $A_{18}=2$, $A_{42}=-8$ & ($0$-block: $B_{2
 \bottomrule
 \end{tabular}
 \medskip
-\caption{The correction, per index, as a linear functional of the principal part. The
-values are $d$-independent: at every firing discriminant the coefficient of $\log N$ in
-$\kappa_0(m)$ must equal $A_m$, whereas the recipe of \S\ref{sec:chain} returns $0$.}
+\caption{The correction, per index, as a linear functional of the principal part, in the
+representative fixed by the support rule. The values are $d$-independent, and the recipe of
+\S\ref{sec:chain} returns $0$ where the table does not. The individual $A_m$ are determined
+only modulo the relation ideal of the panel; see Remark~\ref{rem:gauge}.}
 \label{tab:A}
 \end{table}
 
@@ -292,7 +438,14 @@ with it. We record them because several are natural first guesses.
 \item $\mathrm{mult}=c_0(0)$, or any linear combination of the two scalar constant terms
       $\mathrm{Coeff}(f_\infty,0)$ and $\mathrm{Coeff}(f_0,0)$: inconsistent on three bases.
 \item Evaluating the local Whittaker at a nonzero isotropic coset $\eta^*$ rather than at $0$:
-      destroys the pattern of vanishing indices on all three bases.
+      destroys the pattern of vanishing indices on all three bases. The mechanism is now clear:
+      the nonzero isotropic cosets live in the level-$N$ hyperbolic plane, so changing the coset
+      changes \emph{only} the level-prime factor (measured: from $1-X^2/N$ to the constant $1$,
+      with the factors at $p\mid D$ byte-identical) and can never repair an index whose defect is
+      at a ramified prime. This is not in tension with the conclusion of \S\ref{sec:open}, that
+      the correction is carried by the $m=0$ term at precisely those cosets: what is eliminated
+      here is moving the coset inside the $m>0$ Whittaker factors, which is a different object
+      from the $m=0$ constant term $c_{\eta^*}(0)$ that \S\ref{sec:ident} onwards reads off.
 \item Replacing the local factor at $p\mid D$ by the anisotropic branch of \cite[Prop.~5.3]{KY}:
       does not reproduce $b$, under either sign of $\kappa m$. (The implementation of
       \cite[Props.~5.3, 5.4]{KY} agrees with the pipeline's own factor at every good prime,
@@ -307,37 +460,1367 @@ with it. We record them because several are natural first guesses.
       all $60$ (discriminant, index) pairs over every firing discriminant of the three bases.
 \item Schofer's outer $m=0$ term: vanishes by Observation~\ref{obs:c00}.
 \item The re-enumeration of \S\ref{sec:reenum}: adds no case.
+\item Any re-weighting of the existing local data: every combination of a subset of the
+      prefactors $\{\sqrt{m}/\sqrt{\lvert d\rvert},\,h/w,\,\prod(1-\chi(p)/p),\,
+      \prod(1-1/p^2)^{-1}\}$ with a local rule drawn from \{the product of the $W_p(1)$; the
+      derivative of that product; the derivative taken at $N$, at the primes $p\mid D$, at each
+      single prime, or at the vanishing places\}, times an arbitrary constant per base, fails to
+      reproduce the nine measured multipliers of $X_0^{15}(2)$.
+\item More strongly, \emph{no multiplicative correction of any kind} can succeed: at two of the
+      nine determined indices (both with $m=10$) the product of the code's local factors vanishes
+      while the true weight does not, so the discrepancy is infinite there. The missing
+      contribution is a \emph{term}, not a factor.
+\item Differentiating at the place where the ternary \emph{space} fails to represent $m$
+      (Kudla's $\Diff$, computed at the level of quadratic spaces rather than lattice densities):
+      reproduces $A_2=-1$ and $A_{30}=0$ on $X_0^{15}(2)$ exactly --- the only rule found that
+      \emph{explains} $A_{30}=0$ --- but fails on $7$ of $9$ indices, and is refuted as a support
+      rule by $X_0^{6}(5)$ at $m=15$, where $\Diff$ is empty but $A_{15}=1/2\ne0$. The support is
+      $N\mid m$; whether $\Diff$ supplies the correct place to differentiate is a separate
+      question.
 \end{enumerate}
 
-\section{The open question}\label{sec:open}
+\section{The correction identified}\label{sec:ident}
+
+This section identifies the object the correction reads off, and reduces it --- along one
+route --- to seed-$0$ Eisenstein coefficients of a smaller module. That route is not the one
+finally taken: \S\ref{sec:determined} determines the correction outright by a different
+argument, and the reader interested only in the answer may pass to it. Two things here are
+used later regardless. Proposition~\ref{prop:nohalf}, that $M_{1/2}(\rho_A)=0$, is what
+closes the first of the two readings in \S\ref{sec:open}; and the failure recorded at the end
+of this section is what sent the derivation to the exact evaluation of \S\ref{sec:exact}.
+
+The rule of Observation~\ref{obs:mult} reads off the constant term $c_{\eta^*}(0)$ of the input
+form at a nonzero isotropic coset $\eta^*$. By the constant-term pairing (pair $F$ against a
+holomorphic Eisenstein series of the complementary weight $3/2$ and take the constant term of the
+resulting weight-$2$ invariant), that quantity is determined by the principal part of $F$ paired
+against the coefficients of $E_{A,\eta^*}$, the Eisenstein series attached to the coset $\eta^*$
+of the discriminant form $A=\Ldual/L$. This is precisely the object the maximal-order literature
+does not compute: \cite{BK}, \cite[\S8--9]{KY} and the recipe of \S\ref{sec:chain} all work with
+the series attached to the \emph{zero} coset (equivalently, with sections
+$\mathrm{char}(\mu+\widehat L)$ seeded at $0$), and Kudla--Yang explicitly leave the general
+Eichler-order case open at the end of their \S9.
+
+The coefficients of $E_{A,\beta}$ for isotropic $\beta\ne0$ are computed by Schwagenscheidt
+\cite{Schwag}. For our purposes the essential ingredient is not the main formula but the oldform
+relation \cite[Prop.~1.4]{Schwag} applied to the trivial character: for $\beta=\eta^*$ of prime
+order $N_\beta=N$,
+\begin{equation}\label{eq:oldform}
+  E_{A,\eta^*,\chi_0}\;=\;E_{B,0}\!\uparrow_B^A\;-\;E_{A,0},
+  \qquad
+  B=\langle\eta^*\rangle^{\perp}/\langle\eta^*\rangle\;\cong\;L_1^{\vee}/L_1,
+\end{equation}
+where $L_1$ is the even lattice generated by $L$ and $\eta^*$. Pairing $F$ against
+\eqref{eq:oldform} and using Observations~\ref{obs:c00} and~\ref{obs:iso} --- $c_0(0)=0$, the
+constant $c_\eta(0)$ shared by all $2N-2$ nonzero isotropic cosets, and the vanishing of the
+constant-term pairing for every nontrivial character twist --- gives
+\begin{equation}\label{eq:multformula}
+  \mathrm{mult}(f)\;=\;-\frac{1}{4(N-1)}\ \sum_{n>0}\ \sum_{\gamma\in(\eta^*)^{\perp}}
+     c_\gamma(-n)\,b^{B,0}_{\gamma+H}(n),
+  \qquad H=\langle\eta^*\rangle,
+\end{equation}
+in which every object on the right is a \emph{seed-$0$} Eisenstein coefficient of the smaller
+module $B$ --- the territory of \cite{BK}, computable by the same machinery as the existing
+recipe, applied to $L_1$ in place of $L$.
+
+Three structural facts corroborate the identification.
+\begin{enumerate}
+\item The pairing constant in \eqref{eq:multformula} is $4(N-1)$ --- exactly the normalisation
+      measured in Observation~\ref{obs:mult} (the sum of $c_\eta(0)$ over the $2N-2$ nonzero
+      isotropic cosets equals $4(N-1)\cdot\mathrm{mult}$).
+\item $\det L_1=\det L/N^2$: the level-prime part of $L_1$ is \emph{unimodular}, so the
+      coefficients $b^{B,0}$ have no vanishing level-prime factor. The zero
+      $W_{m,N}(1)=0$ at $N\nmid m$ (Corollary~\ref{cor:support}), which removes the majority of
+      terms from the seed-$0$ pairing on $A$, never occurs on $B$ --- the structural mechanism by
+      which \eqref{eq:multformula} can produce the $\log N$ terms that \S\ref{sec:reenum} shows
+      the seed-$0$ recipe cannot.
+\item $2\lvert\det L_1\rvert$ remains a perfect square (e.g.\ $2\cdot450=30^2$ on
+      $X_0^{15}(2)$), so the discriminant and character bookkeeping of the weight-$3/2$
+      coefficient formula carries over unchanged in shape.
+\end{enumerate}
+
+One caution, which the data has since promoted to a finding. The identity
+\eqref{eq:oldform} is proven in \cite{Schwag} for weight $k\ge5/2$; at $k=3/2$ both sides require
+analytic continuation, and the naive pairing argument assumes the continued series is holomorphic
+at the special point, where Zagier-type non-holomorphic contributions are possible. That
+assumption \emph{fails}, and it fails in a way one can measure without any of the machinery of
+this section: for the true seed-$0$ series on $A$ itself, the constant-term pairing forces
+$\sum_{n>0,\gamma}c_\gamma(-n)\,b^{A,0}_\gamma(n)$ to equal $-c_0(0)$ minus a spread term
+proportional to the multiplier --- so on a form with $\mathrm{mult}=0$ and $c_0(0)=0$ it must
+vanish outright. Evaluating the left side with the na\"ive weight-$3/2$ coefficient formula
+(rank~$3$ collapses the Bruinier--Kuss local polynomials to plain representation densities, since
+they are evaluated where the factor $1-p^{m-1}X$ vanishes) gives $-5$, not $0$, on such a form of
+$X_0^{15}(2)$. The na\"ive recipe therefore violates its own constant-term identity,
+independently of everything specific to \eqref{eq:multformula} --- and this, rather than any
+defect of \eqref{eq:oldform}, is where the computation of \eqref{eq:multformula} currently stops.
+
+One natural reading of that violation --- that the weight-$3/2$ series is merely harmonic, and
+the missing term is the pairing against its $\xi$-image, a weight-$1/2$ theta on $A$ --- is
+\emph{refuted} by the following observation, which seems worth recording in its own right.
+
+\begin{proposition}\label{prop:nohalf}
+For the discriminant forms $A=\Ldual/L$ arising here (and for their rescalings
+$\bigl(2L\bigr)^{\vee}\!/2L$), the space of holomorphic vector-valued modular forms of weight
+$1/2$ for $\rho_A$ (and for $\rho_A^*$) is zero.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+By the Serre--Stark theorem in its vector-valued form \cite{SeSt,Skoruppa}, every such form is a
+linear combination of unary theta functions; each arises from a cyclic nondegenerate orthogonal
+summand $Z$ of a quotient $H^{\perp}/H$ of $A$ by an isotropic subgroup $H$, tensored with a
+$\rho_C$-invariant vector on the complement $C$, and invariant vectors are supported on
+self-dual isotropic subgroups of $C$. The $D$-part of $A$ is anisotropic of shape
+$(\Z/p)^2$ at each odd $p\mid D$ (Observation~\ref{obs:iso}); an isotropic subgroup cannot meet
+it, a cyclic summand cannot absorb both $\Z/p$ factors, and passage to $H^{\perp}/H$ preserves
+it. Hence at least one anisotropic $\Z/p$ survives into every complement, no invariant vector
+exists, and every candidate theta vanishes.
+\end{proof}
+
+In particular $E_{A,0}$ of weight $3/2$ has no shadow, the completion reading is closed, and the
+input form $F_f$ is determined by its principal part alone --- a fact the computations of
+\S\ref{sec:exact} confirm to seventy digits on pairs of forms with equal principal parts. What
+the failed identity signals is therefore not a non-holomorphic correction on $A$ but a missing
+\emph{channel} in the ansatz for the functional itself, which the exact evaluation of the next
+section locates.
+
+\section{The constant term evaluated exactly, and the two channels of the correction}
+\label{sec:exact}
+
+The constant term that Observation~\ref{obs:mult} reads off admits a finite evaluation which
+replaces the Fourier extraction of \S\ref{sec:data} entirely. For a coset word $w$ with matrix
+$g$ and an eta monomial $\prod_d\eta(d\tau)^{r_d}$ of $f$, triangularising
+$\left(\begin{smallmatrix}d&0\\0&1\end{smallmatrix}\right)g=g_d
+\left(\begin{smallmatrix}a_d&b_d\\0&e_d\end{smallmatrix}\right)$ exhibits
+$(f\vert_{1/2}w)$ as a constant multiple of a $q$-series with \emph{exact rational exponents}
+and coefficients that are roots of unity; the single constant per (monomial, word) is pinned
+numerically at one point of $\HH$ and verified at a second, so no eta-multiplier or metaplectic
+bookkeeping enters. The coefficient of $q^0$ in $f\vert_{1/2}w$ is then a finite sum, and
+\[
+  c_{\eta^*}(0)\;=\;\sum_{w}\bigl(\rho(w^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w)
+\]
+is evaluated in minutes per base, with no horocycle sampling, no aliasing, and none of the
+cancellation constraints of \S\ref{app:repro}. The same series supply the full principal part of
+$F_f$ at every coset and exponent; on $X_0^{22}(3)$ this reproduces \cite[Lemma 24]{GY}
+coefficient by coefficient to $10^{-70}$, and on $X_0^{15}(2)$ the nine multipliers of
+Observation~\ref{obs:mult} are reproduced exactly, the two zero multipliers to $10^{-71}$.
+
+Two panels beyond the reach of the numerical oracle result. On $X_0^{22}(3)$ the nine
+multipliers are
+\[
+(r_{-2},r_{-1},r_9,\dots,r_{15})=(3,\,3,\,-6,\,3,\,-3,\,-9,\,3,\,6,\,-6),
+\]
+and on $X_0^{21}(2)$ --- a base on which no ground truth of any kind existed ---
+\[
+(2,\,2,\,4,\,2,\,2,\,2,\,-4,\,-4,\,0).
+\]
+
+\subsection*{The second channel}
+The nine $X_0^{22}(3)$ values are \emph{inconsistent} with any linear functional of the
+principal part supported on the indices $N\mid m$: the combinations of forms
+$(f_{-2}-f_9+f_{11})$ and $(-f_{-1}-f_9+f_{12})$ cancel every $N$-divisible index of the
+principal parts identically, yet their multipliers sum to $6$ and $-6$. The residual support of
+both combinations is the set $m\in\{1,4,16,25\}$ --- perfect squares --- with residual
+coefficients $(4,4,2,2)$ and $(-4,-4,-2,-2)$, so both reduce to the single equation
+$12\,w_{\square}=6$. The correction therefore carries a second channel:
+\begin{equation}\label{eq:twochannel}
+  \mathrm{mult}(f)\;=\;\underbrace{\sum_{N\mid m}c_0(-m)\,w(m)}_{\text{level channel}}
+  \;+\;w_{\square}(D,N)\,\sum_{k\ge1}c_0(-k^2),
+\end{equation}
+with $w(m)$ depending on $m$ only through the square class of $m/N$. With both channels present,
+the measured multipliers of \emph{every} base are consistent, with spare conditions throughout;
+the data force
+\[
+w_{\square}=0\ \text{on}\ X_0^{15}(2),\,X_0^{6}(5),\,X_0^{6}(13),\,X_0^{6}(17);\qquad
+w_{\square}=\tfrac12\ \text{on}\ X_0^{22}(3);\qquad
+w_{\square}=1\ \text{on}\ X_0^{21}(2).
+\]
+The square-class sum is the signature of the \emph{scalar} Zagier weight-$3/2$ structure ---
+which is consistent with Proposition~\ref{prop:nohalf}: no vector-valued shadow exists on $A$,
+but the scalar theta enters through the cusp expansions of $f$ itself. The bases with
+$w_{\square}=0$ are exactly those on which the level-support rule appeared exact, which is why
+this channel escaped notice through eighteen bases of fitted corrections.
+
+\begin{conjecture}\label{conj:sq}
+$w_{\square}(D,N)\neq0$ if and only if no prime of $DN$ splits in $\Q(i)$ --- the embedding
+criterion for the orders of discriminant $-4k^2$ --- and in that case
+$w_{\square}=1/(N-1)$.
+\end{conjecture}
+
+The condition matches all six determined values above ($DN$ contains a prime
+$\equiv1\bmod4$ precisely on the four bases with $w_{\square}=0$), and the magnitude matches
+$N=2,3$. We record, in advance of the measurements, the values the conjecture predicts on the
+panels currently being computed: $1$ on $X_0^{33}(2)$; $\tfrac12$ on $X_0^{38}(3)$ and
+$X_0^{14}(3)$; $0$ on $X_0^{35}(2)$, $X_0^{22}(5)$ and $X_0^{34}(5)$; $\tfrac16$ on
+$X_0^{22}(7)$; $\tfrac1{10}$ on $X_0^{6}(11)$.
+
+\emph{Scorecard at the time of writing.} The panels for $X_0^{33}(2)$, $X_0^{35}(2)$,
+$X_0^{22}(5)$, $X_0^{38}(3)$, $X_0^{14}(3)$, $X_0^{6}(11)$, $X_0^{10}(11)$, $X_0^{14}(5)$,
+$X_0^{6}(19)$, $X_0^{34}(5)$ and $X_0^{22}(7)$
+have since been measured. Every one is consistent with the two-channel
+form~\eqref{eq:twochannel}, with spare conditions; two of the preregistered predictions
+have been decided, and both \emph{hit}: $X_0^{14}(5)$ pins $w_{\square}=0$, and
+$X_0^{34}(5)$ pins $w_{\square}=0$ at rank $7$ of $9$ (both have $5\mid DN$ split in
+$\Q(i)$); the latter panel also pins the $k$-twist values
+$w(1,1)=w(1,2)=w(1,4)=0$, $w(17,1)=0$ and $w(2,1)=w(34,1)=\tfrac12$. On the remaining
+bases the nine-form panel leaves $w_{\square}$ undetermined: the square-class column of the
+principal-part profile matrix lies in the span of the level-channel columns, so no value of
+$w_{\square}$ is forced either way. This aliasing is \emph{intrinsic} rather than an
+accident of the panel --- see the assembly analysis below --- so the outstanding predictions
+cannot be decided by further panels of the same kind. Nor, as it turns out, by the
+derivation. Section~\ref{sec:determined} determines the functional outright, and its
+canonical representative --- the Fourier coefficients of an explicit weight-$\tfrac32$ form
+--- does not have the two-channel shape of \eqref{eq:twochannel} at all. So $w_{\square}$ is
+a coordinate of a gauge-fixed representative rather than an invariant of the correction, and
+Conjecture~\ref{conj:sq} is to be read as a statement about that representative
+(Remark~\ref{rem:gauge}). Its predictions stand unfalsified where they have been tested; what
+changes is that no computation can be expected to settle the rest.
+
+\subsection*{The level channel}
+Within the first channel the data pin two further structural facts. The weight at
+$m=N d k^2$ ($d$ squarefree) depends on $k$ through a sign: on $X_0^{10}(7)$ the two Hauptmodul
+rows force $w(7)=+\tfrac12$ and $w(28)=-\tfrac12$, and across all bases the $k$-dependence is
+consistent with the twist $\lambda(k)\left(\tfrac kN\right)$ (Liouville times Legendre), while
+$k$-independence and $k$-linearity are refuted. And no assignment of the weights by a fixed
+product of Legendre symbols in $(D,N,d)$ covers all bases: three successive such laws, each
+consistent with all data available when it was formulated, were refuted by the next base
+measured ($X_0^{6}(13)$, then $X_0^{10}(7)$, then $X_0^{22}(3)$ and $X_0^{38}(3)$). The surviving
+magnitudes $0,\pm\tfrac12,\pm1,\pm\tfrac32$ vary with the base in the manner of representation
+numbers rather than characters. Since the coset sum above evaluates $c_{\eta^*}(0)$ as a finite
+sum of Weil-representation entries --- quadratic Gauss sums --- against the cusp expansions of
+$f$, grouping it by cusp class is a finite, exact route to the closed form; we have executed
+it, with the following results.
+
+\subsection*{The cusp-class assembly}
+Throughout this subsection $A=\Ldual/L$ carries the \emph{negated} quadratic form
+$\bar q=-q$ (the dual Weil representation of the evaluation above is the representation
+$\rho_{\bar A}$ of \cite{Stromberg2013} attached to $\bar A=(A,\bar q)$; the identification
+is verified coset by coset in \texttt{rho5.m}), $\eta^*$ denotes a nonzero isotropic
+element, $M$ is the lattice level, and for $\gamma\in\mathrm{SL}_2(\Z)$ with lower row
+$(c,d)$ we write $g=\gcd(c,M)$ for its cusp class. We assume $DN$ even, the case of all
+computations in this paper.
+
+\begin{proposition}[local structure]\label{prop:jordan}
+The Jordan components of $\bar A$ are as follows. For each odd $p\mid D$ the $p$-part is
+the anisotropic plane $(\Z/p)^2$; for each odd $p\mid N$ it is the hyperbolic plane; the
+$2$-part has order $8$ and equals $A_2^1\oplus C_2$ if $2\mid N$, and $A_2^1\oplus B_2$ if
+$2\mid D$, in the notation of \cite[\S2]{Stromberg2013}. Consequently the Gauss function
+of the $2$-part on odd arguments is
+\[
+  G_2(x)\;=\;\epsilon_D\,\bigl(\tfrac2x\bigr)e_8(x),\qquad
+  \epsilon_D=\begin{cases}+1,&2\mid N,\\ -1,&2\mid D,\end{cases}
+\]
+by \cite[Lemmas 3.7, 3.8]{Stromberg2013} (the $B_2$ factor contributes the constant
+$(\tfrac32)=-1$).
+\end{proposition}
+
+\begin{proof}
+The completion $L\otimes\Z_p$ depends, up to isometry, only on the local type of the
+order: at $p\mid D$ the maximal order of the ramified quaternion algebra over $\Q_p$ is
+unique up to conjugation, and at $p\mid N$ so is the Eichler order of level $p$ in
+$M_2(\Q_p)$. Hence the $p$-part of the discriminant form is a single isomorphism class
+determined by the case, and one computation per case identifies it: the odd parts are the
+standard anisotropic (ramified) and hyperbolic (split Eichler) planes, and for $p=2$ the
+$\bar q$-value multisets $\{0,0,0,\tfrac14,\tfrac14,\tfrac14,\tfrac12,\tfrac34\}$
+($2\mid N$) and $\{0,\tfrac14,\tfrac12,\tfrac12,\tfrac12,\tfrac34,\tfrac34,\tfrac34\}$
+($2\mid D$), computed in \texttt{g2jordan.m} and constant across ten bases, identify
+$A_2^1\oplus C_2$ and $A_2^1\oplus B_2$ respectively.
+\end{proof}
+
+\begin{theorem}[the $\rho$-entry at a cusp class]\label{thm:rhoentry}
+Let $\gamma$ have lower row $(c,d)$ with class $g$, and let
+$\widetilde\gamma$ be its canonical metaplectic lift. Then
+$(\rho_{\bar A}(\widetilde\gamma)e_0)_{\eta^*}$:
+\begin{enumerate}
+\item vanishes iff $N\mid g$;
+\item has absolute value $g/\sqrt{|A|}$ for odd $g$ and $g/M$ for $4\mid g$;
+\item for odd $g$ and the canonical representative ($a=d=1$, $c=-g$) equals
+$(g/\sqrt{|A|})\,e_8(E_0(g))$ with
+\[
+  E_0(g)\;=\;2+4\,r(g)-4\,\omega(g)+\arg_8 G_2(-g)\ \bmod 8,\qquad
+  \arg_8 G_2(x)=x+4\,\bigl[\bigl(\tfrac2x\bigr)=-1\bigr],
+\]
+where $r(g)=\#\{p\mid g:p\equiv3\bmod4\}$ and $\omega(g)$ the number of prime divisors;
+in particular $E_0$ is independent of the base $(D,N)$;
+\item for $4\mid g$ and the canonical representative it is real, of sign $\mu(g/4)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+By \cite[Thm.~6.4]{Stromberg2013}, for $x=0$ the $\eta^*$-component of
+$\rho_{\bar A}(\widetilde\gamma)e_0$ is the \emph{single} term
+$\xi(a,c)\sqrt{|A[c]|/|A|}\;e(ac\,\bar q(y_0)+B(x_c,y_0))$ if
+$\eta^*\in cA+x_c$ (with $cy_0+x_c=\eta^*$), and $0$ otherwise. (i): the element $x_c$ is
+$2$-adic, and for $N\mid c$ the $N$-part of $cA$ is trivial while $\eta^*$ has nonzero
+$N$-part, so the support condition fails; conversely for $N\nmid g$ it holds. (ii):
+$|A[c]|=\prod_{p\mid g\ \mathrm{odd}}p^2$ times $8$ if $4\mid c$, and
+$|A|=M^2/2$. (iii): choose $y_0$ inside the $N$-part; then
+$\bar q(y_0)=c^{-2}\bar q(\eta^*)=0$ and (for odd $c$) $x_c=0$, so the phase is exactly
+$\xi(a,c)$, which \cite[Def.~6.1]{Stromberg2013} factors as
+$e_4(-\mathrm{sign})\,\xi_0\,\xi_2\prod_J\xi(J)$ over the Jordan components of
+Proposition~\ref{prop:jordan}. At the canonical representative: $\xi_2=1$;
+$\xi_0=(\tfrac{-1}{-g})(-1,-g)_\infty=e_8(4+4r(g))$; each anisotropic pair with
+$p\nmid g$ contributes $(\tfrac{t_1t_2}p)e_8(2-2p)=-1$ and each hyperbolic pair $+1$
+(\cite[Lem.~3.6]{Stromberg2013}, independently of the argument); the components at
+$p\mid g$ contribute $1$; and the $2$-part contributes $G_2(-g)$ of
+Proposition~\ref{prop:jordan}. Collecting, and using
+$e_4(-\mathrm{sign}(\bar A))=e_8(-2)$ together with the two Gauss-sum factors
+$e_8(-3)$ and $e_8(1)$ arising from the normalisation of
+\cite[eq.~(6.6)]{Stromberg2013} (the latter because the auxiliary $d'\equiv1\bmod 8$
+forces its Kronecker symbol to $+1$), gives
+$E_0(g)=2+4r-4\omega(g)+\arg_8G_2(-g)+4\,\omega_{\mathrm{odd}}(D)+4\,[2\mid D]$. The last
+two terms cancel: an indefinite quaternion algebra ramifies at an even number of finite
+primes, so $\omega_{\mathrm{odd}}(D)$ is odd exactly when $2\mid D$, which is exactly when
+$\epsilon_D=-1$ shifts $\arg_8G_2$ by $4$. This proves (iii) and the base-independence.
+(iv): for $4\mid c$ the level-$4$ component is annihilated, $x_c=0$ again, and every
+factor of $\xi$ is real ($\xi_2=e_8(-2(c_2-1+s_2))$ with $c_2$ the odd part of $c$ and
+$s_2$ the $2$-part signature contributes a sign, as do $\xi_0$ and the anisotropic pairs
+prime to $g$); the product of signs is $\mu(g/4)$ by the same bookkeeping.
+\end{proof}
+
+The theorem reproduces all nine measured odd classes ($g=1,3,5,7,11,15,21,33,35$ across
+six bases) and all four measured $4\mid g$ classes. On $\omega(g)\le2$ --- every class
+measurable on these bases --- $E_0$ coincides with the symbol form $1+6r(g)+4s(g)$,
+$s(g)=\#\{p<q\mid g:(\tfrac pq)(\tfrac qp)=+1\}$, but the two diverge from $\omega(g)=3$
+onward: the symbol form is only the low-complexity shadow of $E_0$
+(\texttt{rho5.m}, \texttt{thetag-derivation.md}). Word-based evaluations differ from the
+canonical lift by the metaplectic centre ($\pm1$ per word, the Kubota cocycle product of
+the letters), which cancels in the pairing below.
+
+\begin{proposition}[class constancy]\label{prop:constancy}
+Let $f$ be weakly holomorphic of weight $1/2$ for $\Gamma_0(M)$ whose multiplier
+restricted to $\Gamma_0(\mathrm{lev}(\bar A))$ equals the character $\chi$ by which that
+group acts on $e_0$ (the case of all Borcherds inputs here, forced by well-definedness of
+the coset average of \cite[Lem.~24]{GY}). Then
+$(\rho(w^{-1})e_0)_{\eta}\,a_0(f\vert_{1/2}w)$ is, for every isotropic $\eta$, constant
+as $w$ ranges over a cusp class, and consequently
+\[
+  c_{\eta^*}(0)\;=\;\sum_{g}\,N_g\,
+  \bigl(\rho(w_g^{-1})e_0\bigr)_{\eta^*}\,a_0(f\vert_{1/2}w_g)
+\]
+with one arbitrary coset $w_g$ per class and $N_g$ the number of cosets in the class.
+\end{proposition}
+
+\begin{proof}
+Replacing $w$ by $\gamma wT^k$ with $\gamma\in\Gamma_0(M)$ multiplies
+$a_0(f\vert_{1/2}w)$ by $\chi(\gamma)$ (the $T$-shift fixes the $q^0$ coefficient), while
+$e_0$ is a $\rho(\Gamma_0(\mathrm{lev}))$-eigenvector with character $\chi$
+(\cite[Lem.~5.5, 5.6]{Stromberg2013}; verified to $10^{-59}$ in \texttt{rho6.m}), so the
+$\rho$-side acquires $\overline{\chi(\gamma)}$, and the isotropy of $\eta$ makes its
+component $T$-invariant. The factors cancel.
+\end{proof}
+
+The constancy is verified on $570$ class/form/base checks
+(\texttt{cuspclass2.py}), and Theorem~\ref{thm:rhoentry} with
+Proposition~\ref{prop:constancy} make the evaluation of $c_{\eta^*}(0)$ a sum over
+\emph{classes} rather than cosets --- the form in which it is deployed in production
+(\texttt{M0MultiplierExact}), with the constancy re-verified at runtime on sampled
+cosets. The remaining ingredient, $a_0(f\vert_{1/2}w_g)$, is itself closed-form: the
+pinned constants of the evaluation equal $\zeta_w\prod_d\bigl[\varepsilon(g_d)\,
+e(b_d/24e_d)\,e_d^{-1/2}\bigr]^{r_d}$ with $\varepsilon$ the Dedekind-sum eta multiplier
+and $\zeta_w$ the metaplectic cocycle unit of the word, certified on all $144$ cosets of
+$X_0^{15}(2)$ and all $288$ of $X_0^{10}(7)$ (\texttt{cusp4.m}), so nothing in the
+assembly remains numerical.
+
+Because $c_{\eta^*}(0)$ is linear in $f$, the assembly can be probed one eta monomial at a
+time --- each monomial of the $X_0^{15}(2)$ forms is itself a weakly holomorphic weight-$1/2$
+form of the same multiplier character, holomorphic at every intermediate cusp, and there are
+$86$ of them, extended to $158$ by monomials appearing in no form of the panel
+(\texttt{cusp5.m}--\texttt{cusp7.m}). On this space the functional does \emph{not} factor
+through the $\infty$-side principal part (residual $2.08$): the $0$-side principal part
+genuinely enters, and the joint $(\infty,0)$-side factorisation holds to $10^{-11}$ with
+eighty independent quotient conditions. The ledger's ``$0$-block weight $0$'' finding, and
+the $\infty$-only shape of~\eqref{eq:twochannel} itself, are therefore \emph{representatives}
+of the true functional modulo the relation ideal of the form space: the joint principal-part
+coordinates of this character's forms span only $78$ of the $128$ channel slots, and the
+$50$ leftover combinations are identities of the space, unremovable by further probes. This
+is the structural origin of the $w_{\square}$ aliasing reported above, and it sharpens what
+the derivation must produce: the functional as an element of the quotient, with the
+square-class channel as its panel-span shadow.
+
+\section{The Eisenstein part as ternary theta arithmetic: the $s$-law and its
+Siegel--Weil origin}\label{sec:slaw}
+
+The assembly of the previous subsection makes the functional a finite exact pairing
+against the cusp constants of $f$; the derivation it calls for has since been carried out
+in measured stages, each preregistered before the next base was computed. We record here
+the state of that campaign. Throughout, $D=qs$ with $q>s$ its two prime factors, and
+$\mathrm{Gr}(D',R)$ denotes the \emph{genus} of the ternary lattice
+$\{\alpha\in\mathcal{O}':\tr\alpha=0\}$ with the reduced-norm form, $\mathcal{O}'$ an
+Eichler order of level $R$ in the \emph{definite} quaternion algebra of discriminant $D'$
+(for $D'R=DN$ this is the Jacquet--Langlands partner of $(D,N)$); $\bar\theta(D',R)$ is
+its mass-weighted average theta series and $\Theta(D',R)=\mathrm{mass}\cdot\bar\theta$
+the corresponding genus sum.
+
+\begin{remark}[the tracked coset: what is arithmetic and what is normalisation]\label{rem:coset}
+Every fit below reads the $\rho$-vector of Theorem~\ref{thm:rhoentry} at \emph{one}
+isotropic coset, and that choice is a normalisation which must be named. At $N>1$ the
+coset is a nonzero $\eta^*$ --- the functional of Observation~\ref{obs:mult}, well defined
+because all $2N-2$ choices agree (Observation~\ref{obs:iso}); at $N=1$ there is no such
+coset, since $2N-1=1$ leaves only $\eta=0$, so the $N=1$ bases fit a different linear
+functional. This is the \emph{only} difference between the two regimes. Forcing the zero
+coset at an $N>1$ base reproduces the entire $N=1$ shape --- the third term drops, the
+remaining pair doubles, and the weight sum moves from $0$ to $1$:
+\[
+\begin{array}{llc}
+\toprule
+\text{base} & \text{fit of }E_{\mathrm{eis}}\text{ mod cusp} & \sum w\\
+\midrule
+X_0^{15}(2),\ \eta^*\ (\text{default})
+  & -\tfrac12\bar\theta(5,2)+\bar\theta(5,6)-\tfrac12\bar\theta(30,1) & 0\\
+X_0^{15}(2),\ \eta=0
+  & -\bar\theta(5,2)+2\,\bar\theta(5,6) & 1\\
+X_0^{22}(3),\ \eta^*\ (\text{default})
+  & -\bar\theta(11,3)+\tfrac32\bar\theta(11,6)-\tfrac12\bar\theta(66,1) & 0\\
+X_0^{22}(3),\ \eta=0
+  & -2\,\bar\theta(11,3)+3\,\bar\theta(11,6) & 1\\
+\bottomrule
+\end{array}
+\]
+At $X_0^{22}(3)$ the zero-coset fit is literally $(-2,+3)$, the weights of every $N=1$
+base recorded below. In particular the third term does not vanish at $N=1$ for the reason
+one would guess: at $X_0^{15}(2)$ the slot $(30,1)$ is definite, of one class, and it
+still drops under $\eta=0$. Two consequences, which we apply throughout. Absolute weights
+are comparable only \emph{within} a regime; the weight formulas of
+Observation~\ref{obs:slaw} are those of the $\eta^*$ normalisation. And the
+convention-free content of these fits is the mass \emph{ratio} of
+Observation~\ref{obs:mass}, unchanged by any rescaling --- which is why it, alone among
+the readings, survives across both regimes.
+\end{remark}
+
+\begin{observation}[the weight-$3/2$ residue pairing]\label{obs:eis32}
+On every base measured, the class-assembled $\rho$-vector of
+Theorem~\ref{thm:rhoentry} lies in the span of the $0$-cusp constant vectors of the
+holomorphic weight-$3/2$ eta monomials with the conjugate panel character (residuals
+$\sim10^{-42}$ at working precision $80$), so the functional is represented by a
+weight-$3/2$ form $E^*$; its Eisenstein component $E_{\mathrm{eis}}\in
+M_{3/2}(\Gamma_0(4DN))$ is exactly rational. Three constants are shared by all nine bases
+of Observation~\ref{obs:slaw}: the Eisenstein dimension of $M_{3/2}(\Gamma_0(4DN))$ is
+$11$, the rank of the constants map is $7$, and the aliasing kernel of the Gross-average
+fit has dimension $6$. They are constants of that family of levels rather than of the
+phenomenon: the aliasing is $25$ at $X_0^{210}(1)$ and $X_0^{330}(1)$; the triple
+degenerates to $(5,3,1)$ at the four small bases $D=2q$, $N=1$ of
+Observation~\ref{obs:n1} (levels $40$--$104$); and the odd-level family of
+Observation~\ref{obs:oddlev} has its own uniform pair, Eisenstein dimension $7$ and
+constants-rank $7$, at all four of its levels $60,84,132,140$.
+\end{observation}
+
+\begin{observation}[the $s$-law; nine bases, all with $N>1$]\label{obs:slaw}
+On every base, in the $\eta^*$ normalisation of Remark~\ref{rem:coset}, the Eisenstein
+component $E_{\mathrm{eis}}$ of Observation~\ref{obs:eis32} lies in the span of the $\bar\theta(D',R)$ over the
+definite structures with $D'R\mid DN$, modulo cusp forms, with support
+$\{(q,N),\,(q,sN),\,(DN,1)\}$ and weights
+\[
+  w_1=-\frac{1}{s-1},\qquad w_2=\frac{\psi(s)}{2\varphi(s)}=\frac{s+1}{2(s-1)},\qquad
+  w_3=-\frac12 ,
+\]
+depending on the base only through $s$. The nine bases are $X_0^{15}(2)$, $X_0^{21}(2)$,
+$X_0^{33}(2)$ ($s=3$: weights $-\tfrac12,1,-\tfrac12$); $X_0^{22}(3)$, $X_0^{34}(3)$,
+$X_0^{10}(7)$ ($s=2$: $-1,\tfrac32,-\tfrac12$); $X_0^{35}(2)$, $X_0^{55}(2)$ ($s=5$:
+$-\tfrac14,\tfrac34,-\tfrac12$); and $X_0^{77}(2)$ ($s=7$: $-\tfrac16,\tfrac23,-\tfrac12$).
+The law was found on the first six and \emph{preregistered} on the last three, each of
+which extended its range ($s=3$ at a new $q$; $s=5$ at a new $q$; $s=7$ new): all three
+hit. Two simpler laws were killed by preregistered bases along the way: weights following
+$N$ alone (killed by $X_0^{35}(2)$), and weights following $r=DN/q$ (killed by
+$X_0^{10}(7)$, which also fixed $q$ as the largest \emph{ramified} prime: there $N=7>q=5$
+and the support remains at $(5,\ast)$).
+\end{observation}
+
+\begin{observation}[Siegel--Weil identification]\label{obs:sw}
+On $X_0^{15}(2)$ the identification is complete. The $16$ ternary lattices whose thetas
+span the relevant subspace of $M_{3/2}(\Gamma_0(60))$ fall into $13$ genera, and each
+genus in the support is quaternionic: the assignment $(D',R)\mapsto\mathrm{Gr}(D',R)$
+sends the four definite factorizations $30=D'R$ bijectively onto the four genera of
+discriminant $900$, distinguishes same-discriminant genera by which prime ramifies
+(e.g.\ $\mathrm{Gr}(2,5)$ and $\mathrm{Gr}(5,2)$ are the two genera of discriminant
+$100$), and is inert under level structure at an already-ramified prime. The independent
+decomposition of $E_{\mathrm{eis}}$ over the $13$ genus averages plus cusp forms
+reproduces the fitted weights term by term:
+$E_{\mathrm{eis}}=-\tfrac12\,\bar\theta(5,2)+\bar\theta(5,6)-\tfrac12\,\bar\theta(30,1)$
+modulo cusp forms. The $s$-law weights are coefficients of genuine Siegel--Weil genus
+averages, not of single-class thetas.
+\end{observation}
+
+\begin{observation}[the mass identities; the $s$-dependence is normalisation]\label{obs:mass}
+On all nine bases the genus masses of the support obey
+\[
+  \mathrm{mass}(q,N)=\frac{(q-1)(N+1)}{96},\qquad
+  \frac{\mathrm{mass}(q,sN)}{\mathrm{mass}(q,N)}=\frac{s+1}{2},\qquad
+  \mathrm{mass}(DN,1)=\frac{(q-1)(s-1)(N-1)}{192},
+\]
+so that, over the genus \emph{sums}, the $s$-dependence of the weights disappears:
+\[
+  E_{\mathrm{eis}}\;=\;\frac{96}{(q-1)(s-1)(N+1)}
+  \Bigl[-\Theta(q,N)+\Theta(q,sN)-\frac{N+1}{N-1}\,\Theta(DN,1)\Bigr]
+  \quad\text{mod cusp forms},
+\]
+an identity verified on all nine bases (in the $\eta^*$ normalisation); the second factor
+of the middle mass ratio is multiplicative, $\prod_{p\mid s}(p+1)/2$, over the primes of
+$s$. The bracket depends on the base only through $N$, and the fitted ``$s$-law'' is
+exactly the mass normalisation of a fixed Siegel--Weil combination.
+
+The scale-free part of this,
+\[
+  \Bigl\lvert\frac{w_2}{w_1}\Bigr\rvert\;=\;
+  \frac{\mathrm{mass}(q,sN)}{\mathrm{mass}(q,N)},
+\]
+is the one statement here untouched by Remark~\ref{rem:coset}, and it is the widest-held:
+it holds on all \emph{nineteen} bases measured --- the nine above, the two composite-$D$
+bases, the four $N=1$ bases and the four odd-level bases below --- in both normalisations,
+in both parities of $DN$, and, where the support is degenerate, on both competing supports
+simultaneously (Observations~\ref{obs:n1} and~\ref{obs:oddlev}). It is
+therefore the form in which we expect these fits to enter a Siegel--Weil derivation.
+\end{observation}
+
+\begin{remark}[preregistration: the first composite $s$]\label{rem:210}
+The base $X_0^{210}(1)$ ($q=7$, $s=30$, $N=1$) separates three extensions of the law
+that agree on all nine prime-$s$ bases, and we record their predictions in advance of the
+measurement, which is in flight at the time of writing. (A) The reciprocal reading of
+Observation~\ref{obs:slaw} verbatim: $w_1=-\tfrac1{29}$, $w_2=\tfrac{31}{58}$,
+$w_3=-\tfrac12$. (B) The $\psi/\varphi$ reading ($\psi$ the Dedekind psi):
+$w_1=\tfrac12-\psi(30)/2\varphi(30)=-4$, $w_2=\psi(30)/16=\tfrac92$. (C) The mass reading of Observation~\ref{obs:mass}:
+$\mathrm{mass}(7,30)/\mathrm{mass}(7,1)=9=\prod_{p\mid30}\tfrac{p+1}2$, hence
+$w_1=-\tfrac1{29}$, $w_2=+\tfrac9{29}$, and \emph{no third term}: the structure
+$(210,1)$ is indefinite (four ramified places would be required), and its formal mass
+$(q-1)(s-1)(N-1)/192$ vanishes at $N=1$. Reading (C) is the only one coherent about the
+third term; readings (A) and (C) agree on $w_1$. The discriminating ratio is
+$\lvert w_2/w_1\rvert=\tfrac{31}2,\ \tfrac98,\ 9$ respectively.
+\end{remark}
+
+\emph{Scorecard: measured, same day.} The verdict refutes all three readings of
+Remark~\ref{rem:210} \emph{as
+stated}, in an instructive way: their shared support assumption was wrong. The measurement
+(residual $1.0\cdot10^{-42}$, rank $100$ of $100$, exact rational recognition) gives
+\[
+  E_{\mathrm{eis}}\;=\;-2\,\bar\theta(105,1)+3\,\bar\theta(105,2)\quad\text{mod cusp forms},
+\]
+and the support is genuine, not a pivot artifact of the $25$-dimensional aliasing:
+$E_{\mathrm{eis}}$ lies in the span of $\{\bar\theta(105,1),\bar\theta(105,2)\}$ plus cusp
+forms, and does \emph{not} lie in the span of $\{\bar\theta(7,1),\bar\theta(7,30)\}$ plus cusp
+forms (rank $87$ against $88$; but see Observation~\ref{obs:nosel} --- $(7,1)$ has one prime,
+and the three-prime competitors are not excluded). Thus at a four-prime discriminant the law re-splits
+$D=210$ as $q=105$ --- the full odd ramified part, itself a definite discriminant --- and
+$s=2$: the weights are twice the prime-$s$ law at $s=2$, the mass-ratio law of
+Observation~\ref{obs:mass} extends to ten bases
+($\mathrm{mass}(105,1)=\tfrac14$, $\mathrm{mass}(105,2)=\tfrac38$, ratio
+$\tfrac32=\lvert w_2/w_1\rvert$), and the third term is absent exactly as reading (C)
+predicted --- though for the wrong reason: (C) attributed the absence to the indefiniteness
+of $(210,1)$, and Remark~\ref{rem:coset} exhibits a \emph{definite} third slot,
+$(30,1)$ at $X_0^{15}(2)$, dropping under the same normalisation. The overall scale ($-2$ against the prime-case $-1/(s-1)=-1$) looked at this
+point like a second law to be found; Remark~\ref{rem:coset} shows it is not arithmetic at
+all --- $X_0^{210}(1)$ has $N=1$, hence is normalised at $\eta=0$, and the same doubling
+appears at $N>1$ the moment that coset is forced. What does remain a constraint on the
+derivation is the composite-$D'$ genus mass, which carries a factor $2^{\omega(D')-1}$
+relative to the multiplicative prime-case formula of Observation~\ref{obs:mass}.
+
+\begin{observation}[the eleventh base, and the four $N=1$ bases]\label{obs:n1}
+Five further measurements, in two preregistered groups, complete the picture. (i)
+$X_0^{330}(1)$ ($q=11$, $s=30$; $M=660$, residual $1.7\cdot10^{-42}$) hits all four
+predictions recorded in advance --- support $\{(165,1),(165,2)\}$ with $q=D/2$ the odd
+ramified part and no third term, weights $(-2,+3)$, mass ratio $\tfrac32$ from the
+advance-computed $\mathrm{mass}(165,1)=\tfrac5{12}$, $\mathrm{mass}(165,2)=\tfrac58$
+(the same $2^{\omega-1}$ factor), and rank $15$ with aliasing $25$. Its falsifier fired:
+the competing largest-prime support $\{(11,1),(11,30)\}$ is excluded (rank $135$ against
+$136$), while the winner carries $E_{\mathrm{eis}}$ with aliasing dimension $0$ --- the
+weights are pinned with no gauge freedom at all. (That competitor has a \emph{single}
+prime; Observation~\ref{obs:nosel} shows the three-prime competitors, never tested at the
+time, are \emph{not} excluded, so this exclusion does not establish a choice of $q$.) We record that $330$ cannot separate
+``odd part'' from ``largest definite divisor'': those coincide on every even $D$, so
+$X_0^{330}(1)$ replicates the $X_0^{210}(1)$ re-split at fresh primes rather than testing
+it. (ii) Composite $q$ and $N=1$ are perfectly confounded across all eleven bases above;
+the missing cell is prime $q$ with $N=1$, i.e.\ $D=2q$ at $M=20,28,44,52$. At
+$q=5,7,11,13$ (residuals $\sim10^{-44}$) one finds
+$E_{\mathrm{eis}}=-2\,\bar\theta(q,1)+3\,\bar\theta(q,2)$ modulo cusp forms, identical to
+the composite bases: the doubling does not track composite $q$. Here the support is
+genuinely degenerate --- the competitor $\{(2,1),(2,q)\}$ also carries $E_{\mathrm{eis}}$,
+with weights $\bigl(-\tfrac2{q-1},\tfrac{q+1}{q-1}\bigr)$ --- and the mass-ratio law holds
+on \emph{both} supports at all four bases ($\tfrac32$ on the canonical one;
+$3,4,6,7$ on the competitor, matching its masses), so it does not depend on the choice of
+$q$ as the largest ramified prime.
+\end{observation}
+
+These six $N=1$ bases are what forced Remark~\ref{rem:coset}: the doubling they exhibit
+survived two successive explanations (composite $D$, then $N=1$ itself) before the direct
+test --- forcing $\eta=0$ at $X_0^{15}(2)$ and $X_0^{22}(3)$ --- identified it as the
+tracked coset and dissolved it. What looked at this stage like the surviving arithmetic ---
+the support, including the re-split $q=D/2$ at four-prime $D$, together with the mass-ratio
+law --- is reduced further below: Theorem~\ref{thm:noresplit} shows the support is not
+determined at all, and that the mass-ratio law is one half of a single identity.
+
+One confound remained. All six of those bases have $s=2$ --- the four small ones outright,
+$X_0^{210}(1)$ and $X_0^{330}(1)$ after the re-split --- so ``the $N=1$ weights are the
+constant $(-2,+3)$'' and ``the $N=1$ weights are twice the $s$-law'' agree on every one of
+them and nowhere else. Separating them needs $N=1$ with $s>2$, hence odd $D$, hence odd
+$DN$: a regime with level $4DN$ rather than $2DN$, which the computation had never entered.
+It turns out to require only that the $2$-part of the discriminant form, there a single
+$\mathbb{Z}/2$ of odd type rather than $(\Z/2)^3$, be admitted into the closed form of
+Theorem~\ref{thm:rhoentry}; the four smallest such bases are then cheap.
+
+\begin{observation}[the odd-level quartet; the $N=1$ weights follow $s$]\label{obs:oddlev}
+At $X_0^{15}(1)$, $X_0^{21}(1)$, $X_0^{33}(1)$ ($s=3$) and $X_0^{35}(1)$ ($s=5$), all
+preregistered, the residue pairing holds (residuals $8.0\cdot10^{-42}$, $6.1\cdot10^{-41}$,
+$3.2\cdot10^{-42}$, $9.7\cdot10^{-43}$) and
+\[
+\begin{array}{lll}
+\toprule
+\text{base} & E_{\mathrm{eis}}\ \text{mod cusp} & \lvert w_2/w_1\rvert\\
+\midrule
+X_0^{15}(1) & -\bar\theta(5,1)+2\,\bar\theta(5,3) & 2\\
+X_0^{21}(1) & -\bar\theta(7,1)+2\,\bar\theta(7,3) & 2\\
+X_0^{33}(1) & -\bar\theta(11,1)+2\,\bar\theta(11,3) & 2\\
+X_0^{35}(1) & -\tfrac12\bar\theta(7,1)+\tfrac32\bar\theta(7,5) & 3\\
+\bottomrule
+\end{array}
+\]
+each restricted support carrying $E_{\mathrm{eis}}$ with aliasing dimension $0$. These are
+$2\bigl(-\tfrac1{s-1},\tfrac{s+1}{2(s-1)}\bigr)$ exactly, so the $N=1$ weights follow $s$
+and the constant reading is refuted. Two further facts, neither predicted. First, the
+support is \emph{degenerate}: the other ramified prime also carries $E_{\mathrm{eis}}$, at
+aliasing dimension $0$, with weights obeying the same formula read with its own
+$(q',s')$ --- $(3,5)\mapsto(-\tfrac12,\tfrac32)$, $(3,7)\mapsto(-\tfrac13,\tfrac43)$,
+$(3,11)\mapsto(-\tfrac15,\tfrac65)$, $(5,7)\mapsto(-\tfrac13,\tfrac43)$. The law is thus
+not attached to a choice of $q$ at all when $D$ has two primes. Second, the mass-ratio
+identity holds on all eight of these fits, canonical and competing, from masses computed
+in advance; it now stands at \emph{nineteen} bases, across both normalisations, both
+parities of $DN$, and every support that carries $E_{\mathrm{eis}}$.
+\end{observation}
+
+The degeneracy at two primes appeared to locate where the re-split rule has content: a
+two-prime discriminant cannot select a support, but at $X_0^{210}(1)$ and $X_0^{330}(1)$
+a competing span genuinely fails the rank test, so four primes looked as though they did
+select. That reading was wrong, and the error is instructive: \emph{one} competitor was
+tested per base, and in both cases it was a $D'$ with a \emph{single} prime
+($\{(7,1),(7,30)\}$ at $210$, $\{(11,1),(11,30)\}$ at $330$). Those exclusions are correct
+and reproduce here; they are simply not the discriminating test they were taken for. The
+composite competitors were never run.
+
+\begin{observation}[the support is never selected]\label{obs:nosel}
+Testing \emph{every} candidate support $\{(D',1),(D',DN/D')\}$ over the definite $D'$ (an
+odd number of primes) gives the same verdict at all three four-prime bases:
+\[
+\begin{array}{lll}
+\toprule
+\text{base} & D'\ \text{with one prime} & D'\ \text{with three primes}\\
+\midrule
+X_0^{210}(1) & 2,3,5,7\ \text{fail} & 30,42,70,105\ \text{all carry }E_{\mathrm{eis}}\\
+X_0^{330}(1) & 2,3,5,11\ \text{fail} & 30,66,110,165\ \text{all carry }E_{\mathrm{eis}}\\
+X_0^{1155}(1) & 11\ \text{fails} & 105,165,231,385\ \text{all carry }E_{\mathrm{eis}}\\
+\bottomrule
+\end{array}
+\]
+each with the weights $\bigl(\tfrac1{1-r},\tfrac{r}{r-1}\bigr)$ read off its
+\emph{own} mass ratio $r$, and each at aliasing dimension $0$. What the rank test
+separates is one prime from three, not one composite from another. The confirmations are
+by the same $q$-expansion machinery used throughout: at $X_0^{330}(1)$ the three supports
+never previously tested return
+$-\tfrac15\Theta(30,1)+\tfrac65\Theta(30,11)$,
+$-\tfrac12\Theta(66,1)+\tfrac32\Theta(66,5)$ and
+$-\Theta(110,1)+2\,\Theta(110,3)$, all at rank $135$ against $135$.
+\end{observation}
+
+So ``$q$ = the larger ramified prime'', ``odd part of $D$'', ``drop the smallest prime''
+and ``largest definite divisor'' are not competing rules that $D=1155$ was to adjudicate.
+They are four names for one object, and the reason is arithmetic rather than accidental.
+
+\begin{theorem}[the Eisenstein part, and why no re-split rule exists]\label{thm:noresplit}
+Let $D$ be squarefree with $\omega$ prime factors and $N=1$. For any $D'$ a product of
+$\omega-1$ of them, with $s=D/D'$,
+\[
+  \rho\;=\;\frac{\Theta(D',s)-\Theta(D',1)}{\mathrm{mass}(D',s)-\mathrm{mass}(D',1)},
+\]
+and neither side depends on which prime is $s$.
+\end{theorem}
+
+\begin{proof}
+Both sides factor over primes: the Weil representation is multiplicative on orthogonal
+sums and $(\rho_A\otimes\rho_B)_{00}=(\rho_A)_{00}(\rho_B)_{00}$, and at $N=1$ the tracked
+coset is $\eta=0$, so $\rho$ is exactly such an entry (Remark~\ref{rem:coset}).
+
+At each $p\mid DN$ the local discriminant group is $(\Z/p)^2$, and the two relevant forms
+are the \emph{hyperbolic} plane $\bar Q(b,c)=-bc/p$ (Eichler level $p$, from
+$Q=-x^2-pyz$) and the \emph{anisotropic} plane $\bar Q(b,c)=(uc^2-b^2)/p$ with $u$ a
+nonsquare unit (ramified, from $\nrd=-ux^2-py^2+upz^2$). Their Gauss sums are $p$ and
+$(u\mid p)(-1\mid p)g(1)^2=-p$, so the signatures are $0$ and $4$ and, with $c$ the
+lower-left entry of the coset representative,
+\[
+  c_p^{\mathrm{Eich}}=\begin{cases}1&p\mid c\\ +1/p&\text{else,}\end{cases}
+  \qquad
+  c_p^{\mathrm{ram}}=\begin{cases}1&p\mid c\\ -1/p&\text{else,}\end{cases}
+\]
+whence $c_p^{\mathrm{ram}}=\varepsilon_p\,c_p^{\mathrm{Eich}}$ with $\varepsilon_p=\pm1$.
+Setting $f_p=(p-1)c_p^{\mathrm{ram}}$ and $g_p=\tfrac{p+1}2c_p^{\mathrm{Eich}}-1$, both
+cases give $g_p=\tfrac{p-1}2\varepsilon_p c_p^{\mathrm{Eich}}$ and
+$f_p=(p-1)\varepsilon_p c_p^{\mathrm{Eich}}$, so
+\[
+  g_p=\tfrac12 f_p \qquad\text{at every prime, including }p=2.
+\]
+The two lattices of a support differ at exactly one prime, so with
+$C=48\cdot2^{\omega-2}$,
+\[
+  \mathrm{mass}_s\,\mathrm{ct}_s-\mathrm{mass}_1\,\mathrm{ct}_1
+   =\frac{c_2}{C}\prod_{p\neq s}f_p\cdot g_s
+   =\frac{c_2}{2C}\prod_{p\mid D}(p-1)\prod_{p\mid D}c_p^{\mathrm{ram}},
+\]
+while $\mathrm{mass}(D',s)-\mathrm{mass}(D',1)=\mathrm{mass}_1(s-1)/2
+=\prod_{p\mid D'}(p-1)(s-1)/(2C)$, and this \emph{telescopes}: $D'$ and $s$ partition the
+primes of $D$, so $\prod_{p\mid D'}(p-1)(s-1)=\prod_{p\mid D}(p-1)$, independent of which
+prime is omitted. Dividing, the right-hand side is $c_2\prod_{p\mid D}c_p^{\mathrm{ram}}$.
+
+For the left-hand side, $B_D$ is ramified exactly at the primes of $D$, and ramification
+is a \emph{local} condition --- it does not see the archimedean place --- so the
+(indefinite) Shimura curve lattice carries the same anisotropic plane at each $p\mid D$ as
+the definite Gross lattices do, and $\rho=c_2^{L}\prod_{p\mid D}c_p^{\mathrm{ram}}$. The
+$2$-parts agree ($\Z/2$ with $4\bar Q=1$ for odd $D$; the same $(\Z/2)^3$ otherwise), so
+$c_2^L=c_2$ and the two sides coincide.
+\end{proof}
+
+The one-prime failures follow from the same computation: there the partner is Eichler at
+$\omega-1$ primes at once, so the bracket is $\prod_q\bigl(\tfrac{q+1}2
+c_q^{\mathrm{Eich}}\bigr)-1$, which does not factor into $g_q$'s. Nothing telescopes and
+the mass difference takes $\omega$ distinct values instead of one.
+
+Theorem~\ref{thm:noresplit} was then used \emph{predictively}, on bases the computation had
+never seen and with nothing fitted --- no eta pool, no constant-term table, no least
+squares, both sides evaluated from the lattices alone. At $D=39,51,55$ (odd) and $D=46,390$
+(even) all ten support-instances agree with $\rho$ to $\sim10^{-120}$; at $D=390=2\cdot3\cdot5\cdot13$
+the four supports have mass pairs $(\tfrac12,\tfrac34)$, $(\tfrac14,\tfrac12)$,
+$(\tfrac18,\tfrac38)$, $(\tfrac1{24},\tfrac7{24})$ and the identical difference $\tfrac14$
+--- the telescoping in the output rather than on paper.
+
+Finally, the theorem explains the ``no third term'' of Remark~\ref{rem:coset}. A third
+slot $\Theta(DN,1)$ exists precisely when $DN$ is itself a definite discriminant, i.e.\
+when $\omega(DN)$ is odd; and it is present in exactly those cases, always with
+coefficient $-\tfrac12$. Across the twelve bases measured, $\omega(DN)=3$ at
+$X_0^{15}(2)$, $X_0^{21}(2)$, $X_0^{22}(3)$, $X_0^{33}(2)$, $X_0^{35}(2)$, $X_0^{55}(2)$,
+$X_0^{77}(2)$, $X_0^{10}(7)$, $X_0^{34}(3)$ --- all carry the third term --- and
+$\omega(DN)\in\{2,4\}$ at $X_0^{15}(1)$, $X_0^{210}(1)$, $X_0^{330}(1)$, none of which do.
+At $N=1$ the algebra $B_D$ is indefinite, which forces $\omega(D)$ even; the absence of a
+third term at $N=1$ is therefore a corollary of indefiniteness, not an independent fact.
+
+\section{The correction determined, at every level}\label{sec:determined}
+
+Theorem~\ref{thm:noresplit} is the $N=1$ case of a single identity that also covers the
+$N>1$ fits of Observations~\ref{obs:slaw} and~\ref{obs:mass}, at any tracked coset.
+Throughout, $\mathrm{mass}(\Delta,R)=\mathrm{mass}(\Delta,1)\prod_{p\mid R}(p+1)/2$ is
+multiplicative in the level, as in Observation~\ref{obs:mass}.
+
+\begin{theorem}[the Eisenstein part at every level]\label{thm:Ngeneral}
+Let $D$ be squarefree with $\omega(D)$ even, write $D=D's$ with $s$ any one of its primes,
+and let $N$ be squarefree with $\gcd(D,N)=1$. Let $\mu$ be an isotropic coset of the
+discriminant form of the Shimura curve lattice of $(D,N)$, and put
+$S=\{p\mid N:\mu_p\neq0\}$. With
+\[
+  \mathrm{Tel}_s(\Delta;R)\;=\;\frac{\Theta(\Delta,Rs)-\Theta(\Delta,R)}
+                                    {\mathrm{mass}(\Delta,Rs)-\mathrm{mass}(\Delta,R)},
+\]
+the $\rho$-vector read at $\mu$ satisfies, at every coset,
+\[
+  \rho_\mu\;=\;2^{-\lvert S\rvert}\sum_{T\subseteq S}(-1)^{\lvert T\rvert}\,\mathrm{Term}(T),
+  \qquad
+  \mathrm{Term}(T)=
+  \begin{cases}
+    \bar\theta\bigl(D's{\textstyle\prod}T,\;N/{\textstyle\prod}T\bigr)
+      & \lvert T\rvert\ \text{odd},\\[2pt]
+    \mathrm{Tel}_s\bigl(D'{\textstyle\prod}T;\;N/{\textstyle\prod}T\bigr)
+      & \lvert T\rvert\ \text{even},
+  \end{cases}
+\]
+and the right-hand side does not depend on which prime is $s$. The case $S=\varnothing$ is
+Theorem~\ref{thm:noresplit}.
+\end{theorem}
+
+\begin{proof}
+Beyond the ingredients of Theorem~\ref{thm:noresplit} the proof needs two things.
+
+\emph{The prime factorisation is exact, and its global factor does not see the lattice.}
+The closed form of Theorem~\ref{thm:rhoentry} splits as
+$\mathrm{ct}_L=\mathrm{glob}(\gamma)\prod_p\mathrm{loc}^L_p(\gamma)$, where
+$\mathrm{glob}=u\cdot(-a\mid\lvert c\rvert)\cdot(-a,c)_\infty$ collects the Kubota sign
+and the Kronecker and Hilbert symbols, and
+$\mathrm{loc}_p=e(-\sigma_p/4)\,G_p\,\sqrt{\lvert A_p[c]\rvert/\lvert A_p\rvert}$ collects
+the local signature, Gauss sum and index. Only $\mathrm{loc}_p$ depends on $L$, so
+telescopings between lattices may be carried out prime by prime.
+
+\emph{The tracked coset contributes an indicator, not a phase.} The coset enters the
+closed form only through the solvability of $c\,y=\mu$ and the resulting phase
+$e(ac\,Q(y))$. The hyperbolic plane at $p$ has exponent $p$, so a solution exists iff no
+$p\in S$ divides $c$; and then $y=c^{-1}\mu$ has $Q(y)=c^{-2}Q(\mu)=0$ because $\mu$ is
+\emph{isotropic}. Hence $\rho_\mu=\kappa\,\rho_0$ with
+$\kappa=\prod_{p\in S}\bigl[p\nmid c\bigr]$, with no phase at all.
+
+Now $\rho_0=\prod_{p\mid D}c_p^{\mathrm{ram}}\prod_{p\mid N}c_p^{\mathrm{Eich}}$, and the
+two local values displayed in the proof of Theorem~\ref{thm:noresplit} give, at every
+prime, $\tfrac12\bigl(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}}\bigr)
+=c_p^{\mathrm{Eich}}\bigl[p\nmid c\bigr]$. Therefore
+\[
+  \rho_\mu=\prod_{p\mid D}c_p^{\mathrm{ram}}
+    \prod_{p\mid N,\,p\notin S}c_p^{\mathrm{Eich}}
+    \prod_{p\in S}\tfrac12\bigl(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}}\bigr),
+\]
+and expanding the last product over subsets $T\subseteq S$ gives $2^{-\lvert S\rvert}
+(-1)^{\lvert T\rvert}$ times $\prod_{p\mid D}c_p^{\mathrm{ram}}\prod_{p\in T}
+c_p^{\mathrm{ram}}\prod_{p\mid N,\,p\notin T}c_p^{\mathrm{Eich}}$. It remains to identify
+that with $\mathrm{Term}(T)$. If $\lvert T\rvert$ is odd then
+$\omega(D's\prod T)=\omega(D)+\lvert T\rvert$ is odd, the algebra of that discriminant is
+definite, and $\mathrm{Gr}(D's\prod T,\,N/\prod T)$ --- ramified at the primes of $D$ and
+of $T$, Eichler at the remaining primes of $N$ --- has exactly that constant term. If
+$\lvert T\rvert$ is even that discriminant is indefinite and no such genus exists;
+instead the two levels $N/\prod T$ and $(N/\prod T)s$ over $D'\prod T$ differ at $s$
+alone, all common factors cancel from the quotient because the mass is multiplicative in
+the level, and $g_s=\tfrac12 f_s$ restores the missing $c_s^{\mathrm{ram}}$ exactly as in
+Theorem~\ref{thm:noresplit} --- which is also why the answer is independent of $s$.
+Finally, as at $N=1$, the $2$-adic normalisations of the lattices involved must agree
+after telescoping; the per-prime factorisation exhibits this directly (at $X_0^{22}(3)$
+and $c$ prime to the level, $\mathrm{loc}_2=(1+i)/4$ for the Shimura lattice and for
+$\mathrm{Gr}(66,1)$ alike, and the telescoped $2$-part of the $\mathrm{Gr}(11,\cdot)$ pair
+is the same).
+\end{proof}
+
+Three consequences are worth recording. First, Theorem~\ref{thm:Ngeneral} promotes
+Observation~\ref{obs:mass} to an identity: for $N$ prime and $\mu\neq0$ the set
+$S=\{N\}$ has two subsets, and the theorem reads
+$\rho_\mu=\tfrac12\mathrm{Tel}_s(D';N)-\tfrac12\bar\theta(DN,1)$, which is the displayed
+formula of that observation term for term, including the coefficient
+$-\tfrac{N+1}{N-1}$ of the third slot. Second, the right-hand side is symmetric in
+$D'\leftrightarrow s$, so at $N>1$ as at $N=1$ \emph{the support is not selected}: both
+choices of which prime of $D$ plays the role of $s$ give the same Eisenstein series. This
+is Observation~\ref{obs:nosel} again, now at every level and with a reason.
+
+Third, the theorem settles the coset bookkeeping that Observation~\ref{obs:iso} could only
+record. For $\mu$ isotropic with support $S=\{p\mid N:\mu_p\neq0\}$ it gives
+\[
+  \rho^{S}\;=\;\rho^{0}\cdot\prod_{p\in S}\bigl[\,p\nmid c\,\bigr],
+\]
+since $\prod_{p\in S}\tfrac12(c_p^{\mathrm{Eich}}-c_p^{\mathrm{ram}})
+=\prod_{p\in S}c_p^{\mathrm{Eich}}[p\nmid c]$ and the remaining factors reassemble
+$\mathrm{ct}_L(\gamma,0)$. So distinct tracked cosets do not give unrelated functionals: they give
+one vector restricted to nested sets of cosets, and the functional depends on $\mu$ only through
+$S$. Consequently the number of isotropic cosets is $\prod_{p\mid N}(2p-1)$, those with support
+exactly $S$ number $\prod_{p\in S}(2p-2)$, and the number of \emph{distinct} functionals is
+$2^{\omega(N)}-1$. For $N$ prime that last count is $1$ --- which is exactly the agreement
+Observation~\ref{obs:iso} records, now with a reason --- while for composite $N$ it is not, and
+the normalisation $4(N-1)=2(2N-2)$ implicit in the equivalent form
+$\mathrm{mult}=\sum_\eta c_\eta(0)/(4(N-1))$ is correct only when $\omega(N)=1$; in general
+\[
+  \sum_{\eta\neq0}\rho^{\,\eta}
+  \;=\;\rho^{0}\Bigl(\prod_{p\mid N}\bigl(1+(2p-2)[p\nmid c]\bigr)-1\Bigr).
+\]
+Measured at $X_0^{22}(3)$ ($\omega=1$: one functional, all four nonzero cosets agreeing),
+$X_0^{35}(6)$ and $X_0^{15}(14)$ ($\omega=2$: three functionals each, class sizes $2,4,8$ and
+$2,12,24$), with the restriction law holding at $4$, $14$ and $38$ of $4$, $14$ and $38$ cosets.
+Which of the $2^{\omega(N)}-1$ functionals would be the multiplier at composite $N$ is not decided
+here, and cannot be until a composite-$N$ base with independent ground truth exists.
+
+The identity was checked at every coset of the level $4DN$, with nothing fitted --- both
+sides evaluated from the lattices alone. On the eight banked $N>1$ bases the derived
+weights agree with the fitted ones exactly (worst residual $3\cdot10^{-119}$). It was then
+used \emph{predictively} at eight bases that had never been looked at ---
+$X_0^{6}(5)$, $X_0^{10}(3)$, $X_0^{14}(3)$, $X_0^{6}(7)$, $X_0^{14}(5)$, $X_0^{26}(3)$,
+$X_0^{39}(2)$, $X_0^{34}(3)$ --- with \emph{both} choices of $s$ at each: sixteen
+instances, all confirmed to $\sim10^{-119}$, with weights ranging from $-\tfrac1{16}$ to
+$\tfrac32$; dropping the third term fails at relative size $1.4$ to $3.5$ at every one of
+them. Composite $N$, where $\lvert S\rvert$ can be $2$ and the combination has four terms,
+was checked at $X_0^{35}(6)$ and $X_0^{15}(14)$ at \emph{every} nonzero isotropic coset
+rather than the default one --- $14$ and $38$ of them, both choices of $s$ --- for a
+further $112$ confirmed instances. Finally $\omega(D)=4$ with $N>1$, whose smallest
+instance is $X_0^{210}(11)$ at level $9240$ with $27648$ cosets and a discriminant group
+of order $2.9\cdot10^7$: both $s=2$ and $s=3$, two tracked cosets each, all confirmed to
+$2\cdot10^{-118}$.
+
+For the combination of Theorem~\ref{thm:Ngeneral} to be usable as an $E$ in what follows,
+it must be a holomorphic form of weight $\tfrac32$ on $\Gamma_0(4DN)$ carrying a single
+multiplier. Both are consequences of the local structure already in hand.
+
+\begin{lemma}[level and multiplier of the Gross thetas]\label{lem:levelchar}
+Let $\Delta$ be squarefree with $\omega(\Delta)$ odd, let $R$ be squarefree and coprime to
+$\Delta$ with $\Delta R\mid DN$, and let $L$ be the trace-zero part of an Eichler order of
+level $R$ in the definite quaternion algebra of discriminant $\Delta$, with $Q=\nrd$. Then
+\begin{enumerate}
+\item[(i)] the Gram matrix has determinant $2(\Delta R)^2$, and the level of $Q$ is
+      $4\cdot\mathrm{odd}(\Delta R)$, which divides $4DN$;
+\item[(ii)] $\theta_L$ is a holomorphic modular form of weight $\tfrac32$ on
+      $\Gamma_0(4DN)$;
+\item[(iii)] all the $\theta_L$ occurring in Theorem~\ref{thm:Ngeneral} carry the same
+      multiplier, namely the one governing $\rho$; hence their combination is a modular
+      form, and $fE$ has trivial multiplier for $E$ that combination.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(i) By the local analysis in the proof of Theorem~\ref{thm:noresplit}, the discriminant
+form of $L$ is an anisotropic plane $(\Z/p)^2$ at each $p\mid\Delta$, a hyperbolic plane
+$(\Z/p)^2$ at each $p\mid R$, and $\Z/2$ with $4\bar Q=1$ at $2$ when $\Delta R$ is odd
+(the same $\Z/2$ that makes $c_2^L=c_2^G$ there). Multiplying orders gives
+$|A_L|=2(\Delta R)^2=\det$. The level of an even lattice is the exponent of $\bar Q$ as a
+$\Q/\Z$-valued form: each odd $p\mid\Delta R$ contributes $p$, and the $2$-part
+contributes $4$, since $4\bar Q=1$ there. Hence the level is
+$4\cdot\mathrm{odd}(\Delta R)$. As $DN$ is squarefree and $\Delta R\mid DN$, we get
+$\mathrm{odd}(\Delta R)\mid DN$ and so the level divides $4DN$.
+
+(ii) A positive definite ternary theta series is holomorphic of weight $\tfrac32$ on
+$\Gamma_0$ of its level, and by (i) that group contains $\Gamma_0(4DN)$; the genus average
+is a convex combination of such.
+
+(iii) The identity of Theorem~\ref{thm:Ngeneral} is an identity of Weil-representation
+entries in closed form, and its proof nowhere uses that $\gamma$ belongs to any chosen set
+of coset representatives: it holds for every $\gamma$. Now fix $\gamma_0\in\Gamma_0(4DN)$
+and a representative $w$. Each side is a weight-$\tfrac32$ object slashed by a matrix, so
+evaluating at $\gamma_0w$ multiplies the left side by $\nu_{\mathrm{Shim}}(\gamma_0)$ and
+the right by $\nu_{\mathrm{Gross}}(\gamma_0)$. Since the identity holds at $\gamma_0w$ as
+well as at $w$, and the common value is not identically zero,
+$\nu_{\mathrm{Gross}}=\nu_{\mathrm{Shim}}$. The same argument applied to the individual
+terms shows they share that multiplier. Finally the panel character is by definition the
+one for which $E^*$ reproduces $\rho$, i.e.\ the conjugate of $\nu_{\mathrm{Shim}}$, so
+$fE$ has trivial multiplier.
+\end{proof}
+
+Each clause was checked. The determinant and level of (i) were computed for all $100$
+Gross lattices arising at the bases treated here, agreeing with
+$2(\Delta R)^2$ and $4\cdot\mathrm{odd}(\Delta R)$ in every case and dividing $4DN$ in
+every case. For (iii), the identity was re-evaluated \emph{off} the representative list,
+at $\gamma_0w$ for four or five $\gamma_0\in\Gamma_0(4DN)$ against a spread of twelve
+representatives, at $X_0^{21}(2)$, $X_0^{22}(3)$, $X_0^{55}(2)$, $X_0^{77}(2)$,
+$X_0^{34}(3)$ and $X_0^{15}(2)$: it holds at all $48$--$60$ matrices per base, to
+$4\cdot10^{-96}$. Independently, at seven of the bases the combination is exhibited
+inside the space of holomorphic weight-$3/2$ eta quotients with the panel character,
+which gives (iii) there directly; at the remaining bases that space is too small to
+decide, which is why the argument above is the one used.
+
+\subsection*{The multiplicity as a residue pairing}
+
+The assembly of \S\ref{sec:exact} expresses the $m=0$ multiplier as a sum of
+constant terms of $f$ against the $\rho$-entries. That sum is one half of a residue
+identity, and the other half is a pairing against the Fourier coefficients of \emph{any}
+weight-$3/2$ form carrying those constants --- in particular against the explicit
+combination of ternary genus thetas supplied by Theorem~\ref{thm:Ngeneral}. Write
+$a_n(h\mid w)$ for the coefficient of $q^n$ in the expansion at $\infty$ of $h$ slashed by
+a coset representative $w$.
+
+\begin{theorem}[the residue pairing]\label{thm:respair}
+Let $M\ge1$, let $f$ be a weakly holomorphic modular form of weight $\tfrac12$ on
+$\Gamma_0(M)$ with multiplier $\chi$, holomorphic on $\HH$, and let $E$ be a
+\emph{holomorphic} modular form of weight $\tfrac32$ on $\Gamma_0(M)$ whose multiplier is
+\emph{conjugate} to $\chi$ --- by which we mean precisely that the product $fE$ has
+trivial multiplier on $\Gamma_0(M)$. (In half-integral weight this is a condition on the
+theta factors as well as on $\chi$, and it is verified, not assumed, in the cases used
+below.) Then
+\[
+  \sum_{w\in\Gamma_0(M)\backslash\mathrm{SL}_2(\Z)}\ \sum_{n\ge0}
+      a_{-n}(f\mid w)\,a_n(E\mid w)\;=\;0,
+\]
+each inner sum being finite. Separating the term $n=0$,
+\[
+  \sum_w a_0(f\mid w)\,a_0(E\mid w)
+  \;=\;-\sum_w\sum_{n>0} a_{-n}(f\mid w)\,a_n(E\mid w). \tag{$\ast$}
+\]
+If $a_0(E\mid w)=\rho_w$ for every $w$, the left-hand side of $(\ast)$ is the assembly,
+i.e.\ $c_{\eta^*}(0)$; and the right-hand side is unchanged if $E$ is replaced by any
+other holomorphic weight-$\tfrac32$ form with the same constants.
+\end{theorem}
+
+\begin{proof}
+Put $h=fE$. It is holomorphic on $\HH$, of weight $2$, and by hypothesis has trivial
+multiplier, so $h$ is a meromorphic modular form of weight $2$ on $\Gamma_0(M)$ with
+poles only at the cusps; hence $\omega=h(\tau)\,d\tau$ is a meromorphic differential on
+$X_0(M)$, holomorphic away from the cusps. By the residue theorem on a compact Riemann
+surface, $\sum_s\mathrm{Res}_s\,\omega=0$.
+
+Fix a cusp $s$ of width $h_s$ with scaling matrix $\sigma_s$, and set
+$q_s=e^{2\pi i\tau/h_s}$. Then $(h\mid\sigma_s)(\tau)=\sum_n a_n(h\mid\sigma_s)q_s^{\,n}$
+and $\omega=\frac{h_s}{2\pi i}\bigl(\sum_n a_n(h\mid\sigma_s)q_s^{\,n}\bigr)\frac{dq_s}{q_s}$,
+so $\mathrm{Res}_s\,\omega=\frac{h_s}{2\pi i}\,a_0(h\mid\sigma_s)$. The cosets lying over
+$s$ are $\sigma_sT^{\,j}$ for $0\le j<h_s$, and slashing by $T^{\,j}$ multiplies the
+$n$-th coefficient by $e^{2\pi i n j/h_s}$, which fixes $n=0$; hence each of those $h_s$
+cosets contributes the same $a_0$. Summing over all cosets therefore supplies the width
+factor automatically:
+\[
+  \sum_{w} a_0(h\mid w)\;=\;\sum_s h_s\,a_0(h\mid\sigma_s)
+  \;=\;2\pi i\sum_s \mathrm{Res}_s\,\omega\;=\;0 .
+\]
+Finally $h\mid w=(f\mid w)(E\mid w)$, and $E\mid w$ has no negative coefficients while
+$f\mid w$ has only finitely many, so
+$a_0(h\mid w)=\sum_{n\ge0}a_{-n}(f\mid w)\,a_n(E\mid w)$ is a finite sum. This is the
+displayed identity, and $(\ast)$ is the case $n=0$ separated off.
+
+For the last statement, let $E'$ be another such form and $g=E-E'$. Then $g$ is
+holomorphic of weight $\tfrac32$ with $a_0(g\mid w)=0$ for every $w$ --- a cusp form ---
+so applying the identity to the pair $(f,g)$ makes its $n=0$ block vanish, leaving
+$\sum_w\sum_{n>0}a_{-n}(f\mid w)a_n(g\mid w)=0$.
+\end{proof}
+
+The independence in the last paragraph is worth isolating, because it is the reason the
+cuspidal ambiguity of Theorem~\ref{thm:Ngeneral} costs nothing. Every method used here
+determines a weight-$3/2$ form only through its constant terms, hence only modulo
+$S_{3/2}$; by Theorem~\ref{thm:respair} that ambiguity is annihilated by the pairing.
+(This is Borcherds' obstruction principle in the present setting, and it also accounts for
+the two-sided shape of the pairing: the sum runs over \emph{all} cosets, so principal
+parts at $0$ enter on the same footing as those at $\infty$.)
+
+\begin{corollary}\label{cor:multgross}
+Let $E$ be the combination of genus theta series furnished by Theorem~\ref{thm:Ngeneral}.
+Then the $m=0$ multiplier is
+\[
+  c_{\eta^*}(0)\;=\;-\sum_w\sum_{n>0}a_{-n}(f\mid w)\,a_n(E\mid w),
+\]
+a pairing of the principal parts of $f$ against Fourier coefficients of an explicit
+mass-weighted combination of ternary genus theta series --- that is, against
+representation numbers of definite ternary quadratic forms.
+\end{corollary}
+
+The hypotheses were verified rather than assumed. That $fE$ has trivial multiplier on
+$\Gamma_0(60)$ is checked directly at $X_0^{15}(2)$, with $f\cdot f$ as a control
+exhibiting Newman's $(-1/d)$. The vanishing $\sum_w a_0(fE\mid w)=0$ is confirmed to some
+$70$ digits on all nine panel forms at each of $X_0^{15}(2)$, $X_0^{21}(2)$ and
+$X_0^{22}(3)$ --- the three distinct $w_{\mathrm{sq}}$ regimes. And at $X_0^{15}(2)$ the
+substitution of Corollary~\ref{cor:multgross} was carried out: the genus combination lies
+in the space of holomorphic weight-$3/2$ eta quotients of level $60$ with the panel
+character, reproduces $\rho$ at all $288$ cosets to $6\cdot10^{-77}$ --- computed along a
+different route than Theorem~\ref{thm:Ngeneral} uses --- and returns the same pairing as
+the fitted representative on every panel form, to every digit printed, although the two
+forms differ.
+
+\subsection*{The coefficients in closed form}
+
+Corollary~\ref{cor:multgross} makes $-a_E(m)$ a combination of representation numbers
+of definite ternary forms. Siegel--Weil turns each of those into a product of local
+densities --- the terms really are genus averages rather than single-class thetas, which is
+the content of Observation~\ref{obs:sw} --- and the combination collapses, at odd primes, into
+one elementary factor per prime of $DN$ against a Hurwitz class number.
+
+\begin{proposition}[the multiplicity coefficients]\label{prop:closedcoef}
+Let $D$ be squarefree with $\omega(D)=2$, let $N$ be $1$ or a prime coprime to $D$ (the
+prime $2$ is allowed in either slot), and let $m\ge1$. Write $-4m=D_0c^2$ with $D_0$ fundamental, and for a prime $p$ set
+$k_p=v_p(c)$, $\chi_p=\bigl(\tfrac{D_0}{p}\bigr)$ and
+$\sigma_j(p)=1+p+\dots+p^{\,j}$ (with $\sigma_{-1}=0$). Then, with $H$ the Hurwitz class
+number,
+\[
+  -a_E(m)\;=\;12\,H(4m)\;
+  \prod_{p\mid D}\frac{1-\chi_p}{(p-1)\bigl(\sigma_{k_p}-\chi_p\sigma_{k_p-1}\bigr)}
+  \;\prod_{p\mid N}\frac{(p-\chi_p)\,p^{k_p}}
+                        {(p^2-1)\bigl(\sigma_{k_p}-\chi_p\sigma_{k_p-1}\bigr)} ,
+\]
+the second product being empty when $N=1$.
+In particular $a_E(m)=0$ unless every $p\mid D$ is non-split in $\Q(\sqrt{-m})$, i.e.\
+unless $\Q(\sqrt{-m})$ embeds in $B_D$: the support rule is part of the formula rather
+than a side condition.
+\end{proposition}
+
+The conductor factors are the only place $c$ enters, and they have the same denominator
+$\sigma_{k}-\chi\sigma_{k-1}$ at both kinds of prime, with numerator $1$ at a ramified
+prime and $p^{k}$ at the Eichler prime. For $m$ squarefree every $k_p$ is $0$, both
+$\sigma$-factors are $1$, and the statement collapses to
+\[
+  -a_E(m)\;=\;H(4m)\,\prod_{p\mid D}\frac{1-\bigl(\tfrac{-m}{p}\bigr)}{p-1}
+    \;\cdot\;\frac{12\bigl(N-\bigl(\tfrac{-m}{N}\bigr)\bigr)}{N^2-1},
+\]
+which is how it was found.
+
+The squarefree shape was read off at $N=3$ and $N=7$ and tested at $N=5$ (on $X_0^{21}(5)$
+and $X_0^{33}(5)$), $N=11$ and $N=13$, none of which entered the fit; the conductor factors
+were then read off at $X_0^{15}(7)$, $X_0^{35}(3)$, $X_0^{21}(5)$ with $k\le2$. The full
+statement holds for \emph{every} $m<400$ at all six bases --- $156$ of them non-squarefree
+--- and, pushed to $m<800$ at $X_0^{15}(7)$ to reach $k=3$, for all $799$ values, $310$ of
+them non-squarefree. So the $k$-dependence is verified one step beyond where it was fitted.
+
+Two of the regimes deserve a word. The case $N=1$ is not a limit of the others --- the Eichler factor would read $0/0$ --- but
+it is the empty product, and this is where the constant $12$ shows itself as global rather
+than as part of the level factor. It was checked on \emph{all six} bases of the model set
+with $DN$ odd, namely $D=15,35,39,55,65,87$ (each a product of two primes), with both
+choices of which prime is $s$: the residual after dividing out the ramified product and the
+conductor corrections is exactly $12$, for every $m<250$, in all twelve runs.
+
+Finally $p=2$, which carries no exception: the two products above are taken over
+\emph{all} primes of $D$ and of $N$, the prime $2$ included, with the same two expressions.
+Read off in the three regimes separately --- $2\mid D$ with $N=1$, $2\mid D$ with $N$ odd,
+and $N=2$ --- the $2$-adic factors are exactly $\mathrm{ram}_2$ and $\mathrm{eich}_2$: for
+instance $\mathrm{ram}_2$ gives $\tfrac12,\tfrac17,\tfrac1{11}$ at
+$(k,\chi)=(1,-1),(2,0),(3,-1)$ and $\mathrm{eich}_2$ gives $\tfrac23,\tfrac49,\tfrac13$ at
+$(0,0),(1,0),(2,1)$. The two $2\mid D$ regimes produce identical tables, as they must if
+``ramified at $2$'' is one local factor.
+
+It is worth saying how this looked before the conductor parametrisation, because the
+appearance of an exception at $2$ was an artefact. Restricted to squarefree $m$ and keyed
+on $m\bmod 8$, the same data reads as $\delta_2=1,\tfrac12,0$ for $m\equiv1,2,5,6$, $3$,
+$7\pmod 8$ when $2\mid D$, and as $8,8,6,8,8,4$ when $N=2$ --- neither of which resembles
+the odd law. Both are just its shadow: for $m$ squarefree, $m\equiv1,2\pmod4$ forces
+$k_2=0,\chi_2=0$, while $m\equiv3\pmod4$ forces $k_2=1$ with $\chi_2=\mp1$ according as
+$m\equiv3,7\pmod 8$, and substituting reproduces the tables.
+
+The proposition therefore covers every base in the model set. It was verified on nineteen
+of them spanning all four regimes --- $X_0^{15}(1)$, $X_0^{35}(1)$, $X_0^{39}(1)$,
+$X_0^{55}(1)$; $X_0^{10}(1)$, $X_0^{14}(1)$, $X_0^{22}(1)$, $X_0^{26}(1)$; $X_0^{15}(2)$,
+$X_0^{21}(2)$, $X_0^{33}(2)$, $X_0^{35}(2)$; $X_0^{10}(3)$, $X_0^{22}(3)$, $X_0^{10}(7)$,
+$X_0^{6}(5)$, $X_0^{14}(5)$, $X_0^{34}(3)$, and $X_0^{15}(7)$ --- at every $m<250$: $4731$
+of $4731$ values.
+
+\begin{remark}[what Table~\ref{tab:A} pins down, and what it does not]\label{rem:gauge}
+Proposition~\ref{prop:closedcoef} and Table~\ref{tab:A} are two representatives of one
+functional, and they do \emph{not} agree coefficient by coefficient. At $X_0^{15}(2)$ the nine
+panel forms touch the six indices $m=1,2,3,10,15,30$, where $\tfrac12\bigl(-a_E(m)\bigr)$
+reads $0,0,1,2,1,2$ against the $A_m$ of Table~\ref{tab:A}, which read $0,-1,0,1,0,0$. Both
+reproduce all nine measured multipliers exactly. They can do so because the panel's matrix of
+$\infty$-side principal parts has rank $4$ in those six indices, so an $\infty$-only functional
+is determined only modulo a $2$-dimensional space and the two vectors lie in one coset of it.
+
+Two consequences. First, the rule ``the weight vanishes unless $N\mid m$'' fixes a
+representative inside that ambiguity: it is a gauge, not a property of the correction, whose
+coefficients on that base are nonzero at $m=3,7,13,15,27,33,37$. What
+Corollary~\ref{cor:support} governs is the vanishing of the level-prime Whittaker factor, and
+--- through Proposition~\ref{prop:reenum} --- which $m$ can contribute a logarithm from
+$\kappa_\eta(m)$; it does not govern the support of $-a_E$, which is the embedding condition at
+the primes of $D$. Second, this is the $w_\square$ aliasing of \S\ref{sec:exact} in the
+coordinates of the closed form, and it shows that aliasing is not something a derivation could
+remove: the canonical representative $-a_E$ does not have the two-channel shape of
+\eqref{eq:twochannel} at all, so $w_\square$ is a coordinate of a gauge-fixed representative
+rather than an invariant. Conjecture~\ref{conj:sq} should be read accordingly.
+
+What the multipliers do pin down is reproduced exactly. Evaluating
+$\tfrac12\sum_m c_\infty(-m)\bigl(-a_E(m)\bigr)$ from Proposition~\ref{prop:closedcoef} alone
+returns the measured multiplier on all $39$ forms carrying one, across the nine bases
+$X_0^{6}(5)$, $X_0^{6}(7)$, $X_0^{6}(19)$, $X_0^{10}(3)$, $X_0^{10}(11)$, $X_0^{14}(5)$,
+$X_0^{15}(2)$, $X_0^{22}(7)$ and $X_0^{34}(5)$. This is a longer chain than the sweep above:
+there the closed form is checked against the theta combination it was derived from, whereas
+here the right-hand side is built from the closed form alone while the left-hand side is the
+kernel-consistency or Hauptmodul measurement of \S\ref{sec:data}, which evaluates no Eisenstein
+series at all. The $\infty$ block suffices on these panels; on the larger monomial probe space
+of \S\ref{sec:exact} the $0$-side genuinely enters, and there the pairing must be taken over all
+cosets as in Corollary~\ref{cor:multgross}.
+\end{remark}
+
+\section{Where the correction comes from}\label{sec:open}
 
 Corollary~\ref{cor:onlyplace} and Observation~\ref{obs:c00} are in direct tension with
-Observation~\ref{obs:mult} and with the failure of the uncorrected computation on $X_0^{6}(19)$. We
-see two possibilities and cannot presently distinguish them.
+Observation~\ref{obs:mult} and with the failure of the uncorrected computation on $X_0^{6}(19)$.
+Two readings suggest themselves, and both can now be excluded.
 
 \begin{enumerate}
-\item The constant term $c_0(0)$ of the form $F$ actually attached to $\psi_F$ differs from that of
-      the coset sum $F_f$. The principal parts agree to $10^{-103}$, but the principal part alone
-      does not determine $c_0(0)$.
-\item The correction compensates an error elsewhere in the computation of the CM values, outside
-      Schofer's formula. It is a $d$-independent linear functional of the principal part, which is
-      the shape of a per-form normalisation.
+\item \emph{The constant term $c_0(0)$ of the form $F$ actually attached to $\Psi_F$ differs from
+      that of the coset sum $F_f$; the principal parts agree to $10^{-103}$, but the principal part
+      alone does not determine $c_0(0)$.} --- The premise fails. A weakly holomorphic form of
+      weight $\tfrac12$ for $\rho$ is determined by its principal part up to
+      $M_{1/2}(\rho)$, and $M_{1/2}(\rho)=0$ for the modules occurring here. This is structural,
+      not a base-by-base observation: invariants correspond to self-dual isotropic subgroups, and
+      the $D$-part of the discriminant form is an anisotropic $(\Z/p)^2$ at every $p\mid D$ ---
+      which contains no nonzero isotropic vector, so no isotropic subgroup can meet it, no cyclic
+      summand can absorb it, and no $H^\perp/H$ lift can remove it. Hence $F=F_f$ exactly, and
+      $c_0(0)$ is the measured $0$.
+\item \emph{The correction compensates an error elsewhere in the computation of the CM values,
+      outside Schofer's formula; being a $d$-independent linear functional of the principal part,
+      it has the shape of a per-form normalisation.} --- A per-form normalisation rescales a whole
+      row of the CM table by one factor, and a uniform rescaling cannot turn a consistent linear
+      system into an inconsistent one. On $X_0^{6}(19)$ the uncorrected values are mutually
+      inconsistent, and with the correction the published model is recovered. Moreover the
+      correction is now identified rather than fitted: by
+      Theorem~\ref{thm:respair} and Corollary~\ref{cor:multgross} it is the residue pairing of the
+      principal parts of $f$ against an explicit holomorphic weight-$\tfrac32$ form, and by
+      Proposition~\ref{prop:closedcoef} its coefficients are a Hurwitz class number times one local
+      factor per prime of $DN$. That is an arithmetic term of exactly the family Schofer's formula
+      is assembled from, not the signature of a misnormalisation.
 \end{enumerate}
 
-In either case Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand, and part (ii) of
-the Kudla--Rapoport--Yang programme --- the incorporation of a level structure --- remains to be
-carried out. Table~\ref{tab:A} is what any corrected formula must reproduce, index by index.
+What survives is that terms \emph{inside} Schofer's formula were dropped, and his statement locates
+them precisely. In \cite[Thm.~3.3]{SchoferThesis} the coefficient attached to a pair
+$(\eta,\lambda)$ is
+$\kappa_{\eta,\lambda}(m_1)=\sum_{0\le m\le m_1}d_{\eta_++\lambda_+}(m_1-m)\,
+\kappa_{\eta_-+\lambda_-}(m)$, where $d_{\eta_++\lambda_+}(m)=\#\{x_1\in\eta_++\lambda_++L_+:
+Q(x_1)=m\}$ and, at $m=0$,
+\[
+  \kappa_{\eta_-+\lambda_-}(0)\;=\;k_0(0)\,\varphi_{\eta_-+\lambda_-+L_-}(0),
+\]
+a \emph{characteristic function} of the coset. Since $L_+$ is positive definite, $Q(x_1)=0$ forces
+$x_1=0$, so $d_{\eta_++\lambda_+}(0)$ is $1$ when $\eta_++\lambda_+\equiv0$ and $0$ otherwise.
+Hence
+\[
+  \kappa_{\eta,\lambda}(0)\;=\;k_0(0)\cdot
+  \bigl[\eta_++\lambda_+\equiv0\bigr]\bigl[\eta_-+\lambda_-\equiv0\bigr],
+\]
+and the $m=0$ part of the formula is $k_0(0)\sum_{\eta}\sum_{\lambda}c_\eta(0)$ over the pairs
+satisfying both congruences, with $\lambda$ running over $L/(L_++L_-)$.
 
-A third reading should be recorded, because it is not excluded by anything above. The evaluation of
-$\kappa^-_\mu(m)$ for $m>0$ has never been checked against an independent computation at $N>1$ ---
-neither here nor, as far as we can determine, in the literature. Yang's worked examples
-\cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a \emph{maximal} order, and
-indeed $L=\Lp+\Lm$ there; the corresponding regression tests in the accompanying code likewise cover
-only $N=1$. So the step on which everything here turns is unverified precisely in the range where we
-claim it to be incomplete. Constructing such a check --- for instance by comparing against a
-published CM value on a base with $N>1$ and a nonvanishing correction, of which
-$X_0^{14}(5)$ with $s(\tau_{-280})=5/16$ \cite[Ex.~36]{GY} appears to be the only available
-instance --- would be the natural next step.
+The collapse to $c_0(0)k_0(0)$ is therefore valid exactly when $L=L_++L_-$. There
+$\lambda=0$ is the only class, the two congruences read $\eta_+\equiv0$ and $\eta_-\equiv0$, and
+only $\eta=0$ survives. That is the maximal-order situation, and it is the one in which the recipe
+was checked --- Yang's worked examples have $L=L_++L_-$. For an Eichler order of level $N>1$ the
+index $[L:L_++L_-]$ exceeds $1$, the $\lambda$-sum is nontrivial, and cosets $\eta\neq0$ whose two
+components are matched by some $\lambda$ contribute. Those are the dropped terms; $c_0(0)=0$
+removes the one that was kept, so they carry the whole correction. That the surviving cosets share
+one constant term, which Observation~\ref{obs:iso} recorded empirically, is now a consequence of
+$N$ being prime: the number of distinct functionals is $2^{\omega(N)}-1$, which is $1$ exactly when
+$\omega(N)=1$.
+
+The scope violation is visible in the sources' own terms. Kudla--Rapoport--Yang state that they
+consider only Eisenstein series built from sections given by the characteristic functions of the
+completions of $\mathcal{O}_k$, and note that more general sections would cost ``more elaborate
+calculations of Whittaker functions'' and ``incorporation of a level structure in the moduli
+problem''; they also fix a maximal order. At a firing discriminant our $L_-$ is $N$-scaled, which is
+such a more general section, so the case-completeness assertion that becomes Schofer's Theorem~4.1
+and Yang's Lemma~16 is being applied outside its stated hypotheses.
+
+The vanishing at $\eta\neq0$ has a second guard in \cite{SchoferThesis}, and it fails the same way.
+Lemma~2.18 there concludes $b_\varphi(0,t)=0$ for $\varphi\neq\varphi_0$, citing a local statement:
+$W_{0,p}(s,\varphi_p)=0$ whenever $\varphi_p$ is not the characteristic function of the local
+lattice. For a unimodular $L_p$ that is vacuous --- $L_p^\vee/L_p$ is trivial, so the only such
+$\varphi_p$ is $\mathrm{char}(L_p)$ and there is nothing else to test. At a $p$-scaled $L_p$ there
+is. Evaluating $W_{0,p}$ directly on the cosets of $L_p^\vee/L_p\cong(\Z/p)^2$ for
+$A=p\cdot(\text{unimodular})$, at a \emph{split} $p$ --- the case a firing discriminant forces ---
+gives
+\[
+  \#\{\mu\neq0: W_{0,p}(0,\mu)\neq0\}\;=\;4,\;8,\;12 \quad\text{at } p=3,5,7,
+\]
+each with value $1$; that is $2(p-1)$, which is exactly the number of nonzero \emph{isotropic}
+cosets of a hyperbolic plane over $\mathbb{F}_p$. (Lemma~\ref{lem:m0loc} below sharpens this from a
+value to an identity of polynomials: the factor is the constant $1$, so its $s$-derivative vanishes
+too. The distinction matters, and is what fixes where the derivative of the product is taken.)
+So at the level prime the $m=0$ local Whittaker is
+nonzero on precisely the $2N-2$ nonzero isotropic cosets, with equal weight, and Lemma~2.18 sets
+all of them to zero on the strength of a statement established where no such coset exists. Those
+are the dropped terms, and their count and equal weighting are exactly the structure the
+measurements report: all nonzero isotropic $\eta$ carry the same $c_\eta(0)$, and the multiplier is
+$\sum_\eta c_\eta(0)/(4(N-1))=\tfrac12c_\eta(0)$ over the $2N-2$ of them.
+
+This also changes what should replace the dropped term, and the replacement is not
+$k_0(0)$ times a count. In \cite[Lem.~2.18]{SchoferThesis} the $m=0$ Fourier coefficient is
+\[
+  \mathcal{E}_0(\tau,s;\varphi,+1)\;=\;v^{s/2}\varphi(0)
+  \;-\;\sqrt{\pi}\,i\,v^{-s/2}\,
+  \frac{\Gamma\bigl(\tfrac{s+1}{2}\bigr)}{\Gamma\bigl(\tfrac{s}{2}+1\bigr)}
+  \prod_p W_{0,p}(s,\varphi_p),
+\]
+and for a nonzero coset $\varphi_\mu$ one has $\varphi_\mu(0)=0$, since $0\notin\mu+L$. The first
+term therefore drops. The Whittaker product does still vanish at $s=0$ --- though not for the
+reason one would expect, as the proof of Proposition~\ref{prop:kappa0} shows --- so what survives
+at $\mu\neq0$ is its \emph{$s$-derivative}, rather than the regularised constant $k_0(0)$ that
+Theorem~3.3 attaches to $\varphi_0$. We now evaluate it. The one ingredient not already in hand is the
+level-prime factor at the \emph{zero} coset, which the recipe of \S\ref{sec:chain} never needs and
+which the accompanying code cannot return, its defining series failing to terminate. It is fixed by
+calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis} itself.
+
+\begin{lemma}[the $m=0$ local factor of a $p$-scaled plane]\label{lem:m0loc}
+For a binary $\Z_p$-lattice $L$ and $\varphi=\mathrm{char}(\mu+L)$, put
+$\alpha_k=p^{-k}\#\{x\in(\mu+L)/p^kL: Q(x)\equiv0 \bmod p^k\}$ and
+$G(X)=\sum_{k\ge0}\alpha_kX^k$ with $X=p^{-s}$. Then $W_{0,p}(s,\varphi)=(1-X)\,G(X)$, and
+\[
+\begin{array}{llll}
+\toprule
+\text{$L_p$} & \text{$\mu$} & \alpha_k & W_{0,p}(s,\varphi)\\
+\midrule
+\text{unimodular, split} & 0 & 1+k\tfrac{p-1}{p} & (1-X/p)/(1-X)\\
+\text{unimodular, inert} & 0 & 1,\tfrac1p,1,\tfrac1p,\dots & (1+X/p)/(1+X)\\
+\text{$p$-scaled, split} & \neq0 \text{ isotropic} & 1 & 1\\
+\text{$p$-scaled, split} & 0 & (k-1)(p-1)+p & \bigl(1+(p-2)X\bigr)/(1-X)\\
+\bottomrule
+\end{array}
+\]
+In particular the last has a \emph{simple pole} at $s=0$:
+$W_{0,p}(s,\varphi_0)=\tfrac{p-1}{s\log p}+O(1)$.
+\end{lemma}
+
+\begin{proof}
+The two unimodular rows are forced: \cite[Lem.~2.18]{SchoferThesis} evaluates
+$\prod_pW_{0,p}(s,\varphi_0)=c_0\,L(s,\chi_d)/L(s+1,\chi_d)$ in the unimodular case, so the local
+factor there must be the $p$-factor of that ratio, which is $(1-\chi_d(p)X/p)/(1-\chi_d(p)X)$; the
+displayed $\alpha_k$ are elementary counts, and $(1-X)G(X)$ returns exactly those two expressions.
+This determines the normalisation. The third and fourth rows are the same counts for the $p$-scaled
+plane $Q=pxy$: at an isotropic $\mu=(a/p,0)$ with $a$ a unit, $Q(x)\equiv0$ forces $y\equiv0$ and
+$\alpha_k=1$; at $\mu=0$ one has $xy\equiv0\bmod p^{k-1}$, giving $\alpha_k=(k-1)(p-1)+p$. Summing
+and multiplying by $1-X$ gives the last two entries.
+\end{proof}
+
+The third row is a check rather than an input: it is the object the code \emph{can} compute, and it
+returns the constant $1$, in agreement (\texttt{km0poly.m}). All four rows were verified against
+brute-force counts at $p=3,5,7$ (\texttt{km0whit.py}).
+
+\begin{proposition}[the dropped coefficient]\label{prop:kappa0}
+Let $N$ be prime and $\mu$ a nonzero isotropic coset. Then
+\[
+  \kappa_\mu(0)\;=\;-\,\frac{\log N}{N-1},
+\]
+and summing over the $2N-2$ such cosets reproduces the correction of
+Observation~\ref{obs:mult}: in the normalisation of \S\ref{sec:chain} the dropped $m=0$ terms
+contribute $\tfrac12c_\eta(0)\log N$ per CM point, i.e.\ exactly
+$\mathrm{mult}(f)\sum_{p\mid N/(N,d)}\log p$.
+\end{proposition}
+
+\begin{proof}
+At a firing discriminant a nonzero isotropic $\mu$ is supported at the level prime alone --- the
+$D$-part of the discriminant form is anisotropic (Observation~\ref{obs:iso}), and this is verified
+for $L_-$ itself in \texttt{km0places.m}, where the nonzero isotropic cosets of $L_-^\vee/L_-$
+number $4,2,8$ at $N=3,2,5$, that is $2N-2$. Hence every local factor other than the one at $N$
+agrees for $\varphi_\mu$ and $\varphi_0$, and with $P(s)=\prod_pW_{0,p}(s,\varphi_0)$,
+\[
+  \prod_p W_{0,p}(s,\varphi_\mu)\;=\;\frac{P(s)}{W_{0,N}(s,\varphi_0)} ,
+\]
+using $W_{0,N}(s,\varphi_\mu)=1$ from Lemma~\ref{lem:m0loc}. Individual factors have poles at
+$s=0$ and only the product converges, so this ratio, and not any single place, is the object to
+evaluate. Writing $A(s)$ for the archimedean factor displayed above, with $A(0)=i\pi$, the
+vanishing of the $m=0$ coefficient at $\varphi_0$ --- which is the functional equation, not
+incoherence --- reads $1=A(0)P(0)$. At $\mu\neq0$ the term $v^{s/2}\varphi_\mu(0)$ is absent, and
+by Lemma~\ref{lem:m0loc} the denominator has a simple pole, so the ratio has a simple zero:
+$\prod_pW_{0,p}(s,\varphi_\mu)=P(0)\,s\log N/(N-1)+O(s^2)$. Therefore
+$\kappa_\mu(0)=-A(0)P(0)\log N/(N-1)=-\log N/(N-1)$, every transcendental constant cancelling.
+Finally the $2N-2$ cosets carry a common $c_\eta(0)$ (Observation~\ref{obs:iso}), so the prefactor
+$-\tfrac14$ of \S\ref{sec:chain} gives
+$-\tfrac14(2N-2)c_\eta(0)\bigl(-\log N/(N-1)\bigr)=\tfrac12c_\eta(0)\log N$.
+\end{proof}
+
+Two things are worth drawing out. The factor $\tfrac12$ is
+$\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same
+$\tfrac12$ was measured at $N=2$, $3$ and $5$ and why Observation~\ref{obs:mult} could be stated
+without an $N$-dependent constant. And the $\log N$ comes from the level prime, not from a place of
+$\mathrm{Diff}$: not because the level factor \emph{vanishes} --- it does not, being identically
+$1$ at every nonzero isotropic coset --- but because at the zero coset it has a \emph{pole}, so
+that replacing it by $1$ converts that pole into the zero whose derivative is taken. This is why
+searching for a vanishing place does not find it, and it is the reason the correction eluded the
+case analysis of \S\ref{sec:reenum}, which tracks orders of vanishing only.
+
+Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand in any case: the level factor at
+$m>0$ only ever raises the order of vanishing, so $\kappa$ cannot supply the $\log N$ from the
+$m>0$ terms, which is what leaves the whole correction in the $m=0$ term at $\eta\neq0$. Part (ii)
+of the Kudla--Rapoport--Yang programme --- the incorporation of a level structure into the moduli
+problem --- remains to be carried out. And what a corrected formula must reproduce is the
+multipliers of Observation~\ref{obs:mult}, equivalently the coefficients of
+Proposition~\ref{prop:closedcoef}; not Table~\ref{tab:A} index by index, which fixes the functional
+only modulo the relation ideal of the panel (Remark~\ref{rem:gauge}).
+
+A further reading should be recorded, since it would undercut the rest: that the evaluation of
+$\kappa^-_\mu(m)$ for $m>0$ is itself wrong at $N>1$. It had never been checked against an
+independent computation there --- neither here nor, as far as we can determine, in the literature.
+Yang's worked examples \cite[Ex.~21--24]{Yang} take $B=\bigl(\tfrac{-1,3}{\Q}\bigr)$ with a
+\emph{maximal} order, and indeed $L=\Lp+\Lm$ there; the regression tests in the accompanying code
+likewise cover only $p=2$, hyperbolic blocks, and scalings $0$ and $1$.
+
+That check has now been made where the $N$-dependence lives. Against the naive local
+representation density $\alpha_p(m)=\lim_k p^{-k}\#\{x\in(\Z/p^k)^2: Q(x)\equiv m\}$, computed by
+counting with convergence in $k$ verified rather than assumed, the code's local Whittaker agrees
+exactly --- with no normalising constant --- first in the already-trusted configuration ($p=2$,
+scalings $0$ and $1$), and then in the one that had never been touched: odd $p=3,5,7$ with the
+lattice $p$-scaled, i.e.\ $\ord_p(\det)=2$, which is the shape of $L_-$ at a firing discriminant,
+in both the isotropic case (relevant, since firing forces $N$ split) and the anisotropic one. All
+twelve configurations agree. The closed form $W_{m,N}(1)=(N-1)\ord_N(m)$, previously read off the same
+code that computes it, is likewise reproduced from the counting alone.
+
+This bounds the reading rather than eliminating it: it verifies the local \emph{values}, not the
+derivative $W'(1)$. But among the $m>0$ terms the derivative is only ever taken at a vanishing
+place, and the level prime is never that place in a contributing term --- when $N\mid m$ the level
+factor is $(N-1)\ord_N(m)\neq0$, and when $N\nmid m$ the order of vanishing is at least two and the
+term is discarded --- so there the derivative is always evaluated in a configuration that already
+occurs at $N=1$. This is a statement about $m>0$ only, and the contrast with $m=0$ is the point of
+Proposition~\ref{prop:kappa0}: there the level prime \emph{is} where the derivative is taken, and it
+gets there through a pole rather than a zero, which is exactly the configuration the $m>0$ analysis
+never meets.
+
+\begin{remark}[Published CM values need not discriminate]\label{rem:gy36}
+A natural-seeming check is to compare against a published CM value on a base with $N>1$ and a
+nonvanishing correction; $X_0^{14}(5)$ with $s(\tau_{-280})=5/16$ \cite[Ex.~36]{GY} appears to be
+the only available instance. It cannot work. The Hauptmodul there is normalised by
+$s(\tau_{-4})=\infty$, $s(\tau_{-11})=1$, $s(\tau_{-35})=0$, so the published value depends only on
+the ratio $s(-280)/s(-35)$ --- and $-35$ and $-280$ are both non-firing ($5\mid d$), so any
+correction multiplies both by the same power of $N$ and cancels; the remaining anchors sit at $0$
+and $\infty$, where a multiplicative factor is invisible. Indeed the pipeline reproduces $5/16$
+exactly both with and without the correction. A published value can only test the correction if
+its normalising anchors and the tested point lie on opposite sides of the firing rule; this should
+be checked, at a cost of nothing, before any such comparison is attempted. The consistency
+relation \eqref{eq:haupt}, by contrast, is sensitive exactly where \cite[Ex.~36]{GY} is blind, and
+is what supplied the $X_0^{14}(5)$ ground truth here.
+\end{remark}
 
 \appendix
 \section{Reproducibility}\label{app:repro}
@@ -363,9 +1846,56 @@ The computations were carried out in Magma against the codebase accompanying thi
       effect.
 \item Every reported value is gated on the principal-part check; a run failing that gate is
       discarded.
+\item The exact constant-term evaluation of \S\ref{sec:exact} (\texttt{cusp1.m},
+      \texttt{cusp2.m}, and the two-channel solver \texttt{ledger2.py}) and the complete
+      campaign data --- principal-part dumps, ground-truth sweeps, and the constraints ledger
+      --- are banked on the branch \texttt{m0-theta-campaign} of the accompanying repository.
+\item The campaign of \S\ref{sec:slaw} is banked on the same branch under
+      \texttt{vvdata/weyl-campaign}: the residue-pairing solver (\texttt{eis32.m}), the exact
+      rationalisers (\texttt{kernelrat.py}, \texttt{eisrat.py}), the genus-average drivers
+      (\texttt{allgross.m}, \texttt{genallgross.py}), the dictionary and mass probes
+      (\texttt{grossid100.m}, \texttt{grossid900.m}, \texttt{swapprobe.m},
+      \texttt{massprobe.m}, \texttt{genusfit15sw.m}), the per-base evidence records
+      (\texttt{mono}/\texttt{epool}/\texttt{eis32e}/\texttt{kernelrat}/\texttt{eisrat}/%
+      \texttt{allgross} per base), and the composite-$s$ preregistration
+      (\texttt{thetasum-form.md}, \texttt{mass210.log}).
+\item The closed form of Proposition~\ref{prop:closedcoef} is implemented independently of
+      the Magma pipeline in \texttt{closedcoef.py}, with the Hurwitz class number counted from
+      reduced forms rather than tabulated; it self-checks against the genus-combination
+      coefficients of \texttt{ctwm.log} at $D=15,39,55$. \texttt{multcheck.py} runs the chain
+      out to the measured multipliers ($39$ of $39$, Remark~\ref{rem:gauge}) and
+      \texttt{gauge152.py} exhibits the rank deficiency that separates it from
+      Table~\ref{tab:A}.
+\item For \S\ref{sec:open}: \texttt{km0poly.m} computes the level-prime factor at $m=0$ as a
+      \emph{polynomial} rather than a value, giving the constant $1$ of Lemma~\ref{lem:m0loc};
+      \texttt{km0places.m} exhibits the nonzero isotropic cosets of $L_-^\vee/L_-$ at firing
+      discriminants, $2N-2$ of them, supported at the level prime alone; and \texttt{km0whit.py}
+      carries out the calibration of Lemma~\ref{lem:m0loc} against brute-force counts at
+      $p=3,5,7$ and assembles Proposition~\ref{prop:kappa0}. The distinction between a local
+      factor's value and its polynomial matters twice over in this section, and both scripts
+      report the polynomial.
+\item The bases with $M\ge660$ are reachable only through \texttt{eis32k.m}, which replaces
+      the numerical Weil-representation loop of \texttt{eis32.m} by the closed form of
+      \cite[Thm.~6.4]{Stromberg2013} (agreement with the numerical driver checked
+      end-to-end at $X_0^{210}(1)$: $960$ of $960$ words, identical solve residual
+      $1.0087\cdot10^{-42}$). Its \texttt{EST} switch selects the tracked isotropic coset
+      and is what produces the $\eta=0$ rows of Remark~\ref{rem:coset}; the corresponding
+      control runs reproduce the banked $\eta^*$ fits exactly. Its \texttt{CTL} switch
+      recomputes every $\rho$-entry by the numerical route and reports the worst
+      deviation; this is the gate through which the odd-level $2$-part of
+      Observation~\ref{obs:oddlev} was admitted (worst $1.3\cdot10^{-79}$ over all $144$
+      words of $X_0^{15}(1)$, against $7.3\cdot10^{-80}$ for the unchanged even-level path
+      at $X_0^{15}(2)$), run before any fit. Restricted-support gauge checks (the rank
+      exclusions and the degeneracy quoted above) are generated by \texttt{genrestrict.py}.
 \end{itemize}
 
 \begin{thebibliography}{99}
+
+\bibitem{Borcherds} R.~E.~Borcherds, \emph{Automorphic forms with singularities on Grassmannians},
+Invent.\ Math.\ \textbf{132} (1998), 491--562.
+
+\bibitem{BK} J.~H.~Bruinier and M.~Kuss, \emph{Eisenstein series attached to lattices and modular
+forms on orthogonal groups}, Manuscripta Math.\ \textbf{106} (2001), 443--459.
 
 \bibitem{Errthum} E.~Errthum, \emph{Singular moduli of Shimura curves},
 Canad.\ J.\ Math.\ \textbf{63} (2011), 826--861.
@@ -379,8 +1909,23 @@ weight one}, Internat.\ Math.\ Res.\ Notices (1999), no.~7, 347--385.
 \bibitem{KY} S.~Kudla and T.~Yang, \emph{Eisenstein series for $SL(2)$},
 Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
 
+\bibitem{Stromberg2013} F.~Str\"omberg, \emph{Weil representations associated with finite
+quadratic modules}, Math.~Z.\ \textbf{275} (2013), 509--527.
+
 \bibitem{Schofer} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
 J.\ reine angew.\ Math.\ \textbf{629} (2009), 1--36.
+
+\bibitem{SchoferThesis} J.~Schofer, \emph{Borcherds forms and generalizations of singular moduli},
+Ph.D.\ thesis, University of Maryland, College Park, 2005.
+
+\bibitem{Schwag} M.~Schwagenscheidt, \emph{Eisenstein series for the Weil representation},
+J.\ Number Theory \textbf{193} (2018), 74--101.
+
+\bibitem{SeSt} J.-P.~Serre and H.~M.~Stark, \emph{Modular forms of weight $1/2$}, in: Modular
+Functions of One Variable VI, Lecture Notes in Math.\ \textbf{627}, Springer (1977), 27--67.
+
+\bibitem{Skoruppa} N.-P.~Skoruppa, \emph{Jacobi forms of critical weight and Weil
+representations}, in: Modular Forms on Schiermonnikoog, Cambridge Univ.\ Press (2008), 239--266.
 
 \bibitem{Yang} Y.~Yang, \emph{Special values of hypergeometric functions and periods of CM elliptic
 curves}, arXiv:1503.07971.

@@ -195,8 +195,8 @@ end intrinsic;
 // ---------------------------------------------------------------------------------------------
 
 intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::RngIntElt :
-                          Prec := 200, NumSamples := 192, Height := 1)
-      -> SeqEnum, SeqEnum, SeqEnum
+                          Prec := 200, NumSamples := 192, Height := 1, PosDepth := 0)
+      -> SeqEnum, SeqEnum, SeqEnum, SeqEnum
 {For each f in fs, the constant terms c_eta(0) of F_f at the ISOTROPIC cosets eta.  Returns, per form,
  that sequence of constant terms; then the isotropic cosets themselves (in the matching order, with
  the trivial coset first); then, per form, the maximum deviation of F_f's numerically computed
@@ -205,6 +205,14 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
 
  The transcendental work (the coset rho-vectors and the eta values at the pulled-back points) does not
  depend on the form, so passing all the forms of a base at once is far cheaper than one call each.
+
+ With PosDepth = P > 0, a fourth return value gives, per form and per ISOTROPIC coset, the
+ POSITIVE coefficients c_eta(j/M) for j = 1..P (so integer index n corresponds to j = n*M).  These
+ are the coefficients no scalar q-expansion can supply at a nonzero coset -- the input of the
+ weight-3/2 shadow calibration.  ALIASING CAVEAT: the extraction aliases c(nn - K) and c(nn + K),
+ so the error at a positive exponent nn grows like exp(4 pi sqrt(p(nn + K)) - 2 pi K + 2 pi nn)
+ relative to the constant term; raise NumSamples accordingly and treat the returned gate as
+ covering the PRINCIPAL part only.
 
  CHOOSING THE PARAMETERS -- getting these wrong looks exactly like a wrong answer:
   * Height must be >= 1.  Then Im(gamma tau) <= Im(tau) for every coset, so no coset is pushed up
@@ -258,7 +266,7 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
         end for;
     end for;
 
-    consts := []; errs := [];
+    consts := []; errs := []; poscs := [];
     for f in fs do
         require Parent(f)`M eq M : "All forms must live in the eta-quotient ring of level M.";
         foo := qExpansionAtoo(f, 80); f0 := qExpansionAt0(f, 80);
@@ -283,7 +291,8 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
         v0 := Minimum(0, Valuation(f0));
         exps := Sort(Setseq( {Rationals() | 0}
                     join {Rationals() | -(Rationals()!j)/M : j in [1..-v0]}
-                    join {Rationals() | nn : nn in [Valuation(foo)..-1]} ));
+                    join {Rationals() | nn : nn in [Valuation(foo)..-1]}
+                    join {Rationals() | (Rationals()!j)/M : j in [1..PosDepth]} ));
         pos := AssociativeArray();
         for a->e in exps do pos[e] := a; end for;
         // NB: build this with an explicit loop.  Magma's multi-index comprehension varies the FIRST
@@ -314,8 +323,9 @@ intrinsic VVConstantTerms(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, M::Rn
 
         Append(~consts, [coef(i, 0) : i in iso]);
         Append(~errs, err);
+        Append(~poscs, [ [coef(i, (Rationals()!j)/M) : j in [1..PosDepth]] : i in iso ]);
     end for;
-    return consts, [elts[i] : i in iso], errs;
+    return consts, [elts[i] : i in iso], errs, poscs;
 end intrinsic;
 
 intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
@@ -338,6 +348,300 @@ intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D
                                              Height := Height);
     // entry 1 is the trivial coset (whose constant term is 0); any other will do
     return [ c[2]/2 : c in consts ], errs;
+end intrinsic;
+
+intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
+                            N::RngIntElt : Prec := 80) -> SeqEnum
+{The m = 0 multipliers of Schofer's formula for the forms fs, evaluated EXACTLY as a finite sum
+ over Gamma_0(M) cosets -- no Fourier sampling, no CM table, minutes per base.  The multiplier is
+
+     (1/2) * c_eta(0)   for any NONZERO ISOTROPIC eta
+
+ (all such eta carry the same value, and c_0(0) = 0), and c_eta(0) is assembled coset by coset:
+ for each coset word w and eta monomial prod_d eta(d tau)^(r_d), triangularising
+ [d 0; 0 1] g = g_d [a_d b_d; 0 e_d] exhibits f|w as a constant multiple of a q-series with
+ exact rational exponents and root-of-unity coefficients; the constant per (monomial, word) is
+ pinned numerically at one point of the upper half plane and verified at a second (its closed
+ form -- the Dedekind-sum eta multiplier system -- is certified in vvdata/weyl-campaign/cusp4.m).
+ Then c_eta(0) = sum_w rho(w^-1)e_0[eta] * a0(f|w).
+
+ Validated against the measured ground truth on 21 bases (vvdata/weyl-campaign, branch
+ m0-theta-campaign): the 15_2 full panel 9/9 exactly, 21_2, 22_3, and every base of the
+ constraints ledger.  Returns one rational per form; raises an error rather than return an
+ unverified value (kappa two-point check, isotropic-component agreement, rational snap).}
+    require N gt 1 : "There are no nonzero isotropic cosets when N = 1, so no m = 0 multiplier.";
+    require #fs gt 0 : "Empty form sequence.";
+    R := Parent(fs[1]); ds := R`ds;
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    require R`M eq M : "The forms live at the wrong level for (D, N).";
+
+    CC := ComplexField(Prec); ii := CC.1; pi := Pi(CC);
+    ee := func< z | Exp(2*pi*ii*z) >;
+
+    fftdata := VVWeilFFT(Ld, CC : Dual := true);
+    elts := fftdata[7]; i0 := fftdata[8];
+    Qr := ChangeRing(Ld`Q, Rationals()); dn := Ld`denom;
+    isoidx := [];
+    for i in [1..#elts] do
+        v := ChangeRing(elts[i]@@Ld`to_disc, Rationals());
+        r := (v*Qr, v)/(2*dn^2);
+        if r eq Floor(r) then Append(~isoidx, i); end if;
+    end for;
+    require #isoidx ge 2 : "No nonzero isotropic coset found.";
+
+    reps := VVCosetReps(M);
+    words := [ VVSTWord(g) : g in reps ];
+
+    triang := function(g, d)
+        g2 := Matrix(Integers(), 2, 2, [d*g[1][1], d*g[1][2], g[2][1], g[2][2]]);
+        c1 := g2[1][1]; c2 := g2[2][1];
+        h := GCD(c1, c2);
+        p1 := c1 div h; p2 := c2 div h;
+        gg, u, v := XGCD(p1, p2);
+        error if gg ne 1, "triangularisation: row not primitive";
+        gd := Matrix(Integers(), 2, 2, [p1, -v, p2, u]);
+        sd := gd^(-1) * g2;
+        a := sd[1][1]; b := sd[1][2]; e := sd[2][2];
+        if a lt 0 then a := -a; b := -b; e := -e; end if;
+        if e lt 0 then gd := -gd; sd := -sd; a := sd[1][1]; b := sd[1][2]; e := sd[2][2]; end if;
+        return a, b, e;
+    end function;
+
+    slashdata := function(word, tau)
+        z := tau; factor := CC!1;
+        for i := #word to 1 by -1 do
+            if word[i][1] eq "S" then factor /:= Sqrt(z); z := -1/z;
+            else z := z + word[i][2]; end if;
+        end for;
+        return factor, z;
+    end function;
+
+    tau0 := CC!0.31 + CC!1.31*ii;
+    tau1 := CC!(-0.57) + CC!1.73*ii;
+
+    // PER-WORD FALLBACK for the two evaluation points, triggered only when the global tau0/tau1
+    // land a word's z = w.tau outside the measured-safe range. eta(d z) is evaluated for d up to
+    // M, so Im(z) too small OR too large both blow up its dynamic range in floating point; the
+    // measured bands (vvdata/weyl-campaign/tau-precision/tauwindow.m, over all 2232 cosets of
+    // M = 1220) show catastrophic loss ONLY at the extremes -- [0,1e-5) and [1e-1,1e2) lose
+    // 90-180 digits, everything from [1e-5,1e-1) loses at most ~10, comfortably inside the
+    // 1e-15-relative two-point check below (needs ~15 valid digits out of Prec := 80).
+    //
+    // THE UPPER THRESHOLD SCALES WITH M, the lower one does not -- and using the raw M = 1220
+    // absolute band on a smaller base is a real bug (caught by M0PROGRESS=1 on 15_2, M = 60: it
+    // flagged the DEFAULT tau0 itself, Im(z) = 1.31, as unsafe, when 15_2 has always worked
+    // exactly with that tau0). The mechanism explains why: eta is evaluated at d*z for d up to
+    // M, so the dynamic-range risk on the large side is really about M*Im(z), not Im(z) alone --
+    // the M = 1220 measurement's unsafe boundary sits at Im(z) ~ 0.1, i.e. M*Im(z) ~ 122. The
+    // near-real-axis mechanism on the small side (z and -1/z both close to the real line) is
+    // about the word's own S-step structure, not a d-scaling effect, so that threshold is kept
+    // as an absolute floor.
+    //
+    // The correction: since the slash constant is tau-independent (that is exactly what the
+    // two-point check verifies), tau is a free choice per word. Take tau to be the PREIMAGE of a
+    // fixed safe-band target z under the word's own SL2(Z) matrix (tau := g^-1.ztarg), so
+    // slashdata(w, tau) reproduces z = ztarg exactly regardless of how extreme that word's own
+    // (c, d) are. This is deliberately NOT applied to every word: an earlier attempt that used
+    // per-word preimages everywhere pushed Im(tau) itself to extreme values for many words
+    // (sfun's own argument is evaluated at tau directly, not at z), which was slow rather than
+    // wrong but never finished on 58_5 in a reasonable time. Confining it to the rare words the
+    // default actually mishandles keeps that risk rare too.
+    z0targ := CC!0.31 + CC!0.0057*ii;
+    z1targ := CC!(-0.57) + CC!0.0083*ii;
+    safe_im := func< z | Abs(Im(z)) ge 10^(-5) and M*Abs(Im(z)) lt 100 >;
+    preimage := function(g, z)
+        a := CC!g[1][1]; b := CC!g[1][2]; c := CC!g[2][1]; d := CC!g[2][2];
+        return (d*z - b) / (a - c*z);
+    end function;
+
+    monos := {@ @};
+    for f in fs do for r in Exponents(f) do Include(~monos, r); end for; end for;
+
+    // Cusp-class shortcut: the per-coset product rho(w^-1)e_0[eta] * a0(f|w) is CONSTANT
+    // on each class g = gcd(c, M) for every isotropic component (e_0 is a
+    // rho(Gamma_0(lev))-eigenvector whose character is f's eta multiplier, and the
+    // isotropic components are T-invariant; verified on 570 class/form/base checks and
+    // derived in vvdata/weyl-campaign/thetag-derivation.md).  So evaluate ONE canonical
+    // coset per class, VERIFY the constancy on up to two more cosets of the class, and
+    // multiply by the true class size.  This replaces #cosets FFT applications by
+    // ~3 * #classes -- the difference between minutes and hours at M ~ 400.
+    classof := [ GCD(VVWordMatrix(w)[2][1] mod M, M) : w in words ];
+    classes := Sort(Setseq(Set(classof)));
+    Ng := AssociativeArray();
+    canon := AssociativeArray();   // class -> [canonical wi, up to 2 verification wi's]
+    for g0 in classes do
+        idxs := [ wi : wi in [1..#words] | classof[wi] eq g0 ];
+        Ng[g0] := #idxs;
+        picks := [ idxs[1] ];
+        if #idxs ge 2 then Append(~picks, idxs[1 + (#idxs div 2)]); end if;
+        if #idxs ge 3 then Append(~picks, idxs[#idxs]); end if;
+        canon[g0] := picks;
+    end for;
+    selected := Sort(Setseq(&join{ Set(canon[g0]) : g0 in classes }));
+
+    // Diagnostic-only, gated behind M0PROGRESS so it's silent by default: printf is buffered to
+    // a file (CLAUDE.md), so a killed/crashed run leaves NOTHING to show where it got to.
+    // WriteStderr is not buffered that way.
+    progress := GetEnv("M0PROGRESS") ne "";
+    if progress then
+        WriteStderr(Sprintf("M0MultiplierExact: %o words selected of %o total, %o classes\n",
+                             #selected, #words, #classes));
+    end if;
+
+    SS := PowerSeriesRing(CC); t := SS.1;
+    a0tab := [ [ CC!0 : r in monos ] : w in words ];
+    nfallback := 0;
+    t_progress := Realtime();
+    for wcount->wi in selected do
+        w := words[wi];
+        g := VVWordMatrix(w);
+        tri := [ ];
+        for d in ds do
+            a, b, e := triang(g, d);
+            Append(~tri, <a, b, e>);
+        end for;
+        W := LCM([ tri[i][3] : i in [1..#ds] ]);
+        leads := [ &+[ Integers() | r[i]*tri[i][1]*(W div tri[i][3]) : i in [1..#ds] ]
+                   : r in monos ];
+        depth := Maximum([ 0 ] cat [ -L : L in leads ]) + 1;
+        if progress then
+            WriteStderr(Sprintf("  wi=%o W=%o depth=%o\n", wi, W, depth));
+        end if;
+        units := [ ];
+        for i->d in ds do
+            a, b, e := Explode(tri[i]);
+            step := 24*a*(W div e);
+            u := SS!1 + O(t^depth);
+            n := 1;
+            while n*step lt depth do
+                u *:= 1 - ee(CC!(n*b/e))*t^(n*step);
+                n +:= 1;
+            end while;
+            Append(~units, u);
+        end for;
+        mytau0 := tau0; mytau1 := tau1;
+        _, ztest0 := slashdata(w, tau0);
+        if not safe_im(ztest0) then
+            mytau0 := preimage(g, z0targ); nfallback +:= 1;
+            if progress then
+                WriteStderr(Sprintf("  fallback wi=%o point0: default Im(z)=%o -> using preimage\n",
+                                     wi, RealField(6)!Im(ztest0)));
+            end if;
+        end if;
+        _, ztest1 := slashdata(w, tau1);
+        if not safe_im(ztest1) then
+            mytau1 := preimage(g, z1targ); nfallback +:= 1;
+            if progress then
+                WriteStderr(Sprintf("  fallback wi=%o point1: default Im(z)=%o -> using preimage\n",
+                                     wi, RealField(6)!Im(ztest1)));
+            end if;
+        end if;
+        fac0, z0 := slashdata(w, mytau0);
+        fac1, z1 := slashdata(w, mytau1);
+        if progress and (wcount mod 20 eq 0 or Realtime(t_progress) gt 30) then
+            WriteStderr(Sprintf("  word %o/%o (wi=%o), %o fallbacks so far\n",
+                                 wcount, #selected, wi, nfallback));
+            t_progress := Realtime();
+        end if;
+        for ri->r in monos do
+            if progress and ri mod 50 eq 0 then
+                WriteStderr(Sprintf("    wi=%o mono %o/%o\n", wi, ri, #monos));
+            end if;
+            L := leads[ri];
+            if L gt 0 then continue; end if;
+            produ := &*[ SS | units[i]^(r[i]) : i in [1..#ds] | r[i] ne 0 ];
+            c0 := Coefficient(produ, -L);
+            if c0 eq 0 then a0tab[wi][ri] := CC!0; continue; end if;
+            num0 := fac0 * &*[ CC | DedekindEta(d*z0)^(r[i]) : i->d in ds | r[i] ne 0 ];
+            num1 := fac1 * &*[ CC | DedekindEta(d*z1)^(r[i]) : i->d in ds | r[i] ne 0 ];
+            sfun := func< tau | ee(tau*L/(24*W)) *
+                &*[ CC | ( DedekindEta((tri[i][1]*tau + tri[i][2])/tri[i][3]) *
+                           ee(-(tri[i][1]*tau + tri[i][2])/(24*tri[i][3])) )^(r[i])
+                    : i in [1..#ds] | r[i] ne 0 ] >;
+            k0 := num0 / sfun(mytau0);
+            k1 := num1 / sfun(mytau1);
+            // The two-point check must SCALE WITH THE CONSTANT, at the same 10^(-15) the other
+            // four guards in this intrinsic use (10^(-15)*vscale on the value checks,
+            // 10^(-15)*Max(1,|.|) on the contributions).  This was the last absolute tolerance
+            // here; the merged m0exact-relative-tolerance work converted the others but not this.
+            //
+            // MEASURED, two bases, reporting instead of erroring:
+            //   X0^58(5)   1446 evaluations   |k| 1 .. 2.5e10   reldiff <= 5.9e-33
+            //   X0^34(11)   319 failures      |k| 1e8 .. 1e12   reldiff <= 1.07e-18
+            // The absolute 1e-30 failed on LARGE constants whose agreement was unchanged
+            // (absdiff = reldiff * |k|), which is why it had to become relative.  But the
+            // ACHIEVABLE relative precision is base-dependent: 33 digits at 58_5, 18 at 34_11,
+            // at the same Prec := 80 -- longer eta products accumulate more rounding.  So the
+            // threshold must be the siblings' 10^(-15), not something tuned to the best base.
+            // (A first attempt used 10^(-30) relative, calibrated on 58_5 alone; that passed
+            // 58_5 and still blocked 34_11 and 74_5.  Do not re-tighten it on one base.)
+            //
+            // 10^(-15) still catches what this guard is for: a wrong slash constant differs at
+            // O(1), not in the 19th digit.  Maximum(1, .) keeps it exactly as strict as the
+            // original absolute test for |k| <= 1.
+            kscale := Maximum(Abs(k0), Abs(k1));
+            error if Abs(k0 - k1) gt 10^(-15) * Maximum(1, kscale),
+                "M0MultiplierExact: slash constant failed its two-point check";
+            a0tab[wi][ri] := k0 * c0;
+        end for;
+    end for;
+    if progress then
+        WriteStderr(Sprintf("M0MultiplierExact: a0 table done, %o fallback points of %o\n",
+                             nfallback, 2*#selected));
+    end if;
+
+    rvtab := AssociativeArray();
+    for wi in selected do rvtab[wi] := VVRhoInvE0FFT(fftdata, words[wi]); end for;
+
+    mults := [ Rationals() | ];
+    for f in fs do
+        a0w := AssociativeArray();
+        for wi in selected do
+            a0w[wi] := &+[ CC | f`coeffs[r] * a0tab[wi][Index(monos, r)]
+                           : r in Exponents(f) ];
+        end for;
+        cvals := [ CC!0 : i in isoidx ];
+        for g0 in classes do
+            picks := canon[g0];
+            contribs := [ [ rvtab[wi][i] * a0w[wi] : i in isoidx ] : wi in picks ];
+            // constancy check across the class's sampled cosets, per component.
+            // RELATIVE tolerance with a 1e-15 floor: 39_2 (M = 156, the deepest
+            // base, fractional-pp family) shows measured class-1 deviation
+            // 1.1e-22 at Prec 80 -- honest deep-series roundoff, while its
+            // cusp3 dump passes every class-constancy check (cuspclass2.py,
+            // 42/42), so constancy itself is exact.  A genuine violation is
+            // O(scale), so 1e-15 relative keeps 15 digits of margin.  Max(1, .)
+            // keeps an absolute floor at small scales.
+            for k := 2 to #picks do
+                for j := 1 to #isoidx do
+                    dev := Abs(contribs[k][j] - contribs[1][j]);
+                    tol := 10^(-15) * Maximum(1, Abs(contribs[1][j]));
+                    error if dev gt tol,
+                        Sprintf("M0MultiplierExact: class-constancy violated (class %o, dev %o, scale %o)",
+                                g0, RealField(6)!dev, RealField(6)!Abs(contribs[1][j]));
+                end for;
+            end for;
+            for j := 1 to #isoidx do
+                cvals[j] +:= Ng[g0] * contribs[1][j];
+            end for;
+        end for;
+        // the nonzero isotropic components must agree, be real, and snap to a rational
+        // (same relative-tolerance reasoning as the constancy check above)
+        vals := [ cvals[j] : j->i in isoidx | i ne i0 ];
+        vscale := Maximum(1, Abs(vals[1]));
+        for v in vals do
+            error if Abs(v - vals[1]) gt 10^(-15) * vscale,
+                Sprintf("M0MultiplierExact: isotropic components disagree (dev %o, scale %o)",
+                        RealField(6)!Abs(v - vals[1]), RealField(6)!vscale);
+        end for;
+        error if Abs(Im(vals[1])) gt 10^(-15) * vscale,
+            "M0MultiplierExact: constant term not real";
+        mult := BestApproximation(Re(vals[1])/2, 10^4);
+        error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-15) * vscale,
+            "M0MultiplierExact: multiplier does not snap to a rational";
+        Append(~mults, mult);
+    end for;
+    return mults;
 end intrinsic;
 
 // ---------------------------------------------------------------------------------------------
