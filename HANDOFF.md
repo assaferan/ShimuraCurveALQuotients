@@ -9,6 +9,21 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
 
+## Update — 2026-09-04: `main` and `tier1-models` are now the SAME commit
+
+`main` was fast-forwarded to `tier1-models` (`475e72b`) — a clean FF, `main` was a strict
+ancestor 40 commits behind with nothing of its own. **`main` is no longer "code only": it now
+carries `paper/` too**, so every description of the split below is historical. The open SHIP
+question "merge `paper/`, or write down that the split is deliberate" is answered by merging.
+
+What that merge carried, beyond the paper: the per-coset `tau` fix in `M0MultiplierExact`
+(`34_11` goes from failing to passing, and its multipliers match the Prop 9.15 closed form 9/9 —
+see `PLAN.md` REPAIR), `tests/KudlaYangLocal.m`, and 34 Guo-Yang CM-value tables as offline tests
+under `tests/_offline/` (verified after the merge to emit zero CI targets).
+
+⚠ **Left open by the merge:** with the branches identical, either keep `tier1-models` in lockstep
+with `main` or retire it — silent drift between them is what produced the 27/27 problem.
+
 ## Update — 2026-09-03 (evening)
 
 Not a full rewrite; the record below (08-30) still stands for the model-pipeline arc. This adds

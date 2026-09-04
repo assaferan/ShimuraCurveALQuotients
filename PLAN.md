@@ -119,10 +119,21 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       `w_square` is a gauge — a choice of representative, not arithmetic. The paper was updated
       for that finding (`ee94175`); confirm the conjecture is still well-posed rather than a
       statement about a normalisation.
-- [ ] **Merge `paper/` into `main`, or write down that the split is deliberate.** The ambiguity is
-      what produced the 27/27 drift and cost a working branch the pointless-conics guard.
-      ⚠ Merge trap: anything cut from `tier1-models` drags the whole paper rewrite with it — run
-      `git log origin/main..origin/<branch>` first.
+- [x] **Merge `paper/` into `main`.** *(done 2026-09-04)* **THE SPLIT IS OVER: `main` and
+      `tier1-models` are now the SAME commit** (`475e72b`). It was a clean fast-forward — `main`
+      was a strict ancestor, 40 commits behind, nothing on `main` that was not already here, so
+      no conflict was possible. 46 files, +2855/−208, including `paper/` (+1417/−194) and the PDF.
+      `main` is therefore **no longer "code only"** — every description of it that way is now
+      stale.
+      ⚠ **The old merge trap still applies to FEATURE branches** cut from `tier1-models`: they
+      still drag whatever the paper has moved on by. Keep running
+      `git log origin/main..origin/<branch>` before merging one.
+      ⚠ **New question this raises, unanswered:** with the two branches identical, what is
+      `tier1-models` FOR now? Either keep it in lockstep (every commit fast-forwarded to `main`)
+      or retire it. Drifting silently is what caused the 27/27 problem in the first place.
+      Verified after the merge: CI's matrix generator emits **zero** `_offline`/`GuoYang` targets
+      (checked in the job log, not just read off the workflow), so the 34 offline tests stay out
+      of CI as designed.
 - [ ] **Rebuild the PDF, confirm refs resolve, submit.**
 
 ---
