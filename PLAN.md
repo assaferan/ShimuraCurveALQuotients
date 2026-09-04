@@ -125,6 +125,11 @@ One object blocks disproportionately much. Everything below this section is seco
         every one of the 158 monomials** — measured, `minlead` 12–36, `#le0 = 0` at every such
         word. The monomials are simply holomorphic there. All 12 divisor-classes of `M = 60` DO
         occur among the 144 words, so the classes exist; the POOL has no support at them.
+      ⚠ **The "provably resolvable" premise is NOT established** *(checked 2026-09-04)*. The
+      rank-6 figure is real but is computed over MONOMIALS, which are not valid probes of
+      `c_{eta*}(0)` — exactly the caveat the paragraph above states. Whether the six-index gap is
+      resolvable over the FORM space is uncomputed. Treat this section's premise as open, not
+      verified, and see SHIP.
       ⇒ It is a **search problem, not a dump fix**: it needs eta-monomials that actually carry a
       pole or constant term at cusp classes 2, 6, 10 and 30. `extraseqs`' 69 hand-picked vectors
       came from an earlier session with no surviving generator, so that pool has to be
@@ -148,25 +153,44 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
 
 - [ ] **Decide explicitly: does the paper need model results?** The blocking decision. If it does,
       scope exactly which claim — what exists is four models from one base, a partial set.
-- [ ] **Re-read `conj:sq` under the gauge finding.** It is stated in terms of `w_square`, and
-      `w_square` is a gauge — a choice of representative, not arithmetic. The paper was updated
-      for that finding (`ee94175`); confirm the conjecture is still well-posed rather than a
-      statement about a normalisation.
-- [x] **Merge `paper/` into `main`.** *(done 2026-09-04)* **THE SPLIT IS OVER: `main` and
-      `tier1-models` are now the SAME commit** (`475e72b`). It was a clean fast-forward — `main`
-      was a strict ancestor, 40 commits behind, nothing on `main` that was not already here, so
-      no conflict was possible. 46 files, +2855/−208, including `paper/` (+1417/−194) and the PDF.
-      `main` is therefore **no longer "code only"** — every description of it that way is now
-      stale.
-      ⚠ **The merge-trap habit still applies to any FEATURE branch**: check
-      `git log origin/main..origin/<branch>` before merging one, so you see what it really drags.
-      **RESOLVED 2026-09-04: `tier1-models` was RETIRED** — deleted local and remote (it was a
-      strict ancestor of `main`, so `-d` accepted it and nothing was lost), and
-      `worktrees/mainport` removed as redundant. Commit to `main` directly; do not recreate it.
-      Verified after the merge: CI's matrix generator emits **zero** `_offline`/`GuoYang` targets
-      (checked in the job log, not just read off the workflow), so the 34 offline tests stay out
-      of CI as designed.
-- [ ] **Rebuild the PDF, confirm refs resolve, submit.**
+      ⚠ **This decision is time-sensitive as of 2026-09-04**: `34_11` is being run through the
+      pipeline right now and may produce a second base. Wait for it, or decide conditionally —
+      "four models from one base" reads very differently from "two bases".
+- [x] **Re-read `conj:sq` under the gauge finding — DONE 2026-09-04, and the paper is already
+      consistent.** It attaches the caveat in BOTH places it needs to: after the scorecard
+      (~line 673) and in `rem:gauge` (~line 1573), each saying `w_square` "is a coordinate of a
+      gauge-fixed representative rather than an invariant" and that `conj:sq` "is to be read as a
+      statement about that representative". So the answer to "is it still well-posed?" is: it is
+      well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
+      tested predictions stand unfalsified (`14_5` and `34_5` both hit).
+- [ ] **The `rem:gauge` / MAIN LINE tension: STILL OPEN. My 2026-09-04 "the paper is wrong"
+      claim was RETRACTED the same day — do not act on it.** What was measured is solid:
+      `vvdata/weyl-campaign/rankcheck_gauge.py` (campaign) shows the `oo`-side matrix over the
+      **158 MONOMIALS** at `m = 1,2,3,10,15,30` has **rank 6**, against **rank 4** for the
+      nine-form panel, with two hard-assert validations (form `-1`'s principal part; the panel's
+      rank 4).
+      ⚠ **But that does not bear on the paper's claim, because the two are about DIFFERENT
+      OBJECTS.** `sec:exact` counts the span of *this character's* **FORMS** (78 of 128 joint
+      `(oo,0)` slots, 50 identities). I ranked **MONOMIALS**. Monomials are not valid probes of
+      this functional at all — `c_{eta*}(0)` sums over every cusp class, and unlike a genuine
+      Borcherds principal part (protected by `prop:nohalf` / [GY, Lemma 24]) an individual
+      eta-monomial can carry a nonzero constant term at *intermediate* cusps that an
+      `(A_m, B_j)`-only model never sees. See the same warning in MAIN LINE, which also records
+      that the numeric solve against real `c_{eta*}(0)` values **is still inconsistent**.
+      ⇒ **`rem:gauge` is NOT known to be wrong, and the paper should NOT be edited on this basis.**
+      The question it answers — can more FORMS separate `-a_E` from Table A? — is one nobody has
+      computed. **That is the actual open item**: rank the joint `(oo,0)` coordinates over the
+      form space, not over monomials, and see whether the six-index gap survives there.
+      **Method note worth keeping:** the two validations that made the rank number trustworthy
+      (they caught Magma line-wrapping and dropped rational coefficients) said nothing about
+      whether the right OBJECT was being measured. A validated computation of the wrong thing is
+      still the wrong thing.
+- [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
+      **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
+      moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
+      citations, 0 LaTeX warnings in the committed build log, and 0 occurrences of `??` in the
+      PDF text. So no rebuild is needed unless the `.tex` changes; what remains is the decision to
+      submit.
 
 ---
 
@@ -365,9 +389,35 @@ are provisional.
 
 The only cheap-predictor path left, and it converts 81 unknowns into data.
 
-- [ ] **Fix the half-integral convention *from theory*, not by fitting.** The error is very nearly
-      `-d/6`. Do not tune that constant — a fitted phase would silently corrupt all 81
-      classifications.
+- [ ] **Fix the half-integral convention *from theory*, not by fitting.** Do not tune the constant
+      — a fitted phase would silently corrupt all 81 classifications.
+      **2026-09-04, MEASURED — the target is much sharper than "the error is nearly `-d/6`".**
+      Ran `weildim2.m` (cross-check at `6_1` still PASSES, all 10 traces). Decomposing
+      `dimM = d + dk/12 - a1 - a2 - aT` by its leading rationals, at `k = 3/2`:
+
+          base      d       a1/d      a2/d      aT/d     dimM   truth
+          34_3    20808   0.37495   0.41671   0.49986   -3465     0
+          38_5    72200   0.37499   0.41668   0.50237  -12204     1
+          38_7   141512   0.37499   0.41667   0.50009  -23598     0
+
+      `a1/d -> 3/8` and `aT/d -> 1/2` on the nose; `a2/d -> 5/12`. And
+      `1 + k/12 - 3/8 - 5/12 - 1/2 = -1/6` **exactly** — so the `-d/6` is not a vague "phase is
+      off", it is **entirely attributable to `a2`, the ST / order-12 term**. `a1` (the order-8
+      S-term) and `aT` are already right.
+      Sharper still: had `a2/d` been `3/12` instead of `5/12`, the leading term would be
+      `1 + k/12 - 3/8 - 1/4 - 1/2 = 0` **exactly** — i.e. `a2`'s index looks offset by **2 units of
+      the 12-cycle**. Since `a2 = sum_j m_j (j/12)` with `sum_j m_j = d`, relabelling `j -> j+2`
+      moves it by `2d/12` MINUS the wrap at `j = 10, 11`, which is base-dependent — and that is
+      exactly why the residual is "nearly" `-d/6` and differs per base (`-0.16652`, `-0.16904`,
+      `-0.16676`) rather than being constant.
+      ⚠ **What this does NOT establish.** It shows the LEADING term vanishes under that shift. The
+      actual answer (`0, 1, 0`) lives in the `O(1)` deviations from those rationals — `a1/d`
+      differs from `3/8` only in the 5th decimal — so the systematic `O(d)` offset currently
+      swamps the entire signal. Getting the leading term to cancel is necessary, not sufficient,
+      and **applying a `+2/12` shift by hand would be exactly the fitting this item forbids**: it
+      would make the big number vanish while leaving the `O(1)` content unvalidated. Use this to
+      aim the derivation — the metaplectic base point for the order-12 `ST` lift — and then check
+      the `O(1)` part against `38_5 -> 1`, `38_7 -> 0`, `34_3 -> 0`.
 - [ ] **Validate against the known deficits:** `38_5 -> 1`, `38_7 -> 0`, `34_3 -> 0`.
 - [ ] **Classify the 81**, including whether the obstructed class is larger than 49.
 
