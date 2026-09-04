@@ -5,6 +5,16 @@ what you are working on, and that have each cost a session at least once.
 
 ## Start here
 
+> ### ⇒ Spend your effort on WHICH OBJECT a claim is about, not on whether the computation is right.
+>
+> Learned expensively on 2026-09-04: nearly every wrong conclusion that day had correct arithmetic
+> about the wrong object — a rank over monomials when the claim was about forms, a parser emitting
+> valid polynomials from truncated input, greps that read a fragment and generalised. Validations
+> that check "is this number right" cannot catch "is this the right number". The two habits that
+> did catch things: **reproduce a KNOWN value before trusting a new one**, and **draft an edit
+> rather than applying it** — a wrong "the paper is wrong" claim was retracted while writing the
+> diff. See `HANDOFF.md`, "READ THIS FIRST".
+
 * **`PLAN.md`** — what to do next. Opens with a "Picking this up cold" block.
 * **`HANDOFF.md`** — what happened. Authoritative on state; it wins over `PLAN.md` and over any
   agent memory when they disagree.

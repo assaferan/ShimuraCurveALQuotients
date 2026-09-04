@@ -8,6 +8,11 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ## Picking this up cold
 
+> **⇒ Spend your effort on WHICH OBJECT a claim is about, not on whether the computation is right.**
+> The 2026-09-04 session's most expensive errors all had correct arithmetic about the wrong object.
+> Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
+> Full account: `HANDOFF.md`, "READ THIS FIRST".
+
 As of **2026-09-04** everything is committed and pushed, both branches and lovelace are in sync,
 and the housekeeping list is empty. **The ordering below CHANGED on 2026-09-04** — the per-coset
 `tau` fix landed, and it moved the frontier. In decreasing order of value:
