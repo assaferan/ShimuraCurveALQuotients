@@ -507,7 +507,36 @@ was ever attempted.**
 
 ### The two-tier test plan (adopted 2026-09-04)
 
-- [ ] **TIER 1 — one cheap test, all 34 bases at once. DO THIS FIRST.** `ModelChecks` validates the
+- [~] **TIER 1 — ATTEMPTED 2026-09-04 AND ABANDONED. The "cheap" framing was WRONG.**
+      The Magma comparison is indeed cheap; **acquiring the data reliably is not**, and that was
+      the whole cost. Automated extraction of Guo-Yang's equation tables from the arXiv LaTeX hit
+      FOUR distinct silent-corruption bugs, every one of which yields a plausible wrong polynomial
+      rather than an error:
+      1. an equation may **wrap across `\\` into several `$...$` groups** (6_11 loses four terms
+         if you split on `\\`) — the same content-split-with-no-marker class as the Magma
+         line-wrapping trap, third instance this session;
+      2. a leading `-` may belong to the first TERM, not be an overall factor (26_1 came out
+         sign-flipped);
+      3. the base label `$X^{D}_0(N)$` is itself inside `$...$`, so segmenting AT it flips the
+         parity of every subsequent `$` pairing;
+      4. newlines inside the math break term parsing.
+      **And the target was wrong twice over.** Guo-Yang's tables are heterogeneous: some rows are a
+      single `y^2=f(x)`, others a PAIR (`82_1`: `y^2=f(s)` AND `x^2=g(s)`), `15_4` is a conic in
+      `z`, and `93_1` mixes two variables (`3s^3-7s^2-3t-1`) — almost certainly a typo in the
+      paper. Worse, the published equation does **not** uniformly correspond to a single key of our
+      model files: `X0_26_1.m` compares `-2s^3+19s^2-24s-169` (degree 3) against Guo-Yang's degree-6
+      `x`-equation — they differ by `s = x^2`, i.e. the existing tests compare **covers in their own
+      coordinates**, not the published curve.
+      ⇒ **Do not retry the automated extraction.** The existing 24 tests were hand-transcribed, and
+      that was the right call. Scripts kept for reference at
+      `vvdata/weyl-campaign/guoyang/extract_equations.py` (campaign) with the traps documented in
+      its header; the generated `gy_equations.m` is **NOT trustworthy** and was removed from `main`.
+- [ ] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter**, following the existing
+      `X0_D_N.m` pattern: `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`. Per base: read the
+      published equation off the PDF, identify WHICH cover it corresponds to (it is not always the
+      `W={1}` key — see above), derive the isomorphism, and verify. Slower per base than a parser,
+      but it is the only approach with a working track record here.
+- [ ] ~~TIER 1 (superseded)~~ **one cheap test, all 34 bases at once** `ModelChecks` validates the
       79 model files structurally (genus, Weil-polynomial divisibility, point counts) but **never
       compares them to Guo-Yang**. So nothing in CI would notice a committed model silently
       disagreeing with the paper. A test that checks the **STORED** model against the **published**
