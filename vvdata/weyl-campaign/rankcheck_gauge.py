@@ -2,9 +2,26 @@
 """Is rem:gauge's six-index ambiguity resolvable on the 158-monomial space, or is it one of
 sec:exact's 50 'unremovable' identities?  Run from vvdata/weyl-campaign/ (reads cusp7_15_2.out).
 
-ANSWER (2026-09-04): RESOLVABLE. 158 x 6 matrix has rank 6 (0 free directions), against rank 4
-for the nine-form panel. So an oo-only functional IS pinned on m = 1,2,3,10,15,30 by the monomial
-space, and -a_E / Table A cannot both fit it there.
+ANSWER (2026-09-04): THE RANK IS 6 -- BUT THAT DOES NOT ANSWER THE QUESTION IN THE TITLE.
+158 x 6 has rank 6 (0 free directions) against rank 4 for the nine-form panel. That is solid
+arithmetic. It does NOT show the rem:gauge ambiguity is resolvable, and it does NOT contradict
+sec:exact, because the two are about different objects:
+
+  * sec:exact counts the span of this character's FORMS (78 of 128 joint (oo,0) slots, 50
+    identities).
+  * this script ranks MONOMIALS.
+
+Monomials are not valid probes of c_{eta*}(0) at all: it sums over EVERY cusp class, and unlike
+a genuine Borcherds principal part (prop:nohalf / [GY, Lemma 24]) an individual eta-monomial can
+carry a nonzero constant term at INTERMEDIATE cusps that an (A_m, B_j)-only model never sees.
+PLAN.md records that the numeric solve against real c_{eta*}(0) values is still inconsistent.
+
+So: do NOT cite this as evidence the paper is wrong. It was briefly written up that way on
+2026-09-04 and retracted the same day. The open question is the FORM-space rank, uncomputed.
+
+LESSON: the two validations below make the NUMBER trustworthy (they caught Magma line-wrapping
+and silently-dropped rational coefficients). They say nothing about whether the right OBJECT is
+being measured. A validated computation of the wrong thing is still the wrong thing.
 
 ⚠ TWO SILENT PARSE TRAPS -- both give a WRONG matrix that still looks plausible:
   1. cusp7.m had no SetColumns(0), so Magma wrapped FORMC across many physical lines with NO
