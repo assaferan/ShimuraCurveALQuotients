@@ -169,14 +169,21 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       **158 MONOMIALS** at `m = 1,2,3,10,15,30` has **rank 6**, against **rank 4** for the
       nine-form panel, with two hard-assert validations (form `-1`'s principal part; the panel's
       rank 4).
-      ⚠ **But that does not bear on the paper's claim, because the two are about DIFFERENT
-      OBJECTS.** `sec:exact` counts the span of *this character's* **FORMS** (78 of 128 joint
-      `(oo,0)` slots, 50 identities). I ranked **MONOMIALS**. Monomials are not valid probes of
-      this functional at all — `c_{eta*}(0)` sums over every cusp class, and unlike a genuine
-      Borcherds principal part (protected by `prop:nohalf` / [GY, Lemma 24]) an individual
-      eta-monomial can carry a nonzero constant term at *intermediate* cusps that an
-      `(A_m, B_j)`-only model never sees. See the same warning in MAIN LINE, which also records
-      that the numeric solve against real `c_{eta*}(0)` values **is still inconsistent**.
+      ⚠ **But it does not bear on the paper's claim — and the REASON is not the one MAIN LINE
+      gives.** *(reasoning corrected 2026-09-04, second pass)* MAIN LINE objects that monomials
+      can carry constant terms at intermediate cusps. `sec:exact` says the opposite and is
+      explicit about it: each monomial "is itself a weakly holomorphic weight-`1/2` form of the
+      same multiplier character, **holomorphic at every intermediate cusp**", and the joint
+      `(oo,0)` factorisation is measured to hold to `10^{-11}` on that space. So intermediate
+      cusps are not the obstruction.
+      **The actual obstruction is that I computed in the wrong MODEL:**
+      * for genuine **FORMS** the `oo`-ONLY model is valid — `(1/2) sum_m c(-m) W(m)` reproduces
+        the measured multiplier on all **39 forms** across nine bases;
+      * for **MONOMIALS** the `oo`-only model provably FAILS — `sec:exact` measures residual
+        **2.08**; the `0`-side genuinely enters.
+      `rem:gauge`'s rank-4 claim lives in the `oo`-only model **on forms**, where it is
+      legitimate. My rank-6 lives in the `oo`-only model **on monomials**, where the paper has
+      already measured that model as inadequate. Ranking an inapplicable model says nothing.
       ⇒ **`rem:gauge` is NOT known to be wrong, and the paper should NOT be edited on this basis.**
       The question it answers — can more FORMS separate `-a_E` from Table A? — is one nobody has
       computed. **That is the actual open item**: rank the joint `(oo,0)` coordinates over the
