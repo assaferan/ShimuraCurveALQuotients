@@ -9,6 +9,73 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
 
+## ⇒ READ THIS FIRST — 2026-09-04, late
+
+> ### Spend your effort on WHICH OBJECT the claim is about, not on whether the computation is right.
+
+That is the single most useful thing this session produced, and it was learned the hard way. Nearly
+every error made on 2026-09-04 had the same shape: **the arithmetic was correct and the object was
+wrong.** A rank computed over MONOMIALS when the claim was about FORMS (twice, in two different
+ways). A LaTeX parser emitting perfectly valid polynomials from silently truncated input. Three
+`grep`s that read a fragment of a file and generalised from it. Every validation in place was of
+the form "is this number computed correctly" — **none of them could catch "is this the right
+number."**
+
+Two habits did catch things, and are worth keeping:
+* **Reproduce a KNOWN value before trusting a new one.** The rank result was only believable
+  because the same script had to reproduce the paper's own rank-4 panel and a principal part known
+  from `tests/M0Multiplier.m`. Both caught silent data corruption that had produced a
+  plausible-looking right answer for the wrong reason.
+* **Draft an edit instead of applying it.** The claim "the paper is wrong, fix `rem:gauge`" was
+  retracted *while writing the diff*, because writing it forced a close enough read of `sec:exact`
+  to notice it says FORMS where I had MONOMIALS. Applying directly would have degraded a correct
+  argument in a paper heading for submission.
+
+### State right now
+
+**Three runs were left going on lovelace** (`~/shimura/models/*.genmodels.log`, `M0PROGRESS=1`):
+`34_11` (~5 h, in final assembly), `10_61` and `14_43` (~3 h, ~80% through the identity word).
+All three are past the gate that used to stop them. lovelace is shared and busy again (~68 magma
+processes, mostly other users) — check `uptime` before adding load. Both branches and lovelace's
+clone are clean and in sync; housekeeping list is empty.
+
+### What shipped
+
+* **The per-coset `tau` fix** (`475e72b`) — the only thing that moved the mathematics. `34_11` went
+  from failing to passing; validated three ways (`15_2` exact, `58_5` keeps its models, and both
+  match the Prop 9.15 closed form 9/9 — `58_5`'s as a PRE-REGISTERED prediction). New
+  `M0PROGRESS=1` diagnostic (WriteStderr, because buffered `printf` is lost when a run is killed).
+* **`51_1` and `57_1`** — never blocked, just never run. Guo-Yang coverage 32 → **34 of 43**;
+  81 model files, `ModelChecks` 8309 checks 0 failures.
+* **34 Guo-Yang CM-value tables** as offline tests (`tests/_offline/`, 254 checks, 0 failures) and
+  **`tests/GuoYangEquations.m`** comparing 7 committed models to the PUBLISHED equations — the
+  first thing in CI that checks our output against the literature. Both negative-controlled.
+* **Housekeeping**: branches 4 → 2, 10 archive tags, lovelace pulled up (was 52 behind), the
+  t-shift fallback ported to `main` after 9 days missing, 109 stranded Normaliz solves harvested.
+
+### ⚠ What was CORRECTED — do not re-litigate these
+
+* **`rem:gauge` is CORRECT. Do not edit the paper.** It was claimed wrong twice, from measuring the
+  wrong object. The `oo`-only model is valid for genuine Borcherds forms (39 of them) and FAILS on
+  monomials (residual 2.08), so a rank over monomials says nothing about it.
+* **`A_m` genuinely needs new mathematics.** `sec:determined` determines the CONSTANT TERM at
+  isotropic cosets ("an indicator, not a phase"); the canonical representative is the SCALAR
+  `-a_E`. All-`m` at a nonzero isotropic coset is absent. No shortcut by extraction.
+* **`93_1`/`95_1`/`159_1` are the vx class**, not squarefree-`N` — all have `N=1`, which IS
+  squarefree. Measured: Magma's own `GalFldFun.m:305 assert vx ge 0`. `genmodels.m`'s `vx_skip`
+  list is INCOMPLETE.
+* **`gtsweep`'s `FIRE` lever does nothing** (measured on all three bases it claimed to fix).
+* **The `cusp7` "scoped implementation task" was falsified** — a monomial-pool coverage gap, not a
+  dump bug. MAIN LINE's "provably resolvable" premise is dead with it.
+* **Gate 4's "GENUINE 43% violation" was numerical**, not mathematics.
+
+### Where to pick up
+
+`PLAN.md` "Picking this up cold" is current. In short: wait on the three runs; then the 9 remaining
+Guo-Yang blockers are correctly classified for the first time (1 structural, 3 vx, 1 nonintegral,
+1 non-rational, 2 odd-`D` basis ceiling, 1 open anomaly — `26_3`'s exact `z -> z/(z-1)`
+involution). `22_5` and `14_3` need full-curve models GENERATED, not transcribed.
+
 ## Update — 2026-09-04: `tier1-models` is RETIRED; `main` is the only code branch
 
 `main` was fast-forwarded to `tier1-models` (`475e72b`) — a clean FF, `main` was a strict

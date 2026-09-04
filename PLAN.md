@@ -8,6 +8,11 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ## Picking this up cold
 
+> **⇒ Spend your effort on WHICH OBJECT a claim is about, not on whether the computation is right.**
+> The 2026-09-04 session's most expensive errors all had correct arithmetic about the wrong object.
+> Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
+> Full account: `HANDOFF.md`, "READ THIS FIRST".
+
 As of **2026-09-04** everything is committed and pushed, both branches and lovelace are in sync,
 and the housekeeping list is empty. **The ordering below CHANGED on 2026-09-04** — the per-coset
 `tau` fix landed, and it moved the frontier. In decreasing order of value:
@@ -76,6 +81,20 @@ One object blocks disproportionately much. Everything below this section is seco
 - [ ] **State it precisely before attempting anything.** The vector-valued weight-3/2 Eisenstein
       coefficient `b^{eta*}_0(r)` at a *nonzero isotropic coset*, general `m`, supported on
       `N | r` — with `A_r = -b(r)/4`. A different object from the scalar, not a special case.
+      ✅ **CHECKED 2026-09-04 against `sec:determined`, and the gap is CONFIRMED REAL.** The
+      scorecard's phrase "Section `sec:determined` determines the functional outright" invites the
+      hope that `A_m` is already in the paper and merely needs extracting. It is not. Two distinct
+      things live there, and neither is `A_m`:
+      * `thm:Ngeneral` determines `rho_mu` at isotropic cosets — but that is the **CONSTANT TERM**
+        (`ct_L = glob * prod_p loc_p`), i.e. `m = 0`. Its own proof says the coset "contributes an
+        **indicator, not a phase**": `rho_mu = kappa * rho_0` with `kappa = prod_{p in S}[p nmid c]`,
+        because `Q(y) = 0` for isotropic `mu`. There is no `m`-dependence anywhere in it.
+      * the "canonical representative — the Fourier coefficients of an explicit weight-3/2 form"
+        is `-a_E`, the **SCALAR** of `prop:closedcoef` — which reproduces 39 forms' multipliers but
+        only **1 of 13** measured `A_m`.
+      ⇒ `m = 0` at those cosets: solved. All `m` for the scalar: solved. **All `m` AT a nonzero
+      isotropic coset: genuinely absent.** `A_m` needs new mathematics, not extraction. This
+      is now a checked claim rather than an assumption — do not re-open it hoping for a shortcut.
 - [ ] **Load the regression set first.** 13 exact values already measured at `15_2`, `6_5`,
       `10_3`, `21_2`. Any candidate formula gets checked against all 13 before it is believed.
 - [x] **Confirm the scalar route is closed.** *(done 2026-09-02)* Re-run with the repo's own
@@ -163,28 +182,52 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       statement about that representative". So the answer to "is it still well-posed?" is: it is
       well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
       tested predictions stand unfalsified (`14_5` and `34_5` both hit).
-- [ ] **The `rem:gauge` / MAIN LINE tension: STILL OPEN. My 2026-09-04 "the paper is wrong"
+- [x] **The `rem:gauge` / MAIN LINE tension: CLOSED — the paper is right. My 2026-09-04 "the paper is wrong"
       claim was RETRACTED the same day — do not act on it.** What was measured is solid:
       `vvdata/weyl-campaign/rankcheck_gauge.py` (campaign) shows the `oo`-side matrix over the
       **158 MONOMIALS** at `m = 1,2,3,10,15,30` has **rank 6**, against **rank 4** for the
       nine-form panel, with two hard-assert validations (form `-1`'s principal part; the panel's
       rank 4).
-      ⚠ **But that does not bear on the paper's claim, because the two are about DIFFERENT
-      OBJECTS.** `sec:exact` counts the span of *this character's* **FORMS** (78 of 128 joint
-      `(oo,0)` slots, 50 identities). I ranked **MONOMIALS**. Monomials are not valid probes of
-      this functional at all — `c_{eta*}(0)` sums over every cusp class, and unlike a genuine
-      Borcherds principal part (protected by `prop:nohalf` / [GY, Lemma 24]) an individual
-      eta-monomial can carry a nonzero constant term at *intermediate* cusps that an
-      `(A_m, B_j)`-only model never sees. See the same warning in MAIN LINE, which also records
-      that the numeric solve against real `c_{eta*}(0)` values **is still inconsistent**.
+      ⚠ **But it does not bear on the paper's claim — and the REASON is not the one MAIN LINE
+      gives.** *(reasoning corrected 2026-09-04, second pass)* MAIN LINE objects that monomials
+      can carry constant terms at intermediate cusps. `sec:exact` says the opposite and is
+      explicit about it: each monomial "is itself a weakly holomorphic weight-`1/2` form of the
+      same multiplier character, **holomorphic at every intermediate cusp**", and the joint
+      `(oo,0)` factorisation is measured to hold to `10^{-11}` on that space. So intermediate
+      cusps are not the obstruction.
+      **The actual obstruction is that I computed in the wrong MODEL:**
+      * for genuine **FORMS** the `oo`-ONLY model is valid — `(1/2) sum_m c(-m) W(m)` reproduces
+        the measured multiplier on all **39 forms** across nine bases;
+      * for **MONOMIALS** the `oo`-only model provably FAILS — `sec:exact` measures residual
+        **2.08**; the `0`-side genuinely enters.
+      `rem:gauge`'s rank-4 claim lives in the `oo`-only model **on forms**, where it is
+      legitimate. My rank-6 lives in the `oo`-only model **on monomials**, where the paper has
+      already measured that model as inadequate. Ranking an inapplicable model says nothing.
       ⇒ **`rem:gauge` is NOT known to be wrong, and the paper should NOT be edited on this basis.**
       The question it answers — can more FORMS separate `-a_E` from Table A? — is one nobody has
-      computed. **That is the actual open item**: rank the joint `(oo,0)` coordinates over the
-      form space, not over monomials, and see whether the six-index gap survives there.
-      **Method note worth keeping:** the two validations that made the rank number trustworthy
-      (they caught Magma line-wrapping and dropped rational coefficients) said nothing about
-      whether the right OBJECT was being measured. A validated computation of the wrong thing is
-      still the wrong thing.
+      computed.
+      **RESOLVED 2026-09-04 (third pass), IN THE PAPER'S FAVOUR — `rem:gauge` looks CORRECT.**
+      The tempting next step was "redo the rank over forms, e.g. a weakly-holomorphic basis".
+      That would have been the SAME MISTAKE a third time. `sec:exact` states that the 158
+      monomials ARE "weakly holomorphic weight-`1/2` form[s] of the same multiplier character" —
+      and the `oo`-only model demonstrably FAILS on them (residual `2.08`). So being such a form
+      is **not sufficient** for the `oo`-only functional to be meaningful; a weakly-holomorphic
+      basis is not the right domain either.
+      The `oo`-only formula `(1/2) sum_m c(-m) W(m)` is validated only on **genuine Borcherds
+      forms from the divisor construction** (39 forms, nine bases). At `15_2` those are the NINE
+      panel forms, whose `oo`-principal parts have **rank 4** at the six indices. Within the
+      domain where the model means anything the 2-dimensional ambiguity is therefore REAL, and
+      enlarging the probe set does not help because every enlargement leaves that domain —
+      which is exactly what the paper's hedge "further panels **of the same kind**" already says.
+      ⇒ **Do not edit `rem:gauge`, and do not re-run this as a rank computation over any larger
+      space.** The one honest caveat left is narrow: this assumes the nine panel forms are ALL the
+      Borcherds forms at `15_2`; if that base admits more (more covers/keys) their principal parts
+      would add rows and the rank could rise. That is the only version still worth asking.
+      **Method note, three passes in:** monomials, then weakly-holomorphic forms, then the right
+      answer. Every time the arithmetic was fine and the DOMAIN was wrong — and the validations
+      that made the numbers trustworthy (they caught Magma line-wrapping and dropped rational
+      coefficients) said nothing about which object was being measured. On this problem spend the
+      effort on "which objects is this functional even defined for", not on the linear algebra.
 - [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
       **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
       moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
@@ -423,6 +466,101 @@ The only cheap-predictor path left, and it converts 81 unknowns into data.
 
 The machinery is already sound: the trace formulas reproduce 11 classical `dim M_k(SL2(Z))` values
 exactly. Only the half-integral phase is wrong.
+
+---
+
+## COVERAGE — reproducing Guo-Yang's published equations
+
+*(stock-take 2026-09-04. Distinct from the CM-value tables in `tests/_offline/` — this is about
+the paper's headline output, the EQUATIONS.)*
+
+    43   (D,N) bases with published equations in Guo-Yang
+    34   we have a model for            <- was 32; 51_1 and 57_1 added 2026-09-04
+    24   ...and a test comparing it to Guo-Yang
+    10   model exists but NO GY comparison test  <- the gap this section closes
+     9   no model: the real blockers
+    47   models we have BEYOND Guo-Yang's list entirely (79 model files total)
+
+**The 10 with models but no GY test:** `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`.
+Not blocked — we reproduce them and nobody wrote the comparison.
+
+**The 9 remaining blockers, with the classification CORRECTED 2026-09-04:**
+* `15_4` — **structural**, and the only one of its kind: `N = 4` is not squarefree, and the method
+  boundary is literally `assert IsSquarefree(N)`. The sole non-squarefree `N` in Guo-Yang's list.
+* `93_1`, `95_1`, `159_1` — **RE-CLASSIFIED**. Previously filed under the `IsSquarefree(N)`
+  boundary, which **cannot** be right: all three have `N = 1`, which IS squarefree. Measured
+  traceback at `93_1` is Magma's OWN assert:
+  `GalFldFun.m:305  assert vx ge 0`, reached via `AbsEltseq` on a `q^-60` pole — the **vx class**.
+  `genmodels.m` already fails fast on it via `vx_skip = {<95,1>,<115,1>,<123,1>,<129,1>}`, but
+  **that list is incomplete — `93_1` belongs in it** (`159_1` under test). See
+  [[assert-failed-is-squarefree-n]], now corrected. ⚠ `genmodels.m` cites "memory
+  vx-laurent-n0-circular", which **does not exist** — dangling reference.
+* `39_2` — NONINTEGRAL (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`), the malformed-form base.
+  Its CM-value table passes **11/11**, so the Schofer side is fine; the blocker is upstream.
+* `69_1` — non-rational value (`RationalNumber` failure), the embedding-selection class.
+* `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
+  40 GB, stuck inside `BorcherdsForms`.
+* `26_3` — **open anomaly**: CM table runs, but 2 of 11 values are off by exactly the Mobius
+  involution `z -> z/(z-1)`. Unexplained.
+
+**⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
+ANY triage record — no `INTSOL`, no `BASEVERD`, nothing. They had simply never been run. One
+`genmodels` run each produced 4 cover-keys apiece, and `51_1` reproduces Guo-Yang's
+`y^2 = -(x^2+3)(243x^6+235x^4-31x^2+1)` **exactly** under `x -> 3x, y -> (27/16)y` (over-determined
+and consistent across all five coefficients). **Before filing a base as blocked, check whether it
+was ever attempted.**
+
+### The two-tier test plan (adopted 2026-09-04)
+
+- [~] **TIER 1 — ATTEMPTED 2026-09-04 AND ABANDONED. The "cheap" framing was WRONG.**
+      The Magma comparison is indeed cheap; **acquiring the data reliably is not**, and that was
+      the whole cost. Automated extraction of Guo-Yang's equation tables from the arXiv LaTeX hit
+      FOUR distinct silent-corruption bugs, every one of which yields a plausible wrong polynomial
+      rather than an error:
+      1. an equation may **wrap across `\\` into several `$...$` groups** (6_11 loses four terms
+         if you split on `\\`) — the same content-split-with-no-marker class as the Magma
+         line-wrapping trap, third instance this session;
+      2. a leading `-` may belong to the first TERM, not be an overall factor (26_1 came out
+         sign-flipped);
+      3. the base label `$X^{D}_0(N)$` is itself inside `$...$`, so segmenting AT it flips the
+         parity of every subsequent `$` pairing;
+      4. newlines inside the math break term parsing.
+      **And the target was wrong twice over.** Guo-Yang's tables are heterogeneous: some rows are a
+      single `y^2=f(x)`, others a PAIR (`82_1`: `y^2=f(s)` AND `x^2=g(s)`), `15_4` is a conic in
+      `z`, and `93_1` mixes two variables (`3s^3-7s^2-3t-1`) — almost certainly a typo in the
+      paper.       ⚠ **One claim made here on 2026-09-04 was WRONG and is retracted:** that the published
+      equation does not uniformly correspond to a key of our model files, "evidenced" by
+      `X0_26_1.m` comparing a degree-3 `s`-equation. That came from grepping only the FIRST
+      `HyperellipticCurve` in the file. `X0_26_1.m` actually carries THREE cover entries and its
+      `{1}` entry IS Guo-Yang's degree-6 equation, with the identity matrix. **The mapping to
+      `W={1}` is uniform as far as checked**, and the apparent `82_1` genus contradiction was the
+      parser taking only the first of a PAIR, not a mapping failure.
+      ⇒ **Do not retry the automated extraction.** The existing 24 tests were hand-transcribed, and
+      that was the right call. Scripts kept for reference at
+      `vvdata/weyl-campaign/guoyang/extract_equations.py` (campaign) with the traps documented in
+      its header; the generated `gy_equations.m` is **NOT trustworthy** and was removed from `main`.
+- [ ] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter**, following the existing
+      `X0_D_N.m` pattern: `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`. Per base: read the
+      published equation off the PDF, identify WHICH cover it corresponds to (it is not always the
+      `W={1}` key — see above), derive the isomorphism, and verify. Slower per base than a parser,
+      but it is the only approach with a working track record here.
+- [ ] ~~TIER 1 (superseded)~~ **one cheap test, all 34 bases at once** `ModelChecks` validates the
+      79 model files structurally (genus, Weil-polynomial divisibility, point counts) but **never
+      compares them to Guo-Yang**. So nothing in CI would notice a committed model silently
+      disagreeing with the paper. A test that checks the **STORED** model against the **published**
+      equation, up to the hyperelliptic isomorphism, needs **no pipeline run** — milliseconds — and
+      covers every base where both exist. Best value per unit of CI time available here.
+- [ ] **TIER 2 — pipeline tests for the FAST bases only.** The existing `X0_D_N.m` pattern calls
+      `AllEquationsAboveCovers` and re-derives the curve, which is the stronger test (it exercises
+      the computation, not the stored data). Measured: `51_1` takes **240 s** — comfortably CI-able.
+      But `87_1` is likely hours (its CM-value run was ~7000 s) and GitHub caps a job at 6 h, so
+      slow bases go to `tests/_offline/`, reusing the split already set up for the CM-value tables.
+      ⚠ **Per-base cost is NOT just CI time.** Each `X0_D_N.m` needs an **isomorphism matrix**
+      between our model and the published one — that is **not in the paper** and must be derived
+      per base (`51_1`'s is `x -> 3x, y -> (27/16)y`) — plus the Atkin-Lehner involutions as
+      matrices in our coordinates. Budget 30-60 min of careful work each, and note that a
+      plausible-but-wrong matrix would make the test **vacuously pass**. Derive it the way `51_1`
+      was done: solve the transformation from two coefficients and CHECK the rest agree.
 
 ---
 
