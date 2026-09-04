@@ -1,3 +1,21 @@
+// gtsweep_fire.m -- the FIRE variant of vvdata/gtsweep.m, kept HERE and not there.
+//
+// WHY IT LIVES ON THE CAMPAIGN BRANCH, IN THIS DIRECTORY. `vvdata/gtsweep.m` is a SHARED
+// path: it exists on `main` too (tests/M0MultiplierExact.m cites it for ground-truth
+// provenance, and main carries the gtsweep_*.log outputs). Shared-path files that diverge
+// between main and this branch are exactly how two capability gaps went unnoticed --
+// nmzsolve.py's t-shift fallback was missing from main for nine days. So the shared copy is
+// kept byte-identical to main's, and this experiment lives in vvdata/weyl-campaign/, which
+// main does not have and which therefore cannot diverge.
+//
+// WHAT IT IS. gtsweep.m plus the FIRE knob: admit up to NFIRE firing degree-1 discriminants
+// into must_use, on the theory that NOT DETERMINED verdicts are starved of exactly those.
+// Run it the same way, e.g.  magma -b DD:=34 NN:=3 FIRE:=3 vvdata/weyl-campaign/gtsweep_fire.m
+//
+// ⚠ THE THEORY WAS MEASURED AND IT IS WRONG -- see the block lower down. Kept because the
+// knob is still the right PLACE to fix this, and because a measured negative is worth more
+// than the confident comment it replaced. Do NOT port it to main on the old comment's word.
+//
 // Measure the outer-m=0 multipliers of the two Hauptmodul forms on a base, WITHOUT the numeric
 // vector-valued oracle: drive the pipeline as far as the Hauptmodul table and hand it to
 // HauptmodulM0Residuals (SchoferFormula.m), where the argument is written out.
@@ -42,9 +60,67 @@ printf "X0^%o(%o): non-firing rational candidates %o; admitting %o beyond the an
        D, N, nonfiring, extra;
 must_use := must_use join Set(extra);
 
+// FIRING DEGREE-1 DISCRIMINANTS -- what NOT DETERMINED actually lacks.
+//
+// A row is INFORMATIVE only when its firing status differs from a normaliser's, and
+// HauptmodulM0Residuals discards every row with degs ne 1.  The Keep-admitted `extra` above
+// are all NON-firing, so they add rows with exponents [0,0] that constrain nothing; and
+// raising MaxNum does not help either, because the budget gets spent on degree-2 points
+// (measured on X0^34(3): MN:=14 added six points, all degree 2, verdict unchanged).
+//
+// rat_all is the FIRST return of RationalandQuadraticCMPoints, i.e. the RATIONAL points, so
+// everything in it is already degree 1.  Forcing a few FIRING ones into Include is therefore
+// exactly the missing lever.  Three bases are stuck for want of them: X0^33(2) (one
+// informative row, -15; its only other firing disc -55 is degree 2), X0^34(3) (two rows,
+// both [1,1]) and X0^46(3) (r2 appears in no row at all).
+//
+// FIRE := 0 reproduces the earlier logs exactly.
+//
+// ⚠ MEASURED 2026-09-04, AND THE LEVER DOES NOT WORK. The claim above -- that these three
+// bases are "stuck for want of" firing degree-1 discriminants and that admitting them is
+// "exactly the missing lever" -- is NOT borne out. Ran each base at FIRE:=0 and FIRE:=3:
+//
+//     33_2   admitted [-15]        NOT MEASURABLE -> NOT MEASURABLE   (unchanged)
+//     34_3   admitted [-11, -20]   NOT DETERMINED -> NOT DETERMINED   (unchanged)
+//     46_3   admitted []           NOT DETERMINED, 25 pairs both ways (VACUOUS: its only
+//                                  firing degree-1 candidate, -8, is already in must_use)
+//
+// So on the two bases where the knob actually admits anything, the verdict does not move;
+// on the third it cannot engage at all -- consistent with the aside above that 46_3's r2
+// "appears in no row at all", which is a different problem. The knob is kept (it is still
+// the right PLACE to fix this) but it is UNVALIDATED -- do not cite it as a working lever,
+// and do not port it to main on the strength of the comment above. This is also why main
+// does not have it, while main DID get the t-shift fallback, which had real verification.
+firing1 := [ p[1] : p in rat_all
+             | not IsEmpty(PrimeDivisors(N div GCD(N, FundamentalDiscriminant(p[1])))) ];
+NFIRE := 3; if assigned FIRE then NFIRE := StringToInteger(FIRE); end if;
+extra_f := [ d : d in firing1 | d notin must_use ];
+extra_f := extra_f[1 .. Minimum(NFIRE, #extra_f)];
+printf "  firing degree-1 candidates %o; admitting %o\n", firing1, extra_f;
+must_use := must_use join Set(extra_f);
+
+// MN raises the point budget.  When the sweep returns NOT DETERMINED the missing
+// information is FIRING discriminants: the Keep-admitted extras are all non-firing, so they
+// contribute rows with exponents [0,0] that constrain nothing about (r1,r2), while the
+// firing ones give [k-kA, k-kB] rows that do.  Firing discriminants arrive through the
+// ordinary coprime-to-level channel and are capped by MaxNum, so raising it is the lever.
+//
+// MEASURED, AND IT DID NOT WORK: on X0^34(3), MN:=14 added six points and ALL SIX WERE
+// DEGREE 2, which HauptmodulM0Residuals skips (`degs[i] ne 1`).  Informative rows stayed at
+// two and the verdict stayed NOT DETERMINED.  Raising MaxNum alone is therefore not enough
+// -- the budget has to be spent on DEGREE-1 firing discriminants, which this knob cannot
+// ask for.  Kept because the knob is still the right place to fix that.
+//
+// It also RE-BASES the answer: the surviving pairs moved {<0,0>,<1,2>} -> {<-3,-3>,<-2,-1>},
+// a uniform (-3,-3) shift, because the multiplier the pipeline APPLIED changed with the
+// point set (non-firing table entries moved by 3^6, firing by 3^3).  Since the residual is
+// true - applied, that is a change of origin and not a contradiction -- but it does mean a
+// residual, and the "pipeline OK" verdict built on it, is relative to that run's point set.
+MAXNUM := Maximum(7, #must_use + 2);
+if assigned MN then MAXNUM := Maximum(MAXNUM, StringToInteger(MN)); end if;
 all_cm_pts := CandidateDiscriminants(star, curves : Keep := must_use);
 abs_tab, all_cm_pts := AbsoluteValuesAtCMPoints(star, curves, all_cm_pts, fs
-                                                : MaxNum := Maximum(7, #must_use + 2),
+                                                : MaxNum := MAXNUM,
                                                   Prec := PRECF, Include := must_use);
 ReduceTable(abs_tab);
 
