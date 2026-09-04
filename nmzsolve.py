@@ -51,6 +51,91 @@ for b in ds:
         c = 24 * m_pole if b == 1 else (24 * n_pole if b == M else 0)
     ineqs.append(row + [c])
 
+# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
+# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
+# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
+# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
+# the cache, answer tall requests by shifting + thinning instead of normaliz.
+import glob as _glob, re as _re
+def _load_magma_seq(path):
+    return [ [int(x) for x in m.split(',')] for m in _re.findall(r'\\?\[ ([-\d, ]+) \]', open(path).read().replace('\\\n', '').replace('\n', ' ')) ]
+def _pole(r):
+    s24 = sum(d*x for d, x in zip(ds, r))
+    assert s24 % 24 == 0
+    return -s24 // 24
+if m_pole == 0 and k24 == 12 and cuspidal == 0:
+    w0p = f'polymake/tshift_w0_{M}.txt'
+    cands = []
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_0'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_0$', f)
+        if mm and int(mm.group(1)) < n_pole:
+            cands.append(int(mm.group(1)))
+    if os.path.exists(w0p) and cands:
+        base_n = max(cands)
+        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_0')
+        shifts = [ t for t in _load_magma_seq(w0p) if any(t) ]
+        # a rank-preserving CORE (same span as the full rung, ~dim vectors) beats
+        # thinning by pole order: 42 of sol(420,145)'s 105 pivots come from
+        # cancellations between same-leading-order vectors, which order-thinning
+        # destroys.  If a core file exists, shift it verbatim (no thinning).
+        corep = f'polymake/tshift_core_{M}.txt'
+        use_core = os.path.exists(corep)
+        if use_core:
+            core = _load_magma_seq(corep)
+            if core: base = core
+        if base and shifts:
+            tp = max(_pole(t) for t in shifts)                     # shift pole k
+            # the cache accumulates rungs THIS fallback wrote (shifted, not
+            # enumerated), so the filename's n overstates the reach of `base`
+            # once it has been swapped for the core: compute J from the actual
+            # max pole of the vectors being shifted, never from base_n.
+            base_n = max(_pole(list(r)) for r in base)
+            J = max(0, -(-(n_pole - base_n) // tp))                # ceil
+            if use_core:
+                pts = set()
+                for j in range(J + 1):
+                    for r in base:
+                        v = tuple(a + j*b for a, b in zip(r, shifts[0])) if len(shifts) == 1 else None
+                        if v is not None: pts.add(v)
+                if len(shifts) > 1:
+                    layer = [ tuple(r) for r in base ]
+                    pts = set(layer)
+                    for j in range(J):
+                        layer = [ tuple(a + b for a, b in zip(r, t)) for t in shifts for r in layer ]
+                        pts.update(layer)
+                pts = sorted(pts)
+            else:
+                byorder = {}
+                layer = [ tuple(r) for r in base ]
+                seen = set(layer)
+                def _absorb(vs):
+                    for v in vs:
+                        pl = _pole(list(v))
+                        if pl > n_pole: continue
+                        b = byorder.setdefault(pl, [])
+                        if len(b) < 4:
+                            b.append(v)
+                _absorb(layer)
+                for j in range(J):
+                    nxt = []
+                    for t in shifts:
+                        for r in layer:
+                            v = tuple(a + b for a, b in zip(r, t))
+                            if v not in seen:
+                                seen.add(v); nxt.append(v)
+                    _absorb(nxt)
+                    layer = nxt
+                pts = sorted({ v for b in byorder.values() for v in b })
+            residues = { _pole(list(r)) % tp for r in base }
+            if len(residues) < tp:
+                print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
+            print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} thinned pts for n={n_pole}", file=sys.stderr)
+            with open(outp, 'w') as f:
+                f.write('[ PowerSequence(IntegerRing()) |\n')
+                f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
+                f.write('\n]\n')
+            sys.exit(0)
+
 work = tempfile.mkdtemp(prefix='nmz_')
 base = os.path.join(work, f'poly_{M}_{n_pole}_{m_pole}')
 with open(base + '.in', 'w') as f:
