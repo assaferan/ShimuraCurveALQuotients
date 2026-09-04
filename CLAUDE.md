@@ -51,24 +51,25 @@ output fails on identical content; compare as vector sets.
 
 ## Where things live
 
-    tier1-models   the working branch: code + paper/
-    main           code only
+    main                the working branch: code + paper/ + PLAN.md/HANDOFF.md
     m0-theta-campaign   research data, probes and triage tooling (vvdata/weyl-campaign/)
 
 Worktrees live under `worktrees/` inside this repo checkout, not as siblings of it — deliberate,
 to keep the `GitHub/` directory tidy:
 
-    .                    tier1-models (this checkout)
+    .                    main (this checkout)
     worktrees/campaign   m0-theta-campaign
-    worktrees/mainport   main
 
 **When adding a new worktree, put it under `worktrees/<name>` here**, e.g.:
 
     git worktree add worktrees/<name> <branch>
 
-Older material (`HANDOFF.md`, memory) may still call these `-campaign` / `-mainport`, a shorthand
-from when they were sibling directories next to this one. That naming is historical only — use the
-table above for actual paths.
+**⚠ `tier1-models` is RETIRED (2026-09-04) and `main` carries everything it had.** It was
+fast-forwarded into `main` — the two were the same commit — and then deleted, local and remote,
+along with the now-redundant `worktrees/mainport`. Older material (`HANDOFF.md`, `PLAN.md`,
+memory) still says things like "`main` is code only", "the `tier1-models` merge trap", or refers
+to `-campaign` / `-mainport` sibling directories. **All of that is historical** — there is one
+code branch now, and it is `main`. Do not recreate `tier1-models`; commit to `main` directly.
 
 **Triage tooling lives on the campaign branch under `vvdata/weyl-campaign/`, never at the repo
 root.** So `git log --all -- cmsupply.m` reports "not in any branch" for a file that is committed.

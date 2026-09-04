@@ -9,7 +9,7 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
 
-## Update — 2026-09-04: `main` and `tier1-models` are now the SAME commit
+## Update — 2026-09-04: `tier1-models` is RETIRED; `main` is the only code branch
 
 `main` was fast-forwarded to `tier1-models` (`475e72b`) — a clean FF, `main` was a strict
 ancestor 40 commits behind with nothing of its own. **`main` is no longer "code only": it now
@@ -21,8 +21,21 @@ What that merge carried, beyond the paper: the per-coset `tau` fix in `M0Multipl
 see `PLAN.md` REPAIR), `tests/KudlaYangLocal.m`, and 34 Guo-Yang CM-value tables as offline tests
 under `tests/_offline/` (verified after the merge to emit zero CI targets).
 
-⚠ **Left open by the merge:** with the branches identical, either keep `tier1-models` in lockstep
-with `main` or retire it — silent drift between them is what produced the 27/27 problem.
+**Then `tier1-models` was retired**, closing that question: deleted local and remote (it was a
+strict ancestor of `main`, so `git branch -d` accepted it — nothing lost), and
+`worktrees/mainport` removed as redundant. The layout is now just:
+
+    .                    main  (this checkout)
+    worktrees/campaign   m0-theta-campaign
+
+⚠ **Everything below describing a `main` / `tier1-models` split is HISTORICAL.** `main` is not
+"code only" any more; commit to it directly and do not recreate `tier1-models`.
+
+Also confirmed 2026-09-04 while checking: the branch housekeeping this file and `PLAN.md` list as
+open is already DONE — only `main`, `m0-theta-campaign` and `whbasis-speedup` exist, and the nine
+retired branches (`non_optimal`, `odd_DN`, `pointlessconics` and the six `SCRATCH:` ones) are all
+preserved as `archive/<name>` tags **on `origin`**, so `fix-15-2-find-signs`'s 3 never-pushed
+commits are safe.
 
 ## Update — 2026-09-03 (evening)
 

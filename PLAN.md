@@ -25,9 +25,10 @@ is running. Three items are ready to start immediately, in decreasing order of v
    Needs a real `DedekindEta` with full `SL2` reduction — do **not** reuse `tauwindow.m`'s
    one-`S`-step `logeta`, which is invalid in exactly that regime (see its README).
 
-Worktrees: `tier1-models` (here, `.`), `worktrees/campaign` (`m0-theta-campaign`, research data),
-`worktrees/mainport` (`main`) — nested under this checkout, not siblings; see CLAUDE.md for the
-convention on new worktrees.
+Worktrees: `main` (here, `.`) and `worktrees/campaign` (`m0-theta-campaign`, research data),
+nested under this checkout, not siblings; see CLAUDE.md. **`tier1-models` was RETIRED 2026-09-04**
+— fast-forwarded into `main` and deleted, along with the redundant `worktrees/mainport`. There is
+one code branch now, `main`, and it carries `paper/` too.
 Probes live at `vvdata/weyl-campaign/tau-precision/` on the campaign branch.
 
 ## State of play
@@ -125,12 +126,11 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       no conflict was possible. 46 files, +2855/−208, including `paper/` (+1417/−194) and the PDF.
       `main` is therefore **no longer "code only"** — every description of it that way is now
       stale.
-      ⚠ **The old merge trap still applies to FEATURE branches** cut from `tier1-models`: they
-      still drag whatever the paper has moved on by. Keep running
-      `git log origin/main..origin/<branch>` before merging one.
-      ⚠ **New question this raises, unanswered:** with the two branches identical, what is
-      `tier1-models` FOR now? Either keep it in lockstep (every commit fast-forwarded to `main`)
-      or retire it. Drifting silently is what caused the 27/27 problem in the first place.
+      ⚠ **The merge-trap habit still applies to any FEATURE branch**: check
+      `git log origin/main..origin/<branch>` before merging one, so you see what it really drags.
+      **RESOLVED 2026-09-04: `tier1-models` was RETIRED** — deleted local and remote (it was a
+      strict ancestor of `main`, so `-d` accepted it and nothing was lost), and
+      `worktrees/mainport` removed as redundant. Commit to `main` directly; do not recreate it.
       Verified after the merge: CI's matrix generator emits **zero** `_offline`/`GuoYang` targets
       (checked in the job log, not just read off the workflow), so the 34 offline tests stay out
       of CI as designed.
@@ -345,23 +345,16 @@ exactly. Only the half-integral phase is wrong.
       local branches above, which only became remote-only once those were deleted. Was: `add-external-cm-value-tests`,
       `add-kudla-yang-local-tests`, `add-m0-local-density-tests`, `fix-cm-supply-divisor-discs`,
       `fix-wpoly2-p2-local-density`, `m0-vv-constant-term`, `preprint-n5-validation`.
-- [ ] **Retire or tag the three stale ones:** `non_optimal` (Oct 2025, 429 behind main), `odd_DN`
-      (279 behind, 12 ahead), `pointlessconics` (277 behind, 2 ahead). Still open as of 2026-09-03;
-      `odd_DN`'s non-mergeability was already investigated (memory: `odd-dn-branch-not-mergeable`).
-      Recommend: `git tag archive/<name> origin/<name>` for each (preserves the commits under a
-      permanent pointer), then delete the branch, local and remote.
-- [ ] **NEW 2026-09-03: six more local branches are stale and unmerged into either `tier1-models`
-      or `main`**, all predating the 09-02 cleanup and missed by it (`git branch -d` correctly
-      refused them — they're genuinely unmerged): `m0-hauptmodul-ground-truth`,
-      `m0-prop53-anisotropic`, `m0-level-rule-e2e`, `fix-m0-multiterm`,
-      `valuesatcmpoints-diagnostic` (all 2026-08-14 to 08-21, commit messages mostly prefixed
-      `SCRATCH:`), and `fix-15-2-find-signs` (2026-08-19, and **has 3 commits not even on its own
-      remote** — `origin/fix-15-2-find-signs` is 3 commits behind the local branch). All look like
-      superseded intermediate stages of the m=0 investigation that shipped a different way (via
-      `prop:kappa0` in the paper) — worth a skim before deleting, since `m0-level-rule-e2e` in
-      particular touches the same KY Prop 5.3/5.4 territory as this session's CI test and might
-      have relevant scratch notes. `whbasis-speedup` is *not* in this list — it's deliberately kept
-      as the CI-green record for a cherry-picked commit (see HANDOFF.md); leave it.
+- [x] **Retire or tag the three stale ones.** *(done; confirmed 2026-09-04)* `non_optimal`,
+      `odd_DN` and `pointlessconics` are gone as branches and preserved as `archive/<name>` tags,
+      exactly as recommended — **all 9 archive tags exist on `origin`, not just locally**.
+- [x] **The six stale local branches: DONE, and nothing was lost.** *(confirmed 2026-09-04)*
+      `m0-hauptmodul-ground-truth`, `m0-prop53-anisotropic`, `m0-level-rule-e2e`,
+      `fix-m0-multiterm`, `valuesatcmpoints-diagnostic` and `fix-15-2-find-signs` are all deleted
+      AND preserved as `archive/<name>` tags on `origin`. That matters for `fix-15-2-find-signs`
+      in particular, which had 3 commits that never reached its own remote — the tag holds them.
+      `whbasis-speedup` is deliberately kept as the CI-green record for a cherry-picked commit;
+      it is still there, correctly.
 - [ ] **`worktrees/campaign` has one untracked stray file:** `polymake/nmzsolve.err` (136 bytes,
       2026-08-29, Normaliz solver log debris). Harmless; safe to `rm` whenever convenient.
 - [x] **Retire the merged worktrees.** *(done 2026-09-02)* `-fix`, `-hoist` and `-control` removed;
