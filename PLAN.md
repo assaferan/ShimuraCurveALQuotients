@@ -355,8 +355,7 @@ exactly. Only the half-integral phase is wrong.
       in particular, which had 3 commits that never reached its own remote — the tag holds them.
       `whbasis-speedup` is deliberately kept as the CI-green record for a cherry-picked commit;
       it is still there, correctly.
-- [ ] **`worktrees/campaign` has one untracked stray file:** `polymake/nmzsolve.err` (136 bytes,
-      2026-08-29, Normaliz solver log debris). Harmless; safe to `rm` whenever convenient.
+- [x] **The `polymake/nmzsolve.err` stray is gone.** *(confirmed 2026-09-04: campaign has 0 untracked files)*
 - [x] **Retire the merged worktrees.** *(done 2026-09-02)* `-fix`, `-hoist` and `-control` removed;
       worktrees 6 -> 3 (`tier1-models`, `-campaign`, `-mainport`). `-control` needed `--force` for
       its 23 untracked files, all previously verified as duplicates; its one single-copy item was
@@ -365,39 +364,26 @@ exactly. Only the half-integral phase is wrong.
       memory was stale. Campaign `0bc7f28` already made the fix; the file has no `Probe*` reference
       and calls only public intrinsics, so the three validated results stand unpatched. Memory
       corrected. Still **even-D only**.
-- [ ] **Pull the lovelace clone up to `main`.** Its hand-applied pointless-conics guard is now
-      upstream as `127b044`, byte-identical, so the local modification is redundant.
-- [ ] **Commit the `tau-precision` probes to the campaign branch.** Staged at
-      `vvdata/weyl-campaign/tau-precision/`; they are currently scratchpad-only, which is the exact
-      failure mode that lost the original `genmodels.m` to a nightly `/tmp` purge.
-
----
-
-## DO NOT — each of these already cost a session
-
-* **No third slash-constant tolerance change.** Settled twice over: 924 failures, every one at
-  `reldiff > 0.999`, zero near-misses. No threshold in (0,1) passes any of them.
-* **No deeper pole orders.** The deficit is exactly 1 and *invariant* under enlargement; refuted
-  at `38_5` (bump 0→8: rows 164→172, cols 36→38, rank 35→37).
-* **No re-attempting the even correction as an implementation task.** It needs the theorem.
-* **No tuning route B's phase constant to fit.**
-* **No more odd-D constant-factor work.** Exhausted; the ceiling is
-  `basis_of_weakly_holomorphic_forms(... : Zero)`.
-* **Do not treat `ppint`/`cmsupply` as cheap triage on large bases** — 81 of 122 gave no verdict
-  in a full hour.
-
-## TRAPS — the ones that keep biting
-
-* **Tilde plus a remote path.** It bit the same run twice in opposite directions:
-  `OUTDIR:=~/shimura/models` did *not* expand (bash only expands after `:` in real assignments), so
-  `Write` would have died on a literal `~` path; while `LOG=~/...` in a watcher *did* expand — to
-  the local Mac home, which was then sent to a Linux box. Single-quote remote paths or use `\$HOME`.
-* **`magma | tail` hangs** — an error drops it to the interactive prompt where it blocks on stdin.
-  Redirect `< /dev/null`. One such hang burned 4 h 23 m at 0.02 s CPU.
-* **Magma buffers stdout to a file.** An unchanged log is *not* evidence of no output — the
-  `10_61` log sat at 154 bytes, then flushed 353 KB at once.
-* **`pkill -x magma` matches nothing** (the binary is `magma.exe`). Verify a kill with a
-  *different* pattern than the one used to kill.
-* **`git log --all -- file.m` misses `vvdata/weyl-campaign/file.m`.** Search by basename:
-  `'*file.m'`. Triage tooling lives on the campaign branch, never at the root.
-* **No `timeout` on the Mac**; lovelace has GNU `timeout` and it truncates cleanly.
+- [ ] **Pull the lovelace clone up to `main` — and the old description of this item was WRONG.**
+      *(re-measured 2026-09-04)* It is **52 commits behind**, not current: a plain
+      `git rev-list HEAD..origin/main` there reports 0 only because its `origin` ref is stale —
+      **fetch first**. Of its two modified files:
+      * `EquationsCovers.m` — confirmed **byte-identical to `origin/main`**, so the
+        pointless-conics guard really is redundant, as this item claimed.
+      * `VectorValuedForm.m` — **NOT the pointless-conics guard.** It is the **GATE3B
+        report-and-continue diagnostic** (the patch behind the 924-failure `10_61` measurement),
+        which is *not* upstream. It IS preserved on campaign as
+        `vvdata/weyl-campaign/gate4/gate3b-gate4-probes.patch` (diffed, they match), so discarding
+        it loses nothing — but a pull WILL remove GATE3B-measuring capability from that machine,
+        which may be wanted there. Decide deliberately rather than pulling blind.
+      Its five root `.m` scripts (`cmsupply`, `deficit`, `gencapped`, `genmodels`, `ppint`) are
+      **stale copies** of campaign tooling (campaign's `deficit.m` is 69 lines to lovelace's 62),
+      so there is nothing to rescue there.
+- [x] **Harvest the 109 stranded Normaliz solves from lovelace.** *(done 2026-09-04, `e6d8ff2`)*
+      They existed on lovelace only, committed nowhere, `M = 708..3372` — past the old frontier.
+      Cache 797 -> 906 files. Verified before trusting: not t-shift output (lovelace runs the
+      99-line `nmzsolve.py`, no `tshift` files, so the fallback could not have fired), all
+      well-formed, and the 16 files lovelace shared with `main` agree as **vector sets** (byte
+      comparison is invalid — committed files use escaped `\[` line starts).
+- [x] **`tau-precision` probes are committed.** *(confirmed 2026-09-04)* Five files at
+      `vvdata/weyl-campaign/tau-precision/` on the campaign branch since `c672464`.
