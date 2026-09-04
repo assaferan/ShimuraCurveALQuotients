@@ -43,7 +43,7 @@ https://github.com/assaferan/ShimuraCurveALQuotients.git`); no prior checkout ex
 
 ## Result, 2026-09-03
 
-    40/42 bases attempted (111_1, 119_1 still running as of this write-up; update if finished)
+    all 42 bases attempted
 
 **34 PASS clean** (254 total individual CM-value checks, 0 failures):
 `10_11 10_13 10_23 134_1 14_3 14_5 146_1 15_2 194_1 206_1 21_2 22_3 22_5 26_1 35_1 38_1 39_1
@@ -85,10 +85,32 @@ table for X_0^10(19) rather than trusting this extraction.
 - `93_1`, `95_1`, `159_1`: `Assertion failed` -- matches the documented squarefree-N method
   boundary (memory: [[assert-failed-is-squarefree-n]]), not investigated further here.
 
+**`111_1` and `119_1`: KILLED at ~17.5 h CPU each, stuck building the basis.** Neither ever
+returned from `ValuesAtCMPoints` (the driver's first `printf` comes after it, and both logs stayed
+empty). Diagnosis, from `/proc` on lava rather than from the logs:
+
+* **not** a polytope solve -- no `normaliz` child process on either, and the `M = 444` (111_1) and
+  `M = 476` (119_1) solutions are already in the committed cache;
+* `119_1` reached **VmPeak 40.6 GB** (8.2 GB resident at kill, 572 s system time -- heavy
+  allocation churn), far past the "Magma dies ~11 GB on pools >~2000 vectors" threshold;
+  `111_1` peaked at 3.4 GB;
+* both are **odd D at level 1** (`111 = 3*37`, `119 = 7*17`) -- exactly the class whose documented
+  remaining ceiling is `basis_of_weakly_holomorphic_forms(... : Zero)`, steep in pole order
+  (556 s at pole order 845; these are far higher).
+
+⚠ Localised to "inside `BorcherdsForms`, not the polytope stage" -- NOT proven to be the
+`Zero`-side basis specifically. A verbose re-run (`SetVerbose` + `WriteStderr`) would pin it.
+Note lava runs `earlyoom`, so a 40 GB excursion is also a candidate for being killed from outside.
+
+Neither is in the sweep122 or wave-4 triage records (only in `MISSING_TARGETS.txt`), so these two
+were genuinely uncharacterized before this. Of the **10** level-1 bases with no `X0_D_1.m`
+equations test (`51 55 57 69 87 93 95 111 119 159`), this batch splits **4 pass / 4 error /
+2 basis-ceiling** -- the trouble concentrates exactly in the previously-untested ones.
+
 **Timing, for planning future batches:** wildly variable, 26s (`38_1`) to ~7000s (`87_1`); the
-heaviest 6 bases (`6_29`, `6_31`, `6_37`, `10_19`, `10_23`, `87_1`, plus whichever of `111_1`/
-`119_1` finishes slowest) account for the bulk of the wall-clock. 16-way parallel on 32 cores
-finished the other 34 well within the time the 6 stragglers took.
+heaviest 6 bases (`6_29`, `6_31`, `6_37`, `10_19`, `10_23`, `87_1`) account for the bulk of the
+wall-clock, and `111_1`/`119_1` never finished at all. 16-way parallel on 32 cores finished the
+other 34 well within the time the stragglers took.
 
 ## Not done here (follow-ups)
 
@@ -98,6 +120,7 @@ finished the other 34 well within the time the 6 stragglers took.
   radical entries, a symbolic (not just rational) comparison.
 * `26_3`'s involution anomaly -- real, unexplained.
 * `10_19` -- needs the actual published table, not the arXiv v1 draft.
-* `111_1`, `119_1` -- still running as of this write-up.
 * The 4 pipeline-boundary bases (`69_1`, `93_1`, `95_1`, `159_1`) -- already have named root
   causes elsewhere in memory; not re-diagnosed here.
+* `111_1`, `119_1` -- killed at the basis stage; a verbose re-run would confirm which basis call
+  they sit in, and whether the odd-D `Zero`-side ceiling is the whole story.
