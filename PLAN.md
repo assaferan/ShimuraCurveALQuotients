@@ -365,9 +365,35 @@ are provisional.
 
 The only cheap-predictor path left, and it converts 81 unknowns into data.
 
-- [ ] **Fix the half-integral convention *from theory*, not by fitting.** The error is very nearly
-      `-d/6`. Do not tune that constant — a fitted phase would silently corrupt all 81
-      classifications.
+- [ ] **Fix the half-integral convention *from theory*, not by fitting.** Do not tune the constant
+      — a fitted phase would silently corrupt all 81 classifications.
+      **2026-09-04, MEASURED — the target is much sharper than "the error is nearly `-d/6`".**
+      Ran `weildim2.m` (cross-check at `6_1` still PASSES, all 10 traces). Decomposing
+      `dimM = d + dk/12 - a1 - a2 - aT` by its leading rationals, at `k = 3/2`:
+
+          base      d       a1/d      a2/d      aT/d     dimM   truth
+          34_3    20808   0.37495   0.41671   0.49986   -3465     0
+          38_5    72200   0.37499   0.41668   0.50237  -12204     1
+          38_7   141512   0.37499   0.41667   0.50009  -23598     0
+
+      `a1/d -> 3/8` and `aT/d -> 1/2` on the nose; `a2/d -> 5/12`. And
+      `1 + k/12 - 3/8 - 5/12 - 1/2 = -1/6` **exactly** — so the `-d/6` is not a vague "phase is
+      off", it is **entirely attributable to `a2`, the ST / order-12 term**. `a1` (the order-8
+      S-term) and `aT` are already right.
+      Sharper still: had `a2/d` been `3/12` instead of `5/12`, the leading term would be
+      `1 + k/12 - 3/8 - 1/4 - 1/2 = 0` **exactly** — i.e. `a2`'s index looks offset by **2 units of
+      the 12-cycle**. Since `a2 = sum_j m_j (j/12)` with `sum_j m_j = d`, relabelling `j -> j+2`
+      moves it by `2d/12` MINUS the wrap at `j = 10, 11`, which is base-dependent — and that is
+      exactly why the residual is "nearly" `-d/6` and differs per base (`-0.16652`, `-0.16904`,
+      `-0.16676`) rather than being constant.
+      ⚠ **What this does NOT establish.** It shows the LEADING term vanishes under that shift. The
+      actual answer (`0, 1, 0`) lives in the `O(1)` deviations from those rationals — `a1/d`
+      differs from `3/8` only in the 5th decimal — so the systematic `O(d)` offset currently
+      swamps the entire signal. Getting the leading term to cancel is necessary, not sufficient,
+      and **applying a `+2/12` shift by hand would be exactly the fitting this item forbids**: it
+      would make the big number vanish while leaving the `O(1)` content unvalidated. Use this to
+      aim the derivation — the metaplectic base point for the order-12 `ST` lift — and then check
+      the `O(1)` part against `38_5 -> 1`, `38_7 -> 0`, `34_3 -> 0`.
 - [ ] **Validate against the known deficits:** `38_5 -> 1`, `38_7 -> 0`, `34_3 -> 0`.
 - [ ] **Classify the 81**, including whether the obstructed class is larger than 49.
 
