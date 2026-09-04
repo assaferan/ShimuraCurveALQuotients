@@ -364,21 +364,25 @@ exactly. Only the half-integral phase is wrong.
       memory was stale. Campaign `0bc7f28` already made the fix; the file has no `Probe*` reference
       and calls only public intrinsics, so the three validated results stand unpatched. Memory
       corrected. Still **even-D only**.
-- [ ] **Pull the lovelace clone up to `main` — and the old description of this item was WRONG.**
-      *(re-measured 2026-09-04)* It is **52 commits behind**, not current: a plain
-      `git rev-list HEAD..origin/main` there reports 0 only because its `origin` ref is stale —
-      **fetch first**. Of its two modified files:
-      * `EquationsCovers.m` — confirmed **byte-identical to `origin/main`**, so the
-        pointless-conics guard really is redundant, as this item claimed.
-      * `VectorValuedForm.m` — **NOT the pointless-conics guard.** It is the **GATE3B
-        report-and-continue diagnostic** (the patch behind the 924-failure `10_61` measurement),
-        which is *not* upstream. It IS preserved on campaign as
-        `vvdata/weyl-campaign/gate4/gate3b-gate4-probes.patch` (diffed, they match), so discarding
-        it loses nothing — but a pull WILL remove GATE3B-measuring capability from that machine,
-        which may be wanted there. Decide deliberately rather than pulling blind.
-      Its five root `.m` scripts (`cmsupply`, `deficit`, `gencapped`, `genmodels`, `ppint`) are
-      **stale copies** of campaign tooling (campaign's `deficit.m` is 69 lines to lovelace's 62),
-      so there is nothing to rescue there.
+- [x] **Pull the lovelace clone up to `main`.** *(done 2026-09-04)* It was **52 behind**, not
+      current — a plain `git rev-list HEAD..origin/main` there reports 0 because its `origin` ref
+      is stale, so **fetch first**. Now at `05471c8`, 0 behind, carrying the tau fix and the
+      t-shift `nmzsolve.py`. What was discarded, and why it was safe:
+      * `EquationsCovers.m` — was byte-identical to `origin/main`; the pointless-conics guard
+        really was redundant, as this item originally claimed.
+      * `VectorValuedForm.m` — was NOT that guard but the **GATE3B report-and-continue
+        diagnostic**. Preserved on campaign as `vvdata/weyl-campaign/gate4/gate3b-gate4-probes.patch`
+        (diffed to confirm), so nothing was lost — but note the pull DID remove GATE3B-measuring
+        capability from that machine. `git apply` the patch there to get it back.
+      * its 109 untracked solves — checksummed against the now-committed copies before deleting,
+        and restored by the pull (907 polymake files there now).
+      ⚠ Its five root `.m` triage scripts stay untracked by design (that is how they are run
+      there). Two were STALE and have been refreshed from campaign: `deficit.m` still called
+      `ProbeWHBasis`/`ProbeDivisorMatrix`, the instrumentation-only functions campaign's `0bc7f28`
+      removed so the file runs on an UNPATCHED tree — so it would have failed there; and
+      `genmodels.m` was missing the INTSOL toggle. `cmsupply.m`, `ppint.m`, `gencapped.m` already
+      matched. **Re-check these against campaign whenever you use that machine** — they are copies,
+      and nothing keeps them in sync.
 - [x] **Harvest the 109 stranded Normaliz solves from lovelace.** *(done 2026-09-04, `e6d8ff2`)*
       They existed on lovelace only, committed nowhere, `M = 708..3372` — past the old frontier.
       Cache 797 -> 906 files. Verified before trusting: not t-shift output (lovelace runs the
