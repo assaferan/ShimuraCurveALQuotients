@@ -148,10 +148,33 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
 
 - [ ] **Decide explicitly: does the paper need model results?** The blocking decision. If it does,
       scope exactly which claim — what exists is four models from one base, a partial set.
-- [ ] **Re-read `conj:sq` under the gauge finding.** It is stated in terms of `w_square`, and
-      `w_square` is a gauge — a choice of representative, not arithmetic. The paper was updated
-      for that finding (`ee94175`); confirm the conjecture is still well-posed rather than a
-      statement about a normalisation.
+      ⚠ **This decision is time-sensitive as of 2026-09-04**: `34_11` is being run through the
+      pipeline right now and may produce a second base. Wait for it, or decide conditionally —
+      "four models from one base" reads very differently from "two bases".
+- [x] **Re-read `conj:sq` under the gauge finding — DONE 2026-09-04, and the paper is already
+      consistent.** It attaches the caveat in BOTH places it needs to: after the scorecard
+      (~line 673) and in `rem:gauge` (~line 1573), each saying `w_square` "is a coordinate of a
+      gauge-fixed representative rather than an invariant" and that `conj:sq` "is to be read as a
+      statement about that representative". So the answer to "is it still well-posed?" is: it is
+      well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
+      tested predictions stand unfalsified (`14_5` and `34_5` both hit).
+- [ ] **⚠ BUT A TENSION SURFACED WHILE READING IT — reconcile before submitting.** The paper makes
+      an **impossibility** claim: the `w_square` aliasing is "*intrinsic* rather than an accident
+      of the panel", the 50 leftover combinations are "identities of the space, **unremovable by
+      further probes**" (`sec:exact`, ~line 834), and so "**no computation can be expected to
+      settle the rest**" (~line 675). `rem:gauge` then identifies its own 6-index `-a_E` vs
+      Table A disagreement AS that same aliasing ("this is the `w_square` aliasing of
+      \S`sec:exact`... aliasing is not something a derivation could remove").
+      **This file's own MAIN LINE says the opposite**: that the `rem:gauge` ambiguity is
+      *provably resolvable*, because the 158-monomial data gives that 6-index matrix **full rank
+      6**, i.e. it is NOT one of the 50 unremovable directions. Both cannot be right.
+      Neither claim has been re-verified this session, so I am flagging, not adjudicating. But
+      "unremovable by further probes" and "no computation can settle this" are strong negative
+      claims to publish, and if the MAIN LINE analysis is correct then `rem:gauge` conflates a
+      *resolvable* 6-index gap with the genuinely unremovable 50. **Check which before submitting.**
+      (Related, and it does not settle the question either way: the reachable-subspace solve is
+      currently BLOCKED for a different reason — the monomial pool has no support at cusp classes
+      `g = 2,6,10,30` — so "resolvable in principle" is not "resolved in practice".)
 - [x] **Merge `paper/` into `main`.** *(done 2026-09-04)* **THE SPLIT IS OVER: `main` and
       `tier1-models` are now the SAME commit** (`475e72b`). It was a clean fast-forward — `main`
       was a strict ancestor, 40 commits behind, nothing on `main` that was not already here, so
@@ -166,7 +189,12 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       Verified after the merge: CI's matrix generator emits **zero** `_offline`/`GuoYang` targets
       (checked in the job log, not just read off the workflow), so the 34 offline tests stay out
       of CI as designed.
-- [ ] **Rebuild the PDF, confirm refs resolve, submit.**
+- [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
+      **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
+      moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
+      citations, 0 LaTeX warnings in the committed build log, and 0 occurrences of `??` in the
+      PDF text. So no rebuild is needed unless the `.tex` changes; what remains is the decision to
+      submit.
 
 ---
 
