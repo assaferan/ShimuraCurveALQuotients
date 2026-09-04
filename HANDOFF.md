@@ -33,9 +33,21 @@ Two habits did catch things, and are worth keeping:
 
 ### State right now
 
-**Three runs were left going on lovelace** (`~/shimura/models/*.genmodels.log`, `M0PROGRESS=1`):
-`34_11` (~5 h, in final assembly), `10_61` and `14_43` (~3 h, ~80% through the identity word).
-All three are past the gate that used to stop them. lovelace is shared and busy again (~68 magma
+**Three runs were left going on lovelace** (`~/shimura/models/*.genmodels.log`, `M0PROGRESS=1`).
+**All three completed their a0 tables**, which is the result they were launched for:
+
+    34_11   13 fallback points of 64      (~8.7 h elapsed)
+    10_61   27 fallback points of 64      (~6.7 h)   <- previously DIED at gate 3
+    14_43   22 fallback points of 64      (~6.7 h)   <- previously DIED at gate 3
+
+**A completed a0 table means the two-point check never fired, i.e. GATE 3 IS CLEARED at `10_61`
+and `14_43`** — the gate that killed both before. That retires the "924 gate-3 failures at 10_61,
+zero near-misses" entry and, with it, the claim that `10_61` "is not runnable, it has a real
+upstream defect". The fallback rates scale as expected: 1/64 at `15_2` (M=60), 8/64 at `58_5`
+(M=580), 22-27/64 at M≈1200 — the threshold is M-scaled, so bigger bases trigger it more.
+All three were still in FINAL ASSEMBLY (class-constancy, isotropic agreement, rational snap) when
+this was written; **check those logs first — they may have finished, and `10_61`/`14_43` producing
+models would change the sweep record's "two runnable candidates of 122" count.** lovelace is shared and busy again (~68 magma
 processes, mostly other users) — check `uptime` before adding load. Both branches and lovelace's
 clone are clean and in sync; housekeeping list is empty.
 
