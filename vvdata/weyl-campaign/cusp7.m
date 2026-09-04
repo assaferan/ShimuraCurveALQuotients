@@ -21,6 +21,9 @@
 //   TG <mono index> g=<class> re im   (50 digits)
 //
 //   magma -b DD:=15 NN:=2 KEYS:=-2,-1,9,10,11,12,13,14,15 cusp6.m
+SetColumns(0);   // WITHOUT THIS Magma wraps the long FORMC lines across many physical
+                 // lines with NO continuation character, and any line-based parser silently
+                 // reads only the first fragment. Cost a wrong rank computation on 2026-09-04.
 AttachSpec("ShimuraQuotients.spec");
 
 D := 15; N := 2; keystr := "-2,-1,9,10,11,12,13,14,15";
