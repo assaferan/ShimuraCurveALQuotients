@@ -111,7 +111,17 @@ gy_pairs := [*
     // homogenised with d; GY's y has weight 3 since its second equation has degree 6.  [genus 3]
     <21, 2, [Integers()|1], [1,3,1,1],
      func<a,b,c,d | [c^2 + a^2 + 3*d^2,
-                     b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>
+                     b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>,
+
+    // X_0^57(1):  y^2 = (3s+1)(3s^3+11s^2+17s+1)  and  x^2 = -4s^2+2s-1               [genus 3]
+    // GY's variables are (s,x,y), so here a=s, b=y, c=x, d=the homogenising variable; y has
+    // weight 2 (its equation is degree 4). Involutions w_19(s,x,y)=(s,x,-y), w_57(s,x,y)=(s,-x,y).
+    // ⚠ In the source this entry WRAPS across `\\`: the `x^2` line sits in a separate row of the
+    // same \tabincell, so reading only the first math group silently yields a lone genus-1
+    // y^2=quartic. Transcribed whole -- this is trap #1 of the four in the header.
+    <57, 1, [Integers()|1], [1,2,1,1],
+     func<a,b,c,d | [b^2 - (3*a+d)*(3*a^3+11*a^2*d+17*a*d^2+d^3),
+                     c^2 + 4*a^2 - 2*a*d + d^2]>>
 *];
 
 for c in gy_pairs do
