@@ -57,6 +57,22 @@ must_use := must_use join Set(extra);
 // both [1,1]) and X0^46(3) (r2 appears in no row at all).
 //
 // FIRE := 0 reproduces the earlier logs exactly.
+//
+// ⚠ MEASURED 2026-09-04, AND THE LEVER DOES NOT WORK. The claim above -- that these three
+// bases are "stuck for want of" firing degree-1 discriminants and that admitting them is
+// "exactly the missing lever" -- is NOT borne out. Ran each base at FIRE:=0 and FIRE:=3:
+//
+//     33_2   admitted [-15]        NOT MEASURABLE -> NOT MEASURABLE   (unchanged)
+//     34_3   admitted [-11, -20]   NOT DETERMINED -> NOT DETERMINED   (unchanged)
+//     46_3   admitted []           NOT DETERMINED, 25 pairs both ways (VACUOUS: its only
+//                                  firing degree-1 candidate, -8, is already in must_use)
+//
+// So on the two bases where the knob actually admits anything, the verdict does not move;
+// on the third it cannot engage at all -- consistent with the aside above that 46_3's r2
+// "appears in no row at all", which is a different problem. The knob is kept (it is still
+// the right PLACE to fix this) but it is UNVALIDATED -- do not cite it as a working lever,
+// and do not port it to main on the strength of the comment above. This is also why main
+// does not have it, while main DID get the t-shift fallback, which had real verification.
 firing1 := [ p[1] : p in rat_all
              | not IsEmpty(PrimeDivisors(N div GCD(N, FundamentalDiscriminant(p[1])))) ];
 NFIRE := 3; if assigned FIRE then NFIRE := StringToInteger(FIRE); end if;
