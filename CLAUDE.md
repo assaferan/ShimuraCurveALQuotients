@@ -64,6 +64,17 @@ to keep the `GitHub/` directory tidy:
 
     git worktree add worktrees/<name> <branch>
 
+**Two branches, that is all: `main` and `m0-theta-campaign`.** Everything else is retired and
+preserved as an `archive/<name>` tag on `origin` (10 of them). `whbasis-speedup` went too — its
+one commit was already in `main` via the `04f1d7b` cherry-pick.
+
+**⚠ The campaign branch carries a FULL CODE TREE, not just data.** So a probe run from
+`worktrees/campaign` uses *that branch's* code, not `main`'s. It had drifted 103 commits behind
+before being merged up on 2026-09-04; **merge `main` into it before trusting any measurement
+taken there.** One conflict recurs: `nmzsolve.py`, where the campaign copy is a strict superset
+(the t-shift fallback plus its `tshift` helper files, which `main` has never received) — keep the
+campaign side.
+
 **⚠ `tier1-models` is RETIRED (2026-09-04) and `main` carries everything it had.** It was
 fast-forwarded into `main` — the two were the same commit — and then deleted, local and remote,
 along with the now-redundant `worktrees/mainport`. Older material (`HANDOFF.md`, `PLAN.md`,
