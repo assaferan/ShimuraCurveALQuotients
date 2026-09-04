@@ -473,18 +473,36 @@ exactly. Only the half-integral phase is wrong.
 
 ## COVERAGE — reproducing Guo-Yang's published equations
 
-*(stock-take 2026-09-04. Distinct from the CM-value tables in `tests/_offline/` — this is about
-the paper's headline output, the EQUATIONS.)*
+*(stock-take RE-MEASURED 2026-09-05, superseding the 2026-09-04 counts. Distinct from the
+CM-value tables in `tests/_offline/` — this is about the paper's headline output, the EQUATIONS.)*
 
     43   (D,N) bases with published equations in Guo-Yang
     34   we have a model for            <- was 32; 51_1 and 57_1 added 2026-09-04
-    24   ...and a test comparing it to Guo-Yang
-    10   model exists but NO GY comparison test  <- the gap this section closes
+    32   ...and a test comparing it to Guo-Yang   <- was 24; the 8 in GuoYangEquations.m
+     2   model exists but NO GY comparison test   <- was 10; and BOTH need generation, not a test
      9   no model: the real blockers
-    47   models we have BEYOND Guo-Yang's list entirely (79 model files total)
+    47   models we have BEYOND Guo-Yang's list entirely (81 model files total)
 
-**The 10 with models but no GY test:** `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`.
-Not blocked — we reproduce them and nobody wrote the comparison.
+**⇒ TIER 1' IS EXHAUSTED AS A TRANSCRIPTION TASK.** Eight of the original ten are done
+(`14_5 15_2 21_2 22_3 51_1 55_1 57_1 87_1`, in `tests/GuoYangEquations.m`). The remaining **two are
+not transcribable at all** — we do not have the object to compare:
+* `14_3` — GY publishes a PAIR (`z^2=-9x^2-2`, `y^2=-7x^4+22x^2+1`). Our `models[[1]]` entry is
+  literally `[* *]`, **empty**. A fresh plain `genmodels` run on 2026-09-05 reproduced the
+  committed file byte-for-byte in 37 s, so the empty `{1}` is a REPRODUCIBLE outcome of
+  `AllEquationsAboveCovers`, not a stale or truncated artifact.
+* `22_5` — GY publishes `y^2 = -11x^12-80x^10-240x^8-362x^6-240x^4-80x^2-11` (degree 12, genus 5).
+  Our file has **no `[1]` key at all**, only three quotients; its commit message (`08ce5fa`) says
+  "3 covers", i.e. it was committed knowing the full curve was absent.
+⇒ Both are **model-generation** items, not test-writing items. Do not re-file them under TIER 1'.
+
+⚠ **How the "43" was confirmed, because the obvious grep gets 41.** Two rows write the label
+without braces round `D` — `$X^6_0(17)$` and `$X^6_0(29)$` — so a pattern anchored on `X^{D}_0(N)`
+silently drops exactly those two and returns a plausible 41. Cross-check with the equation cell
+instead: `multirow{1}{*}{\text}` occurs 43 times in the table range, once per base. (Same
+read-a-fragment-and-generalise family as the four extraction traps in `GuoYangEquations.m`'s
+header.) Also note `6_17` and `6_29` appear ONLY in CM-value captions elsewhere — having a
+`tests/X0_6_17.m` does not imply a published equation, and `15_1` has a test but is **not** a GY
+equation base at all.
 
 **The 9 remaining blockers, with the classification CORRECTED 2026-09-04:**
 * `15_4` — **structural**, and the only one of its kind: `N = 4` is not squarefree, and the method
@@ -541,11 +559,21 @@ was ever attempted.**
       that was the right call. Scripts kept for reference at
       `vvdata/weyl-campaign/guoyang/extract_equations.py` (campaign) with the traps documented in
       its header; the generated `gy_equations.m` is **NOT trustworthy** and was removed from `main`.
-- [ ] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter**, following the existing
-      `X0_D_N.m` pattern: `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`. Per base: read the
-      published equation off the PDF, identify WHICH cover it corresponds to (it is not always the
-      `W={1}` key — see above), derive the isomorphism, and verify. Slower per base than a parser,
-      but it is the only approach with a working track record here.
+- [x] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter. DONE 2026-09-05 for all
+      that are transcribable: 8 of 10**, in `tests/GuoYangEquations.m` (`ed38ed5`, `41da3fb`,
+      `64d9316`). `14_3` and `22_5` are NOT transcribable — see the stock-take above; they need
+      models generated. The hand route worked exactly as predicted: slower per base than a parser,
+      and the only approach with a working track record here.
+      **Method that made each entry trustworthy, worth reusing:**
+      * **Read the raw `.tex` row, not a parse of it**, and read the neighbouring rows too — `51_1`
+        and `55_1` sit either side of `57_1` and are already-passing hand-transcribed entries, so
+        matching them byte-for-byte calibrates the reading before the new row is trusted. This is
+        the "reproduce a KNOWN value before trusting a new one" habit applied to transcription.
+      * **Negative-control every entry before committing.** For `57_1`, five single-coefficient
+        perturbations of the published pair, each chosen to KEEP genus 3 so that `IsIsomorphic`
+        does the discriminating rather than the genus assert — all five correctly rejected. A
+        perturbation that changes the genus proves nothing about the comparison.
+      * `57_1` cost ~13 s; `21_2` still dominates the file at ~100 s (112 s total, 8 bases).
 - [ ] ~~TIER 1 (superseded)~~ **one cheap test, all 34 bases at once** `ModelChecks` validates the
       79 model files structurally (genus, Weil-polynomial divisibility, point counts) but **never
       compares them to Guo-Yang**. So nothing in CI would notice a committed model silently
