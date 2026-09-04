@@ -419,6 +419,41 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
     tau0 := CC!0.31 + CC!1.31*ii;
     tau1 := CC!(-0.57) + CC!1.73*ii;
 
+    // PER-WORD FALLBACK for the two evaluation points, triggered only when the global tau0/tau1
+    // land a word's z = w.tau outside the measured-safe range. eta(d z) is evaluated for d up to
+    // M, so Im(z) too small OR too large both blow up its dynamic range in floating point; the
+    // measured bands (vvdata/weyl-campaign/tau-precision/tauwindow.m, over all 2232 cosets of
+    // M = 1220) show catastrophic loss ONLY at the extremes -- [0,1e-5) and [1e-1,1e2) lose
+    // 90-180 digits, everything from [1e-5,1e-1) loses at most ~10, comfortably inside the
+    // 1e-15-relative two-point check below (needs ~15 valid digits out of Prec := 80).
+    //
+    // THE UPPER THRESHOLD SCALES WITH M, the lower one does not -- and using the raw M = 1220
+    // absolute band on a smaller base is a real bug (caught by M0PROGRESS=1 on 15_2, M = 60: it
+    // flagged the DEFAULT tau0 itself, Im(z) = 1.31, as unsafe, when 15_2 has always worked
+    // exactly with that tau0). The mechanism explains why: eta is evaluated at d*z for d up to
+    // M, so the dynamic-range risk on the large side is really about M*Im(z), not Im(z) alone --
+    // the M = 1220 measurement's unsafe boundary sits at Im(z) ~ 0.1, i.e. M*Im(z) ~ 122. The
+    // near-real-axis mechanism on the small side (z and -1/z both close to the real line) is
+    // about the word's own S-step structure, not a d-scaling effect, so that threshold is kept
+    // as an absolute floor.
+    //
+    // The correction: since the slash constant is tau-independent (that is exactly what the
+    // two-point check verifies), tau is a free choice per word. Take tau to be the PREIMAGE of a
+    // fixed safe-band target z under the word's own SL2(Z) matrix (tau := g^-1.ztarg), so
+    // slashdata(w, tau) reproduces z = ztarg exactly regardless of how extreme that word's own
+    // (c, d) are. This is deliberately NOT applied to every word: an earlier attempt that used
+    // per-word preimages everywhere pushed Im(tau) itself to extreme values for many words
+    // (sfun's own argument is evaluated at tau directly, not at z), which was slow rather than
+    // wrong but never finished on 58_5 in a reasonable time. Confining it to the rare words the
+    // default actually mishandles keeps that risk rare too.
+    z0targ := CC!0.31 + CC!0.0057*ii;
+    z1targ := CC!(-0.57) + CC!0.0083*ii;
+    safe_im := func< z | Abs(Im(z)) ge 10^(-5) and M*Abs(Im(z)) lt 100 >;
+    preimage := function(g, z)
+        a := CC!g[1][1]; b := CC!g[1][2]; c := CC!g[2][1]; d := CC!g[2][2];
+        return (d*z - b) / (a - c*z);
+    end function;
+
     monos := {@ @};
     for f in fs do for r in Exponents(f) do Include(~monos, r); end for; end for;
 
@@ -444,9 +479,20 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
     end for;
     selected := Sort(Setseq(&join{ Set(canon[g0]) : g0 in classes }));
 
+    // Diagnostic-only, gated behind M0PROGRESS so it's silent by default: printf is buffered to
+    // a file (CLAUDE.md), so a killed/crashed run leaves NOTHING to show where it got to.
+    // WriteStderr is not buffered that way.
+    progress := GetEnv("M0PROGRESS") ne "";
+    if progress then
+        WriteStderr(Sprintf("M0MultiplierExact: %o words selected of %o total, %o classes\n",
+                             #selected, #words, #classes));
+    end if;
+
     SS := PowerSeriesRing(CC); t := SS.1;
     a0tab := [ [ CC!0 : r in monos ] : w in words ];
-    for wi in selected do
+    nfallback := 0;
+    t_progress := Realtime();
+    for wcount->wi in selected do
         w := words[wi];
         g := VVWordMatrix(w);
         tri := [ ];
@@ -458,6 +504,9 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
         leads := [ &+[ Integers() | r[i]*tri[i][1]*(W div tri[i][3]) : i in [1..#ds] ]
                    : r in monos ];
         depth := Maximum([ 0 ] cat [ -L : L in leads ]) + 1;
+        if progress then
+            WriteStderr(Sprintf("  wi=%o W=%o depth=%o\n", wi, W, depth));
+        end if;
         units := [ ];
         for i->d in ds do
             a, b, e := Explode(tri[i]);
@@ -470,9 +519,34 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
             end while;
             Append(~units, u);
         end for;
-        fac0, z0 := slashdata(w, tau0);
-        fac1, z1 := slashdata(w, tau1);
+        mytau0 := tau0; mytau1 := tau1;
+        _, ztest0 := slashdata(w, tau0);
+        if not safe_im(ztest0) then
+            mytau0 := preimage(g, z0targ); nfallback +:= 1;
+            if progress then
+                WriteStderr(Sprintf("  fallback wi=%o point0: default Im(z)=%o -> using preimage\n",
+                                     wi, RealField(6)!Im(ztest0)));
+            end if;
+        end if;
+        _, ztest1 := slashdata(w, tau1);
+        if not safe_im(ztest1) then
+            mytau1 := preimage(g, z1targ); nfallback +:= 1;
+            if progress then
+                WriteStderr(Sprintf("  fallback wi=%o point1: default Im(z)=%o -> using preimage\n",
+                                     wi, RealField(6)!Im(ztest1)));
+            end if;
+        end if;
+        fac0, z0 := slashdata(w, mytau0);
+        fac1, z1 := slashdata(w, mytau1);
+        if progress and (wcount mod 20 eq 0 or Realtime(t_progress) gt 30) then
+            WriteStderr(Sprintf("  word %o/%o (wi=%o), %o fallbacks so far\n",
+                                 wcount, #selected, wi, nfallback));
+            t_progress := Realtime();
+        end if;
         for ri->r in monos do
+            if progress and ri mod 50 eq 0 then
+                WriteStderr(Sprintf("    wi=%o mono %o/%o\n", wi, ri, #monos));
+            end if;
             L := leads[ri];
             if L gt 0 then continue; end if;
             produ := &*[ SS | units[i]^(r[i]) : i in [1..#ds] | r[i] ne 0 ];
@@ -484,8 +558,8 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
                 &*[ CC | ( DedekindEta((tri[i][1]*tau + tri[i][2])/tri[i][3]) *
                            ee(-(tri[i][1]*tau + tri[i][2])/(24*tri[i][3])) )^(r[i])
                     : i in [1..#ds] | r[i] ne 0 ] >;
-            k0 := num0 / sfun(tau0);
-            k1 := num1 / sfun(tau1);
+            k0 := num0 / sfun(mytau0);
+            k1 := num1 / sfun(mytau1);
             // The two-point check must SCALE WITH THE CONSTANT, at the same 10^(-15) the other
             // four guards in this intrinsic use (10^(-15)*vscale on the value checks,
             // 10^(-15)*Max(1,|.|) on the contributions).  This was the last absolute tolerance
@@ -511,6 +585,10 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
             a0tab[wi][ri] := k0 * c0;
         end for;
     end for;
+    if progress then
+        WriteStderr(Sprintf("M0MultiplierExact: a0 table done, %o fallback points of %o\n",
+                             nfallback, 2*#selected));
+    end if;
 
     rvtab := AssociativeArray();
     for wi in selected do rvtab[wi] := VVRhoInvE0FFT(fftdata, words[wi]); end for;
