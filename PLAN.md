@@ -523,10 +523,13 @@ was ever attempted.**
       **And the target was wrong twice over.** Guo-Yang's tables are heterogeneous: some rows are a
       single `y^2=f(x)`, others a PAIR (`82_1`: `y^2=f(s)` AND `x^2=g(s)`), `15_4` is a conic in
       `z`, and `93_1` mixes two variables (`3s^3-7s^2-3t-1`) — almost certainly a typo in the
-      paper. Worse, the published equation does **not** uniformly correspond to a single key of our
-      model files: `X0_26_1.m` compares `-2s^3+19s^2-24s-169` (degree 3) against Guo-Yang's degree-6
-      `x`-equation — they differ by `s = x^2`, i.e. the existing tests compare **covers in their own
-      coordinates**, not the published curve.
+      paper.       ⚠ **One claim made here on 2026-09-04 was WRONG and is retracted:** that the published
+      equation does not uniformly correspond to a key of our model files, "evidenced" by
+      `X0_26_1.m` comparing a degree-3 `s`-equation. That came from grepping only the FIRST
+      `HyperellipticCurve` in the file. `X0_26_1.m` actually carries THREE cover entries and its
+      `{1}` entry IS Guo-Yang's degree-6 equation, with the identity matrix. **The mapping to
+      `W={1}` is uniform as far as checked**, and the apparent `82_1` genus contradiction was the
+      parser taking only the first of a PAIR, not a mapping failure.
       ⇒ **Do not retry the automated extraction.** The existing 24 tests were hand-transcribed, and
       that was the right call. Scripts kept for reference at
       `vvdata/weyl-campaign/guoyang/extract_equations.py` (campaign) with the traps documented in

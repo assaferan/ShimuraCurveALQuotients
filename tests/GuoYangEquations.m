@@ -20,9 +20,19 @@
 // some rows are a single y^2=f(x), others a PAIR (82_1: y^2=f(s) AND x^2=g(s)), 15_4 is a conic in
 // z, and 93_1 mixes two variables -- almost certainly a typo in the paper. Do not re-automate this.
 //
-// ⚠ AND THE PUBLISHED EQUATION IS NOT ALWAYS OUR W={1} KEY. `X0_26_1.m` compares a degree-3
-// s-equation against Guo-Yang's degree-6 x-equation; they differ by s = x^2. So each case below
-// records WHICH cover key it is comparing, established per base rather than assumed.
+// THE PUBLISHED EQUATION CORRESPONDS TO OUR W={1} KEY (the curve itself). Each case still records
+// the key explicitly, but the mapping is uniform as far as checked.
+// ⚠ A CORRECTION, recorded because the wrong version briefly stood: an earlier note here claimed
+// `X0_26_1.m` compares a degree-3 s-equation against Guo-Yang's degree-6 x-equation, and inferred
+// the mapping was not uniform. That was an artifact of grepping only the FIRST HyperellipticCurve
+// in the file. X0_26_1.m in fact carries THREE cover entries, and its {1} entry is exactly
+// Guo-Yang's -2s^6+19s^4-24s^2-169 with the identity matrix.
+//
+// HOW THE PAIRED / CONIC PRESENTATIONS ARE HANDLED (see X0_82_1.m, X0_26_1.m, X0_15_1.m,
+// X0_146_1.m): build the pair as a Curve in a WeightedProjectiveSpace -- e.g. weights [1,2,1,1]
+// for (x,y,z,s), since y has weight 2 -- and pin the isomorphism by giving cover_data an entry for
+// EACH cover, the quotients as well as the full curve, each with its own matrix. Establishing the
+// quotients first is what makes the full-curve isomorphism findable.
 //
 // The comparison is `IsIsomorphic` on the curves, not coefficient equality: a model is only
 // defined up to isomorphism, and ours generally differs from the published one by a coordinate
