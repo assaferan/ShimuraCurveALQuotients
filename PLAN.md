@@ -163,7 +163,7 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       statement about that representative". So the answer to "is it still well-posed?" is: it is
       well-posed *as a statement about the gauge-fixed representative*, the paper says so, and its
       tested predictions stand unfalsified (`14_5` and `34_5` both hit).
-- [ ] **The `rem:gauge` / MAIN LINE tension: STILL OPEN. My 2026-09-04 "the paper is wrong"
+- [x] **The `rem:gauge` / MAIN LINE tension: CLOSED — the paper is right. My 2026-09-04 "the paper is wrong"
       claim was RETRACTED the same day — do not act on it.** What was measured is solid:
       `vvdata/weyl-campaign/rankcheck_gauge.py` (campaign) shows the `oo`-side matrix over the
       **158 MONOMIALS** at `m = 1,2,3,10,15,30` has **rank 6**, against **rank 4** for the
@@ -186,12 +186,29 @@ Runs in parallel. The fast arc is currently hostage to the slow one — that is 
       already measured that model as inadequate. Ranking an inapplicable model says nothing.
       ⇒ **`rem:gauge` is NOT known to be wrong, and the paper should NOT be edited on this basis.**
       The question it answers — can more FORMS separate `-a_E` from Table A? — is one nobody has
-      computed. **That is the actual open item**: rank the joint `(oo,0)` coordinates over the
-      form space, not over monomials, and see whether the six-index gap survives there.
-      **Method note worth keeping:** the two validations that made the rank number trustworthy
-      (they caught Magma line-wrapping and dropped rational coefficients) said nothing about
-      whether the right OBJECT was being measured. A validated computation of the wrong thing is
-      still the wrong thing.
+      computed.
+      **RESOLVED 2026-09-04 (third pass), IN THE PAPER'S FAVOUR — `rem:gauge` looks CORRECT.**
+      The tempting next step was "redo the rank over forms, e.g. a weakly-holomorphic basis".
+      That would have been the SAME MISTAKE a third time. `sec:exact` states that the 158
+      monomials ARE "weakly holomorphic weight-`1/2` form[s] of the same multiplier character" —
+      and the `oo`-only model demonstrably FAILS on them (residual `2.08`). So being such a form
+      is **not sufficient** for the `oo`-only functional to be meaningful; a weakly-holomorphic
+      basis is not the right domain either.
+      The `oo`-only formula `(1/2) sum_m c(-m) W(m)` is validated only on **genuine Borcherds
+      forms from the divisor construction** (39 forms, nine bases). At `15_2` those are the NINE
+      panel forms, whose `oo`-principal parts have **rank 4** at the six indices. Within the
+      domain where the model means anything the 2-dimensional ambiguity is therefore REAL, and
+      enlarging the probe set does not help because every enlargement leaves that domain —
+      which is exactly what the paper's hedge "further panels **of the same kind**" already says.
+      ⇒ **Do not edit `rem:gauge`, and do not re-run this as a rank computation over any larger
+      space.** The one honest caveat left is narrow: this assumes the nine panel forms are ALL the
+      Borcherds forms at `15_2`; if that base admits more (more covers/keys) their principal parts
+      would add rows and the rank could rise. That is the only version still worth asking.
+      **Method note, three passes in:** monomials, then weakly-holomorphic forms, then the right
+      answer. Every time the arithmetic was fine and the DOMAIN was wrong — and the validations
+      that made the numbers trustworthy (they caught Magma line-wrapping and dropped rational
+      coefficients) said nothing about which object was being measured. On this problem spend the
+      effort on "which objects is this functional even defined for", not on the linear algebra.
 - [ ] **Rebuild the PDF, confirm refs resolve, submit.** *(partly done 2026-09-04)* The PDF is
       **current** — `.tex` and `.pdf` were last committed in the same commit and the `.tex` has not
       moved since — and **refs already resolve clean**: 0 undefined references, 0 undefined
