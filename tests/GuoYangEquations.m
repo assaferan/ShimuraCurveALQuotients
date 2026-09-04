@@ -39,7 +39,25 @@ gy_cases := [*
     // X_0^51(1):  y^2 = -(x^2+3)(243x^6+235x^4-31x^2+1)
     // ours is the W={1} genus-3 entry; matches under x -> 3x, y -> (27/16)y (over-determined,
     // fixed by the leading and constant coefficients and consistent on all five).
-    <51, 1, [Integers()|1], -(x^2+3)*(243*x^6+235*x^4-31*x^2+1)>
+    <51, 1, [Integers()|1], -(x^2+3)*(243*x^6+235*x^4-31*x^2+1)>,
+
+    // X_0^87(1):  y^2 = -(x^6-7x^4+43x^2+27)(243x^6+523x^4+369x^2+81)   [genus 5]
+    <87, 1, [Integers()|1], -(x^6-7*x^4+43*x^2+27)*(243*x^6+523*x^4+369*x^2+81)>,
+
+    // X_0^14(5):  y^2 = -23x^8 - 180x^7 - 358x^6 - 168x^5 - 677x^4 + 168x^3 - 358x^2 + 180x - 23
+    // ⚠ In the source this equation WRAPS across `\\` into two $...$ groups; the tail
+    // (+168x^3 - 358x^2 + 180x - 23) is easy to lose. Transcribed whole.                 [genus 3]
+    <14, 5, [Integers()|1],
+      -23*x^8 - 180*x^7 - 358*x^6 - 168*x^5 - 677*x^4 + 168*x^3 - 358*x^2 + 180*x - 23>,
+
+    // X_0^55(1):  y^2 = -(x^4-x^3+x^2+x+1)(3x^4+x^3-5x^2-x+3)                            [genus 3]
+    <55, 1, [Integers()|1], -(x^4-x^3+x^2+x+1)*(3*x^4+x^3-5*x^2-x+3)>,
+
+    // X_0^15(2):  y^2 = -(x^2+3)(3x^2+4)(x^4-x^2+4)                                      [genus 3]
+    <15, 2, [Integers()|1], -(x^2+3)*(3*x^2+4)*(x^4-x^2+4)>,
+
+    // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
+    <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>
 *];
 
 gy_checked := 0;
