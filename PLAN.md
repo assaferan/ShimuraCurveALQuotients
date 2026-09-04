@@ -76,6 +76,20 @@ One object blocks disproportionately much. Everything below this section is seco
 - [ ] **State it precisely before attempting anything.** The vector-valued weight-3/2 Eisenstein
       coefficient `b^{eta*}_0(r)` at a *nonzero isotropic coset*, general `m`, supported on
       `N | r` — with `A_r = -b(r)/4`. A different object from the scalar, not a special case.
+      ✅ **CHECKED 2026-09-04 against `sec:determined`, and the gap is CONFIRMED REAL.** The
+      scorecard's phrase "Section `sec:determined` determines the functional outright" invites the
+      hope that `A_m` is already in the paper and merely needs extracting. It is not. Two distinct
+      things live there, and neither is `A_m`:
+      * `thm:Ngeneral` determines `rho_mu` at isotropic cosets — but that is the **CONSTANT TERM**
+        (`ct_L = glob * prod_p loc_p`), i.e. `m = 0`. Its own proof says the coset "contributes an
+        **indicator, not a phase**": `rho_mu = kappa * rho_0` with `kappa = prod_{p in S}[p nmid c]`,
+        because `Q(y) = 0` for isotropic `mu`. There is no `m`-dependence anywhere in it.
+      * the "canonical representative — the Fourier coefficients of an explicit weight-3/2 form"
+        is `-a_E`, the **SCALAR** of `prop:closedcoef` — which reproduces 39 forms' multipliers but
+        only **1 of 13** measured `A_m`.
+      ⇒ `m = 0` at those cosets: solved. All `m` for the scalar: solved. **All `m` AT a nonzero
+      isotropic coset: genuinely absent.** `A_m` needs new mathematics, not extraction. This
+      is now a checked claim rather than an assumption — do not re-open it hoping for a shortcut.
 - [ ] **Load the regression set first.** 13 exact values already measured at `15_2`, `6_5`,
       `10_3`, `21_2`. Any candidate formula gets checked against all 13 before it is believed.
 - [x] **Confirm the scalar route is closed.** *(done 2026-09-02)* Re-run with the repo's own
