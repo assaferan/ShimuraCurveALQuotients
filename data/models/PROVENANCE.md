@@ -53,7 +53,7 @@ encode.
 | test | checks | runs |
 |---|---|---|
 | `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 82 files, 8767 checks |
-| `tests/GuoYangEquations.m` | STORED models against the published equations, 9 bases | CI, ~97 s |
+| `tests/GuoYangEquations.m` | STORED models against the published equations, 10 bases | CI, ~125 s |
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
 | `tests/X0_D_N.m` (25 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to hand-written data | CI |
@@ -61,13 +61,29 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the five bases above. **Update both it and this table
 together**, or the next session gets a false "drifted" and repeats a day of work.
 
+## A model that needs no flag but DOES need a code fix: `93_1`
+
+`models_93_1.m` regenerates with the default recipe — but only on `main` **at or after the vx fix**
+(`n_oo`, `BorcherdsForms.m` ~`:771`/`:787`/`:858`). Before it, the base died in the odd-`D`
+`oo`-expansion block, which is why `93_1` had no model until 2026-09-05. Cost: 50927 s (14.1 h).
+
+This is a **third** category, distinct from the two below: not a flag, not drift, but a *minimum
+code version*. Anyone bisecting `main` to an older commit will find this file unregenerable and
+should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
+`159_1` were blocked on.
+
 ## Reproducibility status, measured 2026-09-05
 
-Of the 34 Guo-Yang bases we reproduce:
+Of the 35 Guo-Yang bases we reproduce (`93_1` added 2026-09-05):
 * **24** are verified BY re-derivation (the `X0_D_N.m` tests run the pipeline, so passing IS
   reproduction);
-* **10** are stored-model comparisons; of those, `51_1 57_1 14_5 55_1 21_2 87_1` regenerate clean
-  (`ModelRegen`, measured), and `39_2 14_3 22_3 15_2` need the flags above.
+* **11** are stored-model comparisons; of those, `51_1 57_1 14_5 55_1 21_2 87_1` regenerate clean
+  (`ModelRegen`, measured), `93_1` regenerates clean given the vx fix (see above), and
+  `39_2 14_3 22_3 15_2` need the flags above.
+⚠ `93_1` is checked at the level of its `V_4` **quotients**, not its genus-5 full curve — the only
+base in `GuoYangEquations.m` for which that is true. Its three cover keys `[1,3] [1,31] [1,93]` are
+pinned against Guo-Yang; the `W={1}` entry is their fibre product and is validated only
+structurally (`ModelChecks`). Closing that gap needs an offline full-curve test.
 ⚠ `21_2` and `57_1` report `OK` with **1 CRV skipped** — `ModelRegen` cannot rebuild `CRV` entries
 because the model file does not record the ambient weights, and for those two the `CRV` entry IS
 the `W={1}` full curve. So their *hyperelliptic covers* are known to regenerate; their full curves

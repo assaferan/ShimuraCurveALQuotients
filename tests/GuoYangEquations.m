@@ -18,7 +18,12 @@
 // segmenting at the label, which is itself inside $...$; newlines inside the math), each of which
 // produces a plausible WRONG polynomial rather than an error. The tables are also heterogeneous:
 // some rows are a single y^2=f(x), others a PAIR (82_1: y^2=f(s) AND x^2=g(s)), 15_4 is a conic in
-// z, and 93_1 mixes two variables -- almost certainly a typo in the paper. Do not re-automate this.
+// z, and 93_1 mixes two variables. Do not re-automate this.
+// ⚠ UPDATE 2026-09-05: that 93_1 anomaly is now SETTLED, not merely suspected. Their `-3t` is a
+// typo for `-3s` -- our model's genus-2 quotient is isomorphic to that reading and to none of the
+// three other plausible repairs. See the 93_1 block at the end of this file. It is a worked example
+// of why hand-transcription is the right call: an extractor would have emitted a two-variable
+// polynomial or silently dropped a term, and either way produced a wrong curve without an error.
 //
 // THE PUBLISHED EQUATION CORRESPONDS TO OUR W={1} KEY (the curve itself). Each case still records
 // the key explicitly, but the mapping is uniform as far as checked.
@@ -158,4 +163,75 @@ for c in gy_pairs do
     gy_checked +:= 1;
 end for;
 
-printf " ok (%o base(s))\n", gy_checked;
+// ---------------------------------------------------------------------------------------------
+// X_0^93(1): compared through the V_4 QUOTIENT DIAGRAM, not the full curve -- and the comparison
+// determines a typo in the published table.
+//
+// GUO-YANG PRINT:   y^2 = (3s^3 - 7s^2 - 3t - 1)(3s^3 + s^2 - 3s - 9),   x^2 = -4s^2 - 6s - 9
+// The `t` occurs nowhere else in that row, and the header above flags it as "almost certainly a
+// typo". It is, and this test says WHICH typo: of the plausible repairs only `-3t -> -3s` yields a
+// curve isomorphic to our genus-2 quotient. `-3s^2`, `-3`, and deleting the term all produce
+// genus-2 curves that are NOT isomorphic to ours -- so the test discriminates rather than merely
+// accommodating, which is what makes the conclusion worth anything. The three refuted repairs are
+// checked below alongside the accepted one, precisely so that a future change cannot quietly turn
+// this into a vacuous "some reading works" test. (The repo has produced three vacuous tests this
+// way already; the guard is to count the comparisons actually made.)
+//
+// ⚠ WHY QUOTIENTS AND NOT THE FULL CURVE. The W={1} entry is a genus-5 CRV pair, and IsIsomorphic
+// on those is the 10h+ regime measured at 26_3 -- not a CI cost. What IS checked: the two
+// hyperelliptic quotients exactly, and the conic up to Q*/Q*^2. Three of the four cover keys are
+// therefore pinned, and the fourth is their fibre product. Strong, but NOT a full-curve proof;
+// models_93_1.m's header says the same. Closing it means an offline test like
+// tests/_offline/GuoYangCurve_14_3.m.
+gy93_P<gs> := PolynomialRing(Rationals());
+gy93_B := 3*gs^3 + gs^2 - 3*gs - 9;                       // the second factor, unambiguous
+gy93_C := -4*gs^2 - 6*gs - 9;                             // the conic
+gy93_A := 3*gs^3 - 7*gs^2 - 3*gs - 1;                     // first factor, `-3t` read as `-3s`
+gy93_models := eval (Read("data/models/models_93_1.m") cat "\nreturn models;");
+
+// the accepted reading must match, on BOTH hyperelliptic quotients
+for gy93_c in [* <[Integers()|1,93], gy93_A*gy93_B, "y-quotient">,
+                 <[Integers()|1,3],  gy93_A*gy93_B*gy93_C, "product quotient"> *] do
+    gy93_key, gy93_f, gy93_nm := Explode(gy93_c);
+    gy93_ok, gy93_e := IsDefined(gy93_models, gy93_key);
+    error if not gy93_ok, Sprintf("X0^93(1): model file has no cover key %o", gy93_key);
+    gy93_ours := HyperellipticCurve(gy93_e[1][2]);
+    gy93_gy   := HyperellipticCurve(gy93_f);
+    error if Genus(gy93_ours) ne Genus(gy93_gy),
+        Sprintf("X0^93(1) %o: our genus %o vs Guo-Yang's %o -- wrong object",
+                gy93_nm, Genus(gy93_ours), Genus(gy93_gy));
+    error if not IsIsomorphic(gy93_ours, gy93_gy),
+        Sprintf("X0^93(1) %o (cover %o): NOT isomorphic to Guo-Yang's, reading `-3t` as `-3s`",
+                gy93_nm, gy93_key);
+    gy_checked +:= 1;
+end for;
+
+// the conic, up to squares: ours is -144s^2+36s-63, theirs -4s^2-6s-9; disc -34992 = -108*18^2.
+gy93_oc := gy93_models[[Integers()|1,31]][1][2];
+gy93_r  := Discriminant(gy93_oc) / Discriminant(gy93_C);
+error if not IsSquare(Rationals()!gy93_r),
+    Sprintf("X0^93(1) conic: disc ratio %o is not a square, so [1,31] is not Guo-Yang's conic",
+            gy93_r);
+gy_checked +:= 1;
+
+// AND the three refuted repairs must STILL be refuted -- otherwise the typo is not determined.
+gy93_ours93 := HyperellipticCurve(gy93_models[[Integers()|1,93]][1][2]);
+gy93_alts := [* <"-3s^2", 3*gs^3 - 7*gs^2 - 3*gs^2 - 1>,
+                <"dropped", 3*gs^3 - 7*gs^2 - 1>,
+                <"-3",     3*gs^3 - 7*gs^2 - 3 - 1> *];
+gy93_nref := 0;
+for gy93_a in gy93_alts do
+    gy93_nm, gy93_Aa := Explode(gy93_a);
+    gy93_alt := HyperellipticCurve(gy93_Aa*gy93_B);
+    error if Genus(gy93_alt) eq Genus(gy93_ours93) and IsIsomorphic(gy93_alt, gy93_ours93),
+        Sprintf("X0^93(1): reading `-3t` as `%o` ALSO matches -- the typo is no longer determined, "
+                * "and models_93_1.m's provenance claim must be weakened", gy93_nm);
+    gy93_nref +:= 1;
+end for;
+error if gy93_nref ne 3,
+    Sprintf("X0^93(1): expected 3 refuted readings, made %o comparisons", gy93_nref);
+
+// gy_checked counts COMPARISONS, and 93_1 contributes three of them (two quotients + the conic)
+// for one base -- so report both numbers rather than calling the total a base count.
+printf " ok (%o comparison(s) over 10 base(s); 93_1 is quotient-level, %o alternative readings "
+       * "refuted)\n", gy_checked, gy93_nref;
