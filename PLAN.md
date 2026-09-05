@@ -644,12 +644,34 @@ equation base at all.
       POOL rat 3 quad 0 include 3
       CMVERD 26 3 SHORT margin -5
 
-  — the first `SHORT` verdict measured this session (`14_3` and `22_5` are `OK margin 0`), with
-  only 3 rational CM points and **ZERO** quadratic ones against demand 9.
-  ⚠ **`Targets` cannot rescue it**, unlike the usual CM-supply story: demand is `max(2g+5)` over the
-  targeted covers, so even restricting to the genus-0 covers gives `2*0+5 = 5`, still above the ~4
-  points available. So `26_3` is blocked on genuinely absent CM points, and the `s` <-> `s~` swap is
-  a separate, probably cosmetic, defect. Fixing the swap would NOT unblock the model.
+  ⚠⚠ **BUT "26_3 IS CM-STARVED" IS WRONG — RETRACTED SAME DAY. It is the COPRIME FILTER, and the
+  swap is ON the critical path after all.** The `SHORT` verdict measures the FILTERED pool, not the
+  available points. Measured:
+
+      bd | coprime_to_level | #rat | #quad | total      (demand 9)
+       2 | true             |   3  |   0   |   3
+       2 | false            |   7  |   0   |   7
+       4 | true             |   3  |   0   |   3
+       4 | false            |  14  |   7   |  21   <-- at the DEFAULT bd
+       8 | false            |  15  |  22   |  37
+
+  At the default `bd := 4`, dropping `coprime_to_level` gives **21 points against demand 9** — and
+  those 14 rational discs are exactly Guo-Yang's 14-row table. `26_3` has ample CM points.
+  **The causal chain runs: non-coprime discs misbehave -> the filter excludes them
+  (`SchoferFormula.m:1063` passes `coprime_to_level := true`) -> pool 21 -> 3 -> "Could not find
+  enough points".** So the earlier claim here that "fixing the swap would NOT unblock the model"
+  was backwards: the swap-class misbehaviour is precisely WHY the filter exists.
+  **And the swap is confined to that class.** Of Guo-Yang's 14 discs only `-8, -11, -20` are coprime
+  to `N = 3` — exactly the 3 the filter admits — and BOTH swapped discs (`-267`, `-708`) are
+  non-coprime, while 9 other non-coprime discs give correct values. The filter is blunt: it drops
+  11 points to avoid 2 bad ones (`ShimuraQuotients.m:1420` says so in as many words).
+  ⇒ **Route to unblocking `26_3`: fix the non-coprime misbehaviour, then relax the filter** (or
+  extend the `Keep` exemption). ⚠ NOT established: that the swap is the ONLY misbehaviour, or that
+  relaxing the filter yields a CORRECT model — the bad points would poison the solve, which is what
+  the filter is protecting against. Verify against Guo-Yang's table before trusting any model so
+  produced.
+  ⚠ Note `BorcherdsForms.m:709` ALREADY falls back to `coprime_to_level := false` for CM-starved
+  bases, but `AbsoluteValuesAtCMPoints` does not — an asymmetry worth understanding.
   Write-up: memory `26-3-hauptmodul-swap`.
 
 **⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
