@@ -150,6 +150,45 @@ at all.
 **suspect** — if these are two defects, the right fix for one need not touch the other. Keep both
 targets, but stop treating agreement on both as the pass condition until (d) is settled.
 
+### (e) THE CONVENTION IS ALREADY PINNED, AND N=1 IS A CONTROL [T3 sharpened]
+
+*(assaferan, 2026-09-05: the Errthum convention was resolved and there is a CI test. Correct.)*
+`tests/Schofer.m` is **in CI** and validates `SchoferFormula` against published values —
+`[Errthum, p.850]` and `[Errthum, Table 2]` at `D=6, N=1`, `[Err, Table 4]` at `D=10, N=1`.
+
+⇒ **The decisive control: `-267` and `-708` are in that list and PASS at `6_1`.** The very
+discriminants that come out exchanged at `26_3` (`N=3`) are correct at `N=1`, against an
+independent published source, with the same code. Same `d`, same machinery, only the LEVEL differs.
+
+Two consequences for T3:
+* The `N=1` normalisation — the `|CM(d)|/4` prefactor and the square-and-quarter convention — is
+  **already validated**. So the missing constant is **purely the `p|N` contribution** and nothing
+  else. That is a far sharper target than "reconcile the normalisations".
+* **Any fix MUST be inert at `N=1`**, or it breaks a CI test against published values. §10's
+  structure satisfies this automatically: `prod_{p|N}` is empty when `N=1`. That is a real
+  constraint on the answer, and a free regression test.
+
+⇒ **Third regression target: `6_1` and `10_1` must keep passing** (`tests/Schofer.m`). Unlike the
+other two this one is already automated.
+
+### (f) ⚠ A lead: the `10_1`, `d = -68` "error in [Err]" may be OURS
+
+`tests/Schofer.m`, `D=10` block, carries:
+
+    // The next one does still not work at 2! Off by a factor of 4, this is confusing.
+    // Probably an error in [Err] ?
+    // <-68, { <2, 2>, <5, 1> }>,     <- Errthum's published value
+       <-68, { <2, 6>, <5, 1> }>,     <- ours, committed as the expected value
+
+The discrepancy is **4 in the `log 2` coefficient** — the SAME `2^4` signature as `15_2`'s three
+failing discs. It is currently attributed to a mistake in the source. Given we are now hunting a
+`2^4`-shaped index factor at exactly this prime, **that attribution should be re-examined**: if it
+is our defect rather than Errthum's, then it appears at `N = 1` too and the whole "it is a level
+effect" framing needs revisiting.
+⚠ Note this cuts BOTH ways and is why it matters: `d = -68 = -4*17` has `2 | d` and `2 | D = 10`,
+so 2 is ramified — a different local situation from the `p | N` Eichler case. Do not assume the two
+`2^4`s have one cause; check.
+
 ## 5. Two independent regression targets, with exact known answers
 
 Any candidate translation must hit **both**, which is what makes it hard to fit a wrong formula:
