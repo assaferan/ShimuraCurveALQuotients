@@ -615,9 +615,22 @@ equation base at all.
   **that list is incomplete — `93_1` belongs in it** (`159_1` under test). See
   [[assert-failed-is-squarefree-n]], now corrected. ⚠ `genmodels.m` cites "memory
   vx-laurent-n0-circular", which **does not exist** — dangling reference.
-* `39_2` — NONINTEGRAL (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`), the malformed-form base.
-  Its CM-value table passes **11/11**, so the Schofer side is fine; the blocker is upstream.
-* `69_1` — non-rational value (`RationalNumber` failure), the embedding-selection class.
+* `39_2` — ⚠ **RE-CLASSIFIED 2026-09-05: it is NOT the NONINTEGRAL failure any more.** The old
+  entry (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`, the malformed-form base) is not what it
+  currently fails on. Re-run against current code it dies at
+  `Computing absolute values at CM points...Runtime error: Could not find enough points, sorry!` —
+  the SAME failure as `26_3`, and long before integrality is reached. And it is the same cause:
+  the coprime CM filter. Demand 19; pool is **3** with the filter on and **24** with it off at the
+  default `bd := 4`. `N = 2` is even, and the filter drops every even discriminant on even-level
+  bases, which is why it bites so hard here. See `CMNONCOPRIME` below.
+* `69_1` — ⚠ **RE-CLASSIFIED 2026-09-05: an exponent OVERFLOW, not a non-rational value.** The old
+  entry called it "non-rational value (`RationalNumber` failure), the embedding-selection class".
+  It is indeed inside `RationalNumber`, but the actual error is
+  `LogSum.m:142  ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : ...]` ->
+  `Runtime error in '^': Argument 2 is too large`, i.e. a `log_coeffs` exponent so large that
+  Magma refuses the power. That is a different defect from the `15_2` embedding-selection story,
+  so **do not assume the `15_2` root cause applies**. Unmeasured: whether the huge exponent is
+  genuine or itself a symptom.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
   40 GB, stuck inside `BorcherdsForms`.
 * `26_3` — **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
