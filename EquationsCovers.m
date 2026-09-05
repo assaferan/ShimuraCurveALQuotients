@@ -116,6 +116,55 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
+// Y2TWIST -- PROTOTYPE, env-gated, OFF by default.
+//
+// find_y2_scales cannot always pin the y2-scale from sparse CM data.  EquationsOfCovers then
+// force-defers the cover (issue #36), because a consistent solve with an unpinned scale is off
+// by an unknown quadratic twist -- and back-fill usually cannot recover it, so the cover is lost
+// outright (four of them at 22_5).
+//
+// But that twist is DECIDABLE by machinery this repo already has, and which is independent of
+// the Borcherds/Schofer path that produced the equation: the Eichler-Selberg point count, run by
+// ModelVerification.m as check [4].  It separates a curve from its quadratic twists -- measured
+// 2026-09-05 on the committed 22_5 [1,2,5,10] cover, where the true curve passes 24/24 and all
+// six twists d = -1, 2, -2, 5, -5, 11 fail with 3-5 failures each.
+//
+// So: try each squarefree twist supported on the primes of 2*D*N and keep the twist that matches
+// at every usable prime.  Returns false unless EXACTLY ONE candidate survives, so an ambiguous
+// or empty result still defers -- this never trades a deferral for a guess.
+function select_y2_twist(f, X)
+    if X`g lt 1 then return false, 0; end if;      // genus 0: no hyperelliptic model to twist
+    D := X`D; N := X`N;
+    prs := [p : p in [3,5,7,11,13,17,19,23] | (D*N) mod p ne 0];
+    supp := SetToSequence({2} join {q[1] : q in Factorization(D*N)});
+    cands := [];
+    for S in Subsets({1..#supp}) do
+        d0 := &*[Integers() | supp[j] : j in S];
+        Append(~cands, d0); Append(~cands, -d0);
+    end for;
+    good := [];
+    for d in cands do
+        okall := true; nchk := 0;
+        for p in prs do
+            try
+                Cp := ChangeRing(HyperellipticCurve(d*f), GF(p));
+                if not IsNonsingular(Cp) then continue; end if;
+                if #Points(Cp) ne ComputePointsViaTrace(X, p, 1) then okall := false; break; end if;
+                nchk +:= 1;
+            catch e
+                continue;                          // bad reduction at p: no information, skip
+            end try;
+        end for;
+        if okall and nchk ge 3 then Append(~good, d); end if;
+    end for;
+    if #good eq 1 then return true, good[1]; end if;
+    vprintf ShimuraQuotients, 1 :
+        "  Y2TWIST: %o twist(s) matched for W=%o; ambiguous, leaving it deferred.\n",
+        #good, Sort(SetToSequence(X`W));
+    return false, 0;
+end function;
+
+
 intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
@@ -136,10 +185,14 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     // deferred even when its constraints happen to be consistent: the solved equation is then
     // off by an unknown quadratic twist (issue #36 -- four wrong-twist covers emitted on 22_3).
     unscaled := (assigned schofer_table`UnscaledKeys) select schofer_table`UnscaledKeys else [];
+    // Y2TWIST=1 (prototype): instead of dropping an unscaled cover, solve it anyway and SELECT
+    // its quadratic twist against the trace-formula point count.  Unset => behaviour unchanged.
+    y2twist := GetEnv("Y2TWIST") ne "";
     good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
     deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
-        if keys_fs[k_idxs[i]] in unscaled then
+        is_unscaled := keys_fs[k_idxs[i]] in unscaled;
+        if is_unscaled and not y2twist then
             Append(~deferred, keys_fs[k_idxs[i]]);
             vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) has an unpinned y2-scale; deferring to recover as a quotient (twist untrusted).\n",
                 curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
@@ -165,6 +218,19 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
         catch e
             determined := false;
         end try;
+        // Y2TWIST: the solve above is right only up to a quadratic twist for an unscaled cover,
+        // so pin the twist by point count before accepting it; an undecided twist re-defers.
+        if determined and is_unscaled then
+            tw_ok, tw_d := select_y2_twist(f, curves[keys_fs[k_idxs[i]]]);
+            if tw_ok then
+                f := tw_d*f;
+                vprintf ShimuraQuotients, 1 :
+                    "  Y2TWIST: selected twist d=%o for W=%o (g=%o) by trace-formula point count.\n",
+                    tw_d, curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
+            else
+                determined := false;
+            end if;
+        end if;
         if determined then
             Append(~eqn_list, f);
             Append(~good_kidxs, i);
