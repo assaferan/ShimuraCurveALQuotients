@@ -93,11 +93,31 @@ involution). `22_5` and `14_3` need full-curve models GENERATED, not transcribed
 Six commits, `64d9316`..`36ac71e`, all pushed. **Two of them change code and only ONE of the two
 is fully validated** — read the status column before building on either.
 
+### ✅ X_0^39(2) RECOVERED — 33 of 43
+
+**The one coverage result of the session.** `39_2` was filed as the NONINTEGRAL malformed-form
+base; that was wrong. It is starved by the **coprime-to-level CM filter**: with the filter on it
+sees 3 CM points against demand 19 and dies with "Could not find enough points"; with
+`CMNONCOPRIME=1` it sees 24 and builds cleanly (15 keys, 0 empty). Its `W={1}` genus-7 curve is
+**`IsIsomorphic` to Guo-Yang's published equation** (0.06 s), now pinned in
+`tests/GuoYangEquations.m` (9 bases); `ModelChecks` passes it independently (82 files, 8573 checks,
+0 failures, via trace-formula point counts rather than the path that produced it).
+
+⚠ **The flag is NOT safe by default and is not enabled.** The `p | gcd(d,N)` local factor has no
+live implementation (`kappaminuszero` is dead code), and at `26_3` two non-coprime discriminants
+give provably wrong values. What makes `models_39_2.m` trustworthy is the INDEPENDENT ORACLE, not
+the flag — **any further base produced this way must clear the same bar before being committed.**
+⚠ That file does not regenerate by default; recorded in its header and in `ModelRegen`'s
+`MR_KNOWN_DRIFT`, with the reason distinguished from the three y2-guard entries.
+
+`26_3` is the same story but NOT yet closed: a model is produced, its `[1,78]` cover is verified
+against Guo-Yang, but the genus-5 `W={1}` comparison had not returned when this was written.
+
 ### The Guo-Yang picture, measured rather than inherited
 
     43   published equations                    (see the counting trap below)
-    32   we reproduce today, with a test        (24 pipeline X0_D_N.m + 8 GuoYangEquations.m)
-    11   the gap: 9 with no model, + 14_3, 22_5
+    33   we reproduce today, with a test        (24 pipeline X0_D_N.m + 9 GuoYangEquations.m)
+    10   the gap: 8 with no model, + 14_3, 22_5
 
 `PLAN.md`'s COVERAGE section had `24` tested and a `10`-base transcription gap; both were stale.
 **TIER 1' is finished as a transcription task** — `57_1` was the last transcribable base
