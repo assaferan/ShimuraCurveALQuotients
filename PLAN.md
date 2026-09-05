@@ -478,8 +478,8 @@ CM-value tables in `tests/_offline/` — this is about the paper's headline outp
 
     43   (D,N) bases with published equations in Guo-Yang
     35   we have a model for            <- was 34; 39_2 RECOVERED 2026-09-05
-    33   ...and a test comparing it to Guo-Yang   <- was 32; the 9 in GuoYangEquations.m
-     2   model exists but NO GY comparison test   <- 14_3, 22_5; both need generation, not a test
+    34   ...and a test comparing it to Guo-Yang   <- 9 in GuoYangEquations.m + GuoYangCurve_14_3
+     1   model exists but NO GY comparison test   <- 22_5 only; 14_3 RECOVERED 2026-09-05
      8   no model: the real blockers   <- was 9; 39_2 is off this list
     47   models we have BEYOND Guo-Yang's list entirely (82 model files total)
 
