@@ -128,6 +128,67 @@ allocation), `qExpansionAtoo` 53 s / 12531 calls, `&*` 13.8 s / 262860. These lo
 allocation rather than anything with an obvious algorithmic fix, so the next constant-factor
 increment is likely smaller and harder-won than these three.
 
+### How the cost SCALES — measured 2026-09-05, and it corrects a claim above
+
+`basis_of_weakly_holomorphic_forms` at `51_1`, timing its three parts against `pole_order`
+(`scratchpad/poolcost.m`; pool grows linearly in `pole_order` because `full_basis` is the
+t-EXPANDED pool):
+
+| `pole_order` | pool | qexps | `EchelonForm` | `ech_etas` | total |
+|---|---|---|---|---|---|
+| 100 | 86 | 0.40 s | 0.01 s | 0.42 s | 0.83 s |
+| 200 | 186 | 2.75 s | 0.26 s | 2.89 s | 5.90 s |
+| 400 | 386 | 22.09 s | 5.49 s | 16.26 s | 43.84 s |
+| 800 | 786 | 213.84 s | 112.94 s | 90.38 s | 417.16 s |
+
+⚠ **"`EchelonForm` was only 6 s of 222 s" does NOT extrapolate.** That was measured at a small
+pole order. `EchelonForm` has the STEEPEST growth of the three (~x20-26 per doubling, ~`PO^4.4`,
+vs ~`PO^3` for qexps): 1% of the cost at `PO=100`, 27% at `PO=800`, and on this trend it overtakes
+qexps around `PO ~ 1200-1600`. Any future profile must say at which `pole_order` it was taken.
+
+### The t-ladder leaves the pool ALREADY TRIANGULAR — structure confirmed, exploitation REFUTED
+
+Measured at `51_1`, `87_1`, `55_1`, `15_2` (`scratchpad/poolstruct.m`), with `k` = 32, 56, 37, 8
+and `r` = 11, 6, 10, 49 — so this is not one base's accident:
+
+* every pool element has a **distinct valuation** (e.g. 386 distinct over 386 forms);
+* sorting rows by valuation puts **100% of rows in triangular position**, every consecutive pair
+  strictly increasing.
+
+This is structural, not luck: `WeaklyHolomorphicBasis` already returns an echelon `E`, and
+multiplying a block by `t^j` shifts every valuation by exactly `-jk`, so the size-`k` blocks tile
+the pole range without collision. So `EchelonForm` never SEARCHES for pivots — all its time is
+elimination above pivots that are already on the diagonal.
+
+⚠ **The obvious inference — "so skip the reduction" — is REFUTED by measurement.** At `51_1`,
+`PO=800` (`scratchpad/echcost.m`):
+
+    EchelonForm (full RREF)          : 112.910s
+    sort rows into valuation order   :   0.030s
+    pivot columns identical          : true (786 vs 786 pivots)
+    max |num|,|den|: RREF 1 digits, sorted pool 33 digits
+
+The RREF turns **33-digit** rational entries into **1-digit** ones. It is not wasted elimination;
+it is buying a vastly better-conditioned basis. Feeding the raw sorted pool downstream would push
+33-digit rationals through `ech_basis * mat` and the linear solve, RELOCATING the cost and most
+likely increasing it. Do not re-propose this without first measuring the downstream cost on
+33-digit input.
+
+What survives as a lever: the pivot order is known in advance, so a solver specialised to a
+triangular system with a fixed pivot sequence (or a fraction-free/modular one) could beat the
+generic call — but the target is the coefficient growth, not the pivoting.
+
+### The untested lever: q-expansions of the t-expanded pool
+
+`qexps` is still the largest single term (213.84 s of 417 s at `PO=800`). We already bootstrap the
+BASIS the way Guo-Yang do — `BorcherdsForms.m:600`, `full_basis := [t^r*f : f in init_basis]`, with
+the basis computed only at `n0+k` — but line 607/609 then pays a from-scratch eta-quotient
+expansion for EVERY pool element. `t^j*f` has the same number of eta-quotient terms as `f` (the
+exponent vectors merely shift), so each costs full price, and there are `r` times as many.
+The alternative is `qexp(t^j*f) = qexp(t)^j * qexp(f)`: expand only `init_basis`, `basis_n0` and
+`t`, then multiply series. ⚠ NOT free — the products need higher ABSOLUTE precision on the factors
+(`1 + jk` and `1 + v` respectively), so measure before believing it. NOT YET TESTED.
+
 ---
 
 ## PRODUCING MORE MODELS RELIABLY — the plan, 2026-09-05
