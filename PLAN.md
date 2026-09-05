@@ -76,6 +76,60 @@ month.
 
 ---
 
+## SPEEDING UP THE EXPENSIVE BASES — measured 2026-09-05
+
+The five odd-`D` level-1 bases (`93_1 95_1 159_1 111_1 119_1`) are the largest block of
+unreproduced Guo-Yang bases and need 8+ hours each. Three constant-factor wins shipped, and two
+algorithmic hypotheses were tested and REFUTED. Recording both so neither is re-attempted.
+
+### Shipped: 41% off `BorcherdsForms` (137.3 s -> 81.1 s on a full `genmodels` run of `51_1`)
+
+    c04f938  &+ single-pass          the fold copied the whole accumulator per addition and
+                                     re-reduced -- O(k^2).            137.3 -> 107.6
+    1d8b2fc  reduce stops sorting    it went through Exponents (which sorts) to find zeros;
+                                     removal order is irrelevant.     107.6 -> 103.4
+    33379fa  power cache             qExpansionAtoo recomputed nor_eta_ds[i]^r[i] per quotient
+                                     -- 3451296 series '^' calls.     103.4 ->  81.1
+
+⚠ The linear algebra was NEVER the bottleneck: `EchelonForm` is 6 s of 222 s. It was all
+data-structure overhead in the eta-quotient layer. Every step verified by byte-identical
+regeneration of `51_1` and `14_3` plus `ModelChecks` 8767/0.
+
+### ⚠ REFUTED (1): the basis pool is NOT redundant
+
+`BFPROGRESS=1` now reports `BFPOOL pole_order=... pool=... rank=...`. Measured at `51_1`,
+`pool ~ rank` at every call (`159/154`, `37/37`, `149/149`, `173/173`, `253/253`, `312/307`).
+There is no repeat of the 66x `WeaklyHolomorphicBasis` win (a rank-258 space echelonised as
+12784 rows) hiding here. Spanning a rank-253 space genuinely needs 253 q-expansions.
+
+### ⚠ REFUTED (2): "find a SHORT eta-quotient combination instead of a full basis" — base-dependent
+
+The idea, from the observation that Guo-Yang found their forms almost by hand: skip the complete
+basis up to `pole_order` and search directly for a short combination with the required principal
+part. Measured how many eta-quotient terms our produced forms ACTUALLY use:
+
+    X_0^6(1)   : 4 to 7 terms      <- hand-scale, matches the literature's small bases
+    X_0^51(1)  : 433 terms         <- not hand-scale
+
+⇒ **It would work on the bases we already solve in seconds and not on the expensive ones.** The
+"almost by hand" framing holds at small `D` (`6_1`, `10_1` -- Errthum's bases) and breaks by
+`D = 51`.
+
+⚠ ONE THING STILL OPEN, and it is the only way this idea survives: 433 is the length of OUR
+representation. If the eta quotients used are linearly DEPENDENT, a shorter representation may
+exist and our construction is simply not finding it. `FindMinimalEtaQuotient` exists for exactly
+that question. Settle that before discarding the approach entirely — but do not assume a short
+form exists just because one does at `6_1`.
+
+### Where the remaining time goes
+
+After the three fixes, re-profiled: `Constructor (sub)` 113 s / 1.23M calls (Magma-internal
+allocation), `qExpansionAtoo` 53 s / 12531 calls, `&*` 13.8 s / 262860. These look like
+allocation rather than anything with an obvious algorithmic fix, so the next constant-factor
+increment is likely smaller and harder-won than these three.
+
+---
+
 ## PRODUCING MORE MODELS RELIABLY — the plan, 2026-09-05
 
 *(adopted after the session that recovered `39_2` and `14_3`. Priority set by assaferan: make the
