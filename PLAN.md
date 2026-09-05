@@ -546,12 +546,40 @@ back-fill stage:
   ⇒ **The lever this exposes.** The `y2`-scale is unpinnable from sparse CM data, but the twist is
   **independently decidable** by the point count already implemented in `ModelVerification.m`. So
   instead of dropping an unscaled cover, the pipeline could emit each candidate twist and SELECT
-  the one matching `ComputePointsViaTrace`. At `22_5` alone four covers are withheld this way
-  (`[1,5,11,55]`, `[1,2,5,10]`, `[1,5,22,110]`, `[1,10,22,55]`); `14_3` loses six to the plain
-  under-determination above, which is a different and harder failure. Unmeasured: how many covers
-  corpus-wide sit in this recoverable class, and whether recovering them makes any `W={1}`
-  reachable — `W={1}` is the finest cover, so nothing sits above it to be back-filled from, and it
-  must still be determined directly.
+  the one matching `ComputePointsViaTrace`. Shipped behind `Y2TWIST=1` (`36ac71e`).
+
+#### THE STALE-MODEL FINDING, and what `Y2TWIST` actually buys — measured 2026-09-05
+
+**THREE committed model files do not regenerate from current code**, and all three for the same
+reason: the y2 guard (`1768517`, 2026-08-24 19:20) POSTDATES them, so regeneration now withholds
+covers they contain. Found by an 8-base regeneration sweep (6 identical, 2 differ) plus a
+fresh-vs-fresh baseline run that proved the difference was staleness, not the vx fix.
+
+    models_22_5.m   08ce5fa, 2026-08-24 07:30   12 h older than the guard
+    models_22_3.m   the base issue #36 was actually filed about
+    models_15_2.m
+
+⚠ **They are NOT wrong.** All three pass `ModelChecks` and their Guo-Yang comparisons. They are
+*unreproducible*. Nothing in CI regenerates a model and compares, which is why this went unseen —
+now covered by **`tests/_offline/ModelRegen.m`** (`afa0412`), auto-discovering, no per-base
+authoring, with these three recorded in `MR_KNOWN_DRIFT`.
+
+**What `Y2TWIST=1` restores, measured against the committed files:**
+
+    22_5    FULLY   3/3 populated covers, coefficient-for-coefficient
+    15_2    FULLY   12/12 keys; one cover ([1,2,3,6]) differs in presentation but IsIsomorphic
+    22_3    13/14   missing [1,3,22,66], and [1,66] loses 1 of its 3 entries
+
+⇒ **The residual gap is GENUS 0, by construction.** `select_y2_twist` returns false for
+`X`g lt 1` because `HyperellipticCurve` needs degree >= 3, so unscaled *conics* are still dropped —
+both `22_3` losses are genus 0. **Extending twist selection to conics is the concrete next step**,
+and `22_3` is its ready-made regression target.
+⚠ Also measured: at `22_3` the selector reported `0 twist(s) matched` for `W={1,2,3,6}` — a clean
+negative, not an ambiguity. Worth understanding before widening the candidate set.
+
+**Still 0 new Guo-Yang equations.** `W={1}` at `22_5` remains empty, and `14_3`'s six lost covers
+are plain under-determination, which this lever does not touch. The value here is
+**reproducibility of the model corpus**, not coverage.
 * In both bases `models[[1]]` now exists as a key and is **empty**, so the full curve is genuinely
   not produced — consistent across every variant tried.
 
