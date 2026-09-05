@@ -189,6 +189,60 @@ effect" framing needs revisiting.
 so 2 is ramified — a different local situation from the `p | N` Eichler case. Do not assume the two
 `2^4`s have one cause; check.
 
+### (g) ⇒ THE CORRECTION IS A SIGN, NOT A MAGNITUDE. [T1 and T2 RESOLVED]
+
+This inverts §4b(c) above, which chased a magnitude and could not make one work. Two facts from
+`thm:rhoentry` and §10 settle it.
+
+**The Weil-representation coefficient.** `thm:rhoentry`'s proof quotes Stromberg Thm 6.4: the
+`eta*`-component of `rho_Abar(gamma~)e_0` is the SINGLE term
+
+    xi(a,c) * sqrt( |A[c]| / |A| ) * e( ac*qbar(y_0) + B(x_c,y_0) ),      |A| = M^2/2
+
+**Fact 1 — the index cannot distinguish the cases.** `15_1` and `15_2` have the SAME `M = 60`,
+hence the same `|A| = M^2/2`; and `|A_p| = p^2` for the anisotropic plane and the hyperbolic plane
+alike. So `sqrt(|A[c]|/|A|)` is identical in the ramified and Eichler cases. **No index factor can
+produce a magnitude change**, and §4b(c)'s hunt for one was misconceived.
+
+**Fact 2 — §10 says the difference is exactly a sign.** `c_p^ram = eps_p c_p^Eich`, `eps_p = ±1`:
+Gauss sum `+p` vs `-p`, signature `0` vs `4`, `|c_p| = 1/p` in both. The Eichler and ramified local
+factors differ ONLY in sign.
+
+**⇒ The consequence, and it explains the `2^4` exactly.** In a log-linear identity, using `-x`
+where `+x` belongs shifts the answer by `2x`, not by `x`. So:
+
+    observed shortfall at 15_2 = 4*log 2   ==>   a term of coefficient 2*log 2 has the WRONG SIGN
+
+Check: ours `1/128`, correct `1/8`, ratio `2^{-4}` — exactly `+2log2` computed as `-2log2`. The
+same arithmetic for the other two: `5/128` vs `5/8`, `1/384` vs `1/24`, both `2^{-4}`.
+
+⇒ **T1 RESOLVED**: the correction is a sign, and its direction is fixed by §10 — at `p | N` the
+form is the HYPERBOLIC plane, so `c_p^Eich = +1/p`; using the ramified `-1/p` is the error.
+⇒ **T2 RESOLVED**: the "multiplicity 4" was never a multiplicity. It is `2 x (a coefficient-2
+term)`, the factor 2 being the sign-flip doubling. Nothing has to attach four times.
+⇒ **T3 DISSOLVED**: there is no magnitude constant to derive from KY/KRY. The normalisation is
+already validated at `N = 1` (§4b(e)), and the `p | N` correction contributes no magnitude at all.
+
+**This also explains `26_3` — so §4b(d) is superseded.** A sign error is not a scaling, so the two
+targets need not have different causes after all. At `26_3` the two hauptmoduls are EXCHANGED with
+`s + s~ = 1` preserved; a sign error in the Weil-representation phase at `p | N` selects the wrong
+branch of exactly that pair. The `15_2` and `26_3` signatures are the same defect seen through
+different forms.
+
+### (h) The concrete, checkable prediction
+
+**At `p | N` the code should be using the HYPERBOLIC plane (`Qbar(b,c) = -bc/p`, from
+`Q = -x^2 - pyz`, Gauss sum `+p`, signature `0`), not the anisotropic/ramified one.** If it selects
+the local form by `p | D*N` rather than distinguishing `p | D` from `p | N`, that is the bug, and it
+is a sign error of exactly the derived shape.
+⇒ NEXT: read the local-form selection in the Whittaker/Jordan path (`Wpoly_scaled`, `Wpoly2`'s
+Jordan classification, and `get_lattice_data`) and check whether `p | N` is distinguished from
+`p | D`. This is now a code question with a derived answer to check against, not a search.
+
+⚠ Still to verify before implementing: that a term of coefficient exactly `2 log 2` is present and
+sign-flipped at `15_2`'s three discs — i.e. confirm the mechanism at the level of the actual terms,
+not just the totals. The totals matching is necessary, not sufficient.
+
 ## 5. Two independent regression targets, with exact known answers
 
 Any candidate translation must hit **both**, which is what makes it hard to fit a wrong formula:
