@@ -495,6 +495,45 @@ not transcribable at all** — we do not have the object to compare:
   "3 covers", i.e. it was committed knowing the full curve was absent.
 ⇒ Both are **model-generation** items, not test-writing items. Do not re-file them under TIER 1'.
 
+#### What blocks `14_3` and `22_5`, measured 2026-09-05
+
+Cheap and now on record, so nobody re-runs it. Both bases fail the same way and it is **not** the
+back-fill stage:
+
+* **The covers are UNDER-DETERMINED, not short of CM points.** `EquationsCovers.m:157-158` accepts
+  a cover only when `solve_quadratic_constraints` returns a *unique* solution; `#coeffs ne 1`
+  raises, is caught at `:166`, and the cover is deferred. A deferred cover is then recoverable
+  ONLY as a quotient of an already-determined cover above it (`:701`). At `14_3`, 6 of the 7
+  index-2 covers defer, nothing above them is determined, and all 6 emit
+  `could not recover deferred cover` — so `W={1}` has no substrate to be built on. `W={1}` is
+  never itself mentioned in the log: not determined, not deferred, not recovered.
+* ⚠ **`cmsupply` says `OK`, and that verdict DOES NOT APPLY to the full curve.** Measured:
+  `BASE 14 3 demand 7 genera [0,0,0,0,1,1,1] CMVERD OK margin 0` and
+  `BASE 22 5 demand 9 genera [0,0,0,1,1,1,2] CMVERD OK margin 0`. Those genus lists top out at
+  **1 and 2**, but Guo-Yang's published `14_3` is genus **3** and `22_5` is genus **5** — the 7
+  curves it measures are the *index-2* covers of the star curve (their genera match the seven
+  `W={1,6,7,42}`-type rows in the genmodels log exactly, which is what pins the identification),
+  and `demand 7 = 2*1+5` comes from a max genus of 1. This is structural, not a coincidence of one
+  base: the supply check iterates `Xstar`CoveredBy` (`ShimuraQuotients.m:1526`), the *immediate*
+  covers, exactly as `AllEquationsAboveCovers` does (`EquationsCovers.m:740`). So `OK` means "supply is adequate for the
+  easy targets, with **zero** margin"; it is silent on `W={1}`. Do not quote `CMVERD OK` as
+  evidence that these bases have enough CM points. (Same wrong-object family as the rank-over-
+  monomials error of 2026-09-04.)
+* **`INTSOL=1` is REFUTED as a lever at `14_3`** — plain and `INTSOL=1` runs produce **byte-identical**
+  model files (37 s / 38 s), and both are byte-identical to the committed `data/models/models_14_3.m`.
+  That byte-identity is also the reproduction check: the committed file is current, not stale.
+* ⚠ **`22_5` does NOT reproduce, and a naive regenerate-and-commit would be a REGRESSION.** A fresh
+  plain run (680 s) yields **8 cover-keys but only 2 populated**, whereas the committed file has
+  **3 keys, all 3 populated** — the fresh run **loses `[1,2,5,10]`**
+  (`P![-1, 4755/1024, -8267/1024, 797/128, -115/64]`) entirely, while the extra keys it adds
+  (`[1,2]`, `[1,11]`, `[1,22]`, `[1,55]`, `[1,110]`, `[1]`) all come back empty. The two runs used
+  **different target cover sets** — the committed file has only order-4 subgroups — so `08ce5fa`
+  ("3 covers") was produced by a path this checkout does not reproduce. **Do not overwrite
+  `data/models/models_22_5.m`.** Worth understanding before any regeneration campaign: if the
+  committed file came from a `Targets`-restricted run, that restriction is the thing to recover.
+* In both bases `models[[1]]` now exists as a key and is **empty**, so the full curve is genuinely
+  not produced — consistent across every variant tried.
+
 ⚠ **How the "43" was confirmed, because the obvious grep gets 41.** Two rows write the label
 without braces round `D` — `$X^6_0(17)$` and `$X^6_0(29)$` — so a pattern anchored on `X^{D}_0(N)`
 silently drops exactly those two and returns a plausible 41. Cross-check with the equation cell
