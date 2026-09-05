@@ -728,7 +728,22 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
 
     found_all := false;
     
+    // BFPROGRESS=1: unbuffered per-m progress for this search.
+    //
+    // BorcherdsForms already reports progress -- the vprintf just below -- but at LEVEL 2, while
+    // genmodels.m defaults to verb := 1, so the whole search is silent under the harness that
+    // actually runs it. And even at VERB:=2 those go to stdout, which Magma BUFFERS to a file, so
+    // a killed run loses them (the M0PROGRESS lesson). Measured 2026-09-05: 93_1/95_1/159_1 sat
+    // here for 2h50m each with a 28-byte log, and their state had to be read out of /proc --
+    // CPU-bound, no normaliz child, no I/O -- rather than from any output.
+    // WriteStderr survives a kill and does not depend on the verbose level.
+    bf_progress := GetEnv("BFPROGRESS") ne "";
+    bf_t0 := Realtime();
     while (not found_all) do
+        if bf_progress then
+            WriteStderr(Sprintf("  BFPROGRESS m_idx=%o of %o, m=%o, elapsed %os\n",
+                                m_idx, #all_ms, all_ms[m_idx], Realtime()-bf_t0));
+        end if;
         if IsOdd(Xstar`D) then
             vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
 
