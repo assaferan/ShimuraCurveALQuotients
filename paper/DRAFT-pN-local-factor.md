@@ -88,6 +88,68 @@ substitution can produce a magnitude change like `2^4`; and conversely a *sign*/
 `p | N` is exactly the shape that would exchange the values of two forms while preserving
 `s + s̃ = 1`. Which `S` each Borcherds form sees at `p | N` has to be pinned.
 
+## 4b. DERIVATION ATTEMPT, 2026-09-05 — what is now settled, and what is not
+
+### (a) The correction is an INDEX factor, not a Whittaker one. [T1/T2, structurally settled]
+
+Decisive, and it rests on a result this repo already proved rather than on a guess. §10 factors the
+local contribution as
+
+    loc_p = e(-sigma_p/4) * G_p * sqrt( |A_p[c]| / |A_p| )
+
+and for the Eichler plane `|A_p| = p^2`, with `A_p[c]` trivial when `p ∤ c` — which is precisely
+where `c_p^Eich = 1/p` comes from. It is the third factor, the **index**, not the Gauss sum and not
+a Whittaker value.
+
+That the Whittaker route is EMPTY is not an assumption:
+`tests/KudlaYangLocal.m::test_prop55_nonzero_isotropic_coset` proves (1440 checks, five bases,
+including `N = 2`) that at the level prime, for a nonzero isotropic `N`-only-supported coset, KY
+Prop 5.5 **collapses to the constant polynomial 1 — no `m`-dependence, no pole, every `m`, every
+conductor.** A constant-1 local Whittaker never vanishes, so `p | N` is **never in the Diff set**
+and contributes **no `log p` from any derivative**.
+
+⇒ **T1/T2 resolved structurally.** The missing factor is `m`-INDEPENDENT. So it does NOT enter the
+`Σ_m c(−m) κ(−m)` sum term by term; it multiplies `Ψ` as a whole, and therefore appears with the
+multiplicity the `log|Ψ|²` convention gives it, not with a multiplicity that has to be discovered.
+
+### (b) Where the `d`-dependence comes from — and why only SOME discs are wrong
+
+A factor depending only on `N` would shift every discriminant equally, and it demonstrably does
+not: at `15_2` **16 of 19 discs are exact** and only 3 fail. The resolution is in §10's own
+statement — `c_p^Eich = 1` when `p | c`, and `1/p` otherwise. The factor depends on **`c`**, the
+lower-left entry of the coset representative, hence on the CM point. Discs with `p | c` need no
+correction; discs with `p ∤ c` do. That is the mechanism, and it predicts a partition of the discs
+of exactly the observed kind.
+
+Consistent with this, `15_2`'s three failing discs (`−7, −15, −60`) are exactly those of **odd
+fundamental discriminant**, i.e. those where 2 is split — the case KRY singles out as never
+entering the Diff set.
+
+### (c) Magnitude — SUGGESTIVE, NOT DERIVED [T3 still open]
+
+`15_2` is short by exactly `2^4`. With `|A_2| = p^2 = 4`, `|A_2|^2 = 16 = 2^4`, which is what a
+factor of `|A_p|` entering `|Ψ|` linearly would give in `|Ψ|^2`.
+⚠ **This is numerology until the normalisation is derived.** `sqrt(|A_p[c]|/|A_p|) = 1/2` at
+`p = 2` would give `2^{-2}` in `|Ψ|^2`, not `2^{+4}` — wrong sign AND wrong exponent. So the bare
+index does not produce the observed factor, and the gap between `1/p` and `p^2` has to be closed by
+the actual normalisation (the `|CM(d)|/4` prefactor, the `[GY]`/`[Err]` square-and-quarter
+convention, and whether `s` scales as `|Ψ|` or `|Ψ|^2`). **Do not fit this constant.**
+
+### (d) ⚠ The two regression targets may NOT be the same bug
+
+An index factor **scales** a value; it does not **exchange** two values. `15_2`'s defect IS a
+scaling (`2^4`, uniform across the three affected discs). `26_3`'s is an **exchange**
+(`s ↔ s̃`, with `s + s̃ = 1` preserved exactly). Those are different signatures, and the derivation
+above only addresses the first.
+⇒ Treat `26_3` as possibly a SECOND defect — most likely T4, the coset bookkeeping: which `S =
+{p | N : μ_p ≠ 0}` each Borcherds form is assigned at `p | N`. §10's coset enters as an
+**indicator**, `ρ_μ = κ ρ_0` with `κ = ∏_{p∈S}[p ∤ c]`, and an indicator assigned to the wrong form
+exchanges two values while preserving their sum. That matches `26_3` exactly and matches `15_2` not
+at all.
+⚠ Corollary for §5 below: "a formula that fixes one and not the other is wrong" is now itself
+**suspect** — if these are two defects, the right fix for one need not touch the other. Keep both
+targets, but stop treating agreement on both as the pass condition until (d) is settled.
+
 ## 5. Two independent regression targets, with exact known answers
 
 Any candidate translation must hit **both**, which is what makes it hard to fit a wrong formula:
