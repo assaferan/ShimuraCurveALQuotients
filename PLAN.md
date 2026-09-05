@@ -152,10 +152,36 @@ fixed — so PR #18's isometry-invariance fix is holding, and lambda-dependence 
 suspect.
 
 ⇒ **THE DEFECT IS IN THE KAPPA / LOCAL-FACTOR SUM.** It is the only stage left between inputs that
-are identical across the bad/good pairs and outputs that differ. Next stop is the `p | gcd(d,N)`
-local factor proper: Schofer Thm 4.1 assumes the local lattice is unimodular at unramified primes,
-which FAILS at `p | N` for Eichler orders (see [[embedding-selection-root-cause]], where the same
-assumption broke at `15_2` and the fix was never found).
+are identical across the bad/good pairs and outputs that differ.
+
+⚠⚠ **AND THE MISSING THEORY IS NOT MISSING — IT IS IN OUR OWN §10.** *(assaferan, 2026-09-05;
+this supersedes the "the fix was never found" framing carried from
+[[embedding-selection-root-cause]].)* Schofer Thm 4.1 assumes the local lattice is unimodular at
+unramified primes, which FAILS at `p | N` for Eichler orders — and `sec:determined` (§10) supplies
+the modification. From the proof of `thm:noresplit` (paper line ~1140): at each `p | DN` the local
+discriminant group is `(Z/p)^2` and the two relevant forms are
+
+    Eichler level p (UNRAMIFIED, non-unimodular):  hyperbolic plane  Qbar(b,c) = -bc/p
+                                                   from Q = -x^2 - pyz
+                                                   Gauss sum  p,  signature 0
+    ramified (p | D):                              anisotropic plane (uc^2-b^2)/p
+                                                   Gauss sum -p,  signature 4
+
+    c_p^Eich = 1 if p|c, else +1/p          c_p^ram = 1 if p|c, else -1/p
+
+so `c_p^ram = eps_p c_p^Eich`, and `rho_0 = prod_{p|D} c_p^ram * prod_{p|N} c_p^Eich`
+(`thm:Ngeneral`).
+
+**This is exactly the term the `15_2` investigation concluded was missing** — it ended at "the
++4log2 must come from a NON-kappa level-`N` bad-place factor that Schofer Thm 4.1 LACKS", and
+noted that the DEAD `kappaminuszero` (`SchoferFormula.m:569`, `log_coeffs[p] := 1` for
+`p | N/gcd(d,N)`) is "the vestige of this missing `p|N` factor". §10 is what that vestige was
+waiting for.
+
+⚠ **NOT a drop-in.** §10 gives these as MULTIPLICATIVE factors on the rho / constant-term side,
+while the Schofer side is ADDITIVE in logs. So it supplies the missing local STRUCTURE and its
+values; translating that into the `kappa` log contribution is the work. But this is now an
+implementation-and-translation task against a written formula, NOT open theory.
 
 ### The next probe
 
