@@ -522,15 +522,36 @@ back-fill stage:
 * **`INTSOL=1` is REFUTED as a lever at `14_3`** — plain and `INTSOL=1` runs produce **byte-identical**
   model files (37 s / 38 s), and both are byte-identical to the committed `data/models/models_14_3.m`.
   That byte-identity is also the reproduction check: the committed file is current, not stale.
-* ⚠ **`22_5` does NOT reproduce, and a naive regenerate-and-commit would be a REGRESSION.** A fresh
-  plain run (680 s) yields **8 cover-keys but only 2 populated**, whereas the committed file has
-  **3 keys, all 3 populated** — the fresh run **loses `[1,2,5,10]`**
-  (`P![-1, 4755/1024, -8267/1024, 797/128, -115/64]`) entirely, while the extra keys it adds
-  (`[1,2]`, `[1,11]`, `[1,22]`, `[1,55]`, `[1,110]`, `[1]`) all come back empty. The two runs used
-  **different target cover sets** — the committed file has only order-4 subgroups — so `08ce5fa`
-  ("3 covers") was produced by a path this checkout does not reproduce. **Do not overwrite
-  `data/models/models_22_5.m`.** Worth understanding before any regeneration campaign: if the
-  committed file came from a `Targets`-restricted run, that restriction is the thing to recover.
+* ⚠ **`22_5`: do not overwrite `data/models/models_22_5.m` — but NOT for the reason first recorded.**
+  *(diagnosis corrected 2026-09-05 after measuring; the first version of this bullet was wrong and
+  is kept only as the retraction.)* A fresh plain run (680 s) yields **8 cover-keys, 2 populated**,
+  against the committed **3 keys, 3 populated**, dropping `[1,2,5,10]`
+  (`P![-1, 4755/1024, -8267/1024, 797/128, -115/64]`).
+  **The retracted explanation:** "the two runs used different target cover sets, so `08ce5fa` came
+  from a path this checkout cannot reproduce." **That is false.** `{1,2,5,10}` (label 7584, g=1) is
+  present in `GetHyperellipticCandidates()` AND in `Xstar`CoveredBy` today; the cover set is
+  unchanged. Current code enumerates the cover and then withholds it **on purpose**.
+  **What is actually happening:** commit `1768517` (2026-08-24 19:20) — *"Force-defer covers with an
+  unpinned y2-scale instead of trusting their twist"*, i.e. the PR #38 / issue #36 guard — makes the
+  run emit `Cover W={1,2,5,10} (g=1) has an unpinned y2-scale; deferring to recover as a quotient
+  (twist untrusted)`, and back-fill then fails for want of a determined parent. The committed file
+  is `08ce5fa`, 2026-08-24 **07:30** — **twelve hours older than the guard** — so its entry was
+  produced by exactly the code path the guard was later written to distrust.
+  ⇒ **But the committed entry is CORRECT, and that is measured, not assumed.** `VerifyModelSet`
+  check [4] — the Eichler-Selberg trace-formula point count, independent of the Borcherds/Schofer
+  machinery that generated the model — passes it (24 checks, 0 failures) and **discriminates the
+  twist**: negative-controlled against six quadratic twists `d = -1, 2, -2, 5, -5, 11`, every one
+  fails (3-5 failures each) while the committed curve passes. So this is a case where the guard is
+  **CONSERVATIVE**: it suppresses a cover whose twist is in fact right.
+  ⇒ **The lever this exposes.** The `y2`-scale is unpinnable from sparse CM data, but the twist is
+  **independently decidable** by the point count already implemented in `ModelVerification.m`. So
+  instead of dropping an unscaled cover, the pipeline could emit each candidate twist and SELECT
+  the one matching `ComputePointsViaTrace`. At `22_5` alone four covers are withheld this way
+  (`[1,5,11,55]`, `[1,2,5,10]`, `[1,5,22,110]`, `[1,10,22,55]`); `14_3` loses six to the plain
+  under-determination above, which is a different and harder failure. Unmeasured: how many covers
+  corpus-wide sit in this recoverable class, and whether recovering them makes any `W={1}`
+  reachable — `W={1}` is the finest cover, so nothing sits above it to be back-filled from, and it
+  must still be determined directly.
 * In both bases `models[[1]]` now exists as a key and is **empty**, so the full curve is genuinely
   not produced — consistent across every variant tried.
 
