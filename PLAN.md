@@ -132,11 +132,39 @@ does not rule this out — evaluating `s` and `s~` at DIFFERENT points of the sa
 produces exactly the observed exchange. The good discs also have `h > 1`, so the hypothesis needs
 a second ingredient: perhaps at the good ones the several points give the SAME value (conjugates
 with a rational common value) while at the bad ones they differ.
-⇒ **EXPERIMENT: for each of the 14 discs, compute `s` at EVERY CM point of that discriminant and
-count distinct values.** If the bad discs are exactly those where the points disagree, the defect
-is point SELECTION and the fix is to pin the choice; if not, it is in the Schofer value itself and
-the next stop is the `p | gcd(d,N)` local factor proper (Kudla-Yang; Schofer Thm 4.1 assumes the
-local lattice is unimodular at unramified primes, which FAILS at `p | N` for Eichler orders).
+⇒ EXPERIMENT RUN 2026-09-05. **The hypothesis is REFUTED and the problem is split.** Every
+discriminant contributes **exactly ONE** rational CM point — `-267` (h=2) and `-123` (h=2) alike,
+`-708` (h=4) and `-132` (h=4) alike. `h(d) > 1` does NOT put several points in the pool, so this
+is **not point selection**.
+
+### Where the defect is NOT — ruled out 2026-09-05, do not re-run these
+
+    one CM point per disc          both bad and good; not selection
+    ScaleForSchofer                -1/4 UNIFORMLY for -123/-267/-132/-708
+    the optimal embedding lambda   all have the correct norm -2d, all with v3 = 1;
+                                   no structural difference between bad and good
+    find_signs_hauptmodul          never reports ambiguity at the bad discs
+    seed / order representative    stable across 3 seeds
+
+⚠ Incidental but useful: `ElementOfNorm` returns a DIFFERENT `lambda` for the same `d` on
+different runs (`-123` gave `[-93,-10,-122]` then `[-67,-10,-90]`) while the computed values stay
+fixed — so PR #18's isometry-invariance fix is holding, and lambda-dependence is NOT a live
+suspect.
+
+⇒ **THE DEFECT IS IN THE KAPPA / LOCAL-FACTOR SUM.** It is the only stage left between inputs that
+are identical across the bad/good pairs and outputs that differ. Next stop is the `p | gcd(d,N)`
+local factor proper: Schofer Thm 4.1 assumes the local lattice is unimodular at unramified primes,
+which FAILS at `p | N` for Eichler orders (see [[embedding-selection-root-cause]], where the same
+assumption broke at `15_2` and the fix was never found).
+
+### The next probe
+
+Instrument `kappaminus` for `d = -267` (BAD) against `d = -123` (good) — an invariant-identical
+pair — and compare **which primes vanish, and whether they vanish ALONE**. That is the quantity
+that decides whether a prime contributes a log term, and at `15_2` it was exactly where the p=2
+analogue went wrong (prime 2 co-vanishing with an odd prime -> double zero -> no contribution).
+⚠ This needs the Borcherds forms for `26_3` (to supply the `m` values), so it is not a two-minute
+probe; budget a run.
 
 ### Ordering, and why
 
