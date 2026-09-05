@@ -767,8 +767,21 @@ that reads the artifact instead of regenerating it.
   `LogSum.m:142  ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : ...]` ->
   `Runtime error in '^': Argument 2 is too large`, i.e. a `log_coeffs` exponent so large that
   Magma refuses the power. That is a different defect from the `15_2` embedding-selection story,
-  so **do not assume the `15_2` root cause applies**. Unmeasured: whether the huge exponent is
-  genuine or itself a symptom.
+  so **do not assume the `15_2` root cause applies**.
+  ✅ **PINNED 2026-09-05.** `RationalNumber` now names the offending prime instead of letting
+  Magma emit its opaque `'^': Argument 2 is too large` (`LogSum.m`). The actual failure is:
+
+      6*Log3 + 826241926712017437948244622352640031335552334419770916034895634120110682322*Log23
+
+  i.e. the coefficient at **23 has diverged** (~`8.26e74`) while `Log3`'s is an ordinary `6`.
+  `D = 69 = 3*23`, so BOTH primes are **ramified** — this is a runaway at a RAMIFIED prime, not a
+  level-prime effect, and NOT related to the `p | gcd(d,N)` work.
+  ⚠ Note the sum is supported ONLY on `3` and `23`, both dividing `D`. Whatever diverges is
+  concentrated on the ramified places.
+  ⇒ NEXT: find which `m` (and which `kappaminus` call) contributes the runaway. The diagnostic
+  prints the whole LogSum, so instrumenting the per-`m` accumulation should localise it quickly.
+  Also observed in the same run: the y2-scale `IsSquare` check fails for a cover at `69_1`, so
+  this base additionally exercises the unpinned-y2 path.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
   40 GB, inside `BorcherdsForms`.
   ⚠ **"Ceiling" may be the wrong word — measured 2026-09-05 with the new `BFPROGRESS=1`.** On
