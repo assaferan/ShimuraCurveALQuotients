@@ -308,11 +308,51 @@ end intrinsic;
 
 intrinsic '&+'(etas::SeqEnum[EtaQuot]) -> EtaQuot
 {.}
-    sum_etas := Universe(etas)!0;
-    for eta in etas do
-        sum_etas +:= eta;
+    // SINGLE-PASS SUM. The obvious fold `sum +:= eta` is QUADRATIC: binary '+' copies the whole
+    // accumulator into a fresh AssociativeArray and then calls reduce(), so summing k terms costs
+    // O(k^2) copying plus k redundant reduces. Profiled on X_0^51(1) (odd D, level 1 -- the class
+    // that takes 8+ hours at 93_1/95_1/159_1/111_1/119_1): basis_of_weakly_holomorphic_forms was
+    // 164 s of a 222 s BorcherdsForms, of which &+ was 95 s over 1270 calls -- 112899 binary
+    // additions, 246174 reduce calls, 259242 Exponents, 1.7M sub-constructors. The linear algebra
+    // was not the problem: EchelonForm was 6 s.
+    //
+    // Merging every summand into ONE map and reducing once is linear in the total number of terms.
+    // Semantics are preserved exactly, including the parent rule and the q-expansion caches:
+    // the fold's parent is the LAST summand whose parent is over FldRat (else the universe), and
+    // it propagates a cached expansion only when EVERY summand has one.
+    if IsEmpty(etas) then return Universe(etas)!0; end if;
+
+    R := Universe(etas);
+    eta := New(EtaQuot);
+
+    par := R;
+    for e in etas do
+        if Type(BaseRing(Parent(e))) eq FldRat then par := Parent(e); end if;
     end for;
-    return sum_etas;
+    eta`parent := par;
+
+    eta`coeffs := AssociativeArray();
+    for e in etas do
+        for r in Keys(e`coeffs) do
+            if IsDefined(eta`coeffs, r) then
+                eta`coeffs[r] +:= e`coeffs[r];
+            else
+                eta`coeffs[r] := e`coeffs[r];
+            end if;
+        end for;
+    end for;
+    reduce(eta);
+
+    if &and[assigned e`qexp_oo : e in etas] then
+        eta`qexp_oo := &+[e`qexp_oo : e in etas];
+        eta`prec_oo := Minimum([e`prec_oo : e in etas]);
+    end if;
+    if &and[assigned e`qexp_0 : e in etas] then
+        eta`qexp_0 := &+[e`qexp_0 : e in etas];
+        eta`prec_0 := Minimum([e`prec_0 : e in etas]);
+    end if;
+
+    return eta;
 end intrinsic;
 
 intrinsic '*'(eta1::EtaQuot, eta2::EtaQuot) -> EtaQuot
