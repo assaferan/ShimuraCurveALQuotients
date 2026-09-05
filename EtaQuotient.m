@@ -138,7 +138,28 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt : RelPrec := false) -> Rn
     
     coeffs := [eta`coeffs[x] : x in eta_quots];
 
-    prod_nor_etas := [&*[(R`nor_eta_ds[i] + O(q^prec))^r[i] : i->d in R`ds] : r in eta_quots];
+    // Cache the series powers by <divisor index, exponent>, and skip zero exponents.
+    // The old line recomputed (nor_eta_ds[i] + O(q^prec))^r[i] from scratch for EVERY eta
+    // quotient r, although the exponents repeat heavily across the hundreds of quotients in one
+    // call, and r[i] = 0 terms were computed only to multiply by 1. Profiled on X_0^51(1) this
+    // was 3451296 calls to '^' on power series -- the single largest remaining count in
+    // BorcherdsForms after the &+ and reduce fixes.
+    base_ser := [R`nor_eta_ds[i] + O(q^prec) : i in [1..#R`ds]];
+    pow_cache := AssociativeArray();
+    prod_nor_etas := [];
+    for r in eta_quots do
+        prod_r := Universe(base_ser)!1;
+        for i in [1..#R`ds] do
+            e := r[i];
+            if e eq 0 then continue; end if;      // base^0 = 1
+            key := <i, e>;
+            if not IsDefined(pow_cache, key) then
+                pow_cache[key] := base_ser[i]^e;
+            end if;
+            prod_r *:= pow_cache[key];
+        end for;
+        Append(~prod_nor_etas, prod_r);
+    end for;
     prod_etas := [prod_nor_etas[j] * q^valuation_shifts[j] : j->r in eta_quots];
 
     eta`qexp_oo := &+[c*prod_etas[j] : j->c in coeffs];
