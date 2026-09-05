@@ -88,6 +88,108 @@ Guo-Yang blockers are correctly classified for the first time (1 structural, 3 v
 1 non-rational, 2 odd-`D` basis ceiling, 1 open anomaly — `26_3`'s exact `z -> z/(z-1)`
 involution). `22_5` and `14_3` need full-curve models GENERATED, not transcribed.
 
+## Update — 2026-09-05: Guo-Yang coverage re-measured, and two code changes
+
+Six commits, `64d9316`..`36ac71e`, all pushed. **Two of them change code and only ONE of the two
+is fully validated** — read the status column before building on either.
+
+### The Guo-Yang picture, measured rather than inherited
+
+    43   published equations                    (see the counting trap below)
+    32   we reproduce today, with a test        (24 pipeline X0_D_N.m + 8 GuoYangEquations.m)
+    11   the gap: 9 with no model, + 14_3, 22_5
+
+`PLAN.md`'s COVERAGE section had `24` tested and a `10`-base transcription gap; both were stale.
+**TIER 1' is finished as a transcription task** — `57_1` was the last transcribable base
+(`64d9316`, a paired presentation like `21_2`; 8 bases, 112 s, still dominated by `21_2`'s ~100 s).
+`14_3` and `22_5` are NOT transcribable: we do not possess the object to compare, so they are
+model-GENERATION items. `10_19` looks like a gap in the stored models but is not — its
+`X0_10_19.m` re-derives the curve via `AllEquationsAboveCovers` instead of reading a model file.
+
+⚠ **Counting trap: the obvious grep for the 43 bases returns 41.** Two rows write the label
+without braces round `D` (`$X^6_0(17)$`, `$X^6_0(29)$`), so a pattern anchored on `X^{D}_0(N)`
+drops exactly those two and yields a plausible 41. Cross-check on the equation cell instead:
+`multirow{1}{*}{\text}` occurs 43 times. Also, `6_17`/`6_29` appear ONLY in CM-value captions
+elsewhere — having a `tests/X0_6_17.m` does not imply a published equation — and `15_1` has a test
+but is not a GY equation base at all.
+
+### Two code changes
+
+| commit | change | status |
+|---|---|---|
+| `d9b52d0` | `BorcherdsForms`: shift the oo-side basis by its own valuation, not the 0-side `n0` | fix landed, **NOT yet shown to unblock any base** |
+| `36ac71e` | `EquationsCovers`: `Y2TWIST=1` prototype, decide the unpinned twist instead of dropping the cover | works, and **yields 0 new GY equations** |
+
+**The vx fix (`d9b52d0`).** The "vx class" crash is Magma's own `assert vx ge 0`
+(`GalFldFun.m:305`) reached from `AbsEltseq` on a deep Laurent pole (`93_1`: `q^-60`). Cause is a
+wrong-object normalisation at `BorcherdsForms.m:771`: `ech_fs_oo` holds the **oo**-expansions of the
+**ZERO**-side etas `ech_etas_0`, but the shift applied was `n0`, which comes back from
+`WeaklyHolomorphicBasis(... : Zero, n0 := n0)` and bounds the 0-side, not the pole at oo. Shift by
+`max(n0, -min valuation)` instead, and carry the same `n_oo` into BOTH places that must agree:
+`coeffs_to_divisor_matrix(-n_oo, ...)` (the shift DEFINES the column↔exponent mapping) and
+`min_m := Minimum(min_m, -(n_oo + k - 1))` (`relevant_ds` must stay a superset of
+`relevant_ds_0_oo`).
+⚠ **Both of those were learned by running it, not by reading it.** Missing the `min_m` one made
+`95_1` clear the assert and then die at `:891` with `column index not in [1..37]`; and `n_oo` was
+unassigned for even `D` (the block computing it is odd-`D` only), caught by the regression.
+**Safety property:** where every oo-pole already fits within `n0` — every base that currently works
+— the maximum IS `n0` and the change is a literal no-op. Verified byte-identical for `14_3`
+(even `D`) and `51_1` (**odd `D`**, so it exercises the `IsOdd(D)` block the change lives in); an
+8-base sweep was running when this was written (`~/shimura/regen/sweep.log` on lovelace) —
+**check it: if any base says `DIFFERS` the no-op claim is false and the commit needs revisiting.**
+
+**The `Y2TWIST` prototype (`36ac71e`).** `find_y2_scales` cannot always pin the y2-scale from
+sparse CM data, so `EquationsOfCovers` force-defers the cover (issue #36, `1768517`) and back-fill
+usually cannot recover it. But the twist is decidable by machinery INDEPENDENT of the
+Borcherds/Schofer path that produced the equation — the Eichler-Selberg point count that
+`ModelVerification.m` runs as check [4]. Env-gated, off by default, and it accepts only when
+exactly one squarefree twist survives at 3+ good primes, so it never trades a deferral for a guess.
+Ground truth: at `22_5` it recovers `W={1,2,5,10}` at `d=1` and reproduces the committed
+polynomial coefficient-for-coefficient. **So `models_22_5.m` is regenerable from current code with
+the twist VERIFIED rather than trusted.** Scope, honestly: 1 cover of 4 withheld, 0 new equations,
+`W={1}` still empty; the other three failed their SOLVES, so they are under-determined like
+`14_3` — a different problem that this does not touch.
+
+### Corrections made this session — do not re-derive these
+
+* **`22_5` is not "unreproducible".** I claimed a fresh run drops `[1,2,5,10]` because the target
+  cover sets differ and `08ce5fa` came from a lost path. **False** — `{1,2,5,10}` (label 7584,
+  g=1) is in `GetHyperellipticCandidates()` and `Xstar`CoveredBy` today. The cover is withheld
+  **on purpose** by the y2 guard, which postdates the model file by 12 hours.
+* **And the committed entry is CORRECT**, measured: `VerifyModelSet` passes it 24/24 and
+  discriminates the twist — six twists `d = -1,2,-2,5,-5,11` all fail with 3-5 failures. So that
+  guard is CONSERVATIVE, which is what motivated `Y2TWIST`. "Do not overwrite `models_22_5.m`"
+  still stands; the reason changed.
+* **The vx crash is at `BorcherdsForms.m:771`, not `ShimuraQuotients.m:1116`.** My first candidate
+  was the unnormalised `denom` in `IsHyperelliptic`; the traceback never reaches it. `:615` is
+  exonerated by its own `assert minval eq -Minimum(...)`.
+* **`111_1`/`119_1` were attempted 2026-09-03, AFTER the 66x speedup (`04f1d7b`, 08-29).** So
+  "re-run them now that the basis step is faster" is NOT free progress.
+* **`cmsupply`'s `CMVERD OK` does not apply to the full curve.** It iterates `Xstar`CoveredBy`
+  (`ShimuraQuotients.m:1526`), the immediate covers, whose genera top out at 1 (`14_3`) and 2
+  (`22_5`) — while GY's published curves there are genus 3 and 5. `OK margin 0` means "adequate for
+  the easy targets, zero slack", nothing about `W={1}`.
+
+### Runs in flight when this was written
+
+**On lovelace, and note there are now TWO checkouts there.** The long runs use
+`~/shimura/ShimuraCurveALQuotients` (at `05471c8`, behind `main`); the new work uses a SEPARATE
+clone `~/shimura/vxfix` pinned to `36ac71e`, deliberately, because `AttachSpec` loads packages
+lazily and pulling under a 17-hour run could swap code mid-flight. **Do not `git pull` the first
+one while those jobs are alive.**
+
+* `34_11` — ~17 h, inside `AllEquationsAboveCovers` (4 ambiguous-sign points, 16 combinations),
+  RSS plateaued ~22 GB. Past `M0MultiplierExact` and `ValuesAtCMPoints` entirely. This is the run
+  that would give a SECOND base ever to produce models.
+* `10_61`, `14_43` — ~15 h, still in the absolute-values phase. No gate failures anywhere.
+* `93_1`, `95_1`, `159_1` — the vx bases, in `~/shimura/vxfix`, output to `~/shimura/vxout`.
+  ⚠ Ran locally first; that was a mistake — the Mac has 48 GB and this class peaked at 40.6 GB on
+  `119_1`. Use lovelace for these.
+* the 8-base regeneration sweep, `~/shimura/regen/`.
+
+⚠ **Clearing the vx assert is necessary, not sufficient** — these bases may still die downstream,
+and `95_1`/`159_1` sharing `93_1`'s cause is inherited from memory, not measured.
+
 ## Update — 2026-09-04: `tier1-models` is RETIRED; `main` is the only code branch
 
 `main` was fast-forwarded to `tier1-models` (`475e72b`) — a clean FF, `main` was a strict
