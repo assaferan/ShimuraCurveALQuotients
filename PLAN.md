@@ -76,6 +76,80 @@ month.
 
 ---
 
+## PRODUCING MORE MODELS RELIABLY — the plan, 2026-09-05
+
+*(adopted after the session that recovered `39_2` and `14_3`. Priority set by assaferan: make the
+REAL REPAIR first, not the workaround.)*
+
+### Where we are
+
+Coverage **34 of 43**. Both recoveries came from the same place, and it was not mathematics: the
+**coprime-to-level CM filter** was starving the CM pool (`39_2`: 3 points against demand 19; with
+the filter off, 24). Three blocked bases examined, three whose recorded diagnosis had gone STALE.
+
+### The problem to solve
+
+`CMNONCOPRIME=1` is the lever that works and it has **no theoretical guarantee**: the
+`p | gcd(d,N)` local factor has NO live implementation (`kappaminuszero`, `SchoferFormula.m:569`,
+is dead code and does not even cover that case — it loops over `PrimeDivisors(N div GCD(d,N))`,
+the coprime part), and at `26_3` two non-coprime discriminants give provably wrong values. So its
+output has only ever been trusted where Guo-Yang publishes an equation to check against.
+**That does not scale**: 47 of our models are beyond Guo-Yang's list, and any new base has no
+published answer.
+
+⇒ **THE REAL REPAIR IS THE `p | gcd(d,N)` SCHOFER VALUE.** Fix it and the filter can be removed,
+which turns an oracle-dependent hack into a sound method and unblocks bases nobody has published.
+
+### Why this is tractable now: there is a per-value oracle
+
+Guo-Yang's **CM-value tables** give the correct `s` at every listed discriminant — a per-value
+oracle, far sharper than a per-model one. At `26_3` we know exactly which values are wrong and
+what they should be:
+
+    disc    ours     correct   relation
+    -267    8/25     17/25     ours = 1 - correct   (s and s~ exchanged)
+    -708    11/49    38/49     ours = 1 - correct
+    other 12 discs: correct
+
+### What is already ruled out — do not re-derive these
+
+* NOT the sign tie-break. `find_signs_hauptmodul` never reports ambiguity at those discs (checked
+  with an unconditional marker, so the silence is real and not a run that never reached it). The
+  absolute values arrive already exchanged from `AbsoluteValuesAtCMPoints`.
+* NOT seed or quaternion-order representative dependence. Stable across 3 seeds — so the `15_2`
+  root cause ([[embedding-selection-root-cause]]) does NOT transfer.
+* NOT a function of `d`'s standard invariants. `-267` matches the GOOD `-123`, and `-708` matches
+  the GOOD `-132`, on class number, fundamentality, every valuation and every Kronecker symbol.
+  ⇒ so a `Keep`-list keyed on `d` cannot work.
+* NOT duplicate rows: each disc appears exactly once in our table.
+* Coprimality alone does not predict it: 11 of the 14 discs are non-coprime to `N=3` and only 2
+  are wrong.
+
+### The live hypothesis, and the experiment that tests it
+
+Both bad discs have `h(d) > 1`, so SEVERAL CM points share the discriminant. "We hold both values"
+does not rule this out — evaluating `s` and `s~` at DIFFERENT points of the same discriminant
+produces exactly the observed exchange. The good discs also have `h > 1`, so the hypothesis needs
+a second ingredient: perhaps at the good ones the several points give the SAME value (conjugates
+with a rational common value) while at the bad ones they differ.
+⇒ **EXPERIMENT: for each of the 14 discs, compute `s` at EVERY CM point of that discriminant and
+count distinct values.** If the bad discs are exactly those where the points disagree, the defect
+is point SELECTION and the fix is to pin the choice; if not, it is in the Schofer value itself and
+the next stop is the `p | gcd(d,N)` local factor proper (Kudla-Yang; Schofer Thm 4.1 assumes the
+local lattice is unimodular at unramified primes, which FAILS at `p | N` for Eichler orders).
+
+### Ordering, and why
+
+1. **The experiment above** — cheap, and it splits the problem in two.
+2. **Fix whichever half it indicts.**
+3. Only then, sweep `CMNONCOPRIME` across the remaining blocked bases.
+⚠ An earlier draft put "quantify how discriminating `ModelChecks` is" first. It does NOT accelerate
+this: `ModelChecks` adjudicates whole models, while this defect needs per-value truth, and the
+published CM tables already supply that. Keep it as the tool for validating models on bases with
+no published equation — a separate job.
+
+---
+
 ## MAIN LINE — the `A_m` theorem
 
 One object blocks disproportionately much. Everything below this section is secondary to it.
