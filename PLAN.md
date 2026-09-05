@@ -625,6 +625,14 @@ equation base at all.
   ⚠ `data/models/models_39_2.m` does NOT regenerate by default — see its header, and its entry in
   `ModelRegen`'s `MR_KNOWN_DRIFT`. The flag is NOT known to be safe in general; what makes this file
   trustworthy is the independent oracle, not the flag.
+⚠ **On the two re-classifications below: those records were CORRECT WHEN WRITTEN, not careless.**
+The intervening fixes (Schofer cusp-0 isometry PR #18, per-coset `tau` `475e72b`, the y2 guard
+`1768517`, the vx shift `d9b52d0`) moved where these bases fail. So the remedy is **re-measure a
+base whose record predates a fix that could move its failure** — not "triage more carefully". This
+is the same phenomenon as the stale committed models above, one level up: a model goes stale when a
+GUARD postdates it, a triage record when a FIX postdates it, and both are invisible to any check
+that reads the artifact instead of regenerating it.
+
 * `69_1` — ⚠ **RE-CLASSIFIED 2026-09-05: an exponent OVERFLOW, not a non-rational value.** The old
   entry called it "non-rational value (`RationalNumber` failure), the embedding-selection class".
   It is indeed inside `RationalNumber`, but the actual error is

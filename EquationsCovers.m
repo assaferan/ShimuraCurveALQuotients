@@ -842,8 +842,17 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
         best_score := -2;
         best_combo := [1 : a in ambiguous];
         crv_list := []; ws := AssociativeArray(); new_keys := []; deferred := [];
+        // COVPROGRESS=1: per-combination progress. This loop runs a FULL EquationsOfCovers solve
+        // per combination and printed nothing between the "searching N combination(s)" line above
+        // and the result below -- so on a large base it goes dark for hours. Measured 2026-09-05:
+        // 34_11 sat in exactly this loop for 12+ h (16 combinations, ~45 min each) with no output,
+        // and there was no way to tell progress from a stall.
+        // WriteStderr, not printf: Magma buffers stdout to a file, so a killed run loses the lot --
+        // the same lesson M0PROGRESS records. Bounded by nchoices <= 1024, so it cannot flood.
+        cov_progress := GetEnv("COVPROGRESS") ne "";
         if nchoices le 1024 then
-            for combo in combos do
+            cov_t0 := Realtime();
+            for ci->combo in combos do
                 tab := base_vals;
                 for t->a in ambiguous do
                     pair := a[2][combo[t]];
@@ -861,6 +870,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
                     best_score := score;
                     crv_list := cl; ws := w; new_keys := nk; deferred := df;
                     best_combo := combo;
+                end if;
+                if cov_progress then
+                    WriteStderr(Sprintf("  COVPROGRESS combo %o/%o score %o best %o elapsed %os\n",
+                                        ci, nchoices, score, best_score, Realtime()-cov_t0));
                 end if;
             end for;
         else
