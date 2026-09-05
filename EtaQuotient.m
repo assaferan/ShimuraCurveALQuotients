@@ -79,7 +79,11 @@ procedure update_precision_eta(~nor_eta_ds, Prec, ds)
 end procedure;
 
 procedure reduce(eta)
-    zero_coeffs := [r : r in Exponents(eta) | eta`coeffs[r] eq 0];
+    // Iterate Keys directly, NOT Exponents. Exponents sorts (`Sort([x : x in Keys(...)])`), and
+    // reduce only needs to FIND and REMOVE the zero coefficients -- removal order is irrelevant.
+    // Profiled on X_0^51(1): reduce ran 246174 times, and the sort it did not need showed up as
+    // 259605 Sort calls / 259242 Exponents calls. The sort was pure waste on every one of them.
+    zero_coeffs := [r : r in Keys(eta`coeffs) | eta`coeffs[r] eq 0];
     for r in zero_coeffs do
         Remove(~eta`coeffs, r);
     end for;
