@@ -25,8 +25,26 @@ conventions and fitting numerically is exactly what produces a plausible wrong f
 **exchanged** at exactly these two. Both are non-coprime to `N = 3` — but so are nine discs that
 come out right, so coprimality alone does not predict it.
 
-At `X_0^{15}(2)` the same class of defect appears differently: `d = −7, −15, −60` are each short by
-exactly `2^4`, i.e. the correct value needs **+4·log 2**.
+⚠⚠ **CORRECTED 2026-09-05 — the `15_2` `2^4` DEFECT NO LONGER EXISTS.** Every earlier version of
+this draft (and memory `embedding-selection-root-cause`, 2026-08-16) said `d = −7, −15, −60` at
+`X_0^{15}(2)` are each short by `2^4`. **Measured today, they are not.** Recomputed values against
+the expected `our_s = their_s / 2`:
+
+    d = -7    ours 1/8    expected 1/8    OK
+    d = -15   ours 5/8    expected 5/8    OK
+    d = -52   ours 1/2    expected 1/2    OK
+    d = -88   ours 2      expected 2      OK
+    d = -60   ours -1/24  expected +1/24  WRONG -- SIGN ONLY
+    (-12 -> oo, -40 -> 0, -120 -> 1: the three normalising anchors, all correct)
+
+Some intervening fix repaired the magnitude. **The surviving defect at `15_2` is a pure SIGN error
+at `d = −60`** — and `gcd(60, 2) = 2`, i.e. non-coprime to the level, exactly like `26_3`'s two bad
+discriminants.
+
+⇒ This **invalidates the magnitude premise** these notes were built on, and **strengthens the
+conclusion**: the only surviving defects at BOTH bases are sign errors at discriminants
+non-coprime to `N`. That is what a sign-valued `p | N` correction predicts, and it is now the
+evidence rather than the `2^4`.
 
 ## 2. Why it is a `p | N` problem
 
@@ -211,10 +229,11 @@ factors differ ONLY in sign.
 **⇒ The consequence, and it explains the `2^4` exactly.** In a log-linear identity, using `-x`
 where `+x` belongs shifts the answer by `2x`, not by `x`. So:
 
-    observed shortfall at 15_2 = 4*log 2   ==>   a term of coefficient 2*log 2 has the WRONG SIGN
-
-Check: ours `1/128`, correct `1/8`, ratio `2^{-4}` — exactly `+2log2` computed as `-2log2`. The
-same arithmetic for the other two: `5/128` vs `5/8`, `1/384` vs `1/24`, both `2^{-4}`.
+⚠ **The `2^4` arithmetic that motivated this is now void** — see §1: `15_2`'s magnitudes are
+correct today and only `d = −60`'s SIGN is wrong. The conclusion survives on stronger evidence:
+the surviving defects at `15_2` (`−60`) and `26_3` (`−267`, `−708`) are ALL sign errors, and ALL at
+discriminants non-coprime to `N`. A sign-valued correction at `p | N` predicts exactly that; a
+magnitude-valued one predicts nothing of the kind.
 
 ⇒ **T1 RESOLVED**: the correction is a sign, and its direction is fixed by §10 — at `p | N` the
 form is the HYPERBOLIC plane, so `c_p^Eich = +1/p`; using the ramified `-1/p` is the error.
@@ -249,11 +268,14 @@ Any candidate translation must hit **both**, which is what makes it hard to fit 
 
 * `26_3`, `N = 3`: Guo-Yang's CM table, all 14 discriminants, with `−267 → 17/25` and
   `−708 → 38/49` the two currently wrong.
-* `15_2`, `N = 2`: `d = −7, −15, −60`, each currently short by exactly `2^4`
-  (`1/128` vs `1/8`, `5/128` vs `5/8`, `1/384` vs `1/24`).
+* `15_2`, `N = 2`: **`d = −60` only**, and it is a SIGN error (`−1/24`, expected `+1/24`).
+  ⚠ `−7` and `−15` are NO LONGER failing — do not use them as targets; the `2^4` shortfall recorded
+  for them is stale.
 
-Different level primes, different failure shapes (exchange vs scaling). A formula that fixes one
-and not the other is wrong.
+Different level primes, and BOTH failure shapes are now sign-valued (an exchange at `26_3`, a sign
+flip at `15_2`). A correct sign rule should fix both; a magnitude constant would fix neither.
+⚠ Both bases also share the pattern that only SOME non-coprime discriminants fail — 1 of 4 at
+`15_2`, 2 of 11 at `26_3` — so the rule must be finer than "non-coprime to `N`".
 
 ## 6. What is already ruled out — do not re-derive
 
