@@ -79,10 +79,18 @@ procedure test_Schofer_10()
 
     //t_10 = 2^(-2)*|Psi_f_10|^2
     vals := [<-20, { <2, 3> }>,
-             // The next one does still not work at 2! Off by a factor of 4, this is confusing. The kappas are all correct now.
-             // Probably an error in [Err] ?
-             // Here is the result we expected from [Err]
-             // <-68, { <2, 2>, <5, 1> }>,
+             // -68 and -420 are the ONLY D=10 discriminants with a degree-2 CM cycle, so the
+             // renormalisation t_10 = 2^-2 ||Psi||^2 applies TWICE: expected = 4^2 * |t_10|.
+             // [Err, Table 5] gives |t_10(P_-68)| = 2^2 * 5, and 4^2 * 2^2 * 5 = 2^6 * 5 -- ours.
+             // (Same reason as the -420 note below, which already states it.)
+             // ⚠ RETRACTED 2026-09-05, checked against Errthum's arXiv source. An older comment
+             // here read "off by a factor of 4 ... probably an error in [Err]?". That was wrong:
+             // our Kappa0(2,-68) and Kappa0(3,-68) reproduce his printed kappas EXACTLY, so there
+             // is no p=2 disagreement at all, and his own theorem applied to his own kappas with
+             // the prefactor -|CM|/4 yields 2^6*5. The 2^2*5 shown in [Err, 7.2.3] is his Table-5
+             // norm prod|t_10| with the left-hand side mislabelled prod||Psi||^2 -- a cosmetic
+             // slip, not a computational error on either side. The rule 4^(#pts) * Table 4/5
+             // reproduces all 19 D=10 entries.
              <-68, { <2, 6>, <5, 1> }>,
              //Testing Err. Table 4, Section 8.2.1
              <-40, { <3,3>, <2, 2> }>,
