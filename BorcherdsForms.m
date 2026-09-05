@@ -615,6 +615,16 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
     
     ech_basis, T := EchelonForm(coeffs);
+    // BFPROGRESS: pool size vs actual rank. The 66x WeaklyHolomorphicBasis speedup came from
+    // finding a rank-258 space being echelonised as 12784 rows; if this pool is similarly
+    // redundant we are computing a q-expansion per element to span far fewer dimensions, and the
+    // fix is algorithmic (build a smaller pool) rather than another constant-factor win.
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFPOOL pole_order=%o Zero=%o  pool=%o  rank=%o  cols=%o\n",
+                            pole_order, Zero, #full_basis,
+                            #[i : i in [1..Nrows(ech_basis)] | not IsZero(ech_basis[i])],
+                            Ncols(coeffs)));
+    end if;
     ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
    
     return ech_basis, ech_etas, T;
