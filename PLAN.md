@@ -642,7 +642,20 @@ that reads the artifact instead of regenerating it.
   so **do not assume the `15_2` root cause applies**. Unmeasured: whether the huge exponent is
   genuine or itself a symptom.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
-  40 GB, stuck inside `BorcherdsForms`.
+  40 GB, inside `BorcherdsForms`.
+  ⚠ **"Ceiling" may be the wrong word — measured 2026-09-05 with the new `BFPROGRESS=1`.** On
+  `95_1` (same class: odd `D`, level 1, previously undiagnosable) the `m`-search costs
+  **4653 s = 77.6 min for the FIRST `m` alone**, of **6**, and `m` grows in magnitude
+  (`-7 -> -35 -> ...`) so later values should cost more. That projects to **8+ hours for one
+  base**, and it is PROGRESSING, not wedged: `/proc` shows 100% CPU, no `normaliz` child, no I/O,
+  flat 0.6 GB.
+  ⇒ So 17.5 h may simply not have been long enough, rather than evidencing a hard wall. Before
+  writing these two off again, **re-run with `BFPROGRESS=1` and read `m_idx=k of N`** — that
+  distinguishes "slow" from "stuck", which nothing previously could. (`119_1`'s 40 GB is a
+  separate and more serious signal; the memory-side claim is not affected by this.)
+  ⚠ Note the earlier diagnosis was made from `/proc` because the logs were empty: `BorcherdsForms`
+  reports each `m` at `vprintf` LEVEL 2 while `genmodels.m` defaults to `verb := 1`, and even at
+  `VERB:=2` those go to buffered stdout and are lost on a kill. `BFPROGRESS` uses `WriteStderr`.
 * `26_3` — **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
   and `-708` Guo-Yang's `s` sits in **our `s~` row** (`sIndex = 7` is `s`, row 9 is `s~`); the
   other 12 of 14 discs are correct. `s + s~ = 1` holds at EVERY disc (`8/25 + 17/25`,
