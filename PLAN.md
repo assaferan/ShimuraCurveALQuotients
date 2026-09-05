@@ -778,8 +778,22 @@ that reads the artifact instead of regenerating it.
   level-prime effect, and NOT related to the `p | gcd(d,N)` work.
   ⚠ Note the sum is supported ONLY on `3` and `23`, both dividing `D`. Whatever diverges is
   concentrated on the ramified places.
-  ⇒ NEXT: find which `m` (and which `kappaminus` call) contributes the runaway. The diagnostic
-  prints the whole LogSum, so instrumenting the per-`m` accumulation should localise it quickly.
+  ✅ **ROOT-CAUSED 2026-09-05 — the overflow is a SYMPTOM, not the disease.** `Kappa0` is fine:
+  its per-`m` coefficients at 23 are all small fractions (`-1/2, -2/3, -3/2, -1, -5/6, -1/3`)
+  across every CM discriminant. The runaway enters through the OTHER factor of
+  `log_coeffs += Coefficient(f,-m) * Kappa0(m)` — **the Borcherds forms themselves have
+  astronomical principal parts**. Measured, all five keys:
+
+      key -1:  valuation -62, 29 nonzero principal coefficients,
+               MAX |coeff| = 1.17e73 / 3072
+      key 10669: MAX |coeff| = 1.96e76 / 1536      (others 10^73..10^76 likewise)
+
+  ⚠ And they are NON-INTEGRAL (denominators 512, 384, 1536, 3072), which puts `69_1` in the known
+  **non-integral-forms class** ([[nonintegral-forms-root-cause]]) — NOT the `p | gcd(d,N)`
+  level-prime story, and not the embedding-selection story its original record named. Three
+  different diagnoses, three different classes; only this one is measured.
+  ⇒ NEXT: `IntegralSolution` is the documented rescue for that class (it "rescues 7 of 18"), so
+  `INTSOL=1` is the obvious experiment and costs one run.
   Also observed in the same run: the y2-scale `IsSquare` check fails for a cover at `69_1`, so
   this base additionally exercises the unpinned-y2 path.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
