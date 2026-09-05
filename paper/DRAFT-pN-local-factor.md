@@ -262,6 +262,51 @@ Jordan classification, and `get_lattice_data`) and check whether `p | N` is dist
 sign-flipped at `15_2`'s three discs — i.e. confirm the mechanism at the level of the actual terms,
 not just the totals. The totals matching is necessary, not sufficient.
 
+### (i) ⚠ THE PREDICTION OF (g)/(h) IS NOT CONFIRMED BY TERM-LEVEL PROBING [2026-09-05]
+
+The sign derivation of §4b(g) predicts a sign error in the `p | N` local factor. Probed directly at
+an invariant-identical pair — `d = -267` (BAD) against `d = -123` (good), both `h=2`, both
+non-coprime to `N=3`, one CM point each — **the `p = 3` term is identical in sign and magnitude on
+both sides of the formula**:
+
+    oo-side (Kappa0, mu = 0):
+      m=6   -6Log3 - 6/7Log13        |  -6Log3 - 6/7Log13        p=3 term IDENTICAL
+    cusp-0 side (sum over nonzero gammas in the mM bucket):
+      mM=3  -2Log3 - 8Log5           |  -2Log3 - 4Log127         p=3 term IDENTICAL
+      mM=4  -4/3Log2                 |  -4/3Log2                 identical
+
+The other differences (`Log5`, `Log7`, `Log127`, ...) are the ordinary arithmetic of different
+discriminants. **No sign anomaly at the level prime appears anywhere.**
+
+⚠ Also ruled out by code reading: the local form is NOT selected by a `p | D*N` test. `Wpoly_scaled`
+builds `S` from the lattice and hands it to `Wpoly`/`Wpoly2`, which take `eps` from the Jordan block
+diagonals and the sign from `LegendreSymbol(-1,p)^(l_mu(k) div 2) * prod legendre(eps[i],p)`. The
+hyperbolic-vs-anisotropic distinction is read off the lattice, correctly, by construction. So §4b(h)'s
+"check whether it selects on `p | D*N`" is answered: it does not, and that is not the bug.
+
+### (j) A STRUCTURAL CONSTRAINT any explanation of the `26_3` exchange must satisfy
+
+Both sides of the formula compute a **form-independent kernel**:
+* `SchoferFormula` (oo-side) calls `Kappa0` only — `mu = 0` for EVERY form;
+* `SchoferFormula0` (cusp-0) buckets by `mM mod M` and sums `Kappa(gamma, mM/M, d, ...)` over that
+  bucket — the bucket depends on `mM`, NOT on the form.
+
+The form enters only as `Coefficient(f, -mM)`. So every form's value is `sum_m c_f(-m) K(m)` with a
+COMMON `K(m)`. Therefore an exchange of two forms' values requires either
+
+  (A) `K(m)` wrong at exactly those discriminants — but the `p=3` part of `K` is measured identical
+      to the good twin's, so if this is it, the error is at some other prime and is not a `p | N`
+      effect at all; or
+  (B) the coefficient vectors `c_1, c_2` swapped — but that is `d`-INDEPENDENT and would corrupt all
+      14 discriminants, not 2.
+
+**Neither is consistent with what is measured.** That is the sharpest statement of the puzzle
+currently available, and it means the `26_3` exchange is NOT yet explained by this derivation.
+
+⚠ **Do not implement the §4b(g) sign fix on the strength of the derivation alone.** It is a clean
+argument whose empirical prediction fails at the only place it can be tested. Either the derivation
+applies somewhere the probes did not reach, or it is wrong. Settle that before writing code.
+
 ## 5. Two independent regression targets, with exact known answers
 
 Any candidate translation must hit **both**, which is what makes it hard to fit a wrong formula:
