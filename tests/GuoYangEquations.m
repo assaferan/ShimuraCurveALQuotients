@@ -71,7 +71,18 @@ gy_cases := [*
     <15, 2, [Integers()|1], -(x^2+3)*(3*x^2+4)*(x^4-x^2+4)>,
 
     // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
-    <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>
+    <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>,
+
+    // X_0^39(2):  y^2 = -(x^8+11x^7+52x^6+140x^5+243x^4+280x^3+208x^2+88x+16)
+    //                   (7x^4+24x^3+32x^2+24x+16)(x^4+3x^3+8x^2+12x+7)          [degree 16, genus 7]
+    // ⚠ In the source this WRAPS across `\\`, the second line beginning `\qquad(7x^4...` -- reading
+    // only the first math group gives a degree-8 factor and a plausible WRONG curve.
+    // ⚠ models_39_2.m was produced with CMNONCOPRIME=1 and does NOT regenerate by default; see its
+    // header. This comparison is the independent oracle that makes that file trustworthy, so it is
+    // the one test that must not be skipped when the CM filter is changed.
+    <39, 2, [Integers()|1],
+      -(x^8+11*x^7+52*x^6+140*x^5+243*x^4+280*x^3+208*x^2+88*x+16)
+       *(7*x^4+24*x^3+32*x^2+24*x+16)*(x^4+3*x^3+8*x^2+12*x+7)>
 *];
 
 gy_checked := 0;

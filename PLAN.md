@@ -477,11 +477,11 @@ exactly. Only the half-integral phase is wrong.
 CM-value tables in `tests/_offline/` — this is about the paper's headline output, the EQUATIONS.)*
 
     43   (D,N) bases with published equations in Guo-Yang
-    34   we have a model for            <- was 32; 51_1 and 57_1 added 2026-09-04
-    32   ...and a test comparing it to Guo-Yang   <- was 24; the 8 in GuoYangEquations.m
-     2   model exists but NO GY comparison test   <- was 10; and BOTH need generation, not a test
-     9   no model: the real blockers
-    47   models we have BEYOND Guo-Yang's list entirely (81 model files total)
+    35   we have a model for            <- was 34; 39_2 RECOVERED 2026-09-05
+    33   ...and a test comparing it to Guo-Yang   <- was 32; the 9 in GuoYangEquations.m
+     2   model exists but NO GY comparison test   <- 14_3, 22_5; both need generation, not a test
+     8   no model: the real blockers   <- was 9; 39_2 is off this list
+    47   models we have BEYOND Guo-Yang's list entirely (82 model files total)
 
 **⇒ TIER 1' IS EXHAUSTED AS A TRANSCRIPTION TASK.** Eight of the original ten are done
 (`14_5 15_2 21_2 22_3 51_1 55_1 57_1 87_1`, in `tests/GuoYangEquations.m`). The remaining **two are
@@ -615,14 +615,16 @@ equation base at all.
   **that list is incomplete — `93_1` belongs in it** (`159_1` under test). See
   [[assert-failed-is-squarefree-n]], now corrected. ⚠ `genmodels.m` cites "memory
   vx-laurent-n0-circular", which **does not exist** — dangling reference.
-* `39_2` — ⚠ **RE-CLASSIFIED 2026-09-05: it is NOT the NONINTEGRAL failure any more.** The old
-  entry (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`, the malformed-form base) is not what it
-  currently fails on. Re-run against current code it dies at
-  `Computing absolute values at CM points...Runtime error: Could not find enough points, sorry!` —
-  the SAME failure as `26_3`, and long before integrality is reached. And it is the same cause:
-  the coprime CM filter. Demand 19; pool is **3** with the filter on and **24** with it off at the
-  default `bd := 4`. `N = 2` is even, and the filter drops every even discriminant on even-level
-  bases, which is why it bites so hard here. See `CMNONCOPRIME` below.
+* `39_2` — ✅ **RECOVERED 2026-09-05. No longer a blocker.** It was never the NONINTEGRAL failure
+  its record claimed; it was starved by the coprime CM filter. With `CMNONCOPRIME=1` it sees 24 CM
+  points against demand 19 and builds cleanly (15 keys, **0 empty**), and its `W={1}` genus-7 curve
+  is **`IsIsomorphic` to Guo-Yang's published equation** (verified 0.06 s; now pinned in
+  `tests/GuoYangEquations.m`, 9 bases). `ModelChecks` also passes it (82 files, 8573 checks, 0
+  failures), which is an independent check since it uses trace-formula point counts rather than the
+  Borcherds/Schofer path that produced the model.
+  ⚠ `data/models/models_39_2.m` does NOT regenerate by default — see its header, and its entry in
+  `ModelRegen`'s `MR_KNOWN_DRIFT`. The flag is NOT known to be safe in general; what makes this file
+  trustworthy is the independent oracle, not the flag.
 * `69_1` — ⚠ **RE-CLASSIFIED 2026-09-05: an exponent OVERFLOW, not a non-rational value.** The old
   entry called it "non-rational value (`RationalNumber` failure), the embedding-selection class".
   It is indeed inside `RationalNumber`, but the actual error is
