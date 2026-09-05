@@ -688,7 +688,13 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
     // !!! For D = 35, this takes about 13 minutes on lava....
     E, n, n0, t, eta_quotients := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
     k := -Valuation(qExpansionAtoo(t,1));
-   
+
+    // Default the oo-side shift to n0.  The odd-D block below re-computes it as
+    // max(n0, actual minimum valuation) once the oo-expansions exist; for even D that block never
+    // runs, so without this default the min_m bound further down reads an unassigned variable.
+    // Equal to n0 except where a deep oo-pole forces it up, which keeps every working base fixed.
+    n_oo := n0;
+
     if IsOdd(Xstar`D) then
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
@@ -768,7 +774,22 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
             Rq<q> := Universe(ech_fs_oo);
             R := BaseRing(Rq);
 
-            ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+            // The shift here sets the column<->exponent mapping: column 1 is the coefficient of
+            // q^(-n_oo), which is why the SAME n_oo is handed to coeffs_to_divisor_matrix below.
+            //
+            // It used to be q^n0 flat.  But n0 is calibrated on the ZERO side (it comes back from
+            // WeaklyHolomorphicBasis(... : Zero, n0 := n0)), while the forms being expanded here
+            // are the oo-expansions of the zero-side etas ech_etas_0 -- a different object, whose
+            // pole at oo is NOT bounded by n0.  When it is deeper, q^n0*f still has a pole and
+            // AbsEltseq hits Magma's own "assert vx ge 0" (GalFldFun.m:305): the "vx class",
+            // e.g. 93_1 dying on a q^-60 pole.
+            //
+            // Taking the max with the actual minimum valuation fixes the alignment.  Note this is
+            // a NO-OP wherever the code already worked: if every oo-pole is within n0 the maximum
+            // IS n0 and every emitted model is unchanged -- so it can only affect bases that
+            // previously crashed.
+            n_oo := Maximum(n0, -Minimum([Valuation(f) : f in ech_fs_oo]));
+            ech_basis_oo := Matrix(R, [AbsEltseq(q^n_oo*f : FixedLength) : f in ech_fs_oo]);
 
             non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
             div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
@@ -784,7 +805,9 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
             good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
             // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20
             mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
-            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+            // -n_oo, not -n0: must match the shift used to build ech_basis_oo above, or the
+            // column<->exponent mapping is silently off by (n_oo - n0).
+            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n_oo, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
             coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
             coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
 
@@ -838,7 +861,13 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
 
                     ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                     min_m := Minimum(ms);
-                    min_m := Minimum(min_m, -(n0 + k - 1));
+                    // n_oo, not n0: relevant_ds below must stay a SUPERSET of relevant_ds_0_oo,
+                    // which is built from relevant_ds_oo at the -n_oo shift.  Widening the oo-side
+                    // without widening this bound breaks that containment and Index() returns 0 at
+                    // the ds_0_oo_to_ds fill below (seen at 95_1: "column index not in [1..37]").
+                    // Identical to the old line whenever n_oo = n0, i.e. on every base that already
+                    // worked.
+                    min_m := Minimum(min_m, -(n_oo + k - 1));
                     
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;
