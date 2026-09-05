@@ -793,7 +793,14 @@ that reads the artifact instead of regenerating it.
   level-prime story, and not the embedding-selection story its original record named. Three
   different diagnoses, three different classes; only this one is measured.
   ⇒ NEXT: `IntegralSolution` is the documented rescue for that class (it "rescues 7 of 18"), so
-  `INTSOL=1` is the obvious experiment and costs one run.
+  `INTSOL=1` is the obvious experiment.
+  ⚠ **Attempted 2026-09-05 LOCALLY and the result is INCONCLUSIVE, not negative.** It died with
+  `Bus error` after 1013 s at `Memory usage: 11335.62MB` — which is exactly the documented
+  "Magma dies ~11 GB" ceiling on this Mac ([[tshift-ladder-gap-filler]]), and the machine had
+  ~2.4 GB free at the time. **That is a machine limit, not a verdict on `INTSOL`.** Re-launched on
+  lovelace (2 TB, 1.8 TB free); do not record `INTSOL` as refuted for `69_1` until that returns.
+  ⚠ General lesson: `69_1` is in the class where the forms themselves are ~`1e75`, so ANY variant
+  of it is memory-hungry. Run this base on lovelace, not locally.
   Also observed in the same run: the y2-scale `IsSquare` check fails for a cover at `69_1`, so
   this base additionally exercises the unpinned-y2 path.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
