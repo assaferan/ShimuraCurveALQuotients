@@ -133,10 +133,14 @@ wrong-object normalisation at `BorcherdsForms.m:771`: `ech_fs_oo` holds the **oo
 `95_1` clear the assert and then die at `:891` with `column index not in [1..37]`; and `n_oo` was
 unassigned for even `D` (the block computing it is odd-`D` only), caught by the regression.
 **Safety property:** where every oo-pole already fits within `n0` — every base that currently works
-— the maximum IS `n0` and the change is a literal no-op. Verified byte-identical for `14_3`
-(even `D`) and `51_1` (**odd `D`**, so it exercises the `IsOdd(D)` block the change lives in); an
-8-base sweep was running when this was written (`~/shimura/regen/sweep.log` on lovelace) —
-**check it: if any base says `DIFFERS` the no-op claim is false and the commit needs revisiting.**
+— the maximum IS `n0` and the change is a literal no-op.
+✅ **SWEEP DONE, AND THE FIX IS EXONERATED — do not re-open this.** The 8-base sweep came back
+**6 IDENTICAL / 2 DIFFERS** (`22_3`, `15_2`). ⚠ The `DIFFERS` does NOT falsify the no-op claim, and
+the instruction that stood here ("if any base says DIFFERS the commit needs revisiting") would lead
+you to exactly the wrong conclusion. The discriminating test is **fresh-vs-fresh**: regenerate at
+`d9b52d0~1` and compare to regenerating at HEAD. Both came back `IDENTICAL`, so the fix changed
+nothing; the two bases differ because their COMMITTED models are stale (see below). No-op verified
+on 7 of 7 testable bases, including odd `D` (`51_1`).
 
 **The `Y2TWIST` prototype (`36ac71e`).** `find_y2_scales` cannot always pin the y2-scale from
 sparse CM data, so `EquationsOfCovers` force-defers the cover (issue #36, `1768517`) and back-fill
@@ -149,6 +153,44 @@ polynomial coefficient-for-coefficient. **So `models_22_5.m` is regenerable from
 the twist VERIFIED rather than trusted.** Scope, honestly: 1 cover of 4 withheld, 0 new equations,
 `W={1}` still empty; the other three failed their SOLVES, so they are under-determined like
 `14_3` — a different problem that this does not touch.
+
+### THREE COMMITTED MODELS DO NOT REGENERATE — and now there is a test for it
+
+Found while validating the vx fix, not looked for. `models_22_5.m`, `models_22_3.m` and
+`models_15_2.m` do not reproduce from current code, all for one reason: the unpinned-y2-scale
+guard (`1768517`, 2026-08-24 19:20) POSTDATES all three, so regeneration withholds covers they
+contain. ⚠ **They are NOT wrong** — all three pass `ModelChecks` and their Guo-Yang comparisons.
+They are *unreproducible*, which is a different failure and one nothing in the suite could see:
+`ModelChecks` and `GuoYangEquations` read STORED models and never run the pipeline, and the
+`X0_D_N.m` tests run it for only ~25 bases, each needing hand-written cover/AL data.
+
+**`tests/_offline/ModelRegen.m` (`afa0412`) closes that gap** — auto-discovering, no per-base
+authoring, works for all 81 models; regenerates and checks each committed cover is still produced
+and still ISOMORPHIC. The three are listed in `MR_KNOWN_DRIFT`, reported rather than asserted away.
+Two traps it cost: matching must be a **multiset** match (the first draft passed `22_3` clean while
+it had LOST a cover, because two committed entries matched the same survivor), and selection must
+be an **env var** (`MODELREGEN_BASES`) because `run_tests.m` `eval`s test files and a `name:=value`
+argument is invisible there — it silently runs the default list instead.
+
+**What `Y2TWIST=1` restores** (measured against the committed files): `22_5` FULLY (3/3,
+coefficient-for-coefficient), `15_2` FULLY (12/12 keys, one cover differing in presentation but
+`IsIsomorphic`), `22_3` 13/14. ⇒ The residual gap is **GENUS 0 by construction** —
+`select_y2_twist` skips `X`g lt 1` because `HyperellipticCurve` needs degree >= 3, and both `22_3`
+losses are conics. **Extending twist selection to conics is the next concrete step**, with `22_3`
+as its regression target. This revises the scope note above: `Y2TWIST` is a REPRODUCIBILITY fix for
+the model corpus, not the single-cover curiosity the commit message describes. Still 0 new
+Guo-Yang equations.
+
+### `26_3`: the Mobius anomaly is an `s` <-> `s~` SWAP
+
+At discs `-267` and `-708` Guo-Yang's `s` sits in **our `s~` row**; the other 12 of 14 are correct,
+and `s + s~ = 1` holds at every disc. The exact `z -> z/(z-1)` is just how an `s -> 1-s` swap looks
+after the checker's cross-ratio normalisation — the involution was the shadow, not the cause.
+⚠ NOT a CM-point selection ambiguity (the old framing): both values are the same point, and each
+disc appears exactly once in our table. **Root cause: `s + s~ = 1`, the relation used to pin the
+pair, is SYMMETRIC under exchanging them**, so it cannot resolve the ordering; the signs are forced,
+only the labelling is free. Deliberately NOT fixed — what pins the ordering at the other 12 discs is
+unidentified, and a tie-break without that invariant is a guess. Memory: `26-3-hauptmodul-swap`.
 
 ### Corrections made this session — do not re-derive these
 
