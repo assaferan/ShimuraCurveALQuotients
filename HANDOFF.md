@@ -93,7 +93,38 @@ involution). `22_5` and `14_3` need full-curve models GENERATED, not transcribed
 Six commits, `64d9316`..`36ac71e`, all pushed. **Two of them change code and only ONE of the two
 is fully validated** — read the status column before building on either.
 
-### ✅ X_0^39(2) RECOVERED — 33 of 43
+### ✅ TWO GUO-YANG EQUATIONS RECOVERED — 34 of 43 (`39_2` and `14_3`)
+
+Both were blocked by the **coprime-to-level CM filter**, not by mathematics, and both were filed
+under diagnoses that had gone STALE rather than been wrong. `CMNONCOPRIME=1` (env-gated, OFF by
+default) unblocks them; the published equations are what make the results believable.
+
+    39_2   filed NONINTEGRAL.   filter on: 3 CM points vs demand 19 -> "not enough points".
+           filter off: 24 points, 15 keys 0 empty. W={1} genus-7 hyperelliptic,
+           IsIsomorphic to Guo-Yang in 0.06 s. Pinned in tests/GuoYangEquations.m (9 bases).
+    14_3   covers under-determined by default, W={1} EMPTY (6 keys, 3 populated).
+           filter off: 16 keys, 0 empty. W={1} genus-3 CRV pair, IsIsomorphic in 6817 s.
+           Pinned in tests/_offline/GuoYangCurve_14_3.m -- OFFLINE because ~2 h would wreck
+           GuoYangEquations.m's ~97 s.
+
+`ModelChecks` passes both independently (82 files, 8767 checks, 0 failures) via trace-formula
+point counts rather than the path that produced them.
+
+⚠ **IS EVERYTHING REPRODUCIBLE FROM COMMITTED CODE? NO — and that is partly deliberate.** Of the
+34: **24** are verified BY re-derivation (the `X0_D_N.m` tests run the pipeline, so passing IS
+reproduction); **10** are stored-model comparisons that never run it. Of those 10, four do NOT
+regenerate by default, for two different reasons that should not be conflated:
+* `22_3`, `15_2` — ACCIDENTAL: the y2-scale guard (`1768517`) postdates the files. `Y2TWIST=1`
+  restores them. This is drift, and it went unseen because every test reads the stored model.
+* `39_2`, `14_3` — DELIBERATE: they exist only under `CMNONCOPRIME=1`, which stays off because it
+  has no theoretical guarantee. Their justification is the published equation, not regeneration.
+  Enabling the flag to make them "reproducible" would trade a documented gap for an undocumented
+  risk on every base.
+⇒ The target is NOT "everything regenerates by default", it is "every non-reproducing file has a
+recorded reason and an independent validation" — which is what `MR_KNOWN_DRIFT` and the model
+headers now encode. (`14_5`, `55_1`, `21_2`, `87_1` were still unchecked when this was written.)
+
+### ✅ X_0^39(2) RECOVERED — the first of the two
 
 **The one coverage result of the session.** `39_2` was filed as the NONINTEGRAL malformed-form
 base; that was wrong. It is starved by the **coprime-to-level CM filter**: with the filter on it
@@ -116,8 +147,8 @@ against Guo-Yang, but the genus-5 `W={1}` comparison had not returned when this 
 ### The Guo-Yang picture, measured rather than inherited
 
     43   published equations                    (see the counting trap below)
-    33   we reproduce today, with a test        (24 pipeline X0_D_N.m + 9 GuoYangEquations.m)
-    10   the gap: 8 with no model, + 14_3, 22_5
+    34   we reproduce today, with a test        (24 pipeline + 9 GuoYangEquations + 14_3 offline)
+     9   the gap: 8 with no model, + 22_5
 
 `PLAN.md`'s COVERAGE section had `24` tested and a `10`-base transcription gap; both were stale.
 **TIER 1' is finished as a transcription task** — `57_1` was the last transcribable base
