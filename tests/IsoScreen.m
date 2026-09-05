@@ -20,32 +20,35 @@
 // curves can legitimately disagree and a mismatch proves nothing. On 2026-09-05 an affine screen
 // of 14_3 reported mismatches at p = 13, 29, 53 (12 vs 16, 44 vs 40, 36 vs 32) where the place
 // counts agree (16/16, 44/44, 36/36) -- all three were chart artifacts.
-// ⚠ Do NOT read that episode as "affine counts caught something the places missed". 14_3 did turn
-// out to be non-isomorphic (see below), so the affine screen reached the right verdict BY THE
-// WRONG ROUTE, from differences that carry no information about the curves. An unsound test that
-// happens to agree with the truth once is still unsound, and the next time the chart artifact
-// will point the other way.
+// ⚠ Those three affine "mismatches" were pure chart artifacts and carried no information about
+// the curves -- the place counts (16/16, 44/44, 36/36) are the correct answer at those primes.
 //
 // ⚠ Also do not screen with #Points on a curve in a WeightedProjectiveSpace: it returned nothing
 // at every prime tried (silently, so the run looked like agreement until a guard was added).
 //
 // HOW TO READ THE RESULT. The screen is RELIABLE FOR NEGATIVES, WEAK FOR POSITIVES.
 //   * a MISMATCH at one prime disproves isomorphism outright;
-//   * agreement is NOT proof, and this is not a theoretical caveat -- it FIRED on 2026-09-05.
-//     The 14_3 model produced under CMNONCOPRIME=1 agreed with Guo-Yang's curve at ALL THIRTEEN
-//     primes and is NOT isomorphic to it: their Jacobians are isogenous, so the point counts
-//     agree at every prime while the curves differ. Never commit a model on a passing screen.
+//   * agreement is NOT proof: non-isomorphic curves with isogenous Jacobians agree at every
+//     prime. Never commit a model on a passing screen alone -- get an exact result.
 //
 // WHAT TO DO INSTEAD, when the full curve is too slow (14_3's genus-3 CRV pair ran >1 h):
-// COMPARE THE QUOTIENTS. For y^2=f (deg 4), x^2=g (deg 2) the three double-cover quotients have
-// genus 0, 1 and 2 -- distinguished BY GENUS, so an isomorphism has no freedom in matching them:
-//     genus-1 quotient  y^2 = f
-//     genus-2 quotient  y^2 = f*g
-// Both are small hyperelliptic curves and IsIsomorphic settles them in SECONDS. On 14_3 both came
-// back false, refuting the curve in seconds where the direct call had run over an hour. A second,
-// independent check: a PGL2 base map carries roots of f to roots of f', so the two degree-4 forms
-// must have the SAME Galois group -- 14_3's were C2^2 vs D4, which alone rules out a base-
-// compatible isomorphism.
+// COMPARE THE QUOTIENTS -- but compare them CORRECTLY, which is the trap this file exists to warn
+// about. For y^2=f, x^2=g the three double-cover quotients have distinct genera, and it is
+// tempting to conclude that an isomorphism must match OUR f-quotient to THEIRS. IT NEED NOT.
+// That inference assumes the Klein 4-group is UNIQUE in Aut(C), and it generally is not: on 14_3
+// the full Atkin-Lehner group has 8 elements, W={1} has SEVEN involution quotients (genera
+// 1,2,2,2,0,1,1), and at least two different V4s give a valid 0+1+2 decomposition.
+//
+// Measured on 14_3, 2026-09-05: our W={1} is presented over V4 = {1,2,7,14}, Guo-Yang's over
+// {1,3,14,42} -- DIFFERENT V4s of the same curve. Comparing our presentation's quotients to
+// theirs gave false on both, and I briefly concluded the curves differed. The correct question is
+// "does each of THEIR quotients match ANY of ours", and the answer was yes:
+//     GY genus-1 quotient  ~  our [1,42]      (not the [1,2] in our presentation)
+//     GY genus-2 quotient  ~  our [1,3]       (not [1,6] or [1,7])
+// Likewise the Galois groups of the two degree-4 branch forms differ (C2^2 vs D4) -- that rules
+// out a BASE-COMPATIBLE isomorphism for that pairing, not isomorphism of the curves.
+// ⇒ Enumerate quotients by genus on BOTH sides and look for a consistent matching. Never assume
+// the presentations exhibit the same V4.
 //   * ncmp = 0 means the test was VACUOUS -- report that, never "no mismatches".
 
 // Count degree-1 places of C over GF(p); returns <ok, n>.
@@ -95,9 +98,7 @@ end function;
 
 // Nothing runs at load: this file is a helper, imported as
 //     import "tests/IsoScreen.m" : ScreenByPlaces;
-// Worked example (14_3 against Guo-Yang's z^2=-9x^2-2, y^2=-7x^4+22x^2+1). It reports 13/13
-// consistent -- and those curves are NOT isomorphic. Kept deliberately as the file's own
-// demonstration that a passing screen settles nothing:
+// Worked example (14_3 against Guo-Yang's z^2=-9x^2-2, y^2=-7x^4+22x^2+1), 13/13 consistent:
 //   ScreenByPlaces("14_3", 2*7*3,
 //     func<F,S,Y,X | [ Y^2 + (F!256*S^4 + (F!1792/3)*S^3 + (F!6592/9)*S^2 + (F!1792/3)*S + F!256),
 //                      X^2 + (F!3*S^2 + F!2*S + F!3) ]>,
