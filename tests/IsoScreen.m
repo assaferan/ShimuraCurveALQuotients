@@ -17,11 +17,14 @@
 // projective point count, and it IS an isomorphism invariant.
 //
 // ⚠⚠ DO NOT SCREEN WITH AFFINE POINT COUNTS. They depend on the affine chart, so isomorphic
-// curves can disagree, and a mismatch proves nothing. This is not hypothetical: on 2026-09-05 an
-// affine screen of 14_3 reported mismatches at p = 13, 29, 53 (12 vs 16, 44 vs 40, 36 vs 32) and
-// would have condemned a model that the place counts then matched at ALL THIRTEEN primes. Every
-// one of those three was a chart artifact. Affine counts nearly produced a false NEGATIVE, which
-// is worse than a false positive here -- it discards a correct result.
+// curves can legitimately disagree and a mismatch proves nothing. On 2026-09-05 an affine screen
+// of 14_3 reported mismatches at p = 13, 29, 53 (12 vs 16, 44 vs 40, 36 vs 32) where the place
+// counts agree (16/16, 44/44, 36/36) -- all three were chart artifacts.
+// ⚠ Do NOT read that episode as "affine counts caught something the places missed". 14_3 did turn
+// out to be non-isomorphic (see below), so the affine screen reached the right verdict BY THE
+// WRONG ROUTE, from differences that carry no information about the curves. An unsound test that
+// happens to agree with the truth once is still unsound, and the next time the chart artifact
+// will point the other way.
 //
 // ⚠ Also do not screen with #Points on a curve in a WeightedProjectiveSpace: it returned nothing
 // at every prime tried (silently, so the run looked like agreement until a guard was added).
@@ -92,7 +95,9 @@ end function;
 
 // Nothing runs at load: this file is a helper, imported as
 //     import "tests/IsoScreen.m" : ScreenByPlaces;
-// Worked example (14_3 against Guo-Yang's z^2=-9x^2-2, y^2=-7x^4+22x^2+1), 13/13 consistent:
+// Worked example (14_3 against Guo-Yang's z^2=-9x^2-2, y^2=-7x^4+22x^2+1). It reports 13/13
+// consistent -- and those curves are NOT isomorphic. Kept deliberately as the file's own
+// demonstration that a passing screen settles nothing:
 //   ScreenByPlaces("14_3", 2*7*3,
 //     func<F,S,Y,X | [ Y^2 + (F!256*S^4 + (F!1792/3)*S^3 + (F!6592/9)*S^2 + (F!1792/3)*S + F!256),
 //                      X^2 + (F!3*S^2 + F!2*S + F!3) ]>,
