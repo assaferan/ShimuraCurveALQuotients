@@ -730,7 +730,7 @@ Let $\gamma$ have lower row $(c,d)$ with class $g$, and let
 $\widetilde\gamma$ be its canonical metaplectic lift. Then
 $(\rho_{\bar A}(\widetilde\gamma)e_0)_{\eta^*}$:
 \begin{enumerate}
-\item vanishes iff $N\mid g$;
+\item vanishes iff $N\mid g$ or $c\equiv2\pmod4$;
 \item has absolute value $g/\sqrt{|A|}$ for odd $g$ and $g/M$ for $4\mid g$;
 \item for odd $g$ and the canonical representative ($a=d=1$, $c=-g$) equals
 $(g/\sqrt{|A|})\,e_8(E_0(g))$ with
@@ -748,11 +748,17 @@ in particular $E_0$ is independent of the base $(D,N)$;
 By \cite[Thm.~6.4]{Stromberg2013}, for $x=0$ the $\eta^*$-component of
 $\rho_{\bar A}(\widetilde\gamma)e_0$ is the \emph{single} term
 $\xi(a,c)\sqrt{|A[c]|/|A|}\;e(ac\,\bar q(y_0)+B(x_c,y_0))$ if
-$\eta^*\in cA+x_c$ (with $cy_0+x_c=\eta^*$), and $0$ otherwise. (i): the element $x_c$ is
-$2$-adic, and for $N\mid c$ the $N$-part of $cA$ is trivial while $\eta^*$ has nonzero
-$N$-part, so the support condition fails; conversely for $N\nmid g$ it holds. (ii):
-$|A[c]|=\prod_{p\mid g\ \mathrm{odd}}p^2$ times $8$ if $4\mid c$, and
-$|A|=M^2/2$. (iii): choose $y_0$ inside the $N$-part; then
+$\eta^*\in cA+x_c$ (with $cy_0+x_c=\eta^*$), and $0$ otherwise. (i): for $N\mid c$ the $N$-part of $cA$ is trivial while $\eta^*$ has nonzero
+$N$-part, so the support condition fails. It also fails when $c\equiv2\pmod4$: by
+\cite[Lem.~2.4]{Stromberg2013} the $2$-adic element $x_c$ is nonzero exactly when
+$2\,\|\,c$, since $A_2$ carries an odd Jordan component of scale $2$
+(Proposition~\ref{prop:jordan}); then $x_c$ has nonzero $2$-part while $cA$ has trivial
+$2$-part, so no element of $cA+x_c$ has trivial $2$-part, whereas every nonzero isotropic
+$\eta^*$ does (isotropy splits $2$-adically, the odd part having odd order). Conversely
+for $N\nmid g$ and $c\not\equiv2\pmod4$ the support condition holds. (ii):
+$|A[c]|=\prod_{p\mid g\ \mathrm{odd}}p^2$ times $8$ if $2\mid c$, and
+$|A|=M^2/2$; the $2$-part is annihilated already at $2\mid c$ because $A_2\cong(\Z/2)^3$
+has \emph{exponent} $2$, although its level is $4$. (iii): choose $y_0$ inside the $N$-part; then
 $\bar q(y_0)=c^{-2}\bar q(\eta^*)=0$ and (for odd $c$) $x_c=0$, so the phase is exactly
 $\xi(a,c)$, which \cite[Def.~6.1]{Stromberg2013} factors as
 $e_4(-\mathrm{sign})\,\xi_0\,\xi_2\prod_J\xi(J)$ over the Jordan components of

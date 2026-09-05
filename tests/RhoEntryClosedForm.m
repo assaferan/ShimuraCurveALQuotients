@@ -31,14 +31,21 @@
 // canonical-representative normalisation pinned first; claiming them here would overstate what is
 // verified.
 //
-// ⚠⚠ A GAP IN THE PAPER, found by writing this test (2026-09-05). thm:rhoentry (ii) gives the
-// absolute value for ODD g and for 4 | g, and says NOTHING about g = 2 mod 4. Those cases occur:
-// at X0^6(1) and X0^10(1) they are g = 2, 6, 10. Measured, every one of them has
-//     |entry| = 2g/M        (i.e. |entry|^2 = 4g^2/M^2, exactly 4x the 4|g formula)
-// -- 8 of 8 such gamma, consistently. An earlier draft of this test applied the 4|g formula there
-// and reported 8 "failures"; they were the test's error, not a divergence. The cases are now
-// SKIPPED rather than asserted, because asserting a formula the paper does not state would be
-// inventing theory. Worth adding to thm:rhoentry as a third case.
+// ⚠⚠ WHAT THIS TEST FOUND, AND HOW IT WAS WRONG THE FIRST TIME (2026-09-05).
+// Writing it exposed TWO errors in thm:rhoentry, both now corrected in level-prime-kappa.tex:
+//   * the proof's |A[c]| said "times 8 if 4 | c"; it is 2 | c. A_2 = (Z/2)^3 has EXPONENT 2
+//     though its LEVEL is 4, and the proof conflated the two. Verified at 14 bases, c = 1..3M.
+//   * statement (i) said "vanishes iff N | g"; it is "N | g OR c = 2 mod 4". The extra case is
+//     Stromberg Lem. 2.4: x_c != 0 exactly when 2 || c.
+// ⚠ AND HOW I GOT IT WRONG: an earlier draft of this test measured |entry| = 2g/M at
+// g = 2 mod 4 and proposed adding it to (ii) as a third case. That was measuring the WRONG
+// COSETS. (ii) is about the entry at a nonzero ISOTROPIC eta*, and 6_1/10_1 have NO nonzero
+// isotropic cosets (1 of 72, 1 of 200); 2g/M is the modulus at the non-isotropic cosets that
+// carry the support. At the real eta* the entry is exactly zero there. A hostile review caught
+// it one step before it reached the paper. The lesson is the repo's own: check WHICH OBJECT.
+//
+// ⚠ SCOPE. |A| = M^2/2 is an EVEN-DN statement -- at 15_1 (odd DN) |A| = 450, not 1800 -- so the
+// bases below are all even DN. This does NOT check (iii)'s e_8(E_0(g)) phase or (iv).
 
 printf "Checking rho-entry against the preprint's thm:rhoentry closed form...\n";
 
@@ -108,10 +115,20 @@ for re_DN in [ [6,1], [10,1] ] do
         // entry of the column has that modulus. If the prediction is eta*-specific rather than
         // uniform across the column, this reports it as a mismatch -- which is information, not
         // a bug in the test, and the printed values say which.
-        // ⚠ thm:rhoentry (ii) covers ONLY odd g and 4 | g. It says nothing about g = 2 mod 4,
-        // so predicting there would be testing a claim the paper does not make. Skipped, and
-        // the observation recorded below rather than asserted.
-        if (re_g mod 4) eq 2 then continue; end if;
+        // g = 2 mod 4: the paper (as amended 2026-09-05) says the entry VANISHES there, so
+        // assert exactly that rather than an absolute value. The mechanism is Stromberg
+        // Lem. 2.4: x_c != 0 exactly when 2 || c, and then nothing in cA + x_c has trivial
+        // 2-part -- so the e_0 entry, which does, drops out of the support.
+        if (re_g mod 4) eq 2 then
+            re_total +:= 1; re_checked_here +:= 1;
+            if re_rho[re_i0, re_i0] ne 0 then
+                re_fail +:= 1;
+                Append(~re_bad, Sprintf("%o_%o c=%o g=%o: e_0 entry is %o, expected 0 "
+                                        * "(g = 2 mod 4 must vanish)",
+                                        re_D, re_N, re_c, re_g, re_rho[re_i0, re_i0]));
+            end if;
+            continue;
+        end if;
         re_total +:= 1; re_checked_here +:= 1;
         re_pred2 := IsOdd(re_g) select (Rationals()!re_g)^2 / re_A
                                   else (Rationals()!re_g)^2 / (Rationals()!re_M)^2;
