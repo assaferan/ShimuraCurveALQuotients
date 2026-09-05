@@ -580,8 +580,23 @@ equation base at all.
 * `69_1` — non-rational value (`RationalNumber` failure), the embedding-selection class.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
   40 GB, stuck inside `BorcherdsForms`.
-* `26_3` — **open anomaly**: CM table runs, but 2 of 11 values are off by exactly the Mobius
-  involution `z -> z/(z-1)`. Unexplained.
+* `26_3` — **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
+  and `-708` Guo-Yang's `s` sits in **our `s~` row** (`sIndex = 7` is `s`, row 9 is `s~`); the
+  other 12 of 14 discs are correct. `s + s~ = 1` holds at EVERY disc (`8/25 + 17/25`,
+  `11/49 + 38/49`, ...), and the exact `z -> z/(z-1)` is simply how an `s -> 1-s` swap looks after
+  the checker's cross-ratio normalisation — the involution was the shadow, not the cause. The
+  Mobius map from GY's coordinate to ours is `phi(w) = (1-w)/2`, verified on all nine
+  non-reference rows.
+  ⚠ **It is NOT a CM-point selection ambiguity** (the old description). Both values are the same
+  point, different hauptmodul; and our table has each disc exactly ONCE (multiplicity checked).
+  **Root cause:** the pair is pinned by `s + s~ = 1` (`find_signs_hauptmodul`), and that constraint
+  is **symmetric under exchanging `s` and `s~`** — `8/25 + 17/25 = 1` reads the same either way —
+  so the relation meant to resolve the ordering structurally cannot. The signs themselves are
+  forced (only `+ +` sums to 1); the freedom is purely in the LABELLING.
+  ⇒ **Before fixing: identify what pins the ordering at the other 12 discs.** Something is doing
+  real work there, and adding a tie-break without knowing the intended invariant is guessing.
+  ⚠ Also NOT established: that this swap is why `26_3` has no model. It may be an independent
+  cosmetic defect. Write-up: memory `26-3-hauptmodul-swap`.
 
 **⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
 ANY triage record — no `INTSOL`, no `BASEVERD`, nothing. They had simply never been run. One
