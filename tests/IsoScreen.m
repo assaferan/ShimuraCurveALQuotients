@@ -26,12 +26,23 @@
 // ⚠ Also do not screen with #Points on a curve in a WeightedProjectiveSpace: it returned nothing
 // at every prime tried (silently, so the run looked like agreement until a guard was added).
 //
-// HOW TO READ THE RESULT.
+// HOW TO READ THE RESULT. The screen is RELIABLE FOR NEGATIVES, WEAK FOR POSITIVES.
 //   * a MISMATCH at one prime disproves isomorphism outright;
-//   * agreement over many primes is STRONG EVIDENCE, not proof -- non-isomorphic curves can share
-//     point counts. Before committing a model, still get an exact IsIsomorphic (a hyperelliptic
-//     quotient is often tractable when the full curve is not: 26_3's genus-2 [1,78] cover settled
-//     in seconds where its genus-5 W={1} did not).
+//   * agreement is NOT proof, and this is not a theoretical caveat -- it FIRED on 2026-09-05.
+//     The 14_3 model produced under CMNONCOPRIME=1 agreed with Guo-Yang's curve at ALL THIRTEEN
+//     primes and is NOT isomorphic to it: their Jacobians are isogenous, so the point counts
+//     agree at every prime while the curves differ. Never commit a model on a passing screen.
+//
+// WHAT TO DO INSTEAD, when the full curve is too slow (14_3's genus-3 CRV pair ran >1 h):
+// COMPARE THE QUOTIENTS. For y^2=f (deg 4), x^2=g (deg 2) the three double-cover quotients have
+// genus 0, 1 and 2 -- distinguished BY GENUS, so an isomorphism has no freedom in matching them:
+//     genus-1 quotient  y^2 = f
+//     genus-2 quotient  y^2 = f*g
+// Both are small hyperelliptic curves and IsIsomorphic settles them in SECONDS. On 14_3 both came
+// back false, refuting the curve in seconds where the direct call had run over an hour. A second,
+// independent check: a PGL2 base map carries roots of f to roots of f', so the two degree-4 forms
+// must have the SAME Galois group -- 14_3's were C2^2 vs D4, which alone rules out a base-
+// compatible isomorphism.
 //   * ncmp = 0 means the test was VACUOUS -- report that, never "no mismatches".
 
 // Count degree-1 places of C over GF(p); returns <ok, n>.
