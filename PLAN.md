@@ -570,10 +570,22 @@ authoring, with these three recorded in `MR_KNOWN_DRIFT`.
     15_2    FULLY   12/12 keys; one cover ([1,2,3,6]) differs in presentation but IsIsomorphic
     22_3    13/14   missing [1,3,22,66], and [1,66] loses 1 of its 3 entries
 
-⇒ **The residual gap is GENUS 0, by construction.** `select_y2_twist` returns false for
-`X`g lt 1` because `HyperellipticCurve` needs degree >= 3, so unscaled *conics* are still dropped —
-both `22_3` losses are genus 0. **Extending twist selection to conics is the concrete next step**,
-and `22_3` is its ready-made regression target.
+⇒ **The residual gap is GENUS 0** — both `22_3` losses are conics, which `select_y2_twist` skips
+(`X`g lt 1`, since `HyperellipticCurve` needs degree >= 3).
+⚠⚠ **"Extend twist selection to conics" was recorded here as the next step. It is IMPOSSIBLE, and
+the guard is CORRECT — do not attempt it.** *(measured 2026-09-05, before implementing)* Every
+quadratic twist of a conic has **exactly `p+1` points over `F_p`**, for every `p`: probed
+`d = 1,-1,2,-2,3,-3` at `p = 3..23` on `22_3`'s own `[1,66]` conic `y^2 = 4x^2+1`, and every row is
+constant. The reason is structural — a smooth conic over a finite field always has a rational point
+(Chevalley-Warning), so it is isomorphic to `P^1` and its count is `p+1` regardless of twist. The
+trace formula returns `p+1` too, so **the discriminator is vacuous in genus 0**. Extending the
+selector would make every candidate "match", give `#good ne 1`, and defer exactly as now — same
+behaviour, more work.
+⇒ **What would actually pin a conic's twist is a different mechanism.** Over `Q` conic twists are
+separated by rational solubility / Hilbert symbols, not by reductions, and we have no independent
+source of truth for that here (the trace formula is blind). The route the pipeline already has is
+`backfill_deferred`: a genus-0 cover under a DETERMINED higher cover is pinned as its quotient. So
+this is a **back-fill** problem, not a twist-selection one.
 ⚠ Also measured: at `22_3` the selector reported `0 twist(s) matched` for `W={1,2,3,6}` — a clean
 negative, not an ambiguity. Worth understanding before widening the candidate set.
 
@@ -623,8 +635,22 @@ equation base at all.
   forced (only `+ +` sums to 1); the freedom is purely in the LABELLING.
   ⇒ **Before fixing: identify what pins the ordering at the other 12 discs.** Something is doing
   real work there, and adding a tie-break without knowing the intended invariant is guessing.
-  ⚠ Also NOT established: that this swap is why `26_3` has no model. It may be an independent
-  cosmetic defect. Write-up: memory `26-3-hauptmodul-swap`.
+  ⚠⚠ **THE SWAP IS *NOT* WHY `26_3` HAS NO MODEL — measured 2026-09-05, and this closes the
+  question flagged as open here.** Re-run against current code, `26_3` dies much earlier:
+  `Computing absolute values at CM points...Runtime error: Could not find enough points, sorry!`
+  It is **CM-STARVED**, confirmed by `cmsupply`:
+
+      BASE 26 3 demand 9 genera [ 0, 0, 0, 1, 1, 1, 2 ]
+      POOL rat 3 quad 0 include 3
+      CMVERD 26 3 SHORT margin -5
+
+  — the first `SHORT` verdict measured this session (`14_3` and `22_5` are `OK margin 0`), with
+  only 3 rational CM points and **ZERO** quadratic ones against demand 9.
+  ⚠ **`Targets` cannot rescue it**, unlike the usual CM-supply story: demand is `max(2g+5)` over the
+  targeted covers, so even restricting to the genus-0 covers gives `2*0+5 = 5`, still above the ~4
+  points available. So `26_3` is blocked on genuinely absent CM points, and the `s` <-> `s~` swap is
+  a separate, probably cosmetic, defect. Fixing the swap would NOT unblock the model.
+  Write-up: memory `26-3-hauptmodul-swap`.
 
 **⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
 ANY triage record — no `INTSOL`, no `BASEVERD`, nothing. They had simply never been run. One
