@@ -823,10 +823,45 @@ by THREE independent CM values, which fixes it completely and therefore fixes it
 other discriminant — exactly the tie-break that `s + s~ = 1` cannot supply, and from a source that
 shares no machinery with either us or Guo-Yang.
 
-**Next step if `26_3` is picked up:** pin our hauptmodul against Tu's normalisation at `-312`,
-`-24`, `-8`, then compare the predicted values at `-267` and `-708` with ours and with Guo-Yang's.
-⚠ Check the convention first — Tu's `t_1` is `x^2` on HIS model of `/<w_2>`, so relating it to our
-hauptmodul needs the Mobius transformation pinned by those three points, not assumed.
+**WORKED OUT 2026-09-06 — the Mobius map, and what Tu can and cannot do.**
+
+Guo-Yang normalise `s(-8) = oo`, `s(-24) = 0`, `s(-11) = 1`; Tu normalises `t_1(-312) = oo`,
+`t_1(-24) = 0`, `t_1(-8) = -1/8`. Those three shared discriminants pin the map completely:
+
+        t_1 = -s / (8s + 3)
+
+(check: `s=0 -> 0`; `s=oo -> -1/8`; `s=-3/8 -> oo`.)
+
+⚠ **Tu does NOT directly resolve the swap.** His discriminants are `-312, -24, -8, -104`; the two
+swapped rows are `-267` and `-708`, and there is **no overlap**. What he DOES give is
+* an independent confirmation of the normalisation (three points), and
+* a value set at **`-104`, which is COPRIME to `N = 3`** — so our pipeline computes it under the
+  default filter, giving this base an external check it has never had. Tu: the `t_1`-values at
+  `-104` are the roots of `f_1(z) = -2197z^3/3 - 362z^2 - 55z - 8/3`.
+
+**⚠ A HYPOTHESIS FOR THE ORDERING, TESTED AND REFUTED.** Guo-Yang's table carries a second column,
+`x` on `X_0^26(3)/<w_3,w_26>` with `s = x^2`, so `s` must be a SQUARE while `s~ = 1-s` generally is
+not — an invariant the symmetric `s + s~ = 1` cannot see. Tested on all 14 published rows asking
+whether `s` is a square in `Q(sqrt(d))`: **it fails — 9 of 13 rows have NEITHER `s` nor `1-s` a
+square there**, and only 2 separate. The reason is visible in the `x` column: those values live in
+`Q(i)`, `Q(sqrt(-3))`, `Q(sqrt(3))`, `Q(sqrt(-15))`, `Q(sqrt(-6))` — **not** in `Q(sqrt(d))`. So
+the field is the CM point's FIELD OF DEFINITION (genus theory / ring class field), not the naive
+CM field, and testing in `Q(sqrt(d))` is a wrong-object error.
+
+⇒ **The criterion is right in shape and wrong in field:** `s(tau_d)` is pinned by being a square in
+the CORRECT field, which is exactly Guo-Yang's own phrase ("only one of them is in the correct
+field"). Determining that field per discriminant is the actual work, and it is the answer to
+"what pins the ordering at the other 12 discs".
+
+**Recommended sequence for `26_3`:**
+1. compute our hauptmodul at `-104` and check it against Tu's cubic — an external validation of
+   this base that costs nothing extra and is independent of Guo-Yang;
+2. work out the field of definition per discriminant and confirm it separates `s` from `s~` at all
+   14 rows (it must, or Guo-Yang could not have built the table);
+3. use that as the tie-break in `find_signs_hauptmodul`, then relax the coprime filter for `26_3`
+   and run — the pool goes 3 -> 21 against demand 9;
+4. validate the resulting model against Guo-Yang's published equation for `26_3`
+   (`y^2 = x^6 - 2x^4 + 9x^2 + 8` in the journal version).
 
 #### CAN THE `15_4` ROUTE BE GENERALISED? — scoped 2026-09-06
 
