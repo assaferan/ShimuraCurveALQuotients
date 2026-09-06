@@ -153,8 +153,22 @@ Of the 36 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator 
 base in `GuoYangEquations.m` for which that is true. Its three cover keys `[1,3] [1,31] [1,93]` are
 pinned against Guo-Yang; the `W={1}` entry is their fibre product and is validated only
 structurally (`ModelChecks`). Closing that gap needs an offline full-curve test.
-⚠ `21_2` and `57_1` report `OK` with **1 CRV skipped** — `ModelRegen` cannot rebuild `CRV` entries
-because the model file does not record the ambient weights, and for those two the `CRV` entry IS
-the `W={1}` full curve. So their *hyperelliptic covers* are known to regenerate; their full curves
-are validated against Guo-Yang but not shown to regenerate. Closing that gap means recording the
-weights (recoverable: `y`'s weight is half the degree of its defining polynomial).
+⚠ `21_2` and `57_1` report `OK` with **1 CRV skipped** — `ModelRegen` cannot rebuild `CRV` entries,
+and for those two the `CRV` entry IS the `W={1}` full curve. So their *hyperelliptic covers* are
+known to regenerate; their full curves are validated against Guo-Yang but not shown to regenerate.
+
+✅ **The stated blocker for that is GONE (2026-09-06): the weights do NOT need recording.** They are
+derivable — `y`'s weight is half the degree of its own equation, every other variable has weight 1 —
+and `tests/CRVStructure.m` verifies that derivation reconstructs **16 of 21** stored `CRV` entries
+exactly (irreducible, and the genus matches the one recorded beside it). No data migration is
+needed; `ModelRegen` and the `X0_*` helper can derive the ambient space when they need it.
+
+⚠⚠ **AND IT FOUND A REAL DEFECT: 5 `CRV` entries are DEGENERATE as stored.** `10_3` (four keys) and
+`22_3` `[1,3]` each store the SAME equation twice, up to `y` <-> `x` — e.g.
+`y^2 + 7/20*s^2 - 43/20*s*z + 2*z^2` alongside `x^2 + (the identical form)`. Then `y^2 = x^2`, the
+scheme is REDUCIBLE (measured), and it cannot be the genus-1 curve recorded beside it. A fibre
+product of a double cover with itself is reducible by construction, so this looks like two covers
+with the same equation being paired as though independent.
+**Nothing had ever checked these**, because `VerifyModelSet` skips every `CRV` entry. They are
+listed in `CRVStructure.m`'s `CRV_KNOWN_BAD` — documented, not accommodated. Repair them and shrink
+the list; the test fails if the list goes stale in either direction.
