@@ -776,6 +776,51 @@ whose star check compares `W` against `Set(Divisors(D*N))` -- but the AL group i
 divisors, and `DN = 60` has 12 divisors to 8 Hall divisors, so it CANNOT pass (same at `10_9`,
 `21_4`). Fixing that indexing would still not produce `15_4`, because of Remark 39.
 
+#### CAN THE `15_4` ROUTE BE GENERALISED? — scoped 2026-09-06
+
+**The target set is 9 bases, not hundreds.** Of 246 `D>1` non-squarefree-`N` entries in
+`GetHyperellipticCandidates`, only **9 carry a `W={1}` full curve** and are therefore real model
+targets:
+
+    6_25 (g5)  6_49 (g9)  10_9 (g5)  14_9 (g7)  15_4 (g5, DONE)  15_8 (g9)  21_4 (g7)
+    22_9 (g11) 33_4 (g11)
+
+**What generalises: the VALIDATION half, and it is worth having.** `ComputePointsViaTrace` and the
+Shimura genus formula run fine on non-squarefree bases — that is exactly what pinned `15_4`'s two
+constants, and it is an oracle for a whole class the pipeline cannot otherwise touch. Any candidate
+model for these 9 can be checked the same way.
+
+**What does NOT generalise: the GENERATION half.** `15_4` worked because Tu (Pacific J. Math. 269
+(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote. Nothing
+supplies that for the other 8. Two possible routes:
+* **the Hall-divisor refactor** (index `W` by Hall divisors; lift `assert IsSquarefree(N)`), which
+  only helps where Guo-Yang's obstruction is ABSENT;
+* **external Hauptmoduls** — Tu's paper is about genus-zero Shimura curves generally, so it may
+  cover more of these. We do not have it; it is not in the user's Dropbox.
+
+**⚠ A PREDICTION, NOT A MEASUREMENT — which of the 8 are only CODE-blocked.** Guo-Yang's
+obstruction is that `N^+_B(O)` strictly contains the Atkin-Lehner group. By analogy with
+Atkin-Lehner-Newman for `Gamma_0(N)` — where the normalizer exceeds the AL group exactly when
+`h > 1` for `h` the largest divisor of **24** with `h^2 | N` — one expects:
+
+| base | `N` | `h` | expected |
+|---|---|---|---|
+| `6_25` | 25 | 1 (5 does not divide 24) | **no obstruction — possibly only code-blocked** |
+| `6_49` | 49 | 1 (7 does not divide 24) | **no obstruction — possibly only code-blocked** |
+| `15_4`, `21_4`, `33_4` | 4 | 2 | obstruction — matches Guo-Yang's Remark 39 ✓ |
+| `15_8` | 8 | 2 | obstruction |
+| `10_9`, `14_9`, `22_9` | 9 | 3 | obstruction |
+
+The single confirming data point is `15_4` itself, where the criterion agrees with Guo-Yang.
+⚠ **I could not COMPUTE this.** `TwoSidedIdealClassGroup(O)` returns 1 for all nine INCLUDING
+`15_4` — it fails the positive control, so it is not measuring `N^+_B(O)/Q^*O^*` and its output must
+not be quoted. Until someone computes the normalizer properly (or reads Michon/Ogg on normalizers
+of Eichler orders), the table above is an **analogy with one confirmation**, not a result.
+
+⇒ **Recommended if this is pursued:** test the prediction at `6_25` or `6_49` — they are the only
+two where the payoff (a base reachable by fixing code) justifies the Hall-divisor refactor. Confirm
+the normalizer claim FIRST; the refactor is wasted if the obstruction is present anyway.
+
 #### ⚠ WE HAVE BEEN READING THE SUPERSEDED VERSION
 
 arXiv has exactly **one** version (v1, 2015-10-21). The paper of record is **Compositio Math. 153
