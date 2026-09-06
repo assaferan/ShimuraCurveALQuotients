@@ -26,6 +26,7 @@ drops Magma into its interpreter and blocks forever.
 | `22_5` | `Y2TWIST=1` | the unpinned-y2-scale guard (`1768517`) POSTDATES the file, so default regeneration withholds `[1,2,5,10]` | restores 3/3 covers, coefficient-for-coefficient |
 | `15_2` | `Y2TWIST=1` | same guard | restores 12/12 keys (one cover up to isomorphism) |
 | `22_3` | `Y2TWIST=1` | same guard | restores 13/14; `[1,3,22,66]` and one `[1,66]` entry are **still lost** — both genus-0 conics, which `select_y2_twist` skips by construction |
+| `26_3` | `CMNONCOPRIME=1` | the default filter admits only 3 of Guo-Yang's 14 discriminants (only `-8, -11, -20` are coprime to `N=3`) against demand 9, and the base dies at "Could not find enough points"; with the filter off the pool is 21 | `tests/GuoYangEquations.m` — the full `V_4` diagram matches Guo-Yang: `[1,78]` and `[1,3]` `IsIsomorphic` to their genus-2 and genus-3 quotients, and `[1,26]` entry 2 IS their conic `-8x^2-3` coefficient for coefficient |
 | `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
 So, e.g.:
@@ -38,10 +39,19 @@ So, e.g.:
   committed. `Y2TWIST=1` decides the quadratic twist by Eichler-Selberg point count instead of
   dropping the cover, and restores them. This is a defect to repair: the right long-term fix is to
   make that selection the default once it is trusted.
-* **`39_2`, `14_3` — DELIBERATE.** These exist only under `CMNONCOPRIME=1`, which is **off by
-  default because it has no theoretical guarantee**: the `p | gcd(d,N)` local factor has no live
+* **`39_2`, `14_3`, `26_3` — DELIBERATE.** These exist only under `CMNONCOPRIME=1`, which is **off
+  by default because it has no theoretical guarantee**: the `p | gcd(d,N)` local factor has no live
   implementation (`kappaminuszero` is dead code), and at `26_3` two non-coprime discriminants give
-  provably wrong values. Their justification is the **published equation**, not regeneration.
+  provably wrong values.
+  ⚠ **BUT THE STATED JUSTIFICATION FOR THE GUARD IS NOW IN DOUBT (2026-09-06).** `26_3` is the base
+  whose two bad discriminants (`-267`, `-708`) are the whole reason the filter exists — and with
+  the filter OFF, so those rows are admitted, `26_3` produces a model whose every quotient is
+  isomorphic to Guo-Yang's, with the conic matching coefficient for coefficient. The two wrong
+  values are evidently not load-bearing for the covers. Three bases now produce GY-matching models
+  with the guard off (`39_2`, `14_3`, `26_3`) and none is known to be harmed by it.
+  ⇒ A sweep of the 25 `X0_D_N.m` re-derivation tests under `CMNONCOPRIME=1` is the evidence needed
+  to decide whether the guard should become off-by-default. Until that finishes, the flag stays
+  opt-in. Their justification is the **published equation**, not regeneration.
   **Do not turn the flag on globally to make them "reproducible"** — that trades a documented gap
   for an undocumented risk on every base.
 
