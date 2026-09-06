@@ -739,33 +739,49 @@ survives re-presentation. `Aut` has 4-8 elements, so the search is cheap.
 
 ### (b) CRV pairs (double covers of POINTLESS CONICS): `IsIsomorphic` HANGS
 
-⚠ **Do not call `IsIsomorphic` on these at all.** Cost depends violently on PRESENTATION, not
-genus — measured in `tests/IsoScreen.m`:
+⚠ **Do not call `IsIsomorphic` on these.** Cost depends violently on PRESENTATION, not genus —
+measured in `tests/IsoScreen.m`:
 
     39_2  W={1}  hyperelliptic, genus 7   0.06 s
     21_2  W={1}  CRV pair,      genus 3   ~100 s
     14_3  W={1}  CRV pair,      genus 3   >50 min
     26_3  W={1}  CRV pair,      genus 5   >1 h
 
-⇒ **Use instead, in this order:**
-1. **`ScreenByPlaces`** (already written, `tests/IsoScreen.m`, importable) — degree-1 places of the
-   function field, i.e. the smooth projective point count, which IS an isomorphism invariant.
-   DECISIVE ON MISMATCH, weak on agreement (isogenous Jacobians agree at every prime).
-   ⚠ Never screen with affine counts (chart-dependent; three false mismatches at `14_3`) nor with
-   `#Points` in a `WeightedProjectiveSpace` (returns nothing, silently).
-2. **Trace-formula point counts** against `ComputePointsViaTrace` — the `tests/CRV_15_4.m` pattern.
-   Independent of the Borcherds/Schofer path, and demonstrably DISCRIMINATING: it pinned `15_4`'s
-   conic constant (`b = -1` matched at all 12 primes; 13 alternatives each failed at 4-6) where
-   `VerifyModelSet` was vacuous for that constant.
-3. **Quotient comparison** — ⚠ carefully. The `V_4` need NOT be unique: at `14_3` the full AL group
-   has 8 elements, `W={1}` has SEVEN involution quotients, and at least two different `V_4`s give a
-   valid 0+1+2 decomposition. Match quotients BY ISOMORPHISM TESTING, never by assuming genus
-   determines the pairing (that assumption once produced a confident refutation of a model later
-   proved isomorphic).
+⚠⚠ **AND THE REPLACEMENT MUST STILL PROVE ISOMORPHISM** (assaferan, 2026-09-06 — correcting an
+earlier version of this section that proposed screens as the substitute). `IsIsomorphism(phi)` on
+an explicitly EXHIBITED map is a **proof**; `ScreenByPlaces` and trace-formula point counts are
+**not** — `IsoScreen.m` says so itself: non-isomorphic curves with isogenous Jacobians agree at
+every prime. Screens can only ever REFUTE. The manual check is right in KIND; its only defect is
+that it hardcodes one matrix and so breaks under re-presentation.
 
-⇒ Sequencing note: (a) is a contained change to the helper. (b) is really "the helper should not
-be asked to compare CRV entries at all" — `ModelRegen` and the generated `X0_*` tests already skip
-them, and `CRV_15_4.m` shows what a real CRV check looks like.
+⇒ **Keep the proof, drop the hardcoding — CONSTRUCT the isomorphism from the known shape.**
+For `C: y^2 = f(x), z^2 = g(x)` and `C': Y^2 = F(x), Z^2 = G(x)`, an isomorphism that respects the
+labelled Atkin-Lehner involutions descends to the common genus-0 base, where it is a **Mobius
+transformation** `mu`, together with scalings of `y` and `z`. And `mu` must carry branch locus to
+branch locus. That makes the candidate set FINITE and small:
+* `g` has degree 2 (the conic), so `mu` maps its 2 roots to `G`'s 2 roots — **2 ways**;
+* one further correspondence among the roots of `f` (degree 6) fixes `mu` completely — **6 ways**;
+* so **~12 candidate Mobius maps**, each then determined; solve for the scalars from
+  `f(mu(x)) = lambda^2 * (denominator)^k * F(x)` and likewise for `g`;
+* build the explicit map and verify it with `IsIsomorphism`. **That is a proof**, and it never
+  calls the generic routine that hangs.
+If no candidate verifies, the curves are genuinely not isomorphic **through a V_4-respecting map** —
+which, when the involutions are labelled, is the statement we actually want.
+
+⇒ **Screens keep a legitimate but DEMOTED role**: a fast pre-filter that fails early at a bad prime
+before any candidate is constructed. `ScreenByPlaces` (already written and importable) is the tool;
+⚠ never screen with affine counts (chart-dependent — three false mismatches at `14_3`) nor with
+`#Points` in a `WeightedProjectiveSpace` (returns nothing, silently).
+
+⚠ **The `V_4` is not unique** — at `14_3` the AL group has 8 elements, `W={1}` has SEVEN involution
+quotients, and at least two different `V_4`s give a valid 0+1+2 decomposition. The construction
+above sidesteps this only because the involutions are LABELLED; without labels, do not assume genus
+determines the pairing (that assumption once produced a confident refutation of a model later
+proved isomorphic).
+
+⇒ Sequencing note: (a) is done (`981618b`). (b) needs the ambient weights recorded in the model
+files before it can be wired into the helper — the same gap `PROVENANCE.md` flags for `21_2`/`57_1`
+and `ModelRegen`. `CRV_15_4.m` is the current stand-in and is honest about being point-counts only.
 
 ## COVERAGE — reproducing Guo-Yang's published equations
 
