@@ -776,6 +776,58 @@ whose star check compares `W` against `Set(Divisors(D*N))` -- but the AL group i
 divisors, and `DN = 60` has 12 divisors to 8 Hall divisors, so it CANNOT pass (same at `10_9`,
 `21_4`). Fixing that indexing would still not produce `15_4`, because of Remark 39.
 
+#### TU'S PAPER: OBTAINED 2026-09-06 — and it answers the generalisation question NO
+
+**It is NOT on arXiv** (searched by title and by author; his arXiv record has no such paper —
+`1112.1001` is a different Tu-Yang paper on hypergeometric transformations). It IS freely
+downloadable from the publisher:
+
+    F.-T. Tu, "Schwarzian differential equations associated to Shimura curves of genus zero",
+    Pacific J. Math. 269 (2014) 453-489.
+    https://msp.org/pjm/2014/269-2/p14.xhtml   (PDF: .../pjm-v269-n2-p14-s.pdf, ~440 KB, free)
+
+**It CONFIRMS our `15_4` transcription exactly.** Lemma 13(3): a Hauptmodul `t_4` for
+`X_0^15(4)/W_15` taking `+-1/sqrt(-3)`, `+-sqrt(-15)/5`, `(+-1+-sqrt(-15))/8` at discriminants
+`-12, -15, -60`, with `t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3)`. Character for character what
+Guo-Yang quote and what `models_15_4.m` rests on.
+
+**⇒ IT DOES NOT UNLOCK ANY OTHER NON-SQUAREFREE BASE.** Tu treats
+`6_{1,5,7,13}`, `10_{1,3,7}`, `14_{1,3,5}`, `15_{1,2,4}`, `21_{1,2}`, `26_{1,3}`, `35_{1,2}`,
+`39_{1,2}` — **`15_4` is the only non-squarefree case in the paper**, and NONE of the eight
+remaining targets (`6_25 6_49 10_9 14_9 15_8 21_4 22_9 33_4`) appears. So the "external
+Hauptmoduls" route listed above is CLOSED for them; only the Hall-divisor refactor remains, and
+only where the normalizer obstruction is absent.
+
+#### ⇒ BUT TU COVERS `26_3`, WHICH IS A LIVE BLOCKER — a concrete route to the s/s~ problem
+
+Tu's Lemmas 18-20 give, for `X_0^26(3)`, data that is independent of Guo-Yang AND of our pipeline:
+
+* **Lemma 18** — three genus-1 quotients as explicit elliptic curves over Q:
+  `X_0^26(3)/<w_2,w_3>: y^2 = x^3 - 3403x - 83834` (26B2),
+  `X_0^26(3)/<w_2,w_39>: y^2 = x^3 - 43x + 166` (26B1),
+  `X_0^26(3)/<w_6,w_13>: y^2 = x^3 + 621x + 9774` (26A3),
+  with the CM-points of discriminant `-312`, `-24`, `-8` at infinity respectively, and the
+  2-torsion points the CM-points of discriminant `-104`.
+* **Lemma 19** — genus-2 equations for `/<w_2>`, `/<w_6>`, `/<w_39>`, e.g.
+  `X_0^26(3)/<w_2>: y^2 = -2197x^6/3 - 362x^4 - 55x^2 - 8/3`, with the disc `-312` points at
+  infinity, the disc `-24` points at `(0, +-2sqrt(-6)/3)`, and the six disc `-104` points at
+  `(alpha_j, 0)`.
+* **Lemma 20** — `t_1 = x^2` is a Hauptmodul for `X_0^26(3)/W_{26,3}` with
+  `t_1 = oo` at `-312`, `0` at `-24`, `-1/8` at `-8`, and the roots of
+  `f_1(z) = -2197z^3/3 - 362z^2 - 55z - 8/3` at `-104`.
+
+**Why this matters.** `26_3`'s failure is the `s <-> s~` SWAP: at discriminants `-267` and `-708`
+Guo-Yang's `s` sits in our `s~` row, and the relation `s + s~ = 1` used to pin the pair is
+SYMMETRIC, so it cannot resolve the ordering (see the memory entry). Tu's Hauptmodul is normalised
+by THREE independent CM values, which fixes it completely and therefore fixes its value at every
+other discriminant — exactly the tie-break that `s + s~ = 1` cannot supply, and from a source that
+shares no machinery with either us or Guo-Yang.
+
+**Next step if `26_3` is picked up:** pin our hauptmodul against Tu's normalisation at `-312`,
+`-24`, `-8`, then compare the predicted values at `-267` and `-708` with ours and with Guo-Yang's.
+⚠ Check the convention first — Tu's `t_1` is `x^2` on HIS model of `/<w_2>`, so relating it to our
+hauptmodul needs the Mobius transformation pinned by those three points, not assumed.
+
 #### CAN THE `15_4` ROUTE BE GENERALISED? — scoped 2026-09-06
 
 **The target set is 9 bases, not hundreds.** Of 246 `D>1` non-squarefree-`N` entries in
