@@ -142,7 +142,9 @@ printf "ModelRegen: %o base(s) reproduce, %o drifted%o\n", mr_ok, mr_fail,
 //                     drift here is EXPECTED and is documented in the model file header; the file
 //                     is validated by GuoYangEquations.m (IsIsomorphic to Guo-Yang's published
 //                     genus-7 curve) and by ModelChecks, not by regeneration.
-MR_KNOWN_DRIFT := ["22_3", "15_2", "22_5", "39_2", "14_3"];
+// 14_43 added 2026-09-06: produced with INTSOL=1 (see data/models/PROVENANCE.md), so it does
+// not regenerate under the default recipe. Keep this list and that table in sync.
+MR_KNOWN_DRIFT := ["22_3", "15_2", "22_5", "39_2", "14_3", "14_43"];
 mr_unexpected := [b : b in mr_bad | not (b in MR_KNOWN_DRIFT)];
 error if not IsEmpty(mr_unexpected),
     Sprintf("ModelRegen: base(s) %o no longer reproduce and are NOT in the known-drift list",

@@ -26,6 +26,7 @@ drops Magma into its interpreter and blocks forever.
 | `22_5` | `Y2TWIST=1` | the unpinned-y2-scale guard (`1768517`) POSTDATES the file, so default regeneration withholds `[1,2,5,10]` | restores 3/3 covers, coefficient-for-coefficient |
 | `15_2` | `Y2TWIST=1` | same guard | restores 12/12 keys (one cover up to isomorphism) |
 | `22_3` | `Y2TWIST=1` | same guard | restores 13/14; `[1,3,22,66]` and one `[1,66]` entry are **still lost** — both genus-0 conics, which `select_y2_twist` skips by construction |
+| `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
 So, e.g.:
 
@@ -52,14 +53,33 @@ encode.
 
 | test | checks | runs |
 |---|---|---|
-| `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 82 files, 8767 checks |
+| `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 85 files, 8889 checks |
 | `tests/GuoYangEquations.m` | STORED models against the published equations, 10 bases | CI, ~125 s |
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
 | `tests/X0_D_N.m` (25 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to hand-written data | CI |
 
-`ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the five bases above. **Update both it and this table
+`ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
+plus `14_43`). **Update both it and this table
 together**, or the next session gets a false "drifted" and repeats a day of work.
+
+## ⚠ TWO MODELS WITH NO EXTERNAL ORACLE (`10_61`, `14_43`) — a weaker class of evidence
+
+Added 2026-09-06 from the OBSTRUCTED class. Neither `X_0^10(61)` nor `X_0^14(43)` has a published
+Guo-Yang equation, so **nothing outside our own pipeline confirms them**. `ModelChecks` alone
+stands behind them (63 and 32 checks). Its strongest component is the Eichler-Selberg point count,
+which *is* independent of the Borcherds/Schofer path that produced the models — but that is not the
+same as matching a published curve. **Quote these two at that lower confidence**, and do not cite
+them as evidence the pipeline is correct on obstructed bases in the way the Guo-Yang bases are.
+
+## ⚠ PROCESS HAZARD: never `git pull` a clone that has jobs running from it
+
+`10_61` and `14_43` were both started from lovelace's clone on 2026-09-04; that clone was pulled up
+to `main` on 2026-09-06 **while both jobs were still running from it**. `AttachSpec` loads packages
+**on demand**, so a long run can compile source that changed underneath it, and the output cannot
+be pinned to one commit. No harm is evident (all checks pass), but reproducibility is the point of
+this file. **Launch long runs from a COPIED tree** (as `~/shimura/vxfix` does) and leave the clone
+free to update.
 
 ## A model that needs no flag but DOES need a code fix: `93_1`
 
@@ -74,7 +94,8 @@ should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1
 
 ## Reproducibility status, measured 2026-09-05
 
-Of the 35 Guo-Yang bases we reproduce (`93_1` added 2026-09-05):
+Of the 36 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
+43 — `15_4` is outside the method by their Remark 39):
 * **24** are verified BY re-derivation (the `X0_D_N.m` tests run the pipeline, so passing IS
   reproduction);
 * **11** are stored-model comparisons; of those, `51_1 57_1 14_5 55_1 21_2 87_1` regenerate clean
