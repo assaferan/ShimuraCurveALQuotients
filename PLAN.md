@@ -720,11 +720,20 @@ exactly. Only the half-integral phase is wrong.
 CM-value tables in `tests/_offline/` — this is about the paper's headline output, the EQUATIONS.)*
 
     43   (D,N) bases with published equations in Guo-Yang
-    35   we have a model for            <- was 34; 39_2 RECOVERED 2026-09-05
-    34   ...and a test comparing it to Guo-Yang   <- 9 in GuoYangEquations.m + GuoYangCurve_14_3
-     1   model exists but NO GY comparison test   <- 22_5 only; 14_3 RECOVERED 2026-09-05
-     8   no model: the real blockers   <- was 9; 39_2 is off this list
-    47   models we have BEYOND Guo-Yang's list entirely (82 model files total)
+    36   we have a model for            <- was 35; 93_1 RECOVERED 2026-09-05 (the vx fix)
+    35   ...and a test comparing it to Guo-Yang   <- GuoYangEquations.m + GuoYangCurve_14_3
+     1   model exists but NO GY comparison test   <- 22_5 only
+     7   no model: the real blockers   <- 15_4 26_3 69_1 95_1 111_1 119_1 159_1
+    47   models we have BEYOND Guo-Yang's list entirely (83 model files total)
+
+⚠ **TWO DIFFERENT COUNTS, do not conflate them** (this bit on 2026-09-06 — `93_1` was first
+reported as "34 -> 35", which was wrong). **34** is the number of GY **CM-VALUE tables** we have as
+offline tests (`tests/_offline/GuoYang_*.m`); that set does not even contain `93_1`. **43** is the
+number of bases with published **EQUATIONS**, which is what this section counts. The 43 are
+reproducible from the source: extract every `$X^D_0(N)$` label in lines 3150-3800 of
+`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex` (⚠ starting at 3300 silently drops five
+bases — `35_1 38_1 39_1 51_1 55_1` — whose table row begins at 3264) and intersect with
+`data/models/`.
 
 **⇒ TIER 1' IS EXHAUSTED AS A TRANSCRIPTION TASK.** Eight of the original ten are done
 (`14_5 15_2 21_2 22_3 51_1 55_1 57_1 87_1`, in `tests/GuoYangEquations.m`). The remaining **two are
