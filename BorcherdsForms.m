@@ -7,7 +7,34 @@ end function;
 
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
-    assert IsSquarefree(N);
+    // NONSQFREE=1 lifts the squarefree-N restriction. OFF BY DEFAULT and deliberately so: the
+    // explicit basis for the Eichler order O that this construction rests on is stated by
+    // Guo-Yang only for squarefree N (their Lemma "basis for O", arXiv:1510.06193 line 566, under
+    // the standing hypothesis at line 561 "The level N is always assumed to be squarefree"). So
+    // there is no theoretical guarantee here, exactly as with CMNONCOPRIME.
+    //
+    // WHY IT IS WORTH A TRY AT ALL, measured 2026-09-06. D0 is the ODD PART of D*N, so 15_4 gets
+    // D0 = 15 and M = 4*D0 = 60 -- the SAME form ring as 15_1 and 15_2, and 15_2 both works and is
+    // validated against Guo-Yang. Sharing M across different N is therefore normal, not anomalous;
+    // what distinguishes the curves is the lattice, and ShimuraCurveLattice(15,4) succeeds with
+    // |A| = 7200 = 120^2/2, exactly the even-DN law. So the assert may be the only obstacle.
+    // ⚠ EVIDENCE, NOT PROOF. Anything produced this way must clear the same bar as 39_2/14_3:
+    // an INDEPENDENT ORACLE (Guo-Yang's published equation), never regeneration alone. 15_4 has
+    // one, which is what makes the experiment safe -- a wrong answer is detected, not absorbed.
+    //
+    // ⚠⚠ RESULT OF THAT EXPERIMENT, 2026-09-06: THE ASSERT IS NOT THE ONLY OBSTACLE, so this flag
+    // alone does NOT unblock 15_4. With it set, WeaklyHolomorphicBasis(15,4) builds fine (4.4 s,
+    // 9 eta quotients, k = 8) and the run proceeds to `ShimuraQuotients.m:1431`:
+    //     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
+    // That check encodes the SAME hypothesis in a second place. The Atkin-Lehner group is indexed
+    // by HALL divisors (d || DN with gcd(d, DN/d) = 1), and `Divisors(DN)` enumerates those only
+    // when DN is squarefree. Measured: DN = 60 has 12 divisors but 8 Hall divisors, so the star
+    // check CANNOT pass -- likewise 10_9 (90) and 21_4 (84), the other non-squarefree bases.
+    // ⇒ Extending to non-squarefree N is a REPRESENTATIONAL change (index W by Hall divisors
+    // throughout), not a one-line relaxation, and the deeper question -- whether Guo-Yang's
+    // explicit order basis survives -- sits behind it, still unaddressed. The flag is kept only
+    // so the next attempt starts at the second obstacle instead of rediscovering the first.
+    assert IsSquarefree(N) or GetEnv("NONSQFREE") ne "";
     D0 := (D*N) div 2^Valuation(D*N,2);  // odd part of DN (was 2^Valuation(D,2), wrong for even N)
     M := 4*D0;
     g := Genus(Gamma0(M));
