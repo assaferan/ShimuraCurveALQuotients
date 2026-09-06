@@ -56,6 +56,7 @@ encode.
 | `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 85 files, 8889 checks |
 | `tests/GuoYangEquations.m` | STORED models against the published equations, 10 bases | CI, ~125 s |
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
+| `tests/CRV_15_4.m` | `15_4`'s FULL genus-5 curve against trace-formula point counts — the only check of a `CRV` entry anywhere, and the one that pins its conic constant | CI, ~1 s |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
 | `tests/X0_D_N.m` (25 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to hand-written data | CI |
 
@@ -95,10 +96,18 @@ independently reproduces GY's quotient structure, and the y-side constant `a = -
 by our Eichler-Selberg point counts, discriminatingly** — 16/16 at `a = -1`, while `a = 1, 2, -2,
 5, -5` each fail 2-3.
 
-⚠ **The conic constant `b = -1` is NOT confirmed by us.** Point counts are **vacuous** for it —
-every `b` passes 16/16, since the conic is genus 0 and the counts do not constrain its twist.
-`b < 0` is forced (no real points; `X_0^15(4)` is not hyperelliptic over R), but `-1, -2, -3, -5,
--6` are all admissible. `b = -1` rests on Guo-Yang's Schofer/CM argument, unreproduced here.
+The conic constant `b = -1` is **also confirmed by us** (closed 2026-09-06; it was open for one
+commit). It could not be reached the obvious way — `VerifyModelSet` is **vacuous** for `b`, passing
+16/16 for *every* value, since the conic is genus 0 and point counts do not constrain its twist.
+What closed it was the **full genus-5 curve**, which depends on `b` and which `ModelChecks` never
+tests because it **skips `CRV` entries**: counting points on the fibre product over `F_p` and
+comparing with `ComputePointsViaTrace` gives a match at all 12 primes 7..47 for `b = -1`, while
+`-2,-3,-5,-6,-7,-10,-15,-30,1,2,3,5,15` each fail at 4-6. See `tests/CRV_15_4.m`.
+
+⚠ **That exposed a general gap: no `CRV` (paired) entry has ever been point-count checked** — not
+`93_1`, `57_1`, `21_2` either. Those bases are validated only through their hyperelliptic
+quotients. Generalising `CRV_15_4.m` needs the ambient weights recorded in the model files, the
+same gap noted above for `ModelRegen`.
 
 ⇒ `15_4` does **not** count toward "bases our pipeline reproduces". The Guo-Yang denominator for
 that statistic stays **42**.
