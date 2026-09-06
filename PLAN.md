@@ -714,6 +714,59 @@ exactly. Only the half-integral phase is wrong.
 
 ---
 
+## REPLACING `manual_isomorphism` — design, 2026-09-06
+
+`test_AllEquationsAboveCoversSingleCurve` takes `manual_isomorphism`, which applies a HARDCODED
+coordinate matrix instead of testing isomorphism. Four tests use it (`X0_10_13`, `X0_10_19`,
+`X0_6_17`, `X0_82_1`). It is brittle: under `CMNONCOPRIME=1` the pipeline re-presents `10_13`'s
+curve in different coordinates and the pinned matrix stops defining a map, so the test fails at
+`BorcherdsProducts.m:19` for a reason that has nothing to do with correctness.
+
+**It is covering TWO different problems, and they need different fixes.**
+
+### (a) Hyperelliptic covers: the map CHOICE matters
+
+`IsIsomorphic` is fast here (`39_2`'s genus-7 `W={1}` in 0.06 s) but returns an ARBITRARY element
+of `Isom(C, C_ex)` — a torsor under `Aut(C_ex)`. And `Aut` is essentially the Atkin-Lehner group:
+measured, `#Aut = 8` for `10_13`'s `W={1}` (genus 3) and `4` for `26_1`'s (genus 2), matching the
+AL group orders. So a wrong pick PERMUTES THE INVOLUTION LABELS and the `ws` check then fails on a
+perfectly correct model — which is exactly why those tests pin the matrix.
+
+⇒ **Fix:** search `Aut(C_ex) o phi_0` for a map intertwining ALL the labelled involutions
+SIMULTANEOUSLY, requiring `w_m -> w_m` rather than merely some permutation. That is as strong as
+the manual version (each named involution is still checked) but coordinate-independent, so it
+survives re-presentation. `Aut` has 4-8 elements, so the search is cheap.
+
+### (b) CRV pairs (double covers of POINTLESS CONICS): `IsIsomorphic` HANGS
+
+⚠ **Do not call `IsIsomorphic` on these at all.** Cost depends violently on PRESENTATION, not
+genus — measured in `tests/IsoScreen.m`:
+
+    39_2  W={1}  hyperelliptic, genus 7   0.06 s
+    21_2  W={1}  CRV pair,      genus 3   ~100 s
+    14_3  W={1}  CRV pair,      genus 3   >50 min
+    26_3  W={1}  CRV pair,      genus 5   >1 h
+
+⇒ **Use instead, in this order:**
+1. **`ScreenByPlaces`** (already written, `tests/IsoScreen.m`, importable) — degree-1 places of the
+   function field, i.e. the smooth projective point count, which IS an isomorphism invariant.
+   DECISIVE ON MISMATCH, weak on agreement (isogenous Jacobians agree at every prime).
+   ⚠ Never screen with affine counts (chart-dependent; three false mismatches at `14_3`) nor with
+   `#Points` in a `WeightedProjectiveSpace` (returns nothing, silently).
+2. **Trace-formula point counts** against `ComputePointsViaTrace` — the `tests/CRV_15_4.m` pattern.
+   Independent of the Borcherds/Schofer path, and demonstrably DISCRIMINATING: it pinned `15_4`'s
+   conic constant (`b = -1` matched at all 12 primes; 13 alternatives each failed at 4-6) where
+   `VerifyModelSet` was vacuous for that constant.
+3. **Quotient comparison** — ⚠ carefully. The `V_4` need NOT be unique: at `14_3` the full AL group
+   has 8 elements, `W={1}` has SEVEN involution quotients, and at least two different `V_4`s give a
+   valid 0+1+2 decomposition. Match quotients BY ISOMORPHISM TESTING, never by assuming genus
+   determines the pairing (that assumption once produced a confident refutation of a model later
+   proved isomorphic).
+
+⇒ Sequencing note: (a) is a contained change to the helper. (b) is really "the helper should not
+be asked to compare CRV entries at all" — `ModelRegen` and the generated `X0_*` tests already skip
+them, and `CRV_15_4.m` shows what a real CRV check looks like.
+
 ## COVERAGE — reproducing Guo-Yang's published equations
 
 *(stock-take RE-MEASURED 2026-09-05, superseding the 2026-09-04 counts. Distinct from the
