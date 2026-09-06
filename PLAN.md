@@ -724,6 +724,8 @@ CM-value tables in `tests/_offline/` — this is about the paper's headline outp
     35   ...and a test comparing it to Guo-Yang   <- GuoYangEquations.m + GuoYangCurve_14_3
      1   model exists but NO GY comparison test   <- 22_5 only
      7   no model: the real blockers   <- 15_4 26_3 69_1 95_1 111_1 119_1 159_1
+         ⚠ 15_4 is NOT one of them -- see below; it is outside the method by the authors' own
+         statement, so the honest target is 42, not 43.
     47   models we have BEYOND Guo-Yang's list entirely (83 model files total)
 
 ⚠ **TWO DIFFERENT COUNTS, do not conflate them** (this bit on 2026-09-06 — `93_1` was first
@@ -746,6 +748,52 @@ not transcribable at all** — we do not have the object to compare:
   Our file has **no `[1]` key at all**, only three quotients; its commit message (`08ce5fa`) says
   "3 covers", i.e. it was committed knowing the full curve was absent.
 ⇒ Both are **model-generation** items, not test-writing items. Do not re-file them under TIER 1'.
+
+#### `15_4` IS OUT OF SCOPE -- BY GUO-YANG'S OWN STATEMENT (settled 2026-09-06)
+
+**Do not attempt to make the pipeline produce `15_4`.** The published version of the paper
+(Compositio Math. 153 (2017) 1-40) carries a remark that **arXiv v1 does not have**:
+
+> *Remark 39.* Note that there is a curve, namely, `X = X_0^15(4)`, whose equation is not obtained
+> using our method. This is because **the normalizer of the Eichler order in this case is larger
+> than the Atkin-Lehner group**. For this special curve, we use the result of Tu [Tu14].
+
+They then take a Hauptmodul `t_4` on `X/<w_3,w_5>` from [Tu14, Lemma 13] (values `+-1/sqrt(-3)`,
+`+-sqrt(-15)/5`, `(+-1 +- sqrt(-15))/8` at discriminants `-12, -15, -60`), read off
+`y^2 = a(4t_4^2-t_4+1)(4t_4^2+t_4+1)(5t_4^2+3)` and `z^2 = b(3t_4^2+1)` from the ramification, and
+fix `a = b = -1` using `t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3)` on `X_0^15(2)/<w_3,w_5>` plus
+Schofer. `X_0^15(4)` is also one of the hyperelliptic Shimura curves that are **not hyperelliptic
+over R** [Ogg83].
+
+⇒ Since `N^+_B(O)` strictly contains `W_{15,4}`, the star quotient our pipeline forms is the WRONG
+OBJECT. This is the hypothesis flagged in memory as never checked (`O^+_{L,F} = O^+_L`), and here
+it demonstrably fails.
+
+**What we measured before finding the remark, kept because it is still true of the CODE:** two
+independent layers encode squarefree-`N`. (1) `assert IsSquarefree(N)` in `get_D0_M_g`. (2) Behind
+`NONSQFREE=1` the basis builds fine (4.4 s), and the run then stops at `ShimuraQuotients.m:1431`,
+whose star check compares `W` against `Set(Divisors(D*N))` -- but the AL group is indexed by HALL
+divisors, and `DN = 60` has 12 divisors to 8 Hall divisors, so it CANNOT pass (same at `10_9`,
+`21_4`). Fixing that indexing would still not produce `15_4`, because of Remark 39.
+
+#### ⚠ WE HAVE BEEN READING THE SUPERSEDED VERSION
+
+arXiv has exactly **one** version (v1, 2015-10-21). The paper of record is **Compositio Math. 153
+(2017) 1-40**, substantially revised and **not on arXiv**; the copy at
+`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex` is v1. Differences found so far:
+
+| | arXiv v1 | journal |
+|---|---|---|
+| `93_1` equation | `3s^3 - 7s^2 - 3t - 1` (typo) | `3s^3 - 7s^2 - 3s - 1` |
+| `39_2` involutions | `w_4, w_3, w_5` (copy-paste from `15_4`; `4` does not divide `78`) | `w_2, w_3, w_39` |
+| Remark 39 (`15_4` out of scope) | absent | present |
+| Remark 38 (`10_19` NOT hyperelliptic over Q; `14_5` is) | absent | present |
+
+The journal PDF is at `~/MIT Dropbox/Eran Assaf/Research/HyperellipticQuotients/Guo, Yang -
+equations-of-hyperelliptic-shimura-curves.pdf`. **All ten equations in
+`tests/GuoYangEquations.m` were re-verified against it on 2026-09-06 and agree.** Remark 38 also
+bears on the recorded `10_19` anomaly (its v1 table contradicting the paper's own worked example)
+-- re-check that against the journal before trusting either.
 
 #### What blocks `14_3` and `22_5`, measured 2026-09-05
 

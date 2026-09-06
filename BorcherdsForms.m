@@ -31,9 +31,27 @@ function get_D0_M_g(D, N)
     // when DN is squarefree. Measured: DN = 60 has 12 divisors but 8 Hall divisors, so the star
     // check CANNOT pass -- likewise 10_9 (90) and 21_4 (84), the other non-squarefree bases.
     // ⇒ Extending to non-squarefree N is a REPRESENTATIONAL change (index W by Hall divisors
-    // throughout), not a one-line relaxation, and the deeper question -- whether Guo-Yang's
-    // explicit order basis survives -- sits behind it, still unaddressed. The flag is kept only
-    // so the next attempt starts at the second obstacle instead of rediscovering the first.
+    // throughout), not a one-line relaxation. The flag is kept only so the next attempt starts at
+    // the second obstacle instead of rediscovering the first.
+    //
+    // ⚠⚠⚠ AND THE REAL REASON IS DEEPER THAN EITHER -- CORRECTED 2026-09-06 from the PUBLISHED
+    // version of Guo-Yang (Compositio Math. 153 (2017) 1-40), which contains a remark the arXiv
+    // v1 we work from DOES NOT HAVE:
+    //
+    //   "Remark 39. Note that there is a curve, namely, X = X_0^15(4), whose equation is not
+    //    obtained using our method. This is because THE NORMALIZER OF THE EICHLER ORDER IN THIS
+    //    CASE IS LARGER THAN THE ATKIN-LEHNER GROUP. For this special curve, we use the result of
+    //    Tu [Tu14]."
+    //
+    // So 15_4 is not a squarefree-N accident at all: N^+_B(O) strictly contains W_{15,4}, so the
+    // star quotient this pipeline forms is the WRONG OBJECT -- and fixing the Hall-divisor
+    // indexing would NOT be enough. Guo-Yang get the equation from Tu [Tu14, Lemma 13] (a
+    // Hauptmodul t_4 on X/<w_3,w_5> with known CM values at discs -12, -15, -60), fixing the two
+    // constants via t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3) on X_0^15(2)/<w_3,w_5> plus Schofer.
+    // ⇒ 15_4 is OUT OF SCOPE for this method by the authors' own statement. Do not spend effort
+    // making the pipeline produce it; if it is ever wanted, transcribe Tu's route instead.
+    // (This also connects to [[guo-yang-thm-B-hypotheses]]: "O^+_{L,F} = O^+_L has never been
+    // checked" is exactly the hypothesis that fails here.)
     assert IsSquarefree(N) or GetEnv("NONSQFREE") ne "";
     D0 := (D*N) div 2^Valuation(D*N,2);  // odd part of DN (was 2^Valuation(D,2), wrong for even N)
     M := 4*D0;

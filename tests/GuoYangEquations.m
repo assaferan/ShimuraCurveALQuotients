@@ -11,6 +11,21 @@
 // SOURCE. J.-W. Guo and Y. Yang, "Equations of hyperelliptic Shimura curves" (arXiv:1510.06193),
 // the "Equations of level ..." tables.
 //
+// ⚠ WHICH VERSION -- ESTABLISHED 2026-09-06, AND IT MATTERS. arXiv has exactly ONE version
+// (v1, 2015-10-21); the paper of record is Compositio Math. 153 (2017) 1-40, which is
+// SUBSTANTIALLY REVISED and is NOT on arXiv. Our working copy
+// (`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex`, campaign branch) is v1, so it is the
+// superseded text. Known v1-vs-journal differences, all found by comparing against the published
+// PDF:
+//   * 93_1's `-3t` is `-3s` in the journal -- the typo this file determines by isomorphism is
+//     CONFIRMED by the version of record, not merely inferred;
+//   * 39_2's involution cell in v1 is copy-pasted from 15_4 (it lists w_4, w_3, w_5 although
+//     4 does not divide 78); the journal has w_2, w_3, w_39;
+//   * the journal adds Remark 39 (X_0^15(4) is outside their method) and Remark 38 (X_0^10(19)
+//     is NOT hyperelliptic over Q, X_0^14(5) is), neither present in v1.
+// ⇒ ALL TEN equations transcribed below were re-verified character-by-character against the
+// JOURNAL text on 2026-09-06 and agree. When adding an entry, check the journal, not just v1.
+//
 // ⚠ EVERY ENTRY BELOW IS HAND-TRANSCRIBED, DELIBERATELY. Automated extraction from the arXiv
 // LaTeX was tried on 2026-09-04 and abandoned; see PLAN.md, COVERAGE. It hit four separate
 // silent-corruption bugs (equations wrapping across `\\` into several $...$ groups; a leading
@@ -24,6 +39,10 @@
 // three other plausible repairs. See the 93_1 block at the end of this file. It is a worked example
 // of why hand-transcription is the right call: an extractor would have emitted a two-variable
 // polynomial or silently dropped a term, and either way produced a wrong curve without an error.
+// ⚠ AND CONFIRMED EXTERNALLY 2026-09-06: the published Compositio version prints `-3s`. The
+// isomorphism test and the version of record agree, which is the strongest form this claim can
+// take -- a prediction made from our own model alone, then checked against a source we had not
+// read when we made it.
 //
 // THE PUBLISHED EQUATION CORRESPONDS TO OUR W={1} KEY (the curve itself). Each case still records
 // the key explicitly, but the mapping is uniform as far as checked.
