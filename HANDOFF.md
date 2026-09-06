@@ -1,4 +1,8 @@
-# Handoff — 2026-08-30
+# Handoff — 2026-09-06
+
+**The newest section is the 2026-09-06 one below; everything after it is older and kept for
+provenance.** Earlier material still says things like "34 of 43" — those counts are STALE, and the
+2026-09-06 section says what replaced them.
 
 **Supersedes** the 2026-07-17 handoff about producing cover models, archived as
 `HANDOFF_2026-07-17.md`. That task is not dead, but it is gated on the blocker described below.
@@ -8,6 +12,62 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 **➡ For what to do next, see `PLAN.md`** — five tracks, a do-not list, and the recurring traps.
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
+
+## Handoff — 2026-09-06 (this session; supersedes the state notes below)
+
+**Five models produced, and the Guo-Yang denominator was wrong.**
+
+    Guo-Yang published equations:  42 reproducible bases (NOT 43 -- see below)
+    we now have a model for:       37
+    remaining blockers:             5   95_1  111_1  119_1  159_1  69_1   -- ALL RUNNING
+
+* **`93_1`** — the vx fix unblocked it (default recipe, 14.1 h). It also **settles a typo in their
+  table**: their `-3t` is `-3s`, determined by isomorphism from our own model against three refuted
+  alternatives, and later **confirmed independently** by the journal version.
+* **`26_3`** — recovered with `CMNONCOPRIME=1`, 189 s. Full `V_4` diagram matches; their conic
+  `-8x^2-3` comes out coefficient for coefficient.
+* **`15_4`** — a FOURTH provenance category: **literature-derived, not pipeline-produced**, and it
+  never can be (see below). `a = -1` is confirmed by our point counts, `b = -1` by the full-curve
+  trace-formula comparison.
+* **`10_61`, `14_43`** — first two models out of the OBSTRUCTED class (41 h, 42 h). ⚠ Neither is a
+  Guo-Yang base, so **no external oracle** — `ModelChecks` alone. Weaker evidence; quote it as such.
+
+**⚠ 42, NOT 43.** `15_4` is outside the Guo-Yang method *by the authors' own statement* — their
+published Remark 39 says the normalizer of the Eichler order strictly contains the Atkin-Lehner
+group there, so the star quotient our pipeline forms is the wrong object. It is not a blocker; it
+is out of scope.
+
+**⚠⚠ WE HAD BEEN READING THE SUPERSEDED PAPER.** arXiv:1510.06193 has exactly ONE version (2015).
+The paper of record is **Compositio Math. 153 (2017) 1-40**, substantially revised and NOT on
+arXiv; our `ShimuraCurves-arxiv.tex` is the arXiv one. The journal fixes `93_1`'s equation and
+`39_2`'s involutions, and adds Remarks 38 and 39. PDF is in the user's Dropbox. **Check the
+journal, not just v1.** Tu (Pacific J. Math. 269 (2014) — also now in that Dropbox folder, free
+from MSP, not on arXiv) confirms `15_4` and covers `26_3`, but supplies nothing for any other
+non-squarefree base.
+
+**Speedup shipped:** the q-expansion bootstrap, `qexp(t^j f) = qexp(t)^j qexp(f)`, both sides —
+**up to 18.6x** on that step at `pole_order 800`. ⚠ NOT yet shown to help any base end to end.
+
+**The coprime guard is under doubt.** Three bases (`39_2`, `14_3`, `26_3`) produce Guo-Yang-matching
+models with it OFF, and `26_3` is the very base whose bad discriminants justify its existence. A
+targeted sweep is running. ⚠ Only the 11 `N>1` `X0_*` tests can possibly show anything: for `N=1`,
+`gcd(d,1)=1` makes the filter provably a no-op.
+
+### Process lessons this session cost something to learn
+
+* **Never `git pull` a clone that has jobs running from it.** I did, to lovelace, with eight jobs
+  running from that directory. `AttachSpec` loads packages ON DEMAND, so a long run can compile
+  source that changed under it. `10_61` and `14_43` cannot be pinned to a single commit because of
+  it. Launch long runs from a COPIED tree.
+* **My own foreground timeout killed a background sweep**, and the sweep recorded the killed run as
+  a FAILURE. That produced a false "`X0_10_13` breaks under `CMNONCOPRIME=1`", since retracted. A
+  killed run and a failing run are indistinguishable in a one-line summary.
+* **`nohup ... &` inside a background call reports "completed" for the WRAPPER**, not the job. Check
+  process state; do not trust the notification.
+* **Corrections made:** `93_1` was first reported as "34 -> 35" (that is the CM-TABLE count, a
+  different set); `EchelonForm` was called negligible when it has the STEEPEST growth (~`PO^4.4`);
+  `15_4` was diagnosed as a squarefree-`N` code issue when the authors had stated the real reason
+  in a version we had not read.
 
 ## ⇒ READ THIS FIRST — 2026-09-04, late
 
