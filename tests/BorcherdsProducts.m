@@ -54,34 +54,41 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
             // SIMULTANEOUSLY -- w_m must go to w_m, not to some other involution. That keeps the
             // full strength of the manual check (each named involution is still verified against
             // an explicitly exhibited isomorphism) while surviving re-presentation.
-            iso_cands := [phi];
-            if not manual_isomorphism then
-                try
-                    Aut, mAut := AutomorphismGroup(C_ex);
-                    iso_cands := [phi*mAut(a) : a in Aut];
-                catch e
-                    ;   // no computable automorphism group: fall back to the single phi
-                end try;
-            end if;
-
-            found_phi := false;
-            for psi in iso_cands do
-                all_ws_ok := true;
+            // ⚠ PAY FOR THE SEARCH ONLY WHEN THE FIRST MAP FAILS. Computing AutomorphismGroup
+            // unconditionally, once per (cover, base), is ruinous: measured at 10_13 it took the
+            // test from 870 s to over 71 minutes and still climbing -- a ~5x regression on the
+            // common case, where the phi that IsIsomorphic returned already works. So try phi
+            // first and fall back to the torsor only if it does not intertwine the involutions.
+            function ws_ok(psi)
                 for Q in Keys(ws_ex) do
                     w_alg := AlgebraMap(psi)*AlgebraMap(ws[label][base][Q])*AlgebraMap(psi^(-1));
                     phi1 := map< C_ex -> C_ex | [w_alg(x[j]) : j in [1..#x]]>;
                     phi2 := map< C_ex -> C_ex | Eltseq(Vector(x)*ChangeRing(ws_ex[Q], Universe(x)))>;
-                    if phi1 ne phi2 then all_ws_ok := false; break; end if;
+                    if phi1 ne phi2 then return false; end if;
                 end for;
-                if all_ws_ok then found_phi := true; break; end if;
-            end for;
+                return true;
+            end function;
+
+            found_phi := ws_ok(phi);
+            n_iso_tried := 1;
+            if (not found_phi) and (not manual_isomorphism) then
+                try
+                    Aut, mAut := AutomorphismGroup(C_ex);
+                    for a in Aut do
+                        n_iso_tried +:= 1;
+                        if ws_ok(phi*mAut(a)) then found_phi := true; break; end if;
+                    end for;
+                catch e
+                    ;   // no computable automorphism group: phi was the only candidate
+                end try;
+            end if;
             n_ws_cmp +:= #Keys(ws_ex);
             error if not found_phi,
                 Sprintf("X0^%o(%o) cover %o: no isomorphism to the expected curve intertwines all "
                         * "%o labelled Atkin-Lehner involution(s). %o candidate map(s) tried "
                         * "(Isom = Aut(C_ex) o phi). The curves ARE isomorphic -- what fails is "
                         * "that no identification matches the involution LABELLING.",
-                        D, N, Sort(SetToSequence(X`W)), #Keys(ws_ex), #iso_cands);
+                        D, N, Sort(SetToSequence(X`W)), #Keys(ws_ex), n_iso_tried);
         end for;
     end for;
 
