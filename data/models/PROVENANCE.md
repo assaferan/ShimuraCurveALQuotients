@@ -68,10 +68,17 @@ encode.
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
 | `tests/CRV_15_4.m` | `15_4`'s FULL genus-5 curve against trace-formula point counts — the only check of a `CRV` entry anywhere, and the one that pins its conic constant | CI, ~1 s |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
-| `tests/X0_D_N.m` (25 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to hand-written data | CI |
+| `tests/X0_D_N.m` (27 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
+| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
-plus `14_43`). **Update both it and this table
+plus `14_43`).
+
+⚠ **A KNOWN WEAKNESS OF THE `X0_D_N.m` TESTS.** `test_AllEquationsAboveCoversSingleCurve` SILENTLY
+SKIPS cover keys it does not find (`if not is_def then continue`), so a base whose re-derived `W`
+keys do not match the expected ones would pass **vacuously**. `X0_51_1` was negative-controlled by
+hand (perturbing one coefficient makes it fail); the others have not been. The durable fix is a
+comparison counter inside the helper that errors on zero — it would protect all 27 at once. **Update both it and this table
 together**, or the next session gets a false "drifted" and repeats a day of work.
 
 ## ⚠ TWO MODELS WITH NO EXTERNAL ORACLE (`10_61`, `14_43`) — a weaker class of evidence
