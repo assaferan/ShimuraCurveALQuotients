@@ -649,9 +649,50 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     minval := pole_order;
    
     if Zero then
+        // ⚠ THE 0-SIDE CANNOT USE THE BOOTSTRAP BELOW, and the reason is not laziness.
+        // SAction divides each term by sqrt(prod d^r_i) and ASSERTS that product is a square --
+        // a condition on each FACTOR separately. Measured 2026-09-06 at 51_1: qExpansionAt0(t0)
+        // ASSERTS ("not a square") while qExpansionAt0(t0*f) and qExpansionAt0(t0^2*f) are both
+        // fine. So the factor qexp(t0) that the identity needs DOES NOT EXIST here, even though
+        // every product does. Leave this branch alone.
         qexps := [qExpansionAt0(eta, 1) : eta in full_basis];
     else
-        qexps := [qExpansionAtoo(eta, 1) : eta in full_basis];
+        // THE t-BOOTSTRAP, applied to the q-EXPANSIONS and not just to the basis.
+        // full_basis is t^j * f, and qExpansionAtoo is multiplicative, so
+        //     qexp(t^j * f) = qexp(t)^j * qexp(f).
+        // The old line paid a from-scratch eta-quotient expansion for every element of the
+        // t-EXPANDED pool -- and t^j*f has the SAME number of eta-quotient terms as f (the
+        // exponent vectors merely shift), so each cost full price while the pool grows like r.
+        // Here we expand only init_basis, basis_n0 and t, then multiply series.
+        //
+        // Measured (51_1, identical output at every point):
+        //     pole_order  200:   2.65 s ->  0.98 s   (2.7x)
+        //     pole_order  400:  17.74 s ->  2.97 s   (6.0x)
+        //     pole_order  800: 210.70 s -> 11.33 s   (18.6x)
+        // and 87_1 at 400: 27.23 s -> 7.91 s (3.4x). The gain scales with r, the number of
+        // t-power blocks (51_1 has r=24 at PO=800; 87_1 only r=6), so it is largest exactly on
+        // the deep-pole bases that dominate a genmodels run.
+        //
+        // ⚠ THE TRUNCATION IS LOAD-BEARING, not tidiness. The factors must be known to absolute
+        // precision ~pole_order for the products to be right to O(q^1), so the products come out
+        // known MUCH deeper -- and `AbsEltseq(... : FixedLength)` below turns precision into
+        // COLUMN COUNT. Without `+ O(q^1)` the column counts scatter from 401 up to 801 on a
+        // single call (measured) and the matrix is malformed. With it, the coefficient matrix is
+        // identical to the old path entry for entry.
+        bwh_A := pole_order + 1;
+        bwh_qt := qExpansionAtoo(t, bwh_A);
+        bwh_Rq := Parent(bwh_qt);
+        bwh_q := bwh_Rq.1;
+        bwh_tpow := [bwh_Rq!1];
+        for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt); end for;
+        qexps := [bwh_tpow[r+1]*qExpansionAtoo(f, bwh_A)
+                  : f in init_basis[n0+k-s..#init_basis]];
+        if r gt 0 then
+            bwh_qi := [qExpansionAtoo(f, bwh_A) : f in init_basis];
+            qexps cat:= &cat[[bwh_tpow[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]];
+        end if;
+        qexps := [x + O(bwh_q^1) : x in qexps];
+        qexps cat:= [qExpansionAtoo(f, 1) : f in basis_n0];   // never multiplied by t
     end if;
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
