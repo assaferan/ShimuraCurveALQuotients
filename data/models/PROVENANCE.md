@@ -81,6 +81,28 @@ be pinned to one commit. No harm is evident (all checks pass), but reproducibili
 this file. **Launch long runs from a COPIED tree** (as `~/shimura/vxfix` does) and leave the clone
 free to update.
 
+## ⚠ A FOURTH CATEGORY: literature-derived, NOT pipeline-produced (`15_4`)
+
+`models_15_4.m` was **not** produced by this pipeline and never can be. Guo-Yang's published
+Remark 39 (Compositio 153 (2017); absent from arXiv v1) says `X_0^15(4)`'s equation "is not
+obtained using our method... the normalizer of the Eichler order in this case is larger than the
+Atkin-Lehner group", and they take it from Tu (Pacific J. Math. 269 (2014), Lemma 13). Since
+`N^+_B(O)` strictly contains `W_{15,4}`, the star quotient we form is the wrong object.
+
+What we did instead: transcribe Tu's CM values (as quoted by GY) and **derive and check the rest**.
+The polynomials are forced (they are the minimal polynomials of those values), our genus formula
+independently reproduces GY's quotient structure, and the y-side constant `a = -1` is **confirmed
+by our Eichler-Selberg point counts, discriminatingly** — 16/16 at `a = -1`, while `a = 1, 2, -2,
+5, -5` each fail 2-3.
+
+⚠ **The conic constant `b = -1` is NOT confirmed by us.** Point counts are **vacuous** for it —
+every `b` passes 16/16, since the conic is genus 0 and the counts do not constrain its twist.
+`b < 0` is forced (no real points; `X_0^15(4)` is not hyperelliptic over R), but `-1, -2, -3, -5,
+-6` are all admissible. `b = -1` rests on Guo-Yang's Schofer/CM argument, unreproduced here.
+
+⇒ `15_4` does **not** count toward "bases our pipeline reproduces". The Guo-Yang denominator for
+that statistic stays **42**.
+
 ## A model that needs no flag but DOES need a code fix: `93_1`
 
 `models_93_1.m` regenerates with the default recipe — but only on `main` **at or after the vx fix**
