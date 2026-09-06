@@ -648,17 +648,8 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     
     minval := pole_order;
    
-    if Zero then
-        // ⚠ THE 0-SIDE CANNOT USE THE BOOTSTRAP BELOW, and the reason is not laziness.
-        // SAction divides each term by sqrt(prod d^r_i) and ASSERTS that product is a square --
-        // a condition on each FACTOR separately. Measured 2026-09-06 at 51_1: qExpansionAt0(t0)
-        // ASSERTS ("not a square") while qExpansionAt0(t0*f) and qExpansionAt0(t0^2*f) are both
-        // fine. So the factor qexp(t0) that the identity needs DOES NOT EXIST here, even though
-        // every product does. Leave this branch alone.
-        qexps := [qExpansionAt0(eta, 1) : eta in full_basis];
-    else
-        // THE t-BOOTSTRAP, applied to the q-EXPANSIONS and not just to the basis.
-        // full_basis is t^j * f, and qExpansionAtoo is multiplicative, so
+    // THE t-BOOTSTRAP, applied to the q-EXPANSIONS and not just to the basis.
+        // full_basis is t^j * f, and the expansion map is multiplicative, so
         //     qexp(t^j * f) = qexp(t)^j * qexp(f).
         // The old line paid a from-scratch eta-quotient expansion for every element of the
         // t-EXPANDED pool -- and t^j*f has the SAME number of eta-quotient terms as f (the
@@ -679,21 +670,41 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
         // COLUMN COUNT. Without `+ O(q^1)` the column counts scatter from 401 up to 801 on a
         // single call (measured) and the matrix is malformed. With it, the coefficient matrix is
         // identical to the old path entry for entry.
+        // ⚠ THE 0-SIDE NEEDS `Admissible := false` FOR THE t FACTOR, and this is not a free
+        // choice -- it is what makes the identity expressible there at all. SAction divides each
+        // term by sqrt(prod d^r_i), times R`disc when Admissible (the default), and ASSERTS that
+        // this is a square. Measured at 51_1: for EVERY j, `t0^j` alone fails that test while
+        // `t0^j * f` passes. The reason is that sqr_fac(t0) IS a square but `disc` is NOT, so the
+        // lone powers carry an unpaired `disc` and the products do not. Dropping the disc factor
+        // on the t side alone repairs it, because
+        //     SAction_adm(x) = (M/sqrt(disc)) * SAction_nonadm(x)
+        // and that scalar belongs to the f factor, which keeps it:
+        //     qexp0(t^j * f) = qexp0_nonadm(t)^j * qexp0(f).
+        // Verified 30/30 at 51_1 with a negative control (j=3 against j=2) that DIFFERS, so the
+        // check discriminates rather than merely agreeing.
         bwh_A := pole_order + 1;
-        bwh_qt := qExpansionAtoo(t, bwh_A);
+        bwh_qt := Zero select qExpansionAt0(t, bwh_A : Admissible := false)
+                         else qExpansionAtoo(t, bwh_A);
         bwh_Rq := Parent(bwh_qt);
         bwh_q := bwh_Rq.1;
         bwh_tpow := [bwh_Rq!1];
         for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt); end for;
-        qexps := [bwh_tpow[r+1]*qExpansionAtoo(f, bwh_A)
-                  : f in init_basis[n0+k-s..#init_basis]];
+        bwh_head := init_basis[n0+k-s..#init_basis];
+        if Zero then
+            bwh_qh := [qExpansionAt0(f, bwh_A) : f in bwh_head];
+            bwh_qi := (r gt 0) select [qExpansionAt0(f, bwh_A) : f in init_basis] else [];
+            bwh_qz := [qExpansionAt0(f, 1) : f in basis_n0];
+        else
+            bwh_qh := [qExpansionAtoo(f, bwh_A) : f in bwh_head];
+            bwh_qi := (r gt 0) select [qExpansionAtoo(f, bwh_A) : f in init_basis] else [];
+            bwh_qz := [qExpansionAtoo(f, 1) : f in basis_n0];
+        end if;
+        qexps := [bwh_tpow[r+1]*f : f in bwh_qh];
         if r gt 0 then
-            bwh_qi := [qExpansionAtoo(f, bwh_A) : f in init_basis];
             qexps cat:= &cat[[bwh_tpow[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]];
         end if;
         qexps := [x + O(bwh_q^1) : x in qexps];
-        qexps cat:= [qExpansionAtoo(f, 1) : f in basis_n0];   // never multiplied by t
-    end if;
+        qexps cat:= bwh_qz;                                   // never multiplied by t
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
     assert minval eq -Minimum([Valuation(f) : f in qexps]);
