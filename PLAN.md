@@ -853,15 +853,48 @@ the CORRECT field, which is exactly Guo-Yang's own phrase ("only one of them is 
 field"). Determining that field per discriminant is the actual work, and it is the answer to
 "what pins the ordering at the other 12 discs".
 
-**Recommended sequence for `26_3`:**
-1. compute our hauptmodul at `-104` and check it against Tu's cubic — an external validation of
-   this base that costs nothing extra and is independent of Guo-Yang;
-2. work out the field of definition per discriminant and confirm it separates `s` from `s~` at all
-   14 rows (it must, or Guo-Yang could not have built the table);
-3. use that as the tie-break in `find_signs_hauptmodul`, then relax the coprime filter for `26_3`
-   and run — the pool goes 3 -> 21 against demand 9;
-4. validate the resulting model against Guo-Yang's published equation for `26_3`
-   (`y^2 = x^6 - 2x^4 + 9x^2 + 8` in the journal version).
+**⚠⚠ STEP 2 BELOW WAS WRONG AND IS RETRACTED (assaferan, 2026-09-06): THE CODE ALREADY DOES THIS.**
+`FieldsOfDefinitionOfCMPointFast` (`SchoferFormula.m:1494`) computes the field of definition per CM
+point — ring class field, Shimura reciprocity Thm 5.8, Prop 5.6, AL-fixed subfields, and it
+explicitly handles `gcd(N, f) != 1`. And `find_y2_signs` (`:1753`) ALREADY applies the
+"square in the CORRECT field" criterion to pick cover values: it reads `flds[keys_fs[i]][d]` and
+tests `IsSquare(F!y2)` with the degree conditions. That IS Guo-Yang's criterion, implemented.
+**Do not re-derive it.** (I started to; this note exists so the next session does not.)
+
+**WHERE THE ACTUAL GAP IS.** `find_signs_hauptmodul` (`:1198`) takes only `(s, stilde, ds, degs)` —
+**no fields of definition** — and pins signs from `eps1*s/scale + eps2*stilde/scale_tilde = 1`
+alone. When that does not discriminate it **silently takes the first solution**:
+
+        if #per_idx[j] gt 1 then   // "the value cannot distinguish them"
+            vprintf ShimuraQuotients, 1: "sign choice not unique at d = %o; taking %o"
+        s_new[idx] := per_idx[j][1][1]*s_new[idx];
+
+`abs_schofer_tab` — carrying `FldsOfDefn` — is in scope at the call site (`:1902`), and
+`find_y2_signs` uses it 49 lines later (`:1951`). So plumbing the same test into the hauptmodul
+tie-break is a LOCAL change requiring no new mathematics.
+
+**⚠ BUT THAT MAY NOT BE `26_3`'s BUG — DECIDE BEFORE CODING.** This note records that at `-267`
+and `-708` **the signs are FORCED** (only `+ +` sums to 1) and "the freedom is purely in the
+LABELLING". If that is right, `#per_idx = 1` there, the tie-break never fires, and the swap is
+UPSTREAM — in the Schofer values themselves, which would be consistent with the missing
+`p | gcd(d,N)` local factor (`kappaminuszero` is dead code) and with both swapped discs being
+non-coprime to `N = 3`.
+
+⇒ **THE DECIDING EXPERIMENT, cheap:** run `26_3`'s hauptmodul stage at `SetVerbose("ShimuraQuotients", 1)`
+and look for `find_signs_hauptmodul: sign choice not unique at d = -267 / -708`.
+* **If it fires** — the tie-break is the fix: pass `abs_schofer_tab` in and reuse `find_y2_signs`'s
+  field test.
+* **If it does not** — the sign logic is innocent and the values are already wrong when they reach
+  it; the fix is the `p | gcd(d,N)` local factor, not the labelling.
+
+**Sequence for `26_3` (revised):**
+1. run the deciding experiment above — it costs one verbose run and settles which defect is real;
+2. cross-check our hauptmodul at `-104` against Tu's cubic (`-104` is COPRIME to `N=3`, so the
+   default filter admits it) — an external validation independent of Guo-Yang, worth having either way;
+3. fix whichever defect step 1 identifies, then relax the coprime filter for `26_3` — pool 3 -> 21
+   against demand 9;
+4. validate the resulting model against Guo-Yang's published equation
+   (`y^2 = x^6 - 2x^4 + 9x^2 + 8`, journal version).
 
 #### CAN THE `15_4` ROUTE BE GENERALISED? — scoped 2026-09-06
 
