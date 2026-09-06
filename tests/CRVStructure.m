@@ -18,23 +18,36 @@
 // skipped only because "the model file does not record the ambient weights". It does not have to
 // -- 16 of 21 entries reconstruct exactly. No data migration is needed, just this derivation.
 //
-// ⚠⚠ WHAT IT FOUND, 2026-09-06. FIVE entries store the SAME equation twice, up to `y` <-> `x`:
+// ⚠⚠ WHAT IT FOUND, AND THE BUG BEHIND IT (2026-09-06 -- found, root-caused and FIXED same day).
+// Five entries stored the SAME equation twice, up to `y` <-> `x`:
 //
 //     10_3  [1,10]  y^2 + 7/20*s^2 - 43/20*s*z + 2*z^2   and   x^2 + (the identical form)
 //
-// If `y^2 = q` and `x^2 = q` then `y^2 = x^2`, so `(y-x)(y+x) = 0` and the scheme is REDUCIBLE --
-// measured, `IsIrreducible` is false for all five. They cannot be the genus-1 curves recorded
-// beside them. A fibre product of a double cover with ITSELF is reducible by construction, so this
-// looks like two covers with the same equation being paired as if independent.
-// These are listed in CRV_KNOWN_BAD so the test documents them rather than failing CI, exactly as
-// `ModelRegen`'s MR_KNOWN_DRIFT does. ⇒ They are a REAL DEFECT to repair, not a convention to
-// accommodate; when one is fixed, remove it from the list.
+// If `y^2 = q` and `x^2 = q` then `y^2 = x^2`, so `(y-x)(y+x) = 0` and the scheme is REDUCIBLE
+// (measured: `IsIrreducible` false for all five). They could not be the genus-1 curves recorded
+// beside them.
+//
+// ROOT CAUSE, in `EquationsAbovePointlessConics` (`EquationsCovers.m`). It builds the fibre product
+//     C := Curve(P3, [y^2 - eqn2, x^2 - eqn1]);
+// taking `eqn2` from a cover whose hyperelliptic polynomial has degree `g+1` and `eqn1` from a
+// conic. At `g = 1` the required degree `g+1 = 2` IS a conic's degree, so the conic itself passed
+// the degree test and could be picked for BOTH roles -- each of the five stored its own parent
+// conic twice (`10_3 [1,10]` against `[1,2,5,10]`, and so on).
+// FIXED by requiring the two roles be filled by different covers (`c ne other_curve`); those
+// covers now DEFER, which is the honest outcome, and the five stored entries were emptied to match
+// what the fixed pipeline produces.
+//
+// ⚠ The failure was invisible for as long as it was because `VerifyModelSet` skips every `CRV`
+// entry -- there was no check of any kind on these until this file.
 
 printf "Checking CRV entries for irreducibility and derivable weights...";
 
 // The five entries measured degenerate on 2026-09-06 (identical equations up to y <-> x).
 // Keep this list and the header in sync; shrink it as they are repaired.
-CRV_KNOWN_BAD := [ "10_3:[1,10]", "10_3:[1,15]", "10_3:[1]", "10_3:[1,6]", "22_3:[1,3]" ];
+// ✅ EMPTIED 2026-09-06 once the root cause was fixed (EquationsCovers.m: the two roles
+// must be filled by DIFFERENT covers). The list is now empty and must STAY empty --
+// a new degenerate entry is a regression, not something to add here.
+CRV_KNOWN_BAD := [ Strings() | ];
 
 crv_files := Split(Pipe("ls data/models/*.m | xargs grep -l '\"CRV\"'", ""), "\n");
 crv_n := 0; crv_bad := []; crv_expected := [];

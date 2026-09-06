@@ -618,7 +618,19 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
             for b in cand_bases do
                 if Type(all_eqns[other_curve][b]) ne CrvHyp then continue; end if;
                 if Degree(HyperellipticPolynomials(all_eqns[other_curve][b])) ne g+1 then continue; end if;
-                if exists(ck){c : c in conic_cands | IsDefined(all_eqns[c], b) and
+                // ⚠ THE TWO ROLES MUST BE FILLED BY DIFFERENT COVERS.  The curve built below is
+                // the fibre product  y^2 = f_{gplus1}(s),  x^2 = f_conic(s)  -- so if the same
+                // cover is chosen for both, the equations coincide and y^2 = x^2 factors as
+                // (y-x)(y+x): the scheme is REDUCIBLE and is not the genus-g curve at all.
+                // This bites exactly at g = 1, where the required degree g+1 = 2 is also a
+                // CONIC's degree, so the conic itself passes the degree test above and can be
+                // selected as `other_curve`.  Measured 2026-09-06: it produced five degenerate
+                // entries -- models_10_3.m at W = {1,10}, {1,15}, {1,6}, {1} and models_22_3.m at
+                // W = {1,3} -- each storing its parent conic twice, e.g.
+                //     y^2 + 7/20*s^2 - 43/20*s*z + 2*z^2   and   x^2 + (the identical form).
+                // Nothing caught them because VerifyModelSet skips every CRV entry; see
+                // tests/CRVStructure.m, which now checks exactly this.
+                if exists(ck){c : c in conic_cands | c ne other_curve and IsDefined(all_eqns[c], b) and
                         IsDefined(all_ws, c) and IsDefined(all_ws[c], b)} then
                     conic_key := ck; base := b;
                     gplus1key := other_curve; //found the gplus1

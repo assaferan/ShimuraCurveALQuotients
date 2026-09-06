@@ -169,6 +169,16 @@ needed; `ModelRegen` and the `X0_*` helper can derive the ambient space when the
 scheme is REDUCIBLE (measured), and it cannot be the genus-1 curve recorded beside it. A fibre
 product of a double cover with itself is reducible by construction, so this looks like two covers
 with the same equation being paired as though independent.
-**Nothing had ever checked these**, because `VerifyModelSet` skips every `CRV` entry. They are
-listed in `CRVStructure.m`'s `CRV_KNOWN_BAD` — documented, not accommodated. Repair them and shrink
-the list; the test fails if the list goes stale in either direction.
+**Nothing had ever checked these**, because `VerifyModelSet` skips every `CRV` entry.
+
+✅ **ROOT-CAUSED AND FIXED the same day.** `EquationsAbovePointlessConics` builds the fibre product
+`[y^2 - eqn2, x^2 - eqn1]`, taking `eqn2` from a cover of hyperelliptic degree `g+1` and `eqn1` from
+a conic. **At `g = 1` the required degree `g+1 = 2` is also a conic's degree**, so the conic passed
+the degree test and could be selected for BOTH roles — each of the five stored its own parent conic
+twice (`10_3 [1,10]` against `[1,2,5,10]`, etc.). Fixed by requiring the two roles be filled by
+different covers; those covers now DEFER, which is the honest outcome, and the five stored entries
+were emptied to match. `CRV_KNOWN_BAD` is now EMPTY and must stay empty — a new degenerate entry is
+a regression, not something to add to the list.
+⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
+external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
+genus-3 hyperelliptic, untouched.
