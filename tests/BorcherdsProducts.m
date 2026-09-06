@@ -39,13 +39,49 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
             assert is_isom;
             ws_def, ws_ex := IsDefined(ws_data, X`W);
             if not ws_def then continue; end if;
-            for Q in Keys(ws_ex) do
-                w_alg := AlgebraMap(phi)*AlgebraMap(ws[label][base][Q])*AlgebraMap(phi^(-1));
-                phi1 := map< C_ex -> C_ex | [w_alg(x[j]) : j in [1..#x]]>;
-                phi2 := map< C_ex -> C_ex | Eltseq(Vector(x)*ChangeRing(ws_ex[Q], Universe(x)))>;
-                n_ws_cmp +:= 1;
-                assert phi1 eq phi2;
+
+            // WHICH isomorphism, not just whether one exists.
+            // phi is reused below to conjugate the Atkin-Lehner involutions, and IsIsomorphic
+            // returns an ARBITRARY element of Isom(C, C_ex) -- a torsor under Aut(C_ex). Here
+            // Aut is essentially the Atkin-Lehner group itself (measured: #Aut = 8 for 10_13's
+            // W={1} at genus 3, 4 for 26_1's at genus 2, matching the AL group orders), so an
+            // unlucky choice PERMUTES THE INVOLUTION LABELS and the check below fails on a
+            // perfectly correct model. That is why four tests pin a coordinate matrix by hand.
+            //
+            // Pinning a matrix is brittle: under CMNONCOPRIME=1 the pipeline re-presents 10_13's
+            // curve in different coordinates and the hardcoded map stops being a map at all.
+            // So instead search the torsor for one that intertwines EVERY LABELLED involution
+            // SIMULTANEOUSLY -- w_m must go to w_m, not to some other involution. That keeps the
+            // full strength of the manual check (each named involution is still verified against
+            // an explicitly exhibited isomorphism) while surviving re-presentation.
+            iso_cands := [phi];
+            if not manual_isomorphism then
+                try
+                    Aut, mAut := AutomorphismGroup(C_ex);
+                    iso_cands := [phi*mAut(a) : a in Aut];
+                catch e
+                    ;   // no computable automorphism group: fall back to the single phi
+                end try;
+            end if;
+
+            found_phi := false;
+            for psi in iso_cands do
+                all_ws_ok := true;
+                for Q in Keys(ws_ex) do
+                    w_alg := AlgebraMap(psi)*AlgebraMap(ws[label][base][Q])*AlgebraMap(psi^(-1));
+                    phi1 := map< C_ex -> C_ex | [w_alg(x[j]) : j in [1..#x]]>;
+                    phi2 := map< C_ex -> C_ex | Eltseq(Vector(x)*ChangeRing(ws_ex[Q], Universe(x)))>;
+                    if phi1 ne phi2 then all_ws_ok := false; break; end if;
+                end for;
+                if all_ws_ok then found_phi := true; break; end if;
             end for;
+            n_ws_cmp +:= #Keys(ws_ex);
+            error if not found_phi,
+                Sprintf("X0^%o(%o) cover %o: no isomorphism to the expected curve intertwines all "
+                        * "%o labelled Atkin-Lehner involution(s). %o candidate map(s) tried "
+                        * "(Isom = Aut(C_ex) o phi). The curves ARE isomorphic -- what fails is "
+                        * "that no identification matches the involution LABELLING.",
+                        D, N, Sort(SetToSequence(X`W)), #Keys(ws_ex), #iso_cands);
         end for;
     end for;
 
