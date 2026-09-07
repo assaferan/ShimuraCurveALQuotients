@@ -1,5 +1,9 @@
 // Regression test for the CM-point supply on even-level bases.
 //
+// ⚠ CONTEXT CHANGED 2026-09-07: the coprime-to-level filter is now **OFF BY DEFAULT**
+// (`CMCOPRIME=1` re-enables it). Everything below describes why `Keep` exists and still pins its
+// behaviour, but at this base the anchors now arrive without it -- see check [4].
+//
 // CandidateDiscriminants applies a coprime-to-level filter to the CM points it offers Schofer's
 // formula. The filter is a blunt instrument: on an even-level base it drops EVERY even discriminant,
 // including the zeros and poles of the two hauptmoduls, which the pipeline requires as anchors
@@ -44,10 +48,30 @@ procedure test_CMSupply()
     // [3] Keep is targeted, not a global relaxation: nothing beyond the anchors is admitted.
     assert kept_rat subset (base_rat join anchors);
 
-    // [4] The filter really is what was hiding them -- i.e. this base genuinely needs the fix.
-    //     (All four X0^15(2) divisor discriminants are even, hence dropped by a coprime-to-N=2 filter.)
-    assert IsEmpty(anchors meet base_rat);
+    // [4] ⚠ REWRITTEN 2026-09-07, WHEN THE FILTER BECAME OFF BY DEFAULT.
+    //     This used to assert the OPPOSITE -- `IsEmpty(anchors meet base_rat)` -- to show that the
+    //     coprime-to-level filter was what hid the anchors, so the base genuinely needed `Keep`.
+    //     That premise was the OLD DEFAULT. With the filter off, the anchors are offered by the
+    //     plain call, which is exactly what the flip was for, and the old assertion necessarily
+    //     fails. It failed in CI on 206a0cb3; this is a changed premise, NOT a regression.
+    //     What the pipeline actually depends on is that the anchors ARE AVAILABLE, so assert that
+    //     directly -- a stronger statement than the old one, and now true without `Keep`.
+    //     ⚠ AND IT MUST HOLD IN BOTH REGIMES. Asserting only the new default made the test fail
+    //     under `CMCOPRIME=1` -- i.e. it then described one mode and broke in the other, which is
+    //     how this assertion got stale in the first place. So branch on the flag and state the
+    //     invariant for each.
+    if GetEnv("CMCOPRIME") ne "" then
+        // filter ON (the escape hatch): the anchors are hidden, which is exactly why Keep exists.
+        assert IsEmpty(anchors meet base_rat);
+    else
+        // filter OFF (the default since 2026-09-07): the anchors arrive from the plain call.
+        assert anchors subset base_rat;
+    end if;
     assert &and[IsEven(d) : d in anchors];
+    //     ⚠ `Keep` is therefore a NO-OP at this base under the default, but it is NOT dead: it is
+    //     what makes the anchors survive when the filter is re-enabled with `CMCOPRIME=1`. Checks
+    //     [1]-[3] still pin that behaviour, and they are what to look at if that escape hatch is
+    //     ever used.
 
     printf "Done!\n";
 end procedure;
