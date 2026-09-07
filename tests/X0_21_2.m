@@ -14,6 +14,15 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // Keys with several stored entries are omitted: they cannot be matched unambiguously.
 // The matrix in each cover_data value is a placeholder -- with manual_isomorphism false (the
 // default) the helper never reads it.
+//
+// ⚠ THIS TEST IS WEAKER THAN THE HAND-WRITTEN ONES: `ws_data` IS EMPTY, so it makes ZERO
+// involution comparisons. It verifies that each cover is ISOMORPHIC to the stored curve, but not
+// that the Atkin-Lehner involutions correspond -- and the involutions are what make these QUOTIENT
+// models rather than merely curves. 23 of the 34 X0_*.m tests do check them; the ones generated on
+// 2026-09-07 (this file among them) do not.
+// ⇒ Closing that needs involution matrices IN OUR MODEL'S COORDINATES. Taking them from the
+// pipeline's own `ws` output would be circular; deriving them from Guo-Yang's published
+// involutions is independent but is per-base work. Recorded rather than silently accepted.
 
 function load_covers_and_ws_data_21_2()
     _<s> := PolynomialRing(Rationals());

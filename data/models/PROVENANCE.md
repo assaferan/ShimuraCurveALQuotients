@@ -105,6 +105,15 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
+⚠ **A SECOND KNOWN WEAKNESS: 10 of the tests DO NOT CHECK THE INVOLUTIONS.** The tests generated
+on 2026-09-07 (`51_1 55_1 57_1 14_5 14_3 26_3 21_2 15_2 22_3 22_5`) carry an EMPTY `ws_data`, so
+they make zero involution comparisons: they verify each cover is isomorphic to the stored curve,
+but not that the Atkin-Lehner involutions correspond — and the involutions are what make these
+QUOTIENT models rather than merely curves. 23 of the 34 `X0_*` tests do check them.
+⇒ Closing it needs involution matrices in OUR models' coordinates. Taking them from the pipeline's
+own `ws` output would be CIRCULAR; deriving them from Guo-Yang's published involutions is
+independent, but is per-base work. Each affected file says so in its header.
+
 ⚠ **A KNOWN WEAKNESS OF THE `X0_D_N.m` TESTS.** `test_AllEquationsAboveCoversSingleCurve` SILENTLY
 SKIPS cover keys it does not find (`if not is_def then continue`), so a base whose re-derived `W`
 keys do not match the expected ones would pass **vacuously**. `X0_51_1` was negative-controlled by
