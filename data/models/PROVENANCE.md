@@ -132,6 +132,21 @@ genuinely different presentation and the isomorphism assertion fails.
 
 **Still open for `14_3 21_2 22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
+**Counted, not assumed** (`SetVerbose("ShimuraQuotients",1)` prints them; the repo has produced
+three vacuous tests, so the comparisons made are checked rather than inferred from a green run):
+
+| base | curve cmps | involution cmps | covers matched |
+|---|---|---|---|
+| `51_1` | 4 | 2 | 4/4 |
+| `55_1` | 4 | 2 | 4/4 |
+| `22_3` | 14 | 3 | 14/14 |
+| `15_2` | 13 | 3 | 13/13 |
+| `14_5` | 8 | 4 | 8/8 |
+| `26_3` | 12 | 3 | 12/12 |
+| `57_1` | 4 | 2 | 4/4 |
+
+19 involution comparisons in total, and every expected cover matched in every case.
+
 `14_3` and `21_2` are pending for a specific, recorded reason. `construct_crv_isomorphism` declines
 on both because our pair and Guo-Yang's present the curve over DIFFERENT intermediate quotients (at
 `21_2` Guo-Yang's `y` has weight 3 and a genus-2 `y`-quotient, ours weight 2 and genus 1), so there
