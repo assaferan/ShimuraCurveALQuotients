@@ -1,4 +1,8 @@
-# Handoff — 2026-08-30
+# Handoff — 2026-09-06
+
+**The newest section is the 2026-09-06 one below; everything after it is older and kept for
+provenance.** Earlier material still says things like "34 of 43" — those counts are STALE, and the
+2026-09-06 section says what replaced them.
 
 **Supersedes** the 2026-07-17 handoff about producing cover models, archived as
 `HANDOFF_2026-07-17.md`. That task is not dead, but it is gated on the blocker described below.
@@ -8,6 +12,62 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 **➡ For what to do next, see `PLAN.md`** — five tracks, a do-not list, and the recurring traps.
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
+
+## Handoff — 2026-09-06 (this session; supersedes the state notes below)
+
+**Five models produced, and the Guo-Yang denominator was wrong.**
+
+    Guo-Yang published equations:  42 reproducible bases (NOT 43 -- see below)
+    we now have a model for:       37
+    remaining blockers:             5   95_1  111_1  119_1  159_1  69_1   -- ALL RUNNING
+
+* **`93_1`** — the vx fix unblocked it (default recipe, 14.1 h). It also **settles a typo in their
+  table**: their `-3t` is `-3s`, determined by isomorphism from our own model against three refuted
+  alternatives, and later **confirmed independently** by the journal version.
+* **`26_3`** — recovered with `CMNONCOPRIME=1`, 189 s. Full `V_4` diagram matches; their conic
+  `-8x^2-3` comes out coefficient for coefficient.
+* **`15_4`** — a FOURTH provenance category: **literature-derived, not pipeline-produced**, and it
+  never can be (see below). `a = -1` is confirmed by our point counts, `b = -1` by the full-curve
+  trace-formula comparison.
+* **`10_61`, `14_43`** — first two models out of the OBSTRUCTED class (41 h, 42 h). ⚠ Neither is a
+  Guo-Yang base, so **no external oracle** — `ModelChecks` alone. Weaker evidence; quote it as such.
+
+**⚠ 42, NOT 43.** `15_4` is outside the Guo-Yang method *by the authors' own statement* — their
+published Remark 39 says the normalizer of the Eichler order strictly contains the Atkin-Lehner
+group there, so the star quotient our pipeline forms is the wrong object. It is not a blocker; it
+is out of scope.
+
+**⚠⚠ WE HAD BEEN READING THE SUPERSEDED PAPER.** arXiv:1510.06193 has exactly ONE version (2015).
+The paper of record is **Compositio Math. 153 (2017) 1-40**, substantially revised and NOT on
+arXiv; our `ShimuraCurves-arxiv.tex` is the arXiv one. The journal fixes `93_1`'s equation and
+`39_2`'s involutions, and adds Remarks 38 and 39. PDF is in the user's Dropbox. **Check the
+journal, not just v1.** Tu (Pacific J. Math. 269 (2014) — also now in that Dropbox folder, free
+from MSP, not on arXiv) confirms `15_4` and covers `26_3`, but supplies nothing for any other
+non-squarefree base.
+
+**Speedup shipped:** the q-expansion bootstrap, `qexp(t^j f) = qexp(t)^j qexp(f)`, both sides —
+**up to 18.6x** on that step at `pole_order 800`. ⚠ NOT yet shown to help any base end to end.
+
+**The coprime guard is under doubt.** Three bases (`39_2`, `14_3`, `26_3`) produce Guo-Yang-matching
+models with it OFF, and `26_3` is the very base whose bad discriminants justify its existence. A
+targeted sweep is running. ⚠ Only the 11 `N>1` `X0_*` tests can possibly show anything: for `N=1`,
+`gcd(d,1)=1` makes the filter provably a no-op.
+
+### Process lessons this session cost something to learn
+
+* **Never `git pull` a clone that has jobs running from it.** I did, to lovelace, with eight jobs
+  running from that directory. `AttachSpec` loads packages ON DEMAND, so a long run can compile
+  source that changed under it. `10_61` and `14_43` cannot be pinned to a single commit because of
+  it. Launch long runs from a COPIED tree.
+* **My own foreground timeout killed a background sweep**, and the sweep recorded the killed run as
+  a FAILURE. That produced a false "`X0_10_13` breaks under `CMNONCOPRIME=1`", since retracted. A
+  killed run and a failing run are indistinguishable in a one-line summary.
+* **`nohup ... &` inside a background call reports "completed" for the WRAPPER**, not the job. Check
+  process state; do not trust the notification.
+* **Corrections made:** `93_1` was first reported as "34 -> 35" (that is the CM-TABLE count, a
+  different set); `EchelonForm` was called negligible when it has the STEEPEST growth (~`PO^4.4`);
+  `15_4` was diagnosed as a squarefree-`N` code issue when the authors had stated the real reason
+  in a version we had not read.
 
 ## ⇒ READ THIS FIRST — 2026-09-04, late
 
@@ -87,6 +147,201 @@ clone are clean and in sync; housekeeping list is empty.
 Guo-Yang blockers are correctly classified for the first time (1 structural, 3 vx, 1 nonintegral,
 1 non-rational, 2 odd-`D` basis ceiling, 1 open anomaly — `26_3`'s exact `z -> z/(z-1)`
 involution). `22_5` and `14_3` need full-curve models GENERATED, not transcribed.
+
+## Update — 2026-09-05: Guo-Yang coverage re-measured, and two code changes
+
+Six commits, `64d9316`..`36ac71e`, all pushed. **Two of them change code and only ONE of the two
+is fully validated** — read the status column before building on either.
+
+### ✅ TWO GUO-YANG EQUATIONS RECOVERED — 34 of 43 (`39_2` and `14_3`)
+
+Both were blocked by the **coprime-to-level CM filter**, not by mathematics, and both were filed
+under diagnoses that had gone STALE rather than been wrong. `CMNONCOPRIME=1` (env-gated, OFF by
+default) unblocks them; the published equations are what make the results believable.
+
+    39_2   filed NONINTEGRAL.   filter on: 3 CM points vs demand 19 -> "not enough points".
+           filter off: 24 points, 15 keys 0 empty. W={1} genus-7 hyperelliptic,
+           IsIsomorphic to Guo-Yang in 0.06 s. Pinned in tests/GuoYangEquations.m (9 bases).
+    14_3   covers under-determined by default, W={1} EMPTY (6 keys, 3 populated).
+           filter off: 16 keys, 0 empty. W={1} genus-3 CRV pair, IsIsomorphic in 6817 s.
+           Pinned in tests/_offline/GuoYangCurve_14_3.m -- OFFLINE because ~2 h would wreck
+           GuoYangEquations.m's ~97 s.
+
+`ModelChecks` passes both independently (82 files, 8767 checks, 0 failures) via trace-formula
+point counts rather than the path that produced them.
+
+⚠ **IS EVERYTHING REPRODUCIBLE FROM COMMITTED CODE? NO — and that is partly deliberate.** Of the
+34: **24** are verified BY re-derivation (the `X0_D_N.m` tests run the pipeline, so passing IS
+reproduction); **10** are stored-model comparisons that never run it. Of those 10, four do NOT
+regenerate by default, for two different reasons that should not be conflated:
+* `22_3`, `15_2` — ACCIDENTAL: the y2-scale guard (`1768517`) postdates the files. `Y2TWIST=1`
+  restores them. This is drift, and it went unseen because every test reads the stored model.
+* `39_2`, `14_3` — DELIBERATE: they exist only under `CMNONCOPRIME=1`, which stays off because it
+  has no theoretical guarantee. Their justification is the published equation, not regeneration.
+  Enabling the flag to make them "reproducible" would trade a documented gap for an undocumented
+  risk on every base.
+⇒ The target is NOT "everything regenerates by default", it is "every non-reproducing file has a
+recorded reason and an independent validation" — which is what `MR_KNOWN_DRIFT` and the model
+headers now encode. (`14_5`, `55_1`, `21_2`, `87_1` were still unchecked when this was written.)
+
+### ✅ X_0^39(2) RECOVERED — the first of the two
+
+**The one coverage result of the session.** `39_2` was filed as the NONINTEGRAL malformed-form
+base; that was wrong. It is starved by the **coprime-to-level CM filter**: with the filter on it
+sees 3 CM points against demand 19 and dies with "Could not find enough points"; with
+`CMNONCOPRIME=1` it sees 24 and builds cleanly (15 keys, 0 empty). Its `W={1}` genus-7 curve is
+**`IsIsomorphic` to Guo-Yang's published equation** (0.06 s), now pinned in
+`tests/GuoYangEquations.m` (9 bases); `ModelChecks` passes it independently (82 files, 8573 checks,
+0 failures, via trace-formula point counts rather than the path that produced it).
+
+⚠ **The flag is NOT safe by default and is not enabled.** The `p | gcd(d,N)` local factor has no
+live implementation (`kappaminuszero` is dead code), and at `26_3` two non-coprime discriminants
+give provably wrong values. What makes `models_39_2.m` trustworthy is the INDEPENDENT ORACLE, not
+the flag — **any further base produced this way must clear the same bar before being committed.**
+⚠ That file does not regenerate by default; recorded in its header and in `ModelRegen`'s
+`MR_KNOWN_DRIFT`, with the reason distinguished from the three y2-guard entries.
+
+`26_3` is the same story but NOT yet closed: a model is produced, its `[1,78]` cover is verified
+against Guo-Yang, but the genus-5 `W={1}` comparison had not returned when this was written.
+
+### The Guo-Yang picture, measured rather than inherited
+
+    43   published equations                    (see the counting trap below)
+    34   we reproduce today, with a test        (24 pipeline + 9 GuoYangEquations + 14_3 offline)
+     9   the gap: 8 with no model, + 22_5
+
+`PLAN.md`'s COVERAGE section had `24` tested and a `10`-base transcription gap; both were stale.
+**TIER 1' is finished as a transcription task** — `57_1` was the last transcribable base
+(`64d9316`, a paired presentation like `21_2`; 8 bases, 112 s, still dominated by `21_2`'s ~100 s).
+`14_3` and `22_5` are NOT transcribable: we do not possess the object to compare, so they are
+model-GENERATION items. `10_19` looks like a gap in the stored models but is not — its
+`X0_10_19.m` re-derives the curve via `AllEquationsAboveCovers` instead of reading a model file.
+
+⚠ **Counting trap: the obvious grep for the 43 bases returns 41.** Two rows write the label
+without braces round `D` (`$X^6_0(17)$`, `$X^6_0(29)$`), so a pattern anchored on `X^{D}_0(N)`
+drops exactly those two and yields a plausible 41. Cross-check on the equation cell instead:
+`multirow{1}{*}{\text}` occurs 43 times. Also, `6_17`/`6_29` appear ONLY in CM-value captions
+elsewhere — having a `tests/X0_6_17.m` does not imply a published equation — and `15_1` has a test
+but is not a GY equation base at all.
+
+### Two code changes
+
+| commit | change | status |
+|---|---|---|
+| `d9b52d0` | `BorcherdsForms`: shift the oo-side basis by its own valuation, not the 0-side `n0` | fix landed, **NOT yet shown to unblock any base** |
+| `36ac71e` | `EquationsCovers`: `Y2TWIST=1` prototype, decide the unpinned twist instead of dropping the cover | works, and **yields 0 new GY equations** |
+
+**The vx fix (`d9b52d0`).** The "vx class" crash is Magma's own `assert vx ge 0`
+(`GalFldFun.m:305`) reached from `AbsEltseq` on a deep Laurent pole (`93_1`: `q^-60`). Cause is a
+wrong-object normalisation at `BorcherdsForms.m:771`: `ech_fs_oo` holds the **oo**-expansions of the
+**ZERO**-side etas `ech_etas_0`, but the shift applied was `n0`, which comes back from
+`WeaklyHolomorphicBasis(... : Zero, n0 := n0)` and bounds the 0-side, not the pole at oo. Shift by
+`max(n0, -min valuation)` instead, and carry the same `n_oo` into BOTH places that must agree:
+`coeffs_to_divisor_matrix(-n_oo, ...)` (the shift DEFINES the column↔exponent mapping) and
+`min_m := Minimum(min_m, -(n_oo + k - 1))` (`relevant_ds` must stay a superset of
+`relevant_ds_0_oo`).
+⚠ **Both of those were learned by running it, not by reading it.** Missing the `min_m` one made
+`95_1` clear the assert and then die at `:891` with `column index not in [1..37]`; and `n_oo` was
+unassigned for even `D` (the block computing it is odd-`D` only), caught by the regression.
+**Safety property:** where every oo-pole already fits within `n0` — every base that currently works
+— the maximum IS `n0` and the change is a literal no-op.
+✅ **SWEEP DONE, AND THE FIX IS EXONERATED — do not re-open this.** The 8-base sweep came back
+**6 IDENTICAL / 2 DIFFERS** (`22_3`, `15_2`). ⚠ The `DIFFERS` does NOT falsify the no-op claim, and
+the instruction that stood here ("if any base says DIFFERS the commit needs revisiting") would lead
+you to exactly the wrong conclusion. The discriminating test is **fresh-vs-fresh**: regenerate at
+`d9b52d0~1` and compare to regenerating at HEAD. Both came back `IDENTICAL`, so the fix changed
+nothing; the two bases differ because their COMMITTED models are stale (see below). No-op verified
+on 7 of 7 testable bases, including odd `D` (`51_1`).
+
+**The `Y2TWIST` prototype (`36ac71e`).** `find_y2_scales` cannot always pin the y2-scale from
+sparse CM data, so `EquationsOfCovers` force-defers the cover (issue #36, `1768517`) and back-fill
+usually cannot recover it. But the twist is decidable by machinery INDEPENDENT of the
+Borcherds/Schofer path that produced the equation — the Eichler-Selberg point count that
+`ModelVerification.m` runs as check [4]. Env-gated, off by default, and it accepts only when
+exactly one squarefree twist survives at 3+ good primes, so it never trades a deferral for a guess.
+Ground truth: at `22_5` it recovers `W={1,2,5,10}` at `d=1` and reproduces the committed
+polynomial coefficient-for-coefficient. **So `models_22_5.m` is regenerable from current code with
+the twist VERIFIED rather than trusted.** Scope, honestly: 1 cover of 4 withheld, 0 new equations,
+`W={1}` still empty; the other three failed their SOLVES, so they are under-determined like
+`14_3` — a different problem that this does not touch.
+
+### THREE COMMITTED MODELS DO NOT REGENERATE — and now there is a test for it
+
+Found while validating the vx fix, not looked for. `models_22_5.m`, `models_22_3.m` and
+`models_15_2.m` do not reproduce from current code, all for one reason: the unpinned-y2-scale
+guard (`1768517`, 2026-08-24 19:20) POSTDATES all three, so regeneration withholds covers they
+contain. ⚠ **They are NOT wrong** — all three pass `ModelChecks` and their Guo-Yang comparisons.
+They are *unreproducible*, which is a different failure and one nothing in the suite could see:
+`ModelChecks` and `GuoYangEquations` read STORED models and never run the pipeline, and the
+`X0_D_N.m` tests run it for only ~25 bases, each needing hand-written cover/AL data.
+
+**`tests/_offline/ModelRegen.m` (`afa0412`) closes that gap** — auto-discovering, no per-base
+authoring, works for all 81 models; regenerates and checks each committed cover is still produced
+and still ISOMORPHIC. The three are listed in `MR_KNOWN_DRIFT`, reported rather than asserted away.
+Two traps it cost: matching must be a **multiset** match (the first draft passed `22_3` clean while
+it had LOST a cover, because two committed entries matched the same survivor), and selection must
+be an **env var** (`MODELREGEN_BASES`) because `run_tests.m` `eval`s test files and a `name:=value`
+argument is invisible there — it silently runs the default list instead.
+
+**What `Y2TWIST=1` restores** (measured against the committed files): `22_5` FULLY (3/3,
+coefficient-for-coefficient), `15_2` FULLY (12/12 keys, one cover differing in presentation but
+`IsIsomorphic`), `22_3` 13/14. ⇒ The residual gap is **GENUS 0 by construction** —
+`select_y2_twist` skips `X`g lt 1` because `HyperellipticCurve` needs degree >= 3, and both `22_3`
+losses are conics. **Extending twist selection to conics is the next concrete step**, with `22_3`
+as its regression target. This revises the scope note above: `Y2TWIST` is a REPRODUCIBILITY fix for
+the model corpus, not the single-cover curiosity the commit message describes. Still 0 new
+Guo-Yang equations.
+
+### `26_3`: the Mobius anomaly is an `s` <-> `s~` SWAP
+
+At discs `-267` and `-708` Guo-Yang's `s` sits in **our `s~` row**; the other 12 of 14 are correct,
+and `s + s~ = 1` holds at every disc. The exact `z -> z/(z-1)` is just how an `s -> 1-s` swap looks
+after the checker's cross-ratio normalisation — the involution was the shadow, not the cause.
+⚠ NOT a CM-point selection ambiguity (the old framing): both values are the same point, and each
+disc appears exactly once in our table. **Root cause: `s + s~ = 1`, the relation used to pin the
+pair, is SYMMETRIC under exchanging them**, so it cannot resolve the ordering; the signs are forced,
+only the labelling is free. Deliberately NOT fixed — what pins the ordering at the other 12 discs is
+unidentified, and a tie-break without that invariant is a guess. Memory: `26-3-hauptmodul-swap`.
+
+### Corrections made this session — do not re-derive these
+
+* **`22_5` is not "unreproducible".** I claimed a fresh run drops `[1,2,5,10]` because the target
+  cover sets differ and `08ce5fa` came from a lost path. **False** — `{1,2,5,10}` (label 7584,
+  g=1) is in `GetHyperellipticCandidates()` and `Xstar`CoveredBy` today. The cover is withheld
+  **on purpose** by the y2 guard, which postdates the model file by 12 hours.
+* **And the committed entry is CORRECT**, measured: `VerifyModelSet` passes it 24/24 and
+  discriminates the twist — six twists `d = -1,2,-2,5,-5,11` all fail with 3-5 failures. So that
+  guard is CONSERVATIVE, which is what motivated `Y2TWIST`. "Do not overwrite `models_22_5.m`"
+  still stands; the reason changed.
+* **The vx crash is at `BorcherdsForms.m:771`, not `ShimuraQuotients.m:1116`.** My first candidate
+  was the unnormalised `denom` in `IsHyperelliptic`; the traceback never reaches it. `:615` is
+  exonerated by its own `assert minval eq -Minimum(...)`.
+* **`111_1`/`119_1` were attempted 2026-09-03, AFTER the 66x speedup (`04f1d7b`, 08-29).** So
+  "re-run them now that the basis step is faster" is NOT free progress.
+* **`cmsupply`'s `CMVERD OK` does not apply to the full curve.** It iterates `Xstar`CoveredBy`
+  (`ShimuraQuotients.m:1526`), the immediate covers, whose genera top out at 1 (`14_3`) and 2
+  (`22_5`) — while GY's published curves there are genus 3 and 5. `OK margin 0` means "adequate for
+  the easy targets, zero slack", nothing about `W={1}`.
+
+### Runs in flight when this was written
+
+**On lovelace, and note there are now TWO checkouts there.** The long runs use
+`~/shimura/ShimuraCurveALQuotients` (at `05471c8`, behind `main`); the new work uses a SEPARATE
+clone `~/shimura/vxfix` pinned to `36ac71e`, deliberately, because `AttachSpec` loads packages
+lazily and pulling under a 17-hour run could swap code mid-flight. **Do not `git pull` the first
+one while those jobs are alive.**
+
+* `34_11` — ~17 h, inside `AllEquationsAboveCovers` (4 ambiguous-sign points, 16 combinations),
+  RSS plateaued ~22 GB. Past `M0MultiplierExact` and `ValuesAtCMPoints` entirely. This is the run
+  that would give a SECOND base ever to produce models.
+* `10_61`, `14_43` — ~15 h, still in the absolute-values phase. No gate failures anywhere.
+* `93_1`, `95_1`, `159_1` — the vx bases, in `~/shimura/vxfix`, output to `~/shimura/vxout`.
+  ⚠ Ran locally first; that was a mistake — the Mac has 48 GB and this class peaked at 40.6 GB on
+  `119_1`. Use lovelace for these.
+* the 8-base regeneration sweep, `~/shimura/regen/`.
+
+⚠ **Clearing the vx assert is necessary, not sufficient** — these bases may still die downstream,
+and `95_1`/`159_1` sharing `93_1`'s cause is inherited from memory, not measured.
 
 ## Update — 2026-09-04: `tier1-models` is RETIRED; `main` is the only code branch
 

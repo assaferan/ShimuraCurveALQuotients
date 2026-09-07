@@ -1060,7 +1060,30 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
  of the two hauptmoduls, which the pipeline needs as anchors. Without this, AbsoluteValuesAtCMPoints'
  Include (must-use) set is selected FROM this list and so comes out empty whenever an anchor is not
  coprime to N, e.g. on X0^15(2), whose four divisor discriminants are all even.} //'
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true,
+    // CMNONCOPRIME=1 (env-gated, OFF by default): admit CM points NOT coprime to the level.
+    //
+    // The filter here is the one ShimuraQuotients.m:1420 calls "a blunt instrument": it exists to
+    // keep out points whose Schofer values misbehave, but it drops far more than it needs to. On
+    // 26_3, of Guo-Yang's 14 published discriminants only -8, -11, -20 are coprime to N=3, so the
+    // filter admits 3 and discards 11 -- and only 2 of those 11 actually misbehave (the s <-> s~
+    // swap at -267 and -708). Measured pools at the default bd := 4:
+    //
+    //     base   demand   filter ON   filter OFF
+    //     26_3     15         3          21
+    //     39_2     19         3          24
+    //
+    // Both then die with "Could not find enough points", so this filter -- not any real absence of
+    // CM points -- is what blocks those two Guo-Yang bases.
+    //
+    // ⚠ Relaxing it is NOT known to be safe: the misbehaving points would poison the solve, which
+    // is exactly what the filter protects against. Any model produced this way MUST be checked
+    // against Guo-Yang's published equation/CM table before it is believed. Hence env-gated and
+    // off by default.
+    //
+    // NB BorcherdsForms.m:709 ALREADY falls back this way for CM-starved bases; that this call
+    // does not is the asymmetry this flag exists to probe.
+    cm_coprime := GetEnv("CMNONCOPRIME") eq "";
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := cm_coprime,
                                                               bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
 end intrinsic;

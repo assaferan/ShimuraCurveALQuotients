@@ -76,6 +76,249 @@ month.
 
 ---
 
+## SPEEDING UP THE EXPENSIVE BASES — measured 2026-09-05
+
+The five odd-`D` level-1 bases (`93_1 95_1 159_1 111_1 119_1`) are the largest block of
+unreproduced Guo-Yang bases and need 8+ hours each. Three constant-factor wins shipped, and two
+algorithmic hypotheses were tested and REFUTED. Recording both so neither is re-attempted.
+
+### Shipped: 41% off `BorcherdsForms` (137.3 s -> 81.1 s on a full `genmodels` run of `51_1`)
+
+    c04f938  &+ single-pass          the fold copied the whole accumulator per addition and
+                                     re-reduced -- O(k^2).            137.3 -> 107.6
+    1d8b2fc  reduce stops sorting    it went through Exponents (which sorts) to find zeros;
+                                     removal order is irrelevant.     107.6 -> 103.4
+    33379fa  power cache             qExpansionAtoo recomputed nor_eta_ds[i]^r[i] per quotient
+                                     -- 3451296 series '^' calls.     103.4 ->  81.1
+
+⚠ The linear algebra was NEVER the bottleneck: `EchelonForm` is 6 s of 222 s. It was all
+data-structure overhead in the eta-quotient layer. Every step verified by byte-identical
+regeneration of `51_1` and `14_3` plus `ModelChecks` 8767/0.
+
+### ⚠ REFUTED (1): the basis pool is NOT redundant
+
+`BFPROGRESS=1` now reports `BFPOOL pole_order=... pool=... rank=...`. Measured at `51_1`,
+`pool ~ rank` at every call (`159/154`, `37/37`, `149/149`, `173/173`, `253/253`, `312/307`).
+There is no repeat of the 66x `WeaklyHolomorphicBasis` win (a rank-258 space echelonised as
+12784 rows) hiding here. Spanning a rank-253 space genuinely needs 253 q-expansions.
+
+### ⚠ REFUTED (2): "find a SHORT eta-quotient combination instead of a full basis" — base-dependent
+
+The idea, from the observation that Guo-Yang found their forms almost by hand: skip the complete
+basis up to `pole_order` and search directly for a short combination with the required principal
+part. Measured how many eta-quotient terms our produced forms ACTUALLY use:
+
+    X_0^6(1)   : 4 to 7 terms      <- hand-scale, matches the literature's small bases
+    X_0^51(1)  : 433 terms         <- not hand-scale
+
+⇒ **It would work on the bases we already solve in seconds and not on the expensive ones.** The
+"almost by hand" framing holds at small `D` (`6_1`, `10_1` -- Errthum's bases) and breaks by
+`D = 51`.
+
+⚠ ONE THING STILL OPEN, and it is the only way this idea survives: 433 is the length of OUR
+representation. If the eta quotients used are linearly DEPENDENT, a shorter representation may
+exist and our construction is simply not finding it. `FindMinimalEtaQuotient` exists for exactly
+that question. Settle that before discarding the approach entirely — but do not assume a short
+form exists just because one does at `6_1`.
+
+### Where the remaining time goes
+
+After the three fixes, re-profiled: `Constructor (sub)` 113 s / 1.23M calls (Magma-internal
+allocation), `qExpansionAtoo` 53 s / 12531 calls, `&*` 13.8 s / 262860. These look like
+allocation rather than anything with an obvious algorithmic fix, so the next constant-factor
+increment is likely smaller and harder-won than these three.
+
+### How the cost SCALES — measured 2026-09-05, and it corrects a claim above
+
+`basis_of_weakly_holomorphic_forms` at `51_1`, timing its three parts against `pole_order`
+(`scratchpad/poolcost.m`; pool grows linearly in `pole_order` because `full_basis` is the
+t-EXPANDED pool):
+
+| `pole_order` | pool | qexps | `EchelonForm` | `ech_etas` | total |
+|---|---|---|---|---|---|
+| 100 | 86 | 0.40 s | 0.01 s | 0.42 s | 0.83 s |
+| 200 | 186 | 2.75 s | 0.26 s | 2.89 s | 5.90 s |
+| 400 | 386 | 22.09 s | 5.49 s | 16.26 s | 43.84 s |
+| 800 | 786 | 213.84 s | 112.94 s | 90.38 s | 417.16 s |
+
+⚠ **"`EchelonForm` was only 6 s of 222 s" does NOT extrapolate.** That was measured at a small
+pole order. `EchelonForm` has the STEEPEST growth of the three (~x20-26 per doubling, ~`PO^4.4`,
+vs ~`PO^3` for qexps): 1% of the cost at `PO=100`, 27% at `PO=800`, and on this trend it overtakes
+qexps around `PO ~ 1200-1600`. Any future profile must say at which `pole_order` it was taken.
+
+### The t-ladder leaves the pool ALREADY TRIANGULAR — structure confirmed, exploitation REFUTED
+
+Measured at `51_1`, `87_1`, `55_1`, `15_2` (`scratchpad/poolstruct.m`), with `k` = 32, 56, 37, 8
+and `r` = 11, 6, 10, 49 — so this is not one base's accident:
+
+* every pool element has a **distinct valuation** (e.g. 386 distinct over 386 forms);
+* sorting rows by valuation puts **100% of rows in triangular position**, every consecutive pair
+  strictly increasing.
+
+This is structural, not luck: `WeaklyHolomorphicBasis` already returns an echelon `E`, and
+multiplying a block by `t^j` shifts every valuation by exactly `-jk`, so the size-`k` blocks tile
+the pole range without collision. So `EchelonForm` never SEARCHES for pivots — all its time is
+elimination above pivots that are already on the diagonal.
+
+⚠ **The obvious inference — "so skip the reduction" — is REFUTED by measurement.** At `51_1`,
+`PO=800` (`scratchpad/echcost.m`):
+
+    EchelonForm (full RREF)          : 112.910s
+    sort rows into valuation order   :   0.030s
+    pivot columns identical          : true (786 vs 786 pivots)
+    max |num|,|den|: RREF 1 digits, sorted pool 33 digits
+
+The RREF turns **33-digit** rational entries into **1-digit** ones. It is not wasted elimination;
+it is buying a vastly better-conditioned basis. Feeding the raw sorted pool downstream would push
+33-digit rationals through `ech_basis * mat` and the linear solve, RELOCATING the cost and most
+likely increasing it. Do not re-propose this without first measuring the downstream cost on
+33-digit input.
+
+What survives as a lever: the pivot order is known in advance, so a solver specialised to a
+triangular system with a fixed pivot sequence (or a fraction-free/modular one) could beat the
+generic call — but the target is the coefficient growth, not the pivoting.
+
+### The untested lever: q-expansions of the t-expanded pool
+
+`qexps` is still the largest single term (213.84 s of 417 s at `PO=800`). We already bootstrap the
+BASIS the way Guo-Yang do — `BorcherdsForms.m:600`, `full_basis := [t^r*f : f in init_basis]`, with
+the basis computed only at `n0+k` — but line 607/609 then pays a from-scratch eta-quotient
+expansion for EVERY pool element. `t^j*f` has the same number of eta-quotient terms as `f` (the
+exponent vectors merely shift), so each costs full price, and there are `r` times as many.
+The alternative is `qexp(t^j*f) = qexp(t)^j * qexp(f)`: expand only `init_basis`, `basis_n0` and
+`t`, then multiply series. ⚠ NOT free — the products need higher ABSOLUTE precision on the factors
+(`1 + jk` and `1 + v` respectively), so measure before believing it. NOT YET TESTED.
+
+---
+
+## PRODUCING MORE MODELS RELIABLY — the plan, 2026-09-05
+
+*(adopted after the session that recovered `39_2` and `14_3`. Priority set by assaferan: make the
+REAL REPAIR first, not the workaround.)*
+
+### Where we are
+
+Coverage **34 of 43**. Both recoveries came from the same place, and it was not mathematics: the
+**coprime-to-level CM filter** was starving the CM pool (`39_2`: 3 points against demand 19; with
+the filter off, 24). Three blocked bases examined, three whose recorded diagnosis had gone STALE.
+
+### The problem to solve
+
+`CMNONCOPRIME=1` is the lever that works and it has **no theoretical guarantee**: the
+`p | gcd(d,N)` local factor has NO live implementation (`kappaminuszero`, `SchoferFormula.m:569`,
+is dead code and does not even cover that case — it loops over `PrimeDivisors(N div GCD(d,N))`,
+the coprime part), and at `26_3` two non-coprime discriminants give provably wrong values. So its
+output has only ever been trusted where Guo-Yang publishes an equation to check against.
+**That does not scale**: 47 of our models are beyond Guo-Yang's list, and any new base has no
+published answer.
+
+⇒ **THE REAL REPAIR IS THE `p | gcd(d,N)` SCHOFER VALUE.** Fix it and the filter can be removed,
+which turns an oracle-dependent hack into a sound method and unblocks bases nobody has published.
+
+### Why this is tractable now: there is a per-value oracle
+
+Guo-Yang's **CM-value tables** give the correct `s` at every listed discriminant — a per-value
+oracle, far sharper than a per-model one. At `26_3` we know exactly which values are wrong and
+what they should be:
+
+    disc    ours     correct   relation
+    -267    8/25     17/25     ours = 1 - correct   (s and s~ exchanged)
+    -708    11/49    38/49     ours = 1 - correct
+    other 12 discs: correct
+
+### What is already ruled out — do not re-derive these
+
+* NOT the sign tie-break. `find_signs_hauptmodul` never reports ambiguity at those discs (checked
+  with an unconditional marker, so the silence is real and not a run that never reached it). The
+  absolute values arrive already exchanged from `AbsoluteValuesAtCMPoints`.
+* NOT seed or quaternion-order representative dependence. Stable across 3 seeds — so the `15_2`
+  root cause ([[embedding-selection-root-cause]]) does NOT transfer.
+* NOT a function of `d`'s standard invariants. `-267` matches the GOOD `-123`, and `-708` matches
+  the GOOD `-132`, on class number, fundamentality, every valuation and every Kronecker symbol.
+  ⇒ so a `Keep`-list keyed on `d` cannot work.
+* NOT duplicate rows: each disc appears exactly once in our table.
+* Coprimality alone does not predict it: 11 of the 14 discs are non-coprime to `N=3` and only 2
+  are wrong.
+
+### The live hypothesis, and the experiment that tests it
+
+Both bad discs have `h(d) > 1`, so SEVERAL CM points share the discriminant. "We hold both values"
+does not rule this out — evaluating `s` and `s~` at DIFFERENT points of the same discriminant
+produces exactly the observed exchange. The good discs also have `h > 1`, so the hypothesis needs
+a second ingredient: perhaps at the good ones the several points give the SAME value (conjugates
+with a rational common value) while at the bad ones they differ.
+⇒ EXPERIMENT RUN 2026-09-05. **The hypothesis is REFUTED and the problem is split.** Every
+discriminant contributes **exactly ONE** rational CM point — `-267` (h=2) and `-123` (h=2) alike,
+`-708` (h=4) and `-132` (h=4) alike. `h(d) > 1` does NOT put several points in the pool, so this
+is **not point selection**.
+
+### Where the defect is NOT — ruled out 2026-09-05, do not re-run these
+
+    one CM point per disc          both bad and good; not selection
+    ScaleForSchofer                -1/4 UNIFORMLY for -123/-267/-132/-708
+    the optimal embedding lambda   all have the correct norm -2d, all with v3 = 1;
+                                   no structural difference between bad and good
+    find_signs_hauptmodul          never reports ambiguity at the bad discs
+    seed / order representative    stable across 3 seeds
+
+⚠ Incidental but useful: `ElementOfNorm` returns a DIFFERENT `lambda` for the same `d` on
+different runs (`-123` gave `[-93,-10,-122]` then `[-67,-10,-90]`) while the computed values stay
+fixed — so PR #18's isometry-invariance fix is holding, and lambda-dependence is NOT a live
+suspect.
+
+⇒ **THE DEFECT IS IN THE KAPPA / LOCAL-FACTOR SUM.** It is the only stage left between inputs that
+are identical across the bad/good pairs and outputs that differ.
+
+⚠⚠ **AND THE MISSING THEORY IS NOT MISSING — IT IS IN OUR OWN §10.** *(assaferan, 2026-09-05;
+this supersedes the "the fix was never found" framing carried from
+[[embedding-selection-root-cause]].)* Schofer Thm 4.1 assumes the local lattice is unimodular at
+unramified primes, which FAILS at `p | N` for Eichler orders — and `sec:determined` (§10) supplies
+the modification. From the proof of `thm:noresplit` (paper line ~1140): at each `p | DN` the local
+discriminant group is `(Z/p)^2` and the two relevant forms are
+
+    Eichler level p (UNRAMIFIED, non-unimodular):  hyperbolic plane  Qbar(b,c) = -bc/p
+                                                   from Q = -x^2 - pyz
+                                                   Gauss sum  p,  signature 0
+    ramified (p | D):                              anisotropic plane (uc^2-b^2)/p
+                                                   Gauss sum -p,  signature 4
+
+    c_p^Eich = 1 if p|c, else +1/p          c_p^ram = 1 if p|c, else -1/p
+
+so `c_p^ram = eps_p c_p^Eich`, and `rho_0 = prod_{p|D} c_p^ram * prod_{p|N} c_p^Eich`
+(`thm:Ngeneral`).
+
+**This is exactly the term the `15_2` investigation concluded was missing** — it ended at "the
++4log2 must come from a NON-kappa level-`N` bad-place factor that Schofer Thm 4.1 LACKS", and
+noted that the DEAD `kappaminuszero` (`SchoferFormula.m:569`, `log_coeffs[p] := 1` for
+`p | N/gcd(d,N)`) is "the vestige of this missing `p|N` factor". §10 is what that vestige was
+waiting for.
+
+⚠ **NOT a drop-in.** §10 gives these as MULTIPLICATIVE factors on the rho / constant-term side,
+while the Schofer side is ADDITIVE in logs. So it supplies the missing local STRUCTURE and its
+values; translating that into the `kappa` log contribution is the work. But this is now an
+implementation-and-translation task against a written formula, NOT open theory.
+
+### The next probe
+
+Instrument `kappaminus` for `d = -267` (BAD) against `d = -123` (good) — an invariant-identical
+pair — and compare **which primes vanish, and whether they vanish ALONE**. That is the quantity
+that decides whether a prime contributes a log term, and at `15_2` it was exactly where the p=2
+analogue went wrong (prime 2 co-vanishing with an odd prime -> double zero -> no contribution).
+⚠ This needs the Borcherds forms for `26_3` (to supply the `m` values), so it is not a two-minute
+probe; budget a run.
+
+### Ordering, and why
+
+1. **The experiment above** — cheap, and it splits the problem in two.
+2. **Fix whichever half it indicts.**
+3. Only then, sweep `CMNONCOPRIME` across the remaining blocked bases.
+⚠ An earlier draft put "quantify how discriminating `ModelChecks` is" first. It does NOT accelerate
+this: `ModelChecks` adjudicates whole models, while this defect needs per-value truth, and the
+published CM tables already supply that. Keep it as the tool for validating models on bases with
+no published equation — a separate job.
+
+---
+
 ## MAIN LINE — the `A_m` theorem
 
 One object blocks disproportionately much. Everything below this section is secondary to it.
@@ -471,20 +714,429 @@ exactly. Only the half-integral phase is wrong.
 
 ---
 
+## REPLACING `manual_isomorphism` — design, 2026-09-06
+
+`test_AllEquationsAboveCoversSingleCurve` takes `manual_isomorphism`, which applies a HARDCODED
+coordinate matrix instead of testing isomorphism. Four tests use it (`X0_10_13`, `X0_10_19`,
+`X0_6_17`, `X0_82_1`). It is brittle: under `CMNONCOPRIME=1` the pipeline re-presents `10_13`'s
+curve in different coordinates and the pinned matrix stops defining a map, so the test fails at
+`BorcherdsProducts.m:19` for a reason that has nothing to do with correctness.
+
+**It is covering TWO different problems, and they need different fixes.**
+
+### (a) Hyperelliptic covers: the map CHOICE matters
+
+`IsIsomorphic` is fast here (`39_2`'s genus-7 `W={1}` in 0.06 s) but returns an ARBITRARY element
+of `Isom(C, C_ex)` — a torsor under `Aut(C_ex)`. And `Aut` is essentially the Atkin-Lehner group:
+measured, `#Aut = 8` for `10_13`'s `W={1}` (genus 3) and `4` for `26_1`'s (genus 2), matching the
+AL group orders. So a wrong pick PERMUTES THE INVOLUTION LABELS and the `ws` check then fails on a
+perfectly correct model — which is exactly why those tests pin the matrix.
+
+⇒ **Fix:** search `Aut(C_ex) o phi_0` for a map intertwining ALL the labelled involutions
+SIMULTANEOUSLY, requiring `w_m -> w_m` rather than merely some permutation. That is as strong as
+the manual version (each named involution is still checked) but coordinate-independent, so it
+survives re-presentation. `Aut` has 4-8 elements, so the search is cheap.
+
+### (b) CRV pairs (double covers of POINTLESS CONICS): `IsIsomorphic` HANGS
+
+⚠ **Do not call `IsIsomorphic` on these.** Cost depends violently on PRESENTATION, not genus —
+measured in `tests/IsoScreen.m`:
+
+    39_2  W={1}  hyperelliptic, genus 7   0.06 s
+    21_2  W={1}  CRV pair,      genus 3   ~100 s
+    14_3  W={1}  CRV pair,      genus 3   >50 min
+    26_3  W={1}  CRV pair,      genus 5   >1 h
+
+⚠⚠ **AND THE REPLACEMENT MUST STILL PROVE ISOMORPHISM** (assaferan, 2026-09-06 — correcting an
+earlier version of this section that proposed screens as the substitute). `IsIsomorphism(phi)` on
+an explicitly EXHIBITED map is a **proof**; `ScreenByPlaces` and trace-formula point counts are
+**not** — `IsoScreen.m` says so itself: non-isomorphic curves with isogenous Jacobians agree at
+every prime. Screens can only ever REFUTE. The manual check is right in KIND; its only defect is
+that it hardcodes one matrix and so breaks under re-presentation.
+
+⇒ **Keep the proof, drop the hardcoding — CONSTRUCT the isomorphism from the known shape.**
+For `C: y^2 = f(x), z^2 = g(x)` and `C': Y^2 = F(x), Z^2 = G(x)`, an isomorphism that respects the
+labelled Atkin-Lehner involutions descends to the common genus-0 base, where it is a **Mobius
+transformation** `mu`, together with scalings of `y` and `z`. And `mu` must carry branch locus to
+branch locus. That makes the candidate set FINITE and small:
+* `g` has degree 2 (the conic), so `mu` maps its 2 roots to `G`'s 2 roots — **2 ways**;
+* one further correspondence among the roots of `f` (degree 6) fixes `mu` completely — **6 ways**;
+* so **~12 candidate Mobius maps**, each then determined; solve for the scalars from
+  `f(mu(x)) = lambda^2 * (denominator)^k * F(x)` and likewise for `g`;
+* build the explicit map and verify it with `IsIsomorphism`. **That is a proof**, and it never
+  calls the generic routine that hangs.
+If no candidate verifies, the curves are genuinely not isomorphic **through a V_4-respecting map** —
+which, when the involutions are labelled, is the statement we actually want.
+
+⇒ **Screens keep a legitimate but DEMOTED role**: a fast pre-filter that fails early at a bad prime
+before any candidate is constructed. `ScreenByPlaces` (already written and importable) is the tool;
+⚠ never screen with affine counts (chart-dependent — three false mismatches at `14_3`) nor with
+`#Points` in a `WeightedProjectiveSpace` (returns nothing, silently).
+
+⚠ **The `V_4` is not unique** — at `14_3` the AL group has 8 elements, `W={1}` has SEVEN involution
+quotients, and at least two different `V_4`s give a valid 0+1+2 decomposition. The construction
+above sidesteps this only because the involutions are LABELLED; without labels, do not assume genus
+determines the pairing (that assumption once produced a confident refutation of a model later
+proved isomorphic).
+
+⇒ Sequencing note: (a) is done (`981618b`). (b) needs the ambient weights recorded in the model
+files before it can be wired into the helper — the same gap `PROVENANCE.md` flags for `21_2`/`57_1`
+and `ModelRegen`. `CRV_15_4.m` is the current stand-in and is honest about being point-counts only.
+
 ## COVERAGE — reproducing Guo-Yang's published equations
 
-*(stock-take 2026-09-04. Distinct from the CM-value tables in `tests/_offline/` — this is about
-the paper's headline output, the EQUATIONS.)*
+*(stock-take RE-MEASURED 2026-09-05, superseding the 2026-09-04 counts. Distinct from the
+CM-value tables in `tests/_offline/` — this is about the paper's headline output, the EQUATIONS.)*
 
     43   (D,N) bases with published equations in Guo-Yang
-    34   we have a model for            <- was 32; 51_1 and 57_1 added 2026-09-04
-    24   ...and a test comparing it to Guo-Yang
-    10   model exists but NO GY comparison test  <- the gap this section closes
-     9   no model: the real blockers
-    47   models we have BEYOND Guo-Yang's list entirely (79 model files total)
+    36   we have a model for            <- was 35; 93_1 RECOVERED 2026-09-05 (the vx fix)
+    35   ...and a test comparing it to Guo-Yang   <- GuoYangEquations.m + GuoYangCurve_14_3
+     1   model exists but NO GY comparison test   <- 22_5 only
+     7   no model: the real blockers   <- 15_4 26_3 69_1 95_1 111_1 119_1 159_1
+         ⚠ 15_4 is NOT one of them -- see below; it is outside the method by the authors' own
+         statement, so the honest target is 42, not 43.
+    47   models we have BEYOND Guo-Yang's list entirely (83 model files total)
 
-**The 10 with models but no GY test:** `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`.
-Not blocked — we reproduce them and nobody wrote the comparison.
+⚠ **TWO DIFFERENT COUNTS, do not conflate them** (this bit on 2026-09-06 — `93_1` was first
+reported as "34 -> 35", which was wrong). **34** is the number of GY **CM-VALUE tables** we have as
+offline tests (`tests/_offline/GuoYang_*.m`); that set does not even contain `93_1`. **43** is the
+number of bases with published **EQUATIONS**, which is what this section counts. The 43 are
+reproducible from the source: extract every `$X^D_0(N)$` label in lines 3150-3800 of
+`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex` (⚠ starting at 3300 silently drops five
+bases — `35_1 38_1 39_1 51_1 55_1` — whose table row begins at 3264) and intersect with
+`data/models/`.
+
+**⇒ TIER 1' IS EXHAUSTED AS A TRANSCRIPTION TASK.** Eight of the original ten are done
+(`14_5 15_2 21_2 22_3 51_1 55_1 57_1 87_1`, in `tests/GuoYangEquations.m`). The remaining **two are
+not transcribable at all** — we do not have the object to compare:
+* `14_3` — GY publishes a PAIR (`z^2=-9x^2-2`, `y^2=-7x^4+22x^2+1`). Our `models[[1]]` entry is
+  literally `[* *]`, **empty**. A fresh plain `genmodels` run on 2026-09-05 reproduced the
+  committed file byte-for-byte in 37 s, so the empty `{1}` is a REPRODUCIBLE outcome of
+  `AllEquationsAboveCovers`, not a stale or truncated artifact.
+* `22_5` — GY publishes `y^2 = -11x^12-80x^10-240x^8-362x^6-240x^4-80x^2-11` (degree 12, genus 5).
+  Our file has **no `[1]` key at all**, only three quotients; its commit message (`08ce5fa`) says
+  "3 covers", i.e. it was committed knowing the full curve was absent.
+⇒ Both are **model-generation** items, not test-writing items. Do not re-file them under TIER 1'.
+
+#### `15_4` IS OUT OF SCOPE -- BY GUO-YANG'S OWN STATEMENT (settled 2026-09-06)
+
+**Do not attempt to make the pipeline produce `15_4`.** The published version of the paper
+(Compositio Math. 153 (2017) 1-40) carries a remark that **arXiv v1 does not have**:
+
+> *Remark 39.* Note that there is a curve, namely, `X = X_0^15(4)`, whose equation is not obtained
+> using our method. This is because **the normalizer of the Eichler order in this case is larger
+> than the Atkin-Lehner group**. For this special curve, we use the result of Tu [Tu14].
+
+They then take a Hauptmodul `t_4` on `X/<w_3,w_5>` from [Tu14, Lemma 13] (values `+-1/sqrt(-3)`,
+`+-sqrt(-15)/5`, `(+-1 +- sqrt(-15))/8` at discriminants `-12, -15, -60`), read off
+`y^2 = a(4t_4^2-t_4+1)(4t_4^2+t_4+1)(5t_4^2+3)` and `z^2 = b(3t_4^2+1)` from the ramification, and
+fix `a = b = -1` using `t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3)` on `X_0^15(2)/<w_3,w_5>` plus
+Schofer. `X_0^15(4)` is also one of the hyperelliptic Shimura curves that are **not hyperelliptic
+over R** [Ogg83].
+
+⇒ Since `N^+_B(O)` strictly contains `W_{15,4}`, the star quotient our pipeline forms is the WRONG
+OBJECT. This is the hypothesis flagged in memory as never checked (`O^+_{L,F} = O^+_L`), and here
+it demonstrably fails.
+
+**What we measured before finding the remark, kept because it is still true of the CODE:** two
+independent layers encode squarefree-`N`. (1) `assert IsSquarefree(N)` in `get_D0_M_g`. (2) Behind
+`NONSQFREE=1` the basis builds fine (4.4 s), and the run then stops at `ShimuraQuotients.m:1431`,
+whose star check compares `W` against `Set(Divisors(D*N))` -- but the AL group is indexed by HALL
+divisors, and `DN = 60` has 12 divisors to 8 Hall divisors, so it CANNOT pass (same at `10_9`,
+`21_4`). Fixing that indexing would still not produce `15_4`, because of Remark 39.
+
+#### TU'S PAPER: OBTAINED 2026-09-06 — and it answers the generalisation question NO
+
+**It is NOT on arXiv** (searched by title and by author; his arXiv record has no such paper —
+`1112.1001` is a different Tu-Yang paper on hypergeometric transformations). It IS freely
+downloadable from the publisher:
+
+    F.-T. Tu, "Schwarzian differential equations associated to Shimura curves of genus zero",
+    Pacific J. Math. 269 (2014) 453-489.
+    https://msp.org/pjm/2014/269-2/p14.xhtml   (PDF: .../pjm-v269-n2-p14-s.pdf, ~440 KB, free)
+
+**It CONFIRMS our `15_4` transcription exactly.** Lemma 13(3): a Hauptmodul `t_4` for
+`X_0^15(4)/W_15` taking `+-1/sqrt(-3)`, `+-sqrt(-15)/5`, `(+-1+-sqrt(-15))/8` at discriminants
+`-12, -15, -60`, with `t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3)`. Character for character what
+Guo-Yang quote and what `models_15_4.m` rests on.
+
+**⇒ IT DOES NOT UNLOCK ANY OTHER NON-SQUAREFREE BASE.** Tu treats
+`6_{1,5,7,13}`, `10_{1,3,7}`, `14_{1,3,5}`, `15_{1,2,4}`, `21_{1,2}`, `26_{1,3}`, `35_{1,2}`,
+`39_{1,2}` — **`15_4` is the only non-squarefree case in the paper**, and NONE of the eight
+remaining targets (`6_25 6_49 10_9 14_9 15_8 21_4 22_9 33_4`) appears. So the "external
+Hauptmoduls" route listed above is CLOSED for them; only the Hall-divisor refactor remains, and
+only where the normalizer obstruction is absent.
+
+#### ⇒ BUT TU COVERS `26_3`, WHICH IS A LIVE BLOCKER — a concrete route to the s/s~ problem
+
+Tu's Lemmas 18-20 give, for `X_0^26(3)`, data that is independent of Guo-Yang AND of our pipeline:
+
+* **Lemma 18** — three genus-1 quotients as explicit elliptic curves over Q:
+  `X_0^26(3)/<w_2,w_3>: y^2 = x^3 - 3403x - 83834` (26B2),
+  `X_0^26(3)/<w_2,w_39>: y^2 = x^3 - 43x + 166` (26B1),
+  `X_0^26(3)/<w_6,w_13>: y^2 = x^3 + 621x + 9774` (26A3),
+  with the CM-points of discriminant `-312`, `-24`, `-8` at infinity respectively, and the
+  2-torsion points the CM-points of discriminant `-104`.
+* **Lemma 19** — genus-2 equations for `/<w_2>`, `/<w_6>`, `/<w_39>`, e.g.
+  `X_0^26(3)/<w_2>: y^2 = -2197x^6/3 - 362x^4 - 55x^2 - 8/3`, with the disc `-312` points at
+  infinity, the disc `-24` points at `(0, +-2sqrt(-6)/3)`, and the six disc `-104` points at
+  `(alpha_j, 0)`.
+* **Lemma 20** — `t_1 = x^2` is a Hauptmodul for `X_0^26(3)/W_{26,3}` with
+  `t_1 = oo` at `-312`, `0` at `-24`, `-1/8` at `-8`, and the roots of
+  `f_1(z) = -2197z^3/3 - 362z^2 - 55z - 8/3` at `-104`.
+
+**Why this matters.** `26_3`'s failure is the `s <-> s~` SWAP: at discriminants `-267` and `-708`
+Guo-Yang's `s` sits in our `s~` row, and the relation `s + s~ = 1` used to pin the pair is
+SYMMETRIC, so it cannot resolve the ordering (see the memory entry). Tu's Hauptmodul is normalised
+by THREE independent CM values, which fixes it completely and therefore fixes its value at every
+other discriminant — exactly the tie-break that `s + s~ = 1` cannot supply, and from a source that
+shares no machinery with either us or Guo-Yang.
+
+**WORKED OUT 2026-09-06 — the Mobius map, and what Tu can and cannot do.**
+
+Guo-Yang normalise `s(-8) = oo`, `s(-24) = 0`, `s(-11) = 1`; Tu normalises `t_1(-312) = oo`,
+`t_1(-24) = 0`, `t_1(-8) = -1/8`. Those three shared discriminants pin the map completely:
+
+        t_1 = -s / (8s + 3)
+
+(check: `s=0 -> 0`; `s=oo -> -1/8`; `s=-3/8 -> oo`.)
+
+⚠ **Tu does NOT directly resolve the swap.** His discriminants are `-312, -24, -8, -104`; the two
+swapped rows are `-267` and `-708`, and there is **no overlap**. What he DOES give is
+* an independent confirmation of the normalisation (three points), and
+* a value set at **`-104`, which is COPRIME to `N = 3`** — so our pipeline computes it under the
+  default filter, giving this base an external check it has never had. Tu: the `t_1`-values at
+  `-104` are the roots of `f_1(z) = -2197z^3/3 - 362z^2 - 55z - 8/3`.
+
+**⚠ A HYPOTHESIS FOR THE ORDERING, TESTED AND REFUTED.** Guo-Yang's table carries a second column,
+`x` on `X_0^26(3)/<w_3,w_26>` with `s = x^2`, so `s` must be a SQUARE while `s~ = 1-s` generally is
+not — an invariant the symmetric `s + s~ = 1` cannot see. Tested on all 14 published rows asking
+whether `s` is a square in `Q(sqrt(d))`: **it fails — 9 of 13 rows have NEITHER `s` nor `1-s` a
+square there**, and only 2 separate. The reason is visible in the `x` column: those values live in
+`Q(i)`, `Q(sqrt(-3))`, `Q(sqrt(3))`, `Q(sqrt(-15))`, `Q(sqrt(-6))` — **not** in `Q(sqrt(d))`. So
+the field is the CM point's FIELD OF DEFINITION (genus theory / ring class field), not the naive
+CM field, and testing in `Q(sqrt(d))` is a wrong-object error.
+
+⇒ **The criterion is right in shape and wrong in field:** `s(tau_d)` is pinned by being a square in
+the CORRECT field, which is exactly Guo-Yang's own phrase ("only one of them is in the correct
+field"). Determining that field per discriminant is the actual work, and it is the answer to
+"what pins the ordering at the other 12 discs".
+
+**⚠⚠ STEP 2 BELOW WAS WRONG AND IS RETRACTED (assaferan, 2026-09-06): THE CODE ALREADY DOES THIS.**
+`FieldsOfDefinitionOfCMPointFast` (`SchoferFormula.m:1494`) computes the field of definition per CM
+point — ring class field, Shimura reciprocity Thm 5.8, Prop 5.6, AL-fixed subfields, and it
+explicitly handles `gcd(N, f) != 1`. And `find_y2_signs` (`:1753`) ALREADY applies the
+"square in the CORRECT field" criterion to pick cover values: it reads `flds[keys_fs[i]][d]` and
+tests `IsSquare(F!y2)` with the degree conditions. That IS Guo-Yang's criterion, implemented.
+**Do not re-derive it.** (I started to; this note exists so the next session does not.)
+
+**WHERE THE ACTUAL GAP IS.** `find_signs_hauptmodul` (`:1198`) takes only `(s, stilde, ds, degs)` —
+**no fields of definition** — and pins signs from `eps1*s/scale + eps2*stilde/scale_tilde = 1`
+alone. When that does not discriminate it **silently takes the first solution**:
+
+        if #per_idx[j] gt 1 then   // "the value cannot distinguish them"
+            vprintf ShimuraQuotients, 1: "sign choice not unique at d = %o; taking %o"
+        s_new[idx] := per_idx[j][1][1]*s_new[idx];
+
+`abs_schofer_tab` — carrying `FldsOfDefn` — is in scope at the call site (`:1902`), and
+`find_y2_signs` uses it 49 lines later (`:1951`). So plumbing the same test into the hauptmodul
+tie-break is a LOCAL change requiring no new mathematics.
+
+**⚠ BUT THAT MAY NOT BE `26_3`'s BUG — DECIDE BEFORE CODING.** This note records that at `-267`
+and `-708` **the signs are FORCED** (only `+ +` sums to 1) and "the freedom is purely in the
+LABELLING". If that is right, `#per_idx = 1` there, the tie-break never fires, and the swap is
+UPSTREAM — in the Schofer values themselves, which would be consistent with the missing
+`p | gcd(d,N)` local factor (`kappaminuszero` is dead code) and with both swapped discs being
+non-coprime to `N = 3`.
+
+⇒ **THE DECIDING EXPERIMENT, cheap:** run `26_3`'s hauptmodul stage at `SetVerbose("ShimuraQuotients", 1)`
+and look for `find_signs_hauptmodul: sign choice not unique at d = -267 / -708`.
+* **If it fires** — the tie-break is the fix: pass `abs_schofer_tab` in and reuse `find_y2_signs`'s
+  field test.
+* **If it does not** — the sign logic is innocent and the values are already wrong when they reach
+  it; the fix is the `p | gcd(d,N)` local factor, not the labelling.
+
+**Sequence for `26_3` (revised):**
+1. run the deciding experiment above — it costs one verbose run and settles which defect is real;
+2. cross-check our hauptmodul at `-104` against Tu's cubic (`-104` is COPRIME to `N=3`, so the
+   default filter admits it) — an external validation independent of Guo-Yang, worth having either way;
+3. fix whichever defect step 1 identifies, then relax the coprime filter for `26_3` — pool 3 -> 21
+   against demand 9;
+4. validate the resulting model against Guo-Yang's published equation
+   (`y^2 = x^6 - 2x^4 + 9x^2 + 8`, journal version).
+
+#### CAN THE `15_4` ROUTE BE GENERALISED? — scoped 2026-09-06
+
+**The target set is 9 bases, not hundreds.** Of 246 `D>1` non-squarefree-`N` entries in
+`GetHyperellipticCandidates`, only **9 carry a `W={1}` full curve** and are therefore real model
+targets:
+
+    6_25 (g5)  6_49 (g9)  10_9 (g5)  14_9 (g7)  15_4 (g5, DONE)  15_8 (g9)  21_4 (g7)
+    22_9 (g11) 33_4 (g11)
+
+**What generalises: the VALIDATION half, and it is worth having.** `ComputePointsViaTrace` and the
+Shimura genus formula run fine on non-squarefree bases — that is exactly what pinned `15_4`'s two
+constants, and it is an oracle for a whole class the pipeline cannot otherwise touch. Any candidate
+model for these 9 can be checked the same way.
+
+**What does NOT generalise: the GENERATION half.** `15_4` worked because Tu (Pacific J. Math. 269
+(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote. Nothing
+supplies that for the other 8. Two possible routes:
+* **the Hall-divisor refactor** (index `W` by Hall divisors; lift `assert IsSquarefree(N)`), which
+  only helps where Guo-Yang's obstruction is ABSENT;
+* **external Hauptmoduls** — Tu's paper is about genus-zero Shimura curves generally, so it may
+  cover more of these. We do not have it; it is not in the user's Dropbox.
+
+**⚠ A PREDICTION, NOT A MEASUREMENT — which of the 8 are only CODE-blocked.** Guo-Yang's
+obstruction is that `N^+_B(O)` strictly contains the Atkin-Lehner group. By analogy with
+Atkin-Lehner-Newman for `Gamma_0(N)` — where the normalizer exceeds the AL group exactly when
+`h > 1` for `h` the largest divisor of **24** with `h^2 | N` — one expects:
+
+| base | `N` | `h` | expected |
+|---|---|---|---|
+| `6_25` | 25 | 1 (5 does not divide 24) | **no obstruction — possibly only code-blocked** |
+| `6_49` | 49 | 1 (7 does not divide 24) | **no obstruction — possibly only code-blocked** |
+| `15_4`, `21_4`, `33_4` | 4 | 2 | obstruction — matches Guo-Yang's Remark 39 ✓ |
+| `15_8` | 8 | 2 | obstruction |
+| `10_9`, `14_9`, `22_9` | 9 | 3 | obstruction |
+
+The single confirming data point is `15_4` itself, where the criterion agrees with Guo-Yang.
+⚠ **I could not COMPUTE this.** `TwoSidedIdealClassGroup(O)` returns 1 for all nine INCLUDING
+`15_4` — it fails the positive control, so it is not measuring `N^+_B(O)/Q^*O^*` and its output must
+not be quoted. Until someone computes the normalizer properly (or reads Michon/Ogg on normalizers
+of Eichler orders), the table above is an **analogy with one confirmation**, not a result.
+
+⇒ **Recommended if this is pursued:** test the prediction at `6_25` or `6_49` — they are the only
+two where the payoff (a base reachable by fixing code) justifies the Hall-divisor refactor. Confirm
+the normalizer claim FIRST; the refactor is wasted if the obstruction is present anyway.
+
+#### ⚠ WE HAVE BEEN READING THE SUPERSEDED VERSION
+
+arXiv has exactly **one** version (v1, 2015-10-21). The paper of record is **Compositio Math. 153
+(2017) 1-40**, substantially revised and **not on arXiv**; the copy at
+`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex` is v1. Differences found so far:
+
+| | arXiv v1 | journal |
+|---|---|---|
+| `93_1` equation | `3s^3 - 7s^2 - 3t - 1` (typo) | `3s^3 - 7s^2 - 3s - 1` |
+| `39_2` involutions | `w_4, w_3, w_5` (copy-paste from `15_4`; `4` does not divide `78`) | `w_2, w_3, w_39` |
+| Remark 39 (`15_4` out of scope) | absent | present |
+| Remark 38 (`10_19` NOT hyperelliptic over Q; `14_5` is) | absent | present |
+
+The journal PDF is at `~/MIT Dropbox/Eran Assaf/Research/HyperellipticQuotients/Guo, Yang -
+equations-of-hyperelliptic-shimura-curves.pdf`. **All ten equations in
+`tests/GuoYangEquations.m` were re-verified against it on 2026-09-06 and agree.** Remark 38 also
+bears on the recorded `10_19` anomaly (its v1 table contradicting the paper's own worked example)
+-- re-check that against the journal before trusting either.
+
+#### What blocks `14_3` and `22_5`, measured 2026-09-05
+
+Cheap and now on record, so nobody re-runs it. Both bases fail the same way and it is **not** the
+back-fill stage:
+
+* **The covers are UNDER-DETERMINED, not short of CM points.** `EquationsCovers.m:157-158` accepts
+  a cover only when `solve_quadratic_constraints` returns a *unique* solution; `#coeffs ne 1`
+  raises, is caught at `:166`, and the cover is deferred. A deferred cover is then recoverable
+  ONLY as a quotient of an already-determined cover above it (`:701`). At `14_3`, 6 of the 7
+  index-2 covers defer, nothing above them is determined, and all 6 emit
+  `could not recover deferred cover` — so `W={1}` has no substrate to be built on. `W={1}` is
+  never itself mentioned in the log: not determined, not deferred, not recovered.
+* ⚠ **`cmsupply` says `OK`, and that verdict DOES NOT APPLY to the full curve.** Measured:
+  `BASE 14 3 demand 7 genera [0,0,0,0,1,1,1] CMVERD OK margin 0` and
+  `BASE 22 5 demand 9 genera [0,0,0,1,1,1,2] CMVERD OK margin 0`. Those genus lists top out at
+  **1 and 2**, but Guo-Yang's published `14_3` is genus **3** and `22_5` is genus **5** — the 7
+  curves it measures are the *index-2* covers of the star curve (their genera match the seven
+  `W={1,6,7,42}`-type rows in the genmodels log exactly, which is what pins the identification),
+  and `demand 7 = 2*1+5` comes from a max genus of 1. This is structural, not a coincidence of one
+  base: the supply check iterates `Xstar`CoveredBy` (`ShimuraQuotients.m:1526`), the *immediate*
+  covers, exactly as `AllEquationsAboveCovers` does (`EquationsCovers.m:740`). So `OK` means "supply is adequate for the
+  easy targets, with **zero** margin"; it is silent on `W={1}`. Do not quote `CMVERD OK` as
+  evidence that these bases have enough CM points. (Same wrong-object family as the rank-over-
+  monomials error of 2026-09-04.)
+* **`INTSOL=1` is REFUTED as a lever at `14_3`** — plain and `INTSOL=1` runs produce **byte-identical**
+  model files (37 s / 38 s), and both are byte-identical to the committed `data/models/models_14_3.m`.
+  That byte-identity is also the reproduction check: the committed file is current, not stale.
+* ⚠ **`22_5`: do not overwrite `data/models/models_22_5.m` — but NOT for the reason first recorded.**
+  *(diagnosis corrected 2026-09-05 after measuring; the first version of this bullet was wrong and
+  is kept only as the retraction.)* A fresh plain run (680 s) yields **8 cover-keys, 2 populated**,
+  against the committed **3 keys, 3 populated**, dropping `[1,2,5,10]`
+  (`P![-1, 4755/1024, -8267/1024, 797/128, -115/64]`).
+  **The retracted explanation:** "the two runs used different target cover sets, so `08ce5fa` came
+  from a path this checkout cannot reproduce." **That is false.** `{1,2,5,10}` (label 7584, g=1) is
+  present in `GetHyperellipticCandidates()` AND in `Xstar`CoveredBy` today; the cover set is
+  unchanged. Current code enumerates the cover and then withholds it **on purpose**.
+  **What is actually happening:** commit `1768517` (2026-08-24 19:20) — *"Force-defer covers with an
+  unpinned y2-scale instead of trusting their twist"*, i.e. the PR #38 / issue #36 guard — makes the
+  run emit `Cover W={1,2,5,10} (g=1) has an unpinned y2-scale; deferring to recover as a quotient
+  (twist untrusted)`, and back-fill then fails for want of a determined parent. The committed file
+  is `08ce5fa`, 2026-08-24 **07:30** — **twelve hours older than the guard** — so its entry was
+  produced by exactly the code path the guard was later written to distrust.
+  ⇒ **But the committed entry is CORRECT, and that is measured, not assumed.** `VerifyModelSet`
+  check [4] — the Eichler-Selberg trace-formula point count, independent of the Borcherds/Schofer
+  machinery that generated the model — passes it (24 checks, 0 failures) and **discriminates the
+  twist**: negative-controlled against six quadratic twists `d = -1, 2, -2, 5, -5, 11`, every one
+  fails (3-5 failures each) while the committed curve passes. So this is a case where the guard is
+  **CONSERVATIVE**: it suppresses a cover whose twist is in fact right.
+  ⇒ **The lever this exposes.** The `y2`-scale is unpinnable from sparse CM data, but the twist is
+  **independently decidable** by the point count already implemented in `ModelVerification.m`. So
+  instead of dropping an unscaled cover, the pipeline could emit each candidate twist and SELECT
+  the one matching `ComputePointsViaTrace`. Shipped behind `Y2TWIST=1` (`36ac71e`).
+
+#### THE STALE-MODEL FINDING, and what `Y2TWIST` actually buys — measured 2026-09-05
+
+**THREE committed model files do not regenerate from current code**, and all three for the same
+reason: the y2 guard (`1768517`, 2026-08-24 19:20) POSTDATES them, so regeneration now withholds
+covers they contain. Found by an 8-base regeneration sweep (6 identical, 2 differ) plus a
+fresh-vs-fresh baseline run that proved the difference was staleness, not the vx fix.
+
+    models_22_5.m   08ce5fa, 2026-08-24 07:30   12 h older than the guard
+    models_22_3.m   the base issue #36 was actually filed about
+    models_15_2.m
+
+⚠ **They are NOT wrong.** All three pass `ModelChecks` and their Guo-Yang comparisons. They are
+*unreproducible*. Nothing in CI regenerates a model and compares, which is why this went unseen —
+now covered by **`tests/_offline/ModelRegen.m`** (`afa0412`), auto-discovering, no per-base
+authoring, with these three recorded in `MR_KNOWN_DRIFT`.
+
+**What `Y2TWIST=1` restores, measured against the committed files:**
+
+    22_5    FULLY   3/3 populated covers, coefficient-for-coefficient
+    15_2    FULLY   12/12 keys; one cover ([1,2,3,6]) differs in presentation but IsIsomorphic
+    22_3    13/14   missing [1,3,22,66], and [1,66] loses 1 of its 3 entries
+
+⇒ **The residual gap is GENUS 0** — both `22_3` losses are conics, which `select_y2_twist` skips
+(`X`g lt 1`, since `HyperellipticCurve` needs degree >= 3).
+⚠⚠ **"Extend twist selection to conics" was recorded here as the next step. It is IMPOSSIBLE, and
+the guard is CORRECT — do not attempt it.** *(measured 2026-09-05, before implementing)* Every
+quadratic twist of a conic has **exactly `p+1` points over `F_p`**, for every `p`: probed
+`d = 1,-1,2,-2,3,-3` at `p = 3..23` on `22_3`'s own `[1,66]` conic `y^2 = 4x^2+1`, and every row is
+constant. The reason is structural — a smooth conic over a finite field always has a rational point
+(Chevalley-Warning), so it is isomorphic to `P^1` and its count is `p+1` regardless of twist. The
+trace formula returns `p+1` too, so **the discriminator is vacuous in genus 0**. Extending the
+selector would make every candidate "match", give `#good ne 1`, and defer exactly as now — same
+behaviour, more work.
+⇒ **What would actually pin a conic's twist is a different mechanism.** Over `Q` conic twists are
+separated by rational solubility / Hilbert symbols, not by reductions, and we have no independent
+source of truth for that here (the trace formula is blind). The route the pipeline already has is
+`backfill_deferred`: a genus-0 cover under a DETERMINED higher cover is pinned as its quotient. So
+this is a **back-fill** problem, not a twist-selection one.
+⚠ Also measured: at `22_3` the selector reported `0 twist(s) matched` for `W={1,2,3,6}` — a clean
+negative, not an ambiguity. Worth understanding before widening the candidate set.
+
+**Still 0 new Guo-Yang equations.** `W={1}` at `22_5` remains empty, and `14_3`'s six lost covers
+are plain under-determination, which this lever does not touch. The value here is
+**reproducibility of the model corpus**, not coverage.
+* In both bases `models[[1]]` now exists as a key and is **empty**, so the full curve is genuinely
+  not produced — consistent across every variant tried.
+
+⚠ **How the "43" was confirmed, because the obvious grep gets 41.** Two rows write the label
+without braces round `D` — `$X^6_0(17)$` and `$X^6_0(29)$` — so a pattern anchored on `X^{D}_0(N)`
+silently drops exactly those two and returns a plausible 41. Cross-check with the equation cell
+instead: `multirow{1}{*}{\text}` occurs 43 times in the table range, once per base. (Same
+read-a-fragment-and-generalise family as the four extraction traps in `GuoYangEquations.m`'s
+header.) Also note `6_17` and `6_29` appear ONLY in CM-value captions elsewhere — having a
+`tests/X0_6_17.m` does not imply a published equation, and `15_1` has a test but is **not** a GY
+equation base at all.
 
 **The 9 remaining blockers, with the classification CORRECTED 2026-09-04:**
 * `15_4` — **structural**, and the only one of its kind: `N = 4` is not squarefree, and the method
@@ -497,13 +1149,134 @@ Not blocked — we reproduce them and nobody wrote the comparison.
   **that list is incomplete — `93_1` belongs in it** (`159_1` under test). See
   [[assert-failed-is-squarefree-n]], now corrected. ⚠ `genmodels.m` cites "memory
   vx-laurent-n0-circular", which **does not exist** — dangling reference.
-* `39_2` — NONINTEGRAL (`BASEVERD 39 2 oo:NONINTEGRAL all:NONINTEGRAL`), the malformed-form base.
-  Its CM-value table passes **11/11**, so the Schofer side is fine; the blocker is upstream.
-* `69_1` — non-rational value (`RationalNumber` failure), the embedding-selection class.
+* `39_2` — ✅ **RECOVERED 2026-09-05. No longer a blocker.** It was never the NONINTEGRAL failure
+  its record claimed; it was starved by the coprime CM filter. With `CMNONCOPRIME=1` it sees 24 CM
+  points against demand 19 and builds cleanly (15 keys, **0 empty**), and its `W={1}` genus-7 curve
+  is **`IsIsomorphic` to Guo-Yang's published equation** (verified 0.06 s; now pinned in
+  `tests/GuoYangEquations.m`, 9 bases). `ModelChecks` also passes it (82 files, 8573 checks, 0
+  failures), which is an independent check since it uses trace-formula point counts rather than the
+  Borcherds/Schofer path that produced the model.
+  ⚠ `data/models/models_39_2.m` does NOT regenerate by default — see its header, and its entry in
+  `ModelRegen`'s `MR_KNOWN_DRIFT`. The flag is NOT known to be safe in general; what makes this file
+  trustworthy is the independent oracle, not the flag.
+⚠ **On the two re-classifications below: those records were CORRECT WHEN WRITTEN, not careless.**
+The intervening fixes (Schofer cusp-0 isometry PR #18, per-coset `tau` `475e72b`, the y2 guard
+`1768517`, the vx shift `d9b52d0`) moved where these bases fail. So the remedy is **re-measure a
+base whose record predates a fix that could move its failure** — not "triage more carefully". This
+is the same phenomenon as the stale committed models above, one level up: a model goes stale when a
+GUARD postdates it, a triage record when a FIX postdates it, and both are invisible to any check
+that reads the artifact instead of regenerating it.
+
+* `69_1` — ⚠ **RE-CLASSIFIED 2026-09-05: an exponent OVERFLOW, not a non-rational value.** The old
+  entry called it "non-rational value (`RationalNumber` failure), the embedding-selection class".
+  It is indeed inside `RationalNumber`, but the actual error is
+  `LogSum.m:142  ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : ...]` ->
+  `Runtime error in '^': Argument 2 is too large`, i.e. a `log_coeffs` exponent so large that
+  Magma refuses the power. That is a different defect from the `15_2` embedding-selection story,
+  so **do not assume the `15_2` root cause applies**.
+  ✅ **PINNED 2026-09-05.** `RationalNumber` now names the offending prime instead of letting
+  Magma emit its opaque `'^': Argument 2 is too large` (`LogSum.m`). The actual failure is:
+
+      6*Log3 + 826241926712017437948244622352640031335552334419770916034895634120110682322*Log23
+
+  i.e. the coefficient at **23 has diverged** (~`8.26e74`) while `Log3`'s is an ordinary `6`.
+  `D = 69 = 3*23`, so BOTH primes are **ramified** — this is a runaway at a RAMIFIED prime, not a
+  level-prime effect, and NOT related to the `p | gcd(d,N)` work.
+  ⚠ Note the sum is supported ONLY on `3` and `23`, both dividing `D`. Whatever diverges is
+  concentrated on the ramified places.
+  ✅ **ROOT-CAUSED 2026-09-05 — the overflow is a SYMPTOM, not the disease.** `Kappa0` is fine:
+  its per-`m` coefficients at 23 are all small fractions (`-1/2, -2/3, -3/2, -1, -5/6, -1/3`)
+  across every CM discriminant. The runaway enters through the OTHER factor of
+  `log_coeffs += Coefficient(f,-m) * Kappa0(m)` — **the Borcherds forms themselves have
+  astronomical principal parts**. Measured, all five keys:
+
+      key -1:  valuation -62, 29 nonzero principal coefficients,
+               MAX |coeff| = 1.17e73 / 3072
+      key 10669: MAX |coeff| = 1.96e76 / 1536      (others 10^73..10^76 likewise)
+
+  ⚠ And they are NON-INTEGRAL (denominators 512, 384, 1536, 3072), which puts `69_1` in the known
+  **non-integral-forms class** ([[nonintegral-forms-root-cause]]) — NOT the `p | gcd(d,N)`
+  level-prime story, and not the embedding-selection story its original record named. Three
+  different diagnoses, three different classes; only this one is measured.
+  ⇒ NEXT: `IntegralSolution` is the documented rescue for that class (it "rescues 7 of 18"), so
+  `INTSOL=1` is the obvious experiment.
+  ⚠ **Attempted 2026-09-05 LOCALLY and the result is INCONCLUSIVE, not negative.** It died with
+  `Bus error` after 1013 s at `Memory usage: 11335.62MB` — which is exactly the documented
+  "Magma dies ~11 GB" ceiling on this Mac ([[tshift-ladder-gap-filler]]), and the machine had
+  ~2.4 GB free at the time. **That is a machine limit, not a verdict on `INTSOL`.** Re-launched on
+  lovelace (2 TB, 1.8 TB free); do not record `INTSOL` as refuted for `69_1` until that returns.
+  ⚠ General lesson: `69_1` is in the class where the forms themselves are ~`1e75`, so ANY variant
+  of it is memory-hungry. Run this base on lovelace, not locally.
+  Also observed in the same run: the y2-scale `IsSquare` check fails for a cover at `69_1`, so
+  this base additionally exercises the unpinned-y2 path.
 * `111_1`, `119_1` — the odd-`D` basis ceiling; killed at **17.5 h CPU each**, `119_1` peaking at
-  40 GB, stuck inside `BorcherdsForms`.
-* `26_3` — **open anomaly**: CM table runs, but 2 of 11 values are off by exactly the Mobius
-  involution `z -> z/(z-1)`. Unexplained.
+  40 GB, inside `BorcherdsForms`.
+  ⚠ **"Ceiling" may be the wrong word — measured 2026-09-05 with the new `BFPROGRESS=1`.** On
+  `95_1` (same class: odd `D`, level 1, previously undiagnosable) the `m`-search costs
+  **4653 s = 77.6 min for the FIRST `m` alone**, of **6**, and `m` grows in magnitude
+  (`-7 -> -35 -> ...`) so later values should cost more. That projects to **8+ hours for one
+  base**, and it is PROGRESSING, not wedged: `/proc` shows 100% CPU, no `normaliz` child, no I/O,
+  flat 0.6 GB.
+  ⇒ So 17.5 h may simply not have been long enough, rather than evidencing a hard wall. Before
+  writing these two off again, **re-run with `BFPROGRESS=1` and read `m_idx=k of N`** — that
+  distinguishes "slow" from "stuck", which nothing previously could. (`119_1`'s 40 GB is a
+  separate and more serious signal; the memory-side claim is not affected by this.)
+  ⚠ Note the earlier diagnosis was made from `/proc` because the logs were empty: `BorcherdsForms`
+  reports each `m` at `vprintf` LEVEL 2 while `genmodels.m` defaults to `verb := 1`, and even at
+  `VERB:=2` those go to buffered stdout and are lost on a kill. `BFPROGRESS` uses `WriteStderr`.
+* `26_3` — **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
+  and `-708` Guo-Yang's `s` sits in **our `s~` row** (`sIndex = 7` is `s`, row 9 is `s~`); the
+  other 12 of 14 discs are correct. `s + s~ = 1` holds at EVERY disc (`8/25 + 17/25`,
+  `11/49 + 38/49`, ...), and the exact `z -> z/(z-1)` is simply how an `s -> 1-s` swap looks after
+  the checker's cross-ratio normalisation — the involution was the shadow, not the cause. The
+  Mobius map from GY's coordinate to ours is `phi(w) = (1-w)/2`, verified on all nine
+  non-reference rows.
+  ⚠ **It is NOT a CM-point selection ambiguity** (the old description). Both values are the same
+  point, different hauptmodul; and our table has each disc exactly ONCE (multiplicity checked).
+  **Root cause:** the pair is pinned by `s + s~ = 1` (`find_signs_hauptmodul`), and that constraint
+  is **symmetric under exchanging `s` and `s~`** — `8/25 + 17/25 = 1` reads the same either way —
+  so the relation meant to resolve the ordering structurally cannot. The signs themselves are
+  forced (only `+ +` sums to 1); the freedom is purely in the LABELLING.
+  ⇒ **Before fixing: identify what pins the ordering at the other 12 discs.** Something is doing
+  real work there, and adding a tie-break without knowing the intended invariant is guessing.
+  ⚠⚠ **THE SWAP IS *NOT* WHY `26_3` HAS NO MODEL — measured 2026-09-05, and this closes the
+  question flagged as open here.** Re-run against current code, `26_3` dies much earlier:
+  `Computing absolute values at CM points...Runtime error: Could not find enough points, sorry!`
+  It is **CM-STARVED**, confirmed by `cmsupply`:
+
+      BASE 26 3 demand 9 genera [ 0, 0, 0, 1, 1, 1, 2 ]
+      POOL rat 3 quad 0 include 3
+      CMVERD 26 3 SHORT margin -5
+
+  ⚠⚠ **BUT "26_3 IS CM-STARVED" IS WRONG — RETRACTED SAME DAY. It is the COPRIME FILTER, and the
+  swap is ON the critical path after all.** The `SHORT` verdict measures the FILTERED pool, not the
+  available points. Measured:
+
+      bd | coprime_to_level | #rat | #quad | total      (demand 9)
+       2 | true             |   3  |   0   |   3
+       2 | false            |   7  |   0   |   7
+       4 | true             |   3  |   0   |   3
+       4 | false            |  14  |   7   |  21   <-- at the DEFAULT bd
+       8 | false            |  15  |  22   |  37
+
+  At the default `bd := 4`, dropping `coprime_to_level` gives **21 points against demand 9** — and
+  those 14 rational discs are exactly Guo-Yang's 14-row table. `26_3` has ample CM points.
+  **The causal chain runs: non-coprime discs misbehave -> the filter excludes them
+  (`SchoferFormula.m:1063` passes `coprime_to_level := true`) -> pool 21 -> 3 -> "Could not find
+  enough points".** So the earlier claim here that "fixing the swap would NOT unblock the model"
+  was backwards: the swap-class misbehaviour is precisely WHY the filter exists.
+  **And the swap is confined to that class.** Of Guo-Yang's 14 discs only `-8, -11, -20` are coprime
+  to `N = 3` — exactly the 3 the filter admits — and BOTH swapped discs (`-267`, `-708`) are
+  non-coprime, while 9 other non-coprime discs give correct values. The filter is blunt: it drops
+  11 points to avoid 2 bad ones (`ShimuraQuotients.m:1420` says so in as many words).
+  ⇒ **Route to unblocking `26_3`: fix the non-coprime misbehaviour, then relax the filter** (or
+  extend the `Keep` exemption). ⚠ NOT established: that the swap is the ONLY misbehaviour, or that
+  relaxing the filter yields a CORRECT model — the bad points would poison the solve, which is what
+  the filter is protecting against. Verify against Guo-Yang's table before trusting any model so
+  produced.
+  ⚠ Note `BorcherdsForms.m:709` ALREADY falls back to `coprime_to_level := false` for CM-starved
+  bases, but `AbsoluteValuesAtCMPoints` does not — an asymmetry worth understanding.
+  Write-up: memory `26-3-hauptmodul-swap`.
 
 **⚠ The lesson from `51_1`/`57_1`: "no recorded failure" was being read as "blocked".** Neither had
 ANY triage record — no `INTSOL`, no `BASEVERD`, nothing. They had simply never been run. One
@@ -541,11 +1314,21 @@ was ever attempted.**
       that was the right call. Scripts kept for reference at
       `vvdata/weyl-campaign/guoyang/extract_equations.py` (campaign) with the traps documented in
       its header; the generated `gy_equations.m` is **NOT trustworthy** and was removed from `main`.
-- [ ] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter**, following the existing
-      `X0_D_N.m` pattern: `14_3 14_5 15_2 21_2 22_3 22_5 51_1 55_1 57_1 87_1`. Per base: read the
-      published equation off the PDF, identify WHICH cover it corresponds to (it is not always the
-      `W={1}` key — see above), derive the isomorphism, and verify. Slower per base than a parser,
-      but it is the only approach with a working track record here.
+- [x] **TIER 1' (replacement) — hand-transcribe the ~10 bases that matter. DONE 2026-09-05 for all
+      that are transcribable: 8 of 10**, in `tests/GuoYangEquations.m` (`ed38ed5`, `41da3fb`,
+      `64d9316`). `14_3` and `22_5` are NOT transcribable — see the stock-take above; they need
+      models generated. The hand route worked exactly as predicted: slower per base than a parser,
+      and the only approach with a working track record here.
+      **Method that made each entry trustworthy, worth reusing:**
+      * **Read the raw `.tex` row, not a parse of it**, and read the neighbouring rows too — `51_1`
+        and `55_1` sit either side of `57_1` and are already-passing hand-transcribed entries, so
+        matching them byte-for-byte calibrates the reading before the new row is trusted. This is
+        the "reproduce a KNOWN value before trusting a new one" habit applied to transcription.
+      * **Negative-control every entry before committing.** For `57_1`, five single-coefficient
+        perturbations of the published pair, each chosen to KEEP genus 3 so that `IsIsomorphic`
+        does the discriminating rather than the genus assert — all five correctly rejected. A
+        perturbation that changes the genus proves nothing about the comparison.
+      * `57_1` cost ~13 s; `21_2` still dominates the file at ~100 s (112 s total, 8 bases).
 - [ ] ~~TIER 1 (superseded)~~ **one cheap test, all 34 bases at once** `ModelChecks` validates the
       79 model files structurally (genus, Weil-polynomial divisibility, point counts) but **never
       compares them to Guo-Yang**. So nothing in CI would notice a committed model silently

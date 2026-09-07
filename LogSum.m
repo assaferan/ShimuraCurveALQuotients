@@ -139,6 +139,16 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     require &and[IsIntegral(coeff) : coeff in s`log_coeffs] : "s does not represent a rational number!";
     if IsLogZero(s) then return 0; end if;
     if IsLogInfinity(s) then return Infinity(); end if;
+    // Report WHICH prime has a runaway exponent. Magma's own failure here is
+    // "Runtime error in '^': Argument 2 is too large", which names neither the prime nor the
+    // exponent, and that is exactly how X_0^69(1) has been failing (it is the whole of that
+    // base's triage record). A runaway coefficient means the Schofer sum diverged upstream, so
+    // the useful diagnostic is the offending (p, coeff) pair, not the power that overflowed.
+    for p in Keys(s`log_coeffs) do
+        error if AbsoluteValue(s`log_coeffs[p]) gt 10^5,
+            Sprintf("RationalNumber: runaway log coefficient %o on Log%o -- the LogSum did not "
+                    * "converge upstream. Full sum: %o", s`log_coeffs[p], p, s);
+    end for;
     ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
     if (ret eq -1) then return Infinity(); end if;
     return ret;

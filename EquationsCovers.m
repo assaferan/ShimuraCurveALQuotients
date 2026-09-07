@@ -116,6 +116,55 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
+// Y2TWIST -- PROTOTYPE, env-gated, OFF by default.
+//
+// find_y2_scales cannot always pin the y2-scale from sparse CM data.  EquationsOfCovers then
+// force-defers the cover (issue #36), because a consistent solve with an unpinned scale is off
+// by an unknown quadratic twist -- and back-fill usually cannot recover it, so the cover is lost
+// outright (four of them at 22_5).
+//
+// But that twist is DECIDABLE by machinery this repo already has, and which is independent of
+// the Borcherds/Schofer path that produced the equation: the Eichler-Selberg point count, run by
+// ModelVerification.m as check [4].  It separates a curve from its quadratic twists -- measured
+// 2026-09-05 on the committed 22_5 [1,2,5,10] cover, where the true curve passes 24/24 and all
+// six twists d = -1, 2, -2, 5, -5, 11 fail with 3-5 failures each.
+//
+// So: try each squarefree twist supported on the primes of 2*D*N and keep the twist that matches
+// at every usable prime.  Returns false unless EXACTLY ONE candidate survives, so an ambiguous
+// or empty result still defers -- this never trades a deferral for a guess.
+function select_y2_twist(f, X)
+    if X`g lt 1 then return false, 0; end if;      // genus 0: no hyperelliptic model to twist
+    D := X`D; N := X`N;
+    prs := [p : p in [3,5,7,11,13,17,19,23] | (D*N) mod p ne 0];
+    supp := SetToSequence({2} join {q[1] : q in Factorization(D*N)});
+    cands := [];
+    for S in Subsets({1..#supp}) do
+        d0 := &*[Integers() | supp[j] : j in S];
+        Append(~cands, d0); Append(~cands, -d0);
+    end for;
+    good := [];
+    for d in cands do
+        okall := true; nchk := 0;
+        for p in prs do
+            try
+                Cp := ChangeRing(HyperellipticCurve(d*f), GF(p));
+                if not IsNonsingular(Cp) then continue; end if;
+                if #Points(Cp) ne ComputePointsViaTrace(X, p, 1) then okall := false; break; end if;
+                nchk +:= 1;
+            catch e
+                continue;                          // bad reduction at p: no information, skip
+            end try;
+        end for;
+        if okall and nchk ge 3 then Append(~good, d); end if;
+    end for;
+    if #good eq 1 then return true, good[1]; end if;
+    vprintf ShimuraQuotients, 1 :
+        "  Y2TWIST: %o twist(s) matched for W=%o; ambiguous, leaving it deferred.\n",
+        #good, Sort(SetToSequence(X`W));
+    return false, 0;
+end function;
+
+
 intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
@@ -136,10 +185,14 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     // deferred even when its constraints happen to be consistent: the solved equation is then
     // off by an unknown quadratic twist (issue #36 -- four wrong-twist covers emitted on 22_3).
     unscaled := (assigned schofer_table`UnscaledKeys) select schofer_table`UnscaledKeys else [];
+    // Y2TWIST=1 (prototype): instead of dropping an unscaled cover, solve it anyway and SELECT
+    // its quadratic twist against the trace-formula point count.  Unset => behaviour unchanged.
+    y2twist := GetEnv("Y2TWIST") ne "";
     good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
     deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
-        if keys_fs[k_idxs[i]] in unscaled then
+        is_unscaled := keys_fs[k_idxs[i]] in unscaled;
+        if is_unscaled and not y2twist then
             Append(~deferred, keys_fs[k_idxs[i]]);
             vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) has an unpinned y2-scale; deferring to recover as a quotient (twist untrusted).\n",
                 curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
@@ -165,6 +218,19 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
         catch e
             determined := false;
         end try;
+        // Y2TWIST: the solve above is right only up to a quadratic twist for an unscaled cover,
+        // so pin the twist by point count before accepting it; an undecided twist re-defers.
+        if determined and is_unscaled then
+            tw_ok, tw_d := select_y2_twist(f, curves[keys_fs[k_idxs[i]]]);
+            if tw_ok then
+                f := tw_d*f;
+                vprintf ShimuraQuotients, 1 :
+                    "  Y2TWIST: selected twist d=%o for W=%o (g=%o) by trace-formula point count.\n",
+                    tw_d, curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
+            else
+                determined := false;
+            end if;
+        end if;
         if determined then
             Append(~eqn_list, f);
             Append(~good_kidxs, i);
@@ -552,7 +618,19 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
             for b in cand_bases do
                 if Type(all_eqns[other_curve][b]) ne CrvHyp then continue; end if;
                 if Degree(HyperellipticPolynomials(all_eqns[other_curve][b])) ne g+1 then continue; end if;
-                if exists(ck){c : c in conic_cands | IsDefined(all_eqns[c], b) and
+                // ⚠ THE TWO ROLES MUST BE FILLED BY DIFFERENT COVERS.  The curve built below is
+                // the fibre product  y^2 = f_{gplus1}(s),  x^2 = f_conic(s)  -- so if the same
+                // cover is chosen for both, the equations coincide and y^2 = x^2 factors as
+                // (y-x)(y+x): the scheme is REDUCIBLE and is not the genus-g curve at all.
+                // This bites exactly at g = 1, where the required degree g+1 = 2 is also a
+                // CONIC's degree, so the conic itself passes the degree test above and can be
+                // selected as `other_curve`.  Measured 2026-09-06: it produced five degenerate
+                // entries -- models_10_3.m at W = {1,10}, {1,15}, {1,6}, {1} and models_22_3.m at
+                // W = {1,3} -- each storing its parent conic twice, e.g.
+                //     y^2 + 7/20*s^2 - 43/20*s*z + 2*z^2   and   x^2 + (the identical form).
+                // Nothing caught them because VerifyModelSet skips every CRV entry; see
+                // tests/CRVStructure.m, which now checks exactly this.
+                if exists(ck){c : c in conic_cands | c ne other_curve and IsDefined(all_eqns[c], b) and
                         IsDefined(all_ws, c) and IsDefined(all_ws[c], b)} then
                     conic_key := ck; base := b;
                     gplus1key := other_curve; //found the gplus1
@@ -776,8 +854,17 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
         best_score := -2;
         best_combo := [1 : a in ambiguous];
         crv_list := []; ws := AssociativeArray(); new_keys := []; deferred := [];
+        // COVPROGRESS=1: per-combination progress. This loop runs a FULL EquationsOfCovers solve
+        // per combination and printed nothing between the "searching N combination(s)" line above
+        // and the result below -- so on a large base it goes dark for hours. Measured 2026-09-05:
+        // 34_11 sat in exactly this loop for 12+ h (16 combinations, ~45 min each) with no output,
+        // and there was no way to tell progress from a stall.
+        // WriteStderr, not printf: Magma buffers stdout to a file, so a killed run loses the lot --
+        // the same lesson M0PROGRESS records. Bounded by nchoices <= 1024, so it cannot flood.
+        cov_progress := GetEnv("COVPROGRESS") ne "";
         if nchoices le 1024 then
-            for combo in combos do
+            cov_t0 := Realtime();
+            for ci->combo in combos do
                 tab := base_vals;
                 for t->a in ambiguous do
                     pair := a[2][combo[t]];
@@ -795,6 +882,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
                     best_score := score;
                     crv_list := cl; ws := w; new_keys := nk; deferred := df;
                     best_combo := combo;
+                end if;
+                if cov_progress then
+                    WriteStderr(Sprintf("  COVPROGRESS combo %o/%o score %o best %o elapsed %os\n",
+                                        ci, nchoices, score, best_score, Realtime()-cov_t0));
                 end if;
             end for;
         else

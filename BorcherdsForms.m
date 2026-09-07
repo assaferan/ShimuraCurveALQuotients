@@ -7,7 +7,52 @@ end function;
 
 function get_D0_M_g(D, N)
     // assert IsEven(D) and IsSquarefree(N);
-    assert IsSquarefree(N);
+    // NONSQFREE=1 lifts the squarefree-N restriction. OFF BY DEFAULT and deliberately so: the
+    // explicit basis for the Eichler order O that this construction rests on is stated by
+    // Guo-Yang only for squarefree N (their Lemma "basis for O", arXiv:1510.06193 line 566, under
+    // the standing hypothesis at line 561 "The level N is always assumed to be squarefree"). So
+    // there is no theoretical guarantee here, exactly as with CMNONCOPRIME.
+    //
+    // WHY IT IS WORTH A TRY AT ALL, measured 2026-09-06. D0 is the ODD PART of D*N, so 15_4 gets
+    // D0 = 15 and M = 4*D0 = 60 -- the SAME form ring as 15_1 and 15_2, and 15_2 both works and is
+    // validated against Guo-Yang. Sharing M across different N is therefore normal, not anomalous;
+    // what distinguishes the curves is the lattice, and ShimuraCurveLattice(15,4) succeeds with
+    // |A| = 7200 = 120^2/2, exactly the even-DN law. So the assert may be the only obstacle.
+    // ⚠ EVIDENCE, NOT PROOF. Anything produced this way must clear the same bar as 39_2/14_3:
+    // an INDEPENDENT ORACLE (Guo-Yang's published equation), never regeneration alone. 15_4 has
+    // one, which is what makes the experiment safe -- a wrong answer is detected, not absorbed.
+    //
+    // ⚠⚠ RESULT OF THAT EXPERIMENT, 2026-09-06: THE ASSERT IS NOT THE ONLY OBSTACLE, so this flag
+    // alone does NOT unblock 15_4. With it set, WeaklyHolomorphicBasis(15,4) builds fine (4.4 s,
+    // 9 eta quotients, k = 8) and the run proceeds to `ShimuraQuotients.m:1431`:
+    //     require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
+    // That check encodes the SAME hypothesis in a second place. The Atkin-Lehner group is indexed
+    // by HALL divisors (d || DN with gcd(d, DN/d) = 1), and `Divisors(DN)` enumerates those only
+    // when DN is squarefree. Measured: DN = 60 has 12 divisors but 8 Hall divisors, so the star
+    // check CANNOT pass -- likewise 10_9 (90) and 21_4 (84), the other non-squarefree bases.
+    // ⇒ Extending to non-squarefree N is a REPRESENTATIONAL change (index W by Hall divisors
+    // throughout), not a one-line relaxation. The flag is kept only so the next attempt starts at
+    // the second obstacle instead of rediscovering the first.
+    //
+    // ⚠⚠⚠ AND THE REAL REASON IS DEEPER THAN EITHER -- CORRECTED 2026-09-06 from the PUBLISHED
+    // version of Guo-Yang (Compositio Math. 153 (2017) 1-40), which contains a remark the arXiv
+    // v1 we work from DOES NOT HAVE:
+    //
+    //   "Remark 39. Note that there is a curve, namely, X = X_0^15(4), whose equation is not
+    //    obtained using our method. This is because THE NORMALIZER OF THE EICHLER ORDER IN THIS
+    //    CASE IS LARGER THAN THE ATKIN-LEHNER GROUP. For this special curve, we use the result of
+    //    Tu [Tu14]."
+    //
+    // So 15_4 is not a squarefree-N accident at all: N^+_B(O) strictly contains W_{15,4}, so the
+    // star quotient this pipeline forms is the WRONG OBJECT -- and fixing the Hall-divisor
+    // indexing would NOT be enough. Guo-Yang get the equation from Tu [Tu14, Lemma 13] (a
+    // Hauptmodul t_4 on X/<w_3,w_5> with known CM values at discs -12, -15, -60), fixing the two
+    // constants via t_2 = (5t_4^2+2t_4+1)/(7t_4^2-2t_4+3) on X_0^15(2)/<w_3,w_5> plus Schofer.
+    // ⇒ 15_4 is OUT OF SCOPE for this method by the authors' own statement. Do not spend effort
+    // making the pipeline produce it; if it is ever wanted, transcribe Tu's route instead.
+    // (This also connects to [[guo-yang-thm-B-hypotheses]]: "O^+_{L,F} = O^+_L has never been
+    // checked" is exactly the hypothesis that fails here.)
+    assert IsSquarefree(N) or GetEnv("NONSQFREE") ne "";
     D0 := (D*N) div 2^Valuation(D*N,2);  // odd part of DN (was 2^Valuation(D,2), wrong for even N)
     M := 4*D0;
     g := Genus(Gamma0(M));
@@ -603,11 +648,63 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     
     minval := pole_order;
    
-    if Zero then
-        qexps := [qExpansionAt0(eta, 1) : eta in full_basis];
-    else
-        qexps := [qExpansionAtoo(eta, 1) : eta in full_basis];
-    end if;
+    // THE t-BOOTSTRAP, applied to the q-EXPANSIONS and not just to the basis.
+        // full_basis is t^j * f, and the expansion map is multiplicative, so
+        //     qexp(t^j * f) = qexp(t)^j * qexp(f).
+        // The old line paid a from-scratch eta-quotient expansion for every element of the
+        // t-EXPANDED pool -- and t^j*f has the SAME number of eta-quotient terms as f (the
+        // exponent vectors merely shift), so each cost full price while the pool grows like r.
+        // Here we expand only init_basis, basis_n0 and t, then multiply series.
+        //
+        // Measured (51_1, identical output at every point):
+        //     pole_order  200:   2.65 s ->  0.98 s   (2.7x)
+        //     pole_order  400:  17.74 s ->  2.97 s   (6.0x)
+        //     pole_order  800: 210.70 s -> 11.33 s   (18.6x)
+        // and 87_1 at 400: 27.23 s -> 7.91 s (3.4x). The gain scales with r, the number of
+        // t-power blocks (51_1 has r=24 at PO=800; 87_1 only r=6), so it is largest exactly on
+        // the deep-pole bases that dominate a genmodels run.
+        //
+        // ⚠ THE TRUNCATION IS LOAD-BEARING, not tidiness. The factors must be known to absolute
+        // precision ~pole_order for the products to be right to O(q^1), so the products come out
+        // known MUCH deeper -- and `AbsEltseq(... : FixedLength)` below turns precision into
+        // COLUMN COUNT. Without `+ O(q^1)` the column counts scatter from 401 up to 801 on a
+        // single call (measured) and the matrix is malformed. With it, the coefficient matrix is
+        // identical to the old path entry for entry.
+        // ⚠ THE 0-SIDE NEEDS `Admissible := false` FOR THE t FACTOR, and this is not a free
+        // choice -- it is what makes the identity expressible there at all. SAction divides each
+        // term by sqrt(prod d^r_i), times R`disc when Admissible (the default), and ASSERTS that
+        // this is a square. Measured at 51_1: for EVERY j, `t0^j` alone fails that test while
+        // `t0^j * f` passes. The reason is that sqr_fac(t0) IS a square but `disc` is NOT, so the
+        // lone powers carry an unpaired `disc` and the products do not. Dropping the disc factor
+        // on the t side alone repairs it, because
+        //     SAction_adm(x) = (M/sqrt(disc)) * SAction_nonadm(x)
+        // and that scalar belongs to the f factor, which keeps it:
+        //     qexp0(t^j * f) = qexp0_nonadm(t)^j * qexp0(f).
+        // Verified 30/30 at 51_1 with a negative control (j=3 against j=2) that DIFFERS, so the
+        // check discriminates rather than merely agreeing.
+        bwh_A := pole_order + 1;
+        bwh_qt := Zero select qExpansionAt0(t, bwh_A : Admissible := false)
+                         else qExpansionAtoo(t, bwh_A);
+        bwh_Rq := Parent(bwh_qt);
+        bwh_q := bwh_Rq.1;
+        bwh_tpow := [bwh_Rq!1];
+        for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt); end for;
+        bwh_head := init_basis[n0+k-s..#init_basis];
+        if Zero then
+            bwh_qh := [qExpansionAt0(f, bwh_A) : f in bwh_head];
+            bwh_qi := (r gt 0) select [qExpansionAt0(f, bwh_A) : f in init_basis] else [];
+            bwh_qz := [qExpansionAt0(f, 1) : f in basis_n0];
+        else
+            bwh_qh := [qExpansionAtoo(f, bwh_A) : f in bwh_head];
+            bwh_qi := (r gt 0) select [qExpansionAtoo(f, bwh_A) : f in init_basis] else [];
+            bwh_qz := [qExpansionAtoo(f, 1) : f in basis_n0];
+        end if;
+        qexps := [bwh_tpow[r+1]*f : f in bwh_qh];
+        if r gt 0 then
+            qexps cat:= &cat[[bwh_tpow[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]];
+        end if;
+        qexps := [x + O(bwh_q^1) : x in qexps];
+        qexps cat:= bwh_qz;                                   // never multiplied by t
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
     assert minval eq -Minimum([Valuation(f) : f in qexps]);
@@ -615,6 +712,16 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
     
     ech_basis, T := EchelonForm(coeffs);
+    // BFPROGRESS: pool size vs actual rank. The 66x WeaklyHolomorphicBasis speedup came from
+    // finding a rank-258 space being echelonised as 12784 rows; if this pool is similarly
+    // redundant we are computing a q-expansion per element to span far fewer dimensions, and the
+    // fix is algorithmic (build a smaller pool) rather than another constant-factor win.
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFPOOL pole_order=%o Zero=%o  pool=%o  rank=%o  cols=%o\n",
+                            pole_order, Zero, #full_basis,
+                            #[i : i in [1..Nrows(ech_basis)] | not IsZero(ech_basis[i])],
+                            Ncols(coeffs)));
+    end if;
     ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
    
     return ech_basis, ech_etas, T;
@@ -688,7 +795,13 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
     // !!! For D = 35, this takes about 13 minutes on lava....
     E, n, n0, t, eta_quotients := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec);
     k := -Valuation(qExpansionAtoo(t,1));
-   
+
+    // Default the oo-side shift to n0.  The odd-D block below re-computes it as
+    // max(n0, actual minimum valuation) once the oo-expansions exist; for even D that block never
+    // runs, so without this default the min_m bound further down reads an unassigned variable.
+    // Equal to n0 except where a deep oo-pole forces it up, which keeps every working base fixed.
+    n_oo := n0;
+
     if IsOdd(Xstar`D) then
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
@@ -722,7 +835,22 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
 
     found_all := false;
     
+    // BFPROGRESS=1: unbuffered per-m progress for this search.
+    //
+    // BorcherdsForms already reports progress -- the vprintf just below -- but at LEVEL 2, while
+    // genmodels.m defaults to verb := 1, so the whole search is silent under the harness that
+    // actually runs it. And even at VERB:=2 those go to stdout, which Magma BUFFERS to a file, so
+    // a killed run loses them (the M0PROGRESS lesson). Measured 2026-09-05: 93_1/95_1/159_1 sat
+    // here for 2h50m each with a 28-byte log, and their state had to be read out of /proc --
+    // CPU-bound, no normaliz child, no I/O -- rather than from any output.
+    // WriteStderr survives a kill and does not depend on the verbose level.
+    bf_progress := GetEnv("BFPROGRESS") ne "";
+    bf_t0 := Realtime();
     while (not found_all) do
+        if bf_progress then
+            WriteStderr(Sprintf("  BFPROGRESS m_idx=%o of %o, m=%o, elapsed %os\n",
+                                m_idx, #all_ms, all_ms[m_idx], Realtime()-bf_t0));
+        end if;
         if IsOdd(Xstar`D) then
             vprintf ShimuraQuotients, 2 : "\n\tAttempting to find Borcherds forms with m = %o...", all_ms[m_idx];
 
@@ -768,7 +896,22 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
             Rq<q> := Universe(ech_fs_oo);
             R := BaseRing(Rq);
 
-            ech_basis_oo := Matrix(R, [AbsEltseq(q^n0*f : FixedLength) : f in ech_fs_oo]);
+            // The shift here sets the column<->exponent mapping: column 1 is the coefficient of
+            // q^(-n_oo), which is why the SAME n_oo is handed to coeffs_to_divisor_matrix below.
+            //
+            // It used to be q^n0 flat.  But n0 is calibrated on the ZERO side (it comes back from
+            // WeaklyHolomorphicBasis(... : Zero, n0 := n0)), while the forms being expanded here
+            // are the oo-expansions of the zero-side etas ech_etas_0 -- a different object, whose
+            // pole at oo is NOT bounded by n0.  When it is deeper, q^n0*f still has a pole and
+            // AbsEltseq hits Magma's own "assert vx ge 0" (GalFldFun.m:305): the "vx class",
+            // e.g. 93_1 dying on a q^-60 pole.
+            //
+            // Taking the max with the actual minimum valuation fixes the alignment.  Note this is
+            // a NO-OP wherever the code already worked: if every oo-pole is within n0 the maximum
+            // IS n0 and every emitted model is unchanged -- so it can only affect bases that
+            // previously crashed.
+            n_oo := Maximum(n0, -Minimum([Valuation(f) : f in ech_fs_oo]));
+            ech_basis_oo := Matrix(R, [AbsEltseq(q^n_oo*f : FixedLength) : f in ech_fs_oo]);
 
             non_div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 ne 0];
             div_idxs := [i : i in [1..Ncols(ech_basis_0)] | (i-1-pole_order) mod D0 eq 0];
@@ -784,7 +927,9 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
             good_forms_0 := Submatrix(good_forms_0,[1..Nrows(good_forms_0)], div_idxs);
             // This was now verified to give the q-expansion of h in [GY] Example 31, p. 20
             mat_0, relevant_ds_0 := coeffs_to_divisor_matrix(m_choice, Xstar`D, Xstar`N, Ncols(good_forms_0) : Zero, const_coeff := false);
-            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n0, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
+            // -n_oo, not -n0: must match the shift used to build ech_basis_oo above, or the
+            // column<->exponent mapping is silently off by (n_oo - n0).
+            mat_oo, relevant_ds_oo := coeffs_to_divisor_matrix(-n_oo, Xstar`D, Xstar`N, Ncols(good_forms_oo) : const_coeff := false);
             coeffs_0 := good_forms_0*ChangeRing(mat_0, Rationals());
             coeffs_oo := good_forms_oo*ChangeRing(mat_oo,Rationals());
 
@@ -838,7 +983,13 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
 
                     ms := [(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in ram];
                     min_m := Minimum(ms);
-                    min_m := Minimum(min_m, -(n0 + k - 1));
+                    // n_oo, not n0: relevant_ds below must stay a SUPERSET of relevant_ds_0_oo,
+                    // which is built from relevant_ds_oo at the -n_oo shift.  Widening the oo-side
+                    // without widening this bound breaks that containment and Index() returns 0 at
+                    // the ds_0_oo_to_ds fill below (seen at 95_1: "column index not in [1..37]").
+                    // Identical to the old line whenever n_oo = n0, i.e. on every base that already
+                    // worked.
+                    min_m := Minimum(min_m, -(n_oo + k - 1));
                     
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;

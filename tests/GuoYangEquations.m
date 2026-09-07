@@ -11,6 +11,21 @@
 // SOURCE. J.-W. Guo and Y. Yang, "Equations of hyperelliptic Shimura curves" (arXiv:1510.06193),
 // the "Equations of level ..." tables.
 //
+// ⚠ WHICH VERSION -- ESTABLISHED 2026-09-06, AND IT MATTERS. arXiv has exactly ONE version
+// (v1, 2015-10-21); the paper of record is Compositio Math. 153 (2017) 1-40, which is
+// SUBSTANTIALLY REVISED and is NOT on arXiv. Our working copy
+// (`vvdata/weyl-campaign/guoyang/ShimuraCurves-arxiv.tex`, campaign branch) is v1, so it is the
+// superseded text. Known v1-vs-journal differences, all found by comparing against the published
+// PDF:
+//   * 93_1's `-3t` is `-3s` in the journal -- the typo this file determines by isomorphism is
+//     CONFIRMED by the version of record, not merely inferred;
+//   * 39_2's involution cell in v1 is copy-pasted from 15_4 (it lists w_4, w_3, w_5 although
+//     4 does not divide 78); the journal has w_2, w_3, w_39;
+//   * the journal adds Remark 39 (X_0^15(4) is outside their method) and Remark 38 (X_0^10(19)
+//     is NOT hyperelliptic over Q, X_0^14(5) is), neither present in v1.
+// ⇒ ALL TEN equations transcribed below were re-verified character-by-character against the
+// JOURNAL text on 2026-09-06 and agree. When adding an entry, check the journal, not just v1.
+//
 // ⚠ EVERY ENTRY BELOW IS HAND-TRANSCRIBED, DELIBERATELY. Automated extraction from the arXiv
 // LaTeX was tried on 2026-09-04 and abandoned; see PLAN.md, COVERAGE. It hit four separate
 // silent-corruption bugs (equations wrapping across `\\` into several $...$ groups; a leading
@@ -18,7 +33,16 @@
 // segmenting at the label, which is itself inside $...$; newlines inside the math), each of which
 // produces a plausible WRONG polynomial rather than an error. The tables are also heterogeneous:
 // some rows are a single y^2=f(x), others a PAIR (82_1: y^2=f(s) AND x^2=g(s)), 15_4 is a conic in
-// z, and 93_1 mixes two variables -- almost certainly a typo in the paper. Do not re-automate this.
+// z, and 93_1 mixes two variables. Do not re-automate this.
+// ⚠ UPDATE 2026-09-05: that 93_1 anomaly is now SETTLED, not merely suspected. Their `-3t` is a
+// typo for `-3s` -- our model's genus-2 quotient is isomorphic to that reading and to none of the
+// three other plausible repairs. See the 93_1 block at the end of this file. It is a worked example
+// of why hand-transcription is the right call: an extractor would have emitted a two-variable
+// polynomial or silently dropped a term, and either way produced a wrong curve without an error.
+// ⚠ AND CONFIRMED EXTERNALLY 2026-09-06: the published Compositio version prints `-3s`. The
+// isomorphism test and the version of record agree, which is the strongest form this claim can
+// take -- a prediction made from our own model alone, then checked against a source we had not
+// read when we made it.
 //
 // THE PUBLISHED EQUATION CORRESPONDS TO OUR W={1} KEY (the curve itself). Each case still records
 // the key explicitly, but the mapping is uniform as far as checked.
@@ -71,7 +95,26 @@ gy_cases := [*
     <15, 2, [Integers()|1], -(x^2+3)*(3*x^2+4)*(x^4-x^2+4)>,
 
     // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
-    <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>
+    <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>,
+
+    // X_0^111(1):  y^2 = -(19x^8-44x^7-16x^6+55x^5+37x^4-55x^3-16x^2+44x+19)
+    //                     (x^8-3x^5-x^4+3x^3+1)                        [degree 16, genus 7]
+    // Recovered 2026-09-07 (20.2 h, default flags, the vx fix). Exact full-curve IsIsomorphic in
+    // 0.05 s -- cheap because W={1} is hyperelliptic here, not a CRV pair.
+    <111, 1, [Integers()|1],
+      -(19*x^8 - 44*x^7 - 16*x^6 + 55*x^5 + 37*x^4 - 55*x^3 - 16*x^2 + 44*x + 19)
+      * (x^8 - 3*x^5 - x^4 + 3*x^3 + 1)>,
+
+    // X_0^39(2):  y^2 = -(x^8+11x^7+52x^6+140x^5+243x^4+280x^3+208x^2+88x+16)
+    //                   (7x^4+24x^3+32x^2+24x+16)(x^4+3x^3+8x^2+12x+7)          [degree 16, genus 7]
+    // ⚠ In the source this WRAPS across `\\`, the second line beginning `\qquad(7x^4...` -- reading
+    // only the first math group gives a degree-8 factor and a plausible WRONG curve.
+    // ⚠ models_39_2.m was produced with CMNONCOPRIME=1 and does NOT regenerate by default; see its
+    // header. This comparison is the independent oracle that makes that file trustworthy, so it is
+    // the one test that must not be skipped when the CM filter is changed.
+    <39, 2, [Integers()|1],
+      -(x^8+11*x^7+52*x^6+140*x^5+243*x^4+280*x^3+208*x^2+88*x+16)
+       *(7*x^4+24*x^3+32*x^2+24*x+16)*(x^4+3*x^3+8*x^2+12*x+7)>
 *];
 
 gy_checked := 0;
@@ -111,7 +154,17 @@ gy_pairs := [*
     // homogenised with d; GY's y has weight 3 since its second equation has degree 6.  [genus 3]
     <21, 2, [Integers()|1], [1,3,1,1],
      func<a,b,c,d | [c^2 + a^2 + 3*d^2,
-                     b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>
+                     b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>,
+
+    // X_0^57(1):  y^2 = (3s+1)(3s^3+11s^2+17s+1)  and  x^2 = -4s^2+2s-1               [genus 3]
+    // GY's variables are (s,x,y), so here a=s, b=y, c=x, d=the homogenising variable; y has
+    // weight 2 (its equation is degree 4). Involutions w_19(s,x,y)=(s,x,-y), w_57(s,x,y)=(s,-x,y).
+    // ⚠ In the source this entry WRAPS across `\\`: the `x^2` line sits in a separate row of the
+    // same \tabincell, so reading only the first math group silently yields a lone genus-1
+    // y^2=quartic. Transcribed whole -- this is trap #1 of the four in the header.
+    <57, 1, [Integers()|1], [1,2,1,1],
+     func<a,b,c,d | [b^2 - (3*a+d)*(3*a^3+11*a^2*d+17*a*d^2+d^3),
+                     c^2 + 4*a^2 - 2*a*d + d^2]>>
 *];
 
 for c in gy_pairs do
@@ -137,4 +190,75 @@ for c in gy_pairs do
     gy_checked +:= 1;
 end for;
 
-printf " ok (%o base(s))\n", gy_checked;
+// ---------------------------------------------------------------------------------------------
+// X_0^93(1): compared through the V_4 QUOTIENT DIAGRAM, not the full curve -- and the comparison
+// determines a typo in the published table.
+//
+// GUO-YANG PRINT:   y^2 = (3s^3 - 7s^2 - 3t - 1)(3s^3 + s^2 - 3s - 9),   x^2 = -4s^2 - 6s - 9
+// The `t` occurs nowhere else in that row, and the header above flags it as "almost certainly a
+// typo". It is, and this test says WHICH typo: of the plausible repairs only `-3t -> -3s` yields a
+// curve isomorphic to our genus-2 quotient. `-3s^2`, `-3`, and deleting the term all produce
+// genus-2 curves that are NOT isomorphic to ours -- so the test discriminates rather than merely
+// accommodating, which is what makes the conclusion worth anything. The three refuted repairs are
+// checked below alongside the accepted one, precisely so that a future change cannot quietly turn
+// this into a vacuous "some reading works" test. (The repo has produced three vacuous tests this
+// way already; the guard is to count the comparisons actually made.)
+//
+// ⚠ WHY QUOTIENTS AND NOT THE FULL CURVE. The W={1} entry is a genus-5 CRV pair, and IsIsomorphic
+// on those is the 10h+ regime measured at 26_3 -- not a CI cost. What IS checked: the two
+// hyperelliptic quotients exactly, and the conic up to Q*/Q*^2. Three of the four cover keys are
+// therefore pinned, and the fourth is their fibre product. Strong, but NOT a full-curve proof;
+// models_93_1.m's header says the same. Closing it means an offline test like
+// tests/_offline/GuoYangCurve_14_3.m.
+gy93_P<gs> := PolynomialRing(Rationals());
+gy93_B := 3*gs^3 + gs^2 - 3*gs - 9;                       // the second factor, unambiguous
+gy93_C := -4*gs^2 - 6*gs - 9;                             // the conic
+gy93_A := 3*gs^3 - 7*gs^2 - 3*gs - 1;                     // first factor, `-3t` read as `-3s`
+gy93_models := eval (Read("data/models/models_93_1.m") cat "\nreturn models;");
+
+// the accepted reading must match, on BOTH hyperelliptic quotients
+for gy93_c in [* <[Integers()|1,93], gy93_A*gy93_B, "y-quotient">,
+                 <[Integers()|1,3],  gy93_A*gy93_B*gy93_C, "product quotient"> *] do
+    gy93_key, gy93_f, gy93_nm := Explode(gy93_c);
+    gy93_ok, gy93_e := IsDefined(gy93_models, gy93_key);
+    error if not gy93_ok, Sprintf("X0^93(1): model file has no cover key %o", gy93_key);
+    gy93_ours := HyperellipticCurve(gy93_e[1][2]);
+    gy93_gy   := HyperellipticCurve(gy93_f);
+    error if Genus(gy93_ours) ne Genus(gy93_gy),
+        Sprintf("X0^93(1) %o: our genus %o vs Guo-Yang's %o -- wrong object",
+                gy93_nm, Genus(gy93_ours), Genus(gy93_gy));
+    error if not IsIsomorphic(gy93_ours, gy93_gy),
+        Sprintf("X0^93(1) %o (cover %o): NOT isomorphic to Guo-Yang's, reading `-3t` as `-3s`",
+                gy93_nm, gy93_key);
+    gy_checked +:= 1;
+end for;
+
+// the conic, up to squares: ours is -144s^2+36s-63, theirs -4s^2-6s-9; disc -34992 = -108*18^2.
+gy93_oc := gy93_models[[Integers()|1,31]][1][2];
+gy93_r  := Discriminant(gy93_oc) / Discriminant(gy93_C);
+error if not IsSquare(Rationals()!gy93_r),
+    Sprintf("X0^93(1) conic: disc ratio %o is not a square, so [1,31] is not Guo-Yang's conic",
+            gy93_r);
+gy_checked +:= 1;
+
+// AND the three refuted repairs must STILL be refuted -- otherwise the typo is not determined.
+gy93_ours93 := HyperellipticCurve(gy93_models[[Integers()|1,93]][1][2]);
+gy93_alts := [* <"-3s^2", 3*gs^3 - 7*gs^2 - 3*gs^2 - 1>,
+                <"dropped", 3*gs^3 - 7*gs^2 - 1>,
+                <"-3",     3*gs^3 - 7*gs^2 - 3 - 1> *];
+gy93_nref := 0;
+for gy93_a in gy93_alts do
+    gy93_nm, gy93_Aa := Explode(gy93_a);
+    gy93_alt := HyperellipticCurve(gy93_Aa*gy93_B);
+    error if Genus(gy93_alt) eq Genus(gy93_ours93) and IsIsomorphic(gy93_alt, gy93_ours93),
+        Sprintf("X0^93(1): reading `-3t` as `%o` ALSO matches -- the typo is no longer determined, "
+                * "and models_93_1.m's provenance claim must be weakened", gy93_nm);
+    gy93_nref +:= 1;
+end for;
+error if gy93_nref ne 3,
+    Sprintf("X0^93(1): expected 3 refuted readings, made %o comparisons", gy93_nref);
+
+// gy_checked counts COMPARISONS, and 93_1 contributes three of them (two quotients + the conic)
+// for one base -- so report both numbers rather than calling the total a base count.
+printf " ok (%o comparison(s) over 11 base(s); 93_1 is quotient-level, %o alternative readings "
+       * "refuted)\n", gy_checked, gy93_nref;

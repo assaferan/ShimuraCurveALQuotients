@@ -212,8 +212,35 @@ jobs:
           sudo ifconfig dumdum hw ether `./magma/magma -d | grep "Valid MAC addresses" -A1 | tail -n1`
           echo | ./magma/magma
 
+      # Normaliz is REQUIRED for any polytope solve.  Without NORMALIZ_BIN a fresh solve fails
+      # SILENTLY -- "no solutions" instead of an error (see CLAUDE.md) -- so tests needing a solve
+      # beyond the committed cache quietly verify less than they appear to.  That is not
+      # hypothetical: X0_10_19 passed green in CI for a long time while making ZERO comparisons,
+      # and was only caught once test_AllEquationsAboveCoversSingleCurve started counting them.
+      # Package name checked against the same image CI runs (Ubuntu 24.04): normaliz-bin ->
+      # /usr/bin/normaliz.
+      # ⚠ Deliberately NOT fatal.  If the package ever disappears or is renamed, the right outcome
+      # is a loud warning and a CI run that behaves as it did before -- not every job in the matrix
+      # failing on a packaging change.  The warning is the signal to fix it.
+      - name: Install Normaliz
+        shell: bash
+        run: |
+          if sudo apt-get update -qq && \
+             sudo apt-get install -y --no-install-recommends normaliz-bin; then
+            NB="$(command -v normaliz || true)"
+            if [ -x "$NB" ]; then
+              echo "NORMALIZ_BIN=$NB" >> "$GITHUB_ENV"
+              echo "using $NB ($("$NB" --version 2>&1 | head -1))"
+            else
+              echo "::warning::normaliz-bin installed but no normaliz binary found; polytope solves will fail SILENTLY"
+            fi
+          else
+            echo "::warning::could not install normaliz-bin; polytope solves will fail SILENTLY (see CLAUDE.md)"
+          fi
+
       - name: Run tests
         shell: bash
         run: |
+          echo "NORMALIZ_BIN=${NORMALIZ_BIN:-<unset -- solves will fail silently>}"
           ./magma/magma -b verbose:=3 target:=${{matrix.target}} exitsignal:="" run_tests.m
 
