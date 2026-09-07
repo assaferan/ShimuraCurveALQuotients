@@ -61,6 +61,36 @@ sweep's Magma, which then recorded a killed run as a failure. Retracted.
   870 s -> 71 min), an inverted conic scalar (`x/rg` for `rg*x`), hardcoded variable order, and
   image polynomials built in the wrong ring. Each was invisible in the first case tried.
 
+## Handoff — 2026-09-07, later (test coverage; supersedes the earlier 09-07 block on these points)
+
+**Re-derivation coverage went 4 → 11 Guo-Yang bases.** Passing an `X0_D_N.m` test IS reproduction,
+the stronger claim than `GuoYangEquations.m`'s stored-model comparison. Now covered:
+`51_1 55_1 57_1 14_5 14_3 26_3 21_2 15_2 22_3 22_5` in CI, `39_2` offline. 34 `X0_*` tests in CI.
+* `X0_21_2` is the **first test that checks a CRV entry** — possible only because the helper now
+  CONSTRUCTS those isomorphisms (`tests/_crviso.m`) instead of calling `IsIsomorphic`, which hangs.
+* `MR_KNOWN_DRIFT` is down from 5 to **2**: only `14_43` (`INTSOL=1`) and `26_3` (deliberate
+  `base_label := 8103`).
+
+**⚠ `Y2TWIST` WAS THE WRONG SUSPECT, and I nearly flipped it on a confounded measurement.**
+`PROVENANCE.md` had predicted for two days that making twist selection default was "the right
+long-term fix" for `15_2`/`22_3`/`22_5`. Measuring `Y2TWIST=1` against the COMMITTED models showed
+large gains — and those were the **coprime flip's**, from hours earlier the same day, because every
+committed model predated it. The control is flag-on vs flag-off on the SAME code: run that way all
+three bases are IDENTICAL and the deferral path logs zero messages. The selector never fires. The
+flip was reverted; the mechanism is kept (it is sound: unique-or-defer) but not defaulted.
+⇒ **Compare against a current baseline, never a committed artifact.**
+
+**The real win was already sitting there.** Those three needed NO flag — their committed files were
+simply STALE. Regenerated with the plain recipe: `22_5` 3 → 11 populated covers, `15_2` 12 → 15,
+`22_3` 13 → 15, nothing lost, `GuoYangEquations` still passing.
+
+**`X0_87_1` is the one known-broken test** and is under diagnosis. Established: the MODEL is fine
+(`ModelRegen` reproduces it; `GuoYangEquations` matches its `W={1}`), and the test is well-formed
+(expects exactly the model's 4 single-entry keys). So the failure is `assert is_isom`. Leading
+hypothesis, which has bitten twice already: `ModelRegen` compares the AGGREGATED model while the
+helper iterates EVERY BASE of every cover, so a second base with a different presentation fails only
+the helper — fixed at `26_3` and `21_2` with a `base_label`.
+
 ## Handoff — 2026-09-06 (this session; supersedes the state notes below)
 
 **Five models produced, and the Guo-Yang denominator was wrong.**
