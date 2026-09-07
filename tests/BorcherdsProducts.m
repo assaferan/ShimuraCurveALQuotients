@@ -1,3 +1,4 @@
+import "_crviso.m" : construct_crv_isomorphism;
 
 procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves : algebra_map := false, base_label := 0, manual_isomorphism := false)
     // no longer needed as we now have a test for each curve
@@ -33,6 +34,19 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                     phi := map<C -> C_ex | Eltseq(Vector(x)*ChangeRing(scales, Universe(x)))>;
                 end if;
                 is_isom := IsIsomorphism(phi);
+            elif (Type(C) ne CrvHyp) and (Type(C_ex) ne CrvHyp)
+                 and (#DefiningPolynomials(C) eq 2) and (#DefiningPolynomials(C_ex) eq 2) then
+                // ⚠ CRV PAIR: NEVER call IsIsomorphic here. Its cost tracks PRESENTATION, not
+                // genus -- a genus-7 hyperelliptic curve settles in 0.06 s while the genus-3 CRV
+                // pair at 14_3 runs >50 min and the genus-5 one at 26_3 >1 h (tests/IsoScreen.m).
+                // That is the real reason four tests pinned a coordinate matrix, and pinning is
+                // brittle: under CMNONCOPRIME=1 the pipeline re-presents 10_13's curve and the
+                // hardcoded map stops being a map at all.
+                // CONSTRUCT the isomorphism instead (tests/_crviso.m): take the Mobius map from
+                // the hyperelliptic y-quotient, require it to carry both sides by constant
+                // squares, then let IsIsomorphism certify the result. Still a PROOF -- an
+                // explicit map is exhibited and checked -- and it runs in hundredths of a second.
+                is_isom, phi := construct_crv_isomorphism(C, C_ex);
             else
                 is_isom, phi := IsIsomorphic(C, C_ex);
             end if;
