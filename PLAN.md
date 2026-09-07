@@ -779,9 +779,30 @@ above sidesteps this only because the involutions are LABELLED; without labels, 
 determines the pairing (that assumption once produced a confident refutation of a model later
 proved isomorphic).
 
-⇒ Sequencing note: (a) is done (`981618b`). (b) needs the ambient weights recorded in the model
-files before it can be wired into the helper — the same gap `PROVENANCE.md` flags for `21_2`/`57_1`
-and `ModelRegen`. `CRV_15_4.m` is the current stand-in and is honest about being point-counts only.
+✅ **(b) IS IMPLEMENTED, 2026-09-07** — `tests/_crviso.m`, wired into
+`test_AllEquationsAboveCoversSingleCurve`, which now routes CRV pairs through the construction
+instead of `IsIsomorphic`. (a) was done in `981618b`.
+
+⚠ **The blocker recorded here was WRONG.** This said (b) needed the ambient weights recorded in the
+model files. It did not: the weights are DERIVABLE (`y`'s weight is half its own equation's degree),
+verified on 16 of 21 stored entries by `tests/CRVStructure.m` — and the helper does not need them at
+all, because it identifies the roles STRUCTURALLY.
+
+**Two bugs worth knowing, both invisible in the first case tested:**
+* **Do not assume the variable order.** The pipeline emits `P3<x,y,s,z>` with base `(s,z)`; the
+  hand-written `tests/X0_6_17.m` uses `P3<x,y,z,s>` with base `(x,s)`. Hardcoded indices extracted
+  the wrong polynomial and `HyperellipticCurve` reported "geometrically reducible". Identify roles
+  structurally: **a base variable occurs in BOTH equations, a fibre variable in exactly one.**
+* **Image polynomials live in `C`'s ring, indexed by `C_ex`'s coordinate POSITIONS.** Invisible when
+  both curves share an ambient — which is why the hand-check on `93_1` passed — and wrong when they
+  do not.
+
+**Results:** `93_1` and `26_3` proven at FULL-CURVE level (`tests/CRVFullCurve.m`, 0.16 s for both);
+`X0_6_17` passes with its pinned matrix REMOVED (466 s against a 403 s baseline). A negative control
+(deliberately wrong conic) returns false throughout, so the construction is not permissive.
+
+⇒ Remaining: confirm `X0_10_13` likewise, after which the guard sweep has no artifacts left and its
+verdict — 10 of 10 bases identical with `CMNONCOPRIME` on and off — is unambiguous.
 
 ## COVERAGE — reproducing Guo-Yang's published equations
 
