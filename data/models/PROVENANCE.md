@@ -64,7 +64,7 @@ encode.
 | test | checks | runs |
 |---|---|---|
 | `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 85 files, 8889 checks |
-| `tests/GuoYangEquations.m` | STORED models against the published equations, 10 bases | CI, ~125 s |
+| `tests/GuoYangEquations.m` | STORED models against the published equations, 11 bases | CI, ~122 s |
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
 | `tests/CRV_15_4.m` | `15_4`'s FULL genus-5 curve against trace-formula point counts — the only check of a `CRV` entry anywhere, and the one that pins its conic constant | CI, ~1 s |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
@@ -142,7 +142,7 @@ should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1
 
 ## Reproducibility status, measured 2026-09-05
 
-Of the 36 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
+Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
 43 — `15_4` is outside the method by their Remark 39):
 * **24** are verified BY re-derivation (the `X0_D_N.m` tests run the pipeline, so passing IS
   reproduction);

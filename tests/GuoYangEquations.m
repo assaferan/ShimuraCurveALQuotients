@@ -97,6 +97,14 @@ gy_cases := [*
     // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
     <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>,
 
+    // X_0^111(1):  y^2 = -(19x^8-44x^7-16x^6+55x^5+37x^4-55x^3-16x^2+44x+19)
+    //                     (x^8-3x^5-x^4+3x^3+1)                        [degree 16, genus 7]
+    // Recovered 2026-09-07 (20.2 h, default flags, the vx fix). Exact full-curve IsIsomorphic in
+    // 0.05 s -- cheap because W={1} is hyperelliptic here, not a CRV pair.
+    <111, 1, [Integers()|1],
+      -(19*x^8 - 44*x^7 - 16*x^6 + 55*x^5 + 37*x^4 - 55*x^3 - 16*x^2 + 44*x + 19)
+      * (x^8 - 3*x^5 - x^4 + 3*x^3 + 1)>,
+
     // X_0^39(2):  y^2 = -(x^8+11x^7+52x^6+140x^5+243x^4+280x^3+208x^2+88x+16)
     //                   (7x^4+24x^3+32x^2+24x+16)(x^4+3x^3+8x^2+12x+7)          [degree 16, genus 7]
     // ⚠ In the source this WRAPS across `\\`, the second line beginning `\qquad(7x^4...` -- reading
@@ -252,5 +260,5 @@ error if gy93_nref ne 3,
 
 // gy_checked counts COMPARISONS, and 93_1 contributes three of them (two quotients + the conic)
 // for one base -- so report both numbers rather than calling the total a base count.
-printf " ok (%o comparison(s) over 10 base(s); 93_1 is quotient-level, %o alternative readings "
+printf " ok (%o comparison(s) over 11 base(s); 93_1 is quotient-level, %o alternative readings "
        * "refuted)\n", gy_checked, gy93_nref;
