@@ -11,6 +11,16 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // keys are omitted: the helper compares hyperelliptic covers, and a key with several stored
 // entries cannot be matched unambiguously.
 //
+//
+// ⚠ WHAT A PASS DOES AND DOES NOT PIN, measured 2026-09-07 by negative control on X0_14_3.
+// The comparison is `IsIsomorphic`, so it pins each cover UP TO ISOMORPHISM -- which is the right
+// notion for a model, but it is WEAKER on the genus-0 entries than it looks:
+//   * perturbing the GENUS-2 entry at {1,3} (-184 -> -185) makes the test FAIL, as it should;
+//   * perturbing a GENUS-0 conic's constant term does NOT -- two conics can be isomorphic with
+//     different coefficients, so `IsIsomorphic` correctly still says yes.
+// So the genus-0 cover entries are checked only for their isomorphism CLASS. If a conic's actual
+// coefficients matter (they do for the CRV constructions, and for `15_4`'s twist), that has to be
+// pinned elsewhere -- see tests/CRVFullCurve.m and tests/CRV_15_4.m.
 // The second component of each cover_data value is unused here -- with manual_isomorphism false
 // (the default) the helper calls IsIsomorphic, so the matrix is a placeholder. ws_data is left
 // empty for the same reason: the helper skips involution checks for keys it does not find.
