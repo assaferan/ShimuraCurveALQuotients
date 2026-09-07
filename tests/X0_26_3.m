@@ -25,19 +25,29 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // (the default) the helper calls IsIsomorphic, so the matrix is a placeholder. ws_data is left
 // empty for the same reason: the helper skips involution checks for keys it does not find.
 //
-// ⚠ THIS TEST IS WEAKER THAN THE HAND-WRITTEN ONES: `ws_data` IS EMPTY, so it makes ZERO
-// involution comparisons. It verifies that each cover is ISOMORPHIC to the stored curve, but not
-// that the Atkin-Lehner involutions correspond -- and the involutions are what make these QUOTIENT
-// models rather than merely curves. 23 of the 34 X0_*.m tests do check them; the ones generated on
-// 2026-09-07 (this file among them) do not.
-// ⇒ Closing that needs involution matrices IN OUR MODEL'S COORDINATES. Taking them from the
-// pipeline's own `ws` output would be circular; deriving them from Guo-Yang's published
-// involutions is independent but is per-base work. Recorded rather than silently accepted.
+// ✅ INVOLUTIONS CHECKED (2026-09-07), and the W={1} CRV pair is now compared too. Guo-Yang
+// publish, in THEIR coordinates:
+//     w_2(x,y,z) = (-x,-y,-z)   w_3(x,y,z) = (x,-y,-z)   w_26(x,y,z) = (x,-y,z)
+// Our model is a different presentation, so those do NOT carry over as written. They were
+// TRANSPORTED: psi := construct_crv_isomorphism(our stored pair, Guo-Yang's pair) is computed from
+// the two EQUATIONS alone, and the matrix recorded here is psi^-1 . w_GY . psi, which came out
+// linear in the weighted coordinates. Script: tests/_gyinvol.m / the CRV variant beside it.
+// ⚠ WHY THIS IS NOT CIRCULAR: the involutions are Guo-Yang's (external) and psi comes from
+// equations, never from the pipeline's own `ws`. The harness then checks that the PIPELINE's
+// involution labelled w_m matches Guo-Yang's w_m, so a labelling error is detectable.
+// ⚠ psi is one element of a torsor under Aut; another choice conjugates all the transported
+// involutions simultaneously, and the harness searches that same torsor, so it cannot cause a
+// false verdict. Each matrix was verified to PRESERVE our curve (ideal membership) and to be an
+// involution projectively -- `M^2 = identity` is the wrong test on a weighted ambient, where
+// M^2 must act as (x_i) -> (lambda^{w_i} x_i).
 
 function load_covers_and_ws_data_26_3()
     _<s> := PolynomialRing(Rationals());
 
+    P3_1<x,y,s,z> := WeightedProjectiveSpace(Rationals(), [1,3,1,1]);
+
     cover_data := AssociativeArray();
+    cover_data[{1}] := <Curve(P3_1, [ y^2 - 1/64*s^6 + 1/32*s^4*z^2 - 9/64*s^2*z^4 - 1/8*z^6, x^2 + 8*s^2 + 3*z^2 ]), DiagonalMatrix([1,1,1,1])>;   // genus 5, CRV pair
     cover_data[{1,6,26,39}] := <HyperellipticCurve(Polynomial(Rationals(), [ -11, 16 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1,3}] := <HyperellipticCurve(Polynomial(Rationals(), [ -3/8, 0, -91/64, 0, -33/32, 0, 13/64, 0, -1/8 ])), DiagonalMatrix([1,1,1])>;   // genus 3
     cover_data[{1,2,13,26}] := <HyperellipticCurve(Polynomial(Rationals(), [ -11, 38, -32 ])), DiagonalMatrix([1,1,1])>;   // genus 0
@@ -51,13 +61,21 @@ function load_covers_and_ws_data_26_3()
     cover_data[{1,78}] := <HyperellipticCurve(Polynomial(Rationals(), [ 1/8, 0, 9/64, 0, -1/32, 0, 1/64 ])), DiagonalMatrix([1,1,1])>;   // genus 2
 
     ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][2]  := Matrix(4,4,[ -1,0,0,0,  0,-1,0,0,  0,0,-1,0,  0,0,0,1 ]);
+    ws_data[{1}][3]  := Matrix(4,4,[ -1,0,0,0,  0,-1,0,0,  0,0, 1,0,  0,0,0,1 ]);
+    ws_data[{1}][26] := Matrix(4,4,[  1,0,0,0,  0,-1,0,0,  0,0, 1,0,  0,0,0,1 ]);
     return cover_data, ws_data;
 end function;
 
 procedure test_26_3()
     cover_data, ws_data := load_covers_and_ws_data_26_3();
     curves := GetHyperellipticCandidates();
-    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves);
+    // ⚠ base_label := 8103 IS REQUIRED, not cosmetic: models_26_3.m deliberately stores the V_4
+    // that Guo-Yang use, which a DEFAULT run does not produce (it gives a different, equally valid
+    // one). Without it the W={1} CRV pair the pipeline emits is a genuinely different presentation
+    // and the isomorphism assertion fails. See models_26_3.m's header.
+    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : base_label := 8103);
     return;
 end procedure;
 

@@ -105,13 +105,16 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
-⚠ **A SECOND KNOWN WEAKNESS, NOW HALF CLOSED: 5 of the 34 tests do not check the involutions.**
+⚠ **A SECOND KNOWN WEAKNESS, NOW MOSTLY CLOSED: 3 of the 34 tests do not check the involutions.**
 The tests generated on 2026-09-07 all carried an EMPTY `ws_data`, so they made zero involution
 comparisons: they verified each cover is isomorphic to the stored curve, but not that the
 Atkin-Lehner involutions correspond — and the involutions are what make these QUOTIENT models
 rather than merely curves.
 
-**Closed for `51_1 55_1 22_3 15_2 14_5`** (so 28 of 34 tests now check involutions). The matrices
+**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1`** (so 30 of 34 tests now check involutions).
+For `26_3` and `57_1` this also added the `W={1}` CRV pair itself to `cover_data`, which the
+generator had omitted; `psi` there comes from `construct_crv_isomorphism` rather than
+`IsIsomorphic`, which hangs on paired presentations. The matrices
 were obtained by TRANSPORT, which is what makes them non-circular: Guo-Yang publish the
 involutions in THEIR coordinates, `psi := IsIsomorphic(our stored curve, their curve)` is computed
 from the two EQUATIONS alone — never from the pipeline's own `ws` — and the recorded matrix is
@@ -122,9 +125,17 @@ same torsor, so the choice cannot produce a false verdict either way. **Negative
 `51_1`, swapping `w_3` and `w_51` makes the test fail on the labelling — and on `14_5` this
 machinery *determined a typo in the journal's table* (see below).
 
-**Still open for `57_1 14_3 26_3 21_2 22_5`** — the four CRV bases need 4x4 matrices on a weighted
-ambient with the variable identification done by hand, and `22_5` has no `W={1}` key to attach
-them to.
+⚠ **`26_3`'s test now REQUIRES `base_label := 8103`**, and this is not cosmetic. `models_26_3.m`
+deliberately stores the `V_4` Guo-Yang use, which a default run does not produce — it gives a
+different, equally valid one — so without the label the `W={1}` pair the pipeline emits is a
+genuinely different presentation and the isomorphism assertion fails.
+
+**Still open for `14_3 21_2 22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
+no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
+`14_3` and `21_2` are pending: `construct_crv_isomorphism` declines on both because our pair and
+Guo-Yang's present the curve over DIFFERENT intermediate quotients (at `21_2`, Guo-Yang's `y` has
+weight 3 and a genus-2 `y`-quotient, ours weight 2 and genus 1), so there is no common base to take
+a Mobius map from, and the general `IsIsomorphic` fallback is the slow paired-presentation path.
 
 ⚠ **A SECOND GUO-YANG TABLE TYPO DETERMINED, at `14_5`.** The journal's table prints
 `w_35(x,y) = ((x+2)/(2x-1), -25y/(2x-1)^4)` while its own Example 36 prints `+25y`. Both are
