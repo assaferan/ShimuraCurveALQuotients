@@ -38,7 +38,7 @@ it cut `26_3`'s pool from 21 to 3 against demand 15, and `39_2`'s from 24 to 3 a
 | `26_3` | needed the flag | builds with **no flag**, 15 keys |
 | `14_3` | needed the flag | **no flag**, 15 keys, **identical to committed** |
 | `51_1` | never needed it | still **byte-for-byte identical** |
-| `39_2` | needed the flag | regeneration in progress at time of writing — confirm before relying on it |
+| `39_2` | needed the flag | **no flag**, 15 keys, **identical to committed** |
 
 ⚠ **THE GAP THIS LEAVES OPEN.** There is **no theoretical guarantee**, only the sweep above. The
 local factor at `p | gcd(d,N)` has **no live implementation** (`kappaminuszero` is dead code), and
@@ -57,9 +57,8 @@ simply do not propagate into the cover equations. Therefore:
 | `26_3` | *(no flag)* but `base_label := 8103` | stores the presentation whose `V_4` is the one Guo-Yang use, so the full curve is directly comparable. A DEFAULT run yields a different (equally valid) `V_4` and so differs in the `W={1}` entry only | `tests/CRVFullCurve.m` — full-curve isomorphism CONSTRUCTED and certified |
 | `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
-So, e.g.:
-
-    CMNONCOPRIME=1 NORMALIZ_BIN=... magma -b D_s:=39 N_s:=2 OUTDIR:=... genmodels.m < /dev/null
+Everything else uses the plain recipe above. (`CMNONCOPRIME` no longer exists as a flag — what it
+enabled is the default; `CMCOPRIME=1` is the escape hatch in the other direction.)
 
 ## ⚠ The two reasons are NOT the same, and must not be conflated
 
@@ -80,17 +79,11 @@ So, e.g.:
   What follows is kept because the underlying THEORETICAL gap is unchanged: the `p | gcd(d,N)` local factor has no live
   implementation (`kappaminuszero` is dead code), and at `26_3` two non-coprime discriminants give
   provably wrong values.
-  ⚠ **BUT THE STATED JUSTIFICATION FOR THE GUARD IS NOW IN DOUBT (2026-09-06).** `26_3` is the base
-  whose two bad discriminants (`-267`, `-708`) are the whole reason the filter exists — and with
-  the filter OFF, so those rows are admitted, `26_3` produces a model whose every quotient is
-  isomorphic to Guo-Yang's, with the conic matching coefficient for coefficient. The two wrong
-  values are evidently not load-bearing for the covers. Three bases now produce GY-matching models
-  with the guard off (`39_2`, `14_3`, `26_3`) and none is known to be harmed by it.
-  ⇒ A sweep of the 25 `X0_D_N.m` re-derivation tests under `CMNONCOPRIME=1` is the evidence needed
-  to decide whether the guard should become off-by-default. Until that finishes, the flag stays
-  opt-in. Their justification is the **published equation**, not regeneration.
-  **Do not turn the flag on globally to make them "reproducible"** — that trades a documented gap
-  for an undocumented risk on every base.
+  ⚠ **THAT DOUBT IS RESOLVED — the sweep ran and the guard was flipped (see the section above).**
+  `26_3` is the base whose two bad discriminants (`-267`, `-708`) were the filter's whole
+  justification, and with them admitted its every quotient is isomorphic to Guo-Yang's, the conic
+  coefficient for coefficient. Their justification remains the **published equation**, not
+  regeneration.
 
 ⇒ The target is **not** "everything regenerates by default". It is "every non-reproducing file has
 a recorded reason and an independent validation". That is what this table and the model headers
@@ -100,7 +93,7 @@ encode.
 
 | test | checks | runs |
 |---|---|---|
-| `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 85 files, 8889 checks |
+| `tests/ModelChecks.m` | STORED models structurally — genus, Weil divisibility, Eichler-Selberg point counts. Independent of the Borcherds/Schofer path that produced them | CI, 88 files, 9349 checks |
 | `tests/GuoYangEquations.m` | STORED models against the published equations, 11 bases | CI, ~122 s |
 | `tests/_offline/ModelRegen.m` | that models still REGENERATE — the only check that runs the pipeline over stored files | offline |
 | `tests/CRVFullCurve.m` | CRV pairs against Guo-Yang by CONSTRUCTED full-curve isomorphism — Mobius map from the hyperelliptic quotient, then `IsIsomorphism` certifies it. Proof, not a screen; avoids the generic call that runs for hours on these | CI, ~0.1 s |
