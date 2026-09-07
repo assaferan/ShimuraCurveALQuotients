@@ -1,4 +1,4 @@
-# Handoff — 2026-09-06
+# Handoff — 2026-09-07
 
 **The newest section is the 2026-09-06 one below; everything after it is older and kept for
 provenance.** Earlier material still says things like "34 of 43" — those counts are STALE, and the
@@ -12,6 +12,54 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 **➡ For what to do next, see `PLAN.md`** — five tracks, a do-not list, and the recurring traps.
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
+
+## Handoff — 2026-09-07 (newest; the 09-06 section below is still accurate, just earlier)
+
+    Guo-Yang published equations:  42 reproducible bases
+    we now have a model for:       38      <- 111_1 recovered
+    remaining blockers:             4      95_1  119_1  159_1  69_1   -- ALL RUNNING
+
+* **`111_1` recovered** — 20.2 h, DEFAULT flags, another base the vx fix unblocked. Verified by
+  **exact full-curve `IsIsomorphic`, true in 0.05 s**, which is cheap only because its `W={1}` is
+  HYPERELLIPTIC. ⚠ Pinnable to one commit (`f87b0ae`, clean tree) — unlike `10_61`/`14_43`.
+* **`93_1` and `26_3` upgraded to FULL-CURVE PROOFS** (were quotient-level). `IsIsomorphic` hangs on
+  CRV pairs, so the isomorphism is CONSTRUCTED: Mobius map from the hyperelliptic quotient, both
+  sides carried by constant squares, then `IsIsomorphism` certifies it. Hundredths of a second.
+  ⇒ **The BASE chooses the `V_4`** (assaferan): `26_3` would not match until rebuilt with
+  `base_label := 8103`, which is the `V_4` Guo-Yang use. When a CRV pair will not match, try
+  another base before concluding anything about the curve.
+
+### Three blind spots removed, each of which immediately exposed a real defect
+
+* **`VerifyModelSet` skips every `CRV` entry** — so 21 paired presentations across 16 files had
+  NEVER been checked. `tests/CRVStructure.m` found **5 storing their parent conic twice**
+  (reducible schemes, not the genus-1 curves recorded). ROOT CAUSE: at `g = 1` the required degree
+  `g+1 = 2` is also a conic's degree, so the conic could fill BOTH roles in the fibre product.
+  Fixed; those covers now defer.
+* **The `X0_*` helper silently skipped unmatched cover keys** — it could pass while verifying
+  NOTHING. It now counts comparisons and errors on zero. That immediately turned CI red, correctly:
+  **`X0_10_19` had been passing green in CI while making ZERO comparisons**, at 84 min a run.
+* **CI never set `NORMALIZ_BIN`** — so polytope solves failed SILENTLY ("no solutions", not an
+  error). Now installs `normaliz-bin` and exports the path. ⚠ Scope was MEASURED: every other
+  `X0_*` job reported full coverage, so `10_19` was the only affected test.
+
+### The coprime guard: no evidence it is needed
+
+Full sweep of the 11 `N>1` `X0_*` tests (for `N=1` the filter is provably a no-op, which excludes
+19 of 30 rigorously). **8 of 10 pass identically with `CMNONCOPRIME` on and off.** The 2 failures
+(`10_13`, `6_17`) are both CRV tests whose PINNED COORDINATE MATRIX breaks under re-presentation —
+not correctness. Removing that artifact is what `tests/_crviso.m` does.
+⚠ A first sweep appeared to show `10_13` failing; that was MY OWN foreground timeout killing the
+sweep's Magma, which then recorded a killed run as a failure. Retracted.
+
+### Process notes
+
+* **`nohup ... &` inside a background call reports completion for the WRAPPER**, not the job.
+* **My own foreground timeout killed a background sweep** — a killed run and a failing run are
+  indistinguishable in a one-line summary. Capture the error text before believing a regression.
+* Bugs of mine caught only because a test could fail: an eager `AutomorphismGroup` (5x slowdown,
+  870 s -> 71 min), an inverted conic scalar (`x/rg` for `rg*x`), hardcoded variable order, and
+  image polynomials built in the wrong ring. Each was invisible in the first case tried.
 
 ## Handoff — 2026-09-06 (this session; supersedes the state notes below)
 
