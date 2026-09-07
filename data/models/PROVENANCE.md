@@ -99,7 +99,7 @@ encode.
 | `tests/CRVFullCurve.m` | CRV pairs against Guo-Yang by CONSTRUCTED full-curve isomorphism — Mobius map from the hyperelliptic quotient, then `IsIsomorphism` certifies it. Proof, not a screen; avoids the generic call that runs for hours on these | CI, ~0.1 s |
 | `tests/CRV_15_4.m` | `15_4`'s FULL genus-5 curve against trace-formula point counts — the only check of a `CRV` entry anywhere, and the one that pins its conic constant | CI, ~1 s |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
-| `tests/X0_D_N.m` (27 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
+| `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
 | `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
