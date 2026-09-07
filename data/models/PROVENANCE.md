@@ -17,6 +17,39 @@ committing the model.
 (triage tooling is not on `main` — see `CLAUDE.md`). **Always redirect stdin**, or a runtime error
 drops Magma into its interpreter and blocks forever.
 
+## ⚠⚠ THE COPRIME-TO-LEVEL CM FILTER IS NOW **OFF BY DEFAULT** (flipped 2026-09-07)
+
+`CMNONCOPRIME` is retired — what it used to enable is the default. **`CMCOPRIME=1` restores the old
+filtering** if a base ever turns out to be poisoned by an admitted point.
+
+**Evidence for the flip.** A full sweep of the 11 `N>1` `X0_D_N.m` re-derivation tests, each run
+both ways: **10 of 10 pass identically**. (For `N = 1` the filter is provably a no-op, excluding 19
+of 30 tests rigorously rather than by sampling.) Two tests appeared to fail with it off — `10_13`
+and `6_17` — and both were artifacts of a hardcoded coordinate matrix *in the test*, gone once the
+isomorphism is constructed rather than pinned. Decisively, `26_3` is the very base whose two
+misbehaving discriminants justified the filter, and with them admitted its full `V_4` diagram still
+matches Guo-Yang, conic coefficient for coefficient. The filter also **cost** models: at `bd := 4`
+it cut `26_3`'s pool from 21 to 3 against demand 15, and `39_2`'s from 24 to 3 against 19.
+
+**Measured consequences** (verified by regeneration, not assumed):
+
+| base | before | after |
+|---|---|---|
+| `26_3` | needed the flag | builds with **no flag**, 15 keys |
+| `14_3` | needed the flag | **no flag**, 15 keys, **identical to committed** |
+| `51_1` | never needed it | still **byte-for-byte identical** |
+| `39_2` | needed the flag | regeneration in progress at time of writing — confirm before relying on it |
+
+⚠ **THE GAP THIS LEAVES OPEN.** There is **no theoretical guarantee**, only the sweep above. The
+local factor at `p | gcd(d,N)` has **no live implementation** (`kappaminuszero` is dead code), and
+Schofer's Thm 4.1 assumes unimodularity at unramified primes, which fails at a level prime where the
+order is Eichler. The two known-wrong values at `26_3` (`-267`, `-708`) **are still wrong** — they
+simply do not propagate into the cover equations. Therefore:
+* a model built from non-coprime discriminants still needs an **INDEPENDENT ORACLE** (a published
+  equation, or Eichler-Selberg point counts); regeneration alone is not enough;
+* **do not read this flip as evidence the `p | gcd(d,N)` factor is unnecessary.** Supplying it is
+  still the real fix — it is what would make the swap class *correct* rather than merely *harmless*.
+
 ## Files needing a non-default flag
 
 | base | flag | why | validated by |
