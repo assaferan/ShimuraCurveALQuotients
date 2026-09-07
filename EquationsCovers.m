@@ -116,7 +116,21 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
-// Y2TWIST -- PROTOTYPE, env-gated, OFF by default.
+// Y2TWIST -- env-gated, OFF by default.
+//
+// ⚠ EVALUATED FOR DEFAULT-ON 2026-09-07 AND DELIBERATELY LEFT OFF. Measured on the three bases it
+// was written for -- 15_2, 22_3, 22_5 -- `NOY2TWIST`-style control runs give results IDENTICAL to
+// the default, and the deferral path logs ZERO "unpinned y2-scale" messages. Under current code
+// the selector never fires: the covers it was meant to rescue are already recovered by the
+// coprime-to-level filter being off by default (flipped the same day).
+// ⚠⚠ AND THE FIRST EVALUATION WAS CONFOUNDED, which is the lesson worth keeping. Comparing
+// `Y2TWIST=1` runs against the COMMITTED model files appeared to show large gains (22_3 13 -> 15
+// populated covers, 15_2 12 -> 15, 22_5 3 -> 11). Those files predate the coprime flip, so the
+// gains were ITS effect, not this flag's. The control that settles it is default vs NOY2TWIST on
+// the SAME code -- always compare against a current baseline, never a committed artifact.
+// ⇒ The mechanism is still sound (unique-or-defer; it cannot trade a deferral for a guess) and is
+// kept for the case where an unscaled cover reappears. But it is not made default while there is
+// no measured case where it changes anything: an unexercised default-on path is a risk, not a win.
 //
 // find_y2_scales cannot always pin the y2-scale from sparse CM data.  EquationsOfCovers then
 // force-defers the cover (issue #36), because a consistent solve with an unpinned scale is off

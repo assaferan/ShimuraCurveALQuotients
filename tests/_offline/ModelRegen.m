@@ -150,7 +150,12 @@ printf "ModelRegen: %o base(s) reproduce, %o drifted%o\n", mr_ok, mr_fail,
 // deliberately stores the `base_label := 8103` presentation (the V_4 Guo-Yang use, so the full
 // curve is directly comparable), while a DEFAULT run produces a different, equally valid V_4.
 // The drift is therefore in the `W={1}` CRV entry ONLY, and it is intentional.
-MR_KNOWN_DRIFT := ["22_3", "15_2", "22_5", "14_43", "26_3"];
+// ⚠ SHRUNK AGAIN 2026-09-07: `22_3`, `15_2` and `22_5` came off once they were REGENERATED
+// with default flags (the coprime filter being off by default is what recovers their covers;
+// Y2TWIST was evaluated and does not fire). Only two remain, for unrelated reasons:
+//   14_43  produced with INTSOL=1
+//   26_3   stores the base_label := 8103 presentation deliberately (the V_4 Guo-Yang use)
+MR_KNOWN_DRIFT := ["14_43", "26_3"];
 mr_unexpected := [b : b in mr_bad | not (b in MR_KNOWN_DRIFT)];
 error if not IsEmpty(mr_unexpected),
     Sprintf("ModelRegen: base(s) %o no longer reproduce and are NOT in the known-drift list",

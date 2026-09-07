@@ -55,9 +55,6 @@ simply do not propagate into the cover equations. Therefore:
 | base | flag | why | validated by |
 |---|---|---|---|
 | `26_3` | *(no flag)* but `base_label := 8103` | stores the presentation whose `V_4` is the one Guo-Yang use, so the full curve is directly comparable. A DEFAULT run yields a different (equally valid) `V_4` and so differs in the `W={1}` entry only | `tests/CRVFullCurve.m` — full-curve isomorphism CONSTRUCTED and certified |
-| `22_5` | `Y2TWIST=1` | the unpinned-y2-scale guard (`1768517`) POSTDATES the file, so default regeneration withholds `[1,2,5,10]` | restores 3/3 covers, coefficient-for-coefficient |
-| `15_2` | `Y2TWIST=1` | same guard | restores 12/12 keys (one cover up to isomorphism) |
-| `22_3` | `Y2TWIST=1` | same guard | restores 13/14; `[1,3,22,66]` and one `[1,66]` entry are **still lost** — both genus-0 conics, which `select_y2_twist` skips by construction |
 | `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
 So, e.g.:
@@ -66,10 +63,18 @@ So, e.g.:
 
 ## ⚠ The two reasons are NOT the same, and must not be conflated
 
-* **`22_3`, `15_2`, `22_5` — ACCIDENTAL drift.** A guard was added *after* these files were
-  committed. `Y2TWIST=1` decides the quadratic twist by Eichler-Selberg point count instead of
-  dropping the cover, and restores them. This is a defect to repair: the right long-term fix is to
-  make that selection the default once it is trusted.
+* **`22_3`, `15_2`, `22_5` — RESOLVED 2026-09-07, and NOT the way this file predicted.** They no
+  longer need any flag: regenerated with the plain recipe they give MORE covers than the files they
+  replaced (`22_5` 3 → 11 populated, `15_2` 12 → 15, `22_3` 13 → 15), nothing lost, and
+  `GuoYangEquations` still passes.
+  ⚠ **The fix was the COPRIME flip, not `Y2TWIST`.** This file used to say "the right long-term fix
+  is to make that selection the default once it is trusted". `Y2TWIST` was evaluated for exactly
+  that and left OFF: a controlled run — default vs the selector disabled, on the SAME code — is
+  IDENTICAL at all three bases, and the deferral path logs zero "unpinned y2-scale" messages. It
+  never fires here any more.
+  ⚠⚠ The first evaluation got this backwards by comparing `Y2TWIST=1` runs against the COMMITTED
+  files, which predate the coprime flip — so the coprime flip's gains were credited to `Y2TWIST`.
+  **Compare against a current baseline, never a committed artifact.**
 * **`39_2`, `14_3`, `26_3` — NO LONGER NEED A FLAG (2026-09-07).** The coprime filter is now off by
   default, and all three regenerate without one (`39_2` and `14_3` byte-identical to committed).
   What follows is kept because the underlying THEORETICAL gap is unchanged: the `p | gcd(d,N)` local factor has no live

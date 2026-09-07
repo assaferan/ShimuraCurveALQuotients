@@ -1,7 +1,35 @@
-// Subhyperelliptic cover models for X_0(22,5)* -- Guo-Yang /  AllEquationsAboveCovers
-// models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually  0).
+// Subhyperelliptic cover models for X_0(22,5)*
+//
+// REGENERATED 2026-09-07 with DEFAULT FLAGS -- no flag is needed any more:
+//     NORMALIZ_BIN=... magma -b D_s:=22 N_s:=5 OUTDIR:=... genmodels.m < /dev/null
+// Populated covers went 3 -> 11.
+//
+// ⚠ WHAT ACTUALLY UNLOCKED THIS, because it is easy to misattribute: the COPRIME-TO-LEVEL CM
+// FILTER becoming OFF BY DEFAULT (same day). NOT Y2TWIST. That flag was written for exactly these
+// three bases, but a controlled run -- default vs the selector disabled, on the SAME code -- gives
+// IDENTICAL output at all three, and the deferral path logs zero "unpinned y2-scale" messages.
+// The selector never fires here now, so Y2TWIST stays off by default; see EquationsCovers.m.
+// (An earlier evaluation compared against the COMMITTED files, which predate the coprime flip, and
+// so credited the gains to the wrong flag. Compare against a current baseline, not an artifact.)
+//
+// ⚠ The p | gcd(d,N) local factor still has NO live implementation, so what makes this file
+// trustworthy is the published Guo-Yang equation, not regeneration. See data/models/PROVENANCE.md.
+//
+// models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[ 1, 2, 5, 10 ]] := [* <1, P![ -1, 4755/1024, -8267/1024, 797/128,  -115/64 ], P![]> *];
-models[[ 1, 2, 55, 110 ]] := [* <0, P![ 1, -9/4, 5/4 ], P![]> *];
-models[[ 1, 2, 11, 22 ]] := [* <1, P![ -4096, 20044, -36799, 30040, -9200 ],  P![]> *];
+models[[Integers()|1,10]] := [* <3, P![ -1024/625, -4096/625, -6803/625, -6073/625, -3147/625, -951/625, -157/625, -11/625 ], P![]> *];
+models[[Integers()|1,110]] := [* <0, P![ 1/4, 1/4 ], P![]>, <0, P![ 1/25, 0, -4/25 ], P![]>, <0, P![ 4, 0, 1 ], P![]> *];
+models[[Integers()|1,55]] := [* <3, P![ -11/390625, 0, 6/78125, 0, 37/390625, 0, 56/390625, 0, 16/78125 ], P![]> *];
+models[[Integers()|1,2,11,22]] := [* <1, P![ -4096/625, 20044/625, -36799/625, 6008/125, -368/25 ], P![]> *];
+models[[Integers()|1]] := [*  *];
+models[[Integers()|1,2]] := [*  *];
+models[[Integers()|1,2,5,10]] := [* <1, P![ -1024/625, 951/125, -8267/625, 6376/625, -368/125 ], P![]> *];
+models[[Integers()|1,5]] := [*  *];
+models[[Integers()|1,5,22,110]] := [* <0, P![ 0, -16, 16 ], P![]> *];
+models[[Integers()|1,5,11,55]] := [* <1, P![ 0, 1024/625, -3731/625, 4536/625, -368/125 ], P![]> *];
+models[[Integers()|1,10,22,55]] := [* <2, P![ 0, 65536/50625, -77248/10125, 909488/50625, -1069424/50625, 13952/1125, -5888/2025 ], P![]> *];
+models[[Integers()|1,2,55,110]] := [* <0, P![ 1, -9/4, 5/4 ], P![]> *];
+models[[Integers()|1,10,11,110]] := [* <0, P![ 0, -4, 5 ], P![]> *];
+models[[Integers()|1,11]] := [*  *];
+models[[Integers()|1,22]] := [* <3, P![ -4096/625, 0, -732/125, 0, -1243/625, 0, -38/125, 0, -11/625 ], P![]> *];
