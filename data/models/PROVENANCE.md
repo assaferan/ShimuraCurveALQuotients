@@ -132,10 +132,21 @@ genuinely different presentation and the isomorphism assertion fails.
 
 **Still open for `14_3 21_2 22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
-`14_3` and `21_2` are pending: `construct_crv_isomorphism` declines on both because our pair and
-Guo-Yang's present the curve over DIFFERENT intermediate quotients (at `21_2`, Guo-Yang's `y` has
-weight 3 and a genus-2 `y`-quotient, ours weight 2 and genus 1), so there is no common base to take
-a Mobius map from, and the general `IsIsomorphic` fallback is the slow paired-presentation path.
+`14_3` and `21_2` are pending for a specific, recorded reason. `construct_crv_isomorphism` declines
+on both because our pair and Guo-Yang's present the curve over DIFFERENT intermediate quotients (at
+`21_2` Guo-Yang's `y` has weight 3 and a genus-2 `y`-quotient, ours weight 2 and genus 1), so there
+is no common base to take a Mobius map from. The general `IsIsomorphic` fallback DOES find the
+isomorphism at `21_2` (171 s) — `Inverse` then fails on it and `IsInvertible` is the route that
+works — but the composite `psi^-1 . w_GY . psi` comes back as a single degree-39 representation,
+and `ws_data` holds MATRICES.
+
+⚠ **That degree-39 form does NOT show the map is non-linear**, and it would be wrong to record it
+as one: it is Magma's unreduced composite, and `AllDefiningPolynomials` offers no other. The
+decisive test was run instead — on `P(1,2,1,1)` only `y` has weight 2, so a weight-respecting
+matrix must send `y -> c*y` and hence COMMUTE with the fibration involution `y -> -y`, and map
+equality in Magma compares maps rather than representations. **All three of `21_2`'s transported
+involutions commute**, so the necessary condition holds and a matrix may well exist. Getting it
+needs a linear solve for the weight-1 block modulo the curve's ideal, which is where this stopped.
 
 ⚠ **A SECOND GUO-YANG TABLE TYPO DETERMINED, at `14_5`.** The journal's table prints
 `w_35(x,y) = ((x+2)/(2x-1), -25y/(2x-1)^4)` while its own Example 36 prints `+25y`. Both are
