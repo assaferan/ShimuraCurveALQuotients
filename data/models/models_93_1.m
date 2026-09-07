@@ -17,10 +17,13 @@
 //     GY y-quotient   y^2 = AB    genus 2  ==  our [1,93]     IsIsomorphic
 //     GY product      y^2 = ABC   genus 3  ==  our [1,3]      IsIsomorphic
 //     GY conic        x^2 = C     genus 0  ==  our [1,31]     same class in Q*/Q*^2
-// ⚠ SCOPE: that is the QUOTIENT diagram, not the genus-5 full curve. A direct IsIsomorphic on the
-// W={1} CRV pair is the 10h+ regime (cf. 26_3) and is not run. Three of the four cover keys are
-// pinned exactly and the fourth is their fibre product, so this is strong but not a full-curve
-// proof. ModelChecks validates the file structurally.
+// ✅ AND THE FULL CURVE IS NOW PROVEN TOO (2026-09-07), upgrading this from quotient-level.
+// A direct IsIsomorphic on a genus-5 CRV pair is the hours regime, so the isomorphism is
+// CONSTRUCTED instead of searched: take the Mobius map from the HYPERELLIPTIC y-quotient (where
+// IsIsomorphic costs 0.07 s), check it carries both sides by constant squares, then build the map
+// and let Magma certify it. Result:
+//     (t, y, x)  ->  (2t - 1,  24y,  x/3)      IsIsomorphism TRUE, in 0.000 s
+// See tests/CRVFullCurve.m. ModelChecks validates the file structurally as well.
 //
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
