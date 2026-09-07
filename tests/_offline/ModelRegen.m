@@ -144,7 +144,13 @@ printf "ModelRegen: %o base(s) reproduce, %o drifted%o\n", mr_ok, mr_fail,
 //                     genus-7 curve) and by ModelChecks, not by regeneration.
 // 14_43 added 2026-09-06: produced with INTSOL=1 (see data/models/PROVENANCE.md), so it does
 // not regenerate under the default recipe. Keep this list and that table in sync.
-MR_KNOWN_DRIFT := ["22_3", "15_2", "22_5", "39_2", "14_3", "14_43"];
+// ⚠ SHRUNK 2026-09-07 when the coprime filter became default-off: `39_2` and `14_3` came OFF
+// this list because they now regenerate WITHOUT a flag, byte-identical to the committed files.
+// `26_3` is NOT on the list for a flag reason -- it is here because its committed `W={1}` entry
+// deliberately stores the `base_label := 8103` presentation (the V_4 Guo-Yang use, so the full
+// curve is directly comparable), while a DEFAULT run produces a different, equally valid V_4.
+// The drift is therefore in the `W={1}` CRV entry ONLY, and it is intentional.
+MR_KNOWN_DRIFT := ["22_3", "15_2", "22_5", "14_43", "26_3"];
 mr_unexpected := [b : b in mr_bad | not (b in MR_KNOWN_DRIFT)];
 error if not IsEmpty(mr_unexpected),
     Sprintf("ModelRegen: base(s) %o no longer reproduce and are NOT in the known-drift list",
