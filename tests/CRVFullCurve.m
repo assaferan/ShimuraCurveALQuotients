@@ -74,21 +74,28 @@ crv_cases := [*
      t^6 - 4*t^5 + 50/9*t^4 - 34/9*t^3 + 17/9*t^2 - 2/3*t + 1/9,
      -(144*t^2 - 36*t + 63),
      (3*t^3 - 7*t^2 - 3*t - 1)*(3*t^3 + t^2 - 3*t - 9),
-     -4*t^2 - 6*t - 9>
+     -4*t^2 - 6*t - 9>,
+
+    // 26_3: the committed W={1} entry is the base_label := 8103 presentation, which is the V_4
+    // Guo-Yang use. Our f is theirs scaled by 1/64 = (1/8)^2 and the conic is theirs verbatim, so
+    // mu is the identity and the map is (t, y, x) -> (t, 8y, x).
+    <"26_3", 3,
+     1/64*t^6 - 1/32*t^4 + 9/64*t^2 + 1/8,
+     -8*t^2 - 3,
+     t^6 - 2*t^4 + 9*t^2 + 8,
+     -8*t^2 - 3>
 *];
 
-// ⚠ 26_3 IS NOT HERE, AND THE REASON IS INSTRUCTIVE -- measured 2026-09-07.
-// Its stored CRV pairs a DIFFERENT V_4 than Guo-Yang's presentation does. Our CRV's y-side is the
-// `[1,6]` entry and its conic is the THIRD `[1,26]` entry, whereas the quotients that match
-// Guo-Yang are `[1,78]` and the SECOND `[1,26]`. Measured: our CRV's genus-2 y-curve is NOT
-// isomorphic to Guo-Yang's genus-2 y-side, and the two conics' discriminants do not differ by a
-// square. Both are legitimate V_4s -- `tests/IsoScreen.m` warns that the Klein four-group is not
-// unique in Aut(C), and at 14_3 there are provably at least two valid 0+1+2 decompositions.
-// ⇒ The construction below assumes the y/x ROLES correspond. To cover 26_3 it must first pin the
-// V_4 correspondence (match our CRV's two quotients to Guo-Yang's by isomorphism, then permute the
-// roles accordingly). Until then 26_3 stays quotient-level, which its model header already says.
-// This is a gap in COVERAGE, not a doubt about the model: its three cover keys are pinned against
-// Guo-Yang, the conic coefficient for coefficient.
+// ⚠ HOW 26_3 GOT HERE, because it did not work at first. Its DEFAULT presentation pairs a
+// different V_4 than Guo-Yang's: y-side [1,6] and the third [1,26] conic, versus their [1,78] and
+// the second. Measured then: the genus-2 y-curves were NOT isomorphic and the conic discriminants
+// differed by a non-square. Both V_4s are legitimate -- IsoScreen.m warns the Klein four-group is
+// not unique in Aut(C).
+// The fix was assaferan's: a CRV is built over a CHOSEN BASE, and the base decides the V_4. Running
+// AllEquationsAboveCovers with base_label := 8103 yields the V_4 Guo-Yang use, after which the
+// comparison is nearly the identity. models_26_3.m now stores that presentation.
+// ⇒ GENERAL LESSON: when a CRV pair will not match, try another base before concluding anything
+// about the curve. The presentation is a choice; the curve is not.
 
 crv_n := 0; crv_fail := [];
 for c in crv_cases do

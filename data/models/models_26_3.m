@@ -14,6 +14,19 @@
 //                                                              -8x^2-3 COEFFICIENT FOR COEFFICIENT
 // (Guo-Yang, Compositio 153 (2017), "Equations of level greater than one" table.)
 //
+// ✅ THE W={1} FULL CURVE IS PROVEN ISOMORPHIC TO GUO-YANG (2026-09-07), not merely its quotients.
+// ⚠ THE PRESENTATION BELOW IS THE base_label := 8103 ONE, DELIBERATELY. A CRV pair is built over a
+// chosen base cover, and the base decides WHICH V_4 the pair presents. The default run picked a
+// V_4 whose y-side is the [1,6] quotient -- perfectly valid, but NOT the one Guo-Yang present, so
+// the two were not directly comparable (their genus-2 y-curves are not isomorphic and the conic
+// discriminants differ by a non-square). Rebuilding with base_label := 8103 gives the V_4 they use:
+//     ours  y^2 = 1/64 t^6 - 1/32 t^4 + 9/64 t^2 + 1/8,   x^2 = -8t^2 - 3
+//     GY    y^2 =      t^6 -    2t^4 +    9t^2 + 8,       z^2 = -8t^2 - 3
+// i.e. our f is theirs scaled by 1/64 = (1/8)^2 and the conic is theirs VERBATIM, giving the
+// explicit isomorphism (t, y, x) -> (t, 8y, x), certified by IsIsomorphism. See
+// tests/CRVFullCurve.m. Regenerate with:
+//     CMNONCOPRIME=1 ... AllEquationsAboveCovers(Xstar, curves : base_label := 8103)
+//
 // ⚠⚠ THE KNOWN-BAD CM VALUES DID NOT CORRUPT THE MODEL, and that is the interesting part.
 // This base has a recorded s <-> s~ SWAP at discriminants -267 and -708 -- Guo-Yang's `s` sits in
 // our `s~` row there -- and that misbehaviour is the entire justification for the coprime filter
@@ -31,7 +44,7 @@
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
 models[[Integers()|1,13]] := [*  *];
-models[[Integers()|1]] := [* <5, "CRV", [ Strings() | "y^2 + 1/32768*s^6 + 25/32768*s^4*z^2 + 699/32768*s^2*z^4 - 2197/32768*z^6", "x^2 + 1/8*s^2 + 3/8*z^2" ]> *];
+models[[Integers()|1]] := [* <5, "CRV", [ Strings() | "y^2 - 1/64*s^6 + 1/32*s^4*z^2 - 9/64*s^2*z^4 - 1/8*z^6", "x^2 + 8*s^2 + 3*z^2" ]> *];
 models[[Integers()|1,6,26,39]] := [* <0, P![ -11, 16 ], P![]> *];
 models[[Integers()|1,3]] := [* <3, P![ -3/8, 0, -91/64, 0, -33/32, 0, 13/64, 0, -1/8 ], P![]> *];
 models[[Integers()|1,2]] := [*  *];
