@@ -95,12 +95,22 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
     // THE GUARD. Zero curve comparisons means nothing above was verified, however green the run
     // looks. Fail loudly and say what was expected against what was produced, so the reader can
     // tell "the pipeline stopped emitting this cover" from "the expected key is written wrong".
+    // ⚠ TWO DIFFERENT CAUSES, and saying which one matters. Either no expected key matched a
+    // produced cover at all, or a key DID match but `covers[label]` carried no bases, so the inner
+    // loop never ran. The first version of this message reported only the first cause and
+    // misdiagnosed X0_10_19 in CI, where `[1]` is both expected AND produced but has zero bases.
     error if n_curve_cmp eq 0,
         Sprintf("X0^%o(%o): NO EVIDENCE -- the test made ZERO curve comparisons, so it verified "
                 * "nothing.\n  cover_data expects W in %o\n  AllEquationsAboveCovers produced W in "
-                * "%o\n  No expected key matched a produced cover, so every comparison was skipped.",
+                * "%o\n  %o\n  (%o expected key(s) matched a produced cover; a matched key still "
+                * "yields no comparison when it has no bases -- i.e. no equation was found over "
+                * "anything it covers.)",
                 D, N, {Sort(SetToSequence(W)) : W in Keys(cover_data)},
-                {Sort(SetToSequence(curves[l]`W)) : l in Keys(covers)});
+                {Sort(SetToSequence(curves[l]`W)) : l in Keys(covers)},
+                IsEmpty(matched_Ws)
+                    select "No expected key matched a produced cover, so every comparison was skipped."
+                    else "Keys MATCHED but produced no bases, so there was nothing to compare against.",
+                #matched_Ws);
 
     // Expected covers that were never reached are NOT fatal -- a cover may legitimately be
     // deferred on a given run -- but they are silent, so say so. If this ever prints for a test
