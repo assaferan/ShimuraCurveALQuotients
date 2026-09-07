@@ -105,14 +105,34 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
-⚠ **A SECOND KNOWN WEAKNESS: 10 of the tests DO NOT CHECK THE INVOLUTIONS.** The tests generated
-on 2026-09-07 (`51_1 55_1 57_1 14_5 14_3 26_3 21_2 15_2 22_3 22_5`) carry an EMPTY `ws_data`, so
-they make zero involution comparisons: they verify each cover is isomorphic to the stored curve,
-but not that the Atkin-Lehner involutions correspond — and the involutions are what make these
-QUOTIENT models rather than merely curves. 23 of the 34 `X0_*` tests do check them.
-⇒ Closing it needs involution matrices in OUR models' coordinates. Taking them from the pipeline's
-own `ws` output would be CIRCULAR; deriving them from Guo-Yang's published involutions is
-independent, but is per-base work. Each affected file says so in its header.
+⚠ **A SECOND KNOWN WEAKNESS, NOW HALF CLOSED: 5 of the 34 tests do not check the involutions.**
+The tests generated on 2026-09-07 all carried an EMPTY `ws_data`, so they made zero involution
+comparisons: they verified each cover is isomorphic to the stored curve, but not that the
+Atkin-Lehner involutions correspond — and the involutions are what make these QUOTIENT models
+rather than merely curves.
+
+**Closed for `51_1 55_1 22_3 15_2 14_5`** (so 28 of 34 tests now check involutions). The matrices
+were obtained by TRANSPORT, which is what makes them non-circular: Guo-Yang publish the
+involutions in THEIR coordinates, `psi := IsIsomorphic(our stored curve, their curve)` is computed
+from the two EQUATIONS alone — never from the pipeline's own `ws` — and the recorded matrix is
+`psi^-1 . w_GY . psi`, which came out linear in the weighted coordinates in all 11 cases. The
+script is `tests/_gyinvol.m`; each matrix is checked to be an involution of our curve and to equal
+the transported map. `psi` is one element of a torsor under `Aut`, but the harness searches that
+same torsor, so the choice cannot produce a false verdict either way. **Negative-controlled**: on
+`51_1`, swapping `w_3` and `w_51` makes the test fail on the labelling — and on `14_5` this
+machinery *determined a typo in the journal's table* (see below).
+
+**Still open for `57_1 14_3 26_3 21_2 22_5`** — the four CRV bases need 4x4 matrices on a weighted
+ambient with the variable identification done by hand, and `22_5` has no `W={1}` key to attach
+them to.
+
+⚠ **A SECOND GUO-YANG TABLE TYPO DETERMINED, at `14_5`.** The journal's table prints
+`w_35(x,y) = ((x+2)/(2x-1), -25y/(2x-1)^4)` while its own Example 36 prints `+25y`. Both are
+involutions of the curve, so inspection cannot choose between them; they differ by `w_14`, and
+`35*14/gcd(35,14)^2 = 10`, so the two readings are `w_35` and `w_10`. `tests/X0_14_5.m` adjudicates:
+`+25` labelled `w_35` passes, `-25` labelled `w_35` FAILS on the labelling, `-25` labelled `w_10`
+passes. Example 36 is right and the table is wrong. Both readings are kept in the test under their
+own labels, so the run makes 4 involution comparisons and neither can be quietly relabelled.
 
 ⚠ **A KNOWN WEAKNESS OF THE `X0_D_N.m` TESTS.** `test_AllEquationsAboveCoversSingleCurve` SILENTLY
 SKIPS cover keys it does not find (`if not is_def then continue`), so a base whose re-derived `W`

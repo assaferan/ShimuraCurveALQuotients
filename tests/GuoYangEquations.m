@@ -21,6 +21,11 @@
 //     CONFIRMED by the version of record, not merely inferred;
 //   * 39_2's involution cell in v1 is copy-pasted from 15_4 (it lists w_4, w_3, w_5 although
 //     4 does not divide 78); the journal has w_2, w_3, w_39;
+//   * 14_5's w_35 sign: the journal's TABLE prints -25y/(2x-1)^4 and its OWN Example 36 prints
+//     +25y -- an internal contradiction, v1's table agreeing with the erroneous one. Both maps are
+//     involutions, so inspection cannot choose; they differ by w_14 and 35*14/gcd^2 = 10, so the
+//     table's map is w_10. tests/X0_14_5.m determines this (the -25 reading FAILS under the label
+//     w_35 and PASSES under w_10). Second published typo the pipeline has settled, after 93_1's;
 //   * the journal adds Remark 39 (X_0^15(4) is outside their method) and Remark 38 (X_0^10(19)
 //     is NOT hyperelliptic over Q, X_0^14(5) is), neither present in v1.
 // ⇒ ALL TEN equations transcribed below were re-verified character-by-character against the

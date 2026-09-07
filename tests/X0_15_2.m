@@ -15,14 +15,20 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // The matrix in each cover_data value is a placeholder -- with manual_isomorphism false (the
 // default) the helper never reads it.
 //
-// ⚠ THIS TEST IS WEAKER THAN THE HAND-WRITTEN ONES: `ws_data` IS EMPTY, so it makes ZERO
-// involution comparisons. It verifies that each cover is ISOMORPHIC to the stored curve, but not
-// that the Atkin-Lehner involutions correspond -- and the involutions are what make these QUOTIENT
-// models rather than merely curves. 23 of the 34 X0_*.m tests do check them; the ones generated on
-// 2026-09-07 (this file among them) do not.
-// ⇒ Closing that needs involution matrices IN OUR MODEL'S COORDINATES. Taking them from the
-// pipeline's own `ws` output would be circular; deriving them from Guo-Yang's published
-// involutions is independent but is per-base work. Recorded rather than silently accepted.
+// ✅ INVOLUTIONS CHECKED (2026-09-07). Guo-Yang publish, in THEIR coordinates:
+//     w_2(x,y) = (2/x, -4y/x^4)   w_3(x,y) = (-x, y)   w_5(x,y) = (-x, -y)
+// Our model is a different presentation, so those matrices do NOT carry over as written. They were
+// TRANSPORTED: psi := IsIsomorphic(our stored curve, Guo-Yang's curve) is computed from the two
+// EQUATIONS alone, and the involution recorded here is psi^-1 . w_GY . psi, which came out linear
+// in the weighted coordinates and so is expressible as a matrix.
+// ⚠ WHY THIS IS NOT CIRCULAR: the involutions are Guo-Yang's (external), and psi is derived from
+// equations, never from the pipeline's own `ws`. What the harness then checks is that the
+// PIPELINE's involution labelled w_m matches Guo-Yang's w_m under some identification -- so an
+// error in the pipeline's LABELLING is detectable, which is the whole point.
+// ⚠ psi is one element of a torsor under Aut, and another choice would conjugate all the
+// transported involutions simultaneously. That is harmless here because the harness searches that
+// same torsor (see BorcherdsProducts.m), so the choice cannot cause a false verdict either way.
+// Each matrix was verified to be an involution OF OUR CURVE and to equal the transported map.
 
 function load_covers_and_ws_data_15_2()
     _<s> := PolynomialRing(Rationals());
@@ -44,6 +50,10 @@ function load_covers_and_ws_data_15_2()
     cover_data[{1,5,6,30}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 5/18, 56/9, -32/3 ])), DiagonalMatrix([1,1,1])>;   // genus 1
 
     ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][2] := Matrix(3,3,[ -1, 0, 1, 0, -4, 0, 1, 0, 1 ]);
+    ws_data[{1}][3] := Matrix(3,3,[ 1, 0, 0, 0, 1, 0, 2, 0, -1 ]);
+    ws_data[{1}][5] := Matrix(3,3,[ 1, 0, 0, 0, -1, 0, 2, 0, -1 ]);
     return cover_data, ws_data;
 end function;
 
