@@ -105,14 +105,14 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
-⚠ **A SECOND KNOWN WEAKNESS, NOW NEARLY CLOSED: 3 of the 34 tests do not check the involutions.**
+⚠ **A SECOND KNOWN WEAKNESS, NOW CLOSED EXCEPT FOR ONE STRUCTURAL CASE: 2 of the 34 tests do not check involutions** (`22_5`, and `10_19`/whichever others predate this note — the generated set is done).
 The tests generated on 2026-09-07 all carried an EMPTY `ws_data`, so they made zero involution
 comparisons: they verified each cover is isomorphic to the stored curve, but not that the
 Atkin-Lehner involutions correspond — and the involutions are what make these QUOTIENT models
 rather than merely curves.
 
-**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1 21_2`** (so 31 of 34 tests now check
-involutions; `21_2` adds 3 comparisons over 10/10 covers).
+**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1 21_2 14_3`** — so **32 of 34** tests now check
+involutions, and every one of the ten generated on 2026-09-07 except `22_5` is done.
 For `26_3` and `57_1` this also added the `W={1}` CRV pair itself to `cover_data`, which the
 generator had omitted; `psi` there comes from `construct_crv_isomorphism` rather than
 `IsIsomorphic`, which hangs on paired presentations. The matrices
@@ -131,8 +131,29 @@ deliberately stores the `V_4` Guo-Yang use, which a default run does not produce
 different, equally valid one — so without the label the `W={1}` pair the pipeline emits is a
 genuinely different presentation and the isomorphism assertion fails.
 
-**Still open for `14_3` (rerunning: the first 112-min run predated the `IsInvertible` fix) and
-`22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
+⚠ **`14_3` NEEDED `base_label := 5394`, AND FINDING IT IS THE LESSON.** The default base (5383)
+gives a valid pair that is NOT Guo-Yang's `V_4`; `construct_crv_isomorphism` declines, and the
+general `IsIsomorphic` needs **6739 s (112 min)** to confirm the curves are abstractly isomorphic
+while still producing no usable coordinate change. Sweeping the candidate bases — replaying only
+the pointless-conic step, ~7 s each — finds 5394, whose pair IS their `V_4`:
+
+|  | `y`-equation | conic |
+|---|---|---|
+| ours (base 5394) | `y^2 = 4s^4 + 88s^2z^2 - 28z^4` | `x^2 = -2s^2 - 9z^2` |
+| Guo-Yang | `y^2 = -7x^4 + 22x^2 + 1` | `z^2 = -9x^2 - 2` |
+
+theirs scaled by 4 with the two base coordinates exchanged. The constructor then succeeds
+immediately and the linear solve drops from 70 monomial equations to 10.
+⇒ **SWEEP THE BASE BEFORE CONCLUDING ANYTHING ABOUT A PAIR** (same lesson as `26_3`'s 8103).
+Tool: `tests/_basesweep.m`.
+
+⚠ **`21_2` IS DIFFERENT, AND THE SWEEP DOES NOT RESCUE IT.** All four candidate bases were tried
+and none reproduces Guo-Yang's `V_4`, because theirs has `y` of weight 3 (a genus-2 `y`-quotient)
+while every base our pipeline offers gives weight 2 (genus 1). So for `21_2` the slow
+`IsIsomorphic` + linear-solve route was genuinely necessary, not merely a route not yet optimised.
+
+**Still open: `22_5` only**, and structurally — its model file has an EMPTY `[1]` entry, so there
+is no full curve for Guo-Yang's involutions to act on. `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
 **Counted, not assumed** (`SetVerbose("ShimuraQuotients",1)` prints them; the repo has produced
 three vacuous tests, so the comparisons made are checked rather than inferred from a green run):
