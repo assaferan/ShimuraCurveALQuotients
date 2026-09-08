@@ -105,13 +105,14 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
-⚠ **A SECOND KNOWN WEAKNESS, NOW MOSTLY CLOSED: 3 of the 34 tests do not check the involutions.**
+⚠ **A SECOND KNOWN WEAKNESS, NOW NEARLY CLOSED: 3 of the 34 tests do not check the involutions.**
 The tests generated on 2026-09-07 all carried an EMPTY `ws_data`, so they made zero involution
 comparisons: they verified each cover is isomorphic to the stored curve, but not that the
 Atkin-Lehner involutions correspond — and the involutions are what make these QUOTIENT models
 rather than merely curves.
 
-**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1`** (so 30 of 34 tests now check involutions).
+**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1 21_2`** (so 31 of 34 tests now check
+involutions; `21_2` adds 3 comparisons over 10/10 covers).
 For `26_3` and `57_1` this also added the `W={1}` CRV pair itself to `cover_data`, which the
 generator had omitted; `psi` there comes from `construct_crv_isomorphism` rather than
 `IsIsomorphic`, which hangs on paired presentations. The matrices
@@ -130,7 +131,8 @@ deliberately stores the `V_4` Guo-Yang use, which a default run does not produce
 different, equally valid one — so without the label the `W={1}` pair the pipeline emits is a
 genuinely different presentation and the isomorphism assertion fails.
 
-**Still open for `14_3 21_2 22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
+**Still open for `14_3` (rerunning: the first 112-min run predated the `IsInvertible` fix) and
+`22_5`.** `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
 **Counted, not assumed** (`SetVerbose("ShimuraQuotients",1)` prints them; the repo has produced
 three vacuous tests, so the comparisons made are checked rather than inferred from a green run):
@@ -147,21 +149,25 @@ three vacuous tests, so the comparisons made are checked rather than inferred fr
 
 19 involution comparisons in total, and every expected cover matched in every case.
 
-`14_3` and `21_2` are pending for a specific, recorded reason. `construct_crv_isomorphism` declines
-on both because our pair and Guo-Yang's present the curve over DIFFERENT intermediate quotients (at
-`21_2` Guo-Yang's `y` has weight 3 and a genus-2 `y`-quotient, ours weight 2 and genus 1), so there
-is no common base to take a Mobius map from. The general `IsIsomorphic` fallback DOES find the
-isomorphism at `21_2` (171 s) — `Inverse` then fails on it and `IsInvertible` is the route that
-works — but the composite `psi^-1 . w_GY . psi` comes back as a single degree-39 representation,
-and `ws_data` holds MATRICES.
+`14_3` and `21_2` needed a different route, and it is now the general one. `construct_crv_isomorphism`
+DECLINES on both, because our pair and Guo-Yang's present the curve over DIFFERENT intermediate
+quotients (at `21_2` Guo-Yang's `y` has weight 3 and a genus-2 `y`-quotient, ours weight 2 and
+genus 1), so there is no common base to take a Mobius map from. The general `IsIsomorphic` is the
+fallback: 208 s at `21_2`, **6739 s (112 min) at `14_3`**, both returning true.
 
-⚠ **That degree-39 form does NOT show the map is non-linear**, and it would be wrong to record it
-as one: it is Magma's unreduced composite, and `AllDefiningPolynomials` offers no other. The
-decisive test was run instead — on `P(1,2,1,1)` only `y` has weight 2, so a weight-respecting
-matrix must send `y -> c*y` and hence COMMUTE with the fibration involution `y -> -y`, and map
-equality in Magma compares maps rather than representations. **All three of `21_2`'s transported
-involutions commute**, so the necessary condition holds and a matrix may well exist. Getting it
-needs a linear solve for the weight-1 block modulo the curve's ideal, which is where this stopped.
+⚠ **THREE TRAPS ON THIS ROUTE, each of which cost a wrong conclusion or a rerun:**
+1. `Inverse(psi)` raises `"Map has no inverse"` on the very map `IsIsomorphic` returns.
+   `IsInvertible` succeeds on the SAME map — a representation issue, not a mathematical one.
+2. The composite `psi^-1 . w_GY . psi` comes back as ONE unreduced degree-39 representation
+   (`AllDefiningPolynomials` offers no other), so **reading coefficients off it reports "not
+   linear" although the MAP is linear**. Recording that as non-linearity would have been a
+   wrong-object claim of exactly the kind this repo keeps paying for.
+3. The fix is to **SOLVE for the matrix, not read it**. On `P(1,wy,1,1)` only `y` has weight `wy`,
+   so a weight-respecting matrix must send `y -> c*y` and act on `(x,s,z)` by a 3x3 block; and
+   `q1*L3-q3*L1` and `q1*L4-q4*L1` vanishing on the curve are LINEAR conditions on that block's 9
+   coefficients. At `21_2` the kernel came out **dimension 1** for all three involutions — the
+   block is unique up to scalar — and each was certified by MAP EQUALITY against the transported
+   map, which is representation-independent. Script: `tests/_gyinvol_crv.m`.
 
 ⚠ **A SECOND GUO-YANG TABLE TYPO DETERMINED, at `14_5`.** The journal's table prints
 `w_35(x,y) = ((x+2)/(2x-1), -25y/(2x-1)^4)` while its own Example 36 prints `+25y`. Both are
