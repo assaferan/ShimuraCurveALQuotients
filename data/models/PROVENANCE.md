@@ -152,8 +152,35 @@ and none reproduces Guo-Yang's `V_4`, because theirs has `y` of weight 3 (a genu
 while every base our pipeline offers gives weight 2 (genus 1). So for `21_2` the slow
 `IsIsomorphic` + linear-solve route was genuinely necessary, not merely a route not yet optimised.
 
-**Still open: `22_5` only**, and structurally — its model file has an EMPTY `[1]` entry, so there
-is no full curve for Guo-Yang's involutions to act on. `22_5` has an EMPTY `[1]` entry in its model file, so there is
+**Still open: `22_5` only**, and the reason is now DIAGNOSED rather than merely observed.
+
+⚠ **WHAT GUO-YANG DO DIFFERENTLY AT `22_5`: THEY DO NOT BUILD IT AS A FIBRE PRODUCT.** Their model
+is a single plain hyperelliptic curve, `y^2 = -11x^12 - 80x^10 - 240x^8 - 362x^6 - 240x^4 - 80x^2
+- 11` (degree 12, genus 5), presented as a double cover of `X/w_110`, with `w_110 = (x,-y)` as the
+hyperelliptic involution. That base is real and we have it: our `[1,110]` entry is `y^2 = (x+1)/4`,
+degree 1 — a genus-0 curve WITH a rational point, i.e. a `P^1` over `Q`. The paper gives `22_5` no
+worked example and flags no exception for it (the only exception they flag anywhere is Remark 39,
+`15_4`), so it came out of their standard method.
+
+Our pipeline never constructs a genus-`g` curve directly. `process_P1_cover` always assembles it
+as a FIBRE PRODUCT, and requires some OTHER quotient to carry an equation of degree exactly `g+1`
+**over a base shared with the `P^1`**. At `22_5` that requirement fails twice, and the two failures
+cascade:
+
+* `{1,2}`, `{1,5}`, `{1,11}` (genus 2) each need a **degree-3** equation. The degrees the pipeline
+  actually produces here are `1, 2, 4, 6, 7, 8` — **no degree 3 exists at all**, so all three are
+  blocked outright.
+* `{1}` (genus 5) needs **degree 6** over a base shared with the `P^1` `[1,110]`. A degree-6
+  equation does exist — `{1,10,22,55}` — but over the **star base 7588**, whereas `[1,110]`'s
+  equations live over bases 7582/7585/7586. **No common base**, which is exactly what the
+  `"No (degree g+1, conic) pair over a common base"` message reports. The quotients that WOULD
+  supply degree 6 over those bases are precisely the three genus-2 ones above.
+
+⇒ So this is a **missing construction path, not a theoretical obstruction**: the Borcherds/CM data
+is evidently fine, since the other 11 cover keys all build. Closing it means teaching the pipeline
+Guo-Yang's direct route — realise the genus-`g` curve as the double cover of a genus-0 quotient
+branched at its `2g+2` CM points — instead of only the fibre-product route. That would also close
+`{1,2}`, `{1,5}`, `{1,11}`. Not attempted. `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
 **Counted, not assumed** (`SetVerbose("ShimuraQuotients",1)` prints them; the repo has produced
 three vacuous tests, so the comparisons made are checked rather than inferred from a green run):
