@@ -10,10 +10,19 @@
 // anything: t -> r + 1/u at a RATIONAL ROOT r moves a branch point to infinity, turning a quartic
 // into a cubic and collapsing a conic that shares the root to degree 1 (a P1).
 //
-// Measured: at 22_5 this builds the full genus-5 curve and reproduces Guo-Yang's degree-12
-// polynomial VERBATIM (tests/FullCurve_22_5.m). At 10_19 it fills 3 of the 4 empty keys at r = 0
-// ({1}, {1,10}, {1,190}) and a different 3 at r = 32/27 ({1}, {1,10}, {1,2}), so between them all
-// four. ⚠ NOTE THE ROOT MATTERS AND NO SINGLE ONE WINS -- sweep them all.
+// ⚠⚠ FILLING A KEY IS NOT BUILDING THE RIGHT CURVE, AND THIS TOOL DOES BOTH. Read this before
+// trusting any output.
+//   * At 22_5 it is CORRECT: it builds the full genus-5 curve and reproduces Guo-Yang's degree-12
+//     polynomial VERBATIM, coefficient for coefficient (tests/FullCurve_22_5.m).
+//   * At 10_19 it is WRONG. It fills 3 of the 4 empty keys at r = 0 and a different 3 at r = 32/27,
+//     but the genus-5 pair it produces has a y-side that is NOT ISOMORPHIC TO ANY Atkin-Lehner
+//     quotient of X_0^10(19) -- checked against all three genus-2 quotients derived from Guo-Yang's
+//     own curve and involutions (tests/GuoYangQuotients_10_19.m). Its conic IS right, which is
+//     exactly why the output looks plausible.
+// ⇒ SO NEVER ACCEPT A FILLED KEY WITHOUT AN INDEPENDENT ORACLE. Why it succeeds at 22_5 and fails
+// at 10_19 is NOT diagnosed; the likely suspect is that the rebase changes the coordinate but the
+// y^2-scale (twist) is not re-derived from CM values afterwards, so the twist can come out wrong.
+// ⚠ The root matters and no single one wins -- sweep them all.
 //
 // ⚠ SLOW on big bases: the AllEquationsAboveCovers call dominates (~40 s at 22_5, ~35 min at
 // 10_19). Magma buffers stdout to a file, so an empty log is NOT evidence of a stall -- check CPU

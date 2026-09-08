@@ -181,11 +181,29 @@ that is isomorphic but NOT equal, so the coincidence at `r = 4/5` is real rather
 of any construction landing on genus 5. `tests/FullCurve_22_5.m` pins both (~420 s), and also
 recovers all three genus-2 quotients.
 
-⇒ **THIS IS LIKELY A GENERAL LEVER, NOT A ONE-OFF.** The obstruction was never mathematical — the
-Borcherds/CM data was fine all along, since the other 11 cover keys built normally. Any base with
-empty cover keys should be re-examined by sweeping rational roots on the star base before being
-called obstructed. NOT yet wired into `AllEquationsAboveCovers`, so `models_22_5.m` still records
-the empty entries and `tests/X0_22_5.m` still checks no involutions. `22_5` has an EMPTY `[1]` entry in its model file, so there is
+⚠ **BUT IT DOES NOT GENERALISE, AND THAT WAS TESTED RATHER THAN ASSUMED.** At `10_19` the same
+sweep fills 3 of 4 empty keys, yet the genus-5 pair it produces has a `y`-side that is **not
+isomorphic to any Atkin-Lehner quotient of `X_0^10(19)`** — checked against all three genus-2
+quotients derived from Guo-Yang's own curve and involutions. Its conic IS right, which is precisely
+why the output looks plausible; **filling a key is not building the right curve**. So the lever is
+correct at `22_5` (verified verbatim against a published equation) and WRONG at `10_19`, and no
+output of `tests/_rebaselever.m` should be accepted without an independent oracle. Why it diverges
+is not diagnosed; the likely suspect is that the rebase changes the coordinate while the `y^2`-scale
+(twist) is not re-derived from CM values afterwards.
+
+NOT wired into `AllEquationsAboveCovers` — and on this evidence it should not be until the failure
+mode is understood. `models_22_5.m` still records the empty entries and `tests/X0_22_5.m` still
+checks no involutions.
+
+✅ **A REAL WIN CAME OUT OF TESTING IT, THOUGH: A COMPLETE ORACLE FOR `10_19`.** Guo-Yang print only
+three quotients for that base, so only three of our fifteen keys looked checkable — but they also
+print the full curve AND the involutions, and every quotient follows from those. The action is
+diagonal, so each quotient is the field of invariant monomials. `tests/GuoYangQuotients_10_19.m`
+checks **11 of our stored entries** against it, label by label, in 0.24 s: **11 matches, 0
+mismatches**. The construction is calibrated against the two quotients Guo-Yang state in words
+(`X/w_190` genus 2, `X/w_38` genus 0) before being trusted. ⇒ **This technique applies to every base
+where they print the top curve with its involutions**, and is much cheaper than re-deriving
+anything. `22_5` has an EMPTY `[1]` entry in its model file, so there is
 no full curve to attach Guo-Yang's involutions to at all — that one is structural, not effort.
 **Counted, not assumed** (`SetVerbose("ShimuraQuotients",1)` prints them; the repo has produced
 three vacuous tests, so the comparisons made are checked rather than inferred from a green run):
