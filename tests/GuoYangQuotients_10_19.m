@@ -45,6 +45,18 @@ error if Genus(gyq_oracle[1][2]) ne 2,
 error if Genus(gyq_oracle[2][2]) ne 0,
     "X0^10(19): X/w_38 should have genus 0 (Guo-Yang print it); the involution composition is wrong";
 
+// ⚠ A STORED ENTRY MAY BE <genus, f, h>, MEANING y^2 + h*y = f -- NOT y^2 = f. Nine entries
+// across seven model files carry a nonzero h. Reading only e[2] silently drops it and yields a
+// DIFFERENT CURVE of the same genus, which is exactly the wrong-object mistake this repo keeps
+// paying for: it cost a false "defect" report against models_87_1.m on 2026-09-08, where
+// 4*f + h^2 is precisely Guo-Yang's published polynomial.
+function model_curve(e)
+    if (#e ge 3) and (Type(e[3]) eq RngUPolElt) and (e[3] ne 0) then
+        return HyperellipticCurve(e[2], e[3]);
+    end if;
+    return HyperellipticCurve(e[2]);
+end function;
+
 gyq_models := eval (Read("data/models/models_10_19.m") cat "\nreturn models;");
 gyq_n := 0; gyq_empty := 0;
 for gyq_o in gyq_oracle do
@@ -53,7 +65,7 @@ for gyq_o in gyq_oracle do
     if (not gyq_ok) or (#gyq_es eq 0) then gyq_empty +:= 1; continue; end if;
     for gyq_e in gyq_es do
         if Type(gyq_e[2]) eq MonStgElt then continue; end if;      // CRV entries: not compared here
-        gyq_Cs := HyperellipticCurve(gyq_e[2]);
+        gyq_Cs := model_curve(gyq_e);
         error if Genus(gyq_Cs) ne Genus(gyq_Cq),
             Sprintf("X0^10(19) W=%o: our genus %o vs Guo-Yang's %o -- wrong object",
                     gyq_lab, Genus(gyq_Cs), Genus(gyq_Cq));

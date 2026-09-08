@@ -76,15 +76,23 @@ data := [*
      [* <2, [-1,0,0, 0,1,0, 0,0,1]>, <94, [1,0,0, 0,-1,0, 0,0,1]> *]>
 *];
 
-// ⚠ A REAL DEFECT THIS ORACLE FOUND, recorded rather than hidden. models_87_1.m's [1,29] entry is
-// NOT the quotient of X_0^87(1) by w_29: our full curve IS isomorphic to Guo-Yang's and our [1,3]
-// and [1,87] both match theirs, but [1,29] disagrees in POINT COUNT at 8 of 10 small primes
-// (ours/theirs: 10/4 at p=7, 8/20 at 11, 12/10 at 13, ...), which refutes isomorphism outright
-// rather than merely failing to prove it. It was invisible until now because Guo-Yang publish only
-// the FULL curve for 87_1, which is all tests/GuoYangEquations.m could compare.
-// Listed as EXPECTED-TO-MISMATCH so the suite stays honest: if it ever starts matching, the test
-// fails and tells you to delete this line.
-KNOWN_BAD := { <87, 1, "[ 1, 29 ]"> };
+// ⚠ THIS SET IS EMPTY, AND THE STORY MATTERS. It briefly held models_87_1.m's [1,29], reported
+// as a real defect on 2026-09-08. That was WRONG: the entry is <genus, f, h> for y^2 + h*y = f,
+// and this test was reading only f. With h restored it matches Guo-Yang exactly. No stored model
+// is known to disagree with Guo-Yang.
+KNOWN_BAD := {};
+// ⚠ A STORED ENTRY MAY BE <genus, f, h>, MEANING y^2 + h*y = f -- NOT y^2 = f. Nine entries
+// across seven model files carry a nonzero h. Reading only e[2] silently drops it and yields a
+// DIFFERENT CURVE of the same genus, which is exactly the wrong-object mistake this repo keeps
+// paying for: it cost a false "defect" report against models_87_1.m on 2026-09-08, where
+// 4*f + h^2 is precisely Guo-Yang's published polynomial.
+function model_curve(e)
+    if (#e ge 3) and (Type(e[3]) eq RngUPolElt) and (e[3] ne 0) then
+        return HyperellipticCurve(e[2], e[3]);
+    end if;
+    return HyperellipticCurve(e[2]);
+end function;
+
 TOTM := 0; TOTX := 0; TOTS := 0; TOTKB := 0;
 for d in data do
     D, N, f, gens := Explode(d);
@@ -133,7 +141,7 @@ for d in data do
     // GuoYangEquations.m does not cover.
     ok1, es1 := IsDefined(models, [Integers()|1]);
     if ok1 and #es1 gt 0 and Type(es1[1][2]) ne MonStgElt then
-        C1 := HyperellipticCurve(es1[1][2]);
+        C1 := model_curve(es1[1]);
         if Genus(C1) ne g then
             printf "\n  ⚠ X_0^%o(%o) W={1}: our genus %o vs Guo-Yang's %o\n", D, N, Genus(C1), g;
             TOTX +:= 1;
@@ -157,7 +165,7 @@ for d in data do
         if not okq then printf "  W=%-16o CurveQuotient failed\n", Sprint(k); continue; end if;
         for e in models[k] do
             if Type(e[2]) eq MonStgElt then continue; end if;
-            Cs := HyperellipticCurve(e[2]);
+            Cs := model_curve(e);
             // ⚠ NEVER let an exception become a "MISMATCH". Magma REFUSES IsIsomorphic for genus-1
             // curves over Q ("the basefield must be finite"), and swallowing that error reported
             // six false mismatches -- a failing check is no more self-evident than a passing one.

@@ -48,6 +48,18 @@ gyv_oracle := [*
   <[1,55], HyperellipticCurve(Evaluate(gyv_Q, v^2-2)*(v^2-4)),        "(x+1/x, (y/x^3)(x-1/x))">
 *];
 
+// ⚠ A STORED ENTRY MAY BE <genus, f, h>, MEANING y^2 + h*y = f -- NOT y^2 = f. Nine entries
+// across seven model files carry a nonzero h. Reading only e[2] silently drops it and yields a
+// DIFFERENT CURVE of the same genus, which is exactly the wrong-object mistake this repo keeps
+// paying for: it cost a false "defect" report against models_87_1.m on 2026-09-08, where
+// 4*f + h^2 is precisely Guo-Yang's published polynomial.
+function model_curve(e)
+    if (#e ge 3) and (Type(e[3]) eq RngUPolElt) and (e[3] ne 0) then
+        return HyperellipticCurve(e[2], e[3]);
+    end if;
+    return HyperellipticCurve(e[2]);
+end function;
+
 gyv_models := eval (Read("data/models/models_22_5.m") cat "\nreturn models;");
 gyv_n := 0; gyv_empty := 0;
 for gyv_o in gyv_oracle do
@@ -56,7 +68,7 @@ for gyv_o in gyv_oracle do
     if (not gyv_ok) or (#gyv_es eq 0) then gyv_empty +:= 1; continue; end if;
     for gyv_e in gyv_es do
         if Type(gyv_e[2]) eq MonStgElt then continue; end if;
-        gyv_Cs := HyperellipticCurve(gyv_e[2]);
+        gyv_Cs := model_curve(gyv_e);
         error if Genus(gyv_Cs) ne Genus(gyv_Cq),
             Sprintf("X0^22(5) W=%o: our genus %o vs Guo-Yang's %o -- wrong object",
                     gyv_lab, Genus(gyv_Cs), Genus(gyv_Cq));
@@ -73,7 +85,7 @@ gyv_ok110, gyv_es110 := IsDefined(gyv_models, [Integers()|1,110]);
 error if not gyv_ok110, "X0^22(5): no [1,110] key";
 for gyv_e in gyv_es110 do
     if Type(gyv_e[2]) eq MonStgElt then continue; end if;
-    gyv_C := HyperellipticCurve(gyv_e[2]);
+    gyv_C := model_curve(gyv_e);
     error if Genus(gyv_C) ne 0, "X0^22(5) W=[1,110]: expected genus 0";
     error if not HasRationalPoint(Conic(gyv_C)),
         "X0^22(5) W=[1,110]: X/w_110 must be a P^1 over Q -- that is why the curve is "
