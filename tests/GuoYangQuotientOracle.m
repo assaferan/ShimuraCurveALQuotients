@@ -24,7 +24,7 @@
 //   * When no elliptic model is obtainable the case is SKIPPED, not scored. Counting an
 //     uncomparable case as a failure would be as wrong as counting it as a pass.
 //
-// Measured 2026-09-08: see the count guard at the bottom for the current totals.
+// Measured: see the count guard at the bottom for the current totals.
 // X_0^15(1) contributes nothing -- its top curve has genus 1 and CurveQuotient declines there.
 
 // GENERAL Guo-Yang oracle: derive EVERY Atkin-Lehner quotient from their published top curve and
@@ -73,7 +73,28 @@ data := [*
   <87, 1, -(x^6-7*x^4+43*x^2+27)*(243*x^6+523*x^4+369*x^2+81),
      [* <3, [-1,0,0, 0,1,0, 0,0,1]>, <87, [1,0,0, 0,-1,0, 0,0,1]> *]>,
   <94, 1, -8*x^8 + 69*x^6 - 234*x^4 + 381*x^2 - 256,
-     [* <2, [-1,0,0, 0,1,0, 0,0,1]>, <94, [1,0,0, 0,-1,0, 0,0,1]> *]>
+     [* <2, [-1,0,0, 0,1,0, 0,0,1]>, <94, [1,0,0, 0,-1,0, 0,0,1]> *]>  ,
+  // ---- Table A.2 (level greater than one) ---------------------------------------------------
+  // ⚠ TRANSCRIPTION TRAP: the PDF text layer drops superscripts. 10_23's w_2 reads "-55 y" but is
+  // -5^5 y = -3125 y (confirmed against this repo's existing ws_data for that shape), and every
+  // "y/x6" is y/x^6. The automorphism check below is the safety net: a wrong coefficient makes
+  // the non-trivial involutions stop preserving the curve.
+  <6, 29, -64*x^12 + 813*x^10 - 3066*x^8 + 4597*x^6 - 12264*x^4 + 13008*x^2 - 4096,
+     [* <2,   [-1,0,0, 0,1,0, 0,0,1]>,          // (-x, y)
+        <3,   [0,0,1, 0,8,0, -2,0,0]>,          // (-2/x, 8y/x^6)  -- NOTE THE MINUS
+        <174, [1,0,0, 0,-1,0, 0,0,1]> *]>,      // (x, -y)
+  <6, 31, -243*x^12 + 11882*x^10 - 177701*x^8 + 803948*x^6 - 1599309*x^4 + 962442*x^2 - 177147,
+     [* <2,   [0,0,1, 0,-27,0, 3,0,0]>,         // (3/x, -27y/x^6)
+        <3,   [-1,0,0, 0,1,0, 0,0,1]>,          // (-x, y)
+        <186, [1,0,0, 0,-1,0, 0,0,1]> *]>,      // (x, -y)
+  <6, 37, -4096*x^12 - 18480*x^10 - 40200*x^8 - 51595*x^6 - 40200*x^4 - 18480*x^2 - 4096,
+     [* <2,   [-1,0,0, 0,1,0, 0,0,1]>,          // (-x, y)
+        <3,   [0,0,1, 0,1,0, 1,0,0]>,           // (1/x, y/x^6)
+        <222, [1,0,0, 0,-1,0, 0,0,1]> *]>,      // (x, -y)
+  <10, 11, -8*x^12 - 35*x^10 + 30*x^8 + 277*x^6 + 120*x^4 - 560*x^2 - 512,
+     [* <10,  [0,0,1, 0,-8,0, -2,0,0]>,         // (-2/x, -8y/x^6)
+        <22,  [0,0,1, 0,8,0, 2,0,0]>,           // ( 2/x,  8y/x^6)
+        <110, [1,0,0, 0,-1,0, 0,0,1]> *]>,      // (x, -y)
 *];
 
 // ⚠ THIS SET IS EMPTY, AND THE STORY MATTERS. It briefly held models_87_1.m's [1,29], reported
@@ -93,7 +114,7 @@ function model_curve(e)
     return HyperellipticCurve(e[2]);
 end function;
 
-TOTM := 0; TOTX := 0; TOTS := 0; TOTKB := 0;
+TOTM := 0; TOTX := 0; TOTS := 0; TOTKB := 0; NBASE := 0;
 for d in data do
     D, N, f, gens := Explode(d);
     vprintf ShimuraQuotients, 1: "\n\tX_0^%o(%o): ", D, N;
@@ -236,15 +257,15 @@ for d in data do
         end for;
     end for;
     vprintf ShimuraQuotients, 1: "%o ok, %o skipped", nm, nsk;
-    TOTM +:= nm; TOTX +:= nmm; TOTS +:= nsk;
+    TOTM +:= nm; TOTX +:= nmm; TOTS +:= nsk; NBASE +:= 1;
 end for;
 error if TOTX ne 0,
     Sprintf("Guo-Yang quotient oracle: %o MISMATCH(es) -- a stored model disagrees with the "
             * "quotient derived from Guo-Yang's own curve and involutions", TOTX);
 // ⚠ COUNT THE COMPARISONS. If the models stop being found, or CurveQuotient starts declining,
 // this must go red rather than green-with-nothing-checked.
-error if TOTM lt 83,
-    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 83 "
+error if TOTM lt 144,
+    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 144 "
             * "(%o skipped) -- something stopped being compared", TOTM, TOTS);
-printf " ok (Guo-Yang quotient oracle: %o quotient comparison(s) over 15 base(s), %o skipped, "
-       * "%o known defect(s) still failing)\n", TOTM, TOTS, TOTKB;
+printf " ok (Guo-Yang quotient oracle: %o quotient comparison(s) over %o base(s), %o skipped, "
+       * "%o known defect(s) still failing)\n", TOTM, NBASE, TOTS, TOTKB;
