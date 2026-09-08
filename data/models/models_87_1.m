@@ -1,3 +1,15 @@
+// ⚠⚠ KNOWN DEFECT (found 2026-09-08): THE [1,29] ENTRY BELOW IS WRONG. It is NOT the quotient of
+// X_0^87(1) by w_29. Evidence: our [1] full curve IS isomorphic to Guo-Yang's published equation,
+// and our [1,3] and [1,87] both match the corresponding quotients derived from their curve and
+// involutions -- but [1,29] disagrees with theirs in POINT COUNT at 8 of 10 small primes
+// (ours/theirs 10/4 at p=7, 8/20 at 11, 12/10 at 13, 16/14 at 17, 26/22 at 19, 21/18 at 23,
+// 44/30 at 37), which REFUTES isomorphism rather than merely failing to establish it. Both are
+// genus 3, so genus does not catch it.
+// ⇒ This was invisible until tests/GuoYangQuotientOracle.m, because Guo-Yang publish only the FULL
+// curve for 87_1 and tests/GuoYangEquations.m could therefore compare only that. The defect is
+// pinned there as expected-to-mismatch; fix the entry and the test will tell you to delist it.
+// ⚠ NOT diagnosed. 87_1 already had an open question about multiple bases per cover.
+
 // Subhyperelliptic cover models for X_0(87,1)* -- Guo-Yang / AllEquationsAboveCovers
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
