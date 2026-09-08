@@ -36,7 +36,16 @@ gyq_oracle := [*
   <[1,2,95,190],   HyperellipticCurve(gyq_F),                             "(u, y)">,
   <[1,5,19,95],    HyperellipticCurve(u*gyq_F*gyq_G),                     "(u, xyz)">,
   <[1,10,19,190],  HyperellipticCurve(u*gyq_F),                           "(u, xy)">,
-  <[1,10,38,95],   HyperellipticCurve(u*gyq_G),                           "(u, xz)">
+  <[1,10,38,95],   HyperellipticCurve(u*gyq_G),                           "(u, xz)">,
+  // ⚠ w_10 AND w_95 WERE MISSING FROM THIS LIST UNTIL 2026-09-08, AND THAT OMISSION CAUSED A
+  // WRONG CONCLUSION. Both quotients are CRV pairs in Guo-Yang's coordinates -- {a^2 = uF(u),
+  // c^2 = uG(u)} for w_10, {y^2 = F(u), b^2 = uG(u)} for w_95 -- so they are not plain sign
+  // patterns and I skipped them. Their conic c^2 = u(5u-32) HAS the rational point (0,0), so it
+  // parametrises: c = t*u gives u = 32/(5-t^2), and both collapse to hyperelliptic models.
+  // Because they were absent, "matches no Guo-Yang quotient" was reported for a curve that IS
+  // X/w_10 -- an incomplete comparison set treated as a complete one. See gyq_w10 below.
+  <[1,95],  HyperellipticCurve(16*z^8 + 960*z^6 + 41568*z^4 - 233536*z^2 - 1520), "(u, y, xz)">,
+  <[1,10],  HyperellipticCurve(-512*z^6 - 33280*z^4 - 1496576*z^2 - 9728),        "(u, xy, xz)">
 *];
 
 // the calibration, asserted rather than assumed
@@ -83,8 +92,8 @@ for gyq_o in gyq_oracle do
 end for;
 
 // ⚠ COUNT THE COMPARISONS. A key that stops being produced must not turn this green silently.
-error if gyq_n lt 11,
-    Sprintf("X0^10(19): expected at least 11 quotient comparisons, made %o (%o keys empty)",
+error if gyq_n lt 12,
+    Sprintf("X0^10(19): expected at least 12 quotient comparisons, made %o (%o keys empty)",
             gyq_n, gyq_empty);
 
 printf " ok (X0^10(19): %o quotient(s) checked against Guo-Yang's curve + involutions, "
