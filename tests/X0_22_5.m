@@ -15,20 +15,25 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // The matrix in each cover_data value is a placeholder -- with manual_isomorphism false (the
 // default) the helper never reads it.
 //
-// ⚠ THIS TEST IS WEAKER THAN THE HAND-WRITTEN ONES: `ws_data` IS EMPTY, so it makes ZERO
-// involution comparisons. It verifies that each cover is ISOMORPHIC to the stored curve, but not
-// that the Atkin-Lehner involutions correspond -- and the involutions are what make these QUOTIENT
-// models rather than merely curves. 23 of the 34 X0_*.m tests do check them; the ones generated on
-// 2026-09-07 (this file among them) do not.
-// ⇒ Closing that needs involution matrices IN OUR MODEL'S COORDINATES. Taking them from the
-// pipeline's own `ws` output would be circular; deriving them from Guo-Yang's published
-// involutions is independent but is per-base work. Recorded rather than silently accepted.
+// ✅ INVOLUTIONS CHECKED (2026-09-08), and the W={1} FULL CURVE is now compared -- both became
+// possible only when EquationsByRebase landed. Before that the pipeline produced NOTHING for
+// W={1}, {1,2}, {1,5}, {1,11}: it assembles a genus-g curve as a fibre product needing degree
+// exactly g+1 over a shared base, and at this base the degrees produced were 1,2,4,6,7,8 with the
+// genus-2 quotients needing 3. Changing the Hauptmodul on the star base fixes the degree profile.
+//
+// The expected curve below is GUO-YANG'S OWN published equation, so their involutions apply
+// VERBATIM with no transport:
+//     w_2(x,y) = (1/x, y/x^6)   w_5(x,y) = (-1/x, -y/x^6)   w_110(x,y) = (x, -y)
+// On P(1,6,1) those are (x:y:z) -> (z:y:x), (-z:-y:x) and (x:-y:z) respectively.
+// ⚠ NOT circular: the involutions and the curve are Guo-Yang's, and what the harness checks is
+// that the PIPELINE's involution labelled w_m matches theirs, so a labelling error is detectable.
 
 function load_covers_and_ws_data_22_5()
     _<s> := PolynomialRing(Rationals());
 
 
     cover_data := AssociativeArray();
+    cover_data[{1}] := <HyperellipticCurve(Polynomial(Rationals(), [ -11, 0, -80, 0, -240, 0, -362, 0, -240, 0, -80, 0, -11 ])), DiagonalMatrix([1,1,1])>;   // genus 5 -- Guo-Yang's published equation
     cover_data[{1,10}] := <HyperellipticCurve(Polynomial(Rationals(), [ -1024/625, -4096/625, -6803/625, -6073/625, -3147/625, -951/625, -157/625, -11/625 ])), DiagonalMatrix([1,1,1])>;   // genus 3
     cover_data[{1,55}] := <HyperellipticCurve(Polynomial(Rationals(), [ -11/390625, 0, 6/78125, 0, 37/390625, 0, 56/390625, 0, 16/78125 ])), DiagonalMatrix([1,1,1])>;   // genus 3
     cover_data[{1,2,11,22}] := <HyperellipticCurve(Polynomial(Rationals(), [ -4096/625, 20044/625, -36799/625, 6008/125, -368/25 ])), DiagonalMatrix([1,1,1])>;   // genus 1
@@ -41,6 +46,10 @@ function load_covers_and_ws_data_22_5()
     cover_data[{1,22}] := <HyperellipticCurve(Polynomial(Rationals(), [ -4096/625, 0, -732/125, 0, -1243/625, 0, -38/125, 0, -11/625 ])), DiagonalMatrix([1,1,1])>;   // genus 3
 
     ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][2]   := Matrix(3,3,[ 0,0,1,  0, 1,0,  1,0,0 ]);
+    ws_data[{1}][5]   := Matrix(3,3,[ 0,0,1,  0,-1,0, -1,0,0 ]);
+    ws_data[{1}][110] := Matrix(3,3,[ 1,0,0,  0,-1,0,  0,0,1 ]);
     return cover_data, ws_data;
 end function;
 

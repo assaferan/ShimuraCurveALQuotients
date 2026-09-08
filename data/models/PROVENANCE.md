@@ -108,14 +108,17 @@ encode.
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
 
-⚠ **A SECOND KNOWN WEAKNESS, NOW CLOSED EXCEPT FOR ONE STRUCTURAL CASE: 2 of the 34 tests do not check involutions** (`22_5`, and `10_19`/whichever others predate this note — the generated set is done).
+✅ **CLOSED: ALL 34 `X0_*.m` TESTS NOW CHECK INVOLUTIONS** (was 23 on 2026-09-07).
 The tests generated on 2026-09-07 all carried an EMPTY `ws_data`, so they made zero involution
 comparisons: they verified each cover is isomorphic to the stored curve, but not that the
 Atkin-Lehner involutions correspond — and the involutions are what make these QUOTIENT models
 rather than merely curves.
 
-**Closed for `51_1 55_1 22_3 15_2 14_5 26_3 57_1 21_2 14_3`** — so **32 of 34** tests now check
-involutions, and every one of the ten generated on 2026-09-07 except `22_5` is done.
+**All of `51_1 55_1 22_3 15_2 14_5 26_3 57_1 21_2 14_3 15_1 22_5`** now check involutions, so the
+count is **34 of 34**. `22_5` was last and needed the pipeline change below: before
+`EquationsByRebase` its `W={1}` cover did not exist at all, so there was nothing to attach
+involutions to. Its expected curve is Guo-Yang's own published equation, so their involutions apply
+verbatim with no transport.
 For `26_3` and `57_1` this also added the `W={1}` CRV pair itself to `cover_data`, which the
 generator had omitted; `psi` there comes from `construct_crv_isomorphism` rather than
 `IsIsomorphic`, which hangs on paired presentations. The matrices
@@ -155,7 +158,7 @@ and none reproduces Guo-Yang's `V_4`, because theirs has `y` of weight 3 (a genu
 while every base our pipeline offers gives weight 2 (genus 1). So for `21_2` the slow
 `IsIsomorphic` + linear-solve route was genuinely necessary, not merely a route not yet optimised.
 
-**Still open: `22_5` only**, and the reason is now DIAGNOSED rather than merely observed.
+✅ **`22_5` IS NOW CLOSED**, and the reason it was open is worth keeping.
 
 ⚠ **WHAT GUO-YANG DO DIFFERENTLY AT `22_5`: THEY DO NOT BUILD IT AS A FIBRE PRODUCT.** Their model
 is a single plain hyperelliptic curve, `y^2 = -11x^12 - 80x^10 - 240x^8 - 362x^6 - 240x^4 - 80x^2
