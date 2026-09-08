@@ -1,4 +1,9 @@
-// tests/FullCurve_22_5.m -- constructs the FULL curve X_0^22(5), which the pipeline's standard
+// tests/_offline/FullCurve_22_5.m -- OFFLINE (~420 s; `run_tests.m` globs only `tests/*.m`, so
+// `_offline` is excluded automatically). The CI-side check for this base is
+// tests/GuoYangQuotients_22_5.m, which takes 0.06 s and validates the STORED entries against
+// Guo-Yang; what lives here is the CONSTRUCTION, which needs a full pipeline run.
+//
+// constructs the FULL curve X_0^22(5), which the pipeline's standard
 // stages do not produce, and checks it against Guo-Yang's published equation.
 //
 // ⚠ WHY THIS EXISTS. models_22_5.m has EMPTY entries at W = {1}, {1,2}, {1,5}, {1,11}: the
