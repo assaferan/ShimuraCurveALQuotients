@@ -46,26 +46,45 @@ function gyt_clear(e)
     return P div (sq^2);      // keeps the leading constant, which fixes the QUADRATIC TWIST
 end function;
 
-// ⚠⚠ w_10 AND w_13 ARE LABELLED THE OTHER WAY ROUND BY OUR PIPELINE, AND THIS IS UNRESOLVED.
-// Both negate x and fix y, differing only in z: w_10 = (-x,y,z) and w_13 = (-x,y,-z). Guo-Yang's
-// three published generators FORCE that assignment (w_10 = w_2 w_5, w_13 = w_5 w_65), and the
-// transcription was checked against both the journal and arXiv. Yet our stored [1,10] is
-// isomorphic to THEIR w_13 quotient and our [1,13] to their w_10 quotient. The two involutions
-// that FIX x -- w_65 and w_130 -- agree by label, so the disagreement is confined to this pair.
-// Both quotients have genus 1, so genus cannot separate them, and I have no independent handle on
-// which labelling is right: it needs the fixed-point / CM data, not equations. NEITHER SIDE IS
-// CLAIMED WRONG HERE. Compare that pair as an unordered SET, which is a real check (it would fail
-// if either curve were wrong) while staying silent on the labelling.
+// ⚠⚠ GUO-YANG'S INVOLUTION TABLE SWAPS w_10 AND w_13 HERE, and their OWN CM table proves it.
+// This is the third error found in their tables (after 93_1's `-3t` and 14_5's w_35 sign), and it
+// is settled by fixed points, not by preferring one source over the other.
+//
+// Their two candidates both negate x and fix y, differing only in z. On P(1,2,1,1) with
+// (Z,Y,X,W) ~ (lam*Z, lam^2*Y, lam*X, lam*W), a map (Z,Y,X,W) -> (a*Z, Y, -X, W) fixes a point iff
+// there is lam with a*Z = lam*Z, -X = lam*X, W = lam*W:
+//   * X /= 0 forces lam = -1, hence W = 0 (the points at INFINITY) and a = -1. So ONLY (-x,y,-z)
+//     fixes them. Those points have Z^2 = -2X^2, Y^2 = 5X^4, so they live over
+//     Q(sqrt(-2), sqrt(5)) -- which contains sqrt(-10).
+//   * X = 0 forces lam = 1, hence a = +1. So ONLY (-x,y,z) fixes the x=0 points, where
+//     Z^2 = -25 and Y^2 = 325 = 25*13, i.e. over Q(i, sqrt(13)) -- which contains sqrt(-13).
+// (Both rely on Z /= 0 at the locus, which holds: -25 /= 0, and -2X^2 /= 0 for X /= 0.)
+//
+// By Ogg, the fixed points of w_m are the CM points of discriminant -4m. So the map fixed at the
+// sqrt(-10) points is w_10 (-40 = -4*10) and the one fixed at the sqrt(-13) points is w_13
+// (-52 = -4*13):
+//     w_10 = (-x, y, -z)        w_13 = (-x, y,  z)
+// which is the OPPOSITE of their involution table -- and is what our pipeline says.
+//
+// ⚠ THE CLINCHER IS INTERNAL TO THEIR PAPER: their CM table for this base (transcribed in
+// tests/_offline/GuoYang_10_13.m) lists disc -52 at Hauptmodul value 0 and disc -40 at infinity.
+// Since u = x^2 is the star Hauptmodul in their normalisation -- checked against their own CM
+// values, e.g. d=-3 at u=1 gives z^2 = -27, d=-43 at u=9 gives z^2 = -43, d=-35 at u=5 gives
+// z^2 = -35, each exactly d times a square -- u=0 is the x=0 locus and u=infinity the points at
+// infinity. So their CM table and their involution table contradict each other, and the CM table
+// agrees with us.
 gyt_oracle := [*
   <[1,130], HyperellipticCurve(gyt_f),                             "(x, y)">,
   <[1,65],  HyperellipticCurve(gyt_g),                             "(x, z)">,
   <[1,2],   HyperellipticCurve(gyt_f*gyt_g),                       "(x, yz)">,
   <[1,26],  HyperellipticCurve(gyt_sub*Evaluate(gyt_F, gyt_sub)),  "(u, xy) via z">,
   <[1,5],   HyperellipticCurve(gyt_clear((t^2+2)^4 * (gyt_uu*Evaluate(gyt_F, gyt_uu)))),
-                                                                   "(u, xy, xz)">
+                                                                   "(u, xy, xz)">,
+  // the two whose labels the fixed-point argument above CORRECTS relative to Guo-Yang's table
+  <[1,13],  HyperellipticCurve(Evaluate(gyt_F, gyt_sub)),          "(u, y) via z">,
+  <[1,10],  HyperellipticCurve(gyt_clear((t^2+2)^4 * Evaluate(gyt_F, gyt_uu))),
+                                                                   "(u, y, xz)">
 *];
-gyt_pair := [ HyperellipticCurve(Evaluate(gyt_F, gyt_sub)),                            // their w_10
-              HyperellipticCurve(gyt_clear((t^2+2)^4 * Evaluate(gyt_F, gyt_uu))) ];    // their w_13
 
 // ⚠ A STORED ENTRY MAY BE <genus, f, h>, MEANING y^2 + h*y = f. Reading only e[2] drops h and
 // gives a DIFFERENT curve of the same genus (see tests/GuoYangQuotientOracle.m).
@@ -110,33 +129,6 @@ for gyt_o in gyt_oracle do
         gyt_n +:= 1;
     end for;
 end for;
-
-// the disputed pair, as an unordered set
-gyt_ours := [];
-for gyt_k in [[Integers()|1,10],[Integers()|1,13]] do
-    gyt_ok, gyt_es := IsDefined(gyt_models, gyt_k);
-    if gyt_ok and #gyt_es gt 0 and Type(gyt_es[1][2]) ne MonStgElt then
-        Append(~gyt_ours, gyt_model_curve(gyt_es[1]));
-    end if;
-end for;
-if #gyt_ours eq 2 then
-    gyt_matched := 0;
-    for gyt_C in gyt_ours do
-        for gyt_Q in gyt_pair do
-            gyt_r := false;
-            try
-                gyt_r := IsIsomorphic(Jacobian(GenusOneModel(HyperellipticPolynomials(gyt_C))),
-                                      Jacobian(GenusOneModel(HyperellipticPolynomials(gyt_Q))));
-            catch err ; end try;
-            if gyt_r then gyt_matched +:= 1; break; end if;
-        end for;
-    end for;
-    error if gyt_matched ne 2,
-        Sprintf("X0^10(13): {[1,10],[1,13]} should match Guo-Yang's {w_10, w_13} quotients as a "
-                * "SET, but only %o of 2 did -- so one of those curves is actually wrong, not "
-                * "merely mislabelled", gyt_matched);
-    gyt_n +:= 2;
-end if;
 
 error if gyt_n lt 4,
     Sprintf("X0^10(13): expected at least 4 quotient comparisons, made %o (%o empty, %o skipped)",
