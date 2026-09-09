@@ -1,23 +1,20 @@
-// ⚠⚠ THIS TEST CURRENTLY FAILS, AND THE CAUSE IS NOT YET KNOWN. It is kept OFFLINE
-// (`run_tests.m` globs only `tests/*.m`) so it cannot reach CI, and committed so the open question
-// is not lost.
+// ✅ DIAGNOSED AND FIXED 2026-09-09. This test used to FAIL with the cause unknown; it was a
+// DROPPED h-TERM in the generated `cover_data`, not a defect in the pipeline or the model.
 //
-// WHAT IS KNOWN, 2026-09-07:
-//   * the MODEL is fine -- `tests/_offline/ModelRegen.m` reports `87_1: OK (4 covers compared,
-//     0 CRV skipped)`, i.e. `models_87_1.m` regenerates from the pipeline exactly;
-//   * `tests/GuoYangEquations.m` independently checks `87_1`'s `W={1}` genus-5 curve against
-//     Guo-Yang's published equation and passes;
-//   * so the defect is in THIS generated test, not in the data it compares against.
-//   * it is also slow: 3945 s (66 min), which is why it would not belong in CI even once fixed.
+// models_87_1.m stores its [1,29] entry as `<3, f, h>` with `h = x^3 + x^2 + 1`, meaning the curve
+// is `y^2 + h*y = f`. The generator (scratch, `genx0.py`) emitted only `f`, so the test compared
+// `y^2 = f` against what the pipeline produces -- a DIFFERENT curve, of the same genus, so the
+// genus check could not catch it. Nine entries across seven model files carry a nonzero `h`; this
+// was the only generated test affected.
 //
-// The generator that produced it (scratch, `genx0.py`) emits the committed model's hyperelliptic
-// cover entries as `cover_data` and lets the helper call `IsIsomorphic`. For the other four bases
-// generated the same way -- `51_1`, `55_1`, `57_1`, `14_5` -- that works and they are in CI.
-// ⇒ NEXT STEP when picked up: run it with `verbose:=1` and read the coverage line the helper now
-// prints ("N curve comparison(s) ... M/K expected covers matched"). That distinguishes "an
-// expected cover was never produced" from "a produced cover failed its isomorphism", which are
-// different problems.
-
+// ⚠ THE PREVIOUS HEADER'S DIAGNOSIS WAS SOUND AND POINTED THE RIGHT WAY: it established that the
+// model regenerates exactly (`ModelRegen`: "87_1: OK") and that `GuoYangEquations.m` independently
+// validates the `W={1}` curve, and concluded the defect was "in THIS generated test, not in the
+// data it compares against". That was correct. What was missing was only the mechanism.
+//
+// ⚠ IT REMAINS OFFLINE because it is SLOW (3945 s = 66 min), not because it is broken.
+// `run_tests.m` globs only `tests/*.m`, so `_offline` cannot reach CI.
+//
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 // tests/X0_87_1.m -- RE-DERIVATION test for X_0^87(1).
@@ -39,7 +36,10 @@ function load_covers_and_ws_data_87_1()
     _<s> := PolynomialRing(Rationals());
 
     cover_data := AssociativeArray();
-    cover_data[{1,29}] := <HyperellipticCurve(Polynomial(Rationals(), [ -5, 14, 23, -81, -36, 93, 70, 18, 3 ])), DiagonalMatrix([1,1,1])>;   // genus 3
+    // ⚠ THE h-TERM. models_87_1.m stores this entry as <3, f, h> with h = x^3 + x^2 + 1, i.e. the
+    // curve is y^2 + h*y = f, NOT y^2 = f. The generator dropped h, so this line used to compare a
+    // DIFFERENT curve of the same genus -- which is why this test failed. See the header.
+    cover_data[{1,29}] := <HyperellipticCurve(Polynomial(Rationals(), [ -5, 14, 23, -81, -36, 93, 70, 18, 3 ]), Polynomial(Rationals(), [ 1, 0, 1, 1 ])), DiagonalMatrix([1,1,1])>;   // genus 3
     cover_data[{1,3}] := <HyperellipticCurve(Polynomial(Rationals(), [ -129140163/3444736, 1190959281/1722368, -15635525661/3444736, 10581521751/861184, -34231709133/3444736, -8451506223/1722368, -10460353203/3444736 ])), DiagonalMatrix([1,1,1])>;   // genus 2
     cover_data[{1,87}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, -27 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1}] := <HyperellipticCurve(Polynomial(Rationals(), [ -129140163/3444736, 0, -44109603/1722368, 0, -21447909/3444736, 0, -537597/861184, 0, -64413/3444736, 0, 589/1722368, 0, -27/3444736 ])), DiagonalMatrix([1,1,1])>;   // genus 5

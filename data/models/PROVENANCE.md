@@ -289,6 +289,23 @@ involutions of the curve, so inspection cannot choose between them; they differ 
 passes. Example 36 is right and the table is wrong. Both readings are kept in the test under their
 own labels, so the run makes 4 involution comparisons and neither can be quietly relabelled.
 
+⚠ **MEASURED 2026-09-09: THE `X0_*` TESTS RE-DERIVE ONLY 41% OF THE COVERS.** Across the 34 tests
+there are **128 `cover_data` keys against 309 populated model keys**. Many check a single cover:
+`10_11 10_13 10_23 6_11 6_17 6_19 6_29 6_31 6_37` are 1 of 15 each, and nine level-one bases
+(`134_1 194_1 35_1 38_1 39_1 58_1 62_1 74_1 82_1 86_1 94_1`) are 1 of 4. The helper SILENTLY SKIPS
+a key that is absent from `cover_data` (`if not is_def then continue`), so this is invisible unless
+the keys are counted.
+
+⚠ **What this does and does not mean.** The stored MODELS are well checked — the quotient oracle
+makes ~190 comparisons over 25 bases against Guo-Yang. What is thin is the RE-DERIVATION claim,
+that the pipeline reproduces them: for most bases that rests on one cover. Closing it is mechanical
+(emit `cover_data` from the model) but must handle two things that have already caused defects:
+entries stored as `<genus, f, h>`, and `CRV` pairs. It also costs CI time — each key is an
+`IsIsomorphic`.
+
+**Done so far**: `206_1` went 1 -> 4 of 4 (its `[1,103]` entry carries `h = x^5+x^4+x^3+x^2`), and
+`_offline/X0_87_1.m`'s long-standing failure was diagnosed as exactly this dropped `h`.
+
 ⚠ **A KNOWN WEAKNESS OF THE `X0_D_N.m` TESTS.** `test_AllEquationsAboveCoversSingleCurve` SILENTLY
 SKIPS cover keys it does not find (`if not is_def then continue`), so a base whose re-derived `W`
 keys do not match the expected ones would pass **vacuously**. `X0_51_1` was negative-controlled by
