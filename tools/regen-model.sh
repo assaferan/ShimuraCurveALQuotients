@@ -41,11 +41,26 @@ fi
 
 # --- the flags each base needs, mirroring data/models/PROVENANCE.md -------------------------
 # Keep these two in sync. A base missing from this table regenerates with no flags.
+#
+# ⚠ THIS TABLE IS NOW EMPTY, AND THAT IS THE CORRECT STATE (checked 2026-09-09). It used to read:
+#     39_2|14_3)      FLAGS="CMNONCOPRIME=1"
+#     22_5|15_2|22_3) FLAGS="Y2TWIST=1"
+# Both rows had gone stale, in different and instructive ways:
+#
+#   * CMNONCOPRIME IS A DEAD NAME. The code reads CMCOPRIME (SchoferFormula.m:1113) -- the filter
+#     was flipped to OFF by default, so what the old flag enabled is now the behaviour and
+#     CMCOPRIME=1 RESTORES the old one. Setting CMNONCOPRIME=1 changed nothing at all, which is the
+#     worst kind of stale: it looked like it was doing something.
+#
+#   * Y2TWIST IS LIVE (EquationsCovers.m:204), and setting it here was actively harmful. All three
+#     of models_{22_5,15_2,22_3}.m record "REGENERATED 2026-09-07 with DEFAULT FLAGS -- no flag is
+#     needed any more", and that the gain came from the COPRIME FLIP, not Y2TWIST. Passing
+#     Y2TWIST=1 could therefore produce a model differing from the committed file and be read as
+#     drift that is not there. (An earlier evaluation made exactly this mistake in reverse, by
+#     comparing Y2TWIST runs against committed files that predated the coprime flip.)
+#
+# So: no base currently needs a flag. If one ever does, add it here AND to PROVENANCE.md.
 FLAGS=""
-case "${D}_${N}" in
-    39_2|14_3)      FLAGS="CMNONCOPRIME=1" ;;   # deliberate: no theoretical guarantee, oracle-validated
-    22_5|15_2|22_3) FLAGS="Y2TWIST=1" ;;        # accidental: the y2-scale guard postdates these files
-esac
 
 mkdir -p "$OUT"
 echo "regenerating X_0^${D}(${N})${FLAGS:+ with $FLAGS}"
