@@ -60,6 +60,8 @@ fi
 #     comparing Y2TWIST runs against committed files that predated the coprime flip.)
 #
 # So: no base currently needs a flag. If one ever does, add it here AND to PROVENANCE.md.
+# VERIFIED with the table empty: 51_1 and 22_5 both report "IDENTICAL to the committed model".
+# 22_5 is the one the Y2TWIST row would have mis-flagged, so that is the check that matters.
 FLAGS=""
 
 mkdir -p "$OUT"
