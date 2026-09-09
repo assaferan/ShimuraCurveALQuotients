@@ -1,8 +1,88 @@
-# Handoff — 2026-09-07
+# Handoff — 2026-09-09
 
-**The newest section is the 2026-09-06 one below; everything after it is older and kept for
-provenance.** Earlier material still says things like "34 of 43" — those counts are STALE, and the
-2026-09-06 section says what replaced them.
+**The newest section is this one; everything after it is older and kept for provenance.** Earlier
+material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
+STALE.
+
+Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
+
+**➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
+about state, this file wins.
+
+## Handoff — 2026-09-09 (newest)
+
+    Guo-Yang published equations:   42 reproducible bases
+    full curve stored:              38      <- 10_19 and 22_5 regenerated today
+    remaining blockers:              4      95_1  119_1  159_1  69_1  -- still running on lovelace
+    X0_*.m tests checking involutions:  34 of 34   (was 23 on 09-07)
+    Guo-Yang quotient comparisons:     188 over 24 bases, 0 skipped, 0 mismatches
+
+### The big change: the quotient oracle
+
+⚠ **`GuoYangEquations.m` compares only the equations Guo-Yang PRINT** — usually the full curve
+alone — so a base with fifteen cover keys got ONE external comparison. But they also print the
+INVOLUTIONS, and every quotient follows from those:
+`CurveQuotient(AutomorphismGroup(C,[w]))` is `X/W`. That turns one comparison per base into one per
+cover key. `tests/GuoYangQuotientOracle.m` (generic, 20 bases) plus four hand-derived files for the
+CRV bases now make **188 comparisons in a few seconds**.
+
+**Three errors in Guo-Yang's tables are now determined**, each by evidence rather than preference:
+* `93_1`: `-3t` is a typo for `-3s` (confirmed by the journal version).
+* `14_5`: the table's `w_35` sign is wrong; **their own Example 36** has it right.
+* `10_13`: the table **SWAPS `w_10` and `w_13`** — settled by Ogg's fixed-point rule, with the
+  clincher internal to their paper: **their own CM table** puts disc `-52` at Hauptmodul `0` and
+  `-40` at infinity, contradicting their involution table and agreeing with our pipeline.
+
+### The pipeline change: `EquationsByRebase`
+
+An EMPTY cover key is often a **Hauptmodul normalisation artefact, not an obstruction**. The
+pipeline builds a genus-`g` curve only as a FIBRE PRODUCT, needing degree exactly `g+1` over a
+shared base; which degree a quotient has depends on whether infinity is a branch point, which is
+ours to choose. `t -> r + 1/u` at a RATIONAL ROOT fixes the degree profile. At `22_5` this
+reproduces Guo-Yang's degree-12 polynomial VERBATIM.
+
+Wired in as the last stage of `AllEquationsAboveCovers`; it is a **no-op unless some cover is
+empty**, and only ADOPTS keys that were empty. The `ws` transport works because the rebase is
+LINEAR on the weighted ambient: `psi = (r*x + z, y, x)`.
+
+⚠ **Cost**: bases WITH empty covers get slower (`X0_10_11` 471 s, `X0_10_13` 872 s). Bases without
+pay nothing.
+
+### Traps that cost real time today, all now guarded
+
+* **`run_tests.m` was SILENTLY TRUNCATING the suite.** It globbed every `tests/*.m`, including
+  helpers; several end with `exit;`, which kills Magma. 72 of 79 files reported and no summary was
+  printed — a truncated run looks like a clean one. Now mirrors the CI matrix. **Check the file
+  count and that `Tests failed:` is present.**
+* **A model entry may be `<genus, f, h>`, meaning `y^2 + h*y = f`.** Dropping `h` gives a DIFFERENT
+  curve of the same genus; 9 entries across 7 files have one. This produced a false "defect" report
+  against `models_87_1`, retracted.
+* **An incomplete oracle cannot refute anything.** `GuoYangQuotients_10_19.m` was missing `w_10`
+  and `w_95`, so "matches no quotient" really meant "matches none of the ones I computed" — that
+  produced a wrong retraction of the rebase lever, since re-corrected.
+* ⇒ **All three of the day's wrong verdicts were REFUTATIONS**, each correct about its arithmetic
+  and wrong about its object. **A failing check needs its object verified as much as a passing one.**
+* **A SKIP is a silent gap**: 13 oracle comparisons were being skipped behind a green summary line.
+  All recovered; the cause was on the Guo-Yang side (`CurveQuotient` returns a plain `Crv`).
+* **`tools/regen-model.sh`'s flag table had gone stale on both rows** — `CMNONCOPRIME` is a dead
+  name (the code reads `CMCOPRIME`), and `Y2TWIST` would have produced models differing from the
+  committed files and been read as drift. Table now empty; `51_1` and `22_5` verify IDENTICAL.
+
+### Filed upstream
+
+**[Magma-Maths/Magma#123](https://github.com/Magma-Maths/Magma/issues/123)**: `AutomorphismGroup`/
+`CurveQuotient` fail for curves in weighted projective (toric) ambients — `IdentityMap` returns a
+`TorMap`, not a `MapAutSch`. It blocks the oracle on exactly the `CRV` paired presentations, which
+is why `10_19`, `22_5`, `10_13` and `26_3` each need a hand-derived oracle file.
+
+### Still open
+
+* **22 empty cover keys** across `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3` — the rebase should
+  fill many, and oracles are in place to CHECK them for every one except `10_23`.
+* The four lovelace blockers are mid-FIRST-PHASE after ~3 days; weeks away, not days.
+* `93_1` and `111_1` still have no `X0_*` re-derivation test (14-20 h per run).
+
+## Older — Handoff 2026-09-07
 
 **Supersedes** the 2026-07-17 handoff about producing cover models, archived as
 `HANDOFF_2026-07-17.md`. That task is not dead, but it is gated on the blocker described below.
