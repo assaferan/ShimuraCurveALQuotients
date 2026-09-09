@@ -13,6 +13,45 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
+## ⇒ START HERE — updated 2026-09-09 (the numbered list further down is from 09-02 and its top two items are DONE)
+
+**State**: Guo-Yang full curves 38 of 42; involutions checked in 34 of 34 `X0_*` tests; 188 quotient
+comparisons over 24 bases (0 skipped, 0 mismatches). `EquationsByRebase` is wired into
+`AllEquationsAboveCovers`. See `HANDOFF.md` (2026-09-09) for what changed and why.
+
+In decreasing order of value:
+
+1. **Fill the 22 remaining EMPTY cover keys** — `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3`
+   (2–3 each). `EquationsByRebase` should fill many with no flag. **Regenerate with
+   `tools/regen-model.sh D N OUT`, then CHECK each newly-filled key against the oracle before
+   committing** — oracles exist for all of these except `10_23`. That ordering is what made the
+   `22_5` and `10_19` regenerations trustworthy; do not invert it.
+   ⚠ Existing entries may come back RESCALED by a square (11 did at `10_19`). That is a
+   re-presentation, not a regression — verify entry-by-entry isomorphism, and treat only a MISSING
+   cover as a failure.
+   ⚠ Cost: bases with empty covers get much slower (`X0_10_13` 872 s). Watch the CI budget.
+
+2. **An oracle for `10_23`**, the one base with empty keys and no external check. Needs hand
+   derivation: it is genus 9 (degree 20) and `CurveQuotient` was OOM-killed there, and its `w_2` is
+   the non-diagonal `((2x+1)/(x-2), -5^5 y/(x-2)^10)`.
+
+3. **Offline re-derivation tests for `93_1` and `111_1`** — the only Guo-Yang bases with a stored
+   full curve and NO `X0_*` test, so they are checked only against a committed file rather than by
+   re-running the pipeline. 14–20 h per run; good background work, poor foreground work.
+
+4. **The four blockers on lovelace** (`95_1 119_1 159_1 69_1`) — DO NOT start new work here. As of
+   09-09 all four are mid-FIRST-PHASE (Borcherds forms) after ~3 days; weeks away, not days, and
+   `69_1` still has the exponent overflow waiting downstream. Check status occasionally; do not
+   `git pull` those checkouts while the jobs are alive.
+
+5. **The `A_m` theorem** remains the main line and is untouched by any of the above.
+
+⚠ **Two habits that earned their place on 2026-09-09**, both cheap:
+* **Count what was actually compared**, never just "it went green". A truncated suite, a skipped
+  comparison and a silently-unread `h`-term all look exactly like passes.
+* **A FAILING check needs its object verified as much as a passing one.** All three wrong verdicts
+  that day were refutations that were right about the arithmetic and wrong about the object.
+
 As of **2026-09-04** everything is committed and pushed, both branches and lovelace are in sync,
 and the housekeeping list is empty. **The ordering below CHANGED on 2026-09-04** — the per-coset
 `tau` fix landed, and it moved the frontier. In decreasing order of value:
