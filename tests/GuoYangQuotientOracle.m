@@ -22,7 +22,11 @@
 //     EllipticCurve wants a cubic. Several routes are tried, and they compute the SAME object, so
 //     this is robustness rather than shopping for a favourable answer.
 //   * When no elliptic model is obtainable the case is SKIPPED, not scored. Counting an
-//     uncomparable case as a failure would be as wrong as counting it as a pass.
+//     uncomparable case as a failure would be as wrong as counting it as a pass. ⚠ There are now
+//     ZERO skips: every one was on the GUO-YANG side, where CurveQuotient returns a plain Crv for
+//     genus-1 quotients -- our own models converted fine all along. Jacobian() of a genus-1 Crv
+//     yields the CrvEll directly, and all 13 recovered cases MATCH. Worth noting because a skip
+//     is a silent gap: it looks like a pass in the summary line.
 //
 // Measured: see the count guard at the bottom for the current totals.
 // X_0^15(1) contributes nothing -- its top curve has genus 1 and CurveQuotient declines there.
@@ -217,6 +221,13 @@ for d in data do
                     end if;
                     try E := EllipticCurve(CC); ok1 := true; catch e ; end try;
                     if ok1 then return true, E; end if;
+                    // ⚠ CurveQuotient returns a plain Crv for many genus-1 quotients, and that is
+                    // what caused ALL the skips: our side converted fine, theirs did not.
+                    // Jacobian() of a genus-1 Crv gives the CrvEll directly.
+                    try E := Jacobian(CC); ok1 := Type(E) eq CrvEll; catch e ; end try;
+                    if ok1 then return true, E; end if;
+                    try E := Jacobian(GenusOneModel(CC)); ok1 := true; catch e ; end try;
+                    if ok1 then return true, E; end if;
                     try
                         bh, CH := IsHyperelliptic(CC);
                         if bh then
@@ -264,8 +275,8 @@ error if TOTX ne 0,
             * "quotient derived from Guo-Yang's own curve and involutions", TOTX);
 // ⚠ COUNT THE COMPARISONS. If the models stop being found, or CurveQuotient starts declining,
 // this must go red rather than green-with-nothing-checked.
-error if TOTM lt 144,
-    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 144 "
+error if TOTM lt 157,
+    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 157 "
             * "(%o skipped) -- something stopped being compared", TOTM, TOTS);
 printf " ok (Guo-Yang quotient oracle: %o quotient comparison(s) over %o base(s), %o skipped, "
        * "%o known defect(s) still failing)\n", TOTM, NBASE, TOTS, TOTKB;
