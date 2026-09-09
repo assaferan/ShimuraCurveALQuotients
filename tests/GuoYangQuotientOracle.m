@@ -275,8 +275,8 @@ error if TOTX ne 0,
             * "quotient derived from Guo-Yang's own curve and involutions", TOTX);
 // ⚠ COUNT THE COMPARISONS. If the models stop being found, or CurveQuotient starts declining,
 // this must go red rather than green-with-nothing-checked.
-error if TOTM lt 157,
-    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 157 "
+error if TOTM lt 170,
+    Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 170 "
             * "(%o skipped) -- something stopped being compared", TOTM, TOTS);
 printf " ok (Guo-Yang quotient oracle: %o quotient comparison(s) over %o base(s), %o skipped, "
        * "%o known defect(s) still failing)\n", TOTM, NBASE, TOTS, TOTKB;

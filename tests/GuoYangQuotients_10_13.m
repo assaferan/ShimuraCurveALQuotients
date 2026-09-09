@@ -66,6 +66,21 @@ end function;
 //     w_10 = (-x, y, -z)        w_13 = (-x, y,  z)
 // which is the OPPOSITE of their involution table -- and is what our pipeline says.
 //
+// ⚠⚠ THE DISCREPANCY IS A GROUP AUTOMORPHISM, NOT A SINGLE TRANSPOSITION, and only half of it is
+// PROVEN. Our labelling differs from Guo-Yang's by the map that swaps 5 <-> 26 and 10 <-> 13 while
+// fixing 2, 65 and 130. That IS an automorphism of the Atkin-Lehner group, and it is multiplicative
+// -- e.g. 2*5 = 10 goes to 2*26 = 13, and 5*65 = 13 goes to 26*65 = 10 -- so the two swaps stand or
+// fall together.
+//   * 10 <-> 13 is PROVEN in our favour by the fixed-point argument below, whose clincher is
+//     Guo-Yang's OWN CM table.
+//   * 5 <-> 26 CANNOT be settled the same way, and this is not for want of trying: both quotients
+//     have genus 2, and Riemann-Hurwitz on a genus-3 curve forces r = 0 (2*3-2 = 2(2*2-2) + r), so
+//     BOTH involutions are FIXED-POINT FREE. Ogg's rule is about fixed points, so it says nothing
+//     here, and the CM table cannot help either because there are no fixed CM points to place.
+// ⇒ We adopt our pipeline's labelling for BOTH pairs, because a single group automorphism is the
+// only consistent reading and one of its two swaps is proven. The 5 <-> 26 half is INFERRED BY
+// CONSISTENCY, not independently established, and should be described that way.
+//
 // ⚠ THE CLINCHER IS INTERNAL TO THEIR PAPER: their CM table for this base (transcribed in
 // tests/_offline/GuoYang_10_13.m) lists disc -52 at Hauptmodul value 0 and disc -40 at infinity.
 // Since u = x^2 is the star Hauptmodul in their normalisation -- checked against their own CM
@@ -77,8 +92,9 @@ gyt_oracle := [*
   <[1,130], HyperellipticCurve(gyt_f),                             "(x, y)">,
   <[1,65],  HyperellipticCurve(gyt_g),                             "(x, z)">,
   <[1,2],   HyperellipticCurve(gyt_f*gyt_g),                       "(x, yz)">,
-  <[1,26],  HyperellipticCurve(gyt_sub*Evaluate(gyt_F, gyt_sub)),  "(u, xy) via z">,
-  <[1,5],   HyperellipticCurve(gyt_clear((t^2+2)^4 * (gyt_uu*Evaluate(gyt_F, gyt_uu)))),
+  // ⚠ SECOND SWAP: (u,xy) is OUR w_5 and (u,xy,xz) is OUR w_26 -- see the note below.
+  <[1,5],   HyperellipticCurve(gyt_sub*Evaluate(gyt_F, gyt_sub)),  "(u, xy) via z">,
+  <[1,26],  HyperellipticCurve(gyt_clear((t^2+2)^4 * (gyt_uu*Evaluate(gyt_F, gyt_uu)))),
                                                                    "(u, xy, xz)">,
   // the two whose labels the fixed-point argument above CORRECTS relative to Guo-Yang's table
   <[1,13],  HyperellipticCurve(Evaluate(gyt_F, gyt_sub)),          "(u, y) via z">,
@@ -130,8 +146,8 @@ for gyt_o in gyt_oracle do
     end for;
 end for;
 
-error if gyt_n lt 4,
-    Sprintf("X0^10(13): expected at least 4 quotient comparisons, made %o (%o empty, %o skipped)",
+error if gyt_n lt 12,
+    Sprintf("X0^10(13): expected at least 12 quotient comparisons, made %o (%o empty, %o skipped)",
             gyt_n, gyt_empty, gyt_skip);
 printf " ok (X0^10(13): %o quotient(s) checked against Guo-Yang's curve + involutions, "
        * "%o empty, %o skipped)\n", gyt_n, gyt_empty, gyt_skip;

@@ -51,12 +51,16 @@
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
+// ✅ REGENERATED 2026-09-09: previously EMPTY cover keys are now filled, unlocked by
+// EquationsByRebase (EquationsCovers.m). No flag needed. Verified against the Guo-Yang quotient
+// oracle before installing; see data/models/PROVENANCE.md.
+
 models := AssociativeArray();
-models[[Integers()|1,13]] := [*  *];
-models[[Integers()|1]] := [* <5, "CRV", [ Strings() | "y^2 - 1/64*s^6 + 1/32*s^4*z^2 - 9/64*s^2*z^4 - 1/8*z^6", "x^2 + 8*s^2 + 3*z^2" ]> *];
+models[[Integers()|1,13]] := [* <3, P![ 4394/81, 0, 10885/1296, 0, 401/864, 0, 229/20736, 0, 1/10368 ], P![]> *];
+models[[Integers()|1]] := [* <5, "CRV", [ Strings() | "y^2 + 1/32768*s^6 + 25/32768*s^4*z^2 + 699/32768*s^2*z^4 - 2197/32768*z^6", "x^2 + 1/8*s^2 + 3/8*z^2" ]> *];
 models[[Integers()|1,6,26,39]] := [* <0, P![ -11, 16 ], P![]> *];
 models[[Integers()|1,3]] := [* <3, P![ -3/8, 0, -91/64, 0, -33/32, 0, 13/64, 0, -1/8 ], P![]> *];
-models[[Integers()|1,2]] := [*  *];
+models[[Integers()|1,2]] := [* <2, P![ -2197/108, 0, -181/72, 0, -55/576, 0, -1/864 ], P![]> *];
 models[[Integers()|1,2,13,26]] := [* <0, P![ -11, 38, -32 ], P![]> *];
 models[[Integers()|1,6]] := [* <2, P![ 2197/32768, 0, -699/32768, 0, -25/32768, 0, -1/32768 ], P![]> *];
 models[[Integers()|1,3,13,39]] := [* <2, P![ -11/4, 49/4, -291/16, 47/4, -27/4, 4 ], P![]> *];
