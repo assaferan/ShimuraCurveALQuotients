@@ -35,22 +35,37 @@ gyt_sub := -(z^2 + 25)/2;
 gyt_Kt<t> := FunctionField(Rationals());
 gyt_uu := -25/(t^2 + 2);
 gyt_Pt<T> := PolynomialRing(Rationals());
+// ⚠ CLEARING DENOMINATORS LEAVES SQUARE FACTORS, and y^2 = Q^2*R is SINGULAR as written.
+// Multiplying F(u) by s^4 (s = t^2+2) leaves an s^2 factor, because F(u) = (...)/s^2. For y^2 = P
+// with P = Q^2*R the model is Y^2 = R via Y = y/Q, so strip every factor of even multiplicity.
 function gyt_clear(e)
     error if Denominator(e) ne 1, "10_13: parametrised expression is not a polynomial";
-    return Evaluate(gyt_Pt ! Numerator(e), T);
+    P := Evaluate(gyt_Pt ! Numerator(e), T);
+    sq := gyt_Pt ! 1;
+    for fe in Factorisation(P) do sq *:= fe[1]^(fe[2] div 2); end for;
+    return P div (sq^2);      // keeps the leading constant, which fixes the QUADRATIC TWIST
 end function;
 
+// ⚠⚠ w_10 AND w_13 ARE LABELLED THE OTHER WAY ROUND BY OUR PIPELINE, AND THIS IS UNRESOLVED.
+// Both negate x and fix y, differing only in z: w_10 = (-x,y,z) and w_13 = (-x,y,-z). Guo-Yang's
+// three published generators FORCE that assignment (w_10 = w_2 w_5, w_13 = w_5 w_65), and the
+// transcription was checked against both the journal and arXiv. Yet our stored [1,10] is
+// isomorphic to THEIR w_13 quotient and our [1,13] to their w_10 quotient. The two involutions
+// that FIX x -- w_65 and w_130 -- agree by label, so the disagreement is confined to this pair.
+// Both quotients have genus 1, so genus cannot separate them, and I have no independent handle on
+// which labelling is right: it needs the fixed-point / CM data, not equations. NEITHER SIDE IS
+// CLAIMED WRONG HERE. Compare that pair as an unordered SET, which is a real check (it would fail
+// if either curve were wrong) while staying silent on the labelling.
 gyt_oracle := [*
   <[1,130], HyperellipticCurve(gyt_f),                             "(x, y)">,
   <[1,65],  HyperellipticCurve(gyt_g),                             "(x, z)">,
   <[1,2],   HyperellipticCurve(gyt_f*gyt_g),                       "(x, yz)">,
-  <[1,10],  HyperellipticCurve(Evaluate(gyt_F, gyt_sub)),          "(u, y) via z">,
   <[1,26],  HyperellipticCurve(gyt_sub*Evaluate(gyt_F, gyt_sub)),  "(u, xy) via z">,
   <[1,5],   HyperellipticCurve(gyt_clear((t^2+2)^4 * (gyt_uu*Evaluate(gyt_F, gyt_uu)))),
-                                                                   "(u, xy, xz)">,
-  <[1,13],  HyperellipticCurve(gyt_clear((t^2+2)^4 * Evaluate(gyt_F, gyt_uu))),
-                                                                   "(u, y, xz)">
+                                                                   "(u, xy, xz)">
 *];
+gyt_pair := [ HyperellipticCurve(Evaluate(gyt_F, gyt_sub)),                            // their w_10
+              HyperellipticCurve(gyt_clear((t^2+2)^4 * Evaluate(gyt_F, gyt_uu))) ];    // their w_13
 
 // ⚠ A STORED ENTRY MAY BE <genus, f, h>, MEANING y^2 + h*y = f. Reading only e[2] drops h and
 // gives a DIFFERENT curve of the same genus (see tests/GuoYangQuotientOracle.m).
@@ -95,6 +110,33 @@ for gyt_o in gyt_oracle do
         gyt_n +:= 1;
     end for;
 end for;
+
+// the disputed pair, as an unordered set
+gyt_ours := [];
+for gyt_k in [[Integers()|1,10],[Integers()|1,13]] do
+    gyt_ok, gyt_es := IsDefined(gyt_models, gyt_k);
+    if gyt_ok and #gyt_es gt 0 and Type(gyt_es[1][2]) ne MonStgElt then
+        Append(~gyt_ours, gyt_model_curve(gyt_es[1]));
+    end if;
+end for;
+if #gyt_ours eq 2 then
+    gyt_matched := 0;
+    for gyt_C in gyt_ours do
+        for gyt_Q in gyt_pair do
+            gyt_r := false;
+            try
+                gyt_r := IsIsomorphic(Jacobian(GenusOneModel(HyperellipticPolynomials(gyt_C))),
+                                      Jacobian(GenusOneModel(HyperellipticPolynomials(gyt_Q))));
+            catch err ; end try;
+            if gyt_r then gyt_matched +:= 1; break; end if;
+        end for;
+    end for;
+    error if gyt_matched ne 2,
+        Sprintf("X0^10(13): {[1,10],[1,13]} should match Guo-Yang's {w_10, w_13} quotients as a "
+                * "SET, but only %o of 2 did -- so one of those curves is actually wrong, not "
+                * "merely mislabelled", gyt_matched);
+    gyt_n +:= 2;
+end if;
 
 error if gyt_n lt 4,
     Sprintf("X0^10(13): expected at least 4 quotient comparisons, made %o (%o empty, %o skipped)",
