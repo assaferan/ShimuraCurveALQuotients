@@ -99,11 +99,46 @@ encode.
 | `tests/CRVFullCurve.m` | CRV pairs against Guo-Yang by CONSTRUCTED full-curve isomorphism — Mobius map from the hyperelliptic quotient, then `IsIsomorphism` certifies it. Proof, not a screen; avoids the generic call that runs for hours on these | CI, ~0.1 s |
 | `tests/CRV_15_4.m` | `15_4`'s FULL genus-5 curve against trace-formula point counts — the only check of a `CRV` entry anywhere, and the one that pins its conic constant | CI, ~1 s |
 | `tests/_offline/GuoYangCurve_14_3.m` | `14_3`'s full curve against Guo-Yang | offline, ~2 h |
-| `tests/GuoYangQuotients_10_19.m` | **all 11** `10_19` quotients, derived from Guo-Yang's curve + involutions | CI, 0.24 s |
-| `tests/GuoYangQuotients_22_5.m` | **all 6** `22_5` quotients, same technique (non-diagonal action) | CI, 0.06 s |
+| `tests/GuoYangQuotientOracle.m` | **144** quotients over **20 bases**, derived generically via `CurveQuotient` from Guo-Yang's published curve + involutions | CI, ~4.6 s |
+| `tests/GuoYangQuotients_10_19.m` | **12** `10_19` quotients, hand-derived (CRV pair — `CurveQuotient` is blocked, see below) | CI, 0.26 s |
+| `tests/GuoYangQuotients_22_5.m` | **9** `22_5` quotients, hand-derived (non-diagonal action) | CI, 0.13 s |
+| `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
 | `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+
+## THE QUOTIENT ORACLE — the largest source of external validation here
+
+⚠ **`tests/GuoYangEquations.m` compares only the equations Guo-Yang PRINT**, which for most bases
+is the full curve alone — so a base with fifteen cover keys got **one** external comparison. But
+they also print the **involutions**, and every quotient follows from those:
+`CurveQuotient(AutomorphismGroup(C,[w]))` is `X/W`. That turns one comparison per base into one per
+cover key, against a source entirely outside the pipeline. Current totals: **174 quotient
+comparisons over 23 bases**, all passing, in about 5 seconds.
+
+**Three errors in Guo-Yang's tables have now been determined this way or alongside it**, each by
+evidence rather than by preferring one source:
+* `93_1`: `-3t` is a typo for `-3s` — confirmed independently by the journal version.
+* `14_5`: the table's `w_35` sign is wrong; **their own Example 36** has it right, and the table's
+  map is `w_10`.
+* `10_13`: the table **swaps `w_10` and `w_13`** — settled by Ogg's fixed-point rule (the fixed
+  points of `w_m` are the CM points of discriminant `-4m`), and the clincher is internal: **their
+  own CM table** puts disc `-52` at Hauptmodul `0` and `-40` at infinity, contradicting their
+  involution table and agreeing with our pipeline.
+
+⚠ **WHAT THE ORACLE CANNOT COVER, and why.** `CurveQuotient` fails on any curve whose ambient is a
+weighted projective space — Magma models that as a toric variety and `IdentityMap` returns a
+`TorMap`, so `AutomorphismGroup` dies (reported as
+[Magma-Maths/Magma#123](https://github.com/Magma-Maths/Magma/issues/123)). That is exactly the
+`CRV` paired presentations, so `10_19`, `22_5` and `10_13` each need a hand-derived oracle file.
+`10_23` is excluded for a different reason: genus 9, where `CurveQuotient` ran >11 min and got the
+process OOM-killed.
+
+⚠ **TRANSCRIPTION TRAPS, all of which bit.** `pdftotext` drops superscripts, so `10_23`'s `w_2`
+reads `-55 y` for `-5^5 y`, and every `y/x6` is `y/x^6`. And **the automorphism check cannot catch
+a dropped sign when `f` is even**: at `6_29` I wrote `w_3 = (2/x, 8y/x^6)` for their
+`(-2/x, 8y/x^6)`, and since `f(2/x) = f(-2/x)` both preserve the curve — but they differ by `w_2`,
+so the quotients came out swapped. The **per-label genus comparison** is what caught it.
 
 `ModelRegen`'s `MR_KNOWN_DRIFT` lists exactly the six flagged bases above (the five originals
 plus `14_43`).
