@@ -21,7 +21,10 @@ comparisons over 24 bases (0 skipped, 0 mismatches). `EquationsByRebase` is wire
 
 In decreasing order of value:
 
-1. **Fill the 22 remaining EMPTY cover keys** — `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3`
+0. ✅ **DONE 2026-09-09: all empty cover keys are filled** (347 of 347 across 38 bases), each
+   oracle-checked before installing. The item below is kept only for its method notes.
+
+1. ~~**Fill the 22 remaining EMPTY cover keys**~~ — `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3`
    (2–3 each). `EquationsByRebase` should fill many with no flag. **Regenerate with
    `tools/regen-model.sh D N OUT`, then CHECK each newly-filled key against the oracle before
    committing** — oracles exist for all of these except `10_23`. That ordering is what made the
@@ -31,7 +34,14 @@ In decreasing order of value:
    cover as a failure.
    ⚠ Cost: bases with empty covers get much slower (`X0_10_13` 872 s). Watch the CI budget.
 
-2. **An oracle for `10_23`**, the one base with empty keys and no external check. Needs hand
+1b. ⚠ **THE BIGGEST REMAINING GAP: the `X0_*` tests re-derive only 41% of the covers** — 128
+   `cover_data` keys against 309 populated model keys. Nine bases check 1 of 15, eleven check 1 of
+   4, and the helper SILENTLY SKIPS absent keys. The models are well checked by the oracle; what is
+   thin is that the PIPELINE REPRODUCES them. Mechanical to close, but must handle `<genus, f, h>`
+   entries and `CRV` pairs, and it costs CI time. Start with the nine at 1-of-15.
+
+2. ~~**An oracle for `10_23`**~~ ✅ DONE (its two filled keys are checked; `w_2`'s non-diagonal
+   orbit is deliberately not covered). Original note:, the one base with empty keys and no external check. Needs hand
    derivation: it is genus 9 (degree 20) and `CurveQuotient` was OOM-killed there, and its `w_2` is
    the non-diagonal `((2x+1)/(x-2), -5^5 y/(x-2)^10)`.
 

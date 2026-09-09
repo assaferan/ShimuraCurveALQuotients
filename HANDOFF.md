@@ -75,10 +75,46 @@ pay nothing.
 `TorMap`, not a `MapAutSch`. It blocks the oracle on exactly the `CRV` paired presentations, which
 is why `10_19`, `22_5`, `10_13` and `26_3` each need a hand-derived oracle file.
 
+### Later the same day — the fill, and an audit that found a systemic gap
+
+* **ALL 18 remaining EMPTY cover keys filled**, across `6_29 6_31 6_37 10_11 10_13 10_23 14_5
+  26_3`. **0 empty cover keys remain: 347 of 347 populated across 38 Guo-Yang bases.** Every filled
+  key was checked against the quotient oracle **in a scratch directory BEFORE installing** — that
+  ordering is what makes the data trustworthy, and it should not be inverted.
+* ⚠ **`14_5` gained two cover keys that never existed in the file** (`[1,5,7,35]`, `[1,7,10,70]`).
+  Its AL group has order 8, so there are 15 proper cover keys; the file had 13.
+* ⚠ **Existing entries can come back RESCALED BY A SQUARE** (11 did at `10_19`). That is a
+  re-presentation, not a regression. Verify entry-by-entry isomorphism; only a MISSING cover is a
+  failure.
+* **`10_13`'s labelling differs from Guo-Yang by a GROUP AUTOMORPHISM**, and only half is proven.
+  Ours differs by `5 <-> 26` AND `10 <-> 13`, fixing `2, 65, 130`; the map is multiplicative so the
+  swaps stand or fall together. `10 <-> 13` is PROVEN by fixed points with their own CM table as
+  clincher. `5 <-> 26` CANNOT be: both quotients are genus 2 and Riemann-Hurwitz forces `r = 0`, so
+  both involutions are FIXED-POINT FREE and Ogg's rule says nothing. We adopt our labelling for
+  both; the second half is **inferred by consistency, not established**.
+* ⚠ **A SECOND SILENT TRUNCATION, pre-existing**: `tests/test_weil_polynomial.m` ended with
+  `quit;`, which kills Magma since `run_tests.m` evals every test in one process. It sorts
+  second-to-last, so `trace_formula.m` never ran locally — which is probably why it was believed
+  deliberately skipped. It is not slow: **2.4 s**. Fixed.
+* ✅ **`tests/_offline/X0_87_1.m`'s long-standing failure DIAGNOSED AND FIXED**, and validated:
+  **passes in 4081 s**. The cause was a **DROPPED h-TERM** — the model stores `[1,29]` as
+  `<3, f, h>` with `h = x^3+x^2+1`, and the generator emitted only `f`, so the test compared a
+  DIFFERENT curve of the SAME GENUS. It stays offline because it is slow, not broken.
+* **`X0_206_1` went 1 -> 4 of 4 covers**, including its `h`-bearing `[1,103]`.
+
+⚠⚠ **AND THE AUDIT THAT MATTERS MOST: the `X0_*` tests re-derive only 41% of the covers.**
+**128 `cover_data` keys against 309 populated model keys.** Nine bases check 1 of 15
+(`10_11 10_13 10_23 6_11 6_17 6_19 6_29 6_31 6_37`) and eleven check 1 of 4. The helper SILENTLY
+SKIPS an absent key, so this is invisible unless counted.
+⇒ The MODELS are well checked (~190 oracle comparisons over 25 bases against Guo-Yang). What is
+thin is the **RE-DERIVATION** claim — that the pipeline reproduces them — which for most bases
+rests on ONE cover. Closing it is mechanical but must handle `<genus, f, h>` entries and `CRV`
+pairs, both of which have already caused defects, and it costs CI time.
+
 ### Still open
 
-* **22 empty cover keys** across `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3` — the rebase should
-  fill many, and oracles are in place to CHECK them for every one except `10_23`.
+* **The 41% re-derivation gap above** is now the largest single opportunity: work the thin tests in
+  order of missing covers, starting with the nine at 1-of-15.
 * The four lovelace blockers are mid-FIRST-PHASE after ~3 days; weeks away, not days.
 * `93_1` and `111_1` still have no `X0_*` re-derivation test (14-20 h per run).
 
