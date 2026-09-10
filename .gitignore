@@ -15,3 +15,7 @@ data/par.*
 # local Claude Code agent config
 .claude/
 polymake/nmzsolve.err
+
+# Python bytecode (py_compile/pytest artifacts; never source)
+__pycache__/
+*.pyc
