@@ -36,11 +36,29 @@ A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover
    are fixed-point/triage code, not `AllEquationsAboveCovers`). Pick additions by COST, not parity.
    ⚠ Odd-`D` bases with NO test are four, not one: `111_1`, `15_4`, `65_1`, `93_1`.
 
-B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`).
-   Well-evidenced: it is why `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled,
-   the only two drift failures in 34 bases. Since the rebase ONLY fills ALREADY-EMPTY keys it should
-   not disturb a pinned presentation. ⚠ A pipeline change — needs oracle validation, not a green
-   test, and the two `model_drift_ok` flags come off only when it lands.
+B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`) — still
+   worth doing, but **NOT the one-liner the first draft of this item claimed**. It is why
+   `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled, the only two drift failures
+   in 34 bases, and it is what would let their `model_drift_ok` flags come off.
+
+   ⚠ **READ THE STAGE 2026-09-10; the reassuring half of the old claim holds and the rest does not.**
+   Confirmed safe: it builds into LOCAL copies (`re_eqns`/`re_ws`), and adopts only keys that are
+   still empty (`for k in still do ... all_eqns[k] := re_eqns[k]`), so non-empty covers genuinely
+   cannot be disturbed. **But `base_label` is not merely unused by the stage — it is incompatible
+   with how the stage works:**
+   * it picks its own rebase base, `STAR` = "the base carrying the most first-level equations", by a
+     heuristic that never consults `base_label` and need not select the pinned base at all;
+   * the covers it adopts are expressed over the **REBASED Hauptmodul** on that `STAR`, so a pinned
+     run would get those keys in a coordinate it did not ask for;
+   * its internal `EquationsAbovePointlessConics(re_eqns, re_ws, curves)` call **drops
+     `base_label`**, i.e. silently reverts to the default for the filled covers.
+
+   ⇒ So the minimal honest change is: thread `base_label` through `EquationsByRebase` into that inner
+   call, and adopt a rebased key only when the chosen `STAR` is consistent with the pinned label.
+   ⚠ This matters most at exactly the base that motivates it: `26_3` pins `base_label := 8103`
+   *specifically* to obtain the `V_4` Guo-Yang use, so filling two of its keys over an unpinned base
+   could hand back a different (if equally valid) presentation — the very thing the pin exists to
+   prevent. Validate against `tests/GuoYangQuotients_{10_13,26_3}.m`, not against a green test.
 
 C. ✅ **DONE: the concurrent-run race in `nmzsolve.py` is fixed** (atomic `os.replace`, both write
    sites, byte-identical output, exercised end to end). ⚠ Shared-path file — **still needs merging
