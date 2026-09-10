@@ -24,6 +24,31 @@ See `HANDOFF.md` (2026-09-10) for what changed and why.
 
 In decreasing order of value:
 
+0c. ✅ **DONE 2026-09-10: the obstructed class is REFRESHED — 49 of 49 re-run against current code,
+   ZERO flips.** Every prior verdict predated the vx fix (`d9b52d0`, 09-05) to the stage that raises
+   the error, so this was the one thing that could have invalidated `A_m`'s priority. It did not.
+   The 49 was also RECOVERED rather than assumed: every obstructed verdict on record unions to
+   exactly 49 distinct bases. ⇒ **`A_m` is the main line on refreshed evidence.**
+
+0d. ✅ **DONE: `93_1` and `111_1` now have re-derivation tests** (old item 3). `X0_93_1` PASSES in
+   3.7 h; `X0_111_1` runs on **lava** and anchors on the FULL curve. ⚠ Its pool hit 1678 vectors at
+   m 3 of 7 — near the ~2000-vector / ~11 GB wall; if it vanishes, suspect that first.
+
+0e. ⚠ **CORRECTION: item 4 below says "four blockers on lovelace". There are FIVE jobs**, and the
+   fifth is **`34_11` with `INTSOL=1` at 5 d 16 h**, ~100% CPU — this file's own old item 1. Also
+   **lovelace is SATURATED** (load 324/256, other users); use **lava** (`ssh -J lovelace lava`),
+   which is idle and needs its own clone.
+
+0f. ⇒ **BEFORE ANY FURTHER `A_m` WORK, READ `paper/level-prime-kappa.tex`.** Two hypotheses were
+   formed and retracted on 09-10, both from working off memory entries and code while treating the
+   30-page paper as background. `thm:closed` already gives the level-prime factor at GENERAL `m`
+   (`W_{m,N}(1) = (N-1)ord_N(m)`, `cor:support`); `sec:open` already has the `alpha_k` counts;
+   `rem:gauge` already explains why `-a_E` and `A_m` disagree pointwise. **The level prime is
+   CLOSED. The open object is the coefficient at `p | D` and `∞`** — where
+   [[b-eisenstein-coefficients-solved]] localised it, and where no product of local densities of one
+   quadratic space reproduces the exact `b`. ⚠ And `SchoferFormula.m:589` needs the LEVEL-supported
+   `A_m` (nonzero exactly when `N | m`), NOT `prop:closedcoef`'s `-a_E` — that refutation stands.
+
 A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover keys sit on 51 bases
    with NO re-derivation test at all** — 476 of them on 44 bases validated ONLY by `ModelChecks`,
    which never runs the pipeline. `tests/_offline/ModelRegen.m` is the only thing that can see drift

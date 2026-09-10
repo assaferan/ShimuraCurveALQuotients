@@ -11,6 +11,78 @@ about state, this file wins.
 
 ## Handoff — 2026-09-10 (newest)
 
+### ✅ THE OBSTRUCTED CLASS RE-RUN AGAINST CURRENT CODE: 49 of 49, ZERO FLIPS
+
+Every OBSTRUCTED verdict on record was taken **2026-09-01/02**, and `BorcherdsForms.m` has had six
+commits since — including **`d9b52d0` (09-05), "shift the oo-side basis by its own valuation, not
+the 0-side n0"**, the vx fix, which is a CORRECTNESS fix to the very stage that raises "Failed to
+find all Borcherds forms". So the 49-base figure justifying `A_m`'s priority rested on pre-fix
+verdicts. Re-run 2026-09-10 with `spanprobe.m` at `PROBE_BUMP=0`:
+
+    49 bases re-run    49 still obstructed    0 flipped    0 failing for another reason
+    runtimes 18 s (38_5) to 1349 s (34_19)
+
+⇒ **The obstruction is not an artifact of the pre-vx-fix code**, and `A_m`'s justification is now
+refreshed evidence rather than a stale tally. A prediction recorded before the first run ("still
+obstructed, ~60/40") held.
+⚠ **The 49 was recovered, not assumed**: harvesting every obstructed verdict across `sweep122`, the
+triage waves and the span probes yields EXACTLY 49 distinct bases, independently confirming the
+"known 28 + 21 new" figure as the union of recorded verdicts.
+⚠ **`38_5` returned in 18 s against 901 s recorded** (~6x, from the q-expansion bootstrap), and its
+`pole_order=190 pool=164` reproduces the recorded `poleord 190 rows 164` — the same computation, not
+merely another failure. ⚠ **Level does NOT predict cost** here either (18 s to 1349 s, uncorrelated
+with M) — the third time that lesson recurred in one day.
+
+### ✅ `X0_93_1` PASSES — 13389 s (3.7 h)
+
+`tests/_offline/X0_93_1.m` (new): 1 external comparison against Guo-Yang's typo-corrected `[1,93]`
+plus **3 committed model covers re-derived** (1 CRV skipped by design). This base mattered most
+because `models_93_1.m` regenerates ONLY since the vx fix, so a silent regression there would have
+left every committed artifact looking fine. Pre-flighted before the run, not after: their
+`(3s^3-7s^2-3s-1)(3s^3+s^2-3s-9)` is isomorphic to the committed entry and all three refuted typo
+repairs still fail.
+`tests/_offline/X0_111_1.m` (new) is running on **lava** — it anchors on the FULL CURVE (genus 7,
+hyperelliptic, published), which is stronger than 93_1's quotient-only anchor.
+⚠ At m 3 of 7 its pool is **1678 vectors**, near the recorded ~2000-vector / ~11 GB wall where
+Magma dies. If it disappears, that is the likely cause, not a code fault.
+
+### ⚠ REMOTE MACHINES: lovelace is saturated, and PLAN's "four blockers" is FIVE
+
+`lovelace` load **324 on 256 cores**, dominated by other users (`xw132`'s `k3rank` since Sep 06) —
+the memory entry's warning that "idle is not a durable fact" holds. **Do not launch there.**
+`lava` (`ssh -J lovelace lava`) was load 0.04 on 32 cores and is where `111_1` runs; it needed its
+own clone, and the committed `polymake/` cache came with it.
+⚠ **`PLAN.md` says four blockers; there are FIVE Magma jobs**, and the fifth is
+**`34_11` with `INTSOL=1`, 5 d 16 h elapsed at ~100% CPU** — PLAN's old item 1, "the best-value
+thing here". All five show elapsed ~ CPU, so they are progressing, not wedged.
+
+### The math: two hypotheses formed, two retracted
+
+Both concerned `A_m`; neither survived contact with the sources, and the record is worth more than
+the hypotheses were.
+
+1. **RETRACTED: "I derived the level-prime factor at general m."** Both "results" are already in
+   `paper/level-prime-kappa.tex` — Result 1 IS `thm:closed` (`W_{m,N}(1) = (N-1) ord_N(m)`, with
+   `cor:support` for the `N | m` vanishing, verified there over 180 checks against my 18), and
+   Result 2 is in `sec:open`, which carries the same `alpha_k`/`G(X)` recipe AND the counts. Cause:
+   I read the memory's "the next theorem is general `m` at a nonzero isotropic coset" as meaning the
+   LEVEL PRIME was open at general `m`; it is not — the sentence means the intersection with the
+   `D`-part. **Every number was right; I was wrong about which object was already known.**
+   ⇒ **READ THE PAPER BEFORE DERIVING.** Memory entries and code are not a substitute for the
+   30-page document in the repo.
+2. **CHECKED AND DROPPED BEFORE REPORTING: "the `prop:closedcoef` refutation is a wrong-object
+   comparison."** `rem:gauge` does say `-a_E` and `A_m` are two representatives disagreeing
+   pointwise while both reproducing the multipliers — but (i) the memory POSTDATES `rem:gauge` by
+   two days, (ii) its literal claim "`A_m` does not follow from `prop:closedcoef`" is TRUE, and
+   (iii) decisively, `SchoferFormula.m:589` specifies the code needs the log-`N` coefficient of
+   `Kappa0`, "nonzero exactly when `N | m`" — the LEVEL-supported object, whose support `cor:support`
+   governs, not `-a_E`'s embedding support. **The memory is correct; the hatch is genuinely blocked.**
+
+**What survives of the math:** `prop:closedcoef`, transcribed and evaluated against the repo's own
+`Hurwitz`, reproduces `rem:gauge`'s stated values EXACTLY (`0,0,1,2,1,2` at `X_0^15(2)`) — a small
+reusable confirmation that the closed form and its implementation agree.
+
+
     X0_*.m cover comparisons:   126 hand-written + 337 model-derived over ALL 34 bases
                                 (was 126, and NOTHING else); 34 of 34 tests pass
     committed cover keys:       863 across 88 model files
