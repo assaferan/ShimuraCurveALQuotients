@@ -1075,14 +1075,42 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // Both then die with "Could not find enough points", so this filter -- not any real absence of
     // CM points -- is what blocks those two Guo-Yang bases.
     //
-    // ⚠ Relaxing it is NOT known to be safe: the misbehaving points would poison the solve, which
-    // is exactly what the filter protects against. Any model produced this way MUST be checked
-    // against Guo-Yang's published equation/CM table before it is believed. Hence env-gated and
-    // off by default.
+    // ⚠⚠ DEFAULT FLIPPED 2026-09-07: THE FILTER IS NOW **OFF** BY DEFAULT.
+    // `CMCOPRIME=1` restores the old behaviour (filter ON). `CMNONCOPRIME` is retired -- what it
+    // used to enable is now the default, so it is silently ignored.
     //
-    // NB BorcherdsForms.m:709 ALREADY falls back this way for CM-starved bases; that this call
-    // does not is the asymmetry this flag exists to probe.
-    cm_coprime := GetEnv("CMNONCOPRIME") eq "";
+    // WHY, and the evidence: a full sweep of the 11 `N>1` X0_D_N.m re-derivation tests, each run
+    // BOTH ways, found **10 of 10 pass identically** with the filter on and off. (For `N = 1`,
+    // gcd(d,1) = 1 makes the filter provably a no-op, which excludes 19 of 30 tests rigorously
+    // rather than by sampling.) Two tests appeared to fail with it off -- 10_13 and 6_17 -- and
+    // BOTH were artifacts of a hardcoded coordinate matrix in the test, not of the models; they
+    // pass once the isomorphism is CONSTRUCTED instead of pinned (tests/_crviso.m).
+    // Three bases now produce models matching Guo-Yang's PUBLISHED equations with the filter off
+    // (39_2, 14_3, 26_3), and none is known to be harmed by it. Decisively, 26_3 is the very base
+    // whose two misbehaving discriminants (-267, -708) were the filter's stated justification --
+    // and with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient
+    // for coefficient. Those wrong values are simply not load-bearing for the covers.
+    // Against that, the filter COSTS models: at the default bd := 4 it cut 26_3's pool from 21 to
+    // 3 against demand 15, and 39_2's from 24 to 3 against 19, killing both outright.
+    //
+    // ⚠⚠ THE GAP THIS LEAVES OPEN -- read before trusting a non-coprime discriminant.
+    // There is **no theoretical guarantee**, only the empirical evidence above. The local factor at
+    // `p | gcd(d, N)` HAS NO LIVE IMPLEMENTATION: `kappaminuszero` is dead code, and Schofer's
+    // Thm 4.1 assumes the lattice is unimodular at unramified primes, which fails at a level prime
+    // where the order is Eichler. The two known-wrong values at 26_3 (`-267`, `-708`, the
+    // s <-> s~ swap) are exactly this class and are STILL WRONG -- they just do not propagate into
+    // the cover equations. So:
+    //   * a model produced from non-coprime discriminants must still be validated against an
+    //     INDEPENDENT oracle (a published equation, or Eichler-Selberg point counts) before it is
+    //     believed -- passing regeneration is not enough;
+    //   * do not read this flip as evidence the p | gcd(d,N) factor is unnecessary. Supplying it
+    //     remains the real fix, and is what would make the swap class correct rather than merely
+    //     harmless.
+    //   * `CMCOPRIME=1` is the escape hatch if a future base is poisoned by an admitted point.
+    //
+    // NB BorcherdsForms.m:709 already fell back this way for CM-starved bases; the asymmetry this
+    // flag existed to probe is now resolved in favour of that behaviour.
+    cm_coprime := GetEnv("CMCOPRIME") ne "";
     rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := cm_coprime,
                                                               bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
@@ -1127,7 +1155,12 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         // per-discriminant ring-class-field field-of-definition to ~target real CM points.
         fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
                                       // the early-stop fires well before exhausting the (expensive) h=16 points
-        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true, target := fetch_target);
+        // Follows the same default as CandidateDiscriminants above (filter OFF unless CMCOPRIME=1).
+        // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
+        // filtering even when the main gate had been relaxed -- a base could be admitted by one
+        // and starved by the other.
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude,
+                                       coprime_to_level := (GetEnv("CMCOPRIME") ne ""), target := fetch_target);
         pt_list_rat := pt_list_rat cat new_rat_cm;
         need := need - #new_rat_cm;
         if need gt 0 then

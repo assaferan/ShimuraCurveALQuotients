@@ -5,7 +5,18 @@ if assigned filename then
   end if;
   tests := [filename];
 else
-  tests := Split(Pipe("cd tests && ls *.m && cd ..", ""), "\n");
+  // ⚠ MIRROR THE CI MATRIX: .github/workflows/tests.yml uses grep -vE '^_|^run_filters\.m$'.
+  // Files starting with "_" are shared helpers and hand-run tools, not tests; run_filters.m is the
+  // full end-to-end pipeline (6h+, past GitHub's job limit) and is meant to be run deliberately.
+  //
+  // ⚠ WHY THIS MATTERS AND IS NOT COSMETIC: several helpers END WITH `exit;`, which terminates
+  // Magma and SILENTLY TRUNCATES the suite. On 2026-09-09 `_gyinvol.m` did exactly that -- it
+  // sorts AFTER the uppercase test names (ASCII "_" is 0x5F, above "Z"), so 34 X0_* tests ran,
+  // then it called exit, and the remaining tests never ran and NO summary was printed. A truncated
+  // run looks almost exactly like a clean one. The "_ is excluded" convention was documented in
+  // tests/_crviso.m's header but had never actually been implemented here.
+  tests := [f : f in Split(Pipe("cd tests && ls *.m && cd ..", ""), "\n")
+            | f ne "" and f[1] ne "_" and f ne "run_filters.m"];
 end if;
 if assigned debug then
   SetDebugOnError(true);

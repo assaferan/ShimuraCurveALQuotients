@@ -159,6 +159,27 @@ end procedure;
 
 function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
+    // ⚠⚠ THE CACHE KEY IS ONLY (M, n, m) -- IT OMITS k, sq_disc AND cuspidal, AND ALL THREE CHANGE
+    // THE ANSWER. Measured 2026-09-10 at (M,n,m) = (8,1,0), varying only the omitted parameters:
+    //     k24=12 sq_disc=1 cuspidal=0 ->  4 points
+    //     k24=12 sq_disc=0 cuspidal=0 ->  4 DIFFERENT points
+    //     k24=24 sq_disc=1 cuspidal=0 -> 10 points
+    //     k24=12 sq_disc=1 cuspidal=1 ->  0 points
+    // So if two call paths ever ask for the same (M, n, m) with different k/sq_disc/cuspidal, the
+    // second silently receives the FIRST one's point set -- correct arithmetic about the wrong
+    // object, with no error anywhere. The two call sites DO differ in sq_disc: HolomorphicEtaQuotients
+    // (line ~194) passes sq_disc := true and is pinned at (M, 0, 0), while the Borcherds path
+    // (line ~425) uses the sq_disc := false default.
+    //
+    // ⚠ LATENT, NOT MATERIALISED, and that is a measurement rather than a hope: of the 503 committed
+    // solution files NONE is a *_0_0, so the (M,0,0) site has never cached anything and no existing
+    // file can be mis-served to the other site today.
+    //
+    // ⚠ DO NOT "FIX" THIS BY WIDENING THE KEY WITHOUT A MIGRATION. Every one of the 503 committed
+    // files is named under the narrow key; widening it makes all of them invisible, and CLAUDE.md
+    // is explicit that above the cached frontier a fresh solve fails SILENTLY ("no solutions",
+    // not an error). Widening the key therefore converts a latent collision into a guaranteed
+    // silent regression across every base. Rename the cache in the same commit, or leave it.
     if FileExists(Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m)) then
         vprintf ShimuraQuotients, 3 : "File found.";
         // Sort canonically so the eta-quotient basis (and hence all downstream models) is independent

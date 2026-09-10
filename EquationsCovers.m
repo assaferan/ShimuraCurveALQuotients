@@ -116,7 +116,21 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
-// Y2TWIST -- PROTOTYPE, env-gated, OFF by default.
+// Y2TWIST -- env-gated, OFF by default.
+//
+// ⚠ EVALUATED FOR DEFAULT-ON 2026-09-07 AND DELIBERATELY LEFT OFF. Measured on the three bases it
+// was written for -- 15_2, 22_3, 22_5 -- `NOY2TWIST`-style control runs give results IDENTICAL to
+// the default, and the deferral path logs ZERO "unpinned y2-scale" messages. Under current code
+// the selector never fires: the covers it was meant to rescue are already recovered by the
+// coprime-to-level filter being off by default (flipped the same day).
+// ⚠⚠ AND THE FIRST EVALUATION WAS CONFOUNDED, which is the lesson worth keeping. Comparing
+// `Y2TWIST=1` runs against the COMMITTED model files appeared to show large gains (22_3 13 -> 15
+// populated covers, 15_2 12 -> 15, 22_5 3 -> 11). Those files predate the coprime flip, so the
+// gains were ITS effect, not this flag's. The control that settles it is default vs NOY2TWIST on
+// the SAME code -- always compare against a current baseline, never a committed artifact.
+// ⇒ The mechanism is still sound (unique-or-defer; it cannot trade a deferral for a guess) and is
+// kept for the case where an unscaled cover reappears. But it is not made default while there is
+// no measured case where it changes anything: an unexercised default-on path is a risk, not a win.
 //
 // find_y2_scales cannot always pin the y2-scale from sparse CM data.  EquationsOfCovers then
 // force-defers the cover (issue #36), because a consistent solve with an unpinned scale is off
@@ -799,6 +813,140 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     return all_eqns, all_ws;
 end function;
 
+// ---------------------------------------------------------------------------------------------
+// LAST-RESORT STAGE: re-derive still-empty covers after changing the Hauptmodul on the star base.
+//
+// ⚠ WHY THIS IS NEEDED AND WHY IT IS NOT A MATHEMATICAL FIX. process_P1_cover assembles a genus-g
+// curve as a FIBRE PRODUCT and needs some other quotient to carry an equation of degree EXACTLY
+// g+1 over a base shared with the P1/conic. Which degree a quotient's equation has depends on
+// whether infinity is a branch point -- that is the Hauptmodul NORMALISATION, ours to choose, not
+// a fact about the curve. So a cover can come back empty purely because the degrees did not line
+// up. Measured at 22_5: the genus-2 quotients need degree 3 and the degrees produced are
+// 1,2,4,6,7,8, so W={1},{1,2},{1,5},{1,11} were ALL empty although the Borcherds/CM data was fine.
+//
+// The Mobius change t -> r + 1/u, for r a RATIONAL ROOT of an equation over that base, moves a
+// branch point to infinity: a quartic becomes a cubic, and a conic sharing that root collapses to
+// degree 1 (a P1). Re-running the existing propagation on the rebased equations then fills the
+// gaps. At 22_5 this reproduces Guo-Yang's published degree-12 polynomial VERBATIM.
+//
+// ⚠ THE COORDINATE CHANGE IS LINEAR ON THE WEIGHTED AMBIENT, which is what makes the Atkin-Lehner
+// maps transportable: psi : C_new -> C_old is (x,y,z) -> (r*x + z, y, x). Verified at 22_5 for
+// every cover and all 8 involutions. Without that, the rebase would produce equations with no ws
+// and the covers would be unusable.
+//
+// ⚠ IT ONLY EVER FILLS KEYS THAT ARE ALREADY EMPTY, so a base that already builds completely is
+// untouched and this stage is a no-op there.
+// ⚠ FILLING A KEY IS NOT PROVING IT CORRECT. Validated against Guo-Yang at 22_5 and 10_19
+// (tests/_offline/FullCurve_22_5.m, tests/GuoYangQuotients_*.m); no such check exists for an
+// arbitrary base.
+intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> Assoc, Assoc
+    {Fill still-empty covers by changing the Hauptmodul on the star base and re-propagating.}
+    empty_keys := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
+    if IsEmpty(empty_keys) then return all_eqns, all_ws; end if;
+
+    // the base carrying the most first-level equations is the star base
+    base_count := AssociativeArray();
+    for k in Keys(all_eqns) do
+        for b in Keys(all_eqns[k]) do
+            if not IsDefined(base_count, b) then base_count[b] := 0; end if;
+            base_count[b] +:= 1;
+        end for;
+    end for;
+    if IsEmpty(Keys(base_count)) then return all_eqns, all_ws; end if;
+    STAR := Rep(Keys(base_count));
+    for b in Keys(base_count) do
+        if base_count[b] gt base_count[STAR] then STAR := b; end if;
+    end for;
+
+    // candidate roots: the rational roots of every equation over that base
+    roots := {Rationals()|};
+    for k in Keys(all_eqns) do
+        if not IsDefined(all_eqns[k], STAR) then continue; end if;
+        if Type(all_eqns[k][STAR]) ne CrvHyp then continue; end if;
+        for rt in Roots(HyperellipticPolynomials(all_eqns[k][STAR])) do
+            Include(~roots, rt[1]);
+        end for;
+    end for;
+    if IsEmpty(roots) then return all_eqns, all_ws; end if;
+    vprintf ShimuraQuotients, 1 :
+        "\n\t%o cover(s) still empty; sweeping %o Hauptmodul root(s) on base %o...",
+        #empty_keys, #roots, STAR;
+
+    for r in Sort(Setseq(roots)) do
+        still := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
+        if IsEmpty(still) then break; end if;
+
+        // rebase every star-base equation, and carry its ws along by conjugating with psi
+        re_eqns := AssociativeArray();  re_ws := AssociativeArray();
+        ok_all := true;
+        for k in Keys(all_eqns) do
+            if not IsDefined(all_eqns[k], STAR) then continue; end if;
+            C := all_eqns[k][STAR];
+            if Type(C) ne CrvHyp then continue; end if;
+            f := HyperellipticPolynomials(C);
+            d := Degree(f);
+            if d lt 1 then continue; end if;
+            n := Ceiling(d/2);
+            R<u> := PolynomialRing(Rationals());
+            g := &+[ Coefficient(f,i) * (r*u + 1)^i * u^(2*n-i) : i in [0..d] ];
+            // ⚠ a u^2 factor would change y by a power of u and break the LINEAR psi below, so
+            // skip that root for this cover rather than transporting a map that is not a map.
+            if (Degree(g) ge 2) and (Coefficient(g,0) eq 0) and (Coefficient(g,1) eq 0) then
+                ok_all := false; break;
+            end if;
+            if Degree(g) lt 1 then ok_all := false; break; end if;
+            okc := true;
+            try
+                Cn := HyperellipticCurve(g);
+                An := Ambient(Cn);
+                xn := An.1; yn := An.2; zn := An.3;
+                psi := map< Cn -> C | [r*xn + zn, yn, xn] >;
+                re_eqns[k] := AssociativeArray();  re_eqns[k][STAR] := Cn;
+                re_ws[k] := AssociativeArray();    re_ws[k][STAR] := AssociativeArray();
+                if IsDefined(all_ws, k) and IsDefined(all_ws[k], STAR) then
+                    for mm in Keys(all_ws[k][STAR]) do
+                        re_ws[k][STAR][mm] := psi * all_ws[k][STAR][mm] * Inverse(psi);
+                    end for;
+                end if;
+            catch e okc := false; end try;
+            if not okc then ok_all := false; break; end if;
+        end for;
+        if (not ok_all) or IsEmpty(Keys(re_eqns)) then continue; end if;
+
+        // re-run the ordinary propagation on the rebased data
+        okp := true;
+        try
+            ab_P1, ab_con := curves_above_P1_and_conics(re_eqns, [k : k in Keys(re_eqns)], curves);
+            nk := Keys(ab_P1) join Keys(ab_con);
+            while not IsEmpty(nk) do
+                for lab in Keys(ab_P1) do
+                    el, wl := process_P1_cover(lab, ab_P1, curves, re_eqns, re_ws);
+                    re_eqns[lab] := el; re_ws[lab] := wl;
+                end for;
+                for lab in Keys(ab_con) do
+                    el, wl := process_conic_cover(lab, ab_con, curves, re_eqns, re_ws);
+                    for bb in Keys(el) do re_eqns[lab][bb] := el[bb]; re_ws[lab][bb] := wl[bb]; end for;
+                end for;
+                ab_P1, ab_con := curves_above_P1_and_conics(re_eqns, nk, curves);
+                nk := Keys(ab_P1) join Keys(ab_con);
+            end while;
+            re_eqns, re_ws := EquationsAbovePointlessConics(re_eqns, re_ws, curves);
+        catch e okp := false; end try;
+        if not okp then continue; end if;
+
+        // adopt ONLY the keys that were empty
+        for k in still do
+            if not IsDefined(re_eqns, k) then continue; end if;
+            if IsEmpty(Keys(re_eqns[k])) then continue; end if;
+            all_eqns[k] := re_eqns[k];
+            if IsDefined(re_ws, k) then all_ws[k] := re_ws[k]; end if;
+            vprintf ShimuraQuotients, 1 :
+                "\n\t  rebase at r = %o filled W = %o", r, curves[k]`W;
+        end for;
+    end for;
+    return all_eqns, all_ws;
+end intrinsic;
+
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
@@ -909,6 +1057,12 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
+    // ⚠ LAST RESORT, and a NO-OP unless some cover is still empty (see EquationsByRebase).
+    if base_label eq 0 then
+        vprintf ShimuraQuotients, 1 : "Filling empty covers by Hauptmodul rebase...";
+        all_eqns, all_ws := EquationsByRebase(all_eqns, all_ws, curves);
+        vprintf ShimuraQuotients, 1 : "Done\n";
+    end if;
     if not IsEmpty(deferred) then
         vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
         all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);

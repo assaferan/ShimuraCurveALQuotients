@@ -1,8 +1,296 @@
-# Handoff — 2026-09-06
+# Handoff — 2026-09-10
 
-**The newest section is the 2026-09-06 one below; everything after it is older and kept for
-provenance.** Earlier material still says things like "34 of 43" — those counts are STALE, and the
-2026-09-06 section says what replaced them.
+**The newest section is this one; everything after it is older and kept for provenance.** Earlier
+material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
+STALE.
+
+Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
+
+**➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
+about state, this file wins.
+
+## Handoff — 2026-09-10 (newest)
+
+    X0_*.m cover comparisons:   126 hand-written + 337 model-derived over ALL 34 bases
+                                (was 126, and NOTHING else); 34 of 34 tests pass
+    committed cover keys:       863 across 88 model files
+      with a re-derivation test:  343 on 37 bases
+      with none:                  520 on 51 bases   <- 476 of them validated ONLY by ModelChecks
+    X0_* census:                32 of 34 pass; the 2 failures are MISSING-KEYS-ONLY and diagnosed
+
+### The `X0_*` tests re-derived 41% of the covers. They now re-derive all of them, for free.
+
+`test_AllEquationsAboveCoversSingleCurve` compared ONLY the keys hand-written into `cover_data`,
+and `if not is_def then continue` dropped the rest IN SILENCE: 128 hand-written cover_data KEYS against
+309 populated model keys, nine bases checking 1 of 15. (⚠ KEYS, not comparisons -- a key holds one
+entry per base, so the comparison counts above are the larger multiset figures. Different objects;
+do not quote one for the other.)
+
+⇒ **The fix was not transcription.** `AllEquationsAboveCovers` is ALREADY PAID FOR by each test,
+and `tests/_offline/ModelRegen.m` already had the right comparison -- it was offline only because
+it paid for a SECOND pipeline run per base. So that comparison now runs as a second pass inside
+the helper, reusing the run it already did:
+
+* `tests/_modelfile.m` (NEW) -- `ReadModelSet(D,N)`. Isolated in its own file because an `eval`
+  inside a procedure that closes over an outer variable segfaults Magma 2.29 (the trap that forces
+  ModelChecks.m and ModelRegen.m into top-level form). PROBED in isolation before being built on.
+* `tests/BorcherdsProducts.m` -- ModelRegen's MULTISET matching (so a 3 -> 2 loss cannot hide
+  behind two committed entries matching one survivor), `<genus, f, h>` handling, CRV entries
+  skipped AND COUNTED, a zero-comparison guard, and `model_drift_ok`.
+
+**MEASURED at 6_11: 1 comparison -> 1 + 17, in 119.8 s against a 121.5 s baseline.** The check is
+free; the pipeline run was the cost all along.
+**NEGATIVE-CONTROLLED:** perturbing one entry to a same-genus DIFFERENT curve and adding a key the
+AL group cannot produce makes it fail, naming both causes separately. It could have failed.
+
+⚠ **IT IS A DRIFT CHECK, NOT A VALIDATION.** It says "current code still produces this", not "this
+is correct" -- the committed file is what the pipeline itself wrote. Correctness still comes from
+ModelChecks (Eichler-Selberg point counts) and the Guo-Yang oracles. The hand-written `cover_data`
+entries must NOT be deleted in favour of it: those are Guo-Yang's PUBLISHED equations, and they
+are the only entries carrying labelled involutions.
+
+### ⚠ A pinned `base_label` loses EXACTLY the keys `EquationsByRebase` filled
+
+Two tests fail, both MISSING-KEYS-ONLY, zero non-isomorphic anywhere in 34 bases:
+`10_13` (`[1,2] [1,5] [1,26]`) and `26_3` (`[1,2] [1,13]`).
+
+`AllEquationsAboveCovers` gates `EquationsByRebase` on `base_label eq 0` (`EquationsCovers.m:1061`),
+so a test pinning a non-zero `base_label` cannot reproduce a key the rebase FILLED on a default run.
+Both model files say so in their own headers -- `models_26_3.m` even names `[1,2]` and `[1,13]` as
+the two that were empty and were "filled, unlocked by EquationsByRebase".
+
+⚠ **THE CONTROL GROUP is what makes this a diagnosis and not an excuse.** `14_3`, `21_2` and `6_17`
+also pin a `base_label` and ALL THREE PASS: `14_3`'s empties were fixed by the COPRIME FILTER FLIP,
+not the rebase, and the other two never had any. The gate costs the rebase-filled keys and nothing
+else.
+⚠ **A PREDICTION WRITTEN DOWN BEFORE THE RUN WAS HALF WRONG, AND THAT IS WHY THE RULE IS NOW EXACT.**
+It predicted drift at `10_13 14_3 21_2 6_17` and a PASS at `26_3`; the opposite happened for four of
+the five. Had the flag been set from the prediction, three tests would have been needlessly
+weakened and `26_3`'s real cause never found.
+
+⇒ `model_drift_ok` therefore tolerates **MISSING keys only**. A key the pipeline DOES produce must
+still be the committed curve, whatever `base_label` was pinned -- silencing both with one flag would
+hide the failure that actually matters.
+
+⇒ **OPEN, and well-evidenced: relax the `base_label eq 0` gate.** `EquationsByRebase` only ever
+fills keys that are ALREADY EMPTY, so running it under a pinned `base_label` should not disturb the
+pinned presentation's other covers -- and it would make both these tests reproduce their full model.
+A pipeline change, so it needs oracle validation, not just a green test.
+
+### The re-derivation gap is bigger than "128 of 309" -- that counted only the tested bases
+
+    88  model files, 863 cover keys
+    37  bases have a re-derivation test (CI or offline)  ->  343 keys
+    51  bases have NONE                                 ->  520 keys (60%)
+    44  bases are validated ONLY by ModelChecks          ->  476 keys (55%)
+
+"Only ModelChecks" is not nothing -- genus, Weil divisibility and Eichler-Selberg point counts,
+none of which touch the Borcherds machinery. But it NEVER RUNS THE PIPELINE, so drift there was
+invisible to everything in the repo.
+
+⚠ **And ModelRegen's default `CHEAP_BASES` had become PURE DUPLICATION: all nine had an `X0_*`
+test.** Retargeted at bases with none. MEASURED PER BASE, because a batch total cannot tell a
+3-minute base from a 26-minute one:
+
+    6_1 10_1 14_1 22_1 6_7 6_13   72 comparisons, ~5 min for all six
+    10_7            15 keys       26 comparisons, 185 s
+    26_5  804 s | 14_11 1475 s | 22_7 1591 s | 65_1 813 s     <- measured, LEFT OUT for cost
+
+⚠ **KEY COUNT DOES NOT PREDICT COST**: `10_7` has 15 keys and costs 185 s; `65_1` has 4 and costs
+813 s. ⚠ `65_1` is the ONLY odd `D` among the 51, so the new list is all even `D` -- the one
+property the old list had that this one loses. `14_43` was killed at 7 h 44 m unfinished.
+
+### The oracle's genus-0 branch was a one-bit check
+
+`GuoYangQuotientOracle.m` compared genus-0 quotients by `HasRationalPoint` alone, so ANY two
+POINTLESS conics MATCHED -- and 57 of its 170 comparisons (34%) take that branch. Now a real
+`IsIsomorphic` on the conics, negative-controlled on `y^2 = -x^2-1` vs `y^2 = -x^2-3` (both
+pointless, correctly distinguished).
+⚠ **BE HONEST: it changed no verdict.** Every genus-0 quotient at all 20 oracle bases is a POINTED
+conic, and pointed conics over Q are all isomorphic to P^1, so the old check was ACCIDENTALLY
+equivalent; all 57 still match in the same 4.8 s. It is not equivalent in general -- 73 of the 281
+genus-0 entries in `data/models/` ARE pointless (`6_5 6_7 6_83 82_1 93_1`) -- so this guards the
+first such oracle base rather than discovering anything.
+
+### ⚠ A LATENT SILENT-CORRUPTION RACE IN CONCURRENT RUNS (found, checked, NOT yet fixed)
+
+`BorcherdsForms.m:180` writes every Normaliz solution to a DETERMINISTIC SHARED PATH
+`polymake/polymake_solution_<M>_<n>_<m>`, and reads it back as `FileExists` -> `eval Read`.
+`nmzsolve.py` writes that file NON-ATOMICALLY. So two concurrent Magma processes needing the same
+UNCACHED triple can have one read a PARTIALLY WRITTEN file -- a valid-looking but truncated point
+list, i.e. exactly the "a partially-cached base returns a wrong answer rather than an error" mode
+`CLAUDE.md` flags as critical.
+
+⚠ **This session ran up to five Magma processes at once, so it was exposed.** Checked rather than
+assumed: NO `polymake_solution_*` was written during any of it and `polymake/nmzsolve.err` does not
+exist, so every solve hit the committed cache and no race occurred. The results stand.
+✅ **FIXED**: `nmzsolve.py` now writes via a pid-suffixed temp file and `os.replace` (atomic on
+POSIX), at both write sites. Validated: byte-IDENTICAL output to the old writer on the same point
+list, no temp file left behind, and exercised END TO END by a real `nmzsolve.py` invocation (not
+just the cache-read path, which is all a passing test would have touched).
+⚠ SHARED-PATH FILE -- **merge it down to the campaign branch.**
+
+### ⚠⚠ AND A SECOND, WORSE ONE FOUND WHILE TESTING THAT: THE SOLUTION CACHE KEY IS INCOMPLETE
+
+The cache key is `(M, n, m)` ONLY. It omits `k`, `sq_disc` and `cuspidal` -- **and all three change
+the answer.** Measured at `(M,n,m) = (8,1,0)`, varying only the omitted parameters:
+
+    k24=12 sq_disc=1 cuspidal=0  ->   4 points
+    k24=12 sq_disc=0 cuspidal=0  ->   4 DIFFERENT points
+    k24=24 sq_disc=1 cuspidal=0  ->  10 points
+    k24=12 sq_disc=1 cuspidal=1  ->   0 points
+
+So two call paths asking for the same `(M,n,m)` with different parameters means the second silently
+gets the FIRST one's point set -- correct arithmetic about the wrong object, no error anywhere. And
+the two call sites DO differ: `HolomorphicEtaQuotients` (`BorcherdsForms.m:194`, live, reached from
+line 289) passes `sq_disc := true` pinned at `(M,0,0)`, while the Borcherds path (line 425) takes
+the `sq_disc := false` default.
+
+⚠ **LATENT, NOT MATERIALISED** -- measured, not hoped: of the 503 committed solution files **NONE is
+a `*_0_0`**, so the `(M,0,0)` site has never cached anything and nothing can be mis-served today.
+⚠ **DO NOT WIDEN THE KEY WITHOUT MIGRATING THE CACHE IN THE SAME COMMIT.** All 503 files are named
+under the narrow key; widening makes them all invisible, and above the cached frontier a fresh solve
+fails SILENTLY. That would turn a latent collision into a guaranteed silent regression everywhere.
+Documented at the read site in `BorcherdsForms.m`.
+
+⇒ **HOW IT WAS FOUND, because the method generalises:** regenerating a committed cache file to check
+the atomic-write change gave a DIFFERENT point set. The tempting read was "my change broke it". The
+actual cause was that the filename does not record the parameters, so I could not reconstruct the
+original constraint system -- and that *is* the bug. A mismatch was evidence about the CACHE KEY,
+not about the edit, and the writer had already been proven byte-identical independently.
+
+### ⚠ THE BRANCH-DIVERGENCE INVARIANT IS RED, and not in the harmless direction
+
+`CLAUDE.md`'s check -- `git diff origin/main origin/m0-theta-campaign --name-only --
+':!vvdata/weyl-campaign/*'` -- "should print nothing but doc files". It prints **53**, including
+`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files and 30+ test files.
+
+Direction checked, not assumed: **main-only 51 commits, campaign-only 180, and campaign is NOT an
+ancestor of main.** So campaign carries real independent work (`rankcheck_gauge.py` on the
+`rem:gauge` ambiguity, `cusp7.m`) AND is missing all 51 of main's recent commits -- which include
+`EquationsByRebase`, the quotient oracle and the model fills.
+⇒ **Any measurement taken from `worktrees/campaign` right now uses STALE code at shared paths.**
+This is the nine-day `nmzsolve.py` gap recurring; merge `main` down before trusting anything there.
+⚠ NOT affected: `tools/regen-model.sh` runs campaign's `genmodels.m` but from the main checkout's
+cwd, so `AttachSpec` loads MAIN's packages. Model regeneration is fine.
+
+### A grep that read a fragment and generalised (again)
+
+Building "which bases have an external oracle" by matching `<D, N,` tuples MISSED `93_1`, whose
+Guo-Yang check is a bespoke `gy93_*` block at the END of `GuoYangEquations.m`. The count was rebuilt
+searching for the model FILENAME and the `D_N` tag too. Caught only because the number contradicted
+what the project already knew -- the same failure mode `CLAUDE.md` opens with.
+
+## Handoff — 2026-09-09
+
+    Guo-Yang published equations:   42 reproducible bases
+    full curve stored:              38      <- 10_19 and 22_5 regenerated today
+    remaining blockers:              4      95_1  119_1  159_1  69_1  -- still running on lovelace
+    X0_*.m tests checking involutions:  34 of 34   (was 23 on 09-07)
+    Guo-Yang quotient comparisons:     188 over 24 bases, 0 skipped, 0 mismatches
+
+### The big change: the quotient oracle
+
+⚠ **`GuoYangEquations.m` compares only the equations Guo-Yang PRINT** — usually the full curve
+alone — so a base with fifteen cover keys got ONE external comparison. But they also print the
+INVOLUTIONS, and every quotient follows from those:
+`CurveQuotient(AutomorphismGroup(C,[w]))` is `X/W`. That turns one comparison per base into one per
+cover key. `tests/GuoYangQuotientOracle.m` (generic, 20 bases) plus four hand-derived files for the
+CRV bases now make **188 comparisons in a few seconds**.
+
+**Three errors in Guo-Yang's tables are now determined**, each by evidence rather than preference:
+* `93_1`: `-3t` is a typo for `-3s` (confirmed by the journal version).
+* `14_5`: the table's `w_35` sign is wrong; **their own Example 36** has it right.
+* `10_13`: the table **SWAPS `w_10` and `w_13`** — settled by Ogg's fixed-point rule, with the
+  clincher internal to their paper: **their own CM table** puts disc `-52` at Hauptmodul `0` and
+  `-40` at infinity, contradicting their involution table and agreeing with our pipeline.
+
+### The pipeline change: `EquationsByRebase`
+
+An EMPTY cover key is often a **Hauptmodul normalisation artefact, not an obstruction**. The
+pipeline builds a genus-`g` curve only as a FIBRE PRODUCT, needing degree exactly `g+1` over a
+shared base; which degree a quotient has depends on whether infinity is a branch point, which is
+ours to choose. `t -> r + 1/u` at a RATIONAL ROOT fixes the degree profile. At `22_5` this
+reproduces Guo-Yang's degree-12 polynomial VERBATIM.
+
+Wired in as the last stage of `AllEquationsAboveCovers`; it is a **no-op unless some cover is
+empty**, and only ADOPTS keys that were empty. The `ws` transport works because the rebase is
+LINEAR on the weighted ambient: `psi = (r*x + z, y, x)`.
+
+⚠ **Cost**: bases WITH empty covers get slower (`X0_10_11` 471 s, `X0_10_13` 872 s). Bases without
+pay nothing.
+
+### Traps that cost real time today, all now guarded
+
+* **`run_tests.m` was SILENTLY TRUNCATING the suite.** It globbed every `tests/*.m`, including
+  helpers; several end with `exit;`, which kills Magma. 72 of 79 files reported and no summary was
+  printed — a truncated run looks like a clean one. Now mirrors the CI matrix. **Check the file
+  count and that `Tests failed:` is present.**
+* **A model entry may be `<genus, f, h>`, meaning `y^2 + h*y = f`.** Dropping `h` gives a DIFFERENT
+  curve of the same genus; 9 entries across 7 files have one. This produced a false "defect" report
+  against `models_87_1`, retracted.
+* **An incomplete oracle cannot refute anything.** `GuoYangQuotients_10_19.m` was missing `w_10`
+  and `w_95`, so "matches no quotient" really meant "matches none of the ones I computed" — that
+  produced a wrong retraction of the rebase lever, since re-corrected.
+* ⇒ **All three of the day's wrong verdicts were REFUTATIONS**, each correct about its arithmetic
+  and wrong about its object. **A failing check needs its object verified as much as a passing one.**
+* **A SKIP is a silent gap**: 13 oracle comparisons were being skipped behind a green summary line.
+  All recovered; the cause was on the Guo-Yang side (`CurveQuotient` returns a plain `Crv`).
+* **`tools/regen-model.sh`'s flag table had gone stale on both rows** — `CMNONCOPRIME` is a dead
+  name (the code reads `CMCOPRIME`), and `Y2TWIST` would have produced models differing from the
+  committed files and been read as drift. Table now empty; `51_1` and `22_5` verify IDENTICAL.
+
+### Filed upstream
+
+**[Magma-Maths/Magma#123](https://github.com/Magma-Maths/Magma/issues/123)**: `AutomorphismGroup`/
+`CurveQuotient` fail for curves in weighted projective (toric) ambients — `IdentityMap` returns a
+`TorMap`, not a `MapAutSch`. It blocks the oracle on exactly the `CRV` paired presentations, which
+is why `10_19`, `22_5`, `10_13` and `26_3` each need a hand-derived oracle file.
+
+### Later the same day — the fill, and an audit that found a systemic gap
+
+* **ALL 18 remaining EMPTY cover keys filled**, across `6_29 6_31 6_37 10_11 10_13 10_23 14_5
+  26_3`. **0 empty cover keys remain: 347 of 347 populated across 38 Guo-Yang bases.** Every filled
+  key was checked against the quotient oracle **in a scratch directory BEFORE installing** — that
+  ordering is what makes the data trustworthy, and it should not be inverted.
+* ⚠ **`14_5` gained two cover keys that never existed in the file** (`[1,5,7,35]`, `[1,7,10,70]`).
+  Its AL group has order 8, so there are 15 proper cover keys; the file had 13.
+* ⚠ **Existing entries can come back RESCALED BY A SQUARE** (11 did at `10_19`). That is a
+  re-presentation, not a regression. Verify entry-by-entry isomorphism; only a MISSING cover is a
+  failure.
+* **`10_13`'s labelling differs from Guo-Yang by a GROUP AUTOMORPHISM**, and only half is proven.
+  Ours differs by `5 <-> 26` AND `10 <-> 13`, fixing `2, 65, 130`; the map is multiplicative so the
+  swaps stand or fall together. `10 <-> 13` is PROVEN by fixed points with their own CM table as
+  clincher. `5 <-> 26` CANNOT be: both quotients are genus 2 and Riemann-Hurwitz forces `r = 0`, so
+  both involutions are FIXED-POINT FREE and Ogg's rule says nothing. We adopt our labelling for
+  both; the second half is **inferred by consistency, not established**.
+* ⚠ **A SECOND SILENT TRUNCATION, pre-existing**: `tests/test_weil_polynomial.m` ended with
+  `quit;`, which kills Magma since `run_tests.m` evals every test in one process. It sorts
+  second-to-last, so `trace_formula.m` never ran locally — which is probably why it was believed
+  deliberately skipped. It is not slow: **2.4 s**. Fixed.
+* ✅ **`tests/_offline/X0_87_1.m`'s long-standing failure DIAGNOSED AND FIXED**, and validated:
+  **passes in 4081 s**. The cause was a **DROPPED h-TERM** — the model stores `[1,29]` as
+  `<3, f, h>` with `h = x^3+x^2+1`, and the generator emitted only `f`, so the test compared a
+  DIFFERENT curve of the SAME GENUS. It stays offline because it is slow, not broken.
+* **`X0_206_1` went 1 -> 4 of 4 covers**, including its `h`-bearing `[1,103]`.
+
+⚠⚠ **AND THE AUDIT THAT MATTERS MOST: the `X0_*` tests re-derive only 41% of the covers.**
+**128 `cover_data` keys against 309 populated model keys.** Nine bases check 1 of 15
+(`10_11 10_13 10_23 6_11 6_17 6_19 6_29 6_31 6_37`) and eleven check 1 of 4. The helper SILENTLY
+SKIPS an absent key, so this is invisible unless counted.
+⇒ The MODELS are well checked (~190 oracle comparisons over 25 bases against Guo-Yang). What is
+thin is the **RE-DERIVATION** claim — that the pipeline reproduces them — which for most bases
+rests on ONE cover. Closing it is mechanical but must handle `<genus, f, h>` entries and `CRV`
+pairs, both of which have already caused defects, and it costs CI time.
+
+### Still open
+
+* **The 41% re-derivation gap above** is now the largest single opportunity: work the thin tests in
+  order of missing covers, starting with the nine at 1-of-15.
+* The four lovelace blockers are mid-FIRST-PHASE after ~3 days; weeks away, not days.
+* `93_1` and `111_1` still have no `X0_*` re-derivation test (14-20 h per run).
+
+## Older — Handoff 2026-09-07
 
 **Supersedes** the 2026-07-17 handoff about producing cover models, archived as
 `HANDOFF_2026-07-17.md`. That task is not dead, but it is gated on the blocker described below.
@@ -12,6 +300,84 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 **➡ For what to do next, see `PLAN.md`** — five tracks, a do-not list, and the recurring traps.
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
+
+## Handoff — 2026-09-07 (the 09-06 section below is still accurate, just earlier)
+
+    Guo-Yang published equations:  42 reproducible bases
+    we now have a model for:       38      <- 111_1 recovered
+    remaining blockers:             4      95_1  119_1  159_1  69_1   -- ALL RUNNING
+
+* **`111_1` recovered** — 20.2 h, DEFAULT flags, another base the vx fix unblocked. Verified by
+  **exact full-curve `IsIsomorphic`, true in 0.05 s**, which is cheap only because its `W={1}` is
+  HYPERELLIPTIC. ⚠ Pinnable to one commit (`f87b0ae`, clean tree) — unlike `10_61`/`14_43`.
+* **`93_1` and `26_3` upgraded to FULL-CURVE PROOFS** (were quotient-level). `IsIsomorphic` hangs on
+  CRV pairs, so the isomorphism is CONSTRUCTED: Mobius map from the hyperelliptic quotient, both
+  sides carried by constant squares, then `IsIsomorphism` certifies it. Hundredths of a second.
+  ⇒ **The BASE chooses the `V_4`** (assaferan): `26_3` would not match until rebuilt with
+  `base_label := 8103`, which is the `V_4` Guo-Yang use. When a CRV pair will not match, try
+  another base before concluding anything about the curve.
+
+### Three blind spots removed, each of which immediately exposed a real defect
+
+* **`VerifyModelSet` skips every `CRV` entry** — so 21 paired presentations across 16 files had
+  NEVER been checked. `tests/CRVStructure.m` found **5 storing their parent conic twice**
+  (reducible schemes, not the genus-1 curves recorded). ROOT CAUSE: at `g = 1` the required degree
+  `g+1 = 2` is also a conic's degree, so the conic could fill BOTH roles in the fibre product.
+  Fixed; those covers now defer.
+* **The `X0_*` helper silently skipped unmatched cover keys** — it could pass while verifying
+  NOTHING. It now counts comparisons and errors on zero. That immediately turned CI red, correctly:
+  **`X0_10_19` had been passing green in CI while making ZERO comparisons**, at 84 min a run.
+* **CI never set `NORMALIZ_BIN`** — so polytope solves failed SILENTLY ("no solutions", not an
+  error). Now installs `normaliz-bin` and exports the path. ⚠ Scope was MEASURED: every other
+  `X0_*` job reported full coverage, so `10_19` was the only affected test.
+
+### The coprime guard: no evidence it is needed
+
+Full sweep of the 11 `N>1` `X0_*` tests (for `N=1` the filter is provably a no-op, which excludes
+19 of 30 rigorously). **8 of 10 pass identically with `CMNONCOPRIME` on and off.** The 2 failures
+(`10_13`, `6_17`) are both CRV tests whose PINNED COORDINATE MATRIX breaks under re-presentation —
+not correctness. Removing that artifact is what `tests/_crviso.m` does.
+⚠ A first sweep appeared to show `10_13` failing; that was MY OWN foreground timeout killing the
+sweep's Magma, which then recorded a killed run as a failure. Retracted.
+
+### Process notes
+
+* **`nohup ... &` inside a background call reports completion for the WRAPPER**, not the job.
+* **My own foreground timeout killed a background sweep** — a killed run and a failing run are
+  indistinguishable in a one-line summary. Capture the error text before believing a regression.
+* Bugs of mine caught only because a test could fail: an eager `AutomorphismGroup` (5x slowdown,
+  870 s -> 71 min), an inverted conic scalar (`x/rg` for `rg*x`), hardcoded variable order, and
+  image polynomials built in the wrong ring. Each was invisible in the first case tried.
+
+## Handoff — 2026-09-07, later (test coverage; supersedes the earlier 09-07 block on these points)
+
+**Re-derivation coverage went 4 → 11 Guo-Yang bases.** Passing an `X0_D_N.m` test IS reproduction,
+the stronger claim than `GuoYangEquations.m`'s stored-model comparison. Now covered:
+`51_1 55_1 57_1 14_5 14_3 26_3 21_2 15_2 22_3 22_5` in CI, `39_2` offline. 34 `X0_*` tests in CI.
+* `X0_21_2` is the **first test that checks a CRV entry** — possible only because the helper now
+  CONSTRUCTS those isomorphisms (`tests/_crviso.m`) instead of calling `IsIsomorphic`, which hangs.
+* `MR_KNOWN_DRIFT` is down from 5 to **2**: only `14_43` (`INTSOL=1`) and `26_3` (deliberate
+  `base_label := 8103`).
+
+**⚠ `Y2TWIST` WAS THE WRONG SUSPECT, and I nearly flipped it on a confounded measurement.**
+`PROVENANCE.md` had predicted for two days that making twist selection default was "the right
+long-term fix" for `15_2`/`22_3`/`22_5`. Measuring `Y2TWIST=1` against the COMMITTED models showed
+large gains — and those were the **coprime flip's**, from hours earlier the same day, because every
+committed model predated it. The control is flag-on vs flag-off on the SAME code: run that way all
+three bases are IDENTICAL and the deferral path logs zero messages. The selector never fires. The
+flip was reverted; the mechanism is kept (it is sound: unique-or-defer) but not defaulted.
+⇒ **Compare against a current baseline, never a committed artifact.**
+
+**The real win was already sitting there.** Those three needed NO flag — their committed files were
+simply STALE. Regenerated with the plain recipe: `22_5` 3 → 11 populated covers, `15_2` 12 → 15,
+`22_3` 13 → 15, nothing lost, `GuoYangEquations` still passing.
+
+**`X0_87_1` is the one known-broken test** and is under diagnosis. Established: the MODEL is fine
+(`ModelRegen` reproduces it; `GuoYangEquations` matches its `W={1}`), and the test is well-formed
+(expects exactly the model's 4 single-entry keys). So the failure is `assert is_isom`. Leading
+hypothesis, which has bitten twice already: `ModelRegen` compares the AGGREGATED model while the
+helper iterates EVERY BASE of every cover, so a second base with a different presentation fails only
+the helper — fixed at `26_3` and `21_2` with a `base_label`.
 
 ## Handoff — 2026-09-06 (this session; supersedes the state notes below)
 

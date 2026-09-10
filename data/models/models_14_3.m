@@ -1,6 +1,13 @@
 // Subhyperelliptic cover models for X_0(14,3)*
 //
-// ⚠ PRODUCED WITH CMNONCOPRIME=1 -- this file does NOT regenerate under default settings.
+// ✅ NO LONGER NEEDS A FLAG (2026-09-07). The coprime-to-level CM filter is now OFF BY DEFAULT, so
+// this file regenerates with the plain recipe:
+//     NORMALIZ_BIN=... magma -b D_s:=14 N_s:=3 OUTDIR:=... genmodels.m < /dev/null
+// ⚠ The THEORETICAL gap is unchanged: the `p | gcd(d,N)` local factor still has no live
+// implementation, so what makes this file trustworthy is still the published equation, not
+// regeneration. See data/models/PROVENANCE.md.
+//
+// ⚠ HISTORICAL: PRODUCED WITH CMNONCOPRIME=1 -- this file does NOT regenerate under default settings.
 // With the coprime-to-level CM filter on, 14_3's covers are under-determined and W={1} comes out
 // EMPTY (the previous committed file had 6 keys, 3 of them empty); with the filter off it builds
 // 16 keys, 0 empty. Regenerate with:

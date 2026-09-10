@@ -13,6 +13,97 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
+## ⇒ START HERE — updated 2026-09-10 (the numbered list further down is from 09-02 and its top two items are DONE)
+
+**State**: Guo-Yang full curves 38 of 42; involutions checked in 34 of 34 `X0_*` tests; 188 quotient
+comparisons over 24 bases (0 skipped, 0 mismatches). `EquationsByRebase` is wired into
+`AllEquationsAboveCovers`. The `X0_*` tests now re-derive **every** committed cover key, not 41% of
+them: **126 hand-written + 337 model-derived comparisons over all 34 bases**, at no extra
+runtime, and 34 of 34 pass.
+See `HANDOFF.md` (2026-09-10) for what changed and why.
+
+In decreasing order of value:
+
+A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover keys sit on 51 bases
+   with NO re-derivation test at all** — 476 of them on 44 bases validated ONLY by `ModelChecks`,
+   which never runs the pipeline. `tests/_offline/ModelRegen.m` is the only thing that can see drift
+   there, and its default list has been retargeted at them (~98 comparisons in ~8 min). **Extending
+   that list is the cheapest remaining coverage in the repo**, but ⚠ **pick additions by MEASURED
+   cost, never by key count** — `10_7` has 15 keys at 185 s, `65_1` has 4 at 813 s. Measured and
+   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The new list is **all even
+   `D`** (`65_1` is the only odd `D` among the 51 and it is expensive) — that is a known hole.
+
+B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`).
+   Well-evidenced: it is why `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled,
+   the only two drift failures in 34 bases. Since the rebase ONLY fills ALREADY-EMPTY keys it should
+   not disturb a pinned presentation. ⚠ A pipeline change — needs oracle validation, not a green
+   test, and the two `model_drift_ok` flags come off only when it lands.
+
+C. ✅ **DONE: the concurrent-run race in `nmzsolve.py` is fixed** (atomic `os.replace`, both write
+   sites, byte-identical output, exercised end to end). ⚠ Shared-path file — **still needs merging
+   down** (item D).
+
+C2. ⚠ **OPEN, and the more dangerous one: the solution cache key is INCOMPLETE.**
+   `polymake/polymake_solution_<M>_<n>_<m>` omits `k`, `sq_disc` and `cuspidal`, and all three change
+   the answer (measured at `(8,1,0)`: 4 pts / 4 different pts / 10 pts / 0 pts). The two call sites
+   differ in `sq_disc` — `HolomorphicEtaQuotients` (`BorcherdsForms.m:194`, pinned at `(M,0,0)`) vs
+   the Borcherds path (line 425). **Latent only**: none of the 503 committed files is a `*_0_0`.
+   ⚠ **DO NOT widen the key without renaming the cache in the SAME commit** — all 503 files are
+   named under the narrow key, and above the cached frontier a fresh solve fails SILENTLY, so
+   widening alone converts a latent collision into a guaranteed silent regression everywhere.
+
+D. ⚠ **Merge `main` into `m0-theta-campaign`.** The `CLAUDE.md` divergence invariant is RED: 53
+   shared paths differ (`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files,
+   30+ tests), main-only 51 commits against campaign-only 180, and campaign is **not** an ancestor
+   of main. Any probe run from `worktrees/campaign` is using stale shared-path code right now.
+
+0b. ✅ **DONE 2026-09-10: the 41% re-derivation gap is CLOSED** — `test_AllEquationsAboveCovers`‑
+   `SingleCurve` now cross-checks every committed cover key against the pipeline run it already
+   performs (`tests/BorcherdsProducts.m`, `tests/_modelfile.m`). Item 1b below is kept for its
+   method notes only. ⚠ Its premise was also too narrow: "309 keys" counted only the 34 bases that
+   HAVE a test — see item A above for the 520 that do not.
+
+0. ✅ **DONE 2026-09-09: all empty cover keys are filled** (347 of 347 across 38 bases), each
+   oracle-checked before installing. The item below is kept only for its method notes.
+
+1. ~~**Fill the 22 remaining EMPTY cover keys**~~ — `6_29 6_31 6_37 10_11 10_13 10_23 14_5 26_3`
+   (2–3 each). `EquationsByRebase` should fill many with no flag. **Regenerate with
+   `tools/regen-model.sh D N OUT`, then CHECK each newly-filled key against the oracle before
+   committing** — oracles exist for all of these except `10_23`. That ordering is what made the
+   `22_5` and `10_19` regenerations trustworthy; do not invert it.
+   ⚠ Existing entries may come back RESCALED by a square (11 did at `10_19`). That is a
+   re-presentation, not a regression — verify entry-by-entry isomorphism, and treat only a MISSING
+   cover as a failure.
+   ⚠ Cost: bases with empty covers get much slower (`X0_10_13` 872 s). Watch the CI budget.
+
+1b. ⚠ **THE BIGGEST REMAINING GAP: the `X0_*` tests re-derive only 41% of the covers** — 128
+   `cover_data` keys against 309 populated model keys. Nine bases check 1 of 15, eleven check 1 of
+   4, and the helper SILENTLY SKIPS absent keys. The models are well checked by the oracle; what is
+   thin is that the PIPELINE REPRODUCES them. Mechanical to close, but must handle `<genus, f, h>`
+   entries and `CRV` pairs, and it costs CI time. Start with the nine at 1-of-15.
+
+2. ~~**An oracle for `10_23`**~~ ✅ DONE (its two filled keys are checked; `w_2`'s non-diagonal
+   orbit is deliberately not covered). Original note:, the one base with empty keys and no external check. Needs hand
+   derivation: it is genus 9 (degree 20) and `CurveQuotient` was OOM-killed there, and its `w_2` is
+   the non-diagonal `((2x+1)/(x-2), -5^5 y/(x-2)^10)`.
+
+3. **Offline re-derivation tests for `93_1` and `111_1`** — the only Guo-Yang bases with a stored
+   full curve and NO `X0_*` test, so they are checked only against a committed file rather than by
+   re-running the pipeline. 14–20 h per run; good background work, poor foreground work.
+
+4. **The four blockers on lovelace** (`95_1 119_1 159_1 69_1`) — DO NOT start new work here. As of
+   09-09 all four are mid-FIRST-PHASE (Borcherds forms) after ~3 days; weeks away, not days, and
+   `69_1` still has the exponent overflow waiting downstream. Check status occasionally; do not
+   `git pull` those checkouts while the jobs are alive.
+
+5. **The `A_m` theorem** remains the main line and is untouched by any of the above.
+
+⚠ **Two habits that earned their place on 2026-09-09**, both cheap:
+* **Count what was actually compared**, never just "it went green". A truncated suite, a skipped
+  comparison and a silently-unread `h`-term all look exactly like passes.
+* **A FAILING check needs its object verified as much as a passing one.** All three wrong verdicts
+  that day were refutations that were right about the arithmetic and wrong about the object.
+
 As of **2026-09-04** everything is committed and pushed, both branches and lovelace are in sync,
 and the housekeeping list is empty. **The ordering below CHANGED on 2026-09-04** — the per-coset
 `tau` fix landed, and it moved the frontier. In decreasing order of value:
@@ -779,9 +870,30 @@ above sidesteps this only because the involutions are LABELLED; without labels, 
 determines the pairing (that assumption once produced a confident refutation of a model later
 proved isomorphic).
 
-⇒ Sequencing note: (a) is done (`981618b`). (b) needs the ambient weights recorded in the model
-files before it can be wired into the helper — the same gap `PROVENANCE.md` flags for `21_2`/`57_1`
-and `ModelRegen`. `CRV_15_4.m` is the current stand-in and is honest about being point-counts only.
+✅ **(b) IS IMPLEMENTED, 2026-09-07** — `tests/_crviso.m`, wired into
+`test_AllEquationsAboveCoversSingleCurve`, which now routes CRV pairs through the construction
+instead of `IsIsomorphic`. (a) was done in `981618b`.
+
+⚠ **The blocker recorded here was WRONG.** This said (b) needed the ambient weights recorded in the
+model files. It did not: the weights are DERIVABLE (`y`'s weight is half its own equation's degree),
+verified on 16 of 21 stored entries by `tests/CRVStructure.m` — and the helper does not need them at
+all, because it identifies the roles STRUCTURALLY.
+
+**Two bugs worth knowing, both invisible in the first case tested:**
+* **Do not assume the variable order.** The pipeline emits `P3<x,y,s,z>` with base `(s,z)`; the
+  hand-written `tests/X0_6_17.m` uses `P3<x,y,z,s>` with base `(x,s)`. Hardcoded indices extracted
+  the wrong polynomial and `HyperellipticCurve` reported "geometrically reducible". Identify roles
+  structurally: **a base variable occurs in BOTH equations, a fibre variable in exactly one.**
+* **Image polynomials live in `C`'s ring, indexed by `C_ex`'s coordinate POSITIONS.** Invisible when
+  both curves share an ambient — which is why the hand-check on `93_1` passed — and wrong when they
+  do not.
+
+**Results:** `93_1` and `26_3` proven at FULL-CURVE level (`tests/CRVFullCurve.m`, 0.16 s for both);
+`X0_6_17` passes with its pinned matrix REMOVED (466 s against a 403 s baseline). A negative control
+(deliberately wrong conic) returns false throughout, so the construction is not permissive.
+
+⇒ Remaining: confirm `X0_10_13` likewise, after which the guard sweep has no artifacts left and its
+verdict — 10 of 10 bases identical with `CMNONCOPRIME` on and off — is unambiguous.
 
 ## COVERAGE — reproducing Guo-Yang's published equations
 

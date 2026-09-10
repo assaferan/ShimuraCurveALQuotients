@@ -18,7 +18,12 @@ end function;
 procedure test_6_17()
     cover_data, ws_data := load_covers_and_ws_data_6_17();
     curves := GetHyperellipticCandidates();
-    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_label := 1557, manual_isomorphism);
+    // manual_isomorphism DROPPED 2026-09-07: the helper now CONSTRUCTS the isomorphism for
+    // CRV pairs (tests/_crviso.m) instead of calling IsIsomorphic, which hangs on them. The
+    // pinned matrix was brittle -- it stopped being a map at all when CMNONCOPRIME=1 changed
+    // the presentation -- while the construction survives re-presentation and still PROVES
+    // the isomorphism (it exhibits a map and certifies it with IsIsomorphism).
+    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_label := 1557);
     return;
 end procedure;
 
