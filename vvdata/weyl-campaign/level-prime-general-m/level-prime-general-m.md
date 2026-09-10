@@ -44,3 +44,36 @@ derivation" (Conjecture 8.2). Either (i) the gauge entry concerns a different su
 DO NOT claim the support rule is derived until this is settled -- read the paper's Conj 8.2 and
 the b^{eta*}_eta(r) indexing at [[b-eisenstein-coefficients-solved]] first.
 Regression set for any claim: the 9 exact b at 15_2, 6_5, 10_3.
+
+---
+
+## ⚠⚠ RETRACTION (same day, before anyone builds on this): NEITHER RESULT IS NEW.
+
+Both are already in `paper/level-prime-kappa.tex`, and I should have read it before computing:
+
+* **Result 1 IS Theorem `thm:closed`**, verbatim:
+  `W_{m,N}(X) = 1 + (N-1)(X + ... + X^j) - X^{j+1}`, `W_{m,N}(1) = (N-1) ord_N(m)`,
+  with **`cor:support`**: it vanishes iff `N` does not divide `m`. Verified there for
+  `N = 2,3,5` and all `1 <= m <= 60` on the `Lm` of 15_2, 6_5, 10_3 -- **180 checks**, against
+  my 3 values of `N` and `m <= 6`.
+* **Result 2 is in `sec:open`**, which carries the same `alpha_k`/`G(X)` recipe AND the counts:
+  "at `mu != 0` ... `alpha_k = 1`; at `mu = 0` one has `xy = 0 mod p^{k-1}`, giving
+  `alpha_k = (k-1)(p-1)+p`". That is exactly this computation.
+* The paper also already records the consequence I drew ("the difficulty is at `p | D`"), via
+  `prop:closedcoef` (coefficients supported by an EMBEDDING condition at the primes of `D`).
+* And the gauge worry was answered there too: `rem:gauge` explains why the `N | m` support rule
+  (a statement about a REPRESENTATIVE) and `prop:closedcoef`'s embedding-supported coefficients
+  are compatible, and why no panel can separate them.
+
+**What actually remains of this work:** an INDEPENDENT brute-force reproduction. The paper itself
+asks for one -- "That test alone would establish only that the code is self-consistent, since the
+closed form was read off the same implementation" -- though `sec:open` then supplies one, so this
+is at best a second. Modest, and not what I claimed.
+
+**HOW I GOT IT WRONG, since the pattern is the point.** I read the memory entries, saw "the next
+theorem is general `m` at a nonzero isotropic coset", and inferred the level prime was open at
+general `m`. It is not: `thm:closed` IS general `m` at the level prime. The memory sentence means
+the *intersection* -- general `m` AND the `D`-part -- and I resolved its ambiguity in the direction
+that made my computation look new. Every number I produced was right; I was wrong about **which
+object was already known**, which is the failure mode `CLAUDE.md` opens with, in a fresh disguise:
+validating arithmetic cannot detect redundancy. **Read the paper before deriving, not after.**
