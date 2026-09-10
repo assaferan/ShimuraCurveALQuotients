@@ -24,20 +24,66 @@ See `HANDOFF.md` (2026-09-10) for what changed and why.
 
 In decreasing order of value:
 
+0c. ✅ **DONE 2026-09-10: the obstructed class is REFRESHED — 49 of 49 re-run against current code,
+   ZERO flips.** Every prior verdict predated the vx fix (`d9b52d0`, 09-05) to the stage that raises
+   the error, so this was the one thing that could have invalidated `A_m`'s priority. It did not.
+   The 49 was also RECOVERED rather than assumed: every obstructed verdict on record unions to
+   exactly 49 distinct bases. ⇒ **`A_m` is the main line on refreshed evidence.**
+
+0d. ✅ **DONE: `93_1` and `111_1` now have re-derivation tests** (old item 3). `X0_93_1` PASSES in
+   3.7 h; `X0_111_1` runs on **lava** and anchors on the FULL curve. ⚠ Its pool hit 1678 vectors at
+   m 3 of 7 — near the ~2000-vector / ~11 GB wall; if it vanishes, suspect that first.
+
+0e. ⚠ **CORRECTION: item 4 below says "four blockers on lovelace". There are FIVE jobs**, and the
+   fifth is **`34_11` with `INTSOL=1` at 5 d 16 h**, ~100% CPU — this file's own old item 1. Also
+   **lovelace is SATURATED** (load 324/256, other users); use **lava** (`ssh -J lovelace lava`),
+   which is idle and needs its own clone.
+
+0f. ⇒ **BEFORE ANY FURTHER `A_m` WORK, READ `paper/level-prime-kappa.tex`.** Two hypotheses were
+   formed and retracted on 09-10, both from working off memory entries and code while treating the
+   30-page paper as background. `thm:closed` already gives the level-prime factor at GENERAL `m`
+   (`W_{m,N}(1) = (N-1)ord_N(m)`, `cor:support`); `sec:open` already has the `alpha_k` counts;
+   `rem:gauge` already explains why `-a_E` and `A_m` disagree pointwise. **The level prime is
+   CLOSED. The open object is the coefficient at `p | D` and `∞`** — where
+   [[b-eisenstein-coefficients-solved]] localised it, and where no product of local densities of one
+   quadratic space reproduces the exact `b`. ⚠ And `SchoferFormula.m:589` needs the LEVEL-supported
+   `A_m` (nonzero exactly when `N | m`), NOT `prop:closedcoef`'s `-a_E` — that refutation stands.
+
 A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover keys sit on 51 bases
    with NO re-derivation test at all** — 476 of them on 44 bases validated ONLY by `ModelChecks`,
    which never runs the pipeline. `tests/_offline/ModelRegen.m` is the only thing that can see drift
    there, and its default list has been retargeted at them (~98 comparisons in ~8 min). **Extending
    that list is the cheapest remaining coverage in the repo**, but ⚠ **pick additions by MEASURED
    cost, never by key count** — `10_7` has 15 keys at 185 s, `65_1` has 4 at 813 s. Measured and
-   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The new list is **all even
-   `D`** (`65_1` is the only odd `D` among the 51 and it is expensive) — that is a known hole.
+   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The list is all even `D` and
+   that is **NOT** a hole — 10 of the 14 odd-`D` model bases have an `X0_*` test which now re-derives
+   every key, and no D-parity branch exists in the code ModelRegen drives (the live `IsEven(D)` uses
+   are fixed-point/triage code, not `AllEquationsAboveCovers`). Pick additions by COST, not parity.
+   ⚠ Odd-`D` bases with NO test are four, not one: `111_1`, `15_4`, `65_1`, `93_1`.
 
-B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`).
-   Well-evidenced: it is why `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled,
-   the only two drift failures in 34 bases. Since the rebase ONLY fills ALREADY-EMPTY keys it should
-   not disturb a pinned presentation. ⚠ A pipeline change — needs oracle validation, not a green
-   test, and the two `model_drift_ok` flags come off only when it lands.
+B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`) — still
+   worth doing, but **NOT the one-liner the first draft of this item claimed**. It is why
+   `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled, the only two drift failures
+   in 34 bases, and it is what would let their `model_drift_ok` flags come off.
+
+   ⚠ **READ THE STAGE 2026-09-10; the reassuring half of the old claim holds and the rest does not.**
+   Confirmed safe: it builds into LOCAL copies (`re_eqns`/`re_ws`), and adopts only keys that are
+   still empty (`for k in still do ... all_eqns[k] := re_eqns[k]`), so non-empty covers genuinely
+   cannot be disturbed. **But `base_label` is not merely unused by the stage — it is incompatible
+   with how the stage works:**
+   * it picks its own rebase base, `STAR` = "the base carrying the most first-level equations", by a
+     heuristic that never consults `base_label` and need not select the pinned base at all;
+   * the covers it adopts are expressed over the **REBASED Hauptmodul** on that `STAR`, so a pinned
+     run would get those keys in a coordinate it did not ask for;
+   * its internal `EquationsAbovePointlessConics(re_eqns, re_ws, curves)` call **drops
+     `base_label`**, i.e. silently reverts to the default for the filled covers.
+
+   ⇒ So the minimal honest change is: thread `base_label` through `EquationsByRebase` into that inner
+   call, and adopt a rebased key only when the chosen `STAR` is consistent with the pinned label.
+   ⚠ This matters most at exactly the base that motivates it: `26_3` pins `base_label := 8103`
+   *specifically* to obtain the `V_4` Guo-Yang use, so filling two of its keys over an unpinned base
+   could hand back a different (if equally valid) presentation — the very thing the pin exists to
+   prevent. Validate against `tests/GuoYangQuotients_{10_13,26_3}.m`, not against a green test.
 
 C. ✅ **DONE: the concurrent-run race in `nmzsolve.py` is fixed** (atomic `os.replace`, both write
    sites, byte-identical output, exercised end to end). ⚠ Shared-path file — **still needs merging
@@ -52,10 +98,11 @@ C2. ⚠ **OPEN, and the more dangerous one: the solution cache key is INCOMPLETE
    named under the narrow key, and above the cached frontier a fresh solve fails SILENTLY, so
    widening alone converts a latent collision into a guaranteed silent regression everywhere.
 
-D. ⚠ **Merge `main` into `m0-theta-campaign`.** The `CLAUDE.md` divergence invariant is RED: 53
-   shared paths differ (`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files,
-   30+ tests), main-only 51 commits against campaign-only 180, and campaign is **not** an ancestor
-   of main. Any probe run from `worktrees/campaign` is using stale shared-path code right now.
+D. ✅ **DONE: `main` merged into `m0-theta-campaign`** (no conflicts, both pushed). The invariant
+   now prints nothing at all and main-only commits are 0; verified by running tests FROM the campaign
+   worktree (`X0_38_1` 8.5 s, oracle 170 comparisons). It had been RED — 53 shared paths, including
+   `EquationsCovers.m`, `SchoferFormula.m` and `run_tests.m`. ⚠ It goes red again as soon as `main`
+   moves, so **run the invariant rather than trusting discipline**.
 
 0b. ✅ **DONE 2026-09-10: the 41% re-derivation gap is CLOSED** — `test_AllEquationsAboveCovers`‑
    `SingleCurve` now cross-checks every committed cover key against the pipeline run it already

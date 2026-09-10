@@ -11,6 +11,102 @@ about state, this file wins.
 
 ## Handoff — 2026-09-10 (newest)
 
+### ⇒ LIVE JOBS AT HANDOFF TIME — collect these before starting anything
+
+**`X0_111_1` is RUNNING ON LAVA** and will outlive this session. To collect it:
+
+    ssh -J lovelace lava
+    tail -50 $HOME/x0_111_1.log            # look for "Success!" / "Fail!"
+    pgrep -u $USER magma                   # empty => finished (or died)
+
+It was at `m_idx=3 of 7` after 5.6 h. ⚠ Its pool reached **1678 vectors**; the recorded wall is
+Magma dying around **~2000 vectors / ~11 GB**, so if the process is gone with no verdict in the log,
+suspect OOM rather than a code fault, and re-run with a smaller `Prec` or on a bigger box.
+⚠ Its clone is `$HOME/ShimuraCurveALQuotients` on lava at `8dac84c`; **it is now behind `main`** —
+`git fetch && git reset --hard origin/main` BEFORE any new run there, but **NOT while that job is
+alive** (`AttachSpec` compiles on demand; see [[never-update-a-clone-with-jobs-running]]).
+
+**FIVE jobs on lovelace** (`ps -u $USER -o pid,etime,time,cmd | grep magma`), all ~100% CPU:
+`34_11` (INTSOL=1, 5 d 16 h — PLAN's old item 1), `95_1`, `159_1`, `69_1`, `119_1`.
+⚠ Do not `git pull` those checkouts while they run. ⚠ lovelace itself is SATURATED by other users
+(load 324/256) — launch new work on **lava**, not there.
+
+Everything else from this session is committed and pushed on both branches; the evidence for the
+49/49 refresh is at `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/` on campaign.
+
+
+### ✅ THE OBSTRUCTED CLASS RE-RUN AGAINST CURRENT CODE: 49 of 49, ZERO FLIPS
+
+Every OBSTRUCTED verdict on record was taken **2026-09-01/02**, and `BorcherdsForms.m` has had six
+commits since — including **`d9b52d0` (09-05), "shift the oo-side basis by its own valuation, not
+the 0-side n0"**, the vx fix, which is a CORRECTNESS fix to the very stage that raises "Failed to
+find all Borcherds forms". So the 49-base figure justifying `A_m`'s priority rested on pre-fix
+verdicts. Re-run 2026-09-10 with `spanprobe.m` at `PROBE_BUMP=0`:
+
+    49 bases re-run    49 still obstructed    0 flipped    0 failing for another reason
+    runtimes 18 s (38_5) to 1349 s (34_19)
+
+⇒ **The obstruction is not an artifact of the pre-vx-fix code**, and `A_m`'s justification is now
+refreshed evidence rather than a stale tally. A prediction recorded before the first run ("still
+obstructed, ~60/40") held.
+⚠ **The 49 was recovered, not assumed**: harvesting every obstructed verdict across `sweep122`, the
+triage waves and the span probes yields EXACTLY 49 distinct bases, independently confirming the
+"known 28 + 21 new" figure as the union of recorded verdicts.
+⚠ **`38_5` returned in 18 s against 901 s recorded** (~6x, from the q-expansion bootstrap), and its
+`pole_order=190 pool=164` reproduces the recorded `poleord 190 rows 164` — the same computation, not
+merely another failure. ⚠ **Level does NOT predict cost** here either (18 s to 1349 s, uncorrelated
+with M) — the third time that lesson recurred in one day.
+
+### ✅ `X0_93_1` PASSES — 13389 s (3.7 h)
+
+`tests/_offline/X0_93_1.m` (new): 1 external comparison against Guo-Yang's typo-corrected `[1,93]`
+plus **3 committed model covers re-derived** (1 CRV skipped by design). This base mattered most
+because `models_93_1.m` regenerates ONLY since the vx fix, so a silent regression there would have
+left every committed artifact looking fine. Pre-flighted before the run, not after: their
+`(3s^3-7s^2-3s-1)(3s^3+s^2-3s-9)` is isomorphic to the committed entry and all three refuted typo
+repairs still fail.
+`tests/_offline/X0_111_1.m` (new) is running on **lava** — it anchors on the FULL CURVE (genus 7,
+hyperelliptic, published), which is stronger than 93_1's quotient-only anchor.
+⚠ At m 3 of 7 its pool is **1678 vectors**, near the recorded ~2000-vector / ~11 GB wall where
+Magma dies. If it disappears, that is the likely cause, not a code fault.
+
+### ⚠ REMOTE MACHINES: lovelace is saturated, and PLAN's "four blockers" is FIVE
+
+`lovelace` load **324 on 256 cores**, dominated by other users (`xw132`'s `k3rank` since Sep 06) —
+the memory entry's warning that "idle is not a durable fact" holds. **Do not launch there.**
+`lava` (`ssh -J lovelace lava`) was load 0.04 on 32 cores and is where `111_1` runs; it needed its
+own clone, and the committed `polymake/` cache came with it.
+⚠ **`PLAN.md` says four blockers; there are FIVE Magma jobs**, and the fifth is
+**`34_11` with `INTSOL=1`, 5 d 16 h elapsed at ~100% CPU** — PLAN's old item 1, "the best-value
+thing here". All five show elapsed ~ CPU, so they are progressing, not wedged.
+
+### The math: two hypotheses formed, two retracted
+
+Both concerned `A_m`; neither survived contact with the sources, and the record is worth more than
+the hypotheses were.
+
+1. **RETRACTED: "I derived the level-prime factor at general m."** Both "results" are already in
+   `paper/level-prime-kappa.tex` — Result 1 IS `thm:closed` (`W_{m,N}(1) = (N-1) ord_N(m)`, with
+   `cor:support` for the `N | m` vanishing, verified there over 180 checks against my 18), and
+   Result 2 is in `sec:open`, which carries the same `alpha_k`/`G(X)` recipe AND the counts. Cause:
+   I read the memory's "the next theorem is general `m` at a nonzero isotropic coset" as meaning the
+   LEVEL PRIME was open at general `m`; it is not — the sentence means the intersection with the
+   `D`-part. **Every number was right; I was wrong about which object was already known.**
+   ⇒ **READ THE PAPER BEFORE DERIVING.** Memory entries and code are not a substitute for the
+   30-page document in the repo.
+2. **CHECKED AND DROPPED BEFORE REPORTING: "the `prop:closedcoef` refutation is a wrong-object
+   comparison."** `rem:gauge` does say `-a_E` and `A_m` are two representatives disagreeing
+   pointwise while both reproducing the multipliers — but (i) the memory POSTDATES `rem:gauge` by
+   two days, (ii) its literal claim "`A_m` does not follow from `prop:closedcoef`" is TRUE, and
+   (iii) decisively, `SchoferFormula.m:589` specifies the code needs the log-`N` coefficient of
+   `Kappa0`, "nonzero exactly when `N | m`" — the LEVEL-supported object, whose support `cor:support`
+   governs, not `-a_E`'s embedding support. **The memory is correct; the hatch is genuinely blocked.**
+
+**What survives of the math:** `prop:closedcoef`, transcribed and evaluated against the repo's own
+`Hurwitz`, reproduces `rem:gauge`'s stated values EXACTLY (`0,0,1,2,1,2` at `X_0^15(2)`) — a small
+reusable confirmation that the closed form and its implementation agree.
+
+
     X0_*.m cover comparisons:   126 hand-written + 337 model-derived over ALL 34 bases
                                 (was 126, and NOTHING else); 34 of 34 tests pass
     committed cover keys:       863 across 88 model files
@@ -97,8 +193,37 @@ test.** Retargeted at bases with none. MEASURED PER BASE, because a batch total 
     26_5  804 s | 14_11 1475 s | 22_7 1591 s | 65_1 813 s     <- measured, LEFT OUT for cost
 
 ⚠ **KEY COUNT DOES NOT PREDICT COST**: `10_7` has 15 keys and costs 185 s; `65_1` has 4 and costs
-813 s. ⚠ `65_1` is the ONLY odd `D` among the 51, so the new list is all even `D` -- the one
-property the old list had that this one loses. `14_43` was killed at 7 h 44 m unfinished.
+813 s. `14_43` was killed at 7 h 44 m unfinished.
+
+⚠ **TWO CLAIMS I FIRST WROTE HERE WERE WRONG, both caught by being challenged rather than by a test.**
+1. *"The new list is all even `D`, which is a hole."* **It is not a hole**, and "both D parities" from
+   the old comment is itself the stale part. **10 of the 14 odd-`D` model bases have an `X0_*` test**
+   (`15_1 15_2 21_2 35_1 39_1 51_1 55_1 57_1` in CI, `39_2 87_1` offline) and every such test now
+   re-derives EVERY cover key, so odd-`D` model building is well exercised without ModelRegen. And
+   **there is no D-parity branch in the code ModelRegen drives**: the only live `IsEven(D)` uses are
+   in AL fixed-point code (`ShimuraQuotients.m:842`, `GeneralizedComplicatedFixedPoints.m:125,186`)
+   reached from the FILTER/triage pipeline, never from `AllEquationsAboveCovers`;
+   `BorcherdsForms.m:9`'s `assert IsEven(D)` is commented out. Parity mattered when ModelRegen was
+   the only re-derivation for those bases; it is not any more.
+2. *"`65_1` is the only odd `D` among the 51."* It is the only odd `D` among the **44** with neither
+   a test nor an oracle mention. Among the **51** without a re-derivation test there are **four**:
+   `111_1`, `15_4`, `65_1`, `93_1`. I quoted a figure for one set while naming the other.
+
+⇒ Both were inherited framing rather than measured claims — the first copied from the comment being
+replaced, the second a set I had computed earlier for a different purpose. Spend the ModelRegen
+budget on COST, not parity.
+
+**RUN END TO END with the new default: 8 of 8 reproduce, 0 drifted, 114 comparisons, 802 s** — inside
+the ~20 min the old list cost, and none of the 7 new bases is re-derived anywhere else.
+
+⚠ **AND THAT RUN FALSIFIED MY OWN REASON FOR ONE ENTRY.** `26_3` was included "to keep the
+known-drift path exercised"; it reports `OK (16 compared, 1 CRV skipped)` — it REPRODUCES. The drift
+`MR_KNOWN_DRIFT` records for `26_3` is entirely in its `W={1}` entry, that entry is a `"CRV"` entry,
+and ModelRegen SKIPS every CRV entry. So **the `26_3` row of `MR_KNOWN_DRIFT` is INERT** — it cannot
+fire under this code and has probably been inert since CRV skipping was added. With `14_43` out of
+the default list, **the known-drift tolerance is now exercised by nothing**. A tolerance that cannot
+fire is the mirror image of a check that cannot fail, and it was only caught by running the default
+list instead of trusting the reasoning that chose it.
 
 ### The oracle's genus-0 branch was a one-bit check
 
@@ -169,8 +294,12 @@ Direction checked, not assumed: **main-only 51 commits, campaign-only 180, and c
 ancestor of main.** So campaign carries real independent work (`rankcheck_gauge.py` on the
 `rem:gauge` ambiguity, `cusp7.m`) AND is missing all 51 of main's recent commits -- which include
 `EquationsByRebase`, the quotient oracle and the model fills.
-⇒ **Any measurement taken from `worktrees/campaign` right now uses STALE code at shared paths.**
-This is the nine-day `nmzsolve.py` gap recurring; merge `main` down before trusting anything there.
+✅ **RESOLVED the same day: `main` merged into `m0-theta-campaign`, no conflicts, both pushed.**
+The invariant now prints **NOTHING AT ALL** (not even doc files), and main-only commits are **0** —
+campaign contains everything on main. Sanity-checked by running from the campaign worktree itself,
+which is the only thing that proves the point: `X0_38_1` passes in 8.5 s and the quotient oracle
+makes its 170 comparisons there. Campaign keeps its own 182 commits of research work.
+⚠ It will drift again the moment `main` moves. **Run the invariant, do not rely on discipline.**
 ⚠ NOT affected: `tools/regen-model.sh` runs campaign's `genmodels.m` but from the main checkout's
 cwd, so `AttachSpec` loads MAIN's packages. Model regeneration is fine.
 
