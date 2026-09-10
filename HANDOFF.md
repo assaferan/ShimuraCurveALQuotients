@@ -124,10 +124,40 @@ list, i.e. exactly the "a partially-cached base returns a wrong answer rather th
 ⚠ **This session ran up to five Magma processes at once, so it was exposed.** Checked rather than
 assumed: NO `polymake_solution_*` was written during any of it and `polymake/nmzsolve.err` does not
 exist, so every solve hit the committed cache and no race occurred. The results stand.
-⇒ **FIX: write to a temp file and `os.rename` (atomic on POSIX).** Not done here because
-`nmzsolve.py` is a SHARED-PATH file and needs the merge-down protocol, and jobs were invoking it.
-⇒ **Until then, verify after any parallel run** that no solution file was written; if one was,
-re-run the affected bases serially.
+✅ **FIXED**: `nmzsolve.py` now writes via a pid-suffixed temp file and `os.replace` (atomic on
+POSIX), at both write sites. Validated: byte-IDENTICAL output to the old writer on the same point
+list, no temp file left behind, and exercised END TO END by a real `nmzsolve.py` invocation (not
+just the cache-read path, which is all a passing test would have touched).
+⚠ SHARED-PATH FILE -- **merge it down to the campaign branch.**
+
+### ⚠⚠ AND A SECOND, WORSE ONE FOUND WHILE TESTING THAT: THE SOLUTION CACHE KEY IS INCOMPLETE
+
+The cache key is `(M, n, m)` ONLY. It omits `k`, `sq_disc` and `cuspidal` -- **and all three change
+the answer.** Measured at `(M,n,m) = (8,1,0)`, varying only the omitted parameters:
+
+    k24=12 sq_disc=1 cuspidal=0  ->   4 points
+    k24=12 sq_disc=0 cuspidal=0  ->   4 DIFFERENT points
+    k24=24 sq_disc=1 cuspidal=0  ->  10 points
+    k24=12 sq_disc=1 cuspidal=1  ->   0 points
+
+So two call paths asking for the same `(M,n,m)` with different parameters means the second silently
+gets the FIRST one's point set -- correct arithmetic about the wrong object, no error anywhere. And
+the two call sites DO differ: `HolomorphicEtaQuotients` (`BorcherdsForms.m:194`, live, reached from
+line 289) passes `sq_disc := true` pinned at `(M,0,0)`, while the Borcherds path (line 425) takes
+the `sq_disc := false` default.
+
+⚠ **LATENT, NOT MATERIALISED** -- measured, not hoped: of the 503 committed solution files **NONE is
+a `*_0_0`**, so the `(M,0,0)` site has never cached anything and nothing can be mis-served today.
+⚠ **DO NOT WIDEN THE KEY WITHOUT MIGRATING THE CACHE IN THE SAME COMMIT.** All 503 files are named
+under the narrow key; widening makes them all invisible, and above the cached frontier a fresh solve
+fails SILENTLY. That would turn a latent collision into a guaranteed silent regression everywhere.
+Documented at the read site in `BorcherdsForms.m`.
+
+⇒ **HOW IT WAS FOUND, because the method generalises:** regenerating a committed cache file to check
+the atomic-write change gave a DIFFERENT point set. The tempting read was "my change broke it". The
+actual cause was that the filename does not record the parameters, so I could not reconstruct the
+original constraint system -- and that *is* the bug. A mismatch was evidence about the CACHE KEY,
+not about the edit, and the writer had already been proven byte-identical independently.
 
 ### ⚠ THE BRANCH-DIVERGENCE INVARIANT IS RED, and not in the harmless direction
 

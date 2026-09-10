@@ -18,6 +18,31 @@ if not os.path.exists(NMZ):
 NMZ_TIMEOUT = int(os.environ.get('NMZ_TIMEOUT', '1800'))
 
 M, n_pole, m_pole, outp = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
+
+def _write_solution(outp, pts):
+    """Write the Magma-evaluable solution file ATOMICALLY.
+
+    ⚠ WHY THIS IS NOT JUST `open(outp,'w')`. BorcherdsForms.m:180 caches every solve at a
+    DETERMINISTIC SHARED PATH, polymake/polymake_solution_<M>_<n>_<m>, and reads it back as
+    FileExists(...) -> eval Read(...). A plain open() truncates the file and then fills it, so a
+    SECOND Magma process running concurrently and needing the same uncached triple can see the
+    path exist and read a PARTIAL point list -- valid Magma, fewer points, no error anywhere.
+    That is the "a partially-cached base returns a wrong answer rather than an error" failure
+    CLAUDE.md flags as critical, and parallel test runs make it reachable.
+
+    os.replace is atomic on POSIX, so a reader sees either the old complete file or the new
+    complete one, never a half-written one. Two writers racing is harmless: they compute the same
+    answer, so whichever rename lands last wins with identical content. The temp file carries the
+    pid so concurrent writers do not clobber each other's scratch.
+    """
+    tmp = f'{outp}.tmp.{os.getpid()}'
+    with open(tmp, 'w') as f:
+        f.write('[ PowerSequence(IntegerRing()) |\n')
+        f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
+        f.write('\n]\n')
+    os.replace(tmp, outp)
+
+
 k24 = int(sys.argv[5]) if len(sys.argv) > 5 else 12
 sq_disc = int(sys.argv[6]) if len(sys.argv) > 6 else 0
 cuspidal = int(sys.argv[7]) if len(sys.argv) > 7 else 0
@@ -130,10 +155,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
             if len(residues) < tp:
                 print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
             print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} thinned pts for n={n_pole}", file=sys.stderr)
-            with open(outp, 'w') as f:
-                f.write('[ PowerSequence(IntegerRing()) |\n')
-                f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
-                f.write('\n]\n')
+            _write_solution(outp, pts)
             sys.exit(0)
 
 work = tempfile.mkdtemp(prefix='nmz_')
@@ -178,7 +200,4 @@ while i < len(lines):
 
 pts = sorted(set(pts))
 print(f"# M={M} n={n_pole} m={m_pole} k24={k24} sq_disc={sq_disc} cuspidal={cuspidal}: {len(pts)} lattice points", file=sys.stderr)
-with open(outp, 'w') as f:
-    f.write('[ PowerSequence(IntegerRing()) |\n')
-    f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
-    f.write('\n]\n')
+_write_solution(outp, pts)

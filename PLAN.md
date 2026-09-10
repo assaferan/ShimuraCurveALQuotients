@@ -39,12 +39,18 @@ B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers
    not disturb a pinned presentation. ⚠ A pipeline change — needs oracle validation, not a green
    test, and the two `model_drift_ok` flags come off only when it lands.
 
-C. **Fix the concurrent-run race in `nmzsolve.py`** — write to a temp file and `os.rename`.
-   `BorcherdsForms.m:180` reads a deterministic shared solution path via `FileExists` → `eval Read`
-   while `nmzsolve.py` writes it non-atomically, so two parallel Magma runs needing the same
-   UNCACHED triple can read a truncated point list — silently wrong, not an error. ⚠ Shared-path
-   file: **merge it down to the campaign branch**. Until then, after any parallel run check that no
-   `polymake/polymake_solution_*` was written.
+C. ✅ **DONE: the concurrent-run race in `nmzsolve.py` is fixed** (atomic `os.replace`, both write
+   sites, byte-identical output, exercised end to end). ⚠ Shared-path file — **still needs merging
+   down** (item D).
+
+C2. ⚠ **OPEN, and the more dangerous one: the solution cache key is INCOMPLETE.**
+   `polymake/polymake_solution_<M>_<n>_<m>` omits `k`, `sq_disc` and `cuspidal`, and all three change
+   the answer (measured at `(8,1,0)`: 4 pts / 4 different pts / 10 pts / 0 pts). The two call sites
+   differ in `sq_disc` — `HolomorphicEtaQuotients` (`BorcherdsForms.m:194`, pinned at `(M,0,0)`) vs
+   the Borcherds path (line 425). **Latent only**: none of the 503 committed files is a `*_0_0`.
+   ⚠ **DO NOT widen the key without renaming the cache in the SAME commit** — all 503 files are
+   named under the narrow key, and above the cached frontier a fresh solve fails SILENTLY, so
+   widening alone converts a latent collision into a guaranteed silent regression everywhere.
 
 D. ⚠ **Merge `main` into `m0-theta-campaign`.** The `CLAUDE.md` divergence invariant is RED: 53
    shared paths differ (`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files,
