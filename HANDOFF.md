@@ -11,6 +11,30 @@ about state, this file wins.
 
 ## Handoff — 2026-09-10 (newest)
 
+### ⇒ LIVE JOBS AT HANDOFF TIME — collect these before starting anything
+
+**`X0_111_1` is RUNNING ON LAVA** and will outlive this session. To collect it:
+
+    ssh -J lovelace lava
+    tail -50 $HOME/x0_111_1.log            # look for "Success!" / "Fail!"
+    pgrep -u $USER magma                   # empty => finished (or died)
+
+It was at `m_idx=3 of 7` after 5.6 h. ⚠ Its pool reached **1678 vectors**; the recorded wall is
+Magma dying around **~2000 vectors / ~11 GB**, so if the process is gone with no verdict in the log,
+suspect OOM rather than a code fault, and re-run with a smaller `Prec` or on a bigger box.
+⚠ Its clone is `$HOME/ShimuraCurveALQuotients` on lava at `8dac84c`; **it is now behind `main`** —
+`git fetch && git reset --hard origin/main` BEFORE any new run there, but **NOT while that job is
+alive** (`AttachSpec` compiles on demand; see [[never-update-a-clone-with-jobs-running]]).
+
+**FIVE jobs on lovelace** (`ps -u $USER -o pid,etime,time,cmd | grep magma`), all ~100% CPU:
+`34_11` (INTSOL=1, 5 d 16 h — PLAN's old item 1), `95_1`, `159_1`, `69_1`, `119_1`.
+⚠ Do not `git pull` those checkouts while they run. ⚠ lovelace itself is SATURATED by other users
+(load 324/256) — launch new work on **lava**, not there.
+
+Everything else from this session is committed and pushed on both branches; the evidence for the
+49/49 refresh is at `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/` on campaign.
+
+
 ### ✅ THE OBSTRUCTED CLASS RE-RUN AGAINST CURRENT CODE: 49 of 49, ZERO FLIPS
 
 Every OBSTRUCTED verdict on record was taken **2026-09-01/02**, and `BorcherdsForms.m` has had six
