@@ -169,8 +169,12 @@ Direction checked, not assumed: **main-only 51 commits, campaign-only 180, and c
 ancestor of main.** So campaign carries real independent work (`rankcheck_gauge.py` on the
 `rem:gauge` ambiguity, `cusp7.m`) AND is missing all 51 of main's recent commits -- which include
 `EquationsByRebase`, the quotient oracle and the model fills.
-⇒ **Any measurement taken from `worktrees/campaign` right now uses STALE code at shared paths.**
-This is the nine-day `nmzsolve.py` gap recurring; merge `main` down before trusting anything there.
+✅ **RESOLVED the same day: `main` merged into `m0-theta-campaign`, no conflicts, both pushed.**
+The invariant now prints **NOTHING AT ALL** (not even doc files), and main-only commits are **0** —
+campaign contains everything on main. Sanity-checked by running from the campaign worktree itself,
+which is the only thing that proves the point: `X0_38_1` passes in 8.5 s and the quotient oracle
+makes its 170 comparisons there. Campaign keeps its own 182 commits of research work.
+⚠ It will drift again the moment `main` moves. **Run the invariant, do not rely on discipline.**
 ⚠ NOT affected: `tools/regen-model.sh` runs campaign's `genmodels.m` but from the main checkout's
 cwd, so `AttachSpec` loads MAIN's packages. Model regeneration is fine.
 

@@ -52,10 +52,11 @@ C2. ⚠ **OPEN, and the more dangerous one: the solution cache key is INCOMPLETE
    named under the narrow key, and above the cached frontier a fresh solve fails SILENTLY, so
    widening alone converts a latent collision into a guaranteed silent regression everywhere.
 
-D. ⚠ **Merge `main` into `m0-theta-campaign`.** The `CLAUDE.md` divergence invariant is RED: 53
-   shared paths differ (`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files,
-   30+ tests), main-only 51 commits against campaign-only 180, and campaign is **not** an ancestor
-   of main. Any probe run from `worktrees/campaign` is using stale shared-path code right now.
+D. ✅ **DONE: `main` merged into `m0-theta-campaign`** (no conflicts, both pushed). The invariant
+   now prints nothing at all and main-only commits are 0; verified by running tests FROM the campaign
+   worktree (`X0_38_1` 8.5 s, oracle 170 comparisons). It had been RED — 53 shared paths, including
+   `EquationsCovers.m`, `SchoferFormula.m` and `run_tests.m`. ⚠ It goes red again as soon as `main`
+   moves, so **run the invariant rather than trusting discipline**.
 
 0b. ✅ **DONE 2026-09-10: the 41% re-derivation gap is CLOSED** — `test_AllEquationsAboveCovers`‑
    `SingleCurve` now cross-checks every committed cover key against the pipeline run it already
