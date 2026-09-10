@@ -198,8 +198,30 @@ for d in data do
             if Genus(Cs) ne Genus(Q) then
                 res := Sprintf("GENUS %o vs %o", Genus(Cs), Genus(Q));
             elif Genus(Q) eq 0 then
-                res := (HasRationalPoint(Conic(Cs)) eq HasRationalPoint(Conic(Q)))
-                       select "MATCH(g0)" else "MISMATCH(g0 pointedness)";
+                // ⚠ POINTEDNESS IS NOT ISOMORPHISM. This branch used to compare only
+                // HasRationalPoint on the two conics, so ANY two pointless conics "MATCHED" --
+                // and 57 of the 170 comparisons (34%) land here. Over Q a conic is classified by
+                // its quaternion algebra and IsIsomorphic decides it outright; negative-controlled
+                // on y^2 = -x^2-1 against y^2 = -x^2-3, both POINTLESS, where the one-bit check
+                // says MATCH and IsIsomorphic correctly says false.
+                //
+                // ⚠ BE HONEST ABOUT WHAT THIS CHANGED: nothing, today. Checked 2026-09-09, every
+                // genus-0 quotient at all 20 oracle bases is a POINTED conic, and pointed conics
+                // over Q are all isomorphic to P^1 -- so on the current data the old check was
+                // accidentally equivalent and all 57 still MATCH. It is not equivalent in general:
+                // 73 of the 281 genus-0 entries across data/models/ ARE pointless (6_5, 6_7, 6_83,
+                // 82_1, 93_1), so the first oracle base with one would have degraded to a one-bit
+                // check in silence. This is a guard against that, not a discovery.
+                g0ok := true; C0 := 0; Q0 := 0;
+                try C0 := Conic(Cs); Q0 := Conic(Q); catch e g0ok := false; end try;
+                if g0ok then
+                    try res := IsIsomorphic(C0, Q0) select "MATCH(g0)" else "MISMATCH(g0)";
+                    catch e g0ok := false; end try;
+                end if;
+                // ⚠ SKIP, not a fallback to pointedness: a conic Magma will not build or compare
+                // is not evidence either way, and silently degrading to the weaker check would
+                // hide exactly what this change is meant to expose.
+                if not g0ok then res := "SKIP(g0: no comparable conic model)"; end if;
             elif Genus(Q) eq 1 then
                 // CurveQuotient returns a CrvEll here; compare JACOBIANS, both elliptic over Q
                 // ⚠ Jacobian(CrvHyp of genus 1) is a JacHyp, not an elliptic curve. Go through

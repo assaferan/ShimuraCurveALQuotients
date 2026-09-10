@@ -13,13 +13,49 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-09 (the numbered list further down is from 09-02 and its top two items are DONE)
+## ⇒ START HERE — updated 2026-09-10 (the numbered list further down is from 09-02 and its top two items are DONE)
 
 **State**: Guo-Yang full curves 38 of 42; involutions checked in 34 of 34 `X0_*` tests; 188 quotient
 comparisons over 24 bases (0 skipped, 0 mismatches). `EquationsByRebase` is wired into
-`AllEquationsAboveCovers`. See `HANDOFF.md` (2026-09-09) for what changed and why.
+`AllEquationsAboveCovers`. The `X0_*` tests now re-derive **every** committed cover key, not 41% of
+them: **126 hand-written + 337 model-derived comparisons over all 34 bases**, at no extra
+runtime, and 34 of 34 pass.
+See `HANDOFF.md` (2026-09-10) for what changed and why.
 
 In decreasing order of value:
+
+A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover keys sit on 51 bases
+   with NO re-derivation test at all** — 476 of them on 44 bases validated ONLY by `ModelChecks`,
+   which never runs the pipeline. `tests/_offline/ModelRegen.m` is the only thing that can see drift
+   there, and its default list has been retargeted at them (~98 comparisons in ~8 min). **Extending
+   that list is the cheapest remaining coverage in the repo**, but ⚠ **pick additions by MEASURED
+   cost, never by key count** — `10_7` has 15 keys at 185 s, `65_1` has 4 at 813 s. Measured and
+   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The new list is **all even
+   `D`** (`65_1` is the only odd `D` among the 51 and it is expensive) — that is a known hole.
+
+B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`).
+   Well-evidenced: it is why `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled,
+   the only two drift failures in 34 bases. Since the rebase ONLY fills ALREADY-EMPTY keys it should
+   not disturb a pinned presentation. ⚠ A pipeline change — needs oracle validation, not a green
+   test, and the two `model_drift_ok` flags come off only when it lands.
+
+C. **Fix the concurrent-run race in `nmzsolve.py`** — write to a temp file and `os.rename`.
+   `BorcherdsForms.m:180` reads a deterministic shared solution path via `FileExists` → `eval Read`
+   while `nmzsolve.py` writes it non-atomically, so two parallel Magma runs needing the same
+   UNCACHED triple can read a truncated point list — silently wrong, not an error. ⚠ Shared-path
+   file: **merge it down to the campaign branch**. Until then, after any parallel run check that no
+   `polymake/polymake_solution_*` was written.
+
+D. ⚠ **Merge `main` into `m0-theta-campaign`.** The `CLAUDE.md` divergence invariant is RED: 53
+   shared paths differ (`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files,
+   30+ tests), main-only 51 commits against campaign-only 180, and campaign is **not** an ancestor
+   of main. Any probe run from `worktrees/campaign` is using stale shared-path code right now.
+
+0b. ✅ **DONE 2026-09-10: the 41% re-derivation gap is CLOSED** — `test_AllEquationsAboveCovers`‑
+   `SingleCurve` now cross-checks every committed cover key against the pipeline run it already
+   performs (`tests/BorcherdsProducts.m`, `tests/_modelfile.m`). Item 1b below is kept for its
+   method notes only. ⚠ Its premise was also too narrow: "309 keys" counted only the 34 bases that
+   HAVE a test — see item A above for the 520 that do not.
 
 0. ✅ **DONE 2026-09-09: all empty cover keys are filled** (347 of 347 across 38 bases), each
    oracle-checked before installing. The item below is kept only for its method notes.

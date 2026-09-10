@@ -75,7 +75,17 @@ procedure test_26_3()
     // that Guo-Yang use, which a DEFAULT run does not produce (it gives a different, equally valid
     // one). Without it the W={1} CRV pair the pipeline emits is a genuinely different presentation
     // and the isomorphism assertion fails. See models_26_3.m's header.
-    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : base_label := 8103);
+    // ⚠ model_drift_ok: this test pins a NON-ZERO base_label, and AllEquationsAboveCovers gates
+    // EquationsByRebase on `base_label eq 0` (EquationsCovers.m:1061). So it cannot reproduce the
+    // cover keys that the rebase FILLED on a default run -- [1,2] and [1,13], which
+    // data/models/models_26_3.m records as "previously EMPTY ... now filled, unlocked by
+    // EquationsByRebase". MISSING keys only: a key this test DOES produce must still be the
+    // committed curve, and model_drift_ok does not silence that.
+    // ⚠ THE CONTROL GROUP is what makes this a diagnosis rather than an excuse: 14_3, 21_2 and
+    // 6_17 also pin a base_label and all three PASS -- 14_3's empties were fixed by the coprime
+    // filter flip, not the rebase, and the other two never had any. The gate costs exactly the
+    // rebase-filled keys and nothing else.
+    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : model_drift_ok := true, base_label := 8103);
     return;
 end procedure;
 

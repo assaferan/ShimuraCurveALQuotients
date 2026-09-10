@@ -41,9 +41,28 @@
 // NB: top-level statements, not a procedure -- run_tests.m uses `eval`, and an `eval` inside a
 // procedure closing over an outer variable segfaults Magma 2.29 (same trap as ModelChecks.m).
 
-// A cheap spread: both D parities, hyperelliptic and CRV entries, and the three known-stale bases
-// so the failure they represent stays visible instead of being quietly dropped.
-CHEAP_BASES := ["14_3", "51_1", "57_1", "6_11", "35_1", "38_1", "22_3", "15_2", "22_5"];
+// ⚠ RETARGETED 2026-09-10, because the old list had become PURE DUPLICATION.
+// It was ["14_3","51_1","57_1","6_11","35_1","38_1","22_3","15_2","22_5"] -- and ALL NINE have a
+// tests/X0_D_N.m. Since test_AllEquationsAboveCoversSingleCurve now cross-checks EVERY committed
+// cover key against the run it already performs (tests/BorcherdsProducts.m), CI re-derives those
+// nine itself, and this file was paying for a SECOND full pipeline run per base to learn nothing
+// new. Counted the same day: of 88 model files and 863 cover keys, 37 bases (343 keys) have a
+// re-derivation test and 51 (520 keys) have none -- 44 of those are validated ONLY by ModelChecks,
+// which never runs the pipeline, so drift there was invisible to everything.
+//
+// So the list now names bases with NO X0_*.m test. MEASURED per base (not as a batch total --
+// a batch total cannot tell a 3-minute base from a 26-minute one):
+//     6_1 10_1 14_1 22_1 6_7 6_13   72 comparisons, ~5 min for all six together
+//     10_7                          26 comparisons, 185 s
+// ⚠ KEY COUNT DOES NOT PREDICT COST, so do not pick additions by it: 10_7 has 15 keys and costs
+// 185 s, while 65_1 has 4 keys and costs 813 s. Others measured and deliberately LEFT OUT for
+// cost: 26_5 804 s, 14_11 1475 s, 22_7 1591 s, 65_1 813 s (the only odd D among the 51 -- so this
+// list is all even D, which is the one property the old list had and this one loses).
+// ⚠ 14_43 is NOT here: it is MR_KNOWN_DRIFT (INTSOL=1) and was killed at 7 h 44 m unfinished.
+// The known-drift entries stay exercised by 26_3 below.
+//
+// Total: ~98 comparisons in ~8 min, on bases nothing else re-derives.
+CHEAP_BASES := ["6_1", "10_1", "14_1", "22_1", "6_7", "6_13", "10_7", "26_3"];
 
 mr_sel := CHEAP_BASES;
 mr_env := GetEnv("MODELREGEN_BASES");

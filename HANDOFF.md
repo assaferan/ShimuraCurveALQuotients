@@ -1,4 +1,4 @@
-# Handoff — 2026-09-09
+# Handoff — 2026-09-10
 
 **The newest section is this one; everything after it is older and kept for provenance.** Earlier
 material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
@@ -9,7 +9,149 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## Handoff — 2026-09-09 (newest)
+## Handoff — 2026-09-10 (newest)
+
+    X0_*.m cover comparisons:   126 hand-written + 337 model-derived over ALL 34 bases
+                                (was 126, and NOTHING else); 34 of 34 tests pass
+    committed cover keys:       863 across 88 model files
+      with a re-derivation test:  343 on 37 bases
+      with none:                  520 on 51 bases   <- 476 of them validated ONLY by ModelChecks
+    X0_* census:                32 of 34 pass; the 2 failures are MISSING-KEYS-ONLY and diagnosed
+
+### The `X0_*` tests re-derived 41% of the covers. They now re-derive all of them, for free.
+
+`test_AllEquationsAboveCoversSingleCurve` compared ONLY the keys hand-written into `cover_data`,
+and `if not is_def then continue` dropped the rest IN SILENCE: 128 hand-written cover_data KEYS against
+309 populated model keys, nine bases checking 1 of 15. (⚠ KEYS, not comparisons -- a key holds one
+entry per base, so the comparison counts above are the larger multiset figures. Different objects;
+do not quote one for the other.)
+
+⇒ **The fix was not transcription.** `AllEquationsAboveCovers` is ALREADY PAID FOR by each test,
+and `tests/_offline/ModelRegen.m` already had the right comparison -- it was offline only because
+it paid for a SECOND pipeline run per base. So that comparison now runs as a second pass inside
+the helper, reusing the run it already did:
+
+* `tests/_modelfile.m` (NEW) -- `ReadModelSet(D,N)`. Isolated in its own file because an `eval`
+  inside a procedure that closes over an outer variable segfaults Magma 2.29 (the trap that forces
+  ModelChecks.m and ModelRegen.m into top-level form). PROBED in isolation before being built on.
+* `tests/BorcherdsProducts.m` -- ModelRegen's MULTISET matching (so a 3 -> 2 loss cannot hide
+  behind two committed entries matching one survivor), `<genus, f, h>` handling, CRV entries
+  skipped AND COUNTED, a zero-comparison guard, and `model_drift_ok`.
+
+**MEASURED at 6_11: 1 comparison -> 1 + 17, in 119.8 s against a 121.5 s baseline.** The check is
+free; the pipeline run was the cost all along.
+**NEGATIVE-CONTROLLED:** perturbing one entry to a same-genus DIFFERENT curve and adding a key the
+AL group cannot produce makes it fail, naming both causes separately. It could have failed.
+
+⚠ **IT IS A DRIFT CHECK, NOT A VALIDATION.** It says "current code still produces this", not "this
+is correct" -- the committed file is what the pipeline itself wrote. Correctness still comes from
+ModelChecks (Eichler-Selberg point counts) and the Guo-Yang oracles. The hand-written `cover_data`
+entries must NOT be deleted in favour of it: those are Guo-Yang's PUBLISHED equations, and they
+are the only entries carrying labelled involutions.
+
+### ⚠ A pinned `base_label` loses EXACTLY the keys `EquationsByRebase` filled
+
+Two tests fail, both MISSING-KEYS-ONLY, zero non-isomorphic anywhere in 34 bases:
+`10_13` (`[1,2] [1,5] [1,26]`) and `26_3` (`[1,2] [1,13]`).
+
+`AllEquationsAboveCovers` gates `EquationsByRebase` on `base_label eq 0` (`EquationsCovers.m:1061`),
+so a test pinning a non-zero `base_label` cannot reproduce a key the rebase FILLED on a default run.
+Both model files say so in their own headers -- `models_26_3.m` even names `[1,2]` and `[1,13]` as
+the two that were empty and were "filled, unlocked by EquationsByRebase".
+
+⚠ **THE CONTROL GROUP is what makes this a diagnosis and not an excuse.** `14_3`, `21_2` and `6_17`
+also pin a `base_label` and ALL THREE PASS: `14_3`'s empties were fixed by the COPRIME FILTER FLIP,
+not the rebase, and the other two never had any. The gate costs the rebase-filled keys and nothing
+else.
+⚠ **A PREDICTION WRITTEN DOWN BEFORE THE RUN WAS HALF WRONG, AND THAT IS WHY THE RULE IS NOW EXACT.**
+It predicted drift at `10_13 14_3 21_2 6_17` and a PASS at `26_3`; the opposite happened for four of
+the five. Had the flag been set from the prediction, three tests would have been needlessly
+weakened and `26_3`'s real cause never found.
+
+⇒ `model_drift_ok` therefore tolerates **MISSING keys only**. A key the pipeline DOES produce must
+still be the committed curve, whatever `base_label` was pinned -- silencing both with one flag would
+hide the failure that actually matters.
+
+⇒ **OPEN, and well-evidenced: relax the `base_label eq 0` gate.** `EquationsByRebase` only ever
+fills keys that are ALREADY EMPTY, so running it under a pinned `base_label` should not disturb the
+pinned presentation's other covers -- and it would make both these tests reproduce their full model.
+A pipeline change, so it needs oracle validation, not just a green test.
+
+### The re-derivation gap is bigger than "128 of 309" -- that counted only the tested bases
+
+    88  model files, 863 cover keys
+    37  bases have a re-derivation test (CI or offline)  ->  343 keys
+    51  bases have NONE                                 ->  520 keys (60%)
+    44  bases are validated ONLY by ModelChecks          ->  476 keys (55%)
+
+"Only ModelChecks" is not nothing -- genus, Weil divisibility and Eichler-Selberg point counts,
+none of which touch the Borcherds machinery. But it NEVER RUNS THE PIPELINE, so drift there was
+invisible to everything in the repo.
+
+⚠ **And ModelRegen's default `CHEAP_BASES` had become PURE DUPLICATION: all nine had an `X0_*`
+test.** Retargeted at bases with none. MEASURED PER BASE, because a batch total cannot tell a
+3-minute base from a 26-minute one:
+
+    6_1 10_1 14_1 22_1 6_7 6_13   72 comparisons, ~5 min for all six
+    10_7            15 keys       26 comparisons, 185 s
+    26_5  804 s | 14_11 1475 s | 22_7 1591 s | 65_1 813 s     <- measured, LEFT OUT for cost
+
+⚠ **KEY COUNT DOES NOT PREDICT COST**: `10_7` has 15 keys and costs 185 s; `65_1` has 4 and costs
+813 s. ⚠ `65_1` is the ONLY odd `D` among the 51, so the new list is all even `D` -- the one
+property the old list had that this one loses. `14_43` was killed at 7 h 44 m unfinished.
+
+### The oracle's genus-0 branch was a one-bit check
+
+`GuoYangQuotientOracle.m` compared genus-0 quotients by `HasRationalPoint` alone, so ANY two
+POINTLESS conics MATCHED -- and 57 of its 170 comparisons (34%) take that branch. Now a real
+`IsIsomorphic` on the conics, negative-controlled on `y^2 = -x^2-1` vs `y^2 = -x^2-3` (both
+pointless, correctly distinguished).
+⚠ **BE HONEST: it changed no verdict.** Every genus-0 quotient at all 20 oracle bases is a POINTED
+conic, and pointed conics over Q are all isomorphic to P^1, so the old check was ACCIDENTALLY
+equivalent; all 57 still match in the same 4.8 s. It is not equivalent in general -- 73 of the 281
+genus-0 entries in `data/models/` ARE pointless (`6_5 6_7 6_83 82_1 93_1`) -- so this guards the
+first such oracle base rather than discovering anything.
+
+### ⚠ A LATENT SILENT-CORRUPTION RACE IN CONCURRENT RUNS (found, checked, NOT yet fixed)
+
+`BorcherdsForms.m:180` writes every Normaliz solution to a DETERMINISTIC SHARED PATH
+`polymake/polymake_solution_<M>_<n>_<m>`, and reads it back as `FileExists` -> `eval Read`.
+`nmzsolve.py` writes that file NON-ATOMICALLY. So two concurrent Magma processes needing the same
+UNCACHED triple can have one read a PARTIALLY WRITTEN file -- a valid-looking but truncated point
+list, i.e. exactly the "a partially-cached base returns a wrong answer rather than an error" mode
+`CLAUDE.md` flags as critical.
+
+⚠ **This session ran up to five Magma processes at once, so it was exposed.** Checked rather than
+assumed: NO `polymake_solution_*` was written during any of it and `polymake/nmzsolve.err` does not
+exist, so every solve hit the committed cache and no race occurred. The results stand.
+⇒ **FIX: write to a temp file and `os.rename` (atomic on POSIX).** Not done here because
+`nmzsolve.py` is a SHARED-PATH file and needs the merge-down protocol, and jobs were invoking it.
+⇒ **Until then, verify after any parallel run** that no solution file was written; if one was,
+re-run the affected bases serially.
+
+### ⚠ THE BRANCH-DIVERGENCE INVARIANT IS RED, and not in the harmless direction
+
+`CLAUDE.md`'s check -- `git diff origin/main origin/m0-theta-campaign --name-only --
+':!vvdata/weyl-campaign/*'` -- "should print nothing but doc files". It prints **53**, including
+`EquationsCovers.m`, `SchoferFormula.m`, `run_tests.m`, 15 model files and 30+ test files.
+
+Direction checked, not assumed: **main-only 51 commits, campaign-only 180, and campaign is NOT an
+ancestor of main.** So campaign carries real independent work (`rankcheck_gauge.py` on the
+`rem:gauge` ambiguity, `cusp7.m`) AND is missing all 51 of main's recent commits -- which include
+`EquationsByRebase`, the quotient oracle and the model fills.
+⇒ **Any measurement taken from `worktrees/campaign` right now uses STALE code at shared paths.**
+This is the nine-day `nmzsolve.py` gap recurring; merge `main` down before trusting anything there.
+⚠ NOT affected: `tools/regen-model.sh` runs campaign's `genmodels.m` but from the main checkout's
+cwd, so `AttachSpec` loads MAIN's packages. Model regeneration is fine.
+
+### A grep that read a fragment and generalised (again)
+
+Building "which bases have an external oracle" by matching `<D, N,` tuples MISSED `93_1`, whose
+Guo-Yang check is a bespoke `gy93_*` block at the END of `GuoYangEquations.m`. The count was rebuilt
+searching for the model FILENAME and the `D_N` tag too. Caught only because the number contradicted
+what the project already knew -- the same failure mode `CLAUDE.md` opens with.
+
+## Handoff — 2026-09-09
 
     Guo-Yang published equations:   42 reproducible bases
     full curve stored:              38      <- 10_19 and 22_5 regenerated today
@@ -129,7 +271,7 @@ Everything here is committed and pushed. **`git pull` first — local `main` may
 This file is the record of *what happened*; `PLAN.md` is the record of *what to do*. When the two
 disagree about state, this file wins.
 
-## Handoff — 2026-09-07 (newest; the 09-06 section below is still accurate, just earlier)
+## Handoff — 2026-09-07 (the 09-06 section below is still accurate, just earlier)
 
     Guo-Yang published equations:  42 reproducible bases
     we now have a model for:       38      <- 111_1 recovered
