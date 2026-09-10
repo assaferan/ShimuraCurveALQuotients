@@ -100,6 +100,18 @@ test.** Retargeted at bases with none. MEASURED PER BASE, because a batch total 
 813 s. ⚠ `65_1` is the ONLY odd `D` among the 51, so the new list is all even `D` -- the one
 property the old list had that this one loses. `14_43` was killed at 7 h 44 m unfinished.
 
+**RUN END TO END with the new default: 8 of 8 reproduce, 0 drifted, 114 comparisons, 802 s** — inside
+the ~20 min the old list cost, and none of the 7 new bases is re-derived anywhere else.
+
+⚠ **AND THAT RUN FALSIFIED MY OWN REASON FOR ONE ENTRY.** `26_3` was included "to keep the
+known-drift path exercised"; it reports `OK (16 compared, 1 CRV skipped)` — it REPRODUCES. The drift
+`MR_KNOWN_DRIFT` records for `26_3` is entirely in its `W={1}` entry, that entry is a `"CRV"` entry,
+and ModelRegen SKIPS every CRV entry. So **the `26_3` row of `MR_KNOWN_DRIFT` is INERT** — it cannot
+fire under this code and has probably been inert since CRV skipping was added. With `14_43` out of
+the default list, **the known-drift tolerance is now exercised by nothing**. A tolerance that cannot
+fire is the mirror image of a check that cannot fail, and it was only caught by running the default
+list instead of trusting the reasoning that chose it.
+
 ### The oracle's genus-0 branch was a one-bit check
 
 `GuoYangQuotientOracle.m` compared genus-0 quotients by `HasRationalPoint` alone, so ANY two

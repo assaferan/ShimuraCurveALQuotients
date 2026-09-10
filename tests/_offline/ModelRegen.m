@@ -59,9 +59,20 @@
 // cost: 26_5 804 s, 14_11 1475 s, 22_7 1591 s, 65_1 813 s (the only odd D among the 51 -- so this
 // list is all even D, which is the one property the old list had and this one loses).
 // ⚠ 14_43 is NOT here: it is MR_KNOWN_DRIFT (INTSOL=1) and was killed at 7 h 44 m unfinished.
-// The known-drift entries stay exercised by 26_3 below.
 //
-// Total: ~98 comparisons in ~8 min, on bases nothing else re-derives.
+// ⚠⚠ AND A CORRECTION, because the first version of this comment got it WRONG: 26_3 was put in the
+// list "to keep the known-drift path exercised", and IT DOES NOT. Running the new default shows
+// `26_3: OK (16 cover(s) compared, 1 CRV skipped)` -- it REPRODUCES. The drift MR_KNOWN_DRIFT
+// records for 26_3 lives entirely in its W={1} entry, that entry is a "CRV" entry, and the loop
+// below SKIPS every CRV entry (the file does not record the ambient weights). So the 26_3 row of
+// MR_KNOWN_DRIFT is INERT -- it cannot fire under this code, and it has presumably been inert since
+// CRV skipping was introduced. ⇒ With 14_43 out of the list, the known-drift tolerance is NOT
+// exercised by the default run at all. 26_3 stays only because it is cheap and contributes 16
+// comparisons plus the CRV-skip path; do not read it as covering the tolerance logic.
+//
+// MEASURED end to end with this list: 98 comparisons over the 7 new bases + 16 at 26_3, 8 of 8
+// reproduce, 0 drifted, 802 s (13.4 min) -- inside the ~20 min the old list cost, and unlike the
+// old list none of the 7 is re-derived anywhere else.
 CHEAP_BASES := ["6_1", "10_1", "14_1", "22_1", "6_7", "6_13", "10_7", "26_3"];
 
 mr_sel := CHEAP_BASES;
