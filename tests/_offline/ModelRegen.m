@@ -56,8 +56,24 @@
 //     10_7                          26 comparisons, 185 s
 // ⚠ KEY COUNT DOES NOT PREDICT COST, so do not pick additions by it: 10_7 has 15 keys and costs
 // 185 s, while 65_1 has 4 keys and costs 813 s. Others measured and deliberately LEFT OUT for
-// cost: 26_5 804 s, 14_11 1475 s, 22_7 1591 s, 65_1 813 s (the only odd D among the 51 -- so this
-// list is all even D, which is the one property the old list had and this one loses).
+// cost: 26_5 804 s, 14_11 1475 s, 22_7 1591 s, 65_1 813 s.
+//
+// ⚠ THIS LIST IS ALL EVEN D, AND THAT IS **NOT** A HOLE -- the old comment's "both D parities" is
+// what is stale, and it was nearly carried over unexamined. Checked 2026-09-10:
+//   * 10 of the 14 odd-D model bases HAVE an X0_*.m re-derivation test (15_1 15_2 21_2 35_1 39_1
+//     51_1 55_1 57_1 in CI, 39_2 87_1 offline), and since every such test now re-derives EVERY
+//     committed cover key, odd-D model building is thoroughly exercised without this file.
+//   * there is no D-parity branch in the code this file drives at all. The only live `IsEven(D)`
+//     uses are in AL FIXED-POINT code (ShimuraQuotients.m:842,
+//     GeneralizedComplicatedFixedPoints.m:125,186), reached from the FILTER/triage pipeline
+//     (FilterByGeneralizedComplicatedFixedPoints, run_filters.m), never from
+//     AllEquationsAboveCovers. The `assert IsEven(D)` in BorcherdsForms.m:9 is commented out.
+// "Both D parities" mattered when this file was the ONLY re-derivation for those bases. It is not
+// any more, so spend the budget on cost, not parity.
+//
+// ⚠ AND A COUNT TO NOT REPEAT: 65_1 is the only odd D among the **44** bases that have neither a
+// test nor any oracle mention -- NOT among the 51 without a re-derivation test, where there are
+// FOUR (111_1, 15_4, 65_1, 93_1). Two different sets; do not quote one figure for the other.
 // ⚠ 14_43 is NOT here: it is MR_KNOWN_DRIFT (INTSOL=1) and was killed at 7 h 44 m unfinished.
 //
 // ⚠⚠ AND A CORRECTION, because the first version of this comment got it WRONG: 26_3 was put in the

@@ -30,8 +30,11 @@ A. ⚠ **THE GAP THAT IS LEFT, and it is the big one: 520 of 863 committed cover
    there, and its default list has been retargeted at them (~98 comparisons in ~8 min). **Extending
    that list is the cheapest remaining coverage in the repo**, but ⚠ **pick additions by MEASURED
    cost, never by key count** — `10_7` has 15 keys at 185 s, `65_1` has 4 at 813 s. Measured and
-   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The new list is **all even
-   `D`** (`65_1` is the only odd `D` among the 51 and it is expensive) — that is a known hole.
+   left out for cost: `26_5` 804 s, `14_11` 1475 s, `22_7` 1591 s. ⚠ The list is all even `D` and
+   that is **NOT** a hole — 10 of the 14 odd-`D` model bases have an `X0_*` test which now re-derives
+   every key, and no D-parity branch exists in the code ModelRegen drives (the live `IsEven(D)` uses
+   are fixed-point/triage code, not `AllEquationsAboveCovers`). Pick additions by COST, not parity.
+   ⚠ Odd-`D` bases with NO test are four, not one: `111_1`, `15_4`, `65_1`, `93_1`.
 
 B. **Relax the `base_label eq 0` gate on `EquationsByRebase`** (`EquationsCovers.m:1061`).
    Well-evidenced: it is why `X0_10_13` and `X0_26_3` cannot re-derive the keys the rebase filled,

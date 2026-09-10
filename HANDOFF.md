@@ -97,8 +97,25 @@ test.** Retargeted at bases with none. MEASURED PER BASE, because a batch total 
     26_5  804 s | 14_11 1475 s | 22_7 1591 s | 65_1 813 s     <- measured, LEFT OUT for cost
 
 ⚠ **KEY COUNT DOES NOT PREDICT COST**: `10_7` has 15 keys and costs 185 s; `65_1` has 4 and costs
-813 s. ⚠ `65_1` is the ONLY odd `D` among the 51, so the new list is all even `D` -- the one
-property the old list had that this one loses. `14_43` was killed at 7 h 44 m unfinished.
+813 s. `14_43` was killed at 7 h 44 m unfinished.
+
+⚠ **TWO CLAIMS I FIRST WROTE HERE WERE WRONG, both caught by being challenged rather than by a test.**
+1. *"The new list is all even `D`, which is a hole."* **It is not a hole**, and "both D parities" from
+   the old comment is itself the stale part. **10 of the 14 odd-`D` model bases have an `X0_*` test**
+   (`15_1 15_2 21_2 35_1 39_1 51_1 55_1 57_1` in CI, `39_2 87_1` offline) and every such test now
+   re-derives EVERY cover key, so odd-`D` model building is well exercised without ModelRegen. And
+   **there is no D-parity branch in the code ModelRegen drives**: the only live `IsEven(D)` uses are
+   in AL fixed-point code (`ShimuraQuotients.m:842`, `GeneralizedComplicatedFixedPoints.m:125,186`)
+   reached from the FILTER/triage pipeline, never from `AllEquationsAboveCovers`;
+   `BorcherdsForms.m:9`'s `assert IsEven(D)` is commented out. Parity mattered when ModelRegen was
+   the only re-derivation for those bases; it is not any more.
+2. *"`65_1` is the only odd `D` among the 51."* It is the only odd `D` among the **44** with neither
+   a test nor an oracle mention. Among the **51** without a re-derivation test there are **four**:
+   `111_1`, `15_4`, `65_1`, `93_1`. I quoted a figure for one set while naming the other.
+
+⇒ Both were inherited framing rather than measured claims — the first copied from the comment being
+replaced, the second a set I had computed earlier for a different purpose. Spend the ModelRegen
+budget on COST, not parity.
 
 **RUN END TO END with the new default: 8 of 8 reproduce, 0 drifted, 114 comparisons, 802 s** — inside
 the ~20 min the old list cost, and none of the 7 new bases is re-derived anywhere else.
