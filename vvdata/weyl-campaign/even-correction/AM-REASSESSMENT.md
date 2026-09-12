@@ -382,3 +382,73 @@ multiplier becoming integral).
 Schofer sum contributed it. The bad cells are stable across configurations, so a single cell can be
 followed all the way through. That converts guessing into reading, which is what settled the
 firing/non-firing question earlier in this file.
+
+---
+
+# THE RESIDUAL, LOCALISED: a fractional exponent on `log 17`, the RAMIFIED prime
+
+`RationalNumber` (LogSum.m:137) fails iff some prime carries a NON-INTEGRAL coefficient -- a
+`LogSm` is a formal sum `sum_p coeff_p log p`, so the failure is a FRACTIONAL EXPONENT, not an
+irrationality. Naming the prime is therefore the whole diagnostic, and it is cheap.
+
+## The measurement (pinned 164/+2, the 11-cell configuration)
+
+**All 11 bad cells fail on the SAME prime, `p = 17`, with denominator exactly 3.** Coefficients
+`+-5/3` and `+-2/3`. EVERY other prime in every bad cell is integral:
+
+    row 3, disc -11  : [<2,-1>,  <11,1>, <17,5/3>]
+    row 3, disc -20  : [<2,-2>,  <5,1>,  <17,5/3>]
+    row 3, disc -228 : [<3,-2>,  <7,2>,  <17,5/3>, <43,2>]
+
+`D = 34 = 2 * 17`, so **17 is a RAMIFIED prime of `D`** -- not the level prime `N = 3`, where every
+previous explanation lived.
+
+## Baseline-vs-perturbed diff at the same cells (63 cells each)
+
+In the BASELINE every `c17` is an integer. The perturbation shifts them, and the shifts are mixed:
+
+    row 2:  -408 -> -2/3        -228/-24/-20/-11 -> +2
+    row 3:  -228/-20/-11 -> 11/3        -51 -> +1
+    row 5:  -408/-51 -> -2/3           -228/-20/-11 -> +2
+    row 6:  -408 -> -8/3
+    row 7:  -228/-24/-20/-11 -> 5/3     -51 -> -1
+
+The bad cells are exactly those whose SHIFT has denominator 3; where the shift is an integer the
+cell stays fine.
+
+## ⚠ WHAT THIS REFUTES, INCLUDING MY OWN PREVIOUS READING
+
+The natural reading on seeing "fractional coefficient at `p | D`" is that the perturbation breaks
+the cancellation which justifies DROPPING the D-part of the m=0 term (`SchoferFormula.m:965`:
+"the fractional D-parts cancel against the period / the m>0 Diff-derivatives"). **The arithmetic
+does not support it**, and it is recorded as refuted rather than left as a plausible story:
+
+* the D-part at `p = 17` is `(17-1)/(17+1) = 8/9`, which would give denominator **9**; the measured
+  denominator is always **3**;
+* `1/3` IS `(p-1)/(p+1)` at the OTHER ramified prime `p = 2` -- but that term belongs to `log 2`,
+  and `log 2`'s coefficient is integral in every bad cell;
+* the m=0 term is per-form times a per-disc INDICATOR, so within a row it would shift all firing
+  discs equally. It does not: row 5 shifts `-2/3` at `-408, -51` but `+2` at `-228, -20, -11`.
+
+⇒ The effect is per-`(form, disc)`, not per-form, which points at the **m>0 terms** -- `kappaminus`
+at the vanishing place -- rather than at the m=0 constant term. Note `kappaminus` emits a `log p`
+coefficient ONLY at a vanishing place, and the perturbation changes the divisor and hence which
+places vanish.
+
+## STATUS: localised, not explained
+
+**Established:** the residual is entirely a denominator-3 coefficient on `log 17`, the ramified
+prime; every other prime stays integral; the baseline is integral everywhere; the bad cells are
+exactly those whose shift has denominator 3.
+
+**NOT established:** the mechanism. Five candidate causes have now been refuted by controls or by
+arithmetic (CM-set collision, coprimality to `N`, the missing `log N`/`A_m`, integrality-alone, and
+now the dropped D-part). **Do not promote the next pattern to a cause without a control.**
+
+⇒ Next: instrument `kappaminus` itself at one bad `(form, disc)` -- print the vanishing place, the
+Whittaker polynomial and `ret` -- since that is the only place a `log 17` coefficient can be
+emitted, and the denominator 3 has to enter there.
+
+⚠ Convergence worth noting but NOT leaning on: `PLAN.md` item 0f and
+[[b-eisenstein-coefficients-solved]] independently localise the remaining open object to `p | D`.
+This arrives at the same primes by a different route. That is corroboration of WHERE, not of WHY.
