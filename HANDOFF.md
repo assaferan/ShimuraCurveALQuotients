@@ -64,8 +64,21 @@ what both runs measure. `IntegralSolution := true` does not rescue it (the pertu
 no integral form), **and that verdict is safe only because its control was run: the unperturbed
 baseline passes cleanly under the same flag** (0 cells, 12 keys).
 
-⇒ The hatch becomes a SEARCH for an even perturbation that is ALSO integral -- two conditions, not
-one -- rather than a wait for an open theorem. ⚠ `A_m`/`b` remains a genuine open question in its
+⚠⚠ **CORRECTED LATER THE SAME DAY — "blocked on integrality" is an OVER-CLAIM.** The sweep meant
+to confirm it refuted it. Integrality is real but PARTIAL: baseline 0 cells, the original heuristic
+run 18, and **any integral perturbation exactly 11** (164/+2, 164/+4, 56/+4 all give 11), with
+`m0mult` integral again. The residual 11 is INVARIANT in discriminant and amount, so it does not
+depend on which even divisor is added. The remaining cause is NOT identified, and the next step is
+INSTRUMENTATION (print what `RationalNumber` is handed at one stable bad cell), not a fifth
+single-cause story — four have now been refuted by controls.
+⚠ A genuine defect WAS found in the old instrumentation: its "prefer the largest |disc|" heuristic
+sent 4 of 7 keys to disc 296, which is integrally solvable at NO key, while 164 is solvable at all.
+⚠ Useful accident: the `180/+4` run applied no perturbation at all (180 is divisible by N=3 and the
+probe requires coprimality), giving a NULL CONTROL that returns 0 cells — so the 11s are caused by
+the perturbation, not by the harness.
+
+⇒ The hatch is a SEARCH for an even perturbation that is ALSO integral -- two conditions, not
+one -- rather than a wait for an open theorem; but both conditions together are still not enough. ⚠ `A_m`/`b` remains a genuine open question in its
 own right (no product of local densities reproduces `b`); it is simply not what blocks the 49.
 
 ⚠ Not a byte-reproduction of 2026-08-31: 18 cells vs 17, because the CM evaluation set differs

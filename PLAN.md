@@ -36,10 +36,18 @@ scope by its own definition. Argument, data and controls:
 
 ### ⇒ THE NEW MAIN LINE: the integrality search
 
-The even-correction hatch is blocked on INTEGRALITY, not on a theorem. The perturbed form has
-half-integral `c_eta(0)`, and `IntegralSolution := true` shows the perturbed divisor admits no
-integral Borcherds form — while the unperturbed baseline passes cleanly under the same flag (the
-control that makes that verdict safe).
+⚠ **CORRECTED 2026-09-12, same day, by the sweep that was meant to confirm it.** The hatch is NOT
+"blocked on integrality" — that was an over-claim made one measurement too early. Integrality is a
+REAL but PARTIAL cause, and a residual remains that is NOT identified.
+
+    baseline                    0 non-rational cells
+    original heuristic run     18   (4 of 7 keys perturbed at a NON-INTEGRAL disc, 296)
+    any INTEGRAL perturbation  11   (164/+2, 164/+4, 56/+4 — all exactly 11)
+
+Fixing integrality made `m0mult` integral again and removed 7 of the 18 cells. **11 survive, and
+the count is INVARIANT in both the discriminant and the amount** — so the residual does not depend
+on WHICH even divisor is added, only that one was. ⇒ "pick a better discriminant" is ruled out as
+the remedy.
 
 So the hatch is a SEARCH for a perturbation meeting TWO conditions at once:
   1. it sends `phi(target)` to 0 (parity: `phi(target)` is even with `gcd(phi) = 1` at all 28
@@ -47,9 +55,16 @@ So the hatch is a SEARCH for a perturbation meeting TWO conditions at once:
      WHICH discriminants carry the correction);
   2. the resulting divisor admits an INTEGRAL Borcherds form.
 
-Condition 1 is settled and condition 2 is the open one. **The criterion is cheap**: does the run
-clear `BorcherdsForms` under `IntegralSolution := true`? That is a fraction of a pipeline run per
-candidate, and no CM evaluation is needed to decide it.
+Condition 1 is settled; condition 2 is now MEASURED and satisfiable (a hoisted sweep of all 21
+discriminants x {+-2,+-4,+-6} at `34_3` found 170 of 834 candidates integrally solvable, with disc
+164 integral at every cover key and every amount). **But satisfying both is still not sufficient** —
+see the correction above.
+
+⇒ **NEXT STEP IS INSTRUMENTATION, NOT ANOTHER HYPOTHESIS.** Four single-cause stories have now been
+refuted by controls (CM-set collision, coprimality, missing `log N`, integrality-alone). Take ONE
+bad cell and print what `RationalNumber` is handed — which prime's exponent is non-rational and
+which Schofer term produced it. The bad cells are stable across configurations, so one cell can be
+followed end to end.
 
 ⇒ **NEXT: sweep (discriminant, even amount) at `34_3` against criterion 2.** Tooling is ported and
 committed: `vvdata/weyl-campaign/even-correction/probe-ported-2026-09-12.patch` (post-vx-fix, with a
