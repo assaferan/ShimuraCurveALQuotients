@@ -571,3 +571,54 @@ that some integer combination hits any target.
 ⇒ **Cheapest next thing in the whole file**: run that divisibility screen over the 28 surveyed
 bases from the recorded `phi` vectors. No Magma pipeline, no CM tables -- it is arithmetic on data
 already in `annprobe_<base>.log`.
+
+---
+
+# THE DIVISIBILITY SCREEN OVER ALL 28 SURVEYED BASES — and a CONFOUND that must be resolved first
+
+If every perturbation component must satisfy `amt = 0 mod M`, then summing
+`sum_i amt_i phi(disc_i) = -phi(target)` forces `M | phi(target)`. That is a NECESSARY condition,
+computable from the recorded `phi` vectors alone -- no Magma, no pipeline.
+
+## ⚠⚠ THE MODULUS IS CONFOUNDED AT THE ONLY BASE WHERE IT WAS MEASURED
+
+At `34_3`: `N = 3`, and the ramified prime `p = 17` has `p + 1 = 18 = 2 * 3^2`, so the `kappa_17`
+denominators (3 and 9) are equally explained by `N` and by the odd part of `p+1`. **The two
+readings are indistinguishable there, and I derived "2N" from that single base.**
+
+    reading A:  amt = 0 mod 2N
+    reading B:  amt = 0 mod 2*oddpart(p+1)   (p | D ramified)
+
+## The screen under both readings
+
+    reading A (2N):                  3 of 28 pass ->  106_3, 26_11, 82_5
+    reading B (2*oddpart(p+1)):      4 of 28 pass ->  10_47, 14_17, 14_23, 62_5
+
+⚠ **The two passing sets are DISJOINT.** So the readings are not a quibble -- they name entirely
+different bases, and getting this wrong sends the whole effort at the wrong targets.
+
+## ⇒ The result, stated with its assumption attached
+
+**Under either reading, the hatch as currently understood unblocks 3-4 bases of 28, NOT 49.** That
+is a large downgrade of its value, and it is the first quantitative statement of what the hatch can
+be worth.
+
+⚠⚠ **THE ASSUMPTION IS UNTESTED AND MAY BE FALSE.** `amt = 0 mod 2N` was measured for a SINGLE
+discriminant at a SINGLE base. The real condition is a congruence on
+`sum_m c(-m) kappa_p(m)`, which is a statement about the FORM's principal part, not directly about
+`phi`. A correction spread over SEVERAL discriminants could satisfy that congruence with individual
+components that are NOT separately `0 mod M` -- in which case this screen is far too strict and the
+3-4 figure is a floor, not a ceiling. Nothing here tests that.
+
+## The two experiments that settle it, in order
+
+1. **DISAMBIGUATE A vs B.** Re-run the amount sweep at a base where `N` and `oddpart(p+1)` DIFFER.
+   `34_7` is ideal: same `D = 34` (so `p = 17`, `oddpart(18) = 9`) but `N = 7`, giving
+   `2N = 14` against `2*9 = 18`. It is a working base with a committed model, so it can serve as a
+   positive control exactly as `34_3` did. If `amt = 14` clears the cells, reading A; if `amt = 18`
+   does, reading B. ⚠ `34_7` was measured at >600 s in the ModelRegen sweep, so budget for it.
+2. **TEST THE SINGLE-COMPONENT ASSUMPTION** by perturbing at TWO discriminants at once with
+   amounts that are individually not `0 mod M` but sum appropriately. If the cells clear, the
+   screen above is void and the hatch's reach is much larger than 3-4.
+
+⚠ Do not quote the 3-4 figure without the assumption. It is a conditional result.
