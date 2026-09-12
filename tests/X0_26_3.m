@@ -85,7 +85,7 @@ procedure test_26_3()
     // 6_17 also pin a base_label and all three PASS -- 14_3's empties were fixed by the coprime
     // filter flip, not the rebase, and the other two never had any. The gate costs exactly the
     // rebase-filled keys and nothing else.
-    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : model_drift_ok := true, base_label := 8103);
+    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : base_label := 8103);
     return;
 end procedure;
 
