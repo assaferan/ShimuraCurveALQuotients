@@ -509,3 +509,65 @@ control already run -- the baseline satisfies the congruence at all 63 cells, wh
 perturbation exists meeting all four. That is the next thing to test, and it is now testable
 cheaply. If none exists, the hatch is dead for a precise and statable reason rather than an
 unexplained one -- which is itself a result.
+
+---
+
+# CONDITION 4 IS SATISFIABLE, AND IT IS A CONGRUENCE ON THE AMOUNT: `amt = 0 mod 2N`
+
+Tested at `34_3` (`N = 3`, so `2N = 6`) with the perturbation pinned at disc 164, which the sweep
+showed is integrally solvable at all 7 cover keys for every amount:
+
+    amt    even?  N | amt?   NONRAT cells   fails in
+     2      yes     no            11        RationalNumber
+     4      yes     no            11        RationalNumber
+     8      yes     no            11        RationalNumber
+     3      no      yes           23        RationalNumber
+     9      no      yes           22        RationalNumber
+     6      yes     yes        ** 0 **      QuadraticConstraintsOnEquations
+    12      yes     yes        ** 0 **      QuadraticConstraintsOnEquations
+
+⇒ **`amt = 0 mod 2N` clears condition 4 completely** -- 0 non-rational cells, divisors exactly
+`ram + <-164, amt>` at all 7 keys, and the pipeline passes `ValuesAtCMPoints` for the first time
+since this hatch was attempted on 2026-08-30.
+
+**A PREDICTION WAS RECORDED BEFORE THE RUN AND WAS HALF WRONG, WHICH IS WHY THE LAW IS NOW EXACT.**
+Predicted: "condition 4 is divisibility by 3 alone, so `amt = 9` (odd, divisible by 3) will give 0
+cells". It gave **22**. Evenness is INDEPENDENTLY required -- odd multiples of `N` are worse than
+even non-multiples (22-23 cells vs 11). Had `9` not been tested, "divisible by `N`" would have been
+recorded as the law and it is wrong.
+
+**Why the two factors are different in kind**, and the reason the merged statement is the right one:
+* EVENNESS is the hatch's founding premise -- a double cover depends on its branch divisor only
+  mod 2, so only an even correction leaves the cover alone;
+* DIVISIBILITY BY `N` is the new condition -- `kappa_p` at the ramified prime carries denominators
+  `3` and `9` (natural at `p = 17`, where `p+1 = 18`), so only a multiple of `N` shifts
+  `sum_m c(-m) kappa_p(m)` by an integer.
+Together: `amt = 0 mod 2N`.
+
+## The next blocker, which is NOT condition 4
+
+At `amt = 6` and `12` the run now dies later and elsewhere:
+
+    Runtime error in 'QuadraticConstraintsOnEquations':
+    Error in Schofer table values at rational points - no solution found!
+
+So the CM values are now rational and usable, and the failure has moved to solving for the
+equations. ⚠ **This is a NEW, UNEXAMINED stage** -- do not assume it is the same problem wearing a
+different hat, and do not assume it is fatal. It may be CM-supply (the perturbed divisor changes
+which rational points are available), which is a known rescue axis with known levers.
+
+## What this implies for the OBSTRUCTED bases -- arithmetic, not yet a claim
+
+At an obstructed base the amount is not free: it must also satisfy `amt * phi(disc) = -phi(target)`.
+With `amt = 0 mod 2N` that is a DIVISIBILITY SCREEN, and the parity survey already has every number
+needed to run it across all 28 bases without touching a pipeline.
+
+Worked example, `38_5`: `phi(target) = -22`, `N = 5`, so `2N = 10`, and a SINGLE-discriminant
+correction needs `amt * phi(disc) = 22` with `10 | amt` -- impossible, since `22` is not divisible
+by `10`. ⚠ **That rules out single-discriminant corrections there, NOT the hatch**: a correction
+spread over several discriminants has far more freedom, and `gcd(phi) = 1` is exactly the statement
+that some integer combination hits any target.
+
+⇒ **Cheapest next thing in the whole file**: run that divisibility screen over the 28 surveyed
+bases from the recorded `phi` vectors. No Magma pipeline, no CM tables -- it is arithmetic on data
+already in `annprobe_<base>.log`.
