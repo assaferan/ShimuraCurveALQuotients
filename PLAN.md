@@ -13,7 +13,78 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-10 (the numbered list further down is from 09-02 and its top two items are DONE)
+## ⇒ START HERE — updated 2026-09-12 (the numbered list further down is from 09-02 and is largely DONE)
+
+**State**: Guo-Yang full curves 38 of 42. Both previously un-re-derived Guo-Yang bases now PASS
+(`X0_93_1` 3.7 h; `X0_111_1` 16.3 h on lava, anchored on the FULL genus-7 curve). The `X0_*` tests
+re-derive every committed cover key. `EquationsByRebase` now runs under a pinned `base_label`, and
+both `model_drift_ok` flags are off. Full suite 75/75, 0 failures.
+See `HANDOFF.md` (2026-09-12) for what changed and why.
+
+### ⚠⚠ THE MAIN LINE HAS CHANGED. `A_m` IS DEMOTED.
+
+`A_m` was the main line on the grounds that it unblocks 49 obstructed bases and is the only item
+that does. **That justification was withdrawn on 2026-09-12** — the correction it would supply is
+already proved (`prop:kappa0`) and already implemented (`SchoferFormula.m:1024`), and 12 of the 18
+non-rational cells in the positive control sit at NON-FIRING discriminants where `A_m` is out of
+scope by its own definition. Argument, data and controls:
+`vvdata/weyl-campaign/even-correction/AM-REASSESSMENT.md` (campaign, `bb3700e`).
+
+⚠ **Do NOT implement `A_m` inside `Kappa0` without removing the outer m=0 term — that DOUBLE-COUNTS.**
+⚠ `A_m`/`b` is still a real open question mathematically (no product of local densities reproduces
+`b`). It is simply not the blocker for the 49, so it is no longer the priority.
+
+### ⇒ THE NEW MAIN LINE: the integrality search
+
+The even-correction hatch is blocked on INTEGRALITY, not on a theorem. The perturbed form has
+half-integral `c_eta(0)`, and `IntegralSolution := true` shows the perturbed divisor admits no
+integral Borcherds form — while the unperturbed baseline passes cleanly under the same flag (the
+control that makes that verdict safe).
+
+So the hatch is a SEARCH for a perturbation meeting TWO conditions at once:
+  1. it sends `phi(target)` to 0 (parity: `phi(target)` is even with `gcd(phi) = 1` at all 28
+     surveyed bases, so this is always solvable — and `gcd(phi)=1` means there is real freedom in
+     WHICH discriminants carry the correction);
+  2. the resulting divisor admits an INTEGRAL Borcherds form.
+
+Condition 1 is settled and condition 2 is the open one. **The criterion is cheap**: does the run
+clear `BorcherdsForms` under `IntegralSolution := true`? That is a fraction of a pipeline run per
+candidate, and no CM evaluation is needed to decide it.
+
+⇒ **NEXT: sweep (discriminant, even amount) at `34_3` against criterion 2.** Tooling is ported and
+committed: `vvdata/weyl-campaign/even-correction/probe-ported-2026-09-12.patch` (post-vx-fix, with a
+new `PROBE_M0` reporting the outer m=0 term's firing status and multiplier per CM point and form).
+If some even perturbation IS integral, the 49 reopen by a completely different route.
+⚠ Validate any probe against the recorded control first: baseline 0 non-rational cells / 12 keys /
+`ok=true`; perturbed 18 cells (not 17 — the CM evaluation set differs from 2026-08-31).
+
+### WHAT THE OBSTRUCTION IS, so it is not re-litigated
+
+**It is NOT the eta quotients failing to span**, and "one pole order too small" is REFUTED by
+measurement: bumping the pole order grows forms and divisor-columns at the SAME rate, leaving the
+deficit at exactly 1, and the annihilator `phi` is stable entry-for-entry under enlargement — the
+signature of a fixed modular form, not a truncated basis. The reason is Borcherds' criterion: a
+divisor is a Borcherds product's divisor iff it pairs to zero against the obstruction space (the
+weight-3/2 cusp forms of the dual Weil representation), and `phi(target) = -22 != 0` at `38_5`.
+Working bases have NO obstruction space at all (deficit 0), and it is not a size threshold — `38_7`
+is strictly larger than `38_5` and fully surjective. ⚠ Distinct from the eta-quotient EXPLOSION,
+which is a TIMEOUT mode, root-caused to a `D0` bug and fixed. ⚠ The obstruction and integrality are
+INDEPENDENT axes: the deficit persists under the integral solve, which is exactly why an even
+perturbation can fix the pairing and break integrality.
+
+### Also open, in rough value order
+
+* **`10_3` DRIFTS** — 3 non-isomorphic genus-0 conic entries at `W=[1,2]`, two differing from fresh
+  output by exactly `-1/2` (a non-square, i.e. a quadratic twist). PRE-EXISTING, not from the
+  09-12 change. ⚠ **There is no Guo-Yang oracle at `10_3`**, so which side is correct is unsettled
+  and needs an independent arbiter before anything is changed. Left out of `ModelRegen`'s default
+  list deliberately.
+* **Push and merge down.** `main` `47ea828` and campaign `bb3700e` are committed but NOT pushed, and
+  `EquationsCovers.m`/`tests/` are shared paths, so the divergence invariant is red until `main` is
+  merged into `m0-theta-campaign`.
+* **Collect `X0_111_1` from lava** — nothing has been copied off; its clone is still at `8dac84c`.
+* **lovelace is usable again** (load 40/256, was 324). Five jobs still running there.
+* Item A's remaining gap below still stands, now smaller.
 
 **State**: Guo-Yang full curves 38 of 42; involutions checked in 34 of 34 `X0_*` tests; 188 quotient
 comparisons over 24 bases (0 skipped, 0 mismatches). `EquationsByRebase` is wired into
@@ -39,7 +110,8 @@ In decreasing order of value:
    **lovelace is SATURATED** (load 324/256, other users); use **lava** (`ssh -J lovelace lava`),
    which is idle and needs its own clone.
 
-0f. ⇒ **BEFORE ANY FURTHER `A_m` WORK, READ `paper/level-prime-kappa.tex`.** Two hypotheses were
+0f. ⚠ **SUPERSEDED 2026-09-12 — `A_m` is demoted; see the START HERE block above.** Kept
+   because its reading advice stands and its refutations are still correct. Two hypotheses were
    formed and retracted on 09-10, both from working off memory entries and code while treating the
    30-page paper as background. `thm:closed` already gives the level-prime factor at GENERAL `m`
    (`W_{m,N}(1) = (N-1)ord_N(m)`, `cor:support`); `sec:open` already has the `alpha_k` counts;

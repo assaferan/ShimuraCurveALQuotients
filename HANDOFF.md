@@ -1,15 +1,177 @@
-# Handoff — 2026-09-10
+# Handoff — 2026-09-12
 
 **The newest section is this one; everything after it is older and kept for provenance.** Earlier
 material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
 STALE.
 
-Everything here is committed and pushed. **`git pull` first — local `main` may be stale.**
+⚠ **2026-09-12: the newest section's work is COMMITTED LOCALLY BUT NOT PUSHED** (`main`
+`47ea828`, campaign `bb3700e`). Push both before relying on a clone elsewhere — and because
+`EquationsCovers.m` and `tests/` are SHARED PATHS, the branch-divergence invariant goes red
+until `main` is merged down into `m0-theta-campaign`. Earlier sections were pushed when written.
 
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## Handoff — 2026-09-10 (newest)
+## Handoff — 2026-09-12 (newest)
+
+### ⇒ LIVE JOBS: `X0_111_1` IS DONE AND PASSED; the five on lovelace are still running
+
+**`X0_111_1` SUCCEEDED on lava in 58595 s (16.3 h).** It survived the 1678-vector pool that the
+last handoff flagged as near the ~2000-vector / ~11 GB wall -- no OOM. Result line:
+
+    X0^111(1): 1 curve comparison(s), 0 involution comparison(s), 1/1 expected covers matched;
+               4 committed model cover(s) re-derived (0 CRV skipped)
+
+It anchors on the FULL genus-7 curve, which is a stronger anchor than `93_1`'s quotient-only one.
+⇒ **Both previously un-re-derived Guo-Yang bases now have passing re-derivation tests.**
+⚠ Nothing has been copied off lava; the log is `$HOME/x0_111_1.log` there and its clone is still at
+`8dac84c`, i.e. behind `main`.
+
+**lovelace: all five still alive** (`34_11` INTSOL at 8 d 2 h, `95_1`, `159_1`, `69_1`, `119_1`), all
+elapsed ~ CPU so all progressing. ⚠ **lovelace is USABLE AGAIN** -- load 40 on 256 cores, down from
+324. The last handoff's "do not launch there" no longer holds.
+
+### ⚠⚠ THE `A_m` MAIN LINE IS WITHDRAWN — the hatch is blocked on INTEGRALITY, not on a theorem
+
+Full argument and data: `vvdata/weyl-campaign/even-correction/AM-REASSESSMENT.md` on campaign
+(`bb3700e`), which also carries a superseding header on that directory's README.
+
+`PLAN.md` named the `A_m` theorem as the main line because it "unblocks 49 obstructed bases and is
+the only item that does". **That justification does not survive its own evidence.**
+
+* `A_m` is DEFINED by `sum_m c(-m) A_m = mult(f)` -- that identity is how the values were solved,
+  not a property proved of them. So inserting `A_m` into `Kappa0` adds exactly `mult(f) log N` per
+  firing CM point.
+* `SchoferFormula.m:1024` ALREADY adds precisely that, and it is `prop:kappa0`'s conclusion verbatim.
+* That code was LIVE at `619051a`, the commit both hatch branches were cut from -- so the recorded
+  17 non-rational cells were measured WITH the correction applied.
+* Re-run on current code: **12 of 18 bad cells are at NON-FIRING discriminants** (`-24 -51 -228
+  -408`), where no level term is owed and the `A_m` defect is outside its own stated scope; at the
+  6 firing cells the outer term DID fire with nonzero `m0mult` and they are non-rational anyway.
+* `rem:gauge` already says the `N | m` support rule is a GAUGE, which explains without any new
+  theorem both why `N | m` had to be imposed by hand and why `prop:closedcoef`'s `-a_E` "reproduces
+  1 of 13".
+
+**⚠ A TRAP THIS CREATES:** implementing `A_m` inside `Kappa0` WITHOUT removing the outer m=0 term
+would DOUBLE-COUNT. `SchoferFormula.m:609` says the correction "actually belongs" there -- true as
+bookkeeping, but it is a MOVE, not an ADDITION.
+
+**What actually blocks it:** the perturbed form is NON-INTEGRAL. `m0mult = (1/2)c_eta(0)` goes from
+integers (baseline) to quarter-integers (perturbed), so `c_eta(0)` is half-integral; a fractional
+multiplier puts a fractional exponent on a prime, which is exactly the `RationalNumber` failure --
+and unlike the log-`N` story it predicts failures at firing AND non-firing discriminants, which is
+what both runs measure. `IntegralSolution := true` does not rescue it (the perturbed divisor admits
+no integral form), **and that verdict is safe only because its control was run: the unperturbed
+baseline passes cleanly under the same flag** (0 cells, 12 keys).
+
+⇒ The hatch becomes a SEARCH for an even perturbation that is ALSO integral -- two conditions, not
+one -- rather than a wait for an open theorem. ⚠ `A_m`/`b` remains a genuine open question in its
+own right (no product of local densities reproduces `b`); it is simply not what blocks the 49.
+
+⚠ Not a byte-reproduction of 2026-08-31: 18 cells vs 17, because the CM evaluation set differs
+(`-56/-68` then, `-228/-408` now). Same phenomenon, different sample -- do not read the two counts
+as a change in the effect.
+
+⚠ Recorded, not chased: **`mult(f)` is NOT determined by `div(f)`.** The INTSOL and default
+baselines pick forms differing by a trivial-divisor kernel element and report different `m0mult`
+vectors, while both give 0 bad cells and the same 12 keys.
+
+### WHAT THE OBSTRUCTION ACTUALLY IS — and it is NOT the eta quotients failing to span
+
+Asked directly this session, so it is written down here. **The eta-quotient basis is not the
+problem, and "the space is one pole order too small" is REFUTED BY MEASUREMENT**
+([[borcherds-obstruction-is-real]], probe at `38_5`):
+
+    bump 0:  poleord 190  rows 164  cols 36  rank 35      deficit 1
+    bump 8:  poleord 198  rows 172  cols 38  rank 37      deficit 1
+
+Enlarging the weakly holomorphic space adds forms AND divisor-columns at the same rate, so the
+deficit is invariant. Decisively, the annihilator `phi` is **stable under enlargement** -- equal
+entry-for-entry on shared discriminants and merely extending to the new ones -- which is the
+signature of reading coefficients off a FIXED modular form, not of a truncated basis.
+
+**The actual reason is Borcherds' criterion.** A divisor is the divisor of a Borcherds product iff
+it pairs to zero against every form of the obstruction space -- the weight-3/2 cusp forms of the
+lattice's dual Weil representation. At `38_5` that space is 1-dimensional with generator `phi`, and
+`phi(target) = -22 != 0`, so the requested ramification divisor **is not the divisor of any
+Borcherds product**. That is why all 96 triples fail identically: the search is futile by
+construction, not unlucky.
+
+Two corollaries worth keeping:
+* **The working bases have NO obstruction space at all** (`34_3`, `38_7`: rank = cols, deficit 0 at
+  every key, target found on triple 1). The obstruction is absent there, not dodged.
+* **It is not a size threshold.** `38_7` is strictly LARGER than `38_5` in every dimension and is
+  fully surjective. The cokernel dimension is an ARITHMETIC INVARIANT of the discriminant form, not
+  a monotone function of `DN` -- which is why `14_19`/`14_29` work while `14_17`/`14_23`/`14_31`
+  fail.
+
+⚠ **DO NOT CONFUSE THIS WITH THE ETA-QUOTIENT EXPLOSION**, which is a different failure mode
+(TIMEOUT, not form-failure) and was root-caused to a `D0` bug and FIXED
+([[odd-d-etaquotient-explosion]]).
+
+⚠ And note the two axes are independent: the deficit persists with a fully integral basis and under
+the integral solve. So the obstruction (is the target in the image at all?) and integrality (does
+the preimage contain an integral point?) are DIFFERENT questions -- which is exactly why the even
+perturbation can fix the first and break the second.
+
+### ✅ `EquationsByRebase` now runs under a pinned `base_label`; both `model_drift_ok` flags are off
+
+`main` `47ea828`. PLAN item B. The `base_label eq 0` gate is gone and the pin is threaded into the
+stage's inner `EquationsAbovePointlessConics`, which had been silently reverting to the default base
+(propagation adds NEW bases to `re_eqns`, so that was a real hole).
+
+⚠ **`STAR` IS NOT FORCED TO THE PINNED BASE, AND THE FIRST ATTEMPT THAT DID SO WAS WRONG.** Forcing
+`STAR := base_label` is what PLAN item B literally specifies; at `26_3` it runs the stage and fills
+NOTHING. Measured `base_count` there: `<8092,1> <8098,1> <8103,3> <8104,3> <8105,7>` -- the pinned
+base carries 3 first-level equations, the heuristic picks `8105` with 7, and only `8105` admits a
+usable Hauptmodul root.
+
+⚠⚠ **AND THE COMMITTED DATA IS A MIXTURE.** `models_26_3.m`'s `[1,2]` and `[1,13]` were filled by
+`7a923ae` on a DEFAULT run -- the old gate was `base_label eq 0`, so that run cannot have been
+pinned. So the file carries 13 keys in the `base_label := 8103` presentation plus 2 from an unpinned
+rebase, and reproducing it REQUIRES the unpinned `STAR`.
+
+**The check that caught it is the one worth keeping**: `model_drift_ok` tolerates MISSING keys, so
+"Success!" with the flag on proved nothing. The flagless run is what failed, with exactly
+`[1,13], [1,2] NOT PRODUCED AT ALL`. Both flags are now off and both tests pass on their own merits
+(`X0_26_3` 189 s, `X0_10_13` 773 s), with both Guo-Yang oracles green -- and that oracle holds
+Guo-Yang's own curves for exactly the two keys the rebase fills. Full suite **75/75, 0 failures**.
+
+### ✅ ModelRegen retargeted from a MEASURED sweep — and it immediately found a real drift
+
+All 38 bases with no `X0_*.m` test and no recorded cost were measured, one magma process each
+(so an OOM costs one base, not the batch), capped at 600 s. **Only 12 of 38 finished.**
+`CHEAP_BASES` 8 -> 14: `+191 s` for `+40` comparisons, against the old list's 802 s for 114.
+
+    added:      34_1 5.8s->4   46_1 13.3s->4   6_5 22.3s->23
+                106_1 38.6s->3  122_1 49.6s->3  118_1 61.4s->3
+    left out:   34_3 204s->10   178_1 269s->3   202_1 374s->2        (poor value, not failure)
+    capped:     the ENTIRE D=6 large-prime-N family (6_23 .. 6_83, 11 bases), plus
+                10_17 10_29 10_31 10_37 10_41 10_53 10_61 14_13 14_19 14_29 22_13 34_5 34_7 38_7 58_5
+
+⚠ **`10_3` DRIFTS, and it is REAL AND PRE-EXISTING** -- 3 non-isomorphic entries at `W=[1,2]`,
+0 missing. Confirmed NOT caused by this session's change: it drifts identically with
+`EquationsCovers.m` reverted to HEAD. The entries are genus-0 conics and two differ from fresh
+output by exactly **-1/2, a NON-SQUARE** -- a quadratic twist, i.e. the unpinned-y2-scale class
+([[committed-models-can-be-unreproducible]]), not a lost cover. **Which side is correct is NOT
+settled: there is no Guo-Yang oracle at `10_3`.** It is deliberately left OUT of the default list
+rather than given an undiagnosed `MR_KNOWN_DRIFT` row -- an undiagnosed row is how `26_3`'s went
+inert.
+
+⚠ **`15_4` cannot run here at all**: `N = 4` is not squarefree and `BorcherdsForms.m:55` asserts.
+A METHOD BOUNDARY, not drift, and it fails in 0.7 s.
+
+### A near-miss worth recording: I nearly reported a clean suite as truncated
+
+`run_tests.m` prints `Tests failed:` **only when `#failed gt 0`**, so its ABSENCE means zero
+failures -- it is NOT the truncation signature that `CLAUDE.md` warns about. My file count also used
+a pattern that only matches when `Success!` lands on the same line as the filename, which is false
+for every test that prints output first, giving 40 instead of 75. Counting the right thing:
+**75 expected, 75 started, 75 `Success!`, 0 `Fail!`.** ⇒ When checking for truncation, count
+`Success!` occurrences against the suite's OWN file filter, and read the summary's print condition
+before treating its absence as evidence.
+
+## Handoff — 2026-09-10
 
 ### ⇒ LIVE JOBS AT HANDOFF TIME — collect these before starting anything
 
