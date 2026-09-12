@@ -94,10 +94,15 @@ perturbation can fix the pairing and break integrality.
   09-12 change. ⚠ **There is no Guo-Yang oracle at `10_3`**, so which side is correct is unsettled
   and needs an independent arbiter before anything is changed. Left out of `ModelRegen`'s default
   list deliberately.
-* **Push and merge down.** `main` `47ea828` and campaign `bb3700e` are committed but NOT pushed, and
-  `EquationsCovers.m`/`tests/` are shared paths, so the divergence invariant is red until `main` is
-  merged into `m0-theta-campaign`.
-* **Collect `X0_111_1` from lava** — nothing has been copied off; its clone is still at `8dac84c`.
+* ✅ **DONE: `main` merged down into `m0-theta-campaign`.** The invariant is GREEN locally --
+  `git diff main m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'` prints nothing and
+  main-only commits are 0. ⚠ **STILL NOT PUSHED**: 3 commits on `main`, 8 on campaign. Push both
+  before relying on any clone elsewhere (lava's is already stale).
+* ✅ **DONE: `X0_111_1` collected from lava** — log kept at
+  `vvdata/weyl-campaign/run-logs/x0_111_1-lava-2026-09-12.log` on campaign, with its two
+  non-obvious facts (it survived the 1678-vector pool, and its sign resolution needed the spare
+  discriminant, so it is not sign-deterministic). ⚠ Its lava clone is still at `8dac84c`, i.e.
+  behind `main`; `git fetch && git reset --hard origin/main` there before any new run.
 * **lovelace is usable again** (load 40/256, was 324). Five jobs still running there.
 * Item A's remaining gap below still stands, now smaller.
 
