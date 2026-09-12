@@ -60,11 +60,51 @@ discriminants x {+-2,+-4,+-6} at `34_3` found 170 of 834 candidates integrally s
 164 integral at every cover key and every amount). **But satisfying both is still not sufficient** —
 see the correction above.
 
-⇒ **NEXT STEP IS INSTRUMENTATION, NOT ANOTHER HYPOTHESIS.** Four single-cause stories have now been
-refuted by controls (CM-set collision, coprimality, missing `log N`, integrality-alone). Take ONE
-bad cell and print what `RationalNumber` is handed — which prime's exponent is non-rational and
-which Schofer term produced it. The bad cells are stable across configurations, so one cell can be
-followed end to end.
+✅ **DONE 2026-09-12/13: the instrumentation was run and it found the mechanism.** `RationalNumber`
+fails iff some prime carries a NON-INTEGRAL exponent, so the failure is a fractional exponent, not
+an irrationality. Measured: it is always the RAMIFIED prime (17 at `D=34`), always denominator 3;
+the principal-part coefficients are integers 362/362; and `Kappa0`'s OWN log-17 coefficients are
+fractional (235 at denominator 3, 113 at 9 — natural at `p=17`, where `p+1=18`). So those fractions
+are INTRINSIC and are supposed to cancel; a legitimate divisor makes `sum_m c(-m) kappa_p(m)` an
+integer, and the perturbation breaks that.
+
+⇒ **THERE IS A FOURTH CONDITION on any usable perturbation, and it was invisible until now:**
+
+    1. EVEN                          -- cover unchanged                  (parity survey 28/28)
+    2. phi(target) = 0               -- Borcherds' criterion             (always solvable, gcd(phi)=1)
+    3. integral solution             -- a form exists at all             (measured: 170/834 candidates)
+    4. sum_m c(-m) kappa_p(m) in Z   at every ramified p | D, every CM d   <-- NEW
+
+**Condition 4 is SATISFIABLE** — at `34_3` amounts 6 and 12 give ZERO non-rational cells and clear
+`ValuesAtCMPoints` for the first time since 2026-08-30. It is NOT implied by 3: the `164/+2` run
+satisfies 1–3 and violates 4 at 11 cells. The blocker then MOVES to
+`QuadraticConstraintsOnEquations` ("Schofer table values at rational points — no solution found"),
+a new and unexamined stage that may be CM supply, a known rescue axis.
+
+⚠⚠ **THE MODULUS IS `D`-DEPENDENT, NOT `N`-DEPENDENT, AND `amt = 0 mod 2N` IS REFUTED.** `2N` was
+recorded from `34_3`, where `N=3` and `oddpart(17+1)=9` make `N` and the `D`-formula
+indistinguishable. `34_7` killed it: `amt 28` IS divisible by `2N=14` and gives 31 cells, `amt 36`
+is not and gives 0. `mod 6` fits all ten measurements at BOTH `N`, and the modulus did not move when
+`N` went 3 → 7.
+⚠ **The 28-base divisibility screen built on `2N` is VOID** — neither `106_3/26_11/82_5` nor
+`10_47/14_17/14_23/62_5` is a candidate set. **The hatch's reach is UNKNOWN**: neither "3–4 of 28"
+nor the original "49" is currently supported.
+
+⇒ **NEXT: pin the `D`-formula.** Three candidates all give 6 at `D=34` — `2*oddpart(2+1)`,
+`2*gcd_{p|D} oddpart(p+1)`, `2*oddpart(min p + 1)`. `35_1` and `65_1` separate them (`2*gcd` → 2,
+`2*minp` → 6). A sweep over a RANGE of amounts at `35_1` is running; read the modulus off the
+pattern of which amounts clear rather than testing two guesses. ⚠ Also read off WHICH PRIME carries
+the fraction at an odd `D` — the whole `2*oddpart(p+1)` family is an inference from one prime at one
+`D`, and that tests the family rather than a member of it.
+⚠ **Screen for condition 3 before attributing any failure to condition 4.** At `34_7` only `±28`
+and `±36` are integral at all 7 keys; testing `amt=6` there would have failed on condition 3 and
+been misread.
+
+⚠⚠ **A METHODOLOGICAL RULE, from four recurrences in one day** (`A_m`, integrality-alone, `2N`, and
+the `STAR := base_label` reading): **a law fixed from ONE base has each time been REPLACED, not
+refined, by the second base.** When two explanations coincide at the base in hand, say so in the
+write-up instead of recording the more salient one — `2N` was chosen over `2*oddpart(p+1)` only
+because `N` is the more obvious number.
 
 ⇒ **NEXT: sweep (discriminant, even amount) at `34_3` against criterion 2.** Tooling is ported and
 committed: `vvdata/weyl-campaign/even-correction/probe-ported-2026-09-12.patch` (post-vx-fix, with a
