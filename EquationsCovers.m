@@ -839,7 +839,7 @@ end function;
 // ⚠ FILLING A KEY IS NOT PROVING IT CORRECT. Validated against Guo-Yang at 22_5 and 10_19
 // (tests/_offline/FullCurve_22_5.m, tests/GuoYangQuotients_*.m); no such check exists for an
 // arbitrary base.
-intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> Assoc, Assoc
+intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
     {Fill still-empty covers by changing the Hauptmodul on the star base and re-propagating.}
     empty_keys := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
     if IsEmpty(empty_keys) then return all_eqns, all_ws; end if;
@@ -853,6 +853,21 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> 
         end for;
     end for;
     if IsEmpty(Keys(base_count)) then return all_eqns, all_ws; end if;
+    // ⚠ STAR IS *NOT* FORCED TO A PINNED base_label, AND THAT WAS MEASURED, NOT ASSUMED.
+    // Forcing STAR := base_label is the obvious reading of "keep the pinned presentation", and it
+    // is WRONG HERE: at 26_3 with base_label = 8103 the rebase then runs and fills NOTHING, leaving
+    // exactly [1,2] and [1,13] empty -- the two keys this stage exists to fill.  Measured
+    // base_count at that base: <8092,1> <8098,1> <8103,3> <8104,3> <8105,7>, so the pinned base
+    // carries 3 first-level equations while the heuristic picks 8105 with 7, and only 8105 admits
+    // a usable Hauptmodul root.
+    // ⚠ AND THE COMMITTED DATA SETTLES WHICH BEHAVIOUR IS RIGHT.  models_26_3.m's [1,2] and [1,13]
+    // were filled by commit 7a923ae (2026-09-09) on a DEFAULT run -- the old gate here was
+    // `base_label eq 0`, so that run cannot have been pinned.  The committed file is therefore a
+    // MIXTURE: 13 keys in the base_label := 8103 presentation plus 2 keys from an unpinned rebase.
+    // Reproducing it requires the unpinned STAR, so the heuristic stays.
+    // This does not disturb the pin's purpose: the pin exists to select the V_4 of the W = {1} CRV
+    // pair, this stage only ever fills keys that are ALREADY EMPTY, and the two it fills at 26_3
+    // are checked against Guo-Yang's own curves by tests/GuoYangQuotients_26_3.m.
     STAR := Rep(Keys(base_count));
     for b in Keys(base_count) do
         if base_count[b] gt base_count[STAR] then STAR := b; end if;
@@ -930,7 +945,10 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum) -> 
                 ab_P1, ab_con := curves_above_P1_and_conics(re_eqns, nk, curves);
                 nk := Keys(ab_P1) join Keys(ab_con);
             end while;
-            re_eqns, re_ws := EquationsAbovePointlessConics(re_eqns, re_ws, curves);
+            // ⚠ THE PIN MUST BE THREADED HERE.  Propagation above adds NEW bases to re_eqns,
+            // so without it this pass silently reverts to the default base for exactly the covers
+            // the rebase is being run to fill.
+            re_eqns, re_ws := EquationsAbovePointlessConics(re_eqns, re_ws, curves : base_label := base_label);
         catch e okp := false; end try;
         if not okp then continue; end if;
 
@@ -1058,11 +1076,13 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
     // ⚠ LAST RESORT, and a NO-OP unless some cover is still empty (see EquationsByRebase).
-    if base_label eq 0 then
-        vprintf ShimuraQuotients, 1 : "Filling empty covers by Hauptmodul rebase...";
-        all_eqns, all_ws := EquationsByRebase(all_eqns, all_ws, curves);
-        vprintf ShimuraQuotients, 1 : "Done\n";
-    end if;
+    // Formerly gated on `base_label eq 0`, which cost a pinned run EXACTLY the keys this stage
+    // fills (10_13's [1,2] [1,5] [1,26]; 26_3's [1,2] [1,13]) and nothing else -- 14_3, 21_2 and
+    // 6_17 also pin and were unaffected.  The stage is pin-aware now: it rebases ON the pinned
+    // base and threads the pin into its own inner conic pass, so it is safe to run pinned.
+    vprintf ShimuraQuotients, 1 : "Filling empty covers by Hauptmodul rebase...";
+    all_eqns, all_ws := EquationsByRebase(all_eqns, all_ws, curves : base_label := base_label);
+    vprintf ShimuraQuotients, 1 : "Done\n";
     if not IsEmpty(deferred) then
         vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
         all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);

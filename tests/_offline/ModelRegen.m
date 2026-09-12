@@ -89,7 +89,29 @@
 // MEASURED end to end with this list: 98 comparisons over the 7 new bases + 16 at 26_3, 8 of 8
 // reproduce, 0 drifted, 802 s (13.4 min) -- inside the ~20 min the old list cost, and unlike the
 // old list none of the 7 is re-derived anywhere else.
-CHEAP_BASES := ["6_1", "10_1", "14_1", "22_1", "6_7", "6_13", "10_7", "26_3"];
+// ⚠ EXTENDED 2026-09-10/12 from a MEASURED sweep of ALL 38 bases that have no X0_*.m test and no
+// recorded cost, each in its own magma process, capped at 600 s (past that a base cannot earn a
+// place in a ~20 min list, so the exact number is not worth buying).  Only 12 of the 38 finished
+// under the cap -- the D = 6 large-prime-N family is uniformly expensive (6_23 6_41 6_43 6_47 6_53
+// 6_59 6_61 6_67 6_71 6_79 6_83 ALL capped), as are 10_17 10_29 10_31 10_37 10_41 10_53 10_61
+// 14_13 14_19 14_29 22_13 34_5 34_7 38_7 58_5.  Do not re-measure those without a reason.
+// ADDED (cost -> comparisons):  34_1 5.8s -> 4,  46_1 13.3s -> 4,  6_5 22.3s -> 23,
+//                               106_1 38.6s -> 3,  122_1 49.6s -> 3,  118_1 61.4s -> 3
+//   i.e. +191 s for +40 comparisons, against the old list's 802 s for 114.
+// MEASURED AND LEFT OUT for poor value, not for failure: 34_3 204 s -> 10, 178_1 269 s -> 3,
+//   202_1 374 s -> 2.
+// ⚠ 15_4 CANNOT RUN HERE AT ALL and that is a METHOD BOUNDARY, not drift: N = 4 is not squarefree
+//   and BorcherdsForms.m:55 asserts IsSquarefree(N) unless NONSQFREE is set.  It fails in 0.7 s.
+// ⚠⚠ 10_3 IS DELIBERATELY ABSENT -- IT DRIFTS, AND THE DRIFT IS REAL AND PRE-EXISTING.
+//   18.0 s, 6 compared, 3 NON-ISOMORPHIC at W = [1,2] (missing: none).  Confirmed NOT caused by the
+//   2026-09-12 EquationsByRebase change: it drifts identically with that file reverted to HEAD.
+//   The three committed entries are genus-0 conics, and two of them differ from what regenerates by
+//   exactly -1/2 -- a NON-SQUARE, i.e. a quadratic twist, which is the known unpinned-y2-scale class
+//   ([[committed-models-can-be-unreproducible]]), not a lost cover.  Which side is correct is NOT
+//   settled: there is no Guo-Yang oracle at 10_3.  Resolve that before adding it here or to
+//   MR_KNOWN_DRIFT -- a known-drift row added without a diagnosis is how 26_3's row went inert.
+CHEAP_BASES := ["6_1", "10_1", "14_1", "22_1", "6_7", "6_13", "10_7", "26_3",
+                "34_1", "46_1", "6_5", "106_1", "122_1", "118_1"];
 
 mr_sel := CHEAP_BASES;
 mr_env := GetEnv("MODELREGEN_BASES");
