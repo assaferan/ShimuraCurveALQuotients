@@ -1,0 +1,179 @@
+diff --git a/BorcherdsForms.m b/BorcherdsForms.m
+index 8499be9..2e49e50 100644
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -1051,6 +1051,81 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+ 
+                     V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
+                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
++
++                    // ===== PROBE_EVEN (throwaway branch; never merge) =====
++                    // POSITIVE CONTROL for the even-correction escape hatch.  The hatch claims a
++                    // double cover depends on its branch divisor only MOD 2, so adding an EVEN
++                    // divisor changes the Borcherds form but not the cover.  Obstructed bases have
++                    // no model to compare against, so test the claim HERE instead, on a base that
++                    // already works and has a committed model: perturb the target by an even
++                    // amount at a discriminant NOT in the ramification divisor, and see whether
++                    // the pipeline still lands on the same curve.
++                    // CONFOUND CONTROL: by default perturb only the COVER keys (i > 0), never the
++                    // two hauptmoduls (keys -1, -2).  EquationsCovers.m:218 builds d_divs from the
++                    // hauptmodul divisors' SUPPORT (it keeps T[1] and discards the multiplicity
++                    // T[2]), and d_divs then drives CandidateDiscriminants' Keep set and
++                    // AbsoluteValuesAtCMPoints' Include set.  Perturbing a hauptmodul would
++                    // therefore change which CM points are selected, so a failure could not be
++                    // attributed to the cover-invariance claim under test -- it might just be CM
++                    // starvation.  PROBE_EVEN_KEYS=all opts into the confounded variant on purpose.
++                    probe_pert := [];
++                    probe_even := GetEnv("PROBE_EVEN");
++                    probe_keys := GetEnv("PROBE_EVEN_KEYS");
++                    if probe_keys eq "" then probe_keys := "covers"; end if;
++                    if (probe_even ne "") and (probe_keys eq "covers") and (i lt 0) then
++                        printf "PROBEEVEN key %o SKIPPED (hauptmodul; PROBE_EVEN_KEYS=covers)\n", i;
++                        probe_even := "";
++                    end if;
++                    if probe_even ne "" then
++                        amt := StringToInteger(probe_even);
++                        ram_ds := {-pt[1] : pt in ram};
++                        // AVOID THE CM EVALUATION SET.  Placing the even correction at a
++                        // discriminant that is later used as a Schofer evaluation point makes the
++                        // form VANISH there, so ValuesAtCMPoints hits log|0| and dies in
++                        // RationalNumber ("s does not represent a rational number").  That is
++                        // exactly what the first run of this control did -- it picked cand[1] =
++                        // disc 11, which was one of the five CM points {3,11,20,24,51} -- so the
++                        // failure was self-inflicted, not evidence against the hatch.
++                        // PROBE_EVEN_AVOID is a comma-separated list of |disc| to steer clear of;
++                        // PROBE_EVEN_DISC pins the choice outright.
++                        avoid := {};
++                        av := GetEnv("PROBE_EVEN_AVOID");
++                        if av ne "" then
++                            avoid := {StringToInteger(s) : s in Split(av, ",")};
++                        end if;
++                        // HYPOTHESIS UNDER TEST: the correction discriminant must be COPRIME TO N.
++                        // Avoiding the CM evaluation set was not sufficient -- the rerun placed the
++                        // correction at disc 180 and 360, neither of them an evaluation point, and
++                        // ValuesAtCMPoints still died in RationalNumber.  Both are divisible by 9,
++                        // and N = 3 for the control base, so they are non-coprime to the level --
++                        // the axis that [[embedding-selection-root-cause]] ties to non-rational
++                        // Schofer values.  Worse, the "prefer the largest |disc|" heuristic
++                        // actively SELECTED such discriminants.  PROBE_EVEN_COPRIME=0 disables.
++                        require_cop := GetEnv("PROBE_EVEN_COPRIME") ne "0";
++                        cand := [j : j in [1..#relevant_ds] | (relevant_ds[j] notin ram_ds)
++                                                          and (AbsoluteValue(relevant_ds[j]) notin avoid)
++                                                          and ((not require_cop)
++                                                               or (GCD(AbsoluteValue(relevant_ds[j]), Xstar`N) eq 1))];
++                        pinned := GetEnv("PROBE_EVEN_DISC");
++                        if pinned ne "" then
++                            pd := StringToInteger(pinned);
++                            cand := [j : j in cand | AbsoluteValue(relevant_ds[j]) eq pd];
++                        end if;
++                        if not IsEmpty(cand) then
++                            // prefer the LARGEST |disc|: the CM evaluation set is built at small
++                            // bd, so large discriminants are the least likely to collide.
++                            _, mi := Maximum([AbsoluteValue(relevant_ds[j]) : j in cand]);
++                            jj := cand[mi];
++                            target_v +:= amt*V.jj;
++                            probe_pert := [<-relevant_ds[jj], amt>];
++                            printf "PROBEEVEN key %o perturb disc %o by %o\n",
++                                   i, relevant_ds[jj], amt;
++                        else
++                            printf "PROBEEVEN key %o NO free discriminant available\n", i;
++                        end if;
++                    end if;
++                    // ===== end PROBE_EVEN =====
++
+                     
+                     found_v := target_v in Image(coeffs_trunc);
+                    
+@@ -1102,7 +1177,16 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+                     // check divisor
+                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
+                     
+-                    assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
++                    if not IsEmpty(probe_pert) then
++                        expected := {<pt[1], div_coeffs[j]> : j->pt in ram} join {<p[1], p[2]> : p in probe_pert};
++                        printf "PROBEEVEN key %o div_f %o\n", i, Sort(div_f);
++                        printf "PROBEEVEN key %o expected %o\n", i, Sort(SetToSequence(expected));
++                        if Set(div_f) ne expected then
++                            printf "PROBEEVEN key %o DIVISOR MISMATCH\n", i;
++                        end if;
++                    else
++                        assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
++                    end if;
+                 end for;
+                 if found_all then break; end if;
+             end for;
+diff --git a/SchoferFormula.m b/SchoferFormula.m
+index 0d4db75..436837e 100644
+--- a/SchoferFormula.m
++++ b/SchoferFormula.m
+@@ -1005,6 +1005,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
+     // wrong on multi-term inputs, while odd-N bases got no term at all -- the exact value is
+     // nonzero on some odd-N bases (X0^10(11) reproduces Guo-Yang Table A.2 with it).
+     // The evaluation does not depend on d, so it runs once per form and is cached on the form.
++    if GetEnv("PROBE_M0") ne "" and IsEmpty(Nprimes) then
++        printf "M0TERM d %o d_fund %o firing 0 Nprimes [] (no level term is due here)\n", d, d_fund;
++    end if;
+     if not IsEmpty(Nprimes) then
+         kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
+         if exists{eta : eta in etas | not assigned eta`m0mult} then
+@@ -1022,6 +1025,16 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
+         // quadratic points of X0^10(23) were the first to expose the difference.
+         for i->eta in etas do
+             log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
++            // ===== PROBE_M0 (throwaway instrumentation; never merge) =====
++            // Makes prediction 3 of AM-REASSESSMENT.md testable: at a bad cell, was the outer
++            // m=0 term actually APPLIED, and with what multiplier?  If the cells that are
++            // non-rational are ones where this fired with a nonzero m0mult, then the missing
++            // log N cannot be their cause.
++            if GetEnv("PROBE_M0") ne "" then
++                printf "M0TERM d %o d_fund %o firing 1 Nprimes %o form %o m0mult %o degree %o\n",
++                       d, d_fund, Nprimes, i, eta`m0mult, PointDegree;
++            end if;
++            // ===== end PROBE_M0 =====
+         end for;
+     end if;
+ 
+@@ -1923,10 +1936,42 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum :
+         row_scales[k] +:= scale_factors[i];
+     end for;
+ 
++    // ===== PROBE_EVEN diagnostic (throwaway branch; never merge) =====
++    // Three guesses at why an even divisor correction breaks this conversion have now failed
++    // (CM-point collision, then coprimality to N).  Stop guessing: report exactly WHICH cells
++    // are non-rational and at which discriminant, so the pattern is read off rather than
++    // predicted.  NOTE this is a DIFFERENT RationalNumber call from the one the rescued
++    // valuesatcmpoints-characterization.patch instruments (that one is in the 2-argument
++    // intrinsic at ~1534, which indeed has no Xstar); here Xstar is in scope via the table.
++    if GetEnv("PROBE_NONRAT") ne "" then
++        allds := abs_schofer_tab`Discs;
++        nbad := 0;
++        for i->y in table do
++            for j->x in y do
++                ok := true;
++                try
++                    _ := RationalNumber(x);
++                catch e
++                    ok := false;
++                end try;
++                if not ok then
++                    nbad +:= 1;
++                    dj := (j le #allds) select allds[j] else 0;
++                    printf "NONRAT row %o col %o disc %o gcd(disc,N)=%o inK %o\n",
++                           i, j, dj, GCD(AbsoluteValue(dj), Xstar`N),
++                           i in abs_schofer_tab`K_idxs;
++                end if;
++            end for;
++        end for;
++        printf "NONRAT TOTAL %o cells; nrows %o ndiscs %o N %o\n",
++               nbad, #table, #allds, Xstar`N;
++    end if;
++    // ===== end PROBE_EVEN diagnostic =====
++
+     // make table values into rational numbers
+     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
+     abs_schofer_tab`RowScales := row_scales;
+-    
++
+     //find signs on the hauptmodul rows
+     table := abs_schofer_tab`Values;
+     s := table[s_idx];

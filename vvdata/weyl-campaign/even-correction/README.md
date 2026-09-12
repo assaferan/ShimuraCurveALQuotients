@@ -137,3 +137,26 @@ is the well-posed next theorem, and until it exists the escape hatch cannot be f
 
 All three patches are THROWAWAY-branch instrumentation; branches `even-correction` (probe) and
 `even-control` (perturbation) are off `619051a`.
+
+---
+
+## ⚠ SUPERSEDED IN PART — see `AM-REASSESSMENT.md` (2026-09-12)
+
+§4 above attributes the blockage to the `A_m` / `Kappa0` log-`N` defect. **That attribution does
+not survive its own evidence and is withdrawn.** The measurements in §1–§3 all stand; what changed
+is what they mean.
+
+In short: `A_m` is defined so that `sum_m c(-m) A_m = mult(f)`, the code ALREADY adds exactly
+`mult(f) log N` at firing CM points (`SchoferFormula.m:1024`, which is `prop:kappa0` verbatim), and
+that code was live at `619051a` — the commit these branches were cut from. Re-running the control
+on current code: **12 of 18 non-rational cells sit at NON-FIRING discriminants** where no `log N` is
+owed, and at the 6 firing ones the term fired with a nonzero multiplier and the cell was
+non-rational anyway.
+
+The real mechanism is INTEGRALITY: the perturbed form has half-integral `c_eta(0)`, and
+`IntegralSolution := true` shows the perturbed divisor admits no integral form at all — while the
+unperturbed baseline passes cleanly under the same flag (the control that makes that verdict safe).
+
+⇒ The hatch is a SEARCH for an even perturbation that is also integral, not a wait for a theorem.
+`probe-ported-2026-09-12.patch` is the instrumentation ported to post-vx-fix code, with a new
+`PROBE_M0` that reports the outer m=0 term's firing status and multiplier per CM point and form.
