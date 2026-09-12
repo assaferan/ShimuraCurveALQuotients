@@ -292,3 +292,93 @@ at `34_3` and test only whether the resulting form is integral -- i.e. whether t
 candidate, and the baseline control above shows the criterion is meaningful at this base. If some
 even perturbation IS integral, the hatch reopens on a completely different route from the one
 `PLAN.md` currently names.
+
+---
+
+# ⚠ CORRECTION TO THIS FILE'S OWN CONCLUSION (same day, after the sweep)
+
+The CONCLUSION above says the hatch "is blocked on INTEGRALITY". **That is too strong, and the
+sweep that was proposed to confirm it is what refuted it.** Integrality is a REAL contributing
+cause but NOT the whole cause.
+
+## What the sweep established (and it is real)
+
+Hoisting the test inside the run -- `coeffs_trunc` and `target_v` are already computed, so each
+candidate is one linear-algebra test rather than one pipeline run -- swept all 21 discriminants x
+{+-2,+-4,+-6} at every key:
+
+    834 candidates:  all in-image (34_3 is unobstructed => surjective divisor map)
+                     170 integrally solvable, 664 not
+
+    integral at ALL 7 cover keys, none ramified:
+        disc 164  at every amount tested (+-2, +-4, +-6)
+        disc  56  at +-4
+        disc 180  at +-4
+
+**And it identified exactly what the 2026-08-31 experiment did wrong.** That run's heuristic is
+"prefer the LARGEST |disc|", chosen to dodge collision with the CM evaluation set. It therefore
+picked disc 296 for keys 8791/8793/8794/8797 and disc 164 for 8792/8795/8796. Measured:
+
+    disc 164, amt +2  ->  intsol TRUE  at every key
+    disc 296, amt +2  ->  intsol FALSE at every key it appears
+
+So four of the seven keys were perturbed at a NON-INTEGRAL discriminant, purely because of a
+heuristic inside throwaway instrumentation.
+
+## But pinning the integral discriminant does NOT fix the pipeline
+
+Prediction recorded before the run: 0 non-rational cells. **WRONG.**
+
+    PROBE_EVEN_DISC=164, amt +2:   NONRAT TOTAL 11 cells   (was 18)   still dies
+    divisors exactly ram + <-164,2> at all 7 keys, no mismatches
+    m0mult now -3 9 0 -6 15 18 -3 6 3   <- ALL INTEGERS (was quarter-integers)
+
+So the integrality repair DID work on its own terms -- `c_eta(0)` is integral again and 7 of the 18
+cells went away -- and **11 cells remain anyway**, split 4 firing / 7 non-firing. A fractional
+multiplier was A cause of non-rationality, not THE cause.
+
+⇒ **The hatch is still blocked, by a residual cause that is NOT identified.** It is not the missing
+`log N` (that refutation stands, on its own evidence), and it is not solely non-integrality of the
+Borcherds solution. Do not write the next confident single-cause story without a control that could
+falsify it -- this file has now produced two.
+
+⚠ What survives unchanged: everything in the "three predictions" section above, the identification
+of the 296-vs-164 heuristic error, and the demotion of `A_m` -- which rests on the firing/non-firing
+split and on the outer term already supplying `mult(f) log N`, neither of which this correction
+touches.
+
+## The residual is INVARIANT — 11 cells, whatever the integral perturbation
+
+| config                     | perturbed?            | NONRAT | m0mult integral |
+|----------------------------|-----------------------|--------|-----------------|
+| baseline                   | no                    | **0**  | yes             |
+| heuristic (296/164, +2)    | yes, 4 keys at 296    | **18** | NO (quarter)    |
+| pinned 164, +2             | yes                   | **11** | yes             |
+| pinned 164, +4             | yes                   | **11** | yes             |
+| pinned 56,  +4             | yes                   | **11** | yes             |
+| pinned 180, +4             | NO -- excluded        | **0**  | yes (= baseline)|
+
+⚠ `180` is divisible by `N = 3` and `PROBE_EVEN_COPRIME` defaults to requiring coprimality, so that
+run applied NO perturbation at all. Its `m0mult` equals the baseline's exactly. It is therefore an
+accidental but useful NULL CONTROL: it confirms the harness reports 0 cells when nothing is
+perturbed, so the 11s are caused by the perturbation and not by the instrumentation.
+
+⇒ **Every genuine integral perturbation gives exactly 11 cells, independent of discriminant (164 or
+56) and of amount (+2 or +4).** The residual does not depend on WHICH even divisor is added, only
+on the fact that one was. That is a structural signal, and it is the single most useful thing this
+sweep produced: it rules out "pick a better discriminant" as the remedy, which is precisely what
+the previous round of reasoning would have suggested next.
+
+## What to do next, and what NOT to do
+
+⚠ **DO NOT propose a fifth single-cause explanation from this data.** The count so far: CM-set
+collision, coprimality to `N`, the missing `log N`/`A_m`, and integrality-alone. Each accounted for
+part of the data and was promoted to the whole of it; each was refuted by a control. Integrality is
+the only one that survives AS A PARTIAL cause (it accounts for the 18 -> 11 difference, and for the
+multiplier becoming integral).
+
+⇒ **The next step is instrumentation, not hypothesis.** Take ONE specific bad cell and print what
+`RationalNumber` is actually handed: which prime's exponent is non-rational, and which term of the
+Schofer sum contributed it. The bad cells are stable across configurations, so a single cell can be
+followed all the way through. That converts guessing into reading, which is what settled the
+firing/non-firing question earlier in this file.
