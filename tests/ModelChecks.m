@@ -10,7 +10,24 @@
 //       the W-fixed part of the D-new space) equals the model's actual point count.
 //
 // None of these uses the Borcherds/Schofer CM machinery that produced the models, so they are
-// genuine cross-checks.  Check [4] reuses the codebase's own trace-formula point count (the same
+// genuine cross-checks.
+//
+// ⚠⚠ KNOWN BLIND SPOT, MEASURED 2026-09-12: **ALL FOUR CHECKS ARE STRUCTURALLY BLIND TO A
+// QUADRATIC TWIST AT GENUS 0**, and 282 of the 822 committed entries (the LARGEST genus class,
+// across 75 of the model files) are genus 0.  A conic and its non-square twist have:
+//   [1] the same genus (0),                     [2] so both match X`g,
+//   [3] the same (trivial) Weil polynomial,      [4] and the SAME point count over every F_p --
+// because every smooth conic over a finite field is isotropic (Chevalley-Warning), so BOTH twists
+// are P^1 over F_p and both have exactly p+1 points.  Verified directly on models_10_3.m's [1,2]
+// entries: two of the three are NOT isomorphic to their -2 twists, yet the point counts agree at
+// p = 7,11,13,19,23,29,31 (8,12,14,20,24,30,32 = p+1) in every case.
+// ⇒ A genus-0 row passing here is NOT evidence about its twist class; the check CANNOT fail on
+// that axis.  This is why models_10_3.m's [1,2] drift (3 non-isomorphic genus-0 conics, found by
+// ModelRegen on 2026-09-12) was invisible to CI.  An arbiter for a genus-0 twist has to be
+// something else -- local invariants / the Brauer class at the ramified primes -- and the repo
+// does not currently have one.
+// This is the third exempted-class defect pool found the same way (after CRV entries and the
+// un-re-derived cover keys); see [[crv-entries-were-never-checked]].  Check [4] reuses the codebase's own trace-formula point count (the same
 // routine behind the Weil/automorphism filters), so it builds no modular-symbol spaces.
 //
 // Model files are auto-discovered, so new models are covered without editing this file.
