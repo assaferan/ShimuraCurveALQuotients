@@ -452,3 +452,60 @@ emitted, and the denominator 3 has to enter there.
 ⚠ Convergence worth noting but NOT leaning on: `PLAN.md` item 0f and
 [[b-eisenstein-coefficients-solved]] independently localise the remaining open object to `p | D`.
 This arrives at the same primes by a different route. That is corroboration of WHERE, not of WHY.
+
+---
+
+# THE MECHANISM, MEASURED END TO END: an integrality CONGRUENCE on the principal part
+
+Chain, each step measured rather than inferred:
+
+1. `RationalNumber` fails **iff some prime carries a non-integral exponent** (LogSum.m:137). The
+   failure is a fractional EXPONENT, not an irrationality.
+2. The prime is **always 17**, denominator **always 3** -- and `D = 34 = 2*17`, so it is a RAMIFIED
+   prime, not the level prime. Every other prime is integral in every bad cell.
+3. It is present BEFORE the final rescaling: `scale = -1/4` (denominator 4, wrong prime), and no
+   cell goes integral -> fractional across that step. `c17_pre = -20/3` already.
+4. **The principal-part coefficients are INTEGERS: 362 of 362 have denominator 1.**
+5. **`Kappa0`'s own log-17 coefficients are FRACTIONAL: 14 denominator 1, 235 denominator 3, 113
+   denominator 9.** Ninths are natural at `p = 17`, since `p + 1 = 18` and the ramified factor is
+   `(p-1)/(p+1) = 16/18 = 8/9`.
+
+⇒ **The fractional log-17 coefficients are INTRINSIC to `Kappa0` at the ramified prime.** They are
+not a defect. In a legitimate Borcherds divisor the weighted sum
+
+        sum_m c(-m) * kappa_17(m)
+
+comes out an INTEGER -- the fractions cancel. The baseline demonstrates it: 0 non-rational cells,
+`c17` integral at all 63. **The perturbation breaks that cancellation**, and that is the whole of
+the residual.
+
+## What this means for the hatch: there is a FOURTH condition, and it was invisible
+
+A usable perturbation must satisfy, simultaneously:
+
+    1. EVEN                      -- so the double cover is unchanged          (parity survey: 28/28)
+    2. phi(target) = 0           -- Borcherds' criterion                      (always solvable, gcd(phi)=1)
+    3. integral solution         -- so a Borcherds form exists at all         (measured: 170/834 candidates)
+    4. sum_m c(-m) kappa_p(m) in Z  at every ramified p | D and every CM point d   <-- NEW
+
+Condition 4 has been failing silently in every attempt since 2026-08-30. It is not implied by 3:
+the `164/+2` run has a fully integral solution AND integral principal-part coefficients, and still
+violates 4 at 11 cells.
+
+⚠ **Condition 4 is CHEAP to test**, which is what makes this actionable: `kappa_p(m)` depends only
+on `(m, d, Q, lambda)`, not on the model, so a candidate perturbation can be screened by evaluating
+one weighted sum per (ramified prime, CM point) -- no covers, no CM tables, no pipeline run. That
+is the same hoisting trick that made the integrality sweep cheap.
+
+## Status of this explanation vs the six before it
+
+This is the seventh candidate, so it is worth being explicit about why it is different in kind.
+The previous six were HYPOTHESES ABOUT A CAUSE. This is a MEASUREMENT OF WHERE THE FRACTION LIVES,
+with counts (362/362 integral coefficients; 348 of 362 fractional kappa values) and with its
+control already run -- the baseline satisfies the congruence at all 63 cells, which is exactly what
+"0 non-rational cells" means.
+
+⚠ What remains inferred: that condition 4 is SATISFIABLE together with 1-3. Nothing here shows a
+perturbation exists meeting all four. That is the next thing to test, and it is now testable
+cheaply. If none exists, the hatch is dead for a precise and statable reason rather than an
+unexplained one -- which is itself a result.
