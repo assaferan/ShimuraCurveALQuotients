@@ -149,10 +149,56 @@ index 8499be9..07f9783 100644
                  if found_all then break; end if;
              end for;
 diff --git a/SchoferFormula.m b/SchoferFormula.m
-index 0d4db75..436837e 100644
+index 0d4db75..bbd3150 100644
 --- a/SchoferFormula.m
 +++ b/SchoferFormula.m
-@@ -1005,6 +1005,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
+@@ -703,6 +703,23 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
+         log_coeffs_m := Kappa0(m,d,Q,lambda);
+         vprintf ShimuraQuotients, 5 : "\t\t";
+         vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
++        // ===== PROBE_TERM (throwaway) =====
++        // The denominator-3 exponent on log 17 is present BEFORE `scale` (which is -1/4), so it
++        // enters in THIS accumulation.  Binary question: does it come from the principal-part
++        // coefficient Coefficient(f,-m), or from Kappa0's own log-17 coefficient?
++        if GetEnv("PROBE_TERM") ne "" then
++            k17 := IsDefined(log_coeffs_m`log_coeffs, 17)
++                   select log_coeffs_m`log_coeffs[17] else 0;
++            for i->f in fs do
++                cf := Coefficient(f,-m);
++                if (cf ne 0) and (k17 ne 0) then
++                    printf "TERM d %o form %o m %o coef %o coefden %o kappa17 %o kappa17den %o contrib %o\n",
++                           d, i, m, cf, Denominator(Rationals()!cf), k17,
++                           Denominator(Rationals()!k17), cf*k17;
++                end if;
++            end for;
++        end if;
++        // ===== end PROBE_TERM =====
+         for i->f in fs do
+             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
+         end for;
+@@ -710,6 +727,21 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
+ 
+     // rescaling
+ 
++    // ===== PROBE_SCALE (throwaway) =====
++    // Is the denominator-3 exponent on log 17 introduced HERE, by the rational `scale`, rather
++    // than by any kappaminus term?  If so the pre-scale coefficient is integral and `scale` has
++    // denominator 3 -- which would also explain why only SOME cells fail (those whose unscaled
++    // c17 is not divisible by 3) and why the effect is per-(form, disc).
++    if GetEnv("PROBE_SCALE") ne "" then
++        for i in [1..#fs] do
++            c17pre := IsDefined(log_coeffs[i]`log_coeffs, 17)
++                      select log_coeffs[i]`log_coeffs[17] else 0;
++            printf "SCALEPROBE d %o form %o scale %o scaleden %o c17_pre %o c17_post %o\n",
++                   d, i, scale, Denominator(scale), c17pre, scale*c17pre;
++        end for;
++    end if;
++    // ===== end PROBE_SCALE =====
++
+     for i in [1..#fs] do
+         log_coeffs[i] := scale * log_coeffs[i];
+     end for;
+@@ -1005,6 +1037,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
      // wrong on multi-term inputs, while odd-N bases got no term at all -- the exact value is
      // nonzero on some odd-N bases (X0^10(11) reproduces Guo-Yang Table A.2 with it).
      // The evaluation does not depend on d, so it runs once per form and is cached on the form.
@@ -162,7 +208,7 @@ index 0d4db75..436837e 100644
      if not IsEmpty(Nprimes) then
          kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
          if exists{eta : eta in etas | not assigned eta`m0mult} then
-@@ -1022,6 +1025,16 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
+@@ -1022,6 +1057,16 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
          // quadratic points of X0^10(23) were the first to expose the difference.
          for i->eta in etas do
              log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
@@ -179,7 +225,7 @@ index 0d4db75..436837e 100644
          end for;
      end if;
  
-@@ -1923,10 +1936,42 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum :
+@@ -1923,10 +1968,78 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum :
          row_scales[k] +:= scale_factors[i];
      end for;
  
@@ -207,11 +253,47 @@ index 0d4db75..436837e 100644
 +                    printf "NONRAT row %o col %o disc %o gcd(disc,N)=%o inK %o\n",
 +                           i, j, dj, GCD(AbsoluteValue(dj), Xstar`N),
 +                           i in abs_schofer_tab`K_idxs;
++                    // ===== PROBE_NONRAT_DETAIL =====
++                    // RationalNumber fails iff SOME prime carries a NON-INTEGRAL coefficient
++                    // (LogSum.m:137 requires &and[IsIntegral(c)]).  So the failure is not an
++                    // irrationality at all -- it is a fractional exponent, and naming the prime
++                    // and the fraction is the whole diagnostic.  Print every term, flagging the
++                    // offenders, so the bad prime can be traced back to the Schofer term that
++                    // produced it instead of guessed at.
++                    if Type(x) eq LogSm then
++                        for pp in Sort(Setseq(Keys(x`log_coeffs))) do
++                            cc := x`log_coeffs[pp];
++                            if not IsIntegral(cc) then
++                                printf "   NONRATTERM row %o disc %o p %o coeff %o den %o BAD\n",
++                                       i, dj, pp, cc, Denominator(Rationals()!cc);
++                            end if;
++                        end for;
++                        printf "   NONRATFULL row %o disc %o : %o\n", i, dj,
++                               [<pp, x`log_coeffs[pp]> : pp in Sort(Setseq(Keys(x`log_coeffs)))];
++                    end if;
++                    // ===== end PROBE_NONRAT_DETAIL =====
 +                end if;
 +            end for;
 +        end for;
 +        printf "NONRAT TOTAL %o cells; nrows %o ndiscs %o N %o\n",
 +               nbad, #table, #allds, Xstar`N;
++        // ===== PROBE_ALLCELLS: dump EVERY cell, not just the bad ones =====
++        // So the perturbed run can be DIFFED against the baseline at the same (row, disc).
++        // The bad cells all fail on p = 17 = the ramified prime of D = 34, with a coefficient that
++        // is constant in d and varies only by form -- so the question is what the perturbation
++        // SHIFTED, and that needs the baseline's value at the same cell.
++        if GetEnv("PROBE_ALLCELLS") ne "" then
++            for i->y in table do
++                for j->x in y do
++                    if Type(x) ne LogSm then continue; end if;
++                    dj := (j le #allds) select allds[j] else 0;
++                    c17 := IsDefined(x`log_coeffs, 17) select x`log_coeffs[17] else 0;
++                    printf "ALLCELL row %o disc %o c17 %o full %o\n", i, dj, c17,
++                           [<pp, x`log_coeffs[pp]> : pp in Sort(Setseq(Keys(x`log_coeffs)))];
++                end for;
++            end for;
++        end if;
++        // ===== end PROBE_ALLCELLS =====
 +    end if;
 +    // ===== end PROBE_EVEN diagnostic =====
 +
