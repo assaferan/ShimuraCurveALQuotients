@@ -1,8 +1,8 @@
 diff --git a/BorcherdsForms.m b/BorcherdsForms.m
-index 8499be9..2e49e50 100644
+index 8499be9..07f9783 100644
 --- a/BorcherdsForms.m
 +++ b/BorcherdsForms.m
-@@ -1051,6 +1051,81 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+@@ -1051,6 +1051,127 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
  
                      V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
                      target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
@@ -23,6 +23,52 @@ index 8499be9..2e49e50 100644
 +                    // therefore change which CM points are selected, so a failure could not be
 +                    // attributed to the cover-invariance claim under test -- it might just be CM
 +                    // starvation.  PROBE_EVEN_KEYS=all opts into the confounded variant on purpose.
++                    // ===== PROBE_INTSWEEP (throwaway; never merge) =====
++                    // THE INTEGRALITY SEARCH.  The hatch needs a perturbation that is
++                    // simultaneously (1) even, so the double cover is unchanged, and (2) INTEGRAL,
++                    // since a non-integral solution gives half-integral c_eta(0), a fractional
++                    // exponent on a prime, and the RationalNumber failure.  Condition 2 is the open
++                    // one (AM-REASSESSMENT.md).
++                    // ⚠ HOISTED ON PURPOSE: coeffs_trunc and target_v are ALREADY COMPUTED here, so
++                    // every candidate (disc, amount) is one linear-algebra test rather than one
++                    // pipeline run.  Testing them in separate runs would repeat the expensive part
++                    // (BorcherdsForms) once per candidate for no reason.
++                    // Reports, per candidate: in-image over Q, and integrally solvable over Z --
++                    // the same IsConsistent test the IntegralSolution branch uses below.
++                    if GetEnv("PROBE_INTSWEEP") ne "" then
++                        swamts := [2, 4, 6, -2, -4, -6];
++                        ram_ds_sw := {-pt[1] : pt in ram};
++                        ctQs := ChangeRing(coeffs_trunc, Rationals());
++                        for jj in [1..#relevant_ds] do
++                            for amt in swamts do
++                                tv := target_v + amt*V.jj;
++                                inim := tv in Image(coeffs_trunc);
++                                tvQ := ChangeRing(tv, Rationals());
++                                dMs := LCM([Denominator(x) : x in Eltseq(ctQs)] cat
++                                           [Denominator(x) : x in Eltseq(tvQ)]);
++                                okZs := false;
++                                if inim then
++                                    okZs := IsConsistent(ChangeRing(dMs*ctQs, Integers()),
++                                                         ChangeRing(dMs*tvQ, Integers()));
++                                end if;
++                                printf "INTSWEEP key %o disc %o isram %o amt %o inimage %o intsol %o\n",
++                                       i, relevant_ds[jj], relevant_ds[jj] in ram_ds_sw, amt, inim, okZs;
++                            end for;
++                        end for;
++                        // the unperturbed reference, so the sweep can be read against it
++                        tv0Q := ChangeRing(target_v, Rationals());
++                        dM0 := LCM([Denominator(x) : x in Eltseq(ctQs)] cat
++                                   [Denominator(x) : x in Eltseq(tv0Q)]);
++                        in0 := target_v in Image(coeffs_trunc);
++                        ok0 := in0 select IsConsistent(ChangeRing(dM0*ctQs, Integers()),
++                                                       ChangeRing(dM0*tv0Q, Integers())) else false;
++                        printf "INTSWEEP key %o BASELINE amt 0 inimage %o intsol %o\n", i, in0, ok0;
++                    end if;
++                    // ===== end PROBE_INTSWEEP =====
++                    if GetEnv("PROBE_DS") ne "" then
++                        printf "PROBEDS key %o relevant_ds %o\n", i, relevant_ds;
++                        printf "PROBEDS key %o ram %o\n", i, ram;
++                    end if;
 +                    probe_pert := [];
 +                    probe_even := GetEnv("PROBE_EVEN");
 +                    probe_keys := GetEnv("PROBE_EVEN_KEYS");
@@ -84,7 +130,7 @@ index 8499be9..2e49e50 100644
                      
                      found_v := target_v in Image(coeffs_trunc);
                     
-@@ -1102,7 +1177,16 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+@@ -1102,7 +1223,16 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
                      // check divisor
                      div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                      
