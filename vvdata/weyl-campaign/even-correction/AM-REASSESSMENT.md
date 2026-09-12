@@ -622,3 +622,56 @@ components that are NOT separately `0 mod M` -- in which case this screen is far
    screen above is void and the hatch's reach is much larger than 3-4.
 
 ⚠ Do not quote the 3-4 figure without the assumption. It is a conditional result.
+
+---
+
+# ⚠⚠ `amt = 0 mod 2N` IS REFUTED. The modulus is `D`-dependent, NOT `N`-dependent.
+
+The `34_7` disambiguation was run precisely because `N` and `oddpart(p+1)` coincide at `34_3`.
+It killed the law I had recorded.
+
+    base   N   amt   cells   works   2N predicts   mod 6 predicts
+    34_3   3    2     11      no        no             no
+    34_3   3    4     11      no        no             no
+    34_3   3    6      0     YES       YES            YES
+    34_3   3    8     11      no        no             no
+    34_3   3   12      0     YES       YES            YES
+    34_3   3    3     23      no        no             no
+    34_3   3    9     22      no        no             no
+    34_7   7   28     31      no       YES  <- WRONG   no
+    34_7   7   36      0     YES        no  <- WRONG  YES
+    34_7   7    4     31      no        no             no
+
+⇒ **`2N` mispredicts BOTH discriminating points at `34_7`**: `28` is divisible by `2N = 14` and
+FAILS; `36` is not and CLEARS. **`mod 6` matches all ten measurements across both `N`.**
+
+⇒ **The modulus did not move when `N` went 3 -> 7.** It is a function of `D`, and `N` is eliminated.
+
+⚠ Controls held: `amt = 4` fails at both bases, and all 7 cover keys were perturbed in every run
+(`perturbed_keys=7`), so no run is an accidental null like `180/+4` was.
+
+## Still confounded -- three formulas give 6 at `D = 34`
+
+    2*oddpart(2+1)                =  6      (the prime 2)
+    2*gcd_{p|D} oddpart(p+1)      =  6      (gcd(3,9))
+    2*oddpart(smallest p + 1)     =  6
+
+A base with a DIFFERENT `D` is needed to separate them. Choose one where the three disagree --
+e.g. an odd `D`, where there is no `p = 2` to supply the 3.
+
+## ⚠ THE DIVISIBILITY SCREEN IS VOID AND MUST BE REDONE
+
+The screen over 28 bases used `2N`, which is now refuted, so **both of its columns are worthless**:
+reading A's `106_3, 26_11, 82_5` and reading B17's `10_47, 14_17, 14_23, 62_5` are NOT candidate
+sets. ⚠ **Do not quote either.** The screen has to be re-run once the `D`-formula is pinned, and
+until then the hatch's reach is UNKNOWN -- neither the "3-4 of 28" figure nor the original "49"
+is supported.
+
+## The methodological point, recorded because it has now happened four times
+
+`A_m`, integrality-alone, `2N`, and before that the `STAR := base_label` reading -- each was fixed
+from ONE base and each was underdetermined. In every case the second base did not refine the law,
+it REPLACED it. ⇒ **Do not record a law from a single base as settled**, and when two candidate
+explanations coincide at the base in hand, say so in the write-up rather than picking the salient
+one. `2N` was chosen over `2*oddpart(p+1)` for no better reason than that `N` was the more obvious
+number.
