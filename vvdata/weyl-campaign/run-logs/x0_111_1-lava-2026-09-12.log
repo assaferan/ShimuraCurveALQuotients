@@ -1,0 +1,11 @@
+_offline/X0_111_1.m: Computing Borcherds forms...Done!
+Computing divisors of hauptmodules...Done!
+Computing candidate discriminants...Computing absolute values at CM points...Done!
+Computing actual values at CM points...sign of -88 unresolved (2 candidates); trying spare -168.
+Done!
+Computing equations of covers...Done!
+Computing equations above P1s and conics...Done
+Computing equations above pointless conics...Done
+Filling empty covers by Hauptmodul rebase...Done
+	X0^111(1): 1 curve comparison(s), 0 involution comparison(s), 1/1 expected covers matched; 4 committed model cover(s) re-derived (0 CRV skipped)
+Success! 58595.120 s
