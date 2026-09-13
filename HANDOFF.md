@@ -11,6 +11,94 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-13 (evening) — the BACKLOG restarts: 5 new models and a second oracle
+
+The even-correction line was closed (below); the session then switched to the dormant model
+backlog. Everything here is committed and pushed on both branches.
+
+### ✅ FIVE NEW MODELS, all VerifyModelSet-clean and each NEGATIVE-CONTROLLED
+
+    base   M     where      keys        VerifyModelSet   negctl (twist one entry by -1)
+    38_3   228   local      10 / 15     116 / 0          --
+    46_3   276   local      10 / 15     116 / 0          116 / 3
+    35_2   280   lovelace   12 / 15     146 / 0          146 / 7
+    51_2   408   lovelace   10 / 15     116 / 0          116 / 6
+    57_2   456   lovelace   10 / 15     116 / 0          116 / 5
+
+`46_3` and `35_2` were both Tier 0 "RationalNumber crashers" — the crash IS the m0 signature — so
+the 2026-08-23 plan's falsifiable prediction now has **two** confirmations, three weeks on.
+⚠ None of the five has a Guo-Yang oracle: this is the `10_61` evidence level.
+
+### ✅✅ A SECOND EXTERNAL ORACLE — Gonzalez-Rotger, genus one (`tests/GonzalezRotger.m`)
+
+*"Non-elliptic Shimura curves of genus one"*, JMSJ 58 (2006); arXiv:math/0612732v2, **Table 1 p.8**.
+Their eleven genus-one `(D,N)` are **exactly** the eleven our own curve data gives.
+
+⇒ **8 of 8 comparable committed models MATCH the published equation** — `14_1 15_1 34_1 46_1 6_5
+6_7 6_13 10_7`, none of which had any external corroboration before. Not comparable: `21_1`/`33_1`
+(no model) and **`10_3`, whose `W=[1]` key is EMPTY** — filling it would bring an oracle to the base
+with the unresolved `[1,2]` drift, which currently has none. Its Jacobian should be `30a2`.
+
+⚠ Compare the JACOBIAN, not coefficients — the models need only be `Q`-equivalent. ⚠ And NOT via
+Magma's `Jacobian()`/`EllipticCurve()`: both want a rational point and these curves have **none** by
+construction. A first attempt returned `ERR` on both sides and printed a vacuous `MATCH` for every
+base. The test uses the paper's own `I,J` invariants, **self-checks them against the labels the
+paper itself states** before comparing ours, and both guards are negative-controlled.
+
+    X_0(21,1) : y^2 = -7x^4 + 94x^2 - 343   Jac 21a2   w_21 = (x,-y), w_7 = (-x,y)
+    X_0(33,1) : y^2 = -3x^4 - 10x^2 - 243   Jac 33a1
+
+### THE BACKLOG, RECOUNTED — and the tiers are not ordered the way the plan assumes
+
+⚠ The recorded 377/73/304 does NOT reproduce. Under the natural filter (`D>1`, star curve with
+covers) the current data gives **798 targets / 93 done / 705 missing**; the plan's missing-demand
+histogram peaks at 9 and stops at 21, ours peaks at 21 and runs to 31. Either a further filter is
+undocumented or the curve data was regenerated. **Do not quote a % complete until this is pinned.**
+Of the missing, **192 are FRESH and reachable** (squarefree `N`, `#div <= 20`, not obstructed, not
+already tried).
+
+* ✅ **`#div >= 24` IS a real wall, CONFIRMED on Normaliz** — see `normaliz-wall-probe.md`. Probe the
+  SOLVER, not the pipeline: at a matched `n/M`, `#div=12` solves in 1 s and `#div=24` TIMES OUT at
+  600 s. The plan's routing stands, for a new reason (time, not polymake's OOM).
+* ✅ **The `#div = 16-20` "marginal" tier is REACHABLE** — 3 of 4 tried built (`35_2 51_2 57_2`);
+  `69_2` failed for an unrelated reason. That tier had never been tested on Normaliz.
+* ⚠ **The `#div <= 12` "reliable" tier is NOT uniformly reliable** — `85_1` (M=340) died with a
+  **SEGFAULT at 122.7 GB** after 98 min. `#div(M)` predicts POLYTOPE cost, not downstream memory.
+  (Also corrects the old "Magma dies ~11 GB" figure again: that was a machine, not Magma.)
+* ⚠ Non-squarefree `N` (`6_25 14_9 6_49`) hits the known assertion-failed METHOD BOUNDARY. Filter
+  it out of any batch; I wasted three launches on it.
+
+### THREE CODE FIXES (`a9f33d5`), full suite 77/77
+
+1. **`SchoferFormula.m`: guard `f2 = 1`.** `IsPrimePower(1)` ERRORS in Magma, so the `Yang_tt`
+   branch crashed at any FUNDAMENTAL discriminant. Cannot regress (the path previously hard-errored).
+2. **`LogSum.m`: the runaway guard ASSERTED A WRONG CAUSE.** "the LogSum did not converge upstream"
+   is REFUTED — `Prec 300` reproduces `69_1`'s coefficient **byte-identically**. Cause is OPEN; the
+   `Prec` experiment is spent, do not repeat it. The prime is RAMIFIED (`23 | 69`).
+3. **`tests/GuoYangQuotientOracle.m`: count the unbuildable quotients.** It printed "0 skipped"
+   three lines below three `CurveQuotient failed` lines (Magma #123). Now reports them.
+
+### `21_1`: the error names the wrong discriminants (`2416ad0`, HMFIT)
+
+`find_signs_hauptmodul` reads its normalisation off the two discs where a value vanishes, so those
+two satisfy the relation BY CONSTRUCTION and can never be flagged. At `21_1` the error blames
+`[-15,-43,-51,-67]` — but those four, plus `-91` (from `gtsweep`'s wider CM selection) and `-28` up
+to sign, all agree on `scale_tilde = 36`, while the pipeline takes **9** from `d = -7`, the disc it
+reads FROM. Discrepancy exactly **4**, a perfect square, so not absorbable by the `+-1` signs.
+
+`HMFIT=1` (env-gated, OFF by default) fits the normalisation over all rational CM points and
+independently reproduces that: `scale = -4/9, scale_tilde = 36, satisfied at 5 of 6`. `21_1` then
+advances TWO stages to a NEW blocker: **"y^2 and s have poles in different places"**.
+⚠ HMFIT trusts the majority; it does not prove it. Settle it with the GR oracle, not the fit.
+
+### lovelace
+
+`69_1` KILLED as futile (we reproduced its runaway locally in 8 min). Four legacy jobs (7-9 d,
+logs silent 8-9 d) still run against the FROZEN `f87b0ae` clone. New work runs from
+**`~/shimura/scq-current`**, a COPIED tree reset to current `main` — never `git pull` the clone the
+legacy jobs run from. 17 jobs, load 17/256. Normaliz there is 3.10.2 vs 3.11.1 locally; harmless,
+lattice points are canonically sorted on cache read and write.
+
 ## Handoff — 2026-09-13 (later) — the post-condition-4 blocker, examined
 
 **Supersedes the "blocker then MOVES to `QuadraticConstraintsOnEquations`" claim in the section

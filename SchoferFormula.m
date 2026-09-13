@@ -1241,6 +1241,40 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
     scale_tilde := stilde[Index(s,0)];
     scale := s[Index(stilde,0)];
 
+    // ===== HMFIT (env-gated experiment; OFF by default) =====
+    // The normalisation above is read off the TWO discriminants where a value vanishes, so those
+    // two satisfy the relation BY CONSTRUCTION and can never be reported as bad.  If one of them
+    // carries a wrong value, every OTHER discriminant is measured against it and the error surfaces
+    // as "the others are inconsistent" -- which is exactly what X_0^21(1) does (5 discriminants
+    // agree on scale_tilde = 36; the pipeline takes 9 from d = -7, the disc it reads FROM).
+    // HMFIT=1 instead SOLVES for (scale, scale_tilde) against every rational CM point and keeps
+    // the pair satisfied at the most of them.  Experimental: it changes which datum is trusted.
+    if GetEnv("HMFIT") ne "" then
+        cand_i := [i : i in [1..#s] | Type(s[i]) ne Infty and Type(stilde[i]) ne Infty
+                                      and degs[i] eq 1];
+        best := 0; bsc := scale; bstc := scale_tilde;
+        for i in cand_i, j in cand_i do
+            if i eq j then continue; end if;
+            // solve  a1*u + b1*v = 1 ,  a2*u + b2*v = 1   with u = 1/scale, v = 1/scale_tilde
+            a1 := s[i]; b1 := stilde[i]; a2 := s[j]; b2 := stilde[j];
+            det := a1*b2 - a2*b1;
+            if det eq 0 then continue; end if;
+            u := (b2 - b1)/det; v := (a1 - a2)/det;
+            if u eq 0 or v eq 0 then continue; end if;
+            n := 0;
+            for k in cand_i do
+                if exists{ 1 : e1 in [-1,1], e2 in [-1,1] | e1*s[k]*u + e2*stilde[k]*v eq 1 }
+                    then n +:= 1; end if;
+            end for;
+            if n gt best then best := n; bsc := 1/u; bstc := 1/v; end if;
+        end for;
+        printf "HMFIT: fitted scale = %o, scale_tilde = %o, satisfied at %o of %o rational CM point(s)"
+               * " (pipeline default was scale = %o, scale_tilde = %o)\n",
+               bsc, bstc, best, #cand_i, scale, scale_tilde;
+        scale := bsc; scale_tilde := bstc;
+    end if;
+    // ===== end HMFIT =====
+
     rat_idxs := [i : i in [1..#s] | i notin inf_zero_indices and degs[i] eq 1];
     // For each rational CM point the signs are pinned by
     //     eps1*s[i]/scale + eps2*stilde[i]/scale_tilde = 1.
