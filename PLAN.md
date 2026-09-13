@@ -90,15 +90,32 @@ is not and gives 0. `mod 6` fits all ten measurements at BOTH `N`, and the modul
 `10_47/14_17/14_23/62_5` is a candidate set. **The hatch's reach is UNKNOWN**: neither "3–4 of 28"
 nor the original "49" is currently supported.
 
-⇒ **NEXT: pin the `D`-formula.** Three candidates all give 6 at `D=34` — `2*oddpart(2+1)`,
-`2*gcd_{p|D} oddpart(p+1)`, `2*oddpart(min p + 1)`. `35_1` and `65_1` separate them (`2*gcd` → 2,
-`2*minp` → 6). A sweep over a RANGE of amounts at `35_1` is running; read the modulus off the
-pattern of which amounts clear rather than testing two guesses. ⚠ Also read off WHICH PRIME carries
-the fraction at an odd `D` — the whole `2*oddpart(p+1)` family is an inference from one prime at one
-`D`, and that tests the family rather than a member of it.
-⚠ **Screen for condition 3 before attributing any failure to condition 4.** At `34_7` only `±28`
-and `±36` are integral at all 7 keys; testing `amt=6` there would have failed on condition 3 and
-been misread.
+⚠⚠ **UPDATE 2026-09-13: THE FORMULA HUNT IS PARKED. Six formulas fitted, six refuted.**
+
+    D=34 (2*17)  M = 6  EXACTLY   (N=3 and N=7 AGREE -> NOT N-dependent)
+    D=35 (5*7)   M = 12 EXACTLY
+    D=21 (3*7)   M | 6            (2,4 untestable -- they fail condition 3)
+
+Dead: `2N`, `2*oddpart(17+1)`, `2(pmin+1)`, `2(pmax+1)`, `2*gcd`, `2*lcm`. **Do not propose a
+seventh from this data.**
+
+⇒ **THE NEXT EXPERIMENT IS THE DISC-DEPENDENCE CONTROL, not another formula.** The perturbation
+DISCRIMINANT differs across the three bases (164, 32, 16), and nothing establishes the modulus is a
+property of the BASE rather than of the DISCRIMINANT. Vary the disc at FIXED base: if the modulus
+moves, "the modulus at base X" is not a well-defined object and every measurement above is really a
+`(base, disc)` pair. That decides whether the question is even well posed, and it is cheap.
+
+⚠ **RUN WITH `PROBE_EVEN_COPRIME=0`, AND COUNT `perturb disc` LINES.** That filter rests on a
+REFUTED hypothesis and silently perturbs nothing while returning 0 cells. It caused TWO null-run
+traps in one session -- the second was three runs at `21_2` reading as "all amounts clear", which
+would have refuted a formula on no computation at all.
+
+**If you would rather not resume the modulus question**, the two better-posed alternatives are:
+* **`QuadraticConstraintsOnEquations`** -- the blocker actually reached once condition 4 is
+  satisfied, never examined, and plausibly CM supply (a known rescue axis with known levers);
+* **the genus-0 twist arbiter** -- 282 entries, no oracle, and `tests/ConicClasses.m` now covers
+  only INTERNAL consistency. `W=[1]` entries come out ramified, consistent with `X^D(R)=empty`,
+  so Ogg's real-points criterion is the frame.
 
 ⚠⚠ **A METHODOLOGICAL RULE, from four recurrences in one day** (`A_m`, integrality-alone, `2N`, and
 the `STAR := base_label` reading): **a law fixed from ONE base has each time been REPLACED, not
