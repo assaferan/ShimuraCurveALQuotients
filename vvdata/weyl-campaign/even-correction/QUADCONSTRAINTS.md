@@ -261,6 +261,72 @@ that directly would need `ncols = 3 + 12 = 15` rational points against the 10 th
 §6 already establishes the load-bearing claim — the ratio is a perfect 6th power, hence a perfect
 square, hence the cover is preserved — without knowing `deg G`.
 
+## 7b. `deg Z(d)` from the divisors — a cross-check that reproduces 7/7 baseline degrees
+
+`f` is a polynomial, so its only pole is at `s = ∞`; the divisor's negative entry is that pole. At
+`34_3` every baseline `div_f` has its negative entry at disc `-3`, and
+
+    deg f  =  (multiplicity at -3) · deg Z(3)
+
+    key    W                 div_f (baseline, positive part; pole)      mult   deg f pred   deg f actual
+    8792   [1,6,17,102]      <-51,1>;                       <-3,-1>       1         1            1
+    8793   [1,3,17,51]       <-408,1> <-24,1>;              <-3,-2>       2         2            2
+    8791   [1,2,17,34]       <-408,1> <-51,1> <-24,1>;      <-3,-3>       3         3            3
+    8795   [1,2,51,102]      <-68,1> <-24,1>;               <-3,-3>       3         3            3
+    8797   [1,6,34,51]       <-408,1> <-68,1>;              <-3,-3>       3         3            3
+    8794   [1,2,3,6]         <-408,1> <-68,1> <-51,1>;      <-3,-4>       4         4            4
+    8796   [1,3,34,102]      <-68,1> <-51,1> <-24,1>;       <-3,-4>       4         4            4
+
+**7 of 7** with `deg Z(3) = 1` — i.e. the disc `-3` CM point IS the point at infinity. Imposing
+`deg(div) = 0` on the same seven divisors then determines the rest, consistently and
+overdetermined:
+
+    deg Z(3) = deg Z(24) = deg Z(51) = deg Z(408) = 1        deg Z(68) = 2
+
+(The three independent relations `z_408+z_24 = 2z_3`, `z_408+z_68 = 3z_3`, `z_68+z_24 = 3z_3` are
+each confirmed by a second key.) ⚠ Note this is **not** `h(d)/2`: `h(-408) = 4` but `z_408 = 1`,
+while `h(-68) = 4` and `z_68 = 2`. Do not fit a formula — read `deg Z(d)` off `FldsOfDefn` as the
+sum of the degrees of the fields of definition (`replace_column`, `SchoferFormula.m:1740`, already
+uses exactly that quantity), and use this identity as the cross-check.
+
+## 7c. `deg Z(d)` MEASURED at `34_3` — and `deg Z(164) = 4`
+
+`degz.m` computes `deg Z(d)` as the sum of the degrees of the fields of definition
+(`FieldsOfDefinitionOfCMPointFast`), the same quantity `replace_column` already uses. It **refuses
+to print a sweep unless it first reproduces the five values §7b pins independently** — it does,
+5 of 5.
+
+    deg Z(d) at 34_3, |d| <= 500:  43 discriminants
+      degZ 1: -3 -11 -20 -24 -27 -51 -75 -147 -228 -267 -312 -408   (12)
+      degZ 2: 7    degZ 3: 6    degZ 4: 7    degZ 5: 6    degZ 8: 4    degZ 9: 1
+
+    deg Z(164) = 4
+
+⇒ The correction actually used all along costs a degree gain of **`amt · deg Z(164)` = 6 × 4 = 24**,
+so the fit needs `2g+5+24 = 31` rational CM points against a supply of **10**. That is why nothing
+downstream of condition 4 has ever worked. (§7's bound `deg Z(164) >= 2`, derived from the rank
+refutation alone, is consistent and now superseded by the exact value.)
+
+⚠ **`deg Z(d)` is not `h(d)/2` or any similar formula** — `h(-408) = 4` with `deg Z(408) = 1`,
+while `h(-68) = 4` with `deg Z(68) = 2`. Do not fit one; call `degz.m`.
+
+### The cheapest legal correction at `34_3`
+
+Excluding the ramification support (`-408 -68 -51 -24 -3`) and the CM evaluation set
+(`3 11 20 24 51`), the `deg Z = 1` candidates are
+
+    -27  -75  -147  -228  -267  -312
+
+At the base's modulus `amt = M = 6` each costs a gain of only **6**, against 24 for disc 164:
+
+    g=1 keys:  ncols = 2g+4+6 = 12  vs 10 rational points   -- still 2 short
+    g=0 keys:  ncols =    4+6 = 10  vs 10 rational points   -- EXACTLY determined, TESTABLE
+
+⇒ **The `g = 0` cover keys become testable for the first time.** A perturbation at one of these six
+that also satisfies conditions 3 and 4 should give `rank 9, dimker 1` at `degbound 8` on the `g=0`
+keys — where disc 164 gives `rank 10, dimker 0`. That is a clean, falsifiable prediction and it
+needs no extra CM points.
+
 ## 8. ⇒ THE ACTIONABLE CONSEQUENCE: the correction's COST is `amt · deg Z(disc)`
 
 Conditions 1–4 constrain *which* perturbations are legal. None of them mentions the quantity that
@@ -283,6 +349,57 @@ The cheapest legal correction is `amt = M` (the base's modulus, 6 at `34_3`) at 
 those satisfying conditions 1–4 is unmeasured — and it is a far better-posed question than the
 modulus-formula hunt that was parked.
 
+## 9. MEASURED: at `34_3` the minimum legal cost is 24, against a supply of 10
+
+`costtab.py` crosses `degz.m` against a hoisted `PROBE_INTSWEEP` (`PROBE_SWAMTS=6,12`), over all
+21 discriminants in `relevant_ds`. Restricting to those available at **all 9 keys** — a correction
+must apply at every cover key or it is not a uniform correction at all — and non-ramified:
+
+    amt = 6                                     amt = 12
+    disc  degZ  cost  intsol                    disc  degZ  cost  intsol
+     -11    1     6    0/9                       -11    1    12    0/9
+     -20    1     6    0/9                       -20    1    12    0/9
+     -24    1     6    0/9                       -24    1    12    0/9
+     -27    1     6    0/9                       -27    1    12    0/9
+     -56    2    12    0/9                       -56    2    24    9/9   <==
+     -68    2    12    0/9                       -68    2    24    0/9
+    -116    3    18    0/9                      -116    3    36    0/9
+    -164    4    24    9/9   <==                -164    4    48    9/9
+    -180    4    24    0/9                      -180    4    48    9/9
+
+⇒ **`-164` is the UNIQUE usable discriminant at `amt = 6`** — and it is the joint most expensive
+one available. The choice was never free; nothing cheaper is integrally solvable.
+
+⇒⇒ **The minimum cost over ALL legal `(disc, amt)` pairs is 24, reached twice and by different
+routes** — `164` at `amt 6` (`6 × 4`) and `56` at `amt 12` (`12 × 2`). Every legal pair measured
+here has `amt · deg Z(disc) >= 24`.
+
+    cheapest legal correction at 34_3:  cost 24
+    the fit then needs:                 2g+5+24 = 31 rational CM points  (g=1)
+    34_3 supplies:                      10
+
+⇒ **The hatch is structurally unaffordable at `34_3`, by a factor of ~3.** Not a bad choice of
+discriminant — the cheapest legal one is still 3× over supply. This is a clean negative result
+with a stated mechanism, which is worth more than the unexplained failure it replaces.
+
+⚠⚠ **DO NOT PROMOTE "cost >= 24" TO A LAW.** It is ONE base, and this project's record is that a
+law fixed from one base gets REPLACED, not refined, by the second (`A_m`, integrality-alone, `2N`,
+`STAR := base_label` — four in one day). `24` here coincides with several things at `34_3`
+(`4·M`, `2·deg Z(164)·2`, …) and nothing distinguishes them. The honest statement is the
+measurement: *at `34_3`, every integrally-solvable `(disc, amt)` pair has `amt · deg Z(disc) >= 24`,
+with equality achieved.* Whether a floor exists at all, and whether it is a property of the base,
+needs `35_1` or `21_2` — and `degz.m` + `costtab.py` run there unchanged.
+
+### What this does NOT show
+
+* it does not show the hatch is dead in general — only that `34_3`, the positive control, cannot
+  afford it. A base with more rational CM points, or a smaller legal cost, is not excluded;
+* it does not explain WHY integrality concentrates on large `deg Z(disc)`. The correlation is
+  clean here (0 of 11 legal below cost 24) but its mechanism is unexamined, and `deg Z` may be a
+  proxy for something else;
+* condition 4 was not re-tested for any discriminant other than 164; the sweep measures conditions
+  2 and 3 only.
+
 ## Summary — what this note establishes
 
 1. **The error message attributes the failure to the wrong intrinsic** (§1). The `require` is on a
@@ -297,8 +414,13 @@ modulus-formula hunt that was parked.
    pipeline is discarding a correct answer because its ansatz is too short (§6).
 7. **`deg Z(164) >= 2`**, and `34_3` supplies only 10 rational CM points no matter how many
    discriminants are requested (§7).
-8. ⇒ **The binding quantity is a COST, `amt · deg Z(disc)`, not a fifth condition** — and the
-   probe's "prefer the largest `|disc|`" heuristic works against it (§8).
+8. ⇒ **The binding quantity is a COST, `amt · deg Z(disc)`, not a fifth condition** (§8).
+9. **`deg Z(164) = 4`**, so the correction used all along costs 24 and needs 31 rational points
+   against a supply of 10 (§7c).
+10. **`-164` is the UNIQUE usable discriminant at `amt = 6`**, and the minimum cost over all legal
+   `(disc, amt)` pairs at `34_3` is **24** — reached by `164/6` and by `56/12`. Nothing below 24 is
+   integrally solvable (0 of 11). ⇒ **the hatch is structurally unaffordable at `34_3`, ~3× over
+   supply** (§9). ⚠ One base — do not promote the 24 to a law.
 
 ### Reproducing
 
