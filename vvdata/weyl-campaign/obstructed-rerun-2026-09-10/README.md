@@ -26,3 +26,26 @@ bases -- an independent confirmation of the "28 + 21" figure. `bases49.txt` is t
   to reproduce. Rank candidates by the sweep's own log mtimes, not by `M`.
 * The rank detail (`PROBESPAN`, deficit exactly 1) needs `span-obstruction-probe.patch`, which
   **no longer applies** -- `BorcherdsForms.m` moved under it. Port it if a verdict ever flips.
+
+---
+
+## ⚠⚠ THE 49 IS A LOWER BOUND, NOT THE SIZE OF THE CLASS (2026-09-13)
+
+A routine backlog sweep launched `142_1` and `166_1` — neither in `bases49.txt` — and BOTH came
+back `Failed to find all Borcherds forms`, i.e. obstructed.
+
+    142_1  (D = 2*71, N = 1)   NEW, obstructed
+    166_1  (D = 2*83, N = 1)   NEW, obstructed
+
+⇒ **The obstructed class is larger than 49.** The figure is a property of WHICH BASES HAVE BEEN
+SWEPT, not of the obstruction. `bases49.txt` remains a correct union of every obstructed verdict on
+record — it is the interpretation as "the obstructed class" that is wrong.
+
+⚠ **AND IT BREAKS THE `N` PATTERN.** All 49 have `N >= 3` (odd prime; no `N = 1`, no `N = 2`).
+These two have **`N = 1`**. So "obstruction needs nontrivial level" was a SAMPLE ARTIFACT — the
+same confound already flagged for `D`: within `sweep122` every base is either (even `D`, odd prime
+`N`) or (odd `D`, `N = 2`), so `D`-parity and `N` were never separable there. Now they are, and the
+`N` half is refuted.
+
+⇒ The cell (odd `D`, odd `N`) is STILL untested, and the extent of the obstruction in `(D, N)` is
+genuinely unknown. Do not quote 49 as the size of the class; quote it as "49 known".
