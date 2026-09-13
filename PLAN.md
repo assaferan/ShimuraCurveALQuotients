@@ -13,7 +13,37 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-12 (the numbered list further down is from 09-02 and is largely DONE)
+## ⇒ START HERE — updated 2026-09-13 evening
+
+**THE MAIN LINE IS NOW THE MODEL BACKLOG.** The even-correction hatch is CLOSED (a stated
+mechanism, not an unexplained failure — see below and `HANDOFF.md`), and the modulus-formula hunt
+is RETIRED as ill-posed. The backlog is where new results come from, and it restarted today with
+**5 new models** and a **second external oracle**.
+
+### What to do next, in order
+
+1. **Keep sweeping.** 192 FRESH reachable targets (squarefree `N`, `#div <= 20`, not obstructed,
+   not already tried). Launch from `~/shimura/scq-current` on lovelace (~215 free cores).
+   ⚠ Filter out: non-squarefree `N` (assertion-failed method boundary), the 49 obstructed bases
+   (`vvdata/weyl-campaign/obstructed-rerun-2026-09-10/bases49.txt`), and `#div >= 24` (a CONFIRMED
+   time wall on Normaliz). Verify each model with `VerifyModelSet` AND a negative control.
+2. **Fill `10_3`'s empty `W=[1]` key.** Its full curve is genus one, so
+   `tests/GonzalezRotger.m` would immediately arbitrate it (expected Jacobian `30a2`) — and `10_3`
+   is the base with the unresolved `[1,2]` conic drift and NO oracle today. Highest value per hour.
+3. **`21_1`** (cheapest target in the backlog, `M=84`): with `HMFIT=1` it clears the hauptmodul
+   normalisation and hits a NEW blocker, "y^2 and s have poles in different places". Its target
+   equation is known: `y^2 = -7x^4+94x^2-343`, Jac `21a2`.
+4. **The runaway class** (`33_1` Log11, `69_1` Log23): precision is REFUTED as the cause (byte-
+   identical at 3x `Prec`); the prime is RAMIFIED both times. `33_1`'s target is `y^2 =
+   -3x^4-10x^2-243`, Jac `33a1`.
+5. **Pin the target count.** The recorded 377/73/304 does not reproduce; the natural filter gives
+   798/93/705. Do not quote a completion % until the definition is settled.
+
+⚠ **The tiers are not ordered the way the old plan assumes**: `#div = 16-20` "marginal" is largely
+REACHABLE (3 of 4 built), while `#div <= 12` "reliable" is not uniformly so (`85_1` segfaulted at
+122.7 GB).
+
+## ⇒ (SUPERSEDED) START HERE — updated 2026-09-12
 
 **State**: Guo-Yang full curves 38 of 42. Both previously un-re-derived Guo-Yang bases now PASS
 (`X0_93_1` 3.7 h; `X0_111_1` 16.3 h on lava, anchored on the FULL genus-7 curve). The `X0_*` tests
