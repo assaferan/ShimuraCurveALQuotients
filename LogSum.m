@@ -142,12 +142,23 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     // Report WHICH prime has a runaway exponent. Magma's own failure here is
     // "Runtime error in '^': Argument 2 is too large", which names neither the prime nor the
     // exponent, and that is exactly how X_0^69(1) has been failing (it is the whole of that
-    // base's triage record). A runaway coefficient means the Schofer sum diverged upstream, so
-    // the useful diagnostic is the offending (p, coeff) pair, not the power that overflowed.
+    // base's triage record). The useful diagnostic is the offending (p, coeff) pair, not the
+    // power that overflowed.
+    //
+    // ⚠ THE CAUSE IS NOT PRECISION, AND THIS COMMENT USED TO SAY IT WAS. "A runaway coefficient
+    // means the Schofer sum diverged upstream" was an asserted cause, and it is REFUTED
+    // (2026-09-13): re-running X_0^69(1) at Prec 300 instead of 100 reproduces the coefficient
+    // 826241926712017437948244622352640031335552334419770916034895634120110682322 on Log23
+    // BYTE-IDENTICALLY. A convergence or precision failure would move; an exact computation
+    // returning a genuinely enormous integer does not. So this guard reports an OBSERVATION --
+    // a coefficient past the threshold -- and the cause is open. Note the prime is RAMIFIED
+    // (23 | 69), the same place condition 4's fractional exponents live.
+    // ⇒ Do not spend a run raising Prec on this failure; that experiment is done.
     for p in Keys(s`log_coeffs) do
         error if AbsoluteValue(s`log_coeffs[p]) gt 10^5,
-            Sprintf("RationalNumber: runaway log coefficient %o on Log%o -- the LogSum did not "
-                    * "converge upstream. Full sum: %o", s`log_coeffs[p], p, s);
+            Sprintf("RationalNumber: runaway log coefficient %o on Log%o (exceeds 10^5). "
+                    * "Cause OPEN -- precision is refuted, see the note above. Full sum: %o",
+                    s`log_coeffs[p], p, s);
     end for;
     ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
     if (ret eq -1) then return Infinity(); end if;

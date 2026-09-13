@@ -681,7 +681,14 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     if Yang_tt then
         d0 := FundamentalDiscriminant(d);
         f2 := d div d0;
-        is_pp, p, e2 := IsPrimePower(f2);
+        // f2 = 1 means d is already FUNDAMENTAL (conductor 1), so there is no conductor prime for
+        // this correction to attach to and the branch must not fire.  Magma's IsPrimePower errors
+        // on 1 rather than returning false, so guard it: 1 is not a prime power, and skipping is
+        // the correct semantics, not a workaround.  Hit at 21_1, whose CM set reaches d = -7.
+        is_pp := false;
+        if f2 gt 1 then
+            is_pp, p, e2 := IsPrimePower(f2);
+        end if;
         if is_pp then
             e := e2 div 2;
             log_coeffs +:= LogSum(-4*p^(1-e)/(p-KroneckerSymbol(d0,p)),p);

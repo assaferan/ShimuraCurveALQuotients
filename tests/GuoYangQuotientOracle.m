@@ -119,6 +119,10 @@ function model_curve(e)
 end function;
 
 TOTM := 0; TOTX := 0; TOTS := 0; TOTKB := 0; NBASE := 0;
+// TOTQF: keys whose quotient could not be BUILT at all (Magma #123 -- CurveQuotient dies on
+// a curve in a toric/weighted-projective ambient because IdentityMap returns TorMap).
+// Counted separately from TOTS: "no quotient to compare" is not "skipped a comparison".
+TOTQF := 0;
 for d in data do
     D, N, f, gens := Explode(d);
     vprintf ShimuraQuotients, 1: "\n\tX_0^%o(%o): ", D, N;
@@ -187,7 +191,11 @@ for d in data do
             G := AutomorphismGroup(C, [all[t] : t in W]);
             Q := CurveQuotient(G);
         catch err okq := false; end try;
-        if not okq then printf "  W=%-16o CurveQuotient failed\n", Sprint(k); continue; end if;
+        if not okq then
+            TOTQF +:= 1;
+            printf "  W=%-16o CurveQuotient failed (Magma #123)\n", Sprint(k);
+            continue;
+        end if;
         for e in models[k] do
             if Type(e[2]) eq MonStgElt then continue; end if;
             Cs := model_curve(e);
@@ -301,4 +309,5 @@ error if TOTM lt 170,
     Sprintf("Guo-Yang quotient oracle: only %o comparison(s) made, expected at least 170 "
             * "(%o skipped) -- something stopped being compared", TOTM, TOTS);
 printf " ok (Guo-Yang quotient oracle: %o quotient comparison(s) over %o base(s), %o skipped, "
-       * "%o known defect(s) still failing)\n", TOTM, NBASE, TOTS, TOTKB;
+       * "%o known defect(s) still failing, %o quotient(s) unbuildable [Magma #123])\n",
+       TOTM, NBASE, TOTS, TOTKB, TOTQF;
