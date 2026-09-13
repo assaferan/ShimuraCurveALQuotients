@@ -675,3 +675,56 @@ it REPLACED it. ⇒ **Do not record a law from a single base as settled**, and w
 explanations coincide at the base in hand, say so in the write-up rather than picking the salient
 one. `2N` was chosen over `2*oddpart(p+1)` for no better reason than that `N` was the more obvious
 number.
+
+---
+
+# THE MODULUS IS BASE-DEPENDENT AND NO FORMULA OVER `D`'s PRIMES FITS. STOP FITTING.
+
+Measured at three `D` values, with the perturbation verified applied in every run:
+
+    D=34 (2*17)   M = 6  EXACTLY     2,4,8 fail; 6,12 clear   (N=3 and N=7 agree)
+    D=35 (5*7)    M = 12 EXACTLY     2,4,6 fail; 12 clears
+    D=21 (3*7)    M | 6              6,12,24 clear; 2,4 UNTESTABLE (fail condition 3)
+
+Every candidate formula dies, each on a different base:
+
+    2(pmin+1)  ->  6, 12,  8   refuted at D=21 (M must divide 6)
+    2(pmax+1)  -> 36, 16, 16   refuted at D=34 (6 clears; 36 does not divide 6)
+    2*gcd_p oddpart(p+1) ->  6, 2, 2   refuted at D=35 (amt 2 FAILED there)
+    2*lcm_p oddpart(p+1) -> 18, 6, 2   refuted at D=34
+    2N                          refuted at 34_7 (see above)
+
+⇒ **Six formulas have now been fitted and refuted.** Each fit the bases in hand and died on the
+next one. **Do not propose a seventh from this data.**
+
+## ⚠ AN UNCONTROLLED CONFOUND, which may mean the question is mis-posed
+
+The perturbation DISCRIMINANT differs across the three bases -- 164 at `34_3`, 32 at `35_1`, 16 at
+`21_2`. **Nothing establishes that the modulus is a function of the BASE rather than of the
+DISCRIMINANT.** The only evidence either way is weak: at `34_3`, discs 164 and 56 behave the same
+at amounts 2 and 4. Before any further formula-hunting, **vary the disc at FIXED base and see
+whether the modulus moves.** If it does, "the modulus at base X" is not a well-defined object and
+every measurement above is a measurement of a (base, disc) pair.
+
+## ⚠ TWO NULL-RUN TRAPS HIT IN ONE SESSION — always print the perturbed-key count
+
+* `180/+4` at `34_3`: excluded by the coprimality filter, perturbed nothing, returned 0 cells.
+* `16/{6,12,24}` at `21_2`: same cause (`N=2`, disc 16 even), THREE null runs returning 0 cells.
+  Read naively that was "all amounts clear", which would have refuted the `p_min` formula and
+  supported `M=6` -- **from three runs that computed nothing.**
+⇒ The probe's `PROBE_EVEN_COPRIME` filter was added on the NON-COPRIMALITY hypothesis, which this
+README itself records as REFUTED. Set `PROBE_EVEN_COPRIME=0`; it excludes legitimate discriminants
+and manufactures silent null runs.
+
+## Where the hatch actually stands
+
+**Solid:** condition 4 exists, is real, and is SATISFIABLE -- at `34_3`, `35_1` and `21_2` there
+are amounts giving ZERO non-rational cells, clearing `ValuesAtCMPoints` for the first time since
+2026-08-30. The blocker then moves to `QuadraticConstraintsOnEquations`, still unexamined.
+
+**Unknown:** the modulus law, and therefore the hatch's REACH. The 28-base divisibility screen
+cannot be run without it. Neither "3-4 of 28" nor "49" is supported.
+
+⇒ **Recommendation: park the formula hunt.** The deliverable is condition 4 itself plus the
+measured moduli. Resuming is cheap and well-posed -- start with the disc-dependence control above,
+since it decides whether the question as posed is even meaningful.
