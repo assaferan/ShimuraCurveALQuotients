@@ -76,3 +76,16 @@ that rung, not the cost of the base.
 
 ⚠ **This probes the SOLVER only.** A base build does many solves plus everything downstream, so
 "the solver is slow" is a lower bound on base cost, not an estimate of it.
+
+---
+
+## Corollary (2026-09-13): the wall makes an entire (D,N) CELL unreachable
+
+For odd `D`, `v_2(D) = 0` so `M = 4DN = 2^2 · DN`; with `D` a product of >= 2 odd primes and odd
+`N > 1` coprime to it, `#div(DN) >= 8` and therefore
+
+    #div(M) = 3 · #div(DN) >= 24    for EVERY (odd D, odd N > 1)
+
+All 74 such targets are behind this wall by construction. This is why `sweep122` contains only
+(even `D`, odd prime `N`) and (odd `D`, `N = 2`) — the missing cell was never a sampling choice.
+⇒ The `D`-parity vs `N` confound in the obstructed class cannot be resolved cheaply.

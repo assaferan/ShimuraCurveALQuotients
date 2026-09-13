@@ -47,5 +47,19 @@ same confound already flagged for `D`: within `sweep122` every base is either (e
 `N`) or (odd `D`, `N = 2`), so `D`-parity and `N` were never separable there. Now they are, and the
 `N` half is refuted.
 
-⇒ The cell (odd `D`, odd `N`) is STILL untested, and the extent of the obstruction in `(D, N)` is
-genuinely unknown. Do not quote 49 as the size of the class; quote it as "49 known".
+⇒ The extent of the obstruction in `(D, N)` is genuinely unknown. Do not quote 49 as the size of
+the class; quote it as "49 known".
+
+### ⚠ AND THE (odd `D`, odd `N`) CELL IS UNREACHABLE BY CONSTRUCTION, not merely untested
+
+For odd `D` we have `v_2(D) = 0`, so `M = 4DN/2^{v_2(D)} = 4DN = 2^2 · DN`. An odd `D` is a product
+of an even number (>= 2) of odd primes, and an odd `N > 1` coprime to it adds at least one more, so
+`DN` carries >= 3 distinct odd primes and `#div(DN) >= 8`. Hence
+
+    #div(M) = 3 · #div(DN) >= 24     ALWAYS, for every (odd D, odd N>1)
+
+All **74** such targets therefore sit behind the `#div >= 24` wall, which a direct Normaliz probe
+confirms is real (`vvdata/weyl-campaign/normaliz-wall-probe.md`). ⇒ That is WHY `sweep122` contains
+no such base — not an oversight in the sweep design. The `D`-parity confound in the obstructed
+class **cannot be separated without first beating the wall**, so it is not a cheap experiment and
+should not be listed as one.
