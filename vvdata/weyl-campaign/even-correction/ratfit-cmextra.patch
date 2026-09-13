@@ -1,0 +1,64 @@
+diff --git a/EquationsCovers.m b/EquationsCovers.m
+index 563dc5e..3887eae 100644
+--- a/EquationsCovers.m
++++ b/EquationsCovers.m
+@@ -29,6 +29,26 @@ intrinsic RationalConstraintsOnEquations(schofer_table::SchoferTable, curves::Se
+         end for;
+         M := Matrix(M);
+         B :=  Basis(Kernel(Transpose(M)));
++        // ===== PROBE_RATFIT (throwaway branch; never merge) =====
++        // The "no solution found" error raised in QuadraticConstraintsOnEquations tests THIS
++        // kernel, not anything the quadratic stage computes.  Report why it is empty.
++        if GetEnv("PROBE_RATFIT") ne "" then
++            printf "RATFIT key %o W=%o g=%o #ds=%o #svals=%o #rat=%o #quad=%o dimB=%o\n",
++                keys_fs[idx], Sort([w : w in curves[keys_fs[idx]]`W]), g, #ds, #svals,
++                #rat_svals, #svals-#rat_svals, #B;
++            for e in [0..6] do
++                Me := Matrix([[Rationals()!(s)^i : i in [0..2*g+2+e]]
++                              cat [Rationals()!rat_y2vals[jj]] : jj->s in rat_svals]);
++                printf "RATFIT   key %o degbound=%o nrows=%o ncols=%o rank=%o dimker=%o\n",
++                    keys_fs[idx], 2*g+2+e, #rat_svals, 2*g+4+e, Rank(Me),
++                    #Basis(Kernel(Transpose(Me)));
++            end for;
++            printf "RATFITDATA key %o s=%o\n", keys_fs[idx], rat_svals;
++            printf "RATFITDATA key %o y2=%o\n", keys_fs[idx], rat_y2vals;
++            printf "RATFITQUAD key %o s=%o\n", keys_fs[idx],
++                [s : s in svals | Type(s) eq RngUPolElt];
++        end if;
++        // ===== end PROBE_RATFIT =====
+         require #B le #ds - #rat_svals : "We don't have enough constraints imposed by the rational points";
+         Append(~kernels, B);
+     end for;
+@@ -315,6 +335,17 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
+ 
+     // num_vals := Maximum([2*g+4 : g in genus_list]); // This is what we need for the equation part, but
+     num_vals := Maximum([2*g+5 : g in genus_list]); // This is what we need for finding the y2 scales
++    // ===== CMEXTRA (throwaway branch; never merge) =====
++    // num_vals is tuned to the UNPERTURBED degree: the rational fit in
++    // RationalConstraintsOnEquations solves for deg f <= 2g+2, i.e. 2g+4 unknowns, and 2g+5
++    // points give it one spare.  Under an even correction f picks up a factor with divisor
++    // amt*Z(disc), so its degree GROWS and the same point count cannot fit it -- the system
++    // comes out full row rank and the kernel is empty, which is the "no solution found" error.
++    // CMEXTRA=k asks for k more CM points so the degree question is answerable at all.
++    if GetEnv("CMEXTRA") ne "" then
++        num_vals +:= StringToInteger(GetEnv("CMEXTRA"));
++    end if;
++    // ===== end CMEXTRA =====
+     // Note that y^2 may vanish at 2*g+2 CM points, and be infinity at another one (2g+3).
+     // We would need two other CM pts to determine the correct scaling, based on the fields of definition.
+     t := Realtime();
+@@ -985,6 +1016,14 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
+     require not IsEmpty(aeac_keys) : "None of Xstar`CoveredBy matches Targets";
+     genus_list := [curves[i]`g: i in aeac_keys];
+     num_vals := Maximum([2*g+5 : g in genus_list]);
++    // ===== CMEXTRA (throwaway branch; never merge) -- THE LIVE CALL SITE =====
++    // AllEquationsAboveCovers has its OWN copy of the num_vals computation; the one in
++    // EquationsOfCovers (the "[4/6]" path) is not on this driver's path at all.
++    if GetEnv("CMEXTRA") ne "" then
++        num_vals +:= StringToInteger(GetEnv("CMEXTRA"));
++    end if;
++    printf "CMEXTRA num_vals = %o\n", num_vals;
++    // ===== end CMEXTRA =====
+     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
+     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
+                                                            MaxNum := num_vals, Prec := Prec,
