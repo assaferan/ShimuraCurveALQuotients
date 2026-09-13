@@ -1,15 +1,19 @@
-// Subhyperelliptic cover models for X_0(10,3)* -- Guo-Yang / AllEquationsAboveCovers
+// Subhyperelliptic cover models for X_0(10,3)*
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[Integers()|1,10]] := [*  *];   // degenerate CRV removed 2026-09-06: stored its parent conic twice
-models[[Integers()|1,2,5,10]] := [* <0, P![ -2, 43/20, -7/20 ], P![]> *];
-models[[Integers()|1,2,3,6]] := [* <0, P![ 1, -15/8, 7/8 ], P![]> *];
-models[[Integers()|1,30]] := [*  *];
-models[[Integers()|1,2,15,30]] := [* <0, P![ 1, -6/5, 1/5 ], P![]> *];
-models[[Integers()|1,15]] := [*  *];   // degenerate CRV removed 2026-09-06: stored its parent conic twice
-models[[Integers()|1]] := [*  *];   // degenerate CRV removed 2026-09-06: stored its parent conic twice
-models[[Integers()|1,3]] := [*  *];
-models[[Integers()|1,2]] := [* <0, P![ 8/845, 16/845, -20/169 ], P![]>, <0, P![ 1, -11/8, 1 ], P![]>, <0, P![ 27/2450, 0, 27/1960 ], P![]> *];
-models[[Integers()|1,5]] := [*  *];
-models[[Integers()|1,6]] := [*  *];   // degenerate CRV removed 2026-09-06: stored its parent conic twice
+models[[Integers()|1,10]] := [* <1, P![ -128/25, 0, 592/25, 0, -64/5 ], P![]>, <1, P![ 1/1225, 0, 37/4900, 0, 2/245 ], P![]> *];
+models[[Integers()|1,15]] := [* <1, P![ 0, 8, -11, 8 ], P![]>, <1, P![ 16/81, 32/81, 112/81, 32/27, -112/81 ], P![]> *];
+models[[Integers()|1,3,10,30]] := [* <0, P![ 0, -1/20, 1/20 ], P![]> *];
+models[[Integers()|1]] := [* <1, P![ -1/50, -2/25, -59/400, -27/200, -27/400 ], P![]> *];
+models[[Integers()|1,3]] := [* <0, P![ 1/980, 0, 2/245 ], P![]>, <0, P![ -2/25, 0, 1/20 ], P![]>, <0, P![ -1/162, -1/162, 1/162 ], P![]> *];
+models[[Integers()|1,2]] := [* <0, P![ -64/245, 0, -432/245 ], P![]>, <0, P![ -2, 11/4, -2 ], P![]>, <0, P![ -27/1225, 0, -27/980 ], P![]> *];
+models[[Integers()|1,2,5,10]] := [* <0, P![ -128, 688/5, -112/5 ], P![]> *];
+models[[Integers()|1,5]] := [* <0, P![ -432/1225, 0, -3456/1225 ], P![]>, <0, P![ -128, 0, -432 ], P![]>, <0, P![ -32/81, -32/81, -224/81 ], P![]> *];
+models[[Integers()|1,6,10,15]] := [* <1, P![ 0, 2048/3645, -21248/18225, 512/729, -1792/18225 ], P![]> *];
+models[[Integers()|1,2,15,30]] := [* <0, P![ 16, -96/5, 16/5 ], P![]> *];
+models[[Integers()|1,6]] := [* <1, P![ -64/1225, 0, -944/1225, 0, -3456/1225 ], P![]>, <1, P![ -2, 0, -59/4, 0, -27 ], P![]> *];
+models[[Integers()|1,2,3,6]] := [* <0, P![ -2, 15/4, -7/4 ], P![]> *];
+models[[Integers()|1,30]] := [* <0, P![ 0, -1/4 ], P![]>, <0, P![ 16/25, 0, -64/25 ], P![]>, <0, P![ 16, 0, 64 ], P![]> *];
+models[[Integers()|1,3,5,15]] := [* <0, P![ 0, 8/5, -7/5 ], P![]> *];
+models[[Integers()|1,5,6,30]] := [* <0, P![ 0, -16/5, 16/25 ], P![]> *];
