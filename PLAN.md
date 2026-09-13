@@ -120,7 +120,17 @@ traps in one session -- the second was three runs at `21_2` reading as "all amou
 would have refuted a formula on no computation at all.
 
 **If you would rather not resume the modulus question**, the two better-posed alternatives are:
-* ⇒ **MEASURE `35_1`'s RATIONAL CM SUPPLY** (new 2026-09-13; one baseline run, count `#rat`).
+* ⇒ ✅ **DONE 2026-09-13 — and the answer is negative on both bases.** `35_1`'s supply is 8 asked
+  for 9, **12** asked for 21 (not capped like `34_3`'s hard 10). But the correction that actually
+  WORKS there is disc 32 at `amt 12`, cost `12*4 = 48`, needing **54** columns at `g=1` — ~4.5x
+  short, worse than `34_3`'s ~3x. ⇒ **The hatch is unaffordable on both bases tested.**
+  ✅ The mechanism REPLICATES at `35_1` (condition 4 clears, then `dimB = 0` at full column rank,
+  same wrong-stage error), so the rational-fit analysis is not `34_3`-specific.
+  ⇒⇒ **RETIRE THE MODULUS-FORMULA HUNT AS ILL-POSED**: at `35_1`, `amt 12` clears condition 4 with
+  disc 32 and FAILS it with disc 112 — same base, same amount. "The modulus at base X" is not a
+  well-defined object, and the six refuted formulas were fitting a quantity that does not exist.
+  ⚠ WITHDRAWN: my "this reopens the hatch at `35_1`" — `amt 6` is illegal there and `-112` fails
+  condition 4 at `amt 12` regardless.
   ✅ The `35_1` cost sweep is DONE and it **REFUTED** the `34_3` floor: `-112` has `deg Z = 1`,
   is non-ram, and is integrally solvable — cost **6**, against `34_3`'s cheapest legal 24. So
   legality does NOT require an expensive discriminant. ⇒ The hatch REOPENS at `35_1`: the demand
