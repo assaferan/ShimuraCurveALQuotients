@@ -26,6 +26,7 @@
 // the I,J implementation cannot silently pass our models.
 SetVerbose("ShimuraQuotients", 0);
 P<x> := PolynomialRing(Rationals());
+u := x;
 
 // <D, N, f(x) from Table 1, Jacobian label as STATED in the paper>
 GR := [* <14,1, -x^4+13*x^2-128,               "14a2">,
@@ -85,5 +86,78 @@ error if NCMP lt 8,
     Sprintf("Gonzalez-Rotger oracle: only %o comparison(s) made, expected at least 8 "
             * "(%o base(s) had no usable W=[1] model) -- something stopped being compared",
             NCMP, NMISS);
-printf " ok (%o genus-one model(s) match the published equation; %o base(s) without a usable "
-       * "W=[1] model)\n", NCMP, NMISS;
+// ---------------------------------------------------------------------------------------------
+// PART 2: the AL-QUOTIENT keys.  GR give the involutions as well as the curves (table, p.8), so
+// where the quartic is EVEN in x and the involution is (x,y) -> (-x,y), the quotient X/omega_m is
+// simply y^2 = f(u) with u = x^2.  Comparing its Brauer class against our stored entry is what
+// CAUGHT the 10_3 [1,2] drift, which three internal-consistency tests had passed for a week:
+// all three committed entries were consistently WRONG, and only an oracle can arbitrate that.
+//
+// Class computed as ConicClasses.m does: the quaternion algebra (a, disc), a = leading coeff,
+// disc = b^2-4ac.  ⚠ A LINEAR entry (a = 0) is y^2 = b u + c, which parametrises as
+// u = (y^2-c)/b and is therefore RATIONAL, i.e. split -- not degenerate.  Mishandling that
+// produced two false "NOT SPLIT" reports on the first run of this audit.
+function conicRam(f)
+    a := Coefficient(f,2); b := Coefficient(f,1); c := Coefficient(f,0);
+    if a eq 0 then
+        if b eq 0 then return "const"; end if;
+        return [Integers()|];                      // linear: rational, split
+    end if;
+    return Sort(RamifiedPrimes(QuaternionAlgebra<Rationals() | a, b^2-4*a*c>));
+end function;
+
+// <D, N, m, quotient quadratic in u = x^2>  -- only bases whose GR quartic is even in x
+QT := [* <14,1, 2,  -u^2+13*u-128>,    <15,1, 3,  -3*u^2-82*u-27>,
+         <46,1, 2,  -u^2+45*u-512>,    <6,5,  2,  -u^2+61*u-1024>,
+         <6,7,  3,  -3*u^2-34*u-2187>, <6,13, 2,  -u^2-115*u-4096>,
+         <10,3, 2,  -2*u^2-11*u-32> *];
+NQ := 0; qbad := [];
+for t in QT do
+    D:=t[1]; N:=t[2]; m:=t[3]; want := conicRam(t[4]);
+    fn := Sprintf("data/models/models_%o_%o.m", D, N);
+    if not FileExists(fn) then continue; end if;
+    models := eval (Read(fn) cat "\nreturn models;");
+    key := Sort([Integers()|1, m]);
+    if (not IsDefined(models,key)) or #models[key] eq 0 then continue; end if;
+    for i->e in models[key] do
+        if Type(e[2]) eq MonStgElt then continue; end if;
+        NQ +:= 1;
+        got := conicRam(e[2]);
+        if got cmpne want then
+            Append(~qbad, Sprintf("%o_%o W=%o entry %o (ours ram %o, GR ram %o)",
+                                  D, N, Sprint(key), i, got, want));
+        end if;
+    end for;
+end for;
+error if not IsEmpty(qbad),
+    Sprintf("Gonzalez-Rotger quotient oracle: %o entry(ies) DISAGREE with the published "
+            * "quotient: %o", #qbad, qbad);
+
+// PART 3: Lemma 2.1 -- the quotient by omega_{D*N} is P^1 over Q, so W=[1,D*N] must be SPLIT.
+NS := 0; sbad := [];
+for t in GR do
+    D:=t[1]; N:=t[2];
+    fn := Sprintf("data/models/models_%o_%o.m", D, N);
+    if not FileExists(fn) then continue; end if;
+    models := eval (Read(fn) cat "\nreturn models;");
+    key := Sort([Integers()|1, D*N]);
+    if (not IsDefined(models,key)) or #models[key] eq 0 then continue; end if;
+    for i->e in models[key] do
+        if Type(e[2]) eq MonStgElt or e[1] ne 0 then continue; end if;
+        NS +:= 1;
+        r := conicRam(e[2]);
+        if r cmpne [Integers()|] then
+            Append(~sbad, Sprintf("%o_%o W=%o entry %o ram %o", D, N, Sprint(key), i, r));
+        end if;
+    end for;
+end for;
+error if not IsEmpty(sbad),
+    Sprintf("Gonzalez-Rotger oracle: %o W=[1,D*N] entry(ies) are NOT split, contradicting "
+            * "Lemma 2.1 (the quotient by omega_{D*N} is P^1 over Q): %o", #sbad, sbad);
+
+error if NQ lt 15 or NS lt 19,
+    Sprintf("Gonzalez-Rotger oracle: only %o quotient and %o splitness comparison(s) "
+            * "(expected >= 15 and >= 19) -- something stopped being compared", NQ, NS);
+
+printf " ok (%o genus-one curve(s) + %o AL-quotient(s) + %o splitness check(s) match the published "
+       * "equations; %o base(s) without a usable W=[1] model)\n", NCMP, NQ, NS, NMISS;
