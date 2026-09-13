@@ -120,8 +120,26 @@ traps in one session -- the second was three runs at `21_2` reading as "all amou
 would have refuted a formula on no computation at all.
 
 **If you would rather not resume the modulus question**, the two better-posed alternatives are:
-* ⇒ **RUN THE COST SWEEP AT `35_1` AND `21_2`** (new 2026-09-13; the tooling exists and runs
-  unchanged). The correction's cost is `amt * deg Z(disc)`, and the fit needs
+* ⇒ ✅ **DONE 2026-09-13 — and the answer is negative on both bases.** `35_1`'s supply is 8 asked
+  for 9, **12** asked for 21 (not capped like `34_3`'s hard 10). But the correction that actually
+  WORKS there is disc 32 at `amt 12`, cost `12*4 = 48`, needing **54** columns at `g=1` — ~4.5x
+  short, worse than `34_3`'s ~3x. ⇒ **The hatch is unaffordable on both bases tested.**
+  ✅ The mechanism REPLICATES at `35_1` (condition 4 clears, then `dimB = 0` at full column rank,
+  same wrong-stage error), so the rational-fit analysis is not `34_3`-specific.
+  ⇒⇒ **RETIRE THE MODULUS-FORMULA HUNT AS ILL-POSED**: at `35_1`, `amt 12` clears condition 4 with
+  disc 32 and FAILS it with disc 112 — same base, same amount. "The modulus at base X" is not a
+  well-defined object, and the six refuted formulas were fitting a quantity that does not exist.
+  ⚠ WITHDRAWN: my "this reopens the hatch at `35_1`" — `amt 6` is illegal there and `-112` fails
+  condition 4 at `amt 12` regardless.
+  ✅ The `35_1` cost sweep is DONE and it **REFUTED** the `34_3` floor: `-112` has `deg Z = 1`,
+  is non-ram, and is integrally solvable — cost **6**, against `34_3`'s cheapest legal 24. So
+  legality does NOT require an expensive discriminant. ⇒ The hatch REOPENS at `35_1`: the demand
+  is `2g+11` = **15** rational points at the `g=2` cover, versus 31 at `34_3`. If `35_1` supplies
+  15, it is the first base that can afford the hatch. ⚠ Two open caveats: the `35_1` sweep is
+  UNVALIDATED (`degz.m`'s self-check is `34_3`-only; `degz_known.py` is drafted to fix it), and no
+  discriminant is legal at all THREE `35_1` cover keys — a coverage problem replacing the cost one.
+* **(superseded) the cost sweep at `21_2`** — still worth running as a third point, but the
+  one-base floor it was meant to test is already dead. The correction's cost is `amt * deg Z(disc)`, and the fit needs
   `2g+5 + amt*deg Z(disc)` RATIONAL CM points. **MEASURED at `34_3`: `deg Z(164) = 4`, so the
   correction used all along costs 24 and needs 31 points against a supply of 10.** Worse, `-164`
   is the ONLY usable discriminant at `amt = 6` (0 of 11 cheaper ones are integrally solvable —

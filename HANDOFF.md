@@ -60,6 +60,77 @@ PRICED OUT.**
 directly against the cost.** The cheapest legal correction is `amt = M` at a discriminant with
 `deg Z(disc) = 1`.
 
+### ✅ THE MECHANISM REPLICATES AT `35_1`, AND CONDITION 4 IS DISC-DEPENDENT
+
+`amt 12` / disc 32 — `35_1`'s recorded clearing config — **reproduces on current code**: condition 4
+clears, then the run dies in exactly the same place as `34_3`, with `dimB = 0` at both fitted keys
+and **full COLUMN rank** at every non-vacuous degree bound. Same error naming the same wrong stage.
+⇒ The rational-fit analysis is NOT `34_3`-specific.
+
+⇒⇒ **CONDITION 4 IS DISC-DEPENDENT — the control `PLAN.md` asked for, answered:**
+
+    35_1, amt = 12:   disc  32  ->  condition 4 CLEARS
+                      disc 112  ->  condition 4 FAILS (RationalNumber)
+
+Same base, same amount, different discriminant, different outcome. **"The modulus at base X" is
+not a well-defined object**; every recorded modulus (`6` at `34_3`, `12` at `35_1`, `| 6` at
+`21_2`) is really a `(base, disc)` measurement. ⇒ **RETIRE the modulus-formula hunt as ILL-POSED**,
+do not resume it — the six refuted formulas were fitting a quantity that does not exist.
+
+⚠ `35_1`'s `g=2` cover (`9044`, `W=[1,5]`) is **not fitted through this path**; only `9045` (`g=0`)
+and `9046` (`g=1`) reach `RationalConstraintsOnEquations`. A demand quoted "at the `g=2` cover" is
+a wrong-object number.
+
+⚠ **Supply is only meaningful with the ask attached**: `34_3` returns 10 rational points whether
+asked for 7 or 19 (a genuine cap); `35_1` returns 8 asked for 9, and **12** asked for 21.
+
+Affordability with the correction that actually WORKS on each base:
+
+    base   working correction    cost       g=1 cols needed   supply   short by
+    34_3   -164, amt 6           6*4 = 24        30            10       ~3x
+    35_1    -32, amt 12         12*4 = 48        54            12       ~4.5x
+
+### ⚠⚠ RETRACTED SAME DAY — "minimum cost 24" IS REFUTED AT `35_1`
+
+The section immediately below reports a cost floor of 24 at `34_3` and explicitly warns it is one
+base. **`35_1` refuted it within the hour**, which is the fifth time in three days a law fitted
+from one base has been REPLACED rather than refined by the second.
+
+    base    cheapest INTEGRALLY SOLVABLE discriminant        cost
+    34_3    -164,  deg Z = 4                                  24     nothing legal below 24 (0 of 11)
+    35_1    -112,  deg Z = 1, non-ram                          6     legal at 2 of 3 cover keys
+
+⇒ **Legality does NOT require an expensive discriminant.** "Cost >= 24" is a property of `34_3`.
+
+**What SURVIVES is the framework, not the number.** `cost = amt * deg Z(disc)`, and the fit
+needing `2g+5 + cost` RATIONAL CM points, comes from the 58/58 sixth-power structure and is
+untouched. Also untouched: `deg Z(164) = 4`, so `34_3` itself is still priced out at 31 points
+against a supply of 10.
+
+⇒ ⚠⚠ **"THIS REOPENS THE HATCH AT `35_1`" WAS WRONG AND IS WITHDRAWN** (see the section above).
+Two errors: `amt = 6` is ILLEGAL at `35_1` (the modulus is 12), so "cost 6" never existed; and at
+the legal `amt = 12`, `-112` **fails condition 4** anyway. The cheap discriminant that appeared to
+break the floor is not usable at all. ⇒ The replacement for the refuted floor is not a number but a
+**COUPLING**: on both bases the discriminant satisfying every condition is an expensive one, and
+the cheap ones are filtered — by condition 3 at `34_3`, by condition 4 at `35_1`. ⚠ Thin (2 discs
+tested for condition 4 at `35_1`, 1 at `34_3`) — do not promote this to a law either.
+
+⚠ **TWO CAVEATS ON THE REFUTATION ITSELF, both open:**
+* **the `35_1` deg Z sweep is UNVALIDATED.** `degz.m`'s self-check is hardcoded to `34_3`'s five
+  discriminants, most of which are not valid CM discs for `D = 35`, so it printed `0 of 5` and the
+  guard (which only fires at `34_3`) let the sweep run. `deg Z(-112) = 1` rests on the METHOD,
+  validated only at the other base. `degz_known.py` (drafted, not yet applied) derives the
+  per-base known values from the divisor-degree identity and is what closes this.
+* **no discriminant is integrally solvable at ALL THREE `35_1` cover keys** at `amt` 6 or 12 — the
+  legal ones cover `9045`/`9046` but not `9044`. `34_3`'s `-164` was legal at all 7. So `35_1`
+  trades a cost problem for a COVERAGE problem. ⚠ Note `IntegralSolution` is OFF by default, so
+  condition 3 is MEASURED, not enforced — which sits oddly with the record that `amt 12`/disc 32
+  cleared `35_1` cleanly, and that tension is unresolved.
+
+⚠ **A counting trap at `35_1` that does not exist at `34_3`:** each key emits MANY `INTSWEEP` /
+`PROBEDS` lines (successive pole-order iterations), so line-count != key-count. `costtab.py` counts
+lines and is therefore WRONG at this base; dedupe by key before reading it.
+
 ### ✅ THE COST IS MEASURED — and `34_3` cannot afford the cheapest LEGAL correction
 
 `degz.m` computes `deg Z(d)` from `FieldsOfDefinitionOfCMPointFast` (the quantity
