@@ -60,6 +60,43 @@ PRICED OUT.**
 directly against the cost.** The cheapest legal correction is `amt = M` at a discriminant with
 `deg Z(disc) = 1`.
 
+### ⚠⚠ RETRACTED SAME DAY — "minimum cost 24" IS REFUTED AT `35_1`
+
+The section immediately below reports a cost floor of 24 at `34_3` and explicitly warns it is one
+base. **`35_1` refuted it within the hour**, which is the fifth time in three days a law fitted
+from one base has been REPLACED rather than refined by the second.
+
+    base    cheapest INTEGRALLY SOLVABLE discriminant        cost
+    34_3    -164,  deg Z = 4                                  24     nothing legal below 24 (0 of 11)
+    35_1    -112,  deg Z = 1, non-ram                          6     legal at 2 of 3 cover keys
+
+⇒ **Legality does NOT require an expensive discriminant.** "Cost >= 24" is a property of `34_3`.
+
+**What SURVIVES is the framework, not the number.** `cost = amt * deg Z(disc)`, and the fit
+needing `2g+5 + cost` RATIONAL CM points, comes from the 58/58 sixth-power structure and is
+untouched. Also untouched: `deg Z(164) = 4`, so `34_3` itself is still priced out at 31 points
+against a supply of 10.
+
+⇒ **This REOPENS the hatch at `35_1`**: `-112` at `amt 6` demands `2g+11` rational points — 15 at
+the `g=2` cover, against `34_3`'s 31. **Whether `35_1` supplies 15 is UNMEASURED** and is the next
+experiment (one baseline run, count `#rat`).
+
+⚠ **TWO CAVEATS ON THE REFUTATION ITSELF, both open:**
+* **the `35_1` deg Z sweep is UNVALIDATED.** `degz.m`'s self-check is hardcoded to `34_3`'s five
+  discriminants, most of which are not valid CM discs for `D = 35`, so it printed `0 of 5` and the
+  guard (which only fires at `34_3`) let the sweep run. `deg Z(-112) = 1` rests on the METHOD,
+  validated only at the other base. `degz_known.py` (drafted, not yet applied) derives the
+  per-base known values from the divisor-degree identity and is what closes this.
+* **no discriminant is integrally solvable at ALL THREE `35_1` cover keys** at `amt` 6 or 12 — the
+  legal ones cover `9045`/`9046` but not `9044`. `34_3`'s `-164` was legal at all 7. So `35_1`
+  trades a cost problem for a COVERAGE problem. ⚠ Note `IntegralSolution` is OFF by default, so
+  condition 3 is MEASURED, not enforced — which sits oddly with the record that `amt 12`/disc 32
+  cleared `35_1` cleanly, and that tension is unresolved.
+
+⚠ **A counting trap at `35_1` that does not exist at `34_3`:** each key emits MANY `INTSWEEP` /
+`PROBEDS` lines (successive pole-order iterations), so line-count != key-count. `costtab.py` counts
+lines and is therefore WRONG at this base; dedupe by key before reading it.
+
 ### ✅ THE COST IS MEASURED — and `34_3` cannot afford the cheapest LEGAL correction
 
 `degz.m` computes `deg Z(d)` from `FieldsOfDefinitionOfCMPointFast` (the quantity

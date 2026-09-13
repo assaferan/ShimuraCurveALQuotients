@@ -120,8 +120,16 @@ traps in one session -- the second was three runs at `21_2` reading as "all amou
 would have refuted a formula on no computation at all.
 
 **If you would rather not resume the modulus question**, the two better-posed alternatives are:
-* ⇒ **RUN THE COST SWEEP AT `35_1` AND `21_2`** (new 2026-09-13; the tooling exists and runs
-  unchanged). The correction's cost is `amt * deg Z(disc)`, and the fit needs
+* ⇒ **MEASURE `35_1`'s RATIONAL CM SUPPLY** (new 2026-09-13; one baseline run, count `#rat`).
+  ✅ The `35_1` cost sweep is DONE and it **REFUTED** the `34_3` floor: `-112` has `deg Z = 1`,
+  is non-ram, and is integrally solvable — cost **6**, against `34_3`'s cheapest legal 24. So
+  legality does NOT require an expensive discriminant. ⇒ The hatch REOPENS at `35_1`: the demand
+  is `2g+11` = **15** rational points at the `g=2` cover, versus 31 at `34_3`. If `35_1` supplies
+  15, it is the first base that can afford the hatch. ⚠ Two open caveats: the `35_1` sweep is
+  UNVALIDATED (`degz.m`'s self-check is `34_3`-only; `degz_known.py` is drafted to fix it), and no
+  discriminant is legal at all THREE `35_1` cover keys — a coverage problem replacing the cost one.
+* **(superseded) the cost sweep at `21_2`** — still worth running as a third point, but the
+  one-base floor it was meant to test is already dead. The correction's cost is `amt * deg Z(disc)`, and the fit needs
   `2g+5 + amt*deg Z(disc)` RATIONAL CM points. **MEASURED at `34_3`: `deg Z(164) = 4`, so the
   correction used all along costs 24 and needs 31 points against a supply of 10.** Worse, `-164`
   is the ONLY usable discriminant at `amt = 6` (0 of 11 cheaper ones are integrally solvable —
