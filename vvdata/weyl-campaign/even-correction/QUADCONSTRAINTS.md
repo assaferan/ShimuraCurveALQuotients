@@ -400,6 +400,73 @@ needs `35_1` or `21_2` — and `degz.m` + `costtab.py` run there unchanged.
 * condition 4 was not re-tested for any discriminant other than 164; the sweep measures conditions
   2 and 3 only.
 
+## 10. `35_1`: the mechanism REPLICATES, the cost floor is REFUTED, and condition 4 is DISC-DEPENDENT
+
+### ⚠⚠ RETRACTION: "minimum cost 24" (§9) is a property of `34_3`. `35_1` refutes it.
+
+    base   cheapest INTEGRALLY SOLVABLE disc      cost
+    34_3   -164, deg Z = 4                         24     nothing legal below 24 (0 of 11)
+    35_1   -112, deg Z = 1, non-ram                12     legal at 2 of 3 cover keys
+
+Fifth time in three days a law fitted from one base has been REPLACED, not refined, by the second.
+**What survives is the framework** — `cost = amt · deg Z(disc)`, demand `2g+5+cost` rational CM
+points — which came from the 58/58 sixth-power structure, not from the sweep.
+
+### ⚠ AND MY "THIS REOPENS THE HATCH AT 35_1" WAS WRONG, ON TWO COUNTS
+
+* `amt = 6` is **illegal at `35_1`** — the modulus there is 12 — so "cost 6" never existed;
+* at the legal `amt = 12`, `-112` **fails condition 4** anyway (dies in `RationalNumber`).
+
+So the cheap discriminant that appeared to break the floor is not usable at all. ⚠ Also: the `g=2`
+cover (`9044`, `W=[1,5]`) is **not fitted through this path** — only `9045` (`g=0`) and `9046`
+(`g=1`) reach `RationalConstraintsOnEquations` — so a demand quoted "at the `g=2` cover" is a
+wrong-object number.
+
+### ✅ THE MECHANISM REPLICATES AT A SECOND BASE
+
+`amt 12` / disc 32 — the recorded clearing config — **reproduces on current code**: condition 4
+clears, and the run then dies in exactly the same place as `34_3`:
+
+    RATFIT key 9045 W=[1,35]  g=0  #ds=9 #rat=8 #quad=0  dimB=0
+    RATFIT key 9046 W=[1,7]   g=1  #ds=9 #rat=8 #quad=0  dimB=0
+    key 9045 sweep: deg 2..6  rank = ncols, dimker 0   (deg 6: 8x8, non-vacuous)
+                    deg 7,8   ncols > nrows, vacuous
+    Runtime error in 'QuadraticConstraintsOnEquations' ... no solution found
+
+Same error naming the same wrong stage, same empty kernel, same **full column rank**. The §1–§6
+analysis is not `34_3`-specific.
+
+### ⇒ CONDITION 4 IS DISC-DEPENDENT — the disc-dependence control, answered
+
+`PLAN.md` asked for exactly this: vary the disc at FIXED base, because base and disc were
+confounded (164 at `34_3`, 32 at `35_1`, 16 at `21_2`) and "nothing establishes the modulus is a
+property of the BASE rather than of the DISCRIMINANT."
+
+    35_1, amt = 12:   disc  32  ->  condition 4 CLEARS
+                      disc 112  ->  condition 4 FAILS
+
+⇒ **Same base, same amount, different discriminant, different outcome.** "The modulus at base X"
+is **not a well-defined object**, and every recorded modulus (`M = 6` at `34_3`, `12` at `35_1`,
+`| 6` at `21_2`) is really a `(base, disc)` measurement. ⇒ The parked modulus-formula hunt should
+be **retired as ill-posed**, not resumed — the six refuted formulas were fitting a quantity that
+does not exist.
+
+### Affordability, both bases, using the correction that actually WORKS
+
+    base   working correction     cost      g=1 cols needed   rational supply   short by
+    34_3   -164, amt 6           6*4 = 24        30                 10 (capped)    ~3x
+    35_1    -32, amt 12         12*4 = 48        54                 12             ~4.5x
+
+⚠ **Supply behaves differently on the two bases**: `34_3` returns 10 whether asked for 7 or 19
+(a genuine cap); `35_1` returns 8 when asked for 9 and **12** when asked for 21 (not capped at 8).
+So a supply figure is only meaningful with the ask attached.
+
+⇒ **The replacement for the refuted floor is not a number but a COUPLING**: on both bases the
+discriminant that satisfies every condition is an expensive one, and the cheap ones are filtered —
+by **condition 3** at `34_3`, by **condition 4** at `35_1`. Different condition, same direction.
+⚠ Thin: condition 4 has been tested at 2 discriminants at `35_1` and 1 at `34_3`. Do not promote
+this to a law either — that is the mistake this section is retracting.
+
 ## Summary — what this note establishes
 
 1. **The error message attributes the failure to the wrong intrinsic** (§1). The `require` is on a
