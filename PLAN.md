@@ -120,16 +120,20 @@ traps in one session -- the second was three runs at `21_2` reading as "all amou
 would have refuted a formula on no computation at all.
 
 **If you would rather not resume the modulus question**, the two better-posed alternatives are:
-* ⇒ **MINIMISE THE CORRECTION'S COST, `amt * deg Z(disc)`** (new 2026-09-13, and now the best-posed
-  item here). The hatch is not obstructed at `34_3` — it is PRICED OUT: `deg Z(164) >= 2` makes the
-  demand `>= 19` rational CM points against a genuine supply of **10** (`#ds = 19` still gives
-  `#rat = 10`; the extras are all quadratic). No selection rule considers `deg Z(disc)`, and
-  `PROBE_EVEN` prefers the LARGEST `|disc|` — hence large class number, hence large `deg Z(disc)` —
-  so **the current heuristic works against the cost**. The experiment: among the discriminants
-  satisfying conditions 1–4 at `34_3`, find one with `deg Z(disc) = 1`, giving gain 6 and a demand
-  of `2g+11`. `deg Z(d)` is read off `FldsOfDefn` as the sum of the degrees of the fields of
-  definition, and is cross-checked by the divisor-degree identity in `QUADCONSTRAINTS.md` §7b,
-  which reproduces all 7 baseline polynomial degrees at `34_3` exactly;
+* ⇒ **RUN THE COST SWEEP AT `35_1` AND `21_2`** (new 2026-09-13; the tooling exists and runs
+  unchanged). The correction's cost is `amt * deg Z(disc)`, and the fit needs
+  `2g+5 + amt*deg Z(disc)` RATIONAL CM points. **MEASURED at `34_3`: `deg Z(164) = 4`, so the
+  correction used all along costs 24 and needs 31 points against a supply of 10.** Worse, `-164`
+  is the ONLY usable discriminant at `amt = 6` (0 of 11 cheaper ones are integrally solvable —
+  condition 3, not condition 2: all report `inimage true`), and the minimum cost over every legal
+  `(disc, amt)` pair is **24**, hit twice by different routes (`164/6`, `56/12`). ⇒ **`34_3` is
+  structurally unaffordable, ~3× over supply** — the positive control cannot run the hatch at all.
+  ⚠⚠ **ONE BASE — do not promote "cost >= 24" to a law**; `24` coincides with several quantities
+  here and nothing distinguishes them. The next experiment is the same sweep at a second base:
+  `vvdata/weyl-campaign/even-correction/degz.m` (self-validating: it refuses to print unless it
+  reproduces the divisor-degree identity) then `costtab.py`. ⚠ `PROBE_EVEN` prefers the LARGEST
+  `|disc|`, hence large class number, hence large `deg Z` — the heuristic works against the cost,
+  though at `34_3` that turned out not to matter since only the expensive disc is legal;
 * **the genus-0 twist arbiter** -- 282 entries, no oracle, and `tests/ConicClasses.m` now covers
   only INTERNAL consistency. `W=[1]` entries come out ramified, consistent with `X^D(R)=empty`,
   so Ogg's real-points criterion is the frame.

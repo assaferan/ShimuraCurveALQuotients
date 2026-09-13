@@ -60,6 +60,40 @@ PRICED OUT.**
 directly against the cost.** The cheapest legal correction is `amt = M` at a discriminant with
 `deg Z(disc) = 1`.
 
+### ✅ THE COST IS MEASURED — and `34_3` cannot afford the cheapest LEGAL correction
+
+`degz.m` computes `deg Z(d)` from `FieldsOfDefinitionOfCMPointFast` (the quantity
+`replace_column` already uses) and **refuses to print a sweep unless it first reproduces the five
+values the divisor-degree identity pins independently** — 5 of 5. That identity is itself new and
+worth keeping: `deg f = (multiplicity at -3) · deg Z(3)` reproduces **all 7** baseline polynomial
+degrees at `34_3` exactly, the disc `-3` CM point being `s = ∞`.
+
+    deg Z(164) = 4     =>  cost 6*4 = 24, i.e. 31 rational CM points needed, against 10
+
+⚠ `deg Z` is **not** `h(d)/2` or any similar formula: `h(-408) = 4` with `deg Z(408) = 1`, while
+`h(-68) = 4` with `deg Z(68) = 2`. Do not fit one; call `degz.m`.
+
+`costtab.py` crosses that against a hoisted `PROBE_INTSWEEP` over all 21 relevant discriminants.
+Restricting to those available at **all 9 keys** (a correction must apply at every cover key) and
+non-ramified:
+
+    amt 6:   degZ 1 (11,20,24,27) 0/9 | degZ 2 (56,68) 0/9 | degZ 3 (116) 0/9
+             degZ 4:  164 -> 9/9,  180 -> 0/9
+    amt 12:  56 -> 9/9,  164 -> 9/9,  180 -> 9/9;  every degZ 1 still 0/9
+
+⇒ **`-164` is the UNIQUE usable discriminant at `amt = 6`, and the joint most expensive available.**
+The minimum cost over ALL legal `(disc, amt)` pairs is **24**, reached twice by different routes —
+`164/6` (`6·4`) and `56/12` (`12·2`). **Nothing below cost 24 is integrally solvable, 0 of 11.**
+The failures are condition 3, not condition 2 — every candidate reports `inimage true`.
+
+⇒⇒ **The hatch is STRUCTURALLY UNAFFORDABLE at `34_3`, ~3× over supply** — not a bad choice of
+discriminant. A clean negative result with a stated mechanism, replacing an unexplained failure.
+
+⚠⚠ **ONE BASE. Do not promote "cost >= 24" to a law.** `24` coincides with several quantities at
+`34_3` and nothing distinguishes them — this is exactly the shape of the four laws refuted on
+09-12/13. The honest statement is the measurement. `degz.m` and `costtab.py` run unchanged at
+`35_1` and `21_2`, and that is the next experiment.
+
 ### ⚠⚠ A THIRD NULL-RUN TRAP, same family as the two below — a knob at a dead call site
 
 The first `CMEXTRA` knob went into `EquationsOfCovers` (the `[4/6]` path). **`genmodels.m` never
