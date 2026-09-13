@@ -1,18 +1,113 @@
-# Handoff — 2026-09-12
+# Handoff — 2026-09-13
 
 **The newest section is this one; everything after it is older and kept for provenance.** Earlier
 material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
 STALE.
 
-⚠ **2026-09-12: the newest section's work is COMMITTED LOCALLY BUT NOT PUSHED** (`main`
-`47ea828`, campaign `bb3700e`). Push both before relying on a clone elsewhere — and because
-`EquationsCovers.m` and `tests/` are SHARED PATHS, the branch-divergence invariant goes red
-until `main` is merged down into `m0-theta-campaign`. Earlier sections were pushed when written.
+✅ **2026-09-13: everything is COMMITTED AND PUSHED on both branches**, and the branch-divergence
+invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8dac84c` — `git fetch
+&& git reset --hard origin/main` there before any new run, but NOT while a job is alive.
 
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## Handoff — 2026-09-12 (newest)
+## Handoff — 2026-09-13 (newest)
+
+Continues 09-12. Everything below is committed AND PUSHED on both branches; the branch-divergence
+invariant prints nothing against `origin`.
+
+### ✅ CONDITION 4 — a fourth requirement on any even correction, and it is SATISFIABLE
+
+The instrumentation asked for on 09-12 was built and run. `RationalNumber` fails **iff some prime
+carries a NON-INTEGRAL exponent** (`LogSum.m:137`) -- a `LogSm` is a formal `sum_p coeff_p log p`,
+so the failure is a fractional EXPONENT, not an irrationality, and naming the prime is the whole
+diagnostic. Measured chain:
+
+* the prime is always a RAMIFIED prime of `D` (17 at `D=34`, 5 at `D=35`), never the level prime;
+* it is present BEFORE the final rescaling (`scale = -1/4`, denominator 4, wrong prime);
+* the principal-part coefficients are INTEGERS, **362 of 362**;
+* `Kappa0`'s OWN log-`p` coefficients are fractional -- 235 at denominator 3, 113 at 9, natural at
+  `p=17` where `p+1=18`.
+
+⇒ Those fractions are INTRINSIC and are supposed to cancel: a legitimate divisor makes
+`sum_m c(-m) kappa_p(m)` an INTEGER, and the perturbation breaks that. So a usable perturbation
+needs FOUR conditions, not three:
+
+    1. EVEN                        -- cover unchanged                 (parity survey 28/28)
+    2. phi(target) = 0             -- Borcherds' criterion            (always solvable, gcd(phi)=1)
+    3. integral solution           -- a form exists at all            (170/834 candidates at 34_3)
+    4. sum_m c(-m) kappa_p(m) in Z at every ramified p | D, every CM d   <-- NEW, and not implied by 3
+
+**Condition 4 IS satisfiable** -- at `34_3`, `35_1` and `21_2` there are amounts giving ZERO
+non-rational cells, clearing `ValuesAtCMPoints` for the first time since 2026-08-30. ⚠ The blocker
+then MOVES to `QuadraticConstraintsOnEquations` ("Schofer table values at rational points -- no
+solution found"), a NEW and UNEXAMINED stage that may be CM supply, a known rescue axis.
+
+### ⚠ THE MODULUS LAW IS UNRESOLVED — SIX FORMULAS FITTED AND REFUTED
+
+    D=34 (2*17)   M = 6  EXACTLY    (N=3 and N=7 AGREE -- so it is NOT N-dependent)
+    D=35 (5*7)    M = 12 EXACTLY
+    D=21 (3*7)    M | 6             (2,4 untestable there -- they fail condition 3)
+
+Refuted: `2N` (at `34_7`), `2*oddpart(p+1)` for `p=17` (at `34_3`), `2(pmin+1)` (at `21_2`),
+`2(pmax+1)` (at `34_3`), `2*gcd` (at `35_1`), `2*lcm` (at `34_3`). **Do not propose a seventh.**
+
+⚠ **UNCONTROLLED CONFOUND, possibly making the question mis-posed**: the perturbation DISCRIMINANT
+differs across the three bases (164, 32, 16), and nothing shows the modulus is a property of the
+BASE rather than of the DISCRIMINANT. ⇒ The next experiment is the disc-dependence control -- vary
+the disc at FIXED base -- because it decides whether "the modulus at base X" is even well defined.
+
+⚠ **THE 28-BASE DIVISIBILITY SCREEN IS VOID** (it used `2N`). **The hatch's REACH IS UNKNOWN** --
+neither "3-4 of 28" nor the original "49" is supported. Do not quote either.
+
+### ⚠⚠ TWO NULL-RUN TRAPS, SAME CAUSE — always print the perturbed-key count
+
+`PROBE_EVEN_COPRIME` silently excludes the chosen discriminant and perturbs NOTHING while returning
+0 cells. Hit twice: `180/+4` at `34_3`, and THREE runs at `21_2` (`N=2`, disc 16 even) that read as
+"all amounts clear" -- which would have refuted the `p_min` formula **on no computation at all**.
+That filter rests on the non-coprimality hypothesis, which the even-correction README itself records
+as REFUTED. ⇒ **Run with `PROBE_EVEN_COPRIME=0`, and count `perturb disc` lines before believing any
+verdict.**
+
+### ✅ tests/ConicClasses.m — the first check on a genus-0 twist class (`4f4667a`)
+
+`ModelChecks`' four tests are STRUCTURALLY BLIND to a quadratic twist at genus 0: a conic and its
+non-square twist share genus, genus formula, the trivial Weil polynomial AND the point count over
+every `F_p` (every smooth conic over a finite field is isotropic, so both are `P^1` with `p+1`
+points). **282 of 822 committed entries are genus 0 across 75 files** -- the largest exempted class
+in the repo, previously unvalidated, and why `10_3`'s `[1,2]` drift was invisible to CI.
+
+The new test needs no theory: entries under one `(D,N,W)` key are the same quotient over different
+bases, so they must share a class in `Br(Q)[2]`, computed as the quaternion algebra `(a, disc)`.
+**215 conics, 38 multi-entry keys, all consistent, 0.05 s.** NEGATIVE-CONTROLLED in situ: twisting
+one `10_3` entry by `-2` makes it fail and name the key. Suite **76/76**.
+⚠ It catches INTERNAL inconsistency only -- it does NOT resolve `10_3`, whose committed entries
+agree with each other. Predicting WHICH conic is right is the open arbiter question; `W=[1]` entries
+come out RAMIFIED, consistent with `X^D(R) = empty`, which points at Ogg's real-points criterion.
+
+### Runtime on lovelace: where the time goes
+
+Measured scaling (at `51_1`): pool grows LINEARLY in pole order, but `qexps ~ PO^3.3`,
+`EchelonForm ~ PO^4.4`, `ech_etas ~ PO^2.5`. Extrapolated to the pole orders the live jobs reach
+(`119_1` hit 1309, `111_1` 1665): ~0.6 h per pool build at `PO=1300`, ~1.7 h at `PO=1700`, and
+`EchelonForm` OVERTAKES `qexps` around `PO~1200-1600` -- so these runs sit exactly at the crossover.
+⚠ The recorded "EchelonForm is only 6 s of 222 s" is from a small pole order and does NOT
+extrapolate.
+
+Levers, ranked: (1) build the DEFICIT PREDICTOR -- the deficit is a rank comparison independent of
+any divisor choice, so obstruction is computable from the Weil representation WITHOUT the pipeline;
+nobody has built it, and it is the only lever that changes the campaign's complexity rather than one
+run's. (2) Attack COEFFICIENT GROWTH in the elimination (multi-modular + CRT): the pool is already
+100% triangular when sorted by valuation, so `EchelonForm` never searches for pivots -- but "skip
+the RREF" is REFUTED, it only relocates 33-digit coefficients downstream. (3) Reuse q-expansions
+across the t-ladder (`qexp(t^j f) = qexp(t)^j qexp(f)`), untested, needs higher absolute precision.
+(4) Audit `Prec` per base -- precision is `M^2`.
+⚠ The scaling table is ONE base; verify the exponents elsewhere before investing.
+
+⚠ Checked: `bfp` (`95_1`) and `vxfix` (`159_1`) DO contain the vx fix `d9b52d0`, so those multi-day
+runs are on valid code. All five lovelace jobs still alive; `34_11` at **81.6 GB** with 1450 GB free.
+
+## Handoff — 2026-09-12
 
 ### ⇒ LIVE JOBS: `X0_111_1` IS DONE AND PASSED; the five on lovelace are still running
 
