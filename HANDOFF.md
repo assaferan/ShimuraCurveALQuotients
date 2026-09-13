@@ -11,6 +11,74 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-13 (later) — the post-condition-4 blocker, examined
+
+**Supersedes the "blocker then MOVES to `QuadraticConstraintsOnEquations`" claim in the section
+below.** Full account with every count: `vvdata/weyl-campaign/even-correction/QUADCONSTRAINTS.md`
+(campaign, `9a949b4`), with `ratfit_compare.py` and `ratfit-cmextra.patch` beside it.
+
+### ⚠ THE STAGE ATTRIBUTION WAS WRONG — read the `require`, not the traceback
+
+    Runtime error in 'QuadraticConstraintsOnEquations':
+    Error in Schofer table values at rational points - no solution found!
+
+That `require` (`EquationsCovers.m:68`) tests `kernels[j]`, an ARGUMENT, built one intrinsic earlier
+in `RationalConstraintsOnEquations` (`EquationsCovers.m:31`). When it fires the quadratic stage has
+done no arithmetic. It also **cannot** be the blocker in principle: its relations are built from
+`B[1]` and solved inside `P(B)`, so they select within an existing solution space and can never
+create one. At `34_3` it is moot anyway — **`#quad = 0`**, so the stage is a no-op in both runs.
+
+⇒ The real failure is the **rational linear fit**: no `f` of degree `<= 2g+2` matches the rational
+CM values. Empty at all 7 cover keys, at FULL COLUMN RANK (baseline: `dimB = 1` at all 7).
+
+### ✅ THE HATCH'S FOUNDING PREMISE HOLDS — and more strongly than "branch locus"
+
+* branch locus preserved: **0 of 42** (rational CM point, key) cells change zero-ness;
+* `h = y2_pert / y2_base` is a perfect **6th power at 58 of 58 cells** once the bad primes of
+  `D*N = 102` are divided out, and its 6th root depends **only on `s`, not on the cover key**.
+
+⇒ `h = c_key * G(s)^6`, one shared `G`, `c_key` a bad-prime constant (the re-chosen
+`find_y2_scales` row scale). `amt = 6` is the exponent — exactly what adding `6*Z(164)` to the
+divisor predicts. Predicted first, then measured.
+
+⇒⇒ **`G^6 = (G^3)^2` is a perfect SQUARE, so `y^2 = c*f_old*(G^3)^2` is the SAME CURVE as
+`y^2 = c*f_old`.** The even correction preserves the whole cover, not just its branch divisor, and
+**the pipeline is discarding a correct answer** — its ansatz is simply too short.
+
+### ⇒ THE BINDING QUANTITY IS A COST, NOT A FIFTH CONDITION
+
+    degree gain    = amt * deg Z(disc)
+    the fit needs    2g+5 + amt*deg Z(disc)   RATIONAL CM points
+
+`deg Z(164) >= 2` at `34_3` (`= 1` refuted on an exactly-determined system at the `g=0` keys), so
+the demand is `>= 19` against a supply of **10** — and 10 is genuine: `#ds = 19` still yields
+`#rat = 10`, the six extra points all quadratic. **The hatch is not obstructed at `34_3`; it is
+PRICED OUT.**
+
+⚠ No selection rule so far considers `deg Z(disc)`, and `PROBE_EVEN` actively prefers the
+**largest** `|disc|` — hence large class number, hence large `deg Z(disc)`. **That heuristic works
+directly against the cost.** The cheapest legal correction is `amt = M` at a discriminant with
+`deg Z(disc) = 1`.
+
+### ⚠⚠ A THIRD NULL-RUN TRAP, same family as the two below — a knob at a dead call site
+
+The first `CMEXTRA` knob went into `EquationsOfCovers` (the `[4/6]` path). **`genmodels.m` never
+calls it** — `AllEquationsAboveCovers` has its own copy of the `num_vals` computation. Both runs
+came back byte-identical in the same 207 s, which reads as "more CM points don't help": a clean
+refutation of the degree story **from a run that added no points**. Caught because `[4/6]` appeared
+in no log, baseline included. ⇒ The knob now prints `CMEXTRA num_vals` unconditionally.
+
+⚠ Also: **the degree sweep is VACUOUS whenever `ncols > nrows`**, which it is at the default
+`MaxNum = 7` (`#rat = 6` = `2g+4` for `g=1`, a square system). A kernel appearing above the true
+bound there means nothing.
+
+### ⚠ `genmodels.m` output is NOT byte-comparable to `data/models/`
+
+The unperturbed run gives 15 cover keys against the committed 10, and shared entries differ — but
+they are **the same curves in a different normalisation** (`W=[1,2,17,34]` fresh = committed/9;
+`W=[1,17]` fresh(x) = committed(17x/3); `W=[1,102]` both). `genmodels.m` does not pin `base_label`.
+A byte-diff is not a valid reproduction check for this driver.
+
 ## Handoff — 2026-09-13 (newest)
 
 Continues 09-12. Everything below is committed AND PUSHED on both branches; the branch-divergence

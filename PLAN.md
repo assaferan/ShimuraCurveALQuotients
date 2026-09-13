@@ -77,9 +77,18 @@ integer, and the perturbation breaks that.
 
 **Condition 4 is SATISFIABLE** — at `34_3` amounts 6 and 12 give ZERO non-rational cells and clear
 `ValuesAtCMPoints` for the first time since 2026-08-30. It is NOT implied by 3: the `164/+2` run
-satisfies 1–3 and violates 4 at 11 cells. The blocker then MOVES to
-`QuadraticConstraintsOnEquations` ("Schofer table values at rational points — no solution found"),
-a new and unexamined stage that may be CM supply, a known rescue axis.
+satisfies 1–3 and violates 4 at 11 cells.
+
+✅ **EXAMINED 2026-09-13 — and the stage attribution was WRONG.** That error's `require`
+(`EquationsCovers.m:68`) tests a kernel built in `RationalConstraintsOnEquations`; the quadratic
+stage has done no arithmetic when it fires, cannot create a kernel in principle, and at `34_3` has
+`#quad = 0` and does nothing at all. The real failure is the **rational linear fit**. And the
+hatch's premise HOLDS: `y2_pert/y2_base` is a perfect **6th power at 58/58 cells** (bad primes of
+`D*N` removed), so the perturbed model is the SAME CURVE and **the pipeline is discarding a correct
+answer** — its ansatz solves `deg f <= 2g+2` while the perturbed `f` has degree
+`2g+2 + amt*deg Z(disc)`. ⇒ The binding quantity is a **COST**, not a fifth condition:
+the fit needs `2g+5 + amt*deg Z(disc)` RATIONAL CM points. See `HANDOFF.md` (09-13 later) and
+`vvdata/weyl-campaign/even-correction/QUADCONSTRAINTS.md`.
 
 ⚠⚠ **THE MODULUS IS `D`-DEPENDENT, NOT `N`-DEPENDENT, AND `amt = 0 mod 2N` IS REFUTED.** `2N` was
 recorded from `34_3`, where `N=3` and `oddpart(17+1)=9` make `N` and the `D`-formula
@@ -111,8 +120,16 @@ traps in one session -- the second was three runs at `21_2` reading as "all amou
 would have refuted a formula on no computation at all.
 
 **If you would rather not resume the modulus question**, the two better-posed alternatives are:
-* **`QuadraticConstraintsOnEquations`** -- the blocker actually reached once condition 4 is
-  satisfied, never examined, and plausibly CM supply (a known rescue axis with known levers);
+* ⇒ **MINIMISE THE CORRECTION'S COST, `amt * deg Z(disc)`** (new 2026-09-13, and now the best-posed
+  item here). The hatch is not obstructed at `34_3` — it is PRICED OUT: `deg Z(164) >= 2` makes the
+  demand `>= 19` rational CM points against a genuine supply of **10** (`#ds = 19` still gives
+  `#rat = 10`; the extras are all quadratic). No selection rule considers `deg Z(disc)`, and
+  `PROBE_EVEN` prefers the LARGEST `|disc|` — hence large class number, hence large `deg Z(disc)` —
+  so **the current heuristic works against the cost**. The experiment: among the discriminants
+  satisfying conditions 1–4 at `34_3`, find one with `deg Z(disc) = 1`, giving gain 6 and a demand
+  of `2g+11`. `deg Z(d)` is read off `FldsOfDefn` as the sum of the degrees of the fields of
+  definition, and is cross-checked by the divisor-degree identity in `QUADCONSTRAINTS.md` §7b,
+  which reproduces all 7 baseline polynomial degrees at `34_3` exactly;
 * **the genus-0 twist arbiter** -- 282 entries, no oracle, and `tests/ConicClasses.m` now covers
   only INTERNAL consistency. `W=[1]` entries come out ramified, consistent with `X^D(R)=empty`,
   so Ogg's real-points criterion is the frame.
