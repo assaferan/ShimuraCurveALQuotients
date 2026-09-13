@@ -1,8 +1,8 @@
 diff --git a/BorcherdsForms.m b/BorcherdsForms.m
-index 8499be9..07f9783 100644
+index 8499be9..aebe65a 100644
 --- a/BorcherdsForms.m
 +++ b/BorcherdsForms.m
-@@ -1051,6 +1051,127 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+@@ -1051,6 +1051,134 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
  
                      V := RSpace(BaseRing(coeffs_trunc), Ncols(mat));
                      target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
@@ -36,7 +36,14 @@ index 8499be9..07f9783 100644
 +                    // Reports, per candidate: in-image over Q, and integrally solvable over Z --
 +                    // the same IsConsistent test the IntegralSolution branch uses below.
 +                    if GetEnv("PROBE_INTSWEEP") ne "" then
++                        // amounts are env-driven: the disambiguating values differ per base
++                        // (at 34_7 the readings separate at 6 vs 14 vs 18, none of which is in the
++                        // original list), and widening costs nothing -- each is one linear solve
++                        // against the already-computed coeffs_trunc.
 +                        swamts := [2, 4, 6, -2, -4, -6];
++                        if GetEnv("PROBE_SWAMTS") ne "" then
++                            swamts := [StringToInteger(z) : z in Split(GetEnv("PROBE_SWAMTS"), ",")];
++                        end if;
 +                        ram_ds_sw := {-pt[1] : pt in ram};
 +                        ctQs := ChangeRing(coeffs_trunc, Rationals());
 +                        for jj in [1..#relevant_ds] do
@@ -130,7 +137,7 @@ index 8499be9..07f9783 100644
                      
                      found_v := target_v in Image(coeffs_trunc);
                     
-@@ -1102,7 +1223,16 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
+@@ -1102,7 +1230,16 @@ the targets we actually need are determined as long as THEIR forms exist. Empty
                      // check divisor
                      div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                      
