@@ -68,11 +68,23 @@ Both were only visible by reproducing KNOWN values on bases that build.
 
 ### Next on this line
 
-* **Re-read the 18 screened OBSTRUCTED verdicts with `wdef`.** They were all called on
-  `Ncols - Rank`. `142_1`/`158_1` agree (`wdef = deficit = 1`), so there is no reason to expect a
-  wholesale correction — but a base where `wdef` is 0 and `deficit` is 1 would be a FALSE
-  OBSTRUCTED, and nothing has looked. Cheapest first: `38_13`, `6_101`.
-* **Screen the odd backlog for CLEARS**, which is the half the even-only screen could never touch.
+* ✅ **The `wdef` re-read of the screened verdicts came back CLEAN** — `10_71 22_31 38_13 6_101` all
+  hold at `wdef >= 1`. The 72-base census stands. (The other 14 have not been re-read; nothing so
+  far suggests they will move.)
+* ✅ **`21_1` BUILDS and the Gonzalez-Rotger oracle confirms it** (`eb78acc`) — under `HMFIT=1`,
+  after fixing a gauge sign in the fit. The oracle is at **45 comparisons**.
+* **`33_1` is now the last Gonzalez-Rotger target without a model, and its blocker is ISOLATED.**
+  The odd screen says it is **clear** (`wdef 0 at m = -15`), so the Borcherds stage is fine; it dies
+  downstream on the **`Log11` runaway** (reproduced this session under `HMFIT=1`). Precision is
+  already REFUTED as the cause and the prime is RAMIFIED in both runaway cases (`33_1` Log11,
+  `69_1` Log23 — and `69_1` also screens clear). ⇒ **Two bases, same shape, both with the upstream
+  stage now cleared: this is the cleanest the runaway class has ever been to attack.** Its target
+  equation is known: `y^2 = -3x^4-10x^2-243`, Jac `33a1`.
+* **Keep screening the odd backlog.** 45 odd targets remain missing at `#div(M) <= 20`, none of them
+  ever screened before today; 10 are in flight (`~/shimura/oddscr`).
+  ⚠⚠ Read `wdef`: at `33_1` and `69_1` the plain deficit reads 1 and 3, and would have called both
+  OBSTRUCTED. Those are the first two live cases where the two statistics disagree, and `wdef` is
+  the one that matches what is independently known.
 * `6_131`/`6_137` need the `find_t` / polytope stage to work at `M ~ 1600` before they can be
   screened at all.
 
