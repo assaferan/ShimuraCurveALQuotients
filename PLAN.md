@@ -77,7 +77,13 @@ Both were only visible by reproducing KNOWN values on bases that build.
   far suggests they will move.)
 * ✅ **`21_1` BUILDS and the Gonzalez-Rotger oracle confirms it** (`eb78acc`) — under `HMFIT=1`,
   after fixing a gauge sign in the fit. The oracle is at **45 comparisons**.
-* **`33_1` is now the last Gonzalez-Rotger target without a model, and its blocker is ISOLATED.**
+* ✅ **DONE — `33_1` AND `69_1` BUILD** (`4bfb859`): the runaway class was an incorrect scaling
+  factor (`w_1` counted as an Atkin-Lehner involution), not a property of the forms. `33_1` matches
+  the published equation; the Gonzalez-Rotger oracle is at **47 comparisons** with **0 bases lacking
+  a `W=[1]` model**. Every Gonzalez-Rotger target now has a model.
+* ✅ **DONE — the second hauptmodul row is checked**, 195 assertions against the published primary
+  column, 0 mismatches (`tests/_offline/GuoYangCheck.m`). ⚠ Selection-biased toward passing.
+* **(superseded) `33_1` was the last Gonzalez-Rotger target without a model:**
   The odd screen says it is **clear** (`wdef 0 at m = -15`), so the Borcherds stage is fine; it dies
   downstream on the **`Log11` runaway** (reproduced this session under `HMFIT=1`). Precision is
   already REFUTED as the cause and the prime is RAMIFIED in both runaway cases (`33_1` Log11,
