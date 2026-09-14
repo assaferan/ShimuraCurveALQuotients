@@ -1,0 +1,24 @@
+# Bases screened with deficit.m (vvdata/weyl-campaign/deficit.m), 2026-09-14.
+# Verdict requires >= 2 rungs AND an invariant deficit -- a single rung carries no information.
+# EVEN D only (the odd-D 0-side block is missing; overestimate ~20, see deficit-predictor-validated.md).
+#
+# base   rungs  ladder        verdict
+134_3    2      0 0           clear
+14_37    2      0 0           clear
+62_7     2      0 0           clear
+34_11    3      0 0 0         clear
+6_107    3      0 0 0         clear
+6_109    3      1 0 0         clear      # low rung reads 1: truncation, NOT obstruction
+6_113    3      0 0 0         clear
+74_5     3      0 0 0         clear
+146_1    5      1 0 0 0 0     clear      # validation set
+194_1    5      2 0 0 0 0     clear      # validation set
+22_31    3      3 1 1         OBSTRUCTED
+6_101    3      1 1 1         OBSTRUCTED
+274_1    4      2 1 1 1       OBSTRUCTED
+38_13    4      1 1 1 1       OBSTRUCTED
+218_1    5      3 1 1 1 1     OBSTRUCTED
+226_1    5      3 1 1 1 1     OBSTRUCTED
+10_67    3      2 2 2         OBSTRUCTED, deficit 2 (2-dimensional obstruction space)
+142_1    5      4 1 1 1 1     OBSTRUCTED # validation set
+158_1    5      3 1 1 1 1     OBSTRUCTED # validation set
