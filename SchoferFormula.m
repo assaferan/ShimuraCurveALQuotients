@@ -900,10 +900,29 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
         W_size div:= 2;
     end if;
     */
-    // This follows from Ogg's description of the fixed points 
-    // of Atkin-Lehner w_m
+    // This follows from Ogg's description of the fixed points
+    // of Atkin-Lehner w_m: w_m is fixed at discriminant -4m, and also at -m when m = 3 mod 4.
+    //
+    // ⚠ THE SECOND CLAUSE USED TO READ `(D*N mod (d div 4)) eq 0` WITH NO LOWER BOUND ON m, and at
+    // d = -4 that is m = 1 -- i.e. w_1, the IDENTITY.  Since d div 4 = -1 divides EVERYTHING, the
+    // clause fired at d = -4 on EVERY base, halving W_size for a point no Atkin-Lehner involution
+    // fixes.  For EVEN D*N it is invisible: the first clause gives the same answer there, and it is
+    // right to (Ogg's fixed points of w_2 include disc -4).  For ODD D*N it is simply WRONG, and it
+    // made the Schofer scale at d = -4 too large by a factor of 2.
+    //
+    // Checked against the repo's own Ogg implementation, which is a separate code path and which
+    // REQUIRES m > 1:  NumFixedPointsByCMOrder(D,N,m) over m | D*N, m > 1, reports disc -4 fixed by
+    //   D*N odd  (33_1, 69_1, 21_1, 57_1): NOTHING
+    //   D*N even (6_1, 38_1):              w_2
+    // The first clause is therefore kept exactly as it was; only m = 1 is excluded below.
+    //
+    // ⇒ This is what produced the "runaway log coefficient" class.  A common huge factor C sits in
+    // every column of a row and cancels in ReduceTable, which subtracts the per-row MINIMUM -- but
+    // the doubled scale made the d = -4 column carry 2C, so C survived there and overflowed
+    // RationalNumber.  See HANDOFF.md, 2026-09-14.
+    m_al := -(d div 4);
     Ogg_condition := ((d eq -4) and IsEven(D*N)) or
-                     ((d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)) or
+                     ((d mod 4 eq 0) and (m_al gt 1) and ((D*N mod m_al) eq 0)) or
                      ((d mod 4 eq 1) and (D*N mod d eq 0));
     if Ogg_condition then
         W_size div:= 2;

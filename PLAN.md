@@ -30,7 +30,10 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
        magma -b DD:=<D> NN:=<N> vvdata/weyl-campaign/deficit_odd.m # either parity, via DeficitScreen
 
    ⚠⚠ **EVEN `D`: require >= 2 rungs and an INVARIANT deficit.** A single rung is meaningless —
-   `6_109` reads `1 0 0` and BUILDS.
+   `146_1` reads `1 0 0 0 0` and BUILDS (committed model + published Guo-Yang table).
+   ⚠ **Do NOT cite `6_109` here.** It was the example this line used to carry, on no evidence: a
+   real run died with "Failed to find all Borcherds forms" after 58 min and no `models_6_109.m` has
+   ever existed. It is a CONFIRMED FALSE CLEAR of the even screen, not a proof of the rule.
    ⚠⚠ **ODD `D` IS A DIFFERENT LADDER — over `m`, not over `P`,** and the statistic is `wdef` (the
    deficit restricted to the achievable targets), not `Ncols - Rank`. `55_1` reads `deficit 3` /
    `wdef 0` and builds. On odd `D` the screen is fast only when it CLEARS, and an odd "obstructed"
@@ -46,7 +49,7 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ### The numbers, corrected — do not quote the old ones
 
-    obstructed   72 known, a LOWER BOUND = 49 recorded + 5 stumbled into + 18 screened.  The 5 are
+    obstructed   73 known (6_109 added by a failed run), a LOWER BOUND = 49 recorded + 5 stumbled into + 18 screened.  The 5 are
                  142_1 158_1 166_1 214_1 6_97; all three sets are disjoint, checked.  Never quote
                  49, and do not quote 61 either.
     2-dim        FIVE bases have a 2-dimensional obstruction space: 166_3 22_19 74_7 10_67 58_13.
@@ -74,7 +77,13 @@ Both were only visible by reproducing KNOWN values on bases that build.
   far suggests they will move.)
 * ✅ **`21_1` BUILDS and the Gonzalez-Rotger oracle confirms it** (`eb78acc`) — under `HMFIT=1`,
   after fixing a gauge sign in the fit. The oracle is at **45 comparisons**.
-* **`33_1` is now the last Gonzalez-Rotger target without a model, and its blocker is ISOLATED.**
+* ✅ **DONE — `33_1` AND `69_1` BUILD** (`4bfb859`): the runaway class was an incorrect scaling
+  factor (`w_1` counted as an Atkin-Lehner involution), not a property of the forms. `33_1` matches
+  the published equation; the Gonzalez-Rotger oracle is at **47 comparisons** with **0 bases lacking
+  a `W=[1]` model**. Every Gonzalez-Rotger target now has a model.
+* ✅ **DONE — the second hauptmodul row is checked**, 195 assertions against the published primary
+  column, 0 mismatches (`tests/_offline/GuoYangCheck.m`). ⚠ Selection-biased toward passing.
+* **(superseded) `33_1` was the last Gonzalez-Rotger target without a model:**
   The odd screen says it is **clear** (`wdef 0 at m = -15`), so the Borcherds stage is fine; it dies
   downstream on the **`Log11` runaway** (reproduced this session under `HMFIT=1`). Precision is
   already REFUTED as the cause and the prime is RAMIFIED in both runaway cases (`33_1` Log11,

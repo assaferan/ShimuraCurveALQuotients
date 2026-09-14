@@ -11,6 +11,116 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 (night, later) — THE RUNAWAY CLASS IS FIXED, NOT JUST ROOT-CAUSED
+
+The section below this one says the cause was "a huge principal part x a column whose scale
+differs", and treats the scale difference as legitimate. **It is not legitimate — the scale itself
+was wrong**, and correcting it removes the runaway at the source. `4bfb859`.
+
+### THE BUG: `w_1` counted as an Atkin-Lehner involution
+
+`ScaleForSchofer`'s second Ogg clause was `(d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)`, with no
+lower bound on `m`. At `d = -4` that is `m = 1` — the IDENTITY — and `d div 4 = -1` divides
+everything, so **the clause fired at `d = -4` on every base**. Even `D*N` hides it (the first
+clause, `(d eq -4) and IsEven(D*N)`, gives the same answer and is right to). Odd `D*N` gets a
+Schofer scale at `d = -4` that is **too large by a factor of 2**.
+
+⇒ That is the whole runaway class. The huge common factor `C` cancels in `ReduceTable` (which
+subtracts the per-row minimum) everywhere except the one column carrying `2C`.
+
+**Confirmed against a separate code path.** `NumFixedPointsByCMOrder` — the repo's own Ogg
+implementation, which REQUIRES `m > 1` — reports disc `-4` fixed by **NOTHING** at odd `D*N`
+(`33_1 69_1 21_1 57_1`) and by `w_2` at even `D*N` (`6_1 38_1`).
+
+⚠ **The published tables cannot arbitrate this cell.** Every offline Guo-Yang table with a FINITE
+`d = -4` value has even `D*N`; the one odd-`D*N` table with `d = -4` (`57_1`) has a pole there.
+
+### ✅ TWO NEW MODELS, both on the PLAIN RECIPE
+
+    33_1   GonzalezRotger MATCH, Jacobian 33a1 (published).  Oracle 45 -> 47 comparisons, and
+           "0 bases without a usable W=[1] model" for the first time.
+           neg ctl: the -1 twist gives 528h2 and is REJECTED.  VerifyModelSet 44/0 (neg ctl 4).
+           ⚠ Built twice, with and without HMFIT=1: BYTE-IDENTICAL.  It does not need the flag.
+    69_1   VerifyModelSet 44/0 (neg ctl 5).  ⚠ No external oracle -- 10_61 evidence level.
+
+`21_1` is unaffected (its `d = -4` is a pole) and still needs `HMFIT`.
+
+### ⚠ `X0_15_1` FAILS ON LOVELACE AND PASSES ON THE MAC — Magma 2.29-10 vs 2.29-7
+
+Controlled three ways: it passes locally WITH the fix, it fails on lovelace on the UNMODIFIED tree
+run SERIALLY, and the `15_1` model regenerates **byte-identically** on both machines and matches
+what is committed. So the mathematics is reproducible and the divergence is in the test's
+isomorphism check. **A red `X0_15_1` is not evidence of a regression — check the Magma version
+first.** Regression coverage for `4bfb859` was 76 of 84 files green on lovelace.
+
+### ✅ THE SECOND HAUPTMODUL ROW IS NO LONGER UNCHECKED — 195 new checks
+
+Guo-Yang publish the PRIMARY column only, so the `s~` row — an independently computed Borcherds
+form — had never been compared against anything. It does not need new data: `s~ = 1 - s` is Mobius
+and the cross-ratio is Mobius-invariant, so the published column pins what that row's cross-ratios
+must be (`want` is literally unchanged). Now asserted in `tests/_offline/GuoYangCheck.m`.
+Measured before it became an assertion: **27 tables, 195 checks, 0 mismatches**. `NEGCTL=1`
+perturbs one non-frame `s~` value and the check catches it, naming the disc.
+
+⚠ **Selection bias, and it limits the conclusion**: a table exists only where Guo-Yang published
+one, i.e. a base that builds. A base whose `s~` row is wrong may fail to build and so have no
+table — `21_1`, which motivated all this, is exactly that case and is NOT in the set. "All pass"
+means **no systematic defect among bases that build**, not "no defect".
+
+### `21_1`'s wrong CM value, pinned exactly
+
+Its `s~(-7) = 9`; the other five discriminants agree it must be **36** (`-1/4 + 5/4`, `-9/16 +
+25/16`, `-1/16 + 17/16`, `-25/144 + 169/144`, `1 + 0`, each exactly 1). The pipeline reads
+`scale_tilde` FROM that cell, so the bad datum becomes the yardstick, satisfies the relation by
+construction, and cannot be flagged — the error surfaces as "the four others are inconsistent".
+`HMFIT=1` refits and is externally confirmed there (Jacobian `21a2`).
+Fingerprint for whoever chases it: `9 = 3^2`, `36 = 2^2*3^2`, so the LogSum is short by exactly
+**`2*Log2`** — and 2 is UNRAMIFIED here (`2 | 21` is false), in fact SPLIT in `Q(sqrt -7)`
+(`-7 = 1 mod 8`). Not today's ramified-prime story. Ruled out: another Ogg mis-classification —
+on `X_0^21(1)` only `-7` and `-28` are AL-fixed, each by `w_7` alone.
+
+## Handoff — 2026-09-14 (late night) — ⚠ `6_109` IS A CONFIRMED FALSE CLEAR
+
+**A real pipeline run contradicts the screen, and it takes a documented claim with it.**
+
+`6_109` was screened CLEAR (`1 0 0`) and launched in today's `bk3` batch. It ran 58 min on current
+code and died with **"Failed to find all Borcherds forms"** — the Borcherds obstruction itself.
+
+⚠⚠ **The claim "`6_109` reads `1 0 0` and BUILDS" was NEVER BACKED BY A RUN.** There is no
+`models_6_109.m` anywhere — not committed, not on lovelace. It was an inference (low rung reads 1,
+higher rungs read 0, therefore truncation, therefore it builds) that got written down as a "live
+proof" and then cited in both `PLAN.md` and `HANDOFF.md` as the justification for the `>= 2 rungs`
+rule. Delete that citation wherever it appears.
+
+⇒ **Known obstructed is 73**, and the even screen now has a **false CLEAR** on record — the clear
+direction is not airtight either, in either parity.
+
+**The `>= 2 rungs` rule itself still stands, but on a different example.** `146_1` reads
+`1 0 0 0 0`, has a committed model AND a published Guo-Yang table, and genuinely builds. Re-ground
+the rule on `146_1`; `6_109` is now a counterexample to it, not evidence for it.
+
+### A HYPOTHESIS for the mechanism — NOT established, do not quote as fact
+
+The pipeline floors `min_m` at `-(n_oo + k - 1)` and otherwise takes it from the divisor's own `m`s,
+so the pole order it actually uses is `max(floor_pole, max|m| over the divisor)`. Rungs DEEPER than
+that are pole orders the pipeline never visits. Measured floors:
+
+    6_109   floor 325   ladder at [325, 357, 401] = 1 0 0     FAILS
+    6_107   floor 330   ladder at [330, 362, 406] = 0 0 0     still running, screen clear
+    146_1   floor  55   ladder 1 0 0 0 0                      BUILDS
+
+If this is right, `6_109`'s only reachable rung is the floor, which reads **1**, and its two zeros
+are unreachable — while at `146_1` the divisor pushes the pole order past the floor into the zeros.
+That would mean the rule as written ("a low rung reading 1 is truncation; trust the invariant value
+above") **discards the one rung the pipeline is guaranteed to use**. ⚠ Checking this needs the `m`s
+the divisor actually supplies at each base; it has NOT been done.
+
+### The `vx_skip` retest is dead again, still with no verdict
+
+`115_1` and `123_1` are gone from `ps` with no models written; `123_1`'s log ends mid-search. No
+`vx ge 0` assert was ever hit, so the vx fix is not implicated — they simply did not survive.
+`vx_skip` stays in `genmodels.m`.
+
 ## Handoff — 2026-09-14 (night) — THE RUNAWAY CLASS IS ROOT-CAUSED
 
 `RationalNumber`'s guard has said **"Cause OPEN"** since 2026-09-13. It is no longer open. The chain
