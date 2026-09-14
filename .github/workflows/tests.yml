@@ -86,6 +86,43 @@ jobs:
 
 
 
+  # Check the actor's write permission ONCE, before the matrix fans out.
+  #
+  # WHY: this check used to run INSIDE every one of the ~40 matrix jobs, each firing its own
+  # authenticated API call.  A single transient failure makes that job print "Sorry! Your
+  # permissions are insufficient." and run `false`, reddening the entire run -- indistinguishable
+  # from a real test failure.  That happened on 2026-09-13 (X0_14_3), where every other job in the
+  # same run passed the identical gate.
+  #
+  # This is the same lesson prime-magma below already records for the magma download: do the
+  # shared, flaky, external call ONCE rather than 40 times in parallel.
+  #
+  # ⚠ THE SECURITY PROPERTY IS UNCHANGED.  The workflow triggers on pull_request_target, so it
+  # runs with secrets in the BASE repo's context; the gate is what stops an untrusted PR author
+  # from using them.  This job still FAILS LOUDLY when permission is absent (so the run goes red,
+  # never silently green), and `test` needs: it -- so the matrix cannot run unless it passed.
+  permission-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check user permission
+        id: check
+        uses: scherermichael-oss/action-has-permission@master
+        with:
+          required-permission: write
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stop workflow for users with no write access
+        if: "! steps.check.outputs.has-permission"
+        run: |
+          echo "Sorry! Your permissions are insufficient."
+          false
+
+      - name: The user has write access
+        if: "steps.check.outputs.has-permission"
+        run: |
+          echo "The user has write access"
+
   # Download magma ONCE and populate the shared cache before the test matrix fans out.
   # On a cold cache (evicted after 7 days idle) the ~40 matrix jobs used to each fire the
   # same authenticated wget at the licence server in parallel; the server throttles/drops
@@ -134,7 +171,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     name: Run tests
-    needs: [has_access, matrix, prime-magma]
+    # The longest jobs run ~90 min (X0_10_23 92m, X0_6_37 84m, ExternalCMValues 84m), so 180
+    # leaves ~2x headroom while bounding a hang: without it a stuck job burns GitHub's full 6h
+    # limit before anyone learns anything.
+    # ⚠ THIS DOES NOT FIX RUNNER LOSS.  "The hosted runner lost communication with the server"
+    # (X0_6_37, 2026-09-14) kills the job from outside; nothing inside the job can retry it, and
+    # GitHub Actions has no per-job retry.  The only real mitigations are re-running the failed
+    # job, or making those three jobs shorter.  Recorded so the next person does not go looking
+    # for a retry knob that does not exist.
+    timeout-minutes: 180
+    needs: [has_access, matrix, prime-magma, permission-gate]
     if: needs.has_access.outputs.has_access == 'true'
 
     strategy:
@@ -142,25 +188,7 @@ jobs:
       matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
 
     steps:
-      - name: Check user permission
-        id: check
-        uses: scherermichael-oss/action-has-permission@master
-        with:
-          required-permission: write
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Stop workflow for users with no write access
-        if: "! steps.check.outputs.has-permission"
-        run: |
-          echo "Sorry! Your permissions are insufficient."
-          false
-
-      - name: The user has write access
-        if: "steps.check.outputs.has-permission"
-        run: |
-          echo "The user has write access"
-
+      # Permission is checked ONCE in the permission-gate job above, which this job needs:.
       - name: Checkout for a push event
         uses: actions/checkout@v2
         if: ${{ github.event_name == 'push' }}
