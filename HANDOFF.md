@@ -11,6 +11,93 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 (later) — THE ODD-D SCREEN: BUILT, AND ITS PREMISE CORRECTED
+
+Read this before `PLAN.md`'s "one substantial piece of deferred work" — that item is now DONE, but
+not in the way it was written, and the difference is the point.
+
+### ⇒ WHAT CHANGED MOST: `Ncols - Rank` IS THE WRONG STATISTIC, AND `wdef` IS THE RIGHT ONE
+
+`BorcherdsForms` takes a new `DeficitScreen := false` parameter (`b78149b`). Setting it reports the
+obstruction deficit from INSIDE the intrinsic, which reaches the odd-`D` 0-side block without
+copying it and without refactoring the hot path — everything new is behind the flag, so the
+production path is untouched (`tests/X0_15_1.m` passes, 15.0 s).
+
+**But supplying the missing 0-side rows does NOT make the even-`D` criterion work on odd `D`.** Two
+separate errors in the old framing, both measured:
+
+* **The ladder is over `m`, not over `P`.** On even `D` the deficit does not depend on `m` at all,
+  and the diagnostic is its INVARIANCE as the pole order grows. On odd `D` the 0-side contributes a
+  row block fixed by `m_choice` while a deeper `P` keeps adding columns, so **the deficit GROWS with
+  `P` at fixed `m`** — `15_1` at `m = -3` reads `1 3 6 10 14 19` across `P = 10..266`, and `15_1`
+  builds. That growth is what the old "overestimate ~20" was really measuring. The odd ladder runs
+  over `m`, each rung read at the shallowest `P` legal for that `m`.
+* **Full column rank is sufficient, NOT necessary.** `Ncols - Rank` asks whether *every* vector is
+  in the image; the search only ever asks it of a target supported on the CM points' coordinates.
+  The screen now also reports **`wdef`** — the deficit restricted to the span of achievable targets
+  — and decides on that. The gap is real and decisive: **`55_1` reaches `deficit 3` / `wdef 0` and
+  builds**; `21_2` sits at `deficit 2` across its whole ladder and builds.
+
+⚠ `P` is chosen from the 0-side discriminants so `relevant_ds` stays a superset of
+`relevant_ds_0_oo`. Without that the `Index()` fill returns 0 — exactly the failure `95_1` hit.
+
+### KNOWN VALUES REPRODUCED BEFORE ANY NEW NUMBER WAS TRUSTED
+
+    38_5    obstructed, deficit 1 at every rung     recorded: deficit 1 at poleord 190   ✓
+    34_3    clear, 0                                recorded: 0                          ✓
+    146_1   1 then 0                                recorded: 1 0 0 0 0                  ✓
+    142_1   wdef = deficit = 1 at every rung        CONFIRMED obstructed by a real run   ✓
+    158_1   wdef = deficit = 1 at every rung        CONFIRMED obstructed by a real run   ✓
+    15_1    clear (wdef 0 at m = -7),  16 s         odd, builds                          ✓
+    55_1    clear (wdef 0 at m = -15)               odd, builds                          ✓
+
+`142_1`/`158_1` matter most: they show the sharper statistic does **not** wrongly clear a base that
+genuinely is obstructed.
+
+### ⚠ LIMITS — quoting this outside them is the failure mode
+
+* **On odd `D` the screen is fast only when it CLEARS.** An obstructed verdict needs the whole `m`
+  ladder, and the 0-side basis at deep `m` costs (`pole_order = -D0*m`, e.g. **4005** at `15_1`).
+  That is the opposite of what a screen wants, so odd-`D` triage should read a clear and stop.
+* **No odd-`D` base is CONFIRMED obstructed by a real run**, so the odd "obstructed" verdict has no
+  positive control. Read it as **"not cleared"**, never as obstructed.
+* The `wdef` span is still an over-approximation of the achievable targets (it takes the whole span,
+  not the specific `div_coeffs` combinations), so `wdef >= 1` remains one-sided in both parities.
+
+### THE SECOND COLLECTION: 12 more screens, 11 new obstructed, known obstructed 61 -> 72
+
+Ladders appended to `obstructed-rerun-2026-09-10/screened-2026-09-14.txt` on the campaign branch.
+NEW obstructed: `10_71 10_73 10_79 10_89 14_53 146_3 254_1 262_1 58_13 6_127 6_139`. Cleared: `6_73`.
+
+* **`58_13` reads `2 2 2` — a FIFTH 2-dimensional obstruction space** (with `166_3 22_19 74_7
+  10_67`), and the second found by screening rather than by a failed run.
+* `262_1` (`4 2 1 1`) has only two invariant rungs — the weakest call in the batch.
+* **`6_131` and `6_137` get NO VERDICT**: the screen itself died on `assert success eq 0` at
+  `BorcherdsForms.m:114` inside `find_t` (`M = 1572, 1644`). That is the polytope/t-ladder stage —
+  an infrastructure limit at large `M`, not a rank fact. Do not record them either way.
+* The **5 stumbled-into** obstructed bases are identified as `142_1 158_1 166_1 214_1 6_97` (grep of
+  the `bk2` run logs); checked disjoint from the 18 screened and from `bases49.txt`, so
+  `49 + 5 + 18 = 72` has no double count. Still a LOWER BOUND.
+
+### ⚠ A CLEARED BASE CAN STILL FAIL — ON CM SUPPLY, WHICH THE SCREEN DOES NOT SEE
+
+8 pipeline runs were launched on the screen-cleared bases (`~/shimura/bk3` on lovelace, default
+recipe). **`134_3` died in 68 s: "Could not find enough rational CM points!"** — the screen cleared
+it on rank and it failed on the *other* triage axis. ⇒ **The deficit screen predicts the Borcherds
+obstruction and nothing else.** Route a screen-cleared base through the CM-supply check too.
+
+### WHAT IS RUNNING (lovelace, `~/shimura/scq-current`; do NOT `git pull` it)
+
+* **`bk3`: 7 pipeline jobs** on cleared bases — `14_37 62_7 34_11 6_107 6_109 6_113 74_5`; four are
+  already past Borcherds forms and into the CM-point stage. `134_3` failed (above).
+* **`defic`: 11 deficit screens** still going (`178_3 278_1 298_1 302_1 314_1 326_1 334_1 346_1
+  358_1 6_89` and friends).
+* **The `vx_skip` retest is STILL ALIVE** — `115_1` and `123_1` at ~11 h under `genmodels_novx2.m`,
+  no `vx ge 0` assert. ⚠ A previous reading in this session that they had died was wrong: the `ps`
+  output had been truncated by a `head`. If either completes, delete `vx_skip` from `genmodels.m`.
+* 4 legacy jobs on the FROZEN clone (`34_11` at 10 d, `95_1`, `159_1`, `119_1`). `34_11` now also
+  has a fresh run in `bk3` on current code; the legacy one is on `magma-2.29-9` and old source.
+
 ## Handoff — 2026-09-14 — THE DEFICIT SCREEN WORKS. Read this first.
 
 **Everything below is committed and pushed on both branches; the invariant prints nothing.**
