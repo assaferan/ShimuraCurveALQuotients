@@ -796,12 +796,16 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
 This means an unrealizable sibling cover (one whose Borcherds form cannot be found) no longer aborts the whole call --
-the targets we actually need are determined as long as THEIR forms exist. Empty Targets => all covers (unchanged).}
+the targets we actually need are determined as long as THEIR forms exist. Empty Targets => all covers (unchanged).
+If DeficitScreen is set, NO forms are computed: the search reports the obstruction deficit
+Ncols(mat) - Rank(coeffs_trunc) over a sweep of (m, pole order) and returns an empty array. This is
+the odd-D-capable form of vvdata/weyl-campaign/deficit.m -- see the block below for why the script
+alone cannot do odd D.}
     rams := RamficationPointsOfCovers(Xstar, curves);
     // Restrict to the target covers (the two hauptmoduls, keys -1/-2, are added below and always kept). rams is
     // keyed by CurveID and curves is indexed by CurveID, so curves[k]`W is the cover's AL group.
@@ -977,6 +981,114 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
             mat_0_oo := coeffs_0*ChangeRing(ds_0_to_ds,Rationals()) + coeffs_oo*ds_oo_to_ds;
             // -------------- end of the hoisted 0-side block --------------
         end if;
+        // ---------------- DEFICIT SCREEN (opt-in; default false => wholly inert) -------------
+        // vvdata/weyl-campaign/deficit.m screens a base for the Borcherds obstruction without the
+        // divisor-triple search, by reporting Ncols(mat) - Rank(coeffs_trunc).  It reimplements the
+        // {oo} side in the script, and that is exactly why it is EVEN D ONLY: on odd D the 0-side
+        // block above VerticalJoins further rows into coeffs_trunc, so a script that omits them
+        // reports an UPPER bound -- measured overestimate ~20 on six odd bases that all build.
+        //
+        // Screening from INSIDE the intrinsic lifts that restriction, and it is the only way to
+        // reach the 0-side block without copying it (its own comment warns those lines "must move
+        // TOGETHER").  Everything below is guarded, so the production path is bit-for-bit unchanged.
+        //
+        // ⚠⚠ ODD D IS NOT "EVEN D PLUS ROWS" -- IT IS A DIFFERENT LADDER.  On even D the deficit
+        // does not depend on m at all, and the diagnostic is its INVARIANCE as the pole order P
+        // grows.  On odd D that sweep is meaningless: the 0-side contributes a fixed row block
+        // fixed by m_choice, while a deeper P keeps adding columns, so the deficit GROWS with P
+        // at fixed m (15_1, m = -3: 1 3 6 10 14 19 at P = 10..266, and 15_1 builds).  What varies
+        // on odd D is m, exactly as in the search below: deeper m means more 0-side rows.  So the
+        // odd ladder is over m, read at the SHALLOWEST P legal for that m, and the verdict is
+        //     clear      = deficit 0 at some m in all_ms
+        //     obstructed = deficit >= 1 at every m in all_ms
+        // which is the same decision the search makes, minus the triple loop.
+        //
+        // ⚠ The deficit is a ONE-SIDED test in both parities: deficit 0 means every target is in
+        // the image, but a positive deficit does not by itself put a particular target outside it.
+        if DeficitScreen then
+            if IsOdd(Xstar`D) then
+                // P must leave relevant_ds a SUPERSET of relevant_ds_0_oo, or the Index() fill
+                // below returns 0 -- the same containment the production path protects with its
+                // n_oo bound.  The oo side reaches a discriminant d at pole order d (d = 3 mod 4)
+                // or d/4 (d = 0 mod 4), so this is the exact requirement, not a margin.
+                needed := [(d mod 4 eq 0) select d div 4 else d : d in relevant_ds_0_oo];
+                poles := [Maximum([n_oo + k - 1] cat needed)];
+            else
+                floor_pole := n_oo + k - 1;
+                poles := [floor_pole];
+                for P in [51, 102, 134, 190, 266] do
+                    if (P gt floor_pole) and (P notin poles) then Append(~poles, P); end if;
+                end for;
+                // At least three rungs.  A SINGLE reading carries no information on even D: the
+                // invariance across rungs is the diagnostic, not the value (6_109 reads 1 0 0 and
+                // builds).  Spacing mirrors the absolute list's own steps (102->134, 190->266).
+                if #poles lt 3 then
+                    for dP in [32, 76] do
+                        if (floor_pole + dP) notin poles then Append(~poles, floor_pole + dP); end if;
+                    end for;
+                end if;
+                Sort(~poles);
+            end if;
+            for P in poles do
+                t_scr := Realtime();
+                if (max_pole_order_oo lt P) then
+                    max_pole_order_oo := P;
+                    ech_basis_all_oo, ech_etas_all_oo, T_all_oo :=
+                        basis_of_weakly_holomorphic_forms(P, eta_quotients, n0+1, n, t);
+                end if;
+                first_idx := -P + max_pole_order_oo + 1;
+                ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx,
+                                            Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
+                mat, relevant_ds := coeffs_to_divisor_matrix(-P, Xstar`D, Xstar`N, Ncols(ech_basis));
+                coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
+                if IsOdd(Xstar`D) then
+                    // Identical assembly to the production path below.
+                    assert forall{d : d in relevant_ds_0_oo | d in relevant_ds};
+                    ds_0_oo_to_ds := ZeroMatrix(Rationals(), #relevant_ds_0_oo, #relevant_ds + 1);
+                    for i->d in relevant_ds_0_oo do
+                        ds_0_oo_to_ds[i, Index(relevant_ds, d)] := 1;
+                    end for;
+                    coeffs_trunc := VerticalJoin(ChangeRing(coeffs_trunc, Rationals()),
+                                                 mat_0_oo*ds_0_oo_to_ds);
+                end if;
+                r := Rank(coeffs_trunc);
+                // TARGET-SUBSPACE deficit, and it is the sharper object.  `deficit` asks whether
+                // EVERY vector is in the image; the search only ever asks it of a target
+                //     target_v = sum_j div_coeffs[j]*pt[2]*V.(Index(relevant_ds, -pt[1]))
+                // supported on the coordinates of the CM points in pts.  So the question that
+                // decides the search is whether that SPAN, not the whole space, lies in the image.
+                // Full column rank is sufficient but not necessary, and on odd D it is not even
+                // close: 21_2 sits at deficit 2 across its whole m-ladder and BUILDS.
+                Vs := RSpace(BaseRing(coeffs_trunc), Ncols(coeffs_trunc));
+                tgt_idxs := [j : j in {Index(relevant_ds, -pt[1]) : pt in pts} | j ne 0];
+                W := sub<Vs | [Vs.j : j in tgt_idxs]>;
+                Im := Image(coeffs_trunc);
+                wdef := Dimension(W) - Dimension(W meet Im);
+                printf "DEFICIT m %o P %o rows %o cols %o nds %o rank %o deficit %o tgt %o wdef %o  (%os)\n",
+                       all_ms[m_idx], P, Nrows(coeffs_trunc), Ncols(coeffs_trunc),
+                       #relevant_ds, r, Ncols(coeffs_trunc) - r, Dimension(W), wdef,
+                       Realtime() - t_scr;
+                // Clear: every target the search can possibly form is in the image, so it would
+                // succeed at this m.  Stop -- deeper m only costs more.
+                if wdef eq 0 then
+                    printf "DEFICIT VERDICT clear (wdef 0 at m = %o, P = %o, deficit %o)\n",
+                           all_ms[m_idx], P, Ncols(coeffs_trunc) - r;
+                    return AssociativeArray();
+                end if;
+            end for;
+            if IsEven(Xstar`D) then
+                // Even D: nothing in the screen depends on m, so the P sweep above is the whole
+                // ladder and reaching here means no rung cleared.
+                printf "DEFICIT VERDICT obstructed (wdef >= 1 at every rung)\n";
+                break;
+            end if;
+            m_idx +:= 1;
+            if (m_idx gt #all_ms) then
+                printf "DEFICIT VERDICT obstructed (wdef >= 1 at every m in all_ms)\n";
+                break;
+            end if;
+            continue;
+        end if;
         for infty in pts do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
             non_infty := [pt : pt in pts | pt ne infty];
@@ -1112,6 +1224,9 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
         if (m_idx gt #all_ms) then break; end if;
     end while;  
     vprintf ShimuraQuotients, 2 : "\n";
+    // The screen never sets found_all -- it does no divisor work at all -- so it must return
+    // before the obstruction error, which would otherwise fire on every screened base.
+    if DeficitScreen then return AssociativeArray(); end if;
     if not found_all then
         error "Failed to find all Borcherds forms";
     end if;
