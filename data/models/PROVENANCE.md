@@ -57,6 +57,13 @@ simply do not propagate into the cover equations. Therefore:
 | `26_3` | *(no flag)* but `base_label := 8103` | stores the presentation whose `V_4` is the one Guo-Yang use, so the full curve is directly comparable. A DEFAULT run yields a different (equally valid) `V_4` and so differs in the `W={1}` entry only | `tests/CRVFullCurve.m` — full-curve isomorphism CONSTRUCTED and certified |
 | `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
+| `21_1` | `HMFIT=1` | the hauptmodul normalisation is read off the two discriminants where a value VANISHES, so those satisfy the relation BY CONSTRUCTION and can never be flagged; at `21_1` the datum it reads FROM is the wrong one (five discriminants agree on `scale_tilde = 36`, the default takes `9` from `d = -7`). `HMFIT=1` solves for the pair against every rational CM point instead. ⚠ It also needed the fitted scale's SIGN pinned positive — see below | **`tests/GonzalezRotger.m`, an EXTERNAL oracle**: the `W=[1]` full curve has Jacobian `21a2`, matching the published equation (ours `-343x^4+94x^2-7`, theirs `-7x^4+94x^2-343` — the same curve by `x -> 1/x`). Negative-controlled: the `-1` twist gives `336e4` and the oracle rejects it. Also `VerifyModelSet` 44/0 (negative control: twisting the `[1,3]` entry gives 3 failures) and `ModelChecks` 44/0 |
+
+⚠ **`HMFIT` is still OFF by default and is validated at ONE base.** `21_1` is the first external
+confirmation that its fit picks the right datum — real evidence, but a single base. It does NOT
+unblock `33_1`, the other Gonzalez-Rotger target: that one still dies on the `Log11` runaway, a
+different and still-open cause.
+
 Everything else uses the plain recipe above. (`CMNONCOPRIME` no longer exists as a flag — what it
 enabled is the default; `CMCOPRIME=1` is the escape hatch in the other direction.)
 

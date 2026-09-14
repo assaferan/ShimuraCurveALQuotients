@@ -1268,6 +1268,20 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
             end for;
             if n gt best then best := n; bsc := 1/u; bstc := 1/v; end if;
         end for;
+        // KEEP THE POSITIVE REPRESENTATIVE.  The sign of each fitted scale is pure GAUGE: the
+        // criterion above quantifies over eps1, eps2 in {+-1}, so u -> -u maps eps1 -> -eps1 and
+        // leaves the satisfied set -- hence `best` -- unchanged.  The default path cannot produce a
+        // negative scale (it reads one off the ABSOLUTE-value table), and two places downstream
+        // depend on that:
+        //   * s_new[i_st0] = s[i_st0]/scale.  At that index stilde VANISHES, so the relation reads
+        //     eps1*s/scale = 1 and the value is FORCED to +1 -- which needs scale > 0.
+        //   * s_new at the POLE is Infinity()/scale, and a negative scale makes it -Infinity().
+        //     RationalConstraintsOnEquations finds the pole with Index(table, Infinity()), gets 0,
+        //     and fires "y^2 and s have poles in different places".  That is exactly what
+        //     X_0^21(1) did under HMFIT=1: its three covers and its SECOND Hauptmodul all had the
+        //     pole at d = -4, and only the first Hauptmodul disagreed -- because only its fitted
+        //     scale came out negative (-4/9 against the default's +4/9).
+        bsc := Abs(bsc); bstc := Abs(bstc);
         printf "HMFIT: fitted scale = %o, scale_tilde = %o, satisfied at %o of %o rational CM point(s)"
                * " (pipeline default was scale = %o, scale_tilde = %o)\n",
                bsc, bstc, best, #cand_i, scale, scale_tilde;

@@ -11,6 +11,64 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 (evening) — `21_1` BUILDS, AND THE ODD SCREEN EARNS ITS CORRECTION
+
+### ✅ X_0^21(1): a NEW EQUATION, confirmed by the external oracle
+
+The cheapest target in the backlog (`M = 84`) has a model — 4 cover keys, **50 s** — and
+`tests/GonzalezRotger.m` arbitrates it: **the `W=[1]` full curve has Jacobian `21a2`, matching the
+published equation.** Ours is `-343x^4 + 94x^2 - 7`, theirs `-7x^4 + 94x^2 - 343`: the same curve by
+`x -> 1/x`. The oracle now makes **45 comparisons** (was 43): 10 genus-one curves + 15 AL quotients
++ 20 splitness checks.
+
+Evidence, each piece negative-controlled:
+
+    GonzalezRotger   MATCH 21a2      neg ctl: the -1 twist gives 336e4 and the oracle REJECTS it
+    VerifyModelSet   44 checks / 0   neg ctl: twisting the [1,3] entry gives 3 failures
+    ModelChecks      44 checks / 0
+
+⚠ **Built under `HMFIT=1`, which is still OFF by default and is now validated at ONE base.** Row
+added to `data/models/PROVENANCE.md`. This is the first EXTERNAL confirmation that the fit picks the
+right datum, which is more than the flag had before — but it is one base.
+
+### THE BUG UNDER IT: a fitted scale's SIGN is gauge, and one consumer was not
+
+`HMFIT=1` advanced `21_1` two stages and then died on
+**"y^2 and s have poles in different places"**. The probe (`scratchpad/probe_21_1.m`) says exactly
+which object disagreed: the three covers and the SECOND hauptmodul all have their pole at `d = -4`;
+the FIRST hauptmodul's row has no `Infinity()` entry at all, because its value there is
+**`-Infinity`**. Cause: HMFIT fitted `scale = -4/9` where the default reads `+4/9`, and
+`s_new := s/scale` turns `Infinity()` into `-Infinity()`.
+
+**That sign is pure gauge** — the sign criterion quantifies over `eps1, eps2 in {+-1}`, so `u -> -u`
+maps `eps1 -> -eps1` and leaves the satisfied set unchanged — and the default path can never produce
+a negative scale, because it reads one off the ABSOLUTE-value table. Two consumers depend on that:
+`RationalConstraintsOnEquations` finds the pole with `Index(table, Infinity())`, and `s_new[i_st0]`
+is FORCED to `+1` (at that index `stilde` vanishes, so the relation reads `eps1*s/scale = 1`).
+Fix: keep the positive representative inside the HMFIT block. One line, inside an env-gated
+experiment; `15_1` was checked first to confirm the convention (`+Infinity`, signs per-discriminant).
+
+⚠ `HMFIT=1` does **not** unblock `33_1`, the other Gonzalez-Rotger target: it still dies on the
+`Log11` runaway. Different cause, still open.
+
+### ✅ THE `wdef` CORRECTION PAYS OFF IMMEDIATELY — and the 72-base census SURVIVES
+
+**False-positive check on the even screen: clean.** `10_71 22_31 38_13 6_101` re-read with the
+sharper statistic all hold at `wdef >= 1`. The verdicts called on `Ncols - Rank` stand.
+
+**First odd-`D` screens ever run** (10 launched, `~/shimura/oddscr` on lovelace):
+
+    33_1   clear   wdef 0 at m = -15   ⚠ deficit 1 -- the OLD statistic would have called it OBSTRUCTED
+    69_1   clear   wdef 0 at m = -6    ⚠ deficit 3 -- likewise
+
+Both are independently known **not** to be Borcherds-obstructed: each fails downstream in the
+runaway class (`Log11`, `Log23`), and this session reproduced `33_1`'s failure directly. So the two
+bases where the plain deficit and `wdef` disagree are exactly the two where the answer is already
+known — and `wdef` is the one that gets them right. That is the correction's first live test.
+
+### Still running
+
+`bk3` pipeline (7), `defic` screens, `oddscr` (8 more), the `115_1`/`123_1` `vx_skip` retest.
 ## Handoff — 2026-09-14 (later) — THE ODD-D SCREEN: BUILT, AND ITS PREMISE CORRECTED
 
 Read this before `PLAN.md`'s "one substantial piece of deferred work" — that item is now DONE, but
