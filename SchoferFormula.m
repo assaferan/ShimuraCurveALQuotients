@@ -710,6 +710,13 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
         log_coeffs_m := Kappa0(m,d,Q,lambda);
         vprintf ShimuraQuotients, 5 : "\t\t";
         vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
+        // RUNAWAY=1: attribute a runaway log coefficient to one of the two factors in this
+        // product -- the form's principal part c(-m), or kappa_0(m).  Printing the SUM tells you
+        // nothing about which; printing the terms does.  Inert unless the variable is set.
+        if GetEnv("RUNAWAY") ne "" then
+            printf "RUNAWAYK d %o m %o kappa %o c(-m) %o\n",
+                   d, m, log_coeffs_m, [Coefficient(f,-m) : f in fs];
+        end if;
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
@@ -903,6 +910,13 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     end if;
 
     scale := -n_d / (4*W_size);
+
+    // RUNAWAY=1: this scale is the only per-discriminant multiplier in the Schofer sum, so when the
+    // Log-p part of that sum is the SAME for every d (which it is whenever a huge principal-part
+    // coefficient dominates), the whole per-column variation lives here.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYSC d %o n_d %o W_size %o scale %o\n", d, n_d, W_size, scale;
+    end if;
 
     return scale;
 end intrinsic;
@@ -1179,6 +1193,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
                 error "Could not find enough points, sorry!";
             end if;
         end if;
+    end if;
+
+    // RUNAWAY=1: the column order is pt_list_rat then pt_list_quad, and a rational column is
+    // evaluated with PointDegree 1 while a quadratic one uses 2.  ReduceTable later divides column
+    // j by scale^degs[j] with degs from find_degs (the field of definition).  If those two notions
+    // of "degree" disagree at one column, that column keeps a factor the others shed -- which is
+    // what the runaway looks like.  Print both classifications side by side.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYP rat %o\nRUNAWAYP quad %o\n",
+               [pt[1] : pt in pt_list_rat], [pt[1] : pt in pt_list_quad];
     end if;
 
     table := [[] : f in all_fs];
@@ -1978,6 +2002,37 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
         row_scales[k] +:= scale_factors[i];
     end for;
 
+    // RUNAWAY=1: dump the LogSum table BEFORE it is turned into rationals, so a runaway coefficient
+    // can be attributed to a PRODUCER instead of theorised about.  The guard in RationalNumber
+    // reports the offending (p, coeff) pair but not where it entered: the raw Schofer value at that
+    // cell, the row scale, or the y2 scale factor.  This prints all three, so the first table below
+    // to carry the large coefficient is the one that made it.  Inert unless the variable is set.
+    if GetEnv("RUNAWAY") ne "" then
+        big := func<x | IsEmpty(Keys(x`log_coeffs)) select 0
+                        else Maximum([AbsoluteValue(c) : c in x`log_coeffs])>;
+        which := func<x | IsEmpty(Keys(x`log_coeffs)) select 0
+                         else rep{p : p in Keys(x`log_coeffs)
+                                  | AbsoluteValue(x`log_coeffs[p]) eq big(x)}>;
+        printf "RUNAWAY ds %o\n", allds;
+        for i->k in abs_schofer_tab`Keys_fs do
+            printf "RUNAWAY row %-4o rowscale max %o on Log%o\n",
+                   k, big(row_scales[i]), which(row_scales[i]);
+        end for;
+        for i->k in k_idxs do
+            printf "RUNAWAY y2scale key %-4o max %o on Log%o  (unscaled %o)\n",
+                   abs_schofer_tab`Keys_fs[k], big(scale_factors[i]), which(scale_factors[i]),
+                   abs_schofer_tab`Keys_fs[k] in unscaled_keys;
+        end for;
+        for i->row in table do
+            for j->x in row do
+                if Type(x) eq LogSm and big(x) gt 10^5 then
+                    printf "RUNAWAY CELL row %o (key %o) d %o : max %o on Log%o\n",
+                           i, abs_schofer_tab`Keys_fs[i], allds[j], big(x), which(x);
+                end if;
+            end for;
+        end for;
+    end if;
+
     // make table values into rational numbers
     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
     abs_schofer_tab`RowScales := row_scales;
@@ -2067,6 +2122,27 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
         scale := &+([LogSum()] cat [LogSum(mins[i][2], p) : i->p in ps]);
         Append(~scales, scale);
     end for;
+    // RUNAWAY=1: show what the per-row rescaling actually removes.  `scales` takes the entry of
+    // MINIMAL ABSOLUTE valuation over the rational columns, so a common huge factor cancels only
+    // when EVERY rational cell carries it; a single cell that is huge on its own survives.  Print
+    // the row before and after, per prime, so which of those two it is can be read off.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYP ds %o\nRUNAWAYP degs %o\n", allds, degs;
+        reduced := [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
+        for i->t in table do
+            ps := Sort([p : p in &join([{Integers()|}] cat [Keys(x`log_coeffs) : x in t
+                                                            | Type(x) eq LogSm])]);
+            for p in ps do
+                cf := func<x | (Type(x) eq LogSm and IsDefined(x`log_coeffs, p))
+                               select x`log_coeffs[p] else 0>;
+                before := [cf(x) : x in t];
+                after  := [cf(x) : x in reduced[i]];
+                if Maximum([AbsoluteValue(c) : c in before]) le 10^5 then continue; end if;
+                printf "RUNAWAYR row %o Log%o scale %o\n  before %o\n  after  %o\n",
+                       i, p, cf(scales[i]), before, after;
+            end for;
+        end for;
+    end if;
     schofer_tab`Values :=  [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
     return;

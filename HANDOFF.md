@@ -11,6 +11,60 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 (night) — THE RUNAWAY CLASS IS ROOT-CAUSED
+
+`RationalNumber`'s guard has said **"Cause OPEN"** since 2026-09-13. It is no longer open. The chain
+below is measured end to end at `33_1`, with `21_1` as the contrast base, under `RUNAWAY=1` (a new
+env-gated instrumentation, inert by default, left in place because it is what found this).
+
+### The chain
+
+1. **The Borcherds form at `33_1` has a 19-DIGIT PRINCIPAL PART.** `c(-m)` reaches
+   `3133789104529289709` at `m = 2, 6, 7, 8, 10`, while at every other `m` it is a single digit.
+   The same dump at `21_1`, which builds, tops out at **10**. So every Schofer value at `33_1`
+   carries a gigantic `Log11` component — call it `C`.
+2. **`kappa_11(m)` is IDENTICAL at every discriminant** for exactly those `m` (`m=6: -2Log11`,
+   `m=7: -4Log11`, `m=10: -4Log11`, and `m=2,8: 0`). So `C` is a pure COMMON factor, not a
+   per-point quantity — it should cancel.
+3. **It does not cancel at one column, because `ScaleForSchofer` is not constant.** Measured:
+
+       d = -4    n_d 4  W_size 2  scale -1/2      <-- twice everyone else
+       d = -12   n_d 2  W_size 2  scale -1/4
+       d = -15, -67, -88, -163    n_d 4  W_size 4  scale -1/4
+
+   `d = -4` gets `W_size` halved by Ogg's condition without `n_d` falling with it, so its value is
+   **2C/4** where every other column is `C/4`.
+4. **`ReduceTable` subtracts the per-row MINIMUM valuation**, so it removes `C/4` from the whole row
+   — clearing every column except `d = -4`, which is left holding `C/4` exactly. Measured before /
+   after, row 1: `[0, -2277330272783157992, -1138665136391578996, ...]` becomes
+   `[0, -1138665136391578997, -1, -1, -1, 0, -1]`.
+5. `RationalNumber` then meets a 19-digit exponent and the guard fires.
+
+⇒ **The runaway needs BOTH a huge principal part AND a discriminant whose Schofer scale differs.**
+It is not a precision failure (already refuted, and now explained: exact linear algebra reproduces
+byte-identically), and it is not the ramified prime being mis-handled — `11` appears only because
+that is where this form's large coefficients happen to pair.
+
+### TWO STORIES REFUTED ALONG THE WAY — both by measurement, before they were written up
+
+* **"`Solution` picks a bad representative from `sol + Kernel`."** Plausible — the kernel is
+  19-dimensional at `33_1` — and WRONG: `maxsol` is **2**. The solution vector is tiny; it is the
+  ECHELON BASIS that carries the digits. `21_1` has kernels of dimension 10-13 and builds fine.
+* **"A degree mismatch at `d = -4`" (the factor 2 looked like a degree-2 point read as degree 1).**
+  Refuted: every point is in `pt_list_rat` and `find_degs` returns `1` for all seven. The factor 2
+  is `ScaleForSchofer`, not the field of definition.
+
+### ⇒ THE NEXT EXPERIMENT, AND WHY IT IS WELL-POSED
+
+`C` is an ARTIFACT, and we know it is because adding a kernel element changes the form without
+changing its divisor — so `C` is not an invariant of the problem. The concrete move is to
+**LLL-reduce `sol` against the kernel so as to minimise the resulting FORM's coefficients** (not
+`sol`'s, which are already small). If a representative with a small principal part exists, `C`
+collapses and step 3 has nothing to leave behind.
+
+⚠ And the judge is already in place: `33_1` has a Gonzalez-Rotger target,
+`y^2 = -3x^4 - 10x^2 - 243`, Jac `33a1`. Same for `69_1`/`Log23`, the other member of the class,
+which today's odd screen also clears.
 ## Handoff — 2026-09-14 (evening) — `21_1` BUILDS, AND THE ODD SCREEN EARNS ITS CORRECTION
 
 ### ✅ X_0^21(1): a NEW EQUATION, confirmed by the external oracle

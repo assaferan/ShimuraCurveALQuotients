@@ -1168,6 +1168,16 @@ alone cannot do odd D.}
                    
                     if not found_v then found_all := false; break; end if;
                     sol := Solution(coeffs_trunc, target_v);
+                    // RUNAWAY=1: `Solution` returns ONE point of the affine space
+                    // sol + Kernel(coeffs_trunc), chosen arbitrarily.  When the kernel is
+                    // NONTRIVIAL that choice is unconstrained, and an 18-digit representative is
+                    // as valid a point of the line as a 1-digit one -- so this reports the kernel
+                    // dimension next to the size of the representative actually taken.
+                    if GetEnv("RUNAWAY") ne "" then
+                        printf "RUNAWAYS key %o kerdim %o maxsol %o\n", i,
+                               Dimension(Kernel(coeffs_trunc)),
+                               Maximum([AbsoluteValue(x) : x in Eltseq(sol)]);
+                    end if;
 
                     // IntegralSolution (default false => this whole block is inert and the
                     // behaviour below is bit-for-bit what it always was).
