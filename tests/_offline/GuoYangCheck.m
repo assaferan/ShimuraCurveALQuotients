@@ -75,5 +75,60 @@ procedure test_gy_table(D, N, gy)
                     D, N, d, got, want, expected, ref[1][1], ref[2][1], ref[3][1]);
         nchecked +:= 1;
     end for;
-    printf " ok (%o of %o published values)\n", nchecked, #gy;
+    printf " ok (%o of %o published values)", nchecked, #gy;
+
+    // ===== SECOND HAUPTMODUL (reporting only, for now) =====
+    // The published tables give the PRIMARY hauptmodule column only, so the s~ row -- the second
+    // Borcherds form's Schofer values, computed completely independently -- has never been checked
+    // against anything.  That is a structural blind spot, and X_0^21(1) shows what hides in it:
+    // there s~(-7) comes out 9 where the other five discriminants agree it must be 36, and because
+    // the pipeline READS its normaliser from that very cell the error cannot be flagged there --
+    // it surfaces as "the other four are inconsistent".
+    //
+    // The published column suffices to check this row.  s~ = 1 - s is a Mobius map, and the
+    // cross-ratio is Mobius-invariant, so the s~ row must reproduce the SAME cross-ratios as the
+    // published s values -- `want` below is literally unchanged.  A mismatch at a disc is a wrong
+    // s~ value there.
+    strow := tab`Values[tab`sTildeIndex];
+    tref := [];
+    for t in have do
+        if #tref eq 3 then break; end if;
+        if forall{r : r in tref | strow[idx[r[1]]] ne strow[idx[t[1]]]} then Append(~tref, t); end if;
+    end for;
+    if #tref lt 3 then
+        printf "  [s~] SKIP X0^%o(%o): fewer than 3 distinct s~ values\n", D, N;
+        return;
+    end if;
+    // NEGCTL=1: perturb one non-frame s~ value; the check below MUST catch it.
+    if GetEnv("NEGCTL") ne "" then
+        for t in have do
+            if t[1] in {tref[1][1], tref[2][1], tref[3][1]} then continue; end if;
+            if Type(strow[idx[t[1]]]) ne Infty and strow[idx[t[1]]] ne 0 then
+                printf "  [s~] NEGCTL perturbing d = %o\n", t[1];
+                strow[idx[t[1]]] := 2*strow[idx[t[1]]];
+                break;
+            end if;
+        end for;
+    end if;
+    y0 := strow[idx[tref[1][1]]]; y1 := strow[idx[tref[2][1]]]; y2 := strow[idx[tref[3][1]]];
+    v0 := tref[1][2]; v1 := tref[2][2]; v2 := tref[3][2];
+    bad := []; nt := 0;
+    for t in have do
+        d, expected := Explode(t);
+        if d in {tref[1][1], tref[2][1], tref[3][1]} then continue; end if;
+        got  := mobius(y0, y1, y2, strow[idx[d]]);
+        want := mobius(v0, v1, v2, expected);
+        if got ne want then Append(~bad, <d, got, want, strow[idx[d]]>); end if;
+        nt +:= 1;
+    end for;
+    // Measured 2026-09-14 before this was made an assertion: 27 tables, 195 checks, 0 mismatches.
+    // ⚠ That set is SELECTION-BIASED toward passing -- a table exists only where Guo-Yang published
+    // one, i.e. a base their method handled and ours builds. A base whose s~ row is wrong may well
+    // fail to build and so have no table; X_0^21(1), the base that motivated this, is exactly that
+    // case and is NOT in the set. So "all pass" means no systematic defect AMONG BASES THAT BUILD.
+    error if not IsEmpty(bad),
+        Sprintf("X0^%o(%o) second hauptmodul: %o of %o cross-ratios disagree with the published "
+                * "primary column: %o (disc, our s~ value)", D, N, #bad, nt,
+                [<b[1], b[4]> : b in bad]);
+    printf "  [s~] X0^%o(%o) ok (%o checks)\n", D, N, nt;
 end procedure;
