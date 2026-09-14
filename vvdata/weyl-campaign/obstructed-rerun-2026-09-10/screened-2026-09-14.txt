@@ -22,3 +22,27 @@
 10_67    3      2 2 2         OBSTRUCTED, deficit 2 (2-dimensional obstruction space)
 142_1    5      4 1 1 1 1     OBSTRUCTED # validation set
 158_1    5      3 1 1 1 1     OBSTRUCTED # validation set
+#
+# --- second collection, 2026-09-14 (later): 12 more bases, ladders read off ~/shimura/defic ---
+6_73     4      1 0 0 0       clear      # low rung 1 is truncation; three rungs at 0
+10_71    3      1 1 1         OBSTRUCTED
+10_73    3      1 1 1         OBSTRUCTED
+10_79    3      1 1 1         OBSTRUCTED
+10_89    3      1 1 1         OBSTRUCTED
+14_53    3      2 1 1         OBSTRUCTED
+146_3    4      1 1 1 1       OBSTRUCTED
+254_1    5      2 2 1 1 1     OBSTRUCTED
+262_1    4      4 2 1 1       OBSTRUCTED # only 2 invariant rungs -- the weakest call here
+58_13    3      2 2 2         OBSTRUCTED, deficit 2 (2-dimensional obstruction space)
+6_127    3      1 1 1         OBSTRUCTED
+6_139    3      1 1 1         OBSTRUCTED
+#
+# NO VERDICT -- the screen itself failed, this is NOT evidence either way:
+#   6_131 (M=1572), 6_137 (M=1644): `assert success eq 0` at BorcherdsForms.m:114, inside find_t.
+#   That is the polytope/t-ladder stage, i.e. an infrastructure limit at large M, not a rank fact.
+#
+# Running counts after this collection:
+#   known obstructed = 72  (49 recorded + 5 stumbled into + 18 screened).  STILL A LOWER BOUND.
+#   the 5 stumbled-into are 142_1 158_1 166_1 214_1 6_97 (from the bk2 run logs); none overlaps
+#   the 18 screened, and none of the 18 is in bases49.txt -- checked, not assumed.
+#   2-dimensional obstruction spaces now number FIVE: 166_3 22_19 74_7 10_67 58_13.
