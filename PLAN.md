@@ -30,7 +30,10 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
        magma -b DD:=<D> NN:=<N> vvdata/weyl-campaign/deficit_odd.m # either parity, via DeficitScreen
 
    ⚠⚠ **EVEN `D`: require >= 2 rungs and an INVARIANT deficit.** A single rung is meaningless —
-   `6_109` reads `1 0 0` and BUILDS.
+   `146_1` reads `1 0 0 0 0` and BUILDS (committed model + published Guo-Yang table).
+   ⚠ **Do NOT cite `6_109` here.** It was the example this line used to carry, on no evidence: a
+   real run died with "Failed to find all Borcherds forms" after 58 min and no `models_6_109.m` has
+   ever existed. It is a CONFIRMED FALSE CLEAR of the even screen, not a proof of the rule.
    ⚠⚠ **ODD `D` IS A DIFFERENT LADDER — over `m`, not over `P`,** and the statistic is `wdef` (the
    deficit restricted to the achievable targets), not `Ncols - Rank`. `55_1` reads `deficit 3` /
    `wdef 0` and builds. On odd `D` the screen is fast only when it CLEARS, and an odd "obstructed"
@@ -46,7 +49,7 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 
 ### The numbers, corrected — do not quote the old ones
 
-    obstructed   72 known, a LOWER BOUND = 49 recorded + 5 stumbled into + 18 screened.  The 5 are
+    obstructed   73 known (6_109 added by a failed run), a LOWER BOUND = 49 recorded + 5 stumbled into + 18 screened.  The 5 are
                  142_1 158_1 166_1 214_1 6_97; all three sets are disjoint, checked.  Never quote
                  49, and do not quote 61 either.
     2-dim        FIVE bases have a 2-dimensional obstruction space: 166_3 22_19 74_7 10_67 58_13.

@@ -11,6 +11,48 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 (late night) — ⚠ `6_109` IS A CONFIRMED FALSE CLEAR
+
+**A real pipeline run contradicts the screen, and it takes a documented claim with it.**
+
+`6_109` was screened CLEAR (`1 0 0`) and launched in today's `bk3` batch. It ran 58 min on current
+code and died with **"Failed to find all Borcherds forms"** — the Borcherds obstruction itself.
+
+⚠⚠ **The claim "`6_109` reads `1 0 0` and BUILDS" was NEVER BACKED BY A RUN.** There is no
+`models_6_109.m` anywhere — not committed, not on lovelace. It was an inference (low rung reads 1,
+higher rungs read 0, therefore truncation, therefore it builds) that got written down as a "live
+proof" and then cited in both `PLAN.md` and `HANDOFF.md` as the justification for the `>= 2 rungs`
+rule. Delete that citation wherever it appears.
+
+⇒ **Known obstructed is 73**, and the even screen now has a **false CLEAR** on record — the clear
+direction is not airtight either, in either parity.
+
+**The `>= 2 rungs` rule itself still stands, but on a different example.** `146_1` reads
+`1 0 0 0 0`, has a committed model AND a published Guo-Yang table, and genuinely builds. Re-ground
+the rule on `146_1`; `6_109` is now a counterexample to it, not evidence for it.
+
+### A HYPOTHESIS for the mechanism — NOT established, do not quote as fact
+
+The pipeline floors `min_m` at `-(n_oo + k - 1)` and otherwise takes it from the divisor's own `m`s,
+so the pole order it actually uses is `max(floor_pole, max|m| over the divisor)`. Rungs DEEPER than
+that are pole orders the pipeline never visits. Measured floors:
+
+    6_109   floor 325   ladder at [325, 357, 401] = 1 0 0     FAILS
+    6_107   floor 330   ladder at [330, 362, 406] = 0 0 0     still running, screen clear
+    146_1   floor  55   ladder 1 0 0 0 0                      BUILDS
+
+If this is right, `6_109`'s only reachable rung is the floor, which reads **1**, and its two zeros
+are unreachable — while at `146_1` the divisor pushes the pole order past the floor into the zeros.
+That would mean the rule as written ("a low rung reading 1 is truncation; trust the invariant value
+above") **discards the one rung the pipeline is guaranteed to use**. ⚠ Checking this needs the `m`s
+the divisor actually supplies at each base; it has NOT been done.
+
+### The `vx_skip` retest is dead again, still with no verdict
+
+`115_1` and `123_1` are gone from `ps` with no models written; `123_1`'s log ends mid-search. No
+`vx ge 0` assert was ever hit, so the vx fix is not implicated — they simply did not survive.
+`vx_skip` stays in `genmodels.m`.
+
 ## Handoff — 2026-09-14 (night) — THE RUNAWAY CLASS IS ROOT-CAUSED
 
 `RationalNumber`'s guard has said **"Cause OPEN"** since 2026-09-13. It is no longer open. The chain
