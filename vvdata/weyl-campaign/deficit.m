@@ -49,7 +49,21 @@ poles := [floor_pole];
 for P in [51, 102, 134, 190, 266] do
     if (P gt floor_pole) and (P notin poles) then Append(~poles, P); end if;
 end for;
+// ⚠ GUARANTEE AT LEAST THREE RUNGS.  The fixed list above is absolute, so a base whose
+// floor_pole exceeds 266 gets NO extra rungs and reports a SINGLE deficit -- which carries no
+// information at all, because the INVARIANCE across rungs IS the diagnostic, not the value.
+// A single low rung reads high while the basis has not yet caught up: 146_1 reports deficit 1
+// at its floor and 0 at every rung above, and it BUILDS.  On 2026-09-14 the screen produced
+// one-rung readings for 6_101, 6_107 and 6_109 (floor_pole 334+), and a "deficit 1" there was
+// nearly recorded as a new obstructed base off one number.
+// Spacing mirrors the absolute list's own steps (102->134 = 32, 190->266 = 76).
+if #poles lt 3 then
+    for dP in [32, 76] do
+        if (floor_pole + dP) notin poles then Append(~poles, floor_pole + dP); end if;
+    end for;
+end if;
 Sort(~poles);
+printf "DEFICIT POLES %o\n", poles;
 
 for P in poles do
     tt := Realtime();
