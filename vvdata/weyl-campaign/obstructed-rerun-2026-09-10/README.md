@@ -34,8 +34,12 @@ bases -- an independent confirmation of the "28 + 21" figure. `bases49.txt` is t
 A routine backlog sweep launched `142_1` and `166_1` — neither in `bases49.txt` — and BOTH came
 back `Failed to find all Borcherds forms`, i.e. obstructed.
 
-    142_1  (D = 2*71, N = 1)   NEW, obstructed
-    166_1  (D = 2*83, N = 1)   NEW, obstructed
+    142_1  (D = 2*71,  N = 1)    158_1  (D = 2*79,  N = 1)
+    166_1  (D = 2*83,  N = 1)    214_1  (D = 2*107, N = 1)
+    6_97   (D = 6,     N = 97)
+
+**FIVE new, so 54 known obstructed** (2026-09-13/14), all found incidentally by a routine backlog
+sweep rather than by looking for them.
 
 ⇒ **The obstructed class is larger than 49.** The figure is a property of WHICH BASES HAVE BEEN
 SWEPT, not of the obstruction. `bases49.txt` remains a correct union of every obstructed verdict on
@@ -63,3 +67,33 @@ confirms is real (`vvdata/weyl-campaign/normaliz-wall-probe.md`). ⇒ That is WH
 no such base — not an oversight in the sweep design. The `D`-parity confound in the obstructed
 class **cannot be separated without first beating the wall**, so it is not a cheap experiment and
 should not be listed as one.
+
+
+## ⚠⚠ AND A PATTERN I FLOATED FROM THESE FIVE IS REFUTED — by data already in `data/models/`
+
+Four of the five are `D = 2p`, `N = 1` with `p >= 71`, which looked like a size effect. **It is not.**
+Restricting to `D = 2p`, `N = 1`:
+
+    HAVE MODELS   p = 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 73 89 97 101 103   (23)
+    OBSTRUCTED    p = 71 79 83 107                                                          (4)
+
+`71` is obstructed but `73` builds; `79` and `83` are obstructed but `89 97 101 103` all build;
+then `107` is obstructed. **Interleaved, not a threshold.** Several of the builders are even
+EXTERNALLY corroborated — `14_1`, `34_1`, `46_1` against Gonzalez-Rotger, `82_1` against Guo-Yang —
+so `D = 2p, N = 1` is one of the BEST-reproduced shapes in the repo, not a suspect one.
+
+This is the same conclusion the record already held for a fixed `D` (`38_7` is larger than `38_5`
+and fully surjective); it now holds across `D` too. ⇒ **The obstruction is not predictable from the
+shape of `(D, N)`.** Every `D = 2p` family contains both: `6_5 ... 6_83` build while `6_97`/`6_103`
+are obstructed; `10_3 ... 10_61` build while `10_43`/`10_47`/`10_59` are obstructed.
+
+⇒ That is a direct argument for the **DEFICIT PREDICTOR** (`vvdata/weyl-campaign/deficit.m`): the
+deficit is `Ncols(mat) - Rank(ech_basis * mat)`, independent of any divisor choice, so obstruction
+is computable from the Weil representation WITHOUT the CM points or the 96-triple search. Five new
+obstructed bases found by accident, with no predicate in sight, is evidence that guessing from
+`(D, N)` will not work.
+
+⚠ `deficit.m` is **EVEN `D` ONLY** (for odd `D` the 0-side block is missing and the deficit drifts
+with pole order instead of staying invariant). All five new bases have even `D`, so they are a
+VALIDATION SET the script was never calibrated on — its recorded ground truth is only
+`38_5 -> 1`, `38_7 -> 0`, `34_3 -> 0`.
