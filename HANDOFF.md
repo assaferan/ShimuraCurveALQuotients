@@ -11,6 +11,94 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-14 — THE DEFICIT SCREEN WORKS. Read this first.
+
+**Everything below is committed and pushed on both branches; the invariant prints nothing.**
+
+### ⇒ WHAT CHANGED MOST: obstruction is now CHEAP to detect, so STOP ATTEMPTING BASES BLIND
+
+`vvdata/weyl-campaign/deficit.m` computes `deficit = Ncols(mat) - Rank(ech_basis*mat)` — a rank
+comparison depending on NO divisor choice, so it skips the CM points, the field-of-definition work
+and the 96-triple search. **Validated 7/7** on bases it was never calibrated on, at **seconds to
+minutes** against HOURS for a pipeline run.
+
+    magma -b DD:=<D> NN:=<N> deficit.m        # from a tree with ShimuraQuotients.spec
+
+⚠⚠ **A SINGLE RUNG CARRIES NO INFORMATION. The INVARIANCE across rungs IS the diagnostic.** At a
+low pole order the basis has not caught up and the deficit reads high from pure truncation.
+Require `>= 2` rungs and a stable value. Live proof: `6_109` reads `1 0 0` and **builds fine**;
+`146_1` reads `1` at its floor and `0` above. Both would have been condemned off one number.
+`f6b8b55` now guarantees `>= 3` rungs (the old fixed list `[51,102,134,190,266]` gave exactly ONE
+when `floor_pole = n0+k-1` exceeded 266).
+
+⚠ **EVEN `D` ONLY, and the tempting shortcut is REFUTED.** The omitted odd-`D` block only
+`VerticalJoin`s rows, so the reported deficit is an UPPER bound and a reported 0 *would* be valid —
+but measured on six odd-`D` bases that all BUILD, the overestimate is **~20** (`15_1`→20, `39_1`→19,
+`51_1`→20, `55_1`→22, `57_1`→19, `21_2`→10). No odd-`D` base will ever read 0. ⇒ The 0-side block
+must really be implemented: `BorcherdsForms.m:876-978`, 102 lines, self-contained. **EXTRACT it as a
+file-local function and `import` it — do NOT copy it** (its own comment warns the lines "must move
+TOGETHER"). ⚠ It refactors the hottest path inside a memoised loop, so it needs a FULL SUITE run
+(~4 h). Deliberately deferred.
+
+### FIRST PRODUCTION SCREEN: 7 new obstructed, 8 cleared
+
+`obstructed-rerun-2026-09-10/screened-2026-09-14.txt` has the ladders.
+NEW obstructed: `22_31 6_101 274_1 38_13 218_1 226_1 10_67`. Cleared for running:
+`134_3 14_37 62_7 34_11 6_107 6_109 6_113 74_5`.
+⚠ **`10_67` has deficit 2 — a 2-DIMENSIONAL obstruction space**, the fourth known (with `166_3`,
+`22_19`, `74_7`) and the first found by screening rather than a failed run.
+
+⇒ **Known obstructed is 61** (49 recorded + 5 stumbled into + 7 screened) and STILL A LOWER BOUND —
+only ~20 of 105 reachable even-`D` targets are screened. **Never quote 49.**
+
+### 15 NEW/CORRECTED MODELS (102 model files, ModelChecks 0 failures)
+
+`38_3 46_3 35_2 51_2 57_2 77_1 58_3 26_7 62_3 46_5 82_3 74_3 86_3 22_17` new, `10_3` CORRECTED.
+Every one verified with `VerifyModelSet` **and an individual negative control** (twist one
+genus>=1 entry by the non-square `-1`, confirm the check fails).
+
+### A SECOND EXTERNAL ORACLE — `tests/GonzalezRotger.m`, 43 comparisons
+
+Gonzalez-Rotger, arXiv:math/0612732v2 Table 1. **It resolved the `10_3` drift** that `ModelChecks`,
+`ConicClasses` and `VerifyModelSet` had all passed for a week: the three committed entries were
+CONSISTENTLY wrong, and an internal-consistency test cannot arbitrate consistency. Supplies target
+equations for `21_1` (`y^2 = -7x^4+94x^2-343`, Jac `21a2`) and `33_1` (`y^2=-3x^4-10x^2-243`, `33a1`).
+
+### ⚠ WHAT IS STILL RUNNING ON LOVELACE — COLLECT THIS
+
+Tree: **`~/shimura/scq-current`** (a COPY reset to `main`; never `git pull` the legacy clone).
+Outputs: models in `~/shimura/bk2/`, deficit logs in `~/shimura/defic/`.
+
+* **13 pipeline jobs** from batches 1-2 — collect any `models_*.m`, verify + negative-control,
+  commit. Already-handled bases are listed above.
+* **16 deficit screens** — read with the `>= 2 rungs + invariant` rule, append to
+  `screened-2026-09-14.txt`.
+* **`115_1` and `123_1`: the `vx_skip` RETEST, and it looks promising.** `genmodels.m` hardcodes
+  `vx_skip = {95_1,115_1,123_1,129_1}` and `quit`s; the vx defect was FIXED on 09-05 and those four
+  were "gated on it", never retested. Run with the skip stripped (`genmodels_novx2.m` on lovelace)
+  they are deep into Borcherds forms with **no `vx ge 0` assert** — `123_1` logged
+  `BFPOOL pole_order=1845 Zero=true pool=1935 rank=1846 cols=1846`, i.e. it spanned the Zero side
+  FULLY, which is exactly what used to blow up. **If either completes, delete `vx_skip`.**
+* **4 legacy jobs** (7-9 d, silent logs) on the FROZEN `f87b0ae` clone. ⚠ `34_11` was screened
+  **clear** (deficit `0 0 0`) so it is slow, not futile — unlike `69_1`, which was killed after the
+  screen showed its failure was reproducible locally in 8 min.
+
+### Other open items
+
+* **`21_1`** (cheapest target, `M=84`): `find_signs_hauptmodul` reads its normalisation off the two
+  discs where a value VANISHES, so those satisfy the relation by construction and can never be
+  flagged. Five discriminants agree on `scale_tilde = 36`; the pipeline takes **9** from `d = -7`,
+  the disc it reads FROM. `HMFIT=1` (env-gated, off) fits it and advances `21_1` TWO stages, to
+  "y^2 and s have poles in different places". The GR oracle can now judge the result.
+* **The runaway class** (`33_1` Log11, `69_1` Log23): precision REFUTED (byte-identical at 3x
+  `Prec`); the prime is RAMIFIED both times. Cause open.
+* **Class-constancy** (`M0MultiplierExact`): `55_2` dev `2.95e-15` is precision-INDEPENDENT (same
+  at `Prec` 100/200/300), so NOT roundoff; `87_2` dev `2.2e-5` is ~0.2% of scale. Probably two
+  different problems sharing one message.
+* **CI**: the permission gate now runs ONCE (`acbc5b1`) instead of in ~40 matrix jobs — that flake
+  reddened a run on 09-13. Runner loss on the ~90 min jobs (`X0_10_23`, `X0_6_37`,
+  `ExternalCMValues`) is NOT fixable from inside a job; rerun it.
+
 ## Handoff — 2026-09-13 (evening) — the BACKLOG restarts: 5 new models and a second oracle
 
 The even-correction line was closed (below); the session then switched to the dormant model

@@ -13,7 +13,42 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-13 evening
+## ⇒ START HERE — updated 2026-09-14
+
+**MAIN LINE: the model backlog, and it is now SCREENED rather than attempted blind.**
+
+### Do this first, in order
+
+1. **COLLECT WHAT IS RUNNING ON LOVELACE.** 13 pipeline jobs + 16 deficit screens + the two
+   `vx_skip` retests. Tree `~/shimura/scq-current`, outputs `~/shimura/bk2/` and `~/shimura/defic/`.
+   Full detail in `HANDOFF.md` (2026-09-14) — read it before launching anything new.
+2. **SCREEN BEFORE YOU RUN.** `magma -b DD:=<D> NN:=<N> deficit.m` costs seconds-to-minutes and
+   says whether a base is obstructed; a pipeline run costs hours to say the same thing.
+   ⚠⚠ Require **>= 2 rungs and an INVARIANT deficit**. A single rung is meaningless: `6_109` reads
+   `1 0 0` and BUILDS. ⚠ EVEN `D` only.
+3. **Then launch pipeline runs only on CLEARED bases.** Ready now:
+   `134_3 14_37 62_7 34_11 6_107 6_109 6_113 74_5`.
+   ⚠ Also filter out non-squarefree `N` (assertion-failed method boundary) and `#div(M) >= 24`
+   (a CONFIRMED time wall on Normaliz).
+4. **If `115_1` or `123_1` completes, DELETE `vx_skip` from `genmodels.m`** and four targets reopen.
+
+### The numbers, corrected — do not quote the old ones
+
+    obstructed   61 known, a LOWER BOUND (was "49", quoted as the class size).  Only ~20 of 105
+                 reachable even-D targets are screened.
+    backlog      798 targets / 102 done / ~696 missing  (the recorded 377/73/304 does NOT reproduce)
+    tiers        #div >= 24 is a REAL wall (confirmed on Normaliz).  But #div 16-20 "marginal" is
+                 largely REACHABLE, and #div <= 12 "reliable" is NOT uniformly so (85_1 segfaulted
+                 at 122.7 GB).  The tiers are not ordered as the old plan assumes.
+
+### The one substantial piece of deferred work
+
+**Extend `deficit.m` to odd `D`** by extracting `BorcherdsForms.m:876-978` (the 0-side block, 102
+lines) as a file-local function and importing it. The upper-bound shortcut is REFUTED by
+measurement (overestimate ~20). ⚠ It refactors the hottest path inside a memoised loop, so budget a
+FULL SUITE run (~4 h). This is what makes the screen cover the whole backlog instead of half.
+
+## ⇒ (SUPERSEDED) START HERE — updated 2026-09-13 evening
 
 **THE MAIN LINE IS NOW THE MODEL BACKLOG.** The even-correction hatch is CLOSED (a stated
 mechanism, not an unexplained failure — see below and `HANDOFF.md`), and the modulus-formula hunt
