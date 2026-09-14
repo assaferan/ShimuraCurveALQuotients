@@ -145,6 +145,22 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     // base's triage record). The useful diagnostic is the offending (p, coeff) pair, not the
     // power that overflowed.
     //
+    // ⇒ CAUSE FOUND 2026-09-14 (it is no longer "OPEN"; see HANDOFF.md, the night section, and run
+    // with RUNAWAY=1 to reproduce the chain).  Three things have to line up:
+    //   1. the Borcherds form has a huge principal part -- c(-m) reaches 19 digits at X_0^33(1)
+    //      where X_0^21(1), which builds, tops out at 10 -- so every Schofer value carries a
+    //      gigantic Log p component C;
+    //   2. kappa_p(m) is IDENTICAL at every discriminant for exactly those m, so C is a pure
+    //      COMMON factor that ought to cancel;
+    //   3. ScaleForSchofer is NOT constant across the columns -- at d = -4 Ogg's condition halves
+    //      W_size without n_d falling with it, giving scale -1/2 against -1/4 elsewhere -- so that
+    //      column carries 2C where the rest carry C.
+    // ReduceTable then subtracts the per-row MINIMUM, clearing every column but that one, which is
+    // left holding the whole common factor.  C is an ARTIFACT: adding a kernel element changes the
+    // form without changing its divisor, so C is not an invariant of the problem.  The fix to try
+    // is to LLL-reduce the solution against the kernel to MINIMISE THE FORM'S coefficients -- note
+    // the solution VECTOR is already tiny (maxsol 2 at 33_1); it is the echelon basis that is huge.
+    //
     // ⚠ THE CAUSE IS NOT PRECISION, AND THIS COMMENT USED TO SAY IT WAS. "A runaway coefficient
     // means the Schofer sum diverged upstream" was an asserted cause, and it is REFUTED
     // (2026-09-13): re-running X_0^69(1) at Prec 300 instead of 100 reproduces the coefficient
@@ -157,7 +173,8 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     for p in Keys(s`log_coeffs) do
         error if AbsoluteValue(s`log_coeffs[p]) gt 10^5,
             Sprintf("RationalNumber: runaway log coefficient %o on Log%o (exceeds 10^5). "
-                    * "Cause OPEN -- precision is refuted, see the note above. Full sum: %o",
+                    * "Cause: huge principal part x a column whose ScaleForSchofer differs "
+                    * "(see the note above; RUNAWAY=1 reproduces it). Full sum: %o",
                     s`log_coeffs[p], p, s);
     end for;
     ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
