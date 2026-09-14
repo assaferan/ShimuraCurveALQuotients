@@ -117,10 +117,20 @@ genuinely is obstructed.
 * **On odd `D` the screen is fast only when it CLEARS.** An obstructed verdict needs the whole `m`
   ladder, and the 0-side basis at deep `m` costs (`pole_order = -D0*m`, e.g. **4005** at `15_1`).
   That is the opposite of what a screen wants, so odd-`D` triage should read a clear and stop.
-* **No odd-`D` base is CONFIRMED obstructed by a real run**, so the odd "obstructed" verdict has no
-  positive control. Read it as **"not cleared"**, never as obstructed.
-* The `wdef` span is still an over-approximation of the achievable targets (it takes the whole span,
-  not the specific `div_coeffs` combinations), so `wdef >= 1` remains one-sided in both parities.
+* ⚠⚠ **THE ODD "OBSTRUCTED" VERDICT IS REFUTED — `21_2` IS A CONFIRMED FALSE POSITIVE.** Corrected
+  later the same day, after this section first said only that the verdict "has no positive control".
+  It is worse than uncontrolled: `21_2` is a **Guo-Yang base with a committed model**, and its screen
+  exhausts all 8 rungs of `all_ms` at `wdef >= 2` and prints **obstructed**. ⇒ **On odd `D` the
+  screen yields CLEAR verdicts ONLY.** Anything else means "this screen learned nothing".
+* The mechanism is the one already written down: **`wdef` over-approximates** the achievable targets
+  — it takes the whole span of the CM coordinates, not the specific `div_coeffs` combinations the
+  search actually forms — so `wdef >= 1` is one-sided in BOTH parities. Even `D` gets away with it
+  empirically (7/7, and `142_1`/`158_1` re-confirm); odd `D` demonstrably does not.
+* Combined with the cost asymmetry above, this makes the expensive path the worthless one: the full
+  `m` ladder costs the most and yields the only verdict you cannot use. **Time-box odd screens, take
+  a clear, stop.**
+* Odd builders scored so far: `15_1` clear, `55_1` clear, `39_1` clear, **`21_2` FALSE POSITIVE**;
+  `51_1`, `57_1` still running.
 
 ### THE SECOND COLLECTION: 12 more screens, 11 new obstructed, known obstructed 61 -> 72
 

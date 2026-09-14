@@ -34,8 +34,9 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
    ⚠⚠ **ODD `D` IS A DIFFERENT LADDER — over `m`, not over `P`,** and the statistic is `wdef` (the
    deficit restricted to the achievable targets), not `Ncols - Rank`. `55_1` reads `deficit 3` /
    `wdef 0` and builds. On odd `D` the screen is fast only when it CLEARS, and an odd "obstructed"
-   verdict has **no positive control** — read it as "not cleared". See `HANDOFF.md` (2026-09-14
-   later) for the full statement of limits.
+   verdict is **REFUTED** — `21_2`, a Guo-Yang base with a committed model, exhausts its whole `m`
+   ladder at `wdef >= 2` and prints "obstructed". ⇒ **odd screens give CLEAR verdicts ONLY**; time-box
+   them, take a clear, stop. See `HANDOFF.md` (2026-09-14 later) for the full statement of limits.
 3. **Then launch pipeline runs only on CLEARED bases** — ⚠ *and expect the OTHER triage axis.*
    `134_3` was screen-clear and died in 68 s on **"Could not find enough rational CM points!"**.
    **The screen predicts the Borcherds obstruction and nothing else.**
