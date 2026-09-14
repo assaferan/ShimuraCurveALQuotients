@@ -41,6 +41,38 @@ reads deficit 1 there**. Reading the first rung alone would condemn a perfectly 
 ⇒ **Require `P >= 102` AND require the value to be stable across at least two rungs.** The whole
 diagnostic is the invariance, not any single number.
 
+## ⚠ ODD `D`: THE SHORTCUT IS DEAD, AND THE 0-SIDE BLOCK IS GENUINELY REQUIRED (2026-09-14)
+
+A tempting shortcut: the block `deficit.m` omits for odd `D` only ever `VerticalJoin`s **rows** onto
+`coeffs_trunc`, and more rows can only raise the rank, so `deficit = Ncols - Rank` can only FALL.
+The reported odd-`D` value is therefore an **upper bound** — so a reported **0** would still be
+valid (a true deficit cannot be negative), and "clear" is exactly the verdict the screen needs.
+No code change required.
+
+**MEASURED, AND IT DOES NOT WORK.** Six odd-`D` bases that all BUILD (true deficit 0):
+
+    15_1 -> 20    39_1 -> 19    51_1 -> 20
+    55_1 -> 22    57_1 -> 19    21_2 -> 10
+
+The overestimate is ~20, so **no odd-`D` base will ever read 0** while the block is missing. The
+shortcut is useless in practice. (Consistent with the recorded `65_2`: 5, 6, 6, 9.)
+
+⇒ **The 0-side block must actually be implemented.** It is `BorcherdsForms.m:876-978`, 102 lines,
+self-contained by its own comment (depends only on `m_idx` plus `D0, n0, nE0, t,
+eta_quotients_oo, Xstar`; produces `mat_0_oo` and `relevant_ds_0_oo`).
+
+⚠ **EXTRACT IT, DO NOT COPY IT.** Duplicating 102 lines of submatrix slicing, a kernel solve, two
+`coeffs_to_divisor_matrix` calls and an in-place recombination of `ech_etas_0` invites exactly the
+drift this repo keeps paying for — and the block's own comment warns those lines "must move
+TOGETHER" or you recombine an already-recombined list. Make it a file-local function and `import`
+it, as `deficit.m` already does for `basis_of_weakly_holomorphic_forms`.
+
+⚠ **COST:** it refactors the hottest path, inside a memoised loop (`max_pole_order_0`) whose
+hoisting was itself a measured optimisation verified by checksumming across 336 triples at `65_2`.
+Getting it wrong is a correctness regression on every base, so it needs a FULL SUITE run (~4 h)
+before it can be trusted. Deferred deliberately on 2026-09-14; the even-`D` screen (105 targets)
+works today and is the larger half.
+
 ## Limits
 
 * ⚠ **EVEN `D` ONLY.** For odd `D`, `BorcherdsForms` joins a 0-side block (`coeffs_0_oo`) that this
