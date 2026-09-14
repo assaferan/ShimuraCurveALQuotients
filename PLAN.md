@@ -13,40 +13,68 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-14
+## ⇒ START HERE — updated 2026-09-14 (later)
 
 **MAIN LINE: the model backlog, and it is now SCREENED rather than attempted blind.**
 
 ### Do this first, in order
 
-1. **COLLECT WHAT IS RUNNING ON LOVELACE.** 13 pipeline jobs + 16 deficit screens + the two
-   `vx_skip` retests. Tree `~/shimura/scq-current`, outputs `~/shimura/bk2/` and `~/shimura/defic/`.
-   Full detail in `HANDOFF.md` (2026-09-14) — read it before launching anything new.
-2. **SCREEN BEFORE YOU RUN.** `magma -b DD:=<D> NN:=<N> deficit.m` costs seconds-to-minutes and
-   says whether a base is obstructed; a pipeline run costs hours to say the same thing.
-   ⚠⚠ Require **>= 2 rungs and an INVARIANT deficit**. A single rung is meaningless: `6_109` reads
-   `1 0 0` and BUILDS. ⚠ EVEN `D` only.
-3. **Then launch pipeline runs only on CLEARED bases.** Ready now:
-   `134_3 14_37 62_7 34_11 6_107 6_109 6_113 74_5`.
+1. **COLLECT WHAT IS RUNNING ON LOVELACE.** Tree `~/shimura/scq-current` (do NOT `git pull` it —
+   jobs are compiling from it); outputs `~/shimura/bk3/` (pipeline), `~/shimura/defic/` (screens).
+   Live as of this writing: **7 pipeline jobs** on cleared bases, **11 deficit screens**, the
+   **`115_1`/`123_1` `vx_skip` retest at ~11 h**, and 4 legacy jobs on the frozen clone.
+   ⚠ `ps | head` TRUNCATES — this session misread "the retests died" off a cut-off listing.
+2. **SCREEN BEFORE YOU RUN, and read `wdef`, not `deficit`.**
+
+       magma -b DD:=<D> NN:=<N> deficit.m                          # even D, fast, validated 7/7
+       magma -b DD:=<D> NN:=<N> vvdata/weyl-campaign/deficit_odd.m # either parity, via DeficitScreen
+
+   ⚠⚠ **EVEN `D`: require >= 2 rungs and an INVARIANT deficit.** A single rung is meaningless —
+   `6_109` reads `1 0 0` and BUILDS.
+   ⚠⚠ **ODD `D` IS A DIFFERENT LADDER — over `m`, not over `P`,** and the statistic is `wdef` (the
+   deficit restricted to the achievable targets), not `Ncols - Rank`. `55_1` reads `deficit 3` /
+   `wdef 0` and builds. On odd `D` the screen is fast only when it CLEARS, and an odd "obstructed"
+   verdict has **no positive control** — read it as "not cleared". See `HANDOFF.md` (2026-09-14
+   later) for the full statement of limits.
+3. **Then launch pipeline runs only on CLEARED bases** — ⚠ *and expect the OTHER triage axis.*
+   `134_3` was screen-clear and died in 68 s on **"Could not find enough rational CM points!"**.
+   **The screen predicts the Borcherds obstruction and nothing else.**
    ⚠ Also filter out non-squarefree `N` (assertion-failed method boundary) and `#div(M) >= 24`
    (a CONFIRMED time wall on Normaliz).
 4. **If `115_1` or `123_1` completes, DELETE `vx_skip` from `genmodels.m`** and four targets reopen.
 
 ### The numbers, corrected — do not quote the old ones
 
-    obstructed   61 known, a LOWER BOUND (was "49", quoted as the class size).  Only ~20 of 105
-                 reachable even-D targets are screened.
+    obstructed   72 known, a LOWER BOUND = 49 recorded + 5 stumbled into + 18 screened.  The 5 are
+                 142_1 158_1 166_1 214_1 6_97; all three sets are disjoint, checked.  Never quote
+                 49, and do not quote 61 either.
+    2-dim        FIVE bases have a 2-dimensional obstruction space: 166_3 22_19 74_7 10_67 58_13.
     backlog      798 targets / 102 done / ~696 missing  (the recorded 377/73/304 does NOT reproduce)
     tiers        #div >= 24 is a REAL wall (confirmed on Normaliz).  But #div 16-20 "marginal" is
                  largely REACHABLE, and #div <= 12 "reliable" is NOT uniformly so (85_1 segfaulted
                  at 122.7 GB).  The tiers are not ordered as the old plan assumes.
 
-### The one substantial piece of deferred work
+### ✅ The one substantial piece of deferred work is DONE — and its premise was wrong
 
-**Extend `deficit.m` to odd `D`** by extracting `BorcherdsForms.m:876-978` (the 0-side block, 102
-lines) as a file-local function and importing it. The upper-bound shortcut is REFUTED by
-measurement (overestimate ~20). ⚠ It refactors the hottest path inside a memoised loop, so budget a
-FULL SUITE run (~4 h). This is what makes the screen cover the whole backlog instead of half.
+`BorcherdsForms` now takes `DeficitScreen` (`b78149b`), which screens from INSIDE the intrinsic:
+that reaches the odd-`D` 0-side block without copying it and without refactoring the hot path, so
+the full-suite budget the old plan reserved is not needed (the flag defaults false and the
+production path is bit-for-bit unchanged; `tests/X0_15_1.m` passes).
+
+⚠ **What the old item got wrong is worth keeping**: it assumed the odd-`D` numbers never read 0
+because rows were missing. They are missing, but adding them is not enough — the criterion itself
+was wrong (`Ncols - Rank` is sufficient, not necessary) and the sweep axis was wrong (`P`, not `m`).
+Both were only visible by reproducing KNOWN values on bases that build.
+
+### Next on this line
+
+* **Re-read the 18 screened OBSTRUCTED verdicts with `wdef`.** They were all called on
+  `Ncols - Rank`. `142_1`/`158_1` agree (`wdef = deficit = 1`), so there is no reason to expect a
+  wholesale correction — but a base where `wdef` is 0 and `deficit` is 1 would be a FALSE
+  OBSTRUCTED, and nothing has looked. Cheapest first: `38_13`, `6_101`.
+* **Screen the odd backlog for CLEARS**, which is the half the even-only screen could never touch.
+* `6_131`/`6_137` need the `find_t` / polytope stage to work at `M ~ 1600` before they can be
+  screened at all.
 
 ## ⇒ (SUPERSEDED) START HERE — updated 2026-09-13 evening
 
