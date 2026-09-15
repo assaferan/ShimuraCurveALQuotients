@@ -46,3 +46,22 @@
 #   the 5 stumbled-into are 142_1 158_1 166_1 214_1 6_97 (from the bk2 run logs); none overlaps
 #   the 18 screened, and none of the 18 is in bases49.txt -- checked, not assumed.
 #   2-dimensional obstruction spaces now number FIVE: 166_3 22_19 74_7 10_67 58_13.
+#
+# --- 2026-09-15 (night): the collection pass, and a CORRECTION to what "screened" meant above ---
+#
+# TEN BASES HAVE NO VERDICT AND NEVER DID.  Their logs in ~/shimura/defic are 19 bytes -- the
+# "DEFICIT BASE D N" header and nothing else:
+#
+#   6_89  178_3  278_1  298_1  302_1  314_1  326_1  334_1  346_1  358_1
+#
+# The screen driver capped each run at `timeout 1800`, and the comparable bases that DID finish
+# spent longer than that inside WeaklyHolomorphicBasis alone (254_1 2091 s, 262_1 2402 s,
+# 274_1 1383 s).  A killed Magma run loses its stdout buffer, so this is indistinguishable from
+# "never started" -- which is how it reads.  NOT evidence either way, exactly like 6_131/6_137.
+# Relaunched 2026-09-15 with no timeout: ~/shimura/def4.sh -> ~/shimura/defic4/.
+#
+# 6_73's PIPELINE run (not its screen) was SIGTERM'd -- bk3/DRIVER.log reads `EXIT 143 6_73`, seven
+# minutes after the screen finished, i.e. when the batch was relaunched.  Its `clear` above stands;
+# there is still no model.  Relaunched 2026-09-15.
+#
+# Counts are UNCHANGED by this pass: known obstructed = 72, still a lower bound.
