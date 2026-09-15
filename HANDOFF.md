@@ -11,6 +11,64 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, later still) — A SUITE FILE THAT RAN NOTHING, AND WHAT IT HID
+
+`tests/InternalBorcherds.m` reported `Success! 0.000 s` in every suite run on record. It defines
+`test_kronecker_sigma`, `test_bp_KY` and `test_W` and **called none of them**, and nothing outside
+called them either — the four apparent references are `test_Whittaker2`/`test_WeilRepresentation`,
+prefix collisions, checked. A file of definitions asserts nothing. Compare `tests/Whittaker2.m` and
+`tests/WeilRepresentation.m`, which invoke their procedure on the last line.
+
+### What the silence hid: all three were broken, none of it mathematical
+
+    the import named tests/BorcherdsProducts.m, but Wpoly/Wpoly2/Wpoly_scaled live in the LIBRARY,
+      SchoferFormula.m -- so the symbols could never resolve at all
+    ShimuraCurveLattice returns a QuaternionLatticeData record where it used to return 5 values
+    ElementOfNorm takes the order and the basis, and returns ONE value where it returned two
+
+⚠ And a fourth, which is the repo's signature trap: `Ldata`Q` holds the Gram matrix over the
+**rationals**, while the original line built it over the **integers** (`ChangeRing(Qinv^-1, Z)`).
+The two compare EQUAL — `Ldata`Q eq Qint` is `true` — and `lambda_v*Q` then fails with "incompatible
+coefficient rings". Equal as values, different as objects. I made that substitution on the strength
+of the equality test and had to undo it.
+
+### Now green, and it checks something
+
+    InternalBorcherds: 104 sigma identities, 6 published Wpoly values...Success! 0.270 s
+
+`test_kronecker_sigma` and `test_W` now **return their assertion counts**, and the file asserts the
+counts (104 and 6). A caller that only knows "it did not throw" cannot tell a thorough run from an
+empty one. Negative controls RUN, not assumed:
+
+    perturb a published Wpoly value (w22)        -> RED
+    silently empty the sigma loop (kappas := []) -> RED   (the COUNT catches this, not the asserts)
+    restored                                     -> GREEN
+
+The six `Wpoly_scaled` values are Yang's published ones at `d = -4` and `d = -3`; they had not been
+checked by any run this repo has a record of.
+
+### ⚠ `test_bp_KY` IS DELIBERATELY NOT WIRED IN — and its failure is now LOCALISED
+
+It is a probe, not a test: its assertion is commented out in the body and it returns a list of
+mismatches. Once the import was repaired so it could run at all:
+
+    test_bp_KY(10)  ->  28 mismatches
+    test_bp_KY(20)  -> 118 mismatches
+
+⚠ **All 118 sit at `p = 2` with `mu = 0`.** Every odd prime agrees, and so does `p = 2` at
+`mu = 1/2`. So the discrepancy is confined to the **`Wpoly2` branch** — worth recording because the
+file's own header guesses at "a sqrtp factor that I am missing", and a missing `sqrtp` would have
+moved the odd primes too. Left as a probe until that is understood; do not assert on it.
+
+### Import paths in this repo are not what they look like
+
+`import "X.m"` from a file that `run_tests.m` eval's resolves against the **working directory**, but
+from a file reached through another `import` it resolves against the **importing file's directory**.
+So `tests/InternalBorcherds.m` needs `"SchoferFormula.m"` when run as a test and would need
+`"../SchoferFormula.m"` if anything ever imported it. Nothing does, and top-level statements are
+illegal in a file used as a package anyway — which is a second reason those three calls could not
+simply have been added while the file was being imported somewhere.
+
 ## Handoff — 2026-09-15 (night, later) — `find_t` DID NOT PROVE ANYTHING, AND NOW IT SAYS SO
 
 `6_131` and `6_137` were recorded as screen failures on `assert success eq 0` inside `find_t`

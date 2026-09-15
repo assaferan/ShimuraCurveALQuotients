@@ -1,4 +1,28 @@
-import "BorcherdsProducts.m" : Wpoly, Wpoly2, Wpoly_scaled;
+// INTERNAL CHECKS ON THE Wpolys -- and, until 2026-09-15, A TEST THAT RAN NOTHING.
+//
+// ⚠ HOW THIS FILE FAILED.  It defines test_kronecker_sigma, test_bp_KY and test_W and, for as long
+// as git remembers, CALLED NONE OF THEM -- nor did anything else (the apparent outside references
+// to "test_W" are test_Whittaker2 and test_WeilRepresentation, prefix collisions).  The suite ran
+// it in 0.000 s and reported Success, because a file of definitions asserts nothing.  Compare
+// tests/Whittaker2.m and tests/WeilRepresentation.m, which invoke their procedure on the last line.
+//
+// ⚠ AND WHAT THAT HID.  Because nothing called them, they rotted against the library without a
+// murmur.  All three were broken, in three different ways, and none of the three was mathematical:
+//
+//   * the import named tests/BorcherdsProducts.m, but Wpoly/Wpoly2/Wpoly_scaled live in the
+//     LIBRARY, SchoferFormula.m -- so the symbols could never resolve;
+//   * ShimuraCurveLattice returns a QuaternionLatticeData record where it used to return 5 values;
+//   * ElementOfNorm takes the order and the basis and returns ONE value where it returned two.
+//
+// This is the repo's own lesson twice over: a passing check is not evidence until you know it
+// could have failed, and the exempted classes are where the defects accumulate.
+//
+// ⚠ These three live in the LIBRARY (SchoferFormula.m), not in tests/BorcherdsProducts.m.
+// The old import named the test helper and so could never resolve -- which nothing noticed,
+// because the procedures below were never called.  See the header comment.
+_ := ClassNumberLU(-4);   // AttachSpec is lazy and `import` compiles its file NOW, so touch
+                          // one intrinsic first or references from other packages go unresolved.
+import "SchoferFormula.m" : Wpoly, Wpoly2, Wpoly_scaled;
 
 // functions for testing the Wpolys from Kudla Yang paper
 function bp_Kudla_Yang_poly(p, kappam, D)
@@ -27,14 +51,19 @@ function sigmasp_Kudla_Yang_poly(p, m, kappa, is_even)
     return &+[(chi_p*x)^r : r in [0..Valuation(m,p)]];
 end function;
 
-procedure test_kronecker_sigma(B)
+// ⚠ RETURNS ITS ASSERTION COUNT.  A caller that only knows "it did not throw" cannot tell a
+// thorough run from an empty one; the count is what makes a silently emptied loop go red.
+function test_kronecker_sigma(B)
+    n := 0;
     kappas := [kappa : kappa in [1..B] | IsSquarefree(kappa)];
     for p in PrimesUpTo(B) do
         for kappa in kappas do
             assert sigmasp_Kudla_Yang_poly(p,0,kappa,true)*EulerFactor(KroneckerCharacter(kappa),p) eq 1;
+            n +:= 1;
         end for;
     end for;
-end procedure;
+    return n;
+end function;
 
 // Testing Proposition 5.1 in [KY]
 // Should have Wp(s-1/2,m,mu) = Lp(s,chi_{kappa m})/zeta_p(2s) bp(kappa m, s) * (m - Q(mu) in Zp)
@@ -87,12 +116,21 @@ end function;
 // zeta_p(2s) / zeta_p(2s+1) in the odd case
 
 
-procedure test_W()
+function test_W()   // returns the number of published values checked
     // testing the few values we know from Yang
-    L, Ldual, disc_grp, to_disc, Qinv := ShimuraCurveLattice(6,1);
-    Q := ChangeRing(Qinv^(-1), Integers());
+    // Two API drifts repaired 2026-09-15.  ShimuraCurveLattice returns a QuaternionLatticeData
+    // record where it used to return 5 values, and Ldata`Q is that record's integral Gram matrix --
+    // checked equal to the old ChangeRing(Qinv^-1, Integers()), not assumed.  ElementOfNorm now
+    // takes the order and the basis and returns ONE value, not two; the call below follows
+    // tests/EisensteinLocalFactors.m, which uses the current signature.
+    // ⚠ Q must be INTEGRAL here, as the original line made it.  Ldata`Q holds the same matrix
+    // over the RATIONALS, and `lambda_v*Q` then fails with "incompatible coefficient rings" --
+    // equal as values, different as objects.
+    n := 0;
+    Ldata := ShimuraCurveLattice(6,1);
+    Q := ChangeRing(Ldata`Qinv^(-1), Integers());
     for d in [-3,-4] do
-        _, lambda_v := ElementOfNorm(Q,-d);
+        lambda_v := ElementOfNorm(Q, -d, Ldata`O, Ldata`basis_L);
         Lminus := Kernel(Transpose(Matrix(lambda_v*Q)));
         mu := Vector([0,0,0]);
         if d eq -4 then
@@ -104,6 +142,7 @@ procedure test_W()
             assert w22 eq 1/2*(1+x^3);
             w23<x> := Wpoly_scaled(2,3,mu,Lminus,Q);
             assert w23 eq 1/3*(1-x);
+            n +:= 4;
         end if;
         if d eq -3 then
             w12<x> := Wpoly_scaled(1,2,mu,Lminus,Q);
@@ -111,10 +150,11 @@ procedure test_W()
             w13<x> := Wpoly_scaled(1,3,mu,Lminus,Q);
             _<sqrt3> := BaseRing(w13);
             assert w13 eq 1/sqrt3*(1+x);
+            n +:= 2;
         end if;
     end for;
-    return;
-end procedure;
+    return n;
+end function;
 
 // This is not (!!!) [Err, Lemma 6.1, p. 845] based on [KRY, Lemmas 2.4 and 2.5]
 // [Err only refers to primes not in Sm_mu]
@@ -175,3 +215,25 @@ function Wpolys_KY_5_3(m,p,mu,Lminus,Q)
    
     return 1 + val_e*KroneckerCharacter(kappa)(m)*x^(a+f);
 end function;
+
+
+// ---------------------------------------------------------------------------------------------
+// RUN THEM.  ⚠ Count the checks: a silently skipped case must make this red, not green.
+nkron := test_kronecker_sigma(20);
+nW    := test_W();
+assert nkron eq 104;   // 8 primes up to 20 x 13 squarefree kappa in [1..20]
+assert nW eq 6;        // the six Wpoly_scaled values Yang states, at d = -4 (four) and -3 (two)
+printf "InternalBorcherds: %o sigma identities, %o published Wpoly values...", nkron, nW;
+
+// ⚠ test_bp_KY IS NOT WIRED IN, DELIBERATELY.  It is an exploratory probe, not a test: its
+// assertion is commented out in the body and it returns a list of mismatches instead.  Measured
+// 2026-09-15, once the import was repaired so it could run at all:
+//
+//     test_bp_KY(10)  ->  28 mismatches
+//     test_bp_KY(20)  -> 118 mismatches
+//
+// ⚠ and they are not scattered: ALL 118 sit at p = 2 with mu = 0.  Every odd prime agrees, and so
+// does p = 2 at mu = 1/2.  So the discrepancy is confined to the Wpoly2 branch -- which is worth
+// recording because the header note above guesses at "a sqrtp factor that I am missing", and a
+// missing sqrtp would have moved the odd primes too.  Whatever is wrong is specific to p = 2,
+// mu = 0.  Left as a probe until that is understood; do not assert on it.
