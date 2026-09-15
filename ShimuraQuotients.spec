@@ -1,6 +1,7 @@
 {
 BorcherdsForms.m
 SchoferFormula.m
+CMFieldsOfDefinition.m
 EquationsCovers.m
 Caching.m
 ClassNumberData.m
