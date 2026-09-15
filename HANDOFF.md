@@ -11,6 +11,46 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 — THE SCALE FIX CORRUPTED NOTHING, AND TWO MORE MODELS LANDED
+
+### ✅ AUDIT CLOSED: no committed model was corrupted by the `ScaleForSchofer` bug
+
+The fix changes CM values at `d = -4` for ODD `D*N`. `33_1`/`69_1` announced themselves by crashing,
+but a base where the doubled scale produced a merely WRONG value would have built silently and
+passed every internal check — this repo's canonical failure mode. So every odd-`D*N` committed model
+was checked, and the screen is free: `d = -4` can only enter a table if the base HAS a disc `-4` CM
+point, and `NumberOfOptimalEmbeddings` decides that in closed form.
+
+    14 odd-D*N models
+     8  n(-4) = 0  -- PROVABLY unaffected, no disc -4 CM point exists
+        (111_1 15_1 35_1 39_1 51_1 55_1 65_1 87_1)
+     3  21_1 33_1 69_1  -- built today WITH the fix, each validated
+     1  57_1            -- its d = -4 is a POLE (published table), so no Schofer value there
+     2  77_1 93_1       -- REGENERATED under the fixed code: BYTE-IDENTICAL to what is committed
+
+⇒ **Measured, not assumed, for every odd-`D*N` base.** Nothing to re-derive.
+
+### ✅ TWO MORE MODELS FROM THE SCREEN-CLEARED BATCH
+
+    34_11   10 keys   VerifyModelSet 44/0   neg ctl 5 failures   ModelChecks 44/0
+    74_5    12 keys   VerifyModelSet 45/0   neg ctl 5 failures   ModelChecks 45/0
+
+`34_11` is the base that had a 10-day legacy run grinding on frozen code; screened clear, then built
+on current code. Neither has an external oracle — `10_61` evidence level.
+
+### The second-row check, final tally
+
+**33 tables, 251 checks, 0 mismatches** (the six expensive tables landed after the earlier commit
+said 27/195). Figure corrected in `GuoYangCheck.m`, here and in `PLAN.md`.
+
+### Still open / running
+
+* `bk3`: `14_37 62_7 6_113 6_107` still going; `6_109` FAILED (see the false-clear section) and
+  `134_3` died on CM supply.
+* Odd screens: `33_2` reads "obstructed", which per the refutation means **not cleared**, nothing
+  more. `141_1 143_1 145_1 21_4 55_2 65_2 91_1` still running.
+* Suite 81 of 84 green; the only failure is the Magma-version-dependent `X0_15_1`.
+
 ## Handoff — 2026-09-14 (night, later) — THE RUNAWAY CLASS IS FIXED, NOT JUST ROOT-CAUSED
 
 The section below this one says the cause was "a huge principal part x a column whose scale
@@ -59,7 +99,7 @@ Guo-Yang publish the PRIMARY column only, so the `s~` row — an independently c
 form — had never been compared against anything. It does not need new data: `s~ = 1 - s` is Mobius
 and the cross-ratio is Mobius-invariant, so the published column pins what that row's cross-ratios
 must be (`want` is literally unchanged). Now asserted in `tests/_offline/GuoYangCheck.m`.
-Measured before it became an assertion: **27 tables, 195 checks, 0 mismatches**. `NEGCTL=1`
+Measured before it became an assertion: **33 tables, 251 checks, 0 mismatches**. `NEGCTL=1`
 perturbs one non-frame `s~` value and the check catches it, naming the disc.
 
 ⚠ **Selection bias, and it limits the conclusion**: a table exists only where Guo-Yang published
