@@ -11,6 +11,86 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, later) — `find_t` DID NOT PROVE ANYTHING, AND NOW IT SAYS SO
+
+`6_131` and `6_137` were recorded as screen failures on `assert success eq 0` inside `find_t`
+(`BorcherdsForms.m`). **Neither is obstructed.** The assert was reading "Magma's integer LP gave up"
+as "the problem is infeasible", and those are not the same statement.
+
+Full account, with every measurement: `vvdata/weyl-campaign/find-t-lp-solver-gives-up.md`.
+
+### The witness
+
+The family is `M = 12N` (`D = 6`). The three solved neighbours return the SAME eta-exponent vector
+with only the pole order scaling — `N = 73, 89, 107` give `k = 144, 176, 212 = 2N-2`. Extrapolating
+to `N = 131, 137` and substituting into `find_t`'s own constraint blocks:
+
+    N 131  M 1572  k 260 : eq true  ge true  le true  ge2 true  ==> FEASIBLE
+    N 137  M 1644  k 272 : eq true  ge true  le true  ge2 true  ==> FEASIBLE
+
+⚠ **The hypothesis I started from is REFUTED by its own witness.** I expected the hard-coded
+`SetLowerBound(LP, n, -1000)` to be too tight at large `M`. The witness's smallest entry is **-260**
+— the bound was never binding. Drafting the check before touching the code is what caught it.
+
+### The failure is sporadic in BOTH directions
+
+    M = 1572  bound -1000                            -> gives up (success 25)
+    M = 1572  bound -261 -300 -500 -800 -1500 -3000  -> success, k = 260 every time
+    M = 1284  bound -1024                            -> gives up, while -1000 -2000 -5000 succeed
+    M = 732, 948, 1068, 1308, 1356   bound -5000     -> gives up, while -1000 -1024 -2000 succeed
+
+Tighter works, looser works, looser-still fails, and nothing tracks `M`. ⇒ **`success != 0` carries
+no mathematical information**, and no single bound is safe.
+
+### The fix and its guard
+
+`find_t` retries over `[-1000, -1024, -2000, -800, -5000, -20000]` and errors only if every one
+gives up, saying in the message that this is not a proof of infeasibility. `-1000` is tried FIRST,
+so the production path for every base that already worked is bit-for-bit unchanged — verified, not
+assumed (`M = 876/1068/1284` reproduce `k = 144/176/212`). A solution whose minimum entry **equals**
+the bound is rejected and the next bound tried, since a binding bound may have truncated the search.
+
+`tests/FindT.m` (51 s, 5 bases) checks the optimum AND verifies each `t` against the constraint
+blocks — a `k` assertion alone would only say the solver returned what it returned last time.
+Negative controls RUN, not assumed: single bound `[-1000]` → red; `ETA` perturbed → red; restored →
+green. Suite: 11 files touching `BorcherdsForms` re-run green, incl. `X0_15_1 X0_35_1 X0_6_11`.
+
+⚠ **Not a two-base footnote.** Of the 78 never-screened even-`D` targets at `#div(M) <= 20`, **24
+are `6_N` with `M = 12N >= 1788`** — the same family, past where the old code first aborted.
+
+### ✅ THE TIMEOUT DIAGNOSIS IS CONFIRMED BY MEASUREMENT, and it cost a CLEAR base
+
+The two re-screens that have finished both spent longer in `WeaklyHolomorphicBasis` than the old
+`timeout 1800` cap allowed, which is why their first attempt left a header and nothing else:
+
+    6_89    WHB 2090 s, wall 2206 s   ladder 0 0 0   CLEAR       -> pipeline launched
+    178_3   WHB 2340 s, wall 2500 s   ladder 1 1 1   OBSTRUCTED
+
+So the cap was not a marginal call: **`6_89` is a clear base that the harness threw away.** Eight
+re-screens still running.
+
+### ⚠ TWO SUITE FILES VERIFY NOTHING — found in passing, NOT fixed
+
+`tests/BorcherdsProducts.m` (0.010 s) and `tests/InternalBorcherds.m` (0.000 s) have **zero
+top-level statements**. Both are pure helper libraries that lack the `_` prefix the runner uses to
+exclude helpers, so they run as tests and assert nothing.
+
+`BorcherdsProducts.m` is a genuine library (35 test files import it) and is harmless apart from
+inflating the file count. **`InternalBorcherds.m` is not**: it defines `test_kronecker_sigma`,
+`test_bp_KY` and `test_W` and **calls none of them**, and nothing outside the file calls them either
+(the four apparent hits are `test_Whittaker2`/`test_WeilRepresentation`, prefix collisions —
+checked). Compare `tests/Whittaker2.m` and `tests/WeilRepresentation.m`, which define a procedure
+and then invoke it on the last line. This looks like a plain omission, but adding the three calls
+may turn the file red, so it is a separate piece of work.
+
+### ⚠ A TRAP I WALKED INTO — don't repeat it
+
+I edited `BorcherdsForms.m` while 8 test jobs were running from the same tree. `AttachSpec` loads
+packages on demand, so those runs could have mixed code versions; their results were discarded and
+the whole set re-run on a frozen tree. This is the local-checkout form of "never `git pull` a clone
+that has jobs running from it". **There is also another Claude session running Magma on this Mac**,
+so `pgrep magma` counts are not yours alone.
+
 ## Handoff — 2026-09-15 (night) — THE COLLECTION, AND TWO BATCHES LOST TO HARNESS, NOT MATHS
 
 Collection pass over lovelace. Nothing here is a new mathematical fact; the value is that **two
