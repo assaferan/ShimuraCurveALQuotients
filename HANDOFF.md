@@ -11,6 +11,72 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, 7th) — RETRACTION: "20 OF 23 KEYS HOLD DIFFERENT CURVES" IS WRONG
+
+The section below this one (night, 5th) claims 20 of 23 multi-entry genus-1 keys hold different
+curves, and the one below that (night, 4th) calls two `GonzalezRotger.m` entries "the wrong torsor".
+**Both claims are retracted.** The arithmetic was right; the criterion was wrong.
+
+### WHAT WAS WRONG
+
+`Genus1Classes.m` asserted that entries under one key must be **GL2-equivalent** as binary quartics.
+That is not what "the same curve" means. A degree-2 map from a genus-1 curve `C` to `P^1` is a
+`Q`-rational degree-2 divisor class, and those form a torsor under `E(Q) = Pic^0(C)`. So when `E(Q)`
+is nontrivial, **one curve carries several inequivalent quartic models** — inequivalent as binary
+quartics, identical as curves.
+
+`E(Q)` is nontrivial for every Jacobian in play. Measured:
+
+    30a6 [2,2]   78a2 [2,2]   30a2 [2,6]   30a3 [2]   102b3 [2,2]   130b2 [2,2]
+    154a1 rank 1 [2]     138a1 rank 1 [2]     426b1 rank 1 [2]
+
+Not one trivial group. Two bases picking different degree-2 classes produce exactly the observed
+signature — inequivalent quartics, same Jacobian, 14 of 14. ⇒ **"14 of 14 share a Jacobian" is not a
+smoking gun, it is the EXPECTED outcome**, and the "one mechanism, not twenty mistakes" paragraph in
+the night-5th section argues for the wrong conclusion from it.
+
+Corroborating, and the check that should have been run first: the entries of all eight keys probed
+have **identical everywhere-local solubility profiles** (real place and every prime up to 47).
+
+⚠ This is the failure `CLAUDE.md` opens with — correct arithmetic about the wrong object — and it
+happened while building a test to catch that very class. The tell was available and ignored: a
+check that calls 87% of its population defective is far more likely to have the wrong criterion than
+to have found an 87% defect rate.
+
+### WHAT REPLACES IT
+
+`tests/Genus1Classes.m` now compares the **Jacobian**, which is an invariant of the curve and blind
+to the choice of degree-2 class — the honest genus-1 analogue of `ConicClasses.m`'s Brauer class:
+
+    23 multi-entry genus-1 key(s), 23 pairwise Jacobian comparison(s)
+    all 23 multi-entry key(s) agree on the Jacobian
+
+⚠ Necessary, NOT sufficient: inequivalent torsors of one `E` share a Jacobian. At genus 0 the Brauer
+class happens to be a COMPLETE invariant of a conic; at genus 1 the Jacobian is not, and that gap is
+real and unclosed. The file's header now carries the whole argument, so the GL2 criterion is not
+re-invented.
+
+Controls RUN: quadratic-twist one entry (changes its Jacobian) -> RED, naming `6_17 W=[1,2]` and
+printing both `aInvariants`; read a single model file -> RED on the count guard; restored -> GREEN.
+
+### `GonzalezRotger.m`, corrected
+
+`KNOWN_TORSOR_DRIFT` is renamed **`NO_EXHIBITED_ISO`** and no longer claims the entries are wrong.
+The asymmetry note now gives BOTH reasons a failure proves nothing — `IsGL2Equivalent` need not
+return the full orbit, and our model need not be GL2-equivalent to theirs at all. The error message
+says "could not be proved isomorphic", and is flagged in-file as a "something changed, look at it"
+guard rather than a defect claim.
+
+⚠ **Nothing should be deleted from `models_6_5.m` or `models_6_13.m`.** The night-4th section says
+those entries "should be removed from the data"; that recommendation is withdrawn.
+
+### What survives, unchanged
+
+The positive half: where an isomorphism IS exhibited it is a proof, certified as an exact identity
+in `Q[x]`, and 11 of 13 genus-one entries now carry one where previously all 11 rested on a Cremona
+label. `NPROOF` is asserted separately so a run that degrades back to matching invariants goes red.
+The oracle stands at 49 comparisons. `ConicClasses.m` is untouched and still passes.
+
 ## Handoff — 2026-09-15 (night, 6th) — THE p=2 BLIND SPOT IS CLOSED, AND THERE WERE FIVE SHAPES
 
 `tests/Whittaker2.m` validated `Wpoly2` on exactly two 2-adic Jordan shapes. Production feeds it

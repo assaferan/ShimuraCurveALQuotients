@@ -78,12 +78,19 @@ end for;
 //   * IsIsomorphic on a genus-0 CrvHyp is wrong on Magma 2.29-10 (Magma#125).
 //
 // ⚠ The lambda^2 matters.  IsGL2Equivalent decides equivalence of binary quartics MODULO ANY
-// SCALAR; the curves y^2 = f are isomorphic only when that scalar is a SQUARE.  A non-square
-// constant is a different torsor, which is the whole point of this check.
+// SCALAR; the curves y^2 = f are isomorphic only when that scalar is a SQUARE.
 //
-// ⚠ Asymmetry, deliberate: finding a transformation with a square constant PROVES isomorphism.
-// Finding none does NOT prove non-isomorphism, since IsGL2Equivalent does not promise the full
-// orbit.  So a proof is asserted, and a failure to prove is reported, never asserted upon.
+// ⚠⚠ ASYMMETRY, AND IT IS NOT A TECHNICALITY -- READ BEFORE ASSERTING ON A FAILURE.  A square
+// constant PROVES isomorphism.  Finding none proves NOTHING, for two independent reasons:
+//   * IsGL2Equivalent does not promise the full GL2 orbit, so the search can simply miss one; and
+//   * more importantly, OUR MODEL NEED NOT BE GL2-EQUIVALENT TO THEIRS AT ALL.  A degree-2 map
+//     from a genus-1 curve to P^1 is a Q-rational degree-2 divisor class, and those form a torsor
+//     under E(Q).  When E(Q) is nontrivial ONE CURVE has SEVERAL INEQUIVALENT QUARTIC MODELS, and
+//     E(Q) is nontrivial for every Jacobian in this table (measured: 14a2 [6], 15a1, 21a2 [2,2],
+//     33a1, 34a3, 46a2, 30a6 [2,2], 42a3, 78a2 [2,2], 30a2 [2,6], 70a2 [2,2]).
+// ⇒ "no exhibited isomorphism" means UNPROVED, never DISPROVED.  On 2026-09-15 this was briefly
+// committed the other way round -- as "these entries are the wrong torsor" -- and retracted the
+// same day.  See tests/Genus1Classes.m for the full statement of the correction.
 function exhibit_iso(fo, fgr)
     ok, Ts := IsGL2Equivalent(fo, fgr, 4);
     if not ok then return false, _, _; end if;      // not even GL2-equivalent: no isomorphism
@@ -100,16 +107,17 @@ function exhibit_iso(fo, fgr)
     return false, _, _;
 end function;
 
-// ⚠ TWO COMMITTED ENTRIES ARE THE WRONG TORSOR.  At 6_5 and 6_13 the W=[1] key holds TWO entries
-// that are NOT GL2-equivalent TO EACH OTHER -- genuinely different curves -- and BOTH carry the
-// Jacobian label the paper states.  Only one of each pair is Gonzalez-Rotger's curve.  The
-// invariant check could not see this, and since it only ever read entry [1], at 6_5 it was
-// certifying the entry that is NOT the published curve.
-//   6_5  : entry 1 is spurious, entry 2 is GR's curve
-//   6_13 : entry 2 is spurious, entry 1 is GR's curve
-// Recorded rather than asserted away: a NEW one must turn this test red.  These two entries
-// should be removed from the data, which is a separate change.
-KNOWN_TORSOR_DRIFT := { <6,5,1>, <6,13,2> };
+// Entries for which no isomorphism to the published quartic could be exhibited.  At 6_5 and 6_13
+// the W=[1] key holds two entries; one of each pair is provably GR's curve and the other is not
+// provably anything.  ⚠ THIS IS NOT A DEFECT LIST.  Per the asymmetry above, the likely reading is
+// that the pipeline computed the same curve over two bases which picked DIFFERENT degree-2 divisor
+// classes -- both models correct, inequivalent as quartics.  Corroborating: the two entries of each
+// pair have IDENTICAL everywhere-local solubility profiles (real place and every prime to 47).
+//   6_5  : entry 2 is proved GR's curve; entry 1 unproved
+//   6_13 : entry 1 is proved GR's curve; entry 2 unproved
+// ⚠ DO NOT DELETE THESE ENTRIES on the strength of this list.  Recorded so that a NEW unproved
+// entry is noticed rather than absorbed silently.
+NO_EXHIBITED_ISO := { <6,5,1>, <6,13,2> };
 
 NCMP := 0; NMISS := 0; NPROOF := 0; bad := []; drift := [];
 for t in GR do
@@ -137,9 +145,11 @@ for t in GR do
             a, b, c, d := Explode(T);
             assert fgr eq lam^2 * (c*x+d)^4 * Evaluate(fo, (a*x+b)/(c*x+d));
             NPROOF +:= 1; proved_here := true;
-        elif <D,N,i> notin KNOWN_TORSOR_DRIFT then
-            Append(~drift, Sprintf("%o entry %o: Jacobian %o matches but NO Q-isomorphism to the "
-                                   * "published curve -- a different torsor", base, i, ours));
+        elif <D,N,i> notin NO_EXHIBITED_ISO then
+            Append(~drift, Sprintf("%o entry %o: Jacobian %o matches, but no Q-isomorphism to the "
+                                   * "published quartic could be EXHIBITED (unproved, not "
+                                   * "disproved -- a second degree-2 class gives an inequivalent "
+                                   * "model of the same curve)", base, i, ours));
         end if;
     end for;
     if (not proved_here) and (#models[key] gt 0) then
@@ -150,9 +160,11 @@ end for;
 error if not IsEmpty(bad),
     Sprintf("Gonzalez-Rotger oracle: %o base(s)/entr(ies) DISAGREE with the published equation: %o",
             #bad, bad);
+// ⚠ This is a "something changed, look at it" guard, NOT a claim that the entry is wrong.  If the
+// new entry is a legitimate second degree-2 model, add it to NO_EXHIBITED_ISO and say so.
 error if not IsEmpty(drift),
-    Sprintf("Gonzalez-Rotger oracle: %o NEW wrong-torsor entr(ies) -- same Jacobian, not the same "
-            * "curve: %o", #drift, drift);
+    Sprintf("Gonzalez-Rotger oracle: %o entr(ies) with a matching Jacobian could not be proved "
+            * "isomorphic to the published quartic: %o", #drift, drift);
 // ⚠ COUNT THE COMPARISONS. If models stop being found this must go red, not green-with-nothing-checked.
 error if NCMP lt 8,
     Sprintf("Gonzalez-Rotger oracle: only %o comparison(s) made, expected at least 8 "
