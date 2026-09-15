@@ -11,6 +11,71 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, 5th) — 20 OF 23 MULTI-ENTRY GENUS-1 KEYS HOLD DIFFERENT CURVES
+
+The `6_5`/`6_13` torsor drift is not an anomaly. It is a CLASS, and `tests/Genus1Classes.m` now
+records it.
+
+### THE MEASUREMENT
+
+Entries under one `(D,N,W)` key are the same quotient `X/W` computed over DIFFERENT BASES
+(`all_eqns[k][base]`, `EquationsCovers.m`), so they must be isomorphic over `Q`. Across every model
+file:
+
+    890 populated keys ; 23 multi-entry keys of genus >= 1 (all genus 1) ; 23 pairwise comparisons
+    ->  3 proved isomorphic,  20 NOT EVEN GL2-EQUIVALENT
+
+Violating bases: `10_13 10_3 10_7 14_3 14_5 15_2 22_7 26_5 6_13 6_17 6_23 6_5 6_71`.
+The three that pass: `10_7 W=[1,7]`, `21_2 W=[1,2]`, `6_13 W=[1,6]` — so `6_13` has both, and this
+is per-KEY, not per-base.
+
+### ⚠ ONE MECHANISM, NOT TWENTY MISTAKES — THEY ALL SHARE A JACOBIAN
+
+Cross-checked against an invariant that does not use `IsGL2Equivalent` at all:
+
+    same-Jacobian pairs: 14        different-Jacobian pairs: 0
+
+Every multi-entry genus-1 key sampled holds inequivalent quartics whose Jacobians carry the SAME
+Cremona label. Inequivalent quartics with one Jacobian are **different torsors** of it. Independent
+transcription errors do not land on one `H^1` class fourteen times out of fourteen.
+
+⚠ The suspect is the `y^2` sign/scale resolution (`find_y2_signs`, the per-disc signs): a choice
+made differently per base would move the torsor while leaving the Jacobian alone. **UNTESTED.** Four
+single-cause stories have been refuted by controls in this repo already; treat it as a lead.
+
+### ⚠ THE GENUS-0 ANALOGUE PASSES — WHICH LOCALISES IT
+
+    ConicClasses.m: 236 genus-0 conic(s); 41 multi-entry key(s); all internally consistent
+
+Same data model, same generation path, same multi-base structure — and across bases the conics agree
+every time. So this is **genus-1-specific**, not a general cross-base inconsistency.
+
+### WHY NOTHING WAS DELETED
+
+Two of the twenty are arbitrated by Gonzalez-Rotger (`6_5 W=[1]` entry 1, `6_13 W=[1]` entry 2) and
+are pinned in `GonzalezRotger.m`'s `KNOWN_TORSOR_DRIFT`. **For the other eighteen there is no
+oracle**, so removing an entry would be guessing which base got it right. Recording them makes the
+class visible in CI and stops it growing; if the mechanism is found and fixed, the entries regenerate
+correctly and the data question answers itself.
+
+### THE TEST
+
+`tests/Genus1Classes.m`, 0.14 s. Two entries are the same curve over `Q` iff there is a GL2(Q) map
+`[a,b,c,d]` and a RATIONAL `lambda` with `f_2(x) = lambda^2 (cx+d)^(2g+2) f_1((ax+b)/(cx+d))`, and
+the identity is certified in `Q[x]`.
+
+⚠ The `lambda^2` is the mechanism, not decoration: `IsGL2Equivalent` decides equivalence MODULO ANY
+SCALAR, and `y^2 = f` curves are isomorphic only when that scalar is a SQUARE.
+⚠ Asymmetry, deliberate: a square constant PROVES isomorphism; finding none proves nothing, since
+`IsGL2Equivalent` does not promise the full orbit. Hence a recorded list, not an assertion that these
+curves differ.
+⚠ It errors when a RECORDED violation starts passing. That firing is GOOD NEWS — it is what fixing
+the mechanism looks like — and it forces the record to stay accurate instead of going stale.
+
+Negative controls RUN: drop one violation from the record -> RED ("NEW key(s)"); record a violation
+for a key that passes -> RED ("now PASS"); read one model file -> RED (count guard, "only 0
+multi-entry key(s)"); restored -> GREEN.
+
 ## Handoff — 2026-09-15 (night, 4th) — EXHIBIT THE MAP: TWO COMMITTED ENTRIES ARE THE WRONG TORSOR
 
 `tests/GonzalezRotger.m` compared the genus-one full curves by an INVARIANT — the Jacobian's Cremona
