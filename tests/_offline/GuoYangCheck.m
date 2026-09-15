@@ -121,7 +121,7 @@ procedure test_gy_table(D, N, gy)
         if got ne want then Append(~bad, <d, got, want, strow[idx[d]]>); end if;
         nt +:= 1;
     end for;
-    // Measured 2026-09-14 before this was made an assertion: 27 tables, 195 checks, 0 mismatches.
+    // Measured 2026-09-14 before this was made an assertion: 33 tables, 251 checks, 0 mismatches.
     // ⚠ That set is SELECTION-BIASED toward passing -- a table exists only where Guo-Yang published
     // one, i.e. a base their method handled and ours builds. A base whose s~ row is wrong may well
     // fail to build and so have no table; X_0^21(1), the base that motivated this, is exactly that

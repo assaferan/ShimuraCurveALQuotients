@@ -81,7 +81,7 @@ Both were only visible by reproducing KNOWN values on bases that build.
   factor (`w_1` counted as an Atkin-Lehner involution), not a property of the forms. `33_1` matches
   the published equation; the Gonzalez-Rotger oracle is at **47 comparisons** with **0 bases lacking
   a `W=[1]` model**. Every Gonzalez-Rotger target now has a model.
-* ✅ **DONE — the second hauptmodul row is checked**, 195 assertions against the published primary
+* ✅ **DONE — the second hauptmodul row is checked**, 251 assertions against the published primary
   column, 0 mismatches (`tests/_offline/GuoYangCheck.m`). ⚠ Selection-biased toward passing.
 * **(superseded) `33_1` was the last Gonzalez-Rotger target without a model:**
   The odd screen says it is **clear** (`wdef 0 at m = -15`), so the Borcherds stage is fine; it dies
