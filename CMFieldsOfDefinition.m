@@ -5,7 +5,7 @@
 // Entry points:  DegreeOfFieldOfDefinitionOfCMPoint(X, d)   just the degree
 //                RationalCMDiscs(X)                         discriminants of degree 1
 //                Degree2Points(X)                           discriminants of degree 2
-//                CMClassLists() / CMClassListsDeg2()        the candidate discriminants
+//                CMClassLists()                             the candidate discriminants
 //
 // The degree is read off group orders alone, with no number field and no ring
 // class field: only Pic(R) and the Atkin-Lehner combinatorics of W.  This is
@@ -26,63 +26,22 @@
 
 
 intrinsic CMClassLists() -> Assoc
-{Absolute values of the discriminants of the imaginary quadratic orders of each
- class number, keyed by class number.  Covers non-maximal orders as well as
- maximal ones, so it is the right candidate list for CM points.}
+{The imaginary quadratic discriminants of each class number up to 8, keyed by
+ class number.  The full list: every order, maximal or not, and every class
+ group, not only the 2-groups.  A pruned list is valid only for a specific kind
+ of point on a specific quotient -- a rational point on the full Atkin-Lehner
+ quotient forces an elementary abelian 2 class group, but that argument does not
+ carry to a proper subquotient -- so the scans here keep everything and let
+ DegreeOfFieldOfDefinitionOfCMPoint decide.}
     CNs := AssociativeArray();
-    CNs[1] := {3,4,7,8,11,12,16,19,27,28,43,67,163};
-    CNs[2] := {15,20,24,32,35,36,40,48,51,52,60,64,72,75,88,91,99,100,112,115,123,147,148,187,232,
-               235,267,403,427};
-    CNs[4] := {84,96,120,132,160,168,180,192,195,228,240,280,288,312,315,340,352,372,408,435,448,
-               483,520,532,555,595,627,708,715,760,795,928,1012,1435};
-    CNs[8] := {420,480,660,672,840,960,1092,1120,1155,1248,1320,1380,1428,1540,1632,1848,1995,2080,
-               3003,3040,3315};
-    CNs[16] := {3360,5280,5460,7392};
-    CNs[32] := {};
-    CNs[64] := {};
-    return CNs;
-end intrinsic;
-
-intrinsic CMClassListsDeg2() -> Assoc
-{As CMClassLists, extended to the larger class numbers a degree-2 point can
- have.  Separate from CMClassLists because the degree-2 scan reaches one power
- of two further and the extra discriminants are not wanted in the rational scan.}
-    CNs := AssociativeArray();
-    CNs[1] := {3,4,7,8,11,12,16,19,27,28,43,67,163};
-    CNs[2] := {15,20,24,32,35,36,40,48,51,52,60,64,72,75,88,91,99,100,112,115,123,147,148,187,232,
-               235,267,403,427};
-    CNs[4] := {39,55,56,63,68,80,84,96,120,128,132,136,144,155,156,160,168,171,180,184,192,195,196,
-               203,208,219,220,228,240,252,256,259,275,280,288,291,292,312,315,323,328,340,352,355,
-               363,372,387,388,400,408,435,448,475,483,507,520,532,555,568,592,595,603,627,667,708,
-               715,723,760,763,772,795,928,955,1003,1012,1027,1227,1243,1387,1411,1435,1467,1507,
-               1555};
-    CNs[8] := {224,260,264,276,308,320,336,360,384,420,456,468,480,504,528,544,552,564,576,580,600,
-               612,616,624,640,651,660,672,720,736,768,792,819,820,832,840,852,868,880,900,912,915,
-               952,960,987,1008,1032,1035,1060,1092,1120,1128,1131,1152,1155,1204,1240,1248,1275,
-               1288,1312,1320,1332,1360,1380,1395,1408,1428,1443,1488,1540,1600,1632,1635,1659,1672,
-               1683,1752,1768,1771,1780,1792,1827,1848,1947,1992,1995,2020,2035,2067,2080,2088,2115,
-               2128,2139,2163,2212,2272,2275,2368,2392,2451,2475,2632,2667,2715,2755,2788,2832,2907,
-               2968,3003,3040,3172,3243,3315,3355,3507,3627,3712,3843,4048,4123,4323,5083,5467,6307};
-    CNs[16] := {1056,1140,1344,1440,1560,1680,1716,1824,1860,1872,1920,2016,2040,2100,2112,2176,
-                2208,2244,2280,2304,2320,2331,2340,2379,2400,2436,2464,2496,2520,2580,2640,2688,
-                2760,2772,2880,3060,3108,3168,3192,3220,3280,3360,3432,3480,3520,3588,3600,3640,
-                3648,3795,3808,3828,3840,4020,4032,4128,4180,4260,4275,4368,4420,4440,4452,4480,
-                4488,4512,4515,4680,4740,4788,4960,4992,5115,5152,5160,5187,5208,5248,5280,5328,
-                5355,5412,5440,5460,5520,5712,5952,6052,6123,6160,6195,6328,6355,6400,6420,6435,
-                6528,6580,6612,6688,6708,6820,6840,6867,7008,7035,7072,7120,7315,7392,7395,7480,
-                7540,7672,7755,7968,7995,8008,8052,8080,8320,8352,8512,8547,8680,8715,8835,8932,
-                9108,9243,9568,9595,9867,9955,10168,10528,10803,10948,11067,11328,11715,11872,
-                12160,12483,12595,12688,12915,13195,14008,14155,14547,14763,16192,16555,17427,
-                19947,20155};
-    CNs[32] := {5760,6240,6360,6720,6900,7140,7488,8160,8400,8448,8580,9120,9240,9280,9540,9600,
-                10080,10560,10920,11040,11160,11400,12180,12240,12432,12672,12768,13120,13440,13728,
-                13860,13920,14100,14280,14352,14400,14560,14592,14820,15400,16128,16720,17220,17472,
-                17760,17952,18720,19152,19240,19320,19380,19635,20020,20148,20475,20608,20640,20832,
-                21120,21312,21840,22080,22848,23640,24640,25312,25608,26712,26832,27280,27360,28032,
-                28288,28480,28548,29568,29920,30100,30160,30340,30688,31395,32032,32320,33408,33915,
-                34720,34840,36432,37107,40672,40755,41475,42112,43435,44115,45312,45747,46852,50752,
-                53475,56032,57387,57715,82555};
-    CNs[64] := {};
+    CNs[1] := {-3,-4,-7,-8,-11,-12,-16,-19,-27,-28,-43,-67,-163};
+    CNs[2] := {-15,-20,-24,-32,-35,-36,-40,-48,-51,-52,-60,-64,-72,-75,-88,-91,-99,-100,-112,-115,-123,-147,-148,-187,-232,-235,-267,-403,-427};
+    CNs[3] := {-23,-31,-44,-59,-76,-83,-92,-107,-108,-124,-139,-172,-211,-243,-268,-283,-307,-331,-379,-499,-547,-643,-652,-883,-907};
+    CNs[4] := {-39,-55,-56,-63,-68,-80,-84,-96,-120,-128,-132,-136,-144,-155,-156,-160,-168,-171,-180,-184,-192,-195,-196,-203,-208,-219,-220,-228,-240,-252,-256,-259,-275,-280,-288,-291,-292,-312,-315,-323,-328,-340,-352,-355,-363,-372,-387,-388,-400,-408,-435,-448,-475,-483,-507,-520,-532,-555,-568,-592,-595,-603,-627,-667,-708,-715,-723,-760,-763,-772,-795,-928,-955,-1003,-1012,-1027,-1227,-1243,-1387,-1411,-1435,-1467,-1507,-1555};
+    CNs[5] := {-47,-79,-103,-127,-131,-179,-188,-227,-316,-347,-412,-443,-508,-523,-571,-619,-683,-691,-739,-787,-947,-1051,-1123,-1723,-1747,-1867,-2203,-2347,-2683};
+    CNs[6] := {-87,-104,-116,-135,-140,-152,-175,-176,-200,-204,-207,-212,-216,-244,-247,-300,-304,-324,-339,-348,-364,-368,-396,-411,-424,-432,-436,-451,-459,-460,-472,-484,-492,-496,-515,-531,-540,-588,-628,-648,-675,-676,-688,-700,-707,-747,-748,-771,-808,-828,-835,-843,-856,-867,-891,-931,-940,-963,-988,-1048,-1059,-1068,-1072,-1075,-1083,-1099,-1107,-1108,-1147,-1192,-1203,-1219,-1267,-1315,-1323,-1347,-1363,-1432,-1563,-1588,-1603,-1612,-1675,-1708,-1843,-1915,-1963,-2227,-2283,-2403,-2443,-2515,-2563,-2608,-2787,-2923,-3235,-3427,-3523,-3763,-4075};
+    CNs[7] := {-71,-151,-223,-251,-284,-343,-463,-467,-487,-587,-604,-811,-827,-859,-892,-1163,-1171,-1372,-1483,-1523,-1627,-1787,-1852,-1948,-1987,-2011,-2083,-2179,-2251,-2467,-2707,-3019,-3067,-3187,-3907,-4603,-5107,-5923};
+    CNs[8] := {-95,-111,-164,-183,-224,-248,-260,-264,-272,-276,-295,-299,-308,-320,-336,-360,-371,-376,-380,-384,-392,-395,-420,-444,-452,-456,-468,-480,-504,-512,-528,-539,-544,-548,-552,-564,-576,-579,-580,-583,-600,-612,-616,-624,-632,-640,-651,-660,-672,-712,-720,-732,-736,-768,-784,-792,-819,-820,-832,-840,-852,-868,-880,-900,-904,-912,-915,-939,-952,-960,-979,-987,-995,-1008,-1024,-1032,-1035,-1043,-1060,-1092,-1120,-1128,-1131,-1152,-1155,-1156,-1168,-1180,-1195,-1204,-1240,-1248,-1252,-1275,-1288,-1299,-1312,-1320,-1332,-1339,-1348,-1360,-1380,-1395,-1408,-1428,-1443,-1488,-1528,-1540,-1552,-1587,-1600,-1632,-1635,-1651,-1659,-1672,-1683,-1731,-1752,-1768,-1771,-1780,-1792,-1795,-1803,-1827,-1828,-1848,-1864,-1912,-1939,-1947,-1992,-1995,-2020,-2035,-2059,-2067,-2080,-2088,-2107,-2115,-2128,-2139,-2163,-2212,-2248,-2272,-2275,-2307,-2308,-2323,-2332,-2368,-2392,-2395,-2419,-2451,-2475,-2587,-2611,-2632,-2667,-2715,-2755,-2788,-2827,-2832,-2907,-2947,-2968,-2995,-3003,-3040,-3088,-3172,-3243,-3283,-3315,-3355,-3403,-3448,-3507,-3595,-3627,-3712,-3787,-3843,-3883,-3963,-4048,-4123,-4195,-4267,-4323,-4387,-4747,-4843,-4867,-5083,-5467,-5587,-5707,-5947,-6307,-7987};
     return CNs;
 end intrinsic;
 
@@ -164,21 +123,22 @@ function CMOrbitDenominator(X, d)
     return W_size div #(AllALsFromGens(fixers, X`D*X`N) meet X`W);
 end function;
 
-intrinsic RationalCMDiscs(X::ShimuraQuot) -> Assoc
+intrinsic RationalCMDiscs(X::ShimuraQuot : max_class_num := 0) -> Assoc
 {Discriminants of the orders whose CM points on X are rational, mapped to the
  number of such points.  Uses Shimura reciprocity through
- DegreeOfFieldOfDefinitionOfCMPoint; requires D*N squarefree.}
+ DegreeOfFieldOfDefinitionOfCMPoint; requires D*N squarefree.  max_class_num > 0
+ considers only class numbers up to that bound.}
     require IsSquarefree(X`D * X`N) : "RationalCMDiscs requires D*N squarefree";
     CNs := CMClassLists();
     cm_pts := AssociativeArray();
-    omegaDN := #PrimeFactors(X`D * X`N);
-    iterates := [2^i : i in [0..omegaDN]];
-    for n in iterates do
-        error if not IsDefined(CNs, n),
-            Sprintf("CMClassLists() missing class number %o; add CNs[%o] (omega(D*N)=%o, D=%o, N=%o)",
-                    n, n, omegaDN, X`D, X`N);
-        for a in CNs[n] do
-            disc := -a;
+    // Every class number in the table, not only the powers of two: the class
+    // group need not be a 2-group for a point on a proper subquotient.
+    hs := Sort(Setseq(Keys(CNs)));
+    if max_class_num gt 0 then
+        hs := [h : h in hs | h le max_class_num];
+    end if;
+    for h in hs do
+        for disc in CNs[h] do
             R := QuadraticOrder(BinaryQuadraticForms(disc));
             opt_emb := NumberOfOptimalEmbeddings(R, X`D, X`N);
             if opt_emb eq 0 then continue; end if;
@@ -196,21 +156,14 @@ intrinsic Degree2Points(X::ShimuraQuot : max_class_num := 0, compute_fields := t
  class numbers up to that bound.  compute_fields := false leaves the two field
  slots as false, skipping the ring class field build that dominates the cost.}
     require IsSquarefree(X`D * X`N) : "Degree2Points requires D*N squarefree";
-    CNs := CMClassListsDeg2();
+    CNs := CMClassLists();
     cm_pts := AssociativeArray();
-    omegaDN := #PrimeFactors(X`D * X`N);
-    // one power of two further than the rational scan: a degree-2 point can come
-    // from an order whose class number is twice as large.
-    iterates := [2^i : i in [0..omegaDN+1]];
+    hs := Sort(Setseq(Keys(CNs)));
     if max_class_num gt 0 then
-        iterates := [n : n in iterates | n le max_class_num];
+        hs := [h : h in hs | h le max_class_num];
     end if;
-    for n in iterates do
-        error if not IsDefined(CNs, n),
-            Sprintf("CMClassListsDeg2() missing class number %o; add CNs[%o] (omega(D*N)=%o, D=%o, N=%o)",
-                    n, n, omegaDN, X`D, X`N);
-        for a in CNs[n] do
-            disc := -a;
+    for h in hs do
+        for disc in CNs[h] do
             R := QuadraticOrder(BinaryQuadraticForms(disc));
             opt_emb := NumberOfOptimalEmbeddings(R, X`D, X`N);
             if opt_emb eq 0 then continue; end if;

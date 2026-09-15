@@ -1424,7 +1424,8 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
  Easy bases finish inside CNs[<=8] and never pay for CNs[16]; starved bases reach into it only as far
  as needed. target = 0 means no early stop (scan everything, as before).}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
-    require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
+    // Any Atkin-Lehner quotient: DegreeOfFieldOfDefinitionOfCMPoint handles an
+    // arbitrary W, so the star restriction this routine used to carry is gone.
     rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
     vprintf ShimuraQuotients, 2: "\n\tcounting elliptic points by CM order...";
@@ -1433,10 +1434,15 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     vprintf ShimuraQuotients, 2: " done (%os).", Realtime() - tt;
     for q in Keys(ell) do
         for d in Keys(ell[q]) do
-            if d in [-3,-4] then 
+            // The seeding conditions below say when an elliptic point is rational on
+            // the STAR quotient.  On a proper subquotient fewer points are identified,
+            // so the d = -3, -4 elliptic points can have degree 2 there; confirm
+            // rationality against the field of definition before seeding.
+            if DegreeOfFieldOfDefinitionOfCMPoint(X, d) ne 1 then continue; end if;
+            if d in [-3,-4] then
                 is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
                 if is_split and d notin Exclude then
-                    Append(~rat_pts, <d,q,ell[q][d]>); 
+                    Append(~rat_pts, <d,q,ell[q][d]>);
                 end if;
             else
                 if ell[q][d] eq 1 and d notin Exclude then
@@ -1482,17 +1488,15 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
         if coprime_to_level and (GCD(d, X`N) ne 1) then continue; end if;
 
-        // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
-        // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
-        // plain #flds = 1 test below then accepts the deg-2 multi-orbit discs the slow routine used to
-        // over-split.  It is also faster (no AutomorphismGroup blowup).
-        // MaxDegree := 2: this loop only keeps rational (deg 1) or quadratic (deg 2) CM points, so
-        // cap the field-of-definition work -- discriminants whose field of definition has degree > 2
-        // are discarded anyway, and the cap skips their (expensive) complex-conjugation pinning.
-        flds := FieldsOfDefinitionOfCMPointFast(X, d : MaxDegree := 2);
-        if flds eq [* Rationals() *] and d notin Exclude then
+        // Only the DEGREE of the field of definition is needed here, and
+        // DegreeOfFieldOfDefinitionOfCMPoint reads it off Pic(R) and the Atkin-Lehner
+        // combinatorics alone.  The field itself would cost a ring class field per
+        // discriminant, paid on every candidate scanned rather than only on the few
+        // that survive.  Degree 0 means X carries no CM point by this order.
+        deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
+        if deg eq 1 and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
-        elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
+        elif deg eq 2 and d notin Exclude then
             Append(~quad_pts, <d,1,2>);
         end if;
 
