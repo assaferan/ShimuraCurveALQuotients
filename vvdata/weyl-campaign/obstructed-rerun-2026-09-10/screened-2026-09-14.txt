@@ -65,3 +65,33 @@
 # there is still no model.  Relaunched 2026-09-15.
 #
 # Counts are UNCHANGED by this pass: known obstructed = 72, still a lower bound.
+#
+# --- 2026-09-15 (night): the uncapped re-run starts returning verdicts ---
+#
+# base   rungs  ladder        verdict        WeaklyHolomorphicBasis   (the old cap was 1800 s)
+6_89     3      0 0 0         clear          2090 s   -> pipeline launched
+178_3    3      1 1 1         OBSTRUCTED     2340 s
+298_1    4      3 2 1 1       OBSTRUCTED     3104 s
+#
+# ⚠ ALL THREE spent longer in WeaklyHolomorphicBasis alone than `timeout 1800` allowed.  The cap was
+# not a marginal call: 6_89 is a CLEAR base the harness threw away.  Seven re-screens still running.
+#
+# --- and the two that the find_t assert had removed from the board entirely ---
+#
+6_131    3      1 1 1         OBSTRUCTED     374 s    (M = 1572, k = 260)
+6_137    3      0 0 0         clear          456 s    (M = 1644, k = 272)  -> pipeline launched
+#
+# These two used to abort inside find_t (`assert success eq 0`), which is Magma's integer LP giving
+# up and NOT a statement about the problem -- see find-t-lp-solver-gives-up.md.  Both k values are
+# exactly the 2N-2 the witness predicted, so the production path independently reproduces the
+# closed form that was used to show the LP was feasible in the first place.
+#
+# ⚠ COST IS NOT MONOTONE IN M.  6_131 at M = 1572 spent 374 s in WeaklyHolomorphicBasis; 6_89 at
+# M = 1068 spent 2090 s.  The driver is the eta-quotient pool (#eta 521 vs 529), not the level.
+# Do NOT budget the screen by M -- the 24 remaining large-M `6_N` targets are not automatically dear.
+#
+# Running counts after this collection:
+#   screened-new obstructed = 21 (was 18): + 178_3, 298_1, 6_131.
+#   known obstructed = 75 = 49 recorded + 5 stumbled into + 21 screened.  STILL A LOWER BOUND.
+#   PLAN.md's accounting adds 6_109 (a failed run, not a screen) and so reads 76.
+#   2-dimensional obstruction spaces: unchanged at FIVE (166_3 22_19 74_7 10_67 58_13).
