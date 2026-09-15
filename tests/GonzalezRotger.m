@@ -60,32 +60,109 @@ for t in GR do
                 t[1], t[2], got, t[4]);
 end for;
 
-NCMP := 0; NMISS := 0; bad := [];
+// ⇒ EXHIBIT THE MAP, DO NOT MATCH AN INVARIANT.  Matching the Jacobian's Cremona label is
+// NECESSARY and NOT SUFFICIENT: genus-one quartics with the same Jacobian can be INEQUIVALENT
+// TORSORS of it, and the label cannot tell them apart.  That is not hypothetical here -- it is
+// exactly what this upgrade found at 6_5 and 6_13 (see KNOWN_TORSOR_DRIFT below).
+//
+// The certificate is Gonzalez-Rotger's own relation (Section 2, p.3):
+//
+//     f_GR(x) = lambda^2 * (c x + d)^4 * f_ours((a x + b)/(c x + d))
+//
+// as an identity in Q[x], with lambda RATIONAL.  Given it, (X,Y) |-> ((aX+b)/(cX+d),
+// Y/(lambda*(cX+d)^2)) is an isomorphism over Q, because Y^2 = f_GR(X) gives
+// (Y/(lambda(cX+d)^2))^2 = f_GR(X)/(lambda^2 (cX+d)^4) = f_ours((aX+b)/(cX+d)).  So we check an
+// exact polynomial identity and never call IsIsomorphic or Jacobian():
+//   * these curves have NO rational point by construction ("non-elliptic"), so Jacobian()/
+//     EllipticCurve() return ERR on both sides and print a vacuous MATCH;
+//   * IsIsomorphic on a genus-0 CrvHyp is wrong on Magma 2.29-10 (Magma#125).
+//
+// ⚠ The lambda^2 matters.  IsGL2Equivalent decides equivalence of binary quartics MODULO ANY
+// SCALAR; the curves y^2 = f are isomorphic only when that scalar is a SQUARE.  A non-square
+// constant is a different torsor, which is the whole point of this check.
+//
+// ⚠ Asymmetry, deliberate: finding a transformation with a square constant PROVES isomorphism.
+// Finding none does NOT prove non-isomorphism, since IsGL2Equivalent does not promise the full
+// orbit.  So a proof is asserted, and a failure to prove is reported, never asserted upon.
+function exhibit_iso(fo, fgr)
+    ok, Ts := IsGL2Equivalent(fo, fgr, 4);
+    if not ok then return false, _, _; end if;      // not even GL2-equivalent: no isomorphism
+    R := Parent(fgr); z := R.1;
+    for T in Ts do
+        a, b, c, d := Explode(T);
+        den := c*z + d;
+        if den eq 0 then continue; end if;
+        num := den^4 * Evaluate(fo, (a*z + b)/den);
+        if num eq 0 or not IsCoercible(Rationals(), fgr/num) then continue; end if;
+        sq, lam := IsSquare(Rationals()!(fgr/num));
+        if sq then return true, T, lam; end if;
+    end for;
+    return false, _, _;
+end function;
+
+// ⚠ TWO COMMITTED ENTRIES ARE THE WRONG TORSOR.  At 6_5 and 6_13 the W=[1] key holds TWO entries
+// that are NOT GL2-equivalent TO EACH OTHER -- genuinely different curves -- and BOTH carry the
+// Jacobian label the paper states.  Only one of each pair is Gonzalez-Rotger's curve.  The
+// invariant check could not see this, and since it only ever read entry [1], at 6_5 it was
+// certifying the entry that is NOT the published curve.
+//   6_5  : entry 1 is spurious, entry 2 is GR's curve
+//   6_13 : entry 2 is spurious, entry 1 is GR's curve
+// Recorded rather than asserted away: a NEW one must turn this test red.  These two entries
+// should be removed from the data, which is a separate change.
+KNOWN_TORSOR_DRIFT := { <6,5,1>, <6,13,2> };
+
+NCMP := 0; NMISS := 0; NPROOF := 0; bad := []; drift := [];
 for t in GR do
-    D := t[1]; N := t[2]; base := Sprintf("%o_%o", D, N);
+    D := t[1]; N := t[2]; base := Sprintf("%o_%o", D, N); fgr := t[3];
     fn := Sprintf("data/models/models_%o_%o.m", D, N);
     if not FileExists(fn) then NMISS +:= 1; continue; end if;
     models := eval (Read(fn) cat "\nreturn models;");
     key := [Integers()|1];
     if (not IsDefined(models, key)) or #models[key] eq 0 then NMISS +:= 1; continue; end if;
-    e := models[key][1];
-    if Type(e[2]) eq MonStgElt then NMISS +:= 1; continue; end if;   // CRV paired presentation
-    fo := e[2];
-    if e[3] ne 0 then fo := fo + e[3]^2/4; end if;                   // y^2+hy=f -> y^2=f+h^2/4
-    if Degree(fo) gt 4 then NMISS +:= 1; continue; end if;
-    NCMP +:= 1;
-    ours := CremonaReference(jacIJ(fo));
-    if ours ne t[4] then Append(~bad, Sprintf("%o (ours %o, GR %o)", base, ours, t[4])); end if;
+    proved_here := false;
+    for i->e in models[key] do
+        if Type(e[2]) eq MonStgElt then continue; end if;            // CRV paired presentation
+        fo := e[2];
+        if e[3] ne 0 then fo := fo + e[3]^2/4; end if;               // y^2+hy=f -> y^2=f+h^2/4
+        if Degree(fo) gt 4 then continue; end if;
+        NCMP +:= 1;
+        ours := CremonaReference(jacIJ(fo));
+        if ours ne t[4] then
+            Append(~bad, Sprintf("%o entry %o (ours %o, GR %o)", base, i, ours, t[4]));
+            continue;
+        end if;
+        p, T, lam := exhibit_iso(fo, fgr);
+        if p then
+            // certify the identity itself, not just the search's say-so
+            a, b, c, d := Explode(T);
+            assert fgr eq lam^2 * (c*x+d)^4 * Evaluate(fo, (a*x+b)/(c*x+d));
+            NPROOF +:= 1; proved_here := true;
+        elif <D,N,i> notin KNOWN_TORSOR_DRIFT then
+            Append(~drift, Sprintf("%o entry %o: Jacobian %o matches but NO Q-isomorphism to the "
+                                   * "published curve -- a different torsor", base, i, ours));
+        end if;
+    end for;
+    if (not proved_here) and (#models[key] gt 0) then
+        Append(~bad, Sprintf("%o: no entry could be proved isomorphic to the published curve", base));
+    end if;
 end for;
 
 error if not IsEmpty(bad),
-    Sprintf("Gonzalez-Rotger oracle: %o base(s) DISAGREE with the published equation: %o",
+    Sprintf("Gonzalez-Rotger oracle: %o base(s)/entr(ies) DISAGREE with the published equation: %o",
             #bad, bad);
+error if not IsEmpty(drift),
+    Sprintf("Gonzalez-Rotger oracle: %o NEW wrong-torsor entr(ies) -- same Jacobian, not the same "
+            * "curve: %o", #drift, drift);
 // ⚠ COUNT THE COMPARISONS. If models stop being found this must go red, not green-with-nothing-checked.
 error if NCMP lt 8,
     Sprintf("Gonzalez-Rotger oracle: only %o comparison(s) made, expected at least 8 "
             * "(%o base(s) had no usable W=[1] model) -- something stopped being compared",
             NCMP, NMISS);
+// ⚠ And count the PROOFS separately: a run where every base fell back to the invariant check would
+// otherwise pass silently, which is the weaker thing this section exists to stop doing.
+error if NPROOF lt 11,
+    Sprintf("Gonzalez-Rotger oracle: only %o exhibited isomorphism(s), expected at least 11 -- "
+            * "the check has degraded to matching invariants", NPROOF);
 // ---------------------------------------------------------------------------------------------
 // PART 2: the AL-QUOTIENT keys.  GR give the involutions as well as the curves (table, p.8), so
 // where the quartic is EVEN in x and the involution is (x,y) -> (-x,y), the quotient X/omega_m is
@@ -159,5 +236,6 @@ error if NQ lt 15 or NS lt 19,
     Sprintf("Gonzalez-Rotger oracle: only %o quotient and %o splitness comparison(s) "
             * "(expected >= 15 and >= 19) -- something stopped being compared", NQ, NS);
 
-printf " ok (%o genus-one curve(s) + %o AL-quotient(s) + %o splitness check(s) match the published "
-       * "equations; %o base(s) without a usable W=[1] model)\n", NCMP, NQ, NS, NMISS;
+printf " ok (%o genus-one entr(ies) checked, %o of them by an EXHIBITED isomorphism; "
+       * "+ %o AL-quotient(s) + %o splitness check(s) match the published equations; "
+       * "%o base(s) without a usable W=[1] model)\n", NCMP, NPROOF, NQ, NS, NMISS;

@@ -11,6 +11,80 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, 4th) — EXHIBIT THE MAP: TWO COMMITTED ENTRIES ARE THE WRONG TORSOR
+
+`tests/GonzalezRotger.m` compared the genus-one full curves by an INVARIANT — the Jacobian's Cremona
+label. That is necessary and not sufficient: quartics with the same Jacobian can be **inequivalent
+torsors** of it. Upgrading the check to exhibit the isomorphism found that this is not hypothetical.
+
+### THE DEFECT
+
+At **`6_5`** and **`6_13`** the `W=[1]` key holds TWO entries which are **not GL2-equivalent to each
+other** — genuinely different curves — and **both carry the Jacobian label the paper states**:
+
+    6_5   entry 1  Jacobian 30a6  NO Q-isomorphism to GR's curve     <-- spurious
+    6_5   entry 2  Jacobian 30a6  isomorphic, T = [1,8,-1,0], lambda = 1/64
+    6_13  entry 1  Jacobian 78a2  isomorphic, T = [0,1,-1/8,-3], lambda = 176
+    6_13  entry 2  Jacobian 78a2  NO Q-isomorphism to GR's curve     <-- spurious
+
+⚠ And the old check read only `models[key][1]`, so **at `6_5` it was certifying the entry that is
+NOT the published curve** — and reporting a match. Same shape as the `10_3` `[1,2]` drift: internally
+consistent, externally wrong, invisible to an invariant.
+
+⚠ **THE DATA IS NOT YET FIXED.** `data/models/models_6_5.m` and `models_6_13.m` still carry the
+spurious entry, recorded in the test as `KNOWN_TORSOR_DRIFT` so a NEW one goes red. Removing them
+touches entry counts that `ModelChecks`/`VerifyModelSet` read, so it is a separate change.
+
+### THE CERTIFICATE
+
+Gonzalez-Rotger's own relation (Section 2, p.3), checked as an exact identity in `Q[x]`:
+
+    f_GR(x) = lambda^2 * (c x + d)^4 * f_ours((a x + b)/(c x + d)),   lambda in Q
+
+Given it, `(X,Y) |-> ((aX+b)/(cX+d), Y/(lambda (cX+d)^2))` is an isomorphism over `Q`. So nothing
+calls `IsIsomorphic` or `Jacobian()` — these curves have no rational point by construction, so that
+route returns `ERR` on both sides and prints a vacuous MATCH, and `IsIsomorphic` on a genus-0
+`CrvHyp` is wrong on 2.29-10 (Magma#125).
+
+⚠ **The `lambda^2` is the whole point.** `IsGL2Equivalent` decides equivalence of binary quartics
+**modulo any scalar**; `y^2 = f` curves are isomorphic only when that scalar is a **SQUARE**. A
+non-square constant is a different torsor. All 11 bases are GL2-equivalent to GR's quartic; the
+square-class test is what separates them.
+
+⚠ **Asymmetry, deliberate.** A transformation with a square constant PROVES isomorphism. Finding
+none does NOT prove non-isomorphism — `IsGL2Equivalent` does not promise the full orbit. So proofs
+are asserted; failures to prove are reported, never asserted upon.
+
+### THE ORACLE NOW
+
+    ok (13 genus-one entr(ies) checked, 11 of them by an EXHIBITED isomorphism;
+        + 15 AL-quotient(s) + 21 splitness check(s); 0 base(s) without a usable W=[1] model)
+
+**47 -> 49 comparisons**, and 11 of them are now proofs rather than invariant matches. `NPROOF` is
+asserted separately from `NCMP`, so a run that silently degraded back to matching invariants goes
+red. Negative controls RUN:
+
+    empty KNOWN_TORSOR_DRIFT   -> RED  ("NEW wrong-torsor entr(ies)")  -- it SEES 6_5/6_13
+    perturb GR's 14_1 quartic  -> RED  (the paper's own self-check fires first)
+    cripple exhibit_iso        -> RED  ("no entry could be proved isomorphic...")
+    restored                   -> GREEN
+
+### ⚠ HOW MUCH OF THESE BASES ANY ORACLE ACTUALLY TOUCHES: 30%
+
+Measured over the 11 Gonzalez-Rotger bases:
+
+    98 populated model keys  ->  29 touched (30%)
+    149 entries              ->  49 touched (33%)
+
+Two-thirds of the model data on the bases where we HAVE an oracle is checked by internal consistency
+alone. Concentrated in the large ones: `6_13` is 15 keys / 27 entries with 3 keys touched, `10_7` 15
+keys with 2. ⚠ And **10 of the 11 have no `X0_*.m` test at all** — only `15_1` does.
+
+⚠ **Gonzalez-Rotger cannot close that gap**, so do not write `X0_D_N.m` files for it: an `X0_*` test
+is driven by hand-transcribed PUBLISHED COVER EQUATIONS (`cover_data`), and GR publish only the
+genus-one full curve and the involutions. Such files could carry `cover_data[{1}]` and nothing else,
+restating the key this section already proves. The 70% has no published source.
+
 ## Handoff — 2026-09-15 (night, later still) — A SUITE FILE THAT RAN NOTHING, AND WHAT IT HID
 
 `tests/InternalBorcherds.m` reported `Success! 0.000 s` in every suite run on record. It defines
