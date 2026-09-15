@@ -40,6 +40,22 @@ Tighter works, looser works, looser-still fails, and the failures do not track `
 solver quirk, not a property of the problem — **`success != 0` carries no mathematical
 information at all.**
 
+## The full sweep: 34 values of `M`, four bounds, every bound fails somewhere
+
+Completed 2026-09-15 (`M = 12N`, N prime in [31, 200], Magma 2.29-7). Only the failures are listed;
+every other cell returned `success 0` with `k = 2N-2`.
+
+    bound     M at which the solver gives up
+    -1000     1572  1644  1956
+    -1024     1284  1956
+    -2000     1572  1644  1788  1812  2076
+    -5000      732   948  1068  1164  1308  1356  1524  1788  1812  1956
+
+⚠ **Every bound fails somewhere**, no bound's failures predict another's, and nothing tracks `M`.
+The value the code had hard-coded for years, `-1000`, fails on **3 of 34**. The retry list must
+therefore contain bounds that are not merely "looser" — `-1024` rescues `1572`/`1644` where `-2000`
+does not, and `-2000` rescues `1284` where `-1024` does not.
+
 ## The fix
 
 `find_t` now retries over `FIND_T_BOUNDS = [-1000, -1024, -2000, -800, -5000, -20000]` and errors
