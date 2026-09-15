@@ -11,6 +11,80 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, 6th) — THE p=2 BLIND SPOT IS CLOSED, AND THERE WERE FIVE SHAPES
+
+`tests/Whittaker2.m` validated `Wpoly2` on exactly two 2-adic Jordan shapes. Production feeds it
+**five**. All five now have expected values pinned, and **the library is correct on every one**.
+
+    H0      unimodular hyperbolic        [[0,1],[1,0]]        was covered
+    H1      2-modular hyperbolic         [[0,2],[2,0]]        was covered
+    d1d1    odd type, v_2(det) = 2                            NEW
+    d1d2    odd type, v_2(det) = 3                            NEW
+    even1A  2*[[2,1],[1,2]]                                   NEW -- and I had MISSED it
+
+### ⚠ MY OWN SHAPE CENSUS WAS WRONG, AND WRONG IN THE REPO'S SIGNATURE WAY
+
+I reported four shapes. My classifier recorded only the 2-VALUATION of the off-diagonal entry after
+`pAdicDiagonalization`, so it labelled every 2x2 block "H" — conflating the two inequivalent even
+binary `Z_2` lattices. There are exactly two up to scaling: `H = [[0,1],[1,0]]` (det -1) and
+`A = [[2,1],[1,2]]` (det 3). Checked independently: `det A / det H = -3`, and `-3 = 5 mod 8` is not
+a square in `Z_2^*`, so they are NOT interchangeable — and `Wpoly2` routes them down different
+branches of Yang's formula. Correct arithmetic, wrong object, again.
+
+`even1A` is what the ODD discriminants give: `6_1` at -3/-19, `14_1` at -11, `10_1` at -3, `34_1` at
+-3/-11, `38_1` at -11/-19, `26_1` at -11/-19, `6_5` at -19, `10_3` at -3. All twelve real Grams
+return the same value row and the entry `3` appears nowhere else in the file, so it is a distinct
+branch and not a relabelling.
+
+### THE VERDICT: THE LIBRARY IS CORRECT
+
+Brute-force representation-density counting, independent of Yang's formula and of the library:
+
+    calibration on H0/H1        32/32 exact, ratio 1        (reproduce a KNOWN value first)
+    mu = 0, all five shapes     72/72 agree
+    nonzero cosets             108/108 agree
+    Magma re-derivation        786 comparisons, 0 mismatches (k=12, 1602 s)
+                               966 comparisons, 0 mismatches (k=10, 122 s) with even1A
+
+### ⚠ THE PLATEAU IS REAL AND LONG — NO REPEATS RULE, ANYWHERE
+
+Measured across 300 `mu = 0` comparisons, the last `k` at which any approximant moved was **k = 8**;
+across 666 coset comparisons, **k = 2**. `6_1`/-24 at `m = 32` reads
+
+    1 1 1 1 1 1 1 2 2 2 2 2 2 2      (k = 3 .. 16)
+
+— seven identical values before the true one. My own "two repeats" stopping rule produced NINE false
+mismatches earlier this session. The committed table was taken at a fixed **k = 14, re-confirmed at
+k = 16**, 228/228 agreeing at both.
+
+### ⚠ TWO HARNESS FACTS THAT COST TIME
+
+* **A command-line `kmax:=N` DOES NOT REACH A TEST FILE.** `run_tests.m` does `Read()` + `eval`, and
+  Magma's eval scope cannot see top-level command-line assignments — the variable is simply
+  unassigned and the default silently wins, which looks exactly like the flag being honoured, only
+  slower. It cost a 27-minute run at the wrong `k`. `tests/_offline/Whittaker2Oracle.m` therefore
+  reads `W2O_KMAX` from the ENVIRONMENT (`GetEnv`, as `Y2TWIST`/`M0PROGRESS` already do).
+* **`ElementOfNorm` is ORDER-OF-CALL dependent, not merely seed dependent.** Inserting a
+  `pAdicDiagonalization` call between iterations changed which `lambda` came back at `10_3`/-3 and
+  `6_5`/-4 — to a 2-adically equivalent lattice, but a different Gram. ⇒ **Anything that pins a
+  `lambda^perp` by re-deriving it is not reproducible.** The 25 Gram matrices are committed as
+  LITERALS, and `two_adic_shape` re-checks that each row still is the shape it claims, so a typo
+  fails before any value is compared.
+
+### Counts and controls
+
+**1067 comparisons** asserted (90 + 8 + 3 from the old parts, 300 new at `mu = 0`, 666 on cosets),
+plus a shape census asserting 10 `d1d1` / 9 `d1d2` / 6 `even1A`. Runtime `0.15 s -> 1.1 s`; no brute
+force in the committed file. Controls RUN:
+
+    perturb one expected value            -> RED  (the value assert)
+    empty the coset loop silently         -> RED  (ONLY the counter catches this)
+    corrupt a Gram so its shape changes   -> RED  (the which-object guard, before any value)
+    restore                               -> GREEN, "Done!  1067 comparisons."
+
+⚠ One weak layer, flagged in-file: for `even1A` the coset values are all 1 (Yang's `K_mu` vanishes),
+so that part of the coset sweep asserts little.
+
 ## Handoff — 2026-09-15 (night, 5th) — 20 OF 23 MULTI-ENTRY GENUS-1 KEYS HOLD DIFFERENT CURVES
 
 The `6_5`/`6_13` torsor drift is not an anomaly. It is a CLASS, and `tests/Genus1Classes.m` now
