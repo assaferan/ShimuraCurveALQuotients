@@ -93,26 +93,55 @@ function create_lhs_rhs(M)
     return lhs, rhs, n_eq, #ds;
 end function;
 
+// The lower bound below is arbitrary, and Magma's integer LP gives up on SOME (M, bound) pairs --
+// sporadically, in neither direction monotonically.  Measured 2026-09-15 on Magma 2.29-7:
+//
+//     M = 1572  bound -1000            -> success 25 (gives up)
+//     M = 1572  bound -261 -300 -500 -800 -1500 -3000  -> success 0, k = 260 in every case
+//     M =  732  bound -5000            -> success 25, while -1000 -1024 -2000 all succeed
+//
+// So a failure is NOT a proof of infeasibility, and no single bound is safe.  At M = 1572 the
+// problem is feasible with an explicit witness: the eta exponents
+// [0,1,0,-2,-3,6,0,-1,0,2,3,-6] with k = 2N-2, checked against all four constraint blocks --
+// its smallest entry is -260, so -1000 was never binding there.  The old code asserted
+// `success eq 0` and so reported "Assertion failed" for 6_131 (M=1572) and 6_137 (M=1644),
+// which reads as an obstruction and is not one.
+//
+// Retry over several bounds and fail only if every one of them gives up, saying so.  -1000 is
+// tried FIRST, so every base that worked before returns bit-for-bit what it returned before.
 function find_t(M)
+    FIND_T_BOUNDS := [-1000, -1024, -2000, -800, -5000, -20000];
     lhs, rhs, n_eq, n_ds := create_lhs_rhs(M);
     objective := Matrix(Integers(), 1, Ncols(lhs), [0 : i in [1..Ncols(lhs)-1]] cat [1]);
     // This is what we want but doesn't work because assumes all variables are nonnegative
     // MinimalIntegerSolution(lhs, rels, rhs, objective);
-    LP := LPProcess(Integers(),Ncols(lhs));
-    AddConstraints(LP,Matrix(lhs[1..n_eq]), Matrix(rhs[1..n_eq]) : Rel := "eq");
-    AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + n_ds]), Matrix(rhs[n_eq + 1..n_eq + n_ds]) : Rel := "ge");
     idx := n_eq + n_ds + 1;
     assert idx + 1 eq Nrows(lhs);
-    AddConstraints(LP,Matrix(lhs[idx..idx]), Matrix(rhs[idx..idx]) : Rel := "le");
-    AddConstraints(LP,Matrix(lhs[idx+1..idx+1]), Matrix(rhs[idx+1..idx+1]) : Rel := "ge");
-    for n in [1..Ncols(lhs)] do
-        SetLowerBound(LP,n,-1000);
+    codes := [];
+    for lb in FIND_T_BOUNDS do
+        LP := LPProcess(Integers(),Ncols(lhs));
+        AddConstraints(LP,Matrix(lhs[1..n_eq]), Matrix(rhs[1..n_eq]) : Rel := "eq");
+        AddConstraints(LP,Matrix(lhs[n_eq + 1..n_eq + n_ds]), Matrix(rhs[n_eq + 1..n_eq + n_ds]) : Rel := "ge");
+        AddConstraints(LP,Matrix(lhs[idx..idx]), Matrix(rhs[idx..idx]) : Rel := "le");
+        AddConstraints(LP,Matrix(lhs[idx+1..idx+1]), Matrix(rhs[idx+1..idx+1]) : Rel := "ge");
+        for n in [1..Ncols(lhs)] do
+            SetLowerBound(LP,n,lb);
+        end for;
+        SetObjectiveFunction(LP, objective);
+        t, success := Solution(LP);
+        Append(~codes, <lb, success>);
+        if success ne 0 then continue; end if;
+        // A bound that BINDS may have truncated the search, so the returned t need not be optimal.
+        // Every bound that has ever succeeded here left slack, so this is a guard, not a code path.
+        if Minimum(Eltseq(t)) le lb then continue; end if;
+        vprintf ShimuraQuotients, 3: "\n\t\tfind_t(M = %o): solved at lower bound %o%o", M, lb,
+            (lb eq FIND_T_BOUNDS[1]) select "" else Sprintf(" (the default gave up: %o)", codes);
+        return t, lhs, rhs, n_eq, n_ds;
     end for;
-    SetObjectiveFunction(LP, objective); 
-    t, success := Solution(LP);
-    // making sure this is a feasible problem
-    assert success eq 0;
-    return t, lhs, rhs, n_eq, n_ds;
+    error Sprintf("find_t(M = %o): Magma's integer LP gave up at every lower bound tried, "
+        * "(bound, code) = %o.  This is NOT a proof that the problem is infeasible -- the solver "
+        * "is known to give up sporadically on this family (see the note above find_t).  Add a "
+        * "bound to FIND_T_BOUNDS, or exhibit a feasible point directly.", M, codes);
 end function;
 
 // n is the order of the pole at infty,
