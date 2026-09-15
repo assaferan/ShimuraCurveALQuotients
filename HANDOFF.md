@@ -11,6 +11,96 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night) — THE COLLECTION, AND TWO BATCHES LOST TO HARNESS, NOT MATHS
+
+Collection pass over lovelace. Nothing here is a new mathematical fact; the value is that **two
+batches that read as negative results were not results at all**, and both are back in flight.
+
+### ✅ THE SUITE IS GREEN ON 2.29-10, `X0_15_1` INCLUDED
+
+`~/shimura/suiteout`: 84 logs, **75 report `Success!`, 0 failures**. `X0_15_1` passes on lovelace
+now — so the genus-0 conic-class fix (`f3d98a5`) is confirmed on the very version that exposed
+Magma#125, not just on the Mac. Supersedes "81 of 84 green, the only failure is `X0_15_1`".
+
+⚠ The tree's `HEAD` is 9 commits behind `origin/main` and does **not** contain the fix — it carries
+it as working-tree modifications. Checking `HEAD` alone would have given the wrong answer about
+which code ran; `git diff origin/main -- <the fixed files>` is the check that means something.
+
+The 9 logs without `Success!` are all accounted for and none is a failure of the library:
+
+    X0_10_23 X0_6_29 X0_6_31 X0_6_37   still running
+    run_filters                        still running (FilterByGeneralizedComplicatedFixedPoints
+                                       3103 s, FilterByTrace 2789 s -- slow, but progressing)
+    _gyinvol _gyinvol_crv              diagnostics, they print and never assert
+    _basesweep _rebaselever            ⚠ PARAMETRISED HELPERS.  They need `Dd`/`Nn` and a blanket
+                                       per-file sweep runs them without arguments, so they fail
+                                       with "Identifier 'Dd' has not been declared".  A harness
+                                       artefact of the sweep, NOT a defect -- do not chase it.
+
+### ⚠ `6_73` NEVER FAILED — it was SIGTERM'd, and it is screen-CLEAR
+
+`bk3/DRIVER.log` reads `EXIT 143 6_73`, seven minutes after its own screen finished, i.e. at the
+moment the batch was relaunched. `143` is SIGTERM: the process was killed from outside, and its log
+stops at "Computing Borcherds forms...". Its ladder is `1 0 0 0` — **clear**. **Relaunched.**
+
+### ⚠ TEN EVEN SCREENS PRODUCED NO VERDICT — a 30-minute timeout, not an obstruction
+
+`6_89 178_3 278_1 298_1 302_1 314_1 326_1 334_1 346_1 358_1` each left a **19-byte log** holding
+only its `DEFICIT BASE D N` header. The screen driver caps the run at `timeout 1800`, and the
+comparable bases that DID finish spent longer than that in `WeaklyHolomorphicBasis` alone —
+`254_1` 2091 s, `262_1` 2402 s, `274_1` 1383 s. So the cap, not the maths, is the likely cause.
+
+**All ten relaunched with no timeout** (`~/shimura/def4.sh` → `~/shimura/defic4/`). ⚠ Recall that a
+killed Magma run loses its buffer, so a truncated log is indistinguishable from "never started" —
+which is exactly how these read. **`screened-2026-09-14.txt` must not gain an entry for any of them
+until a real ladder comes back.**
+
+### ✅ A NEGATIVE CONTROL FOR THE ODD LADDER, 6 FOR 6
+
+`~/shimura/defic/ODD_*.log` ran the **even** screen's criterion (`Ncols - Rank`, swept over `P`) on
+six bases that **all build and have committed models**:
+
+    15_1  2 4 7 11 15 20      21_2  2 3 4 5 8 10      39_1  4 5 7 10 14 19
+    51_1  6 9 9 15 20         55_1  7 8 10 16 22      57_1  5 7 10 15 19
+
+Every one reads a large and **rising** deficit — 6 of 6 would be called OBSTRUCTED, and 6 of 6 are
+wrong. This is the sharpest statement yet of why odd `D` needs `wdef` and its own `m`-ladder: it is
+not that the even statistic is noisy on odd `D`, it is that the even statistic is **anti**-correlated
+with the truth there.
+
+### Jobs stopped (approved, not unilateral)
+
+* **The legacy `34_11` run** — 10 days, **131 GB RSS**, Magma 2.29-9, frozen code. `models_34_11.m`
+  was rebuilt on current code and committed in `b80c3c5`, so the job could only produce a
+  superseded answer. Killing it returned ~151 GB.
+* **The six odd screens** (`141_1 145_1 91_1 55_2 65_2 143_1`) at 13 h with no `wdef 0`. Recorded as
+  **not cleared — no verdict**, which per the `21_2` refutation is all an odd non-clear ever means.
+  Ladders as far as they got: `141_1` 7→4, `91_1` 5→2, `145_1` flat 8, `65_2` flat 3, `55_2` flat 1,
+  `143_1` printed nothing but its header in 13 h.
+* **`_gyinvol_crv`** — 10 h 49 m stuck at `26_3`, where the by-construction route declined and it
+  fell back to `IsIsomorphic` on a paired CRV presentation. That is the documented hang, not a slow
+  test; it will not finish.
+
+### ⚠ `21_4` SHOULD NEVER HAVE BEEN SCREENED — `N = 4` is not squarefree
+
+It died at `BorcherdsForms.m:55` on the squarefree-`N` assertion, the known method boundary. Drop it
+from the odd list; the filter is in `PLAN.md` step 3 and was not applied when that list was built.
+
+### Provenance check that DID come back clean
+
+`deficit.m` and `genmodels.m` live at the ROOT of every lovelace tree but are committed only under
+`vvdata/weyl-campaign/` on the campaign branch — precisely the shape that drifts silently. Hashed
+all four trees against the committed versions: `scq-current`, `scq-0914b` and `scq-suite` are
+**byte-identical** to `origin/m0-theta-campaign`. Only the old `ShimuraCurveALQuotients` tree has a
+stale `deficit.m` — and that is the tree `def.sh` points at, so **do not screen with `def.sh`**;
+`def4.sh` runs from `scq-current`.
+
+### In flight at the end of this pass
+
+    pipeline (bk3)   14_37  62_7  6_107  6_113   (~13 h 45 m)  +  6_73  (fresh)
+    screens (defic4) 6_89 178_3 278_1 298_1 302_1 314_1 326_1 334_1 346_1 358_1
+    suite            4 X0_* files and run_filters
+
 ## Handoff — 2026-09-15 (later) — MAGMA #125 FILED; `X0_15_1` EXPLAINED AND FIXED
 
 ### ⚠ A RED `X0_*` MAY BE THE MAGMA VERSION. CHECK `GetVersion()` FIRST.
