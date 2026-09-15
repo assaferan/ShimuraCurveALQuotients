@@ -72,10 +72,27 @@ Both were only visible by reproducing KNOWN values on bases that build.
 
 ### ⇒ FIRST THING NEXT SESSION: collect lovelace, then launch on what cleared
 
-`HANDOFF.md` (2026-09-15 later) has the full inventory. In short: `bk3` has 5 pipeline jobs still
-running (`14_37 6_107 6_113 62_7 6_73`, with `62_7` nearly done), `oddscr` has 7 odd screens
-(`141_1 143_1 145_1 21_4 55_2 65_2 91_1`), and `defic` has 6 even screens. Collect, verify each
-model with `VerifyModelSet` AND an individual negative control, then commit.
+`HANDOFF.md` (2026-09-15 night) has the full inventory, collected at 02:30. In flight:
+
+    pipeline (~/shimura/bk3)      14_37  62_7  6_107  6_113   (~13 h 45 m)  +  6_73  (relaunched)
+    screens  (~/shimura/defic4)   6_89 178_3 278_1 298_1 302_1 314_1 326_1 334_1 346_1 358_1
+    suite    (~/shimura/suiteout) 4 X0_* files and run_filters
+
+Collect, verify each model with `VerifyModelSet` AND an individual negative control, then commit.
+
+⚠⚠ **`defic4` is a RE-RUN of ten screens that produced no verdict**, not new bases. Their first
+attempt left 19-byte header-only logs under a `timeout 1800` cap that is shorter than the
+`WeaklyHolomorphicBasis` time of comparable bases (`254_1` 2091 s, `262_1` 2402 s). **Do not record
+a verdict for any of the ten until a real ladder comes back**, and screen with `def4.sh` (runs from
+`scq-current`, which carries the committed `deficit.m`) — NOT `def.sh`, whose tree has a stale copy
+and imposes the cap.
+
+✅ **The suite is green on 2.29-10, `X0_15_1` included** — 75 of 84 logs say `Success!`, 0 failures;
+the other 9 are 5 still running, 2 print-only diagnostics, and `_basesweep`/`_rebaselever`, which a
+blanket per-file sweep runs without their required `Dd`/`Nn` arguments.
+
+⚠ **`21_4` is out of scope** — `N = 4` is not squarefree. Apply the step-3 filters when building any
+screen list; that one was not filtered.
 
 ⚠ **A red `X0_*` test may be the Magma version, not a regression** — lovelace runs 2.29-10, the Mac
 2.29-7, and Magma#125 makes `IsIsomorphic` wrong on genus-0 degree-1 models. Check `GetVersion()`
