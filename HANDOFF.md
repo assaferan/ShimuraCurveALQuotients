@@ -11,6 +11,285 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (night, 7th) — RETRACTION: "20 OF 23 KEYS HOLD DIFFERENT CURVES" IS WRONG
+
+The section below this one (night, 5th) claims 20 of 23 multi-entry genus-1 keys hold different
+curves, and the one below that (night, 4th) calls two `GonzalezRotger.m` entries "the wrong torsor".
+**Both claims are retracted.** The arithmetic was right; the criterion was wrong.
+
+### WHAT WAS WRONG
+
+`Genus1Classes.m` asserted that entries under one key must be **GL2-equivalent** as binary quartics.
+That is not what "the same curve" means. A degree-2 map from a genus-1 curve `C` to `P^1` is a
+`Q`-rational degree-2 divisor class, and those form a torsor under `E(Q) = Pic^0(C)`. So when `E(Q)`
+is nontrivial, **one curve carries several inequivalent quartic models** — inequivalent as binary
+quartics, identical as curves.
+
+`E(Q)` is nontrivial for every Jacobian in play. Measured:
+
+    30a6 [2,2]   78a2 [2,2]   30a2 [2,6]   30a3 [2]   102b3 [2,2]   130b2 [2,2]
+    154a1 rank 1 [2]     138a1 rank 1 [2]     426b1 rank 1 [2]
+
+Not one trivial group. Two bases picking different degree-2 classes produce exactly the observed
+signature — inequivalent quartics, same Jacobian, 14 of 14. ⇒ **"14 of 14 share a Jacobian" is not a
+smoking gun, it is the EXPECTED outcome**, and the "one mechanism, not twenty mistakes" paragraph in
+the night-5th section argues for the wrong conclusion from it.
+
+Corroborating, and the check that should have been run first: the entries of all eight keys probed
+have **identical everywhere-local solubility profiles** (real place and every prime up to 47).
+
+⚠ This is the failure `CLAUDE.md` opens with — correct arithmetic about the wrong object — and it
+happened while building a test to catch that very class. The tell was available and ignored: a
+check that calls 87% of its population defective is far more likely to have the wrong criterion than
+to have found an 87% defect rate.
+
+### WHAT REPLACES IT
+
+`tests/Genus1Classes.m` now compares the **Jacobian**, which is an invariant of the curve and blind
+to the choice of degree-2 class — the honest genus-1 analogue of `ConicClasses.m`'s Brauer class:
+
+    23 multi-entry genus-1 key(s), 23 pairwise Jacobian comparison(s)
+    all 23 multi-entry key(s) agree on the Jacobian
+
+⚠ Necessary, NOT sufficient: inequivalent torsors of one `E` share a Jacobian. At genus 0 the Brauer
+class happens to be a COMPLETE invariant of a conic; at genus 1 the Jacobian is not, and that gap is
+real and unclosed. The file's header now carries the whole argument, so the GL2 criterion is not
+re-invented.
+
+Controls RUN: quadratic-twist one entry (changes its Jacobian) -> RED, naming `6_17 W=[1,2]` and
+printing both `aInvariants`; read a single model file -> RED on the count guard; restored -> GREEN.
+
+### `GonzalezRotger.m`, corrected
+
+`KNOWN_TORSOR_DRIFT` is renamed **`NO_EXHIBITED_ISO`** and no longer claims the entries are wrong.
+The asymmetry note now gives BOTH reasons a failure proves nothing — `IsGL2Equivalent` need not
+return the full orbit, and our model need not be GL2-equivalent to theirs at all. The error message
+says "could not be proved isomorphic", and is flagged in-file as a "something changed, look at it"
+guard rather than a defect claim.
+
+⚠ **Nothing should be deleted from `models_6_5.m` or `models_6_13.m`.** The night-4th section says
+those entries "should be removed from the data"; that recommendation is withdrawn.
+
+### What survives, unchanged
+
+The positive half: where an isomorphism IS exhibited it is a proof, certified as an exact identity
+in `Q[x]`, and 11 of 13 genus-one entries now carry one where previously all 11 rested on a Cremona
+label. `NPROOF` is asserted separately so a run that degrades back to matching invariants goes red.
+The oracle stands at 49 comparisons. `ConicClasses.m` is untouched and still passes.
+
+## Handoff — 2026-09-15 (night, 6th) — THE p=2 BLIND SPOT IS CLOSED, AND THERE WERE FIVE SHAPES
+
+`tests/Whittaker2.m` validated `Wpoly2` on exactly two 2-adic Jordan shapes. Production feeds it
+**five**. All five now have expected values pinned, and **the library is correct on every one**.
+
+    H0      unimodular hyperbolic        [[0,1],[1,0]]        was covered
+    H1      2-modular hyperbolic         [[0,2],[2,0]]        was covered
+    d1d1    odd type, v_2(det) = 2                            NEW
+    d1d2    odd type, v_2(det) = 3                            NEW
+    even1A  2*[[2,1],[1,2]]                                   NEW -- and I had MISSED it
+
+### ⚠ MY OWN SHAPE CENSUS WAS WRONG, AND WRONG IN THE REPO'S SIGNATURE WAY
+
+I reported four shapes. My classifier recorded only the 2-VALUATION of the off-diagonal entry after
+`pAdicDiagonalization`, so it labelled every 2x2 block "H" — conflating the two inequivalent even
+binary `Z_2` lattices. There are exactly two up to scaling: `H = [[0,1],[1,0]]` (det -1) and
+`A = [[2,1],[1,2]]` (det 3). Checked independently: `det A / det H = -3`, and `-3 = 5 mod 8` is not
+a square in `Z_2^*`, so they are NOT interchangeable — and `Wpoly2` routes them down different
+branches of Yang's formula. Correct arithmetic, wrong object, again.
+
+`even1A` is what the ODD discriminants give: `6_1` at -3/-19, `14_1` at -11, `10_1` at -3, `34_1` at
+-3/-11, `38_1` at -11/-19, `26_1` at -11/-19, `6_5` at -19, `10_3` at -3. All twelve real Grams
+return the same value row and the entry `3` appears nowhere else in the file, so it is a distinct
+branch and not a relabelling.
+
+### THE VERDICT: THE LIBRARY IS CORRECT
+
+Brute-force representation-density counting, independent of Yang's formula and of the library:
+
+    calibration on H0/H1        32/32 exact, ratio 1        (reproduce a KNOWN value first)
+    mu = 0, all five shapes     72/72 agree
+    nonzero cosets             108/108 agree
+    Magma re-derivation        786 comparisons, 0 mismatches (k=12, 1602 s)
+                               966 comparisons, 0 mismatches (k=10, 122 s) with even1A
+
+### ⚠ THE PLATEAU IS REAL AND LONG — NO REPEATS RULE, ANYWHERE
+
+Measured across 300 `mu = 0` comparisons, the last `k` at which any approximant moved was **k = 8**;
+across 666 coset comparisons, **k = 2**. `6_1`/-24 at `m = 32` reads
+
+    1 1 1 1 1 1 1 2 2 2 2 2 2 2      (k = 3 .. 16)
+
+— seven identical values before the true one. My own "two repeats" stopping rule produced NINE false
+mismatches earlier this session. The committed table was taken at a fixed **k = 14, re-confirmed at
+k = 16**, 228/228 agreeing at both.
+
+### ⚠ TWO HARNESS FACTS THAT COST TIME
+
+* **A command-line `kmax:=N` DOES NOT REACH A TEST FILE.** `run_tests.m` does `Read()` + `eval`, and
+  Magma's eval scope cannot see top-level command-line assignments — the variable is simply
+  unassigned and the default silently wins, which looks exactly like the flag being honoured, only
+  slower. It cost a 27-minute run at the wrong `k`. `tests/_offline/Whittaker2Oracle.m` therefore
+  reads `W2O_KMAX` from the ENVIRONMENT (`GetEnv`, as `Y2TWIST`/`M0PROGRESS` already do).
+* **`ElementOfNorm` is ORDER-OF-CALL dependent, not merely seed dependent.** Inserting a
+  `pAdicDiagonalization` call between iterations changed which `lambda` came back at `10_3`/-3 and
+  `6_5`/-4 — to a 2-adically equivalent lattice, but a different Gram. ⇒ **Anything that pins a
+  `lambda^perp` by re-deriving it is not reproducible.** The 25 Gram matrices are committed as
+  LITERALS, and `two_adic_shape` re-checks that each row still is the shape it claims, so a typo
+  fails before any value is compared.
+
+### Counts and controls
+
+**1067 comparisons** asserted (90 + 8 + 3 from the old parts, 300 new at `mu = 0`, 666 on cosets),
+plus a shape census asserting 10 `d1d1` / 9 `d1d2` / 6 `even1A`. Runtime `0.15 s -> 1.1 s`; no brute
+force in the committed file. Controls RUN:
+
+    perturb one expected value            -> RED  (the value assert)
+    empty the coset loop silently         -> RED  (ONLY the counter catches this)
+    corrupt a Gram so its shape changes   -> RED  (the which-object guard, before any value)
+    restore                               -> GREEN, "Done!  1067 comparisons."
+
+⚠ One weak layer, flagged in-file: for `even1A` the coset values are all 1 (Yang's `K_mu` vanishes),
+so that part of the coset sweep asserts little.
+
+## Handoff — 2026-09-15 (night, 5th) — 20 OF 23 MULTI-ENTRY GENUS-1 KEYS HOLD DIFFERENT CURVES
+
+The `6_5`/`6_13` torsor drift is not an anomaly. It is a CLASS, and `tests/Genus1Classes.m` now
+records it.
+
+### THE MEASUREMENT
+
+Entries under one `(D,N,W)` key are the same quotient `X/W` computed over DIFFERENT BASES
+(`all_eqns[k][base]`, `EquationsCovers.m`), so they must be isomorphic over `Q`. Across every model
+file:
+
+    890 populated keys ; 23 multi-entry keys of genus >= 1 (all genus 1) ; 23 pairwise comparisons
+    ->  3 proved isomorphic,  20 NOT EVEN GL2-EQUIVALENT
+
+Violating bases: `10_13 10_3 10_7 14_3 14_5 15_2 22_7 26_5 6_13 6_17 6_23 6_5 6_71`.
+The three that pass: `10_7 W=[1,7]`, `21_2 W=[1,2]`, `6_13 W=[1,6]` — so `6_13` has both, and this
+is per-KEY, not per-base.
+
+### ⚠ ONE MECHANISM, NOT TWENTY MISTAKES — THEY ALL SHARE A JACOBIAN
+
+Cross-checked against an invariant that does not use `IsGL2Equivalent` at all:
+
+    same-Jacobian pairs: 14        different-Jacobian pairs: 0
+
+Every multi-entry genus-1 key sampled holds inequivalent quartics whose Jacobians carry the SAME
+Cremona label. Inequivalent quartics with one Jacobian are **different torsors** of it. Independent
+transcription errors do not land on one `H^1` class fourteen times out of fourteen.
+
+⚠ The suspect is the `y^2` sign/scale resolution (`find_y2_signs`, the per-disc signs): a choice
+made differently per base would move the torsor while leaving the Jacobian alone. **UNTESTED.** Four
+single-cause stories have been refuted by controls in this repo already; treat it as a lead.
+
+### ⚠ THE GENUS-0 ANALOGUE PASSES — WHICH LOCALISES IT
+
+    ConicClasses.m: 236 genus-0 conic(s); 41 multi-entry key(s); all internally consistent
+
+Same data model, same generation path, same multi-base structure — and across bases the conics agree
+every time. So this is **genus-1-specific**, not a general cross-base inconsistency.
+
+### WHY NOTHING WAS DELETED
+
+Two of the twenty are arbitrated by Gonzalez-Rotger (`6_5 W=[1]` entry 1, `6_13 W=[1]` entry 2) and
+are pinned in `GonzalezRotger.m`'s `KNOWN_TORSOR_DRIFT`. **For the other eighteen there is no
+oracle**, so removing an entry would be guessing which base got it right. Recording them makes the
+class visible in CI and stops it growing; if the mechanism is found and fixed, the entries regenerate
+correctly and the data question answers itself.
+
+### THE TEST
+
+`tests/Genus1Classes.m`, 0.14 s. Two entries are the same curve over `Q` iff there is a GL2(Q) map
+`[a,b,c,d]` and a RATIONAL `lambda` with `f_2(x) = lambda^2 (cx+d)^(2g+2) f_1((ax+b)/(cx+d))`, and
+the identity is certified in `Q[x]`.
+
+⚠ The `lambda^2` is the mechanism, not decoration: `IsGL2Equivalent` decides equivalence MODULO ANY
+SCALAR, and `y^2 = f` curves are isomorphic only when that scalar is a SQUARE.
+⚠ Asymmetry, deliberate: a square constant PROVES isomorphism; finding none proves nothing, since
+`IsGL2Equivalent` does not promise the full orbit. Hence a recorded list, not an assertion that these
+curves differ.
+⚠ It errors when a RECORDED violation starts passing. That firing is GOOD NEWS — it is what fixing
+the mechanism looks like — and it forces the record to stay accurate instead of going stale.
+
+Negative controls RUN: drop one violation from the record -> RED ("NEW key(s)"); record a violation
+for a key that passes -> RED ("now PASS"); read one model file -> RED (count guard, "only 0
+multi-entry key(s)"); restored -> GREEN.
+
+## Handoff — 2026-09-15 (night, 4th) — EXHIBIT THE MAP: TWO COMMITTED ENTRIES ARE THE WRONG TORSOR
+
+`tests/GonzalezRotger.m` compared the genus-one full curves by an INVARIANT — the Jacobian's Cremona
+label. That is necessary and not sufficient: quartics with the same Jacobian can be **inequivalent
+torsors** of it. Upgrading the check to exhibit the isomorphism found that this is not hypothetical.
+
+### THE DEFECT
+
+At **`6_5`** and **`6_13`** the `W=[1]` key holds TWO entries which are **not GL2-equivalent to each
+other** — genuinely different curves — and **both carry the Jacobian label the paper states**:
+
+    6_5   entry 1  Jacobian 30a6  NO Q-isomorphism to GR's curve     <-- spurious
+    6_5   entry 2  Jacobian 30a6  isomorphic, T = [1,8,-1,0], lambda = 1/64
+    6_13  entry 1  Jacobian 78a2  isomorphic, T = [0,1,-1/8,-3], lambda = 176
+    6_13  entry 2  Jacobian 78a2  NO Q-isomorphism to GR's curve     <-- spurious
+
+⚠ And the old check read only `models[key][1]`, so **at `6_5` it was certifying the entry that is
+NOT the published curve** — and reporting a match. Same shape as the `10_3` `[1,2]` drift: internally
+consistent, externally wrong, invisible to an invariant.
+
+⚠ **THE DATA IS NOT YET FIXED.** `data/models/models_6_5.m` and `models_6_13.m` still carry the
+spurious entry, recorded in the test as `KNOWN_TORSOR_DRIFT` so a NEW one goes red. Removing them
+touches entry counts that `ModelChecks`/`VerifyModelSet` read, so it is a separate change.
+
+### THE CERTIFICATE
+
+Gonzalez-Rotger's own relation (Section 2, p.3), checked as an exact identity in `Q[x]`:
+
+    f_GR(x) = lambda^2 * (c x + d)^4 * f_ours((a x + b)/(c x + d)),   lambda in Q
+
+Given it, `(X,Y) |-> ((aX+b)/(cX+d), Y/(lambda (cX+d)^2))` is an isomorphism over `Q`. So nothing
+calls `IsIsomorphic` or `Jacobian()` — these curves have no rational point by construction, so that
+route returns `ERR` on both sides and prints a vacuous MATCH, and `IsIsomorphic` on a genus-0
+`CrvHyp` is wrong on 2.29-10 (Magma#125).
+
+⚠ **The `lambda^2` is the whole point.** `IsGL2Equivalent` decides equivalence of binary quartics
+**modulo any scalar**; `y^2 = f` curves are isomorphic only when that scalar is a **SQUARE**. A
+non-square constant is a different torsor. All 11 bases are GL2-equivalent to GR's quartic; the
+square-class test is what separates them.
+
+⚠ **Asymmetry, deliberate.** A transformation with a square constant PROVES isomorphism. Finding
+none does NOT prove non-isomorphism — `IsGL2Equivalent` does not promise the full orbit. So proofs
+are asserted; failures to prove are reported, never asserted upon.
+
+### THE ORACLE NOW
+
+    ok (13 genus-one entr(ies) checked, 11 of them by an EXHIBITED isomorphism;
+        + 15 AL-quotient(s) + 21 splitness check(s); 0 base(s) without a usable W=[1] model)
+
+**47 -> 49 comparisons**, and 11 of them are now proofs rather than invariant matches. `NPROOF` is
+asserted separately from `NCMP`, so a run that silently degraded back to matching invariants goes
+red. Negative controls RUN:
+
+    empty KNOWN_TORSOR_DRIFT   -> RED  ("NEW wrong-torsor entr(ies)")  -- it SEES 6_5/6_13
+    perturb GR's 14_1 quartic  -> RED  (the paper's own self-check fires first)
+    cripple exhibit_iso        -> RED  ("no entry could be proved isomorphic...")
+    restored                   -> GREEN
+
+### ⚠ HOW MUCH OF THESE BASES ANY ORACLE ACTUALLY TOUCHES: 30%
+
+Measured over the 11 Gonzalez-Rotger bases:
+
+    98 populated model keys  ->  29 touched (30%)
+    149 entries              ->  49 touched (33%)
+
+Two-thirds of the model data on the bases where we HAVE an oracle is checked by internal consistency
+alone. Concentrated in the large ones: `6_13` is 15 keys / 27 entries with 3 keys touched, `10_7` 15
+keys with 2. ⚠ And **10 of the 11 have no `X0_*.m` test at all** — only `15_1` does.
+
+⚠ **Gonzalez-Rotger cannot close that gap**, so do not write `X0_D_N.m` files for it: an `X0_*` test
+is driven by hand-transcribed PUBLISHED COVER EQUATIONS (`cover_data`), and GR publish only the
+genus-one full curve and the involutions. Such files could carry `cover_data[{1}]` and nothing else,
+restating the key this section already proves. The 70% has no published source.
+
 ## Handoff — 2026-09-15 (night, later still) — A SUITE FILE THAT RAN NOTHING, AND WHAT IT HID
 
 `tests/InternalBorcherds.m` reported `Success! 0.000 s` in every suite run on record. It defines
