@@ -70,6 +70,17 @@ because rows were missing. They are missing, but adding them is not enough — t
 was wrong (`Ncols - Rank` is sufficient, not necessary) and the sweep axis was wrong (`P`, not `m`).
 Both were only visible by reproducing KNOWN values on bases that build.
 
+### ⇒ FIRST THING NEXT SESSION: collect lovelace, then launch on what cleared
+
+`HANDOFF.md` (2026-09-15 later) has the full inventory. In short: `bk3` has 5 pipeline jobs still
+running (`14_37 6_107 6_113 62_7 6_73`, with `62_7` nearly done), `oddscr` has 7 odd screens
+(`141_1 143_1 145_1 21_4 55_2 65_2 91_1`), and `defic` has 6 even screens. Collect, verify each
+model with `VerifyModelSet` AND an individual negative control, then commit.
+
+⚠ **A red `X0_*` test may be the Magma version, not a regression** — lovelace runs 2.29-10, the Mac
+2.29-7, and Magma#125 makes `IsIsomorphic` wrong on genus-0 degree-1 models. Check `GetVersion()`
+before investigating. (The one known case, `X0_15_1`, is fixed in-repo.)
+
 ### Next on this line
 
 * ✅ **The `wdef` re-read of the screened verdicts came back CLEAN** — `10_71 22_31 38_13 6_101` all
