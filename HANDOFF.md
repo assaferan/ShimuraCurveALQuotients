@@ -11,6 +11,66 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-15 (later) — MAGMA #125 FILED; `X0_15_1` EXPLAINED AND FIXED
+
+### ⚠ A RED `X0_*` MAY BE THE MAGMA VERSION. CHECK `GetVersion()` FIRST.
+
+`tests/X0_15_1.m` was red on lovelace and green on the Mac with a **byte-identical model**. Cause
+found and filed: **[Magma-Maths/Magma#125](https://github.com/Magma-Maths/Magma/issues/125)**.
+
+For a genus-0 `CrvHyp` given by a **degree-1** model, `IsIsomorphic` returns `false` when the leading
+coefficients differ by a NON-SQUARE. Witness, verified verbatim on both versions:
+
+    C1 := HyperellipticCurve(x);
+    C2, phi := Transformation(C1, [2,0,0,1], 1, P!0);   //  y^2 = 1/2*x
+    IsIsomorphism(phi);      // true   on BOTH
+    IsIsomorphic(C1, C2);    // V2.29-7 true,  V2.29-10 FALSE
+
+Magma CONSTRUCTS the isomorphism, certifies it, then denies one exists. `true` is correct: the
+handbook defines the notion as "a matrix T and a scalar e ... that induce `y^2 = f1 |-> y^2 = f2`",
+and `T = diag(a,1)` with scalar `e` sends `y^2 = x` to `y^2 = (a/e^2)x`, covering all of `Q^*`.
+Nothing in the docs excludes genus 0 from `CrvHyp` (`HyperellipticCurve(f,h)` promises "the
+nonsingular hyperelliptic curve", and `HyperellipticCurve(C::CrvCon)` converts a conic by design) --
+that was the main way this could have turned out NOT to be a bug, so it was checked before filing.
+Scope, measured: **degree 1 only**; degree 2 (conic class) and degree 3 (genus-1 twist) agree across
+versions. Machines: **lovelace runs 2.29-10, the Mac 2.29-7.**
+
+**FIXED IN-REPO** by never asking `IsIsomorphic` about a genus-0 pair: `tests/BorcherdsProducts.m`
+decides those by CONIC CLASS -- `RamifiedPrimes` of the quaternion algebra, the same invariant
+`tests/ConicClasses.m` uses; a degree-<=1 model is split, so mixed degrees compare correctly. A
+genus-0 cover carrying `ws_data` now ERRORS rather than silently skipping, since that branch
+exhibits no map to conjugate involutions by.
+
+⚠ Two dead ends worth not repeating: the first guess, "isomorphic as curves but not as hyperelliptic
+curves", is WRONG here -- these are isomorphic in BOTH senses. And on the genus-1 key of the same
+test, where that distinction WOULD have bitten, matching `(I,J)` invariants does not settle it
+(necessary, not sufficient -- quartics with the same Jacobian can be inequivalent torsors); the
+honest check is to exhibit the map, which is `x -> 9x, y -> 108y`, exactly the `scales` the test
+file already records.
+
+### WHAT IS STILL RUNNING ON LOVELACE — collect these first
+
+Trees: `scq-current` (legacy jobs), `scq-0914b` (odd screens), `scq-suite` (tests; HAS the
+`ScaleForSchofer` fix and the genus-0 test fix). ⚠ Never `git pull` a tree with jobs running from it.
+
+* **`bk3` pipeline** — `34_11` and `74_5` DONE and committed; `134_3` died on CM supply; `6_109`
+  FAILED (obstructed, see the false-clear section). Still running: `14_37 6_107 6_113 62_7 6_73`,
+  with `62_7` already at "Computing equations of covers".
+* **`oddscr` odd screens** — `33_1` clear, `69_1` clear (both BUILT since), `33_2` "obstructed"
+  (= NOT CLEARED, nothing more). Still running: `141_1 143_1 145_1 21_4 55_2 65_2 91_1`.
+* **`defic` even screens** — 6 still running; ladders go in
+  `obstructed-rerun-2026-09-10/screened-2026-09-14.txt` on the campaign branch.
+* **`suiteout`** — the parallel test run. ⚠ `onetest.sh` hardcodes that output directory, so a
+  second sweep OVERWRITES the first; the `X0_*` re-run after the genus-0 fix landed there.
+
+### Scoreboard for this stretch
+
+    new models      21_1  33_1  69_1  34_11  74_5      (33_1 and 21_1 match published equations)
+    oracle          Gonzalez-Rotger 43 -> 47 comparisons, 0 bases without a usable W=[1] model
+    new coverage    the second hauptmodul row, 251 assertions, previously unchecked
+    obstructed      73 known, a LOWER BOUND
+    upstream        Magma#125 filed
+
 ## Handoff — 2026-09-15 — THE SCALE FIX CORRUPTED NOTHING, AND TWO MORE MODELS LANDED
 
 ### ✅ AUDIT CLOSED: no committed model was corrupted by the `ScaleForSchofer` bug

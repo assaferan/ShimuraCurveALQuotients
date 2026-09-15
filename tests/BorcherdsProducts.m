@@ -1,4 +1,30 @@
 import "_crviso.m" : construct_crv_isomorphism;
+
+// ⚠ MAGMA 2.29-10 REGRESSION on genus-0 hyperelliptic curves given by a DEGREE-1 model.
+// Measured 2026-09-15 on 2.29-7 vs 2.29-10, which is what made tests/X0_15_1.m red on lovelace and
+// green on the Mac with a BYTE-IDENTICAL model:
+//
+//     IsIsomorphic(y^2 = x, y^2 = lam*x)     2.29-7 true always      2.29-10 true iff lam is a SQUARE
+//
+// The truth is "always": homogenised, y^2 = lam*x*z carries the rational point (1:0:0), so both are
+// P^1 -- and (X,Y) -> (lam*X, Y) is an explicit isomorphism respecting the degree-2 map, so they are
+// isomorphic AS HYPERELLIPTIC CURVES too, not merely as curves.  The newer version looks to be
+// applying the EVEN-degree rule, where the leading coefficient's square class genuinely is an
+// invariant because x-scaling cannot absorb it.  Degree 2 (both versions correct, conic class) and
+// degree 3 (genus 1, a real twist) are unaffected -- measured.
+//
+// So do not ask IsIsomorphic about a genus-0 pair.  Two smooth conics over Q are isomorphic iff they
+// have the same class in Br(Q)[2], which is what tests/ConicClasses.m already computes; a model of
+// degree <= 1 is split, i.e. the empty class, so mixed degrees compare correctly.
+function genus0_conic_class(C)
+    f, h := HyperellipticPolynomials(C);
+    g := f + h^2/4;                       // an entry may be y^2 + h y = f
+    if Degree(g) le 1 then return []; end if;          // y^2 = linear: split, it is P^1
+    a := Coefficient(g, 2);
+    disc := Coefficient(g, 1)^2 - 4*a*Coefficient(g, 0);
+    if a eq 0 or disc eq 0 then return []; end if;     // degenerate, not a smooth conic
+    return Sort(RamifiedPrimes(QuaternionAlgebra<Rationals() | a, disc>));
+end function;
 import "_modelfile.m" : ReadModelSet;
 
 procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves : algebra_map := false, base_label := 0, manual_isomorphism := false, model_covers := true, model_drift_ok := false)
@@ -28,6 +54,10 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
         for base in Keys(covers[label]) do
             C := covers[label][base];
             n_curve_cmp +:= 1;
+            // Reset PER COMPARISON.  `assigned` would stay true for every later key once the
+            // genus-0 branch had run once, so a later genus>0 cover with ws_data would error
+            // spuriously.
+            phi_set := true;
             if manual_isomorphism then
                 if algebra_map then
                     phi := scales;
@@ -48,12 +78,23 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                 // squares, then let IsIsomorphism certify the result. Still a PROOF -- an
                 // explicit map is exhibited and checked -- and it runs in hundredths of a second.
                 is_isom, phi := construct_crv_isomorphism(C, C_ex);
+            elif Genus(C) eq 0 and Genus(C_ex) eq 0 then
+                // Conic class, not IsIsomorphic -- see the note at the top of this file.
+                is_isom := genus0_conic_class(C) eq genus0_conic_class(C_ex);
+                phi_set := false;                      // no map exhibited by this branch
             else
                 is_isom, phi := IsIsomorphic(C, C_ex);
             end if;
             assert is_isom;
             ws_def, ws_ex := IsDefined(ws_data, X`W);
             if not ws_def then continue; end if;
+            // The genus-0 branch above decides by class and produces no map, so an involution check
+            // there would read an unassigned phi.  Fail loudly rather than skip silently -- a
+            // silently skipped assertion is the failure mode this file's own header warns about.
+            error if (not phi_set) and (not manual_isomorphism),
+                Sprintf("X0^%o(%o) W=%o: ws_data given for a GENUS-0 cover, but the genus-0 branch "
+                        * "decides by conic class and exhibits no isomorphism to conjugate by. "
+                        * "Supply the map via manual_isomorphism.", D, N, Sort([w : w in X`W]));
 
             // WHICH isomorphism, not just whether one exists.
             // phi is reused below to conjugate the Atkin-Lehner involutions, and IsIsomorphic
