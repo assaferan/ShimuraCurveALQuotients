@@ -19,10 +19,14 @@ Px<x> := PolynomialRing(Rationals());
 D := StringToInteger(D_s); N := StringToInteger(N_s);
 outdir := "data/models";
 if assigned OUTDIR then outdir := OUTDIR; end if;
-// Skip known-deferred vx bases (memory vx-laurent-n0-circular): huge Zero-side space then
-// crash on the AbsEltseq "vx ge 0" assert. Fail fast.
-vx_skip := {<95,1>, <115,1>, <123,1>, <129,1>};
-if <D,N> in vx_skip then WriteStderr(Sprintf("SKIP vx base %o_%o\n", D, N)); quit; end if;
+// ⚠ THE vx_skip GUARD IS GONE (2026-09-15).  It fenced off <95,1> <115,1> <123,1> <129,1> because
+// of the vx defect -- huge Zero-side space, then a crash on the AbsEltseq "vx ge 0" assert.  That
+// defect was ROOT-CAUSED AND FIXED on 2026-09-05 in d9b52d0 ("shift the oo-side basis by its own
+// valuation, not the 0-side n0"), the same fix that unblocked 93_1.  PLAN.md gated removal on a
+// 115_1/123_1 retest that never finished, so a guard whose justification had been gone for ten days
+// was still `quit`ing on four bases -- one of them, 95_1, a Guo-Yang target with a PUBLISHED
+// equation and therefore an oracle.  The failure mode if the fix were somehow incomplete is a
+// wasted run, not a wrong answer: the assert it guarded against is still there and still fires.
 curves := GetHyperellipticCandidates();
 Xstar := rep{X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
 t0 := Realtime();
