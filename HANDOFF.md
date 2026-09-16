@@ -11,6 +11,82 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-16 (evening) — THE EVEN-CORRECTION HATCH EXISTS EVERYWHERE SURVEYED, AND IT HAS AN UNGUARDED HAZARD
+
+Full account, with every measurement and control:
+`vvdata/weyl-campaign/even-correction/HATCH-EXISTS.md` (campaign, `7b60f15`/`69d77cb`/`64f7e73`).
+Probe code: `vvdata/weyl-campaign/even-correction/probe-mod2.patch`.
+
+### ✅ Three more models collected
+
+    14_37   7 of 14 keys    ModelChecks 12036/0   neg ctl 62/5    9bb63ec
+    6_73    8 of 15 keys    ModelChecks 12162/0   neg ctl 62/5    88634f9   (recovered: the
+    6_107   8 of 15 keys                          neg ctl 62/6              SIGTERM'd 09-14 run)
+
+None is a Guo-Yang base, so all three are at `10_61` evidence level -- no external oracle.
+⚠ The five Guo-Yang re-runs (`95_1 119_1 159_1` at ~27 h, `115_1 123_1` at ~7 h) are ALL still in
+`BorcherdsForms`. Their logs are 28 bytes and Magma buffers, so **CPU-vs-elapsed is the only
+progress signal** -- all five read 99.6%, i.e. healthy, not stuck.
+
+### ✅ The hatch's EXISTENCE question is settled, and it is not what the record assumed
+
+`PROBE_MOD2` decides "does ANY even correction exist" by lattice membership -- `target in L + 2Z^nds`
+-- in ~20 s per base. `PROBE_INTSWEEP` could never answer it: it tests ONE discriminant at a time
+against a guessed amount list, and at an obstructed base the charge equation `a*phi_j = -phi(target)`
+PINS the amount per discriminant, so the corrections that exist need TWO OR MORE discriminants and
+were never searched for. Result: **TRUE at all 28 bases with annihilator data**, restricted to
+genuine discriminant coordinates. ⇒ conditions 1+2+3 are jointly satisfiable everywhere surveyed;
+**condition 3 is not a filter on existence.** The test is strictly stronger than the known parity
+criterion at **16 of 28** bases (scaling-free unit-perturbation control), so this is real
+information, not a restatement of the 28/28 parity survey.
+
+⚠ **The `QUADCONSTRAINTS.md` cost verdict does not transfer to obstructed bases.** Its 24 (at
+`34_3`) and 48 (at `35_1`) are measured at UNOBSTRUCTED controls, where `phi = 0` makes every amount
+legal and integrality picks the expensive discriminants. At an obstructed base the charge equation
+sets the price instead.
+
+### ⚠⚠ THE HAZARD: the target coordinate is NOT the divisor coefficient
+
+    generic disc             factor 1    target +2 -> divisor +2
+    AL fixed-point disc      factor 2    target +2 -> divisor +1   (|d| = m or 4m, m | D*N)
+    d = -3, -4               factor 4+   target +4 -> divisor +1   (compounds with the above)
+
+An ODD divisor change breaks condition 1 -- the cover is not preserved and the "model" is a
+DIFFERENT CURVE, undetectable at an obstructed base where there is no oracle. **The existing probe
+printed `DIVISOR MISMATCH` and CONTINUED**, so this was latent in the machinery. ⚠ The recorded
+`34_3` results are unaffected (disc -164 is generic; re-confirmed this session), but `PROBE_EVEN`'s
+"prefer the LARGEST |disc|" heuristic does nothing to avoid the dangerous ones.
+⇒ The check now computes the ACTUAL change (`div_f - ram`) and ERRORS unless every entry is an even
+integer. **Keep the guard even if the rule looks complete** -- the first rule covered the factor-2
+case and still let disc 4 through; the guard, not the rule, caught it.
+
+### Corrections to claims made earlier the same day
+
+* **"cost 10 at `38_5`" -- WRONG, it is 18.** Every cost-10 witness used disc 19 or 20 at amount 2,
+  i.e. the factor-2 discriminants. Demand is `2g+23`, not `2g+15`.
+* **"22 of 28 bases have 2-torsion" -- WRONG**, a scaling artifact (elementary divisors of `dM*A`).
+* **"the lattice test is just the parity criterion" -- WRONG**, generalised from `38_5`, which is one
+  of the 12 bases where they happen to coincide.
+* **A two-amount elimination** `(y2_a)^2/y2_b` removes the degree cost EXACTLY at `34_3` (7/7 keys,
+  23 independent checks, negative-controlled) and is **PROVABLY IMPOSSIBLE** at an obstructed base:
+  legal perturbations all carry the same nonzero charge, so no two are proportional and the residue
+  never cancels. Do not re-attempt it.
+
+### In flight at the end of this session
+
+* `38_5` auto-hatch pipeline run (per-key corrections, cost 18, all divisor changes verified even).
+  First run to get past `BorcherdsForms` at an obstructed base -- it is what will finally measure
+  `#rat` and condition 4 there, neither of which has ever been observed at an obstructed base.
+* `34_3` **quadratic-CM-point validation**: fit at the TRUE perturbed degree (`DEGBUMP=24`) so the
+  rational points UNDER-determine `f` instead of contradicting it, then let the existing quadratic
+  machinery cut `P(B)` down. The rational supply is capped (10 at `34_3` however many are asked for)
+  while the extra points all arrive QUADRATIC, so quadratic points are the only supply that grows.
+  ⚠ `require not IsEmpty(B)` in `QuadraticConstraintsOnEquations` means quadratic constraints are
+  reachable only AFTER the rational fit succeeds -- i.e. exactly when they are not needed. That gate
+  is the hatch's real blocker, not the CM supply.
+* `358_1` pole-ladder extension: alive, 99.6% CPU, **32 GB RSS**, ~7 h inside
+  `WeaklyHolomorphicBasis`. ⚠ lovelace runs `earlyoom` with `--prefer ...|magma`.
+
 ## Handoff — 2026-09-16 (later still) — COLLECTION: `14_37` LANDS, `14_71` RESOLVES, NOTHING ELSE IS DONE YET
 
 Picked the backlog-collection track back up. lovelace load 107/256 (shared, other users' jobs
