@@ -55,6 +55,31 @@ lack the runner's naming convention). Left alone — harmless, not blocking anyt
 `CLAUDE.md` scratch scripts belong on the campaign branch under `vvdata/weyl-campaign/`, not here;
 worth moving or deleting next time this file is touched.
 
+## Handoff — 2026-09-16 (later still, second) — THE KRY CHAPTER 7 LEAD IS CHASED, AND RETIRED
+
+Fetched the KRY book (PDF), `pdftotext -layout`'d it, and read Chapter 7 — §7.1 (statement of
+Theorem C, the height-pairing/Fourier-coefficient identity, and Theorem 7.1.1) and §7.6
+(the explicit local formula `ν̃_p(T)` at ramified primes, Props 7.6.2–7.6.4) in full; the rest of
+the chapter only by section-header structure. Re-read `vvdata/weyl-campaign/deficit.m` alongside it
+to pin down exactly what the target computation is.
+
+**Verdict: retired as a deficit predictor.** Theorem C's height pairing is an Arakelov-theoretic
+real number on the *integral model*, tied by the book's own Ch. 9 to central derivatives of
+`L`-functions — the Gross–Zagier analogue for Shimura curves. `deficit.m`'s number is a plain
+finite-dimensional linear-algebra rank over q-expansion coefficients, with no scheme, height, or
+archimedean data anywhere in it. The §7.6 local formula, despite having the right "local density at
+a ramified prime" flavor (same family as this project's own `κ_p`/`SchoferFormula.m`), computes an
+intersection multiplicity for ONE fixed pair `(t1,t2)`, never a rank over a basis against a target
+SET — that question doesn't appear in Ch. 7 at all. If anything this REINFORCES the earlier
+`S_{3/2}`-dimension finding rather than circumventing it: the closest global quantity KRY computes
+is exactly the "hard", central-L-value-flavored kind the deficit rank was already diagnosed as.
+Full argument and the exact citations: `vvdata/weyl-campaign/kry-ch7-notes.md` (campaign, `dba02a3`,
+pushed). `PLAN.md`'s "⚠ THE KRY LEAD" section has the recorded verdict.
+
+⇒ **The theory-arc parallel track is now exhausted of concrete leads.** Nothing currently on record
+suggests a closed-form deficit predictor exists; the model backlog (collection track) remains the
+only track producing results. Not pursued further this session — reverting to backlog collection.
+
 ## Handoff — 2026-09-16 (later) — THE `S_{3/2}` DIMENSION IS COMPUTABLE, AND IT ANSWERS THE WRONG QUESTION
 
 `paper/DRAFT-borcherds-obstruction.md` §5 asked for `dim S_{3/2}(ρ_L^*)` in closed form as a

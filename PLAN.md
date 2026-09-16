@@ -81,56 +81,56 @@ NOT `≤ dim S_{3/2}`). Two closed-form routes were tried and both are now settl
 Full write-up of both: `paper/DRAFT-borcherds-obstruction.md` §5 (a-d). `HANDOFF.md` (2026-09-16,
 "THE `S_{3/2}` DIMENSION IS COMPUTABLE...") has the session narrative.
 
-### The live lead: Kudla–Rapoport–Yang, Chapter 7
+### ⚠ THE KRY LEAD: CHASED, AND IT LOOKS LIKE A DEAD END — 2026-09-16
 
-`T` is built from CM points, which (Deuring/Čerednik–Drinfeld) reduce to **supersingular** points at
-the ramified primes `p | D` — so the pairing isn't a generic, structureless Fourier-coefficient
-question; it has known local structure. The reference that computes exactly this kind of pairing is:
+**Fetched and read Chapter 7 (§7.1 in full, §7.6 in full; §7.2–7.5/7.7–7.11 only by section-header
+structure, NOT read line by line — so this is a strong lead, not an exhaustive survey).**
+`vvdata/weyl-campaign/kry-ch7-notes.md` (this commit) has the two sections in full with the exact
+citations. Bottom line: **Chapter 7 answers a different question from `deficit.m`, in a way that
+looks structural, not incidental.**
 
-    S. S. Kudla, M. Rapoport, T. Yang, "Modular Forms and Special Cycles on Shimura Curves"
-    (Annals of Math. Studies 161, Princeton, 2006).
-    PDF: https://www.math.uni-bonn.de/people/rapoport/myalggeom/preprints/kry.pdf
+* **What Theorem C actually computes**: the ARITHMETIC HEIGHT PAIRING `⟨Ẑ(t1,v1), Ẑ(t2,v2)⟩` in the
+  arithmetic Chow group of the INTEGRAL MODEL `M` over `Z` — a real-number Arakelov invariant built
+  from intersection multiplicities on the special fiber (formal/Drinfeld-space geometry, quasi-
+  canonical liftings) PLUS an archimedean Green-function term. Theorem C identifies its generating
+  function with the Fourier coefficients of a genus-2 SIEGEL modular form `φ̂2`, itself an arithmetic
+  theta lift (Ch. 4/6). The book's own Ch. 9, "Central derivatives of L-functions", is what that
+  generating function computes in the end — this is the Shimura-curve analogue of Gross–Zagier.
+* **What `deficit.m` actually computes** (confirmed by re-reading the file, `vvdata/weyl-campaign/
+  deficit.m`): `Ncols(mat) - Rank(ech_basis * mat)`, a **purely classical, finite-dimensional linear-
+  algebra rank** of a matrix pairing q-expansion coefficients of a weakly-holomorphic basis against a
+  fixed set of target discriminants (`coeffs_to_divisor_matrix`). No scheme, no integral model, no
+  Green functions, no archimedean data, no heights of any kind.
+* **The local formula that DOES exist** (`§7.6`, Props 7.6.2–7.6.4: `ν̃_p(T)` at ramified `p`, built
+  from `p^k`, `χ_d(p)`, `ordp(d/4)`) is real and does have the local-density flavor this project's
+  own `κ_p`/`SchoferFormula.m` machinery already uses — but it computes an intersection MULTIPLICITY
+  for a FIXED pair `(t1,t2)`, always a well-defined number. It says nothing about whether a rank
+  degenerates across a whole basis of `S_{3/2}(ρ_L^*)`, because that basis-level question never
+  appears in Ch. 7 at all — `T`'s role there is a single quadratic-form index, not a target set.
 
-**Chapter 7, "An inner product formula"** (~p.205–264 in the book) computes `⟨Z(t₁), Z(t₂)⟩`-type
-pairings between special-cycle (CM-divisor) classes as a product of *local densities* at each prime
-— this is the tool that would tell us whether `T`'s image in `S_{3/2}(ρ_L^*)^*` is degenerate, i.e.
-the actual rank computation `deficit.m` needs, done by the people who built this exact machinery for
-this exact geometric setting (Shimura curves, not just classical modular curves).
+⇒ **Read this as reinforcing, not circumventing, the earlier finding.** The 2026-09-16 (later)
+session already concluded `deficit.m`'s rank is a Waldspurger-type "do these specific Fourier
+coefficients vanish" question — "hard" arithmetic, not amenable to a Riemann–Roch/trace-formula
+closed form. KRY's own book ties the structurally closest global quantity (the height pairing) to
+CENTRAL DERIVATIVES OF L-FUNCTIONS (Ch. 9) — exactly the kind of object that is hard for the same
+reason, not a local formula that would sidestep it. **No closed-form deficit predictor is expected
+to exist along this route either.**
 
-⚠ Two things confirmed already, worth not re-deriving:
+⚠ Two things confirmed while reading, worth not re-deriving if this is ever revisited anyway:
 * Their Introduction (p.5, Prop 1.0.1) identifies the *degree*-generating series (summed over all
   cosets) with an **Eisenstein series**, not a cusp form — consistent with this project's own
   "in our dimension the obstruction is cuspidal" (Borcherds Example 5.4, §3 of the paper draft).
-  The Eisenstein/degree part is NOT what we want; we want the genuinely cuspidal, per-coset part.
-* `B^(p)`, their definite companion algebra for a prime `p | D(B)`, is `D(B)` with `p`'s
-  ramification moved to infinity — i.e. NOT the same construction as this repo's own
-  `SupersingularALData` (`special_fiber_modular.m`), which uses `BrandtModule(D*p)` for an
-  *auxiliary* reduction prime `p ∤ D`. Different prime regime, same Deuring-correspondence idea —
-  do not reuse `SupersingularALData` directly; it answers a different question (mod-`p` reduction
-  at a level prime) than the one here (structure at the *ramified* primes of `D`).
+* `B^(p)`, their definite companion algebra for a prime `p | D(B)` in the local formula, is NOT the
+  same construction as this repo's own `SupersingularALData` (`special_fiber_modular.m`, which uses
+  `BrandtModule(D*p)` for an *auxiliary* reduction prime `p ∤ D`) — different prime regime, in case
+  anyone is tempted to reuse it for something else in this area.
 
-### Also relevant from this project's own history
-
-* `vvdata/weyl-campaign/even-correction/AM-REASSESSMENT.md` and memory
-  `condition4-ramified-congruence` / `am-demoted-hatch-blocked-on-integrality`: a **different**
-  question (even-divisor integrality for the hatch construction) used the same local-density
-  machinery at ramified primes (`κ_p(m)`, `SchoferFormula.m`) and found it genuinely subtle — a
-  residual of exactly 11 cells survived every integral perturbation tried, cause unidentified. Not
-  a reason to avoid this route, but go in expecting it to bite, not expecting a clean first pass.
-* `SchoferFormula.m` in this repo already computes CM-value local densities (`kappa_mu(0)` etc.) for
-  a related purpose (evaluating an ALREADY-CONSTRUCTED Borcherds lift at a CM point). Whatever
-  Chapter 7's inner product formula needs may already have a partial implementation to build from.
-
-### Concrete next step for whoever picks this up
-
-1. Fetch the KRY PDF (URL above), `pdftotext -layout` it, and read Chapter 7 start to finish —
-   the actual local density formula, not just the chapter's existence.
-2. Work out precisely how it specializes to our `(D,N)` convention and to the SPECIFIC target set
-   `T` that `BorcherdsForms.m`/`deficit.m` track (read what "target" actually is in the pipeline
-   code before assuming — this project's own lesson, repeated three times now in this thread alone,
-   is to check the object before trusting the arithmetic).
-3. Implement, then **validate against the calibration bases before trusting**, exactly as
-   `gksz-dim-formula.m` did (against `6_1`/`10_1`) before touching the real target:
+⇒ **RETIRED as a deficit predictor.** If the theory arc wants a next move here, it is NOT "implement
+Ch. 7" — it would have to be something that engages the central-L-value question head-on (e.g.
+asking, for the SPECIFIC small target sets `T` that actually occur, whether there's a representation-
+theoretic reason — an oldform/local-component obstruction — forcing a coefficient to vanish, rather
+than hoping for a formula that works for a generic `T`). Not attempted; no evidence it is tractable
+either. The model backlog remains the only track producing results.
    `38_5` (deficit 1), `146_1` (0), `194_1` (0), `58_13` (2), `26_31` (3).
 4. If it reproduces those five, THEN check it against the much larger dataset now available:
    `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt` has 132+ bases with
