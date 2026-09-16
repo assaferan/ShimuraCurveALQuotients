@@ -46,6 +46,13 @@ real, validated, fast upper bound on the deficit — useful, but not the predict
 
 Full argument, with all the algebra: `paper/DRAFT-borcherds-obstruction.md` §5.
 
+⚠ **Paused here, deliberately, for a fresh session to pick up** — the live lead (Kudla–Rapoport–Yang,
+*Modular Forms and Special Cycles on Shimura Curves*, Ch. 7's inner product formula, motivated by
+`T` reducing to the supersingular locus at ramified primes) is real but was not chased into an
+implementation; the conversation that found it was already long. Full plan, with the exact chapter,
+what's already confirmed, and the calibration bases to validate against: `PLAN.md`, "PARALLEL TRACK
+— added 2026-09-16".
+
 ## Handoff — 2026-09-16 — POST-RESET COLLECTION: 57 NEW OBSTRUCTED BASES, TWO NEW 2-DIM SPACES
 
 The local Mac was reset mid-session. **Nothing was lost**: nothing was running locally (no Magma

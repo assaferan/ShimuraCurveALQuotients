@@ -43,6 +43,94 @@ discipline — but its numbers and its "first thing next session" list are super
 4. **Keep collecting the ~25 still-running `defic5` bases** and fold new verdicts into
    `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`, not a new file.
 
+## ⇒ PARALLEL TRACK — added 2026-09-16: does `deficit.m`'s number have a closed form?
+
+**Does not block the model backlog above.** A same-day session ran the theory arc's open question
+(`paper/DRAFT-borcherds-obstruction.md` §5, "why is a base obstructed, and can the deficit be
+predicted without running the pipeline") about as far as it goes without committing to a multi-day
+implementation, and the context is long enough that the plan below is meant to be picked up by a
+**fresh session with no memory of the conversation that produced it** — everything you need is here
+or in the two files it points to.
+
+### Where this stands, in one paragraph
+
+`deficit.m` measures the rank of a pairing between `S_{3/2}(ρ_L^*)` (dual Weil representation, weight
+3/2 cusp forms) and a small fixed target set `T` of tracked CM-divisor classes (`deficit ≤ dim T`,
+NOT `≤ dim S_{3/2}`). Two closed-form routes were tried and both are now settled, in the sense of
+"we know why they don't work," which is progress, not a dead end:
+
+* **`deficit = genus(X_0^D(N))`** — refuted outright, first two bases tried (`146_1`/`194_1` share a
+  genus, not a deficit).
+* **`dim M_{3/2}(ρ_L^*)`, via Borcherds' own Riemann–Roch formula** (GKZ paper, Duke 97 (1999), p.9)
+  — sourced correctly, IMPLEMENTED via `O(n)` Gauss sums (the naive matrix build is infeasible:
+  `|disc_grp|` runs to 1.3M on the calibration bases), and VALIDATED bit-for-bit against real
+  matrices on `6_1`/`10_1` before being trusted on anything larger. **It computes a real number, but
+  the wrong one** — thousands, against measured deficits of 0–3 — because it's the dimension of the
+  *whole* obstruction space, not the rank of the pairing against the small target `T`. Banked as
+  `vvdata/weyl-campaign/gksz-dim-formula.m` (campaign, `6565a95`) — its header documents exactly
+  this, so it isn't re-attempted as a predictor. **Read this file's derivation before writing any
+  new eigenvalue/trace formula in this area** — it hit two real sign/index errors (wrong eigenvalue
+  pair for one block, `n0` not divisible by 12 for a second base) that only the `6_1`/`10_1`
+  validation step caught; skipping that step on this problem is asking to repeat them.
+
+Full write-up of both: `paper/DRAFT-borcherds-obstruction.md` §5 (a-d). `HANDOFF.md` (2026-09-16,
+"THE `S_{3/2}` DIMENSION IS COMPUTABLE...") has the session narrative.
+
+### The live lead: Kudla–Rapoport–Yang, Chapter 7
+
+`T` is built from CM points, which (Deuring/Čerednik–Drinfeld) reduce to **supersingular** points at
+the ramified primes `p | D` — so the pairing isn't a generic, structureless Fourier-coefficient
+question; it has known local structure. The reference that computes exactly this kind of pairing is:
+
+    S. S. Kudla, M. Rapoport, T. Yang, "Modular Forms and Special Cycles on Shimura Curves"
+    (Annals of Math. Studies 161, Princeton, 2006).
+    PDF: https://www.math.uni-bonn.de/people/rapoport/myalggeom/preprints/kry.pdf
+
+**Chapter 7, "An inner product formula"** (~p.205–264 in the book) computes `⟨Z(t₁), Z(t₂)⟩`-type
+pairings between special-cycle (CM-divisor) classes as a product of *local densities* at each prime
+— this is the tool that would tell us whether `T`'s image in `S_{3/2}(ρ_L^*)^*` is degenerate, i.e.
+the actual rank computation `deficit.m` needs, done by the people who built this exact machinery for
+this exact geometric setting (Shimura curves, not just classical modular curves).
+
+⚠ Two things confirmed already, worth not re-deriving:
+* Their Introduction (p.5, Prop 1.0.1) identifies the *degree*-generating series (summed over all
+  cosets) with an **Eisenstein series**, not a cusp form — consistent with this project's own
+  "in our dimension the obstruction is cuspidal" (Borcherds Example 5.4, §3 of the paper draft).
+  The Eisenstein/degree part is NOT what we want; we want the genuinely cuspidal, per-coset part.
+* `B^(p)`, their definite companion algebra for a prime `p | D(B)`, is `D(B)` with `p`'s
+  ramification moved to infinity — i.e. NOT the same construction as this repo's own
+  `SupersingularALData` (`special_fiber_modular.m`), which uses `BrandtModule(D*p)` for an
+  *auxiliary* reduction prime `p ∤ D`. Different prime regime, same Deuring-correspondence idea —
+  do not reuse `SupersingularALData` directly; it answers a different question (mod-`p` reduction
+  at a level prime) than the one here (structure at the *ramified* primes of `D`).
+
+### Also relevant from this project's own history
+
+* `vvdata/weyl-campaign/even-correction/AM-REASSESSMENT.md` and memory
+  `condition4-ramified-congruence` / `am-demoted-hatch-blocked-on-integrality`: a **different**
+  question (even-divisor integrality for the hatch construction) used the same local-density
+  machinery at ramified primes (`κ_p(m)`, `SchoferFormula.m`) and found it genuinely subtle — a
+  residual of exactly 11 cells survived every integral perturbation tried, cause unidentified. Not
+  a reason to avoid this route, but go in expecting it to bite, not expecting a clean first pass.
+* `SchoferFormula.m` in this repo already computes CM-value local densities (`kappa_mu(0)` etc.) for
+  a related purpose (evaluating an ALREADY-CONSTRUCTED Borcherds lift at a CM point). Whatever
+  Chapter 7's inner product formula needs may already have a partial implementation to build from.
+
+### Concrete next step for whoever picks this up
+
+1. Fetch the KRY PDF (URL above), `pdftotext -layout` it, and read Chapter 7 start to finish —
+   the actual local density formula, not just the chapter's existence.
+2. Work out precisely how it specializes to our `(D,N)` convention and to the SPECIFIC target set
+   `T` that `BorcherdsForms.m`/`deficit.m` track (read what "target" actually is in the pipeline
+   code before assuming — this project's own lesson, repeated three times now in this thread alone,
+   is to check the object before trusting the arithmetic).
+3. Implement, then **validate against the calibration bases before trusting**, exactly as
+   `gksz-dim-formula.m` did (against `6_1`/`10_1`) before touching the real target:
+   `38_5` (deficit 1), `146_1` (0), `194_1` (0), `58_13` (2), `26_31` (3).
+4. If it reproduces those five, THEN check it against the much larger dataset now available:
+   `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt` has 132+ bases with
+   known ladders (deficit values 0/1/2/3, plus two confirmed 2-dimensional cases).
+
 ## ⇒ (SUPERSEDED) START HERE — updated 2026-09-14 (later)
 
 **MAIN LINE: the model backlog, and it is now SCREENED rather than attempted blind.**
