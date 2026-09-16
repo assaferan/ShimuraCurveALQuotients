@@ -1,0 +1,88 @@
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -1209,6 +1209,85 @@
+                     // therefore change which CM points are selected, so a failure could not be
+                     // attributed to the cover-invariance claim under test -- it might just be CM
+                     // starvation.  PROBE_EVEN_KEYS=all opts into the confounded variant on purpose.
++                    // ===== PROBE_MOD2 (throwaway; never merge) =====
++                    // DOES *ANY* EVEN CORRECTION EXIST?  PROBE_INTSWEEP can only test one
++                    // discriminant at a time against a guessed list of amounts, so it can never
++                    // answer this -- the charge equation sum_j a_j phi_j = -phi(target) has many
++                    // solutions using two or more discriminants, and none of those is swept.
++                    // The question is exactly a lattice-membership question and is decidable in
++                    // one shot:  writing L for the Z-row-span of dM*coeffs_trunc and t for
++                    // dM*target_v, an even correction exists iff  t in L + 2*dM*Z^n.
++                    // ⚠ This is a RELAXATION: it allows corrections at ramified discriminants and
++                    // at CM evaluation points, which the pipeline avoids for separate practical
++                    // reasons.  So FALSE is decisive (no even correction exists at all), while
++                    // TRUE only says a witness exists and it may not be usable.
++                    // Built-in control: target_in_L must come back FALSE at an obstructed base,
++                    // since the baseline is not even in the image over Q.
++                    if GetEnv("PROBE_MOD2") ne "" then
++                        ctQ2 := ChangeRing(coeffs_trunc, Rationals());
++                        tv2Q := ChangeRing(target_v, Rationals());
++                        dM2 := LCM([Denominator(x) : x in Eltseq(ctQ2)] cat
++                                   [Denominator(x) : x in Eltseq(tv2Q)]);
++                        A2 := ChangeRing(dM2*ctQ2, Integers());
++                        t2 := ChangeRing(dM2*tv2Q, Integers());
++                        n2 := Ncols(A2);
++                        Amb2 := RSpace(Integers(), n2);
++                        rows2 := [Amb2 ! Eltseq(A2[ii]) : ii in [1..Nrows(A2)]];
++                        L1 := sub<Amb2 | rows2>;
++                        gens2 := rows2;
++                        for ii in [1..n2] do
++                            Append(~gens2, 2*dM2*Amb2.ii);
++                        end for;
++                        L2 := sub<Amb2 | gens2>;
++                        // ⚠ RESTRICTED (and this is the HONEST one).  n2 = Ncols is consistently
++                        // #relevant_ds + 1: there is a trailing column that is NOT a discriminant,
++                        // and the pipeline never perturbs it -- target_v is built only from
++                        // V.(Index(relevant_ds, ...)) and PROBE_INTSWEEP only sweeps
++                        // jj in [1..#relevant_ds].  Allowing an even correction to use that extra
++                        // coordinate would let the test pass using a divisor that does not exist.
++                        // So restrict the perturbation lattice to the genuine discriminant
++                        // coordinates.
++                        nds2 := #relevant_ds;
++                        gens2r := rows2;
++                        for ii in [1..nds2] do
++                            Append(~gens2r, 2*dM2*Amb2.ii);
++                        end for;
++                        L2r := sub<Amb2 | gens2r>;
++                        tvec2 := Amb2 ! Eltseq(t2);
++                        printf "MOD2 key %o n %o nds %o dM %o target_in_L %o target_in_L_plus_2Z %o target_in_L_plus_2Z_RESTRICTED %o\n",
++                               i, n2, nds2, dM2, tvec2 in L1, tvec2 in L2, tvec2 in L2r;
++                        // ⚠ IS THIS TEST VACUOUS?  A check that passes everywhere is not
++                        // evidence until it is known it could have failed.  Two things are
++                        // conflated if we only ever test `target`:
++                        //   (a) the test might be EQUIVALENT to "phi(target) is even", which the
++                        //       28-base parity survey already established -- adding nothing;
++                        //   (b) Z^n/L may carry 2-torsion, in which case the test is STRICTLY
++                        //       stronger than parity.
++                        // Distinguish them, and get negative controls for free, by testing
++                        // target + e_j for every j.  Since phi annihilates L, membership forces
++                        // phi(target)+phi_j even, so a j with phi_j ODD *must* come back false.
++                        //   #true = #{j : phi_j even}  =>  the test IS just parity
++                        //   #true < that               =>  torsion contributes real conditions
++                        if GetEnv("PROBE_MOD2_CTL") ne "" then
++                            ntrue := 0; nfalse := 0; falsejs := [];
++                            for jj in [1..n2] do
++                                tj := tvec2 + dM2*(Amb2.jj);
++                                if tj in L2 then
++                                    ntrue +:= 1;
++                                else
++                                    nfalse +:= 1; Append(~falsejs, jj);
++                                end if;
++                            end for;
++                            printf "MOD2CTL key %o unit-perturbations: true %o false %o\n",
++                                   i, ntrue, nfalse;
++                            printf "MOD2CTL key %o false_at_j %o\n", i, falsejs;
++                            // structure of Z^n/L: elementary divisors say whether there is
++                            // 2-torsion at all
++                            printf "MOD2CTL key %o elementary_divisors %o\n",
++                                   i, ElementaryDivisors(A2);
++                        end if;
++                    end if;
++                    // ===== end PROBE_MOD2 =====
+                     // ===== PROBE_INTSWEEP (throwaway; never merge) =====
+                     // THE INTEGRALITY SEARCH.  The hatch needs a perturbation that is
+                     // simultaneously (1) even, so the double cover is unchanged, and (2) INTEGRAL,
