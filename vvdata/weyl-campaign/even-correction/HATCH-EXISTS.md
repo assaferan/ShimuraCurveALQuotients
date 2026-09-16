@@ -235,3 +235,56 @@ whether `38_5` behaves that way is unknown. Condition 4 likewise remains unteste
 ⇒ **Next: per-key perturbation vectors (`PROBE_EVEN_VEC_<key>`), then a full `genmodels` run at
 `38_5`.** That single run answers all three open questions at once: does condition 4 hold, what is
 `#rat`, and does the fit close (with `CMEXTRA` if short).
+
+---
+
+## 6. ⚠⚠ THE TARGET COORDINATE IS NOT THE DIVISOR COEFFICIENT — an unguarded hazard in the hatch
+
+**Found 2026-09-16 by making a warning fatal.** Adding `a` to a target coordinate does NOT always
+move the divisor by `a`. The ratio depends on the discriminant:
+
+    generic discriminant          factor 1    target +2  ->  divisor +2
+    Atkin-Lehner fixed-point      factor 2    target +2  ->  divisor +1
+      (|d| = m or 4m, m | D*N)
+    d = -3, -4                    factor 4+   target +4  ->  divisor +1
+      (extra automorphisms, |Aut| = 6 resp. 4, COMPOUNDING with the AL halving)
+
+Measured at `38_5` (`D*N = 190`): disc 19 (for `w_19`) and disc 20 = 4*5 (for `w_5`) both moved the
+divisor by 1 for a requested 2; disc 4 moved it by 1 for a requested 4. The two ramified
+discriminants, 4 (`m=1`) and 760 (`m=190`), fit the same rule, which is corroboration rather than
+coincidence. Compare [[runaway-class-was-a-scale-bug]], where `d = -4` was the same special case.
+
+### Why this matters more than a wrong cost
+
+**An odd divisor change breaks condition 1** — the cover is no longer preserved, so the "model" is a
+DIFFERENT CURVE. At an obstructed base there is no committed model and no oracle, so nothing
+downstream would catch it. The whole hatch rests on the correction being even *in the divisor*, and
+that was never checked: `probe-ported-2026-09-12.patch` compares `div_f` against a SET union of
+`ram` and the requested perturbation, prints `DIVISOR MISMATCH`, and **continues**.
+
+⚠ **The recorded `34_3` results are NOT affected**: disc `-164` is a generic discriminant
+(164 = 4*41, 41 does not divide 102), and a re-run this session confirms the change is exactly
+`<-164, 6>`. The hazard is latent, not historical — but any future run that selected an AL
+fixed-point discriminant would have been silently wrong, and `PROBE_EVEN`'s "prefer the LARGEST
+|disc|" heuristic does not avoid them.
+
+### The fix, and why the guard matters more than the rule
+
+`probe-mod2.patch` now (a) excludes `d = -3, -4` outright and requires amounts to be multiples of 4
+at AL fixed-point discriminants, with **cost computed from the divisor change** `(amt/factor)*deg Z`
+rather than the requested amount; and (b) replaces the print-and-continue check with one that
+computes the ACTUAL change `div_f - ram` and **errors** unless every entry is an even integer.
+
+The rule alone would not have been enough: the rule I wrote first covered the AL factor of 2 and
+still let disc 4 through at amount 4, and it was the guard — not the rule — that caught it. Keep the
+guard even if the rule is later proved complete.
+
+⚠ **Divisor coefficients need not be integers** (half-integers occur at AL fixed points), so the
+evenness test must be "is an even integer", not `IsOdd` — which errors on a `FldRatElt`.
+
+### ⇒ CORRECTION to §5: the cheapest cost at `38_5` is 18, not 10
+
+Every cost-10 witness listed in §5 uses disc 19 or 20 at amount 2 — exactly the factor-2
+discriminants — so all of them are INVALID: they move the divisor by an odd amount. With those
+properly handled the minimum observed cost is **18**, and the fit's demand is `2g+23`, not `2g+15`.
+The support-3 search that produced the 10s was costing the requested amount, not the divisor change.
