@@ -95,3 +95,106 @@
 #   known obstructed = 75 = 49 recorded + 5 stumbled into + 21 screened.  STILL A LOWER BOUND.
 #   PLAN.md's accounting adds 6_109 (a failed run, not a screen) and so reads 76.
 #   2-dimensional obstruction spaces: unchanged at FIVE (166_3 22_19 74_7 10_67 58_13).
+#
+# --- 2026-09-15/16: defic4 finishes (7 more of its 10), and defic5 -- a much larger sweep -- lands ---
+#
+# base   rungs  ladder                verdict
+278_1    4      3 1 1 1               OBSTRUCTED
+302_1    8      5 3 2 2 2 2 2 2       OBSTRUCTED, deficit 2 (2-dimensional obstruction space) -- see defhi.sh below
+314_1    4      0 0 0 0               clear      -> pipeline launched (deferred one cover, W={1,157}, on an ambiguous CM sign; not a failure)
+326_1    8      4 4 1 1 1 1 1 1       OBSTRUCTED -- see defhi.sh below; resolves the P<=266 ambiguity as 1-dimensional
+334_1    8      3 3 2 2 2 2 2 2       OBSTRUCTED, deficit 2 (2-dimensional obstruction space) -- see defhi.sh below
+346_1    3      2 1 1                 OBSTRUCTED
+358_1    3      5 3 2                 NO VERDICT -- still descending at P=266, never extended.  Not clear, not any fixed deficit.
+#
+# ⚠ defhi.sh (deficit_hi.m, ladder extended to [51,102,134,190,266,350,450,550,700]) was built to
+# settle 302_1/326_1/334_1 -- deficit.m caps its sweep at P=266, and all three were still moving
+# there.  158_1, a KNOWN obstructed base (line 24, "validation set"), was run as a positive control:
+#
+158_1(ctl) 9      3 1 1 1 1 1 1 1 1    OBSTRUCTED, deficit 1 -- flat from P=102 clear through P=700
+#                                        (630 of pole-order headroom past the old cap).  This is the
+#                                        evidence that a flat P<=266 tail is the true invariant and
+#                                        not an artifact of stopping early.
+#
+# ⇒ TWO-DIMENSIONAL OBSTRUCTION SPACES: FIVE -> SEVEN.  Add 302_1 and 334_1 to
+#   166_3 22_19 74_7 10_67 58_13.  326_1 was the fourth candidate and resolved to ORDINARY (dim 1).
+#
+# --- defic5: an odd-prime-N sweep at D = 6,10,14,22,26,34,38,46,58,62,74,82,94,118,122,134,142,
+#     146,194,206,326,362,386,394, plus a batch of large-D N=1 targets.  Checked against
+#     bases49.txt and the 21+5 previously screened/stumbled bases: ZERO overlap with any of the
+#     three lists (script-checked, not assumed).
+#
+# base     rungs  ladder      verdict
+10_83      3      2 2 2       OBSTRUCTED
+10_97      3      2 2 2       OBSTRUCTED
+10_101     3      2 2 2       OBSTRUCTED
+10_107     3      2 2 2       OBSTRUCTED
+10_109     3      1 1 1       OBSTRUCTED
+10_113     3      1 1 1       OBSTRUCTED
+10_137     3      2 2 2       OBSTRUCTED
+14_59      3      2 2 2       OBSTRUCTED
+14_61      3      1 1 1       OBSTRUCTED
+14_67      3      1 1 1       OBSTRUCTED
+14_71      3      3 3 2       NO VERDICT -- still descending, never extended
+14_79      3      1 1 1       OBSTRUCTED
+14_109     3      2 2 2       OBSTRUCTED
+118_7      3      2 2 2       OBSTRUCTED
+122_7      3      1 1 1       OBSTRUCTED
+134_5      3      2 2 2       OBSTRUCTED
+142_5      3      3 2 2       OBSTRUCTED
+146_5      3      1 1 1       OBSTRUCTED
+146_7      3      2 2 2       OBSTRUCTED
+194_3      3      1 1 1       OBSTRUCTED
+194_5      3      2 2 2       OBSTRUCTED
+206_3      3      1 1 1       OBSTRUCTED
+22_41      3      2 2 2       OBSTRUCTED
+22_43      3      2 2 2       OBSTRUCTED
+22_47      3      3 3 3       OBSTRUCTED
+26_29      3      2 2 2       OBSTRUCTED
+26_31      3      3 3 3       OBSTRUCTED
+26_37      3      3 2 2       OBSTRUCTED
+26_43      3      2 2 2       OBSTRUCTED
+326_3      3      2 2 2       OBSTRUCTED
+34_23      3      2 2 2       OBSTRUCTED
+34_29      3      1 1 1       OBSTRUCTED
+34_37      3      3 3 3       OBSTRUCTED
+38_23      3      2 2 2       OBSTRUCTED
+362_1      3      1 1 1       OBSTRUCTED
+386_1      3      5 2 2       OBSTRUCTED
+394_1      3      3 2 2       OBSTRUCTED
+46_19      3      3 3 3       OBSTRUCTED
+58_17      3      3 3 3       OBSTRUCTED
+62_11      3      1 1 1       OBSTRUCTED
+62_13      3      3 3 3       OBSTRUCTED
+74_13      3      3 3 3       OBSTRUCTED
+82_11      3      2 2 2       OBSTRUCTED
+94_11      3      2 2 2       OBSTRUCTED
+6_149      3      1 1 1       OBSTRUCTED
+6_151      3      1 1 1       OBSTRUCTED
+6_157      3      2 2 2       OBSTRUCTED
+6_163      3      1 1 1       OBSTRUCTED
+6_167      3      1 1 1       OBSTRUCTED
+6_173      3      2 2 2       OBSTRUCTED
+6_179      3      1 1 1       OBSTRUCTED
+6_181      3      2 1 1       OBSTRUCTED
+6_191      3      1 1 1       OBSTRUCTED
+#
+# (6_131 and 6_137 re-ran in this batch too: 1 1 1 and 0 0 0, matching what is already recorded
+#  above exactly.  Not counted again.)
+#
+# NOT YET STARTED as of collection time (header-only logs, live processes still in
+# WeaklyHolomorphicBasis) -- NO VERDICT, not evidence either way, same as the timeout traps above:
+#   398_1 446_1 454_1 458_1 482_1 502_1 514_1 538_1 566_1 586_1 614_1 626_1  (large D, N=1)
+#   6_193 6_197 6_199 6_211 6_227 6_229 6_233 6_239 6_241 6_251 6_257 6_263 6_281
+#
+# Running counts after this collection:
+#   screened-new obstructed = 21 (prior) + 5 (278_1, 302_1, 326_1, 334_1, 346_1)
+#                                + 52 (defic5, excluding 14_71 no-verdict and the 6_131/6_137
+#                                repeats) = 78.
+#   known obstructed = 49 recorded + 5 stumbled into + 78 screened = 132.  STILL A LOWER BOUND.
+#   ⚠ Read this jump as "we screened a systematic sweep of odd-prime N", not as a new statement
+#   about the obstruction's density -- these bases were not a random sample.
+#   NO VERDICT, unresolved: 358_1, 14_71 -- both still descending at their last computed rung; the
+#   defhi extension that resolved 302_1/326_1/334_1 was never run on either.
+#   clear (new): 314_1 -> pipeline launched.  (6_137 was already recorded clear above.)
+#   2-dimensional obstruction spaces: FIVE -> SEVEN (166_3 22_19 74_7 10_67 58_13, + 302_1, 334_1).
