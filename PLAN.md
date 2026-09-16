@@ -21,26 +21,31 @@ discipline — but its numbers and its "first thing next session" list are super
 
 ### The numbers, corrected AGAIN — do not quote 75/132 as anything but a lower bound
 
-    obstructed   132 known (49 recorded + 5 stumbled into + 78 screened), a LOWER BOUND.  The jump
+    obstructed   133 known (49 recorded + 5 stumbled into + 79 screened), a LOWER BOUND.  The jump
                  from 75 is a systematic odd-prime-N sweep (defic5), not a density finding -- the
                  bases screened were chosen, not sampled.
     2-dim        SEVEN bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 (302_1/334_1 new, confirmed
                  by extending the pole ladder to P=700 with 158_1 as a positive control).
-    unresolved   358_1, 14_71 -- deficit still descending at their last computed rung, neither
-                 extended to P=700 yet.  NOT clear, NOT any fixed deficit -- do not quote either.
+    unresolved   358_1 only -- deficit still descending at its last computed rung, its defhi
+                 extension is running on lovelace.  NOT clear, NOT any fixed deficit yet.
+                 (14_71 RESOLVED 2026-09-16: flat deficit 2 across P=550->700.  Do not re-screen.)
     still running ~25 defic5 targets (large-D N=1, and D=6 at large prime N) had not returned a
                  verdict as of collection; check them before re-screening anything in that range.
 
 ### Do this first, in order
 
-1. **Collect `bk3`** as soon as any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1` finishes --
-   all seven were still computing (mostly "equations of covers") at collection time, so there is
-   nothing to `VerifyModelSet` yet. `95_1` is newly running: `cc8beb8` dropped the stale `vx_skip`
-   guard in `genmodels.m` (its justifying defect was fixed ten days earlier).
-2. **Relaunch `115_1`/`123_1`** -- also freed by the `vx_skip` removal, never restarted.
-3. **Extend `358_1` and `14_71`** with `defhi.sh` (`deficit_hi.m`, ladder to `P=700`) to get real
-   verdicts -- the same tool that resolved `302_1`/`326_1`/`334_1`.
-4. **Keep collecting the ~25 still-running `defic5` bases** and fold new verdicts into
+1. ✅ **DONE 2026-09-16 — `14_37` collected**: 7 of 14 keys, `ModelChecks` 12036/0 with it
+   included, negative control run. Committed `9bb63ec`. See `HANDOFF.md` for detail.
+2. ✅ **DONE 2026-09-16 — `14_71` resolved** via `defhi.sh`: OBSTRUCTED, deficit 2, flat
+   P=550->700. Folded into the campaign screening log (`cdcf801`, not yet pushed).
+3. **Collect `bk3`** as soon as any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1 119_1 159_1`
+   finishes -- as of 2026-09-16 all are still computing (mostly "Borcherds forms"/"CM points";
+   `62_7` is furthest along, at "equations of covers"), so there is nothing to `VerifyModelSet`
+   yet. `115_1`/`123_1` are ALSO now running (relaunched, freed by the `vx_skip` removal) --
+   do not relaunch again.
+4. **Extend `358_1`** with `defhi.sh` (`deficit_hi.m`, ladder to `P=700`) -- already launched and
+   in progress on lovelace as of 2026-09-16; just collect it when it finishes.
+5. **Keep collecting the ~25 still-running `defic5` bases** and fold new verdicts into
    `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`, not a new file.
 
 ## ⇒ PARALLEL TRACK — added 2026-09-16: does `deficit.m`'s number have a closed form?

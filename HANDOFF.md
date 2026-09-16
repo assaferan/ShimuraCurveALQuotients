@@ -11,6 +11,50 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-16 (later still) — COLLECTION: `14_37` LANDS, `14_71` RESOLVES, NOTHING ELSE IS DONE YET
+
+Picked the backlog-collection track back up. lovelace load 107/256 (shared, other users' jobs
+still dominate — did not launch anything new).
+
+### ✅ NEW MODEL: `14_37` — 7 of 14 keys, via Hauptmodul rebase
+
+`~/shimura/bk3/14_37.log` finished after **25.5 h wall** (started under the 2026-09-15 batch).
+7 of 14 cover keys came back empty from the direct construction and were filled by the
+Hauptmodul-rebase sweep (`"sweeping 1 Hauptmodul root(s) on base 5699"` — the same mechanism as
+`22_5`'s recovery). Collected, `ModelChecks` run against the WHOLE suite with it included
+(**108 model files, 12036 checks, 0 failures**), and a negative control (corrupt one leading
+coefficient in the `[1,7,74,518]` entry) correctly goes red (62/5). Committed, `9bb63ec`.
+⚠ No external oracle at `14_37` — `10_61`/`34_11`/`74_5` evidence level, not a Guo-Yang base.
+
+### ✅ `14_71` RESOLVED via `defhi` (P=700 extension): OBSTRUCTED, deficit 2
+
+`~/shimura/defhi/14_71.log` extended the pole ladder past `deficit.m`'s `P<=266` cap. Reads
+`3 3 2 2 2` at `P = 498, 550, 574→realigned, 550, 700` — **flat at deficit 2 across P=550→700**,
+150 of pole-order headroom past the point it last moved. Same invariance signature as the
+`158_1` positive control from the prior collection pass. Corrects the earlier `deficit 3` reading,
+which was mid-descent, not the true value. Ordinary (1-dimensional), not a new 2-dim candidate.
+Folded into `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt` on the
+campaign branch (`cdcf801`, not yet pushed). ⇒ **known obstructed 132 → 133**, still a lower bound.
+`358_1` is the only remaining unresolved verdict — its own `defhi` extension is still running on
+lovelace as of this collection (`~/shimura/defhi/358_1.log`, header only so far, ~4 h elapsed).
+
+### Everything else on lovelace: still in flight, nothing new to collect
+
+    bk3 pipeline    115_1 123_1 (relaunched, both at "Computing Borcherds forms")
+                    62_7 (at "equations of covers"), 6_107 6_113 6_73 6_89 6_137 (all at
+                    "candidate discriminants"/"CM points"), 314_1 (deferred one cover on an
+                    ambiguous sign, W={1,157}, continuing -- not a failure), 95_1 119_1 159_1
+                    (all still at "Computing Borcherds forms")
+    defic5 screens  ~25 large-D N=1 / D=6 large-N targets still header-only (never returned;
+                    see the campaign log for the list) -- check again before re-screening any of
+                    that range
+
+Two uncommitted scratch files sit at the repo root from a prior session, `tests/_probe_gy.m` /
+`tests/_probe_gy2.m` (quick Guo-Yang model-completeness listings, not registered tests since they
+lack the runner's naming convention). Left alone — harmless, not blocking anything, and per
+`CLAUDE.md` scratch scripts belong on the campaign branch under `vvdata/weyl-campaign/`, not here;
+worth moving or deleting next time this file is touched.
+
 ## Handoff — 2026-09-16 (later) — THE `S_{3/2}` DIMENSION IS COMPUTABLE, AND IT ANSWERS THE WRONG QUESTION
 
 `paper/DRAFT-borcherds-obstruction.md` §5 asked for `dim S_{3/2}(ρ_L^*)` in closed form as a
