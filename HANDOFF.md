@@ -70,6 +70,24 @@ guard rather than a defect claim.
 ⚠ **Nothing should be deleted from `models_6_5.m` or `models_6_13.m`.** The night-4th section says
 those entries "should be removed from the data"; that recommendation is withdrawn.
 
+### A second, smaller retraction in the same class: `test_bp_KY`
+
+The `InternalBorcherds` revival said its 118 mismatches meant "the discrepancy is confined to the
+`Wpoly2` branch". **Also wrong, also the wrong object.** Arbitrated with the brute-force density
+oracle at RANK 1 — which is what `test_bp_KY` builds, where production and `Whittaker2.m` both work
+at rank 2:
+
+    rank 1, Q = [2 kappa], kappa in {1,2,3,5,6,7}, m in {1,2,3,4}
+       -> 24 comparisons, library vs oracle: 0 disagreements   (k = 14, re-confirmed at k = 18)
+
+⇒ **`Wpoly2` is correct at rank 1 as well as rank 2.** What fails is the test file's own right-hand
+side — its transcription of [KY, Prop 5.1] at `p = 2`. The file's guess at "a sqrtp factor I am
+missing" is in the right half of the identity but the wrong place; a missing `sqrtp` would have moved
+the odd primes too. Corrected in-file.
+
+⇒ **Tally for the day: three blind spots opened, and the library was clean in all three.** Every
+defect found today was in a test, a harness, or one of my own readings.
+
 ### What survives, unchanged
 
 The positive half: where an isomorphism IS exhibited it is a proof, certified as an exact identity

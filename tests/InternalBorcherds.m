@@ -233,7 +233,20 @@ printf "InternalBorcherds: %o sigma identities, %o published Wpoly values...", n
 //     test_bp_KY(20)  -> 118 mismatches
 //
 // ⚠ and they are not scattered: ALL 118 sit at p = 2 with mu = 0.  Every odd prime agrees, and so
-// does p = 2 at mu = 1/2.  So the discrepancy is confined to the Wpoly2 branch -- which is worth
-// recording because the header note above guesses at "a sqrtp factor that I am missing", and a
-// missing sqrtp would have moved the odd primes too.  Whatever is wrong is specific to p = 2,
-// mu = 0.  Left as a probe until that is understood; do not assert on it.
+// does p = 2 at mu = 1/2.
+//
+// ⚠⚠ THE LIBRARY IS NOT THE SIDE THAT IS WRONG.  My first reading of that -- "the discrepancy is
+// confined to the Wpoly2 branch" -- was itself wrong, and is retracted.  Arbitrated 2026-09-15 with
+// a brute-force representation-density count independent of BOTH sides (this repo's convention is
+// Q(x) = 1/2 x G x^T, so count x G x^T = 2m mod 2^(k+1); fixed k = 14, re-confirmed at k = 18, and
+// NO repeats-based stopping rule -- the plateau is long enough to defeat one):
+//
+//     rank 1, Q = [2 kappa], kappa in {1,2,3,5,6,7}, m in {1,2,3,4}
+//        -> 24 comparisons, library vs oracle: 0 disagreements
+//
+// So Wpoly2 is correct at RANK 1 as well as at rank 2, where tests/Whittaker2.m now pins it on all
+// five 2-adic shapes production uses.  => WHAT FAILS IS THIS FILE'S RIGHT-HAND SIDE: its
+// transcription of [KY, Prop 5.1] at p = 2, the (1-x^2)/EulerFactor(...) * bp_Kudla_Yang_poly
+// expression.  The header's guess at "a sqrtp factor" is in the right half of the identity but the
+// wrong place -- a missing sqrtp would have moved the odd primes too.
+// Left as a probe until the p = 2 form of Prop 5.1 is worked out; do not assert on it.
