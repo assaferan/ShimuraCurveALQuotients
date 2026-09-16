@@ -11,6 +11,63 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-16 — POST-RESET COLLECTION: 57 NEW OBSTRUCTED BASES, TWO NEW 2-DIM SPACES
+
+The local Mac was reset mid-session. **Nothing was lost**: nothing was running locally (no Magma
+process), and every job in flight was already on `lovelace`, detached (`ppid 1`) and unaffected.
+Full detail of everything below: `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`
+(campaign, `c834599`).
+
+### ✅ Branch hygiene: campaign was one merge behind `main`, now fixed
+
+`git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'` showed a
+real (non-doc) divergence on `tests/InternalBorcherds.m` — campaign's last merge point (`928bf22`)
+predated `main`'s `714e831`/`5b57a2d`. Merged and pushed (`d55b5c0`); the invariant is clean again.
+
+### ✅ The screening collection: known obstructed 75 → 132, 2-dim spaces 5 → 7
+
+Two batches finished on lovelace since the last collection pass:
+
+* **`defic4`'s remaining 7 bases** (its first 3 were already recorded): `278_1`, `326_1`, `346_1`
+  obstructed; **`314_1` CLEAR** (pipeline launched, deferred one cover on an ambiguous CM sign —
+  not a failure); `302_1` and `334_1` obstructed at **deficit 2**; `358_1` still descending at
+  `P=266`, no verdict.
+* **`defhi.sh`** (new: extends the pole ladder from `deficit.m`'s `P<=266` cap out to `P=700`) was
+  built to settle the three still-moving cases, using `158_1` — a known obstructed base — as a
+  positive control: it stays flat at deficit 1 for 630 of pole-order headroom past the old cap,
+  which is the evidence that a flat `P<=266` tail is the real invariant and not truncation.
+  `302_1`/`334_1` hold at deficit 2 across the same range. ⇒ **2-dimensional obstruction spaces:
+  FIVE → SEVEN** — add `302_1`, `334_1` to `166_3 22_19 74_7 10_67 58_13`; `326_1` resolves to
+  ordinary (dim 1), not the fourth candidate it looked like at `P<=266`.
+* **`defic5`**, a systematic odd-prime-`N` sweep (`D = 6,10,14,22,26,34,38,46,58,62,74,82,94,118,
+  122,134,142,146,194,206,326,362,386,394`) plus a batch of large-`D` `N=1` targets: **52 more
+  obstructed verdicts**, checked against `bases49.txt` and every prior screened/stumbled list —
+  zero overlap, script-checked not assumed. One more unresolved case, `14_71`.
+
+⇒ **Known obstructed: 49 recorded + 5 stumbled into + 78 screened = 132**, still a lower bound.
+⚠ **Read the jump as "we screened a systematic sweep", not as a new density statement** — these
+bases were chosen, not sampled. ⚠ **Unresolved, not obstructed and not clear**: `358_1`, `14_71`
+(both still descending at their last rung, neither got the `P=700` extension). 25 more targets in
+the `defic5` batch never finished (still running as of collection, header-only logs).
+
+### `bk3` pipeline: nothing new to commit yet, all still in flight
+
+`62_7 6_107 6_113 6_73 6_89 6_137 314_1` are all still computing (mostly at "equations of covers").
+**`95_1` is now actually running** — `cc8beb8` (campaign, already landed before the reset) dropped
+the stale `vx_skip` guard in `vvdata/weyl-campaign/genmodels.m` once its justifying defect (fixed
+2026-09-05, `d9b52d0`) was ten days gone; `95_1` is a Guo-Yang target with a published equation and
+was being `quit`-skipped for no remaining reason. `115_1`/`123_1` — the other two bases the guard
+was fencing off besides `95_1`/`129_1` — have **not** been relaunched since.
+
+### Next
+
+* Collect `bk3` once any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1` finishes; verify with
+  `VerifyModelSet` + a negative control before committing, per the usual discipline.
+* Relaunch `115_1`/`123_1` now that `vx_skip` is gone.
+* Extend `358_1` and `14_71` with `defhi.sh` (`P=700`) to get real verdicts.
+* The ~25 not-yet-finished `defic5` bases will keep returning verdicts; collect and fold into the
+  same log file rather than starting a new one.
+
 ## Handoff — 2026-09-15 (night, 7th) — RETRACTION: "20 OF 23 KEYS HOLD DIFFERENT CURVES" IS WRONG
 
 The section below this one (night, 5th) claims 20 of 23 multi-entry genus-1 keys hold different

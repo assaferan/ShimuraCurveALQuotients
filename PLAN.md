@@ -13,7 +13,37 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-14 (later)
+## ⇒ START HERE — updated 2026-09-16
+
+**Post-reset collection is DONE; see `HANDOFF.md` (2026-09-16) for the full account.** The section
+below (2026-09-14 later) is otherwise still current — same main line, same screen-before-you-run
+discipline — but its numbers and its "first thing next session" list are superseded by this one.
+
+### The numbers, corrected AGAIN — do not quote 75/132 as anything but a lower bound
+
+    obstructed   132 known (49 recorded + 5 stumbled into + 78 screened), a LOWER BOUND.  The jump
+                 from 75 is a systematic odd-prime-N sweep (defic5), not a density finding -- the
+                 bases screened were chosen, not sampled.
+    2-dim        SEVEN bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 (302_1/334_1 new, confirmed
+                 by extending the pole ladder to P=700 with 158_1 as a positive control).
+    unresolved   358_1, 14_71 -- deficit still descending at their last computed rung, neither
+                 extended to P=700 yet.  NOT clear, NOT any fixed deficit -- do not quote either.
+    still running ~25 defic5 targets (large-D N=1, and D=6 at large prime N) had not returned a
+                 verdict as of collection; check them before re-screening anything in that range.
+
+### Do this first, in order
+
+1. **Collect `bk3`** as soon as any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1` finishes --
+   all seven were still computing (mostly "equations of covers") at collection time, so there is
+   nothing to `VerifyModelSet` yet. `95_1` is newly running: `cc8beb8` dropped the stale `vx_skip`
+   guard in `genmodels.m` (its justifying defect was fixed ten days earlier).
+2. **Relaunch `115_1`/`123_1`** -- also freed by the `vx_skip` removal, never restarted.
+3. **Extend `358_1` and `14_71`** with `defhi.sh` (`deficit_hi.m`, ladder to `P=700`) to get real
+   verdicts -- the same tool that resolved `302_1`/`326_1`/`334_1`.
+4. **Keep collecting the ~25 still-running `defic5` bases** and fold new verdicts into
+   `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`, not a new file.
+
+## ⇒ (SUPERSEDED) START HERE — updated 2026-09-14 (later)
 
 **MAIN LINE: the model backlog, and it is now SCREENED rather than attempted blind.**
 
