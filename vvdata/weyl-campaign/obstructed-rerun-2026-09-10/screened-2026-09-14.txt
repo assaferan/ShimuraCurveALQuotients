@@ -135,7 +135,7 @@
 14_59      3      2 2 2       OBSTRUCTED
 14_61      3      1 1 1       OBSTRUCTED
 14_67      3      1 1 1       OBSTRUCTED
-14_71      3      3 3 2       NO VERDICT -- still descending, never extended
+14_71      3      3 3 2       see defhi extension below -- RESOLVED, deficit 2
 14_79      3      1 1 1       OBSTRUCTED
 14_109     3      2 2 2       OBSTRUCTED
 118_7      3      2 2 2       OBSTRUCTED
@@ -198,3 +198,17 @@
 #   defhi extension that resolved 302_1/326_1/334_1 was never run on either.
 #   clear (new): 314_1 -> pipeline launched.  (6_137 was already recorded clear above.)
 #   2-dimensional obstruction spaces: FIVE -> SEVEN (166_3 22_19 74_7 10_67 58_13, + 302_1, 334_1).
+#
+# --- 2026-09-16: defhi extends 14_71 to P=700 -- RESOLVED, one-dimensional ---
+#
+14_71(hi)  5      3 3 2 2 2       OBSTRUCTED, deficit 2 -- flat from P=550 through P=700 (150 of
+#                                   pole-order headroom past the P=498 rung where it last moved).
+#                                   Same invariance signature as the 158_1 positive control above;
+#                                   corrects the earlier "3" reading, which was mid-descent, not
+#                                   the true deficit.  Ordinary (1-dimensional), not a candidate
+#                                   for the 2-dim list.
+#
+# ⇒ screened-new obstructed = 78 + 1 (14_71) = 79.
+#   known obstructed = 49 recorded + 5 stumbled into + 79 screened = 133.  STILL A LOWER BOUND.
+#   NO VERDICT, unresolved: 358_1 only -- still descending, defhi running as of this update
+#   (~/shimura/defhi/358_1.log on lovelace).
