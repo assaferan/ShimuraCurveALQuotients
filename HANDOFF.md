@@ -11,6 +11,41 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-16 (later) — THE `S_{3/2}` DIMENSION IS COMPUTABLE, AND IT ANSWERS THE WRONG QUESTION
+
+`paper/DRAFT-borcherds-obstruction.md` §5 asked for `dim S_{3/2}(ρ_L^*)` in closed form as a
+predictor for `deficit.m`'s measured number. Both halves are now settled.
+
+**Route B (naive) refuted immediately**: `deficit = genus(X_0^D(N))` fails on the first two bases
+tried — `146_1` (genus 7, deficit 0) and `194_1` (genus 9, deficit 0) don't even share a genus with
+`38_5` (genus 9, deficit **1**), so genus alone cannot determine the deficit.
+
+**Route A (the real Riemann–Roch formula) is now sourced, implemented, and validated.** The formula
+is Borcherds' own, from the GKZ paper itself (Duke 97 (1999), p. 9) — not the Bruinier/Kuss citation
+the draft originally guessed at. Implementing it hit a real wall: this repo's `WeilRepresentationST`
+builds the honest `|L'/L| × |L'/L|` matrix, and `|L'/L|` runs 72,200 to 1,299,272 on the calibration
+bases — far too large to diagonalize (the naive attempt was killed after 7+ minutes on the smallest
+one). The fix: every quantity the formula needs reduces to `O(n)` Gauss sums via two algebraic
+tricks (a projector isolating one eigenspace of the negation involution, and a shift-bijection that
+factors `tr((ST)²)` into a product of two simpler sums) — **all six resulting trace identities were
+checked bit-for-bit against the real matrices on `6_1`/`10_1` before being trusted on anything
+larger.** Banked as `vvdata/weyl-campaign/gksz-dim-formula.m` (campaign, `6565a95`).
+
+**The result is not what was hoped for, and that is itself the finding**: `dim M_{3/2}(ρ_L^*)` comes
+out in the **thousands** (`38_5` → 1594, `146_1` → 888) against measured deficits of 1 and 0. This
+is not a bug — Serre duality (§1) says the full obstruction space is dual to *arbitrary* principal
+parts, but `deficit.m` only ever asks to hit a small, fixed target set of tracked CM-divisor classes.
+The honest statement is `deficit = rank(S_{3/2}(ρ_L^*) → target*) ≤ dim(target)`, bounded by the
+*target's* dimension (small, a dozen or so classes), not the ambient one — so the Riemann–Roch number
+is essentially irrelevant to the actual deficit. Whether that rank degenerates depends on whether
+*specific Fourier coefficients* vanish at the *specific* discriminants in the target set — a
+Waldspurger-type coefficient/central-L-value question, which is "hard" arithmetic, not a "soft"
+dimension count, and structurally cannot be answered by any Riemann–Roch or trace-formula argument.
+⇒ **No closed-form deficit predictor is expected to exist along this route.** What survives is a
+real, validated, fast upper bound on the deficit — useful, but not the predictor the draft wanted.
+
+Full argument, with all the algebra: `paper/DRAFT-borcherds-obstruction.md` §5.
+
 ## Handoff — 2026-09-16 — POST-RESET COLLECTION: 57 NEW OBSTRUCTED BASES, TWO NEW 2-DIM SPACES
 
 The local Mac was reset mid-session. **Nothing was lost**: nothing was running locally (no Magma
