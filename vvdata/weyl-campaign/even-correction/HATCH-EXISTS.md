@@ -188,3 +188,50 @@ is `38_5` only. The 28/28 existence result in §3 is the only claim here with br
 ⚠ `annprobe.m` does not `SetColumns(0)`, so its output WRAPS MID-TOKEN. Join log lines with `''`,
 not `' '`, before parsing, and anchor boolean captures as `(true|false)` — a `\w+` capture silently
 swallows the next token and reports `truePROBEANN`. Both bit me.
+
+---
+
+## 5. EXPLICIT WITNESSES AT `38_5` — and the correction is PER COVER KEY
+
+`PROBE_WITNESS` (same patch) enumerates supports of size 1 and 2 with `|amt| <= AMAX` even, testing
+membership directly — no reliance on `phi`'s index alignment. At `38_5`, `AMAX = 6`, 15 s per key:
+
+    key 11:  20 witnesses, ALL of support 2   (no singles -- consistent with intsol false on all 11
+                                               charge-legal single-disc candidates)
+    key 12:  14 witnesses, all of support 2
+
+Costed against `degz.m`'s table (`cost = sum_j |a_j| * deg Z(d_j)`):
+
+    key 11   cost  4   24:+2 520:-2  |  36:-2 180:+2  |  100:-2 340:+2     <-- all have a NEGATIVE amt
+             cost 10   20:+2 456:+4                                        <-- cheapest ALL-POSITIVE
+             cost 18   104:+4 180:+6  |  120:+6 324:+4  |  120:+6 424:+4
+    key 12   cost 18   139:+4 340:+6                                       <-- cheapest ALL-POSITIVE
+
+⚠ **NEGATIVE amounts at a finite discriminant are probably unusable, and that is why the cost-4
+witnesses are not the answer.** A negative entry puts POLES in `f`: `f_pert = f_old * G^(-2k)`, so
+`f` is no longer a polynomial, while `RationalConstraintsOnEquations` fits
+`[s^i : i in [0..2g+2]]`. Extra CM points cannot rescue that — unlike a positive amount, where the
+failure is only that the ansatz is too short. (At `34_3` every amount used was positive, and the
+baseline's one negative entry sits at disc `-3`, which §7b identifies as the point at infinity.)
+**UNTESTED** — if the fit is ever generalised to a rational `f`, the cost-4 witnesses reopen.
+
+⚠ **The correction is PER COVER KEY, not per base.** `coeffs_trunc` is shared but `target_v` is not,
+so `phi(target)` differs per key and one vector cannot serve all of them. Applying key 11's witness
+makes key 11 pass and the run then stops at key 12 — which `annprobe` had never reached, because it
+aborts at the FIRST failing key. ⇒ **the number of obstructed cover keys at a base is not what the
+annihilator probe reports; it reports 1.** At `38_5` at least two keys (11, 12) are obstructed, both
+have `target_in_L_plus_2Z_RESTRICTED true`, and both have support-2 witnesses.
+
+### What this costs, and what is still unknown
+
+    demand = 2g+5 + cost   rational CM points, per key
+    key 11 -> 2g+15        key 12 -> 2g+23
+
+`38_5`'s rational CM supply is **unmeasured and cannot be measured without applying a correction** —
+the pipeline dies in `BorcherdsForms`, upstream of `AbsoluteValuesAtCMPoints`, so `#rat` is never
+computed at an obstructed base. ⚠ At `34_3` the supply was a hard cap at 10 regardless of the ask;
+whether `38_5` behaves that way is unknown. Condition 4 likewise remains untested here.
+
+⇒ **Next: per-key perturbation vectors (`PROBE_EVEN_VEC_<key>`), then a full `genmodels` run at
+`38_5`.** That single run answers all three open questions at once: does condition 4 hold, what is
+`#rat`, and does the fit close (with `CMEXTRA` if short).
