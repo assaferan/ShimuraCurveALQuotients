@@ -860,7 +860,24 @@ alone cannot do odd D.}
         E0, nE0, _, eta_quotients_oo, eta_quotients_0 := WeaklyHolomorphicBasis(Xstar`D, Xstar`N : Prec := Prec, Zero, n0 := n0);
     end if;
     // we do this twice -- we should remember this
-    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2); // pts <-> infty, 0, rational
+    // The coprime-to-level filter is a NO-OP IN PRINCIPLE for this pool and pure loss in practice.
+    // These points are used ONLY as divisor support (zeros/poles of the Borcherds form) and are
+    // never Schofer-evaluated -- the fallback below already says so in as many words -- so the
+    // reason the filter exists (keeping out CM points whose Schofer values misbehave) does not
+    // apply here.  What it does instead is shrink three things: the (infty, P, Q) sweep that picks
+    // the hauptmodul divisor, the achievable-target set behind wdef (~line 1092), and the
+    // `#pts ge 3` requirement below (which is what kills bases with "Could not find enough
+    // rational CM points!").  Measured at 38_5: 4 points with the filter, 9 without.
+    // This mirrors SchoferFormula.m:1153, where the same filter was flipped OFF by default on
+    // 2026-09-07 after an 11-test both-ways sweep; that flip was simply never applied here.
+    // ⚠ A DISTINCT env var, NOT CMCOPRIME.  SchoferFormula.m:1153 reads CMCOPRIME for the OTHER
+    // call site, so reusing it here toggles both at once -- which makes any both-ways comparison
+    // confounded: CMCOPRIME=1 also re-enables the filter on the Schofer evaluation set, and that
+    // alone is known to break 14_3 / 39_2 (the bases the 2026-09-07 flip recovered).  PTSCOPRIME=1
+    // restores the old behaviour of THIS line only, so the control isolates this change.
+    pts_coprime := GetEnv("PTSCOPRIME") ne "";
+    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2,
+                                           coprime_to_level := pts_coprime); // pts <-> infty, 0, rational
     if #pts lt 3 then
         // CM-starved bases (e.g. the even-level X0^15(2), which has only 2 coprime-to-N rational CM
         // points) do not have enough coprime points to pin the infty/0/rational divisor structure.
