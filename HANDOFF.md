@@ -37,7 +37,7 @@ like a dead job; it was not.
 
 ### ⚠⚠ ~400 CPU-HOURS LOST: `earlyoom` KILLS LONG MAGMA JOBS ON lovelace
 
-`bk3/DRIVER.log` records `EXIT 143` (SIGTERM) for **all five Guo-Yang re-runs within 41 seconds**:
+`bk3/DRIVER.log` records `EXIT 143` (SIGTERM) for **all five re-runs within 41 seconds**:
 
     123_1  2026-09-18T23:24:10     119_1  23:24:17     115_1  23:24:49
      95_1  2026-09-18T23:24:50     159_1  23:24:51
@@ -51,10 +51,23 @@ box where other users can squeeze 2 TB.
 
 ⇒ **Multi-day Magma jobs on lovelace are not survivable as currently launched**, and the loss is
 silent: `/usr/bin/time` still reports `Exit status: 0`, so only the `Command terminated by signal 15`
-line and `EXIT 143` in the driver log reveal it. ⚠ `95_1` was the one with oracle value (a published
-Guo-Yang equation), so that is the expensive loss.
+line and `EXIT 143` in the driver log reveal it.
 ⇒ Use **lava** (`ssh -J lovelace lava`, 32 cores, near-idle) for runs of that length, or expect to
 lose them. See [[remote-machines-lovelace-lava]].
+
+⚠ **CORRECTED 2026-09-22, same day: this block first called the five "the Guo-Yang re-runs" and
+said `95_1` "was the one with oracle value". Both are wrong.** The five are the jobs `earlyoom`
+reaped -- a kill cohort. The Guo-Yang label came from `genmodels.m`'s
+`vx_skip = {95_1,115_1,123_1,129_1}`, which groups by the vx defect and not by the paper. Against
+the equation tables (43 `\multirow{1}{*}{\text}` cells, label two lines above each; 43 cells to 43
+distinct labels, no repeats): **`95_1`, `119_1` AND `159_1` all have published equations**, while
+**`115_1` and `123_1` are not in Guo-Yang at all** -- no `X^{115}_0` or `X^{123}_0` label anywhere
+in the source. So the expensive loss is three oracle-bearing bases, not one.
+⚠ `119_1`/`159_1` are not transcribed in `tests/GuoYangEquations.m` (it has ten + `93_1`); both are
+degree-20 and wrap across `\\`, so transcribe by hand from the JOURNAL version --
+[[guoyang-journal-version-differs]]. A textbook instance of the repo's own rule: the arithmetic
+about *which machine killed what* was right, and the object -- *which bases carry an oracle* -- was
+never checked.
 
 ### The even-correction / quadratic-CM line: where it stopped
 

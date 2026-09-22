@@ -29,15 +29,34 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
 
 ### Do this first, in order
 
-1. ⚠⚠ **RELAUNCH THE FIVE GUO-YANG BASES ON `lava`, NOT lovelace** -- `95_1 115_1 123_1 119_1 159_1`
+1. ⚠⚠ **RELAUNCH THE FIVE KILLED BASES ON `lava`, NOT lovelace** -- `95_1 115_1 123_1 119_1 159_1`
    were all SIGTERM'd by **`earlyoom`** at 66-87 h, within 41 seconds of each other, plus `62_7`
    (at its FINAL stage) and `314_1`.  lovelace runs `earlyoom --prefer ...|magma` and is SHARED, so
    Magma is killed first under pressure.  ⚠ **THE LOSS IS SILENT**: `/usr/bin/time` still prints
    `Exit status: 0`; only `Command terminated by signal 15` in the log and `EXIT 143` in
-   `bk3/DRIVER.log` reveal it.  **`95_1` is the one worth the compute** -- it is the only one of the
-   five with a published Guo-Yang equation, hence the only one that returns with an ORACLE.
+   `bk3/DRIVER.log` reveal it.
    `ssh -J lovelace lava` (32 cores, near-idle, needs its own clone).  See
    [[remote-machines-lovelace-lava]].
+
+   ⚠ **CORRECTED 2026-09-22: these are NOT "the five Guo-Yang bases", and `95_1` is NOT the only
+   one with an oracle.**  The cohort is a KILL cohort, not a Guo-Yang cohort -- it is the five jobs
+   `earlyoom` reaped, and it got the "Guo-Yang" label from `genmodels.m`'s
+   `vx_skip = {95_1,115_1,123_1,129_1}`, which groups by the vx defect, not by the paper.  Checked
+   against the equation tables (43 `\multirow{1}{*}{\text}` cells, each with its label two lines
+   above; 43 cells to 43 distinct labels, no repeats):
+
+       95_1   119_1   159_1     published equation -> RETURNS WITH AN ORACLE
+       115_1  123_1              NOT in Guo-Yang at all (no `X^{115}_0` / `X^{123}_0` label)
+
+   ⇒ **three of the five are worth the compute, not one.**  `111_1`, the fourth odd-`D` level-1
+   base of that class, is also a Guo-Yang base and ALREADY BUILT (20.2 h, default flags, exact
+   `IsIsomorphic` in 0.05 s) -- so the class is known to be reachable, which raises the prior on
+   `119_1`/`159_1` rather than lowering it.
+   ⚠ Their equations are **not transcribed yet** -- `tests/GuoYangEquations.m` carries ten
+   (`51_1 87_1 14_5 55_1 15_2 22_3 111_1 39_2` + pairs `21_2 57_1`) plus `93_1`.  `119_1`/`159_1`
+   are degree-20 and wrap across `\\`, the exact shape of the four silent-corruption traps in that
+   file's header: transcribe BY HAND, and **from the JOURNAL version**, not the arXiv v1 in
+   `vvdata/weyl-campaign/guoyang/` -- see [[guoyang-journal-version-differs]].
 2. **Re-screen with the coprime fix in place.** `0ca6e37` enlarged the divisor-support CM pool at
    every `N>1` base (15_2 2->10, 21_2 2->9, 38_5 4->9).  That pool feeds `wdef`'s achievable-target
    set, so some recorded verdicts may move -- ⚠ and note the direction: a SMALLER pool makes `wdef`
