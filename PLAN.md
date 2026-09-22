@@ -61,14 +61,30 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
    ### ⇒ LAUNCHED ON lava 2026-09-22 -- and lava is NOT the safe harbour PLAN assumed
 
    `$HOME/lavarun` (fresh clone at `31bd605`, `genmodels.m` copied from campaign), driver
-   `run_base.sh`, output `$HOME/lavarun/out/` with a `DRIVER.log`.  **`95_1` and `119_1` running;
-   `159_1` deliberately HELD.**
+   `run_base.sh`, output `$HOME/lavarun/out/` with a `DRIVER.log`.  **All three running** --
+   `95_1` and `119_1` from 11:40, `159_1` added 16:47 once the memory question was answered.
 
    ⚠⚠ **lava runs the SAME `earlyoom --prefer (...|magma)` as lovelace.**  The move buys headroom,
-   not immunity: 125 GB total / ~110 available and one idle user, versus a shared box where others
-   take 2 TB.  earlyoom fires below **10 GB available**.  With per-job peaks measured at 13-82 GB,
-   **three concurrent heavy bases can reproduce the loss on lava** -- which is why the third is
-   held.  Check `free -g` before adding it.
+   not immunity: 125 GB total and one idle user, versus a shared box where others take 2 TB.
+   earlyoom fires below **10 GB available**.
+
+   **MEASURED, which is why all three now run.** The 13-82 GB per-job figure that justified holding
+   the third is from *lovelace* and did NOT transfer.  Actual on lava, at 5 h elapsed:
+
+       95_1   2.2 GB        119_1   8.7 GB        available: 99 GB of 125
+
+   `119_1` spiked to **17.4 GB** during its pool build and came back down to ~8 GB, so that was a
+   TRANSIENT, not monotonic growth -- the thing that looked like the start of a climb to 82 GB was
+   a phase.  Two jobs at ~11 GB combined left the 82 GB reading with no support here, so the
+   memory case for holding `159_1` had nothing behind it.  ⚠ Do not re-derive the ceiling from the
+   lovelace numbers; measure on the box you are on.
+
+   ⚠ **Checking is on demand, not watched.** `run_base.sh` records `128+N` for a signalled child
+   AND verifies the model file, so an earlyoom kill lands in `DRIVER.log` as a loud `EXIT 143`
+   whether or not anyone is looking -- which is the whole point, since the lovelace loss was silent
+   for exactly the opposite reason.  One line answers it at any later time:
+
+       ssh -J lovelace lava 'grep "^EXIT" ~/lavarun/out/DRIVER.log'
 
    ⚠ Three harness traps, all hit launching this and all now handled in `run_base.sh`:
    * **a bad Magma arg exits 0** -- the syntax is `name:=value`; `OUTDIR=...` is read as a
