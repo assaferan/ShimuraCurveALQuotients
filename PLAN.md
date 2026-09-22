@@ -52,11 +52,32 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
    base of that class, is also a Guo-Yang base and ALREADY BUILT (20.2 h, default flags, exact
    `IsIsomorphic` in 0.05 s) -- so the class is known to be reachable, which raises the prior on
    `119_1`/`159_1` rather than lowering it.
-   ⚠ Their equations are **not transcribed yet** -- `tests/GuoYangEquations.m` carries ten
-   (`51_1 87_1 14_5 55_1 15_2 22_3 111_1 39_2` + pairs `21_2 57_1`) plus `93_1`.  `119_1`/`159_1`
-   are degree-20 and wrap across `\\`, the exact shape of the four silent-corruption traps in that
-   file's header: transcribe BY HAND, and **from the JOURNAL version**, not the arXiv v1 in
-   `vvdata/weyl-campaign/guoyang/` -- see [[guoyang-journal-version-differs]].
+   ✅ **All three are now transcribed** (`31bd605`, `tests/GuoYangEquations.m`), read three
+   independent ways -- the journal page, the journal PDF's text layer, and the arXiv v1 TeX, all
+   agreeing.  They report `PENDING` until a model exists and then compare automatically, so nobody
+   has to remember the table is there.  Each is checked WITHOUT a model via the involutions the
+   same table publishes, plus the genus column; six symmetry controls keep that non-vacuous.
+
+   ### ⇒ LAUNCHED ON lava 2026-09-22 -- and lava is NOT the safe harbour PLAN assumed
+
+   `$HOME/lavarun` (fresh clone at `31bd605`, `genmodels.m` copied from campaign), driver
+   `run_base.sh`, output `$HOME/lavarun/out/` with a `DRIVER.log`.  **`95_1` and `119_1` running;
+   `159_1` deliberately HELD.**
+
+   ⚠⚠ **lava runs the SAME `earlyoom --prefer (...|magma)` as lovelace.**  The move buys headroom,
+   not immunity: 125 GB total / ~110 available and one idle user, versus a shared box where others
+   take 2 TB.  earlyoom fires below **10 GB available**.  With per-job peaks measured at 13-82 GB,
+   **three concurrent heavy bases can reproduce the loss on lava** -- which is why the third is
+   held.  Check `free -g` before adding it.
+
+   ⚠ Three harness traps, all hit launching this and all now handled in `run_base.sh`:
+   * **a bad Magma arg exits 0** -- the syntax is `name:=value`; `OUTDIR=...` is read as a
+     FILENAME, prints `Can't open file`, exits **0**, and `/usr/bin/time` reports
+     `Exit status: 0`.  `SetQuitOnError(true)` is inside the script that was never read.
+     ⇒ **verify the OUTPUT FILE, never the exit code**;
+   * **the process is `magma.exe`** -- `ps -C magma` finds nothing while the job runs;
+   * **`nohup` inside `ssh` hangs** holding the pipe though the job launched fine -- confirm from
+     a SECOND ssh, as [[remote-machines-lovelace-lava]] says.
 2. **Re-screen with the coprime fix in place.** `0ca6e37` enlarged the divisor-support CM pool at
    every `N>1` base (15_2 2->10, 21_2 2->9, 38_5 4->9).  That pool feeds `wdef`'s achievable-target
    set, so some recorded verdicts may move -- ⚠ and note the direction: a SMALLER pool makes `wdef`
