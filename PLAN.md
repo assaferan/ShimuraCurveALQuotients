@@ -13,7 +13,39 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-16
+## ⇒ START HERE — updated 2026-09-22
+
+**`HANDOFF.md` (2026-09-22) has the full account.** Everything the 2026-09-16 block below asked for
+is DONE; it is kept only for provenance. Its numbers are superseded by these.
+
+### The numbers
+
+    models       113 model files committed.  ModelChecks 12414 checks / 0 failures.
+                 Six collected 2026-09-16..22: 14_37 6_73 6_107 6_89 6_113 6_137 (6_137 COMPLETE,
+                 8 of 8 keys).  None is a Guo-Yang base -> all at 10_61 evidence level.
+    obstructed   134 known (49 recorded + 5 stumbled into + 80 screened), a LOWER BOUND.
+    2-dim        EIGHT bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 358_1.
+    unresolved   NONE.  358_1 was the last, resolved 2026-09-22 (deficit 2, flat P=266..700).
+
+### Do this first, in order
+
+1. ⚠⚠ **RELAUNCH THE FIVE GUO-YANG BASES ON `lava`, NOT lovelace** -- `95_1 115_1 123_1 119_1 159_1`
+   were all SIGTERM'd by **`earlyoom`** at 66-87 h, within 41 seconds of each other, plus `62_7`
+   (at its FINAL stage) and `314_1`.  lovelace runs `earlyoom --prefer ...|magma` and is SHARED, so
+   Magma is killed first under pressure.  ⚠ **THE LOSS IS SILENT**: `/usr/bin/time` still prints
+   `Exit status: 0`; only `Command terminated by signal 15` in the log and `EXIT 143` in
+   `bk3/DRIVER.log` reveal it.  **`95_1` is the one worth the compute** -- it is the only one of the
+   five with a published Guo-Yang equation, hence the only one that returns with an ORACLE.
+   `ssh -J lovelace lava` (32 cores, near-idle, needs its own clone).  See
+   [[remote-machines-lovelace-lava]].
+2. **Re-screen with the coprime fix in place.** `0ca6e37` enlarged the divisor-support CM pool at
+   every `N>1` base (15_2 2->10, 21_2 2->9, 38_5 4->9).  That pool feeds `wdef`'s achievable-target
+   set, so some recorded verdicts may move -- ⚠ and note the direction: a SMALLER pool makes `wdef`
+   look CLEARER, so the risk the fix addresses is false CLEARS, not false obstructions.
+3. **Keep collecting the backlog.** It produced six models this stretch while the hatch line
+   produced none.
+
+## ⇒ (SUPERSEDED) START HERE — updated 2026-09-16
 
 **Post-reset collection is DONE; see `HANDOFF.md` (2026-09-16) for the full account.** The section
 below (2026-09-14 later) is otherwise still current — same main line, same screen-before-you-run
