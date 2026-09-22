@@ -212,3 +212,16 @@
 #   known obstructed = 49 recorded + 5 stumbled into + 79 screened = 133.  STILL A LOWER BOUND.
 #   NO VERDICT, unresolved: 358_1 only -- still descending, defhi running as of this update
 #   (~/shimura/defhi/358_1.log on lovelace).
+#
+# --- 2026-09-22: 358_1 RESOLVED by defhi (P=700) -- the last unresolved base ---
+#
+358_1(hi)  7      5 3 2 2 2 2 2   OBSTRUCTED, deficit 2 (2-DIMENSIONAL obstruction space) -- flat
+#                                   across FIVE rungs, P = 266 through 700, the same invariance
+#                                   signature as the 158_1 positive control.  WeaklyHolomorphicBasis
+#                                   alone took 29152 s (8 h); total wall 41240 s, which is why this
+#                                   base sat header-only for days and looked stalled.
+#
+# ⇒ 2-DIMENSIONAL OBSTRUCTION SPACES: SEVEN -> EIGHT.  Add 358_1 to
+#   166_3 22_19 74_7 10_67 58_13 302_1 334_1.
+# ⇒ known obstructed = 49 recorded + 5 stumbled into + 80 screened = 134.  STILL A LOWER BOUND.
+# ⇒ NO bases remain in the "no verdict" state.
