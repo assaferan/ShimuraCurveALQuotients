@@ -288,3 +288,64 @@ Every cost-10 witness listed in §5 uses disc 19 or 20 at amount 2 — exactly t
 discriminants — so all of them are INVALID: they move the divisor by an odd amount. With those
 properly handled the minimum observed cost is **18**, and the fit's demand is `2g+23`, not `2g+15`.
 The support-3 search that produced the 10s was costing the requested amount, not the divisor change.
+
+---
+
+## 7. CONDITION 4 IS THE BINDING FILTER, AND A CHEAP SCREEN FOR IT IS HARDER THAN IT LOOKS
+
+*2026-09-22.*
+
+### The cost floor from conditions 1-3 does NOT predict legality
+
+`PROBE_WITNESS2` (in `probe-witness-guard.patch`) enumerates corrections satisfying conditions 1-3
+with the per-discriminant FACTOR handled (§6), cheapest first. Measured floors, ~16 s per base:
+
+    10_11: 2    14_3: 2    26_3: 2    6_11: 2    14_5: 6    6_17: 6    22_3: 10    6_19: 10
+    34_3:  8   (108 candidates valid at all 7 cover keys, costs 8,12,16,20,24,...)
+
+**Every cheap candidate tested dies on condition 4.** `34_3` disc 11 amt 8 (cost 8) and `14_3`
+disc 11 amt 2 (cost 2) both fail in `RationalNumber` inside `ValuesAtCMPoints`. ⇒ conditions 1-3
+rank candidates by a quantity that does not decide the question; condition 4 is the filter that
+binds, and it costs a partial pipeline run per candidate.
+
+### ⇒ §9's "minimum cost 24 at 34_3" is VINDICATED, and now explained
+
+Earlier the same day I claimed cost 8 refuted it. **That was wrong** -- cost 8 satisfies 1-3 only.
+Sorting the 108 candidates by cost and keeping those whose amounts are all `= 0 mod 6` (the
+empirical condition-4 modulus at `D = 34`) gives a first entry at **cost 24**, and `disc 164 amt 6`
+is one of four there. So the floor of 24 is not an artifact of the old sweep's `PROBE_SWAMTS=6,12`:
+conditions 3 and 4 pull against each other. Condition 4 wants amounts divisible by 6; condition 3
+kills the cheap ones that are (disc 11 at amt 6 would cost 6 but is not integrally solvable). The
+cheapest correction satisfying BOTH is 24.
+
+⚠ That also explains why the quadratic-CM route (§8 below) cannot be validated at `34_3`:
+`dim P(B) ~ (2g+4+cost) - #rat - 1`, and `34_3` is doubly unlucky -- legal cost 24 AND a rational
+supply hard-capped at 10 -- giving `dim P(B) ~ 19`, where `solve_quadratic_constraints`' Groebner
+step ran 6 h and produced nothing.
+
+### ⚠ THE CHEAP CONDITION-4 SCREEN DOES NOT WORK AS BUILT -- and the baseline control caught it
+
+`PROBE_COND4` hoists what looked like the right way: `Ldata`, `Q`, `lambda`, `scale` depend only on
+`(D, N, d)`, not on the correction, so one run should screen every candidate -- solve, build the
+form, call the real `SchoferFormula`, try `RationalNumber`.
+
+It reported all 32 candidates FAIL. **The baseline control says that is meaningless**: the
+UNPERTURBED target, at a base that demonstrably builds, also comes back FAIL. A screen that
+rejects the known-good answer is measuring the wrong object.
+
+The reason is in `ValuesAtCMPoints`: `RationalNumber` is applied to the table entries AFTER
+`row_scales`/`scale_factors` are applied, not to a raw `SchoferFormula` output. Condition 4 is a
+statement about the SCALED table; a raw value may be non-rational before scalings that are
+supposed to cancel. So the screen has to hook into `AbsoluteValuesAtCMPoints`' table construction,
+which needs `curves`, `all_cm_pts` and `fs` -- none of which exist where the candidates are
+enumerated inside `BorcherdsForms`.
+
+⚠ **Do not re-attempt the screen by calling `SchoferFormula` directly.** The viable design hoists
+one level up: compute the weakly-holomorphic basis ONCE (the expensive part, and independent of
+the correction) and loop candidates through the real CM evaluation.
+
+⇒ **The baseline control is the whole lesson.** Without it this section would have reported "all
+32 candidates fail condition 4" as a finding. Any future screen here must test the unperturbed
+target first and refuse to report if it fails. The sign of `d` was a red herring: passing `|d|`
+instead of `d` was also wrong, and fixing it changed nothing, because the object was wrong either
+way.
