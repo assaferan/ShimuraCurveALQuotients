@@ -13,7 +13,130 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-14 (later)
+## ⇒ START HERE — updated 2026-09-16
+
+**Post-reset collection is DONE; see `HANDOFF.md` (2026-09-16) for the full account.** The section
+below (2026-09-14 later) is otherwise still current — same main line, same screen-before-you-run
+discipline — but its numbers and its "first thing next session" list are superseded by this one.
+
+### The numbers, corrected AGAIN — do not quote 75/132 as anything but a lower bound
+
+    obstructed   133 known (49 recorded + 5 stumbled into + 79 screened), a LOWER BOUND.  The jump
+                 from 75 is a systematic odd-prime-N sweep (defic5), not a density finding -- the
+                 bases screened were chosen, not sampled.
+    2-dim        SEVEN bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 (302_1/334_1 new, confirmed
+                 by extending the pole ladder to P=700 with 158_1 as a positive control).
+    unresolved   358_1 only -- deficit still descending at its last computed rung, its defhi
+                 extension is running on lovelace.  NOT clear, NOT any fixed deficit yet.
+                 (14_71 RESOLVED 2026-09-16: flat deficit 2 across P=550->700.  Do not re-screen.)
+    still running ~25 defic5 targets (large-D N=1, and D=6 at large prime N) had not returned a
+                 verdict as of collection; check them before re-screening anything in that range.
+
+### Do this first, in order
+
+1. ✅ **DONE 2026-09-16 — `14_37` collected**: 7 of 14 keys, `ModelChecks` 12036/0 with it
+   included, negative control run. Committed `9bb63ec`. See `HANDOFF.md` for detail.
+2. ✅ **DONE 2026-09-16 — `14_71` resolved** via `defhi.sh`: OBSTRUCTED, deficit 2, flat
+   P=550->700. Folded into the campaign screening log (`cdcf801`, not yet pushed).
+3. **Collect `bk3`** as soon as any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1 119_1 159_1`
+   finishes -- as of 2026-09-16 all are still computing (mostly "Borcherds forms"/"CM points";
+   `62_7` is furthest along, at "equations of covers"), so there is nothing to `VerifyModelSet`
+   yet. `115_1`/`123_1` are ALSO now running (relaunched, freed by the `vx_skip` removal) --
+   do not relaunch again.
+4. **Extend `358_1`** with `defhi.sh` (`deficit_hi.m`, ladder to `P=700`) -- already launched and
+   in progress on lovelace as of 2026-09-16; just collect it when it finishes.
+5. **Keep collecting the ~25 still-running `defic5` bases** and fold new verdicts into
+   `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`, not a new file.
+
+## ⇒ PARALLEL TRACK — added 2026-09-16: does `deficit.m`'s number have a closed form?
+
+**Does not block the model backlog above.** A same-day session ran the theory arc's open question
+(`paper/DRAFT-borcherds-obstruction.md` §5, "why is a base obstructed, and can the deficit be
+predicted without running the pipeline") about as far as it goes without committing to a multi-day
+implementation, and the context is long enough that the plan below is meant to be picked up by a
+**fresh session with no memory of the conversation that produced it** — everything you need is here
+or in the two files it points to.
+
+### Where this stands, in one paragraph
+
+`deficit.m` measures the rank of a pairing between `S_{3/2}(ρ_L^*)` (dual Weil representation, weight
+3/2 cusp forms) and a small fixed target set `T` of tracked CM-divisor classes (`deficit ≤ dim T`,
+NOT `≤ dim S_{3/2}`). Two closed-form routes were tried and both are now settled, in the sense of
+"we know why they don't work," which is progress, not a dead end:
+
+* **`deficit = genus(X_0^D(N))`** — refuted outright, first two bases tried (`146_1`/`194_1` share a
+  genus, not a deficit).
+* **`dim M_{3/2}(ρ_L^*)`, via Borcherds' own Riemann–Roch formula** (GKZ paper, Duke 97 (1999), p.9)
+  — sourced correctly, IMPLEMENTED via `O(n)` Gauss sums (the naive matrix build is infeasible:
+  `|disc_grp|` runs to 1.3M on the calibration bases), and VALIDATED bit-for-bit against real
+  matrices on `6_1`/`10_1` before being trusted on anything larger. **It computes a real number, but
+  the wrong one** — thousands, against measured deficits of 0–3 — because it's the dimension of the
+  *whole* obstruction space, not the rank of the pairing against the small target `T`. Banked as
+  `vvdata/weyl-campaign/gksz-dim-formula.m` (campaign, `6565a95`) — its header documents exactly
+  this, so it isn't re-attempted as a predictor. **Read this file's derivation before writing any
+  new eigenvalue/trace formula in this area** — it hit two real sign/index errors (wrong eigenvalue
+  pair for one block, `n0` not divisible by 12 for a second base) that only the `6_1`/`10_1`
+  validation step caught; skipping that step on this problem is asking to repeat them.
+
+Full write-up of both: `paper/DRAFT-borcherds-obstruction.md` §5 (a-d). `HANDOFF.md` (2026-09-16,
+"THE `S_{3/2}` DIMENSION IS COMPUTABLE...") has the session narrative.
+
+### ⚠ THE KRY LEAD: CHASED, AND IT LOOKS LIKE A DEAD END — 2026-09-16
+
+**Fetched and read Chapter 7 (§7.1 in full, §7.6 in full; §7.2–7.5/7.7–7.11 only by section-header
+structure, NOT read line by line — so this is a strong lead, not an exhaustive survey).**
+`vvdata/weyl-campaign/kry-ch7-notes.md` (this commit) has the two sections in full with the exact
+citations. Bottom line: **Chapter 7 answers a different question from `deficit.m`, in a way that
+looks structural, not incidental.**
+
+* **What Theorem C actually computes**: the ARITHMETIC HEIGHT PAIRING `⟨Ẑ(t1,v1), Ẑ(t2,v2)⟩` in the
+  arithmetic Chow group of the INTEGRAL MODEL `M` over `Z` — a real-number Arakelov invariant built
+  from intersection multiplicities on the special fiber (formal/Drinfeld-space geometry, quasi-
+  canonical liftings) PLUS an archimedean Green-function term. Theorem C identifies its generating
+  function with the Fourier coefficients of a genus-2 SIEGEL modular form `φ̂2`, itself an arithmetic
+  theta lift (Ch. 4/6). The book's own Ch. 9, "Central derivatives of L-functions", is what that
+  generating function computes in the end — this is the Shimura-curve analogue of Gross–Zagier.
+* **What `deficit.m` actually computes** (confirmed by re-reading the file, `vvdata/weyl-campaign/
+  deficit.m`): `Ncols(mat) - Rank(ech_basis * mat)`, a **purely classical, finite-dimensional linear-
+  algebra rank** of a matrix pairing q-expansion coefficients of a weakly-holomorphic basis against a
+  fixed set of target discriminants (`coeffs_to_divisor_matrix`). No scheme, no integral model, no
+  Green functions, no archimedean data, no heights of any kind.
+* **The local formula that DOES exist** (`§7.6`, Props 7.6.2–7.6.4: `ν̃_p(T)` at ramified `p`, built
+  from `p^k`, `χ_d(p)`, `ordp(d/4)`) is real and does have the local-density flavor this project's
+  own `κ_p`/`SchoferFormula.m` machinery already uses — but it computes an intersection MULTIPLICITY
+  for a FIXED pair `(t1,t2)`, always a well-defined number. It says nothing about whether a rank
+  degenerates across a whole basis of `S_{3/2}(ρ_L^*)`, because that basis-level question never
+  appears in Ch. 7 at all — `T`'s role there is a single quadratic-form index, not a target set.
+
+⇒ **Read this as reinforcing, not circumventing, the earlier finding.** The 2026-09-16 (later)
+session already concluded `deficit.m`'s rank is a Waldspurger-type "do these specific Fourier
+coefficients vanish" question — "hard" arithmetic, not amenable to a Riemann–Roch/trace-formula
+closed form. KRY's own book ties the structurally closest global quantity (the height pairing) to
+CENTRAL DERIVATIVES OF L-FUNCTIONS (Ch. 9) — exactly the kind of object that is hard for the same
+reason, not a local formula that would sidestep it. **No closed-form deficit predictor is expected
+to exist along this route either.**
+
+⚠ Two things confirmed while reading, worth not re-deriving if this is ever revisited anyway:
+* Their Introduction (p.5, Prop 1.0.1) identifies the *degree*-generating series (summed over all
+  cosets) with an **Eisenstein series**, not a cusp form — consistent with this project's own
+  "in our dimension the obstruction is cuspidal" (Borcherds Example 5.4, §3 of the paper draft).
+* `B^(p)`, their definite companion algebra for a prime `p | D(B)` in the local formula, is NOT the
+  same construction as this repo's own `SupersingularALData` (`special_fiber_modular.m`, which uses
+  `BrandtModule(D*p)` for an *auxiliary* reduction prime `p ∤ D`) — different prime regime, in case
+  anyone is tempted to reuse it for something else in this area.
+
+⇒ **RETIRED as a deficit predictor.** If the theory arc wants a next move here, it is NOT "implement
+Ch. 7" — it would have to be something that engages the central-L-value question head-on (e.g.
+asking, for the SPECIFIC small target sets `T` that actually occur, whether there's a representation-
+theoretic reason — an oldform/local-component obstruction — forcing a coefficient to vanish, rather
+than hoping for a formula that works for a generic `T`). Not attempted; no evidence it is tractable
+either. The model backlog remains the only track producing results.
+   `38_5` (deficit 1), `146_1` (0), `194_1` (0), `58_13` (2), `26_31` (3).
+4. If it reproduces those five, THEN check it against the much larger dataset now available:
+   `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt` has 132+ bases with
+   known ladders (deficit values 0/1/2/3, plus two confirmed 2-dimensional cases).
+
+## ⇒ (SUPERSEDED) START HERE — updated 2026-09-14 (later)
 
 **MAIN LINE: the model backlog, and it is now SCREENED rather than attempted blind.**
 

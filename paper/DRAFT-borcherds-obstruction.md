@@ -85,27 +85,82 @@ Three consequences, in increasing order of usefulness:
    while every base the screen was validated on had a flat ladder from `P = 102`);
 3. obstruction becomes computable without running anything.
 
-## 5. ⚠ The open piece, and where it will bite
+## 5. ⚠ RESOLVED (2026-09-16): `dim S_{3/2}(ρ_L^*)` is now computable, and it is the WRONG target
 
-The predictor needs `dim S_{3/2}(ρ_L^*)` in closed form. Two warnings:
+This section originally asked for `dim S_{3/2}(ρ_L^*)` in closed form as a predictor for `deficit.m`'s
+measured number. Both halves of that plan are now settled — the dimension is computable, and it does
+**not** predict the deficit, for a reason that is itself informative.
 
-* The relevant dimension formula is the Riemann–Roch / trace-formula statement (Borcherds' §4;
-  Bruinier, *Borcherds products on O(2,l)*, LNM 1780, §2). It is **not** in §4 of "Reflection groups
-  of Lorentzian lattices" — checked, that section is about Lorentzian reflection groups.
-* **Weight 3/2 is the singular case.** Riemann–Roch computes `dim M_k − dim S_{2−k}`; at `k = 3/2`
-  the partner is `M_{1/2}`, spanned by unary theta series (Serre–Stark). The formula does not
-  separate the two, so the `M_{1/2}` contribution must be computed explicitly. This is where an
-  unchecked formula returns a plausible wrong number.
+### 5a. Route B (the naive guess) is refuted by measurement
 
-⚠ CONJECTURAL, NOT ESTABLISHED: by the Eichler/Shimizu and Shimura correspondences one expects
-`S_{3/2}(ρ_L^*)` to be related to weight-2 forms on the Shimura curve (in the GKZ case the weight-3/2
-forms are the Kohnen plus-space partners of `S_2(Γ_0(N))`). If that holds there may be a route to the
-dimension that avoids the singular-weight formula entirely. **Nothing here has been checked.**
+The first candidate, motivated by Eichler/Shimizu/Shimura, was `deficit = genus(X_0^D(N))` (the
+weight-2 space on the full Shimura curve itself, `GenusShimuraCurve` in `ShimuraQuotients.m`):
 
-**Calibrate before trusting.** Reproduce the KNOWN deficits first — `38_5` (1), `146_1` and `194_1`
-(0, both build), `58_13` (2), `26_31` (3) — before believing any new number. The repo's own record of
-what happens otherwise is `HANDOFF.md`, and this session alone retracted three readings that were
-correct arithmetic about the wrong object.
+    38_5  : genus  9   deficit 1   match=false
+    146_1 : genus  7   deficit 0   match=false
+    194_1 : genus  9   deficit 0   match=false   <- SAME genus as 38_5, different deficit
+
+`146_1` and `194_1` share a genus but not a deficit, so deficit cannot be a function of the curve's
+genus alone. Refuted immediately, no further work needed on this route.
+
+### 5b. The real Riemann–Roch formula, sourced and validated
+
+The correct general statement is Borcherds' own (*GKZ in higher dimensions*, Duke 97 (1999), p. 9,
+right after Lemma 4.4 — not the Bruinier/Kuss citation this section originally guessed at): for a
+`d`-dimensional representation `ρ` of `Mp₂(Z)` on which the metaplectic central element `Z = S²` acts
+as `e^{−iπk}·Id`,
+
+    dim HolModForm(ρ, k) = d + dk/12 − α(e^{iπk/2}S) − α((e^{iπk/3}ST)^{−1}) − α(T)
+
+where `α(X)` sums the fractional eigenvalue-phases of `X`. Applying it to `ρ = ρ_L^*` at `k = 3/2`
+needs eigenvalues of `ρ_L^*(S)` and `ρ_L^*(ST)` restricted to the unique subspace where `Z` is
+compatible with `k = 3/2` — the "antisymmetric under `γ ↦ −γ`" eigenspace of the dual, confirmed by
+direct computation of `Z = ρ_L^*(S)²` on both eigenspaces, not assumed.
+
+**The obstacle was scale, not theory**: this repo's own `WeilRepresentationST` builds the honest
+`|L'/L| × |L'/L|` matrix, and `|L'/L|` runs from 72,200 to 1,299,272 on the calibration bases —
+far beyond what can be diagonalized. The fix: every quantity Borcherds' formula needs reduces to a
+handful of `O(n)` Gauss sums `Σ_γ e(c·Q(γ))` (never the full matrix), via two algebraic tricks —
+`tr(S²·X)` isolates one eigenspace of the negation involution by a projector trick, and `tr((ST)²)`
+factors into a *product* of two single Gauss sums because shifting `γ ↦ γ − 2δ` is a bijection of the
+group for fixed `δ`. **All six resulting trace identities were checked EXACTLY (bit-for-bit, in the
+same cyclotomic field) against the real matrices** on `6_1` (n=72) and `10_1` (n=200) before being
+trusted on anything larger — this is the "reproduce a known value first" habit, applied to a formula
+rather than a number.
+
+### 5c. Computed, and it answers a different question than deficit
+
+    38_5   dim M_{3/2}(ρ_L^*) = 1594     (deficit.m measures 1)
+    146_1  dim M_{3/2}(ρ_L^*) =  888     (deficit.m measures 0)
+
+Both in the thousands, both wildly larger than the tracked deficit. **This is not a bug in the
+formula — it is the correct dimension of the wrong space.** `deficit.m` does not measure
+`dim S_{3/2}(ρ_L^*)`; Serre duality (§1) says the obstruction to prescribing an *arbitrary* principal
+part is dual to the *whole* space `S_{3/2}(ρ_L^*)`, but the pipeline only ever asks to hit a small,
+fixed target set `T` of specific CM-divisor classes (the handful of cosets the model construction
+actually needs). The right statement is
+
+    deficit  =  rank of the pairing  S_{3/2}(ρ_L^*) → T*   ≤  min(dim S_{3/2}(ρ_L^*), dim T)
+
+so the deficit is bounded by `dim T` (small, by construction — a dozen or so classes), not by the
+ambient dimension, and the Riemann–Roch number above is essentially irrelevant to it: making the
+haystack bigger does not change whether this specific needle is in it.
+
+### 5d. Why this resists a closed form — and it is not merely unfinished work
+
+Whether the pairing degenerates on `T` depends on whether *specific Fourier coefficients* of a basis
+of `S_{3/2}(ρ_L^*)` vanish at the *specific discriminants* in `T`. That is a "hard" arithmetic
+question (Waldspurger's theorem ties half-integral-weight coefficients to central values of the
+Shimura/Shintani lift), not a "soft" dimension-counting one — no Riemann–Roch or trace-formula
+argument can answer it, by construction, since those only ever see the size of a space, not which
+specific coefficients within it vanish. This is consistent with the data: most bases screen clear
+(the generic, full-rank outcome), and the 132 known-obstructed bases are presumably each sitting on
+a specific algebraic coincidence rather than a smooth trend in `(D,N)`.
+
+**What survives**: a genuine, validated, `O(n)`-time computation of `dim M_{3/2}(ρ_L^*)` (equivalently
+`S_{3/2}`, since weight 3/2 is cuspidal here by §3) — a real invariant, and a correct upper bound on
+the deficit, banked as `vvdata/weyl-campaign/gksz-dim-formula.m` on the campaign branch. It is not,
+and per §5d cannot be turned into, a predictor for the small number `deficit.m` actually measures.
 
 ## Sources
 

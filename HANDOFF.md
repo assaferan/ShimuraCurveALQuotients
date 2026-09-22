@@ -11,6 +11,327 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-22 — SIX MODELS, `358_1` RESOLVED, AND ~400 CPU-HOURS LOST TO `earlyoom`
+
+### ✅ Six models collected and committed
+
+    14_37    7 of 14 keys    9bb63ec      6_89    11 of 15    7796a99
+    6_73     8 of 15         88634f9      6_113    8 of 15
+    6_107    8 of 15                      6_137    8 of 8  (a COMPLETE set)
+
+All verified: `ModelChecks` 12414/0 over **113 model files**, and each base individually
+negative-controlled (corrupt one leading coefficient -> red). ⚠ None is a Guo-Yang base, so all six
+are at `10_61` evidence level -- no external oracle.
+
+### ✅ `358_1` RESOLVED -- the last base carrying "no verdict"
+
+    ladder 5 3 2 2 2 2 2  at P = 144 190 266 350 450 550 700
+
+Flat at **deficit 2 across five rungs** (P = 266 -> 700), the same invariance signature as the
+`158_1` positive control. ⇒ OBSTRUCTED with a **2-dimensional obstruction space**, the EIGHTH such
+base (`166_3 22_19 74_7 10_67 58_13 302_1 334_1` + `358_1`). **Known obstructed 133 -> 134**, still
+a lower bound, and **no base is left in the unresolved state**.
+⚠ `WeaklyHolomorphicBasis` alone took 29152 s (8 h), total wall 41240 s -- which is why this base
+sat header-only for days and looked stalled. Buffered stdout + a slow first stage reads exactly
+like a dead job; it was not.
+
+### ⚠⚠ ~400 CPU-HOURS LOST: `earlyoom` KILLS LONG MAGMA JOBS ON lovelace
+
+`bk3/DRIVER.log` records `EXIT 143` (SIGTERM) for **all five Guo-Yang re-runs within 41 seconds**:
+
+    123_1  2026-09-18T23:24:10     119_1  23:24:17     115_1  23:24:49
+     95_1  2026-09-18T23:24:50     159_1  23:24:51
+    314_1  2026-09-18T17:41:55     (62_7 died 17:48, not even recorded in DRIVER.log)
+
+Each had run **66-87 hours** and was still in `Computing Borcherds forms`; `62_7` died at
+`Computing equations of covers`, i.e. the LAST stage. No reboot (uptime 20 days), no stop script
+touched since 09-15, and lovelace runs **`earlyoom -r 3600 --prefer ^(...|magma)$`** -- killing
+preferred processes one after another under memory pressure is exactly this signature, on a shared
+box where other users can squeeze 2 TB.
+
+⇒ **Multi-day Magma jobs on lovelace are not survivable as currently launched**, and the loss is
+silent: `/usr/bin/time` still reports `Exit status: 0`, so only the `Command terminated by signal 15`
+line and `EXIT 143` in the driver log reveal it. ⚠ `95_1` was the one with oracle value (a published
+Guo-Yang equation), so that is the expensive loss.
+⇒ Use **lava** (`ssh -J lovelace lava`, 32 cores, near-idle) for runs of that length, or expect to
+lose them. See [[remote-machines-lovelace-lava]].
+
+### The even-correction / quadratic-CM line: where it stopped
+
+Full account: `vvdata/weyl-campaign/even-correction/HATCH-EXISTS.md` §5-§7 (campaign), probes in
+`probe-witness-guard.patch`. In brief:
+
+* **Condition 4 is the binding filter.** Conditions 1-3 are cheap lattice tests with cheap
+  candidates (floors 2-10 across controls), but the cheapest 1-3 candidate fails condition 4 at
+  both bases tried (`34_3` cost 8, `14_3` cost 2). ⇒ the 1-3 cost floor does NOT predict legality.
+* **`QUADCONSTRAINTS.md` §9's "minimum cost 24 at `34_3`" is VINDICATED** and now explained:
+  condition 4 wants amounts `= 0 mod 6`, condition 3 kills the cheap ones that are. My same-day
+  claim that cost 8 refuted it was wrong.
+* ⇒ **The quadratic-CM route cannot be validated at `34_3`**: legal cost 24 and a rational supply
+  hard-capped at 10 give `dim P(B) ~ 19`, where the Groebner step ran 6 h for nothing.
+* ⚠ **A cheap condition-4 screen does NOT work by calling `SchoferFormula` directly** -- its
+  baseline control (the UNPERTURBED target, at a base that builds) also came back FAIL, which is
+  what caught it. `RationalNumber` is applied to the table entries AFTER `row_scales`, so the raw
+  value is the wrong object. Any future screen must test the unperturbed target first and refuse
+  to report if that fails.
+
+### ✅ Also landed: the coprime filter fix (`0ca6e37`, main)
+
+`BorcherdsForms.m:863` still passed the `coprime_to_level` default of `true`, though the same
+filter was flipped OFF by default at `SchoferFormula.m:1153` on 2026-09-07. These points are
+divisor support only and never Schofer-evaluated -- the `#pts<3` fallback says so itself -- so the
+filter's purpose does not apply. Pool grows at **all 16** `N>1` bases (15_2 2->10, 21_2 2->9,
+38_5 4->9); **14 of 16 re-derivation tests byte-identical both ways**, including `26_3` (pinned
+base_label) and `22_5` (drift flags). `PTSCOPRIME=1` restores the old behaviour at THIS site only
+-- deliberately not `CMCOPRIME`, which `SchoferFormula` also reads, so a control using it is
+confounded (it re-enables the Schofer-side filter and alone breaks `14_3`/`39_2` -- which it did,
+and nearly read as evidence FOR the change).
+⚠ NOT a rescue for CM-starved bases: `134_3` has 0 coprime and 2 total points, still under the bar.
+
+## Handoff — 2026-09-16 (evening) — THE EVEN-CORRECTION HATCH EXISTS EVERYWHERE SURVEYED, AND IT HAS AN UNGUARDED HAZARD
+
+Full account, with every measurement and control:
+`vvdata/weyl-campaign/even-correction/HATCH-EXISTS.md` (campaign, `7b60f15`/`69d77cb`/`64f7e73`).
+Probe code: `vvdata/weyl-campaign/even-correction/probe-mod2.patch`.
+
+### ✅ Three more models collected
+
+    14_37   7 of 14 keys    ModelChecks 12036/0   neg ctl 62/5    9bb63ec
+    6_73    8 of 15 keys    ModelChecks 12162/0   neg ctl 62/5    88634f9   (recovered: the
+    6_107   8 of 15 keys                          neg ctl 62/6              SIGTERM'd 09-14 run)
+
+None is a Guo-Yang base, so all three are at `10_61` evidence level -- no external oracle.
+⚠ The five Guo-Yang re-runs (`95_1 119_1 159_1` at ~27 h, `115_1 123_1` at ~7 h) are ALL still in
+`BorcherdsForms`. Their logs are 28 bytes and Magma buffers, so **CPU-vs-elapsed is the only
+progress signal** -- all five read 99.6%, i.e. healthy, not stuck.
+
+### ✅ The hatch's EXISTENCE question is settled, and it is not what the record assumed
+
+`PROBE_MOD2` decides "does ANY even correction exist" by lattice membership -- `target in L + 2Z^nds`
+-- in ~20 s per base. `PROBE_INTSWEEP` could never answer it: it tests ONE discriminant at a time
+against a guessed amount list, and at an obstructed base the charge equation `a*phi_j = -phi(target)`
+PINS the amount per discriminant, so the corrections that exist need TWO OR MORE discriminants and
+were never searched for. Result: **TRUE at all 28 bases with annihilator data**, restricted to
+genuine discriminant coordinates. ⇒ conditions 1+2+3 are jointly satisfiable everywhere surveyed;
+**condition 3 is not a filter on existence.** The test is strictly stronger than the known parity
+criterion at **16 of 28** bases (scaling-free unit-perturbation control), so this is real
+information, not a restatement of the 28/28 parity survey.
+
+⚠ **The `QUADCONSTRAINTS.md` cost verdict does not transfer to obstructed bases.** Its 24 (at
+`34_3`) and 48 (at `35_1`) are measured at UNOBSTRUCTED controls, where `phi = 0` makes every amount
+legal and integrality picks the expensive discriminants. At an obstructed base the charge equation
+sets the price instead.
+
+### ⚠⚠ THE HAZARD: the target coordinate is NOT the divisor coefficient
+
+    generic disc             factor 1    target +2 -> divisor +2
+    AL fixed-point disc      factor 2    target +2 -> divisor +1   (|d| = m or 4m, m | D*N)
+    d = -3, -4               factor 4+   target +4 -> divisor +1   (compounds with the above)
+
+An ODD divisor change breaks condition 1 -- the cover is not preserved and the "model" is a
+DIFFERENT CURVE, undetectable at an obstructed base where there is no oracle. **The existing probe
+printed `DIVISOR MISMATCH` and CONTINUED**, so this was latent in the machinery. ⚠ The recorded
+`34_3` results are unaffected (disc -164 is generic; re-confirmed this session), but `PROBE_EVEN`'s
+"prefer the LARGEST |disc|" heuristic does nothing to avoid the dangerous ones.
+⇒ The check now computes the ACTUAL change (`div_f - ram`) and ERRORS unless every entry is an even
+integer. **Keep the guard even if the rule looks complete** -- the first rule covered the factor-2
+case and still let disc 4 through; the guard, not the rule, caught it.
+
+### Corrections to claims made earlier the same day
+
+* **"cost 10 at `38_5`" -- WRONG, it is 18.** Every cost-10 witness used disc 19 or 20 at amount 2,
+  i.e. the factor-2 discriminants. Demand is `2g+23`, not `2g+15`.
+* **"22 of 28 bases have 2-torsion" -- WRONG**, a scaling artifact (elementary divisors of `dM*A`).
+* **"the lattice test is just the parity criterion" -- WRONG**, generalised from `38_5`, which is one
+  of the 12 bases where they happen to coincide.
+* **A two-amount elimination** `(y2_a)^2/y2_b` removes the degree cost EXACTLY at `34_3` (7/7 keys,
+  23 independent checks, negative-controlled) and is **PROVABLY IMPOSSIBLE** at an obstructed base:
+  legal perturbations all carry the same nonzero charge, so no two are proportional and the residue
+  never cancels. Do not re-attempt it.
+
+### In flight at the end of this session
+
+* `38_5` auto-hatch pipeline run (per-key corrections, cost 18, all divisor changes verified even).
+  First run to get past `BorcherdsForms` at an obstructed base -- it is what will finally measure
+  `#rat` and condition 4 there, neither of which has ever been observed at an obstructed base.
+* `34_3` **quadratic-CM-point validation**: fit at the TRUE perturbed degree (`DEGBUMP=24`) so the
+  rational points UNDER-determine `f` instead of contradicting it, then let the existing quadratic
+  machinery cut `P(B)` down. The rational supply is capped (10 at `34_3` however many are asked for)
+  while the extra points all arrive QUADRATIC, so quadratic points are the only supply that grows.
+  ⚠ `require not IsEmpty(B)` in `QuadraticConstraintsOnEquations` means quadratic constraints are
+  reachable only AFTER the rational fit succeeds -- i.e. exactly when they are not needed. That gate
+  is the hatch's real blocker, not the CM supply.
+* `358_1` pole-ladder extension: alive, 99.6% CPU, **32 GB RSS**, ~7 h inside
+  `WeaklyHolomorphicBasis`. ⚠ lovelace runs `earlyoom` with `--prefer ...|magma`.
+
+## Handoff — 2026-09-16 (later still) — COLLECTION: `14_37` LANDS, `14_71` RESOLVES, NOTHING ELSE IS DONE YET
+
+Picked the backlog-collection track back up. lovelace load 107/256 (shared, other users' jobs
+still dominate — did not launch anything new).
+
+### ✅ NEW MODEL: `14_37` — 7 of 14 keys, via Hauptmodul rebase
+
+`~/shimura/bk3/14_37.log` finished after **25.5 h wall** (started under the 2026-09-15 batch).
+7 of 14 cover keys came back empty from the direct construction and were filled by the
+Hauptmodul-rebase sweep (`"sweeping 1 Hauptmodul root(s) on base 5699"` — the same mechanism as
+`22_5`'s recovery). Collected, `ModelChecks` run against the WHOLE suite with it included
+(**108 model files, 12036 checks, 0 failures**), and a negative control (corrupt one leading
+coefficient in the `[1,7,74,518]` entry) correctly goes red (62/5). Committed, `9bb63ec`.
+⚠ No external oracle at `14_37` — `10_61`/`34_11`/`74_5` evidence level, not a Guo-Yang base.
+
+### ✅ `14_71` RESOLVED via `defhi` (P=700 extension): OBSTRUCTED, deficit 2
+
+`~/shimura/defhi/14_71.log` extended the pole ladder past `deficit.m`'s `P<=266` cap. Reads
+`3 3 2 2 2` at `P = 498, 550, 574→realigned, 550, 700` — **flat at deficit 2 across P=550→700**,
+150 of pole-order headroom past the point it last moved. Same invariance signature as the
+`158_1` positive control from the prior collection pass. Corrects the earlier `deficit 3` reading,
+which was mid-descent, not the true value. Ordinary (1-dimensional), not a new 2-dim candidate.
+Folded into `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt` on the
+campaign branch (`cdcf801`, not yet pushed). ⇒ **known obstructed 132 → 133**, still a lower bound.
+`358_1` is the only remaining unresolved verdict — its own `defhi` extension is still running on
+lovelace as of this collection (`~/shimura/defhi/358_1.log`, header only so far, ~4 h elapsed).
+
+### Everything else on lovelace: still in flight, nothing new to collect
+
+    bk3 pipeline    115_1 123_1 (relaunched, both at "Computing Borcherds forms")
+                    62_7 (at "equations of covers"), 6_107 6_113 6_73 6_89 6_137 (all at
+                    "candidate discriminants"/"CM points"), 314_1 (deferred one cover on an
+                    ambiguous sign, W={1,157}, continuing -- not a failure), 95_1 119_1 159_1
+                    (all still at "Computing Borcherds forms")
+    defic5 screens  ~25 large-D N=1 / D=6 large-N targets still header-only (never returned;
+                    see the campaign log for the list) -- check again before re-screening any of
+                    that range
+
+Two uncommitted scratch files sit at the repo root from a prior session, `tests/_probe_gy.m` /
+`tests/_probe_gy2.m` (quick Guo-Yang model-completeness listings, not registered tests since they
+lack the runner's naming convention). Left alone — harmless, not blocking anything, and per
+`CLAUDE.md` scratch scripts belong on the campaign branch under `vvdata/weyl-campaign/`, not here;
+worth moving or deleting next time this file is touched.
+
+## Handoff — 2026-09-16 (later still, second) — THE KRY CHAPTER 7 LEAD IS CHASED, AND RETIRED
+
+Fetched the KRY book (PDF), `pdftotext -layout`'d it, and read Chapter 7 — §7.1 (statement of
+Theorem C, the height-pairing/Fourier-coefficient identity, and Theorem 7.1.1) and §7.6
+(the explicit local formula `ν̃_p(T)` at ramified primes, Props 7.6.2–7.6.4) in full; the rest of
+the chapter only by section-header structure. Re-read `vvdata/weyl-campaign/deficit.m` alongside it
+to pin down exactly what the target computation is.
+
+**Verdict: retired as a deficit predictor.** Theorem C's height pairing is an Arakelov-theoretic
+real number on the *integral model*, tied by the book's own Ch. 9 to central derivatives of
+`L`-functions — the Gross–Zagier analogue for Shimura curves. `deficit.m`'s number is a plain
+finite-dimensional linear-algebra rank over q-expansion coefficients, with no scheme, height, or
+archimedean data anywhere in it. The §7.6 local formula, despite having the right "local density at
+a ramified prime" flavor (same family as this project's own `κ_p`/`SchoferFormula.m`), computes an
+intersection multiplicity for ONE fixed pair `(t1,t2)`, never a rank over a basis against a target
+SET — that question doesn't appear in Ch. 7 at all. If anything this REINFORCES the earlier
+`S_{3/2}`-dimension finding rather than circumventing it: the closest global quantity KRY computes
+is exactly the "hard", central-L-value-flavored kind the deficit rank was already diagnosed as.
+Full argument and the exact citations: `vvdata/weyl-campaign/kry-ch7-notes.md` (campaign, `dba02a3`,
+pushed). `PLAN.md`'s "⚠ THE KRY LEAD" section has the recorded verdict.
+
+⇒ **The theory-arc parallel track is now exhausted of concrete leads.** Nothing currently on record
+suggests a closed-form deficit predictor exists; the model backlog (collection track) remains the
+only track producing results. Not pursued further this session — reverting to backlog collection.
+
+## Handoff — 2026-09-16 (later) — THE `S_{3/2}` DIMENSION IS COMPUTABLE, AND IT ANSWERS THE WRONG QUESTION
+
+`paper/DRAFT-borcherds-obstruction.md` §5 asked for `dim S_{3/2}(ρ_L^*)` in closed form as a
+predictor for `deficit.m`'s measured number. Both halves are now settled.
+
+**Route B (naive) refuted immediately**: `deficit = genus(X_0^D(N))` fails on the first two bases
+tried — `146_1` (genus 7, deficit 0) and `194_1` (genus 9, deficit 0) don't even share a genus with
+`38_5` (genus 9, deficit **1**), so genus alone cannot determine the deficit.
+
+**Route A (the real Riemann–Roch formula) is now sourced, implemented, and validated.** The formula
+is Borcherds' own, from the GKZ paper itself (Duke 97 (1999), p. 9) — not the Bruinier/Kuss citation
+the draft originally guessed at. Implementing it hit a real wall: this repo's `WeilRepresentationST`
+builds the honest `|L'/L| × |L'/L|` matrix, and `|L'/L|` runs 72,200 to 1,299,272 on the calibration
+bases — far too large to diagonalize (the naive attempt was killed after 7+ minutes on the smallest
+one). The fix: every quantity the formula needs reduces to `O(n)` Gauss sums via two algebraic
+tricks (a projector isolating one eigenspace of the negation involution, and a shift-bijection that
+factors `tr((ST)²)` into a product of two simpler sums) — **all six resulting trace identities were
+checked bit-for-bit against the real matrices on `6_1`/`10_1` before being trusted on anything
+larger.** Banked as `vvdata/weyl-campaign/gksz-dim-formula.m` (campaign, `6565a95`).
+
+**The result is not what was hoped for, and that is itself the finding**: `dim M_{3/2}(ρ_L^*)` comes
+out in the **thousands** (`38_5` → 1594, `146_1` → 888) against measured deficits of 1 and 0. This
+is not a bug — Serre duality (§1) says the full obstruction space is dual to *arbitrary* principal
+parts, but `deficit.m` only ever asks to hit a small, fixed target set of tracked CM-divisor classes.
+The honest statement is `deficit = rank(S_{3/2}(ρ_L^*) → target*) ≤ dim(target)`, bounded by the
+*target's* dimension (small, a dozen or so classes), not the ambient one — so the Riemann–Roch number
+is essentially irrelevant to the actual deficit. Whether that rank degenerates depends on whether
+*specific Fourier coefficients* vanish at the *specific* discriminants in the target set — a
+Waldspurger-type coefficient/central-L-value question, which is "hard" arithmetic, not a "soft"
+dimension count, and structurally cannot be answered by any Riemann–Roch or trace-formula argument.
+⇒ **No closed-form deficit predictor is expected to exist along this route.** What survives is a
+real, validated, fast upper bound on the deficit — useful, but not the predictor the draft wanted.
+
+Full argument, with all the algebra: `paper/DRAFT-borcherds-obstruction.md` §5.
+
+⚠ **Paused here, deliberately, for a fresh session to pick up** — the live lead (Kudla–Rapoport–Yang,
+*Modular Forms and Special Cycles on Shimura Curves*, Ch. 7's inner product formula, motivated by
+`T` reducing to the supersingular locus at ramified primes) is real but was not chased into an
+implementation; the conversation that found it was already long. Full plan, with the exact chapter,
+what's already confirmed, and the calibration bases to validate against: `PLAN.md`, "PARALLEL TRACK
+— added 2026-09-16".
+
+## Handoff — 2026-09-16 — POST-RESET COLLECTION: 57 NEW OBSTRUCTED BASES, TWO NEW 2-DIM SPACES
+
+The local Mac was reset mid-session. **Nothing was lost**: nothing was running locally (no Magma
+process), and every job in flight was already on `lovelace`, detached (`ppid 1`) and unaffected.
+Full detail of everything below: `vvdata/weyl-campaign/obstructed-rerun-2026-09-10/screened-2026-09-14.txt`
+(campaign, `c834599`).
+
+### ✅ Branch hygiene: campaign was one merge behind `main`, now fixed
+
+`git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'` showed a
+real (non-doc) divergence on `tests/InternalBorcherds.m` — campaign's last merge point (`928bf22`)
+predated `main`'s `714e831`/`5b57a2d`. Merged and pushed (`d55b5c0`); the invariant is clean again.
+
+### ✅ The screening collection: known obstructed 75 → 132, 2-dim spaces 5 → 7
+
+Two batches finished on lovelace since the last collection pass:
+
+* **`defic4`'s remaining 7 bases** (its first 3 were already recorded): `278_1`, `326_1`, `346_1`
+  obstructed; **`314_1` CLEAR** (pipeline launched, deferred one cover on an ambiguous CM sign —
+  not a failure); `302_1` and `334_1` obstructed at **deficit 2**; `358_1` still descending at
+  `P=266`, no verdict.
+* **`defhi.sh`** (new: extends the pole ladder from `deficit.m`'s `P<=266` cap out to `P=700`) was
+  built to settle the three still-moving cases, using `158_1` — a known obstructed base — as a
+  positive control: it stays flat at deficit 1 for 630 of pole-order headroom past the old cap,
+  which is the evidence that a flat `P<=266` tail is the real invariant and not truncation.
+  `302_1`/`334_1` hold at deficit 2 across the same range. ⇒ **2-dimensional obstruction spaces:
+  FIVE → SEVEN** — add `302_1`, `334_1` to `166_3 22_19 74_7 10_67 58_13`; `326_1` resolves to
+  ordinary (dim 1), not the fourth candidate it looked like at `P<=266`.
+* **`defic5`**, a systematic odd-prime-`N` sweep (`D = 6,10,14,22,26,34,38,46,58,62,74,82,94,118,
+  122,134,142,146,194,206,326,362,386,394`) plus a batch of large-`D` `N=1` targets: **52 more
+  obstructed verdicts**, checked against `bases49.txt` and every prior screened/stumbled list —
+  zero overlap, script-checked not assumed. One more unresolved case, `14_71`.
+
+⇒ **Known obstructed: 49 recorded + 5 stumbled into + 78 screened = 132**, still a lower bound.
+⚠ **Read the jump as "we screened a systematic sweep", not as a new density statement** — these
+bases were chosen, not sampled. ⚠ **Unresolved, not obstructed and not clear**: `358_1`, `14_71`
+(both still descending at their last rung, neither got the `P=700` extension). 25 more targets in
+the `defic5` batch never finished (still running as of collection, header-only logs).
+
+### `bk3` pipeline: nothing new to commit yet, all still in flight
+
+`62_7 6_107 6_113 6_73 6_89 6_137 314_1` are all still computing (mostly at "equations of covers").
+**`95_1` is now actually running** — `cc8beb8` (campaign, already landed before the reset) dropped
+the stale `vx_skip` guard in `vvdata/weyl-campaign/genmodels.m` once its justifying defect (fixed
+2026-09-05, `d9b52d0`) was ten days gone; `95_1` is a Guo-Yang target with a published equation and
+was being `quit`-skipped for no remaining reason. `115_1`/`123_1` — the other two bases the guard
+was fencing off besides `95_1`/`129_1` — have **not** been relaunched since.
+
+### Next
+
+* Collect `bk3` once any of `62_7 6_107 6_113 6_73 6_89 6_137 314_1 95_1` finishes; verify with
+  `VerifyModelSet` + a negative control before committing, per the usual discipline.
+* Relaunch `115_1`/`123_1` now that `vx_skip` is gone.
+* Extend `358_1` and `14_71` with `defhi.sh` (`P=700`) to get real verdicts.
+* The ~25 not-yet-finished `defic5` bases will keep returning verdicts; collect and fold into the
+  same log file rather than starting a new one.
+
 ## Handoff — 2026-09-15 (night, 7th) — RETRACTION: "20 OF 23 KEYS HOLD DIFFERENT CURVES" IS WRONG
 
 The section below this one (night, 5th) claims 20 of 23 multi-entry genus-1 keys hold different
