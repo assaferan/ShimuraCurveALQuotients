@@ -102,6 +102,17 @@ gy_cases := [*
     // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
     <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>,
 
+    // X_0^69(1):  y^2 = -243x^8 + 1268x^6 - 666x^4 - 2268x^2 - 2187                      [genus 3]
+    // Journal Table A.1, printed page 34; agrees with the arXiv v1 TeX and the PDF text layer.
+    // ⚠ ADDED 2026-09-22, and it closes a REAL HOLE rather than adding redundancy: models_69_1.m
+    // landed 2026-09-14 (`4bfb859`, the ScaleForSchofer w_1 fix), AFTER both X0_* test batches
+    // (2025-11-19 and 2026-09-06/07) and after this table was last extended -- so a base with a
+    // PUBLISHED equation sat validated by nothing but ModelChecks, i.e. structurally only. Nothing
+    // in the repo sweeps for "a model exists but no oracle covers it"; that is how this survived.
+    // ⚠ A bare `grep 69` over this file returns hits (6561, 369, -2268...) and reads like coverage.
+    // The honest query is for the case tuple: grep -E "<\s*69\s*,\s*1\s*,".
+    <69, 1, [Integers()|1], -243*x^8 + 1268*x^6 - 666*x^4 - 2268*x^2 - 2187>,
+
     // X_0^111(1):  y^2 = -(19x^8-44x^7-16x^6+55x^5+37x^4-55x^3-16x^2+44x+19)
     //                     (x^8-3x^5-x^4+3x^3+1)                        [degree 16, genus 7]
     // Recovered 2026-09-07 (20.2 h, default flags, the vx fix). Exact full-curve IsIsomorphic in
@@ -384,6 +395,11 @@ error if gy93_nref ne 3,
 
 // gy_checked counts COMPARISONS, and 93_1 contributes three of them (two quotients + the conic)
 // for one base -- so report both numbers rather than calling the total a base count.
-printf " ok (%o comparison(s) over 11 base(s); 93_1 is quotient-level, %o alternative readings "
+// ⚠ The base count is COMPUTED, not written down. It used to be the literal "11", which went
+// stale the moment 69_1 was added (2026-09-22) and would have kept reporting 11 forever -- a
+// count nobody can trust is worse than no count, and this file's whole argument is that you
+// must count the comparisons actually made.
+gy_bases := #gy_cases + #gy_pairs + 1;        // +1 for 93_1, handled in its own block below
+printf " ok (%o comparison(s) over %o base(s); 93_1 is quotient-level, %o alternative readings "
        * "refuted; %o transcribed base(s) PENDING a model, %o symmetry control(s))\n",
-       gy_checked, gy93_nref, gy_pending, gy_ctls;
+       gy_checked, gy_bases, gy93_nref, gy_pending, gy_ctls;
