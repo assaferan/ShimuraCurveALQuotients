@@ -94,10 +94,50 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
    * **the process is `magma.exe`** -- `ps -C magma` finds nothing while the job runs;
    * **`nohup` inside `ssh` hangs** holding the pipe though the job launched fine -- confirm from
      a SECOND ssh, as [[remote-machines-lovelace-lava]] says.
-2. **Re-screen with the coprime fix in place.** `0ca6e37` enlarged the divisor-support CM pool at
-   every `N>1` base (15_2 2->10, 21_2 2->9, 38_5 4->9).  That pool feeds `wdef`'s achievable-target
-   set, so some recorded verdicts may move -- ⚠ and note the direction: a SMALLER pool makes `wdef`
-   look CLEARER, so the risk the fix addresses is false CLEARS, not false obstructions.
+2. ~~**Re-screen with the coprime fix in place.**~~ **✅ CLOSED 2026-09-23 -- CHECKED, NOT DONE.
+   No recorded verdict can move, and the reason is structural rather than statistical.**
+
+   The item assumed `0ca6e37`'s enlarged CM pool feeds `wdef`, so recorded verdicts might shift
+   (and predicted the shift would be false CLEARS).  **The screen that produced the record does
+   not consume that pool at all.**  `screened-2026-09-14.txt` says in its own header that it was
+   produced with `deficit.m`, and `deficit.m` says in ITS header:
+
+       PREDICTOR PROTOTYPE: compute the Borcherds-obstruction deficit WITHOUT the CM points
+       and WITHOUT the divisor-triple loop ... therefore skips RationalandQuadraticCMPoints
+
+   `RationalandQuadraticCMPoints` is precisely the call `0ca6e37` changed.  `deficit.m` never
+   reaches it -- skipping it is the very thing that makes it a fast predictor -- and the word
+   `wdef` does not occur in that file.  ⇒ **None of the 99 recorded verdicts (77 at `N>1`) can
+   move.**  Corroborating: all 99 entries are EVEN `D`, consistent with `deficit.m` being even-`D`
+   only, so the record is entirely that screen's output.
+
+   **Measured anyway on `deficit_odd.m`, which DOES consume the pool** (`PTSCOPRIME=1` restores the
+   old behaviour of that one line, which is why `0ca6e37` added the flag):
+
+       base    tgt OLD -> NEW    wdef            verdict OLD -> NEW
+       38_5    4 -> 9            1, every rung   obstructed -> obstructed
+       34_11   3 -> 5            0               clear      -> clear
+       15_2    unchanged         unchanged       obstructed -> obstructed
+       134_3   errors identically both ways ("Could not find enough rational CM points!")
+
+   At `38_5` ONLY the `tgt` column moves -- `rows cols nds rank deficit wdef` are identical across
+   all five rungs.  ⇒ **The mechanism, not just the outcome: the extra targets the bigger pool
+   supplies land INSIDE the image, so `dim W` and `dim(W meet Im)` grow together and their
+   difference is untouched.**  `34_11` is the one that tests the item's stated fear directly -- it
+   is a recorded CLEAR, and it stays clear.
+   ⚠ Validated before being believed: `PTSCOPRIME=1` reproduces the header's recorded anchor
+   `38_5 obstructed deficit 1 every rung` to the second, and `tgt` visibly responds to the flag, so
+   both modes demonstrably do what they claim.
+
+   ⇒ **Do not spend the re-screen.**  Reach for `PTSCOPRIME=1` only when something actually reads
+   the divisor-support pool -- the hauptmodul-divisor sweep or the `#pts ge 3` CM-supply gate, not
+   `deficit.m`.
+
+   **Side finding, belongs to the screen and not to this item: `15_2` is a SECOND odd-`D`
+   counterexample.**  It has a committed model, so it BUILDS, yet exhausts its whole `all_ms`
+   ladder at `wdef >= 1` and prints `obstructed` (127 s, identically in both modes).  `deficit_odd.m`'s
+   header names only `21_2`.  Same known over-approximation, one more instance -- and it is NOT
+   caused by the coprime filter, since both modes agree rung for rung.
 3. **Keep collecting the backlog.** It produced six models this stretch while the hatch line
    produced none.
 
