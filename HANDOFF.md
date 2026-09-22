@@ -11,6 +11,83 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-22 — SIX MODELS, `358_1` RESOLVED, AND ~400 CPU-HOURS LOST TO `earlyoom`
+
+### ✅ Six models collected and committed
+
+    14_37    7 of 14 keys    9bb63ec      6_89    11 of 15    7796a99
+    6_73     8 of 15         88634f9      6_113    8 of 15
+    6_107    8 of 15                      6_137    8 of 8  (a COMPLETE set)
+
+All verified: `ModelChecks` 12414/0 over **113 model files**, and each base individually
+negative-controlled (corrupt one leading coefficient -> red). ⚠ None is a Guo-Yang base, so all six
+are at `10_61` evidence level -- no external oracle.
+
+### ✅ `358_1` RESOLVED -- the last base carrying "no verdict"
+
+    ladder 5 3 2 2 2 2 2  at P = 144 190 266 350 450 550 700
+
+Flat at **deficit 2 across five rungs** (P = 266 -> 700), the same invariance signature as the
+`158_1` positive control. ⇒ OBSTRUCTED with a **2-dimensional obstruction space**, the EIGHTH such
+base (`166_3 22_19 74_7 10_67 58_13 302_1 334_1` + `358_1`). **Known obstructed 133 -> 134**, still
+a lower bound, and **no base is left in the unresolved state**.
+⚠ `WeaklyHolomorphicBasis` alone took 29152 s (8 h), total wall 41240 s -- which is why this base
+sat header-only for days and looked stalled. Buffered stdout + a slow first stage reads exactly
+like a dead job; it was not.
+
+### ⚠⚠ ~400 CPU-HOURS LOST: `earlyoom` KILLS LONG MAGMA JOBS ON lovelace
+
+`bk3/DRIVER.log` records `EXIT 143` (SIGTERM) for **all five Guo-Yang re-runs within 41 seconds**:
+
+    123_1  2026-09-18T23:24:10     119_1  23:24:17     115_1  23:24:49
+     95_1  2026-09-18T23:24:50     159_1  23:24:51
+    314_1  2026-09-18T17:41:55     (62_7 died 17:48, not even recorded in DRIVER.log)
+
+Each had run **66-87 hours** and was still in `Computing Borcherds forms`; `62_7` died at
+`Computing equations of covers`, i.e. the LAST stage. No reboot (uptime 20 days), no stop script
+touched since 09-15, and lovelace runs **`earlyoom -r 3600 --prefer ^(...|magma)$`** -- killing
+preferred processes one after another under memory pressure is exactly this signature, on a shared
+box where other users can squeeze 2 TB.
+
+⇒ **Multi-day Magma jobs on lovelace are not survivable as currently launched**, and the loss is
+silent: `/usr/bin/time` still reports `Exit status: 0`, so only the `Command terminated by signal 15`
+line and `EXIT 143` in the driver log reveal it. ⚠ `95_1` was the one with oracle value (a published
+Guo-Yang equation), so that is the expensive loss.
+⇒ Use **lava** (`ssh -J lovelace lava`, 32 cores, near-idle) for runs of that length, or expect to
+lose them. See [[remote-machines-lovelace-lava]].
+
+### The even-correction / quadratic-CM line: where it stopped
+
+Full account: `vvdata/weyl-campaign/even-correction/HATCH-EXISTS.md` §5-§7 (campaign), probes in
+`probe-witness-guard.patch`. In brief:
+
+* **Condition 4 is the binding filter.** Conditions 1-3 are cheap lattice tests with cheap
+  candidates (floors 2-10 across controls), but the cheapest 1-3 candidate fails condition 4 at
+  both bases tried (`34_3` cost 8, `14_3` cost 2). ⇒ the 1-3 cost floor does NOT predict legality.
+* **`QUADCONSTRAINTS.md` §9's "minimum cost 24 at `34_3`" is VINDICATED** and now explained:
+  condition 4 wants amounts `= 0 mod 6`, condition 3 kills the cheap ones that are. My same-day
+  claim that cost 8 refuted it was wrong.
+* ⇒ **The quadratic-CM route cannot be validated at `34_3`**: legal cost 24 and a rational supply
+  hard-capped at 10 give `dim P(B) ~ 19`, where the Groebner step ran 6 h for nothing.
+* ⚠ **A cheap condition-4 screen does NOT work by calling `SchoferFormula` directly** -- its
+  baseline control (the UNPERTURBED target, at a base that builds) also came back FAIL, which is
+  what caught it. `RationalNumber` is applied to the table entries AFTER `row_scales`, so the raw
+  value is the wrong object. Any future screen must test the unperturbed target first and refuse
+  to report if that fails.
+
+### ✅ Also landed: the coprime filter fix (`0ca6e37`, main)
+
+`BorcherdsForms.m:863` still passed the `coprime_to_level` default of `true`, though the same
+filter was flipped OFF by default at `SchoferFormula.m:1153` on 2026-09-07. These points are
+divisor support only and never Schofer-evaluated -- the `#pts<3` fallback says so itself -- so the
+filter's purpose does not apply. Pool grows at **all 16** `N>1` bases (15_2 2->10, 21_2 2->9,
+38_5 4->9); **14 of 16 re-derivation tests byte-identical both ways**, including `26_3` (pinned
+base_label) and `22_5` (drift flags). `PTSCOPRIME=1` restores the old behaviour at THIS site only
+-- deliberately not `CMCOPRIME`, which `SchoferFormula` also reads, so a control using it is
+confounded (it re-enables the Schofer-side filter and alone breaks `14_3`/`39_2` -- which it did,
+and nearly read as evidence FOR the change).
+⚠ NOT a rescue for CM-starved bases: `134_3` has 0 coprime and 2 total points, still under the bar.
+
 ## Handoff — 2026-09-16 (evening) — THE EVEN-CORRECTION HATCH EXISTS EVERYWHERE SURVEYED, AND IT HAS AN UNGUARDED HAZARD
 
 Full account, with every measurement and control:
