@@ -1,0 +1,173 @@
+--- a/BorcherdsForms.m
++++ b/BorcherdsForms.m
+@@ -1288,6 +1288,105 @@
+                         end if;
+                     end if;
+                     // ===== end PROBE_MOD2 =====
++                    // ===== PROBE_WITNESS2 (throwaway; never merge) =====
++                    // Find the CHEAPEST even correction, over supports of size 1..3, with the
++                    // per-discriminant FACTOR taken into account.  The factor matters because the
++                    // target coordinate is NOT the divisor coefficient: at Atkin-Lehner
++                    // fixed-point discs (|d| = m or 4m, m | D*N) a target amount of a moves the
++                    // divisor by a/2, and at d = -3,-4 (extra automorphisms) by a/4.  So amounts
++                    // must be multiples of 2*factor, and the COST is the divisor change times
++                    // deg Z, i.e. (a/factor)*degZ -- not a*degZ.
++                    // Cost matters because the perturbed f has degree 2g+2+cost, and the rational
++                    // fit needs 2g+5+cost points; a cheap correction keeps the kernel small enough
++                    // for the quadratic stage's Groebner step to be tractable.
++                    if (GetEnv("PROBE_WITNESS2") ne "") and (i gt 0) then
++                        w2_ct := ChangeRing(coeffs_trunc, Rationals());
++                        w2_tv := ChangeRing(target_v, Rationals());
++                        w2_dM := LCM([Denominator(x) : x in Eltseq(w2_ct)] cat
++                                     [Denominator(x) : x in Eltseq(w2_tv)]);
++                        w2_A := ChangeRing(w2_dM*w2_ct, Integers());
++                        w2_nds := #relevant_ds;
++                        w2_Amb := RSpace(Integers(), Ncols(w2_A));
++                        w2_L := sub<w2_Amb | [w2_Amb ! Eltseq(w2_A[ii]) : ii in [1..Nrows(w2_A)]]>;
++                        w2_t0 := w2_Amb ! Eltseq(ChangeRing(w2_dM*w2_tv, Integers()));
++                        w2_al := {};
++                        for mm in Divisors(Xstar`D * Xstar`N) do
++                            Include(~w2_al, mm); Include(~w2_al, 4*mm);
++                        end for;
++                        w2_ram := {-pt[1] : pt in ram};
++                        w2_AMAX := 8;
++                        if GetEnv("PROBE_WITNESS2_AMAX") ne "" then
++                            w2_AMAX := StringToInteger(GetEnv("PROBE_WITNESS2_AMAX"));
++                        end if;
++                        // candidates: skip ramified support, and d = -3/-4 whose factor is 4+
++                        w2_cand := []; w2_opts := [];
++                        for jj in [1..w2_nds] do
++                            d := relevant_ds[jj];
++                            if (d in w2_ram) or (d in {3,4}) then continue; end if;
++                            wgt := 0;
++                            try
++                                fl := FieldsOfDefinitionOfCMPointFast(Xstar, -d);
++                                if not IsEmpty(fl) then wgt := &+[Degree(FF) : FF in fl]; end if;
++                            catch e
++                                wgt := 0;
++                            end try;
++                            if wgt eq 0 then continue; end if;
++                            fac := (d in w2_al) select 2 else 1;
++                            oo := [];
++                            for aa in [2*fac..w2_AMAX by 2*fac] do
++                                Append(~oo, <aa, (aa div fac)*wgt>);
++                            end for;
++                            if IsEmpty(oo) then continue; end if;
++                            Append(~w2_cand, jj); Append(~w2_opts, oo);
++                        end for;
++                        printf "WITNESS2 key %o candidates %o of %o discs\n", i, #w2_cand, w2_nds;
++                        w2_best := -1; w2_bv := [];
++                        for i1 in [1..#w2_cand] do
++                            for o1 in w2_opts[i1] do
++                                if (w2_best ge 0) and (o1[2] ge w2_best) then continue; end if;
++                                if (w2_t0 + w2_dM*o1[1]*w2_Amb.(w2_cand[i1])) in w2_L then
++                                    w2_best := o1[2]; w2_bv := [<w2_cand[i1],o1[1]>];
++                                end if;
++                            end for;
++                        end for;
++                        for i1 in [1..#w2_cand-1] do
++                          for i2 in [i1+1..#w2_cand] do
++                            for o1 in w2_opts[i1] do
++                              for o2 in w2_opts[i2] do
++                                c := o1[2]+o2[2];
++                                if (w2_best ge 0) and (c ge w2_best) then continue; end if;
++                                if (w2_t0 + w2_dM*(o1[1]*w2_Amb.(w2_cand[i1])
++                                                   + o2[1]*w2_Amb.(w2_cand[i2]))) in w2_L then
++                                    w2_best := c; w2_bv := [<w2_cand[i1],o1[1]>,<w2_cand[i2],o2[1]>];
++                                end if;
++                              end for;
++                            end for;
++                          end for;
++                        end for;
++                        if w2_best lt 0 then
++                            printf "WITNESS2 key %o NONE FOUND (AMAX %o, supports<=2)\n", i, w2_AMAX;
++                        else
++                            printf "WITNESS2 key %o CHEAPEST cost %o correction %o\n", i, w2_best,
++                                   [<relevant_ds[t[1]], t[2]> : t in w2_bv];
++                        end if;
++                    end if;
++                    // ===== end PROBE_WITNESS2 =====
++                    // ===== PROBE_EVEN_VEC (throwaway; never merge) =====
++                    // Apply a MULTI-DISCRIMINANT correction, e.g. PROBE_EVEN_VEC="164:6,56:12".
++                    // PROBE_EVEN only ever perturbs ONE discriminant.
++                    pv_pert := [];
++                    if (GetEnv("PROBE_EVEN_VEC") ne "") and (i gt 0) then
++                        for tok in Split(GetEnv("PROBE_EVEN_VEC"), ",") do
++                            bits := Split(tok, ":");
++                            pd := StringToInteger(bits[1]); pa := StringToInteger(bits[2]);
++                            idx := Index(relevant_ds, pd);
++                            error if idx eq 0, "PROBE_EVEN_VEC: discriminant not in relevant_ds";
++                            target_v +:= pa*V.idx;
++                            Append(~pv_pert, <-pd, pa>);
++                            printf "PROBEEVENVEC key %o perturb disc %o by %o\n", i, pd, pa;
++                        end for;
++                    end if;
++                    // ===== end PROBE_EVEN_VEC =====
+                     // ===== PROBE_INTSWEEP (throwaway; never merge) =====
+                     // THE INTEGRALITY SEARCH.  The hatch needs a perturbation that is
+                     // simultaneously (1) even, so the double cover is unchanged, and (2) INTEGRAL,
+@@ -1460,12 +1559,34 @@
+                     // check divisor
+                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
+                     
+-                    if not IsEmpty(probe_pert) then
+-                        expected := {<pt[1], div_coeffs[j]> : j->pt in ram} join {<p[1], p[2]> : p in probe_pert};
++                    if not IsEmpty(probe_pert cat pv_pert) then
++                        // ⚠ CHECK THE ACTUAL DIVISOR CHANGE AND REQUIRE IT EVEN.  The old check
++                        // compared div_f to a SET union of ram and the REQUESTED perturbation,
++                        // printed DIVISOR MISMATCH and CONTINUED -- so a correction that moved the
++                        // divisor by an ODD amount (which changes the cover, making the model a
++                        // DIFFERENT CURVE) still produced a model.  Coefficients can be
++                        // half-integers at AL fixed points, so test "even integer", not IsOdd,
++                        // which errors on a FldRatElt.  Print before testing.
++                        pe_base := AssociativeArray();
++                        for j->pt in ram do pe_base[pt[1]] := div_coeffs[j]; end for;
++                        pe_chg := AssociativeArray();
++                        for tt in div_f do
++                            pe_b := IsDefined(pe_base, tt[1]) select pe_base[tt[1]] else 0;
++                            pe_chg[tt[1]] := tt[2] - pe_b;
++                        end for;
++                        for dd in Keys(pe_base) do
++                            if not IsDefined(pe_chg, dd) then pe_chg[dd] := -pe_base[dd]; end if;
++                        end for;
+                         printf "PROBEEVEN key %o div_f %o\n", i, Sort(div_f);
+-                        printf "PROBEEVEN key %o expected %o\n", i, Sort(SetToSequence(expected));
+-                        if Set(div_f) ne expected then
+-                            printf "PROBEEVEN key %o DIVISOR MISMATCH\n", i;
++                        printf "PROBEEVEN key %o change %o\n", i,
++                               Sort([<dd, pe_chg[dd]> : dd in Keys(pe_chg) | pe_chg[dd] ne 0]);
++                        pe_bad := [dd : dd in Keys(pe_chg)
++                                   | not (IsIntegral(pe_chg[dd])
++                                          and IsEven(Integers()!pe_chg[dd]))];
++                        if not IsEmpty(pe_bad) then
++                            printf "PROBEEVEN key %o ODD DIVISOR CHANGE at %o -- cover NOT preserved\n",
++                                   i, Sort(pe_bad);
++                            error "PROBE_EVEN: odd divisor change -- correction invalid";
+                         end if;
+                     else
+                         assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
+--- a/EquationsCovers.m
++++ b/EquationsCovers.m
+@@ -23,9 +23,21 @@
+         rat_sidxs := [i :  i->s in svals   | Type(s) ne RngUPolElt];
+         rat_y2vals := [ y2vals[i]  : i in rat_sidxs];
+ 
++        // ===== DEGBUMP (throwaway; never merge) =====
++        // The even correction multiplies f by G^amt, so the perturbed f has degree 2g+2+cost,
++        // NOT 2g+2.  Fitting at the short degree makes the rational system full COLUMN rank and
++        // the kernel EMPTY -- that is the "no solution found" error every hatch attempt dies on.
++        // Fitting at the TRUE degree leaves it UNDER-determined instead, so B is positive
++        // dimensional and the quadratic CM relations -- which can only select a point inside
++        // P(B), never create one -- finally have something to act on.
++        // ⚠ Keep cost SMALL: dim P(B) ~ (2g+4+cost) - #rat - 1, and solve_quadratic_constraints
++        // does a Groebner computation in that many variables.  At cost 24 (dim ~19) a 6-hour run
++        // produced nothing.
++        dgb := 0;
++        if GetEnv("DEGBUMP") ne "" then dgb := StringToInteger(GetEnv("DEGBUMP")); end if;
+         M := [];
+         for j->s in rat_svals do
+-            Append(~M, [Rationals()!(s)^i : i in [0..2*g+2]] cat [Rationals()!rat_y2vals[j]]);
++            Append(~M, [Rationals()!(s)^i : i in [0..2*g+2+dgb]] cat [Rationals()!rat_y2vals[j]]);
+         end for;
+         M := Matrix(M);
+         B :=  Basis(Kernel(Transpose(M)));
