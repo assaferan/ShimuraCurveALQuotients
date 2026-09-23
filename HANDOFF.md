@@ -142,6 +142,57 @@ does not prove it. Settle it with the GR oracle, not the fit."* This is that set
 points — and under that fit all four covers re-derive and **every published involution matches**.
 The majority reading is now corroborated by an external oracle rather than by its own vote count.
 
+### ✅ GROUP 2: `34_1` and `10_7` — and TWO MORE published errors, in one table column
+
+    34_1    6 s   tests/X0_34_1.m    4 curve /  3 involution cmp, 4/4 covers,  4 keys re-derived
+    10_7  178 s   tests/X0_10_7.m   10 curve /  7 involution cmp, 4/4 covers, 26 keys re-derived
+
+Labelling swaps go red after 5 and 9 candidate identifications.
+
+**⚠ "THEY NEED THE TRANSPORT" WAS WRONG — a prediction this session made and then refuted.** `PLAN`
+said `34_1`/`10_7` would need [[gy-involution-transport]] because their involutions are
+non-diagonal. **They do not.** Transport is for carrying a published involution into OUR model's
+coordinates; the helper compares `ws_data` in the **expected** curve's coordinates, and
+`cover_data[{1}]` is GR's equation verbatim, so GR's formulas are already in the right frame. The
+whole job is writing a Möbius map as a matrix on `P(1,2,1)` in the helper's row-vector convention
+(`x = X/Z`, `y = Y/Z^2`). `34_1` took minutes, not hours.
+
+**⚠⚠ TWO PUBLISHED ERRORS IN THE `(10,7)` COLUMN OF THE p.8 INVOLUTION TABLE.**
+
+* **The label.** It prints `w_15`; `15 ∤ 70`, so that is not an involution of `X_0(10,7)` at all
+  (`W_{10,7} = {1,2,5,7,10,14,35,70}`). Lemma 3.2 gives `I_0 = {w_70, w_5, w_10, w_35}`, and the
+  conic class decides between the candidates: `X/(-1/x,-y/x^2)` is `-27u^2-40u-48`, class `[2]`, and
+  our `W=[1,5]` is `[2]` in all three entries while `[1,35]` is `[2,5]` and `[1,10]` is `[5]`.
+  ⇒ it is **`w_5`**.
+* **The Möbius map.** It prints `w_10 = ((2x-1)/(x-2), 5y/(x-2)^2)`. With `2x-1` that is not a
+  self-map — `(x-2)^4 f((2x-1)/(x-2))/f(x)` is a ratio of quartics, not a constant — and not an
+  involution, since `x'-2 = 3/(x-2)` gives `y'' = 25y/9`. With **`(2x+1)/(x-2)`** we get
+  `x'-2 = 5/(x-2)`, hence `y'' = y`, and the published `5y/(x-2)^2` is then exactly right.
+  ⇒ `IsGL2Equivalent(f,f,4)` returns exactly **four** self-equivalences of GR's quartic —
+  `x`, `-1/x`, `(2x+1)/(x-2)` and their composite — and `(2x-1)/(x-2)` is not among them. Four
+  Möbius maps lifting to eight maps on the curve is all of `W_{10,7}`, so nothing is missing.
+
+⇒ **A control that restores the PRINTED map fails with "Polynomials do not define a map into the
+codomain".** The typo is not a subtlety; the printed map is not a map. All seven non-trivial
+involutions were verified as automorphisms AND involutions before the file was written, with the
+four derived ones formed by the group law `w_m w_n = w_{mn/gcd^2}` so their labelling is forced
+rather than guessed.
+
+### ⚠ OPTION 2 FOR `6_5`/`6_13` IS REFUTED — `base_label` does not reach the step that matters
+
+`base_label` is threaded into only `EquationsAbovePointlessConics` (`EquationsCovers.m:1076`) and
+`EquationsByRebase` (`:1084`). The `W={1}` cover comes out of the earlier main step, which never
+sees it. Measured on both bases:
+
+    6_5    W={1} over bases 1483, 1484  ->  1484 is GR's curve;  PINNED at 1484: STILL BOTH
+    6_13   W={1} over bases 1532, 1533  ->  1532 is GR's curve;  PINNED at 1532: STILL BOTH
+
+So the helper still makes two comparisons at `W={1}` against one expected curve, and
+`assert is_isom` (`tests/BorcherdsProducts.m:88`) is unconditional — `model_drift_ok` relaxes only
+the second pass. ⇒ the route is the helper change (PLAN item 6), letting a key carry several
+acceptable curves. The base labels above are the useful residue of the refuted attempt and are
+worth keeping whatever route is taken.
+
 ### ⚠ A SELF-INFLICTED CONTAMINATION, recorded because the trap generalises
 
 The first full-suite run of this session was **killed and re-run, and its result must not be

@@ -259,22 +259,58 @@ are in `HANDOFF.md` 2026-09-23.)
    `W=[1,3]`, which is exactly what `I_0` membership means. GR's own p.8 Jacobian table corroborates
    (`Jac(X_0(21,1)/<u.w>) = 21A6`, genus one, which needs `u = w_7`).
 
-   **The six that remain, still NOT equal work:**
-   * `34_1 10_7` -- non-diagonal involutions (`w_17(x,y) = (-1/x, -y/x^2)`;
-     `w_15(x,y) = (-1/x,-y/x^2)`, `w_10(x,y) = ((2x-1)/(x-2), 5y/(x-2)^2)`), so they need the
-     transport of [[gy-involution-transport]] -- carry GR's `w_m` through an EQUATION-derived
-     isomorphism, never the pipeline's own `ws`.
-   * `6_5 6_7 6_13 10_3` -- `N > 1` AND a non-diagonal second generator (`w_6(x,y) = (32/x,
-     32y/x^2)` and friends). Hardest, and runtime is unmeasured at `N > 1`.
-   ⚠ **Each needs its own non-vacuity read and its own labelling control.** The helper prints
-   `n curve / n involution comparisons, k/k expected covers matched` under
+   ✅ **DONE 2026-09-23 -- group 2 (`34_1`, `10_7`), both CI-visible, both negative-controlled.**
+   `34_1` 6 s (4 curve / 3 involution cmp, 4/4 covers); `10_7` 178 s (10 curve / **7** involution
+   cmp, 4/4 covers, **26** committed cover keys re-derived). Labelling swaps go red after 5 and 9
+   candidate identifications.
+
+   ⚠ **"THEY NEED THE TRANSPORT" WAS WRONG, and the correction is worth keeping.** This item used
+   to say `34_1`/`10_7` need [[gy-involution-transport]] because their involutions are non-diagonal.
+   **They do not.** Transport is needed when a published involution must be carried into OUR model's
+   coordinates; here it must not be, because the helper compares `ws_data` in the EXPECTED curve's
+   coordinates and `cover_data[{1}]` is GR's equation VERBATIM. GR's formulas are already in the
+   right frame. The only work is writing a Mobius map as a matrix on `P(1,2,1)` -- the helper's
+   convention is ROW-VECTOR times matrix, with `x = X/Z`, `y = Y/Z^2`. `34_1` took minutes.
+
+   ⚠⚠ **TWO MORE PUBLISHED ERRORS, BOTH IN THE `(10,7)` COLUMN OF THE p.8 INVOLUTION TABLE.**
+   * **the label**: it prints `w_15`, but `15 ∤ 70`, so `w_15` is not an involution of `X_0(10,7)`
+     at all. It is **`w_5`** -- the quotient of GR's curve by `(-1/x,-y/x^2)` is the conic
+     `-27u^2-40u-48`, class `[2]`, and our `W=[1,5]` is `[2]` in all three entries while `[1,35]`
+     is `[2,5]` and `[1,10]` is `[5]`. The class discriminates.
+   * **the Mobius map**: it prints `w_10 = ((2x-1)/(x-2), 5y/(x-2)^2)`. With `2x-1` that is not a
+     self-map of the curve -- `(x-2)^4 f((2x-1)/(x-2))/f(x)` is a ratio of quartics, not a constant
+     -- and not an involution (`y'' = 25y/9`). With **`(2x+1)/(x-2)`** it is both, and the published
+     `5y/(x-2)^2` is then exactly right. `IsGL2Equivalent(f,f,4)` returns exactly four
+     self-equivalences and `(2x-1)/(x-2)` is not among them; four Mobius maps lifting to eight maps
+     is all of `W_{10,7}`, so nothing is missing.
+   ⇒ A control that restores the PRINTED map fails with *"Polynomials do not define a map into the
+   codomain"* -- the typo is not a subtlety, the printed map is not a map.
+
+   **What remains: `6_5 6_7 6_13 10_3` (`N > 1`), and `6_5`/`6_13` need a HELPER CHANGE FIRST.**
+   ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
+   `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
+   (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the
+   earlier main step, which never sees it. Measured:
+
+       6_5    W={1} over bases 1483, 1484  ->  1484 is GR's curve;  PINNED at 1484: STILL BOTH
+       6_13   W={1} over bases 1532, 1533  ->  1532 is GR's curve;  PINNED at 1532: STILL BOTH
+
+   So the helper still makes two comparisons at `W={1}` against one expected curve, and
+   `assert is_isom` (`tests/BorcherdsProducts.m:88`) is unconditional -- `model_drift_ok` relaxes
+   only the SECOND pass. ⇒ **Option 1**: let a `cover_data` key carry SEVERAL acceptable curves,
+   require every produced cover to match one, and require GR's to be matched by at least one. At
+   `W={1}` that is honestly two different claims -- GR's quartic is an ORACLE, our second entry is a
+   DRIFT check, since it has no published equation.
+   ⚠ That file is the shared helper behind all X0_ tests, so the change needs its own controls: a
+   cover matching NONE of the listed curves must still go red, and a key where GR's curve is matched
+   by NO base must go red.
+
+   ⚠ **Each new test needs its own non-vacuity read and its own labelling control.** The helper
+   prints `n curve / n involution comparisons, k/k expected covers matched` under
    `SetVerbose("ShimuraQuotients",1)` -- read it, do not assume it ran.
    ⚠ **Run the labelling control WITH whatever flags the test needs.** At `21_1` the control is
    only meaningful under `HMFIT=1`; without it the run dies upstream and goes red for the wrong
    reason, which would have looked like a passing control.
-   ⚠ **`6_5` and `6_13` carry the KNOWN TORSOR AMBIGUITY** (`NO_EXHIBITED_ISO` in
-   `tests/GonzalezRotger.m`): each has two `W=[1]` entries, one provably GR's curve and one not
-   provably anything. Decide what `cover_data[{1}]` should be BEFORE writing those two.
 
 7. **Cheap extension to `tests/GonzalezRotger.m` PART 2, found while writing the pilot.** PART 2
    checks only the even-quartic `w_2`-type quotient (`u = x^2`, a conic). Every one of those 7
