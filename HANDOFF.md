@@ -11,6 +11,127 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-23 (later) — THE SECOND ORACLE AUDIT: the unit was wrong, so a whole published table was invisible
+
+**One finding, and it is the same shape as the morning's: a WRONG OBJECT, not a wrong computation.**
+`PLAN` item 5 asked to extend `tests/OracleCoverage.m` to Gonzalez-Rotger, expecting to find "a
+GR-coverable **base** with a model and no oracle". No such base exists. The gap was one level down.
+
+### ✅ GR publish THREE lists; the repo had transcribed ONE
+
+    Table 1, p.8       11 genus-one curves X_0(D,N)                     -- transcribed since 09-15
+    Table 2, p.12      17 genus-one AL quotients X_D^(m) = X_0(D,1)/w_m -- NOT transcribed
+    footnote 2, p.11    3 further X_D^(m) that ARE elliptic over Q      -- NOT transcribed
+
+Table 2's objects are **quotient keys, not bases** — our `W=[1,m]` at `N=1`. Seven of its rows had a
+committed model and none was being checked against the publication:
+
+    39_1[1,13]  55_1[1,5]  62_1[1,2]  69_1[1,3]  77_1[1,11]  94_1[1,2]  178_1[1,89]
+
+⇒ **All seven sit on bases `OracleCoverage` already called COVERED**, because each base's `W=[1]`
+curve carries a Guo-Yang equation. **A green verdict on a base said nothing about its quotient
+keys.** That is the `69_1` lesson one level down: a sweep is blind to objects it does not enumerate,
+and "base" was the wrong unit for half of what GR publish. `OracleCoverage` PART B now sweeps GR at
+OBJECT granularity (31 rows: 11 + 17 + 3), reporting 20 with a model, all with an oracle.
+
+### ✅ All nine new comparisons PASS — seven by an EXHIBITED isomorphism, not an invariant
+
+    39_1[1,13] 39a1   55_1[1,5] 55a1   62_1[1,2] 62a3   69_1[1,3] 69a2   77_1[1,11] 77c2
+    94_1[1,2]  94a2   178_1[1,89] 178b1                      all PROVED, < 0.05 s each
+
+The certificate is GR's own relation `f_GR = lambda^2 (cx+d)^4 f_ours((ax+b)/(cx+d))` with `lambda`
+rational — so the torsor ambiguity that produced the `6_5`/`6_13` "drift" cannot arise here, and
+nothing rests on a matching Cremona label alone.
+
+**The footnote rows are a DIFFERENT CLAIM IN KIND and needed a different check.** GR's footnote 2
+corrects their own earlier paper: `(35,7)`, `(51,3)`, `(115,23)` do NOT fail to have rational points,
+they *are* elliptic curves over Q. There is no published quartic to compare, so the check is "find
+the point, then identify the curve": `35_1[1,7] -> 35a1`, `51_1[1,3] -> 51a2`, both as published.
+`115_1` has no model, so 2 of 3 fire.
+
+### ⚠ Two defects found by the negative controls, in the new code, before it was committed
+
+Both were in guards, and neither is visible by reading the code:
+* **the self-check crashed in the wrong place.** A mistyped coefficient — the commonest real
+  transcription slip — throws the Jacobian's conductor out of Cremona's database range, so calling
+  `CremonaReference` first died inside Magma with "Conductor is outside the database range" instead
+  of naming the row. **Testing `Conductor = D` FIRST** turns it into a message that says which row
+  and what is wrong with it. The ordering is load-bearing, not stylistic.
+* **an error message that lied.** The footnote check hardcoded "height bound 2000" in its failure
+  text while the bound was a separate literal; a control that lowered the bound produced a message
+  claiming a search that had not been run. Now one `FN_BOUND` constant feeds both.
+
+Eleven controls in all, each verified to actually change the file before being believed (one edit
+silently failed to apply and the assertion caught it — the run then printed a cheerful `ok`, which
+is exactly the false assurance being guarded against). The load-bearing one is the `69_1` replay:
+perturbing the committed `39_1[1,13]` entry to a wrong curve of the right genus — the kind
+`ModelChecks` passes — is caught and named.
+
+### ✅ `tests/X0_14_1.m` — the FIRST X0_ test built on Gonzalez-Rotger, and a ten-base gap it opens
+
+The X0_ batches swept **Guo-Yang's** bases, and GR's eleven genus-one bases are disjoint from those
+43. So **ten of the eleven had no re-derivation test at all** — the same blind spot as the oracle
+sweep's, one level up. (`15_1` is the exception; it already had one.)
+
+    HAVE an X0_ test   15_1
+    DO NOT             14_1  21_1  33_1  34_1  46_1  6_5  6_7  6_13  10_3  10_7
+
+**What makes these writable at all is that GR publish the INVOLUTIONS, not just the equations**
+(p.8, directly under Table 1): `w_{D.N}(x,y) = (x,-y)` for all eleven, plus one further generator
+each. An X0_ test needs `ws_data`, and without a published involution you can check the curve but
+not the LABELLING — which is the claim that matters.
+
+`14_1` was run as the pilot because it needs **no transport**: GR's equation is `cover_data[{1}]`
+verbatim, so their coordinates are the expected curve's and the involutions are diagonal matrices.
+
+    W=[1]     y^2 = -x^4 + 13x^2 - 128        w_2 (-x,y)   w_7 (-x,-y)   w_14 (x,-y)
+    W=[1,2]   y^2 = -u^2 + 13u - 128          u = x^2,  genus 0, conic class [7]
+    W=[1,7]   y^2 = u(-u^2 + 13u - 128)       u = x^2, v = xy,  genus 1
+    W=[1,14]  P^1 over Q (their Lemma 2.1)
+
+**80.7 s, so it is in `tests/` and CI-visible**, like `X0_69_1.m`. Non-vacuous by the helper's own
+counters: **4 curve comparisons, 3 involution comparisons, 4/4 expected covers matched, 4 committed
+cover keys re-derived.**
+⚠ **Negative-controlled, and the labelling control is the one that counts:** swapping the `w_2` and
+`w_7` matrices goes red after the helper searches **5** candidate identifications — so the pass is
+not an accident of which isomorphism `IsIsomorphic` happened to return. Perturbing the expected
+`W=[1]` curve and the expected `W=[1,7]` quotient each go red too.
+
+⇒ **Side finding, for `tests/GonzalezRotger.m` rather than this test:** the `W=[1,7]` quotient
+`v^2 = u*f(u)` is NOT checked by that file. Its PART 2 only treats the even-quartic `w_2`-type
+quotient (`u = x^2`), but every one of those 7 bases also has the companion `w_{D.N}*w_m` quotient
+via `v = xy`, which is genus 1 and carries more information than a conic class. That would take
+PART 2 from 15 comparisons to roughly 22, cheaply. Not done.
+
+### ⚠ A SELF-INFLICTED CONTAMINATION, recorded because the trap generalises
+
+The first full-suite run of this session was **killed and re-run, and its result must not be
+quoted.** It was launched, and the negative controls were run AFTERWARDS — and those controls
+temporarily rewrite `tests/GonzalezRotger.m` and `tests/OracleCoverage.m` on disk before restoring
+them. `run_tests.m` loads each test file when it reaches it, so a run in flight can read a
+deliberately broken version of a file and report a failure that means nothing.
+⇒ **This is `CLAUDE.md`'s "never update a clone that has jobs running from it" in local form**, and
+it applies to the working tree just as much as to a remote clone. **Do not edit anything under
+`tests/` while a suite is running** — develop controls in the scratchpad and install afterwards.
+⚠ The kill was by **PID**, not `pkill -f magma.exe`: three peer sessions were running Magma against
+the `core` repo at the time, and the blanket form would have killed all of them.
+
+### ⚠ Corrections to material that was stale, not wrong
+
+* `PLAN` said GR had "ten transcribed bases" and omitted `14_1`; the paper's Lemma 3.1 list is
+  **eleven**, and the test always had all eleven. The disjointness claim it supported is unaffected.
+* `tests/GonzalezRotger.m`'s header said `21_1` and `33_1` "have no model yet (both fail upstream)"
+  and `10_3`'s `W=[1]` key is empty. **All three now have usable `W=[1]` models**; the run reports
+  0 bases without one. Marked as a correction rather than deleted — a comment saying a base "fails
+  upstream" is exactly the kind of note that later gets quoted as a live obstruction.
+* **Version of record CHECKED** and the risk is the REVERSE of Guo-Yang's: the Dropbox PDF is arXiv
+  **v2 (Apr 2008)**, which *postdates* J. Math. Soc. Japan 58 (2006), and Table 2 is **identical in
+  v1 and v2**. The journal PDF is behind a Project Euclid bot check and was not read directly; that
+  gap is covered by re-deriving all 17 Cremona labels from the paper's own equations. ⚠ An earlier
+  draft of this session asserted the journal citation was wrong (reasoning that a 2008 arXiv version
+  cannot precede a 2006 journal one — arXiv **revisions** can and do postdate publication). Checked
+  before it was committed; the repo's original citation was right.
+
 ## Handoff — 2026-09-23 — THE ORACLE AUDIT: a wrong cohort, a base nobody checked, and a guard that could not fail
 
 **Theme, because all five items share it: every defect found today was a WRONG OBJECT, not a wrong

@@ -190,20 +190,74 @@ are in `HANDOFF.md` 2026-09-23.)
    `main@7d9f0fb`, so no silent drift). Deliberately not merged yet, to avoid needing a second
    merge; do it in one go afterwards.
 
-5. **Extend `tests/OracleCoverage.m` to Gonzalez-Rotger.** Today it answers "no GUO-YANG oracle",
-   not "no oracle at all".
-   ⇒ **The two published sources are COMPLETELY DISJOINT** -- measured 2026-09-23: GR's ten
-   transcribed bases (`15_1 21_1 33_1 34_1 46_1 6_5 6_7 6_13 10_3 10_7`) share NOT ONE base with
-   Guo-Yang's 43. So GR is a second, separate region of the model set, not redundant cover -- and
-   it is the source that caught the `10_3` conic drift, i.e. the one that has actually found a
-   defect.
-   ⚠ **The cost is a READ-THE-PAPER task, not a fill-in.** `tests/GonzalezRotger.m` encodes only
-   what was TRANSCRIBED; the hole the sweep must find is a GR-coverable base with a model that is
-   ABSENT from that list, which needs GR's published base list. PDF:
-   `~/MIT Dropbox/Eran Assaf/Research/HyperellipticQuotients/Gonzales, Rotger - non-elliptic
-   Shimura curves of genus one.pdf`. Same shape as the Guo-Yang transcription -- hand-transcribe,
-   and check the version of record first ([[guoyang-journal-version-differs]] is the cautionary
-   precedent).
+5. ~~**Extend `tests/OracleCoverage.m` to Gonzalez-Rotger.**~~ **✅ DONE 2026-09-23 -- and the hole
+   was REAL and bigger than this item assumed: a whole published TABLE, not a missing base.**
+
+   ⚠ **The item mis-stated the target, and the mis-statement is the finding.** It said the hole to
+   look for is "a GR-coverable BASE with a model that is absent from the list". There is no such
+   base -- but GR publish **three** lists, and only the first was ever transcribed:
+
+       Table 1, p.8      11 genus-one curves X_0(D,N)                   -- was transcribed
+       Table 2, p.12     17 genus-one AL quotients X_D^(m)=X_0(D,1)/w_m -- WAS NOT
+       footnote 2, p.11   3 more X_D^(m), ELLIPTIC over Q               -- WAS NOT
+
+   Table 2's objects are **quotient KEYS, not bases** -- our `W=[1,m]` at `N=1`. Seven had a
+   committed model and nothing was checking any of them: `39_1[1,13] 55_1[1,5] 62_1[1,2]
+   69_1[1,3] 77_1[1,11] 94_1[1,2] 178_1[1,89]`. ⇒ **Every one of those seven sits on a base that
+   `OracleCoverage` already reported as COVERED**, because its `W=[1]` curve has a Guo-Yang
+   equation. **A green verdict on a base said nothing about its quotient keys** -- the `69_1`
+   lesson one level down, and the reason PART B of that file now sweeps OBJECTS, not bases.
+
+   **All nine new comparisons PASS** (7 Table 2 + 2 footnote), the seven by an *exhibited*
+   Q-isomorphism rather than a matching invariant, so the torsor ambiguity that bit `6_5`/`6_13`
+   does not arise. The footnote rows (`35_1[1,7] 51_1[1,3]`) are a different claim in kind -- GR
+   correct their own earlier paper to say these quotients DO have a rational point -- so they are
+   checked by finding the point and identifying the curve: `35a1` and `51a2`, as published.
+   10 further Table 2 rows fire automatically if `85_1 210_1 330_1 462_1` are ever built, and
+   `115_1` for the footnote.
+
+   ⚠ **`PLAN` also had the GR base list wrong**: it said "ten transcribed bases" and omitted
+   `14_1`. The paper's Lemma 3.1 list is **eleven**, and `tests/GonzalezRotger.m` always had all
+   eleven. The disjointness claim it was supporting is unaffected and still holds -- GR's eleven
+   share not one base with Guo-Yang's 43.
+
+   ⚠ **Version of record CHECKED, per [[guoyang-journal-version-differs]]** -- and the risk is the
+   reverse of Guo-Yang's here: the Dropbox PDF is arXiv **v2 (Apr 2008)**, which POSTDATES the
+   J. Math. Soc. Japan 58 (2006) version, and **Table 2 is identical in v1 and v2**. Project
+   Euclid serves the journal PDF only behind a bot check, so it was not read directly; that gap is
+   covered from the other side, by re-deriving every row's Cremona label from its own equation
+   (17/17) before any model of ours is compared.
+
+6. **Write the remaining nine GR X0_ re-derivation tests.** ✅ `tests/X0_14_1.m` landed 2026-09-23
+   as the pilot (80.7 s, CI-visible, negative-controlled; see `HANDOFF.md`). The X0_ batches swept
+   **Guo-Yang's** bases, so GR's eleven genus-one bases -- disjoint from those 43 -- have almost no
+   re-derivation coverage:
+
+       HAVE   15_1  14_1(new)
+       WANT   21_1  33_1  46_1  |  34_1  10_7  |  6_5  6_7  6_13  10_3
+
+   ⇒ **They are NOT equal work, and the grouping above is the order to do them in.**
+   * `21_1 33_1 46_1` -- same shape as the pilot: GR's involution is `w_m(x,y) = (-x,y)`, diagonal,
+     **no transport needed**. These should be near-mechanical copies of `X0_14_1.m`.
+   * `34_1 10_7` -- involutions are non-diagonal (`w_17(x,y) = (-1/x, -y/x^2)`;
+     `w_15(x,y) = (-1/x,-y/x^2)`, `w_10(x,y) = ((2x-1)/(x-2), 5y/(x-2)^2)`), so they need the
+     transport of [[gy-involution-transport]] -- carry GR's `w_m` through an EQUATION-derived
+     isomorphism, never the pipeline's own `ws`.
+   * `6_5 6_7 6_13 10_3` -- `N > 1` AND a non-diagonal second generator (`w_6(x,y) = (32/x,
+     32y/x^2)` and friends). Hardest, and runtime is unmeasured at `N > 1`.
+   ⚠ **Each one needs its own non-vacuity read and its own labelling control.** The pilot's helper
+   prints `n curve / n involution comparisons, k/k expected covers matched` under
+   `SetVerbose("ShimuraQuotients",1)` -- read it, do not assume. And swap two involution matrices to
+   confirm the test can go red; at `14_1` that took 5 candidate identifications to reject.
+   ⚠ `21_1` and `33_1` are the two whose models came from the HMFIT route and the `w_1` scaling fix
+   respectively, so they are also the two where a re-derivation failure is most likely to be real.
+
+7. **Cheap extension to `tests/GonzalezRotger.m` PART 2, found while writing the pilot.** PART 2
+   checks only the even-quartic `w_2`-type quotient (`u = x^2`, a conic). Every one of those 7
+   bases ALSO has the companion `w_{D.N}*w_m` quotient via `v = x*y`, which is **genus 1** and so
+   carries strictly more information than a conic class. Verified by hand at `14_1`: the `W=[1,7]`
+   entry is `IsIsomorphic` to `v^2 = u(-u^2+13u-128)`. ⇒ roughly 15 -> 22 comparisons, no new
+   transcription, no pipeline run.
 
 ## ⇒ (SUPERSEDED) START HERE — updated 2026-09-16
 
