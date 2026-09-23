@@ -228,29 +228,53 @@ are in `HANDOFF.md` 2026-09-23.)
    covered from the other side, by re-deriving every row's Cremona label from its own equation
    (17/17) before any model of ours is compared.
 
-6. **Write the remaining nine GR X0_ re-derivation tests.** ✅ `tests/X0_14_1.m` landed 2026-09-23
-   as the pilot (80.7 s, CI-visible, negative-controlled; see `HANDOFF.md`). The X0_ batches swept
-   **Guo-Yang's** bases, so GR's eleven genus-one bases -- disjoint from those 43 -- have almost no
-   re-derivation coverage:
+6. **Write the remaining GR X0_ re-derivation tests. GROUP 1 IS DONE; six remain.**
 
-       HAVE   15_1  14_1(new)
-       WANT   21_1  33_1  46_1  |  34_1  10_7  |  6_5  6_7  6_13  10_3
+       HAVE   15_1 | 14_1 (pilot) | 33_1 46_1 CI-visible | 21_1 offline, needs HMFIT=1
+       WANT   34_1  10_7   |   6_5  6_7  6_13  10_3
 
-   ⇒ **They are NOT equal work, and the grouping above is the order to do them in.**
-   * `21_1 33_1 46_1` -- same shape as the pilot: GR's involution is `w_m(x,y) = (-x,y)`, diagonal,
-     **no transport needed**. These should be near-mechanical copies of `X0_14_1.m`.
-   * `34_1 10_7` -- involutions are non-diagonal (`w_17(x,y) = (-1/x, -y/x^2)`;
+   ✅ **DONE 2026-09-23 -- group 1 (`21_1 33_1 46_1`), all negative-controlled.** Runtimes 44 s /
+   49 s / 15 s. Each reports **4 curve comparisons, 3 involution comparisons, 4/4 expected covers
+   matched, 4 committed cover keys re-derived**; each labelling swap goes red after 9 / 9 / 5
+   candidate identifications.
+
+   ⚠⚠ **`21_1` IS IN `tests/_offline/` BECAUSE IT NEEDS `HMFIT=1`, and that is a finding.** Under
+   default flags the pipeline cannot re-derive `21_1` at all -- it dies in `find_signs_hauptmodul`
+   ("no choice of signs satisfies `s/scale + stilde/scale_tilde = 1`" at `[-15,-43,-51,-67]`)
+   before making a single comparison. ⇒ **`21_1`'s committed model is CORRECT BUT NOT REPRODUCIBLE
+   UNDER DEFAULT FLAGS** -- a property of the default normalisation, not of the model. A CI-visible
+   copy would be permanently red, and making it skip itself when the flag is absent would be the
+   vacuity failure mode. Run it as
+   `HMFIT=1 magma -b filename:=tests/_offline/X0_21_1.m run_tests.m < /dev/null`.
+   ⇒ **It also CLOSES an open note**: `HANDOFF` recorded that HMFIT "trusts the majority; it does
+   not prove it -- settle it with the GR oracle, not the fit". This test is that settlement. HMFIT
+   fits `scale_tilde = 36` against the default's `9`, satisfied at only **5 of 6** rational CM
+   points, and under that fit all four covers re-derive AND every published involution matches.
+
+   ⚠⚠ **A THIRD PUBLISHED TYPO, found writing `21_1`.** Lemma 3.2 (p.7) prints the `I_0` set for
+   `(21,1)` as `{w_21, w_3}`, but the two rows of that same cell are `K_21` and **`K_7`**, not
+   `K_3` -- and every other cell in the lemma has matching subscripts. The set is `{w_21, w_7}`.
+   Three independent confirmations: the paper's own `K_7` row; the p.8 involution table
+   (`w_7(x,y) = (-x,y)` for `D = 21`); and our committed model, genus 0 at `W=[1,7]` and genus 1 at
+   `W=[1,3]`, which is exactly what `I_0` membership means. GR's own p.8 Jacobian table corroborates
+   (`Jac(X_0(21,1)/<u.w>) = 21A6`, genus one, which needs `u = w_7`).
+
+   **The six that remain, still NOT equal work:**
+   * `34_1 10_7` -- non-diagonal involutions (`w_17(x,y) = (-1/x, -y/x^2)`;
      `w_15(x,y) = (-1/x,-y/x^2)`, `w_10(x,y) = ((2x-1)/(x-2), 5y/(x-2)^2)`), so they need the
      transport of [[gy-involution-transport]] -- carry GR's `w_m` through an EQUATION-derived
      isomorphism, never the pipeline's own `ws`.
    * `6_5 6_7 6_13 10_3` -- `N > 1` AND a non-diagonal second generator (`w_6(x,y) = (32/x,
      32y/x^2)` and friends). Hardest, and runtime is unmeasured at `N > 1`.
-   ⚠ **Each one needs its own non-vacuity read and its own labelling control.** The pilot's helper
-   prints `n curve / n involution comparisons, k/k expected covers matched` under
-   `SetVerbose("ShimuraQuotients",1)` -- read it, do not assume. And swap two involution matrices to
-   confirm the test can go red; at `14_1` that took 5 candidate identifications to reject.
-   ⚠ `21_1` and `33_1` are the two whose models came from the HMFIT route and the `w_1` scaling fix
-   respectively, so they are also the two where a re-derivation failure is most likely to be real.
+   ⚠ **Each needs its own non-vacuity read and its own labelling control.** The helper prints
+   `n curve / n involution comparisons, k/k expected covers matched` under
+   `SetVerbose("ShimuraQuotients",1)` -- read it, do not assume it ran.
+   ⚠ **Run the labelling control WITH whatever flags the test needs.** At `21_1` the control is
+   only meaningful under `HMFIT=1`; without it the run dies upstream and goes red for the wrong
+   reason, which would have looked like a passing control.
+   ⚠ **`6_5` and `6_13` carry the KNOWN TORSOR AMBIGUITY** (`NO_EXHIBITED_ISO` in
+   `tests/GonzalezRotger.m`): each has two `W=[1]` entries, one provably GR's curve and one not
+   provably anything. Decide what `cover_data[{1}]` should be BEFORE writing those two.
 
 7. **Cheap extension to `tests/GonzalezRotger.m` PART 2, found while writing the pilot.** PART 2
    checks only the even-quartic `w_2`-type quotient (`u = x^2`, a conic). Every one of those 7

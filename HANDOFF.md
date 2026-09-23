@@ -103,6 +103,45 @@ quotient (`u = x^2`), but every one of those 7 bases also has the companion `w_{
 via `v = xy`, which is genus 1 and carries more information than a conic class. That would take
 PART 2 from 15 comparisons to roughly 22, cheaply. Not done.
 
+### ✅ GROUP 1 OF THE GR X0_ TESTS: `33_1` `46_1` CI-visible, `21_1` offline — and a THIRD published typo
+
+    33_1   49 s  tests/X0_33_1.m            4 curve / 3 involution cmp, 4/4 covers matched
+    46_1   15 s  tests/X0_46_1.m            4 curve / 3 involution cmp, 4/4 covers matched
+    21_1   44 s  tests/_offline/X0_21_1.m   4 curve / 3 involution cmp, 4/4 covers matched
+                                            ⚠ REQUIRES HMFIT=1
+
+All three labelling controls (swap the two non-`w_D` involution matrices) go red after 9 / 9 / 5
+candidate identifications. ⚠ **The `21_1` control had to be run WITH `HMFIT=1`**: without it the run
+dies upstream and goes red for the wrong reason, which would have read as a passing control.
+
+**⚠⚠ A THIRD PUBLISHED TYPO — and it is in the involution set for `21_1` itself.** Lemma 3.2 (p.7)
+prints the `I_0` set for `(21,1)` as `{w_21, w_3}`. The two rows of that same cell are `K_21` and
+**`K_7`**, not `K_3`, and every other cell in the lemma has matching subscripts. The set is
+`{w_21, w_7}`. Three independent confirmations, which is why the test uses `w_7`:
+
+* the paper's own `K_7` row, inside the inconsistent cell;
+* the p.8 involution table: `w_7(x,y) = (-x,y)` for `D = 21`;
+* our committed model: genus 0 at `W=[1,7]`, genus 1 at `W=[1,3]` — and a genus-0 quotient is
+  exactly what membership of `I_0` means.
+
+GR's own p.8 Jacobian table corroborates: `Jac(X_0(21,1)/<u.w>) = 21A6` is genus one, and `u.w` is
+`w_3` precisely when `u = w_7`.
+
+**⚠⚠ `21_1` IS NOT REPRODUCIBLE UNDER DEFAULT FLAGS, and that is why it is offline.** Under defaults
+the pipeline dies in `find_signs_hauptmodul` — *"no choice of signs satisfies `s/scale +
+stilde/scale_tilde = 1` at discriminant(s) `[-15, -43, -51, -67]`"* — **before a single comparison
+is made**. ⇒ **the committed model is CORRECT BUT NOT REGENERABLE by default**, a property of the
+default normalisation rather than of the model. A CI-visible copy would be permanently red; making
+it skip itself when the flag is absent would be the vacuity failure mode this repo keeps being bitten
+by. See [[committed-models-can-be-unreproducible]] — this is a second instance, with a different
+cause from the y2-scale one.
+
+⇒ **It CLOSES the open HMFIT note.** This file previously recorded *"HMFIT trusts the majority; it
+does not prove it. Settle it with the GR oracle, not the fit."* This is that settlement: HMFIT fits
+`scale_tilde = 36` against the pipeline default's `9`, satisfied at only **5 of 6** rational CM
+points — and under that fit all four covers re-derive and **every published involution matches**.
+The majority reading is now corroborated by an external oracle rather than by its own vote count.
+
 ### ⚠ A SELF-INFLICTED CONTAMINATION, recorded because the trap generalises
 
 The first full-suite run of this session was **killed and re-run, and its result must not be
