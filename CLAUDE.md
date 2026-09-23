@@ -38,6 +38,18 @@ whatever is still in the buffer, so a `kill`-based timeout can leave a 0-byte lo
 identical to "never started". macOS has no `timeout`; GNU `timeout` (on the Linux boxes) truncates
 cleanly.
 
+**Do not edit anything under `tests/` while a suite is running.** `run_tests.m` globs the file list
+once at start but *loads each file when it reaches it*, so a run in flight can read a half-written
+or deliberately-broken version and report a failure that means nothing. This bit a session on
+2026-09-23: negative controls, which rewrite a test file and restore it seconds later, were run
+against a suite launched ten minutes earlier, and the whole 30-minute run had to be discarded.
+Develop controls in the scratchpad and install them afterwards. It is the same hazard as the
+"never `git pull` a clone with jobs running from it" rule below — the working tree is a clone too.
+
+**Kill Magma by PID, never `pkill -f magma.exe`.** This Mac hosts several Claude sessions and the
+`core` repo sessions run their own `magma.exe`; the blanket form takes theirs down with yours.
+`ps -eo pid,etime,command | grep magma.exe` first, then `kill <pid>`.
+
 **`import` defeats `AttachSpec`'s laziness.** `AttachSpec` loads packages on demand, but
 `import "X.m" : f;` compiles `X.m` immediately as its own package — so intrinsics from *other*
 spec files are unresolved inside it and you get `Undefined reference` at call time. Touch one
