@@ -13,11 +13,20 @@
 // fixed by m_choice while a deeper P keeps adding columns.  That growth is what the old
 // "odd-D overestimate ~20" was really measuring.
 //
-// ⚠⚠ ON ODD D THIS GIVES *CLEAR* VERDICTS ONLY.  Its "obstructed" line is REFUTED: 21_2 is a
-// Guo-Yang base WITH A COMMITTED MODEL, and it exhausts all 8 rungs of all_ms at wdef >= 2 and
-// prints obstructed.  The cause is that wdef over-approximates -- it takes the whole span of the CM
-// coordinates, not the specific div_coeffs combinations the search forms.  Even D gets away with
-// that empirically (7/7); odd D does not.
+// ⚠⚠ ON ODD D THIS GIVES *CLEAR* VERDICTS ONLY.  Its "obstructed" line is REFUTED, and by TWO
+// counterexamples now, not one -- both Guo-Yang bases WITH A COMMITTED MODEL, i.e. both provably
+// build, and both printing obstructed:
+//     21_2   exhausts all 8 rungs of all_ms at wdef >= 2
+//     15_2   exhausts its ladder at wdef >= 1 (tgt 3,3,3,4,6,7,8,9 / wdef 1,1,1,1,2,2,2,2),
+//            127 s                                                        [added 2026-09-23]
+// The cause is that wdef over-approximates -- it takes the whole span of the CM coordinates, not
+// the specific div_coeffs combinations the search forms.  Even D gets away with that empirically
+// (7/7); odd D does not.
+// ⚠ 15_2 arrived as a by-product of the PTSCOPRIME both-ways control (see PLAN.md item 2, closed
+// 2026-09-23) and is NOT caused by the coprime filter: its two ladders are numerically IDENTICAL
+// rung for rung with the filter on and off, so this is the same wdef over-approximation as 21_2
+// and not a pool effect.  One counterexample reads as a quirk; two read as the rule this header
+// states, which is why it is recorded here rather than left in the handoff.
 //
 // ⚠ And the useless verdict is the expensive one: a clear stops early, while "obstructed" costs the
 // whole m ladder, whose 0-side basis at deep m is dear (pole order -D0*m, e.g. 4005 at 15_1).
@@ -28,6 +37,8 @@
 //   142_1, 158_1 wdef = deficit = 1 (both CONFIRMED obstructed by a real run)
 //   15_1 clear at m = -7 (16 s), 55_1 at m = -15, 39_1 at m = -19 -- odd bases that build
 //   21_2 prints OBSTRUCTED and builds -- the standing counterexample; keep it in any re-validation
+//   15_2 prints OBSTRUCTED and builds -- the SECOND counterexample, 127 s; keep it too, and note
+//        it is cheap enough to run in any re-validation where 21_2's 8 rungs are not
 SetQuitOnError(true);
 SetColumns(0);
 AttachSpec("ShimuraQuotients.spec");
