@@ -141,6 +141,36 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
 3. **Keep collecting the backlog.** It produced six models this stretch while the hatch line
    produced none.
 
+4. **Finish the four involution files, then merge `main` down to campaign ONCE.**
+   `tests/_offline/X0_87_1.m`, `X0_111_1.m`, `X0_39_2.m` and `X0_93_1.m` have their matrices (see
+   `HANDOFF.md` 2026-09-23) but their runs were still in flight; each is hours.
+   ⚠ **What is verified and what is not**: the matrices are confirmed automorphisms AND involutions
+   of the exact curves in `cover_data[{1}]`, with discriminating controls. The **LABELLING** is
+   unverified, and only the pipeline run tests it -- that is the claim that matters.
+   ⚠ `X0_93_1` carries a documented risk: if the re-derived `W={1}` does not arrive as a
+   2-equation non-`CrvHyp`, the helper falls through from its construct-the-CRV-isomorphism branch
+   to a plain `IsIsomorphic` (the 10 h+ regime) rather than failing. A sudden runtime jump there is
+   that, not a regression in the mathematics.
+   Once they land: **the branch-divergence invariant is currently dirty on 7 shared test paths**,
+   diagnosed 2026-09-23 as `main` being AHEAD (campaign's copies are byte-identical to
+   `main@7d9f0fb`, so no silent drift). Deliberately not merged yet, to avoid needing a second
+   merge; do it in one go afterwards.
+
+5. **Extend `tests/OracleCoverage.m` to Gonzalez-Rotger.** Today it answers "no GUO-YANG oracle",
+   not "no oracle at all".
+   ⇒ **The two published sources are COMPLETELY DISJOINT** -- measured 2026-09-23: GR's ten
+   transcribed bases (`15_1 21_1 33_1 34_1 46_1 6_5 6_7 6_13 10_3 10_7`) share NOT ONE base with
+   Guo-Yang's 43. So GR is a second, separate region of the model set, not redundant cover -- and
+   it is the source that caught the `10_3` conic drift, i.e. the one that has actually found a
+   defect.
+   ⚠ **The cost is a READ-THE-PAPER task, not a fill-in.** `tests/GonzalezRotger.m` encodes only
+   what was TRANSCRIBED; the hole the sweep must find is a GR-coverable base with a model that is
+   ABSENT from that list, which needs GR's published base list. PDF:
+   `~/MIT Dropbox/Eran Assaf/Research/HyperellipticQuotients/Gonzales, Rotger - non-elliptic
+   Shimura curves of genus one.pdf`. Same shape as the Guo-Yang transcription -- hand-transcribe,
+   and check the version of record first ([[guoyang-journal-version-differs]] is the cautionary
+   precedent).
+
 ## ⇒ (SUPERSEDED) START HERE — updated 2026-09-16
 
 **Post-reset collection is DONE; see `HANDOFF.md` (2026-09-16) for the full account.** The section
