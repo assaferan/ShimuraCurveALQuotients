@@ -61,6 +61,21 @@ function load_covers_and_ws_data_87_1()
     // hours): both matrices below are automorphisms AND involutions of cover_data[{1}], while the
     // x <-> z swap Matrix(3,3,[0,0,1, 0,1,0, -1,0,0]) is NOT -- which is the discriminating fact,
     // since at 111_1 the situation is exactly reversed.
+    //
+    // ✅ RUN GREEN 2026-09-23 in 4660 s, AND NEGATIVE-CONTROLLED -- the second half is what makes
+    // the first half evidence. `run_tests.m` does not enable ShimuraQuotients verbosity, and the
+    // helper reports its comparison counts only under `vprintf ... 1`, so a bare "Success!" is
+    // equally consistent with "the involutions matched" and "the {1} key was never matched, so
+    // ws_data was skipped in silence" (`if not ws_def then continue`). Swapping the two matrices
+    // resolves it -- the run goes RED in 3008 s with:
+    //     "X0^87(1) cover [ 1 ]: no isomorphism to the expected curve intertwines all 2 labelled
+    //      Atkin-Lehner involution(s). 5 candidate map(s) tried (Isom = Aut(C_ex) o phi). The
+    //      curves ARE isomorphic -- what fails is that no identification matches the involution
+    //      LABELLING."
+    // That message certifies three things the green run cannot: the {1} key WAS matched, exactly
+    // 2 involutions were compared, and 5 maps from the Isom torsor were tried before failing -- so
+    // the pass is not a lucky phi either. Re-run the control by swapping the two DiagonalMatrix
+    // lines below; it must go red.
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
     ws_data[{1}][3]  := DiagonalMatrix([-1, 1, 1]);

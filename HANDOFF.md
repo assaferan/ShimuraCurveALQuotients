@@ -103,7 +103,32 @@ not the instrument to check with — and the fallback must be a level BELOW the 
 sibling at the same level, since every map-level predicate routes through the same machinery.**
 ⚠ **Status: matrices verified as automorphisms of the right curves; LABELLING is unverified.** Only
 a pipeline run tests that, and that is the claim that matters. `87_1`/`111_1` running, `39_2` queued,
-`93_1` not started. **These four files are UNCOMMITTED on purpose.**
+`93_1` not started.
+
+⚠ **CORRECTION, same day.** This block first said "these four files are UNCOMMITTED on purpose".
+They are not: `git add -A` in THIS commit (`638223e`) swept all four in and they were pushed. The
+intent was real and was stated twice, but the command did not implement it. **They are offline
+tests, so CI does not run them and nothing went green on unverified matrices** -- but the repo
+carried four labelling claims whose verification was still in flight.
+⇒ Two things that follow. **`git add -A` does not respect an intention held only in your head**;
+stage explicitly when part of a tree is deliberately held back. And **a claim about repo state is
+as checkable as any other claim** -- one `git show --stat` would have caught it at the time, and it
+was caught only when a later `git status` looked surprisingly clean.
+
+**Verification status of the four, which is the part that matters:**
+
+    87_1   ✅ GREEN 4660 s, AND negative-controlled: swapping the matrices goes RED in 3008 s
+           naming "all 2 labelled involution(s), 5 candidate map(s) tried" -- so the {1} key WAS
+           matched and the pass is not a lucky phi
+    111_1  🔄 running, 3 h+ at 98% CPU
+    39_2   ⏳ queued
+    93_1   ⏳ not started
+
+⚠ **A bare `Success!` from these files is NOT evidence on its own.** `run_tests.m` does not enable
+`ShimuraQuotients` verbosity and the helper prints its comparison counts only under
+`vprintf ... 1`, so a green run is equally consistent with "the involutions matched" and "the `{1}`
+key was never matched, so `ws_data` was skipped in silence" (`if not ws_def then continue`). The
+swapped-matrix control is what separates those, and it must be run per file.
 
 ### ⚠ `X0_*` re-derivation is 43%, and BOTH of my "corrections" to the recorded 41% were wrong
 
