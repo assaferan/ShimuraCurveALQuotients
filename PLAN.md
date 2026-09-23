@@ -286,7 +286,47 @@ are in `HANDOFF.md` 2026-09-23.)
    ⇒ A control that restores the PRINTED map fails with *"Polynomials do not define a map into the
    codomain"* -- the typo is not a subtlety, the printed map is not a map.
 
-   **What remains: `6_5 6_7 6_13 10_3` (`N > 1`), and `6_5`/`6_13` need a HELPER CHANGE FIRST.**
+   ✅ **DONE 2026-09-23 -- `6_7`** (38 s, `tests/X0_6_7.m`): **15 curve / 7 involution comparisons,
+   7/7 expected covers matched, 23 committed keys re-derived**; labelling swap red after 9 candidate
+   identifications.
+   ⚠ **COMPOSE THE GENERATORS CAREFULLY -- this cost a false alarm.** `w_6(w_3(x,y)) = (27/x,
+   -27y/x^2)`, NOT `(-27/x, +27y/x^2)`. Mislabelling swaps `w_2` with `w_7`, and the SYMPTOM was a
+   derived quotient Jacobian of `42a2` against our `42a5` -- which reads as "the model is wrong"
+   when the model was right and the LABEL was wrong. Correctly composed: `w_3 [2]`, `w_6 [3]`,
+   `w_21 [2,3]`, `w_2 42a5`, `w_7 42a2`, `w_14 42a6`, all matching.
+
+   ⚠ **A KEY MAY HAVE TO BE OMITTED FROM `cover_data`, and that is principled.** `6_7`'s `W=[1,14]`
+   is absent: our entry has the SAME Jacobian as the quotient derived from GR's model (`42a6` both
+   sides, and GR's p.9 table publishes `42A6` for it) but is an inequivalent QUARTIC model -- a
+   different degree-2 divisor class. Listing it would make the test red for something that is not a
+   defect. Nothing is lost: the helper's SECOND pass drift-checks every committed key anyway; what
+   is unavailable is an ORACLE claim, since GR pin the quotient's Jacobian but not which degree-2
+   model the pipeline should pick.
+
+7b. ⚠⚠ **NEW, FOUND BY WRITING `X0_10_3.m` -- `10_3` PRODUCES ONE COVER WHERE THE FILE RECORDS TWO.
+   The test is written and HELD OUT of `tests/` until this is understood.**
+
+       key        committed entries   produced by a default run
+       [1,6]              2                    1  (base 4004)
+       [1,10]             2                    1  (base 4001)
+       [1,15]             2                    1  (base 4003)
+
+   ⇒ **NOT a wrong curve.** The produced cover IS isomorphic to one of the two committed entries at
+   each key (entry 1, 2, 2 respectively) and the Jacobians agree throughout (`30a5 30a4 30a1`). It
+   is a **LOST COVER** -- the same shape as the `22_3 [1,66]` 3 -> 2 loss the helper's multiset
+   matching was built to catch, which is why the second pass fires: each committed entry must find
+   an unused fresh cover, and the second entry has nothing left to match.
+   ⚠ The helper's message says "NOT ISOMORPHIC ... the pipeline now builds a DIFFERENT curve",
+   which is MISLEADING here -- the curve is right and a cover is missing. Worth rewording when the
+   helper is next touched.
+   ⚠ `PROVENANCE.md` gives `10_3` no flags row, so a default run is supposed to reproduce the file.
+   Candidate causes, none checked: the 2026-09-07 coprime flip (`CMCOPRIME=1` restores the old
+   filtering), or the CRV-degeneracy repair that already "loses 4 entries" at `10_3`
+   (`PROVENANCE.md:411+`). **Check whether the file predates the flip before assuming a regression.**
+   ⇒ This is a THIRD reproducibility gap after the y2-scale one and `21_1`'s `HMFIT` --
+   see [[committed-models-can-be-unreproducible]].
+
+   **What remains: `6_5 6_13` (`N > 1`), which need a HELPER CHANGE FIRST, plus `10_3` above.**
    ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
    `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
    (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the

@@ -178,6 +178,43 @@ involutions were verified as automorphisms AND involutions before the file was w
 four derived ones formed by the group law `w_m w_n = w_{mn/gcd^2}` so their labelling is forced
 rather than guessed.
 
+### ✅ `6_7` — and ⚠⚠ a LOST COVER at `10_3` that the new test found and nothing else was checking
+
+    6_7   38 s  tests/X0_6_7.m   15 curve / 7 involution cmp, 7/7 covers, 23 keys re-derived
+
+Labelling swap red after 9 candidate identifications.
+
+**⚠ A FALSE ALARM I RAISED AND THEN KILLED — compose the generators carefully.**
+`w_6(w_3(x,y)) = w_6(-x,y) = (27/x, -27y/x^2)`, **not** `(-27/x, +27y/x^2)`. Mislabelling those
+swaps `w_2` with `w_7`, and the symptom was a derived quotient Jacobian of `42a2` against our
+`42a5` — which reads as *"the committed model is wrong"*. The model was right; the label was mine
+and wrong. Correctly composed, every key matches: `w_3 [2]`, `w_6 [3]`, `w_21 [2,3]`, `w_2 42a5`,
+`w_7 42a2`, `w_14 42a6`. ⇒ **the Jacobian comparison is what caught it** — `IsIsomorphic` alone just
+says "false" and tells you nothing about which of the two objects moved.
+
+**⚠⚠ `10_3` PRODUCES ONE COVER WHERE THE COMMITTED FILE RECORDS TWO.** The test is written and
+**held out of `tests/`** (kept in the session scratchpad) until this is understood.
+
+    key       committed entries    produced by a default run
+    [1,6]             2                   1   (base 4004)
+    [1,10]            2                   1   (base 4001)
+    [1,15]            2                   1   (base 4003)
+
+⇒ **NOT a wrong curve.** The produced cover IS isomorphic to one of the two committed entries at
+each key (entry 1, 2, 2) and the Jacobians agree throughout (`30a5 30a4 30a1`). It is a **lost
+cover** — the same shape as the `22_3 [1,66]` 3 → 2 loss the helper's multiset matching exists to
+catch: every committed entry must find an unused fresh cover, and the second has nothing left.
+⚠ **The helper's message is misleading here** — it says *"NOT ISOMORPHIC … the pipeline now builds a
+DIFFERENT curve"*, when the curve is right and a cover is missing. Reword when next touching it.
+⚠ `PROVENANCE.md` gives `10_3` no flags row, so a default run is meant to reproduce the file.
+Unchecked candidate causes: the 2026-09-07 coprime flip, or the CRV-degeneracy repair that already
+"loses 4 entries" at `10_3` (`PROVENANCE.md:411+`). **Establish whether the file predates the flip
+before calling this a regression.** Third reproducibility gap after the y2-scale one and `21_1`.
+
+⇒ **The test did its job**: no `X0_10_3.m` existed, so nothing had ever compared `10_3`'s committed
+covers against a fresh run. This is the `69_1` pattern once more — the gap was in what nobody was
+looking at, not in what was being computed.
+
 ### ⚠ OPTION 2 FOR `6_5`/`6_13` IS REFUTED — `base_label` does not reach the step that matters
 
 `base_label` is threaded into only `EquationsAbovePointlessConics` (`EquationsCovers.m:1076`) and
