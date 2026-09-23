@@ -44,7 +44,27 @@ function load_covers_and_ws_data_87_1()
     cover_data[{1,87}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, -27 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1}] := <HyperellipticCurve(Polynomial(Rationals(), [ -129140163/3444736, 0, -44109603/1722368, 0, -21447909/3444736, 0, -537597/861184, 0, -64413/3444736, 0, 589/1722368, 0, -27/3444736 ])), DiagonalMatrix([1,1,1])>;   // genus 5
 
+    // ATKIN-LEHNER INVOLUTIONS, transcribed from Guo-Yang (journal, Table A.1, printed page 34):
+    //     w_3 (x,y) = (-x,  y)        w_87 (x,y) = ( x, -y)
+    // ✅ ADDED 2026-09-23. Until now this file's ws_data was EMPTY -- boilerplate inherited from
+    // the 2026-09-07 generated batch ("the helper skips involution checks for keys it does not
+    // find"), i.e. undone work rather than a decision. A pass without it says the CURVES are
+    // re-derived, not that their LABELLING is right, and the labelling is what makes these
+    // quotient models rather than merely curves.
+    //
+    // ⚠ WHY THESE CARRY OVER UNCHANGED, checked and not assumed: the stored W={1} polynomial above
+    // is EVEN in x (every odd coefficient is literally 0), as is Guo-Yang's published
+    // y^2 = -(x^6-7x^4+43x^2+27)(243x^6+523x^4+369x^2+81). So the two differ by a DIAGONAL change
+    // x -> ax, y -> by, and diagonal scalings commute with sign changes, leaving a sign-only
+    // involution with the same matrix on both sides. Same argument as X0_51_1.m and X0_69_1.m.
+    // ⚠ VERIFIED AS AUTOMORPHISMS of the stored curve before this file was run at all (the run is
+    // hours): both matrices below are automorphisms AND involutions of cover_data[{1}], while the
+    // x <-> z swap Matrix(3,3,[0,0,1, 0,1,0, -1,0,0]) is NOT -- which is the discriminating fact,
+    // since at 111_1 the situation is exactly reversed.
     ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][3]  := DiagonalMatrix([-1, 1, 1]);
+    ws_data[{1}][87] := DiagonalMatrix([ 1,-1, 1]);
     return cover_data, ws_data;
 end function;
 

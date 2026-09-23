@@ -40,7 +40,33 @@ function load_covers_and_ws_data_111_1()
     // this test does not pass. The identity is a placeholder, not a claim about coordinates.
     cover_data[{1}] := <HyperellipticCurve(gy_f), IdentityMatrix(Rationals(), 3)>;
 
-    ws_data := AssociativeArray();      // deliberately empty -- see the header
+    // ATKIN-LEHNER INVOLUTIONS, from Guo-Yang (journal, Table A.1, printed page 35):
+    //     w_37 (x,y) = (-1/x, y/x^8)      w_111 (x,y) = (x, -y)
+    // ✅ ADDED 2026-09-23, and it RETIRES this file's own stated blocker. The header used to say
+    // "Guo-Yang's w_m for 111_1 are transcribed nowhere in this repo" -- true when written, no
+    // longer: they are read off the journal page above.
+    //
+    // ⚠ THESE ARE IN GUO-YANG'S COORDINATES, and that is correct HERE precisely because
+    // cover_data[{1}] above is gy_f, their published curve, rather than our stored model. The
+    // helper conjugates the pipeline's own w_Q into C_ex's coordinates, and C_ex is theirs -- so
+    // their published formulas apply verbatim, with no transport. ⚠ Do NOT copy this reasoning to
+    // a file whose cover_data holds OUR model (X0_87_1.m, X0_69_1.m): there the matrix is only the
+    // same because the coordinate change is diagonal and the involution sign-only.
+    //
+    // ⚠ w_37 IS NOT "NON-LINEAR". An earlier note in X0_51_1.m claims Guo-Yang's Mobius
+    // involutions are ones "the helper cannot express as a matrix at all", citing 55_1's
+    // w_5 = (-1/x, y/x^4). That is REFUTED by X0_55_1.m itself, which encodes exactly that as
+    // Matrix(3,3,[0,0,1, 0,1,0, -1,0,0]). On the weighted ambient P(1,g+1,1) the map
+    // (x:y:z) -> (-z:y:x) IS linear, and rescaling by 1/x to normalise the last coordinate gives
+    // (-1/x, y/x^(g+1), 1). Here g+1 = 8, matching their y/x^8 exactly.
+    //
+    // ⚠ VERIFIED BEFORE RUNNING, because this file costs hours: on gy_f itself, both matrices
+    // below are automorphisms AND involutions, while DiagonalMatrix([-1,1,1]) is NOT -- the
+    // reverse of the situation at 87_1, so the two files cannot have been filled in by copying.
+    ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][37]  := Matrix(3,3,[ 0,0,1,  0,1,0, -1,0,0 ]);
+    ws_data[{1}][111] := DiagonalMatrix([ 1,-1, 1]);
     return cover_data, ws_data;
 end function;
 

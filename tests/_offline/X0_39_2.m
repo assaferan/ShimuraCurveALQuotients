@@ -49,7 +49,39 @@ function load_covers_and_ws_data_39_2()
     cover_data[{1,3,26,78}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 81/6656, 2997/43264, -3645/173056, 6561/173056, -177147/1384448 ])), DiagonalMatrix([1,1,1])>;   // genus 2
     cover_data[{1,78}] := <HyperellipticCurve(Polynomial(Rationals(), [ 9/3328, 0, 37/10816, 0, -5/21632, 0, 1/10816, 0, -3/43264 ])), DiagonalMatrix([1,1,1])>;   // genus 3
 
+    // ATKIN-LEHNER INVOLUTIONS, from Guo-Yang (JOURNAL, level-2 table, printed page 38):
+    //     w_2 (x,y,z)  = (2/x, -16y/x^8)
+    //     w_3 (x,y,z)  = (-(x+2)/(x+1), -y/(x+1)^8)
+    //     w_39(x,y)    = (x, -y)                        [the hyperelliptic involution]
+    // ⚠ THE JOURNAL, NOT arXiv v1. v1's cell here is copy-pasted from 15_4 -- it lists w_4, w_3,
+    // w_5, and 4 does not divide 78. Using v1 would label these wrong; see this repo's
+    // tests/GuoYangEquations.m header.
+    //
+    // ✅ ADDED 2026-09-23, by TRANSPORT rather than transcription, because unlike 87_1/111_1 our
+    // model is NOT in coordinates where Guo-Yang's formulas hold. Procedure, all of it cheap:
+    //   1. Their w_2 and w_3 ARE linear on the weighted ambient P(1,8,1), despite looking Mobius:
+    //        w_2 -> (x:y:z) |-> ( 2z, -16y,  x  )
+    //        w_3 -> (x:y:z) |-> (-(x+2z), -y, x+z)
+    //      Both verified to be automorphisms AND involutions OF THEIR PUBLISHED CURVE first.
+    //   2. phi := IsIsomorphic(ours, theirs) -- 0.06 s, since W={1} is hyperelliptic here.
+    //   3. transport: psi := phi * w * phi^-1, then read DefiningPolynomials(psi) off directly
+    //      instead of guessing a matrix. That is how w_2 was found: it is NOT in the obvious
+    //      candidate set {swap, y-negation, their product} -- it carries a -16 scaling on y.
+    //
+    // ⚠ WHY THE ANSWER DOES NOT DEPEND ON WHICH phi IsIsomorphic RETURNED -- the step that makes
+    // this a determination rather than a guess. Isom(ours, theirs) is a torsor under Aut(ours), so
+    // a different phi conjugates the result by some a in Aut. MEASURED: #Aut(ours) = 8 and it is
+    // ABELIAN, so that conjugation is trivial and the transported matrix is canonical. Without
+    // that check the labelling would be an artifact of an arbitrary choice -- which is exactly the
+    // torsor trap tests/BorcherdsProducts.m documents for the helper's own phi.
+    //
+    // VERIFIED on our stored curve before committing: all three are automorphisms and involutions,
+    // pairwise distinct, and w_2*w_3 is an involution too (consistent with an abelian AL group).
     ws_data := AssociativeArray();
+    ws_data[{1}] := AssociativeArray();
+    ws_data[{1}][2]  := Matrix(3,3,[ 1,0, 1,  0,-16,0,  1,0,-1 ]);   // (x+z, -16y, x-z)
+    ws_data[{1}][3]  := Matrix(3,3,[ 0,0, 1,  0, -1,0, -1,0, 0 ]);   // (-z, -y, x)
+    ws_data[{1}][39] := DiagonalMatrix([1,-1,1]);                    // (x, -y)
     return cover_data, ws_data;
 end function;
 

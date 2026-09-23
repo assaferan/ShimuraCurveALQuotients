@@ -1,8 +1,8 @@
-# Handoff — 2026-09-13
+# Handoff — 2026-09-23
 
-**The newest section is this one; everything after it is older and kept for provenance.** Earlier
-material still says things like "34 of 43" or "23 of 34 tests check involutions" — those counts are
-STALE.
+**The newest section is the FIRST one below; everything after it is older and kept for provenance.**
+Earlier material still says things like "34 of 43", "23 of 34 tests check involutions", or that
+`95_1` is the only killed base with an oracle — those counts are STALE.
 
 ✅ **2026-09-13: everything is COMMITTED AND PUSHED on both branches**, and the branch-divergence
 invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8dac84c` — `git fetch
@@ -10,6 +10,136 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
+
+## Handoff — 2026-09-23 — THE ORACLE AUDIT: a wrong cohort, a base nobody checked, and a guard that could not fail
+
+**Theme, because all five items share it: every defect found today was a WRONG OBJECT, not a wrong
+computation.** A cohort labelled by the wrong criterion, a coverage question asked of the wrong
+screen, a ratio computed against the wrong denominator (twice), a guard counting the wrong thing,
+and an instrument answering about the wrong ambient. Nothing arithmetical was broken anywhere.
+
+### ✅ `95_1`, `119_1`, `159_1` ALL have published Guo-Yang equations — `PLAN` said only `95_1` did
+
+`PLAN.md` called `95_1 115_1 123_1 119_1 159_1` "the five Guo-Yang bases" and said `95_1` was the
+only one carrying an oracle. Both wrong. The five are the jobs `earlyoom` reaped — a KILL cohort.
+The Guo-Yang label came from `genmodels.m`'s `vx_skip = {95_1,115_1,123_1,129_1}`, which groups by
+the **vx defect**, and nobody checked it against the paper. Against the 43 equation cells:
+
+    95_1  119_1  159_1   published equation -> RETURNS WITH AN ORACLE
+    115_1 123_1           NOT in Guo-Yang at all
+
+⇒ the ~400 CPU-hour loss cost **three** oracle-bearing bases, not one. All three are now
+transcribed in `tests/GuoYangEquations.m` (`31bd605`), read three independent ways (journal page,
+journal PDF text layer, arXiv v1 TeX, all agreeing), reporting `PENDING` until a model lands and
+then comparing automatically. Each is checked WITHOUT a model via the involutions the same table
+publishes, plus the genus column; 6 symmetry controls keep that non-vacuous.
+⚠ **Both checks are needed.** Truncating at the `\\` wrap — the documented trap — leaves all three
+invariant under their own involution and is caught ONLY by genus; a mistyped middle coefficient
+preserves degree and is caught ONLY by the involution.
+
+### ✅ `69_1` closed — it had a published equation and NOTHING external checking it (`11532a3`)
+
+Neither an entry in `GuoYangEquations.m` nor any `X0_` test; only `ModelChecks`, which is
+structural and passes on a wrong curve of the right genus. Cause was structural, not an oversight:
+`models_69_1.m` landed 2026-09-14 (`4bfb859`), AFTER both `X0_*` batches (2025-11-19, 2026-09-06/07)
+and after the table was last extended. **A model that arrives after a sweep is never swept.**
+Now has both halves: `IsIsomorphic` against their degree-8 curve (2 perturbation controls fail
+correctly), plus `tests/X0_69_1.m` re-deriving all four covers with `w_3`/`w_69`. Negative-controlled
+(swapping the matrices goes red, 2 involutions compared, 5 torsor maps tried). **117 s, so it is in
+`tests/` and CI-visible** — the only one of `69_1/87_1/39_2/111_1/93_1` that CI sees.
+
+### ✅ `tests/OracleCoverage.m` — so this cannot recur (`f0c3c67`)
+
+    ok (40 of 43 published bases have a model; 12 via the equation table, 39 via an X0_ test;
+        1 exempt; 3 not yet built: 119_1 159_1 95_1)          0.03 s, no pipeline run
+
+Fails when a Guo-Yang base has a model and no oracle. Exemptions must carry a reason (only `15_4`,
+Remark 39), and a STALE exemption is itself a failure, so the list cannot become a hiding place.
+⚠⚠ **Its third negative control FAILED against the first version, and that is the real lesson.**
+With the search pattern deliberately broken the test still printed `ok`: `93_1`'s hardcoded special
+case held the count at 1, so the `eq 0` non-vacuity guard could not fire. **A guard incapable of
+failing, inside the file whose whole purpose is catching that.** Reading the code it looks correct;
+only running the control exposed it. Fixed by counting pattern hits separately from the special
+case, plus a `51_1` canary.
+
+### ✅ PLAN item 2 CLOSED — the coprime fix cannot move any recorded verdict (`c7108fb`)
+
+Not "false clears", not "false obstructions" — **the question was asked of the wrong screen.**
+`screened-2026-09-14.txt` was produced by `deficit.m`, and `deficit.m` says of itself that it
+computes the deficit *"WITHOUT the CM points ... therefore skips `RationalandQuadraticCMPoints`"* —
+exactly the call `0ca6e37` changed. Skipping it is what makes it a fast predictor. ⇒ **none of the
+99 recorded verdicts (77 at `N>1`) can move.** All 99 are even `D`, consistent with `deficit.m`
+being even-`D` only.
+Measured anyway on `deficit_odd.m`, which DOES consume the pool, via the `PTSCOPRIME=1` control:
+
+    38_5  tgt 4->9  wdef 1 every rung  obstructed->obstructed    34_11  tgt 3->5  wdef 0  clear->clear
+    15_2  ladder numerically IDENTICAL both ways                 134_3  identical CM-supply error both ways
+
+At `38_5` **only `tgt` moves**; `rows cols nds rank deficit wdef` are identical across all five
+rungs — the extra targets land INSIDE the image, so `dim W` and `dim(W meet Im)` grow together.
+⚠ Side finding for the screen, not this item: **`15_2` is a SECOND odd-`D` counterexample** — it has
+a committed model and BUILDS, yet exhausts its `all_ms` ladder at `wdef >= 1` and prints
+`obstructed`, identically in both modes. `deficit_odd.m`'s header names only `21_2`.
+
+### 🔄 The involution gaps — all four now have matrices, NONE yet verified end to end
+
+`87_1` and `111_1` by transcription, `39_2` and `93_1` by work:
+
+    87_1   w_3,w_87    diagonal; our stored poly is EVEN in x, so the change from GY is diagonal
+    111_1  w_37,w_111  cover_data IS their curve, so their formulas apply verbatim
+    39_2   w_2,w_3,w_39  TRANSPORTED: phi := IsIsomorphic(ours,theirs) (0.06 s), then read
+                         DefiningPolynomials off directly. w_2 = (x+z,-16y,x-z) was NOT in the
+                         obvious candidate set. Canonical because #Aut = 8 and ABELIAN, so the
+                         Isom-torsor choice of phi does not change the answer -- checked, not assumed
+    93_1   w_3,w_31    + THE FULL CURVE, built from their published PAIR in P(1,3,1,1), genus 5.
+                         No manual_isomorphism: the helper's construct-the-CRV-isomorphism branch
+                         is hundredths of a second vs the 10 h+ IsIsomorphic
+
+⚠⚠ **`IsIsomorphism` reported FALSE for `93_1`'s two involutions, and they are CORRECT.** Toric /
+weighted-projective breakage (Magma #123 territory). Taken at face value it would have rejected two
+correct transcriptions from the paper. Substituting into the defining polynomials leaves both
+literally unchanged, with a control `x -> x+z` that breaks. ⇒ **On `P(1,w,1,1)`, `IsIsomorphism` is
+not the instrument to check with — and the fallback must be a level BELOW the instrument, not a
+sibling at the same level, since every map-level predicate routes through the same machinery.**
+⚠ **Status: matrices verified as automorphisms of the right curves; LABELLING is unverified.** Only
+a pipeline run tests that, and that is the claim that matters. `87_1`/`111_1` running, `39_2` queued,
+`93_1` not started. **These four files are UNCOMMITTED on purpose.**
+
+### ⚠ `X0_*` re-derivation is 43%, and BOTH of my "corrections" to the recorded 41% were wrong
+
+    152 cover_data keys / 355 populated model keys across the 40 tested bases = 43%
+
+The recorded 41% (2026-09-09) was sound. I first got 17% by using the denominator across ALL 113
+model files rather than the 40 tested bases — the note says "across the 34 tests". Then 44%, still
+short, because **three model files write keys as `models[[ 1 ]]` rather than
+`models[[Integers()|1]]`** (`21_2`, `58_5`, `34_3`) and my regex silently missed them. Eight bases
+still check 1 of 15. ⇒ two wrong-denominator errors in one afternoon; the number was only ever
+flagged as uncertain, never asserted.
+
+### ⚠ A PEER SESSION `pkill`ed EVERY Magma PROCESS — and the misdiagnosis cost more than the kill
+
+`ModFrm-CrvMod` ran `pkill -f "magma.exe"`, which kills every Magma the user owns. It took out
+`X0_87_1`, `X0_111_1` and a `39_2` probe. **Signature: exit code 144 (NOT 143/SIGTERM) and a log
+holding only the banner, ~20 bytes.** I diagnosed it as "three concurrent launches" and told the
+user — a wrong cause that would have gone into the notes permanently, and was corrected only
+because that session volunteered the disclosure. ⇒ **before blaming your own launch for a
+simultaneous multi-job death, ask: `ListAgents` lists the peers.**
+⚠ `pgrep -f magma.exe` then killing PIDs is NOT the remedy — that is a pattern kill with extra
+steps, and there is no safe pattern here because `build/debug/native/magma.exe` is shared by every
+worktree. Use `TaskStop` by task id, or an explicit PID with its cwd confirmed in the same command
+(`lsof -a -p <pid> -d cwd -Fn`).
+
+### lava: all three oracle-bearing bases running, and lava is NOT the safe harbour PLAN assumed
+
+`95_1` and `119_1` from 11:40, `159_1` added 16:47, `$HOME/lavarun`, 0 `EXIT` lines.
+⚠⚠ **lava runs the SAME `earlyoom --prefer (...|magma)`.** The move buys headroom, not immunity.
+But the 13–82 GB per-job figure that justified holding the third back is from **lovelace and did
+not transfer**: measured here, `95_1` 2.2 GB and `119_1` 8.7 GB against 125 GB, and `119_1`'s spike
+to 17.4 GB came back down — a build phase, not a growth rate. ⇒ do not re-derive a resource ceiling
+from another machine's numbers.
+`run_base.sh` records `128+N` for a signalled child AND verifies the model file, because a bad
+Magma command line **exits 0** (`OUTDIR=` instead of `OUTDIR:=` is read as a filename). Check with
+`ssh -J lovelace lava 'grep "^EXIT" ~/lavarun/out/DRIVER.log'`.
 
 ## Handoff — 2026-09-22 — SIX MODELS, `358_1` RESOLVED, AND ~400 CPU-HOURS LOST TO `earlyoom`
 
