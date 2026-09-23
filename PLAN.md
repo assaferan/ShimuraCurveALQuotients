@@ -27,6 +27,40 @@ is DONE; it is kept only for provenance. Its numbers are superseded by these.
     2-dim        EIGHT bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 358_1.
     unresolved   NONE.  358_1 was the last, resolved 2026-09-22 (deficit 2, flat P=266..700).
 
+### ⇒⇒ TWO THINGS ARE RUNNING ON `lava` RIGHT NOW — CHECK THESE BEFORE STARTING ANYTHING
+
+Both outlive the session that launched them; neither is discoverable from this repo without this
+block. `ssh -J lovelace lava` (lava is NOT reachable directly).
+
+    ~/lavarun    3 model builds: 95_1, 119_1, 159_1 -- the oracle-bearing bases earlyoom reaped
+                 on lovelace. Launched 2026-09-22, ~18 h in at 2026-09-23 06:00.
+                 STATUS:  ssh -J lovelace lava 'grep "^EXIT" ~/lavarun/out/DRIVER.log'
+                 Empty = all alive. An `EXIT 143` line = earlyoom killed it (lava runs the SAME
+                 earlyoom as lovelace -- the move buys headroom, NOT immunity).
+                 When one finishes, its published equation is ALREADY transcribed in
+                 tests/GuoYangEquations.m, so the oracle fires the moment the model lands.
+
+    ~/lavatests  6 runs: involution tests 111_1, 39_2, 93_1, EACH FOLLOWED BY ITS SWAPPED-MATRIX
+                 CONTROL. Launched 2026-09-23 06:02 by ~/lavatests/runtests.sh.
+                 STATUS:  ssh -J lovelace lava 'cat ~/lavatests/out/SUMMARY.log'
+                 Every line records expect= vs got=, and a MISMATCH is flagged in EITHER
+                 direction -- a GREEN control is reported as loudly as a RED test, because a
+                 control that passes means the check CANNOT FAIL.
+
+⚠ **`~/lavatests` is a SEPARATE clone from `~/lavarun` deliberately.** `CLAUDE.md` forbids updating
+a clone that has jobs running from it (`AttachSpec` is lazy, so a long run can compile source that
+changed under it). Do NOT `git pull` in `~/lavarun` while those three builds are alive.
+⚠ **lava is Magma 2.29-9.** Issue #125 is a 2.29-7 -> 2.29-10 regression on genus-0 `CrvHyp`
+`IsIsomorphic`, and `87_1`/`93_1` carry genus-0 cover keys. The repo routes around it by deciding
+genus-0 pairs via conic class, but **check `GetVersion()` before calling any red result there
+real** -- `87_1` is already GREEN on the Mac, so a lava-only failure would be diagnostic.
+
+⚠ **Why the tests moved off the Mac:** `X0_111_1` was killed there at 3 h+ when the machine ran
+low on memory. Not this project's doing -- the top consumer was a **6.9 GB Python process**
+belonging to something else, against Magma's 645 MB, on a Mac hosting ~7 Claude sessions.
+⇒ **Run offline tests on lava, not here.** (Distinct from the `pkill` incident the same day; both
+are in `HANDOFF.md` 2026-09-23.)
+
 ### Do this first, in order
 
 1. ⚠⚠ **RELAUNCH THE FIVE KILLED BASES ON `lava`, NOT lovelace** -- `95_1 115_1 123_1 119_1 159_1`

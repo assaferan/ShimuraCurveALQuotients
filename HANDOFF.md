@@ -120,9 +120,23 @@ was caught only when a later `git status` looked surprisingly clean.
     87_1   ✅ GREEN 4660 s, AND negative-controlled: swapping the matrices goes RED in 3008 s
            naming "all 2 labelled involution(s), 5 candidate map(s) tried" -- so the {1} key WAS
            matched and the pass is not a lucky phi
-    111_1  🔄 running, 3 h+ at 98% CPU
-    39_2   ⏳ queued
-    93_1   ⏳ not started
+    111_1  🔄 relaunched on lava -- its Mac run was KILLED at 3 h+ (see below)
+    39_2   🔄 on lava, queued behind 111_1
+    93_1   🔄 on lava, queued
+
+⚠ **THE MAC KILLED `X0_111_1` AT 3 h+ FOR LOW MEMORY, and it was not this project's fault.** The
+machine's top consumer was a **6.9 GB Python process** belonging to something else, against
+Magma's 645 MB, on a Mac hosting ~7 Claude sessions. ⇒ **offline tests belong on lava**, which has
+125 GB with ~11 GB in use. ⚠ Distinct from the `pkill` incident above: that one was exit 144 with
+an empty log, this one is a harness kill reported as "low on memory". Two different external
+causes for a vanished Magma run IN ONE DAY, which is the argument for checking the cause rather
+than assuming your own launch was at fault.
+
+⇒ All three now run on lava from `~/lavatests` (a SEPARATE clone from `~/lavarun`, because
+`CLAUDE.md` forbids updating a clone with live jobs), **each followed by its swapped-matrix
+control** -- 6 runs, results in `~/lavatests/out/SUMMARY.log`, which flags a mismatch in either
+direction. See `PLAN.md`'s "TWO THINGS ARE RUNNING ON lava RIGHT NOW" block for the status
+commands; that block is the only place either job is discoverable from this repo.
 
 ⚠ **A bare `Success!` from these files is NOT evidence on its own.** `run_tests.m` does not enable
 `ShimuraQuotients` verbosity and the helper prints its comparison counts only under
