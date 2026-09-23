@@ -244,12 +244,35 @@ in the session scratchpad, not committed):
 In every case the produced cover IS isomorphic to one of the two committed entries — **no curve is
 wrong, a cover is missing**. At `6_13`'s `[1,6]` *both* committed entries match the single produced
 cover, so those two entries are isomorphic to each other.
-⇒ **Two bases, identical shape, both `N > 1`, both at the genus-1 quotient keys.** That is a pattern,
-not two accidents. `6_5` and `6_7` do not show it. Candidate causes, none checked: the 2026-09-07
-coprime flip, and the CRV-degeneracy repair that already loses 4 entries at `10_3`
-(`PROVENANCE.md:411+`). **Establish whether the files predate the flip before calling it a
-regression** — if the covers are genuinely gone the committed files are stale; if the flip is
-responsible, `PROVENANCE.md` needs rows for both.
+⇒ **Two bases, identical shape, both `N > 1`, both at the genus-1 quotient keys.** `6_5` and `6_7`
+do not show it.
+
+### ⇒⇒ CAUSE FOUND: `0ca6e37` LOSES COVERS. It is a regression, not a stale file.
+
+    base   default           PTSCOPRIME=1      verdict
+    10_3   23 of 26 covers   26 of 26          RESTORED
+    6_13   24 of 27 covers   27 of 27          RESTORED
+    6_5    23 of 23          --                unaffected (negative control)
+
+`0ca6e37` (2026-09-21) — *"BorcherdsForms: drop the coprime-to-level filter on the divisor-support
+CM pool"* — is the change, and `PTSCOPRIME=1` restores that one line's old behaviour.
+
+⚠ **It is NOT the 2026-09-07 `CMCOPRIME` flip**, which was the obvious suspect and is ruled out by
+dates: `models_10_3.m` was REGENERATED WHOLESALE on 2026-09-13 (`080b836`, the GR drift fix — the
+three keys went from empty to two entries each), i.e. *after* that flip and *before* `0ca6e37`. The
+free half of the investigation — `git log` on the model files — is what killed the wrong hypothesis
+before any Magma was run.
+
+⇒ **`0ca6e37` HAS AN UNMEASURED COST.** PLAN item 2 scoped its analysis to the SCREEN and said
+explicitly *"reach for `PTSCOPRIME=1` only when something actually reads the divisor-support pool"*.
+**Cover production reads it.** Item 2's verdict about the screen is untouched and still correct;
+what was never checked is the other consumer.
+
+⇒ **A DECISION IS OWED**: either gate/revert `0ca6e37` for cover production, or accept the enlarged
+pool and regenerate the affected files under it — which permanently drops a real quotient model at
+each of those keys. Until then the two tests stay out of `tests/`; both pass under `PTSCOPRIME=1`.
+⚠ **BLAST RADIUS NOT MEASURED** — only `10_3`, `6_13` and `6_5` were checked. Sweep the other `N>1`
+bases with committed models before deciding.
 
 ### ⚠ OPTION 2 FOR `6_5`/`6_13` IS REFUTED — `base_label` does not reach the step that matters
 

@@ -352,11 +352,28 @@ are in `HANDOFF.md` 2026-09-23.)
    produced cover, i.e. the two committed entries are isomorphic to each other there.
    ⇒ **Two bases, same shape, both `N > 1`, both at the GENUS-1 quotient keys** -- that pattern
    suggests a systematic cause rather than two accidents. `6_5` and `6_7` do NOT show it.
-   ⚠ Candidate causes, none checked: the 2026-09-07 coprime flip (`CMCOPRIME=1` restores the old
-   filtering) and the CRV-degeneracy repair that already "loses 4 entries" at `10_3`
-   (`PROVENANCE.md:411+`). **Establish whether the files predate the flip before calling it a
-   regression.** If the covers are genuinely gone, the committed files are stale and should be
-   regenerated; if the flip is responsible, `PROVENANCE.md` needs rows for both bases.
+   ⇒⇒ **CAUSE FOUND 2026-09-23, AND IT IS A REGRESSION IN `0ca6e37`, NOT STALE FILES.**
+
+       base   default          PTSCOPRIME=1     verdict
+       10_3   23 of 26 covers  26 of 26         RESTORED
+       6_13   24 of 27 covers  27 of 27         RESTORED
+       6_5    23 of 23         --               unaffected (negative control)
+
+   `0ca6e37` (2026-09-21) *"BorcherdsForms: drop the coprime-to-level filter on the divisor-support
+   CM pool"* is the change, and `PTSCOPRIME=1` restores the old behaviour of that one line.
+   ⚠ **It is NOT the 2026-09-07 `CMCOPRIME` flip**, which was the obvious suspect and is excluded by
+   dates: `models_10_3.m` was REGENERATED WHOLESALE on 2026-09-13 (`080b836`, the GR drift fix --
+   those three keys went from empty to two entries each), i.e. after that flip and before `0ca6e37`.
+   ⇒ **`0ca6e37` HAS AN UNMEASURED COST: it loses covers at the genus-1 quotient keys of some `N>1`
+   bases.** PLAN item 2 scoped its analysis to the SCREEN and said explicitly *"reach for
+   `PTSCOPRIME=1` only when something actually reads the divisor-support pool"*. Cover production
+   reads it. That is this, and item 2's verdict about the screen is untouched.
+   ⇒ **DECIDE WHAT THE DEFAULT SHOULD BE.** Either `0ca6e37` is gated/reverted for cover production,
+   or the enlarged pool is accepted as correct and the affected committed files are regenerated
+   under it (which LOSES a cover at each of those keys, and they are real quotient models). Until
+   that is settled the two tests stay out of `tests/`; they pass under `PTSCOPRIME=1`.
+   ⚠ **BLAST RADIUS NOT MEASURED.** Only `10_3`, `6_13` (short) and `6_5` (clean) were checked. The
+   other `N>1` bases with committed models have NOT been swept; do that before deciding.
    ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
    `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
    (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the
