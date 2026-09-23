@@ -326,7 +326,37 @@ are in `HANDOFF.md` 2026-09-23.)
    ⇒ This is a THIRD reproducibility gap after the y2-scale one and `21_1`'s `HMFIT` --
    see [[committed-models-can-be-unreproducible]].
 
-   **What remains: `6_5 6_13` (`N > 1`), which need a HELPER CHANGE FIRST, plus `10_3` above.**
+   ✅ **DONE 2026-09-23 -- the HELPER CHANGE and `6_5`.** `cover_data[W]` may now be
+   `<[* C1, C2, ... *], scales>`: every produced cover must match SOME listed curve, and at least
+   one must match **entry 1**, the published one. Later entries are DRIFT alternatives, accepted but
+   vouched for by nothing external. The involution check runs only against a cover that matched
+   entry 1, since the published involutions act on the published curve.
+   `tests/X0_6_5.m` 17 s: **14 curve / 7 involution comparisons, 5/5 expected covers matched, 23
+   committed keys re-derived.**
+   ⚠ **Three controls on the helper, all red as required:** a cover matching none of the listed
+   curves; every cover matching an alternative with none matching entry 1 (the oracle guard --
+   without it such a key passes having consulted no oracle at all); and a labelling swap, proving
+   the involution check still fires through the list path.
+   ⚠ **Every branch re-exercised after the edit**: `manual_isomorphism` (`X0_82_1`, 33 s), CRV +
+   `base_label` (`X0_14_3`, 21 s), plain `IsIsomorphic` (`X0_39_1`, 363 s), genus-0 and the new
+   tests. Single-entry keys behave exactly as before.
+
+7c. ⚠⚠ **`6_13` JOINS `10_3`: THE SAME LOST COVER, SO THE TWO TESTS ARE WRITTEN AND HELD OUT.**
+   Both are complete and in the session scratchpad; neither is committed.
+
+       10_3   [1,6] [1,10] [1,15]    committed 2, produced 1   (Jac 30a5 30a4 30a1)
+       6_13   [1,6] [1,26] [1,39]    committed 2, produced 1
+
+   In every case the produced cover IS isomorphic to one of the two committed entries, so **no curve
+   is wrong** -- a cover is missing. At `6_13`'s `[1,6]` BOTH committed entries match the single
+   produced cover, i.e. the two committed entries are isomorphic to each other there.
+   ⇒ **Two bases, same shape, both `N > 1`, both at the GENUS-1 quotient keys** -- that pattern
+   suggests a systematic cause rather than two accidents. `6_5` and `6_7` do NOT show it.
+   ⚠ Candidate causes, none checked: the 2026-09-07 coprime flip (`CMCOPRIME=1` restores the old
+   filtering) and the CRV-degeneracy repair that already "loses 4 entries" at `10_3`
+   (`PROVENANCE.md:411+`). **Establish whether the files predate the flip before calling it a
+   regression.** If the covers are genuinely gone, the committed files are stale and should be
+   regenerated; if the flip is responsible, `PROVENANCE.md` needs rows for both bases.
    ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
    `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
    (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the

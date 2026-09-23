@@ -215,6 +215,42 @@ before calling this a regression.** Third reproducibility gap after the y2-scale
 covers against a fresh run. This is the `69_1` pattern once more — the gap was in what nobody was
 looking at, not in what was being computed.
 
+### ✅ THE HELPER NOW ACCEPTS SEVERAL CURVES PER KEY — `6_5` lands; `6_13` joins `10_3` as held out
+
+`cover_data[W]` may now be `<[* C1, C2, ... *], scales>`. Every produced cover must match SOME
+listed curve, and **at least one must match entry 1**, the published one. Later entries are DRIFT
+alternatives — accepted, but vouched for by nothing external. The involution check runs only against
+a cover that matched entry 1, because the published involutions act on the published curve.
+
+    tests/X0_6_5.m   17 s   14 curve / 7 involution cmp, 5/5 covers, 23 keys re-derived
+
+⚠ **Three controls on the helper, all red as required:**
+* a cover matching none of the listed curves → *"matches NONE of the 2 acceptable curve(s)"*;
+* every cover matching an alternative and none matching entry 1 → the **oracle guard** fires. This
+  is the one that matters: without it such a key passes having consulted no oracle at all, which is
+  the failure mode this file's header is about;
+* a labelling swap → still red, so the involution check fires through the list path.
+
+⚠ **Every branch re-exercised after the edit**, because this file backs all the X0_ tests:
+`manual_isomorphism` (`X0_82_1`, 33 s), CRV + `base_label` (`X0_14_3`, 21 s), plain `IsIsomorphic`
+(`X0_39_1`, 363 s), genus-0, and the new tests. Single-entry keys behave exactly as before.
+
+**⚠⚠ `6_13` SHOWS THE SAME LOST COVER AS `10_3`, so both tests are written and HELD OUT** (complete,
+in the session scratchpad, not committed):
+
+    10_3   [1,6] [1,10] [1,15]    committed 2, produced 1    (Jac 30a5 30a4 30a1)
+    6_13   [1,6] [1,26] [1,39]    committed 2, produced 1
+
+In every case the produced cover IS isomorphic to one of the two committed entries — **no curve is
+wrong, a cover is missing**. At `6_13`'s `[1,6]` *both* committed entries match the single produced
+cover, so those two entries are isomorphic to each other.
+⇒ **Two bases, identical shape, both `N > 1`, both at the genus-1 quotient keys.** That is a pattern,
+not two accidents. `6_5` and `6_7` do not show it. Candidate causes, none checked: the 2026-09-07
+coprime flip, and the CRV-degeneracy repair that already loses 4 entries at `10_3`
+(`PROVENANCE.md:411+`). **Establish whether the files predate the flip before calling it a
+regression** — if the covers are genuinely gone the committed files are stale; if the flip is
+responsible, `PROVENANCE.md` needs rows for both.
+
 ### ⚠ OPTION 2 FOR `6_5`/`6_13` IS REFUTED — `base_label` does not reach the step that matters
 
 `base_label` is threaded into only `EquationsAbovePointlessConics` (`EquationsCovers.m:1076`) and
