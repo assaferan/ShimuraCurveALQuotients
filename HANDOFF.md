@@ -247,6 +247,27 @@ cover, so those two entries are isomorphic to each other.
 ⇒ **Two bases, identical shape, both `N > 1`, both at the genus-1 quotient keys.** `6_5` and `6_7`
 do not show it.
 
+### ⚠⚠ THE SHORTFALL IS WIDER THAN TWO BASES, AND THE SUITE WILL NOT RUN LOCALLY
+
+**Sweep, scoped cheaply.** 76 `N>1` bases have committed models; only 26 have any key with >= 2
+entries, and the helper's SECOND pass tests this exact shortfall on every committed key with no test
+disabling it — so **every base whose `X0_` test passes is already proven clean**. That left four
+bases with no coverage at all:
+
+    22_7   12 -> 14 covers   clean (2 keys produced that the file does not record)
+    26_5   11 -> 12 covers   ⚠ SHORT at [1,26] (committed 2, produced 1)
+    6_23   14 -> 14 covers   clean
+    6_71   (killed mid-run; rerunning)
+
+⇒ **`26_5` is a THIRD affected base**, alongside `10_3` and `6_13`. All three are `N>1`, all at a
+genus-1 quotient key.
+
+**⚠⚠ THE FULL SUITE CANNOT COMPLETE ON THIS MAC — it dies at `X0_206_1`.** Measured TWICE,
+independently: runs reached 56 and 57 files and both were killed by macOS for memory pressure at
+exactly `X0_206_1.m`, 0 failures up to that point. Recorded in `CLAUDE.md`. ⇒ **the local suite is a
+~3-hour way to learn nothing past the `X0_1*` range**; use `target:=`/`filename:=`, or run it on
+**lava**, where the offline tests already go. The second kill also took the sweep down with it.
+
 ### ⇒⇒ CAUSE FOUND: `0ca6e37` LOSES COVERS. It is a regression, not a stale file.
 
     base   default           PTSCOPRIME=1      verdict

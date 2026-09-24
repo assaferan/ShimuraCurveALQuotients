@@ -46,6 +46,14 @@ against a suite launched ten minutes earlier, and the whole 30-minute run had to
 Develop controls in the scratchpad and install them afterwards. It is the same hazard as the
 "never `git pull` a clone with jobs running from it" rule below — the working tree is a clone too.
 
+**⚠ THE FULL SUITE DOES NOT COMPLETE ON THIS MAC — it dies at `X0_206_1`.** Measured twice on
+2026-09-23, independently: two runs reached 56 and 57 files and both were killed by macOS for memory
+pressure at exactly `X0_206_1.m`, with 0 failures up to that point. So a local `run_tests.m` with no
+target is a ~3-hour way to learn nothing past the `X0_1*` range. Either use `target:=` /
+`filename:=` for the tests you care about, or run the suite on **lava**, which is where the offline
+tests already go. ⚠ A killed suite LOOKS like a clean one — check the file count and that
+`Tests failed:` is present, per the truncation rule.
+
 **Kill Magma by PID, never `pkill -f magma.exe`.** This Mac hosts several Claude sessions and the
 `core` repo sessions run their own `magma.exe`; the blanket form takes theirs down with yours.
 `ps -eo pid,etime,command | grep magma.exe` first, then `kill <pid>`.
