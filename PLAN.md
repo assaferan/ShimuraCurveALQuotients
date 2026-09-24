@@ -372,8 +372,25 @@ are in `HANDOFF.md` 2026-09-23.)
    or the enlarged pool is accepted as correct and the affected committed files are regenerated
    under it (which LOSES a cover at each of those keys, and they are real quotient models). Until
    that is settled the two tests stay out of `tests/`; they pass under `PTSCOPRIME=1`.
-   ⚠ **BLAST RADIUS NOT MEASURED.** Only `10_3`, `6_13` (short) and `6_5` (clean) were checked. The
-   other `N>1` bases with committed models have NOT been swept; do that before deciding.
+   ⇒ **BLAST RADIUS SWEPT 2026-09-23/24. THREE bases affected, and `PTSCOPRIME=1` restores all
+   three.**
+
+       base    default      PTSCOPRIME=1   verdict
+       10_3    23 of 26     26 of 26       RESTORED
+       6_13    24 of 27     27 of 27       RESTORED
+       26_5    11 of 12     no shortfall   RESTORED
+       6_5     23 of 23     --             clean (control)
+       22_7    12 of 12     --             clean   (plus 2 keys the file does not record)
+       6_23    14 of 14     --             clean
+       6_71    still running at 3.5 h -- the ONE base still unmeasured
+
+   **How the sweep was scoped, because the cheap part did most of the work:** 76 `N>1` bases have
+   committed models; only **26** have any key with >= 2 entries (a free, file-level filter); and the
+   helper's SECOND pass tests this exact shortfall on EVERY committed key, with no test disabling
+   `model_covers`. ⇒ **every base whose `X0_` test passes is already proven clean**, which left just
+   four bases needing a manual run. Do not re-sweep the rest by hand.
+   ⚠ All three affected bases are `N>1` and short at a **genus-1 quotient key**. `6_5`, `6_7`, `22_7`
+   and `6_23` are `N>1` too and are clean, so it is not simply "all `N>1`".
    ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
    `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
    (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the

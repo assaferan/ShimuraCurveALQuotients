@@ -257,10 +257,12 @@ bases with no coverage at all:
     22_7   12 -> 14 covers   clean (2 keys produced that the file does not record)
     26_5   11 -> 12 covers   ⚠ SHORT at [1,26] (committed 2, produced 1)
     6_23   14 -> 14 covers   clean
-    6_71   (killed mid-run; rerunning)
+    6_71   still running at 3.5 h -- the ONE base still unmeasured
 
-⇒ **`26_5` is a THIRD affected base**, alongside `10_3` and `6_13`. All three are `N>1`, all at a
-genus-1 quotient key.
+⇒ **`26_5` is a THIRD affected base**, alongside `10_3` and `6_13`. All three are `N>1`, all short at
+a genus-1 quotient key — and **`PTSCOPRIME=1` restores all three** (`26_5` confirmed 2026-09-24: the
+short key is gone, 11 committed against 13 produced). `6_5`, `6_7`, `22_7` and `6_23` are `N>1` and
+clean, so it is not simply "all `N>1`".
 
 **⚠⚠ THE FULL SUITE CANNOT COMPLETE ON THIS MAC — it dies at `X0_206_1`.** Measured TWICE,
 independently: runs reached 56 and 57 files and both were killed by macOS for memory pressure at
