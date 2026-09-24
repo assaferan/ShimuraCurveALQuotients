@@ -886,6 +886,37 @@ alone cannot do odd D.}
         // irrelevant for them. Bases that already have >= 3 coprime points are untouched by this.
         pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2, coprime_to_level := false);
     end if;
+    // ⚠⚠ ORDER IS LOAD-BEARING: it chooses the HAUPTMODUL'S NORMALISATION DIVISOR.
+    // The (infty, P, Q) sweep below takes the FIRST triple that yields every form it needs, and it
+    // iterates `for infty in pts` in THIS order. So enlarging the pool does not merely add options
+    // -- it can hand the `infty` anchor to a point that was previously not a candidate, which
+    // re-normalises the hauptmodul and changes which covers come out.
+    //
+    // That is what 0ca6e37 did. Dropping the coprime-to-level filter here is sound on its own terms
+    // (these points are divisor support, never Schofer-evaluated) and its stated benefits are real,
+    // but it was measured only against bases that HAD an X0_ re-derivation test, and it silently
+    // LOST covers on three that did not:
+    //
+    //     base    covers before -> after     infty anchor moved
+    //     10_3    26 -> 23                   -35  -> -120   (newly admitted)
+    //     6_13    27 -> 24                   (same shape)
+    //     26_5    12 -> 11                   -11  -> -20    (newly admitted)
+    //     6_5     23 -> 23  (unaffected)     -4   -> -4     -- anchor never displaced, so clean
+    //
+    // In every case the covers that DID come out were still correct (each matched a committed
+    // entry); covers went MISSING. This is the hauptmodul-normalisation artefact the repo already
+    // knows about as a cause of empty cover keys, induced wholesale by a change of anchor.
+    //
+    // ⇒ SORT COPRIME-TO-N FIRST, stably. The anchor search then meets exactly the points it met
+    // before the pool grew, so `infty` is chosen as it always was, while every newly admitted point
+    // stays available where 0ca6e37 wanted it: as P/Q later in the sweep, in the achievable-target
+    // span behind wdef, and in the `#pts ge 3` bar. The fix keeps the commit's benefits and drops
+    // its side effect.
+    // ⚠ NOT a re-introduction of the filter: nothing is removed from `pts`, only reordered. On a
+    // base whose coprime points alone cannot pin the divisor, the non-coprime ones are still reached
+    // -- just after the coprime ones have been tried.
+    pts := [p : p in pts | GCD(p[1], Xstar`N) eq 1]
+           cat [p : p in pts | GCD(p[1], Xstar`N) ne 1];
     require #pts ge 3 : "Could not find enough rational CM points!";
 
 
