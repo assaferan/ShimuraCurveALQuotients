@@ -1099,18 +1099,52 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 end intrinsic;
 
 intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
-{Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
- definition of the CM point with CM by d on X, built via Magma's AbelianExtension
- inside the (smaller) Atkin-Lehner-fixed field A_abs rather than the full ring class
- field H_R + ArtinMap(H_R).  Returns the same set of fields (up to isomorphism) as
- FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.
- If MaxDegree > 0, callers that only want small-degree fields (e.g. the rational/quadratic
- CM-point fetch) can cap the work: the field-of-definition DEGREE is known cheaply from A_abs
- (it is Degree(A_abs) when complex conjugation is inactive on the quotient, else Degree(A_abs)/2,
- because every returned field is the fixed field of an order-2 reflection).  When that degree
- exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
- complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
- high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
+{Fields of definition Q(P) of the CM points of discriminant d on the Atkin-Lehner
+ quotient X = X_0(D,N)/W.  Faster replacement for FieldsOfDefinitionOfCMPoint; this is
+ the function the pipeline actually calls.  Reference: Gonzalez-Rotger,
+ arXiv:math/0612732v2, Appendix (Thm mainCM, Lemma CC, Rem uniqueness) = [GR, Sec 5].
+
+ RETURNS a Magma List of number fields:
+   [* *]         - X carries NO CM point by the order R of discriminant d.  This is the
+                   Prop 5.6 congruence Disc(R) = 0 mod (D*N)/(D_R*N_star_R) TOGETHER WITH
+                   the correction GCD(D, Conductor(R)) = 1 (an order non-maximal at a prime
+                   ramified in B_D has optimal embedding number 0, which the congruence
+                   alone misses -- e.g. d = -656 on X_0(34,5)*).  Same test as
+                   DegreeOfFieldOfDefinitionOfCMPoint, which returns 0 here.
+   [* Aabs *]    - complex conjugation is NOT active on the quotient (no element of W is a
+                   reflection m*w0).  Then Q(P) = A_abs contains K = Q(sqrt d) and has
+                   degree 2*h_R/#alSub_W over Q.
+   one field per valid class [a] in Pic(R)/Pic(R)^2 - complex conjugation IS active.  Q(P)
+                   is the fixed field of the reflection c . sigma_a . sigma_w0, so it is
+                   totally real of degree (1/2)*Degree(A_abs).  For d a FUNDAMENTAL
+                   discriminant the class is unique ([GR] Rem 5.11) and the list has length
+                   1; for non-fundamental d several classes [a] can satisfy the quaternion
+                   condition B_D = (d, m*N(a))_Q and the list records that genuine
+                   ambiguity.  Duplicates are removed up to isomorphism.
+
+ WHY IT IS FAST.  The slow function builds the full ring class field H_R (degree 2*h_R
+ over Q) and ArtinMap(H_R).  Here we work inside A_abs = H_R^(alSub_W), the subfield
+ fixed by the Atkin-Lehner-Galois subgroup of W (Lemma 5.9), built directly with Magma's
+ AbelianExtension over the norm group -- degree 2*h_R/#alSub_W over Q.  The bigger W, the
+ smaller A_abs; at the star quotient the saving is the full 2^omega(D*N).
+
+ DIFFERENCE FROM FieldsOfDefinitionOfCMPoint.  The two agree, up to isomorphism, whenever
+ Pic(R) has exponent <= 2 (H_R is CM).  When Exponent(Pic(R)) > 2 the slow function calls
+ AutomorphismGroup and enumerates EVERY order-2 automorphism restricting to complex
+ conjugation on K, which over-generates: only one of those reflections is genuinely
+ complex conjugation.  This function pins that one (see the comment at the Roots() call),
+ so on such discriminants it returns a SUBSET of the slow function's list -- one field per
+ class [a] rather than one per (reflection, class) pair.  That pinning is what makes the
+ high-class-number discriminants tractable (d = -1651: 212s -> 1.9s).
+
+ MaxDegree (default 0 = no cap).  Callers that only keep small-degree points (the
+ rational / quadratic CM-point fetch) should pass their cap.  The DEGREE of Q(P) is known
+ from group orders alone -- Degree(A_abs) = 2*#G/#alSub_W, halved when complex conjugation
+ is active -- so when it exceeds MaxDegree we return [* *] before building any number
+ field and before the complex-conjugation pinning (a Roots() over A_abs, ~1 min on the
+ high-Picard-exponent CNs[16] discriminants).  Note [* *] then means "no point of degree
+ <= MaxDegree", NOT "no CM point"; callers needing the degree alone without any field
+ should use DegreeOfFieldOfDefinitionOfCMPoint instead.}
     D := X`D;
     N := X`N;
     W := X`W;
@@ -1209,7 +1243,10 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     // smaller A_abs (whose cc-candidates restrict from those of H_R, giving the same fixed
     // fields):
     //   exponent <= 2  ->  H_R CM  ->  the unique canonical conjugation (one field per a);
-    //   exponent  > 2  ->  enumerate all cc-candidates (multiple genuine fields).
+    //   exponent  > 2  ->  A_abs not CM, HasComplexConjugate fails; we pin the single
+    //                      genuine complex conjugation by hand below (one field per a).
+    // Either way ccs has ONE element: we do NOT enumerate the cc-candidates the way the
+    // slow function does -- see the comment at the Roots() call for why that is correct.
     if Exponent(G) le 2 then
         has_cc, cc := HasComplexConjugate(Aabs);   // A_abs (subfield of CM H_R, contains K) is CM
         assert has_cc;
