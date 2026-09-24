@@ -1,0 +1,30 @@
+Magma V2.29-7     Fri Aug 21 2026 08:51:04 on LR43Q9LVQJ [Seed = 2541362049]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "recover.m"
+
+===== X0^10(3) d=-8  (N = 3 is SPLIT in k) =====
+  m = 3    recovered terms by prime: [ <2, 2>, <5, 2> ]                 | still 
+0: 0    unaffected: 1
+  m = 12   recovered terms by prime: [ <2, 2>, <5, 2> ]                 | still 
+0: 2    unaffected: 3
+  m = 30   recovered terms by prime: [ <5, 6>, <7, 2> ]                 | still 
+0: 2    unaffected: 5
+
+===== X0^15(2) d=-7  (N = 2 is SPLIT in k) =====
+  m = 2    recovered terms by prime: [ <3, 2> ]                         | still 
+0: 2    unaffected: 3
+  m = 10   recovered terms by prime: [ <3, 2>, <5, 4> ]                 | still 
+0: 2    unaffected: 9
+  m = 30   recovered terms by prime: [ <3, 2>, <5, 4> ]                 | still 
+0: 8    unaffected: 15
+
+===== X0^6(5) d=-19  (N = 5 is SPLIT in k) =====
+  m = 10   recovered terms by prime: [ <2, 8>, <3, 6>, <29, 2>, <31, 2> ] | 
+still 0: 4    unaffected: 5
+  m = 15   recovered terms by prime: [ <2, 8> ]                         | still 
+0: 18   unaffected: 7
+  m = 30   recovered terms by prime: [ <2, 6>, <3, 12>, <41, 2>, <71, 2>, <89, 
+2> ] | still 0: 14   unaffected: 9
+
+Total time: 0.590 seconds, Total memory usage: 32.09MB

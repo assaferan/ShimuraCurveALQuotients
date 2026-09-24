@@ -1415,8 +1415,12 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0) -> SeqEnum, SeqEnum
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}) -> SeqEnum, SeqEnum
 {returns rational and quadratic CM points on X. Excludes those in exclude.
+ Keep: discriminants exempt from the coprime_to_level filter. The filter exists to keep out CM points
+ whose Schofer values misbehave, but it is a blunt instrument: on even-level bases it drops every even
+ discriminant, including the zeros/poles of the hauptmoduls themselves, which the caller REQUIRES as
+ anchors. Listing those in Keep admits exactly them without relaxing the filter globally.
  INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
  points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
  "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
@@ -1478,7 +1482,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
     // (they are appended before the loop); the loop below only appends already-coprime points.
     if coprime_to_level then
-        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
+        rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
     end if;
     for ctr->d in allCN do
         // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
@@ -1486,7 +1490,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
-        if coprime_to_level and (GCD(d, X`N) ne 1) then continue; end if;
+        if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
         // Only the DEGREE of the field of definition is needed here, and
         // DegreeOfFieldOfDefinitionOfCMPoint reads it off Pic(R) and the Atkin-Lehner
@@ -1507,12 +1511,28 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     if not coprime_to_level then
         return rat_pts, quad_pts;
     end if;
-    // Filter out points where p[1] is not coprime to N
+    // Filter out points where p[1] is not coprime to N (except those the caller pinned via Keep)
     // Build new lists instead of modifying during iteration
-    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1];
-    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1];
+    rat_pts := [p : p in rat_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
+    quad_pts := [p : p in quad_pts | GCD(p[1], X`N) eq 1 or p[1] in Keep];
     return rat_pts, quad_pts;
 
+end intrinsic;
+
+intrinsic EnoughCMPointsForTargets(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot], Targets::SetEnum)
+          -> BoolElt, RngIntElt, RngIntElt
+{Cheap predict-and-skip guard for the ratpts sweeps. Returns (available ge required),
+ required, available, where required = Maximum(2g+5) over the target immediate covers
+ (the same CM-point demand EquationsOfCovers(... : Targets) imposes) and available =
+ #rational + #quadratic CM points at bd=8 (the highest bd the pipeline reaches). When
+ this returns false the target equation cannot be determined no matter the work spent,
+ so the caller should skip before paying WeaklyHolomorphicBasis / polymake / Borcherds.}
+    target_keys := [i : i in Xstar`CoveredBy | IsEmpty(Targets) or curves[i]`W in Targets];
+    require not IsEmpty(target_keys) : "None of Xstar`CoveredBy matches Targets";
+    required := Maximum([2*curves[i]`g + 5 : i in target_keys]);
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : coprime_to_level := true, bd := 8);
+    available := #rat_pts + #quad_pts;
+    return available ge required, required, available;
 end intrinsic;
 
 intrinsic RamficationPointsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> Assoc

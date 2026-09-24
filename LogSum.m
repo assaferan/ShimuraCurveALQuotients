@@ -139,6 +139,44 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     require &and[IsIntegral(coeff) : coeff in s`log_coeffs] : "s does not represent a rational number!";
     if IsLogZero(s) then return 0; end if;
     if IsLogInfinity(s) then return Infinity(); end if;
+    // Report WHICH prime has a runaway exponent. Magma's own failure here is
+    // "Runtime error in '^': Argument 2 is too large", which names neither the prime nor the
+    // exponent, and that is exactly how X_0^69(1) has been failing (it is the whole of that
+    // base's triage record). The useful diagnostic is the offending (p, coeff) pair, not the
+    // power that overflowed.
+    //
+    // ⇒ CAUSE FOUND 2026-09-14 (it is no longer "OPEN"; see HANDOFF.md, the night section, and run
+    // with RUNAWAY=1 to reproduce the chain).  Three things have to line up:
+    //   1. the Borcherds form has a huge principal part -- c(-m) reaches 19 digits at X_0^33(1)
+    //      where X_0^21(1), which builds, tops out at 10 -- so every Schofer value carries a
+    //      gigantic Log p component C;
+    //   2. kappa_p(m) is IDENTICAL at every discriminant for exactly those m, so C is a pure
+    //      COMMON factor that ought to cancel;
+    //   3. ScaleForSchofer is NOT constant across the columns -- at d = -4 Ogg's condition halves
+    //      W_size without n_d falling with it, giving scale -1/2 against -1/4 elsewhere -- so that
+    //      column carries 2C where the rest carry C.
+    // ReduceTable then subtracts the per-row MINIMUM, clearing every column but that one, which is
+    // left holding the whole common factor.  C is an ARTIFACT: adding a kernel element changes the
+    // form without changing its divisor, so C is not an invariant of the problem.  The fix to try
+    // is to LLL-reduce the solution against the kernel to MINIMISE THE FORM'S coefficients -- note
+    // the solution VECTOR is already tiny (maxsol 2 at 33_1); it is the echelon basis that is huge.
+    //
+    // ⚠ THE CAUSE IS NOT PRECISION, AND THIS COMMENT USED TO SAY IT WAS. "A runaway coefficient
+    // means the Schofer sum diverged upstream" was an asserted cause, and it is REFUTED
+    // (2026-09-13): re-running X_0^69(1) at Prec 300 instead of 100 reproduces the coefficient
+    // 826241926712017437948244622352640031335552334419770916034895634120110682322 on Log23
+    // BYTE-IDENTICALLY. A convergence or precision failure would move; an exact computation
+    // returning a genuinely enormous integer does not. So this guard reports an OBSERVATION --
+    // a coefficient past the threshold -- and the cause is open. Note the prime is RAMIFIED
+    // (23 | 69), the same place condition 4's fractional exponents live.
+    // ⇒ Do not spend a run raising Prec on this failure; that experiment is done.
+    for p in Keys(s`log_coeffs) do
+        error if AbsoluteValue(s`log_coeffs[p]) gt 10^5,
+            Sprintf("RationalNumber: runaway log coefficient %o on Log%o (exceeds 10^5). "
+                    * "Cause: huge principal part x a column whose ScaleForSchofer differs "
+                    * "(see the note above; RUNAWAY=1 reproduces it). Full sum: %o",
+                    s`log_coeffs[p], p, s);
+    end for;
     ret := &*[Rationals() | p^(Integers()!s`log_coeffs[p]) : p in Keys(s`log_coeffs)];
     if (ret eq -1) then return Infinity(); end if;
     return ret;

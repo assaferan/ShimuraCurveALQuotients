@@ -1,0 +1,27 @@
+Magma V2.29-7     Thu Aug 20 2026 23:43:13 on LR43Q9LVQJ [Seed = 1939766932]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "diffset.m"
+
+===== X0^15(2)  diag(Q) = [ 14, -840, -120 ], det = 1411200 =====
+  good-prime audit passed
+  r     b_true  Diff_fin(Q)      Diff_fin(-Q)     A: |Diff|=1  B: |Diff|=0
+  2     4       [ 5 ]            [ 3, 5 ]         A:ok     B:FAIL  
+  10    -4      [ 3 ]            []               A:ok     B:FAIL  
+  30    0       []               []               A:ok     B:FAIL  
+
+===== X0^6(5)  diag(Q) = [ -22, 330, -30 ], det = 217800 =====
+  good-prime audit passed
+  r     b_true  Diff_fin(Q)      Diff_fin(-Q)     A: |Diff|=1  B: |Diff|=0
+  10    -6      [ 3 ]            []               A:ok     B:FAIL  
+  15    -2      []               []               A:FAIL   B:ok    
+  30    -6      [ 2 ]            []               A:ok     B:FAIL  
+
+===== X0^10(3)  diag(Q) = [ -26, 2340, -180 ], det = 10951200 =====
+  good-prime audit passed
+  r     b_true  Diff_fin(Q)      Diff_fin(-Q)     A: |Diff|=1  B: |Diff|=0
+  3     -2      [ 5 ]            [ 5 ]            A:ok     B:FAIL  
+  12    -2      [ 5 ]            [ 5 ]            A:ok     B:FAIL  
+  30    -6      [ 2 ]            []               A:ok     B:FAIL  
+
+Total time: 0.080 seconds, Total memory usage: 32.09MB

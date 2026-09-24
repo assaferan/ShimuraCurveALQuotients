@@ -1,0 +1,30 @@
+Magma V2.29-7     Fri Aug 21 2026 09:00:45 on LR43Q9LVQJ [Seed = 2255160362]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "alaction.m"
+
+=== X0^6(1), |G| = 72 ===
+  m = 2    : no trace-zero element of norm 2
+  m = 3    : permutation=true  preserves Q=true  [rho(T),sigma]=0.0000  
+[rho(S),sigma]=0.0000  sigma(e_0)=e_1
+  m = 6    : no trace-zero element of norm 6
+
+=== X0^10(1), |G| = 200 ===
+  m = 2    : no trace-zero element of norm 2
+  m = 5    : no trace-zero element of norm 5
+  m = 10   : no trace-zero element of norm 10
+
+=== X0^15(2), |G| = 1800 ===
+  m = 2    : no trace-zero element of norm 2
+  m = 3    : no trace-zero element of norm 3
+  m = 5    : no trace-zero element of norm 5
+  m = 6    : no trace-zero element of norm 6
+  m = 10   : no trace-zero element of norm 10
+
+In file "alaction.m", line 49, column 41:
+>>             Append(~perm, idx[Ld`to_disc(ChangeRing(v, Integers()))]);
+                                           ^
+Runtime error in map application: Element is not in the domain of the map
+
+
+Total time: 20.420 seconds, Total memory usage: 610.59MB

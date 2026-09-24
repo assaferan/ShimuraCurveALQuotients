@@ -1,0 +1,31 @@
+Magma V2.29-7     Fri Aug 21 2026 11:00:34 on LR43Q9LVQJ [Seed = 3661149607]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-Shimura\
+CurveALQuotients/a8c95df8-bb7c-4234-a11d-1108c951f4a5/scratchpad/poles145.m"
+curves built (0.020 s)
+BorcherdsForms done (802.980 s): 9 forms, keys = [ -2, -1, 9, 10, 11, 12, 13, 
+14, 15 ]
+X0^14(5): M = 140, |disc grp| = 9800, index Gamma_0(M) = 288
+
+form   pole ord   max|exp|     #terms  
+-2     91         34           192     
+-1     16         24           48      
+9      70         28           144     
+10     35         24           96      
+11     70         28           144     
+12     70         28           144     
+13     16         24           47      
+14     35         24           96      
+15     70         28           144     
+
+worst form: pole order 91, exponent spread 34
+  aliasing rule  -> NumSamples K = 448   (log10 err = -120.552)
+  precision rule -> Prec = 406  (dynamic range 249 + cancellation 107 + margin 
+50)
+  15_2 reference: p = 30, spread 21, K = 192, P = 200, |G| = 1800, 19 min for 9 
+forms
+  cost scales with |G| * K * (#cosets): |G| ratio = 5.4444444444444444444
+TOTAL 802.990 s
+
+Total time: 803.009 seconds, Total memory usage: 7022.28MB

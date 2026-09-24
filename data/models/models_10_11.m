@@ -1,13 +1,17 @@
 // Subhyperelliptic cover models for X_0(10,11)* -- Guo-Yang / AllEquationsAboveCovers
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
+// ✅ REGENERATED 2026-09-09: previously EMPTY cover keys are now filled, unlocked by
+// EquationsByRebase (EquationsCovers.m). No flag needed. Verified against the Guo-Yang quotient
+// oracle before installing; see data/models/PROVENANCE.md.
+
 models := AssociativeArray();
 models[[Integers()|1,10]] := [* <2, P![ -11, 0, -538, 0, -131, 0, -8 ], P![]> *];
 models[[Integers()|1,110]] := [* <0, P![ 8, 0, 1 ], P![]>, <0, P![ -2, -2 ], P![]>, <0, P![ -8, 0, 1 ], P![]> *];
-models[[Integers()|1,55]] := [*  *];
+models[[Integers()|1,55]] := [* <3, P![ -11/4096, 0, -26625/1024, 0, 1394375/2048, 0, -765625/1024, 0, 1953125/4096 ], P![]> *];
 models[[Integers()|1,2,11,22]] := [* <1, P![ 0, 5/4, 11/2, 61/4, -2 ], P![]> *];
 models[[Integers()|1]] := [* <5, P![ -688, 816, 3052, 1740, -4935, -11814, -13625, -10296, -5505, -2110, -563, -96, -8 ], P![]> *];
-models[[Integers()|1,2]] := [*  *];
+models[[Integers()|1,2]] := [* <2, P![ -11/2048, 0, -106775/2048, 0, 119375/2048, 0, -78125/2048 ], P![]> *];
 models[[Integers()|1,2,5,10]] := [* <1, P![ -1/10, -171/400, -233/200, 5/16, -1/50 ], P![]> *];
 models[[Integers()|1,5]] := [* <3, P![ -1/10, 0, -171/400, 0, -233/200, 0, 5/16, 0, -1/50 ], P![]> *];
 models[[Integers()|1,5,22,110]] := [* <0, P![ 0, 1 ], P![]> *];

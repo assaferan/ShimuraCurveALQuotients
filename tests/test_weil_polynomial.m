@@ -40,4 +40,9 @@ end for;
 print "PASS: WeilClassNumberPrimeBound is database-tight.";
 
 print "All tests passed.";
-quit;
+// ⚠ NO `quit;` HERE. It used to end this file, and it SILENTLY TRUNCATED the whole local suite:
+// run_tests.m evals each test in the same Magma process, so `quit` terminates the run. This file
+// sorts second-to-last, so `trace_formula.m` never ran in a full local pass and no summary was
+// printed -- the run just stopped, looking like a clean finish. (CI is unaffected: it runs each
+// test as a separate matrix job.) `magma -b file` exits at EOF anyway, so the statement bought
+// nothing.

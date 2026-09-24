@@ -116,6 +116,69 @@ function solve_quadratic_constraints(relns)
 end function;
 
 
+// Y2TWIST -- env-gated, OFF by default.
+//
+// ⚠ EVALUATED FOR DEFAULT-ON 2026-09-07 AND DELIBERATELY LEFT OFF. Measured on the three bases it
+// was written for -- 15_2, 22_3, 22_5 -- `NOY2TWIST`-style control runs give results IDENTICAL to
+// the default, and the deferral path logs ZERO "unpinned y2-scale" messages. Under current code
+// the selector never fires: the covers it was meant to rescue are already recovered by the
+// coprime-to-level filter being off by default (flipped the same day).
+// ⚠⚠ AND THE FIRST EVALUATION WAS CONFOUNDED, which is the lesson worth keeping. Comparing
+// `Y2TWIST=1` runs against the COMMITTED model files appeared to show large gains (22_3 13 -> 15
+// populated covers, 15_2 12 -> 15, 22_5 3 -> 11). Those files predate the coprime flip, so the
+// gains were ITS effect, not this flag's. The control that settles it is default vs NOY2TWIST on
+// the SAME code -- always compare against a current baseline, never a committed artifact.
+// ⇒ The mechanism is still sound (unique-or-defer; it cannot trade a deferral for a guess) and is
+// kept for the case where an unscaled cover reappears. But it is not made default while there is
+// no measured case where it changes anything: an unexercised default-on path is a risk, not a win.
+//
+// find_y2_scales cannot always pin the y2-scale from sparse CM data.  EquationsOfCovers then
+// force-defers the cover (issue #36), because a consistent solve with an unpinned scale is off
+// by an unknown quadratic twist -- and back-fill usually cannot recover it, so the cover is lost
+// outright (four of them at 22_5).
+//
+// But that twist is DECIDABLE by machinery this repo already has, and which is independent of
+// the Borcherds/Schofer path that produced the equation: the Eichler-Selberg point count, run by
+// ModelVerification.m as check [4].  It separates a curve from its quadratic twists -- measured
+// 2026-09-05 on the committed 22_5 [1,2,5,10] cover, where the true curve passes 24/24 and all
+// six twists d = -1, 2, -2, 5, -5, 11 fail with 3-5 failures each.
+//
+// So: try each squarefree twist supported on the primes of 2*D*N and keep the twist that matches
+// at every usable prime.  Returns false unless EXACTLY ONE candidate survives, so an ambiguous
+// or empty result still defers -- this never trades a deferral for a guess.
+function select_y2_twist(f, X)
+    if X`g lt 1 then return false, 0; end if;      // genus 0: no hyperelliptic model to twist
+    D := X`D; N := X`N;
+    prs := [p : p in [3,5,7,11,13,17,19,23] | (D*N) mod p ne 0];
+    supp := SetToSequence({2} join {q[1] : q in Factorization(D*N)});
+    cands := [];
+    for S in Subsets({1..#supp}) do
+        d0 := &*[Integers() | supp[j] : j in S];
+        Append(~cands, d0); Append(~cands, -d0);
+    end for;
+    good := [];
+    for d in cands do
+        okall := true; nchk := 0;
+        for p in prs do
+            try
+                Cp := ChangeRing(HyperellipticCurve(d*f), GF(p));
+                if not IsNonsingular(Cp) then continue; end if;
+                if #Points(Cp) ne ComputePointsViaTrace(X, p, 1) then okall := false; break; end if;
+                nchk +:= 1;
+            catch e
+                continue;                          // bad reduction at p: no information, skip
+            end try;
+        end for;
+        if okall and nchk ge 3 then Append(~good, d); end if;
+    end for;
+    if #good eq 1 then return true, good[1]; end if;
+    vprintf ShimuraQuotients, 1 :
+        "  Y2TWIST: %o twist(s) matched for W=%o; ambiguous, leaving it deferred.\n",
+        #good, Sort(SetToSequence(X`W));
+    return false, 0;
+end function;
+
+
 intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the covers using the values from Schofers formula}
     R<x> := PolynomialRing(Rationals());
@@ -132,9 +195,23 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     // A cover whose CM constraints are insufficient/inconsistent (e.g. a hard intermediate cover
     // that is not on the path to the top curve) is DEFERRED rather than aborting the whole run;
     // AllEquationsAboveCovers recovers it later as a quotient of a curve lying above it.
+    // A cover whose y2-scale could not be pinned (find_y2_scales placeholder) must ALSO be
+    // deferred even when its constraints happen to be consistent: the solved equation is then
+    // off by an unknown quadratic twist (issue #36 -- four wrong-twist covers emitted on 22_3).
+    unscaled := (assigned schofer_table`UnscaledKeys) select schofer_table`UnscaledKeys else [];
+    // Y2TWIST=1 (prototype): instead of dropping an unscaled cover, solve it anyway and SELECT
+    // its quadratic twist against the trace-formula point count.  Unset => behaviour unchanged.
+    y2twist := GetEnv("Y2TWIST") ne "";
     good_kidxs := [ ];   // positions i (into kernels/k_idxs) that were successfully determined
     deferred := [ ];     // cover keys that could not be determined from CM constraints
     for i->B in kernels do //indexed by k_idxs
+        is_unscaled := keys_fs[k_idxs[i]] in unscaled;
+        if is_unscaled and not y2twist then
+            Append(~deferred, keys_fs[k_idxs[i]]);
+            vprintf ShimuraQuotients, 1 : "  Cover W=%o (g=%o) has an unpinned y2-scale; deferring to recover as a quotient (twist untrusted).\n",
+                curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
+            continue;
+        end if;
         determined := true;
         f := R!0;
         try
@@ -155,6 +232,19 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
         catch e
             determined := false;
         end try;
+        // Y2TWIST: the solve above is right only up to a quadratic twist for an unscaled cover,
+        // so pin the twist by point count before accepting it; an undecided twist re-defers.
+        if determined and is_unscaled then
+            tw_ok, tw_d := select_y2_twist(f, curves[keys_fs[k_idxs[i]]]);
+            if tw_ok then
+                f := tw_d*f;
+                vprintf ShimuraQuotients, 1 :
+                    "  Y2TWIST: selected twist d=%o for W=%o (g=%o) by trace-formula point count.\n",
+                    tw_d, curves[keys_fs[k_idxs[i]]]`W, curves[keys_fs[k_idxs[i]]]`g;
+            else
+                determined := false;
+            end if;
+        end if;
         if determined then
             Append(~eqn_list, f);
             Append(~good_kidxs, i);
@@ -188,7 +278,7 @@ intrinsic EquationsOfCovers(schofer_table::SchoferTable, all_cm_pts::SeqEnum) ->
     return crv_list, ws, keys, deferred;
 end intrinsic;
 
-intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}) -> SeqEnum, Assoc, SeqEnum
+intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Targets := {}, IntegralSolution := false) -> SeqEnum, Assoc, SeqEnum
 {Determine the equations of the immediate covers of X. If Targets (a set of W
  subgroups, each a set of AL involutions, as produced by AllALsFromGens) is
  non-empty, restrict both the CM-point demand (num_vals) and the per-cover solve
@@ -200,7 +290,7 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [1/6] computing Borcherds forms (Prec = %o)...", Prec;
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Targets := Targets);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Targets := Targets, IntegralSolution := IntegralSolution);
     vprintf ShimuraQuotients, 1 : " done (%os).\n", Realtime() - t;
 
     t := Realtime();
@@ -210,7 +300,9 @@ intrinsic EquationsOfCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : P
 
     t := Realtime();
     vprintf ShimuraQuotients, 1 : "  [3/6] computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves); // !!! This is slow, figure out why !!!
+    // Keep := d_divs so the hauptmoduls' own zeros/poles survive the coprime-to-level filter;
+    // AbsoluteValuesAtCMPoints' Include (must-use) set is selected from this list.
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs)); // !!! This is slow, figure out why !!!
     vprintf ShimuraQuotients, 1 : " done (%os): %o rational, %o quadratic CM points.\n",
                                   Realtime() - t, #all_cm_pts[1], #all_cm_pts[2];
     // Restrict the demand to the target covers when Targets is given. This is the
@@ -508,6 +600,15 @@ end intrinsic;
 intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
     {Find equations above pointless conics, as a last step}
     all_keys := Keys(all_eqns);
+    // Nothing upstream found an equation, so there is nothing to lie above: return unchanged.
+    // Without this, Maximum(all_keys) below throws "Argument 1 is not non-empty" -- a latent
+    // crash on the empty case that predates Targets, but which restricting Targets makes far
+    // more likely to reach, since fewer retained covers means a higher chance that
+    // EquationsAboveP1s produced nothing at all.  Observed at X0^74(3) under a g <= 2 cap.
+    if IsEmpty(all_keys) then
+        vprintf ShimuraQuotients, 2 : "\n\tNo equations found upstream; nothing above pointless conics.";
+        return all_eqns, all_ws;
+    end if;
     not_done := [k : k in all_keys | #Keys(all_eqns[k]) eq 0]; // don't have an equation over anything they cover
     starcurve := Representative(curves[Maximum(all_keys)]`Covers);
     assert IsStarCurve(curves[starcurve]);
@@ -516,21 +617,47 @@ intrinsic EquationsAbovePointlessConics(all_eqns::Assoc, all_ws::Assoc, curves::
     curves_to_do := [k : k in not_done | #(curves[k]`Covers meet Set(known_conics)) gt 0];
     for k in curves_to_do do
         g := curves[k]`g;
-        assert exists(conic_key){x : x in (curves[k]`Covers meet Set(known_conics))}; //find the conic that it covers
+        // The degree-(g+1) curve AND the conic must both have an equation (and AL data) over the
+        // SAME base: a conic deferred upstream (unpinned y2-scale) may miss some bases, so pick
+        // the (gplus1key, conic_key, base) combination jointly and degrade to the deferred path
+        // when none exists, instead of indexing all_eqns[conic_key][base] blind (issue #33, 21_2).
+        conic_cands := [x : x in curves[k]`Covers | x in Set(known_conics)];
+        found_gplus1 := false;
         for other_curve in curves[k]`Covers do
-            found_gplus1 := false;
             if not IsDefined(all_eqns, other_curve) then continue; end if;  // deferred cover, not computed
             bases := Keys(all_eqns[other_curve]);
             if IsEmpty(bases) then continue; end if;// all eqns for all bases have the same degree
             if (base_label ne 0) and base_label notin bases then continue; end if;
-            base := (base_label eq 0) select Representative(bases) else base_label;
-            if (Degree(HyperellipticPolynomials(all_eqns[other_curve][base])) eq g+1) then
-                gplus1key := other_curve; //found the gplus1
-                found_gplus1 := true;
-                break;
-            end if;
+            cand_bases := (base_label eq 0) select [b : b in bases] else [base_label];
+            for b in cand_bases do
+                if Type(all_eqns[other_curve][b]) ne CrvHyp then continue; end if;
+                if Degree(HyperellipticPolynomials(all_eqns[other_curve][b])) ne g+1 then continue; end if;
+                // ⚠ THE TWO ROLES MUST BE FILLED BY DIFFERENT COVERS.  The curve built below is
+                // the fibre product  y^2 = f_{gplus1}(s),  x^2 = f_conic(s)  -- so if the same
+                // cover is chosen for both, the equations coincide and y^2 = x^2 factors as
+                // (y-x)(y+x): the scheme is REDUCIBLE and is not the genus-g curve at all.
+                // This bites exactly at g = 1, where the required degree g+1 = 2 is also a
+                // CONIC's degree, so the conic itself passes the degree test above and can be
+                // selected as `other_curve`.  Measured 2026-09-06: it produced five degenerate
+                // entries -- models_10_3.m at W = {1,10}, {1,15}, {1,6}, {1} and models_22_3.m at
+                // W = {1,3} -- each storing its parent conic twice, e.g.
+                //     y^2 + 7/20*s^2 - 43/20*s*z + 2*z^2   and   x^2 + (the identical form).
+                // Nothing caught them because VerifyModelSet skips every CRV entry; see
+                // tests/CRVStructure.m, which now checks exactly this.
+                if exists(ck){c : c in conic_cands | c ne other_curve and IsDefined(all_eqns[c], b) and
+                        IsDefined(all_ws, c) and IsDefined(all_ws[c], b)} then
+                    conic_key := ck; base := b;
+                    gplus1key := other_curve; //found the gplus1
+                    found_gplus1 := true;
+                    break;
+                end if;
+            end for;
+            if found_gplus1 then break; end if;
         end for;
-        if not found_gplus1 then continue; end if;
+        if not found_gplus1 then
+            vprintf ShimuraQuotients, 1 : "  No (degree g+1, conic) pair over a common base for W=%o; leaving it deferred.\n", curves[k]`W;
+            continue;
+        end if;
 
         //combine equations to get the equation for the curve
         covered_gplus1 := all_eqns[gplus1key][base];
@@ -606,9 +733,18 @@ function direct_involution_quotient(C, w)
     ssum := xx + mu;  sprod := xx * mu;
     U := (not IsCoercible(Rationals(), ssum)) select ssum else sprod;
     error if IsCoercible(Rationals(), U), "no non-constant symmetric invariant of {x, mu(x)}";
+    // Invariant lift of y: for rho <> -1, V = (1+rho)*y works (rho(mu)*rho = 1 makes it
+    // w-invariant).  For rho = -1 (y anti-invariant, issue #35) take V = (x - mu)*y instead:
+    // (x - mu) is mu-ANTI-symmetric, so the two signs cancel; mu = x is excluded below since
+    // that w is the hyperelliptic involution itself and the quotient is the genus-0 x-line.
     onep := 1 + rho;
-    error if onep eq 0, "rho = -1 (y anti-invariant) is not handled by direct_involution_quotient";
-    V2 := onep^2 * Evaluate(f, xx);
+    if onep eq 0 then
+        delta := xx - mu;
+        error if delta eq 0, "w is the hyperelliptic involution; the quotient is the x-line";
+        V2 := delta^2 * Evaluate(f, xx);
+    else
+        V2 := onep^2 * Evaluate(f, xx);
+    end if;
     pU := Numerator(U); qU := Denominator(U);
     QU<u> := RationalFunctionField(Rationals());
     RX<XX> := PolynomialRing(QU);
@@ -656,6 +792,9 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
             else
                 Cq := CurveQuotient(AutomorphismGroup(C_above, [w_map]));
             end if;
+            // CurveQuotient returns a CrvEll for a genus-1 quotient with a rational point;
+            // downstream (HyperellipticInvolution, the models file) expects CrvHyp (issue #34).
+            if Type(Cq) eq CrvEll then Cq := HyperellipticCurve(Cq); end if;
             if not IsDefined(all_eqns, k) then all_eqns[k] := AssociativeArray(); end if;
             if not IsDefined(all_ws, k) then all_ws[k] := AssociativeArray(); end if;
             all_eqns[k][base] := Cq;
@@ -674,19 +813,177 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     return all_eqns, all_ws;
 end function;
 
-intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
+// ---------------------------------------------------------------------------------------------
+// LAST-RESORT STAGE: re-derive still-empty covers after changing the Hauptmodul on the star base.
+//
+// ⚠ WHY THIS IS NEEDED AND WHY IT IS NOT A MATHEMATICAL FIX. process_P1_cover assembles a genus-g
+// curve as a FIBRE PRODUCT and needs some other quotient to carry an equation of degree EXACTLY
+// g+1 over a base shared with the P1/conic. Which degree a quotient's equation has depends on
+// whether infinity is a branch point -- that is the Hauptmodul NORMALISATION, ours to choose, not
+// a fact about the curve. So a cover can come back empty purely because the degrees did not line
+// up. Measured at 22_5: the genus-2 quotients need degree 3 and the degrees produced are
+// 1,2,4,6,7,8, so W={1},{1,2},{1,5},{1,11} were ALL empty although the Borcherds/CM data was fine.
+//
+// The Mobius change t -> r + 1/u, for r a RATIONAL ROOT of an equation over that base, moves a
+// branch point to infinity: a quartic becomes a cubic, and a conic sharing that root collapses to
+// degree 1 (a P1). Re-running the existing propagation on the rebased equations then fills the
+// gaps. At 22_5 this reproduces Guo-Yang's published degree-12 polynomial VERBATIM.
+//
+// ⚠ THE COORDINATE CHANGE IS LINEAR ON THE WEIGHTED AMBIENT, which is what makes the Atkin-Lehner
+// maps transportable: psi : C_new -> C_old is (x,y,z) -> (r*x + z, y, x). Verified at 22_5 for
+// every cover and all 8 involutions. Without that, the rebase would produce equations with no ws
+// and the covers would be unusable.
+//
+// ⚠ IT ONLY EVER FILLS KEYS THAT ARE ALREADY EMPTY, so a base that already builds completely is
+// untouched and this stage is a no-op there.
+// ⚠ FILLING A KEY IS NOT PROVING IT CORRECT. Validated against Guo-Yang at 22_5 and 10_19
+// (tests/_offline/FullCurve_22_5.m, tests/GuoYangQuotients_*.m); no such check exists for an
+// arbitrary base.
+intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
+    {Fill still-empty covers by changing the Hauptmodul on the star base and re-propagating.}
+    empty_keys := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
+    if IsEmpty(empty_keys) then return all_eqns, all_ws; end if;
+
+    // the base carrying the most first-level equations is the star base
+    base_count := AssociativeArray();
+    for k in Keys(all_eqns) do
+        for b in Keys(all_eqns[k]) do
+            if not IsDefined(base_count, b) then base_count[b] := 0; end if;
+            base_count[b] +:= 1;
+        end for;
+    end for;
+    if IsEmpty(Keys(base_count)) then return all_eqns, all_ws; end if;
+    // ⚠ STAR IS *NOT* FORCED TO A PINNED base_label, AND THAT WAS MEASURED, NOT ASSUMED.
+    // Forcing STAR := base_label is the obvious reading of "keep the pinned presentation", and it
+    // is WRONG HERE: at 26_3 with base_label = 8103 the rebase then runs and fills NOTHING, leaving
+    // exactly [1,2] and [1,13] empty -- the two keys this stage exists to fill.  Measured
+    // base_count at that base: <8092,1> <8098,1> <8103,3> <8104,3> <8105,7>, so the pinned base
+    // carries 3 first-level equations while the heuristic picks 8105 with 7, and only 8105 admits
+    // a usable Hauptmodul root.
+    // ⚠ AND THE COMMITTED DATA SETTLES WHICH BEHAVIOUR IS RIGHT.  models_26_3.m's [1,2] and [1,13]
+    // were filled by commit 7a923ae (2026-09-09) on a DEFAULT run -- the old gate here was
+    // `base_label eq 0`, so that run cannot have been pinned.  The committed file is therefore a
+    // MIXTURE: 13 keys in the base_label := 8103 presentation plus 2 keys from an unpinned rebase.
+    // Reproducing it requires the unpinned STAR, so the heuristic stays.
+    // This does not disturb the pin's purpose: the pin exists to select the V_4 of the W = {1} CRV
+    // pair, this stage only ever fills keys that are ALREADY EMPTY, and the two it fills at 26_3
+    // are checked against Guo-Yang's own curves by tests/GuoYangQuotients_26_3.m.
+    STAR := Rep(Keys(base_count));
+    for b in Keys(base_count) do
+        if base_count[b] gt base_count[STAR] then STAR := b; end if;
+    end for;
+
+    // candidate roots: the rational roots of every equation over that base
+    roots := {Rationals()|};
+    for k in Keys(all_eqns) do
+        if not IsDefined(all_eqns[k], STAR) then continue; end if;
+        if Type(all_eqns[k][STAR]) ne CrvHyp then continue; end if;
+        for rt in Roots(HyperellipticPolynomials(all_eqns[k][STAR])) do
+            Include(~roots, rt[1]);
+        end for;
+    end for;
+    if IsEmpty(roots) then return all_eqns, all_ws; end if;
+    vprintf ShimuraQuotients, 1 :
+        "\n\t%o cover(s) still empty; sweeping %o Hauptmodul root(s) on base %o...",
+        #empty_keys, #roots, STAR;
+
+    for r in Sort(Setseq(roots)) do
+        still := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
+        if IsEmpty(still) then break; end if;
+
+        // rebase every star-base equation, and carry its ws along by conjugating with psi
+        re_eqns := AssociativeArray();  re_ws := AssociativeArray();
+        ok_all := true;
+        for k in Keys(all_eqns) do
+            if not IsDefined(all_eqns[k], STAR) then continue; end if;
+            C := all_eqns[k][STAR];
+            if Type(C) ne CrvHyp then continue; end if;
+            f := HyperellipticPolynomials(C);
+            d := Degree(f);
+            if d lt 1 then continue; end if;
+            n := Ceiling(d/2);
+            R<u> := PolynomialRing(Rationals());
+            g := &+[ Coefficient(f,i) * (r*u + 1)^i * u^(2*n-i) : i in [0..d] ];
+            // ⚠ a u^2 factor would change y by a power of u and break the LINEAR psi below, so
+            // skip that root for this cover rather than transporting a map that is not a map.
+            if (Degree(g) ge 2) and (Coefficient(g,0) eq 0) and (Coefficient(g,1) eq 0) then
+                ok_all := false; break;
+            end if;
+            if Degree(g) lt 1 then ok_all := false; break; end if;
+            okc := true;
+            try
+                Cn := HyperellipticCurve(g);
+                An := Ambient(Cn);
+                xn := An.1; yn := An.2; zn := An.3;
+                psi := map< Cn -> C | [r*xn + zn, yn, xn] >;
+                re_eqns[k] := AssociativeArray();  re_eqns[k][STAR] := Cn;
+                re_ws[k] := AssociativeArray();    re_ws[k][STAR] := AssociativeArray();
+                if IsDefined(all_ws, k) and IsDefined(all_ws[k], STAR) then
+                    for mm in Keys(all_ws[k][STAR]) do
+                        re_ws[k][STAR][mm] := psi * all_ws[k][STAR][mm] * Inverse(psi);
+                    end for;
+                end if;
+            catch e okc := false; end try;
+            if not okc then ok_all := false; break; end if;
+        end for;
+        if (not ok_all) or IsEmpty(Keys(re_eqns)) then continue; end if;
+
+        // re-run the ordinary propagation on the rebased data
+        okp := true;
+        try
+            ab_P1, ab_con := curves_above_P1_and_conics(re_eqns, [k : k in Keys(re_eqns)], curves);
+            nk := Keys(ab_P1) join Keys(ab_con);
+            while not IsEmpty(nk) do
+                for lab in Keys(ab_P1) do
+                    el, wl := process_P1_cover(lab, ab_P1, curves, re_eqns, re_ws);
+                    re_eqns[lab] := el; re_ws[lab] := wl;
+                end for;
+                for lab in Keys(ab_con) do
+                    el, wl := process_conic_cover(lab, ab_con, curves, re_eqns, re_ws);
+                    for bb in Keys(el) do re_eqns[lab][bb] := el[bb]; re_ws[lab][bb] := wl[bb]; end for;
+                end for;
+                ab_P1, ab_con := curves_above_P1_and_conics(re_eqns, nk, curves);
+                nk := Keys(ab_P1) join Keys(ab_con);
+            end while;
+            // ⚠ THE PIN MUST BE THREADED HERE.  Propagation above adds NEW bases to re_eqns,
+            // so without it this pass silently reverts to the default base for exactly the covers
+            // the rebase is being run to fill.
+            re_eqns, re_ws := EquationsAbovePointlessConics(re_eqns, re_ws, curves : base_label := base_label);
+        catch e okp := false; end try;
+        if not okp then continue; end if;
+
+        // adopt ONLY the keys that were empty
+        for k in still do
+            if not IsDefined(re_eqns, k) then continue; end if;
+            if IsEmpty(Keys(re_eqns[k])) then continue; end if;
+            all_eqns[k] := re_eqns[k];
+            if IsDefined(re_ws, k) then all_ws[k] := re_ws[k]; end if;
+            vprintf ShimuraQuotients, 1 :
+                "\n\t  rebase at r = %o filled W = %o", r, curves[k]`W;
+        end for;
+    end for;
+    return all_eqns, all_ws;
+end intrinsic;
+
+intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec);
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution, Targets := Targets);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
     vprintf ShimuraQuotients, 4 : "\n";
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing candidate discriminants...";
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    genus_list := [curves[i]`g: i in Xstar`CoveredBy];
+    // Keep := d_divs: see the note at the other CandidateDiscriminants call site.
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := Set(d_divs));
+    // Restrict the demand to the target covers when Targets is given: num_vals below is
+    // max(2g+5) over the RETAINED covers, so one high-genus sibling inflates the CM-point
+    // demand for everyone.  Dropping it is the documented rescue lever for a SHORT base.
+    aeac_keys := [i : i in Xstar`CoveredBy | IsEmpty(Targets) or curves[i]`W in Targets];
+    require not IsEmpty(aeac_keys) : "None of Xstar`CoveredBy matches Targets";
+    genus_list := [curves[i]`g: i in aeac_keys];
     num_vals := Maximum([2*g+5 : g in genus_list]);
     vprintf ShimuraQuotients, 1 : "Computing absolute values at CM points...";
     abs_schofer_tab, all_cm_pts:= AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs :
@@ -723,8 +1020,17 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
         best_score := -2;
         best_combo := [1 : a in ambiguous];
         crv_list := []; ws := AssociativeArray(); new_keys := []; deferred := [];
+        // COVPROGRESS=1: per-combination progress. This loop runs a FULL EquationsOfCovers solve
+        // per combination and printed nothing between the "searching N combination(s)" line above
+        // and the result below -- so on a large base it goes dark for hours. Measured 2026-09-05:
+        // 34_11 sat in exactly this loop for 12+ h (16 combinations, ~45 min each) with no output,
+        // and there was no way to tell progress from a stall.
+        // WriteStderr, not printf: Magma buffers stdout to a file, so a killed run loses the lot --
+        // the same lesson M0PROGRESS records. Bounded by nchoices <= 1024, so it cannot flood.
+        cov_progress := GetEnv("COVPROGRESS") ne "";
         if nchoices le 1024 then
-            for combo in combos do
+            cov_t0 := Realtime();
+            for ci->combo in combos do
                 tab := base_vals;
                 for t->a in ambiguous do
                     pair := a[2][combo[t]];
@@ -742,6 +1048,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
                     best_score := score;
                     crv_list := cl; ws := w; new_keys := nk; deferred := df;
                     best_combo := combo;
+                end if;
+                if cov_progress then
+                    WriteStderr(Sprintf("  COVPROGRESS combo %o/%o score %o best %o elapsed %os\n",
+                                        ci, nchoices, score, best_score, Realtime()-cov_t0));
                 end if;
             end for;
         else
@@ -765,6 +1075,14 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     vprintf ShimuraQuotients, 1 :"Computing equations above pointless conics...";
     all_eqns, all_ws := EquationsAbovePointlessConics(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
+    // ⚠ LAST RESORT, and a NO-OP unless some cover is still empty (see EquationsByRebase).
+    // Formerly gated on `base_label eq 0`, which cost a pinned run EXACTLY the keys this stage
+    // fills (10_13's [1,2] [1,5] [1,26]; 26_3's [1,2] [1,13]) and nothing else -- 14_3, 21_2 and
+    // 6_17 also pin and were unaffected.  The stage is pin-aware now: it rebases ON the pinned
+    // base and threads the pin into its own inner conic pass, so it is safe to run pinned.
+    vprintf ShimuraQuotients, 1 : "Filling empty covers by Hauptmodul rebase...";
+    all_eqns, all_ws := EquationsByRebase(all_eqns, all_ws, curves : base_label := base_label);
+    vprintf ShimuraQuotients, 1 : "Done\n";
     if not IsEmpty(deferred) then
         vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
         all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
@@ -773,8 +1091,8 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     return all_eqns, all_ws;
 end intrinsic;
 
-intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0)-> Assoc, Assoc
+intrinsic AllEquationsAboveCovers(D::RngIntElt, N::RngIntElt, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
 {Get equations of all covers (not just immediate covers)}
     _ := exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
-    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label);
+    return AllEquationsAboveCovers(Xstar, curves : Prec := Prec, base_label := base_label, IntegralSolution := IntegralSolution, Targets := Targets);
 end intrinsic;

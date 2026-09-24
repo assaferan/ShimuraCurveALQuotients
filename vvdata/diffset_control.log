@@ -1,0 +1,36 @@
+Magma V2.29-7     Thu Aug 20 2026 23:44:05 on LR43Q9LVQJ [Seed = 1252476507]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "diffctrl.m"
+
+===== X0^15(2) =====
+  |Diff|   #(N | r)   #(N does not divide r)
+  0        10         11
+  1        16         15
+  2        4          4
+  3        0          0
+  4        0          0
+  r with |Diff| = 1 but N does not divide r (these WOULD violate the level 
+rule): [ 15 ]
+
+===== X0^6(5) =====
+  |Diff|   #(N | r)   #(N does not divide r)
+  0        7          28
+  1        5          19
+  2        0          1
+  3        0          0
+  4        0          0
+  r with |Diff| = 1 but N does not divide r (these WOULD violate the level 
+rule): [ 19 ]
+
+===== X0^10(3) =====
+  |Diff|   #(N | r)   #(N does not divide r)
+  0        11         20
+  1        9          20
+  2        0          0
+  3        0          0
+  4        0          0
+  r with |Diff| = 1 but N does not divide r (these WOULD violate the level 
+rule): [ 20 ]
+
+Total time: 0.100 seconds, Total memory usage: 32.09MB

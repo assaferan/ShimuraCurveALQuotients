@@ -1,0 +1,119 @@
+Magma V2.29-7     Fri Aug 21 2026 01:43:18 on LR43Q9LVQJ [Seed = 1555150297]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "kappaN.m"
+
+================ X0^15(2)   N = 2 ================
+  --- d = -7    (d_fund = -7   , FIRING) ---
+      m = 2    (N | m)  code log_2 coeff = 0        | target A_m = -1     | all:
+[ <3, -1> ]
+      m = 10   (N | m)  code log_2 coeff = 0        | target A_m = 1      | all:
+[ <3, -1>, <5, -8/3> ]
+      m = 30   (N | m)  code log_2 coeff = 0        | target A_m = 0      | all:
+[ <3, -2>, <5, -8/3>, <7, -2> ]
+      m = 1             code log_2 coeff = 0        | target A_m = 0      | all:
+[ <5, -2/3> ]
+      m = 3             code log_2 coeff = 0        | target A_m = 0      | all:
+[ <3, -2>, <5, -4/3> ]
+      m = 5             code log_2 coeff = 0        | target A_m = 0      | all:
+[ <3, -1> ]
+      m = 15            code log_2 coeff = 0        | target A_m = 0      | all:
+[ <3, -4>, <5, -16/3> ]
+  --- d = -15   (d_fund = -15  , FIRING) ---
+      m = 2    (N | m)  code log_2 coeff = 0        | target A_m = -1     | all:
+[ <3, -2> ]
+      m = 10   (N | m)  code log_2 coeff = 0        | target A_m = 1      | all:
+[ <5, -4> ]
+      m = 30   (N | m)  code log_2 coeff = 0        | target A_m = 0      | all:
+[ <3, -4> ]
+      m = 1             code log_2 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 3             code log_2 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 5             code log_2 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 15            code log_2 coeff = 0        | target A_m = 0      | all:
+[]
+  d = -23   : no lambda of norm 23
+
+================ X0^6(5)   N = 5 ================
+  d = -8    : no lambda of norm 8
+  --- d = -19   (d_fund = -19  , FIRING) ---
+      m = 10   (N | m)  code log_5 coeff = 0        | target A_m = 3/2    | all:
+[ <2, -8/3>, <3, -6> ]
+      m = 15   (N | m)  code log_5 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -20/3> ]
+      m = 30   (N | m)  code log_5 coeff = 0        | target A_m = 3/2    | all:
+[ <2, -8/3>, <3, -4>, <19, -2> ]
+      m = 1             code log_5 coeff = 0        | target A_m = 0      | all:
+[ <2, -4/3>, <3, -1> ]
+      m = 2             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 3             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 6             code log_5 coeff = 0        | target A_m = 0      | all:
+[ <2, -8/3>, <3, -4> ]
+  --- d = -24   (d_fund = -24  , FIRING) ---
+      m = 10   (N | m)  code log_5 coeff = 0        | target A_m = 3/2    | all:
+[ <2, -8> ]
+      m = 15   (N | m)  code log_5 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -6> ]
+      m = 30   (N | m)  code log_5 coeff = 0        | target A_m = 3/2    | all:
+[ <3, -4> ]
+      m = 1             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 2             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 3             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 6             code log_5 coeff = 0        | target A_m = 0      | all:
+[]
+
+================ X0^10(3)   N = 3 ================
+  --- d = -8    (d_fund = -8   , FIRING) ---
+      m = 3    (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <5, -2/3> ]
+      m = 12   (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -8>, <5, -2/3> ]
+      m = 30   (N | m)  code log_3 coeff = 0        | target A_m = 3/2    | all:
+[ <2, -8>, <5, -4> ]
+      m = 1             code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 2             code log_3 coeff = 0        | target A_m = 0      | all:
+[ <5, -4/3> ]
+      m = 5             code log_3 coeff = 0        | target A_m = 0      | all:
+[ <5, -4> ]
+      m = 10            code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+  --- d = -20   (d_fund = -20  , FIRING) ---
+      m = 3    (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -4> ]
+      m = 12   (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -8> ]
+      m = 30   (N | m)  code log_3 coeff = 0        | target A_m = 3/2    | all:
+[ <5, -4> ]
+      m = 1             code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 2             code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 5             code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 10            code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+  --- d = -35   (d_fund = -35  , FIRING) ---
+      m = 3    (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -4/3> ]
+      m = 12   (N | m)  code log_3 coeff = 0        | target A_m = 1/2    | all:
+[ <2, -8> ]
+      m = 30   (N | m)  code log_3 coeff = 0        | target A_m = 3/2    | all:
+[ <2, -8/3>, <5, -4>, <7, -2> ]
+      m = 1             code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+      m = 2             code log_3 coeff = 0        | target A_m = 0      | all:
+[ <2, -8/3> ]
+      m = 5             code log_3 coeff = 0        | target A_m = 0      | all:
+[ <2, -4/3>, <5, -4> ]
+      m = 10            code log_3 coeff = 0        | target A_m = 0      | all:
+[]
+
+Total time: 3.100 seconds, Total memory usage: 32.09MB

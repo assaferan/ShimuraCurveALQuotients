@@ -371,7 +371,10 @@ function Wpoly2(m,mu,L,K,Q)
     mu_wrt_L := Solution(ChangeRing(BasisMatrix(L),Rationals()), ChangeRing(mu, Rationals()));
     Q_mu := 1/2*(mu_wrt_L * ChangeRing(S,Rationals()), mu_wrt_L);
     R<x> := PolynomialRing(K);
-    if not IsIntegral(m - Q_mu) then
+    // Yang's coset condition m in Q(mu) + Z_2: the local density vanishes iff m - Q(mu) is NOT
+    // 2-integral. (Was IsIntegral, i.e. rational-integrality -- too strict: it spuriously killed the
+    // p=2 factor whenever m - Q(mu) had an odd denominator, e.g. at odd-fundamental CM discs.)
+    if Valuation(m - Q_mu, 2) lt 0 then
         return R!0;
     end if;
     mu_wrt_B := mu_wrt_L*B^(-1);
@@ -435,6 +438,27 @@ function Wpoly_scaled(m,p,mu,L,Q : scaled := true)
     assert CanChangeRing(euler, Rationals());
     return (scaled) select scale*euler else ChangeRing(euler, Rationals()), p^(-vpD);
 end function;
+
+intrinsic LocalWhittakerAtOne(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng, Q::AlgMatElt) -> FldRatElt
+{The unnormalized local Whittaker (representation-density) polynomial W_m,p(mu) for the sublattice L
+ with ambient Gram matrix Q and coset representative mu, evaluated at X = 1 -- i.e. its value at s = 0
+ up to the p^(-v_p(det)) scaling. This is exactly the quantity kappaminus tests for vanishing. Exposed
+ so tests/Whittaker2.m can cross-check the internal Wpoly/Wpoly2 against Yang's explicit local density
+ formula (Yang, J. Number Theory 72 (1998); the p = 2 factor is the delicate case, cf. Kudla-Rapoport-
+ Yang, IMRN 1999).}
+    Wpol := Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+    return Evaluate(Wpol, 1);
+end intrinsic;
+
+intrinsic LocalWhittakerPolynomial(m::FldRatElt, p::RngIntElt, mu::ModTupFldElt, L::ModTupRng,
+                                   Q::AlgMatElt) -> RngUPolElt
+{The local Whittaker POLYNOMIAL W_m,p(mu)(X) in X = p^(-s), unscaled -- the object LocalWhittakerAtOne
+ evaluates at X = 1 and then discards.  Exposed because the s-DERIVATIVE is what produces the log p
+ terms of Schofer's kappa, and because the level prime needs its order of vanishing, not just its
+ value: at a firing discriminant the binary lattice L_- is N-scaled (ord_N of disc(L_-) is 2), so
+ W_N can vanish at X = 1 for reasons of LEVEL rather than of representability.}
+    return Wpoly_scaled(m, p, mu, L, Q : scaled := false);
+end intrinsic;
 
 function W(m,p,mu,L,Q)
     Wpoly := Wpoly_scaled(m,p,mu,L,Q);
@@ -563,6 +587,29 @@ function kappaminuszero(D,N,d)
 end function;
 
 // Computes kappa0(m) in Schofer's formula
+// KNOWN DEFECT, with an exact specification (probe vv/kappaN.m; see memory schofer-m0-term-vanishes).
+// At a FIRING discriminant -- one with N not dividing the fundamental discriminant -- Kappa0(m,d)
+// returns log-N coefficient ZERO for every m.  It should be nonzero exactly when N | m, and the
+// correct value is INDEPENDENT of d:
+//        coefficient of log N in Kappa0(m, d)  =  A_m     for every firing d,
+//    X0^15(2): A_2 = -1,   A_10 = 1,   A_30 = 0
+//    X0^6(5) : A_10 = 3/2, A_15 = 1/2, A_30 = 3/2
+//    X0^10(3): A_3  = 1/2, A_12 = 1/2, A_30 = 3/2
+//    X0^21(2): A_2  = -2,  A_6  = -4,  A_18 = 2,   A_42 = -8
+// These are solved exactly (uniquely, with 4-6 spare conditions per base) from the vector-valued
+// oracle in VectorValuedForm.m, via A_m = -b(m)/4 with b the weight-3/2 Eisenstein coefficient.
+// Verified d-independent on three firing discs per base, and the controls (N not dividing m) are
+// correctly zero already.
+//
+// WHY IT IS ZERO: kappaminus emits the coefficient of log p' only at a VANISHING place p'.  At a
+// firing disc with N | m one has W_N(1) = (N-1)/N which is nonzero, so N is never the vanishing
+// place and no log N can ever be produced.  The other primes are fine -- the code returns perfectly
+// good log 3, log 5, log 7, log 19 coefficients alongside the missing log N.
+//
+// This is where the correction currently bolted on as an "outer m = 0 term" below actually belongs.
+// Schofer's own m = 0 term is 2*c_0(0)*k_0(0) with a single (eta, lambda) = (0,0) -- derived from
+// Thm 3.3 and verified by direct enumeration on this very lattice (1799 of 1800 cosets keep no
+// lambda at all) -- and c_0(0) is measured to be 0, so that term contributes nothing here.
 intrinsic Kappa0(m::RngIntElt, d::RngIntElt, Q::AlgMatElt, lambda_v::ModTupRngElt) -> LogSm
 {Computing coefficients Kappa0(m) in Schofers formula}
     return Kappa(Parent(lambda_v)!0,Rationals()!m,d,Q,lambda_v);
@@ -634,7 +681,14 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     if Yang_tt then
         d0 := FundamentalDiscriminant(d);
         f2 := d div d0;
-        is_pp, p, e2 := IsPrimePower(f2);
+        // f2 = 1 means d is already FUNDAMENTAL (conductor 1), so there is no conductor prime for
+        // this correction to attach to and the branch must not fire.  Magma's IsPrimePower errors
+        // on 1 rather than returning false, so guard it: 1 is not a prime power, and skipping is
+        // the correct semantics, not a workaround.  Hit at 21_1, whose CM set reaches d = -7.
+        is_pp := false;
+        if f2 gt 1 then
+            is_pp, p, e2 := IsPrimePower(f2);
+        end if;
         if is_pp then
             e := e2 div 2;
             log_coeffs +:= LogSum(-4*p^(1-e)/(p-KroneckerSymbol(d0,p)),p);
@@ -656,6 +710,13 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
         log_coeffs_m := Kappa0(m,d,Q,lambda);
         vprintf ShimuraQuotients, 5 : "\t\t";
         vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
+        // RUNAWAY=1: attribute a runaway log coefficient to one of the two factors in this
+        // product -- the form's principal part c(-m), or kappa_0(m).  Printing the SUM tells you
+        // nothing about which; printing the terms does.  Inert unless the variable is set.
+        if GetEnv("RUNAWAY") ne "" then
+            printf "RUNAWAYK d %o m %o kappa %o c(-m) %o\n",
+                   d, m, log_coeffs_m, [Coefficient(f,-m) : f in fs];
+        end if;
         for i->f in fs do
             log_coeffs[i] +:= Coefficient(f,-m)*log_coeffs_m;
         end for;
@@ -670,29 +731,39 @@ intrinsic SchoferFormula(fs::SeqEnum[RngSerLaurElt], d::RngIntElt, Q::AlgMatElt,
     return log_coeffs;
 end intrinsic;
 
-function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
+function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc, denom)
 
     log_coeffs := [LogSum() : f in fs_0];
 
     ns := [-Valuation(f) : f in fs_0];
     n := Maximum(ns);
-    
-    // computing norms of elements in the discriminant group
+
+    // Bucket discriminant-group elements by the Guo-Yang cusp-0 condition (arXiv:1510.06193,
+    // Lemma "P(F_f)"): the coefficient b_n at q^{-n/M} is distributed to every eta in L^vee/L with
+    //   nm(eta) in n/M + Z,      i.e.   nm(eta) = n/M  (mod 1),
+    // where nm(eta) = <eta,eta>/2 is the discriminant-form norm (well-defined mod 1 since L is even)
+    // and M is the level of L. A disc-group element eta lifts (via to_disc) to a representative
+    // v = denom*w in the SCALED dual Ldual = denom*L^vee, so the invariant norm is
+    //   nm(eta) = (w*Q*w)/2 = (v*Q*v)/(2*denom^2).
+    // (The previous code used (v*Q*v)/(2*M) with an integer-mod-M match -- a representative-DEPENDENT
+    // quantity that dropped valid eta whenever denom != M, breaking isometry invariance.)
+    // Index buckets by the invariant residue  M*nm(eta) mod M in {0..M-1}.
     mod_M_to_vecs := AssociativeArray([0..M-1]);
     for j in [0..M-1] do
         mod_M_to_vecs[j] := [];
     end for;
     for eta in disc_grp do
         v := ChangeRing(eta@@to_disc,Rationals());
-        norm_v := (v*Q,v)/(2*M);
-        if not IsIntegral(norm_v) then continue; end if;
-        norm_mod_M := Integers()!norm_v mod M;
-        Append(~mod_M_to_vecs[norm_mod_M], eta);
+        nm_eta := (v*Q,v)/(2*denom^2);          // invariant discriminant-form norm, well-defined mod 1
+        res := M*nm_eta;                          // = M*nm(eta); eta lands in bucket iff this is an integer mod M
+        if not IsIntegral(res) then continue; end if;   // nm(eta) not in (1/M)Z => matches no n/M
+        Append(~mod_M_to_vecs[Integers()!res mod M], eta);
     end for;
 
     for mM in [1..n] do
         if &and[Coefficient(f, -mM) eq 0 : f in fs_0] then continue; end if;
-        gammas:= [1/M*ChangeRing(gammaM@@to_disc, Rationals()) : gammaM in mod_M_to_vecs[mM mod M]];
+        // gamma is eta's representative in L^vee (L-coordinates): w = v/denom  (NOT (1/M)*v).
+        gammas:= [ChangeRing(gammaM@@to_disc, Rationals())/denom : gammaM in mod_M_to_vecs[mM mod M]];
         log_coeffs_m := &+([Kappa(gamma,mM/M,d,Q,lambda_v) : gamma in gammas] cat [LogSum()]);
         vprintf ShimuraQuotients, 4 : " is %o", log_coeffs_m;
         for i->f in fs_0 do
@@ -709,8 +780,99 @@ function SchoferFormula0(fs_0, d, Q, lambda_v, scale, M, disc_grp, to_disc)
     return log_coeffs;
 end function;
 
+// ---- Principled multiplier for the outer m=0 term: sum_{eta} c_eta(0) --------------------------
+// The m=0 term of Schofer's sum is sum_eta c_eta(0) kappa_eta(0) = (sum_{eta} c_eta(0)) * kappa^-_0(0)
+// (Yang, arXiv:1503.07971, eq (11)-(12): kappa_eta(0) = kappa^-_0(0) for the valid/isotropic eta,
+// 0 otherwise). The multiplier sum_eta c_eta(0) is the constant term of the vector-valued Borcherds
+// input F_f. By the Borcherds/Eisenstein obstruction (pairing F_f, weight 1/2 rho_L, against the
+// holomorphic weight-3/2 Eisenstein series G for the dual rho_L^* with constant term 1_isotropic),
+//   sum_eta c_eta(0) = - sum_{eta, m>0} c_eta(-m) b_eta(m),
+// where b_eta(m) is the weight-3/2 dual Eisenstein coefficient. By Kudla-Yang (Sci China Math 53
+// (2010), Prop 2.6(ii) odd case + Prop 5.3, B = indefinite quaternion of disc D: split at p ! D,
+// ramified at p | D), at the critical point s0 = n/2 - 1 = 1/2 (i.e. X = 1, where LocalWhittakerAtOne
+// evaluates),
+//   b_eta(m) = C * m^{1/2} * L(1, chi_{kappa_m}) / zeta(2) * prod_{p in S_c} W_p(1/2, m, eta),
+// with kappa_m = -m (since det Q = 2(DN)^2 => -2 det Q = -(2DN)^2 is minus a square => the space
+// character is chi_{-m}; a purely imaginary quadratic character), S_c = { p | det Q } u { p | num(m) },
+// and W_p(1/2,m,eta) = LocalWhittakerAtOne(m,p,eta,-Q). The archimedean m^{1/2} cancels the sqrt|d|
+// in the class-number formula L(1,chi_d) = 2*pi*h_d/(w_d sqrt|d|) via sqrt(m)/sqrt|d| = cond/2, making
+// each b_eta(m) rational; all pi's, sqrt2's (from |det S|^{-1/2} = 1/(DN sqrt2)) and the archimedean
+// constant collapse into the single rational prefactor -96/(D*N). Validated: X0^15(2) -> 4 (all 19
+// Table-45 discs), X0^10(11) -> 0 (matches main, no m=0 contribution). See memory route-c-obstruction.
+function m0_multiplier(foo, f0, Q, disc_grp, to_disc, denom, M, D, N)
+    Qint := ChangeRing(Q, Integers());
+    Qr := ChangeRing(Q, Rationals());
+    negQ := -Qint;
+    dQ := Determinant(Qint);
+    detprimes := Set(PrimeDivisors(dQ));
+    Lfull := RSpaceWithBasis(IdentityMatrix(Integers(), 3));
+
+    // bucket disc-group elements by the invariant norm residue M*nm(eta) mod M (as in SchoferFormula0)
+    mod_M_to_vecs := AssociativeArray([0..M-1]);
+    for j in [0..M-1] do mod_M_to_vecs[j] := []; end for;
+    i0 := 0;
+    for eta in disc_grp do
+        if IsZero(eta) then i0 := eta; end if;
+        v := ChangeRing(eta@@to_disc, Rationals());
+        nm_eta := (v*Qr, v)/(2*denom^2);
+        res := M*nm_eta;
+        if not IsIntegral(res) then continue; end if;
+        Append(~mod_M_to_vecs[Integers()!res mod M], eta);
+    end for;
+
+    // per-(eta, r) contribution c_eta(-r) * b_eta(r) / (archimedean+global collapse)
+    // term = c * (sqrt(r)/sqrt|d|) * (h/w) * (prod(1-chi(p)/p)/prod(1-1/p^2)) * g,  g = prod_{S_c} W_p
+    contrib := function(eta, r, c)
+        w_eta := ChangeRing(eta@@to_disc, Rationals())/denom;
+        D0 := -(Numerator(r)*Denominator(r));      // kappa_m = -r  (up to rational square)
+        K := QuadraticField(D0);
+        dd := Discriminant(Integers(K));
+        chi := KroneckerCharacter(dd);
+        h := ClassNumber(K);
+        wr := #TorsionSubgroup(UnitGroup(K));
+        is_sq, cond_half := IsSquare(Rationals()!(r/AbsoluteValue(dd)));   // = sqrt(r)/sqrt|d|
+        assert is_sq;
+        Sc := Sort([p : p in detprimes join Set(PrimeDivisors(Numerator(r)))]);
+        g := Rationals()!1;
+        for p in Sc do
+            g *:= LocalWhittakerAtOne(r, p, Vector(Rationals(), Eltseq(w_eta)), Lfull, negQ);
+        end for;
+        en := &*[Rationals() | 1 - Evaluate(chi, p)/p : p in Sc];
+        ed := &*[Rationals() | 1 - 1/(Rationals()!p)^2 : p in Sc];
+        return c * cond_half * (Rationals()!h/wr) * (en/ed) * g;
+    end function;
+
+    T := Rationals()!0;
+    // oo-block: principal part at oo lives on eta = 0
+    for m in [1..-Valuation(foo)] do
+        c := Coefficient(foo, -m);
+        if c ne 0 then T +:= contrib(i0, Rationals()!m, Rationals()!c); end if;
+    end for;
+    // 0-block: coefficient at q^{-j} of the cusp-0 expansion distributes to bucket(j/M mod 1)
+    for j in [1..-Valuation(f0)] do
+        c := Coefficient(f0, -j);
+        if c eq 0 then continue; end if;
+        r := (Rationals()!j)/M;
+        for eta in mod_M_to_vecs[j mod M] do
+            T +:= contrib(eta, r, Rationals()!c);
+        end for;
+    end for;
+
+    return -96 * T / (D*N);
+end function;
+
+intrinsic M0Multiplier(foo::RngSerLaurElt, f0::RngSerLaurElt, D::RngIntElt, N::RngIntElt,
+                       Ldata::QuaternionLatticeData) -> FldRatElt
+{The principled outer-m=0 multiplier sum_eta c_eta(0) of Schofer's formula, for an input whose
+ q-expansions at the cusps oo and 0 are foo and f0 (only their principal parts are used). Computed via
+ the Kudla-Yang weight-3/2 dual Eisenstein obstruction; see m0_multiplier. Exposed so tests/M0Multiplier.m
+ can pin the coefficient's normalization independently of the full Borcherds/CM pipeline.}
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    return m0_multiplier(foo, f0, Ldata`Q, Ldata`disc_grp, Ldata`to_disc, Ldata`denom, M, D, N);
+end intrinsic;
+
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
-{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
+{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo,
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.
  Here Q is the Gram matrix of the lattice L and lambda is a vecotr of norm -d.}
     return SchoferFormula([f], d, Q, lambda, scale)[1];
@@ -738,16 +900,42 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
         W_size div:= 2;
     end if;
     */
-    // This follows from Ogg's description of the fixed points 
-    // of Atkin-Lehner w_m
+    // This follows from Ogg's description of the fixed points
+    // of Atkin-Lehner w_m: w_m is fixed at discriminant -4m, and also at -m when m = 3 mod 4.
+    //
+    // ⚠ THE SECOND CLAUSE USED TO READ `(D*N mod (d div 4)) eq 0` WITH NO LOWER BOUND ON m, and at
+    // d = -4 that is m = 1 -- i.e. w_1, the IDENTITY.  Since d div 4 = -1 divides EVERYTHING, the
+    // clause fired at d = -4 on EVERY base, halving W_size for a point no Atkin-Lehner involution
+    // fixes.  For EVEN D*N it is invisible: the first clause gives the same answer there, and it is
+    // right to (Ogg's fixed points of w_2 include disc -4).  For ODD D*N it is simply WRONG, and it
+    // made the Schofer scale at d = -4 too large by a factor of 2.
+    //
+    // Checked against the repo's own Ogg implementation, which is a separate code path and which
+    // REQUIRES m > 1:  NumFixedPointsByCMOrder(D,N,m) over m | D*N, m > 1, reports disc -4 fixed by
+    //   D*N odd  (33_1, 69_1, 21_1, 57_1): NOTHING
+    //   D*N even (6_1, 38_1):              w_2
+    // The first clause is therefore kept exactly as it was; only m = 1 is excluded below.
+    //
+    // ⇒ This is what produced the "runaway log coefficient" class.  A common huge factor C sits in
+    // every column of a row and cancels in ReduceTable, which subtracts the per-row MINIMUM -- but
+    // the doubled scale made the d = -4 column carry 2C, so C survived there and overflowed
+    // RationalNumber.  See HANDOFF.md, 2026-09-14.
+    m_al := -(d div 4);
     Ogg_condition := ((d eq -4) and IsEven(D*N)) or
-                     ((d mod 4 eq 0) and ((D*N mod (d div 4)) eq 0)) or
+                     ((d mod 4 eq 0) and (m_al gt 1) and ((D*N mod m_al) eq 0)) or
                      ((d mod 4 eq 1) and (D*N mod d eq 0));
     if Ogg_condition then
         W_size div:= 2;
     end if;
 
     scale := -n_d / (4*W_size);
+
+    // RUNAWAY=1: this scale is the only per-discriminant multiplier in the Schofer sum, so when the
+    // Log-p part of that sum is the SAME for every d (which it is whenever a huge principal-part
+    // coefficient dominates), the whole per-column variation lives here.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYSC d %o n_d %o W_size %o scale %o\n", d, n_d, W_size, scale;
+    end if;
 
     return scale;
 end intrinsic;
@@ -778,7 +966,7 @@ end intrinsic;
 // Note that in [GY] there is no square on the lhs, and 
 // in [Err] there is no division by 4 on the rhs,
 // but this seems to match with the examples in [Err] !?
-intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
+intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false, PointDegree := 1) -> SeqEnum[LogSm]
 {Return the log of the absolute value of Psi_F_f for every f in fs at the CM point with CM d.}
     // _,_,disc_grp,to_disc,_, Q, O, basis_L := ShimuraCurveLattice(D,N);
     Q := Ldata`Q;
@@ -802,12 +990,80 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
 
     // Taking care of the principal part at zero
     M := IsOdd(D*N) select 4*D*N else 2*D*N;
-    log_coeffs_0 := SchoferFormula0(fs_0, d, Q, lambda, scale, M, disc_grp, to_disc);
+    log_coeffs_0 := SchoferFormula0(fs_0, d, Q, lambda, scale, M, disc_grp, to_disc, Ldata`denom);
 
     // summing up
     for i->s in log_coeffs do
         log_coeffs[i] +:= log_coeffs_0[i];
     end for;
+
+    // ----- outer m=0 term (Yifan Yang, arXiv:1503.07971, Sec 4, eq (11)-(12) + Lemma 20) -----
+    // Schofer's sum runs over m >= 0; the loops above only cover m >= 1, dropping the constant term
+    // sum_eta c_eta(0) kappa_eta(0). By (11), kappa^-_mu(0) = 0 for mu != 0, so every nonzero
+    // kappa_eta(0) equals the single number kappa^-_0(0) whose value (Lemma 20) is
+    //   kappa_0(0) = 2 Lambda'/Lambda + sum_{p|D/(D,d)} (p-1)/(p+1) log p + sum_{p|N/(N,d)} log p.
+    // Its transcendental (2 Lambda'/Lambda) and fractional D-parts cancel against the period / the
+    // m>0 Diff-derivatives (which is why dropping the whole term still gives the D-primes correctly);
+    // the ONLY uncanceled rational survivor is the N-part sum_{p|N/(N,d)} log p, whose multiplier is
+    // the input's constant term sum_eta c_eta(0) (computed by m0_multiplier below). This restores the
+    // level-prime contribution missing at 2|N for CM discs where 2 is unramified (split or inert) --
+    // e.g. the +4 log 2 on X0^15(2), d = -7,-15,-60.
+    // Ramification of p is a property of the FIELD, so test against the fundamental discriminant
+    // (Yang's d is fundamental): p contributes iff p is unramified in Q(sqrt d), i.e. p does not
+    // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
+    // d_fund = -15, even though 2 | 60).
+    d_fund := FundamentalDiscriminant(d);
+    Nprimes := PrimeDivisors(N div GCD(N, d_fund));
+    // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
+    // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
+    // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
+    // the old 15_2-calibrated handle Coefficient(fs_0[i],0) by a derived value.
+    //
+    // HISTORY: m0_multiplier was validated only on the single-surviving-term base X0^15(2) (-> 4,
+    // all 19 Table-45 discs) and wrong on multi-term inputs (X0^21(2) -> -20/3); an even-N guard
+    // once forced 0 on odd-N bases. Both are superseded by the exact evaluation below.
+    //
+    // WHAT THE MULTIPLIER ACTUALLY IS (measured; see VectorValuedForm.m and tests/VectorValuedForm.m).
+    // Evaluating the Guo-Yang coset sum F_f = sum_gamma (f|gamma) rho(gamma^{-1}) e_0 directly, rather
+    // than reading its constant terms off the two scalar q-expansions, gives
+    //        multiplier = (1/2) * c_eta(0)   at any NONZERO ISOTROPIC eta,   and   c_0(0) = 0.
+    // All 2N-2 nonzero isotropic cosets carry the same c_eta(0); the isotropic cosets number exactly
+    // 2N-1 and all come from the level-N hyperbolic plane, which is why this term carries log N.
+    // Verified against the independently measured ground truth on 19 forms: X0^15(2) (9/9),
+    // X0^6(5) (5/5) and X0^10(3) (5/5).
+    // So "sum_eta c_eta(0)" above names the wrong functional, and the guess previously recorded here
+    // (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing over
+    // several isotropic eta0) was RIGHT IN SUBSTANCE: the relevant Eisenstein series is the one
+    // attached to a nonzero ISOTROPIC coset, not the one attached to 0 that the b_eta(m) below are
+    // built from. That is the concrete defect to repair.
+    // RESOLVED (2026-08-22): the multiplier is now computed EXACTLY by M0MultiplierExact
+    // (VectorValuedForm.m) -- the finite Gamma_0(M)-coset evaluation of (1/2) c_eta(0), minutes
+    // per base with no Fourier sampling and no CM table, validated against the measured ground
+    // truth on 21 bases (vvdata/weyl-campaign, branch m0-theta-campaign).  It replaces
+    // m0_multiplier (kept above: it is the Kudla-Yang Route-C closed form, correct on 15_2 only)
+    // and applies at EVERY level parity: the old even-N guard existed because m0_multiplier was
+    // wrong on multi-term inputs, while odd-N bases got no term at all -- the exact value is
+    // nonzero on some odd-N bases (X0^10(11) reproduces Guo-Yang Table A.2 with it).
+    // The evaluation does not depend on d, so it runs once per form and is cached on the form.
+    if not IsEmpty(Nprimes) then
+        kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
+        if exists{eta : eta in etas | not assigned eta`m0mult} then
+            mults := M0MultiplierExact(etas, Ldata, D, N);
+            for i in [1..#etas] do
+                e := etas[i];
+                e`m0mult := mults[i];
+            end for;
+        end if;
+        // The correction multiplies the VALUE at each point of the CM cycle by
+        // N^mult, so a table cell holding the norm over a degree-PointDegree star
+        // point carries N^(PointDegree * mult) -- the degree weighting that every
+        // other Schofer term inherits from the cycle structure. Flat addition is
+        // correct only at PointDegree = 1 (where all prior validation lived); the
+        // quadratic points of X0^10(23) were the first to expose the difference.
+        for i->eta in etas do
+            log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
+        end for;
+    end if;
 
     return log_coeffs;
 end intrinsic;
@@ -817,7 +1073,7 @@ intrinsic SchoferFormula(eta::EtaQuot, d::RngIntElt, D::RngIntElt, N::RngIntElt,
     return SchoferFormula([eta], d, D, N, Ldata : Lambda := Lambda)[1];
 end intrinsic;
 
-intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false) -> SeqEnum[LogSm]
+intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xstar::ShimuraQuot, Ldata::QuaternionLatticeData : Lambda := false, PointDegree := 1) -> SeqEnum[LogSm]
 {Returns the absolute value of f for every f in fs at the rational CM point with CM d.}
     vals := [LogSum() : f in fs];
     for i->f in fs do
@@ -831,16 +1087,72 @@ intrinsic AbsoluteValuesAtRationalCMPoint(fs::SeqEnum[EtaQuot], d::RngIntElt, Xs
     rest_idxs := [i : i in [1..#fs] | vals[i] eq LogSum()];
     if IsEmpty(rest_idxs) then return vals; end if;
     rest_fs := [fs[i] : i in rest_idxs];
-    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda);
+    log_coeffs := SchoferFormula(rest_fs, d, Xstar`D, Xstar`N, Ldata : Lambda := Lambda, PointDegree := PointDegree);
     for i->log_coeff in log_coeffs do
         vals[rest_idxs[i]] := log_coeff;
     end for;
     return vals;
 end intrinsic;
 
-intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4) -> SeqEnum
-{Returns list of candidate discriminats for Schofer's formula} //'
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := true, bd := bd);
+intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Exclude := {}, bd := 4, Keep := {}) -> SeqEnum
+{Returns list of candidate discriminats for Schofer's formula. Keep lists discriminants that must be
+ offered as candidates even if they fail the coprime-to-level filter -- typically the zeros and poles
+ of the two hauptmoduls, which the pipeline needs as anchors. Without this, AbsoluteValuesAtCMPoints'
+ Include (must-use) set is selected FROM this list and so comes out empty whenever an anchor is not
+ coprime to N, e.g. on X0^15(2), whose four divisor discriminants are all even.} //'
+    // CMNONCOPRIME=1 (env-gated, OFF by default): admit CM points NOT coprime to the level.
+    //
+    // The filter here is the one ShimuraQuotients.m:1420 calls "a blunt instrument": it exists to
+    // keep out points whose Schofer values misbehave, but it drops far more than it needs to. On
+    // 26_3, of Guo-Yang's 14 published discriminants only -8, -11, -20 are coprime to N=3, so the
+    // filter admits 3 and discards 11 -- and only 2 of those 11 actually misbehave (the s <-> s~
+    // swap at -267 and -708). Measured pools at the default bd := 4:
+    //
+    //     base   demand   filter ON   filter OFF
+    //     26_3     15         3          21
+    //     39_2     19         3          24
+    //
+    // Both then die with "Could not find enough points", so this filter -- not any real absence of
+    // CM points -- is what blocks those two Guo-Yang bases.
+    //
+    // ⚠⚠ DEFAULT FLIPPED 2026-09-07: THE FILTER IS NOW **OFF** BY DEFAULT.
+    // `CMCOPRIME=1` restores the old behaviour (filter ON). `CMNONCOPRIME` is retired -- what it
+    // used to enable is now the default, so it is silently ignored.
+    //
+    // WHY, and the evidence: a full sweep of the 11 `N>1` X0_D_N.m re-derivation tests, each run
+    // BOTH ways, found **10 of 10 pass identically** with the filter on and off. (For `N = 1`,
+    // gcd(d,1) = 1 makes the filter provably a no-op, which excludes 19 of 30 tests rigorously
+    // rather than by sampling.) Two tests appeared to fail with it off -- 10_13 and 6_17 -- and
+    // BOTH were artifacts of a hardcoded coordinate matrix in the test, not of the models; they
+    // pass once the isomorphism is CONSTRUCTED instead of pinned (tests/_crviso.m).
+    // Three bases now produce models matching Guo-Yang's PUBLISHED equations with the filter off
+    // (39_2, 14_3, 26_3), and none is known to be harmed by it. Decisively, 26_3 is the very base
+    // whose two misbehaving discriminants (-267, -708) were the filter's stated justification --
+    // and with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient
+    // for coefficient. Those wrong values are simply not load-bearing for the covers.
+    // Against that, the filter COSTS models: at the default bd := 4 it cut 26_3's pool from 21 to
+    // 3 against demand 15, and 39_2's from 24 to 3 against 19, killing both outright.
+    //
+    // ⚠⚠ THE GAP THIS LEAVES OPEN -- read before trusting a non-coprime discriminant.
+    // There is **no theoretical guarantee**, only the empirical evidence above. The local factor at
+    // `p | gcd(d, N)` HAS NO LIVE IMPLEMENTATION: `kappaminuszero` is dead code, and Schofer's
+    // Thm 4.1 assumes the lattice is unimodular at unramified primes, which fails at a level prime
+    // where the order is Eichler. The two known-wrong values at 26_3 (`-267`, `-708`, the
+    // s <-> s~ swap) are exactly this class and are STILL WRONG -- they just do not propagate into
+    // the cover equations. So:
+    //   * a model produced from non-coprime discriminants must still be validated against an
+    //     INDEPENDENT oracle (a published equation, or Eichler-Selberg point counts) before it is
+    //     believed -- passing regeneration is not enough;
+    //   * do not read this flip as evidence the p | gcd(d,N) factor is unnecessary. Supplying it
+    //     remains the real fix, and is what would make the swap class correct rather than merely
+    //     harmless.
+    //   * `CMCOPRIME=1` is the escape hatch if a future base is poisoned by an admitted point.
+    //
+    // NB BorcherdsForms.m:709 already fell back this way for CM-starved bases; the asymmetry this
+    // flag existed to probe is now resolved in favour of that behaviour.
+    cm_coprime := GetEnv("CMCOPRIME") ne "";
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := cm_coprime,
+                                                              bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
 end intrinsic;
 
@@ -883,7 +1195,12 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         // per-discriminant ring-class-field field-of-definition to ~target real CM points.
         fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
                                       // the early-stop fires well before exhausting the (expensive) h=16 points
-        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, coprime_to_level := true, target := fetch_target);
+        // Follows the same default as CandidateDiscriminants above (filter OFF unless CMCOPRIME=1).
+        // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
+        // filtering even when the main gate had been relaxed -- a base could be admitted by one
+        // and starved by the other.
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude,
+                                       coprime_to_level := (GetEnv("CMCOPRIME") ne ""), target := fetch_target);
         pt_list_rat := pt_list_rat cat new_rat_cm;
         need := need - #new_rat_cm;
         if need gt 0 then
@@ -895,6 +1212,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
                 error "Could not find enough points, sorry!";
             end if;
         end if;
+    end if;
+
+    // RUNAWAY=1: the column order is pt_list_rat then pt_list_quad, and a rational column is
+    // evaluated with PointDegree 1 while a quadratic one uses 2.  ReduceTable later divides column
+    // j by scale^degs[j] with degs from find_degs (the field of definition).  If those two notions
+    // of "degree" disagree at one column, that column keeps a factor the others shed -- which is
+    // what the runaway looks like.  Print both classifications side by side.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYP rat %o\nRUNAWAYP quad %o\n",
+               [pt[1] : pt in pt_list_rat], [pt[1] : pt in pt_list_quad];
     end if;
 
     table := [[] : f in all_fs];
@@ -923,7 +1250,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         d := pt[1];
         tt := Realtime();
         vprintf ShimuraQuotients, 2: "\tabsolute values at quadratic CM point %o/%o (d = %o)...", j, #pt_list_quad, d;
-        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
+        norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d], PointDegree := 2);
         for i->v in norm_val do
             Append(~table[i], norm_val[i]);
         end for;
@@ -957,15 +1284,215 @@ function find_signs_hauptmodul(s, stilde, ds, degs)
     scale_tilde := stilde[Index(s,0)];
     scale := s[Index(stilde,0)];
 
+    // ===== HMFIT (env-gated experiment; OFF by default) =====
+    // The normalisation above is read off the TWO discriminants where a value vanishes, so those
+    // two satisfy the relation BY CONSTRUCTION and can never be reported as bad.  If one of them
+    // carries a wrong value, every OTHER discriminant is measured against it and the error surfaces
+    // as "the others are inconsistent" -- which is exactly what X_0^21(1) does (5 discriminants
+    // agree on scale_tilde = 36; the pipeline takes 9 from d = -7, the disc it reads FROM).
+    // HMFIT=1 instead SOLVES for (scale, scale_tilde) against every rational CM point and keeps
+    // the pair satisfied at the most of them.  Experimental: it changes which datum is trusted.
+    if GetEnv("HMFIT") ne "" then
+        cand_i := [i : i in [1..#s] | Type(s[i]) ne Infty and Type(stilde[i]) ne Infty
+                                      and degs[i] eq 1];
+        best := 0; bsc := scale; bstc := scale_tilde;
+        for i in cand_i, j in cand_i do
+            if i eq j then continue; end if;
+            // solve  a1*u + b1*v = 1 ,  a2*u + b2*v = 1   with u = 1/scale, v = 1/scale_tilde
+            a1 := s[i]; b1 := stilde[i]; a2 := s[j]; b2 := stilde[j];
+            det := a1*b2 - a2*b1;
+            if det eq 0 then continue; end if;
+            u := (b2 - b1)/det; v := (a1 - a2)/det;
+            if u eq 0 or v eq 0 then continue; end if;
+            n := 0;
+            for k in cand_i do
+                if exists{ 1 : e1 in [-1,1], e2 in [-1,1] | e1*s[k]*u + e2*stilde[k]*v eq 1 }
+                    then n +:= 1; end if;
+            end for;
+            if n gt best then best := n; bsc := 1/u; bstc := 1/v; end if;
+        end for;
+        // KEEP THE POSITIVE REPRESENTATIVE.  The sign of each fitted scale is pure GAUGE: the
+        // criterion above quantifies over eps1, eps2 in {+-1}, so u -> -u maps eps1 -> -eps1 and
+        // leaves the satisfied set -- hence `best` -- unchanged.  The default path cannot produce a
+        // negative scale (it reads one off the ABSOLUTE-value table), and two places downstream
+        // depend on that:
+        //   * s_new[i_st0] = s[i_st0]/scale.  At that index stilde VANISHES, so the relation reads
+        //     eps1*s/scale = 1 and the value is FORCED to +1 -- which needs scale > 0.
+        //   * s_new at the POLE is Infinity()/scale, and a negative scale makes it -Infinity().
+        //     RationalConstraintsOnEquations finds the pole with Index(table, Infinity()), gets 0,
+        //     and fires "y^2 and s have poles in different places".  That is exactly what
+        //     X_0^21(1) did under HMFIT=1: its three covers and its SECOND Hauptmodul all had the
+        //     pole at d = -4, and only the first Hauptmodul disagreed -- because only its fitted
+        //     scale came out negative (-4/9 against the default's +4/9).
+        bsc := Abs(bsc); bstc := Abs(bstc);
+        printf "HMFIT: fitted scale = %o, scale_tilde = %o, satisfied at %o of %o rational CM point(s)"
+               * " (pipeline default was scale = %o, scale_tilde = %o)\n",
+               bsc, bstc, best, #cand_i, scale, scale_tilde;
+        scale := bsc; scale_tilde := bstc;
+    end if;
+    // ===== end HMFIT =====
+
     rat_idxs := [i : i in [1..#s] | i notin inf_zero_indices and degs[i] eq 1];
-    signs := &cat[[[eps1, eps2] : eps1,eps2 in [-1,1] | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1] : i in rat_idxs];
+    // For each rational CM point the signs are pinned by
+    //     eps1*s[i]/scale + eps2*stilde[i]/scale_tilde = 1.
+    // Keep the solutions PER INDEX.  The previous version flattened them with &cat and then indexed
+    // the flat list in step with rat_idxs, which is only correct if every index contributes exactly
+    // one pair.  An index contributing none shifts everything after it -- giving either an
+    // index-out-of-range or, worse, silently correct-looking signs attached to the wrong
+    // discriminants when a later index contributes two.
+    per_idx := [ [ [eps1, eps2] : eps1, eps2 in [-1,1]
+                   | eps1*s[i]/scale + eps2*stilde[i]/scale_tilde eq 1 ] : i in rat_idxs ];
+
+    // No sign choice at some discriminant is NOT an indexing accident: the two Hauptmodul values
+    // there are inconsistent with the relation that holds at the normalising points.  Say which.
+    bad := [ ds[rat_idxs[j]] : j in [1..#rat_idxs] | IsEmpty(per_idx[j]) ];
+    error if not IsEmpty(bad),
+        Sprintf("find_signs_hauptmodul: no choice of signs satisfies "
+                * "s/scale + stilde/scale_tilde = 1 at discriminant(s) %o.  The Hauptmodul values "
+                * "there are inconsistent with those at the normalising points.\n"
+                * "  ds     = %o\n  s      = %o\n  stilde = %o\n  degs   = %o",
+                bad, ds, s, stilde, degs);
+
     s_new := [* ss/scale^degs[i] : i->ss in s *];
     stilde_new := [* sstilde/scale_tilde^degs[i] : i->sstilde in stilde *];
     for j->idx in rat_idxs do
-        s_new[idx] := signs[j][1]*s_new[idx];
-        stilde_new[idx] := signs[j][2]*stilde_new[idx];
+        if #per_idx[j] gt 1 then
+            // both sign choices satisfy the relation; the value cannot distinguish them
+            vprintf ShimuraQuotients, 1:
+                "\tfind_signs_hauptmodul: sign choice not unique at d = %o; taking %o\n",
+                ds[idx], per_idx[j][1];
+        end if;
+        s_new[idx] := per_idx[j][1][1]*s_new[idx];
+        stilde_new[idx] := per_idx[j][1][2]*stilde_new[idx];
     end for;
     return s_new, stilde_new, scale, scale_tilde;
+end function;
+
+intrinsic HauptmodulM0Residuals(s::List, stilde::List, ds::SeqEnum, degs::SeqEnum, N::RngIntElt
+                                : Bound := 12) -> SetEnum
+{The outer-m=0 multipliers of the two Hauptmodul forms (rows -1 and -2), read off the consistency
+ relation that find_signs_hauptmodul imposes -- no vector-valued oracle run.  Returns the set of
+ admissible pairs <r_1, r_2>; a single element means the pair is DETERMINED, and the empty set means
+ no multiple of log N explains the table.  The inputs are the rows as find_signs_hauptmodul receives
+ them: the absolute values with Infinity() at the poles, the discriminants, and their degrees.
+
+ What is returned is the RESIDUAL r = true - applied.  On an odd-N base the pipeline applies no m=0
+ term (the guard in SchoferFormula), so the residual IS the multiplier; on an even-N base add back
+ M0Multiplier to recover it.
+
+ THE ARGUMENT.  find_signs_hauptmodul requires, at each rational CM point d,
+     eps_1(d) s(d)/s(d_A)  +  eps_2(d) stilde(d)/stilde(d_B)  =  1,
+ with d_A the discriminant at which stilde vanishes and d_B the one at which s does.  Writing
+ k(d) = 1 when the outer m=0 term fires at d (N does not divide the fundamental discriminant; see the
+ Nprimes computation in SchoferFormula) and 0 otherwise, restoring that term scales |psi_f(d)| by
+ N^(r_f k(d)), so the TRUE normalised value is the pipeline's times N^(r_f (k(d) - k(d_ref))).  Each
+ rational d therefore contributes one equation with exponent -1, 0 or +1, two informative ones
+ determine the pair, and any further ones are consistency checks.
+
+ TWO THINGS THAT LOOK LIKE BUGS IF YOU ASSUME THEM AWAY.
+  * The signs eps are PER DISCRIMINANT.  Folding them into the unknowns makes X0^6(5) report a
+    multiplier of -1 (i.e. not a power of N at all) when the truth there is 0 with signs (-,+).  So
+    the search below quantifies over the signs and keeps only integer exponents.
+  * BOTH firing regimes occur and they invert the argument.  On X0^14(5) the normalising points fire
+    and the information sits at the non-firing discriminants; on X0^15(2) the normalisers (-120, -40)
+    are themselves non-firing and it sits at the firing ones.  The exponent k(d) - k(d_ref) covers
+    both without a case split.
+ Note also that CandidateDiscriminants' coprime-to-level filter removes exactly the discriminants
+ divisible by N, so on most bases no non-firing point reaches the table at all; admit some through the
+ documented Keep hook of ValuesAtCMPoints when this returns "not measurable".}
+    require #s eq #ds and #stilde eq #ds and #degs eq #ds : "the rows, ds and degs must agree in length";
+    require N gt 1 : "N must exceed 1";
+    i_s0  := Index(s, 0);
+    i_st0 := Index(stilde, 0);
+    require i_s0 ne 0 and i_st0 ne 0 : "each Hauptmodul must vanish somewhere in the table";
+    scale       := s[i_st0];
+    scale_tilde := stilde[i_s0];
+    require scale cmpne Infinity() and scale_tilde cmpne Infinity() : "a normalising value is infinite";
+
+    fires := func<d | not IsEmpty(PrimeDivisors(N div GCD(N, FundamentalDiscriminant(d))))>;
+    kA := fires(ds[i_st0]) select 1 else 0;
+    kB := fires(ds[i_s0])  select 1 else 0;
+
+    rows := [];  exps := [];
+    for i->d in ds do
+        if degs[i] ne 1 or i eq i_s0 or i eq i_st0 then continue; end if;
+        if s[i] cmpeq Infinity() or stilde[i] cmpeq Infinity() then continue; end if;
+        k := fires(d) select 1 else 0;
+        Append(~rows, [Rationals() | s[i]/scale, stilde[i]/scale_tilde]);
+        Append(~exps, [k - kA, k - kB]);
+    end for;
+    // Fewer than two INFORMATIVE points and the pair is not pinned: every remaining discriminant
+    // shares the normalisers' firing status, so the correction cancels and nothing can be seen.
+    if #[j : j in [1..#rows] | exps[j] ne [0,0]] lt 2 then return {}; end if;
+
+    sols := {};
+    for r1 in [-Bound..Bound] do
+        for r2 in [-Bound..Bound] do
+            X1 := (Rationals()!N)^r1;  X2 := (Rationals()!N)^r2;
+            good := true;
+            for j := 1 to #rows do
+                a := rows[j][1] * X1^exps[j][1];
+                b := rows[j][2] * X2^exps[j][2];
+                if not exists{ <g1,g2> : g1, g2 in [1,-1] | g1*a + g2*b eq 1 } then
+                    good := false; break;
+                end if;
+            end for;
+            if good then Include(~sols, <r1, r2>); end if;
+        end for;
+    end for;
+    return sols;
+end intrinsic;
+
+
+// Complex conjugation of a totally imaginary Galois number field L (as used for CM fields of
+// definition: L is the ring class field H_R, or its Atkin-Lehner-fixed subfield A_abs, both of which
+// contain the imaginary quadratic K and are Galois over Q).  Returns the automorphism realizing
+// complex conjugation.
+//
+// When L is CM (<=> Pic(R) has exponent <= 2) HasComplexConjugate returns the unique one.  Otherwise
+// Gal(L/Q) has several order-2 automorphisms restricting to complex conjugation on K, and we must pick
+// a GENUINE one (a Frobenius at infinity); the wrong ones give spurious fields of definition.  We pick
+// the root of L's defining polynomial closest to conj(L.1) numerically -- but rather than trust a fixed
+// precision (two conjugates can be close under the chosen place, so Minimum can latch onto the wrong
+// root), we CERTIFY the pick algebraically and raise precision until it certifies:
+//
+//   an involution tau of a totally imaginary Galois L is a genuine complex conjugation (Frobenius at
+//   infinity) <=> its fixed field is not totally imaginary, i.e. r1(Fix tau) > 0.
+//
+// (=> a real place of Fix tau becomes complex in the totally imaginary L, with tau the local
+// conjugation; <= a real Frobenius is real at that place of its fixed field.)  All complex conjugations
+// of a Galois field are conjugate, so every certified pick lies in the same class and yields the same
+// field of definition up to isomorphism -- we need not match a specific embedding.
+function pin_complex_conjugation(L)
+    // HasComplexConjugate is a Magma builtin that, for some fields (e.g. certain degree-4 fields),
+    // throws an internal error ("Sequence must have length 4 to lift into this algebraic field",
+    // from RepThry/ModGrp/LLL.m) instead of returning false. Guard it: on any failure fall through
+    // to the numeric certified pinning below, which never needs it and finds a genuine complex
+    // conjugation regardless of whether L is CM.
+    has_cc := false; cc := 0;
+    try
+        has_cc, cc := HasComplexConjugate(L);
+    catch e
+        has_cc := false;
+    end try;
+    if has_cc then return cc; end if;
+    f := DefiningPolynomial(L);
+    roots := [r[1] : r in Roots(f, L)];
+    prec := 40 + 4*Degree(L);
+    while true do
+        target := ComplexConjugate(Conjugates(L.1 : Precision := prec)[1]);
+        _, idx := Minimum([Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots]);
+        cc := hom<L -> L | roots[idx]>;
+        // certificate: a genuine complex conjugation is an involution (cc(cc(L.1)) = L.1) whose fixed
+        // field has a real place (r1 > 0).  The identity pick is rejected here since Fix = L is totally
+        // imaginary (r1 = 0), as is any wrong-class reflection.
+        if cc(cc(L.1)) eq L.1 and Signature(FixedField(L, [cc])) gt 0 then
+            return cc;
+        end if;
+        error if prec gt 2^20,
+            "pin_complex_conjugation: precision exceeded 2^20 without certifying a complex conjugation";
+        prec *:= 2;
+    end while;
 end function;
 
 
@@ -1067,16 +1594,13 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     Q_P := FixedField(abs_H_R, fixed_by);
     Q_Ps := [* Q_P *];
 
-    // Handle complex conjugation 
-    has_cc, cc := HasComplexConjugate(abs_H_R);
-    if not has_cc then
-        gal, auts, gal_to_auts := AutomorphismGroup(abs_H_R);
-        // elements that restrict to the complex conjugation on K
-        cc_candidates := [g : g in gal | Order(g) eq 2 and gal_to_auts(g)(K.1) eq ComplexConjugate(K.1)];  
-        cc_reps := [gal_to_auts(cc) : cc in cc_candidates];
-    else
-        cc_reps := [cc];
-    end if;
+    // Handle complex conjugation.  Enumerating every order-2 automorphism restricting to complex
+    // conjugation on K (as this routine used to, via AutomorphismGroup) over-generates spurious fields
+    // when Pic(R) has exponent > 2 -- e.g. it returned {Q(sqrt(-3)), Q(sqrt(13))} for d = -39 where the
+    // true field is Q(sqrt(13)) alone.  pin_complex_conjugation returns the single genuine, certified
+    // complex conjugation.
+    cc := pin_complex_conjugation(abs_H_R);
+    cc_reps := [cc];
     sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
     if m eq 1 then 
         return [* FixedField(Q_P, [sigma]) : Q_P in Q_Ps, sigma in sigmas *];
@@ -1132,7 +1656,7 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
  Pic(R) has exponent <= 2 (H_R is CM).  When Exponent(Pic(R)) > 2 the slow function calls
  AutomorphismGroup and enumerates EVERY order-2 automorphism restricting to complex
  conjugation on K, which over-generates: only one of those reflections is genuinely
- complex conjugation.  This function pins that one (see the comment at the Roots() call),
+ complex conjugation.  This function pins that one (see pin_complex_conjugation),
  so on such discriminants it returns a SUBSET of the slow function's list -- one field per
  class [a] rather than one per (reflection, class) pair.  That pinning is what makes the
  high-class-number discriminants tractable (d = -1651: 212s -> 1.9s).
@@ -1235,36 +1759,13 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
         return [* Aabs *];   // field of definition contains K
     end if;
 
-    // Complex-conjugation candidate(s).  The slow function uses HasComplexConjugate on the
-    // FULL ring class field H_R: a single canonical conjugation when H_R is CM, else every
-    // order-2 automorphism restricting to complex conjugation on K.  H_R is CM iff complex
-    // conjugation is central iff cc acts trivially by inversion on Gal(H_R/K) = Pic(R), i.e.
-    // iff Pic(R) has exponent <= 2 (here G = Domain(mG) ~ Pic(R)).  We reproduce that on the
-    // smaller A_abs (whose cc-candidates restrict from those of H_R, giving the same fixed
-    // fields):
-    //   exponent <= 2  ->  H_R CM  ->  the unique canonical conjugation (one field per a);
-    //   exponent  > 2  ->  A_abs not CM, HasComplexConjugate fails; we pin the single
-    //                      genuine complex conjugation by hand below (one field per a).
-    // Either way ccs has ONE element: we do NOT enumerate the cc-candidates the way the
-    // slow function does -- see the comment at the Roots() call for why that is correct.
-    if Exponent(G) le 2 then
-        has_cc, cc := HasComplexConjugate(Aabs);   // A_abs (subfield of CM H_R, contains K) is CM
-        assert has_cc;
-    else
-        // A_abs is not CM (Pic(R) has exponent > 2), so HasComplexConjugate fails -- but complex
-        // conjugation is still ONE automorphism (A_abs/Q is Galois): the unique one sending A_abs.1
-        // to the complex-conjugate root of its defining polynomial.  GR (Lemma CC / Thm mainCM) use
-        // this c abstractly and pin only sigma_a; we build c directly here rather than enumerating
-        // every order-2 reflection via AutomorphismGroup (slow, and over-generating -- it returns
-        // all reflections c.sigma, of which only this one is genuinely complex conjugation).
-        f := DefiningPolynomial(Aabs);
-        prec := 40 + 4*Degree(Aabs);
-        target := ComplexConjugate(Conjugates(Aabs.1 : Precision := prec)[1]);
-        roots_A := [r[1] : r in Roots(f, Aabs)];
-        diffs := [Abs(Conjugates(r : Precision := prec)[1] - target) : r in roots_A];
-        _, idx := Minimum(diffs);
-        cc := hom<Aabs -> Aabs | roots_A[idx]>;
-    end if;
+    // Complex conjugation on A_abs.  When A_abs is CM (Pic(R) exponent <= 2) it is canonical; otherwise
+    // Gal(A_abs/Q) has several order-2 automorphisms restricting to complex conjugation on K and only a
+    // genuine Frobenius-at-infinity gives the right field of definition.  pin_complex_conjugation
+    // returns the single certified complex conjugation (HasComplexConjugate in the CM case, else the
+    // closest-root pick certified by r1(Fix) > 0 with precision raised until it certifies) -- avoiding
+    // the AutomorphismGroup enumeration entirely.
+    cc := pin_complex_conjugation(Aabs);
     ccs := [* cc *];
 
     // Valid classes [a] in Pic(R)/Pic(R)^2 with B_D ~ (-s, m*N(a))_Q  (Lemma CC /
@@ -1326,7 +1827,7 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     d_idx := Index(ds,d);
     ds[d_idx] := dnew;
     Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
-    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata);
+    norm_val := AbsoluteValuesAtRationalCMPoint(all_fs, dnew, Xstar, Ldata : PointDegree := 2);
     for i->v in norm_val do
         // table[i][d_idx] := norm_val[i]/row_scales[i]^deg;
         if is_log then
@@ -1354,6 +1855,7 @@ function find_y2_scales(schofer_table)
     //Scale the y2 rows of the table
 
     scale_factors :=[];
+    unscaled_keys := [];   // covers whose y2-scale is a placeholder; their twist is NOT trusted
     for i in k_idxs do
         if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)} then
             //then we have a rational point on X
@@ -1367,10 +1869,12 @@ function find_y2_scales(schofer_table)
             found_j1 := exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
             found_j2 := found_j1 and exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             // Graceful: without two suitable rational CM points we cannot pin this cover's y2-scale.
-            // Leave the row unscaled (placeholder); the cover's constraints then come out inconsistent
-            // in EquationsOfCovers, so it is deferred and (if a parent is computed) recovered as a quotient.
+            // Leave the row unscaled (placeholder) and RECORD the cover: the constraints may still
+            // come out consistent and produce a model with the wrong quadratic twist (issue #36, 22_3),
+            // so EquationsOfCovers must force-defer it; a computed parent then recovers it as a quotient.
             if not found_j2 then
                 Append(~scale_factors, LogSum(1));
+                Append(~unscaled_keys, keys_fs[i]);
                 vprintf ShimuraQuotients, 1 : "  Could not pin y2-scale (sparse CM data); leaving a cover unscaled to be deferred downstream.\n";
                 continue;
             end if;
@@ -1402,11 +1906,12 @@ function find_y2_scales(schofer_table)
                 Append(~scale_factors, log_scale2);
             else
                 Append(~scale_factors, LogSum(1));
+                Append(~unscaled_keys, keys_fs[i]);
                 vprintf ShimuraQuotients, 1 : "  y2-scale IsSquare check failed for a cover; leaving it unscaled to be deferred downstream.\n";
             end if;
         end if;
     end for;
-    return scale_factors;
+    return scale_factors, unscaled_keys;
 
 end function;
 
@@ -1537,7 +2042,8 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
     abs_schofer_tab`Values := table;
 
     //Scale the y2 rows of the table
-    scale_factors := find_y2_scales(abs_schofer_tab);
+    scale_factors, unscaled_keys := find_y2_scales(abs_schofer_tab);
+    abs_schofer_tab`UnscaledKeys := unscaled_keys;
 
     degs := find_degs(abs_schofer_tab);
     for i->k in k_idxs do
@@ -1548,6 +2054,37 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
         // row_scales[k] := row_scales[k]*scale_factors[i];
         row_scales[k] +:= scale_factors[i];
     end for;
+
+    // RUNAWAY=1: dump the LogSum table BEFORE it is turned into rationals, so a runaway coefficient
+    // can be attributed to a PRODUCER instead of theorised about.  The guard in RationalNumber
+    // reports the offending (p, coeff) pair but not where it entered: the raw Schofer value at that
+    // cell, the row scale, or the y2 scale factor.  This prints all three, so the first table below
+    // to carry the large coefficient is the one that made it.  Inert unless the variable is set.
+    if GetEnv("RUNAWAY") ne "" then
+        big := func<x | IsEmpty(Keys(x`log_coeffs)) select 0
+                        else Maximum([AbsoluteValue(c) : c in x`log_coeffs])>;
+        which := func<x | IsEmpty(Keys(x`log_coeffs)) select 0
+                         else rep{p : p in Keys(x`log_coeffs)
+                                  | AbsoluteValue(x`log_coeffs[p]) eq big(x)}>;
+        printf "RUNAWAY ds %o\n", allds;
+        for i->k in abs_schofer_tab`Keys_fs do
+            printf "RUNAWAY row %-4o rowscale max %o on Log%o\n",
+                   k, big(row_scales[i]), which(row_scales[i]);
+        end for;
+        for i->k in k_idxs do
+            printf "RUNAWAY y2scale key %-4o max %o on Log%o  (unscaled %o)\n",
+                   abs_schofer_tab`Keys_fs[k], big(scale_factors[i]), which(scale_factors[i]),
+                   abs_schofer_tab`Keys_fs[k] in unscaled_keys;
+        end for;
+        for i->row in table do
+            for j->x in row do
+                if Type(x) eq LogSm and big(x) gt 10^5 then
+                    printf "RUNAWAY CELL row %o (key %o) d %o : max %o on Log%o\n",
+                           i, abs_schofer_tab`Keys_fs[i], allds[j], big(x), which(x);
+                end if;
+            end for;
+        end for;
+    end if;
 
     // make table values into rational numbers
     abs_schofer_tab`Values := [*[*RationalNumber(x) : x in y*] : y in table*];
@@ -1611,6 +2148,7 @@ intrinsic ValuesAtCMPoints(abs_schofer_tab::SchoferTable, all_cm_pts::SeqEnum : 
 
     schofer_table := CreateSchoferTable(table, abs_schofer_tab`Keys_fs, abs_schofer_tab`Discs, abs_schofer_tab`Curves, Xstar);
     schofer_table`AmbiguousSigns := ambiguous;
+    schofer_table`UnscaledKeys := unscaled_keys;   // covers with a placeholder y2-scale (twist untrusted)
     return schofer_table;
 end intrinsic;
 
@@ -1637,17 +2175,44 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
         scale := &+([LogSum()] cat [LogSum(mins[i][2], p) : i->p in ps]);
         Append(~scales, scale);
     end for;
+    // RUNAWAY=1: show what the per-row rescaling actually removes.  `scales` takes the entry of
+    // MINIMAL ABSOLUTE valuation over the rational columns, so a common huge factor cancels only
+    // when EVERY rational cell carries it; a single cell that is huge on its own survives.  Print
+    // the row before and after, per prime, so which of those two it is can be read off.
+    if GetEnv("RUNAWAY") ne "" then
+        printf "RUNAWAYP ds %o\nRUNAWAYP degs %o\n", allds, degs;
+        reduced := [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
+        for i->t in table do
+            ps := Sort([p : p in &join([{Integers()|}] cat [Keys(x`log_coeffs) : x in t
+                                                            | Type(x) eq LogSm])]);
+            for p in ps do
+                cf := func<x | (Type(x) eq LogSm and IsDefined(x`log_coeffs, p))
+                               select x`log_coeffs[p] else 0>;
+                before := [cf(x) : x in t];
+                after  := [cf(x) : x in reduced[i]];
+                if Maximum([AbsoluteValue(c) : c in before]) le 10^5 then continue; end if;
+                printf "RUNAWAYR row %o Log%o scale %o\n  before %o\n  after  %o\n",
+                       i, p, cf(scales[i]), before, after;
+            end for;
+        end for;
+    end if;
     schofer_tab`Values :=  [[x - degs[j]*scales[i] : j->x in t] : i->t in table ];
     schofer_tab`RowScales := scales;
     return;
 end intrinsic;
 
-intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}) -> SeqEnum, SeqEnum, SeqEnum
-{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.}
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}, Keep := {}) -> SeqEnum, SeqEnum, SeqEnum
+{Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.
+ Keep: extra discriminants that must appear in the table, beyond the hauptmoduls' own zeros and poles.
+ They bypass the coprime-to-level filter (same mechanism as CandidateDiscriminants' Keep) and are pinned
+ as must-use points. This lets a caller evaluate at a CM point the filter would otherwise discard -- in
+ particular at a discriminant DIVISIBLE by the level. Such a value is not absorbed by ReduceTable's
+ per-row rescaling, which is what makes it usable as an external check; see tests/ExternalCMValues.m.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    all_cm_pts := CandidateDiscriminants(Xstar, curves);
-    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := Set(d_divs));
+    must_use := Set(d_divs) join Keep;
+    all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := must_use);
+    abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := must_use);
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
     return schofer_tab;

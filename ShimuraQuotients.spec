@@ -2,6 +2,9 @@
 BorcherdsForms.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
+WeilRepresentation.m
+EisensteinLocalFactors.m
+VectorValuedForm.m
 EquationsCovers.m
 Caching.m
 ClassNumberData.m

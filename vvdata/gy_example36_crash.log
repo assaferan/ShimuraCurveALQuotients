@@ -1,0 +1,32 @@
+Magma V2.29-7     Fri Aug 21 2026 09:57:30 on LR43Q9LVQJ [Seed = 3744613208]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "gy36.m"
+d = -35    d_fund = -35    : NON-firing (5 | d)
+d = -4     d_fund = -4     : FIRING, 5 is split
+d = -11    d_fund = -11    : FIRING, 5 is split
+d = -280   d_fund = -280   : NON-firing (5 | d)
+
+ValuesAtCMPoints(
+    Xstar: ,
+    curves: [ , , , , , , , , , , , , , , ,  ]
+)
+ValuesAtCMPoints(
+    abs_schofer_tab: ,
+    all_cm_pts: [ [ <-4, 4, 1>, <-35, 2, 1>, <-280, 2, 1>, <-11, 1, 1>, <-84...
+)
+find_signs_hauptmodul(
+    s: [* Infinity, 5/8, 55/128, 0, 1, 1/4, 1/8 *],
+    stilde: [* Infinity, 35/8, 585/128, 1, 0, 3/4, 9/4 *],
+    ds: [ -4, -35, -280, -11, -91, -84, -51 ],
+    degs: [ 1, 1, 1, 1, 1, 1, 2 ]
+)
+In file "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurve\
+ALQuotients/c76cc793-ba57-4aa8-b17e-60502ef8aa0f/scratchpad/p53/SchoferFormula.\
+m", line 1171, column 28:
+>>         s_new[idx] := signs[j][1]*s_new[idx];
+                              ^
+Runtime error in '[]': Sequence index 2 should be in the range 1 to 1
+
+
+Total time: 779.750 seconds, Total memory usage: 7022.28MB

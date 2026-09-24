@@ -1,0 +1,39 @@
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurve\
+ALQuotients/a8c95df8-bb7c-4234-a11d-1108c951f4a5/scratchpad/tcw.m"
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurve\
+ALQuotients/a8c95df8-bb7c-4234-a11d-1108c951f4a5/scratchpad/schwag2.m"
+eta* = (  0   0 1/2), order N_beta = 2 (level N = 2)
+L1 built: det = -450 (det L = -1800, ratio 4)
+
+form   truth     candidate sum S_f 
+-2     2         0                 
+-1     4         -15/8             
+9      0         0                 
+10     0         -15/8             
+11     4         -15/8             
+12     2         -15/8             
+13     4         -15/8             
+14     -2        0                 
+15     2         0                 
+
+ratios vs form -1 (truth ratio: mult/4):
+  form -2   truth 1/2     candidate 0
+  form -1   truth 1       candidate 1
+  form 9    truth 0       candidate 0
+  form 10   truth 0       candidate 1
+  form 11   truth 1       candidate 1
+  form 12   truth 1/2     candidate 1
+  form 13   truth 1       candidate 1
+  form 14   truth -1/2    candidate 0
+  form 15   truth 1/2     candidate 0
+
+form   truth    S_B          S_A          -(8/5)(SB-SA/2)  +(8/5)(SB-SA/2) 
+-2     2        0            -5/4         -1               1               
+-1     4        -15/8        -5/4         2                -2              
+9      0        0            -5           -4               4               
+10     0        -15/8        -25/4        -2               2               
+11     4        -15/8        -15/4        0                0               
+12     2        -15/8        -15/2        -3               3               
+13     4        -15/8        -5/4         2                -2              
+14     -2       0            -15/4        -3               3               
+15     2        0            -5/4         -1               1               

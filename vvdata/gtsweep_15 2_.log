@@ -1,0 +1,13 @@
+Magma V2.29-7     Fri Aug 21 2026 12:03:36 on LR43Q9LVQJ [Seed = 435906087]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "vvdata/gtsweep.m"
+
+In file "vvdata/gtsweep.m", line 17, column 41:
+>> if assigned DD then D := StringToInteger(DD); end if;
+                                           ^
+Runtime error in 'StringToInteger': String "15 2" does not represent a number in
+base 10
+
+
+Total time: 0.010 seconds, Total memory usage: 32.09MB

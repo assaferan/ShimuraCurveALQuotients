@@ -1,0 +1,43 @@
+Magma V2.29-7     Thu Aug 20 2026 23:11:14 on LR43Q9LVQJ [Seed = 2889980032]
+Type ? for help.  Type <Ctrl>-D to quit.
+
+Loading file "bfit.m"
+
+======================== X0^15(2)  M = 60 ========================
+occurring oo-indices r : [ 1, 2, 3, 10, 15, 30 ]
+occurring  0-indices j : [ 30, 45 ]
+of these, N | r : [ 2, 10, 30 ]   and  N | j : [ 30 ]
+unknowns: 3 (oo) + 1 (0) = 4, equations: 9
+CONSISTENT.  solution space dimension = 0  (spare conditions = 5)
+  A_r  (r, weight, implied b_0(r) = -4A) :
+      r = 2     A = -1       b = 4
+      r = 10    A = 1        b = -4
+      r = 30    A = 0        b = 0
+  B_j  (j, weight, implied sum_bucket b = -4B) :
+      j = 30    (r = 1/2) B = 0        b = 0
+
+======================== X0^6(5)  M = 60 ========================
+occurring oo-indices r : [ 1, 2, 3, 4, 6, 10, 15, 19, 30 ]
+occurring  0-indices j : []
+of these, N | r : [ 10, 15, 30 ]   and  N | j : []
+unknowns: 3 (oo) + 0 (0) = 3, equations: 9
+CONSISTENT.  solution space dimension = 0  (spare conditions = 6)
+  A_r  (r, weight, implied b_0(r) = -4A) :
+      r = 10    A = 3/2      b = -6
+      r = 15    A = 1/2      b = -2
+      r = 30    A = 3/2      b = -6
+  B_j  (j, weight, implied sum_bucket b = -4B) :
+
+======================== X0^10(3)  M = 60 ========================
+occurring oo-indices r : [ 1, 2, 3, 5, 8, 12, 30, 35 ]
+occurring  0-indices j : []
+of these, N | r : [ 3, 12, 30 ]   and  N | j : []
+unknowns: 3 (oo) + 0 (0) = 3, equations: 9
+CONSISTENT.  solution space dimension = 0  (spare conditions = 6)
+  A_r  (r, weight, implied b_0(r) = -4A) :
+      r = 3     A = 1/2      b = -2
+      r = 12    A = 1/2      b = -2
+      r = 30    A = 3/2      b = -6
+  B_j  (j, weight, implied sum_bucket b = -4B) :
+
+Total time: 18.299 seconds, Total memory usage: 32.09MB
