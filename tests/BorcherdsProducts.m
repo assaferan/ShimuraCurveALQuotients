@@ -50,23 +50,51 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
         if not is_def then continue; end if;
         Include(~matched_Ws, X`W);
         C_ex, scales := Explode(datum);
+        // ⚠ A KEY MAY LIST SEVERAL ACCEPTABLE CURVES, and the reason is mathematical, not a
+        // convenience. A degree-2 map from a genus-1 curve to P^1 is a Q-rational degree-2 divisor
+        // class, and those form a torsor under E(Q); when E(Q) is non-trivial ONE CURVE has several
+        // INEQUIVALENT quartic models. At 6_5 and 6_13 the pipeline emits two of them at W={1},
+        // over two different bases, and only one is the published curve. Magma's IsIsomorphic on a
+        // genus-1 CrvHyp separates them, because a CrvHyp carries its degree-2 map -- so a single
+        // expected curve cannot describe that key, whichever of the two is chosen.
+        // ⚠ ORDER IS MEANINGFUL: cex_list[1] is the ORACLE curve, the published one. Any later
+        // entry is a DRIFT alternative -- a model accepted as legitimate but which nothing external
+        // vouches for. The two claims are kept apart below: every produced cover must match SOME
+        // entry, and at least one must match entry 1.
+        if Type(C_ex) eq List then
+            cex_list := C_ex;
+        else
+            cex_list := [* C_ex *];
+        end if;
+        error if #cex_list eq 0,
+            Sprintf("X0^%o(%o) W=%o: cover_data lists an EMPTY set of acceptable curves, so this "
+                    * "key can neither pass nor fail meaningfully.", D, N, Sort(SetToSequence(X`W)));
+        C_ex := cex_list[1];
         P<[x]> := AmbientSpace(C_ex);
+        oracle_matched := false;
         for base in Keys(covers[label]) do
             C := covers[label][base];
             n_curve_cmp +:= 1;
             // Reset PER COMPARISON.  `assigned` would stay true for every later key once the
             // genus-0 branch had run once, so a later genus>0 cover with ws_data would error
             // spuriously.
+            // ⚠ TRY EACH ACCEPTABLE CURVE IN TURN, stopping at the first that matches. `matched_at`
+            // records WHICH one, because that distinction is the whole point: 1 means the cover is
+            // the published curve, anything else means it is an accepted alternative carrying no
+            // external claim. Single-entry keys behave exactly as before.
+            matched_at := 0;
+            for cex_i := 1 to #cex_list do
+                C_ex_i := cex_list[cex_i];
             phi_set := true;
             if manual_isomorphism then
                 if algebra_map then
                     phi := scales;
                 else
-                    phi := map<C -> C_ex | Eltseq(Vector(x)*ChangeRing(scales, Universe(x)))>;
+                    phi := map<C -> C_ex_i | Eltseq(Vector(x)*ChangeRing(scales, Universe(x)))>;
                 end if;
                 is_isom := IsIsomorphism(phi);
-            elif (Type(C) ne CrvHyp) and (Type(C_ex) ne CrvHyp)
-                 and (#DefiningPolynomials(C) eq 2) and (#DefiningPolynomials(C_ex) eq 2) then
+            elif (Type(C) ne CrvHyp) and (Type(C_ex_i) ne CrvHyp)
+                 and (#DefiningPolynomials(C) eq 2) and (#DefiningPolynomials(C_ex_i) eq 2) then
                 // ⚠ CRV PAIR: NEVER call IsIsomorphic here. Its cost tracks PRESENTATION, not
                 // genus -- a genus-7 hyperelliptic curve settles in 0.06 s while the genus-3 CRV
                 // pair at 14_3 runs >50 min and the genus-5 one at 26_3 >1 h (tests/IsoScreen.m).
@@ -77,17 +105,35 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                 // the hyperelliptic y-quotient, require it to carry both sides by constant
                 // squares, then let IsIsomorphism certify the result. Still a PROOF -- an
                 // explicit map is exhibited and checked -- and it runs in hundredths of a second.
-                is_isom, phi := construct_crv_isomorphism(C, C_ex);
-            elif Genus(C) eq 0 and Genus(C_ex) eq 0 then
+                is_isom, phi := construct_crv_isomorphism(C, C_ex_i);
+            elif Genus(C) eq 0 and Genus(C_ex_i) eq 0 then
                 // Conic class, not IsIsomorphic -- see the note at the top of this file.
-                is_isom := genus0_conic_class(C) eq genus0_conic_class(C_ex);
+                is_isom := genus0_conic_class(C) eq genus0_conic_class(C_ex_i);
                 phi_set := false;                      // no map exhibited by this branch
             else
-                is_isom, phi := IsIsomorphic(C, C_ex);
+                is_isom, phi := IsIsomorphic(C, C_ex_i);
             end if;
-            assert is_isom;
+                if is_isom then matched_at := cex_i; break; end if;
+            end for;
+            // ⚠ NOT `assert`: say WHICH key and HOW MANY alternatives were tried, because with a
+            // list the bare assertion cannot distinguish "the curve is wrong" from "the list is
+            // missing the model this base produces".
+            error if matched_at eq 0,
+                Sprintf("X0^%o(%o) W=%o over base %o: the produced cover matches NONE of the %o "
+                        * "acceptable curve(s) listed in cover_data. Entry 1 is the published "
+                        * "curve; any further entries are accepted alternatives. Either the "
+                        * "pipeline now builds a different curve, or this base produces a "
+                        * "legitimate second degree-2 model that is not yet listed.",
+                        D, N, Sort(SetToSequence(X`W)), base, #cex_list);
+            if matched_at eq 1 then oracle_matched := true; end if;
             ws_def, ws_ex := IsDefined(ws_data, X`W);
             if not ws_def then continue; end if;
+            // ⚠ The published involutions act on the PUBLISHED curve, so they are only checked
+            // against a cover that matched entry 1. A cover matching a later entry is a different
+            // quartic model and carries no published involution claim -- checking it against these
+            // matrices would be comparing the wrong objects. The `oracle_matched` guard after this
+            // loop is what stops that from quietly meaning "no involution was ever checked".
+            if matched_at ne 1 then continue; end if;
             // The genus-0 branch above decides by class and produces no map, so an involution check
             // there would read an unassigned phi.  Fail loudly rather than skip silently -- a
             // silently skipped assertion is the failure mode this file's own header warns about.
@@ -146,6 +192,16 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                         * "that no identification matches the involution LABELLING.",
                         D, N, Sort(SetToSequence(X`W)), #Keys(ws_ex), n_iso_tried);
         end for;
+        // ⚠ THE COMPANION GUARD TO THE LIST. Without it a multi-entry key passes when EVERY cover
+        // matched a drift alternative and none matched the published curve -- i.e. the oracle
+        // silently stopped being consulted, which is the exact failure mode this file's header is
+        // about. Only meaningful for lists: a single-entry key that matched at all matched entry 1.
+        error if (#cex_list gt 1) and (not oracle_matched),
+            Sprintf("X0^%o(%o) W=%o: every produced cover matched an ACCEPTED ALTERNATIVE and none "
+                    * "matched the PUBLISHED curve (entry 1 of %o). The test would otherwise pass "
+                    * "having consulted no oracle at all. Either the base that used to produce the "
+                    * "published model stopped doing so, or entry 1 is wrong.",
+                    D, N, Sort(SetToSequence(X`W)), #cex_list);
     end for;
 
     // THE GUARD. Zero curve comparisons means nothing above was verified, however green the run

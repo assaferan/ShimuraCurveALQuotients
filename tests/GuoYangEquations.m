@@ -102,6 +102,17 @@ gy_cases := [*
     // X_0^22(3):  y^2 = -27x^8 - 308x^6 - 2146x^4 - 308x^2 - 27                          [genus 3]
     <22, 3, [Integers()|1], -27*x^8 - 308*x^6 - 2146*x^4 - 308*x^2 - 27>,
 
+    // X_0^69(1):  y^2 = -243x^8 + 1268x^6 - 666x^4 - 2268x^2 - 2187                      [genus 3]
+    // Journal Table A.1, printed page 34; agrees with the arXiv v1 TeX and the PDF text layer.
+    // ⚠ ADDED 2026-09-22, and it closes a REAL HOLE rather than adding redundancy: models_69_1.m
+    // landed 2026-09-14 (`4bfb859`, the ScaleForSchofer w_1 fix), AFTER both X0_* test batches
+    // (2025-11-19 and 2026-09-06/07) and after this table was last extended -- so a base with a
+    // PUBLISHED equation sat validated by nothing but ModelChecks, i.e. structurally only. Nothing
+    // in the repo sweeps for "a model exists but no oracle covers it"; that is how this survived.
+    // ⚠ A bare `grep 69` over this file returns hits (6561, 369, -2268...) and reads like coverage.
+    // The honest query is for the case tuple: grep -E "<\s*69\s*,\s*1\s*,".
+    <69, 1, [Integers()|1], -243*x^8 + 1268*x^6 - 666*x^4 - 2268*x^2 - 2187>,
+
     // X_0^111(1):  y^2 = -(19x^8-44x^7-16x^6+55x^5+37x^4-55x^3-16x^2+44x+19)
     //                     (x^8-3x^5-x^4+3x^3+1)                        [degree 16, genus 7]
     // Recovered 2026-09-07 (20.2 h, default flags, the vx fix). Exact full-curve IsIsomorphic in
@@ -195,6 +206,125 @@ for c in gy_pairs do
     gy_checked +:= 1;
 end for;
 
+// ---- TRANSCRIBED, MODEL NOT YET BUILT ---------------------------------------------------------
+// The three odd-`D` level-1 bases whose runs `earlyoom` reaped on lovelace (2026-09-18). They are
+// Guo-Yang equation bases -- checked against the tables, NOT inherited from `genmodels.m`'s
+// `vx_skip` grouping, which is what produced the false "only 95_1 has an oracle" claim in PLAN.md.
+// (`115_1`/`123_1`, grouped with them by that guard, are NOT in Guo-Yang at all.)
+//
+// The equations are transcribed HERE, ahead of the models, so that the oracle fires the moment a
+// model file lands rather than needing someone to remember this table exists. Until then each is
+// reported as PENDING and contributes no comparison to `gy_checked`.
+//
+// SOURCE: Compositio Math. 153 (2017) 1-40, Table A.1 "Equations of level one (continued)",
+// printed page 35. Read three independent ways on 2026-09-22 -- the journal page visually, the
+// journal PDF's text layer, and the arXiv v1 TeX -- all three agreeing character for character.
+// ⚠ All three WRAP across `\\` with a `\times` continuation line, the exact shape of trap #1 in
+// this file's header: reading only the first math group yields a factor of half the degree and a
+// plausible WRONG curve. Transcribed whole.
+//
+// WHAT MAKES THESE MORE THAN A RE-READ. Each row also publishes its Atkin-Lehner involutions, and
+// an equation must be invariant under its own. That is a check on the TRANSCRIPTION itself which
+// needs no model, so these entries are evidence now and not merely later:
+//   95_1   w_5(x,y)   = (-1/x, y/x^8)  => x^16 f(-1/x) = f(x)   [the "inv" case]
+//   119_1  w_7(x,y)   = (-x, y)        => f(-x) = f(x)          [the "neg" case]
+//   159_1  w_3(x,y)   = (-x, y)        => f(-x) = f(x)
+// Each is negative-controlled below by perturbations chosen to BREAK that symmetry -- and chosen
+// per type, since an even polynomial stays even under `f + 1`, so the obvious uniform control
+// would have been vacuous for two of the three.
+// Genus is cross-checked against the paper's own genus column (95 -> 7, 119 -> 9, 159 -> 9).
+// ⚠ BOTH checks are needed, and neither alone suffices -- worked out against the actual trap.
+// Reading only the first math group (the wrap failure) leaves an EVEN polynomial for 119_1/159_1
+// and a self-reciprocal one for 95_1, so all three truncations PASS the involution check. What
+// kills them is the genus: degree 10 -> genus 4, degree 8 -> genus 3, against a published 9 and 7.
+// Conversely a mistyped middle coefficient keeps the degree and is caught only by the involution.
+//
+// ⚠ This block declares its OWN univariate ring. By this point in the file `x` is a coordinate of
+// the weighted projective space `Pours` declared for the paired presentations above -- an
+// `RngMPolElt` -- so reusing it compiles fine and then dies inside `Coefficient` at run time.
+gyP<gyx> := PolynomialRing(Rationals());
+gy_pend := [*
+    // X_0^95(1):  y^2 = -(x^8+x^7-x^6-4x^5+x^4+4x^3-x^2-x+1)
+    //                    (7x^8+19x^7+21x^6-13x^4+21x^2-19x+7)               [degree 16, genus 7]
+    // ⚠ the second factor has NO x^5 and NO x^3 term -- it is not a typo, it is what makes the
+    // factor w_5-invariant (check: a_j = (-1)^(8-j) a_(8-j) holds only with those two zero).
+    <95, 1, [Integers()|1], 7, "inv",
+      -(gyx^8 + gyx^7 - gyx^6 - 4*gyx^5 + gyx^4 + 4*gyx^3 - gyx^2 - gyx + 1)
+      * (7*gyx^8 + 19*gyx^7 + 21*gyx^6 - 13*gyx^4 + 21*gyx^2 - 19*gyx + 7)>,
+
+    // X_0^119(1):  y^2 = -(7x^10-171x^8+758x^6+3418x^4+4851x^2+2401)
+    //                     (x^10+3x^8+26x^6+278x^4+373x^2+343)               [degree 20, genus 9]
+    <119, 1, [Integers()|1], 9, "neg",
+      -(7*gyx^10 - 171*gyx^8 + 758*gyx^6 + 3418*gyx^4 + 4851*gyx^2 + 2401)
+      * (gyx^10 + 3*gyx^8 + 26*gyx^6 + 278*gyx^4 + 373*gyx^2 + 343)>,
+
+    // X_0^159(1):  y^2 = -(81x^10+207x^8+874x^6-130x^4-11x^2+3)
+    //                     (2187x^10+8389x^8+8878x^6+42x^4-41x^2+1)          [degree 20, genus 9]
+    <159, 1, [Integers()|1], 9, "neg",
+      -(81*gyx^10 + 207*gyx^8 + 874*gyx^6 - 130*gyx^4 - 11*gyx^2 + 3)
+      * (2187*gyx^10 + 8389*gyx^8 + 8878*gyx^6 + 42*gyx^4 - 41*gyx^2 + 1)>
+*];
+
+// f |-> x^deg(f) * f(-1/x), the action of w with x -> -1/x and y -> y/x^(deg f / 2)
+gy_neginv := function(f)
+    gy_d := Degree(f);
+    return &+[ Coefficient(f, gy_d-gy_j) * (-1)^(gy_d-gy_j) * gyx^gy_j : gy_j in [0..gy_d] ];
+end function;
+
+gy_fixes := function(f, ty)
+    if ty eq "neg" then return Evaluate(f, -gyx) eq f; end if;
+    return gy_neginv(f) eq f;
+end function;
+
+gy_pending := 0;
+gy_ctls    := 0;
+for c in gy_pend do
+    gy_D, gy_N, gy_key, gy_gpub, gy_ty, gy_f := Explode(c);
+
+    // (a) the transcription is invariant under the row's own published involution
+    error if not gy_fixes(gy_f, gy_ty),
+        Sprintf("X0^%o(%o): the transcribed equation is NOT invariant under its published "
+                * "Atkin-Lehner involution -- the transcription is wrong", gy_D, gy_N);
+
+    // (b) ...and that check could have failed. Controls are type-specific ON PURPOSE: `f+1`
+    //     leaves an even polynomial even, so it is NOT a control for the "neg" case.
+    gy_ctl := (gy_ty eq "neg") select [gy_f + gyx, gy_f + gyx^3] else [gy_f + 1, gy_f + gyx];
+    for gy_g in gy_ctl do
+        error if gy_fixes(gy_g, gy_ty),
+            Sprintf("X0^%o(%o): a symmetry-breaking perturbation still passes -- the invariance "
+                    * "check is vacuous", gy_D, gy_N);
+        gy_ctls +:= 1;
+    end for;
+
+    // (c) genus matches the paper's own genus column
+    error if Genus(HyperellipticCurve(gy_f)) ne gy_gpub,
+        Sprintf("X0^%o(%o): transcribed equation has genus %o, Guo-Yang's table says %o",
+                gy_D, gy_N, Genus(HyperellipticCurve(gy_f)), gy_gpub);
+
+    // (d) the moment a model exists, compare it -- same comparison as gy_cases above
+    gy_mf := Sprintf("data/models/models_%o_%o.m", gy_D, gy_N);
+    // ⚠ `FileExists`, not `Open` -- `Open` on a missing file RAISES rather than returning false,
+    // which turns "model not built yet" into a red suite. Same idiom as tests/GonzalezRotger.m.
+    if not FileExists(gy_mf) then gy_pending +:= 1; continue; end if;
+    gy_models := eval (Read(gy_mf) cat "\nreturn models;");
+    gy_ok, gy_entry := IsDefined(gy_models, gy_key);
+    error if not gy_ok,
+        Sprintf("X0^%o(%o): model file exists but has no cover key %o", gy_D, gy_N, gy_key);
+    gy_g, gy_fo, gy_h := Explode(gy_entry[1]);
+    error if Type(gy_fo) eq MonStgElt,
+        Sprintf("X0^%o(%o): cover %o is stored as a general CRV, not a hyperelliptic model",
+                gy_D, gy_N, gy_key);
+    gy_Cours := HyperellipticCurve(gy_fo, gy_h);
+    gy_Cgy   := HyperellipticCurve(gy_f);
+    error if Genus(gy_Cours) ne Genus(gy_Cgy),
+        Sprintf("X0^%o(%o) cover %o: our genus %o vs Guo-Yang's %o -- comparing the wrong object",
+                gy_D, gy_N, gy_key, Genus(gy_Cours), Genus(gy_Cgy));
+    error if not IsIsomorphic(gy_Cours, gy_Cgy),
+        Sprintf("X0^%o(%o) cover %o: our model is NOT isomorphic to Guo-Yang's published curve",
+                gy_D, gy_N, gy_key);
+    gy_checked +:= 1;
+end for;
+
 // ---------------------------------------------------------------------------------------------
 // X_0^93(1): compared through the V_4 QUOTIENT DIAGRAM, not the full curve -- and the comparison
 // determines a typo in the published table.
@@ -265,5 +395,11 @@ error if gy93_nref ne 3,
 
 // gy_checked counts COMPARISONS, and 93_1 contributes three of them (two quotients + the conic)
 // for one base -- so report both numbers rather than calling the total a base count.
-printf " ok (%o comparison(s) over 11 base(s); 93_1 is quotient-level, %o alternative readings "
-       * "refuted)\n", gy_checked, gy93_nref;
+// ⚠ The base count is COMPUTED, not written down. It used to be the literal "11", which went
+// stale the moment 69_1 was added (2026-09-22) and would have kept reporting 11 forever -- a
+// count nobody can trust is worse than no count, and this file's whole argument is that you
+// must count the comparisons actually made.
+gy_bases := #gy_cases + #gy_pairs + 1;        // +1 for 93_1, handled in its own block below
+printf " ok (%o comparison(s) over %o base(s); 93_1 is quotient-level, %o alternative readings "
+       * "refuted; %o transcribed base(s) PENDING a model, %o symmetry control(s))\n",
+       gy_checked, gy_bases, gy93_nref, gy_pending, gy_ctls;
