@@ -266,6 +266,113 @@ error if not IsEmpty(sbad),
     Sprintf("Gonzalez-Rotger oracle: %o W=[1,D*N] entry(ies) are NOT split, contradicting "
             * "Lemma 2.1 (the quotient by omega_{D*N} is P^1 over Q): %o", #sbad, sbad);
 
+// ---------------------------------------------------------------------------------------------
+// PART 2b: THE COMPANION QUOTIENT, which is GENUS 1 and whose Jacobian GR PUBLISH.
+//
+// ⚠ WHY THIS EXISTS. PART 2 above checks the quotient by w_m, where m is the involution acting as
+// (x,y) -> (-x,y) on an EVEN quartic: u = x^2 descends and the quotient is a CONIC, compared by its
+// Brauer class. But each of those seven bases has a SECOND quotient reachable the same way, by
+// w_{D*N/m} = w_{D*N} * w_m, via u = x^2 and v = x*y, giving v^2 = u*F(u). That one is GENUS ONE,
+// so it carries strictly more information than a conic class -- and GR publish its Jacobian:
+// p.8's table for N = 1 (the Jac(X_0(D,1)/<u.w>) column) and p.9's for N > 1 (the
+// Jac(X_0(D,N)/<w_{D.N/m}>) column). Seven published values that nothing in this repo was reading.
+//
+// ⚠ THE COMPANION IS w_{D*N/m}, NOT some other involution: w_{D.N}*w_m = w_{D.N.m/gcd(m,D.N)^2},
+// and m | D.N with gcd(m, D.N/m) = 1, so gcd(m, D.N) = m and the product is w_{D.N/m}. Checked
+// against GR's own column headings, which name exactly that quotient.
+//
+// <D, N, companion m' = D*N/m, F(u) (the same F PART 2 uses), Jacobian AS PUBLISHED>
+QT2 := [* <14,1, 7,  -u^2+13*u-128,     "14a1">,    // p.8: D=14 row, Jac(X/<u.w>) = A1
+          <15,1, 5,  -3*u^2-82*u-27,    "15a2">,    // p.8: D=15 row, A2
+          <46,1, 23, -u^2+45*u-512,     "46a1">,    // p.8: D=46 row, A1
+          <6,5,  15, -u^2+61*u-1024,    "30a3">,    // p.9: (6,5)  m=2 -> 30A3
+          <6,7,  14, -3*u^2-34*u-2187,  "42a6">,    // p.9: (6,7)  m=3 -> 42A6
+          <6,13, 39, -u^2-115*u-4096,   "78a1">,    // p.9: (6,13) m=2 -> 78A1
+          <10,3, 15, -2*u^2-11*u-32,    "30a1"> *]; // p.9: (10,3) m=2 -> 30A1
+error if #QT2 ne #QT,
+    Sprintf("GR PART 2b: %o companion row(s) against %o quotient rows -- every even-quartic base has "
+            * "exactly one companion, so these must agree", #QT2, #QT);
+
+// --- self-check: the derived companion must reproduce the PUBLISHED Jacobian, before any model of
+// ours is compared to it. Same discipline as PART 1 and PART 4.
+for t in QT2 do
+    comp := u*(t[4]);
+    got := CremonaReference(jacIJ(comp));
+    error if got ne t[5],
+        Sprintf("GR PART 2b self-check FAILED at %o_%o w_%o: the companion v^2 = u*F(u) has Jacobian "
+                * "%o, but GR publish %o. Either F(u) is mistyped or the companion involution is "
+                * "not w_{D*N/m}.", t[1], t[2], t[3], got, t[5]);
+end for;
+
+// ⚠ TWO COMPANIONS ARE A DIFFERENT TORSOR, and that is expected rather than a defect -- the same
+// phenomenon as NO_EXHIBITED_ISO in PART 1. Their Jacobians agree with the publication; what
+// differs is WHICH degree-2 model of that curve the pipeline stored. Recorded so a NEW one is
+// noticed instead of absorbed.
+NO_EXHIBITED_COMPANION := { <6,5,15>, <6,7,14> };
+
+NC := 0; NCPROOF := 0; cbad := []; cdrift := [];
+for t in QT2 do
+    D := t[1]; N := t[2]; mm := t[3]; comp := P!(u*(t[4]));
+    fn := Sprintf("data/models/models_%o_%o.m", D, N);
+    if not FileExists(fn) then continue; end if;
+    models := eval (Read(fn) cat "\nreturn models;");
+    key := Sort([Integers()|1, mm]);
+    if (not IsDefined(models,key)) or #models[key] eq 0 then continue; end if;
+    proved := false;
+    for i->e in models[key] do
+        if Type(e[2]) eq MonStgElt then continue; end if;
+        // ⚠ GENUS GUARD, and a negative control is what put it here. The companion is GENUS ONE by
+        // construction. Pointing this row at the wrong involution lands on a genus-0 conic entry,
+        // whose quartic invariants describe a SINGULAR curve, and jacIJ then dies inside Magma with
+        // "Curve is singular" -- red, but pointing at EllipticCurve rather than at the mistyped row.
+        // Skipping non-genus-1 entries lets the count guard below deliver that diagnosis instead.
+        if e[1] ne 1 then continue; end if;
+        fo := e[2];
+        if e[3] ne 0 then fo := fo + e[3]^2/4; end if;
+        if Degree(fo) gt 4 then continue; end if;
+        NC +:= 1;
+        // ⚠ CONDUCTOR BEFORE CremonaReference -- THE SAME DEFECT AS PART 4'S, AND IT RECURRED HERE
+        // BECAUSE I WROTE NEW CODE WITHOUT APPLYING THE EARLIER LESSON. A wrong model throws the
+        // Jacobian's conductor far outside Cremona's database range, so asking for its label first
+        // dies inside Magma with "Conductor is outside the database range" -- red, but pointing at
+        // the elliptic-curve database rather than at the base and key that disagree. Comparing
+        // conductors first turns the commonest real failure into a message that names the entry.
+        Eo := jacIJ(fo);
+        Ec := jacIJ(comp);
+        if Conductor(Eo) ne Conductor(Ec) then
+            Append(~cbad, Sprintf("%o_%o W=[1,%o] entry %o: Jacobian has conductor %o, but the "
+                                  * "published companion %o has conductor %o",
+                                  D, N, mm, i, Conductor(Eo), t[5], Conductor(Ec)));
+            continue;
+        end if;
+        ours := CremonaReference(Eo);
+        if ours ne t[5] then
+            Append(~cbad, Sprintf("%o_%o W=[1,%o] entry %o (ours %o, GR publish %o)",
+                                  D, N, mm, i, ours, t[5]));
+            continue;
+        end if;
+        p := exhibit_iso(fo, comp);
+        if p then NCPROOF +:= 1; proved := true; end if;
+    end for;
+    if (not proved) and (<D,N,mm> notin NO_EXHIBITED_COMPANION) then
+        Append(~cdrift, Sprintf("%o_%o W=[1,%o]: Jacobian matches the published %o, but no entry "
+                                * "could be proved isomorphic to the derived companion v^2 = u*F(u) "
+                                * "(unproved, NOT disproved -- a second degree-2 class gives an "
+                                * "inequivalent model of the same curve)", D, N, mm, t[5]));
+    end if;
+end for;
+error if not IsEmpty(cbad),
+    Sprintf("Gonzalez-Rotger companion oracle: %o quotient(s) DISAGREE with the PUBLISHED Jacobian: "
+            * "%o", #cbad, cbad);
+error if not IsEmpty(cdrift),
+    Sprintf("Gonzalez-Rotger companion oracle: %o quotient(s) newly unprovable against the derived "
+            * "companion: %o", #cdrift, cdrift);
+// ⚠ Count, as everywhere else here: seven bases all have this key, so a drop means something
+// stopped being compared rather than that the data changed.
+error if NC lt 7,
+    Sprintf("Gonzalez-Rotger companion oracle: only %o comparison(s), expected at least 7 -- a "
+            * "committed model or a W=[1,D*N/m] key stopped being found", NC);
+
 error if NQ lt 15 or NS lt 19,
     Sprintf("Gonzalez-Rotger oracle: only %o quotient and %o splitness comparison(s) "
             * "(expected >= 15 and >= 19) -- something stopped being compared", NQ, NS);
@@ -445,7 +552,8 @@ error if NFN lt 2,
             * "compared", NFN);
 
 printf " ok (%o genus-one entr(ies) checked, %o of them by an EXHIBITED isomorphism; "
-       * "+ %o AL-quotient(s) + %o splitness check(s) match the published equations; "
+       * "+ %o AL-quotient(s) + %o companion(s) vs the PUBLISHED Jacobian (%o by exhibited iso) "
+       * "+ %o splitness check(s) match the published equations; "
        * "%o base(s) without a usable W=[1] model.  Table 2: %o of 17 quotient(s) checked, all by "
        * "an exhibited isomorphism, %o row(s) not yet built.  footnote 2: %o of 3 checked)\n",
-       NCMP, NPROOF, NQ, NS, NMISS, N2, N2MISS, NFN;
+       NCMP, NPROOF, NQ, NC, NCPROOF, NS, NMISS, N2, N2MISS, NFN;
