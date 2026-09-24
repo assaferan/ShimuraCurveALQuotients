@@ -23,9 +23,32 @@
 // rows (MatchFixedPointOrbits, a multiset check).  The a_p matching is redundant: the fields alone
 // decide the pairing (see the note in CheckBiellipticCandidate); it is kept as a cross-check.
 //
+// Which involution is Atkin-Lehner.  All of the above assumes that the residual AL group acts on
+// the model through V_4 = <sigma, iota>.  The AL involutions are defined over Q, so they lie in
+// Aut_Q(C); when the reduced automorphism group Aut(C)/<iota> is just C_2 there is no other
+// choice.  When it is larger there are other bielliptic involutions and the AL ones need not be
+// x -> -x in the given model.  ModelInvolutionCheck decides, per candidate, whether the choice
+// matters:
+//   * geometric automorphism group of order 4 (reduced group C_2), from the Igusa invariants
+//     (GeometricAutomorphismGroupFromIgusaInvariants, i.e. the Cardona-Quer classification;
+//     cross-checked against GeometricAutomorphismGroup)                        -> trusted;
+//   * otherwise, compute Aut_Q(C) (AutomorphismGroup over Q).  If every Klein four-subgroup of
+//     Aut_Q(C) containing iota is conjugate in Aut_Q(C) to <sigma, iota> (in particular if
+//     #Aut_Q(C) = 4), then any AL V_4 is carried to <sigma, iota> by an automorphism of C over Q,
+//     which preserves the fields of fixed points and the elliptic quotients    -> trusted;
+//   * otherwise                                                                -> NOT trusted.
+// For a candidate whose model is not trusted, only the involution-independent checks may exclude
+// it: the isogeny class (a_p) and the Weierstrass points (iota is unique).  A fixed-point
+// contradiction for sigma / sigma*iota is reported but does not exclude the candidate.  (A
+// fixed-point MATCH never needs this: "consistent" only means "not excluded".)  Over the whole of
+// data/bielliptic_candidates.m exactly one attempted (squarefree-N) candidate has a geometric
+// group larger than V_4: X_0(14,15)/<w_7,w_30>, candidate 2, Aut_Q = Aut_geom = D_12 = C_2 x S_3,
+// whose three Klein subgroups containing iota are conjugate -- so it is trusted and no verdict
+// changed when this check was added (2026-09-24).
+//
 // Scope: N squarefree (the field-of-definition theory is only implemented there).
 //
-// Worked out first for X_0(34,3)/w_102 in verify_al_fixed_fields.m; candidate 1 of that entry
+// Worked example, X_0(34,3)/w_102 (tests/BiellipticModelCheck.m [4]): candidate 1 of that entry
 // has the right a_p at all primes yet needs fixed points over Q(sqrt(-222)) and Q(sqrt(-74)),
 // ramified at 37 -- impossible for CM points of a curve of level 34*3.
 
@@ -42,6 +65,9 @@ VerdictRF := recformat< D : RngIntElt, N : RngIntElt, Wgens : SetEnum, W : SetEn
                                                   // not attempted | error
                         Consistent : SeqEnum,     // indices of the consistent candidates
                         IsogenyClass : SeqEnum,   // per candidate: a_p agree with the trace formula
+                        Untrusted : SeqEnum,      // candidates whose AL involutions need not be
+                                                  // x -> -x (ModelInvolutionCheck); not excluded
+                                                  // by fixed-point fields alone
                         Report : MonStgElt >;
 
 // ---------------------------------------------------------------- small helpers
@@ -162,6 +188,8 @@ intrinsic ExpectedALFixedPointData(X::ShimuraQuot : Fast := true) -> List
             c := Integers()!c;
             total +:= c;
             vprintf BiellipticModelCheck, 2 : "  class %o: disc %o, %o fixed point(s) on C; computing fields...\n", cl, d, c;
+            // Fast := false selects FieldsOfDefinitionOfCMPoint, which is DEPRECATED (kept only as
+            // a test cross-check, slated for removal); use the default Fast := true.
             fs := Fast select FieldsOfDefinitionOfCMPointFast(X, d) else FieldsOfDefinitionOfCMPoint(X, d);
             Append(~rows, <d, c, fs>);
         end for;
@@ -170,6 +198,49 @@ intrinsic ExpectedALFixedPointData(X::ShimuraQuot : Fast := true) -> List
                                      NumFixed := nfix, Rows := rows >);
     end for;
     return out;
+end intrinsic;
+
+// ---------------------------------------------------------------- which involution is AL
+
+intrinsic ModelInvolutionCheck(f::RngUPolElt) -> BoolElt, MonStgElt
+{For an even sextic f over Q: true iff every Klein four-subgroup of Aut_Q(y^2 = f) containing the
+ hyperelliptic involution iota is conjugate in Aut_Q to <iota, sigma>, sigma : x -> -x -- so that,
+ whichever V_4 of rational automorphisms the Atkin-Lehner group is, the fixed-point data read off
+ from sigma and sigma*iota are the right ones.  True in particular when the geometric automorphism
+ group has order 4 (reduced group C_2).  Second value: a one-line description.}
+    require Degree(f) eq 6 and &and[Coefficient(f, i) eq 0 : i in [1, 3, 5]] : "f must be an even sextic";
+    C := HyperellipticCurve(f);
+    require Genus(C) eq 2 : "f does not define a genus-2 curve";
+    // geometric group: Cardona-Quer classification from the Igusa invariants, cross-checked
+    G := GeometricAutomorphismGroupFromIgusaInvariants(IgusaInvariants(C));
+    require #G eq #GeometricAutomorphismGroup(C) :
+        "GeometricAutomorphismGroupFromIgusaInvariants and GeometricAutomorphismGroup disagree";
+    if #G eq 4 then
+        return true, "geometric automorphism group <4,2> = V_4 (reduced group C_2)";
+    end if;
+    A, m := AutomorphismGroup(C);        // automorphisms defined over Q
+    require #G mod #A eq 0 : "Aut_Q does not divide the geometric automorphism group";
+    // the Moebius action on x = X/Z of an automorphism (X : Y : Z) -> (aX + bZ : * : cX + dZ)
+    R := CoordinateRing(Ambient(C));
+    function mobius(g)
+        e := DefiningEquations(m(g));
+        return [MonomialCoefficient(e[1], R.1), MonomialCoefficient(e[1], R.3),
+                MonomialCoefficient(e[3], R.1), MonomialCoefficient(e[3], R.3)];
+    end function;
+    diag := [g : g in A | mb[2] eq 0 and mb[3] eq 0 where mb := mobius(g)];
+    iotas := [g : g in diag | g ne Id(A) and mb[1] eq mb[4] where mb := mobius(g)];
+    sigmas := [g : g in diag | mb[1] eq -mb[4] where mb := mobius(g)];
+    require #iotas eq 1 and #sigmas eq 2 : "could not locate iota and x -> -x in Aut_Q";
+    iota := iotas[1];
+    K0 := sub< A | iota, sigmas[1] >;
+    require #K0 eq 4 and not IsCyclic(K0) : "<iota, sigma> is not a Klein four-group";
+    // Subgroups returns conjugacy-class representatives; iota is central, so "contains iota" is a
+    // property of the class
+    classes := [K`subgroup : K in Subgroups(A : OrderEqual := 4) | not IsCyclic(K`subgroup) and iota in K`subgroup];
+    ok := #classes eq 1;
+    assert ok eq &and[IsConjugate(A, K, K0) : K in classes];
+    return ok, Sprintf("geometric automorphism group %o, Aut_Q %o: %o conjugacy class(es) of Klein four-subgroups containing iota",
+                       IdentifyGroup(G), IdentifyGroup(A), #classes);
 end intrinsic;
 
 // ---------------------------------------------------------------- the comparison
@@ -197,10 +268,15 @@ intrinsic MatchFixedPointOrbits(observed::List, expected::List) -> BoolElt
     return go(1, remaining);
 end intrinsic;
 
-intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List : NumPrimes := 12) -> BoolElt, MonStgElt, BoolElt
+intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List : NumPrimes := 12,
+                                   AssumeUntrusted := false) -> BoolElt, MonStgElt, BoolElt, BoolElt
 {Test the candidate model y^2 = f (an even sextic) of the genus-2 quotient X against the predicted
- AL fixed-point data (from ExpectedALFixedPointData).  Returns: consistent?, a human-readable
- report, and whether the a_p of the model agree with the trace formula (isogeny class check).}
+ AL fixed-point data (from ExpectedALFixedPointData).  Returns: consistent? (i.e. NOT excluded), a
+ human-readable report, whether the a_p of the model agree with the trace formula (isogeny class
+ check), and whether the model's AL involutions are known to be x -> -x and its composite with iota
+ (ModelInvolutionCheck).  When they are not, a fixed-point contradiction for sigma or sigma*iota
+ does not exclude the candidate; only the a_p and the Weierstrass points can.  AssumeUntrusted
+ (for testing) treats the model as untrusted whatever ModelInvolutionCheck says.}
     D := X`D; N := X`N; DN := D*N;
     require X`g eq 2 : "the quotient must have genus 2";
     require Degree(f) eq 6 and &and[Coefficient(f, i) eq 0 : i in [1, 3, 5]] : "candidate must be an even sextic";
@@ -209,6 +285,13 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
     require Genus(Cv) eq 2 : "candidate has the wrong genus";
 
     rep := Sprintf("y^2 = %o\n", f);
+    trusted, autdesc := ModelInvolutionCheck(f);
+    if AssumeUntrusted then
+        trusted := false; autdesc cat:= " [overridden: AssumeUntrusted]";
+    end if;
+    rep cat:= Sprintf("  automorphisms: %o -> AL involutions %o\n", autdesc,
+                      trusted select "are sigma, sigma*iota (trusted)"
+                              else "NEED NOT be sigma, sigma*iota (UNTRUSTED: fixed-point fields of sigma, sigma*iota cannot exclude)");
     ps := good_primes(f, DN, NumPrimes);
 
     // isogeny class: a_p of the model vs the trace formula
@@ -218,7 +301,7 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
     rep cat:= Sprintf("  a_p match the trace formula at p in %o: %o\n", ps, isog);
     if not isog then
         rep cat:= "  *** CONTRADICTION: wrong isogeny class ***\n";
-        return false, rep, false;
+        return false, rep, false, trusted;
     end if;
 
     g0 := [r : r in expected | r`QuotientGenus eq 0];
@@ -251,12 +334,6 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
     else
         matchings := [[j1, j2] : j1 in idx[1], j2 in idx[2] | j1 ne j2];
     end if;
-    if #matchings eq 0 then
-        rep cat:= Sprintf("  *** CONTRADICTION: no bielliptic involution of the model has the a_p of the genus-1 quotient(s) %o ***\n",
-                          [r`Class : r in g1]);
-        return false, rep, isog;
-    end if;
-
     function class_name(cl)
         return "{" cat Join([Sprintf("w_%o", m) : m in cl], ",") cat "}";
     end function;
@@ -264,7 +341,23 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
         return Join([Sprintf("%o x disc %o: %o", r[2], r[1], [fldname(F) : F in r[3]]) : r in rows], "; ");
     end function;
 
-    consistent := false;
+    // iota is the unique hyperelliptic involution, so this check does not depend on which V_4
+    iota_ok := true;
+    if #g0 eq 1 then
+        r := g0[1];
+        iota_ok := MatchFixedPointOrbits(iota_orbits, r`Rows);
+        rep cat:= Sprintf("  iota       (x,y)->( x,-y) -> AL coset %o (hyperelliptic, quotient genus 0)\n", class_name(r`Class));
+        rep cat:= Sprintf("        Weierstrass points    : %o\n", [fldname(F) : F in iota_orbits]);
+        rep cat:= Sprintf("        fixed points expected : %o\n", rows_name(r`Rows));
+        rep cat:= Sprintf("        %o\n", iota_ok select "MATCH" else "*** CONTRADICTION ***");
+    end if;
+
+    // sigma / sigma*iota: these depend on the model's V_4 being the AL one
+    fixed_ok := false;
+    if #matchings eq 0 then
+        rep cat:= Sprintf("  *** CONTRADICTION: no bielliptic involution of the model has the a_p of the genus-1 quotient(s) %o ***\n",
+                          [r`Class : r in g1]);
+    end if;
     for a in matchings do
         rep cat:= (#matchings gt 1) select Sprintf("  -- matching %o --\n", a) else "";
         allok := true;
@@ -277,23 +370,18 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
             rep cat:= Sprintf("        fixed points expected : %o\n", rows_name(r`Rows));
             rep cat:= Sprintf("        %o\n", ok select "MATCH" else "*** CONTRADICTION ***");
         end for;
-        if #g0 eq 1 then
-            r := g0[1];
-            ok := MatchFixedPointOrbits(iota_orbits, r`Rows);
-            allok and:= ok;
-            rep cat:= Sprintf("  iota       (x,y)->( x,-y) -> AL coset %o (hyperelliptic, quotient genus 0)\n", class_name(r`Class));
-            rep cat:= Sprintf("        Weierstrass points    : %o\n", [fldname(F) : F in iota_orbits]);
-            rep cat:= Sprintf("        fixed points expected : %o\n", rows_name(r`Rows));
-            rep cat:= Sprintf("        %o\n", ok select "MATCH" else "*** CONTRADICTION ***");
-        end if;
-        consistent or:= allok;
+        fixed_ok or:= allok;
     end for;
+    consistent := iota_ok and (fixed_ok or not trusted);
+    if iota_ok and not fixed_ok and not trusted then
+        rep cat:= "  (sigma / sigma*iota contradicted, but the model is UNTRUSTED: candidate NOT excluded)\n";
+    end if;
     // the third involution of V_4 is not an AL involution when the residual group has order 2
     if #expected eq 1 then
         rep cat:= "  (residual AL group of order 2: only one involution of the model is Atkin-Lehner)\n";
     end if;
-    rep cat:= Sprintf("  VERDICT: %o\n", consistent select "CONSISTENT" else "CONTRADICTED");
-    return consistent, rep, isog;
+    rep cat:= Sprintf("  VERDICT: %o\n", consistent select (fixed_ok select "CONSISTENT" else "NOT EXCLUDED (untrusted model)") else "CONTRADICTED");
+    return consistent, rep, isog, trusted;
 end intrinsic;
 
 // ---------------------------------------------------------------- entries of the candidate file
@@ -314,13 +402,16 @@ intrinsic ReadBiellipticCandidates(fname::MonStgElt) -> List
     return eval ("_<x> := PolynomialRing(Rationals()); return " cat body cat ";");
 end intrinsic;
 
-intrinsic CheckBiellipticEntry(e::List : NumPrimes := 12, Fast := true) -> Rec
+intrinsic CheckBiellipticEntry(e::List : NumPrimes := 12, Fast := true, AssumeUntrusted := false) -> Rec
 {Decide an entry [* D, N, W (generating set), [candidate even sextics] *] of the candidate file.
  Returns a record with Status one of "determined" (exactly one consistent candidate), "ambiguous",
  "none consistent", "not attempted" (N not squarefree) or "error", the indices of the consistent
- candidates, per-candidate isogeny-class flags, and a full report.}
+ (= not excluded) candidates, per-candidate isogeny-class flags, the indices of the candidates whose
+ model is untrusted (ModelInvolutionCheck; such a candidate is never excluded by the sigma /
+ sigma*iota fixed-point fields alone), and a full report.  AssumeUntrusted is passed through to
+ CheckBiellipticCandidate (testing only).}
     D := e[1]; N := e[2]; gens := e[3]; cands := e[4];
-    v := rec< VerdictRF | D := D, N := N, Wgens := gens, Consistent := [], IsogenyClass := [] >;
+    v := rec< VerdictRF | D := D, N := N, Wgens := gens, Consistent := [], IsogenyClass := [], Untrusted := [] >;
     if not IsSquarefree(N) then
         v`Status := "not attempted";
         v`Report := Sprintf("X_0(%o,%o)/<%o>: N = %o is not squarefree; field-of-definition theory not implemented\n", D, N, gens, N);
@@ -342,14 +433,17 @@ intrinsic CheckBiellipticEntry(e::List : NumPrimes := 12, Fast := true) -> Rec
         end for;
         for i->f in cands do
             vprintf BiellipticModelCheck, 1 : "  candidate %o/%o\n", i, #cands;
-            ok, crep, isog := CheckBiellipticCandidate(X, f, expected : NumPrimes := NumPrimes);
+            ok, crep, isog, trusted := CheckBiellipticCandidate(X, f, expected : NumPrimes := NumPrimes,
+                                                                AssumeUntrusted := AssumeUntrusted);
             rep cat:= Sprintf("-- candidate %o --\n%o", i, crep);
             Append(~v`IsogenyClass, isog);
+            if not trusted then Append(~v`Untrusted, i); end if;
             if ok then Append(~v`Consistent, i); end if;
         end for;
         v`Status := #v`Consistent eq 1 select "determined" else
                     (#v`Consistent eq 0 select "none consistent" else "ambiguous");
-        rep cat:= Sprintf("==> %o: consistent candidates %o\n", v`Status, v`Consistent);
+        rep cat:= Sprintf("==> %o: consistent candidates %o%o\n", v`Status, v`Consistent,
+                          #v`Untrusted eq 0 select "" else Sprintf(" (untrusted models, not excludable by sigma fields: %o)", v`Untrusted));
         v`Report := rep;
     catch err
         v`Status := "error";
