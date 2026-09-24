@@ -29,8 +29,9 @@
 // DegreeOfFieldOfDefinitionOfCMPoint equals the common absolute degree of those fields.
 //
 // PIN entry  <D, N, W, d, fields, deg>
-//   fields : one coefficient list (constant term first) per field, of Polredabs of a defining
-//            polynomial of its absolute field; [0, 1] is Q.  [] means NO CM point by the order of
+//   fields : one coefficient list (constant term first) per field, of a defining polynomial of
+//            its absolute field (Polredabs-reduced when first pinned; the test compares up to
+//            isomorphism, so any defining polynomial is valid); [0, 1] is Q.  [] means NO CM point by the order of
 //            discriminant d on the quotient (an existence-test verdict, pinned deliberately).
 //   deg    : DegreeOfFieldOfDefinitionOfCMPoint(X, d); 0 for no CM point.
 //

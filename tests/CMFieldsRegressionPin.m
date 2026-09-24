@@ -57,7 +57,7 @@ procedure test_CMFieldsRegressionPin(PIN, PIN_CURVES, PIN_DISCS, PIN_EXCLUDED)
         got_deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
         if not same or got_deg ne deg then
             Append(~failures, Sprintf("(%o, %o, %o) d = %o: pinned %o of degree %o, now %o of degree %o",
-                D, N, W, d, flds, deg, [Type(F) eq FldRat select [0, 1] else Coefficients(Polredabs(DefiningPolynomial(F))) : F in got], got_deg));
+                D, N, W, d, flds, deg, [Type(F) eq FldRat select [0, 1] else Coefficients(DefiningPolynomial(AbsoluteField(F))) : F in got], got_deg));
         end if;
         checked +:= 1;
     end for;

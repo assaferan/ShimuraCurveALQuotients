@@ -33,6 +33,7 @@ if not assigned out then
     exit 1;
 end if;
 if not assigned pin then pin := "data/cm_fields_pin.m"; end if;
+SetColumns(0);   // no line wrapping in the written file; do not rely on a local .magmarc
 AttachSpec("ShimuraQuotients.spec");
 
 src := Read(pin);
@@ -40,19 +41,35 @@ PIN_CURVES   := eval (src cat "\nreturn PIN_CURVES;");
 PIN_DISCS    := eval (src cat "\nreturn PIN_DISCS;");
 PIN_EXCLUDED := eval (src cat "\nreturn PIN_EXCLUDED;");
 excluded := {<e[1], e[2], e[3], e[4]> : e in PIN_EXCLUDED};
+PIN          := eval (src cat "\nreturn PIN;");
+committed := AssociativeArray();
+for e in PIN do committed[<e[1], e[2], e[3], e[4]>] := e[5]; end for;
 
-// Canonical, version-independent description of a list of fields: the sorted set of
-// coefficient lists of Polredabs of their absolute defining polynomials; [0, 1] is Q.
-canon := function(Fs)
+// Description of a list of fields as a sorted set of coefficient lists of absolute defining
+// polynomials; [0, 1] is Q.  Built-in Magma only -- CI's Magma has no Polredabs (that comes from
+// a locally attached package).  So that a diff shows only REAL changes, a field isomorphic to one
+// of the committed entry's fields (refs) is written with the committed polynomial; a genuinely new
+// field is written as DefiningPolynomial(OptimizedRepresentation(.)).
+nf := func<c | c eq [0, 1] select Rationals() else NumberField(Polynomial(Rationals(), c))>;
+iso := func<F, G | AbsoluteDegree(F) eq AbsoluteDegree(G) and
+                   (AbsoluteDegree(F) eq 1 or IsIsomorphic(AbsoluteField(F), AbsoluteField(G)))>;
+canon := function(Fs, refs)
     S := {};
     for F in Fs do
         if Type(F) eq FldRat or AbsoluteDegree(F) eq 1 then
-            Include(~S, [0, 1]);
+            Include(~S, [0, 1]); continue;
+        end if;
+        if exists(c){c : c in refs | iso(nf(c), F)} then
+            Include(~S, c);
         else
-            Include(~S, Coefficients(Polredabs(DefiningPolynomial(AbsoluteField(F)))));
+            Include(~S, Coefficients(DefiningPolynomial(OptimizedRepresentation(AbsoluteField(F)))));
         end if;
     end for;
     return Sort(Setseq(S));
+end function;
+// equal as sets up to isomorphism
+same_fields := function(A, B)
+    return &and[exists{G : G in B | iso(F, G)} : F in A] and &and[exists{F : F in A | iso(F, G)} : G in B];
 end function;
 // Format exactly as data/cm_fields_pin.m (no Magma line wrapping).
 seqstr := func<s | "[" cat Join([Sprint(x) : x in s], ", ") cat "]">;
@@ -67,20 +84,22 @@ for c in PIN_CURVES do
     for d in PIN_DISCS do
         if <D, N, W, d> in excluded then continue; end if;
         key := Sprintf("%o, %o, %o, %o", D, N, seqstr(W), d);
+        refs := IsDefined(committed, <D, N, W, d>) select committed[<D, N, W, d>] else [];
         try
-            slow := canon(FieldsOfDefinitionOfCMPoint(X, d));
+            slowF := FieldsOfDefinitionOfCMPoint(X, d);
         catch e
             printf "INCONSISTENT <%o>: slow raised %o\n", key, e`Object; bad +:= 1; continue;
         end try;
         try
-            fast := canon(FieldsOfDefinitionOfCMPointFast(X, d));
+            fastF := FieldsOfDefinitionOfCMPointFast(X, d);
         catch e
             printf "INCONSISTENT <%o>: fast raised %o\n", key, e`Object; bad +:= 1; continue;
         end try;
         deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
+        fast := canon(fastF, refs);
         degs := {#p - 1 : p in fast};
-        if slow ne fast then
-            printf "INCONSISTENT <%o>: slow %o fast %o\n", key, slow, fast; bad +:= 1; continue;
+        if not same_fields(slowF, fastF) then
+            printf "INCONSISTENT <%o>: slow %o fast %o\n", key, canon(slowF, refs), fast; bad +:= 1; continue;
         end if;
         if degs ne (deg eq 0 select {} else {deg}) then
             printf "INCONSISTENT <%o>: degree function %o, field degrees %o\n", key, deg, degs;
