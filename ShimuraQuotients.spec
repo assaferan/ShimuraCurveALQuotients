@@ -14,6 +14,7 @@ workingcode.m
 automorphisms.m
 LogSum.m
 ModularNonALInvolutions.m
+V5Operator.m
 QuaternionLatticeData.m
 RationalWithFactorization.m
 TraceFormula.m
