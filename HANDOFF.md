@@ -257,7 +257,7 @@ bases with no coverage at all:
     22_7   12 -> 14 covers   clean (2 keys produced that the file does not record)
     26_5   11 -> 12 covers   ⚠ SHORT at [1,26] (committed 2, produced 1)
     6_23   14 -> 14 covers   clean
-    6_71   still running at 3.5 h -- the ONE base still unmeasured
+    6_71   13 -> 13 covers   clean  (returned after 5 h 40 m)
 
 ⇒ **`26_5` is a THIRD affected base**, alongside `10_3` and `6_13`. All three are `N>1`, all short at
 a genus-1 quotient key — and **`PTSCOPRIME=1` restores all three** (`26_5` confirmed 2026-09-24: the
@@ -269,6 +269,52 @@ independently: runs reached 56 and 57 files and both were killed by macOS for me
 exactly `X0_206_1.m`, 0 failures up to that point. Recorded in `CLAUDE.md`. ⇒ **the local suite is a
 ~3-hour way to learn nothing past the `X0_1*` range**; use `target:=`/`filename:=`, or run it on
 **lava**, where the offline tests already go. The second kill also took the sweep down with it.
+
+### ✅ ROOT-CAUSED AND FIXED — and it is ANCHOR ORDER, not arithmetic (`fix/cm-pool-anchor-ordering`)
+
+**Sweep complete: the blast radius is exactly THREE bases** (`10_3`, `6_13`, `26_5`), with `6_5`,
+`6_7`, `22_7`, `6_23`, `6_71` clean, and every base holding a passing `X0_` test proven clean for
+free by the helper's second pass.
+
+**The mechanism.** `pts` does not merely supply candidates — it fixes the ORDER in which the
+`(infty, P, Q)` sweep tries anchors, and that sweep takes the **first** triple that yields every
+form it needs. So enlarging the pool handed `infty` to a point that had not previously been a
+candidate, which **re-normalised the hauptmodul** and changed which covers come out:
+
+    10_3   infty  -35 -> -120   (newly admitted)      26_5   infty  -11 -> -20   (newly admitted)
+    6_5    infty   -4 ->   -4   never displaced  =>  clean
+
+**The fix** sorts the pool coprime-to-`N` first, *stably*. Nothing is removed, only reordered, so
+the anchor search meets exactly the points it met before the pool grew while every newly admitted
+point stays available as `P`/`Q`, in the `wdef` target span and in the `#pts ge 3` bar. Measured at
+`10_3`: pool stays **7** (`PTSCOPRIME=1` gives 3) and 61 triples remain reachable — **not** a
+disguised revert. `15_2` and `21_2`, which have only 2 coprime points and so must reach the
+non-coprime ones through the `#pts<3` fallback, still pass.
+
+    affected, restored        controls, unchanged
+    10_3   23/26 -> 26/26     6_5   23/23   22_7  12/14   6_23  14/14
+    6_13   24/27 -> 27/27     15_2  18/18   21_2  15/15
+    26_5   11/12 -> 11/13
+
+**⚠⚠ THE VALUES ARE CORRECT — CHECKED, NOT ASSUMED, and this was the load-bearing check.** Had the
+newly admitted points carried wrong values, reordering would have MASKED a defect instead of fixing
+one. New hand-run tool `tests/_crossnorm.m` dumps the hauptmodul's value at every CM point in the
+Schofer table; run in both trees, ONE Möbius map fitted on three discriminants reproduces all four
+remaining values exactly — `-20 -> 32/5`, `-35 -> 8/35`, `-123 -> -8/41`, `-132 -> 2`. ⇒ both runs
+compute the **same** hauptmodul, differently normalised, including at the `j = 0` elliptic point
+`d = -3` whose order-6 unit group made it the likeliest place for a multiplicity error.
+⚠ **The obvious form of that test is VACUOUS and the first draft was**: any two hauptmoduls of a
+genus-0 curve are Möbius-related *by definition*, and the three shared anchors determine the map
+exactly. It bites only because the Schofer table carries seven discriminants where the map needs
+three — fit on three, and the rest are genuine checks.
+
+⚠ **Why `0ca6e37`'s own validation missed it**: it was measured against the 16 `N>1` bases that HAVE
+an `X0_` re-derivation test, and all three affected bases are ones that did not. The same shape as
+everything else this session — the gap sits where nothing was looking.
+
+⇒ Branch `fix/cm-pool-anchor-ordering` (`052e3c1`) is pushed and ready for a PR. **After merging,
+re-run the two held tests (`X0_10_3`, `X0_6_13`) against merged `main` and commit them if green —
+measure, do not assume.**
 
 ### ⇒⇒ CAUSE FOUND: `0ca6e37` LOSES COVERS. It is a regression, not a stale file.
 

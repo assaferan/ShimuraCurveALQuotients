@@ -382,15 +382,43 @@ are in `HANDOFF.md` 2026-09-23.)
        6_5     23 of 23     --             clean (control)
        22_7    12 of 12     --             clean   (plus 2 keys the file does not record)
        6_23    14 of 14     --             clean
-       6_71    still running at 3.5 h -- the ONE base still unmeasured
+       6_71    13 of 13     --             clean
 
    **How the sweep was scoped, because the cheap part did most of the work:** 76 `N>1` bases have
    committed models; only **26** have any key with >= 2 entries (a free, file-level filter); and the
    helper's SECOND pass tests this exact shortfall on EVERY committed key, with no test disabling
    `model_covers`. ⇒ **every base whose `X0_` test passes is already proven clean**, which left just
    four bases needing a manual run. Do not re-sweep the rest by hand.
-   ⚠ All three affected bases are `N>1` and short at a **genus-1 quotient key**. `6_5`, `6_7`, `22_7`
-   and `6_23` are `N>1` too and are clean, so it is not simply "all `N>1`".
+   ⚠ All three affected bases are `N>1` and short at a **genus-1 quotient key**. `6_5`, `6_7`, `22_7`,
+   `6_23` and `6_71` are `N>1` too and are clean, so it is not simply "all `N>1`".
+   ⇒ **SWEEP COMPLETE 2026-09-24. The blast radius is exactly THREE bases.**
+
+   ✅⇒ **ROOT-CAUSED AND FIXED — on branch `fix/cm-pool-anchor-ordering` (`052e3c1`, pushed), ready
+   for a PR.** The cause is not arithmetic: `pts` also fixes the ORDER in which the `(infty, P, Q)`
+   sweep tries anchors, and that sweep takes the FIRST workable triple. Enlarging the pool handed
+   the `infty` anchor to a newly admitted point (`10_3` `-35 -> -120`; `26_5` `-11 -> -20`), which
+   RE-NORMALISED the hauptmodul and changed which covers come out. `6_5`'s anchor is never
+   displaced, which is exactly why it stays clean.
+   The fix sorts the pool coprime-to-`N` FIRST, stably -- nothing removed, only reordered -- so the
+   anchor reverts while every newly admitted point stays available for `P`/`Q`, for the `wdef`
+   target span and for the `#pts ge 3` bar. Measured: pool stays 7 (not 3), 61 triples still
+   reachable, so it is not a disguised revert. `15_2`/`21_2` (only 2 coprime points, so they MUST
+   reach the non-coprime ones via the fallback) still pass.
+
+   ⚠⚠ **THE VALUES AT THE NEWLY ADMITTED POINTS ARE CORRECT -- CHECKED, NOT ASSUMED.** This mattered:
+   had they been wrong, the reordering would have MASKED a defect rather than fixed one. New tool
+   `tests/_crossnorm.m` (on the branch) dumps the hauptmodul's value at every CM point in the
+   Schofer table; running it in both trees and fitting ONE Mobius map on three discriminants
+   reproduces all four remaining values exactly (`-20 -> 32/5`, `-35 -> 8/35`, `-123 -> -8/41`,
+   `-132 -> 2`). ⇒ both runs compute the SAME hauptmodul, differently normalised -- including at the
+   `j=0` elliptic point `d = -3`, whose order-6 unit group made it the likeliest place for a
+   multiplicity error.
+   ⚠ **The obvious form of that check is VACUOUS** and the first draft of it was: any two hauptmoduls
+   are Mobius-related BY DEFINITION, and the three shared anchors fit the map exactly. It bites only
+   because the Schofer table carries MORE discriminants than the map needs.
+
+   ⇒ **NEXT: merge the PR, then re-run the two held tests** (`X0_10_3`, `X0_6_13`) against merged
+   `main` and commit them if green. Do not assume they pass -- measure.
    ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
    `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
    (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the
