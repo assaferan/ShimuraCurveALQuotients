@@ -13,10 +13,41 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
-## ⇒ START HERE — updated 2026-09-22
+## ⇒ START HERE — updated 2026-09-24
 
-**`HANDOFF.md` (2026-09-22) has the full account.** Everything the 2026-09-16 block below asked for
-is DONE; it is kept only for provenance. Its numbers are superseded by these.
+**`HANDOFF.md` (2026-09-23 and 2026-09-24) has the full account.** Everything the older blocks below
+asked for is DONE; they are kept only for provenance, and their numbers are superseded by these.
+
+### What closed on 2026-09-23/24
+
+    item 5  ✅ Gonzalez-Rotger coverage: Table 2 (17 genus-one AL QUOTIENTS) and footnote 2 (3 more)
+               transcribed; OracleCoverage now sweeps GR by OBJECT, not by base.  The gap was that
+               a green verdict on a BASE said nothing about its quotient KEYS.
+    item 6  ✅ THE GR ELEVEN ARE COMPLETE -- 1 of 11 had a re-derivation test at the start of the
+               session, 11 of 11 now (10 in tests/, 21_1 in tests/_offline/ needing HMFIT=1).
+               X0_ tests went 40 -> 48.
+    item 7  ✅ GonzalezRotger PART 2b: the companion genus-1 quotients, against SEVEN published
+               Jacobians (p.8 for N=1, p.9 for N>1) that nothing was reading.
+    item 7b ✅ ROOT-CAUSED AND FIXED (PR #41, merged, CI 188 pass / 0 fail): 0ca6e37 lost covers at
+               10_3, 6_13, 26_5 by ANCHOR ORDER, not arithmetic.  The CM values are correct --
+               verified by an over-determined Mobius check, tests/_crossnorm.m.
+
+### ⚠ What this session found in the PAPERS, all three negative-controlled
+
+    GR p.8 (10,7) column   prints `w_15`, but 15 does not divide 70.  It is w_5.
+    GR p.8 (10,7) column   prints w_10 = ((2x-1)/(x-2), ...): with 2x-1 that is NOT a self-map of
+                           the curve.  It is (2x+1)/(x-2); the published y-part is then right.
+    GR Lemma 3.2 (21,1)    prints the I_0 set as {w_21, w_3}, but the cell's own rows are K_21 and
+                           K_7.  The set is {w_21, w_7}.
+
+### ⚠ INFRASTRUCTURE, learned the hard way on 2026-09-23
+
+**The full suite does not complete on this Mac** -- two independent runs were killed by macOS for
+memory pressure at exactly `X0_206_1.m`, after 56 and 57 files with 0 failures.  Use `target:=` /
+`filename:=`, or let GitHub CI run it (PR #41's matrix is the first end-to-end pass these tests got).
+⚠ A killed suite LOOKS like a clean one -- check the file count and that `Tests failed:` is present.
+⚠ Do NOT edit anything under `tests/` while a suite is running, and kill Magma by PID, never
+`pkill -f magma.exe` (peer sessions share this Mac).  Both are in `CLAUDE.md`.
 
 ### The numbers
 
