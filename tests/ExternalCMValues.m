@@ -30,11 +30,25 @@
 // were multiplied by 19^(+-1) -- the shape of error this test exists to catch -- the reconstructed
 // s(tau_-760) becomes -32/481 or 608/581 rather than 32/5.  So the check bites.
 //
-// COST, and ADDING MORE CASES.  One base costs a full Borcherds + Schofer run (~850 s here), comparable
-// to the X0_D_N model tests.  More published tables are available in the same paper and are easy to add
-// to `cases` -- Example 36 gives s(tau_-280) = 5/16 on X_0^14(5) (another odd N, with 5 | 280), and
-// Examples 35, 42 and 43 tabulate values on X_0^146(1), X_0^142(1) and X_0^302(1).  Each added case
-// costs another such run, so they are left out deliberately rather than overlooked.
+// COST, and ADDING MORE CASES.  One base costs a full Borcherds + Schofer run (~3300 s as measured in
+// the suite), comparable to the X0_D_N model tests.
+//
+// ⚠⚠ THIS PARAGRAPH USED TO RECOMMEND GUO-YANG EXAMPLE 36 AS AN EASY ADDITION. IT IS NOT AN ADDITION
+// AT ALL, and the correction is kept rather than deleted because the recommendation was followed far
+// enough to nearly cost an hour of oracle run on 2026-09-24.  A usable case needs all three
+// conditions now enforced at the guard below, and Guo-Yang's remaining published values fail them:
+//
+//     Example 36, X_0^14(5), s(tau_-280) = 5/16   FAILS (b): it normalises at -4, -11, -35 and
+//                                                 5 | 35, so the value is absorbed by the Mobius fit
+//     Examples 35, 42, 43 on X_0^146(1),          FAIL (a): N = 1, where the coprime-to-level filter
+//     X_0^142(1), X_0^302(1)                      discards nothing and no value can escape the row
+//                                                 rescaling -- the configuration cannot exist
+//
+// ⇒ Example 37 (X_0^10(19)) is the ONLY Guo-Yang case that satisfies the configuration, which is why
+// this test rests on a single published value.  That is a real limit of the available data, not an
+// omission: adding more needs a published CM value on an N > 1 base, normalised at discriminants
+// coprime to N.  Do not spend a run before checking (a), (b), (c) -- it costs nothing and it is what
+// makes or breaks the test.
 
 // The Mobius map sending z0 -> 0, z1 -> infinity, z2 -> 1, evaluated at z.  Any of the arguments may be
 // Infinity.  Returns Infinity when the image is the point at infinity.
@@ -60,8 +74,34 @@ procedure test_ExternalCMValues()
         d0, d1, d2 := Explode(norm);
         keep := {d0, d1, d2} join {t[1] : t in targets};
 
-        // the point of the test: at least one target must be divisible by N, or the row rescaling
-        // absorbs the check and it proves nothing
+        // ⚠⚠ THREE CONDITIONS, AND THE FIRST TWO WERE MISSING -- the guard below used to test only
+        // the third, which is VACUOUS AT N = 1 because every integer is divisible by 1. A case added
+        // on an N = 1 base would therefore have passed this guard while proving nothing, which is
+        // precisely the failure mode this file exists to prevent. Checked 2026-09-24.
+        //
+        //   (a) N > 1. At N = 1 the coprime-to-level filter discards nothing, so there is no
+        //       discriminant whose value escapes the row rescaling, and the configuration this test
+        //       depends on cannot exist AT ALL. ⇒ Guo-Yang Examples 35, 42 and 43 (on X_0^146(1),
+        //       X_0^142(1), X_0^302(1)) can NEVER serve here, however many published values they
+        //       carry.
+        //   (b) every NORMALISING discriminant coprime to N. The Mobius map is fitted at those three
+        //       points, so if one of them is divisible by N its value is absorbed into the fit and
+        //       the calibration is lost. ⇒ Guo-Yang Example 36 (X_0^14(5), s(tau_-280) = 5/16)
+        //       CANNOT serve either: it normalises at -4, -11 and -35, and 5 | 35. This file's own
+        //       header used to recommend Example 36 as an easy addition. It is not an addition at
+        //       all, and an hour of oracle run would have been spent discovering that.
+        //       ⚠ Independently refuted: [[gy-example36-cannot-discriminate]] shows that value is
+        //       reproduced EXACTLY whether corrected or uncorrected, because -35 and -280 are both
+        //       non-firing and any correction cancels in the ratio.
+        //   (c) at least one TARGET divisible by N -- the original condition, still necessary.
+        error if N le 1,
+            Sprintf("X0^%o(%o): N = %o, so 'divisible by N' is vacuous (every integer is) and no "
+                    * "value here can escape ReduceTable's per-row rescaling. This case cannot "
+                    * "calibrate anything; it needs a base with N > 1.", D, N, N);
+        error if exists{d : d in norm | GCD(d, N) ne 1},
+            Sprintf("X0^%o(%o): a NORMALISING discriminant is not coprime to N, so its value is "
+                    * "absorbed by the Mobius fit and the calibration is lost. Normalise at "
+                    * "discriminants coprime to N and evaluate at one divisible by N.", D, N);
         error if not exists{t : t in targets | t[1] mod N eq 0},
             Sprintf("X0^%o(%o): no target discriminant is divisible by N; the check would be vacuous",
                     D, N);
