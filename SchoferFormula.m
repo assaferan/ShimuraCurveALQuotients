@@ -1187,14 +1187,16 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
-        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the incremental early-stop below keeps it cheap
+        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the scan is cheap (degrees only, see below)
         // Fetch INCREMENTALLY: scan discriminants (smallest |d| first) only until we have enough --
         // the demand MaxNum plus a margin of spare quadratic points for the hauptmodul sign-finding
-        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8] and never pay for
-        // CNs[16]; CM-starved bases reach into CNs[16] just far enough. Bounds the expensive
-        // per-discriminant ring-class-field field-of-definition to ~target real CM points.
+        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8]; CM-starved bases
+        // reach into CNs[16] just far enough. The scan itself is cheap (one
+        // DegreeOfFieldOfDefinitionOfCMPoint per candidate, no ring class field; the whole bd = 16
+        // table takes ~0.5-1.5 s). What target bounds is the number of points RETURNED, and hence the
+        // expensive per-point work downstream (Schofer values, fields of definition of the chosen points).
         fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
-                                      // the early-stop fires well before exhausting the (expensive) h=16 points
+                                      // few surplus points are returned to pay the per-point work on
         // Follows the same default as CandidateDiscriminants above (filter OFF unless CMCOPRIME=1).
         // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
         // filtering even when the main gate had been relaxed -- a base could be admitted by one
@@ -1498,7 +1500,8 @@ end function;
 
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
-{Return possible fields of definition for CM point with CM by d on X.}
+{Return possible fields of definition for CM point with CM by d on X.
+DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check; slated for removal.}
     // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
@@ -1509,13 +1512,16 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
     N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1 or (f mod p eq 0)];   
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
-    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     // Proposition 5.6 + correction (adding GCD(D,f) = 1)
+    // This test must come before the asserts below: when p | GCD(D, f), KroneckerCharacter(d)
+    // (primitive) gives chi(p) = -1, so p lands in D_R and the first assert fails.
     if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
+
+    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
+    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     rec := ArtinMap(H_R);
 
@@ -1639,8 +1645,10 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
                    reflection m*w0).  Then Q(P) = A_abs contains K = Q(sqrt d) and has
                    degree 2*h_R/#alSub_W over Q.
    one field per valid class [a] in Pic(R)/Pic(R)^2 - complex conjugation IS active.  Q(P)
-                   is the fixed field of the reflection c . sigma_a . sigma_w0, so it is
-                   totally real of degree (1/2)*Degree(A_abs).  For d a FUNDAMENTAL
+                   is the fixed field of the reflection c . sigma_a . sigma_w0, of degree
+                   (1/2)*Degree(A_abs).  It is NOT necessarily totally real: that reflection
+                   need not be conjugate to complex conjugation (e.g. d = -228 on
+                   X_0(38,1)/<w_38> gives Q(sqrt(-19)), matching [GY]).  For d a FUNDAMENTAL
                    discriminant the class is unique ([GR] Rem 5.11) and the list has length
                    1; for non-fundamental d several classes [a] can satisfy the quaternion
                    condition B_D = (d, m*N(a))_Q and the list records that genuine
@@ -1652,17 +1660,19 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
  AbelianExtension over the norm group -- degree 2*h_R/#alSub_W over Q.  The bigger W, the
  smaller A_abs; at the star quotient the saving is the full 2^omega(D*N).
 
- DIFFERENCE FROM FieldsOfDefinitionOfCMPoint.  The two agree, up to isomorphism, whenever
- Pic(R) has exponent <= 2 (H_R is CM).  When Exponent(Pic(R)) > 2 the slow function calls
- AutomorphismGroup and enumerates EVERY order-2 automorphism restricting to complex
- conjugation on K, which over-generates: only one of those reflections is genuinely
- complex conjugation.  This function pins that one (see pin_complex_conjugation),
- so on such discriminants it returns a SUBSET of the slow function's list -- one field per
- class [a] rather than one per (reflection, class) pair.  That pinning is what makes the
- high-class-number discriminants tractable (d = -1651: 212s -> 1.9s).
+ RELATION TO FieldsOfDefinitionOfCMPoint.  Both functions now pin the single genuine
+ complex conjugation with pin_complex_conjugation (on H_R there, on A_abs here), so they
+ return the same fields as sets up to isomorphism; test_FieldOfDefinition in
+ tests/CMPoints.m asserts that set equality on every [GY] point except the degree-only rows.  Before that pinning, when
+ Exponent(Pic(R)) > 2 the slow function enumerated, via AutomorphismGroup, EVERY order-2
+ automorphism restricting to complex conjugation on K and over-generated spurious fields
+ (e.g. both Q(sqrt(-3)) and Q(sqrt(13)) for d = -39, where the true field is Q(sqrt(13))).
+ Replacing that enumeration by the pinning is also what made the high-class-number
+ discriminants tractable (d = -1651: 212s -> 1.9s).
 
- MaxDegree (default 0 = no cap).  Callers that only keep small-degree points (the
- rational / quadratic CM-point fetch) should pass their cap.  The DEGREE of Q(P) is known
+ MaxDegree (default 0 = no cap).  Callers that only keep small-degree points should pass
+ their cap.  (The rational / quadratic CM-point scan RationalandQuadraticCMPoints no longer
+ calls this function; it uses DegreeOfFieldOfDefinitionOfCMPoint.)  The DEGREE of Q(P) is known
  from group orders alone -- Degree(A_abs) = 2*#G/#alSub_W, halved when complex conjugation
  is active -- so when it exceeds MaxDegree we return [* *] before building any number
  field and before the complex-conjugation pinning (a Roots() over A_abs, ~1 min on the

@@ -1423,10 +1423,13 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
  anchors. Listing those in Keep admits exactly them without relaxing the filter globally.
  INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
  points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
- "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
- (ring class field) computation to ~target real CM points instead of the whole class-number table.
- Easy bases finish inside CNs[<=8] and never pay for CNs[16]; starved bases reach into it only as far
- as needed. target = 0 means no early stop (scan everything, as before).}
+ "nicest" points. The scan itself is now cheap: each candidate costs one
+ DegreeOfFieldOfDefinitionOfCMPoint call (Pic(R) plus Atkin-Lehner combinatorics, no ring class
+ field), and the whole bd = 16 table (CNs[1..16]) takes about 0.5-1.4 s on the star quotients
+ (38,1), (6,29), (10,19), (1,210), (142,1). What target bounds is the number of points RETURNED,
+ and hence the caller's per-point work downstream (Schofer values, and FieldsOfDefinitionOfCMPointFast
+ on the star curve and each cover when the Schofer table is built), which is far more expensive
+ than the scan. target = 0 means no early stop (scan everything, as before).}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
     // Any Atkin-Lehner quotient: DegreeOfFieldOfDefinitionOfCMPoint handles an
     // arbitrary W, so the star restriction this routine used to carry is gone.
@@ -1477,7 +1480,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     quad_pts := [];
     D := X`D;
     N := X`N;
-    vprintf ShimuraQuotients, 2: "\n\tchecking fields of definition for %o candidate discriminant(s)...\n", #allCN;
+    vprintf ShimuraQuotients, 2: "\n\tcomputing degrees of fields of definition for %o candidate discriminant(s)...\n", #allCN;
     tt := Realtime();
     // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
     // (they are appended before the loop); the loop below only appends already-coprime points.
@@ -1486,7 +1489,8 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     end if;
     for ctr->d in allCN do
         // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
-        // so this keeps the nicest ones and avoids the expensive field-of-def on the rest).
+        // so this keeps the nicest ones and returns fewer points for the caller's expensive per-point
+        // work -- Schofer values, fields of definition; the degree computation below is cheap).
         if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
@@ -1505,7 +1509,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         end if;
 
     end for;
-    vprintf ShimuraQuotients, 2: "\tdone checking fields of definition (%os).\n", Realtime() - tt;
+    vprintf ShimuraQuotients, 2: "\tdone computing degrees of fields of definition (%os).\n", Realtime() - tt;
     vprintf ShimuraQuotients, 2: "Done!\n";
 
     if not coprime_to_level then
