@@ -190,20 +190,238 @@ are in `HANDOFF.md` 2026-09-23.)
    `main@7d9f0fb`, so no silent drift). Deliberately not merged yet, to avoid needing a second
    merge; do it in one go afterwards.
 
-5. **Extend `tests/OracleCoverage.m` to Gonzalez-Rotger.** Today it answers "no GUO-YANG oracle",
-   not "no oracle at all".
-   ⇒ **The two published sources are COMPLETELY DISJOINT** -- measured 2026-09-23: GR's ten
-   transcribed bases (`15_1 21_1 33_1 34_1 46_1 6_5 6_7 6_13 10_3 10_7`) share NOT ONE base with
-   Guo-Yang's 43. So GR is a second, separate region of the model set, not redundant cover -- and
-   it is the source that caught the `10_3` conic drift, i.e. the one that has actually found a
-   defect.
-   ⚠ **The cost is a READ-THE-PAPER task, not a fill-in.** `tests/GonzalezRotger.m` encodes only
-   what was TRANSCRIBED; the hole the sweep must find is a GR-coverable base with a model that is
-   ABSENT from that list, which needs GR's published base list. PDF:
-   `~/MIT Dropbox/Eran Assaf/Research/HyperellipticQuotients/Gonzales, Rotger - non-elliptic
-   Shimura curves of genus one.pdf`. Same shape as the Guo-Yang transcription -- hand-transcribe,
-   and check the version of record first ([[guoyang-journal-version-differs]] is the cautionary
-   precedent).
+5. ~~**Extend `tests/OracleCoverage.m` to Gonzalez-Rotger.**~~ **✅ DONE 2026-09-23 -- and the hole
+   was REAL and bigger than this item assumed: a whole published TABLE, not a missing base.**
+
+   ⚠ **The item mis-stated the target, and the mis-statement is the finding.** It said the hole to
+   look for is "a GR-coverable BASE with a model that is absent from the list". There is no such
+   base -- but GR publish **three** lists, and only the first was ever transcribed:
+
+       Table 1, p.8      11 genus-one curves X_0(D,N)                   -- was transcribed
+       Table 2, p.12     17 genus-one AL quotients X_D^(m)=X_0(D,1)/w_m -- WAS NOT
+       footnote 2, p.11   3 more X_D^(m), ELLIPTIC over Q               -- WAS NOT
+
+   Table 2's objects are **quotient KEYS, not bases** -- our `W=[1,m]` at `N=1`. Seven had a
+   committed model and nothing was checking any of them: `39_1[1,13] 55_1[1,5] 62_1[1,2]
+   69_1[1,3] 77_1[1,11] 94_1[1,2] 178_1[1,89]`. ⇒ **Every one of those seven sits on a base that
+   `OracleCoverage` already reported as COVERED**, because its `W=[1]` curve has a Guo-Yang
+   equation. **A green verdict on a base said nothing about its quotient keys** -- the `69_1`
+   lesson one level down, and the reason PART B of that file now sweeps OBJECTS, not bases.
+
+   **All nine new comparisons PASS** (7 Table 2 + 2 footnote), the seven by an *exhibited*
+   Q-isomorphism rather than a matching invariant, so the torsor ambiguity that bit `6_5`/`6_13`
+   does not arise. The footnote rows (`35_1[1,7] 51_1[1,3]`) are a different claim in kind -- GR
+   correct their own earlier paper to say these quotients DO have a rational point -- so they are
+   checked by finding the point and identifying the curve: `35a1` and `51a2`, as published.
+   10 further Table 2 rows fire automatically if `85_1 210_1 330_1 462_1` are ever built, and
+   `115_1` for the footnote.
+
+   ⚠ **`PLAN` also had the GR base list wrong**: it said "ten transcribed bases" and omitted
+   `14_1`. The paper's Lemma 3.1 list is **eleven**, and `tests/GonzalezRotger.m` always had all
+   eleven. The disjointness claim it was supporting is unaffected and still holds -- GR's eleven
+   share not one base with Guo-Yang's 43.
+
+   ⚠ **Version of record CHECKED, per [[guoyang-journal-version-differs]]** -- and the risk is the
+   reverse of Guo-Yang's here: the Dropbox PDF is arXiv **v2 (Apr 2008)**, which POSTDATES the
+   J. Math. Soc. Japan 58 (2006) version, and **Table 2 is identical in v1 and v2**. Project
+   Euclid serves the journal PDF only behind a bot check, so it was not read directly; that gap is
+   covered from the other side, by re-deriving every row's Cremona label from its own equation
+   (17/17) before any model of ours is compared.
+
+6. **Write the remaining GR X0_ re-derivation tests. GROUP 1 IS DONE; six remain.**
+
+       HAVE   15_1 | 14_1 (pilot) | 33_1 46_1 CI-visible | 21_1 offline, needs HMFIT=1
+       WANT   34_1  10_7   |   6_5  6_7  6_13  10_3
+
+   ✅ **DONE 2026-09-23 -- group 1 (`21_1 33_1 46_1`), all negative-controlled.** Runtimes 44 s /
+   49 s / 15 s. Each reports **4 curve comparisons, 3 involution comparisons, 4/4 expected covers
+   matched, 4 committed cover keys re-derived**; each labelling swap goes red after 9 / 9 / 5
+   candidate identifications.
+
+   ⚠⚠ **`21_1` IS IN `tests/_offline/` BECAUSE IT NEEDS `HMFIT=1`, and that is a finding.** Under
+   default flags the pipeline cannot re-derive `21_1` at all -- it dies in `find_signs_hauptmodul`
+   ("no choice of signs satisfies `s/scale + stilde/scale_tilde = 1`" at `[-15,-43,-51,-67]`)
+   before making a single comparison. ⇒ **`21_1`'s committed model is CORRECT BUT NOT REPRODUCIBLE
+   UNDER DEFAULT FLAGS** -- a property of the default normalisation, not of the model. A CI-visible
+   copy would be permanently red, and making it skip itself when the flag is absent would be the
+   vacuity failure mode. Run it as
+   `HMFIT=1 magma -b filename:=tests/_offline/X0_21_1.m run_tests.m < /dev/null`.
+   ⇒ **It also CLOSES an open note**: `HANDOFF` recorded that HMFIT "trusts the majority; it does
+   not prove it -- settle it with the GR oracle, not the fit". This test is that settlement. HMFIT
+   fits `scale_tilde = 36` against the default's `9`, satisfied at only **5 of 6** rational CM
+   points, and under that fit all four covers re-derive AND every published involution matches.
+
+   ⚠⚠ **A THIRD PUBLISHED TYPO, found writing `21_1`.** Lemma 3.2 (p.7) prints the `I_0` set for
+   `(21,1)` as `{w_21, w_3}`, but the two rows of that same cell are `K_21` and **`K_7`**, not
+   `K_3` -- and every other cell in the lemma has matching subscripts. The set is `{w_21, w_7}`.
+   Three independent confirmations: the paper's own `K_7` row; the p.8 involution table
+   (`w_7(x,y) = (-x,y)` for `D = 21`); and our committed model, genus 0 at `W=[1,7]` and genus 1 at
+   `W=[1,3]`, which is exactly what `I_0` membership means. GR's own p.8 Jacobian table corroborates
+   (`Jac(X_0(21,1)/<u.w>) = 21A6`, genus one, which needs `u = w_7`).
+
+   ✅ **DONE 2026-09-23 -- group 2 (`34_1`, `10_7`), both CI-visible, both negative-controlled.**
+   `34_1` 6 s (4 curve / 3 involution cmp, 4/4 covers); `10_7` 178 s (10 curve / **7** involution
+   cmp, 4/4 covers, **26** committed cover keys re-derived). Labelling swaps go red after 5 and 9
+   candidate identifications.
+
+   ⚠ **"THEY NEED THE TRANSPORT" WAS WRONG, and the correction is worth keeping.** This item used
+   to say `34_1`/`10_7` need [[gy-involution-transport]] because their involutions are non-diagonal.
+   **They do not.** Transport is needed when a published involution must be carried into OUR model's
+   coordinates; here it must not be, because the helper compares `ws_data` in the EXPECTED curve's
+   coordinates and `cover_data[{1}]` is GR's equation VERBATIM. GR's formulas are already in the
+   right frame. The only work is writing a Mobius map as a matrix on `P(1,2,1)` -- the helper's
+   convention is ROW-VECTOR times matrix, with `x = X/Z`, `y = Y/Z^2`. `34_1` took minutes.
+
+   ⚠⚠ **TWO MORE PUBLISHED ERRORS, BOTH IN THE `(10,7)` COLUMN OF THE p.8 INVOLUTION TABLE.**
+   * **the label**: it prints `w_15`, but `15 ∤ 70`, so `w_15` is not an involution of `X_0(10,7)`
+     at all. It is **`w_5`** -- the quotient of GR's curve by `(-1/x,-y/x^2)` is the conic
+     `-27u^2-40u-48`, class `[2]`, and our `W=[1,5]` is `[2]` in all three entries while `[1,35]`
+     is `[2,5]` and `[1,10]` is `[5]`. The class discriminates.
+   * **the Mobius map**: it prints `w_10 = ((2x-1)/(x-2), 5y/(x-2)^2)`. With `2x-1` that is not a
+     self-map of the curve -- `(x-2)^4 f((2x-1)/(x-2))/f(x)` is a ratio of quartics, not a constant
+     -- and not an involution (`y'' = 25y/9`). With **`(2x+1)/(x-2)`** it is both, and the published
+     `5y/(x-2)^2` is then exactly right. `IsGL2Equivalent(f,f,4)` returns exactly four
+     self-equivalences and `(2x-1)/(x-2)` is not among them; four Mobius maps lifting to eight maps
+     is all of `W_{10,7}`, so nothing is missing.
+   ⇒ A control that restores the PRINTED map fails with *"Polynomials do not define a map into the
+   codomain"* -- the typo is not a subtlety, the printed map is not a map.
+
+   ✅ **DONE 2026-09-23 -- `6_7`** (38 s, `tests/X0_6_7.m`): **15 curve / 7 involution comparisons,
+   7/7 expected covers matched, 23 committed keys re-derived**; labelling swap red after 9 candidate
+   identifications.
+   ⚠ **COMPOSE THE GENERATORS CAREFULLY -- this cost a false alarm.** `w_6(w_3(x,y)) = (27/x,
+   -27y/x^2)`, NOT `(-27/x, +27y/x^2)`. Mislabelling swaps `w_2` with `w_7`, and the SYMPTOM was a
+   derived quotient Jacobian of `42a2` against our `42a5` -- which reads as "the model is wrong"
+   when the model was right and the LABEL was wrong. Correctly composed: `w_3 [2]`, `w_6 [3]`,
+   `w_21 [2,3]`, `w_2 42a5`, `w_7 42a2`, `w_14 42a6`, all matching.
+
+   ⚠ **A KEY MAY HAVE TO BE OMITTED FROM `cover_data`, and that is principled.** `6_7`'s `W=[1,14]`
+   is absent: our entry has the SAME Jacobian as the quotient derived from GR's model (`42a6` both
+   sides, and GR's p.9 table publishes `42A6` for it) but is an inequivalent QUARTIC model -- a
+   different degree-2 divisor class. Listing it would make the test red for something that is not a
+   defect. Nothing is lost: the helper's SECOND pass drift-checks every committed key anyway; what
+   is unavailable is an ORACLE claim, since GR pin the quotient's Jacobian but not which degree-2
+   model the pipeline should pick.
+
+7b. ⚠⚠ **NEW, FOUND BY WRITING `X0_10_3.m` -- `10_3` PRODUCES ONE COVER WHERE THE FILE RECORDS TWO.
+   The test is written and HELD OUT of `tests/` until this is understood.**
+
+       key        committed entries   produced by a default run
+       [1,6]              2                    1  (base 4004)
+       [1,10]             2                    1  (base 4001)
+       [1,15]             2                    1  (base 4003)
+
+   ⇒ **NOT a wrong curve.** The produced cover IS isomorphic to one of the two committed entries at
+   each key (entry 1, 2, 2 respectively) and the Jacobians agree throughout (`30a5 30a4 30a1`). It
+   is a **LOST COVER** -- the same shape as the `22_3 [1,66]` 3 -> 2 loss the helper's multiset
+   matching was built to catch, which is why the second pass fires: each committed entry must find
+   an unused fresh cover, and the second entry has nothing left to match.
+   ⚠ The helper's message says "NOT ISOMORPHIC ... the pipeline now builds a DIFFERENT curve",
+   which is MISLEADING here -- the curve is right and a cover is missing. Worth rewording when the
+   helper is next touched.
+   ⚠ `PROVENANCE.md` gives `10_3` no flags row, so a default run is supposed to reproduce the file.
+   Candidate causes, none checked: the 2026-09-07 coprime flip (`CMCOPRIME=1` restores the old
+   filtering), or the CRV-degeneracy repair that already "loses 4 entries" at `10_3`
+   (`PROVENANCE.md:411+`). **Check whether the file predates the flip before assuming a regression.**
+   ⇒ This is a THIRD reproducibility gap after the y2-scale one and `21_1`'s `HMFIT` --
+   see [[committed-models-can-be-unreproducible]].
+
+   ✅ **DONE 2026-09-23 -- the HELPER CHANGE and `6_5`.** `cover_data[W]` may now be
+   `<[* C1, C2, ... *], scales>`: every produced cover must match SOME listed curve, and at least
+   one must match **entry 1**, the published one. Later entries are DRIFT alternatives, accepted but
+   vouched for by nothing external. The involution check runs only against a cover that matched
+   entry 1, since the published involutions act on the published curve.
+   `tests/X0_6_5.m` 17 s: **14 curve / 7 involution comparisons, 5/5 expected covers matched, 23
+   committed keys re-derived.**
+   ⚠ **Three controls on the helper, all red as required:** a cover matching none of the listed
+   curves; every cover matching an alternative with none matching entry 1 (the oracle guard --
+   without it such a key passes having consulted no oracle at all); and a labelling swap, proving
+   the involution check still fires through the list path.
+   ⚠ **Every branch re-exercised after the edit**: `manual_isomorphism` (`X0_82_1`, 33 s), CRV +
+   `base_label` (`X0_14_3`, 21 s), plain `IsIsomorphic` (`X0_39_1`, 363 s), genus-0 and the new
+   tests. Single-entry keys behave exactly as before.
+
+7c. ⚠⚠ **`6_13` JOINS `10_3`: THE SAME LOST COVER, SO THE TWO TESTS ARE WRITTEN AND HELD OUT.**
+   Both are complete and in the session scratchpad; neither is committed.
+
+       10_3   [1,6] [1,10] [1,15]    committed 2, produced 1   (Jac 30a5 30a4 30a1)
+       6_13   [1,6] [1,26] [1,39]    committed 2, produced 1
+
+   In every case the produced cover IS isomorphic to one of the two committed entries, so **no curve
+   is wrong** -- a cover is missing. At `6_13`'s `[1,6]` BOTH committed entries match the single
+   produced cover, i.e. the two committed entries are isomorphic to each other there.
+   ⇒ **Two bases, same shape, both `N > 1`, both at the GENUS-1 quotient keys** -- that pattern
+   suggests a systematic cause rather than two accidents. `6_5` and `6_7` do NOT show it.
+   ⇒⇒ **CAUSE FOUND 2026-09-23, AND IT IS A REGRESSION IN `0ca6e37`, NOT STALE FILES.**
+
+       base   default          PTSCOPRIME=1     verdict
+       10_3   23 of 26 covers  26 of 26         RESTORED
+       6_13   24 of 27 covers  27 of 27         RESTORED
+       6_5    23 of 23         --               unaffected (negative control)
+
+   `0ca6e37` (2026-09-21) *"BorcherdsForms: drop the coprime-to-level filter on the divisor-support
+   CM pool"* is the change, and `PTSCOPRIME=1` restores the old behaviour of that one line.
+   ⚠ **It is NOT the 2026-09-07 `CMCOPRIME` flip**, which was the obvious suspect and is excluded by
+   dates: `models_10_3.m` was REGENERATED WHOLESALE on 2026-09-13 (`080b836`, the GR drift fix --
+   those three keys went from empty to two entries each), i.e. after that flip and before `0ca6e37`.
+   ⇒ **`0ca6e37` HAS AN UNMEASURED COST: it loses covers at the genus-1 quotient keys of some `N>1`
+   bases.** PLAN item 2 scoped its analysis to the SCREEN and said explicitly *"reach for
+   `PTSCOPRIME=1` only when something actually reads the divisor-support pool"*. Cover production
+   reads it. That is this, and item 2's verdict about the screen is untouched.
+   ⇒ **DECIDE WHAT THE DEFAULT SHOULD BE.** Either `0ca6e37` is gated/reverted for cover production,
+   or the enlarged pool is accepted as correct and the affected committed files are regenerated
+   under it (which LOSES a cover at each of those keys, and they are real quotient models). Until
+   that is settled the two tests stay out of `tests/`; they pass under `PTSCOPRIME=1`.
+   ⇒ **BLAST RADIUS SWEPT 2026-09-23/24. THREE bases affected, and `PTSCOPRIME=1` restores all
+   three.**
+
+       base    default      PTSCOPRIME=1   verdict
+       10_3    23 of 26     26 of 26       RESTORED
+       6_13    24 of 27     27 of 27       RESTORED
+       26_5    11 of 12     no shortfall   RESTORED
+       6_5     23 of 23     --             clean (control)
+       22_7    12 of 12     --             clean   (plus 2 keys the file does not record)
+       6_23    14 of 14     --             clean
+       6_71    still running at 3.5 h -- the ONE base still unmeasured
+
+   **How the sweep was scoped, because the cheap part did most of the work:** 76 `N>1` bases have
+   committed models; only **26** have any key with >= 2 entries (a free, file-level filter); and the
+   helper's SECOND pass tests this exact shortfall on EVERY committed key, with no test disabling
+   `model_covers`. ⇒ **every base whose `X0_` test passes is already proven clean**, which left just
+   four bases needing a manual run. Do not re-sweep the rest by hand.
+   ⚠ All three affected bases are `N>1` and short at a **genus-1 quotient key**. `6_5`, `6_7`, `22_7`
+   and `6_23` are `N>1` too and are clean, so it is not simply "all `N>1`".
+   ⚠⚠ **OPTION 2 (pin `base_label`) IS REFUTED -- MEASURED 2026-09-23, do not retry it.**
+   `base_label` is threaded into only two late stages, `EquationsAbovePointlessConics`
+   (`EquationsCovers.m:1076`) and `EquationsByRebase` (`:1084`). The `W={1}` cover is produced by the
+   earlier main step, which never sees it. Measured:
+
+       6_5    W={1} over bases 1483, 1484  ->  1484 is GR's curve;  PINNED at 1484: STILL BOTH
+       6_13   W={1} over bases 1532, 1533  ->  1532 is GR's curve;  PINNED at 1532: STILL BOTH
+
+   So the helper still makes two comparisons at `W={1}` against one expected curve, and
+   `assert is_isom` (`tests/BorcherdsProducts.m:88`) is unconditional -- `model_drift_ok` relaxes
+   only the SECOND pass. ⇒ **Option 1**: let a `cover_data` key carry SEVERAL acceptable curves,
+   require every produced cover to match one, and require GR's to be matched by at least one. At
+   `W={1}` that is honestly two different claims -- GR's quartic is an ORACLE, our second entry is a
+   DRIFT check, since it has no published equation.
+   ⚠ That file is the shared helper behind all X0_ tests, so the change needs its own controls: a
+   cover matching NONE of the listed curves must still go red, and a key where GR's curve is matched
+   by NO base must go red.
+
+   ⚠ **Each new test needs its own non-vacuity read and its own labelling control.** The helper
+   prints `n curve / n involution comparisons, k/k expected covers matched` under
+   `SetVerbose("ShimuraQuotients",1)` -- read it, do not assume it ran.
+   ⚠ **Run the labelling control WITH whatever flags the test needs.** At `21_1` the control is
+   only meaningful under `HMFIT=1`; without it the run dies upstream and goes red for the wrong
+   reason, which would have looked like a passing control.
+
+7. **Cheap extension to `tests/GonzalezRotger.m` PART 2, found while writing the pilot.** PART 2
+   checks only the even-quartic `w_2`-type quotient (`u = x^2`, a conic). Every one of those 7
+   bases ALSO has the companion `w_{D.N}*w_m` quotient via `v = x*y`, which is **genus 1** and so
+   carries strictly more information than a conic class. Verified by hand at `14_1`: the `W=[1,7]`
+   entry is `IsIsomorphic` to `v^2 = u(-u^2+13u-128)`. ⇒ roughly 15 -> 22 comparisons, no new
+   transcription, no pipeline run.
 
 ## ⇒ (SUPERSEDED) START HERE — updated 2026-09-16
 
