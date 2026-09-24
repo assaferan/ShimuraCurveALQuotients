@@ -11,6 +11,56 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
+
+**One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
+came from asking "what is published that we do not read?" or "what does nothing check?"
+
+### ✅ What landed (all pushed; `main` and `m0-theta-campaign` both current, invariant = 0 files)
+
+    X0_ tests        40 -> 48.  The GONZALEZ-ROTGER ELEVEN ARE COMPLETE: 1 of 11 had a
+                     re-derivation test at session start, 11 of 11 now (10 in tests/, 21_1 in
+                     tests/_offline/ because it cannot re-derive under default flags -- needs HMFIT=1).
+    PR #41           MERGED, CI 188 pass / 0 fail.  0ca6e37's cover loss root-caused and fixed.
+    GonzalezRotger   PART 4 (Table 2, 17 quotients), PART 5 (footnote 2, 3 more),
+                     PART 2b (companion genus-1 quotients vs SEVEN published Jacobians).
+    OracleCoverage   now sweeps GR by OBJECT, not by base.
+    GuoYangTable1    NEW -- a third Guo-Yang table, never transcribed.  86 checks, 0.03 s.
+    ExternalCMValues guard was VACUOUS at N=1; fixed, header corrected.
+    tests/_crossnorm.m  new hand-run tool: are CM values right when nothing publishes them?
+
+### ⚠⚠ FOUR PUBLISHED ERRORS FOUND, all negative-controlled
+
+    GR p.8, (10,7)      prints `w_15`; 15 does not divide 70.  It is w_5 (conic class decides).
+    GR p.8, (10,7)      prints w_10 = ((2x-1)/(x-2), 5y/(x-2)^2).  With 2x-1 that is NOT a self-map
+                        of the curve.  It is (2x+1)/(x-2); the published y-part is then right.
+    GR Lemma 3.2, (21,1) prints the I_0 set {w_21, w_3}; the cell's own rows are K_21 and K_7.
+                        The set is {w_21, w_7}.
+    (plus the earlier GY/`10_3` items from 2026-09-23)
+
+### ⚠ THE REGRESSION, because it is the most reusable lesson
+
+`0ca6e37` enlarged the divisor-support CM pool.  `pts` ALSO fixes the ORDER in which the
+`(infty,P,Q)` sweep tries anchors, and that sweep takes the FIRST workable triple -- so the pool
+change handed `infty` to a newly admitted point and RE-NORMALISED the hauptmodul, losing covers at
+`10_3`, `6_13`, `26_5`.  Fixed by sorting the pool coprime-to-N first, *stably*: pool stays 7 (not
+3), 61 triples still reachable, `15_2`/`21_2` still reach non-coprime points via the fallback.
+⇒ **The CM values were CORRECT** -- one Mobius map carries all values from one normalisation to the
+other, exact on four over-determined points.  Checking that was load-bearing: had they been wrong,
+the reordering would have MASKED a defect.
+⚠ `0ca6e37`'s own validation covered the 16 `N>1` bases that HAVE an X0_ test; all three affected
+bases had none.
+
+### ⚠ INFRASTRUCTURE, paid for twice
+
+* **The full suite does NOT complete on this Mac** -- killed by macOS at exactly `X0_206_1.m` on two
+  independent runs (56 and 57 files, 0 failures).  Use `target:=`/`filename:=`, or GitHub CI.
+* **A killed suite looks like a clean one** -- check the file count AND that `Tests failed:` is there.
+* **Do not edit `tests/` while a suite runs** (cost a 30-minute run), and **kill Magma by PID**, never
+  `pkill -f magma.exe` (peers share this Mac).  Both now in `CLAUDE.md`.
+* **Run with higher verbosity** (user's instruction, 2026-09-24): a silent multi-hour job cannot be
+  told from a hung one.
+
 ## Handoff — 2026-09-23 (later) — THE SECOND ORACLE AUDIT: the unit was wrong, so a whole published table was invisible
 
 **One finding, and it is the same shape as the morning's: a WRONG OBJECT, not a wrong computation.**

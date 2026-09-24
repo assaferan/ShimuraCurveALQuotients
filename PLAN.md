@@ -58,7 +58,59 @@ memory pressure at exactly `X0_206_1.m`, after 56 and 57 files with 0 failures. 
     2-dim        EIGHT bases: 166_3 22_19 74_7 10_67 58_13 302_1 334_1 358_1.
     unresolved   NONE.  358_1 was the last, resolved 2026-09-22 (deficit 2, flat P=266..700).
 
-### ⇒⇒ TWO THINGS ARE RUNNING ON `lava` RIGHT NOW — CHECK THESE BEFORE STARTING ANYTHING
+### ⇒⇒ FOUR THINGS ARE RUNNING ON `lava` AS OF 2026-09-24 — CHECK BEFORE STARTING ANYTHING
+
+`ssh -J lovelace lava` (lava is NOT reachable directly). No `EXIT` lines as of 2026-09-24, i.e. all
+alive; **0 model files produced so far**.
+
+    ~/lavarun    95_1  1d 22h 59m   |  119_1  1d 22h 56m (9.1 GB)  |  159_1  1d 17h 52m
+                 STATUS: ssh -J lovelace lava 'grep "^EXIT" ~/lavarun/out/DRIVER.log'
+                 Empty = alive.  EXIT 143 = earlyoom killed it.
+                 ⚠ 119_1 has held 9.1 GB for ~2 days with NO OUTPUT. The user's call (2026-09-24)
+                 was to let it run -- and to raise verbosity on future runs so "slow" can be told
+                 from "hung". Do that.
+    ~/lavatests  ✅ 111_1 GREEN (as expected), took ~18.5 h.
+                 ctl_111_1 (the SWAPPED-MATRIX control, expect RED) running ~10 h.
+                 STATUS: ssh -J lovelace lava 'cat ~/lavatests/out/SUMMARY.log'
+                 ⚠ The control is what makes the GREEN mean anything -- wait for it.
+                 Four runs remain after it, at ~18 h each: this batch is a MULTI-DAY proposition.
+
+### ⇒ NEXT PIECE OF WORK: a QUOTIENT-BY-INVOLUTION helper (raises X0_ coverage from 44%)
+
+**Why.** `X0_` re-derivation coverage is **44%** (198 of 449 committed cover keys have a hand-written
+expected curve; measured 2026-09-24, was 41-43% on 2026-09-09). The thinnest bases check **1 of 15**
+keys -- all Guo-Yang `N>1` bases where only `W={1}` has a published equation. The other 56% are still
+DRIFT-checked by the helper's second pass, but carry no oracle.
+
+**The idea (the user's, 2026-09-24).** Given the top curve and the involutions, DERIVE the quotient
+instead of hand-writing it. That is exactly what was done by hand four times on 2026-09-24 for the GR
+bases, and it generalises.
+
+⚠ **The pipeline does NOT already do this, and the direction matters.** `EquationsAboveP1s`,
+`EquationsAbovePointlessConics`, `EquationsByRebase` build covers *upward* over a base -- see
+[[fibre-product-only-construction-gap]]. There is no quotient-downward routine to reuse.
+⚠ **Magma's `CurveQuotient` will not serve** -- checked 2026-09-24: `AutomorphismGroup(C,[phi])` and
+`AutomorphismGroup(C,H)` both reject a `CrvHyp`, and `CurveQuotient` rejects a bare group.
+`AutomorphismGroup(C)` alone works (it found `w_2` in a group of order 4) but leads nowhere for
+hyperelliptic curves. Consistent with [[magma-issue-123-toric-curvequotient]].
+
+**The recipe that DOES work** -- invariant theory, verified by hand at `14_1 21_1 33_1 46_1 34_1
+10_7 6_7 6_5 6_13 10_3`:
+  * let `sigma` be the Mobius part of the involution on `x`;
+  * the invariant is `u = x + sigma(x)` when that is non-constant, else `u = x*sigma(x)`
+    (the `x -> -x` case, where the sum degenerates to 0 and the product gives `-x^2`);
+  * then decide whether `y` itself descends, or must be paired with an anti-invariant -- e.g.
+    `v = x*y` for `x -> -x`, or `t = (y/x)*s` with `s = x + c/x` anti-invariant for `x -> -c/x`.
+
+**FIRST QUESTION TO SETTLE, before writing code:** which Guo-Yang bases do we actually have
+involutions for? That decides whether this reaches the `1/15` bases or only ones already covered.
+⚠ The helper would feed expected values into forty-odd tests, so it needs its own negative controls:
+a wrong invariant, a degenerate `u`, and the `y`-descent branch taken wrongly must each go red.
+⚠ Expect torsor ambiguity at genus-1 quotient keys -- the derived model and the committed one can be
+inequivalent quartics of the SAME curve. `tests/X0_6_7.m` and `tests/X0_10_3.m` document how that was
+handled (omit the key, say why; the second pass still drift-checks it).
+
+### ⇒⇒ (SUPERSEDED 2026-09-24) TWO THINGS WERE RUNNING ON `lava`
 
 Both outlive the session that launched them; neither is discoverable from this repo without this
 block. `ssh -J lovelace lava` (lava is NOT reachable directly).
