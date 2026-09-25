@@ -57,10 +57,14 @@ end function;
 
 // Close a set of labelled generator matrices into the full Atkin-Lehner group.
 // `gens` is an associative array  m -> 3x3 matrix.  Returns  m -> matrix  for EVERY element.
+// ⚠ NAME: "Matrix" in the name is deliberate and should stay.  This closes a set of MATRICES under
+// the group law; `AllALsFromGens` (ShimuraQuotients.m) closes a set of INTEGERS and is the one you
+// want if you only need the labels.  An earlier draft of this called itself
+// `ALGroupFromGenerators`, which collided with both.
 // ⚠ The labels of the products are computed from the labels of the generators, so a mislabelled
 // GENERATOR propagates.  What this does catch is an INCONSISTENT set: if two different words spell
 // the same label with genuinely different maps, it says so.
-function ALGroupFromGenerators(gens, w)
+function ALMatrixGroupFromGenerators(gens, w)
     all := AssociativeArray();
     ok := true;  why := "";
     for m in Keys(gens) do all[m] := gens[m]; end for;

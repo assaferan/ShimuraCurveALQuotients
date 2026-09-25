@@ -18,7 +18,7 @@
 // -u^2+13u-128, because u = x*sigma(x) = -x^2 differs from the committed normalisation by u -> -u.
 
 import "tests/_quotbyinvol.m" : QuotientByInvolution, QuotientMatches,
-                                ALGroupFromGenerators, ALCompose;
+                                ALMatrixGroupFromGenerators, ALCompose;
 
 Q := Rationals();
 P<x> := PolynomialRing(Q);
@@ -88,7 +88,7 @@ gens67[42] := DiagonalMatrix(Q, [1,-1,1]);                   // (x, -y)
 gens67[3]  := DiagonalMatrix(Q, [-1,1,1]);                   // (-x, y)
 gens67[6]  := Matrix(Q, 3,3, [0,0,1,  0,-27,0,  -27,0,0]);   // (-27/x, -27y/x^2)
 
-all67, consistent, why := ALGroupFromGenerators(gens67, 2);   // y has weight g+1 = 2
+all67, consistent, why := ALMatrixGroupFromGenerators(gens67, 2);   // y has weight g+1 = 2
 error if not consistent, Sprintf("6_7: generated AL group is inconsistent: %o", why);
 error if #Keys(all67) ne 7,
     Sprintf("6_7: three generators closed to %o elements, expected the full group of 7",

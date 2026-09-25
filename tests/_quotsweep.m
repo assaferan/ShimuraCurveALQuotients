@@ -30,7 +30,7 @@
 // ⚠ A CRV top is skipped, not failed: the recipe is written for y^2 = f(x).  Those nine bases
 // (10_13 10_19 14_3 21_2 26_3 57_1 6_17 82_1 93_1) are the gap between a 76% and a 69% ceiling.
 
-import "tests/_quotbyinvol.m" : QuotientByInvolution, QuotientMatches, ALGroupFromGenerators;
+import "tests/_quotbyinvol.m" : QuotientByInvolution, QuotientMatches, ALMatrixGroupFromGenerators;
 
 if not assigned bases then
     bases := "10_11,10_13,10_23,10_3,10_7,134_1,146_1,14_1,14_3,14_5,15_1,15_2,194_1,206_1,21_2,"
@@ -75,7 +75,7 @@ for base in Split(bases, ",") do
 
     gens := AssociativeArray();
     for m in Keys(ws_data[{1}]) do gens[m] := ChangeRing(ws_data[{1}][m], Rationals()); end for;
-    all, consistent, why := ALGroupFromGenerators(gens, g+1);
+    all, consistent, why := ALMatrixGroupFromGenerators(gens, g+1);
     printf "%-8o genus %-2o  %o stored -> group of %o%o\n", base, Genus(top),
            #Keys(gens), #Keys(all), consistent select "" else ("   INCONSISTENT: " cat why);
 
