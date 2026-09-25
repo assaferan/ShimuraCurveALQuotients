@@ -1,56 +1,25 @@
 // BiellipticModelCheck.m
 //
 // Decide between candidate models of a genus-2 bielliptic Atkin-Lehner quotient
-// C = X_0(D,N)/W when point counts cannot: two curves with isogenous Jacobians have the SAME
-// a_p at every good prime, so the trace formula pins only the isogeny class.  The fixed points
-// of the residual Atkin-Lehner involutions, and their fields of definition, are invariants of the
-// CURVE together with its AL action (not of its Jacobian), and they do decide.
+// C = X_0(D,N)/W that share an isogeny class (so the same a_p), using the fields of definition
+// of the fixed points of the residual AL involutions, which depend on the curve.
 //
 // For an even sextic model  y^2 = A x^6 + B x^4 + C x^2 + D  the group V_4 = <sigma, iota> acts by
 //     sigma      : (x,y) -> (-x,  y)   Fix = (0, +-sqrt(D))                 field Q(sqrt(D))
 //     sigma*iota : (x,y) -> (-x, -y)   Fix = 2 pts at infty, y/x^3 = +-sqrt(A)  field Q(sqrt(A))
 //     iota       : (x,y) -> ( x, -y)   Fix = the 6 Weierstrass points (roots of the sextic)
-// and the square classes of A and D are invariants of the model up to x -> lambda x, y -> nu y.
-// On the Shimura side the residual group W_full/W acts on C; for each nontrivial coset the number
-// of fixed points on C, split by CM discriminant, comes from Ogg's formula (NumFixedPointsByCMOrder,
-// CountFixedPointsOnQuotient), and the possible fields of definition of those CM points on C from
-// Shimura reciprocity (FieldsOfDefinitionOfCMPoint[Fast], following Gonzalez-Rotger).  A coset
-// whose quotient has genus 0 is the hyperelliptic involution iota; a coset with genus-1 quotient is
-// one of the two bielliptic involutions, and is matched to sigma or sigma*iota by comparing the a_p
-// of its elliptic quotient with the trace formula for X_0(D,N)/<W, coset> -- no hand assignment.
-// A candidate is CONSISTENT when, for some a_p-compatible matching, the Galois orbits of the fixed
-// points of every AL involution of the model are absorbed by the predicted (disc, count, fields)
-// rows (MatchFixedPointOrbits, a multiset check).  The a_p matching is redundant: the fields alone
-// decide the pairing (see the note in CheckBiellipticCandidate); it is kept as a cross-check.
+// On the Shimura side, each nontrivial coset of W in W_full has fixed points counted by Ogg's
+// formula (NumFixedPointsByCMOrder) with fields from Shimura reciprocity
+// (FieldsOfDefinitionOfCMPointFast).  A genus-0 coset is iota; a genus-1 coset is sigma or
+// sigma*iota, matched by the a_p of its elliptic quotient.  A candidate is CONSISTENT when, for
+// some matching, every model involution's fixed-point orbits fit the predicted rows
+// (MatchFixedPointOrbits).
 //
-// Which involution is Atkin-Lehner.  All of the above assumes that the residual AL group acts on
-// the model through V_4 = <sigma, iota>.  The AL involutions are defined over Q, so they lie in
-// Aut_Q(C); when the reduced automorphism group Aut(C)/<iota> is just C_2 there is no other
-// choice.  When it is larger there are other bielliptic involutions and the AL ones need not be
-// x -> -x in the given model.  ModelInvolutionCheck decides, per candidate, whether the choice
-// matters:
-//   * geometric automorphism group of order 4 (reduced group C_2), from the Igusa invariants
-//     (GeometricAutomorphismGroupFromIgusaInvariants, i.e. the Cardona-Quer classification;
-//     cross-checked against GeometricAutomorphismGroup)                        -> trusted;
-//   * otherwise, compute Aut_Q(C) (AutomorphismGroup over Q).  If every Klein four-subgroup of
-//     Aut_Q(C) containing iota is conjugate in Aut_Q(C) to <sigma, iota> (in particular if
-//     #Aut_Q(C) = 4), then any AL V_4 is carried to <sigma, iota> by an automorphism of C over Q,
-//     which preserves the fields of fixed points and the elliptic quotients    -> trusted;
-//   * otherwise                                                                -> NOT trusted.
-// For a candidate whose model is not trusted, only the involution-independent checks may exclude
-// it: the isogeny class (a_p) and the Weierstrass points (iota is unique).  A fixed-point
-// contradiction for sigma / sigma*iota is reported but does not exclude the candidate.  (A
-// fixed-point MATCH never needs this: "consistent" only means "not excluded".)  Over the whole of
-// data/bielliptic_candidates.m exactly one attempted (squarefree-N) candidate has a geometric
-// group larger than V_4: X_0(14,15)/<w_7,w_30>, candidate 2, Aut_Q = Aut_geom = D_12 = C_2 x S_3,
-// whose three Klein subgroups containing iota are conjugate -- so it is trusted and no verdict
-// changed when this check was added (2026-09-24).
+// This assumes the AL group acts through <sigma, iota>.  ModelInvolutionCheck verifies that every
+// Klein four-subgroup of Aut_Q(C) containing iota is conjugate to it; when that fails the model is
+// UNTRUSTED and only the a_p and Weierstrass-point checks may exclude it.
 //
 // Scope: N squarefree (the field-of-definition theory is only implemented there).
-//
-// Worked example, X_0(34,3)/w_102 (tests/BiellipticModelCheck.m [4]): candidate 1 of that entry
-// has the right a_p at all primes yet needs fixed points over Q(sqrt(-222)) and Q(sqrt(-74)),
-// ramified at 37 -- impossible for CM points of a curve of level 34*3.
 
 declare verbose BiellipticModelCheck, 2;
 
@@ -188,8 +157,7 @@ intrinsic ExpectedALFixedPointData(X::ShimuraQuot : Fast := true) -> List
             c := Integers()!c;
             total +:= c;
             vprintf BiellipticModelCheck, 2 : "  class %o: disc %o, %o fixed point(s) on C; computing fields...\n", cl, d, c;
-            // Fast := false selects FieldsOfDefinitionOfCMPoint, which is DEPRECATED (kept only as
-            // a test cross-check, slated for removal); use the default Fast := true.
+            // Fast := false selects the deprecated FieldsOfDefinitionOfCMPoint (tests only).
             fs := Fast select FieldsOfDefinitionOfCMPointFast(X, d) else FieldsOfDefinitionOfCMPoint(X, d);
             Append(~rows, <d, c, fs>);
         end for;
@@ -316,13 +284,8 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
     iota_orbits := [* Degree(t[1]) eq 1 select Rationals() else NumberField(t[1])
                        : t in Factorization(f) *];
 
-    // a_p-compatible matchings of the genus-1 cosets to the bielliptic model involutions.
-    // NB: the traces are NOT needed for the verdict -- the fixed-point fields alone decide the
-    // pairing (try both assignments of {sigma, sigma*iota} to the two genus-1 cosets and accept
-    // the candidate if either fits, which is what happens below whenever the two elliptic quotients
-    // are isogenous).  The a_p matching is kept only as a redundant cross-check that the elliptic
-    // quotient attached to a coset lies in the isogeny class of X_0(D,N)/<W, coset>; in the full
-    // run over data/bielliptic_candidates.m it rejected nothing.
+    // a_p-compatible matchings of the genus-1 cosets to the bielliptic model involutions.  When
+    // the two elliptic quotients are isogenous both assignments are tried.
     q_ap := [[p + 1 - ComputePointsViaTrace(r`Quotient, p, 1) : p in ps] : r in g1];
     m_ap := [[TraceOfFrobenius(mv[3], p) : p in ps] : mv in model];
     matchings := [];   // sequences a with a[i] = index into model for g1[i], injective

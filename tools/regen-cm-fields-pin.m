@@ -1,32 +1,16 @@
-// tools/regen-cm-fields-pin.m -- regenerate the CM field-of-definition REGRESSION PIN
-// (data/cm_fields_pin.m) from the CURRENT code only.
+// tools/regen-cm-fields-pin.m -- regenerate the CM field-of-definition regression pin
+// (data/cm_fields_pin.m) from the current code.
 //
-//   magma -b out:=/tmp/cm_fields_pin.m tools/regen-cm-fields-pin.m < /dev/null     # from repo root
-//   magma -b out:=/tmp/x.m pin:=data/cm_fields_pin.m tools/regen-cm-fields-pin.m < /dev/null
+//   magma -b out:=/tmp/cm_fields_pin.m [pin:=data/cm_fields_pin.m] tools/regen-cm-fields-pin.m < /dev/null
 //
-// `out:=` is REQUIRED and there is deliberately no default: this script must never overwrite the
-// committed pin by accident.  `pin:=` (default data/cm_fields_pin.m) is the committed file whose
-// key set -- PIN_CURVES, PIN_DISCS and PIN_EXCLUDED -- is reused unchanged, so the regenerated file
-// has exactly the same keys in the same order and a plain diff shows only changed VALUES.
-//
-// THEN DIFF AGAINST THE COMMITTED FILE, IGNORING THE HEADER COMMENT:
+// out has no default so the committed pin is never overwritten.  The key set is read from pin, so
+// a diff shows only changed values:
 //   diff <(grep -v '^//' data/cm_fields_pin.m) <(grep -v '^//' /tmp/cm_fields_pin.m)
-// and REVIEW EVERY CHANGED LINE.  A changed entry means the code now gives a different field of
-// definition (or a different existence verdict) for that CM point than it did when pinned.  That
-// is either a bug you just introduced or a fix you intend; this script cannot tell which.
-// Copying the output over data/cm_fields_pin.m ("re-pinning") is a statement that you INTEND every
-// such change -- say why in the commit message, and check changed points against a source
-// (tests/CMPoints.m, tests/CMFieldsOfDefinition.m) where one exists.
+// Each changed line is a bug or an intended fix; re-pinning asserts the latter, so say why in the
+// commit.  The committed pin was cross-checked against older code versions; this output is not.
 //
-// NOTE ON PROVENANCE.  The committed pin was made from THREE versions of the code (081d1ae,
-// fddce4e, working tree of 2026-09-24) and keeps only values they all agree on.  This script sees
-// only the current code, so its output is a weaker object; its header says so.  If you re-pin,
-// keep that distinction honest in the header.
-//
-// Per key it computes FieldsOfDefinitionOfCMPoint (slow), FieldsOfDefinitionOfCMPointFast and
-// DegreeOfFieldOfDefinitionOfCMPoint.  A key where slow and fast differ up to isomorphism, either
-// errors, or the degree function disagrees with the field degrees is reported as INCONSISTENT and
-// OMITTED from PIN (so it shows up in the diff as a deleted line).  Runtime ~6 min.
+// A key where slow and fast fields differ, either errors, or the degree function disagrees is
+// reported INCONSISTENT and omitted.  Runtime ~6 min.
 if not assigned out then
     print "usage: magma -b out:=OUTFILE [pin:=data/cm_fields_pin.m] tools/regen-cm-fields-pin.m < /dev/null";
     print "ERROR: out:= is required (no default, so the committed pin is never overwritten by accident).";
@@ -45,11 +29,9 @@ PIN          := eval (src cat "\nreturn PIN;");
 committed := AssociativeArray();
 for e in PIN do committed[<e[1], e[2], e[3], e[4]>] := e[5]; end for;
 
-// Description of a list of fields as a sorted set of coefficient lists of absolute defining
-// polynomials; [0, 1] is Q.  Built-in Magma only -- CI's Magma has no Polredabs (that comes from
-// a locally attached package).  So that a diff shows only REAL changes, a field isomorphic to one
-// of the committed entry's fields (refs) is written with the committed polynomial; a genuinely new
-// field is written as DefiningPolynomial(OptimizedRepresentation(.)).
+// Sorted coefficient lists of absolute defining polynomials; [0, 1] is Q.  No Polredabs (not in
+// CI's Magma).  A field isomorphic to a committed one (refs) reuses its polynomial, so the diff
+// shows only real changes.
 nf := func<c | c eq [0, 1] select Rationals() else NumberField(Polynomial(Rationals(), c))>;
 iso := func<F, G | AbsoluteDegree(F) eq AbsoluteDegree(G) and
                    (AbsoluteDegree(F) eq 1 or IsIsomorphic(AbsoluteField(F), AbsoluteField(G)))>;

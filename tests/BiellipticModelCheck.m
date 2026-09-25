@@ -12,17 +12,6 @@
 //   CROSS-CHECK two different methods are compared; neither is an independent truth
 //   CODE-DERIVED a regression value produced by this code, with no independent source; it pins
 //               behaviour, it does not validate it
-//
-//   [1] ALGroupFromGenerators closes a generating set under Atkin-Lehner multiplication,
-//   [2] MatchFixedPointOrbits: Galois orbits of observed fixed points must be absorbed by the
-//       predicted (CM discriminant, count, possible fields) rows -- multiset, not "some row",
-//   [3] ReadBiellipticCandidates parses the vendored candidate file,
-//   [4] X_0(34,3)/w_102: candidate 1 contradicts (independent ramification argument),
-//       candidate 2 is consistent (code-derived),
-//   [5] CheckBiellipticEntry returns "determined" there and "not attempted" for a non-squarefree
-//       level,
-//   [6] ModelInvolutionCheck: which bielliptic involution of the model is Atkin-Lehner, when the
-//       reduced automorphism group is larger than C_2; and the downgrade it triggers.
 
 QQ := Rationals();
 P<x> := PolynomialRing(QQ);
@@ -121,8 +110,8 @@ assert v9`Status eq "not attempted";
 ok, desc := ModelInvolutionCheck(e102[4][2]);
 assert ok and "V_4" in desc;
 //
-// (b) X_0(14,15)/<w_7,w_30>, candidate 2 -- the ONLY attempted (squarefree-N) candidate in the
-//     file with extra automorphisms (CODE-DERIVED survey, see the BiellipticModelCheck.m header).
+// (b) X_0(14,15)/<w_7,w_30>, candidate 2: the only attempted (squarefree-N) candidate in the
+//     file with extra automorphisms (CODE-DERIVED survey).
 //     HAND: f = 9x^6 + 90x^4 + 225x^2 + 252 satisfies (x+1)^6 f((x-3)/(x+1)) = 64 f(x), so
 //     x -> (x-3)/(x+1), y -> 8y/(x+1)^3 is an automorphism over Q; its matrix [[1,-3],[1,1]] has
 //     cube -8*I, so it has order 3 in PGL_2 and the reduced group is at least S_3, not C_2.

@@ -1,22 +1,11 @@
 // data/cm_fields_pin.m -- REGRESSION PIN of fields of definition of CM points.
 //
-// ============================================================================================
-//  WHAT THIS IS: the output of the code, agreed by three versions of it -- commits 081d1ae
-//  (2026-06-27), fddce4e (2026-08-08) and the working tree of branch bielliptic-model-check on
-//  2026-09-24 (HEAD 14d7b2f plus comment-only edits to the CM-field code) -- computed on
-//  2026-09-24.  One later change to that code: the slow function's existence test was moved
-//  above its asserts (the "sE" class below).  The pinned values are unchanged by it
-//  (tools/regen-cm-fields-pin.m reproduces this file's body byte for byte, 0 inconsistent keys).
+// The output of the code, agreed by three versions of it: 081d1ae (2026-06-27), fddce4e
+// (2026-08-08) and bielliptic-model-check at 14d7b2f (2026-09-24).  NOT a source of truth: it
+// guarantees the answer is UNCHANGED, not CORRECT.  Source-backed checks are in tests/CMPoints.m
+// ([GY] Appendix B) and tests/CMFieldsOfDefinition.m ([Err], [Kl], [Wat]).
 //
-//  WHAT THIS IS NOT: a source of truth.  Nothing here was checked against a paper.  An entry
-//  is only as right as the code that produced it; the pin guarantees the answer is UNCHANGED,
-//  not that it is CORRECT.  Source-backed checks are in tests/CMPoints.m ([GY] Appendix B) and
-//  tests/CMFieldsOfDefinition.m ([Err], [Kl], [Wat]).
-// ============================================================================================
-//
-// Consumed by tests/CMFieldsRegressionPin.m.  Regenerate (from the CURRENT code only) with
-//     magma -b out:=/tmp/cm_fields_pin.m tools/regen-cm-fields-pin.m < /dev/null
-// then diff against this file and review every change -- see that script's header.
+// Consumed by tests/CMFieldsRegressionPin.m; regenerate with tools/regen-cm-fields-pin.m.
 //
 // KEYS.  Every (curve, d) in PIN_CURVES x PIN_DISCS: 26 quotients X_0(D,N)/W with D*N squarefree
 // (W given as the sorted list of Atkin-Lehner indices), and the 151 discriminants of class number
@@ -30,9 +19,8 @@
 //
 // PIN entry  <D, N, W, d, fields, deg>
 //   fields : one coefficient list (constant term first) per field, of a defining polynomial of
-//            its absolute field (Polredabs-reduced when first pinned; the test compares up to
-//            isomorphism, so any defining polynomial is valid); [0, 1] is Q.  [] means NO CM point by the order of
-//            discriminant d on the quotient (an existence-test verdict, pinned deliberately).
+//            its absolute field (compared up to isomorphism); [0, 1] is Q.  [] means NO CM point
+//            by the order of discriminant d on the quotient (pinned deliberately).
 //   deg    : DegreeOfFieldOfDefinitionOfCMPoint(X, d); 0 for no CM point.
 //
 // PIN_EXCLUDED entry  <D, N, W, d, code>: keys NOT pinned because the versions or the two
@@ -47,12 +35,9 @@
 //        and returns a field on an order non-maximal at a prime dividing D (all gcd(D,f) > 1).
 //   198  v081:sE fE, later f0 -- same missing correction, making 081d1ae's fast function crash
 //        ('@@' not in codomain, or "could not find a fractional ideal").
-//   103  sE f0 in all 3 versions -- the SLOW function asserts GCD(D_R*N_star_R, Disc(R)) = 1
-//        BEFORE its existence test and trips it (all gcd(D,f) > 1); fast returns no field.
-//        (12 more of these are counted in the 198 above.)  Excluded only because slow errored.
-//        FIXED after pinning (existence test moved above the asserts): on every key whose code
-//        has cur:sEf0 the slow function now returns no field, as fast does.  The keys stay
-//        excluded, since the three pinned versions did not agree on them.
+//   103  sE f0 in all 3 versions -- the SLOW function tripped an assert before its existence
+//        test (all gcd(D,f) > 1; 12 more are counted in the 198 above).  Since fixed: slow now
+//        returns no field there, as fast does, but the keys stay excluded.
 // Degree function vs field degrees: no disagreement.  fddce4e vs current: no disagreement.
 
 PIN_CURVES := [

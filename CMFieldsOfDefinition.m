@@ -1,17 +1,7 @@
-// Fields of definition of the CM points on the Atkin-Lehner quotient
-// X^D_0(N)/W, computed from ring class field data: their degree, and hence
-// which discriminants give a point that is rational or of degree 2.
-//
-// Entry points:  DegreeOfFieldOfDefinitionOfCMPoint(X, d)   just the degree
-//                RationalCMDiscs(X)                         discriminants of degree 1
-//                Degree2Points(X)                           discriminants of degree 2
-//                CMClassLists()                             the candidate discriminants
-//
-// The degree is read off group orders alone, with no number field and no ring
-// class field: only Pic(R) and the Atkin-Lehner combinatorics of W.  This is
-// what makes scanning a whole class-number table affordable.  For the fields
-// themselves see FieldsOfDefinitionOfCMPoint(Fast) in SchoferFormula.m, which
-// computes the same degree the expensive way.
+// Degrees of the fields of definition of CM points on the Atkin-Lehner quotient
+// X^D_0(N)/W, read off Pic(R) and the Atkin-Lehner combinatorics of W alone (no
+// ring class field), and the rational and degree-2 CM points built from them.
+// For the fields themselves see FieldsOfDefinitionOfCMPointFast in SchoferFormula.m.
 //
 // The degree of the field of definition of the CM points by R on X^D_0(N)/W is
 //
@@ -27,12 +17,9 @@
 
 intrinsic CMClassLists() -> Assoc
 {The imaginary quadratic discriminants of each class number up to 8, keyed by
- class number.  The full list: every order, maximal or not, and every class
- group, not only the 2-groups.  A pruned list is valid only for a specific kind
- of point on a specific quotient -- a rational point on the full Atkin-Lehner
- quotient forces an elementary abelian 2 class group, but that argument does not
- carry to a proper subquotient -- so the scans here keep everything and let
- DegreeOfFieldOfDefinitionOfCMPoint decide.}
+ class number: every order, maximal or not, and every class group, not only the
+ 2-groups (a point on a proper subquotient can be rational without an elementary
+ abelian 2 class group).}
     CNs := AssociativeArray();
     CNs[1] := {-3,-4,-7,-8,-11,-12,-16,-19,-27,-28,-43,-67,-163};
     CNs[2] := {-15,-20,-24,-32,-35,-36,-40,-48,-51,-52,-60,-64,-72,-75,-88,-91,-99,-100,-112,-115,-123,-147,-148,-187,-232,-235,-267,-403,-427};
@@ -75,8 +62,7 @@ intrinsic DegreeOfFieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Rn
 
     // Proposition 5.6 plus the GCD(D, f) = 1 correction: an order non-maximal at
     // a prime ramified in the quaternion algebra has embedding number 0, which
-    // the congruence alone does not see.  Same test as
-    // FieldsOfDefinitionOfCMPointFast, which returns no field in this case.
+    // the congruence alone does not see.
     if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return 0;
     end if;
@@ -92,20 +78,15 @@ intrinsic DegreeOfFieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Rn
     eps_factor := #ker;
 
     // Complex conjugation is realised by w_m composed with an Artin symbol, for
-    // m = D_R * N_star_R.  It identifies a point with its conjugate on the
-    // quotient exactly when some element of W differs from m by a Galois
-    // Atkin-Lehner, which halves the degree.  The product m * mm only has to be
-    // Galois; it need not itself lie in W, and requiring that suppresses the
-    // halving on quotients such as W = {1, D*N}.
+    // m = D_R * N_star_R.  It halves the degree exactly when some mm in W has
+    // m * mm Galois; m * mm need not itself lie in W (e.g. W = {1, D*N}).
     m := D_R*N_star_R;
     cc_active := exists{mm : mm in W |
         ((D*N) div (D_R*N_R)) mod AtkinLehnerMul(m, mm, D*N) eq 0};
 
     h_R := #PicardGroup(R);
-    // The division is exact: #W_gal / eps_factor is the order of the image of
-    // W_gal in Gal(H_R/K), a subgroup of a group of order h_R.  An inexact
-    // division means W_gal or the eps correction is wrong, which integer
-    // division would otherwise hide by truncating.
+    // Exact: #W_gal / eps_factor is the order of a subgroup of Gal(H_R/K).
+    // Assert it so that integer division cannot hide a wrong W_gal or eps.
     assert (2 * h_R * eps_factor) mod #W_gal eq 0;
     deg := 2 * h_R * eps_factor div #W_gal;
     if cc_active then
@@ -131,8 +112,6 @@ intrinsic RationalCMDiscs(X::ShimuraQuot : max_class_num := 0) -> Assoc
     require IsSquarefree(X`D * X`N) : "RationalCMDiscs requires D*N squarefree";
     CNs := CMClassLists();
     cm_pts := AssociativeArray();
-    // Every class number in the table, not only the powers of two: the class
-    // group need not be a 2-group for a point on a proper subquotient.
     hs := Sort(Setseq(Keys(CNs)));
     if max_class_num gt 0 then
         hs := [h : h in hs | h le max_class_num];

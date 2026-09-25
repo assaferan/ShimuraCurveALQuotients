@@ -1,23 +1,11 @@
 // tests/CMFieldsRegressionPin.m
 //
-// REGRESSION PIN -- pinned against the code's output as of 2026-09-24, consistent across
-// versions 081d1ae, fddce4e and current; guarantees UNCHANGED, not CORRECT; for source-backed
-// checks see tests/CMPoints.m and tests/CMFieldsOfDefinition.m.
-//
-// What it checks.  data/cm_fields_pin.m lists 3252 CM points (curve, d): 26 quotients
-// X_0(D,N)/W with D*N squarefree (star quotients and proper subquotients, D = 1 and D > 1,
-// N = 1 and N > 1) times the 151 discriminants of class number <= 4.  1133 carry a CM point and
-// pin its field(s) of definition; 2119 pin "no CM point by this order" (the existence test,
-// including the GCD(D, f) = 1 correction).  Each entry was kept only where the slow and fast
-// field-of-definition functions agreed in all three versions and the degree function matched;
-// the 674 keys where anything disagreed are listed in PIN_EXCLUDED and NOT checked here (see the
-// data file's header for what disagreed).  For every pinned entry this test asserts that the
-// current FieldsOfDefinitionOfCMPointFast returns the same fields UP TO ISOMORPHISM (as sets) and
-// that DegreeOfFieldOfDefinitionOfCMPoint returns the pinned degree.
-//
-// A FAILURE HERE MEANS THE ANSWER CHANGED, not that it is wrong.  If the change is intended,
-// regenerate with tools/regen-cm-fields-pin.m, review the diff line by line, and re-pin.
-// Runtime ~45 s.
+// REGRESSION PIN: guarantees the answer is UNCHANGED, not CORRECT (for source-backed checks see
+// tests/CMPoints.m and tests/CMFieldsOfDefinition.m).  For every entry of data/cm_fields_pin.m
+// (3252 keys: 26 quotients x 151 discriminants of class number <= 4, minus PIN_EXCLUDED; see its
+// header), asserts that FieldsOfDefinitionOfCMPointFast returns the pinned fields up to
+// isomorphism and DegreeOfFieldOfDefinitionOfCMPoint the pinned degree.  On an intended change,
+// regenerate with tools/regen-cm-fields-pin.m and review the diff.  Runtime ~45 s.
 
 procedure test_CMFieldsRegressionPin(PIN, PIN_CURVES, PIN_DISCS, PIN_EXCLUDED)
     printf "Testing CM fields of definition against the regression pin...";

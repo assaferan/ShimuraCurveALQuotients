@@ -1423,16 +1423,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
  anchors. Listing those in Keep admits exactly them without relaxing the filter globally.
  INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
  points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
- "nicest" points. The scan itself is now cheap: each candidate costs one
- DegreeOfFieldOfDefinitionOfCMPoint call (Pic(R) plus Atkin-Lehner combinatorics, no ring class
- field), and the whole bd = 16 table (CNs[1..16]) takes about 0.5-1.4 s on the star quotients
- (38,1), (6,29), (10,19), (1,210), (142,1). What target bounds is the number of points RETURNED,
- and hence the caller's per-point work downstream (Schofer values, and FieldsOfDefinitionOfCMPointFast
- on the star curve and each cover when the Schofer table is built), which is far more expensive
- than the scan. target = 0 means no early stop (scan everything, as before).}
+ "nicest" points. Each candidate costs one DegreeOfFieldOfDefinitionOfCMPoint call (the whole
+ bd = 16 table takes about 1 s), so target bounds the caller's per-point work (Schofer values,
+ fields of definition), not the scan. target = 0 means no early stop.}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
-    // Any Atkin-Lehner quotient: DegreeOfFieldOfDefinitionOfCMPoint handles an
-    // arbitrary W, so the star restriction this routine used to carry is gone.
     rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
     vprintf ShimuraQuotients, 2: "\n\tcounting elliptic points by CM order...";
@@ -1441,10 +1435,8 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     vprintf ShimuraQuotients, 2: " done (%os).", Realtime() - tt;
     for q in Keys(ell) do
         for d in Keys(ell[q]) do
-            // The seeding conditions below say when an elliptic point is rational on
-            // the STAR quotient.  On a proper subquotient fewer points are identified,
-            // so the d = -3, -4 elliptic points can have degree 2 there; confirm
-            // rationality against the field of definition before seeding.
+            // The conditions below give rationality on the star quotient only; on a
+            // proper subquotient the d = -3, -4 elliptic points can have degree 2.
             if DegreeOfFieldOfDefinitionOfCMPoint(X, d) ne 1 then continue; end if;
             if d in [-3,-4] then
                 is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
@@ -1489,18 +1481,13 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     end if;
     for ctr->d in allCN do
         // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
-        // so this keeps the nicest ones and returns fewer points for the caller's expensive per-point
-        // work -- Schofer values, fields of definition; the degree computation below is cheap).
+        // so this keeps the nicest ones).
         if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
         if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
-        // Only the DEGREE of the field of definition is needed here, and
-        // DegreeOfFieldOfDefinitionOfCMPoint reads it off Pic(R) and the Atkin-Lehner
-        // combinatorics alone.  The field itself would cost a ring class field per
-        // discriminant, paid on every candidate scanned rather than only on the few
-        // that survive.  Degree 0 means X carries no CM point by this order.
+        // Degree 0 means X carries no CM point by this order.
         deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
         if deg eq 1 and d notin Exclude then
             Append(~rat_pts, <d,1,1>);

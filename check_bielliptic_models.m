@@ -1,23 +1,12 @@
 // check_bielliptic_models.m
 //
-// Decide the candidate genus-2 bielliptic models of data/bielliptic_candidates.m (from
-// fsaia/GenusAtMost2) by the fields of definition of the Atkin-Lehner fixed points; see
-// BiellipticModelCheck.m for the method.  Only squarefree N is attempted.
+// Decide the candidate models of data/bielliptic_candidates.m with BiellipticModelCheck.m.
 //
-// Usage:   magma -b out:=PREFIX [target:=D_N] check_bielliptic_models.m < /dev/null > LOG 2>&1
-//   out     REQUIRED output prefix  ->  PREFIX_verdicts.txt   (summary + full reports)
-//                                       PREFIX_determined.m   (Freddy's format)
-//           There is deliberately no default: the committed result is
-//           data/bielliptic_model_determined.m, and a run must not overwrite it silently.  Write
-//           into a scratch directory, e.g.
-//               mkdir -p /tmp/bmc && magma -b out:=/tmp/bmc/bielliptic_model check_bielliptic_models.m < /dev/null > /tmp/bmc/log 2>&1
-//           and diff against the committed file (the generated header is fixed text, so a plain
-//           diff is exact; any output line is a verdict change or a re-presented equation):
-//               diff data/bielliptic_model_determined.m /tmp/bmc/bielliptic_model_determined.m
-//           Only after reviewing that diff, copy the new file over the committed one.
-//   target  optional "D_N" (e.g. 34_3) to run a single level (then do NOT copy the output over the
-//           committed file -- it only contains that level).
-// Full run: ~5 min on the Mac (309 s, 2026-09-24).
+//   magma -b out:=PREFIX [target:=D_N] check_bielliptic_models.m < /dev/null > LOG 2>&1
+//
+// Writes PREFIX_verdicts.txt and PREFIX_determined.m.  out has no default so the committed
+// data/bielliptic_model_determined.m is never overwritten; diff against it before copying over.
+// target (e.g. 34_3) runs a single level.  Full run ~5 min.
 
 SetColumns(0);
 AttachSpec("ShimuraQuotients.spec");
