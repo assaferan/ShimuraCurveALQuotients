@@ -60,13 +60,28 @@ procedure test_10_19()
     // so the pinned matrix was the only bridge between the two presentations -- and it is the
     // bridge that rotted, not the matrix's arithmetic.
     //
-    // ⇒ A REAL FIX HAS TO RE-DERIVE BOTH SIDES TOGETHER, and there is nothing external to anchor
-    // them: `tests/GuoYangEquations.m` carries NO equation for this base (the journal's only word
-    // on it is Remark 38, that X_0^10(19) is not hyperelliptic over Q), and neither the expected
-    // curve nor the three ws_data matrices here cite a source.  So both are unattributed snapshots
-    // of pipeline output, and re-pinning them against today's pipeline would make this test
-    // compare the pipeline with itself.  What is worth preserving is the INVOLUTION check, which
-    // needs the curve and the matrices to be re-derived in ONE consistent presentation.
+    // ✅ THE EXPECTED CURVE IS PUBLISHED -- IT IS AN ORACLE, NOT A SNAPSHOT.  Guo-Yang,
+    // Compositio Math. 153 (2017), EXAMPLE 37 is exactly X = X_0^10(19).  With s the Hauptmodul of
+    // X/W_{10,19} normalised by s(tau_-8) = 0, s(tau_-40) = infinity, s(tau_-3) = 1, they print
+    //
+    //     X/<w_2, w_95> :  y^2 = -8s^3 + 57s^2 - 40s + 16     (Cremona E190A1)
+    //     X/w_190       :  y^2 = -8x^6 + 57x^4  - 40x^2 + 16
+    //
+    // and the sextic in cover_data[{1}] above, homogenised, IS that second equation verbatim
+    // (y^2 = -8x^6 + 57x^4 s^2 - 40x^2 s^4 + 16 s^6, i.e. s = 1).  So this key is anchored in the
+    // published text and MUST NOT be replaced by the committed model's presentation -- doing so
+    // would throw the oracle away and leave the pipeline compared with itself.
+    //
+    // ⚠ TRANSCRIPTION GAP: tests/GuoYangEquations.m carries NO row for 10_19, because its rows come
+    // from Tables A.1/A.2 and this base's equations are in the BODY, in Example 37.  Remark 38
+    // (X_0^10(19) is not hyperelliptic over Q) is why it is not in the hyperelliptic tables at all.
+    // Same shape as the GuoYangTable1 find: ask of every source what else it publishes that we do
+    // not read.
+    //
+    // ⇒ SO THE FIX IS A TRANSPORT, not a re-pin: carry the published presentation onto the
+    // pipeline's current one and record the resulting matrix, exactly as tests/_gyinvol.m does for
+    // involutions.  The three ws_data matrices below must be transported through the SAME map, or
+    // they will be checked against the wrong object.
     test_AllEquationsAboveCoversSingleCurve(10, 19, cover_data, ws_data, curves : manual_isomorphism);
     return;
 end procedure;
