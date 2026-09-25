@@ -1,6 +1,7 @@
 {
 BorcherdsForms.m
 SchoferFormula.m
+CMFieldsOfDefinition.m
 WeilRepresentation.m
 EisensteinLocalFactors.m
 VectorValuedForm.m
@@ -16,6 +17,7 @@ workingcode.m
 automorphisms.m
 LogSum.m
 ModularNonALInvolutions.m
+BiellipticModelCheck.m
 QuaternionLatticeData.m
 RationalWithFactorization.m
 TraceFormula.m

@@ -1187,14 +1187,10 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
-        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the incremental early-stop below keeps it cheap
-        // Fetch INCREMENTALLY: scan discriminants (smallest |d| first) only until we have enough --
-        // the demand MaxNum plus a margin of spare quadratic points for the hauptmodul sign-finding
-        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8] and never pay for
-        // CNs[16]; CM-starved bases reach into CNs[16] just far enough. Bounds the expensive
-        // per-discriminant ring-class-field field-of-definition to ~target real CM points.
-        fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
-                                      // the early-stop fires well before exhausting the (expensive) h=16 points
+        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the scan computes degrees only, so it is cheap
+        // Stop once MaxNum points plus a margin of spares (for the sign-finding replacement loop in
+        // ValuesAtCMPoints) are found: every returned point costs Schofer values and fields downstream.
+        fetch_target := MaxNum + 8;
         // Follows the same default as CandidateDiscriminants above (filter OFF unless CMCOPRIME=1).
         // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
         // filtering even when the main gate had been relaxed -- a base could be admitted by one
@@ -1498,7 +1494,8 @@ end function;
 
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
-{Return possible fields of definition for CM point with CM by d on X.}
+{Return possible fields of definition for CM point with CM by d on X.
+DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check; slated for removal.}
     // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
@@ -1509,13 +1506,16 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
     N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1 or (f mod p eq 0)];   
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
-    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     // Proposition 5.6 + correction (adding GCD(D,f) = 1)
+    // This test must come before the asserts below: when p | GCD(D, f), KroneckerCharacter(d)
+    // (primitive) gives chi(p) = -1, so p lands in D_R and the first assert fails.
     if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
+
+    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
+    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     rec := ArtinMap(H_R);
 
@@ -1623,18 +1623,24 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 end intrinsic;
 
 intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
-{Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
- definition of the CM point with CM by d on X, built via Magma's AbelianExtension
- inside the (smaller) Atkin-Lehner-fixed field A_abs rather than the full ring class
- field H_R + ArtinMap(H_R).  Returns the same set of fields (up to isomorphism) as
- FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.
- If MaxDegree > 0, callers that only want small-degree fields (e.g. the rational/quadratic
- CM-point fetch) can cap the work: the field-of-definition DEGREE is known cheaply from A_abs
- (it is Degree(A_abs) when complex conjugation is inactive on the quotient, else Degree(A_abs)/2,
- because every returned field is the fixed field of an order-2 reflection).  When that degree
- exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
- complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
- high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
+{Fields of definition Q(P) of the CM points of discriminant d on the Atkin-Lehner
+ quotient X = X_0(D,N)/W, following [GR, Sec 5] (arXiv:math/0612732v2, Appendix).
+ Works inside A_abs, the subfield of the ring class field H_R fixed by the Galois
+ Atkin-Lehner subgroup of W (Lemma 5.9), of degree 2*h_R/#alSub_W.
+
+ Returns:
+   [* *]       X has no CM point by the order R of discriminant d: the Prop 5.6
+               congruence together with GCD(D, Conductor(R)) = 1 (e.g. d = -656 on
+               X_0(34,5)*).  DegreeOfFieldOfDefinitionOfCMPoint returns 0 here.
+   [* Aabs *]  complex conjugation is not active on the quotient.
+   otherwise   one field per valid class [a] in Pic(R)/Pic(R)^2: the fixed field of the
+               reflection c . sigma_a . sigma_w0, of degree Degree(A_abs)/2.  It need not
+               be totally real (d = -228 on X_0(38,1)/<w_38> gives Q(sqrt(-19)), as in
+               [GY]).  The list has length 1 for fundamental d ([GR] Rem 5.11).
+
+ MaxDegree > 0: return [* *] when the degree exceeds it, before building any field, so
+ [* *] then means "no point of degree <= MaxDegree".  For the degree alone use
+ DegreeOfFieldOfDefinitionOfCMPoint.}
     D := X`D;
     N := X`N;
     W := X`W;
