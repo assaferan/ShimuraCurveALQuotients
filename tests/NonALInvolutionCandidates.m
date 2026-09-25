@@ -41,6 +41,9 @@ assert isinv(get_V3(90)*al_matrix(10, 90), {1}, 90);    // eps(10) = eps(2) eps(
 assert isinv(get_V2(72)*get_V3(72)*al_matrix(8, 72), {1}, 72);       // eps(8*8) = 0
 assert isinv(get_V2(144)*get_V3(144), {1}, 144);        // 2^4 || 144: eps(16) = 0
 assert isinv(S2*al_matrix(9, 36), {1}, 36);
+// W_4 S2 W_4^-1 = [1,0;2,1]: an involution of X_0(4) that fails only the lower-left mod-L
+// test of Gamma_0(4) membership, so this pins that part of the oracle.
+assert isinv(M2Z![1,0,2,1], {1}, 4);
 assert nControl eq 5;
 
 // ------------------------------------------------ PART 2: pinned candidate lists
