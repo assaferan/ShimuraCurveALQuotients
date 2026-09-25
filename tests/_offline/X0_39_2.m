@@ -1,5 +1,9 @@
 // ⚠ OFFLINE, ON COST GROUNDS ONLY (`run_tests.m` globs just `tests/*.m`). Re-deriving 39_2 takes
-// over 17 minutes, which does not belong in a CI slot; the test itself is expected to pass.
+// over 17 minutes, which does not belong in a CI slot.  MEASURED 2026-09-25: passes in 680 s,
+// 14 curve comparisons, 3 involution comparisons, 14/14 expected covers matched.
+// ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because nothing in
+// CI runs this directory and the line here used to assert "the test is expected to pass" without
+// anyone having run it.  State what was measured and when, not what is expected.
 // It became possible at all on 2026-09-07, when the coprime-to-level CM filter became OFF BY
 // DEFAULT: before that 39_2 needed CMNONCOPRIME=1, and a plain X0_*.m test cannot set an env var.
 //
@@ -27,8 +31,10 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // coefficients matter (they do for the CRV constructions, and for `15_4`'s twist), that has to be
 // pinned elsewhere -- see tests/CRVFullCurve.m and tests/CRV_15_4.m.
 // The second component of each cover_data value is unused here -- with manual_isomorphism false
-// (the default) the helper calls IsIsomorphic, so the matrix is a placeholder. ws_data is left
-// empty for the same reason: the helper skips involution checks for keys it does not find.
+// (the default) the helper calls IsIsomorphic, so the matrix is a placeholder.
+// ⚠ This comment used to end "ws_data is left empty for the same reason". That went STALE when
+// 638223e populated ws_data without updating it, and the stale line is what made the red test
+// look explained. ws_data IS populated below, and the involution check does fire (3 comparisons).
 
 function load_covers_and_ws_data_39_2()
     _<s> := PolynomialRing(Rationals());
@@ -79,7 +85,34 @@ function load_covers_and_ws_data_39_2()
     // pairwise distinct, and w_2*w_3 is an involution too (consistent with an abelian AL group).
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
-    ws_data[{1}][2]  := Matrix(3,3,[ 1,0, 1,  0,-16,0,  1,0,-1 ]);   // (x+z, -16y, x-z)
+    // ⚠⚠ A FOURTH PUBLISHED GUO-YANG ERROR, determined 2026-09-25: the journal's involution cell
+    // for X_0^39(2) (Compositio Table A.2, p.38) MISLABELS w_2 and w_26 -- the map it prints as
+    // w_2 = (2/x, -16y/x^8) is w_26, and its w_78 is w_6.  The matrix below is the correct
+    // TRANSPORT of that published map (reproduced independently, byte for byte); only the LABEL
+    // was wrong, so the fix is a relabel, not a new matrix.
+    //
+    // HOW IT WAS DETERMINED, non-circularly.  The star hauptmodul s is the V_4-invariant
+    // R(u) = (u^2-8)/(u+3), u = (x^2+2)/x, built from Guo-Yang's OWN published involutions; its
+    // branch values are R(Fix s2)=0, R(Fix s3)=-4, R(Fix s6)=-8.  Our Schofer/Borcherds table --
+    // keyed by DISCRIMINANT, with no involution input -- gives s(-24)=Infinity, s(-52)=0,
+    // s(-312)=1, and Ogg fixes disc <-> involution as theory (-24 <-> w_6, -52 <-> w_13,
+    // -312 <-> w_78).  The fourth anchor that breaks the Mobius ambiguity is the Weierstrass
+    // locus: the roots of f are the w_39 fixed points, CM of disc -39/-156, with R-images
+    // v^2+45/7v+81/7 and v^2+11v+27.  Pushing those through the two candidate normalisations,
+    // ONLY the assignment Fix(sigma_2) -> Infinity reproduces the pipeline's
+    // s(-39) = x^2 - 20/27x - 4/27.  So Fix(sigma_2) has disc -24, i.e. it is Fix(w_6), i.e. the
+    // element the journal calls w_78 is w_6 and the one it calls w_2 is w_26.
+    //
+    // ⚠ WHY NOTHING ELSE CAUGHT IT, and why the obvious checks cannot: the relabelling is the
+    // F_2-automorphism v -> v + v_2*e_13, and BOTH genus and Ogg's fixed-point COUNTS are
+    // invariant under it (counts are 0,0,4,4,0,16,4 for m = 2,3,6,13,26,39,78 on either reading).
+    // The CM FIELD cannot separate -24 from -312 either: H(-24) = Q(sqrt2,sqrt-3) sits inside the
+    // genus field H(-312) = Q(sqrt2,sqrt-3,sqrt13), and the measurable point-field degree
+    // saturates at 4 because the sigma-fixed x always lies in a quadratic field.  Only the CM
+    // VALUES discriminate.  Do not "simplify" this to a genus or fixed-point-count check.
+    //
+    // {w_26, w_3, w_39} still generates the full Atkin-Lehner group, so nothing is lost.
+    ws_data[{1}][26] := Matrix(3,3,[ 1,0, 1,  0,-16,0,  1,0,-1 ]);   // (x+z, -16y, x-z)
     ws_data[{1}][3]  := Matrix(3,3,[ 0,0, 1,  0, -1,0, -1,0, 0 ]);   // (-z, -y, x)
     ws_data[{1}][39] := DiagonalMatrix([1,-1,1]);                    // (x, -y)
     return cover_data, ws_data;
