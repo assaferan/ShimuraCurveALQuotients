@@ -348,9 +348,11 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
         if (2 le bound) and (2 notin PrimeDivisors(X`D*X`N)) then
             wp := WeilPolynomial(X,2);
             slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
-            f := [i[2] : i in slopes | i[1] eq 0][1]; //find multiplicity of 0
+            f := &+[Integers() | i[2] : i in slopes | i[1] eq 0]; //2-rank = multiplicity of slope 0
             u := Universe(poss_wps_at2[f]);
-            wp := Reverse(Coefficients(wp));
+            // Only the unit-root part is constrained: the coefficients of T^0..T^f of the
+            // L-polynomial. The higher ones are even, and the table entries have length f+1.
+            wp := Reverse(Coefficients(wp))[1..f+1];
             if u!wp notin poss_wps_at2[f] then
                 vprint ShimuraQuotients, 2 : u!wp;
                 return false, 2;
