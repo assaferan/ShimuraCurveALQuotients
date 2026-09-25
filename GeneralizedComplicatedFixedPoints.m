@@ -101,8 +101,9 @@ involutions on X_0(D,N)/W.}
             bad join:= {w : w in als | IsEven(w)};
         end if;
         if ("V3" in vname) and (9 notin W) then
-            bad join:= {w : w in als | exists(p){p : p in PrimeDivisors(w) |
-                                                 (p^Valuation(w,p) mod 3) eq 2}};
+            // V3 W_w V3^-1 = W_9^eps(w) W_w, eps(w) = 1 iff the 3-free part of w is 2 mod 3
+            // ([FH] Lemma 1; eps is multiplicative, so this is not a per-prime condition).
+            bad join:= {w : w in als | (w div 3^Valuation(w,3)) mod 3 eq 2};
         end if;
         Append(~bad_sets, bad);
     end for;
