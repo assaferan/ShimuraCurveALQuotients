@@ -82,6 +82,35 @@ procedure test_10_19()
     // pipeline's current one and record the resulting matrix, exactly as tests/_gyinvol.m does for
     // involutions.  The three ws_data matrices below must be transported through the SAME map, or
     // they will be checked against the wrong object.
+    //
+    // ✅ THE HAUPTMODUL BRIDGE IS FOUND AND VERIFIED (2026-09-25).  Example 37 states Guo-Yang's
+    // normalisation outright -- s is the Hauptmodul of X/W_{10,19} with s(tau_-8) = 0,
+    // s(tau_-40) = infinity, s(tau_-3) = 1 -- so the two presentations differ by the Mobius map
+    // between their Hauptmodul normalisations, and that map is DETERMINED, not searched for.
+    // ValuesAtCMPoints gives ours:
+    //
+    //     disc      -8     -40     -3        -760
+    //     ours       0       1      infinity  32/27
+    //     Guo-Yang   0       infinity  1      32/5
+    //
+    // The first three force  s_GY = s_ours / (s_ours - 1).  The FOURTH IS A CHECK, NOT AN INPUT:
+    // that map sends 32/27 to 32/5, which is exactly what Example 37 prints for s(tau_-760).
+    // So the bridge is confirmed by a value it was not fitted to.
+    //
+    // ⚠ WHAT REMAINS is mechanical but not done: turning that Mobius map into the 4x4 coordinate
+    // matrix this test needs.  Guo-Yang's model has s = x^2 (compare their X/<w_2,w_95> equation
+    // y^2 = -8s^3+57s^2-40s+16 with X/w_190's y^2 = -8x^6+57x^4-40x^2+16), so the remaining step is
+    // to express our model's base coordinate in terms of our s and compose.
+    //
+    // ⚠⚠ TWO FAILED ATTEMPTS BEFORE THIS, BOTH THE SAME ERROR -- assuming a coordinate
+    // correspondence instead of deriving one.  (1) Solving for a linear map required the sextic
+    // identity to hold in the polynomial ring, when the two equations define the curve TOGETHER and
+    // it need only hold MODULO the conic.  (2) That same slip made me argue the published z must be
+    // proportional to the pipeline's conic variable X; the conic isomorphism shows the published
+    // **s** is, while z corresponds to the pipeline's S.  The resulting "no solution, dimension -1"
+    // was an artifact of the ansatz and says nothing about the curves.  Independently: the two
+    // conics ARE in the same class -- both pointless, both ramified at {2,5} -- so the pipeline is
+    // not building a wrong object here.
     test_AllEquationsAboveCoversSingleCurve(10, 19, cover_data, ws_data, curves : manual_isomorphism);
     return;
 end procedure;
