@@ -224,6 +224,31 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                     else "Keys MATCHED but produced no bases, so there was nothing to compare against.",
                 #matched_Ws);
 
+    // THE COMPANION GUARD. Curves verified, LABELS not. n_ws_cmp was counted and printed here for
+    // a long time but never asserted, so a test could go green having checked every cover equation
+    // and not one involution label -- the branch is skipped when the pipeline does not produce a
+    // ws_data key, or when the produced cover matched a LATER cover_data entry instead of entry 1.
+    // ⚠ WHY THIS HALF MATTERS MOST: a relabelling of the Atkin-Lehner group is invisible to every
+    // other check in this file. At 39_2 the published w_2/w_26 were swapped, and genus, Ogg's
+    // fixed-point counts and the CM fields are ALL blind to it because the relabelling is a group
+    // automorphism; only this intertwining comparison could see it. A test that silently stops
+    // making it is therefore not "slightly weaker" -- it is blind to the one defect class this
+    // comparison exists for.
+    // Fires only when ws_data actually asked for involution checks, so a test that never claimed
+    // to check labels is untouched.
+    ws_asked := &+[Integers()| #Keys(ws_data[W]) : W in Keys(ws_data)];
+    error if (ws_asked gt 0) and (n_ws_cmp eq 0),
+        Sprintf("X0^%o(%o): NO INVOLUTION EVIDENCE -- ws_data lists %o labelled involution(s) "
+                * "across %o key(s), but ZERO involution comparisons ran, so the LABELLING was "
+                * "never checked (the cover equations were: %o curve comparison(s) did run).\n"
+                * "  The branch is skipped when the pipeline does not produce a ws_data key, or "
+                * "when the produced cover matched a LATER cover_data entry instead of entry 1 -- "
+                * "the published involutions only act on the published model.\n"
+                * "  ws_data keys: %o\n  keys reached: %o",
+                D, N, ws_asked, #Keys(ws_data), n_curve_cmp,
+                {Sort(SetToSequence(W)) : W in Keys(ws_data)},
+                {Sort(SetToSequence(W)) : W in matched_Ws});
+
     // Expected covers that were never reached are NOT fatal -- a cover may legitimately be
     // deferred on a given run -- but they are silent, so say so. If this ever prints for a test
     // that is supposed to be exhaustive, that test is weaker than it looks.
