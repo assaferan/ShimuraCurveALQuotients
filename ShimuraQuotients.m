@@ -1487,7 +1487,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
         if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
-        // Degree 0 means X carries no CM point by this order.
+        // Degree 0 means X carries no CM point by this order.  A degree-2 point is kept even when
+        // its quadratic field is not determined (possible for non-fundamental d, where
+        // FieldsOfDefinitionOfCMPointFast returns several fields): it is still a quadratic point.
+        // A caller that needs the field must check that it is unique (hauptmodul_sign_candidates does).
         deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
         if deg eq 1 and d notin Exclude then
             Append(~rat_pts, <d,1,1>);

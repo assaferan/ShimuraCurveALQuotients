@@ -77,7 +77,11 @@ for c in PIN_CURVES do
         catch e
             printf "INCONSISTENT <%o>: fast raised %o\n", key, e`Object; bad +:= 1; continue;
         end try;
-        deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
+        try
+            deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
+        catch e
+            printf "INCONSISTENT <%o>: degree function raised %o\n", key, e`Object; bad +:= 1; continue;
+        end try;
         fast := canon(fastF, refs);
         degs := {#p - 1 : p in fast};
         if not same_fields(slowF, fastF) then

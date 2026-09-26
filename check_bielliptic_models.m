@@ -50,9 +50,9 @@ for v in untr do
     S cat:= Sprintf("  X_0(%o,%o)/<%o>: candidates %o (status %o)\n", v`D, v`N, v`Wgens, v`Untrusted, v`Status);
 end for;
 S cat:= Sprintf("\n%-5o %-5o %-20o %-6o %-16o %o\n", "D", "N", "W (generators)", "#cand", "status", "consistent candidates");
-for v in verdicts do
-    S cat:= Sprintf("%-5o %-5o %-20o %-6o %-16o %o\n", v`D, v`N, v`Wgens,
-                    #[* e : e in entries | e[1] eq v`D and e[2] eq v`N and e[3] eq v`Wgens *][1][4],
+// verdicts[i] is the verdict for entries[i] (built in lockstep above).
+for i->v in verdicts do
+    S cat:= Sprintf("%-5o %-5o %-20o %-6o %-16o %o\n", v`D, v`N, v`Wgens, #entries[i][4],
                     v`Status, v`Consistent);
 end for;
 S cat:= "\n\n================ FULL REPORTS ================\n\n";
@@ -68,9 +68,9 @@ M cat:= "// candidates in data/bielliptic_candidates.m.  Entries: [* D, N, W (ge
 M cat:= "_<x> := PolynomialRing(Rationals());\n";
 M cat:= "genus_2_bielliptics_eqn_determined := [\n";
 first := true;
-for v in verdicts do
+for i->v in verdicts do
     if v`Status ne "determined" then continue; end if;
-    e := [* e : e in entries | e[1] eq v`D and e[2] eq v`N and e[3] eq v`Wgens *][1];
+    e := entries[i];
     M cat:= Sprintf("%o[* %o, %o, %o, %o *]", first select "" else ",\n", v`D, v`N, v`Wgens, e[4][v`Consistent[1]]);
     first := false;
 end for;
@@ -78,10 +78,10 @@ M cat:= "\n];\n\n";
 M cat:= "// Entries with more than one candidate still consistent: [* D, N, W, [remaining candidates] *].\n";
 M cat:= "genus_2_bielliptics_eqn_still_ambiguous := [\n";
 first := true;
-for v in verdicts do
+for i->v in verdicts do
     if v`Status ne "ambiguous" then continue; end if;
-    e := [* e : e in entries | e[1] eq v`D and e[2] eq v`N and e[3] eq v`Wgens *][1];
-    M cat:= Sprintf("%o[* %o, %o, %o, %o *]", first select "" else ",\n", v`D, v`N, v`Wgens, [e[4][i] : i in v`Consistent]);
+    e := entries[i];
+    M cat:= Sprintf("%o[* %o, %o, %o, %o *]", first select "" else ",\n", v`D, v`N, v`Wgens, [e[4][j] : j in v`Consistent]);
     first := false;
 end for;
 M cat:= "\n];\n";

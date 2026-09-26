@@ -18,11 +18,11 @@ P<x> := PolynomialRing(QQ);
 
 // [1]  HAND: w_a w_b = w_{ab/gcd(a,b)^2}.  {2,3} in 210 closes to {1,2,3,6};
 //      {2,3,133} in 798 = 2*3*7*19 closes to all products of 2, 3, 133.
-assert ALGroupFromGenerators({3}, 102) eq {1, 3};
-assert ALGroupFromGenerators({102}, 102) eq {1, 102};
-assert ALGroupFromGenerators({2, 3}, 210) eq {1, 2, 3, 6};
-assert ALGroupFromGenerators({2, 3, 133}, 798) eq {1, 2, 3, 6, 133, 266, 399, 798};
-assert ALGroupFromGenerators({Integers() | }, 102) eq {1};
+assert AllALsFromGens({3}, 102) eq {1, 3};
+assert AllALsFromGens({102}, 102) eq {1, 102};
+assert AllALsFromGens({2, 3}, 210) eq {1, 2, 3, 6};
+assert AllALsFromGens({2, 3, 133}, 798) eq {1, 2, 3, 6, 133, 266, 399, 798};
+assert AllALsFromGens({Integers() | }, 102) eq {1};
 
 // [2]  HAND: synthetic inputs; the expected answer follows from the definition (each orbit of
 //      degree k takes k points from one row whose field list contains its field; every row must

@@ -1959,6 +1959,10 @@ function hauptmodul_sign_candidates(abs_schofer_tab, d, d_idx)
     flds := abs_schofer_tab`FldsOfDefn;
     cid := abs_schofer_tab`Xstar`CurveID;
 
+    // For non-fundamental d the list can hold several possible star fields, and the true one is not
+    // known.  Testing against one of them could keep a wrong minpoly, so return [] and let the caller
+    // swap the point for a spare (it errors if none is left).
+    if #flds[cid][d] ne 1 then return []; end if;
     K := flds[cid][d][1];                          // star field of definition: exactly where s(P) lives
     K_imaginary := not IsTotallyReal(K);
     norm_s := table[s_idx][d_idx];
