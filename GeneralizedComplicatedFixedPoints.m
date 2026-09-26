@@ -101,9 +101,10 @@ involutions on X_0(D,N)/W.}
         if "S2" in vname then
             bad join:= {w : w in als | IsEven(w)};
         end if;
+        // V3 fails to commute with w_m exactly when the 3-free part of m is 2 mod 3 ([FH] Lemma 1;
+        // multiplicative in m, as in the descent test above -- e.g. it commutes with w_10).
         if ("V3" in vname) and (9 notin W) then
-            bad join:= {w : w in als | exists(p){p : p in PrimeDivisors(w) |
-                                                 (p^Valuation(w,p) mod 3) eq 2}};
+            bad join:= {w : w in als | (w div 3^Valuation(w,3)) mod 3 eq 2};
         end if;
         Append(~bad_sets, bad);
     end for;
