@@ -37,8 +37,10 @@ function wpat2_setup(g)
 end function;
 
 // id is the CurveID in data/curves_after_*.dat. It must be set: WeilPolynomial's point-count
-// cache compares curves with 'eq', which reads CurveID.
+// cache compares curves with 'eq', which reads CurveID. The genus is asserted, not trusted: it
+// picks both the branch (g not in [3..6]) and the table size.
 function wpat2_curve(D, N, W, g, id)
+    assert GenusShimuraCurveQuotient(D, N, W) eq g;
     X := CreateShimuraQuot(D, N, W);
     X`g := g;
     X`CurveID := id;
