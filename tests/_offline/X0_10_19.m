@@ -97,10 +97,26 @@ procedure test_10_19()
     // that map sends 32/27 to 32/5, which is exactly what Example 37 prints for s(tau_-760).
     // So the bridge is confirmed by a value it was not fitted to.
     //
-    // ⚠ WHAT REMAINS is mechanical but not done: turning that Mobius map into the 4x4 coordinate
-    // matrix this test needs.  Guo-Yang's model has s = x^2 (compare their X/<w_2,w_95> equation
-    // y^2 = -8s^3+57s^2-40s+16 with X/w_190's y^2 = -8x^6+57x^4-40x^2+16), so the remaining step is
-    // to express our model's base coordinate in terms of our s and compose.
+    // ✅ THE TWO MODELS ARE THE SAME CURVE -- measured 2026-09-27, so a pipeline defect here is
+    // RULED OUT.  Counting points of each (sextic, conic) pair over F_p and INCLUDING the fibre
+    // over t = infinity (both polynomials have even degree, so that fibre is governed by their
+    // leading coefficients) gives identical totals at all 15 good primes p <= 61:
+    //     8 16 8 20 20 16 40 24 60 32 44 52 60 72 56
+    // ⚠ The affine count alone is NOT an invariant and says the opposite -- it differs at 6 of 13
+    // primes, always by exactly +-4, purely from the boundary.  Do not repeat that: count the
+    // fibre at infinity or the comparison is presentation-dependent.
+    //
+    // ⚠⚠ WHY THE TRANSPORT IS STILL NOT DONE, and why three attempts failed the same way.  The
+    // obstruction is structural, not arithmetic: the two pairs present the curve over DIFFERENT
+    // intermediate quotients (ours has conic variable x over the (z,s)-line; Guo-Yang's has conic
+    // variable z over the x-line).  So there is no Mobius map between the two BASE lines to find,
+    // and any parametrisation assuming one is empty by construction.  Measured: solving
+    //     nu^2 * P(z) = -8u^6 + 57u^4 v^2 - 40u^2 v^4 + 16v^6,   mu^2 * Q(z) = 5u^2 - 32v^2
+    // for u = az+b, v = cz+d has NO rational solution under any pin of a, b, c or d -- including
+    // with mu^2, nu^2 as the unknowns rather than mu, nu, so a non-square scaling is not the issue.
+    // ⇒ The map must be a general weight-respecting map on P(1,3,1,1) with the sextic identity
+    // holding MODULO the conic, not a base Mobius.  That is the case construct_crv_isomorphism
+    // declines, which is why the harness cannot do it either.
     //
     // ⚠⚠ TWO FAILED ATTEMPTS BEFORE THIS, BOTH THE SAME ERROR -- assuming a coordinate
     // correspondence instead of deriving one.  (1) Solving for a linear map required the sextic
