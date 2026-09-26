@@ -81641,8 +81641,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 9>,
 <"g", 7>, <"CurveID", 10146>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10149 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 2">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 9>,
 <"W", { IntegerRing() | 1, 5, 99, 495 }>,
