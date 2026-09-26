@@ -41148,8 +41148,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"g", 5>, <"CurveID", 5124>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5137 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=18 (nu=8), N2=1530 (nu=24)">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 153, 306, 765, 1530 }>,
@@ -63726,8 +63725,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 45>,
 <"g", 5>, <"CurveID", 7923>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7936 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=9 (nu=8), N2=990 (nu=24)">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 99, 198, 495, 990 }>,
@@ -67484,8 +67482,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 45>,
 <"g", 5>, <"CurveID", 8387>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8397 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=45 (nu=8), N2=234 (nu=24)">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 45>,
 <"W", { IntegerRing() | 1, 9, 10, 26, 65, 90, 234, 585 }>,
