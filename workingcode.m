@@ -25,17 +25,21 @@ FILTER_STAGES := [*
     <"FilterByTraceStar", FilterByTrace>,
     // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
     // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
-    // GetQuotientsAndGenera.  There is no star Weil-polynomial stage in this list (run_pipeline.sh
-    // has FilterByWeilPolynomialStar, and runs the twisted Weil stage right after it), so the star
-    // twisted Weil stage follows the star twisted trace here.  They DO decide some D = 1 star curves
-    // of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so VerifyHHProposition1 is run on HH's own
-    // input -- the FilterByTraceStar snapshot -- rather than on the pipeline state (see below).
+    // GetQuotientsAndGenera.  Each twisted stage runs right after its untwisted counterpart, and
+    // the star block is in the same order as run_pipeline.sh (tests/PipelineStages.m checks it),
+    // so that attribution -- the first stage to decide a curve -- agrees between the two.  They DO
+    // decide some D = 1 star curves of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so
+    // VerifyHHProposition1 is run on HH's own input -- the FilterByTraceStar snapshot -- rather
+    // than on the pipeline state (see below).
     <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
-    <"FilterByTwistedWeilPolynomialStar", FilterByTwistedWeilPolynomial>,
     // <"VerifyHHTable2", VerifyHHTable2>,
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
     <"SpecialFiberIsomorphismStar", SpecialFiberIsomorphism>,
+    // Weil polynomials of the star curves (same filter as parallel_filter_worker.m runs for it),
+    // then their twists.  FilterStarCurvesByFpAutomorphisms is a redundant cross-check after Weil.
+    <"FilterByWeilPolynomialStar", FilterByWeilPolynomialGenusScaled>,
+    <"FilterByTwistedWeilPolynomialStar", FilterByTwistedWeilPolynomial>,
     <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
     // Non-AL involution filter on the star curves before expansion; determinations are
     // carried onto the full-W entries by GetQuotientsAndGenera and then propagated.
