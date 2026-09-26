@@ -42,6 +42,24 @@ heavy curves are always dispatched early.}
         return R!0;
     end if;
 
+    if stage eq "FilterByAutomorphismGroup" then
+        // Cheap coset enumeration; the occasional expensive part is TraceDNewQuotient for a
+        // non-AL central involution, which only arises with S2/V2/V3 (4 | N or 9 || N).
+        if (X`N mod 4 eq 0) or (Valuation(X`N, 3) eq 2) then return R!(g * Sqrt(R!DN)); end if;
+        return R!1;
+    end if;
+
+    if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial"} then
+        // Modular symbols of level D*N plus Hecke operators: grows roughly like DN^2.  The worker
+        // takes the maximum over a level (the modular symbols are shared by its curves).
+        if DN gt TwistedModSymMaxLevel() then return R!0; end if;
+        if stage eq "FilterByTwistedWeilPolynomial" and
+           not ((g eq 3) or (g eq 4 and exists{p : p in [2,3,5] | DN mod p ne 0}) or (g in {5,6} and IsOdd(DN))) then
+            return R!0;
+        end if;
+        return R!(DN) * R!(DN);
+    end if;
+
     if stage eq "FilterBySpecialFiber" then
         // D=1, D=6 and D=10 curves do work (a few primes, supersingular points, a Mobius check);
         // other discriminants are skipped for free.  Cost is roughly per-prime.  For D=6 the

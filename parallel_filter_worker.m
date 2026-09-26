@@ -20,6 +20,11 @@
 //   FilterByDegeneracyMorphism
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
+//
+// FilterByAutomorphismGroup is per curve, like the above.  FilterByTwistedTrace and
+// FilterByTwistedWeilPolynomial compute the modular symbols of level D*N once per level and
+// share them between the curves at that level, so for them the unit of work is a LEVEL: all
+// curves with the same (D,N) go to the same chunk (see the assignment below).
 
 // Convert integer args from the raw strings Magma receives on the command line
 chunk_i        := StringToInteger(chunk);
@@ -44,9 +49,27 @@ n := #curves;
 // in the lowest-numbered chunks, which GNU parallel dispatches first.  Each worker computes
 // the same ordering deterministically, so the chunks partition the curves with no overlap.
 proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
-perm := [1..n];
-Sort(~perm, func<i, j | proxy[i] gt proxy[j] select -1 else (proxy[i] lt proxy[j] select 1 else i - j)>);
-my_idx := [perm[k] : k in [chunk_i .. n by total_chunks_i]];   // strided slice of the sorted order
+if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial"} then
+    // Level-grouped stages: the same cost-aware strided deal, over levels instead of curves.  A
+    // level's cost is its most expensive curve (the modular symbols dominate and are shared), and
+    // every curve of the level, decided or not, goes with it, so the chunks still partition 1..n.
+    lv := AssociativeArray();
+    for i in [1..n] do
+        key := <curves[i]`D, curves[i]`N>;
+        if not IsDefined(lv, key) then lv[key] := []; end if;
+        Append(~lv[key], i);
+    end for;
+    groups := [lv[key] : key in Keys(lv)];
+    gcost := [Max([proxy[i] : i in grp]) : grp in groups];
+    gfirst := [Min(grp) : grp in groups];
+    gperm := [1..#groups];
+    Sort(~gperm, func<a, b | gcost[a] gt gcost[b] select -1 else (gcost[a] lt gcost[b] select 1 else gfirst[a] - gfirst[b])>);
+    my_idx := Sort(&cat([groups[gperm[k]] : k in [chunk_i .. #groups by total_chunks_i]] cat [[Integers()|]]));
+else
+    perm := [1..n];
+    Sort(~perm, func<i, j | proxy[i] gt proxy[j] select -1 else (proxy[i] lt proxy[j] select 1 else i - j)>);
+    my_idx := [perm[k] : k in [chunk_i .. n by total_chunks_i]];   // strided slice of the sorted order
+end if;
 subseq := [curves[i] : i in my_idx];
 
 t0 := Realtime();
@@ -54,6 +77,12 @@ t0 := Realtime();
 case stage:
     when "FilterByTrace", "FilterByTraceStar":
         FilterByTrace(~subseq);
+    when "FilterByAutomorphismGroup":
+        FilterByAutomorphismGroup(~subseq);
+    when "FilterByTwistedTrace":
+        FilterByTwistedTrace(~subseq);
+    when "FilterByTwistedWeilPolynomial":
+        FilterByTwistedWeilPolynomial(~subseq);
     when "FilterStarCurvesByFpAutomorphisms":
         FilterStarCurvesByFpAutomorphisms(~subseq);
     when "FilterByALFixedPointsOnQuotient":

@@ -49,10 +49,23 @@ FILTER_STAGES := [*
     // Mirrors run_pipeline.sh.
     <"FilterByGeneralizedComplicatedFixedPoints", FilterByGeneralizedComplicatedFixedPoints>,
     <"UpdateCurves5", UpdateCurves>,
+    // Brandt-Stichtenoth lemma on the known automorphism group (residual ALs plus the S2/V2/V3 that
+    // descend).  Placed after BOTH refined fixed-point stages above and their closure UpdateCurves5.
+    // The new stages get "UpdateCurvesAfter<X>" closures, not renumbered UpdateCurvesN, so that the
+    // existing data/curves_after_UpdateCurves<N>.dat names (read by tests and
+    // GetHyperellipticCandidates) keep their meaning.  Mirrors run_pipeline.sh.
+    <"FilterByAutomorphismGroup", FilterByAutomorphismGroup>,
+    <"UpdateCurvesAfterAutomorphismGroup", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
+    // Trace twisted by the involutions defined over Q (modular symbols, once per level).
+    <"FilterByTwistedTrace", FilterByTwistedTrace>,
+    <"UpdateCurvesAfterTwistedTrace", UpdateCurves>,
     <"FilterByWeilPolynomial",FilterByWeilPolynomialGenusScaled>,
     <"UpdateCurves7", UpdateCurves>,
+    // Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables.
+    <"FilterByTwistedWeilPolynomial", FilterByTwistedWeilPolynomial>,
+    <"UpdateCurvesAfterTwistedWeilPolynomial", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>
 *];

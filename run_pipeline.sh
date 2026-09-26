@@ -37,10 +37,16 @@
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
 #   FilterByGeneralizedComplicatedFixedPoints  [PARALLEL]  (generalized Prop 6, mixed groups)
 #   UpdateCurves5                          [sequential]  + VerifyFHTable3 (pre)
+#   FilterByAutomorphismGroup              [PARALLEL]  (Brandt-Stichtenoth lemma on the known group)
+#   UpdateCurvesAfterAutomorphismGroup     [sequential]
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
+#   FilterByTwistedTrace                   [PARALLEL, by level]  (modular symbols once per level)
+#   UpdateCurvesAfterTwistedTrace          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]
 #   UpdateCurves7                          [sequential]
+#   FilterByTwistedWeilPolynomial          [PARALLEL, by level]
+#   UpdateCurvesAfterTwistedWeilPolynomial [sequential]
 #   FilterByNonALInvolutions               [PARALLEL]
 #   UpdateCurves8                          [sequential]
 
@@ -156,10 +162,29 @@ run_par "FilterByComplicatedALFixedPointsOnQuotient"
 run_par "FilterByGeneralizedComplicatedFixedPoints"
 run_seq "UpdateCurves5"       "${D}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat" \
                                                                                    "${D}/curves_after_UpdateCurves5.dat"
+# Brandt-Stichtenoth lemma on the known automorphism group G_Y (residual ALs plus the S2/V2/V3 that
+# descend), after BOTH refined fixed-point stages above.  The new stages' closures are named
+# UpdateCurvesAfter<Stage> rather than renumbering UpdateCurves6..8, so the existing
+# curves_after_UpdateCurves<N>.dat names keep their meaning (tests and GetHyperellipticCandidates
+# read them).
+run_par "FilterByAutomorphismGroup"
+run_seq "UpdateCurvesAfterAutomorphismGroup" "${D}/curves_after_FilterByAutomorphismGroup.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterAutomorphismGroup.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"
+# Trace twisted by the involutions defined over Q.  Needs the modular symbols of level D*N, so the
+# worker splits this stage by LEVEL (one modular-symbols computation per level); the largest levels
+# take hours each.
+run_par "FilterByTwistedTrace"
+run_seq "UpdateCurvesAfterTwistedTrace" "${D}/curves_after_FilterByTwistedTrace.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterTwistedTrace.dat"
 run_par "FilterByWeilPolynomial"
 run_seq "UpdateCurves7"       "${D}/curves_after_FilterByWeilPolynomial.dat"       "${D}/curves_after_UpdateCurves7.dat"
+# Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables
+# (g = 3..6 at the table primes only).  Split by level, like FilterByTwistedTrace.
+run_par "FilterByTwistedWeilPolynomial"
+run_seq "UpdateCurvesAfterTwistedWeilPolynomial" "${D}/curves_after_FilterByTwistedWeilPolynomial.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
 run_par "FilterByNonALInvolutions"
 run_seq "UpdateCurves8"       "${D}/curves_after_FilterByNonALInvolutions.dat"     "${D}/curves_after_UpdateCurves8.dat"
 
