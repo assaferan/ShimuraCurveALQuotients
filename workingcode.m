@@ -23,10 +23,23 @@ FILTER_STAGES := [*
     // <"VerifyHHTable1", VerifyHHTable1>,
     <"UpdateByGenusStar", UpdateByGenus>,
     <"FilterByTraceStar", FilterByTrace>,
+    // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
+    // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
+    // GetQuotientsAndGenera.  Each twisted stage runs right after its untwisted counterpart, and
+    // the star block is in the same order as run_pipeline.sh (tests/PipelineStages.m checks it),
+    // so that attribution -- the first stage to decide a curve -- agrees between the two.  They DO
+    // decide some D = 1 star curves of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so
+    // VerifyHHProposition1 is run on HH's own input -- the FilterByTraceStar snapshot -- rather
+    // than on the pipeline state (see below).
+    <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
     // <"VerifyHHTable2", VerifyHHTable2>,
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
     <"SpecialFiberIsomorphismStar", SpecialFiberIsomorphism>,
+    // Weil polynomials of the star curves (same filter as parallel_filter_worker.m runs for it),
+    // then their twists.  FilterStarCurvesByFpAutomorphisms is a redundant cross-check after Weil.
+    <"FilterByWeilPolynomialStar", FilterByWeilPolynomialGenusScaled>,
+    <"FilterByTwistedWeilPolynomialStar", FilterByTwistedWeilPolynomial>,
     <"FilterStarCurvesByFpAutomorphisms", FilterStarCurvesByFpAutomorphisms>,
     // Non-AL involution filter on the star curves before expansion; determinations are
     // carried onto the full-W entries by GetQuotientsAndGenera and then propagated.
@@ -49,10 +62,23 @@ FILTER_STAGES := [*
     // Mirrors run_pipeline.sh.
     <"FilterByGeneralizedComplicatedFixedPoints", FilterByGeneralizedComplicatedFixedPoints>,
     <"UpdateCurves5", UpdateCurves>,
+    // Brandt-Stichtenoth lemma on the known automorphism group (residual ALs plus the S2/V2/V3 that
+    // descend).  Placed after BOTH refined fixed-point stages above and their closure UpdateCurves5.
+    // The new stages get "UpdateCurvesAfter<X>" closures, not renumbered UpdateCurvesN, so that the
+    // existing data/curves_after_UpdateCurves<N>.dat names (read by tests and
+    // GetHyperellipticCandidates) keep their meaning.  Mirrors run_pipeline.sh.
+    <"FilterByAutomorphismGroup", FilterByAutomorphismGroup>,
+    <"UpdateCurvesAfterAutomorphismGroup", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
+    // Trace twisted by the involutions defined over Q (modular symbols, once per level).
+    <"FilterByTwistedTrace", FilterByTwistedTrace>,
+    <"UpdateCurvesAfterTwistedTrace", UpdateCurves>,
     <"FilterByWeilPolynomial",FilterByWeilPolynomialGenusScaled>,
     <"UpdateCurves7", UpdateCurves>,
+    // Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables.
+    <"FilterByTwistedWeilPolynomial", FilterByTwistedWeilPolynomial>,
+    <"UpdateCurvesAfterTwistedWeilPolynomial", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>
 *];
@@ -113,7 +139,11 @@ function compute_data(start_stage, stages)
         when "FilterByTraceStar":
 	        VerifyHHTable2(curves);
         when "HHProposition1":
-    	    VerifyHHProposition1(curves);
+            // [HH] Proposition 1 applied to the point-count output alone; the twisted star stages
+            // in between decide further Table 2 curves, which HH do not.
+            hh := eval Read("data/curves_after_FilterByTraceStar.dat");
+            HHProposition1(~hh);
+    	    VerifyHHProposition1(hh);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByGeneralizedComplicatedFixedPoints":

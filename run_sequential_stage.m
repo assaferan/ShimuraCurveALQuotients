@@ -37,9 +37,17 @@ case stage:
         UpdateByGenus(~curves);
 
     when "HHProposition1":
-        // Verify FilterByTraceStar output before running HHProposition1
-        VerifyHHTable2(curves);
+        // The [HH] checks are about HH's own input, the FilterByTraceStar output, which sits next to
+        // input_dat.  The input itself is FilterByTwistedTraceStar's output, and the twisted trace
+        // decides further D = 1 star curves of HH Table 2 (e.g. X_0^*(396)), so it would not match.
+        slash := [i : i in [1..#input_dat] | input_dat[i] eq "/"];
+        dir := #slash eq 0 select "." else input_dat[1..slash[#slash]-1];
+        hh := eval Read(dir cat "/curves_after_FilterByTraceStar.dat");
+        VerifyHHTable2(hh);
         printf "VerifyHHTable2 passed\n";
+        HHProposition1(~hh);
+        VerifyHHProposition1(hh);
+        printf "VerifyHHProposition1 passed\n";
         HHProposition1(~curves);
 
     when "SpecialFiberIsomorphismStar":
@@ -59,7 +67,9 @@ case stage:
         UpdateCurves(~curves);
 
     when "UpdateCurves1", "UpdateCurves2", "UpdateCurves3", "UpdateCurves4",
-         "UpdateCurves6", "UpdateCurves7", "UpdateCurves8":
+         "UpdateCurves6", "UpdateCurves7", "UpdateCurves8",
+         "UpdateCurvesAfterAutomorphismGroup", "UpdateCurvesAfterTwistedTrace",
+         "UpdateCurvesAfterTwistedWeilPolynomial":
         UpdateCurves(~curves);
 
     when "Genus3CoversGenus2":
@@ -76,9 +86,6 @@ case stage:
     when "UpdateGenera":
         VerifyHHTable1(curves);
         printf "VerifyHHTable1 passed\n";
-    when "HHProposition1":
-        VerifyHHProposition1(curves);
-        printf "VerifyHHProposition1 passed\n";
     when "GetQuotientsAndGenera_UpdateByGenus":
         VerifyFHTheorem3(curves);
         printf "VerifyFHTheorem3 passed\n";
