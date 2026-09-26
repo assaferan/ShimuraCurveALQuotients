@@ -26,10 +26,12 @@ procedure test_TwistedWeil(curves)
     P := AssociativeArray(); for x in tw do P[x[1]] := x[2]; end for;
     assert P["w2"] eq t^6 - 4*t^5 + 19*t^4 - 40*t^3 + 95*t^2 - 100*t + 125;
     assert P["w6"] eq Evaluate(P["w2"], -t);
-    // h = 1 reproduces a recorded WeilPolynomial verdict
+    // h = 1 reproduces a recorded WeilPolynomial verdict.  Not pinned by TestInWhichProved: 169 also
+    // fails TwistedTrace (h = w43, p = 5), which now runs first and takes the attribution.
     Y := curves[169];
-    assert Y`TestInWhichProved eq Sprintf("WeilPolynomial with p = %o", 2);
+    assert assigned Y`IsSubhyp and not Y`IsSubhyp;
     P1 := TwistedWeilPolynomials(Y, 2)[1][2];
+    assert P1 eq WeilPolynomial(Y, 2);
     tab := {l : l in Split(Read(Sprintf("data/hypg%oq%o.txt", Y`g, 2)), "\n") | #l gt 0};
     assert "[" cat Join([IntegerToString(x) : x in Reverse(Coefficients(P1))], ",") cat "]" notin tab;
     // the filter
