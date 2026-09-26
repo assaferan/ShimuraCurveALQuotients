@@ -22,7 +22,7 @@
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
 // FilterByAutomorphismGroup is per curve, like the above.  FilterByTwistedTrace and
-// FilterByTwistedWeilPolynomial compute the modular symbols of level D*N once per level and
+// FilterByTwistedWeilPolynomial (and their *Star versions) compute the modular symbols of level D*N once per level and
 // share them between the curves at that level, so for them the unit of work is a LEVEL: all
 // curves with the same (D,N) go to the same chunk (see the assignment below).
 
@@ -49,7 +49,8 @@ n := #curves;
 // in the lowest-numbered chunks, which GNU parallel dispatches first.  Each worker computes
 // the same ordering deterministically, so the chunks partition the curves with no overlap.
 proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
-if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial"} then
+if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial",
+             "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar"} then
     // Level-grouped stages: the same cost-aware strided deal, over levels instead of curves.  A
     // level's cost is its most expensive curve (the modular symbols dominate and are shared), and
     // every curve of the level, decided or not, goes with it, so the chunks still partition 1..n.
@@ -79,9 +80,9 @@ case stage:
         FilterByTrace(~subseq);
     when "FilterByAutomorphismGroup":
         FilterByAutomorphismGroup(~subseq);
-    when "FilterByTwistedTrace":
+    when "FilterByTwistedTrace", "FilterByTwistedTraceStar":
         FilterByTwistedTrace(~subseq);
-    when "FilterByTwistedWeilPolynomial":
+    when "FilterByTwistedWeilPolynomial", "FilterByTwistedWeilPolynomialStar":
         FilterByTwistedWeilPolynomial(~subseq);
     when "FilterStarCurvesByFpAutomorphisms":
         FilterStarCurvesByFpAutomorphisms(~subseq);

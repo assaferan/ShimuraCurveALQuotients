@@ -23,6 +23,15 @@ FILTER_STAGES := [*
     // <"VerifyHHTable1", VerifyHHTable1>,
     <"UpdateByGenusStar", UpdateByGenus>,
     <"FilterByTraceStar", FilterByTrace>,
+    // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
+    // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
+    // GetQuotientsAndGenera.  There is no star Weil-polynomial stage in this list (run_pipeline.sh
+    // has FilterByWeilPolynomialStar, and runs the twisted Weil stage right after it), so the star
+    // twisted Weil stage follows the star twisted trace here.  They DO decide some D = 1 star curves
+    // of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so VerifyHHProposition1 is run on HH's own
+    // input -- the FilterByTraceStar snapshot -- rather than on the pipeline state (see below).
+    <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
+    <"FilterByTwistedWeilPolynomialStar", FilterByTwistedWeilPolynomial>,
     // <"VerifyHHTable2", VerifyHHTable2>,
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
@@ -126,7 +135,11 @@ function compute_data(start_stage, stages)
         when "FilterByTraceStar":
 	        VerifyHHTable2(curves);
         when "HHProposition1":
-    	    VerifyHHProposition1(curves);
+            // [HH] Proposition 1 applied to the point-count output alone; the twisted star stages
+            // in between decide further Table 2 curves, which HH do not.
+            hh := eval Read("data/curves_after_FilterByTraceStar.dat");
+            HHProposition1(~hh);
+    	    VerifyHHProposition1(hh);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByGeneralizedComplicatedFixedPoints":

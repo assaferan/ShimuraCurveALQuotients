@@ -39,8 +39,15 @@ case "${STAGE}" in
         # every star curve FpAut does), so this stage subsumes the FpAut stage that follows.
         INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
         ;;
-    FilterStarCurvesByFpAutomorphisms)
+    FilterByTwistedTraceStar)
+        # Twisted trace on the star curves (V2/V3 twists only); split by level.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByTraceStar.dat"
+        ;;
+    FilterByTwistedWeilPolynomialStar)
         INPUT_DAT="${DATA_DIR}/curves_after_FilterByWeilPolynomialStar.dat"
+        ;;
+    FilterStarCurvesByFpAutomorphisms)
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByTwistedWeilPolynomialStar.dat"
         ;;
     FilterByNonALInvolutionsStar)
         # Non-AL involution filter run on the star curves (full AL group), before they
@@ -94,7 +101,8 @@ case "${STAGE}" in
         ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
-        echo "Supported: FilterByTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "Supported: FilterByTraceStar, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "           FilterByTwistedWeilPolynomialStar," >&2
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient," >&2
