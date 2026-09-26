@@ -47,5 +47,21 @@ procedure test_TwistedWeil(curves)
     assert &and[not assigned cs[i]`IsSubhyp : i in [#known+1..#cs]];
 end procedure;
 
+// Star curves (FilterByTwistedWeilPolynomialStar): X_0^(39)(16)^* (9698, undecided) fails at p = 5
+// for h = V2; the hyperelliptic star curves X_0^(35)(16)^* (9244) and X_0^*(176) (828), both with
+// V2, do not.
+procedure test_TwistedWeilStar(curves)
+    X := curves[9698];
+    assert <X`D, X`N> eq <39, 16> and IsStarCurve(X);
+    ctl := [9244, 828];
+    assert &and[IsStarCurve(curves[c]) and curves[c]`IsSubhyp : c in ctl];
+    cs := [fresh(X)] cat [fresh(curves[c]) : c in ctl];
+    FilterByTwistedWeilPolynomial(~cs);
+    printf "  star %o: %o\n", X`CurveID, cs[1]`TestInWhichProved;
+    assert (not cs[1]`IsSubhyp) and cs[1]`TestInWhichProved eq "TwistedWeilPolynomial h = V2 with p = 5";
+    assert &and[not assigned cs[i]`IsSubhyp : i in [2..#cs]];
+end procedure;
+
 curves := GetHyperellipticCandidates();
 test_TwistedWeil(curves);
+test_TwistedWeilStar(curves);
