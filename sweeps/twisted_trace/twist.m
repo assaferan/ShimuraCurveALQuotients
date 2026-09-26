@@ -25,8 +25,12 @@ SetColumns(0);
 if not assigned BOUND then BOUND := "weil"; end if;
 error if BOUND notin {"weil", "pb"}, "BOUND must be weil or pb";
 if not assigned PB then PB := BOUND eq "pb" select "59" else "0"; end if;   // 0 = no prime cap
+// PMIN (supplement mode): only primes p >= PMIN.  Used to fill the q < 4g^2 gaps left by a PB=59 run
+// (report.py writes levels_supplement.txt with the PMIN each level needs).  Default 0 = no lower cap.
+if not assigned PMIN then PMIN := "0"; end if;
 if not assigned IN then IN := "sweeps/twisted_trace/curves_pending.txt"; end if;
-if not assigned OUT then OUT := "sweeps/twisted_trace/out/" cat D cat "_" cat N cat ".out"; end if;
+if not assigned OUT then OUT := "sweeps/twisted_trace/out/" cat D cat "_" cat N cat (PMIN eq "0" select "" else ".supp") cat ".out"; end if;
+PMIN := StringToInteger(PMIN);
 D := StringToInteger(D); N := StringToInteger(N); PB := StringToInteger(PB);
 L := D*N;
 cs := [];
@@ -53,11 +57,11 @@ Vfull := AssociativeArray();
 if N mod 4 eq 0 then Vfull["S2"] := MA!get_Vmu(2, N, B, MDN, true); end if;
 if N mod 8 eq 0 then Vfull["V2"] := MA!get_Vmu(2, N, B, MDN, false); end if;
 if Valuation(N, 3) eq 2 then Vfull["V3"] := MA!get_Vmu(3, N, B, MDN, false); end if;
-ps := [p : p in PrimesUpTo(pcap) | L mod p ne 0];
+ps := [p : p in PrimesUpTo(pcap) | L mod p ne 0 and p ge PMIN];
 Tp := AssociativeArray(); for p in ps do Tp[p] := MA!Solution(B, B*HeckeOperator(MDN, p)); end for;
 tall := Cputime(t0);
 F := Open(OUT, "w");
-fprintf F, "LEVEL %o %o dimDnew %o tspace %o tall %o ncurves %o bound %o PB %o pmax %o\n", D, N, n, tsp, tall, #cs, BOUND, PB, pcap;
+fprintf F, "LEVEL %o %o dimDnew %o tspace %o tall %o ncurves %o bound %o PB %o pmax %o pmin %o\n", D, N, n, tsp, tall, #cs, BOUND, PB, pcap, PMIN;
 for c in cs do
   st, id, g, W := Explode(c);
   V := VectorSpace(Rationals(), n); K := V;
@@ -113,7 +117,7 @@ for c in cs do
   end for;
   fprintf F, "RES %o %o %o %o %o %o nops %o nodesc %o noncomm %o h1 %o nviol %o viol %o ops %o\n", st, id, D, N, g,
      Join([IntegerToString(w) : w in Sort(SetToSequence(W))], ","), #ops, nodesc, noncomm, h1viol, #viol,
-     (#viol eq 0 select "-" else &cat[Sprintf("%o:%o:%o;", x[1], x[2], x[3]) : x in viol]), Join([o[1] : o in ops], ",") cat " qmax " cat IntegerToString(QM) cat " pmax " cat IntegerToString(Max([0] cat [p : p in ps | p le QM]));
+     (#viol eq 0 select "-" else &cat[Sprintf("%o:%o:%o;", x[1], x[2], x[3]) : x in viol]), Join([o[1] : o in ops], ",") cat " qmax " cat IntegerToString(QM) cat " pmax " cat IntegerToString(Max([0] cat [p : p in ps | p le QM])) cat " pmin " cat IntegerToString(PMIN);
   Flush(F);
 end for;
 fprintf F, "DONE %o %o %o\n", D, N, Cputime(t0);

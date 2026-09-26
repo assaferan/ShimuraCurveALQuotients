@@ -23,8 +23,32 @@ These two are **not** nested. The pb range contains more prime powers, but its p
 Weil range needs primes up to 4g² (61 at g = 4, and 193 at g = 7). The local results therefore
 never went past the Weil bound on q, and all 93 recorded violations satisfy q < 4g² and |tr| ≤ 2g√q
 (`report.py` checks this and prints `WEIL-BREACH`). For g ≥ 4, though, the local run skipped
-primes between 61 and 4g². `report.py` counts the curves affected. For the pending levels
+primes between 61 and 4g². The supplement run described below fills that gap. For the pending levels
 (g = 3..7, so q ≤ 35..195), weil mode computes about 10% more T_p than pb mode (2000 against 1826).
+
+## The supplement run: why it is needed
+
+The local PB=59 run skipped primes 61 ≤ p < 4g² for curves of genus g ≥ 4. A "no violation" there
+was therefore not a complete result. `report.py` computes, for every curve, the set of q that
+have actually been tested across all result files. It then compares that set with the Weil range
+{q = p^v < 4g², p ∤ DN}. Every U/R curve that has no counted violation and still has a gap goes to
+`curves_supplement.txt`. Its level, together with the smallest missing prime as `PMIN`, goes to
+`levels_supplement.txt` ("D N PMIN").
+
+At the current snapshot there are **119 curves** (118 U and the reopened curve 9255) at **83 levels**, all
+of them small completed levels. Their genera are 4 (47 curves), 5 (67), 6 (4) and 7 (1).
+
+* The missing q are all primes, from 61 to 193. Since 61² > 196 ≥ 4g² for g ≤ 7, no prime
+  powers are missing (`report.py` checks this).
+* `twist.m PMIN:=61` computes T_p only for those primes. It writes `out/D_N.supp.out`.
+* Because the list comes from per-curve coverage and not from a fixed list, it also picks up any
+  level that the local queue finishes later in PB=59 mode. To pick those up, copy the queue's newer
+  `main.out` in as `results_local.out`; any `results_*.out` is read.
+* When everything has run, section 6 of the report ("INCOMPLETE COVERAGE") should read 0.
+
+Coverage counts a q as tested even when a particular op was skipped at q: V₃ ops are only
+used at p ≡ 1 mod 3, and an op is skipped if it does not commute with T_p. So "exhaustive" means
+exhaustive for the ops the reviewed rules allow.
 
 ## Why the numbers are trustworthy
 
@@ -41,6 +65,9 @@ primes between 61 and 4g². `report.py` counts the curves affected. For the pend
 * **Same code:** `twist.m` is the exact code of the local run, with only its I/O changed. With
   `BOUND:=pb` it reproduces the `RES` lines of `results_local.out` byte for byte at (26,45), and it
   runs without `.magmarc` (`MAGMA_STARTUP_FILE=/dev/null`).
+* **Supplement check:** with `PMIN:=7` at (26,45), it finds the known violation on 8387
+  (q=7, V3*w1, −12) again. A smoke test at (1,84) and (38,5) with `PMIN:=61` merged correctly and
+  dropped the gap count from 119 to 117.
 
 ## Requirements
 
@@ -53,14 +80,29 @@ primes between 61 and 4g². `report.py` counts the curves affected. For the pend
 
     git fetch origin && git checkout twisted-trace-sweep      # or clone, then check out the branch
     cd sweeps/twisted_trace
-    JOBS=16 TIMEOUT=48h ./run.sh        # restartable: levels whose out/D_N.out has DONE are skipped
-    python3 report.py                   # merges results_local.out + out/*.out, dedup by CurveID
+    JOBS=16 TIMEOUT=48h ./run.sh        # phase 1 pending (Weil), then phase 2 supplement; restartable
+    python3 report.py                   # merges results_*.out + out/*.out per CurveID
 
-Levels run from `levels_pending.txt`, smallest DN first. Each level writes `out/D_N.out`, which is
-complete iff it ends in `DONE`, and `logs/D_N.log`. The optional environment variables are `LEVELS=`,
-`CURVES=` and `PB=`. One level by hand, from the repo root:
+`run.sh` runs in two phases:
+
+1. The levels in `levels_pending.txt`, smallest DN first. Each writes `out/D_N.out`.
+2. The supplement. `report.py` first regenerates the supplement lists, then each level is run with
+   its `PMIN` and writes `out/D_N.supp.out`.
+
+A level's output is complete iff it ends in `DONE`, and complete levels are skipped on a rerun. A
+partial output is kept as `*.partial-<time>.out`, and its finished `RES` lines still count. Logs go
+to `logs/`, and the final report goes to `logs/report_final.txt`.
+
+The phases can be run separately, since the supplement levels are small and quick:
+
+    PHASE=2 JOBS=16 ./run.sh             # supplement only
+    PHASE=1 JOBS=16 TIMEOUT=48h ./run.sh # pending only
+
+The other optional variables are `LEVELS=`, `CURVES=` and `SUPPLEVELS=` (subsets, for testing) and
+`PB=` (a prime cap). One level by hand, from the repo root:
 
     magma -b D:=15 N:=146 sweeps/twisted_trace/twist.m < /dev/null
+    magma -b D:=38 N:=5 PMIN:=61 IN:=sweeps/twisted_trace/curves_supplement.txt sweeps/twisted_trace/twist.m < /dev/null
 
 To bring the results back, copy `sweeps/twisted_trace/out/` into the same place in the local
 checkout and rerun `python3 report.py`.

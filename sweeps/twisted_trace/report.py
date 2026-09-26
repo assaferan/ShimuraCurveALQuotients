@@ -9,6 +9,10 @@ A violation is COUNTED iff
                                   per prime; a nonzero noncomm drops that curve's non-AL violations
                                   because the line does not say which op failed to commute)
 A curve seen in several files keeps the union of its counted violations (every file is a sound run).
+Coverage: each RES line says which q it tested (legacy lines without qmax/pmax/pmin: p <= 59,
+q <= 59^2).  Per curve the union over all files is compared with the Weil range {q = p^v < 4g^2, p | DN
+excluded}; U/R curves with no counted violation and a gap go to curves_supplement.txt, and their
+levels, with the smallest missing prime as PMIN, to levels_supplement.txt ("D N PMIN").
 Sanity: every recorded violation must satisfy |tr| <= 2g sqrt(q) and q < 4g^2 (Weil); else WEIL-BREACH.
 Writes final_ruled_out.txt: CurveID D N g W q h tr  (min-q counted violation), U and R curves.
 """
@@ -19,8 +23,19 @@ T = os.path.dirname(os.path.abspath(__file__)) + '/'
 GL = [2555, 2568, 4190, 5635, 5639, 6616, 8495, 7926, 7932]   # group-lemma curves
 P = print
 
-def maxgoodprime(n, L):
-    return max([p for p in range(2, n + 1) if L % p and all(p % d for d in range(2, int(p ** .5) + 1))], default=0)
+PR = [p for p in range(2, 4000) if all(p % d for d in range(2, int(p ** .5) + 1))]
+
+def qset(L, qmax, pmin=0, pmax=10 ** 9):
+    """All q = p^v <= qmax with p prime, p not dividing L, pmin <= p <= pmax."""
+    out = set()
+    for p in PR:
+        if p > min(qmax, pmax): break
+        if p < pmin or L % p == 0: continue
+        q = p
+        while q <= qmax: out.add(q); q *= p
+    return out
+
+def need(g, L): return qset(L, 4 * g * g - 1)      # Weil range: a violation needs q < 4g^2
 
 def is_al(h): return h == '1' or (h.startswith('w') and h[1:].isdigit())
 
@@ -30,7 +45,7 @@ for l in open(T + 'curves_all.txt'):
     if len(f) >= 7 and not l.startswith('#'):
         curves[int(f[1])] = dict(st=f[0], D=int(f[2]), N=int(f[3]), g=int(f[4]), W=f[6])
 
-files = [T + 'results_local.out'] + sorted(glob.glob(T + 'out/*.out'))
+files = sorted(glob.glob(T + 'results_*.out')) + sorted(glob.glob(T + 'out/*.out'))
 recs, bugs, breach, baddim = {}, [], [], []
 ndup = 0
 levels, done = set(), set()
@@ -46,9 +61,11 @@ for fn in files:
         st, cid, D, N, g, W = f[1], int(f[2]), int(f[3]), int(f[4]), int(f[5]), f[6]
         Ws = set(int(x) for x in W.split(','))
         noncomm = int(kv['noncomm'])
-        has = len(f) > 24 and f[21] == 'qmax' and f[23] == 'pmax'
-        qmax, pmax = (int(f[22]), int(f[24])) if has else (59 ** 2, 59)      # legacy lines: PB = 59
-        exh = qmax >= 4 * g * g - 1 and pmax >= maxgoodprime(4 * g * g - 1, D * N)   # Weil range covered
+        tail = {f[i]: int(f[i + 1]) for i in range(21, len(f) - 1, 2)}
+        if 'qmax' in tail:   # tested exactly the good primes pmin <= p <= pmax, powers up to qmax
+            cov = qset(D * N, tail['qmax'], tail.get('pmin', 0), tail['pmax'])
+        else:                # legacy local-run line: PB = 59
+            cov = qset(D * N, 59 ** 2, 0, 59)
         raw = [] if kv['viol'] in ('-', '[]') else [x.split(':') for x in kv['viol'].rstrip(';').split(';')]
         good = set()
         for q, h, tr in raw:
@@ -62,11 +79,11 @@ for fn in files:
         if cid in recs:
             ndup += 1
             r = recs[cid]; r['good'] |= good; r['noncomm'] = max(r['noncomm'], noncomm)
-            r['weil'] = r['weil'] or exh
+            r['cov'] |= cov
             r['src'].add(os.path.basename(fn))
         else:
             recs[cid] = dict(st=st, D=D, N=N, g=g, W=W, good=good, noncomm=noncomm,
-                             weil=exh, src={os.path.basename(fn)})
+                             cov=cov, src={os.path.basename(fn)})
 
 P('=== inputs: %d files (results_local.out + %d out/*.out); %d RES curves %s; %d duplicate RES merged'
   % (len(files), len(files) - 1, len(recs), dict(collections.Counter(r['st'] for r in recs.values())), ndup))
@@ -92,9 +109,6 @@ nonal = [i for i, r in Uf.items() if all(not is_al(h) for _, h, _ in r['good'])]
 P('  ruled out by h = 1 only (plain trace):', len(h1only))
 P('  needing a non-AL h (no AL/1 violation):', len(nonal), sorted(nonal))
 P('  ruled out by genus:', dict(sorted(collections.Counter(r['g'] for r in Uf.values()).items())))
-nw = [i for i, r in U.items() if not r['good'] and not r['weil'] and r['g'] >= 4]
-P('  not ruled out, g >= 4, Weil range q < 4g^2 not exhausted (p <= 59 only):', len(nw),
-  'at', len({(U[i]['D'], U[i]['N']) for i in nw}), 'levels')
 
 P('\n=== 3. Group-lemma curves')
 for i in GL:
@@ -119,6 +133,27 @@ for lv in sorted(pend, key=lambda x: (x[0] * x[1], x)):
     o = T + 'out/%d_%d.out' % lv
     tag = 'partial/killed/running' if os.path.exists(o) else 'not started'
     P('  (%d,%d) DN=%d  %d curves  %s' % (lv[0], lv[1], lv[0] * lv[1], len(pend[lv]), tag))
+
+gap = {i: sorted(need(r['g'], r['D'] * r['N']) - r['cov']) for i, r in recs.items()
+       if r['st'] in 'UR' and not r['good']}
+gap = {i: m for i, m in gap.items() if m}
+lvgap = collections.defaultdict(list)
+for i, m in gap.items(): lvgap[(recs[i]['D'], recs[i]['N'])].append(i)
+P('\n=== 6. INCOMPLETE COVERAGE: %d U/R curves (no violation) with untested q < 4g^2, at %d levels%s'
+  % (len(gap), len(lvgap), '' if gap else '  -- all tested curves exhausted'))
+if gap:
+    P('  missing q by genus:', {g: sorted({q for i, m in gap.items() if recs[i]['g'] == g for q in m})
+                                for g in sorted({recs[i]['g'] for i in gap})})
+    P('  all missing q prime (no prime powers):', all(len([p for p in PR if q % p == 0]) == 1 and q in PR
+                                                       for m in gap.values() for q in m))
+with open(T + 'curves_supplement.txt', 'w') as F:
+    for l in open(T + 'curves_all.txt'):
+        f = l.split()
+        if len(f) >= 7 and int(f[1]) in gap: F.write(l)
+with open(T + 'levels_supplement.txt', 'w') as F:
+    for lv in sorted(lvgap, key=lambda x: (x[0] * x[1], x)):
+        F.write('%d %d %d\n' % (lv[0], lv[1], min(min(p for p in PR if gap[i][0] % p == 0) for i in lvgap[lv])))
+P('wrote curves_supplement.txt, levels_supplement.txt')
 
 with open(T + 'final_ruled_out.txt', 'w') as F:
     F.write('# CurveID D N g W q h tr   (twisted trace, min-q counted violation; U and R curves)\n')
