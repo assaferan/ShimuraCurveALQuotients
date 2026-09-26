@@ -3,9 +3,12 @@
 //
 // WHY THE CONTROLS COME FIRST.  This helper's output is destined to become the expected value of
 // other tests, so an instrument that cannot go red would launder a wrong curve into forty of them.
-// PART 1 therefore feeds it five inputs that must each be REJECTED, and the count guard at the
-// bottom fails if any control stops firing.  "A passing check is not evidence" -- see
-// tests/ConicClasses.m for the same pattern.
+// PART 1 feeds it SIX inputs that must each be REJECTED, then TWO genus-0 class controls, and
+// each of those is paired with a POSITIVE counterpart so the tests cannot be satisfied by
+// rejecting everything.  Every one of those eleven assertions is counted, and the guards at the
+// bottom fail if any stops firing.  "A passing check is not evidence" -- see tests/ConicClasses.m.
+// ⚠ KEEP THE COUNTS IN THIS PARAGRAPH IN STEP WITH THE GUARDS.  The previous version said "five"
+// after a sixth was added, in the very commit that corrected the same staleness elsewhere.
 //
 // SELF-CONTAINED BY DESIGN.  The two bases below carry PUBLISHED equations and PUBLISHED
 // involutions (Gonzalez-Rotger, "Non-elliptic Shimura curves of genus one", J. Math. Soc. Japan 58
@@ -69,10 +72,12 @@ printf "  %o negative control(s) fired\n", nControl;
 // ⚠ THE POSITIVE COUNTERPART to control (6): a correctly SCALED hyperelliptic involution must be
 // ACCEPTED.  Without this, tightening the test to e = -a^(g+1) could have been "fixed" by
 // rejecting everything, and the controls above would not have noticed.
+nPositive := 0;   // POSITIVE counterparts -- counted, or deleting one would go unnoticed
 okScaled, FqScaled, _ := QuotientByInvolution(f14, DiagonalMatrix(Q, [2,-4,2]));   // = (x,-y)
 error if not okScaled,
     "diag(2,-4,2) IS the hyperelliptic involution of 14_1 (y |-> -4y/2^2 = -y) and must be accepted";
 error if FqScaled ne 0, "the scaled hyperelliptic involution must give P^1";
+nPositive +:= 1;
 
 // ⚠ GENUS-0 COMPARISON MUST USE THE BRAUER CLASS, NOT DEGREES.  P^1 is the SPLIT class, so it must
 // NOT compare equal to a pointless conic.  Both of these returned `true` before 2026-09-26, and
@@ -85,8 +90,9 @@ error if badDeg1, "a split degree-1 model must NOT match a POINTLESS conic";
 // ...and the positive side, so the fix is not just "reject everything":
 okSplit := QuotientMatches(P!0, HyperellipticCurve(x^2 - x));      // split conic = P^1
 error if not okSplit, "P^1 must match a SPLIT genus-0 model";
+nPositive +:= 1;
 nControl +:= 2;
-printf "  2 genus-0 class control(s) fired, and both positive counterparts pass\n";
+printf "  2 genus-0 class control(s) fired; %o positive counterpart(s) pass\n", nPositive;
 
 // =============================================================== PART 2: 14_1, all three branches
 // w_2  : sigma = -x, sum degenerates -> u = x*sigma(x);  y descends       -> genus 0
@@ -147,5 +153,10 @@ end for;
 // ⚠ Raise these when the test grows; NEVER lower one to make a run pass.  The failure mode this
 // repo keeps hitting is a check that quietly stops checking.
 error if nControl lt 8, Sprintf("only %o negative controls fired, expected 8", nControl);
+// ⚠ THE POSITIVE COUNTERPARTS NEED A GUARD TOO.  Without this, deleting them satisfies every
+// other check in the file -- which is exactly the "reject everything" escape they exist to block.
+error if nPositive lt 2,
+    Sprintf("only %o positive counterpart(s) ran, expected 2 -- a tightened test with no positive "
+            * "side can be satisfied by rejecting everything", nPositive);
 error if nDeriv lt 9,   Sprintf("only %o quotients were derived and compared, expected 9", nDeriv);
 printf "  %o quotient(s) derived and matched against published curves\n", nDeriv;
