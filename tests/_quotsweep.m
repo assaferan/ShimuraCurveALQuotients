@@ -87,13 +87,22 @@ for base in Split(bases, ",") do
         end if;
         key := {1, m};
         if not IsDefined(cover_data, key) then nNew +:= 1; continue; end if;
-        Ck := cover_data[key][1];
-        // ⚠ Unwrap a multi-candidate key the same way `top` is unwrapped above. Without this a
-        // List-valued entry fell through EVERY counter -- neither matched, mismatched, new nor
-        // failed -- i.e. a silent skip in a tool whose whole output is a coverage count.
-        if Type(Ck) eq List then Ck := Ck[1]; end if;
-        if Type(Ck) ne CrvHyp then continue; end if;
-        same, why2 := QuotientMatches(Fq, Ck);
+        // A key may list SEVERAL acceptable curves, and they are not always isomorphic to one
+        // another -- measured: at 6_5 and 6_13 the two entries at key {1} give IsIsomorphic=false.
+        // So try EVERY candidate; picking candidate 1 would report a derived quotient that matches
+        // candidate 2 as a mismatch, and then diagnose it as "matches NO committed key" -- a
+        // wrong-object verdict in a tool whose whole output is a coverage count.
+        // ⚠ No such multi-candidate COVER key exists today (the only List entries are at {1},
+        // which this loop never looks up), so this is defensive, not a fix for an observed skip.
+        cands := cover_data[key][1];
+        if Type(cands) ne List then cands := [* cands *]; end if;
+        cands := [* C : C in cands | Type(C) eq CrvHyp *];
+        if #cands eq 0 then continue; end if;
+        same := false; why2 := "";
+        for C in cands do
+            same, why2 := QuotientMatches(Fq, C);
+            if same then break; end if;
+        end for;
         if same then nMatch +:= 1; continue; end if;
         nMis +:= 1;
         // WHICH OBJECT is it, then?  A derived curve matching a DIFFERENT key is a labelling
@@ -101,11 +110,13 @@ for base in Split(bases, ",") do
         hit := "";
         for k in Keys(cover_data) do
             if k eq key then continue; end if;
-            Cj := cover_data[k][1];
-            if Type(Cj) eq List then Cj := Cj[1]; end if;
-            if Type(Cj) ne CrvHyp then continue; end if;
-            h, _ := QuotientMatches(Fq, Cj);
-            if h then hit cat:= Sprintf(" %o", Sort([Integers()|q : q in k])); end if;
+            cj := cover_data[k][1];
+            if Type(cj) ne List then cj := [* cj *]; end if;
+            for Cj in cj do
+                if Type(Cj) ne CrvHyp then continue; end if;
+                h, _ := QuotientMatches(Fq, Cj);
+                if h then hit cat:= Sprintf(" %o", Sort([Integers()|q : q in k])); break; end if;
+            end for;
         end for;
         printf "    w_%-5o MISMATCH at key %o  [%o]%o\n", m,
                Sort([Integers()|q : q in key]), why2,

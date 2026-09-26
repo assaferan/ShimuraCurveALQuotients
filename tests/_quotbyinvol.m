@@ -49,10 +49,12 @@ end function;
 
 // Two matrices describe the SAME map on P(1,w,1) iff they differ by the weighted scaling
 // (x,y,z) -> (lam*x, lam^w*y, lam*z).  Used to check a generated group for consistency.
+// ⚠ This compares two WELL-FORMED matrices.  Well-formedness is checked once, on the generators,
+// in ALMatrixGroupFromGenerators -- NOT here.  Checking it here made ALSameMap(M, M, w) return
+// false for a malformed M, i.e. broke reflexivity, and the caller then reported "two words for
+// w_p give different maps" when the two words produced literally the same matrix, pointing the
+// reader at the group law instead of at the malformed generator.
 function ALSameMap(M, Mp, w)
-    // ⚠ Compare the off-block entries too: reading only the four corners and [2,2] reported two
-    // matrices "the same map" when they differed in entries that make one of them not a map at all.
-    if not (SigmaWellFormed(M) and SigmaWellFormed(Mp)) then return false; end if;
     for i, j in [1, 3] do
         if M[i,j] eq 0 and Mp[i,j] ne 0 then return false; end if;
         if M[i,j] ne 0 and Mp[i,j] eq 0 then return false; end if;
@@ -80,6 +82,15 @@ end function;
 function ALMatrixGroupFromGenerators(gens, w)
     all := AssociativeArray();
     ok := true;  why := "";
+    // Well-formedness belongs here, on the GENERATORS, where it can name the offender.  Products
+    // of well-formed matrices are well-formed, so this covers the whole generated group.
+    for m in Keys(gens) do
+        if not SigmaWellFormed(gens[m]) then
+            return gens, false,
+                Sprintf("generator w_%o is not weight-respecting on P(1,%o,1): it has a nonzero "
+                        * "off-block entry, so it is not a map at all", m, w);
+        end if;
+    end for;
     for m in Keys(gens) do all[m] := gens[m]; end for;
     repeat
         added := false;
@@ -230,7 +241,11 @@ function QuotientConicClass(f)
     a := Coefficient(f, 2);
     disc := Coefficient(f, 1)^2 - 4*a*Coefficient(f, 0);
     if a eq 0 then return false, []; end if;
-    if disc eq 0 then return true, [Integers()|]; end if;        // double root: split
+    // ⚠ disc = 0 is a(x-r)^2 -- a pair of conjugate lines, NOT P^1.  Reporting it as the split
+    // class would let y^2 = -(x-1)^2 compare equal to P^1.  Unreachable today, since Magma's
+    // HyperellipticCurve rejects such f as geometrically reducible, but "undecidable" must stay a
+    // FAILURE here or this function contradicts the rule QuotientMatches enforces below.
+    if disc eq 0 then return false, []; end if;
     return true, Sort(RamifiedPrimes(QuaternionAlgebra<Rationals() | a, disc>));
 end function;
 
