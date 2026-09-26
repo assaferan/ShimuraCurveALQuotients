@@ -12,7 +12,14 @@ A curve seen in several files keeps the union of its counted violations (every f
 Coverage: each RES line says which q it tested (legacy lines without qmax/pmax/pmin: p <= 59,
 q <= 59^2).  Per curve the union over all files is compared with the Weil range {q = p^v < 4g^2, p | DN
 excluded}; U/R curves with no counted violation and a gap go to curves_supplement.txt, and their
-levels, with the smallest missing prime as PMIN, to levels_supplement.txt ("D N PMIN").
+levels, with the smallest missing prime as PMIN, to levels_supplement.txt ("D N PMIN V3ONLY", V3ONLY = 0).
+V3 coverage is tracked separately.  When 9 in W, V3 ops are Q-rational (sigma(V3) = V3 W9) and twist.m
+now uses them at every good p (RES lines marked "v3all 1").  Older lines (no v3all) used V3 ops only
+at p = 1 mod 3, so a curve with 9 in W and a V3 op in its list is complete only once V3 ops have been
+tested on the whole Weil range: a line contributes to V3 coverage its full range if v3all, its
+p = 1 mod 3 part if not, and a V3ONLY line (v3only 1: only V3 ops, only p = 2 mod 3) only to V3
+coverage.  Curves with a V3 gap at p = 2 mod 3 get a levels_supplement.txt row with V3ONLY = 1 and
+PMIN = the smallest missing such prime (run.sh -> twist.m V3ONLY:=1 -> out/D_N.v3.out).
 Sanity: every recorded violation must satisfy |tr| <= 2g sqrt(q) and q < 4g^2 (Weil); else WEIL-BREACH.
 Writes final_ruled_out.txt: CurveID D N g W q h tr  (min-q counted violation), U and R curves.
 """
@@ -36,6 +43,8 @@ def qset(L, qmax, pmin=0, pmax=10 ** 9):
     return out
 
 def need(g, L): return qset(L, 4 * g * g - 1)      # Weil range: a violation needs q < 4g^2
+
+def pdiv(q): return next(p for p in PR if q % p == 0)
 
 def is_al(h): return h == '1' or (h.startswith('w') and h[1:].isdigit())
 
@@ -66,6 +75,14 @@ for fn in files:
             cov = qset(D * N, tail['qmax'], tail.get('pmin', 0), tail['pmax'])
         else:                # legacy local-run line: PB = 59
             cov = qset(D * N, 59 ** 2, 0, 59)
+        v3only = tail.get('v3only', 0) == 1
+        if v3only:                       # only V3 ops, only p = 2 mod 3: V3 coverage only
+            v3cov = {q for q in cov if pdiv(q) % 3 == 2}; cov = set()
+        elif tail.get('v3all', 0) == 1:  # V3 ops at every p in range
+            v3cov = set(cov)
+        else:                            # pre-v3all rule: V3 ops at p = 1 mod 3 only
+            v3cov = {q for q in cov if pdiv(q) % 3 == 1}
+        hasv3 = 9 in Ws and any('V3' in h for h in f[20].split(','))
         raw = [] if kv['viol'] in ('-', '[]') else [x.split(':') for x in kv['viol'].rstrip(';').split(';')]
         good = set()
         for q, h, tr in raw:
@@ -79,11 +96,11 @@ for fn in files:
         if cid in recs:
             ndup += 1
             r = recs[cid]; r['good'] |= good; r['noncomm'] = max(r['noncomm'], noncomm)
-            r['cov'] |= cov
+            r['cov'] |= cov; r['v3cov'] |= v3cov; r['hasv3'] |= hasv3
             r['src'].add(os.path.basename(fn))
         else:
             recs[cid] = dict(st=st, D=D, N=N, g=g, W=W, good=good, noncomm=noncomm,
-                             cov=cov, src={os.path.basename(fn)})
+                             cov=cov, v3cov=v3cov, hasv3=hasv3, src={os.path.basename(fn)})
 
 P('=== inputs: %d files (results_local.out + %d out/*.out); %d RES curves %s; %d duplicate RES merged'
   % (len(files), len(files) - 1, len(recs), dict(collections.Counter(r['st'] for r in recs.values())), ndup))
@@ -137,10 +154,21 @@ for lv in sorted(pend, key=lambda x: (x[0] * x[1], x)):
 gap = {i: sorted(need(r['g'], r['D'] * r['N']) - r['cov']) for i, r in recs.items()
        if r['st'] in 'UR' and not r['good']}
 gap = {i: m for i, m in gap.items() if m}
+# V3 gap: q < 4g^2 not yet tested with the V3 ops (9 in W, V3 op in the list).  Its p = 1 mod 3 part and
+# its p >= 61 part lie inside the general gap (every line covers V3 at p = 1 mod 3; a new general
+# supplement is v3all), so only the p = 2 mod 3 part needs a V3ONLY run.
+v3gap = {i: sorted(q for q in need(r['g'], r['D'] * r['N']) - r['v3cov'] if pdiv(q) % 3 == 2)
+         for i, r in recs.items() if r['st'] in 'UR' and not r['good'] and r['hasv3']}
+v3gap = {i: m for i, m in v3gap.items() if m}
 lvgap = collections.defaultdict(list)
 for i, m in gap.items(): lvgap[(recs[i]['D'], recs[i]['N'])].append(i)
+lvv3 = collections.defaultdict(list)
+for i, m in v3gap.items(): lvv3[(recs[i]['D'], recs[i]['N'])].append(i)
+inc = set(gap) | set(v3gap)
 P('\n=== 6. INCOMPLETE COVERAGE: %d U/R curves (no violation) with untested q < 4g^2, at %d levels%s'
-  % (len(gap), len(lvgap), '' if gap else '  -- all tested curves exhausted'))
+  % (len(inc), len(set(lvgap) | set(lvv3)), '' if inc else '  -- all tested curves exhausted'))
+P('  all ops (general gap): %d curves at %d levels; V3 ops at p = 2 mod 3 (9 in W): %d curves (%s) at %d levels'
+  % (len(gap), len(lvgap), len(v3gap), dict(collections.Counter(recs[i]['st'] for i in v3gap)), len(lvv3)))
 if gap:
     P('  missing q by genus:', {g: sorted({q for i, m in gap.items() if recs[i]['g'] == g for q in m})
                                 for g in sorted({recs[i]['g'] for i in gap})})
@@ -149,10 +177,12 @@ if gap:
 with open(T + 'curves_supplement.txt', 'w') as F:
     for l in open(T + 'curves_all.txt'):
         f = l.split()
-        if len(f) >= 7 and int(f[1]) in gap: F.write(l)
-with open(T + 'levels_supplement.txt', 'w') as F:
-    for lv in sorted(lvgap, key=lambda x: (x[0] * x[1], x)):
-        F.write('%d %d %d\n' % (lv[0], lv[1], min(min(p for p in PR if gap[i][0] % p == 0) for i in lvgap[lv])))
+        if len(f) >= 7 and int(f[1]) in inc: F.write(l)
+with open(T + 'levels_supplement.txt', 'w') as F:     # D N PMIN V3ONLY
+    rows = [(lv, min(pdiv(gap[i][0]) for i in lvgap[lv]), 0) for lv in lvgap] + \
+           [(lv, min(pdiv(v3gap[i][0]) for i in lvv3[lv]), 1) for lv in lvv3]
+    for lv, pm, v in sorted(rows, key=lambda x: (x[0][0] * x[0][1], x[0], x[2])):
+        F.write('%d %d %d %d\n' % (lv[0], lv[1], pm, v))
 P('wrote curves_supplement.txt, levels_supplement.txt')
 
 with open(T + 'final_ruled_out.txt', 'w') as F:

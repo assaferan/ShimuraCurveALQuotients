@@ -2,8 +2,10 @@
 # Twisted-trace sweep, two phases, each parallel (xargs -P) with GNU timeout per level:
 #   1. pending levels (levels_pending.txt, curves_pending.txt), Weil mode q < 4g^2  -> out/D_N.out
 #   2. supplement: report.py recomputes per-curve coverage and writes levels_supplement.txt
-#      ("D N PMIN") + curves_supplement.txt; each level is run with PMIN (primes p >= PMIN only)
-#      -> out/D_N.supp.out.  Fills the p in [61, 4g^2) gap of the PB=59 local run for g >= 4.
+#      ("D N PMIN V3ONLY") + curves_supplement.txt.  V3ONLY=0 rows run all ops at primes p >= PMIN
+#      -> out/D_N.supp.out (fills the p in [61, 4g^2) gap of the PB=59 local run for g >= 4).
+#      V3ONLY=1 rows run only the V3 ops of curves with 9 in W at p = 2 mod 3, p >= PMIN
+#      -> out/D_N.v3.out (pre-v3all runs used V3 ops at p = 1 mod 3 only).
 #   JOBS=8 TIMEOUT=48h ./run.sh            (from anywhere; paths are resolved from this file)
 # Optional: PHASE=1|2|all (default all), LEVELS=/CURVES= (override phase-1 lists), SUPPLEVELS=,
 #           PB=<prime cap, default none>.
@@ -26,14 +28,14 @@ command -v magma >/dev/null || { echo "ERROR: magma not on PATH" >&2; exit 1; }
 command -v python3 >/dev/null || { echo "ERROR: python3 not on PATH" >&2; exit 1; }
 
 export REPO REL PB TIMEOUT TO CURVES
-# one <curves-file> <suffix> D N [PMIN]
+# one <curves-file> <suffix> D N [PMIN] [V3ONLY]
 one() {
-  C="$1"; SFX="$2"; D="$3"; N="$4"; PM="${5:-0}"
+  C="$1"; SFX="$2"; D="$3"; N="$4"; PM="${5:-0}"; V3="${6:-0}"
   tag="${D}_${N}${SFX}"; o="$REPO/$REL/out/$tag.out"; lg="$REPO/$REL/logs/$tag.log"
   if [ -f "$o" ] && grep -q '^DONE ' "$o"; then echo "skip  $tag (done)"; return 0; fi
   [ -f "$o" ] && mv "$o" "$REPO/$REL/out/$tag.partial-$(date +%s).out"
   echo "start $tag $(date '+%F %T')"
-  cd "$REPO" && "$TO" "$TIMEOUT" magma -b D:="$D" N:="$N" PB:="$PB" PMIN:="$PM" IN:="$C" \
+  cd "$REPO" && "$TO" "$TIMEOUT" magma -b D:="$D" N:="$N" PB:="$PB" PMIN:="$PM" V3ONLY:="$V3" IN:="$C" \
       OUT:="$REL/out/$tag.out" "$REL/twist.m" < /dev/null > "$lg" 2>&1
   rc=$?
   if grep -q '^DONE ' "$o" 2>/dev/null; then echo "done  $tag $(date '+%F %T')"
@@ -57,8 +59,8 @@ fi
 if [ "$PHASE" = all ] || [ "$PHASE" = 2 ]; then
   echo "== phase 2: supplement levels (coverage gaps, from report.py)"
   python3 "$HERE/report.py" > "$HERE/logs/report_before_supp.txt"
-  grep -E '^[0-9]+ [0-9]+ [0-9]+' "$SUPPLEVELS" |
-    xargs -P "$JOBS" -n 3 bash -c 'one "$REL/curves_supplement.txt" ".supp" "$0" "$1" "$2"'
+  grep -E '^[0-9]+ [0-9]+ [0-9]+ [01]' "$SUPPLEVELS" |
+    xargs -P "$JOBS" -n 4 bash -c 'one "$REL/curves_supplement.txt" "$([ "$3" = 1 ] && echo .v3 || echo .supp)" "$0" "$1" "$2" "$3"'
 fi
 
 python3 "$HERE/report.py" > "$HERE/logs/report_final.txt"

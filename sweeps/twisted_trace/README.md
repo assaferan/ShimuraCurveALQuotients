@@ -4,7 +4,8 @@
 
 C = X₀^D(N)/W. Take a prime power q = p^v with p ∤ DN, and an involution h of C defined over Q:
 an Atkin–Lehner w_Q with Q ∉ W, or S₂, V₂, V₃ times an AL, subject to the descent conditions of
-`CheckModularNonALInvolutionModSym`. V₃ is used only when 9 ∈ W. If C is hyperelliptic, then
+`CheckModularNonALInvolutionModSym`. A V₃ op counts only when 9 ∈ W (see "V₃" below). If C is
+hyperelliptic, then
 
     tr := Tr((T_{p^v} − p·T_{p^{v−2}}) ∘ h | S₂(DN; W = σ)^{D-new}) ≥ −(q+1),
 
@@ -15,8 +16,8 @@ trace on the W-fixed part of the D-new cuspidal modular symbols (sign 0).
 Frob_q∘h on H¹ therefore has absolute value √q, which gives |tr| ≤ 2g√q. A violation needs
 q + 1 < 2g√q, i.e. q < (g + √(g²−1))² < 4g². This is the same bound that `FilterByTrace` uses.
 
-* `BOUND:=weil` is the default. For each curve it tests every q = p^v < 4g², so it is exhaustive:
-  no violation can exist beyond that range.
+* `BOUND:=weil` is the default. For each curve it tests every q = p^v < 4g², and no violation can
+  exist beyond that range (for each op tested; see the caveats under "Coverage" below).
 * `BOUND:=pb` reproduces the local run of 2026-09-25: p ≤ 59 and q ≤ 59² for every curve.
 
 These two are **not** nested. The pb range contains more prime powers, but its primes stop at 59, while the
@@ -33,9 +34,9 @@ was therefore not a complete result. `report.py` computes, for every curve, the 
 have actually been tested across all result files. It then compares that set with the Weil range
 {q = p^v < 4g², p ∤ DN}. Every U/R curve that has no counted violation and still has a gap goes to
 `curves_supplement.txt`. Its level, together with the smallest missing prime as `PMIN`, goes to
-`levels_supplement.txt` ("D N PMIN").
+`levels_supplement.txt` ("D N PMIN V3ONLY", with V3ONLY = 0 for these rows).
 
-At the current snapshot there are **119 curves** (118 U and the reopened curve 9255) at **83 levels**, all
+For all ops, at the current snapshot there are **119 curves** (118 U and the reopened curve 9255) at **83 levels**, all
 of them small completed levels. Their genera are 4 (47 curves), 5 (67), 6 (4) and 7 (1).
 
 * The missing q are all primes, from 61 to 193. Since 61² > 196 ≥ 4g² for g ≤ 7, no prime
@@ -46,9 +47,31 @@ of them small completed levels. Their genera are 4 (47 curves), 5 (67), 6 (4) an
   `main.out` in as `results_local.out`; any `results_*.out` is read.
 * When everything has run, section 6 of the report ("INCOMPLETE COVERAGE") should read 0.
 
-Coverage counts a q as tested even when a particular op was skipped at q: V₃ ops are only
-used at p ≡ 1 mod 3, and an op is skipped if it does not commute with T_p. So "exhaustive" means
-exhaustive for the ops the reviewed rules allow.
+**Coverage** counts a q as tested even when an op was skipped at q because it does not commute
+with T_p there (`noncomm`). So a complete curve has been tested at every q < 4g² with every op the
+rules allow, except for ops that fail to commute with T_p at some p. V₃ ops are tracked separately
+(next section).
+
+## V₃
+
+Galois acts on V₃ by σ(V₃) = V₃W₉. So when **9 ∈ W**, V₃ and every V₃·w_Q induce involutions of C
+that are defined over Q. They then commute with T_p at every good p, which was checked numerically for
+every 9 ∈ W case; the non-commuting cases all have 9 ∉ W. The test allows any involution defined over
+Q, so `twist.m` uses V₃ ops at **every** good p when 9 ∈ W. Its `RES` lines are marked `v3all 1`. The
+per-p commutation check stays on as a safety net. When 9 ∉ W, V₃ need not be defined over Q; those ops
+are still used only at p ≡ 1 mod 3, and `report.py` never counts them.
+
+Earlier runs (`results_local.out`, and any `RES` line without `v3all`) used V₃ ops only at
+p ≡ 1 mod 3. `report.py` therefore tracks V₃ coverage per curve. For a curve with 9 ∈ W and a V₃ op
+in its op list, a `v3all` line covers V₃ on its whole range; an older line covers only its
+p ≡ 1 mod 3 part. Such a curve is incomplete until V₃ has been tested at every q = p^v < 4g² with
+p ≡ 2 mod 3 and p ∤ DN. These curves get a `levels_supplement.txt` row with `V3ONLY = 1`.
+`twist.m V3ONLY:=1` runs only those curves (9 ∈ W), only their V₃ ops, only at p ≡ 2 mod 3, and
+writes `out/D_N.v3.out`. The result is counted only towards V₃ coverage.
+
+At the current snapshot this adds **26 curves** (25 U and 1 R) at **22 levels**. Of those levels,
+12 are not already in the general supplement. In total the supplement is 134 curves at 95 levels
+(105 rows).
 
 ## Why the numbers are trustworthy
 
@@ -59,12 +82,19 @@ exhaustive for the ops the reviewed rules allow.
   * an op that does not commute with T_p at p is skipped;
   * a curve with `noncomm > 0` keeps only its AL/identity violations.
 * **Controls:** 914 known-hyperelliptic curves (status H) were tested with 0 violations (913 at review time).
+  V₃ at every p (`v3all`) was checked separately, because it is a new regime. All 48 H curves with 9 ∈ W and 9 ‖ N (37 levels,
+  80 V₃ ops) were run in three ranges: V₃ ops at p ≡ 2 mod 3 up to the Weil bound; the same for
+  p ≤ 59, q ≤ 59²; and all ops on the Weil range. Each range gave 0 violations, 0 cases of tr > q+1,
+  and noncomm = 0.
 * **Cross-check:** 20 AL-twisted traces agree with Eichler–Selberg (`TraceDNewALFixed`).
 * **Independent reproduction:** the reviewer's separate implementation reproduced the violations on
   the 3 reopened curves: 5124 (q=7, −12), 7923 (q=13, −18) and 8387 (q=7, −12).
-* **Same code:** `twist.m` is the exact code of the local run, with only its I/O changed. With
-  `BOUND:=pb` it reproduces the `RES` lines of `results_local.out` byte for byte at (26,45), and it
-  runs without `.magmarc` (`MAGMA_STARTUP_FILE=/dev/null`).
+* **Same code:** `twist.m` is the code of the local run, with its I/O changed and V₃ now used at
+  every p when 9 ∈ W. Before that rule change, `BOUND:=pb` reproduced the `RES` lines of
+  `results_local.out` byte for byte at (26,45). It runs without `.magmarc`
+  (`MAGMA_STARTUP_FILE=/dev/null`). With `v3all`, (26,45) and (10,153) still give the known
+  violations 8387 (q=7, V3*w1, −12), 5124 (q=7, V3*w5, −12) and 5133 (q=7, V3*w2, −12). With
+  `BOUND:=pb`, their `RES` lines match `results_local.out` in every field before the coverage tail.
 * **Supplement check:** with `PMIN:=7` at (26,45), it finds the known violation on 8387
   (q=7, V3*w1, −12) again. A smoke test at (1,84) and (38,5) with `PMIN:=61` merged correctly and
   dropped the gap count from 119 to 117.
@@ -87,7 +117,7 @@ exhaustive for the ops the reviewed rules allow.
 
 1. The levels in `levels_pending.txt`, smallest DN first. Each writes `out/D_N.out`.
 2. The supplement. `report.py` first regenerates the supplement lists, then each level is run with
-   its `PMIN` and writes `out/D_N.supp.out`.
+   its `PMIN` and writes `out/D_N.supp.out`, or `out/D_N.v3.out` for a `V3ONLY = 1` row.
 
 A level's output is complete iff it ends in `DONE`, and complete levels are skipped on a rerun. A
 partial output is kept as `*.partial-<time>.out`, and its finished `RES` lines still count. Logs go

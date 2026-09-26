@@ -1,6 +1,7 @@
 // Twisted trace (twisted Lefschetz) non-hyperellipticity test, one (D,N) level per run.
-// Adapted from v3cert/probe6.m; this is the exact code of the 2026-09-25 local counting run
-// (scratchpad twistcount/twist.m) with only I/O changed: paths are args, output is per-level.
+// Adapted from v3cert/probe6.m; this is the code of the 2026-09-25 local counting run
+// (scratchpad twistcount/twist.m) with I/O changed (paths are args, output is per-level) and one rule
+// changed: V3 ops are used at every good p when 9 in W ("v3all", below).
 //
 // Run from the repo root:
 //   magma -b D:=15 N:=146 [BOUND:=weil|pb] [PB:=59] [IN:=sweeps/twisted_trace/curves_pending.txt]
@@ -11,8 +12,14 @@
 //   CheckModularNonALInvolutionModSym), plus h = 1,
 // and each q = p^v with p good (range set by BOUND below), record every |Tr(s_v(T_p) h)/2| > q+1 on H^1(C).
 // (report.py counts only tr < -(q+1); tr > q+1 is impossible for any curve and is flagged as a BUG.)
-// Ops involving V3 are only used at p = 1 mod 3.  Any op not commuting with T_p at p is skipped (counted
-// in noncomm).  OUT is truncated at start; a level is complete iff OUT ends with a DONE line.
+// Ops involving V3: if 9 in W they are used at EVERY good p (rule "v3all"): Galois acts by
+// sigma(V3) = V3*W9, so V3 (and V3*w) induces an involution of C defined over Q when 9 in W.  If 9 notin W,
+// V3 need not be Q-rational and those ops are only used at p = 1 mod 3 (report.py never counts them).
+// (Before v3all, V3 ops were used at p = 1 mod 3 only, for every W; RES lines of that rule carry no v3all.)
+// Any op not commuting with T_p at p is skipped (counted in noncomm): the safety net for every op.
+// V3ONLY:=1 (supplement mode): only curves with 9 in W, only the V3-containing ops, only p = 2 mod 3 --
+// exactly what a pre-v3all run left untested.  Default OUT suffix .v3.  OUT is truncated at start; a level
+// is complete iff OUT ends with a DONE line.
 // Output: LEVEL / RES (one per curve) / BADDIM / DONE lines.
 AttachSpec("ShimuraQuotients.spec");
 import "ModularNonALInvolutions.m" : get_Vmu;
@@ -28,8 +35,11 @@ if not assigned PB then PB := BOUND eq "pb" select "59" else "0"; end if;   // 0
 // PMIN (supplement mode): only primes p >= PMIN.  Used to fill the q < 4g^2 gaps left by a PB=59 run
 // (report.py writes levels_supplement.txt with the PMIN each level needs).  Default 0 = no lower cap.
 if not assigned PMIN then PMIN := "0"; end if;
+if not assigned V3ONLY then V3ONLY := "0"; end if;
+error if V3ONLY notin {"0", "1"}, "V3ONLY must be 0 or 1";
+V3ONLY := V3ONLY eq "1";
 if not assigned IN then IN := "sweeps/twisted_trace/curves_pending.txt"; end if;
-if not assigned OUT then OUT := "sweeps/twisted_trace/out/" cat D cat "_" cat N cat (PMIN eq "0" select "" else ".supp") cat ".out"; end if;
+if not assigned OUT then OUT := "sweeps/twisted_trace/out/" cat D cat "_" cat N cat (V3ONLY select ".v3" else (PMIN eq "0" select "" else ".supp")) cat ".out"; end if;
 PMIN := StringToInteger(PMIN);
 D := StringToInteger(D); N := StringToInteger(N); PB := StringToInteger(PB);
 L := D*N;
@@ -37,7 +47,7 @@ cs := [];
 for line in Split(Read(IN), "\n") do
   f := Split(line, " ");
   if #f lt 7 or line[1] eq "#" then continue; end if;
-  if StringToInteger(f[3]) eq D and StringToInteger(f[4]) eq N then
+  if StringToInteger(f[3]) eq D and StringToInteger(f[4]) eq N and (not V3ONLY or 9 in {StringToInteger(x) : x in Split(f[7], ",")}) then
     Append(~cs, <f[1], StringToInteger(f[2]), StringToInteger(f[5]), {StringToInteger(x) : x in Split(f[7], ",")}>);
   end if;
 end for;
@@ -57,11 +67,11 @@ Vfull := AssociativeArray();
 if N mod 4 eq 0 then Vfull["S2"] := MA!get_Vmu(2, N, B, MDN, true); end if;
 if N mod 8 eq 0 then Vfull["V2"] := MA!get_Vmu(2, N, B, MDN, false); end if;
 if Valuation(N, 3) eq 2 then Vfull["V3"] := MA!get_Vmu(3, N, B, MDN, false); end if;
-ps := [p : p in PrimesUpTo(pcap) | L mod p ne 0 and p ge PMIN];
+ps := [p : p in PrimesUpTo(pcap) | L mod p ne 0 and p ge PMIN and (not V3ONLY or p mod 3 eq 2)];
 Tp := AssociativeArray(); for p in ps do Tp[p] := MA!Solution(B, B*HeckeOperator(MDN, p)); end for;
 tall := Cputime(t0);
 F := Open(OUT, "w");
-fprintf F, "LEVEL %o %o dimDnew %o tspace %o tall %o ncurves %o bound %o PB %o pmax %o pmin %o\n", D, N, n, tsp, tall, #cs, BOUND, PB, pcap, PMIN;
+fprintf F, "LEVEL %o %o dimDnew %o tspace %o tall %o ncurves %o bound %o PB %o pmax %o pmin %o v3all 1 v3only %o\n", D, N, n, tsp, tall, #cs, BOUND, PB, pcap, PMIN, V3ONLY select 1 else 0;
 for c in cs do
   st, id, g, W := Explode(c);
   V := VectorSpace(Rationals(), n); K := V;
@@ -70,7 +80,7 @@ for c in cs do
   if dK ne 2*g then fprintf F, "BADDIM %o %o %o\n", id, dK, g; continue; end if;
   IK := IdentityMatrix(Rationals(), dK);
   res := function(M) ok, S := IsConsistent(BK, BK*M); if ok then return true, MatrixAlgebra(Rationals(), dK)!S; else return false, _; end if; end function;
-  // candidate ops: <name, matrix, needs p = 1 mod 3>
+  // candidate ops: <name, matrix, restricted to p = 1 mod 3 (V3 op with 9 notin W)>
   cand := [<"1", ALm[1], false>] cat [<"w" cat IntegerToString(Q), ALm[Q], false> : Q in als | Q notin W];
   vn := [];
   if "S2" in Keys(Vfull) and &and[IsOdd(w) : w in W] then Append(~vn, "S2"); end if;
@@ -86,7 +96,7 @@ for c in cs do
       if Q in W and Q ne 1 then continue; end if;
       if "S2" in vv[1] and IsEven(Q) then continue; end if;
       if "V3" in vv[1] and 9 notin W and exists{p : p in PrimeDivisors(Q) | (p^Valuation(Q,p) mod 3) eq 2} then continue; end if;
-      Append(~cand, <vv[1] cat "*w" cat IntegerToString(Q), vv[2]*ALm[Q], "V3" in vv[1]>);
+      Append(~cand, <vv[1] cat "*w" cat IntegerToString(Q), vv[2]*ALm[Q], "V3" in vv[1] and 9 notin W>);
     end for;
   end for;
   ops := []; nodesc := 0;
@@ -96,6 +106,7 @@ for c in cs do
     if exists{x : x in ops | x[2] eq M} then continue; end if;
     Append(~ops, <o[1], M, o[3]>);
   end for;
+  if V3ONLY then ops := [o : o in ops | "V3" in o[1]]; end if;
   viol := []; noncomm := 0; h1viol := false;
   QM := qmax(g);
   for p in ps do
@@ -117,7 +128,7 @@ for c in cs do
   end for;
   fprintf F, "RES %o %o %o %o %o %o nops %o nodesc %o noncomm %o h1 %o nviol %o viol %o ops %o\n", st, id, D, N, g,
      Join([IntegerToString(w) : w in Sort(SetToSequence(W))], ","), #ops, nodesc, noncomm, h1viol, #viol,
-     (#viol eq 0 select "-" else &cat[Sprintf("%o:%o:%o;", x[1], x[2], x[3]) : x in viol]), Join([o[1] : o in ops], ",") cat " qmax " cat IntegerToString(QM) cat " pmax " cat IntegerToString(Max([0] cat [p : p in ps | p le QM])) cat " pmin " cat IntegerToString(PMIN);
+     (#viol eq 0 select "-" else &cat[Sprintf("%o:%o:%o;", x[1], x[2], x[3]) : x in viol]), (#ops eq 0 select "-" else Join([o[1] : o in ops], ",")) cat " qmax " cat IntegerToString(QM) cat " pmax " cat IntegerToString(Max([0] cat [p : p in ps | p le QM])) cat " pmin " cat IntegerToString(PMIN) cat " v3all 1 v3only " cat (V3ONLY select "1" else "0");
   Flush(F);
 end for;
 fprintf F, "DONE %o %o %o\n", D, N, Cputime(t0);
