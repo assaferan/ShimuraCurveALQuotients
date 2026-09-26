@@ -24,6 +24,7 @@ ModelVerification.m
 Verifications.m
 GeneralizedComplicatedFixedPoints.m
 AutomorphismGroupFilter.m
+TwistedFilters.m
 special_fiber_modular.m
 special_fiber_cm.m
 }
