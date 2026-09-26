@@ -74019,8 +74019,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 18>,
 <"g", 5>, <"CurveID", 9255>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9268 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=18 (nu=8), N2=315 (nu=24)">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 18>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 63, 126, 315, 630 }>,

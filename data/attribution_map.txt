@@ -8785,7 +8785,7 @@ curve 376
 9252	Trace, with p^v = 2^1
 9253	UpdateIsoStatus, isomorphic to 9316
 9254	ALFixedPointsOnQuotient, W_7 has 12 fixed points
-9255	GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=18 (nu=8), N2=315 (nu=24)
+9255	ModularNonALInvolution V3 W45 8
 9256	ComplicatedALFixedPointsOnQuotient with N1 = 18, N2 = 35, Nprime = 35
 9257	ALFixedPointsOnQuotient, W_5 has 6 fixed points
 9258	ALFixedPointsOnQuotient, W_2 has 12 fixed points
