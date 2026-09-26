@@ -37,9 +37,22 @@ function ALCompose(m, n)
     return (m * n) div (g * g);
 end function;
 
+// ⚠ The off-block entries MUST vanish, or M is not a map on P(1,g+1,1) at all: y has weight g+1,
+// so x,z cannot receive a y-term and y cannot receive an x- or z-term.  Reading only the corners
+// silently accepted such a matrix and returned a perfectly plausible curve for a map that does not
+// exist (measured: [[-1,0,0],[5,1,0],[0,0,1]] on 14_1 gave -T^2-13T-128).  That is exactly the
+// failure this file's controls advertise against, so it is checked, not assumed.
+// Defined here, above its first use in ALSameMap: Magma resolves package functions in order.
+function SigmaWellFormed(M)
+    return M[1,2] eq 0 and M[3,2] eq 0 and M[2,1] eq 0 and M[2,3] eq 0;
+end function;
+
 // Two matrices describe the SAME map on P(1,w,1) iff they differ by the weighted scaling
 // (x,y,z) -> (lam*x, lam^w*y, lam*z).  Used to check a generated group for consistency.
 function ALSameMap(M, Mp, w)
+    // ⚠ Compare the off-block entries too: reading only the four corners and [2,2] reported two
+    // matrices "the same map" when they differed in entries that make one of them not a map at all.
+    if not (SigmaWellFormed(M) and SigmaWellFormed(Mp)) then return false; end if;
     for i, j in [1, 3] do
         if M[i,j] eq 0 and Mp[i,j] ne 0 then return false; end if;
         if M[i,j] ne 0 and Mp[i,j] eq 0 then return false; end if;
@@ -133,6 +146,9 @@ function QuotientByInvolution(f, M)
     g  := (Degree(f) - 1) div 2;                 // deg f = 2g+1 or 2g+2
     wy := g + 1;                                 // weight of y
 
+    if not SigmaWellFormed(M) then
+        return false, 0, "matrix is not weight-respecting on P(1,g+1,1) (nonzero off-block entry)";
+    end if;
     a, b, c, d, e := SigmaData(M);
 
     FF<X> := FunctionField(Rationals());
@@ -144,9 +160,15 @@ function QuotientByInvolution(f, M)
     if Evaluate(sig, sig) ne X then return false, 0, "sigma is not an involution"; end if;
 
     // sigma = id is the hyperelliptic involution (x,y) -> (x,-y); the quotient is the x-line.
+    // ⚠ THE TEST IS e = -a^(g+1), NOT e = -1.  With b = c = 0 and a = d the matrix acts affinely
+    // as y |-> e*y/a^(g+1), so an UNSCALED representative has e = -1 only when a = 1.  Testing
+    // e eq -1 was wrong in both directions (measured on 14_1): diag(2,-1,2) is y |-> -y/4, not an
+    // automorphism, and was ACCEPTED; diag(2,-4,2) genuinely is (x,-y) and was REJECTED.  Products
+    // formed by ALMatrixGroupFromGenerators are not normalised, so scaled representatives do occur.
     if sig eq X then
-        if e eq -1 then return true, Pol!0, "P1 (hyperelliptic involution)"; end if;
-        return false, 0, "sigma is the identity and e /= -1: this is the identity map";
+        if e eq -a^(g+1) then return true, Pol!0, "P1 (hyperelliptic involution)"; end if;
+        if e eq  a^(g+1) then return false, 0, "sigma = id and e = +a^(g+1): this is the identity map"; end if;
+        return false, 0, "sigma = id but e /= +-a^(g+1): not an automorphism of the curve";
     end if;
 
     // CONTROL, the load-bearing one: the matrix must PRESERVE the curve.  y_new^2 = f(X_new)
@@ -199,20 +221,38 @@ end function;
 // normalisation by u -> -u.  Compare by isomorphism class, never coefficient-wise.
 // Genus 0 must NOT go through IsIsomorphic (Magma 2.29-10 regression, see BorcherdsProducts.m);
 // compare the Brauer class exactly as tests/ConicClasses.m does.
+// Returns ok, ramification set.  ⚠ Degree <= 1 is the SPLIT class (P^1), which is a genuine
+// answer, not a failure -- returning `false` for it is what let P^1 compare equal to a POINTLESS
+// conic (see QuotientMatches below).
 function QuotientConicClass(f)
+    if Degree(f) le 1 then return true, [Integers()|]; end if;   // split: P^1
     if Degree(f) ne 2 then return false, []; end if;
     a := Coefficient(f, 2);
     disc := Coefficient(f, 1)^2 - 4*a*Coefficient(f, 0);
-    if a eq 0 or disc eq 0 then return false, []; end if;
+    if a eq 0 then return false, []; end if;
+    if disc eq 0 then return true, [Integers()|]; end if;        // double root: split
     return true, Sort(RamifiedPrimes(QuaternionAlgebra<Rationals() | a, disc>));
 end function;
 
 // Compare a derived quotient against a committed/expected curve.  Returns  same, why.
+// ⚠⚠ EVERY genus-0 comparison goes through the Brauer class -- NEVER through degrees.  Two
+// earlier versions of this function got that wrong in the same direction, and both were caught
+// only by an adversarial reading, not by the controls:
+//   * the P^1 branch returned `gE eq 0 and Degree(fe) le 2`, so P^1 compared EQUAL to a POINTLESS
+//     conic (measured: -x^2-1 returned true).  That branch carries every w_{DN} row of the sweep,
+//     so those agreements were no evidence at all against a twist error;
+//   * the fallback returned `Degree(Fder) le 2 and Degree(fe) le 2` whenever either side was not a
+//     smooth conic, which said "both split" when only one side was.
+// This is the quadratic-twist blindness MEMORY.md records for ModelChecks, reintroduced here.
 function QuotientMatches(Fder, Cexp)
     fe := HyperellipticPolynomials(SimplifiedModel(Cexp));
     gE := Genus(Cexp);
+    // Fder = 0 is the P^1 answer, i.e. the SPLIT genus-0 class -- still decided by class.
     if Fder eq 0 then
-        return gE eq 0 and Degree(fe) le 2, Sprintf("P1 vs genus %o", gE);
+        if gE ne 0 then return false, Sprintf("P1 vs genus %o", gE); end if;
+        oke, re := QuotientConicClass(fe);
+        if not oke then return false, "P1 vs an undecidable genus-0 model"; end if;
+        return IsEmpty(re), Sprintf("P1 (split) vs conic class %o", re);
     end if;
     Cder := HyperellipticCurve(Fder);
     gD := Genus(Cder);
@@ -223,8 +263,9 @@ function QuotientMatches(Fder, Cexp)
     end if;
     okd, rd := QuotientConicClass(Fder);
     oke, re := QuotientConicClass(fe);
+    // Refuse to guess: an undecidable side is a FAILURE, not a pass.
     if not okd or not oke then
-        return Degree(Fder) le 2 and Degree(fe) le 2, "both split genus 0";
+        return false, Sprintf("genus 0 but class undecidable (derived ok=%o, expected ok=%o)", okd, oke);
     end if;
     return rd eq re, Sprintf("conic class %o vs %o", rd, re);
 end function;
