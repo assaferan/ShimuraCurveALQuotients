@@ -23,18 +23,19 @@ FILTER_STAGES := [*
     // <"VerifyHHTable1", VerifyHHTable1>,
     <"UpdateByGenusStar", UpdateByGenus>,
     <"FilterByTraceStar", FilterByTrace>,
-    // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
-    // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
-    // GetQuotientsAndGenera.  Each twisted stage runs right after its untwisted counterpart, and
-    // the star block is in the same order as run_pipeline.sh (tests/PipelineStages.m checks it),
-    // so that attribution -- the first stage to decide a curve -- agrees between the two.  They DO
-    // decide some D = 1 star curves of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so
-    // VerifyHHProposition1 is run on HH's own input -- the FilterByTraceStar snapshot -- rather
-    // than on the pipeline state (see below).
-    <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
     // <"VerifyHHTable2", VerifyHHTable2>,
+    // HHProposition1 comes directly after the point counts, so that VerifyHHTable2 and
+    // VerifyHHProposition1 check [HH]'s own input and output.  The twisted star stages decide some
+    // D = 1 curves of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so they must come after it.
+    // HHProposition1 decides nothing that SpecialFiberIsomorphismStar would not.
     <"HHProposition1", HHProposition1>,
     // <"VerifyHHProposition1", VerifyHHProposition1>,
+    // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
+    // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
+    // GetQuotientsAndGenera.  The star block is in the same order as run_pipeline.sh
+    // (tests/PipelineStages.m checks it), so that attribution -- the first stage to decide a
+    // curve -- agrees between the two.
+    <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
     <"SpecialFiberIsomorphismStar", SpecialFiberIsomorphism>,
     // Weil polynomials of the star curves (same filter as parallel_filter_worker.m runs for it),
     // then their twists.  FilterStarCurvesByFpAutomorphisms is a redundant cross-check after Weil.
@@ -139,11 +140,7 @@ function compute_data(start_stage, stages)
         when "FilterByTraceStar":
 	        VerifyHHTable2(curves);
         when "HHProposition1":
-            // [HH] Proposition 1 applied to the point-count output alone; the twisted star stages
-            // in between decide further Table 2 curves, which HH do not.
-            hh := eval Read("data/curves_after_FilterByTraceStar.dat");
-            HHProposition1(~hh);
-    	    VerifyHHProposition1(hh);
+    	    VerifyHHProposition1(curves);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByGeneralizedComplicatedFixedPoints":

@@ -17,9 +17,8 @@
 #   UpdateGenera                           [sequential]  + VerifyHHTable1
 #   UpdateByGenusStar                      [sequential]
 #   FilterByTraceStar                      [PARALLEL]
+#   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
-#   HHProposition1                         [sequential]  + VerifyHHTable2, VerifyHHProposition1 (on the
-#                                                         FilterByTraceStar snapshot)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
 #   FilterByTwistedWeilPolynomialStar      [PARALLEL, by level]
@@ -120,15 +119,15 @@ run_seq "FindPairs"           ""                                                
 run_seq "UpdateGenera"        "${D}/curves_after_FindPairs.dat"                    "${D}/curves_after_UpdateGenera.dat"
 run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"                 "${D}/curves_after_UpdateByGenusStar.dat"
 run_par "FilterByTraceStar"
+# HHProposition1 directly after the point counts, so that VerifyHHTable2 / VerifyHHProposition1
+# check [HH]'s own input and output (the twisted trace below decides further HH Table 2 curves).
+run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
 # Twisted trace on the star curves: W is the full AL group, so the only twists are V2, V3 and V2 V3
-# (V3 is Q-rational since 9 in W).  It decides some D = 1 curves of HH Table 2 (e.g. X_0^*(396)),
-# so the HHProposition1 stage runs VerifyHHTable2 / VerifyHHProposition1 on the FilterByTraceStar
-# snapshot (HH's own input), not on its input file.
+# (V3 is Q-rational since 9 in W).
 run_par "FilterByTwistedTraceStar"
-run_seq "HHProposition1"      "${D}/curves_after_FilterByTwistedTraceStar.dat"     "${D}/curves_after_HHProposition1.dat"
 # Special fiber reduction on the star curves: X_0(D,Np)/W reduces mod p to
 # X_0(D,N)/W'; a non-subhyperelliptic source makes the target non-hyperelliptic.
-run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_HHProposition1.dat"        "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
+run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_FilterByTwistedTraceStar.dat" "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
 # Weil-polynomial filter on the star curves.  Both this and the Fp-automorphism stage below
 # derive from the same F_{p^d} point counts, and Weil is at least as strong: it was verified to
 # rule out every star curve FpAutomorphisms does (0 missed of 66), so FpAutomorphisms is kept

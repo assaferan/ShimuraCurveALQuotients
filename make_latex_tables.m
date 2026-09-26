@@ -7,7 +7,8 @@
 // columns are the deltas from the previous row.
 //
 // Rows are grouped BY PAPER SECTION, not one-per-pipeline-stage:
-//   * "Special fiber isomorphisms" merges HHProposition1 + SpecialFiberIsomorphism.
+//   * HHProposition1 has its own row: it runs before the twisted point counts, so it cannot be
+//     merged with SpecialFiberIsomorphism as it was before the twisted stages existed.
 //   * "Weil polynomials" (star) merges FilterByWeilPolynomialStar + the redundant
 //     FilterStarCurvesByFpAutomorphisms cross-check.
 //   * "Refined Atkin--Lehner fixed points" merges FilterByComplicatedAL... +
@@ -63,6 +64,8 @@ T1 := [
         "data/curves_after_UpdateByGenusStar.dat">,
  <"Finite field point count (Section~\\ref{sec:trace})",
         "data/curves_after_FilterByTraceStar.dat">,
+ <"Hasegawa--Hashimoto Proposition 1 (Section~\\ref{sec:specialfiber})",
+        "data/curves_after_HHProposition1.dat">,
  <"Twisted point counts (Section~\\ref{sec:trace})",
         "data/curves_after_FilterByTwistedTraceStar.dat">,
  <"Special fiber isomorphisms (Section~\\ref{sec:specialfiber})",
@@ -118,6 +121,8 @@ tab2 cat:= Row("Atkin--Lehner involutions as hyperelliptic involutions (Section~
 // remaining Phase-B snapshots
 T2 := [
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves1.dat">,
+ <"Special fiber (Section~\\ref{sec:specialfiber})",
+        "data/curves_after_FilterBySpecialFiber.dat">,
  <"Atkin--Lehner fixed points (Section~\\ref{sec:fixedpointsAL})",
         "data/curves_after_FilterByALFixedPointsOnQuotient.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves2.dat">,
