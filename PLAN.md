@@ -13,6 +13,53 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
+## ⇒ OPEN (2026-09-26): `HHProposition1` in the analysis pipeline
+
+`HHProposition1` is a real pipeline stage (right after `FilterByTraceStar`), not just a
+verification. It marks curves non-subhyperelliptic, and on the committed data it takes credit for
+4 star curves: 193 = X_0^*(194), 362 = X_0^*(546), 1725 = (205,3), 2159 = (1995,2).
+**Decide how the analysis and the paper account for it.** Today the generators disagree:
+`make_latex_tables.m` (since `2628279`) gives it its own row "Hasegawa--Hashimoto Proposition 1",
+while `make_latex_figures.m` folds it into "Special fiber isomorphism"; the committed
+`data/pipeline_tables.tex` predates `2628279` and still folds it, so regenerating the tables will
+change the paper. The census lists `HHproposition1: 4` separately.
+
+**It is a strict subcase of `SpecialFiberIsomorphism` (SFI) on star curves** (with the p ∤ N guard
+below): for M = pN with p ∤ N, the full AL group minus the w_m with p | m is exactly the star W of
+(D,N), so SFI finds the same source; HH only adds an equal-genus condition. On the committed
+`FilterByTraceStar` snapshot SFI rules out 9 curves, including HH's 4. Between the two stages
+verdicts only accumulate (`FilterByTwistedTraceStar` only sets `IsSubhyp := false`), so removing
+HH moves attribution, not verdicts.
+
+**Options.** (a) Move `SpecialFiberIsomorphismStar` up into HH's slot and run HH as a check there;
+or (b) keep SFI where it is and run HH as a check in its current slot. Either way HH's
+`VerifyHHTable2`/`VerifyHHProposition1` should still test [HH]'s own input and output, on a copy.
+Moving SFI loses no verdicts: `UpdateCurves` (`workingcode.m:10`) calls `SpecialFiberIsomorphism`
+again at every `UpdateCurves1..8`, after expansion, so twisted-trace verdicts still propagate.
+Blast radius for either option (this is what got the first draft reverted): `run_parallel_filter.sh`
+feeds `FilterByTwistedTraceStar` from `curves_after_HHProposition1.dat`; the stage is also named
+in `make_latex_tables.m`, `analysis_stages.m`, `reconstruct_attribution.m`,
+`run_sequential_stage.m`, `tests/PipelineStages.m` (asserts the stage lists equal
+`FILTER_STAGES`) and `docs/RUNNING_PIPELINE.md`.
+
+Also true of the current code and data:
+
+* **p ∤ N guard — ADDED 2026-09-26 (uncommitted), latent fix only.** `HHProposition1` did not
+  require p ∤ N, unlike SFI (`Valuation(M,p) eq 1`). No pair in the data triggers it (e.g.
+  X_0^*(72) is genus 1 and hyperelliptic, X_0^*(144) genus 3), so guarded and unguarded HH both
+  rule out exactly [193, 362, 1725, 2159]. (`VerifyHHProposition1` only checks D = 1, so it is not
+  evidence for 1725/2159.) HH still duplicates SFI's hypothesis by hand; computing HH's set as
+  SFI's filtered to equal genus would remove the drift.
+* **HH is star-list only.** `lut_DN` is keyed by (D,N), ignoring W. On an expanded list it could
+  pick a quotient without w_p and mark it with no valid argument. Nothing asserts star-only.
+* **Stale strings.** Star curves 1196, 1807, 1817, 1838 carry "HHproposition1 isomorphic to …"
+  although `FilterByTraceStar.dat` already rules them out by Trace. Cause: the committed
+  `FilterByTraceStar`/`HHProposition1` snapshots were written in `f9a6b70` (2026-06-02), before
+  HH stopped overwriting decided curves in `7ac1c29` (2026-06-22). All 8 HH strings appear in 23
+  `data/*.dat` files (the chain from `HHProposition1` through `UpdateCurves7`, plus `D1Oracle`
+  and `star_curves_after_FpAuto`); only `UpdateCurves8` has just the 4 real ones. A fresh run
+  fixes this.
+
 ## ⇒ START HERE — updated 2026-09-24
 
 **`HANDOFF.md` (2026-09-23 and 2026-09-24) has the full account.** Everything the older blocks below
