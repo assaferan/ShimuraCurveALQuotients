@@ -13,6 +13,13 @@ function get_Vmu(mu, N, SDN_new_basis, MDN, get_S)
     return Vmu_SN;
 end function;
 
+intrinsic ModularNonALOperatorOnSubspace(mu::RngIntElt, N::RngIntElt, B::Mtrx, M::ModSym, get_S::BoolElt) -> Mtrx
+{The matrix of S_mu (get_S) or V_mu = S_mu W_(mu^v) S_mu^-1 (mu^v || N) on the subspace of the
+modular symbols space M spanned by the rows of B, in that basis.  Intrinsic wrapper of get_Vmu,
+for use from other packages.}
+    return get_Vmu(mu, N, B, M, get_S);
+end intrinsic;
+
 
 intrinsic CanApplyTraceFormula(vname, Q) -> BoolElt, RngIntElt
     {From the data of the name of the V and the Al operator, do we know a trace formula that is fast}

@@ -23,6 +23,18 @@ SetVerbose("ShimuraQuotients", 0);
 
 out := "data/pipeline_tables.tex";
 
+// Stages added after the last full run (automorphism groups, twisted point counts, twisted Weil
+// polynomials) have no snapshot file until the rerun; their rows are then left out, so on older
+// data the tables are unchanged.
+function Exists(f)
+    try
+        _ := Open(f, "r");
+        return true;
+    catch e
+        return false;
+    end try;
+end function;
+
 // cumulative open / ruled(=Filt) / proved / total in a snapshot file
 function CO(f)
     cs := eval Read(f);
@@ -40,6 +52,10 @@ end function;
 // ---------------------------------------------------------------------------
 // TABLE 1 : star curves
 // ---------------------------------------------------------------------------
+// With the star twisted Weil stage present, "Weil polynomials" is the FilterByWeilPolynomialStar
+// snapshot and "Twisted Weil polynomials" the FpAutomorphisms one (twisted Weil + the redundant
+// FpAut cross-check); without it, "Weil polynomials" keeps merging Weil + FpAut as before.
+twstar := Exists("data/curves_after_FilterByTwistedWeilPolynomialStar.dat");
 T1 := [
  <"Reduction to finitely many pairs $(D,N)$ (Section~\\ref{sec:reduction})",
         "data/curves_after_UpdateGenera.dat">,
@@ -47,13 +63,20 @@ T1 := [
         "data/curves_after_UpdateByGenusStar.dat">,
  <"Finite field point count (Section~\\ref{sec:trace})",
         "data/curves_after_FilterByTraceStar.dat">,
+ <"Twisted point counts (Section~\\ref{sec:trace})",
+        "data/curves_after_FilterByTwistedTraceStar.dat">,
  <"Special fiber isomorphisms (Section~\\ref{sec:specialfiber})",
         "data/curves_after_SpecialFiberIsomorphismStar.dat">,
  <"Weil polynomials (Section~\\ref{sec:Weilpolys})",
-        "data/curves_after_FilterStarCurvesByFpAutomorphisms.dat">,
+        twstar select "data/curves_after_FilterByWeilPolynomialStar.dat"
+               else "data/curves_after_FilterStarCurvesByFpAutomorphisms.dat">,
+ <"Twisted Weil polynomials (Section~\\ref{sec:Weilpolys})",
+        twstar select "data/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
+               else "data/curves_after_FilterByTwistedWeilPolynomialStar.dat">,
  <"Modular non-Atkin--Lehner involutions (Section~\\ref{sec:modularnonAL})",
         "data/curves_after_FilterByNonALInvolutionsStar.dat">
 ];
+T1 := [t : t in T1 | Exists(t[2])];
 
 tab1 := "";
 prevr := 0; prevp := 0; ntot := 0;
@@ -107,17 +130,27 @@ T2 := [
  <"Refined Atkin--Lehner fixed points (Section~\\ref{sec:fixedpointsAL})",
         "data/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves5.dat">,
+ <"Automorphism groups (Section~\\ref{sec:autgroups})",
+        "data/curves_after_FilterByAutomorphismGroup.dat">,
+ <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterAutomorphismGroup.dat">,
  <"Finite field point count (Section~\\ref{sec:trace})",
         "data/curves_after_FilterByTrace.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves6.dat">,
+ <"Twisted point counts (Section~\\ref{sec:trace})",
+        "data/curves_after_FilterByTwistedTrace.dat">,
+ <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterTwistedTrace.dat">,
  <"Weil polynomials (Section~\\ref{sec:Weilpolys})",
         "data/curves_after_FilterByWeilPolynomial.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves7.dat">,
+ <"Twisted Weil polynomials (Section~\\ref{sec:Weilpolys})",
+        "data/curves_after_FilterByTwistedWeilPolynomial.dat">,
+ <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat">,
  <"Modular non-Atkin--Lehner involutions (Section~\\ref{sec:modularnonAL})",
         "data/curves_after_FilterByNonALInvolutions.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves8.dat">
 ];
 
+T2 := [t : t in T2 | Exists(t[2])];
 prevr := r3; prevp := p3; oF := 0; rF := 0; pF := 0;
 for i in [1..#T2] do
     o, r, p, _ := CO(T2[i][2]);

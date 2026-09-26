@@ -17,9 +17,12 @@
 #   UpdateGenera                           [sequential]  + VerifyHHTable1
 #   UpdateByGenusStar                      [sequential]
 #   FilterByTraceStar                      [PARALLEL]
-#   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
+#   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
+#   HHProposition1                         [sequential]  + VerifyHHTable2, VerifyHHProposition1 (on the
+#                                                         FilterByTraceStar snapshot)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
+#   FilterByTwistedWeilPolynomialStar      [PARALLEL, by level]
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]  (redundant cross-check after Weil)
 #   FilterByNonALInvolutionsStar           [PARALLEL]  (star curves, pre-expansion)
 #   GetQuotientsAndGenera + UpdateByGenus  [sequential]  (carries star determinations
@@ -37,10 +40,16 @@
 #   FilterByComplicatedALFixedPointsOnQuotient [PARALLEL]
 #   FilterByGeneralizedComplicatedFixedPoints  [PARALLEL]  (generalized Prop 6, mixed groups)
 #   UpdateCurves5                          [sequential]  + VerifyFHTable3 (pre)
+#   FilterByAutomorphismGroup              [PARALLEL]  (Brandt-Stichtenoth lemma on the known group)
+#   UpdateCurvesAfterAutomorphismGroup     [sequential]
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
+#   FilterByTwistedTrace                   [PARALLEL, by level]  (modular symbols once per level)
+#   UpdateCurvesAfterTwistedTrace          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]
 #   UpdateCurves7                          [sequential]
+#   FilterByTwistedWeilPolynomial          [PARALLEL, by level]
+#   UpdateCurvesAfterTwistedWeilPolynomial [sequential]
 #   FilterByNonALInvolutions               [PARALLEL]
 #   UpdateCurves8                          [sequential]
 
@@ -111,7 +120,12 @@ run_seq "FindPairs"           ""                                                
 run_seq "UpdateGenera"        "${D}/curves_after_FindPairs.dat"                    "${D}/curves_after_UpdateGenera.dat"
 run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"                 "${D}/curves_after_UpdateByGenusStar.dat"
 run_par "FilterByTraceStar"
-run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
+# Twisted trace on the star curves: W is the full AL group, so the only twists are V2, V3 and V2 V3
+# (V3 is Q-rational since 9 in W).  It decides some D = 1 curves of HH Table 2 (e.g. X_0^*(396)),
+# so the HHProposition1 stage runs VerifyHHTable2 / VerifyHHProposition1 on the FilterByTraceStar
+# snapshot (HH's own input), not on its input file.
+run_par "FilterByTwistedTraceStar"
+run_seq "HHProposition1"      "${D}/curves_after_FilterByTwistedTraceStar.dat"     "${D}/curves_after_HHProposition1.dat"
 # Special fiber reduction on the star curves: X_0(D,Np)/W reduces mod p to
 # X_0(D,N)/W'; a non-subhyperelliptic source makes the target non-hyperelliptic.
 run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_HHProposition1.dat"        "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
@@ -120,6 +134,7 @@ run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_HHProposition1.dat"    
 # rule out every star curve FpAutomorphisms does (0 missed of 66), so FpAutomorphisms is kept
 # only as a redundant cross-check and prunes nothing further.
 run_par "FilterByWeilPolynomialStar"
+run_par "FilterByTwistedWeilPolynomialStar"
 run_par "FilterStarCurvesByFpAutomorphisms"
 # Non-AL involution filter on the star curves themselves: a star curve proven
 # non-subhyperelliptic here prunes its entire cover-tree (via UpwardClosure) right
@@ -156,10 +171,29 @@ run_par "FilterByComplicatedALFixedPointsOnQuotient"
 run_par "FilterByGeneralizedComplicatedFixedPoints"
 run_seq "UpdateCurves5"       "${D}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat" \
                                                                                    "${D}/curves_after_UpdateCurves5.dat"
+# Brandt-Stichtenoth lemma on the known automorphism group G_Y (residual ALs plus the S2/V2/V3 that
+# descend), after BOTH refined fixed-point stages above.  The new stages' closures are named
+# UpdateCurvesAfter<Stage> rather than renumbering UpdateCurves6..8, so the existing
+# curves_after_UpdateCurves<N>.dat names keep their meaning (tests and GetHyperellipticCandidates
+# read them).
+run_par "FilterByAutomorphismGroup"
+run_seq "UpdateCurvesAfterAutomorphismGroup" "${D}/curves_after_FilterByAutomorphismGroup.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterAutomorphismGroup.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"
+# Trace twisted by the involutions defined over Q.  Needs the modular symbols of level D*N, so the
+# worker splits this stage by LEVEL (one modular-symbols computation per level); the largest levels
+# take hours each.
+run_par "FilterByTwistedTrace"
+run_seq "UpdateCurvesAfterTwistedTrace" "${D}/curves_after_FilterByTwistedTrace.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterTwistedTrace.dat"
 run_par "FilterByWeilPolynomial"
 run_seq "UpdateCurves7"       "${D}/curves_after_FilterByWeilPolynomial.dat"       "${D}/curves_after_UpdateCurves7.dat"
+# Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables
+# (g = 3..6 at the table primes only).  Split by level, like FilterByTwistedTrace.
+run_par "FilterByTwistedWeilPolynomial"
+run_seq "UpdateCurvesAfterTwistedWeilPolynomial" "${D}/curves_after_FilterByTwistedWeilPolynomial.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
 run_par "FilterByNonALInvolutions"
 run_seq "UpdateCurves8"       "${D}/curves_after_FilterByNonALInvolutions.dat"     "${D}/curves_after_UpdateCurves8.dat"
 

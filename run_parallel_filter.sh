@@ -39,8 +39,15 @@ case "${STAGE}" in
         # every star curve FpAut does), so this stage subsumes the FpAut stage that follows.
         INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
         ;;
-    FilterStarCurvesByFpAutomorphisms)
+    FilterByTwistedTraceStar)
+        # Twisted trace on the star curves (V2/V3 twists only); split by level.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByTraceStar.dat"
+        ;;
+    FilterByTwistedWeilPolynomialStar)
         INPUT_DAT="${DATA_DIR}/curves_after_FilterByWeilPolynomialStar.dat"
+        ;;
+    FilterStarCurvesByFpAutomorphisms)
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByTwistedWeilPolynomialStar.dat"
         ;;
     FilterByNonALInvolutionsStar)
         # Non-AL involution filter run on the star curves (full AL group), before they
@@ -70,24 +77,39 @@ case "${STAGE}" in
         # its determinations prune all the heavier filters that follow.
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
         ;;
-    FilterByTrace)
+    FilterByAutomorphismGroup)
+        # Brandt-Stichtenoth lemma on the known automorphism group; after both refined
+        # fixed-point stages and their closure UpdateCurves5.
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves5.dat"
         ;;
-    FilterByWeilPolynomial)
+    FilterByTrace)
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterAutomorphismGroup.dat"
+        ;;
+    FilterByTwistedTrace)
+        # Split by level in parallel_filter_worker.m (modular symbols once per level).
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves6.dat"
         ;;
-    FilterByNonALInvolutions)
+    FilterByWeilPolynomial)
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterTwistedTrace.dat"
+        ;;
+    FilterByTwistedWeilPolynomial)
+        # Split by level, like FilterByTwistedTrace.
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves7.dat"
+        ;;
+    FilterByNonALInvolutions)
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
         ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
-        echo "Supported: FilterByTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "Supported: FilterByTraceStar, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "           FilterByTwistedWeilPolynomialStar," >&2
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient," >&2
         echo "           FilterByGeneralizedComplicatedFixedPoints, FilterBySpecialFiber," >&2
-        echo "           FilterByTrace," >&2
-        echo "           FilterByWeilPolynomial, FilterByNonALInvolutions," >&2
+        echo "           FilterByAutomorphismGroup, FilterByTrace, FilterByTwistedTrace," >&2
+        echo "           FilterByWeilPolynomial, FilterByTwistedWeilPolynomial," >&2
+        echo "           FilterByNonALInvolutions," >&2
         echo "           FilterByNonALInvolutionsStar" >&2
         exit 1
         ;;
