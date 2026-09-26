@@ -170,14 +170,20 @@ procedure testFH4(curves : check_modular := CheckModularNonALInvolutionTrace)
         <126, {1,9,14,126}>,
         <168, {1,24,56,21}>
     ];
-    names := ["V3 W7", "V2 V3 W72", "V2 W13", "V2 W3", "V3 W1", "V3 W2", "V2 W3"];
+    // The witness name is not pinned: which decisive candidate is reported first depends on the
+    // check (ModSym also accepts g = 3, g' = 2) and on candidate order.  Pin its quotient genus.
     for idx in [1..#NWs] do
         NW := NWs[idx];
         assert exists(X){X : X in curves | X`D eq 1 and X`N eq NW[1] and X`W eq NW[2]};
-        vname := names[idx];
         g, name, fix := check_modular(X);
         assert g eq 1;
-        assert name eq vname; 
+        parts := Split(name, " ");
+        vname := &cat[(k eq 1 select "" else " ") cat parts[k] : k in [1..#parts-1]];
+        o := StringToInteger(parts[#parts][2..#parts[#parts]]);
+        V := ModularInvolution(vname, NW[1]);
+        assert IsModularInvolutionOnQuotient(V*al_matrix(o, NW[1]), NW[2], NW[1]);
+        gq := TraceDNewQuotient(V, vname, o, NW[2], 1, NW[1]);
+        assert (gq eq 0) or ((X`g eq 3) and (gq eq 2));
     end for;
     return;
 end procedure;
