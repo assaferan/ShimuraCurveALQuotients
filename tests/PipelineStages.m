@@ -8,7 +8,7 @@ function StageOrder(text, names)
 end function;
 
 wc := [
-    "FilterByTraceStar", "FilterByTwistedTraceStar", "HHProposition1",
+    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1",
@@ -26,7 +26,7 @@ assert Position(Read("workingcode.m"), "<\"UpdateCurves8\", UpdateCurves>\n*];")
 rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
-    "FilterByTraceStar", "FilterByTwistedTraceStar", "HHProposition1",
+    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateCurves5", "FilterByAutomorphismGroup",
     "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
@@ -69,3 +69,31 @@ printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
 assert #wstar eq 10;
 assert wstar eq sstar;
+
+// reconstruct_attribution.m credits each curve to the FIRST stage that decided it, so its
+// star_stages cat full_stages must be exactly the uncommented FILTER_STAGES (less UpdateGenera,
+// which decides nothing).  A missing stage credits its curves to the next UpdateCurves snapshot.
+wall := [];
+for line in Split(wct[1..Position(wct, "*];")], "\n") do
+    ok, _, sub := Regexp("^ *<\"([A-Za-z0-9_]+)\",", Uncommented(line));
+    if ok and sub[1] ne "UpdateGenera" then Append(~wall, sub[1]); end if;
+end for;
+ra := Read("reconstruct_attribution.m");
+ra := ra[Position(ra, "star_stages := [")..Position(ra, "final := Load")];
+rall := [];
+for line in Split(ra, "\n") do
+    ok, _, sub := Regexp("^ *\"([A-Za-z0-9_]+)\",?$", line);
+    if ok then Append(~rall, sub[1]); end if;
+end for;
+printf "  reconstruct_attribution.m: %o stages, FILTER_STAGES: %o\n", #rall, #wall;
+assert rall eq wall;
+
+// analysis_stages.m (the per-stage counts table) lists every snapshot: FILTER_STAGES plus FindPairs.
+as := Read("analysis_stages.m");
+as := as[Position(as, "stages := [")..Position(as, "];")];
+asl := [];
+for line in Split(as, "\n") do
+    ok, _, sub := Regexp("^ *\"([A-Za-z0-9_]+)\",?$", line);
+    if ok then Append(~asl, sub[1]); end if;
+end for;
+assert asl eq ["FindPairs", "UpdateGenera"] cat wall;

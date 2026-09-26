@@ -49,8 +49,10 @@ end function;
 
 intrinsic AutomorphismGroupMaxOrder() -> RngIntElt
 {Largest order of the known group G_Y that FilterByAutomorphismGroup enumerates; above it the
-curve is left undetermined.  The prototype never met a G_Y this large on any curve.}
-    return 3000;
+curve is left undetermined.  The cost is Subgroups(G) in agFailingSubgroups, which grows
+super-polynomially for 2-groups (PR #48 review: 55,599 classes in 2.5 s at order 256, 805,186 in
+40 s at 512).  The largest #G_Y over the genus >= 2 curves of the current data is 32.}
+    return 256;
 end intrinsic;
 
 // The known group G_Y, as a regular permutation group on its elements (cosets of

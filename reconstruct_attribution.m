@@ -26,12 +26,14 @@ function Exists(name)
     end try;
 end function;
 
+// Both lists together must equal FILTER_STAGES in workingcode.m less UpdateGenera
+// (asserted by tests/PipelineStages.m).
 // Star stages run first (on X_0^*(D,N) only); matched to the full list by (D,N,W).
 star_stages := [
  "UpdateByGenusStar",
  "FilterByTraceStar",
- "FilterByTwistedTraceStar",
  "HHProposition1",
+ "FilterByTwistedTraceStar",
  "SpecialFiberIsomorphismStar",
  "FilterByWeilPolynomialStar",
  "FilterByTwistedWeilPolynomialStar",
@@ -42,6 +44,7 @@ star_stages := [
 full_stages := [
  "UpdateByGenus",
  "UpdateCurves1",
+ "FilterBySpecialFiber",
  "FilterByALFixedPointsOnQuotient",
  "UpdateCurves2",
  "Genus3CoversGenus2",
@@ -49,6 +52,7 @@ full_stages := [
  "FilterByDegeneracyMorphism",
  "UpdateCurves4",
  "FilterByComplicatedALFixedPointsOnQuotient",
+ "FilterByGeneralizedComplicatedFixedPoints",
  "UpdateCurves5",
  "FilterByAutomorphismGroup",
  "UpdateCurvesAfterAutomorphismGroup",

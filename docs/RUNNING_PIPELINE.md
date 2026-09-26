@@ -1,9 +1,9 @@
 # Running the classification pipeline
 
 This page covers a full rerun of the hyperellipticity pipeline in parallel, on a Linux server.
-`run_pipeline.sh` runs the stages of `FILTER_STAGES` in `workingcode.m`, plus a Weil-polynomial
-pass on the star curves (`FilterByWeilPolynomialStar`), and splits each `FilterBy*` stage across
-many Magma processes. The sequential alternative is
+`run_pipeline.sh` runs the stages of `FILTER_STAGES` in `workingcode.m`, in the same order
+(`tests/PipelineStages.m` checks this), and splits each `FilterBy*` stage across many Magma
+processes. The sequential alternative is
 `GetHyperellipticCandidates(:recompute_data)`; it takes about four days on one core.
 
 ## Requirements
@@ -83,8 +83,8 @@ The star-curve block in `run_pipeline.sh` reads:
 
     FindPairs, UpdateGenera, UpdateByGenusStar
     FilterByTraceStar                         parallel
-    FilterByTwistedTraceStar                  parallel, by level  NEW
     HHProposition1                            (+ VerifyHHTable2, VerifyHHProposition1)
+    FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
     FilterByWeilPolynomialStar                parallel
     FilterByTwistedWeilPolynomialStar         parallel, by level  NEW
@@ -92,18 +92,17 @@ The star-curve block in `run_pipeline.sh` reads:
     FilterByNonALInvolutionsStar              parallel
     GetQuotientsAndGenera + UpdateByGenus     (+ VerifyFHTheorem3)
 
-`FILTER_STAGES` in `workingcode.m` has no star Weil-polynomial stage, so there the star twisted
-Weil stage comes directly after the star twisted trace. On a star curve W is the full AL group,
-so the only twists are V2 (8 | N), V3 (9 || N, and then 9 is in W) and V2 V3. A star level with
-neither has nothing to test and its modular symbols are never built. As with
-`FilterByNonALInvolutionsStar`, the star determinations are carried onto the full-W entries by
-`GetQuotientsAndGenera`, and from there to the covers by the closures. The group filter does not
-run on the star curves.
+The star twisted Weil stage runs after `FilterByWeilPolynomialStar`, in `FILTER_STAGES` as well.
+On a star curve W is the full AL group, so the only twists are V2 (8 | N), V3 (9 || N, and then
+9 is in W) and V2 V3. A star level with neither has nothing to test and its modular symbols are
+never built. As with `FilterByNonALInvolutionsStar`, the star determinations are carried onto the
+full-W entries by `GetQuotientsAndGenera`, and from there to the covers by the closures. The group
+filter does not run on the star curves.
 
 The star twisted stages decide some D = 1 curves of [HH] Table 2 (for example X_0^*(396), by V3
-at q = 5). So `VerifyHHTable2` and `VerifyHHProposition1` are now run on HH's own input, the
-`FilterByTraceStar` snapshot with HH Proposition 1 applied, and no longer on the pipeline state.
-The check is the same, exact reproduction of the table.
+at q = 5). So `HHProposition1` stays directly after `FilterByTraceStar`, and `VerifyHHTable2` and
+`VerifyHHProposition1` check its actual input and output, an exact reproduction of HH's table.
+HH Proposition 1 decides nothing that `SpecialFiberIsomorphismStar` would not.
 
 The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 

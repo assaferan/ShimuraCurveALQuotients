@@ -41,7 +41,7 @@ case "${STAGE}" in
         ;;
     FilterByTwistedTraceStar)
         # Twisted trace on the star curves (V2/V3 twists only); split by level.
-        INPUT_DAT="${DATA_DIR}/curves_after_FilterByTraceStar.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
         ;;
     FilterByTwistedWeilPolynomialStar)
         INPUT_DAT="${DATA_DIR}/curves_after_FilterByWeilPolynomialStar.dat"
