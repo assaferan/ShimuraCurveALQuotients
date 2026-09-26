@@ -1,0 +1,12 @@
+# SNAPSHOT 2026-09-25, IN PROGRESS: the completeness enumeration was still running when this was copied.
+# verify_poly.sh (hypsearch.c + candcheck.m), genus 3, q >= 11: one line per hit polynomial (up to t -> -t).
+VERIFY q=11 P=[1,10,65,252,715,1210,1331] N1=22 N2=152 q=11 n=2 N1=22 N2=152 n1pass=12758 found=0 intable=0 found_by_search=0
+VERIFY q=13 P=[1,14,101,448,1313,2366,2197] N1=28 N2=176 q=13 n=2 N1=28 N2=176 n1pass=681 found=24 intable=0 found_by_search=0
+VERIFY q=13 P=[1,8,59,224,767,1352,2197] N1=22 N2=224 q=13 n=2 N1=22 N2=224 n1pass=319942 found=0 intable=0 found_by_search=0
+VERIFY q=13 P=[1,4,43,104,559,676,2197] N1=18 N2=240 q=13 n=2 N1=18 N2=240 n1pass=1961434 found=0 intable=0 found_by_search=0
+VERIFY q=17 P=[1,16,135,688,2295,4624,4913] N1=34 N2=304 q=17 n=3 N1=34 N2=304 n1pass=3424 found=0 intable=0 found_by_search=0
+VERIFY q=17 P=[1,8,71,288,1207,2312,4913] N1=26 N2=368 q=17 n=3 N1=26 N2=368 n1pass=2480116 found=0 intable=0 found_by_search=0
+VERIFY q=19 P=[1,10,89,412,1691,3610,6859] N1=30 N2=440 q=19 n=2 N1=30 N2=440 n1pass=2150011 found=0 intable=0 found_by_search=0
+VERIFY q=19 P=[1,-10,88,-410,1672,-3610,6859] N1=10 N2=438 q=19 n=2 N1=10 N2=438 n1pass=2150011 found=0 intable=0 found_by_search=0
+VERIFY q=23 P=[1,-14,133,-740,3059,-7406,12167] N1=10 N2=600 q=23 n=5 N1=10 N2=600 n1pass=1132728 found=0 intable=0 found_by_search=0
+VERIFY q=23 P=[1,10,101,492,2323,5290,12167] N1=34 N2=632 q=23 n=5 N1=34 N2=632 n1pass=9669773 found=0 intable=0 found_by_search=0
