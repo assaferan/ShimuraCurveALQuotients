@@ -1,0 +1,9 @@
+# SNAPSHOT 2026-09-25, IN PROGRESS. verify_poly2.sh (hypsearch2.c + candcheck2.m) at q = 5: hypsearch2 stderr, then the
+# multiset of Weil polys of the smooth candidates with the same (N1,N2) (truncated). Some rows are positive controls.
+c2_g3_78cd446cfe | q=5 g=3 n=2 N1=6 N2=46 n1pass=19905 found=65 | singular 5 smooth-by-poly {* [1,0,10,0,50,0,125]^^60 *}
+c2_g3_a41f05e88c | q=5 g=3 n=2 N1=3 N2=21 n1pass=7800 found=182 | singular 36 smooth-by-poly {* [1,-3,2,0,10,-75,125]^^30, [1,-3,2,4,10,-75,125]^^70, [1,-3,2,6,10,-75,125]^^16, [1,-3,2,8,10,-75,125]^^30 *}
+c2_g3_cacfe52576 | q=5 g=3 n=2 N1=2 N2=48 n1pass=4480 found=12 | singular 12 smooth-by-poly {* *}
+c2_g4_5f9869421b | q=5 g=4 n=2 N1=7 N2=29 n1pass=1222500 found=103615 | singular 27262 smooth-by-poly {* [1,1,2,-1,-10,-5,50,125,625]^^84, [1,1,2,-1,-14,-5,50,125,625]^^282, [1,1,2,-1,-18,-5,50,125,625]^^405, [1,1,2,-1,-2,-5,50,125,625]^^294, [1,1,2,-1,-22,-5,50,125,625]^^42, [1,1,2,-1,-30,-5,50,125,625]^^198, 
+c2_g4_941a1a0f44 | q=5 g=4 n=2 N1=12 N2=48 n1pass=40000 found=0 | singular 0 smooth-by-poly {* *}
+c2_g4_d812755b8a | q=5 g=4 n=2 N1=12 N2=48 n1pass=40000 found=0 | singular 0 smooth-by-poly {* *}
+c2_g4_e4daa56416 | q=5 g=4 n=2 N1=12 N2=46 n1pass=40000 found=0 | singular 0 smooth-by-poly {* *}

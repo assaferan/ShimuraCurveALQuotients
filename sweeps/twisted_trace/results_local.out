@@ -1,0 +1,2075 @@
+LEVEL 1 57 dimDnew 10 tspace 0.030 tall 0.060 ncurves 3
+RES H 228 1 57 2 1,3 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 229 1 57 2 1,57 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 230 1 57 3 1,19 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1 57 0.070
+LEVEL 1 42 dimDnew 10 tspace 0.020 tall 0.070 ncurves 6
+RES U 154 1 42 3 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+LEVEL 1 65 dimDnew 10 tspace 0.050 tall 0.070 ncurves 2
+RES H 156 1 42 2 1,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 157 1 42 2 1,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 158 1 42 2 1,3 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 159 1 42 2 1,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 270 1 65 3 1,5 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES U 160 1 42 3 1,7 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 272 1 65 3 1,13 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 1 42 0.080
+DONE 1 65 0.070
+LEVEL 1 90 dimDnew 22 tspace 0.030 tall 0.090 ncurves 7
+RES U 417 1 90 3 1,2,5,10 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w9
+RES H 418 1 90 2 1,5,18,90 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 419 1 90 2 1,5,9,45 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 420 1 90 3 1,2,9,18 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES H 421 1 90 2 1,2,45,90 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+LEVEL 1 84 dimDnew 22 tspace 0.030 tall 0.090 ncurves 8
+RES H 422 1 90 2 1,9,10,90 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 423 1 90 3 1,10,18,45 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1 90 0.110
+RES U 379 1 84 5 1,3 nops 6 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,w7,w28,S2*w1,S2*w7
+RES U 382 1 84 3 1,4,7,28 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 383 1 84 2 1,7,12,84 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 384 1 84 3 1,3,7,21 nops 3 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,S2*w1
+RES H 385 1 84 2 1,3,4,12 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 386 1 84 2 1,4,21,84 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 387 1 84 2 1,3,28,84 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+RES U 388 1 84 3 1,12,21,28 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1 84 0.100
+LEVEL 33 2 dimDnew 10 tspace 0.120 tall 0.150 ncurves 5
+RES H 8476 33 2 2 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 8477 33 2 2 1,22 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 8478 33 2 3 1,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w22:-10; ops 1,w2,w11,w22
+RES H 8480 33 2 2 1,3 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 8481 33 2 2 1,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+DONE 33 2 0.160
+LEVEL 1 93 dimDnew 18 tspace 0.030 tall 0.070 ncurves 2
+RES U 436 1 93 5 1,31 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 437 1 93 2 1,3,31,93 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 93 0.080
+LEVEL 1 96 dimDnew 18 tspace 0.040 tall 0.090 ncurves 2
+RES U 447 1 96 3 1,32 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES U 448 1 96 3 1,96 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+DONE 1 96 0.100
+LEVEL 1 114 dimDnew 34 tspace 0.030 tall 0.110 ncurves 2
+RES U 547 1 114 3 1,2,19,38 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 552 1 114 2 1,3,38,114 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1 114 0.120
+LEVEL 1 120 dimDnew 34 tspace 0.050 tall 0.140 ncurves 4
+RES H 583 1 120 3 1,5,24,120 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES U 584 1 120 3 1,3,5,15 nops 7 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w8,S2*w1,V2*w1,V2*w8,S2*V2*w1,V2*S2*w1
+RES H 586 1 120 2 1,8,15,120 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES H 588 1 120 2 1,15,24,40 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+DONE 1 120 0.150
+LEVEL 34 3 dimDnew 10 tspace 0.140 tall 0.180 ncurves 6
+RES U 8784 34 3 3 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w17:-16; ops 1,w3,w17,w51
+RES U 8785 34 3 3 1,34 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8786 34 3 2 1,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 8787 34 3 2 1,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8788 34 3 2 1,3 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 8789 34 3 2 1,51 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+DONE 34 3 0.190
+LEVEL 1 130 dimDnew 34 tspace 0.030 tall 0.120 ncurves 3
+RES U 624 1 130 3 1,2,13,26 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 629 1 130 3 1,5,26,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 630 1 130 2 1,10,26,65 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1 130 0.130
+LEVEL 65 2 dimDnew 26 tspace 0.160 tall 0.220 ncurves 6
+RES U 10551 65 2 3 1,2,13,26 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 10552 65 2 3 1,10,13,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 10553 65 2 2 1,5,13,65 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10554 65 2 3 1,2,5,10 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 10555 65 2 2 1,2,65,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 10556 65 2 3 1,5,26,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 65 2 0.240
+LEVEL 1 138 dimDnew 42 tspace 0.060 tall 0.160 ncurves 3
+RES U 672 1 138 3 1,2,23,46 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 673 1 138 2 1,6,23,138 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 674 1 138 2 1,3,23,69 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1 138 0.170
+LEVEL 33 4 dimDnew 22 tspace 0.190 tall 0.270 ncurves 9
+RES U 8494 33 4 5 1,12 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 5:w11:-10;7:w33:-10; ops 1,w3,w11,w33
+RES U 8495 33 4 4 1,132 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 5:w11:-8;7:w4:-12; ops 1,w3,w4,w11
+RES U 8496 33 4 5 1,3 nops 6 nodesc 0 noncomm 0 h1 false nviol 2 viol 7:w11:-10;31:w11:-40; ops 1,w4,w11,w44,S2*w1,S2*w11
+LEVEL 141 1 dimDnew 14 tspace 0.130 tall 0.160 ncurves 2
+RES H 8500 33 4 2 1,11,12,132 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 11700 141 1 3 1,3 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w47
+RES H 11701 141 1 2 1,141 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 141 1 0.160
+RES U 8501 33 4 3 1,3,11,33 nops 3 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,S2*w1
+RES H 8502 33 4 2 1,3,4,12 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 8503 33 4 2 1,4,33,132 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8504 33 4 2 1,3,44,132 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+RES U 8505 33 4 3 1,12,33,44 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w3:-8; ops 1,w3
+DONE 33 4 0.300
+LEVEL 46 3 dimDnew 14 tspace 0.210 tall 0.270 ncurves 5
+RES H 9767 46 3 3 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w23,w69
+RES H 9770 46 3 2 1,138 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 9771 46 3 3 1,3 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w46:-8; ops 1,w2,w23,w46
+RES H 9772 46 3 2 1,69 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 9774 46 3 2 1,2,23,46 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 46 3 0.280
+LEVEL 6 23 dimDnew 10 tspace 0.180 tall 0.260 ncurves 5
+RES H 1577 6 23 3 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w23,w69
+RES H 1579 6 23 3 1,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES H 1581 6 23 3 1,3 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES U 1583 6 23 3 1,23 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1587 6 23 2 1,2,3,6 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w23
+DONE 6 23 0.270
+LEVEL 1 156 dimDnew 46 tspace 0.040 tall 0.170 ncurves 2
+LEVEL 142 1 dimDnew 10 tspace 0.150 tall 0.190 ncurves 4
+RES U 11716 142 1 5 1 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 3:w142:-8;5:w142:-10; ops 1,w2,w71,w142
+RES H 11717 142 1 2 1,2 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w71
+RES H 11718 142 1 2 1,142 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 11719 142 1 3 1,71 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 3:w2:-6;5:w2:-8; ops 1,w2
+RES H 762 1 156 2 1,4,39,156 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 142 1 0.200
+RES U 764 1 156 3 1,12,39,52 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1 156 0.190
+LEVEL 158 1 dimDnew 14 tspace 0.110 tall 0.140 ncurves 2
+RES U 11840 158 1 3 1,2 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w79
+RES H 11841 158 1 2 1,158 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 158 1 0.150
+LEVEL 1 165 dimDnew 42 tspace 0.040 tall 0.130 ncurves 3
+RES H 784 1 165 3 1,11,15,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 785 1 165 4 1,5,11,55 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 790 1 165 2 1,3,5,11,15,33,55,165 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 165 0.150
+LEVEL 1 175 dimDnew 30 tspace 0.040 tall 0.090 ncurves 1
+RES U 827 1 175 3 1,7,25,175 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 175 0.090
+LEVEL 85 2 dimDnew 34 tspace 0.110 tall 0.190 ncurves 2
+RES H 10989 85 2 2 1,10,17,170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10993 85 2 3 1,5,34,170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 85 2 0.200
+LEVEL 1 185 dimDnew 34 tspace 0.050 tall 0.100 ncurves 1
+RES U 857 1 185 3 1,5,37,185 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 185 0.110
+LEVEL 1 180 dimDnew 50 tspace 0.060 tall 0.220 ncurves 4
+RES U 836 1 180 5 1,5,36,180 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+LEVEL 1 195 dimDnew 50 tspace 0.050 tall 0.180 ncurves 1
+RES U 840 1 180 5 1,9,20,180 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,V3*w1,V3*w4
+RES U 889 1 195 3 1,5,39,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1 195 0.190
+RES U 841 1 180 5 1,20,36,45 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+RES H 842 1 180 2 1,4,5,9,20,36,45,180 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 1 180 0.240
+LEVEL 38 5 dimDnew 18 tspace 0.140 tall 0.220 ncurves 10
+RES U 9350 38 5 5 1,38 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 9351 38 5 5 1,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w19:-20; ops 1,w2,w19,w38
+RES U 9354 38 5 5 1,95 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w5:-20; ops 1,w2,w5,w10
+RES H 9356 38 5 2 1,2,19,38 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 9357 38 5 2 1,10,19,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9358 38 5 2 1,5,19,95 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9359 38 5 2 1,2,5,10 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 9360 38 5 2 1,2,95,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 9361 38 5 2 1,5,38,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9362 38 5 3 1,10,38,95 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 38 5 0.240
+LEVEL 1 198 dimDnew 58 tspace 0.030 tall 0.230 ncurves 2
+RES U 896 1 198 5 1,9,11,99 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 901 1 198 2 1,2,9,11,18,22,99,198 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 1 198 0.250
+LEVEL 22 9 dimDnew 22 tspace 0.350 tall 0.470 ncurves 5
+RES H 7614 22 9 2 1,11,18,198 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7615 22 9 2 1,9,11,99 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 7616 22 9 3 1,2,9,18 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11,V3*w1,V3*w11
+RES H 7617 22 9 2 1,2,99,198 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w9
+RES H 7618 22 9 2 1,9,22,198 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+DONE 22 9 0.490
+LEVEL 1 210 dimDnew 82 tspace 0.050 tall 0.430 ncurves 4
+RES U 982 1 210 3 1,3,10,14,30,35,42,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 984 1 210 2 1,6,10,14,15,21,35,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 989 1 210 3 1,2,5,7,10,14,35,70 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 990 1 210 3 1,5,6,7,30,35,42,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1 210 0.490
+LEVEL 14 15 dimDnew 26 tspace 0.220 tall 0.460 ncurves 29
+RES H 5462 14 15 3 1,14 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+LEVEL 10 21 dimDnew 18 tspace 0.190 tall 0.440 ncurves 30
+RES H 4110 10 21 3 1,42 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 5467 14 15 5 1,30 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w7,w14,w21,w35
+RES H 4112 10 21 3 1,210 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w10,w14
+RES H 4113 10 21 3 1,3 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7,w10,w14,w35,w70
+RES H 4116 10 21 3 1,105 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w10,w14
+RES H 5472 14 15 5 1,105 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w10,w14
+RES H 4117 10 21 3 1,5 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES U 5477 14 15 3 1,2,35,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 5478 14 15 2 1,5,14,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4118 10 21 3 1,35 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 5480 14 15 3 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 4120 10 21 2 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 4121 10 21 2 1,2,35,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 5481 14 15 2 1,6,35,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4122 10 21 2 1,5,14,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5483 14 15 2 1,30,35,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 4123 10 21 2 1,10,14,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5484 14 15 2 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 4124 10 21 2 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 5487 14 15 2 1,7,30,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 5488 14 15 3 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 4128 10 21 3 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 5489 14 15 3 1,7,15,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 4129 10 21 3 1,7,10,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5491 14 15 2 1,3,35,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 5492 14 15 2 1,5,21,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4130 10 21 2 1,6,7,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4131 10 21 2 1,7,30,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 5493 14 15 2 1,15,21,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4132 10 21 2 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 5495 14 15 3 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 4133 10 21 2 1,7,15,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4137 10 21 2 1,15,21,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5496 14 15 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 4138 10 21 2 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w7,w35
+RES H 5497 14 15 2 1,2,105,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w7
+RES H 4139 10 21 2 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 5498 14 15 2 1,3,14,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 4140 10 21 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 5502 14 15 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES U 4143 10 21 3 1,6,14,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4144 10 21 2 1,14,15,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5503 14 15 2 1,10,21,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4145 10 21 2 1,14,30,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 4146 10 21 2 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 4147 10 21 2 1,10,21,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 4148 10 21 3 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES U 4151 10 21 3 1,21,30,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 5504 14 15 4 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 4152 10 21 2 1,15,42,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4153 10 21 2 1,6,70,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+DONE 10 21 0.510
+RES H 5505 14 15 3 1,10,42,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 5506 14 15 3 1,3,70,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+RES H 5507 14 15 2 1,21,30,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 5509 14 15 3 1,6,70,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+RES U 5510 14 15 3 1,5,7,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 5512 14 15 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+LEVEL 15 14 dimDnew 34 tspace 0.210 tall 0.490 ncurves 20
+RES H 5523 14 15 2 1,6,7,10,15,42,70,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 15 0.540
+RES U 6400 15 14 3 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 6402 15 14 2 1,6,7,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6403 15 14 2 1,7,30,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 6404 15 14 2 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6405 15 14 2 1,7,15,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 6413 15 14 3 1,2,105,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w7
+RES U 6414 15 14 3 1,3,14,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6418 15 14 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 6419 15 14 3 1,10,21,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6420 15 14 4 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 6421 15 14 2 1,10,42,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6422 15 14 2 1,3,70,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+RES H 6423 15 14 4 1,21,30,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 6424 15 14 3 1,15,42,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6425 15 14 3 1,6,70,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+RES U 6426 15 14 3 1,5,7,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6428 15 14 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 6431 15 14 2 1,2,15,21,30,35,42,70 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6434 15 14 2 1,5,6,14,21,30,70,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 6435 15 14 2 1,6,10,14,15,21,35,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 15 14 0.550
+LEVEL 21 10 dimDnew 34 tspace 0.200 tall 0.480 ncurves 20
+RES H 7150 21 10 3 1,2,35,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 7156 21 10 4 1,30,35,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 7157 21 10 4 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 7160 21 10 3 1,7,30,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 7162 21 10 2 1,7,15,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 7163 21 10 3 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 7166 21 10 2 1,15,21,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7168 21 10 3 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 7170 21 10 2 1,2,105,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w7
+RES H 7173 21 10 2 1,14,15,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7174 21 10 3 1,14,30,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 7176 21 10 3 1,10,21,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 7177 21 10 3 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 7180 21 10 2 1,21,30,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 7181 21 10 2 1,15,42,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 7182 21 10 3 1,6,70,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7
+RES H 7190 21 10 2 1,3,10,14,30,35,42,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7193 21 10 2 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 7197 21 10 2 1,2,5,7,10,14,35,70 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7198 21 10 2 1,5,6,7,30,35,42,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 21 10 0.550
+LEVEL 213 1 dimDnew 22 tspace 0.110 tall 0.170 ncurves 2
+RES U 13031 213 1 5 1,3 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 2:w71:-5;11:w71:-14; ops 1,w71
+RES H 13034 213 1 2 1,3,71,213 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 213 1 0.180
+LEVEL 226 1 dimDnew 18 tspace 0.140 tall 0.190 ncurves 1
+RES U 13113 226 1 3 1,113 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+DONE 226 1 0.200
+LEVEL 35 6 dimDnew 50 tspace 0.190 tall 0.490 ncurves 16
+RES H 9111 35 6 3 1,2,35,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 9115 35 6 3 1,6,35,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 9117 35 6 2 1,30,35,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 9127 35 6 2 1,15,21,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 9129 35 6 5 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 9130 35 6 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 9141 35 6 6 1,21,30,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 9142 35 6 4 1,15,42,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+LEVEL 6 35 dimDnew 18 tspace 0.190 tall 0.450 ncurves 30
+RES H 1643 6 35 3 1,10 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES H 1644 6 35 3 1,70 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w15,w21
+RES H 1645 6 35 3 1,6 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w7,w10,w14,w35,w70
+RES H 9146 35 6 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 1648 6 35 3 1,210 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w10,w14
+RES H 1650 6 35 3 1,21 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 9148 35 6 2 1,2,5,10,21,42,105,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 1652 6 35 3 1,105 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w7,w10,w14
+RES H 1656 6 35 2 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 1657 6 35 2 1,2,35,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 9150 35 6 2 1,3,5,14,15,42,70,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 1658 6 35 2 1,5,14,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1659 6 35 2 1,10,14,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1660 6 35 2 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 1662 6 35 2 1,5,42,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 1663 6 35 3 1,30,35,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 9152 35 6 3 1,5,6,14,21,30,70,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 1664 6 35 3 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 1666 6 35 2 1,6,7,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1667 6 35 2 1,7,30,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 1668 6 35 2 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1669 6 35 2 1,7,15,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 9154 35 6 3 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 1670 6 35 3 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 1671 6 35 2 1,3,35,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1673 6 35 2 1,15,21,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 9156 35 6 3 1,3,7,10,21,30,70,210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 1674 6 35 2 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w7,w35
+RES H 1675 6 35 2 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 1676 6 35 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+LEVEL 1 234 dimDnew 70 tspace 0.040 tall 0.280 ncurves 1
+RES H 9157 35 6 2 1,6,7,10,15,42,70,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 1678 6 35 3 1,3,14,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1680 6 35 2 1,14,15,210 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1681 6 35 2 1,14,30,105 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 1682 6 35 2 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 1688 6 35 2 1,15,42,70 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 9158 35 6 2 1,2,5,7,10,14,35,70 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 35 6 0.600
+RES U 1690 6 35 3 1,5,7,35 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+DONE 6 35 0.520
+RES U 1053 1 234 3 1,2,9,13,18,26,117,234 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 1 234 0.290
+LEVEL 14 17 dimDnew 18 tspace 0.150 tall 0.250 ncurves 9
+RES H 5528 14 17 3 1,2 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7,w17,w119
+RES U 5529 14 17 5 1,34 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 3:w7:-8;11:w2:-14; ops 1,w2,w7,w14
+RES H 5531 14 17 3 1,238 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 5535 14 17 2 1,2,17,34 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 5536 14 17 2 1,14,17,238 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5537 14 17 3 1,7,17,119 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 5538 14 17 2 1,2,7,14 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w17
+RES H 5540 14 17 2 1,7,34,238 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5541 14 17 3 1,14,34,119 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 17 0.280
+LEVEL 1 240 dimDnew 74 tspace 0.070 tall 0.350 ncurves 1
+RES U 1072 1 240 3 1,3,5,15,16,48,80,240 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V2*w1
+DONE 1 240 0.360
+LEVEL 69 4 dimDnew 46 tspace 0.190 tall 0.400 ncurves 2
+RES U 10689 69 4 4 1,12,23,276 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w3:-14; ops 1,w3
+RES H 10695 69 4 2 1,3,4,12,23,69,92,276 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 69 4 0.420
+LEVEL 10 27 dimDnew 26 tspace 0.230 tall 0.460 ncurves 4
+RES U 4190 10 27 4 1,270 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 7:w10:-12;17:w5:-24; ops 1,w2,w5,w10
+RES H 4195 10 27 2 1,5,54,270 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4198 10 27 2 1,2,135,270 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4199 10 27 2 1,10,27,270 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 27 0.470
+LEVEL 141 2 dimDnew 46 tspace 0.160 tall 0.360 ncurves 2
+LEVEL 35 8 dimDnew 50 tspace 0.220 tall 0.460 ncurves 2
+RES U 11709 141 2 3 1,3,94,282 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 11710 141 2 3 1,6,94,141 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 141 2 0.380
+RES U 9165 35 8 5 1,8,35,280 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 3:V2*w1:-8; ops 1,w5,V2*w1,V2*w5
+RES H 9168 35 8 2 1,5,7,8,35,40,56,280 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V2*w1
+DONE 35 8 0.480
+LEVEL 94 3 dimDnew 30 tspace 0.170 tall 0.330 ncurves 5
+RES U 11257 94 3 3 1,6,47,282 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES U 11258 94 3 3 1,3,47,141 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 11260 94 3 2 1,2,141,282 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 11261 94 3 3 1,3,94,282 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 11262 94 3 3 1,6,94,141 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 94 3 0.350
+LEVEL 57 5 dimDnew 34 tspace 0.150 tall 0.280 ncurves 2
+RES U 10236 57 5 3 1,3,19,57 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 10238 57 5 3 1,5,19,95 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 57 5 0.290
+LEVEL 62 5 dimDnew 30 tspace 0.180 tall 0.350 ncurves 5
+LEVEL 1 294 dimDnew 82 tspace 0.060 tall 0.370 ncurves 1
+RES U 10453 62 5 3 1,10,31,310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10454 62 5 3 1,5,31,155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 10456 62 5 2 1,2,155,310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 10457 62 5 3 1,5,62,310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 1188 1 294 3 1,2,3,6,49,98,147,294 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 294 0.380
+RES U 10458 62 5 3 1,10,62,155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 62 5 0.370
+LEVEL 39 8 dimDnew 50 tspace 0.240 tall 0.530 ncurves 3
+RES U 9617 39 8 3 1,3,13,39 nops 7 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w8,S2*w1,V2*w1,V2*w8,S2*V2*w1,V2*S2*w1
+RES H 9619 39 8 2 1,8,39,312 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES H 9621 39 8 2 1,24,39,104 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+DONE 39 8 0.560
+LEVEL 15 16 dimDnew 34 tspace 1.160 tall 1.350 ncurves 4
+RES U 6451 15 16 3 1,5,48,240 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES U 6452 15 16 3 1,3,5,15 nops 7 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w16,S2*w1,V2*w1,V2*w16,S2*V2*w1,V2*S2*w1
+RES H 6454 15 16 2 1,15,16,240 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+RES H 6456 15 16 2 1,15,48,80 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+DONE 15 16 1.370
+LEVEL 1 330 dimDnew 130 tspace 0.060 tall 0.730 ncurves 2
+RES U 1229 1 330 4 1,6,10,11,15,66,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 1232 1 330 2 1,2,3,5,6,10,11,15,22,30,33,55,66,110,165,330 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 330 0.800
+LEVEL 15 22 dimDnew 50 tspace 0.320 tall 0.790 ncurves 22
+RES U 6489 15 22 3 1,2,55,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 6493 15 22 2 1,6,55,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6495 15 22 2 1,30,55,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 6503 15 22 2 1,3,55,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6505 15 22 2 1,15,33,55 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6510 15 22 6 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6511 15 22 5 1,6,22,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6512 15 22 5 1,15,22,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6513 15 22 4 1,22,30,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 6514 15 22 5 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 6515 15 22 4 1,10,33,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6516 15 22 6 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+LEVEL 22 15 dimDnew 42 tspace 0.280 tall 0.760 ncurves 19
+RES H 6517 15 22 5 1,10,66,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 6522 15 22 3 1,5,11,55 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 7652 22 15 3 1,2,55,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 7653 22 15 2 1,5,22,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7657 22 15 2 1,5,66,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6524 15 22 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 7660 22 15 2 1,10,11,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7661 22 15 3 1,6,11,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6526 15 22 2 1,2,5,10,33,66,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7664 22 15 4 1,11,15,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6528 15 22 3 1,3,5,15,22,66,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7665 22 15 5 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 6530 15 22 2 1,5,6,22,30,33,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7673 22 15 4 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 7675 22 15 5 1,15,22,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6532 15 22 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 6533 15 22 2 1,2,11,15,22,30,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7679 22 15 6 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 6534 15 22 2 1,3,10,11,30,33,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7680 22 15 3 1,10,66,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6535 15 22 3 1,6,10,11,15,66,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 15 22 0.960
+RES H 7681 22 15 2 1,3,110,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 7684 22 15 2 1,6,110,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 7686 22 15 2 1,3,5,11,15,33,55,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7687 22 15 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 7692 22 15 2 1,3,10,22,30,55,66,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 33 10 dimDnew 58 tspace 0.280 tall 0.850 ncurves 17
+RES H 7694 22 15 3 1,6,10,15,22,33,55,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8554 33 10 3 1,2,55,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 7695 22 15 2 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 8558 33 10 3 1,6,55,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w10:-10; ops 1,w2,w5,w10
+RES H 7696 22 15 2 1,2,11,15,22,30,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 22 15 0.880
+RES H 8560 33 10 2 1,30,55,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 8570 33 10 2 1,15,33,55 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8572 33 10 5 1,2,33,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 8573 33 10 5 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 8584 33 10 8 1,30,33,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 8585 33 10 4 1,15,66,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8589 33 10 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 8591 33 10 2 1,2,5,10,33,66,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8593 33 10 2 1,3,5,15,22,66,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8595 33 10 4 1,5,6,22,30,33,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8597 33 10 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 8598 33 10 2 1,2,11,15,22,30,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8599 33 10 4 1,3,10,11,30,33,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8600 33 10 2 1,6,10,11,15,66,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 6 55 dimDnew 26 tspace 0.310 tall 0.740 ncurves 28
+RES H 8601 33 10 2 1,2,5,10,11,22,55,110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 33 10 1.030
+RES H 1805 6 55 5 1,10 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w11,w22,w33,w66
+RES H 1808 6 55 3 1,66 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 1814 6 55 5 1,165 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w11,w22
+RES H 1818 6 55 3 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 1821 6 55 3 1,10,22,55 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1822 6 55 2 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 1823 6 55 2 1,6,55,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1827 6 55 3 1,10,11,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1829 6 55 2 1,11,30,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 1831 6 55 3 1,11,15,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1833 6 55 3 1,3,55,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1834 6 55 3 1,5,33,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 1836 6 55 3 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w11,w55
+RES H 1837 6 55 2 1,2,33,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 1838 6 55 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 13:w11:-16; ops 1,w3,w11,w33
+RES H 1839 6 55 2 1,2,165,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w11
+RES H 1840 6 55 2 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 1841 6 55 3 1,6,22,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1843 6 55 2 1,22,30,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 1844 6 55 2 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 1845 6 55 2 1,10,33,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1846 6 55 2 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 1848 6 55 3 1,3,110,330 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1850 6 55 2 1,15,66,110 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1851 6 55 2 1,6,110,165 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1852 6 55 4 1,5,11,55 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1853 6 55 2 1,3,5,11,15,33,55,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 1866 6 55 2 1,2,5,10,11,22,55,110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 55 0.840
+LEVEL 55 6 dimDnew 82 tspace 0.310 tall 0.970 ncurves 6
+RES U 10112 55 6 3 1,2,3,6,55,110,165,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+LEVEL 21 16 dimDnew 50 tspace 0.280 tall 0.620 ncurves 1
+RES U 10114 55 6 3 1,2,15,30,33,55,66,110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7231 21 16 3 1,7,48,336 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,V2*w1,V2*w3
+DONE 21 16 0.630
+RES H 10115 55 6 2 1,3,5,15,22,66,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10117 55 6 3 1,5,6,22,30,33,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10121 55 6 3 1,3,10,11,30,33,110,330 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10122 55 6 3 1,6,10,11,15,66,110,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 55 6 1.080
+LEVEL 15 23 dimDnew 34 tspace 0.190 tall 0.380 ncurves 3
+RES U 6548 15 23 3 1,5,23,115 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6550 15 23 2 1,3,115,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 6552 15 23 2 1,15,69,115 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 15 23 0.390
+LEVEL 115 3 dimDnew 58 tspace 0.170 tall 0.390 ncurves 2
+RES U 11443 115 3 5 1,5,23,115 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w3:-12; ops 1,w3
+RES H 11448 115 3 2 1,3,5,15,23,69,115,345 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 115 3 0.410
+LEVEL 21 17 dimDnew 34 tspace 0.180 tall 0.360 ncurves 3
+LEVEL 118 3 dimDnew 38 tspace 0.220 tall 0.470 ncurves 2
+RES U 7245 21 17 3 1,3,17,51 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 7250 21 17 2 1,7,51,357 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7251 21 17 2 1,21,51,119 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 11481 118 3 2 1,6,59,354 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 21 17 0.380
+RES U 11482 118 3 3 1,3,59,177 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+DONE 118 3 0.480
+LEVEL 51 7 dimDnew 42 tspace 0.180 tall 0.390 ncurves 2
+LEVEL 1 370 dimDnew 106 tspace 0.060 tall 0.390 ncurves 1
+RES U 9949 51 7 5 1,3,17,51 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w7:-16; ops 1,w7
+RES H 9956 51 7 2 1,3,7,17,21,51,119,357 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 51 7 0.400
+RES U 1247 1 370 4 1,2,5,10,37,74,185,370 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 370 0.410
+LEVEL 55 7 dimDnew 50 tspace 0.160 tall 0.350 ncurves 1
+RES U 10132 55 7 3 1,35,55,77 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 55 7 0.360
+LEVEL 35 11 dimDnew 50 tspace 0.210 tall 0.410 ncurves 1
+RES U 9183 35 11 3 1,35,55,77 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 35 11 0.410
+LEVEL 77 5 dimDnew 58 tspace 0.190 tall 0.420 ncurves 1
+RES U 10869 77 5 3 1,5,7,11,35,55,77,385 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 77 5 0.430
+LEVEL 1 390 dimDnew 154 tspace 0.060 tall 0.920 ncurves 2
+RES U 1262 1 390 5 1,5,6,26,30,39,130,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w2:-10; ops 1,w2
+RES H 1270 1 390 2 1,2,3,5,6,10,13,15,26,30,39,65,78,130,195,390 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 390 1.000
+LEVEL 10 39 dimDnew 34 tspace 0.360 tall 0.890 ncurves 22
+RES H 4330 10 39 3 1,2,65,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 4332 10 39 3 1,10,26,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4333 10 39 4 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 4335 10 39 2 1,5,78,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4339 10 39 4 1,6,13,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4340 10 39 2 1,13,30,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 4346 10 39 3 1,15,39,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4347 10 39 4 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w13,w65
+RES H 4350 10 39 2 1,2,195,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w13
+RES H 4351 10 39 3 1,3,26,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4354 10 39 3 1,26,30,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 4355 10 39 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES U 4356 10 39 3 1,10,39,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4358 10 39 3 1,10,78,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4359 10 39 2 1,3,130,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4362 10 39 4 1,6,130,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4363 10 39 3 1,5,13,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4365 10 39 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 4371 10 39 2 1,5,6,26,30,39,130,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4373 10 39 2 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4376 10 39 2 1,6,10,13,15,78,130,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4377 10 39 2 1,2,5,10,13,26,65,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 10 39 1.000
+LEVEL 26 15 dimDnew 50 tspace 0.360 tall 0.970 ncurves 16
+LEVEL 15 26 dimDnew 58 tspace 0.410 tall 1.080 ncurves 11
+RES U 8170 26 15 3 1,5,26,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8171 26 15 2 1,10,26,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8173 26 15 2 1,6,65,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 6575 15 26 3 1,2,195,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w13
+RES U 6583 15 26 3 1,10,78,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8185 26 15 5 1,15,39,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8191 26 15 3 1,6,26,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 6589 15 26 2 1,3,5,13,15,39,65,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8192 26 15 2 1,15,26,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 8193 26 15 3 1,26,30,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 6590 15 26 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 8195 26 15 5 1,10,39,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+LEVEL 390 1 dimDnew 18 tspace 0.530 tall 0.990 ncurves 31
+RES H 6593 15 26 3 1,2,15,30,39,65,78,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 13718 390 1 5 1,2 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w13,w15,w39,w65,w195
+RES H 13721 390 1 3 1,130 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 8196 26 15 6 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 13723 390 1 3 1,78 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 6594 15 26 2 1,3,5,15,26,78,130,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8203 26 15 2 1,3,5,13,15,39,65,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 13724 390 1 5 1,30 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w13,w26,w39,w65
+RES H 8204 26 15 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 6596 15 26 2 1,5,6,26,30,39,130,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8206 26 15 2 1,2,5,10,39,78,195,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 13726 390 1 5 1,3 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10,w13,w26,w65,w130
+RES H 8207 26 15 3 1,2,15,30,39,65,78,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 13729 390 1 3 1,195 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w13,w26
+RES H 6597 15 26 3 1,6,10,15,26,39,65,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8212 26 15 2 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 13730 390 1 5 1,5 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w13,w26,w39,w78
+RES H 13732 390 1 3 1,13 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 6598 15 26 3 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 13733 390 1 3 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w13,w39
+RES H 8214 26 15 3 1,3,10,13,30,39,130,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 13734 390 1 2 1,2,65,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 13735 390 1 2 1,5,26,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 13736 390 1 3 1,10,26,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8215 26 15 3 1,6,10,13,15,78,130,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 26 15 1.090
+RES H 13737 390 1 3 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 6602 15 26 3 1,2,5,10,13,26,65,130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 13740 390 1 2 1,30,65,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 13741 390 1 2 1,2,13,26 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 13745 390 1 2 1,3,13,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 13747 390 1 3 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 13748 390 1 2 1,3,65,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 13749 390 1 2 1,5,39,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 6603 15 26 2 1,5,6,13,30,65,78,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 13750 390 1 3 1,15,39,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+DONE 15 26 1.230
+RES H 13751 390 1 3 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w13,w65
+RES H 13752 390 1 2 1,2,39,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 13753 390 1 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w13,w39
+RES H 13755 390 1 2 1,3,26,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 13756 390 1 3 1,6,26,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 13758 390 1 2 1,26,30,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 13759 390 1 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 13761 390 1 3 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 13764 390 1 2 1,30,39,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 13767 390 1 2 1,5,13,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 13769 390 1 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+DONE 390 1 1.080
+LEVEL 6 65 dimDnew 26 tspace 0.350 tall 0.870 ncurves 29
+RES H 1900 6 65 5 1,2 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w13,w15,w39,w65,w195
+RES H 1907 6 65 3 1,390 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w13,w15
+RES H 1911 6 65 5 1,195 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w13,w26
+RES H 1915 6 65 2 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w13,w39
+RES H 1916 6 65 2 1,2,65,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 1917 6 65 3 1,5,26,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w3:-10; ops 1,w2,w3,w6
+RES U 1918 6 65 3 1,10,26,65 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 1919 6 65 3 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 1920 6 65 2 1,6,65,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1921 6 65 2 1,5,78,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1923 6 65 3 1,2,13,26 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 1924 6 65 2 1,10,13,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1927 6 65 4 1,3,13,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1928 6 65 3 1,13,15,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1930 6 65 3 1,3,65,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1931 6 65 3 1,5,39,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1933 6 65 3 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w13,w65
+RES H 1934 6 65 3 1,2,39,78 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 1935 6 65 2 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w13,w39
+RES H 1939 6 65 2 1,15,26,390 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1940 6 65 2 1,26,30,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 1941 6 65 2 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES U 1943 6 65 3 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 1944 6 65 2 1,10,78,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1946 6 65 2 1,30,39,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 1947 6 65 3 1,15,78,130 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 1948 6 65 2 1,6,130,195 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 1950 6 65 2 1,3,5,13,15,39,65,195 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 1959 6 65 2 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 6 65 0.970
+LEVEL 1 396 dimDnew 122 tspace 0.080 tall 0.630 ncurves 1
+LEVEL 82 5 dimDnew 42 tspace 0.190 tall 0.430 ncurves 2
+RES H 10922 82 5 2 1,10,41,410 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10925 82 5 3 1,2,205,410 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 82 5 0.440
+RES U 1272 1 396 5 1,4,9,11,36,44,99,396 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 1 396 0.660
+LEVEL 46 9 dimDnew 46 tspace 0.260 tall 0.590 ncurves 4
+RES U 9813 46 9 4 1,18,23,414 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9816 46 9 4 1,2,207,414 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w9
+LEVEL 38 11 dimDnew 38 tspace 0.210 tall 0.430 ncurves 3
+RES H 9817 46 9 4 1,9,46,414 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 9403 38 11 2 1,11,19,209 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9405 38 11 2 1,2,209,418 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES U 9407 38 11 3 1,22,38,209 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 38 11 0.440
+RES H 9819 46 9 2 1,2,9,18,23,46,207,414 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 46 9 0.630
+LEVEL 51 8 dimDnew 66 tspace 0.300 tall 0.760 ncurves 1
+RES U 9964 51 8 3 1,3,8,17,24,51,136,408 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V2*w1
+DONE 51 8 0.780
+LEVEL 65 6 dimDnew 98 tspace 0.370 tall 1.210 ncurves 3
+RES U 10619 65 6 3 1,2,3,6,65,130,195,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 10620 65 6 3 1,2,5,10,39,78,195,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 10627 65 6 3 1,2,13,15,26,30,195,390 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 65 6 1.300
+LEVEL 33 13 dimDnew 42 tspace 0.190 tall 0.450 ncurves 3
+RES U 8604 33 13 5 1,3,13,39 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 2:w11:-5;5:w11:-8; ops 1,w11
+LEVEL 142 3 dimDnew 46 tspace 0.280 tall 0.640 ncurves 2
+RES H 8608 33 13 3 1,3,143,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 8611 33 13 2 1,3,11,13,33,39,143,429 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 33 13 0.470
+RES U 11722 142 3 3 1,6,71,426 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 11725 142 3 2 1,2,213,426 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 142 3 0.660
+LEVEL 39 11 dimDnew 50 tspace 0.210 tall 0.450 ncurves 1
+LEVEL 213 2 dimDnew 70 tspace 0.310 tall 0.770 ncurves 2
+RES U 9679 39 11 3 1,11,39,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 39 11 0.450
+RES U 13040 213 2 5 1,3,142,426 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w2:-14; ops 1,w2
+RES H 13042 213 2 2 1,2,3,6,71,142,213,426 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 213 2 0.800
+LEVEL 15 28 dimDnew 66 tspace 0.510 tall 1.390 ncurves 12
+RES U 6615 15 28 5 1,7,12,84 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 6616 15 28 4 1,7,60,420 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w4,w5
+RES U 6617 15 28 5 1,3,7,21 nops 6 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,w5,w20,S2*w1,S2*w5
+RES U 6640 15 28 3 1,3,5,7,15,21,35,105 nops 3 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4,S2*w1
+RES U 6645 15 28 3 1,3,5,15,28,84,140,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+LEVEL 21 20 dimDnew 74 tspace 0.530 tall 1.450 ncurves 10
+RES U 6648 15 28 3 1,12,15,20,21,28,35,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7292 21 20 5 1,15,28,420 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w4,w12
+RES H 6649 15 28 2 1,3,4,7,12,21,28,84 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 6650 15 28 2 1,4,7,15,28,60,105,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7296 21 20 7 1,12,15,20 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 17:w3:-20; ops 1,w3,w7,w21
+RES H 6651 15 28 2 1,3,7,20,21,60,140,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+RES U 7300 21 20 5 1,15,84,140 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w4,w7
+LEVEL 87 5 dimDnew 58 tspace 0.210 tall 0.520 ncurves 2
+RES U 6652 15 28 3 1,7,12,15,20,84,105,140 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 11108 87 5 5 1,15,29,435 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w3:-10; ops 1,w3
+RES U 7304 21 20 3 1,3,4,5,12,15,20,60 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 6653 15 28 3 1,4,5,7,20,28,35,140 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 11114 87 5 2 1,3,5,15,29,87,145,435 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 87 5 0.540
+RES H 7307 21 20 2 1,4,15,21,35,60,84,140 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6654 15 28 2 1,5,7,12,35,60,84,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 15 28 1.580
+RES H 7308 21 20 2 1,3,5,15,28,84,140,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+LEVEL 34 13 dimDnew 34 tspace 0.230 tall 0.480 ncurves 5
+RES U 7311 21 20 3 1,12,15,20,21,28,35,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 8865 34 13 5 1,221 nops 4 nodesc 0 noncomm 0 h1 false nviol 3 viol 3:w2:-6;27:w13:-34;5:w2:-10; ops 1,w2,w13,w26
+RES U 8868 34 13 3 1,17,26,442 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8869 34 13 2 1,13,17,221 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8871 34 13 2 1,2,221,442 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES U 8873 34 13 3 1,26,34,221 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+DONE 34 13 0.500
+RES H 7313 21 20 2 1,4,7,15,28,60,105,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 65 7 dimDnew 66 tspace 0.190 tall 0.480 ncurves 1
+RES U 7315 21 20 3 1,7,12,15,20,84,105,140 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 10634 65 7 3 1,13,35,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 65 7 0.490
+LEVEL 146 3 dimDnew 50 tspace 0.270 tall 0.640 ncurves 3
+RES U 11795 146 3 3 1,2,73,146 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7317 21 20 3 1,5,7,12,35,60,84,420 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 21 20 1.650
+RES H 11800 146 3 2 1,3,146,438 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 11801 146 3 2 1,6,146,219 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 146 3 0.660
+LEVEL 22 21 dimDnew 50 tspace 0.440 tall 1.210 ncurves 17
+RES H 7735 22 21 3 1,14,22,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7739 22 21 2 1,42,66,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+LEVEL 6 77 dimDnew 34 tspace 0.440 tall 1.140 ncurves 27
+RES H 7747 22 21 4 1,3,77,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 2014 6 77 5 1,154 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w11,w21,w33
+RES H 7754 22 21 4 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 2016 6 77 5 1,66 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES H 7757 22 21 6 1,22,42,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2021 6 77 7 1,21 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w11,w22,w33,w66
+LEVEL 14 33 dimDnew 50 tspace 0.440 tall 1.240 ncurves 20
+RES H 7758 22 21 3 1,3,14,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 2027 6 77 3 1,2,77,154 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 2028 6 77 3 1,7,22,154 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2032 6 77 2 1,7,66,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 5635 14 33 4 1,2,77,154 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 5:w3:-8;13:w21:-16; ops 1,w3,w7,w21
+RES U 7759 22 21 3 1,14,33,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2033 6 77 3 1,42,66,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2035 6 77 3 1,11,14,154 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2036 6 77 2 1,6,11,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 7761 22 21 3 1,14,66,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2039 6 77 4 1,11,21,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 5637 14 33 5 1,14,22,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-10; ops 1,w2,w3,w6
+RES H 7767 22 21 2 1,3,7,11,21,33,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7768 22 21 2 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 2040 6 77 4 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 5639 14 33 4 1,6,77,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2,w7,w14
+RES H 2043 6 77 3 1,21,33,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2045 6 77 2 1,2,33,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 7769 22 21 2 1,2,3,6,77,154,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 2046 6 77 4 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 2048 6 77 3 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 7772 22 21 2 1,3,7,21,22,66,154,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5641 14 33 5 1,42,66,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w6:-10; ops 1,w2,w3,w6
+RES U 2049 6 77 3 1,6,22,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 2050 6 77 3 1,21,22,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2054 6 77 3 1,6,14,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 5642 14 33 5 1,2,11,22 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 2055 6 77 3 1,14,66,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2056 6 77 2 1,3,154,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w11
+RES H 2057 6 77 2 1,33,42,154 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 7774 22 21 3 1,6,7,22,33,42,154,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2059 6 77 2 1,6,154,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w11
+RES U 5649 14 33 5 1,3,77,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-10; ops 1,w2,w7,w14
+RES H 2061 6 77 2 1,3,7,11,21,33,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7776 22 21 2 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 2062 6 77 2 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 2067 6 77 2 1,3,14,22,42,66,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2071 6 77 2 1,2,11,21,22,42,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7777 22 21 3 1,2,11,21,22,42,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 462 1 dimDnew 18 tspace 0.620 tall 1.280 ncurves 31
+RES H 2074 6 77 2 1,2,7,11,14,22,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 77 1.280
+RES U 5654 14 33 5 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 14123 462 1 3 1,2 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w11,w21,w33,w77,w231
+RES H 7779 22 21 2 1,6,11,14,21,66,154,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 14124 462 1 3 1,22 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES U 5655 14 33 5 1,2,231,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 3 viol 5:w3:-10;13:w7:-16;23:w11:-32; ops 1,w3,w7,w11
+RES H 14129 462 1 3 1,42 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w11,w22,w33,w66
+RES H 14130 462 1 3 1,462 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w11,w14,w21
+RES H 7780 22 21 2 1,2,7,11,14,22,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 22 21 1.380
+RES H 5669 14 33 2 1,3,7,11,21,33,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 14131 462 1 5 1,3 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w11,w14,w22,w77,w154
+RES U 5670 14 33 3 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 14132 462 1 5 1,33 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES H 14135 462 1 5 1,7 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w11,w22,w33,w66
+RES H 5671 14 33 2 1,2,3,6,77,154,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 14136 462 1 5 1,77 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w7,w14,w21,w42
+RES H 14138 462 1 2 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w33
+RES H 14141 462 1 2 1,14,22,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14142 462 1 2 1,6,7,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 14143 462 1 2 1,6,77,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 14144 462 1 2 1,7,66,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14145 462 1 2 1,42,66,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 5672 14 33 3 1,2,7,14,33,66,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 14148 462 1 3 1,6,11,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 14150 462 1 3 1,3,11,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+LEVEL 33 14 dimDnew 82 tspace 0.460 tall 1.400 ncurves 12
+RES H 5673 14 33 2 1,2,21,33,42,66,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 14151 462 1 3 1,11,21,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14152 462 1 3 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 14153 462 1 3 1,3,77,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES U 5674 14 33 3 1,3,7,21,22,66,154,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 14154 462 1 3 1,7,33,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 8641 33 14 3 1,14,66,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14155 462 1 3 1,21,33,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14156 462 1 2 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7,w11,w77
+RES U 5675 14 33 3 1,3,14,22,42,66,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 14157 462 1 2 1,2,33,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES H 14160 462 1 2 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 14161 462 1 2 1,6,22,33 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 14164 462 1 2 1,3,14,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 14165 462 1 2 1,14,33,462 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 8645 33 14 3 1,6,154,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w11
+RES H 5677 14 33 2 1,6,14,21,22,33,77,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 14166 462 1 3 1,6,14,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 14167 462 1 3 1,14,66,231 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14172 462 1 3 1,7,11,77 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14173 462 1 2 1,3,7,11,21,33,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 462 1 1.380
+RES U 5678 14 33 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 8647 33 14 2 1,3,7,11,21,33,77,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5679 14 33 2 1,2,11,21,22,42,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 5682 14 33 2 1,2,7,11,14,22,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 5683 14 33 2 1,6,7,11,42,66,77,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 33 1.470
+RES H 8648 33 14 5 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 8651 33 14 3 1,2,21,33,42,66,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8652 33 14 3 1,3,7,21,22,66,154,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8655 33 14 5 1,6,14,21,22,33,77,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8656 33 14 4 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 8657 33 14 2 1,2,11,21,22,42,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8658 33 14 3 1,3,11,14,33,42,154,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8660 33 14 5 1,2,7,11,14,22,77,154 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8661 33 14 4 1,6,7,11,42,66,77,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 33 14 1.680
+LEVEL 77 6 dimDnew 122 tspace 0.500 tall 1.810 ncurves 2
+RES U 10880 77 6 3 1,2,11,21,22,42,231,462 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 10882 77 6 3 1,6,11,14,21,66,154,231 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 77 6 1.890
+LEVEL 15 31 dimDnew 42 tspace 0.240 tall 0.530 ncurves 1
+RES U 6675 15 31 3 1,3,155,465 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 15 31 0.530
+LEVEL 94 5 dimDnew 46 tspace 0.230 tall 0.540 ncurves 2
+RES U 11268 94 5 3 1,2,235,470 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 11269 94 5 2 1,5,94,470 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 94 5 0.550
+LEVEL 158 3 dimDnew 54 tspace 0.290 tall 0.740 ncurves 1
+RES U 11848 158 3 3 1,2,237,474 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 158 3 0.750
+LEVEL 166 3 dimDnew 54 tspace 0.310 tall 0.750 ncurves 2
+RES U 11904 166 3 4 1,3,83,249 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 11909 166 3 2 1,2,3,6,83,166,249,498 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 166 3 0.760
+LEVEL 1 510 dimDnew 202 tspace 0.090 tall 1.500 ncurves 1
+RES U 1387 1 510 3 1,2,3,5,6,10,15,17,30,34,51,85,102,170,255,510 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 510 1.610
+LEVEL 510 1 dimDnew 18 tspace 0.760 tall 1.450 ncurves 31
+RES H 14443 510 1 3 1,10 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w17,w34,w51,w102
+RES H 14444 510 1 5 1,170 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 14445 510 1 5 1,6 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10,w17,w34,w85,w170
+RES H 14446 510 1 3 1,102 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 14449 510 1 3 1,3 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10,w17,w34,w85,w170
+RES H 14450 510 1 5 1,51 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 14453 510 1 5 1,5 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w17,w34,w51,w102
+RES H 14454 510 1 3 1,85 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 14456 510 1 2 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w17,w51
+RES H 14457 510 1 2 1,2,85,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 14458 510 1 3 1,5,34,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14460 510 1 3 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES U 14464 510 1 3 1,2,17,34 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 14465 510 1 2 1,10,17,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+LEVEL 34 15 dimDnew 66 tspace 0.560 tall 1.530 ncurves 8
+RES H 14466 510 1 2 1,6,17,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14468 510 1 2 1,3,17,51 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 14469 510 1 3 1,15,17,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14470 510 1 2 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 14472 510 1 3 1,5,51,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14473 510 1 2 1,15,51,85 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14474 510 1 2 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w17,w85
+RES U 8877 34 15 5 1,5,34,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14475 510 1 2 1,2,51,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 14476 510 1 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w17,w51
+RES H 14479 510 1 3 1,6,34,51 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14481 510 1 3 1,30,34,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 14484 510 1 2 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 14487 510 1 3 1,30,51,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 8912 34 15 2 1,2,3,6,85,170,255,510 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 14488 510 1 2 1,15,102,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14489 510 1 3 1,6,170,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14490 510 1 2 1,5,17,85 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14498 510 1 2 1,5,6,30,34,51,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 510 1 1.570
+RES U 8914 34 15 3 1,2,15,30,51,85,102,170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 10 51 dimDnew 50 tspace 0.560 tall 1.650 ncurves 16
+RES H 8915 34 15 2 1,3,5,15,34,102,170,510 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 4441 10 51 3 1,2,85,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 4449 10 51 2 1,10,17,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 8917 34 15 2 1,5,6,30,34,51,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4451 10 51 2 1,17,30,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 8921 34 15 2 1,3,10,17,30,51,170,510 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4452 10 51 5 1,3,17,51 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4466 10 51 6 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES U 8922 34 15 3 1,6,10,15,17,102,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4467 10 51 5 1,10,51,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4470 10 51 2 1,3,170,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 8923 34 15 3 1,2,5,10,17,34,85,170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 34 15 1.650
+RES H 4471 10 51 3 1,30,51,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 4472 10 51 3 1,15,102,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4475 10 51 3 1,3,5,15,17,51,85,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4476 10 51 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w17
+RES H 4478 10 51 2 1,2,5,10,51,102,255,510 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4481 10 51 3 1,3,10,30,34,85,102,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4482 10 51 2 1,5,6,30,34,51,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4483 10 51 3 1,6,10,15,34,51,85,510 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4484 10 51 2 1,2,3,6,17,34,51,102 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+DONE 10 51 1.800
+LEVEL 6 85 dimDnew 34 tspace 0.570 tall 1.460 ncurves 20
+RES U 2124 6 85 3 1,5,34,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2125 6 85 2 1,10,34,85 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2127 6 85 2 1,6,85,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 2129 6 85 3 1,30,85,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 2130 6 85 2 1,2,17,34 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 2133 6 85 2 1,17,30,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 2135 6 85 5 1,15,17,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2139 6 85 3 1,15,51,85 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2142 6 85 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w17,w51
+RES H 2143 6 85 2 1,2,255,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 2144 6 85 3 1,3,34,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 2145 6 85 2 1,6,34,51 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 2147 6 85 2 1,30,34,255 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 2149 6 85 2 1,10,51,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2150 6 85 5 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES U 2152 6 85 3 1,3,170,510 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 2153 6 85 3 1,30,51,170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 2157 6 85 2 1,3,5,15,17,51,85,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2158 6 85 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w17
+RES H 2169 6 85 3 1,6,10,15,17,102,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 85 1.560
+LEVEL 74 7 dimDnew 50 tspace 0.300 tall 0.680 ncurves 2
+RES U 10778 74 7 5 1,14,74,259 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 13:w2:-18; ops 1,w2
+RES H 10779 74 7 2 1,2,7,14,37,74,259,518 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 74 7 0.710
+LEVEL 85 6 dimDnew 130 tspace 0.600 tall 2.250 ncurves 1
+LEVEL 58 9 dimDnew 58 tspace 0.350 tall 0.890 ncurves 2
+RES U 10362 58 9 5 1,9,29,261 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:V3*w2:-12; ops 1,w2,V3*w1,V3*w2
+RES H 10367 58 9 2 1,2,9,18,29,58,261,522 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 58 9 0.930
+RES U 11024 85 6 3 1,6,10,15,17,102,170,255 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 85 6 2.310
+LEVEL 22 25 dimDnew 50 tspace 0.380 tall 0.840 ncurves 2
+RES U 7803 22 25 5 1,22,25,550 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7805 22 25 2 1,2,11,22,25,50,275,550 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 22 25 0.870
+LEVEL 39 14 dimDnew 98 tspace 0.600 tall 1.890 ncurves 3
+RES U 9684 39 14 3 1,2,3,6,91,182,273,546 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 9690 39 14 3 1,6,14,21,26,39,91,546 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9696 39 14 2 1,6,7,13,42,78,91,546 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 39 14 2.000
+LEVEL 1 570 dimDnew 226 tspace 0.080 tall 1.820 ncurves 1
+RES U 1414 1 570 4 1,2,3,5,6,10,15,19,30,38,57,95,114,190,285,570 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 570 1.970
+LEVEL 10 57 dimDnew 50 tspace 0.730 tall 2.020 ncurves 16
+RES H 4514 10 57 3 1,2,19,38 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 4517 10 57 5 1,19,30,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 4519 10 57 5 1,15,19,285 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4526 10 57 6 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w19,w57
+RES H 4527 10 57 2 1,2,285,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 4528 10 57 3 1,3,38,114 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 4529 10 57 3 1,6,38,57 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4530 10 57 2 1,15,38,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4531 10 57 2 1,30,38,285 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 4541 10 57 2 1,3,5,15,19,57,95,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4542 10 57 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 4545 10 57 3 1,2,15,30,57,95,114,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4552 10 57 2 1,3,10,19,30,57,190,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4553 10 57 3 1,6,10,15,19,114,190,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4554 10 57 2 1,2,5,10,19,38,95,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4555 10 57 3 1,5,6,19,30,95,114,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 57 2.160
+LEVEL 38 15 dimDnew 74 tspace 0.630 tall 1.760 ncurves 7
+RES U 9454 38 15 3 1,2,3,6,95,190,285,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 9455 38 15 2 1,2,5,10,57,114,285,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 9457 38 15 3 1,3,5,15,38,114,190,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9458 38 15 3 1,3,10,30,38,95,114,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9459 38 15 3 1,5,6,30,38,57,190,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9464 38 15 3 1,6,10,15,19,114,190,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9466 38 15 2 1,5,6,19,30,95,114,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 38 15 1.890
+LEVEL 57 10 dimDnew 106 tspace 0.690 tall 2.130 ncurves 3
+RES U 10270 57 10 3 1,2,15,19,30,38,285,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 10272 57 10 3 1,6,10,15,19,114,190,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10274 57 10 3 1,5,6,19,30,95,114,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 57 10 2.250
+LEVEL 14 41 dimDnew 42 tspace 0.310 tall 0.730 ncurves 4
+RES U 5751 14 41 5 1,2,41,82 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 5752 14 41 4 1,14,41,574 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5755 14 41 3 1,2,287,574 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+LEVEL 15 38 dimDnew 82 tspace 0.750 tall 2.540 ncurves 5
+RES H 5758 14 41 2 1,2,7,14,41,82,287,574 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 41 0.760
+RES U 6786 15 38 3 1,3,5,15,38,114,190,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6789 15 38 3 1,6,10,15,38,57,95,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6791 15 38 3 1,2,15,19,30,38,285,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 6792 15 38 3 1,3,10,19,30,57,190,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6793 15 38 3 1,6,10,15,19,114,190,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 15 38 2.680
+LEVEL 570 1 dimDnew 26 tspace 0.940 tall 1.770 ncurves 25
+RES H 14913 570 1 7 1,2 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15,w19,w57,w95,w285
+RES H 14920 570 1 3 1,570 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w19
+RES H 14924 570 1 3 1,285 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 14928 570 1 4 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w19,w57
+RES H 14929 570 1 3 1,2,95,190 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 14930 570 1 3 1,5,38,190 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14932 570 1 3 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w19,w38
+RES H 14933 570 1 2 1,6,95,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14934 570 1 2 1,5,114,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14936 570 1 4 1,2,19,38 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 14937 570 1 3 1,10,19,190 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14940 570 1 3 1,3,19,57 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14941 570 1 2 1,15,19,285 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14943 570 1 2 1,3,95,285 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14946 570 1 4 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w19,w95
+RES H 14947 570 1 3 1,2,57,114 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 14948 570 1 3 1,2,15,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w19,w57
+RES H 14951 570 1 3 1,6,38,57 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 14952 570 1 2 1,15,38,570 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14954 570 1 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w19,w38
+RES H 14957 570 1 2 1,10,114,285 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 14960 570 1 3 1,15,114,190 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 14964 570 1 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 14972 570 1 2 1,2,3,6,19,38,57,114 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 14976 570 1 2 1,2,5,10,19,38,95,190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 570 1 1.890
+LEVEL 194 3 dimDnew 66 tspace 0.410 tall 1.020 ncurves 2
+RES H 12000 194 3 2 1,3,194,582 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 12001 194 3 3 1,6,194,291 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 194 3 1.050
+LEVEL 21 29 dimDnew 58 tspace 0.290 tall 0.870 ncurves 1
+RES U 7409 21 29 3 1,3,7,21,29,87,203,609 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 21 29 0.890
+LEVEL 95 6 dimDnew 146 tspace 0.750 tall 2.600 ncurves 2
+RES U 11329 95 6 3 1,3,10,30,38,95,114,285 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 22 27 dimDnew 62 tspace 0.600 tall 1.560 ncurves 2
+RES U 7810 22 27 4 1,2,297,594 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 7813 22 27 2 1,2,11,22,27,54,297,594 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 22 27 1.580
+RES U 11331 95 6 3 1,6,10,15,38,57,95,570 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 95 6 2.750
+LEVEL 39 16 dimDnew 98 tspace 0.670 tall 1.810 ncurves 1
+RES U 9698 39 16 3 1,3,13,16,39,48,208,624 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V2*w1
+DONE 39 16 1.860
+LEVEL 34 19 dimDnew 50 tspace 0.390 tall 0.870 ncurves 2
+RES U 8931 34 19 5 1,17,38,646 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8933 34 19 2 1,2,17,19,34,38,323,646 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 34 19 0.880
+LEVEL 14 47 dimDnew 50 tspace 0.370 tall 0.900 ncurves 4
+RES U 5820 14 47 4 1,7,47,329 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 5822 14 47 3 1,2,329,658 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 5824 14 47 4 1,14,94,329 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5825 14 47 2 1,2,7,14,47,94,329,658 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 47 0.930
+LEVEL 10 63 dimDnew 66 tspace 1.130 tall 2.620 ncurves 11
+RES H 4615 10 63 3 1,5,7,9,35,45,63,315 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 4617 10 63 3 1,2,9,18,35,70,315,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES U 4618 10 63 3 1,2,5,10,63,126,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 4619 10 63 3 1,2,35,45,63,70,90,126 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 4620 10 63 3 1,5,9,14,45,70,126,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 4621 10 63 3 1,9,10,14,35,90,126,315 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+LEVEL 1 630 dimDnew 258 tspace 0.120 tall 2.740 ncurves 1
+RES U 4622 10 63 3 1,5,14,18,63,70,90,315 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 4623 10 63 3 1,10,14,18,35,45,63,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4625 10 63 2 1,2,7,14,45,90,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4626 10 63 3 1,7,9,10,63,70,90,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 4629 10 63 2 1,5,7,18,35,90,126,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 63 2.870
+RES U 1434 1 630 5 1,2,5,7,9,10,14,18,35,45,63,70,90,126,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 1 630 2.940
+LEVEL 14 45 dimDnew 74 tspace 1.180 tall 2.730 ncurves 8
+RES H 5804 14 45 3 1,2,9,18,35,70,315,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES U 5805 14 45 3 1,2,5,10,63,126,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 5807 14 45 2 1,5,9,14,45,70,126,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 5808 14 45 2 1,9,10,14,35,90,126,315 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 5810 14 45 3 1,10,14,18,35,45,63,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5811 14 45 3 1,2,7,9,14,18,63,126 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES U 5812 14 45 3 1,2,7,14,45,90,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 5816 14 45 3 1,5,7,18,35,90,126,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 45 2.980
+LEVEL 39 17 dimDnew 74 tspace 0.300 tall 0.930 ncurves 1
+RES U 9706 39 17 3 1,3,13,17,39,51,221,663 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 39 17 0.950
+LEVEL 74 9 dimDnew 74 tspace 0.580 tall 1.380 ncurves 2
+RES U 10785 74 9 5 1,9,74,666 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 10787 74 9 2 1,2,9,18,37,74,333,666 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 74 9 1.430
+LEVEL 226 3 dimDnew 74 tspace 0.500 tall 1.380 ncurves 2
+RES U 13116 226 3 5 1,6,113,678 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 5:w2:-7;11:w2:-14; ops 1,w2
+RES H 13122 226 3 2 1,2,3,6,113,226,339,678 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 226 3 1.420
+LEVEL 15 44 dimDnew 98 tspace 1.190 tall 3.210 ncurves 6
+RES H 6815 15 44 2 1,3,4,12,55,165,220,660 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 6817 15 44 2 1,4,15,33,55,60,132,220 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 6819 15 44 3 1,3,20,44,55,60,132,165 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w4
+RES U 6821 15 44 3 1,12,15,20,33,44,55,660 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 35 18 dimDnew 146 tspace 1.480 tall 4.340 ncurves 2
+RES U 6826 15 44 3 1,4,5,11,20,44,55,220 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6827 15 44 2 1,5,11,12,55,60,132,660 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 15 44 3.430
+RES R 9255 35 18 5 1,2,9,18,35,70,315,630 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES H 9268 35 18 2 1,2,5,7,9,10,14,18,35,45,63,70,90,126,315,630 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 35 18 4.630
+LEVEL 33 20 dimDnew 122 tspace 1.240 tall 3.490 ncurves 2
+RES H 8691 33 20 2 1,4,15,33,55,60,132,220 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 8695 33 20 3 1,12,15,20,33,44,55,660 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 33 20 3.610
+LEVEL 10 69 dimDnew 66 tspace 1.040 tall 3.050 ncurves 17
+RES H 4641 10 69 3 1,5,46,230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4645 10 69 4 1,5,138,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4653 10 69 8 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES H 4661 10 69 7 1,3,46,138 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4663 10 69 7 1,15,46,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 4669 10 69 2 1,3,230,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4671 10 69 2 1,15,138,230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 4672 10 69 3 1,6,230,345 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 4674 10 69 4 1,3,5,15,23,69,115,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4675 10 69 4 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w23
+RES H 4677 10 69 2 1,2,5,10,69,138,345,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4680 10 69 3 1,3,10,30,46,115,138,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4682 10 69 4 1,6,10,15,46,69,115,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4683 10 69 4 1,2,3,6,23,46,69,138 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4684 10 69 3 1,2,15,23,30,46,345,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4687 10 69 2 1,2,5,10,23,46,115,230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4688 10 69 2 1,5,6,23,30,115,138,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 69 3.370
+LEVEL 46 15 dimDnew 90 tspace 0.960 tall 2.610 ncurves 4
+RES H 9838 46 15 2 1,2,3,6,115,230,345,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 9841 46 15 3 1,3,5,15,46,138,230,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9843 46 15 2 1,5,6,30,46,69,230,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9847 46 15 2 1,3,10,23,30,69,230,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 46 15 2.720
+LEVEL 690 1 dimDnew 26 tspace 1.390 tall 2.580 ncurves 26
+RES H 15066 690 1 3 1,138 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w30
+RES H 15068 690 1 3 1,690 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5,w6,w10,w15,w23
+RES H 15073 690 1 7 1,5 nops 8 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6,w23,w46,w69,w138
+RES H 15076 690 1 4 1,2,5,10 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w23,w69
+RES H 15077 690 1 3 1,2,115,230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 15078 690 1 4 1,5,46,230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15079 690 1 3 1,10,46,115 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15080 690 1 4 1,5,6,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES H 15086 690 1 2 1,6,23,138 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 15087 690 1 2 1,23,30,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 15088 690 1 3 1,3,23,69 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 15089 690 1 3 1,15,23,345 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15090 690 1 3 1,3,5,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES H 15092 690 1 3 1,5,69,345 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15094 690 1 3 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w23,w115
+RES H 15095 690 1 2 1,2,69,138 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 15100 690 1 2 1,15,46,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15101 690 1 3 1,30,46,345 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 15102 690 1 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w23,w46
+RES H 15103 690 1 2 1,10,69,690 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15108 690 1 2 1,15,138,230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15109 690 1 3 1,6,230,345 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 15110 690 1 3 1,5,23,115 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15112 690 1 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w23
+RES H 15118 690 1 2 1,5,6,30,46,69,230,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 15124 690 1 2 1,2,5,10,23,46,115,230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 690 1 2.700
+LEVEL 26 27 dimDnew 74 tspace 0.740 tall 2.070 ncurves 1
+RES U 8323 26 27 3 1,2,13,26,27,54,351,702 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 27 2.090
+LEVEL 10 71 dimDnew 50 tspace 0.430 tall 1.140 ncurves 3
+RES U 4691 10 71 3 1,10,71,710 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4694 10 71 2 1,2,355,710 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4695 10 71 2 1,5,142,710 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 71 1.180
+LEVEL 15 46 dimDnew 98 tspace 1.200 tall 4.370 ncurves 2
+LEVEL 142 5 dimDnew 70 tspace 0.360 tall 1.090 ncurves 2
+RES U 6835 15 46 3 1,3,10,30,46,115,138,345 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 11730 142 5 5 1,10,71,710 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 3:w2:-6; ops 1,w2
+LEVEL 69 10 dimDnew 130 tspace 1.030 tall 3.590 ncurves 2
+RES H 11736 142 5 2 1,2,5,10,71,142,355,710 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 142 5 1.130
+RES U 6843 15 46 3 1,5,6,23,30,115,138,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 15 46 4.520
+RES U 10721 69 10 4 1,6,10,15,46,69,115,690 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 10728 69 10 2 1,2,3,5,6,10,15,23,30,46,69,115,138,230,345,690 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 69 10 3.810
+LEVEL 69 11 dimDnew 90 tspace 0.360 tall 1.100 ncurves 1
+RES U 10729 69 11 3 1,3,11,23,33,69,253,759 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 69 11 1.120
+LEVEL 82 9 dimDnew 82 tspace 0.580 tall 1.630 ncurves 1
+RES U 10944 82 9 3 1,2,9,18,41,82,369,738 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 82 9 1.650
+LEVEL 1 714 dimDnew 274 tspace 0.100 tall 2.640 ncurves 1
+RES U 1437 1 714 5 1,2,3,6,7,14,17,21,34,42,51,102,119,238,357,714 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1 714 2.810
+LEVEL 14 51 dimDnew 74 tspace 0.860 tall 3.010 ncurves 5
+RES H 5864 14 51 2 1,2,7,14,51,102,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 5866 14 51 3 1,3,7,21,34,102,238,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5869 14 51 3 1,6,14,21,34,51,119,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5871 14 51 2 1,2,17,21,34,42,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 5875 14 51 3 1,6,7,17,42,102,119,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+DONE 14 51 3.130
+LEVEL 34 21 dimDnew 82 tspace 0.870 tall 3.260 ncurves 6
+RES U 8936 34 21 3 1,2,3,6,119,238,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 8937 34 21 3 1,2,7,14,51,102,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 8942 34 21 3 1,6,14,21,34,51,119,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8944 34 21 3 1,2,17,21,34,42,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 8945 34 21 2 1,3,14,17,42,51,238,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8948 34 21 3 1,6,7,17,42,102,119,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 34 21 3.410
+LEVEL 86 9 dimDnew 86 tspace 0.580 tall 1.640 ncurves 1
+RES U 11072 86 9 3 1,2,9,18,43,86,387,774 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 86 9 1.670
+LEVEL 21 34 dimDnew 106 tspace 1.000 tall 4.380 ncurves 2
+RES U 7422 21 34 3 1,2,7,14,51,102,357,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7430 21 34 3 1,3,14,17,42,51,238,714 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 21 34 4.540
+LEVEL 14 55 dimDnew 74 tspace 0.660 tall 2.900 ncurves 7
+RES H 5922 14 55 2 1,2,5,10,77,154,385,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 5923 14 55 3 1,2,7,14,55,110,385,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 5925 14 55 2 1,5,7,22,35,110,154,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 6 131 dimDnew 46 tspace 0.770 tall 1.750 ncurves 1
+RES U 5928 14 55 3 1,10,14,22,35,55,77,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2542 6 131 3 1,6,262,393 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 131 1.760
+RES H 5930 14 55 2 1,2,11,22,35,70,385,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 5931 14 55 2 1,5,11,14,55,70,154,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5934 14 55 3 1,7,10,11,70,77,110,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 55 3.070
+LEVEL 10 79 dimDnew 50 tspace 0.510 tall 1.350 ncurves 2
+RES U 4762 10 79 3 1,5,158,790 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 4763 10 79 3 1,10,158,395 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 79 1.380
+LEVEL 798 1 dimDnew 34 tspace 1.250 tall 2.720 ncurves 21
+LEVEL 6 133 dimDnew 50 tspace 0.880 tall 2.770 ncurves 18
+RES H 15547 798 1 4 1,2,7,14 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w19,w57
+RES H 15548 798 1 3 1,2,133,266 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w21
+RES U 2555 6 133 4 1,19,42,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w3:-8; ops 1,w2,w3,w6
+RES H 15551 798 1 4 1,6,7,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w19,w38
+RES H 15552 798 1 2 1,6,133,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 15557 798 1 3 1,6,19,114 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 15558 798 1 2 1,19,42,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 2556 6 133 5 1,3,19,57 nops 4 nodesc 0 noncomm 0 h1 false nviol 2 viol 5:w14:-10;11:w14:-14; ops 1,w2,w7,w14
+RES H 15563 798 1 4 1,7,57,399 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15564 798 1 3 1,21,57,133 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15567 798 1 3 1,2,21,42 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w19,w57
+RES U 2558 6 133 5 1,3,7,21 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w38:-10; ops 1,w2,w19,w38
+RES H 15568 798 1 2 1,2,399,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w7,w19
+RES U 15569 798 1 3 1,3,38,114 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w7,w14
+RES H 15574 798 1 2 1,14,57,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 2559 6 133 5 1,3,133,399 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-10; ops 1,w2,w7,w14
+RES H 15576 798 1 3 1,14,114,399 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15578 798 1 3 1,42,57,266 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15579 798 1 3 1,21,114,266 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 2561 6 133 5 1,21,57,133 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w3:-14; ops 1,w2,w3,w6
+RES H 15581 798 1 4 1,7,19,133 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15582 798 1 2 1,3,7,19,21,57,133,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2568 6 133 4 1,21,38,798 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w3:-8; ops 1,w2,w3,w6
+LEVEL 33 25 dimDnew 98 tspace 0.660 tall 2.360 ncurves 1
+RES H 15583 798 1 2 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 2579 6 133 2 1,3,7,19,21,57,133,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 15589 798 1 2 1,6,7,38,42,57,266,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 15594 798 1 2 1,6,14,19,21,114,266,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2580 6 133 3 1,2,3,6,7,14,21,42 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 15595 798 1 2 1,2,7,14,19,38,133,266 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 798 1 2.840
+RES H 2581 6 133 2 1,2,3,6,133,266,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 2583 6 133 3 1,2,21,42,57,114,133,266 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 8711 33 25 4 1,3,11,25,33,75,275,825 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 33 25 2.420
+RES H 2584 6 133 2 1,3,7,21,38,114,266,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2585 6 133 3 1,3,14,38,42,114,133,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 2587 6 133 2 1,6,14,21,38,57,133,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2588 6 133 3 1,2,3,6,19,38,57,114 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 2589 6 133 2 1,2,19,21,38,42,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 2590 6 133 2 1,3,14,19,42,57,266,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2591 6 133 3 1,6,14,19,21,114,266,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2593 6 133 2 1,6,7,19,42,114,133,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 133 3.070
+LEVEL 77 10 dimDnew 178 tspace 0.850 tall 6.060 ncurves 1
+LEVEL 57 14 dimDnew 146 tspace 0.890 tall 3.610 ncurves 1
+RES U 10295 57 14 3 1,2,19,21,38,42,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 57 14 3.700
+RES U 10888 77 10 3 1,2,5,7,10,11,14,22,35,55,70,77,110,154,385,770 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 77 10 6.430
+LEVEL 21 38 dimDnew 122 tspace 0.950 tall 5.020 ncurves 4
+RES U 7445 21 38 3 1,2,3,6,133,266,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 7446 21 38 2 1,2,7,14,57,114,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7449 21 38 3 1,3,14,38,42,114,133,399 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 7453 21 38 3 1,2,19,21,38,42,399,798 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 21 38 5.440
+LEVEL 34 25 dimDnew 82 tspace 0.710 tall 2.320 ncurves 1
+RES U 8965 34 25 3 1,2,17,25,34,50,425,850 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 34 25 2.360
+LEVEL 6 143 dimDnew 58 tspace 1.120 tall 3.340 ncurves 18
+RES H 2620 6 143 3 1,13,22,286 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2622 6 143 3 1,13,66,858 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2623 6 143 7 1,3,13,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES H 2637 6 143 5 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 2638 6 143 5 1,22,39,858 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2641 6 143 3 1,3,286,858 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w13
+LEVEL 22 39 dimDnew 90 tspace 1.030 tall 4.260 ncurves 4
+RES H 2642 6 143 3 1,39,66,286 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 2644 6 143 3 1,6,286,429 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2,w11,w13
+RES H 2646 6 143 3 1,3,11,13,33,39,143,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2647 6 143 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES U 7894 22 39 3 1,3,11,26,33,78,286,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 26 33 dimDnew 98 tspace 1.080 tall 4.160 ncurves 2
+RES H 2649 6 143 2 1,2,11,22,39,78,429,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 2650 6 143 2 1,2,33,39,66,78,143,286 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 2651 6 143 2 1,3,11,26,33,78,286,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 7895 22 39 2 1,3,22,26,66,78,143,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8345 26 33 5 1,3,11,26,33,78,286,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2652 6 143 2 1,3,22,26,66,78,143,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2654 6 143 3 1,6,22,26,33,39,143,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 7896 22 39 3 1,6,11,26,39,66,286,429 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2655 6 143 4 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 2659 6 143 2 1,2,11,13,22,26,143,286 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 7899 22 39 2 1,2,13,26,33,66,429,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 22 39 4.440
+RES H 2660 6 143 2 1,6,11,13,66,78,143,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 143 3.630
+RES H 8355 26 33 2 1,2,3,6,11,13,22,26,33,39,66,78,143,286,429,858 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 33 4.300
+LEVEL 33 26 dimDnew 138 tspace 1.240 tall 6.920 ncurves 2
+RES U 8723 33 26 5 1,3,13,22,39,66,286,858 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES H 8727 33 26 2 1,2,3,6,11,13,22,26,33,39,66,78,143,286,429,858 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 33 26 7.410
+LEVEL 10 87 dimDnew 82 tspace 1.410 tall 6.140 ncurves 8
+RES U 4783 10 87 5 1,5,58,290 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+LEVEL 870 1 dimDnew 34 tspace 1.910 tall 3.640 ncurves 23
+RES H 15784 870 1 3 1,2,145,290 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES U 15789 870 1 3 1,5,174,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15790 870 1 3 1,30,145,174 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES U 15794 870 1 3 1,29,30,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 15800 870 1 3 1,15,87,145 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15801 870 1 4 1,2,3,6 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,w29,w145
+RES H 15804 870 1 2 1,2,435,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w5,w15
+RES H 15805 870 1 3 1,3,58,174 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 15806 870 1 4 1,6,58,87 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 4812 10 87 5 1,30,87,290 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 15807 870 1 2 1,15,58,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15808 870 1 3 1,30,58,435 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 15809 870 1 3 1,3,10,30 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w29,w58
+RES H 15810 870 1 2 1,10,87,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15811 870 1 4 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w29,w58
+RES H 15812 870 1 3 1,10,174,435 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15813 870 1 2 1,3,290,870 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 15816 870 1 4 1,6,290,435 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 15817 870 1 3 1,5,29,145 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 15819 870 1 2 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w29
+RES H 4818 10 87 2 1,2,3,6,145,290,435,870 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 15822 870 1 2 1,2,15,30,87,145,174,290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 15825 870 1 2 1,5,6,30,58,87,290,435 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 15827 870 1 2 1,2,3,6,29,58,87,174 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 15830 870 1 2 1,6,10,15,29,174,290,435 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 870 1 3.780
+RES U 4820 10 87 3 1,2,15,30,87,145,174,290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4821 10 87 2 1,3,5,15,58,174,290,870 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4823 10 87 2 1,5,6,30,58,87,290,435 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4827 10 87 2 1,3,10,29,30,87,290,870 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 4829 10 87 3 1,2,5,10,29,58,145,290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 10 87 6.640
+LEVEL 145 6 dimDnew 226 tspace 1.560 tall 7.150 ncurves 1
+LEVEL 87 10 dimDnew 170 tspace 1.420 tall 5.170 ncurves 1
+RES U 11788 145 6 3 1,2,3,5,6,10,15,29,30,58,87,145,174,290,435,870 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 145 6 7.560
+RES U 11124 87 10 3 1,2,3,5,6,10,15,29,30,58,87,145,174,290,435,870 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 87 10 5.460
+LEVEL 10 91 dimDnew 66 tspace 0.920 tall 3.300 ncurves 6
+RES H 4877 10 91 2 1,2,5,10,91,182,455,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 4879 10 91 3 1,2,35,65,70,91,130,182 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4880 10 91 2 1,5,7,26,35,130,182,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 4882 10 91 3 1,7,10,26,65,70,182,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4886 10 91 2 1,5,13,14,65,70,182,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4887 10 91 2 1,10,13,14,35,130,182,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 91 3.420
+LEVEL 26 35 dimDnew 98 tspace 0.870 tall 3.420 ncurves 5
+RES U 8361 26 35 4 1,5,7,26,35,130,182,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8362 26 35 4 1,5,14,26,70,91,130,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 3:w2:-6; ops 1,w2
+LEVEL 14 65 dimDnew 82 tspace 0.860 tall 3.880 ncurves 4
+RES H 6006 14 65 2 1,2,7,14,65,130,455,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 8363 26 35 5 1,7,10,26,65,70,182,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6007 14 65 3 1,2,35,65,70,91,130,182 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 8364 26 35 4 1,10,14,26,35,65,91,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 3:w2:-6; ops 1,w2
+RES H 6011 14 65 2 1,10,14,26,35,65,91,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6014 14 65 3 1,5,13,14,65,70,182,910 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 65 4.040
+RES H 8371 26 35 2 1,2,5,7,10,13,14,26,35,65,70,91,130,182,455,910 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 35 3.720
+LEVEL 34 27 dimDnew 98 tspace 0.900 tall 3.450 ncurves 1
+RES U 8966 34 27 4 1,2,17,27,34,54,459,918 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 34 27 3.510
+LEVEL 86 11 dimDnew 86 tspace 0.480 tall 1.310 ncurves 1
+RES U 11073 86 11 4 1,2,11,22,43,86,473,946 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 86 11 1.340
+LEVEL 15 58 dimDnew 122 tspace 1.580 tall 9.520 ncurves 1
+RES U 6904 15 58 3 1,2,5,10,87,174,435,870 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 15 58 9.690
+LEVEL 62 15 dimDnew 122 tspace 1.640 tall 4.650 ncurves 3
+RES U 10504 62 15 5 1,3,5,15,62,186,310,930 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10513 62 15 4 1,5,6,30,31,155,186,930 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 10514 62 15 2 1,2,3,5,6,10,15,30,31,62,93,155,186,310,465,930 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 62 15 4.900
+LEVEL 6 155 dimDnew 66 tspace 1.810 tall 6.150 ncurves 11
+RES U 2735 6 155 3 1,5,186,930 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 2764 6 155 4 1,3,5,15,31,93,155,465 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2765 6 155 4 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w31
+RES H 2768 6 155 2 1,2,15,30,93,155,186,310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 2770 6 155 2 1,3,10,30,62,155,186,465 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2771 6 155 2 1,5,6,30,62,93,310,465 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2772 6 155 3 1,6,10,15,62,93,155,930 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2773 6 155 3 1,2,3,6,31,62,93,186 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 2774 6 155 2 1,2,15,30,31,62,465,930 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 2775 6 155 2 1,3,10,30,31,93,310,930 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2777 6 155 4 1,2,5,10,31,62,155,310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 155 6.630
+LEVEL 14 69 dimDnew 98 tspace 1.070 tall 5.250 ncurves 2
+RES H 6035 14 69 2 1,6,14,21,46,69,161,966 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6041 14 69 3 1,6,7,23,42,138,161,966 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 69 5.400
+LEVEL 46 21 dimDnew 114 tspace 1.020 tall 5.730 ncurves 2
+RES U 9876 46 21 3 1,6,14,21,46,69,161,966 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9882 46 21 3 1,6,7,23,42,138,161,966 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 46 21 5.890
+LEVEL 14 73 dimDnew 74 tspace 0.690 tall 2.440 ncurves 1
+RES U 6058 14 73 3 1,2,7,14,73,146,511,1022 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 73 2.480
+LEVEL 155 6 dimDnew 242 tspace 2.090 tall 11.780 ncurves 1
+LEVEL 6 169 dimDnew 58 tspace 1.730 tall 3.600 ncurves 1
+RES U 2856 6 169 3 1,6,169,1014 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 169 3.620
+LEVEL 10 99 dimDnew 98 tspace 2.950 tall 8.000 ncurves 2
+RES U 11837 155 6 4 1,2,3,5,6,10,15,30,31,62,93,155,186,310,465,930 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 155 6 12.300
+RES H 4917 10 99 3 1,2,9,18,55,110,495,990 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5,V3*w1,V3*w5
+RES U 4926 10 99 3 1,9,10,11,90,99,110,990 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+DONE 10 99 8.320
+LEVEL 22 45 dimDnew 122 tspace 2.690 tall 6.430 ncurves 4
+RES R 7923 22 45 5 1,2,9,18,55,110,495,990 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 13:V3*w5:-18; ops 1,w5,V3*w1,V3*w5
+RES U 7926 22 45 4 1,5,9,22,45,110,198,990 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 7932 22 45 4 1,9,10,11,90,99,110,990 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+LEVEL 346 3 dimDnew 114 tspace 1.010 tall 4.290 ncurves 1
+RES U 13687 346 3 5 1,2,3,6,173,346,519,1038 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 346 3 4.340
+RES H 7936 22 45 2 1,2,5,9,10,11,18,22,45,55,90,99,110,198,495,990 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 22 45 6.960
+LEVEL 26 41 dimDnew 86 tspace 0.670 tall 2.540 ncurves 1
+RES U 8380 26 41 3 1,2,13,26,41,82,533,1066 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 41 2.580
+LEVEL 6 175 dimDnew 82 tspace 4.530 tall 9.200 ncurves 6
+RES U 2908 6 175 3 1,2,3,6,175,350,525,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 2909 6 175 3 1,2,21,25,42,50,525,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 2914 6 175 3 1,6,14,21,50,75,175,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2916 6 175 2 1,2,7,14,75,150,525,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 2917 6 175 3 1,3,7,21,50,150,350,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2920 6 175 3 1,6,7,25,42,150,175,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 175 9.510
+LEVEL 74 15 dimDnew 146 tspace 2.380 tall 6.710 ncurves 3
+RES U 10803 74 15 5 1,3,10,30,74,185,222,555 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 10810 74 15 5 1,2,5,10,37,74,185,370 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 10812 74 15 2 1,2,3,5,6,10,15,30,37,74,111,185,222,370,555,1110 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 74 15 7.060
+LEVEL 14 75 dimDnew 122 tspace 4.340 tall 11.470 ncurves 1
+RES U 6070 14 75 3 1,3,7,21,50,150,350,1050 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 75 11.590
+LEVEL 6 185 dimDnew 74 tspace 2.880 tall 10.790 ncurves 6
+RES H 2975 6 185 2 1,2,3,6,185,370,555,1110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 2977 6 185 3 1,2,15,30,111,185,222,370 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 2980 6 185 3 1,5,6,30,74,111,370,555 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 2984 6 185 2 1,3,10,30,37,111,370,1110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2985 6 185 3 1,6,10,15,37,222,370,555 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 2986 6 185 3 1,2,5,10,37,74,185,370 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 185 11.400
+LEVEL 10 111 dimDnew 98 tspace 2.780 tall 13.980 ncurves 3
+RES U 4967 10 111 3 1,2,15,30,111,185,222,370 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 4969 10 111 2 1,3,10,30,74,185,222,555 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 4977 10 111 2 1,5,6,30,37,185,222,1110 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 111 14.440
+LEVEL 1122 1 dimDnew 50 tspace 2.440 tall 7.610 ncurves 18
+RES H 16202 1122 1 3 1,22,34,187 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16206 1122 1 5 1,66,102,187 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16214 1122 1 3 1,3,187,561 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 16220 1122 1 3 1,2,561,1122 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w17
+RES H 16221 1122 1 3 1,3,34,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w11,w22
+RES U 16223 1122 1 3 1,33,34,1122 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16224 1122 1 3 1,34,66,561 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16225 1122 1 5 1,3,22,66 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 16228 1122 1 3 1,22,102,561 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16234 1122 1 2 1,3,11,17,33,51,187,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16235 1122 1 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w17
+RES H 16238 1122 1 3 1,2,33,51,66,102,187,374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16241 1122 1 2 1,6,11,34,51,66,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16243 1122 1 2 1,2,3,6,17,34,51,102 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 16245 1122 1 2 1,3,17,22,51,66,374,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16246 1122 1 2 1,6,17,22,33,102,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16247 1122 1 2 1,2,11,17,22,34,187,374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16248 1122 1 2 1,6,11,17,66,102,187,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1122 1 8.500
+LEVEL 22 51 dimDnew 122 tspace 1.480 tall 8.130 ncurves 5
+RES U 7948 22 51 3 1,2,3,6,187,374,561,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES U 7950 22 51 3 1,2,33,51,66,102,187,374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7951 22 51 3 1,3,11,33,34,102,374,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 7953 22 51 3 1,6,11,34,51,66,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 7958 22 51 3 1,6,17,22,33,102,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 22 51 8.730
+LEVEL 34 33 dimDnew 130 tspace 1.420 tall 8.580 ncurves 3
+RES U 8983 34 33 3 1,6,11,34,51,66,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8987 34 33 3 1,3,17,22,51,66,374,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 8988 34 33 3 1,6,17,22,33,102,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 34 33 8.970
+LEVEL 21 50 dimDnew 178 tspace 5.090 tall 21.150 ncurves 1
+RES U 7510 21 50 3 1,2,3,6,7,14,21,25,42,50,75,150,175,350,525,1050 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 21 50 22.000
+LEVEL 6 187 dimDnew 74 tspace 1.500 tall 8.020 ncurves 9
+RES U 2996 6 187 7 1,66,102,187 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w6:-10; ops 1,w2,w3,w6
+RES U 3024 6 187 3 1,3,11,17,33,51,187,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3027 6 187 3 1,2,11,22,51,102,561,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3028 6 187 3 1,2,33,51,66,102,187,374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3030 6 187 3 1,3,22,34,66,102,187,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3031 6 187 3 1,6,11,34,51,66,374,561 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w2:-10; ops 1,w2
+RES U 3032 6 187 3 1,6,22,33,34,51,187,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3034 6 187 2 1,2,17,33,34,66,561,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 6 191 dimDnew 66 tspace 1.840 tall 3.900 ncurves 2
+RES U 3044 6 191 3 1,2,573,1146 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3045 6 191 3 1,3,382,1146 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 191 3.940
+RES U 3038 6 187 3 1,6,11,17,66,102,187,1122 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 187 8.700
+LEVEL 6 193 dimDnew 62 tspace 1.430 tall 5.020 ncurves 1
+RES U 3052 6 193 3 1,2,579,1158 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 193 5.060
+LEVEL 14 81 dimDnew 110 tspace 1.960 tall 8.750 ncurves 1
+RES U 6083 14 81 4 1,2,7,14,81,162,567,1134 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 81 8.900
+LEVEL 38 31 dimDnew 98 tspace 0.790 tall 3.170 ncurves 1
+RES U 9503 38 31 4 1,2,19,31,38,62,589,1178 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 38 31 3.220
+LEVEL 26 45 dimDnew 146 tspace 3.830 tall 9.070 ncurves 3
+RES R 8387 26 45 5 1,5,9,26,45,130,234,1170 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:V3*w1:-12; ops 1,w2,V3*w1,V3*w2
+RES U 8388 26 45 5 1,9,10,26,65,90,234,585 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES H 8397 26 45 2 1,2,5,9,10,13,18,26,45,65,90,117,130,234,585,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 26 45 9.750
+LEVEL 34 35 dimDnew 130 tspace 1.310 tall 7.200 ncurves 2
+RES U 9003 34 35 5 1,5,14,17,70,85,238,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9007 34 35 2 1,2,5,7,10,14,17,34,35,70,85,119,170,238,595,1190 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 34 35 7.470
+LEVEL 10 119 dimDnew 98 tspace 1.440 tall 9.630 ncurves 3
+RES H 5013 10 119 2 1,2,17,34,35,70,595,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 5014 10 119 2 1,5,14,17,70,85,238,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5017 10 119 3 1,7,10,17,70,119,170,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 119 10.070
+LEVEL 14 85 dimDnew 106 tspace 1.370 tall 11.060 ncurves 3
+RES H 6088 14 85 2 1,2,7,14,85,170,595,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 6090 14 85 3 1,5,7,34,35,170,238,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6099 14 85 3 1,7,10,17,70,119,170,1190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 85 11.620
+LEVEL 134 9 dimDnew 134 tspace 1.210 tall 5.690 ncurves 1
+RES U 11695 134 9 5 1,2,9,18,67,134,603,1206 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 134 9 5.780
+LEVEL 10 117 dimDnew 114 tspace 4.020 tall 18.070 ncurves 8
+LEVEL 1155 1 dimDnew 82 tspace 2.800 tall 20.930 ncurves 6
+RES U 4990 10 117 5 1,2,5,10,117,234,585,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w9
+RES H 16320 1155 1 2 1,3,5,15,77,231,385,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 16321 1155 1 2 1,3,7,21,55,165,385,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 4991 10 117 5 1,2,45,65,90,117,130,234 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 16323 1155 1 3 1,5,7,33,35,165,231,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 4994 10 117 5 1,5,18,26,90,117,130,585 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 16326 1155 1 3 1,15,21,33,35,55,77,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 16328 1155 1 3 1,3,11,33,35,105,385,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 4995 10 117 5 1,10,18,26,45,65,117,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16332 1155 1 2 1,7,11,15,77,105,165,1155 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1155 1 21.950
+RES U 4997 10 117 5 1,2,13,26,45,90,585,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 4998 10 117 5 1,9,10,13,90,117,130,1170 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+RES U 5001 10 117 5 1,5,13,18,65,90,234,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5002 10 117 2 1,2,5,9,10,13,18,26,45,65,90,117,130,234,585,1170 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 10 117 20.730
+LEVEL 87 14 dimDnew 226 tspace 1.680 tall 7.880 ncurves 1
+RES U 11127 87 14 3 1,2,3,6,7,14,21,29,42,58,87,174,203,406,609,1218 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 87 14 8.400
+LEVEL 14 87 dimDnew 122 tspace 1.650 tall 14.620 ncurves 3
+RES U 6112 14 87 5 1,3,14,29,42,87,406,1218 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6115 14 87 4 1,6,7,29,42,174,203,1218 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 6116 14 87 2 1,2,3,6,7,14,21,29,42,58,87,174,203,406,609,1218 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 87 15.550
+LEVEL 1230 1 dimDnew 50 tspace 4.590 tall 9.190 ncurves 17
+RES H 16505 1230 1 3 1,10,82,205 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16507 1230 1 2 1,6,205,1230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES U 16513 1230 1 3 1,30,41,1230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w5
+RES H 16519 1230 1 4 1,15,123,205 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16525 1230 1 4 1,6,82,123 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 16526 1230 1 2 1,15,82,1230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16529 1230 1 3 1,10,123,1230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16530 1230 1 7 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w41,w82
+RES U 16532 1230 1 3 1,3,410,1230 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 16537 1230 1 2 1,3,5,15,41,123,205,615 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16538 1230 1 3 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w41
+RES H 16540 1230 1 2 1,2,5,10,123,246,615,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16541 1230 1 2 1,2,15,30,123,205,246,410 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16544 1230 1 2 1,5,6,30,82,123,410,615 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16546 1230 1 2 1,2,3,6,41,82,123,246 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 16549 1230 1 4 1,6,10,15,41,246,410,615 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16550 1230 1 2 1,2,5,10,41,82,205,410 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1230 1 9.650
+LEVEL 6 205 dimDnew 82 tspace 3.270 tall 12.410 ncurves 3
+RES H 3126 6 205 2 1,2,5,10,123,246,615,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3128 6 205 3 1,3,5,15,82,246,410,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3137 6 205 2 1,5,6,30,41,205,246,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 205 12.750
+LEVEL 10 123 dimDnew 114 tspace 3.270 tall 18.000 ncurves 3
+RES U 5023 10 123 5 1,2,5,10,123,246,615,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 1254 1 dimDnew 58 tspace 3.990 tall 10.470 ncurves 9
+RES U 16576 1254 1 3 1,2,627,1254 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3,w11,w19
+RES H 16590 1254 1 4 1,3,11,19,33,57,209,627 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16591 1254 1 3 1,2,3,6,11,22,33,66 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w19
+RES H 16596 1254 1 2 1,3,22,38,66,114,209,627 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16597 1254 1 2 1,6,11,38,57,66,418,627 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16598 1254 1 3 1,6,22,33,38,57,209,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16599 1254 1 3 1,2,3,6,19,38,57,114 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 16602 1254 1 2 1,6,19,22,33,114,418,627 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 5031 10 123 4 1,3,10,30,41,123,410,1230 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16603 1254 1 3 1,2,11,19,22,38,209,418 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1254 1 10.780
+RES H 5035 10 123 2 1,2,3,5,6,10,15,30,41,82,123,205,246,410,615,1230 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 10 123 19.040
+LEVEL 21 58 dimDnew 178 tspace 2.060 tall 22.260 ncurves 1
+RES U 7529 21 58 3 1,2,3,6,7,14,21,29,42,58,87,174,203,406,609,1218 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 21 58 23.270
+LEVEL 6 209 dimDnew 82 tspace 3.080 tall 10.240 ncurves 5
+RES U 3177 6 209 3 1,2,11,22,57,114,627,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3179 6 209 3 1,3,11,33,38,114,418,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3182 6 209 3 1,6,22,33,38,57,209,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3184 6 209 3 1,2,19,33,38,66,627,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 3185 6 209 2 1,3,19,22,57,66,418,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 209 10.620
+LEVEL 22 57 dimDnew 130 tspace 2.800 tall 18.420 ncurves 1
+RES U 7971 22 57 3 1,6,22,33,38,57,209,1254 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 22 57 18.760
+LEVEL 1290 1 dimDnew 58 tspace 6.110 tall 12.930 ncurves 18
+RES H 16617 1290 1 3 1,10,43,430 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16618 1290 1 5 1,6,43,258 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 16621 1290 1 5 1,15,43,645 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16636 1290 1 7 1,6,10,15 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w43,w86
+RES H 16637 1290 1 3 1,10,258,645 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 16638 1290 1 3 1,3,430,1290 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 16640 1290 1 3 1,15,258,430 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16641 1290 1 3 1,6,430,645 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w5,w10
+RES H 16643 1290 1 3 1,3,5,15,43,129,215,645 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16644 1290 1 4 1,2,3,5,6,10,15,30 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w43
+RES H 16647 1290 1 2 1,2,15,30,129,215,258,430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16649 1290 1 2 1,3,10,30,86,215,258,645 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16650 1290 1 2 1,5,6,30,86,129,430,645 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16651 1290 1 3 1,6,10,15,86,129,215,1290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16652 1290 1 3 1,2,3,6,43,86,129,258 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 16653 1290 1 2 1,2,15,30,43,86,645,1290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16656 1290 1 2 1,2,5,10,43,86,215,430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16657 1290 1 2 1,5,6,30,43,215,258,1290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1290 1 13.680
+LEVEL 86 15 dimDnew 170 tspace 4.160 tall 13.730 ncurves 1
+RES U 11075 86 15 3 1,2,3,5,6,10,15,30,43,86,129,215,258,430,645,1290 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 86 15 14.090
+LEVEL 6 215 dimDnew 90 tspace 4.670 tall 15.800 ncurves 3
+RES U 3202 6 215 3 1,2,15,30,129,215,258,430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 3205 6 215 2 1,5,6,30,86,129,430,645 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3209 6 215 2 1,3,10,30,43,129,430,1290 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 215 16.190
+LEVEL 6 217 dimDnew 82 tspace 2.320 tall 11.340 ncurves 6
+LEVEL 14 93 dimDnew 130 tspace 1.970 tall 19.010 ncurves 2
+RES U 3214 6 217 3 1,3,7,21,31,93,217,651 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3216 6 217 2 1,2,3,6,217,434,651,1302 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 3220 6 217 3 1,3,14,42,62,186,217,651 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6122 14 93 3 1,2,21,42,93,186,217,434 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3222 6 217 3 1,6,14,21,62,93,217,1302 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3224 6 217 3 1,2,21,31,42,62,651,1302 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3228 6 217 3 1,6,7,31,42,186,217,1302 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 217 12.060
+RES U 6130 14 93 3 1,6,14,21,31,186,434,651 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 14 93 19.640
+LEVEL 93 14 dimDnew 242 tspace 1.930 tall 9.110 ncurves 1
+LEVEL 1326 1 dimDnew 66 tspace 2.740 tall 8.830 ncurves 17
+RES H 16714 1326 1 5 1,13,34,442 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16718 1326 1 3 1,13,102,1326 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES U 16723 1326 1 3 1,17,78,1326 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16726 1326 1 9 1,3,13,39 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w17,w34
+RES H 16734 1326 1 6 1,3,34,102 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w26
+RES H 16736 1326 1 2 1,34,39,1326 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16742 1326 1 2 1,3,442,1326 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w13,w17
+RES H 16744 1326 1 6 1,39,102,442 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,w3,w6
+RES H 16747 1326 1 5 1,3,13,17,39,51,221,663 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16748 1326 1 4 1,2,3,6,13,26,39,78 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w17
+RES H 16750 1326 1 2 1,2,13,26,51,102,663,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 11243 93 14 4 1,2,3,6,7,14,21,31,42,62,93,186,217,434,651,1302 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 93 14 9.790
+RES H 16751 1326 1 3 1,2,39,51,78,102,221,442 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 16753 1326 1 3 1,3,26,34,78,102,221,663 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16754 1326 1 2 1,6,13,34,51,78,442,663 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16756 1326 1 3 1,2,3,6,17,34,51,102 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 16759 1326 1 3 1,6,17,26,39,102,442,663 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16760 1326 1 3 1,2,13,17,26,34,221,442 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 1326 1 9.620
+LEVEL 15 86 dimDnew 178 tspace 5.330 tall 33.550 ncurves 1
+LEVEL 6 221 dimDnew 82 tspace 1.810 tall 8.250 ncurves 6
+RES H 3232 6 221 2 1,2,3,6,221,442,663,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES H 3233 6 221 2 1,2,13,26,51,102,663,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 3235 6 221 2 1,3,13,34,39,102,442,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3240 6 221 3 1,2,17,34,39,78,663,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 7013 15 86 3 1,2,3,5,6,10,15,30,43,86,129,215,258,430,645,1290 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 15 86 34.960
+RES H 3241 6 221 2 1,3,17,26,51,78,442,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3244 6 221 3 1,6,13,17,78,102,221,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 221 8.630
+LEVEL 26 51 dimDnew 146 tspace 1.830 tall 12.020 ncurves 2
+RES U 8408 26 51 4 1,6,26,34,39,51,221,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8415 26 51 2 1,2,3,6,13,17,26,34,39,51,78,102,221,442,663,1326 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 51 12.590
+LEVEL 34 39 dimDnew 146 tspace 1.740 tall 15.930 ncurves 4
+RES U 9017 34 39 5 1,6,26,34,39,51,221,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 5:w2:-8; ops 1,w2
+RES U 9020 34 39 5 1,3,17,26,51,78,442,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 9023 34 39 4 1,6,13,17,78,102,221,1326 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 9024 34 39 2 1,2,3,6,13,17,26,34,39,51,78,102,221,442,663,1326 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 34 39 17.230
+LEVEL 6 229 dimDnew 74 tspace 2.050 tall 7.140 ncurves 2
+RES U 3263 6 229 4 1,6,229,1374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3269 6 229 2 1,2,3,6,229,458,687,1374 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 229 7.280
+LEVEL 39 35 dimDnew 194 tspace 2.100 tall 22.850 ncurves 1
+LEVEL 39 34 dimDnew 218 tspace 2.130 tall 32.510 ncurves 1
+RES U 9753 39 35 4 1,3,5,7,13,15,21,35,39,65,91,105,195,273,455,1365 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 39 35 24.130
+LEVEL 22 63 dimDnew 162 tspace 2.660 tall 15.750 ncurves 1
+RES U 9752 39 34 3 1,2,3,6,13,17,26,34,39,51,78,102,221,442,663,1326 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 39 34 34.600
+RES U 7996 22 63 3 1,2,7,9,11,14,18,22,63,77,99,126,154,198,693,1386 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 22 63 16.260
+LEVEL 46 31 dimDnew 114 tspace 0.880 tall 3.910 ncurves 1
+RES U 9887 46 31 3 1,2,23,31,46,62,713,1426 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 46 31 3.990
+LEVEL 14 99 dimDnew 146 tspace 2.800 tall 25.560 ncurves 3
+RES U 6154 14 99 5 1,2,7,14,99,198,693,1386 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w9
+LEVEL 1365 1 dimDnew 98 tspace 3.360 tall 33.200 ncurves 5
+RES U 6165 14 99 5 1,7,11,18,77,126,198,1386 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 16849 1365 1 5 1,3,5,7,15,21,35,105 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 11:w13:-14; ops 1,w13
+RES U 16856 1365 1 5 1,15,21,35,39,65,91,1365 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6166 14 99 2 1,2,7,9,11,14,18,22,63,77,99,126,154,198,693,1386 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 14 99 27.290
+RES U 16860 1365 1 5 1,13,15,21,35,195,273,455 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 2:w3:-5;11:w3:-14; ops 1,w3
+RES U 16861 1365 1 5 1,3,7,13,21,39,91,273 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 2:w5:-5;11:w5:-16; ops 1,w5
+RES H 16863 1365 1 2 1,3,5,7,13,15,21,35,39,65,91,105,195,273,455,1365 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1365 1 35.110
+LEVEL 10 143 dimDnew 114 tspace 1.730 tall 11.670 ncurves 2
+RES U 5102 10 143 5 1,10,11,13,110,130,143,1430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5103 10 143 2 1,2,5,10,11,13,22,26,55,65,110,130,143,286,715,1430 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 10 143 12.080
+LEVEL 21 62 dimDnew 194 tspace 2.670 tall 65.010 ncurves 1
+RES U 7532 21 62 3 1,2,3,6,7,14,21,31,42,62,93,186,217,434,651,1302 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 21 62 66.610
+LEVEL 1430 1 dimDnew 82 tspace 3.040 tall 25.860 ncurves 4
+RES U 16990 1430 1 3 1,5,22,26,110,130,143,715 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16994 1430 1 2 1,2,13,26,55,110,715,1430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES H 16995 1430 1 2 1,5,13,22,65,110,286,1430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 16998 1430 1 2 1,10,11,13,110,130,143,1430 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1430 1 26.510
+LEVEL 6 247 dimDnew 90 tspace 2.800 tall 13.560 ncurves 2
+RES H 3322 6 247 2 1,2,13,26,57,114,741,1482 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3329 6 247 3 1,2,19,38,39,78,741,1482 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 247 13.860
+LEVEL 1518 1 dimDnew 66 tspace 4.330 tall 23.320 ncurves 7
+RES H 17123 1518 1 2 1,2,3,6,253,506,759,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES H 17124 1518 1 2 1,2,11,22,69,138,759,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 10 147 dimDnew 146 tspace 15.540 tall 47.520 ncurves 2
+RES U 17126 1518 1 3 1,3,11,33,46,138,506,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17129 1518 1 2 1,6,22,33,46,69,253,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 17131 1518 1 3 1,2,23,33,46,66,759,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 17132 1518 1 2 1,3,22,23,66,69,506,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 17135 1518 1 3 1,6,11,23,66,138,253,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1518 1 24.010
+RES U 5112 10 147 4 1,6,10,15,98,147,245,1470 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+LEVEL 6 245 dimDnew 114 tspace 16.310 tall 41.590 ncurves 2
+RES U 3308 6 245 3 1,3,5,15,98,294,490,1470 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 5119 10 147 2 1,2,3,5,6,10,15,30,49,98,147,245,294,490,735,1470 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 10 147 48.910
+RES U 3315 6 245 3 1,6,10,15,49,294,490,735 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 245 42.230
+LEVEL 46 33 dimDnew 178 tspace 2.180 tall 24.920 ncurves 1
+RES U 9888 46 33 3 1,2,3,6,11,22,23,33,46,66,69,138,253,506,759,1518 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 46 33 25.810
+LEVEL 39 38 dimDnew 242 tspace 2.980 tall 48.180 ncurves 1
+RES U 9755 39 38 4 1,2,3,6,13,19,26,38,39,57,78,114,247,494,741,1482 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 39 38 51.430
+LEVEL 6 253 dimDnew 98 tspace 2.860 tall 16.100 ncurves 3
+RES U 3341 6 253 3 1,3,11,33,46,138,506,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3344 6 253 3 1,6,22,33,46,69,253,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3346 6 253 3 1,2,23,33,46,66,759,1518 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 253 16.660
+LEVEL 1554 1 dimDnew 74 tspace 5.370 tall 23.520 ncurves 6
+RES H 17176 1554 1 2 1,2,3,6,259,518,777,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 17177 1554 1 3 1,2,7,14,111,222,777,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 17182 1554 1 3 1,6,14,21,74,111,259,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17184 1554 1 2 1,2,21,37,42,74,777,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 17185 1554 1 3 1,3,14,37,42,111,518,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17188 1554 1 2 1,6,7,37,42,222,259,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1554 1 24.130
+LEVEL 6 259 dimDnew 98 tspace 3.720 tall 19.670 ncurves 3
+RES U 3356 6 259 3 1,2,7,14,111,222,777,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3358 6 259 3 1,3,7,21,74,222,518,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3367 6 259 3 1,6,7,37,42,222,259,1554 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 259 20.170
+LEVEL 10 153 dimDnew 146 tspace 4.120 tall 33.130 ncurves 3
+RES R 5124 10 153 5 1,2,9,18,85,170,765,1530 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:V3*w5:-12; ops 1,w5,V3*w1,V3*w5
+RES U 5133 10 153 5 1,9,10,17,90,153,170,1530 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:V3*w2:-12; ops 1,w2,V3*w1,V3*w2
+RES H 5137 10 153 2 1,2,5,9,10,17,18,34,45,85,90,153,170,306,765,1530 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 10 153 35.480
+LEVEL 39 40 dimDnew 290 tspace 5.850 tall 29.420 ncurves 1
+RES U 9756 39 40 5 1,3,5,8,13,15,24,39,40,65,104,120,195,312,520,1560 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V2*w1
+DONE 39 40 31.300
+LEVEL 1610 1 dimDnew 90 tspace 4.550 tall 38.400 ncurves 4
+RES H 17245 1610 1 2 1,2,5,10,161,322,805,1610 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 17248 1610 1 3 1,5,7,35,46,230,322,1610 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17253 1610 1 2 1,2,23,35,46,70,805,1610 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 17254 1610 1 3 1,5,14,23,70,115,322,1610 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1610 1 39.330
+LEVEL 6 265 dimDnew 106 tspace 4.500 tall 48.550 ncurves 2
+RES H 3378 6 265 2 1,6,10,15,106,159,265,1590 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3380 6 265 3 1,2,15,30,53,106,795,1590 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 265 48.930
+LEVEL 14 117 dimDnew 170 tspace 4.430 tall 50.690 ncurves 1
+RES U 6204 14 117 3 1,2,7,9,13,14,18,26,63,91,117,126,182,234,819,1638 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 14 117 52.060
+LEVEL 26 63 dimDnew 194 tspace 4.310 tall 26.230 ncurves 1
+RES U 8451 26 63 3 1,2,7,9,13,14,18,26,63,91,117,126,182,234,819,1638 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 26 63 27.150
+LEVEL 15 98 dimDnew 226 tspace 18.200 tall 161.760 ncurves 1
+RES U 7035 15 98 3 1,2,3,5,6,10,15,30,49,98,147,245,294,490,735,1470 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 15 98 165.030
+LEVEL 10 159 dimDnew 146 tspace 3.970 tall 101.010 ncurves 1
+RES U 5151 10 159 3 1,6,10,15,53,318,530,795 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 10 159 101.660
+LEVEL 22 75 dimDnew 202 tspace 5.600 tall 46.830 ncurves 1
+RES U 8032 22 75 4 1,2,3,6,11,22,25,33,50,66,75,150,275,550,825,1650 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 22 75 48.390
+LEVEL 6 275 dimDnew 122 tspace 7.760 tall 38.810 ncurves 1
+RES U 3390 6 275 3 1,2,3,6,275,550,825,1650 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+DONE 6 275 39.090
+LEVEL 6 289 dimDnew 102 tspace 6.160 tall 17.160 ncurves 1
+RES U 3423 6 289 3 1,2,3,6,289,578,867,1734 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 289 17.370
+LEVEL 6 287 dimDnew 114 tspace 4.590 tall 25.790 ncurves 2
+RES U 3409 6 287 3 1,2,3,6,287,574,861,1722 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 3417 6 287 3 1,2,21,41,42,82,861,1722 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 6 287 26.270
+LEVEL 33 50 dimDnew 298 tspace 7.540 tall 97.710 ncurves 1
+LEVEL 1806 1 dimDnew 82 tspace 8.700 tall 49.100 ncurves 7
+RES H 17400 1806 1 2 1,2,3,6,301,602,903,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 17401 1806 1 3 1,2,7,14,129,258,903,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+LEVEL 21 74 dimDnew 226 tspace 4.350 tall 196.930 ncurves 1
+RES U 17403 1806 1 3 1,3,7,21,86,258,602,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17406 1806 1 2 1,6,14,21,86,129,301,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17408 1806 1 2 1,2,21,42,43,86,903,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 17409 1806 1 3 1,3,14,42,43,129,602,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17412 1806 1 2 1,6,7,42,43,258,301,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1806 1 50.440
+RES U 8771 33 50 6 1,2,3,6,11,22,25,33,50,66,75,150,275,550,825,1650 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 33 50 103.980
+RES U 7538 21 74 4 1,2,3,6,7,14,21,37,42,74,111,222,259,518,777,1554 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 21 74 203.260
+LEVEL 6 299 dimDnew 114 tspace 5.050 tall 74.460 ncurves 2
+RES U 3448 6 299 5 1,6,13,46,69,78,598,897 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3456 6 299 2 1,2,3,6,13,23,26,39,46,69,78,138,299,598,897,1794 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 299 75.510
+LEVEL 122 15 dimDnew 242 tspace 3.740 tall 30.100 ncurves 1
+RES U 11589 122 15 5 1,2,3,5,6,10,15,30,61,122,183,305,366,610,915,1830 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 122 15 31.170
+LEVEL 6 301 dimDnew 114 tspace 5.930 tall 63.030 ncurves 1
+RES U 3468 6 301 3 1,3,14,42,43,129,602,1806 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 301 63.300
+LEVEL 1830 1 dimDnew 82 tspace 10.320 tall 59.140 ncurves 3
+RES H 17452 1830 1 2 1,2,3,6,305,610,915,1830 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 17455 1830 1 3 1,3,5,15,122,366,610,1830 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17461 1830 1 2 1,3,10,30,61,183,610,1830 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 1830 1 59.800
+LEVEL 15 119 dimDnew 194 tspace 4.350 tall 143.540 ncurves 1
+RES U 7046 15 119 3 1,3,5,7,15,17,21,35,51,85,105,119,255,357,595,1785 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 15 119 147.300
+LEVEL 1870 1 dimDnew 98 tspace 5.840 tall 69.450 ncurves 3
+RES U 17471 1870 1 5 1,2,55,85,110,170,187,374 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 17476 1870 1 5 1,2,5,10,17,34,85,170 nops 2 nodesc 0 noncomm 0 h1 false nviol 2 viol 3:w11:-6;7:w11:-10; ops 1,w11
+RES H 17482 1870 1 2 1,2,5,10,11,17,22,34,55,85,110,170,187,374,935,1870 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 1870 1 70.920
+LEVEL 10 171 dimDnew 162 tspace 5.110 tall 192.940 ncurves 3
+RES U 5179 10 171 7 1,5,9,38,45,190,342,1710 nops 4 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2,V3*w1,V3*w2
+LEVEL 14 135 dimDnew 218 tspace 19.990 tall 51.280 ncurves 1
+RES U 5180 10 171 7 1,9,10,38,90,95,342,855 nops 4 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:V3*w2:-16; ops 1,w2,V3*w1,V3*w2
+RES U 6211 14 135 4 1,2,5,7,10,14,27,35,54,70,135,189,270,378,945,1890 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 135 52.710
+RES U 5189 10 171 3 1,2,5,9,10,18,19,38,45,90,95,171,190,342,855,1710 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 10 171 198.530
+LEVEL 58 33 dimDnew 226 tspace 4.070 tall 74.030 ncurves 1
+RES U 10421 58 33 3 1,2,3,6,11,22,29,33,58,66,87,174,319,638,957,1914 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 58 33 76.150
+LEVEL 6 319 dimDnew 122 tspace 5.870 tall 96.730 ncurves 4
+RES U 3501 6 319 4 1,6,22,33,58,87,319,1914 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3503 6 319 4 1,2,29,33,58,66,957,1914 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3504 6 319 5 1,3,22,29,66,87,638,1914 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w2:-10; ops 1,w2
+RES H 3508 6 319 2 1,2,3,6,11,22,29,33,58,66,87,174,319,638,957,1914 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 319 98.380
+LEVEL 6 323 dimDnew 122 tspace 6.140 tall 137.270 ncurves 1
+RES U 3521 6 323 3 1,6,19,34,51,114,646,969 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 6 323 137.740
+LEVEL 26 75 dimDnew 242 tspace 8.550 tall 115.600 ncurves 1
+RES U 8456 26 75 4 1,2,3,6,13,25,26,39,50,75,78,150,325,650,975,1950 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 75 119.700
+LEVEL 94 21 dimDnew 242 tspace 4.500 tall 70.320 ncurves 1
+RES U 11286 94 21 4 1,2,3,6,7,14,21,42,47,94,141,282,329,658,987,1974 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 94 21 72.580
+LEVEL 134 15 dimDnew 266 tspace 4.460 tall 34.380 ncurves 1
+RES U 11698 134 15 5 1,2,3,5,6,10,15,30,67,134,201,335,402,670,1005,2010 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 134 15 35.690
+LEVEL 14 143 dimDnew 170 tspace 3.420 tall 78.490 ncurves 1
+RES U 6215 14 143 3 1,2,7,11,13,14,22,26,77,91,143,154,182,286,1001,2002 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 143 79.700
+LEVEL 6 325 dimDnew 138 tspace 11.500 tall 208.240 ncurves 4
+LEVEL 6 329 dimDnew 130 tspace 7.260 tall 184.270 ncurves 4
+RES U 3527 6 325 6 1,2,3,6,325,650,975,1950 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w13
+RES U 3543 6 329 5 1,2,3,6,329,658,987,1974 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES U 3548 6 329 5 1,6,7,42,94,141,658,987 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3533 6 325 6 1,6,26,39,50,75,325,1950 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3549 6 329 5 1,6,14,21,94,141,329,1974 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3539 6 325 6 1,6,13,25,78,150,325,1950 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3556 6 329 2 1,2,3,6,7,14,21,42,47,94,141,282,329,658,987,1974 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 329 187.770
+RES U 3540 6 325 3 1,2,3,6,13,25,26,39,50,75,78,150,325,650,975,1950 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 325 212.250
+LEVEL 2002 1 dimDnew 122 tspace 6.450 tall 110.340 ncurves 2
+RES U 17562 2002 1 4 1,2,13,26,77,154,1001,2002 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w7
+RES H 17567 2002 1 2 1,2,7,11,13,14,22,26,77,91,143,154,182,286,1001,2002 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 2002 1 112.170
+LEVEL 2046 1 dimDnew 98 tspace 11.280 tall 93.940 ncurves 4
+RES U 17604 2046 1 3 1,2,3,6,341,682,1023,2046 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w11
+RES U 17606 2046 1 3 1,2,33,66,93,186,341,682 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 17607 2046 1 3 1,3,11,33,62,186,682,2046 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17613 2046 1 2 1,3,22,31,66,93,682,2046 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 2046 1 95.540
+LEVEL 2030 1 dimDnew 114 tspace 9.010 tall 96.060 ncurves 3
+RES U 17593 2030 1 4 1,10,14,35,58,145,203,2030 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 17599 2030 1 4 1,7,10,29,70,203,290,2030 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17600 2030 1 2 1,2,5,7,10,14,29,35,58,70,145,203,290,406,1015,2030 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 2030 1 98.040
+LEVEL 10 189 dimDnew 194 tspace 20.690 tall 398.660 ncurves 1
+RES U 5226 10 189 4 1,2,5,7,10,14,27,35,54,70,135,189,270,378,945,1890 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 10 189 403.620
+LEVEL 6 335 dimDnew 138 tspace 8.420 tall 168.070 ncurves 3
+RES U 3565 6 335 5 1,5,6,30,134,201,670,1005 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 7:w2:-12; ops 1,w2
+RES U 3569 6 335 4 1,3,10,30,67,201,670,2010 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3573 6 335 2 1,2,3,5,6,10,15,30,67,134,201,335,402,670,1005,2010 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 335 171.160
+LEVEL 142 15 dimDnew 282 tspace 5.170 tall 44.080 ncurves 1
+RES U 11740 142 15 4 1,2,3,5,6,10,15,30,71,142,213,355,426,710,1065,2130 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 142 15 45.640
+LEVEL 146 15 dimDnew 290 tspace 5.540 tall 49.340 ncurves 1
+RES U 11814 146 15 5 1,2,3,5,6,10,15,30,73,146,219,365,438,730,1095,2190 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 146 15 51.310
+LEVEL 14 145 dimDnew 178 tspace 4.430 tall 232.220 ncurves 1
+RES U 6216 14 145 3 1,2,5,7,10,14,29,35,58,70,145,203,290,406,1015,2030 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 145 235.450
+LEVEL 6 341 dimDnew 130 tspace 7.590 tall 173.360 ncurves 3
+RES U 3580 6 341 4 1,3,11,33,62,186,682,2046 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3587 6 341 5 1,6,22,31,33,186,682,1023 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3590 6 341 2 1,2,3,6,11,22,31,33,62,66,93,186,341,682,1023,2046 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 341 175.790
+LEVEL 22 93 dimDnew 210 tspace 5.450 tall 339.390 ncurves 1
+RES U 8039 22 93 4 1,2,3,6,11,22,31,33,62,66,93,186,341,682,1023,2046 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 22 93 344.950
+LEVEL 2190 1 dimDnew 98 tspace 18.490 tall 154.980 ncurves 2
+RES U 17691 2190 1 3 1,3,5,15,146,438,730,2190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17697 2190 1 2 1,3,10,30,73,219,730,2190 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 2190 1 155.760
+LEVEL 6 355 dimDnew 146 tspace 9.700 tall 279.610 ncurves 5
+RES U 3598 6 355 4 1,2,5,10,213,426,1065,2130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 3600 6 355 5 1,3,5,15,142,426,710,2130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3601 6 355 5 1,3,10,30,142,355,426,1065 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 3609 6 355 4 1,5,6,30,71,355,426,2130 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3610 6 355 2 1,2,3,5,6,10,15,30,71,142,213,355,426,710,1065,2130 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 355 285.650
+LEVEL 2210 1 dimDnew 130 tspace 8.460 tall 176.400 ncurves 1
+RES U 17707 2210 1 3 1,5,13,34,65,170,442,2210 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+DONE 2210 1 177.260
+LEVEL 26 85 dimDnew 218 tspace 4.960 tall 112.670 ncurves 1
+RES U 8459 26 85 3 1,2,5,10,13,17,26,34,65,85,130,170,221,442,1105,2210 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 85 114.720
+LEVEL 10 207 dimDnew 194 tspace 9.260 tall 419.290 ncurves 1
+RES U 5248 10 207 3 1,2,5,9,10,18,23,45,46,90,115,207,230,414,1035,2070 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,V3*w1
+DONE 10 207 423.720
+LEVEL 2226 1 dimDnew 106 tspace 14.540 tall 152.250 ncurves 3
+RES H 17724 2226 1 2 1,3,7,21,106,318,742,2226 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 17727 2226 1 3 1,6,14,21,106,159,371,2226 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 17729 2226 1 2 1,2,21,42,53,106,1113,2226 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+DONE 2226 1 153.520
+LEVEL 6 379 dimDnew 126 tspace 10.860 tall 115.960 ncurves 1
+RES U 3663 6 379 3 1,2,3,6,379,758,1137,2274 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 379 116.580
+LEVEL 6 377 dimDnew 138 tspace 9.620 tall 192.540 ncurves 2
+RES U 3658 6 377 5 1,3,26,29,78,87,754,2262 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 3662 6 377 2 1,2,3,6,13,26,29,39,58,78,87,174,377,754,1131,2262 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 6 377 195.300
+LEVEL 58 39 dimDnew 258 tspace 5.740 tall 254.500 ncurves 1
+RES U 10423 58 39 5 1,2,3,6,13,26,29,39,58,78,87,174,377,754,1131,2262 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 58 39 258.610
+LEVEL 26 87 dimDnew 242 tspace 6.760 tall 563.430 ncurves 1
+RES U 8460 26 87 5 1,2,3,6,13,26,29,39,58,78,87,174,377,754,1131,2262 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 26 87 591.490
+LEVEL 14 165 dimDnew 290 tspace 50.720 tall 457.150 ncurves 5
+RES U 6232 14 165 5 1,2,3,6,7,14,21,42,55,110,165,330,385,770,1155,2310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 6241 14 165 5 1,3,10,14,22,30,35,42,55,66,77,105,165,231,770,2310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES U 6247 14 165 5 1,2,3,6,11,22,33,35,66,70,105,210,385,770,1155,2310 nops 2 nodesc 0 noncomm 0 h1 false nviol 1 viol 13:w5:-16; ops 1,w5
+RES U 6249 14 165 5 1,2,11,15,21,22,30,35,42,70,165,231,330,385,462,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES H 6254 14 165 2 1,2,3,5,6,7,10,11,14,15,21,22,30,33,35,42,55,66,70,77,105,110,154,165,210,231,330,385,462,770,1155,2310 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 14 165 554.830
+LEVEL 22 105 dimDnew 322 tspace 41.600 tall 137.480 ncurves 4
+RES U 8050 22 105 5 1,2,3,6,7,14,21,42,55,110,165,330,385,770,1155,2310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w5
+RES U 8054 22 105 5 1,2,7,14,15,30,33,55,66,105,110,210,231,385,462,770 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w3
+RES U 8056 22 105 5 1,3,5,7,15,21,22,35,66,105,110,154,330,462,770,2310 nops 2 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1,w2
+RES H 8072 22 105 2 1,2,3,5,6,7,10,11,14,15,21,22,30,33,35,42,55,66,70,77,105,110,154,165,210,231,330,385,462,770,1155,2310 nops 1 nodesc 0 noncomm 0 h1 false nviol 0 viol - ops 1
+DONE 22 105 156.140
