@@ -23,6 +23,7 @@ cmtables.m
 ModelVerification.m
 Verifications.m
 GeneralizedComplicatedFixedPoints.m
+AutomorphismGroupFilter.m
 special_fiber_modular.m
 special_fiber_cm.m
 }
