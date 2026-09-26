@@ -65,10 +65,11 @@ intrinsic NumFixedPointsNonALOnX(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt,
     return val;
 end intrinsic;
 
-// The non-AL modular involutions available on C = X_0(D,N)/W, returned as parallel lists
-// of matrices and names, together with, for each, the set of Atkin-Lehner w_Q it does NOT
-// commute with (so that V*W_Q is a well-defined involution and V commutes with w_Q).
-// Mirrors the Vs/bad_ws logic of CheckModularNonALInvolutionTrace.
+// The single non-AL modular involutions S2, V2, V3 that descend to C = X_0(D,N)/W, returned
+// as parallel lists of matrices and names, together with, for each, the set of Atkin-Lehner
+// w_Q it does NOT commute with.  Singletons only: the one caller,
+// CheckGeneralizedComplicatedFixedPoints, uses nothing else.  (Products of these, and which
+// v*W_o are involutions of C, are handled by ModularNonALInvolutionCandidates.)
 intrinsic AvailableNonALInvolutions(D::RngIntElt, N::RngIntElt, W::SetEnum)
     -> SeqEnum, SeqEnum, SeqEnum
 {Matrices, names, and per-involution non-commuting AL sets for the non-AL modular
@@ -90,8 +91,8 @@ involutions on X_0(D,N)/W.}
             Append(~Vs, get_V3(DN)); Append(~V_names, "V3");
         end if;
     end if;
-    all_vs := Vs cat [v1*v2 : v1, v2 in Vs | v1 ne v2];
-    all_names := V_names cat [v1 cat " " cat v2 : v1, v2 in V_names | v1 ne v2];
+    all_vs := Vs;
+    all_names := V_names;
 
     als := [Q : Q in Divisors(DN) | GCD(Q, DN div Q) eq 1];
     bad_sets := [];
