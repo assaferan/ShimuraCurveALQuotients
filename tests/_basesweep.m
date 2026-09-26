@@ -17,6 +17,11 @@ gy := AssociativeArray();
 gy[[21,2]] := <[1,3,1,1], func<a,b,c,d | [c^2 + a^2 + 3*d^2,
                   b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>;
 gy[[14,3]] := <[1,2,1,1], func<a,b,c,d | [c^2 + 9*a^2 + 2*d^2, b^2 + 7*a^4 - 22*a^2*d^2 - d^4]>>;
+// X_0^10(19), Guo-Yang Compositio 153 (2017) EXAMPLE 37 (body text, not the tables -- it is absent
+// from A.1/A.2 because Remark 38 says this curve is not hyperelliptic over Q):
+//     y^2 = -8x^6 + 57x^4 - 40x^2 + 16 ,  z^2 = 5x^2 - 32
+gy[[10,19]] := <[1,3,1,1], func<a,b,c,d | [c^2 - 5*a^2 + 32*d^2,
+                  b^2 + 8*a^6 - 57*a^4*d^2 + 40*a^2*d^4 - 16*d^6]>>;
 
 D := StringToInteger(Dd); N := StringToInteger(Nn);
 curves := GetHyperellipticCandidates();
@@ -55,7 +60,13 @@ for bl in Sort(Setseq(cand)) do
         gg := Genus(C);
         okc, psi := construct_crv_isomorphism(C, Cgy);
         printf "  base %-6o : genus %o, CONSTRUCTED ISOMORPHISM TO GY: %o\n", bl, gg, okc;
-        if okc then printf "      *** eqns: %o\n", DefiningPolynomials(C); end if;
+        // ⚠ Print the pair on FAILURE too.  construct_crv_isomorphism declines for two very
+        // different reasons -- the pair is a different V_4, or the y-weights disagree (the 21_2
+        // case) -- and without the equations a negative sweep says nothing about which, so the
+        // next person pays the whole base run again to find out.
+        printf "      weights %o\n      eqns %o\n",
+               Gradings(Ambient(C))[1], DefiningPolynomials(C);
+        printf "      GY weights %o\n", Gradings(Qg)[1];
     end for;
 end for;
 exit;

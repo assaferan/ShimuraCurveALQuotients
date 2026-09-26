@@ -114,9 +114,24 @@ procedure test_10_19()
     //     nu^2 * P(z) = -8u^6 + 57u^4 v^2 - 40u^2 v^4 + 16v^6,   mu^2 * Q(z) = 5u^2 - 32v^2
     // for u = az+b, v = cz+d has NO rational solution under any pin of a, b, c or d -- including
     // with mu^2, nu^2 as the unknowns rather than mu, nu, so a non-square scaling is not the issue.
-    // ⇒ The map must be a general weight-respecting map on P(1,3,1,1) with the sextic identity
-    // holding MODULO the conic, not a base Mobius.  That is the case construct_crv_isomorphism
-    // declines, which is why the harness cannot do it either.
+    // ⚠⚠ base_label WAS SWEPT, AND IT DOES NOT RESOLVE THIS BASE (2026-09-27).  On a CRV base the
+    // FIRST move is `magma -b Dd:=10 Nn:=19 tests/_basesweep.m` -- the base decides which V_4 the
+    // pair presents, and it is what found 5394 for 14_3 and 8103 for 26_3 in seconds after exactly
+    // this symptom.  Here it comes back negative:
+    //
+    //     W={1} is label 4089; default base 4091;  candidates 4097, 4102, 4103
+    //       4097  no pair produced
+    //       4102  genus 5, construct_crv_isomorphism to GY: FALSE
+    //       4103  no pair produced
+    //
+    // So this base is in the 21_2 category, not the 14_3 / 26_3 one: the candidate pool is three,
+    // two yield no pair, and the one that does is not Guo-Yang's V_4.  ⇒ Do not re-run the sweep
+    // expecting a different answer; the base run alone is 3371 s.
+    //
+    // ⇒ WHAT IS LEFT is the slow route, as at 21_2: a general weight-respecting map on P(1,3,1,1)
+    // with the sextic identity holding MODULO the conic.  ⚠ Three parametrisations that assume a
+    // Mobius between the two BASE lines are already known to come back empty -- that assumption is
+    // what the differing V_4 rules out, so do not spend a fourth on it.
     //
     // ⚠⚠ TWO FAILED ATTEMPTS BEFORE THIS, BOTH THE SAME ERROR -- assuming a coordinate
     // correspondence instead of deriving one.  (1) Solving for a linear map required the sextic
