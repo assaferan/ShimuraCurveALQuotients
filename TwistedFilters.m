@@ -31,13 +31,19 @@
 // the Weil code at h = 1 reproduces all 60 recorded "WeilPolynomial with p = x" verdicts.
 // tests/TwistedTraceFilter.m and tests/TwistedWeilFilter.m pin the known values.
 
-intrinsic TwistedModSymMaxLevel() -> RngIntElt
-{Maximum level D*N at which FilterByTwistedTrace and FilterByTwistedWeilPolynomial run; curves at
-larger levels are left undetermined.  Both need the modular symbols space of level D*N and its Hecke
-operators, which at D*N of several thousand costs hours per level.  The default is above every level
-in the current curve list (at most 15330), so nothing is skipped; lower it to bound the cost.}
-    return 20000;
-end intrinsic;
+// There is deliberately no level cap: every level is run, and the largest (D*N up to 15330) take
+// hours each.  See docs/RUNNING_PIPELINE.md.
+
+// Can X carry an admissible involution h != 1 at all?  (A residual AL, S2 with every w in W odd,
+// V2, or V3 with 9 in W.)  If not, the twisted tests have nothing to do and the modular symbols of
+// the level are not built.  On a star curve (W the full AL group) only V2 and V3 can qualify.
+function twHasOps(X)
+    N := X`N; W := X`W; L := X`D*N;
+    if exists{Q : Q in Divisors(L) | GCD(Q, L div Q) eq 1 and Q notin W} then return true; end if;
+    if (N mod 4 eq 0) and &and[IsOdd(w) : w in W] then return true; end if;
+    if N mod 8 eq 0 then return true; end if;
+    return (Valuation(N, 3) eq 2) and (9 in W);
+end function;
 
 // Primes whose Weil polynomial tables are complete, by genus.
 function twTablePrimes(g)
@@ -92,7 +98,10 @@ function twCurveData(X, LD, ps)
     end for;
     BK := BasisMatrix(K);
     dK := Nrows(BK);
-    error if dK ne 2*X`g, Sprintf("twisted: W-fixed D-new dimension %o is not 2g = %o on %o", dK, 2*X`g, X);
+    // Deliberately an error, not a skip: a mismatch means the space is not H^1 of this curve (wrong
+    // genus, W or sign convention), and then no verdict of this filter can be trusted.  It stops
+    // the (parallel) stage; the prototypes never met it on any curve.
+    error if dK ne 2*X`g, Sprintf("twisted filters: BADDIM on curve %o (%o): the W-fixed D-new modular symbols have dimension %o, not 2g = %o; the genus or W is inconsistent, so the stage stops rather than risk a wrong verdict", assigned X`CurveID select X`CurveID else "?", X, dK, 2*X`g);
     MK := MatrixAlgebra(Rationals(), dK);
     IK := MK!1;
     Tk := AssociativeArray();
@@ -256,17 +265,14 @@ polynomial of X.}
 end intrinsic;
 
 // The undecided curves of genus >= 3 in curves, grouped by level (D,N) in increasing D*N; only the
-// curves with some prime to test (per primes_of(g, D*N)) and at levels within the cap.
+// curves with some prime to test (per primes_of(g, D*N)) and some admissible involution h != 1.
 function twLevels(curves, primes_of)
     levels := AssociativeArray();
     for i->X in curves do
         if assigned X`IsSubhyp then continue; end if;
         if X`g lt 3 then continue; end if;
         if #primes_of(X`g, X`D*X`N) eq 0 then continue; end if;
-        if X`D*X`N gt TwistedModSymMaxLevel() then
-            vprintf ShimuraQuotients, 2: "twisted: %o exceeds the level cap\n", X;
-            continue;
-        end if;
+        if not twHasOps(X) then continue; end if;
         key := <X`D, X`N>;
         if not IsDefined(levels, key) then levels[key] := []; end if;
         Append(~levels[key], i);
