@@ -239,8 +239,9 @@ procedure test_FieldOfDefinition()
     //       X_0^26(3)/W and x on X_0^26(3)/<w3,w26> with s = x^2 (both column headers).
     // So given s, x = sqrt(s), y = sqrt(s^3-2s^2+9s+8) and z = sqrt(-8s-3) must all lie in H_R.
     // Every other row of Table 49 passes as printed, which checks that (i)+(ii) are read correctly.
-    // NB: PLAN.md and data/models/PROVENANCE.md treat the printed values as correct; under their
-    // map phi(w) = (1-w)/2 our Schofer values 8/25, 11/49 are phi(9/25), phi(27/49), i.e. -s.
+    // NB: under the map phi(w) = (1-w)/2 from [GY]'s coordinate to ours, our Schofer values 8/25,
+    // 11/49 are phi(9/25), phi(27/49), i.e. phi(-s); the printed s would give 17/25, 38/49.  The
+    // journal version (Compositio 153, 2017) has no CM-value tables, so it cannot arbitrate.
     ring_class_field := function(d)
         K := QuadraticField(d); OK := MaximalOrder(K);
         f := Isqrt(d div Discriminant(OK));

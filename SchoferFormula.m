@@ -1105,8 +1105,9 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // The filter here is the one ShimuraQuotients.m:1420 calls "a blunt instrument": it exists to
     // keep out points whose Schofer values misbehave, but it drops far more than it needs to. On
     // 26_3, of Guo-Yang's 14 published discriminants only -8, -11, -20 are coprime to N=3, so the
-    // filter admits 3 and discards 11 -- and only 2 of those 11 actually misbehave (the s <-> s~
-    // swap at -267 and -708). Measured pools at the default bd := 4:
+    // filter admits 3 and discards 11. (Two of those 11, -267 and -708, were long thought to
+    // misbehave; the 26_3 note below explains why our values there appear to be right.)
+    // Measured pools at the default bd := 4:
     //
     //     base   demand   filter ON   filter OFF
     //     26_3     15         3          21
@@ -1127,9 +1128,9 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // pass once the isomorphism is CONSTRUCTED instead of pinned (tests/_crviso.m).
     // Three bases now produce models matching Guo-Yang's PUBLISHED equations with the filter off
     // (39_2, 14_3, 26_3), and none is known to be harmed by it. Decisively, 26_3 is the very base
-    // whose two misbehaving discriminants (-267, -708) were the filter's stated justification --
-    // and with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient
-    // for coefficient. Those wrong values are simply not load-bearing for the covers.
+    // whose two suspect discriminants (-267, -708) were the filter's stated justification -- and
+    // with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient for
+    // coefficient.
     // Against that, the filter COSTS models: at the default bd := 4 it cut 26_3's pool from 21 to
     // 3 against demand 15, and 39_2's from 24 to 3 against 19, killing both outright.
     //
@@ -1137,15 +1138,20 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // There is **no theoretical guarantee**, only the empirical evidence above. The local factor at
     // `p | gcd(d, N)` HAS NO LIVE IMPLEMENTATION: `kappaminuszero` is dead code, and Schofer's
     // Thm 4.1 assumes the lattice is unimodular at unramified primes, which fails at a level prime
-    // where the order is Eichler. The two known-wrong values at 26_3 (`-267`, `-708`, the
-    // s <-> s~ swap) are exactly this class and are STILL WRONG -- they just do not propagate into
-    // the cover equations. So:
+    // where the order is Eichler.
+    // 26_3 NOTE (corrected 2026-09-26): the values at `-267`, `-708` were recorded as wrong (an
+    // s <-> s~ swap). They appear to be right, and GY arXiv v1 Table 49 to have a sign misprint.
+    // Ours are s = 8/25, 11/49; under phi(w) = (1-w)/2 these are phi(9/25), phi(27/49), i.e. the
+    // sign-flipped printed values, while the printed -9/25, -27/49 give 17/25, 38/49. Shimura
+    // reciprocity on GY's own equations rejects the printed values and accepts the flipped ones
+    // (tests/CMPoints.m, (26,3) block). The journal version (Compositio 153, 2017) has no CM-value
+    // tables, so no published table arbitrates.
+    // Consequences of the gap:
     //   * a model produced from non-coprime discriminants must still be validated against an
     //     INDEPENDENT oracle (a published equation, or Eichler-Selberg point counts) before it is
     //     believed -- passing regeneration is not enough;
     //   * do not read this flip as evidence the p | gcd(d,N) factor is unnecessary. Supplying it
-    //     remains the real fix, and is what would make the swap class correct rather than merely
-    //     harmless.
+    //     remains the real fix.
     //   * `CMCOPRIME=1` is the escape hatch if a future base is poisoned by an admitted point.
     //
     // NB BorcherdsForms.m:709 already fell back this way for CM-starved bases; the asymmetry this
