@@ -13,8 +13,11 @@
 //   * the four former V3 certificates (CurveIDs 5124, 7923, 8387, 9255) no longer fire;
 //   * the commuting V3 control (5,63)/<7,9> does not fire;
 //   * the valid V2 certificate #997, X_0(216)/<w8,w27> (G = <w27, V2>, N1 = 8, N2 = 216),
-//     still fires, so the new guard (S2 commutes with W_odd, G elementary abelian of order #W,
-//     w_N1, w_N2 notin G) does not reject a genuine certificate.
+//     still fires, so the checks do not reject a genuine certificate;
+//   * the group checks (GeneralizedComplicatedMixedGroup) reject on V3: on (10,153)/<2,9,85>,
+//     S3 does not commute with W_odd.  None of the cases above reaches this rejection, because
+//     the filter only offers V2, and for V2 the group checks always pass (see the comment on
+//     GeneralizedComplicatedMixedGroup).  So it is called directly.
 
 gcv3_make := function(D, N, gens, id)
     X := CreateShimuraQuot(D, N, AllALsFromGens(gens, D*N));
@@ -43,3 +46,11 @@ gcv3_list := [gcv3_997];
 FilterByGeneralizedComplicatedFixedPoints(~gcv3_list);
 assert gcv3_list[1]`IsHyp eq false and gcv3_list[1]`IsSubhyp eq false;
 assert gcv3_list[1]`TestInWhichProved eq gcv3_s;
+
+// The group checks on their own: they reject for V3 at the commute step, and pass for #997.
+gcv3_M2Q := MatrixAlgebra(Rationals(), 2);
+gcv3_ok, gcv3_why := GeneralizedComplicatedMixedGroup(1530, {1, 2, 85, 170}, get_V3(1530),
+                                                      gcv3_M2Q![3, 1, 0, 3]);
+assert not gcv3_ok and gcv3_why eq "commute";
+gcv3_ok := GeneralizedComplicatedMixedGroup(216, {1, 27}, get_V2(216), gcv3_M2Q![2, 1, 0, 2]);
+assert gcv3_ok;
