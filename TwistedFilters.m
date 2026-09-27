@@ -31,6 +31,8 @@
 // the Weil code at h = 1 reproduces all 60 recorded "WeilPolynomial with p = x" verdicts.
 // tests/TwistedTraceFilter.m and tests/TwistedWeilFilter.m pin the known values.
 
+import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis, Heilbronn, TnSparse;
+
 // There is deliberately no level cap: every level is run, and the largest (D*N up to 15330) take
 // hours each.  See docs/RUNNING_PIPELINE.md.
 
@@ -62,73 +64,151 @@ function twWeilPrimes(g, L)
     return [p : p in twTablePrimes(g) | L mod p ne 0];
 end function;
 
-// Level data at (D,N): the D-new cuspidal modular symbols (basis B), sigma-twisted AL matrices,
-// the non-AL S2, V2, V3 that exist at this level, and T_p for p in ps, all on that basis.
+// Pivot columns of a matrix in echelon form.
+function twPivots(E)
+    return [Min([j : j in [1..Ncols(E)] | E[i,j] ne 0]) : i in [1..Nrows(E)]];
+end function;
+
+// Level data at (D,N).  Everything is kept at the size of the D-new space or of K = H^1(X), never
+// as a full operator on the D-new space built by Solution against its (dense, large-height) basis,
+// which is what made the large levels slow:
+//  * B and Phi, the echelonized bases of the D-new cuspidal modular symbols SDN and of its dual
+//    (the functionals vanishing on the Hecke-stable complement: Eisenstein and D-old).  For an
+//    echelon basis the coordinates of a vector are its entries at the pivot columns, so an operator
+//    A preserving SDN is B * A[:, pivots] on it, with no Solution.
+//  * the sigma-twisted AL matrices only for the prime powers l^a || D*N, on B and on Phi; w_Q for
+//    composite Q is their product (W_a W_b = W_ab exactly on modular symbols of weight 2, trivial
+//    character).  Before this every Hall divisor Q got its own matrix (64 at level 8190).
+//  * S_mu, S_mu^-1 and W_(mu^v) on the ambient, for the V_mu = S_mu W S_mu^-1 of the level.
+//    S_mu^-1 is the action of [mu,-1,0,mu] (= mu^2 S_mu^-1, and scalars act trivially in weight 2),
+//    so nothing is inverted; these are applied to the few rows of K only (twCurveData).
+//  * T_p is not computed here at all: twCurveData gets it on K from d = dim K Manin symbols.
 function twLevelData(D, N, ps)
     L := D*N;
     MDN := ModularSymbols(L, 2, 0);
     SDN := CuspidalSubspace(MDN);
     for p in PrimeDivisors(D) do SDN := NewSubspace(SDN, p); end for;
-    B := Matrix([Representation(v) : v in Basis(SDN)]);
+    B := EchelonForm(Matrix([Representation(v) : v in Basis(SDN)]));
+    Phi := EchelonForm(BasisMatrix(DualVectorSpace(SDN)));
+    pivB := twPivots(B); pivPhi := twPivots(Phi);
     n := Nrows(B);
-    MA := MatrixAlgebra(Rationals(), n);
-    ALm := AssociativeArray();
-    for Q in [Q : Q in Divisors(L) | GCD(Q, L div Q) eq 1] do
-        chi := (-1)^#PrimeDivisors(GCD(Q, D));
-        ALm[Q] := MA!(chi*Solution(B, B*AtkinLehnerOperator(MDN, Q)));
+    ALB := AssociativeArray(); ALPhi := AssociativeArray();
+    for l in PrimeDivisors(L) do
+        q := l^Valuation(L, l);
+        A := ((D mod l eq 0) select -1 else 1) * AtkinLehnerOperator(MDN, q);
+        ALB[q] := B * ColumnSubmatrix(A, pivB);                              // A on B
+        ALPhi[q] := Phi * Transpose(Matrix([A[i] : i in pivPhi]));           // A^T on Phi
     end for;
-    Vfull := AssociativeArray();
-    if N mod 4 eq 0 then Vfull["S2"] := MA!ModularNonALOperatorOnSubspace(2, N, B, MDN, true); end if;
-    if N mod 8 eq 0 then Vfull["V2"] := MA!ModularNonALOperatorOnSubspace(2, N, B, MDN, false); end if;
-    if Valuation(N, 3) eq 2 then Vfull["V3"] := MA!ModularNonALOperatorOnSubspace(3, N, B, MDN, false); end if;
-    Tp := AssociativeArray();
-    for p in ps do Tp[p] := MA!Solution(B, B*HeckeOperator(MDN, p)); end for;
-    vprintf ShimuraQuotients, 2: "twisted: level (%o,%o), D-new dimension %o, %o Hecke operators\n", D, N, n, #ps;
-    return <D, N, n, ALm, Vfull, Tp>;
+    Vamb := AssociativeArray();
+    for mu in [2, 3] do
+        if N mod mu^2 ne 0 then continue; end if;
+        Vamb[mu] := <ActionOnModularSymbolsBasis([mu,1,0,mu], MDN), AtkinLehnerOperator(MDN, mu^Valuation(N, mu)),
+                     ActionOnModularSymbolsBasis([mu,-1,0,mu], MDN)>;
+    end for;
+    vprintf ShimuraQuotients, 2: "twisted: level (%o,%o), D-new dimension %o, ambient dimension %o\n", D, N, n, Dimension(MDN);
+    return <D, N, n, MDN, B, Phi, ALB, ALPhi, Vamb>;
+end function;
+
+// The sigma-twisted w_Q (Q a Hall divisor) on a space whose prime-power AL matrices are AL, as the
+// product of the prime-power ones.
+function twALProduct(AL, Q, L, MA)
+    M := MA!1;
+    for l in PrimeDivisors(Q) do M := M * AL[l^Valuation(L, l)]; end for;
+    return M;
+end function;
+
+// Echelon row basis (in the coordinates of the space) of the W-fixed part, cutting by a basis gens
+// of W over F_2.  Each w_Q preserves the part fixed by the previous ones (the ALs commute), so its
+// matrix there is read off at the pivots.  w_Q is applied to the rows one prime power at a time.
+function twFixed(AL, gens, L, n)
+    K := MatrixAlgebra(Rationals(), n)!1;
+    for Q in gens do
+        R := K;
+        for l in PrimeDivisors(Q) do R := R * AL[l^Valuation(L, l)]; end for;
+        C := ColumnSubmatrix(R, twPivots(K));
+        K := EchelonForm(KernelMatrix(C - 1) * K);
+    end for;
+    return K;
+end function;
+
+// Rows R (ambient coordinates) under S2, or V_mu = S_mu W S_mu^-1 (on rows: ((x S) W) S^-1), on the
+// ambient.
+function twActV(R, a, Vamb)
+    if a eq "S2" then return R * Vamb[2][1]; end if;
+    t := Vamb[a eq "V2" select 2 else 3];
+    return ((R * t[1]) * t[2]) * t[3];
 end function;
 
 // The data of curve X on the level data LD: the restrictions to K = H^1(X) of T_p (p in ps) and of
-// the admissible involutions h != 1, as a list of <name, matrix>.
+// the admissible involutions h != 1, as a list of <name, matrix>, all in one basis of K.
 function twCurveData(X, LD, ps)
-    D, N, n, ALm, Vfull, Tp := Explode(LD);
+    D, N, n, MDN, B, Phi, ALB, ALPhi, Vamb := Explode(LD);
     W := X`W; L := D*N;
-    K := VectorSpace(Rationals(), n);
-    for w in W do
-        if w ne 1 then K meet:= Kernel(ALm[w] - 1); end if;
+    // W is cut out by a basis over F_2 (fixed by it = fixed by all of W, as w_Q, sigma are
+    // multiplicative).  Not the prime-power ALs: W need not be generated by them (e.g. <w6>).
+    gens := []; span := {1};
+    for w in Sort(SetToSequence(W)) do
+        if w notin span then Append(~gens, w); span join:= {AtkinLehnerMul(w, s, L) : s in span}; end if;
     end for;
-    BK := BasisMatrix(K);
+    Kc := twFixed(ALB, gens, L, n);
+    BK := Kc * B;                                  // K, in ambient coordinates
     dK := Nrows(BK);
     // Deliberately an error, not a skip: a mismatch means the space is not H^1 of this curve (wrong
     // genus, W or sign convention), and then no verdict of this filter can be trusted.  It stops
     // the (parallel) stage; the prototypes never met it on any curve.
     error if dK ne 2*X`g, Sprintf("twisted filters: BADDIM on curve %o (%o): the W-fixed D-new modular symbols have dimension %o, not 2g = %o; the genus or W is inconsistent, so the stage stops rather than risk a wrong verdict", assigned X`CurveID select X`CurveID else "?", X, dK, 2*X`g);
+    PhiK := twFixed(ALPhi, gens, L, n) * Phi;      // functionals vanishing on the complement of K
+    assert Nrows(PhiK) eq dK;
     MK := MatrixAlgebra(Rationals(), dK);
     IK := MK!1;
+    // T_p on K from dK Manin symbols (Stein's trick, as HeckeOperator does on a subspace, but with
+    // PhiK in place of its dense ambient projection matrix): T_p preserves K and its complement, so
+    // (x T_p) PhiK^T = (x PhiK^T) [T_p] for every ambient x; take x = the symbols E at the pivots.
+    PhiKT := Transpose(PhiK);
+    C := MK!(BK * PhiKT);                          // basis change: BK-coordinates -> PhiK-coordinates
+    Ci := C^(-1);
+    E := twPivots(EchelonForm(PhiK));
+    P0i := (MK!Matrix([PhiKT[e] : e in E]))^(-1);
     Tk := AssociativeArray();
     for p in ps do
-        ok, S := IsConsistent(BK, BK*Tp[p]);
-        assert ok;       // T_p commutes with the ALs, so it preserves K
-        Tk[p] := MK!S;
+        H := Heilbronn(MDN, p, false);
+        ET := Matrix([TnSparse(MDN, H, [<1, e>]) : e in E]);
+        Tk[p] := MK!(C * P0i * (ET * PhiKT) * Ci);
     end for;
-    als := Sort([Q : Q in Keys(ALm)]);
-    cand := [<"w" cat IntegerToString(Q), ALm[Q]> : Q in als | Q notin W];
+    // The same safety net as before (T_p preserves K), now also checking the trick: at the smallest
+    // p, where the ambient T_p is cheapest, compare with the ambient operator.
+    if #ps gt 0 then
+        ok, S := IsConsistent(BK, BK * HeckeOperator(MDN, ps[1]));
+        assert ok and MK!S eq Tk[ps[1]];
+    end if;
+    // The prime-power ALs on K (they preserve it: the ALs commute), in the BK basis.
+    ALK := AssociativeArray();
+    pivK := twPivots(Kc);
+    for q in Keys(ALB) do ALK[q] := MK!ColumnSubmatrix(Kc * ALB[q], pivK); end for;
+    als := [Q : Q in Divisors(L) | GCD(Q, L div Q) eq 1];
+    cand := [<"w" cat IntegerToString(Q), twALProduct(ALK, Q, L, MK)> : Q in als | Q notin W];
     vn := [];
-    if IsDefined(Vfull, "S2") and &and[IsOdd(w) : w in W] then Append(~vn, "S2"); end if;
-    if IsDefined(Vfull, "V2") then Append(~vn, "V2"); end if;
-    if IsDefined(Vfull, "V3") and (9 in W) then Append(~vn, "V3"); end if;   // Q-rational V3 only
-    allv := [<a, Vfull[a]> : a in vn] cat [<a cat "*" cat b, Vfull[a]*Vfull[b]> : a, b in vn | a ne b];
+    if IsDefined(Vamb, 2) and (N mod 4 eq 0) and &and[IsOdd(w) : w in W] then Append(~vn, "S2"); end if;
+    if IsDefined(Vamb, 2) and (N mod 8 eq 0) then Append(~vn, "V2"); end if;
+    if IsDefined(Vamb, 3) and (9 in W) then Append(~vn, "V3"); end if;   // Q-rational V3 only
+    allv := [<[a], a> : a in vn] cat [<[a, b], a cat "*" cat b> : a, b in vn | a ne b];
     for vv in allv do
+        R := BK;
+        for a in vv[1] do R := twActV(R, a, Vamb); end for;         // x (V_a V_b) = (x V_a) V_b
+        // V w_Q preserves K iff V does (w_Q is invertible on K), so when V does not, none of the
+        // V w_Q do either and all of them are skipped below, as before.
+        ok, S := IsConsistent(BK, R);
+        if not ok then continue; end if;
+        MV := MK!S;
         for Q in als do
             if (Q in W) and (Q ne 1) then continue; end if;
-            if ("S2" in vv[1]) and IsEven(Q) then continue; end if;
-            Append(~cand, <Q eq 1 select vv[1] else vv[1] cat "*w" cat IntegerToString(Q), vv[2]*ALm[Q]>);
+            if ("S2" in vv[2]) and IsEven(Q) then continue; end if;
+            Append(~cand, <Q eq 1 select vv[2] else vv[2] cat "*w" cat IntegerToString(Q), MV * twALProduct(ALK, Q, L, MK)>);
         end for;
     end for;
     ops := [];
     for o in cand do
-        ok, S := IsConsistent(BK, BK*o[2]);
-        if not ok then continue; end if;            // does not descend to K
-        M := MK!S;
+        M := o[2];
         if M eq IK then continue; end if;           // h = 1 on C
         if M^2 ne IK then
             vprintf ShimuraQuotients, 2: "twisted: %o is not an involution on %o\n", o[1], X;
