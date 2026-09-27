@@ -54,7 +54,31 @@ function load_covers_and_ws_data_21_2()
     cover_data[{1,2,21,42}] := <HyperellipticCurve(Polynomial(Rationals(), [ -7/16, 3/32, 81/256 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1,3,14,42}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 7/4, -1/8, -9/64 ])), DiagonalMatrix([1,1,1])>;   // genus 1
     cover_data[{1,6,14,21}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 7/64, 31/32, -9/64 ])), DiagonalMatrix([1,1,1])>;   // genus 1
-    cover_data[{1}] := <Curve(P3_1, [ y^2 + 7/256*s^4 + 25/32*s^2*z^2 + 7/16*z^4, x^2 + 3*s^2 + 3*z^2 ]), DiagonalMatrix([1,1,1,1])>;   // genus 3, CRV pair
+    // ✅ UPGRADED 2026-09-27 FROM A SNAPSHOT TO AN ORACLE.  This key used to be a copy of our own
+    // committed pair, so the top-curve comparison was the pipeline against itself.  It is now
+    // GUO-YANG'S PUBLISHED CURVE, re-presented over OUR V_4 by pure algebra -- no pipeline input.
+    //
+    // Their pair, in their coordinates (x base, y weight 3, z conic):
+    //     y^2 = -(9u-1)(u+7)(u+3),  z^2 = -(u+3),  u = x^2
+    //     w_2 = (-x,-y,-z)   w_3 = (x,y,-z)   w_7 = (x,-y,z)
+    // Their V_4 is {1,w_3,w_7,w_21} (y-branch X/w_3, genus 2); OURS is {1,w_2,w_7,w_14} (y-branch
+    // X/w_2, genus 1) -- read off the ws_data matrices below, where w_2 = (x,y,-s,-z) ~ (-x,y,s,z)
+    // negates the CONIC variable.  That difference is what the header's first trap describes.
+    // ⇒ BOTH CONTAIN w_7, so re-present theirs over ours instead of looking for a map between the
+    // two base lines.  V-invariants are u = x^2 and xz with (xz)^2 = -u^2-3u; that conic has the
+    // point (0,0), so X/V = P^1 with m = z/x and u = -3/(m^2+1).  Then
+    //     conic branch X/w_7 :  x^2 = u            ->  x^2 = -3(m^2+1)
+    //     y branch     X/w_2 :  (xy)^2 = u*F(u)    ->  y^2 = -(7m^4 + 200m^2 + 112)
+    // (the numerator carries a factor 9m^2, a square, which comes out; genus 1, as X/w_2 must be).
+    //
+    // ✅ AND IT LANDS ON THE COMMITTED PAIR EXACTLY: the conic is IDENTICAL to ours, and the two
+    // y-branches differ by the constant 256 = 16^2 -- a square, so the same curve.
+    // construct_crv_isomorphism returns (x,y,s,z) -> (x, y/16, s, z) in 0.01 s, verified by
+    // substitution (pullbacks 1/256 and 1 times these polynomials; a perturbed map fails).
+    // ⇒ THIS ALSO RETIRES THE HEADER'S FIRST TRAP: the construct branch no longer declines, so the
+    // 208 s IsIsomorphic fallback is not used.  The weight mismatch it complained about was an
+    // artefact of comparing across different V_4, not a property of the curves.
+    cover_data[{1}] := <Curve(P3_1, [ y^2 + 7*s^4 + 200*s^2*z^2 + 112*z^4, x^2 + 3*s^2 + 3*z^2 ]), DiagonalMatrix([1,1,1,1])>;   // genus 3, CRV pair -- Guo-Yang's curve over our V_4
 
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
