@@ -63,6 +63,19 @@ procedure test_V3Guard(curves)
     assert not exists{h : h in names(Y) | "V3" in h};
 end procedure;
 
+// S2 w_Q is used only for odd Q, as in CheckModularNonALInvolutionModSym (S2 does not commute with
+// w_(2^v)).  On X_0(40) (146) that rule is the only thing keeping S2*V2*w8 and S2*V2*w40 out: both
+// pass the involution and T_p checks on K (found by deleting the rule).  The rule is conservative
+// here, since S2 V2 w8 = w8 S2 w8^-1; loosening it is a separate decision, and would change this pin.
+procedure test_S2EvenGuard(curves)
+    X := curves[146];
+    assert <X`D, X`N, X`W> eq <1, 40, {1}>;
+    names := [x[1] : x in TwistedWeilPolynomials(X, 3)];
+    printf "  (1,40) S2 twists: %o\n", [h : h in names | "S2" in h];
+    assert "S2" in names and "S2*w5" in names;
+    assert not exists{h : h in names | "S2" in h and exists{Q : Q in [8, 40] | ("*w" cat IntegerToString(Q)) in h}};
+end procedure;
+
 // Star curves (W the full AL group; FilterByTwistedTraceStar): only V2, V3, V2 V3 can occur.
 // X_0^*(396) (1272, undecided) is ruled out by V3 at q = 5, trace -10; the hyperelliptic star
 // curves X_0^*(171) (813) and X_0^(9)(55)^* (10149), both with V3, are not.  A star curve with no
@@ -87,4 +100,5 @@ end procedure;
 curves := GetHyperellipticCandidates();
 test_TwistedTrace(curves);
 test_V3Guard(curves);
+test_S2EvenGuard(curves);
 test_TwistedTraceStar(curves);
