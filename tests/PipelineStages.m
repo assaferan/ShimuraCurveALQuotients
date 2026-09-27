@@ -102,12 +102,22 @@ function StripBlockComments(t)
     end while;
     return t;
 end function;
+// The whole file is stripped before the case is located, so a comment cannot move its boundaries.
+rscode := [Uncommented(l) : l in Split(StripBlockComments(rs), "\n")];
 for s in check_only do
-    label := "when \"" cat s cat "\":";
-    assert Position(rs, label) gt 0;
-    blk := rs[Position(rs, label) + #label..#rs];          // the case body, less its label
-    blk := blk[1..Position(blk, "when \"") - 1];
-    code := [Uncommented(l) : l in Split(StripBlockComments(blk), "\n")];
+    label := "^ *when \"" cat s cat "\": *";
+    at := [j : j in [1..#rscode] | Regexp(label, rscode[j])];
+    assert #at eq 1;
+    // the case body: the rest of the label line, up to the next when / else / end case of this
+    // case (indented no deeper than the label, so an if-else inside the body does not end it)
+    _, lbl := Regexp(label, rscode[at[1]]);
+    code := [rscode[at[1]][#lbl+1..#rscode[at[1]]]];
+    ind := Position(lbl, "when") - 1;
+    for j in [at[1]+1..#rscode] do
+        _, lead := Regexp("^ *", rscode[j]);
+        if #lead le ind and Regexp("^ *(when |else|end case)", rscode[j]) then break; end if;
+        Append(~code, rscode[j]);
+    end for;
     calls := [l : l in code | Regexp("[A-Za-z0-9_]+ *\\( *~ *curves *\\)", l)];
     printf "  run_sequential_stage.m %o: %o\n", s, calls;
     assert #calls eq 1 and Regexp("^ *Check" cat s cat " *\\( *~ *curves *\\) *; *$", calls[1]);
