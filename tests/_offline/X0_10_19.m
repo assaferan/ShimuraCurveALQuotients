@@ -237,8 +237,15 @@ procedure test_10_19()
     //       4103  no pair produced
     //
     // So this base is in the 21_2 category, not the 14_3 / 26_3 one: the candidate pool is three,
-    // two yield no pair, and the one that does is not Guo-Yang's V_4.  ⇒ Do not re-run the sweep
-    // expecting a different answer; the base run alone is 3371 s.
+    // two yield no pair, and the one that does is not Guo-Yang's V_4.
+    // ⚠ THAT "FALSE" AT 4102 IS NOW UNVERIFIED (2026-09-27, later the same day).  The sweep calls
+    // construct_crv_isomorphism, which until tests/_crviso.m was fixed SILENTLY DECLINED every
+    // genuine Mobius base change -- it tested Evaluate(f,mu)/fo for constancy, which only holds
+    // when the base change is AFFINE.  So the 4102 row carried no information about that pair.
+    // It does not matter here, because this file no longer depends on it: the key above is
+    // Guo-Yang's curve re-presented over our V_4 and the test is green.  Recorded only so the row
+    // is not quoted later as evidence.  ⇒ The base run alone is 3371 s, so re-running is a choice,
+    // not a necessity.
     //
     // ⇒ ⚠ AND THE "SLOW ROUTE" THIS BLOCK USED TO RECOMMEND -- a general weight-respecting map on
     // P(1,3,1,1) with the sextic identity holding modulo the conic -- WAS NEVER NEEDED.  Changing
