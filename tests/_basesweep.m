@@ -57,6 +57,28 @@ Qg<a,b_,c,dd> := WeightedProjectiveSpace(Rationals(), w);
 Cgy := Curve(Qg, eqf(a,b_,c,dd));
 printf "GY genus %o\n", Genus(Cgy);
 
+// ⚠⚠ COMPARE THE **DEFAULT** RUN'S OWN PAIRS FIRST, and do not skip this block.  Until 2026-09-27
+// this script swept only `cand` -- the bases of the OTHER cover keys -- so the pair the DEFAULT run
+// actually produces was NEVER compared to Guo-Yang.  That made a negative sweep ambiguous in the
+// worst way: it could not distinguish "no base presents GY's V_4" from "the default already does,
+// and only the alternatives fail".  The 82_1 verdict was recorded under that ambiguity.
+//   ⇒ This is also EXACTLY what the test sees.  test_AllEquationsAboveCoversSingleCurve raises its
+// "matches NONE" error PER BASE ("W=%o over base %o"), so EVERY base the run produces must match --
+// it is not enough that some base does.  A default base that fails is a red test.
+// Free: these entries already exist from the base run above, so no replay is needed.
+printf "---- pairs the DEFAULT run produced (base_label = 0) ----\n";
+for b in Sort(Setseq(Keys(covers[lab1]))) do
+    C := covers[lab1][b];
+    if Type(C) eq CrvHyp then
+        printf "  DEFAULT base %-6o : hyperelliptic, not a pair (genus %o)\n", b, Genus(C);
+        continue;
+    end if;
+    okc := construct_crv_isomorphism(C, Cgy);
+    printf "  DEFAULT base %-6o : genus %o, CONSTRUCTED ISOMORPHISM TO GY: %o\n", b, Genus(C), okc;
+    printf "      weights %o\n      eqns %o\n", Gradings(Ambient(C))[1], DefiningPolynomials(C);
+end for;
+printf "---- alternative bases ----\n";
+
 for bl in Sort(Setseq(cand)) do
     cp := covers;
     cp[lab1] := AssociativeArray();
