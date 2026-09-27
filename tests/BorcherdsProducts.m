@@ -359,9 +359,16 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                     D, N, #Keys(mc_stored), n_model_skip);
 
         // ⚠ TWO DIFFERENT FAILURES, AND ONLY ONE OF THEM IS EVER TOLERABLE.
-        // A test that pins a non-zero base_label legitimately produces FEWER keys: EquationsCovers.m
-        // :1061 gates EquationsByRebase on `base_label eq 0`, so the covers a default run fills by
-        // rebasing the Hauptmodul stay deferred here. Measured at 10_13 (base_label 4069), whose
+        // A test that pins a non-zero base_label can legitimately produce FEWER keys.
+        // ⚠⚠ BUT NOT FOR THE REASON THIS COMMENT GAVE UNTIL 2026-09-27. It said EquationsCovers.m
+        // :1061 gates EquationsByRebase on `base_label eq 0`, so a pinned run skipped the stage.
+        // THAT GATE IS GONE -- EquationsCovers.m:1079, "Formerly gated on `base_label eq 0` ... The
+        // stage is pin-aware now". What remains is the narrower EquationsCovers.m:631, in the conic
+        // stage, where a pin restricts the candidate bases to the pinned one; that can still cost
+        // keys, but it is a different and smaller effect than a skipped stage.
+        // ⇒ SO THE TWO model_drift_ok TESTS BELOW MAY NO LONGER NEED THE FLAG. Unmeasured; settle it
+        // by dropping the flag on one test at a time, not by reasoning from this comment.
+        // Historically measured at 10_13 (base_label 4069), whose
         // three missing keys are exactly the ones that run's own log reports as "leaving it
         // deferred". 26_3 is the case that confirms the reading rather than excusing it: its model
         // was GENERATED at base_label 8103 (data/models/PROVENANCE.md) and its test pins the same
