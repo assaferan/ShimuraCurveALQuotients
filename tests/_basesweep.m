@@ -6,6 +6,12 @@
 // that confirmed abstract isomorphism while yielding no usable coordinate change. Same lesson as
 // 26_3's 8103.
 //
+// ⚠⚠ A "CONSTRUCTED ISOMORPHISM TO GY: false" ROW PRINTED BEFORE 2026-09-27 IS NOT EVIDENCE.
+// Until that date construct_crv_isomorphism silently declined every genuine MOBIUS base change
+// (it tested Evaluate(f,mu)/fo for constancy, which holds only when the change is AFFINE), so a
+// FALSE could mean "different V_4" OR "the helper could not express this map". Fixed in
+// tests/_crviso.m. Verdicts recorded earlier -- 82_1's and 10_19's among them -- are UNVERIFIED.
+//
 // Which base_label makes our W={1} CRV pair present the SAME V_4 as Guo-Yang's?
 // The expensive part (Borcherds forms, CM values) runs ONCE; only the pointless-conic step
 // depends on base_label, so clear the W={1} entry and replay just that step per candidate.

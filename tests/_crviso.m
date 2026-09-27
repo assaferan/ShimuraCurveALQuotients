@@ -95,7 +95,20 @@ function construct_crv_isomorphism(C, C_ex)
             num := Evaluate(de[1], [t, 0, 1]); den := Evaluate(de[3], [t, 0, 1]);
             if den eq 0 then continue; end if;
             mu := num/den;
-            qf := Evaluate(fg, mu) / fo;  qg := Evaluate(gg, mu) / go;
+            // ⚠⚠ THE den^deg FACTOR IS REQUIRED, AND WITHOUT IT THIS ROUTINE SILENTLY DECLINED
+            // EVERY GENUINE MOBIUS (2026-09-27).  Under t -> num/den the model y^2 = f(t) becomes
+            // f(mu)*den^deg, because y picks up den^(deg/2) -- so `Evaluate(fg,mu)/fo` is constant
+            // only when den is, i.e. only for an AFFINE base change.  For a true Mobius the ratio
+            // carries a den^deg and the coercion test below always failed, so the routine returned
+            // "no isomorphism" for curves that are isomorphic.
+            // ⇒ MEASURED AT 82_1, where the correct base map is t -> (2-2t)/(4-3t): with the factor
+            // the ratios are 1024 and 1, whose square roots 32 and 1 are EXACTLY the y- and x-scales
+            // of the matrix that file pins by hand.  So the fix re-derives a hand-pinned bridge.
+            // ⚠ Guarded to leave the affine case bit-for-bit unchanged: when den is a constant the
+            // downstream map normalises it into msn (see msd below), so no factor belongs here.
+            dn := (Degree(den) eq 0) select Parent(den)!1 else den;
+            qf := Evaluate(fg, mu) * dn^Degree(fg) / fo;
+            qg := Evaluate(gg, mu) * dn^Degree(gg) / go;
             if not (IsCoercible(Rationals(), qf) and IsCoercible(Rationals(), qg)) then continue; end if;
             sf, rf := IsSquare(Rationals()!qf);  sg, rg := IsSquare(Rationals()!qg);
             if not (sf and sg) then continue; end if;
