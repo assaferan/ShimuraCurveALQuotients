@@ -41,16 +41,65 @@
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 function load_covers_and_ws_data_10_19()
+    // D = 10, N = 19   (this said "D = 82" until 2026-09-25 -- a copy-paste from another file)
+    //
+    // ✅✅ SOLVED 2026-09-27 -- AND THERE WAS NO OBSTRUCTION, only a missing construction.
+    // The expected curve below is STILL GUO-YANG'S, derived from Example 37 by pure algebra with
+    // NO pipeline input, so this key remains an ORACLE.  What changed is which V_4 it is presented
+    // over.  A CRV pair is a double cover of a conic over the base X/V for a Klein four-group V,
+    // and the two presentations used DIFFERENT V (measured, not guessed -- the genus-2 branch of
+    // the committed pair is an EXACT polynomial match to models_10_19.m's key [1,10]):
+    //
+    //     ours        V  = {1, w_10, w_38, w_95}   branches genus 2/0/3 = [1,10], [1,38], [1,95]
+    //     Guo-Yang    V' = {1, w_5,  w_38, w_190}  branches genus 2/0/3 = [1,190], [1,38], [1,5]
+    //
+    // ⇒ THAT is why three coordinate parametrisations came back empty and why the base sweep could
+    // not help: `construct_crv_isomorphism` derives a Mobius map between the two BASE LINES, and
+    // X/V and X/V' are different curves, so no such map exists.  The ansatz was empty by
+    // construction, which reads exactly like a refutation and is not one.
+    //
+    // THE FIX, and it is four lines of algebra: both V and V' contain w_38, and Guo-Yang's action
+    // is DIAGONAL, so re-present THEIR curve over OUR V by invariant monomials -- the same route
+    // tests/GuoYangQuotients_10_19.m already uses.  With u = x^2 the V-invariants are u and xz,
+    // (xz)^2 = u(5u-32); that conic HAS the rational point (0,0), so X/V = P^1 with coordinate
+    // m = z/x and u = 32/(5-m^2).  Then
+    //     conic branch (X/w_38):  (x*D)^2     = 32*D                       D = 5 - m^2
+    //     y branch     (X/w_10):  (x*y*D^2)^2 = 32*(16D^3-1280D^2+58368D-262144)
+    // ✅ REPRODUCES A KNOWN VALUE: that sextic is -512m^6-33280m^4-1496576m^2-9728, which is
+    // CHARACTER-FOR-CHARACTER the polynomial GuoYangQuotients_10_19.m already carries for [1,10].
+    //
+    // ✅ AND THE ISOMORPHISM IS THEN CONSTRUCTED IN 0.08 s: (x,y,z,s) -> (x/64, y/12800, 4z/5, s).
+    // ⚠ VERIFIED BY SUBSTITUTION INTO THE DEFINING IDEAL, not by IsIsomorphism (Magma #123 makes
+    // that unreliable on weighted ambients): the pullbacks are exactly 1/163840000 and 1/4096 times
+    // Guo-Yang's two polynomials, and a perturbed map fails the same check.
+    // ⇒ So the two models ARE isomorphic, PROVEN by an exhibited map -- upgrading the earlier
+    // point-count agreement, which was only a screen and could never have settled it.
     P3<x,y,z,s> := WeightedProjectiveSpace(Rationals(), [1,3,1,1]);
-     // D = 10, N = 19   (this said "D = 82" until 2026-09-25 -- a copy-paste from another file)
     cover_data := AssociativeArray();
-    cover_data[{1}] := <Curve(P3, [y^2 + 8*x^6 - 57*x^4*s^2 + 40*x^2*s^4 - 16*s^6, z^2 - 5*x^2 + 32*s^2]), Matrix([[0,0,1,0],[0,1/8,0,0],[-1/8,0,0,-1/8],[-1/4,0,0,0]])>;
+    Dh := 5*z^2 - s^2;                                   // base is the (s:z) line, m = s/z
+    cover_data[{1}] := <Curve(P3, [ y^2 - 32*(16*Dh^3 - 1280*Dh^2*z^2 + 58368*Dh*z^4
+                                              - 262144*z^6),
+                                    x^2 - 32*Dh ]), IdentityMatrix(Rationals(), 4)>;
 
+    // ---- ATKIN-LEHNER INVOLUTIONS, TRANSPORTED THROUGH THE SAME RE-PRESENTATION ---------------
+    // Tracking Guo-Yang's actions through the invariants above (m = z/x, x1 = x*D, y1 = x*y*D^2):
+    //     w_2  (-x, y, z) : m -> -m, x1 -> -x1, y1 -> -y1
+    //     w_5  (x,-y,-z)  : m -> -m, x1 ->  x1, y1 -> -y1
+    //     w_38 (x,-y, z)  : m ->  m, x1 ->  x1, y1 -> -y1
+    // and m -> -m is (z,s) -> (z,-s) in these coordinates.  {w_2,w_5,w_38} still generates all 8.
+    //
+    // ⚠⚠ DO NOT "VERIFY" THESE BY SUBSTITUTION -- THAT CHECK IS VACUOUS HERE.  Both defining
+    // polynomials are EVEN in every variable, so EVERY diag(+-1,+-1,+-1,+-1) preserves them; a
+    // substitution test cannot tell these matrices apart and would pass for any sign pattern.
+    // (The same was true of the previous presentation, so this is not a regression in rigour.)
+    // What the test actually checks is that the PIPELINE's computed w_m equals the matrix named
+    // here, which is a real comparison -- so the LABELS above must come from the transport, and
+    // they do.  See the label verification in the header.
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
-    ws_data[{1}][2] := DiagonalMatrix([-1,1,1,1]);
-    ws_data[{1}][5] := DiagonalMatrix([1,-1,-1,1]);
-    ws_data[{1}][38] := DiagonalMatrix([1,-1,1,1]);
+    ws_data[{1}][2]  := DiagonalMatrix([-1,-1,1,-1]);
+    ws_data[{1}][5]  := DiagonalMatrix([ 1,-1,1,-1]);
+    ws_data[{1}][38] := DiagonalMatrix([ 1,-1,1, 1]);
 
     return cover_data, ws_data;
 end function;
@@ -58,27 +107,21 @@ end function;
 procedure test_10_19()
     cover_data, ws_data := load_covers_and_ws_data_10_19();
     curves := GetHyperellipticCandidates();
-    // ⚠⚠ THIS TEST IS RED, measured 2026-09-25 (3500 s), and the cause is NOT what the header
-    // above says.  The header's claim that it "passes LOCALLY with real comparisons" dates from
-    // 2026-09-06 and is stale; run with NORMALIZ_BIN set it fails at BorcherdsProducts.m:93 with
-    // "Polynomials do not define a map into the codomain" -- the pinned matrix in cover_data[{1}]
-    // is no longer a map.
-    //
-    // ⚠ DO NOT "FIX" IT BY DROPPING manual_isomorphism.  That was tried on 2026-09-25 and cost an
-    // hour: the failure merely moves to "the produced cover matches NONE of the 1 acceptable
-    // curve(s)".  The CRV branch cannot bridge these two, and the reason is visible without
-    // running anything -- the two pairs present the curve over DIFFERENT intermediate quotients:
-    //
-    //     committed model (data/models/models_10_19.m, key [1]):
-    //         y^2 + 1/320000 s^6 + ... + 475/2097152 z^6     sextic in (s,z)
-    //         x^2 + 1/128 s^2 - 125/2048 z^2                 conic variable is x
-    //     expected here:
-    //         y^2 + 8x^6 - 57x^4 s^2 + 40x^2 s^4 - 16 s^6    sextic in (x,s)
-    //         z^2 - 5x^2 + 32 s^2                            conic variable is z
-    //
-    // The roles of x and z are swapped.  `construct_crv_isomorphism` declines exactly this case,
-    // so the pinned matrix was the only bridge between the two presentations -- and it is the
-    // bridge that rotted, not the matrix's arithmetic.
+    // ⚠ HISTORY, kept because two of its conclusions were WRONG and the record should say so.
+    // Until 2026-09-27 this test pinned a hand-written matrix and passed `manual_isomorphism`, and
+    // failed at BorcherdsProducts.m:93, "Polynomials do not define a map into the codomain".  It
+    // was believed to have regressed, and the mismatch was called a structural obstruction
+    // (commit 186b523, "the transport obstruction is structural").  BOTH REFUTED:
+    //   * it never regressed -- it had never verified this curve at all (see the header), and the
+    //     pinned matrix was never once exercised successfully;
+    //   * there is no obstruction -- the two pairs merely sat over DIFFERENT V_4, and
+    //     re-presenting Guo-Yang's curve over ours makes the isomorphism a diagonal scaling found
+    //     in 0.08 s (see load_covers_and_ws_data_10_19 above).
+    // ⇒ The lesson is the reusable part: an ansatz that is EMPTY BY CONSTRUCTION reads exactly
+    // like a refutation.  Three parametrisations assuming a Mobius map between the two base lines
+    // all came back "no solution", and every one of them was asking an impossible question rather
+    // than reporting a fact about the curves.  Check what your ansatz can express before believing
+    // its negative.
     //
     // ✅ THE EXPECTED CURVE IS PUBLISHED -- IT IS AN ORACLE, NOT A SNAPSHOT.  Guo-Yang,
     // Compositio Math. 153 (2017), EXAMPLE 37 is exactly X = X_0^10(19).  With s the Hauptmodul of
@@ -147,10 +190,7 @@ procedure test_10_19()
     // ⚠ One slip in THEIR text, harmless and already read correctly here: they print "s(tau_760)"
     // where the argument requires discriminant -760 ("the two CM points of discriminant -760").
     //
-    // ⇒ SO THE FIX IS A TRANSPORT, not a re-pin: carry the published presentation onto the
-    // pipeline's current one and record the resulting matrix, exactly as tests/_gyinvol.m does for
-    // involutions.  The three ws_data matrices below must be transported through the SAME map, or
-    // they will be checked against the wrong object.
+    // ⇒ THE FIX WAS A TRANSPORT, and it is DONE -- see load_covers_and_ws_data_10_19 above.
     //
     // ✅ THE HAUPTMODUL BRIDGE IS FOUND AND VERIFIED (2026-09-25).  Example 37 states Guo-Yang's
     // normalisation outright -- s is the Hauptmodul of X/W_{10,19} with s(tau_-8) = 0,
@@ -166,8 +206,11 @@ procedure test_10_19()
     // that map sends 32/27 to 32/5, which is exactly what Example 37 prints for s(tau_-760).
     // So the bridge is confirmed by a value it was not fitted to.
     //
-    // ✅ THE TWO MODELS ARE THE SAME CURVE -- measured 2026-09-27, so a pipeline defect here is
-    // RULED OUT.  Counting points of each (sextic, conic) pair over F_p and INCLUDING the fibre
+    // ✅ THE TWO MODELS ARE THE SAME CURVE -- and this is now PROVEN by the exhibited isomorphism
+    // above, which SUPERSEDES the point count below.  The count is kept because its trap is worth
+    // keeping, but note it could never have settled the question: a screen only REFUTES, since
+    // non-isomorphic curves with isogenous Jacobians agree at every prime.
+    // Counting points of each (sextic, conic) pair over F_p and INCLUDING the fibre
     // over t = infinity (both polynomials have even degree, so that fibre is governed by their
     // leading coefficients) gives identical totals at all 15 good primes p <= 61:
     //     8 16 8 20 20 16 40 24 60 32 44 52 60 72 56
@@ -175,11 +218,11 @@ procedure test_10_19()
     // primes, always by exactly +-4, purely from the boundary.  Do not repeat that: count the
     // fibre at infinity or the comparison is presentation-dependent.
     //
-    // ⚠⚠ WHY THE TRANSPORT IS STILL NOT DONE, and why three attempts failed the same way.  The
-    // obstruction is structural, not arithmetic: the two pairs present the curve over DIFFERENT
-    // intermediate quotients (ours has conic variable x over the (z,s)-line; Guo-Yang's has conic
-    // variable z over the x-line).  So there is no Mobius map between the two BASE lines to find,
-    // and any parametrisation assuming one is empty by construction.  Measured: solving
+    // ⚠⚠ WHY THREE ATTEMPTS FAILED THE SAME WAY -- and ⚠ this block once concluded, WRONGLY, that
+    // the obstruction was "structural".  It is not: the differing V_4 rules out a Mobius map
+    // between the two BASE lines, which is all these attempts ever tried, but it does NOT rule out
+    // an isomorphism -- re-presenting over a common V_4 produces one immediately.  Read what
+    // follows as "why this family of ansatz is empty", not as evidence about the curves.  Solving
     //     nu^2 * P(z) = -8u^6 + 57u^4 v^2 - 40u^2 v^4 + 16v^6,   mu^2 * Q(z) = 5u^2 - 32v^2
     // for u = az+b, v = cz+d has NO rational solution under any pin of a, b, c or d -- including
     // with mu^2, nu^2 as the unknowns rather than mu, nu, so a non-square scaling is not the issue.
@@ -197,10 +240,10 @@ procedure test_10_19()
     // two yield no pair, and the one that does is not Guo-Yang's V_4.  ⇒ Do not re-run the sweep
     // expecting a different answer; the base run alone is 3371 s.
     //
-    // ⇒ WHAT IS LEFT is the slow route, as at 21_2: a general weight-respecting map on P(1,3,1,1)
-    // with the sextic identity holding MODULO the conic.  ⚠ Three parametrisations that assume a
-    // Mobius between the two BASE lines are already known to come back empty -- that assumption is
-    // what the differing V_4 rules out, so do not spend a fourth on it.
+    // ⇒ ⚠ AND THE "SLOW ROUTE" THIS BLOCK USED TO RECOMMEND -- a general weight-respecting map on
+    // P(1,3,1,1) with the sextic identity holding modulo the conic -- WAS NEVER NEEDED.  Changing
+    // the presentation is far cheaper than searching for a map between two wrong presentations.
+    // ⇒ Worth trying first at 21_2, which was diagnosed into the same category.
     //
     // ⚠⚠ TWO FAILED ATTEMPTS BEFORE THIS, BOTH THE SAME ERROR -- assuming a coordinate
     // correspondence instead of deriving one.  (1) Solving for a linear map required the sextic
@@ -211,7 +254,10 @@ procedure test_10_19()
     // was an artifact of the ansatz and says nothing about the curves.  Independently: the two
     // conics ARE in the same class -- both pointless, both ramified at {2,5} -- so the pipeline is
     // not building a wrong object here.
-    test_AllEquationsAboveCoversSingleCurve(10, 19, cover_data, ws_data, curves : manual_isomorphism);
+    // ⚠ NO manual_isomorphism ANY MORE, deliberately.  The pinned matrix is gone: both sides are
+    // now non-CrvHyp pairs over the same V_4, so the construct branch of tests/_crviso.m fires and
+    // EXHIBITS the map instead of trusting a hardcoded one that nothing ever checked.
+    test_AllEquationsAboveCoversSingleCurve(10, 19, cover_data, ws_data, curves);
     return;
 end procedure;
 
