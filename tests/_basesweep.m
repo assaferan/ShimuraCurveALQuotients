@@ -17,6 +17,19 @@ gy := AssociativeArray();
 gy[[21,2]] := <[1,3,1,1], func<a,b,c,d | [c^2 + a^2 + 3*d^2,
                   b^2 + (3*a-d)*(3*a+d)*(a^2+7*d^2)*(a^2+3*d^2)]>>;
 gy[[14,3]] := <[1,2,1,1], func<a,b,c,d | [c^2 + 9*a^2 + 2*d^2, b^2 + 7*a^4 - 22*a^2*d^2 - d^4]>>;
+// ⚠ 57_1, 82_1, 93_1 write their equations with s as the BASE coordinate and x as the CONIC
+// variable, the opposite naming to 21_2/14_3 above.  In this table a is always the base, b the
+// weight-(g+1) coordinate, c the conic variable, d the homogeniser -- so a = their s, c = their x.
+// X_0^57(1):  y^2 = (3s+1)(3s^3+11s^2+17s+1),  x^2 = -4s^2+2s-1
+gy[[57,1]] := <[1,2,1,1], func<a,b,c,d | [c^2 + 4*a^2 - 2*a*d + d^2,
+                  b^2 - (3*a+d)*(3*a^3 + 11*a^2*d + 17*a*d^2 + d^3)]>>;
+// X_0^82(1):  y^2 = 4s^4+4s^3+s^2-2s+1,  x^2 = -19s^2+18s-11
+gy[[82,1]] := <[1,2,1,1], func<a,b,c,d | [c^2 + 19*a^2 - 18*a*d + 11*d^2,
+                  b^2 - (4*a^4 + 4*a^3*d + a^2*d^2 - 2*a*d^3 + d^4)]>>;
+// X_0^93(1):  y^2 = (3s^3-7s^2-3s-1)(3s^3+s^2-3s-9),  x^2 = -4s^2-6s-9
+// ⚠ the JOURNAL form: arXiv v1 prints -3t for the -3s in the first factor.
+gy[[93,1]] := <[1,3,1,1], func<a,b,c,d | [c^2 + 4*a^2 + 6*a*d + 9*d^2,
+                  b^2 - (3*a^3 - 7*a^2*d - 3*a*d^2 - d^3)*(3*a^3 + a^2*d - 3*a*d^2 - 9*d^3)]>>;
 // X_0^10(19), Guo-Yang Compositio 153 (2017) EXAMPLE 37 (body text, not the tables -- it is absent
 // from A.1/A.2 because Remark 38 says this curve is not hyperelliptic over Q):
 //     y^2 = -8x^6 + 57x^4 - 40x^2 + 16 ,  z^2 = 5x^2 - 32
