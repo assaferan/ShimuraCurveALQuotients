@@ -17,7 +17,7 @@ stages := [
     "UpdateGenera",
     "UpdateByGenusStar",
     "FilterByTraceStar",
-    "HHProposition1",
+    // (HHProposition1 is check-only: its snapshot equals FilterByTraceStar's, so it has no row.)
     "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar",
     "FilterByWeilPolynomialStar",

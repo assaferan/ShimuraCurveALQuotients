@@ -17,7 +17,8 @@
 #   UpdateGenera                           [sequential]  + VerifyHHTable1
 #   UpdateByGenusStar                      [sequential]
 #   FilterByTraceStar                      [PARALLEL]
-#   HHProposition1                         [sequential]  + VerifyHHTable2 (pre), VerifyHHProposition1 (post)
+#   HHProposition1                         [sequential]  check only: VerifyHHTable2 (input),
+#                                                        VerifyHHProposition1 (on a copy); writes input unchanged
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
@@ -121,6 +122,7 @@ run_seq "UpdateByGenusStar"   "${D}/curves_after_UpdateGenera.dat"              
 run_par "FilterByTraceStar"
 # HHProposition1 directly after the point counts, so that VerifyHHTable2 / VerifyHHProposition1
 # check [HH]'s own input and output (the twisted trace below decides further HH Table 2 curves).
+# Check only: the output file is the input unchanged; SpecialFiberIsomorphismStar decides HH's curves.
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
 # Twisted trace on the star curves: W is the full AL group, so the only twists are V2, V3 and V2 V3
 # (V3 is Q-rational since 9 in W).

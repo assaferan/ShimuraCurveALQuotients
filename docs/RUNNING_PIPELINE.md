@@ -83,7 +83,7 @@ The star-curve block in `run_pipeline.sh` reads:
 
     FindPairs, UpdateGenera, UpdateByGenusStar
     FilterByTraceStar                         parallel
-    HHProposition1                            (+ VerifyHHTable2, VerifyHHProposition1)
+    HHProposition1                            check only (VerifyHHTable2, VerifyHHProposition1)
     FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
     FilterByWeilPolynomialStar                parallel
@@ -102,7 +102,11 @@ filter does not run on the star curves.
 The star twisted stages decide some D = 1 curves of [HH] Table 2 (for example X_0^*(396), by V3
 at q = 5). So `HHProposition1` stays directly after `FilterByTraceStar`, and `VerifyHHTable2` and
 `VerifyHHProposition1` check its actual input and output, an exact reproduction of HH's table.
-HH Proposition 1 decides nothing that `SpecialFiberIsomorphismStar` would not.
+The stage is check-only (`CheckHHProposition1`): it runs `HHProposition1` on a copy, and writes
+its input unchanged to `curves_after_HHProposition1.dat`. HH Proposition 1 decides nothing that
+`SpecialFiberIsomorphismStar` would not, so the four curves it used to take (X_0^*(194),
+X_0^*(546), (205, 3), (1995, 2)) are credited to the special fiber isomorphism, and the stage has
+no row in the stage counts, the attribution or the paper tables.
 
 The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 

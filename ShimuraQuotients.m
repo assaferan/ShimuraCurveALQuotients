@@ -1003,11 +1003,19 @@ end intrinsic;
 // Apply the observation from [HH96] Proposition 1,
 // that if X_0^*(D, pN) and X_0^*(D, N) have the same genus,
 // they will be isomorphic in characteristic p
+// The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
+// list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
+// source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, so every
+// curve marked here is marked by SpecialFiberIsomorphismStar (the stages in between only rule
+// curves out).  The asserts below check that this identification holds.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
+        // Star-list precondition: gcd(D, N) = 1 and W is the full Hall-divisor set of D*N.
+        assert GCD(X`D, X`N) eq 1;
+        assert X`W eq {d : d in Divisors(X`D*X`N) | GCD(d, (X`D*X`N) div d) eq 1};
         lut_DN[<X`D, X`N>] := X`CurveID;
         if not IsDefined(lut_D, X`D) then
             lut_D[X`D] := [];
@@ -1024,6 +1032,9 @@ intrinsic HHProposition1(~curves::SeqEnum)
                 if IsDefined(lut_DN, <X`D, p*X`N>) then
                     other := lut_DN[<X`D, p*X`N>];
                     if (X`g eq curves[other]`g) and (not assigned curves[other]`IsSubhyp) then
+                        // SpecialFiberIsomorphism would find the same source X at this prime.
+                        assert p in curves[other]`W;
+                        assert X`W eq {w : w in curves[other]`W | w mod p ne 0};
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);

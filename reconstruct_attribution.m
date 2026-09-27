@@ -26,13 +26,12 @@ function Exists(name)
     end try;
 end function;
 
-// Both lists together must equal FILTER_STAGES in workingcode.m less UpdateGenera
-// (asserted by tests/PipelineStages.m).
+// Both lists together must equal FILTER_STAGES in workingcode.m less UpdateGenera and the
+// check-only HHProposition1, which decides nothing (asserted by tests/PipelineStages.m).
 // Star stages run first (on X_0^*(D,N) only); matched to the full list by (D,N,W).
 star_stages := [
  "UpdateByGenusStar",
  "FilterByTraceStar",
- "HHProposition1",
  "FilterByTwistedTraceStar",
  "SpecialFiberIsomorphismStar",
  "FilterByWeilPolynomialStar",
