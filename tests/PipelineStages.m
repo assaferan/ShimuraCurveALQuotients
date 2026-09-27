@@ -69,6 +69,9 @@ printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
 assert #wstar eq 10;
 assert wstar eq sstar;
+// compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
+// CheckHHProposition1, runs it on the same curves.
+assert wstar[Position(wstar, "FilterByTraceStar") + 1] eq "HHProposition1";
 
 // reconstruct_attribution.m credits each curve to the FIRST stage that decided it, so its
 // star_stages cat full_stages must be exactly the uncommented FILTER_STAGES less UpdateGenera and
@@ -87,6 +90,16 @@ for line in Split(wct[1..Position(wct, "*];")], "\n") do
     end if;
 end for;
 assert &and[s in wstar : s in check_only];
+// ... and run_pipeline.sh runs it through run_sequential_stage.m, whose case must also call the
+// Check intrinsic, not the stage's own (which would write its verdicts into the curves).
+rs := Read("run_sequential_stage.m");
+for s in check_only do
+    blk := rs[Position(rs, "when \"" cat s cat "\":")..#rs];
+    blk := blk[1..Position(blk[2..#blk], "when \"")];
+    calls := [l : l in Split(blk, "\n") | Regexp("[A-Za-z0-9_]+\\(~curves\\)", Uncommented(l))];
+    printf "  run_sequential_stage.m %o: %o\n", s, calls;
+    assert #calls eq 1 and Position(calls[1], "Check" cat s cat "(~curves);") gt 0;
+end for;
 ra := Read("reconstruct_attribution.m");
 ra := ra[Position(ra, "star_stages := [")..Position(ra, "final := Load")];
 rall := [];

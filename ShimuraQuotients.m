@@ -1007,7 +1007,11 @@ end intrinsic;
 // list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
 // source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, so every
 // curve marked here is marked by SpecialFiberIsomorphismStar (the stages in between only rule
-// curves out).  The asserts below check that this identification holds.
+// curves out), including a curve whose source was itself marked earlier in this loop, by
+// induction along the list order (sources precede targets, asserted): SpecialFiberIsomorphism
+// walks the list in index order and reads each source's verdict as it goes, so it has decided
+// the source by the time it reaches the target.  The asserts below check that this
+// identification holds.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     lut_D := AssociativeArray();
@@ -1035,6 +1039,9 @@ intrinsic HHProposition1(~curves::SeqEnum)
                         // SpecialFiberIsomorphism would find the same source X at this prime.
                         assert p in curves[other]`W;
                         assert X`W eq {w : w in curves[other]`W | w mod p ne 0};
+                        // The source precedes its target in the list (CurveID is the index), so
+                        // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
+                        assert i lt other;
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);

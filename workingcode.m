@@ -135,11 +135,11 @@ function compute_data(start_stage, stages)
       run_stage(stage[1], stage[2], ~curves);
 
       // in certain cases, we add verifications
+      // (VerifyHHTable2 on the FilterByTraceStar output runs in the next stage, CheckHHProposition1;
+      // tests/PipelineStages.m checks that it is the next stage)
       case stage[1]:
         when "UpdateGenera":
 	        VerifyHHTable1(curves);
-        when "FilterByTraceStar":
-	        VerifyHHTable2(curves);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByGeneralizedComplicatedFixedPoints":
