@@ -9640,7 +9640,7 @@ curve 1195
 10143	Trace, with p^v = 2^2
 10144	ALFixedPointsOnQuotient, W_9 has 10 fixed points
 10145	ALFixedPointsOnQuotient, W_11 has 8 fixed points
-10146	WeilPolynomial with p = 2
+10146	ModularNonALInvolution V3 W1
 10147	Trace, with p^v = 2^2
 10148	ALFixedPointsOnQuotient, W_5 has 10 fixed points
 10149	ModularNonALInvolution V3 W1
