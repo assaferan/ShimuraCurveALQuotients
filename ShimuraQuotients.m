@@ -1017,8 +1017,9 @@ intrinsic HHProposition1(~curves::SeqEnum)
     for i->X in curves do
         if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
             Ns := lut_D[X`D];
+            // [HH] needs (N, p) = 1, i.e. p exactly divides pN, as in SpecialFiberIsomorphism.
             ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
-                        IsPrime(N div X`N)];
+                        IsPrime(N div X`N) and (X`N mod (N div X`N) ne 0)];
             for p in ps do
                 if IsDefined(lut_DN, <X`D, p*X`N>) then
                     other := lut_DN[<X`D, p*X`N>];
