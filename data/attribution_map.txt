@@ -4885,7 +4885,6 @@ curve 376
 5121	WeilPolynomial with p = 3
 5122	ALFixedPointsOnQuotient, W_2 has 8 fixed points
 5123	ALFixedPointsOnQuotient, W_17 has 12 fixed points
-5124	GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=18 (nu=8), N2=1530 (nu=24)
 5125	ALFixedPointsOnQuotient, W_9 has 6 fixed points
 5126	ALFixedPointsOnQuotient, W_5 has 8 fixed points
 5127	ALFixedPointsOnQuotient, W_2 has 8 fixed points
@@ -7532,7 +7531,6 @@ curve 376
 7920	GenusLt3
 7921	ALFixedPointsOnQuotient, W_2 has 6 fixed points
 7922	ALFixedPointsOnQuotient, W_11 has 8 fixed points
-7923	GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=9 (nu=8), N2=990 (nu=24)
 7924	ALFixedPointsOnQuotient, W_9 has 6 fixed points
 7925	ALFixedPointsOnQuotient, W_5 has 6 fixed points
 7927	ALFixedPointsOnQuotient, W_2 has 10 fixed points
@@ -7971,7 +7969,6 @@ curve 376
 8384	ALFixedPointsOnQuotient, W_5 has 8 fixed points
 8385	ALFixedPointsOnQuotient, W_9 has 6 fixed points
 8386	ALFixedPointsOnQuotient, W_5 has 8 fixed points
-8387	GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=45 (nu=8), N2=234 (nu=24)
 8389	ALFixedPointsOnQuotient, W_2 has 8 fixed points
 8390	ALFixedPointsOnQuotient, W_2 has 6 fixed points
 8391	ALFixedPointsOnQuotient, W_5 has 8 fixed points
@@ -8788,7 +8785,7 @@ curve 376
 9252	Trace, with p^v = 2^1
 9253	UpdateIsoStatus, isomorphic to 9316
 9254	ALFixedPointsOnQuotient, W_7 has 12 fixed points
-9255	GeneralizedComplicatedFixedPoints: V3, pPart=9, N1=18 (nu=8), N2=315 (nu=24)
+9255	ModularNonALInvolution V3 W45 8
 9256	ComplicatedALFixedPointsOnQuotient with N1 = 18, N2 = 35, Nprime = 35
 9257	ALFixedPointsOnQuotient, W_5 has 6 fixed points
 9258	ALFixedPointsOnQuotient, W_2 has 12 fixed points
