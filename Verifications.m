@@ -97,6 +97,20 @@ intrinsic VerifyHHProposition1(starcurves::SeqEnum[ShimuraQuot])
     assert Table2 eq by_genus;
 end intrinsic;
 
+intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
+{Check-only pipeline stage: verify [HH, Table 2] on the input, run HHProposition1 on a copy and
+ verify [HH, Proposition 1] on its output.  The input is left unchanged, since
+ SpecialFiberIsomorphismStar decides every curve HHProposition1 would (see HHProposition1).}
+    VerifyHHTable2(starcurves);
+    before := Sprint(starcurves, "Magma");
+    // A genuine copy: ShimuraQuot has reference semantics, so `copy := starcurves` would share
+    // the records and HHProposition1 would write into the input.
+    copy := eval before;
+    HHProposition1(~copy);
+    VerifyHHProposition1(copy);
+    assert Sprint(starcurves, "Magma") eq before;
+end intrinsic;
+
 intrinsic VerifyHasegawaTable3(starcurves::SeqEnum[ShimuraQuot])
 {Verify that modular non-AL involution works for the curves in [Hasegawa, Table 3].
  !!! At the moment runs the check instead of testing the results of the filter. 
