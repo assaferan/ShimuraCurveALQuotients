@@ -1105,8 +1105,9 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // The filter here is the one ShimuraQuotients.m:1420 calls "a blunt instrument": it exists to
     // keep out points whose Schofer values misbehave, but it drops far more than it needs to. On
     // 26_3, of Guo-Yang's 14 published discriminants only -8, -11, -20 are coprime to N=3, so the
-    // filter admits 3 and discards 11 -- and only 2 of those 11 actually misbehave (the s <-> s~
-    // swap at -267 and -708). Measured pools at the default bd := 4:
+    // filter admits 3 and discards 11. (Two of those 11, -267 and -708, were long thought to
+    // misbehave; the 26_3 note below explains why our values there appear to be right.)
+    // Measured pools at the default bd := 4:
     //
     //     base   demand   filter ON   filter OFF
     //     26_3     15         3          21
@@ -1127,9 +1128,9 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // pass once the isomorphism is CONSTRUCTED instead of pinned (tests/_crviso.m).
     // Three bases now produce models matching Guo-Yang's PUBLISHED equations with the filter off
     // (39_2, 14_3, 26_3), and none is known to be harmed by it. Decisively, 26_3 is the very base
-    // whose two misbehaving discriminants (-267, -708) were the filter's stated justification --
-    // and with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient
-    // for coefficient. Those wrong values are simply not load-bearing for the covers.
+    // whose two suspect discriminants (-267, -708) were the filter's stated justification -- and
+    // with them admitted its full V_4 diagram still matches Guo-Yang, the conic coefficient for
+    // coefficient.
     // Against that, the filter COSTS models: at the default bd := 4 it cut 26_3's pool from 21 to
     // 3 against demand 15, and 39_2's from 24 to 3 against 19, killing both outright.
     //
@@ -1137,15 +1138,20 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // There is **no theoretical guarantee**, only the empirical evidence above. The local factor at
     // `p | gcd(d, N)` HAS NO LIVE IMPLEMENTATION: `kappaminuszero` is dead code, and Schofer's
     // Thm 4.1 assumes the lattice is unimodular at unramified primes, which fails at a level prime
-    // where the order is Eichler. The two known-wrong values at 26_3 (`-267`, `-708`, the
-    // s <-> s~ swap) are exactly this class and are STILL WRONG -- they just do not propagate into
-    // the cover equations. So:
+    // where the order is Eichler.
+    // 26_3 NOTE (corrected 2026-09-26): the values at `-267`, `-708` were recorded as wrong (an
+    // s <-> s~ swap). They appear to be right, and GY arXiv v1 Table 49 to have a sign misprint.
+    // Ours are s = 8/25, 11/49; under phi(w) = (1-w)/2 these are phi(9/25), phi(27/49), i.e. the
+    // sign-flipped printed values, while the printed -9/25, -27/49 give 17/25, 38/49. Shimura
+    // reciprocity on GY's own equations rejects the printed values and accepts the flipped ones
+    // (tests/CMPoints.m, (26,3) block). The journal version (Compositio 153, 2017) has no CM-value
+    // tables, so no published table arbitrates.
+    // Consequences of the gap:
     //   * a model produced from non-coprime discriminants must still be validated against an
     //     INDEPENDENT oracle (a published equation, or Eichler-Selberg point counts) before it is
     //     believed -- passing regeneration is not enough;
     //   * do not read this flip as evidence the p | gcd(d,N) factor is unnecessary. Supplying it
-    //     remains the real fix, and is what would make the swap class correct rather than merely
-    //     harmless.
+    //     remains the real fix.
     //   * `CMCOPRIME=1` is the escape hatch if a future base is poisoned by an admitted point.
     //
     // NB BorcherdsForms.m:709 already fell back this way for CM-starved bases; the asymmetry this
@@ -1187,14 +1193,10 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
         Exclude := Exclude join {pt[1] : pt in pt_list_rat};
-        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the incremental early-stop below keeps it cheap
-        // Fetch INCREMENTALLY: scan discriminants (smallest |d| first) only until we have enough --
-        // the demand MaxNum plus a margin of spare quadratic points for the hauptmodul sign-finding
-        // replacement loop in ValuesAtCMPoints. Easy bases hit this inside CNs[<=8] and never pay for
-        // CNs[16]; CM-starved bases reach into CNs[16] just far enough. Bounds the expensive
-        // per-discriminant ring-class-field field-of-definition to ~target real CM points.
-        fetch_target := MaxNum + 8;   // demand + a small margin of spare quadratic points; keep it low so
-                                      // the early-stop fires well before exhausting the (expensive) h=16 points
+        bd := Maximum(include_bd*2, 16); //reach CNs[16]; the scan computes degrees only, so it is cheap
+        // Stop once MaxNum points plus a margin of spares (for the sign-finding replacement loop in
+        // ValuesAtCMPoints) are found: every returned point costs Schofer values and fields downstream.
+        fetch_target := MaxNum + 8;
         // Follows the same default as CandidateDiscriminants above (filter OFF unless CMCOPRIME=1).
         // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
         // filtering even when the main gate had been relaxed -- a base could be admitted by one
@@ -1498,7 +1500,8 @@ end function;
 
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
-{Return possible fields of definition for CM point with CM by d on X.}
+{Return possible fields of definition for CM point with CM by d on X.
+DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check; slated for removal.}
     // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
@@ -1509,13 +1512,16 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
     D_R := &*[Integers()| p : p in PrimeDivisors(D) | KroneckerCharacter(d)(p) eq -1];
     N_R := &*[Integers()| p : p in PrimeDivisors(N) | KroneckerCharacter(d)(p) eq 1 or (f mod p eq 0)];   
     N_star_R := &*[Integers()| p : p in PrimeDivisors(N) | (KroneckerCharacter(d)(p) eq 1) and (f mod p ne 0)];
-    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
-    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     // Proposition 5.6 + correction (adding GCD(D,f) = 1)
+    // This test must come before the asserts below: when p | GCD(D, f), KroneckerCharacter(d)
+    // (primitive) gives chi(p) = -1, so p lands in D_R and the first assert fails.
     if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
         return [* *];
     end if;
+
+    assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
+    assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
     rec := ArtinMap(H_R);
 
@@ -1623,18 +1629,24 @@ intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 end intrinsic;
 
 intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
-{Faster variant of FieldsOfDefinitionOfCMPoint: returns the possible fields of
- definition of the CM point with CM by d on X, built via Magma's AbelianExtension
- inside the (smaller) Atkin-Lehner-fixed field A_abs rather than the full ring class
- field H_R + ArtinMap(H_R).  Returns the same set of fields (up to isomorphism) as
- FieldsOfDefinitionOfCMPoint.  See arXiv:math/0612732v2, Appendix.
- If MaxDegree > 0, callers that only want small-degree fields (e.g. the rational/quadratic
- CM-point fetch) can cap the work: the field-of-definition DEGREE is known cheaply from A_abs
- (it is Degree(A_abs) when complex conjugation is inactive on the quotient, else Degree(A_abs)/2,
- because every returned field is the fixed field of an order-2 reflection).  When that degree
- exceeds MaxDegree the point is not usable, so we return [* *] BEFORE the expensive
- complex-conjugation pinning (a Roots() over the degree-[A_abs] field that costs ~1min for the
- high-Picard-exponent CNs[16] discriminants) rather than pin a field the caller will discard.}
+{Fields of definition Q(P) of the CM points of discriminant d on the Atkin-Lehner
+ quotient X = X_0(D,N)/W, following [GR, Sec 5] (arXiv:math/0612732v2, Appendix).
+ Works inside A_abs, the subfield of the ring class field H_R fixed by the Galois
+ Atkin-Lehner subgroup of W (Lemma 5.9), of degree 2*h_R/#alSub_W.
+
+ Returns:
+   [* *]       X has no CM point by the order R of discriminant d: the Prop 5.6
+               congruence together with GCD(D, Conductor(R)) = 1 (e.g. d = -656 on
+               X_0(34,5)*).  DegreeOfFieldOfDefinitionOfCMPoint returns 0 here.
+   [* Aabs *]  complex conjugation is not active on the quotient.
+   otherwise   one field per valid class [a] in Pic(R)/Pic(R)^2: the fixed field of the
+               reflection c . sigma_a . sigma_w0, of degree Degree(A_abs)/2.  It need not
+               be totally real (d = -228 on X_0(38,1)/<w_38> gives Q(sqrt(-19)), as in
+               [GY]).  The list has length 1 for fundamental d ([GR] Rem 5.11).
+
+ MaxDegree > 0: return [* *] when the degree exceeds it, before building any field, so
+ [* *] then means "no point of degree <= MaxDegree".  For the degree alone use
+ DegreeOfFieldOfDefinitionOfCMPoint.}
     D := X`D;
     N := X`N;
     W := X`W;
@@ -1953,6 +1965,10 @@ function hauptmodul_sign_candidates(abs_schofer_tab, d, d_idx)
     flds := abs_schofer_tab`FldsOfDefn;
     cid := abs_schofer_tab`Xstar`CurveID;
 
+    // For non-fundamental d the list can hold several possible star fields, and the true one is not
+    // known.  Testing against one of them could keep a wrong minpoly, so return [] and let the caller
+    // swap the point for a spare (it errors if none is left).
+    if #flds[cid][d] ne 1 then return []; end if;
     K := flds[cid][d][1];                          // star field of definition: exactly where s(P) lives
     K_imaginary := not IsTotallyReal(K);
     norm_s := table[s_idx][d_idx];
