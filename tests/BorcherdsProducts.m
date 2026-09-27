@@ -123,8 +123,24 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                         * "acceptable curve(s) listed in cover_data. Entry 1 is the published "
                         * "curve; any further entries are accepted alternatives. Either the "
                         * "pipeline now builds a different curve, or this base produces a "
-                        * "legitimate second degree-2 model that is not yet listed.",
-                        D, N, Sort(SetToSequence(X`W)), base, #cex_list);
+                        * "legitimate second degree-2 model that is not yet listed.%o",
+                        D, N, Sort(SetToSequence(X`W)), base, #cex_list,
+                        // ⚠ ON A CRV PAIR, SWEEP base_label BEFORE CONCLUDING ANYTHING. The base
+                        // decides WHICH V_4 the pair presents, so the default can give a perfectly
+                        // valid pair that is simply not the published one. This found 5394 for
+                        // 14_3 and 8103 for 26_3 in seconds. Said HERE, in the failure itself,
+                        // because it was already written in tests/_basesweep.m's header and in the
+                        // project notes and was still missed on 2026-09-27 at 10_19 -- three
+                        // coordinate parametrisations were spent before the base was varied at all.
+                        (Type(C) ne CrvHyp)
+                          select "\n  ⚠ This is a CRV PAIR. Before concluding anything about the "
+                                 * "curve, SWEEP THE BASE: `magma -b Dd:=" cat IntegerToString(D)
+                                 cat " Nn:=" cat IntegerToString(N)
+                                 cat " tests/_basesweep.m < /dev/null`. base_label decides which "
+                                 * "V_4 the pair presents; the default can be a valid pair that is "
+                                 * "not the published one (14_3 needed 5394, 26_3 needed 8103). "
+                                 * "If the sweep is exhausted too, see 21_2 and 10_19."
+                          else "");
             if matched_at eq 1 then oracle_matched := true; end if;
             ws_def, ws_ex := IsDefined(ws_data, X`W);
             if not ws_def then continue; end if;
