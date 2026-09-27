@@ -1027,6 +1027,8 @@ intrinsic HHProposition1(~curves::SeqEnum)
         lut_D[X`D] := Append(lut_D[X`D], X`N);
     end for;
     for i->X in curves do
+        // CurveID is the index: lut_DN gives indices, so curves[other] and i lt other below mean it.
+        assert X`CurveID eq i;
         if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
             Ns := lut_D[X`D];
             // [HH] needs (N, p) = 1, i.e. p exactly divides pN, as in SpecialFiberIsomorphism.

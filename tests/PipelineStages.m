@@ -93,12 +93,26 @@ assert &and[s in wstar : s in check_only];
 // ... and run_pipeline.sh runs it through run_sequential_stage.m, whose case must also call the
 // Check intrinsic, not the stage's own (which would write its verdicts into the curves).
 rs := Read("run_sequential_stage.m");
+// Only code counts: /* */ and // comments are stripped first, and only what is left is tested.
+function StripBlockComments(t)
+    while Position(t, "/*") gt 0 do
+        a := Position(t, "/*");
+        b := Position(t[a+2..#t], "*/");
+        t := t[1..a-1] cat (b eq 0 select "" else t[a+b+3..#t]);
+    end while;
+    return t;
+end function;
 for s in check_only do
-    blk := rs[Position(rs, "when \"" cat s cat "\":")..#rs];
-    blk := blk[1..Position(blk[2..#blk], "when \"")];
-    calls := [l : l in Split(blk, "\n") | Regexp("[A-Za-z0-9_]+\\(~curves\\)", Uncommented(l))];
+    label := "when \"" cat s cat "\":";
+    assert Position(rs, label) gt 0;
+    blk := rs[Position(rs, label) + #label..#rs];          // the case body, less its label
+    blk := blk[1..Position(blk, "when \"") - 1];
+    code := [Uncommented(l) : l in Split(StripBlockComments(blk), "\n")];
+    calls := [l : l in code | Regexp("[A-Za-z0-9_]+ *\\( *~ *curves *\\)", l)];
     printf "  run_sequential_stage.m %o: %o\n", s, calls;
-    assert #calls eq 1 and Position(calls[1], "Check" cat s cat "(~curves);") gt 0;
+    assert #calls eq 1 and Regexp("^ *Check" cat s cat " *\\( *~ *curves *\\) *; *$", calls[1]);
+    // ... and no bare call of the stage itself anywhere in the body
+    assert not exists{l : l in code | Regexp("(^|[^A-Za-z0-9_])" cat s cat "([^A-Za-z0-9_]|$)", l)};
 end for;
 ra := Read("reconstruct_attribution.m");
 ra := ra[Position(ra, "star_stages := [")..Position(ra, "final := Load")];
