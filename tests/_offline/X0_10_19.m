@@ -1,22 +1,42 @@
 // ⚠ MOVED OUT OF CI 2026-09-06 -- IT WAS VERIFYING NOTHING THERE.
 //
-// This test passes LOCALLY with real comparisons, but in GitHub CI it made ZERO curve
-// comparisons: `AllEquationsAboveCovers` produced the expected `W={1}` key with NO BASES, so the
-// comparison loop never ran. It had been passing green on that basis, and cost 5016 s (84 min) per
-// run to do it. The vacuity guard added to `test_AllEquationsAboveCoversSingleCurve` on
-// 2026-09-06 is what exposed it.
+// In GitHub CI it made ZERO curve comparisons: `AllEquationsAboveCovers` produced the expected
+// `W={1}` key with NO BASES, so the comparison loop never ran. It had been passing green on that
+// basis, and cost 5016 s (84 min) per run to do it. The vacuity guard added to
+// `test_AllEquationsAboveCoversSingleCurve` on 2026-09-06 is what exposed it.
 //
-// ROOT CAUSE: **CI never sets `NORMALIZ_BIN`.** `CLAUDE.md` is explicit that without it a fresh
-// polytope solve fails SILENTLY -- "you get 'no solutions' rather than an error" -- so any cover
-// needing a solve beyond the committed cache simply comes back empty. Locally the variable is set
-// and the same cover is found.
+// ⚠⚠ THE ORIGINAL DIAGNOSIS WAS WRONG, AND SO WAS "IT PASSES LOCALLY". This header used to open
+// "This test passes LOCALLY with real comparisons" and blame CI's missing `NORMALIZ_BIN`:
+//     "CI never sets NORMALIZ_BIN ... a fresh polytope solve fails SILENTLY ... Locally the
+//      variable is set and the same cover is found."
+// REFUTED BY DIRECT MEASUREMENT, 2026-09-27. The 2026-09-07 tree (17f407c) was checked out into a
+// worktree and this test run against it LOCALLY, WITH `NORMALIZ_BIN` SET (3330 s). It failed:
+//     NO EVIDENCE -- the test made ZERO curve comparisons, so it verified nothing.
+//     Keys MATCHED but produced no bases, so there was nothing to compare against.
+// -- exactly the CI symptom. So `NORMALIZ_BIN` was never the cause here, and the cover was NOT
+// being found locally either.
+//
+// ⇒ THE ACTUAL ROOT CAUSE: the W={1} cover was NOT PRODUCIBLE BY ANY RUN until `EquationsByRebase`
+// landed on 2026-09-08 (3684b75). models_10_19.m's `[1]` key was EMPTY from its 2026-07-08
+// generation until e95cca4 (2026-09-09), whose message says the four empty keys
+// ({1},{1,2},{1,10},{1,190}) were "populated, unlocked by EquationsByRebase" -- and that stage
+// "adopts ONLY keys that were empty", so before it existed this key could not be filled at all.
+//
+// ⇒ SO THIS TEST HAS NEVER VERIFIED ITS CURVE, AND ITS RED STATUS IS NOT A REGRESSION. Timeline:
+// born 2025-12-15 in a commit saying outright "we can't yet find a curve"; switched to
+// `manual_isomorphism` three days later; vacuously GREEN until the vacuity guard (9653f12);
+// RED-because-vacuous until 2026-09-08; RED-because-the-matrix-is-not-a-map once the cover finally
+// became producible. **The pinned matrix has never once been exercised successfully** -- it was
+// written speculatively and nothing has ever checked it.
+// ⇒ DO NOT go looking for the commit that "broke" this. A comparison started running for the first
+// time and failed immediately. Same shape as the CI vacuity: the instrument, not the curve.
 //
 // ⚠ MEASURED, so the scope is known: every OTHER X0_* job in CI reports full coverage
 // (`X0_10_11` 1/1, `X0_26_1` 3/3, `X0_6_17` 1/1), so `10_19` is the only test affected. This is
 // not a general CI collapse.
 //
-// ⇒ THE REAL FIX is to install Normaliz in CI and set `NORMALIZ_BIN`, after which this file should
-// move back to `tests/`. Until then it lives here, where it runs meaningfully.
+// ⇒ Installing Normaliz in CI is still worth doing, but it will NOT make this file green and it is
+// no longer "the real fix" for this test -- the transport below is.
 //
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
@@ -77,6 +97,55 @@ procedure test_10_19()
     // (X_0^10(19) is not hyperelliptic over Q) is why it is not in the hyperelliptic tables at all.
     // Same shape as the GuoYangTable1 find: ask of every source what else it publishes that we do
     // not read.
+    //
+    // ✅✅ THE TRANSCRIPTION IS VERIFIED -- THERE IS NO TYPO HERE.  Checked 2026-09-27 against the
+    // JOURNAL PDF itself (Compositio 153 (2017), Example 37, printed page 28), verbatim: both
+    // equations, all four coefficients of each, the three involutions
+    //     w_2 (x,y,z) = (-x, y, z)   w_5 (x,y,z) = (x,-y,-z)   w_19(x,y,z) = (-x,-y, z)
+    // and the normalisation s(tau_-8) = 0, s(tau_-40) = infinity, s(tau_-3) = 1.  ⇒ DO NOT spend
+    // time hunting a transcription error to explain this file's RED status; the expected curve is
+    // right and the failure is purely one of PRESENTATION (see the structural analysis below).
+    //
+    // Corroborated independently of the PDF, so the check does not rest on one reading:
+    //   * y^2 = -8s^3+57s^2-40s+16 IS Cremona 190a1, conductor 190 = D*N -- and Guo-Yang assert
+    //     E190A1 themselves, so their equation is confirmed too, not merely our copy of it.
+    //   * the conic z^2 = 5x^2-32 is POINTLESS over Q and its quaternion algebra ramifies at
+    //     exactly {2,5} = the primes dividing D = 10.  (Remark 38 is precisely this point.)
+    //   * the pair has genus 5 = GenusShimuraCurve(10,19).
+    //   * tests/GuoYangQuotients_10_19.m derives 15 quotients from these same two polynomials and
+    //     matches them against the pipeline: green, 0.28 s, 0 keys empty.  A coefficient slip would
+    //     break that oracle.
+    // ✅✅ AND THE w_m LABELS ARE VERIFIED TOO (2026-09-27) -- UNLIKE 39_2, THIS BASE CAN BE
+    // ARBITRATED.  The reason is that Example 37 states its CM DISCRIMINANTS in prose, which is
+    // exactly the information a bare Table A.1 row withholds; that is why 39_2 needed CM values
+    // computed from scratch and this one does not.  NumFixedPointsByCMOrder(10,19,m) -- class
+    // numbers and Ogg's local embedding numbers, no Guo-Yang input at all -- gives
+    //     w_2  : 4 fixed pts, ALL of disc  -8        w_5, w_19, w_95 : NO fixed points
+    //     w_10 : 4 fixed pts, ALL of disc -40
+    //     w_38 : 12 fixed pts, ALL of disc -152
+    //     w_190: 4 fixed pts, ALL of disc -760
+    // The discriminant is -4m and is INJECTIVE here, so it identifies the involution.  Checking
+    // their two ramification statements against it:
+    //   * "X/<w_5,w_38> -> X/W_{10,19} is ramified at the CM point of disc -8 and the CM point of
+    //     disc -40".  That cover is quotient by the coset w_2*{1,5,38,190} = {w_2,w_10,w_19,w_95},
+    //     whose fixed points are exactly w_2 (-8) and w_10 (-40); w_19 and w_95 have none. ✓
+    //     ⚠ Note w_190 is NOT in that coset (w_2*w_190 = w_95, not the other way round) -- and that
+    //     is load-bearing: w_190 HAS 4 fixed points, so if it were in the coset their claim would
+    //     be false.  Getting this composition backwards is the easy mistake here.
+    //   * "X/w_38 -> X/<w_5,w_38> is ramified at THE TWO CM points of disc -760".  That cover is
+    //     quotient by the coset {w_5, w_190}: w_5 has none, w_190 has 4 on X, which become 2 on
+    //     X/w_38. ✓ Both the discriminant AND the count.
+    //   * their normalisation s(tau_-8) = 0, s(tau_-40) = infinity puts the Hauptmodul's zero and
+    //     pole precisely at those two branch points. ✓
+    // ⇒ So the labels are pinned by the ONE instrument that can pin them.  Corroborating, and
+    // showing the existing oracle is not vacuous: all seven Ogg-predicted quotient genera equal the
+    // genus of the curve Guo-Yang's own matrices produce, and within each genus class the quotients
+    // are pairwise NON-ISOMORPHIC ({w_190,w_2,w_10} at genus 2, {w_5,w_19,w_95} at genus 3).  Genus
+    // alone cannot separate those triples -- the curves can -- so GuoYangQuotients_10_19.m's 15
+    // comparisons WOULD have caught a swap.  Internally too: ws_data[38] below is w_2*w_19, and the
+    // composite w_190 = (x,y,-z) leaves y^2 = f(x) of genus 2, the equation they print for X/w_190.
+    // ⚠ One slip in THEIR text, harmless and already read correctly here: they print "s(tau_760)"
+    // where the argument requires discriminant -760 ("the two CM points of discriminant -760").
     //
     // ⇒ SO THE FIX IS A TRANSPORT, not a re-pin: carry the published presentation onto the
     // pipeline's current one and record the resulting matrix, exactly as tests/_gyinvol.m does for
