@@ -16,12 +16,26 @@ function Load(name)
     return eval Read(Sprintf("data/curves_after_%o.dat", name));
 end function;
 
+// Stages added after the last full run have no file until the rerun; they are skipped.
+function Exists(name)
+    try
+        _ := Open(Sprintf("data/curves_after_%o.dat", name), "r");
+        return true;
+    catch e
+        return false;
+    end try;
+end function;
+
+// Both lists together must equal FILTER_STAGES in workingcode.m less UpdateGenera and the
+// check-only HHProposition1, which decides nothing (asserted by tests/PipelineStages.m).
 // Star stages run first (on X_0^*(D,N) only); matched to the full list by (D,N,W).
 star_stages := [
  "UpdateByGenusStar",
  "FilterByTraceStar",
- "HHProposition1",
+ "FilterByTwistedTraceStar",
  "SpecialFiberIsomorphismStar",
+ "FilterByWeilPolynomialStar",
+ "FilterByTwistedWeilPolynomialStar",
  "FilterStarCurvesByFpAutomorphisms",
  "FilterByNonALInvolutionsStar"
 ];
@@ -29,6 +43,7 @@ star_stages := [
 full_stages := [
  "UpdateByGenus",
  "UpdateCurves1",
+ "FilterBySpecialFiber",
  "FilterByALFixedPointsOnQuotient",
  "UpdateCurves2",
  "Genus3CoversGenus2",
@@ -36,11 +51,18 @@ full_stages := [
  "FilterByDegeneracyMorphism",
  "UpdateCurves4",
  "FilterByComplicatedALFixedPointsOnQuotient",
+ "FilterByGeneralizedComplicatedFixedPoints",
  "UpdateCurves5",
+ "FilterByAutomorphismGroup",
+ "UpdateCurvesAfterAutomorphismGroup",
  "FilterByTrace",
  "UpdateCurves6",
+ "FilterByTwistedTrace",
+ "UpdateCurvesAfterTwistedTrace",
  "FilterByWeilPolynomial",
  "UpdateCurves7",
+ "FilterByTwistedWeilPolynomial",
+ "UpdateCurvesAfterTwistedWeilPolynomial",
  "FilterByNonALInvolutions",
  "UpdateCurves8"
 ];
@@ -69,6 +91,7 @@ procedure consider(~attrib, ~firstStage, idx, X, stagename)
 end procedure;
 
 for s in star_stages do
+    if not Exists(s) then printf "skipping %o (not run yet)\n", s; continue; end if;
     cs := Load(s);
     for X in cs do
         key := <X`D, X`N, X`W>;
@@ -79,6 +102,7 @@ for s in star_stages do
 end for;
 
 for s in full_stages do
+    if not Exists(s) then printf "skipping %o (not run yet)\n", s; continue; end if;
     cs := Load(s);
     assert #cs eq n;
     for i in [1..n] do

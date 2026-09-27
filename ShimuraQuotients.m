@@ -1003,11 +1003,22 @@ end intrinsic;
 // Apply the observation from [HH96] Proposition 1,
 // that if X_0^*(D, pN) and X_0^*(D, N) have the same genus,
 // they will be isomorphic in characteristic p
+// The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
+// list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
+// source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, and SFI's
+// conditions are HH's without the equal-genus requirement.  So every curve marked here is ruled
+// out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
+// including a curve whose source was itself marked earlier in this loop, by induction along the
+// list order (sources precede targets, asserted): SFI walks the list in index order and reads
+// each source's verdict as it goes.  The asserts below check that this identification holds.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
+        // Star-list precondition: gcd(D, N) = 1 and W is the full Hall-divisor set of D*N.
+        assert GCD(X`D, X`N) eq 1;
+        assert X`W eq {d : d in Divisors(X`D*X`N) | GCD(d, (X`D*X`N) div d) eq 1};
         lut_DN[<X`D, X`N>] := X`CurveID;
         if not IsDefined(lut_D, X`D) then
             lut_D[X`D] := [];
@@ -1015,14 +1026,23 @@ intrinsic HHProposition1(~curves::SeqEnum)
         lut_D[X`D] := Append(lut_D[X`D], X`N);
     end for;
     for i->X in curves do
+        // CurveID is the index: lut_DN gives indices, so curves[other] and i lt other below mean it.
+        assert X`CurveID eq i;
         if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
             Ns := lut_D[X`D];
+            // [HH] needs (N, p) = 1, i.e. p exactly divides pN, as in SpecialFiberIsomorphism.
             ps := [N div X`N : N in Ns | (N mod X`N eq 0) and
-                        IsPrime(N div X`N)];
+                        IsPrime(N div X`N) and (X`N mod (N div X`N) ne 0)];
             for p in ps do
                 if IsDefined(lut_DN, <X`D, p*X`N>) then
                     other := lut_DN[<X`D, p*X`N>];
                     if (X`g eq curves[other]`g) and (not assigned curves[other]`IsSubhyp) then
+                        // SpecialFiberIsomorphism would find the same source X at this prime.
+                        assert p in curves[other]`W;
+                        assert X`W eq {w : w in curves[other]`W | w mod p ne 0};
+                        // The source precedes its target in the list (CurveID is the index), so
+                        // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
+                        assert i lt other;
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);

@@ -37,10 +37,11 @@ case stage:
         UpdateByGenus(~curves);
 
     when "HHProposition1":
-        // Verify FilterByTraceStar output before running HHProposition1
-        VerifyHHTable2(curves);
+        // Check only: VerifyHHTable2 on the FilterByTraceStar output, HHProposition1 on a copy,
+        // VerifyHHProposition1 on its output; the input curves are written out unchanged.
+        CheckHHProposition1(~curves);
         printf "VerifyHHTable2 passed\n";
-        HHProposition1(~curves);
+        printf "VerifyHHProposition1 passed\n";
 
     when "SpecialFiberIsomorphismStar":
         SpecialFiberIsomorphism(~curves);
@@ -59,7 +60,9 @@ case stage:
         UpdateCurves(~curves);
 
     when "UpdateCurves1", "UpdateCurves2", "UpdateCurves3", "UpdateCurves4",
-         "UpdateCurves6", "UpdateCurves7", "UpdateCurves8":
+         "UpdateCurves6", "UpdateCurves7", "UpdateCurves8",
+         "UpdateCurvesAfterAutomorphismGroup", "UpdateCurvesAfterTwistedTrace",
+         "UpdateCurvesAfterTwistedWeilPolynomial":
         UpdateCurves(~curves);
 
     when "Genus3CoversGenus2":
@@ -76,9 +79,6 @@ case stage:
     when "UpdateGenera":
         VerifyHHTable1(curves);
         printf "VerifyHHTable1 passed\n";
-    when "HHProposition1":
-        VerifyHHProposition1(curves);
-        printf "VerifyHHProposition1 passed\n";
     when "GetQuotientsAndGenera_UpdateByGenus":
         VerifyFHTheorem3(curves);
         printf "VerifyFHTheorem3 passed\n";
