@@ -1005,13 +1005,12 @@ end intrinsic;
 // they will be isomorphic in characteristic p
 // The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
 // list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
-// source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, so every
-// curve marked here is marked by SpecialFiberIsomorphismStar (the stages in between only rule
-// curves out), including a curve whose source was itself marked earlier in this loop, by
-// induction along the list order (sources precede targets, asserted): SpecialFiberIsomorphism
-// walks the list in index order and reads each source's verdict as it goes, so it has decided
-// the source by the time it reaches the target.  The asserts below check that this
-// identification holds.
+// source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, and SFI's
+// conditions are HH's without the equal-genus requirement.  So every curve marked here is ruled
+// out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
+// including a curve whose source was itself marked earlier in this loop, by induction along the
+// list order (sources precede targets, asserted): SFI walks the list in index order and reads
+// each source's verdict as it goes.  The asserts below check that this identification holds.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     lut_D := AssociativeArray();
