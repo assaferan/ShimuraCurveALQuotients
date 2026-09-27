@@ -1320,7 +1320,8 @@ the filter off, 24). Three blocked bases examined, three whose recorded diagnosi
 `CMNONCOPRIME=1` is the lever that works and it has **no theoretical guarantee**: the
 `p | gcd(d,N)` local factor has NO live implementation (`kappaminuszero`, `SchoferFormula.m:569`,
 is dead code and does not even cover that case — it loops over `PrimeDivisors(N div GCD(d,N))`,
-the coprime part), and at `26_3` two non-coprime discriminants give provably wrong values. So its
+the coprime part), and at `26_3` two non-coprime discriminants were thought to give wrong values
+(they appear to be right; see the correction below). So its
 output has only ever been trusted where Guo-Yang publishes an equation to check against.
 **That does not scale**: 47 of our models are beyond Guo-Yang's list, and any new base has no
 published answer.
@@ -1338,6 +1339,14 @@ what they should be:
     -267    8/25     17/25     ours = 1 - correct   (s and s~ exchanged)
     -708    11/49    38/49     ours = 1 - correct
     other 12 discs: correct
+
+⚠⚠ **CORRECTED 2026-09-26: the table above is wrong; our values at `-267`, `-708` appear to be
+right and Guo-Yang arXiv v1 Table 49 appears to have a sign misprint there.** Its "correct" column
+is `phi(printed)` with `phi(w) = (1-w)/2`, from the printed `-9/25`, `-27/49`. The sign-flipped
+`9/25`, `27/49` map to exactly our `8/25`, `11/49`. Shimura reciprocity on Guo-Yang's own equations
+rejects the printed values and accepts the flipped ones (`tests/CMPoints.m`, `(26,3)` block). The
+journal version (Compositio 153, 2017) has no CM-value tables, so no published table arbitrates.
+The "defect" investigation below was chasing a misprint.
 
 ### What is already ruled out — do not re-derive these
 
@@ -2019,6 +2028,9 @@ Tu's Lemmas 18-20 give, for `X_0^26(3)`, data that is independent of Guo-Yang AN
   `t_1 = oo` at `-312`, `0` at `-24`, `-1/8` at `-8`, and the roots of
   `f_1(z) = -2197z^3/3 - 362z^2 - 55z - 8/3` at `-104`.
 
+*(2026-09-26: the premise of this section is superseded — the "swap" is a sign misprint in
+Guo-Yang v1, not an error in our values; see the correction under "Why this is tractable now".)*
+
 **Why this matters.** `26_3`'s failure is the `s <-> s~` SWAP: at discriminants `-267` and `-708`
 Guo-Yang's `s` sits in our `s~` row, and the relation `s + s~ = 1` used to pin the pair is
 SYMMETRIC, so it cannot resolve the ordering (see the memory entry). Tu's Hauptmodul is normalised
@@ -2358,7 +2370,9 @@ that reads the artifact instead of regenerating it.
   ⚠ Note the earlier diagnosis was made from `/proc` because the logs were empty: `BorcherdsForms`
   reports each `m` at `vprintf` LEVEL 2 while `genmodels.m` defaults to `verb := 1`, and even at
   `VERB:=2` those go to buffered stdout and are lost on a kill. `BFPROGRESS` uses `WriteStderr`.
-* `26_3` — **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
+* `26_3` — *(2026-09-26: superseded — our values at `-267`, `-708` appear to be right and
+  Guo-Yang v1 Table 49 to have a sign misprint; see the correction under "Why this is tractable
+  now".)* **the anomaly is EXPLAINED as of 2026-09-05: an `s` <-> `s~` SWAP.** At discs `-267`
   and `-708` Guo-Yang's `s` sits in **our `s~` row** (`sIndex = 7` is `s`, row 9 is `s~`); the
   other 12 of 14 discs are correct. `s + s~ = 1` holds at EVERY disc (`8/25 + 17/25`,
   `11/49 + 38/49`, ...), and the exact `z -> z/(z-1)` is simply how an `s -> 1-s` swap looks after
