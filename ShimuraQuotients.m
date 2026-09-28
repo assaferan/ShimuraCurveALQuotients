@@ -1003,11 +1003,22 @@ end intrinsic;
 // Apply the observation from [HH96] Proposition 1,
 // that if X_0^*(D, pN) and X_0^*(D, N) have the same genus,
 // they will be isomorphic in characteristic p
+// The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
+// list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
+// source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, and SFI's
+// conditions are HH's without the equal-genus requirement.  So every curve marked here is ruled
+// out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
+// including a curve whose source was itself marked earlier in this loop, by induction along the
+// list order (sources precede targets, asserted): SFI walks the list in index order and reads
+// each source's verdict as it goes.  The asserts below check that this identification holds.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
+        // Star-list precondition: gcd(D, N) = 1 and W is the full Hall-divisor set of D*N.
+        assert GCD(X`D, X`N) eq 1;
+        assert X`W eq {d : d in Divisors(X`D*X`N) | GCD(d, (X`D*X`N) div d) eq 1};
         lut_DN[<X`D, X`N>] := X`CurveID;
         if not IsDefined(lut_D, X`D) then
             lut_D[X`D] := [];
@@ -1015,6 +1026,8 @@ intrinsic HHProposition1(~curves::SeqEnum)
         lut_D[X`D] := Append(lut_D[X`D], X`N);
     end for;
     for i->X in curves do
+        // CurveID is the index: lut_DN gives indices, so curves[other] and i lt other below mean it.
+        assert X`CurveID eq i;
         if (assigned X`IsSubhyp) and (not X`IsSubhyp) then
             Ns := lut_D[X`D];
             // [HH] needs (N, p) = 1, i.e. p exactly divides pN, as in SpecialFiberIsomorphism.
@@ -1024,6 +1037,12 @@ intrinsic HHProposition1(~curves::SeqEnum)
                 if IsDefined(lut_DN, <X`D, p*X`N>) then
                     other := lut_DN[<X`D, p*X`N>];
                     if (X`g eq curves[other]`g) and (not assigned curves[other]`IsSubhyp) then
+                        // SpecialFiberIsomorphism would find the same source X at this prime.
+                        assert p in curves[other]`W;
+                        assert X`W eq {w : w in curves[other]`W | w mod p ne 0};
+                        // The source precedes its target in the list (CurveID is the index), so
+                        // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
+                        assert i lt other;
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);
@@ -1424,12 +1443,10 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
  anchors. Listing those in Keep admits exactly them without relaxing the filter globally.
  INCREMENTAL FETCH: if target > 0, stop scanning discriminants once (#rational + #quadratic) CM
  points reach target. Since candidate discriminants are scanned smallest-|d| first, this returns the
- "nicest" points and -- crucially -- bounds the expensive per-discriminant field-of-definition
- (ring class field) computation to ~target real CM points instead of the whole class-number table.
- Easy bases finish inside CNs[<=8] and never pay for CNs[16]; starved bases reach into it only as far
- as needed. target = 0 means no early stop (scan everything, as before).}
+ "nicest" points. Each candidate costs one DegreeOfFieldOfDefinitionOfCMPoint call (the whole
+ bd = 16 table takes about 1 s), so target bounds the caller's per-point work (Schofer values,
+ fields of definition), not the scan. target = 0 means no early stop.}
     vprintf ShimuraQuotients, 2: "\n\tComputing CM points up to class number %o...", bd;
-    require X`W eq Set(Divisors(X`N*X`D)) : "Rational points only works for star quotients";
     rat_pts := [];
     // we prefer to get an elliptic point if we know it is defined over Q.
     vprintf ShimuraQuotients, 2: "\n\tcounting elliptic points by CM order...";
@@ -1438,10 +1455,13 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     vprintf ShimuraQuotients, 2: " done (%os).", Realtime() - tt;
     for q in Keys(ell) do
         for d in Keys(ell[q]) do
-            if d in [-3,-4] then 
+            // The conditions below give rationality on the star quotient only; on a
+            // proper subquotient the d = -3, -4 elliptic points can have degree 2.
+            if DegreeOfFieldOfDefinitionOfCMPoint(X, d) ne 1 then continue; end if;
+            if d in [-3,-4] then
                 is_split := &and [KroneckerCharacter(d)(p) ne 1 : p in PrimeDivisors(X`D)];
                 if is_split and d notin Exclude then
-                    Append(~rat_pts, <d,q,ell[q][d]>); 
+                    Append(~rat_pts, <d,q,ell[q][d]>);
                 end if;
             else
                 if ell[q][d] eq 1 and d notin Exclude then
@@ -1472,7 +1492,7 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     quad_pts := [];
     D := X`D;
     N := X`N;
-    vprintf ShimuraQuotients, 2: "\n\tchecking fields of definition for %o candidate discriminant(s)...\n", #allCN;
+    vprintf ShimuraQuotients, 2: "\n\tcomputing degrees of fields of definition for %o candidate discriminant(s)...\n", #allCN;
     tt := Realtime();
     // for accurate incremental counting, apply the coprime-to-N filter to the elliptic points now
     // (they are appended before the loop); the loop below only appends already-coprime points.
@@ -1481,28 +1501,25 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     end if;
     for ctr->d in allCN do
         // INCREMENTAL FETCH: stop once we have enough CM points (candidates are smallest-|d| first,
-        // so this keeps the nicest ones and avoids the expensive field-of-def on the rest).
+        // so this keeps the nicest ones).
         if (target gt 0) and (#rat_pts + #quad_pts ge target) then break; end if;
         vprintf ShimuraQuotients, 3: "\t  discriminant %o/%o (d = %o)...\n", ctr, #allCN, d;
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
         if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
-        // FieldsOfDefinitionOfCMPointFast pins the complex conjugation (matching the complex-conjugate
-        // root, GR Lemma CC), so it returns a SINGLE field even when Pic(R) has exponent > 2 -- the
-        // plain #flds = 1 test below then accepts the deg-2 multi-orbit discs the slow routine used to
-        // over-split.  It is also faster (no AutomorphismGroup blowup).
-        // MaxDegree := 2: this loop only keeps rational (deg 1) or quadratic (deg 2) CM points, so
-        // cap the field-of-definition work -- discriminants whose field of definition has degree > 2
-        // are discarded anyway, and the cap skips their (expensive) complex-conjugation pinning.
-        flds := FieldsOfDefinitionOfCMPointFast(X, d : MaxDegree := 2);
-        if flds eq [* Rationals() *] and d notin Exclude then
+        // Degree 0 means X carries no CM point by this order.  A degree-2 point is kept even when
+        // its quadratic field is not determined (possible for non-fundamental d, where
+        // FieldsOfDefinitionOfCMPointFast returns several fields): it is still a quadratic point.
+        // A caller that needs the field must check that it is unique (hauptmodul_sign_candidates does).
+        deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
+        if deg eq 1 and d notin Exclude then
             Append(~rat_pts, <d,1,1>);
-        elif #flds eq 1 and Degree(flds[1]) eq 2 and d notin Exclude then
+        elif deg eq 2 and d notin Exclude then
             Append(~quad_pts, <d,1,2>);
         end if;
 
     end for;
-    vprintf ShimuraQuotients, 2: "\tdone checking fields of definition (%os).\n", Realtime() - tt;
+    vprintf ShimuraQuotients, 2: "\tdone computing degrees of fields of definition (%os).\n", Realtime() - tt;
     vprintf ShimuraQuotients, 2: "Done!\n";
 
     if not coprime_to_level then

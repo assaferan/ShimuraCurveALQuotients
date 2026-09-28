@@ -12,20 +12,21 @@
 //     permutation of keys is a labelling problem and a match with nothing is a derivation problem;
 //   * derived-with-no-expected -- the coverage this would ADD if the values were installed.
 //
-// MEASURED 2026-09-24 over all 50 bases:  75 matched | 4 mismatched | 112 new | 0 failed |
+// MEASURED 2026-09-26 over all 50 bases:  79 matched | 0 mismatched | 112 new | 0 failed |
 // 9 skipped for a non-hyperelliptic (CRV) top.  The 112 is the one-step coverage gain.
 //
-// ⚠⚠ ALL FOUR MISMATCHES ARE AT 39_2 AND FORM ONE TRANSPOSITION:
-//        w_2  -> key {1,26}      w_26 -> key {1,2}
-//        w_6  -> key {1,78}      w_78 -> key {1,6}
-//    while w_3 -> {1,3} and w_13 -> {1,13} agree.  Over F_2 with basis (2,3,13) the discrepancy
-//    fixes 3 and 13 and sends 2 -> 26 = 2*13, i.e. exactly w_2 <-> w_26.  Same SHAPE as the
-//    settled w_10 <-> w_13 swap at 10_13.  UNRESOLVED as of 2026-09-24: either the ws_data labels
-//    in tests/_offline/X0_39_2.m are wrong or the pipeline's cover-key labelling is.  The arbiter
-//    is Ogg's -- the fixed points of w_m are the CM points of discriminant -4m.
-//    ⚠ {1,2} and {1,26} are NON-isomorphic over Q yet share point counts at ten primes, so a
-//    point-count check reads as agreement and a quadratic-twist scan finds nothing.  Only
-//    IsIsomorphic separates them.
+// ✅ 39_2 IS RESOLVED and no longer appears here.  It used to contribute all four mismatches, as
+// the transposition w_2 <-> w_26 (hence w_6 <-> w_78).  It turned out to be a FOURTH published
+// Guo-Yang error -- the journal's involution cell for X_0^39(2) mislabels them -- and the fix was
+// a one-line relabel in tests/_offline/X0_39_2.m, which that file documents in full.  The
+// discriminator was the CM VALUES: genus, Ogg's fixed-point counts and the CM fields are all blind
+// to a relabelling that is a group automorphism.
+//
+// ⚠ THE 2026-09-24 RUN OF THIS TOOL OVERSTATED ITS EVIDENCE, and the counts above are the honest
+// ones.  QuotientMatches used to decide the genus-0 case by DEGREES, so P^1 compared equal to a
+// POINTLESS conic; 18 of the matched rows -- every w_{DN} row -- went through that branch and were
+// no evidence at all against a quadratic twist.  Fixed 2026-09-26 to decide by Brauer class; all
+// 18 still match, so the conclusions stand, but they are only now actually tested.
 //
 // ⚠ A CRV top is skipped, not failed: the recipe is written for y^2 = f(x).  Those nine bases
 // (10_13 10_19 14_3 21_2 26_3 57_1 6_17 82_1 93_1) are the gap between a 76% and a 69% ceiling.
@@ -86,9 +87,22 @@ for base in Split(bases, ",") do
         end if;
         key := {1, m};
         if not IsDefined(cover_data, key) then nNew +:= 1; continue; end if;
-        Ck := cover_data[key][1];
-        if Type(Ck) ne CrvHyp then continue; end if;
-        same, why2 := QuotientMatches(Fq, Ck);
+        // A key may list SEVERAL acceptable curves, and they are not always isomorphic to one
+        // another -- measured: at 6_5 and 6_13 the two entries at key {1} give IsIsomorphic=false.
+        // So try EVERY candidate; picking candidate 1 would report a derived quotient that matches
+        // candidate 2 as a mismatch, and then diagnose it as "matches NO committed key" -- a
+        // wrong-object verdict in a tool whose whole output is a coverage count.
+        // ⚠ No such multi-candidate COVER key exists today (the only List entries are at {1},
+        // which this loop never looks up), so this is defensive, not a fix for an observed skip.
+        cands := cover_data[key][1];
+        if Type(cands) ne List then cands := [* cands *]; end if;
+        cands := [* C : C in cands | Type(C) eq CrvHyp *];
+        if #cands eq 0 then continue; end if;
+        same := false; why2 := "";
+        for C in cands do
+            same, why2 := QuotientMatches(Fq, C);
+            if same then break; end if;
+        end for;
         if same then nMatch +:= 1; continue; end if;
         nMis +:= 1;
         // WHICH OBJECT is it, then?  A derived curve matching a DIFFERENT key is a labelling
@@ -96,10 +110,13 @@ for base in Split(bases, ",") do
         hit := "";
         for k in Keys(cover_data) do
             if k eq key then continue; end if;
-            Cj := cover_data[k][1];
-            if Type(Cj) ne CrvHyp then continue; end if;
-            h, _ := QuotientMatches(Fq, Cj);
-            if h then hit cat:= Sprintf(" %o", Sort([Integers()|q : q in k])); end if;
+            cj := cover_data[k][1];
+            if Type(cj) ne List then cj := [* cj *]; end if;
+            for Cj in cj do
+                if Type(Cj) ne CrvHyp then continue; end if;
+                h, _ := QuotientMatches(Fq, Cj);
+                if h then hit cat:= Sprintf(" %o", Sort([Integers()|q : q in k])); break; end if;
+            end for;
         end for;
         printf "    w_%-5o MISMATCH at key %o  [%o]%o\n", m,
                Sort([Integers()|q : q in key]), why2,

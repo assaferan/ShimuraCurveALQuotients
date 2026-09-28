@@ -83,7 +83,7 @@ end function;
 //    S_mu^-1 is the action of [mu,-1,0,mu] (= mu^2 S_mu^-1, and scalars act trivially in weight 2),
 //    so nothing is inverted; these are applied to the few rows of K only (twCurveData).
 //  * T_p is not computed here at all: twCurveData gets it on K from d = dim K Manin symbols.
-function twLevelData(D, N, ps)
+function twLevelData(D, N)
     L := D*N;
     MDN := ModularSymbols(L, 2, 0);
     SDN := CuspidalSubspace(MDN);
@@ -100,8 +100,10 @@ function twLevelData(D, N, ps)
         ALPhi[q] := Phi * Transpose(Matrix([A[i] : i in pivPhi]));           // A^T on Phi
     end for;
     Vamb := AssociativeArray();
+    // Only where twCurveData can use them: S2 needs 4 | N (and V2 8 | N), V3 needs v_3(N) = 2.
     for mu in [2, 3] do
-        if N mod mu^2 ne 0 then continue; end if;
+        if (mu eq 2) and (N mod 4 ne 0) then continue; end if;
+        if (mu eq 3) and (Valuation(N, 3) ne 2) then continue; end if;
         Vamb[mu] := <ActionOnModularSymbolsBasis([mu,1,0,mu], MDN), AtkinLehnerOperator(MDN, mu^Valuation(N, mu)),
                      ActionOnModularSymbolsBasis([mu,-1,0,mu], MDN)>;
     end for;
@@ -176,7 +178,8 @@ function twCurveData(X, LD, ps)
         Tk[p] := MK!(C * P0i * (ET * PhiKT) * Ci);
     end for;
     // The same safety net as before (T_p preserves K), now also checking the trick: at the smallest
-    // p, where the ambient T_p is cheapest, compare with the ambient operator.
+    // p, where the ambient T_p is cheapest, compare with the ambient operator.  One prime by design:
+    // checking every p would bring back the ambient T_p work that the trick exists to avoid.
     if #ps gt 0 then
         ok, S := IsConsistent(BK, BK * HeckeOperator(MDN, ps[1]));
         assert ok and MK!S eq Tk[ps[1]];
@@ -316,7 +319,7 @@ intrinsic CheckTwistedTrace(X::ShimuraQuot) -> BoolElt, MonStgElt, RngIntElt, Rn
 p good, have Tr((T_(p^v) - p T_(p^(v-2))) o h) < -(q+1), proving X non-hyperelliptic; then also
 returns the name of h, p, v and the trace.  Returns true otherwise.}
     assert X`g ge 2;
-    LD := twLevelData(X`D, X`N, twTracePrimes(X`g, X`D*X`N));
+    LD := twLevelData(X`D, X`N);
     ok, h, p, v, tr := twTraceCheck(X, LD);
     if ok then return true, _, _, _, _; end if;
     return false, h, p, v, tr;
@@ -327,7 +330,7 @@ intrinsic CheckTwistedWeilPolynomial(X::ShimuraQuot) -> BoolElt, MonStgElt, RngI
 the twisted Weil polynomial P_(X_h) is not the Weil polynomial of a hyperelliptic curve over F_p,
 proving X non-hyperelliptic; then also returns the name of h and p.  Returns true otherwise.}
     if #twWeilPrimes(X`g, X`D*X`N) eq 0 then return true, _, _; end if;
-    LD := twLevelData(X`D, X`N, twWeilPrimes(X`g, X`D*X`N));
+    LD := twLevelData(X`D, X`N);
     ok, h, p := twWeilCheck(X, LD, twLoadTables({X`g}));
     if ok then return true, _, _; end if;
     return false, h, p;
@@ -338,7 +341,7 @@ intrinsic TwistedWeilPolynomials(X::ShimuraQuot, p::RngIntElt) -> SeqEnum
 followed by the admissible involutions h != 1 of X defined over Q.  At h = 1 this is the Weil
 polynomial of X.}
     require (X`D*X`N) mod p ne 0 : "p must be a good prime";
-    LD := twLevelData(X`D, X`N, [p]);
+    LD := twLevelData(X`D, X`N);
     Tk, ops, IK := twCurveData(X, LD, [p]);
     return [<"1", twWeilPolynomial(Tk[p], IK, IK, p, X`g)>] cat
            [<o[1], twWeilPolynomial(Tk[p], o[2], IK, p, X`g)> : o in ops];
@@ -369,8 +372,7 @@ The modular symbols are computed once per level.}
     for j->key in keys do
         vprintf ShimuraQuotients, 1: "twisted trace: level %o/%o, (D,N) = %o, %o curves\n", j, #keys, key, #levels[key];
         idx := levels[key];
-        ps := twTracePrimes(Max([curves[i]`g : i in idx]), key[1]*key[2]);
-        LD := twLevelData(key[1], key[2], ps);
+        LD := twLevelData(key[1], key[2]);
         for i in idx do
             ok, h, p, v, tr := twTraceCheck(curves[i], LD);
             if not ok then
@@ -392,8 +394,7 @@ tables (see CheckTwistedWeilPolynomial).  The modular symbols are computed once 
     for j->key in keys do
         vprintf ShimuraQuotients, 1: "twisted Weil: level %o/%o, (D,N) = %o, %o curves\n", j, #keys, key, #levels[key];
         idx := levels[key];
-        ps := &join[Seqset(twWeilPrimes(curves[i]`g, key[1]*key[2])) : i in idx];
-        LD := twLevelData(key[1], key[2], Sort(SetToSequence(ps)));
+        LD := twLevelData(key[1], key[2]);
         for i in idx do
             ok, h, p := twWeilCheck(curves[i], LD, TAB);
             if not ok then

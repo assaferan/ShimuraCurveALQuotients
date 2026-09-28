@@ -25,6 +25,9 @@
 // FilterByTwistedWeilPolynomial (and their *Star versions) compute the modular symbols of level D*N once per level and
 // share them between the curves at that level, so for them the unit of work is a LEVEL: all
 // curves with the same (D,N) go to the same chunk (see the assignment below).
+//
+// The non-star stages that have a *Star version skip the star curves once that version has run
+// (see star_of below): it already ran the same function on them.
 
 // Convert integer args from the raw strings Magma receives on the command line
 chunk_i        := StringToInteger(chunk);
@@ -43,12 +46,37 @@ try
 curves := eval Read(input_dat);
 n := #curves;
 
+// A non-star stage calls the same function as its star version, and a star curve's (D,N,W,g) do
+// not change between the two, so re-running it on a star curve the star version left undecided
+// repeats that computation and returns the same answer.  Skip those curves, but only when the star
+// version has run in this data dir: its output curves_after_<stage>Star.dat sits next to
+// input_dat, and the curve's level (D,N) is in it.
+star_of := AssociativeArray();
+star_of["FilterByTrace"]                 := "FilterByTraceStar";
+star_of["FilterByTwistedTrace"]          := "FilterByTwistedTraceStar";
+star_of["FilterByWeilPolynomial"]        := "FilterByWeilPolynomialStar";
+star_of["FilterByTwistedWeilPolynomial"] := "FilterByTwistedWeilPolynomialStar";
+star_of["FilterByNonALInvolutions"]      := "FilterByNonALInvolutionsStar";
+skip := [false : i in [1..n]];
+if IsDefined(star_of, stage) then
+    parts := Split(input_dat, "/");
+    dir := #parts gt 1 select &cat[p cat "/" : p in parts[1..#parts-1]] else "";
+    if input_dat[1] eq "/" then dir := "/" cat dir; end if;
+    star_dat := dir cat "curves_after_" cat star_of[stage] cat ".dat";
+    ok, _ := OpenTest(star_dat, "r");
+    if ok then
+        star_levels := {<X`D, X`N> : X in eval Read(star_dat)};
+        skip := [#X`W eq 2^#PrimeDivisors(X`D*X`N) and <X`D, X`N> in star_levels : X in curves];
+    end if;
+end if;
+
 // Cost-aware assignment: order all curves by descending cost estimate (CurveCostProxy),
 // then deal them round-robin into total_chunks groups.  This (a) spreads the heavy curves
 // across distinct chunks so no chunk gets several of them, and (b) puts the heaviest curves
 // in the lowest-numbered chunks, which GNU parallel dispatches first.  Each worker computes
 // the same ordering deterministically, so the chunks partition the curves with no overlap.
 proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
+for i in [1..n] do if skip[i] then proxy[i] := 0; end if; end for;   // skipped: no cost
 if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial",
              "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar"} then
     // Level-grouped stages: the same cost-aware strided deal, over levels instead of curves.  A
@@ -72,6 +100,10 @@ else
     my_idx := [perm[k] : k in [chunk_i .. n by total_chunks_i]];   // strided slice of the sorted order
 end if;
 subseq := [curves[i] : i in my_idx];
+// Hand the filter only the curves it is not skipping; the skipped ones are written back unchanged.
+full_subseq := subseq;
+keep := [j : j in [1..#subseq] | not skip[my_idx[j]]];
+subseq := [full_subseq[j] : j in keep];
 
 t0 := Realtime();
 
@@ -110,7 +142,10 @@ catch e
     error e;  // re-raise so SetQuitOnError exits non-zero
 end try;
 
+for t->j in keep do full_subseq[j] := subseq[t]; end for;
+subseq := full_subseq;
+
 // Tag each curve with its original index so the (index-aware) merge can restore order.
 Write(output_dat, Sprint([<my_idx[j], subseq[j]> : j in [1..#subseq]], "Magma") : Overwrite);
-printf "Worker %o/%o: %o curves, %o s\n", chunk_i, total_chunks_i, #subseq, Realtime() - t0;
+printf "Worker %o/%o: %o curves (%o star curves skipped), %o s\n", chunk_i, total_chunks_i, #subseq, #subseq - #keep, Realtime() - t0;
 quit;

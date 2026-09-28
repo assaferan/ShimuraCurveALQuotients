@@ -27,9 +27,10 @@ FILTER_STAGES := [*
     // HHProposition1 comes directly after the point counts, so that VerifyHHTable2 and
     // VerifyHHProposition1 check [HH]'s own input and output.  The twisted star stages decide some
     // D = 1 curves of HH Table 2 (e.g. X_0^*(396), by V3 at q = 5), so they must come after it.
-    // HHProposition1 decides nothing that SpecialFiberIsomorphismStar would not.
-    <"HHProposition1", HHProposition1>,
-    // <"VerifyHHProposition1", VerifyHHProposition1>,
+    // It is check-only: HHProposition1 decides nothing that SpecialFiberIsomorphismStar would not,
+    // so CheckHHProposition1 runs it (and VerifyHHProposition1) on a copy and leaves the curves
+    // unchanged; the stage credits no curve.
+    <"HHProposition1", CheckHHProposition1>,
     // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
     // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
     // GetQuotientsAndGenera.  The star block is in the same order as run_pipeline.sh
@@ -134,13 +135,11 @@ function compute_data(start_stage, stages)
       run_stage(stage[1], stage[2], ~curves);
 
       // in certain cases, we add verifications
+      // (VerifyHHTable2 on the FilterByTraceStar output runs in the next stage, CheckHHProposition1;
+      // tests/PipelineStages.m checks that it is the next stage)
       case stage[1]:
         when "UpdateGenera":
 	        VerifyHHTable1(curves);
-        when "FilterByTraceStar":
-	        VerifyHHTable2(curves);
-        when "HHProposition1":
-    	    VerifyHHProposition1(curves);
         when "UpdateByGenus":
             VerifyFHTheorem3(curves);
         when "FilterByGeneralizedComplicatedFixedPoints":

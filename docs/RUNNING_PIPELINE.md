@@ -83,7 +83,7 @@ The star-curve block in `run_pipeline.sh` reads:
 
     FindPairs, UpdateGenera, UpdateByGenusStar
     FilterByTraceStar                         parallel
-    HHProposition1                            (+ VerifyHHTable2, VerifyHHProposition1)
+    HHProposition1                            check only (VerifyHHTable2, VerifyHHProposition1)
     FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
     FilterByWeilPolynomialStar                parallel
@@ -102,7 +102,11 @@ filter does not run on the star curves.
 The star twisted stages decide some D = 1 curves of [HH] Table 2 (for example X_0^*(396), by V3
 at q = 5). So `HHProposition1` stays directly after `FilterByTraceStar`, and `VerifyHHTable2` and
 `VerifyHHProposition1` check its actual input and output, an exact reproduction of HH's table.
-HH Proposition 1 decides nothing that `SpecialFiberIsomorphismStar` would not.
+The stage is check-only (`CheckHHProposition1`): it runs `HHProposition1` on a copy, and writes
+its input unchanged to `curves_after_HHProposition1.dat`. HH Proposition 1 decides nothing that
+`SpecialFiberIsomorphismStar` would not, so the four curves it used to take (X_0^*(194),
+X_0^*(546), (205, 3), (1995, 2)) are credited to the special fiber isomorphism, and the stage has
+no row in the stage counts, the attribution or the paper tables.
 
 The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 
@@ -137,6 +141,18 @@ read `curves_after_UpdateCurves<N>.dat`, so every existing name keeps its meanin
 for every curve at that level. `parallel_filter_worker.m` therefore deals whole **levels** to the
 chunks for them, again heaviest first. The merge (`parallel_merge.m`) is unchanged: every chunk's
 curves are tagged with their original index.
+
+**Star curves are not re-run.** `FilterByTrace`, `FilterByTwistedTrace`, `FilterByWeilPolynomial`,
+`FilterByTwistedWeilPolynomial` and `FilterByNonALInvolutions` call the same function as their
+`*Star` versions, and a star curve's (D, N, W, g) do not change in between, so on a star curve the
+star version left undecided they would repeat that computation and get the same answer. The worker
+skips those curves (they are written back unchanged and cost 0 in the chunk balance), but only
+when the star version has run in the same data directory: `curves_after_<Stage>Star.dat` must sit
+next to the input and contain the curve's level. Run standalone, without that file, a non-star
+stage still tests every curve. In the 2026-09-26 run the two slowest chunks of the non-star twisted
+trace were such repeats: X_0^*(910, 9) and X_0^*(770, 9) took 4.0 h and 4.6 h and ended undecided,
+exactly as in the star stage; 160 of the 825 curves entering `FilterByWeilPolynomial` were star
+curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 

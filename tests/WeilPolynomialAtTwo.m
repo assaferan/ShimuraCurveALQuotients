@@ -25,9 +25,10 @@
 //   X_0(187)/w17   g=7  NOT hyperelliptic (recorded "UpwardClosure from 869"), with 2-rank 0.
 //                  This is the f = 0 case, which used to error. The test asserts that the check
 //                  returns true, which only means that at f = 0 it is inconclusive.
-// Measured on 2026-09-25 over data/curves_after_UpdateCurves8.dat with 2 not dividing DN: the
-// fixed p = 2 check passed all 337 decided-hyperelliptic curves (g = 2..9) and rejected 297 of
-// 1120 decided non-hyperelliptic ones (g = 3..11).
+// Measured on 2026-09-25 over data/curves_after_UpdateCurves8.dat with 2 not dividing DN, BEFORE
+// the 10146 correction above: the fixed p = 2 check passed all 337 decided-hyperelliptic curves
+// (g = 2..9) and rejected 297 of 1120 decided non-hyperelliptic ones (g = 3..11). The correction
+// moves 10146 across the line, so the file as committed gives 338 and 297 of 1119.
 
 function wpat2_setup(g)
     at2 := AssociativeArray();
@@ -37,8 +38,10 @@ function wpat2_setup(g)
 end function;
 
 // id is the CurveID in data/curves_after_*.dat. It must be set: WeilPolynomial's point-count
-// cache compares curves with 'eq', which reads CurveID.
+// cache compares curves with 'eq', which reads CurveID. The genus is asserted, not trusted: it
+// picks both the branch (g not in [3..6]) and the table size.
 function wpat2_curve(D, N, W, g, id)
+    assert GenusShimuraCurveQuotient(D, N, W) eq g;
     X := CreateShimuraQuot(D, N, W);
     X`g := g;
     X`CurveID := id;

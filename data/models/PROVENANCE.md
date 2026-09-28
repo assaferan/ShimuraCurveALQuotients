@@ -27,9 +27,17 @@ both ways: **10 of 10 pass identically**. (For `N = 1` the filter is provably a 
 of 30 tests rigorously rather than by sampling.) Two tests appeared to fail with it off — `10_13`
 and `6_17` — and both were artifacts of a hardcoded coordinate matrix *in the test*, gone once the
 isomorphism is constructed rather than pinned. Decisively, `26_3` is the very base whose two
-misbehaving discriminants justified the filter, and with them admitted its full `V_4` diagram still
+suspect discriminants justified the filter, and with them admitted its full `V_4` diagram still
 matches Guo-Yang, conic coefficient for coefficient. The filter also **cost** models: at `bd := 4`
 it cut `26_3`'s pool from 21 to 3 against demand 15, and `39_2`'s from 24 to 3 against 19.
+
+**Correction (2026-09-26): the `26_3` values at `-267`, `-708` appear to be right.** They were
+recorded as an `s <-> s~` swap against Guo-Yang arXiv v1 Table 49; that v1 table appears instead to
+have a sign misprint. Our `s(-267) = 8/25`, `s(-708) = 11/49` are `phi(9/25)`, `phi(27/49)` under
+`phi(w) = (1-w)/2`, i.e. the sign-flipped printed values, while the printed `-9/25`, `-27/49` map to
+`17/25`, `38/49`. Shimura reciprocity on Guo-Yang's own equations rejects the printed values and
+accepts the flipped ones (`tests/CMPoints.m`, `(26,3)` block). The journal version (Compositio 153,
+2017) has no CM-value tables, so no published table arbitrates.
 
 **Measured consequences** (verified by regeneration, not assumed):
 
@@ -43,8 +51,7 @@ it cut `26_3`'s pool from 21 to 3 against demand 15, and `39_2`'s from 24 to 3 a
 ⚠ **THE GAP THIS LEAVES OPEN.** There is **no theoretical guarantee**, only the sweep above. The
 local factor at `p | gcd(d,N)` has **no live implementation** (`kappaminuszero` is dead code), and
 Schofer's Thm 4.1 assumes unimodularity at unramified primes, which fails at a level prime where the
-order is Eichler. The two known-wrong values at `26_3` (`-267`, `-708`) **are still wrong** — they
-simply do not propagate into the cover equations. Therefore:
+order is Eichler. Therefore:
 * a model built from non-coprime discriminants still needs an **INDEPENDENT ORACLE** (a published
   equation, or Eichler-Selberg point counts); regeneration alone is not enough;
 * **do not read this flip as evidence the `p | gcd(d,N)` factor is unnecessary.** Supplying it is
@@ -90,10 +97,10 @@ enabled is the default; `CMCOPRIME=1` is the escape hatch in the other direction
 * **`39_2`, `14_3`, `26_3` — NO LONGER NEED A FLAG (2026-09-07).** The coprime filter is now off by
   default, and all three regenerate without one (`39_2` and `14_3` byte-identical to committed).
   What follows is kept because the underlying THEORETICAL gap is unchanged: the `p | gcd(d,N)` local factor has no live
-  implementation (`kappaminuszero` is dead code), and at `26_3` two non-coprime discriminants give
-  provably wrong values.
+  implementation (`kappaminuszero` is dead code). (The `26_3` values at `-267`, `-708` once
+  recorded here as provably wrong appear to be right; see the 2026-09-26 correction above.)
   ⚠ **THAT DOUBT IS RESOLVED — the sweep ran and the guard was flipped (see the section above).**
-  `26_3` is the base whose two bad discriminants (`-267`, `-708`) were the filter's whole
+  `26_3` is the base whose two suspect discriminants (`-267`, `-708`) were the filter's whole
   justification, and with them admitted its every quotient is isomorphic to Guo-Yang's, the conic
   coefficient for coefficient. Their justification remains the **published equation**, not
   regeneration.

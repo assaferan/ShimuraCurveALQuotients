@@ -26,16 +26,26 @@ procedure test_10_13()
     // pinned matrix was brittle -- it stopped being a map at all when CMNONCOPRIME=1 changed
     // the presentation -- while the construction survives re-presentation and still PROVES
     // the isomorphism (it exhibits a map and certifies it with IsIsomorphism).
-    // ⚠ model_drift_ok: this test pins a NON-ZERO base_label, and AllEquationsAboveCovers gates
-    // EquationsByRebase on `base_label eq 0` (EquationsCovers.m:1061). So it cannot reproduce the
+    // ⚠⚠ THE MECHANISM BELOW IS STALE AS OF 2026-09-27 -- THE GATE IS GONE.  This comment used to
+    // say AllEquationsAboveCovers gates EquationsByRebase on `base_label eq 0`, so a pinned run
+    // skipped the stage entirely.  That gate has been REMOVED: EquationsCovers.m:1079 now reads
+    // "Formerly gated on `base_label eq 0` ... The stage is pin-aware now: it rebases ON the pinned
+    // base and threads the pin into its own inner conic pass, so it is safe to run pinned."  The
+    // only surviving `base_label eq 0` branch is EquationsCovers.m:631, in the conic stage, which
+    // narrows the candidate bases to the pinned one.
+    // ⇒ SO model_drift_ok's NECESSITY HERE IS NOW UNMEASURED, not justified by the text below.  It
+    // is kept because removing it on inference would be exactly the wrong move -- a green test is
+    // not evidence the flag is unneeded, and a red one costs a full run to diagnose.  ⇒ TO SETTLE
+    // IT: drop the flag and run this one test; if it passes, delete the flag and this note.
+    // The historical reason, true when written, was that it could not reproduce the
     // cover keys that the rebase FILLED on a default run -- [1,2], [1,5] and [1,26], which
     // data/models/models_10_13.m records as "previously EMPTY ... now filled, unlocked by
     // EquationsByRebase". MISSING keys only: a key this test DOES produce must still be the
     // committed curve, and model_drift_ok does not silence that.
     // ⚠ THE CONTROL GROUP is what makes this a diagnosis rather than an excuse: 14_3, 21_2 and
     // 6_17 also pin a base_label and all three PASS -- 14_3's empties were fixed by the coprime
-    // filter flip, not the rebase, and the other two never had any. The gate costs exactly the
-    // rebase-filled keys and nothing else.
+    // filter flip, not the rebase, and the other two never had any. The gate cost exactly the
+    // rebase-filled keys and nothing else -- while it existed.
     test_AllEquationsAboveCoversSingleCurve(10, 13, cover_data, ws_data, curves : base_label := 4069);
     return;
 end procedure;
