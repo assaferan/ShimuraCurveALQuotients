@@ -1448,7 +1448,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 336>,
 <"W", { IntegerRing() | 1, 3, 7, 16, 21, 48, 112, 336 }>,
-<"g", 6>, <"CurveID", 297>, <"IsEC", false>
+<"g", 6>, <"CurveID", 297>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedTrace, h = V2 with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 340>,
 <"W", { IntegerRing() | 1, 4, 5, 17, 20, 68, 85, 340 }>,
@@ -1558,7 +1559,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 396>,
 <"W", { IntegerRing() | 1, 4, 9, 11, 36, 44, 99, 396 }>,
-<"g", 5>, <"CurveID", 320>, <"IsEC", false>
+<"g", 5>, <"CurveID", 320>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedTrace, h = V3 with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 399>,
 <"W", { IntegerRing() | 1, 3, 7, 19, 21, 57, 133, 399 }>,

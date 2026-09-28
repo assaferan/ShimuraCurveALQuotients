@@ -1245,7 +1245,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 264>,
 <"W", { IntegerRing() | 1, 3, 8, 11, 24, 33, 88, 264 }>,
-<"g", 4>, <"CurveID", 252>, <"IsEC", false>
+<"g", 4>, <"CurveID", 252>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V2 with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 265>,
 <"W", { IntegerRing() | 1, 5, 53, 265 }>,
@@ -1465,7 +1466,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 336>,
 <"W", { IntegerRing() | 1, 3, 7, 16, 21, 48, 112, 336 }>,
-<"g", 6>, <"CurveID", 297>, <"IsEC", false>
+<"g", 6>, <"CurveID", 297>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedTrace, h = V2 with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 340>,
 <"W", { IntegerRing() | 1, 4, 5, 17, 20, 68, 85, 340 }>,
@@ -1578,7 +1580,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 396>,
 <"W", { IntegerRing() | 1, 4, 9, 11, 36, 44, 99, 396 }>,
-<"g", 5>, <"CurveID", 320>, <"IsEC", false>
+<"g", 5>, <"CurveID", 320>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedTrace, h = V3 with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 399>,
 <"W", { IntegerRing() | 1, 3, 7, 19, 21, 57, 133, 399 }>,
@@ -1669,7 +1672,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 450>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 25, 50, 225, 450 }>,
 <"g", 7>, <"CurveID", 338>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 223">
+\n\n\n\n\n\ncurve 223">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 455>,
 <"W", { IntegerRing() | 1, 5, 7, 13, 35, 65, 91, 455 }>,
@@ -1983,7 +1986,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 2310>,
 }>,
 <"g", 12>, <"CurveID", 396>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
-\n\n\n\ncurve 376">
+\n\n\n\n\n\ncurve 376">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 2730>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -3673,7 +3676,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 10>, <"N", 171>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 18, 19, 38, 45, 90, 95, 171, 190, 342, 
 855, 1710 }>,
-<"g", 3>, <"CurveID", 703>, <"IsEC", false>
+<"g", 3>, <"CurveID", 703>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V3 with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 173>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 173, 346, 865, 1730 }>,
@@ -6361,7 +6365,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 34>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 17, 34, 35, 70, 85, 119, 170, 238, 
 595, 1190 }>,
 <"g", 3>, <"CurveID", 1196>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1185">
+false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 36>,
 <"W", { IntegerRing() | 1, 4, 5, 7, 9, 20, 28, 35, 36, 45, 63, 140, 180, 252, 
@@ -6420,7 +6424,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 66>,
 }>,
 <"g", 5>, <"CurveID", 1206>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 1195">
+\n\n\n\n\n\ncurve 1195">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 78>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -6639,7 +6643,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 13, 16, 39, 48, 208, 624 }>,
-<"g", 3>, <"CurveID", 1247>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1247>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V2 with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 13, 17, 39, 51, 221, 663 }>,
@@ -8607,7 +8612,7 @@ CreateShimuraQuot([* <"D", 141>, <"N", 10>,
 705, 1410 }>,
 <"g", 5>, <"CurveID", 1625>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 1623">
+\n\n\n\n\n\ncurve 1623">
 *]),
 CreateShimuraQuot([* <"D", 142>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 71, 142 }>,
@@ -9565,7 +9570,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 259>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 37, 74, 259, 518 }>,
 <"g", 3>, <"CurveID", 1807>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1806">
+false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 259>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 37, 111, 259, 777 }>,
@@ -9616,7 +9621,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 267>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 89, 178, 267, 534 }>,
 <"g", 3>, <"CurveID", 1817>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1816">
+false>, <"TestInWhichProved", "Trace, with p^v = 5^1">
 *]),
 CreateShimuraQuot([* <"D", 274>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 137, 274 }>,
@@ -9721,7 +9726,7 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 301>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 43, 86, 301, 602 }>,
 <"g", 4>, <"CurveID", 1838>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1837">
+false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 302>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 151, 302 }>,
@@ -11787,7 +11792,7 @@ CreateShimuraQuot([* <"D", 2590>, <"N", 3>,
 3885, 7770 }>,
 <"g", 5>, <"CurveID", 2194>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
-\n\n\n\ncurve 2193">
+\n\n\n\n\n\ncurve 2193">
 *]),
 CreateShimuraQuot([* <"D", 2618>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 17, 22, 34, 77, 119, 154, 187, 238, 
