@@ -969,7 +969,10 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
 {Get equations of all covers (not just immediate covers)}
     require IsStarCurve(Xstar): "Xstar must be a star curve";
     vprintf ShimuraQuotients, 1 : "Computing Borcherds forms...";
-    fs := BorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution, Targets := Targets);
+    // GetBorcherdsForms is BorcherdsForms unless BFCACHE is set, in which case it loads a VERIFIED
+    // saved entry when one matches the full configuration signature.  Default OFF, so CI and every
+    // existing run are byte-for-byte unaffected.
+    fs := GetBorcherdsForms(Xstar, curves : Prec := Prec, IntegralSolution := IntegralSolution, Targets := Targets);
     vprintf ShimuraQuotients, 1 : "Done!\n";
     vprintf ShimuraQuotients, 1 : "Computing divisors of hauptmodules...";
     d_divs := &cat[[T[1]: T in DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls

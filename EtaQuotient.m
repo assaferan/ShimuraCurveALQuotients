@@ -65,6 +65,16 @@ intrinsic EtaQuotient(R::RngEtaQuot, exps::SeqEnum[RngIntElt]) -> EtaQuot
     return eta;
 end intrinsic;
 
+intrinsic EtaQuotient(R::RngEtaQuot, coeffs::Assoc) -> EtaQuot
+{Rebuild the element of R whose coefficient map is coeffs: sum over the keys k (each an exponent
+ vector) of coeffs[k] * EtaQuotient(R, k).  This is the inverse of reading off `coeffs, and exists
+ so that a Borcherds form can be reconstructed from a saved coefficient map -- see
+ GetBorcherdsForms in BorcherdsForms.m.  Serialising the COEFFICIENTS rather than the object is
+ what makes the form saveable at all.}
+    require not IsEmpty(Keys(coeffs)) : "EtaQuotient: empty coefficient map";
+    return &+[coeffs[k]*EtaQuotient(R, k) : k in Keys(coeffs)];
+end intrinsic;
+
 intrinsic Parent(eta::EtaQuot) -> RngEtaQuot
 {.}
     return eta`parent;

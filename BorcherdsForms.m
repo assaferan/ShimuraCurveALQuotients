@@ -1320,6 +1320,111 @@ alone cannot do odd D.}
     return etas;
 end intrinsic;
 
+// ---------------------------------------------------------------------------------------------
+// PERSISTENT CACHE FOR BORCHERDS FORMS.  OPT-IN: set BFCACHE=1.
+//
+// ⚠ WHY THIS EXISTS, measured 2026-09-28.  `Computing Borcherds forms` is where the expensive
+// bases spend everything, and a kill loses ALL of it: on lava, X_0^159(1) ran 123 h at 84 GB peak
+// and was then killed by earlyoom, leaving nothing reusable, while 95_1 and 119_1 sat 5.5 days each
+// in the same phase.  Diagnosed by elimination -- neither job had written a polytope-cache file in
+// 5.5 days nor held any open file but its log, so the cost is in-Magma linear algebra, NOT Normaliz
+// and NOT I/O.  `Caching.m` is memoisation in a Store and does not survive the process.
+// ⇒ So this does not make a first run faster.  It makes a SECOND run cheap, which is what matters
+// when a run can be killed at 123 h.
+//
+// ⚠⚠ THE CACHE KEY MUST CARRY EVERYTHING THAT CHANGES THE FORMS, and the original version of this
+// idea (archive/pointlessconics, b700187) keyed on (D, N) ALONE.  That is unsafe here: the forms
+// depend on Prec, Exclude, Targets, IntegralSolution and on six environment flags, and `052e3c1`
+// changed the CM pool ORDERING, which changes which forms the search finds.  A (D,N)-keyed file
+// would be silently reused across configurations -- the same failure the polytope cache already
+// warns about, where "a partially-cached base returns a wrong answer rather than an error".
+// So the filename carries a full signature, and a mismatch simply misses rather than loading.
+//
+// ⚠ AND A HIT IS VERIFIED, NOT TRUSTED.  Every reconstructed form's divisor is recomputed and
+// compared against the divisor stored beside it.  That catches a corrupted or truncated file and a
+// serialisation round-trip that silently loses a coefficient -- a wrong form here would poison
+// every downstream equation, so the cheap check is worth its cost against a multi-day search.
+function bf_cache_signature(Xstar, Prec, Exclude, Targets, IntegralSolution)
+    // Only flags that can change the RESULT.  BFPROGRESS/COVPROGRESS/NMZSOLVE are diagnostic or
+    // point at a binary, so they are deliberately absent.
+    flags := ["CMCOPRIME", "PTSCOPRIME", "HMFIT", "NONSQFREE", "RUNAWAY", "Y2TWIST"];
+    fl := &cat[f cat "-" cat GetEnv(f) cat "-" : f in flags];
+    raw := Sprintf("v1_D%o_N%o_P%o_E%o_T%o_I%o_%o", Xstar`D, Xstar`N, Prec,
+                   Sprint(Sort(Setseq(Exclude))), Sprint(Sort([Sort(Setseq(w)) : w in Targets])),
+                   IntegralSolution select 1 else 0, fl);
+    // ⚠ Keep the name SHELL-SAFE.  The signature naturally contains ";", "[", "]", "=", " " and
+    // "," from Sprint, which make the file a nuisance to quote in every later ls/rm/scp; map
+    // everything outside [A-Za-z0-9_-] to "_".  Distinctness is preserved because the parts that
+    // vary (numbers, flag values) are alphanumeric.
+    safe := "";
+    ok_chars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_-";
+    for i in [1..#raw] do
+        c := raw[i];
+        safe cat:= (Position(ok_chars, c) gt 0) select c else "_";
+    end for;
+    return safe;
+end function;
+
+intrinsic GetBorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100,
+                            Exclude := {}, Targets := {}, IntegralSolution := false) -> Assoc
+{Borcherds forms for Xstar, loaded from disk when BFCACHE is set and a verified cache entry exists,
+ otherwise computed and (if BFCACHE is set) saved.  With BFCACHE unset this is exactly
+ BorcherdsForms, so the default path is unchanged.}
+    use_cache := GetEnv("BFCACHE") ne "";
+    if not use_cache then
+        return BorcherdsForms(Xstar, curves : Prec := Prec, Exclude := Exclude,
+                              Targets := Targets, IntegralSolution := IntegralSolution);
+    end if;
+    sig := bf_cache_signature(Xstar, Prec, Exclude, Targets, IntegralSolution);
+    fname := "BorcherdsForms/BorcherdsForms_" cat sig;
+    if FileExists(fname) then
+        vprintf ShimuraQuotients, 1 : "\n\tBFCACHE: entry found, verifying...";
+        ok := true;
+        try
+            data := eval Read(fname);
+            R := EtaQuotientsRing(data[1], data[2]);
+            fs := AssociativeArray();
+            for entry in data[3] do
+                coeffs := AssociativeArray();
+                for pair in entry[2] do coeffs[pair[1]] := pair[2]; end for;
+                fs[entry[1]] := EtaQuotient(R, coeffs);
+                // the stored divisor is the invariant; recompute and compare
+                if Set(DivisorOfBorcherdsForm(fs[entry[1]], Xstar)) ne Set(entry[3]) then
+                    ok := false;
+                    break;
+                end if;
+            end for;
+        catch e
+            ok := false;
+        end try;
+        if ok then
+            vprintf ShimuraQuotients, 1 : " verified, %o form(s) loaded.", #Keys(fs);
+            return fs;
+        end if;
+        // ⚠ A failed verification is NOT silently tolerated and NOT silently repaired: say so
+        // loudly, then recompute.  Deleting the file here would hide a reproducible defect.
+        printf "\n⚠ BFCACHE: entry %o FAILED VERIFICATION and is being ignored; recomputing.\n"
+               cat "  Investigate before trusting it -- do not just delete it.\n", fname;
+    end if;
+    vprintf ShimuraQuotients, 1 : "\n\tBFCACHE: no verified entry, computing...";
+    fs := BorcherdsForms(Xstar, curves : Prec := Prec, Exclude := Exclude,
+                         Targets := Targets, IntegralSolution := IntegralSolution);
+    try
+        System("mkdir -p BorcherdsForms");
+        entries := [];
+        for i in Keys(fs) do
+            coeffs_list := [[* k, fs[i]`coeffs[k] *] : k in Keys(fs[i]`coeffs)];
+            Append(~entries, [* i, coeffs_list, DivisorOfBorcherdsForm(fs[i], Xstar) *]);
+        end for;
+        Write(fname, Sprint(<Parent(fs[-1])`M, Parent(fs[-1])`disc, entries>, "Magma") : Overwrite);
+        vprintf ShimuraQuotients, 1 : "\n\tBFCACHE: saved %o form(s) to %o", #Keys(fs), fname;
+    catch e
+        // Never let a caching failure lose a computation that took days.
+        printf "\n⚠ BFCACHE: could not save (%o); continuing with the computed forms.\n", e`Object;
+    end try;
+    return fs;
+end intrinsic;
+
 intrinsic DivisorOfBorcherdsForm(f::RngSerLaurElt, Xstar::ShimuraQuot : Zero := false) -> SeqEnum
 {Return the divisor of the Borcherds form associated to the (oo)-Weakly holomorphic modular form f.
 If Zero is set to true, returns the divisor associated to the (0)-Weakly holomorphic modular form with q-expansion f(q^(1/4))}

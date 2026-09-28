@@ -19,3 +19,10 @@ polymake/nmzsolve.err
 # Python bytecode (py_compile/pytest artifacts; never source)
 __pycache__/
 *.pyc
+
+# BFCACHE=1 writes saved Borcherds forms here.  Ignored by default because an entry is specific to
+# one configuration signature and a stray one is noise -- but an entry for an EXPENSIVE base is
+# worth sharing, so add it deliberately with `git add -f BorcherdsForms/<entry>`.  Unlike the
+# polymake cache, a bad entry cannot poison a run silently: every hit is verified against the
+# stored divisor before use (see GetBorcherdsForms in BorcherdsForms.m).
+BorcherdsForms/
