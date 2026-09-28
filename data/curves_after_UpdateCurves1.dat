@@ -6675,7 +6675,8 @@ CreateShimuraQuot([* <"D", 1>, <"N", 194>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"HHproposition1 isomorphic to 97">
+"SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 97">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 195>,
 <"W", { IntegerRing() | 1, 3, 13, 39 }>,
@@ -10502,7 +10503,8 @@ CreateShimuraQuot([* <"D", 1>, <"N", 546>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"HHproposition1 isomorphic to 258">
+"SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 258">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 552>,
 <"W", { IntegerRing() | 1, 3, 8, 23, 24, 69, 184, 552 }>,
@@ -90732,7 +90734,8 @@ CreateShimuraQuot([* <"D", 205>, <"N", 3>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"HHproposition1 isomorphic to 1723">
+"SpecialFiberIsomorphism, isomorphic over F_3 to 
+curve 1723">
 *]),
 CreateShimuraQuot([* <"D", 205>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 41, 164, 205, 820 }>,
@@ -133909,7 +133912,8 @@ CreateShimuraQuot([* <"D", 1995>, <"N", 2>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"HHproposition1 isomorphic to 2158">
+"SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 2158">
 *]),
 CreateShimuraQuot([* <"D", 2002>, <"N", 1>,
 <"W", { IntegerRing() | 1, 7, 11, 13, 77, 91, 143, 1001 }>,

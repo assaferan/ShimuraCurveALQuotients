@@ -956,7 +956,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 2^1">
 CreateShimuraQuot([* <"D", 1>, <"N", 194>,
 <"W", { IntegerRing() | 1, 2, 97, 194 }>,
 <"g", 3>, <"CurveID", 193>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 97">
+false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 97">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 195>,
 <"W", { IntegerRing() | 1, 3, 5, 13, 15, 39, 65, 195 }>,
@@ -1792,7 +1793,8 @@ CreateShimuraQuot([* <"D", 1>, <"N", 546>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 13, 14, 21, 26, 39, 42, 78, 91, 182, 273,
 546 }>,
 <"g", 4>, <"CurveID", 362>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 258">
+false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 258">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 552>,
 <"W", { IntegerRing() | 1, 3, 8, 23, 24, 69, 184, 552 }>,
@@ -9116,7 +9118,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^1">
 CreateShimuraQuot([* <"D", 205>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 41, 123, 205, 615 }>,
 <"g", 3>, <"CurveID", 1725>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 1723">
+false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
+curve 1723">
 *]),
 CreateShimuraQuot([* <"D", 205>, <"N", 4>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 41, 164, 205, 820 }>,
@@ -11568,7 +11571,8 @@ CreateShimuraQuot([* <"D", 1995>, <"N", 2>,
 57, 70, 95, 105, 114, 133, 190, 210, 266, 285, 399, 570, 665, 798, 1330, 1995, 
 3990 }>,
 <"g", 3>, <"CurveID", 2159>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
-false>, <"TestInWhichProved", "HHproposition1 isomorphic to 2158">
+false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
+curve 2158">
 *]),
 CreateShimuraQuot([* <"D", 2002>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286,
