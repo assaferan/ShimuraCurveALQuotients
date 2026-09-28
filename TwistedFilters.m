@@ -227,11 +227,10 @@ function twCurveData(X, LD, ps)
     return Tk, ops, IK;
 end function;
 
-// First twisted-trace violation on X, over p in ps ascending, then v, then the ops.
-function twTraceCheck(X, LD)
+// First twisted-trace violation on X, over the primes ps (each good, < 4g^2) ascending, then v, then
+// the ops; Tk, ops, IK are twCurveData's output, on a prime list containing ps.
+function twTraceCheckOn(X, Tk, ops, IK, ps)
     g := X`g;
-    ps := twTracePrimes(g, X`D*X`N);
-    Tk, ops, IK := twCurveData(X, LD, ps);
     QM := 4*g^2 - 1;
     for p in ps do
         T := Tk[p];
@@ -248,6 +247,13 @@ function twTraceCheck(X, LD)
         end while;
     end for;
     return true, _, _, _, _;
+end function;
+
+// First twisted-trace violation on X, over all the primes the filter uses on X.
+function twTraceCheck(X, LD)
+    ps := twTracePrimes(X`g, X`D*X`N);
+    Tk, ops, IK := twCurveData(X, LD, ps);
+    return twTraceCheckOn(X, Tk, ops, IK, ps);
 end function;
 
 // prod (t^2 - a t + p) over the roots a of c, where chiT = c^2 is the charpoly of T_p on a
@@ -334,6 +340,46 @@ proving X non-hyperelliptic; then also returns the name of h and p.  Returns tru
     ok, h, p := twWeilCheck(X, LD, twLoadTables({X`g}));
     if ok then return true, _, _; end if;
     return false, h, p;
+end intrinsic;
+
+intrinsic CheckTwistedAtPrime(X::ShimuraQuot, p::RngIntElt) -> BoolElt, MonStgElt
+{The twisted tests at the single good prime p only.  Returns false and a description if, for some
+admissible involution h != 1 of X defined over Q, either the twist X_h has more than 2q+2 points
+over F_q for some q = p^v < 4g^2 (the test of CheckTwistedTrace), or p is a table prime and the
+Weil polynomial of X_h at p is not that of a hyperelliptic curve over F_p (the test of
+CheckTwistedWeilPolynomial).  As X_h is isomorphic to X over the algebraic closure of F_p, X is
+then not hyperelliptic over it.  Returns true otherwise; the modular symbols are not built when X
+has no admissible h or neither test applies at p.}
+    require (X`D*X`N) mod p ne 0 : "p must be a good prime";
+    g := X`g;
+    assert g ge 2;
+    trace_ok := p lt 4*g^2;
+    weil_ok := p in twTablePrimes(g);
+    if not (trace_ok or weil_ok) or not twHasOps(X) then return true, _; end if;
+    LD := twLevelData(X`D, X`N);
+    // The ops are built on every prime either filter uses on X, not on p alone, so that the safety
+    // net of twCurveData (each h must commute with T_l for every such l) is no weaker than theirs.
+    L := X`D*X`N;
+    ps := Sort(SetToSequence(Set(twTracePrimes(g, L)) join Set(twWeilPrimes(g, L)) join {p}));
+    Tk, ops, IK := twCurveData(X, LD, ps);
+    if trace_ok then
+        ok, h, _, v, tr := twTraceCheckOn(X, Tk, ops, IK, [p]);
+        if not ok then
+            return false, Sprintf("TwistedTrace, h = %o with p^v = %o^%o", h, p, v);
+        end if;
+    end if;
+    if weil_ok then
+        TAB := twWeilTable(g, p);
+        P1 := twWeilPolynomial(Tk[p], IK, IK, p, g);
+        for o in ops do
+            Ph := twWeilPolynomial(Tk[p], o[2], IK, p, g);
+            assert ChangeRing(Ph, GF(2)) eq ChangeRing(P1, GF(2));
+            if twWeilKey(Ph) notin TAB then
+                return false, Sprintf("TwistedWeilPolynomial h = %o with p = %o", o[1], p);
+            end if;
+        end for;
+    end if;
+    return true, _;
 end intrinsic;
 
 intrinsic TwistedWeilPolynomials(X::ShimuraQuot, p::RngIntElt) -> SeqEnum
