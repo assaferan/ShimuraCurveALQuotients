@@ -150,7 +150,14 @@ W("");
 //   (a) it covers another open curve            -> upward closure may apply;
 //   (b) it is isomorphic over F_p to an open curve (SpecialFiberIsomorphism: the
 //       bigger level X_0(D,Np)/W whose normalization mod p is the open source
-//       X_0(D,N)/W', W' = the AL in W prime to p);
+//       X_0(D,N)/W', W' = the AL in W prime to p), counted only when the source is
+//       certified non-hyperelliptic mod p (NonHyperellipticAtPrimeCertificate), as
+//       SpecialFiberIsomorphism requires: resolving the source over Qbar alone does not
+//       resolve the target.  A certified source is itself non-hyperelliptic over Qbar
+//       (hyperelliptic over Qbar would imply hyperelliptic over Fpbar), so on data where
+//       every char-p filter has run this count should be 0: a nonzero value flags open
+//       curves those filters missed, not curves waiting on their source.  The ungated
+//       count is printed separately, as candidates;
 //   (c) it is fully isomorphic (FH99 Prop 4/5) to an open curve.
 // Counts are of distinct open curves, disjoint, taken in the order (a), (b), (c).
 W("================================================================");
@@ -163,14 +170,19 @@ openids := {X`CurveID : X in open};
 coversOpen := {X`CurveID : X in open
                 | assigned X`Covers and exists{id : id in X`Covers | id in openids}};
 
+// fpIsoCand: SpecialFiberIsomorphism's structural conditions only; fpIso: also certified at p.
 fpIso := {};
+fpIsoCand := {};
 for X in open do
     for p in PrimeDivisors(X`N) do
         if Valuation(X`N, p) ne 1 then continue; end if;
         if not exists{w : w in X`W | w mod p eq 0} then continue; end if;
         key := <X`D, X`N div p, {w : w in X`W | w mod p ne 0}>;
         if IsDefined(lut, key) and curves[lut[key]]`CurveID in openids then
-            Include(~fpIso, X`CurveID); break;
+            Include(~fpIsoCand, X`CurveID);
+            if NonHyperellipticAtPrimeCertificate(curves[lut[key]], p) then
+                Include(~fpIso, X`CurveID); break;
+            end if;
         end if;
     end for;
 end for;
@@ -188,8 +200,12 @@ end for;
 bIso := fpIso diff coversOpen;
 cIso := (fullIso diff coversOpen) diff fpIso;
 W(Sprintf("  cover another open curve (closure may apply)         : %o", #coversOpen));
-W(Sprintf("  + isomorphic over F_p to another open curve          : %o", #bIso));
+W(Sprintf("  + isomorphic over F_p to another open curve, source certified mod p : %o", #bIso));
 W(Sprintf("  + fully isomorphic (FH99 Prop 4/5) to another open   : %o", #cIso));
+W("");
+W(Sprintf("  (ungated F_p candidates, certificate not required : %o)", #(fpIsoCand diff coversOpen)));
+W("  (caveat: uncertified ones are not resolved by resolving the source over Qbar;");
+W("   a nonzero certified count means the char-p filters missed those sources)");
 W("");
 W(Sprintf("  open curves with NO such lifeline -> must be resolved individually : %o",
     #open - #(coversOpen join fpIso join fullIso)));
