@@ -2,6 +2,10 @@ cached_orders := NewStore();
 cached_traces := NewStore();
 class_nos := NewStore();
 point_counts := NewStore();
+// data/hypg<g>q<p>.txt tables loaded by CheckWeilPolynomialAtPrime, keyed by <g, p>
+weil_tables := NewStore();
+// SpecialFiberIsomorphism source certificates, keyed by <D, N, W, g, p>
+sfi_certificates := NewStore();
 
 // Collect mode: a "dry run" of a trace computation in which the leaf class-number function
 // records the discriminants it would need (so they can be fetched in one batched, sorted

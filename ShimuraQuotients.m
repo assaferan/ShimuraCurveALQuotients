@@ -10,7 +10,8 @@ import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
 import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders,
-                     IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs;
+                     IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs,
+                     sfi_certificates;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -751,21 +752,36 @@ end intrinsic;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
+intrinsic CheckHeckeTraceAtPrime(X::ShimuraQuot, p::RngIntElt) -> BoolElt, RngIntElt
+{The point-count test of CheckHeckeTrace at the single good prime p: returns false if
+#X(F_(p^v)) > 2(p^v + 1) for some v with p^v <= 4g^2, and then also returns v.  A curve with that
+many points over F_(p^v) is not hyperelliptic over F_(p^v), so X is not hyperelliptic over the
+algebraic closure of F_p (a hyperelliptic curve over a finite field is a double cover of P^1 over
+that field), and hence not over Qbar either.  Returns true if the test is inconclusive at p.}
+    assert X`g ge 3;
+    assert X`D*X`N mod p ne 0;
+    // #X(F_q) <= q + 1 + 2g sqrt(q), which exceeds 2(q + 1) only when q < 4g^2.
+    v_max := Floor(Log(p,4*X`g^2));
+    for v in [1..v_max] do
+        num_pts := ComputePointsViaTrace(X, p, v);
+        if (num_pts gt 2*(1+p^v)) then
+            vprint ShimuraQuotients, 2: "p, v = ", p, v;
+            return false, v;
+        end if;
+    end for;
+    return true, _;
+end intrinsic;
+
 intrinsic CheckHeckeTrace(X::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
 {Returns false if X is not hyperelliptic, true if this fact cannot be determined from counting points and using a naive inequality.
 If returns false, also returns p, v such that point counts over GF(p^v) proves non-hyperellipticity.}
     assert X`g ge 3;
-    ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
-        v_max := Floor(Log(p,4*X`g^2));
-        for v in [1..v_max] do
-	    num_pts := ComputePointsViaTrace(X, p, v);
-            if (num_pts gt 2*(1+p^v)) then
-		vprint ShimuraQuotients, 2: "p, v = ", p, v;
-                return false, p, v;
-            end if;
-        end for;
+        ok, v := CheckHeckeTraceAtPrime(X, p);
+        if not ok then
+            return false, p, v;
+        end if;
     end for;
     return true, _, _;
 end intrinsic;
@@ -1006,7 +1022,10 @@ end intrinsic;
 // The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
 // list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
 // source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, and SFI's
-// conditions are HH's without the equal-genus requirement.  So every curve marked here is ruled
+// conditions are HH's without the equal-genus requirement, plus a certificate that the source is
+// not hyperelliptic mod p (NonHyperellipticAtPrimeCertificate; not being hyperelliptic over Q is not
+// enough).  That certificate is asserted below, not implied: on the star list it holds because the
+// sources here are ruled by point counts at p itself.  So every curve marked here is ruled
 // out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
 // including a curve whose source was itself marked earlier in this loop, by induction along the
 // list order (sources precede targets, asserted): SFI walks the list in index order and reads
@@ -1043,6 +1062,8 @@ intrinsic HHProposition1(~curves::SeqEnum)
                         // The source precedes its target in the list (CurveID is the index), so
                         // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
                         assert i lt other;
+                        // ... and certifies it at p, as SpecialFiberIsomorphism requires.
+                        assert NonHyperellipticAtPrimeCertificate(X, p);
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);
@@ -1054,12 +1075,85 @@ intrinsic HHProposition1(~curves::SeqEnum)
 end intrinsic;
 
 
+// A certificate that X is not hyperelliptic over the algebraic closure of F_p, for SpecialFiberIsomorphism.
+// Only tests whose conclusion is a statement in characteristic p are used, re-run here on X at p;
+// how X's own IsSubhyp was decided is deliberately not consulted, since most of the pipeline's tests
+// are statements in characteristic 0 (or at another prime) that say nothing about X mod p:
+//  * the point count of FilterByTrace at p: more than 2q + 2 points over F_q, q = p^v;
+//  * the Weil-polynomial test of FilterByWeilPolynomial at p (tables, and the 2-rank at p = 2);
+//  * for p odd only, the plain AL fixed-point test (FilterByALFixedPointsOnQuotient).  Its input is
+//    the genus of X and the number of fixed points of each AL involution, which are the same on
+//    X mod p: X and its AL quotients have good reduction at p, which does not divide DN, and for p
+//    odd every involution is tame, so Riemann-Hurwitz gives the fixed-point count from the genera.
+//    Its argument (an involution other than the hyperelliptic one has 0, 2 or 4 fixed points on a
+//    hyperelliptic curve) needs characteristic not 2.
+// Deliberately NOT used: [FH] Prop 6 (FilterByComplicatedALFixedPointsOnQuotient).  Its proof also
+// uses a Galois orbit of size 3 among the fixed points of w_N2 (3 | [Q(P):Q]); mod p the only Galois
+// action is Frobenius, and when p is inert in Q(sqrt(-N2)) those fixed points are supersingular,
+// defined over F_(p^2), with orbits of size at most 2.  (In the 2026-09-26 rerun, 5040, 5047, 5051
+// and 5202 were ruled at p = 3 through a source certified only by it.)
+//  * the twisted trace and twisted Weil tests at p (a twist of X by an involution defined over Q is
+//    isomorphic to X over the algebraic closure of F_p).  Tried last: they are the only ones that
+//    need the modular symbols of level DN.
+// Results are cached per <D, N, W, g, p> for the session.
+intrinsic NonHyperellipticAtPrimeCertificate(X::ShimuraQuot, p::RngIntElt) -> BoolElt, MonStgElt
+{Returns true and a description of the certificate if X, of genus at least 3, is proved not
+hyperelliptic over the algebraic closure of F_p (p a prime not dividing DN) by a test valid in
+characteristic p: the point count or Weil polynomial of X at p, their twisted versions at p, or,
+for p odd, the AL fixed-point test of FilterByALFixedPointsOnQuotient.  Returns false if no such certificate is found.}
+    require (X`D*X`N) mod p ne 0 : "p must be a prime of good reduction";
+    if X`g lt 3 then return false, _; end if;
+    // g is in the key: it is an attribute, not recomputed here, so a curve with a different
+    // (e.g. hand-set) genus must not reuse another's result.
+    key := <X`D, X`N, X`W, X`g, p>;
+    b, cert := GetCache(key, sfi_certificates);
+    if b then
+        if cert eq "" then return false, _; end if;
+        return true, cert;
+    end if;
+    cert := "";
+    if p ne 2 then
+        ok, d, fix := TestALFixedPointsOnQuotient(X);
+        // A w_d with 2g+2 fixed points is the hyperelliptic involution (X/w_d has genus 0), which
+        // the test does not exclude itself; it never is the witness on a non-hyperelliptic X.
+        if (not ok) and (fix ne 2*X`g + 2) then
+            cert := Sprintf("ALFixedPointsOnQuotient, W_%o has %o fixed points, p odd", d, fix);
+        end if;
+    end if;
+    if cert eq "" then
+        ok, v := CheckHeckeTraceAtPrime(X, p);
+        if not ok then
+            cert := Sprintf("more than 2q+2 points over F_q, q = %o^%o", p, v);
+        end if;
+    end if;
+    if cert eq "" then
+        if not CheckWeilPolynomialAtPrime(X, p) then
+            cert := Sprintf("WeilPolynomial with p = %o", p);
+        end if;
+    end if;
+    // Last, as the only certificate that needs the modular symbols of level DN.
+    if cert eq "" then
+        ok, desc := CheckTwistedAtPrime(X, p);
+        if not ok then
+            cert := desc;
+        end if;
+    end if;
+    SetCache(key, cert, sfi_certificates);
+    if cert eq "" then return false, _; end if;
+    return true, cert;
+end intrinsic;
+
 intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
-    {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p |m. 
-    Then the normalization of X_0(D,Np)/W over Fp is isomorphic to X_0(D,N)/W' over Fp where 
-    W' = all w_m in W such that p does not divide m. If X_0(D,N)/W' is not hyperelliptic, then 
-    X_0(D,Np)/W  is also not hyperelliptic. This filters all curves by starting with all known non-hyperelliptic curves
-    and multiply by primes p such that Np is still a level in curves, and considering all possible W = W' union w_m where m divisible by p  }
+    {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p | m.
+    Then the normalization of X_0(D,Np)/W over F_p is isomorphic to X_0(D,N)/W' over F_p where
+    W' = all w_m in W such that p does not divide m. If X_0(D,N)/W' is not subhyperelliptic over
+    the algebraic closure of F_p, then X_0(D,Np)/W is not hyperelliptic. Non-hyperellipticity over
+    Q is NOT enough: a source that is not hyperelliptic over Q may be hyperelliptic mod p.  So each
+    candidate source X_0(D,N)/W' (one already known not to be subhyperelliptic over Q, which is
+    necessary) is certified at p itself by NonHyperellipticAtPrimeCertificate, which re-runs a test
+    valid in characteristic p on it.  This filters all curves by starting with all known
+    non-hyperelliptic curves and multiply by primes p such that Np is still a level in curves, and
+    considering all possible W = W' union w_m where m divisible by p}
 
     // Lookup from (D, N, W) to the curve's position in `curves`
     // (CurveID coincides with the index, as built by GetQuotientsAndGenera).
@@ -1069,6 +1163,11 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
     end for;
 
     for i->tgt in curves do
+        // Only undecided targets can gain a verdict; a decided one only needs the consistency
+        // check below, which is only worth a certificate when the target is recorded hyperelliptic.
+        if assigned tgt`IsSubhyp and not (assigned tgt`IsHyp and tgt`IsHyp) then
+            continue;
+        end if;
         D := tgt`D;
         M := tgt`N;
         W := tgt`W;
@@ -1091,12 +1190,19 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
                 continue;
             end if;
             src := curves[lut[key]];
-            // Is the source X_0(D, N)/W' known to be NOT subhyperelliptic?
-            // The reduction argument only gives information here: if the target
-            // were hyperelliptic, its hyperelliptic involution would descend
-            // through the special fiber to the normalization, forcing the source
-            // to be subhyperelliptic. 
+            // The reduction argument only gives information if the source is not
+            // subhyperelliptic over the algebraic closure of F_p: if the target were
+            // hyperelliptic, its hyperelliptic involution would descend through the special
+            // fiber to the normalization, forcing the source mod p to be subhyperelliptic.
+            // Not subhyperelliptic over Q is necessary for that (good reduction), so it is the
+            // cheap first filter; the certificate at p is what makes the argument valid.
             if not (assigned src`IsSubhyp and not src`IsSubhyp) then
+                continue;
+            end if;
+            ok, cert := NonHyperellipticAtPrimeCertificate(src, p);
+            if not ok then
+                vprintf ShimuraQuotients, 2: "SpecialFiberIsomorphism: source %o of curve %o is not certified non-hyperelliptic mod %o\n",
+                    src`CurveID, tgt`CurveID, p;
                 continue;
             end if;
             // The normalization of X_0(D, Np)/W over F_p is isomorphic to the
@@ -1113,8 +1219,8 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
                 curves[i]`IsSubhyp := false;
                 curves[i]`IsHyp := false;
                 curves[i]`TestInWhichProved := Sprintf(
-                    "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
-                    p, src`CurveID);
+                    "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o (source: %o)",
+                    p, src`CurveID, cert);
             end if;
             break;
         end for;
