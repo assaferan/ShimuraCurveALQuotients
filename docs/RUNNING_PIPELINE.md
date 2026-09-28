@@ -142,6 +142,18 @@ for every curve at that level. `parallel_filter_worker.m` therefore deals whole 
 chunks for them, again heaviest first. The merge (`parallel_merge.m`) is unchanged: every chunk's
 curves are tagged with their original index.
 
+**Star curves are not re-run.** `FilterByTrace`, `FilterByTwistedTrace`, `FilterByWeilPolynomial`,
+`FilterByTwistedWeilPolynomial` and `FilterByNonALInvolutions` call the same function as their
+`*Star` versions, and a star curve's (D, N, W, g) do not change in between, so on a star curve the
+star version left undecided they would repeat that computation and get the same answer. The worker
+skips those curves (they are written back unchanged and cost 0 in the chunk balance), but only
+when the star version has run in the same data directory: `curves_after_<Stage>Star.dat` must sit
+next to the input and contain the curve's level. Run standalone, without that file, a non-star
+stage still tests every curve. In the 2026-09-26 run the two slowest chunks of the non-star twisted
+trace were such repeats: X_0^*(910, 9) and X_0^*(770, 9) took 4.0 h and 4.6 h and ended undecided,
+exactly as in the star stage; 160 of the 825 curves entering `FilterByWeilPolynomial` were star
+curves that `FilterByWeilPolynomialStar` had already left undecided.
+
 ## Cost hot spots
 
 * **`FilterByWeilPolynomial`**: about 5 h on a single curve at the top end, dominated by
