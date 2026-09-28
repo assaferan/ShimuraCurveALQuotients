@@ -94,7 +94,12 @@ intrinsic VerifyHHProposition1(starcurves::SeqEnum[ShimuraQuot])
     by_genus := GetModularByGenus(starcurves);
     Table2[3] := [N : N in Table2[3] | N ne 194];
     Table2[4] := [N : N in Table2[4] | N ne 546];
-    assert Table2 eq by_genus;
+    if Table2 eq by_genus then return; end if;
+    // The genera at which they differ, for the message.
+    bad := [g : g in [1..Max(#Table2, #by_genus)] |
+                (IsDefined(Table2, g) select Table2[g] else []) ne (IsDefined(by_genus, g) select by_genus[g] else [])];
+    error Sprintf("VerifyHHProposition1: the undecided D = 1 star curves differ from [HH] Table 2 minus 194, 546 in genus %o: expected %o, got %o",
+        bad, [IsDefined(Table2, g) select Table2[g] else [] : g in bad], [IsDefined(by_genus, g) select by_genus[g] else [] : g in bad]);
 end intrinsic;
 
 intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
@@ -106,8 +111,23 @@ intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
     // A genuine copy: ShimuraQuot has reference semantics, so `copy := starcurves` would share
     // the records and HHProposition1 would write into the input.
     copy := eval before;
-    HHProposition1(~copy);
-    VerifyHHProposition1(copy);
+    uncertified := [];
+    HHProposition1(~copy, ~uncertified);
+    // An uncertified source (see HHProposition1) is not used, so [HH] Proposition 1 is not
+    // reproduced at that pair.  VerifyHHProposition1 still runs first, and both diagnoses are
+    // reported together, so the stage fails with the reason rather than on a bare assertion.
+    verify_msg := "";
+    try
+        VerifyHHProposition1(copy);
+    catch e
+        verify_msg := e`Object;
+    end try;
+    unc_msg := #uncertified eq 0 select "" else Sprintf(
+        "CheckHHProposition1: [HH] Proposition 1 applies at %o pair(s) <source, target, p> = %o, but the "
+        cat "source is not certified non-hyperelliptic mod p (NonHyperellipticAtPrimeCertificate), so the "
+        cat "target was not marked and SpecialFiberIsomorphismStar will not decide it either",
+        #uncertified, uncertified);
+    error if verify_msg ne "" or unc_msg ne "", Join([m : m in [unc_msg, verify_msg] | m ne ""], "; ");
     assert Sprint(starcurves, "Magma") eq before;
 end intrinsic;
 
