@@ -239,3 +239,51 @@ procedure test_DualGraphNotSFICertificate()
     printf "Done!\n";
 end procedure;
 test_DualGraphNotSFICertificate();
+
+dg_fiber_raw := eval Read("tests/dualgraph_fiber_data.txt");
+
+procedure test_DualGraphStankewicz(raw)
+    printf "Testing agreement with Stankewicz's fiber...";
+    for r in raw do
+        D, N, p, ei, al := Explode(r);
+        h := Max([x[1] : x in ei]); hh := #ei;
+        org := [x[1] : x in ei];
+        wp := [x[2] : x in al | x[1] eq p][1];
+        assert [x[2] : x in ei] eq [org[wp[e]] : e in [1..hh]];     // terminus = origin of w_p(e)
+        alV := [];
+        for x in al do
+            if x[1] eq p then continue; end if;
+            img := [0 : v in [1..h]];
+            for e in [1..hh] do img[org[e]] := org[x[2][e]]; end for;
+            Append(~alV, <x[1], img>);
+        end for;
+        theirs := <h, hh, org, al, alV>;
+        ValidateDualGraphData(D, N, p, theirs);
+        assert dg_same_graphs(DualGraphData(D, N, p : CacheDir := "none"), theirs, D, N, p);
+    end for;
+    printf "Done!\n";
+end procedure;
+test_DualGraphStankewicz(dg_fiber_raw);
+
+// AL permutations from Magma's Brandt module of level M in the algebra of discriminant Dp
+function dg_brandt_list(Dp, M)
+    B := BrandtModule(Dp, M);
+    n := Dimension(B);
+    return [<q, [[j : j in [1..n] | A[i][j] ne 0][1] : i in [1..n]]> where A := Matrix(AtkinLehnerOperator(B, q))
+            : q in PrimeDivisors(Dp*M)], n;
+end function;
+
+procedure test_DualGraphBrandt()
+    printf "Testing against Magma's Brandt modules...";
+    for c in [<6,35,2>, <10,33,5>, <14,33,7>] do
+        D, N, p := Explode(c);
+        data := DualGraphData(D, N, p : CacheDir := "none");
+        bV, nV := dg_brandt_list(D div p, N);
+        bE, nE := dg_brandt_list(D div p, N*p);
+        assert nV eq data[1] and nE eq data[2];
+        assert dg_fixcounts(bV, nV) eq dg_fixcounts(data[5], nV);
+        assert dg_fixcounts(bE, nE) eq dg_fixcounts(data[4], nE);
+    end for;
+    printf "Done!\n";
+end procedure;
+test_DualGraphBrandt();
