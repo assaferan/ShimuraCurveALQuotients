@@ -9,7 +9,8 @@ end function;
 
 wc := [
     "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
@@ -27,7 +28,8 @@ rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
     "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateCurves5", "FilterByAutomorphismGroup",
     "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
@@ -67,7 +69,7 @@ for line in Split(body, "\n") do
 end for;
 printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
-assert #wstar eq 10;
+assert #wstar eq 11;
 assert wstar eq sstar;
 // compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
 // CheckHHProposition1, runs it on the same curves.

@@ -26,10 +26,8 @@ nuV3 := NumFixedPointsNonALOnX(V3, "V3", 1, D, N);
 printf "nu(V3 on X_0(%o,%o)) = %o\n", D, N, nuV3;
 assert nuV3 ge 0 and IsEven(nuV3);
 
-// Exercise the helper enumerators on a trivial W = {1}.
+// Exercise the helper enumerator on a trivial W = {1}.
 W := {Integers() | 1};
-n2s := GeneralizedN2Candidates(D, N, W);
-printf "N2 candidates (W={1}) for (%o,%o): %o\n", D, N, n2s;
 vs, names, bads := AvailableNonALInvolutions(D, N, W);
 printf "available non-AL involutions: %o\n", names;
 
