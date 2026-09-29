@@ -175,3 +175,43 @@ builds afresh (no caches) identifying every class by a full scan instead of the 
     SetCache(key, data, dual_graphs);
     return data;
 end intrinsic;
+
+// ---------- quotient graph for W ----------
+
+intrinsic DualGraphQuotientFromData(data::Tup, p::RngIntElt, W::SetEnum) -> RngIntElt, SeqEnum
+{The quotient of the dual graph `data` (from DualGraphData at p) by the Atkin-Lehner group W (a set
+of Hall divisors of DN), with half-edges removed and leaves kept.  Returns the number of vertex
+orbits that carry an edge and the edges as pairs <u, v>, u <= v.}
+    h := data[1]; hh := data[2]; org := data[3];
+    wp := dg_img(data[4], p);
+    // vertex x in [1..2h]: label ((x-1) mod h) + 1, copy + if x <= h, - otherwise
+    function vact(m, x)
+        v := ((x-1) mod h) + 1; s := (x-1) div h;
+        for q in PrimeDivisors(m) do
+            if q eq p then s := 1 - s; else v := dg_img(data[5], q)[v]; end if;
+        end for;
+        return v + s*h;
+    end function;
+    function eact(m, e)
+        for q in PrimeDivisors(m) do e := dg_img(data[4], q)[e]; end for;
+        return e;
+    end function;
+    vorb := [0 : x in [1..2*h]]; nv := 0;
+    for x in [1..2*h] do
+        if vorb[x] ne 0 then continue; end if;
+        nv +:= 1;
+        for m in W do vorb[vact(m, x)] := nv; end for;
+    end for;
+    edges := [];
+    seen := {};
+    for e in [1..hh] do
+        if e in seen then continue; end if;
+        seen join:= {eact(m, e) : m in W};
+        // an m with p | m that fixes e swaps its two ends: the orbit is a half-edge, dropped
+        if exists{m : m in W | m mod p eq 0 and eact(m, e) eq e} then continue; end if;
+        u := vorb[org[e]]; v := vorb[org[wp[e]] + h];
+        Append(~edges, <Min(u, v), Max(u, v)>);
+    end for;
+    used := #edges eq 0 select 0 else #({x[1] : x in edges} join {x[2] : x in edges});
+    return used, edges;
+end intrinsic;

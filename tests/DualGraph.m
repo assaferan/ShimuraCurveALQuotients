@@ -90,3 +90,62 @@ procedure test_DualGraphDiskCache()
     printf "Done!\n";
 end procedure;
 test_DualGraphDiskCache();
+
+// simple graph from a multigraph, subdividing every edge (a loop by two points), for IsIsomorphic
+function dg_subdivided(nv, edges)
+    n := nv; E := {};
+    for e in edges do
+        if e[1] eq e[2] then E join:= {{e[1], n+1}, {n+1, n+2}, {n+2, e[1]}}; n +:= 2;
+        else E join:= {{e[1], n+1}, {n+1, e[2]}}; n +:= 1; end if;
+    end for;
+    return Graph< n | E >;
+end function;
+
+// two dual-graph data tuples at p give isomorphic quotient graphs for every AL subgroup
+function dg_same_graphs(a, b, D, N, p)
+    for W in ALSubgroups(D*N) do
+        n1, e1 := DualGraphQuotientFromData(a, p, W[1]);
+        n2, e2 := DualGraphQuotientFromData(b, p, W[1]);
+        if not IsIsomorphic(dg_subdivided(n1, e1), dg_subdivided(n2, e2)) then return false; end if;
+    end for;
+    return true;
+end function;
+
+// (D, N, W, g) rows; read at top level: eval inside a function or procedure of an eval'd test crashes Magma 2.29-4
+dg_genus_rows := eval Read("tests/dualgraph_genus_data.txt");
+
+procedure test_DualGraphQuotient(rows)
+    printf "Testing DualGraphQuotientFromData...";
+    // genus identities b_1(G_W) = g, D*N <= 700 (822 of them; all 988 in tests/_offline/DualGraphFull.m)
+    n := 0;
+    for r in [r : r in rows | r[1]*r[2] le 700] do
+        for p in PrimeDivisors(r[1]) do
+            nv, edges := DualGraphQuotientFromData(DualGraphData(r[1], r[2], p : CacheDir := "none"), p, r[3]);
+            assert #edges - nv + 1 eq r[4] or (#edges eq 0 and r[4] eq 0);
+            n +:= 1;
+        end for;
+    end for;
+    assert n eq 822;
+    // the full-scan build gives the same graphs, for every W
+    for c in [<6,35,2>, <10,33,5>] do
+        assert dg_same_graphs(DualGraphData(c[1], c[2], c[3] : CacheDir := "none"),
+                              DualGraphData(c[1], c[2], c[3] : ForceScan := true), c[1], c[2], c[3]);
+    end for;
+    // negative controls: each deliberately wrong graph (dg_corrupt) breaks at least one identity
+    for variant in ["noreverse", "wrongreversal", "trivialvertexAL"] do
+        fails := 0;
+        for r in [r : r in rows | r[1]*r[2] le 700] do
+            for p in PrimeDivisors(r[1]) do
+                data := DualGraphData(r[1], r[2], p : CacheDir := "none");
+                if variant eq "trivialvertexAL" and forall{x : x in data[5] | x[2] eq [1..data[1]]} then continue; end if;
+                nv, edges := DualGraphQuotientFromData(dg_corrupt(data, p, variant), p, r[3]);
+                b1 := #edges eq 0 select 0 else #edges - nv + 1;
+                if b1 ne r[4] then fails +:= 1; end if;
+            end for;
+        end for;
+        printf " %o:%o", variant, fails;
+        assert fails gt 0;
+    end for;
+    printf " Done!\n";
+end procedure;
+test_DualGraphQuotient(dg_genus_rows);
