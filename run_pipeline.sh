@@ -19,6 +19,7 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  check only: VerifyHHTable2 (input),
 #                                                        VerifyHHProposition1 (on a copy); writes input unchanged
+#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1, N squarefree)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
@@ -33,6 +34,8 @@
 #                                                       cheapest filter, run first to prune the rest)
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
+#   FilterByDualGraph                      [PARALLEL, by level]  (dual graph at p | D)
+#   UpdateCurvesAfterDualGraph             [sequential]
 #   Genus3CoversGenus2                     [sequential]
 #   UpdateCurves3                          [sequential]
 #   FilterByDegeneracyMorphism             [PARALLEL]
@@ -124,6 +127,10 @@ run_par "FilterByTraceStar"
 # check [HH]'s own input and output (the twisted trace below decides further HH Table 2 curves).
 # Check only: the output file is the input unchanged; SpecialFiberIsomorphismStar decides HH's curves.
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
+# Dual graph of the special fibre at each p | D (Padurariu-Saia Thm 2.6; Baker-Norine/Chan):
+# no involution with tree quotient => not hyperelliptic.  After the check-only HHProposition1,
+# so VerifyHHTable2 still reads curves_after_FilterByTraceStar.dat.  Split by level.
+run_par "FilterByDualGraphStar"
 # Twisted trace on the star curves: W is the full AL group, so the only twists are V2, V3 and V2 V3
 # (V3 is Q-rational since 9 in W).
 run_par "FilterByTwistedTraceStar"
@@ -161,7 +168,10 @@ run_par "FilterBySpecialFiber"
 run_par "FilterByALFixedPointsOnQuotient"
 run_seq "UpdateCurves2"       "${D}/curves_after_FilterByALFixedPointsOnQuotient.dat" \
                                                                                    "${D}/curves_after_UpdateCurves2.dat"
-run_seq "Genus3CoversGenus2"  "${D}/curves_after_UpdateCurves2.dat"                "${D}/curves_after_Genus3CoversGenus2.dat"
+run_par "FilterByDualGraph"
+run_seq "UpdateCurvesAfterDualGraph" "${D}/curves_after_FilterByDualGraph.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"
+run_seq "Genus3CoversGenus2"  "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"   "${D}/curves_after_Genus3CoversGenus2.dat"
 run_seq "UpdateCurves3"       "${D}/curves_after_Genus3CoversGenus2.dat"           "${D}/curves_after_UpdateCurves3.dat"
 run_par "FilterByDegeneracyMorphism"
 run_seq "UpdateCurves4"       "${D}/curves_after_FilterByDegeneracyMorphism.dat"   "${D}/curves_after_UpdateCurves4.dat"

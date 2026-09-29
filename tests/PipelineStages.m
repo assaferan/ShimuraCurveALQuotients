@@ -8,10 +8,10 @@ function StageOrder(text, names)
 end function;
 
 wc := [
-    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
+    "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1",
+    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1", "FilterByALFixedPointsOnQuotient", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
     "UpdateCurves5", "FilterByAutomorphismGroup", "UpdateCurvesAfterAutomorphismGroup",
     "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
@@ -26,9 +26,9 @@ assert Position(Read("workingcode.m"), "<\"UpdateCurves8\", UpdateCurves>\n*];")
 rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
-    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
+    "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateCurves5", "FilterByAutomorphismGroup",
+    "FilterByNonALInvolutionsStar", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2", "UpdateCurves5", "FilterByAutomorphismGroup",
     "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
     "FilterByTwistedWeilPolynomial", "UpdateCurvesAfterTwistedWeilPolynomial",
@@ -67,7 +67,7 @@ for line in Split(body, "\n") do
 end for;
 printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
-assert #wstar eq 10;
+assert #wstar eq 11;
 assert wstar eq sstar;
 // compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
 // CheckHHProposition1, runs it on the same curves.

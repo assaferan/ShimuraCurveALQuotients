@@ -18,6 +18,7 @@ stages := [
     "UpdateByGenusStar",
     "FilterByTraceStar",
     // (HHProposition1 is check-only: its snapshot equals FilterByTraceStar's, so it has no row.)
+    "FilterByDualGraphStar",
     "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar",
     "FilterByWeilPolynomialStar",
@@ -29,6 +30,8 @@ stages := [
     "FilterBySpecialFiber",
     "FilterByALFixedPointsOnQuotient",
     "UpdateCurves2",
+    "FilterByDualGraph",
+    "UpdateCurvesAfterDualGraph",
     "Genus3CoversGenus2",
     "UpdateCurves3",
     "FilterByDegeneracyMorphism",

@@ -25,6 +25,8 @@
 // FilterByTwistedWeilPolynomial (and their *Star versions) compute the modular symbols of level D*N once per level and
 // share them between the curves at that level, so for them the unit of work is a LEVEL: all
 // curves with the same (D,N) go to the same chunk (see the assignment below).
+// FilterByDualGraph (and its Star version) is level-grouped too: the dual graph of X_0^D(N) at
+// each p | D is built once per level.
 //
 // The non-star stages that have a *Star version skip the star curves once that version has run
 // (see star_of below): it already ran the same function on them.
@@ -57,6 +59,7 @@ star_of["FilterByTwistedTrace"]          := "FilterByTwistedTraceStar";
 star_of["FilterByWeilPolynomial"]        := "FilterByWeilPolynomialStar";
 star_of["FilterByTwistedWeilPolynomial"] := "FilterByTwistedWeilPolynomialStar";
 star_of["FilterByNonALInvolutions"]      := "FilterByNonALInvolutionsStar";
+star_of["FilterByDualGraph"]             := "FilterByDualGraphStar";
 skip := [false : i in [1..n]];
 if IsDefined(star_of, stage) then
     parts := Split(input_dat, "/");
@@ -78,7 +81,8 @@ end if;
 proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
 for i in [1..n] do if skip[i] then proxy[i] := 0; end if; end for;   // skipped: no cost
 if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial",
-             "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar"} then
+             "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar",
+             "FilterByDualGraph", "FilterByDualGraphStar"} then
     // Level-grouped stages: the same cost-aware strided deal, over levels instead of curves.  A
     // level's cost is its most expensive curve (the modular symbols dominate and are shared), and
     // every curve of the level, decided or not, goes with it, so the chunks still partition 1..n.
@@ -116,6 +120,8 @@ case stage:
         FilterByTwistedTrace(~subseq);
     when "FilterByTwistedWeilPolynomial", "FilterByTwistedWeilPolynomialStar":
         FilterByTwistedWeilPolynomial(~subseq);
+    when "FilterByDualGraph", "FilterByDualGraphStar":
+        FilterByDualGraph(~subseq);
     when "FilterStarCurvesByFpAutomorphisms":
         FilterStarCurvesByFpAutomorphisms(~subseq);
     when "FilterByALFixedPointsOnQuotient":

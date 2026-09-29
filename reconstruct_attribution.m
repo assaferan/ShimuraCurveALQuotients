@@ -32,6 +32,7 @@ end function;
 star_stages := [
  "UpdateByGenusStar",
  "FilterByTraceStar",
+ "FilterByDualGraphStar",
  "FilterByTwistedTraceStar",
  "SpecialFiberIsomorphismStar",
  "FilterByWeilPolynomialStar",
@@ -46,6 +47,8 @@ full_stages := [
  "FilterBySpecialFiber",
  "FilterByALFixedPointsOnQuotient",
  "UpdateCurves2",
+ "FilterByDualGraph",
+ "UpdateCurvesAfterDualGraph",
  "Genus3CoversGenus2",
  "UpdateCurves3",
  "FilterByDegeneracyMorphism",

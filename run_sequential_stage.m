@@ -62,7 +62,7 @@ case stage:
     when "UpdateCurves1", "UpdateCurves2", "UpdateCurves3", "UpdateCurves4",
          "UpdateCurves6", "UpdateCurves7", "UpdateCurves8",
          "UpdateCurvesAfterAutomorphismGroup", "UpdateCurvesAfterTwistedTrace",
-         "UpdateCurvesAfterTwistedWeilPolynomial":
+         "UpdateCurvesAfterTwistedWeilPolynomial", "UpdateCurvesAfterDualGraph":
         UpdateCurves(~curves);
 
     when "Genus3CoversGenus2":

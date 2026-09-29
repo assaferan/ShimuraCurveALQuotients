@@ -31,6 +31,7 @@ FILTER_STAGES := [*
     // so CheckHHProposition1 runs it (and VerifyHHProposition1) on a copy and leaves the curves
     // unchanged; the stage credits no curve.
     <"HHProposition1", CheckHHProposition1>,
+    <"FilterByDualGraphStar", FilterByDualGraph>,
     // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
     // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
     // GetQuotientsAndGenera.  The star block is in the same order as run_pipeline.sh
@@ -55,6 +56,8 @@ FILTER_STAGES := [*
     <"FilterBySpecialFiber", FilterBySpecialFiber>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
+    <"FilterByDualGraph", FilterByDualGraph>,
+    <"UpdateCurvesAfterDualGraph", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
     <"UpdateCurves3", UpdateCurves>,
     <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
