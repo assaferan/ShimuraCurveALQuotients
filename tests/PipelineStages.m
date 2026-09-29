@@ -159,3 +159,47 @@ copy := eval before;
 HHProposition1(~copy);
 hh := [i : i in [1..#copy] | assigned copy[i]`IsSubhyp and not assigned star[i]`IsSubhyp];
 assert [<copy[i]`D, copy[i]`N> : i in hh] eq [<1, 194>, <1, 546>, <205, 3>, <1995, 2>];
+
+// VerifyHHTable2 and VerifyHHProposition1 compare genus-wise, a genus missing on one side counting as
+// no curves: GetHHTable2 always has 19 entries but GetModularByGenus has one per genus up to the
+// largest in the list.  On the list without the curves of genus above 12 (none of them undecided
+// with D = 1) both still pass; before, the lengths differed, so VerifyHHTable2 failed its bare assert and
+// VerifyHHProposition1's error named no genus.  A real
+// difference is still reported, by genus: without HH's marks, 194 and 546 are extra in genus 3, 4.
+low := [X : X in copy | X`g le 12];
+VerifyHHTable2([X : X in star | X`g le 12]);
+VerifyHHProposition1(low);
+msg := "";
+try
+    VerifyHHProposition1([X : X in star | X`g le 12]);
+catch e
+    msg := e`Object;
+end try;
+assert Position(msg, "in genus [ 3, 4 ]") gt 0;
+
+// An uncertified source is reported only if the target stays unmarked.  Genuine star curves, except
+// that the targets' genera are hand-set (to the sources' genus, which [HH] needs), so HHProposition1
+// applies:
+//  * X_0^*(1290) has two sources, X_0^*(258) at p = 5 (no certificate at 5) and, later in the list,
+//    X_0^*(430) at p = 3 (certified).  The first pair is recorded while 1290 is still unmarked; the
+//    second marks it, so the first must not be returned.
+//  * X_0^*(1120) has only X_0^*(160) at p = 7 (no certificate at 7), and stays unmarked: reported.
+mkstar := function(N, g, id)
+    X := CreateShimuraQuot(1, N, {d : d in Divisors(N) | GCD(d, N div d) eq 1});
+    X`g := g;
+    X`CurveID := id;
+    return X;
+end function;
+two := [mkstar(258, 3, 1), mkstar(430, 3, 2), mkstar(160, 4, 3), mkstar(1290, 3, 4), mkstar(1120, 4, 5)];
+for i in [1..3] do
+    assert GenusShimuraCurveQuotient(1, two[i]`N, two[i]`W) eq two[i]`g;
+    two[i]`IsSubhyp := false; two[i]`IsHyp := false; two[i]`TestInWhichProved := "hand-set";
+end for;
+assert not NonHyperellipticAtPrimeCertificate(two[1], 5);
+assert NonHyperellipticAtPrimeCertificate(two[2], 3);
+assert not NonHyperellipticAtPrimeCertificate(two[3], 7);
+uncertified := [];
+HHProposition1(~two, ~uncertified);
+assert assigned two[4]`IsSubhyp and not two[4]`IsSubhyp and two[4]`TestInWhichProved eq "HHproposition1 isomorphic to 2";
+assert not assigned two[5]`IsSubhyp;
+assert uncertified eq [<3, 5, 7>];
