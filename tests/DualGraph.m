@@ -259,7 +259,12 @@ procedure test_DualGraphStankewicz(raw)
         end for;
         theirs := <h, hh, org, al, alV>;
         ValidateDualGraphData(D, N, p, theirs);
-        assert dg_same_graphs(DualGraphData(D, N, p : CacheDir := "none"), theirs, D, N, p);
+        ours := DualGraphData(D, N, p : CacheDir := "none");
+        assert dg_same_graphs(ours, theirs, D, N, p);
+        // negative control: trivial w_p on edges still validates, so only the comparison can reject it
+        bad := dg_corrupt(theirs, p, "noreverse");
+        ValidateDualGraphData(D, N, p, bad);
+        assert not dg_same_graphs(ours, bad, D, N, p);
     end for;
     printf "Done!\n";
 end procedure;
