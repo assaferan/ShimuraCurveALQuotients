@@ -81,10 +81,8 @@ function GetModularByGenus(curves)
     return by_genus;
 end function;
 
-// The genus-wise difference between an expected table and GetModularByGenus's output, as an error
-// message naming the verification ("" if they agree).  A genus missing from either side counts as
-// no curves: the two lengths differ whenever the largest genus in the list is not 19 (#Table2), and
-// an empty genus beyond the end of one of them is not a discrepancy.
+// Error message for the genera where expected and got differ, "" if none.  A genus past the end of
+// either sequence counts as no curves (#Table2 is 19, #GetModularByGenus is the largest genus).
 function HHByGenusMismatch(name, what, expected, got)
     at := func<s, g | IsDefined(s, g) select s[g] else []>;
     bad := [g : g in [1..Max(#expected, #got)] | at(expected, g) ne at(got, g)];
@@ -120,10 +118,8 @@ intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
     copy := eval before;
     uncertified := [];
     HHProposition1(~copy, ~uncertified);
-    // An uncertified source (see HHProposition1) is not used; uncertified lists the pairs whose
-    // target no other source marked, where [HH] Proposition 1 is not reproduced.  VerifyHHProposition1
-    // still runs first, and both diagnoses are reported together, so the stage fails with the reason
-    // rather than on a bare assertion.
+    // uncertified: the <source, target, p> whose target is left unmarked because the source is not
+    // certified mod p (see HHProposition1).  Both diagnoses are reported together.
     verify_msg := "";
     try
         VerifyHHProposition1(copy);

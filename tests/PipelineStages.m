@@ -160,12 +160,8 @@ HHProposition1(~copy);
 hh := [i : i in [1..#copy] | assigned copy[i]`IsSubhyp and not assigned star[i]`IsSubhyp];
 assert [<copy[i]`D, copy[i]`N> : i in hh] eq [<1, 194>, <1, 546>, <205, 3>, <1995, 2>];
 
-// VerifyHHTable2 and VerifyHHProposition1 compare genus-wise, a genus missing on one side counting as
-// no curves: GetHHTable2 always has 19 entries but GetModularByGenus has one per genus up to the
-// largest in the list.  On the list without the curves of genus above 12 (none of them undecided
-// with D = 1) both still pass; before, the lengths differed, so VerifyHHTable2 failed its bare assert and
-// VerifyHHProposition1's error named no genus.  A real
-// difference is still reported, by genus: without HH's marks, 194 and 546 are extra in genus 3, 4.
+// Restricted to genus <= 12 (no undecided D = 1 curves above), GetModularByGenus is shorter than
+// Table 2 and both checks still pass.  Without HH's marks, 194 and 546 are reported in genus 3, 4.
 low := [X : X in copy | X`g le 12];
 VerifyHHTable2([X : X in star | X`g le 12]);
 VerifyHHProposition1(low);
@@ -177,13 +173,10 @@ catch e
 end try;
 assert Position(msg, "in genus [ 3, 4 ]") gt 0;
 
-// An uncertified source is reported only if the target stays unmarked.  Genuine star curves, except
-// that the targets' genera are hand-set (to the sources' genus, which [HH] needs), so HHProposition1
-// applies:
-//  * X_0^*(1290) has two sources, X_0^*(258) at p = 5 (no certificate at 5) and, later in the list,
-//    X_0^*(430) at p = 3 (certified).  The first pair is recorded while 1290 is still unmarked; the
-//    second marks it, so the first must not be returned.
-//  * X_0^*(1120) has only X_0^*(160) at p = 7 (no certificate at 7), and stays unmarked: reported.
+// An uncertified source is reported only if its target stays unmarked.  Genuine star curves, but the
+// targets' genera are hand-set to the sources' so that HHProposition1 applies:
+//  * X_0^*(1290): X_0^*(258) at p = 5, not certified, is recorded first; X_0^*(430) at p = 3 then marks it.
+//  * X_0^*(1120): only X_0^*(160) at p = 7, not certified, so it stays unmarked and is reported.
 mkstar := function(N, g, id)
     X := CreateShimuraQuot(1, N, {d : d in Divisors(N) | GCD(d, N div d) eq 1});
     X`g := g;
