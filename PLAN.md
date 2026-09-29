@@ -13,6 +13,14 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
 > Full account: `HANDOFF.md`, "READ THIS FIRST".
 
+## ⇒ OPEN (2026-09-29): dual-graph filter awaiting the lava rerun
+
+Implemented on branch `dual-graph-filter` (from `integration`). Plan:
+`docs/superpowers/plans/2026-09-29-dual-graph-filter.md`; spec:
+`docs/superpowers/specs/2026-09-29-dual-graph-filter-design.md`. To do: rerun on lava into an
+empty data dir. Report the `DualGraph summary:` lines of both stages and the p = 2-only count
+(command in HANDOFF.md, 2026-09-29). Then write the paper section `sec:dualgraph`.
+
 ## ⇒ OPEN (2026-09-26): `HHProposition1` in the analysis pipeline
 
 `HHProposition1` is a real pipeline stage (right after `FilterByTraceStar`), not just a

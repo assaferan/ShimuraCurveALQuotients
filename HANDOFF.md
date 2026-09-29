@@ -11,6 +11,29 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-09-29 — DUAL-GRAPH FILTER at p | D (FilterByDualGraphStar / FilterByDualGraph)
+
+* New package `DualGraph.m`. The dual graph of X_0^D(N) at p | D comes from left ideal classes
+  (levels N and Np of the definite algebra of discriminant D/p). AL involutions are left
+  multiplication by `PrimeIdeal`. The origin map is `lideal<O | Basis(I)>`, looked up by a
+  canonical Gram key and confirmed by `IsIsomorphic`. It is unweighted only.
+* Validation: 988/988 genus identities (`tests/_offline/DualGraphFull.m`; 822 in CI), K4 for
+  X_0^6(55)/<w_3, w_110> at p = 3, ten hyperelliptic controls, three negative controls,
+  agreement with Stankewicz's `fiber` at (6,35), (10,33), (14,5) for every W, with a negative control, and Brandt fixed-point counts.
+* `BrandtModule(D', M)` exposes no ideals and no degeneracy maps, and its basis cannot be aligned
+  with `LeftIdealClasses`. It is also slow: `BrandtModule(3,1610)` takes 232 s, against 10 s for
+  our whole fiber. It is used as a cross-check only.
+* `LeftIdealClasses` labels differ between calls: compare builds up to isomorphism.
+* Verdicts are tagged `DualGraph at p = <p>`, with odd primes tried first. Count the verdicts that
+  rely on p = 2 alone with:
+  `c := eval Read("data/par/curves_after_UpdateCurves8.dat"); #[X : X in c | assigned X`TestInWhichProved and X`TestInWhichProved eq "DualGraph at p = 2"];`
+  The pilot measured 35 of 165.
+* NOT an SFI certificate (pinned in `tests/DualGraph.m`).
+* Cache: `data/dualgraph/dualgraph_v1_<D>_<N>_<p>`, gitignored and regenerated on lava. Bump
+  `DG_FORMAT` if the construction changes.
+* Next: full rerun on lava. Paper section `sec:dualgraph` (unweighted statement). Paper totals
+  in the later pass.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
