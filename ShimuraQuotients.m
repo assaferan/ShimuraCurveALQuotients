@@ -1111,6 +1111,9 @@ end intrinsic;
 // action is Frobenius, and when p is inert in Q(sqrt(-N2)) those fixed points are supersingular,
 // defined over F_(p^2), with orbits of size at most 2.  (In the 2026-09-26 rerun, 5040, 5047, 5051
 // and 5202 were ruled at p = 3 through a source certified only by it.)
+// Deliberately NOT used: the dual-graph test (FilterByDualGraph, DualGraph.m).  It is a statement
+// about the special fibre at a prime p | D, where X has bad (Mumford) reduction, and says nothing
+// about X mod a good prime.  tests/DualGraph.m asserts this intrinsic never mentions it.
 //  * the twisted trace and twisted Weil tests at p (a twist of X by an involution defined over Q is
 //    isomorphic to X over the algebraic closure of F_p).  Tried last: they are the only ones that
 //    need the modular symbols of level DN.

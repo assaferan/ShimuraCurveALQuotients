@@ -220,3 +220,22 @@ procedure test_FilterByDualGraph()
     printf "Done!\n";
 end procedure;
 test_FilterByDualGraph();
+
+procedure test_DualGraphNotSFICertificate()
+    printf "Testing that DualGraph verdicts are not SFI certificates...";
+    X := CreateShimuraQuot(158, 1, {1, 2}); X`g := GenusShimuraCurveQuotient(158, 1, {1, 2}); X`CurveID := 1;
+    cs := [X];
+    FilterByDualGraph(~cs : CacheDir := "none");
+    assert cs[1]`TestInWhichProved eq "DualGraph at p = 2";
+    // ruled by the graph at p = 2 | D, yet not certified at any good prime tried
+    for l in [3, 5, 7] do
+        assert not NonHyperellipticAtPrimeCertificate(cs[1], l);
+    end for;
+    // and the certificate code never consults the dual-graph test
+    src := Read("ShimuraQuotients.m");
+    a := Position(src, "intrinsic NonHyperellipticAtPrimeCertificate(");
+    b := a + Position(src[a..#src], "end intrinsic;");
+    assert a gt 0 and Position(src[a..b], "DualGraph") eq 0;
+    printf "Done!\n";
+end procedure;
+test_DualGraphNotSFICertificate();
