@@ -215,3 +215,135 @@ orbits that carry an edge and the edges as pairs <u, v>, u <= v.}
     used := #edges eq 0 select 0 else #({x[1] : x in edges} join {x[2] : x in edges});
     return used, edges;
 end intrinsic;
+
+// ---------- canonical model and involution search ----------
+
+function dg_relabel(edges)
+    usedv := Sort(Setseq({e[1] : e in edges} join {e[2] : e in edges}));
+    idx := AssociativeArray();
+    for i->v in usedv do idx[v] := i; end for;
+    return #usedv, [<idx[e[1]], idx[e[2]]> : e in edges];
+end function;
+
+function dg_connected_without(nv, edges, skip)
+    seen := {1}; frontier := [1];
+    while #frontier gt 0 do
+        x := frontier[#frontier]; Prune(~frontier);
+        for i->e in edges do
+            if i eq skip then continue; end if;
+            if e[1] eq x and not (e[2] in seen) then Include(~seen, e[2]); Append(~frontier, e[2]); end if;
+            if e[2] eq x and not (e[1] in seen) then Include(~seen, e[1]); Append(~frontier, e[1]); end if;
+        end for;
+    end while;
+    return #seen eq nv;
+end function;
+
+intrinsic CanonicalGraphModel(nv::RngIntElt, edges::SeqEnum) -> RngIntElt, SeqEnum
+{Canonical model of a connected multigraph given by edges <u, v> (loops allowed): repeatedly delete
+leaves, contract bridges and merge the two edges at a valence-2 vertex.  The genus is unchanged.}
+    if #edges eq 0 then return 0, edges; end if;
+    g0 := #edges - nv + 1;
+    changed := true;
+    while changed do
+        changed := false;
+        nv, edges := dg_relabel(edges);
+        if #edges eq 0 then break; end if;
+        for v in [1..nv] do                                   // leaves
+            inc := [i : i->e in edges | e[1] eq v or e[2] eq v];
+            if #inc eq 1 and edges[inc[1]][1] ne edges[inc[1]][2] then
+                Remove(~edges, inc[1]); changed := true; break;
+            end if;
+        end for;
+        if changed then continue; end if;
+        for i->e in edges do                                  // bridges: contract
+            if e[1] ne e[2] and not dg_connected_without(nv, edges, i) then
+                u := e[1]; v := e[2];
+                Remove(~edges, i);
+                edges := [<f[1] eq v select u else f[1], f[2] eq v select u else f[2]> : f in edges];
+                edges := [<Min(f[1], f[2]), Max(f[1], f[2])> : f in edges];
+                changed := true; break;
+            end if;
+        end for;
+        if changed then continue; end if;
+        for v in [1..nv] do                                   // valence-2 vertices: merge
+            inc := [i : i->e in edges | e[1] eq v or e[2] eq v];
+            if #inc eq 2 and forall{i : i in inc | edges[i][1] ne edges[i][2]} then
+                e1 := edges[inc[1]]; e2 := edges[inc[2]];
+                a := e1[1] eq v select e1[2] else e1[1];
+                b := e2[1] eq v select e2[2] else e2[1];
+                edges := [edges[i] : i in [1..#edges] | not (i in inc)] cat [<Min(a, b), Max(a, b)>];
+                changed := true; break;
+            end if;
+        end for;
+    end while;
+    if #edges eq 0 then return 0, edges; end if;
+    nv, edges := dg_relabel(edges);
+    assert #edges - nv + 1 eq g0;
+    return nv, edges;
+end intrinsic;
+
+// Backtracking over involutions pi of the vertices preserving edge multiplicities.  At a full
+// assignment, the largest chi(Fix) over the compatible edge maps is: fixed vertices, + loops at
+// fixed vertices (each reversed, midpoint fixed), - (mult mod 2) for each pair of distinct fixed
+// vertices (parallel edges swapped in pairs, one left fixed), + mult for each swapped pair a <-> b
+// (each such edge reversed).  chi(Fix) <= g + 1 always, with equality iff the quotient is a tree.
+function dg_search(n, pi, mult, g)
+    u := 0;
+    for i in [1..n] do if pi[i] eq 0 then u := i; break; end if; end for;
+    if u eq 0 then
+        chi := #[i : i in [1..n] | pi[i] eq i];
+        for a in [1..n] do
+            for b in [a..n] do
+                m := mult(a, b);
+                if a eq b then
+                    if pi[a] eq a then chi +:= m; end if;
+                elif pi[a] eq a and pi[b] eq b then
+                    chi -:= m mod 2;
+                elif pi[a] eq b then
+                    chi +:= m;
+                end if;
+            end for;
+        end for;
+        assert chi le g + 1;
+        return chi eq g + 1, pi;
+    end if;
+    for v in [u] cat [w : w in [u+1..n] | pi[w] eq 0] do
+        pi2 := pi; pi2[u] := v; pi2[v] := u;
+        asg := [i : i in [1..n] | pi2[i] ne 0];
+        if forall{<a, b> : a, b in asg | b lt a or mult(a, b) eq mult(pi2[a], pi2[b])} then
+            found, w := dg_search(n, pi2, mult, g);
+            if found then return true, w; end if;
+        end if;
+    end for;
+    return false, pi;
+end function;
+
+intrinsic IsHyperellipticGraph(nv::RngIntElt, edges::SeqEnum, g::RngIntElt) -> BoolElt, SeqEnum
+{For a 2-edge-connected multigraph of genus g >= 2 (edges <u, v> on [1..nv]), true iff it has an
+involution whose quotient is a tree; if so, also returns it as the vertex images.}
+    require g ge 2 and #edges - nv + 1 eq g : "needs a graph of genus g >= 2";
+    M := AssociativeArray();
+    for e in edges do
+        k := <Min(e[1], e[2]), Max(e[1], e[2])>;
+        M[k] := IsDefined(M, k) select M[k] + 1 else 1;
+    end for;
+    mult := func< a, b | IsDefined(M, <Min(a, b), Max(a, b)>) select M[<Min(a, b), Max(a, b)>] else 0 >;
+    return dg_search(nv, [0 : i in [1..nv]], mult, g);
+end intrinsic;
+
+intrinsic DualGraphTest(D::RngIntElt, N::RngIntElt, W::SetEnum, g::RngIntElt, p::RngIntElt : CacheDir := "") -> BoolElt, RngIntElt, SeqEnum
+{For Y = X_0^D(N)/W of genus g >= 2 and p | D: false if the dual graph of Y at p has no involution
+with tree quotient, which proves Y is not hyperelliptic; true otherwise (no conclusion).  Also
+returns the canonical model (vertex count, edges).  Raises DUALGRAPH_GENUS if the quotient graph
+does not have genus g.}
+    require g ge 2 : "needs g >= 2";
+    data := DualGraphData(D, N, p : CacheDir := CacheDir);
+    nv, edges := DualGraphQuotientFromData(data, p, W);
+    b1 := #edges eq 0 select 0 else #edges - nv + 1;
+    if b1 ne g then
+        error Sprintf("DUALGRAPH_GENUS: X_0^%o(%o)/%o at p = %o has graph genus %o, curve genus %o", D, N, W, p, b1, g);
+    end if;
+    nv, edges := CanonicalGraphModel(nv, edges);
+    hyp := IsHyperellipticGraph(nv, edges, g);
+    return hyp, nv, edges;
+end intrinsic;

@@ -149,3 +149,42 @@ procedure test_DualGraphQuotient(rows)
     printf " Done!\n";
 end procedure;
 test_DualGraphQuotient(dg_genus_rows);
+
+procedure test_DualGraphHyperelliptic()
+    printf "Testing canonical model and involution search...";
+    // synthetic graphs: rose and banana are hyperelliptic; K4, K33, Petersen, cube are not
+    assert IsHyperellipticGraph(1, [<1,1>, <1,1>, <1,1>], 3);
+    assert IsHyperellipticGraph(2, [<1,2> : i in [1..4]], 3);
+    K4 := [<1,2>, <1,3>, <1,4>, <2,3>, <2,4>, <3,4>];
+    assert not IsHyperellipticGraph(4, K4, 3);
+    assert not IsHyperellipticGraph(6, [<i,j> : i in [1..3], j in [4..6]], 4);
+    petersen := [<i, i mod 5 + 1> : i in [1..5]] cat [<5+i, 5 + ((i+1) mod 5) + 1> : i in [1..5]] cat [<i, i+5> : i in [1..5]];
+    petersen := [<Min(e[1], e[2]), Max(e[1], e[2])> : e in petersen];
+    t0 := Cputime();
+    assert not IsHyperellipticGraph(10, petersen, 6);
+    cube := [<a+1, b+1> : a, b in [0..7] | a lt b and #[i : i in [0..2] | ((a div 2^i) mod 2) ne ((b div 2^i) mod 2)] eq 1];
+    assert not IsHyperellipticGraph(8, cube, 5);
+    assert Cputime(t0) lt 5;
+    // canonical model: a theta graph with a pendant path and a subdivided edge collapses to a banana
+    nv, edges := CanonicalGraphModel(6, [<1,2>, <1,3>, <3,2>, <1,2>, <2,4>, <4,5>, <5,6>]);
+    assert nv eq 2 and #edges eq 3;
+    // X_0^6(55)/<w_3, w_110> at p = 3: K4, not hyperelliptic (pilot README)
+    hyp, nv, edges := DualGraphTest(6, 55, {1, 3, 110, 330}, 3, 3 : CacheDir := "none");
+    assert not hyp;
+    assert IsIsomorphic(dg_subdivided(nv, edges), dg_subdivided(4, K4));
+    // a wrong genus aborts
+    raised := false;
+    try _ := DualGraphTest(6, 55, {1, 3, 110, 330}, 4, 3 : CacheDir := "none");
+    catch e raised := Position(e`Object, "DUALGRAPH_GENUS") gt 0; end try;
+    assert raised;
+    // ten known-hyperelliptic curves (pilot hyp.m) pass at every p | D
+    for c in [<15,2,{1},3>, <51,2,{1,6},4>, <38,3,{1,3},4>, <57,2,{1,114},3>, <119,1,{1,17},5>,
+              <6,23,{1,6},3>, <143,1,{1,13},6>, <146,1,{1,73},3>, <77,2,{1,2,7,14},3>, <33,5,{1,3,11,33},3>] do
+        assert GenusShimuraCurveQuotient(c[1], c[2], c[3]) eq c[4];
+        for p in PrimeDivisors(c[1]) do
+            assert DualGraphTest(c[1], c[2], c[3], c[4], p : CacheDir := "none");
+        end for;
+    end for;
+    printf "Done!\n";
+end procedure;
+test_DualGraphHyperelliptic();
