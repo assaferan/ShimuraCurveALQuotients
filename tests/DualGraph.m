@@ -227,7 +227,8 @@ procedure test_DualGraphNotSFICertificate()
     cs := [X];
     FilterByDualGraph(~cs : CacheDir := "none");
     assert cs[1]`TestInWhichProved eq "DualGraph at p = 2";
-    // ruled by the graph at p = 2 | D, yet not certified at any good prime tried
+    // ruled by the graph at p = 2 | D; that these primes happen not to certify it is incidental (true
+    // today, and a future char-p test could legitimately change it): the textual check below is the guard
     for l in [3, 5, 7] do
         assert not NonHyperellipticAtPrimeCertificate(cs[1], l);
     end for;

@@ -88,16 +88,20 @@ end function;
 
 intrinsic ValidateDualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt, data::Tup)
 {Raises an error unless data is a consistent dual graph for X_0^D(N) at p: the Atkin-Lehner maps
-are involutions of the right sets, the origin map is equivariant for every w_q with q | DN/p, and
-h' - 2h + 1 is the genus of X_0^D(N).  Run on every build and on every disk-cache read.}
+are involutions of the right sets, w_p commutes with every other w_q on edges, the origin map is
+equivariant for every w_q with q | DN/p, and h' - 2h + 1 is the genus of X_0^D(N).  Run on every
+build and on every disk-cache read.}
     require #data eq 5 : "data must be <h, h', org, alE, alV>";
     h := data[1]; hh := data[2]; org := data[3];
     assert #org eq hh and &and[v in [1..h] : v in org];
     assert {x[1] : x in data[4]} eq Set(PrimeDivisors(D*N));
     assert {x[1] : x in data[5]} eq Set(PrimeDivisors((D div p)*N));
+    wp := dg_img(data[4], p);
     for x in data[4] do
         img := x[2];
         assert Sort(img) eq [1..hh] and &and[img[img[e]] eq e : e in [1..hh]];
+        // w_p commutes with every w_q on edges: the vertex action on the - copy uses alV[q]
+        assert &and[wp[img[e]] eq img[wp[e]] : e in [1..hh]];
     end for;
     for x in data[5] do
         q := x[1]; img := x[2]; eimg := dg_img(data[4], q);
@@ -180,8 +184,8 @@ end intrinsic;
 
 intrinsic DualGraphQuotientFromData(data::Tup, p::RngIntElt, W::SetEnum) -> RngIntElt, SeqEnum
 {The quotient of the dual graph `data` (from DualGraphData at p) by the Atkin-Lehner group W (a set
-of Hall divisors of DN), with half-edges removed and leaves kept.  Returns the number of vertex
-orbits that carry an edge and the edges as pairs <u, v>, u <= v.}
+of Hall divisors of DN, a group, so containing 1), with half-edges removed and leaves kept.  Returns
+the number of vertex orbits that carry an edge and the edges as pairs <u, v>, u <= v.}
     h := data[1]; hh := data[2]; org := data[3];
     wp := dg_img(data[4], p);
     // vertex x in [1..2h]: label ((x-1) mod h) + 1, copy + if x <= h, - otherwise
