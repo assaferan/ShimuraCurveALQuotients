@@ -188,3 +188,35 @@ procedure test_DualGraphHyperelliptic()
     printf "Done!\n";
 end procedure;
 test_DualGraphHyperelliptic();
+
+// a curve with its genus from the independent formula
+function dg_mk(D, N, W)
+    X := CreateShimuraQuot(D, N, W);
+    X`g := GenusShimuraCurveQuotient(D, N, W);
+    return X;
+end function;
+
+procedure test_FilterByDualGraph()
+    printf "Testing FilterByDualGraph...";
+    X1 := dg_mk(6, 55, {1, 3, 110, 330});         // ruled at p = 2 and p = 3: the tag names 3
+    X2 := dg_mk(158, 1, {1, 2});                  // ruled at p = 2 only
+    X3 := dg_mk(6, 55, {1, 3, 110, 330}); X3`IsSubhyp := true; X3`IsHyp := true; X3`TestInWhichProved := "hand";
+    X4 := CreateShimuraQuot(1, 97, {1}); X4`g := 7;            // D = 1: not applicable
+    X5 := CreateShimuraQuot(6, 25, {1}); X5`g := 5;            // N not squarefree: not applicable
+    X6 := dg_mk(15, 2, {1});                      // hyperelliptic: no conclusion
+    cs := [X1, X2, X3, X4, X5, X6];
+    FilterByDualGraph(~cs : CacheDir := "none");
+    assert cs[1]`IsSubhyp eq false and cs[1]`IsHyp eq false and cs[1]`TestInWhichProved eq "DualGraph at p = 3";
+    assert cs[2]`IsSubhyp eq false and cs[2]`TestInWhichProved eq "DualGraph at p = 2";
+    assert cs[3]`IsSubhyp and cs[3]`TestInWhichProved eq "hand";
+    assert &and[not assigned cs[i]`IsSubhyp : i in [4, 5, 6]];
+    // a genus inconsistency is not swallowed by the filter
+    Y := dg_mk(6, 55, {1, 3, 110, 330}); Y`g := 4;
+    ys := [Y];
+    raised := false;
+    try FilterByDualGraph(~ys : CacheDir := "none");
+    catch e raised := Position(e`Object, "DUALGRAPH_GENUS") gt 0; end try;
+    assert raised;
+    printf "Done!\n";
+end procedure;
+test_FilterByDualGraph();

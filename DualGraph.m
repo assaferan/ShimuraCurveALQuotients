@@ -347,3 +347,46 @@ does not have genus g.}
     hyp := IsHyperellipticGraph(nv, edges, g);
     return hyp, nv, edges;
 end intrinsic;
+
+// ---------- the filter ----------
+
+// odd primes first, ascending, then 2: a witness p = 2 then means no odd prime of D sufficed
+function dg_primes(D)
+    ps := PrimeDivisors(D);
+    return [q : q in ps | q ne 2] cat [q : q in ps | q eq 2];
+end function;
+
+intrinsic DualGraphVerdict(X::ShimuraQuot : CacheDir := "") -> BoolElt, RngIntElt
+{False and a prime p | D if the dual graph of X at p proves X is not hyperelliptic; true if no
+prime of D does (no conclusion).  Needs X`g >= 3 and DualGraphApplicable(X`D, X`N).}
+    require X`g ge 3 : "needs genus >= 3";
+    require DualGraphApplicable(X`D, X`N) : "needs D > 1, N squarefree, gcd(D, N) = 1";
+    for p in dg_primes(X`D) do
+        hyp := DualGraphTest(X`D, X`N, X`W, X`g, p : CacheDir := CacheDir);
+        if not hyp then return false, p; end if;
+    end for;
+    return true, _;
+end intrinsic;
+
+intrinsic FilterByDualGraph(~curves::SeqEnum : CacheDir := "")
+{Marks as not hyperelliptic every undecided curve of genus >= 3 whose dual graph at some p | D has
+no involution with tree quotient.  Curves with D = 1 or N not squarefree are not applicable and are
+left unchanged; decided curves are never overwritten.  Prints one DualGraph summary line.}
+    tested := 0; ruled := 0; ruled2 := 0; notapp := 0; decided := 0; lowg := 0;
+    for i->X in curves do
+        if assigned X`IsSubhyp then decided +:= 1; continue; end if;
+        if X`g lt 3 then lowg +:= 1; continue; end if;
+        if not DualGraphApplicable(X`D, X`N) then notapp +:= 1; continue; end if;
+        tested +:= 1;
+        hyp, p := DualGraphVerdict(X : CacheDir := CacheDir);
+        if not hyp then
+            curves[i]`IsSubhyp := false;
+            curves[i]`IsHyp := false;
+            curves[i]`TestInWhichProved := Sprintf("DualGraph at p = %o", p);
+            ruled +:= 1;
+            if p eq 2 then ruled2 +:= 1; end if;
+        end if;
+    end for;
+    printf "DualGraph summary: tested %o, ruled %o (witness p = 2: %o), not applicable %o, already decided %o, genus < 3 %o\n",
+        tested, ruled, ruled2, notapp, decided, lowg;
+end intrinsic;
