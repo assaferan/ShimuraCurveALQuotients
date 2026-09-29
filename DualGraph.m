@@ -1,0 +1,143 @@
+// Dual graph of the special fibre at p | D of X_0^D(N)/W, and the graph-hyperellipticity test.
+//
+// Y = X_0^D(N)/W, D > 1, N squarefree, gcd(D, N) = 1, p | D.  Y over Z_p is a Mumford curve whose
+// stable special fibre has dual graph the minimised quotient graph G_W (Padurariu--Saia,
+// arXiv:2509.25368, Thm 2.6, after Ogg 1985 and Bertolini--Darmon 1996).  gon(graph) <= gon(Y)
+// (Baker 2008).  A 2-edge-connected graph of genus >= 2 has gonality 2 iff it has an involution
+// whose quotient is a tree (Baker--Norine 2009, Chan 2013), i.e. with chi(Fix) = g + 1.  Lengths
+// are ignored (unweighted): an isometric involution is in particular a combinatorial one, so "no
+// combinatorial involution" is sound for every choice of lengths.
+//
+// Graph G (Kurihara; Padurariu--Saia 2.3).  B' = definite algebra of discriminant D/p, O an Eichler
+// order of level N, OO the level-Np suborder.  Vertices (v, +) and (v, -) for the h left ideal
+// classes v of O; one edge e for each of the h' left ideal classes of OO, joining (org[e], +) to
+// (org[w_p e], -), where org[e] is the class of O*I_e.  w_q (q | D'N) acts on classes of both
+// levels by I -> P_q I (P_q the two-sided prime of norm q) and preserves the copies; w_p acts on
+// edges by P_p and swaps the copies.  Specification: docs/superpowers/specs/2026-09-29-dual-graph-filter-design.md.
+
+import "Caching.m" : dual_graphs, SetCache, GetCache;
+
+// ---------- ideal-class lookup ----------
+
+// Class invariant of a left ideal: canonical Gram matrix of its norm form scaled by 1/Norm(I),
+// unchanged by I -> I*alpha.  Only a bucket key: every lookup is confirmed by IsIsomorphic.
+function dg_key(I)
+    return MinkowskiGramReduction(GramMatrix(I)/Norm(I) : Canonical := true);
+end function;
+
+function dg_buckets(reps)
+    b := AssociativeArray();
+    for i->I in reps do
+        k := dg_key(I);
+        if IsDefined(b, k) then Append(~b[k], i); else b[k] := [i]; end if;
+    end for;
+    return b;
+end function;
+
+// index of the class of J among reps; falls back to a full scan if the key bucket has no match
+function dg_find(J, reps, buckets)
+    ok, cand := IsDefined(buckets, dg_key(J));
+    if ok then
+        hits := [i : i in cand | IsIsomorphic(J, reps[i])];
+        if #hits eq 1 then return hits[1]; end if;
+    end if;
+    vprintf ShimuraQuotients, 1 : "DualGraph: class key missed, scanning all %o classes\n", #reps;
+    hits := [i : i in [1..#reps] | IsIsomorphic(J, reps[i])];
+    assert #hits eq 1;
+    return hits[1];
+end function;
+
+function dg_prime(O, q)
+    P := PrimeIdeal(O, q);
+    assert Norm(P) eq q and IsTwoSidedIdeal(P);
+    return P;
+end function;
+
+// image sequence of w_q in a list of pairs <q, images>
+function dg_img(list, q)
+    i := [j : j in [1..#list] | list[j][1] eq q];
+    assert #i eq 1;
+    return list[i[1]][2];
+end function;
+
+// ---------- the data layer ----------
+
+function dg_build(D, N, p, scan)
+    Dp := D div p;
+    Q := QuaternionAlgebra(Dp);
+    O := QuaternionOrder(Q, N);
+    OO := Order(O, p);
+    L := LeftIdealClasses(O);
+    LL := LeftIdealClasses(OO);
+    // scan: empty buckets, so every lookup takes the full-scan path (used by tests of that path)
+    bL := scan select AssociativeArray() else dg_buckets(L);
+    bLL := scan select AssociativeArray() else dg_buckets(LL);
+    org := [dg_find(lideal< O | Basis(II) >, L, bL) : II in LL];
+    alE := [];
+    alV := [];
+    for q in PrimeDivisors(Dp*N*p) do
+        P := dg_prime(OO, q);
+        Append(~alE, <q, [dg_find(P*II, LL, bLL) : II in LL]>);
+        if q ne p then
+            P0 := dg_prime(O, q);
+            Append(~alV, <q, [dg_find(P0*I, L, bL) : I in L]>);
+        end if;
+    end for;
+    return <#L, #LL, org, alE, alV>;
+end function;
+
+intrinsic ValidateDualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt, data::Tup)
+{Raises an error unless data is a consistent dual graph for X_0^D(N) at p: the Atkin-Lehner maps
+are involutions of the right sets, the origin map is equivariant for every w_q with q | DN/p, and
+h' - 2h + 1 is the genus of X_0^D(N).  Run on every build and on every disk-cache read.}
+    require #data eq 5 : "data must be <h, h', org, alE, alV>";
+    h := data[1]; hh := data[2]; org := data[3];
+    assert #org eq hh and &and[v in [1..h] : v in org];
+    assert {x[1] : x in data[4]} eq Set(PrimeDivisors(D*N));
+    assert {x[1] : x in data[5]} eq Set(PrimeDivisors((D div p)*N));
+    for x in data[4] do
+        img := x[2];
+        assert Sort(img) eq [1..hh] and &and[img[img[e]] eq e : e in [1..hh]];
+    end for;
+    for x in data[5] do
+        q := x[1]; img := x[2]; eimg := dg_img(data[4], q);
+        assert Sort(img) eq [1..h] and &and[img[img[v]] eq v : v in [1..h]];
+        assert &and[org[eimg[e]] eq img[org[e]] : e in [1..hh]];       // origin map is equivariant
+    end for;
+    // b_1 of the full graph (2h vertices, h' edges, connected) is the genus of X_0^D(N)
+    assert hh - 2*h + 1 eq GenusShimuraCurveQuotient(D, N, {Integers() | 1});
+end intrinsic;
+
+intrinsic ClearDualGraphCache()
+{Empties the in-memory DualGraphData cache (the disk cache is untouched).}
+    StoreClear(dual_graphs);
+end intrinsic;
+
+intrinsic DualGraphApplicable(D::RngIntElt, N::RngIntElt) -> BoolElt
+{True iff the dual-graph test applies to X_0^D(N)/W: D > 1, N squarefree, gcd(D, N) = 1.}
+    return D gt 1 and IsSquarefree(N) and GCD(D, N) eq 1;
+end intrinsic;
+
+intrinsic DualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt : CacheDir := "", ForceScan := false) -> Tup
+{The dual graph of the special fibre at p of X_0^D(N), as <h, h', org, alE, alV>: h left ideal
+classes of an Eichler order of level N in the definite algebra of discriminant D/p (one vertex in
+each of two copies), h' classes of level Np (the edges; edge e joins (org[e], +) to
+(org[alE_p[e]], -)), and the Atkin-Lehner involutions as pairs <q, images>, on edges for q | DN and
+on vertices for q | DN/p.  Cached per <D, N, p> for the session.  CacheDir names the disk cache,
+which this version does not read or write yet.  ForceScan builds afresh (no caches) identifying
+every class by a full scan instead of the key buckets.}
+    require DualGraphApplicable(D, N) : "needs D > 1, N squarefree, gcd(D, N) = 1";
+    require IsPrime(p) and D mod p eq 0 : "p must be a prime dividing D";
+    if ForceScan then
+        data := dg_build(D, N, p, true);
+        ValidateDualGraphData(D, N, p, data);
+        return data;
+    end if;
+    key := <D, N, p>;
+    b, data := GetCache(key, dual_graphs);
+    if b then return data; end if;
+    data := dg_build(D, N, p, false);
+    ValidateDualGraphData(D, N, p, data);
+    SetCache(key, data, dual_graphs);
+    return data;
+end intrinsic;
