@@ -59,3 +59,34 @@ procedure test_DualGraphData()
     printf "Done!\n";
 end procedure;
 test_DualGraphData();
+
+procedure test_DualGraphDiskCache()
+    printf "Testing DualGraph disk cache...";
+    dir := Sprintf("/tmp/dualgraph_test_%o/nested", Getpid());
+    System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
+    ClearDualGraphCache();
+    d1 := DualGraphData(6, 35, 2 : CacheDir := dir);
+    path := dir cat "/dualgraph_v1_6_35_2";
+    assert OpenTest(path, "r");
+    assert Pipe(Sprintf("ls '%o' | grep -c tmp || true", dir), "") eq "0\n";     // no temp file left
+    ClearDualGraphCache();
+    d2 := DualGraphData(6, 35, 2 : CacheDir := dir);
+    assert d1 eq d2;                                   // read back from disk, same labelling
+    // a corrupt file is rejected on read
+    bad := dg_corrupt(d1, 2, "trivialvertexAL");
+    Write(path, Sprint(bad, "Magma") : Overwrite := true);
+    ClearDualGraphCache();
+    rejected := false;
+    try _ := DualGraphData(6, 35, 2 : CacheDir := dir); catch e rejected := true; end try;
+    assert rejected;
+    // a file with another format stamp is never read
+    System(Sprintf("rm -f '%o'", path));
+    Write(dir cat "/dualgraph_v0_6_35_2", "this is not Magma" : Overwrite := true);
+    ClearDualGraphCache();
+    _ := DualGraphData(6, 35, 2 : CacheDir := dir);
+    assert OpenTest(path, "r");
+    System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
+    ClearDualGraphCache();
+    printf "Done!\n";
+end procedure;
+test_DualGraphDiskCache();

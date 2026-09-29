@@ -108,6 +108,31 @@ h' - 2h + 1 is the genus of X_0^D(N).  Run on every build and on every disk-cach
     assert hh - 2*h + 1 eq GenusShimuraCurveQuotient(D, N, {Integers() | 1});
 end intrinsic;
 
+// ---------- disk cache: <dir>/dualgraph_<format>_<D>_<N>_<p> ----------
+
+function dg_cache_dir(CacheDir)
+    if CacheDir ne "" then return CacheDir; end if;
+    d := GetEnv("DUALGRAPH_CACHE_DIR");
+    return d eq "" select "data/dualgraph" else d;
+end function;
+
+// The format stamp is part of the name: bump it whenever dg_build or the tuple layout changes, so a
+// cache written by older code is never read (validation cannot catch consistent-but-stale data).
+DG_FORMAT := "v1";
+
+function dg_cache_path(dir, D, N, p)
+    return Sprintf("%o/dualgraph_%o_%o_%o_%o", dir, DG_FORMAT, D, N, p);
+end function;
+
+// Write to a per-process temporary name, then rename: a killed worker never leaves a partial file.
+procedure dg_cache_write(dir, D, N, p, data)
+    System(Sprintf("mkdir -p '%o'", dir));
+    path := dg_cache_path(dir, D, N, p);
+    tmp := Sprintf("%o.tmp.%o", path, Getpid());
+    Write(tmp, Sprint(data, "Magma") : Overwrite := true);
+    System(Sprintf("mv '%o' '%o'", tmp, path));
+end procedure;
+
 intrinsic ClearDualGraphCache()
 {Empties the in-memory DualGraphData cache (the disk cache is untouched).}
     StoreClear(dual_graphs);
@@ -123,9 +148,10 @@ intrinsic DualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt : CacheDir := "
 classes of an Eichler order of level N in the definite algebra of discriminant D/p (one vertex in
 each of two copies), h' classes of level Np (the edges; edge e joins (org[e], +) to
 (org[alE_p[e]], -)), and the Atkin-Lehner involutions as pairs <q, images>, on edges for q | DN and
-on vertices for q | DN/p.  Cached per <D, N, p> for the session.  CacheDir names the disk cache,
-which this version does not read or write yet.  ForceScan builds afresh (no caches) identifying
-every class by a full scan instead of the key buckets.}
+on vertices for q | DN/p.  Cached per <D, N, p> for the session and on disk in CacheDir (default
+$DUALGRAPH_CACHE_DIR, else data/dualgraph; "none" disables the disk cache).  A disk entry is
+re-validated when read, so a corrupt file raises an error instead of giving a verdict.  ForceScan
+builds afresh (no caches) identifying every class by a full scan instead of the key buckets.}
     require DualGraphApplicable(D, N) : "needs D > 1, N squarefree, gcd(D, N) = 1";
     require IsPrime(p) and D mod p eq 0 : "p must be a prime dividing D";
     if ForceScan then
@@ -136,8 +162,16 @@ every class by a full scan instead of the key buckets.}
     key := <D, N, p>;
     b, data := GetCache(key, dual_graphs);
     if b then return data; end if;
-    data := dg_build(D, N, p, false);
-    ValidateDualGraphData(D, N, p, data);
+    dir := dg_cache_dir(CacheDir);
+    path := dg_cache_path(dir, D, N, p);
+    if dir ne "none" and OpenTest(path, "r") then
+        data := eval Read(path);
+        ValidateDualGraphData(D, N, p, data);
+    else
+        data := dg_build(D, N, p, false);
+        ValidateDualGraphData(D, N, p, data);
+        if dir ne "none" then dg_cache_write(dir, D, N, p, data); end if;
+    end if;
     SetCache(key, data, dual_graphs);
     return data;
 end intrinsic;
