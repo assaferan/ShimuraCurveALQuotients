@@ -29,7 +29,6 @@ CL_DEFAULT_DIR := "/scratch/class-groups-quadratic-imaginary-fields";
 
 // Module-level state, persistent across calls within a Magma session.
 CL_STORE := NewStore();          // config + per-file stream cursors
-CL_FUND := NewStore();           // |d0| -> h(d0)   for fundamental d0
 CL_ORDER := NewStore();          // D    -> h(order of discriminant D)
 
 function clGetAssoc(store)
