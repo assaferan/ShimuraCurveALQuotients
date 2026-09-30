@@ -16,8 +16,11 @@ on:
   pull_request:
 
 # A new push to the same PR supersedes the run in flight instead of queueing behind it.  Runs on
-# the long-lived branches are never cancelled: several pushes to main within a minute (2026-09-27)
-# would otherwise leave the earlier commits untested.
+# the long-lived branches are not cancelled, but GitHub keeps only one queued run per group, so
+# of several pushes to main within a minute (2026-09-27) the middle ones are skipped and the
+# latest is always tested.  That is enough: a push to main is a PR merge whose commits were
+# tested on the PR, and the state that matters -- main as it stands -- is what the latest run
+# tests.  (Keying pushes on github.sha instead would give every push its own run.)
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
