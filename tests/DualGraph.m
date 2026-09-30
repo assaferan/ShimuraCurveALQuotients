@@ -261,20 +261,21 @@ test_FilterByDualGraph();
 
 procedure test_DualGraphNotSFICertificate()
     printf "Testing that DualGraph verdicts are not SFI certificates...";
-    X := CreateShimuraQuot(158, 1, {1, 2}); X`g := GenusShimuraCurveQuotient(158, 1, {1, 2}); X`CurveID := 1;
+    U := dg_mk(158, 1, {1, 2}); U`CurveID := 1;
+    X := dg_mk(158, 1, {1, 2}); X`CurveID := 1;
     cs := [X];
     FilterByDualGraph(~cs : CacheDir := "none");
     assert cs[1]`TestInWhichProved eq "DualGraph at p = 2";
-    // ruled by the graph at p = 2 | D; that these primes happen not to certify it is incidental (true
-    // today, and a future char-p test could legitimately change it): the textual check below is the guard
+    // the certificate at each good prime is the same with and without the dual-graph mark; the
+    // unmarked copy goes first, and the certificate cache is emptied so each is computed afresh
     for l in [3, 5, 7] do
-        assert not NonHyperellipticAtPrimeCertificate(cs[1], l);
+        ClearSFICertificateCache();
+        bu, du := NonHyperellipticAtPrimeCertificate(U, l);
+        ClearSFICertificateCache();
+        bm, dm := NonHyperellipticAtPrimeCertificate(cs[1], l);
+        assert bu eq bm and (not bu or du eq dm);
     end for;
-    // and the certificate code never consults the dual-graph test
-    src := Read("ShimuraQuotients.m");
-    a := Position(src, "intrinsic NonHyperellipticAtPrimeCertificate(");
-    b := a + Position(src[a..#src], "end intrinsic;");
-    assert a gt 0 and Position(src[a..b], "DualGraph") eq 0;
+    ClearSFICertificateCache();
     printf "Done!\n";
 end procedure;
 test_DualGraphNotSFICertificate();

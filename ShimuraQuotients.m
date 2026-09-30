@@ -1166,6 +1166,11 @@ for p odd, the AL fixed-point test of FilterByALFixedPointsOnQuotient.  Returns 
     return true, cert;
 end intrinsic;
 
+intrinsic ClearSFICertificateCache()
+{Empties the session cache of NonHyperellipticAtPrimeCertificate results.}
+    StoreClear(sfi_certificates);
+end intrinsic;
+
 intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
     {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p | m.
     Then the normalization of X_0(D,Np)/W over F_p is isomorphic to X_0(D,N)/W' over F_p where
