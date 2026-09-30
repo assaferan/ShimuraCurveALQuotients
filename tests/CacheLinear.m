@@ -44,7 +44,8 @@ CacheClear(st);
 b, _ := GetCache(-4, st);
 assert not b;
 
-// (3)
+// (3) -- on a cleared cache, so an earlier test in the same run cannot have filled it.
+CacheClear(CL_ORDER);
 ds := [-4*k : k in [1..300]] cat [-4*k - 3 : k in [1..300]];   // -4k (0 mod 4) and -(4k+3) (1 mod 4)
 assert &and[d mod 4 in [0, 1] : d in ds];
 h := [ClassNumberLU(d) : d in ds];
