@@ -1026,13 +1026,13 @@ end intrinsic;
 // not hyperelliptic mod p (NonHyperellipticAtPrimeCertificate; not being hyperelliptic over Q is not
 // enough).  That certificate is checked below, not implied: on the star list it holds because the
 // sources here are ruled by point counts at p itself.  A source that it does not certify is not
-// used (as in SpecialFiberIsomorphism): the target is left unmarked, a message is printed, and the
-// pair <source, target, p> is appended to `uncertified`, which CheckHHProposition1 turns into a
+// used (as in SpecialFiberIsomorphism) and a message is printed; if no other source marks the target,
+// the pair <source, target, p> is returned in `uncertified`, which CheckHHProposition1 turns into a
 // failure after VerifyHHProposition1 has had its say.  So every curve marked here is ruled
 // out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
 // including a curve whose source was itself marked earlier in this loop, by induction along the
 // list order (sources precede targets, asserted): SFI walks the list in index order and reads
-// each source's verdict as it goes.  The asserts below check that this identification holds.
+// each source's verdict as it goes.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
     uncertified := [];
@@ -1042,7 +1042,7 @@ end intrinsic;
 intrinsic HHProposition1(~curves::SeqEnum, ~uncertified::SeqEnum)
 {As HHProposition1(~curves), and sets uncertified to the triples <source CurveID, target CurveID, p>
  at which [HH] Proposition 1 applies but the source is not certified non-hyperelliptic mod p
- (NonHyperellipticAtPrimeCertificate), so that the target was left unmarked.}
+ (NonHyperellipticAtPrimeCertificate) and no other source marks the target.}
     uncertified := [];
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
@@ -1075,10 +1075,9 @@ intrinsic HHProposition1(~curves::SeqEnum, ~uncertified::SeqEnum)
                         // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
                         assert i lt other;
                         // ... and certifies it at p, as SpecialFiberIsomorphism requires.  If not,
-                        // neither stage may use it: skip, as SpecialFiberIsomorphism does, but loudly,
-                        // since the identification with SpecialFiberIsomorphismStar then fails.
+                        // neither stage may use it: skip, as SpecialFiberIsomorphism does, but loudly.
                         if not NonHyperellipticAtPrimeCertificate(X, p) then
-                            printf "HHProposition1: source %o (%o) of curve %o (%o) is not certified non-hyperelliptic mod %o; [HH] Proposition 1 is not applied to it\n",
+                            printf "HHProposition1: source %o (%o) of curve %o (%o) is not certified non-hyperelliptic mod %o; [HH] Proposition 1 is not applied to it (another source may still mark the curve)\n",
                                 X`CurveID, X, other, curves[other], p;
                             Append(~uncertified, <X`CurveID, other, p>);
                             continue;
@@ -1091,6 +1090,8 @@ intrinsic HHProposition1(~curves::SeqEnum, ~uncertified::SeqEnum)
             end for;
         end if;
     end for;
+    // Drop the pairs whose target another source marked (CurveID is the index).
+    uncertified := [t : t in uncertified | not assigned curves[t[2]]`IsSubhyp];
 end intrinsic;
 
 

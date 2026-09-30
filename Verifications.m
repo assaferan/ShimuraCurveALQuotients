@@ -81,25 +81,30 @@ function GetModularByGenus(curves)
     return by_genus;
 end function;
 
+// Error message for the genera where expected and got differ, "" if none.  A genus past the end of
+// either sequence counts as no curves (#Table2 is 19, #GetModularByGenus is the largest genus).
+function HHByGenusMismatch(name, what, expected, got)
+    at := func<s, g | IsDefined(s, g) select s[g] else []>;
+    bad := [g : g in [1..Max(#expected, #got)] | at(expected, g) ne at(got, g)];
+    if #bad eq 0 then return ""; end if;
+    return Sprintf("%o: the undecided D = 1 star curves differ from %o in genus %o: expected %o, got %o",
+        name, what, bad, [at(expected, g) : g in bad], [at(got, g) : g in bad]);
+end function;
+
 intrinsic VerifyHHTable2(starcurves::SeqEnum[ShimuraQuot])
 {Verify that Table 2 in [HH] (squarefree star curves) is reproduced when we count points using trace formula on star curves.}
-    Table2 := GetHHTable2();
-    by_genus := GetModularByGenus(starcurves);
-    assert Table2 eq by_genus;
+    msg := HHByGenusMismatch("VerifyHHTable2", "[HH] Table 2", GetHHTable2(), GetModularByGenus(starcurves));
+    error if msg ne "", msg;
 end intrinsic;
 
 intrinsic VerifyHHProposition1(starcurves::SeqEnum[ShimuraQuot])
 {Verify that [HH, Prpoposition 1] rules out N = 194, 546 from the modular curve list.}
     Table2 := GetHHTable2();
-    by_genus := GetModularByGenus(starcurves);
     Table2[3] := [N : N in Table2[3] | N ne 194];
     Table2[4] := [N : N in Table2[4] | N ne 546];
-    if Table2 eq by_genus then return; end if;
-    // The genera at which they differ, for the message.
-    bad := [g : g in [1..Max(#Table2, #by_genus)] |
-                (IsDefined(Table2, g) select Table2[g] else []) ne (IsDefined(by_genus, g) select by_genus[g] else [])];
-    error Sprintf("VerifyHHProposition1: the undecided D = 1 star curves differ from [HH] Table 2 minus 194, 546 in genus %o: expected %o, got %o",
-        bad, [IsDefined(Table2, g) select Table2[g] else [] : g in bad], [IsDefined(by_genus, g) select by_genus[g] else [] : g in bad]);
+    msg := HHByGenusMismatch("VerifyHHProposition1", "[HH] Table 2 minus 194, 546", Table2,
+        GetModularByGenus(starcurves));
+    error if msg ne "", msg;
 end intrinsic;
 
 intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
@@ -113,9 +118,8 @@ intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
     copy := eval before;
     uncertified := [];
     HHProposition1(~copy, ~uncertified);
-    // An uncertified source (see HHProposition1) is not used, so [HH] Proposition 1 is not
-    // reproduced at that pair.  VerifyHHProposition1 still runs first, and both diagnoses are
-    // reported together, so the stage fails with the reason rather than on a bare assertion.
+    // uncertified: the <source, target, p> whose target is left unmarked because the source is not
+    // certified mod p (see HHProposition1).  Both diagnoses are reported together.
     verify_msg := "";
     try
         VerifyHHProposition1(copy);
@@ -125,7 +129,8 @@ intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
     unc_msg := #uncertified eq 0 select "" else Sprintf(
         "CheckHHProposition1: [HH] Proposition 1 applies at %o pair(s) <source, target, p> = %o, but the "
         cat "source is not certified non-hyperelliptic mod p (NonHyperellipticAtPrimeCertificate), so the "
-        cat "target was not marked and SpecialFiberIsomorphismStar will not decide it either",
+        cat "target was not marked and SpecialFiberIsomorphismStar cannot use this source at p (it may still "
+        cat "decide the target at another prime)",
         #uncertified, uncertified);
     error if verify_msg ne "" or unc_msg ne "", Join([m : m in [unc_msg, verify_msg] | m ne ""], "; ");
     assert Sprint(starcurves, "Magma") eq before;
