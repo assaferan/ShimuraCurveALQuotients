@@ -16,6 +16,7 @@
 //   FilterByTrace, FilterByTraceStar,
 //   FilterByALFixedPointsOnQuotient,
 //   FilterByComplicatedALFixedPointsOnQuotient,
+//   FilterByGeneralizedComplicatedFixedPoints, FilterByGeneralizedComplicatedFixedPointsStar,
 //   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
 //   FilterByDegeneracyMorphism
 //
@@ -57,6 +58,7 @@ star_of["FilterByTwistedTrace"]          := "FilterByTwistedTraceStar";
 star_of["FilterByWeilPolynomial"]        := "FilterByWeilPolynomialStar";
 star_of["FilterByTwistedWeilPolynomial"] := "FilterByTwistedWeilPolynomialStar";
 star_of["FilterByNonALInvolutions"]      := "FilterByNonALInvolutionsStar";
+star_of["FilterByGeneralizedComplicatedFixedPoints"] := "FilterByGeneralizedComplicatedFixedPointsStar";
 skip := [false : i in [1..n]];
 if IsDefined(star_of, stage) then
     parts := Split(input_dat, "/");
@@ -122,7 +124,7 @@ case stage:
         FilterByALFixedPointsOnQuotient(~subseq);
     when "FilterByComplicatedALFixedPointsOnQuotient":
         FilterByComplicatedALFixedPointsOnQuotient(~subseq);
-    when "FilterByGeneralizedComplicatedFixedPoints":
+    when "FilterByGeneralizedComplicatedFixedPoints", "FilterByGeneralizedComplicatedFixedPointsStar":
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterBySpecialFiber":
         FilterBySpecialFiber(~subseq);

@@ -1,33 +1,25 @@
 // Generalized "complicated AL fixed points on quotient" filter.
 //
-// Upgrades Proposition 6 of [FH] (implemented in TestComplicatedALFixedPointsOnQuotient)
-// by letting the free-action certifier -- the "N1" of the [FH] proof -- be a NON-AL
-// modular involution in the full modular involution group G, instead of only an
-// Atkin-Lehner involution.  This follows Hasegawa's treatment of X_0^*(N): when
-// X_0(D,N)/W carries extra non-AL modular involutions (S2, V2, V3 and products),
-// the full group G of modular involutions replaces W(N) in Prop 6.
+// Applies prop:complicatedAL (the generalization of Proposition 6 of [FH], which
+// TestComplicatedALFixedPointsOnQuotient applies with G an AL group) with G a MIXED group
+// containing the non-AL modular involution V2.  This follows Hasegawa's treatment of X_0^*(N):
+// the full group of modular involutions replaces W(N) in Prop 6.
 //
-// Proof being implemented (per curve C = X_0(D,N)/W, genus g_C >= 3, W an AL subgroup):
-//   * Pick an Atkin-Lehner involution w_{N2} with N2 | D*N, gcd(N2, D*N/N2)=1, N2 notin W,
-//     h(-4 N2) = 0 (mod 3) and the [FH] congruence conditions.  These force Fix(w_{N2})
-//     on X to consist solely of CM points of the single order of discriminant -4 N2, of
-//     size nu(w_{N2}) = NumFixedPoints(D,N,N2), with prime divisors in {2,3} and divisible
-//     by 3.  We further require nu(w_{N2}) = 3*#W exactly, so that the elementary 2-group W
-//     (order #W) acting freely on Fix(w_{N2}) yields exactly 3 fixed points of w_{N2} on C.
-//   * The free action is certified by an involution u1 in G that commutes with w_{N2} and
-//     has nu(u1) on X = #W = nu(w_{N2})/3.  In the [FH] (Atkin-Lehner) setting u1 is the
-//     AL involution N1 with N1*W = N2*W; here u1 is allowed to be a non-AL modular
-//     involution V*W_Q.  (The disjointness of the fixed sets -- i.e. freeness -- follows
-//     from the CM structure of Fix(w_{N2}).)
-//   * Three fixed points is odd, so by Ogg's criterion C is not hyperelliptic.
+// Proof being implemented (per curve C = X_0(D,N)/W, genus g_C >= 3, W an AL subgroup with
+// W = <W_odd, w_pPart>, p = 2, 8 | N):
+//   * G = <W_odd, V2>, V2 = S2 w_pPart S2^-1, is S2 W S2^-1, so C = X/W ~= X/G, and w_N on X/G
+//     for N in the pPart-coset of W_odd corresponds to V2 on C.
+//   * prop:complicatedAL is applied to G with g1 = w_N1, g2 = w_N2, N1, N2 in that coset.  Its
+//     hypotheses (G an elementary 2-group, w_N1, w_N2 notin G, w_N1 w_N2 in G, nu(w_N1) = #G,
+//     nu(w_N2) = 3 #G, w_N2 commuting with G and not hyperelliptic on X/G, the congruence and
+//     class-number conditions on N2) are checked by CheckComplicatedALHypotheses, which
+//     TestComplicatedALFixedPointsOnQuotient uses for the AL case.
+//   * V2 must have exactly 4 fixed points on C (the 3 + 1 of the proof); see the docstring.
 //
-// This is ADDITIVE to FilterByComplicatedALFixedPointsOnQuotient: it only looks for a
-// NON-AL partner u1, catching curves the Atkin-Lehner-only Prop 6 cannot.
+// This is ADDITIVE to FilterByComplicatedALFixedPointsOnQuotient: G contains V2, so it catches
+// curves the Atkin-Lehner-only Prop 6 cannot.
 //
-// This file is a STANDALONE package (deliberately NOT in ShimuraQuotients.spec): Attach it
-// on top of the spec.  It depends on intrinsics from ShimuraQuotients.m, TraceFormula.m and
-// ModularNonALInvolutions.m.  Once validated it can be folded into ModularNonALInvolutions.m
-// and added to the spec.
+// It depends on intrinsics from ShimuraQuotients.m, TraceFormula.m and ModularNonALInvolutions.m.
 
 // Level cap: skip curves whose level D*N exceeds this, to avoid runaway trace-formula work
 // on a few large highly-composite levels (mirrors NonALModSymMaxLevel for the non-AL filter).
@@ -53,13 +45,16 @@ end function;
 intrinsic NumFixedPointsNonALOnX(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt,
                                  D::RngIntElt, N::RngIntElt) -> RngIntElt
 {Number of fixed points of the non-AL modular involution V*W_Q on X_0(D,N).}
-    cache := gcfpCache();
     key := <D, N, vname, Q>;
-    cached, val := IsDefined(cache, key);
+    cached, val := IsDefined(gcfpCache(), key);
     if cached then return val; end if;
     gX := GenusShimuraCurve(D, N);
     gQuot := TraceDNewQuotient(V, vname, Q, {Integers() | 1}, D, N);
     val := 2*gX - 4*gQuot + 2;
+    // Take the array out of the store before inserting so the insert is in place rather
+    // than a copy of the whole array (see Caching.m, SetCache).  Small here, same pattern.
+    b, cache := StoreIsDefined(GCFP_STORE, "cache");
+    if not b then cache := AssociativeArray(); else StoreRemove(GCFP_STORE, "cache"); end if;
     cache[key] := val;
     StoreSet(GCFP_STORE, "cache", cache);
     return val;
@@ -111,43 +106,6 @@ involutions on X_0(D,N)/W.}
     return all_vs, all_names, bad_sets;
 end intrinsic;
 
-// Atkin-Lehner N2 candidates carrying the [FH] CM conditions, with nu(w_{N2}) = 3*#W.
-intrinsic GeneralizedN2Candidates(D::RngIntElt, N::RngIntElt, W::SetEnum) -> SeqEnum
-{Atkin-Lehner divisors N2 of D*N satisfying the [FH] Prop 6 CM conditions with
-NumFixedPoints(D,N,N2) = 3*#W, and N2 notin W.}
-    DN := D*N;
-    sizeW := #W;
-    N2s := [];
-    for N2 in Divisors(DN) do
-        if N2 eq 1 then continue; end if;
-        if GCD(N2, DN div N2) ne 1 then continue; end if;
-        if N2 in W then continue; end if;
-        if ClassNumber(-4*N2) mod 3 ne 0 then continue; end if;
-        if not ((N2 mod 4 ne 3) or ((N2 mod 8 eq 3) and IsEven(N))
-                                 or ((N2 mod 8 eq 7) and IsEven(D))) then
-            continue;
-        end if;
-        nu2 := NumFixedPoints(D, N, N2);
-        if nu2 eq 0 then continue; end if;
-        if nu2 mod 3 ne 0 then continue; end if;
-        if not (PrimeDivisors(nu2) subset [2,3]) then continue; end if;
-        if nu2 ne 3*sizeW then continue; end if;   // exactly 3 fixed points on C
-        Append(~N2s, N2);
-    end for;
-    return N2s;
-end intrinsic;
-
-// True iff the rational matrix M (det > 0) is trivial in Q^* Gamma_0(L), i.e. its primitive
-// integral rescaling has determinant 1 and lower-left entry divisible by L.
-function IsTrivialModGamma0(M, L)
-    e := Eltseq(M);
-    den := LCM([Denominator(x) : x in e]);
-    e := [Integers()!(x*den) : x in e];
-    g := GCD(e);
-    e := [x div g : x in e];
-    return (e[1]*e[4] - e[2]*e[3] eq 1) and (e[3] mod L eq 0);
-end function;
-
 // The group checks of prop:complicatedAL.  G = <W_odd, V_p> must equal S_p W S_p^-1: S_p must
 // commute with every w in W_odd (modulo Q^* Gamma_0(DN)), and G must be elementary abelian of
 // order #W.  Also returns the name of the first failing check, and the matrices of G.
@@ -178,21 +136,21 @@ order 2 #W_odd; otherwise false and the failing check ("commute", "square", "abe
 end intrinsic;
 
 intrinsic CheckGeneralizedComplicatedFixedPoints(X::ShimuraQuot) -> BoolElt, MonStgElt
-{Returns true and a witness string if C = X_0(D,N)/W is proven non-hyperelliptic by the
-generalized [FH] Prop 6.  The Atkin-Lehner group is replaced by a MIXED group G generated by
-W_odd (the w in W coprime to p) together with the non-AL modular involution
-V_p = S_p w_pPart S_p^-1 at p = 2 (V2, S2 = [2,1;0,2]; V3 is excluded, see below).  Via the
-isomorphism C = X/W = X/G the involution w_pPart on X/G plays the Prop 6
-role with a pair of Atkin-Lehner involutions N1, N2 lying OUTSIDE G, so this reaches the
-star/full-W quotients the pure-AL test cannot.  N2 supplies three conjugate complicated CM
-fixed points and N1 the rational fourth.
-SOUNDNESS: the certificate is valid only when V_p has exactly 4 fixed points on C (the 3 + 1
-of the proof).  On a hyperelliptic curve every involution other than the hyperelliptic
-involution has 0/2/4 fixed points, and the hyperelliptic involution itself has 2g+2; so if the
-true number of fixed points of V_p on C equals 2g+2 (e.g. X_0(35,16)) then V_p is itself
-hyperelliptic and C is hyperelliptic, and any value other than 4 means the 3 + 1 count is
-inflated by non-AL coset contributions and the argument breaks.  We therefore require the true
-count, namely (1/#W) times the sum over w in W of NumFixedPoints of V_p*w on X, to equal 4.}
+{Returns true and a witness string if C = X_0(D,N)/W is proven non-hyperelliptic by
+prop:complicatedAL applied to a MIXED group G generated by W_odd (the w in W coprime to p)
+together with the non-AL modular involution V_p = S_p w_pPart S_p^-1 at p = 2 (V2,
+S2 = [2,1;0,2]; V3 is excluded, see below).  Via the isomorphism C = X/W = X/G the involution
+w_pPart on X/G plays the role of g2 = w_N2 and g1 = w_N1, for AL involutions N1, N2 lying OUTSIDE
+G, so this reaches the star/full-W quotients the pure-AL test cannot.  N2 supplies three
+conjugate complicated CM fixed points and N1 the rational fourth.  The hypotheses of the
+proposition are checked by CheckComplicatedALHypotheses; genus(C) >= 3 is checked here.
+SOUNDNESS: in addition, V_p must have exactly 4 fixed points on C (the 3 + 1 of the proof).
+On a hyperelliptic curve every involution other than the hyperelliptic involution has 0/2/4
+fixed points, and the hyperelliptic involution itself has 2g+2; so if the true number of fixed
+points of V_p on C equals 2g+2 (e.g. X_0(35,16)) then V_p is itself hyperelliptic and C is
+hyperelliptic, and any value other than 4 means the 3 + 1 count is inflated by non-AL coset
+contributions and the argument breaks.  We therefore require the true count, namely (1/#W)
+times the sum over w in W of NumFixedPoints of V_p*w on X, to equal 4.}
     if X`g lt 3 then return false, _; end if;
     D := X`D; N := X`N; W := X`W; DN := D*N;
     // Non-AL modular involutions exist only when 4 | N or 9 || N.
@@ -217,9 +175,8 @@ count, namely (1/#W) times the sum over w in W of NumFixedPoints of V_p*w on X, 
         Wodd := {w : w in W | GCD(w, p) eq 1};          // Atkin-Lehner part of G
         if #W ne 2*#Wodd then continue; end if;         // W = <W_odd, w_pPart>, so X/W ~= X/G
         M2Q := MatrixAlgebra(Rationals(), 2);
-        ok, _, Gmats := GeneralizedComplicatedMixedGroup(DN, Wodd, V, M2Q![p, 1, 0, p]);
+        ok := GeneralizedComplicatedMixedGroup(DN, Wodd, V, M2Q![p, 1, 0, p]);
         if not ok then continue; end if;
-        inG := func<Q | exists{x : x in Gmats | IsTrivialModGamma0(M2Q!al_matrix(Q, DN)*x^-1, DN)}>;
 
         // SOUNDNESS GUARD: V_p must have exactly 4 fixed points on C (not 2g+2, not inflated).
         nuVp := (&+[NumFixedPointsNonALOnX(V, vname, w, D, N) : w in W]) / #W;
@@ -227,25 +184,17 @@ count, namely (1/#W) times the sum over w in W of NumFixedPoints of V_p*w on X, 
 
         // N2: three conjugate complicated fixed points; N1: the rational fourth.  Both AL
         // involutions in the pPart-coset of W_odd (i.e. outside G but representing w_pPart).
+        // The hypotheses of prop:complicatedAL are checked by CheckComplicatedALHypotheses.
         for N2 in als do
             if N2 eq 1 or N2 in Wodd then continue; end if;
             if AtkinLehnerMul(N2, pPart, DN) notin Wodd then continue; end if;
-            if ClassNumber(-4*N2) mod 3 ne 0 then continue; end if;
-            if not ((N2 mod 4 ne 3) or ((N2 mod 8 eq 3) and IsEven(N))
-                                     or ((N2 mod 8 eq 7) and IsEven(D))) then continue; end if;
-            nfixed := NumFixedPoints(D, N, N2);
-            if nfixed eq 0 or (nfixed mod 3 ne 0) or not (PrimeDivisors(nfixed) subset [2,3]) then continue; end if;
-            target := 2^Valuation(nfixed, 2);
-            if 2*#Wodd ne target then continue; end if;
             for N1 in als do
                 if N1 eq 1 or N1 in Wodd or N1 eq N2 then continue; end if;
                 if AtkinLehnerMul(N1, pPart, DN) notin Wodd then continue; end if;
-                if NumFixedPoints(D, N, N1) ne target then continue; end if;
-                if AtkinLehnerMul(N1, N2, DN) in Wodd then
-                    if inG(N1) or inG(N2) then continue; end if;   // w_N1, w_N2 must lie outside G
+                if CheckComplicatedALHypotheses(D, N, Wodd, N1, N2 : V := V) then
                     return true, Sprintf(
                         "GeneralizedComplicatedFixedPoints: %o, pPart=%o, N1=%o (nu=%o), N2=%o (nu=%o)",
-                        vname, pPart, N1, target, N2, nfixed);
+                        vname, pPart, N1, #W, N2, 3*#W);
                 end if;
             end for;
         end for;

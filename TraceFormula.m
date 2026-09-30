@@ -1,7 +1,7 @@
 
 import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
 // This file implements the trace formulas from [Popa] and [Assaf]
-import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
+import "Caching.m" : cached_traces, cached_popa, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
                      StartCollecting, StopCollecting, GetCollectedDiscs;
 
 function Sfast(N, u, t, n)
@@ -14,6 +14,15 @@ function Sfast(N, u, t, n)
     y := t^2-4*n;
     for f in fac do
         p,e := Explode(f);
+        // alpha must be a UNIT.  For p | n the polynomial is alpha (alpha - t) mod p, so the
+        // root alpha = 0 is not a unit and the discriminant count below (all roots) is wrong
+        // here: the only candidate is alpha = t, a unit iff p does not divide t, and then a
+        // simple root (derivative 2 alpha - t = t mod p), so it lifts uniquely to every p^e.
+        // Every pipeline caller has p coprime to DN; this only matters for gcd(n, N) > 1.
+        if n mod p eq 0 then
+            if t mod p eq 0 then return 0; end if;
+            continue;
+        end if;
         if (y eq 0) then
 	        num_sols *:= p^(e div 2);
             continue;
@@ -543,7 +552,7 @@ procedure testInverseRelationNewSubspaces(N, k, p)
 end procedure;
 
 // Formula from Popa
-function TraceFormulaGamma0HeckeAL(N, k, n, Q)
+function TraceFormulaGamma0HeckeALUncached(N, k, n, Q)
 // Returns the trace of T_n \circ W_Q on S_k(N) using [Popa, Theorem 4]
     assert k ge 2;
     if (n eq 0) then return 0; end if; // for compatibility with q-expansions
@@ -580,6 +589,21 @@ function TraceFormulaGamma0HeckeAL(N, k, n, Q)
 	    ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
     end if;
     return ret;
+end function;
+
+// Memoised on <N, k, n, Q>.  The newform recursion in TraceFormulaGamma0HeckeALNew evaluates
+// this at every N'' | N' once for each N' | N above it, and TraceDNewALFixed repeats that for
+// each w in W: one call of TraceDNewALFixed(1, 1848, 2, 5, W) with #W = 4 made 1872
+// evaluations for 105 distinct arguments (54 with nonzero weight alpha), counted on main at
+// 95cf87b (issue #8).  The cache is keyed on the arguments alone, so it is also shared across
+// curves at the same level.
+function TraceFormulaGamma0HeckeAL(N, k, n, Q)
+    key := <N, k, n, Q>;
+    b, v := GetCache(key, cached_popa);
+    if b then return v; end if;
+    v := TraceFormulaGamma0HeckeALUncached(N, k, n, Q);
+    SetCache(key, v, cached_popa);
+    return v;
 end function;
 
 function get_trace_hecke_AL(N, k, n, Q : New := false)
@@ -797,8 +821,12 @@ end function;
 
 forward TraceFormulaGamma0HeckeALNew;
 
-function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
-// Returns T_{<n,k}(Q,N) as defined in [Assaf, Cor. 4.27]
+// The n' > 1 terms of [Assaf, Cor. 4.27], i.e. T_{<n,k}(Q,N), with each term attached to the
+// level N' it comes from and only the N' accepted by `keep` summed.  Lemma 4.20 gives the trace
+// of T_n W_Q on the image of S_k(N')^new inside S_k(N) block by block, so a filter on N' is a
+// filter on which old-form blocks are counted -- TraceHeckeALNewBlocks below uses it for the
+// D-new subspace.  keep = everything recovers T_{<n,k}(Q,N).
+function TraceFormulaGamma0HeckeALNewSmallerBlocks(N, k, n, Q, keep)
     trace := 0;
     n_Q := GCD(n, Q);
     n_NQ := n div n_Q;
@@ -814,7 +842,7 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
                 d := d_Q * d_NQ;
                 Q_primes := [Q_p : Q_p in Divisors(Q) | IsRelevantNprime(Q_p, Q, d_Q, n_p_Q, n_Q)];
                 NQ_primes := [NQ_p : NQ_p in Divisors(N div Q) | (GCD(d_NQ, NQ_p) eq 1) and ((N div (Q*NQ_p)) mod d_NQ eq 0)];
-                N_primes := [Q_p * NQ_p : Q_p in Q_primes, NQ_p in NQ_primes];
+                N_primes := [Q_p * NQ_p : Q_p in Q_primes, NQ_p in NQ_primes | keep(Q_p * NQ_p)];
                 weights := [#[x : x in Divisors(GCD(N div Q, N div N_p)) | GCD(x,n) eq 1] : N_p in N_primes];
                 traces := [TraceFormulaGamma0HeckeALNew(N_p, k, n div n_p, GCD(N_p, Q) ) : N_p in N_primes];
                 term := &+[Integers() | weights[i]*traces[i] : i in [1..#N_primes]];
@@ -827,11 +855,34 @@ function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
     return trace;
 end function;
 
+function TraceFormulaGamma0HeckeALNewSmaller(N, k, n, Q)
+// Returns T_{<n,k}(Q,N) as defined in [Assaf, Cor. 4.27]
+    return TraceFormulaGamma0HeckeALNewSmallerBlocks(N, k, n, Q, func<Np | true>);
+end function;
+
+// Sum over the N' | N accepted by `keep` of the trace of T_n W_Q on the image of S_k(N')^new in
+// S_k(N) ([Assaf, Lemma 4.20], all n >= 1): the n' = 1 term -- present when Q/Q' is a square
+// coprime to n, with weight sigma_{0,n}((N/Q)/(N'/Q')) -- plus the n' > 1 terms of Cor. 4.27.
+// keep = everything gives Tr(T_n W_Q | S_k(N)); keep(N') = (D | N') gives the trace on the
+// subspace new at every prime of D (D squarefree, coprime to N/D), which is TraceDNew.
+function TraceHeckeALNewBlocks(N, k, n, Q, keep)
+    trace := 0;
+    for N_p in Divisors(N) do
+        if not keep(N_p) then continue; end if;
+        Q_p := GCD(N_p, Q);
+        if not IsSquare(Q div Q_p) or GCD(Q div Q_p, n) ne 1 then continue; end if;
+        w := #[x : x in Divisors(GCD(N div Q, N div N_p)) | GCD(x, n) eq 1];
+        trace +:= w * TraceFormulaGamma0HeckeALNew(N_p, k, n, Q_p);
+    end for;
+    return trace + TraceFormulaGamma0HeckeALNewSmallerBlocks(N, k, n, Q, keep);
+end function;
+
 function TraceFormulaGamma0HeckeALNew(N, k, n, Q)
 // Returns the trace of T_n \circ W_Q on S_k(N)^{new} using [Assaf, Cor. 5.5]
     trace := 0;
     for N_prime in Divisors(N) do
 	    a := alpha(Q, n, N div N_prime);
+	    if a eq 0 then continue; end if;     // alpha = 0 for p | Q at exponent 1, and off cube-free N/N'
 	    Q_prime := GCD(N_prime, Q);
 	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
 	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime );

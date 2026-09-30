@@ -20,6 +20,7 @@ stages := [
     // (HHProposition1 is check-only: its snapshot equals FilterByTraceStar's, so it has no row.)
     "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar",
+    "FilterByGeneralizedComplicatedFixedPointsStar",
     "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar",
     "FilterStarCurvesByFpAutomorphisms",

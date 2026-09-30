@@ -7,7 +7,7 @@
 declare verbose ShimuraQuotients, 5;
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
-       TraceFormulaGamma0HeckeALNew,
+       TraceFormulaGamma0HeckeALNew, TraceHeckeALNewBlocks,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
 import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders,
                      IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs;
@@ -710,29 +710,19 @@ end function;
 */
 
 function TraceDNew(D,N,k,n,Q)
-    t := 0;
+    // Trace of T_n W_Q on the subspace of S_k(DN) new at every prime of D: the sum over
+    // N' | DN with D | N' of the trace on the image of S_k(N')^new, block by block as in
+    // [Assaf, Lemma 4.20] -- valid for every n, including n sharing a factor with DN.  (An
+    // earlier version kept only the n' = 1 term of Cor. 4.27, which is the whole formula
+    // exactly when gcd(n, DN) = 1; see #57.)
     vprint ShimuraQuotients, 3: "in TraceDNew with n = ,", n, "Q = ", Q;
-    for dN in Divisors(N) do
-        N_prime := D*N div dN;
-        ds := get_ds(D*N, Q, N_prime, n);
-        for d in ds do
-            n_p := n_prime(d, D*N, Q, N_prime, n);
-            d_p := d_prime(d, D*N, Q, N_prime);
-            dd_p := dd_prime(d, D*N, Q, N_prime, n);
-            Q_p := Q_prime(D*N, Q, N_prime);
-            // Should always be trivial as n is coprime to D*N
-            // term := GCD(d_p, n);
-            // term *:= MoebiusMu(dd_p);
-            // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
-            // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
-        end for;
-    end for;
-    return t;
+    return TraceHeckeALNewBlocks(D*N, k, n, Q, func<Np | Np mod D eq 0>);
 end function;
 
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
-    {}
+    {Trace of T_n on the W-fixed part of the D-new subspace of S_k(DN), i.e. (1/#W) times the
+    sum over w in W of the trace of T_n composed with W_w, with the Jacquet-Langlands sign
+    (-1)^omega(gcd(w, D)).  Valid for every n >= 1.}
     // Class numbers are served per-disc by ClassNumberLU: tables for |d| < ClassNumberTableMaxDisc
     // and a direct ClassNumber above it.  This keeps memory bounded without the batch/collect
     // dry-run, whose re-traversal of this trace was the dominant cost.
@@ -831,35 +821,106 @@ intrinsic FilterByALFixedPointsOnQuotient(~curves::SeqEnum)
     end for;
 end intrinsic;
 
-// implementing Proposition 6 of [FH]
+intrinsic IsTrivialModGamma0(M::AlgMatElt, L::RngIntElt) -> BoolElt
+{True iff the rational matrix M (det > 0) is trivial in Q^* Gamma_0(L), i.e. its primitive
+integral rescaling has determinant 1 and lower-left entry divisible by L.}
+    e := Eltseq(M);
+    den := LCM([Denominator(x) : x in e]);
+    e := [Integers()!(x*den) : x in e];
+    g := GCD(e);
+    e := [x div g : x in e];
+    return (e[1]*e[4] - e[2]*e[3] eq 1) and (e[3] mod L eq 0);
+end intrinsic;
+
+// The hypotheses of prop:complicatedAL (the generalization of [FH] Prop 6), shared by
+// TestComplicatedALFixedPointsOnQuotient (G an AL group) and CheckGeneralizedComplicatedFixedPoints
+// (G = <W_odd, V2>).  The genus(X_0(D,N)/G) >= 3 hypothesis is left to the callers.
+intrinsic CheckComplicatedALHypotheses(D::RngIntElt, N::RngIntElt, Wal::SetEnum,
+                                       N1::RngIntElt, N2::RngIntElt : V := 0) -> BoolElt, MonStgElt
+{True iff g1 = w_N1, g2 = w_N2 and G satisfy the hypotheses of prop:complicatedAL on X_0(D,N),
+except genus(X_0(D,N)/G) >= 3, which the caller checks.  G is the AL group Wal (a set of AL
+divisors, closed under AtkinLehnerMul), or, when the matrix V (the non-AL involution V2) is given,
+the mixed group Wal cat V*Wal.  Checked, cheapest first: N1, N2 are distinct AL divisors other
+than 1; the congruence condition on N2; 3 | h(-4 N2); nu(w_N1) = #G and nu(w_N2) = 3 #G on
+X_0(D,N); G is an elementary 2-group; w_N1, w_N2 notin G and w_N1 w_N2 in G; w_N2 commutes with
+every element of G; genus(X_0(D,N)/<G, w_N2>) ne 0, i.e. w_N2 is not the hyperelliptic involution of
+X_0(D,N)/G.  Otherwise false and the name of the first failing check.}
+    require V cmpeq 0 or (ISA(Type(V), Mtrx) and Nrows(V) eq 2 and Ncols(V) eq 2):
+        "V must be 0 or a 2 x 2 matrix";
+    DN := D*N;
+    mixed := not (V cmpeq 0);
+    if mixed then V := MatrixAlgebra(BaseRing(V), 2)!V; end if;   // TraceDNewQuotient needs AlgMatElt
+    if N1 eq 1 or N2 eq 1 or N1 eq N2 then return false, "N1 N2"; end if;
+    if DN mod N1 ne 0 or DN mod N2 ne 0 then return false, "divisor"; end if;
+    if GCD(N1, DN div N1) ne 1 or GCD(N2, DN div N2) ne 1 then return false, "N1 N2"; end if;
+    if not ((N2 mod 4 ne 3) or ((N2 mod 8 eq 3) and IsEven(N))
+                             or ((N2 mod 8 eq 7) and IsEven(D))) then
+        return false, "congruence";
+    end if;
+    if ClassNumber(-4*N2) mod 3 ne 0 then return false, "class number"; end if;
+    sizeG := mixed select 2*#Wal else #Wal;
+    if NumFixedPoints(D, N, N1) ne sizeG then return false, "nu(N1)"; end if;
+    if NumFixedPoints(D, N, N2) ne 3*sizeG then return false, "nu(N2)"; end if;
+    // G is an elementary 2-group: Wal is a group of AL involutions, and the matrices of G square
+    // to, commute and are distinct modulo Q^* Gamma_0(DN) (then Wal cat V*Wal is closed).
+    if 1 notin Wal or exists{<a, b> : a, b in Wal | AtkinLehnerMul(a, b, DN) notin Wal} then
+        return false, "group";
+    end if;
+    M2Q := MatrixAlgebra(Rationals(), 2);
+    Gmats := [M2Q!al_matrix(w, DN) : w in Wal];
+    if mixed then Gmats cat:= [(M2Q!V)*A : A in Gmats]; end if;
+    if not &and[IsTrivialModGamma0(x*x, DN) : x in Gmats]
+       or not &and[IsTrivialModGamma0(x*y*x^-1*y^-1, DN) : x, y in Gmats]
+       or exists{i : i, j in [1..sizeG] | i lt j and IsTrivialModGamma0(Gmats[i]*Gmats[j]^-1, DN)} then
+        return false, "group";
+    end if;
+    inG := func<A | exists{x : x in Gmats | IsTrivialModGamma0(A*x^-1, DN)}>;
+    A1 := M2Q!al_matrix(N1, DN);
+    A2 := M2Q!al_matrix(N2, DN);
+    if inG(A1) or inG(A2) then return false, "notin G"; end if;
+    if not inG(A1*A2) then return false, "product in G"; end if;
+    if not &and[IsTrivialModGamma0(A2*x*A2^-1*x^-1, DN) : x in Gmats] then
+        return false, "commute";
+    end if;
+    H := Wal join {AtkinLehnerMul(N2, w, DN) : w in Wal};   // the AL group <Wal, w_N2>
+    if mixed then
+        gH := TraceDNewQuotient(V, "V2", 1, H, D, N);
+    else
+        gH := GenusShimuraCurveQuotient(D, N, H);
+    end if;
+    if gH eq 0 then return false, "hyperelliptic N2"; end if;
+    return true, "";
+end intrinsic;
+
+// implementing Proposition 6 of [FH] (prop:complicatedAL with G = W an AL group)
 // returns the W for which X_0(D,N)/W is not hyperelliptic
 intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> SetEnum
     {}
-    cond_2 := [N2 : N2 in Divisors(D*N) | ClassNumber(-4*N2) mod 3 eq 0 and GCD(N2, D*N div N2) eq 1];
-    // print "cond_2 = ", cond_2;
-    cond_1 := [N2 : N2 in cond_2 | (N2 mod 4 ne 3) or
-				   ((N2 mod 8 eq 3) and IsEven(N)) or
-				   ((N2 mod 8 eq 7) and IsEven(D))];
-    // print "cond_1 = ", cond_1;
-    num_fixed := [NumFixedPoints(D, N, N2) : N2 in cond_1];
+    als := [Q : Q in Divisors(D*N) | Q ne 1 and GCD(Q, D*N div Q) eq 1];
+    nu := AssociativeArray();
+    for Q in als do nu[Q] := NumFixedPoints(D, N, Q); end for;
+    // Cheap pre-screen by the congruence and class-number conditions (re-checked by the helper).
+    N2s := [N2 : N2 in als | ((N2 mod 4 ne 3) or ((N2 mod 8 eq 3) and IsEven(N))
+                                             or ((N2 mod 8 eq 7) and IsEven(D)))
+                             and ClassNumber(-4*N2) mod 3 eq 0];
+    num_fixed := [nu[N2] : N2 in N2s];
+    // nu(w_N2) = 3 #W, so only N2 with nu(w_N2)/3 a power of 2 have candidate W.
     good_idxs := [i : i in [1..#num_fixed] | (num_fixed[i] ne 0) and
 		  (num_fixed[i] mod 3 eq 0) and
-		  (PrimeDivisors(num_fixed[i]) subset [2,3]) ];
-    N2s := [cond_1[i] : i in good_idxs];
+		  (PrimeDivisors(num_fixed[i] div 3) subset [2]) ];
+    N2s := [N2s[i] : i in good_idxs];
     // print "N2s = ", N2s;
     nfixed := [num_fixed[i] : i in good_idxs];
-    omega := Omega(D*N);
     Ws := ALSubgroups(D*N);
     // !! TODO - Could reuse the data we already have
     Ws := [W[1] : W in Ws | GenusShimuraCurveQuotient(D, N, W[1]) ge 3];
     non_hyp := AssociativeArray();
     for i->N2 in N2s do
-	r := omega - Valuation(nfixed[i], 2);
-	Ws_N2 := [W : W in Ws | (#W eq 2^(omega-r)) and (N2 notin W)];
+	sizeW := nfixed[i] div 3;
+	Ws_N2 := [W : W in Ws | (#W eq sizeW) and (N2 notin W)];
 	for W in Ws_N2 do
 	    is_non_hyp := false;
-	    N1s := [N1 : N1 in Divisors(D*N) | (N1 notin W) and (N1 ne N2) and GCD(N1, D*N div N1) eq 1];
-	    N1s := [N1 : N1 in N1s | NumFixedPoints(D, N, N1) eq 2^(omega-r)];
+	    N1s := [N1 : N1 in als | (N1 notin W) and (N1 ne N2) and nu[N1] eq sizeW];
 	    for N1 in N1s do
 		a := AssociativeArray();
 		for w in W do
@@ -868,10 +929,13 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 		for w in W do
 		    N_prime := AtkinLehnerMul(N2, w, D*N);
 		    if IsDefined(a, N_prime) then
-			// Include(~non_hyp, W);
-		        non_hyp[W] := [N1, N2, N_prime];
-			Ws := [WW : WW in Ws | WW ne W]; 
-			is_non_hyp := true;
+			// N1 W = N2 W; the hypotheses do not depend on w, so they are checked once.
+			if CheckComplicatedALHypotheses(D, N, W, N1, N2) then
+			    // Include(~non_hyp, W);
+			    non_hyp[W] := [N1, N2];
+			    Ws := [WW : WW in Ws | WW ne W]; 
+			    is_non_hyp := true;
+			end if;
 			break;
 		    end if;
 		end for;
@@ -942,7 +1006,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
         if (curves[lut[<D,N,W>]]`g ge 2) then
             curves[lut[<D,N,W>]]`IsHyp := false;
         end if;
-        curves[lut[<D,N,W>]]`TestInWhichProved := Sprintf("ComplicatedALFixedPointsOnQuotient with N1 = %o, N2 = %o, Nprime = %o",Ws[W][1], Ws[W][2], Ws[W][3]);
+        curves[lut[<D,N,W>]]`TestInWhichProved := Sprintf("ComplicatedALFixedPointsOnQuotient with N1 = %o, N2 = %o", Ws[W][1], Ws[W][2]);
     end for;
     if (lc mod 100 eq 0) then
         vprint ShimuraQuotients, 2: "lc = ", lc;
