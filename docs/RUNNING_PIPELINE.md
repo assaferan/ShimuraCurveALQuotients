@@ -156,9 +156,18 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 
-* **`FilterByWeilPolynomial`**: about 5 h on a single curve at the top end, dominated by
-  class-number lookups at depth 4·Qmax·p^g. The heavy curves are dispatched first. The makespan
-  of this stage is roughly the slowest single curve.
+* **`FilterByWeilPolynomial`**: hours on a single curve at the top end, and the top end is
+  **high genus with a small `W`**, not a big level. The stage needs one trace at `n = p^g` per
+  good prime up to its bound, and the cost of that trace is set by `n`: replayed on a Mac
+  (2026-09-30, `main` at `95cf87b`, *without* the class-number tables), the biggest level in the
+  stage, `X_0^{210}(73)/W_{32}` (`g = 4`, `Qmax = 15330`), took 9 min for all seven of its primes,
+  while `X_0(240)/W_4` (`g = 6`, `Qmax = 80`) took 49 min through `p = 17` alone and projects to
+  ~9 h; a `g = 7` curve (`X_0^{21}(20)/W_4`) is heavier still. ⚠ Those are table-less numbers
+  and support the *ordering* only; re-measure on lovelace, where `CLASS_GROUPS_FAST_DIR` points
+  at the tables, before quoting an absolute time. `CurveCostProxy` now sums `p^g` over the good
+  primes (it used to sum `4·Qmax·p^g`, the discriminant depth, which put the 9-min curve above
+  the 9-h one and ranked the latter 138th of 886). The makespan of this stage is roughly the
+  slowest single curve, so getting that ordering right is what the heavy-first dispatch is for.
 * **`FilterByTwistedTrace`**: modular symbols of level D·N, plus T_p for every good p < 4g².
   Small levels take seconds (level 1530 takes about 30 s), but the largest levels (D·N from about
   2000 up to 15330) take **hours each**, and the sweep's top levels ran for more than 4 h.
