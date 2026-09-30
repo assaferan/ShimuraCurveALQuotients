@@ -710,11 +710,13 @@ end function;
 */
 
 function TraceDNew(D,N,k,n,Q)
-    // Trace of T_n W_Q on S_k(DN)^{D-new}: the sum over N' with D | N' | DN of the trace on
-    // S_k(N')^{new}, weighted by how many level-raising images of that space land in the
-    // D-new part.  That weight is the size of get_ds (it is the count sigma_{0,n}(...) of
-    // [Assaf, Cor. 4.27]); the individual d in get_ds are not needed -- see issue #8.  The
-    // trace itself does not depend on d, so it is computed once per N' and multiplied.
+    // Trace of T_n W_Q on S_k(DN)^{D-new}, for n coprime to DN: the sum over N' with
+    // D | N' | DN of the trace on S_k(N')^{new}, weighted by how many level-raising images of
+    // that space land in the D-new part.  That weight is the size of get_ds, which for
+    // (n, DN) = 1 is the count sigma_{0,n}(...) of [Assaf, Cor. 4.27]; the individual d in
+    // get_ds are not needed -- see issue #8.  The trace itself does not depend on d, so it is
+    // computed once per N' and multiplied.  (At gcd(n, DN) > 1 this decomposition is wrong;
+    // TraceDNewALFixed refuses such n.)
     t := 0;
     vprint ShimuraQuotients, 3: "in TraceDNew with n = ,", n, "Q = ", Q;
     for dN in Divisors(N) do

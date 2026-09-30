@@ -584,9 +584,10 @@ end function;
 
 // Memoised on <N, k, n, Q>.  The newform recursion in TraceFormulaGamma0HeckeALNew evaluates
 // this at every N'' | N' once for each N' | N above it, and TraceDNewALFixed repeats that for
-// each w in W; at level 1848 with #W = 4 that was ~1260 evaluations of 54 distinct arguments,
-// and this sum is where the Weil-polynomial stage spends its hours (issue #8).  The cache is
-// keyed on the arguments alone, so it is also shared across curves at the same level.
+// each w in W: one call of TraceDNewALFixed(1, 1848, 2, 5, W) with #W = 4 made 1872
+// evaluations for 105 distinct arguments (54 with nonzero weight alpha), counted on main at
+// 95cf87b (issue #8).  The cache is keyed on the arguments alone, so it is also shared across
+// curves at the same level.
 function TraceFormulaGamma0HeckeAL(N, k, n, Q)
     key := <N, k, n, Q>;
     b, v := GetCache(key, cached_popa);
@@ -846,7 +847,7 @@ function TraceFormulaGamma0HeckeALNew(N, k, n, Q)
     trace := 0;
     for N_prime in Divisors(N) do
 	    a := alpha(Q, n, N div N_prime);
-	    if a eq 0 then continue; end if;     // alpha vanishes off cube-free N/N'
+	    if a eq 0 then continue; end if;     // alpha = 0 for p | Q at exponent 1, and off cube-free N/N'
 	    Q_prime := GCD(N_prime, Q);
 	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
 	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime );
