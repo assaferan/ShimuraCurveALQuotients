@@ -7,7 +7,7 @@
 declare verbose ShimuraQuotients, 5;
 
 import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
-       TraceFormulaGamma0HeckeALNew,
+       TraceFormulaGamma0HeckeALNew, TraceHeckeALNewBlocks,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
 import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders,
                      IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs,
@@ -711,29 +711,19 @@ end function;
 */
 
 function TraceDNew(D,N,k,n,Q)
-    t := 0;
+    // Trace of T_n W_Q on the subspace of S_k(DN) new at every prime of D: the sum over
+    // N' | DN with D | N' of the trace on the image of S_k(N')^new, block by block as in
+    // [Assaf, Lemma 4.20] -- valid for every n, including n sharing a factor with DN.  (An
+    // earlier version kept only the n' = 1 term of Cor. 4.27, which is the whole formula
+    // exactly when gcd(n, DN) = 1; see #57.)
     vprint ShimuraQuotients, 3: "in TraceDNew with n = ,", n, "Q = ", Q;
-    for dN in Divisors(N) do
-        N_prime := D*N div dN;
-        ds := get_ds(D*N, Q, N_prime, n);
-        for d in ds do
-            n_p := n_prime(d, D*N, Q, N_prime, n);
-            d_p := d_prime(d, D*N, Q, N_prime);
-            dd_p := dd_prime(d, D*N, Q, N_prime, n);
-            Q_p := Q_prime(D*N, Q, N_prime);
-            // Should always be trivial as n is coprime to D*N
-            // term := GCD(d_p, n);
-            // term *:= MoebiusMu(dd_p);
-            // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
-            // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
-        end for;
-    end for;
-    return t;
+    return TraceHeckeALNewBlocks(D*N, k, n, Q, func<Np | Np mod D eq 0>);
 end function;
 
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
-    {}
+    {Trace of T_n on the W-fixed part of the D-new subspace of S_k(DN), i.e. (1/#W) times the
+    sum over w in W of the trace of T_n composed with W_w, with the Jacquet-Langlands sign
+    (-1)^omega(gcd(w, D)).  Valid for every n >= 1.}
     // Class numbers are served per-disc by ClassNumberLU: tables for |d| < ClassNumberTableMaxDisc
     // and a direct ClassNumber above it.  This keeps memory bounded without the batch/collect
     // dry-run, whose re-traversal of this trace was the dominant cost.
