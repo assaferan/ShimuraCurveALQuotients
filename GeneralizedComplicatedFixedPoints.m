@@ -45,13 +45,16 @@ end function;
 intrinsic NumFixedPointsNonALOnX(V::AlgMatElt, vname::MonStgElt, Q::RngIntElt,
                                  D::RngIntElt, N::RngIntElt) -> RngIntElt
 {Number of fixed points of the non-AL modular involution V*W_Q on X_0(D,N).}
-    cache := gcfpCache();
     key := <D, N, vname, Q>;
-    cached, val := IsDefined(cache, key);
+    cached, val := IsDefined(gcfpCache(), key);
     if cached then return val; end if;
     gX := GenusShimuraCurve(D, N);
     gQuot := TraceDNewQuotient(V, vname, Q, {Integers() | 1}, D, N);
     val := 2*gX - 4*gQuot + 2;
+    // Take the array out of the store before inserting so the insert is in place rather
+    // than a copy of the whole array (see Caching.m, SetCache).  Small here, same pattern.
+    b, cache := StoreIsDefined(GCFP_STORE, "cache");
+    if not b then cache := AssociativeArray(); else StoreRemove(GCFP_STORE, "cache"); end if;
     cache[key] := val;
     StoreSet(GCFP_STORE, "cache", cache);
     return val;
