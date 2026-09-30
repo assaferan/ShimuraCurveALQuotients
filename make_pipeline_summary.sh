@@ -22,20 +22,20 @@ OUT=data/pipeline_summary.txt
 
 # 1. per-stage open/ruled/proved counts (paste these into the front-matter tables)
 rm -f "$STAGES"
-magma analysis_stages.m
+magma -b analysis_stages.m < /dev/null
 
 # 2. machine-generated census + open-case analyses (both Write-append, so wipe first)
 rm -f "$CENSUS"
-magma analysis_census.m
+magma -b analysis_census.m < /dev/null
 rm -f "$OPEN"
-magma analysis_open.m
+magma -b analysis_open.m < /dev/null
 
 # 3. assemble: hand front-matter (ends at the "DETAILED CENSUS" header) + census + open
 cat "$FRONT" "$CENSUS" "$OPEN" > "$OUT"
 echo "wrote $OUT  ($(wc -l < "$OUT") lines)"
 
 # 4. paper LaTeX filtering tables (star curves; all quotients after expansion)
-magma make_latex_tables.m
+magma -b make_latex_tables.m < /dev/null
 
 # 5. paper LaTeX figures (genus distribution; test attribution)
-magma make_latex_figures.m
+magma -b make_latex_figures.m < /dev/null
