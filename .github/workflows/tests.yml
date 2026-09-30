@@ -2,20 +2,25 @@ name: tests
 
 # Topic branches are tested by their PR only.  With `push: ['**']` every push to a topic branch
 # started TWO full matrices (event=push and event=pull_request_target, seconds apart) -- on #48
-# that was two identical 103-job runs.  Pushes to the two long-lived branches still run directly.
+# that was two identical 103-job runs.  Pushes to the long-lived branches still run directly:
+# main, integration (where fixes waiting for a full pipeline rerun are merged first), and the
+# campaign branch.
 on:
   push:
-    branches: [ main, m0-theta-campaign ]
+    branches: [ main, integration, m0-theta-campaign ]
 
   # `pull_request`, not `pull_request_target`: the latter checked out the PR head and executed it
   # with the base repo's secrets.  `pull_request` runs on the merge ref, and a fork PR gets no
-  # secrets at all (has_access is then false and the matrix does not run).
+  # secrets at all (has_access is then false; check-has_access below makes that a red run, not
+  # a green one with zero tests).
   pull_request:
 
-# A new push to the same PR or branch supersedes the run in flight instead of queueing behind it.
+# A new push to the same PR supersedes the run in flight instead of queueing behind it.  Runs on
+# the long-lived branches are never cancelled: several pushes to main within a minute (2026-09-27)
+# would otherwise leave the earlier commits untested.
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
 
@@ -76,6 +81,14 @@ jobs:
         run: |
           echo ${{needs.has_access.outputs.has_access}}
 
+      # On a pull request the Magma secrets must be present: without them every test job is
+      # skipped, and a green run with zero tests is exactly what must not happen.
+      - name: Fail a pull request that has no Magma access
+        if: ${{ github.event_name == 'pull_request' && needs.has_access.outputs.has_access != 'true' }}
+        run: |
+          echo "::error::MAGMA_URL secret is not available to this pull request; no tests would run."
+          exit 1
+
 
 
   printjob:
@@ -93,14 +106,14 @@ jobs:
 
   # Check the actor's write permission ONCE, before the matrix fans out.
   #
-  # WHY: this check used to run INSIDE every one of the ~40 matrix jobs, each firing its own
+  # WHY: this check used to run INSIDE every one of the 102 matrix jobs, each firing its own
   # authenticated API call.  A single transient failure makes that job print "Sorry! Your
   # permissions are insufficient." and run `false`, reddening the entire run -- indistinguishable
   # from a real test failure.  That happened on 2026-09-13 (X0_14_3), where every other job in the
   # same run passed the identical gate.
   #
   # This is the same lesson prime-magma below already records for the magma download: do the
-  # shared, flaky, external call ONCE rather than 40 times in parallel.
+  # shared, flaky, external call ONCE rather than 102 times in parallel.
   #
   # Since the trigger moved from pull_request_target to pull_request, a fork PR never sees the
   # secrets in the first place, so this gate is no longer what protects them.  It is kept because
@@ -129,7 +142,7 @@ jobs:
           echo "The user has write access"
 
   # Download magma ONCE and populate the shared cache before the test matrix fans out.
-  # On a cold cache (evicted after 7 days idle) the ~40 matrix jobs used to each fire the
+  # On a cold cache (evicted after 7 days idle) the 102 matrix jobs used to each fire the
   # same authenticated wget at the licence server in parallel; the server throttles/drops
   # the connections, wget stalls and eventually fails (exit 4) -- skipping the tests.
   # Priming once means every matrix job below restores a warm cache instead.
