@@ -7,8 +7,8 @@
 // (1) TraceDNewALFixed against the D-new, W-averaged trace: the trace of T_n o w on the
 //     cuspidal subspace of level DN that is new at every p | D, averaged over w in W, with the
 //     Jacquet-Langlands sign (-1)^omega(gcd(w, D)).  Coprime n only: at gcd(n, DN) > 1 the
-//     D-new decomposition in TraceDNew is wrong (D = 1, N = 30, n = 4 gives -1, modular
-//     symbols -2), a pre-existing defect that PR #57 makes TraceDNewALFixed refuse.
+//     D-new trace on main keeps only the n' = 1 term of Cor. 4.27 and is wrong (D = 1, N = 30,
+//     n = 4 gives -1, modular symbols -2); PR #57 corrects it and tests that case.
 // (2) the newform trace against modular symbols at non-squarefree levels, n coprime to N,
 //     which exercises the alpha = 0 skip (alpha vanishes for p | Q at exponent 1 and off
 //     cube-free N/N').  At gcd(n, N) > 1 the trace formula was wrong before #57 (Sfast counted
