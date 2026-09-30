@@ -129,7 +129,8 @@ intrinsic CheckHHProposition1(~starcurves::SeqEnum[ShimuraQuot])
     unc_msg := #uncertified eq 0 select "" else Sprintf(
         "CheckHHProposition1: [HH] Proposition 1 applies at %o pair(s) <source, target, p> = %o, but the "
         cat "source is not certified non-hyperelliptic mod p (NonHyperellipticAtPrimeCertificate), so the "
-        cat "target was not marked and SpecialFiberIsomorphismStar will not decide it either",
+        cat "target was not marked and SpecialFiberIsomorphismStar cannot use this source at p (it may still "
+        cat "decide the target at another prime)",
         #uncertified, uncertified);
     error if verify_msg ne "" or unc_msg ne "", Join([m : m in [unc_msg, verify_msg] | m ne ""], "; ");
     assert Sprint(starcurves, "Magma") eq before;

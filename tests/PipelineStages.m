@@ -162,6 +162,7 @@ assert [<copy[i]`D, copy[i]`N> : i in hh] eq [<1, 194>, <1, 546>, <205, 3>, <199
 
 // Restricted to genus <= 12 (no undecided D = 1 curves above), GetModularByGenus is shorter than
 // Table 2 and both checks still pass.  Without HH's marks, 194 and 546 are reported in genus 3, 4.
+// 12: the largest genus in GetHHTable2 (N = 2310).  194 has genus 3 and 546 genus 4 ([HH] Prop. 1, Table 2).
 low := [X : X in copy | X`g le 12];
 VerifyHHTable2([X : X in star | X`g le 12]);
 VerifyHHProposition1(low);
@@ -177,6 +178,8 @@ assert Position(msg, "in genus [ 3, 4 ]") gt 0;
 // targets' genera are hand-set to the sources' so that HHProposition1 applies:
 //  * X_0^*(1290): X_0^*(258) at p = 5, not certified, is recorded first; X_0^*(430) at p = 3 then marks it.
 //  * X_0^*(1120): only X_0^*(160) at p = 7, not certified, so it stays unmarked and is reported.
+// Source genera 3, 3, 4: dim of the all-signs-+1 AL subspace of S_2(Gamma_0(N)), Magma modular symbols.
+// Target genera hand-set to 3, 4; the true genera of X_0^*(1290), X_0^*(1120) are 10, 19.
 mkstar := function(N, g, id)
     X := CreateShimuraQuot(1, N, {d : d in Divisors(N) | GCD(d, N div d) eq 1});
     X`g := g;
@@ -189,8 +192,9 @@ for i in [1..3] do
     two[i]`IsSubhyp := false; two[i]`IsHyp := false; two[i]`TestInWhichProved := "hand-set";
 end for;
 assert not NonHyperellipticAtPrimeCertificate(two[1], 5);
-assert NonHyperellipticAtPrimeCertificate(two[2], 3);
+assert NonHyperellipticAtPrimeCertificate(two[2], 3); // #X_0^*(430)(F_9) = 24 > 2*9+2 = 20
 assert not NonHyperellipticAtPrimeCertificate(two[3], 7);
+assert [X`N : X in two[1..2]] eq [258, 430]; // 258 must precede 430, or it is never recorded and the filter goes untested
 uncertified := [];
 HHProposition1(~two, ~uncertified);
 assert assigned two[4]`IsSubhyp and not two[4]`IsSubhyp and two[4]`TestInWhichProved eq "HHproposition1 isomorphic to 2";
