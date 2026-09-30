@@ -710,23 +710,18 @@ end function;
 */
 
 function TraceDNew(D,N,k,n,Q)
+    // Trace of T_n W_Q on S_k(DN)^{D-new}: the sum over N' with D | N' | DN of the trace on
+    // S_k(N')^{new}, weighted by how many level-raising images of that space land in the
+    // D-new part.  That weight is the size of get_ds (it is the count sigma_{0,n}(...) of
+    // [Assaf, Cor. 4.27]); the individual d in get_ds are not needed -- see issue #8.  The
+    // trace itself does not depend on d, so it is computed once per N' and multiplied.
     t := 0;
     vprint ShimuraQuotients, 3: "in TraceDNew with n = ,", n, "Q = ", Q;
     for dN in Divisors(N) do
         N_prime := D*N div dN;
-        ds := get_ds(D*N, Q, N_prime, n);
-        for d in ds do
-            n_p := n_prime(d, D*N, Q, N_prime, n);
-            d_p := d_prime(d, D*N, Q, N_prime);
-            dd_p := dd_prime(d, D*N, Q, N_prime, n);
-            Q_p := Q_prime(D*N, Q, N_prime);
-            // Should always be trivial as n is coprime to D*N
-            // term := GCD(d_p, n);
-            // term *:= MoebiusMu(dd_p);
-            // t_d := TraceFormulaGamma0HeckeALNew(N_prime, k, n, GCD(Q, N_prime));
-            // t +:= t_d * #Divisors(d);
-            t +:= TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_p);
-        end for;
+        mult := #get_ds(D*N, Q, N_prime, n);
+        if mult eq 0 then continue; end if;
+        t +:= mult * TraceFormulaGamma0HeckeALNew(N_prime, k, n, Q_prime(D*N, Q, N_prime));
     end for;
     return t;
 end function;
