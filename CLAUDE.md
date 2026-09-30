@@ -171,9 +171,9 @@ miss it.
 * **PR bodies above all: write for a collaborator reading cold, not for another agent.** Open
   with two or three plain sentences saying what was wrong and what the change does, the
   mathematical point before the implementation detail. Then one bullet per file and a line or two
-  on how it was verified. 20–35 lines in total. Leave out internal names, offsets,
-  commit-by-commit history and exhaustive evidence; one piece of evidence the reader can check is
-  enough.
+  on how it was verified. Length follows importance: a small fix needs a few lines, while an
+  important problem can take as long as it needs, provided a reader can follow it. Leave out
+  internal names, offsets, commit-by-commit history and evidence the reader doesn't need.
 * The same plain style applies elsewhere, more briefly:
   * Code comments: 1–4 lines stating the constraint the code cannot show.
   * Tracker comments: a few plain lines on what changed, not a report.
