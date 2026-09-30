@@ -35,6 +35,7 @@ star_stages := [
  "FilterByDualGraphStar",
  "FilterByTwistedTraceStar",
  "SpecialFiberIsomorphismStar",
+ "FilterByGeneralizedComplicatedFixedPointsStar",
  "FilterByWeilPolynomialStar",
  "FilterByTwistedWeilPolynomialStar",
  "FilterStarCurvesByFpAutomorphisms",

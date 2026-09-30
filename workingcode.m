@@ -39,6 +39,8 @@ FILTER_STAGES := [*
     // curve -- agrees between the two.
     <"FilterByTwistedTraceStar", FilterByTwistedTrace>,
     <"SpecialFiberIsomorphismStar", SpecialFiberIsomorphism>,
+    // Generalized [FH] Prop 6 on the star curves, before the (much costlier) Weil polynomials.
+    <"FilterByGeneralizedComplicatedFixedPointsStar", FilterByGeneralizedComplicatedFixedPoints>,
     // Weil polynomials of the star curves (same filter as parallel_filter_worker.m runs for it),
     // then their twists.  FilterStarCurvesByFpAutomorphisms is a redundant cross-check after Weil.
     <"FilterByWeilPolynomialStar", FilterByWeilPolynomialGenusScaled>,

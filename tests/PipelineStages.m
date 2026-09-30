@@ -9,7 +9,8 @@ end function;
 
 wc := [
     "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1", "FilterByALFixedPointsOnQuotient", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
@@ -27,7 +28,8 @@ rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
     "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2", "UpdateCurves5", "FilterByAutomorphismGroup",
     "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",

@@ -87,11 +87,18 @@ The star-curve block in `run_pipeline.sh` reads:
     FilterByDualGraphStar                     parallel, by level  NEW
     FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
+    FilterByGeneralizedComplicatedFixedPointsStar  parallel     NEW
     FilterByWeilPolynomialStar                parallel
     FilterByTwistedWeilPolynomialStar         parallel, by level  NEW
     FilterStarCurvesByFpAutomorphisms         parallel
     FilterByNonALInvolutionsStar              parallel
     GetQuotientsAndGenera + UpdateByGenus     (+ VerifyFHTheorem3)
+
+`FilterByGeneralizedComplicatedFixedPointsStar` runs the generalized [FH] Prop 6 (mixed group
+<W_odd, V2>, so only star curves with 8 | N do any work) before the Weil polynomials: it costs a
+few trace-formula sums per curve, and each star curve it decides is one the Weil stage no longer
+streams class numbers for. `FilterByGeneralizedComplicatedFixedPoints` still runs after expansion,
+on the non-star quotients.
 
 The star twisted Weil stage runs after `FilterByWeilPolynomialStar`, in `FILTER_STAGES` as well.
 On a star curve W is the full AL group, so the only twists are V2 (8 | N), V3 (9 || N, and then
@@ -155,7 +162,8 @@ chunks for them, again heaviest first. The merge (`parallel_merge.m`) is unchang
 curves are tagged with their original index.
 
 **Star curves are not re-run.** `FilterByTrace`, `FilterByTwistedTrace`, `FilterByWeilPolynomial`,
-`FilterByTwistedWeilPolynomial` and `FilterByNonALInvolutions` call the same function as their
+`FilterByTwistedWeilPolynomial`, `FilterByNonALInvolutions` and
+`FilterByGeneralizedComplicatedFixedPoints` call the same function as their
 `*Star` versions, and a star curve's (D, N, W, g) do not change in between, so on a star curve the
 star version left undecided they would repeat that computation and get the same answer. The worker
 skips those curves (they are written back unchanged and cost 0 in the chunk balance), but only
