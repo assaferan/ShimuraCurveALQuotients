@@ -14,6 +14,15 @@ function Sfast(N, u, t, n)
     y := t^2-4*n;
     for f in fac do
         p,e := Explode(f);
+        // alpha must be a UNIT.  For p | n the polynomial is alpha (alpha - t) mod p, so the
+        // root alpha = 0 is not a unit and the discriminant count below (all roots) is wrong
+        // here: the only candidate is alpha = t, a unit iff p does not divide t, and then a
+        // simple root (derivative 2 alpha - t = t mod p), so it lifts uniquely to every p^e.
+        // Every pipeline caller has p coprime to DN; this only matters for gcd(n, N) > 1.
+        if n mod p eq 0 then
+            if t mod p eq 0 then return 0; end if;
+            continue;
+        end if;
         if (y eq 0) then
 	        num_sols *:= p^(e div 2);
             continue;
