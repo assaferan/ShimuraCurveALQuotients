@@ -110,7 +110,7 @@ end function;
 // falsifies the hope that inserting Prop 5.4/5.5 into a level-N analogue of Theorem 8.1 (KY section 8)
 // could reproduce the b^{eta*} Eisenstein coefficients (memory: b-eisenstein-coefficients-solved),
 // since those are supported exactly on N | r and vary nontrivially with N -- neither of which a
-// constant local factor can produce. See PLAN.md, MAIN LINE.
+// constant local factor can produce.
 procedure test_prop55_nonzero_isotropic_coset()
     printf "Testing Prop 5.5 (nonzero isotropic coset) vs LocalWhittakerAtOne...";
 
