@@ -162,7 +162,8 @@ assert [<copy[i]`D, copy[i]`N> : i in hh] eq [<1, 194>, <1, 546>, <205, 3>, <199
 
 // Restricted to genus <= 12 (no undecided D = 1 curves above), GetModularByGenus is shorter than
 // Table 2 and both checks still pass.  Without HH's marks, 194 and 546 are reported in genus 3, 4.
-// 12: the largest genus in GetHHTable2 (N = 2310).  194 has genus 3 and 546 genus 4 ([HH] Prop. 1, Table 2).
+// 12: the largest genus in GetHHTable2 (N = 2310), which omits [HH] Table 2's genus-19 N = 1680.
+// 194 has genus 3 and 546 genus 4 ([HH] Table 2, p. 183); both are removed by Prop. 1, p. 184.
 low := [X : X in copy | X`g le 12];
 VerifyHHTable2([X : X in star | X`g le 12]);
 VerifyHHProposition1(low);
