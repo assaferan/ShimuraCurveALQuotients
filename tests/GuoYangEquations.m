@@ -32,7 +32,7 @@
 // JOURNAL text on 2026-09-06 and agree. When adding an entry, check the journal, not just v1.
 //
 // ⚠ EVERY ENTRY BELOW IS HAND-TRANSCRIBED, DELIBERATELY. Automated extraction from the arXiv
-// LaTeX was tried on 2026-09-04 and abandoned; see PLAN.md, COVERAGE. It hit four separate
+// LaTeX was tried on 2026-09-04 and abandoned. It hit four separate
 // silent-corruption bugs (equations wrapping across `\\` into several $...$ groups; a leading
 // minus belonging to the first term rather than being an overall factor; $-parity broken by
 // segmenting at the label, which is itself inside $...$; newlines inside the math), each of which
@@ -209,7 +209,7 @@ end for;
 // ---- TRANSCRIBED, MODEL NOT YET BUILT ---------------------------------------------------------
 // The three odd-`D` level-1 bases whose runs `earlyoom` reaped on lovelace (2026-09-18). They are
 // Guo-Yang equation bases -- checked against the tables, NOT inherited from `genmodels.m`'s
-// `vx_skip` grouping, which is what produced the false "only 95_1 has an oracle" claim in PLAN.md.
+// `vx_skip` grouping, which is what produced the false "only 95_1 has an oracle" claim.
 // (`115_1`/`123_1`, grouped with them by that guard, are NOT in Guo-Yang at all.)
 //
 // The equations are transcribed HERE, ahead of the models, so that the oracle fires the moment a
