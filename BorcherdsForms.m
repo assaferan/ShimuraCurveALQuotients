@@ -762,8 +762,42 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
     assert minval eq -Minimum([Valuation(f) : f in qexps]);
-   
+
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
+
+    // Every pool element carries its expansion at the OTHER cusp too, to O(q^1), by the same
+    // bootstrap: each factor expanded just deep enough for the product to be right through
+    // the constant term.  A linear combination of pool elements (a good form at 0, the form
+    // the search finds) then inherits both principal parts through the EtaQuot arithmetic,
+    // and its divisor is read off them instead of re-expanding its eta-quotient dictionary
+    // from scratch -- which at 95_1's second rung is minutes per form, sixty forms per rung.
+    // The pool's own expansions are attached only on the oo side: on the 0 side they are
+    // thousands of terms per element at the deep rungs and the kernel below gives their
+    // combinations directly.
+    oc_exp := Zero select func<f, A | qExpansionAtoo(f, A)> else func<f, A | qExpansionAt0(f, A)>;
+    oc_t := Zero select func<A | qExpansionAtoo(t, A)> else func<A | qExpansionAt0(t, A : Admissible := false)>;
+    oc_vt := Valuation(oc_t(1));
+    oc_vf := Minimum([Valuation(oc_exp(f, 1)) : f in fs_E[n+2-n0-k..#fs_E]]);
+    oc_A := 1 + r*Maximum(0, -oc_vt) + Maximum(0, -oc_vf);
+    oc_qt := oc_t(oc_A);
+    oc_tpow := [Parent(oc_qt)!1];
+    for oc_j in [1..r] do Append(~oc_tpow, oc_tpow[#oc_tpow]*oc_qt); end for;
+    oc_qexps := [oc_tpow[r+1]*oc_exp(f, oc_A) : f in bwh_head];
+    if r gt 0 then
+        oc_qexps cat:= &cat[[oc_tpow[r-oc_j]*oc_exp(f, oc_A) : f in init_basis] : oc_j in [0..r-1]];
+    end if;
+    oc_qexps cat:= [oc_exp(f, 1) : f in basis_n0];
+    oc_q := Parent(oc_qexps[1]).1;
+    oc_qexps := [x + O(oc_q^1) : x in oc_qexps];
+    assert #oc_qexps eq #full_basis;
+    for j in [1..#full_basis] do
+        if Zero then
+            full_basis[j]`qexp_oo := oc_qexps[j]; full_basis[j]`prec_oo := 1;
+        else
+            full_basis[j]`qexp_0 := oc_qexps[j]; full_basis[j]`prec_0 := 1;
+            full_basis[j]`qexp_oo := qexps[j]; full_basis[j]`prec_oo := 1;
+        end if;
+    end for;
     return coeffs, full_basis;
 end function;
 
@@ -824,6 +858,15 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
         WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o\n", pole_order, Nrows(coeffs), Nrows(G)));
     end if;
     etas := [&+[K[i][j]*full_basis[j] : j in [1..Ncols(K)] | K[i][j] ne 0] : i in [1..Nrows(K)]];
+    // The oo-expansion of each good form is inherited from the pool elements through the sum;
+    // the 0-expansion is the row of G (the pool elements do not carry theirs, see
+    // weakly_holomorphic_pool), known through the constant term.
+    Rq<q> := LaurentSeriesRing(Rationals());
+    for i in [1..#etas] do
+        etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
+        etas[i]`prec_0 := 1;
+        assert assigned etas[i]`qexp_oo;
+    end for;
     return Submatrix(G, [1..Nrows(G)], div_cols), etas;
 end function;
 
@@ -993,8 +1036,16 @@ alone cannot do odd D.}
     // WriteStderr survives a kill and does not depend on the verbose level.
     bf_progress := GetEnv("BFPROGRESS") ne "";
     bf_t0 := Realtime();
+    // Per-rung counters: (divisor, key) pairs tried and solvable, and the time in the linear
+    // algebra and the oo-side pool builds -- what remains is the 0-side block and the checks.
+    bf_evals := 0; bf_found := 0; bf_t_lin := 0; bf_t_oopool := 0;
     while (not found_all) do
         if bf_progress then
+            if m_idx gt 1 then
+                WriteStderr(Sprintf("  BFRUNG m=%o pairs tried=%o solvable=%o  linear algebra %os  oo-pools %os\n",
+                                    all_ms[m_idx-1], bf_evals, bf_found, bf_t_lin, bf_t_oopool));
+                bf_evals := 0; bf_found := 0; bf_t_lin := 0; bf_t_oopool := 0;
+            end if;
             WriteStderr(Sprintf("  BFPROGRESS m_idx=%o of %o, m=%o, elapsed %os\n",
                                 m_idx, #all_ms, all_ms[m_idx], Realtime()-bf_t0));
         end if;
@@ -1035,6 +1086,9 @@ alone cannot do odd D.}
             // when this was q^n0 flat); the maximum with the actual minimum valuation fixes the
             // alignment and is a no-op wherever every oo-pole is within n0.
             n_oo := Maximum(n0, -Minimum([Valuation(f) : f in ech_fs_oo]));
+            if bf_progress then
+                WriteStderr(Sprintf("  BFNOO m=%o good=%o n_oo=%o (n0=%o, k=%o)\n", m_choice, #ech_fs_oo, n_oo, n0, k));
+            end if;
             good_forms_oo := Matrix(R, [AbsEltseq(q^n_oo*f : FixedLength) : f in ech_fs_oo]);
 
             // This was verified to give the q-expansion of h in [GY] Example 31, p. 20
@@ -1179,7 +1233,8 @@ alone cannot do odd D.}
                 rams[-2] := [other_pts[2]];
                 
                 etas := AssociativeArray();
-                
+                targets := AssociativeArray();
+
                 found_all := true;
                 for i in Keys(rams) do
                     ram := rams[i];
@@ -1207,7 +1262,13 @@ alone cannot do odd D.}
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;
                         vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
+                        bf_tp := Realtime();
                         ech_basis_all_oo, pool_all_oo, fb_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
+                        bf_t_oopool +:= Realtime() - bf_tp;
+                        if bf_progress then
+                            WriteStderr(Sprintf("  BFOOPOOL P=%o (divisor needs %o, 0-side forms need %o)  %os\n",
+                                                -min_m, -Minimum(ms), n_oo+k-1, Realtime()-bf_tp));
+                        end if;
                         vprintf ShimuraQuotients, 5 : "Done!";
                     end if;
                     
@@ -1220,6 +1281,7 @@ alone cannot do odd D.}
                     // block at the top of the while loop.
 
 
+                    bf_ta := Realtime();
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                     coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
 
@@ -1236,9 +1298,15 @@ alone cannot do odd D.}
                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
                     
                     found_v := target_v in Image(coeffs_trunc);
-                   
-                    if not found_v then found_all := false; break; end if;
+                    bf_evals +:= 1;
+                    if not found_v then bf_t_lin +:= Realtime() - bf_ta; found_all := false; break; end if;
+                    bf_found +:= 1;
+                    if bf_progress then
+                        WriteStderr(Sprintf("  BFFOUND m=%o key=%o P=%o infty=%o others=%o\n",
+                                            m_choice, i, -min_m, infty[1], [other_pts[1][1], other_pts[2][1]]));
+                    end if;
                     sol := Solution(coeffs_trunc, target_v);
+                    bf_t_lin +:= Realtime() - bf_ta;
                     // RUNAWAY=1: `Solution` returns ONE point of the affine space
                     // sol + Kernel(coeffs_trunc), chosen arbitrarily.  When the kernel is
                     // NONTRIVIAL that choice is unconstrained, and an 18-digit representative is
@@ -1300,10 +1368,14 @@ alone cannot do odd D.}
                     if IsOdd(Xstar`D) then
                         etas[i] +:= &+[sol[n_ech + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
                     end if;
-                    // check divisor
+                    // check divisor -- from the principal parts the form inherited from the
+                    // pool (both cusps, through the constant term), so this is a read-off, not
+                    // an expansion of its eta-quotient dictionary.  The dictionary itself is
+                    // checked once, after the search, for the forms that are returned.
+                    assert assigned etas[i]`qexp_oo and assigned etas[i]`qexp_0;
+                    targets[i] := {<pt[1], div_coeffs[j]> : j->pt in ram};
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
-                    
-                    assert Set(div_f) eq {<pt[1], div_coeffs[j]> : j->pt in ram};
+                    assert Set(div_f) eq targets[i];
                 end for;
                 if found_all then break; end if;
             end for;
@@ -1319,6 +1391,13 @@ alone cannot do odd D.}
     if not found_all then
         error "Failed to find all Borcherds forms";
     end if;
+    // The search checked each divisor from cached principal parts.  The eta-quotient
+    // dictionary is what is returned, saved and expanded downstream, so derive the divisor
+    // once more from the dictionary alone (a fresh object carries no cache).
+    for i in Keys(etas) do
+        fresh := EtaQuotient(Parent(etas[i]), etas[i]`coeffs);
+        assert Set(DivisorOfBorcherdsForm(fresh, Xstar)) eq targets[i];
+    end for;
     return etas;
 end intrinsic;
 
