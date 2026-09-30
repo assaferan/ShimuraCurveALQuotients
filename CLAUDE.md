@@ -131,7 +131,9 @@ therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). 
 
     git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
 
-**should print nothing but doc files.** Anything else is a silent divergence — run it before
+**should print nothing but doc files** — except in the window between a PR merging to `main` and
+the merge of `main` down into `m0-theta-campaign`, when shared-path files legitimately differ;
+the merge-down clears it. Anything else is a silent divergence — run it before
 trusting either branch's code. Had this existed, the nine-day `nmzsolve.py` gap would have shown
 up immediately. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
 If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is

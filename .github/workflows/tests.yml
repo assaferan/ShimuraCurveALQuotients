@@ -1,10 +1,21 @@
 name: tests
 
+# Topic branches are tested by their PR only.  With `push: ['**']` every push to a topic branch
+# started TWO full matrices (event=push and event=pull_request_target, seconds apart) -- on #48
+# that was two identical 103-job runs.  Pushes to the two long-lived branches still run directly.
 on:
   push:
-    branches: [ '**' ]
+    branches: [ main, m0-theta-campaign ]
 
-  pull_request_target:
+  # `pull_request`, not `pull_request_target`: the latter checked out the PR head and executed it
+  # with the base repo's secrets.  `pull_request` runs on the merge ref, and a fork PR gets no
+  # secrets at all (has_access is then false and the matrix does not run).
+  pull_request:
+
+# A new push to the same PR or branch supersedes the run in flight instead of queueing behind it.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
 
@@ -14,12 +25,6 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v2
-        if: ${{ github.event_name == 'push' }}
-
-      - uses: actions/checkout@v2
-        if: ${{ github.event_name == 'pull_request_target' }}
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - id: set-matrix
         run: |
@@ -97,10 +102,10 @@ jobs:
   # This is the same lesson prime-magma below already records for the magma download: do the
   # shared, flaky, external call ONCE rather than 40 times in parallel.
   #
-  # ⚠ THE SECURITY PROPERTY IS UNCHANGED.  The workflow triggers on pull_request_target, so it
-  # runs with secrets in the BASE repo's context; the gate is what stops an untrusted PR author
-  # from using them.  This job still FAILS LOUDLY when permission is absent (so the run goes red,
-  # never silently green), and `test` needs: it -- so the matrix cannot run unless it passed.
+  # Since the trigger moved from pull_request_target to pull_request, a fork PR never sees the
+  # secrets in the first place, so this gate is no longer what protects them.  It is kept because
+  # it FAILS LOUDLY when permission is absent (the run goes red, never silently green), and `test`
+  # needs: it -- so the matrix cannot run unless it passed.
   permission-gate:
     runs-on: ubuntu-latest
     steps:
@@ -189,15 +194,9 @@ jobs:
 
     steps:
       # Permission is checked ONCE in the permission-gate job above, which this job needs:.
-      - name: Checkout for a push event
+      # On a PR event this checks out the merge ref, i.e. the PR as it would land on its base.
+      - name: Checkout
         uses: actions/checkout@v2
-        if: ${{ github.event_name == 'push' }}
-
-      - name: Checkout for a PR event
-        uses: actions/checkout@v2
-        if: ${{ github.event_name == 'pull_request_target' }}
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Cache magma
         uses: actions/cache@v3
