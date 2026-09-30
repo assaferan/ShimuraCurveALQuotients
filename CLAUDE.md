@@ -174,6 +174,13 @@ miss it.
   on how it was verified. Length follows importance: a small fix needs a few lines, while an
   important problem can take as long as it needs, provided a reader can follow it. Leave out
   internal names, offsets, commit-by-commit history and evidence the reader doesn't need.
+* **Use the words a mathematician would use, not engineering or agent jargon.** No code
+  identifiers in prose: say what the thing does ("the check that w_{N2} has exactly 3·#G fixed
+  points"), and give the name once, in parentheses, only if the reader needs to find the code.
+  Avoid words like *pin*, *guard*, *gating*, *control*, *vacuous*, *delta*, *oracle*, *land*,
+  *surface*. Say instead "the test checks that...", "the code refuses...", "a test that fails
+  if...". Before posting, reread as a coauthor who has not seen the code, and rewrite any sentence
+  they would have to decode.
 * The same plain style applies elsewhere, more briefly:
   * Code comments: 1–4 lines stating the constraint the code cannot show.
   * Tracker comments: a few plain lines on what changed, not a report.
