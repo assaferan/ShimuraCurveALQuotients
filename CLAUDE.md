@@ -15,9 +15,8 @@ what you are working on, and that have each cost a session at least once.
 > rather than applying it** — a wrong "the paper is wrong" claim was retracted while writing the
 > diff. See `HANDOFF.md`, "READ THIS FIRST".
 
-* **`PLAN.md`** — what to do next. Opens with a "Picking this up cold" block.
-* **`HANDOFF.md`** — what happened. Authoritative on state; it wins over `PLAN.md` and over any
-  agent memory when they disagree.
+* **`HANDOFF.md`** — what happened. Authoritative on state; it wins over any agent memory when
+  they disagree.
 
 ## Changes reach `main` only through a reviewed PR
 
@@ -37,7 +36,7 @@ what you are working on, and that have each cost a session at least once.
     side effect.
 * **Stacked work:** a branch that depends on an unmerged PR branches from that PR's branch and
   targets it with `--base`, so each PR shows only its own diff.
-* Merged topic branches are deleted; they are not part of the long-lived set below.
+* Delete a topic branch once its PR merges.
 
 ## Running Magma
 
@@ -67,12 +66,11 @@ Develop controls in the scratchpad and install them afterwards. It is the same h
 "never `git pull` a clone with jobs running from it" rule below — the working tree is a clone too.
 
 **⚠ THE FULL SUITE DOES NOT COMPLETE ON THIS MAC — it dies at `X0_206_1`.** Measured twice on
-2026-09-23, independently: two runs reached 56 and 57 files and both were killed by macOS for memory
-pressure at exactly `X0_206_1.m`, with 0 failures up to that point. So a local `run_tests.m` with no
-target is a ~3-hour way to learn nothing past the `X0_1*` range. Either use `target:=` /
-`filename:=` for the tests you care about, or run the suite on **lava**, which is where the offline
-tests already go. ⚠ A killed suite LOOKS like a clean one — check the file count and that
-`Tests failed:` is present, per the truncation rule.
+2026-09-23: both runs were killed by macOS for memory pressure at exactly `X0_206_1.m`. So a local
+`run_tests.m` with no target learns nothing past the `X0_1*` range. Either use `target:=` /
+`filename:=` for the tests you care about, or run it on a server. ⚠ A killed suite LOOKS like a
+clean one — check that every test file printed a result line. `run_tests.m` prints `Tests failed:`
+only when something failed, so its absence alone proves nothing.
 
 **Kill Magma by PID, never `pkill -f magma.exe`.** This Mac hosts several Claude sessions and the
 `core` repo sessions run their own `magma.exe`; the blanket form takes theirs down with yours.
@@ -89,10 +87,12 @@ intrinsic from the needed package first:
 
 ## Normaliz (required for any polytope solve)
 
-The polymake backend is dead; `nmzsolve.py` replaced it. `NORMALIZ_BIN` **must** be set — the
-fallback path it computes does not exist in this checkout:
+The polymake backend is dead; `nmzsolve.py` replaced it. `NORMALIZ_BIN` **must** point to a
+Normaliz binary — the fallback path it computes does not exist in this checkout. On Eran's machine:
 
     export NORMALIZ_BIN=~/Documents/GitHub/normaliz-3.11.1/normaliz
+
+Elsewhere, find the local install. CI uses `/usr/bin/normaliz` from the apt package `normaliz-bin`.
 
 Without it, or above the cached frontier, a fresh solve fails *silently* — you get "no solutions"
 rather than an error, and a partially-cached base returns a wrong answer instead of complaining.
@@ -101,28 +101,23 @@ output fails on identical content; compare as vector sets.
 
 ## Where things live
 
-    main                the working branch: code + paper/ + PLAN.md/HANDOFF.md
-    m0-theta-campaign   research data, probes and triage tooling (vvdata/weyl-campaign/)
+**Don't assume which branches exist; check `git branch -r`.** `main` is the default PR target,
+but some PRs target other branches (for example `integration`, which stages fixes for a combined
+pipeline rerun), so read a PR's base before reasoning about it. Work goes on a topic branch and
+lands by PR. Retired branches are preserved as `archive/<name>` tags on `origin`.
 
-Worktrees live under `worktrees/` inside this repo checkout, not as siblings of it — deliberate,
-to keep the `GitHub/` directory tidy:
+`git worktree list` shows what is checked out where. New worktrees go under `worktrees/<name>`
+in this checkout. For the campaign branch (research data, probes and triage tooling under
+`vvdata/weyl-campaign/`):
 
-    .                    main (this checkout)
-    worktrees/campaign   m0-theta-campaign
+    git worktree add worktrees/campaign m0-theta-campaign
 
-**When adding a new worktree, put it under `worktrees/<name>` here**, e.g.:
-
-    git worktree add worktrees/<name> <branch>
-
-**Two long-lived branches: `main` and `m0-theta-campaign`**, plus short-lived topic branches
-while their PRs are open. Everything else is retired and
-preserved as an `archive/<name>` tag on `origin` (10 of them). `whbasis-speedup` went too — its
-one commit was already in `main` via the `04f1d7b` cherry-pick.
+**Never `git pull` a clone with jobs running from it.** `AttachSpec` loads packages as they are
+first used, so updating the tree under a running job mixes two versions of the code.
 
 **⚠ The campaign branch carries a FULL CODE TREE, not just data.** So a probe run from
-`worktrees/campaign` uses *that branch's* code, not `main`'s. It had drifted 103 commits behind
-before being merged up on 2026-09-04; **merge `main` into it before trusting any measurement
-taken there.**
+`worktrees/campaign` uses *that branch's* code, not `main`'s. **Merge `main` into it before
+trusting any measurement taken there.**
 
 **The invariant that keeps this from biting again — check it, don't rely on discipline.** The
 gaps above happened in files at **SHARED PATHS**: paths that exist on *both* branches and can
@@ -132,28 +127,20 @@ therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). 
     git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
 
 **should print nothing but doc files.** Anything else is a silent divergence — run it before
-trusting either branch's code. Had this existed, the nine-day `nmzsolve.py` gap would have shown
-up immediately. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
+trusting either branch's code. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
 If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
 why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
 `vvdata/gtsweep.m`.
 
-`nmzsolve.py` used to conflict on that merge, because campaign carried the **t-shift fallback**
-and `main` did not. **Resolved 2026-09-04: the fallback is now IN `main`** (with the two files it
-reads at runtime, `polymake/tshift_{core,w0}_420.txt`); the two copies are identical, so that
-conflict should not recur. Its generator and probe stay on campaign
+`nmzsolve.py` on `main` carries the **t-shift fallback**, with the two files it reads at runtime,
+`polymake/tshift_{core,w0}_420.txt`. Its generator and probe stay on campaign
 (`vvdata/weyl-campaign/tshift_gen.py`, `tshift308.m`) per the tooling convention. The fallback is
 guarded — it needs `m_pole==0 && k24==12 && cuspidal==0`, a `polymake/tshift_w0_<M>.txt`, and a
 lower cached rung — so it is inert at levels without those files, and it is validated at
 **M = 420 only**.
 
-**⚠ `tier1-models` is RETIRED (2026-09-04) and `main` carries everything it had.** It was
-fast-forwarded into `main` — the two were the same commit — and then deleted, local and remote,
-along with the now-redundant `worktrees/mainport`. Older material (`HANDOFF.md`, `PLAN.md`,
-memory) still says things like "`main` is code only", "the `tier1-models` merge trap", or refers
-to `-campaign` / `-mainport` sibling directories. **All of that is historical** — there is one
-code branch now, and it is `main`. Do not recreate `tier1-models`; work for `main` goes on a
-topic branch and lands by PR.
+`tier1-models` is retired and merged into `main`; do not recreate it. Older notes mentioning it or
+`-campaign` / `-mainport` sibling directories are historical.
 
 **Triage tooling lives on the campaign branch under `vvdata/weyl-campaign/`, never at the repo
 root.** So `git log --all -- cmsupply.m` reports "not in any branch" for a file that is committed.
@@ -170,3 +157,11 @@ miss it.
   purged nightly and has already eaten one driver that had to be rewritten from a handoff.
 * Record *why* a probe's number is trustworthy, next to the probe. Several results here are proxies
   with a limited domain of validity, and the failure mode is quoting one outside it.
+* **Every number in a test states its provenance**: the paper with table or equation, an LMFDB
+  label, or the independent command that produced it (another Magma method, Sage/PARI, someone
+  else's code). "Computed by this repo at commit X" makes a regression pin, not a verification, so
+  label it that way.
+* **Don't edit a failing test to make it pass.** A failing test is evidence. Fix the code, or, if
+  you think the test itself is wrong, stop and raise it with a person, giving the independent
+  source that shows the expected value is wrong. Never change an expected value, loosen an assert,
+  or delete a check on your own.
