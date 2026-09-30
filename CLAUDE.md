@@ -168,11 +168,15 @@ miss it.
 
 ## Writing PRs, comments and replies
 
-* **Be concise.**
-  * PR bodies: one short paragraph on the bug with a single signature evidence line, one bullet
-    per file, a line or two on verification, a line of context. 20–35 lines in total.
+* **Write for a collaborator reading cold, not for another agent.** Plain words, short
+  sentences, and the mathematical point before the implementation detail. Open with two or three
+  sentences saying what was wrong and what the change does. Leave out internal names, offsets,
+  commit-by-commit history and exhaustive evidence; one piece of evidence the reader can check is
+  enough.
+  * PR bodies: that opening, one bullet per file, a line or two on how it was verified. 20–35
+    lines in total.
   * Code comments: 1–4 lines stating the constraint the code cannot show.
-  * Tracker comments: a few lines of delta, not a report.
+  * Tracker comments: a few plain lines on what changed, not a report.
 * **Don't comment idiomatic patterns.** A comment must state a constraint that the code cannot
   show and that a competent reader of this codebase would not already know. When unsure, leave it
   out and let the reviewer ask.
