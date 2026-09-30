@@ -1,0 +1,36 @@
+X: D=1 N=240 W={ 1, 15, 48, 80 } g=6
+TraceDNewALFixed(.., 13^6) = -3022 in 141.520 s
+Index Name                                                 Time        Count   
+9     TraceDNew                                            141.48      4       
+4     TraceDNewALFixed(<RngIntElt> D, <RngIntElt> N, <RngIntElt> k, <RngIntElt> 
+n, <SetEnum> W) -> RngIntElt
+                                                           141.48      1       
+1     <main>                                               141.48      1       
+21    TraceFormulaGamma0HeckeALNew                         141.47      37      
+27    TraceFormulaGamma0HeckeAL                            141.42      150     
+39    TraceFormulaGamma0HeckeALUncached                    141.42      37      
+55    H                                                    82.45       405297  
+78    ClassNumberLU(<RngIntElt> D) -> RngIntElt            31.31       21770   
+58    Cfast                                                25.21       405297  
+98    ClassNumber(<RngIntElt> D) -> RngIntElt              20.50       21770   
+116   FundamentalClassNumber(<QuadBin> Q) -> RngIntElt     17.68       12911   
+59    Sfast                                                14.32       405297  
+108   SetCache                                             10.26       21807   
+77    IsSquare(<RngIntElt> x) -> BoolElt, RngIntElt        9.32        17757000
+45    P                                                    7.86        405297  
+61    Lemma4_5                                             7.86        405297  
+33    GetCache                                             5.89        762108  
+95    StoreSet(<Rec> store, <MonStgElt> field, <Any> value)5.58        43583   
+96    setfunc                                              5.51        43583   
+97    setsub                                               5.46        43583   
+11    *(<RngIntElt> x, <RngIntElt> y) -> RngIntElt         4.71        8759769 
+3     ^(<RngIntElt> x, <RngIntElt> n) -> RngIntElt         3.83        6821595 
+18    eq(<RngIntElt> x, <RngIntElt> y) -> BoolElt          2.91        5671646 
+34    StoreIsDefined(<Rec> store, <MonStgElt> field) -> BoolElt, .
+                                                           2.86        827467  
+41    -(<RngIntElt> x, <RngIntElt> y) -> RngIntElt         2.56        4825685 
+10    Divisors(<RngIntElt> n) -> SeqEnum                   2.55        911291  
+12    div(<RngIntElt> x, <RngIntElt> y) -> RngIntElt       2.50        4379007 
+16    mod(<RngIntElt> x, <RngIntElt> y) -> RngIntElt       2.15        4232087 
+35    issetfunc                                            1.63        827467  
+106   ReducedForms(<RngIntElt> D) -> SeqEnum               1.26        8859    

@@ -1,0 +1,3 @@
+N=20000  SetCache 4.290 s   plain assoc 0.01000 s   ratio 429.0
+N=40000  SetCache 17.21 s   plain assoc 0.0000 s   ratio 0
+N=80000  SetCache 68.16 s   plain assoc 0.01000 s   ratio 6816.

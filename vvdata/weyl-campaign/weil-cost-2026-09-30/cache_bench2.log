@@ -1,0 +1,4 @@
+N=20000  SetCacheFast 0.03000 s   GetCache 0.02000 s   hits 20000
+N=80000  SetCacheFast 0.1500 s   GetCache 0.08000 s   hits 80000
+N=320000  SetCacheFast 0.5900 s   GetCache 0.3000 s   hits 320000
+N=1280000  SetCacheFast 2.420 s   GetCache 1.180 s   hits 1280000
