@@ -1,0 +1,2 @@
+(a) SfastFixed vs brute force: 0 of 3440 differ; first []
+(b) Popa with SfastFixed vs modular symbols at gcd(n,N)>1: 0 of 828 differ

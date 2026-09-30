@@ -1,0 +1,4 @@
+gcd(n,DN)>1: 0 of 1548 differ;  coprime: 0 of 242 differ
+REVIEW (1,30,n=4): formula -2, modular symbols -2
+REVIEW (1,1848,n=7): formula -9, modular symbols -9
+REVIEW (1,1848,n=49): formula -73, modular symbols -73

@@ -1,0 +1,6 @@
+(a) Sfast vs brute-force S at p | (n,N): 50 of 154 differ; first: [ <12, 0, 3, 
+2, 0>, <12, -4, 4, 2, 0>, <12, -2, 4, 2, 0>, <12, -1, 4, 2, 1>, <12, 1, 4, 2, 
+1>, <12, 2, 4, 2, 0> ]
+    control gcd(n,N) = 1: 0 of 132 differ
+(b) Popa with brute-force S vs modular symbols at gcd(n,N)>1: 0 of 208 differ 
+(was 80 with Sfast)
