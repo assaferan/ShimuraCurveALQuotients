@@ -161,7 +161,9 @@ procedure test_DualGraphQuotient(rows)
         assert dg_same_graphs(DualGraphData(c[1], c[2], c[3] : CacheDir := "none"),
                               DualGraphData(c[1], c[2], c[3] : ForceScan := true), c[1], c[2], c[3]);
     end for;
-    // negative controls: each deliberately wrong graph (dg_corrupt) breaks at least one identity
+    // each deliberately wrong graph (dg_corrupt) breaks some identities.  431 and 397 are regression
+    // values measured by this repo at 9a48b57, not independent: all come from W containing a multiple
+    // of p, since the genus is blind to the termini otherwise (test_DualGraphBrandtCharpoly checks them)
     for variant in ["noreverse", "wrongreversal", "trivialvertexAL"] do
         fails := 0;
         for r in [r : r in rows | r[1]*r[2] le 700] do
@@ -174,7 +176,11 @@ procedure test_DualGraphQuotient(rows)
             end for;
         end for;
         printf " %o:%o", variant, fails;
-        assert fails gt 0;
+        case variant:
+            when "noreverse": assert fails eq 431;
+            when "wrongreversal": assert fails eq 397;
+            else assert fails gt 0;
+        end case;
     end for;
     printf " Done!\n";
 end procedure;
@@ -326,3 +332,30 @@ procedure test_DualGraphBrandt()
     printf "Done!\n";
 end procedure;
 test_DualGraphBrandt();
+
+// Independent check of the graph's shape, not only its genus: the unit-weighted +/- adjacency is the
+// Brandt matrix T_p of level N in the algebra of discriminant D/p, compared by characteristic
+// polynomial (labels differ) with Magma's BrandtModule.  The 13 pilot levels.
+procedure test_DualGraphBrandtCharpoly()
+    printf "Testing the weighted adjacency against Magma's Brandt matrix T_p...";
+    levels := [<6,35,2>, <6,35,3>, <10,33,5>, <14,5,7>, <6,55,3>, <38,3,2>, <38,3,19>, <146,1,2>,
+               <119,1,7>, <143,1,11>, <10,21,2>, <22,15,11>, <6,77,2>];
+    caught := AssociativeArray();
+    for v in ["noreverse", "wrongreversal"] do caught[v] := 0; end for;
+    for c in levels do
+        D, N, p := Explode(c);
+        data := DualGraphData(D, N, p : CacheDir := "none");
+        cp := CharacteristicPolynomial(HeckeOperator(BrandtModule(D div p, N), p));
+        assert CharacteristicPolynomial(DualGraphBrandtMatrix(data, p)) eq cp;
+        for v in ["noreverse", "wrongreversal"] do
+            if CharacteristicPolynomial(DualGraphBrandtMatrix(dg_corrupt(data, p, v), p)) ne cp then
+                caught[v] +:= 1;
+            end if;
+        end for;
+    end for;
+    // wrong termini change T_p at every level with h > 1; at h = 1 it is the 1x1 matrix (p + 1)
+    nh := #[c : c in levels | DualGraphData(c[1], c[2], c[3] : CacheDir := "none")[1] gt 1];
+    assert nh eq 10 and caught["noreverse"] eq nh and caught["wrongreversal"] eq nh;
+    printf "Done!\n";
+end procedure;
+test_DualGraphBrandtCharpoly();
