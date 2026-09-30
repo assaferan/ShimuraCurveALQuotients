@@ -26,7 +26,7 @@ end function;
 
 procedure CollectDisc(D)
   bool, s := StoreIsDefined(collecting, "discs");
-  if not bool then s := AssociativeArray(); end if;
+  if not bool then s := AssociativeArray(); else StoreRemove(collecting, "discs"); end if;   // in place, see SetCache
   s[D] := true;                       // associative-array key gives free dedup
   StoreSet(collecting, "discs", s);
 end procedure;
@@ -47,10 +47,12 @@ end intrinsic;
 
 // ⚠ Drop the store's reference BEFORE mutating.  Magma copies a value on write when more than
 // one reference to it exists; with the store still holding the array, `cache[k] := v` copied
-// the whole associative array on EVERY insert -- quadratic in cache size (measured: 20k inserts
-// 4.3 s, 80k inserts 68 s; 1.28M inserts 2.4 s once the store's reference is removed first).
-// The class-number cache grows to hundreds of thousands of entries across a Weil-stage run,
-// so this was the stage's real hot spot, not the trace formula.
+// the whole associative array on EVERY insert -- quadratic in cache size.  Measured on a Mac
+// (2026-09-30, vvdata/weyl-campaign/weil-cost-2026-09-30/cache_bench{,2}.m on the campaign
+// branch): 20k inserts 4.3 s, 80k inserts 68 s; 1.28M inserts 2.4 s once the store's reference
+// is removed first.  The class-number cache grows to hundreds of thousands of entries across a
+// Weil-stage run.  Between the StoreRemove and the StoreSet the array lives only in the local
+// `cache`: an error raised there loses the cache (a recomputation cost, never a wrong value).
 procedure SetCache(k,v, name)
   bool, cache := StoreIsDefined(name, "cache");
   if not bool then
