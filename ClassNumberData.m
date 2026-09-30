@@ -29,7 +29,6 @@ CL_DEFAULT_DIR := "/scratch/class-groups-quadratic-imaginary-fields";
 
 // Module-level state, persistent across calls within a Magma session.
 CL_STORE := NewStore();          // config + per-file stream cursors
-CL_FUND := NewStore();           // |d0| -> h(d0)   for fundamental d0
 CL_ORDER := NewStore();          // D    -> h(order of discriminant D)
 
 function clGetAssoc(store)
@@ -37,6 +36,20 @@ function clGetAssoc(store)
     if not b then A := AssociativeArray(); end if;
     return A;
 end function;
+
+// Insert k -> v into the store's associative array WITHOUT copying it.  Magma copies a value
+// on write when more than one reference exists, so mutating an array the store still holds
+// copied the whole array on every insert -- quadratic in cache size (see Caching.m,
+// SetCache).  Removing the store's reference first makes the insert in place.  Callers must
+// not hold their own reference to the array when calling this (use a temporary for reads).
+// Between the StoreRemove and the StoreSet the cache lives only in the local A: an error
+// raised there would lose it, at the cost of recomputing entries, never of a wrong value.
+procedure clRemember(store, k, v)
+    b, A := StoreIsDefined(store, "cache");
+    if not b then A := AssociativeArray(); else StoreRemove(store, "cache"); end if;
+    A[k] := v;
+    StoreSet(store, "cache", A);
+end procedure;
 
 function clDataDir()
     b, dir := StoreIsDefined(CL_STORE, "dir");
@@ -73,73 +86,6 @@ function clResidue(m0)
     error Sprintf("|d| = %o is not a negative fundamental discriminant", m0);
 end function;
 
-// Look up h(d0) for a negative fundamental discriminant d0 with |d0| = m0,
-// streaming the relevant table file on demand.  Returns false if the value is
-// unavailable (missing data file / |d| beyond the downloaded range), in which
-// case the caller should fall back to a direct computation.
-function clFundClassNo(m0)
-    fund := clGetAssoc(CL_FUND);
-    b, h := IsDefined(fund, m0);
-    if b then return true, h; end if;
-
-    prefix, r, m := clResidue(m0);
-    k := m0 div CL_FILE_SPAN;
-    fkey := prefix cat "." cat IntegerToString(k);
-
-    // Recover (or open) the streaming cursor for this file.
-    have, st := StoreIsDefined(CL_STORE, fkey);
-    if have and st`done then return false, _; end if;
-    if not have then
-        path := clDataDir() cat "/" cat prefix cat "/" cat fkey cat ".gz";
-        if not FileExists(path) then
-            // Mark exhausted so we don't probe again, and warn once.
-            StoreSet(CL_STORE, fkey, rec<recformat<F, cum, done> | done := true>);
-            wb, warned := StoreIsDefined(CL_STORE, "warned");
-            if not (wb and warned) then
-                printf "WARNING: class-group data file not found: %o\n", path;
-                printf "         falling back to direct class number computation.\n";
-                StoreSet(CL_STORE, "warned", true);
-            end if;
-            return false, _;
-        end if;
-        // 2>/dev/null suppresses zcat's harmless "stdout: Broken pipe" SIGPIPE
-        // notice, which it prints whenever we stop reading the stream early (the
-        // normal case: we break as soon as the target |d| is found, and abandon
-        // the still-open pipe at process exit). The file's existence was already
-        // checked above, so this does not mask a missing-file error.
-        F := POpen("zcat " cat path cat " 2>/dev/null", "r");
-        st := rec<recformat<F, cum, done> | F := F, cum := 0, done := false>;
-    end if;
-
-    base := k * CL_FILE_SPAN + r;   // |d| of the first line in this file
-    cum := st`cum;
-    F := st`F;
-    found := false; result := 0;
-    line := Gets(F);
-    while not IsEof(line) do
-        sp := Split(line, "\t");
-        cum +:= StringToInteger(sp[1]);
-        d := base + m * cum;
-        hd := StringToInteger(sp[2]);
-        fund[d] := hd;
-        if d eq m0 then
-            found := true; result := hd;
-            line := "";                 // sentinel: stop, but cursor is mid-file
-            break;
-        elif d gt m0 then
-            break;                       // passed it: m0 absent from this file
-        end if;
-        line := Gets(F);
-    end while;
-
-    st`cum := cum;
-    if IsEof(line) then st`done := true; end if;
-    StoreSet(CL_STORE, fkey, st);
-    StoreSet(CL_FUND, "cache", fund);
-
-    if found then return true, result; end if;
-    return false, _;
-end function;
 
 // ===========================================================================
 // Fast random-access lookup.
@@ -307,8 +253,9 @@ formula [Cox, Primes ..., Thm 7.24].}
     require D lt 0 and (D mod 4 in [0, 1]):
         "D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
 
-    order := clGetAssoc(CL_ORDER);
-    cached, h := IsDefined(order, D);
+    // Read through a temporary: holding `order` in a local while clRemember mutates the
+    // store's array would keep a second reference alive and force the copy this avoids.
+    cached, h := IsDefined(clGetAssoc(CL_ORDER), D);
     if cached then return h; end if;
 
     D0 := FundamentalDiscriminant(D);
@@ -320,23 +267,20 @@ formula [Cox, Primes ..., Thm 7.24].}
     // ClassNumber for fundamental discriminants beyond the tables entirely, or missing data.
     if -D0 ge ClassNumberDataMaxAbsDisc() then
         h := ClassNumber(D);
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
+        clRemember(CL_ORDER, D, h);
         return h;
     end if;
 
     ok, h0 := clFundClassNoFast(-D0);
     if not ok then
         h := ClassNumber(D);              // fallback (missing data file / line absent)
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
+        clRemember(CL_ORDER, D, h);
         return h;
     end if;
 
     f := Isqrt(D div D0);                 // conductor; D = D0 * f^2
     h := clOrderFromFund(D0, f, h0);
-    order[D] := h;
-    StoreSet(CL_ORDER, "cache", order);
+    clRemember(CL_ORDER, D, h);
     return h;
 end intrinsic;
 
@@ -398,7 +342,16 @@ requested values.  Memory stays O(#Ds) and each file is read at most once, inste
 every class number streamed past -- use this for the whole discriminant set of a trace-formula
 sum.  Large/uncovered fundamental discriminants use a direct ClassNumber, as in ClassNumberLU.}
     res := AssociativeArray();
-    order := clGetAssoc(CL_ORDER);
+    for D in Ds do
+        require D lt 0 and (D mod 4 in [0,1]):
+            "every D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
+    end for;
+    // Take the cache out of the store for the duration (inserts below are then in place rather
+    // than a copy of the whole array, see clRemember); it goes back at the end.  An error in
+    // between would lose the cache -- only a recomputation cost -- which is why the input is
+    // validated first.
+    b, order := StoreIsDefined(CL_ORDER, "cache");
+    if not b then order := AssociativeArray(); else StoreRemove(CL_ORDER, "cache"); end if;
     // The batch path streams request-only, so it is memory-safe over the whole table range
     // (unlike per-disc ClassNumberLU, which caches everything streamed and so caps out at
     // ClassNumberTableMaxDisc).  Only go direct for discriminants beyond the tables entirely.
@@ -406,8 +359,6 @@ sum.  Large/uncovered fundamental discriminants use a direct ClassNumber, as in 
     info := AssociativeArray();                // D :-> <D0, f>  for the table-served D
     needFund := {};                            // |d0| to fetch from the tables
     for D in Ds do
-        require D lt 0 and (D mod 4 in [0,1]):
-            "every D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
         if IsDefined(res, D) or IsDefined(info, D) then continue; end if;
         cached, h := IsDefined(order, D);
         if cached then res[D] := h; continue; end if;
