@@ -1,7 +1,7 @@
 
 import !"Geometry/ModSym/operators.m" : ActionOnModularSymbolsBasis;
 // This file implements the trace formulas from [Popa] and [Assaf]
-import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
+import "Caching.m" : cached_traces, cached_popa, SetCache, GetCache, class_nos, IsCollecting, CollectDisc,
                      StartCollecting, StopCollecting, GetCollectedDiscs;
 
 function Sfast(N, u, t, n)
@@ -552,7 +552,7 @@ procedure testInverseRelationNewSubspaces(N, k, p)
 end procedure;
 
 // Formula from Popa
-function TraceFormulaGamma0HeckeAL(N, k, n, Q)
+function TraceFormulaGamma0HeckeALUncached(N, k, n, Q)
 // Returns the trace of T_n \circ W_Q on S_k(N) using [Popa, Theorem 4]
     assert k ge 2;
     if (n eq 0) then return 0; end if; // for compatibility with q-expansions
@@ -589,6 +589,21 @@ function TraceFormulaGamma0HeckeAL(N, k, n, Q)
 	    ret +:= &+[n div d : d in Divisors(n) | GCD(d,N) eq 1];
     end if;
     return ret;
+end function;
+
+// Memoised on <N, k, n, Q>.  The newform recursion in TraceFormulaGamma0HeckeALNew evaluates
+// this at every N'' | N' once for each N' | N above it, and TraceDNewALFixed repeats that for
+// each w in W: one call of TraceDNewALFixed(1, 1848, 2, 5, W) with #W = 4 made 1872
+// evaluations for 105 distinct arguments (54 with nonzero weight alpha), counted on main at
+// 95cf87b (issue #8).  The cache is keyed on the arguments alone, so it is also shared across
+// curves at the same level.
+function TraceFormulaGamma0HeckeAL(N, k, n, Q)
+    key := <N, k, n, Q>;
+    b, v := GetCache(key, cached_popa);
+    if b then return v; end if;
+    v := TraceFormulaGamma0HeckeALUncached(N, k, n, Q);
+    SetCache(key, v, cached_popa);
+    return v;
 end function;
 
 function get_trace_hecke_AL(N, k, n, Q : New := false)
@@ -867,6 +882,7 @@ function TraceFormulaGamma0HeckeALNew(N, k, n, Q)
     trace := 0;
     for N_prime in Divisors(N) do
 	    a := alpha(Q, n, N div N_prime);
+	    if a eq 0 then continue; end if;     // alpha = 0 for p | Q at exponent 1, and off cube-free N/N'
 	    Q_prime := GCD(N_prime, Q);
 	    term := TraceFormulaGamma0HeckeAL(N_prime, k, n, Q_prime);
 	    term -:= TraceFormulaGamma0HeckeALNewSmaller(N_prime, k, n, Q_prime );

@@ -1,5 +1,6 @@
 cached_orders := NewStore();
 cached_traces := NewStore();
+cached_popa := NewStore();     // Popa's Tr(T_n W_Q | S_k(N)), keyed <N, k, n, Q>; see TraceFormula.m
 class_nos := NewStore();
 point_counts := NewStore();
 // data/hypg<g>q<p>.txt tables loaded by CheckWeilPolynomialAtPrime, keyed by <g, p>
