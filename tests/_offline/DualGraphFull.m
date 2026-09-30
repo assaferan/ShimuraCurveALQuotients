@@ -1,6 +1,6 @@
 // All 988 genus identities b_1(G_W) = g of the 2026-09-29 pilot list (14 levels, up to (1974, 1)).
 // Offline: about 15 s, dominated by the fibers of D = 1974 and D = 546.
-dg_full_rows := eval Read("tests/dualgraph_genus_data.txt");
+dg_full_rows := eval Read("tests/_dualgraph_genus_data.txt");
 n := 0;
 for r in dg_full_rows do
     for p in PrimeDivisors(r[1]) do

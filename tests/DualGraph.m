@@ -112,7 +112,7 @@ function dg_same_graphs(a, b, D, N, p)
 end function;
 
 // (D, N, W, g) rows; read at top level: eval inside a function or procedure of an eval'd test crashes Magma 2.29-4
-dg_genus_rows := eval Read("tests/dualgraph_genus_data.txt");
+dg_genus_rows := eval Read("tests/_dualgraph_genus_data.txt");
 
 procedure test_DualGraphQuotient(rows)
     printf "Testing DualGraphQuotientFromData...";
@@ -241,7 +241,7 @@ procedure test_DualGraphNotSFICertificate()
 end procedure;
 test_DualGraphNotSFICertificate();
 
-dg_fiber_raw := eval Read("tests/dualgraph_fiber_data.txt");
+dg_fiber_raw := eval Read("tests/_dualgraph_fiber_data.txt");
 
 procedure test_DualGraphStankewicz(raw)
     printf "Testing agreement with Stankewicz's fiber...";
