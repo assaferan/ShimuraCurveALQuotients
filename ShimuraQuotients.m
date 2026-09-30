@@ -732,7 +732,14 @@ function TraceDNew(D,N,k,n,Q)
 end function;
 
 intrinsic TraceDNewALFixed(D::RngIntElt,N::RngIntElt,k::RngIntElt,n::RngIntElt,W::SetEnum ) -> RngIntElt
-    {}
+    {Trace of T_n on the W-fixed part of the D-new subspace of S_k(DN), i.e. (1/#W) times the
+    sum over w in W of the trace of T_n composed with W_w, with the Jacquet-Langlands sign
+    (-1)^omega(gcd(w, D)).  Requires n coprime to DN.}
+    // The D-new decomposition in TraceDNew sums the level-N' newform traces with multiplicity
+    // #get_ds, which is [Assaf, Cor. 4.27]'s count only when (n, DN) = 1; at gcd > 1 it returned
+    // wrong values (D = 1, N = 30, n = 4: -1 where modular symbols give -2).  Every pipeline
+    // caller has p coprime to DN.
+    require GCD(n, D*N) eq 1 : "TraceDNewALFixed: n must be coprime to D*N";
     // Class numbers are served per-disc by ClassNumberLU: tables for |d| < ClassNumberTableMaxDisc
     // and a direct ClassNumber above it.  This keeps memory bounded without the batch/collect
     // dry-run, whose re-traversal of this trace was the dominant cost.
