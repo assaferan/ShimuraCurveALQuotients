@@ -90,9 +90,19 @@ heavy curves are always dispatched early.}
     end if;
 
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
-        // Weil cost is dominated by class-number streaming: each good prime p streams the
-        // tables to depth 4*Qmax*p^g.  Bound p by the database, the affordability budget,
-        // and the per-genus ceiling, then sum those depths over the good primes.
+        // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
+        // class-number database, the disc budget, and the per-genus ceiling), i.e. one trace at
+        // n = p^g per prime, and the measured cost of that trace is set by n: on a Mac without the
+        // class-number tables, 2026-09-30, n = 9e5 took 206 s, 4.8e6 560 s, 2.4e7 2132 s, across
+        // curves of level 15330 and 240 alike.  So sum p^g over the good primes.
+        //
+        // ⚠ This used to be sum 4*Qmax*p^g -- the DISCRIMINANT DEPTH, which is the right quantity
+        // for the table/budget bounds but not a cost: Qmax does not enter the per-term work (the
+        // t-range is sqrt(4*Q*n)/Q, so larger Q means FEWER terms).  The Qmax factor inverted the
+        // order: X_0^210(73)/W32 (g = 4, Qmax = 15330; 9 min for all its primes) was weighted 1.3e11,
+        // above X_0(240)/W4 (g = 6, Qmax = 80; ~9 h) at 7.2e10, which sat at rank 138 of 886 open
+        // curves.  The heavy shape for this stage is HIGH GENUS with a SMALL W (many admissible
+        // primes at n = p^g); under this proxy the top 50 open curves are all genus 5-7.
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
@@ -103,7 +113,7 @@ heavy curves are always dispatched early.}
         s := R!0;
         for p in PrimesUpTo(b) do
             if DN mod p eq 0 then continue; end if;
-            s +:= R!(4*Qmax*p^g);
+            s +:= R!(p^g);
         end for;
         return s;
     end if;
