@@ -838,36 +838,51 @@ end function;
 // 2601: kernel over Z 234 s, LLL 50 s (coordinates 842 -> 145 digits), 57 eta-quotient
 // combinations 17 s, their oo-expansions 2 s -- against hours before.
 //
-// Returns the good forms' 0-expansions restricted to the q^(1/4)-columns, and the good forms
-// as eta-quotient combinations (rows correspond).  The kernel over Z of an integral matrix,
-// LLL-reduced, keeps the coordinates small; zero rows (kernel vectors that only express
-// dependencies among pool elements) are dropped.
+// Returns the good forms' 0-expansions restricted to the q^(1/4)-columns, the good forms as
+// eta-quotient combinations (rows correspond), and the deepest pole at oo over the whole pool.
+//
+// The kernel contains two kinds of rows.  Rows with a nonzero 0-expansion are the good forms
+// proper; they are returned in reduced echelon form, which is the basis the echelon route
+// produced (its selection picked rows of the pool's reduced echelon form), so the search's
+// solution -- one point of an affine space, chosen by the row basis -- is the same form as
+// before.  Rows with zero 0-expansion are dependencies among pool elements; they are not
+// eta-quotient identities but forms holomorphic at 0 with a pole at oo (all 66 at 95_1's
+// first rung are nonzero at oo), and the echelon route kept them as rows too, so they stay.
+// Only a row zero at both cusps is dropped.
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 eq 0];
     den := Lcm([Denominator(x) : x in Eltseq(coeffs)]);
     MZ := ChangeRing(den*coeffs, Integers());
-    K := LLL(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div)));
-    G := ChangeRing(K, Rationals()) * coeffs;
-    keep := [i : i in [1..Nrows(G)] | not IsZero(G[i])];
-    K := Matrix(Integers(), #keep, Ncols(K), [K[i] : i in keep]);
-    G := Matrix(Rationals(), #keep, Ncols(G), [G[i] : i in keep]);
+    K := ChangeRing(LLL(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div))), Rationals());
+    G := K * coeffs;
+    Rq<q> := LaurentSeriesRing(Rationals());
+    pool_oo := Matrix(Rq, #full_basis, 1, [f`qexp_oo : f in full_basis]);
+    Koo := K * pool_oo;
+    good := [i : i in [1..Nrows(G)] | not IsZero(G[i])];
+    rel := [i : i in [1..Nrows(G)] | IsZero(G[i]) and not IsWeaklyZero(Koo[i][1])];
+    Gg := Matrix(Rationals(), #good, Ncols(G), [G[i] : i in good]);
+    Gg, U := EchelonForm(Gg);
+    Kg := U * Matrix(Rationals(), #good, Ncols(K), [K[i] : i in good]);
+    K := VerticalJoin(Kg, Matrix(Rationals(), #rel, Ncols(K), [K[i] : i in rel]));
+    G := VerticalJoin(Gg, ZeroMatrix(Rationals(), #rel, Ncols(G)));
     assert IsZero(Submatrix(G, [1..Nrows(G)], non_div));
     if GetEnv("BFPROGRESS") ne "" then
-        WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o\n", pole_order, Nrows(coeffs), Nrows(G)));
+        WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o  dependencies=%o\n",
+                            pole_order, Nrows(coeffs), #good, #rel));
     end if;
     etas := [&+[K[i][j]*full_basis[j] : j in [1..Ncols(K)] | K[i][j] ne 0] : i in [1..Nrows(K)]];
-    // The oo-expansion of each good form is inherited from the pool elements through the sum;
-    // the 0-expansion is the row of G (the pool elements do not carry theirs, see
+    // The oo-expansion of each form is inherited from the pool elements through the sum; the
+    // 0-expansion is the row of G (the pool elements do not carry theirs, see
     // weakly_holomorphic_pool), known through the constant term.
-    Rq<q> := LaurentSeriesRing(Rationals());
     for i in [1..#etas] do
         etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
         etas[i]`prec_0 := 1;
         assert assigned etas[i]`qexp_oo;
     end for;
-    return Submatrix(G, [1..Nrows(G)], div_cols), etas;
+    deepest_oo := -Minimum([Valuation(f`qexp_oo) : f in full_basis]);
+    return Submatrix(G, [1..Nrows(G)], div_cols), etas, deepest_oo;
 end function;
 
 
@@ -1069,7 +1084,7 @@ alone cannot do odd D.}
             // every rung, so there is nothing to memoise across m.
             t0 := SAction(t : Admissible := false);
             vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing the good forms at 0 with pole order %o...", pole_order;
-            good_forms_0, ech_etas_0 := good_forms_at_zero(pole_order, eta_quotients_oo, 1, nE0, t0, D0);
+            good_forms_0, ech_etas_0, deepest_oo_0 := good_forms_at_zero(pole_order, eta_quotients_oo, 1, nE0, t0, D0);
             vprintf ShimuraQuotients, 5 : "Done!";
 
             vprintf ShimuraQuotients, 5 : "\n\t\t\t\tBuilding q-expansions at oo...";
@@ -1085,7 +1100,11 @@ alone cannot do odd D.}
             // zero-side forms, whose pole at oo is NOT bounded by n0 (93_1 died on a q^-60 pole
             // when this was q^n0 flat); the maximum with the actual minimum valuation fixes the
             // alignment and is a no-op wherever every oo-pole is within n0.
-            n_oo := Maximum(n0, -Minimum([Valuation(f) : f in ech_fs_oo]));
+            // The deepest pole at oo over the WHOLE pool at 0, not just over the good forms: the
+            // echelon route took it over every echelon row, and it sets the pole order of the
+            // oo-side pool below.
+            n_oo := Maximum(n0, deepest_oo_0);
+            assert n_oo ge -Minimum([Valuation(f) : f in ech_fs_oo]);
             if bf_progress then
                 WriteStderr(Sprintf("  BFNOO m=%o good=%o n_oo=%o (n0=%o, k=%o)\n", m_choice, #ech_fs_oo, n_oo, n0, k));
             end if;

@@ -81,10 +81,16 @@ intrinsic Parent(eta::EtaQuot) -> RngEtaQuot
 end intrinsic;
 
 procedure update_precision_eta(~nor_eta_ds, Prec, ds)
+    // prod_{n >= 1} (1 - q^n) = sum_k (-1)^k q^(k(3k-1)/2) (Euler), truncated at O(q^Prec), and
+    // substituted q -> q^d term by term.  The product of the Prec binomials, untruncated and
+    // then evaluated at q^d, has degree ~ d*Prec^2/2: at Prec = 4086, d <= 95 that is 790
+    // million coefficients, and Magma 2.29-7 (intel64 under Rosetta) died with a bus error at
+    // 6.7 GB inside one such call (X_0^95(1), third rung of the Borcherds ladder).
     _<q> := LaurentSeriesRing(Integers());
-    nor_eta := &*[1 - q^n : n in [1..Prec-1]] + O(q^(Prec));
-    // eta_ds := [Evaluate(nor_eta, q^d)*q^(d/24) : d in Divisors(M)];
-    nor_eta_ds := [Evaluate(nor_eta, q^d) + O(q^Prec) : d in ds];
+    K := 0;
+    while (K+1)*(3*(K+1)-1) div 2 lt Prec do K +:= 1; end while;
+    nor_eta := &+[(-1)^k * q^(k*(3*k-1) div 2) : k in [-K..K] | k*(3*k-1) div 2 lt Prec] + O(q^Prec);
+    nor_eta_ds := [&+[Coefficient(nor_eta, i) * q^(d*i) : i in [0..(Prec-1) div d]] + O(q^Prec) : d in ds];
     return;
 end procedure;
 
