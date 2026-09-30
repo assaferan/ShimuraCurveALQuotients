@@ -3,7 +3,7 @@
 # using GNU parallel.
 #
 # Usage:
-#   ./run_parallel_filter.sh <stage> [num_workers] [data_dir] [num_chunks]
+#   ./run_parallel_filter.sh [--print-input] <stage> [num_workers] [data_dir] [num_chunks]
 #
 # num_workers  - number of Magma processes to run simultaneously (default: 8)
 # num_chunks   - number of pieces to split the curve list into (default: num_workers)
@@ -12,6 +12,10 @@
 #                <data_dir>/curves_after_<stage>.dat
 
 set -euo pipefail
+
+# --print-input <stage> ...: print the stage's input file and exit (used by run_pipeline.sh).
+PRINT_INPUT=0
+if [ "${1:-}" = "--print-input" ]; then PRINT_INPUT=1; shift; fi
 
 STAGE="${1:-FilterByTrace}"
 NUM_WORKERS="${2:-128}"
@@ -39,9 +43,17 @@ case "${STAGE}" in
         # every star curve FpAut does), so this stage subsumes the FpAut stage that follows.
         INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
         ;;
+    FilterByDualGraphStar)
+        # Dual graph at p | D on the star curves; split by level (one fiber per (D, N, p)).
+        INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
+        ;;
+    FilterByDualGraph)
+        # Dual graph at p | D on all quotients, after UpdateCurves6; split by level.
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves6.dat"
+        ;;
     FilterByTwistedTraceStar)
         # Twisted trace on the star curves (V2/V3 twists only); split by level.
-        INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByDualGraphStar.dat"
         ;;
     FilterByTwistedWeilPolynomialStar)
         INPUT_DAT="${DATA_DIR}/curves_after_FilterByWeilPolynomialStar.dat"
@@ -87,7 +99,7 @@ case "${STAGE}" in
         ;;
     FilterByTwistedTrace)
         # Split by level in parallel_filter_worker.m (modular symbols once per level).
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves6.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterDualGraph.dat"
         ;;
     FilterByWeilPolynomial)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterTwistedTrace.dat"
@@ -101,7 +113,7 @@ case "${STAGE}" in
         ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
-        echo "Supported: FilterByTraceStar, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "Supported: FilterByTraceStar, FilterByDualGraphStar, FilterByDualGraph, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
         echo "           FilterByTwistedWeilPolynomialStar," >&2
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
@@ -114,6 +126,8 @@ case "${STAGE}" in
         exit 1
         ;;
 esac
+
+if [ "${PRINT_INPUT}" -eq 1 ]; then echo "${INPUT_DAT}"; exit 0; fi
 
 OUTPUT_DAT="${DATA_DIR}/curves_after_${STAGE}.dat"
 

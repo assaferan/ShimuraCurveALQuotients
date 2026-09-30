@@ -84,6 +84,7 @@ The star-curve block in `run_pipeline.sh` reads:
     FindPairs, UpdateGenera, UpdateByGenusStar
     FilterByTraceStar                         parallel
     HHProposition1                            check only (VerifyHHTable2, VerifyHHProposition1)
+    FilterByDualGraphStar                     parallel, by level  NEW
     FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
     FilterByWeilPolynomialStar                parallel
@@ -108,6 +109,13 @@ its input unchanged to `curves_after_HHProposition1.dat`. HH Proposition 1 decid
 X_0^*(546), (205, 3), (1995, 2)) are credited to the special fiber isomorphism, and the stage has
 no row in the stage counts, the attribution or the paper tables.
 
+`FilterByDualGraphStar` runs after the check-only `HHProposition1`, so `VerifyHHTable2` still reads
+`curves_after_FilterByTraceStar.dat`. The HH curves have D = 1 and are not applicable to it anyway.
+Both dual-graph stages apply only to D > 1 with N squarefree, and they skip everything else. They
+cache each fiber in `data/dualgraph/` (gitignored, keyed `dualgraph_v2_<D>_<N>_<p>`; override with
+`DUALGRAPH_CACHE_DIR`), so Phase B reuses the fibers built in Phase A. A curve whose quotient graph
+does not have the curve's genus stops the stage with `DUALGRAPH_GENUS`, like `BADDIM`.
+
 The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 
     UpdateCurves1
@@ -123,6 +131,8 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurvesAfterAutomorphismGroup                            NEW
     FilterByTrace                             parallel
     UpdateCurves6
+    FilterByDualGraph                         parallel, by level  NEW
+    UpdateCurvesAfterDualGraph                                    NEW
     FilterByTwistedTrace                      parallel, by level  NEW
     UpdateCurvesAfterTwistedTrace                                 NEW
     FilterByWeilPolynomial                    parallel
@@ -138,7 +148,8 @@ read `curves_after_UpdateCurves<N>.dat`, so every existing name keeps its meanin
 
 **Splitting by level.** Most parallel stages deal curves to chunks one at a time, in descending order of
 `CurveCostProxy`. The twisted stages (all four) compute the modular symbols of level D·N once and use them
-for every curve at that level. `parallel_filter_worker.m` therefore deals whole **levels** to the
+for every curve at that level; the two dual-graph stages likewise build the graphs once per level.
+`parallel_filter_worker.m` therefore deals whole **levels** to the
 chunks for them, again heaviest first. The merge (`parallel_merge.m`) is unchanged: every chunk's
 curves are tagged with their original index.
 
@@ -156,6 +167,11 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 
+* **`FilterByDualGraphStar` / `FilterByDualGraph`**: one fiber per (D, N, p), cached on disk. The
+  largest star level (39270, 1) takes 50 s at p = 2. Phase A takes at most about 2.7 CPU-h (an upper
+  bound from the mass formula over all 945 applicable star levels; on the committed data only 354
+  star curves are undecided and applicable), and Phase B at most 1.2 CPU-h before cache reuse. The
+  per-curve work is under 0.01 s.
 * **`FilterByWeilPolynomial`**: about 5 h on a single curve at the top end, dominated by
   class-number lookups at depth 4·Qmax·p^g. The heavy curves are dispatched first. The makespan
   of this stage is roughly the slowest single curve.

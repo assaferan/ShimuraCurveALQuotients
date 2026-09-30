@@ -19,6 +19,7 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  check only: VerifyHHTable2 (input),
 #                                                        VerifyHHProposition1 (on a copy); writes input unchanged
+#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1, N squarefree)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
@@ -44,6 +45,8 @@
 #   UpdateCurvesAfterAutomorphismGroup     [sequential]
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
+#   FilterByDualGraph                      [PARALLEL, by level]  (dual graph at p | D)
+#   UpdateCurvesAfterDualGraph             [sequential]
 #   FilterByTwistedTrace                   [PARALLEL, by level]  (modular symbols once per level)
 #   UpdateCurvesAfterTwistedTrace          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]
@@ -72,13 +75,21 @@ mkdir -p "${DATA_DIR}"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
+# A stage is skipped only if its output exists and is not older than its input: when an earlier
+# stage is (re)run, every stage after it reruns, so no stage reads an input from a previous run.
+is_current() {
+    local input_dat="$1"
+    local output_dat="$2"
+    [ -f "${output_dat}" ] && { [ -z "${input_dat}" ] || [ ! "${input_dat}" -nt "${output_dat}" ]; }
+}
+
 run_seq() {
     local stage="$1"
     local input_dat="${2:-}"
     local output_dat="$3"
 
-    if [ -f "${output_dat}" ]; then
-        echo "[skip] ${stage} — ${output_dat} already exists"
+    if is_current "${input_dat}" "${output_dat}"; then
+        echo "[skip] ${stage} — ${output_dat} is up to date"
         return
     fi
 
@@ -101,9 +112,11 @@ run_seq() {
 run_par() {
     local stage="$1"
     local output_dat="${DATA_DIR}/curves_after_${stage}.dat"
+    local input_dat
+    input_dat="$(./run_parallel_filter.sh --print-input "${stage}" "${NUM_WORKERS}" "${DATA_DIR}")" || exit 1
 
-    if [ -f "${output_dat}" ]; then
-        echo "[skip] ${stage} — ${output_dat} already exists"
+    if is_current "${input_dat}" "${output_dat}"; then
+        echo "[skip] ${stage} — ${output_dat} is up to date"
         return
     fi
 
@@ -124,6 +137,10 @@ run_par "FilterByTraceStar"
 # check [HH]'s own input and output (the twisted trace below decides further HH Table 2 curves).
 # Check only: the output file is the input unchanged; SpecialFiberIsomorphismStar decides HH's curves.
 run_seq "HHProposition1"      "${D}/curves_after_FilterByTraceStar.dat"            "${D}/curves_after_HHProposition1.dat"
+# Dual graph of the special fibre at each p | D (Padurariu-Saia Thm 2.6; Baker-Norine/Chan):
+# no involution with tree quotient => not hyperelliptic.  After the check-only HHProposition1,
+# so VerifyHHTable2 still reads curves_after_FilterByTraceStar.dat.  Split by level.
+run_par "FilterByDualGraphStar"
 # Twisted trace on the star curves: W is the full AL group, so the only twists are V2, V3 and V2 V3
 # (V3 is Q-rational since 9 in W).
 run_par "FilterByTwistedTraceStar"
@@ -182,6 +199,9 @@ run_seq "UpdateCurvesAfterAutomorphismGroup" "${D}/curves_after_FilterByAutomorp
                                                                                    "${D}/curves_after_UpdateCurvesAfterAutomorphismGroup.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"
+run_par "FilterByDualGraph"
+run_seq "UpdateCurvesAfterDualGraph" "${D}/curves_after_FilterByDualGraph.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"
 # Trace twisted by the involutions defined over Q.  Needs the modular symbols of level D*N, so the
 # worker splits this stage by LEVEL (one modular-symbols computation per level); the largest levels
 # take hours each.

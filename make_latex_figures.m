@@ -96,7 +96,8 @@ ruledGroups := [
  <"Special fiber isomorphism", ["SpecialFiberIsomorphism", "HHproposition1"]>,
  <"Isomorphism", ["UpdateIsoStatus"]>,
  <"Modular non-Atkin--Lehner involution", ["ModularNonALInvolution"]>,
- <"Degeneracy morphism", ["DegeneracyMorphism"]>
+ <"Degeneracy morphism", ["DegeneracyMorphism"]>,
+ <"Dual graphs of the special fibres", ["DualGraph"]>
 ];
 
 function Rows(curveset, groups)

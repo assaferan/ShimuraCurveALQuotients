@@ -1107,14 +1107,17 @@ end intrinsic;
 //    odd every involution is tame, so Riemann-Hurwitz gives the fixed-point count from the genera.
 //    Its argument (an involution other than the hyperelliptic one has 0, 2 or 4 fixed points on a
 //    hyperelliptic curve) needs characteristic not 2.
+//  * the twisted trace and twisted Weil tests at p (a twist of X by an involution defined over Q is
+//    isomorphic to X over the algebraic closure of F_p).  Tried last: they are the only ones that
+//    need the modular symbols of level DN.
 // Deliberately NOT used: [FH] Prop 6 (FilterByComplicatedALFixedPointsOnQuotient).  Its proof also
 // uses a Galois orbit of size 3 among the fixed points of w_N2 (3 | [Q(P):Q]); mod p the only Galois
 // action is Frobenius, and when p is inert in Q(sqrt(-N2)) those fixed points are supersingular,
 // defined over F_(p^2), with orbits of size at most 2.  (In the 2026-09-26 rerun, 5040, 5047, 5051
 // and 5202 were ruled at p = 3 through a source certified only by it.)
-//  * the twisted trace and twisted Weil tests at p (a twist of X by an involution defined over Q is
-//    isomorphic to X over the algebraic closure of F_p).  Tried last: they are the only ones that
-//    need the modular symbols of level DN.
+// Deliberately NOT used: the dual-graph test (FilterByDualGraph, DualGraph.m).  It is a statement
+// about the special fibre at a prime p | D, where X has bad (Mumford) reduction, and says nothing
+// about X mod a good prime.  tests/DualGraph.m asserts this intrinsic never mentions it.
 // Results are cached per <D, N, W, g, p> for the session.
 intrinsic NonHyperellipticAtPrimeCertificate(X::ShimuraQuot, p::RngIntElt) -> BoolElt, MonStgElt
 {Returns true and a description of the certificate if X, of genus at least 3, is proved not
@@ -1161,6 +1164,11 @@ for p odd, the AL fixed-point test of FilterByALFixedPointsOnQuotient.  Returns 
     SetCache(key, cert, sfi_certificates);
     if cert eq "" then return false, _; end if;
     return true, cert;
+end intrinsic;
+
+intrinsic ClearSFICertificateCache()
+{Empties the session cache of NonHyperellipticAtPrimeCertificate results.}
+    StoreClear(sfi_certificates);
 end intrinsic;
 
 intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)

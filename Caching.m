@@ -6,6 +6,8 @@ point_counts := NewStore();
 weil_tables := NewStore();
 // SpecialFiberIsomorphism source certificates, keyed by <D, N, W, g, p>
 sfi_certificates := NewStore();
+// DualGraphData fibers of X_0^D(N) at p | D, keyed by <D, N, p, cache dir>
+dual_graphs := NewStore();
 
 // Collect mode: a "dry run" of a trace computation in which the leaf class-number function
 // records the discriminants it would need (so they can be fetched in one batched, sorted
