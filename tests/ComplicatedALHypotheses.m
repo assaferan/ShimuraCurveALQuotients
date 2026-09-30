@@ -28,11 +28,10 @@ cah_curves := [cah_make(1, N, Wt[1]) : Wt in ALSubgroups(N), N in cah_levels];
 FilterByComplicatedALFixedPointsOnQuotient(~cah_curves);
 VerifyFHTable3(cah_curves);
 // X_0(58)/<w2>: h(-116) = 6 (LMFDB 2.0.116.1); genus(X_0(58)/<w2>) = 3 (Magma modular symbols).
-// The third entry of the witness depends on the iteration order of W, so it is not pinned.
 cah_S58 := CuspidalSubspace(ModularSymbols(58, 2, 1));
 assert Dimension(Kernel(AtkinLehner(cah_S58, 2) - 1)) eq 3 and ClassNumber(-116) eq 6;
 cah_58 := TestComplicatedALFixedPointsOnQuotient(1, 58);
-assert cah_58[{1, 2}][1..2] eq [58, 29];
+assert cah_58[{1, 2}] eq [58, 29];
 assert CheckComplicatedALHypotheses(1, 58, {1, 2}, 58, 29);
 
 // One negative control per rejection reason; each case fails only the named hypothesis among

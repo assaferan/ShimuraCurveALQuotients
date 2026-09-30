@@ -958,7 +958,7 @@ intrinsic TestComplicatedALFixedPointsOnQuotient(D::RngIntElt,N::RngIntElt) -> S
 			// N1 W = N2 W; the hypotheses do not depend on w, so they are checked once.
 			if CheckComplicatedALHypotheses(D, N, W, N1, N2) then
 			    // Include(~non_hyp, W);
-			    non_hyp[W] := [N1, N2, N_prime];
+			    non_hyp[W] := [N1, N2];
 			    Ws := [WW : WW in Ws | WW ne W]; 
 			    is_non_hyp := true;
 			end if;
@@ -1032,7 +1032,7 @@ intrinsic FilterByComplicatedALFixedPointsOnQuotient(~curves::SeqEnum )
         if (curves[lut[<D,N,W>]]`g ge 2) then
             curves[lut[<D,N,W>]]`IsHyp := false;
         end if;
-        curves[lut[<D,N,W>]]`TestInWhichProved := Sprintf("ComplicatedALFixedPointsOnQuotient with N1 = %o, N2 = %o, Nprime = %o",Ws[W][1], Ws[W][2], Ws[W][3]);
+        curves[lut[<D,N,W>]]`TestInWhichProved := Sprintf("ComplicatedALFixedPointsOnQuotient with N1 = %o, N2 = %o", Ws[W][1], Ws[W][2]);
     end for;
     if (lc mod 100 eq 0) then
         vprint ShimuraQuotients, 2: "lc = ", lc;
