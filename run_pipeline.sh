@@ -75,13 +75,21 @@ mkdir -p "${DATA_DIR}"
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 
+# A stage is skipped only if its output exists and is not older than its input: when an earlier
+# stage is (re)run, every stage after it reruns, so no stage reads an input from a previous run.
+is_current() {
+    local input_dat="$1"
+    local output_dat="$2"
+    [ -f "${output_dat}" ] && { [ -z "${input_dat}" ] || [ ! "${input_dat}" -nt "${output_dat}" ]; }
+}
+
 run_seq() {
     local stage="$1"
     local input_dat="${2:-}"
     local output_dat="$3"
 
-    if [ -f "${output_dat}" ]; then
-        echo "[skip] ${stage} — ${output_dat} already exists"
+    if is_current "${input_dat}" "${output_dat}"; then
+        echo "[skip] ${stage} — ${output_dat} is up to date"
         return
     fi
 
@@ -104,9 +112,11 @@ run_seq() {
 run_par() {
     local stage="$1"
     local output_dat="${DATA_DIR}/curves_after_${stage}.dat"
+    local input_dat
+    input_dat="$(./run_parallel_filter.sh --print-input "${stage}" "${NUM_WORKERS}" "${DATA_DIR}")" || exit 1
 
-    if [ -f "${output_dat}" ]; then
-        echo "[skip] ${stage} — ${output_dat} already exists"
+    if is_current "${input_dat}" "${output_dat}"; then
+        echo "[skip] ${stage} — ${output_dat} is up to date"
         return
     fi
 
