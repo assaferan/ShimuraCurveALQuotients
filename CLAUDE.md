@@ -126,8 +126,10 @@ therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). 
 
     git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
 
-**should print nothing but doc files.** Anything else is a silent divergence — run it before
-trusting either branch's code. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
+**should print nothing but doc files** — except in the window between a PR merging to `main` and
+the merge of `main` down into `m0-theta-campaign`, when shared-path files legitimately differ;
+the merge-down clears it. Anything else is a silent divergence — run it before trusting either
+branch's code. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
 If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
 why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
 `vvdata/gtsweep.m`.
