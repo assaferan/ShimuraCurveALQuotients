@@ -9,8 +9,9 @@
 //     force on 774 of 2677 counts (measured on main at 95cf87b, scratch script
 //     vvdata/weyl-campaign/trace-formula-gcd-2026-09-30/old_sfast_count.m on the campaign branch is this loop).
 // (2) Popa's full-space trace and (3) the newform trace against Magma's modular symbols at
-//     gcd(n, N) > 1 on the grid below.  On this grid the OLD code got 80 of the 176 full-space
-//     traces wrong, and 72 of the 176 newform traces (all inherited from Sfast at sub-levels).
+//     gcd(n, N) > 1 on the grid below.  On this grid main at 95cf87b got 70 of the 176
+//     full-space traces wrong and 64 of the 176 newform traces (all inherited from Sfast at
+//     sub-levels); measured by vvdata/weyl-campaign/trace-formula-gcd-2026-09-30/grid176.m.
 // (4) the D-new, W-averaged trace TraceDNewALFixed at coprime index against modular symbols:
 //     the trace of T_n o w on the cuspidal subspace of level DN that is new at every p | D,
 //     averaged over w in W, with the Jacquet-Langlands sign (-1)^omega(gcd(w, D)) -- so the
@@ -18,10 +19,13 @@
 // (5) TraceDNewALFixed at n sharing a factor with DN, against the same modular-symbols
 //     quantity.  The D-new trace used to keep only the n' = 1 term of [Assaf, Cor. 4.27],
 //     which is the whole formula exactly when gcd(n, DN) = 1; at gcd > 1 it returned wrong
-//     values (D = 1, N = 30, n = 4: -1 where modular symbols give -2; (1, 1848, 7) with the
-//     V4 below: -20 for -9).  It now sums Lemma 4.20 block by block over the N' divisible by
-//     D, for every n.  Beyond the cases here, 0 of 1548 such traces differed from modular
-//     symbols across 23 (D, N) pairs (D up to 26), several W each, n in {2..25}.
+//     values.  D = 1, N = 30, n = 4: main at 95cf87b gives 3, main with only the Sfast fix of
+//     this PR gives -1, modular symbols give -2 (LMFDB 30.2.a.a together with the old forms
+//     from 15.2.a.a); (1, 1848, 7) with the V4 below: main gives -20, modular symbols -9.  It
+//     now sums Lemma 4.20 block by block over the N' divisible by D, for every n.  Beyond the
+//     cases here, 0 of 1548 such traces differed from modular symbols across 23 (D, N) pairs
+//     (D up to 26), several W each, n in {2..25}
+//     (vvdata/weyl-campaign/trace-formula-gcd-2026-09-30/dnew_general.m on the campaign branch).
 //
 // Magma's HeckeOperator on a SUBSPACE dies at (N, k, n) = (6, 4, 2) ("incompatible
 // coefficient rings"), so the oracles restrict the ambient operator, as tests/trace_formula.m.
@@ -107,5 +111,5 @@ for c in [<1, 30, 4, {Integers() | 1}>, <1, 30, 6, {Integers() | 1, 30}>, <1, 18
     assert GCD(n, D*N) gt 1;
     assert TraceDNewALFixed(D, N, 2, n, W) eq DNewTraceModSym(D, N, n, W);
 end for;
-assert TraceDNewALFixed(1, 30, 2, 4, {Integers() | 1}) eq -2;      // the reviewer's case
+assert TraceDNewALFixed(1, 30, 2, 4, {Integers() | 1}) eq -2;      // LMFDB 30.2.a.a + old forms of 15.2.a.a
 printf "  8 D-new traces at n sharing a factor with DN agree with modular symbols\n";
