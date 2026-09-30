@@ -36,12 +36,16 @@ case "${STAGE}" in
     FilterByTraceStar)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateByGenusStar.dat"
         ;;
+    FilterByGeneralizedComplicatedFixedPointsStar)
+        # Generalized [FH] Prop 6 on the star curves, before the Weil polynomials.
+        INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
+        ;;
     FilterByWeilPolynomialStar)
         # Weil-polynomial filter run on the star curves, before FilterStarCurvesByFpAutomorphisms.
         # The Fp-automorphism ramification count and the Weil polynomial both derive from the same
         # F_{p^d} point counts, and the Weil filter is at least as strong (verified: it rules out
         # every star curve FpAut does), so this stage subsumes the FpAut stage that follows.
-        INPUT_DAT="${DATA_DIR}/curves_after_SpecialFiberIsomorphismStar.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByGeneralizedComplicatedFixedPointsStar.dat"
         ;;
     FilterByDualGraphStar)
         # Dual graph at p | D on the star curves; split by level (one fiber per (D, N, p)).
@@ -114,6 +118,7 @@ case "${STAGE}" in
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
         echo "Supported: FilterByTraceStar, FilterByDualGraphStar, FilterByDualGraph, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
+        echo "           FilterByGeneralizedComplicatedFixedPointsStar," >&2
         echo "           FilterByTwistedWeilPolynomialStar," >&2
         echo "           FilterStarCurvesByFpAutomorphisms," >&2
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2

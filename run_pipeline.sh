@@ -22,6 +22,7 @@
 #   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1, N squarefree)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
+#   FilterByGeneralizedComplicatedFixedPointsStar [PARALLEL]  (generalized Prop 6 on the star curves)
 #   FilterByWeilPolynomialStar             [PARALLEL]  (star curves; subsumes FpAutomorphisms)
 #   FilterByTwistedWeilPolynomialStar      [PARALLEL, by level]
 #   FilterStarCurvesByFpAutomorphisms      [PARALLEL]  (redundant cross-check after Weil)
@@ -147,6 +148,9 @@ run_par "FilterByTwistedTraceStar"
 # Special fiber reduction on the star curves: X_0(D,Np)/W reduces mod p to
 # X_0(D,N)/W'; a non-subhyperelliptic source makes the target non-hyperelliptic.
 run_seq "SpecialFiberIsomorphismStar" "${D}/curves_after_FilterByTwistedTraceStar.dat" "${D}/curves_after_SpecialFiberIsomorphismStar.dat"
+# Generalized [FH] Prop 6 (mixed group <W_odd, V2>, 8 | N) on the star curves: cheap next to the
+# Weil polynomials, so it runs first and spares them the curves it decides.
+run_par "FilterByGeneralizedComplicatedFixedPointsStar"
 # Weil-polynomial filter on the star curves.  Both this and the Fp-automorphism stage below
 # derive from the same F_{p^d} point counts, and Weil is at least as strong: it was verified to
 # rule out every star curve FpAutomorphisms does (0 missed of 66), so FpAutomorphisms is kept
@@ -183,9 +187,9 @@ run_seq "UpdateCurves3"       "${D}/curves_after_Genus3CoversGenus2.dat"        
 run_par "FilterByDegeneracyMorphism"
 run_seq "UpdateCurves4"       "${D}/curves_after_FilterByDegeneracyMorphism.dat"   "${D}/curves_after_UpdateCurves4.dat"
 run_par "FilterByComplicatedALFixedPointsOnQuotient"
-# Generalized [FH] Prop 6: replaces the AL group by a mixed group <W_odd, V_p> (non-AL modular
-# involution V_p at a split prime p | N); additive to the AL version above, reaches star/full-W
-# quotients it cannot.  Validated: 0 contradictions, +4 determinations.
+# Generalized [FH] Prop 6 with the mixed group <W_odd, V2>; additive to the AL version above.
+# Runs on the non-star quotients: the worker skips star curves (star_of), which
+# FilterByGeneralizedComplicatedFixedPointsStar has already tested.
 run_par "FilterByGeneralizedComplicatedFixedPoints"
 run_seq "UpdateCurves5"       "${D}/curves_after_FilterByGeneralizedComplicatedFixedPoints.dat" \
                                                                                    "${D}/curves_after_UpdateCurves5.dat"
