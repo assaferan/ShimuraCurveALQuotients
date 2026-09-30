@@ -19,6 +19,26 @@ what you are working on, and that have each cost a session at least once.
 * **`HANDOFF.md`** — what happened. Authoritative on state; it wins over `PLAN.md` and over any
   agent memory when they disagree.
 
+## Changes reach `main` only through a reviewed PR
+
+`main` changes only when a human (@sachihashimoto or @assaferan) merges a pull request on GitHub.
+
+* **Branch first.** Before the first edit of a task, create a topic branch off an up-to-date
+  `main`, in a worktree: `git fetch origin && git worktree add -b <topic> worktrees/<topic>
+  origin/main`. If you find changes sitting on `main`, move them to a topic branch before
+  committing.
+* **One topic per branch**, and commits and pushes go to that branch only. Pushing to `main`,
+  force-pushing it, and merging PRs are the human reviewers' job.
+* **Open a PR for review** with `gh pr create --base main` when the work is ready, then leave it
+  for a human to review and merge. The description states:
+  * what changed and why (the mathematical claim or bug being addressed);
+  * how it was verified: the exact Magma scripts/tests run and their outcome;
+  * every file under `data/` that was regenerated, since test runs can rewrite `data/*.dat` as a
+    side effect.
+* **Stacked work:** a branch that depends on an unmerged PR branches from that PR's branch and
+  targets it with `--base`, so each PR shows only its own diff.
+* Merged topic branches are deleted; they are not part of the long-lived set below.
+
 ## Running Magma
 
     AttachSpec("ShimuraQuotients.spec");     // always, before anything else
@@ -94,7 +114,8 @@ to keep the `GitHub/` directory tidy:
 
     git worktree add worktrees/<name> <branch>
 
-**Two branches, that is all: `main` and `m0-theta-campaign`.** Everything else is retired and
+**Two long-lived branches: `main` and `m0-theta-campaign`**, plus short-lived topic branches
+while their PRs are open. Everything else is retired and
 preserved as an `archive/<name>` tag on `origin` (10 of them). `whbasis-speedup` went too — its
 one commit was already in `main` via the `04f1d7b` cherry-pick.
 
@@ -112,7 +133,7 @@ therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). 
 
 **should print nothing but doc files.** Anything else is a silent divergence — run it before
 trusting either branch's code. Had this existed, the nine-day `nmzsolve.py` gap would have shown
-up immediately. Corollary: **make a change to a shared-path file on `main` and merge it down.**
+up immediately. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
 If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
 why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
 `vvdata/gtsweep.m`.
@@ -131,7 +152,8 @@ fast-forwarded into `main` — the two were the same commit — and then deleted
 along with the now-redundant `worktrees/mainport`. Older material (`HANDOFF.md`, `PLAN.md`,
 memory) still says things like "`main` is code only", "the `tier1-models` merge trap", or refers
 to `-campaign` / `-mainport` sibling directories. **All of that is historical** — there is one
-code branch now, and it is `main`. Do not recreate `tier1-models`; commit to `main` directly.
+code branch now, and it is `main`. Do not recreate `tier1-models`; work for `main` goes on a
+topic branch and lands by PR.
 
 **Triage tooling lives on the campaign branch under `vvdata/weyl-campaign/`, never at the repo
 root.** So `git log --all -- cmsupply.m` reports "not in any branch" for a file that is committed.
