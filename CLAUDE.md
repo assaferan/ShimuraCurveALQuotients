@@ -168,13 +168,13 @@ miss it.
 
 ## Writing PRs, comments and replies
 
-* **Write for a collaborator reading cold, not for another agent.** Plain words, short
-  sentences, and the mathematical point before the implementation detail. Open with two or three
-  sentences saying what was wrong and what the change does. Leave out internal names, offsets,
+* **PR bodies above all: write for a collaborator reading cold, not for another agent.** Open
+  with two or three plain sentences saying what was wrong and what the change does, the
+  mathematical point before the implementation detail. Then one bullet per file and a line or two
+  on how it was verified. 20–35 lines in total. Leave out internal names, offsets,
   commit-by-commit history and exhaustive evidence; one piece of evidence the reader can check is
   enough.
-  * PR bodies: that opening, one bullet per file, a line or two on how it was verified. 20–35
-    lines in total.
+* The same plain style applies elsewhere, more briefly:
   * Code comments: 1–4 lines stating the constraint the code cannot show.
   * Tracker comments: a few plain lines on what changed, not a report.
 * **Don't comment idiomatic patterns.** A comment must state a constraint that the code cannot
