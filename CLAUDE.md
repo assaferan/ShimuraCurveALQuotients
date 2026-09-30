@@ -180,7 +180,8 @@ miss it.
   Avoid words like *pin*, *guard*, *gating*, *control*, *vacuous*, *delta*, *oracle*, *land*,
   *surface*. Say instead "the test checks that...", "the code refuses...", "a test that fails
   if...". Before posting, reread as a coauthor who has not seen the code, and rewrite any sentence
-  they would have to decode.
+  they would have to decode. This is for text people read (PR bodies and PR or issue comments);
+  messages between agents can use whatever language is convenient.
 * The same plain style applies elsewhere, more briefly:
   * Code comments: 1–4 lines stating the constraint the code cannot show.
   * Tracker comments: a few plain lines on what changed, not a report.
