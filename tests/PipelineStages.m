@@ -69,7 +69,7 @@ for line in Split(body, "\n") do
 end for;
 printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
-assert #wstar eq 11;
+assert #wstar eq 12;   // 10 + FilterByDualGraphStar (#54) + FilterByGeneralizedComplicatedFixedPointsStar (#53)
 assert wstar eq sstar;
 // compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
 // CheckHHProposition1, runs it on the same curves.
