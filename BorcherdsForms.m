@@ -767,9 +767,15 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
     return coeffs, full_basis;
 end function;
 
+// Returns the reduced echelon basis of the pool's coefficient matrix, the pool matrix itself
+// and the pool as eta quotients.  No transform: EchelonForm with a transform over Q was 98% of
+// this function (51_1, pole order 800: 2.2 s for the reduced matrix, 112 s with the transform,
+// ~PO^4.4 beyond), and the transform was used only to express the one form the search finds
+// as an eta-quotient combination -- which a single Solution against the pool gives instead
+// (see the search below).
 function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := false)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := Zero);
-    ech_basis, T := EchelonForm(coeffs);
+    ech_basis := EchelonForm(coeffs);
     // BFPROGRESS: pool size vs actual rank. The 66x WeaklyHolomorphicBasis speedup came from
     // finding a rank-258 space being echelonised as 12784 rows; if this pool is similarly
     // redundant we are computing a q-expansion per element to span far fewer dimensions, and the
@@ -780,9 +786,7 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
                             #[i : i in [1..Nrows(ech_basis)] | not IsZero(ech_basis[i])],
                             Ncols(coeffs)));
     end if;
-    ech_etas := [&+[T[i][j]*full_basis[j] : j in [1..Ncols(T)] | T[i][j] ne 0] : i in [1..Nrows(T)]];
-   
-    return ech_basis, ech_etas, T;
+    return ech_basis, coeffs, full_basis;
 end function;
 
 // The 0-side "good forms": the members of the pool at 0 (pole order pole_order in q^(1/4D0))
@@ -968,8 +972,8 @@ alone cannot do odd D.}
 
     max_pole_order_oo := 0;
     ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
-    ech_etas_all_oo := [];
-    T_all_oo := MatrixAlgebra(Rationals(),0)!0; // zero matrix
+    pool_all_oo := MatrixAlgebra(Rationals(),0)!0;   // the pool's coefficient matrix
+    fb_all_oo := [];                                 // the pool as eta quotients
 
     all_ms := [];
     m_idx := 1;
@@ -1109,7 +1113,7 @@ alone cannot do odd D.}
                 t_scr := Realtime();
                 if (max_pole_order_oo lt P) then
                     max_pole_order_oo := P;
-                    ech_basis_all_oo, ech_etas_all_oo, T_all_oo :=
+                    ech_basis_all_oo, pool_all_oo, fb_all_oo :=
                         basis_of_weakly_holomorphic_forms(P, eta_quotients, n0+1, n, t);
                 end if;
                 first_idx := -P + max_pole_order_oo + 1;
@@ -1203,18 +1207,17 @@ alone cannot do odd D.}
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;
                         vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
-                        ech_basis_all_oo, ech_etas_all_oo, T_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
+                        ech_basis_all_oo, pool_all_oo, fb_all_oo := basis_of_weakly_holomorphic_forms(-min_m, eta_quotients, n0+1, n, t);
                         vprintf ShimuraQuotients, 5 : "Done!";
                     end if;
                     
                     first_idx := min_m+max_pole_order_oo+1;
                     ech_basis := SubmatrixRange(ech_basis_all_oo, first_idx, first_idx, Nrows(ech_basis_all_oo), Ncols(ech_basis_all_oo));
-                    ech_etas := ech_etas_all_oo[first_idx..#ech_etas_all_oo];
-                    assert SubmatrixRange(T_all_oo, first_idx, 1, Nrows(T_all_oo), first_idx-1) eq 0;
-                    // The {oo}-side transform T_all_oo is never read below on either parity;
-                    // the assert on its block structure above is the real check.  The 0-side
-                    // quantities (ech_etas_0, mat_0_oo, relevant_ds_0_oo) come from the block at
-                    // the top of the while loop.
+                    // Rows from first_idx on carry nothing in the columns before first_idx, so the
+                    // slice is the basis of the forms with pole order at most -min_m.
+                    assert first_idx eq 1 or IsZero(SubmatrixRange(ech_basis_all_oo, first_idx, 1, Nrows(ech_basis_all_oo), first_idx-1));
+                    // The 0-side quantities (ech_etas_0, mat_0_oo, relevant_ds_0_oo) come from the
+                    // block at the top of the while loop.
 
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
@@ -1285,9 +1288,17 @@ alone cannot do odd D.}
                     end if;
 
 
-                    etas[i] := &+[sol[i]*ech_etas[i] : i in [1..#ech_etas]];
+                    // The oo-part of the form is a combination of the sliced echelon rows; its
+                    // coordinates in the POOL come from one solve against the pool matrix (the
+                    // echelon transform would give them for every row, at ~PO^4.4).
+                    n_ech := Nrows(ech_basis);
+                    f_oo := Vector(Rationals(), [0 : j in [1..first_idx-1]] cat [sol[j] : j in [1..n_ech]]) * ech_basis_all_oo;
+                    c_oo := Solution(pool_all_oo, f_oo);
+                    // The oo-part can be zero (a form living on the 0-side alone, e.g. at 39_1).
+                    nz_oo := [j : j in [1..#fb_all_oo] | c_oo[j] ne 0];
+                    etas[i] := IsEmpty(nz_oo) select 0*fb_all_oo[1] else &+[c_oo[j]*fb_all_oo[j] : j in nz_oo];
                     if IsOdd(Xstar`D) then
-                        etas[i] +:= &+[sol[#ech_etas + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
+                        etas[i] +:= &+[sol[n_ech + i]*ech_etas_0[i] : i in [1..#ech_etas_0]];
                     end if;
                     // check divisor
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
