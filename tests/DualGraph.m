@@ -5,8 +5,9 @@
 // github.com/fsaia/GenusAtMost2.  Labels of LeftIdealClasses are not deterministic, so two builds
 // are compared only up to isomorphism, never with eq.
 
-// A deliberately wrong copy of a data tuple.  "noreverse" and "wrongreversal" keep the origin map
-// equivariant, so their effect does not depend on the (non-deterministic) order of LeftIdealClasses;
+// A deliberately wrong copy of a data tuple.  "noreverse", "wrongreversal" and "twistedreversal" keep
+// the origin map equivariant, so their effect does not depend on the (non-deterministic) order of
+// LeftIdealClasses;
 // "trivialvertexAL" breaks equivariance, so its genus-failure count varies with the labelling
 // (279-305 of 822 observed) and only "> 0" is asserted.
 function dg_corrupt(data, p, variant)
@@ -16,6 +17,10 @@ function dg_corrupt(data, p, variant)
     elif variant eq "wrongreversal" then      // w_p on edges replaced by w_q0, q0 the least other prime
         q0 := Min([x[1] : x in d[4] | x[1] ne p]);
         d[4] := [x[1] eq p select <p, [y[2] : y in d[4] | y[1] eq q0][1]> else x : x in d[4]];
+    elif variant eq "twistedreversal" then    // w_p on edges replaced by w_p w_q0: same full graph, up to relabelling
+        q0 := Min([x[1] : x in d[4] | x[1] ne p]);
+        wp := [y[2] : y in d[4] | y[1] eq p][1]; wq := [y[2] : y in d[4] | y[1] eq q0][1];
+        d[4] := [x[1] eq p select <p, [wp[wq[e]] : e in [1..d[2]]]> else x : x in d[4]];
     else                                      // "trivialvertexAL": a w_q that moves vertices made trivial on them
         q := [x[1] : x in d[5] | x[2] ne [1..d[1]]][1];
         d[5] := [x[1] eq q select <q, [1..d[1]]> else x : x in d[5]];
@@ -33,6 +38,11 @@ function dg_fixcounts(list, n)
         Append(~out, <&*[Integers() | q : q in S], #[i : i in [1..n] | img[i] eq i]>);
     end for;
     return Sort(out);
+end function;
+
+// the graph part of a data tuple, without the unit orders
+function dg_graph_only(d)
+    return <d[1], d[2], d[3], d[4], d[5]>;
 end function;
 
 procedure test_DualGraphData()
@@ -54,6 +64,18 @@ procedure test_DualGraphData()
     rejected := false;
     try ValidateDualGraphData(6, 35, 2, bad); catch e rejected := true; end try;
     assert rejected;
+    // wrong edge termini: noreverse and wrongreversal disconnect the graph; twistedreversal leaves
+    // it connected and passes every check on the graph alone, and only the trace of T_p rejects it
+    good := DualGraphData(6, 35, 2 : CacheDir := "none");
+    for variant in ["noreverse", "wrongreversal", "twistedreversal"] do
+        bad := dg_corrupt(good, 2, variant);
+        rejected := false;
+        try ValidateDualGraphData(6, 35, 2, dg_graph_only(bad)); catch e rejected := true; end try;
+        assert rejected eq (variant ne "twistedreversal");
+        rejected := false;
+        try ValidateDualGraphData(6, 35, 2, bad); catch e rejected := true; end try;
+        assert rejected;
+    end for;
     // not applicable: D = 1, N not squarefree
     assert not DualGraphApplicable(1, 97) and not DualGraphApplicable(6, 25) and DualGraphApplicable(6, 35);
     printf "Done!\n";
@@ -66,7 +88,7 @@ procedure test_DualGraphDiskCache()
     System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
     ClearDualGraphCache();
     d1 := DualGraphData(6, 35, 2 : CacheDir := dir);
-    path := dir cat "/dualgraph_v1_6_35_2";
+    path := dir cat "/dualgraph_v2_6_35_2";
     assert OpenTest(path, "r");
     assert Pipe(Sprintf("ls '%o' | grep -c tmp || true", dir), "") eq "0\n";     // no temp file left
     ClearDualGraphCache();
@@ -79,12 +101,20 @@ procedure test_DualGraphDiskCache()
     rejected := false;
     try _ := DualGraphData(6, 35, 2 : CacheDir := dir); catch e rejected := true; end try;
     assert rejected;
-    // a file with another format stamp is never read
+    // a file without the unit orders is rejected on read, even though its graph is right
+    Write(path, Sprint(dg_graph_only(d1), "Magma") : Overwrite := true);
+    ClearDualGraphCache();
+    rejected := false;
+    try _ := DualGraphData(6, 35, 2 : CacheDir := dir); catch e rejected := true; end try;
+    assert rejected;
+    // a file with another format stamp is never read: a v1 file holding a wrong graph is ignored
     System(Sprintf("rm -f '%o'", path));
     Write(dir cat "/dualgraph_v0_6_35_2", "this is not Magma" : Overwrite := true);
+    Write(dir cat "/dualgraph_v1_6_35_2", Sprint(dg_graph_only(dg_corrupt(d1, 2, "noreverse")), "Magma") : Overwrite := true);
     ClearDualGraphCache();
-    _ := DualGraphData(6, 35, 2 : CacheDir := dir);
+    d3 := DualGraphData(6, 35, 2 : CacheDir := dir);
     assert OpenTest(path, "r");
+    assert dg_fixcounts(d3[4], d3[2]) eq dg_fixcounts(d1[4], d1[2]);
     System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
     ClearDualGraphCache();
     printf "Done!\n";
@@ -262,9 +292,12 @@ procedure test_DualGraphStankewicz(raw)
         ValidateDualGraphData(D, N, p, theirs);
         ours := DualGraphData(D, N, p : CacheDir := "none");
         assert dg_same_graphs(ours, theirs, D, N, p);
-        // negative control: trivial w_p on edges still validates, so only the comparison can reject it
+        // trivial w_p on edges: the comparison rejects it; validation does too (disconnected graph)
+        // unless h = 1, where every edge joins the same two vertices and only the quotients differ
         bad := dg_corrupt(theirs, p, "noreverse");
-        ValidateDualGraphData(D, N, p, bad);
+        rejected := false;
+        try ValidateDualGraphData(D, N, p, bad); catch e rejected := true; end try;
+        assert rejected eq (h gt 1);
         assert not dg_same_graphs(ours, bad, D, N, p);
     end for;
     printf "Done!\n";

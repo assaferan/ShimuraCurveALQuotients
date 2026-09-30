@@ -112,7 +112,7 @@ no row in the stage counts, the attribution or the paper tables.
 `FilterByDualGraphStar` runs after the check-only `HHProposition1`, so `VerifyHHTable2` still reads
 `curves_after_FilterByTraceStar.dat`. The HH curves have D = 1 and are not applicable to it anyway.
 Both dual-graph stages apply only to D > 1 with N squarefree, and they skip everything else. They
-cache each fiber in `data/dualgraph/` (gitignored, keyed `dualgraph_v1_<D>_<N>_<p>`; override with
+cache each fiber in `data/dualgraph/` (gitignored, keyed `dualgraph_v2_<D>_<N>_<p>`; override with
 `DUALGRAPH_CACHE_DIR`), so Phase B reuses the fibers built in Phase A. A curve whose quotient graph
 does not have the curve's genus stops the stage with `DUALGRAPH_GENUS`, like `BADDIM`.
 

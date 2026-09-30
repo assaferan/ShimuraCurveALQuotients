@@ -83,17 +83,34 @@ function dg_build(D, N, p, scan)
             Append(~alV, <q, [dg_find(P0*I, L, bL) : I in L]>);
         end if;
     end for;
-    return <#L, #LL, org, alE, alV>;
+    uV := [#UnitGroup(RightOrder(I)) : I in L];
+    uE := [#UnitGroup(RightOrder(II)) : II in LL];
+    return <#L, #LL, org, alE, alV, uV, uE>;
+end function;
+
+// the +/- adjacency weighted by unit orders: the Brandt matrix T_p of level N in the algebra of
+// discriminant D/p (p is unramified there), entry u, v summing |O_R(I_u)^x| / |O_R(I_e)^x|
+function dg_brandt_matrix(data, p)
+    h := data[1]; org := data[3]; wp := dg_img(data[4], p);
+    B := ZeroMatrix(Rationals(), h, h);
+    for e in [1..data[2]] do
+        u := org[e];
+        B[u][org[wp[e]]] +:= data[6][u] / data[7][e];
+    end for;
+    return B;
 end function;
 
 intrinsic ValidateDualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt, data::Tup)
-{Raises an error unless data is a consistent dual graph for X_0^D(N) at p: the Atkin-Lehner maps
-are involutions of the right sets, w_p commutes with every other w_q on edges, the origin map is
-equivariant for every w_q with q | DN/p, and h' - 2h + 1 is the genus of X_0^D(N).  Run on every
-build and on every disk-cache read.}
-    require #data eq 5 : "data must be <h, h', org, alE, alV>";
+{Raises an error unless data is a consistent dual graph for X_0^D(N) at p: the origin map is onto
+the h classes, the graph is connected, the Atkin-Lehner maps are involutions of the right sets, w_p
+commutes with every other w_q on edges, the origin map is equivariant for every w_q with q | DN/p,
+and h' - 2h + 1 is the genus of X_0^D(N).  For the full tuple (with unit orders) also checks that
+the unit-weighted adjacency is the Brandt matrix T_p: rows sum to p + 1 and its trace is p + 1 plus
+the trace of T_p on the D/p-new weight-2 cusp forms of level DN/p.  A tuple without unit orders
+(the first five entries) gets the structural checks only.  Run on every build and disk-cache read.}
+    require #data in {5, 7} : "data must be <h, h', org, alE, alV> or <h, h', org, alE, alV, uV, uE>";
     h := data[1]; hh := data[2]; org := data[3];
-    assert #org eq hh and &and[v in [1..h] : v in org];
+    assert #org eq hh and Set(org) eq {1..h};
     assert {x[1] : x in data[4]} eq Set(PrimeDivisors(D*N));
     assert {x[1] : x in data[5]} eq Set(PrimeDivisors((D div p)*N));
     wp := dg_img(data[4], p);
@@ -108,8 +125,34 @@ build and on every disk-cache read.}
         assert Sort(img) eq [1..h] and &and[img[img[v]] eq v : v in [1..h]];
         assert &and[org[eimg[e]] eq img[org[e]] : e in [1..hh]];       // origin map is equivariant
     end for;
-    // b_1 of the full graph (2h vertices, h' edges, connected) is the genus of X_0^D(N)
+    // b_1 = h' - 2h + 1 below, and b_1 of every quotient graph, assume the graph is connected
+    none := {Integers() | };
+    nbr := [none : x in [1..2*h]];
+    for e in [1..hh] do
+        u := org[e]; v := org[wp[e]] + h;
+        Include(~nbr[u], v); Include(~nbr[v], u);
+    end for;
+    reached := {1}; frontier := [1];
+    while #frontier gt 0 do
+        x := frontier[#frontier]; Prune(~frontier);
+        for y in nbr[x] diff reached do Include(~reached, y); Append(~frontier, y); end for;
+    end while;
+    assert #reached eq 2*h;
     assert hh - 2*h + 1 eq GenusShimuraCurveQuotient(D, N, {Integers() | 1});
+    if #data eq 7 then
+        assert #data[6] eq h and #data[7] eq hh;
+        B := dg_brandt_matrix(data, p);
+        assert &and[&+Eltseq(B[u]) eq p + 1 : u in [1..h]];
+        // the row sums do not see the terminus map; the trace does (Eichler's trace formula)
+        assert Trace(B) eq (p + 1) + TraceFormulaGamma0DNew(p, D div p, N, 2);
+    end if;
+end intrinsic;
+
+intrinsic DualGraphBrandtMatrix(data::Tup, p::RngIntElt) -> Mtrx
+{The +/- adjacency of the dual graph `data` (from DualGraphData at p) weighted by unit orders: the
+Brandt matrix T_p of level N in the definite algebra of discriminant D/p.}
+    require #data eq 7 : "needs the unit orders (a DualGraphData tuple)";
+    return dg_brandt_matrix(data, p);
 end intrinsic;
 
 // ---------- disk cache: <dir>/dualgraph_<format>_<D>_<N>_<p> ----------
@@ -122,7 +165,7 @@ end function;
 
 // The format stamp is part of the name: bump it whenever dg_build or the tuple layout changes, so a
 // cache written by older code is never read (validation cannot catch consistent-but-stale data).
-DG_FORMAT := "v1";
+DG_FORMAT := "v2";
 
 function dg_cache_path(dir, D, N, p)
     return Sprintf("%o/dualgraph_%o_%o_%o_%o", dir, DG_FORMAT, D, N, p);
@@ -148,11 +191,12 @@ intrinsic DualGraphApplicable(D::RngIntElt, N::RngIntElt) -> BoolElt
 end intrinsic;
 
 intrinsic DualGraphData(D::RngIntElt, N::RngIntElt, p::RngIntElt : CacheDir := "", ForceScan := false) -> Tup
-{The dual graph of the special fibre at p of X_0^D(N), as <h, h', org, alE, alV>: h left ideal
-classes of an Eichler order of level N in the definite algebra of discriminant D/p (one vertex in
-each of two copies), h' classes of level Np (the edges; edge e joins (org[e], +) to
-(org[alE_p[e]], -)), and the Atkin-Lehner involutions as pairs <q, images>, on edges for q | DN and
-on vertices for q | DN/p.  Cached per <D, N, p> for the session and on disk in CacheDir (default
+{The dual graph of the special fibre at p of X_0^D(N), as <h, h', org, alE, alV, uV, uE>: h left
+ideal classes of an Eichler order of level N in the definite algebra of discriminant D/p (one vertex
+in each of two copies), h' classes of level Np (the edges; edge e joins (org[e], +) to
+(org[alE_p[e]], -)), the Atkin-Lehner involutions as pairs <q, images>, on edges for q | DN and on
+vertices for q | DN/p, and the unit-group orders of the right orders of the vertex and edge
+classes.  Cached per <D, N, p> for the session and on disk in CacheDir (default
 $DUALGRAPH_CACHE_DIR, else data/dualgraph; "none" disables the disk cache).  A disk entry is
 re-validated when read, so a corrupt file raises an error instead of giving a verdict.  ForceScan
 builds afresh (no caches) identifying every class by a full scan instead of the key buckets.}
@@ -170,6 +214,7 @@ builds afresh (no caches) identifying every class by a full scan instead of the 
     path := dg_cache_path(dir, D, N, p);
     if dir ne "none" and OpenTest(path, "r") then
         data := eval Read(path);
+        require #data eq 7 : "DualGraph cache file " cat path cat " lacks the unit orders";
         ValidateDualGraphData(D, N, p, data);
     else
         data := dg_build(D, N, p, false);

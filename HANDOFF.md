@@ -29,9 +29,9 @@ about state, this file wins.
   `c := eval Read("data/par/curves_after_UpdateCurves8.dat"); #[X : X in c | assigned X`TestInWhichProved and X`TestInWhichProved eq "DualGraph at p = 2"];`
   The pilot measured 35 of 165.
 * NOT an SFI certificate (pinned in `tests/DualGraph.m`).
-* Cache: `data/dualgraph/dualgraph_v1_<D>_<N>_<p>`, gitignored and regenerated on lava. Bump
+* Cache: `data/dualgraph/dualgraph_v2_<D>_<N>_<p>`, gitignored and regenerated on lovelace. Bump
   `DG_FORMAT` if the construction changes.
-* Next: full rerun on lava. Paper section `sec:dualgraph` (unweighted statement). Paper totals
+* Next: full rerun on lovelace. Paper section `sec:dualgraph` (unweighted statement). Paper totals
   in the later pass.
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
