@@ -234,18 +234,20 @@ end function;
 
 procedure test_FilterByDualGraph()
     printf "Testing FilterByDualGraph...";
-    X1 := dg_mk(6, 55, {1, 3, 110, 330});         // ruled at p = 2 and p = 3: the tag names 3
+    X1 := dg_mk(6, 55, {1, 3, 110, 330});         // ruled at p = 3 only (the graph at p = 2 is hyperelliptic)
     X2 := dg_mk(158, 1, {1, 2});                  // ruled at p = 2 only
     X3 := dg_mk(6, 55, {1, 3, 110, 330}); X3`IsSubhyp := true; X3`IsHyp := true; X3`TestInWhichProved := "hand";
     X4 := CreateShimuraQuot(1, 97, {1}); X4`g := 7;            // D = 1: not applicable
     X5 := CreateShimuraQuot(6, 25, {1}); X5`g := 5;            // N not squarefree: not applicable
     X6 := dg_mk(15, 2, {1});                      // hyperelliptic: no conclusion
-    cs := [X1, X2, X3, X4, X5, X6];
+    X7 := dg_mk(6, 35, {1, 3, 14, 42});           // ruled at p = 2 and p = 3 (test_DualGraphStankewicz): the tag names 3
+    cs := [X1, X2, X3, X4, X5, X6, X7];
     FilterByDualGraph(~cs : CacheDir := "none");
     assert cs[1]`IsSubhyp eq false and cs[1]`IsHyp eq false and cs[1]`TestInWhichProved eq "DualGraph at p = 3";
     assert cs[2]`IsSubhyp eq false and cs[2]`TestInWhichProved eq "DualGraph at p = 2";
     assert cs[3]`IsSubhyp and cs[3]`TestInWhichProved eq "hand";
     assert &and[not assigned cs[i]`IsSubhyp : i in [4, 5, 6]];
+    assert cs[7]`IsSubhyp eq false and cs[7]`TestInWhichProved eq "DualGraph at p = 3";
     // a genus inconsistency is not swallowed by the filter
     Y := dg_mk(6, 55, {1, 3, 110, 330}); Y`g := 4;
     ys := [Y];
@@ -305,6 +307,13 @@ procedure test_DualGraphStankewicz(raw)
         try ValidateDualGraphData(D, N, p, bad); catch e rejected := true; end try;
         assert rejected eq (h gt 1);
         assert not dg_same_graphs(ours, bad, D, N, p);
+        // X_0^6(35)/<w_3, w_14>: from their data alone, K4 (not hyperelliptic) at both p = 2 and p = 3
+        if <D, N> eq <6, 35> then
+            nv, edges := DualGraphQuotientFromData(theirs, p, {1, 3, 14, 42});
+            nv, edges := CanonicalGraphModel(nv, edges);
+            assert IsIsomorphic(dg_subdivided(nv, edges), dg_subdivided(4, [<1,2>, <1,3>, <1,4>, <2,3>, <2,4>, <3,4>]));
+            assert not IsHyperellipticGraph(nv, edges, 3);
+        end if;
     end for;
     printf "Done!\n";
 end procedure;
