@@ -45,10 +45,18 @@ intrinsic CacheClear(name)
   StoreSet(name, "cache", AssociativeArray());
 end intrinsic;
 
+// ⚠ Drop the store's reference BEFORE mutating.  Magma copies a value on write when more than
+// one reference to it exists; with the store still holding the array, `cache[k] := v` copied
+// the whole associative array on EVERY insert -- quadratic in cache size (measured: 20k inserts
+// 4.3 s, 80k inserts 68 s; 1.28M inserts 2.4 s once the store's reference is removed first).
+// The class-number cache grows to hundreds of thousands of entries across a Weil-stage run,
+// so this was the stage's real hot spot, not the trace formula.
 procedure SetCache(k,v, name)
   bool, cache := StoreIsDefined(name, "cache");
   if not bool then
     cache := AssociativeArray();
+  else
+    StoreRemove(name, "cache");
   end if;
   cache[k] := v;
   StoreSet(name, "cache", cache);

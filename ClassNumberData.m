@@ -38,6 +38,18 @@ function clGetAssoc(store)
     return A;
 end function;
 
+// Insert k -> v into the store's associative array WITHOUT copying it.  Magma copies a value
+// on write when more than one reference exists, so mutating an array the store still holds
+// copied the whole array on every insert -- quadratic in cache size (see Caching.m,
+// SetCache).  Removing the store's reference first makes the insert in place.  Callers must
+// not hold their own reference to the array when calling this (use a temporary for reads).
+procedure clRemember(store, k, v)
+    b, A := StoreIsDefined(store, "cache");
+    if not b then A := AssociativeArray(); else StoreRemove(store, "cache"); end if;
+    A[k] := v;
+    StoreSet(store, "cache", A);
+end procedure;
+
 function clDataDir()
     b, dir := StoreIsDefined(CL_STORE, "dir");
     if b then return dir; end if;
@@ -78,9 +90,12 @@ end function;
 // unavailable (missing data file / |d| beyond the downloaded range), in which
 // case the caller should fall back to a direct computation.
 function clFundClassNo(m0)
-    fund := clGetAssoc(CL_FUND);
-    b, h := IsDefined(fund, m0);
+    b, h := IsDefined(clGetAssoc(CL_FUND), m0);
     if b then return true, h; end if;
+    // Take the array out of the store before the inserts below, so they happen in place
+    // (see clRemember); it is put back at the end of this function on every path.
+    b, fund := StoreIsDefined(CL_FUND, "cache");
+    if not b then fund := AssociativeArray(); else StoreRemove(CL_FUND, "cache"); end if;
 
     prefix, r, m := clResidue(m0);
     k := m0 div CL_FILE_SPAN;
@@ -307,8 +322,9 @@ formula [Cox, Primes ..., Thm 7.24].}
     require D lt 0 and (D mod 4 in [0, 1]):
         "D must be a negative discriminant (D < 0 and D = 0 or 1 mod 4)";
 
-    order := clGetAssoc(CL_ORDER);
-    cached, h := IsDefined(order, D);
+    // Read through a temporary: holding `order` in a local while clRemember mutates the
+    // store's array would keep a second reference alive and force the copy this avoids.
+    cached, h := IsDefined(clGetAssoc(CL_ORDER), D);
     if cached then return h; end if;
 
     D0 := FundamentalDiscriminant(D);
@@ -320,23 +336,20 @@ formula [Cox, Primes ..., Thm 7.24].}
     // ClassNumber for fundamental discriminants beyond the tables entirely, or missing data.
     if -D0 ge ClassNumberDataMaxAbsDisc() then
         h := ClassNumber(D);
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
+        clRemember(CL_ORDER, D, h);
         return h;
     end if;
 
     ok, h0 := clFundClassNoFast(-D0);
     if not ok then
         h := ClassNumber(D);              // fallback (missing data file / line absent)
-        order[D] := h;
-        StoreSet(CL_ORDER, "cache", order);
+        clRemember(CL_ORDER, D, h);
         return h;
     end if;
 
     f := Isqrt(D div D0);                 // conductor; D = D0 * f^2
     h := clOrderFromFund(D0, f, h0);
-    order[D] := h;
-    StoreSet(CL_ORDER, "cache", order);
+    clRemember(CL_ORDER, D, h);
     return h;
 end intrinsic;
 
