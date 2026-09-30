@@ -9,7 +9,8 @@ end function;
 
 wc := [
     "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
@@ -27,7 +28,8 @@ rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
     "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
-    "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
+    "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
+    "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
     "FilterByNonALInvolutionsStar", "UpdateCurves5", "FilterByAutomorphismGroup",
     "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
@@ -41,7 +43,8 @@ assert ok;
 // stage to decide a curve, so a star stage that runs at a different point in the two orders labels
 // curves differently, and a sequential recompute_data would then fail its equality check against
 // data made by run_pipeline.sh.  (The star twisted Weil stage decides 144, 152, 160 and 312, which
-// FilterByWeilPolynomialStar decides first; that stage used to be missing from FILTER_STAGES.)
+// earlier stages decide first: 152 and 312 by FilterByGeneralizedComplicatedFixedPointsStar, 144
+// and 160 by FilterByWeilPolynomialStar.  The twisted stage used to be missing from FILTER_STAGES.)
 // workingcode.m: the uncommented <"Name", ...> entries of FILTER_STAGES before "UpdateByGenus".
 // run_pipeline.sh: the run_seq/run_par stages before the expansion, less FindPairs, which
 // compute_data runs outside the stage list.
@@ -67,7 +70,7 @@ for line in Split(body, "\n") do
 end for;
 printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
-assert #wstar eq 10;
+assert #wstar eq 11;
 assert wstar eq sstar;
 // compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
 // CheckHHProposition1, runs it on the same curves.

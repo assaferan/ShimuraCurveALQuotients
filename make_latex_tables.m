@@ -12,7 +12,8 @@
 //   * "Weil polynomials" (star) merges FilterByWeilPolynomialStar + the redundant
 //     FilterStarCurvesByFpAutomorphisms cross-check.
 //   * "Refined Atkin--Lehner fixed points" merges FilterByComplicatedAL... +
-//     FilterByGeneralizedComplicatedFixedPoints (both Section ref:fixedpointsAL).
+//     FilterByGeneralizedComplicatedFixedPoints (both Section ref:fixedpointsAL); in the star
+//     table it is FilterByGeneralizedComplicatedFixedPointsStar.
 // The three expansion operations (generate / genus<=2 / AL-as-hyperelliptic) are
 // logical sub-steps of the single UpdateByGenus stage, so their intermediate
 // counts are computed rather than read from a snapshot.  The final
@@ -68,6 +69,8 @@ T1 := [
         "data/curves_after_FilterByTwistedTraceStar.dat">,
  <"Special fiber isomorphisms (Section~\\ref{sec:specialfiber})",
         "data/curves_after_SpecialFiberIsomorphismStar.dat">,
+ <"Refined Atkin--Lehner fixed points (Section~\\ref{sec:fixedpointsAL})",
+        "data/curves_after_FilterByGeneralizedComplicatedFixedPointsStar.dat">,
  <"Weil polynomials (Section~\\ref{sec:Weilpolys})",
         twstar select "data/curves_after_FilterByWeilPolynomialStar.dat"
                else "data/curves_after_FilterStarCurvesByFpAutomorphisms.dat">,
