@@ -43,7 +43,8 @@ assert ok;
 // stage to decide a curve, so a star stage that runs at a different point in the two orders labels
 // curves differently, and a sequential recompute_data would then fail its equality check against
 // data made by run_pipeline.sh.  (The star twisted Weil stage decides 144, 152, 160 and 312, which
-// FilterByWeilPolynomialStar decides first; that stage used to be missing from FILTER_STAGES.)
+// earlier stages decide first: 152 and 312 by FilterByGeneralizedComplicatedFixedPointsStar, 144
+// and 160 by FilterByWeilPolynomialStar.  The twisted stage used to be missing from FILTER_STAGES.)
 // workingcode.m: the uncommented <"Name", ...> entries of FILTER_STAGES before "UpdateByGenus".
 // run_pipeline.sh: the run_seq/run_par stages before the expansion, less FindPairs, which
 // compute_data runs outside the stage list.
