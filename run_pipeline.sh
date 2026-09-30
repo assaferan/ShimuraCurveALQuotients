@@ -34,8 +34,6 @@
 #                                                       cheapest filter, run first to prune the rest)
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
-#   FilterByDualGraph                      [PARALLEL, by level]  (dual graph at p | D)
-#   UpdateCurvesAfterDualGraph             [sequential]
 #   Genus3CoversGenus2                     [sequential]
 #   UpdateCurves3                          [sequential]
 #   FilterByDegeneracyMorphism             [PARALLEL]
@@ -47,6 +45,8 @@
 #   UpdateCurvesAfterAutomorphismGroup     [sequential]
 #   FilterByTrace                          [PARALLEL]
 #   UpdateCurves6                          [sequential]
+#   FilterByDualGraph                      [PARALLEL, by level]  (dual graph at p | D)
+#   UpdateCurvesAfterDualGraph             [sequential]
 #   FilterByTwistedTrace                   [PARALLEL, by level]  (modular symbols once per level)
 #   UpdateCurvesAfterTwistedTrace          [sequential]
 #   FilterByWeilPolynomial                 [PARALLEL]
@@ -168,10 +168,7 @@ run_par "FilterBySpecialFiber"
 run_par "FilterByALFixedPointsOnQuotient"
 run_seq "UpdateCurves2"       "${D}/curves_after_FilterByALFixedPointsOnQuotient.dat" \
                                                                                    "${D}/curves_after_UpdateCurves2.dat"
-run_par "FilterByDualGraph"
-run_seq "UpdateCurvesAfterDualGraph" "${D}/curves_after_FilterByDualGraph.dat" \
-                                                                                   "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"
-run_seq "Genus3CoversGenus2"  "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"   "${D}/curves_after_Genus3CoversGenus2.dat"
+run_seq "Genus3CoversGenus2"  "${D}/curves_after_UpdateCurves2.dat"                "${D}/curves_after_Genus3CoversGenus2.dat"
 run_seq "UpdateCurves3"       "${D}/curves_after_Genus3CoversGenus2.dat"           "${D}/curves_after_UpdateCurves3.dat"
 run_par "FilterByDegeneracyMorphism"
 run_seq "UpdateCurves4"       "${D}/curves_after_FilterByDegeneracyMorphism.dat"   "${D}/curves_after_UpdateCurves4.dat"
@@ -192,6 +189,9 @@ run_seq "UpdateCurvesAfterAutomorphismGroup" "${D}/curves_after_FilterByAutomorp
                                                                                    "${D}/curves_after_UpdateCurvesAfterAutomorphismGroup.dat"
 run_par "FilterByTrace"
 run_seq "UpdateCurves6"       "${D}/curves_after_FilterByTrace.dat"                "${D}/curves_after_UpdateCurves6.dat"
+run_par "FilterByDualGraph"
+run_seq "UpdateCurvesAfterDualGraph" "${D}/curves_after_FilterByDualGraph.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterDualGraph.dat"
 # Trace twisted by the involutions defined over Q.  Needs the modular symbols of level D*N, so the
 # worker splits this stage by LEVEL (one modular-symbols computation per level); the largest levels
 # take hours each.

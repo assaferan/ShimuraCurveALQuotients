@@ -56,8 +56,6 @@ FILTER_STAGES := [*
     <"FilterBySpecialFiber", FilterBySpecialFiber>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
-    <"FilterByDualGraph", FilterByDualGraph>,
-    <"UpdateCurvesAfterDualGraph", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
     <"UpdateCurves3", UpdateCurves>,
     <"FilterByDegeneracyMorphism",FilterByDegeneracyMorphism>,
@@ -76,6 +74,8 @@ FILTER_STAGES := [*
     <"UpdateCurvesAfterAutomorphismGroup", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
+    <"FilterByDualGraph", FilterByDualGraph>,
+    <"UpdateCurvesAfterDualGraph", UpdateCurves>,
     // Trace twisted by the involutions defined over Q (modular symbols, once per level).
     <"FilterByTwistedTrace", FilterByTwistedTrace>,
     <"UpdateCurvesAfterTwistedTrace", UpdateCurves>,

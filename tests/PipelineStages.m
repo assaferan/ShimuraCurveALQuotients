@@ -11,10 +11,11 @@ wc := [
     "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1", "FilterByALFixedPointsOnQuotient", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2",
+    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1", "FilterByALFixedPointsOnQuotient", "UpdateCurves2", "Genus3CoversGenus2",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
     "UpdateCurves5", "FilterByAutomorphismGroup", "UpdateCurvesAfterAutomorphismGroup",
-    "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
+    "FilterByTrace", "UpdateCurves6", "FilterByDualGraph", "UpdateCurvesAfterDualGraph",
+    "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
     "FilterByWeilPolynomial", "UpdateCurves7", "FilterByTwistedWeilPolynomial",
     "UpdateCurvesAfterTwistedWeilPolynomial", "FilterByNonALInvolutions", "UpdateCurves8"];
 pos, ok := StageOrder(Read("workingcode.m"), wc);
@@ -28,8 +29,9 @@ body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
     "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateCurves2", "FilterByDualGraph", "UpdateCurvesAfterDualGraph", "Genus3CoversGenus2", "UpdateCurves5", "FilterByAutomorphismGroup",
-    "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
+    "FilterByNonALInvolutionsStar", "UpdateCurves2", "Genus3CoversGenus2", "UpdateCurves5", "FilterByAutomorphismGroup",
+    "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByDualGraph", "UpdateCurvesAfterDualGraph",
+    "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
     "FilterByTwistedWeilPolynomial", "UpdateCurvesAfterTwistedWeilPolynomial",
     "FilterByNonALInvolutions", "UpdateCurves8"];

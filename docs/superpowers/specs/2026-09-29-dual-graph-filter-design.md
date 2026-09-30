@@ -174,10 +174,11 @@ checks it. HH's curves are D = 1, so they are not applicable here anyway. Change
 * Phase A has no closure stage. Like the other star stages, its verdicts reach the covers
   through `GetQuotientsAndGenera` and `UpdateCurves1`.
 
-**Phase B.** Stage `FilterByDualGraph` goes directly after `UpdateCurves2`
-(`run_pipeline.sh:162`). It is followed by the closure `UpdateCurvesAfterDualGraph`, added to
-the `UpdateCurves(~curves)` case in `run_sequential_stage.m:62â66`. `Genus3CoversGenus2` then
-reads `curves_after_UpdateCurvesAfterDualGraph.dat`. The naming follows the "Stage order" rule:
+**Phase B.** Stage `FilterByDualGraph` goes directly before `FilterByTwistedTrace`, after
+`UpdateCurves6`, mirroring Phase A (user decision, 2026-09-30). It is followed by the closure
+`UpdateCurvesAfterDualGraph`, added to the `UpdateCurves(~curves)` case in
+`run_sequential_stage.m`. `FilterByTwistedTrace` then reads
+`curves_after_UpdateCurvesAfterDualGraph.dat`. The naming follows the "Stage order" rule:
 existing `UpdateCurves<N>` names are not renumbered.
 
 **Parallel, by level.** Add both stages to the level-grouped set in
@@ -268,3 +269,4 @@ Per-quotient work is under 0.01 s.
 1. `data/dualgraph/` is gitignored and regenerated on lava.
 2. The paper states the unweighted variant only.
 3. `FilterByDualGraphStar` goes after the check-only `HHProposition1`.
+4. (2026-09-30) `FilterByDualGraph` goes right before `FilterByTwistedTrace`, as in Phase A.

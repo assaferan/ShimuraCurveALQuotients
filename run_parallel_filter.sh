@@ -44,8 +44,8 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_HHProposition1.dat"
         ;;
     FilterByDualGraph)
-        # Dual graph at p | D on all quotients, after UpdateCurves2; split by level.
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves2.dat"
+        # Dual graph at p | D on all quotients, after UpdateCurves6; split by level.
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves6.dat"
         ;;
     FilterByTwistedTraceStar)
         # Twisted trace on the star curves (V2/V3 twists only); split by level.
@@ -95,7 +95,7 @@ case "${STAGE}" in
         ;;
     FilterByTwistedTrace)
         # Split by level in parallel_filter_worker.m (modular symbols once per level).
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves6.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterDualGraph.dat"
         ;;
     FilterByWeilPolynomial)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterTwistedTrace.dat"

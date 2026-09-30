@@ -121,10 +121,7 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurves1
     FilterBySpecialFiber                      parallel
     FilterByALFixedPointsOnQuotient           parallel
-    UpdateCurves2
-    FilterByDualGraph                         parallel, by level  NEW
-    UpdateCurvesAfterDualGraph                                    NEW
-    Genus3CoversGenus2, UpdateCurves3
+    UpdateCurves2, Genus3CoversGenus2, UpdateCurves3
     FilterByDegeneracyMorphism                parallel
     UpdateCurves4
     FilterByComplicatedALFixedPointsOnQuotient    parallel
@@ -134,6 +131,8 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurvesAfterAutomorphismGroup                            NEW
     FilterByTrace                             parallel
     UpdateCurves6
+    FilterByDualGraph                         parallel, by level  NEW
+    UpdateCurvesAfterDualGraph                                    NEW
     FilterByTwistedTrace                      parallel, by level  NEW
     UpdateCurvesAfterTwistedTrace                                 NEW
     FilterByWeilPolynomial                    parallel
