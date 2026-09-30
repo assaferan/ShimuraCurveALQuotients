@@ -196,7 +196,7 @@ ideal classes of an Eichler order of level N in the definite algebra of discrimi
 in each of two copies), h' classes of level Np (the edges; edge e joins (org[e], +) to
 (org[alE_p[e]], -)), the Atkin-Lehner involutions as pairs <q, images>, on edges for q | DN and on
 vertices for q | DN/p, and the unit-group orders of the right orders of the vertex and edge
-classes.  Cached per <D, N, p> for the session and on disk in CacheDir (default
+classes.  Cached per <D, N, p, CacheDir> for the session and on disk in CacheDir (default
 $DUALGRAPH_CACHE_DIR, else data/dualgraph; "none" disables the disk cache).  A disk entry is
 re-validated when read, so a corrupt file raises an error instead of giving a verdict.  ForceScan
 builds afresh (no caches) identifying every class by a full scan instead of the key buckets.}
@@ -207,10 +207,10 @@ builds afresh (no caches) identifying every class by a full scan instead of the 
         ValidateDualGraphData(D, N, p, data);
         return data;
     end if;
-    key := <D, N, p>;
+    dir := dg_cache_dir(CacheDir);
+    key := <D, N, p, dir>;
     b, data := GetCache(key, dual_graphs);
     if b then return data; end if;
-    dir := dg_cache_dir(CacheDir);
     path := dg_cache_path(dir, D, N, p);
     if dir ne "none" and OpenTest(path, "r") then
         data := eval Read(path);
