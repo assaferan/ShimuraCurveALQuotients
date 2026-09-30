@@ -7,7 +7,7 @@
 //
 // (1) the count against brute force.  On this exact loop the OLD Sfast differs from brute
 //     force on 774 of 2677 counts (measured on main at 95cf87b, scratch script
-//     vvdata/weyl-campaign/weil-cost-2026-09-30/../old_sfast_count.m is the same loop).
+//     vvdata/weyl-campaign/trace-formula-gcd-2026-09-30/old_sfast_count.m on the campaign branch is this loop).
 // (2) Popa's full-space trace and (3) the newform trace against Magma's modular symbols at
 //     gcd(n, N) > 1 on the grid below.  On this grid the OLD code got 80 of the 176 full-space
 //     traces wrong, and 72 of the 176 newform traces (all inherited from Sfast at sub-levels).
@@ -15,9 +15,13 @@
 //     the trace of T_n o w on the cuspidal subspace of level DN that is new at every p | D,
 //     averaged over w in W, with the Jacquet-Langlands sign (-1)^omega(gcd(w, D)) -- so the
 //     change is inert where the pipeline lives.
-// (5) TraceDNewALFixed refuses n sharing a factor with DN: the D-new decomposition in
-//     TraceDNew assumes (n, DN) = 1, and at gcd > 1 it returned wrong values (e.g. D = 1,
-//     N = 30, n = 4: -1 where modular symbols give -2).
+// (5) TraceDNewALFixed at n sharing a factor with DN, against the same modular-symbols
+//     quantity.  The D-new trace used to keep only the n' = 1 term of [Assaf, Cor. 4.27],
+//     which is the whole formula exactly when gcd(n, DN) = 1; at gcd > 1 it returned wrong
+//     values (D = 1, N = 30, n = 4: -1 where modular symbols give -2; (1, 1848, 7) with the
+//     V4 below: -20 for -9).  It now sums Lemma 4.20 block by block over the N' divisible by
+//     D, for every n.  Beyond the cases here, 0 of 1548 such traces differed from modular
+//     symbols across 23 (D, N) pairs (D up to 26), several W each, n in {2..25}.
 //
 // Magma's HeckeOperator on a SUBSPACE dies at (N, k, n) = (6, 4, 2) ("incompatible
 // coefficient rings"), so the oracles restrict the ambient operator, as tests/trace_formula.m.
@@ -96,18 +100,12 @@ end for;
 printf "  5 coprime-index D-new traces agree with modular symbols\n";
 
 // (5)
-refused := false;
-try
-    _ := TraceDNewALFixed(1, 30, 2, 4, {Integers() | 1});
-catch e
-    refused := true;
-end try;
-assert refused;
-refused := false;
-try
-    _ := TraceDNewALFixed(1, 1848, 2, 7, W4);
-catch e
-    refused := true;
-end try;
-assert refused;
-printf "  TraceDNewALFixed refuses n sharing a factor with DN\n";
+for c in [<1, 30, 4, {Integers() | 1}>, <1, 30, 6, {Integers() | 1, 30}>, <1, 1848, 7, W4>,
+          <1, 1848, 49, W4>, <6, 7, 3, {Integers() | 1, 6}>, <6, 7, 4, {Integers() | 1, 2, 3, 6}>,
+          <10, 9, 6, {Integers() | 1, 10}>, <15, 4, 10, {Integers() | 1, 3, 5, 15}>] do
+    D, N, n, W := Explode(c);
+    assert GCD(n, D*N) gt 1;
+    assert TraceDNewALFixed(D, N, 2, n, W) eq DNewTraceModSym(D, N, n, W);
+end for;
+assert TraceDNewALFixed(1, 30, 2, 4, {Integers() | 1}) eq -2;      // the reviewer's case
+printf "  8 D-new traces at n sharing a factor with DN agree with modular symbols\n";
