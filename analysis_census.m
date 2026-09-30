@@ -2,6 +2,7 @@
 // Writes a human-readable report to data/pipeline_analysis.txt.
 SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);   // no line wrapping: output lines (and LaTeX) must not be split at 80 columns
 SetVerbose("ShimuraQuotients", 0);
 
 curves := eval Read("data/curves_after_UpdateCurves8.dat");

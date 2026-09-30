@@ -752,7 +752,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 152>,
 <"W", { IntegerRing() | 1, 8, 19, 152 }>,
 <"g", 3>, <"CurveID", 151>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "GeneralizedComplicatedFixedPoints: V2, pPart=8, 
-\n\n\nN1=8 (nu=4), N2=152 (nu=12)">
+\n\n\n\n\nN1=8 (nu=4), N2=152 (nu=12)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 153>,
 <"W", { IntegerRing() | 1, 9, 17, 153 }>,
@@ -958,7 +958,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 194>,
 <"W", { IntegerRing() | 1, 2, 97, 194 }>,
 <"g", 3>, <"CurveID", 193>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 97 (source: more than 2q+2 points over F_q, q = 2^1)">
+\n\n\n\n\n\ncurve 97 (source: more than 2q+2 points over F_q, q = 2^1)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 195>,
 <"W", { IntegerRing() | 1, 3, 5, 13, 15, 39, 65, 195 }>,
@@ -1068,7 +1068,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 216>,
 <"W", { IntegerRing() | 1, 8, 27, 216 }>,
 <"g", 5>, <"CurveID", 215>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "GeneralizedComplicatedFixedPoints: V2, pPart=8, 
-\n\n\nN1=8 (nu=4), N2=216 (nu=12)">
+\n\n\n\n\nN1=8 (nu=4), N2=216 (nu=12)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 217>,
 <"W", { IntegerRing() | 1, 7, 31, 217 }>,
@@ -1249,7 +1249,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 264>,
 <"W", { IntegerRing() | 1, 3, 8, 11, 24, 33, 88, 264 }>,
-<"g", 4>, <"CurveID", 252>, <"IsEC", false>
+<"g", 4>, <"CurveID", 252>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V2 with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 265>,
 <"W", { IntegerRing() | 1, 5, 53, 265 }>,
@@ -1416,7 +1417,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 312>,
 <"W", { IntegerRing() | 1, 3, 8, 13, 24, 39, 104, 312 }>,
 <"g", 3>, <"CurveID", 286>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "GeneralizedComplicatedFixedPoints: V2, pPart=8, 
-\n\n\nN1=312 (nu=8), N2=104 (nu=24)">
+\n\n\n\n\nN1=312 (nu=8), N2=104 (nu=24)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 315>,
 <"W", { IntegerRing() | 1, 5, 7, 9, 35, 45, 63, 315 }>,
@@ -1676,7 +1677,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 450>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 25, 50, 225, 450 }>,
 <"g", 7>, <"CurveID", 338>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 223 (source: more than 2q+2 points over F_q, q = 2^2)">
+\n\n\n\n\n\ncurve 223 (source: more than 2q+2 points over F_q, q = 2^2)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 455>,
 <"W", { IntegerRing() | 1, 5, 7, 13, 35, 65, 91, 455 }>,
@@ -1798,7 +1799,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 546>,
 546 }>,
 <"g", 4>, <"CurveID", 362>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_2 to 
-\n\n\n\ncurve 258 (source: more than 2q+2 points over F_q, q = 2^1)">
+\n\n\n\n\n\ncurve 258 (source: more than 2q+2 points over F_q, q = 2^1)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 552>,
 <"W", { IntegerRing() | 1, 3, 8, 23, 24, 69, 184, 552 }>,
@@ -1991,7 +1992,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 2310>,
 }>,
 <"g", 12>, <"CurveID", 396>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "SpecialFiberIsomorphism, isomorphic over F_3 to 
-\n\n\n\ncurve 376 (source: more than 2q+2 points over F_q, q = 3^1)">
+\n\n\n\n\n\ncurve 376 (source: more than 2q+2 points over F_q, q = 3^1)">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 2730>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 13, 14, 15, 21, 26, 30, 35, 39, 
@@ -3699,7 +3700,8 @@ false>, <"TestInWhichProved", "Trace, with p^v = 3^2">
 CreateShimuraQuot([* <"D", 10>, <"N", 171>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 18, 19, 38, 45, 90, 95, 171, 190, 342, 
 855, 1710 }>,
-<"g", 3>, <"CurveID", 703>, <"IsEC", false>
+<"g", 3>, <"CurveID", 703>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V3 with p = 17">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 173>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 173, 346, 865, 1730 }>,
@@ -6701,7 +6703,8 @@ true>, <"TestInWhichProved", "GenusLt3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 13, 16, 39, 48, 208, 624 }>,
-<"g", 3>, <"CurveID", 1247>, <"IsEC", false>
+<"g", 3>, <"CurveID", 1247>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
+false>, <"TestInWhichProved", "TwistedWeilPolynomial h = V2 with p = 5">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 13, 17, 39, 51, 221, 663 }>,
@@ -7982,7 +7985,7 @@ CreateShimuraQuot([* <"D", 87>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 8, 24, 29, 87, 232, 696 }>,
 <"g", 3>, <"CurveID", 1489>, <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", 
 false>, <"TestInWhichProved", "GeneralizedComplicatedFixedPoints: V2, pPart=8, 
-\n\n\nN1=232 (nu=8), N2=696 (nu=24)">
+\n\n\n\n\nN1=232 (nu=8), N2=696 (nu=24)">
 *]),
 CreateShimuraQuot([* <"D", 87>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 29, 30, 58, 87, 145, 174, 290, 
