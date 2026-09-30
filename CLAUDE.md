@@ -165,3 +165,16 @@ miss it.
   you think the test itself is wrong, stop and raise it with a person, giving the independent
   source that shows the expected value is wrong. Never change an expected value, loosen an assert,
   or delete a check on your own.
+
+## Writing PRs, comments and replies
+
+* **Be concise.**
+  * PR bodies: one short paragraph on the bug with a single signature evidence line, one bullet
+    per file, a line or two on verification, a line of context. 20–35 lines in total.
+  * Code comments: 1–4 lines stating the constraint the code cannot show.
+  * Tracker comments: a few lines of delta, not a report.
+* **Don't comment idiomatic patterns.** A comment must state a constraint that the code cannot
+  show and that a competent reader of this codebase would not already know. When unsure, leave it
+  out and let the reviewer ask.
+* **Describe an implementation on its own terms**, not by criticising an alternative. Say what it
+  does, how to call it, and what it costs. Mention comparable APIs as neighbours, not as warnings.
