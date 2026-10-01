@@ -38,3 +38,19 @@ nearly independent of Qmax / W / level; exponent in n between 0.8 and 1.5 depend
   7296/1071 at ranks 1/2 (`proxy_alt.log` used p^(0.8 g); the PR uses p^g).
 * The `docs/RUNNING_PIPELINE.md` "about 5 h on a single curve" is the right order for the
   genus-6 small-W shape, not the big-level shape it named.
+
+## lovelace, with the class-number tables (CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast), 2026-09-30/10-01
+
+Same script, same three code trees, full prime bound, logs in `lovelace/`.  These are the stage's
+own conditions, so the totals are quotable as such; the three 1071 arms ran concurrently with
+each other and with other users' jobs (load 12-22), the main/13029 and main/7296 arms alongside.
+
+    curve  tree       p=7    p=11   p=13   p=17   p=19   p=23    total CPU
+    1071   main       60     291    719    2966   8241   41050   53330 s = 14.8 h
+    1071   #56 memo   4.4    38     135    641    1946   8462    11227 s =  3.1 h
+    1071   #58 cache  55     208    353    806    1352   2448     5220 s = 87 min
+    13029  main       (p=11..31)                                2413 s = 40 min, incl. the one-time .fw extraction
+    7296   main       p=11: 663, p=13: 4001; stopped 2026-09-30 evening (nothing further needed)
+
+So on main the genus-6 curve costs 22x the genus-4 one, and #58's cache fix is 10x on 1071
+overall (17x at p = 23), growing with p; the memo (#56) alone is 4.9x.  Ordering unchanged.
