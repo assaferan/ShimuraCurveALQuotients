@@ -183,18 +183,17 @@ procedure test_m0_multiplier_15_2()
     D := 15; N := 2;
     fs := borcherds_forms(D, N);
     Ld := ShimuraCurveLattice(D, N);
-    // The m = 0 multiplier mult(f) = (1/2) c_eta(0), eta any nonzero isotropic coset of F_f: the
-    // m = 0 terms of Schofer's formula contribute mult(f) log N per CM point, since
-    // kappa_eta(0) = -log N/(N-1) at each of the 2N-2 such cosets (paper/level-prime-kappa.tex,
-    // Proposition "the dropped coefficient", prop:kappa0).  The expected values are in units of
-    // log N and have three independent sources: the kernel-consistency fit of the per-cover
-    // equations to the rational CM values (2026-08-19), which is also the value for which the
-    // Schofer CM values of fs[-1] reproduce Guo-Yang Table 45 (tests/SchoferIsometry.m; the paper
-    // tabulates CM values, not kappa_eta(0)); the exact coset sum M0MultiplierExact; and the
-    // linear functional of the principal parts at the cusps -- on this base
-    // mult = -c_oo(-2) + c_oo(-10) -- which gives 4 for fs[-1] = 2q^-10 - 2q^-2 + 2q^-1 + ...
-    // and 4 for fs[13].  The multiplier is a property of the form, not of its divisor: another
-    // representative of the same divisor with c_oo(-2) = 0 has multiplier 2.
+    // The m = 0 multiplier mult(f): the code adds mult(f) * sum_{p | N/(N,d)} log p to the Schofer
+    // value, with mult(f) = (1/2) c_eta(0) at a nonzero isotropic coset of F_f.  In units of log N,
+    // 4 is the only value for which our Schofer values of fs[-1] reproduce Guo-Yang,
+    // arXiv:1510.06193v1, Table 45 at d = -7, -15, -60 (tests/SchoferIsometry.m).  That is the
+    // only outside evidence.  The general formula mult = (1/2) c_eta(0), from
+    // kappa_eta(0) = -log N/(N-1), is our Proposition prop:kappa0 in paper/level-prime-kappa.tex,
+    // which is not yet proved; M0MultiplierExact and the fitted functional -c_oo(-2) + c_oo(-10)
+    // on this base are our own computations of the same quantity, not independent evidence.
+    // The multiplier is a property of the form, not of its divisor: another representative of
+    // the same divisor with c_oo(-2) = 0 has value 2, and fs[13] has the same principal part as
+    // fs[-1], hence 4.
     // Only the two cheap forms are checked here: the pole-order-30 forms need Prec 200 / 192 samples
     // and about 20 minutes.  Forms -1 and 13 have pole order 10 and converge quickly.
     expected := AssociativeArray();

@@ -770,7 +770,7 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
     // the constant term.  A linear combination of pool elements (a good form at 0, the form
     // the search finds) then inherits both principal parts through the EtaQuot arithmetic,
     // and its divisor is read off them instead of re-expanding its eta-quotient dictionary
-    // from scratch -- which at 95_1's second rung is minutes per form, sixty forms per rung.
+    // from scratch.
     // The pool's own expansions are attached only on the oo side: on the 0 side they are
     // thousands of terms per element at the deep rungs and the kernel below gives their
     // combinations directly.
@@ -788,13 +788,15 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
     end if;
     oc_qexps cat:= [oc_exp(f, 1) : f in basis_n0];
     oc_q := Parent(oc_qexps[1]).1;
-    oc_qexps := [x + O(oc_q^1) : x in oc_qexps];
     assert #oc_qexps eq #full_basis;
+    assert forall{x : x in oc_qexps cat qexps | AbsolutePrecision(x) ge 1};
+    oc_qexps := [x + O(oc_q^1) : x in oc_qexps];
     for j in [1..#full_basis] do
         if Zero then
             full_basis[j]`qexp_oo := oc_qexps[j]; full_basis[j]`prec_oo := 1;
         else
-            full_basis[j]`qexp_0 := oc_qexps[j]; full_basis[j]`prec_0 := 1;
+            // admissible: the t factor was expanded without the factor M/sqrt(disc), f with it
+            full_basis[j]`qexp_0 := oc_qexps[j]; full_basis[j]`prec_0 := 1; full_basis[j]`adm_0 := true;
             full_basis[j]`qexp_oo := qexps[j]; full_basis[j]`prec_oo := 1;
         end if;
     end for;
@@ -802,11 +804,8 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
 end function;
 
 // Returns the reduced echelon basis of the pool's coefficient matrix, the pool matrix itself
-// and the pool as eta quotients.  No transform: EchelonForm with a transform over Q was 98% of
-// this function (51_1, pole order 800: 2.2 s for the reduced matrix, 112 s with the transform,
-// ~PO^4.4 beyond), and the transform was used only to express the one form the search finds
-// as an eta-quotient combination -- which a single Solution against the pool gives instead
-// (see the search below).
+// and the pool as eta quotients.  No transform is computed: the one form the search finds is
+// expressed in the pool by a single Solution against the pool matrix (see the search below).
 function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := false)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := Zero);
     ech_basis := EchelonForm(coeffs);
@@ -837,7 +836,8 @@ end function;
 // pole at oo, or identically zero -- and are returned in reduced echelon form with respect to
 // the pool coordinates.  The other rows carry their 0-expansions in reduced echelon form, and
 // each one's pool coordinates are reduced modulo the dependency rows; two pool combinations
-// with the same expansion at 0 differ by a dependency, so this fixes the combination.
+// with the same expansion at 0 differ by a dependency, so this fixes the combination.  (The
+// dependency rows vanish at 0 through the constant term, with a pole at oo or identically zero.)
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
@@ -850,6 +850,8 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     rel := [i : i in [1..Nrows(G)] | IsZero(G[i])];
     Kr := EchelonForm(Matrix(Rationals(), #rel, Ncols(K), [K[i] : i in rel]));
     Gg, U := EchelonForm(Matrix(Rationals(), #good, Ncols(G), [G[i] : i in good]));
+    // every good row is nonzero at 0, so none reduces to a dependency and the split is exact
+    assert forall{i : i in [1..Nrows(Gg)] | not IsZero(Gg[i])};
     Kg := U * Matrix(Rationals(), #good, Ncols(K), [K[i] : i in good]);
     for j in [1..Nrows(Kr)] do
         c := Depth(Kr[j]);
@@ -870,6 +872,7 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     for i in [1..#etas] do
         etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
         etas[i]`prec_0 := 1;
+        etas[i]`adm_0 := true;
         assert assigned etas[i]`qexp_oo;
     end for;
     deepest_oo := -Minimum([Valuation(f`qexp_oo) : f in full_basis]);
@@ -1062,17 +1065,15 @@ alone cannot do odd D.}
             // Everything here depends only on m_idx (through m_choice, hence pole_order) and
             // on data fixed before the while loop -- D0, n0, nE0, t, eta_quotients_oo, Xstar.
             // Nothing in it reads `ram`, `min_m`, the key i, or the divisor triple
-            // (infty, other_pts), so it sits above the key and triple loops (it used to be
-            // recomputed identically 336 times per m_idx at X0^65(2)).  It leaves ech_etas_0,
-            // mat_0_oo, relevant_ds_0_oo and n_oo for the search below.
+            // (infty, other_pts), so it sits above the key and triple loops.  It leaves
+            // ech_etas_0, mat_0_oo, relevant_ds_0_oo and n_oo for the search below.
             assert m_idx le #all_ms;
             m_choice := all_ms[m_idx];
             vprintf ShimuraQuotients, 5 : "\n\t\t\t\tWorking on m = %o for q-expansion at 0", m_choice;
             pole_order := -D0*m_choice;
 
-            // The good forms at 0 for this m, straight from the pool's kernel (see
-            // good_forms_at_zero for what this replaced and why).  The pole order grows with
-            // every rung, so there is nothing to memoise across m.
+            // The good forms at 0 for this m, from the pool's kernel.  The pole order grows
+            // with every rung, so there is nothing to memoise across m.
             t0 := SAction(t : Admissible := false);
             vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing the good forms at 0 with pole order %o...", pole_order;
             good_forms_0, ech_etas_0, deepest_oo_0 := good_forms_at_zero(pole_order, eta_quotients_oo, 1, nE0, t0, D0);
@@ -1366,8 +1367,7 @@ alone cannot do odd D.}
 
 
                     // The oo-part of the form is a combination of the sliced echelon rows; its
-                    // coordinates in the POOL come from one solve against the pool matrix (the
-                    // echelon transform would give them for every row, at ~PO^4.4).
+                    // coordinates in the POOL come from one solve against the pool matrix.
                     n_ech := Nrows(ech_basis);
                     f_oo := Vector(Rationals(), [0 : j in [1..first_idx-1]] cat [sol[j] : j in [1..n_ech]]) * ech_basis_all_oo;
                     c_oo := Solution(pool_all_oo, f_oo);
@@ -1412,6 +1412,9 @@ alone cannot do odd D.}
         fresh := EtaQuotient(Parent(etas[i]), etas[i]`coeffs);
         assert IsWeaklyZero(qExpansionAtoo(fresh, 1) - qExpansionAtoo(etas[i], 1));
         if verify_0 then
+            // the whole stored expansion at 0 through the constant term, which is what the
+            // Schofer formula reads, and the divisor from the fresh object
+            assert IsWeaklyZero(qExpansionAt0(fresh, 1) - qExpansionAt0(etas[i], 1));
             assert Set(DivisorOfBorcherdsForm(fresh, Xstar)) eq targets[i];
         end if;
     end for;
