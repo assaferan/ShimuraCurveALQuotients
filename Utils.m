@@ -82,17 +82,19 @@ heavy curves are always dispatched early.}
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
         // class-number database, the disc budget, and the per-genus ceiling), i.e. one trace at
-        // n = p^g per prime, and the measured cost of that trace is set by n: on a Mac without the
-        // class-number tables, 2026-09-30, n = 9e5 took 206 s, 4.8e6 560 s, 2.4e7 2132 s, across
-        // curves of level 15330 and 240 alike.  So sum p^g over the good primes.
+        // n = p^g per prime, and the cost of that trace is set by n, not by Qmax: within one curve
+        // the per-prime time grows with n (X_0(240)/W4, g = 6: p = 7, 11, 13, 17 took 43, 224,
+        // 560, 2132 s), and a curve of level 15330 and genus 4 fits the same growth
+        // (X_0^210(73)/W32: 559 s for all seven of its primes).  Measured 2026-09-30 on main at
+        // 95cf87b, before #56 and #58, on a Mac without the class-number tables, with
+        // vvdata/weyl-campaign/weil-cost-2026-09-30/weil_timing.m (logs alongside it); with
+        // #56 and #58 the times are 2-4x smaller and the ordering is the same.  So sum p^g over
+        // the good primes.
         //
-        // ⚠ This used to be sum 4*Qmax*p^g -- the DISCRIMINANT DEPTH, which is the right quantity
-        // for the table/budget bounds but not a cost: Qmax does not enter the per-term work (the
-        // t-range is sqrt(4*Q*n)/Q, so larger Q means FEWER terms).  The Qmax factor inverted the
-        // order: X_0^210(73)/W32 (g = 4, Qmax = 15330; 9 min for all its primes) was weighted 1.3e11,
-        // above X_0(240)/W4 (g = 6, Qmax = 80; ~9 h) at 7.2e10, which sat at rank 138 of 886 open
-        // curves.  The heavy shape for this stage is HIGH GENUS with a SMALL W (many admissible
-        // primes at n = p^g); under this proxy the top 50 open curves are all genus 5-7.
+        // Qmax is the right quantity for the table and budget bounds but not a cost: it does not
+        // enter the per-term work (the t-range is sqrt(4*Q*n)/Q, so larger Q means fewer terms),
+        // and as a factor it put the genus-4 curve above the genus-6 one.  The heavy shape for
+        // this stage is high genus with a small W (many admissible primes at n = p^g).
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
