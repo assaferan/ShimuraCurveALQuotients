@@ -1,6 +1,6 @@
 declare type RngEtaQuot[EtaQuot];
 
-declare attributes RngEtaQuot : M, ds, nor_eta_ds, prec, disc, BaseRing;
+declare attributes RngEtaQuot : M, ds, nor_eta_ds, prec, disc, BaseRing, key_cache;
 
 declare attributes EtaQuot : parent, coeffs, qexp_oo, prec_oo, qexp_0, prec_0, m0mult;
 
@@ -149,21 +149,27 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt : RelPrec := false) -> Rn
         update_precision_eta(~R`nor_eta_ds, prec, R`ds);
         R`prec := prec;
     end if;
+    if not assigned R`key_cache then R`key_cache := AssociativeArray(); end if;
 
     _<q> := Universe(R`nor_eta_ds);
     
     coeffs := [eta`coeffs[x] : x in eta_quots];
 
-    // Cache the series powers by <divisor index, exponent>, and skip zero exponents.
-    // The old line recomputed (nor_eta_ds[i] + O(q^prec))^r[i] from scratch for EVERY eta
-    // quotient r, although the exponents repeat heavily across the hundreds of quotients in one
-    // call, and r[i] = 0 terms were computed only to multiply by 1. Profiled on X_0^51(1) this
-    // was 3451296 calls to '^' on power series -- the single largest remaining count in
-    // BorcherdsForms after the &+ and reduce fixes.
+    // The expansion of each normalised eta quotient prod_d (prod_n (1 - q^(dn)))^(r_d) is
+    // cached ON THE RING by its exponent vector r, at the precision it was last needed.  The
+    // elements of a weakly holomorphic basis are combinations of one fixed set of eta quotients
+    // (132 of them at X_0^95(1)), so expanding the basis at a deep precision -- 187 elements at
+    // precision 4086 on the third rung of the Borcherds ladder, 30 minutes -- recomputed the
+    // same 132 expansions 187 times.  Within one call the powers are shared as before.  The
+    // cache is capped so that a form with thousands of terms does not fill memory with it.
     base_ser := [R`nor_eta_ds[i] + O(q^prec) : i in [1..#R`ds]];
     pow_cache := AssociativeArray();
     prod_nor_etas := [];
     for r in eta_quots do
+        if IsDefined(R`key_cache, r) and AbsolutePrecision(R`key_cache[r]) ge prec then
+            Append(~prod_nor_etas, R`key_cache[r] + O(q^prec));
+            continue;
+        end if;
         prod_r := Universe(base_ser)!1;
         for i in [1..#R`ds] do
             e := r[i];
@@ -174,6 +180,9 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt : RelPrec := false) -> Rn
             end if;
             prod_r *:= pow_cache[key];
         end for;
+        if IsDefined(R`key_cache, r) or #Keys(R`key_cache) lt 1024 then
+            R`key_cache[r] := prod_r;
+        end if;
         Append(~prod_nor_etas, prod_r);
     end for;
     prod_etas := [prod_nor_etas[j] * q^valuation_shifts[j] : j->r in eta_quots];
