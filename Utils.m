@@ -87,9 +87,10 @@ heavy curves are always dispatched early.}
         // 560, 2132 s), and a curve of level 15330 and genus 4 fits the same growth
         // (X_0^210(73)/W32: 559 s for all seven of its primes).  Measured 2026-09-30 on main at
         // 95cf87b, before #56 and #58, on a Mac without the class-number tables, with
-        // vvdata/weyl-campaign/weil-cost-2026-09-30/weil_timing.m (logs alongside it); with
-        // #56 and #58 the times are 2-4x smaller and the ordering is the same.  So sum p^g over
-        // the good primes.
+        // vvdata/weyl-campaign/weil-cost-2026-09-30/weil_timing.m (logs alongside it).  On
+        // lovelace with the tables, to the full prime bound (same directory, lovelace/): the
+        // genus-6 curve took 14.8 h on main, 87 min with #58; the genus-4 one 40 min on main.
+        // The order is the same under every tree.  So sum p^g over the good primes.
         //
         // Qmax is the right quantity for the table and budget bounds but not a cost: it does not
         // enter the per-term work (the t-range is sqrt(4*Q*n)/Q, so larger Q means fewer terms),

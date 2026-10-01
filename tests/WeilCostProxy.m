@@ -4,8 +4,10 @@
 // over the stage's own prime bound; logs alongside it): curve 13029 = X_0^210(73)/W32 (g = 4,
 // Qmax = 15330) took 559 s for all seven of its primes; curve 1071 = X_0(240)/W4 (g = 6,
 // Qmax = 80) took 2959 s through p = 17 alone; curve 7296 = X_0^21(20)/W4 (g = 7) is heavier
-// still (p = 13 alone: 1137 s with #56).  With #56 and #58 every time is 2-4x smaller and the
-// order is the same.  The old proxy (sum 4*Qmax*p^g) put 13029 above 1071.
+// still (p = 13 alone: 1137 s with #56).  On lovelace with the class-number tables, to the
+// full prime bound (same directory, lovelace/): 13029 took 40 min and 1071 14.8 h on main,
+// 87 min with #58; the order is the same under every tree.  The old proxy (sum 4*Qmax*p^g)
+// put 13029 above 1071.
 //
 // The assertions are order claims only, never a cost, and they do not depend on which curves
 // the data currently marks as decided: the proxy returns 0 for a decided curve, so the
