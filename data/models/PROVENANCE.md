@@ -392,6 +392,22 @@ code version*. Anyone bisecting `main` to an older commit will find this file un
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
 
+## `95_1`, `119_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+
+`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
+(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
+lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation; Table 1 and
+the quotient oracle pass.
+
+`models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
+BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
+tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
+second rung of the Borcherds ladder (0-side pole order 3325) had never finished (7 h+); with it the
+five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
+all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), genus 7 and the hyperelliptic involution match
+Table 1, and the quotient oracle passes.
+
 ## Reproducibility status, measured 2026-09-05
 
 Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
