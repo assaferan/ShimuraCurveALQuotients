@@ -12,8 +12,8 @@
 // validates the `W={1}` curve, and concluded the defect was "in THIS generated test, not in the
 // data it compares against". That was correct. What was missing was only the mechanism.
 //
-// ⚠ IT REMAINS OFFLINE because it is SLOW (3945 s = 66 min), not because it is broken.
-// `run_tests.m` globs only `tests/*.m`, so `_offline` cannot reach CI.
+// COST: 117 s on a Mac with the Borcherds search of #63 (3945 s = 66 min before it), so it
+// runs in CI.
 //
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 

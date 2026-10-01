@@ -1,6 +1,5 @@
-// ⚠ OFFLINE, ON COST GROUNDS ONLY (`run_tests.m` globs just `tests/*.m`). Re-deriving 39_2 takes
-// over 17 minutes, which does not belong in a CI slot.  MEASURED 2026-09-25: passes in 680 s,
-// 14 curve comparisons, 3 involution comparisons, 14/14 expected covers matched.
+// COST: 636 s on a Mac (2026-10-01, with the Borcherds search of #63; 680 s on 2026-09-25), so it
+// runs in CI: 14 curve comparisons, 3 involution comparisons, 14/14 expected covers matched.
 // ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because nothing in
 // CI runs this directory and the line here used to assert "the test is expected to pass" without
 // anyone having run it.  State what was measured and when, not what is expected.

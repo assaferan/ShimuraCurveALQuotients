@@ -35,8 +35,8 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // Re-run the control by swapping the two DiagonalMatrix lines below; it must go red.
 //
 // COST 117.5 s, so this file belongs in tests/ and NOT tests/_offline/ -- it is checked on every
-// push. ⚠ That makes 69_1 the only one of 69_1/87_1/39_2/111_1/93_1 that CI sees at all; the
-// other four are offline and run only when someone remembers them.
+// push.  (87_1, 39_2, 111_1 and 93_1 joined it in CI on 2026-10-01, once the Borcherds search of
+// #63 brought each under eleven minutes.)
 //
 // SOURCE for the equation and the involutions: Compositio Math. 153 (2017) 1-40, Table A.1
 // "Equations of level one (continued)", printed page 34. Read three ways (journal page visually,

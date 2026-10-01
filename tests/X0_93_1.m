@@ -1,4 +1,4 @@
-// tests/_offline/X0_93_1.m -- RE-DERIVATION test for X_0^93(1).
+// tests/X0_93_1.m -- RE-DERIVATION test for X_0^93(1).
 //
 // ⚠ WHY THIS FILE EXISTS. Before it, 93_1 was validated only against a COMMITTED FILE: the
 // gy93_* block at the end of tests/GuoYangEquations.m compares data/models/models_93_1.m to
@@ -7,10 +7,10 @@
 // matters, because it regenerates ONLY since the vx fix (`n_oo`, BorcherdsForms.m:771). A silent
 // regression of that fix would have left every committed artifact looking fine.
 //
-// ⚠ OFFLINE BECAUSE IT IS SLOW, NOT BECAUSE IT IS BROKEN: the model took 50927 s (14.1 h) on
-// lovelace with no non-default flags (see the model file header). Far past any CI budget, and past
-// GitHub's job limit, so it lives here with X0_10_19.m / X0_39_2.m / X0_87_1.m.
-//     NORMALIZ_BIN=... magma -b filename:=tests/_offline/X0_93_1.m run_tests.m < /dev/null
+// COST: 370 s on a Mac with the Borcherds search of #63, so it runs in CI.  Before it the model
+// took 50927 s (14.1 h) on lovelace with no non-default flags (see the model file header), far
+// past any CI budget, which is why this file lived in tests/_offline until 2026-10-01.
+//     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
 // ⚠ NORMALIZ_BIN MUST BE SET. Without it a fresh polytope solve fails SILENTLY -- "no solutions"
 // rather than an error (CLAUDE.md) -- which is precisely how X0_10_19 spent 84 min in CI verifying
 // nothing.
