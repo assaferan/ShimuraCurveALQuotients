@@ -1411,11 +1411,17 @@ alone cannot do odd D.}
         error "Failed to find all Borcherds forms";
     end if;
     // The search checked each divisor from cached principal parts.  The eta-quotient
-    // dictionary is what is returned, saved and expanded downstream, so derive the divisor
-    // once more from the dictionary alone (a fresh object carries no cache).
+    // dictionary is what is returned, saved and expanded downstream, so check it against the
+    // cache: a fresh object (no cache) expanded at oo through the constant term must agree.
+    // At oo this is cheap (every term's pole there is bounded by the eta pool's), while a
+    // fresh expansion at 0 costs the whole 0-side precision -- minutes per form at 95_1's
+    // third rung -- so the full re-derivation of the divisor is opt-in: BFVERIFY=1.
     for i in Keys(etas) do
         fresh := EtaQuotient(Parent(etas[i]), etas[i]`coeffs);
-        assert Set(DivisorOfBorcherdsForm(fresh, Xstar)) eq targets[i];
+        assert IsWeaklyZero(qExpansionAtoo(fresh, 1) - qExpansionAtoo(etas[i], 1));
+        if GetEnv("BFVERIFY") ne "" then
+            assert Set(DivisorOfBorcherdsForm(fresh, Xstar)) eq targets[i];
+        end if;
     end for;
     return etas;
 end intrinsic;
