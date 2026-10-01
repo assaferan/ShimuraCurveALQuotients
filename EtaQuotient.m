@@ -81,11 +81,9 @@ intrinsic Parent(eta::EtaQuot) -> RngEtaQuot
 end intrinsic;
 
 procedure update_precision_eta(~nor_eta_ds, Prec, ds)
-    // prod_{n >= 1} (1 - q^n) = sum_k (-1)^k q^(k(3k-1)/2) (Euler), truncated at O(q^Prec), and
-    // substituted q -> q^d term by term.  The product of the Prec binomials, untruncated and
-    // then evaluated at q^d, has degree ~ d*Prec^2/2: at Prec = 4086, d <= 95 that is 790
-    // million coefficients, and Magma 2.29-7 (intel64 under Rosetta) died with a bus error at
-    // 6.7 GB inside one such call (X_0^95(1), third rung of the Borcherds ladder).
+    // prod_{n >= 1} (1 - q^n) = sum_k (-1)^k q^(k(3k-1)/2) (Euler), truncated at O(q^Prec), then
+    // q -> q^d term by term.  Never form the untruncated product of the Prec binomials: its
+    // degree is ~Prec^2/2 before truncation.
     _<q> := LaurentSeriesRing(Integers());
     K := 0;
     while (K+1)*(3*(K+1)-1) div 2 lt Prec do K +:= 1; end while;
@@ -144,24 +142,26 @@ intrinsic qExpansionAtoo(eta::EtaQuot, Prec::RngIntElt : RelPrec := false) -> Rn
     // If we are not able to compute the q-expansion to the desired precision, we set prec to 1
     // so that we will not attempt to update the precision of the eta quotients
 
-    if prec gt Precision(R) then 
+    if prec gt Precision(R) then
         // curious - we are able to update something that does not exist ?
         update_precision_eta(~R`nor_eta_ds, prec, R`ds);
         R`prec := prec;
+        // Entries of the expansion cache below are at the old precision; drop them rather than
+        // keep a table of series that will be recomputed anyway.
+        R`key_cache := AssociativeArray();
     end if;
     if not assigned R`key_cache then R`key_cache := AssociativeArray(); end if;
 
     _<q> := Universe(R`nor_eta_ds);
-    
+
     coeffs := [eta`coeffs[x] : x in eta_quots];
 
-    // The expansion of each normalised eta quotient prod_d (prod_n (1 - q^(dn)))^(r_d) is
-    // cached ON THE RING by its exponent vector r, at the precision it was last needed.  The
-    // elements of a weakly holomorphic basis are combinations of one fixed set of eta quotients
-    // (132 of them at X_0^95(1)), so expanding the basis at a deep precision -- 187 elements at
-    // precision 4086 on the third rung of the Borcherds ladder, 30 minutes -- recomputed the
-    // same 132 expansions 187 times.  Within one call the powers are shared as before.  The
-    // cache is capped so that a form with thousands of terms does not fill memory with it.
+    // The expansion of each normalised eta quotient prod_d (prod_n (1 - q^(dn)))^(r_d) is kept
+    // on the ring by its exponent vector r, at the precision it was last needed: the elements
+    // of a weakly holomorphic basis are combinations of one fixed set of eta quotients, so the
+    // basis is expanded by expanding that set once.  At most 1024 entries are kept, so that a
+    // form with thousands of terms does not fill memory, and the table is emptied whenever the
+    // ring's precision increases.  Within one call the powers are shared as well.
     base_ser := [R`nor_eta_ds[i] + O(q^prec) : i in [1..#R`ds]];
     pow_cache := AssociativeArray();
     prod_nor_etas := [];
@@ -432,7 +432,7 @@ intrinsic '*'(eta1::EtaQuot, eta2::EtaQuot) -> EtaQuot
 
     if assigned eta1`qexp_0 and assigned eta2`qexp_0 then
         eta`qexp_0 := eta1`qexp_0 * eta2`qexp_0;
-        eta`prec_0 := Minimum(eta1`prec_0 + Valuation(eta2`qexp_0), eta2`prec_0 + Valuation(eta2`qexp_0));
+        eta`prec_0 := Minimum(eta1`prec_0 + Valuation(eta2`qexp_0), eta2`prec_0 + Valuation(eta1`qexp_0));
     end if;
 
     return eta;

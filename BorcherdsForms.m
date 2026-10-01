@@ -825,48 +825,38 @@ end function;
 
 // The 0-side "good forms": the members of the pool at 0 (pole order pole_order in q^(1/4D0))
 // whose expansion at 0 has exponents = pole_order mod D0 only, i.e. lives in q^(1/4)Z.  They
-// are the LEFT KERNEL of the pool's coefficient matrix restricted to the other columns, and
-// that kernel is small (about pole_order/D0 dimensional) while the pool is not.
+// are the left kernel of the pool's coefficient matrix restricted to the other columns; that
+// kernel is small (about pole_order/D0 dimensional) while the pool is not.
 //
-// This used to be reached through basis_of_weakly_holomorphic_forms: a full EchelonForm WITH
-// TRANSFORM of the pool over Q, a Kernel on the echelon basis, a pool^2 eta-quotient
-// recombination of every echelon row and an oo-expansion of each.  The transform is where the
-// time went -- at 51_1, pole order 800: 2.2 s for the reduced matrix alone, 112 s with the
-// transform (49-digit entries), and ~PO^4.4 beyond, so the deep rungs of the m-ladder (0-side
-// pole order D0*|m|: 3325 on the second rung of 95_1) took hours.  Only the good forms are
-// ever used afterwards, and the kernel gives exactly them.  Measured at 51_1, pole order
-// 2601: kernel over Z 234 s, LLL 50 s (coordinates 842 -> 145 digits), 57 eta-quotient
-// combinations 17 s, their oo-expansions 2 s -- against hours before.
+// Returns the good forms' 0-expansions restricted to the q^(1/4)-columns, the forms as
+// eta-quotient combinations (rows correspond), and the deepest pole at oo over the pool.
 //
-// Returns the good forms' 0-expansions restricted to the q^(1/4)-columns, the good forms as
-// eta-quotient combinations (rows correspond), and the deepest pole at oo over the whole pool.
-//
-// The kernel contains two kinds of rows.  Rows with a nonzero 0-expansion are the good forms
-// proper; they are returned in reduced echelon form, which is the basis the echelon route
-// produced (its selection picked rows of the pool's reduced echelon form), so the search's
-// solution -- one point of an affine space, chosen by the row basis -- is the same form as
-// before.  Rows with zero 0-expansion are dependencies among pool elements; they are not
-// eta-quotient identities but forms holomorphic at 0 with a pole at oo (all 66 at 95_1's
-// first rung are nonzero at oo), and the echelon route kept them as rows too, so they stay.
-// Only a row zero at both cusps is dropped.
+// The rows are canonical, so the search's solution (one point of an affine space, chosen by
+// the row basis) does not depend on how the kernel was computed.  Kernel rows with zero
+// expansion at 0 are dependencies among pool elements -- as forms, holomorphic at 0 with a
+// pole at oo, or identically zero -- and are returned in reduced echelon form with respect to
+// the pool coordinates.  The other rows carry their 0-expansions in reduced echelon form, and
+// each one's pool coordinates are reduced modulo the dependency rows; two pool combinations
+// with the same expansion at 0 differ by a dependency, so this fixes the combination.
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 eq 0];
     den := Lcm([Denominator(x) : x in Eltseq(coeffs)]);
     MZ := ChangeRing(den*coeffs, Integers());
-    K := ChangeRing(LLL(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div))), Rationals());
+    K := ChangeRing(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div)), Rationals());
     G := K * coeffs;
-    Rq<q> := LaurentSeriesRing(Rationals());
-    pool_oo := Matrix(Rq, #full_basis, 1, [f`qexp_oo : f in full_basis]);
-    Koo := K * pool_oo;
     good := [i : i in [1..Nrows(G)] | not IsZero(G[i])];
-    rel := [i : i in [1..Nrows(G)] | IsZero(G[i]) and not IsWeaklyZero(Koo[i][1])];
-    Gg := Matrix(Rationals(), #good, Ncols(G), [G[i] : i in good]);
-    Gg, U := EchelonForm(Gg);
+    rel := [i : i in [1..Nrows(G)] | IsZero(G[i])];
+    Kr := EchelonForm(Matrix(Rationals(), #rel, Ncols(K), [K[i] : i in rel]));
+    Gg, U := EchelonForm(Matrix(Rationals(), #good, Ncols(G), [G[i] : i in good]));
     Kg := U * Matrix(Rationals(), #good, Ncols(K), [K[i] : i in good]);
-    K := VerticalJoin(Kg, Matrix(Rationals(), #rel, Ncols(K), [K[i] : i in rel]));
-    G := VerticalJoin(Gg, ZeroMatrix(Rationals(), #rel, Ncols(G)));
+    for j in [1..Nrows(Kr)] do
+        c := Depth(Kr[j]);
+        Kg := Kg - Matrix(Rationals(), Nrows(Kg), 1, [Kg[i][c] : i in [1..Nrows(Kg)]]) * Matrix(Kr[j]);
+    end for;
+    K := VerticalJoin(Kg, Kr);
+    G := VerticalJoin(Gg, ZeroMatrix(Rationals(), Nrows(Kr), Ncols(G)));
     assert IsZero(Submatrix(G, [1..Nrows(G)], non_div));
     if GetEnv("BFPROGRESS") ne "" then
         WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o  dependencies=%o\n",
@@ -876,6 +866,7 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     // The oo-expansion of each form is inherited from the pool elements through the sum; the
     // 0-expansion is the row of G (the pool elements do not carry theirs, see
     // weakly_holomorphic_pool), known through the constant term.
+    Rq<q> := LaurentSeriesRing(Rationals());
     for i in [1..#etas] do
         etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
         etas[i]`prec_0 := 1;
@@ -1096,13 +1087,9 @@ alone cannot do odd D.}
 
             // The shift here sets the column<->exponent mapping: column 1 is the coefficient of
             // q^(-n_oo), which is why the SAME n_oo is handed to coeffs_to_divisor_matrix below.
-            // n0 is calibrated on the ZERO side, while these are the oo-expansions of the
-            // zero-side forms, whose pole at oo is NOT bounded by n0 (93_1 died on a q^-60 pole
-            // when this was q^n0 flat); the maximum with the actual minimum valuation fixes the
-            // alignment and is a no-op wherever every oo-pole is within n0.
-            // The deepest pole at oo over the WHOLE pool at 0, not just over the good forms: the
-            // echelon route took it over every echelon row, and it sets the pole order of the
-            // oo-side pool below.
+            // n0 is calibrated on the ZERO side and does not bound the pole at oo of these
+            // forms, so the shift is the deepest pole at oo over the whole pool at 0 (not just
+            // over the good forms); it also sets the pole order of the oo-side pool below.
             n_oo := Maximum(n0, deepest_oo_0);
             assert n_oo ge -Minimum([Valuation(f) : f in ech_fs_oo]);
             if bf_progress then
@@ -1413,13 +1400,15 @@ alone cannot do odd D.}
     // The search checked each divisor from cached principal parts.  The eta-quotient
     // dictionary is what is returned, saved and expanded downstream, so check it against the
     // cache: a fresh object (no cache) expanded at oo through the constant term must agree.
-    // At oo this is cheap (every term's pole there is bounded by the eta pool's), while a
-    // fresh expansion at 0 costs the whole 0-side precision -- minutes per form at 95_1's
-    // third rung -- so the full re-derivation of the divisor is opt-in: BFVERIFY=1.
+    // At oo this is cheap (every term's pole there is bounded by the eta pool's).  A fresh
+    // expansion at 0 costs the whole 0-side precision, so the divisor is re-derived from the
+    // dictionary at both cusps when that is cheap -- even D (no 0-side pole), or a 0-side
+    // pole order up to 1000 -- and always under BFVERIFY=1.
+    verify_0 := GetEnv("BFVERIFY") ne "" or IsEven(Xstar`D) or pole_order le 1000;
     for i in Keys(etas) do
         fresh := EtaQuotient(Parent(etas[i]), etas[i]`coeffs);
         assert IsWeaklyZero(qExpansionAtoo(fresh, 1) - qExpansionAtoo(etas[i], 1));
-        if GetEnv("BFVERIFY") ne "" then
+        if verify_0 then
             assert Set(DivisorOfBorcherdsForm(fresh, Xstar)) eq targets[i];
         end if;
     end for;
