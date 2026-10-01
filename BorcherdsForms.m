@@ -1249,6 +1249,9 @@ alone cannot do odd D.}
                         assert ram[j] eq infty;
                         Remove(~ram, j);
                     end if;
+                    // A cover ramified only at the point taken as infinity leaves no divisor
+                    // to build; this choice of infinity fails and the next one is tried.
+                    if IsEmpty(ram) then found_all := false; break; end if;
                     deg := &+[pt[3] : pt in ram];
                     div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
                     Append(~ram, infty);
