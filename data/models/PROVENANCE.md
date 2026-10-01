@@ -392,7 +392,13 @@ code version*. Anyone bisecting `main` to an older commit will find this file un
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
 
-## `95_1`, `119_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+
+`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
+order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
+lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
+published equation, and Table 1 and the quotient oracle pass. Its `[1,53]` quotient is stored
+with an `h` term (`y^2 + h y = f`).
 
 `models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
 (m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
