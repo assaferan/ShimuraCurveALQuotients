@@ -124,7 +124,7 @@ tab2 cat:= Row("Atkin--Lehner involutions as hyperelliptic involutions (Section~
 // remaining Phase-B snapshots
 T2 := [
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves1.dat">,
- <"Special fiber (Section~\\ref{sec:specialfiber})",
+ <"Special fiber (Section~\\ref{sec:specialfibermethod})",
         "data/curves_after_FilterBySpecialFiber.dat">,
  <"Atkin--Lehner fixed points (Section~\\ref{sec:fixedpointsAL})",
         "data/curves_after_FilterByALFixedPointsOnQuotient.dat">,
