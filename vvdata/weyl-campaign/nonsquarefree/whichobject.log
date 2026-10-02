@@ -1,0 +1,15 @@
+base     N'     U = Hall(DN) cap Hall(DN') deg   g(X/U)  g(base/U) note
+15_4     1      [ 1, 3, 5, 15 ]            6     0       0         genus 0: a 
+hauptmodul exists
+21_4     1      [ 1, 3, 7, 21 ]            6     1       0         higher genus:
+no hauptmodul
+33_4     1      [ 1, 3, 11, 33 ]           6     3       0         higher genus:
+no hauptmodul
+15_8     2      [ 1, 3, 5, 15 ]            4     1       0         higher genus:
+no hauptmodul
+10_9     1      [ 1, 2, 5, 10 ]            12    1       0         higher genus:
+no hauptmodul
+14_9     1      [ 1, 2, 7, 14 ]            12    1       0         higher genus:
+no hauptmodul
+22_9     1      [ 1, 2, 11, 22 ]           12    3       0         higher genus:
+no hauptmodul

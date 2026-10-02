@@ -149,3 +149,50 @@ and that is the step this file retracted above: the containment of the two group
 upstairs sits over a W-orbit downstairs at a point with nontrivial stabiliser. The degeneracy law
 above is independent of it and settled; the star step is not, so the branch data of 15_8, 10_9,
 14_9, 22_9 and 33_4 remains open.
+
+## ⚠⚠ RETRACTION of the 21_4 hauptmodul, and the structural reason the route stops at 15_4
+## (whichobject.m, 2026-10-02)
+
+**There is no map X^*(D,N) -> X^*(D,N').** Such a map needs the top Atkin-Lehner group inside
+<Gamma_0(N'), W'>, and the new involutions are not: w_4 has reduced norm 4, so it would have to be
+2 times a norm-one unit of the maximal order, i.e. w_4/2 integral, which a primitive element of norm
+4 is not. Classically w_4 = (0 -1; 4 0)/2 is visibly outside SL_2(Z), and the reason is geometric --
+w_4 sends (E, C) to (E/C, ...), so the forgetful map does not descend. The degree 3 I computed for
+"X^*(21,4) -> X^*(21,1)" was an arithmetic ratio psi(N)/psi(N') * |W'|/|W_top|, not the degree of a
+map. ⇒ **The degree-3 Hurwitz solve of hurwitz21.m is about an object that does not exist, and the
+hauptmodul 1/s = (t^3 - 4/3 t + 16/27)/(t^2 + 29/12 t + 22/9) is RETRACTED.** Its unique, rational
+solution with fibres over Q(sqrt -7) and Q(sqrt -3) was a solution of that Hurwitz problem; the
+rationality follows from the input being Galois-stable, so it was not the independent confirmation I
+took it for.
+
+**What does map down** is X_0^D(N)/U -> X_0^D(N')/U with U = Hall(DN) cap Hall(DN') -- the largest
+Atkin-Lehner group acting on both levels -- of degree psi(N)/psi(N'). Tu's t_4 is exactly this for
+15_4: he quotients by W_15 = {1,3,5,15}, not by Hall(60). And the genus of that curve decides
+whether a hauptmodul exists at all:
+
+    base   U = Hall(DN) cap Hall(DN')   degree   g(X_0^D(N)/U)
+    15_4   {1,3,5,15}                  6        0     <- a hauptmodul exists
+    21_4   {1,3,7,21}                  6        1
+    33_4   {1,3,11,33}                 6        3
+    15_8   {1,3,5,15}                  4        1
+    10_9   {1,2,5,10}                 12        1
+    14_9   {1,2,7,14}                 12        1
+    22_9   {1,2,11,22}                12        3
+
+⇒ **15_4 is the ONLY one of the seven whose curve has genus 0.** That is a complete structural
+explanation of why Tu treats 15_4 and no other non-squarefree case, and why Guo-Yang's Remark 39
+cites him for exactly this curve. **The 15_4 route does not generalise**, and the reason is not
+missing branch data or a missing Hauptmodul in the literature: for the other six the object is a
+curve of genus 1 or 3, so there is no Hauptmodul to find. Any equation for them has to come from a
+positive-genus model, i.e. from the pipeline's own machinery once it handles non-squarefree levels,
+not from a Belyi-type solve.
+
+### Everything in this file that still stands
+
+* The normaliser theorem (`normaliser.m`) -- independent of all of the above.
+* The local lattice structure at p^e and the m = 0 analysis at a p^2-scaled plane, with its counting
+  check (`../level-p2/`) -- independent, and it is what `6_25` and `6_49` need.
+* The degeneracy map's ramification law (`degen.m`), verified against the genus formula on eleven
+  cases.
+* `15_4`: `cover15.m` reproducing Tu's six values to 60 digits, which is about the right object
+  (degree 6 out of X_0^15(4)/W_15, genus 0).
