@@ -1,0 +1,9 @@
+form -2: ord_oo = -30, ord_0 (in q^(1/60)) = -30, f0 const = 4
+form -1: ord_oo = -10, ord_0 (in q^(1/60)) = -45, f0 const = 4
+form 9: ord_oo = -30, ord_0 (in q^(1/60)) = -30, f0 const = 8
+form 10: ord_oo = -15, ord_0 (in q^(1/60)) = -30, f0 const = 8
+form 11: ord_oo = -30, ord_0 (in q^(1/60)) = -30, f0 const = 8
+form 12: ord_oo = -30, ord_0 (in q^(1/60)) = -30, f0 const = 12
+form 13: ord_oo = -10, ord_0 (in q^(1/60)) = -45, f0 const = 4
+form 14: ord_oo = -15, ord_0 (in q^(1/60)) = -30, f0 const = 4
+form 15: ord_oo = -30, ord_0 (in q^(1/60)) = -30, f0 const = 4

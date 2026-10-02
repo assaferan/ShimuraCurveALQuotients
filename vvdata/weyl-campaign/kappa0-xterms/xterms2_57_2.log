@@ -1,0 +1,21 @@
+X_0^57(2), M = 228
+form -2 (ord_oo 57, ord_0 0/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form -1 (ord_oo 47, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 9 (ord_oo 114, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 10 (ord_oo 57, ord_0 0/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 11 (ord_oo 114, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 12 (ord_oo 114, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 13 (ord_oo 47, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 14 (ord_oo 57, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+form 15 (ord_oo 114, ord_0 57/228): (d, ord at tau_d, extra) = []
+    on divisor only: []
+DISCREPANCIES (ord = 0, extra != 0): 0
+XTERMS2_DONE
