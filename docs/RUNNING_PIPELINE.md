@@ -156,20 +156,20 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 
-* **`FilterByWeilPolynomial`**: **tens of minutes** on a single curve at the top end, and the top
-  end is **high genus with a LARGE `W`**. The stage needs one trace at `n = p^g` per good prime up
-  to its bound, and Eichler--Selberg evaluates it as a sum over the `#W` elements of `W` of about
-  `2 sqrt(n/Q_w)` terms, so the cost is `#W * sum_p p^{g/2}`, which is what `CurveCostProxy` now
-  returns. Measured on lovelace with the class-number tables over 34 curves spanning genus 3 to 7,
-  `#W` from 1 to 64 and level from 30 to 30030, on `main` at `95b19e6`
-  (`vvdata/weyl-campaign/weil-retime-2026-10-02/` on the `m0-theta-campaign` branch): the slowest
-  took 33 min (`X_0(690)/W_{16}`, `g = 6`), and `X_0(240)/W_4` (`g = 6`) took 6 min, against 87 min
-  with #58 alone and 14.8 h before it. **The level has no measurable effect** (the fitted exponent
-  is `-0.07`), so `Qmax` enters the prime bounds and not the cost. The makespan of this stage is
-  roughly the slowest single curve, so getting that ordering right is what the heavy-first dispatch
-  is for; of the curve pairs whose times differ by more than a factor 10, the estimate orders 216
-  of 220 correctly. ⚠ A residual spread of 34x remains, so it orders chunks and is not a cost:
-  quote the measured times.
+* **`FilterByWeilPolynomial`**: up to **about 1.7 h** on a single curve at the top end, and the top
+  end is **high genus at a moderate level** — not a big level, and not a large `W` either. The stage
+  needs one trace at `n = p^g` per good prime up to its bound, and Eichler--Selberg evaluates it as
+  a sum over the `#W` elements of `W` of about `2 sqrt(n/Q_w)` terms, so the cost is
+  `#W * sum_p p^{g/2}`, which is what `CurveCostProxy` now returns. Measured on lovelace with the
+  class-number tables over 36 curves spanning genus 3 to 7, `#W` from 1 to 64 and level from 30 to
+  30030, on `main` at `95b19e6` (`vvdata/weyl-campaign/weil-retime-2026-10-02/` on the
+  `m0-theta-campaign` branch): the slowest two are `X_0(595)/W_8` (`g = 5`) at 101 min and
+  `X_0^6(97)/W_2` (`g = 6`) at 74 min, while `X_0(240)/W_4` (`g = 6`) takes 6 min, against 87 min
+  with #58 alone and 14.8 h before it. The makespan of this stage is roughly the slowest single
+  curve, so getting that ordering right is what the heavy-first dispatch is for; of the curve pairs
+  whose times differ by more than a factor 10 the estimate orders 246 of 271 correctly, against 198
+  for the sum of `p^g` it used before. ⚠ A residual spread of 237x remains and real pairs are
+  mis-ordered, so it orders chunks and is not a cost: quote the measured times.
 * **`FilterByTwistedTrace`**: modular symbols of level D·N, plus T_p for every good p < 4g².
   Small levels take seconds (level 1530 takes about 30 s), but the largest levels (D·N from about
   2000 up to 15330) take **hours each**, and the sweep's top levels ran for more than 4 h.

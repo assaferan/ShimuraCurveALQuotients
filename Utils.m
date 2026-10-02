@@ -87,20 +87,24 @@ fast), so the genuinely heavy curves are always dispatched early.}
         // elements w of W of a sum over t with t^2 < 4n/Q_w, i.e. about 2 sqrt(n/Q_w) terms, so
         // the term count per prime grows like p^(g/2) and the number of inner sums like #W.
         //
-        // Measured on lovelace with the class-number tables, over 34 curves spanning genus 3 to
+        // Measured on lovelace with the class-number tables, over 36 curves spanning genus 3 to
         // 7, #W from 1 to 64 and level from 30 to 30030, on main at 95b19e6 (so with #56, #57
         // and #58): vvdata/weyl-campaign/weil-retime-2026-10-02/ on the m0-theta-campaign
-        // branch.  #W * sum p^(g/2) is what fits: of the 220 curve pairs whose times differ by
-        // more than a factor 10 it orders 216 correctly, against 166 for the sum of p^g that
-        // this function used before.  The level has no measurable effect (fitting
-        // #W^a (sum p^(g/2))^b (D*N)^c gives c = -0.07), which is why Qmax belongs in the prime
-        // bounds and not in the cost, and the Q_w^(-1/2) weights of the exact term count make
-        // the fit worse rather than better: the cost grows with #W rather than shrinking with
-        // the Q_w.  The best simple fit is #W^1.3 (sum p^(g/2))^1.6, which cuts the residual
-        // spread from 34x to 24x; the exponents are not used here, since this only has to order
-        // the chunks.  The whole stage is now minutes per curve, not hours: the slowest of the
-        // 34 took 33 min and the three curves measured in 2026-09-30's run came in at 9.5 min,
-        // 6 min and 86 s.
+        // branch.  Of the 271 curve pairs whose times differ by more than a factor 10, this
+        // orders 246 correctly against 198 for the sum of p^g that the function used before; of
+        // the 520 pairs differing by more than a factor 2, 440 against 343.  So both the #W and
+        // the exponent g/2 in place of g are improvements, and that is as much as the data
+        // supports: among #W * sum p^(a g) for a between 0.5 and 0.8, and #W * max p^(a g), the
+        // counts differ by less than the noise of 36 curves, so the term count is kept because
+        // it is the principled one rather than the best-scoring one.
+        //
+        // ⚠ A residual spread of 237x remains (time over estimate), so this orders chunks and is
+        // never a cost.  It still mis-orders real pairs: X_0^6(97)/W2 (g = 6, 74 min) sits below
+        // X_0^210(73)/W32 (g = 4, 86 s).  The two slowest curves of the 36 are X_0(595)/W8
+        // (g = 5, 101 min) and that X_0^6(97)/W2, both at level about 590 with a SMALL W, so the
+        // heavy shape is high genus at moderate level and a large W is not what makes a curve
+        // slow -- #W earns its place in the ordering, not in the extremes.  The level is weakly
+        // positive (fitting #W^a (sum p^(g/2))^b (D*N)^c gives c = +0.15), not absent.
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
