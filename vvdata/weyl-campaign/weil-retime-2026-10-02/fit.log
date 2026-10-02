@@ -1,0 +1,16 @@
+34 curves with a measured time
+
+  times differing > 2x: #W sum p^(g/2)   mis-orders  44 of 452
+  times differing > 2x: sum p^g          mis-orders 153 of 452
+
+  times differing > 3x: #W sum p^(g/2)   mis-orders  24 of 387
+  times differing > 3x: sum p^g          mis-orders 129 of 387
+
+  times differing > 5x: #W sum p^(g/2)   mis-orders  14 of 311
+  times differing > 5x: sum p^g          mis-orders  95 of 311
+
+  times differing >10x: #W sum p^(g/2)   mis-orders   4 of 220   [(1217, 13029), (1217, 18378), (1217, 979), (1219, 18378)]
+  times differing >10x: sum p^g          mis-orders  54 of 220
+
+  #W^a (sum p^(g/2))^b   exponents [-0.29, 1.57]  residual spread 24x
+  ... * (D N)^c          exponents [-0.2, 1.55, -0.07]  residual spread 24x

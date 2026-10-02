@@ -1,0 +1,23 @@
+curve 18378: D=30030 N=1 g=3 #W=64 Qmax=30030 | table bound 209, budget bound 
+83, ceiling -> effective bound 53
+p=17  cpu 4.550 s  wall 4.540 s  cumulative cpu 4.5500 s   wp=T^6 + 14*T^5 + 
+114*T^4 + 567*T^3 + 1938*T^2 + 4046*T + 4913
+p=19  cpu 5.030 s  wall 5.020 s  cumulative cpu 9.5800 s   wp=T^6 + 13*T^5 + 
+97*T^4 + 481*T^3 + 1843*T^2 + 4693*T + 6859
+p=23  cpu 6.520 s  wall 6.520 s  cumulative cpu 16.100 s   wp=T^6 + 9*T^5 + 
+47*T^4 + 245*T^3 + 1081*T^2 + 4761*T + 12167
+p=29  cpu 9.270 s  wall 9.260 s  cumulative cpu 25.370 s   wp=T^6 + 7*T^5 + 
+73*T^4 + 399*T^3 + 2117*T^2 + 5887*T + 24389
+p=31  cpu 9.960 s  wall 9.980 s  cumulative cpu 35.330 s   wp=T^6 + 7*T^5 + 
+93*T^4 + 427*T^3 + 2883*T^2 + 6727*T + 29791
+p=37  cpu 12.91 s  wall 12.87 s  cumulative cpu 48.240 s   wp=T^6 + 8*T^5 + 
+60*T^4 + 563*T^3 + 2220*T^2 + 10952*T + 50653
+p=41  cpu 14.71 s  wall 14.72 s  cumulative cpu 62.950 s   wp=T^6 + 7*T^5 + 
+74*T^4 + 287*T^3 + 3034*T^2 + 11767*T + 68921
+p=43  cpu 16.02 s  wall 16.04 s  cumulative cpu 78.970 s   wp=T^6 + 12*T^5 + 
+114*T^4 + 655*T^3 + 4902*T^2 + 22188*T + 79507
+p=47  cpu 17.92 s  wall 17.94 s  cumulative cpu 96.890 s   wp=T^6 + 18*T^5 + 
+228*T^4 + 1789*T^3 + 10716*T^2 + 39762*T + 103823
+p=53  cpu 39.38 s  wall 37.28 s  cumulative cpu 136.27 s   wp=T^6 + T^5 + 
+143*T^4 + 77*T^3 + 7579*T^2 + 2809*T + 148877
+DONE  total cpu 136.31 s  wall 134.21 s

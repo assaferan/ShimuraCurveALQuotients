@@ -1,0 +1,15 @@
+curve 9325: D=35 N=66 g=5 #W=32 Qmax=2310 | table bound 41, budget bound 23, 
+ceiling -> effective bound 23
+p=13  cpu 17.87 s  wall 17.82 s  cumulative cpu 17.870 s   wp=T^10 + 8*T^9 + 
+65*T^8 + 304*T^7 + 1418*T^6 + 5008*T^5 + 18434*T^4 + 51376*T^3 + 142805*T^2 + 
+228488*T + 371293
+p=17  cpu 37.22 s  wall 37.58 s  cumulative cpu 55.090 s   wp=T^10 + 13*T^9 + 
+135*T^8 + 904*T^7 + 5224*T^6 + 22934*T^5 + 88808*T^4 + 261256*T^3 + 663255*T^2 +
+1085773*T + 1419857
+p=19  cpu 86.73 s  wall 83.03 s  cumulative cpu 141.82 s   wp=T^10 + 11*T^9 + 
+99*T^8 + 628*T^7 + 3518*T^6 + 16434*T^5 + 66842*T^4 + 226708*T^3 + 679041*T^2 + 
+1433531*T + 2476099
+p=23  cpu 1532. s  wall 1361. s  cumulative cpu 1673.5 s   wp=T^10 + 11*T^9 + 
+127*T^8 + 836*T^7 + 5670*T^6 + 26818*T^5 + 130410*T^4 + 442244*T^3 + 1545209*T^2
++ 3078251*T + 6436343
+DONE  total cpu 1673.5 s  wall 1499.3 s

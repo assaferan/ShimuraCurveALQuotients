@@ -1,0 +1,9 @@
+curve 1217: D=1 N=330 g=7 #W=8 Qmax=165 | table bound 20, budget bound 13, 
+ceiling -> effective bound 13
+p=7  cpu 10.30 s  wall 10.30 s  cumulative cpu 10.310 s   wp=T^14 + 9*T^13 + 
+49*T^12 + 210*T^11 + 757*T^10 + 2311*T^9 + 6549*T^8 + 17692*T^7 + 45843*T^6 + 
+113239*T^5 + 259651*T^4 + 504210*T^3 + 823543*T^2 + 1058841*T + 823543
+p=13  cpu 1422. s  wall 1270. s  cumulative cpu 1432.2 s   wp=T^14 + 2*T^13 + 
+7*T^12 + 52*T^11 + 393*T^10 + 174*T^9 + 4311*T^8 + 20312*T^7 + 56043*T^6 + 
+29406*T^5 + 863421*T^4 + 1485172*T^3 + 2599051*T^2 + 9653618*T + 62748517
+DONE  total cpu 1432.3 s  wall 1280.8 s

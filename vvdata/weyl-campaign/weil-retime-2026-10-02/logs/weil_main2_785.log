@@ -1,0 +1,29 @@
+curve 785: D=1 N=165 g=4 #W=4 Qmax=55 | table bound 265, budget bound 132, 
+ceiling -> effective bound 53
+p=2  cpu 0.06000 s  wall 0.06000 s  cumulative cpu 0.070000 s   wp=T^8 + 2*T^7 +
+4*T^6 + 6*T^5 + 11*T^4 + 12*T^3 + 16*T^2 + 16*T + 16
+p=7  cpu 0.2000 s  wall 0.1900 s  cumulative cpu 0.27000 s   wp=T^8 + 12*T^6 + 
+32*T^5 + 54*T^4 + 224*T^3 + 588*T^2 + 2401
+p=13  cpu 0.5400 s  wall 0.5400 s  cumulative cpu 0.81000 s   wp=T^8 - 4*T^7 + 
+12*T^6 - 28*T^5 + 230*T^4 - 364*T^3 + 2028*T^2 - 8788*T + 28561
+p=17  cpu 0.9800 s  wall 0.9800 s  cumulative cpu 1.7900 s   wp=T^8 + 8*T^7 + 
+76*T^6 + 408*T^5 + 2006*T^4 + 6936*T^3 + 21964*T^2 + 39304*T + 83521
+p=19  cpu 1.140 s  wall 1.140 s  cumulative cpu 2.9300 s   wp=T^8 + 4*T^7 + 
+44*T^6 + 132*T^5 + 886*T^4 + 2508*T^3 + 15884*T^2 + 27436*T + 130321
+p=23  cpu 1.670 s  wall 1.670 s  cumulative cpu 4.6000 s   wp=T^8 + 8*T^7 + 
+60*T^6 + 168*T^5 + 934*T^4 + 3864*T^3 + 31740*T^2 + 97336*T + 279841
+p=29  cpu 2.690 s  wall 2.690 s  cumulative cpu 7.2900 s   wp=T^8 + 4*T^7 + 
+100*T^6 + 300*T^5 + 4166*T^4 + 8700*T^3 + 84100*T^2 + 97556*T + 707281
+p=31  cpu 3.060 s  wall 3.070 s  cumulative cpu 10.350 s   wp=T^8 + 8*T^7 + 
+92*T^6 + 744*T^5 + 3782*T^4 + 23064*T^3 + 88412*T^2 + 238328*T + 923521
+p=37  cpu 4.510 s  wall 4.530 s  cumulative cpu 14.860 s   wp=T^8 - 16*T^7 + 
+156*T^6 - 1264*T^5 + 8630*T^4 - 46768*T^3 + 213564*T^2 - 810448*T + 1874161
+p=41  cpu 5.600 s  wall 5.620 s  cumulative cpu 20.460 s   wp=T^8 - 4*T^7 + 
+148*T^6 - 444*T^5 + 8822*T^4 - 18204*T^3 + 248788*T^2 - 275684*T + 2825761
+p=43  cpu 6.380 s  wall 6.400 s  cumulative cpu 26.840 s   wp=T^8 + 8*T^7 + 
+108*T^6 + 392*T^5 + 4358*T^4 + 16856*T^3 + 199692*T^2 + 636056*T + 3418801
+p=47  cpu 7.740 s  wall 7.780 s  cumulative cpu 34.580 s   wp=T^8 + 8*T^7 + 
+156*T^6 + 744*T^5 + 9478*T^4 + 34968*T^3 + 344604*T^2 + 830584*T + 4879681
+p=53  cpu 10.49 s  wall 10.49 s  cumulative cpu 45.070 s   wp=T^8 + 16*T^7 + 
+124*T^6 + 1008*T^5 + 9014*T^4 + 53424*T^3 + 348316*T^2 + 2382032*T + 7890481
+DONE  total cpu 45.100 s  wall 45.190 s
