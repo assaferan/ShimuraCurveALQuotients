@@ -82,24 +82,25 @@ fast), so the genuinely heavy curves are always dispatched early.}
 
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
-        // class-number database, the disc budget, and the per-genus ceiling), i.e. one trace at
-        // n = p^g per prime.  Measured on lovelace with the class-number tables, to the full
-        // prime bound, 2026-09-30 (vvdata/weyl-campaign/weil-cost-2026-09-30/lovelace/ on the
-        // m0-theta-campaign branch): X_0(240)/W4 (g = 6, Qmax = 80) took 14.8 h on main at
-        // 95cf87b and 87 min with #58, with per-prime times 55, 208, 353, 806, 1352, 2448 s at
-        // p = 7, 11, 13, 17, 19, 23, i.e. growing like p^(g/2); X_0^210(73)/W32 (g = 4,
-        // Qmax = 15330) took 40 min on main; X_0^21(20)/W4 (g = 7) is heavier still (p = 13
-        // alone: 1137 s with #56).
+        // class-number database, the disc budget, and the per-genus ceiling).  The dominant call
+        // is the trace of T_n at n = p^g, which Eichler-Selberg evaluates as a sum over the
+        // elements w of W of a sum over t with t^2 < 4n/Q_w, i.e. about 2 sqrt(n/Q_w) terms, so
+        // the term count per prime grows like p^(g/2) and the number of inner sums like #W.
         //
-        // The sum of p^g over the good primes orders those three correctly.  It is not a model
-        // of the time: within a curve the growth is p^(g/2), and #W * sum p^(g/2) would order
-        // the same three correctly too, but it puts a genus-4 curve measured at 4 min
-        // (X_0^39(38)/W, #W = 16, 12 primes) above the 87-min genus-6 one, while sum p^g puts a
-        // genus-4 curve measured at 93 s (X_0(165)/W, #W = 4, 13 primes) above the 40-min
-        // X_0^210(73)/W32.  Neither fits all five measurements; the heavy shape for this stage
-        // is high genus with many admissible primes, which sum p^g weights most, so it is kept
-        // until the stage is re-timed on current main across genus, #W and level.  Qmax enters
-        // the prime bounds only, not the per-term work.
+        // Measured on lovelace with the class-number tables, over 34 curves spanning genus 3 to
+        // 7, #W from 1 to 64 and level from 30 to 30030, on main at 95b19e6 (so with #56, #57
+        // and #58): vvdata/weyl-campaign/weil-retime-2026-10-02/ on the m0-theta-campaign
+        // branch.  #W * sum p^(g/2) is what fits: of the 220 curve pairs whose times differ by
+        // more than a factor 10 it orders 216 correctly, against 166 for the sum of p^g that
+        // this function used before.  The level has no measurable effect (fitting
+        // #W^a (sum p^(g/2))^b (D*N)^c gives c = -0.07), which is why Qmax belongs in the prime
+        // bounds and not in the cost, and the Q_w^(-1/2) weights of the exact term count make
+        // the fit worse rather than better: the cost grows with #W rather than shrinking with
+        // the Q_w.  The best simple fit is #W^1.3 (sum p^(g/2))^1.6, which cuts the residual
+        // spread from 34x to 24x; the exponents are not used here, since this only has to order
+        // the chunks.  The whole stage is now minutes per curve, not hours: the slowest of the
+        // 34 took 33 min and the three curves measured in 2026-09-30's run came in at 9.5 min,
+        // 6 min and 86 s.
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
@@ -110,9 +111,9 @@ fast), so the genuinely heavy curves are always dispatched early.}
         s := R!0;
         for p in PrimesUpTo(b) do
             if DN mod p eq 0 then continue; end if;
-            s +:= R!(p^g);
+            s +:= Sqrt(R!(p^g));
         end for;
-        return s;
+        return R!nW * s;
     end if;
 
     // trace-formula stages: choose prime bound and largest Hecke index per stage

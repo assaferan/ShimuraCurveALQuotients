@@ -156,18 +156,20 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 
-* **`FilterByWeilPolynomial`**: hours on a single curve at the top end, and the top end is
-  **high genus with a small `W`**, not a big level. The stage needs one trace at `n = p^g` per
-  good prime up to its bound. Measured on lovelace with the class-number tables, to the full
-  prime bound (`vvdata/weyl-campaign/weil-cost-2026-09-30/lovelace/` on the `m0-theta-campaign`
-  branch): `X_0(240)/W_4` (`g = 6`, `Qmax = 80`) took 14.8 h on `main` at `95cf87b` and 87 min
-  with #58, while the biggest level in the stage, `X_0^{210}(73)/W_{32}` (`g = 4`,
-  `Qmax = 15330`), took 40 min on `main`; a `g = 7` curve (`X_0^{21}(20)/W_4`) is heavier still.
-  Within one curve the per-prime time grows like `p^{g/2}` (55, 208, 353, 806, 1352, 2448 s at
-  `p = 7` to `23` for the genus-6 curve with #58). `CurveCostProxy` sums `p^g` over the good
-  primes, which orders the three measured curves correctly. The makespan of this stage is
-  roughly the slowest single curve, so getting that ordering right is what the heavy-first
-  dispatch is for.
+* **`FilterByWeilPolynomial`**: **tens of minutes** on a single curve at the top end, and the top
+  end is **high genus with a LARGE `W`**. The stage needs one trace at `n = p^g` per good prime up
+  to its bound, and Eichler--Selberg evaluates it as a sum over the `#W` elements of `W` of about
+  `2 sqrt(n/Q_w)` terms, so the cost is `#W * sum_p p^{g/2}`, which is what `CurveCostProxy` now
+  returns. Measured on lovelace with the class-number tables over 34 curves spanning genus 3 to 7,
+  `#W` from 1 to 64 and level from 30 to 30030, on `main` at `95b19e6`
+  (`vvdata/weyl-campaign/weil-retime-2026-10-02/` on the `m0-theta-campaign` branch): the slowest
+  took 33 min (`X_0(690)/W_{16}`, `g = 6`), and `X_0(240)/W_4` (`g = 6`) took 6 min, against 87 min
+  with #58 alone and 14.8 h before it. **The level has no measurable effect** (the fitted exponent
+  is `-0.07`), so `Qmax` enters the prime bounds and not the cost. The makespan of this stage is
+  roughly the slowest single curve, so getting that ordering right is what the heavy-first dispatch
+  is for; of the curve pairs whose times differ by more than a factor 10, the estimate orders 216
+  of 220 correctly. ⚠ A residual spread of 34x remains, so it orders chunks and is not a cost:
+  quote the measured times.
 * **`FilterByTwistedTrace`**: modular symbols of level D·N, plus T_p for every good p < 4g².
   Small levels take seconds (level 1530 takes about 30 s), but the largest levels (D·N from about
   2000 up to 15330) take **hours each**, and the sweep's top levels ran for more than 4 h.
