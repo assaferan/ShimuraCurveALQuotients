@@ -61,7 +61,7 @@ function load_covers_and_ws_data_111_1()
     // (x:y:z) -> (-z:y:x) IS linear, and rescaling by 1/x to normalise the last coordinate gives
     // (-1/x, y/x^(g+1), 1). Here g+1 = 8, matching their y/x^8 exactly.
     //
-    // ⚠ VERIFIED BEFORE RUNNING, because this file costs hours: on gy_f itself, both matrices
+    // ⚠ VERIFIED BEFORE RUNNING, because this file then cost hours (minutes now): on gy_f itself, both matrices
     // below are automorphisms AND involutions, while DiagonalMatrix([-1,1,1]) is NOT -- the
     // reverse of the situation at 87_1, so the two files cannot have been filled in by copying.
     ws_data := AssociativeArray();

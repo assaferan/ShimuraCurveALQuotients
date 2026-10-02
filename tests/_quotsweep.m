@@ -18,7 +18,7 @@
 // ✅ 39_2 IS RESOLVED and no longer appears here.  It used to contribute all four mismatches, as
 // the transposition w_2 <-> w_26 (hence w_6 <-> w_78).  It turned out to be a FOURTH published
 // Guo-Yang error -- the journal's involution cell for X_0^39(2) mislabels them -- and the fix was
-// a one-line relabel in tests/_offline/X0_39_2.m, which that file documents in full.  The
+// a one-line relabel in tests/X0_39_2.m, which that file documents in full.  The
 // discriminator was the CM VALUES: genus, Ogg's fixed-point counts and the CM fields are all blind
 // to a relabelling that is a group automorphism.
 //

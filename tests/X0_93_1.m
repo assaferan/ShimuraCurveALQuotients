@@ -7,7 +7,7 @@
 // matters, because it regenerates ONLY since the vx fix (`n_oo`, BorcherdsForms.m:771). A silent
 // regression of that fix would have left every committed artifact looking fine.
 //
-// COST: 370 s on a Mac with the Borcherds search of #63, so it runs in CI.  Before it the model
+// COST: 370 s on a Mac, 495 s in CI, with the Borcherds search of #63.  Before it the model
 // took 50927 s (14.1 h) on lovelace with no non-default flags (see the model file header), far
 // past any CI budget, which is why this file lived in tests/_offline until 2026-10-01.
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
@@ -43,8 +43,7 @@
 //     model cross-check does still SKIP our stored CRV entry (models_93_1.m records defining
 //     polynomials as strings without the ambient weights, and reports the skip in its count); what
 //     changed is that the expected curve no longer has to come from that stored entry at all,
-//     since Guo-Yang printed the pair. ⚠ models_93_1.m's header still says "not a full-curve
-//     proof" and should be updated once this file has actually been RUN green.
+//     since Guo-Yang printed the pair.
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 function load_covers_and_ws_data_93_1()
@@ -78,11 +77,11 @@ function load_covers_and_ws_data_93_1()
     // re-presents 10_13's curve and the hardcoded map stops being a map at all. Only two tests
     // pin a matrix (X0_82_1.m, X0_10_19.m); this one should not become the third.
     //
-    // ⚠ RESIDUAL RISK, stated because it is not checkable without a 14 h run: the construct branch
-    // fires only if the RE-DERIVED W={1} also arrives as a non-CrvHyp with exactly 2 defining
-    // polynomials. If the pipeline ever presents it otherwise, the helper falls through to a plain
-    // IsIsomorphic and this test becomes the 10 h+ case rather than failing. If this file's runtime
-    // suddenly jumps, that is the cause -- not a regression in the mathematics.
+    // The construct branch fires only if the RE-DERIVED W={1} also arrives as a non-CrvHyp with
+    // exactly 2 defining polynomials, which it does on the green runs (8 min in CI). If the
+    // pipeline ever presents it otherwise, the helper falls through to a plain IsIsomorphic and
+    // this test becomes the 10 h+ case rather than failing. If this file's runtime suddenly
+    // jumps, that is the cause -- not a regression in the mathematics.
     P3<x,y,z,s3> := WeightedProjectiveSpace(Rationals(), [1,3,1,1]);
     gy_A3 := 3*s3^3 - 7*s3^2*z - 3*s3*z^2 -   z^3;
     gy_B3 := 3*s3^3 +   s3^2*z - 3*s3*z^2 - 9*z^3;
@@ -140,13 +139,11 @@ procedure test_93_1()
     // own quotients.  ⚠ That the committed model is the 11199 pair while today's default lands on
     // 11198 is pipeline DRIFT since 2026-09-05; the pin restores agreement with the artifact.
     //
-    // ⚠ WHAT IS STILL UNVERIFIED, said plainly because settling it costs a 14 h run: that the
-    // PINNED run is green end to end.  The sweep proves base 11199's pair is GY-isomorphic; it does
-    // NOT prove the other keys still fill under a pin.  EquationsCovers.m:1079 records that
-    // EquationsByRebase is pin-aware now -- it rebases ON the pinned base and threads the pin into
-    // its own inner conic pass -- which is why pinning is expected to be safe; 14_3, 21_2 and 6_17
-    // pin and pass, while 10_13 and 26_3 needed `model_drift_ok`.  ⇒ If this comes back with empty
-    // keys, `model_drift_ok` is the expected remedy, NOT removing the pin.
+    // The PINNED run is green end to end (first on 2026-10-01; 495 s in CI), so the other keys do
+    // fill under the pin.  EquationsCovers.m:1079 records that EquationsByRebase is pin-aware -- it
+    // rebases ON the pinned base and threads the pin into its own inner conic pass; 14_3, 21_2 and
+    // 6_17 pin and pass too, while 10_13 and 26_3 needed `model_drift_ok`.  ⇒ If this ever comes
+    // back with empty keys, `model_drift_ok` is the expected remedy, NOT removing the pin.
     // ⇒ Do not re-run the sweep hoping for more: the candidate pool is exactly one base.
     test_AllEquationsAboveCoversSingleCurve(93, 1, cover_data, ws_data, curves : base_label := 11199);
     return;

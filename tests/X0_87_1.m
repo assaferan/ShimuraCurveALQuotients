@@ -57,8 +57,9 @@ function load_covers_and_ws_data_87_1()
     // y^2 = -(x^6-7x^4+43x^2+27)(243x^6+523x^4+369x^2+81). So the two differ by a DIAGONAL change
     // x -> ax, y -> by, and diagonal scalings commute with sign changes, leaving a sign-only
     // involution with the same matrix on both sides. Same argument as X0_51_1.m and X0_69_1.m.
-    // ⚠ VERIFIED AS AUTOMORPHISMS of the stored curve before this file was run at all (the run is
-    // hours): both matrices below are automorphisms AND involutions of cover_data[{1}], while the
+    // ⚠ VERIFIED AS AUTOMORPHISMS of the stored curve before this file was run at all (the run
+    // took hours then; minutes now): both matrices below are automorphisms AND involutions of
+    // cover_data[{1}], while the
     // x <-> z swap Matrix(3,3,[0,0,1, 0,1,0, -1,0,0]) is NOT -- which is the discriminating fact,
     // since at 111_1 the situation is exactly reversed.
     //
