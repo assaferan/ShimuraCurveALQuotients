@@ -1,0 +1,6 @@
+dimension 0
+solutions over Q(sqrt(-3)): 1
+  R(t) = (t^3 + (-4/3) t + (16/27)) / (t^2 + (29/12) t + (22/9))
+  critical values: [ 0, 1, 1/7*(-8*s3 - 40), 1/7*(8*s3 - 40) ]   (wanted [ 0, 1,
+1/7*(-8*s3 - 40), 1/7*(8*s3 - 40) ])
+  simple critical points: 4 of 4

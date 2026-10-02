@@ -1,0 +1,15 @@
+R = (t^3 - 4/3*t + 16/27) / (t^2 + 29/12*t + 22/9)
+fibre over d = -4   (y = 0): [ <1, 2>, <1, 1> ]
+fibre over d = -28  (y = 1): [ <1, 1>, <1, 2> ]
+fibre over d = -84  (y = 1/7*(-8*s3 - 40)): [ <1, 1>, <1, 2> ]
+fibre over d = -84  (y = 1/7*(8*s3 - 40)): [ <1, 2>, <1, 1> ]
+fibre over d = -7 (y = oo): t = oo, and [ <2, 1> ]
+  the two finite ones generate -5103 (want Q(sqrt(-7)))
+critical points: [
+<1, 1, [ -2/3, 1 ]>,
+<1, 1, [ 5/6, 1 ]>,
+<2, 1, [ 76/9, 14/3, 1 ]>
+]
+  t = 2/3  ->  y = 0
+  t = -5/6  ->  y = 1
+  a conjugate pair over disc -972
