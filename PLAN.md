@@ -2209,17 +2209,41 @@ base (order 3: index 3; order 2: index 2). **Riemann–Hurwitz from the base rep
 formula in all seven cases** — that is the computational check
 (`vvdata/weyl-campaign/kappa0-xterms/normaliser.m` on the campaign branch, log alongside).
 
-⇒ **What this changes.** (1) `6_25` and `6_49` are reachable by our own route: the Hall-divisor
-refactor plus a level-`p^2` version of the local analysis (Kudla-Yang's Theorems 4.3/4.4 handle any
-valuation; Yang's Lemma 18 and the `m = 0` proof of PR #66 assume squarefree level and must be
-redone at a `p^2`-scaled lattice). (2) For the six obstructed bases the quotient by the full
-normaliser is a genus-0 star curve whose Hauptmodul we already have (`15_1`, `21_1`, `33_1`,
-`10_1`, `14_1`, `22_1`, `15_2` are all built), and the curve is the `S_3`/`A_4` cover with
-branching at the elliptic CM points of the base — the analogue of `X(2) -> X(1)`, `lambda -> j`.
-That is what Guo-Yang's use of Tu amounts to for `15_4`. The problem is no longer "find a
-Hauptmodul" but "write the Galois cover with prescribed branching", with the CM machinery fixing
-its constants as it did for `15_4`. **Do not run the pipeline's star quotient on these six**: it
-is the wrong object.
+⇒ **What this changes for `6_25` and `6_49`:** they are reachable by our own route — the
+Hall-divisor refactor plus a level-`p^2` version of the local analysis. **That analysis is now
+done** (campaign `vvdata/weyl-campaign/level-p2/`): for `p^e || N` the negative plane is the
+`p^e`-scaled binary lattice (computed, generalising Yang's Lemma 18), and at a `p^2`-scaled split
+plane the `m = 0` factor takes three values, so the multiplier becomes `(1/2)(c_1(0) + c_2(0))`
+over the two surviving coset classes instead of `(1/2) c_eta(0)`. Every value was confirmed by
+brute-force counting at `p = 3, 5`. **Do not run the pipeline's star quotient on the six obstructed
+bases**: it is the wrong object.
+
+#### ⇒ AND THE ANSWER TO "CAN THE `15_4` ROUTE BE GENERALISED?" IS **NO** — with a reason (2026-10-02)
+
+There is **no map** `X^*(D,N) -> X^*(D,N')`: it would need the top level's new Atkin-Lehner
+involutions inside `<Gamma_0(N'), W'>`, and they are not there (`w_4` has reduced norm 4, so it
+would have to be twice a unit of the maximal order; classically `(0 -1; 4 0)/2` is not in
+`SL_2(Z)`, because `w_4` changes the underlying curve). What *does* map down is
+`X_0^D(N)/U -> X_0^D(N')/U` with `U = Hall(DN) cap Hall(DN')`, the largest Atkin-Lehner group
+acting on both levels, of degree `psi(N)/psi(N')` — and Tu's `t_4` is exactly this for `15_4`, where
+he quotients by `W_15`, not by `Hall(60)`. Its genus decides whether a Hauptmodul exists:
+
+| base | `U` | degree | `g(X_0^D(N)/U)` |
+|---|---|---|---|
+| **`15_4`** | `{1,3,5,15}` | 6 | **0** |
+| `21_4` | `{1,3,7,21}` | 6 | 1 |
+| `33_4` | `{1,3,11,33}` | 6 | 3 |
+| `15_8` | `{1,3,5,15}` | 4 | 1 |
+| `10_9`, `14_9` | `{1,2,p,2p}` | 12 | 1 |
+| `22_9` | `{1,2,11,22}` | 12 | 3 |
+
+`15_4` is the only one of the seven at genus 0. That is why Tu treats it and no other
+non-squarefree case, and why Remark 39 cites him for exactly this curve. For the other six there is
+**no Hauptmodul to find** — the object has genus 1 or 3 — so an equation must come from a
+positive-genus model, i.e. from the pipeline once it handles non-squarefree levels, not from a
+Belyi-type solve. (Computation: campaign `vvdata/weyl-campaign/nonsquarefree/whichobject.m`. An
+earlier attempt of mine to build `21_4` this way solved a Hurwitz problem for a degree-3 map that
+does not exist; it is retracted in that directory's `NOTES.md`.)
 
 (The earlier attempt to measure this with `TwoSidedIdealClassGroup(O)` failed its positive
 control at `15_4` and measured nothing; it is superseded by the argument above.)
