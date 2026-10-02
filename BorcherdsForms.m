@@ -842,7 +842,9 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 eq 0];
-    den := Lcm([Denominator(x) : x in Eltseq(coeffs)]);
+    // Denominator of the matrix, not of its entry sequence: at X_0^141(1) the pool matrix has
+    // 1.1e9 entries, beyond what Eltseq can form.
+    den := Denominator(coeffs);
     MZ := ChangeRing(den*coeffs, Integers());
     K := ChangeRing(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div)), Rationals());
     G := K * coeffs;
