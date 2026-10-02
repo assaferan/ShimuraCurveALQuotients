@@ -1,0 +1,28 @@
+
+p = 3 : isotropic cosets of the p^2-scaled split plane
+  order p^-0, ord_p t_mu = inf : 1    cosets, alpha_0..4 = [ 1, 3, 9, 15, 21 ]
+      (1-X)G = -21*X^5 + 6*X^4 + 6*X^3 + 6*X^2 + 2*X + 1
+  order p^-1, ord_p t_mu = 0   : 4    cosets, alpha_0..4 = [ 1, 0, 0, 0, 0 ]
+      (1-X)G = -X + 1
+  order p^-1, ord_p t_mu = 1   : 2    cosets, alpha_0..4 = [ 1, 3, 3, 3, 3 ]
+      (1-X)G = -3*X^5 + 2*X + 1
+  order p^-1, ord_p t_mu = inf : 2    cosets, alpha_0..4 = [ 1, 3, 3, 3, 3 ]
+      (1-X)G = -3*X^5 + 2*X + 1
+  order p^-2, ord_p t_mu = 0   : 6    cosets, alpha_0..4 = [ 1, 1, 1, 1, 1 ]
+      (1-X)G = -X^5 + 1
+  order p^-2, ord_p t_mu = inf : 6    cosets, alpha_0..4 = [ 1, 1, 1, 1, 1 ]
+      (1-X)G = -X^5 + 1
+
+p = 5 : isotropic cosets of the p^2-scaled split plane
+  order p^-0, ord_p t_mu = inf : 1    cosets, alpha_0..4 = [ 1, 5, 25, 45, 65 ]
+      (1-X)G = -65*X^5 + 20*X^4 + 20*X^3 + 20*X^2 + 4*X + 1
+  order p^-1, ord_p t_mu = 0   : 16   cosets, alpha_0..4 = [ 1, 0, 0, 0, 0 ]
+      (1-X)G = -X + 1
+  order p^-1, ord_p t_mu = 1   : 4    cosets, alpha_0..4 = [ 1, 5, 5, 5, 5 ]
+      (1-X)G = -5*X^5 + 4*X + 1
+  order p^-1, ord_p t_mu = inf : 4    cosets, alpha_0..4 = [ 1, 5, 5, 5, 5 ]
+      (1-X)G = -5*X^5 + 4*X + 1
+  order p^-2, ord_p t_mu = 0   : 20   cosets, alpha_0..4 = [ 1, 1, 1, 1, 1 ]
+      (1-X)G = -X^5 + 1
+  order p^-2, ord_p t_mu = inf : 20   cosets, alpha_0..4 = [ 1, 1, 1, 1, 1 ]
+      (1-X)G = -X^5 + 1

@@ -1,0 +1,20 @@
+D=6   N=5    p=5 : reduced disc 30, det(Gram) = [ <2, 3>, <3, 2>, <5, 2> ], 
+p-valuations of the elementary divisors [ 0, 1, 1 ]
+D=6   N=25   p=5 : reduced disc 150, det(Gram) = [ <2, 3>, <3, 2>, <5, 4> ], 
+p-valuations of the elementary divisors [ 0, 2, 2 ]
+D=6   N=125  p=5 : reduced disc 750, det(Gram) = [ <2, 3>, <3, 2>, <5, 6> ], 
+p-valuations of the elementary divisors [ 0, 3, 3 ]
+D=15  N=2    p=2 : reduced disc 30, det(Gram) = [ <2, 3>, <3, 2>, <5, 2> ], 
+p-valuations of the elementary divisors [ 1, 1, 1 ]
+D=15  N=4    p=2 : reduced disc 60, det(Gram) = [ <2, 5>, <3, 2>, <5, 2> ], 
+p-valuations of the elementary divisors [ 1, 2, 2 ]
+D=15  N=8    p=2 : reduced disc 120, det(Gram) = [ <2, 7>, <3, 2>, <5, 2> ], 
+p-valuations of the elementary divisors [ 1, 3, 3 ]
+D=14  N=3    p=3 : reduced disc 42, det(Gram) = [ <2, 3>, <3, 2>, <7, 2> ], 
+p-valuations of the elementary divisors [ 0, 1, 1 ]
+D=14  N=9    p=3 : reduced disc 126, det(Gram) = [ <2, 3>, <3, 4>, <7, 2> ], 
+p-valuations of the elementary divisors [ 0, 2, 2 ]
+D=10  N=9    p=3 : reduced disc 90, det(Gram) = [ <2, 3>, <3, 4>, <5, 2> ], 
+p-valuations of the elementary divisors [ 0, 2, 2 ]
+D=21  N=4    p=2 : reduced disc 84, det(Gram) = [ <2, 5>, <3, 2>, <7, 2> ], 
+p-valuations of the elementary divisors [ 1, 2, 2 ]
