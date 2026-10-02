@@ -832,12 +832,12 @@ end function;
 //
 // The rows are canonical, so the search's solution (one point of an affine space, chosen by
 // the row basis) does not depend on how the kernel was computed.  Kernel rows with zero
-// expansion at 0 are dependencies among pool elements -- as forms, holomorphic at 0 with a
-// pole at oo, or identically zero -- and are returned in reduced echelon form with respect to
-// the pool coordinates.  The other rows carry their 0-expansions in reduced echelon form, and
-// each one's pool coordinates are reduced modulo the dependency rows; two pool combinations
-// with the same expansion at 0 differ by a dependency, so this fixes the combination.  (The
-// dependency rows vanish at 0 through the constant term, with a pole at oo or identically zero.)
+// expansion at 0 are dependencies among pool elements -- as forms, they vanish at 0 through the
+// constant term, with a pole at oo or identically zero -- and are returned in reduced echelon
+// form with respect to the pool coordinates.  The other rows carry their 0-expansions in reduced
+// echelon form, and each one's pool coordinates are reduced modulo the dependency rows; two pool
+// combinations with the same expansion at 0 differ by a dependency, so this fixes the
+// combination.
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
@@ -1314,8 +1314,10 @@ alone cannot do odd D.}
                     if not found_v then bf_t_lin +:= Realtime() - bf_ta; found_all := false; break; end if;
                     bf_found +:= 1;
                     if bf_progress then
+                        // the 0-side rung m exists only on odd D
                         WriteStderr(Sprintf("  BFFOUND m=%o key=%o P=%o infty=%o others=%o\n",
-                                            m_choice, i, -min_m, infty[1], [other_pts[1][1], other_pts[2][1]]));
+                                            IsOdd(Xstar`D) select Sprint(m_choice) else "oo", i, -min_m,
+                                            infty[1], [other_pts[1][1], other_pts[2][1]]));
                     end if;
                     sol := Solution(coeffs_trunc, target_v);
                     bf_t_lin +:= Realtime() - bf_ta;

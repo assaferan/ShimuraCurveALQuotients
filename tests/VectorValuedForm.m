@@ -189,13 +189,12 @@ procedure test_m0_multiplier_15_2()
     // arXiv:1510.06193v1, Table 45 at d = -7, -15, -60 (tests/SchoferIsometry.m).  That is the
     // only outside evidence.  The general formula mult = (1/2) c_eta(0), from
     // kappa_eta(0) = -log N/(N-1), is Proposition prop:kappa0 in paper/level-prime-kappa.tex,
-    // proved there for prime N and fundamental d from Schofer, Yang and Kudla-Yang, with the
-    // extra term that applies when f has a pole at oo at a CM exponent (zero on this base);
-    // M0MultiplierExact and the fitted functional -c_oo(-2) + c_oo(-10) on this base are our own
-    // computations of the same quantity, not independent evidence.
+    // which is not yet proved; a proposed proof is in PR #66.  M0MultiplierExact and the fitted
+    // functional -c_oo(-2) + c_oo(-10) on this base are our own computations of the same
+    // quantity, not independent evidence.
     // The multiplier is a property of the form, not of its divisor: another representative of
     // the same divisor with c_oo(-2) = 0 has value 2, and fs[13] has the same principal part as
-    // fs[-1], hence 4.
+    // fs[-1], hence 4 -- the last step assuming the same unproved formula.
     // Only the two cheap forms are checked here: the pole-order-30 forms need Prec 200 / 192 samples
     // and about 20 minutes.  Forms -1 and 13 have pole order 10 and converge quickly.
     expected := AssociativeArray();
