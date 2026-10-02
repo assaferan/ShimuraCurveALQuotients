@@ -871,6 +871,26 @@ intrinsic M0Multiplier(foo::RngSerLaurElt, f0::RngSerLaurElt, D::RngIntElt, N::R
     return m0_multiplier(foo, f0, Ldata`Q, Ldata`disc_grp, Ldata`to_disc, Ldata`denom, M, D, N);
 end intrinsic;
 
+intrinsic M0InfinityPoleSum(foo::RngSerLaurElt, d::RngIntElt) -> FldRatElt
+{The sum of the coefficients of q^(-k^2 Q0), k >= 1, in the expansion foo of f at the cusp oo,
+ where Q0 = |d|/4 if 4 | d and |d| otherwise is the norm of the primitive vector on the CM line
+ of a point of discriminant d.  These are the exponents at which a pole of f at oo puts the
+ point on the divisor of the Borcherds form (DivisorOfBorcherdsForm: d = 4m/r^2).
+
+ The m = 0 term of Schofer's formula at a prime level N, N not dividing d, is
+     log N * ( (1/2) c_eta(0) - M0InfinityPoleSum(foo, d) )
+ per CM point: the second summand is the part of the dropped coefficient kappa^-_nu(0) that enters
+ Yang's kappa_eta(m) for m > 0 through vectors on the CM line, evaluated at a point off the
+ divisor (paper/level-prime-kappa.tex, Proposition prop:mult and Remark rem:xsum).  It is nonzero
+ only when a pole of f at oo at such an exponent is cancelled, in the divisor, by the cusp-0 side;
+ on every base of the model set it has been zero at every evaluated point.}
+    require d lt 0 : "d must be a negative discriminant";
+    Q0 := (d mod 4 eq 0) select (-d) div 4 else -d;
+    v := Valuation(foo);
+    if v ge 0 then return Rationals()!0; end if;
+    return &+[Rationals() | Coefficient(foo, -k^2*Q0) : k in [1..Isqrt((-v) div Q0)]];
+end intrinsic;
+
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo,
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.
@@ -1060,8 +1080,22 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // other Schofer term inherits from the cycle structure. Flat addition is
         // correct only at PointDegree = 1 (where all prior validation lived); the
         // quadratic points of X0^10(23) were the first to expose the difference.
+        //
+        // PROVED (paper/level-prime-kappa.tex, Propositions prop:kappa0 and prop:mult, for prime N
+        // and fundamental d with N not dividing d): the dropped coefficient is kappa^-_nu(0) =
+        // -log N/(N-1) at each of the 2N-2 nonzero isotropic cosets, and it enters Theorem B both
+        // at m = 0 (giving the (1/2) c_eta(0)) and at m > 0 through the vectors on the CM line,
+        // which at a point off the divisor reduce to the oo-coefficients of f at the exponents
+        // k^2 Q(lambda_0) (M0InfinityPoleSum).  That second part is subtracted here; it is zero
+        // unless a pole of f at oo at such an exponent is cancelled by the cusp-0 side, and it
+        // has been zero at every evaluated point of the model set.  For composite N the second
+        // part is not derived and is not applied.
         for i->eta in etas do
-            log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
+            xsum := IsPrime(N) select M0InfinityPoleSum(fs[i], d) else 0;
+            if xsum ne 0 then
+                vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: pole sum %o at d = %o for form %o", xsum, d, i;
+            end if;
+            log_coeffs[i] +:= PointDegree * (eta`m0mult - xsum) * kzero_N;
         end for;
     end if;
 
