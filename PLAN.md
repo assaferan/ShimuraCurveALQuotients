@@ -2172,36 +2172,57 @@ Shimura genus formula run fine on non-squarefree bases — that is exactly what 
 constants, and it is an oracle for a whole class the pipeline cannot otherwise touch. Any candidate
 model for these 9 can be checked the same way.
 
-**What does NOT generalise: the GENERATION half.** `15_4` worked because Tu (Pacific J. Math. 269
-(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote. Nothing
-supplies that for the other 8. Two possible routes:
+**The GENERATION half, as first scoped:** `15_4` worked because Tu (Pacific J. Math. 269
+(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote, and nothing
+supplies that for the other 8. Two routes were listed:
 * **the Hall-divisor refactor** (index `W` by Hall divisors; lift `assert IsSquarefree(N)`), which
   only helps where Guo-Yang's obstruction is ABSENT;
-* **external Hauptmoduls** — Tu's paper is about genus-zero Shimura curves generally, so it may
-  cover more of these. We do not have it; it is not in the user's Dropbox.
+* **external Hauptmoduls** — Tu's paper covers none of the other 8 (see below).
 
-**⚠ A PREDICTION, NOT A MEASUREMENT — which of the 8 are only CODE-blocked.** Guo-Yang's
-obstruction is that `N^+_B(O)` strictly contains the Atkin-Lehner group. By analogy with
-Atkin-Lehner-Newman for `Gamma_0(N)` — where the normalizer exceeds the AL group exactly when
-`h > 1` for `h` the largest divisor of **24** with `h^2 | N` — one expects:
+⇒ Superseded by the normaliser theorem below: Tu's Hauptmodul is on `X_0^15(1)^*`, and the
+obstructed curves are Galois covers of star curves we already have.
 
-| base | `N` | `h` | expected |
-|---|---|---|---|
-| `6_25` | 25 | 1 (5 does not divide 24) | **no obstruction — possibly only code-blocked** |
-| `6_49` | 49 | 1 (7 does not divide 24) | **no obstruction — possibly only code-blocked** |
-| `15_4`, `21_4`, `33_4` | 4 | 2 | obstruction — matches Guo-Yang's Remark 39 ✓ |
-| `15_8` | 8 | 2 | obstruction |
-| `10_9`, `14_9`, `22_9` | 9 | 3 | obstruction |
+**THE NORMALISER IS ATKIN–LEHNER–NEWMAN'S — a theorem, computed 2026-10-02.** Guo-Yang's
+obstruction is that the normaliser of `Gamma_0^D(N)` strictly contains the Atkin-Lehner group.
+The normaliser is local: `Gamma = O^1` is dense in `prod_p O_p^1` (strong approximation, `B`
+indefinite), so `alpha` normalises `Gamma` iff it normalises every `O_p^1`, and every adelic
+normaliser has a global representative (one-sided class number 1). At `p | D` the local
+normaliser is all of `B_p^*` (giving `w_p`); at `p` not dividing `D` the local order is the
+standard Eichler order in `M_2(Q_p)`, so the local normaliser is that of `Gamma_0(p^e)`, which
+Atkin-Lehner-Newman computed: beyond `Q_p^* O_p^*` and `w_{p^e}` there is an extra element
+exactly when `p in {2, 3}` and `p^2 | N`, the translation `(1 1/h; 0 1)`, which normalises
+because `ad = 1 mod h^2` forces `a = d mod h` for all units iff `h | 24`. So **the normaliser
+exceeds the AL group iff `h > 1`**, `h` the largest divisor of 24 with `h^2 | N`:
 
-The single confirming data point is `15_4` itself, where the criterion agrees with Guo-Yang.
-⚠ **I could not COMPUTE this.** `TwoSidedIdealClassGroup(O)` returns 1 for all nine INCLUDING
-`15_4` — it fails the positive control, so it is not measuring `N^+_B(O)/Q^*O^*` and its output must
-not be quoted. Until someone computes the normalizer properly (or reads Michon/Ogg on normalizers
-of Eichler orders), the table above is an **analogy with one confirmation**, not a result.
+| base | `h` | Galois over | group | genus (R–H = formula) | full-normaliser quotient |
+|---|---|---|---|---|---|
+| `6_25`, `6_49` | 1 | — | `W` only | 5, 9 | **unobstructed** |
+| `15_4`, `21_4`, `33_4` | 2 | `X_0^D(1)` | `S_3` | 5, 7, 11 | `X_0^D(1)^*`, genus 0 |
+| `15_8` | 2 | `X_0^15(2)` | `(Z/2)^2` | 9 | `X_0^15(2)^*`, genus 0 |
+| `10_9`, `14_9`, `22_9` | 3 | `X_0^D(1)` | `A_4` | 5, 7, 11 | `X_0^D(1)^*`, genus 0 |
 
-⇒ **Recommended if this is pursued:** test the prediction at `6_25` or `6_49` — they are the only
-two where the payoff (a base reachable by fixing code) justifies the Hall-divisor refactor. Confirm
-the normalizer claim FIRST; the refactor is wasted if the obstruction is present anyway.
+**What the extra elements are.** Conjugating by `(h 0; 0 1)` turns `Gamma_0^D(h^2 N')` into
+`Gamma^D(h) cap Gamma_0^D(N')`, normal in `Gamma_0^D(N')` with quotient `SL_2(F_h)` (`S_3` for
+`h = 2`, `A_4` for `h = 3`; for `8 | N` the same over `N/4` with degree 4). So each obstructed
+curve is a **Galois cover of a curve we have**, ramified only over the elliptic points of the
+base (order 3: index 3; order 2: index 2). **Riemann–Hurwitz from the base reproduces the genus
+formula in all seven cases** — that is the computational check
+(`vvdata/weyl-campaign/kappa0-xterms/normaliser.m` on the campaign branch, log alongside).
+
+⇒ **What this changes.** (1) `6_25` and `6_49` are reachable by our own route: the Hall-divisor
+refactor plus a level-`p^2` version of the local analysis (Kudla-Yang's Theorems 4.3/4.4 handle any
+valuation; Yang's Lemma 18 and the `m = 0` proof of PR #66 assume squarefree level and must be
+redone at a `p^2`-scaled lattice). (2) For the six obstructed bases the quotient by the full
+normaliser is a genus-0 star curve whose Hauptmodul we already have (`15_1`, `21_1`, `33_1`,
+`10_1`, `14_1`, `22_1`, `15_2` are all built), and the curve is the `S_3`/`A_4` cover with
+branching at the elliptic CM points of the base — the analogue of `X(2) -> X(1)`, `lambda -> j`.
+That is what Guo-Yang's use of Tu amounts to for `15_4`. The problem is no longer "find a
+Hauptmodul" but "write the Galois cover with prescribed branching", with the CM machinery fixing
+its constants as it did for `15_4`. **Do not run the pipeline's star quotient on these six**: it
+is the wrong object.
+
+(The earlier attempt to measure this with `TwoSidedIdealClassGroup(O)` failed its positive
+control at `15_4` and measured nothing; it is superseded by the argument above.)
 
 #### ⚠ WE HAVE BEEN READING THE SUPERSEDED VERSION
 
