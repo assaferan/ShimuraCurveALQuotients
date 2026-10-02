@@ -54,3 +54,36 @@ level p both collapse to the single class and this is the familiar (1/2) c_eta(0
 checked against any measured CM value: no base with p^2 || N has a model, which is the point of
 pursuing `6_25` and `6_49`. The claim to test first is the coset-orbit count, i.e. that c_1 and c_2
 are each constant on their class.
+
+## The structure confirmed on the real lattices (isocount.m, isoclass.m, 2026-10-02)
+
+The p^2-scaled-plane analysis above was derived from the model plane and checked by counting there.
+It also makes a prediction about the ACTUAL lattices of the two bases that need it, testable in
+seconds from `ShimuraCurveLattice` alone, with no Borcherds form in sight.
+
+**Number of isotropic cosets of L^v/L.** 2N-1 at squarefree level; 3p^2 - 2p when p^2 || N, since
+the D-part is anisotropic and the p-part is the p^2-scaled plane:
+
+    6_5    |A| = 1800     isotropic 9     predicted 9     (2N-1)     MATCHES
+    6_7    |A| = 3528     isotropic 13    predicted 13    (2N-1)     MATCHES
+    15_2   |A| = 1800     isotropic 3     predicted 3     (2N-1)     MATCHES
+    6_25   |A| = 45000    isotropic 65    predicted 65    (3p^2-2p)  MATCHES
+    6_49   |A| = 172872   isotropic 133   predicted 133   (3p^2-2p)  MATCHES
+    15_4   |A| = 7200     isotropic 10    predicted 8                MISMATCH
+
+⚠ `15_4` differs because p = 2: its local valuations are (1,2,2), not (0,2,2), so the 2-adic count
+is not 3p^2-2p. The formula is for ODD p -- which is the case 6_25 and 6_49 need. p = 2 at level 4
+or 8 needs its own count.
+
+**The finer split the multiplier rests on**, by the exact order of the coset at p:
+
+    6_25 (p=5)   order p^0: 1    order p^1: 24    order p^2: 40     predicted 1, 24, 40
+    6_49 (p=7)   order p^0: 1    order p^1: 48    order p^2: 84     predicted 1, 48, 84
+
+matching 2(p-1) + (p-1)^2 = 24 resp. 48 of order p (of which 2(p-1) contribute and (p-1)^2 do not)
+and 2p(p-1) = 40 resp. 84 of order p^2. So the two surviving classes are real and have the predicted
+sizes on the actual lattices.
+
+Also recorded: `ShimuraCurveLattice` works at both levels (probe625.m) with |A| = 2(DN)^2 as at
+squarefree level, the star curves have genus 0 and the full curves genus 5 and 9, and the Hall
+divisor group has 8 elements, {1,2,3,6,25,50,75,150} at 6_25.

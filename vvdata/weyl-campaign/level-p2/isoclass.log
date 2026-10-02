@@ -1,0 +1,14 @@
+
+6_25 (p = 5): isotropic cosets by the p-part of their order in L^v/L
+   order p^0 : 1
+   order p^1 : 24
+   order p^2 : 40
+   predicted: p^0 (zero coset and the anisotropic-part-free ones) 1, p^1 : 24, 
+p^2 : 40
+
+6_49 (p = 7): isotropic cosets by the p-part of their order in L^v/L
+   order p^0 : 1
+   order p^1 : 48
+   order p^2 : 84
+   predicted: p^0 (zero coset and the anisotropic-part-free ones) 1, p^1 : 48, 
+p^2 : 84

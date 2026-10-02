@@ -1,0 +1,6 @@
+6_5: |disc group| = 1800    isotropic cosets = 9     prediction 9     MATCHES
+6_25: |disc group| = 45000   isotropic cosets = 65    prediction 65    MATCHES
+6_49: |disc group| = 172872  isotropic cosets = 133   prediction 133   MATCHES
+6_7: |disc group| = 3528    isotropic cosets = 13    prediction 13    MATCHES
+15_2: |disc group| = 1800    isotropic cosets = 3     prediction 3     MATCHES
+15_4: |disc group| = 7200    isotropic cosets = 10    prediction 8     MISMATCH
