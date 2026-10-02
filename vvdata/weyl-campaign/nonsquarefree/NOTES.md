@@ -72,3 +72,14 @@ has to be COMPUTED, per base, not guessed: enumerate the elements of reduced nor
 order, keep those conjugating the order to itself and not of the form (scalar) x (unit), and read
 off t. Until that is done, 15_8 and 33_4 are not solvable by this route, while 14_9 and 22_9 are
 (their extra point is the d = -36 one).
+
+⚠ **That enumeration is not a short-vector search.** B is INDEFINITE here (split at infinity, as a
+Shimura curve needs), so the reduced-norm form is indefinite: the elements of norm h^2 are infinite
+in number and `ShortVectors` does not apply. The two routes are (a) the local embedding theory at
+the prime dividing h -- which orders of discriminant t^2 - 4h^2 embed optimally in the Eichler order
+of level h^2 N' -- or (b) Magma's two-sided ideal machinery, and ⚠ `TwoSidedIdealClassGroup` FAILS
+its positive control here (it returns 1 at 15_4, where the normaliser is demonstrably larger), so
+its output must not be quoted. Note also that the extra element's fixed points need NOT create a new
+branch point: their discriminant can coincide with one that already branches, which is one way 15_4
+could need nothing new, and distinguishing that from "no fixed points at all" is part of what the
+computation has to settle.
