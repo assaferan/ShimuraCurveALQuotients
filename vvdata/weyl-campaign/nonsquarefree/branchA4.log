@@ -1,0 +1,64 @@
+
+== 10_9: X^*(10,9) (g 0) -> X^*(10,1) (g 0), degree 6, needs R = 10 ; G = A4
+  V of order 2: degree 6
+    |H| = 1  (C1): 6 orbits, contributes 0
+    |H| = 2  (C2): 4 orbits, contributes 2
+    |H| = 3  (C3): 2 orbits, contributes 4
+    |H| = 4  (C2^2): 3 orbits, contributes 3
+    |H| = 12 (A4): 1 orbits, contributes 5
+  base special points:
+    d = -40   1 star point(s), e = 1, fixed by [ 10 ]
+    d = -20   1 star point(s), e = 1, fixed by [ 5 ]
+    d = -8    1 star point(s), e = 1, fixed by [ 2 ]
+    d = -3    1 star point(s), e = 3, fixed by []
+
+== 14_9: X^*(14,9) (g 0) -> X^*(14,1) (g 0), degree 6, needs R = 10 ; G = A4
+  V of order 2: degree 6
+    |H| = 1  (C1): 6 orbits, contributes 0
+    |H| = 2  (C2): 4 orbits, contributes 2
+    |H| = 3  (C3): 2 orbits, contributes 4
+    |H| = 4  (C2^2): 3 orbits, contributes 3
+    |H| = 12 (A4): 1 orbits, contributes 5
+  base special points:
+    d = -56   2 star point(s), e = 1, fixed by [ 14 ]
+    d = -8    1 star point(s), e = 1, fixed by [ 2 ]
+    d = -4    1 star point(s), e = 2, fixed by [ 2 ]
+
+== 22_9: X^*(22,9) (g 1) -> X^*(22,1) (g 0), degree 6, needs R = 12 ; G = A4
+  V of order 2: degree 6
+    |H| = 1  (C1): 6 orbits, contributes 0
+    |H| = 2  (C2): 4 orbits, contributes 2
+    |H| = 3  (C3): 2 orbits, contributes 4
+    |H| = 4  (C2^2): 3 orbits, contributes 3
+    |H| = 12 (A4): 1 orbits, contributes 5
+  base special points:
+    d = -88   1 star point(s), e = 1, fixed by [ 22 ]
+    d = -11   1 star point(s), e = 1, fixed by [ 11 ]
+    d = -4    1 star point(s), e = 2, fixed by [ 2 ]
+    d = -3    1 star point(s), e = 3, fixed by []
+
+== 15_8: X^*(15,8) (g 0) -> X^*(15,2) (g 0), degree 4, needs R = 6 ; G = C2^2
+  V of order 2: degree 2
+    |H| = 1  (C1): 2 orbits, contributes 0
+    |H| = 2  (C2): 2 orbits, contributes 0
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 4  (C2^2): 1 orbits, contributes 1
+  V of order 2: degree 2
+    |H| = 1  (C1): 2 orbits, contributes 0
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 2  (C2): 2 orbits, contributes 0
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 4  (C2^2): 1 orbits, contributes 1
+  V of order 2: degree 2
+    |H| = 1  (C1): 2 orbits, contributes 0
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 2  (C2): 1 orbits, contributes 1
+    |H| = 2  (C2): 2 orbits, contributes 0
+    |H| = 4  (C2^2): 1 orbits, contributes 1
+  base special points:
+    d = -120  1 star point(s), e = 1, fixed by [ 30 ]
+    d = -60   1 star point(s), e = 1, fixed by [ 15 ]
+    d = -40   1 star point(s), e = 1, fixed by [ 10 ]
+    d = -15   1 star point(s), e = 1, fixed by [ 15 ]
+    d = -12   1 star point(s), e = 1, fixed by [ 3 ]
