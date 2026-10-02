@@ -1088,8 +1088,10 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // which at a point off the divisor reduce to the oo-coefficients of f at the exponents
         // k^2 Q(lambda_0) (M0InfinityPoleSum).  That second part is subtracted here; it is zero
         // unless a pole of f at oo at such an exponent is cancelled by the cusp-0 side, and it
-        // has been zero at every evaluated point of the model set.  For composite N the second
-        // part is not derived and is not applied.
+        // has been zero at every evaluated point of the model set.  For composite squarefree N
+        // the term is per prime (prop:composite), with the multiplier of the cosets supported at
+        // that prime alone; no base in the model set has such a level, and neither that
+        // multiplier nor the pole sum is implemented for it.
         for i->eta in etas do
             xsum := IsPrime(N) select M0InfinityPoleSum(fs[i], d) else 0;
             if xsum ne 0 then
