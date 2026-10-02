@@ -13,12 +13,13 @@ intrinsic WriteStderr(e::Err)
 end intrinsic;
 
 intrinsic CurveCostProxy(X::ShimuraQuot, stage::MonStgElt) -> FldReElt
-{A cheap upper-bound estimate of the cost of running `stage` on curve X, used only to
-balance/order the parallel chunks.  Returns 0 for curves the stage skips.  The estimate
-is the number of trace-formula terms a curve would need if it did NOT early-exit:
-|W| * sum over good primes p<=Pbound, powers n=p^i, of sqrt(4*D*N*n).  It deliberately
-over-estimates curves that early-exit (they then just finish fast), so the genuinely
-heavy curves are always dispatched early.}
+{A cheap estimate of the cost of running `stage` on curve X, used only to order the parallel
+chunks heavy-first.  Returns 0 for curves the stage skips.  For the Weil-polynomial stages it
+is the sum of p^g over the good primes the stage will use; for the trace stages it is the
+number of trace-formula terms a curve would need if it did not early-exit, |W| times the sum of
+sqrt(4*D*N*n) over the primes and powers n = p^i; the other stages have their own rough
+measures below.  It deliberately over-estimates curves that early-exit (they then just finish
+fast), so the genuinely heavy curves are always dispatched early.}
     R := RealField(6);
     if assigned X`IsSubhyp then return R!0; end if;
     g := X`g; DN := X`D * X`N; nW := #X`W;
@@ -82,20 +83,23 @@ heavy curves are always dispatched early.}
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
         // class-number database, the disc budget, and the per-genus ceiling), i.e. one trace at
-        // n = p^g per prime, and the cost of that trace is set by n, not by Qmax: within one curve
-        // the per-prime time grows with n (X_0(240)/W4, g = 6: p = 7, 11, 13, 17 took 43, 224,
-        // 560, 2132 s), and a curve of level 15330 and genus 4 fits the same growth
-        // (X_0^210(73)/W32: 559 s for all seven of its primes).  Measured 2026-09-30 on main at
-        // 95cf87b, before #56 and #58, on a Mac without the class-number tables, with
-        // vvdata/weyl-campaign/weil-cost-2026-09-30/weil_timing.m (logs alongside it).  On
-        // lovelace with the tables, to the full prime bound (same directory, lovelace/): the
-        // genus-6 curve took 14.8 h on main, 87 min with #58; the genus-4 one 40 min on main.
-        // The order is the same under every tree.  So sum p^g over the good primes.
+        // n = p^g per prime.  Measured on lovelace with the class-number tables, to the full
+        // prime bound, 2026-09-30 (vvdata/weyl-campaign/weil-cost-2026-09-30/lovelace/ on the
+        // m0-theta-campaign branch): X_0(240)/W4 (g = 6, Qmax = 80) took 14.8 h on main at
+        // 95cf87b and 87 min with #58, with per-prime times 55, 208, 353, 806, 1352, 2448 s at
+        // p = 7, 11, 13, 17, 19, 23, i.e. growing like p^(g/2); X_0^210(73)/W32 (g = 4,
+        // Qmax = 15330) took 40 min on main; X_0^21(20)/W4 (g = 7) is heavier still (p = 13
+        // alone: 1137 s with #56).
         //
-        // Qmax is the right quantity for the table and budget bounds but not a cost: it does not
-        // enter the per-term work (the t-range is sqrt(4*Q*n)/Q, so larger Q means fewer terms),
-        // and as a factor it put the genus-4 curve above the genus-6 one.  The heavy shape for
-        // this stage is high genus with a small W (many admissible primes at n = p^g).
+        // The sum of p^g over the good primes orders those three correctly.  It is not a model
+        // of the time: within a curve the growth is p^(g/2), and #W * sum p^(g/2) would order
+        // the same three correctly too, but it puts a genus-4 curve measured at 4 min
+        // (X_0^39(38)/W, #W = 16, 12 primes) above the 87-min genus-6 one, while sum p^g puts a
+        // genus-4 curve measured at 93 s (X_0(165)/W, #W = 4, 13 primes) above the 40-min
+        // X_0^210(73)/W32.  Neither fits all five measurements; the heavy shape for this stage
+        // is high genus with many admissible primes, which sum p^g weights most, so it is kept
+        // until the stage is re-timed on current main across genus, #W and level.  Qmax enters
+        // the prime bounds only, not the per-term work.
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
