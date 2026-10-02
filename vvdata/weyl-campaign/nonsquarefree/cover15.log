@@ -1,0 +1,16 @@
+best deviation 1.8945E-60; lambda-six: [ 0.312500, 0.312500, 0.500000, 0.500000,
+0.687500, 0.687500 ]
+t(-3)=0 t(-12)=Infinity t(-60)=6 t(-15)=2/27 : j(-15) = -21.600000 ; Tu's values
+reproduced: true
+  best deviation 0.034178; lambda-six: [ -1.13746, -0.879148, 0.467844, 
+0.532156, 1.87915, 2.13747 ]
+t(-3)=0 t(-12)=Infinity t(-60)=2/27 t(-15)=6 : j(-15) = 1749.6000 ; Tu's values 
+reproduced: false
+  best deviation 0.034178; lambda-six: [ -1.13746, -0.879148, 0.467844, 
+0.532156, 1.87915, 2.13747 ]
+t(-3)=Infinity t(-12)=0 t(-60)=6 t(-15)=2/27 : j(-15) = 1749.6000 ; Tu's values 
+reproduced: false
+  best deviation 1.8945E-60; lambda-six: [ 0.312500, 0.312500, 0.500000, 
+0.500000, 0.687500, 0.687500 ]
+t(-3)=Infinity t(-12)=0 t(-60)=2/27 t(-15)=6 : j(-15) = -21.600000 ; Tu's values
+reproduced: true

@@ -1,0 +1,7 @@
+rho permutes the six values: true
+orbits of rho: [
+[ 1, 3, 5 ],
+[ 2, 4, 6 ]
+]
+t -> -t permutes the six values: true
+sigma rho sigma = rho^-1: true
