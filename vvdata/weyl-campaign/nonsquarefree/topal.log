@@ -1,0 +1,82 @@
+
+== 15_4: degree 3 over 15_1, needs R = 4
+   Hall(60) = [ 1, 3, 4, 5, 12, 15, 20, 60 ], Hall(15) = [ 1, 3, 5, 15 ] -> new 
+involutions [ 4, 12, 20, 60 ]
+     d = -4    (w_4): no CM points on the base
+     d = -16   (w_4): no CM points on the base
+     d = -12   (w_12): 2 on the base, 1 star point(s), fixed by [ 3 ] on the 
+base
+     d = -48   (w_12): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -20   (w_20): no CM points on the base
+     d = -80   (w_20): no CM points on the base
+     d = -60   (w_60): 2 on the base, 1 star point(s), fixed by [ 15 ] on the 
+base
+     d = -240  (w_60): 4 on the base, 1 star point(s), fixed by [] on the base
+
+== 21_4: degree 3 over 21_1, needs R = 4
+   Hall(84) = [ 1, 3, 4, 7, 12, 21, 28, 84 ], Hall(21) = [ 1, 3, 7, 21 ] -> new 
+involutions [ 4, 12, 28, 84 ]
+     d = -4    (w_4): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -16   (w_4): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -12   (w_12): no CM points on the base
+     d = -48   (w_12): no CM points on the base
+     d = -28   (w_28): 2 on the base, 1 star point(s), fixed by [ 7 ] on the 
+base
+     d = -112  (w_28): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -84   (w_84): 4 on the base, 2 star point(s), fixed by [ 21 ] on the 
+base
+     d = -336  (w_84): 8 on the base, 2 star point(s), fixed by [] on the base
+
+== 33_4: degree 3 over 33_1, needs R = 6
+   Hall(132) = [ 1, 3, 4, 11, 12, 33, 44, 132 ], Hall(33) = [ 1, 3, 11, 33 ] -> 
+new involutions [ 4, 12, 44, 132 ]
+     d = -4    (w_4): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -16   (w_4): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -12   (w_12): 2 on the base, 1 star point(s), fixed by [ 3 ] on the 
+base
+     d = -48   (w_12): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -44   (w_44): no CM points on the base
+     d = -176  (w_44): no CM points on the base
+     d = -132  (w_132): 4 on the base, 2 star point(s), fixed by [ 33 ] on the 
+base
+     d = -528  (w_132): 8 on the base, 2 star point(s), fixed by [] on the base
+
+== 10_9: degree 6 over 10_1, needs R = 10
+   Hall(90) = [ 1, 2, 5, 9, 10, 18, 45, 90 ], Hall(10) = [ 1, 2, 5, 10 ] -> new 
+involutions [ 9, 18, 45, 90 ]
+     d = -36   (w_9): no CM points on the base
+     d = -72   (w_18): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -180  (w_45): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -360  (w_90): 8 on the base, 2 star point(s), fixed by [] on the base
+
+== 14_9: degree 6 over 14_1, needs R = 10
+   Hall(126) = [ 1, 2, 7, 9, 14, 18, 63, 126 ], Hall(14) = [ 1, 2, 7, 14 ] -> 
+new involutions [ 9, 18, 63, 126 ]
+     d = -36   (w_9): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -72   (w_18): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -63   (w_63): no CM points on the base
+     d = -252  (w_63): no CM points on the base
+     d = -504  (w_126): 8 on the base, 2 star point(s), fixed by [] on the base
+
+== 22_9: degree 6 over 22_1, needs R = 12
+   Hall(198) = [ 1, 2, 9, 11, 18, 22, 99, 198 ], Hall(22) = [ 1, 2, 11, 22 ] -> 
+new involutions [ 9, 18, 99, 198 ]
+     d = -36   (w_9): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -72   (w_18): no CM points on the base
+     d = -99   (w_99): 4 on the base, 1 star point(s), fixed by [] on the base
+     d = -396  (w_99): no CM points on the base
+     d = -792  (w_198): 8 on the base, 2 star point(s), fixed by [] on the base
+
+== 15_8: degree 4 over 15_2, needs R = 6
+   Hall(120) = [ 1, 3, 5, 8, 15, 24, 40, 120 ], Hall(30) = [ 1, 2, 3, 5, 6, 10, 
+15, 30 ] -> new involutions [ 8, 24, 40, 120 ]
+     d = -8    (w_8): no CM points on the base
+     d = -32   (w_8): no CM points on the base
+     d = -24   (w_24): no CM points on the base
+     d = -96   (w_24): no CM points on the base
+     d = -40   (w_40): 4 on the base, 1 star point(s), fixed by [ 10 ] on the 
+base
+     d = -160  (w_40): 16 on the base, 2 star point(s), fixed by [] on the base
+     d = -120  (w_120): 4 on the base, 1 star point(s), fixed by [ 30 ] on the 
+base
+     d = -480  (w_120): 16 on the base, 2 star point(s), fixed by [] on the base
