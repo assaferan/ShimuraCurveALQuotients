@@ -81,8 +81,9 @@ if __name__ == "__main__":
                   + (f"   {bad}" if bad and len(bad) <= 6 else ""))
         print()
     for label, cols in (
-        ("#W^a (sum p^(g/2))^b", [lambda v, s: v["W"], lambda v, s: s]),
-        ("... * (D N)^c", [lambda v, s: v["W"], lambda v, s: s, lambda v, s: v["D"] * v["N"]]),
+        # the fit columns use sum p^(g/2) WITHOUT #W, so the printed exponents read directly
+        ("#W^a (sum p^(g/2))^b", [lambda v, s: v["W"], lambda v, s: s / v["W"]]),
+        ("... * (D N)^c", [lambda v, s: v["W"], lambda v, s: s / v["W"], lambda v, s: v["D"] * v["N"]]),
     ):
         x, spread = fit(data, cols)
         print(f"  {label:<22} exponents {[round(e, 2) for e in x[1:]]}  residual spread {spread:.0f}x")
