@@ -123,3 +123,29 @@ point, combined with the two W-quotients -- i.e. the classical ramification of X
 transported to the quaternionic setting, where there are no cusps. That is a bigger computation than
 coset counting and has not been done. Until it is, only 15_4 and 21_4 have branch data worth
 trusting, and the other five bases are open.
+
+## The degeneracy map's ramification, VERIFIED (degen.m, 2026-10-02)
+
+Rebuilding the branch data from the bottom, the first step is the map before any Atkin-Lehner
+quotient. H/Gamma_0(N) -> H/Gamma_0(N') ramifies exactly where the point stabiliser shrinks, i.e.
+over the base's ELLIPTIC points, and an elliptic point of order e downstairs has n_top/n_bot
+elliptic preimages (index 1) with the rest in orbits of size e, so
+
+    R = sum_{e in {2,3}} n_bot(e) * (deg - n_top(e)/n_bot(e)) * (e-1)/e,   deg = psi(N)/psi(N').
+
+**Riemann-Hurwitz reproduces the genus formula's g_top in all eleven cases tested**: the seven
+obstructed bases, the two unobstructed ones, and two squarefree controls (`10_3`, `14_3`).
+
+⚠ The first version of this law assumed p^2 | N kills the elliptic points upstairs. That is true
+only for p = 2 (order 2) and p = 3 (order 3) -- exactly the h | 24 condition -- and it FAILED at
+`6_25` and `6_49`, where 5 and 7 are split or inert in Q(i) and Q(sqrt -3) and the elliptic points
+persist or multiply (`6_25`: 2 of order 2 downstairs, 4 upstairs). With the n_top term restored all
+eleven close.
+
+### What is still missing for the star map
+
+Passing from X_0^D(N) -> X_0^D(N') to X^*(D,N) -> X^*(D,N') needs the two Atkin-Lehner quotients,
+and that is the step this file retracted above: the containment of the two groups, and how a W-orbit
+upstairs sits over a W-orbit downstairs at a point with nontrivial stabiliser. The degeneracy law
+above is independent of it and settled; the star step is not, so the branch data of 15_8, 10_9,
+14_9, 22_9 and 33_4 remains open.
