@@ -1,24 +1,25 @@
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
-// tests/X0_119_1.m -- RE-DERIVATION test for X_0^119(1).
+// tests/_offline/X0_119_1.m -- re-derivation test for X_0^119(1).
 //
-// models_119_1.m is the first model of this base: its Borcherds search needed PR #63 (the ladder
-// ends on the third rung, 0-side pole order 6069, which the old route never reached).  Checked:
-//   [1] EXTERNAL: the stored W={1} curve against Guo-Yang's published equation (degree 20,
-//       genus 9) -- in tests/GuoYangEquations.m, with an exact IsIsomorphic.
-//   [2] RE-DERIVATION: AllEquationsAboveCovers is re-run and every cover below is compared.
-//   [3] INVOLUTION: Guo-Yang's w_7 on the top curve.
+// Checks, against models_119_1.m:
+//   [1] the stored W={1} curve is isomorphic to Guo-Yang's published equation (degree 20,
+//       genus 9), in tests/GuoYangEquations.m;
+//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one;
+//   [3] Guo-Yang's w_7 is an involution of the top curve.
 //
-// Guo-Yang publish, in their coordinates, w_7(x,y) = (-x, y).  Our stored W={1} polynomial is
-// EVEN in x (every odd coefficient below is literally 0), as is Guo-Yang's, so the two models
-// differ by a diagonal change of coordinates and a sign-only involution has the same matrix in
-// both -- the argument of X0_69_1.m.  The other two involutions of the base are not transcribed
-// in this repository yet and are not checked here.
+// Guo-Yang give w_7(x,y) = (-x, y) in their coordinates.  Our stored W={1} polynomial is even
+// in x, as is Guo-Yang's, so the two models differ by a diagonal change of coordinates and a
+// sign-only involution has the same matrix in both (the argument of X0_69_1.m).  The other two
+// involutions of the base are not transcribed in this repository and are not checked here.
 //
 // SOURCE for the equation and w_7: Compositio Math. 153 (2017) 1-40, Table A.1 "Equations of
 // level one (continued)", printed page 35 (see tests/GuoYangEquations.m for the transcription).
 //
-// COST: the Borcherds forms take under an hour on lovelace; the whole re-derivation about two.
+// COST: 58 min on a Mac, so it is run by hand:
+//     NORMALIZ_BIN=... magma -b filename:=tests/_offline/X0_119_1.m run_tests.m < /dev/null
+// The stored models are checked in CI by tests/ModelChecks.m, including the L-polynomial of
+// every quotient against the trace formula.
 
 function load_covers_and_ws_data_119_1()
     _<s> := PolynomialRing(Rationals());

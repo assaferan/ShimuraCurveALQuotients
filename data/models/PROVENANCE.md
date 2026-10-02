@@ -394,17 +394,6 @@ should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1
 
 ## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
 
-`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
-order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
-lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
-published equation, and Table 1 and the quotient oracle pass. Its `[1,53]` quotient is stored
-with an `h` term (`y^2 + h y = f`).
-
-`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
-(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
-lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation; Table 1 and
-the quotient oracle pass.
-
 `models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
 BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
 tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
@@ -413,6 +402,25 @@ five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43).
 all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
 published equation (`tests/GuoYangEquations.m`), genus 7 and the hyperelliptic involution match
 Table 1, and the quotient oracle passes.
+
+`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
+(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
+lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation; Table 1 and
+the quotient oracle pass.
+
+`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
+order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
+lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
+and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient oracle has no entry for
+`159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
+(`y^2 + h y = f`).
+
+For all three, every stored quotient's L-polynomial at the small good primes equals the one the
+trace formula gives for the W-fixed part of the D-new space (`tests/ModelChecks.m`, check [5]),
+which also fixes the labels of the w_p: the opposite sign convention would swap the genera of the
+two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
+58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
 
 ## Reproducibility status, measured 2026-09-05
 

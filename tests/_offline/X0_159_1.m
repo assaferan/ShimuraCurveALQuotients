@@ -1,27 +1,26 @@
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
-// tests/_offline/X0_159_1.m -- RE-DERIVATION test for X_0^159(1).
+// tests/_offline/X0_159_1.m -- re-derivation test for X_0^159(1).
 //
-// models_159_1.m is the first model of this base: its Borcherds search needed PR #63 (the ladder
-// ends on the third rung, 0-side pole order 8109, whose kernel alone took 4 h 40 min on lovelace;
-// the old route never reached it).  Checked:
-//   [1] EXTERNAL: the stored W={1} curve against Guo-Yang's published equation (degree 20,
-//       genus 9) -- in tests/GuoYangEquations.m, with an exact IsIsomorphic.
-//   [2] RE-DERIVATION: AllEquationsAboveCovers is re-run and every cover below is compared.
-//   [3] INVOLUTION: Guo-Yang's w_3 on the top curve.
+// Checks, against models_159_1.m:
+//   [1] the stored W={1} curve is isomorphic to Guo-Yang's published equation (degree 20,
+//       genus 9), in tests/GuoYangEquations.m;
+//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one;
+//   [3] Guo-Yang's w_3 is an involution of the top curve.
 //
-// Guo-Yang publish, in their coordinates, w_3(x,y) = (-x, y).  Our stored W={1} polynomial is
-// EVEN in x (every odd coefficient below is literally 0), as is Guo-Yang's, so the two models
-// differ by a diagonal change of coordinates and a sign-only involution has the same matrix in
-// both -- the argument of X0_69_1.m.  The other two involutions of the base are not transcribed
-// in this repository yet and are not checked.  The [1,53] quotient is stored as y^2 + h y = f.
+// Guo-Yang give w_3(x,y) = (-x, y) in their coordinates.  Our stored W={1} polynomial is even
+// in x, as is Guo-Yang's, so the two models differ by a diagonal change of coordinates and a
+// sign-only involution has the same matrix in both (the argument of X0_69_1.m).  The other two
+// involutions of the base are not transcribed in this repository and are not checked.  The
+// [1,53] quotient is stored as y^2 + h y = f.
 //
 // SOURCE for the equation and w_3: Compositio Math. 153 (2017) 1-40, Table A.1 "Equations of
 // level one (continued)", printed page 35 (see tests/GuoYangEquations.m for the transcription).
 //
-// COST: 10395 s (2.9 h) on a Mac, the rung-3 kernel dominating -- too long for a CI job, so it
-// lives here and is run by hand:
+// COST: 10395 s (2.9 h) on a Mac, the third rung's kernel dominating, so it is run by hand:
 //     NORMALIZ_BIN=... magma -b filename:=tests/_offline/X0_159_1.m run_tests.m < /dev/null
+// The stored models are checked in CI by tests/ModelChecks.m, including the L-polynomial of
+// every quotient against the trace formula.
 
 function load_covers_and_ws_data_159_1()
     _<s> := PolynomialRing(Rationals());
