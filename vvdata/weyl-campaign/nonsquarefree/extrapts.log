@@ -1,0 +1,55 @@
+
+== 10_9: degree 6 over 10_1, needs R = 10 ; extra-element discriminants [ -36, 
+-35, -32, -27, -20, -11 ]
+   d = -36   : no CM points on the base
+   d = -35   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -32   : no CM points on the base
+   d = -27   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -20   : 2 point(s) on the base, 1 star point(s), fixed by [ 5 ]
+   d = -11   : no CM points on the base
+
+== 14_9: degree 6 over 14_1, needs R = 10 ; extra-element discriminants [ -36, 
+-35, -32, -27, -20, -11 ]
+   d = -36   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -35   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -32   : no CM points on the base
+   d = -27   : no CM points on the base
+   d = -20   : no CM points on the base
+   d = -11   : 4 point(s) on the base, 1 star point(s), fixed by []
+
+== 22_9: degree 6 over 22_1, needs R = 12 ; extra-element discriminants [ -36, 
+-35, -32, -27, -20, -11 ]
+   d = -36   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -35   : no CM points on the base
+   d = -32   : no CM points on the base
+   d = -27   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -20   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -11   : 2 point(s) on the base, 1 star point(s), fixed by [ 11 ]
+
+== 15_8: degree 4 over 15_2, needs R = 6 ; extra-element discriminants [ -16, 
+-15, -12, -7 ]
+   d = -16   : no CM points on the base
+   d = -15   : 4 point(s) on the base, 1 star point(s), fixed by [ 15 ]
+   d = -12   : 4 point(s) on the base, 1 star point(s), fixed by [ 3 ]
+   d = -7    : 8 point(s) on the base, 1 star point(s), fixed by []
+
+== 15_4: degree 3 over 15_1, needs R = 4 ; extra-element discriminants [ -16, 
+-15, -12, -7 ]
+   d = -16   : no CM points on the base
+   d = -15   : 2 point(s) on the base, 1 star point(s), fixed by [ 15 ]
+   d = -12   : 2 point(s) on the base, 1 star point(s), fixed by [ 3 ]
+   d = -7    : 4 point(s) on the base, 1 star point(s), fixed by []
+
+== 21_4: degree 3 over 21_1, needs R = 4 ; extra-element discriminants [ -16, 
+-15, -12, -7 ]
+   d = -16   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -15   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -12   : no CM points on the base
+   d = -7    : 2 point(s) on the base, 1 star point(s), fixed by [ 7 ]
+
+== 33_4: degree 3 over 33_1, needs R = 6 ; extra-element discriminants [ -16, 
+-15, -12, -7 ]
+   d = -16   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -15   : 4 point(s) on the base, 1 star point(s), fixed by []
+   d = -12   : 2 point(s) on the base, 1 star point(s), fixed by [ 3 ]
+   d = -7    : no CM points on the base

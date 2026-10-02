@@ -38,3 +38,37 @@ the discriminant t^2 - 4n(alpha) that do not appear among the base's w-fixed poi
 those discriminants is the next step; until it is done, the branch data of 14_9, 22_9 and 15_8 is
 not known, and the three cases above are not solvable by this route. ⇒ 15_4, 21_4 and 10_9 close
 on their own, which is evidence for them but not a proof that nothing was missed.
+
+## The missing points identified, 2026-10-02 (extrapts.m)
+
+The extra normaliser element is the translation by 1/h, the matrix (h 1; 0 h) of reduced norm h^2
+and trace t. Classically t = 2h and it is parabolic, fixing a cusp; a Shimura curve with D > 1 is
+compact, so the global element is ELLIPTIC and its fixed points are CM points of discriminant
+t^2 - 4h^2 with |t| < 2h. Those discriminants are not of the form -q or -4q for q | D N', so such a
+point is fixed by no Atkin-Lehner involution and was absent from the enumeration.
+
+For an image of order 2 in the Galois group the element squares into Q^* O^*, forcing t = 0 and
+d = -4h^2: **d = -36 for h = 3, d = -16 for h = 2.**
+
+### It closes the three failures, and predicts the one that needed nothing
+
+    14_9   degree 6, R = 10:  -56 (x2), -8, -4 give 2+2+2+2 = 8, and the base has ONE star point
+                              of d = -36 -> +2 = 10  EXACTLY
+    22_9   degree 6, R = 12:  -88, -11, -4, -3 give 2+2+2+4 = 10, one d = -36 star point
+                              -> +2 = 12  EXACTLY
+    10_9   degree 6, R = 10:  closed already -- and the base has NO d = -36 points, so the
+                              hypothesis demands no extra branch point there.  CONSISTENT.
+    15_8   degree 4, R = 6:   its five base points contribute at most 1 each, so it needs a sixth
+                              branch point; d = -16 has no points on 15_2, and the only candidate
+                              among t^2 - 16 that does is d = -7 (t = +-3), one star point.
+
+### ⚠ What is still open: the trace t at h = 2
+
+The three h = 3 cases are settled by t = 0. The h = 2 cases are not, and the two choices disagree:
+15_4's cover is branched at three points only (cover15.m reproduces Tu's values there, so its data
+is complete), which needs the extra element to have NO fixed point on 15_1 -- true for d = -16,
+false for d = -7, since 15_1 carries a -7 star point. 15_8 needs the opposite. So the actual trace
+has to be COMPUTED, per base, not guessed: enumerate the elements of reduced norm h^2 in the Eichler
+order, keep those conjugating the order to itself and not of the form (scalar) x (unit), and read
+off t. Until that is done, 15_8 and 33_4 are not solvable by this route, while 14_9 and 22_9 are
+(their extra point is the d = -36 one).
