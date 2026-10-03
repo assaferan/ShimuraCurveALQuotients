@@ -290,3 +290,12 @@ the q-isogeny; at -1960 the roots are divisible by 7 (s(tau_{-40}) = 0), at -735
 the 7 (s(tau_{-15}) = 5/4).  ⚠ q = 2 outside an odd level (35_1, 39_1, 51_1, 55_1, 57_1, 87_1 tables
 have such points: -12, -28, -48, -60) is NOT derived -- L_2 is not unimodular there.
 GY tables with ODD such points: 21_2 (-100, q = 5), 55_1/58_1/82_1/94_1 (-27, q = 3), 87_1 (-147, q = 7).
+
+## External check of the ramified branch: X_0^58(1), d = -27 (gyforce_58_1.m, 2026-10-03)
+
+The GY tables never REACH their conductor-3/5/7 points (CandidateDiscriminants offers conductors 1
+and 2 only), so `gyforce_58_1.m` forces d = -27 = 3^2 (-3) into the table of X_0^58(1) -- a base with
+NO level prime, so the q = 3 term is the only m = 0 term -- and runs the cross-ratio check of
+GuoYangCheck.m.  The term is log 3 on the Hauptmodul form (key -1) alone, and s(-27) matches
+Guo-Yang's 3/19 (all 7 comparable discs OK in both rows).  3 | d_0: this is the anisotropic
+(ramified) branch kappa^- = -2(q^{rho+1}-1)/((q-1)q^k) log q.
