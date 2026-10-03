@@ -87,3 +87,29 @@ sizes on the actual lattices.
 Also recorded: `ShimuraCurveLattice` works at both levels (probe625.m) with |A| = 2(DN)^2 as at
 squarefree level, the star curves have genus 0 and the full curves genus 5 and 9, and the Hall
 divisor group has 8 elements, {1,2,3,6,25,50,75,150} at 6_25.
+
+## ⇒ WHY 6_25 IS OUT OF REACH: the pool, not the timeout (measured 2026-10-03)
+
+The theory above is done, and nothing structural blocks the base: both lattices build, the
+Atkin-Lehner group is already indexed by Hall divisors throughout the library, and the whole
+quotient diagram of X_0^6(25) comes out instantly (16 curves, top genus 5, star genus 0). The
+obstruction is the eta-quotient pool at level M = 300.
+
+    pole order 55    1.6 s      299 lattice points      (a cached triple, reproduced exactly)
+    pole order 135   ~45 min    4 075 460 lattice points   (272 MB of output)
+
+and the form ring asks for fifteen orders, 135, 175, ..., 695. So the half-hour solver limit was
+NOT the real obstacle -- with a four-hour budget the first deep solve finishes -- but it returns
+FOUR MILLION generators, where the odd-D bases that do build have pools of seven or eight thousand.
+The downstream echelon and kernel steps cannot take that, and the deeper orders are far worse.
+
+⇒ **6_25 (and a fortiori 6_49, at M = 588) is out of reach by this route, for a structural reason
+rather than a budget.** Do not raise NMZ_TIMEOUT and wait: the solve succeeding is what proves the
+point. Level 300 has 18 divisors, so the polytope has 18 variables against 12 at M = 60, and the
+pole orders needed are also an order of magnitude deeper; both push the point count up.
+
+⇒ What this leaves. The level-p^2 m = 0 analysis above stands on its own and is verified, but it
+cannot be tested against a measured CM value until some p^2-level base has a model, and none is
+reachable with the present construction. The 15_4-style route is closed for the obstructed bases
+(see ../nonsquarefree/NOTES.md) and the pool is the obstacle for the unobstructed ones. So the
+non-squarefree frontier needs a different construction, not a bigger budget.
