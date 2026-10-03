@@ -434,3 +434,29 @@ a regression, not something to add to the list.
 ⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
+
+## 200 covers built as fibre products of their double covers (2026-10-03, `FibreProductCovers.m`)
+
+A cover `X_0(D,N)/W` is Galois over the star curve with an elementary abelian 2-group, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 = f(t)`. The
+entries added on this date, 200 of them across 53 files, were built that way from the hyperelliptic
+entries already committed in the same file, with no Borcherds or Schofer computation, by the
+writer `writefp.m` (campaign tooling; the same construction the pipeline's final stage runs).
+
+**Format.** Stored as the existing non-hyperelliptic shape `<genus, "CRV", [ Strings() | ... ]>`,
+one equation per factor, in coordinates `s, z` of weight 1 and fibre coordinates `y1, y2, ...`
+each of weight half the degree of its own equation (the same rule the older `x, y, s, z` pairs
+follow). Twenty-nine of them are top curves `W = {1}`, of genus 3 to 11, which no earlier stage
+could reach because they are not subhyperelliptic.
+
+**What vouches for them.** Each entry was accepted only when the compositum has the genus the
+Shimura-curve genus formula predicts and its point counts over `F_p` and `F_{p^2}` at three good
+primes agree with the Eichler–Selberg trace formula on the `W`-fixed part of the `D`-new space;
+16 candidates failed one of the two and were not written. Every written entry was then re-read
+from its stored strings alone and re-checked the same way at two primes. Nothing external
+publishes these curves, so there is no published-equation comparison.
+
+**Regenerating.** The default recipe produces them since the fibre-product stage runs last in
+`AllEquationsAboveCovers`; the pipeline's own run will write them in the same format. ⚠ A fibre
+product of factors from runs with DIFFERENT Hauptmodul normalisations can have the right genus and
+be the wrong curve; the trace-formula check is what rejects it, so never accept one on genus alone.
