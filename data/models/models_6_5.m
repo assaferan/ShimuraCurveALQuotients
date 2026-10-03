@@ -16,5 +16,8 @@ models[[Integers()|1,6]] := [* <0, P![ 125, 0, -256 ], P![]>, <0, P![ 2125/4096,
 models[[Integers()|1,2,3,6]] := [* <0, P![ -8/3, -131/9, -16/9 ], P![]> *];
 models[[Integers()|1,30]] := [* <0, P![ -2, 0, 4 ], P![]>, <0, P![ 1/2, 0, -1/2 ], P![]>, <0, P![ 1/2, 0, 1/4 ], P![]> *];
 models[[Integers()|1,5,6,30]] := [* <0, P![ 1/2, 1/16 ], P![]> *];
-// The one genus-1 immediate cover of the star curve; its six genus-0 siblings were already here.
+// X_0(6,5)/<w_3, w_5>, genus 1.  It is the quotient of Gonzalez-Rotger's model of X_0(6,5)
+// (J. Math. Soc. Japan 58 (2006), Table 1, p. 8: y^2 = -x^4 + 61x^2 - 1024, with w_30 = (x,-y),
+// w_2 = (-x,y), w_6 = (32/x, 32y/x^2)) first by w_15 = w_2 w_30 and then by w_3 = w_2 w_6, the
+// elliptic curve 30a6; tests/X0_6_5.m checks the isomorphism.
 models[[Integers()|1,3,5,15]] := [* <1, P![ 0, -8/3, -131/9, -16/9 ], P![]> *];
