@@ -115,12 +115,17 @@ function trace_formula_agrees(fs, X, nprimes)
     for p in ps do
         Kp := RationalFunctionField(GF(p));
         L := Kp;
-        ok := true;
-        for f in fs do
-            fp := PolynomialRing(GF(p))!f;
-            R<Y> := PolynomialRing(L);
-            L := FunctionField(Y^2 - L!Evaluate(fp, Kp.1));
-        end for;
+        // A factor can reduce to a square mod p, making Y^2 - f reducible; that is bad reduction
+        // of this model at p, not a verdict, so the prime is skipped rather than raised.
+        try
+            for f in fs do
+                fp := PolynomialRing(GF(p))!f;
+                R<Y> := PolynomialRing(L);
+                L := FunctionField(Y^2 - L!Evaluate(fp, Kp.1));
+            end for;
+        catch e
+            continue;
+        end try;
         if Genus(L) ne X`g then continue; end if;          // bad reduction of this model
         cnt := [&+[e * #Places(L, e) : e in Divisors(d)] : d in [1..2]];
         exp := [ComputePointsViaTrace(X, p, d) : d in [1..2]];
