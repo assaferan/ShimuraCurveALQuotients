@@ -858,12 +858,15 @@ $\tau_{-12}$, which is the congruence $s(\tau_{dq^2})\equiv s(\tau_d)$ at the pr
 the cyclic $q$-isogeny between the CM points predicts. The same happens at $d=-1960=7^2\cdot(-40)$
 (field discriminant $-1960$, roots divisible by $7$ as $s(\tau_{-40})=0$), and at $d=-735=7^2\cdot
 (-15)$, $7$ inert, the term puts the factor $7$ into $N(s-\tfrac54)$ as $s(\tau_{-15})=\tfrac54$
-requires (\texttt{level-p2/qprime.m}, \texttt{classpoly.py}, \texttt{fod.m}). One published value does
-reach such a point: on $X_0^{58}(1)$ --- no level prime, so no other $m=0$ term at all ---
-\cite{GY} give $s(-27)=3/19$, with $-27=3^2\cdot(-3)$ and $3\mid d_0$, the ramified case of (4). There
-the term is $\log 3$ on the Hauptmodul form alone, and with it the pipeline's value at $-27$ agrees
-with the published one (by cross-ratio against three other points of the table, as in
-\texttt{tests/\_offline/GuoYangCheck.m}). Not covered: $q=2$ outside an odd level, where $L_2$ is
+requires (\texttt{level-p2/qprime.m}, \texttt{classpoly.py}, \texttt{fod.m}). Three published values do
+reach such points, once they are forced into the table (the pipeline's candidate search offers
+conductors $1$ and $2$ only): on $X_0^{58}(1)$ and $X_0^{55}(1)$ --- no level prime, so no other
+$m=0$ term at all --- \cite{GY} give $s(-27)=3/19$ and $0$, with $-27=3^2\cdot(-3)$ and $3\mid
+d_0$, the ramified case of (4); on $X_0^{21}(2)$ they give $s(-100)=1/5$, with $-100=5^2\cdot(-4)$
+and $5$ split in $\Q(i)$, the case of Lemma~\ref{lem:Wcond}. The terms are $\log3$, $-\log3$ and
+$-4\log5$ on the Hauptmodul form, and with them the pipeline reproduces all three published values
+(by cross-ratio against three other points of each table, as in
+\texttt{tests/\_offline/GuoYangCheck.m}; \texttt{level-p2/gyforce\_*.m}). Not covered: $q=2$ outside an odd level, where $L_2$ is
 not unimodular and the plane has yet another shape.
 
 \begin{remark}[the $m>0$ terms at non-fundamental $d$]

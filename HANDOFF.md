@@ -42,7 +42,9 @@ is the CM vectors of d/q^2, d/q^4, ..., so the term is a pole sum over the lower
 Table 45 cannot test it; what can: the CLASS POLYNOMIAL. At d = -588 (three star points) the nine
 values force a monic cubic H in Q[X] -- with the term H = X^3 - 191/54 X^2 + 343/432 X - 83^2/(2^8 3^3 7),
 cutting out exactly the cubic field FieldsOfDefinitionOfCMPoint gives (disc -588); without it no
-rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. ⚠ The divisor relations
+rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. EXTERNAL: forcing the Guo-Yang points the
+candidate search never offers, the term reproduces s(-27) on 58_1 and 55_1 (q = 3 ramified) and
+s(-100) on 21_2 (q = 5 split) -- campaign level-p2/gyforce_*.m. ⚠ The divisor relations
 among the nine forms are BLIND to this term (it is divisor-linear). ⚠ NOT derived: q = 2 outside an
 odd level (the tables for 35_1, 39_1, 51_1, 55_1, 57_1, 87_1 have such points; L_2 is not unimodular
 there) and a level prime dividing both the conductor and d_0; both log a verbose warning.
