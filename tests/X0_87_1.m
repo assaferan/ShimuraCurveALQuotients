@@ -12,8 +12,8 @@
 // validates the `W={1}` curve, and concluded the defect was "in THIS generated test, not in the
 // data it compares against". That was correct. What was missing was only the mechanism.
 //
-// ⚠ IT REMAINS OFFLINE because it is SLOW (3945 s = 66 min), not because it is broken.
-// `run_tests.m` globs only `tests/*.m`, so `_offline` cannot reach CI.
+// COST: 117 s on a Mac with the Borcherds search of #63 (3945 s = 66 min before it), so it
+// runs in CI.
 //
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
@@ -57,8 +57,9 @@ function load_covers_and_ws_data_87_1()
     // y^2 = -(x^6-7x^4+43x^2+27)(243x^6+523x^4+369x^2+81). So the two differ by a DIAGONAL change
     // x -> ax, y -> by, and diagonal scalings commute with sign changes, leaving a sign-only
     // involution with the same matrix on both sides. Same argument as X0_51_1.m and X0_69_1.m.
-    // ⚠ VERIFIED AS AUTOMORPHISMS of the stored curve before this file was run at all (the run is
-    // hours): both matrices below are automorphisms AND involutions of cover_data[{1}], while the
+    // ⚠ VERIFIED AS AUTOMORPHISMS of the stored curve before this file was run at all (the run
+    // took hours then; minutes now): both matrices below are automorphisms AND involutions of
+    // cover_data[{1}], while the
     // x <-> z swap Matrix(3,3,[0,0,1, 0,1,0, -1,0,0]) is NOT -- which is the discriminating fact,
     // since at 111_1 the situation is exactly reversed.
     //
