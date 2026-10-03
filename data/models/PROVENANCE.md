@@ -434,3 +434,27 @@ a regression, not something to add to the list.
 ⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
+
+## `21_2` and `6_5`: four quotients added 2026-10-03, both files regenerated with the default recipe
+
+Both files predated the current cover propagation and were missing covers the pipeline now
+produces; no flag is needed, the default recipe above fills them.
+
+**`21_2`, the three genus-2 quotients `{1,3}`, `{1,6}`, `{1,14}`.** These are the quotients by the
+three Atkin-Lehner involutions that act without fixed points, so Riemann-Hurwitz drops the genus
+from 3 to 2 rather than to 1 or 0. They are now checked against **Guo-Yang's published curve**, not
+against our own output: their pair is `y^2 = -(9u-1)(u+7)(u+3)`, `z^2 = -(u+3)`, `u = x^2`, with the
+group acting by sign changes on `(x,y,z)`, and each quotient is the invariant subfield of one sign
+pattern (the derivation is written out in `tests/X0_21_2.m`). Our models are those curves with `y`
+scaled by `3/32`, `3/16`, `3/32`, so they agree over **Q**.
+
+⚠ **The three were absent because the top curve here is stored as a non-hyperelliptic pair and the
+old code only quotiented hyperelliptic curves** — but do not read that as the obstruction: a plain
+rerun produces all three as hyperelliptic curves, so the limitation had already been lifted
+elsewhere. The lesson is the usual one: rerun before diagnosing from the code.
+
+**`6_5`, the quotient `{1,3,5,15}`.** The one genus-1 double cover of the star curve; its six
+genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a single `w_m`, so
+nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
+(genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
+291 checks with no failures.
