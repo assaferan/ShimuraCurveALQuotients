@@ -2191,17 +2191,26 @@ the field, together with the field's unit count and a division by the conductor.
 exactly when $h(d)=h(d_0)$, which holds at conductor $2$ when $2$ splits ($d=-28,-60$) and fails at
 conductor $4$, where $h(d)=2h(d_0)$ and every value came out halved. With the field's class number
 the value at $d=-240$ agrees with Table~45 exactly, $2$-part included, and nothing at a fundamental
-or conductor-$2$ discriminant moves. Second, the $2$-part when the conductor prime is \emph{inert}
-is settled by counting on the negative plane itself: at $d=-48$ the zero coset's series is
-$\alpha_k=1,2,2,4,2,4,2,\dots$, bounded, so $W_{0,2}(s,\varphi_0)$ has no pole, exactly as at
-$d=-12$, while at every split plane ($d=-15,-60,-240$) it grows linearly and the pole is there.
-Since the term of Proposition~\ref{prop:kappa0} comes from that pole, at a level prime dividing the
-conductor it is present when the prime splits in $\Q(\sqrt d)$ and absent when it is inert. With that
-rule the value at $d=-48$ also agrees with Table~45 exactly; before it, the term added $4\log2$ too
-much there. So every conductor case Table~45 can test is now right, by two separate corrections, and
-the routine applies both without warning. What is not established is a proof covering
-non-fundamental $d$ in general: the evidence is the computed local factors and the five points of
-Table~45.
+or conductor-$2$ discriminant moves. Second, the $2$-part at conductor $4$ is \emph{not} governed by a rule on the splitting of
+$2$, although it looked that way on the one form tested: counting on the negative plane itself,
+the zero coset's series is bounded at the inert planes ($d=-12,-48$) and grows linearly at the
+split ones ($d=-15,-60,-240$), so the pole of Proposition~\ref{prop:kappa0} is present exactly when
+$2$ splits in $\Q(\sqrt{d_0})$, and the rule ``add $\tfrac12c_\eta(0)\log2$ when $2$ splits, nothing
+when it is inert'' reproduces Table~45 at $-48$ and $-240$ for that form. But the same lattice
+computation shows that at a conductor prime $L_N\neq L_{+,N}\oplus L_{-,N}$ (index $2^{2k-1}$ at
+conductor $2^k$), so a coset of the plane lies over several pairs $(x,\nu)$ and the restored terms
+are a sum over that fibre, in which the local factors of the nonzero cosets --- nonzero at an inert
+prime too, $-\tfrac43\log2$ and $-\tfrac13\log2$ at $d=-48$ --- are weighted by coefficients of
+$f$ at the exponents $Q(\lambda_0/2)$ and $Q(\lambda_0/4)$, i.e.\ by the poles of $f$ at the CM points
+of the smaller discriminants $d/4$, $d/16$. Evaluating that sum (Proposition~prop:fibre of the
+standalone note \texttt{kappa0-proof-standalone.tex}) reproduces, for all nine forms of the model
+set, the values forced by Table~45 and the forms' divisors at both $-240$ and $-48$; the
+splitting rule is right for five of nine at $-240$ and three of nine at $-48$, and Yang's conductor
+term for the pairs with $Q(x)=m$ gives the irrational $2^{4/3}$ at $-48$ for two forms. The routine
+still applies the splitting rule, which is exact at every conductor-$2$ point and on the tested form
+at conductor $4$ but not in general; conductor-$4$ points are never offered to the model search.
+What is not established is a closed form for the local factors at a conductor prime; with it the
+fibre sum is the term at non-fundamental $d$.
 \end{remark}
 Two things are worth drawing out. The factor $\tfrac12$ is
 $\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same

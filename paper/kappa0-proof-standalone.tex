@@ -449,9 +449,9 @@ primes of $N$ dividing $d$ contribute nothing, for the reason the recipe assumed
 
 Everything above assumes $d$ fundamental. Write $d=f^2d_0$ with $d_0$ fundamental and $f>1$ the
 conductor, $R_f=\Z+f\mathcal O_{d_0}$, and let $\lambda=\varphi(\sqrt d)$ for an optimal embedding
-$\varphi$ of $R_f$, so that $\langle\lambda,\lambda\rangle=2\lvert d\rvert$ as before. Two things are
-different at a level prime $N$ dividing $f$, and they are different in kind: one is proved below,
-the other is computed and leaves an exact gap.
+$\varphi$ of $R_f$, so that $\langle\lambda,\lambda\rangle=2\lvert d\rvert$ as before. At a level prime $N$ dividing $f$ the lattice is different, and so is the bookkeeping;
+what is proved below is the general form of the restored terms (Proposition~\ref{prop:fibre}),
+what is computed is the local factors that enter it on $X_0^{15}(2)$.
 
 \begin{lemma}[the plane's isotropy is a property of the field]\label{lem:split}
 For every prime $p$, the quadratic space $\Lm\otimes\Q_p=\lambda^\perp\subset B_0\otimes\Q_p$ is
@@ -505,7 +505,8 @@ $p^{2k}$-scaled line;
 the $p^k-1$ multiples of $e_2'/p^k$, and of these exactly the $p-1$ multiples of $e_2'/p$ lie in
 $L_p^\vee$. In particular the direct-sum decomposition of Lemma~\ref{lem:LN} fails, and a coset of
 $L_{-,p}^\vee/L_{-,p}$ enters the decomposition of some $\varphi_\eta$, $\eta\in\Ldual/L$, only if it
-is one of those $p-1$.
+is one of those $p-1$; the others can pair only with $x\notin\Ldual$, $x+\nu\in\Ldual$
+(Proposition~\ref{prop:fibre}).
 \end{enumerate}
 For $p=2$ the same computation on $X_0^{15}(2)$ gives, for $f=2,4,8$ and both splitting types,
 index $2^{2k-1}$, elementary divisors of $2$-adic valuations $(1,2k-1)$, $2^k-1$ integral cosets of
@@ -528,58 +529,103 @@ integral iff $p^k\mid j$. Finally $\langle e_2'/p^m,x\rangle=-(1/p^{m-1})(\gamma
 \dots$ is integral on $L_p$ iff $m\le1$, which leaves the multiples of $e_2'/p$.
 \end{proof}
 
-So at a level prime dividing the conductor the picture splits by the field. If $p$ splits, the
-plane is isotropic, the zero coset has its pole, and the mechanism of
-Proposition~\ref{prop:kappa0} is available: on $X_0^{15}(2)$ the counting gives, at the zero coset,
-$\alpha_k=1,2,3,\dots$ for $d=-60$ ($f=2$) and $\alpha_k=1,2,2,4,6,8,10,\dots$ for $d=-240$ ($f=4$),
-with the integral-norm cosets contributing $W=1+X$ at $f=2$, and the resulting correction
-reproduces \cite[Table~45]{GY} exactly at $d=-28,-60,-240$. If $p$ is inert, the plane is
-anisotropic, there is no pole, and the proposition's argument does not apply at all; and this is
-the case that only non-fundamental $d$ can produce, since for fundamental $d$ an inert $p\,\|\,N$
-admits no optimal embedding (Eichler's condition $\nu_p=1+(\tfrac{d}{p})=0$), whereas for $p\mid f$
-the local embedding number is $2$ regardless.
+So at a level prime dividing the conductor the picture splits by the field: if $p$ splits, the
+plane is isotropic and the zero coset has its pole; if $p$ is inert, the plane is anisotropic and
+there is no pole --- a case only non-fundamental $d$ can produce, since for fundamental $d$ an inert
+$p\,\|\,N$ admits no optimal embedding (Eichler's condition $\nu_p=1+(\tfrac dp)=0$), whereas for
+$p\mid f$ the local embedding number is $2$ regardless. In neither case does the argument of
+Proposition~\ref{prop:mult} apply as it stands, because it identifies a coset of $\Lm^\vee/\Lm$ with
+a coset of $\Ldual/L$ through $L_N=L_{+,N}\oplus L_{-,N}$, and Lemma~\ref{lem:conductor}(3) says the
+sum is not direct. What survives is the bookkeeping before that identification.
 
-\begin{proposition}[the inert conductor prime: what is known]\label{prop:inert}
-Let $N\,\|\,$level, $N\mid f$, $N$ inert in $k$. Then $W_{0,N}(s,\varphi_0)$ is holomorphic and
-nonzero at $s=0$, and for a nonzero coset $\nu$ of integral norm the first-order coefficient is
+\begin{proposition}[the restored terms without the direct-sum hypothesis]\label{prop:fibre}
+Let $N$ be prime and $d<0$ any discriminant with $\mathrm{CM}(d)\neq\varnothing$. The terms of
+\cite[Thm.~B]{GY} in which $\kappa^-$ is evaluated at $0$ at a nonzero coset total, per CM point,
 \[
-  b_\nu(0,v)=\Phi(0)\,\frac{W_{0,N}'(0,\varphi_\nu)}{W_{0,N}(0,\varphi_0)}
-            =-\frac{W_{0,N}'(0,\varphi_\nu)}{W_{0,N}(0,\varphi_0)},
+  -\frac14\sum_{\substack{\nu\in\Lm^\vee/\Lm\\ \nu\neq0}}\kappa^-_\nu(0)
+     \sum_{\substack{x\in\Lp^\vee\\ x+\nu\in\Ldual}}c_{[x+\nu]}\bigl(-Q(x)\bigr),
 \]
-which is \emph{not} zero in general: on $X_0^{15}(2)$ it is $-\tfrac23\log2$ at $d=-12$ (zero coset
-$(1+X+X^2)/(1+X)$, one integral coset $1-X$) and the three integral cosets at $d=-48$ (zero coset
-$\alpha_k=1,2,2,4,2,4,2,\dots$, $W_{0,2}(0,\varphi_0)=3$; cosets $1-X$, $1-X$ and
-$(1-X)(1+X+2X^2)$) give $-\tfrac13\log2$, $-\tfrac13\log2$ and $-\tfrac43\log2$. Nevertheless the
-value of the Borcherds product at $d=-48$ agrees with \cite[Table~45]{GY} exactly when \emph{no}
-$\log 2$ correction is applied, and disagrees by $4\log2$ when the recipe of
-Proposition~\ref{prop:mult} is applied with these coefficients; the $x\neq0$ terms of that
-proposition do not account for it either (the pole sum at $d=-48$ is $0$ at the exponents
-$-12k^2$ and $-2$ over all multiples of $\lambda/f$, against a multiplier of $2$).
+where $\kappa^-_\nu(0)=0$ unless $Q(\nu)\in\Z$. If moreover $\nu$ is supported at the single prime
+$p$ (i.e.\ $\nu_q=0$ for $q\neq p$), then with $X=p^{-s}$ and $W_{0,p}(s,\varphi_\nu)$ the local
+factor at $p$ in any fixed normalisation,
+\[
+  \kappa^-_\nu(0)=\log p\cdot\frac{d}{dX}\Bigl[\frac{W_{0,p}(s,\varphi_\nu)}{W_{0,p}(s,\varphi_0)}
+  \Bigr]_{X=1},
+\]
+the ratio being a rational function of $X$ that vanishes at $X=1$.
 \end{proposition}
 \begin{proof}
-The first two statements are Lemmas~\ref{lem:split} and \ref{lem:pole}; the formula for
-$b_\nu(0,v)$ is the computation in the proof of Proposition~\ref{prop:kappa0} with
-$W_{0,N}(0,\varphi_0)$ finite and nonzero, and the values are read off the series. The
-comparison with Table~45 is a computation (the $2$-adic series are counted on
-$\Lm=L\cap\lambda^\perp$ directly).
+The display is the first display in the proof of Proposition~\ref{prop:mult}, which is obtained
+from Theorem~B by regrouping alone, before $L_N=L_{+,N}\oplus L_{-,N}$ is used; the prefactor is
+Theorem~B's $-\tfrac14$ per point. For $Q(\nu)\notin\Z$ some $p$ has $Q(\nu_p)\notin\Z_p$, and then
+$W_{0,p}(s,\varphi_\nu)\equiv0$ (\cite[Thm.~4.3(i), 4.4(i)]{KY}: every $x\in\nu_p+L_{-,p}$ has
+$Q(x)\equiv Q(\nu_p)\notin\Z_p$), so $E_0(\tau,s;\varphi_\nu)\equiv0$. For $\nu$ supported at $p$,
+exactly as in the proof of Proposition~\ref{prop:kappa0}, $E_0(\tau,s;\varphi_\nu)=\Phi(s)\,
+W_{0,p}(s,\varphi_\nu)/W_{0,p}(s,\varphi_0)$ with $\Phi(0)=-1$; the series $E(\tau,s;\varphi_\nu)$ is
+incoherent, hence vanishes at $s=0$, so the ratio vanishes at $X=1$, and $dX/ds=-X\log p$ gives the
+formula. (For $\nu$ supported at two or more primes the product of the vanishing ratios has a
+double zero and $\kappa^-_\nu(0)=0$, as in Proposition~\ref{prop:composite}.)
 \end{proof}
 
-The gap is therefore not in the local factors but in the bookkeeping that turns them into a term
-of the formula, and it can be located exactly. Lemma~\ref{lem:iso} identifies a coset $\nu$ of
-$\Lm^\vee/\Lm$ with a coset of $\Ldual/L$ and reads the multiplier $\tfrac12c_\eta(0)$ off the
-latter; this rests on $L_N=L_{+,N}\oplus L_{-,N}$ (Lemma~\ref{lem:LN}), proved from
-$\langle\lambda,L_N\rangle\subset\langle\lambda,\lambda\rangle\Z_N$. At a conductor prime that
-inclusion fails: $\langle\lambda,\lambda\rangle=2f^2\lvert d_0\rvert$ while $\langle\lambda,L_N
-\rangle$ is only divisible by the $N$-part of $2f$ (optimality of the embedding of $R_f$ puts
-$f\sqrt{d_0}$, not $f^2\sqrt{d_0}$, into the order), so $L_N\supsetneq L_{+,N}\oplus L_{-,N}$ with
-index a power of $N$, the Eisenstein series for $\varphi_\eta$ is not a product of series for
-$L_\pm$, and a coset $\eta$ of $\Ldual/L$ lies over several cosets $(\mu_+,\mu_-)$ of
-$(\Lp\oplus\Lm)^\vee/(\Lp\oplus\Lm)$. The $m=0$ coefficient attached to $\eta$ is then a sum over
-that fibre, and what Table~45 says is that at an inert conductor prime this sum is $0$ although its
-individual $\Lm$-terms are not. Proving that is the statement still missing; the split case, where
-the naive identification evidently gives the right total at every point tested, is in the same
-position. Until it is proved, the routine applies the rule ``fire at $p\mid f$ iff $p$ splits in
-$k$'', which is correct at every point Table~45 can test and is what the local factors say.
+At a conductor prime the inner sum is genuinely a sum over a fibre. Two kinds of pairs $(x,\nu)$
+appear that do not exist for fundamental $d$: a coset $\nu\in\Ldual$ pairs with $x\notin L$ such
+that $x+\nu\in L$ (so $[x+\nu]=0$ and the coefficient is $c_0(-Q(x))$, which includes the pole of $f$
+at $\infty$), and a coset $\nu\notin\Ldual$ pairs with $x\notin\Ldual$ such that $x+\nu\in\Ldual$.
+The vectors $x$ that occur are the vectors $\lambda_0/p^j$ of the CM line, of norm
+$Q(\lambda_0)/p^{2j}$: the primitive CM vectors of the discriminants $d/p^{2j}$. So the correction
+at a conductor prime sees the poles of $f$ at the CM points of the \emph{smaller} discriminants
+$d/p^2,d/p^4,\dots$, which no $d$-independent multiplier can.
+
+\paragraph{Computation on $X_0^{15}(2)$.} Everything in Proposition~\ref{prop:fibre} is computable
+from the lattice: the integral cosets of $\Lm^\vee/\Lm$ supported at $2$, the fibre over each, the
+coefficients $c_{[x+\nu]}(-Q(x))$ (the cusp-$0$ principal part of $f$ at the nonzero cosets by
+Lemma~\ref{lem:H}, $c_\eta(0)=2\,\mathrm{mult}(f)$ at a nonzero isotropic coset, and the
+cusp-$\infty$ principal part added at $\eta=0$), and the local factors $W_{0,2}(s,\varphi_\nu)=
+(1-X)\sum_k\alpha_kX^k$ by counting on $\Lm=L\cap\lambda^\perp$ as in Lemma~\ref{lem:pole},
+reconstructed as rational functions from $\alpha_0,\dots,\alpha_{10}$ (\texttt{level-p2/fibresum.m}
+on the campaign branch; every reconstruction has at least two spare terms). With $\lambda_0=
+\lambda/2$ ($Q(\lambda_0)=\lvert d\rvert/4$) and $\nu_0$ the integral coset lying in $\Ldual$:
+\begin{center}\small
+\begin{tabular}{lllll}
+$d$ & $f$, type & $W_{0,2}(s,\varphi_0)$ & integral cosets $\nu$: $W_{0,2}(s,\varphi_\nu)$, $\kappa^-_\nu(0)/\log2$ & fibre over $\nu$ ($Q(x)$) \\ \hline
+$-15,-7$ & $1$, split & $1/(1-X)$ & two, in $\Ldual$: $1$, $-1$ & $x=0$ \\
+$-60,-28$ & $2$, split & $(1-X+X^2)/(1-X)$ & $\nu_0$: $1+X$, $-2$ & $x=0$ \\
+$-240$ & $4$, split & $(1-X+X^2-X^3+2X^4)/(1-X)$ & $\nu_0$: $1+X^2+2X^3$, $-2$ & $x=0$;\ $x=\pm\lambda_0/2$, $x+\nu_0\in L$ ($15$) \\
+ & & & $\pm\nu_1\notin\Ldual$: $1+X$, $-1$ & none below the poles \\
+$-12$ & $2$, inert & $(1+X+X^2)/(1+X)$ & $\nu_0$: $1-X$, $-\tfrac23$ & $x=0$;\ $x=\pm\lambda_0/2$, $[x+\nu_0]\ne0$ ($\tfrac34$) \\
+$-48$ & $4$, inert & $(1+X+X^2+X^3+2X^4)/(1+X)$ & $\nu_0$: $(1-X)(1+X+2X^2)$, $-\tfrac43$ & $x=0$;\ $x=\pm\lambda_0/2$, $x+\nu_0\in L$ ($3$) \\
+ & & & $\pm\nu_1\notin\Ldual$: $1-X$, $-\tfrac13$ & $x=\pm\lambda_0/4$, $[x+\nu_1]\neq0$ ($\tfrac34$) \\
+\end{tabular}
+\end{center}
+(The fibres are listed up to the largest pole of the nine forms of the model set, $q^{-30}$ at
+$\infty$ and $q^{-3/4}$ at the cusp $0$.) Writing $m=\tfrac12c_\eta(0)$ for the fundamental
+multiplier, $a=c_\infty(-\lvert d\rvert/16)$ for the coefficient of $f$ at the pole exponent
+$Q(\lambda_0/2)$ and $b$ for the coefficient of $q^{-3/4}$ in $f|S$, the proposition gives per point
+\[
+  d=-240:\quad (m+a)\log2,\qquad\qquad d=-48:\quad \bigl(\tfrac23(m+a)+\tfrac13 b\bigr)\log2 ,
+\]
+while at $d=-60,-28$ it gives $m\log2$ (one coset at twice the weight of the two fundamental ones)
+and at $d=-15,-7$ the $m\log2$ of Proposition~\ref{prop:mult}. These predictions were compared, for
+all nine forms, with the values forced by Table~45: each form is a function on the genus-$0$ curve
+$X_0^{15}(2)/W$ whose divisor is known (Lemma~25 of \cite{GY}), so its value at every CM point is
+$C\prod_i\lvert s(d)-s(d_i)\rvert^{m_i}$ with $s$ Guo--Yang's Hauptmodul; the constant $C$ was read
+off at $d=-7$ and the formula checked at six to eight further fundamental and conductor-$2$ points per
+form before being used at $-240$ and $-48$ (\texttt{level-p2/evidence.log}). The fibre sum
+reproduces all $18$ values exactly. The rule ``add $m\log p$ when $p$ splits, nothing when $p$ is
+inert'', which the routine applied until now, is right at $-240$ only for the five forms with
+$a=0$ (those whose divisor misses $\tau_{-60}$) and at $-48$ only for the three forms with
+$m+a=0$ and $b=0$ --- among them the form on which the rule had been tested --- and Yang's conductor
+term for the pairs with $Q(x)=m$, which the routine also carried, gives the irrational $2^{4/3}$ at
+$-48$ for the two forms with $b\neq0$. The vanishing at $-48$ for the tested form is thus the
+identity $c_\eta(0)+2c_\infty(-3)=0$ for that form, not the absence of a term.
+
+What is still missing for a theorem is the analogue of Lemma~\ref{lem:WN} at a conductor prime: a
+closed form for $W_{0,p}(s,\varphi_\nu)$ on the lattice of Lemma~\ref{lem:conductor}, for every
+integral coset $\nu$. For odd $p$ the lattice is the diagonal $\langle-1\rangle\perp\langle-p^{2k}
+\lvert d_0\rvert v^2\rangle$, to which \cite[Thm.~4.3]{KY} applies directly; for $p=2$ the lattice
+itself is only computed, and \cite[Thm.~4.4]{KY} would then give the factors. With that lemma,
+Proposition~\ref{prop:fibre} is the statement at non-fundamental $d$, and the routine should
+evaluate it as written rather than apply a rule; the values above are what it must reproduce.
 
 \begin{remark}[the $m>0$ terms at non-fundamental $d$]
 A separate point, settled by the same comparison: in the $m>0$ part of the formula the class

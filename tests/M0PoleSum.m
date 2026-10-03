@@ -54,16 +54,21 @@ procedure test_pole_sum_15_2()
 end procedure;
 
 // (3) Values at NON-FUNDAMENTAL discriminants against Guo-Yang's Table 45 (arXiv:1510.06193v1),
-// which gives the Hauptmodul s of X_0^15(2)/W at each CM point.  The Borcherds product the code
-// returns as fs[-2] has |value| = (1280/9) |s(s-2)| at every single-point cycle: this is first
-// CHECKED at the fundamental discriminants -7, -15, -52 (s = 1/4, 5/4, 1), so the identification is
-// not assumed, and then REQUIRED at the conductor-2 points -28, -60 (s = 9/4, -1/12) and at the
-// conductor-4 point -240 (s = -25/12), where 2 splits in Q(sqrt d).  Before 2026-10-03 the value at
-// -240 came out exactly halved (and irrational): the m > 0 sum used the class number of the order
-// where the formula takes the field's.  -48 (conductor 4, 2 INERT in Q(sqrt -3), s = -1/4) is the
-// one point where the m = 0 term must NOT fire: the zero coset's local factor at an inert
-// conductor plane has no pole (campaign level-p2/inertplane.m), and with the term the value came
-// out 4 log 2 too large.
+// which gives the Hauptmodul s of X_0^15(2)/W at each CM point.  The form checked is the Borcherds
+// form of the cover with W = {1, 3, 5, 15} (key 11), whose divisor is (tau_-40) + (tau_-120) -
+// 2(tau_-12), so as a function on the genus-0 star curve it is C*|s(s-2)|; C = 1280/9 is read off
+// at the fundamental discriminants -7, -15, -52 (s = 1/4, 5/4, 1), so the identification is not
+// assumed, and the value is then REQUIRED at the conductor-2 points -28, -60 (s = 9/4, -1/12) and
+// the conductor-4 points -240 (s = -25/12, 2 split) and -48 (s = -1/4, 2 inert in Q(sqrt -3)).
+// Before 2026-10-03 the value at -240 came out exactly halved (and irrational): the m > 0 sum used
+// the class number of the order where the formula takes the field's.  At -48 the m = 0 term must
+// contribute nothing FOR THIS FORM: the term is a sum over the fibre of the conductor prime
+// (paper/kappa0-proof-standalone.tex, prop:fibre), c_eta(0) + 2 c_oo(-3) = 8 - 4 - 4 = 0 here,
+// and the code's rule (no term at an inert conductor prime) agrees.  For six of the other eight
+// forms the rule is wrong at -240 or -48 (campaign level-p2/evidence.log), which is why this test
+// checks one form; the fibre sum itself is not implemented yet.
+// (Until 2026-10-03 this comment and the messages below called the form fs[-2]: the table's rows
+// follow Keys(fs), not the sorted keys, and row 1 is key 11.)
 procedure test_values_at_conductor_discriminants_15_2()
     printf "  values at conductor-2 and conductor-4 discriminants on X0^15(2) against Table 45...";
     D := 15; N := 2;
@@ -82,8 +87,8 @@ procedure test_values_at_conductor_discriminants_15_2()
         if not exists{u : u in rat | u[1] eq t[1]} then Append(~rat, t); end if;
     end for;
     tab, _ := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 60, Prec := 100, Exclude := {}, Include := want);
-    ks := Sort([k : k in Keys(fs)]);
-    assert ks[1] eq -2;
+    row := Index(tab`Keys_fs, 11);               // the cover W = {1,3,5,15}; see the header
+    assert row gt 0;
     // the value prints as a formal sum "aLog2+bLog3..."; compare against the expected one in that form
     function logstring(q)   // q a positive rational -> "aLog2+bLog3..." in the code's format
         f := Factorization(Numerator(q)); g := Factorization(Denominator(q));
@@ -99,10 +104,10 @@ procedure test_values_at_conductor_discriminants_15_2()
     for d in [-7, -15, -52, -28, -60, -240, -48] do
         i := Index(tab`Discs, d);
         error if i eq 0, Sprintf("d = %o was not evaluated", d);
-        got := Sprint(tab`Values[1][i]);
+        got := Sprint(tab`Values[row][i]);
         exp := logstring(C * AbsoluteValue(svals[d] * (svals[d] - 2)));
         error if got ne exp,
-            Sprintf("X0^15(2), d = %o: fs[-2] value is %o, Table 45 gives s = %o hence %o", d, got, svals[d], exp);
+            Sprintf("X0^15(2), d = %o: the W = {1,3,5,15} form's value is %o, Table 45 gives s = %o hence %o", d, got, svals[d], exp);
         nchecked +:= 1;
     end for;
     assert nchecked eq 7;

@@ -1041,18 +1041,16 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
-    // The proposition assumes d fundamental.  At a non-fundamental d two things change: the m > 0
-    // sum takes the FIELD's class number (get_kappa_minus_squared), and at a level prime dividing
-    // the conductor the local plane is a different lattice, whose zero coset has a pole exactly
-    // when the prime splits in the CM field -- that is the rule applied to Nprimes below.  On
-    // X_0^15(2) the values at d = -28, -60, -240 (split) and -48 (inert) then agree with Guo-Yang's
-    // Table 45 exactly; -12 is on the divisor.
-    // At a level prime p dividing the CONDUCTOR of d the term fires only when p SPLITS in the CM
-    // field.  The term comes from the simple pole of the zero coset's local factor; counting
-    // directly on the negative plane of X_0^15(2) (campaign level-p2/inertplane.m), the zero
-    // coset's series grows at every split plane (d = -15, -60, -240) and is bounded at every
-    // inert one (d = -12, -48), so there the term is absent.  Checked against Guo-Yang's Table 45:
-    // -28, -60, -240 (split, fires) and -48 (inert, does not) all agree exactly.
+    // The proposition assumes d fundamental.  At a non-fundamental d the m > 0 sum takes the FIELD's
+    // class number (get_kappa_minus_squared), and at a level prime dividing the conductor the lattice
+    // is no longer L_+ (+) L_-, so the restored terms are a sum over the fibre of pairs (x, nu)
+    // (paper/kappa0-proof-standalone.tex, prop:fibre): the local factors of the nonzero cosets,
+    // nonzero at an inert conductor prime too, weighted by coefficients of f at the exponents
+    // Q(lambda_0/p^j) -- the poles of f at the CM points of d/p^2, d/p^4, ...  That sum is not
+    // implemented; the rule below (fire iff the prime splits in the CM field) is what it reduces to
+    // when those coefficients vanish.  On X_0^15(2) it is exact at every conductor-2 point and, at
+    // conductor 4 (d = -240, -48), for 5 resp. 3 of the 9 forms (campaign level-p2/evidence.log);
+    // conductor-4 points are never offered to the model search (CandidateDiscriminants).
     _, cond := IsSquare(d div d_fund);
     Nprimes := [p : p in PrimeDivisors(N div GCD(N, d_fund)) | cond mod p ne 0 or KroneckerSymbol(d_fund, p) eq 1];
     // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
