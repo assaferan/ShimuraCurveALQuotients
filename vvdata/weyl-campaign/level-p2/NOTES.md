@@ -113,3 +113,47 @@ cannot be tested against a measured CM value until some p^2-level base has a mod
 reachable with the present construction. The 15_4-style route is closed for the obstructed bases
 (see ../nonsquarefree/NOTES.md) and the pool is the obstacle for the unobstructed ones. So the
 non-squarefree frontier needs a different construction, not a bigger budget.
+
+## N dividing the CONDUCTOR of d: a different plane, the same correction (2026-10-03)
+
+Sachi's review of PR #66 points out that `SchoferFormula.m` applies the m = 0 term whenever N misses
+the FUNDAMENTAL discriminant of d, while the proof assumes d itself fundamental. These differ when N
+divides the conductor, and on X_0^15(2) that covers **d = -60, one of the three discriminants where
+Guo-Yang's Table 45 validates the rule**. Reproduced and resolved:
+
+**The lattice really is different** (`lminus.m`, counting isotropic cosets of L_- = L cap lambda^perp
+straight from the lattice):
+
+    d = -7, -15   fundamental        L_- at 2 is the EVEN plane 2*H     2 nonzero isotropic cosets
+    d = -12, -60  conductor 2        L_- at 2 is 2*diag(u1,u2), u1 + u2 = 0 mod 4 (ODD type)
+                                                                       1 nonzero isotropic coset
+
+So the proof's count 2N-2 fails there, exactly as the review says.
+
+**But the correction is the same** (`oddtype.m`, the same brute-force counting as above). At the odd
+type 2*diag(1,-1):
+
+    zero coset                 alpha_k = 1, 2, 3, 4, ...  so W_0 = 1/(1-X)   -- still a SIMPLE POLE
+    the one isotropic coset    alpha_k = 2, 2, 2, ...     so W_nu = 1 + X    (value 2 at X = 1)
+    the two anisotropic ones   alpha_k = 0                so W = 0
+
+Then prop:kappa0's argument runs unchanged: W_nu/W_0 = 1 - X^2, which vanishes at s = 0 with
+derivative 2 log 2, so **kappa^-_nu(0) = -2 log 2, exactly TWICE the -log N/(N-1) = -log 2 of the
+fundamental case**, and with the -|CM(d)|/4 prefactor one coset at double weight gives
+
+    -(1/4) * 1 * (-2 log 2) * c_nu(0)  =  (1/2) c_nu(0) log 2,
+
+identical to the fundamental-d answer. ⇒ **The code is right at d = -60, and the proof extends to
+N | conductor** rather than needing to exclude it; the paper should state this case.
+
+⚠ **What this does NOT explain is the review's d = -12 disagreement** (for F = fs[-2] - fs[-1] the
+code's log 2 part is off there). Since the local factor and the prefactor now match at -12 too, the
+discrepancy must be in WHICH coset's constant term the code uses: `M0MultiplierExact` reads c(0) at a
+nonzero isotropic coset of L^v/L, which does not depend on d, while the coset that actually occurs is
+nu in L_-^v/L_-, and the correspondence between them DOES depend on d. At -60 the two evidently
+agree and at -12 they need not. That is the next thing to check, and it is a question about the
+multiplier's coset bookkeeping, not about the local Whittaker factor.
+
+⚠ Note on the counting script: for an ANISOTROPIC coset alpha_0 = 0, not 1 (Q(mu) is not integral),
+so the "1 +" in the generating function must be dropped there; with it one gets 1 - X instead of 0.
+The isotropic rows, which are what matter, are unaffected.
