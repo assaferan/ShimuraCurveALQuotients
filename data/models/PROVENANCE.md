@@ -422,6 +422,24 @@ which also fixes the labels of the w_p: the opposite sign convention would swap 
 two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
 58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
 
+## `115_1`, `129_1`, `161_1`, `183_1`: quotient models, no top curve (PR #63's search)
+
+Produced 2026-10-01 to 10-02 on lovelace in a 24-base sweep of the odd-`D`, `N = 1` bases that had
+no model at all, with the default recipe (`BFPROGRESS=1 BFCACHE=1`, no result-changing flag) from
+the branch of PR #63 and a 24 h limit per base. Four of the 24 produced models; eleven hit the
+limit, seven were killed (three by the memory daemon, four by hand to free the machine), and one
+(`141_1`) needs a rung whose pool matrix has 1.1e9 entries and is out of reach.
+
+⚠ **The top curve is still missing on all four**: each file carries an empty `[* *]` entry at
+`W = {1}` and models only the quotients — one key at `115_1` and `161_1`, three at `129_1` and
+`183_1`. These are new files for bases that previously had none, not completed bases.
+
+Validation is internal only: these are not Guo-Yang bases, so there is no published equation to
+compare against. `VerifyModelSet` passes on all four (102 checks, 0 failures), including the
+L-polynomial comparison against the trace formula on the `W`-fixed part of the `D`-new space, which
+is independent of the Borcherds/Schofer path that produced them. A negative control confirms the
+checks bite: perturbing one coefficient of `183_1`'s `[1,183]` model gives 5 failures.
+
 ## Reproducibility status, measured 2026-09-05
 
 Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
