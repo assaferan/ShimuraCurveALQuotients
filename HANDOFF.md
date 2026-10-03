@@ -3775,3 +3775,26 @@ the deficiency is pure Borcherds duality, not a property of the divisor matrix.
 (all ten traces agree), but its k = 3/2 phase is wrong by very nearly **−d/6** — **do not tune
 that constant to fit**; get the half-integral convention right, then check it against the
 measured deficits (`38_5` → 1, `38_7` → 0, `34_3` → 0).
+
+### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 224 new curves
+
+A cover `X_0(D,N)/W` is Galois over the star with group `W_full/W`, elementary abelian, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 = f(t)`, which
+the earlier stages usually did build. This needs no genus-0 quotient, so it reaches exactly what
+the Borcherds–Schofer route cannot: the non-subhyperelliptic covers, the top curve included.
+`FibreProductCovers.m` implements it; `AllEquationsAboveCovers` runs it last. A result is kept
+only if the compositum has the genus of the genus formula **and** its point counts at three good
+primes over `F_p`, `F_{p^2}` agree with the trace formula — the second test is what rejects a
+compositum of factors in different Hauptmodul normalisations (the committed `21_2` quotients do
+this: right genus, wrong curve).
+
+Measured over the committed model files: 235 missing covers have enough double covers; **224 pass
+both checks**, 38 of them top curves of genus 3–11 (`57_1 65_1 77_1 82_1 93_1 106_1 118_1 122_1
+178_1 202_1 …`); 9 fail the genus check, 2 the trace formula. The same construction decided three
+genus-3 covers left open in `curves_after_UpdateCurves8.dat` — `6_23/w_23`, `34_3/w_2`,
+`46_3/w_3` are smooth plane quartics, hence **not** hyperelliptic. ⚠ The 830 undecided covers
+there are almost all at bases with no model file (826), so as a hyperellipticity decider the stage
+is downstream of model-building; as a model producer it is a new reach.
+
+⚠ A test that `eval`s a model file **inside a procedure** segfaults Magma 2.29-7 under
+`run_tests.m` only; evaluate model files at top level (see `tests/FibreProductCovers.m`).
