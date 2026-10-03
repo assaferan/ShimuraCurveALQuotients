@@ -1,6 +1,6 @@
 // CurveCostProxy for the Weil-polynomial stage must put the measured-heavy curves first.  The
-// estimate is #W * sum p^(g/2) over the good primes the stage will use, which is the number of
-// trace-formula terms the dominant call needs (see Utils.m).
+// estimate is #W * sum p^(g/2) over the good primes the stage will use, the shape of the
+// dominant trace-formula call (see Utils.m).
 //
 // Every assertion below is an ORDERING of two curves whose times were measured, never a cost.
 // Measured on lovelace with the class-number tables, over 36 curves, on main at 95b19e6 (with

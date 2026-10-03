@@ -15,11 +15,10 @@ end intrinsic;
 intrinsic CurveCostProxy(X::ShimuraQuot, stage::MonStgElt) -> FldReElt
 {A cheap estimate of the cost of running `stage` on curve X, used only to order the parallel
 chunks heavy-first.  Returns 0 for curves the stage skips.  For the Weil-polynomial stages it
-is the sum of p^g over the good primes the stage will use; for the trace stages it is the
-number of trace-formula terms a curve would need if it did not early-exit, |W| times the sum of
-sqrt(4*D*N*n) over the primes and powers n = p^i; the other stages have their own rough
-measures below.  It deliberately over-estimates curves that early-exit (they then just finish
-fast), so the genuinely heavy curves are always dispatched early.}
+is |W| times the sum of p^(g/2) over the good primes the stage will use; for the trace stages
+it is |W| times the sum of sqrt(4*D*N*n) over the primes and powers n = p^i; the other stages
+have their own rough measures below.  It deliberately over-estimates curves that early-exit
+(they then just finish fast), so the genuinely heavy curves are always dispatched early.}
     R := RealField(6);
     if assigned X`IsSubhyp then return R!0; end if;
     g := X`g; DN := X`D * X`N; nW := #X`W;
@@ -83,28 +82,12 @@ fast), so the genuinely heavy curves are always dispatched early.}
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
         // class-number database, the disc budget, and the per-genus ceiling).  The dominant call
-        // is the trace of T_n at n = p^g, which Eichler-Selberg evaluates as a sum over the
-        // elements w of W of a sum over t with t^2 < 4n/Q_w, i.e. about 2 sqrt(n/Q_w) terms, so
-        // the term count per prime grows like p^(g/2) and the number of inner sums like #W.
-        //
-        // Measured on lovelace with the class-number tables, over 36 curves spanning genus 3 to
-        // 7, #W from 1 to 64 and level from 30 to 30030, on main at 95b19e6 (so with #56, #57
-        // and #58): vvdata/weyl-campaign/weil-retime-2026-10-02/ on the m0-theta-campaign
-        // branch.  Of the 271 curve pairs whose times differ by more than a factor 10, this
-        // orders 246 correctly against 198 for the sum of p^g that the function used before; of
-        // the 520 pairs differing by more than a factor 2, 440 against 343.  So both the #W and
-        // the exponent g/2 in place of g are improvements, and that is as much as the data
-        // supports: among #W * sum p^(a g) for a between 0.5 and 0.8, and #W * max p^(a g), the
-        // counts differ by less than the noise of 36 curves, so the term count is kept because
-        // it is the principled one rather than the best-scoring one.
-        //
-        // ⚠ A residual spread of 237x remains (time over estimate), so this orders chunks and is
-        // never a cost.  It still mis-orders real pairs: X_0^6(97)/W2 (g = 6, 74 min) sits below
-        // X_0^210(73)/W32 (g = 4, 86 s).  The two slowest curves of the 36 are X_0(595)/W8
-        // (g = 5, 101 min) and that X_0^6(97)/W2, both at level about 590 with a SMALL W, so the
-        // heavy shape is high genus at moderate level and a large W is not what makes a curve
-        // slow -- #W earns its place in the ordering, not in the extremes.  The level is weakly
-        // positive (fitting #W^a (sum p^(g/2))^b (D*N)^c gives c = +0.15), not absent.
+        // is the trace of T_n at n = p^g, a sum over the elements of W of a sum over t with
+        // t^2 < 4n/Q_w, so the work per prime grows like p^(g/2) and the number of inner sums
+        // like #W.  The estimate is #W * sum_p p^(g/2).  It was fitted against measured times on
+        // 36 curves (vvdata/weyl-campaign/weil-retime-2026-10-02/ on the campaign branch, with
+        // the fit statistics); the spread between time and estimate is large, so this orders
+        // chunks and is never a cost.
         ceil := AssociativeArray();
         ceil[3]:=53; ceil[4]:=53; ceil[5]:=37; ceil[6]:=29; ceil[7]:=23; ceil[8]:=17;
         Qmax := Max(X`W);
