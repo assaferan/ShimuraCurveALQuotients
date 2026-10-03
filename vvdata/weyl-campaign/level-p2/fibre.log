@@ -1,0 +1,36 @@
+
+=== d = -15 (conductor 1, 2 split): L_N = L_+ + L_- direct? index [L : L_+ + 
+L_-] at 2 ...
+    [L : L_+ (+) L_-] = 1  (2-part 2^0)
+    coset [ 0, 1/2 ]   Q = -62     in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+    coset [ 1/2, 1/2 ] Q = -167    in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+
+=== d = -60 (conductor 2, 2 split): L_N = L_+ + L_- direct? index [L : L_+ + 
+L_-] at 2 ...
+    [L : L_+ (+) L_-] = 2  (2-part 2^1)
+    coset [ 0, 1/2 ]   Q = -38     in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+
+=== d = -240 (conductor 4, 2 split): L_N = L_+ + L_- direct? index [L : L_+ + 
+L_-] at 2 ...
+    [L : L_+ (+) L_-] = 8  (2-part 2^3)
+    coset [ 0, 1/4 ]   Q = -38     in L^v: false  in L: false  -> enters NO eta
+    coset [ 0, 1/2 ]   Q = -152    in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+    coset [ 0, 3/4 ]   Q = -342    in L^v: false  in L: false  -> enters NO eta
+
+=== d = -12 (conductor 2, 2 INERT): L_N = L_+ + L_- direct? index [L : L_+ + 
+L_-] at 2 ...
+    [L : L_+ (+) L_-] = 2  (2-part 2^1)
+    coset [ 0, 1/2 ]   Q = -3345   in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+
+=== d = -48 (conductor 4, 2 INERT): L_N = L_+ + L_- direct? index [L : L_+ + 
+L_-] at 2 ...
+    [L : L_+ (+) L_-] = 8  (2-part 2^3)
+    coset [ 0, 1/2 ]   Q = -195    in L^v: true   in L: false  -> lies over a 
+NONZERO coset of L^v/L
+    coset [ 1/2, 1/4 ] Q = -395    in L^v: false  in L: false  -> enters NO eta
+    coset [ 1/2, 3/4 ] Q = -1145   in L^v: false  in L: false  -> enters NO eta

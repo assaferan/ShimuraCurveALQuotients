@@ -174,3 +174,15 @@ dividing the conductor it fires iff the prime SPLITS in the CM field. Rule now i
 Checked against Guo-Yang's Table 45 (fs[-2] value = (1280/9)|s(s-2)|): `-28, -60, -240` (fires) and
 `-48` (does not) all exact. ⚠ The earlier conductor-4 defect (odd part halved) was separate: the
 `m > 0` sum used `h(d)` of the order where the formula takes `h(d_0)` of the field (fixed, PR #66).
+
+## Which cosets of the plane actually enter the formula at a conductor prime (fibre.m, 2026-10-03)
+
+At a conductor prime `L_N` is NOT `L_+ (+) L_-`: measured index 1 (fundamental), 2 (f = 2), 8 (f = 4).
+A coset `mu` of `L_-^v/L_-` enters the decomposition of some `phi_eta` only if `mu` lies in `L^v`.
+Integral-norm cosets of the plane: `-15`: 2, both in `L^v` over nonzero `eta`; `-60`: 1, in `L^v`;
+`-240`: 3, ONE in `L^v` (the others enter no `eta`); `-12`: 1, in `L^v`; `-48`: 3, ONE in `L^v`.
+⇒ the pure `m = 0` piece at the inert plane is NOT zero in the formula (one coset over a nonzero
+`eta`, with a nonzero first-order coefficient), so the observed absence of a `log 2` correction at
+`-48` must come from the `x != 0` terms over the enlarged fibre (pairs with `mu_+ != 0`, which
+exist because `L_+ = Z lambda` with `Q(lambda) = f^2 |d_0|`), not from the `m = 0` factor alone.
+That accounting is the missing step of a proof.
