@@ -1,0 +1,53 @@
+ok
+4:D := 21; N := 2; extra := [-100];
+5:gy := [
+== 21_2
+forcing d = -100 (conductor 5): 1 star point(s)
+	m = 0 term at the conductor prime 2, d = -28: [ 2, 4, 2, 2, 2 ]
+	m = 0 term at the conductor prime 5 outside the level, d = -100: [ -1, -4, -2, -3, -3, -2, -1, -1, -1 ]KEYS [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ] sIndex 7 sTildeIndex 9
+CHECK s d -28    OK
+CHECK s d -84    OK
+CHECK s d -100   OK
+CHECK s d -120   OK
+CHECK s d -148   OK
+CHECK s d -168   OK
+CHECK s d -228   OK
+CHECK s d -232   OK
+CHECK s d -280   OK
+CHECK s d -312   OK
+CHECK s d -372   OK
+CHECK s d -408   OK
+CHECK s d -532   OK
+CHECK s d -708   OK
+CHECK stilde d -28    OK
+CHECK stilde d -84    OK
+CHECK stilde d -100   OK
+CHECK stilde d -120   OK
+CHECK stilde d -148   OK
+CHECK stilde d -168   OK
+CHECK stilde d -228   OK
+CHECK stilde d -232   OK
+CHECK stilde d -280   OK
+CHECK stilde d -312   OK
+CHECK stilde d -372   OK
+CHECK stilde d -408   OK
+CHECK stilde d -532   OK
+== 55_1
+forcing d = -27 (conductor 3): 1 star point(s)
+	m = 0 term at the conductor prime 3 outside the level, d = -27: [ -4, -2, -6, -1, -1 ]KEYS [ 2, 3, 4, -1, -2 ] sIndex 4 sTildeIndex 5
+CHECK s d -27    OK
+CHECK s d -88    OK
+CHECK s d -115   OK
+CHECK s d -163   OK
+CHECK s d -187   OK
+CHECK s d -235   OK
+CHECK s d -715   OK
+CHECK stilde d -27    OK
+CHECK stilde d -88    OK
+CHECK stilde d -115   OK
+CHECK stilde d -163   OK
+CHECK stilde d -187   OK
+CHECK stilde d -235   OK
+CHECK stilde d -715   OK
+
+[exited with code 0]

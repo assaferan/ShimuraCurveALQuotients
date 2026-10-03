@@ -299,3 +299,7 @@ NO level prime, so the q = 3 term is the only m = 0 term -- and runs the cross-r
 GuoYangCheck.m.  The term is log 3 on the Hauptmodul form (key -1) alone, and s(-27) matches
 Guo-Yang's 3/19 (all 7 comparable discs OK in both rows).  3 | d_0: this is the anisotropic
 (ramified) branch kappa^- = -2(q^{rho+1}-1)/((q-1)q^k) log q.
+Also forced (gyforce_21_2.m, gyforce_55_1.m, log gyforce_21_2_55_1.log): X_0^21(2) d = -100 = 5^2 (-4),
+5 split in Q(i) -- the lem:Wcond branch -- term -4 log 5 on the s-form, -1 on s~, s(-100) = 1/5
+reproduced; X_0^55(1) d = -27, ramified, terms -1 log 3 on both Hauptmodul forms, s(-27) = 0
+reproduced.  All other table points of both bases unchanged and OK.
