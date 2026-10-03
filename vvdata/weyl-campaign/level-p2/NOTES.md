@@ -257,3 +257,14 @@ kappa^-_{nu_r}(0) = -2 p^{rho-k+1}/(p-1) log p (split), -2/(p^{k-1}(p+1)) (p^rho
 -387, -603 (inert, k = 1), every 3-primary integral coset, 6 terms: all agree (`wcond_check.log`).
 At p = 2 the same formulas give every series of `fibresum.log` (k = 1, 2, both types) -- lem:Wcond in
 the standalone (proved for odd p; p = 2 computed).
+
+## The 2-adic lattice at a conductor prime is DERIVED (standalone lem:conductor2, 2026-10-03)
+
+lambda = (2a', 2b'; 4c', -2a') with b' a unit, c' even (after conjugating by w_2 -- the same step the
+odd-p proof had skipped: optimality only says one of b, c is a unit), a'^2 + 2b'c' = -4^{k-1}|d_0|.
+Plane: <-1> + <-4^{k-1} c>, c = |d_0|/b'^2 = 3 mod 4, -c = 1 mod 8 iff 2 splits.  Index
+[L : Z lambda_0 (+) L_-] = 2^{2k-2} (DIRECT at conductor 2; the earlier "2^{2k-1}" used lambda, not
+the primitive lambda_0).  Dual Z/2 x Z/2^{2k-1}; integral cosets (0, t/2^{k-1}) [rho = 1 + ord t] and
+(1/2, t/2^k), t odd [rho = 0]: 2^k in all, the one of order 2 lies in L^v.  A direct Hensel count
+(1, 2, 2(1+eps) roots of a unit square mod 2^n for n = 1, 2, >= 3) gives the odd-p series verbatim, so
+lem:Wcond holds for every p.  This is what fibresum.log / inertplane.log counted.
