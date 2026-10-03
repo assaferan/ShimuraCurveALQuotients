@@ -7,9 +7,7 @@
 // matters, because it regenerates ONLY since the vx fix (`n_oo`, BorcherdsForms.m:771). A silent
 // regression of that fix would have left every committed artifact looking fine.
 //
-// COST: 370 s on a Mac, 495 s in CI, with the Borcherds search of #63.  Before it the model
-// took 50927 s (14.1 h) on lovelace with no non-default flags (see the model file header), far
-// past any CI budget, which is why this file lived in tests/_offline until 2026-10-01.
+// COST: 370 s on a Mac, 495 s in CI (2026-10-01).
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
 // ⚠ NORMALIZ_BIN MUST BE SET. Without it a fresh polytope solve fails SILENTLY -- "no solutions"
 // rather than an error (CLAUDE.md) -- which is precisely how X0_10_19 spent 84 min in CI verifying

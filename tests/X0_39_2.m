@@ -1,6 +1,5 @@
-// COST: 636 s on a Mac, 889 s in CI (2026-10-01, with the Borcherds search of #63; 680 s on a Mac
-// on 2026-09-25), so it runs in CI: 14 curve comparisons, 3 involution comparisons, 14/14 expected
-// covers matched.
+// COST: 636 s on a Mac, 889 s in CI (2026-10-01), so it runs in CI: 14 curve comparisons,
+// 3 involution comparisons, 14/14 expected covers matched.
 // ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because it lived in
 // tests/_offline, which CI does not run, and the line here used to assert "the test is expected
 // to pass" without anyone having run it.  State what was measured and when, not what is expected.
