@@ -447,10 +447,11 @@ code; the keys are absent rather than empty.
 **What vouches for each quotient.** `115/w23` is the elliptic curve 115a1, as González–Rotger say in
 footnote 2 of *Non-elliptic Shimura curves of genus one* (J. Math. Soc. Japan 58 (2006)), and the
 stored quartic has that Jacobian. The other genus-one quotient, `129/w129`, likewise has its
-Jacobian fixed by the point counts. For the genus-2 quotients
-`129/w43` and `183/w183` no published equation is known to us (not in Molina, arXiv:1004.3675, nor in
-González–Rotger), and the point counts fix the Jacobian only up to isogeny, so those two equations
-rest on our CM-value computation alone. `VerifyModelSet` passes on all four files (102 checks, 0
+Jacobian fixed by the point counts. For the other quotients,
+the genus-2 `129/w43` and `183/w183` and the genus 3–6 `129/w3`, `161/w23`, `183/w3` and `183/w61`,
+no published equation is known to us (not in Molina, arXiv:1004.3675, nor in González–Rotger), and
+the point counts fix the Jacobian only up to isogeny, so these equations rest on our CM-value
+computation alone. `VerifyModelSet` passes on all four files (102 checks, 0
 failures), including the L-polynomial comparison against the trace formula on the `W`-fixed part of
 the `D`-new space, which is independent of the Borcherds/Schofer path that produced them. A negative
 control confirms the checks bite: perturbing one coefficient of `183_1`'s `[1,183]` model gives 5
