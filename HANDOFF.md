@@ -18,8 +18,7 @@ level prime dividing the conductor of d the lattice is not L_+ (+) L_-, and the 
 restores are a sum over the fibre of pairs (x, nu) with x + nu in L^v (standalone prop:fibre):
 cosets in L^v also pair with x = lambda_0/2 (so the pole of f at the CM point of d/4 enters), cosets
 outside L^v pair with x = lambda_0/4 over a nonzero coset, and the local factors of the nonzero
-cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, odd p proved, p = 2 matching
-the counted series): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/(p-1) log p (split),
+cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, proved for every p; the 2-adic lattice is lem:conductor2): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/(p-1) log p (split),
 -2/(p^(k-1)(p+1)) (p^rho + 2(p^rho-1)/(p-1)) log p (inert).
 
     SchoferFormula.m   M0FibreCorrection evaluates the sum at a level prime dividing the conductor
@@ -33,8 +32,9 @@ the counted series): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/
     campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3).
 
 The model set is unaffected: conductor-4 points are never offered to the model search, and at
-conductor 2 the fibre sum equals the old term. Still computed rather than derived: the 2-adic
-lattice at a conductor prime (lem:conductor, p = 2).
+conductor 2 the fibre sum equals the old term. Not covered: a prime of the conductor outside the
+level (unimodular L_q, whose plane has the same shape and whose cosets would give log q terms;
+first such point on 15_2 is d = -588).
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 

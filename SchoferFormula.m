@@ -919,8 +919,8 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
  (p^k || conductor), nu of order p^(k - rho), and kappa^-_nu(0)/log p is
      -2 p^(rho-k+1)/(p-1)                          if p splits in the CM field,
      -2/(p^(k-1)(p+1)) (p^rho + 2(p^rho - 1)/(p-1)) if p is inert,
- proved for odd p on the plane <-1> + <-p^(2k) c>; at p = 2 the same formulas reproduce the series
- counted on X_0^15(2), and the coset count is checked here.  Verified against the values forced by
+ (lem:Wcond; the plane is <-1> + <-p^(2k) c> for odd p and <-1> + <-4^(k-1) c> at p = 2, where the
+ cosets of order 2^k have rho = 0; the coset count is checked here).  Verified against the values forced by
  the forms' divisors and Guo-Yang's Table 45 for all nine forms of X_0^15(2) at d = -240 and -48
  (tests/M0PoleSum.m).}
     require IsPrime(p) : "p must be prime";
