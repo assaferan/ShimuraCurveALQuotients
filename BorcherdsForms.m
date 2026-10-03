@@ -225,15 +225,32 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     // solution file directly in the polymake_solution (Magma-evaluable) format --
     // validated point-for-point against 11 cached polymake outputs across levels
     // 132/204/308/616, m = 0 and m > 0.  It bounds its own runtime (NMZ_TIMEOUT,
-    // default 1800 s); on timeout/failure no file is written and we degrade to []
-    // exactly as before.
+    // default 1800 s).
+    //
+    // A SOLVE THAT DID NOT FINISH IS AN ERROR, NOT AN EMPTY ANSWER.  nmzsolve.py writes its
+    // solution file whenever it finishes, including when the polytope genuinely has no lattice
+    // point, so a missing file means it timed out or failed.  Returning [] there would hand back
+    // an INCOMPLETE eta-quotient basis with nothing to show for it -- the silent-wrong-answer
+    // failure CLAUDE.md records for this backend.  Measured at X_0^6(25) (level 300): the solve
+    // takes 1.6 s at pole order 55 and times out at 1800 s at 15 deeper orders (135, 175, ...,
+    // 695), each of which used to come back as "no solutions".  NMZ_DEGRADE=1 restores the old
+    // behaviour for a sweep that would rather skip an unreachable base than stop.
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
     cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
                    M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
     _ := System(cmd);
-    if not FileExists(solname) then return []; end if;
+    if not FileExists(solname) then
+        if GetEnv("NMZ_DEGRADE") ne "" then
+            vprintf ShimuraQuotients, 1 : "\n⚠ lattice-point solve (M, n, m) = (%o, %o, %o) did not finish; NMZ_DEGRADE is set, continuing with no solutions.\n", M, n, m;
+            return [];
+        end if;
+        error Sprintf("the lattice-point solve for (M, n, m) = (%o, %o, %o) produced no file: " cat
+                      "Normaliz timed out (NMZ_TIMEOUT, default 1800 s) or failed. See " cat
+                      "polymake/nmzsolve.err. Continuing would give an incomplete eta-quotient " cat
+                      "basis; raise NMZ_TIMEOUT, or set NMZ_DEGRADE=1 to accept no solutions here.", M, n, m);
+    end if;
     return Sort(eval Read(solname));
 end function;
 
