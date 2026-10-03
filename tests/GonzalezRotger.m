@@ -545,10 +545,10 @@ for t in FN do
 end for;
 error if not IsEmpty(fnbad),
     Sprintf("Gonzalez-Rotger footnote-2 oracle: %o disagreement(s): %o", #fnbad, fnbad);
-// 115_1 has no model, so only two of the three can fire.
-error if NFN lt 2,
+// All three bases have models (115_1's since PR #69), so all three published quotients must fire.
+error if NFN lt 3,
     Sprintf("Gonzalez-Rotger footnote-2 oracle: only %o of the 3 published quotients were checked, "
-            * "expected at least 2 (35_1 and 51_1 both have models) -- something stopped being "
+            * "expected all 3 (35_1, 51_1 and 115_1 all have models) -- something stopped being "
             * "compared", NFN);
 
 printf " ok (%o genus-one entr(ies) checked, %o of them by an EXHIBITED isomorphism; "

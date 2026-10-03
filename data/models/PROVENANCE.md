@@ -433,15 +433,28 @@ limit, seven were killed (three by the memory daemon, four by hand to free the m
 **The top curve is absent on all four, and is not expected.** The method produces an equation only
 for a subhyperelliptic curve, and these four top curves are not: genus 7 at `115_1` and `129_1` and
 genus 11 at `161_1` and `183_1`, each already decided non-subhyperelliptic by the filtering pipeline.
-So each file carries an empty `[* *]` entry at `W = {1}` and models the quotients, which is the whole
-of what the method can give at these bases — one key at `115_1` and `161_1`, three at `129_1` and
-`183_1`.
+So each file carries an empty `[* *]` entry at `W = {1}` and models some of the quotients: one key at
+`115_1` and `161_1`, three at `129_1` and `183_1`.
 
-Validation is internal only: these are not Guo-Yang bases, so there is no published equation to
-compare against. `VerifyModelSet` passes on all four (102 checks, 0 failures), including the
-L-polynomial comparison against the trace formula on the `W`-fixed part of the `D`-new space, which
-is independent of the Borcherds/Schofer path that produced them. A negative control confirms the
-checks bite: perturbing one coefficient of `183_1`'s `[1,183]` model gives 5 failures.
+**Four hyperelliptic quotients are missing, and that is a gap, not a limit of the method.** The
+quotients `115/w5` (genus 4), `115/w115` (genus 2), `161/w7` (genus 6) and `161/w161` (genus 2) are
+double covers of the star curve, so an equation `y^2 = f(t)` exists for each; the search produced an
+equation for `w23` alone at both bases and never assembled the other three, which it builds as fibre
+products over the star and only when the degrees of the equations it holds line up (the
+Hauptmodul-normalisation artefact described above). Both bases are being rerun with the current
+code; the keys are absent rather than empty.
+
+**What vouches for each quotient.** `115/w23` is the elliptic curve 115a1, as González–Rotger say in
+footnote 2 of *Non-elliptic Shimura curves of genus one* (J. Math. Soc. Japan 58 (2006)), and the
+stored quartic has that Jacobian. The other genus-one quotient, `129/w129`, likewise has its
+Jacobian fixed by the point counts. For the genus-2 quotients
+`129/w43` and `183/w183` no published equation is known to us (not in Molina, arXiv:1004.3675, nor in
+González–Rotger), and the point counts fix the Jacobian only up to isogeny, so those two equations
+rest on our CM-value computation alone. `VerifyModelSet` passes on all four files (102 checks, 0
+failures), including the L-polynomial comparison against the trace formula on the `W`-fixed part of
+the `D`-new space, which is independent of the Borcherds/Schofer path that produced them. A negative
+control confirms the checks bite: perturbing one coefficient of `183_1`'s `[1,183]` model gives 5
+failures.
 
 ## Reproducibility status, measured 2026-09-05
 
