@@ -1,0 +1,52 @@
+
+##### X_0^15(2), level prime p = 2 #####
+d = -15    d0 = -15   f = 1   split | [L : L_+ (+) L_-] p-part p^0 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 2, 3, 4, 5, 6 ]  POLE | integral cosets
+2, in L^v 2, in L 0
+d = -60    d0 = -15   f = 2   split | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 1, 2, 3, 4, 5 ]  POLE | integral cosets
+1, in L^v 1, in L 0
+d = -240   d0 = -15   f = 4   split | [L : L_+ (+) L_-] p-part p^3 | L_- 
+elem.div. p-vals [ 1, 3 ] | zero coset [ 1, 2, 2, 4, 6 ]  POLE | integral cosets
+3, in L^v 1, in L 0
+d = -960   d0 = -15   f = 8   split | [L : L_+ (+) L_-] p-part p^5 | L_- 
+elem.div. p-vals [ 1, 5 ] | zero coset [ 1, 2, 2, 4, 4 ]  POLE | integral cosets
+7, in L^v 1, in L 0
+d = -3     f = 1   (inert at p): no optimal embedding
+d = -12    d0 = -3    f = 2   INERT | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 1, 2, 1, 2, 1 ]  no pole | integral 
+cosets 1, in L^v 1, in L 0
+d = -48    d0 = -3    f = 4   INERT | [L : L_+ (+) L_-] p-part p^3 | L_- 
+elem.div. p-vals [ 1, 3 ] | zero coset [ 1, 2, 2, 4, 2 ]  no pole | integral 
+cosets 3, in L^v 1, in L 0
+d = -192   d0 = -3    f = 8   INERT | [L : L_+ (+) L_-] p-part p^5 | L_- 
+elem.div. p-vals [ 1, 5 ] | zero coset [ 1, 2, 2, 4, 4 ]  no pole | integral 
+cosets 7, in L^v 1, in L 0
+d = -7     d0 = -7    f = 1   split | [L : L_+ (+) L_-] p-part p^0 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 2, 3, 4, 5, 6 ]  POLE | integral cosets
+2, in L^v 2, in L 0
+d = -28    d0 = -7    f = 2   split | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 1, 2, 3, 4, 5 ]  POLE | integral cosets
+1, in L^v 1, in L 0
+d = -112   d0 = -7    f = 4   split | [L : L_+ (+) L_-] p-part p^3 | L_- 
+elem.div. p-vals [ 1, 3 ] | zero coset [ 1, 2, 2, 4, 6 ]  POLE | integral cosets
+3, in L^v 1, in L 0
+
+##### X_0^10(3), level prime p = 3 #####
+d = -8     d0 = -8    f = 1   split | [L : L_+ (+) L_-] p-part p^0 | L_- 
+elem.div. p-vals [ 1, 1 ] | zero coset [ 3, 5, 7, 9, 11 ]  POLE | integral 
+cosets 4, in L^v 4, in L 0
+d = -72    d0 = -8    f = 3   split | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 0, 2 ] | zero coset [ 1, 3, 5, 7, 9 ]  POLE | integral cosets
+2, in L^v 2, in L 0
+d = -648   d0 = -8    f = 9   split | [L : L_+ (+) L_-] p-part p^3 | L_- 
+elem.div. p-vals [ 0, 4 ] | zero coset [ 1, 3, 3, 9, 15 ]  POLE | integral 
+cosets 8, in L^v 2, in L 0
+d = -387   d0 = -43   f = 3   INERT | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 0, 2 ] | zero coset [ 1, 3, 1, 3, 1 ]  no pole | integral 
+cosets 2, in L^v 2, in L 0
+d = -603   d0 = -67   f = 3   INERT | [L : L_+ (+) L_-] p-part p^1 | L_- 
+elem.div. p-vals [ 0, 2 ] | zero coset [ 1, 3, 1, 3, 1 ]  no pole | integral 
+cosets 2, in L^v 2, in L 0
+d = -43    f = 1   (inert at p): no optimal embedding
+d = -67    f = 1   (inert at p): no optimal embedding

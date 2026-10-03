@@ -186,3 +186,24 @@ Integral-norm cosets of the plane: `-15`: 2, both in `L^v` over nonzero `eta`; `
 `-48` must come from the `x != 0` terms over the enlarged fibre (pairs with `mu_+ != 0`, which
 exist because `L_+ = Z lambda` with `Q(lambda) = f^2 |d_0|`), not from the `m = 0` factor alone.
 That accounting is the missing step of a proof.
+
+## The lattice at a conductor prime, measured at p = 2 and p = 3 (conductor.m, 2026-10-03)
+
+    base      d        d0    f   p at p   [L : L_+ (+) L_-]   L_- elem.div. p-vals   zero coset         integral cosets / in L^v
+    15_2    -60      -15    2   split    2^1                 (1,1)                  1,2,3,4,5  POLE    1 / 1
+    15_2    -240     -15    4   split    2^3                 (1,3)                  1,2,2,4,6  POLE    3 / 1
+    15_2    -960     -15    8   split    2^5                 (1,5)                  1,2,2,4,4  POLE    7 / 1
+    15_2    -12      -3     2   inert    2^1                 (1,1)                  1,2,1,2,1  none    1 / 1
+    15_2    -48      -3     4   inert    2^3                 (1,3)                  1,2,2,4,2  none    3 / 1
+    15_2    -192     -3     8   inert    2^5                 (1,5)                  1,2,2,4,4  none    7 / 1
+    15_2    -28,-112 -7     2,4 split    2^1, 2^3            (1,1), (1,3)           POLE               1/1, 3/1
+    10_3    -72      -8     3   split    3^1                 (0,2)                  1,3,5,7,9  POLE    2 / 2
+    10_3    -648     -8     9   split    3^3                 (0,4)                  1,3,3,9,15 POLE    8 / 2
+    10_3    -387     -43    3   inert    3^1                 (0,2)                  1,3,1,3,1  none    2 / 2
+    10_3    -603     -67    3   inert    3^1                 (0,2)                  1,3,1,3,1  none    2 / 2
+
+Pattern, now PROVED for odd p (standalone, lem:conductor): lambda = (p a', b; p^2 c', -p a') with b a
+unit, L_-,p = <-1> ⊥ <-p^{2k}|d_0| v^2>, index p^{2k-1}, p^k - 1 integral cosets of which the p - 1
+multiples of e_2'/p lie in L^v. Inert fundamental d at p || N: no optimal embedding (nu_p = 0), as
+predicted; the inert case arises only through the conductor. p = 2: index 2^{2k-1}, divisors
+(1, 2k-1), ONE integral coset in L^v -- computed, not yet derived.
