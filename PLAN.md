@@ -2182,7 +2182,8 @@ supplies that for the other 8. Two routes were listed:
 ⇒ Superseded by the normaliser theorem below: Tu's Hauptmodul is on `X_0^15(1)^*`, and the
 obstructed curves are Galois covers of star curves we already have.
 
-**THE NORMALISER IS ATKIN–LEHNER–NEWMAN'S — a theorem, computed 2026-10-02.** Guo-Yang's
+**THE NORMALISER IS ATKIN–LEHNER–NEWMAN'S — an argument, computed 2026-10-02, not yet checked
+against a reference (Kontogeorgis–Rotger cover squarefree level only) nor by all of us.** Guo-Yang's
 obstruction is that the normaliser of `Gamma_0^D(N)` strictly contains the Atkin-Lehner group.
 The normaliser is local: `Gamma = O^1` is dense in `prod_p O_p^1` (strong approximation, `B`
 indefinite), so `alpha` normalises `Gamma` iff it normalises every `O_p^1`, and every adelic
@@ -2215,18 +2216,25 @@ done** (campaign `vvdata/weyl-campaign/level-p2/`): for `p^e || N` the negative 
 `p^e`-scaled binary lattice (computed, generalising Yang's Lemma 18), and at a `p^2`-scaled split
 plane the `m = 0` factor takes three values, so the multiplier becomes `(1/2)(c_1(0) + c_2(0))`
 over the two surviving coset classes instead of `(1/2) c_eta(0)`. Every value was confirmed by
-brute-force counting at `p = 3, 5`. **Do not run the pipeline's star quotient on the six obstructed
-bases**: it is the wrong object.
+brute-force counting at `p = 3, 5`. ⚠ This multiplier rests on the `m = 0` term itself, for which
+a proof is *proposed* in PR #66 and not yet agreed. **Do not run the pipeline's star quotient on
+the six obstructed bases**: it is the wrong object.
 
-#### ⇒ AND THE ANSWER TO "CAN THE `15_4` ROUTE BE GENERALISED?" IS **NO** — with a reason (2026-10-02)
+#### ⇒ CAN THE `15_4` ROUTE BE GENERALISED? Two maps, and the earlier "no" was about the wrong one (2026-10-02, corrected 2026-10-03)
 
-There is **no map** `X^*(D,N) -> X^*(D,N')`: it would need the top level's new Atkin-Lehner
-involutions inside `<Gamma_0(N'), W'>`, and they are not there (`w_4` has reduced norm 4, so it
-would have to be twice a unit of the maximal order; classically `(0 -1; 4 0)/2` is not in
-`SL_2(Z)`, because `w_4` changes the underlying curve). What *does* map down is
-`X_0^D(N)/U -> X_0^D(N')/U` with `U = Hall(DN) cap Hall(DN')`, the largest Atkin-Lehner group
-acting on both levels, of degree `psi(N)/psi(N')` — and Tu's `t_4` is exactly this for `15_4`, where
-he quotients by `W_15`, not by `Hall(60)`. Its genus decides whether a Hauptmodul exists:
+**⚠ CORRECTED.** An earlier version of this section said there is no map `X^*(D,N) -> X^*(D,N')`,
+because the top level's new involution `w_{q^2}` is not in `<Gamma_0(N'), W'>`. That is true of
+the *projection* `z -> z`, which does not descend, and false of the *degeneracy map* `z -> qz`,
+which does (Sachi, review of PR #67): conjugating by `diag(q,1)` carries `w_{q^2}` into `q` times
+an element of the lower-level group, as in `X_0(4)/w_4 -> X(1)`. Checked classically at level
+`84 = 4*21`: `diag(2,1) * w_4 * diag(2,1)^-1 = 2 * (2 -1; 21 -10)`, an element of `Gamma_0(21)`.
+So the maps between the star curves **exist**, of degree `psi(N)/psi(N') * #W'/#W`, and the
+degree-3 map `X^*(21,4) -> X^*(21,1)` that the Hurwitz solve below assumed is a genuine map after
+all; that solve, retracted on the strength of the wrong statement, is to be **rechecked, not
+discarded** (campaign `nonsquarefree/NOTES.md`). Everything below about the quotient
+`X_0^D(N)/U -> X_0^D(N')/U` with `U = Hall(DN) cap Hall(DN')` stands as written; it is the map
+Tu's `t_4` uses for `15_4`, where he quotients by `W_15`, not by `Hall(60)`, and its genus decides
+whether a Hauptmodul exists on *that* curve:
 
 | base | `U` | degree | `g(X_0^D(N)/U)` |
 |---|---|---|---|
@@ -2237,13 +2245,15 @@ he quotients by `W_15`, not by `Hall(60)`. Its genus decides whether a Hauptmodu
 | `10_9`, `14_9` | `{1,2,p,2p}` | 12 | 1 |
 | `22_9` | `{1,2,11,22}` | 12 | 3 |
 
-`15_4` is the only one of the seven at genus 0. That is why Tu treats it and no other
-non-squarefree case, and why Remark 39 cites him for exactly this curve. For the other six there is
-**no Hauptmodul to find** — the object has genus 1 or 3 — so an equation must come from a
-positive-genus model, i.e. from the pipeline once it handles non-squarefree levels, not from a
-Belyi-type solve. (Computation: campaign `vvdata/weyl-campaign/nonsquarefree/whichobject.m`. An
-earlier attempt of mine to build `21_4` this way solved a Hurwitz problem for a degree-3 map that
-does not exist; it is retracted in that directory's `NOTES.md`.)
+`15_4` is the only one of the seven at genus 0 on *this* quotient, which is why Tu's route goes
+through `X_0^15(4)/W_15`. But the star curves themselves have genus 0 at every one of the seven, and
+the degeneracy map `X^*(D,N) -> X^*(D,N')` exists, so a Belyi-type solve for a Hauptmodul of the
+top star over the lower star is **not** excluded by this table — that was the wrong conclusion
+drawn here on 2026-10-02. The degree-3 solve for `21_4` (the Hauptmodul
+`1/s = (t^3 - 4/3 t + 16/27)/(t^2 + 29/12 t + 22/9)`, with its `Q(sqrt -7)` and `Q(sqrt -3)` fibres)
+was retracted on that wrong basis and is to be rechecked; see the dated correction in campaign
+`vvdata/weyl-campaign/nonsquarefree/NOTES.md`. (Computation of the table:
+`vvdata/weyl-campaign/nonsquarefree/whichobject.m`.)
 
 (The earlier attempt to measure this with `TwoSidedIdealClassGroup(O)` failed its positive
 control at `15_4` and measured nothing; it is superseded by the argument above.)
