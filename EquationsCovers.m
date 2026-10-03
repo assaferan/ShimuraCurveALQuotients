@@ -1091,6 +1091,13 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
         all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
         vprintf ShimuraQuotients, 1 : "Done\n";
     end if;
+    // Covers with no genus-0 quotient are outside everything above.  They are still Galois over
+    // the star with an elementary abelian 2-group, so they are fibre products of their index-2
+    // double covers, which the stages above usually did build.  Kept only when the genus and the
+    // trace-formula point counts both agree (FibreProductCovers.m).
+    vprintf ShimuraQuotients, 1 : "Building remaining covers as fibre products of their double covers...";
+    all_eqns, all_ws := EquationsByFibreProduct(all_eqns, all_ws, curves);
+    vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
 end intrinsic;
 
