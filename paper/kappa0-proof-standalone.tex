@@ -445,33 +445,110 @@ primes of $N$ dividing $d$ contribute nothing, for the reason the recipe assumed
 \end{remark}
 
 
-\begin{remark}[the level dividing the conductor of $d$]\label{rem:conductor}
-The hypotheses above ask for $d$ fundamental, but the firing rule $\sum_{p\mid N/(N,d)}\log p$ is a
-condition on the \emph{field}, so the correction is applied whenever $N$ misses the fundamental
-discriminant $d_0$ of $d$ --- including when $N$ divides the conductor $f=\sqrt{d/d_0}$. On
-$X_0^{15}(2)$ that covers $d=-60$, which is one of the three discriminants at which
-\cite[Table~45]{GY} tests the rule. There the lattice is genuinely different, and the count
-$2N-2$ of Lemma~\ref{lem:LN} fails: computing $\Lm=L\cap\lambda^\perp$ directly at $D=15$, $N=2$,
-the $2$-part is the even plane $2H$ with two nonzero isotropic cosets when $d=-7$ or $-15$, and the
-\emph{odd} type $2\,\mathrm{diag}(u_1,u_2)$ with $u_1+u_2\equiv0\bmod4$, which has exactly \emph{one},
-when $d=-12$ or $-60$.
+\subsection*{Non-fundamental discriminants}
 
-The correction is nevertheless the same. At the odd type the counting of \textup{Lemma~lem:m0loc of the preprint} gives
-$\alpha_k=1,2,3,\dots$ at the zero coset, so $W_{0,2}(s,\varphi_0)=1/(1-X)$, still a simple pole,
-and $\alpha_k\equiv2$ at the single isotropic coset, so $W_{0,2}(s,\varphi_\nu)=1+X$. The argument
-of Proposition~\ref{prop:kappa0} then runs unchanged with $W_\nu/W_0=1-X^2$, which vanishes at
-$s=0$ with derivative $2\log2$, so $\kappa^-_\nu(0)=-2\log 2$: twice the value at a fundamental $d$.
-One coset at twice the weight gives $-\tfrac14\cdot1\cdot(-2\log2)=\tfrac12\log2$, the same total.
-So \textup{Observation~obs:mult of the preprint} holds at $d=-60$ as well, which is why the comparison with Table~45
-succeeds there, and the proof covers these $d$ once the two cases of the local plane are separated.
+Everything above assumes $d$ fundamental. Write $d=f^2d_0$ with $d_0$ fundamental and $f>1$ the
+conductor, $R_f=\Z+f\mathcal O_{d_0}$, and let $\lambda=\varphi(\sqrt d)$ for an optimal embedding
+$\varphi$ of $R_f$, so that $\langle\lambda,\lambda\rangle=2\lvert d\rvert$ as before. Two things are
+different at a level prime $N$ dividing $f$, and they are different in kind: one is proved below,
+the other is computed and leaves an exact gap.
 
-What is \emph{not} settled is the bookkeeping of \emph{which} coset's constant term to use. The
-multiplier is read off a nonzero isotropic coset of $\Ldual/L$, which does not depend on $d$, while
-the coset occurring here lies in $\Lm^\vee/\Lm$, and the identification of Lemma~\ref{lem:iso} was
-proved under $N\nmid d$. At $d=-12$ on $X_0^{15}(2)$ the value the code produces for
-$f_{-2}-f_{-1}$ disagrees with the model, which is consistent with the two cosets differing there;
-at $d=-60$ they evidently agree. The model set is unaffected, since its CM points are taken coprime
-to the level, but the routine should either exclude $N\mid f$ or resolve this.
+\begin{lemma}[the plane's isotropy is a property of the field]\label{lem:split}
+For every prime $p$, the quadratic space $\Lm\otimes\Q_p=\lambda^\perp\subset B_0\otimes\Q_p$ is
+isotropic if and only if $p$ splits in $k=\Q(\sqrt{d_0})$. In particular this does not depend on
+the conductor.
+\end{lemma}
+\begin{proof}
+Write $B=k\oplus kj$ with $j$ anticommuting with $k$ and $j^2=\beta\in\Q^\times$, and $B_0$ for the
+trace-zero part. Then $\lambda\in k_0=\Q\sqrt{d_0}$ and $\lambda^\perp=kj$: for $x\in k$,
+$\tr(\lambda\overline{xj})=\tr(\lambda\,\bar j\,\bar x)=-\tr(\lambda\bar x j)=0$ since $\lambda\bar x
+\in k$ and $\tr(yj)=0$ for $y\in k$. The quadratic form is $Q(xj)=\nrd(xj)=-\beta\,N_{k/\Q}(x)$.
+So $\lambda^\perp\otimes\Q_p\cong(k_p,-\beta N)$, which represents $0$ nontrivially exactly when
+$N_{k_p/\Q_p}$ does, i.e.\ when $k_p$ is not a field.
+\end{proof}
+
+\begin{lemma}[pole or no pole at the zero coset]\label{lem:pole}
+In the counting normalisation of \textup{Lemma~lem:m0loc of the preprint}, $W_{0,p}(s,\varphi_0)=
+(1-X)\sum_{k\ge0}\alpha_kX^k$ with $X=p^{-s}$, $\alpha_0=1$ and $\alpha_k=p^{-k}\#\{x\in
+L_{-,p}/p^kL_{-,p}:\ Q(x)\equiv0\bmod p^k\}$. If $L_{-,p}\otimes\Q_p$ is anisotropic, the $\alpha_k$
+are bounded and $W_{0,p}(s,\varphi_0)$ is holomorphic at $s=0$. If it is isotropic, $\alpha_k\ge
+ck$ for some $c>0$ and $W_{0,p}(s,\varphi_0)$ has a pole at $s=0$.
+\end{lemma}
+\begin{proof}
+Anisotropic: $Q$ is a nonzero anisotropic form on $\Z_p^2$, so there is $c_0$ with
+$\ord_p Q(x)\le c_0+2\min_i\ord_p(x_i)$ for all $x\ne0$ (on the compact set of primitive $x$,
+$\ord_pQ(x)$ is bounded, and $Q(p^ax)=p^{2a}Q(x)$). Hence $Q(x)\equiv0\bmod p^k$ forces every
+coordinate of $x$ to vanish modulo $p^{\lceil(k-c_0)/2\rceil}$, which leaves at most $p^{k+c_0}$
+classes modulo $p^k$, and $\alpha_k\le p^{c_0}$. Then $\lvert(1-X)\sum\alpha_kX^k\rvert\le p^{c_0}$
+for $0<X<1$, so there is no pole. Isotropic: choose a primitive isotropic $e\in L_{-,p}$ and
+complete it to a basis $e,f'$, so $Q(xe+yf')=uxy+wy^2$ with $u=\langle e,f'\rangle\ne0$. For each
+$0\le j\le k-\ord_pu-1$, the classes $y$ with $\ord_py=j$ number $(p-1)p^{k-j-1}$, and for each of
+them $Q\equiv0\bmod p^k$ is a congruence on $x$ modulo $p^{k-j-\ord_pu}$ with $p^{j+\ord_pu}$
+solutions modulo $p^k$; summing, $\alpha_k\ge(k-\ord_pu)(p-1)/p$, which grows linearly, and the
+pole follows since $(1-X)\sum\alpha_kX^k\ge(1-X)\sum_{k\le K}ckX^k$ for every $K$.
+\end{proof}
+
+So at a level prime dividing the conductor the picture splits by the field. If $p$ splits, the
+plane is isotropic, the zero coset has its pole, and the mechanism of
+Proposition~\ref{prop:kappa0} is available: on $X_0^{15}(2)$ the counting gives, at the zero coset,
+$\alpha_k=1,2,3,\dots$ for $d=-60$ ($f=2$) and $\alpha_k=1,2,2,4,6,8,10,\dots$ for $d=-240$ ($f=4$),
+with the integral-norm cosets contributing $W=1+X$ at $f=2$, and the resulting correction
+reproduces \cite[Table~45]{GY} exactly at $d=-28,-60,-240$. If $p$ is inert, the plane is
+anisotropic, there is no pole, and the proposition's argument does not apply at all; and this is
+the case that only non-fundamental $d$ can produce, since for fundamental $d$ an inert $p\,\|\,N$
+admits no optimal embedding (Eichler's condition $\nu_p=1+(\tfrac{d}{p})=0$), whereas for $p\mid f$
+the local embedding number is $2$ regardless.
+
+\begin{proposition}[the inert conductor prime: what is known]\label{prop:inert}
+Let $N\,\|\,$level, $N\mid f$, $N$ inert in $k$. Then $W_{0,N}(s,\varphi_0)$ is holomorphic and
+nonzero at $s=0$, and for a nonzero coset $\nu$ of integral norm the first-order coefficient is
+\[
+  b_\nu(0,v)=\Phi(0)\,\frac{W_{0,N}'(0,\varphi_\nu)}{W_{0,N}(0,\varphi_0)}
+            =-\frac{W_{0,N}'(0,\varphi_\nu)}{W_{0,N}(0,\varphi_0)},
+\]
+which is \emph{not} zero in general: on $X_0^{15}(2)$ it is $-\tfrac23\log2$ at $d=-12$ (zero coset
+$(1+X+X^2)/(1+X)$, one integral coset $1-X$) and the three integral cosets at $d=-48$ (zero coset
+$\alpha_k=1,2,2,4,2,4,2,\dots$, $W_{0,2}(0,\varphi_0)=3$; cosets $1-X$, $1-X$ and
+$(1-X)(1+X+2X^2)$) give $-\tfrac13\log2$, $-\tfrac13\log2$ and $-\tfrac43\log2$. Nevertheless the
+value of the Borcherds product at $d=-48$ agrees with \cite[Table~45]{GY} exactly when \emph{no}
+$\log 2$ correction is applied, and disagrees by $4\log2$ when the recipe of
+Proposition~\ref{prop:mult} is applied with these coefficients; the $x\neq0$ terms of that
+proposition do not account for it either (the pole sum at $d=-48$ is $0$ at the exponents
+$-12k^2$ and $-2$ over all multiples of $\lambda/f$, against a multiplier of $2$).
+\end{proposition}
+\begin{proof}
+The first two statements are Lemmas~\ref{lem:split} and \ref{lem:pole}; the formula for
+$b_\nu(0,v)$ is the computation in the proof of Proposition~\ref{prop:kappa0} with
+$W_{0,N}(0,\varphi_0)$ finite and nonzero, and the values are read off the series. The
+comparison with Table~45 is a computation (the $2$-adic series are counted on
+$\Lm=L\cap\lambda^\perp$ directly).
+\end{proof}
+
+The gap is therefore not in the local factors but in the bookkeeping that turns them into a term
+of the formula, and it can be located exactly. Lemma~\ref{lem:iso} identifies a coset $\nu$ of
+$\Lm^\vee/\Lm$ with a coset of $\Ldual/L$ and reads the multiplier $\tfrac12c_\eta(0)$ off the
+latter; this rests on $L_N=L_{+,N}\oplus L_{-,N}$ (Lemma~\ref{lem:LN}), proved from
+$\langle\lambda,L_N\rangle\subset\langle\lambda,\lambda\rangle\Z_N$. At a conductor prime that
+inclusion fails: $\langle\lambda,\lambda\rangle=2f^2\lvert d_0\rvert$ while $\langle\lambda,L_N
+\rangle$ is only divisible by the $N$-part of $2f$ (optimality of the embedding of $R_f$ puts
+$f\sqrt{d_0}$, not $f^2\sqrt{d_0}$, into the order), so $L_N\supsetneq L_{+,N}\oplus L_{-,N}$ with
+index a power of $N$, the Eisenstein series for $\varphi_\eta$ is not a product of series for
+$L_\pm$, and a coset $\eta$ of $\Ldual/L$ lies over several cosets $(\mu_+,\mu_-)$ of
+$(\Lp\oplus\Lm)^\vee/(\Lp\oplus\Lm)$. The $m=0$ coefficient attached to $\eta$ is then a sum over
+that fibre, and what Table~45 says is that at an inert conductor prime this sum is $0$ although its
+individual $\Lm$-terms are not. Proving that is the statement still missing; the split case, where
+the naive identification evidently gives the right total at every point tested, is in the same
+position. Until it is proved, the routine applies the rule ``fire at $p\mid f$ iff $p$ splits in
+$k$'', which is correct at every point Table~45 can test and is what the local factors say.
+
+\begin{remark}[the $m>0$ terms at non-fundamental $d$]
+A separate point, settled by the same comparison: in the $m>0$ part of the formula the class
+number and unit count that enter are those of the field $k$, not of the order $R_f$, together
+with a factor $1/f$. The two agree exactly when $h(R_f)=h(k)$, which holds at conductor $2$ when
+$2$ splits ($d=-28,-60$) and fails at conductor $4$, where $h(R_f)=2h(k)$ and the computed values
+came out halved against Table~45 down to a half-integer exponent of $5$; with the field's class
+number $d=-240$ is exact and nothing at a fundamental discriminant moves. In the invariants of
+the order this factor reads $(w_{R_f}/h(R_f))\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$.
 \end{remark}
 
 \begin{thebibliography}{9}
