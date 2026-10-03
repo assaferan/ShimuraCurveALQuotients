@@ -1019,8 +1019,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
 
     // ----- outer m=0 term (Yifan Yang, arXiv:1503.07971, Sec 4, eq (11)-(12) + Lemma 20) -----
     // Schofer's sum runs over m >= 0; the loops above only cover m >= 1, dropping the constant term
-    // sum_eta c_eta(0) kappa_eta(0). By (11), kappa^-_mu(0) = 0 for mu != 0, so every nonzero
-    // kappa_eta(0) equals the single number kappa^-_0(0) whose value (Lemma 20) is
+    // sum_eta c_eta(0) kappa_eta(0). ⚠ Yang's (11) sets kappa^-_mu(0) = 0 for mu != 0, which is the
+    // convention this comment was written under and which the term below exists to correct: at the
+    // level prime those coefficients are NOT zero (paper/level-prime-kappa.tex, prop:kappa0, and
+    // the brute-force local densities in campaign vvdata/weyl-campaign/level-p2/). Reading on with
+    // (11) in force, every nonzero kappa_eta(0) would equal the single number kappa^-_0(0), whose
+    // value (Lemma 20) is
     //   kappa_0(0) = 2 Lambda'/Lambda + sum_{p|D/(D,d)} (p-1)/(p+1) log p + sum_{p|N/(N,d)} log p.
     // Its transcendental (2 Lambda'/Lambda) and fractional D-parts cancel against the period / the
     // m>0 Diff-derivatives (which is why dropping the whole term still gives the D-primes correctly);
@@ -1081,19 +1085,36 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // correct only at PointDegree = 1 (where all prior validation lived); the
         // quadratic points of X0^10(23) were the first to expose the difference.
         //
-        // PROVED (paper/level-prime-kappa.tex, Propositions prop:kappa0 and prop:mult, for prime N
-        // and fundamental d with N not dividing d): the dropped coefficient is kappa^-_nu(0) =
-        // -log N/(N-1) at each of the 2N-2 nonzero isotropic cosets, and it enters Theorem B both
-        // at m = 0 (giving the (1/2) c_eta(0)) and at m > 0 through the vectors on the CM line,
-        // which at a point off the divisor reduce to the oo-coefficients of f at the exponents
-        // k^2 Q(lambda_0) (M0InfinityPoleSum).  That second part is subtracted here; it is zero
-        // unless a pole of f at oo at such an exponent is cancelled by the cusp-0 side, and it
-        // has been zero at every evaluated point of the model set.  For composite squarefree N
-        // the term is per prime (prop:composite), with the multiplier of the cosets supported at
-        // that prime alone; no base in the model set has such a level, and neither that
-        // multiplier nor the pole sum is implemented for it.
+        // WHAT IS ARGUED AND WHAT IS NOT.  paper/level-prime-kappa.tex, Propositions prop:kappa0
+        // and prop:mult, give the dropped coefficient as kappa^-_nu(0) = -log N/(N-1) at each of
+        // the 2N-2 nonzero isotropic cosets, for PRIME N and FUNDAMENTAL d with N not dividing d,
+        // and trace it to the (1/2) c_eta(0) used here.  ⚠ THAT ARGUMENT IS NOT YET AGREED: it has
+        // to be read and accepted by the authors before anything here calls it proved, so treat the
+        // term as the empirically fitted rule it has always been (its only outside evidence is
+        // Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2), via tests/SchoferIsometry.m).
+        //
+        // ⚠ d NEED NOT BE FUNDAMENTAL HERE.  The test above is against the fundamental
+        // discriminant, so the term also fires when N divides the CONDUCTOR of d -- d = -60 on
+        // X_0^15(2), one of the three Table 45 points.  There L_- at N is the odd-type plane
+        // 2*diag(u1,u2), u1+u2 = 0 mod 4, with ONE nonzero isotropic coset rather than two, so the
+        // count 2N-2 does not apply; the local factor is 1+X instead of 1, the coefficient is twice
+        // as large, and the product comes out the same (campaign vvdata/weyl-campaign/level-p2/,
+        // oddtype.m).  ⚠ But at d = -12 on the same base the value disagrees with the model for
+        // fs[-2] - fs[-1], and the suspect is the coset bookkeeping below rather than that factor:
+        // m0mult reads c(0) at a nonzero isotropic coset of L^v/L, which does not depend on d,
+        // while the coset that occurs lies in L_-^v/L_-, and the correspondence does depend on d.
+        // Unresolved; the model set is unaffected because its CM points are coprime to the level.
+        //
+        // The second part of the m = 0 term comes from the vectors on the CM line (prop:mult), and
+        // at a point off the divisor reduces to the oo-coefficients of f at the exponents
+        // k^2 Q(lambda_0) (M0InfinityPoleSum).  It is subtracted below, is zero unless a pole of f
+        // at oo at such an exponent is cancelled by the cusp-0 side, and has been zero at every
+        // evaluated point of the model set.
+        require IsPrime(N) : "the m = 0 term is only derived for prime N: at composite squarefree N" cat
+                             " it is a sum over the primes of N of the multiplier of the cosets" cat
+                             " supported at that prime alone (prop:composite), which is not implemented";
         for i->eta in etas do
-            xsum := IsPrime(N) select M0InfinityPoleSum(fs[i], d) else 0;
+            xsum := M0InfinityPoleSum(fs[i], d);
             if xsum ne 0 then
                 vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: pole sum %o at d = %o for form %o", xsum, d, i;
             end if;
