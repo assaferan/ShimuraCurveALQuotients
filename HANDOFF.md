@@ -11,6 +11,31 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-03 — THE m = 0 TERM AT A CONDUCTOR PRIME IS A FIBRE SUM (PR #66)
+
+**The rule "fire iff the conductor prime splits" was an accident of the one form tested.** At a
+level prime dividing the conductor of d the lattice is not L_+ (+) L_-, and the terms Theorem B
+restores are a sum over the fibre of pairs (x, nu) with x + nu in L^v (standalone prop:fibre):
+cosets in L^v also pair with x = lambda_0/2 (so the pole of f at the CM point of d/4 enters), cosets
+outside L^v pair with x = lambda_0/4 over a nonzero coset, and the local factors of the nonzero
+cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, odd p proved, p = 2 matching
+the counted series): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/(p-1) log p (split),
+-2/(p^(k-1)(p+1)) (p^rho + 2(p^rho-1)/(p-1)) log p (inert).
+
+    SchoferFormula.m   M0FibreCorrection evaluates the sum at a level prime dividing the conductor
+                       (the (1/2)c_eta(0) - pole-sum term of prop:mult stays at p not dividing f);
+                       Kappa skips the Q(x) = m pairs at a nonzero coset (they are in the fibre sum).
+    tests/M0PoleSum.m  all nine forms of 15_2 at -7, -15, -52, -28, -60, -240, -48 against the value
+                       forced by each form's DIVISOR and Table 45 (C read at -7): 46/46.  The old
+                       rule was wrong on 10 of the 18 conductor-4 values, Yang's conductor term gave
+                       2^(4/3) on two.  ⚠ The test used to call its form fs[-2]; rows follow Keys(fs)
+                       and row 1 is key 11.
+    campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3).
+
+The model set is unaffected: conductor-4 points are never offered to the model search, and at
+conductor 2 the fibre sum equals the old term. Still computed rather than derived: the 2-adic
+lattice at a conductor prime (lem:conductor, p = 2).
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today

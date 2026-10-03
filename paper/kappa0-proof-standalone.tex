@@ -613,11 +613,11 @@ $C\prod_i\lvert s(d)-s(d_i)\rvert^{m_i}$ with $s$ Guo--Yang's Hauptmodul; the co
 off at $d=-7$ and the formula checked at six to eight further fundamental and conductor-$2$ points per
 form before being used at $-240$ and $-48$ (\texttt{level-p2/evidence.log}). The fibre sum
 reproduces all $18$ values exactly. The rule ``add $m\log p$ when $p$ splits, nothing when $p$ is
-inert'', which the routine applied until now, is right at $-240$ only for the five forms with
+inert'', which the routine applied before the fibre sum, is right at $-240$ only for the five forms with
 $a=0$ (those whose divisor misses $\tau_{-60}$) and at $-48$ only for the three forms with
 $m+a=0$ and $b=0$ --- among them the form on which the rule had been tested --- and Yang's conductor
 term for the pairs with $Q(x)=m$, which the routine also carried, gives the irrational $2^{4/3}$ at
-$-48$ for the two forms with $b\neq0$. The vanishing at $-48$ for the tested form is thus the
+$-48$ for the two forms with $b\neq0$ (those pairs now enter only through the fibre sum). The vanishing at $-48$ for the tested form is thus the
 identity $c_\eta(0)+2c_\infty(-3)=0$ for that form, not the absence of a term.
 
 The local factors in the table are instances of a closed form.
@@ -693,9 +693,10 @@ is explicit at an odd conductor prime: the restored terms there are
   c_{[x+\nu_r]}\bigl(-Q(x)\bigr),
 \]
 with the fibre over each $\nu_r$ read off the lattice as in the computation above. What remains for
-$p=2$ is the lattice itself (the $2$-adic part of Lemma~\ref{lem:conductor}); the routine should
-evaluate the sum as written rather than apply a rule, and the values in the table are what it must
-reproduce.
+$p=2$ is the lattice itself (the $2$-adic part of Lemma~\ref{lem:conductor}). The routine now
+evaluates the sum as written at a level prime dividing the conductor (\texttt{M0FibreCorrection}),
+with the closed-form $\kappa^-_\nu(0)$ and the fibre read off the lattice, and reproduces the $18$
+values of the table together with the $28$ at conductors $1$ and $2$ (\texttt{tests/M0PoleSum.m}).
 
 \begin{remark}[the $m>0$ terms at non-fundamental $d$]
 A separate point, settled by the same comparison: in the $m>0$ part of the formula the class

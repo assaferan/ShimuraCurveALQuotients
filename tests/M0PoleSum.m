@@ -54,21 +54,23 @@ procedure test_pole_sum_15_2()
 end procedure;
 
 // (3) Values at NON-FUNDAMENTAL discriminants against Guo-Yang's Table 45 (arXiv:1510.06193v1),
-// which gives the Hauptmodul s of X_0^15(2)/W at each CM point.  The form checked is the Borcherds
-// form of the cover with W = {1, 3, 5, 15} (key 11), whose divisor is (tau_-40) + (tau_-120) -
-// 2(tau_-12), so as a function on the genus-0 star curve it is C*|s(s-2)|; C = 1280/9 is read off
-// at the fundamental discriminants -7, -15, -52 (s = 1/4, 5/4, 1), so the identification is not
-// assumed, and the value is then REQUIRED at the conductor-2 points -28, -60 (s = 9/4, -1/12) and
-// the conductor-4 points -240 (s = -25/12, 2 split) and -48 (s = -1/4, 2 inert in Q(sqrt -3)).
-// Before 2026-10-03 the value at -240 came out exactly halved (and irrational): the m > 0 sum used
-// the class number of the order where the formula takes the field's.  At -48 the m = 0 term must
-// contribute nothing FOR THIS FORM: the term is a sum over the fibre of the conductor prime
-// (paper/kappa0-proof-standalone.tex, prop:fibre), c_eta(0) + 2 c_oo(-3) = 8 - 4 - 4 = 0 here,
-// and the code's rule (no term at an inert conductor prime) agrees.  For six of the other eight
-// forms the rule is wrong at -240 or -48 (campaign level-p2/evidence.log), which is why this test
-// checks one form; the fibre sum itself is not implemented yet.
-// (Until 2026-10-03 this comment and the messages below called the form fs[-2]: the table's rows
-// follow Keys(fs), not the sorted keys, and row 1 is key 11.)
+// which gives the Hauptmodul s of X_0^15(2)/W at each CM point.  Every Borcherds form of the model
+// set is a function on the genus-0 star curve with known divisor (DivisorOfBorcherdsForm, Guo-Yang
+// Lemma 25), so its value at a CM point is C * prod |s(d) - s(d_i)|^(m_i) over the zeros and poles
+// d_i of the divisor other than tau_-12 (where s = oo).  The constant C of each form is read at the
+// fundamental discriminant -7 and the formula is then REQUIRED at the fundamental points -15, -52,
+// the conductor-2 points -28, -60 (2 splits) and the conductor-4 points -240 (2 splits) and -48
+// (2 inert in Q(sqrt -3)) -- 46 values, 18 of them at conductor 4.  At conductor 4 the m = 0 term
+// is the fibre sum M0FibreCorrection (paper/kappa0-proof-standalone.tex, prop:fibre, lem:Wcond):
+// (m + c_oo(-15)) log 2 at -240 and (2/3 (m + c_oo(-3)) + 1/3 b) log 2 at -48, with m the
+// multiplier and b the cusp-0 coefficient of q^(-3/4).  Before 2026-10-03 the term was applied as
+// a rule ("fire iff 2 splits"), right at -240 and -48 only for the forms with c_oo(-15) = 0,
+// resp. m + c_oo(-3) = 0 and b = 0 -- which included the one form this test then checked, the
+// W = {1,3,5,15} cover with value (1280/9)|s(s-2)|, kept below as check (3a); and the m > 0 sum
+// used the class number of the order where the formula takes the field's (every conductor-4 value
+// halved).
+// (Until 2026-10-03 this test called its form fs[-2]: the table's rows follow Keys(fs), not the
+// sorted keys, and row 1 is key 11.)
 procedure test_values_at_conductor_discriminants_15_2()
     printf "  values at conductor-2 and conductor-4 discriminants on X0^15(2) against Table 45...";
     D := 15; N := 2;
@@ -80,38 +82,62 @@ procedure test_values_at_conductor_discriminants_15_2()
     svals := AssociativeArray();                      // Guo-Yang v1 Table 45, column s
     svals[-7] := 1/4; svals[-15] := 5/4; svals[-52] := 1;
     svals[-28] := 9/4; svals[-60] := -1/12; svals[-240] := -25/12; svals[-48] := -1/4;
-    want := Set(Keys(svals));
-    cm := CandidateDiscriminants(star, curves : Keep := want);
+    svals[-40] := 0; svals[-120] := 2;                // zeros of the forms; -12 is their common pole
+    points := [-7, -15, -52, -28, -60, -240, -48];
+    cm := CandidateDiscriminants(star, curves : Keep := Set(points));
     rat := cm[1]; quad := cm[2];
     for t in [<-28, 2, 1>, <-240, 4, 1>, <-48, 4, 1>] do   // <d, conductor, degree>; conductor 4 is never offered
         if not exists{u : u in rat | u[1] eq t[1]} then Append(~rat, t); end if;
     end for;
-    tab, _ := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 60, Prec := 100, Exclude := {}, Include := want);
-    row := Index(tab`Keys_fs, 11);               // the cover W = {1,3,5,15}; see the header
-    assert row gt 0;
-    // the value prints as a formal sum "aLog2+bLog3..."; compare against the expected one in that form
-    function logstring(q)   // q a positive rational -> "aLog2+bLog3..." in the code's format
-        f := Factorization(Numerator(q)); g := Factorization(Denominator(q));
-        terms := Sort([<t[1], t[2]> : t in f] cat [<t[1], -t[2]> : t in g]);
-        s := "";
-        for t in terms do
-            s cat:= (t[2] gt 0 and #s gt 0 select "+" else "") cat (t[2] eq 1 select "" else (t[2] eq -1 select "-" else IntegerToString(t[2]))) cat "Log" cat IntegerToString(t[1]);
+    tab, _ := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 60, Prec := 100, Exclude := {}, Include := Set(points));
+    for d in points do error if Index(tab`Discs, d) eq 0, Sprintf("d = %o was not evaluated", d); end for;
+    // a table cell is a formal sum of logs of primes; the forms' values here are rational numbers
+    function cell_value(x)
+        error if x eq LogSum(0) or x eq LogSum(Infinity()), "a divisor point was not skipped";
+        v := Rationals()!1;
+        for q in Keys(x`log_coeffs) do
+            c := x`log_coeffs[q];
+            error if not IsIntegral(c), Sprintf("irrational value %o", x);
+            v *:= (Rationals()!q)^(Integers()!c);
         end for;
-        return s;
+        return v;
     end function;
+
+    // (3a) the W = {1,3,5,15} cover: divisor (-40) + (-120) - 2(-12), value (1280/9) |s(s-2)|
+    row := Index(tab`Keys_fs, 11);
+    assert row gt 0;
     C := 1280/9;
-    nchecked := 0;
-    for d in [-7, -15, -52, -28, -60, -240, -48] do
-        i := Index(tab`Discs, d);
-        error if i eq 0, Sprintf("d = %o was not evaluated", d);
-        got := Sprint(tab`Values[row][i]);
-        exp := logstring(C * AbsoluteValue(svals[d] * (svals[d] - 2)));
+    for d in points do
+        got := cell_value(tab`Values[row][Index(tab`Discs, d)]);
+        exp := C * AbsoluteValue(svals[d] * (svals[d] - 2));
         error if got ne exp,
             Sprintf("X0^15(2), d = %o: the W = {1,3,5,15} form's value is %o, Table 45 gives s = %o hence %o", d, got, svals[d], exp);
-        nchecked +:= 1;
     end for;
-    assert nchecked eq 7;
-    printf " ok (%o discriminants, conductors 1, 2 and 4)\n", nchecked;
+
+    // (3b) every form, from its divisor: C read at -7, required everywhere else off the divisor
+    nchecked := 0;
+    for r->k in tab`Keys_fs do
+        div_f := DivisorOfBorcherdsForm(fs[k], star);
+        for pr in div_f do
+            error if pr[1] ne -12 and not IsDefined(svals, pr[1]),
+                Sprintf("form %o has a divisor point of discriminant %o not in the table", k, pr[1]);
+        end for;
+        model := func< d | &*[Rationals() | AbsoluteValue(svals[d] - svals[pr[1]])^(Integers()!pr[2]) : pr in div_f | pr[1] ne -12] >;
+        on_div := {pr[1] : pr in div_f};
+        assert -7 notin on_div;
+        Ck := cell_value(tab`Values[r][Index(tab`Discs, -7)]) / model(-7);
+        for d in points do
+            if d eq -7 or d in on_div then continue; end if;
+            got := cell_value(tab`Values[r][Index(tab`Discs, d)]);
+            exp := Ck * model(d);
+            error if got ne exp,
+                Sprintf("X0^15(2), form %o (divisor %o), d = %o: value %o, Table 45 and the divisor give %o",
+                        k, div_f, d, got, exp);
+            nchecked +:= 1;
+        end for;
+    end for;
+    assert nchecked eq 46;
+    printf " ok (%o values of 9 forms at conductors 1, 2 and 4)\n", nchecked;
 end procedure;
 
 printf "Testing the oo-pole part of the m = 0 term...\n";
