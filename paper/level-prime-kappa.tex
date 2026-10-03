@@ -2191,14 +2191,17 @@ the field, together with the field's unit count and a division by the conductor.
 exactly when $h(d)=h(d_0)$, which holds at conductor $2$ when $2$ splits ($d=-28,-60$) and fails at
 conductor $4$, where $h(d)=2h(d_0)$ and every value came out halved. With the field's class number
 the value at $d=-240$ agrees with Table~45 exactly, $2$-part included, and nothing at a fundamental
-or conductor-$2$ discriminant moves. Second, what remains is only the $2$-part when the conductor
-prime is \emph{inert}: at $d=-48$ the odd part is now right and the $2$-part is off by $4\log 2$,
-which is the $m=0$ local factor at the $4$-scaled inert plane, the analogue of the $2$-scaled case
-above. So the split case of a level prime dividing the conductor is right as implemented at every
-point tested, and the inert case is the one computation still to do. The routine warns at every
-non-fundamental $d$ and leaves the value as it is; this matters in practice, since the incremental
-discriminant search reaches lists containing non-fundamental discriminants and the coprime-to-level
-filter is off unless \texttt{CMCOPRIME} is set.
+or conductor-$2$ discriminant moves. Second, the $2$-part when the conductor prime is \emph{inert}
+is settled by counting on the negative plane itself: at $d=-48$ the zero coset's series is
+$\alpha_k=1,2,2,4,2,4,2,\dots$, bounded, so $W_{0,2}(s,\varphi_0)$ has no pole, exactly as at
+$d=-12$, while at every split plane ($d=-15,-60,-240$) it grows linearly and the pole is there.
+Since the term of Proposition~\ref{prop:kappa0} comes from that pole, at a level prime dividing the
+conductor it is present when the prime splits in $\Q(\sqrt d)$ and absent when it is inert. With that
+rule the value at $d=-48$ also agrees with Table~45 exactly; before it, the term added $4\log2$ too
+much there. So every conductor case Table~45 can test is now right, by two separate corrections, and
+the routine applies both without warning. What is not established is a proof covering
+non-fundamental $d$ in general: the evidence is the computed local factors and the five points of
+Table~45.
 \end{remark}
 Two things are worth drawing out. The factor $\tfrac12$ is
 $\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same

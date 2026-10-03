@@ -60,9 +60,10 @@ end procedure;
 // not assumed, and then REQUIRED at the conductor-2 points -28, -60 (s = 9/4, -1/12) and at the
 // conductor-4 point -240 (s = -25/12), where 2 splits in Q(sqrt d).  Before 2026-10-03 the value at
 // -240 came out exactly halved (and irrational): the m > 0 sum used the class number of the order
-// where the formula takes the field's.  -48 (2 inert) is left out on purpose: its odd part is right
-// but its log 2 part is still open (the m = 0 factor at the inert plane); the paper's remark on the
-// conductor says what is known.
+// where the formula takes the field's.  -48 (conductor 4, 2 INERT in Q(sqrt -3), s = -1/4) is the
+// one point where the m = 0 term must NOT fire: the zero coset's local factor at an inert
+// conductor plane has no pole (campaign level-p2/inertplane.m), and with the term the value came
+// out 4 log 2 too large.
 procedure test_values_at_conductor_discriminants_15_2()
     printf "  values at conductor-2 and conductor-4 discriminants on X0^15(2) against Table 45...";
     D := 15; N := 2;
@@ -73,11 +74,11 @@ procedure test_values_at_conductor_discriminants_15_2()
     fs := BorcherdsForms(star, curves : Prec := 100);
     svals := AssociativeArray();                      // Guo-Yang v1 Table 45, column s
     svals[-7] := 1/4; svals[-15] := 5/4; svals[-52] := 1;
-    svals[-28] := 9/4; svals[-60] := -1/12; svals[-240] := -25/12;
+    svals[-28] := 9/4; svals[-60] := -1/12; svals[-240] := -25/12; svals[-48] := -1/4;
     want := Set(Keys(svals));
     cm := CandidateDiscriminants(star, curves : Keep := want);
     rat := cm[1]; quad := cm[2];
-    for t in [<-28, 2, 1>, <-240, 4, 1>] do          // <d, conductor, degree>; conductor 4 is never offered
+    for t in [<-28, 2, 1>, <-240, 4, 1>, <-48, 4, 1>] do   // <d, conductor, degree>; conductor 4 is never offered
         if not exists{u : u in rat | u[1] eq t[1]} then Append(~rat, t); end if;
     end for;
     tab, _ := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 60, Prec := 100, Exclude := {}, Include := want);
@@ -95,7 +96,7 @@ procedure test_values_at_conductor_discriminants_15_2()
     end function;
     C := 1280/9;
     nchecked := 0;
-    for d in [-7, -15, -52, -28, -60, -240] do
+    for d in [-7, -15, -52, -28, -60, -240, -48] do
         i := Index(tab`Discs, d);
         error if i eq 0, Sprintf("d = %o was not evaluated", d);
         got := Sprint(tab`Values[1][i]);
@@ -104,7 +105,7 @@ procedure test_values_at_conductor_discriminants_15_2()
             Sprintf("X0^15(2), d = %o: fs[-2] value is %o, Table 45 gives s = %o hence %o", d, got, svals[d], exp);
         nchecked +:= 1;
     end for;
-    assert nchecked eq 6;
+    assert nchecked eq 7;
     printf " ok (%o discriminants, conductors 1, 2 and 4)\n", nchecked;
 end procedure;
 

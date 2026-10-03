@@ -1041,17 +1041,20 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
-    // Everything argued about this term assumes d fundamental (Schofer's theorem as Yang and
-    // Guo-Yang state it, and the coset count of the level-N plane).  At a non-fundamental d the
-    // local plane at a prime dividing the conductor is a different lattice.  On X_0^15(2) the
-    // value agrees with Guo-Yang's Table 45 at d = -28, -60 and -240 (conductor prime split; the
-    // m > 0 sum takes the FIELD's class number, see get_kappa_minus_squared) and only its log 2
-    // part is wrong at d = -48 (2 inert), with -12 on the divisor.  The value is left as it is,
-    // and the caller is told.
-    if d ne d_fund then
-        WriteStderr(Sprintf("⚠ kappa0 term at non-fundamental d = %o (fundamental %o): nothing proved here covers it. Checked right against Guo-Yang at -28, -60, -240 (conductor prime split); the log 2 part is still open when the conductor prime is inert (-48).\n", d, d_fund));
-    end if;
-    Nprimes := PrimeDivisors(N div GCD(N, d_fund));
+    // The proposition assumes d fundamental.  At a non-fundamental d two things change: the m > 0
+    // sum takes the FIELD's class number (get_kappa_minus_squared), and at a level prime dividing
+    // the conductor the local plane is a different lattice, whose zero coset has a pole exactly
+    // when the prime splits in the CM field -- that is the rule applied to Nprimes below.  On
+    // X_0^15(2) the values at d = -28, -60, -240 (split) and -48 (inert) then agree with Guo-Yang's
+    // Table 45 exactly; -12 is on the divisor.
+    // At a level prime p dividing the CONDUCTOR of d the term fires only when p SPLITS in the CM
+    // field.  The term comes from the simple pole of the zero coset's local factor; counting
+    // directly on the negative plane of X_0^15(2) (campaign level-p2/inertplane.m), the zero
+    // coset's series grows at every split plane (d = -15, -60, -240) and is bounded at every
+    // inert one (d = -12, -48), so there the term is absent.  Checked against Guo-Yang's Table 45:
+    // -28, -60, -240 (split, fires) and -48 (inert, does not) all agree exactly.
+    _, cond := IsSquare(d div d_fund);
+    Nprimes := [p : p in PrimeDivisors(N div GCD(N, d_fund)) | cond mod p ne 0 or KroneckerSymbol(d_fund, p) eq 1];
     // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
     // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
     // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
