@@ -15,3 +15,9 @@ models[[ 1, 2, 3, 6 ]] := [* <1, P![ -4/9, 32/9, -71/9, 28/9 ], P![]> *];
 models[[ 1, 2, 21, 42 ]] := [* <0, P![ -7/16, 3/32, 81/256 ], P![]> *];
 models[[ 1, 3, 14, 42 ]] := [* <1, P![ 0, 7/4, -1/8, -9/64 ], P![]> *];
 models[[ 1, 6, 14, 21 ]] := [* <1, P![ 0, 7/64, 31/32, -9/64 ], P![]> *];
+// The three genus-2 quotients of the (non-hyperelliptic, genus 3) top curve.  They are the
+// quotients by the three Atkin-Lehner involutions that act WITHOUT fixed points, so each drops
+// the genus by one; the file previously stopped at the top curve and its genus-0/1 quotients.
+models[[ 1, 3 ]] := [* <2, P![ 189/1024, 0, -1611/1024, 0, -801/1024, 0, -81/1024 ], P![]> *];
+models[[ 1, 6 ]] := [* <2, P![ 189/16, 0, 153/32, 0, -171/256, 0, -81/256 ], P![]> *];
+models[[ 1, 14 ]] := [* <2, P![ 189/64, 0, 1053/128, 0, 5589/1024, 0, 189/1024 ], P![]> *];

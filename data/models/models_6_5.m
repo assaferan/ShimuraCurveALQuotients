@@ -16,3 +16,5 @@ models[[Integers()|1,6]] := [* <0, P![ 125, 0, -256 ], P![]>, <0, P![ 2125/4096,
 models[[Integers()|1,2,3,6]] := [* <0, P![ -8/3, -131/9, -16/9 ], P![]> *];
 models[[Integers()|1,30]] := [* <0, P![ -2, 0, 4 ], P![]>, <0, P![ 1/2, 0, -1/2 ], P![]>, <0, P![ 1/2, 0, 1/4 ], P![]> *];
 models[[Integers()|1,5,6,30]] := [* <0, P![ 1/2, 1/16 ], P![]> *];
+// The one genus-1 immediate cover of the star curve; its six genus-0 siblings were already here.
+models[[Integers()|1,3,5,15]] := [* <1, P![ 0, -8/3, -131/9, -16/9 ], P![]> *];
