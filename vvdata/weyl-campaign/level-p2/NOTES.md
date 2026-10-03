@@ -157,3 +157,20 @@ multiplier's coset bookkeeping, not about the local Whittaker factor.
 ⚠ Note on the counting script: for an ANISOTROPIC coset alpha_0 = 0, not 1 (Q(mu) is not integral),
 so the "1 +" in the generating function must be dropped there; with it one gets 1 - X instead of 0.
 The isotropic rows, which are what matter, are unaffected.
+
+## The inert conductor prime: NO pole at the zero coset, so NO m = 0 term (inertplane.m, 2026-10-03)
+
+Counting on the ACTUAL negative plane `L_- = L ∩ λ^⊥` of `X_0^15(2)` (not on a guessed shape), the
+zero coset's series `α_k` is
+
+    d = -15   (fundamental, 2 split)   2, 3, 4, 5, 6, 7, 8     simple pole
+    d = -60   (conductor 2, 2 split)   1, 2, 3, 4, 5, 6, 7     simple pole
+    d = -240  (conductor 4, 2 split)   1, 2, 2, 4, 6, 8, 10    simple pole
+    d = -12   (conductor 2, 2 INERT)   1, 2, 1, 2, 1, 2, 1     bounded: no pole
+    d = -48   (conductor 4, 2 INERT)   1, 2, 2, 4, 2, 4, 2     bounded: no pole
+
+The `m = 0` correction at a level prime comes from that pole (prop:kappa0), so at a level prime
+dividing the conductor it fires iff the prime SPLITS in the CM field. Rule now in `SchoferFormula.m`.
+Checked against Guo-Yang's Table 45 (fs[-2] value = (1280/9)|s(s-2)|): `-28, -60, -240` (fires) and
+`-48` (does not) all exact. ⚠ The earlier conductor-4 defect (odd part halved) was separate: the
+`m > 0` sum used `h(d)` of the order where the formula takes `h(d_0)` of the field (fixed, PR #66).

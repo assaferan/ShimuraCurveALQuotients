@@ -1,0 +1,103 @@
+
+=== d = -15 (fundamental -15, conductor 1, 2 split in K)  L_- Gram = [ -1140, 
+-1410, -1410, -1744 ]  det 60 = 2^2 * 15
+  mu = [ 0, 0 ]       Q(mu) = 0      integral     alphas [ 2, 3, 4, 5, 6, 7, 8 ]
+grows: POLE
+  mu = [ 0, 1/2 ]     Q(mu) = -218   integral     alphas [ 1, 1, 1, 1, 1, 1, 1 ]
+bounded: no pole
+  mu = [ 1/2, 0 ]     Q(mu) = -285/2 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 1/2 ]   Q(mu) = -713   integral     alphas [ 1, 1, 1, 1, 1, 1, 1 ]
+bounded: no pole
+
+=== d = -60 (fundamental -15, conductor 2, 2 split in K)  L_- Gram = [ -34, -56,
+-56, -94 ]  det 60 = 2^2 * 15
+  mu = [ 0, 0 ]       Q(mu) = 0      integral     alphas [ 1, 2, 3, 4, 5, 6, 7 ]
+grows: POLE
+  mu = [ 0, 1/2 ]     Q(mu) = -47/4  non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 0 ]     Q(mu) = -17/4  non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 1/2 ]   Q(mu) = -30    integral     alphas [ 2, 2, 2, 2, 2, 2, 2 ]
+bounded: no pole
+
+=== d = -240 (fundamental -15, conductor 4, 2 split in K)  L_- Gram = [ -384, 
+-708, -708, -1306 ]  det 240 = 2^4 * 15
+  mu = [ 0, 0 ]       Q(mu) = 0      integral     alphas [ 1, 2, 2, 4, 6, 8, 10 
+]  grows: POLE
+  mu = [ 0, 1/2 ]     Q(mu) = -653/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/8, 1/4 ]   Q(mu) = -1055/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 1/8, 3/4 ]   Q(mu) = -6987/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 1/4, 0 ]     Q(mu) = -12    integral     alphas [ 2, 2, 2, 2, 2, 2, 2 ]
+bounded: no pole
+  mu = [ 1/4, 1/2 ]   Q(mu) = -1055/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 3/8, 1/4 ]   Q(mu) = -2147/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 3/8, 3/4 ]   Q(mu) = -9495/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 1/2, 0 ]     Q(mu) = -48    integral     alphas [ 1, 2, 4, 4, 4, 4, 4 ]
+bounded: no pole
+  mu = [ 1/2, 1/2 ]   Q(mu) = -1553/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 5/8, 1/4 ]   Q(mu) = -3623/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 5/8, 3/4 ]   Q(mu) = -12387/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 
+0 ]  bounded: no pole
+  mu = [ 3/4, 0 ]     Q(mu) = -108   integral     alphas [ 2, 2, 2, 2, 2, 2, 2 ]
+bounded: no pole
+  mu = [ 3/4, 1/2 ]   Q(mu) = -2147/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 7/8, 1/4 ]   Q(mu) = -5483/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 7/8, 3/4 ]   Q(mu) = -15663/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 
+0 ]  bounded: no pole
+
+=== d = -12 (fundamental -3, conductor 2, 2 INERT in K)  L_- Gram = [ -12490, 
+-14360, -14360, -16510 ]  det 300 = 2^2 * 75
+  mu = [ 0, 0 ]       Q(mu) = 0      integral     alphas [ 1, 2, 1, 2, 1, 2, 1 ]
+bounded: no pole
+  mu = [ 0, 1/2 ]     Q(mu) = -8255/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 1/2, 0 ]     Q(mu) = -6245/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 1/2, 1/2 ]   Q(mu) = -7215  integral     alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+
+=== d = -48 (fundamental -3, conductor 4, 2 INERT in K)  L_- Gram = [ -130, 
+-140, -140, -160 ]  det 1200 = 2^4 * 75
+  mu = [ 0, 0 ]       Q(mu) = 0      integral     alphas [ 1, 2, 2, 4, 2, 4, 2 ]
+bounded: no pole
+  mu = [ 0, 1/4 ]     Q(mu) = -5     integral     alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 0, 1/2 ]     Q(mu) = -20    integral     alphas [ 1, 2, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 0, 3/4 ]     Q(mu) = -45    integral     alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/4, 1/8 ]   Q(mu) = -155/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 1/4, 3/8 ]   Q(mu) = -455/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 1/4, 5/8 ]   Q(mu) = -915/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 1/4, 7/8 ]   Q(mu) = -1535/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 1/2, 0 ]     Q(mu) = -65/4  non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 1/4 ]   Q(mu) = -155/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 1/2 ]   Q(mu) = -285/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 1/2, 3/4 ]   Q(mu) = -455/4 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 ]
+bounded: no pole
+  mu = [ 3/4, 1/8 ]   Q(mu) = -815/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0 
+]  bounded: no pole
+  mu = [ 3/4, 3/8 ]   Q(mu) = -1395/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 3/4, 5/8 ]   Q(mu) = -2135/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
+  mu = [ 3/4, 7/8 ]   Q(mu) = -3035/16 non-integral alphas [ 0, 0, 0, 0, 0, 0, 0
+]  bounded: no pole
