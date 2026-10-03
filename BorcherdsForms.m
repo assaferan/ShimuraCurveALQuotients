@@ -227,14 +227,12 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     // 132/204/308/616, m = 0 and m > 0.  It bounds its own runtime (NMZ_TIMEOUT,
     // default 1800 s).
     //
-    // A SOLVE THAT DID NOT FINISH IS AN ERROR, NOT AN EMPTY ANSWER.  nmzsolve.py writes its
-    // solution file whenever it finishes, including when the polytope genuinely has no lattice
-    // point, so a missing file means it timed out or failed.  Returning [] there would hand back
-    // an INCOMPLETE eta-quotient basis with nothing to show for it -- the silent-wrong-answer
-    // failure CLAUDE.md records for this backend.  Measured at X_0^6(25) (level 300): the solve
-    // takes 1.6 s at pole order 55 and times out at 1800 s at 15 deeper orders (135, 175, ...,
-    // 695), each of which used to come back as "no solutions".  NMZ_DEGRADE=1 restores the old
-    // behaviour for a sweep that would rather skip an unreachable base than stop.
+    // nmzsolve.py writes its solution file whenever it finishes, including when the polytope has
+    // no lattice point, so a missing file means the solve timed out or failed.  An empty answer
+    // here does not stop the search: the caller takes it as "no form at this pole order" and
+    // retries at a larger one, so a solve that silently failed would be read as a short basis
+    // and the search would run on from it.  That is why a missing file is an error.  NMZ_DEGRADE=1
+    // keeps the old behaviour for a sweep that would rather skip a base than stop.
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
