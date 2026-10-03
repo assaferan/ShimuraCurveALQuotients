@@ -168,7 +168,7 @@ rule, and the square-class channel of Section~\ref{sec:exact} with it, are prope
 representative rather than of the correction. Section~\ref{sec:open} takes up the
 provenance of the correction: of the two readings previously on offer, both can now be excluded,
 and what survives is that terms inside Schofer's formula were dropped. Those terms are then
-evaluated. Proposition~\ref{prop:kappa0} proves $\kappa^-_\nu(0)=-\log N/(N-1)$ at every nonzero
+evaluated. Proposition~\ref{prop:kappa0} proposes a proof that $\kappa^-_\nu(0)=-\log N/(N-1)$ at every nonzero
 isotropic coset of the level-$N$ plane, from the local Whittaker functions of Kudla--Yang
 (Lemma~\ref{lem:WN}; Lemma~\ref{lem:m0loc} is an independent calibration of the same factor) and
 the vanishing of the incoherent series alone, and Proposition~\ref{prop:mult} traces the restored
@@ -364,7 +364,7 @@ to check them. Ground truth here has to be produced rather than looked up: a pub
 cannot in general test the correction, for the reason set out in Remark~\ref{rem:gy36}.
 \end{observation}
 
-Proposition~\ref{prop:mult} proves this rule for prime $N$ and fundamental $d$, and gives the term
+Proposition~\ref{prop:mult} proposes a proof of this rule for prime $N$ and fundamental $d$, and gives the term
 that replaces $\tfrac12c_\eta(0)$ when $f$ has a pole at $\infty$ at an exponent of the CM line
 that the cusp $0$ cancels in the divisor; that term is zero on every base in this section.
 
@@ -2160,22 +2160,31 @@ the $2$-part is the even plane $2H$ with two nonzero isotropic cosets when $d=-7
 \emph{odd} type $2\,\mathrm{diag}(u_1,u_2)$ with $u_1+u_2\equiv0\bmod4$, which has exactly \emph{one},
 when $d=-12$ or $-60$.
 
-The correction is nevertheless the same. At the odd type the counting of Lemma~\ref{lem:m0loc} gives
-$\alpha_k=1,2,3,\dots$ at the zero coset, so $W_{0,2}(s,\varphi_0)=1/(1-X)$, still a simple pole,
-and $\alpha_k\equiv2$ at the single isotropic coset, so $W_{0,2}(s,\varphi_\nu)=1+X$. The argument
-of Proposition~\ref{prop:kappa0} then runs unchanged with $W_\nu/W_0=1-X^2$, which vanishes at
-$s=0$ with derivative $2\log2$, so $\kappa^-_\nu(0)=-2\log 2$: twice the value at a fundamental $d$.
-One coset at twice the weight gives $-\tfrac14\cdot1\cdot(-2\log2)=\tfrac12\log2$, the same total.
-So Observation~\ref{obs:mult} holds at $d=-60$ as well, which is why the comparison with Table~45
-succeeds there, and the proof covers these $d$ once the two cases of the local plane are separated.
+These two discriminants are \emph{different} cases, and the proposition's argument applies to at
+most one of them. The odd plane $2\,\mathrm{diag}(u_1,u_2)$ is isotropic only when
+$u_1+u_2\equiv0\bmod8$, that is when $2$ splits in $\Q(\sqrt d)$: true at $d=-60$ (and at $-28$),
+false at $d=-12$, where $2$ is inert in $\Q(\sqrt{-3})$. The brute-force counting of
+Lemma~\ref{lem:m0loc} separates them (\texttt{level-p2/oddtype.log} on the campaign branch). At
+$2\,\mathrm{diag}(1,-1)$, the plane at $d=-60$, the zero coset gives $\alpha_k=1,2,3,\dots$, so
+$W_{0,2}(s,\varphi_0)=1/(1-X)$ keeps its simple pole, and the single nonzero coset of integral norm
+gives $\alpha_k\equiv2$, so $W_{0,2}(s,\varphi_\nu)=1+X$; the argument then runs with
+$W_\nu/W_0=1-X^2$ and gives $\kappa^-_\nu(0)=-2\log2$, and one coset at twice the weight reproduces
+$\tfrac12\log2$. At $2\,\mathrm{diag}(1,3)$, the plane at $d=-12$, the zero coset gives
+$\alpha_k=1,2,1,2,\dots$, so $W_{0,2}(s,\varphi_0)=(1+X+X^2)/(1+X)$ with \emph{no} pole, and the
+coset of norm $1$ has odd norm on every vector, so $W_{0,2}(s,\varphi_\nu)=1-X$; the same formal
+computation would give $-\tfrac23\log2$, and no value of the $m=0$ term closes the gap there:
+\cite[Table~45]{GY} gives $|F(-12)|=1/20$ for $F=f_{-2}/f_{-1}$, against $2^{4/3}/5$ from the
+routine, and with $-\tfrac23\log 2$ the gap grows. At $-48$ and $-240$ the odd-prime parts of the
+computed values are half the true ones, which the $m=0$ term cannot touch at all.
 
-What is \emph{not} settled is the bookkeeping of \emph{which} coset's constant term to use. The
-multiplier is read off a nonzero isotropic coset of $\Ldual/L$, which does not depend on $d$, while
-the coset occurring here lies in $\Lm^\vee/\Lm$, and the identification of Lemma~\ref{lem:iso} was
-proved under $N\nmid d$. At $d=-12$ on $X_0^{15}(2)$ the value the code produces for
-$f_{-2}-f_{-1}$ disagrees with the model, which is consistent with the two cosets differing there;
-at $d=-60$ they evidently agree. The model set is unaffected, since its CM points are taken coprime
-to the level, but the routine should either exclude $N\mid f$ or resolve this.
+So the correction is \emph{not} established at non-fundamental $d$. Schofer's theorem, as Yang and
+Guo--Yang state it, assumes $d$ fundamental, and a prime dividing the conductor that splits in
+$\Q(\sqrt d)$ also gives isotropic cosets away from $N$, so Lemma~\ref{lem:LN} needs $d$ fundamental
+too. The agreement with Table~45 at $d=-28$ and $-60$ is an observation, not a consequence of
+anything proved here. The routine now warns at every non-fundamental $d$ and leaves the value as it
+is, so that the Table~45 comparison keeps $-60$ as an observed agreement; this matters in practice,
+since the incremental discriminant search reaches lists containing non-fundamental discriminants
+and the coprime-to-level filter is off unless \texttt{CMCOPRIME} is set.
 \end{remark}
 Two things are worth drawing out. The factor $\tfrac12$ is
 $\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same

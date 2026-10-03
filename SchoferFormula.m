@@ -1037,6 +1037,15 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
+    // Everything argued about this term assumes d fundamental (Schofer's theorem as Yang and
+    // Guo-Yang state it, and the coset count of the level-N plane).  At a non-fundamental d the
+    // local plane at a prime dividing the conductor is a different lattice; on X_0^15(2) the
+    // value agrees with Guo-Yang's Table 45 at d = -28 and -60 (2 split) and is wrong at d = -12
+    // (2 inert), and no choice of the m = 0 term repairs -12.  The value is left as it is so that
+    // the Table 45 comparison keeps -60 as an observed agreement, and the caller is told.
+    if d ne d_fund then
+        WriteStderr(Sprintf("⚠ kappa0 term at non-fundamental d = %o (fundamental %o): nothing proved here covers it; the agreement with Guo-Yang at -28 and -60 is an observation.\n", d, d_fund));
+    end if;
     Nprimes := PrimeDivisors(N div GCD(N, d_fund));
     // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
     // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
