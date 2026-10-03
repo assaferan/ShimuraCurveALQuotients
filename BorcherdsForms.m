@@ -245,6 +245,18 @@ intrinsic HolomorphicEtaQuotients(N::RngIntElt, k::RngIntElt : Prec := 100) -> S
     return [EtaQuotient(R,r) : r in rs];
 end intrinsic;
 
+// Common denominator of a rational matrix, ROW BY ROW.  Magma's own Denominator for a matrix is
+// LCM({Denominator(x) : x in Eltseq(X)}) (Module/Mtrx/ir.m:60), and Eltseq refuses a matrix with
+// more than about 10^9 entries, which is where X_0^141(1)'s pool matrix lands at the rung m = -235
+// (33135 x 33135).  Taking the LCM over rows never forms a sequence longer than one row.
+function matrix_denominator(X)
+    den := 1;
+    for i in [1..Nrows(X)] do
+        den := LCM(den, Denominator(X[i]));
+    end for;
+    return den;
+end function;
+
 function coeff_height(vec)
     return &+[Log(AbsoluteValue(Numerator(x)))+Log(AbsoluteValue(Denominator(x))) : x in Eltseq(vec) | x ne 0];
 end function;
@@ -508,7 +520,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         // short basis as though it were complete.
         if Nrows(coeffs) gt 2*Ncols(coeffs) + 8 then
             sel_p := 1073741789;
-            sel_den := LCM([Denominator(x) : x in Eltseq(coeffs)]);
+            sel_den := matrix_denominator(coeffs);
             sel_cp := ChangeRing(ChangeRing(sel_den*coeffs, Integers()), GF(sel_p));
             sel_E := EchelonForm(Transpose(sel_cp));
             sel := [PivotColumn(sel_E, i) : i in [1..Rank(sel_E)]];
@@ -842,9 +854,7 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 eq 0];
-    // Denominator of the matrix, not of its entry sequence: at X_0^141(1) the pool matrix has
-    // 1.1e9 entries, beyond what Eltseq can form.
-    den := Denominator(coeffs);
+    den := matrix_denominator(coeffs);
     MZ := ChangeRing(den*coeffs, Integers());
     K := ChangeRing(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div)), Rationals());
     G := K * coeffs;
