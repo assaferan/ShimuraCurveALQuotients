@@ -11,6 +11,44 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-03 — THE m = 0 TERM AT A CONDUCTOR PRIME IS A FIBRE SUM (PR #66)
+
+**The rule "fire iff the conductor prime splits" was an accident of the one form tested.** At a
+level prime dividing the conductor of d the lattice is not L_+ (+) L_-, and the terms Theorem B
+restores are a sum over the fibre of pairs (x, nu) with x + nu in L^v (standalone prop:fibre):
+cosets in L^v also pair with x = lambda_0/2 (so the pole of f at the CM point of d/4 enters), cosets
+outside L^v pair with x = lambda_0/4 over a nonzero coset, and the local factors of the nonzero
+cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, proved for every p; the 2-adic lattice is lem:conductor2): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/(p-1) log p (split),
+-2/(p^(k-1)(p+1)) (p^rho + 2(p^rho-1)/(p-1)) log p (inert).
+
+    SchoferFormula.m   M0FibreCorrection evaluates the sum at a level prime dividing the conductor
+                       (the (1/2)c_eta(0) - pole-sum term of prop:mult stays at p not dividing f);
+                       Kappa skips the Q(x) = m pairs at a nonzero coset (they are in the fibre sum).
+    tests/M0PoleSum.m  all nine forms of 15_2 at -7, -15, -52, -28, -60, -240, -48 against the value
+                       forced by each form's DIVISOR and Table 45 (C read at -7): 46/46.  The old
+                       rule was wrong on 10 of the 18 conductor-4 values, Yang's conductor term gave
+                       2^(4/3) on two.  ⚠ The test used to call its form fs[-2]; rows follow Keys(fs)
+                       and row 1 is key 11.
+    campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3),
+                       qprime.m, classpoly.py, fod.m (conductor 7 on 15_2).
+
+The model set is unaffected: conductor-4 points are never offered to the model search, and at
+conductor 2 the fibre sum equals the old term.
+
+**A conductor prime OUTSIDE the level (odd q, q not dividing DN) also carries a term** (lem:unimod):
+L_q is unimodular, the plane is <-1> + <-|d|>, no coset lies in L^v, and the fibre over each coset
+is the CM vectors of d/q^2, d/q^4, ..., so the term is a pole sum over the lower discriminants
+(q | d_0 is anisotropic, kappa^- = -2(q^(rho+1)-1)/((q-1)q^k) log q). Implemented for odd q.
+Table 45 cannot test it; what can: the CLASS POLYNOMIAL. At d = -588 (three star points) the nine
+values force a monic cubic H in Q[X] -- with the term H = X^3 - 191/54 X^2 + 343/432 X - 83^2/(2^8 3^3 7),
+cutting out exactly the cubic field FieldsOfDefinitionOfCMPoint gives (disc -588); without it no
+rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. EXTERNAL: forcing the Guo-Yang points the
+candidate search never offers, the term reproduces s(-27) on 58_1 and 55_1 (q = 3 ramified) and
+s(-100) on 21_2 (q = 5 split) -- campaign level-p2/gyforce_*.m. ⚠ The divisor relations
+among the nine forms are BLIND to this term (it is divisor-linear). ⚠ NOT derived: q = 2 outside an
+odd level (the tables for 35_1, 39_1, 51_1, 55_1, 57_1, 87_1 have such points; L_2 is not unimodular
+there) and a level prime dividing both the conductor and d_0; both log a verbose warning.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today

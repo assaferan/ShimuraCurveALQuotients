@@ -510,7 +510,11 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    h := ClassNumber(d);
+    // EXPERIMENT 2026-10-03: the class number of the FUNDAMENTAL discriminant, not of the order.
+    // With h(d) the value at conductor 4 comes out halved (X_0^15(2), d = -48, -240), because
+    // h(d) = 2 h(d_0) there while w is the field's; at conductor 2 in the split case h(d) = h(d_0)
+    // and nothing showed.  Yang's 1/f below is kept.
+    h := ClassNumber(FundamentalDiscriminant(d));
     w := #UnitGroup(QuadraticField(d));
 
     scale_sqr := &*scales_sqr;
@@ -658,7 +662,12 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
             vprintf ShimuraQuotients, 5: "\n\t\t\tmu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
             vprintf ShimuraQuotients, 5: "\t\t\tQ(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
-            if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
+            if (m - (x*Qrat,x)/2 eq 0) then
+                // A pair with Q(x) = m contributes c_gamma(-m) kappa^-_nu(0) with nu = gamma_- + mu_-.
+                // At a NONZERO coset nu of L_-^v/L_- that term is part of the m = 0 fibre sum
+                // (M0FibreCorrection, or the (1/2)c_eta(0) - pole-sum term at a fundamental d),
+                // so it is skipped here; at a conductor prime such pairs exist with x = lambda_0/p^j.
+                if not forall{c : c in Eltseq(gamma_minus + mu_minus) | IsIntegral(c)} then continue; end if;
                 if (gamma ne 0) then
                     Yang_tt := true;
                 else
@@ -678,6 +687,8 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
 
     // trying to imitate Yang's code
     // !!! Don't know why this is working !!!
+    // Since 2026-10-03 this is reached only for pairs whose coset nu = gamma_- + mu_- is ZERO (the
+    // others are in M0FibreCorrection); no such pair occurred at any evaluated conductor point.
     if Yang_tt then
         d0 := FundamentalDiscriminant(d);
         f2 := d div d0;
@@ -871,6 +882,124 @@ intrinsic M0Multiplier(foo::RngSerLaurElt, f0::RngSerLaurElt, D::RngIntElt, N::R
     return m0_multiplier(foo, f0, Ldata`Q, Ldata`disc_grp, Ldata`to_disc, Ldata`denom, M, D, N);
 end intrinsic;
 
+intrinsic M0InfinityPoleSum(foo::RngSerLaurElt, d::RngIntElt) -> FldRatElt
+{The sum of the coefficients of q^(-k^2 Q0), k >= 1, in the expansion foo of f at the cusp oo,
+ where Q0 = |d|/4 if 4 | d and |d| otherwise is the norm of the primitive vector on the CM line
+ of a point of discriminant d.  These are the exponents at which a pole of f at oo puts the
+ point on the divisor of the Borcherds form (DivisorOfBorcherdsForm: d = 4m/r^2).
+
+ The m = 0 term of Schofer's formula at a prime level N, N not dividing d, is
+     log N * ( (1/2) c_eta(0) - M0InfinityPoleSum(foo, d) )
+ per CM point: the second summand is the part of the dropped coefficient kappa^-_nu(0) that enters
+ Yang's kappa_eta(m) for m > 0 through vectors on the CM line, evaluated at a point off the
+ divisor (paper/level-prime-kappa.tex, Proposition prop:mult and Remark rem:xsum).  It is nonzero
+ only when a pole of f at oo at such an exponent is cancelled, in the divisor, by the cusp-0 side;
+ on every base of the model set it has been zero at every evaluated point.}
+    require d lt 0 : "d must be a negative discriminant";
+    Q0 := (d mod 4 eq 0) select (-d) div 4 else -d;
+    v := Valuation(foo);
+    if v ge 0 then return Rationals()!0; end if;
+    return &+[Rationals() | Coefficient(foo, -k^2*Q0) : k in [1..Isqrt((-v) div Q0)]];
+end intrinsic;
+
+intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLaurElt], mults::SeqEnum[FldRatElt],
+                            d::RngIntElt, p::RngIntElt, Q::AlgMatElt : Lambda := false, M := 0, Unimodular := false) -> SeqEnum
+{The m = 0-type terms of Schofer's formula at a prime p dividing the conductor of d -- a level
+ prime (p || N, p not dividing d_0), or with Unimodular a prime not dividing DN -- per CM point
+ and in units of log p, one value per form (paper/kappa0-proof-standalone.tex, prop:fibre,
+ lem:Wcond and lem:unimod).  foos and f0s are the expansions of the forms at the cusps oo and 0
+ (the latter in q^(1/M), M the level of the forms), mults their multipliers (1/2) c_eta(0), Q the
+ Gram matrix of L in the coordinates of Lambda, a vector of norm |d| on the CM line.
+
+ At a conductor prime L_N is not L_+ (+) L_-, and the restored terms are
+     -(1/4) sum over nu != 0 of kappa^-_nu(0) * sum over x in L_+^v with x + nu in L^v of c_[x+nu](-Q(x)),
+ the inner sum over the fibre of the coset nu: x = 0 (coefficient c_eta(0) = 2 mult, for nu in L^v)
+ and the vectors x = lambda_0/p^j with x + nu in L^v, whose coefficients are the cusp-0 principal
+ part of f at the exponent Q(x) and, when x + nu lies in L, the pole of f at oo there -- the pole
+ of f at the CM point of discriminant d/p^(2j).  The integral cosets are p^k - 1 in number
+ (p^k || conductor), nu of order p^(k - rho), and kappa^-_nu(0)/log p is
+     -2 p^(rho-k+1)/(p-1)                          if p splits in the CM field,
+     -2/(p^(k-1)(p+1)) (p^rho + 2(p^rho - 1)/(p-1)) if p is inert,
+ (lem:Wcond; the plane is <-1> + <-p^(2k) c> for odd p and <-1> + <-4^(k-1) c> at p = 2, where the
+ cosets of order 2^k have rho = 0; the coset count is checked here).  At a prime p not dividing DN
+ the plane is <-1> + <-|d|> (lem:unimod), no nonzero coset lies in L^v, every pair has x != 0 and
+ lies over eta = 0, and when p divides d_0 as well the plane is anisotropic with
+     kappa^-_nu(0)/log p = -2 (p^(rho+1) - 1)/((p-1) p^k).
+ Verified against the values forced by
+ the forms' divisors and Guo-Yang's Table 45 for all nine forms of X_0^15(2) at d = -240 and -48
+ (tests/M0PoleSum.m).}
+    require IsPrime(p) : "p must be prime";
+    require Type(Lambda) ne BoolElt and M gt 0 : "Lambda (the CM vector) and M (the level of the forms) are required";
+    lambda_v := Lambda;
+    Qr := ChangeRing(Q, Rationals()); n := Nrows(Qr);
+    e := func< i | Vector(Rationals(), [j eq i select 1 else 0 : j in [1..n]]) >;
+    Qf := func< v | (v*Qr, v)/2 >;
+    inLdual := func< v | forall{i : i in [1..n] | IsIntegral((v*Qr, e(i)))} >;
+    inL := func< v | forall{c : c in Eltseq(v) | IsIntegral(c)} >;
+    d0 := FundamentalDiscriminant(d);
+    is_sq, f := IsSquare(d div d0); assert is_sq;
+    k := Valuation(f, p);
+    require k ge 1 : "p must divide the conductor of d";
+    eps := KroneckerSymbol(d0, p);
+    require eps ne 0 or Unimodular :
+        "at a level prime dividing both the conductor and the fundamental discriminant the lattice is not derived";
+
+    lam := ChangeRing(lambda_v, Rationals());
+    lam0 := lam / Content(lambda_v);                       // primitive vector on the CM line
+    nn := Integers()!(lam0*Qr, lam0);                      // <lambda_0, lambda_0> = 2 Q(lambda_0)
+    Mx := Matrix(Integers(), n, 1, [Integers() | (e(i)*Qr, lam) : i in [1..n]]);
+    K := ChangeRing(KernelMatrix(Mx), Rationals());        // rows: a basis of L_- = L cap lambda^perp
+    gram := K*Qr*Transpose(K);
+
+    // the p-primary cosets of L_-^v/L_- of integral norm: L_-^v = Z^2 gram^-1, and with
+    // P gram R = S (Smith form) its classes are (a/s1, b/s2) P
+    Sm, Pm := SmithForm(ChangeRing(gram, Integers()));
+    Pq := ChangeRing(Pm, Rationals()); s1 := Sm[1,1]; s2 := Sm[2,2];
+    cosets := {};
+    for a in [0..s1-1], b in [0..s2-1] do
+        v := Vector(Rationals(), [a/s1, b/s2]) * Pq;
+        key := Vector(Rationals(), [c - Floor(c) : c in Eltseq(v)]);
+        if IsZero(key) then continue; end if;
+        if exists{c : c in Eltseq(key) | Denominator(c) ne p^Valuation(Denominator(c), p)} then continue; end if;
+        if not IsIntegral((key*gram, key)/2) then continue; end if;
+        Include(~cosets, key);
+    end for;
+    require #cosets eq p^k - 1 :
+        Sprintf("M0FibreCorrection: %o integral %o-primary cosets of the plane at d = %o, expected p^k - 1 = %o",
+                #cosets, p, d, p^k - 1);
+
+    bound := Maximum([-Valuation(foo) : foo in foos] cat [-Valuation(f0)/M : f0 in f0s] cat [0]);
+    jmax := Isqrt(Floor(2*nn*bound)) + 1;
+    T := [Rationals() | 0 : foo in foos];
+    for key in cosets do
+        ord := Minimum([m : m in [1..2*k] | forall{c : c in Eltseq(key) | IsIntegral(c*p^m)}]);
+        rho := k - ord;
+        require rho ge 0 : "M0FibreCorrection: a coset of order exceeding p^k";
+        kap := eps eq 1 select -2*p^(rho-k+1)/(p-1)
+               else (eps eq -1 select -2/(p^(k-1)*(p+1)) * (p^rho + 2*(p^rho-1)/(p-1))
+                                 else -2*(p^(rho+1)-1)/((p-1)*p^k));
+        nu := key * K;
+        for i in [1..#foos] do
+            S := Rationals()!0;
+            for j in [-jmax..jmax] do
+                x := j * lam0 / nn;                              // runs over L_+^v
+                if not inLdual(x + nu) then continue; end if;
+                m := Qf(x);
+                if m gt bound then continue; end if;
+                if m eq 0 then
+                    assert not inL(nu) and not Unimodular;       // a nonzero isotropic coset of L^v/L, supported at the level
+                    S +:= 2*mults[i];
+                else
+                    if IsIntegral(m*M) then S +:= Coefficient(f0s[i], -Integers()!(m*M)); end if;
+                    if inL(x + nu) and IsIntegral(m) then S +:= Coefficient(foos[i], -Integers()!m); end if;
+                end if;
+            end for;
+            T[i] +:= kap * S;
+        end for;
+    end for;
+    return [-t/4 : t in T];
+end intrinsic;
+
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, Q::AlgMatElt, lambda::ModTupRngElt, scale::FldRatElt) -> LogSm
 {Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo,
  returns the log of the absolute value of Psi_F_f at the CM point with CM d.
@@ -999,8 +1128,12 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
 
     // ----- outer m=0 term (Yifan Yang, arXiv:1503.07971, Sec 4, eq (11)-(12) + Lemma 20) -----
     // Schofer's sum runs over m >= 0; the loops above only cover m >= 1, dropping the constant term
-    // sum_eta c_eta(0) kappa_eta(0). By (11), kappa^-_mu(0) = 0 for mu != 0, so every nonzero
-    // kappa_eta(0) equals the single number kappa^-_0(0) whose value (Lemma 20) is
+    // sum_eta c_eta(0) kappa_eta(0). ⚠ Yang's (11) sets kappa^-_mu(0) = 0 for mu != 0, which is the
+    // convention this comment was written under and which the term below exists to correct: at the
+    // level prime those coefficients are NOT zero (paper/level-prime-kappa.tex, prop:kappa0, and
+    // the brute-force local densities in campaign vvdata/weyl-campaign/level-p2/). Reading on with
+    // (11) in force, every nonzero kappa_eta(0) would equal the single number kappa^-_0(0), whose
+    // value (Lemma 20) is
     //   kappa_0(0) = 2 Lambda'/Lambda + sum_{p|D/(D,d)} (p-1)/(p+1) log p + sum_{p|N/(N,d)} log p.
     // Its transcendental (2 Lambda'/Lambda) and fractional D-parts cancel against the period / the
     // m>0 Diff-derivatives (which is why dropping the whole term still gives the D-primes correctly);
@@ -1013,40 +1146,35 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
+    // Which primes carry a term: the level primes unramified in the CM field, and every prime of the
+    // CONDUCTOR of d.  At a prime dividing the conductor the lattice is not L_+ (+) L_- and the term
+    // is the fibre sum of M0FibreCorrection (at a prime outside the level it is a pole sum over the
+    // CM points of d/p^2, d/p^4, ...); at a level prime not dividing the conductor it is the
+    // (1/2) c_eta(0) - pole-sum term of prop:mult.
+    _, cond := IsSquare(d div d_fund);
     Nprimes := PrimeDivisors(N div GCD(N, d_fund));
-    // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
-    // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
-    // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
-    // the old 15_2-calibrated handle Coefficient(fs_0[i],0) by a derived value.
-    //
-    // HISTORY: m0_multiplier was validated only on the single-surviving-term base X0^15(2) (-> 4,
-    // all 19 Table-45 discs) and wrong on multi-term inputs (X0^21(2) -> -20/3); an even-N guard
-    // once forced 0 on odd-N bases. Both are superseded by the exact evaluation below.
-    //
-    // WHAT THE MULTIPLIER ACTUALLY IS (measured; see VectorValuedForm.m and tests/VectorValuedForm.m).
-    // Evaluating the Guo-Yang coset sum F_f = sum_gamma (f|gamma) rho(gamma^{-1}) e_0 directly, rather
-    // than reading its constant terms off the two scalar q-expansions, gives
-    //        multiplier = (1/2) * c_eta(0)   at any NONZERO ISOTROPIC eta,   and   c_0(0) = 0.
-    // All 2N-2 nonzero isotropic cosets carry the same c_eta(0); the isotropic cosets number exactly
-    // 2N-1 and all come from the level-N hyperbolic plane, which is why this term carries log N.
-    // Verified against the independently measured ground truth on 19 forms: X0^15(2) (9/9),
-    // X0^6(5) (5/5) and X0^10(3) (5/5).
-    // So "sum_eta c_eta(0)" above names the wrong functional, and the guess previously recorded here
-    // (isotropic multiplicity: G's constant term is sum_{eta iso} e_eta, so b^G may need summing over
-    // several isotropic eta0) was RIGHT IN SUBSTANCE: the relevant Eisenstein series is the one
-    // attached to a nonzero ISOTROPIC coset, not the one attached to 0 that the b_eta(m) below are
-    // built from. That is the concrete defect to repair.
-    // RESOLVED (2026-08-22): the multiplier is now computed EXACTLY by M0MultiplierExact
-    // (VectorValuedForm.m) -- the finite Gamma_0(M)-coset evaluation of (1/2) c_eta(0), minutes
-    // per base with no Fourier sampling and no CM table, validated against the measured ground
-    // truth on 21 bases (vvdata/weyl-campaign, branch m0-theta-campaign).  It replaces
-    // m0_multiplier (kept above: it is the Kudla-Yang Route-C closed form, correct on 15_2 only)
-    // and applies at EVERY level parity: the old even-N guard existed because m0_multiplier was
-    // wrong on multi-term inputs, while odd-N bases got no term at all -- the exact value is
-    // nonzero on some odd-N bases (X0^10(11) reproduces Guo-Yang Table A.2 with it).
-    // The evaluation does not depend on d, so it runs once per form and is cached on the form.
+    for q in PrimeDivisors(cond) do
+        if N mod q eq 0 and d_fund mod q eq 0 then
+            vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the level prime %o divides both the conductor and the fundamental discriminant of d = %o; that lattice is not derived and no term is added", q, d;
+        end if;
+    end for;
+    Qprimes := [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0 and IsOdd(q)];
+    if IsEven(cond) and IsOdd(D*N) then
+        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the conductor of d = %o is even and 2 is outside the level; that lattice is not derived and no term is added at 2", d;
+    end if;
+    for q in Qprimes do
+        // no coset lies in L^v at such a prime, so the multipliers (1/2) c_eta(0) never enter
+        corrs := M0FibreCorrection(fs, fs_0, [Rationals() | 0 : eta in etas], d, q, Q : Lambda := lambda, M := M, Unimodular := true);
+        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term at the conductor prime %o outside the level, d = %o: %o", q, d, corrs;
+        for i in [1..#etas] do
+            log_coeffs[i] +:= PointDegree * corrs[i] * LogSum(Rationals()!1, q);
+        end for;
+    end for;
+    // The multiplier (1/2) c_eta(0) is the constant term of the vector-valued input F_f at a
+    // nonzero isotropic coset, computed exactly by M0MultiplierExact (VectorValuedForm.m; the
+    // finite Gamma_0(M)-coset evaluation, validated against the measured ground truth on 21 bases).
+    // It does not depend on d, so it runs once per form and is cached on the form.
     if not IsEmpty(Nprimes) then
-        kzero_N := &+[LogSum(Rationals()!1, p) : p in Nprimes];
         if exists{eta : eta in etas | not assigned eta`m0mult} then
             mults := M0MultiplierExact(etas, Ldata, D, N);
             for i in [1..#etas] do
@@ -1060,8 +1188,40 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // other Schofer term inherits from the cycle structure. Flat addition is
         // correct only at PointDegree = 1 (where all prior validation lived); the
         // quadratic points of X0^10(23) were the first to expose the difference.
-        for i->eta in etas do
-            log_coeffs[i] +:= PointDegree * eta`m0mult * kzero_N;
+        //
+        // WHAT IS ARGUED AND WHAT IS NOT.  paper/level-prime-kappa.tex, Propositions prop:kappa0
+        // and prop:mult, give the dropped coefficient as kappa^-_nu(0) = -log N/(N-1) at each of
+        // the 2N-2 nonzero isotropic cosets, for PRIME N and FUNDAMENTAL d with N not dividing d,
+        // and trace it to the (1/2) c_eta(0) used here.  ⚠ THAT ARGUMENT IS NOT YET AGREED: it has
+        // to be read and accepted by the authors before anything here calls it proved, so treat the
+        // term as the empirically fitted rule it has always been (its only outside evidence is
+        // Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2), via tests/SchoferIsometry.m).
+        //
+        // The second part of the m = 0 term comes from the vectors on the CM line (prop:mult), and
+        // at a point off the divisor reduces to the oo-coefficients of f at the exponents
+        // k^2 Q(lambda_0) (M0InfinityPoleSum).  It is subtracted below, is zero unless a pole of f
+        // at oo at such an exponent is cancelled by the cusp-0 side, and has been zero at every
+        // evaluated point of the model set.
+        require IsPrime(N) : "the m = 0 term is only derived for prime N: at composite squarefree N" cat
+                             " it is a sum over the primes of N of the multiplier of the cosets" cat
+                             " supported at that prime alone (prop:composite), which is not implemented";
+        for p in Nprimes do
+            logp := LogSum(Rationals()!1, p);
+            if cond mod p ne 0 then
+                for i->eta in etas do
+                    xsum := M0InfinityPoleSum(fs[i], d);
+                    if xsum ne 0 then
+                        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: pole sum %o at d = %o for form %o", xsum, d, i;
+                    end if;
+                    log_coeffs[i] +:= PointDegree * (eta`m0mult - xsum) * logp;
+                end for;
+            else
+                corrs := M0FibreCorrection(fs, fs_0, [Rationals() | eta`m0mult : eta in etas], d, p, Q : Lambda := lambda, M := M);
+                vprintf ShimuraQuotients, 1 : "\n\tm = 0 term at the conductor prime %o, d = %o: %o", p, d, corrs;
+                for i in [1..#etas] do
+                    log_coeffs[i] +:= PointDegree * corrs[i] * logp;
+                end for;
+            end if;
         end for;
     end if;
 

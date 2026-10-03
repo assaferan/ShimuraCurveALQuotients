@@ -168,10 +168,13 @@ rule, and the square-class channel of Section~\ref{sec:exact} with it, are prope
 representative rather than of the correction. Section~\ref{sec:open} takes up the
 provenance of the correction: of the two readings previously on offer, both can now be excluded,
 and what survives is that terms inside Schofer's formula were dropped. Those terms are then
-evaluated. Lemma~\ref{lem:m0loc} supplies the one missing local ingredient, the $m=0$ Whittaker
-factor of a $p$-scaled plane, by calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis}
-itself; Proposition~\ref{prop:kappa0} gives $\kappa_\eta(0)=-\log N/(N-1)$ and recovers the measured
-correction, factor $\tfrac12$ included.
+evaluated. Proposition~\ref{prop:kappa0} proposes a proof that $\kappa^-_\nu(0)=-\log N/(N-1)$ at every nonzero
+isotropic coset of the level-$N$ plane, from the local Whittaker functions of Kudla--Yang
+(Lemma~\ref{lem:WN}; Lemma~\ref{lem:m0loc} is an independent calibration of the same factor) and
+the vanishing of the incoherent series alone, and Proposition~\ref{prop:mult} traces the restored
+coefficient through Yang's formula to the measured correction, factor $\tfrac12$ included, together
+with the term that replaces it when the input form has a pole at $\infty$ at an exponent of the CM
+line.
 
 All numerical statements below are exact rational computations, carried out in Magma; the
 supporting scripts are described in Appendix~\ref{app:repro}.
@@ -186,7 +189,9 @@ $\Lp=L\cap\Q\lambda$ and $\Lm=L\cap U$. Following \cite[(11),(12)]{Yang}, one se
 \]
 where $\kappa^-_\mu(m)$ is the $s$-linear coefficient of the $m$-th Fourier coefficient
 $A_\mu(s,m,v)$ of an incoherent Eisenstein series of weight $1$ attached to $\Lm$, and
-$\kappa^-_\mu(0)=0$ unless $\mu=0$.
+$\kappa^-_\mu(0)=0$ unless $\mu=0$. (The last clause is the convention the recipe inherits from
+\cite[Lemma~2.21]{Schofer}; Proposition~\ref{prop:kappa0} shows that it fails at the level
+prime.)
 
 For $m>0$ one has, with $S_{m,\mu}=\{p: p\mid \Delta \text{ or } v_p(m)>0\}$ and
 $\Delta=\disc(\Lm)$,
@@ -344,8 +349,9 @@ cosets carry the same constant term $c_\eta(0)$.
 Both counts in Observation~\ref{obs:iso} are counts for \emph{prime} $N$, which is the only case
 that occurs here --- every base in this project, and every entry of the model set, has $N$ prime
 or $N=1$. The agreement of the nonzero cosets, recorded here as an observation, becomes a theorem
-in \S\ref{sec:determined}, where the general-$N$ counts are given; it fails as soon as $N$ is
-composite.
+in \S\ref{sec:determined}, where the general-$N$ counts are given, and again in
+Lemma~\ref{lem:iso}, by the transitivity of the orthogonal group of the level-$N$ plane; it fails
+as soon as $N$ is composite.
 
 \begin{observation}\label{obs:mult}
 Let $\mathrm{mult}(f)=\tfrac12 c_\eta(0)$ for any nonzero isotropic $\eta$. Then adding
@@ -357,6 +363,10 @@ $20$. A further base $X_0^{21}(2)$ supplies nine values with no prior ground tru
 to check them. Ground truth here has to be produced rather than looked up: a published CM value
 cannot in general test the correction, for the reason set out in Remark~\ref{rem:gy36}.
 \end{observation}
+
+Proposition~\ref{prop:mult} proposes a proof of this rule for prime $N$ and fundamental $d$, and gives the term
+that replaces $\tfrac12c_\eta(0)$ when $f$ has a pole at $\infty$ at an exponent of the CM line
+that the cusp $0$ cancels in the divisor; that term is zero on every base in this section.
 
 That the correction is genuinely required, and not an artefact of a normalisation, is visible on
 $X_0^{6}(19)$: on a set of CM points including discriminants divisible by $N$, the uncorrected
@@ -494,11 +504,11 @@ form at a nonzero isotropic coset $\eta^*$. By the constant-term pairing (pair $
 holomorphic Eisenstein series of the complementary weight $3/2$ and take the constant term of the
 resulting weight-$2$ invariant), that quantity is determined by the principal part of $F$ paired
 against the coefficients of $E_{A,\eta^*}$, the Eisenstein series attached to the coset $\eta^*$
-of the discriminant form $A=\Ldual/L$. This is precisely the object the maximal-order literature
-does not compute: \cite{BK}, \cite[\S8--9]{KY} and the recipe of \S\ref{sec:chain} all work with
-the series attached to the \emph{zero} coset (equivalently, with sections
-$\mathrm{char}(\mu+\widehat L)$ seeded at $0$), and Kudla--Yang explicitly leave the general
-Eichler-order case open at the end of their \S9.
+of the discriminant form $A=\Ldual/L$. The recipe of \S\ref{sec:chain} works only with the series
+attached to the \emph{zero} coset (equivalently, with sections $\mathrm{char}(\mu+\widehat L)$
+seeded at $0$), which is what leaves this quantity unavailable there. Kudla--Yang do compute the
+Eisenstein series at every coset in their \S\S8--9; what they leave open at the end of \S9 is the
+matrix functional equation for a general Eichler order.
 
 The coefficients of $E_{A,\beta}$ for isotropic $\beta\ne0$ are computed by Schwagenscheidt
 \cite{Schwag}. For our purposes the essential ingredient is not the main formula but the oldform
@@ -1312,8 +1322,10 @@ $\mathrm{mult}=\sum_\eta c_\eta(0)/(4(N-1))$ is correct only when $\omega(N)=1$;
 Measured at $X_0^{22}(3)$ ($\omega=1$: one functional, all four nonzero cosets agreeing),
 $X_0^{35}(6)$ and $X_0^{15}(14)$ ($\omega=2$: three functionals each, class sizes $2,4,8$ and
 $2,12,24$), with the restriction law holding at $4$, $14$ and $38$ of $4$, $14$ and $38$ cosets.
-Which of the $2^{\omega(N)}-1$ functionals would be the multiplier at composite $N$ is not decided
-here, and cannot be until a composite-$N$ base with independent ground truth exists.
+Which of the $2^{\omega(N)}-1$ functionals is the multiplier at composite $N$ is decided by
+Proposition~\ref{prop:composite}: for each prime $p\mid N$ with $p\nmid d$, the functional of the
+support class $\{p\}$, with its own $\log p$; the classes supported at two or more primes do not
+enter. No composite-$N$ base with independent ground truth exists yet to test this.
 
 The identity was checked at every coset of the level $4DN$, with nothing fitted --- both
 sides evaluated from the lattices alone. On the eight banked $N>1$ bases the derived
@@ -1694,10 +1706,14 @@ and for a nonzero coset $\varphi_\mu$ one has $\varphi_\mu(0)=0$, since $0\notin
 term therefore drops. The Whittaker product does still vanish at $s=0$ --- though not for the
 reason one would expect, as the proof of Proposition~\ref{prop:kappa0} shows --- so what survives
 at $\mu\neq0$ is its \emph{$s$-derivative}, rather than the regularised constant $k_0(0)$ that
-Theorem~3.3 attaches to $\varphi_0$. We now evaluate it. The one ingredient not already in hand is the
-level-prime factor at the \emph{zero} coset, which the recipe of \S\ref{sec:chain} never needs and
-which the accompanying code cannot return, its defining series failing to terminate. It is fixed by
-calibrating a normalisation against \cite[Lem.~2.18]{SchoferThesis} itself.
+Theorem~3.3 attaches to $\varphi_0$. We evaluate it below from the sources: the local Whittaker
+functions of Kudla--Yang at the level prime (Lemma~\ref{lem:WN}), the vanishing of the incoherent
+series at $s=0$, and Yang's description of $\Lm$ at every prime (Lemma~\ref{lem:Wp}). The one
+ingredient the recipe of \S\ref{sec:chain} never needs is the level-prime factor at the
+\emph{zero} coset, which the accompanying code cannot return, its defining series failing to
+terminate; the following lemma obtains it by calibrating a counting normalisation against
+\cite[Lem.~2.18]{SchoferThesis} itself, and is retained as an independent check of
+Lemma~\ref{lem:WN}.
 
 \begin{lemma}[the $m=0$ local factor of a $p$-scaled plane]\label{lem:m0loc}
 For a binary $\Z_p$-lattice $L$ and $\varphi=\mathrm{char}(\mu+L)$, put
@@ -1734,39 +1750,470 @@ The third row is a check rather than an input: it is the object the code \emph{c
 returns the constant $1$, in agreement (\texttt{km0poly.m}). All four rows were verified against
 brute-force counts at $p=3,5,7$ (\texttt{km0whit.py}).
 
-\begin{proposition}[the dropped coefficient]\label{prop:kappa0}
-Let $N$ be prime and $\mu$ a nonzero isotropic coset. Then
-\[
-  \kappa_\mu(0)\;=\;-\,\frac{\log N}{N-1},
-\]
-and summing over the $2N-2$ such cosets reproduces the correction of
-Observation~\ref{obs:mult}: in the normalisation of \S\ref{sec:chain} the dropped $m=0$ terms
-contribute $\tfrac12c_\eta(0)\log N$ per CM point, i.e.\ exactly
-$\mathrm{mult}(f)\sum_{p\mid N/(N,d)}\log p$.
-\end{proposition}
+\subsection*{The literature's zero, and where it comes from}
 
+In the published form of Schofer's theorem \cite[Thm.~1.1]{Schofer} the sum runs over all cosets
+$\eta$ and all $m\ge0$; the vanishing of the $m=0$ terms at $\eta\neq0$ is
+\cite[Lemma~2.21]{Schofer}, ``for $\mu\neq0$, $b_\mu(0,t)=0$'', stated there for a general lattice.
+Its proof reads: ``Theorem~5.2 of [17] implies $W_{0,p}(s,\varphi_{\mu,p})=0$ if $\varphi_{\mu,p}$
+is not the characteristic function of the local lattice'', where [17] is an unpublished preprint
+(T.~Yang, 2001), so the step cannot be checked as stated. The nearest published statement we can
+check is \cite[Prop.~5.2]{KY}, and it is proved for the ring of integers of a quadratic field,
+where every nonzero coset of the relevant lattice is anisotropic and the conclusion is immediate.
+At an Eichler order of level $N>1$ the lattice $\Lm$ is $N$-scaled at the level prime and has
+nonzero \emph{isotropic} cosets, and there Lemma~\ref{lem:WN} computes the local factor to be a
+nonzero constant. So what we are contradicting is not a verifiable proof but a lemma whose only
+published analogue is proved under a hypothesis these lattices violate; Yang's \cite[(11)]{Yang}
+inherits the conclusion.
+Everything else in the chain --- the constant-term factorisation \cite[Thm.~2.4]{KY}, the vanishing
+of the incoherent series at $s=0$, and the local structure of $\Lm$ \cite[Lemma~18]{Yang} --- is
+used unchanged. One point of bookkeeping decides the shape of the final statement: the quantity
+set to zero enters the Stokes argument \cite[(33)]{Schofer} additively through $b_\mu(0,t)$, which
+is constant in $t$ here, so replacing it by $\lim_tb_\mu(0,t)$ is legitimate; but it must be
+replaced \emph{wherever} Yang's (12) invokes it, and (12) calls $\kappa^-_\nu(0)$ not only at
+$m=0$ but at every $m>0$ through the vectors $x$ on the CM line with $Q(x)=m$.
+Proposition~\ref{prop:mult} keeps all of them.
+
+Throughout, $N$ is prime, $d<0$ is a fundamental discriminant with $N\nmid d$ (so $N$ splits in
+$k=\Q(\sqrt d)$ by Eichler's condition, the hypothesis $\mathrm{CM}(d)\neq\varnothing$ of
+\cite[Thm.~B]{GY}), $\lambda=\varphi(\sqrt d)$, $\langle\alpha,\beta\rangle=\tr(\alpha\beta')$ so
+that $\langle\lambda,\lambda\rangle=2\lvert d\rvert$, $Q=\langle\cdot,\cdot\rangle/2$,
+$\varphi_\nu=\mathrm{char}(\nu+\widehat{\Lm})$, and $A_\nu(s,0,v)=b_\nu(0,v)\,s+O(s^2)$.
+
+\begin{lemma}[the lattice at the level prime]\label{lem:LN}
+$L_{-,N}$ is the $N$-scaled hyperbolic plane, $N\begin{pmatrix}0&1\\1&0\end{pmatrix}$ up to a
+unit; $L_{-,N}^\vee/L_{-,N}\cong(\Z/N)^2$ with $Q(x,y)=xy/N\bmod\Z$, and the nonzero isotropic
+cosets are the $2(N-1)$ nonzero vectors on the two lines $x=0$, $y=0$. Moreover
+$L_N=L_{+,N}\oplus L_{-,N}$.
+\end{lemma}
 \begin{proof}
-At a firing discriminant a nonzero isotropic $\mu$ is supported at the level prime alone --- the
-$D$-part of the discriminant form is anisotropic (Observation~\ref{obs:iso}), and this is verified
-for $L_-$ itself in \texttt{km0places.m}, where the nonzero isotropic cosets of $L_-^\vee/L_-$
-number $4,2,8$ at $N=3,2,5$, that is $2N-2$. Hence every local factor other than the one at $N$
-agrees for $\varphi_\mu$ and $\varphi_0$, and with $P(s)=\prod_pW_{0,p}(s,\varphi_0)$,
-\[
-  \prod_p W_{0,p}(s,\varphi_\mu)\;=\;\frac{P(s)}{W_{0,N}(s,\varphi_0)} ,
-\]
-using $W_{0,N}(s,\varphi_\mu)=1$ from Lemma~\ref{lem:m0loc}. Individual factors have poles at
-$s=0$ and only the product converges, so this ratio, and not any single place, is the object to
-evaluate. Writing $A(s)$ for the archimedean factor displayed above, with $A(0)=i\pi$, the
-vanishing of the $m=0$ coefficient at $\varphi_0$ --- which is the functional equation, not
-incoherence --- reads $1=A(0)P(0)$. At $\mu\neq0$ the term $v^{s/2}\varphi_\mu(0)$ is absent, and
-by Lemma~\ref{lem:m0loc} the denominator has a simple pole, so the ratio has a simple zero:
-$\prod_pW_{0,p}(s,\varphi_\mu)=P(0)\,s\log N/(N-1)+O(s^2)$. Therefore
-$\kappa_\mu(0)=-A(0)P(0)\log N/(N-1)=-\log N/(N-1)$, every transcendental constant cancelling.
-Finally the $2N-2$ cosets carry a common $c_\eta(0)$ (Observation~\ref{obs:iso}), so the prefactor
-$-\tfrac14$ of \S\ref{sec:chain} gives
-$-\tfrac14(2N-2)c_\eta(0)\bigl(-\log N/(N-1)\bigr)=\tfrac12c_\eta(0)\log N$.
+\cite[Lemma~18(1)]{Yang}: for odd $N\nmid d$ the Gram matrix of $L_{-,N}$ is
+$N\,\mathrm{diag}(\epsilon_1,\epsilon_2)$ with $\epsilon_1\epsilon_2=-d$, and $\chi_d(N)=1$ makes
+$-\epsilon_1\epsilon_2$ a square, so the plane is split. For $N=2$ (then $d\equiv1\bmod8$)
+\cite[Lemma~18(3)]{Yang} gives $2\epsilon\begin{pmatrix}0&1\\1&0\end{pmatrix}$ directly (Yang
+writes out the $2$-adic proof only for $2\nmid DN$; we checked this case: $L_{-,2}$ has basis
+$\begin{pmatrix}-c_3/c_1&1\\0&c_3/c_1\end{pmatrix}$,
+$\begin{pmatrix}-c_2/c_1&0\\2&c_2/c_1\end{pmatrix}$ in the notation below, with Gram matrix twice
+an even form with odd off-diagonal entry and determinant $\equiv-1\bmod8$).
+
+For the direct sum it suffices that $\langle\lambda,L_N\rangle\subset\langle\lambda,\lambda\rangle
+\Z_N$: then the orthogonal projection $x\mapsto\frac{\langle x,\lambda\rangle}{\langle\lambda,
+\lambda\rangle}\lambda$ maps $L_N$ into $\Z_N\lambda=L_{+,N}$ and $x-\mathrm{pr}(x)\in L_N\cap
+\lambda^\perp=L_{-,N}$. For odd $N$, $2\lvert d\rvert$ is an $N$-unit. For $N=2$:
+$\mathcal O\otimes\Z_2=\begin{pmatrix}\Z_2&\Z_2\\2\Z_2&\Z_2\end{pmatrix}$ (remark in the proof of
+\cite[Lemma~18]{Yang}), $\lambda=\begin{pmatrix}c_1&c_2\\2c_3&-c_1\end{pmatrix}$, and optimality
+of the embedding of $\mathcal O_d$, $d\equiv1\bmod8$, means $(1+\lambda)/2\in\mathcal O\otimes
+\Z_2$, i.e.\ $c_1$ odd and $c_2,c_3$ even; for $\alpha=\begin{pmatrix}a&b\\2c&-a\end{pmatrix}\in
+L_2$, $\langle\alpha,\lambda\rangle=-\tr(\alpha\lambda)=-2(ac_1+bc_3+cc_2)\in2\Z_2=
+2\lvert d\rvert\Z_2$.
 \end{proof}
 
+Note that $L_{+,N}=\Z_N\lambda$ is unimodular for odd $N$ but not for $N=2$, where
+$L_{+,2}^\vee/L_{+,2}\cong\Z/2$ is generated by $\lambda/2$ with $Q(\lambda/2)=\lvert d\rvert/4
+\notin\Z_2$.
+
+\begin{lemma}[the $m=0$ local factor at $N$]\label{lem:WN}
+With $X=N^{-s}$ and $\gamma_N$ the local splitting index of \cite[(4.3)]{KY}, for $\nu\in
+L_{-,N}^\vee/L_{-,N}$,
+\[
+  W_{0,N}(s,\varphi_0)=\frac{\gamma_N}{N}\cdot\frac{1+(N-2)X}{1-X},\qquad
+  W_{0,N}(s,\varphi_\nu)=\frac{\gamma_N}{N}\ \text{($\nu\neq0$ isotropic)},\qquad
+  W_{0,N}(s,\varphi_\nu)=0\ \text{($\nu\neq0$ anisotropic)}.
+\]
+\end{lemma}
+\begin{proof}
+The first is \cite[(15)]{Yang} with $\chi_d(N)=1$ for odd $N$, where $\frac{1-X/N}{N-X}=\frac1N$,
+and \cite[(16)]{Yang} for $N=2$. For the others apply \cite[(4.4) and Thm.~4.3]{KY} ($N$ odd; KY's
+matrix $S$ is the matrix of the bilinear form with $Q=S/2$, as is Yang's Gram matrix, so
+$S=N\,\mathrm{diag}(\epsilon_1,\epsilon_2)$, $l_1=l_2=1$, $s_0=n/2-1=0$) to $\nu=(a/N,b/N)$ with
+$m=0$: $Q(\nu)=(\epsilon_1a^2+\epsilon_2b^2)/(2N)$ lies in $\Z_N$ exactly when $\nu$ is isotropic
+(for odd $N$ the $2$ is a unit and may be dropped), so
+$W=0$ otherwise by Thm.~4.3(i); when it is, $-\epsilon_1\epsilon_2$ being a square forces $a,b$
+both units, so $H_\nu=\varnothing$, $K_0(\nu)=\min(l_i+\ord_N\nu_i)=0$, and $a_\nu=\ord_N(t_\nu)
+\ge0=K_0$ puts us in the second case of Thm.~4.3(ii), whose sum over $0<k\le K_0$ is empty:
+$W_N(s,0,\nu)=1$. For $N=2$, \cite[Thm.~4.4]{KY} with the Gram matrix $2\epsilon\begin{pmatrix}
+0&1\\1&0\end{pmatrix}$, i.e.\ KY's (4.9) with $H=N=0$, $M=1$, $m_1=1$: $\nu'=(a/2,b/2)\notin
+\Z_2^2$ gives $M_\nu=\varnothing$, $K_0=m_1+\ord_2\nu'=0$, both sums in (ii) are empty, and
+$W_2(s,0,\nu)=1$ when $Q(\nu)=ab/2\in\Z_2$, i.e.\ at the two nonzero isotropic cosets. In every
+case the normalising constant of \cite[(4.4)]{KY} is $\gamma_N\lvert\det S\rvert_N^{1/2}=
+\gamma_N/N$, the same for all $\nu$, so it cancels in the ratio used below. Lemma~\ref{lem:m0loc}
+is the same object in a counting normalisation (its unimodular calibration is Thm.~4.3 with
+$l_i=0$), and its third and fourth rows are these values.
+\end{proof}
+
+\begin{lemma}[no other nonzero coset contributes]\label{lem:Wp}
+For $p\neq N$ every nonzero $\nu_p\in L_{-,p}^\vee/L_{-,p}$ is anisotropic, $Q(\nu_p)\notin\Z_p$.
+Consequently $W_{0,p}(s,\varphi_{\nu,p})=0$ for such $\nu_p$, and a nonzero isotropic coset of
+$\Lm^\vee/\Lm$ is supported at $N$.
+\end{lemma}
+\begin{proof}
+$W_{0,p}=0$ follows from anisotropy by \cite[Thm.~4.3(i)]{KY} ($p$ odd) and \cite[Thm.~4.4(i)]{KY}
+($p=2$). Anisotropy is read off \cite[Lemma~18]{Yang}; $d$ fundamental gives $p\,\|\,d$ for odd
+$p\mid d$.
+
+$p$ odd, $p\nmid dDN$: unimodular. $p$ odd, $p\mid d$: Gram $\mathrm{diag}(\epsilon_1,\epsilon_2)$
+with, say, $\epsilon_2=p\epsilon_2'$; $L^\vee/L\cong\Z/p$ generated by $(0,1/p)$, and
+$Q(0,b/p)=\epsilon_2'b^2/(2p)\notin\Z_p$ for $p\nmid b$. $p$ odd, $p\mid D$, $p\nmid d$: Gram
+$p\,\mathrm{diag}(\epsilon_1,\epsilon_2)$ with $\epsilon_1\epsilon_2=-d$; $p$ is inert in $k$, so
+$d$ is a non-square mod $p$ (the Hilbert-symbol condition $(-\mu_1,-\mu_2p)_p=-1$ in Yang's
+proof), and $Q(a/p,b/p)=(\epsilon_1a^2+\epsilon_2b^2)/(2p)\in\Z_p$ forces $a\equiv b\equiv0$.
+
+$p=2\nmid d$. If $d\equiv1\bmod8$ then $2\nmid D$ and, as $2\neq N$, Lemma~18(3) gives
+$\epsilon\begin{pmatrix}0&1\\1&0\end{pmatrix}$, unimodular. If $d\equiv5\bmod8$, Lemma~18(4) gives
+$\epsilon\begin{pmatrix}2&1\\1&2\end{pmatrix}$ for $2\nmid D$, unimodular, and $2\epsilon
+\begin{pmatrix}2&1\\1&2\end{pmatrix}$ for $2\mid D$, where $L^\vee/L\cong(\Z/2)^2$ and
+$Q(a/2,b/2)=\epsilon(a^2+ab+b^2)/2$ with odd numerator for $(a,b)\not\equiv(0,0)$. (This case is
+again one Yang only sketches; with $(1+\lambda)/2$ in the maximal order, $a,b,c$ are all odd in
+$\lambda=aI+bJ+cIJ$ below, and the elimination below gives diagonal entries $\equiv2\bmod8$, a
+unit off-diagonal and determinant $\equiv3\bmod8$.)
+
+$p=2\mid d$: Lemma~18(2) gives $2\,\mathrm{diag}(\epsilon_1,\epsilon_2)$ with
+$\epsilon_1\epsilon_2=-d/4$, $Q(x,y)=\epsilon_1x^2+\epsilon_2y^2$, and $d$ fundamental means
+$d/4\equiv2,3\bmod4$. If $d\equiv12\bmod16$ both $\epsilon_i$ are units with $\epsilon_1\equiv
+\epsilon_2\bmod4$, and the three nonzero cosets of $(\Z/2)^2$ have $Q=\epsilon_1/4$,
+$\epsilon_2/4$, $(\epsilon_1+\epsilon_2)/4\equiv\epsilon_1/2$. If $d\equiv8\bmod16$, say
+$\epsilon_2=2\epsilon'$; $L^\vee/L\cong\Z/2\times\Z/4$ and $Q(a/2,b/4)=\epsilon_1a^2/4+
+\epsilon'b^2/8$ has $2$-adic valuation $-3$ for $b$ odd, $-2$ or $-1$ for $b\equiv2\bmod4$, and
+equals $\epsilon_1/4$ for $b\equiv0$, $a$ odd. None is in $\Z_2$.
+
+Yang writes out the proof of Lemma~18(2) only for $2\nmid DN$; the case $2\mid N$, $2\mid d$ does
+not occur here, and the case $2\mid D$, $2\mid d$ is proved as follows. $B\otimes\Q_2=
+\bigl(\frac{-1,-1}{\Q_2}\bigr)$ with maximal order $\Z_2+\Z_2I+\Z_2J+\Z_2(1+I+J+IJ)/2$, whose
+trace-zero part is $L_2=\Z_2I+\Z_2J+\Z_2IJ$ with $Q=x^2+y^2+z^2$. Since $d\equiv0\bmod4$,
+$\mathcal O_d=\Z[\sqrt d/2]$ and $\Lp=\Z\lambda_0$ with $\lambda_0=\lambda/2=aI+bJ+cIJ$,
+$a^2+b^2+c^2=m:=-d/4\equiv1$ or $2\bmod4$, and $L_{-,2}=\{xI+yJ+zIJ:ax+by+cz=0\}$. If
+$m\equiv1\bmod4$ exactly one of $a,b,c$ is odd, say $a$; eliminating $x=-(by+cz)/a$,
+$Q|_{L_{-,2}}=u_1y^2+2w\,yz+u_2z^2$ with $u_1=b^2/a^2+1$, $u_2=c^2/a^2+1$ units and $w=bc/a^2\in
+4\Z_2$; $y'=y+(w/u_1)z$ is an integral change of basis and $Q=u_1y'^2+(u_2-w^2/u_1)z^2$ with
+$u_1u_2-w^2=m/a^2$. If $m\equiv2\bmod4$ two of $a,b,c$ are odd, say $a,b$; then $u_1\in2\Z_2^\times$,
+$u_2$ is a unit, $w\in2\Z_2$, and completing the square on $z$ instead gives $Q=u_2z'^2+
+(u_1-w^2/u_2)y^2$, product again $m/a^2$. Rescaling one basis vector by the unit $a$ makes the
+product $-d/4$ exactly, which is Lemma~18(2).
+\end{proof}
+
+\begin{proposition}[the dropped coefficient]\label{prop:kappa0}
+Let $N$ be prime, $N\nmid d$, and $\nu\in\Lm^\vee/\Lm$ a nonzero isotropic coset. Then
+$b_\nu(0,v)=-\log N/(N-1)$ for every $v$, hence
+\[
+  \kappa^-_\nu(0)\;:=\;\lim_{v\to\infty}b_\nu(0,v)\;=\;-\frac{\log N}{N-1}.
+\]
+\end{proposition}
+\begin{proof}
+By \cite[Thm.~2.4]{KY}, as used in \cite[proof of Lemma~2.21]{Schofer} and \cite[(14)]{Yang}, the
+constant term is $E_0(\tau,s;\varphi_\nu,+1)=v^{s/2}\varphi_\nu(0)+W_{0,\infty}(\tau,s)\prod_p
+W_{0,p}(s,\varphi_{\nu,p})$ with $W_{0,\infty}$ finite at $s=0$ (\cite[Prop.~2.3(iii)]{KY} with $l=1$; only finiteness is
+used below). Put $\Phi(s)=E_0(\tau,s;\varphi_0,+1)-v^{s/2}$. For $\nu\neq0$, $\varphi_\nu(0)=0$, and
+$\varphi_{\nu,p}=\varphi_{0,p}$ for $p\neq N$ (Lemma~\ref{lem:Wp}), so for $\mathrm{Re}\,s$ large,
+hence by meromorphic continuation,
+\[
+  E_0(\tau,s;\varphi_\nu,+1)
+   =\Phi(s)\,\frac{W_{0,N}(s,\varphi_\nu)}{W_{0,N}(s,\varphi_0)}
+   =\Phi(s)\,\frac{1-N^{-s}}{1+(N-2)N^{-s}}
+\]
+by Lemma~\ref{lem:WN}. (The Euler product does not converge at $s=0$; $\Phi$ and the identity are
+defined through Thm.~2.4 and continued. The pole of $W_{0,N}(s,\varphi_0)$ at $s=0$ is cancelled
+by the missing Euler factor $1-N^{-s}$ of $L^S(s,\chi_d)$ there, and $W_{0,N}(s,\varphi_0)$ has no
+zero near $s=0$.) The series $E(\tau,s;\varphi_0,+1)$ is holomorphic at $s=0$
+(\cite[Cor.~2.5]{KY}) and incoherent, so it vanishes there (\cite{Yang}, the paragraph before
+(11)); its constant term gives $\Phi(0)=-1$. The last factor vanishes at $s=0$ --- as it must,
+$E(\tau,s;\varphi_\nu,+1)$ being incoherent --- with derivative $\log N/(N-1)$, so
+$A_\nu(s,0,v)=-\frac{\log N}{N-1}s+O(s^2)$, with no $v$ remaining: the $v$-dependence of $\Phi$
+enters at order $s$, multiplying a term already $O(s)$.
+
+As a cross-check, \cite[(14)]{Yang} writes $\Phi(s)=-v^{-s/2}\frac{\Lambda(s,\chi_d)}
+{\Lambda(s+1,\chi_d)}G(s)$ with $G=\prod_{p\mid r}G_p$ over the non-unimodular primes; the
+functional equation of the completed $L$-function of the odd primitive character $\chi_d$ gives
+$\Lambda(0)=\Lambda(1)$, and $G(0)=1$ is read off (15)--(17) factor by factor, so $\Phi(0)=-1$
+again. The sign agrees with \cite[Lemma~20]{Yang}, where $-\frac{d}{ds}\log G_N\big|_{s=0}=\log N$
+at the zero coset.
+\end{proof}
+
+\begin{lemma}[isotropic cosets of $\Ldual/L$]\label{lem:iso}
+For $N$ prime the isotropic cosets of $\Ldual/L$ are supported at $N$ and number $2N-1$: under
+$L_N=L_{+,N}\oplus L_{-,N}$ they are the cosets $0\oplus\nu$ with $\nu$ an isotropic coset of
+$L_{-,N}^\vee/L_{-,N}$. All $2N-2$ nonzero ones carry the same constant term $c_\eta(0)$ of $F_f$.
+\end{lemma}
+\begin{proof}
+A coset is isotropic iff each $p$-part is, and $\Ldual/L$ does not depend on $d$, so the
+computation is on $L_p$ itself. For $p$ odd, $p\nmid DN$, $L_p$ is unimodular. For $p$ odd,
+$p\mid DN$, the proof of \cite[Lemma~18]{Yang} gives a basis of $L_p$ with Gram matrix
+$\mathrm{diag}(2\mu_1,2\mu_2p,2\mu_1\mu_2p)$, $\mu_i$ units, so $(\Ldual/L)_p\cong(\Z/p)^2$ with
+$Q(ae_2/p+be_3/p)=\mu_2(a^2+\mu_1b^2)/p$: anisotropic iff $-\mu_1$ is a non-square mod $p$, i.e.\
+iff $(-\mu_1,-\mu_2p)_p=-1$, which Yang's proof identifies with $p\mid D$; for $p\mid N$ it is the
+hyperbolic plane over $\mathbb F_p$, consistent with Lemma~\ref{lem:LN}. For $p=2\nmid DN$, $L_2$
+is the trace-zero part of $M_2(\Z_2)$, with Gram $(-2)\oplus\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$
+in the basis $\mathrm{diag}(1,-1),e_{12},e_{21}$, so $(\Ldual/L)_2\cong\Z/2$ generated by
+$\tfrac12\mathrm{diag}(1,-1)$ with $Q=-1/4$. For $p=2\mid D$, $L_2=\Z_2I+\Z_2J+\Z_2IJ$ as in the
+proof of Lemma~\ref{lem:Wp}, $(\Ldual/L)_2\cong(\Z/2)^3$ with $Q=(a^2+b^2+c^2)/4\in\{\tfrac14,
+\tfrac12,\tfrac34\}$ on nonzero elements. At $p=N$ odd, $L_{+,N}$ is unimodular and
+$(\Ldual/L)_N=L_{-,N}^\vee/L_{-,N}$, with $2N-1$ isotropic vectors. At $N=2$, the orthogonal direct
+sum gives $(\Ldual/L)_2=L_{+,2}^\vee/L_{+,2}\oplus L_{-,2}^\vee/L_{-,2}\cong\Z/2\oplus(\Z/2)^2$; the
+elements $\lambda/2\oplus\nu$ have $Q=\lvert d\rvert/4+Q(\nu)$ with $Q(\nu)\in\{0,\tfrac12\}\bmod
+\Z$ and $\lvert d\rvert$ odd, never integral, so the isotropic elements are the $0\oplus\nu$ with
+$\nu$ isotropic: again $2N-1=3$.
+
+For the constant terms: an isometry $\sigma$ of the discriminant form permutes the $e_\eta$, fixes
+$e_0$, and commutes with $\rho_L(S)$ and $\rho_L(T)$ because it preserves $Q$ and the pairing,
+hence with every $\rho_L(\tilde\gamma)$; so $\sigma F_f=F_f$ and $c_{\sigma\eta}(0)=c_\eta(0)$. The
+orthogonal group of the hyperbolic plane over $\mathbb F_N$ contains the torus $(x,y)\mapsto
+(ax,a^{-1}y)$ and the swap, and acts transitively on the $2(N-1)$ nonzero isotropic vectors; these
+isometries of $(\Ldual/L)_N$ extend by the identity on the other $p$-parts.
+\end{proof}
+
+\begin{proposition}[the restored terms of Theorem~B]\label{prop:mult}
+Let $N$ be prime, $N\nmid d$, $d$ fundamental, and let $\nu$ run over the $2N-2$ nonzero isotropic
+cosets of $\Lm^\vee/\Lm$, identified with those of $\Ldual/L$ by Lemma~\ref{lem:iso}. Then
+$\kappa_\nu(0)=\kappa^-_\nu(0)=-\log N/(N-1)$, and the terms of \cite[Thm.~B]{GY} that
+\cite[(11)]{Yang} sets to zero are, in total,
+\[
+  -\frac{\lvert\mathrm{CM}(d)\rvert}{4}\sum_{\nu}\kappa^-_\nu(0)
+     \sum_{x\in\Ldual\cap\Q\lambda}c_{[x+\nu]}(-Q(x))
+  \;=\;\frac{\lvert\mathrm{CM}(d)\rvert}{4}\,\frac{\log N}{N-1}
+     \sum_{\nu}\ \sum_{x\in\Ldual\cap\Q\lambda}c_{[x+\nu]}(-Q(x)),
+\]
+with $[\,\cdot\,]$ the class in $\Ldual/L$. The $x=0$ term of each inner sum is $c_{[\nu]}(0)$, and
+those $2N-2$ values agree (Lemma~\ref{lem:iso}), so the $x=0$ part of the total is
+$\tfrac12\lvert\mathrm{CM}(d)\rvert c_\eta(0)\log N$; the $x\neq0$ terms are identified in
+Lemma~\ref{lem:H}(3) and Remark~\ref{rem:xsum}, and are not assumed here to be independent of
+$\nu$. In particular, if
+\begin{itemize}
+\item[(H)] $c_{[x+\nu]}(-Q(x))=0$ for every $x\neq0$ in $\Ldual\cap\Q\lambda$ and every nonzero
+      isotropic $\nu$,
+\end{itemize}
+the correction is $\lvert\mathrm{CM}(d)\rvert\cdot\tfrac12c_\eta(0)\log N$, i.e.\
+$\mathrm{mult}(f)\sum_{p\mid N/(N,d)}\log p$ per CM point with $\mathrm{mult}(f)=\tfrac12c_\eta(0)$,
+which is Observation~\ref{obs:mult}. (Theorem~B constrains the sum over $\mathrm{CM}(d)$; the
+correction does not depend on the point, so dividing by $\lvert\mathrm{CM}(d)\rvert$ is the
+convention of \S\ref{sec:chain}.)
+\end{proposition}
+\begin{proof}
+Theorem~B sums $c_\eta(-m)\kappa_\eta(m)$ over $\eta\in\Ldual/L$ and $m\ge0$, with $\kappa_\eta(m)$
+as in \S\ref{sec:chain}: $\kappa_\eta(m)=\sum_{\mu\in L/(\Lp+\Lm)}\sum_{x\in\eta_++\mu_++\Lp}
+\kappa^-_{\eta_-+\mu_-}(m-Q(x))$, where $\eta=\eta_++\eta_-$ is the decomposition in
+$\Lp^\vee\oplus\Lm^\vee\supset\Ldual$. The pairs $(\eta,\mu)$ run over $\Ldual/(\Lp\oplus\Lm)$
+exactly once, and every factor depends only on $y=\eta+\mu$; the terms in which $\kappa^-$ is
+evaluated at $0$ are those with $m=Q(x)$ ($\Lp$ is positive definite and $\kappa^-_\nu(m)=0$ for
+$m<0$, so no other term involves $\kappa^-_\nu(0)$), and their total is
+\[
+  \sum_{y\in\Ldual/(\Lp\oplus\Lm)}\ \sum_{x\in y_++\Lp}c_{[y]}(-Q(x))\,\kappa^-_{[y_-]}(0)
+  \;=\;\sum_{\nu\in\Lm^\vee/\Lm}\kappa^-_\nu(0)\sum_{\substack{x\in\Lp^\vee\\ x+\nu\in\Ldual}}
+      c_{[x+\nu]}(-Q(x)),
+\]
+the inner sum over all $x$ in the coset, both signs included. By Lemma~\ref{lem:Wp} and
+Proposition~\ref{prop:kappa0}, among nonzero $\nu$ the coefficient $\kappa^-_\nu(0)$ is nonzero
+only for $\nu$ isotropic, supported at $N$, where it equals $-\log N/(N-1)$ (the $\nu=0$ terms are
+the standard ones, unchanged). Such a $\nu$ lies in $\Ldual$: at $N$ by $L_N^\vee=L_{+,N}^\vee
+\oplus L_{-,N}^\vee$, which is Lemma~\ref{lem:LN}, and elsewhere because $\nu_p\in L_{-,p}\subset
+L_p$. So the condition $x+\nu\in\Ldual$ reads $x\in\Ldual\cap\Q\lambda$ and does not depend on
+$\nu$. The $x=0$ term is $c_{[\nu]}(0)$, with $[\nu]$ a nonzero isotropic coset of $\Ldual/L$; the
+$2N-2$ values agree by Lemma~\ref{lem:iso}. This gives the display, with the prefactor
+$-\lvert\mathrm{CM}(d)\rvert/4$ of Theorem~B and $-\tfrac14(2N-2)(-\log N/(N-1))=\tfrac12\log N$;
+the restored terms are \emph{added}, as Observation~\ref{obs:mult} requires.
+
+For $\kappa_\nu(0)$ itself take $\eta=\nu$ and $m=0$: only $x=0$ contributes, which needs
+$\mu_+\in\Lp$ since $\nu_+=0$; then $\mu_-=\mu-\mu_+\in L\cap U=\Lm$, so $\mu=0$ in $L/(\Lp+\Lm)$
+is the only class, and for it $\eta_-+\mu_-\equiv\nu$ modulo $\Lm$. Hence $\kappa_\nu(0)=
+\kappa^-_\nu(0)$. (For $\eta=0$ the same count gives $\mu=0$ alone, which is \cite[Lemma~20]{Yang}'s
+$\kappa_0(0)=\kappa^-_0(0)$, unchanged.)
+\end{proof}
+
+The same accounting is visible in Schofer's own reduction: the $(n,2)$ theorem is proved by
+applying the $(0,2)$ theorem to $\langle F,\theta_+\rangle$, whose constant term at the coset
+$\eta_-+\mu_-$ is $\sum_{x\in\eta_++\mu_++\Lp}c_\eta(-Q(x))$ \cite[Cor.~3.2]{Schofer}, and the
+$m=0$ part of the $(0,2)$ proof is $2\sum_{\mu\neq0}c_\mu(0)b_\mu(0,t)$ with \emph{that}
+constant term, before Lemma~2.21 sets it to zero.
+
+\begin{lemma}[when (H) holds]\label{lem:H}
+Let $F_f$ be built from a scalar form $f$ on $\Gamma_0(M)$ with poles only at the cusps $\infty$
+and $0$, as in \cite[(6)]{GY}. By \cite[Lemma~24]{GY}, in the normalisation of \S\ref{sec:data}
+(where it is checked numerically on every form used), the principal part of $F_f$ at a nonzero
+coset $\eta$ is that of $f$ at the cusp $0$, $c_\eta(-n/M)$ being the coefficient of $q^{-n/M}$ in
+$f|S$, and depends on $\eta$ only through $Q(\eta)\bmod\Z$; at $\eta=0$ the principal part of $f$
+at $\infty$ is added. Hence:
+\begin{enumerate}
+\item Let $\Lp=\Z\lambda_0$, with $\lambda_0=\lambda$ or $\lambda/2$ according as $d\equiv1$ or
+      $0\bmod4$ \cite[proof of Lemma~18]{Yang}, so $Q(\lambda_0)=\lvert d\rvert$ or
+      $\lvert d\rvert/4$, and $\Ldual\cap\Q\lambda=\Z\lambda_0/g$ with $g$ the content of
+      $\langle\lambda_0,\cdot\rangle$ on $L$: $g$ divides $2Q(\lambda_0)$, is prime to odd $N$ and
+      to the primes $p\mid D$, $p\nmid d$, is divisible exactly by $2$ when $d\equiv1\bmod4$ or
+      $2\mid D$, and exactly by $p$ for each odd $p$ dividing both $D$ and $d$ (there $p\mid c_1$
+      and $c_2$ is a unit in Yang's basis). If the pole of $f$ at the cusp $0$ has order below
+      $M\cdot\min_{j\ge1}j^2Q(\lambda_0)/g^2=MQ(\lambda_0)/g^2$ in $q^{1/M}$, then (H) holds at
+      $d$. The threshold can be small: on $X_0^{15}(2)$ at $d=-15$, $g=30$ and it is $1/60$ in
+      powers of $q$, i.e.\ a single power of the local parameter $q^{1/60}$.
+\item In particular (H) holds at every $d$ when $f$ is holomorphic at the cusp $0$. A pole of
+      order below $M$ (one power of $q$) removes only the terms with $x\in L$; those with
+      $x\notin L$ sit at the exponents $Mj^2Q(\lambda_0)/g^2$, $g\nmid j$, which lie below $M$ as
+      soon as $g$ is large.
+\item For $x\notin L$ the coefficient $c_{[x+\nu]}(-Q(x))$ equals $c_{[x]}(-Q(x))$, both cosets
+      being nonzero (the $N$-part of $x+\nu$ is not in $L_N$, the sum there being direct) with
+      the same norm; for $x\in L$ it is the cusp-$0$ part $c_0(-Q(x))-c_\infty(-Q(x))$ of the
+      coefficient at the zero coset.
+\end{enumerate}
+\end{lemma}
+
+\begin{remark}[the $x\neq0$ terms under Theorem~B's own hypothesis]\label{rem:xsum}
+Theorem~B is applied at $\tau_d\notin\mathrm{supp}\,\mathrm{div}\,\psi_F$. By Borcherds' theorem
+in the form \cite[Thm.~A(2)]{Yang}, the order of $\Psi_F$ at $\tau_d$ is $\sum_{0<r,\,r\lambda\in
+\Ldual}c_{r\lambda}(-r^2\langle\lambda,\lambda\rangle/2)=\sum_{x\in\Ldual\cap\Q\lambda,\,x>0}
+c_{[x]}(-Q(x))$, and $c_{[-x]}=c_{[x]}$; so $\sum_{x\neq0}c_{[x]}(-Q(x))=0$ at an evaluated point,
+and by Lemma~\ref{lem:H}(3)
+\[
+  \sum_{x\neq0}c_{[x+\nu]}(-Q(x))
+   =\sum_{x\neq0}c_{[x]}(-Q(x))-\sum_{x\in L\cap\Q\lambda,\,x\neq0}c_\infty(-Q(x))
+   =-2\sum_{k\ge1}c_\infty\bigl(-k^2Q(\lambda_0)\bigr),
+\]
+with $c_\infty(-n)$ the coefficient of $q^{-n}$ in $f$ at $\infty$. So the full correction per CM
+point is
+\[
+  \log N\Bigl(\tfrac12c_\eta(0)-\sum_{k\ge1}c_\infty\bigl(-k^2Q(\lambda_0)\bigr)\Bigr):
+\]
+the $x\neq0$ terms are nonzero exactly when $f$ has a pole at $\infty$ of order $k^2Q(\lambda_0)$
+whose contribution to the order at $\tau_d$ is cancelled by the cusp-$0$ side. Such a point is a
+legitimate point of evaluation --- Theorem~B's hypothesis is the vanishing of the order, not of
+each term --- with a correction different from $\tfrac12c_\eta(0)$ and dependent on $d$. Under
+Lemma~\ref{lem:H}(1), in particular when $f$ is holomorphic at the cusp $0$, no such cancellation
+is possible; otherwise the sum has to be evaluated at each point, which costs a few coefficient
+lookups, and the accompanying code now does so (\texttt{M0InfinityPoleSum}).
+
+On the data: the input forms of every even-$D$ base are holomorphic at the cusp $0$, so (H) holds
+there outright. On the six odd-$D$ bases with prime $N>1$ in our model set
+($X_0^{15}(2)$, $X_0^{21}(2)$, $X_0^{35}(2)$, $X_0^{39}(2)$, $X_0^{51}(2)$, $X_0^{57}(2)$) the
+pole at the cusp $0$ has order up to $\tfrac54M$ (on $X_0^{39}(2)$), so (H) can fail; there the
+order at $\tau_d$ and the $x\neq0$ sum were computed from the two cusp expansions for every form
+and every fundamental $d$ at which the term fires, and the $x\neq0$ sum was zero at every point
+off the divisor. This is a structural fact of these forms rather than a tested cancellation --- the
+principal part of each at the cusp $0$ is a single monomial whose exponent is never of the form
+$Mj^2Q(\lambda_0)/g^2$ --- and on $X_0^{39}(2)$ and $X_0^{51}(2)$ the forms as returned by the
+search have non-integral principal parts at $\infty$, outside Theorem~B's hypothesis
+$c_\eta(-m)\in\Z$, so those two bases are not evidence either way. The agreement of
+Observation~\ref{obs:mult} could therefore not have detected the $x\neq0$ terms; it is
+Proposition~\ref{prop:mult} that accounts for them.
+\end{remark}
+
+The same argument settles the two cases the hypotheses exclude.
+
+\begin{proposition}[composite squarefree level]\label{prop:composite}
+Let $N$ be squarefree, $d$ fundamental, and for a nonzero isotropic $\nu\in\Lm^\vee/\Lm$ let
+$S(\nu)=\{p\mid N:\nu_p\neq0\}$; then $S(\nu)$ is nonempty and consists of primes not dividing
+$d$, and
+\[
+  \kappa^-_\nu(0)=\begin{cases}-\log p/(p-1)&\text{if }S(\nu)=\{p\},\\ 0&\text{if }\lvert S(\nu)
+  \rvert\ge2.\end{cases}
+\]
+Consequently, under (H) at every prime, the restored terms of Theorem~B contribute
+$\sum_{p\mid N,\,p\nmid d}\tfrac12c_{\eta_p}(0)\log p$ per CM point, where $c_{\eta_p}(0)$ is the
+common constant term of the $2p-2$ cosets supported exactly at $\{p\}$. Of the $2^{\omega(N)}-1$
+functionals of \S\ref{sec:determined}, the multiplier at the prime $p$ is the one attached to the
+support class $\{p\}$; the classes supported at two or more primes do not enter.
+\end{proposition}
+\begin{proof}
+At $p\mid N$ with $p\nmid d$ the local plane is the $p$-scaled split plane (Lemma~\ref{lem:LN},
+prime by prime; Eichler's condition makes $p$ split), and at every other prime --- $p\nmid N$, or
+$p\mid N$ with $p\mid d$ --- every nonzero local coset is anisotropic (Lemma~\ref{lem:Wp} and
+Remark~\ref{rem:ramified}). So $S(\nu)$ is as stated, and for $\mathrm{Re}\,s$ large
+\[
+  E_0(\tau,s;\varphi_\nu,+1)=\Phi(s)\prod_{p\in S(\nu)}\frac{1-p^{-s}}{1+(p-2)p^{-s}}
+\]
+by Lemma~\ref{lem:WN} at each $p\in S(\nu)$, with $\Phi(0)=-1$ as in the proof of
+Proposition~\ref{prop:kappa0} (the poles of $W_{0,p}(s,\varphi_0)$ at the primes of $N$ are
+cancelled by the missing Euler factors of $L^S(s,\chi_d)$). The product has a zero of order
+$\lvert S(\nu)\rvert$ at $s=0$, whose first-order coefficient is $\log p/(p-1)$ when
+$S(\nu)=\{p\}$ and $0$ otherwise. The count $\kappa_\nu(0)=\kappa^-_\nu(0)$ is as in
+Proposition~\ref{prop:mult}: with $\eta=\nu$ and $m=0$, $\mu_+\in\Lp$ forces $\mu=0$. The cosets
+with support exactly $\{p\}$ are the nonzero isotropic vectors of the plane at $p$ with zero
+components elsewhere, one orbit of its orthogonal group extended by the identity, so they share
+$c_{\eta_p}(0)$ (Lemma~\ref{lem:iso}); there are $2p-2$ of them, and
+$-\tfrac14(2p-2)(-\log p/(p-1))=\tfrac12\log p$. The $x\neq0$ terms are handled prime by prime
+exactly as in Lemma~\ref{lem:H} and Remark~\ref{rem:xsum}.
+\end{proof}
+
+\begin{remark}[a prime of $N$ dividing $d$]\label{rem:ramified}
+If $p\mid N$ and $p\mid d$, nothing is dropped at $p$: $L_{-,p}$ is anisotropic, so no nonzero
+isotropic coset is supported there and $W_{0,p}(s,\varphi_{\nu,p})=0$ for every $\nu_p\neq0$.
+For odd $p$ this is \cite[Lemma~18(1)]{Yang} with $p\mid(DN,d)$, Gram
+$\mathrm{diag}(\epsilon_1,\epsilon_2)$ with $p\,\|\,\epsilon_2$, as in the proof of
+Lemma~\ref{lem:Wp}. For $p=2$, a case Yang omits, write $\lambda_0=\lambda/2=\begin{pmatrix}c_1&
+c_2\\2c_3&-c_1\end{pmatrix}$ in $\mathcal O\otimes\Z_2=\begin{pmatrix}\Z_2&\Z_2\\2\Z_2&\Z_2
+\end{pmatrix}$, $c_1^2+2c_2c_3=d/4\equiv2,3\bmod4$, and $L_{-,2}=\{\begin{pmatrix}a&b\\2c&-a
+\end{pmatrix}:ac_1+bc_3+cc_2=0\}$ with $Q=-(a^2+2bc)$ (the reduced norm; only its integrality
+is used below). If $d/4\equiv3\bmod4$ then $c_1,c_2,c_3$ are
+odd; eliminating $a$ gives a form $2(uy^2+2v\,yz+u'z^2)$ with $u,u'$ units and $v$ even, hence
+$2\,\mathrm{diag}(\epsilon_1,\epsilon_2)$ with $\epsilon_1\epsilon_2=-(d/4)/c_1^2\equiv1\bmod4$,
+and the three nonzero cosets of $(\Z/2)^2$ have $Q\equiv\epsilon_1/4,\epsilon_2/4,\epsilon_1/2$,
+none integral. If $d/4\equiv2\bmod4$ then $c_1$ is even and $c_2,c_3$ odd; eliminating $b$ gives
+$2(a^2-2(c_1/c_3)ac-2(c_2/c_3)c^2)$, hence $2\,\mathrm{diag}(1,2\epsilon')$ with
+$\epsilon'$ a unit, whose discriminant group $\Z/2\times\Z/4$ has $Q(a/2,b/4)=a^2/4+\epsilon'b^2/8$,
+never integral on a nonzero element. This is the firing rule $\sum_{p\mid N/(N,d)}\log p$: the
+primes of $N$ dividing $d$ contribute nothing, for the reason the recipe assumed at all of them.
+\end{remark}
+
+
+\begin{remark}[the level dividing the conductor of $d$]\label{rem:conductor}
+The hypotheses above ask for $d$ fundamental, but the firing rule $\sum_{p\mid N/(N,d)}\log p$ is a
+condition on the \emph{field}, so the correction is applied whenever $N$ misses the fundamental
+discriminant $d_0$ of $d$ --- including when $N$ divides the conductor $f=\sqrt{d/d_0}$. On
+$X_0^{15}(2)$ that covers $d=-60$, which is one of the three discriminants at which
+\cite[Table~45]{GY} tests the rule. There the lattice is genuinely different, and the count
+$2N-2$ of Lemma~\ref{lem:LN} fails: computing $\Lm=L\cap\lambda^\perp$ directly at $D=15$, $N=2$,
+the $2$-part is the even plane $2H$ with two nonzero isotropic cosets when $d=-7$ or $-15$, and the
+\emph{odd} type $2\,\mathrm{diag}(u_1,u_2)$ with $u_1+u_2\equiv0\bmod4$, which has exactly \emph{one},
+when $d=-12$ or $-60$.
+
+These two discriminants are \emph{different} cases, and the proposition's argument applies to at
+most one of them. The odd plane $2\,\mathrm{diag}(u_1,u_2)$ is isotropic only when
+$u_1+u_2\equiv0\bmod8$, that is when $2$ splits in $\Q(\sqrt d)$: true at $d=-60$ (and at $-28$),
+false at $d=-12$, where $2$ is inert in $\Q(\sqrt{-3})$. The brute-force counting of
+Lemma~\ref{lem:m0loc} separates them (\texttt{level-p2/oddtype.log} on the campaign branch). At
+$2\,\mathrm{diag}(1,-1)$, the plane at $d=-60$, the zero coset gives $\alpha_k=1,2,3,\dots$, so
+$W_{0,2}(s,\varphi_0)=1/(1-X)$ keeps its simple pole, and the single nonzero coset of integral norm
+gives $\alpha_k\equiv2$, so $W_{0,2}(s,\varphi_\nu)=1+X$; the argument then runs with
+$W_\nu/W_0=1-X^2$ and gives $\kappa^-_\nu(0)=-2\log2$, and one coset at twice the weight reproduces
+$\tfrac12\log2$. At $2\,\mathrm{diag}(1,3)$, the plane at $d=-12$, the zero coset gives
+$\alpha_k=1,2,1,2,\dots$, so $W_{0,2}(s,\varphi_0)=(1+X+X^2)/(1+X)$ with \emph{no} pole, and the
+coset of norm $1$ has odd norm on every vector, so $W_{0,2}(s,\varphi_\nu)=1-X$; the same formal
+computation would give $-\tfrac23\log2$, and no value of the $m=0$ term closes the gap there:
+\cite[Table~45]{GY} gives $|F(-12)|=1/20$ for $F=f_{-2}/f_{-1}$, against $2^{4/3}/5$ from the
+routine, and with $-\tfrac23\log 2$ the gap grows. At $-48$ and $-240$ the odd-prime parts of the
+computed values are half the true ones, which the $m=0$ term cannot touch at all.
+
+So the correction is \emph{not} established at non-fundamental $d$. Schofer's theorem, as Yang and
+Guo--Yang state it, assumes $d$ fundamental, and a prime dividing the conductor that splits in
+$\Q(\sqrt d)$ also gives isotropic cosets away from $N$, so Lemma~\ref{lem:LN} needs $d$ fundamental
+too. The agreement with Table~45 at $d=-28$ and $-60$ is an observation, not a consequence of
+anything proved here.
+
+Two further facts from the comparison with Table~45 narrow what is open. First, the discrepancy in
+the \emph{odd}-prime part of the values at $d=-48$ and $-240$ (conductor $4$), which no $\log 2$ term
+could touch, was not in the $m=0$ term at all: the $m>0$ part of the routine was using the class
+number of the order of discriminant $d$ where the formula it implements takes the class number of
+the field, together with the field's unit count and a division by the conductor. The two agree
+exactly when $h(d)=h(d_0)$, which holds at conductor $2$ when $2$ splits ($d=-28,-60$) and fails at
+conductor $4$, where $h(d)=2h(d_0)$ and every value came out halved. With the field's class number
+the value at $d=-240$ agrees with Table~45 exactly, $2$-part included, and nothing at a fundamental
+or conductor-$2$ discriminant moves. Second, the $2$-part at conductor $4$ is \emph{not} governed by a rule on the splitting of
+$2$, although it looked that way on the one form tested: counting on the negative plane itself,
+the zero coset's series is bounded at the inert planes ($d=-12,-48$) and grows linearly at the
+split ones ($d=-15,-60,-240$), so the pole of Proposition~\ref{prop:kappa0} is present exactly when
+$2$ splits in $\Q(\sqrt{d_0})$, and the rule ``add $\tfrac12c_\eta(0)\log2$ when $2$ splits, nothing
+when it is inert'' reproduces Table~45 at $-48$ and $-240$ for that form. But the same lattice
+computation shows that at a conductor prime $L_N\neq L_{+,N}\oplus L_{-,N}$ (index $2^{2k-1}$ at
+conductor $2^k$), so a coset of the plane lies over several pairs $(x,\nu)$ and the restored terms
+are a sum over that fibre, in which the local factors of the nonzero cosets --- nonzero at an inert
+prime too, $-\tfrac43\log2$ and $-\tfrac13\log2$ at $d=-48$ --- are weighted by coefficients of
+$f$ at the exponents $Q(\lambda_0/2)$ and $Q(\lambda_0/4)$, i.e.\ by the poles of $f$ at the CM points
+of the smaller discriminants $d/4$, $d/16$. Evaluating that sum (Proposition~prop:fibre of the
+standalone note \texttt{kappa0-proof-standalone.tex}) reproduces, for all nine forms of the model
+set, the values forced by Table~45 and the forms' divisors at both $-240$ and $-48$; the
+splitting rule is right for five of nine at $-240$ and three of nine at $-48$, and Yang's conductor
+term for the pairs with $Q(x)=m$ gives the irrational $2^{4/3}$ at $-48$ for two forms. The routine
+now evaluates the fibre sum at a level prime dividing the conductor, with the local factors in closed
+form (Lemma~lem:Wcond of the standalone note, proved for every $p$ on the lattices of its
+Lemmas~lem:conductor and lem:conductor2), and reproduces all $46$ values of the nine forms at the seven
+Table-45 points of conductors $1$, $2$ and $4$. Not covered is a prime of the conductor outside the
+level, where the unimodular $L_q$ has a plane of the same shape and the formula acquires $\log q$
+terms.
+\end{remark}
 Two things are worth drawing out. The factor $\tfrac12$ is
 $\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same
 $\tfrac12$ was measured at $N=2$, $3$ and $5$ and why Observation~\ref{obs:mult} could be stated
@@ -1778,13 +2225,17 @@ searching for a vanishing place does not find it, and it is the reason the corre
 case analysis of \S\ref{sec:reenum}, which tracks orders of vanishing only.
 
 Theorem~\ref{thm:closed} and Proposition~\ref{prop:reenum} stand in any case: the level factor at
-$m>0$ only ever raises the order of vanishing, so $\kappa$ cannot supply the $\log N$ from the
-$m>0$ terms, which is what leaves the whole correction in the $m=0$ term at $\eta\neq0$. Part (ii)
-of the Kudla--Rapoport--Yang programme --- the incorporation of a level structure into the moduli
-problem --- remains to be carried out. And what a corrected formula must reproduce is the
-multipliers of Observation~\ref{obs:mult}, equivalently the coefficients of
-Proposition~\ref{prop:closedcoef}; not Table~\ref{tab:A} index by index, which fixes the functional
-only modulo the relation ideal of the panel (Remark~\ref{rem:gauge}).
+$m>0$ only ever raises the order of vanishing, so $\kappa^-_\nu(m)$ with $m>0$ cannot supply the
+$\log N$. What Proposition~\ref{prop:mult} adds is that the coefficient $\kappa^-_\nu(0)$, once
+restored, is called not only from the $m=0$ term but from every $\kappa_\eta(m)$ with $m=Q(x)$
+for a vector $x$ on the CM line; at a point where Theorem~B applies those calls reduce to the
+coefficients of $f$ at $\infty$ at the exponents $k^2Q(\lambda_0)$, and vanish on every base
+examined. The derivation stays inside Schofer's analytic formula and corrects one step of it; part
+(ii) of the Kudla--Rapoport--Yang programme --- the incorporation of a level structure into the
+moduli problem --- remains open as a geometric statement but is not needed for the value. What a
+corrected formula must reproduce is the multipliers of Observation~\ref{obs:mult}, equivalently
+the coefficients of Proposition~\ref{prop:closedcoef}; not Table~\ref{tab:A} index by index, which
+fixes the functional only modulo the relation ideal of the panel (Remark~\ref{rem:gauge}).
 
 A further reading should be recorded, since it would undercut the rest: that the evaluation of
 $\kappa^-_\mu(m)$ for $m>0$ is itself wrong at $N>1$. It had never been checked against an
@@ -1877,9 +2328,12 @@ The computations were carried out in Magma against the codebase accompanying thi
       \texttt{km0places.m} exhibits the nonzero isotropic cosets of $L_-^\vee/L_-$ at firing
       discriminants, $2N-2$ of them, supported at the level prime alone; and \texttt{km0whit.py}
       carries out the calibration of Lemma~\ref{lem:m0loc} against brute-force counts at
-      $p=3,5,7$ and assembles Proposition~\ref{prop:kappa0}. The distinction between a local
-      factor's value and its polynomial matters twice over in this section, and both scripts
-      report the polynomial.
+      $p=3,5,7$. The distinction between a local factor's value and its polynomial matters twice
+      over in this section, and both scripts report the polynomial. The $x\neq0$ term of
+      Remark~\ref{rem:xsum} is \texttt{M0InfinityPoleSum} in \texttt{SchoferFormula.m}, applied
+      at every evaluated CM point; \texttt{tests/M0PoleSum.m} checks it on hand-made series and
+      on $X_0^{15}(2)$ at the discriminants of Guo--Yang's Table~45, and the per-point check on
+      the six odd-$D$ bases is \texttt{kappa0-xterms/xterms2.m} on the campaign branch.
 \item The bases with $M\ge660$ are reachable only through \texttt{eis32k.m}, which replaces
       the numerical Weil-representation loop of \texttt{eis32.m} by the closed form of
       \cite[Thm.~6.4]{Stromberg2013} (agreement with the numerical driver checked
