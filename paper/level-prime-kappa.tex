@@ -2181,10 +2181,24 @@ So the correction is \emph{not} established at non-fundamental $d$. Schofer's th
 Guo--Yang state it, assumes $d$ fundamental, and a prime dividing the conductor that splits in
 $\Q(\sqrt d)$ also gives isotropic cosets away from $N$, so Lemma~\ref{lem:LN} needs $d$ fundamental
 too. The agreement with Table~45 at $d=-28$ and $-60$ is an observation, not a consequence of
-anything proved here. The routine now warns at every non-fundamental $d$ and leaves the value as it
-is, so that the Table~45 comparison keeps $-60$ as an observed agreement; this matters in practice,
-since the incremental discriminant search reaches lists containing non-fundamental discriminants
-and the coprime-to-level filter is off unless \texttt{CMCOPRIME} is set.
+anything proved here.
+
+Two further facts from the comparison with Table~45 narrow what is open. First, the discrepancy in
+the \emph{odd}-prime part of the values at $d=-48$ and $-240$ (conductor $4$), which no $\log 2$ term
+could touch, was not in the $m=0$ term at all: the $m>0$ part of the routine was using the class
+number of the order of discriminant $d$ where the formula it implements takes the class number of
+the field, together with the field's unit count and a division by the conductor. The two agree
+exactly when $h(d)=h(d_0)$, which holds at conductor $2$ when $2$ splits ($d=-28,-60$) and fails at
+conductor $4$, where $h(d)=2h(d_0)$ and every value came out halved. With the field's class number
+the value at $d=-240$ agrees with Table~45 exactly, $2$-part included, and nothing at a fundamental
+or conductor-$2$ discriminant moves. Second, what remains is only the $2$-part when the conductor
+prime is \emph{inert}: at $d=-48$ the odd part is now right and the $2$-part is off by $4\log 2$,
+which is the $m=0$ local factor at the $4$-scaled inert plane, the analogue of the $2$-scaled case
+above. So the split case of a level prime dividing the conductor is right as implemented at every
+point tested, and the inert case is the one computation still to do. The routine warns at every
+non-fundamental $d$ and leaves the value as it is; this matters in practice, since the incremental
+discriminant search reaches lists containing non-fundamental discriminants and the coprime-to-level
+filter is off unless \texttt{CMCOPRIME} is set.
 \end{remark}
 Two things are worth drawing out. The factor $\tfrac12$ is
 $\tfrac14\cdot\tfrac{2N-2}{N-1}$, hence \emph{independent of $N$} --- which is why the same

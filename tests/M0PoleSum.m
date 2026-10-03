@@ -53,7 +53,63 @@ procedure test_pole_sum_15_2()
     printf " ok (%o pairs)\n", checked;
 end procedure;
 
+// (3) Values at NON-FUNDAMENTAL discriminants against Guo-Yang's Table 45 (arXiv:1510.06193v1),
+// which gives the Hauptmodul s of X_0^15(2)/W at each CM point.  The Borcherds product the code
+// returns as fs[-2] has |value| = (1280/9) |s(s-2)| at every single-point cycle: this is first
+// CHECKED at the fundamental discriminants -7, -15, -52 (s = 1/4, 5/4, 1), so the identification is
+// not assumed, and then REQUIRED at the conductor-2 points -28, -60 (s = 9/4, -1/12) and at the
+// conductor-4 point -240 (s = -25/12), where 2 splits in Q(sqrt d).  Before 2026-10-03 the value at
+// -240 came out exactly halved (and irrational): the m > 0 sum used the class number of the order
+// where the formula takes the field's.  -48 (2 inert) is left out on purpose: its odd part is right
+// but its log 2 part is still open (the m = 0 factor at the inert plane); the paper's remark on the
+// conductor says what is known.
+procedure test_values_at_conductor_discriminants_15_2()
+    printf "  values at conductor-2 and conductor-4 discriminants on X0^15(2) against Table 45...";
+    D := 15; N := 2;
+    Xstar := CreateShimuraQuot(D, N, Set(Divisors(D*N)));
+    Xstar`g := GenusShimuraCurveQuotient(D, N, Xstar`W); Xstar`CurveID := 0;
+    curves := GetQuotientsAndGenera([Xstar]);
+    _ := exists(star){c : c in curves | IsStarCurve(c)};
+    fs := BorcherdsForms(star, curves : Prec := 100);
+    svals := AssociativeArray();                      // Guo-Yang v1 Table 45, column s
+    svals[-7] := 1/4; svals[-15] := 5/4; svals[-52] := 1;
+    svals[-28] := 9/4; svals[-60] := -1/12; svals[-240] := -25/12;
+    want := Set(Keys(svals));
+    cm := CandidateDiscriminants(star, curves : Keep := want);
+    rat := cm[1]; quad := cm[2];
+    for t in [<-28, 2, 1>, <-240, 4, 1>] do          // <d, conductor, degree>; conductor 4 is never offered
+        if not exists{u : u in rat | u[1] eq t[1]} then Append(~rat, t); end if;
+    end for;
+    tab, _ := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 60, Prec := 100, Exclude := {}, Include := want);
+    ks := Sort([k : k in Keys(fs)]);
+    assert ks[1] eq -2;
+    // the value prints as a formal sum "aLog2+bLog3..."; compare against the expected one in that form
+    function logstring(q)   // q a positive rational -> "aLog2+bLog3..." in the code's format
+        f := Factorization(Numerator(q)); g := Factorization(Denominator(q));
+        terms := Sort([<t[1], t[2]> : t in f] cat [<t[1], -t[2]> : t in g]);
+        s := "";
+        for t in terms do
+            s cat:= (t[2] gt 0 and #s gt 0 select "+" else "") cat (t[2] eq 1 select "" else (t[2] eq -1 select "-" else IntegerToString(t[2]))) cat "Log" cat IntegerToString(t[1]);
+        end for;
+        return s;
+    end function;
+    C := 1280/9;
+    nchecked := 0;
+    for d in [-7, -15, -52, -28, -60, -240] do
+        i := Index(tab`Discs, d);
+        error if i eq 0, Sprintf("d = %o was not evaluated", d);
+        got := Sprint(tab`Values[1][i]);
+        exp := logstring(C * AbsoluteValue(svals[d] * (svals[d] - 2)));
+        error if got ne exp,
+            Sprintf("X0^15(2), d = %o: fs[-2] value is %o, Table 45 gives s = %o hence %o", d, got, svals[d], exp);
+        nchecked +:= 1;
+    end for;
+    assert nchecked eq 6;
+    printf " ok (%o discriminants, conductors 1, 2 and 4)\n", nchecked;
+end procedure;
+
 printf "Testing the oo-pole part of the m = 0 term...\n";
 test_pole_sum_series();
 test_pole_sum_15_2();
+test_values_at_conductor_discriminants_15_2();
 printf "Done!\n";

@@ -510,7 +510,11 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    h := ClassNumber(d);
+    // EXPERIMENT 2026-10-03: the class number of the FUNDAMENTAL discriminant, not of the order.
+    // With h(d) the value at conductor 4 comes out halved (X_0^15(2), d = -48, -240), because
+    // h(d) = 2 h(d_0) there while w is the field's; at conductor 2 in the split case h(d) = h(d_0)
+    // and nothing showed.  Yang's 1/f below is kept.
+    h := ClassNumber(FundamentalDiscriminant(d));
     w := #UnitGroup(QuadraticField(d));
 
     scale_sqr := &*scales_sqr;
@@ -1039,12 +1043,13 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     d_fund := FundamentalDiscriminant(d);
     // Everything argued about this term assumes d fundamental (Schofer's theorem as Yang and
     // Guo-Yang state it, and the coset count of the level-N plane).  At a non-fundamental d the
-    // local plane at a prime dividing the conductor is a different lattice; on X_0^15(2) the
-    // value agrees with Guo-Yang's Table 45 at d = -28 and -60 (2 split) and is wrong at d = -12
-    // (2 inert), and no choice of the m = 0 term repairs -12.  The value is left as it is so that
-    // the Table 45 comparison keeps -60 as an observed agreement, and the caller is told.
+    // local plane at a prime dividing the conductor is a different lattice.  On X_0^15(2) the
+    // value agrees with Guo-Yang's Table 45 at d = -28, -60 and -240 (conductor prime split; the
+    // m > 0 sum takes the FIELD's class number, see get_kappa_minus_squared) and only its log 2
+    // part is wrong at d = -48 (2 inert), with -12 on the divisor.  The value is left as it is,
+    // and the caller is told.
     if d ne d_fund then
-        WriteStderr(Sprintf("⚠ kappa0 term at non-fundamental d = %o (fundamental %o): nothing proved here covers it; the agreement with Guo-Yang at -28 and -60 is an observation.\n", d, d_fund));
+        WriteStderr(Sprintf("⚠ kappa0 term at non-fundamental d = %o (fundamental %o): nothing proved here covers it. Checked right against Guo-Yang at -28, -60, -240 (conductor prime split); the log 2 part is still open when the conductor prime is inert (-48).\n", d, d_fund));
     end if;
     Nprimes := PrimeDivisors(N div GCD(N, d_fund));
     // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
