@@ -903,10 +903,11 @@ intrinsic M0InfinityPoleSum(foo::RngSerLaurElt, d::RngIntElt) -> FldRatElt
 end intrinsic;
 
 intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLaurElt], mults::SeqEnum[FldRatElt],
-                            d::RngIntElt, p::RngIntElt, Q::AlgMatElt : Lambda := false, M := 0) -> SeqEnum
-{The m = 0-type terms of Schofer's formula at a level prime p dividing the conductor of d, per
- CM point and in units of log p, one value per form (paper/kappa0-proof-standalone.tex,
- prop:fibre and lem:Wcond).  foos and f0s are the expansions of the forms at the cusps oo and 0
+                            d::RngIntElt, p::RngIntElt, Q::AlgMatElt : Lambda := false, M := 0, Unimodular := false) -> SeqEnum
+{The m = 0-type terms of Schofer's formula at a prime p dividing the conductor of d -- a level
+ prime (p || N, p not dividing d_0), or with Unimodular a prime not dividing DN -- per CM point
+ and in units of log p, one value per form (paper/kappa0-proof-standalone.tex, prop:fibre,
+ lem:Wcond and lem:unimod).  foos and f0s are the expansions of the forms at the cusps oo and 0
  (the latter in q^(1/M), M the level of the forms), mults their multipliers (1/2) c_eta(0), Q the
  Gram matrix of L in the coordinates of Lambda, a vector of norm |d| on the CM line.
 
@@ -920,7 +921,11 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
      -2 p^(rho-k+1)/(p-1)                          if p splits in the CM field,
      -2/(p^(k-1)(p+1)) (p^rho + 2(p^rho - 1)/(p-1)) if p is inert,
  (lem:Wcond; the plane is <-1> + <-p^(2k) c> for odd p and <-1> + <-4^(k-1) c> at p = 2, where the
- cosets of order 2^k have rho = 0; the coset count is checked here).  Verified against the values forced by
+ cosets of order 2^k have rho = 0; the coset count is checked here).  At a prime p not dividing DN
+ the plane is <-1> + <-|d|> (lem:unimod), no nonzero coset lies in L^v, every pair has x != 0 and
+ lies over eta = 0, and when p divides d_0 as well the plane is anisotropic with
+     kappa^-_nu(0)/log p = -2 (p^(rho+1) - 1)/((p-1) p^k).
+ Verified against the values forced by
  the forms' divisors and Guo-Yang's Table 45 for all nine forms of X_0^15(2) at d = -240 and -48
  (tests/M0PoleSum.m).}
     require IsPrime(p) : "p must be prime";
@@ -934,8 +939,10 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
     d0 := FundamentalDiscriminant(d);
     is_sq, f := IsSquare(d div d0); assert is_sq;
     k := Valuation(f, p);
-    require k ge 1 and d0 mod p ne 0 : "p must divide the conductor of d and not its fundamental discriminant";
+    require k ge 1 : "p must divide the conductor of d";
     eps := KroneckerSymbol(d0, p);
+    require eps ne 0 or Unimodular :
+        "at a level prime dividing both the conductor and the fundamental discriminant the lattice is not derived";
 
     lam := ChangeRing(lambda_v, Rationals());
     lam0 := lam / Content(lambda_v);                       // primitive vector on the CM line
@@ -969,7 +976,8 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
         rho := k - ord;
         require rho ge 0 : "M0FibreCorrection: a coset of order exceeding p^k";
         kap := eps eq 1 select -2*p^(rho-k+1)/(p-1)
-                           else -2/(p^(k-1)*(p+1)) * (p^rho + 2*(p^rho-1)/(p-1));
+               else (eps eq -1 select -2/(p^(k-1)*(p+1)) * (p^rho + 2*(p^rho-1)/(p-1))
+                                 else -2*(p^(rho+1)-1)/((p-1)*p^k));
         nu := key * K;
         for i in [1..#foos] do
             S := Rationals()!0;
@@ -979,7 +987,7 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
                 m := Qf(x);
                 if m gt bound then continue; end if;
                 if m eq 0 then
-                    assert not inL(nu);                          // a nonzero isotropic coset of L^v/L
+                    assert not inL(nu) and not Unimodular;       // a nonzero isotropic coset of L^v/L, supported at the level
                     S +:= 2*mults[i];
                 else
                     if IsIntegral(m*M) then S +:= Coefficient(f0s[i], -Integers()!(m*M)); end if;
@@ -1138,11 +1146,30 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // divide FundamentalDiscriminant(d) -- NOT d itself (e.g. d = -60 = 2^2*(-15): 2 splits, since
     // d_fund = -15, even though 2 | 60).
     d_fund := FundamentalDiscriminant(d);
-    // Which level primes carry a term: those unramified in the CM field.  At a prime dividing the
-    // CONDUCTOR of d the lattice is not L_+ (+) L_- and the term is the fibre sum of
-    // M0FibreCorrection; elsewhere it is the (1/2) c_eta(0) - pole-sum term of prop:mult.
+    // Which primes carry a term: the level primes unramified in the CM field, and every prime of the
+    // CONDUCTOR of d.  At a prime dividing the conductor the lattice is not L_+ (+) L_- and the term
+    // is the fibre sum of M0FibreCorrection (at a prime outside the level it is a pole sum over the
+    // CM points of d/p^2, d/p^4, ...); at a level prime not dividing the conductor it is the
+    // (1/2) c_eta(0) - pole-sum term of prop:mult.
     _, cond := IsSquare(d div d_fund);
     Nprimes := PrimeDivisors(N div GCD(N, d_fund));
+    for q in PrimeDivisors(cond) do
+        if N mod q eq 0 and d_fund mod q eq 0 then
+            vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the level prime %o divides both the conductor and the fundamental discriminant of d = %o; that lattice is not derived and no term is added", q, d;
+        end if;
+    end for;
+    Qprimes := [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0 and IsOdd(q)];
+    if IsEven(cond) and IsOdd(D*N) then
+        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the conductor of d = %o is even and 2 is outside the level; that lattice is not derived and no term is added at 2", d;
+    end if;
+    for q in Qprimes do
+        // no coset lies in L^v at such a prime, so the multipliers (1/2) c_eta(0) never enter
+        corrs := M0FibreCorrection(fs, fs_0, [Rationals() | 0 : eta in etas], d, q, Q : Lambda := lambda, M := M, Unimodular := true);
+        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term at the conductor prime %o outside the level, d = %o: %o", q, d, corrs;
+        for i in [1..#etas] do
+            log_coeffs[i] +:= PointDegree * corrs[i] * LogSum(Rationals()!1, q);
+        end for;
+    end for;
     // The multiplier (1/2) c_eta(0) is the constant term of the vector-valued input F_f at a
     // nonzero isotropic coset, computed exactly by M0MultiplierExact (VectorValuedForm.m; the
     // finite Gamma_0(M)-coset evaluation, validated against the measured ground truth on 21 bases).

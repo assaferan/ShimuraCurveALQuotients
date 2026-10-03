@@ -29,12 +29,23 @@ cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, proved f
                        rule was wrong on 10 of the 18 conductor-4 values, Yang's conductor term gave
                        2^(4/3) on two.  ⚠ The test used to call its form fs[-2]; rows follow Keys(fs)
                        and row 1 is key 11.
-    campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3).
+    campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3),
+                       qprime.m, classpoly.py, fod.m (conductor 7 on 15_2).
 
 The model set is unaffected: conductor-4 points are never offered to the model search, and at
-conductor 2 the fibre sum equals the old term. Not covered: a prime of the conductor outside the
-level (unimodular L_q, whose plane has the same shape and whose cosets would give log q terms;
-first such point on 15_2 is d = -588).
+conductor 2 the fibre sum equals the old term.
+
+**A conductor prime OUTSIDE the level (odd q, q not dividing DN) also carries a term** (lem:unimod):
+L_q is unimodular, the plane is <-1> + <-|d|>, no coset lies in L^v, and the fibre over each coset
+is the CM vectors of d/q^2, d/q^4, ..., so the term is a pole sum over the lower discriminants
+(q | d_0 is anisotropic, kappa^- = -2(q^(rho+1)-1)/((q-1)q^k) log q). Implemented for odd q.
+Table 45 cannot test it; what can: the CLASS POLYNOMIAL. At d = -588 (three star points) the nine
+values force a monic cubic H in Q[X] -- with the term H = X^3 - 191/54 X^2 + 343/432 X - 83^2/(2^8 3^3 7),
+cutting out exactly the cubic field FieldsOfDefinitionOfCMPoint gives (disc -588); without it no
+rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. ⚠ The divisor relations
+among the nine forms are BLIND to this term (it is divisor-linear). ⚠ NOT derived: q = 2 outside an
+odd level (the tables for 35_1, 39_1, 51_1, 55_1, 57_1, 87_1 have such points; L_2 is not unimodular
+there) and a level prime dividing both the conductor and d_0; both log a verbose warning.
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 

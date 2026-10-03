@@ -138,6 +138,57 @@ procedure test_values_at_conductor_discriminants_15_2()
     end for;
     assert nchecked eq 46;
     printf " ok (%o values of 9 forms at conductors 1, 2 and 4)\n", nchecked;
+
+    // (3c) a conductor prime OUTSIDE the level: d = -588 = 14^2 * (-3), where 7 does not divide 30.
+    // Table 45 is silent, but the nine values (now sums over the three star points of discriminant
+    // -588) give N(s), N(s - 2) and N((s + 1/12)(s - 5/4)) through the divisors, and the monic cubic
+    // H in Q[X] with those absolute values at 0, 2 and (as a product) at -1/12, 5/4 -- the class
+    // polynomial of s at d = -588 -- must exist: a rationality condition on the discriminant of a
+    // quadratic.  With the log 7 term of M0FibreCorrection (standalone lem:unimod) it does, and the
+    // cubic field it cuts out must be the field of definition of the CM points, which
+    // FieldsOfDefinitionOfCMPoint computes by class field theory (discriminant -588); without the
+    // term no rational cubic exists (campaign level-p2/classpoly.log).
+    printf "  the class polynomial of s at d = -588 (conductor prime 7 outside the level)...";
+    d := -588;
+    OK := MaximalOrder(QuadraticField(d)); O := sub<OK | 14>;
+    npts := NumberOfOptimalEmbeddings(O, D, N) div 8;
+    assert npts eq 3;
+    Ld := ShimuraCurveLattice(D, N);
+    vals := SchoferFormula([fs[k] : k in tab`Keys_fs], d, D, N, Ld : PointDegree := npts);
+    norms := AssociativeArray();
+    for r->k in tab`Keys_fs do
+        div_f := DivisorOfBorcherdsForm(fs[k], star);
+        model7 := &*[Rationals() | AbsoluteValue(svals[-7] - svals[pr[1]])^(Integers()!pr[2]) : pr in div_f | pr[1] ne -12];
+        Ck := cell_value(tab`Values[r][Index(tab`Discs, -7)]) / model7;
+        norms[k] := cell_value(vals[r]) / Ck^npts;          // prod over the divisor of N|s - s_i|^{m_i}
+    end for;
+    A := norms[-1]; B := norms[-2]; CE := norms[14];          // N|s|, N|s-2|, N|(s+1/12)(s-5/4)|
+    assert norms[11] eq A*B and norms[9] eq B*CE and norms[10] eq A*CE and norms[12] eq A*B*CE;
+    P<X> := PolynomialRing(Rationals());
+    found := [];
+    for e0, e1, e2 in [1, -1] do
+        // H = X^3 + a X^2 + b X + c with H(0) = e0 A, H(2) = e1 B: c and b = (e1 B - 8 - 4a - c)/2 are
+        // determined by a, and H(-1/12) H(5/4) = e2 CE is a quadratic in a
+        c := e0*A;
+        Pa<a> := PolynomialRing(Rationals());
+        b := (e1*B - 8 - 4*a - c)/2;
+        quad := (-1/1728 + a/144 - b/12 + c)*(125/64 + 25*a/16 + 5*b/4 + c) - e2*CE;
+        for root in Roots(quad) do
+            aa := root[1]; bb := Evaluate(b, aa);
+            Append(~found, X^3 + aa*X^2 + bb*X + c);
+        end for;
+    end for;
+    error if IsEmpty(found), "no rational monic cubic H has the norms the values prescribe at d = -588";
+    flds := FieldsOfDefinitionOfCMPoint(star, d);
+    want_disc := {Discriminant(MaximalOrder(F)) : F in flds | Type(F) ne FldRat};
+    assert want_disc eq {-588};
+    good := [H : H in found | IsIrreducible(H) and Discriminant(MaximalOrder(NumberField(H))) eq -588];
+    error if #good ne 1,
+        Sprintf("expected exactly one cubic cutting out the field of definition (discriminant -588), found %o among %o", #good, found);
+    // regression pin (computed by this test on 2026-10-03, not an independent value): the roots have
+    // 7-adic valuation -1/3, i.e. all three points reduce to the pole tau_-12 at the prime above 7
+    assert good[1] eq X^3 - 191/54*X^2 + 343/432*X - 6889/48384;
+    printf " ok\n";
 end procedure;
 
 printf "Testing the oo-pole part of the m = 0 term...\n";
