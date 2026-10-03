@@ -268,3 +268,25 @@ the primitive lambda_0).  Dual Z/2 x Z/2^{2k-1}; integral cosets (0, t/2^{k-1}) 
 (1/2, t/2^k), t odd [rho = 0]: 2^k in all, the one of order 2 lies in L^v.  A direct Hensel count
 (1, 2, 2(1+eps) roots of a unit square mod 2^n for n = 1, 2, >= 3) gives the odd-p series verbatim, so
 lem:Wcond holds for every p.  This is what fibresum.log / inertplane.log counted.
+
+## A conductor prime OUTSIDE the level: the term exists, and it is a pole sum over d/q^2, d/q^4, ... (qprime.m, 2026-10-03)
+
+At odd q not dividing DN with q^k || f, L_q = M_2(Z_q) trace-zero is unimodular; after GL_2(Z_q)
+conjugation lambda = (0, d; 1, 0), L_- = <-1> + <-|d|>, index q^{2k}, integral cosets (0, r/q^k) --
+NONE in L^v -- and the fibre over nu_r is x = t lambda with t = -r/q^k mod Z_q: the CM vectors of
+d/q^{2(k-rho)}, all over eta = 0 (standalone lem:unimod).  q not dividing d_0: lem:Wcond verbatim;
+q | d_0: anisotropic, kappa^- = -2(q^{rho+1}-1)/((q-1)q^k) log q.  Implemented (M0FibreCorrection with
+Unimodular := true, odd q only).
+
+TEST PROBLEM: the nine-form divisor relations (qprime.m) are BLIND here -- the term is proportional to
+the pole order at tau_{d/q^2}, i.e. linear in the divisor, so they hold with and without it.
+What is NOT blind: the class polynomial.  At d = -588 (three star points, cubic field) the norms
+N|s|, N|s-2|, N|(s+1/12)(s-5/4)| must come from a monic cubic H in Q[X] (classpoly.py): WITH the term
+H = X^3 - 191/54 X^2 + 343/432 X - 83^2/(2^8 3^3 7), whose field has discriminant -588 and the SAME
+reduced polynomial as FieldsOfDefinitionOfCMPoint gives (fod.m); WITHOUT it, no rational cubic.
+Same at -1960 (field disc -1960).  7-adic Newton polygon: every root has ord_7 = -1/3 -- all three
+points reduce to the pole tau_{-12}, the Kronecker congruence s(tau_{dq^2}) = s(tau_d) mod q from
+the q-isogeny; at -1960 the roots are divisible by 7 (s(tau_{-40}) = 0), at -735 N(s - 5/4) acquires
+the 7 (s(tau_{-15}) = 5/4).  ⚠ q = 2 outside an odd level (35_1, 39_1, 51_1, 55_1, 57_1, 87_1 tables
+have such points: -12, -28, -48, -60) is NOT derived -- L_2 is not unimodular there.
+GY tables with ODD such points: 21_2 (-100, q = 5), 55_1/58_1/82_1/94_1 (-27, q = 3), 87_1 (-147, q = 7).

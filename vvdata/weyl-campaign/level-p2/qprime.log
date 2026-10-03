@@ -1,0 +1,76 @@
+
+=== d = -588 = 14^2 * -3, h(R_f) = 6, optimal embeddings 24, star points 3
+
+	m = 0 term at the conductor prime 7 outside the level, d = -588: [ -1/3, -1/3, -1, -1, -2/3, -4/3, -1/3, -2/3, -1/3 ]
+	m = 0 term at the conductor prime 2, d = -588: [ 2/3, 4/3, 0, 0, 4/3, 2/3, 4/3, -2/3, 2/3 ]q = 7 corrections per point (units of log 7): [ -1/3, -1/3, -1, -1, -2/3, -4/3, -1/3, -2/3, -1/3 ]
+  form -2  value 4Log2-2Log3-Log7+2Log53       
+  form -1  value 10Log2-6Log3+3Log5-Log7+2Log83
+  form 9   value -18Log2-8Log3+3Log5-3Log7+6Log11+2Log29+2Log53
+  form 10  value -18Log2-12Log3+6Log5-3Log7+6Log11+2Log29+2Log83
+  form 11  value 8Log2-8Log3+3Log5-2Log7+2Log53+2Log83
+  form 12  value -14Log2-14Log3+6Log5-4Log7+6Log11+2Log29+2Log53+2Log83
+  form 13  value 10Log2-6Log3+3Log5-Log7+2Log83
+  form 14  value -22Log2-6Log3+3Log5-2Log7+6Log11+2Log29
+  form 15  value 4Log2-2Log3-Log7+2Log53       
+  WITH q-term     w11 = w-1 + w-2          lhs - rhs = 0
+  WITH q-term     w13 = w-1                lhs - rhs = 0
+  WITH q-term     w15 = w-2                lhs - rhs = 0
+  WITH q-term     w9 = w14 + w-2           lhs - rhs = 0
+  WITH q-term     w10 = w14 + w-1          lhs - rhs = 0
+  WITH q-term     w12 = w14 + w-1 + w-2    lhs - rhs = 0
+  WITHOUT q-term  w11 = w-1 + w-2          lhs - rhs = 0
+  WITHOUT q-term  w13 = w-1                lhs - rhs = 0
+  WITHOUT q-term  w15 = w-2                lhs - rhs = 0
+  WITHOUT q-term  w9 = w14 + w-2           lhs - rhs = 0
+  WITHOUT q-term  w10 = w14 + w-1          lhs - rhs = 0
+  WITHOUT q-term  w12 = w14 + w-1 + w-2    lhs - rhs = 0
+
+=== d = -735 = 7^2 * -15, h(R_f) = 16, optimal embeddings 32, star points 4
+
+	m = 0 term at the conductor prime 7 outside the level, d = -735: [ 0, 0, 1/4, 1/4, 0, 1/4, 0, 1/4, 0 ]q = 7 corrections per point (units of log 7): [ 0, 0, 1/4, 1/4, 0, 1/4, 0, 1/4, 0 ]
+  form -2  value 8Log2-4Log3+4Log5-4Log11+2Log41
+  form -1  value 16Log2-6Log3+8Log5-4Log11+2Log43
+  form 9   value -4Log3+17Log5+Log7-12Log11+2Log41
+  form 10  value -6Log3+21Log5+Log7-12Log11+2Log43
+  form 11  value 16Log2-10Log3+12Log5-8Log11+2Log41+2Log43
+  form 12  value 8Log2-10Log3+25Log5+Log7-16Log11+2Log41+2Log43
+  form 13  value 16Log2-6Log3+8Log5-4Log11+2Log43
+  form 14  value -8Log2+13Log5+Log7-8Log11     
+  form 15  value 8Log2-4Log3+4Log5-4Log11+2Log41
+  WITH q-term     w11 = w-1 + w-2          lhs - rhs = 0
+  WITH q-term     w13 = w-1                lhs - rhs = 0
+  WITH q-term     w15 = w-2                lhs - rhs = 0
+  WITH q-term     w9 = w14 + w-2           lhs - rhs = 0
+  WITH q-term     w10 = w14 + w-1          lhs - rhs = 0
+  WITH q-term     w12 = w14 + w-1 + w-2    lhs - rhs = 0
+  WITHOUT q-term  w11 = w-1 + w-2          lhs - rhs = 0
+  WITHOUT q-term  w13 = w-1                lhs - rhs = 0
+  WITHOUT q-term  w15 = w-2                lhs - rhs = 0
+  WITHOUT q-term  w9 = w14 + w-2           lhs - rhs = 0
+  WITHOUT q-term  w10 = w14 + w-1          lhs - rhs = 0
+  WITHOUT q-term  w12 = w14 + w-1 + w-2    lhs - rhs = 0
+
+=== d = -1960 = 7^2 * -40, h(R_f) = 12, optimal embeddings 24, star points 3
+
+	m = 0 term at the conductor prime 7 outside the level, d = -1960: [ 0, 1/3, 0, 1/3, 1/3, 1/3, 1/3, 0, 0 ]q = 7 corrections per point (units of log 7): [ 0, 1/3, 0, 1/3, 1/3, 1/3, 1/3, 0, 0 ]
+  form -2  value 17Log2-3Log3+4Log5-2Log83     
+  form -1  value 25Log2-Log3+4Log5+Log7-2Log83 
+  form 9   value -Log2-6Log3+16Log5+2Log43+2Log71-6Log83
+  form 10  value Log2-4Log3+16Log5+Log7+2Log43+2Log71-6Log83
+  form 11  value 36Log2-4Log3+8Log5+Log7-4Log83
+  form 12  value 18Log2-7Log3+20Log5+Log7+2Log43+2Log71-8Log83
+  form 13  value 25Log2-Log3+4Log5+Log7-2Log83 
+  form 14  value -18Log2-3Log3+12Log5+2Log43+2Log71-4Log83
+  form 15  value 17Log2-3Log3+4Log5-2Log83     
+  WITH q-term     w11 = w-1 + w-2          lhs - rhs = 0
+  WITH q-term     w13 = w-1                lhs - rhs = 0
+  WITH q-term     w15 = w-2                lhs - rhs = 0
+  WITH q-term     w9 = w14 + w-2           lhs - rhs = 0
+  WITH q-term     w10 = w14 + w-1          lhs - rhs = 0
+  WITH q-term     w12 = w14 + w-1 + w-2    lhs - rhs = 0
+  WITHOUT q-term  w11 = w-1 + w-2          lhs - rhs = 0
+  WITHOUT q-term  w13 = w-1                lhs - rhs = 0
+  WITHOUT q-term  w15 = w-2                lhs - rhs = 0
+  WITHOUT q-term  w9 = w14 + w-2           lhs - rhs = 0
+  WITHOUT q-term  w10 = w14 + w-1          lhs - rhs = 0
+  WITHOUT q-term  w12 = w14 + w-1 + w-2    lhs - rhs = 0
