@@ -430,9 +430,12 @@ the branch of PR #63 and a 24 h limit per base. Four of the 24 produced models; 
 limit, seven were killed (three by the memory daemon, four by hand to free the machine), and one
 (`141_1`) needs a rung whose pool matrix has 1.1e9 entries and is out of reach.
 
-⚠ **The top curve is still missing on all four**: each file carries an empty `[* *]` entry at
-`W = {1}` and models only the quotients — one key at `115_1` and `161_1`, three at `129_1` and
-`183_1`. These are new files for bases that previously had none, not completed bases.
+**The top curve is absent on all four, and is not expected.** The method produces an equation only
+for a subhyperelliptic curve, and these four top curves are not: genus 7 at `115_1` and `129_1` and
+genus 11 at `161_1` and `183_1`, each already decided non-subhyperelliptic by the filtering pipeline.
+So each file carries an empty `[* *]` entry at `W = {1}` and models the quotients, which is the whole
+of what the method can give at these bases — one key at `115_1` and `161_1`, three at `129_1` and
+`183_1`.
 
 Validation is internal only: these are not Guo-Yang bases, so there is no published equation to
 compare against. `VerifyModelSet` passes on all four (102 checks, 0 failures), including the
