@@ -54,6 +54,25 @@ function load_covers_and_ws_data_21_2()
     cover_data[{1,2,21,42}] := <HyperellipticCurve(Polynomial(Rationals(), [ -7/16, 3/32, 81/256 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1,3,14,42}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 7/4, -1/8, -9/64 ])), DiagonalMatrix([1,1,1])>;   // genus 1
     cover_data[{1,6,14,21}] := <HyperellipticCurve(Polynomial(Rationals(), [ 0, 7/64, 31/32, -9/64 ])), DiagonalMatrix([1,1,1])>;   // genus 1
+    // ✅ THE THREE GENUS-2 QUOTIENTS, FROM GUO-YANG'S PUBLISHED CURVE, not from our pipeline.
+    // Their pair is y^2 = -(9u-1)(u+7)(u+3), z^2 = -(u+3), u = x^2, and their Atkin-Lehner group
+    // acts by sign changes on (x,y,z): w_2 = (-,-,-), w_3 = (+,+,-), w_7 = (+,-,+), so
+    // w_6 = (-,-,+) and w_14 = (-,+,-).  These three are exactly the involutions with no fixed
+    // points, which is why each quotient has genus 2 rather than 1 or 0.  Each equation below is
+    // the invariant subfield of one of them, in one step:
+    //   X/w_3  : z is the only coordinate negated, so (x,y) survive unchanged.
+    //   X/w_6  : z and W = x*y/z generate it; z^2 = -(u+3) gives u = -(z^2+3), and
+    //            W^2 = u*F(u)/(-(u+3)) = u*(9u-1)*(u+7).
+    //   X/w_14 : y and s = x*z generate it, with s^2 = -u(u+3); that conic has the rational point
+    //            (0,0), so u = -3/(1+T^2) with T = s/u, and clearing the square (1+T^2)^4/(9T^2)
+    //            from y^2 = F(u) leaves 3*(T^2+28)*(7T^2+4)*(T^2+1) up to a square.
+    // Our models are these curves with y scaled by 3/32, 3/16 and 3/32 respectively, so they agree
+    // over Q; IsIsomorphic certifies each one here.
+    // -(9t^2-1)(t^2+7)(t^2+3),  u(9u-1)(u+7) at u = -(t^2+3),  and  3(t^2+28)(7t^2+4)(t^2+1),
+    // expanded (the name s is a coordinate of the weighted ambient below, so not usable here).
+    cover_data[{1,3}]  := <HyperellipticCurve(Polynomial(Rationals(), [ 21, 0, -179, 0, -89, 0, -9 ])), DiagonalMatrix([1,1,1])>;   // genus 2
+    cover_data[{1,6}]  := <HyperellipticCurve(Polynomial(Rationals(), [ 336, 0, 136, 0, -19, 0, -9 ])), DiagonalMatrix([1,1,1])>;   // genus 2
+    cover_data[{1,14}] := <HyperellipticCurve(Polynomial(Rationals(), [ 336, 0, 936, 0, 621, 0, 21 ])), DiagonalMatrix([1,1,1])>;   // genus 2
     // ✅ UPGRADED 2026-09-27 FROM A SNAPSHOT TO AN ORACLE.  This key used to be a copy of our own
     // committed pair, so the top-curve comparison was the pipeline against itself.  It is now
     // GUO-YANG'S PUBLISHED CURVE, re-presented over OUR V_4 by pure algebra -- no pipeline input.
