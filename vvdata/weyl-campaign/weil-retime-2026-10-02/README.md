@@ -22,9 +22,10 @@
 `1071` takes 6 min, against 87 min with #58 alone and 14.8 h before it, so #56 and #57 are another
 factor of 14 on that curve.
 
-**The cost is `#W * sum_p p^(g/2)`**, the number of terms the dominant trace at `n = p^g` needs:
-Eichler-Selberg sums over the `w` in `W`, and each inner sum runs over `t^2 < 4n/Q_w`, about
-`2 sqrt(n/Q_w)` values. Of the 271 curve pairs whose times differ by more than a factor 10 it
+**The cost is `#W * sum_p p^(g/2)`**, the shape of the dominant trace at `n = p^g`:
+Eichler-Selberg sums over the `w` in `W`, and each inner sum runs over `t^2 < 4n/Q_w`. (The
+actual term count carries `Q_w^(-1/2)` weights, and that version fits worse, so this is the shape
+of the sum rather than its length.) Of the 271 curve pairs whose times differ by more than a factor 10 it
 orders 246 correctly, against 198 for the sum of `p^g` that `CurveCostProxy` used before; at a
 factor 2, 440 of 520 against 343.
 

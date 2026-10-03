@@ -5,11 +5,12 @@
 
 retime.psv is one line per finished curve, `id|D,N,g,#W,Qmax|total cpu s|primes done`, scraped from
 logs/weil_main2_<id>.log; weil_design.log lists each curve's admissible primes (weil_design.m).
-Compares three candidate estimates and fits power laws.  Conclusion, 2026-10-02 on 34 curves:
-#W * sum p^(g/2) orders 216 of the 220 pairs that differ by more than 10x in time, the sum of p^g
-only 166; the level does not enter (exponent -0.07); the exact term count with the Q_w^(-1/2)
-weights of the trace formula is WORSE than the unweighted #W version, so the cost grows with #W
-rather than shrinking with the Q_w.
+Compares three candidate estimates and fits power laws.  Conclusion, 2026-10-02 on all 36 curves
+(an earlier fit at 34 of 36 omitted the two slowest and read differently, see README.md):
+#W * sum p^(g/2) orders 246 of the 271 pairs that differ by more than 10x in time against 198 for
+the sum of p^g, and 440 of the 520 pairs differing by more than 2x against 343; the level enters
+weakly (exponent +0.15); the version with the Q_w^(-1/2) weights of the trace formula fits worse
+than the unweighted #W one.
 """
 import sys, re, math
 
