@@ -153,7 +153,23 @@ above is independent of it and settled; the star step is not, so the branch data
 ## ⚠⚠ RETRACTION of the 21_4 hauptmodul, and the structural reason the route stops at 15_4
 ## (whichobject.m, 2026-10-02)
 
-**There is no map X^*(D,N) -> X^*(D,N').** Such a map needs the top Atkin-Lehner group inside
+### ⚠⚠ THE RETRACTION BELOW IS ITSELF WRONG (2026-10-03, Sachi's review of PR #67)
+
+The "no map" statement below is about the projection z -> z, which indeed does not descend. The
+DEGENERACY map z -> q z does: conjugating by diag(q,1) carries w_{q^2} into q times an element of
+the lower-level group, exactly as X_0(4)/w_4 -> X(1). Checked classically at level 84 = 4*21:
+diag(2,1) * (4 -1; 84 -20) * diag(2,1)^-1 = (4 -2; 42 -20) = 2 * (2 -1; 21 -10), and (2 -1; 21 -10)
+is in Gamma_0(21) (scratch, 2026-10-03). So X^*(21,4) -> X^*(21,1) EXISTS, of degree
+psi(4)/psi(1) * #W'/#W = 3, and "the degree 3 was an arithmetic ratio, not the degree of a map" is
+false: it is the degree of this map. ⇒ **The degree-3 Hurwitz solve of hurwitz21.m was about a
+real object, and the hauptmodul 1/s = (t^3 - 4/3 t + 16/27)/(t^2 + 29/12 t + 22/9) is NOT retracted;
+it is TO BE RECHECKED** -- in particular whether the branch data fed to the solve is the branch data
+of this map, and whether its CM fibres (Q(sqrt -7), Q(sqrt -3)) are those of X^*(21,4). The point
+about Galois-stable input not being independent confirmation still stands, so the recheck needs an
+outside value (a CM value or a point count), not the solve's own rationality. The quotient map by
+U = Hall(DN) cap Hall(DN') described below is a different map and everything said about it stands.
+
+**There is no map X^*(D,N) -> X^*(D,N') [WRONG for the degeneracy map; see above].** Such a map needs the top Atkin-Lehner group inside
 <Gamma_0(N'), W'>, and the new involutions are not: w_4 has reduced norm 4, so it would have to be
 2 times a norm-one unit of the maximal order, i.e. w_4/2 integral, which a primitive element of norm
 4 is not. Classically w_4 = (0 -1; 4 0)/2 is visibly outside SL_2(Z), and the reason is geometric --
