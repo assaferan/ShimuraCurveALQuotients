@@ -1,0 +1,192 @@
+forms [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ], m = 0 multipliers (1/2)c_eta(0) = [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ]
+pole orders at oo [ 30, 10, 30, 15, 30, 30, 10, 15, 30 ], at 0 (in q^(1/60)) [ 30, 45, 30, 30, 30, 30, 45, 30, 30 ]
+
+=== d = -15 (d0 -15, conductor 1, 2 split)  Q(lam0) = 15  [L : L_+ (+) L_-] = 1  det L_- = [ <2, 2>, <3, 1>, <5, 1> ]
+  60 cosets, 2 nonzero integral: [
+[ 1/2, 1/2 ],
+[ 0, 1/2 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]  W = -1/(x - 1)
+  coset [ 1/2, 1/2 ]   alphas [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]  W = 1
+  coset [ 0, 1/2 ]     alphas [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]  W = 1
+  nu = [ 1/2, 1/2 ]   form -2  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 1/2, 1/2 ]   form -1  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 1/2 ]   form 9   kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/2 ]   form 10  kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/2 ]   form 11  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 1/2 ]   form 12  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 1/2, 1/2 ]   form 13  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 1/2 ]   form 14  kappa/log2 = -1     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 1/2, 1/2 ]   form 15  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -1     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -7 (d0 -7, conductor 1, 2 split)  Q(lam0) = 7  [L : L_+ (+) L_-] = 7  det L_- = [ <2, 2>, <3, 2>, <5, 2>, <7, 1> ]
+  6300 cosets, 2 nonzero integral: [
+[ 0, 1/2 ],
+[ 1/2, 0 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 ]  W = -1/(x - 1)
+  coset [ 0, 1/2 ]     alphas [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]  W = 1
+  coset [ 1/2, 0 ]     alphas [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]  W = 1
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -1     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 1/2, 0 ]     form -2  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 1/2, 0 ]     form -1  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 0 ]     form 9   kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 0 ]     form 10  kappa/log2 = -1     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 0 ]     form 11  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 0 ]     form 12  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 1/2, 0 ]     form 13  kappa/log2 = -1     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 1/2, 0 ]     form 14  kappa/log2 = -1     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 1/2, 0 ]     form 15  kappa/log2 = -1     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -52 (d0 -52, conductor 1, 2 INERT)  Q(lam0) = 13  [L : L_+ (+) L_-] = 13  det L_- = [ <2, 2>, <3, 2>, <5, 2>, <13, 1> ]
+  11700 cosets, 0 nonzero integral: []
+  coset [ 0, 0 ]       alphas [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ]  W = 1
+  PREDICTED correction per point, -T/4, in units of log 2: [ 0, 0, 0, 0, 0, 0, 0, 0, 0 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -28 (d0 -7, conductor 2, 2 split)  Q(lam0) = 7  [L : L_+ (+) L_-] = 7  det L_- = [ <2, 2>, <3, 2>, <5, 2>, <7, 1> ]
+  6300 cosets, 1 nonzero integral: [
+[ 0, 1/2 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]  W = (-x^2 + x - 1)/(x - 1)
+  coset [ 0, 1/2 ]     alphas [ 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ]  W = x + 1
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -2     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -2     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -2     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -60 (d0 -15, conductor 2, 2 split)  Q(lam0) = 15  [L : L_+ (+) L_-] = 1  det L_- = [ <2, 2>, <3, 1>, <5, 1> ]
+  60 cosets, 1 nonzero integral: [
+[ 0, 1/2 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]  W = (-x^2 + x - 1)/(x - 1)
+  coset [ 0, 1/2 ]     alphas [ 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ]  W = x + 1
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -2     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -2     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -2     in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -240 (d0 -15, conductor 4, 2 split)  Q(lam0) = 60  [L : L_+ (+) L_-] = 4  det L_- = [ <2, 4>, <3, 1>, <5, 1> ]
+  240 cosets, 3 nonzero integral: [
+[ 0, 1/2 ],
+[ 0, 1/4 ],
+[ 0, 3/4 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 1, 2, 2, 4, 6, 8, 10, 12, 14, 16 ]  W = (-2*x^4 + x^3 - x^2 + x - 1)/(x - 1)
+  coset [ 0, 1/2 ]     alphas [ 1, 1, 2, 4, 4, 4, 4, 4, 4, 4, 4 ]  W = 2*x^3 + x^2 + 1
+  coset [ 0, 1/4 ]     alphas [ 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ]  W = x + 1
+  coset [ 0, 3/4 ]     alphas [ 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2 ]  W = x + 1
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <-60, 15, "eta=0", 2>, <60, 15, "eta=0", 2> ]
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <-60, 15, "eta=0", 2>, <60, 15, "eta=0", 2> ]
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <-60, 15, "eta=0", 2>, <0, 0, "eta!=0", 4>, <60, 15, "eta=0", 2> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -2     in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -2     in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): [ <-60, 15, "eta=0", 2>, <0, 0, "eta!=0", -4>, <60, 15, "eta=0", 2> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -2     in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/4 ]     form -2  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form -1  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 9   kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 10  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 11  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 12  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 13  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 14  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/4 ]     form 15  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form -2  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form -1  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 9   kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 10  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 11  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 12  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 13  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 14  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 3/4 ]     form 15  kappa/log2 = -1     in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2, 4, 2, 2, 4, 4, 4, 0, 2 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -48 (d0 -3, conductor 4, 2 INERT)  Q(lam0) = 12  [L : L_+ (+) L_-] = 4  det L_- = [ <2, 4>, <3, 1>, <5, 2> ]
+  1200 cosets, 3 nonzero integral: [
+[ 1/2, 3/4 ],
+[ 0, 1/2 ],
+[ 1/2, 1/4 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 1, 2, 2, 4, 2, 4, 2, 4, 2, 4 ]  W = (2*x^4 + x^3 + x^2 + x + 1)/(x + 1)
+  coset [ 1/2, 3/4 ]   alphas [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]  W = -x + 1
+  coset [ 0, 1/2 ]     alphas [ 1, 1, 2, 0, 0, 0, 0, 0, 0, 0, 0 ]  W = -2*x^3 + x^2 + 1
+  coset [ 1/2, 1/4 ]   alphas [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]  W = -x + 1
+  nu = [ 1/2, 3/4 ]   form -2  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form -1  kappa/log2 = -1/3   in L^v: false sum_x c = -4  terms (j, Q(x), coset, c): [ <-6, 3/4, "eta!=0", -2>, <6, 3/4, "eta!=0", -2> ]
+  nu = [ 1/2, 3/4 ]   form 9   kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form 10  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form 11  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form 12  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form 13  kappa/log2 = -1/3   in L^v: false sum_x c = -4  terms (j, Q(x), coset, c): [ <-6, 3/4, "eta!=0", -2>, <6, 3/4, "eta!=0", -2> ]
+  nu = [ 1/2, 3/4 ]   form 14  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 3/4 ]   form 15  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -4/3   in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -2>, <0, 0, "eta!=0", 4>, <12, 3, "eta=0", -2> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -4/3   in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -4/3   in L^v: true  sum_x c = -12  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -6>, <12, 3, "eta=0", -6> ]
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -4/3   in L^v: true  sum_x c = -12  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -6>, <12, 3, "eta=0", -6> ]
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -4/3   in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -4>, <0, 0, "eta!=0", 8>, <12, 3, "eta=0", -4> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -4/3   in L^v: true  sum_x c = -12  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -8>, <0, 0, "eta!=0", 4>, <12, 3, "eta=0", -8> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -4/3   in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -4/3   in L^v: true  sum_x c = -12  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -4>, <0, 0, "eta!=0", -4>, <12, 3, "eta=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -4/3   in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): [ <-12, 3, "eta=0", -2>, <0, 0, "eta!=0", 4>, <12, 3, "eta=0", -2> ]
+  nu = [ 1/2, 1/4 ]   form -2  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form -1  kappa/log2 = -1/3   in L^v: false sum_x c = -4  terms (j, Q(x), coset, c): [ <-6, 3/4, "eta!=0", -2>, <6, 3/4, "eta!=0", -2> ]
+  nu = [ 1/2, 1/4 ]   form 9   kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form 10  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form 11  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form 12  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form 13  kappa/log2 = -1/3   in L^v: false sum_x c = -4  terms (j, Q(x), coset, c): [ <-6, 3/4, "eta!=0", -2>, <6, 3/4, "eta!=0", -2> ]
+  nu = [ 1/2, 1/4 ]   form 14  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 1/2, 1/4 ]   form 15  kappa/log2 = -1/3   in L^v: false sum_x c = 0  terms (j, Q(x), coset, c): []
+  PREDICTED correction per point, -T/4, in units of log 2: [ 0, 2, -4, -4, 0, -4, 2, -4, 0 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])
+
+=== d = -12 (d0 -3, conductor 2, 2 INERT)  Q(lam0) = 3  [L : L_+ (+) L_-] = 1  det L_- = [ <2, 2>, <3, 1>, <5, 2> ]
+  300 cosets, 1 nonzero integral: [
+[ 0, 1/2 ]
+]
+  coset [ 0, 0 ]       alphas [ 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2 ]  W = (x^2 + x + 1)/(x + 1)
+  coset [ 0, 1/2 ]     alphas [ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]  W = -x + 1
+  nu = [ 0, 1/2 ]     form -2  kappa/log2 = -2/3   in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form -1  kappa/log2 = -2/3   in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <-3, 3/4, "eta!=0", -2>, <0, 0, "eta!=0", 8>, <3, 3/4, "eta!=0", -2> ]
+  nu = [ 0, 1/2 ]     form 9   kappa/log2 = -2/3   in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 10  kappa/log2 = -2/3   in L^v: true  sum_x c = 0  terms (j, Q(x), coset, c): []
+  nu = [ 0, 1/2 ]     form 11  kappa/log2 = -2/3   in L^v: true  sum_x c = 8  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 8> ]
+  nu = [ 0, 1/2 ]     form 12  kappa/log2 = -2/3   in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  nu = [ 0, 1/2 ]     form 13  kappa/log2 = -2/3   in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <-3, 3/4, "eta!=0", -2>, <0, 0, "eta!=0", 8>, <3, 3/4, "eta!=0", -2> ]
+  nu = [ 0, 1/2 ]     form 14  kappa/log2 = -2/3   in L^v: true  sum_x c = -4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", -4> ]
+  nu = [ 0, 1/2 ]     form 15  kappa/log2 = -2/3   in L^v: true  sum_x c = 4  terms (j, Q(x), coset, c): [ <0, 0, "eta!=0", 4> ]
+  PREDICTED correction per point, -T/4, in units of log 2: [ 2/3, 2/3, 0, 0, 4/3, 2/3, 2/3, -2/3, 2/3 ]   (fundamental recipe: [ 2, 4, 0, 0, 4, 2, 4, -2, 2 ])

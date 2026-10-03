@@ -1,0 +1,34 @@
+DIV form -2: [ <-120, 1>, <-12, -1> ]
+    principal part at oo: [ <-30, 2>, <-3, -2>, <-2, -2>, <-1, -4> ]
+    principal part at 0 (q^(1/60)): [ <-30, -2> ]
+DIV form -1: [ <-40, 1>, <-12, -1> ]
+    principal part at oo: [ <-10, 2>, <-2, -2>, <-1, 2> ]
+    principal part at 0 (q^(1/60)): [ <-45, -2> ]
+DIV form 9: [ <-60, 1>, <-120, 1>, <-12, -3>, <-15, 1> ]
+    curve 9: W = { 1, 2, 5, 10 } genus 1
+    principal part at oo: [ <-30, 2>, <-15, 2>, <-3, -6>, <-1, -6> ]
+    principal part at 0 (q^(1/60)): [ <-30, -8> ]
+DIV form 10: [ <-60, 1>, <-12, -3>, <-40, 1>, <-15, 1> ]
+    curve 10: W = { 1, 5, 6, 30 } genus 1
+    principal part at oo: [ <-15, 2>, <-10, 2>, <-3, -6>, <-2, 2> ]
+    principal part at 0 (q^(1/60)): [ <-30, -8> ]
+DIV form 11: [ <-120, 1>, <-12, -2>, <-40, 1> ]
+    curve 11: W = { 1, 3, 5, 15 } genus 0
+    principal part at oo: [ <-30, 2>, <-10, 2>, <-3, -4>, <-2, -2>, <-1, -2> ]
+    principal part at 0 (q^(1/60)): [ <-30, -4> ]
+DIV form 12: [ <-60, 1>, <-120, 1>, <-12, -4>, <-40, 1>, <-15, 1> ]
+    curve 12: W = { 1, 2, 3, 6 } genus 1
+    principal part at oo: [ <-30, 2>, <-15, 2>, <-10, 2>, <-3, -8>, <-1, -4> ]
+    principal part at 0 (q^(1/60)): [ <-30, -10> ]
+DIV form 13: [ <-40, 1>, <-12, -1> ]
+    curve 13: W = { 1, 2, 15, 30 } genus 0
+    principal part at oo: [ <-10, 2>, <-2, -2>, <-1, 2> ]
+    principal part at 0 (q^(1/60)): [ <-45, -2> ]
+DIV form 14: [ <-60, 1>, <-12, -2>, <-15, 1> ]
+    curve 14: W = { 1, 3, 10, 30 } genus 0
+    principal part at oo: [ <-15, 2>, <-3, -4>, <-2, 2>, <-1, -2> ]
+    principal part at 0 (q^(1/60)): [ <-30, -6> ]
+DIV form 15: [ <-120, 1>, <-12, -1> ]
+    curve 15: W = { 1, 6, 10, 15 } genus 0
+    principal part at oo: [ <-30, 2>, <-3, -2>, <-2, -2>, <-1, -4> ]
+    principal part at 0 (q^(1/60)): [ <-30, -2> ]

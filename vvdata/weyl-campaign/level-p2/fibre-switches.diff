@@ -1,0 +1,54 @@
+--- /Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/kappa0-proof/SchoferFormula.m	2026-10-03 19:12:51
++++ SchoferFormula.m	2026-10-03 21:18:28
+@@ -662,9 +662,14 @@
+             vprintf ShimuraQuotients, 5: "\n\t\t\tmu_minus = %o, m - Q(x) = %o\n", gamma_minus + mu_minus, m - (x*ChangeRing(Q,Rationals()),x)/2;
+             norm_mu_minus := ((gamma_minus + mu_minus)*Qrat, gamma_minus + mu_minus)/2;
+             vprintf ShimuraQuotients, 5: "\t\t\tQ(mu_minus) = %o, Q(mu_minus) - m + Q(x) = %o\n", norm_mu_minus, norm_mu_minus - m + (x*ChangeRing(Q,Rationals()),x)/2;
+-            if (m - (x*Qrat,x)/2 eq 0) then // and (gamma_minus + mu_minus ne 0) then // This condition is for Chowla-Selberg constant
++            if (m - (x*Qrat,x)/2 eq 0) then
++                if GetEnv("FIBRE") ne "" then
++                    printf "FIBREPAIR d %o gamma %o m %o mu_zero %o nu %o x %o\n", d, gamma, m, IsZero(mu_bar), gamma_minus + mu_minus, x;
++                end if;
+                 if (gamma ne 0) then
+                     Yang_tt := true;
++                elif GetEnv("FIBRE_SKIP") ne "" and (GetEnv("FIBRE_SKIP_DS") eq "" or IntegerToString(d) in Split(GetEnv("FIBRE_SKIP_DS"), ",")) and not IsZero(mu_bar) then
++                    skipped := true;
+                 else
+                     m0, m_cond := SquareFreeFactorization(Integers()!m);
+                     fac := Factorization(m_cond);
+@@ -682,7 +687,7 @@
+ 
+     // trying to imitate Yang's code
+     // !!! Don't know why this is working !!!
+-    if Yang_tt then
++    if Yang_tt and not (GetEnv("FIBRE_SKIP") ne "" and (GetEnv("FIBRE_SKIP_DS") eq "" or IntegerToString(d) in Split(GetEnv("FIBRE_SKIP_DS"), ","))) then
+         d0 := FundamentalDiscriminant(d);
+         f2 := d div d0;
+         // f2 = 1 means d is already FUNDAMENTAL (conductor 1), so there is no conductor prime for
+@@ -1055,6 +1060,7 @@
+     // -28, -60, -240 (split, fires) and -48 (inert, does not) all agree exactly.
+     _, cond := IsSquare(d div d_fund);
+     Nprimes := [p : p in PrimeDivisors(N div GCD(N, d_fund)) | cond mod p ne 0 or KroneckerSymbol(d_fund, p) eq 1];
++    if GetEnv("FIBRE_NOOUTER") ne "" and (GetEnv("FIBRE_NOOUTER_DS") eq "" or IntegerToString(d) in Split(GetEnv("FIBRE_NOOUTER_DS"), ",")) then Nprimes := []; end if;
+     // The rational survivor of kappa^-_0(0) is the N-part sum_{p|N/(N,d_fund)} log p (Lemma 20); its
+     // multiplier is the principled constant term sum_eta c_eta(0) of the vector-valued input F_f,
+     // computed via the Kudla-Yang weight-3/2 dual Eisenstein obstruction (m0_multiplier). This replaces
+@@ -1316,6 +1322,18 @@
+         tt := Realtime();
+         vprintf ShimuraQuotients, 2: "\tabsolute values at rational CM point %o/%o (d = %o)...", j, #pt_list_rat, d;
+         vals := AbsoluteValuesAtRationalCMPoint(all_fs, d, Xstar, Ldata : Lambda := lambdas[-d]);
++        if GetEnv("FIBRE_CORR") ne "" then
++            for ent in Split(GetEnv("FIBRE_CORR"), ";") do
++                parts := Split(ent, ":");
++                if StringToInteger(parts[1]) ne d then continue; end if;
++                kk := StringToInteger(parts[2]); cc := StringToRational(parts[3]);
++                ii := Index(keys_fs, kk);
++                if cc ne 0 and vals[ii] ne LogSum(0) and vals[ii] ne LogSum(Infinity()) then
++                    printf "FIBRECORR d %o form %o adds %o log 2\n", d, kk, 2*cc;
++                    vals[ii] +:= LogSum(2*cc, 2);
++                end if;
++            end for;
++        end if;
+         for i->v in vals do
+             Append(~table[i], vals[i]);
+         end for;

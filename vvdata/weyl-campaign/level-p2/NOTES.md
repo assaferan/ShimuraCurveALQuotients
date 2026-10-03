@@ -207,3 +207,42 @@ unit, L_-,p = <-1> ⊥ <-p^{2k}|d_0| v^2>, index p^{2k-1}, p^k - 1 integral cose
 multiples of e_2'/p lie in L^v. Inert fundamental d at p || N: no optimal embedding (nu_p = 0), as
 predicted; the inert case arises only through the conductor. p = 2: index 2^{2k-1}, divisors
 (1, 2k-1), ONE integral coset in L^v -- computed, not yet derived.
+
+## The restored terms at a conductor prime are a FIBRE SUM, and it is exact for all nine forms (fibresum.m, 2026-10-03)
+
+The sum Theorem B restores, before the direct-sum identification of prop:mult, is
+
+    T = sum_{nu != 0 in L_-^v/L_-}  kappa^-_nu(0)  sum_{x in L_+^v, x + nu in L^v}  c_{[x+nu]}(-Q(x)),      correction = -T/4 per point,
+
+with kappa^-_nu(0) = log p * (W_nu/W_0)'(X = 1) from the counting series at p (prop:fibre in the
+standalone).  `fibresum.m` evaluates it on X_0^15(2) for the nine forms of the model set; the local
+series are reconstructed from alpha_0..alpha_10 (`fibresum.log`) and unchanged with alpha_0..alpha_12
+(`fibresum12` run, scratch).  At a conductor prime two new kinds of pair appear: nu in L^v with
+x = lambda_0/2 NOT in L but x + nu in L (coefficient c_0(-Q(lambda_0/2)) = c_oo(-|d|/16), the pole of
+f at tau_{d/4}), and nu NOT in L^v with x = lambda_0/4, x + nu in L^v over a nonzero coset (the cusp-0
+coefficient at q^{-3/4}).  With m = (1/2)c_eta(0), a = c_oo(-|d|/16), b = cusp-0 coefficient of q^{-3/4}:
+
+    d = -240 (split, f = 4):  one coset in L^v, kappa = -2 log 2          -> (m + a) log 2
+    d = -48  (inert, f = 4):  that coset kappa = -4/3 log 2, two cosets outside L^v kappa = -1/3 log 2
+                                                                           -> (2/3 (m + a) + 1/3 b) log 2
+    d = -60, -28 (split, f = 2): one coset, kappa = -2 log 2              -> m log 2  (= the fundamental recipe)
+
+TRUTH for every form: each Borcherds form is a function on the genus-0 star curve with known divisor
+(DivisorOfBorcherdsForm), so |value| = C prod |s(d) - s(d_i)|^{m_i} with s from Table 45 (27 points,
+tests/_offline/GuoYang_15_2.m).  `fibrepipe.m` + the switches in `fibre-switches.diff` (applied to a
+scratch copy of SchoferFormula.m, never to a worktree) give the raw table in variant A (current code)
+and B (stripped at -240/-48 plus the fibre sum, injected DOUBLED -- `evidence.py` halves it); C is read
+at d = -7 and checked at 6-8 further points per form before -240/-48 are judged (`evidence.log`):
+
+    fibre sum:              18 / 18 exact (9 forms x {-240, -48})
+    "fire iff split" rule:   8 / 18  (right at -240 iff a = 0, i.e. tau_-60 not in the divisor;
+                                      right at -48 iff m + a = 0 and b = 0 -- INCLUDING the one form
+                                      tests/M0PoleSum.m checks, which is why the rule looked right)
+    Yang's conductor term (Kappa, `Yang_tt`): 2^(4/3) at -48 for the two forms with b != 0 (the
+                                      pipeline's RationalNumber conversion then dies -- variant A crashed)
+
+⚠ tests/M0PoleSum.m called its form `fs[-2]`; the table rows follow Keys(fs), and row 1 is key 11
+(the cover W = {1,3,5,15}, divisor (-40)+(-120)-2(-12), hence (1280/9)|s(s-2)|).  Fixed on kappa0-proof.
+⚠ The code still applies the splitting rule (exact at every conductor-2 point; conductor-4 points are
+never offered to the model search).  Implementing T needs the local factors at a conductor prime in
+closed form or by counting (brute force is fine at p = 2, 3; 9^k at p = 3 for k <= 8 or so).

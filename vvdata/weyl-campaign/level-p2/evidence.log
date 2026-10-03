@@ -1,0 +1,99 @@
+form key -2  C=16/3
+   d=-15   truth=4            A=4             OK
+   d=-52   truth=16/3         A=16/3          OK
+   d=-28   truth=4/3          A=4/3           OK
+   d=-60   truth=100/9        A=100/9         OK
+   d=-88   truth=32/3         A=32/3          OK
+   d=-132  truth=16           A=16            OK
+   d=-120  A=Log0 (divisor point)
+   d=-40   truth=32/3         A=32/3          OK
+   d=-240  truth=196/9        A=196/9        fibre=196/9        stripped=49/9          FIBRE OK  A OK
+   d=-48   truth=12           A=12           fibre=12           stripped=12            FIBRE OK  A OK
+form key -1  C=320/3
+   d=-15   truth=400/3        A=400/3         OK
+   d=-52   truth=320/3        A=320/3         OK
+   d=-28   truth=240          A=240           OK
+   d=-60   truth=80/9         A=80/9          OK
+   d=-88   truth=1280/3       A=1280/3        OK
+   d=-132  truth=320/3        A=320/3         OK
+   d=-120  truth=640/3        A=640/3         OK
+   d=-40   A=Log0 (divisor point)
+   d=-240  truth=2000/9       A=2000/9       fibre=2000/9       stripped=125/9         FIBRE OK  A OK
+   d=-48   truth=80/3         A=IRRATIONAL(4/3Log2-Log3+Log5) fibre=80/3         stripped=20/3          FIBRE OK  A wrong
+form key 9  C=20/3
+   d=-15   A=Log0 (divisor point)
+   d=-52   truth=65/36        A=65/36         OK
+   d=-28   truth=35/9         A=35/9          OK
+   d=-60   A=Log0 (divisor point)
+   d=-88   truth=2695/18      A=2695/18       OK
+   d=-132  truth=165/4        A=165/4         OK
+   d=-120  A=Log0 (divisor point)
+   d=-40   truth=25/18        A=25/18         OK
+   d=-240  truth=4900/27      A=1225/27      fibre=4900/27      stripped=1225/27       FIBRE OK  A wrong
+   d=-48   truth=15/4         A=60           fibre=15/4         stripped=60            FIBRE OK  A wrong
+form key 10  C=100/3
+   d=-15   A=Log0 (divisor point)
+   d=-52   truth=325/36       A=325/36        OK
+   d=-28   truth=175          A=175           OK
+   d=-60   A=Log0 (divisor point)
+   d=-88   truth=13475/9      A=13475/9       OK
+   d=-132  truth=275/4        A=275/4         OK
+   d=-120  truth=625/6        A=625/6         OK
+   d=-40   A=Log0 (divisor point)
+   d=-240  truth=12500/27     A=3125/27      fibre=12500/27     stripped=3125/27       FIBRE OK  A wrong
+   d=-48   truth=25/12        A=100/3        fibre=25/12        stripped=100/3         FIBRE OK  A wrong
+form key 11  C=1280/9
+   d=-15   truth=400/3        A=400/3         OK
+   d=-52   truth=1280/9       A=1280/9        OK
+   d=-28   truth=80           A=80            OK
+   d=-60   truth=2000/81      A=2000/81       OK
+   d=-88   truth=10240/9      A=10240/9       OK
+   d=-132  truth=1280/3       A=1280/3        OK
+   d=-120  A=Log0 (divisor point)
+   d=-40   A=Log0 (divisor point)
+   d=-240  truth=98000/81     A=98000/81     fibre=98000/81     stripped=6125/81       FIBRE OK  A OK
+   d=-48   truth=80           A=80           fibre=80           stripped=80            FIBRE OK  A OK
+form key 12  C=1600/9
+   d=-15   A=Log0 (divisor point)
+   d=-52   truth=1300/27      A=1300/27       OK
+   d=-28   truth=700/3        A=700/3         OK
+   d=-60   A=Log0 (divisor point)
+   d=-88   truth=431200/27    A=431200/27     OK
+   d=-132  truth=1100         A=1100          OK
+   d=-120  A=Log0 (divisor point)
+   d=-40   A=Log0 (divisor point)
+   d=-240  truth=2450000/243  A=612500/243   fibre=2450000/243  stripped=153125/243    FIBRE OK  A wrong
+   d=-48   truth=25           A=400          fibre=25           stripped=400           FIBRE OK  A wrong
+form key 13  C=320/3
+   d=-15   truth=400/3        A=400/3         OK
+   d=-52   truth=320/3        A=320/3         OK
+   d=-28   truth=240          A=240           OK
+   d=-60   truth=80/9         A=80/9          OK
+   d=-88   truth=1280/3       A=1280/3        OK
+   d=-132  truth=320/3        A=320/3         OK
+   d=-120  truth=640/3        A=640/3         OK
+   d=-40   A=Log0 (divisor point)
+   d=-240  truth=2000/9       A=2000/9       fibre=2000/9       stripped=125/9         FIBRE OK  A OK
+   d=-48   truth=80/3         A=IRRATIONAL(4/3Log2-Log3+Log5) fibre=80/3         stripped=20/3          FIBRE OK  A wrong
+form key 14  C=5/4
+   d=-15   A=Log0 (divisor point)
+   d=-52   truth=65/192       A=65/192        OK
+   d=-28   truth=35/12        A=35/12         OK
+   d=-60   A=Log0 (divisor point)
+   d=-88   truth=2695/192     A=2695/192      OK
+   d=-132  truth=165/64       A=165/64        OK
+   d=-120  truth=125/64       A=125/64        OK
+   d=-40   truth=25/192       A=25/192        OK
+   d=-240  truth=25/3         A=25/12        fibre=25/3         stripped=25/3          FIBRE OK  A wrong
+   d=-48   truth=5/16         A=5            fibre=5/16         stripped=5             FIBRE OK  A wrong
+form key 15  C=16/3
+   d=-15   truth=4            A=4             OK
+   d=-52   truth=16/3         A=16/3          OK
+   d=-28   truth=4/3          A=4/3           OK
+   d=-60   truth=100/9        A=100/9         OK
+   d=-88   truth=32/3         A=32/3          OK
+   d=-132  truth=16           A=16            OK
+   d=-120  A=Log0 (divisor point)
+   d=-40   truth=32/3         A=32/3          OK
+   d=-240  truth=196/9        A=196/9        fibre=196/9        stripped=49/9          FIBRE OK  A OK
+   d=-48   truth=12           A=12           fibre=12           stripped=12            FIBRE OK  A OK

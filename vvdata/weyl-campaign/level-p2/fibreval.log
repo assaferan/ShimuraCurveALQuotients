@@ -1,0 +1,80 @@
+FIBREPAIR d -240 gamma (0 0 0) m 15 mu_zero false nu (   35 -41/2  65/2) x (   7
+-9/2 13/2)
+FIBREPAIR d -240 gamma (0 0 0) m 15 mu_zero false nu (   35 -41/2  65/2) x (   
+-7   9/2 -13/2)
+FIBREPAIR d -48 gamma (0 0 0) m 3 mu_zero false nu (  150  -123 375/2) x (   -6 
+5 -15/2)
+FIBREPAIR d -48 gamma (0 0 0) m 3 mu_zero false nu (  150  -123 375/2) x (   6  
+-5 15/2)
+FIBREPAIR d -48 gamma (1/2   0   1) m 3/4 mu_zero false nu ( 271/2 -223/2  
+679/4) x (   -3   5/2 -15/4)
+FIBREPAIR d -48 gamma (1/2   0   1) m 3/4 mu_zero false nu (115/2 -93/2 285/4) x
+(   3 -5/2 15/4)
+FIBREPAIR d -48 gamma (-1/2    0 -1/2) m 3/4 mu_zero true nu ( -43/2   35/2 
+-107/4) x (   -3   5/2 -15/4)
+FIBREPAIR d -48 gamma (-1/2    0 -1/2) m 3/4 mu_zero false nu ( 257/2 -211/2  
+643/4) x (   3 -5/2 15/4)
+form keys [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+VALUE d -7  fs[-2]: -2Log3+Log5+Log7   truth: 560/9
+VALUE d -7  fs[-1]: -3Log3+2Log5+Log7
+VALUE d -7  fs[9]: -Log3+Log5
+VALUE d -7  fs[10]: -Log3+Log5
+VALUE d -7  fs[11]: -Log3+Log7
+VALUE d -7  fs[12]: -2Log3+Log5+Log7
+VALUE d -7  fs[13]: -Log3+Log5
+VALUE d -7  fs[14]: -2Log3+2Log5
+VALUE d -7  fs[15]: -Log3+Log7
+VALUE d -15  fs[-2]: -Log3+2Log5   truth: 400/3
+VALUE d -15  fs[-1]: Log0
+VALUE d -15  fs[9]: -Log3+2Log5
+VALUE d -15  fs[10]: Log0
+VALUE d -15  fs[11]: 0
+VALUE d -15  fs[12]: Log0
+VALUE d -15  fs[13]: -Log3+2Log5
+VALUE d -15  fs[14]: Log0
+VALUE d -15  fs[15]: 0
+VALUE d -52  fs[-2]: 8Log2-2Log3+Log5   truth: 1280/9
+VALUE d -52  fs[-1]: 2Log2-3Log3+2Log5+Log13
+VALUE d -52  fs[9]: 6Log2-Log3+Log5
+VALUE d -52  fs[10]: -6Log2-Log3+Log5+Log13
+VALUE d -52  fs[11]: 4Log2-Log3
+VALUE d -52  fs[12]: -2Log2-2Log3+Log5+Log13
+VALUE d -52  fs[13]: 6Log2-Log3+Log5
+VALUE d -52  fs[14]: -2Log2-2Log3+2Log5+Log13
+VALUE d -52  fs[15]: 4Log2-Log3
+VALUE d -28  fs[-2]: Log5   truth: 80
+VALUE d -28  fs[-1]: -Log3+2Log5+Log7
+VALUE d -28  fs[9]: Log3+Log5
+VALUE d -28  fs[10]: -Log3+Log5+Log7
+VALUE d -28  fs[11]: -Log3
+VALUE d -28  fs[12]: -2Log3+Log5+Log7
+VALUE d -28  fs[13]: Log3+Log5
+VALUE d -28  fs[14]: 2Log5+Log7
+VALUE d -28  fs[15]: -Log3
+VALUE d -60  fs[-2]: -4Log3+3Log5   truth: 2000/81
+VALUE d -60  fs[-1]: Log0
+VALUE d -60  fs[9]: -2Log3+Log5
+VALUE d -60  fs[10]: Log0
+VALUE d -60  fs[11]: -2Log3+2Log5
+VALUE d -60  fs[12]: Log0
+VALUE d -60  fs[13]: -2Log3+Log5
+VALUE d -60  fs[14]: Log0
+VALUE d -60  fs[15]: -2Log3+2Log5
+VALUE d -240  fs[-2]: -4Log3+3Log5+2Log7   truth: 98000/81
+VALUE d -240  fs[-1]: -5Log3+5Log5+2Log7
+VALUE d -240  fs[9]: -2Log3+3Log5
+VALUE d -240  fs[10]: -Log3+2Log5
+VALUE d -240  fs[11]: -2Log3+2Log7
+VALUE d -240  fs[12]: -3Log3+2Log5+2Log7
+VALUE d -240  fs[13]: -2Log3+3Log5
+VALUE d -240  fs[14]: -3Log3+5Log5
+VALUE d -240  fs[15]: -2Log3+2Log7
+VALUE d -48  fs[-2]: 4Log2+Log5   truth: 80
+VALUE d -48  fs[-1]: 4Log2+2Log5
+VALUE d -48  fs[9]: 2Log2-Log3+Log5
+VALUE d -48  fs[10]: Log5
+VALUE d -48  fs[11]: 2Log2+Log3
+VALUE d -48  fs[12]: 2Log2+Log3+Log5
+VALUE d -48  fs[13]: 2Log2-Log3+Log5
+VALUE d -48  fs[14]: 2Log2-Log3+2Log5
+VALUE d -48  fs[15]: 2Log2+Log3
