@@ -1,0 +1,30 @@
+
+=== d = -72  d0 -8  f 3  k 1  eps 1
+  coset [ 1/3, 0 ]   rho 0 in L^v true  counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  coset [ 2/3, 0 ]   rho 0 in L^v true  counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  zero coset        counted [ 1, 3, 5, 7, 9, 11 ]  lemma [ 1, 3, 5, 7, 9, 11 ]  OK
+  3 integral p-primary cosets (lemma: p^k = 3), all OK
+
+=== d = -648  d0 -8  f 9  k 2  eps 1
+  coset [ 0, 1/3 ]   rho 1 in L^v true  counted [ 1, 3, 6, 6, 6, 6 ]  lemma [ 1, 3, 6, 6, 6, 6 ]  OK
+  coset [ 2/3, 5/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  coset [ 1/3, 4/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  coset [ 2/3, 2/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  zero coset        counted [ 1, 3, 3, 9, 15, 21 ]  lemma [ 1, 3, 3, 9, 15, 21 ]  OK
+  coset [ 1/3, 1/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  coset [ 0, 2/3 ]   rho 1 in L^v true  counted [ 1, 3, 6, 6, 6, 6 ]  lemma [ 1, 3, 6, 6, 6, 6 ]  OK
+  coset [ 2/3, 8/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  coset [ 1/3, 7/9 ] rho 0 in L^v false counted [ 2, 2, 2, 2, 2, 2 ]  lemma [ 2, 2, 2, 2, 2, 2 ]  OK
+  9 integral p-primary cosets (lemma: p^k = 9), all OK
+
+=== d = -387  d0 -43  f 3  k 1  eps -1
+  coset [ 0, 1/3 ]   rho 0 in L^v true  counted [ 0, 0, 0, 0, 0, 0 ]  lemma [ 0, 0, 0, 0, 0, 0 ]  OK
+  zero coset        counted [ 1, 3, 1, 3, 1, 3 ]  lemma [ 1, 3, 1, 3, 1, 3 ]  OK
+  coset [ 0, 2/3 ]   rho 0 in L^v true  counted [ 0, 0, 0, 0, 0, 0 ]  lemma [ 0, 0, 0, 0, 0, 0 ]  OK
+  3 integral p-primary cosets (lemma: p^k = 3), all OK
+
+=== d = -603  d0 -67  f 3  k 1  eps -1
+  coset [ 1/3, 1/3 ] rho 0 in L^v true  counted [ 0, 0, 0, 0, 0, 0 ]  lemma [ 0, 0, 0, 0, 0, 0 ]  OK
+  coset [ 2/3, 2/3 ] rho 0 in L^v true  counted [ 0, 0, 0, 0, 0, 0 ]  lemma [ 0, 0, 0, 0, 0, 0 ]  OK
+  zero coset        counted [ 1, 3, 1, 3, 1, 3 ]  lemma [ 1, 3, 1, 3, 1, 3 ]  OK
+  3 integral p-primary cosets (lemma: p^k = 3), all OK

@@ -246,3 +246,14 @@ at d = -7 and checked at 6-8 further points per form before -240/-48 are judged 
 ⚠ The code still applies the splitting rule (exact at every conductor-2 point; conductor-4 points are
 never offered to the model search).  Implementing T needs the local factors at a conductor prime in
 closed form or by counting (brute force is fine at p = 2, 3; 9^k at p = 3 for k <= 8 or so).
+
+## Closed form of the m = 0 local factors at an odd conductor prime (wcond_check.m, 2026-10-03)
+
+On L_-,p = <-1> + <-p^{2k} c> (lem:conductor), with eps = (d_0/p) and nu_r = (0, r/p^k), rho = ord_p r:
+alpha_j(nu_r) = p^{floor(j/2)} (j <= 2 rho), (1+eps) p^rho (j > 2 rho);
+alpha_j(0) = p^{floor(j/2)} (j <= 2k), (1+eps)(p-1)p^{k-1} ceil((j-2k)/2) + p^{k-(j mod 2)} (j > 2k).
+kappa^-_{nu_r}(0) = -2 p^{rho-k+1}/(p-1) log p (split), -2/(p^{k-1}(p+1)) (p^rho + 2(p^rho-1)/(p-1)) log p (inert).
+`wcond_check.m` counts on the actual plane of X_0^10(3) at p = 3: d = -72, -648 (split, k = 1, 2),
+-387, -603 (inert, k = 1), every 3-primary integral coset, 6 terms: all agree (`wcond_check.log`).
+At p = 2 the same formulas give every series of `fibresum.log` (k = 1, 2, both types) -- lem:Wcond in
+the standalone (proved for odd p; p = 2 computed).
