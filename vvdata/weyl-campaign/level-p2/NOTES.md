@@ -303,3 +303,15 @@ Also forced (gyforce_21_2.m, gyforce_55_1.m, log gyforce_21_2_55_1.log): X_0^21(
 5 split in Q(i) -- the lem:Wcond branch -- term -4 log 5 on the s-form, -1 on s~, s(-100) = 1/5
 reproduced; X_0^55(1) d = -27, ramified, terms -1 log 3 on both Hauptmodul forms, s(-27) = 0
 reproduced.  All other table points of both bases unchanged and OK.
+
+## q = 2 outside an odd level: same term, eight Guo-Yang values reproduced (gyforce_*.m, 2026-10-04)
+
+2 not dividing DN: O (x) Z_2 = M_2(Z_2); R_f (x) Z_2 = Z_2[lambda/2] whether d_0 is odd or even, and
+optimality makes Z_2^2 a free rank-1 module over it (quadratic orders are Gorenstein: a lattice with
+multiplier ring exactly R is an invertible, hence principal, R-ideal), so lambda_0 = (0, d/4; 1, 0).
+Plane <-1> + <-|d|/4>: lem:conductor2's for odd d_0, anisotropic for even d_0; L_2^v = L_2 + Z_2 e_1/2
+with Q(e_1/2) = -1/4, so NO integral coset in L^v (standalone lem:unimod2).  Forced GY points
+(gyforce_q2.log): 55_1 -12 (inert: -1 log 2 on both Hauptmodul forms), -60 (split: +1 on s);
+57_1 -16 (d_0 = -4, even: -1), -28; 51_1 -12, -28; 39_1 -28, -60; 35_1 -28, -60 and -315 (q = 3 | d_0,
++1 log 3) -- all OK, every other row unchanged.  The forced points are now permanent in the offline
+tests (ValuesAtCMPoints : Force).
