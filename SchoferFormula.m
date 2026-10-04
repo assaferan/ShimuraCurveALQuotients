@@ -1152,10 +1152,14 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // ground truth on 21 prime-level bases).  It does not depend on d, so it runs once per form and
     // is cached on the form as an associative array indexed by the primes of N.
     if not IsEmpty(Nprimes) then
-        if exists{eta : eta in etas | not assigned eta`m0mult} then
-            mults := M0MultipliersBySupport(etas, Ldata, D, N);
-            for i in [1..#etas] do
-                e := etas[i];
+        // computed only for the forms that still lack it: the forms evaluated differ from point to
+        // point (those singular at the point are left out), and at |L^v/L| = 88200 one computation
+        // is an hour, so recomputing for all of them whenever one is new doubled the X_0^6(35) run
+        todo := [eta : eta in etas | not assigned eta`m0mult];
+        if not IsEmpty(todo) then
+            mults := M0MultipliersBySupport(todo, Ldata, D, N);
+            for i in [1..#todo] do
+                e := todo[i];
                 e`m0mult := mults[i];
             end for;
         end if;

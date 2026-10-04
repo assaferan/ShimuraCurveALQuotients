@@ -61,7 +61,12 @@ the t-shift fallback answers every higher m = 0 rung (run210_1.sh is the recipe)
 NMZ_TIMEOUT=7200 (m > 0 rungs are not covered by the fallback and solve live), BFPROGRESS=1 BFCACHE=1,
 VERB:=2, OUTDIR ~/gymodels/composite/out, 96 h timeout; logs ~/gymodels/composite/logs/6_35.{log,err},
 solver lines in tree/polymake/nmzsolve.err ("# tshift fallback: ..." = a rung answered from the cache).
-The pool is ~20000 eta quotients, so expect a long Borcherds stage. When it finishes: the values at the
+FINISHED 2026-10-04 13:20 (2 h 25 min; the Borcherds stage was six minutes, the two
+m = 0 multiplier computations an hour each — now computed only for the forms that lack it): 66 cover
+keys written, data/models/models_6_35.m. ⇒ **FIRST OUTSIDE TEST OF prop:composite PASSED**: all 39
+stored curves of genus >= 1 have the trace formula's point counts over F_p and F_p^2 at p = 11, 13,
+17, 19 (156/156; campaign composite/check635.m). The pool was 170 eta quotients at pole order 210,
+not 20000. When it finishes: the values at the
 CM points go through the Hauptmodul-consistency check (tests/HauptmodulGroundTruth.m pattern), the first
 test of prop:composite's multipliers against numbers they did not produce; the five other DN = 210 bases
 can reuse the same tree.

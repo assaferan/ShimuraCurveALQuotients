@@ -434,3 +434,18 @@ a regression, not something to add to the list.
 ⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
+
+## The first composite-level base: `models_6_35.m` (2026-10-04, branch composite-level, PR #74)
+
+`X_0^6(35)` is the first base with a composite squarefree level in the data. The default recipe
+(`genmodels.m`, no flags) on lovelace, with the level-420 polytope `(420, 145, 0)` enumerated in
+August (campaign `vvdata/weyl-campaign/nmz_420_145_0.txt.gz`) installed as
+`polymake/polymake_solution_420_145_0` and the t-shift fallback answering the higher rungs
+(`polymake/tshift_{core,w0}_420.txt`); 2 h 25 min, of which two hours were the m = 0 multipliers on
+the 88200-element discriminant group (computed twice — fixed since). 66 cover keys: 12 of genus 0,
+21 of genus 1, 18 of genus 2, 3 of genus 3 as `y^2 + h y = f`, and 3 of genus 3 as fibre products
+(`CRV`). The Schofer values here use, for the first time, the m = 0 term at a composite level
+(prop:composite: one multiplier per prime of N). **Outside check**: every stored curve of genus >= 1
+has the point counts over F_p and F_{p^2} of the Eichler-Selberg trace formula at p = 11, 13, 17, 19
+(156 of 156; campaign `composite/check635.m`), which knows nothing about CM values. No published
+equation or CM value exists for this base.
