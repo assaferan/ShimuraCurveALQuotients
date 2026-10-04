@@ -1,9 +1,8 @@
-// ⚠ OFFLINE, ON COST GROUNDS ONLY (`run_tests.m` globs just `tests/*.m`). Re-deriving 39_2 takes
-// over 17 minutes, which does not belong in a CI slot.  MEASURED 2026-09-25: passes in 680 s,
-// 14 curve comparisons, 3 involution comparisons, 14/14 expected covers matched.
-// ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because nothing in
-// CI runs this directory and the line here used to assert "the test is expected to pass" without
-// anyone having run it.  State what was measured and when, not what is expected.
+// COST: 636 s on a Mac, 889 s in CI (2026-10-01), so it runs in CI: 14 curve comparisons,
+// 3 involution comparisons, 14/14 expected covers matched.
+// ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because it lived in
+// tests/_offline, which CI does not run, and the line here used to assert "the test is expected
+// to pass" without anyone having run it.  State what was measured and when, not what is expected.
 // It became possible at all on 2026-09-07, when the coprime-to-level CM filter became OFF BY
 // DEFAULT: before that 39_2 needed CMNONCOPRIME=1, and a plain X0_*.m test cannot set an env var.
 //
