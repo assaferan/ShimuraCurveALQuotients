@@ -449,3 +449,12 @@ the 88200-element discriminant group (computed twice — fixed since). 66 cover 
 has the point counts over F_p and F_{p^2} of the Eichler-Selberg trace formula at p = 11, 13, 17, 19
 (156 of 156; campaign `composite/check635.m`), which knows nothing about CM values. No published
 equation or CM value exists for this base.
+
+`models_10_21.m` (2026-10-05): the second composite-level base, same recipe and the same level-420
+cache (DN = 210 shares the polytope); 3 h 50 min on lovelace, of which three multiplier computations
+of about 73 min each (forms first met at later CM points). 66 cover keys in the same shape as
+`6_35` (12 of genus 0, 21 of genus 1, 18 of genus 2, 3 + 3 of genus 3). The multipliers at the two
+level primes differ here (for one form 6 at 3 and -7 at 7), so this is the first base where the
+per-prime structure of prop:composite acts in production. Outside check as for `6_35`: 156 of 156
+point counts of the Eichler-Selberg trace formula at p = 11, 13, 17, 19 (campaign
+`composite/checkcomp.m`).
