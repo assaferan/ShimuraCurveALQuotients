@@ -64,16 +64,19 @@ for X in curves do
     found := false; reasons := [];
     for gens in genlist do
     fs := [ent[<X`D, X`N, U>] : U in gens];
-    if exists{sub : sub in Subsets({1..#fs}) | not IsEmpty(sub) and Degree(SquarefreePart(&*[fs[i] : i in sub])) eq 0} then
+    if IsDegenerateFactorSet(fs) then
         Append(~reasons, "degenerate factor set"); continue;
     end if;
     K := FibreProductFunctionField(fs);
     if Genus(K) ne X`g then
         Append(~reasons, Sprintf("genus %o, expected %o", Genus(K), X`g)); continue;
     end if;
-    // trace formula at three good primes, F_p and F_{p^2}
-    agree := true; checked := 0;
-    for p in [q : q in [5,7,11,13,17,19,23,29] | DN mod q ne 0][1..3] do
+    // trace formula at three GOOD primes, F_p and F_{p^2}: a prime where a factor is a square mod p
+    // or the genus drops is bad reduction of this model and is replaced by the next prime
+    agree := true; checked := 0; p := 3; tried := 0;
+    while checked lt 3 and tried lt 60 do
+        p := NextPrime(p); tried +:= 1;
+        if DN mod p eq 0 then continue; end if;
         Kp := RationalFunctionField(GF(p)); L := Kp;
         try
             for f in fs do
@@ -81,7 +84,7 @@ for X in curves do
                 L := FunctionField(Y^2 - L!Evaluate(PolynomialRing(GF(p))!f, Kp.1));
             end for;
         catch err
-            continue;                       // a factor is a square mod p: bad reduction, skip
+            continue;
         end try;
         if Genus(L) ne X`g then continue; end if;
         cnt := [&+[e * #Places(L, e) : e in Divisors(d)] : d in [1..2]];
@@ -91,16 +94,15 @@ for X in curves do
             agree := false; break;
         end if;
         checked +:= 1;
-    end for;
+    end while;
     if not agree then continue; end if;
-    if checked eq 0 then Append(~reasons, "no usable prime among the first three"); continue; end if;
+    if checked lt 3 then Append(~reasons, Sprintf("only %o good primes among the first 60", checked)); continue; end if;
     found := true; break;
     end for;
     if not found then
         printf "REJECT %o_%o W=%o: %o\n", X`D, X`N, Sort(SetToSequence(X`W)), reasons;
         nrej +:= 1; continue;
     end if;
-    if checked lt 3 then printf "NOTE %o_%o W=%o: accepted on %o prime(s)\n", X`D, X`N, Sort(SetToSequence(X`W)), checked; end if;
     C, eqns := FibreProductCurve(fs);
     Wseq := Sort(SetToSequence(X`W));
     line := Sprintf("models[[Integers()|%o]] := [* <%o, \"CRV\", [ Strings() | %o ]> *];",
