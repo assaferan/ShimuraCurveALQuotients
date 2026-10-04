@@ -1317,11 +1317,12 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     cm_pts_must_quad := [p : p in cm_pts_quad | p[1] in Include];
     // A NON-FUNDAMENTAL discriminant is evaluated only when asked for (Include, or NONFUND=1): the
     // class-number lists the search draws on contain conductors 2, 3, 4, 6, 8 and more, and at such
-    // a point the m = 0 term is the fibre sum and the m > 0 normalisation is checked against
-    // published values but not derived (paper/kappa0-proof-standalone.tex, rem:mpos), so the models
-    // should not rest on them.  The anchors (zeros and poles of the Hauptmoduln) are unaffected: they
-    // are in Include and are never evaluated.  Applied here, not in the candidate search, so that the
-    // Borcherds search and the forms it returns do not change.
+    // a point the m = 0 term is the fibre sum of prop:fibre (paper/kappa0-proof-standalone.tex), an
+    // argument the authors have still to accept, so the models should not rest on more such points
+    // than they must.  The anchors (zeros and poles of the Hauptmoduln) are in Include and so are
+    // kept whatever their conductor; at a non-fundamental anchor the OTHER forms are evaluated, with
+    // the conductor-prime terms.  Applied here, not in the candidate search, so that the Borcherds
+    // search and the forms it returns do not change.
     nonfund_ok := GetEnv("NONFUND") ne "";
     fund := func< pts | nonfund_ok select pts else [p : p in pts | IsFundamentalDiscriminant(p[1])] >;
     other_cm_rat := fund([p : p in cm_pts_rat | p[1] notin Include]);

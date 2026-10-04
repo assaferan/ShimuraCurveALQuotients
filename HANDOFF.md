@@ -11,6 +11,39 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-04 (evening) — SACHI'S REVIEW OF THE FOUR STATEMENTS: hypotheses stated, outside sources found (PR #66)
+
+Sachi read lem:WN, prop:kappa0, prop:mult, prop:fibre line by line (lem:WN rechecked by counting) and
+found no errors; prop:composite accepted as a corollary. What she asked for, and what was done:
+
+* **Schofer's normalisation of the m = 0 terms** (standalone intro): his (0,2)-theorem is proved as
+  ∫Φ dh = lim_t [2 Σ_μ Σ_{m≥0} c_μ(−m) b_μ(m,t) − 2c_0(0) log t]; the "m = 0 part"
+  2Σ_{μ≠0} c_μ(0) b_μ(0,t) + 2c_0(0)(b_0(0,t) − log t) is what Lemma 2.21 collapses to 2c_0(0)k_0(0).
+  So the ν ≠ 0, m = 0 terms carry the same factor as every m > 0 term; Thm 3.4(ii) / Cor 3.5(i) sum
+  over m ≥ 0 with the one prefactor −2/vol(K_T) = −h_k = −deg Z(U)_K/2 on log‖Ψ‖², i.e. Theorem B's
+  −|CM(d)|/4 on log|ψ|. (Schofer's PDF: arXiv math/0603714; the exact lines are quoted in the tex.)
+* **Outside sources for the nonzero-coset constant terms**: Bruinier–Yang (2.23) repeats Lemma 2.21's
+  zero for the ideal lattice (Z/D, no nonzero isotropic coset — true there); Bruinier–Ehlen–Yang, after
+  (3.14), for an ARBITRARY binary lattice: "the κ(m,μ) with (m,μ) ≠ (0,0) are logarithms of positive
+  rational numbers", computed in KY10 — the same local Whittaker functions lem:WN evaluates. ⇒ there is
+  no independent published value of κ_μ(0) for OUR plane; the published general statement agrees in kind.
+* **Hypotheses now stated**: prop:mult carries "τ_d off the divisor" (used for the x ≠ 0 terms, rem:xsum;
+  rem:divisor is the on-divisor case); new rem:multext extends prop:mult to non-fundamental d with
+  N ∤ f (R_f ⊗ Z_N = O_k ⊗ Z_N, so everything at N is the fundamental case; conductor primes by
+  prop:fibre, additive as in prop:composite) and records that GY Lemma 24 is PROVED in GY for
+  {∞,0}-weakly holomorphic f (the pool imposes it); prop:fibre's proof says why KY Cor 2.5 and the
+  incoherence hold for the plane of a non-maximal order (properties of the quadratic space and of
+  φ ∈ S(V(A_f)), not of the lattice; BEY §3 do it for arbitrary binary lattices).
+* **A second gap for the −log m rule**: scanning the table bases for divisor points where two forms'
+  poles come from different exponents (scratch divpts.m): 21_2 at τ_{−4} (s = ∞) has pairs with
+  m = 1, 9, 1/4 — ratio 9, a gap of 2 log 3. tests/DivisorPoint_21_2.m: C_k read at one table point
+  per form, checked at the others; all 36 quotients f_a^{deg b}/f_b^{deg a} of the nine forms (the
+  four half-integral ones doubled) equal C_a^{deg b}/C_b^{deg a} at τ_{−4}. ⚠ d = −420 on 21_2 is NOT
+  coprime to the level and the values there are off by 3^2-type factors — the known p | gcd(d,N) gap
+  (CMNONCOPRIME comment), not touched here; it is excluded from the test.
+* The comment on non-fundamental anchors corrected (they ARE evaluated through the other forms, with
+  the conductor-prime terms); two docstrings no longer call the 1/2 empirical.
+
 ## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
 
 **Sachi's −12.** Every form on 15_2 has a pole at τ_{−12}, but F = fs[−2]/fs[−1] is finite and Table 45
