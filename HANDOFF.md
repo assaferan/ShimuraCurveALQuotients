@@ -21,9 +21,11 @@ about state, this file wins.
   difference of two rows with the same expansion, is a zero row), not "the rows whose expansion is zero";
   the old assertion would have failed on such a pair. X0_15_1, 51_1, 39_1, 39_2, 87_1, 93_1, 111_1,
   VectorValuedForm pass (abf6460).
-* 95_1 / 119_1 / 159_1: the expansion at 0 was NOT rebuilt from the eta-quotient formula (pole order >
-  1000, no BFVERIFY); they rest on the Guo–Yang isomorphism, the L-polynomials and ModelChecks. An
-  independent rebuild = BFVERIFY=1 on lovelace, ~1 h per base, offered.
+* 95_1 / 119_1 / 159_1: the expansion at 0 had NOT been rebuilt from the eta-quotient formula (pole
+  order > 1000, no BFVERIFY). ✅ DONE 2026-10-05 on lovelace (~/gymodels/verify63, this branch at
+  9037444, BFVERIFY=1, NO form cache, 4 h 53 / 5 h 05): for 95_1 and 119_1 every returned form's fresh
+  expansion at 0 and divisor agree with the stored ones (the asserts would have stopped the run), and
+  the model files written are BYTE-IDENTICAL to PR #64's. 159_1 still running (started 14:00).
 * After this merges: merge main into m0-theta-campaign (shared-path nmzsolve.py).
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
