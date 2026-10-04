@@ -356,3 +356,14 @@ lambda(m) = -log m: the regularised Green function's constant at a singular pair
 rule: F = 1/20 AND fs[10]/fs[-1]^3 = 9/(2^16 5) (three poles vs three; divisors force C_10/C_-1^3) --
 both exact.  Implemented in Kappa (SchoferFormula.m), heuristics removed; tests/M0PoleSum.m (3d).
 Off the divisor no singular pair occurs at any evaluated point (the pole-sum test), so nothing else moves.
+
+## Siegel's genus-average identity at the conductor planes (siegel.m, 2026-10-04): the Euler correction at p | f IS there
+
+a(M) = genus-average representation number of the definite plane L_- vs P(M) = c/sqrt(det S) *
+prod_{p in S} alpha_p(M) / (L(1,chi_{d0}) prod_{p in S}(1 - chi(p)/p)), alpha_p = counting densities.
+a/P = 1/4 (universal) at -15, -60, -240, -48 for every represented M <= 8 WITH the correction at the
+conductor prime; without it 1/2, 1/2, 1/6.  So the Eisenstein coefficient kappa^-(m) carries the
+correction at p | f, and the data-validated normalisation (none at p | f) means Theorem B at conductor
+f has the extra prefactor prod_{p|f}(1 - chi_{d0}(p)/p) = [O_K^x : R_f^x]_hat / f.  OPEN: derive it from
+the normalisation of Schofer's theta integral against the CM cycle of the ORDER R_f (the orbit
+T(Q)\T(A_f)/K_f with the smaller stabiliser).  siegel.log.
