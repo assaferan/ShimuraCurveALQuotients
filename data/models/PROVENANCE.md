@@ -460,3 +460,29 @@ publishes these curves, so there is no published-equation comparison.
 `AllEquationsAboveCovers`; the pipeline's own run will write them in the same format. ⚠ A fibre
 product of factors from runs with DIFFERENT Hauptmodul normalisations can have the right genus and
 be the wrong curve; the trace-formula check is what rejects it, so never accept one on genus alone.
+
+## 36 quotient models from a rerun of the gap bases (2026-10-03, lovelace, code at `main` e4d8b4a)
+
+The census of 2026-10-03 found 100 subhyperelliptic quotients with no model across 31 bases, almost
+all of them because the committed file predates a code fix rather than because the method fails
+(`21_2` and `6_5` closed by a plain rerun, PR #70). The 27 reachable bases were rerun on lovelace
+with the default recipe (`genmodels.m`, `NORMALIZ_BIN=/usr/bin/normaliz`, 10 h cap, all 24 that
+finished exited 0; `143_1`, `145_1`, `203_1` run separately). Against this branch the reruns add
+36 entries in 8 files, all genus-1 quotients:
+
+    14_19  [1,133] [1,7,19,133] [1,19] [1,14,38,133]
+    22_13  [1,286] [1,26] [1,22,26,143] [1,13,22,286] [1,11,26,286] [1,11,13,143] [1,11]
+    22_7   [1,22]            26_5  [1,10]
+    34_5   nine: [1,5,34,170] [1,10,34,85] [1,2,5,10] [1,5] [1,34] [1,5,17,85] [1,170] [1,2,85,170] [1,10,17,170]
+    34_7   [1,14,34,119] [1,7,34,238]
+    38_7   [1,14,19,266] [1,2,7,14] [1,266] [1,7,38,266] [1,38] [1,14,38,133]
+    58_5   [1,10] [1,10,58,145] [1,2,5,10] [1,29] [1,2,29,58] [1,5,29,145]
+
+Nothing committed was replaced: where a key already held a model the rerun's version (often a
+different normalisation of the same curve) was discarded, and where this branch holds a
+fibre-product `CRV` entry it was kept even when the rerun found a hyperelliptic model for the same
+key (`10_17 [1,85]`, `10_29 [1,58]`, `10_37`, `14_13`, `6_41`, `6_43`, `86_3`, `34_3`, `22_7 [1,11]`,
+`26_5 [1,65]`, `34_7`, `14_19 [1,14]`; the rerun output is in `gapscan/out` on lovelace). The two
+odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
+checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
+reach: `GonzalezRotger`, `GuoYangTable1`).
