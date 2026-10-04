@@ -61,7 +61,7 @@
 // ⚠ THIS LIST IS ALL EVEN D, AND THAT IS **NOT** A HOLE -- the old comment's "both D parities" is
 // what is stale, and it was nearly carried over unexamined. Checked 2026-09-10:
 //   * 10 of the 14 odd-D model bases HAVE an X0_*.m re-derivation test (15_1 15_2 21_2 35_1 39_1
-//     51_1 55_1 57_1 in CI, 39_2 87_1 offline), and since every such test now re-derives EVERY
+//     51_1 55_1 57_1 39_2 87_1, all in CI since 2026-10-01), and since every such test now re-derives EVERY
 //     committed cover key, odd-D model building is thoroughly exercised without this file.
 //   * there is no D-parity branch in the code this file drives at all. The only live `IsEven(D)`
 //     uses are in AL FIXED-POINT code (ShimuraQuotients.m:842,

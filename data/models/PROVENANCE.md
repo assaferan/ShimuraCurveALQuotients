@@ -125,7 +125,7 @@ encode.
 | `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
-| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+| `tests/_offline/X0_10_19.m`, `X0_21_1.m` | the same, for the two bases still too slow for CI (`87_1`, `111_1`, `93_1` and `39_2` moved into CI on 2026-10-01, minutes each with the Borcherds search of #63) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 ## THE QUOTIENT ORACLE — the largest source of external validation here
 

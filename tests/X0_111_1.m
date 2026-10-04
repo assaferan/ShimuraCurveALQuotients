@@ -1,4 +1,4 @@
-// tests/_offline/X0_111_1.m -- RE-DERIVATION test for X_0^111(1).
+// tests/X0_111_1.m -- RE-DERIVATION test for X_0^111(1).
 //
 // ⚠ WHY. Like 93_1, this base was validated only against a COMMITTED FILE: GuoYangEquations.m
 // compares data/models/models_111_1.m to Guo-Yang's published degree-16 curve, and ModelChecks
@@ -10,8 +10,8 @@
 // 93_1 the full curve is a genus-5 CRV pair, which forced that test to anchor on the [1,93] and
 // [1,3] quotients and leave the top curve unpinned.
 //
-// OFFLINE because it is slow (the 93_1 sibling took 14.1 h; this base is genus 7 at W={1}).
-//     NORMALIZ_BIN=... magma -b filename:=tests/_offline/X0_111_1.m run_tests.m < /dev/null
+// COST: 315 s on a Mac (genus 7 at W={1}), so it runs in CI.
+//     NORMALIZ_BIN=... magma -b filename:=tests/X0_111_1.m run_tests.m < /dev/null
 // ⚠ NORMALIZ_BIN MUST BE SET, or a fresh polytope solve fails SILENTLY -- "no solutions" rather
 // than an error -- which is how X0_10_19 once spent 84 min in CI verifying nothing.
 //
@@ -60,7 +60,7 @@ function load_covers_and_ws_data_111_1()
     // (x:y:z) -> (-z:y:x) IS linear, and rescaling by 1/x to normalise the last coordinate gives
     // (-1/x, y/x^(g+1), 1). Here g+1 = 8, matching their y/x^8 exactly.
     //
-    // ⚠ VERIFIED BEFORE RUNNING, because this file costs hours: on gy_f itself, both matrices
+    // ⚠ VERIFIED BEFORE RUNNING: on gy_f itself, both matrices
     // below are automorphisms AND involutions, while DiagonalMatrix([-1,1,1]) is NOT -- the
     // reverse of the situation at 87_1, so the two files cannot have been filled in by copying.
     ws_data := AssociativeArray();
