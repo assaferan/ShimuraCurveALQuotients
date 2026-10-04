@@ -18,9 +18,11 @@ for k in Keys(models) do
     X := rep{Y : Y in curves | Y`D eq D and Y`N eq N and Y`W eq Set(k)};
     assert X`g eq g;
     C := HyperellipticCurve(f, h);
-    for p in [11, 13, 17, 19] do
-        Cp := ChangeRing(C, GF(p));
-        if Genus(Cp) ne g then continue; end if;
+    for p in [11, 13, 17, 19, 23, 29] do
+        // a model whose coefficients have p in a denominator has no reduction mod p: skip the prime
+        ok := true;
+        try Cp := ChangeRing(C, GF(p)); catch e ok := false; end try;
+        if not ok or Genus(Cp) ne g then continue; end if;
         cnt := [#Points(BaseChange(Cp, GF(p^d))) : d in [1..2]];
         exp := [ComputePointsViaTrace(X, p, d) : d in [1..2]];
         if cnt eq exp then nok +:= 1; else nbad +:= 1; printf "MISMATCH W=%o genus %o p=%o: counts %o, trace formula %o\n", k, g, p, cnt, exp; end if;
