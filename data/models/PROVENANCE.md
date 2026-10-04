@@ -435,6 +435,60 @@ a regression, not something to add to the list.
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
 
+## 203 covers built as fibre products of their double covers (2026-10-03/04, `FibreProductCovers.m`)
+
+A cover `X_0(D,N)/W` is Galois over the star curve with an elementary abelian 2-group, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 + hy = f(t)`,
+i.e. `(y + h/2)^2 = f + h^2/4`. The entries added on these dates, 203 of them across 53 files, were
+built that way from the hyperelliptic entries already committed in the same file, with no Borcherds
+or Schofer computation, by the writer `tools/writefp.m` (the same construction the pipeline's final
+stage runs). Among them are 29 top curves `W = {1}`, of genus 4 to 11; the rest are intermediate
+quotients of genus 2 to 11.
+
+⚠ **At level `N > 1` these entries rest on the `m = 0` term of Schofer's formula**, through the
+double covers they are built from, and PR #66 only *proposes* a proof of that term; so they are
+checked by point counts against the trace formula, not proved. The same goes for the three
+"not hyperelliptic" verdicts the construction gives (`6_23/w_23`, `34_3/w_2`, `46_3/w_3`).
+
+**Format.** Stored as the existing non-hyperelliptic shape `<genus, "CRV", [ Strings() | ... ]>`,
+one equation per factor, in coordinates `s, z` of weight 1 and fibre coordinates `y1, y2, ...`
+each of weight half the degree of its own equation (the same rule the older `x, y, s, z` pairs
+follow). Twenty-nine of them are top curves `W = {1}`, of genus 3 to 11, which no earlier stage
+could reach because they are not subhyperelliptic.
+
+**What vouches for them.** Each entry was accepted only when the compositum has the genus the
+Shimura-curve genus formula predicts and its point counts over `F_p` and `F_{p^2}` at the first
+three good primes agree with the Eichler–Selberg trace formula on the `W`-fixed part of the `D`-new
+space. A prime at which a factor reduces badly is skipped, so eleven entries rest on two primes
+rather than three: `14_19` `[1]`, `[1,7]`, `[1,14]`; `35_2` `[1]`, `[1,10]`, `[1,14]`; `62_3` `[1]`,
+`[1,2]`, `[1,6]`, `[1,31]`, `[1,93]` (a prime where some factor has a repeated root mod `p`; with
+the writer's weaker criterion, a factor that is a square mod `p`, only the three `62_3` entries
+`[1]`, `[1,2]`, `[1,6]` do). Every written entry was then re-read from its stored strings alone and
+re-checked the same way at two primes. Nothing external publishes these curves, so there is no
+published-equation comparison; the two genus-2 curves at `34_3` are isomorphic to Saia's models
+(Sachi, review of PR #72), and all 200 of the first batch agree with point counts from modular
+symbols at 9–13 primes each (same review).
+
+**Rejections, and the two counts.** The writer of 2026-10-03 tried one generating set of double
+covers per cover and rejected 16 candidates (14 by genus, 2 by the trace formula). The stage's own
+sweep (PR #71) tries every generating set and reported 11 failures over a pool that also held the
+24 stored pairs: the difference is six covers that a second generating set builds. The writer now
+tries every set too (and skips a degenerate one, where some subset of factors multiplies to a
+constant times a square), which reaches seven more covers; three are added here, on 2026-10-04,
+`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have hyperelliptic models
+from reruns instead (`21_2` `[1,3]`, `[1,6]` in PR #70; `22_7` `[1,22]`, `26_5` `[1,10]` in
+PR #73). What remains rejected, with
+every generating set: `14_19` `[1,19]`, `[1,38]`; `34_7` `[1,7]`, `[1,119]`; `82_3` `[1,2]`,
+`[1,82]`, `[1,123]` (no set has the right genus), and `21_2` `[1,14]`, `34_3` `[1,34]` (right genus,
+wrong point counts: factors in mixed Hauptmodul coordinates).
+
+**Regenerating.** The default recipe produces them since the fibre-product stage runs last in
+`AllEquationsAboveCovers`; the pipeline's own run will write them in the same format, and from
+2026-10-04 that stage never uses an equation the rebase or back-fill stage stored (those are in a
+coordinate of their own). The writer here reads committed files, which do not record which entries
+came from those stages; the trace-formula check is what protects it. ⚠ A fibre product of factors
+from runs with DIFFERENT Hauptmodul normalisations can have the right genus and be the wrong curve
+(`21_2 [1,14]`, `34_3 [1,34]` above); never accept one on genus alone.
 ## `21_2` and `6_5`: four quotients added 2026-10-03, both files regenerated with the default recipe
 
 Both files predated the current cover propagation and were missing covers the pipeline now

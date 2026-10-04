@@ -3,6 +3,10 @@
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
 models[[Integers()|1,2]] := [* <2, P![ -19/4096, 39/256, -3663/2048, 4131/512, -19683/4096, -17253/512, -19683/1024 ], P![]> *];
-models[[Integers()|1]] := [*  *];
 models[[Integers()|1,106]] := [* <1, P![ 1/16, -9/8, 45/16, 27, 81/4 ], P![]> *];
 models[[Integers()|1,53]] := [* <1, P![ -19/256, 21/32, 63/128, -297/32, -2187/256 ], P![]> *];
+
+// Built 2026-10-03 as fibre products over the star line of committed double covers
+// (FibreProductCovers.m); each verified against the trace formula at three primes, F_p and F_{p^2}.
+// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
+models[[Integers()|1]] := [* <4, "CRV", [ Strings() | "-81/4*s^4 - 27*s^3*z - 45/16*s^2*z^2 + 9/8*s*z^3 - 1/16*z^4 + y1^2", "2187/256*s^4 + 297/32*s^3*z - 63/128*s^2*z^2 - 21/32*s*z^3 + 19/256*z^4 + y2^2" ]> *];

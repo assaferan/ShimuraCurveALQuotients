@@ -2,7 +2,6 @@
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[Integers()|1,10]] := [*  *];
 models[[Integers()|1,2,23,46]] := [* <2, P![ 0, -15/262144, -81/65536, -2565/131072, -6237/65536, -351135/262144, -729/16384 ], P![]> *];
 models[[Integers()|1,10,23,230]] := [* <1, P![ 0, 69/102400, -81/10240, -27/102400 ], P![]> *];
 models[[Integers()|1,46]] := [* <4, P![ 1/1310720, 0, -9/1638400, 0, 19/655360, 0, -77/1638400, 0, 289/1310720, 0, -1/409600 ], P![]> *];
@@ -15,4 +14,9 @@ models[[Integers()|1,2,115,230]] := [* <0, P![ -23/4096, 135/2048, 9/4096 ], P![
 models[[Integers()|1,115]] := [* <5, P![ 0, 64/25, 661/100, -897/100, -5407/400, 5179/200, -3297/400, -579/50, 5527/400, -1393/200, 781/400, -3/10, 1/50 ], P![]> *];
 models[[Integers()|1,10,46,115]] := [* <2, P![ 1/1310720, 27/1638400, 171/655360, 2079/1638400, 23409/1310720, 243/409600 ], P![]> *];
 models[[Integers()|1,230]] := [* <1, P![ -23/4096, 0, -45/2048, 0, 1/4096 ], P![]> *];
-models[[Integers()|1,23]] := [*  *];
+
+// Built 2026-10-03 as fibre products over the star line of committed double covers
+// (FibreProductCovers.m); each verified against the trace formula at three primes, F_p and F_{p^2}.
+// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
+models[[Integers()|1,10]] := [* <6, "CRV", [ Strings() | "6561/4*s^8 + 6309495/64*s^7*z + 47381355/32*s^6*z^2 - 1293975/64*s^5*z^3 + 203553/16*s^4*z^4 - 30375/64*s^3*z^5 - 1701/32*s^2*z^6 - 345/64*s*z^7 + y1^2", "27/102400*s^3*z + 81/10240*s^2*z^2 - 69/102400*s*z^3 + y2^2" ]> *];
+models[[Integers()|1,23]] := [* <6, "CRV", [ Strings() | "-34992*s^7*z - 2103165*s^6*z^2 - 31587570*s^5*z^3 + 431325*s^4*z^4 - 271404*s^3*z^5 + 10125*s^2*z^6 + 1134*s*z^7 + 115*z^8 + y1^2", "27/102400*s^3*z + 81/10240*s^2*z^2 - 69/102400*s*z^3 + y2^2" ]> *];
