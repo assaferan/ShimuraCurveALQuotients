@@ -419,3 +419,13 @@ integral, use 2f).  Installed as tests/DivisorPoint_21_2.m on kappa0-proof.  ⚠
 d_0 EVEN (-84, -168, -232, -280, ..., -420) are off by factors 9, 9/2, 81/2 at 21_2: the level prime 2
 ramified in the CM field = the known p | gcd(d_0, N) gap (CMNONCOPRIME comment); excluded.  The
 conductor-2 points (-16, -28, -60, -100, -112, -120, ...) pass -- prop:fibre at work.
+
+## CORRECTION (same day): the 21_2 mismatch at -420 is a GUO-YANG TABLE ERROR, not the p | gcd(d_0, N) gap
+
+The entry above says the d_0-even points of 21_2 are off by 9, 9/2, 81/2.  Only -420 mismatched; -84,
+-168, -232, -280, -312, -372, -408, -532, -708, -840 all AGREE with the divisor model.  At -420 all nine
+forms agree with each other on s = 7/3 vs the arXiv table's 21 (Sachi found the same).  One rational
+point of disc -420 on the star curve (W transitive on 8 points), so one value is wrong; Gross-Zagier:
+s = 21 needs the primes 17, 47, 29, 53, 983 in differences with table rows where they are forbidden
+(420|d_i| a non-square mod p), s = 7/3 needs none (gz420.m).  Fifth published GY error; likely 21/9 and
+sqrt(21)/3 with denominators dropped.  tests/DivisorPoint_21_2.m now uses 7/3 and all 21 table points.
