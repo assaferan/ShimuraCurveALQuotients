@@ -47,8 +47,16 @@ at the first word with a nonzero constant term (weight-0 forms with fractional c
 trivially with every c_eta(0) = 0; raising Prec does nothing). The error "slash constant failed its
 two-point check" means WRONG FORM before it means precision.
 ⚠ Whether the VALUES are right at a composite level is untested: it needs Borcherds forms at an
-M = 420 base (a lovelace job at the Normaliz wall) and then the Hauptmodul-consistency check, since
-no outside table has such a point.
+M = 420 base and then the Hauptmodul-consistency check, since no outside table has such a point.
+**The M = 420 wall is already paid for.** A Borcherds search at 6_35 asks for the polytopes
+(420, 145, 0), (420, 249, 0), (420, 353, 0), ... (probe with NMZ_TIMEOUT=120: Normaliz times out on
+the first). But (420, 145, 0) was enumerated in August for the 210_1 theta campaign -- 19864 lattice
+points, 13.4 wall-hours -- and is banked on the campaign branch as
+vvdata/weyl-campaign/nmz_420_145_0.txt.gz (Magma solution format); polymake/tshift_{core,w0}_420.txt
+are on main. Installing the rung as polymake/polymake_solution_420_145_0 serves 145 from cache and
+the t-shift fallback answers every higher m = 0 rung (run210_1.sh is the recipe). The cache key is
+(M, n, m) only, so the same rung serves all six DN = 210 bases. Not run yet: the pool is ~20000 eta
+quotients and the search is a heavy job (lovelace, with the user's go), not a laptop one.
 
 ## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
 
