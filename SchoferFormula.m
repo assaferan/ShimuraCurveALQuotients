@@ -1172,9 +1172,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // and trace it to the (1/2) c_eta(0) used here; prop:composite of the standalone extends it
         // to squarefree N, prime by prime (-log p/(p-1) at the 2p-2 cosets supported at p alone,
         // zero at a coset supported at two or more primes).  ⚠ THAT ARGUMENT IS NOT YET AGREED: it
-        // has to be read and accepted by the authors before anything here calls it proved, so treat
-        // the term as the empirically fitted rule it has always been (its only outside evidence is
-        // Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2), via tests/SchoferIsometry.m), and the
+        // has to be read and accepted by the authors before anything here calls it proved.  Its outside
+        // evidence is Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2) (tests/SchoferIsometry.m,
+        // tests/M0PoleSum.m) and the forced Guo-Yang points of tests/_offline/GuoYang_*.m; the
         // composite case has no outside evidence at all: no composite-level base has been built.
         //
         // The second part of the m = 0 term comes from the vectors on the CM line (prop:mult), and
