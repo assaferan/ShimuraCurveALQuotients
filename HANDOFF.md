@@ -11,6 +11,24 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
+
+**Sachi's −12.** Every form on 15_2 has a pole at τ_{−12}, but F = fs[−2]/fs[−1] is finite and Table 45
+forces 1/20; the code gave 2^(2/3)/5 even with the fibre sum (its term is 2/3 log 2 on both forms and
+cancels). The culprit was the two heuristics inherited from Yang's code for a pair (x, ν = 0) with
+Q(x) = m — the vector on the CM line that puts the point on the divisor: fs[−2]'s pole comes from
+x = ±λ₀ (m = 3, c_oo(−3)), fs[−1]'s from x = ±λ₀/2 (m = 3/4, cusp-0 coefficient), and they were
+treated by different rules. With both dropped the pairs cancel (F = 1/5); the regularised Green
+function leaves −log m at a singular pair, and with that one rule F = 1/20 and fs[10]/fs[−1]³ =
+9/(2^16·5) (three poles vs three), both exact (standalone rem:divisor; tests/M0PoleSum.m (3d)).
+No singular pair occurs off the divisor at any evaluated point, so nothing else moves.
+
+**Non-fundamental d are no longer evaluated unless asked for.** AbsoluteValuesAtCMPoints drops
+them from the candidate and fetched points (NONFUND=1 admits them); Include/Force points and the
+Hauptmodul anchors are untouched. ⚠ The filter was first put into RationalandQuadraticCMPoints and
+that changed the Borcherds search's anchors (−12 is the pole on 15_2) and hence the FORMS; it must
+live at the evaluation step only.
+
 ## Handoff — 2026-10-03 — THE m = 0 TERM AT A CONDUCTOR PRIME IS A FIBRE SUM (PR #66)
 
 **The rule "fire iff the conductor prime splits" was an accident of the one form tested.** At a

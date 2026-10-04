@@ -450,9 +450,10 @@ primes of $N$ dividing $d$ contribute nothing, for the reason the recipe assumed
 Everything above assumes $d$ fundamental. Write $d=f^2d_0$ with $d_0$ fundamental and $f>1$ the
 conductor, $R_f=\Z+f\mathcal O_{d_0}$, and let $\lambda=\varphi(\sqrt d)$ for an optimal embedding
 $\varphi$ of $R_f$, so that $\langle\lambda,\lambda\rangle=2\lvert d\rvert$ as before. At a level prime $N$ dividing $f$ the lattice is different, and so is the bookkeeping;
-what is proved below is the general form of the restored terms (Proposition~\ref{prop:fibre})
-and the local factors that enter it at a prime of the level dividing the conductor
-(Lemmas~\ref{lem:conductor}, \ref{lem:conductor2} and \ref{lem:Wcond}).
+what is argued below --- like everything in this note, a proposed argument until all of us have
+read it --- is the general form of the restored terms (Proposition~\ref{prop:fibre}) and the
+local factors that enter it at every prime of the conductor (Lemmas~\ref{lem:conductor},
+\ref{lem:conductor2}, \ref{lem:Wcond}, \ref{lem:unimod}, \ref{lem:unimod2}, \ref{lem:ramlevel}).
 
 \begin{lemma}[the plane's isotropy is a property of the field]\label{lem:split}
 For every prime $p$, the quadratic space $\Lm\otimes\Q_p=\lambda^\perp\subset B_0\otimes\Q_p$ is
@@ -1010,6 +1011,24 @@ Siegel--Weil normalisation of Schofer's theta integral for the lattice of a non-
 the stabiliser of $\widehat{\Lm}$ has index $f\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$ in that of the
 maximal one. We have not carried that computation out; until it is done the global factor at
 non-fundamental $d$ rests on the agreement above.
+\end{remark}
+
+\begin{remark}[a point on the divisor, and the value of a quotient there]\label{rem:divisor}
+Theorem~B is stated off the divisor of $\Psi$; at a point $\tau_d$ on it a single value is infinite,
+but a quotient of two forms with the same order there is finite, and \cite[Table~45]{GY} gives one:
+on $X_0^{15}(2)$ every form has a pole at $\tau_{-12}$, and $F=f_{-2}/f_{-1}=(s-2)/(20s)$ has
+$F(-12)=1/20$. In the formula the point shows up as pairs $(x,\nu=0)$ with $Q(x)=m$ and
+$c_{[x]}(-m)\neq0$: for $f_{-2}$ the vectors $x=\pm\lambda_0$ with $m=3$ (the pole of $f$ at $\infty$),
+for $f_{-1}$ the vectors $x=\pm\lambda_0/2$ with $m=\tfrac34$ (the cusp-$0$ coefficient at $q^{-3/4}$).
+The routine used to treat these two kinds by two different rules taken from Yang's code, and gave
+$2^{2/3}/5$. Dropping both gives $1/5$: the pairs then cancel in the quotient, and what is missing is
+the constant the regularised Green function leaves at a singular pair, $-\log m$ per unit coefficient
+(Kudla's $\beta(2\pi vR)=-\gamma-\log(2\pi vR)+\dots$ with $R$ proportional to $m$ at the point),
+which differs between the two forms by $\log(3/\tfrac34)=2\log2$. With that single rule in place of
+the two heuristics, $F(-12)=1/20$ and also $f_{10}/f_{-1}^3=9/(2^{16}\cdot5)$, the value the divisors
+force for a quotient with three poles against three; the constant that does not depend on $m$ cancels
+in every quotient and is invisible in a single value, which is infinite anyway. Off the divisor no
+such pair occurs at any evaluated point, so nothing else changes.
 \end{remark}
 
 \begin{thebibliography}{9}

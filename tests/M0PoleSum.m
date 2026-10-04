@@ -116,6 +116,7 @@ procedure test_values_at_conductor_discriminants_15_2()
 
     // (3b) every form, from its divisor: C read at -7, required everywhere else off the divisor
     nchecked := 0;
+    Cks := AssociativeArray();
     for r->k in tab`Keys_fs do
         div_f := DivisorOfBorcherdsForm(fs[k], star);
         for pr in div_f do
@@ -126,6 +127,7 @@ procedure test_values_at_conductor_discriminants_15_2()
         on_div := {pr[1] : pr in div_f};
         assert -7 notin on_div;
         Ck := cell_value(tab`Values[r][Index(tab`Discs, -7)]) / model(-7);
+        Cks[k] := Ck;
         for d in points do
             if d eq -7 or d in on_div then continue; end if;
             got := cell_value(tab`Values[r][Index(tab`Discs, d)]);
@@ -188,6 +190,21 @@ procedure test_values_at_conductor_discriminants_15_2()
     // regression pin (computed by this test on 2026-10-03, not an independent value): the roots have
     // 7-adic valuation -1/3, i.e. all three points reduce to the pole tau_-12 at the prime above 7
     assert good[1] eq X^3 - 191/54*X^2 + 343/432*X - 6889/48384;
+    printf " ok\n";
+
+    // (3d) a point ON the divisor: every form has a pole at tau_-12, so single values are infinite,
+    // but quotients of forms with equal pole orders are finite and the divisors give them: with s = oo
+    // there, f_a/f_b -> C_a/C_b for forms of the same degree in s.  Table 45 gives the first one
+    // directly, F = f_-2/f_-1 = (s-2)/(20 s) -> 1/20.  The formula reaches them through the pairs
+    // (x, nu = 0) with Q(x) = m at the pole, which contribute -log m each (standalone rem:divisor);
+    // f_-2's pole comes from x = lambda_0 (m = 3), f_-1's from x = lambda_0/2 (m = 3/4), f_10 has
+    // three poles from m = 3, so the two quotients test the rule with different multiplicities.
+    printf "  quotients of forms at the pole d = -12 (every form singular there)...";
+    v12 := SchoferFormula([fs[-2], fs[-1], fs[10]], -12, D, N, Ld);
+    F1 := cell_value(v12[1] - v12[2]); F2 := cell_value(v12[3] - 3*v12[2]);
+    error if F1 ne 1/20, Sprintf("f_-2/f_-1 at d = -12 is %o, Table 45 gives 1/20", F1);
+    error if F1 ne Cks[-2]/Cks[-1] or F2 ne Cks[10]/Cks[-1]^3,
+        Sprintf("quotients at d = -12: %o and %o, the divisors give %o and %o", F1, F2, Cks[-2]/Cks[-1], Cks[10]/Cks[-1]^3);
     printf " ok\n";
 end procedure;
 

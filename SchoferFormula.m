@@ -639,8 +639,6 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
     gamma_plus:= c_gamma_plus*lambda_rat;
     gamma_minus := gamma_rat - gamma_plus;
     log_coeffs := LogSum();
-    // This is the condition from Yang code, if we have a vector with Q(x) = m
-    Yang_tt := false;
     for mu_bar in L_quo do
         mu := mu_bar@@L_quo_map;
         c_mu_plus := ((mu*Q, lambda_v)/(lambda_v*Q,lambda_v));
@@ -670,43 +668,23 @@ intrinsic Kappa(gamma::ModTupRngElt, m::FldRatElt, d::RngIntElt, Q::AlgMatElt, l
                 // (M0FibreCorrection, or the (1/2)c_eta(0) - pole-sum term at a fundamental d),
                 // so it is skipped here; at a conductor prime such pairs exist with x = lambda_0/p^j.
                 if not forall{c : c in Eltseq(gamma_minus + mu_minus) | IsIntegral(c)} then continue; end if;
-                if (gamma ne 0) then
-                    Yang_tt := true;
-                else
-                    m0, m_cond := SquareFreeFactorization(Integers()!m);
-                    fac := Factorization(m_cond);
-                    for pe in fac do
-                        p,e := Explode(pe);
-                        log_coeffs -:= LogSum(Rationals()!2*e,p);
-                    end for;
-                end if;
+                // At the ZERO coset the pair is a vector x on the CM line with Q(x) = m, i.e. the point
+                // lies on the divisor of the Borcherds form (the Green function of Z(m, gamma) is
+                // singular there), and the value of a single form is infinite.  What the formula can
+                // still give is the regularised value, and the regularised Green function leaves at a
+                // singular pair the constant -log m (Kudla's beta(2 pi v R) ~ -log(2 pi v R) with R
+                // proportional to m), which cancels between forms with the same singular pairs.
+                // Checked on X_0^15(2) at d = -12, where every form has a pole: fs[-2]/fs[-1] = 1/20
+                // (Table 45) and fs[10]/fs[-1]^3 = 9/(2^16 5) (from the divisors), both exact; the two
+                // heuristics taken from Yang's code that this replaces gave 2^(2/3)/5 for the first.
+                vprintf ShimuraQuotients, 1 : "\n\tsingular pair at d = %o: Q(x) = m = %o, x = %o, coset %o", d, m, x, gamma;
+                log_coeffs -:= LogSum(Rationals()!m);
             else
                 a, p := kappaminus(gamma_minus + mu_minus, m - (x*Qrat,x)/2, Lminus, Q, d);
                 log_coeffs +:= LogSum(Rationals()!a,p);
             end if;
         end for;
     end for;
-
-    // trying to imitate Yang's code
-    // !!! Don't know why this is working !!!
-    // Since 2026-10-03 this is reached only for pairs whose coset nu = gamma_- + mu_- is ZERO (the
-    // others are in M0FibreCorrection); no such pair occurred at any evaluated conductor point.
-    if Yang_tt then
-        d0 := FundamentalDiscriminant(d);
-        f2 := d div d0;
-        // f2 = 1 means d is already FUNDAMENTAL (conductor 1), so there is no conductor prime for
-        // this correction to attach to and the branch must not fire.  Magma's IsPrimePower errors
-        // on 1 rather than returning false, so guard it: 1 is not a prime power, and skipping is
-        // the correct semantics, not a workaround.  Hit at 21_1, whose CM set reaches d = -7.
-        is_pp := false;
-        if f2 gt 1 then
-            is_pp, p, e2 := IsPrimePower(f2);
-        end if;
-        if is_pp then
-            e := e2 div 2;
-            log_coeffs +:= LogSum(-4*p^(1-e)/(p-KroneckerSymbol(d0,p)),p);
-        end if;
-    end if;
 
     return log_coeffs;
 end intrinsic;
@@ -1340,8 +1318,17 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
 
     cm_pts_must_rational := [p : p in cm_pts_rat | p[1] in Include];
     cm_pts_must_quad := [p : p in cm_pts_quad | p[1] in Include];
-    other_cm_rat := [p : p in cm_pts_rat | p[1] notin Include];
-    other_cm_quad := [p : p in cm_pts_quad | p[1] notin Include];
+    // A NON-FUNDAMENTAL discriminant is evaluated only when asked for (Include, or NONFUND=1): the
+    // class-number lists the search draws on contain conductors 2, 3, 4, 6, 8 and more, and at such
+    // a point the m = 0 term is the fibre sum and the m > 0 normalisation is checked against
+    // published values but not derived (paper/kappa0-proof-standalone.tex, rem:mpos), so the models
+    // should not rest on them.  The anchors (zeros and poles of the Hauptmoduln) are unaffected: they
+    // are in Include and are never evaluated.  Applied here, not in the candidate search, so that the
+    // Borcherds search and the forms it returns do not change.
+    nonfund_ok := GetEnv("NONFUND") ne "";
+    fund := func< pts | nonfund_ok select pts else [p : p in pts | IsFundamentalDiscriminant(p[1])] >;
+    other_cm_rat := fund([p : p in cm_pts_rat | p[1] notin Include]);
+    other_cm_quad := fund([p : p in cm_pts_quad | p[1] notin Include]);
     need := MaxNum - #Include;
     pt_list_quad := [];
     if #other_cm_rat ge need then
@@ -1363,6 +1350,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         // and starved by the other.
         new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude,
                                        coprime_to_level := (GetEnv("CMCOPRIME") ne ""), target := fetch_target);
+        new_rat_cm := fund(new_rat_cm); new_quad_cm := fund(new_quad_cm);
         pt_list_rat := pt_list_rat cat new_rat_cm;
         need := need - #new_rat_cm;
         if need gt 0 then
