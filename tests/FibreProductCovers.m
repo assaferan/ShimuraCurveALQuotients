@@ -34,6 +34,7 @@ function hyperelliptic_polys(models)
 end function;
 
 models_6_23 := eval (Read("data/models/models_6_23.m") cat "\nreturn models;");
+models_14_19 := eval (Read("data/models/models_14_19.m") cat "\nreturn models;");
 models_21_2 := eval (Read("data/models/models_21_2.m") cat "\nreturn models;");
 poly_6_23 := hyperelliptic_polys(models_6_23);
 poly_21_2 := hyperelliptic_polys(models_21_2);
@@ -61,6 +62,30 @@ procedure test_degenerate_factor_sets()
     assert not IsDegenerateFactorSet([f1, f2]);
     assert not IsDegenerateFactorSet([f1, f2, f1*(x - 5)]);
     printf " ok\n";
+end procedure;
+
+procedure test_h_term_completes_the_square()
+    // A stored double cover y^2 + h y = f with h != 0 enters the fibre product as y'^2 = f + h^2/4.
+    // X_0^14(19), W = {1,2,19,38}: the one stored equation of the base with a nonzero h.  The function
+    // field of y^2 + h y - f and that of y'^2 - (f + h^2/4) must have the same genus and the same
+    // point counts over F_5 and F_7 (they are the same field).
+    printf "  the h term: y^2 + h y = f enters as y^2 = f + h^2/4 (X0^14(19), W={1,2,19,38})...";
+    e := models_14_19[[Integers()|1,2,19,38]][1];
+    assert #e eq 3 and e[3] ne 0;
+    f := e[2]; h := e[3];
+    assert Genus(HyperellipticCurve(f, h)) eq e[1] and Genus(HyperellipticCurve(f + h^2/4)) eq e[1];
+    checked := 0;
+    for p in [5, 7, 11, 13, 17] do
+        Kp := RationalFunctionField(GF(p)); R<Y> := PolynomialRing(Kp);
+        L1 := FunctionField(Y^2 + Evaluate(PolynomialRing(GF(p))!h, Kp.1)*Y - Evaluate(PolynomialRing(GF(p))!f, Kp.1));
+        L2 := FunctionField(Y^2 - Evaluate(PolynomialRing(GF(p))!(f + h^2/4), Kp.1));
+        if Genus(L1) ne e[1] then continue; end if;         // bad reduction of this model at p
+        assert Genus(L2) eq Genus(L1);
+        assert [#Places(L1, d) : d in [1..2]] eq [#Places(L2, d) : d in [1..2]];
+        checked +:= 1;
+    end for;
+    assert checked ge 2;
+    printf " ok (%o good primes)\n", checked;
 end procedure;
 
 procedure test_fibre_product_6_23(poly)
@@ -182,3 +207,4 @@ test_fibre_product_6_23(poly_6_23);
 test_fibre_product_refuses_mixed_coordinates_21_2(poly_21_2);
 
 test_degenerate_factor_sets();
+test_h_term_completes_the_square();
