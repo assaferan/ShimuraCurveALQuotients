@@ -2,7 +2,7 @@
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[Integers()|1,10]] := [*  *];
+models[[Integers()|1,10]] := [* <4, P![ -845/8192, 0, -126157/16384, 0, -4883/2048, 0, -2307/8192, 0, -123/8192, 0, -5/16384 ], P![]> *];
 models[[Integers()|1,13]] := [*  *];
 models[[Integers()|1,5,13,65]] := [* <1, P![ -76, 164, -107, 60, -44 ], P![]> *];
 models[[Integers()|1,2,65,130]] := [* <1, P![ 1, -3, 9/4, -1, 1 ], P![]> *];
