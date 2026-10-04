@@ -11,6 +11,20 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 — THREE COMPOSITE-LEVEL BASES BUILT, 660/660 AGAINST THE TRACE FORMULA (branch composite-level)
+
+X_0^6(35) (2 h 25), X_0^10(21) (3 h 50) and X_0^14(15) (3 h 54) on lovelace, default recipe, the
+banked (420, 145, 0) rung + t-shift fallback: 66, 66 and 65 cover keys (data/models/models_{6_35,
+10_21,14_15}.m; the third has genus-4 and genus-5 covers). Every stored curve of genus >= 1 has the
+Eichler-Selberg point counts over F_p and F_p^2 at p = 11, 13, 17, 19, 23, 29 (234 + 234 + 192 = 660
+of 660; campaign composite/checkcomp.m, checkcomp.log); ModelChecks 116 files, 14680 checks, 0
+failures. At X_0^10(21) the multipliers at 3 and at 7 differ (6 and -7 on one form): the per-prime
+structure of prop:composite acts in production. Running since 2026-10-05: X_0^15(14), X_0^21(10)
+(logs ~/gymodels/composite/logs/{15_14,21_10}.{log,err}); X_0^35(6) remains.
+⚠ The multiplier computation (~73 min on the 88200-element group) still runs up to three times per
+base, once for each set of forms first met at a later CM point; computing it for ALL forms up front
+would make it once. Not done yet.
+
 ## Handoff — 2026-10-04 (later) — THE m = 0 TERM AT COMPOSITE SQUAREFREE LEVEL (branch composite-level, on #66)
 
 **What changed.** The Schofer routine no longer refuses composite N. prop:composite (standalone)
