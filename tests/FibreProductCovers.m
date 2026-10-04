@@ -198,6 +198,31 @@ procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     assert ok;
     assert Genus(FibreProductFunctionField([poly[U] : U in gens])) eq curves[i14]`g;
     // ... but it is not X_0(21,2)/w_14, and the stage must leave the key alone
+    // what this Magma computes for every generating set: genus over Q, and at each good prime the
+    // reduction's genus and the point counts against the trace formula (printed so a run on another
+    // Magma version can be read: CI's 2.29-4 accepted a set that 2.29-10 rejects at every prime)
+    full := {Integers()| d : d in Divisors(42) | GCD(d, 42 div d) eq 1};
+    avail := {U : U in ups | IsDefined(poly, U)};
+    for c in Subsets(avail, 2) do
+        I := full; for W2 in c do I := I meet W2; end for;
+        if I ne {Integers()|1,14} then continue; end if;
+        fs := [poly[U] : U in c];
+        printf "
+    set %o: genus over Q %o", [Sort(SetToSequence(U)) : U in c], Genus(FibreProductFunctionField(fs));
+        for p in [5, 11, 13, 17, 19, 23] do
+            Kp := RationalFunctionField(GF(p)); L := Kp; bad := false;
+            try
+                for f in fs do R<Y> := PolynomialRing(L); L := FunctionField(Y^2 - L!Evaluate(PolynomialRing(GF(p))!f, Kp.1)); end for;
+            catch e bad := true; end try;
+            if bad then printf "; p=%o square", p; continue; end if;
+            if Genus(L) ne curves[i14]`g then printf "; p=%o genus %o", p, Genus(L); continue; end if;
+            cnt := [&+[e * #Places(L, e) : e in Divisors(d)] : d in [1..2]];
+            exp := [ComputePointsViaTrace(curves[i14], p, d) : d in [1..2]];
+            printf "; p=%o %o vs %o", p, cnt, exp;
+        end for;
+    end for;
+    printf "
+";
     all_ws := AssociativeArray();
     all_eqns, all_ws := EquationsByFibreProduct(all_eqns, all_ws, curves : NPrimes := 2);
     assert not IsDefined(all_eqns, i14);
