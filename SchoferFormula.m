@@ -1902,9 +1902,18 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     A2, PicR_to_A2 := PicR / (2*PicR);
     am := ArtinMap(Aext);
 
-    // Extra Atkin-Lehner twist sigma_{w0} on A_abs from the reflection m*w0 in W.
+    // Extra Atkin-Lehner twist sigma_{w0} on A_abs from the reflection m*w0 in W.  Magma's Artin
+    // map is defined only on ideals coprime to the modulus it chose for the ring class field, and
+    // refuses frakb_w0 otherwise ("Element is not in the codomain of the map": d = -100 on
+    // X_0^21(2), w0 = 2, the prime above 2); the slow routine does not go through the Artin map,
+    // so it answers those cases.
     frakb_w0 := &*[Parent(1*OK) | pa[1]^(pa[2] div 2) : pa in Factorization(w0*OK)];
-    tw := (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
+    try
+        tw := (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
+    catch e
+        vprintf ShimuraQuotients, 2 : "\n\tFieldsOfDefinitionOfCMPointFast(d = %o): the Artin map refuses the twist ideal; using FieldsOfDefinitionOfCMPoint", d;
+        return FieldsOfDefinitionOfCMPoint(X, d);
+    end try;
 
     sigma_as := [* *];
     for a in A2 do
@@ -1919,17 +1928,16 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     require #sigma_as gt 0 :
         "Error in field of definition - could not find a fractional ideal for complex conjugation!";
 
-    // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}; collect distinct.
+    // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}, ONE FIELD PER VALID CLASS: the
+    // classes are the CM points of discriminant d on X (one orbit each), so two classes with
+    // isomorphic fields are two points, both to be listed -- d = -100 on X_0^21(2) has two rational
+    // points, and merging them to one field (as this used to do) left AbsoluteValuesAtCMPoints with
+    // a point count that disagreed with FieldsOfDefinitionOfCMPoint's.
     fields := [* *];
     for c in ccs do
         for sa in sigma_as do
             sigma := hom<Aabs -> Aabs | tw(c(sa(Aabs.1)))>;
-            F := FixedField(Aabs, [sigma]);
-            is_new := true;
-            for FF in fields do
-                if IsIsomorphic(F, FF) then is_new := false; break; end if;
-            end for;
-            if is_new then Append(~fields, F); end if;
+            Append(~fields, FixedField(Aabs, [sigma]));
         end for;
     end for;
 
