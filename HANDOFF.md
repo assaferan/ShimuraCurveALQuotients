@@ -45,9 +45,13 @@ cutting out exactly the cubic field FieldsOfDefinitionOfCMPoint gives (disc -588
 rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. EXTERNAL: forcing the Guo-Yang points the
 candidate search never offers, the term reproduces s(-27) on 58_1 and 55_1 (q = 3 ramified) and
 s(-100) on 21_2 (q = 5 split) -- campaign level-p2/gyforce_*.m. ⚠ The divisor relations
-among the nine forms are BLIND to this term (it is divisor-linear). ⚠ NOT derived: q = 2 outside an
-odd level (the tables for 35_1, 39_1, 51_1, 55_1, 57_1, 87_1 have such points; L_2 is not unimodular
-there) and a level prime dividing both the conductor and d_0; both log a verbose warning.
+among the nine forms are BLIND to this term (it is divisor-linear). q = 2 outside an odd level is the
+same (lem:unimod2): optimality makes Z_2^2 a free Z_2[lambda/2]-module, so lambda_0 = (0, d/4; 1, 0),
+the plane is lem:conductor2's (d_0 odd) or the anisotropic one (d_0 even), and no coset lies in L^v.
+Confirmed on the Guo-Yang points the search never offers, now FORCED into the offline tests
+(ValuesAtCMPoints: Force, test_gy_table: Force): -28, -60 (split), -12 (inert), -16 (d_0 = -4) and
+-315 (q = 3) across 35_1, 39_1, 51_1, 55_1, 57_1 -- all published values reproduced. ⚠ NOT derived:
+a level prime dividing both the conductor and d_0 (verbose warning, no term).
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 

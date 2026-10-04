@@ -36,7 +36,12 @@ function mobius(z0, z1, z2, z)
 end function;
 
 // gy: sequence of <disc, published value> pairs, value in Rationals() or Infinity().
-procedure test_gy_table(D, N, gy)
+// Force: discriminants of the table that the candidate search never offers -- those with a conductor
+// prime other than 2 dividing the level, or 2 outside it (it offers conductors 1 and 2 at level
+// primes only) -- added to the table as rational points; each must be a single star point.  Since
+// 2026-10-04 the m = 0 term at such a point is the fibre sum of M0FibreCorrection, and these rows
+// are its only published test (paper/kappa0-proof-standalone.tex, lem:unimod, lem:unimod2).
+procedure test_gy_table(D, N, gy : Force := [])
     printf "  Guo-Yang CM-values of X0^%o(%o), primary hauptmodule...", D, N;
     Xstar := CreateShimuraQuot(D, N, Set(Divisors(D*N)));
     Xstar`g := GenusShimuraCurveQuotient(D, N, Xstar`W); Xstar`CurveID := 0;
@@ -44,7 +49,7 @@ procedure test_gy_table(D, N, gy)
     assert exists(star){c : c in curves | IsStarCurve(c)};
 
     keep := { t[1] : t in gy };
-    tab := ValuesAtCMPoints(star, curves : Keep := keep);
+    tab := ValuesAtCMPoints(star, curves : Keep := keep, Force := Force);
     discs := tab`Discs;
     srow := tab`Values[tab`sIndex];
     idx := AssociativeArray();
@@ -75,7 +80,11 @@ procedure test_gy_table(D, N, gy)
                     D, N, d, got, want, expected, ref[1][1], ref[2][1], ref[3][1]);
         nchecked +:= 1;
     end for;
-    printf " ok (%o of %o published values)", nchecked, #gy;
+    for d in Force do
+        error if not IsDefined(idx, d), Sprintf("X0^%o(%o): the forced discriminant %o did not reach the table", D, N, d);
+    end for;
+    printf " ok (%o of %o published values%o)", nchecked, #gy,
+           IsEmpty(Force) select "" else Sprintf(", %o forced", #Force);
 
     // ===== SECOND HAUPTMODUL (reporting only, for now) =====
     // The published tables give the PRIMARY hauptmodule column only, so the s~ row -- the second

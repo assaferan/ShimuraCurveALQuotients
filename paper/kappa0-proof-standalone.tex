@@ -866,8 +866,63 @@ d_0$, the ramified case of (4); on $X_0^{21}(2)$ they give $s(-100)=1/5$, with $
 and $5$ split in $\Q(i)$, the case of Lemma~\ref{lem:Wcond}. The terms are $\log3$, $-\log3$ and
 $-4\log5$ on the Hauptmodul form, and with them the pipeline reproduces all three published values
 (by cross-ratio against three other points of each table, as in
-\texttt{tests/\_offline/GuoYangCheck.m}; \texttt{level-p2/gyforce\_*.m}). Not covered: $q=2$ outside an odd level, where $L_2$ is
-not unimodular and the plane has yet another shape.
+\texttt{tests/\_offline/GuoYangCheck.m}; \texttt{level-p2/gyforce\_*.m}). 
+
+\begin{lemma}[the conductor prime $2$ outside the level]\label{lem:unimod2}
+Let $2\nmid DN$, $2^k\,\|\,f$ with $k\ge1$, and $\lambda$ the image of $\sqrt d$ under an optimal
+embedding of $R_f$. In $\mathcal O\otimes\Z_2=M_2(\Z_2)$, after conjugating by $GL_2(\Z_2)$,
+$\lambda_0=\lambda/2=\begin{pmatrix}0&d/4\\1&0\end{pmatrix}$ is primitive, $L_{+,2}=\Z_2\lambda_0$,
+and with $e_1=\mathrm{diag}(1,-1)$, $e_2=\begin{pmatrix}0&-d/4\\1&0\end{pmatrix}$:
+\begin{enumerate}
+\item $L_{-,2}=\langle-1\rangle\perp\langle-\lvert d\rvert/4\rangle$. If $d_0$ is odd this is
+      the plane $\langle-1\rangle\perp\langle-4^{k-1}c\rangle$, $c\equiv3\bmod4$, of
+      Lemma~\ref{lem:conductor2}, with the same $2^k$ integral cosets $(0,t/2^{k-1})$ and
+      $(1/2,t/2^k)$ and the same series and $\kappa^-_\nu(0)$ (Lemma~\ref{lem:Wcond}); if $d_0$ is
+      even it is $\langle-1\rangle\perp\langle-4^kc\rangle$ with $c\equiv1\bmod4$ or $\langle-1
+      \rangle\perp\langle-2^{2k+1}c\rangle$, anisotropic, with integral cosets $(0,r/2^k)$,
+      $\rho=\ord_2r$, series $\alpha_j=2^{\lfloor j/2\rfloor}$ for $j\le2\rho+1$ and $0$ beyond
+      (zero coset: up to $j\le2k+1$, then $2^k$), and
+      $\kappa^-_{\nu_r}(0)=-2(2^{\rho+1}-1)/2^k\cdot\log2$, the formula of Lemma~\ref{lem:unimod}(4)
+      at $q=2$.
+\item $L_2^\vee=L_2+\Z_2e_1/2$ meets $L_{-,2}\otimes\Q$ in $L_{-,2}+\Z_2e_1/2$, and $e_1/2$ has
+      norm $-\tfrac14$: no nonzero integral coset of the plane lies in $L_2^\vee$. The cosets of the
+      second kind $(1/2,t/2^k)$ pair with $x$ such that $x+\nu\in e_1/2+L_2$, i.e.\ over the
+      nonzero class of $(\Ldual/L)_2\cong\Z/2$, at the exponents $Q(x)\equiv\tfrac34\bmod\Z$; all
+      others pair over the trivial class at $2$.
+\end{enumerate}
+\end{lemma}
+\begin{proof}
+$R_f\otimes\Z_2=\Z_2+2^k\mathcal O_{k,2}=\Z_2[2^{k-1}\sqrt{d_0}]=\Z_2[\lambda/2]$ whether $d_0$ is
+odd or even, so the embedding is optimal iff $\Z_2^2$ is a module over $\Z_2[\lambda/2]$ with that
+order as its full ring of multipliers; a lattice in a quadratic field whose multiplier ring is a
+given order is an invertible, hence principal, ideal of it, so $\Z_2^2\cong\Z_2[\lambda/2]$ and in
+the basis $1,\lambda/2$ the element $\lambda/2$ acts as $\begin{pmatrix}0&(\lambda/2)^2\\1&0
+\end{pmatrix}$ with $(\lambda/2)^2=d/4$. With $Q(a,b,c)=-a^2-bc$, $\langle x,\lambda_0\rangle=
+-(\beta+\gamma d/4)$ gives the basis $e_1,e_2$ of $L_{-,2}$ and $Q(e_1)=-1$, $Q(e_2)=d/4$,
+$\langle e_1,e_2\rangle=0$. For odd $d_0$, $\lvert d\rvert/4=4^{k-1}\lvert d_0\rvert f'^2$ with
+$\lvert d_0\rvert\equiv3\bmod4$; for even $d_0=4m$, $\lvert d\rvert/4=4^k\lvert m\rvert f'^2$ with
+$\lvert m\rvert\equiv1\bmod4$ or even, and $-c$ is then not a square mod $4$, resp.\ the exponent
+is odd, so the counts of Lemma~\ref{lem:Wcond} stop after $n=1$ exactly as in the ramified case
+of Lemma~\ref{lem:unimod}. The Gram matrix of $\langle\cdot,\cdot\rangle$ on $L_2$ in the basis
+$e_1,e_{12},e_{21}$ is $(-2)\oplus\begin{pmatrix}0&-1\\-1&0\end{pmatrix}$, so $L_2^\vee=L_2+\Z_2
+e_1/2$; a vector $\nu=se_1/2+te_2/(\lvert d\rvert/2)$ has $\langle\nu,e_{21}\rangle=-t/2$ and
+$\langle\nu,e_{12}\rangle=-2t/\lvert d\rvert$, integral only for $t\equiv0$. For (2), $x=t\lambda_0
+=(0,td/4,t)$ and $x+\nu\in L_2^\vee$ iff $t+2t'/\lvert d\rvert\in\Z_2$ (then the $\beta$-coordinate
+is integral automatically), for either value of $s$; when $s=1$ the sum lies in $e_1/2+L_2$, and
+$Q(x)=t^2\lvert d\rvert/4\equiv-\tfrac14\bmod\Z$ there.
+\end{proof}
+
+So at every prime of the conductor the term is now determined, by Lemmas~\ref{lem:conductor},
+\ref{lem:conductor2}, \ref{lem:unimod} and \ref{lem:unimod2}, except at a level prime dividing both
+$f$ and $d_0$. \paragraph{Check.} Here the published tables do reach the case, once the points are forced in:
+on the odd-level bases $X_0^{35}(1)$, $X_0^{39}(1)$, $X_0^{51}(1)$, $X_0^{55}(1)$ and $X_0^{57}(1)$,
+\cite{GY} list $s$ at $d=-28$ and $-60$ ($2$ split in $k$), $-12$ ($2$ inert), and $-16=2^2\cdot(-4)$
+($d_0$ even), and at $-315=3^2\cdot(-35)$ on $X_0^{35}(1)$ ($3\mid d_0$). The terms are
+$\log2$ on the Hauptmodul form at the split points, $-\log2$ at $-12$ and $-16$ (and $-2,-4,-6,-8\log2$
+on the covers), $\log3$ at $-315$, and with them the pipeline reproduces every one of these eight
+published values, while every other row of those tables is unchanged
+(\texttt{tests/\_offline/GuoYang\_*.m}, which now force these points). Without a term at $2$ the
+Hauptmodul value is off by a factor $2$ at each of them.
 
 \begin{remark}[the $m>0$ terms at non-fundamental $d$]
 A separate point, settled by the same comparison: in the $m>0$ part of the formula the class

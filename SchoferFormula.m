@@ -925,6 +925,8 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
  the plane is <-1> + <-|d|> (lem:unimod), no nonzero coset lies in L^v, every pair has x != 0 and
  lies over eta = 0, and when p divides d_0 as well the plane is anisotropic with
      kappa^-_nu(0)/log p = -2 (p^(rho+1) - 1)/((p-1) p^k).
+ At p = 2 outside an odd level (lem:unimod2) the plane is that of the level prime 2 when d_0 is
+ odd and the anisotropic one when d_0 is even, again with no coset in L^v; the same formulas apply.
  Verified against the values forced by
  the forms' divisors and Guo-Yang's Table 45 for all nine forms of X_0^15(2) at d = -240 and -48
  (tests/M0PoleSum.m).}
@@ -1158,10 +1160,7 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
             vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the level prime %o divides both the conductor and the fundamental discriminant of d = %o; that lattice is not derived and no term is added", q, d;
         end if;
     end for;
-    Qprimes := [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0 and IsOdd(q)];
-    if IsEven(cond) and IsOdd(D*N) then
-        vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the conductor of d = %o is even and 2 is outside the level; that lattice is not derived and no term is added at 2", d;
-    end if;
+    Qprimes := [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0];
     for q in Qprimes do
         // no coset lies in L^v at such a prime, so the multipliers (1/2) c_eta(0) never enter
         corrs := M0FibreCorrection(fs, fs_0, [Rationals() | 0 : eta in etas], d, q, Q : Lambda := lambda, M := M, Unimodular := true);
@@ -2343,17 +2342,25 @@ intrinsic ReduceTable(schofer_tab::SchoferTable)
     return;
 end intrinsic;
 
-intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}, Keep := {}) -> SeqEnum, SeqEnum, SeqEnum
+intrinsic ValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : MaxNum := 7, Prec := 100, Exclude := {}, Include := {}, Keep := {}, Force := []) -> SeqEnum, SeqEnum, SeqEnum
 {Returns the values of y^2 for all degree 2 covers and two hauptmodules at CM points.
  Keep: extra discriminants that must appear in the table, beyond the hauptmoduls' own zeros and poles.
  They bypass the coprime-to-level filter (same mechanism as CandidateDiscriminants' Keep) and are pinned
  as must-use points. This lets a caller evaluate at a CM point the filter would otherwise discard -- in
  particular at a discriminant DIVISIBLE by the level. Such a value is not absorbed by ReduceTable's
- per-row rescaling, which is what makes it usable as an external check; see tests/ExternalCMValues.m.}
+ per-row rescaling, which is what makes it usable as an external check; see tests/ExternalCMValues.m.
+ Force: discriminants the candidate search never offers (a conductor prime other than 2 at a level
+ prime, or 2 outside the level), added to the table as rational CM points -- the caller is responsible
+ for each being a single star point.  Used by the offline Guo-Yang table tests.}
     fs := BorcherdsForms(Xstar, curves : Prec := Prec);
     d_divs := &cat[[T[1]: T in  DivisorOfBorcherdsForm(f, Xstar)] : f in [fs[-1], fs[-2]]]; //include zero infinity of hauptmoduls
-    must_use := Set(d_divs) join Keep;
+    must_use := Set(d_divs) join Keep join Set(Force);
     all_cm_pts := CandidateDiscriminants(Xstar, curves : Keep := must_use);
+    for d in Force do
+        if exists{u : u in all_cm_pts[1] cat all_cm_pts[2] | u[1] eq d} then continue; end if;
+        _, cond := IsSquare(d div FundamentalDiscriminant(d));
+        Append(~all_cm_pts[1], <d, cond, 1>);
+    end for;
     abs_schofer_tab, all_cm_pts := AbsoluteValuesAtCMPoints(Xstar, curves, all_cm_pts, fs : MaxNum := MaxNum, Prec := Prec, Exclude := {}, Include := must_use);
     ReduceTable(abs_schofer_tab);
     schofer_tab := ValuesAtCMPoints(abs_schofer_tab, all_cm_pts : Exclude := Exclude);
