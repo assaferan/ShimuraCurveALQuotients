@@ -3775,3 +3775,53 @@ the deficiency is pure Borcherds duality, not a property of the divisor matrix.
 (all ten traces agree), but its k = 3/2 phase is wrong by very nearly **−d/6** — **do not tune
 that constant to fit**; get the half-integral convention right, then check it against the
 measured deficits (`38_5` → 1, `38_7` → 0, `34_3` → 0).
+
+### 2026-10-04: review of the fibre-product stage (Sachi, #71) — fixes
+
+* **Degenerate sets**: `SquarefreePart` returns the radical, so the old check only caught a subset
+  whose product is literally constant; `[f, -3f]` built a curve with a constant field of degree 2 and
+  `[f1, f2, f1 f2]` stopped Magma. Now `IsDegenerateFactorSet`: some nonempty subset's product has
+  every irreducible factor to an even power. Same in `tools/writefp.m` (#72 branch).
+* **Rejections are always printed** (`WARNING FibreProductCovers: ...`, naming the cover, the base and
+  the generating set): if the stored double covers are right and share a coordinate, every generating
+  set gives the same curve, so a rejected set means a stored equation is wrong or in another coordinate.
+* **The trace check runs to the stated number of GOOD primes** (bad-reduction primes are replaced,
+  not counted; fails if 60 primes do not yield enough).
+* `tools/planequartic.m` is the computation behind the three non-hyperelliptic verdicts
+  (6_23/w_23, 34_3/w_2, 46_3/w_3): fibre product of two stored genus-1 quotients, trace counts at
+  p = 5, 7, 11, 13, IsHyperelliptic false, canonical image a nonsingular plane quartic.
+* The fibre product is returned in its natural affine model, usually SINGULAR (shared branch points):
+  a model for the function field and the point counts, not a curve to search for points on.
+* Counts: 203 new covers (not 200). ⚠ Open: the #72 data were written from committed model files,
+  which do not record which stored equations came from the rebase or back-fill stages; only the
+  trace check protects them. Rebuilding them with the stage itself (which skips those) is a pipeline
+  run per base, not a writer run.
+
+### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 203 new curves
+
+A cover `X_0(D,N)/W` is Galois over the star with group `W_full/W`, elementary abelian, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 = f(t)`, which
+the earlier stages usually did build. This needs no genus-0 quotient, so it reaches exactly what
+the Borcherds–Schofer route cannot: the non-subhyperelliptic covers, the top curve included.
+`FibreProductCovers.m` implements it; `AllEquationsAboveCovers` runs it last. A result is kept
+only if the compositum has the genus of the genus formula **and** its point counts at three good
+primes over `F_p`, `F_{p^2}` agree with the trace formula — the second test is what rejects a
+compositum of factors in different Hauptmodul normalisations (the committed `21_2` quotients do
+this: right genus, wrong curve).
+
+Measured over the committed model files: 235 missing covers have enough double covers; those
+passing **both checks** are the **203 with no entry of any kind** (Sachi's count, and the 203 entries of
+#72; an earlier version of this entry said 200) plus 24 that re-derive stored pairs; 9 fail
+the genus check, 2 the trace formula. Among the 203 are **29 top curves of genus 4–11** (`65_1 77_1
+106_1 118_1 122_1 178_1 202_1` and 22 with `N > 1`, from `6_23`, `34_3`, `22_7` at genus 5 to
+`14_19`, `62_3`, `6_59`, `10_29` at genus 11); the rest are intermediate quotients of genus 2–11.
+The same construction decided three genus-3 covers left open in `curves_after_UpdateCurves8.dat` —
+`6_23/w_23`, `34_3/w_2`, `46_3/w_3` are smooth plane quartics, hence **not** hyperelliptic.
+⚠ At `N > 1` the double covers come from models that depend on the `m = 0` term of Schofer's
+formula, for which PR #66 proposes a proof; so these curves, and the three verdicts, are checked
+by point counts against the trace formula, not proved. ⚠ The 830 undecided covers
+there are almost all at bases with no model file (826), so as a hyperellipticity decider the stage
+is downstream of model-building; as a model producer it is a new reach.
+
+⚠ A test that `eval`s a model file **inside a procedure** segfaults Magma 2.29-7 under
+`run_tests.m` only; evaluate model files at top level (see `tests/FibreProductCovers.m`).
