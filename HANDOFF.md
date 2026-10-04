@@ -38,9 +38,24 @@ found no errors; prop:composite accepted as a corollary. What she asked for, and
   poles come from different exponents (scratch divpts.m): 21_2 at τ_{−4} (s = ∞) has pairs with
   m = 1, 9, 1/4 — ratio 9, a gap of 2 log 3. tests/DivisorPoint_21_2.m: C_k read at one table point
   per form, checked at the others; all 36 quotients f_a^{deg b}/f_b^{deg a} of the nine forms (the
-  four half-integral ones doubled) equal C_a^{deg b}/C_b^{deg a} at τ_{−4}. ⚠ d = −420 on 21_2 is NOT
-  coprime to the level and the values there are off by 3^2-type factors — the known p | gcd(d,N) gap
-  (CMNONCOPRIME comment), not touched here; it is excluded from the test.
+  four half-integral ones doubled) equal C_a^{deg b}/C_b^{deg a} at τ_{−4}. ⚠ CORRECTED THE SAME EVENING: I first blamed the mismatch at
+  d = −420 on the level prime 2 dividing d_0 (the p | gcd(d_0, N) gap). Wrong: every other d_0-even
+  table point (−84, −168, −232, ...) agrees, and at −420 all nine forms agree WITH EACH OTHER on
+  s(−420) = 7/3 against the arXiv table's 21 (Sachi saw the same). There is exactly ONE rational point
+  of discriminant −420 on the star curve (W acts transitively on the 8 points), so the two values
+  cannot both be right, and a Gross–Zagier bound decides it: with s(−420) = 21 the difference from
+  s(−28) = 1/9 carries 47, which cannot divide (420·28 − x²)/4 (420·28 is not a square mod 47); four
+  more forbidden primes (17, 29, 53, 983) appear against other rows, none for 7/3 (campaign
+  level-p2/gz420.m). So Table 46's −420 row is a FIFTH published Guo–Yang error, most likely 21/9 and
+  √21/3 with the denominators dropped; the test uses 7/3 with that argument as provenance, and runs on
+  all 21 table points (162 off-divisor values).
+* **The −100 error (Sachi, #66):** FieldsOfDefinitionOfCMPointFast failed at d = −100 on 21_2 with
+  "Element is not in the codomain of the map" — Magma's Artin map refuses the twist ideal frakb_{w0}
+  (w0 = 2, the prime above 2) for the modulus it chose for the ring class field; and it merged
+  isomorphic fields, so the two rational points of discriminant −100 (slow routine: [Q, Q]) became one.
+  Fixed: one field per valid class (no isomorphism merge), and a fall-back to the slow routine when
+  the Artin map refuses (SchoferFormula.m). Fast vs slow compared over the table discriminants of
+  21_2, 15_2, 10_3 (scratch fastslow.m).
 * The comment on non-fundamental anchors corrected (they ARE evaluated through the other forms, with
   the conductor-prime terms); two docstrings no longer call the 1/2 empirical.
 

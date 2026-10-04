@@ -14,10 +14,14 @@
 // Provenance of the expected values: the s-values are Guo-Yang's; the C_k are computed by this test
 // from them and from the forms' divisors (not independent values); the quotients at -4 are then
 // forced by the divisors alone.
-// Points where the level prime 2 is RAMIFIED in the CM field (d_0 even: -84, -168, -232, ...) are left
-// out: the local factor at a prime dividing gcd(d_0, N) is the known gap of SchoferFormula.m
-// (CMNONCOPRIME); the conductor-2 points (-16, -28, -60, -100, -112, ...) stay, their terms are the
-// fibre sum of prop:fibre.
+// Every table point enters, the conductor-2 points (their terms are the fibre sum of prop:fibre) and
+// those where 2 ramifies in the CM field (-84, -168, -232, ...) included.  One table value is not
+// Guo-Yang's: at d = -420 the arXiv table (Table 46) prints s = 21, x = sqrt(21); all nine forms agree
+// with each other on s(-420) = 7/3 (= 21/9: the denominators 9 and 3 look dropped, as in the rows
+// -28, -148, -280), and 21 is impossible by the Gross-Zagier bound -- s(-420) - s(-28) = 188/9 would
+// carry the prime 47, which cannot divide (420*28 - x^2)/4 since 420*28 is not a square mod 47; four
+// more forbidden primes (17, 29, 53, 983) appear against other table rows, none for 7/3
+// (campaign level-p2/gz420.m).  So 7/3 is used here, as a regression pin with that argument behind it.
 
 procedure test_divisor_point_21_2()
     printf "  X0^21(2): quotients of forms at the pole tau_-4 of s against the divisors...";
@@ -25,7 +29,7 @@ procedure test_divisor_point_21_2()
     sv := AssociativeArray();
     for t in [<-7,-7>,<-15,-5/3>,<-16,1>,<-28,1/9>,<-60,9>,<-84,-3>,<-100,1/5>,<-112,25>,<-120,-1/3>,
               <-148,37/9>,<-168,0>,<-228,-25/3>,<-232,-32>,<-280,-35/9>,<-312,-8/3>,<-372,-3/4>,
-              <-408,-75>,<-420,21>,<-532,-19/4>,<-708,25/48>,<-840,-16/3>] do
+              <-408,-75>,<-420,7/3>,<-532,-19/4>,<-708,25/48>,<-840,-16/3>] do
         sv[t[1]] := Rationals()!t[2];
     end for;
     Xstar := CreateShimuraQuot(D, N, Set(Divisors(D*N)));
@@ -45,7 +49,7 @@ procedure test_divisor_point_21_2()
         end for;
         return v;
     end function;
-    pts := Sort([d : d in Keys(sv) | IsOdd(FundamentalDiscriminant(d))]);
+    pts := Sort([d : d in Keys(sv)]);
     V := AssociativeArray();
     for d in pts do V[d] := SchoferFormula([fs[k] : k in ks], d, D, N, Ld); end for;
     C2 := AssociativeArray(); degs := AssociativeArray(); dvs := AssociativeArray();
