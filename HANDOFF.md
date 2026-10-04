@@ -11,6 +11,45 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-04 (later) — THE m = 0 TERM AT COMPOSITE SQUAREFREE LEVEL (branch composite-level, on #66)
+
+**What changed.** The Schofer routine no longer refuses composite N. prop:composite (standalone)
+gives the restored term as a sum over the primes p of N of log p · ((1/2) c_{eta_p}(0) − pole sum),
+eta_p any nonzero isotropic coset of ORDER p (support {p}); the cosets supported at two or more
+primes carry their own constant term but kappa^-_nu(0) vanishes to second order there, so they do
+not enter. The exact multiplier is now computed by support class:
+
+    VectorValuedForm.m   M0MultipliersBySupport(fs, Ld, D, N) -> one associative array per form,
+                         indexed by the primes of N (checks: supports inside the primes of N, exactly
+                         2p-2 cosets of support {p}, constancy on every class, rational snap).
+                         M0MultiplierExact is now its prime-level wrapper (require IsPrime(N)).
+    SchoferFormula.m     eta`m0mult is that array; the Nprimes loop uses eta`m0mult[p] (also in the
+                         fibre sum at a conductor prime); require IsSquarefree(N) replaces IsPrime(N).
+    tests/M0MultiplierExact.m  also checks the array form at 15_2 (key {2}, same nine values).
+
+Regressions green: M0MultiplierExact, Kappa0, M0PoleSum, X0_15_2, X0_21_2, X0_10_3.
+
+**What is and is not checked at a composite level.** No composite-level base exists in data/ (every
+N is 1 or prime; the smallest composite candidates with a genus-0 star curve all have DN = 210,
+M = 420 = the #div(M) = 24 Normaliz wall, |L^v/L| = 88200: 6_35, 10_21, 14_15, 15_14, 21_10, 35_6).
+At all six the nonzero isotropic cosets split by support as prop:composite says (2p-2 at {p},
+(2p-2)(2q-2) at {p,q}). M0MultipliersBySupport RUNS at 6_35 (about 45 min, almost all of it the
+interpreted rho(w^-1)e_0 loops over 88200 cosets, form-independent) and the class-constancy checks
+pass -- campaign vvdata/weyl-campaign/composite/compmult*.m. RESULT (compmult5.m, four
+weight-1/2 eta quotients WITH the character of the input space -- sum r = 1, sum d r = sum (M/d) r = 0
+mod 24, prod d^r = 2·square, found as short vectors of the solution lattice; poles anywhere): constant
+on each class, rational, and DIFFERENT across classes -- form 2: {5} -23/4, {7} -39/4, {5,7} 0; form 3:
+78, 64, 0; form 4: -1/4, 9/8, 0; form 1: 1/2, 1/2, 1/4. So the prime-level single multiplier would be
+wrong at composite N. ⚠⚠ WRONG-OBJECT TRAP, cost four 45-minute runs: compmult.m--compmult4.m used eta
+quotients OUTSIDE the input space (weight 0, or weight 1/2 with the wrong character). The coset sum is
+not well defined for those, and the routine's two-point / class-constancy checks fail -- correctly --
+at the first word with a nonzero constant term (weight-0 forms with fractional cusp orders pass
+trivially with every c_eta(0) = 0; raising Prec does nothing). The error "slash constant failed its
+two-point check" means WRONG FORM before it means precision.
+⚠ Whether the VALUES are right at a composite level is untested: it needs Borcherds forms at an
+M = 420 base (a lovelace job at the Normaliz wall) and then the Hauptmodul-consistency check, since
+no outside table has such a point.
+
 ## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
 
 **Sachi's −12.** Every form on 15_2 has a pole at τ_{−12}, but F = fs[−2]/fs[−1] is finite and Table 45
