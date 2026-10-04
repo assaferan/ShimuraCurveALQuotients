@@ -458,3 +458,9 @@ level primes differ here (for one form 6 at 3 and -7 at 7), so this is the first
 per-prime structure of prop:composite acts in production. Outside check as for `6_35`: 156 of 156
 point counts of the Eichler-Selberg trace formula at p = 11, 13, 17, 19 (campaign
 `composite/checkcomp.m`).
+
+`models_14_15.m` (2026-10-05): the third composite-level base, same recipe and cache; 3 h 54 min on
+lovelace (three multiplier computations). 65 cover keys: 7 of genus 0, 15 of genus 1, 14 of genus 2,
+6 of genus 3 and 1 of genus 4 as `y^2 + h y = f`, and 3 fibre products (1 of genus 3, 2 of genus 5).
+Outside check: 192 of 192 point counts of the trace formula at p = 11, 13, 17, 19, 23, 29 (primes
+where a model has no reduction are skipped).
