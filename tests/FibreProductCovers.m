@@ -51,6 +51,18 @@ function pipeline_shaped(poly, D, N, curves)
     return all_eqns, labels;
 end function;
 
+procedure test_degenerate_factor_sets()
+    printf "  degenerate factor sets (a subset product that is a constant times a square)...";
+    P<x> := PolynomialRing(Rationals());
+    f1 := x^3 - x + 1; f2 := x^2 + 3;
+    assert IsDegenerateFactorSet([f1, -3*f1]);            // product -3 f1^2: SquarefreePart would say f1
+    assert IsDegenerateFactorSet([f1, f2, f1*f2]);        // product of all three is (f1 f2)^2
+    assert IsDegenerateFactorSet([f1, 4*f1]);             // product 4 f1^2, a square: Magma would stop
+    assert not IsDegenerateFactorSet([f1, f2]);
+    assert not IsDegenerateFactorSet([f1, f2, f1*(x - 5)]);
+    printf " ok\n";
+end procedure;
+
 procedure test_fibre_product_6_23(poly)
     curves := GetHyperellipticCandidates();
 
@@ -168,3 +180,5 @@ end procedure;
 
 test_fibre_product_6_23(poly_6_23);
 test_fibre_product_refuses_mixed_coordinates_21_2(poly_21_2);
+
+test_degenerate_factor_sets();

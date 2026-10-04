@@ -3776,7 +3776,7 @@ the deficiency is pure Borcherds duality, not a property of the divisor matrix.
 that constant to fit**; get the half-integral convention right, then check it against the
 measured deficits (`38_5` → 1, `38_7` → 0, `34_3` → 0).
 
-### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 200 new curves
+### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 203 new curves
 
 A cover `X_0(D,N)/W` is Galois over the star with group `W_full/W`, elementary abelian, so it is
 the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 = f(t)`, which
@@ -3788,9 +3788,10 @@ primes over `F_p`, `F_{p^2}` agree with the trace formula — the second test is
 compositum of factors in different Hauptmodul normalisations (the committed `21_2` quotients do
 this: right genus, wrong curve).
 
-Measured over the committed model files: 235 missing covers have enough double covers; **224 pass
-both checks**, of which 200 had no entry of any kind (the other 24 re-derive stored pairs); 9 fail
-the genus check, 2 the trace formula. Among the 200 are **29 top curves of genus 4–11** (`65_1 77_1
+Measured over the committed model files: 235 missing covers have enough double covers; those
+passing **both checks** are the **203 with no entry of any kind** (Sachi's count, and the 203 entries of
+#72; an earlier version of this entry said 200) plus 24 that re-derive stored pairs; 9 fail
+the genus check, 2 the trace formula. Among the 203 are **29 top curves of genus 4–11** (`65_1 77_1
 106_1 118_1 122_1 178_1 202_1` and 22 with `N > 1`, from `6_23`, `34_3`, `22_7` at genus 5 to
 `14_19`, `62_3`, `6_59`, `10_29` at genus 11); the rest are intermediate quotients of genus 2–11.
 The same construction decided three genus-3 covers left open in `curves_after_UpdateCurves8.dat` —

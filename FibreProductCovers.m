@@ -113,13 +113,15 @@ end intrinsic;
 // different coordinates from the right curve when the degrees happen to agree; this can.
 function trace_formula_agrees(fs, X, nprimes)
     DN := X`D * X`N;
-    ps := [p : p in [5, 7, 11, 13, 17, 19, 23, 29] | DN mod p ne 0][1..nprimes];
-    checked := 0;
-    for p in ps do
+    checked := 0; p := 3; tried := 0;
+    // run through the good primes until nprimes of them have been checked: a prime where a factor
+    // reduces to a square (Y^2 - f reducible) or the genus drops is bad reduction of this model,
+    // not a verdict, and is replaced by the next prime rather than counted
+    while checked lt nprimes and tried lt 60 do
+        p := NextPrime(p); tried +:= 1;
+        if DN mod p eq 0 then continue; end if;
         Kp := RationalFunctionField(GF(p));
         L := Kp;
-        // A factor can reduce to a square mod p, making Y^2 - f reducible; that is bad reduction
-        // of this model at p, not a verdict, so the prime is skipped rather than raised.
         try
             for f in fs do
                 fp := PolynomialRing(GF(p))!f;
@@ -129,27 +131,32 @@ function trace_formula_agrees(fs, X, nprimes)
         catch e
             continue;
         end try;
-        if Genus(L) ne X`g then continue; end if;          // bad reduction of this model
+        if Genus(L) ne X`g then continue; end if;
         cnt := [&+[e * #Places(L, e) : e in Divisors(d)] : d in [1..2]];
         exp := [ComputePointsViaTrace(X, p, d) : d in [1..2]];
-        if cnt ne exp then return false, p; end if;
+        if cnt ne exp then return false, Sprintf("the trace formula disagrees at p = %o", p); end if;
         checked +:= 1;
-    end for;
-    return checked gt 0, checked;
+    end while;
+    if checked lt nprimes then return false, Sprintf("only %o good primes among the first 60", checked); end if;
+    return true, checked;
 end function;
 
 // A set of factors is degenerate when the product of some nonempty subset is a constant times a
 // square: if the constant is a square the compositum has the wrong degree (Magma stops with
 // "Polynomial must be irreducible"), otherwise the constant field grows and the curve is not
 // geometrically irreducible although its genus can still come out right.
-function degenerate_factors(fs)
+intrinsic IsDegenerateFactorSet(fs::SeqEnum[RngUPolElt]) -> BoolElt
+{True when the product of some nonempty subset of fs is a constant times a square, i.e. every
+ irreducible factor of that product has even multiplicity.  (SquarefreePart returns the radical, so
+ it cannot be used for this: SquarefreePart(-3 f^2) is f.)}
     for sub in Subsets({1..#fs}) do
         if IsEmpty(sub) then continue; end if;
         g := &*[fs[i] : i in sub];
-        if Degree(SquarefreePart(g)) eq 0 then return true; end if;
+        if g eq 0 then return true; end if;
+        if forall{fa : fa in Factorization(g) | IsEven(fa[2])} then return true; end if;
     end for;
     return false;
-end function;
+end intrinsic;
 
 intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : NPrimes := 3, Skip := {}) -> Assoc, Assoc
 {Fill covers that still have no equation by taking the fibre product, over the star curve, of
@@ -195,21 +202,24 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
                 Append(~fs, f + h^2/4);
             end for;
             if exists{f : f in fs | f eq 0} then continue; end if;
-            if degenerate_factors(fs) then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o: a subset of the factors has a constant squarefree part: skipped\n",
+            if IsDegenerateFactorSet(fs) then
+                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o: a subset of the factors multiplies to a constant times a square: skipped\n",
                     Sort(SetToSequence(X`W)), b;
                 continue;
             end if;
             K := FibreProductFunctionField(fs);
+            // A rejection is always reported: if the stored double covers are right and share one
+            // coordinate, every generating set gives the same curve, so a set that fails here points
+            // at a stored double-cover equation that is wrong or in another coordinate.
             if Genus(K) ne X`g then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o has genus %o, expected %o: rejected\n",
-                    Sort(SetToSequence(X`W)), b, Genus(K), X`g;
+                printf "WARNING FibreProductCovers: X_0^%o(%o) W=%o over base %o from %o: genus %o, expected %o -- rejected\n",
+                    X`D, X`N, Sort(SetToSequence(X`W)), b, [Sort(SetToSequence(U)) : U in gens], Genus(K), X`g;
                 continue;
             end if;
             agree, info := trace_formula_agrees(fs, X, NPrimes);
             if not agree then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o has the right genus but fails the trace formula at p=%o: rejected\n",
-                    Sort(SetToSequence(X`W)), b, info;
+                printf "WARNING FibreProductCovers: X_0^%o(%o) W=%o over base %o from %o: right genus but %o -- rejected\n",
+                    X`D, X`N, Sort(SetToSequence(X`W)), b, [Sort(SetToSequence(U)) : U in gens], info;
                 continue;
             end if;
             C := FibreProductCurve(fs);
