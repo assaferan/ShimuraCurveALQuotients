@@ -16,11 +16,14 @@
 // known.
 //
 // What accepts a result: the genus of the compositum has to equal the genus the Shimura-curve
-// genus formula predicts.  That is not automatic.  The factors must be written in the SAME
-// coordinate on the star, and committed models of one base can come from runs with different
-// Hauptmodul normalisations, in which case the compositum is a different curve and its genus
-// comes out wrong.  A caller that pools equations from several runs must treat the genus as the
-// test it is, not as a formality.
+// genus formula predicts, AND its point counts over F_p and F_{p^2} at a few good primes have to
+// agree with the trace formula.  The second is not redundant: the factors must be written in the
+// SAME coordinate on the star, and committed models of one base can come from runs with different
+// Hauptmodul normalisations, in which case the compositum is a different curve -- usually of the
+// wrong genus, but at X_0(21,2) of the right one, where only the point counts tell.  Inside one
+// pipeline run the first-level stages share a coordinate; the rebase and back-fill stages do not
+// (the former substitutes t = (ru+1)/u, the latter stores CurveQuotient's own coordinate), so
+// AllEquationsAboveCovers passes their keys as Skip and this stage never uses them as factors.
 
 declare verbose FibreProductCovers, 2;
 
@@ -110,13 +113,15 @@ end intrinsic;
 // different coordinates from the right curve when the degrees happen to agree; this can.
 function trace_formula_agrees(fs, X, nprimes)
     DN := X`D * X`N;
-    ps := [p : p in [5, 7, 11, 13, 17, 19, 23, 29] | DN mod p ne 0][1..nprimes];
-    checked := 0;
-    for p in ps do
+    checked := 0; p := 3; tried := 0;
+    // run through the good primes until nprimes of them have been checked: a prime where a factor
+    // reduces to a square (Y^2 - f reducible) or the genus drops is bad reduction of this model,
+    // not a verdict, and is replaced by the next prime rather than counted
+    while checked lt nprimes and tried lt 60 do
+        p := NextPrime(p); tried +:= 1;
+        if DN mod p eq 0 then continue; end if;
         Kp := RationalFunctionField(GF(p));
         L := Kp;
-        // A factor can reduce to a square mod p, making Y^2 - f reducible; that is bad reduction
-        // of this model at p, not a verdict, so the prime is skipped rather than raised.
         try
             for f in fs do
                 fp := PolynomialRing(GF(p))!f;
@@ -126,16 +131,34 @@ function trace_formula_agrees(fs, X, nprimes)
         catch e
             continue;
         end try;
-        if Genus(L) ne X`g then continue; end if;          // bad reduction of this model
+        if Genus(L) ne X`g then continue; end if;
         cnt := [&+[e * #Places(L, e) : e in Divisors(d)] : d in [1..2]];
         exp := [ComputePointsViaTrace(X, p, d) : d in [1..2]];
-        if cnt ne exp then return false, p; end if;
+        if cnt ne exp then return false, Sprintf("the trace formula disagrees at p = %o", p); end if;
         checked +:= 1;
-    end for;
-    return checked gt 0, checked;
+    end while;
+    if checked lt nprimes then return false, Sprintf("only %o good primes among the first 60", checked); end if;
+    return true, checked;
 end function;
 
-intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : NPrimes := 3) -> Assoc, Assoc
+// A set of factors is degenerate when the product of some nonempty subset is a constant times a
+// square: if the constant is a square the compositum has the wrong degree (Magma stops with
+// "Polynomial must be irreducible"), otherwise the constant field grows and the curve is not
+// geometrically irreducible although its genus can still come out right.
+intrinsic IsDegenerateFactorSet(fs::SeqEnum[RngUPolElt]) -> BoolElt
+{True when the product of some nonempty subset of fs is a constant times a square, i.e. every
+ irreducible factor of that product has even multiplicity.  (SquarefreePart returns the radical, so
+ it cannot be used for this: SquarefreePart(-3 f^2) is f.)}
+    for sub in Subsets({1..#fs}) do
+        if IsEmpty(sub) then continue; end if;
+        g := &*[fs[i] : i in sub];
+        if g eq 0 then return true; end if;
+        if forall{fa : fa in Factorization(g) | IsEven(fa[2])} then return true; end if;
+    end for;
+    return false;
+end intrinsic;
+
+intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : NPrimes := 3, Skip := {}) -> Assoc, Assoc
 {Fill covers that still have no equation by taking the fibre product, over the star curve, of
  their index-2 Atkin-Lehner double covers that do.  A result is kept only when the compositum has
  the genus the Shimura-curve genus formula predicts AND its point counts over NPrimes good primes
@@ -155,27 +178,48 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
         if X`W eq full then continue; end if;
         if IsDefined(all_eqns, i) and not IsEmpty(Keys(all_eqns[i])) then continue; end if;
         ups := index_two_over(X`W, full, DN);
-        cand := [byW[U] : U in ups | IsDefined(byW, U) and has_hyperelliptic_eqn(all_eqns, byW[U])];
+        cand := [byW[U] : U in ups | IsDefined(byW, U) and byW[U] notin Skip and has_hyperelliptic_eqn(all_eqns, byW[U])];
         if IsEmpty(cand) then continue; end if;
         // factors must share a base: group the candidates by the bases they are written over
         bases := &meet[Keys(all_eqns[j]) : j in cand];
         built := false;
         for b in bases do
             avail := {curves[j]`W : j in cand | IsDefined(all_eqns[j], b) and Type(all_eqns[j][b]) eq CrvHyp};
-            ok, gens := FibreProductGenerators(X`W, avail, D, N);
-            if not ok then continue; end if;
-            fs := [HyperellipticPolynomials(all_eqns[byW[U]][b]) : U in gens];
+            // every generating set is tried, so that a degenerate one does not block the cover
+            genlist := [* *];
+            k := Ilog2(#full div #X`W);
+            if #avail ge k then
+                for c in Subsets(avail, k) do
+                    I := full; for W2 in c do I := I meet W2; end for;
+                    if I eq X`W then Append(~genlist, SetToSequence(c)); end if;
+                end for;
+            end if;
+            for gens in genlist do
+            // y^2 + h y = f is (y + h/2)^2 = f + h^2/4: the double cover is y'^2 = f + h^2/4
+            fs := [];
+            for U in gens do
+                f, h := HyperellipticPolynomials(all_eqns[byW[U]][b]);
+                Append(~fs, f + h^2/4);
+            end for;
             if exists{f : f in fs | f eq 0} then continue; end if;
+            if IsDegenerateFactorSet(fs) then
+                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o: a subset of the factors multiplies to a constant times a square: skipped\n",
+                    Sort(SetToSequence(X`W)), b;
+                continue;
+            end if;
             K := FibreProductFunctionField(fs);
+            // A rejection is always reported: if the stored double covers are right and share one
+            // coordinate, every generating set gives the same curve, so a set that fails here points
+            // at a stored double-cover equation that is wrong or in another coordinate.
             if Genus(K) ne X`g then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o has genus %o, expected %o: rejected\n",
-                    Sort(SetToSequence(X`W)), b, Genus(K), X`g;
+                printf "WARNING FibreProductCovers: X_0^%o(%o) W=%o over base %o from %o: genus %o, expected %o -- rejected\n",
+                    X`D, X`N, Sort(SetToSequence(X`W)), b, [Sort(SetToSequence(U)) : U in gens], Genus(K), X`g;
                 continue;
             end if;
             agree, info := trace_formula_agrees(fs, X, NPrimes);
             if not agree then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o has the right genus but fails the trace formula at p=%o: rejected\n",
-                    Sort(SetToSequence(X`W)), b, info;
+                printf "WARNING FibreProductCovers: X_0^%o(%o) W=%o over base %o from %o: right genus but %o -- rejected\n",
+                    X`D, X`N, Sort(SetToSequence(X`W)), b, [Sort(SetToSequence(U)) : U in gens], info;
                 continue;
             end if;
             C := FibreProductCurve(fs);
@@ -185,6 +229,8 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
                 Sort(SetToSequence(X`W)), X`g, #fs, b, info;
             built := true;
             break;
+            end for;
+            if built then break; end if;
         end for;
     end for;
     return all_eqns, all_ws;
