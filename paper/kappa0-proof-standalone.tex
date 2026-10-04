@@ -60,12 +60,27 @@ At an Eichler order of level $N>1$ the lattice $\Lm$ is $N$-scaled at the level 
 nonzero \emph{isotropic} cosets, and there Lemma~\ref{lem:WN} computes the local factor to be a
 nonzero constant. So what we are contradicting is not a verifiable proof but a lemma whose only
 published analogue is proved under a hypothesis these lattices violate; Yang's \cite[(11)]{Yang}
-inherits the conclusion.
+inherits the conclusion. Two later papers are worth putting next to it. Bruinier--Yang
+\cite[(2.23)]{BY} repeat ``$\kappa(m,\mu)=0$ for $m<0$ or $m=0$, $\mu\neq0$'', citing Lemma~2.21, for
+the lattice $(\mathfrak a,-N/N(\mathfrak a))$ of an ideal of a field of odd fundamental discriminant,
+where $L'/L\cong\Z/D\Z$ has no nonzero isotropic element and the statement is true. Bruinier--Ehlen--Yang
+\cite[after (3.14)]{BEY}, for an arbitrary binary lattice, say the opposite in general: ``the Fourier
+coefficients of $E_L'(\tau,0;1)$ are computed in [KY10] \dots\ In particular, up to a common rational
+scaling factor, the $\kappa(m,\mu)$ with $(m,\mu)\neq(0,0)$ are given by logarithms of positive rational
+numbers'' --- $\kappa(0,\mu)$ for $\mu\neq0$ included, and computed from the same local Whittaker
+functions \cite[Thms.~4.3, 4.4]{KY} that Lemma~\ref{lem:WN} evaluates on the Eichler-order plane. So
+the only outside computation of these constant terms is the one we use.
 Everything else in the chain --- the constant-term factorisation \cite[Thm.~2.4]{KY}, the vanishing
 of the incoherent series at $s=0$, and the local structure of $\Lm$ \cite[Lemma~18]{Yang} --- is
 used unchanged. One point of bookkeeping decides the shape of the final statement: the quantity
-set to zero enters the Stokes argument \cite[(33)]{Schofer} additively through $b_\mu(0,t)$, which
-is constant in $t$ here, so replacing it by $\lim_tb_\mu(0,t)$ is legitimate; but it must be
+set to zero enters the Stokes argument \cite[(33)]{Schofer} additively through $b_\mu(0,t)$ --- the
+$(0,2)$-theorem is proved as $\int\Phi(z_0,h;F)\,dh=\lim_t\bigl[2\sum_\mu\sum_{m\ge0}c_\mu(-m)b_\mu(m,t)
+-2c_0(0)\log t\bigr]$, whose ``$m=0$ part'' $2\sum_{\mu\neq0}c_\mu(0)b_\mu(0,t)+2c_0(0)(b_0(0,t)-\log t)$
+Lemma~2.21 then reduces to $2c_0(0)k_0(0)$, so the $m=0$, $\mu\neq0$ terms carry the same factor $2$ as
+every $m>0$ term, and in \cite[Thm.~3.4(ii), Cor.~3.5(i)]{Schofer} the sum is over $m\ge0$ with the
+single prefactor $-2/\mathrm{vol}(K_T)$; with $\mathrm{vol}(K_T)=2/h_k$ and $\deg Z(U)_K=2h_k$ this is
+$-\deg Z(U)_K/2$ on $\log\lVert\Psi\rVert^2$, i.e.\ Theorem~B's $-\lvert\mathrm{CM}(d)\rvert/4$ on
+$\log\lvert\psi\rvert$, for the $m=0$ terms as for the others --- which so replacing it by $\lim_tb_\mu(0,t)$ is legitimate; but it must be
 replaced \emph{wherever} Yang's (12) invokes it, and (12) calls $\kappa^-_\nu(0)$ not only at
 $m=0$ but at every $m>0$ through the vectors $x$ on the CM line with $Q(x)=m$.
 Proposition~\ref{prop:mult} keeps all of them.
@@ -257,7 +272,9 @@ isometries of $(\Ldual/L)_N$ extend by the identity on the other $p$-parts.
 \end{proof}
 
 \begin{proposition}[the restored terms of Theorem~B]\label{prop:mult}
-Let $N$ be prime, $N\nmid d$, $d$ fundamental, and let $\nu$ run over the $2N-2$ nonzero isotropic
+Let $N$ be prime, $N\nmid d$, $d$ fundamental, $\tau_d$ off the divisor of $\Psi_F$ (Theorem~B's own
+hypothesis; it is used for the $x\neq0$ terms, see Remark~\ref{rem:xsum}, and Remark~\ref{rem:divisor}
+treats a point on the divisor), and let $\nu$ run over the $2N-2$ nonzero isotropic
 cosets of $\Lm^\vee/\Lm$, identified with those of $\Ldual/L$ by Lemma~\ref{lem:iso}. Then
 $\kappa_\nu(0)=\kappa^-_\nu(0)=-\log N/(N-1)$, and the terms of \cite[Thm.~B]{GY} that
 \cite[(11)]{Yang} sets to zero are, in total,
@@ -347,6 +364,23 @@ at $\infty$ is added. Hence:
       coefficient at the zero coset.
 \end{enumerate}
 \end{lemma}
+
+\begin{remark}[non-fundamental $d$ with $N\nmid f$, and the input]\label{rem:multext}
+The hypothesis ``$d$ fundamental'' in Proposition~\ref{prop:mult} is used only through the local
+lattice at $N$. If $d=f^2d_0$ with $N\nmid f$ then $R_f\otimes\Z_N=\mathcal O_k\otimes\Z_N$ and
+$L_{-,N}$ is the plane of the fundamental case, so Lemma~\ref{lem:LN}, Lemma~\ref{lem:WN} and
+Proposition~\ref{prop:kappa0} apply verbatim at $N$ with $N\nmid d_0$ in place of $N\nmid d$, and the
+terms at $N$ are those of the proposition; the primes of the conductor contribute separately, by
+Proposition~\ref{prop:fibre}, the contributions being additive over the primes exactly as in
+Proposition~\ref{prop:composite} (a coset supported at two primes has a double zero). This is the
+case the code evaluates when a non-fundamental $d$ is asked for at a level prime not dividing $f$.
+The input $F_f$ is Guo--Yang's: $f$ a weight-$\tfrac12$ eta quotient on $\Gamma_0(M)$ with poles only
+at the cusps $\infty$ and $0$ (``$\{\infty,0\}$-weakly holomorphic''), and its principal part is
+\cite[Lemma~24]{GY}, a lemma proved there for exactly this construction (the proof uses only that
+$P(f|\gamma)=0$ at the other cusps and the formula for $\rho_L(S^{-1})e_\delta$); the pipeline's
+pool imposes the cusp condition, so the lemma, and with it Lemma~\ref{lem:iso} and
+Proposition~\ref{prop:mult}, apply to every form the pipeline produces.
+\end{remark}
 
 \begin{remark}[the $x\neq0$ terms under Theorem~B's own hypothesis]\label{rem:xsum}
 Theorem~B is applied at $\tau_d\notin\mathrm{supp}\,\mathrm{div}\,\psi_F$. By Borcherds' theorem
@@ -457,17 +491,34 @@ built: at the six bases with a genus-zero star curve and $DN=210$ --- $X_0^6(35)
 $X_0^{14}(15)$, $X_0^{15}(14)$, $X_0^{21}(10)$, $X_0^{35}(6)$, all with $\lvert\Ldual/L\rvert=88200$
 and $M=420$ --- the nonzero isotropic cosets number exactly $2p-2$ on each class $\{p\}$ and
 $(2p-2)(2q-2)$ on $\{p,q\}$, as the proof says; and on $X_0^6(35)$, for four weight-$\tfrac12$ eta quotients of
-level $420$ with the character of the Borcherds input space (poles allowed at every cusp), the
-constant terms are constant on each of the three classes $\{5\}$, $\{7\}$, $\{5,7\}$, rational, and
-different from class to class --- $-\tfrac{23}4$, $-\tfrac{39}4$, $0$ on one of them, $78$, $64$, $0$
-on another --- so a single multiplier, the prime-level rule, would be wrong here
-(\texttt{composite/compmult5.m} on the campaign branch; about $45$ minutes, almost all of it the
-Weil representation on $88200$ cosets). The same routine refuses an eta quotient outside that space,
+level $420$ with the character of the Borcherds input space but poles at every cusp --- so not inputs
+of Theorem~B, whose $F_f$ needs $f$ $\{\infty,0\}$-weakly holomorphic for \cite[Lemma~24]{GY} and
+the pole sum of Remark~\ref{rem:xsum}; what is tested is the coset sum $c_\eta(0)=\sum_w\rho(w^{-1})
+e_0[\eta]\,a_0(f|w)$ alone, not a Schofer value --- the constant terms are constant on each of the
+three classes $\{5\}$, $\{7\}$, $\{5,7\}$, rational, and different from class to class ---
+$-\tfrac{23}4$, $-\tfrac{39}4$, $0$ on one of them, $78$, $64$, $0$ on another --- so a single
+multiplier, the prime-level rule, would be wrong here (\texttt{composite/compmult5.m} on the campaign
+branch; about $45$ minutes, almost all of it the Weil representation on $88200$ cosets). The
+pipeline's own inputs satisfy the cusp condition by construction. The same routine refuses an eta quotient outside that space,
 as it should: the coset sum is then not well defined, and the two-point and class-constancy checks
 fail at the first word where the constant term is nonzero (\texttt{compmult.m}--\texttt{compmult4.m},
 weight $0$ or the wrong character). The three functionals of \textup{Section~sec:determined of the preprint}
 are therefore computed, and the one attached to $\{p\}$ is used at $p$; whether the values are
 right at a composite level is untested, since no such base has forms, let alone outside values.
+\end{remark}
+
+\begin{remark}[the conductor-prime terms at a squarefree level]\label{rem:fibrecomp}
+Proposition~\ref{prop:fibre} is stated for prime $N$, and the code applies it prime by prime at a
+squarefree $N$. The statement extends with the same proof: the sum over $\nu\in\Lm^\vee/\Lm$ is
+regrouped by support, a coset supported at a single prime $p$ (a prime of the conductor, or a level
+prime not dividing $d_0$) has $E_0(\tau,s;\varphi_\nu)=\Phi(s)W_{0,p}(s,\varphi_\nu)/W_{0,p}(s,
+\varphi_0)$ because at every other prime $\nu_q=0$ and the local factor is the zero coset's, and a
+coset supported at two or more primes has a product of vanishing ratios, hence a double zero and
+$\kappa^-_\nu(0)=0$, exactly as in Proposition~\ref{prop:composite}. So the restored terms are the
+sum over the primes of $N$ and of $f$ of the single-prime terms: Proposition~\ref{prop:mult}'s at a
+level prime not dividing $f$ (Remark~\ref{rem:multext}), Proposition~\ref{prop:fibre}'s fibre sum at
+a prime of $f$, with the local factors of Lemmas~\ref{lem:Wcond}--\ref{lem:ramlevel} at that prime
+alone. The code's fibre sum at $p$ enumerates the $p$-primary cosets, which is this regrouping.
 \end{remark}
 
 
@@ -652,7 +703,14 @@ $Q(x)\equiv Q(\nu_p)\notin\Z_p$), so $E_0(\tau,s;\varphi_\nu)\equiv0$. For $\nu$
 exactly as in the proof of Proposition~\ref{prop:kappa0}, $E_0(\tau,s;\varphi_\nu)=\Phi(s)\,
 W_{0,p}(s,\varphi_\nu)/W_{0,p}(s,\varphi_0)$ with $\Phi(0)=-1$; the series $E(\tau,s;\varphi_\nu)$ is
 incoherent, hence vanishes at $s=0$, so the ratio vanishes at $X=1$, and $dX/ds=-X\log p$ gives the
-formula. (For $\nu$ supported at two or more primes the product of the vanishing ratios has a
+formula. The two facts used here for the plane of a non-maximal order --- holomorphy of
+$E(\tau,s;\varphi)$ at $s=0$ \cite[Cor.~2.5]{KY} and its vanishing there --- are properties of the
+quadratic space $\Lm\otimes\Q\cong(k,-cN_{k/\Q})$ and of $\varphi\in S(V(\mathbb A_f))$, not of the
+lattice: \cite[Cor.~2.5]{KY} is stated for an arbitrary Schwartz function, and the series is
+incoherent because its finite components come from $(V,Q)$ and the archimedean one from $(V,-Q)$
+\cite[after (2.18)]{BY}, whatever lattice $\varphi$ is the characteristic function of.
+Bruinier--Ehlen--Yang run this argument for binary lattices of arbitrary discriminant, the orders
+$\mathcal O_D$ included \cite[\S3]{BEY}. (For $\nu$ supported at two or more primes the product of the vanishing ratios has a
 double zero and $\kappa^-_\nu(0)=0$, as in Proposition~\ref{prop:composite}.)
 \end{proof}
 
@@ -1073,6 +1131,15 @@ the two heuristics, $F(-12)=1/20$ and also $f_{10}/f_{-1}^3=9/(2^{16}\cdot5)$, t
 force for a quotient with three poles against three; the constant that does not depend on $m$ cancels
 in every quotient and is invisible in a single value, which is infinite anyway. Off the divisor no
 such pair occurs at any evaluated point, so nothing else changes.
+
+Both quotients on $X_0^{15}(2)$ see the same gap, $\log3-\log\tfrac34=2\log2$. A second, independent
+gap is on $X_0^{21}(2)$ at $\tau_{-4}$, the pole of its Hauptmodul $s$ (the table of CM values of $X_0^{21}(2)$ in \cite{GY},
+$s(-4)=\infty$), where every form has a pole and the singular pairs are $x=\pm\lambda_0$ ($m=1$),
+$x=\pm3\lambda_0$ ($m=9$, the pole of $f_{13}$ at $q^{-9}$) and $x=\pm\lambda_0/2$ ($m=\tfrac14$).
+With $C_k$ read at one table point off each form's divisor and checked at the others, the $36$
+quotients $f_a^{\deg b}/f_b^{\deg a}$ of the nine forms (the four with half-integral principal
+parts doubled) all equal $C_a^{\deg b}/C_b^{\deg a}$ at $\tau_{-4}$, those through $f_{13}$
+testing the gap $\log9-\log1=2\log3$ (\texttt{tests/DivisorPoint\_21\_2.m}).
 \end{remark}
 
 \begin{thebibliography}{9}
@@ -1089,7 +1156,13 @@ Sci.\ China Math.\ \textbf{53} (2010), 2275--2316.
 curves}, arXiv:1503.07971.
 
 \bibitem{GY} J.-W.~Guo and Y.~Yang, \emph{Equations of hyperelliptic Shimura curves},
-Proc.\ Lond.\ Math.\ Soc.\ (2017), doi:10.1112/S0010437X16007739.
+Compos.\ Math.\ \textbf{153} (2017), 1--40.
+
+\bibitem{BY} J.~H.~Bruinier and T.~Yang, \emph{Faltings heights of CM cycles and derivatives of
+$L$-functions}, Invent.\ Math.\ \textbf{177} (2009), 631--681.
+
+\bibitem{BEY} J.~H.~Bruinier, S.~Ehlen and T.~Yang, \emph{CM values of higher automorphic Green
+functions for orthogonal groups}, Invent.\ Math.\ \textbf{225} (2021), 693--785.
 
 \bibitem{Borcherds} R.~E.~Borcherds, \emph{Automorphic forms with singularities on Grassmannians},
 Invent.\ Math.\ \textbf{132} (1998), 491--562.
