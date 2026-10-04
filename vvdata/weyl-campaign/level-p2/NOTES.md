@@ -343,3 +343,16 @@ prod_{p|f, p not | d_0} (1 - chi_{d_0}(p)/p)^-1 = 2 at -28/-60/-240, 2/3 at -48 
 FUNDAMENTAL discriminant -- which primes his loop covers was not reverse-engineered.
 OPEN: derive the factor prod_{p|f}(1 - chi(p)/p) (= h(R_f)[O_K^x:R_f^x]/(f h_0)) from the Siegel-Weil
 normalisation of the theta integral at a non-maximal order (stabiliser index f prod(1 - chi/p)).
+
+## The point ON the divisor, d = -12 on 15_2: the zero-coset heuristics replaced by -log m (divisorpoint.m, 2026-10-04)
+
+Sachi: F = fs[-2]/fs[-1] at -12 is 1/20 (Table 45, F = (s-2)/(20 s)); the code gave 2^(2/3)/5 even with the
+fibre sum (whose 2/3 log 2 is the same on both forms and cancels).  Source: the pairs (x, nu = 0) with
+Q(x) = m at the pole -- fs[-2]: x = ±lambda_0, m = 3 (c_oo(-3) = -2); fs[-1]: x = ±lambda_0/2, m = 3/4
+(cusp-0 coefficient -2 at q^(-3/4)) -- handled by TWO different heuristics from Yang's code (gamma = 0:
+"-2e log p"; gamma != 0: the conductor term -4p^(1-e)/(p-chi) log p).  Dropping both: F = 1/5 (the
+pairs cancel).  Truth needs -2 log 2 more = scale(-1/4) * (-2)(2)[lambda(3) - lambda(3/4)] with
+lambda(m) = -log m: the regularised Green function's constant at a singular pair.  With that single
+rule: F = 1/20 AND fs[10]/fs[-1]^3 = 9/(2^16 5) (three poles vs three; divisors force C_10/C_-1^3) --
+both exact.  Implemented in Kappa (SchoferFormula.m), heuristics removed; tests/M0PoleSum.m (3d).
+Off the divisor no singular pair occurs at any evaluated point (the pole-sum test), so nothing else moves.
