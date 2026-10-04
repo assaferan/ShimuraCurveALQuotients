@@ -1,0 +1,14 @@
+X_0^6(35), M = 420, |L^v/L| = 88200
+M0MultiplierExact: 68 words selected of 1152 total, 24 classes
+  wi=1 W=1 depth=169
+  fallback wi=1 point0: default Im(z)=1.31000 -> using preimage
+  fallback wi=1 point1: default Im(z)=1.73000 -> using preimage
+  wi=2 W=420 depth=1
+  fallback wi=2 point0: default Im(z)=0.722878 -> using preimage
+  fallback wi=2 point1: default Im(z)=0.521430 -> using preimage
+  wi=212 W=420 depth=1
+  wi=421 W=420 depth=1
+  fallback wi=421 point0: default Im(z)=7.45069E-6 -> using preimage
+  fallback wi=421 point1: default Im(z)=9.88082E-6 -> using preimage
+  wi=422 W=210 depth=5041
+Runtime error: M0MultiplierExact: slash constant failed its two-point check

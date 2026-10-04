@@ -385,3 +385,23 @@ applied TWICE (L(1, chi_d imprimitive) in place of L(1, chi_{d_0})).  Derivation
 rem:mpos): the T-orbit has equal stabilisers R_f^x at every point (T commutative), so the Tamagawa
 volume 2 splits as 2/|Z(d)| per point exactly as for the maximal order, and the Eisenstein series is
 that of the quadratic space L_- (x) Q, which depends on d_0 only.  Nothing is open here.
+
+## The m = 0 term at COMPOSITE squarefree level: multipliers by support class (composite/compmult*.m, 2026-10-04)
+
+prop:composite implemented on branch composite-level (stacked on kappa0-proof): M0MultipliersBySupport
+returns, per form, (1/2) c_eta(0) for each prime p | N from the 2p-2 nonzero isotropic cosets of order p;
+M0MultiplierExact is its prime-level wrapper; SchoferFormula uses eta`m0mult[p] per prime and refuses
+only non-squarefree N.  No composite-level base has forms (the smallest, DN = 210, all sit at M = 420,
+the Normaliz wall).  Structural check at 6_35 / 10_21 / 14_15 / 15_14 / 21_10 / 35_6: |L^v/L| = 88200,
+nonzero isotropic cosets by support = 2p-2 at {p}, (2p-2)(2q-2) at {p,q} (compprobe).  RESULT at 6_35
+(compmult5.m, 45 min, four weight-1/2 eta quotients WITH the input-space character, poles anywhere):
+constant on each class, rational, DIFFERENT across classes -- {5} -23/4, {7} -39/4, {5,7} 0 on one
+form; 78, 64, 0 on another; 1/2, 1/2, 1/4 on a third -- so the single prime-level multiplier is wrong
+at composite N and the per-prime structure is real.  ⚠⚠ compmult.m..compmult4.m (four 45-min runs)
+used eta quotients OUTSIDE the input space (weight 0; or weight 1/2 without sum (M/d) r = 0 mod 24 and
+prod d^r = 2·square): the coset sum is not well defined for them and the routine's two-point /
+class-constancy checks fail at the first word with nonzero constant term (trivially passing when every
+c_eta(0) = 0).  "slash constant failed its two-point check" = WRONG FORM, not precision.  The input
+character: BorcherdsForms.m lhs_integer_programming -- sum r = 1, sum d r = 0 (24), sum (M/d) r = 0
+(24), v_2-parity 1 and odd-p parities 0 of prod d^r (i.e. 2 * square); compmult5.m solves it by LLL on
+the solution lattice, no Normaliz.
