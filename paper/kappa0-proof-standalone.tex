@@ -1003,14 +1003,27 @@ every $\kappa^-_\mu(m)$ at a given $d$ by $\prod_{p\mid f,\,p\nmid d_0}(1-\chi_{
 $2$ at $-28,-60,-240$, $\tfrac23$ at $-48$ --- and the earlier code, with the order's class number
 $h(R_f)$ in place of $h_0$, was off by $h(R_f)/h_0$, visible only at conductor $4$.
 
-\emph{What is not derived.} Why the corrections stop at the primes of $f$. Equivalently, Theorem~B
-with the prefactor $-\lvert\mathrm{CM}(d)\rvert/4$ and the Euler-product $\kappa^-$ acquires at
-conductor $f$ the extra factor $\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$, which is $h(R_f)[\mathcal O_k^\times:
-R_f^\times]/(fh_0)$, the ratio of the order's class number to the field's; it must come from the
-Siegel--Weil normalisation of Schofer's theta integral for the lattice of a non-maximal order, where
-the stabiliser of $\widehat{\Lm}$ has index $f\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$ in that of the
-maximal one. We have not carried that computation out; until it is done the global factor at
-non-fundamental $d$ rests on the agreement above.
+\emph{Where the missing factor is.} The Euler-product normalisation of the Eisenstein coefficients
+is not in doubt: Siegel's genus-average identity for the definite plane,
+\[
+  \frac{\sum_{L'}r_{L'}(M)/\lvert O(L')\rvert}{\sum_{L'}1/\lvert O(L')\rvert}
+  =\frac{c_\infty}{\sqrt{\det S}}\cdot\frac{\prod_{p\in S}\alpha_p(M)}{L(1,\chi_{d_0})\prod_{p\in S}(1-\chi_{d_0}(p)/p)},
+\]
+with $\alpha_p$ the counting densities, holds with one universal constant at $d=-15,-60,-240,-48$
+on $X_0^{15}(2)$ --- the corrections at the conductor prime included --- and fails without them
+(\texttt{level-p2/siegel.m}). So the coefficient $\kappa^-_\mu(m)$ of the incoherent series carries
+the correction at $p\mid f$, and what the values force is that Theorem~B at conductor $f$ reads
+\[
+  \sum_{z\in\mathrm{CM}(d)}\log\lvert\Psi(z)\rvert^2=-\frac{\lvert\mathrm{CM}(d)\rvert}{4}
+  \prod_{p\mid f}\Bigl(1-\frac{\chi_{d_0}(p)}p\Bigr)\sum_{\mu,m}c_\mu(-m)\kappa_\mu(m)
+\]
+with the Euler-product $\kappa$. The extra factor is $[\widehat{\mathcal O}_k^\times:\widehat R_f^\times]/f$,
+the index of the stabiliser of $\widehat{\Lm}$ in that of the maximal lattice divided by the
+conductor, equivalently $h(R_f)[\mathcal O_k^\times:R_f^\times]/(fh_0)$. It has to come out of the
+normalisation of Schofer's theta integral against the CM cycle of the order $R_f$ --- the orbit
+$T(\Q)\backslash T(\mathbb A_f)/K_f$ with $K_f$ the smaller stabiliser --- and we have not carried
+that computation out; until it is, the global factor at non-fundamental $d$ rests on the agreement
+above and on Siegel's identity for its local part.
 \end{remark}
 
 \begin{remark}[a point on the divisor, and the value of a quotient there]\label{rem:divisor}
