@@ -1,0 +1,9 @@
+form  11: fit at -7, checked at 13 points, bad=[]; d=-16 truth=12 with-term OK without-term OK
+form  12: fit at -15, checked at 10 points, bad=[]; d=-16 truth=9261 with-term OK without-term wrong
+form  13: fit at -84, checked at 12 points, bad=[]; d=-16 truth=49/192 with-term OK without-term wrong
+form  14: fit at -168, checked at 11 points, bad=[]; d=-16 truth=250047/64 with-term OK without-term wrong
+form  15: fit at -84, checked at 11 points, bad=[]; d=-16 truth=441/4 with-term OK without-term wrong
+form   9: fit at -7, checked at 12 points, bad=[]; d=-16 truth=1008 with-term OK without-term OK
+form  -1: fit at -7, checked at 13 points, bad=[]; d=-16 truth=84 with-term OK without-term OK
+form  10: fit at -7, checked at 13 points, bad=[]; d=-16 truth=84 with-term OK without-term OK
+form  -2: fit at -7, checked at 13 points, bad=[]; d=-16 truth=12 with-term OK without-term OK

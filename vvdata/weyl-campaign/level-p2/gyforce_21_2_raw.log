@@ -1,0 +1,226 @@
+forcing d = -100 (conductor 5): 1 star point(s)
+forcing d = -16 (conductor 2): 1 star point(s)
+
+	m = 0 term at the conductor prime 2, d = -28: [ 2, 4, 2, 2, 2 ]
+	m = 0 term at the conductor prime 5 outside the level, d = -100: [ -1, -4, -2, -3, -3, -2, -1, -1, -1 ]
+	m = 0 term at the conductor prime 2, d = -16: [ 0, -4, -6, -8, -4, 0, 0, 0, 0 ]DIV 11 [ <-4, -1>, <-168, 1> ]
+DIV 12 [ <-4, -4>, <-7, 1>, <-84, 1>, <-168, 1>, <-28, 1> ]
+DIV 13 [ <-4, -2>, <-7, 1>, <-28, 1> ]
+DIV 14 [ <-4, -3>, <-7, 1>, <-84, 1>, <-28, 1> ]
+DIV 15 [ <-4, -3>, <-7, 1>, <-168, 1>, <-28, 1> ]
+DIV 9 [ <-4, -2>, <-84, 1>, <-168, 1> ]
+DIV -1 [ <-4, -1>, <-84, 1> ]
+DIV 10 [ <-4, -1>, <-84, 1> ]
+DIV -2 [ <-4, -1>, <-168, 1> ]
+DISCS [ -4, -7, -28, -84, -168, -15, -120, -148, -228, -232, -280, -312, -372, -408, -532, -708, -100, -16 ]
+RAW 11 [
+Logoo,
+2Log2+Log3+Log7,
+2Log2-Log3,
+2Log2+2Log3,
+Log0,
+2Log2+Log5,
+2Log2,
+2Log2-Log3+Log37,
+2Log2+2Log5,
+7Log2+Log3,
+2Log2-Log3+Log5+Log7,
+5Log2,
+2Log3,
+2Log2+2Log3+2Log5,
+Log3+Log19,
+-2Log2+2Log5,
+2Log2+Log3-Log5,
+2Log2+Log3
+]
+RAW 12 [
+Logoo,
+Log0,
+Log0,
+Log0,
+Log0,
+2Log2+Log5+3Log7,
+-Log2+Log5+3Log7,
+2Log2-Log3+2Log5+3Log7+Log37,
+2Log5+3Log7+Log19,
+-3Log2+3Log3+2Log5+3Log7+2Log17+Log29,
+-Log2-Log3+Log5+5Log7,
+-5Log2+2Log5+3Log7+Log13,
+-16Log2+6Log3+2Log5+3Log7+Log31,
+-Log2+6Log3+2Log5+3Log7+2Log13+Log17,
+-16Log2+5Log3+2Log5+5Log7+Log19,
+-24Log2+2Log5+3Log7+2Log13+2Log19+Log59,
+5Log3-4Log5+3Log7,
+3Log3+3Log7
+]
+RAW 13 [
+Logoo,
+Log0,
+Log0,
+-8Log2-Log3+3Log7,
+-12Log2-Log3+3Log7,
+-4Log2-2Log3+2Log7,
+-8Log2-2Log3+Log5+2Log7,
+-8Log2-Log3+2Log5+2Log7,
+-8Log2-2Log3+2Log7+Log19,
+-12Log2-Log3+2Log5+2Log7+2Log17,
+-8Log2-Log3+3Log7,
+-12Log2-2Log3+2Log5+2Log7+Log13,
+-16Log2-Log3+2Log5+2Log7+Log31,
+-8Log2-Log3+2Log7+2Log13+Log17,
+-16Log2+Log3+2Log5+3Log7,
+-20Log2-2Log3+2Log7+2Log19+Log59,
+-8Log2+Log3-2Log5+2Log7,
+-6Log2-Log3+2Log7
+]
+RAW 14 [
+Logoo,
+Log0,
+Log0,
+Log0,
+-14Log2+7Log3+4Log7,
+-4Log2+4Log3+3Log7,
+-7Log2+4Log3+Log5+3Log7,
+-4Log2+4Log3+2Log5+3Log7,
+-6Log2+4Log3+3Log7+Log19,
+-14Log2+6Log3+2Log5+3Log7+2Log17+Log29,
+-7Log2+4Log3+4Log7,
+-14Log2+4Log3+2Log5+3Log7+Log13,
+-20Log2+8Log3+2Log5+3Log7+Log31,
+-7Log2+8Log3+3Log7+2Log13+Log17,
+-20Log2+8Log3+2Log5+5Log7,
+-26Log2+4Log3+3Log7+2Log13+2Log19+Log59,
+-6Log2+8Log3-3Log5+3Log7,
+-6Log2+6Log3+3Log7
+]
+RAW 15 [
+Logoo,
+Log0,
+Log0,
+-4Log2+3Log3+3Log7,
+Log0,
+Log5+2Log7,
+-4Log2+Log5+2Log7,
+-4Log2+2Log5+2Log7+Log37,
+-4Log2+2Log5+2Log7+Log19,
+-3Log2+2Log3+2Log5+2Log7+2Log17,
+-4Log2+Log5+4Log7,
+-5Log2+2Log5+2Log7+Log13,
+-14Log2+3Log3+2Log5+2Log7+Log31,
+-4Log2+3Log3+2Log5+2Log7+2Log13+Log17,
+-14Log2+4Log3+2Log5+3Log7+Log19,
+-20Log2+2Log5+2Log7+2Log19+Log59,
+-4Log2+4Log3-3Log5+2Log7,
+-2Log2+2Log3+2Log7
+]
+RAW 9 [
+Logoo,
+4Log2+2Log3+2Log7,
+4Log2-2Log3+2Log7,
+Log0,
+Log0,
+4Log2+Log5+Log7,
+5Log2+Log7,
+8Log2-2Log3+Log7+Log37,
+6Log2+2Log5+Log7,
+7Log2+2Log3+Log7+Log29,
+5Log2-2Log3+Log5+2Log7,
+5Log2+Log7,
+-2Log2+5Log3+Log7,
+5Log2+5Log3+2Log5+Log7,
+-2Log2+2Log3+2Log7+Log19,
+-6Log2+2Log5+Log7+2Log13,
+6Log2+2Log3-2Log5+Log7,
+4Log2+2Log3+Log7
+]
+RAW -1 [
+Logoo,
+2Log2+Log3+Log7,
+2Log2-Log3+2Log7,
+Log0,
+2Log3+Log7,
+2Log2+Log7,
+3Log2+Log7,
+6Log2-Log3+Log7,
+4Log2+Log7,
+Log3+Log7+Log29,
+3Log2-Log3+Log7,
+Log7,
+-2Log2+3Log3+Log7,
+3Log2+3Log3+Log7,
+-2Log2+Log3+2Log7,
+-4Log2+Log7+2Log13,
+4Log2+Log3-Log5+Log7,
+2Log2+Log3+Log7
+]
+RAW 10 [
+Logoo,
+2Log2+Log3+Log7,
+2Log2-Log3+2Log7,
+Log0,
+2Log3+Log7,
+2Log2+Log7,
+3Log2+Log7,
+6Log2-Log3+Log7,
+4Log2+Log7,
+Log3+Log7+Log29,
+3Log2-Log3+Log7,
+Log7,
+-2Log2+3Log3+Log7,
+3Log2+3Log3+Log7,
+-2Log2+Log3+2Log7,
+-4Log2+Log7+2Log13,
+4Log2+Log3-Log5+Log7,
+2Log2+Log3+Log7
+]
+RAW -2 [
+Logoo,
+2Log2+Log3+Log7,
+2Log2-Log3,
+2Log2+2Log3,
+Log0,
+2Log2+Log5,
+2Log2,
+2Log2-Log3+Log37,
+2Log2+2Log5,
+7Log2+Log3,
+2Log2-Log3+Log5+Log7,
+5Log2,
+2Log3,
+2Log2+2Log3+2Log5,
+Log3+Log19,
+-2Log2+2Log5,
+2Log2+Log3-Log5,
+2Log2+Log3
+]
+KEYS [ 11, 12, 13, 14, 15, 9, -1, 10, -2 ] sIndex 7 sTildeIndex 9
+CHECK s d -16    OK
+CHECK s d -28    OK
+CHECK s d -84    OK
+CHECK s d -100   OK
+CHECK s d -120   OK
+CHECK s d -148   OK
+CHECK s d -168   OK
+CHECK s d -228   OK
+CHECK s d -232   OK
+CHECK s d -280   OK
+CHECK s d -312   OK
+CHECK s d -372   OK
+CHECK s d -408   OK
+CHECK s d -532   OK
+CHECK s d -708   OK
+CHECK stilde d -16    OK
+CHECK stilde d -28    OK
+CHECK stilde d -84    OK
+CHECK stilde d -100   OK
+CHECK stilde d -120   OK
+CHECK stilde d -148   OK
+CHECK stilde d -168   OK
+CHECK stilde d -228   OK
+CHECK stilde d -232   OK
+CHECK stilde d -280   OK
+CHECK stilde d -312   OK
+CHECK stilde d -372   OK
+CHECK stilde d -408   OK
+CHECK stilde d -532   OK
+CHECK stilde d -708   OK

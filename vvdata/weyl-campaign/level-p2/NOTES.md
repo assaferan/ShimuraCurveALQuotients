@@ -315,3 +315,16 @@ with Q(e_1/2) = -1/4, so NO integral coset in L^v (standalone lem:unimod2).  For
 57_1 -16 (d_0 = -4, even: -1), -28; 51_1 -12, -28; 39_1 -28, -60; 35_1 -28, -60 and -315 (q = 3 | d_0,
 +1 log 3) -- all OK, every other row unchanged.  The forced points are now permanent in the offline
 tests (ValuesAtCMPoints : Force).
+
+## A level prime dividing both the conductor and d_0 (lem:ramlevel), checked at X_0^21(2), d = -16 (2026-10-04)
+
+lambda = (0, b; p^2 c', 0) after the two conjugations (b unit by w_p; a' = 0 by (1,0;pt,1) -- this
+normalisation was MISSING from lem:conductor's proof, which dropped the alpha-term of the dual pairing;
+fixed), plane <-1> + <-|d|/p^2> = the anisotropic ramified plane, index p^{2k}, cosets (0, r/p^k), the
+p-1 of order p IN L^v (one at p = 2).  So c_eta(0) enters with weight (p^k-1)/p^k * (1/2) c_eta(0) log p
+-- the fundamental ramified case (k = 0) gives 0, as rem:ramified says.  The only GY point: 21_2, d = -16.
+Term [0,-4,-6,-8,-4,0,0,0,0] on keys [11,12,13,14,15,9,-1,10,-2]: ZERO on the Hauptmodul forms (the
+x = 0 pair cancels against the pole at tau_-4 via x = lambda_0/2), so the s-row check is blind; the
+per-form divisor check (ramcheck.py, raw rows in gyforce_21_2_raw.log) is not: 9/9 with the term,
+forms 12/13/14/15 off by 2^4/2^6/2^8/2^4 without.  Code: Nprimes now includes level primes dividing
+both d_fund and the conductor; M0FibreCorrection's eps = 0 branch no longer requires Unimodular.

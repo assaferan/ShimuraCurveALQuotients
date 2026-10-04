@@ -1,7 +1,7 @@
 AttachSpec("ShimuraQuotients.spec");
 SetColumns(0);
 SetVerbose("ShimuraQuotients", 1);
-D := 21; N := 2; extra := [-100];
+D := 21; N := 2; extra := [-100, -16];
 gy := [
 <-4, Infinity()>,
 <-7, -7>,
@@ -46,6 +46,9 @@ for d in extra do
     end if;
 end for;
 abs_tab, all_cm_pts := AbsoluteValuesAtCMPoints(star, curves, [rat, quad], fs : MaxNum := 12, Prec := 100, Exclude := {}, Include := must_use);
+for k in abs_tab`Keys_fs do printf "DIV %o %o\n", k, DivisorOfBorcherdsForm(fs[k], star); end for;
+printf "DISCS %o\n", abs_tab`Discs;
+for i in [1..#abs_tab`Values] do printf "RAW %o %o\n", abs_tab`Keys_fs[i], abs_tab`Values[i]; end for;
 ReduceTable(abs_tab);
 tab := ValuesAtCMPoints(abs_tab, all_cm_pts);
 printf "KEYS %o sIndex %o sTildeIndex %o\n", tab`Keys_fs, tab`sIndex, tab`sTildeIndex;
