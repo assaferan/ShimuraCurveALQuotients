@@ -517,7 +517,10 @@ $p^{2k}$ with $2k\ge2$, so $p\mid a$. Optimality of the embedding of $R_f$ says 
 Conjugation by the Atkin--Lehner element $w_p=\begin{pmatrix}0&1\\p&0\end{pmatrix}$ normalises
 $\mathcal O\otimes\Z_p$, preserves the norm, and sends $(a,b,c)$ to $(-a,c,b)$; since everything
 below is an isometry invariant of the pair $(L_p,\lambda)$, we may take $b$ to be the unit. Then
-$p^2\mid a^2$ forces $p\mid c$, which is (1). For $x=(\alpha,\beta,\gamma)\in L_p$,
+$p^2\mid a^2$ forces $p\mid c$, which is (1). Conjugating further by $\begin{pmatrix}1&0\\pt&1
+\end{pmatrix}\in(\mathcal O\otimes\Z_p)^\times$ replaces $a'$ by $a'-tb$, so we may and do take
+$a'=0$ below; this is what makes the pairing $\langle e_2',x\rangle=-p\gamma+(p^2c'/b)\beta$ free of an
+$\alpha$-term in the proof of (4). For $x=(\alpha,\beta,\gamma)\in L_p$,
 $\langle x,\lambda\rangle=-\tr(x\lambda)=-(2\alpha pa'+\beta p^2c'+\gamma pb)$, so $x\perp\lambda$
 iff $\gamma=-(2a'\alpha+pc'\beta)/b$, which gives the basis in (2); substituting,
 $Q|_{L_{-,p}}=-\alpha^2+(2pa'/b)\alpha\beta+(p^2c'/b)\beta^2$, and completing the square gives
@@ -912,9 +915,51 @@ is integral automatically), for either value of $s$; when $s=1$ the sum lies in 
 $Q(x)=t^2\lvert d\rvert/4\equiv-\tfrac14\bmod\Z$ there.
 \end{proof}
 
-So at every prime of the conductor the term is now determined, by Lemmas~\ref{lem:conductor},
-\ref{lem:conductor2}, \ref{lem:unimod} and \ref{lem:unimod2}, except at a level prime dividing both
-$f$ and $d_0$. \paragraph{Check.} Here the published tables do reach the case, once the points are forced in:
+\begin{lemma}[a level prime dividing both the conductor and $d_0$]\label{lem:ramlevel}
+Let $p\,\|\,N$, $p\mid d_0$ and $p^k\,\|\,f$ with $k\ge1$. After the conjugations of
+Lemma~\ref{lem:conductor} (and, for $p=2$, of Lemma~\ref{lem:conductor2}), $\lambda=\begin{pmatrix}0&b\\
+p^2c'&0\end{pmatrix}$ with $b$ a unit and $bc'=d/p^2$ for odd $p$, and $\lambda=\begin{pmatrix}0&2b'\\4c'
+&0\end{pmatrix}$ with $b'$ odd, $c'$ even and $b'c'=d/8$ for $p=2$. Then $L_{-,p}=\langle-1\rangle\perp
+\langle-\lvert d\rvert/p^{\,2}\rangle$ for odd $p$ and $\langle-1\rangle\perp\langle-\lvert d\rvert/4\rangle$
+for $p=2$: the anisotropic planes of Lemmas~\ref{lem:unimod}(4) and \ref{lem:unimod2}(1), with their
+integral cosets $(0,r/p^k)$, $\rho=\ord_pr$, their series, and
+\[
+  \kappa^-_{\nu_r}(0)=-\frac{2(p^{\rho+1}-1)}{(p-1)p^k}\log p .
+\]
+The index $[L_p:L_{+,p}\oplus L_{-,p}]$ is $p^{2k}$, and the cosets of order $p$ ($\rho=k-1$), $p-1$
+of them for odd $p$ and one for $p=2$, lie in $L_p^\vee$, over nonzero isotropic classes of
+$\Ldual/L$ supported at $p$. So, unlike the fundamental ramified case (Remark~\ref{rem:ramified}),
+the constant term enters: the $x=0$ pairs contribute $\tfrac{p^k-1}{p^k}\,\tfrac12c_\eta(0)\log p$ per
+point, and the $x\ne0$ pairs the poles of $f$ at the CM points of $d/p^2,\dots$ as before.
+\end{lemma}
+\begin{proof}
+The derivation of Lemma~\ref{lem:conductor}(1) used only $p^2\mid Q(\lambda)$ and optimality, so it
+applies, with $a'^2+bc'=d/p^2$ now divisible by $p$; normalising $a'=0$ the plane is
+$-\alpha^2-(p^2c'/b)\beta^2=-\alpha^2-(\lvert d\rvert/p^2)(1/b^2)\beta^2$ with $\ord_p(\lvert d\rvert/p^2)
+=2k-1$ odd. For $p=2$ the derivation of Lemma~\ref{lem:conductor2}(1) gives $a'$ even (as $a'^2+2b'c'
+=-\lvert d\rvert/4\equiv0\bmod4$), $b'$ odd and $c'$ even, and the conjugation by $\begin{pmatrix}1&0\\
+2t&1\end{pmatrix}$ shifts $a'$ by $2tb'$, so $a'=0$; the plane is $-\alpha^2+(2c'/b')\beta^2$ with
+$2c'/b'=-\lvert d\rvert/(4b'^2)=-4^k\lvert m\rvert f'^2/b'^2$, $d_0=4m$. The series and $\kappa^-$ are
+those computed in Lemmas~\ref{lem:unimod}(4) and \ref{lem:unimod2}(1), which depend only on the plane.
+The dual pairing is $\langle e_2,x\rangle=-p\gamma+(p^2c'/b)\beta$ (resp.\ $-2\gamma+(2c'/b')\beta$),
+so $e_2/p^m\in L_p^\vee$ iff $m\le1$, and $Q(e_2/p)=-\lvert d\rvert/p^4\in\Z_p$ (resp.\ $Q(e_2/2)=
+-\lvert d\rvert/16$) is integral since $k\ge1$; its class in $(\Ldual/L)_p$ is $e_{12}/p$ (resp.\ the
+class of $e_{12}/2$), a nonzero isotropic vector. The index is the valuation of
+$\det(\lambda,e_1,e_2)=2pc'$ (resp.\ of the determinant ratio $4^{2k}$ as in Lemma~\ref{lem:conductor2}).
+The weight of the $x=0$ pairs is $-\tfrac14\cdot(p-1)\cdot\kappa^-_{\nu}(0)\cdot c_\eta(0)$ at $\rho=k-1$
+for odd $p$, and $-\tfrac14\kappa^-_\nu(0)c_\eta(0)$ for $p=2$ where $p-1=1$.
+\end{proof}
+
+So at every prime of the conductor the term is determined, by Lemmas~\ref{lem:conductor},
+\ref{lem:conductor2}, \ref{lem:unimod}, \ref{lem:unimod2} and \ref{lem:ramlevel}. \paragraph{Check.} One published value reaches this case: on $X_0^{21}(2)$, \cite{GY} give
+$s(-16)=1$, with $-16=2^2\cdot(-4)$ and $2$ the level prime dividing $d_0$. There the term is $-4,-6,-8,-4
+\log2$ on four of the covers and $0$ on the Hauptmodul forms (for them the $x=0$ pair, with
+$\tfrac12c_\eta(0)$, is cancelled by the pole of $f$ at $\tau_{-4}$ through $x=\pm\lambda_0/2$), so
+the Hauptmodul row cannot see it; but every form is a function of $s$ with known divisor, supported
+at $\tau_{-4}$ (the pole, where $s=\infty$), $\tau_{-7}$, $\tau_{-28}$, $\tau_{-84}$ and $\tau_{-168}$,
+all with published $s$. Fitting each form's constant at one fundamental point and checking it at ten
+to thirteen others, the value at $-16$ forced by the divisor agrees with the pipeline's for all nine
+forms; without the term the four covers are off by $2^4,2^6,2^8,2^4$ (\texttt{level-p2/ramcheck.py}). \paragraph{Check.} Here the published tables do reach the case, once the points are forced in:
 on the odd-level bases $X_0^{35}(1)$, $X_0^{39}(1)$, $X_0^{51}(1)$, $X_0^{55}(1)$ and $X_0^{57}(1)$,
 \cite{GY} list $s$ at $d=-28$ and $-60$ ($2$ split in $k$), $-12$ ($2$ inert), and $-16=2^2\cdot(-4)$
 ($d_0$ even), and at $-315=3^2\cdot(-35)$ on $X_0^{35}(1)$ ($3\mid d_0$). The terms are

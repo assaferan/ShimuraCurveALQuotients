@@ -905,7 +905,7 @@ end intrinsic;
 intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLaurElt], mults::SeqEnum[FldRatElt],
                             d::RngIntElt, p::RngIntElt, Q::AlgMatElt : Lambda := false, M := 0, Unimodular := false) -> SeqEnum
 {The m = 0-type terms of Schofer's formula at a prime p dividing the conductor of d -- a level
- prime (p || N, p not dividing d_0), or with Unimodular a prime not dividing DN -- per CM point
+ prime p || N, or with Unimodular a prime not dividing DN -- per CM point
  and in units of log p, one value per form (paper/kappa0-proof-standalone.tex, prop:fibre,
  lem:Wcond and lem:unimod).  foos and f0s are the expansions of the forms at the cusps oo and 0
  (the latter in q^(1/M), M the level of the forms), mults their multipliers (1/2) c_eta(0), Q the
@@ -927,6 +927,9 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
      kappa^-_nu(0)/log p = -2 (p^(rho+1) - 1)/((p-1) p^k).
  At p = 2 outside an odd level (lem:unimod2) the plane is that of the level prime 2 when d_0 is
  odd and the anisotropic one when d_0 is even, again with no coset in L^v; the same formulas apply.
+ At a level prime dividing d_0 as well (lem:ramlevel) the plane is the anisotropic one, with the
+ p - 1 cosets of order p (one at p = 2) in L^v, so c_eta(0) enters with weight
+ -2 (p^k - 1)/((p-1) p^k) log p -- nonzero, unlike the fundamental ramified case.
  Verified against the values forced by
  the forms' divisors and Guo-Yang's Table 45 for all nine forms of X_0^15(2) at d = -240 and -48
  (tests/M0PoleSum.m).}
@@ -942,9 +945,7 @@ intrinsic M0FibreCorrection(foos::SeqEnum[RngSerLaurElt], f0s::SeqEnum[RngSerLau
     is_sq, f := IsSquare(d div d0); assert is_sq;
     k := Valuation(f, p);
     require k ge 1 : "p must divide the conductor of d";
-    eps := KroneckerSymbol(d0, p);
-    require eps ne 0 or Unimodular :
-        "at a level prime dividing both the conductor and the fundamental discriminant the lattice is not derived";
+    eps := KroneckerSymbol(d0, p);          // 0 when p divides d_0: the anisotropic plane, at a level prime too (lem:ramlevel)
 
     lam := ChangeRing(lambda_v, Rationals());
     lam0 := lam / Content(lambda_v);                       // primitive vector on the CM line
@@ -1154,12 +1155,10 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     // CM points of d/p^2, d/p^4, ...); at a level prime not dividing the conductor it is the
     // (1/2) c_eta(0) - pole-sum term of prop:mult.
     _, cond := IsSquare(d div d_fund);
-    Nprimes := PrimeDivisors(N div GCD(N, d_fund));
-    for q in PrimeDivisors(cond) do
-        if N mod q eq 0 and d_fund mod q eq 0 then
-            vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: the level prime %o divides both the conductor and the fundamental discriminant of d = %o; that lattice is not derived and no term is added", q, d;
-        end if;
-    end for;
+    // level primes with a term: those not dividing d_fund (prop:mult, or the fibre sum when they divide
+    // the conductor), and those dividing both d_fund and the conductor (the fibre sum on the anisotropic
+    // plane, lem:ramlevel); a level prime dividing d_fund but not the conductor carries nothing (rem:ramified)
+    Nprimes := [p : p in PrimeDivisors(N) | d_fund mod p ne 0 or cond mod p eq 0];
     Qprimes := [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0];
     for q in Qprimes do
         // no coset lies in L^v at such a prime, so the multipliers (1/2) c_eta(0) never enter
@@ -1206,7 +1205,7 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
                              " supported at that prime alone (prop:composite), which is not implemented";
         for p in Nprimes do
             logp := LogSum(Rationals()!1, p);
-            if cond mod p ne 0 then
+            if cond mod p ne 0 then                     // then p does not divide d_fund: prop:mult
                 for i->eta in etas do
                     xsum := M0InfinityPoleSum(fs[i], d);
                     if xsum ne 0 then

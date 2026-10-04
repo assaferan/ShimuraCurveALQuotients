@@ -50,8 +50,13 @@ same (lem:unimod2): optimality makes Z_2^2 a free Z_2[lambda/2]-module, so lambd
 the plane is lem:conductor2's (d_0 odd) or the anisotropic one (d_0 even), and no coset lies in L^v.
 Confirmed on the Guo-Yang points the search never offers, now FORCED into the offline tests
 (ValuesAtCMPoints: Force, test_gy_table: Force): -28, -60 (split), -12 (inert), -16 (d_0 = -4) and
--315 (q = 3) across 35_1, 39_1, 51_1, 55_1, 57_1 -- all published values reproduced. ⚠ NOT derived:
-a level prime dividing both the conductor and d_0 (verbose warning, no term).
+-315 (q = 3) across 35_1, 39_1, 51_1, 55_1, 57_1 -- all published values reproduced. The last case, a
+level prime dividing both the conductor and d_0 (lem:ramlevel): normalising a' = 0 by conjugation
+(a step lem:conductor's proof had skipped), the plane is the anisotropic ramified one and the p - 1
+cosets of order p lie in L^v, so (1/2)c_eta(0) enters with weight (p^k - 1)/p^k -- nonzero, unlike
+the fundamental ramified case. Checked form by form at 21_2, d = -16 (GY s(-16) = 1): 9/9 with the
+term, four covers off by 2^4..2^8 without (campaign level-p2/ramcheck.py). EVERY prime of the
+conductor is now covered; the code adds the fibre sum at all of them.
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
