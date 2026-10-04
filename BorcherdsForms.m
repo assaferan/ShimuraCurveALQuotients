@@ -873,13 +873,18 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     MZ := ChangeRing(den*coeffs, Integers());
     K := ChangeRing(KernelMatrix(Submatrix(MZ, [1..Nrows(MZ)], non_div)), Rationals());
     G := K * coeffs;
-    good := [i : i in [1..Nrows(G)] | not IsZero(G[i])];
-    rel := [i : i in [1..Nrows(G)] | IsZero(G[i])];
-    Kr := EchelonForm(Matrix(Rationals(), #rel, Ncols(K), [K[i] : i in rel]));
-    Gg, U := EchelonForm(Matrix(Rationals(), #good, Ncols(G), [G[i] : i in good]));
-    // every good row is nonzero at 0, so none reduces to a dependency and the split is exact
-    assert forall{i : i in [1..Nrows(Gg)] | not IsZero(Gg[i])};
-    Kg := U * Matrix(Rationals(), #good, Ncols(K), [K[i] : i in good]);
+    // The dependencies are the kernel of the expansion-at-0 map on the kernel rows, not just the
+    // rows whose expansion is zero: two rows with the same nonzero expansion differ by a dependency.
+    // Echelonising the expansions with the transform puts the independent expansions first and
+    // every dependency, hidden or not, in the zero rows below.
+    Gall, U := EchelonForm(G);
+    r := Rank(Gall);
+    assert forall{i : i in [1..r] | not IsZero(Gall[i])} and forall{i : i in [r+1..Nrows(Gall)] | IsZero(Gall[i])};
+    UK := U * K;
+    Gg := Matrix(Rationals(), r, Ncols(G), [Gall[i] : i in [1..r]]);
+    Kg := Matrix(Rationals(), r, Ncols(K), [UK[i] : i in [1..r]]);
+    Kr := EchelonForm(Matrix(Rationals(), Nrows(UK) - r, Ncols(K), [UK[i] : i in [r+1..Nrows(UK)]]));
+    good := [1..r]; rel := [r+1..Nrows(UK)];
     for j in [1..Nrows(Kr)] do
         c := Depth(Kr[j]);
         Kg := Kg - Matrix(Rationals(), Nrows(Kg), 1, [Kg[i][c] : i in [1..Nrows(Kg)]]) * Matrix(Kr[j]);

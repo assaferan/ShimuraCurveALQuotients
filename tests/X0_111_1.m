@@ -12,8 +12,9 @@
 //
 // COST: 315 s on a Mac (genus 7 at W={1}), so it runs in CI.
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_111_1.m run_tests.m < /dev/null
-// ⚠ NORMALIZ_BIN MUST BE SET, or a fresh polytope solve fails SILENTLY -- "no solutions" rather
-// than an error -- which is how X0_10_19 once spent 84 min in CI verifying nothing.
+// ⚠ NORMALIZ_BIN MUST BE SET, or a fresh polytope solve produces no solution file and the search
+// now stops with an error naming the polytope. It used to fail SILENTLY ("no solutions" rather than
+// an error), which is how X0_10_19 once spent 84 min in CI verifying nothing.
 //
 // WHAT IS CHECKED:
 //   [1] EXTERNAL: the re-derived W={1} curve against Guo-Yang's published

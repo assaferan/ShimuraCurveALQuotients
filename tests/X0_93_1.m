@@ -9,9 +9,9 @@
 //
 // COST: 370 s on a Mac, 495 s in CI (2026-10-01).
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
-// ⚠ NORMALIZ_BIN MUST BE SET. Without it a fresh polytope solve fails SILENTLY -- "no solutions"
-// rather than an error (CLAUDE.md) -- which is precisely how X0_10_19 spent 84 min in CI verifying
-// nothing.
+// ⚠ NORMALIZ_BIN MUST BE SET. Without it a fresh polytope solve produces no solution file and the
+// search now stops with an error naming the polytope. It used to fail SILENTLY ("no solutions"
+// rather than an error, CLAUDE.md), which is how X0_10_19 once spent 84 min in CI verifying nothing.
 //
 // WHAT IS CHECKED, and at what strength:
 //   [1] EXTERNAL, one comparison: the re-derived [1,93] quotient against GUO-YANG'S PUBLISHED
