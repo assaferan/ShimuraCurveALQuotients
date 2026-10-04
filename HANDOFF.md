@@ -3776,6 +3776,27 @@ the deficiency is pure Borcherds duality, not a property of the divisor matrix.
 that constant to fit**; get the half-integral convention right, then check it against the
 measured deficits (`38_5` → 1, `38_7` → 0, `34_3` → 0).
 
+### 2026-10-04: review of the fibre-product stage (Sachi, #71) — fixes
+
+* **Degenerate sets**: `SquarefreePart` returns the radical, so the old check only caught a subset
+  whose product is literally constant; `[f, -3f]` built a curve with a constant field of degree 2 and
+  `[f1, f2, f1 f2]` stopped Magma. Now `IsDegenerateFactorSet`: some nonempty subset's product has
+  every irreducible factor to an even power. Same in `tools/writefp.m` (#72 branch).
+* **Rejections are always printed** (`WARNING FibreProductCovers: ...`, naming the cover, the base and
+  the generating set): if the stored double covers are right and share a coordinate, every generating
+  set gives the same curve, so a rejected set means a stored equation is wrong or in another coordinate.
+* **The trace check runs to the stated number of GOOD primes** (bad-reduction primes are replaced,
+  not counted; fails if 60 primes do not yield enough).
+* `tools/planequartic.m` is the computation behind the three non-hyperelliptic verdicts
+  (6_23/w_23, 34_3/w_2, 46_3/w_3): fibre product of two stored genus-1 quotients, trace counts at
+  p = 5, 7, 11, 13, IsHyperelliptic false, canonical image a nonsingular plane quartic.
+* The fibre product is returned in its natural affine model, usually SINGULAR (shared branch points):
+  a model for the function field and the point counts, not a curve to search for points on.
+* Counts: 203 new covers (not 200). ⚠ Open: the #72 data were written from committed model files,
+  which do not record which stored equations came from the rebase or back-fill stages; only the
+  trace check protects them. Rebuilding them with the stage itself (which skips those) is a pipeline
+  run per base, not a writer run.
+
 ### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 203 new curves
 
 A cover `X_0(D,N)/W` is Galois over the star with group `W_full/W`, elementary abelian, so it is

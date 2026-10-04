@@ -163,7 +163,10 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
  their index-2 Atkin-Lehner double covers that do.  A result is kept only when the compositum has
  the genus the Shimura-curve genus formula predicts AND its point counts over NPrimes good primes
  agree with the trace formula.  Reaches covers with no genus-0 quotient, which the Borcherds and
- Schofer route cannot.}
+ Schofer route cannot.  The curve stored is the fibre product in its natural affine model, which is
+ usually SINGULAR (the double covers share branch points over the base): a model for the function
+ field and for point counts through FibreProductFunctionField, not a curve to count or search for
+ points on directly.}
     labels := [k : k in Keys(all_eqns)];
     if IsEmpty(labels) then return all_eqns, all_ws; end if;
     X0 := curves[labels[1]];
