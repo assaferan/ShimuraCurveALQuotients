@@ -16,11 +16,14 @@
 // known.
 //
 // What accepts a result: the genus of the compositum has to equal the genus the Shimura-curve
-// genus formula predicts.  That is not automatic.  The factors must be written in the SAME
-// coordinate on the star, and committed models of one base can come from runs with different
-// Hauptmodul normalisations, in which case the compositum is a different curve and its genus
-// comes out wrong.  A caller that pools equations from several runs must treat the genus as the
-// test it is, not as a formality.
+// genus formula predicts, AND its point counts over F_p and F_{p^2} at a few good primes have to
+// agree with the trace formula.  The second is not redundant: the factors must be written in the
+// SAME coordinate on the star, and committed models of one base can come from runs with different
+// Hauptmodul normalisations, in which case the compositum is a different curve -- usually of the
+// wrong genus, but at X_0(21,2) of the right one, where only the point counts tell.  Inside one
+// pipeline run the first-level stages share a coordinate; the rebase and back-fill stages do not
+// (the former substitutes t = (ru+1)/u, the latter stores CurveQuotient's own coordinate), so
+// AllEquationsAboveCovers passes their keys as Skip and this stage never uses them as factors.
 
 declare verbose FibreProductCovers, 2;
 
@@ -135,7 +138,20 @@ function trace_formula_agrees(fs, X, nprimes)
     return checked gt 0, checked;
 end function;
 
-intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : NPrimes := 3) -> Assoc, Assoc
+// A set of factors is degenerate when the product of some nonempty subset is a constant times a
+// square: if the constant is a square the compositum has the wrong degree (Magma stops with
+// "Polynomial must be irreducible"), otherwise the constant field grows and the curve is not
+// geometrically irreducible although its genus can still come out right.
+function degenerate_factors(fs)
+    for sub in Subsets({1..#fs}) do
+        if IsEmpty(sub) then continue; end if;
+        g := &*[fs[i] : i in sub];
+        if Degree(SquarefreePart(g)) eq 0 then return true; end if;
+    end for;
+    return false;
+end function;
+
+intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : NPrimes := 3, Skip := {}) -> Assoc, Assoc
 {Fill covers that still have no equation by taking the fibre product, over the star curve, of
  their index-2 Atkin-Lehner double covers that do.  A result is kept only when the compositum has
  the genus the Shimura-curve genus formula predicts AND its point counts over NPrimes good primes
@@ -155,17 +171,35 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
         if X`W eq full then continue; end if;
         if IsDefined(all_eqns, i) and not IsEmpty(Keys(all_eqns[i])) then continue; end if;
         ups := index_two_over(X`W, full, DN);
-        cand := [byW[U] : U in ups | IsDefined(byW, U) and has_hyperelliptic_eqn(all_eqns, byW[U])];
+        cand := [byW[U] : U in ups | IsDefined(byW, U) and byW[U] notin Skip and has_hyperelliptic_eqn(all_eqns, byW[U])];
         if IsEmpty(cand) then continue; end if;
         // factors must share a base: group the candidates by the bases they are written over
         bases := &meet[Keys(all_eqns[j]) : j in cand];
         built := false;
         for b in bases do
             avail := {curves[j]`W : j in cand | IsDefined(all_eqns[j], b) and Type(all_eqns[j][b]) eq CrvHyp};
-            ok, gens := FibreProductGenerators(X`W, avail, D, N);
-            if not ok then continue; end if;
-            fs := [HyperellipticPolynomials(all_eqns[byW[U]][b]) : U in gens];
+            // every generating set is tried, so that a degenerate one does not block the cover
+            genlist := [* *];
+            k := Ilog2(#full div #X`W);
+            if #avail ge k then
+                for c in Subsets(avail, k) do
+                    I := full; for W2 in c do I := I meet W2; end for;
+                    if I eq X`W then Append(~genlist, SetToSequence(c)); end if;
+                end for;
+            end if;
+            for gens in genlist do
+            // y^2 + h y = f is (y + h/2)^2 = f + h^2/4: the double cover is y'^2 = f + h^2/4
+            fs := [];
+            for U in gens do
+                f, h := HyperellipticPolynomials(all_eqns[byW[U]][b]);
+                Append(~fs, f + h^2/4);
+            end for;
             if exists{f : f in fs | f eq 0} then continue; end if;
+            if degenerate_factors(fs) then
+                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o: a subset of the factors has a constant squarefree part: skipped\n",
+                    Sort(SetToSequence(X`W)), b;
+                continue;
+            end if;
             K := FibreProductFunctionField(fs);
             if Genus(K) ne X`g then
                 vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o has genus %o, expected %o: rejected\n",
@@ -185,6 +219,8 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
                 Sort(SetToSequence(X`W)), X`g, #fs, b, info;
             built := true;
             break;
+            end for;
+            if built then break; end if;
         end for;
     end for;
     return all_eqns, all_ws;
