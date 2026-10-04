@@ -977,53 +977,58 @@ For $m>0$ the preprint's formula (its eq.~(euler)), after \cite{Yang},
   \qquad S=\{p:\ p\mid\disc\Lm\text{ or }p\mid m\},
 \]
 is an Euler-product identity: away from $S$ the plane is unimodular and $W_{m,p}=1-\chi(p)p^{-1-s}$
-with $\chi$ the character of the plane, which is $\chi_{d_0}$ for every $d$. Two things are then
-established at a conductor prime and one is not.
+with $\chi$ the character of the quadratic space $\Lm\otimes\Q\cong(k,-cN_{k/\Q})$, which is
+$\chi_{d_0}$ for every $d$ with the same fundamental discriminant. Nothing in the derivation of
+Theorem~B uses that the order is maximal, and the formula at conductor $f$ is this one, evaluated on
+the plane of the order. We make the two points where $f$ could have entered explicit.
 
-\emph{The local factors are the right ones.} For a coset $\mu$ of $\Lm$ and $m>0$ let
+\emph{The local factors.} For a coset $\mu$ of $\Lm$ and $m>0$ let
 $\alpha_k=p^{-k}\#\{x\in(\mu+L_{-,p})/p^kL_{-,p}:\ Q(x)\equiv m\bmod p^k\}$ and $W^{\mathrm{count}}=(1-X)
 \sum_k\alpha_kX^k$; at a unimodular prime with $p\nmid m$ this is $1-\chi(p)X/p$. The polynomials
 the routine evaluates (\cite[Thm.~4.3, 4.4]{KY} on the actual $L_{-,p}$, times $|\det S|_p^{1/2}$)
 coincide with $W^{\mathrm{count}}$ at every $(d,p,m)$ tried on $X_0^{15}(2)$: $d=-15,-60,-240,-28,-12,
 -48$, $p=2$ (the conductor planes) and $p=7$ (unimodular, split or inert), $m\le6$
-(\texttt{level-p2/wnorm.m}). So the only question is the global factor.
+(\texttt{level-p2/wnorm.m}). A prime of the conductor divides $\disc\Lm$ (Lemmas~\ref{lem:conductor},
+\ref{lem:conductor2}, \ref{lem:unimod}, \ref{lem:unimod2}), so it lies in $S$ and its factor is one
+of these polynomials, never an unramified Euler factor.
 
-\emph{What the global factor is.} The routine evaluates, per CM point and up to the $-\log p'$ at
-the vanishing place,
+\emph{The global factor.} The routine evaluates, per CM point and up to the $-\log p'$ at the
+vanishing place,
 \[
   \kappa^-_\mu(m)=\frac{w_0\sqrt{\lvert d_0\rvert}}{h_0}\cdot
-  \frac{\bigl[\prod_{p\in S}W_{m,p}(s,\varphi_\mu)\bigr]'_{s=0}}{\prod_{p\in S,\ p\nmid f}(1-\chi_{d_0}(p)/p)},
+  \frac{\bigl[\prod_{p\in S}W_{m,p}(s,\varphi_\mu)\bigr]'_{s=0}}{\prod_{p\in S}(1-\chi_{d_0}(p)/p)},
 \]
-i.e.\ the field's $L(1,\chi_{d_0})^{-1}=w_0\sqrt{\lvert d_0\rvert}/(2\pi h_0)$ with the Euler
-corrections at the primes of $S$ \emph{not} dividing the conductor (in the code: $\sqrt{\lvert d
-\rvert}/f$ for $\sqrt{\lvert d_0\rvert}$, and the imprimitive $\chi_d$, which vanishes at $p\mid f$, in
-the corrections). This is forced by the data: the odd-prime parts of the values at $d=-28,-60,-240,
--48$ and at the eleven forced points are exact with it, the literal identity above would multiply
-every $\kappa^-_\mu(m)$ at a given $d$ by $\prod_{p\mid f,\,p\nmid d_0}(1-\chi_{d_0}(p)/p)^{-1}$ ---
-$2$ at $-28,-60,-240$, $\tfrac23$ at $-48$ --- and the earlier code, with the order's class number
-$h(R_f)$ in place of $h_0$, was off by $h(R_f)/h_0$, visible only at conductor $4$.
+which is the identity above at $s=0$: $L(1,\chi_{d_0})^{-1}=w_0\sqrt{\lvert d_0\rvert}/(2\pi h_0)$ by
+the class number formula of the field, and the Euler correction at every prime of $S$, those of the
+conductor included (in the code $\sqrt{\lvert d\rvert}/f=\sqrt{\lvert d_0\rvert}$, and the Kronecker
+character of $d$, which Magma returns as the primitive character of conductor $\lvert d_0\rvert$;
+\texttt{level-p2/kronprod.m} lists the factors at $d=-60,-240,-28,-48,-12$ and at each $p\mid f$ the
+factor is $1-\chi_{d_0}(p)/p$). This is what the values confirm: the $46$ values on $X_0^{15}(2)$ and
+the eleven forced Guo--Yang points are exact with it. The earlier code had the order's class number
+$h(R_f)$ in place of $h_0$, hence was off by $h(R_f)/h_0$, visible only at conductor $4$; that
+amounts to $L(1,\chi_d)$ of the imprimitive character in place of $L(1,\chi_{d_0})$, i.e.\ to the
+correction at $p\mid f$ applied twice. (An earlier version of this remark read the code's character
+as the imprimitive one and concluded that Theorem~B at conductor $f$ carried an extra factor
+$\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$; it does not.)
 
-\emph{Where the missing factor is.} The Euler-product normalisation of the Eisenstein coefficients
-is not in doubt: Siegel's genus-average identity for the definite plane,
+\emph{Why the constant of Theorem~B is unchanged.} In Schofer's argument the CM cycle is the orbit
+$Z(d)=T(\Q)\backslash T(\mathbb A_f)/K_f$, $T$ the torus of $k^\times$ and $K_f$ the stabiliser of
+$\widehat{\Lm}$, the image of $\widehat R_f^\times$. As $T$ is commutative every point of the orbit
+has the same stabiliser $R_f^\times/\{\pm1\}$, so under the Tamagawa measure, of total volume $2$,
+every point carries the volume $2/\lvert Z(d)\rvert$ and the theta integral over $T(\Q)\backslash
+T(\mathbb A)$ is $(2/\lvert Z(d)\rvert)\sum_{z\in Z(d)}\theta(z)$, as for the maximal order; the
+Siegel--Weil formula then gives the Eisenstein series of the quadratic space $\Lm\otimes\Q$ with the
+Schwartz function of the lattice $\Lm$. The order enters only through $\lvert Z(d)\rvert$, which is
+the number of CM points of discriminant $d$ that Theorem~B already counts, and through the local
+factors above. Independently, Siegel's genus-average identity for the definite plane,
 \[
   \frac{\sum_{L'}r_{L'}(M)/\lvert O(L')\rvert}{\sum_{L'}1/\lvert O(L')\rvert}
   =\frac{c_\infty}{\sqrt{\det S}}\cdot\frac{\prod_{p\in S}\alpha_p(M)}{L(1,\chi_{d_0})\prod_{p\in S}(1-\chi_{d_0}(p)/p)},
 \]
 with $\alpha_p$ the counting densities, holds with one universal constant at $d=-15,-60,-240,-48$
 on $X_0^{15}(2)$ --- the corrections at the conductor prime included --- and fails without them
-(\texttt{level-p2/siegel.m}). So the coefficient $\kappa^-_\mu(m)$ of the incoherent series carries
-the correction at $p\mid f$, and what the values force is that Theorem~B at conductor $f$ reads
-\[
-  \sum_{z\in\mathrm{CM}(d)}\log\lvert\Psi(z)\rvert^2=-\frac{\lvert\mathrm{CM}(d)\rvert}{4}
-  \prod_{p\mid f}\Bigl(1-\frac{\chi_{d_0}(p)}p\Bigr)\sum_{\mu,m}c_\mu(-m)\kappa_\mu(m)
-\]
-with the Euler-product $\kappa$. The extra factor is $[\widehat{\mathcal O}_k^\times:\widehat R_f^\times]/f$,
-the index of the stabiliser of $\widehat{\Lm}$ in that of the maximal lattice divided by the
-conductor, equivalently $h(R_f)[\mathcal O_k^\times:R_f^\times]/(fh_0)$. It has to come out of the
-normalisation of Schofer's theta integral against the CM cycle of the order $R_f$ --- the orbit
-$T(\Q)\backslash T(\mathbb A_f)/K_f$ with $K_f$ the smaller stabiliser --- and we have not carried
-that computation out; until it is, the global factor at non-fundamental $d$ rests on the agreement
-above and on Siegel's identity for its local part.
+(\texttt{level-p2/siegel.m}): the global factor of $E(\tau,0,\varphi_{\Lm})$ does not depend on
+$f$, and $\kappa^-_\mu(m)$ is the same Euler product with one local factor differentiated.
 \end{remark}
 
 \begin{remark}[a point on the divisor, and the value of a quotient there]\label{rem:divisor}

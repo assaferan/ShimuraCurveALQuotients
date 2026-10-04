@@ -510,15 +510,12 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    // The global factor is the FIELD's L(1, chi_{d_0})^-1 = w_0 sqrt|d_0| / (2 pi h_0): h and w of the
-    // fundamental discriminant, and sqrt|d| / f = sqrt|d_0| below.  The Euler corrections kron_prod use
-    // the imprimitive chi_d, so they stop at the primes of the conductor.  Both are what the data force
-    // (paper/kappa0-proof-standalone.tex, rem:mpos): with the order's class number h(d) every
-    // conductor-4 value came out halved; with corrections at p | f too (the literal Euler-product
-    // identity) every kappa^- at d would be off by prod_{p | f} (1 - chi_{d_0}(p)/p)^-1.  The local
-    // polynomials themselves agree with density counts at every prime including the conductor planes
-    // (campaign level-p2/wnorm.m); the derivation of the global factor from the Siegel-Weil
-    // normalisation at a non-maximal order is not written.
+    // Yang's Euler-product formula with the character of the plane, which is chi_{d_0} for every d:
+    // L(1, chi_{d_0})^-1 = w_0 sqrt|d_0| / (2 pi h_0) of the FIELD (h, w of the fundamental discriminant,
+    // sqrt|d| / f = sqrt|d_0| below) and the correction (1 - chi_{d_0}(p)/p)^-1 at every prime of S_mu,
+    // conductor primes included: KroneckerCharacter(d) is the primitive character of conductor |d_0|.
+    // The order's class number h(d) here is wrong (off by h(d)/h_0, seen at conductor 4); see
+    // paper/kappa0-proof-standalone.tex, rem:mpos.
     h := ClassNumber(FundamentalDiscriminant(d));
     w := #UnitGroup(QuadraticField(d));
 

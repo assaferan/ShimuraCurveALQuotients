@@ -29,6 +29,19 @@ Hauptmodul anchors are untouched. ⚠ The filter was first put into RationalandQ
 that changed the Borcherds search's anchors (−12 is the pole on 15_2) and hence the FORMS; it must
 live at the evaluation step only.
 
+**The m > 0 terms at non-fundamental d need nothing new (standalone rem:mpos, rewritten).** The
+routine's κ⁻ is Yang's Euler-product formula with the character of the plane, χ_{d₀}: the field's
+L(1, χ_{d₀})⁻¹ (h₀, w₀, √|d|/f = √|d₀|) and the correction (1 − χ_{d₀}(p)/p)⁻¹ at every prime of S,
+conductor primes included — ⚠ Magma's KroneckerCharacter(d) is the PRIMITIVE character of conductor
+|d₀| (campaign level-p2/kronprod.m lists the factors), not the imprimitive one an earlier version of
+the remark assumed; the "extra prefactor Π_{p|f}(1 − χ(p)/p) in Theorem B" that assumption produced
+was a deduction, not a measurement, and is retracted. The only slip ever measured, h(R_f) for h₀,
+is the correction at p | f applied twice. Why the constant of Theorem B is the same: the T-orbit
+has equal stabilisers at every point (T is a torus), so the Tamagawa volume 2 splits as 2/|Z(d)|
+per point exactly as for the maximal order, and the Eisenstein series is that of the quadratic
+space, which depends on d₀ only; Siegel's genus-average identity (level-p2/siegel.m) confirms the
+normalisation at −15, −60, −240, −48 with one universal constant.
+
 ## Handoff — 2026-10-03 — THE m = 0 TERM AT A CONDUCTOR PRIME IS A FIBRE SUM (PR #66)
 
 **The rule "fire iff the conductor prime splits" was an accident of the one form tested.** At a
