@@ -1,0 +1,25 @@
+d = -15   d0 = -15  f = 1  det L_- = [ <2, 2>, <3, 1>, <5, 1> ] S = [ 2, 3, 5 ]  Conductor(KroneckerCharacter(d)) = 15
+    p = 2      code's factor 1 - chi(p)/p = 1/2   field's 1 - chi_d0(p)/p = 1/2   imprimitive would give 1/2
+    p = 3      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+    p = 5      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+d = -60   d0 = -15  f = 2  det L_- = [ <2, 2>, <3, 1>, <5, 1> ] S = [ 2, 3, 5 ]  Conductor(KroneckerCharacter(d)) = 15
+    p = 2 | f  code's factor 1 - chi(p)/p = 1/2   field's 1 - chi_d0(p)/p = 1/2   imprimitive would give 1
+    p = 3      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+    p = 5      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+d = -240  d0 = -15  f = 4  det L_- = [ <2, 4>, <3, 1>, <5, 1> ] S = [ 2, 3, 5 ]  Conductor(KroneckerCharacter(d)) = 15
+    p = 2 | f  code's factor 1 - chi(p)/p = 1/2   field's 1 - chi_d0(p)/p = 1/2   imprimitive would give 1
+    p = 3      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+    p = 5      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+d = -28   d0 = -7   f = 2  det L_- = [ <2, 2>, <3, 2>, <5, 2>, <7, 1> ] S = [ 2, 3, 5, 7 ]  Conductor(KroneckerCharacter(d)) = 7
+    p = 2 | f  code's factor 1 - chi(p)/p = 1/2   field's 1 - chi_d0(p)/p = 1/2   imprimitive would give 1
+    p = 3      code's factor 1 - chi(p)/p = 4/3   field's 1 - chi_d0(p)/p = 4/3   imprimitive would give 4/3
+    p = 5      code's factor 1 - chi(p)/p = 6/5   field's 1 - chi_d0(p)/p = 6/5   imprimitive would give 6/5
+    p = 7      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+d = -48   d0 = -3   f = 4  det L_- = [ <2, 4>, <3, 1>, <5, 2> ] S = [ 2, 3, 5 ]  Conductor(KroneckerCharacter(d)) = 3
+    p = 2 | f  code's factor 1 - chi(p)/p = 3/2   field's 1 - chi_d0(p)/p = 3/2   imprimitive would give 1
+    p = 3      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+    p = 5      code's factor 1 - chi(p)/p = 6/5   field's 1 - chi_d0(p)/p = 6/5   imprimitive would give 6/5
+d = -12   d0 = -3   f = 2  det L_- = [ <2, 2>, <3, 1>, <5, 2> ] S = [ 2, 3, 5 ]  Conductor(KroneckerCharacter(d)) = 3
+    p = 2 | f  code's factor 1 - chi(p)/p = 3/2   field's 1 - chi_d0(p)/p = 3/2   imprimitive would give 1
+    p = 3      code's factor 1 - chi(p)/p = 1   field's 1 - chi_d0(p)/p = 1   imprimitive would give 1
+    p = 5      code's factor 1 - chi(p)/p = 6/5   field's 1 - chi_d0(p)/p = 6/5   imprimitive would give 6/5

@@ -367,3 +367,21 @@ correction at p | f, and the data-validated normalisation (none at p | f) means 
 f has the extra prefactor prod_{p|f}(1 - chi_{d0}(p)/p) = [O_K^x : R_f^x]_hat / f.  OPEN: derive it from
 the normalisation of Schofer's theta integral against the CM cycle of the ORDER R_f (the orbit
 T(Q)\T(A_f)/K_f with the smaller stabiliser).  siegel.log.
+
+## The m > 0 global factor at non-fundamental d: NO extra prefactor, the two entries above misread the code (kronprod.m, 2026-10-04)
+
+The claim "corrections only at p in S not dividing f (code: chi_d imprimitive)" rested on reading
+KroneckerCharacter(d) as the imprimitive character of modulus |d|.  It is not: Magma returns the
+PRIMITIVE character of conductor |d_0| (Conductor(KroneckerCharacter(-60)) = 15, chi(2) = 1), and
+every conductor prime divides det L_- so lies in S.  kronprod.m lists the factor the code applies at
+each p in S for d = -15, -60, -240, -28, -48, -12: at p | f it is 1 - chi_{d_0}(p)/p (1/2 at -60, -240,
+-28; 3/2 at -48, -12), never 1.  So the data-validated kappa^- IS the literal Euler identity
+L^S(1,chi_{d_0})^-1 prod_{p in S} W_p with the field's character everywhere -- the same normalisation
+siegel.m found for the Eisenstein coefficient at s = 0 -- and Theorem B at conductor f holds as
+stated, with |CM(d)| and the plane's local factors.  The "would be off by 2 at -28/-60/-240, 2/3 at
+-48" sentence was a deduction from the misreading, not a measurement; the measured error of the old
+code (ClassNumber(d) = h(R_f) for h_0, off by h(R_f)/h_0 at conductor 4) is the correction at p | f
+applied TWICE (L(1, chi_d imprimitive) in place of L(1, chi_{d_0})).  Derivation (standalone
+rem:mpos): the T-orbit has equal stabilisers R_f^x at every point (T commutative), so the Tamagawa
+volume 2 splits as 2/|Z(d)| per point exactly as for the maximal order, and the Eisenstein series is
+that of the quadratic space L_- (x) Q, which depends on d_0 only.  Nothing is open here.
