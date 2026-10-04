@@ -1145,13 +1145,15 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
             log_coeffs[i] +:= PointDegree * corrs[i] * LogSum(Rationals()!1, q);
         end for;
     end for;
-    // The multiplier (1/2) c_eta(0) is the constant term of the vector-valued input F_f at a
-    // nonzero isotropic coset, computed exactly by M0MultiplierExact (VectorValuedForm.m; the
-    // finite Gamma_0(M)-coset evaluation, validated against the measured ground truth on 21 bases).
-    // It does not depend on d, so it runs once per form and is cached on the form.
+    // The multiplier at the level prime p is (1/2) c_eta(0), the constant term of the vector-valued
+    // input F_f at a nonzero isotropic coset supported at p alone (prop:composite; at prime N these
+    // are all the nonzero isotropic cosets), computed exactly by M0MultipliersBySupport
+    // (VectorValuedForm.m; the finite Gamma_0(M)-coset evaluation, validated against the measured
+    // ground truth on 21 prime-level bases).  It does not depend on d, so it runs once per form and
+    // is cached on the form as an associative array indexed by the primes of N.
     if not IsEmpty(Nprimes) then
         if exists{eta : eta in etas | not assigned eta`m0mult} then
-            mults := M0MultiplierExact(etas, Ldata, D, N);
+            mults := M0MultipliersBySupport(etas, Ldata, D, N);
             for i in [1..#etas] do
                 e := etas[i];
                 e`m0mult := mults[i];
@@ -1167,19 +1169,20 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // WHAT IS ARGUED AND WHAT IS NOT.  paper/level-prime-kappa.tex, Propositions prop:kappa0
         // and prop:mult, give the dropped coefficient as kappa^-_nu(0) = -log N/(N-1) at each of
         // the 2N-2 nonzero isotropic cosets, for PRIME N and FUNDAMENTAL d with N not dividing d,
-        // and trace it to the (1/2) c_eta(0) used here.  ⚠ THAT ARGUMENT IS NOT YET AGREED: it has
-        // to be read and accepted by the authors before anything here calls it proved, so treat the
-        // term as the empirically fitted rule it has always been (its only outside evidence is
-        // Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2), via tests/SchoferIsometry.m).
+        // and trace it to the (1/2) c_eta(0) used here; prop:composite of the standalone extends it
+        // to squarefree N, prime by prime (-log p/(p-1) at the 2p-2 cosets supported at p alone,
+        // zero at a coset supported at two or more primes).  ⚠ THAT ARGUMENT IS NOT YET AGREED: it
+        // has to be read and accepted by the authors before anything here calls it proved, so treat
+        // the term as the empirically fitted rule it has always been (its only outside evidence is
+        // Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2), via tests/SchoferIsometry.m), and the
+        // composite case has no outside evidence at all: no composite-level base has been built.
         //
         // The second part of the m = 0 term comes from the vectors on the CM line (prop:mult), and
         // at a point off the divisor reduces to the oo-coefficients of f at the exponents
         // k^2 Q(lambda_0) (M0InfinityPoleSum).  It is subtracted below, is zero unless a pole of f
         // at oo at such an exponent is cancelled by the cusp-0 side, and has been zero at every
         // evaluated point of the model set.
-        require IsPrime(N) : "the m = 0 term is only derived for prime N: at composite squarefree N" cat
-                             " it is a sum over the primes of N of the multiplier of the cosets" cat
-                             " supported at that prime alone (prop:composite), which is not implemented";
+        require IsSquarefree(N) : "the m = 0 term is only derived for squarefree N";
         for p in Nprimes do
             logp := LogSum(Rationals()!1, p);
             if cond mod p ne 0 then                     // then p does not divide d_fund: prop:mult
@@ -1188,10 +1191,10 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
                     if xsum ne 0 then
                         vprintf ShimuraQuotients, 1 : "\n\tm = 0 term: pole sum %o at d = %o for form %o", xsum, d, i;
                     end if;
-                    log_coeffs[i] +:= PointDegree * (eta`m0mult - xsum) * logp;
+                    log_coeffs[i] +:= PointDegree * (eta`m0mult[p] - xsum) * logp;
                 end for;
             else
-                corrs := M0FibreCorrection(fs, fs_0, [Rationals() | eta`m0mult : eta in etas], d, p, Q : Lambda := lambda, M := M);
+                corrs := M0FibreCorrection(fs, fs_0, [Rationals() | eta`m0mult[p] : eta in etas], d, p, Q : Lambda := lambda, M := M);
                 vprintf ShimuraQuotients, 1 : "\n\tm = 0 term at the conductor prime %o, d = %o: %o", p, d, corrs;
                 for i in [1..#etas] do
                     log_coeffs[i] +:= PointDegree * corrs[i] * logp;

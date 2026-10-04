@@ -352,24 +352,48 @@ end intrinsic;
 
 intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
                             N::RngIntElt : Prec := 80) -> SeqEnum
-{The m = 0 multipliers of Schofer's formula for the forms fs, evaluated EXACTLY as a finite sum
- over Gamma_0(M) cosets -- no Fourier sampling, no CM table, minutes per base.  The multiplier is
+{The m = 0 multipliers of Schofer's formula for the forms fs at a PRIME level N, evaluated EXACTLY
+ as a finite sum over Gamma_0(M) cosets -- no Fourier sampling, no CM table, minutes per base.  The
+ multiplier is
 
      (1/2) * c_eta(0)   for any NONZERO ISOTROPIC eta
 
- (all such eta carry the same value, and c_0(0) = 0), and c_eta(0) is assembled coset by coset:
- for each coset word w and eta monomial prod_d eta(d tau)^(r_d), triangularising
- [d 0; 0 1] g = g_d [a_d b_d; 0 e_d] exhibits f|w as a constant multiple of a q-series with
- exact rational exponents and root-of-unity coefficients; the constant per (monomial, word) is
- pinned numerically at one point of the upper half plane and verified at a second (its closed
- form -- the Dedekind-sum eta multiplier system -- is certified in vvdata/weyl-campaign/cusp4.m).
- Then c_eta(0) = sum_w rho(w^-1)e_0[eta] * a0(f|w).
+ (all such eta carry the same value, and c_0(0) = 0).  One rational per form; the computation is
+ M0MultipliersBySupport, of which this is the single-prime case.
 
  Validated against the measured ground truth on 21 bases (vvdata/weyl-campaign, branch
  m0-theta-campaign): the 15_2 full panel 9/9 exactly, 21_2, 22_3, and every base of the
- constraints ledger.  Returns one rational per form; raises an error rather than return an
- unverified value (kappa two-point check, isotropic-component agreement, rational snap).}
+ constraints ledger.}
+    require IsPrime(N) : "M0MultiplierExact is the prime-level case; at composite N the multiplier" cat
+                         " depends on the prime, see M0MultipliersBySupport";
+    arrs := M0MultipliersBySupport(fs, Ld, D, N : Prec := Prec);
+    return [a[N] : a in arrs];
+end intrinsic;
+
+intrinsic M0MultipliersBySupport(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
+                                 N::RngIntElt : Prec := 80) -> SeqEnum
+{The m = 0 multipliers of Schofer's formula for the forms fs at a squarefree level N, one
+ associative array per form, indexed by the primes p of N: the entry at p is
+
+     (1/2) * c_eta(0)   for a nonzero isotropic eta supported exactly at p,
+
+ that is of order p in L^v/L.  Such cosets are the 2p - 2 nonzero isotropic vectors of the
+ p-scaled split plane at p, one orbit of its orthogonal group, so they share c_eta(0)
+ (paper/kappa0-proof-standalone.tex, prop:composite); at prime N they are all the nonzero isotropic
+ cosets.  The cosets supported at two or more primes carry their own common value, which is
+ checked for constancy but does not enter Schofer's formula (their kappa^-_nu(0) vanishes to
+ second order).
+
+ c_eta(0) is assembled coset by coset: for each coset word w and eta monomial
+ prod_d eta(d tau)^(r_d), triangularising [d 0; 0 1] g = g_d [a_d b_d; 0 e_d] exhibits f|w as a
+ constant multiple of a q-series with exact rational exponents and root-of-unity coefficients;
+ the constant per (monomial, word) is pinned numerically at one point of the upper half plane and
+ verified at a second (its closed form -- the Dedekind-sum eta multiplier system -- is certified in
+ vvdata/weyl-campaign/cusp4.m).  Then c_eta(0) = sum_w rho(w^-1)e_0[eta] * a0(f|w).  Raises an
+ error rather than return an unverified value (two-point check, agreement within each support
+ class, rational snap).}
     require N gt 1 : "There are no nonzero isotropic cosets when N = 1, so no m = 0 multiplier.";
+    require IsSquarefree(N) : "N must be squarefree";
     require #fs gt 0 : "Empty form sequence.";
     R := Parent(fs[1]); ds := R`ds;
     M := IsOdd(D*N) select 4*D*N else 2*D*N;
@@ -381,13 +405,24 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
     fftdata := VVWeilFFT(Ld, CC : Dual := true);
     elts := fftdata[7]; i0 := fftdata[8];
     Qr := ChangeRing(Ld`Q, Rationals()); dn := Ld`denom;
-    isoidx := [];
+    isoidx := []; supports := [];
     for i in [1..#elts] do
         v := ChangeRing(elts[i]@@Ld`to_disc, Rationals());
         r := (v*Qr, v)/(2*dn^2);
-        if r eq Floor(r) then Append(~isoidx, i); end if;
+        if r eq Floor(r) then
+            Append(~isoidx, i);
+            // the support of the coset: the primes dividing its order in L^v/L
+            Append(~supports, Set(PrimeDivisors(LCM([Denominator(c) : c in Eltseq(v/dn)]))));
+        end if;
     end for;
     require #isoidx ge 2 : "No nonzero isotropic coset found.";
+    Nprimes := Set(PrimeDivisors(N));
+    require forall{S : S in supports | S subset Nprimes} :
+        "a nonzero isotropic coset is supported outside the primes of N";
+    for p in Nprimes do
+        require #[S : S in supports | S eq {p}] eq 2*p - 2 :
+            Sprintf("expected %o nonzero isotropic cosets supported exactly at %o", 2*p - 2, p);
+    end for;
 
     reps := VVCosetReps(M);
     words := [ VVSTWord(g) : g in reps ];
@@ -593,7 +628,7 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
     rvtab := AssociativeArray();
     for wi in selected do rvtab[wi] := VVRhoInvE0FFT(fftdata, words[wi]); end for;
 
-    mults := [ Rationals() | ];
+    mults := [];                                   // one associative array per form
     for f in fs do
         a0w := AssociativeArray();
         for wi in selected do
@@ -625,21 +660,27 @@ intrinsic M0MultiplierExact(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::
                 cvals[j] +:= Ng[g0] * contribs[1][j];
             end for;
         end for;
-        // the nonzero isotropic components must agree, be real, and snap to a rational
-        // (same relative-tolerance reasoning as the constancy check above)
-        vals := [ cvals[j] : j->i in isoidx | i ne i0 ];
-        vscale := Maximum(1, Abs(vals[1]));
-        for v in vals do
-            error if Abs(v - vals[1]) gt 10^(-15) * vscale,
-                Sprintf("M0MultiplierExact: isotropic components disagree (dev %o, scale %o)",
-                        RealField(6)!Abs(v - vals[1]), RealField(6)!vscale);
+        // within each support class the nonzero isotropic components must agree, be real, and
+        // snap to a rational (same relative-tolerance reasoning as the constancy check above)
+        arr := AssociativeArray();
+        for S in Set(supports) do
+            if IsEmpty(S) then continue; end if;                 // the zero coset, c_0(0) = 0
+            vals := [ cvals[j] : j in [1..#isoidx] | supports[j] eq S ];
+            vscale := Maximum(1, Abs(vals[1]));
+            for v in vals do
+                error if Abs(v - vals[1]) gt 10^(-15) * vscale,
+                    Sprintf("M0MultipliersBySupport: isotropic components supported at %o disagree (dev %o, scale %o)",
+                            S, RealField(6)!Abs(v - vals[1]), RealField(6)!vscale);
+            end for;
+            error if Abs(Im(vals[1])) gt 10^(-15) * vscale,
+                "M0MultipliersBySupport: constant term not real";
+            mult := BestApproximation(Re(vals[1])/2, 10^4);
+            error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-15) * vscale,
+                "M0MultipliersBySupport: multiplier does not snap to a rational";
+            vprintf ShimuraQuotients, 2 : "\n\t(1/2) c_eta(0) at the %o cosets supported at %o: %o", #vals, S, mult;
+            if #S eq 1 then arr[Representative(S)] := mult; end if;
         end for;
-        error if Abs(Im(vals[1])) gt 10^(-15) * vscale,
-            "M0MultiplierExact: constant term not real";
-        mult := BestApproximation(Re(vals[1])/2, 10^4);
-        error if Abs(CC!mult - Re(vals[1])/2) gt 10^(-15) * vscale,
-            "M0MultiplierExact: multiplier does not snap to a rational";
-        Append(~mults, mult);
+        Append(~mults, arr);
     end for;
     return mults;
 end intrinsic;
