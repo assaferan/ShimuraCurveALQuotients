@@ -405,3 +405,17 @@ c_eta(0) = 0).  "slash constant failed its two-point check" = WRONG FORM, not pr
 character: BorcherdsForms.m lhs_integer_programming -- sum r = 1, sum d r = 0 (24), sum (M/d) r = 0
 (24), v_2-parity 1 and odd-p parities 0 of prod d^r (i.e. 2 * square); compmult5.m solves it by LLL on
 the solution lattice, no Normaliz.
+
+## A second gap for the -log m rule at a divisor point: X_0^21(2), tau_-4 (divisorpoint21.m, 2026-10-04)
+
+Sachi (#66): the -log m rule at a point on the divisor was checked only through the gap log 3 - log 3/4 =
+2 log 2 at 15_2.  Scan of the table bases (scratch divpts.m) for divisor points where two forms' poles
+come from different exponents: 6_5/-4 {1,4}, 15_2/-12 {3/4,3}, 21_2/-4 {1/4,1,9} (ratios 4, 9, 36),
+22_3/-11 {11,44}, 6_7/-3, 10_7/-3 {3,12}, 14_5/-4 {1,4,16}, 35_1/-7 {7/4,7}.  21_2 at -4 = the pole of s
+(GY table): form 13 has a pole at q^-9 (x = +-3 lambda_0), so quotients through it test the gap 2 log 3.
+All 36 quotients f_a^deg(b)/f_b^deg(a) equal C_a^deg(b)/C_b^deg(a) (C_k read at one table point per
+form, checked at 28 others; forms 12-15 have HALF-INTEGRAL log values -> their principal parts are not
+integral, use 2f).  Installed as tests/DivisorPoint_21_2.m on kappa0-proof.  ⚠ Table points with
+d_0 EVEN (-84, -168, -232, -280, ..., -420) are off by factors 9, 9/2, 81/2 at 21_2: the level prime 2
+ramified in the CM field = the known p | gcd(d_0, N) gap (CMNONCOPRIME comment); excluded.  The
+conductor-2 points (-16, -28, -60, -100, -112, -120, ...) pass -- prop:fibre at work.
