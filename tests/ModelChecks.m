@@ -7,16 +7,19 @@
 //   [2] that genus equals X`g from the Shimura-curve genus formula,
 //   [3] Weil-polynomial divisibility across nested cover keys W1 subset W2, and
 //   [4] the trace-formula point count: #(X/W)(F_p) from ComputePointsViaTrace (Eichler-Selberg on
-//       the W-fixed part of the D-new space) equals the model's actual point count.
+//       the W-fixed part of the D-new space) equals the model's actual point count, and
+//   [5] the whole L-polynomial of the model at the smallest good primes equals the one the trace
+//       formula gives (the Hecke characteristic polynomial of the W-fixed part of the D-new space
+//       at p), so a model of the wrong quotient fails even when its point count over F_p agrees.
 //
 // None of these uses the Borcherds/Schofer CM machinery that produced the models, so they are
 // genuine cross-checks.
 //
-// ⚠⚠ KNOWN BLIND SPOT, MEASURED 2026-09-12: **ALL FOUR CHECKS ARE STRUCTURALLY BLIND TO A
+// ⚠⚠ KNOWN BLIND SPOT, MEASURED 2026-09-12: **ALL FIVE CHECKS ARE STRUCTURALLY BLIND TO A
 // QUADRATIC TWIST AT GENUS 0**, and 282 of the 822 committed entries (the LARGEST genus class,
 // across 75 of the model files) are genus 0.  A conic and its non-square twist have:
 //   [1] the same genus (0),                     [2] so both match X`g,
-//   [3] the same (trivial) Weil polynomial,      [4] and the SAME point count over every F_p --
+//   [3] the same (trivial) Weil polynomial,      [4], [5] and the SAME point counts over every F_{p^v} --
 // because every smooth conic over a finite field is isotropic (Chevalley-Warning), so BOTH twists
 // are P^1 over F_p and both have exactly p+1 points.  Verified directly on models_10_3.m's [1,2]
 // entries: two of the three are NOT isomorphic to their -2 twists, yet the point counts agree at
