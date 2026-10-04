@@ -191,13 +191,18 @@ procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     curves := GetHyperellipticCandidates();
     all_eqns, labels := pipeline_shaped(poly, 21, 2, curves);
     i14 := rep{i : i in labels | curves[i]`W eq {Integers()|1,14}};
-    assert not IsDefined(all_eqns, i14);
+    // Since PR #70 the model file stores the true genus-2 curve X_0^21(2)/w_14 (checked against
+    // Guo-Yang's equations in tests/X0_21_2.m).  This test is about the stage, so that equation is
+    // taken out of the input: the stage must not rebuild the cover from the committed double covers.
+    if IsDefined(all_eqns, i14) then Remove(~all_eqns, i14); end if;
     // the committed index-2 covers above W={1,14} do give a compositum of the right genus ...
     ups := AtkinLehnerDoubleCoversOver({Integers()|1,14}, 21, 2);
     ok, gens := FibreProductGenerators({Integers()|1,14}, {U : U in ups | IsDefined(poly, U)}, 21, 2);
     assert ok;
     assert Genus(FibreProductFunctionField([poly[U] : U in gens])) eq curves[i14]`g;
-    // ... but it is not X_0(21,2)/w_14, and the stage must leave the key alone
+    // ... but it is not X_0(21,2)/w_14 (its factors are in mixed Hauptmodul coordinates): the point
+    // counts disagree with the trace formula at p = 11 (and agree at 13 and 23, which is why the
+    // check runs over several good primes), and the stage must leave the key alone
     all_ws := AssociativeArray();
     all_eqns, all_ws := EquationsByFibreProduct(all_eqns, all_ws, curves : NPrimes := 2);
     assert not IsDefined(all_eqns, i14);
