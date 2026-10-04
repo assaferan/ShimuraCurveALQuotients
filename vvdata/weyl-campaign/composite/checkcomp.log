@@ -1,3 +1,3 @@
-Runtime error in 'Read': Cannot open file "data/models/models_6 35_.m" (No such file or directory)
-Runtime error in 'Read': Cannot open file "data/models/models_10 21_.m" (No such file or directory)
-Runtime error in 'Read': Cannot open file "data/models/models_14 15_.m" (No such file or directory)
+X_0^6(35): 234 (prime, cover) point counts agree with the trace formula, 0 disagree; 11 entries skipped (genus 0 or CRV)
+X_0^10(21): 234 (prime, cover) point counts agree with the trace formula, 0 disagree; 11 entries skipped (genus 0 or CRV)
+X_0^14(15): 192 (prime, cover) point counts agree with the trace formula, 0 disagree; 8 entries skipped (genus 0 or CRV)
