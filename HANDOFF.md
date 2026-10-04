@@ -55,8 +55,16 @@ points, 13.4 wall-hours -- and is banked on the campaign branch as
 vvdata/weyl-campaign/nmz_420_145_0.txt.gz (Magma solution format); polymake/tshift_{core,w0}_420.txt
 are on main. Installing the rung as polymake/polymake_solution_420_145_0 serves 145 from cache and
 the t-shift fallback answers every higher m = 0 rung (run210_1.sh is the recipe). The cache key is
-(M, n, m) only, so the same rung serves all six DN = 210 bases. Not run yet: the pool is ~20000 eta
-quotients and the search is a heavy job (lovelace, with the user's go), not a laptop one.
+(M, n, m) only, so the same rung serves all six DN = 210 bases. RUNNING on lovelace since 2026-10-04 10:55 (user's go):
+`~/gymodels/composite/tree` = clone of composite-level with the rung installed as
+`polymake/polymake_solution_420_145_0`; `genmodels.m` from campaign; NORMALIZ_BIN=/usr/bin/normaliz,
+NMZ_TIMEOUT=7200 (m > 0 rungs are not covered by the fallback and solve live), BFPROGRESS=1 BFCACHE=1,
+VERB:=2, OUTDIR ~/gymodels/composite/out, 96 h timeout; logs ~/gymodels/composite/logs/6_35.{log,err},
+solver lines in tree/polymake/nmzsolve.err ("# tshift fallback: ..." = a rung answered from the cache).
+The pool is ~20000 eta quotients, so expect a long Borcherds stage. When it finishes: the values at the
+CM points go through the Hauptmodul-consistency check (tests/HauptmodulGroundTruth.m pattern), the first
+test of prop:composite's multipliers against numbers they did not produce; the five other DN = 210 bases
+can reuse the same tree.
 
 ## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
 
