@@ -510,19 +510,21 @@ function get_kappa_minus_squared(d, Wpolys, Wpol, Sm_mu, i, scales_sqr)
 
     kron_prod := &*[Rationals() | 1 - Evaluate(KroneckerCharacter(d),p)/p : p in Sm_mu];
 
-    // EXPERIMENT 2026-10-03: the class number of the FUNDAMENTAL discriminant, not of the order.
-    // With h(d) the value at conductor 4 comes out halved (X_0^15(2), d = -48, -240), because
-    // h(d) = 2 h(d_0) there while w is the field's; at conductor 2 in the split case h(d) = h(d_0)
-    // and nothing showed.  Yang's 1/f below is kept.
+    // The global factor is the FIELD's L(1, chi_{d_0})^-1 = w_0 sqrt|d_0| / (2 pi h_0): h and w of the
+    // fundamental discriminant, and sqrt|d| / f = sqrt|d_0| below.  The Euler corrections kron_prod use
+    // the imprimitive chi_d, so they stop at the primes of the conductor.  Both are what the data force
+    // (paper/kappa0-proof-standalone.tex, rem:mpos): with the order's class number h(d) every
+    // conductor-4 value came out halved; with corrections at p | f too (the literal Euler-product
+    // identity) every kappa^- at d would be off by prod_{p | f} (1 - chi_{d_0}(p)/p)^-1.  The local
+    // polynomials themselves agree with density counts at every prime including the conductor planes
+    // (campaign level-p2/wnorm.m); the derivation of the global factor from the Siegel-Weil
+    // normalisation at a non-maximal order is not written.
     h := ClassNumber(FundamentalDiscriminant(d));
     w := #UnitGroup(QuadraticField(d));
 
     scale_sqr := &*scales_sqr;
     
     W_kron := W_prod / kron_prod;
-    // km_sqr := -d*scale_sqr*(w*W_kron / h)^2;
-    // Using Yang's code to try to work the non-maximal case
-    // !!! Not sure why this works !!!
     _, f := SquarefreeFactorization(d div FundamentalDiscriminant(d));
     km_sqr := -d*scale_sqr*(w*W_kron / h)^2 / f^2;
     km_sign := -Sign(W_kron);

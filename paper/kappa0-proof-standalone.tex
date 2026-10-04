@@ -969,14 +969,47 @@ published values, while every other row of those tables is unchanged
 (\texttt{tests/\_offline/GuoYang\_*.m}, which now force these points). Without a term at $2$ the
 Hauptmodul value is off by a factor $2$ at each of them.
 
-\begin{remark}[the $m>0$ terms at non-fundamental $d$]
-A separate point, settled by the same comparison: in the $m>0$ part of the formula the class
-number and unit count that enter are those of the field $k$, not of the order $R_f$, together
-with a factor $1/f$. The two agree exactly when $h(R_f)=h(k)$, which holds at conductor $2$ when
-$2$ splits ($d=-28,-60$) and fails at conductor $4$, where $h(R_f)=2h(k)$ and the computed values
-came out halved against Table~45 down to a half-integer exponent of $5$; with the field's class
-number $d=-240$ is exact and nothing at a fundamental discriminant moves. In the invariants of
-the order this factor reads $(w_{R_f}/h(R_f))\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$.
+\begin{remark}[the $m>0$ terms at non-fundamental $d$]\label{rem:mpos}
+For $m>0$ the preprint's formula (its eq.~(euler)), after \cite{Yang},
+\[
+  A_\mu(s,m,v)=-\frac{2\pi}{L(s+1,\chi)}\prod_{p\in S}\frac{W_{m,p}(s,\varphi_\mu)}{1-\chi(p)p^{-1-s}},
+  \qquad S=\{p:\ p\mid\disc\Lm\text{ or }p\mid m\},
+\]
+is an Euler-product identity: away from $S$ the plane is unimodular and $W_{m,p}=1-\chi(p)p^{-1-s}$
+with $\chi$ the character of the plane, which is $\chi_{d_0}$ for every $d$. Two things are then
+established at a conductor prime and one is not.
+
+\emph{The local factors are the right ones.} For a coset $\mu$ of $\Lm$ and $m>0$ let
+$\alpha_k=p^{-k}\#\{x\in(\mu+L_{-,p})/p^kL_{-,p}:\ Q(x)\equiv m\bmod p^k\}$ and $W^{\mathrm{count}}=(1-X)
+\sum_k\alpha_kX^k$; at a unimodular prime with $p\nmid m$ this is $1-\chi(p)X/p$. The polynomials
+the routine evaluates (\cite[Thm.~4.3, 4.4]{KY} on the actual $L_{-,p}$, times $|\det S|_p^{1/2}$)
+coincide with $W^{\mathrm{count}}$ at every $(d,p,m)$ tried on $X_0^{15}(2)$: $d=-15,-60,-240,-28,-12,
+-48$, $p=2$ (the conductor planes) and $p=7$ (unimodular, split or inert), $m\le6$
+(\texttt{level-p2/wnorm.m}). So the only question is the global factor.
+
+\emph{What the global factor is.} The routine evaluates, per CM point and up to the $-\log p'$ at
+the vanishing place,
+\[
+  \kappa^-_\mu(m)=\frac{w_0\sqrt{\lvert d_0\rvert}}{h_0}\cdot
+  \frac{\bigl[\prod_{p\in S}W_{m,p}(s,\varphi_\mu)\bigr]'_{s=0}}{\prod_{p\in S,\ p\nmid f}(1-\chi_{d_0}(p)/p)},
+\]
+i.e.\ the field's $L(1,\chi_{d_0})^{-1}=w_0\sqrt{\lvert d_0\rvert}/(2\pi h_0)$ with the Euler
+corrections at the primes of $S$ \emph{not} dividing the conductor (in the code: $\sqrt{\lvert d
+\rvert}/f$ for $\sqrt{\lvert d_0\rvert}$, and the imprimitive $\chi_d$, which vanishes at $p\mid f$, in
+the corrections). This is forced by the data: the odd-prime parts of the values at $d=-28,-60,-240,
+-48$ and at the eleven forced points are exact with it, the literal identity above would multiply
+every $\kappa^-_\mu(m)$ at a given $d$ by $\prod_{p\mid f,\,p\nmid d_0}(1-\chi_{d_0}(p)/p)^{-1}$ ---
+$2$ at $-28,-60,-240$, $\tfrac23$ at $-48$ --- and the earlier code, with the order's class number
+$h(R_f)$ in place of $h_0$, was off by $h(R_f)/h_0$, visible only at conductor $4$.
+
+\emph{What is not derived.} Why the corrections stop at the primes of $f$. Equivalently, Theorem~B
+with the prefactor $-\lvert\mathrm{CM}(d)\rvert/4$ and the Euler-product $\kappa^-$ acquires at
+conductor $f$ the extra factor $\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$, which is $h(R_f)[\mathcal O_k^\times:
+R_f^\times]/(fh_0)$, the ratio of the order's class number to the field's; it must come from the
+Siegel--Weil normalisation of Schofer's theta integral for the lattice of a non-maximal order, where
+the stabiliser of $\widehat{\Lm}$ has index $f\prod_{p\mid f}(1-\chi_{d_0}(p)/p)$ in that of the
+maximal one. We have not carried that computation out; until it is done the global factor at
+non-fundamental $d$ rests on the agreement above.
 \end{remark}
 
 \begin{thebibliography}{9}
