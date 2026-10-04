@@ -11,6 +11,21 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-04 — review of #63 (Sachi): three answers, one fix
+
+* An EMPTY polytope still gets the "0 lattice points in polytope:" header from Normaliz (3.11.1 here,
+  3.10.2 on lovelace, this branch's nmzsolve.py on (8,1,0) cuspidal=1), so the new header check
+  leaves empty answers alone; only a missing header or a truncated list errors.
+* `good_forms_at_zero`: the dependencies are now the KERNEL OF THE EXPANSION-AT-0 MAP (echelonise the
+  expansions with the transform; rank = independent nonzero expansions; every dependency, including the
+  difference of two rows with the same expansion, is a zero row), not "the rows whose expansion is zero";
+  the old assertion would have failed on such a pair. X0_15_1, 51_1, 39_1, 39_2, 87_1, 93_1, 111_1,
+  VectorValuedForm pass (abf6460).
+* 95_1 / 119_1 / 159_1: the expansion at 0 was NOT rebuilt from the eta-quotient formula (pole order >
+  1000, no BFVERIFY); they rest on the Guo–Yang isomorphism, the L-polynomials and ModelChecks. An
+  independent rebuild = BFVERIFY=1 on lovelace, ~1 h per base, offered.
+* After this merges: merge main into m0-theta-campaign (shared-path nmzsolve.py).
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
