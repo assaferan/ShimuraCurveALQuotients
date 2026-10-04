@@ -2179,7 +2179,7 @@ supplies that for the other 8. Two routes were listed:
   only helps where Guo-Yang's obstruction is ABSENT;
 * **external Hauptmoduls** — Tu's paper covers none of the other 8 (see below).
 
-⇒ Superseded by the normaliser theorem below: Tu's Hauptmodul is on `X_0^15(1)^*`, and the
+⇒ Superseded by the normaliser argument below: Tu's Hauptmodul is on `X_0^15(1)^*`, and the
 obstructed curves are Galois covers of star curves we already have.
 
 **THE NORMALISER IS ATKIN–LEHNER–NEWMAN'S — an argument, computed 2026-10-02, not yet checked
@@ -2246,10 +2246,13 @@ whether a Hauptmodul exists on *that* curve:
 | `22_9` | `{1,2,11,22}` | 12 | 3 |
 
 `15_4` is the only one of the seven at genus 0 on *this* quotient, which is why Tu's route goes
-through `X_0^15(4)/W_15`. But the star curves themselves have genus 0 at every one of the seven, and
-the degeneracy map `X^*(D,N) -> X^*(D,N')` exists, so a Belyi-type solve for a Hauptmodul of the
-top star over the lower star is **not** excluded by this table — that was the wrong conclusion
-drawn here on 2026-10-02. The degree-3 solve for `21_4` (the Hauptmodul
+through `X_0^15(4)/W_15`. The star curves `X^*(D,N)` themselves have genus 0 at five of the seven
+(`15_4`, `21_4`, `15_8`, `10_9`, `14_9`) and genus 1 at `33_4` and `22_9` (Sachi, through
+Jacquet–Langlands, with the sign convention checked against the fixed-point genus formula on 15
+squarefree cases), and the degeneracy map `X^*(D,N) -> X^*(D,N')` exists, so a Belyi-type solve
+for a Hauptmodul of the top star over the lower star is open for those five and **not** excluded
+by this table — that was the wrong conclusion drawn here on 2026-10-02; for `33_4` and `22_9` there
+is no Hauptmodul to solve for. The degree-3 solve for `21_4` (the Hauptmodul
 `1/s = (t^3 - 4/3 t + 16/27)/(t^2 + 29/12 t + 22/9)`, with its `Q(sqrt -7)` and `Q(sqrt -3)` fibres)
 was retracted on that wrong basis and is to be rechecked; see the dated correction in campaign
 `vvdata/weyl-campaign/nonsquarefree/NOTES.md`. (Computation of the table:
