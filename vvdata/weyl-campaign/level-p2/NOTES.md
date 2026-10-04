@@ -328,3 +328,18 @@ x = 0 pair cancels against the pole at tau_-4 via x = lambda_0/2), so the s-row 
 per-form divisor check (ramcheck.py, raw rows in gyforce_21_2_raw.log) is not: 9/9 with the term,
 forms 12/13/14/15 off by 2^4/2^6/2^8/2^4 without.  Code: Nprimes now includes level primes dividing
 both d_fund and the conductor; M0FibreCorrection's eps = 0 branch no longer requires Unimodular.
+
+## The m > 0 normalisation at non-fundamental d: local side VERIFIED, global side pinned, derivation open (wnorm.m, 2026-10-04)
+
+wnorm.m: the repo's LocalWhittakerPolynomial (KY Thm 4.3/4.4 on the actual L_-) equals the density count
+(1-X) sum_k p^-k #{x in mu+L_- mod p^k : Q(x) = m mod p^k} X^k at EVERY (d, p, m) tried -- d in
+{-15,-60,-240,-28,-12,-48}, p = 2 (conductor planes) and 7 (unimodular, chi = +-1), m <= 6 (wnorm.log).
+At a unimodular prime the count is 1 - chi(p)X/p, the Euler factor, so the normalisation is fixed.
+Global factor the data force (odd parts of 46 + 11 values): L(1,chi_{d_0})^-1 of the FIELD, Euler
+corrections (1 - chi(p)/p)^-1 only at p in S NOT dividing f (code: chi_d imprimitive, sqrt|d|/f).
+The literal Euler identity with chi_{d_0} everywhere would multiply all kappa^- at d by
+prod_{p|f, p not | d_0} (1 - chi_{d_0}(p)/p)^-1 = 2 at -28/-60/-240, 2/3 at -48 -- excluded.
+⚠ Yang's own code (Yang/YangCode.m ~line 880) divides by (1 - LegendreSymbol(cc,p)/p) with cc the
+FUNDAMENTAL discriminant -- which primes his loop covers was not reverse-engineered.
+OPEN: derive the factor prod_{p|f}(1 - chi(p)/p) (= h(R_f)[O_K^x:R_f^x]/(f h_0)) from the Siegel-Weil
+normalisation of the theta integral at a non-maximal order (stabiliser index f prod(1 - chi/p)).

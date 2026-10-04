@@ -1,0 +1,84 @@
+
+=== d = -15 (d0 -15, f 1) det S = [ <2, 2>, <3, 1>, <5, 1> ]
+  p = 2 (v_p det = 2, chi(p) =  1) m = 1: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 2: repo bare -x^2 + x + 1                   count -x^2 + x + 1                       count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 3: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 4: repo bare -x^3 + x^2 + x + 1             count -x^3 + x^2 + x + 1                 count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 5: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 6: repo bare -x^2 + x + 1                   count -x^2 + x + 1                       count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 1: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 2: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 3: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 4: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 5: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 6: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+
+=== d = -60 (d0 -15, f 2) det S = [ <2, 2>, <3, 1>, <5, 1> ]
+  p = 2 (v_p det = 2, chi(p) =  1) m = 1: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 2: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 3: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 4: repo bare -x^3 + x^2 + 1                 count -x^3 + x^2 + 1                     count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 5: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 6: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 1: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 2: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 3: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 4: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 5: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 6: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+
+=== d = -240 (d0 -15, f 4) det S = [ <2, 4>, <3, 1>, <5, 1> ]
+  p = 2 (v_p det = 4, chi(p) =  1) m = 1: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) =  1) m = 2: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) =  1) m = 3: repo bare x^2 + 1                        count x^2 + 1                            count/bare = 1
+  p = 2 (v_p det = 4, chi(p) =  1) m = 4: repo bare x^2 + 1                        count x^2 + 1                            count/bare = 1
+  p = 2 (v_p det = 4, chi(p) =  1) m = 5: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) =  1) m = 6: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 1: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 2: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 3: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 4: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 5: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+  p = 7 (v_p det = 0, chi(p) = -1) m = 6: repo bare 1/7*x + 1                      count 1/7*x + 1                          count/bare = 1
+
+=== d = -28 (d0 -7, f 2) det S = [ <2, 2>, <3, 2>, <5, 2>, <7, 1> ]
+  p = 2 (v_p det = 2, chi(p) =  1) m = 1: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 2: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 3: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 4: repo bare -x^3 + x^2 + 1                 count -x^3 + x^2 + 1                     count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 5: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) =  1) m = 6: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 1: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 2: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 3: repo bare x + 1                          count x + 1                              count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 4: repo bare -x + 1                         count -x + 1                             count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 5: repo bare x + 1                          count x + 1                              count/bare = 1
+  p = 7 (v_p det = 1, chi(p) =  0) m = 6: repo bare x + 1                          count x + 1                              count/bare = 1
+
+=== d = -12 (d0 -3, f 2) det S = [ <2, 2>, <3, 1>, <5, 2> ]
+  p = 2 (v_p det = 2, chi(p) = -1) m = 1: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) = -1) m = 2: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 2, chi(p) = -1) m = 3: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) = -1) m = 4: repo bare x^3 + x^2 + 1                  count x^3 + x^2 + 1                      count/bare = 1
+  p = 2 (v_p det = 2, chi(p) = -1) m = 5: repo bare 1                              count 1                                  count/bare = 1
+  p = 2 (v_p det = 2, chi(p) = -1) m = 6: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 1: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 2: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 3: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 4: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 5: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 6: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+
+=== d = -48 (d0 -3, f 4) det S = [ <2, 4>, <3, 1>, <5, 2> ]
+  p = 2 (v_p det = 4, chi(p) = -1) m = 1: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) = -1) m = 2: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) = -1) m = 3: repo bare x^2 + 1                        count x^2 + 1                            count/bare = 1
+  p = 2 (v_p det = 4, chi(p) = -1) m = 4: repo bare x^2 + 1                        count x^2 + 1                            count/bare = 1
+  p = 2 (v_p det = 4, chi(p) = -1) m = 5: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 2 (v_p det = 4, chi(p) = -1) m = 6: repo bare -x^2 + 1                       count -x^2 + 1                           count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 1: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 2: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 3: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 4: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 5: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
+  p = 7 (v_p det = 0, chi(p) =  1) m = 6: repo bare -1/7*x + 1                     count -1/7*x + 1                         count/bare = 1
