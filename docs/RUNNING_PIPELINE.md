@@ -167,8 +167,8 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   `X_0^6(97)/W_2` (`g = 6`) at 74 min, while `X_0(240)/W_4` (`g = 6`) takes 6 min, against 87 min
   with #58 alone and 14.8 h before it. The makespan of this stage is roughly the slowest single
   curve, so getting that ordering right is what the heavy-first dispatch is for; of the curve pairs
-  whose times differ by more than a factor 10 the estimate orders 246 of 271 correctly, against 198
-  for the sum of `p^g` it used before. ⚠ A residual spread of 237x remains and real pairs are
+  whose times differ by more than a factor 10 the estimate orders 246 of 271 correctly. ⚠ A residual
+  spread of 237x remains and real pairs are
   mis-ordered, so it orders chunks and is not a cost: quote the measured times.
 * **`FilterByTwistedTrace`**: modular symbols of level D·N, plus T_p for every good p < 4g².
   Small levels take seconds (level 1530 takes about 30 s), but the largest levels (D·N from about
