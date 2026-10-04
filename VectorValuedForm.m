@@ -338,7 +338,9 @@ intrinsic M0MultiplierNumeric(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D
 
  (they all carry the same value, and c_0(0) = 0).  Verified against the independently measured
  ground truth on all 9 forms of X0^15(2) and all 5 measured forms of X0^6(5) -- see
- tests/VectorValuedForm.m.  The 1/2 is empirical; it has not been derived.
+ tests/VectorValuedForm.m.  The 1/2 was found numerically; it is derived in
+ paper/kappa0-proof-standalone.tex (prop:kappa0, prop:mult: -(1/4) times kappa^-_nu(0) = -log N/(N-1)
+ at each of the 2N-2 cosets), an argument the authors have still to accept.
 
  This is an ORACLE, not a production route: it costs minutes per base and cannot reach the larger
  discriminant groups.  SchoferFormula.m still uses m0_multiplier; this is what that must reproduce.}
