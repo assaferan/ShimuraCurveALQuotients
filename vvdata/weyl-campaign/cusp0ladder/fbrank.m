@@ -1,0 +1,11 @@
+AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);
+M := 204; nhi := 45; m := 32; ds := Divisors(M);
+load_pts := func< f | eval Read(f) >;
+truth := load_pts("polymake/polymake_solution_204_45_32"); fb := load_pts(FB);
+pole_oo := func< r | -(&+[ds[i]*r[i] : i in [1..#ds]]) div 24 >;
+pole_0 := func< r | -(&+[(M div ds[i])*r[i] : i in [1..#ds]]) div 24 >;
+assert forall{r : r in fb | pole_oo(r) le nhi and pole_0(r) le m};
+R := EtaQuotientsRing(M, 1); PREC := 2*(nhi + m) + 400;
+function spanrank(S) return Rank(Matrix(Rationals(), [[Coefficient(f, k) : k in [-nhi .. PREC - nhi - 10]] where f := qExpansionAtoo(EtaQuotient(R, r), PREC) : r in S])); end function;
+printf "fallback file: %o points (truth %o), %o outside the truth; span rank truth %o, fallback %o\n", #fb, #truth, #(Set(fb) diff Set(truth)), spanrank(truth), spanrank(fb);
