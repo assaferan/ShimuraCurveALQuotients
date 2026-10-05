@@ -25,8 +25,10 @@ which Normaliz does not finish in the 2-hour limit, and the t-shift fallback cov
 after the timeout the search re-requests the same polytope, so the run would loop in 2-hour timeouts
 (composite-level still has main's "no file -> no solutions" behaviour, #63 turns it into an error).
 What would unblock them: one long enumeration of (420, 42, 104) (the August (420,145,0) took 13 h),
-or extending the t-shift fallback to m > 0 rungs. X_0^35(6): a 2-minute-timeout PROBE runs on lovelace
-to list its polytope requests (logs composite/logs/35_6_probe.*) before any real run.
+or extending the t-shift fallback to m > 0 rungs. X_0^35(6), probed with a 2-minute timeout: it asks for the SAME polytope
+(420, 42, 104). ⇒ All three remaining DN = 210 bases are blocked on that one enumeration; one long
+Normaliz job (the (420, 145, 0) enumeration took 13.4 wall-hours) would unblock all three, and would
+be banked like the first one. Not launched: a multi-day job on the shared machine is the user's call.
 ⚠ The multiplier computation (~73 min on the 88200-element group) still runs up to three times per
 base, once for each set of forms first met at a later CM point; computing it for ALL forms up front
 would make it once. Not done yet.
