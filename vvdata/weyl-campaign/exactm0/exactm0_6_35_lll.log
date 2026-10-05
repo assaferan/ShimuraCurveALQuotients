@@ -1,0 +1,60 @@
+  LLL form r = [ 0, -1, 1, 1, -1, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  LLL form r = [ 0, -1, 0, 1, 0, 1, 0, 1, 0, -1, -1, 1, 1, 0, -1, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
+  LLL form r = [ 0, -1, 1, 1, -1, 0, 1, 1, 0, 0, -1, 1, 0, -1, -1, 0, 0, 1, 0, 0, 0, 0, 0, 0 ]
+  LLL form r = [ 0, -1, 1, 1, -1, 0, 0, 1, 0, -1, 0, 1, 0, 0, -1, 0, 0, 0, 0, 1, 0, 1, -1, 0 ]
+BASE 6 35  M = 420  forms [ 1 .. 4 ]
+  |L^v/L| = 88200, isotropic 117, support classes [
+<{}, 1>,
+<{ 5 }, 8>,
+<{ 5, 7 }, 96>,
+<{ 7 }, 12>
+], sampled 10
+  class 1: 2 monomials needed a q-series
+  class 2: 4 monomials needed a q-series
+  class 5: 3 monomials needed a q-series
+  class 7: 2 monomials needed a q-series
+  class 14: 4 monomials needed a q-series
+  class 15: 4 monomials needed a q-series
+  class 28: 2 monomials needed a q-series
+  class 30: 4 monomials needed a q-series
+  class 35: 2 monomials needed a q-series
+  class 60: 1 monomials needed a q-series
+  class 70: 1 monomials needed a q-series
+  class 84: 1 monomials needed a q-series
+  class 105: 3 monomials needed a q-series
+  class 210: 4 monomials needed a q-series
+  class data for 23 classes: 0.060 s
+  form 1: [
+<{}, 1>,
+<{ 5 }, 1/2>,
+<{ 5, 7 }, 1/4>,
+<{ 7 }, 1/2>
+]  (6.520 s)
+    verify: every class agrees between two representatives
+  form 2: [
+<{}, -15>,
+<{ 5 }, -23/4>,
+<{ 5, 7 }, 0>,
+<{ 7 }, -39/4>
+]  (7.480 s)
+    verify: every class agrees between two representatives
+  form 3: [
+<{}, 142>,
+<{ 5 }, 78>,
+<{ 5, 7 }, 0>,
+<{ 7 }, 64>
+]  (6.400 s)
+    verify: every class agrees between two representatives
+  form 4: [
+<{}, 7/4>,
+<{ 5 }, -1/4>,
+<{ 5, 7 }, 0>,
+<{ 7 }, 9/8>
+]  (6.540 s)
+    verify: every class agrees between two representatives
+EXACT multipliers: [
+[ <5, 1/2>, <7, 1/2> ],
+[ <5, -23/4>, <7, -39/4> ],
+[ <5, 78>, <7, 64> ],
+[ <5, -1/4>, <7, 9/8> ]
+]  (83.510 s)

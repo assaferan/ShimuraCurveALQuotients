@@ -1,0 +1,75 @@
+BASE 21 2  M = 84  forms [ -2, -1, 9, 10, 11, 12, 13, 14, 15 ]
+  |L^v/L| = 3528, isotropic 3, support classes [
+<{}, 1>,
+<{ 2 }, 2>
+], sampled 3
+  class 1: 21 monomials needed a q-series
+  class data for 11 classes: 0.100 s
+  form 1: [
+<{}, 0>,
+<{ 2 }, 2>
+]  (0.200 s)
+    verify: every class agrees between two representatives
+  form 2: [
+<{}, 0>,
+<{ 2 }, 2>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+  form 3: [
+<{}, 0>,
+<{ 2 }, 4>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+  form 4: [
+<{}, 0>,
+<{ 2 }, 2>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+  form 5: [
+<{}, 0>,
+<{ 2 }, 2>
+]  (0.200 s)
+    verify: every class agrees between two representatives
+  form 6: [
+<{}, 0>,
+<{ 2 }, 2>
+]  (0.200 s)
+    verify: every class agrees between two representatives
+  form 7: [
+<{}, 0>,
+<{ 2 }, -4>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+  form 8: [
+<{}, 0>,
+<{ 2 }, -4>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+  form 9: [
+<{}, 0>,
+<{ 2 }, 0>
+]  (0.190 s)
+    verify: every class agrees between two representatives
+EXACT multipliers: [
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, 4> ],
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, -4> ],
+[ <2, -4> ],
+[ <2, 0> ]
+]  (5.360 s)
+M0MultipliersBySupport: [
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, 4> ],
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, 2> ],
+[ <2, -4> ],
+[ <2, -4> ],
+[ <2, 0> ]
+]  (15.280 s)
+AGREEMENT exact vs numeric on all 9 forms: true

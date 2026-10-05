@@ -1,0 +1,146 @@
+BASE 6 35  M = 420  forms [ -2, -1, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66 ]
+  |L^v/L| = 88200, isotropic 117, support classes [
+<{}, 1>,
+<{ 5 }, 8>,
+<{ 5, 7 }, 96>,
+<{ 7 }, 12>
+], sampled 10
+  class data for 23 classes: 7.500 s
+  form 1: [
+<{}, 0>,
+<{ 5 }, -1/2>,
+<{ 5, 7 }, 1/2>,
+<{ 7 }, 3>
+]  (19.970 s)
+    verify: every class agrees between two representatives
+  form 2: [
+<{}, 0>,
+<{ 5 }, 1/2>,
+<{ 5, 7 }, 1/2>,
+<{ 7 }, -1/2>
+]  (20.190 s)
+    verify: every class agrees between two representatives
+  form 3: [
+<{}, 0>,
+<{ 5 }, 6>,
+<{ 5, 7 }, 1>,
+<{ 7 }, -33/8>
+]  (20.840 s)
+    verify: every class agrees between two representatives
+  form 4: [
+<{}, 0>,
+<{ 5 }, 7>,
+<{ 5, 7 }, -1>,
+<{ 7 }, -69/8>
+]  (22.790 s)
+    verify: every class agrees between two representatives
+  form 5: [
+<{}, 0>,
+<{ 5 }, 0>,
+<{ 5, 7 }, 5/2>,
+<{ 7 }, 11/2>
+]  (20.000 s)
+    verify: every class agrees between two representatives
+  form 6: [
+<{}, 0>,
+<{ 5 }, 0>,
+<{ 5, 7 }, 7/2>,
+<{ 7 }, 11/2>
+]  (20.240 s)
+    verify: every class agrees between two representatives
+  form 7: [
+<{}, 0>,
+<{ 5 }, 3>,
+<{ 5, 7 }, -3>,
+<{ 7 }, -51/8>
+]  (21.120 s)
+    verify: every class agrees between two representatives
+  form 8: [
+<{}, 0>,
+<{ 5 }, 0>,
+<{ 5, 7 }, 1>,
+<{ 7 }, 3>
+]  (22.390 s)
+    verify: every class agrees between two representatives
+  form 9: [
+<{}, 0>,
+<{ 5 }, 7>,
+<{ 5, 7 }, 1>,
+<{ 7 }, -3/4>
+]  (22.240 s)
+    verify: every class agrees between two representatives
+  form 10: [
+<{}, 0>,
+<{ 5 }, 3>,
+<{ 5, 7 }, 2>,
+<{ 7 }, 1>
+]  (22.800 s)
+    verify: every class agrees between two representatives
+  form 11: [
+<{}, 0>,
+<{ 5 }, -4>,
+<{ 5, 7 }, 2>,
+<{ 7 }, 11>
+]  (21.670 s)
+    verify: every class agrees between two representatives
+  form 12: [
+<{}, 0>,
+<{ 5 }, 6>,
+<{ 5, 7 }, -1>,
+<{ 7 }, -12>
+]  (20.790 s)
+    verify: every class agrees between two representatives
+  form 13: [
+<{}, 0>,
+<{ 5 }, -4>,
+<{ 5, 7 }, 6>,
+<{ 7 }, 19>
+]  (20.410 s)
+    verify: every class agrees between two representatives
+  form 14: [
+<{}, 0>,
+<{ 5 }, 0>,
+<{ 5, 7 }, -3/2>,
+<{ 7 }, -5/2>
+]  (19.720 s)
+    verify: every class agrees between two representatives
+  form 15: [
+<{}, 0>,
+<{ 5 }, 4>,
+<{ 5, 7 }, 2>,
+<{ 7 }, 35/8>
+]  (21.200 s)
+    verify: every class agrees between two representatives
+  form 16: [
+<{}, 0>,
+<{ 5 }, 4>,
+<{ 5, 7 }, -3>,
+<{ 7 }, -3>
+]  (20.330 s)
+    verify: every class agrees between two representatives
+  form 17: [
+<{}, 0>,
+<{ 5 }, -8>,
+<{ 5, 7 }, 9/2>,
+<{ 7 }, 49/2>
+]  (20.620 s)
+    verify: every class agrees between two representatives
+EXACT multipliers: [
+[ <5, -1/2>, <7, 3> ],
+[ <5, 1/2>, <7, -1/2> ],
+[ <5, 6>, <7, -33/8> ],
+[ <5, 7>, <7, -69/8> ],
+[ <5, 0>, <7, 11/2> ],
+[ <5, 0>, <7, 11/2> ],
+[ <5, 3>, <7, -51/8> ],
+[ <5, 0>, <7, 3> ],
+[ <5, 7>, <7, -3/4> ],
+[ <5, 3>, <7, 1> ],
+[ <5, -4>, <7, 11> ],
+[ <5, 6>, <7, -12> ],
+[ <5, -4>, <7, 19> ],
+[ <5, 0>, <7, -5/2> ],
+[ <5, 4>, <7, 35/8> ],
+[ <5, 4>, <7, -3> ],
+[ <5, -8>, <7, 49/2> ]
+]  (1087.040 s)

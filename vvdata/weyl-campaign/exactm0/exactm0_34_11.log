@@ -1,0 +1,62 @@
+BASE 34 11  M = 748  forms [ -2, -1, 8, 9, 10, 11, 12, 13, 14 ]
+  |L^v/L| = 279752, isotropic 21, support classes [
+<{}, 1>,
+<{ 11 }, 20>
+], sampled 4
+  class data for 11 classes: 21.840 s
+  form 1: [
+<{}, 0>,
+<{ 11 }, -1/2>
+]  (4.130 s)
+    verify: every class agrees between two representatives
+  form 2: [
+<{}, 0>,
+<{ 11 }, 1/2>
+]  (4.120 s)
+    verify: every class agrees between two representatives
+  form 3: [
+<{}, 0>,
+<{ 11 }, -5>
+]  (4.430 s)
+    verify: every class agrees between two representatives
+  form 4: [
+<{}, 0>,
+<{ 11 }, -2>
+]  (4.190 s)
+    verify: every class agrees between two representatives
+  form 5: [
+<{}, 0>,
+<{ 11 }, -3>
+]  (4.500 s)
+    verify: every class agrees between two representatives
+  form 6: [
+<{}, 0>,
+<{ 11 }, -8>
+]  (4.520 s)
+    verify: every class agrees between two representatives
+  form 7: [
+<{}, 0>,
+<{ 11 }, 0>
+]  (4.230 s)
+    verify: every class agrees between two representatives
+  form 8: [
+<{}, 0>,
+<{ 11 }, -2>
+]  (4.220 s)
+    verify: every class agrees between two representatives
+  form 9: [
+<{}, 0>,
+<{ 11 }, -6>
+]  (4.510 s)
+    verify: every class agrees between two representatives
+EXACT multipliers: [
+[ <11, -1/2> ],
+[ <11, 1/2> ],
+[ <11, -5> ],
+[ <11, -2> ],
+[ <11, -3> ],
+[ <11, -8> ],
+[ <11, 0> ],
+[ <11, -2> ],
+[ <11, -6> ]
+]  (147.550 s)
