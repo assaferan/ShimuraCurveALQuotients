@@ -22,6 +22,10 @@ about state, this file wins.
 * **lovelace**: nine 30-min probes at M = 660 (6_55 10_33 15_11 15_22 22_15 33_5 33_10 55_3 330_1,
   NMZ_TIMEOUT=120, VERB:=3; logs ~/gymodels/composite/probes660/) to read their rungs off
   polymake/nmzsolve.err; the (420, 42, 104) enumeration continues; 159_1 BFVERIFY still searching.
+* **lava, 2026-10-05 ~19:00**: the M = 660 probes all ask FIRST for (660, 231, 0) — one m = 0 rung for
+  nine bases (39 genus-0 quotients). Its enumeration runs on lava (~/bank660/polymake_solution_660_231_0,
+  7-day timeout) together with the weight-0 shift set for 660 (k24=0, sq_disc=1, pole <= 231:
+  ~/bank660/w0_660_231), which the t-shift fallback needs as polymake/tshift_w0_660.txt.
 * **The cusp-0 fallback, the design to test**: a rung (M, n, m) with m > 0 should be spanned by the
   rung (M, n, 0) — which is FREE as the subset of a cached taller (M, n', 0) with pole at oo <= n —
   shifted by weight-0 eta quotients with poles at the CUSP 0 only, and those are the Atkin-Lehner
