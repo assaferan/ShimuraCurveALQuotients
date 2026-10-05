@@ -88,23 +88,29 @@ def _pole(r):
     s24 = sum(d*x for d, x in zip(ds, r))
     assert s24 % 24 == 0
     return -s24 // 24
-if m_pole == 0 and k24 == 12 and cuspidal == 0:
+# The same ladder at a FIXED cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the
+# pole at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted, exactly as for m = 0
+# (checked against enumerated rungs: M = 204, (20, 32) -> (45, 32), rank 63/63; M = 60, (0|3|8, 8)
+# -> (11, 8), rank 17/17).  What it cannot do is reach a cusp-0 order from the m = 0 rungs (at
+# M = 204 the products of rung (47, 0) with the weight-0 quotients of poles <= 20, 32 span 24 of the
+# 38 dimensions of (20, 32)); the LOWEST rung at each cusp-0 order has to be enumerated once.
+if k24 == 12 and cuspidal == 0:
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []
-    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_0'):
-        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_0$', f)
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
         if mm and int(mm.group(1)) < n_pole:
             cands.append(int(mm.group(1)))
     if os.path.exists(w0p) and cands:
         base_n = max(cands)
-        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_0')
+        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_{m_pole}')
         shifts = [ t for t in _load_magma_seq(w0p) if any(t) ]
         # a rank-preserving CORE (same span as the full rung, ~dim vectors) beats
         # thinning by pole order: 42 of sol(420,145)'s 105 pivots come from
         # cancellations between same-leading-order vectors, which order-thinning
         # destroys.  If a core file exists, shift it verbatim (no thinning).
         corep = f'polymake/tshift_core_{M}.txt'
-        use_core = os.path.exists(corep)
+        use_core = m_pole == 0 and os.path.exists(corep)      # the core is a reduced m = 0 rung
         if use_core:
             core = _load_magma_seq(corep)
             if core: base = core
@@ -130,6 +136,10 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                         pts.update(layer)
                 pts = sorted(pts)
             else:
+                # thinning to four points per pole order is tuned for the m = 0 ladder; at a cusp-0 order it
+                # loses dimensions (M = 204, rung (20, 32) -> (45, 32): 61 of 63 with it, 63 of 63 without),
+                # so for m > 0 every shifted point in the box is kept
+                cap = 4 if m_pole == 0 else 10**9
                 byorder = {}
                 layer = [ tuple(r) for r in base ]
                 seen = set(layer)
@@ -138,7 +148,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                         pl = _pole(list(v))
                         if pl > n_pole: continue
                         b = byorder.setdefault(pl, [])
-                        if len(b) < 4:
+                        if len(b) < cap:
                             b.append(v)
                 _absorb(layer)
                 for j in range(J):
