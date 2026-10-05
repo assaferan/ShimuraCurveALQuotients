@@ -11,6 +11,18 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 (late) — lava backlog: two bases done, two stopped by a ROUNDOFF guard, now retrying with more precision
+
+33_2 (3 min, 15 keys) and 93_2 (46 min, 12 keys, genus up to 8) built on lava and pass the trace formula
+(50/50, 36/36) — branch backlog-odd-2026-10. 55_2 and 87_2 stopped at d = -15 in M0MultiplierExact's
+class-constancy check: "dev 2.95e-15, scale 0.0136" (55_2, M = 220) and "dev 2.2e-5, scale 0.0115"
+(87_2, M = 348). At 55_2 this is ROUNDOFF: the same forms at Prec 160 give the multipliers as small
+rationals (2, 2/3, 8, 4, 16/3, 26/3, 2/3, 10/3, 14/3; 23 min). The guards' 1e-15 floor is what the code's
+own comments say is base-dependent (33 digits at 58_5, 18 at 34_11). FIX (composite-level 9201ae0):
+SchoferFormula retries M0MultipliersBySupport at Prec 160 then 240 before erroring — more precision,
+never a looser check. 55_2 and 87_2 relaunched on lava with it (their first logs kept as *.failed.log);
+87_2's deviation is 10 orders larger, so it is the real test of whether that one is roundoff too.
+
 ## Handoff — 2026-10-05 (night) — lava: the cheap backlog; lovelace: M = 660 probes; the cusp-0 fallback idea
 
 * **lava** (idle, 32 cores, 125 GB; reach it with `ssh -A lovelace 'ssh lava ...'` after ssh-add, or
