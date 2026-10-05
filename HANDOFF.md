@@ -19,8 +19,14 @@ banked (420, 145, 0) rung + t-shift fallback: 66, 66 and 65 cover keys (data/mod
 Eichler-Selberg point counts over F_p and F_p^2 at p = 11, 13, 17, 19, 23, 29 (234 + 234 + 192 = 660
 of 660; campaign composite/checkcomp.m, checkcomp.log); ModelChecks 116 files, 14680 checks, 0
 failures. At X_0^10(21) the multipliers at 3 and at 7 differ (6 and -7 on one form): the per-prime
-structure of prop:composite acts in production. Running since 2026-10-05: X_0^15(14), X_0^21(10)
-(logs ~/gymodels/composite/logs/{15_14,21_10}.{log,err}); X_0^35(6) remains.
+structure of prop:composite acts in production. ⚠ X_0^15(14) and X_0^21(10) STOPPED after 2 h 30 (2026-10-05): both ask for the
+polytope (420, 42, 104) — a cusp-0 pole order of 104 that the three built bases never requested —
+which Normaliz does not finish in the 2-hour limit, and the t-shift fallback covers m = 0 rungs only;
+after the timeout the search re-requests the same polytope, so the run would loop in 2-hour timeouts
+(composite-level still has main's "no file -> no solutions" behaviour, #63 turns it into an error).
+What would unblock them: one long enumeration of (420, 42, 104) (the August (420,145,0) took 13 h),
+or extending the t-shift fallback to m > 0 rungs. X_0^35(6): a 2-minute-timeout PROBE runs on lovelace
+to list its polytope requests (logs composite/logs/35_6_probe.*) before any real run.
 ⚠ The multiplier computation (~73 min on the 88200-element group) still runs up to three times per
 base, once for each set of forms first met at a later CM point; computing it for ALL forms up front
 would make it once. Not done yet.
