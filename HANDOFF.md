@@ -28,7 +28,11 @@ What would unblock them: one long enumeration of (420, 42, 104) (the August (420
 or extending the t-shift fallback to m > 0 rungs. X_0^35(6), probed with a 2-minute timeout: it asks for the SAME polytope
 (420, 42, 104). ⇒ All three remaining DN = 210 bases are blocked on that one enumeration; one long
 Normaliz job (the (420, 145, 0) enumeration took 13.4 wall-hours) would unblock all three, and would
-be banked like the first one. Not launched: a multi-day job on the shared machine is the user's call.
+be banked like the first one. LAUNCHED 2026-10-05 ~17:30 (user's go): `nmzsolve.py 420 42 104` on lovelace,
+8 threads, 7-day timeout, output ~/gymodels/composite/bank/polymake_solution_420_42_104, log
+~/gymodels/composite/logs/nmz_420_42_104.log. When it finishes: copy the file into
+polymake/polymake_solution_420_42_104 of the composite tree (and bank it on the campaign branch like
+nmz_420_145_0.txt.gz), then rerun 15_14, 21_10, 35_6 with the default recipe.
 ⚠ The multiplier computation (~73 min on the 88200-element group) still runs up to three times per
 base, once for each set of forms first met at a later CM point; computing it for ALL forms up front
 would make it once. Not done yet.
