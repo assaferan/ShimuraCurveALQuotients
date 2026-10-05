@@ -11,21 +11,38 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## NEXT (agreed 2026-10-05): an EXACT m = 0 multiplier, no transcendental step
+## Handoff — 2026-10-05 (late evening) — THE m = 0 MULTIPLIER WITHOUT A TRANSCENDENTAL STEP (branch exact-m0, on composite-level)
 
-c_eta(0) = sum_w rho(w^-1)e_0[eta] * a_0(f|w) is algebraic (a cyclotomic number), and the routine
-reaches it through complex arithmetic with 1e-15 agreement checks and now a Prec retry. Replace:
-1. the numerically pinned slash constant by the Dedekind-eta multiplier system (Apostol Thm 3.4,
-   Dedekind sums; campaign cusp4.m verified kappa_{r,w} = zeta_w prod_d eps(g_d)^{r_d} e_d^{-r_d/2}
-   against the pinned values on 15_2) with the word's metaplectic phase zeta_w made exact (the lift
-   of the ST-word as a product of the lifts of S and T: eighth roots of unity, pure bookkeeping);
-2. the complex FFT of rho(w^-1)e_0 over ALL cosets by Scheithauer's Gauss-sum formula for the few
-   components needed (the 2p - 2 isotropic cosets of order p per level prime, and e_0);
-3. the constant term of the slashed q-series by exact series arithmetic over Q(zeta_{8M}).
-Validate against M0MultipliersBySupport on the 21 bases it was validated on and on 6_35 (the three
-classes).  Payoff: certified rationals, no guards, and minutes instead of an hour at |L^v/L| = 88200.
-Why Guo-Yang's Lemma 24 has no analogue here: the principal part sees only the two cusps where f has
-poles; the constant term collects every coset.
+`M0MultipliersAlgebraic` (VectorValuedForm.m) computes (1/2) c_eta(0) per support class as an exact
+rational, and SchoferFormula now uses it (the Prec-80/160/240 retry is gone; M0MultipliersBySupport
+stays as the numerical cross-check). One coset representative per class g = gcd(c, M), both factors
+with the canonical lift (gamma, sqrt(c tau + d)):
+* the Weil-representation component rho*(gamma^-1) e_0 [eta] = e(1/8) c^{-3/2} |L^v/L|^{-1/2}
+  e(d Q(eta)/c) sum_{nu in L/cL} e((a Q(nu) + (eta, nu))/c) — the theta transformation formula
+  (gamma tau = a/c − 1/(c(c tau + d)), Poisson summation), the Gauss sum split over the prime powers of
+  c; NOTE d in the prefactor and a in the Gauss sum, the swap is wrong by O(1);
+* the slash constant from Apostol Thm 3.4: e(−1/8) prod_d [eps(g_d) e(b_d/(24 e_d)) e_d^{-1/2}]^{r_d}
+  with [d 0; 0 1] gamma = g_d [a_d b_d; 0 e_d], eps a 24th root of unity from a Dedekind sum; the
+  polytope monomials are holomorphic at the middle cusps, so a q-series is needed only at the cusp 0,
+  where the representative S makes its coefficients rational.
+Roots of unity are monomials of Q[x]/(x^n − 1), n = 24 M; square roots are Gauss sums; the total is
+reduced modulo the n-th cyclotomic polynomial and must be a constant. Verify (default) recomputes
+every middle class from a second coset with d ≢ ±1 (mod g) and demands exact equality.
+
+Checked (campaign vvdata/weyl-campaign/exactm0/, README there): the rho row against the Fourier
+transform to 1e-58 for c ≤ 10 including representatives with a ≠ d (rhotest.m, rhotest2.m); the
+slash constant on 140/140 (monomial, point) pairs; the multipliers equal the measured ground truth on
+all nine forms of X_0^15(2) (3 s) and the numerical routine on 21_2, 10_3, 22_3 (9/9 each); the four
+compmult5 probe monomials at X_0^6(35) give the twelve class values of compmult5.m (including the
+{5,7} class); the production forms of X_0^6(35), X_0^10(21), X_0^14(15) (17 each, the values the
+genmodels runs printed at verbosity 2) agree as multisets on all three classes. X_0^34(11)
+(|L^v/L| = 279752) takes 148 s with Verify. tests/M0MultipliersAlgebraic.m; regressions green:
+Kappa0, M0PoleSum, M0MultiplierExact, X0_15_2, X0_21_2, X0_10_3.
+Cost: ~1100 s per composite base on lovelace with Verify (23 classes, 10 sampled cosets, degree-10080
+polynomial products), against an hour per batch before. Two traps while building it: a RATIO test of
+two mostly-vanishing vectors is noise (compare by difference with the lift sign fixed on a nonzero
+component), and in the CRT split of the Gauss sum only the quadratic term takes the cofactor (every
+a = 1 representative is right with the wrong split; the two-representative check caught it).
 
 ## Handoff — 2026-10-05 (late) — lava backlog: two bases done, two stopped by a ROUNDOFF guard, now retrying with more precision
 
