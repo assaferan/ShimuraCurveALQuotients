@@ -11,6 +11,22 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## NEXT (agreed 2026-10-05): an EXACT m = 0 multiplier, no transcendental step
+
+c_eta(0) = sum_w rho(w^-1)e_0[eta] * a_0(f|w) is algebraic (a cyclotomic number), and the routine
+reaches it through complex arithmetic with 1e-15 agreement checks and now a Prec retry. Replace:
+1. the numerically pinned slash constant by the Dedekind-eta multiplier system (Apostol Thm 3.4,
+   Dedekind sums; campaign cusp4.m verified kappa_{r,w} = zeta_w prod_d eps(g_d)^{r_d} e_d^{-r_d/2}
+   against the pinned values on 15_2) with the word's metaplectic phase zeta_w made exact (the lift
+   of the ST-word as a product of the lifts of S and T: eighth roots of unity, pure bookkeeping);
+2. the complex FFT of rho(w^-1)e_0 over ALL cosets by Scheithauer's Gauss-sum formula for the few
+   components needed (the 2p - 2 isotropic cosets of order p per level prime, and e_0);
+3. the constant term of the slashed q-series by exact series arithmetic over Q(zeta_{8M}).
+Validate against M0MultipliersBySupport on the 21 bases it was validated on and on 6_35 (the three
+classes).  Payoff: certified rationals, no guards, and minutes instead of an hour at |L^v/L| = 88200.
+Why Guo-Yang's Lemma 24 has no analogue here: the principal part sees only the two cusps where f has
+poles; the constant term collects every coset.
+
 ## Handoff — 2026-10-05 (late) — lava backlog: two bases done, two stopped by a ROUNDOFF guard, now retrying with more precision
 
 33_2 (3 min, 15 keys) and 93_2 (46 min, 12 keys, genus up to 8) built on lava and pass the trace formula
