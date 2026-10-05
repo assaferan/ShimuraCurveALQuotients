@@ -429,3 +429,16 @@ point of disc -420 on the star curve (W transitive on 8 points), so one value is
 s = 21 needs the primes 17, 47, 29, 53, 983 in differences with table rows where they are forbidden
 (420|d_i| a non-square mod p), s = 7/3 needs none (gz420.m).  Fifth published GY error; likely 21/9 and
 sqrt(21)/3 with denominators dropped.  tests/DivisorPoint_21_2.m now uses 7/3 and all 21 table points.
+
+## The "level prime dividing d_0" gap is NOT there (noncoprime/noncop.m, 2026-10-05)
+
+SchoferFormula.m's CMNONCOPRIME comment says the m > 0 local factor at p | gcd(d_0, N) "has no live
+implementation" and the pipeline's coprimality filter keeps such CM points out of the search.  Forcing
+EVERY non-coprime published point of the 16 Guo-Yang tables with N > 1 (104 points where a level prime
+divides d_0, plus the conductor points) through test_gy_table: all agree with Guo-Yang, the single
+failure being 21_2 at -420 (the table's typo, gz420.m).  So Wpoly_scaled (KY Thm 4.3/4.4 on the actual
+plane, which needs no unimodularity) already does the job; Schofer's Thm 4.1 closed form, which does
+assume it, is not what the code evaluates.  The m = 0 side at such a prime is rem:ramified (nothing).
+Consequence to decide: the coprime filter (ShimuraQuotients.m RationalandQuadraticCMPoints,
+coprime_to_level) could be switched off by default -- more anchors per base -- but that changes the
+Borcherds search's anchors and hence the forms, so it needs a regeneration run, not a flag flip.

@@ -1,0 +1,32 @@
+=== X0^10(11): non-coprime table points [-88, -132, -187, -660, -715], of which level prime divides d_0: [-88, -132, -187, -660, -715]
+  Guo-Yang CM-values of X0^10(11), primary hauptmodule... ok (9 of 12 published values, 5 forced)  [s~] X0^10(11) ok (9 checks)
+=== X0^10(13): non-coprime table points [-52, -195, -312], of which level prime divides d_0: [-52, -195, -312]
+  Guo-Yang CM-values of X0^10(13), primary hauptmodule... ok (7 of 10 published values, 3 forced)  [s~] X0^10(13) ok (7 checks)
+=== X0^10(23): non-coprime table points [-115], of which level prime divides d_0: [-115]
+  Guo-Yang CM-values of X0^10(23), primary hauptmodule... ok (7 of 10 published values, 1 forced)  [s~] X0^10(23) ok (7 checks)
+=== X0^14(3): non-coprime table points [-51, -84, -120, -123, -168, -228, -267, -312], of which level prime divides d_0: [-51, -84, -120, -123, -168, -228, -267, -312]
+  Guo-Yang CM-values of X0^14(3), primary hauptmodule... ok (8 of 11 published values, 8 forced)  [s~] X0^14(3) ok (8 checks)
+=== X0^14(5): non-coprime table points [-35, -120, -235, -280, -340, -420, -520, -840], of which level prime divides d_0: [-35, -120, -235, -280, -340, -420, -520, -840]
+  Guo-Yang CM-values of X0^14(5), primary hauptmodule... ok (9 of 12 published values, 8 forced)  [s~] X0^14(5) ok (9 checks)
+=== X0^15(2): non-coprime table points [-12, -28, -40, -48, -52, -60, -88, -120, -132, -148, -168, -228, -232, -240, -280, -312, -340, -372, -408, -420, -520, -660, -708, -760, -840], of which level prime divides d_0: [-40, -52, -88, -120, -132, -148, -168, -228, -232, -280, -312, -340, -372, -408, -420, -520, -660, -708, -760, -840]
+  Guo-Yang CM-values of X0^15(2), primary hauptmodule... ok (24 of 27 published values, 25 forced)  [s~] X0^15(2) ok (24 checks)
+=== X0^21(2): non-coprime table points [-4, -16, -28, -60, -84, -100, -112, -120, -148, -168, -228, -232, -280, -312, -372, -408, -420, -532, -708, -840], of which level prime divides d_0: [-4, -16, -84, -100, -120, -148, -168, -228, -232, -280, -312, -372, -408, -420, -532, -708, -840]
+  FAILED: X0^21(2): disc -420 got 4/7, want 4/21 (published 21; reference discs -4,-7,-15)
+=== X0^22(3): non-coprime table points [-3, -132, -168, -267, -312, -372, -408, -627, -660, -708], of which level prime divides d_0: [-3, -132, -168, -267, -312, -372, -408, -627, -660, -708]
+  Guo-Yang CM-values of X0^22(3), primary hauptmodule... ok (9 of 12 published values, 10 forced)  [s~] X0^22(3) ok (9 checks)
+=== X0^22(5): non-coprime table points [-20, -115, -235, -280, -520, -660, -715, -760], of which level prime divides d_0: [-20, -115, -235, -280, -520, -660, -715, -760]
+  Guo-Yang CM-values of X0^22(5), primary hauptmodule... ok (7 of 10 published values, 8 forced)  [s~] X0^22(5) ok (7 checks)
+=== X0^39(2): non-coprime table points [-24, -28, -52, -60, -84, -132, -148, -228, -232, -312, -372, -408, -520, -708, -1092], of which level prime divides d_0: [-24, -52, -84, -132, -148, -228, -232, -312, -372, -408, -520, -708, -1092]
+  Guo-Yang CM-values of X0^39(2), primary hauptmodule... ok (14 of 17 published values, 15 forced)  [s~] X0^39(2) ok (14 checks)
+=== X0^6(11): non-coprime table points [-88, -132], of which level prime divides d_0: [-88, -132]
+  Guo-Yang CM-values of X0^6(11), primary hauptmodule... ok (8 of 11 published values, 2 forced)  [s~] X0^6(11) ok (8 checks)
+=== X0^6(17): non-coprime table points [-51, -408], of which level prime divides d_0: [-51, -408]
+  Guo-Yang CM-values of X0^6(17), primary hauptmodule... ok (8 of 11 published values, 2 forced)  [s~] X0^6(17) ok (8 checks)
+=== X0^6(19): non-coprime table points [-19, -228], of which level prime divides d_0: [-19, -228]
+  Guo-Yang CM-values of X0^6(19), primary hauptmodule... ok (8 of 11 published values, 2 forced)  [s~] X0^6(19) ok (8 checks)
+=== X0^6(29): non-coprime table points [-232], of which level prime divides d_0: [-232]
+  Guo-Yang CM-values of X0^6(29), primary hauptmodule... ok (10 of 13 published values, 1 forced)  [s~] X0^6(29) ok (10 checks)
+=== X0^6(31): non-coprime table points [-372, -403], of which level prime divides d_0: [-372, -403]
+  Guo-Yang CM-values of X0^6(31), primary hauptmodule... ok (11 of 14 published values, 2 forced)  [s~] X0^6(31) ok (11 checks)
+=== X0^6(37): non-coprime table points [-148, -555], of which level prime divides d_0: [-148, -555]
+  Guo-Yang CM-values of X0^6(37), primary hauptmodule... ok (10 of 13 published values, 2 forced)  [s~] X0^6(37) ok (10 checks)
