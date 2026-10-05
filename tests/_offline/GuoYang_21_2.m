@@ -26,4 +26,4 @@ gy := [
 <-708, 25/48>,
 <-840, -16/3>
 ];
-test_gy_table(21, 2, gy : Force := [-16, -100]);   // conductor primes the search never offers
+test_gy_table(21, 2, gy : Force := [-4, -16, -28, -60, -84, -100, -112, -120, -148, -168, -228, -232, -280, -312, -372, -408, -532, -708, -840]);   // forced as above; -420 is NOT forced: the table prints 21 where every form gives 7/3 and a Gross-Zagier bound excludes 21 (tests/DivisorPoint_21_2.m)

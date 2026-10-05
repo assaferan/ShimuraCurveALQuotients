@@ -1276,11 +1276,17 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // Against that, the filter COSTS models: at the default bd := 4 it cut 26_3's pool from 21 to
     // 3 against demand 15, and 39_2's from 24 to 3 against 19, killing both outright.
     //
-    // ⚠⚠ THE GAP THIS LEAVES OPEN -- read before trusting a non-coprime discriminant.
-    // There is **no theoretical guarantee**, only the empirical evidence above. The local factor at
-    // `p | gcd(d, N)` HAS NO LIVE IMPLEMENTATION: `kappaminuszero` is dead code, and Schofer's
-    // Thm 4.1 assumes the lattice is unimodular at unramified primes, which fails at a level prime
-    // where the order is Eichler.
+    // THE LOCAL FACTOR AT A LEVEL PRIME DIVIDING d_0 IS LIVE AND RIGHT (2026-10-05).  Earlier text here
+    // said it had no implementation, because Schofer's Thm 4.1 closed form assumes the lattice is
+    // unimodular at unramified primes, which fails at an Eichler level prime.  But the code never
+    // evaluates that closed form: Wpoly_scaled applies Kudla-Yang's Thm 4.3/4.4 to the actual local
+    // plane, which needs no unimodularity, and at m = 0 the anisotropic plane contributes nothing
+    // (standalone rem:ramified).  Checked by forcing every published Guo-Yang point a level prime
+    // shares with d_0 on the sixteen table bases with N > 1 -- 104 points -- through the offline
+    // table tests: all agree (campaign vvdata/weyl-campaign/noncoprime/noncop.m; the one failure,
+    // X_0^21(2) at -420, is a misprint in the table).  `kappaminuszero` remains dead code.  What the
+    // coprimality filter still does is keep such points out of the Borcherds SEARCH, where admitting
+    // them changes the anchors and hence the forms; switching it off is a regeneration, not a flag.
     // 26_3 NOTE (corrected 2026-09-26): the values at `-267`, `-708` were recorded as wrong (an
     // s <-> s~ swap). They appear to be right, and GY arXiv v1 Table 49 to have a sign misprint.
     // Ours are s = 8/25, 11/49; under phi(w) = (1-w)/2 these are phi(9/25), phi(27/49), i.e. the

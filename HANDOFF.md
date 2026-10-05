@@ -84,6 +84,21 @@ not 20000. When it finishes: the values at the
 CM points go through the Hauptmodul-consistency check (tests/HauptmodulGroundTruth.m pattern), the first
 test of prop:composite's multipliers against numbers they did not produce; the five other DN = 210 bases
 can reuse the same tree.
+## Handoff — 2026-10-05 — THE "LEVEL PRIME DIVIDING d_0" GAP IS NOT THERE: 104 published points agree
+
+The CMNONCOPRIME comment in SchoferFormula.m said the m > 0 local factor at p | gcd(d_0, N) had no live
+implementation (Schofer's Thm 4.1 closed form assumes unimodularity). The code never evaluates that
+closed form: Wpoly_scaled applies KY Thm 4.3/4.4 to the actual plane. Forcing every published Guo–Yang
+point a level prime shares with d_0 on the sixteen table bases with N > 1 (104 points, plus the
+conductor points) through test_gy_table: ALL agree; the single failure is 21_2 at −420, the table's
+misprint. Campaign vvdata/weyl-campaign/noncoprime/noncop.m + .log (4 h 20 on the Mac, 10_23 and 39_2
+the slow ones). Now in the repo: the sixteen tests/_offline/GuoYang_*.m FORCE those points
+permanently (−420 excluded, with the reason); the comment rewritten; standalone rem:ramified carries
+the m > 0 sentence. ⚠ What the coprimality filter still does is keep such points out of the Borcherds
+SEARCH (admitting them changes the anchors and hence the forms): switching it off is a regeneration
+run per base, not a flag flip — a candidate for the next lovelace campaign, with the trace formula
+as the judge.
+
 ## Handoff — 2026-10-04 (evening) — SACHI'S REVIEW OF THE FOUR STATEMENTS: hypotheses stated, outside sources found (PR #66)
 
 Sachi read lem:WN, prop:kappa0, prop:mult, prop:fibre line by line (lem:WN rechecked by counting) and

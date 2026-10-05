@@ -83,8 +83,10 @@ procedure test_gy_table(D, N, gy : Force := [])
     for d in Force do
         error if not IsDefined(idx, d), Sprintf("X0^%o(%o): the forced discriminant %o did not reach the table", D, N, d);
     end for;
-    printf " ok (%o of %o published values%o)", nchecked, #gy,
-           IsEmpty(Force) select "" else Sprintf(", %o forced", #Force);
+    missing := [t[1] : t in gy | not IsDefined(idx, t[1])];
+    printf " ok (%o of %o published values%o%o)", nchecked, #gy,
+           IsEmpty(Force) select "" else Sprintf(", %o forced", #Force),
+           IsEmpty(missing) select "" else Sprintf("; not reached, so not checked: %o", missing);
 
     // ===== SECOND HAUPTMODUL (reporting only, for now) =====
     // The published tables give the PRIMARY hauptmodule column only, so the s~ row -- the second
