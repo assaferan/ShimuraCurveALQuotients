@@ -17,4 +17,4 @@ gy := [
 <-232, Infinity()>,
 <-267, 81/89>
 ];
-test_gy_table(6, 29, gy);
+test_gy_table(6, 29, gy : Force := [-232]);   // forced: the published points the search never offers -- conductor points, and those a level prime shares with d_0 (the ramified-level values; none is excluded)

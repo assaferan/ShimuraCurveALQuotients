@@ -11,6 +11,147 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 — THE "LEVEL PRIME DIVIDING d_0" GAP IS NOT THERE: 104 published points agree
+
+The CMNONCOPRIME comment in SchoferFormula.m said the m > 0 local factor at p | gcd(d_0, N) had no live
+implementation (Schofer's Thm 4.1 closed form assumes unimodularity). The code never evaluates that
+closed form: Wpoly_scaled applies KY Thm 4.3/4.4 to the actual plane. Forcing every published Guo–Yang
+point a level prime shares with d_0 on the sixteen table bases with N > 1 (104 points, plus the
+conductor points) through test_gy_table: ALL agree; the single failure is 21_2 at −420, the table's
+misprint. Campaign vvdata/weyl-campaign/noncoprime/noncop.m + .log (4 h 20 on the Mac, 10_23 and 39_2
+the slow ones). Now in the repo: the sixteen tests/_offline/GuoYang_*.m FORCE those points
+permanently (−420 excluded, with the reason); the comment rewritten; standalone rem:ramified carries
+the m > 0 sentence. ⚠ What the coprimality filter still does is keep such points out of the Borcherds
+SEARCH (admitting them changes the anchors and hence the forms): switching it off is a regeneration
+run per base, not a flag flip — a candidate for the next lovelace campaign, with the trace formula
+as the judge.
+
+## Handoff — 2026-10-04 (evening) — SACHI'S REVIEW OF THE FOUR STATEMENTS: hypotheses stated, outside sources found (PR #66)
+
+Sachi read lem:WN, prop:kappa0, prop:mult, prop:fibre line by line (lem:WN rechecked by counting) and
+found no errors; prop:composite accepted as a corollary. What she asked for, and what was done:
+
+* **Schofer's normalisation of the m = 0 terms** (standalone intro): his (0,2)-theorem is proved as
+  ∫Φ dh = lim_t [2 Σ_μ Σ_{m≥0} c_μ(−m) b_μ(m,t) − 2c_0(0) log t]; the "m = 0 part"
+  2Σ_{μ≠0} c_μ(0) b_μ(0,t) + 2c_0(0)(b_0(0,t) − log t) is what Lemma 2.21 collapses to 2c_0(0)k_0(0).
+  So the ν ≠ 0, m = 0 terms carry the same factor as every m > 0 term; Thm 3.4(ii) / Cor 3.5(i) sum
+  over m ≥ 0 with the one prefactor −2/vol(K_T) = −h_k = −deg Z(U)_K/2 on log‖Ψ‖², i.e. Theorem B's
+  −|CM(d)|/4 on log|ψ|. (Schofer's PDF: arXiv math/0603714; the exact lines are quoted in the tex.)
+* **Outside sources for the nonzero-coset constant terms**: Bruinier–Yang (2.23) repeats Lemma 2.21's
+  zero for the ideal lattice (Z/D, no nonzero isotropic coset — true there); Bruinier–Ehlen–Yang, after
+  (3.14), for an ARBITRARY binary lattice: "the κ(m,μ) with (m,μ) ≠ (0,0) are logarithms of positive
+  rational numbers", computed in KY10 — the same local Whittaker functions lem:WN evaluates. ⇒ there is
+  no independent published value of κ_μ(0) for OUR plane; the published general statement agrees in kind.
+* **Hypotheses now stated**: prop:mult carries "τ_d off the divisor" (used for the x ≠ 0 terms, rem:xsum;
+  rem:divisor is the on-divisor case); new rem:multext extends prop:mult to non-fundamental d with
+  N ∤ f (R_f ⊗ Z_N = O_k ⊗ Z_N, so everything at N is the fundamental case; conductor primes by
+  prop:fibre, additive as in prop:composite) and records that GY Lemma 24 is PROVED in GY for
+  {∞,0}-weakly holomorphic f (the pool imposes it); prop:fibre's proof says why KY Cor 2.5 and the
+  incoherence hold for the plane of a non-maximal order (properties of the quadratic space and of
+  φ ∈ S(V(A_f)), not of the lattice; BEY §3 do it for arbitrary binary lattices).
+* **A second gap for the −log m rule**: scanning the table bases for divisor points where two forms'
+  poles come from different exponents (scratch divpts.m): 21_2 at τ_{−4} (s = ∞) has pairs with
+  m = 1, 9, 1/4 — ratio 9, a gap of 2 log 3. tests/DivisorPoint_21_2.m: C_k read at one table point
+  per form, checked at the others; all 36 quotients f_a^{deg b}/f_b^{deg a} of the nine forms (the
+  four half-integral ones doubled) equal C_a^{deg b}/C_b^{deg a} at τ_{−4}. ⚠ CORRECTED THE SAME EVENING: I first blamed the mismatch at
+  d = −420 on the level prime 2 dividing d_0 (the p | gcd(d_0, N) gap). Wrong: every other d_0-even
+  table point (−84, −168, −232, ...) agrees, and at −420 all nine forms agree WITH EACH OTHER on
+  s(−420) = 7/3 against the arXiv table's 21 (Sachi saw the same). There is exactly ONE rational point
+  of discriminant −420 on the star curve (W acts transitively on the 8 points), so the two values
+  cannot both be right, and a Gross–Zagier bound decides it: with s(−420) = 21 the difference from
+  s(−28) = 1/9 carries 47, which cannot divide (420·28 − x²)/4 (420·28 is not a square mod 47); four
+  more forbidden primes (17, 29, 53, 983) appear against other rows, none for 7/3 (campaign
+  level-p2/gz420.m). So Table 46's −420 row is a FIFTH published Guo–Yang error, most likely 21/9 and
+  √21/3 with the denominators dropped; the test uses 7/3 with that argument as provenance, and runs on
+  all 21 table points (162 off-divisor values).
+* **The −100 error (Sachi, #66):** FieldsOfDefinitionOfCMPointFast failed at d = −100 on 21_2 with
+  "Element is not in the codomain of the map" — Magma's Artin map refuses the twist ideal frakb_{w0}
+  (w0 = 2, the prime above 2) for the modulus it chose for the ring class field; and it merged
+  isomorphic fields, so the two rational points of discriminant −100 (slow routine: [Q, Q]) became one.
+  Fixed: one field per valid class (no isomorphism merge), and a fall-back to the slow routine when
+  the Artin map refuses (SchoferFormula.m). Fast vs slow compared over the table discriminants of
+  21_2, 15_2, 10_3 (scratch fastslow.m).
+* The comment on non-fundamental anchors corrected (they ARE evaluated through the other forms, with
+  the conductor-prime terms); two docstrings no longer call the 1/2 empirical.
+
+## Handoff — 2026-10-04 — A POINT ON THE DIVISOR, AND NON-FUNDAMENTAL d OUT OF THE SEARCH (PR #66)
+
+**Sachi's −12.** Every form on 15_2 has a pole at τ_{−12}, but F = fs[−2]/fs[−1] is finite and Table 45
+forces 1/20; the code gave 2^(2/3)/5 even with the fibre sum (its term is 2/3 log 2 on both forms and
+cancels). The culprit was the two heuristics inherited from Yang's code for a pair (x, ν = 0) with
+Q(x) = m — the vector on the CM line that puts the point on the divisor: fs[−2]'s pole comes from
+x = ±λ₀ (m = 3, c_oo(−3)), fs[−1]'s from x = ±λ₀/2 (m = 3/4, cusp-0 coefficient), and they were
+treated by different rules. With both dropped the pairs cancel (F = 1/5); the regularised Green
+function leaves −log m at a singular pair, and with that one rule F = 1/20 and fs[10]/fs[−1]³ =
+9/(2^16·5) (three poles vs three), both exact (standalone rem:divisor; tests/M0PoleSum.m (3d)).
+No singular pair occurs off the divisor at any evaluated point, so nothing else moves.
+
+**Non-fundamental d are no longer evaluated unless asked for.** AbsoluteValuesAtCMPoints drops
+them from the candidate and fetched points (NONFUND=1 admits them); Include/Force points and the
+Hauptmodul anchors are untouched. ⚠ The filter was first put into RationalandQuadraticCMPoints and
+that changed the Borcherds search's anchors (−12 is the pole on 15_2) and hence the FORMS; it must
+live at the evaluation step only.
+
+**The m > 0 terms at non-fundamental d need nothing new (standalone rem:mpos, rewritten).** The
+routine's κ⁻ is Yang's Euler-product formula with the character of the plane, χ_{d₀}: the field's
+L(1, χ_{d₀})⁻¹ (h₀, w₀, √|d|/f = √|d₀|) and the correction (1 − χ_{d₀}(p)/p)⁻¹ at every prime of S,
+conductor primes included — ⚠ Magma's KroneckerCharacter(d) is the PRIMITIVE character of conductor
+|d₀| (campaign level-p2/kronprod.m lists the factors), not the imprimitive one an earlier version of
+the remark assumed; the "extra prefactor Π_{p|f}(1 − χ(p)/p) in Theorem B" that assumption produced
+was a deduction, not a measurement, and is retracted. The only slip ever measured, h(R_f) for h₀,
+is the correction at p | f applied twice. Why the constant of Theorem B is the same: the T-orbit
+has equal stabilisers at every point (T is a torus), so the Tamagawa volume 2 splits as 2/|Z(d)|
+per point exactly as for the maximal order, and the Eisenstein series is that of the quadratic
+space, which depends on d₀ only; Siegel's genus-average identity (level-p2/siegel.m) confirms the
+normalisation at −15, −60, −240, −48 with one universal constant.
+
+## Handoff — 2026-10-03 — THE m = 0 TERM AT A CONDUCTOR PRIME IS A FIBRE SUM (PR #66)
+
+**The rule "fire iff the conductor prime splits" was an accident of the one form tested.** At a
+level prime dividing the conductor of d the lattice is not L_+ (+) L_-, and the terms Theorem B
+restores are a sum over the fibre of pairs (x, nu) with x + nu in L^v (standalone prop:fibre):
+cosets in L^v also pair with x = lambda_0/2 (so the pole of f at the CM point of d/4 enters), cosets
+outside L^v pair with x = lambda_0/4 over a nonzero coset, and the local factors of the nonzero
+cosets are nonzero at an inert prime too. Their closed form (lem:Wcond, proved for every p; the 2-adic lattice is lem:conductor2): nu_r = (0, r/p^k), rho = ord_p r, kappa^- = -2 p^(rho-k+1)/(p-1) log p (split),
+-2/(p^(k-1)(p+1)) (p^rho + 2(p^rho-1)/(p-1)) log p (inert).
+
+    SchoferFormula.m   M0FibreCorrection evaluates the sum at a level prime dividing the conductor
+                       (the (1/2)c_eta(0) - pole-sum term of prop:mult stays at p not dividing f);
+                       Kappa skips the Q(x) = m pairs at a nonzero coset (they are in the fibre sum).
+    tests/M0PoleSum.m  all nine forms of 15_2 at -7, -15, -52, -28, -60, -240, -48 against the value
+                       forced by each form's DIVISOR and Table 45 (C read at -7): 46/46.  The old
+                       rule was wrong on 10 of the 18 conductor-4 values, Yang's conductor term gave
+                       2^(4/3) on two.  ⚠ The test used to call its form fs[-2]; rows follow Keys(fs)
+                       and row 1 is key 11.
+    campaign level-p2  fibresum.m, fibrepipe.m, evidence.py (+logs), wcond_check.m (p = 3 on 10_3),
+                       qprime.m, classpoly.py, fod.m (conductor 7 on 15_2).
+
+The model set is unaffected: conductor-4 points are never offered to the model search, and at
+conductor 2 the fibre sum equals the old term.
+
+**A conductor prime OUTSIDE the level (odd q, q not dividing DN) also carries a term** (lem:unimod):
+L_q is unimodular, the plane is <-1> + <-|d|>, no coset lies in L^v, and the fibre over each coset
+is the CM vectors of d/q^2, d/q^4, ..., so the term is a pole sum over the lower discriminants
+(q | d_0 is anisotropic, kappa^- = -2(q^(rho+1)-1)/((q-1)q^k) log q). Implemented for odd q.
+Table 45 cannot test it; what can: the CLASS POLYNOMIAL. At d = -588 (three star points) the nine
+values force a monic cubic H in Q[X] -- with the term H = X^3 - 191/54 X^2 + 343/432 X - 83^2/(2^8 3^3 7),
+cutting out exactly the cubic field FieldsOfDefinitionOfCMPoint gives (disc -588); without it no
+rational cubic exists. Same at -1960. tests/M0PoleSum.m (3c) checks this. EXTERNAL: forcing the Guo-Yang points the
+candidate search never offers, the term reproduces s(-27) on 58_1 and 55_1 (q = 3 ramified) and
+s(-100) on 21_2 (q = 5 split) -- campaign level-p2/gyforce_*.m. ⚠ The divisor relations
+among the nine forms are BLIND to this term (it is divisor-linear). q = 2 outside an odd level is the
+same (lem:unimod2): optimality makes Z_2^2 a free Z_2[lambda/2]-module, so lambda_0 = (0, d/4; 1, 0),
+the plane is lem:conductor2's (d_0 odd) or the anisotropic one (d_0 even), and no coset lies in L^v.
+Confirmed on the Guo-Yang points the search never offers, now FORCED into the offline tests
+(ValuesAtCMPoints: Force, test_gy_table: Force): -28, -60 (split), -12 (inert), -16 (d_0 = -4) and
+-315 (q = 3) across 35_1, 39_1, 51_1, 55_1, 57_1 -- all published values reproduced. The last case, a
+level prime dividing both the conductor and d_0 (lem:ramlevel): normalising a' = 0 by conjugation
+(a step lem:conductor's proof had skipped), the plane is the anisotropic ramified one and the p - 1
+cosets of order p lie in L^v, so (1/2)c_eta(0) enters with weight (p^k - 1)/p^k -- nonzero, unlike
+the fundamental ramified case. Checked form by form at 21_2, d = -16 (GY s(-16) = 1): 9/9 with the
+term, four covers off by 2^4..2^8 without (campaign level-p2/ramcheck.py). EVERY prime of the
+conductor is now covered; the code adds the fibre sum at all of them.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
