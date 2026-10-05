@@ -434,3 +434,33 @@ a regression, not something to add to the list.
 ⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
+
+## The first composite-level base: `models_6_35.m` (2026-10-04, branch composite-level, PR #74)
+
+`X_0^6(35)` is the first base with a composite squarefree level in the data. The default recipe
+(`genmodels.m`, no flags) on lovelace, with the level-420 polytope `(420, 145, 0)` enumerated in
+August (campaign `vvdata/weyl-campaign/nmz_420_145_0.txt.gz`) installed as
+`polymake/polymake_solution_420_145_0` and the t-shift fallback answering the higher rungs
+(`polymake/tshift_{core,w0}_420.txt`); 2 h 25 min, of which two hours were the m = 0 multipliers on
+the 88200-element discriminant group (computed twice — fixed since). 66 cover keys: 12 of genus 0,
+21 of genus 1, 18 of genus 2, 3 of genus 3 as `y^2 + h y = f`, and 3 of genus 3 as fibre products
+(`CRV`). The Schofer values here use, for the first time, the m = 0 term at a composite level
+(prop:composite: one multiplier per prime of N). **Outside check**: every stored curve of genus >= 1
+has the point counts over F_p and F_{p^2} of the Eichler-Selberg trace formula at p = 11, 13, 17, 19
+(156 of 156; campaign `composite/check635.m`), which knows nothing about CM values. No published
+equation or CM value exists for this base.
+
+`models_10_21.m` (2026-10-05): the second composite-level base, same recipe and the same level-420
+cache (DN = 210 shares the polytope); 3 h 50 min on lovelace, of which three multiplier computations
+of about 73 min each (forms first met at later CM points). 66 cover keys in the same shape as
+`6_35` (12 of genus 0, 21 of genus 1, 18 of genus 2, 3 + 3 of genus 3). The multipliers at the two
+level primes differ here (for one form 6 at 3 and -7 at 7), so this is the first base where the
+per-prime structure of prop:composite acts in production. Outside check as for `6_35`: 156 of 156
+point counts of the Eichler-Selberg trace formula at p = 11, 13, 17, 19 (campaign
+`composite/checkcomp.m`).
+
+`models_14_15.m` (2026-10-05): the third composite-level base, same recipe and cache; 3 h 54 min on
+lovelace (three multiplier computations). 65 cover keys: 7 of genus 0, 15 of genus 1, 14 of genus 2,
+6 of genus 3 and 1 of genus 4 as `y^2 + h y = f`, and 3 fibre products (1 of genus 3, 2 of genus 5).
+Outside check: 192 of 192 point counts of the trace formula at p = 11, 13, 17, 19, 23, 29 (primes
+where a model has no reduction are skipped).

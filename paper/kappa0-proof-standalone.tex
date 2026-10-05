@@ -488,6 +488,49 @@ at such points need no separate treatment; the pipeline's coprimality filter kee
 Borcherds search only because admitting them changes its anchors and hence the forms.
 \end{remark}
 
+\begin{remark}[the composite level in the code]\label{rem:compimpl}
+Proposition~\ref{prop:composite} is what the routine now evaluates at a squarefree level: the
+multiplier at the prime $p$ is $\tfrac12c_{\eta_p}(0)$ with $\eta_p$ any nonzero isotropic coset of
+order $p$ in $\Ldual/L$ --- the support of a coset being the set of primes dividing its order ---
+and the restored term per CM point is $\sum_{p\mid N}\log p\,\bigl(\tfrac12c_{\eta_p}(0)-\sum_{x\ne0}
+\bigr)$, the pole sum of Remark~\ref{rem:xsum} being the same at every prime (the routine
+\texttt{M0MultipliersBySupport} returns the multipliers indexed by the primes of $N$, checks that
+the constant terms agree on each support class, and refuses a level that is not squarefree; at a
+prime level it is the old routine). What has been checked, no composite-level base having been
+built: at the six bases with a genus-zero star curve and $DN=210$ --- $X_0^6(35)$, $X_0^{10}(21)$,
+$X_0^{14}(15)$, $X_0^{15}(14)$, $X_0^{21}(10)$, $X_0^{35}(6)$, all with $\lvert\Ldual/L\rvert=88200$
+and $M=420$ --- the nonzero isotropic cosets number exactly $2p-2$ on each class $\{p\}$ and
+$(2p-2)(2q-2)$ on $\{p,q\}$, as the proof says; and on $X_0^6(35)$, for four weight-$\tfrac12$ eta quotients of
+level $420$ with the character of the Borcherds input space but poles at every cusp --- so not inputs
+of Theorem~B, whose $F_f$ needs $f$ $\{\infty,0\}$-weakly holomorphic for \cite[Lemma~24]{GY} and
+the pole sum of Remark~\ref{rem:xsum}; what is tested is the coset sum $c_\eta(0)=\sum_w\rho(w^{-1})
+e_0[\eta]\,a_0(f|w)$ alone, not a Schofer value --- the constant terms are constant on each of the
+three classes $\{5\}$, $\{7\}$, $\{5,7\}$, rational, and different from class to class ---
+$-\tfrac{23}4$, $-\tfrac{39}4$, $0$ on one of them, $78$, $64$, $0$ on another --- so a single
+multiplier, the prime-level rule, would be wrong here (\texttt{composite/compmult5.m} on the campaign
+branch; about $45$ minutes, almost all of it the Weil representation on $88200$ cosets). The
+pipeline's own inputs satisfy the cusp condition by construction. The same routine refuses an eta quotient outside that space,
+as it should: the coset sum is then not well defined, and the two-point and class-constancy checks
+fail at the first word where the constant term is nonzero (\texttt{compmult.m}--\texttt{compmult4.m},
+weight $0$ or the wrong character). The three functionals of \textup{Section~sec:determined of the preprint}
+are therefore computed, and the one attached to $\{p\}$ is used at $p$; whether the values are
+right at a composite level is untested, since no such base has forms, let alone outside values.
+\end{remark}
+
+\begin{remark}[the conductor-prime terms at a squarefree level]\label{rem:fibrecomp}
+Proposition~\ref{prop:fibre} is stated for prime $N$, and the code applies it prime by prime at a
+squarefree $N$. The statement extends with the same proof: the sum over $\nu\in\Lm^\vee/\Lm$ is
+regrouped by support, a coset supported at a single prime $p$ (a prime of the conductor, or a level
+prime not dividing $d_0$) has $E_0(\tau,s;\varphi_\nu)=\Phi(s)W_{0,p}(s,\varphi_\nu)/W_{0,p}(s,
+\varphi_0)$ because at every other prime $\nu_q=0$ and the local factor is the zero coset's, and a
+coset supported at two or more primes has a product of vanishing ratios, hence a double zero and
+$\kappa^-_\nu(0)=0$, exactly as in Proposition~\ref{prop:composite}. So the restored terms are the
+sum over the primes of $N$ and of $f$ of the single-prime terms: Proposition~\ref{prop:mult}'s at a
+level prime not dividing $f$ (Remark~\ref{rem:multext}), Proposition~\ref{prop:fibre}'s fibre sum at
+a prime of $f$, with the local factors of Lemmas~\ref{lem:Wcond}--\ref{lem:ramlevel} at that prime
+alone. The code's fibre sum at $p$ enumerates the $p$-primary cosets, which is this regrouping.
+\end{remark}
+
 
 \subsection*{Non-fundamental discriminants}
 
