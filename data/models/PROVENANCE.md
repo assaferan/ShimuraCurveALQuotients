@@ -466,7 +466,9 @@ nothing external covers this key; it rests on the independent checks in `ModelVe
 default recipe (`genmodels.m`, BFCACHE=1) on lava from branch composite-level, 3 min and 46 min.
 Outside check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace
 formula over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (50 of 50 and 36 of 36; campaign
-`composite/checkcomp.m`). No published equation exists for either base. `55_2` and `87_2` follow:
-their first runs stopped in the exact m = 0 multiplier's class-constancy check, a roundoff miss at
-Prec 80 (3e-15 against a floor of 1e-15 at M = 220; at Prec 160 the same multipliers come out as
-small rationals), and rerun with the precision retry of 9201ae0.
+`composite/checkcomp.m`). No published equation exists for either base. `models_55_2.m` (15 keys: 1 of genus 0, 3 of genus 1, 2 of genus 2, 3 of
+genus 3, 1 of genus 6; 68 min) and `models_87_2.m` (14 keys, genus up to 8; 2 h): their first runs
+stopped in the exact m = 0 multiplier's class-constancy check at d = -15, a roundoff miss at Prec 80
+(3e-15 against a floor of 1e-15 at M = 220, and 2e-5 at M = 348); with the precision retry of
+composite-level 9201ae0 both passed at Prec 160 and the trace formula agrees at every curve (45 of 45
+each).
