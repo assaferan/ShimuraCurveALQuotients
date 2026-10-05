@@ -11,6 +11,25 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 — THE t-SHIFT LADDER WORKS AT A FIXED CUSP-0 ORDER (branch cusp0-ladder, nmzsolve.py)
+
+The cusp-0 rungs (M, n, m), m > 0, were outside the fallback, so a base needing one (every base at
+M = 420 except 6_35, 10_21, 14_15, 210_1 asks for (420, 42, 104)) hit the Normaliz wall. Measured on the
+cached enumerated pairs, with the span of the q-expansions as the criterion:
+* the rung (M, n', m) IS spanned by the rung (M, n, m), n < n', shifted by the weight-0 quotients with
+  poles at oo only (the existing tshift_w0 set): 204 (20,32)->(45,32) 63/63; 60 (0|3|8,8)->(11,8)
+  17/17; 372 (32,60)->(92,60) 124/124; 380 (28,65)->(93,65) 132/132. Every shifted point is a lattice
+  point of the target (none outside the truth).
+* it is NOT reached from the m = 0 rungs: products of (204, 47, 0) with the weight-0 quotients of poles
+  <= 20 at oo and <= 32 at 0 span 24 of 38 dimensions of (204, 20, 32), iterating does not help; and
+  the Atkin-Lehner reversal r_d -> r_{M/d} of an m = 0 rung lands in the TWISTED character (odd-prime
+  parities flip), whose reversal is in the right polytope but the union still spans 14 of 38.
+⇒ nmzsolve.py's fallback now runs at any m: a cached (M, n, m) with n < n_pole and tshift_w0_M.txt
+answer (M, n_pole, m); the m = 0 core file stays m = 0; for m > 0 NO thinning (four per pole order lost
+2 of 63 dimensions at 204; all 274 shifted points give 63/63). So per M the cost is one enumeration of
+the LOWEST rung at each cusp-0 order a base asks for, plus the m = 0 base rung; the ladder is free.
+Validation scripts and the shift sets: campaign vvdata/weyl-campaign/cusp0ladder/.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today

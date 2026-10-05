@@ -92,23 +92,29 @@ def _pole(r):
     s24 = sum(d*x for d, x in zip(ds, r))
     assert s24 % 24 == 0
     return -s24 // 24
-if m_pole == 0 and k24 == 12 and cuspidal == 0:
+# The same ladder at a FIXED cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the
+# pole at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted, exactly as for m = 0
+# (checked against enumerated rungs: M = 204, (20, 32) -> (45, 32), rank 63/63; M = 60, (0|3|8, 8)
+# -> (11, 8), rank 17/17).  What it cannot do is reach a cusp-0 order from the m = 0 rungs (at
+# M = 204 the products of rung (47, 0) with the weight-0 quotients of poles <= 20, 32 span 24 of the
+# 38 dimensions of (20, 32)); the LOWEST rung at each cusp-0 order has to be enumerated once.
+if k24 == 12 and cuspidal == 0:
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []
-    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_0'):
-        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_0$', f)
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
         if mm and int(mm.group(1)) < n_pole:
             cands.append(int(mm.group(1)))
     if os.path.exists(w0p) and cands:
         base_n = max(cands)
-        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_0')
+        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_{m_pole}')
         shifts = [ t for t in _load_magma_seq(w0p) if any(t) ]
         # a rank-preserving CORE (same span as the full rung, ~dim vectors) beats
         # thinning by pole order: 42 of sol(420,145)'s 105 pivots come from
         # cancellations between same-leading-order vectors, which order-thinning
         # destroys.  If a core file exists, shift it verbatim (no thinning).
         corep = f'polymake/tshift_core_{M}.txt'
-        use_core = os.path.exists(corep)
+        use_core = m_pole == 0 and os.path.exists(corep)      # the core is a reduced m = 0 rung
         if use_core:
             core = _load_magma_seq(corep)
             if core: base = core
@@ -175,7 +181,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                 if len(residues) < tp:
                     print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
             print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
-            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m=0) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
+            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m={m_pole}) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
 
 # ---- a lower two-cusp rung is a subset of a higher cached one -----------------
