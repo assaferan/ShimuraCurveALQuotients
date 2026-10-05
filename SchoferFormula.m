@@ -1157,7 +1157,21 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // is an hour, so recomputing for all of them whenever one is new doubled the X_0^6(35) run
         todo := [eta : eta in etas | not assigned eta`m0mult];
         if not IsEmpty(todo) then
-            mults := M0MultipliersBySupport(todo, Ldata, D, N);
+            // The routine's agreement checks (slash constant, class constancy, rational snap) are at
+            // 10^-15 relative with an absolute floor; the precision they can reach depends on the base
+            // (33 digits at 58_5, 18 at 34_11 at Prec 80, and X_0^55(2) missed the floor by 3e-15 at
+            // M = 220).  A miss is answered with more precision, never with a looser check.
+            done := false;
+            for prec in [80, 160, 240] do
+                try
+                    mults := M0MultipliersBySupport(todo, Ldata, D, N : Prec := prec);
+                    done := true;
+                catch e
+                    vprintf ShimuraQuotients, 1 : "\n\tM0MultipliersBySupport at Prec %o: %o -- retrying with more precision", prec, e`Object;
+                end try;
+                if done then break; end if;
+            end for;
+            error if not done, "M0MultipliersBySupport failed its agreement checks at Prec 80, 160 and 240";
             for i in [1..#todo] do
                 e := todo[i];
                 e`m0mult := mults[i];
