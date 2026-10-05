@@ -11,6 +11,26 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 (night) — lava: the cheap backlog; lovelace: M = 660 probes; the cusp-0 fallback idea
+
+* **lava** (idle, 32 cores, 125 GB; reach it with `ssh -A lovelace 'ssh lava ...'` after ssh-add, or
+  `scp -o ProxyJump=lovelace`): fresh clone of composite-level at `~/backlog/tree` (= /scratch/home/
+  assaferan/backlog/tree), genmodels.m from campaign, NORMALIZ_BIN=/usr/bin/normaliz, BFCACHE=1.
+  Running since 2026-10-05 ~18:40: 33_2, 55_2, 87_2, 93_2 (the reachable bases WITH genus-0
+  quotients; 48 h timeouts; logs ~/backlog/logs/). Next: 95_2, 111_2, then the ten with none
+  (69_2 77_2 85_1 115_2 119_2 143_1 143_2 159_2 215_1 237_1; 143_1/145_1 run on lovelace already).
+* **lovelace**: nine 30-min probes at M = 660 (6_55 10_33 15_11 15_22 22_15 33_5 33_10 55_3 330_1,
+  NMZ_TIMEOUT=120, VERB:=3; logs ~/gymodels/composite/probes660/) to read their rungs off
+  polymake/nmzsolve.err; the (420, 42, 104) enumeration continues; 159_1 BFVERIFY still searching.
+* **The cusp-0 fallback, the design to test**: a rung (M, n, m) with m > 0 should be spanned by the
+  rung (M, n, 0) — which is FREE as the subset of a cached taller (M, n', 0) with pole at oo <= n —
+  shifted by weight-0 eta quotients with poles at the CUSP 0 only, and those are the Atkin-Lehner
+  images of the existing oo-pole shift set: reverse the exponent vector (r_d -> r_{M/d}). Every sum is
+  a lattice point of the target polytope (poles add; holomorphy elsewhere preserved); what has to be
+  checked is that they SPAN it, as the m = 0 shifts did (rank 108/108 at M = 308). Ground truth to
+  test against: cached pairs like (60, n, 8), (204, 20|45, 32), (372, 32|92, 60), and, at the level
+  that matters, (420, 42, 104) when its enumeration lands.
+
 ## Handoff — 2026-10-05 — THREE COMPOSITE-LEVEL BASES BUILT, 660/660 AGAINST THE TRACE FORMULA (branch composite-level)
 
 X_0^6(35) (2 h 25), X_0^10(21) (3 h 50) and X_0^14(15) (3 h 54) on lovelace, default recipe, the
