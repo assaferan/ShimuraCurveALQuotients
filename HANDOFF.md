@@ -36,7 +36,8 @@ all nine forms of X_0^15(2) (3 s) and the numerical routine on 21_2, 10_3, 22_3 
 compmult5 probe monomials at X_0^6(35) give the twelve class values of compmult5.m (including the
 {5,7} class); the production forms of X_0^6(35), X_0^10(21), X_0^14(15) (17 each, the values the
 genmodels runs printed at verbosity 2) agree as multisets on all three classes. X_0^34(11)
-(|L^v/L| = 279752) takes 148 s with Verify. tests/M0MultipliersAlgebraic.m; regressions green:
+(|L^v/L| = 279752) takes 148 s with Verify and agrees with the numerical routine on all nine forms
+(which took 2.5 h on the same machine). tests/M0MultipliersAlgebraic.m; regressions green:
 Kappa0, M0PoleSum, M0MultiplierExact, X0_15_2, X0_21_2, X0_10_3.
 Cost: ~1100 s per composite base on lovelace with Verify (23 classes, 10 sampled cosets, degree-10080
 polynomial products), against an hour per batch before. Two traps while building it: a RATIO test of
