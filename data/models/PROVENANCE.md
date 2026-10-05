@@ -458,3 +458,15 @@ genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a si
 nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
+
+## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
+
+`models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
+`models_93_2.m` (12 keys: 1 of genus 0, 2 of genus 1, 1 of genus 2, 2 of genus 4, 1 of genus 8),
+default recipe (`genmodels.m`, BFCACHE=1) on lava from branch composite-level, 3 min and 46 min.
+Outside check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace
+formula over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (50 of 50 and 36 of 36; campaign
+`composite/checkcomp.m`). No published equation exists for either base. `55_2` and `87_2` follow:
+their first runs stopped in the exact m = 0 multiplier's class-constancy check, a roundoff miss at
+Prec 80 (3e-15 against a floor of 1e-15 at M = 220; at Prec 160 the same multipliers come out as
+small rationals), and rerun with the precision retry of 9201ae0.
