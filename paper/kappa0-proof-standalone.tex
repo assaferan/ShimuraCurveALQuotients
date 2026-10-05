@@ -517,6 +517,51 @@ are therefore computed, and the one attached to $\{p\}$ is used at $p$; whether 
 right at a composite level is untested, since no such base has forms, let alone outside values.
 \end{remark}
 
+\begin{remark}[computing $c_\eta(0)$ exactly]\label{rem:exact}
+The constant term $c_\eta(0)=\sum_w\rho(w^{-1})e_0[\eta]\,a_0(f|w)$, a sum over the cosets $w$ of
+$\Gamma_0(M)\backslash SL_2(\mathbf Z)$, is an algebraic number, and it can be computed with no
+transcendental step. The per-coset product depends only on the class $g=\gcd(c,M)$ of the bottom row
+of $w$ (both factors change by the character of $f$ on $\Gamma_0(M)$ under left multiplication, and
+$e_0$ is an eigenvector for that character), so one representative $\gamma=\bigl(\begin{smallmatrix}
+a&b\\c&d\end{smallmatrix}\bigr)$ with $c>0$ per class suffices, both factors taken for the lift
+$(\gamma,\sqrt{c\tau+d})$ of the metaplectic group. The first factor is a Gauss sum: writing
+$\gamma\tau=a/c-1/(c(c\tau+d))$ and applying Poisson summation to the inversion in the theta
+transformation formula \cite[Thm.~4.1]{Borcherds} gives, for the dual representation $\rho$ of a
+lattice of signature $(1,2)$,
+\[
+\rho(\gamma^{-1})e_0[\eta]=\mathbf e(\tfrac18)\,c^{-3/2}\,\lvert\Ldual/L\rvert^{-1/2}\,
+\mathbf e\Bigl(\frac{d\,Q(\eta)}c\Bigr)\sum_{\nu\in L/cL}\mathbf e\Bigl(\frac{a\,Q(\nu)+(\eta,\nu)}c\Bigr),
+\]
+the Gauss sum factoring over the prime powers of $c$ (the quadratic term takes the cofactor, the
+linear term does not); the entry $d$ in the prefactor and $a$ in the sum are not interchangeable.
+The second factor is the Dedekind-eta multiplier system: for a monomial $\prod_d\eta(d\tau)^{r_d}$
+of weight $\tfrac12$, write $\bigl(\begin{smallmatrix}d&0\\0&1\end{smallmatrix}\bigr)\gamma=g_d
+\bigl(\begin{smallmatrix}a_d&b_d\\0&e_d\end{smallmatrix}\bigr)$ with $g_d\in SL_2(\mathbf Z)$ of
+positive lower-left entry; then Apostol's transformation law $\eta(g\tau)=\varepsilon(g)\,
+(-i(c\tau+d))^{1/2}\eta(\tau)$, with $\varepsilon(g)=\exp\bigl(\pi i\bigl(\frac{a+d}{12c}+s(-d,c)
+\bigr)\bigr)$ a $24$th root of unity given by a Dedekind sum, gives
+\[
+\Bigl(\prod_d\eta(d\tau)^{r_d}\Bigr)\Big|\gamma
+=\mathbf e(-\tfrac18)\prod_d\bigl[\varepsilon(g_d)\,\mathbf e\bigl(\tfrac{b_d}{24e_d}\bigr)\,
+e_d^{-1/2}\bigr]^{r_d}\;q^{\sum_d r_da_d/(24e_d)}\prod_d\prod_{n\ge1}
+\bigl(1-\mathbf e(nb_d/e_d)\,q^{na_d/e_d}\bigr)^{r_d},
+\]
+whose constant term is read off: the Borcherds inputs are holomorphic at every cusp other than
+$\infty$ and $0$ and so are their monomials (lattice points of the polytope), so at the classes
+$1<g<M$ the constant term is the product of the roots of unity when the order $\sum_dr_da_d/e_d$
+vanishes and $0$ otherwise, and at the cusp $0$ the representative $S$ makes the $q$-series rational.
+Every root of unity lies in $\mu_{24M}$ and the square roots are those of integers dividing $2M$, so
+the whole computation takes place in $\mathbf Q(\zeta_{24M})$ --- in practice in the group ring
+$\mathbf Q[x]/(x^{24M}-1)$ with the square roots as Gauss sums, reduced modulo the cyclotomic
+polynomial at the end, where the result must be a rational number. This is what the routine
+\texttt{M0MultipliersAlgebraic} does, and what the pipeline now uses. It reproduces the measured
+ground truth on $X_0^{15}(2)$ and the numerical coset evaluation on $X_0^{21}(2)$, $X_0^{10}(3)$,
+$X_0^{22}(3)$, $X_0^{34}(11)$, on the four probe eta quotients of Remark~\ref{rem:compimpl}
+(all three classes), and on the Borcherds inputs of the three composite-level bases $X_0^6(35)$,
+$X_0^{10}(21)$, $X_0^{14}(15)$ that have since been built, in seconds to minutes where the numerical
+route took an hour or more.
+\end{remark}
+
 \begin{remark}[the conductor-prime terms at a squarefree level]\label{rem:fibrecomp}
 Proposition~\ref{prop:fibre} is stated for prime $N$, and the code applies it prime by prime at a
 squarefree $N$. The statement extends with the same proof: the sum over $\nu\in\Lm^\vee/\Lm$ is

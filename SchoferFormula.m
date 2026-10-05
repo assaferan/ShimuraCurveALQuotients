@@ -1157,7 +1157,9 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // point (those singular at the point are left out)
         todo := [eta : eta in etas | not assigned eta`m0mult];
         if not IsEmpty(todo) then
-            mults := M0MultipliersAlgebraic(todo, Ldata, D, N);
+            // Verify (a second coset per class) doubled the cost; it is exercised by the test and
+            // by the campaign validation, and the rationality and class-agreement checks remain on.
+            mults := M0MultipliersAlgebraic(todo, Ldata, D, N : Verify := false);
             for i in [1..#todo] do
                 e := todo[i];
                 e`m0mult := mults[i];
