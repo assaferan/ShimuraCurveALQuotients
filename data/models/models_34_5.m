@@ -1,9 +1,19 @@
-// Subhyperelliptic cover models for X_0(34,5)* -- Guo-Yang / AllEquationsAboveCovers
+// Subhyperelliptic cover models for X_0(34,5)*
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[Integers()|1,34]] := [*  *];
-models[[Integers()|1,2]] := [*  *];
-models[[Integers()|1,17]] := [*  *];
+models[[Integers()|1,10]] := [*  *];
+models[[Integers()|1,5,34,170]] := [* <0, P![ -3, -4, 4 ], P![]> *];
+models[[Integers()|1,10,34,85]] := [* <1, P![ 1/2, 2, 37/16, 1/8, -11/16 ], P![]> *];
 models[[Integers()|1,2,17,34]] := [* <2, P![ -1/6, -8/9, -23/16, -13/72, 173/144, 13/36, -11/36 ], P![]> *];
 models[[Integers()|1]] := [*  *];
+models[[Integers()|1,2]] := [*  *];
+models[[Integers()|1,2,5,10]] := [* <2, P![ -3/8, 1, 241/64, -49/32, -299/64, 57/16, -11/16 ], P![]> *];
+models[[Integers()|1,5]] := [* <4, P![ -289/4096, 0, 957/8192, 0, -1311/32768, 0, -239/32768, 0, 103/1048576, 0, -5/2097152 ], P![]> *];
+models[[Integers()|1,34]] := [* <3, P![ -11/256, -5/32, 25/128, 25/16, 647/256, 25/16, 25/128, -5/32, -11/256 ], P![]> *];
+models[[Integers()|1,5,17,85]] := [* <2, P![ 1/8, 0, -123/64, -105/32, 25/64, 35/16, -11/16 ], P![]> *];
+models[[Integers()|1,85]] := [*  *];
+models[[Integers()|1,170]] := [* <2, P![ 4/625, 24/625, 28/625, -72/625, -236/625, -48/125, -16/125 ], P![]> *];
+models[[Integers()|1,17]] := [*  *];
+models[[Integers()|1,2,85,170]] := [* <1, P![ 1/4, -1/2, -11/4, -1, 1 ], P![]> *];
+models[[Integers()|1,10,17,170]] := [* <1, P![ -3/16, 7/8, 1/16, -3/4, 1/4 ], P![]> *];

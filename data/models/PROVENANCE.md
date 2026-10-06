@@ -482,3 +482,16 @@ run (composite-level code) lost all precision in the numerical m = 0 multiplier 
 class-constancy deviation of 3e61) and sat in the Prec-160 retry for 13 hours; restarted from the
 cached Borcherds forms with the exact algebraic multiplier (branch exact-m0), it finished in 25 minutes.
 Trace formula 36 of 36.
+
+## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
+
+The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
+genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
+order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
+read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
+exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
+present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
+each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
+36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
+keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
