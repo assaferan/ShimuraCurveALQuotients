@@ -470,14 +470,14 @@ them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, branch exact-m
 multiplier) on lovelace, 15 minutes; 66 cover keys, 49 with an equation -- all 11 genus-0 quotients
 of the base, covers up to genus 5, 6 of them as fibre products over a conic -- and 11 empty. Outside
 check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
-over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (190 of 190; campaign `composite/checkcomp.m`).
-No published equation exists for this base.
+over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
+228; campaign `composite/checkcomp.m`). No published equation exists for this base.
 
 `models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
 lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
 {7, 11}. 65 cover keys, 34 with an equation -- all 4 genus-0 quotients, covers up to genus 4, 3 fibre
 products over a conic -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
-trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (150 of 150). At
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180). At
 p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
 smooth curve whose counts differ from the trace formula; the trace formula does not describe the
 reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
