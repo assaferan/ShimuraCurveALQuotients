@@ -22,7 +22,11 @@ bases, star curves excluded) **285 have a model and 210 do not**, at 132 bases. 
   420 holds 13 (the five DN = 210 bases and 35_3), 1140 holds 9. Those seven levels are 141 of the
   204; the other 33 levels hold 63 between them, mostly single X_0^D(1) bases.
 * **3 are Borcherds-obstructed**: one quotient each at X_0^6(109), X_0^14(23), X_0^22(19).
-* **3 are the deferred conics** at X_0^22(13), X_0^34(5), X_0^38(7).
+* **3 are the deferred conics** at X_0^22(13), X_0^34(5), X_0^38(7). Each is the quotient by an
+  order-4 Atkin-Lehner subgroup -- {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- and each is
+  ABSENT from its base's model file rather than stored empty, so the pipeline never produced a
+  candidate there. These are the genus-0 curves with no rational point: the Hauptmodul machinery needs
+  one, so what is missing is a conic equation, not a Borcherds run. Nothing here waits on Normaliz.
 Everything else below the wall is built or running; the bases still in the lava queue have no
 genus-0 quotients and contribute covers only.
 
