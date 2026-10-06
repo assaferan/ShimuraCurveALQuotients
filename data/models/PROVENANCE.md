@@ -458,3 +458,17 @@ genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a si
 nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
+
+## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
+
+The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
+first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threads, 4 h 19 min, 8674
+lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
+weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
+for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, branch exact-m0 for the exact m = 0
+multiplier) on lovelace, 15 minutes; 66 cover keys, 49 with an equation -- all 11 genus-0 quotients
+of the base, covers up to genus 5, 6 of them as fibre products over a conic -- and 11 empty. Outside
+check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
+over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (190 of 190; campaign `composite/checkcomp.m`).
+No published equation exists for this base.
