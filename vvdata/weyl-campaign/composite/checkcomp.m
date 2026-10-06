@@ -18,7 +18,9 @@ for k in Keys(models) do
     X := rep{Y : Y in curves | Y`D eq D and Y`N eq N and Y`W eq Set(k)};
     assert X`g eq g;
     C := HyperellipticCurve(f, h);
-    for p in [11, 13, 17, 19, 23, 29] do
+    // a prime of the level is a prime of bad reduction of the Shimura curve, where the trace formula
+    // does not give the point count of a (possibly smooth) reduction of a quotient: X_0^6(77) at p = 11
+    for p in [q : q in [11, 13, 17, 19, 23, 29, 31, 37] | (D*N) mod q ne 0][1..6] do
         // a model whose coefficients have p in a denominator has no reduction mod p: skip the prime
         ok := true;
         // (a reduction whose equation becomes reducible mod p makes Genus raise an error: also skip)
