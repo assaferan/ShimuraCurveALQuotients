@@ -22,10 +22,13 @@ divisor is a Borcherds divisor. Odd pairings close that door.
 | X_0^38(5) (control) | 11 | 1 | 504 | -2 ... -26 | all even | 1 |
 | X_0^14(23) | 12 | 1 | 120 | +-12 | all even | 1 |
 | X_0^22(19) | 12 | 2 | 24 | +-8, -12, -14, +-26 | all even (both generators) | 1 |
+| X_0^6(109) | 12 | 1 | 60 | 220, +-660 | all even | 1 (phi(3) = 37, phi(4) = -27) |
 
 The control reproduces the 2026-08-29 measurement exactly (key 11, anchor -4 with -19, -11:
-pairing -22, phi(4) = 2, phi(760) = -7). X_0^6(109): plain rerun fails in the search ("Failed to
-find all Borcherds forms"), so it is in the obstructed class; its instrumented run is pending.
+pairing -22, phi(4) = 2, phi(760) = -7). X_0^6(109): its plain rerun fails in the search ("Failed to
+find all Borcherds forms"), so it is in the obstructed class (the screen's remark "reads 1 0 0 and
+builds" is about the deficit reading); the instrumented run took 40 minutes. Its pairings are large,
+so the correcting even divisor will have larger coefficients than at the other three.
 
 Each triple appears once per rung of the m-ladder in the printed lines (the while loop re-enters the
 triple search), which is why the triple counts are multiples of the number of anchors.

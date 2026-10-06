@@ -7,7 +7,7 @@
 == 14_23: failing keys ['12'], obstruction dimension per key {'12': 1}
   key 12: 120 failing triples; parity patterns {(0, 0, 0, 0, 0, 0): 120}; ALL-EVEN triples 120; non-integral pairings 0; distinct pairing values 2; distinct phi 1
     first all-even triple: ('12', '-11', ' -43, -67 ')
-    pairing values: ['12', '-12']
+    pairing values: ['-12', '12']
    OBSTPAIR RESULT 14 23: Failed to find all Borcherds forms (762.660 s)
   phi at key 12: [ <11, 1>, <43, -5>, <51, 2>, <56, -2>, <67, 1>, <84, 1>, <88, 1>, <91, 1>, <99,
 == 22_19: failing keys ['12'], obstruction dimension per key {'12': 2}
@@ -16,3 +16,9 @@
     pairing values: ['8', '-8', '-12', '-14', '-26', '26']
    OBSTPAIR RESULT 22 19: Failed to find all Borcherds forms (446.130 s)
   phi at key 12: [ <27, 1>, <56, 1>, <59, -3>, <75, 2>, <88, -2>, <91, -4>, <132, 1>, <136, 1>, <
+== 6_109: failing keys ['12'], obstruction dimension per key {'12': 1}
+  key 12: 60 failing triples; parity patterns {(0, 0, 0, 0, 0): 60}; ALL-EVEN triples 60; non-integral pairings 0; distinct pairing values 3; distinct phi 1
+    first all-even triple: ('12', '-3', ' -4, -43 ')
+    pairing values: ['220', '-660', '660']
+   OBSTPAIR RESULT 6 109: Failed to find all Borcherds forms (2392.120 s)
+  phi at key 12: [ <3, 37>, <4, -27>, <43, 2>, <75, 2>, <84, 2>, <88, 2>, <100, 2>, <136, 4>, <14
