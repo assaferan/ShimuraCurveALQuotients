@@ -1242,7 +1242,28 @@ alone cannot do odd D.}
                     target_v := &+[div_coeffs[j]*pt[2]*V.(Index(relevant_ds,-pt[1])) : j->pt in ram];
                     
                     found_v := target_v in Image(coeffs_trunc);
-                   
+
+                    // OBSTPAIR=1: when the target is not in the image, print its pairing with each
+                    // generator of the annihilator of the image (Borcherds' obstruction space in
+                    // these coordinates), normalised to primitive integers.  A double cover depends
+                    // on its branch divisor only mod 2, so an EVEN pairing can be removed by adding
+                    // an even divisor; an odd one cannot.  Diagnostic only, prints and continues.
+                    if GetEnv("OBSTPAIR") ne "" and not found_v then
+                        ctQ := ChangeRing(coeffs_trunc, Rationals());
+                        Kann := Kernel(Transpose(ctQ));          // phi with coeffs_trunc * phi^T = 0
+                        tvQ := ChangeRing(target_v, Rationals());
+                        for bphi in Basis(Kann) do
+                            den := LCM([Denominator(x) : x in Eltseq(bphi)]);
+                            phiZ := [Integers() | den*x : x in Eltseq(bphi)];
+                            g := GCD(phiZ); phiZ := [x div g : x in phiZ];
+                            pairing := &+[phiZ[j]*tvQ[j] : j in [1..#phiZ]];
+                            printf "OBSTPAIR key %o infty %o others %o dim %o pairing %o parity %o phi %o\n",
+                                   i, infty[1], [p[1] : p in other_pts], Dimension(Kann), pairing,
+                                   IsIntegral(pairing) select ((Integers()!pairing) mod 2) else -1,
+                                   [<relevant_ds[j], phiZ[j]> : j in [1..#phiZ] | phiZ[j] ne 0];
+                        end for;
+                    end if;
+
                     if not found_v then found_all := false; break; end if;
                     sol := Solution(coeffs_trunc, target_v);
                     // RUNAWAY=1: `Solution` returns ONE point of the affine space
