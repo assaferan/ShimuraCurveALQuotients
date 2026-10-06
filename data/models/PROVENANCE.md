@@ -477,3 +477,8 @@ curve (35 of 35). This base has no genus-0 quotient, so its equations are new co
 `models_95_2.m` (14 keys: 1 of genus 0, 2 of genus 1, then genus 2, 3, 4, 5, 5, 7, 10; 4 keys empty)
 ran on lava the same way (12 h; its m = 0 multipliers missed the Prec-80 floor once and passed at
 Prec 160) and agrees with the trace formula at every curve of genus >= 1 (45 of 45).
+`models_111_2.m` (12 keys: 1 of genus 0, 2 of genus 1, then genus 2, 5, 5, 10; 5 keys empty): its first
+run (composite-level code) lost all precision in the numerical m = 0 multiplier at M = 444 (a
+class-constancy deviation of 3e61) and sat in the Prec-160 retry for 13 hours; restarted from the
+cached Borcherds forms with the exact algebraic multiplier (branch exact-m0), it finished in 25 minutes.
+Trace formula 36 of 36.
