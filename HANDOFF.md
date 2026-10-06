@@ -11,21 +11,78 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## NEXT (agreed 2026-10-05): an EXACT m = 0 multiplier, no transcendental step
+## Handoff — 2026-10-06 — THE GENUS-0 CENSUS RECOUNTED, AND THE FIRST RUNGS OF FIVE MORE LEVELS
 
-c_eta(0) = sum_w rho(w^-1)e_0[eta] * a_0(f|w) is algebraic (a cyclotomic number), and the routine
-reaches it through complex arithmetic with 1e-15 agreement checks and now a Prec retry. Replace:
-1. the numerically pinned slash constant by the Dedekind-eta multiplier system (Apostol Thm 3.4,
-   Dedekind sums; campaign cusp4.m verified kappa_{r,w} = zeta_w prod_d eps(g_d)^{r_d} e_d^{-r_d/2}
-   against the pinned values on 15_2) with the word's metaplectic phase zeta_w made exact (the lift
-   of the ST-word as a product of the lifts of S and T: eighth roots of unity, pure bookkeeping);
-2. the complex FFT of rho(w^-1)e_0 over ALL cosets by Scheithauer's Gauss-sum formula for the few
-   components needed (the 2p - 2 isotropic cosets of order p per level prime, and e_0);
-3. the constant term of the slashed q-series by exact series arithmetic over Q(zeta_{8M}).
-Validate against M0MultipliersBySupport on the 21 bases it was validated on and on 6_35 (the three
-classes).  Payoff: certified rationals, no guards, and minutes instead of an hour at |L^v/L| = 88200.
-Why Guo-Yang's Lemma 24 has no analogue here: the principal part sees only the two cusps where f has
-poles; the constant term collects every coset.
+Counting the stored models of every open branch together (main, #64, #74, #76, #78 and the
+fibre-product work) against the candidate list: of the **495 genus-0 quotient curves in scope** (259
+bases, star curves excluded) **285 have a model and 210 do not**, at 132 bases. The causes:
+* **204 quotients at 110 bases are behind the Normaliz wall** (#div(M) >= 24) -- now essentially the
+  whole gap. The unit of work is the level M, and the groups are uneven: M = 660 holds 39 quotients
+  (9 bases, 20 of them on X_0^330(1)), 780 holds 23, 924 holds 21, 1020 and 1092 hold 18 each,
+  420 holds 13 (the five DN = 210 bases and 35_3), 1140 holds 9. Those seven levels are 141 of the
+  204; the other 33 levels hold 63 between them, mostly single X_0^D(1) bases.
+* **3 are Borcherds-obstructed**: one quotient each at X_0^6(109), X_0^14(23), X_0^22(19).
+* **3 were "deferred conics" at X_0^22(13), X_0^34(5), X_0^38(7) -- and were nothing of the kind.**
+  The quotients by the order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} were ABSENT
+  from files that turned out to be early outputs (5 to 10 keys, no provenance). Rerun with the current
+  pipeline (minutes each) all three come out as P^1 with a rational point -- y^2 = (121/16) x (x - 1),
+  y^2 = (2x - 3)(2x + 1), y^2 = 5 - 8x -- with 14, 15 and 13 keys and the trace formula agreeing at
+  every curve of genus >= 1 (36/36, 45/45, 35/35). Committed to branch backlog-odd-2026-10 (#78).
+  ⚠ I had labelled them "conics without a rational point" from the census alone; the rule "a missing
+  quotient is a stale file until a rerun says otherwise" applied once more. The genus-0 gap is now
+  **207 = 204 behind the wall + 3 Borcherds-obstructed.**
+Everything else below the wall is built or running; the bases still in the lava queue have no
+genus-0 quotients and contribute covers only.
+
+**The first rung of each level, read off 30-minute probes** (lovelace `~/gymodels/composite/probesnext/`,
+one base per level, NMZ_TIMEOUT=120 VERB:=3): M = 780 -> (780, 274, 0), 924 -> (924, 325, 0),
+1020 -> (1020, 360, 0), 1092 -> (1092, 385, 0), 1140 -> (1140, 403, 0). ⚠ **Read the LOWEST rung in
+the log, not the last.** With a 2-minute Normaliz limit every rung fails silently ("no solutions"), so
+the search climbs the whole ladder -- the 6_65 probe ends at (780, 2835, 0), ten steps above its real
+first request, and quoting that number would have made the job look impossible.
+Launched (user's go, `bank_launch.sh` on both machines, 8 threads, 10-day limit, each with the cheap
+weight-0 shift set the t-shift fallback needs): **(780, 274, 0) and (924, 325, 0) on lava**
+(`~/bank780`, `~/bank924`), **(1020, 360, 0) on lovelace** (`~/bank1020`). (1092, 385, 0) and
+(1140, 403, 0) wait for (660, 231, 0) to finish on lava (20 h in). For scale: (420, 145, 0) took
+13.4 h at pole order 145, so these are longer jobs.
+
+## Handoff — 2026-10-05 (late evening) — THE m = 0 MULTIPLIER WITHOUT A TRANSCENDENTAL STEP (branch exact-m0, on composite-level)
+
+`M0MultipliersAlgebraic` (VectorValuedForm.m) computes (1/2) c_eta(0) per support class as an exact
+rational, and SchoferFormula now uses it (the Prec-80/160/240 retry is gone; M0MultipliersBySupport
+stays as the numerical cross-check). One coset representative per class g = gcd(c, M), both factors
+with the canonical lift (gamma, sqrt(c tau + d)):
+* the Weil-representation component rho*(gamma^-1) e_0 [eta] = e(1/8) c^{-3/2} |L^v/L|^{-1/2}
+  e(d Q(eta)/c) sum_{nu in L/cL} e((a Q(nu) + (eta, nu))/c) — the theta transformation formula
+  (gamma tau = a/c − 1/(c(c tau + d)), Poisson summation), the Gauss sum split over the prime powers of
+  c; NOTE d in the prefactor and a in the Gauss sum, the swap is wrong by O(1);
+* the slash constant from Apostol Thm 3.4: e(−1/8) prod_d [eps(g_d) e(b_d/(24 e_d)) e_d^{-1/2}]^{r_d}
+  with [d 0; 0 1] gamma = g_d [a_d b_d; 0 e_d], eps a 24th root of unity from a Dedekind sum; the
+  polytope monomials are holomorphic at the middle cusps, so a q-series is needed only at the cusp 0,
+  where the representative S makes its coefficients rational.
+Roots of unity are monomials of Q[x]/(x^n − 1), n = 24 M; square roots are Gauss sums; the total is
+reduced modulo the n-th cyclotomic polynomial and must be a constant. Verify (default) recomputes
+every middle class from a second coset with d ≢ ±1 (mod g) and demands exact equality.
+
+Checked (campaign vvdata/weyl-campaign/exactm0/, README there): the rho row against the Fourier
+transform to 1e-58 for c ≤ 10 including representatives with a ≠ d (rhotest.m, rhotest2.m); the
+slash constant on 140/140 (monomial, point) pairs; the multipliers equal the measured ground truth on
+all nine forms of X_0^15(2) (3 s) and the numerical routine on 21_2, 10_3, 22_3 (9/9 each); the four
+compmult5 probe monomials at X_0^6(35) give the twelve class values of compmult5.m (including the
+{5,7} class); the production forms of X_0^6(35), X_0^10(21), X_0^14(15) (17 each, the values the
+genmodels runs printed at verbosity 2) agree as multisets on all three classes. X_0^34(11)
+(|L^v/L| = 279752) takes 148 s with Verify and agrees with the numerical routine on all nine forms
+(which took 2.5 h on the same machine). tests/M0MultipliersAlgebraic.m; regressions green:
+Kappa0, M0PoleSum, M0MultiplierExact, X0_15_2, X0_21_2, X0_10_3.
+Cost: ~1100 s per composite base on lovelace with Verify (23 classes, 10 sampled cosets, degree-10080
+polynomial products), against an hour per batch before. In production (SchoferFormula calls it with
+Verify off): X_0^111(2) on lava, whose numerical run had lost all precision at M = 444 (class-constancy
+deviation 3e61 at Prec 80) and sat 13 h in the Prec-160 retry, finished in 25 min after a restart on
+this branch from its cached Borcherds forms (trace formula 36/36). The precision collapse is the
+"precision is M^2" effect; the algebraic route has no precision. Two traps while building it: a RATIO test of
+two mostly-vanishing vectors is noise (compare by difference with the lift sign fixed on a nonzero
+component), and in the CRT split of the Gauss sum only the quadratic term takes the cofactor (every
+a = 1 representative is right with the wrong split; the two-representative check caught it).
 
 ## Handoff — 2026-10-05 (late) — lava backlog: two bases done, two stopped by a ROUNDOFF guard, now retrying with more precision
 

@@ -1147,31 +1147,19 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
     end for;
     // The multiplier at the level prime p is (1/2) c_eta(0), the constant term of the vector-valued
     // input F_f at a nonzero isotropic coset supported at p alone (prop:composite; at prime N these
-    // are all the nonzero isotropic cosets), computed exactly by M0MultipliersBySupport
-    // (VectorValuedForm.m; the finite Gamma_0(M)-coset evaluation, validated against the measured
-    // ground truth on 21 prime-level bases).  It does not depend on d, so it runs once per form and
-    // is cached on the form as an associative array indexed by the primes of N.
+    // are all the nonzero isotropic cosets), computed by M0MultipliersAlgebraic (VectorValuedForm.m):
+    // exact arithmetic in a cyclotomic field, no floating point and no agreement threshold, seconds
+    // to minutes per base.  M0MultipliersBySupport is the numerical route it was checked against.
+    // The multiplier does not depend on d, so it runs once per form and is cached on the form as an
+    // associative array indexed by the primes of N.
     if not IsEmpty(Nprimes) then
         // computed only for the forms that still lack it: the forms evaluated differ from point to
-        // point (those singular at the point are left out), and at |L^v/L| = 88200 one computation
-        // is an hour, so recomputing for all of them whenever one is new doubled the X_0^6(35) run
+        // point (those singular at the point are left out)
         todo := [eta : eta in etas | not assigned eta`m0mult];
         if not IsEmpty(todo) then
-            // The routine's agreement checks (slash constant, class constancy, rational snap) are at
-            // 10^-15 relative with an absolute floor; the precision they can reach depends on the base
-            // (33 digits at 58_5, 18 at 34_11 at Prec 80, and X_0^55(2) missed the floor by 3e-15 at
-            // M = 220).  A miss is answered with more precision, never with a looser check.
-            done := false;
-            for prec in [80, 160, 240] do
-                try
-                    mults := M0MultipliersBySupport(todo, Ldata, D, N : Prec := prec);
-                    done := true;
-                catch e
-                    vprintf ShimuraQuotients, 1 : "\n\tM0MultipliersBySupport at Prec %o: %o -- retrying with more precision", prec, e`Object;
-                end try;
-                if done then break; end if;
-            end for;
-            error if not done, "M0MultipliersBySupport failed its agreement checks at Prec 80, 160 and 240";
+            // Verify (a second coset per class) doubled the cost; it is exercised by the test and
+            // by the campaign validation, and the rationality and class-agreement checks remain on.
+            mults := M0MultipliersAlgebraic(todo, Ldata, D, N : Verify := false);
             for i in [1..#todo] do
                 e := todo[i];
                 e`m0mult := mults[i];
