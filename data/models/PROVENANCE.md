@@ -458,3 +458,40 @@ genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a si
 nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
+
+## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
+
+`models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
+`models_93_2.m` (12 keys: 1 of genus 0, 2 of genus 1, 1 of genus 2, 2 of genus 4, 1 of genus 8),
+default recipe (`genmodels.m`, BFCACHE=1) on lava from branch composite-level, 3 min and 46 min.
+Outside check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace
+formula over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (50 of 50 and 36 of 36; campaign
+`composite/checkcomp.m`). No published equation exists for either base. `models_55_2.m` (15 keys: 1 of genus 0, 3 of genus 1, 2 of genus 2, 3 of
+genus 3, 1 of genus 6; 68 min) and `models_87_2.m` (14 keys, genus up to 8; 2 h): their first runs
+stopped in the exact m = 0 multiplier's class-constancy check at d = -15, a roundoff miss at Prec 80
+(3e-15 against a floor of 1e-15 at M = 220, and 2e-5 at M = 348); with the precision retry of
+composite-level 9201ae0 both passed at Prec 160 and the trace formula agrees at every curve (45 of 45
+each). `models_69_2.m` (14 keys: 3 of genus 1, 4 of genus 2; 7 keys stay empty after the Hauptmodul
+sweep, none of them genus 0) ran the same way on lava and agrees with the trace formula at every
+curve (35 of 35). This base has no genus-0 quotient, so its equations are new covers only.
+`models_95_2.m` (14 keys: 1 of genus 0, 2 of genus 1, then genus 2, 3, 4, 5, 5, 7, 10; 4 keys empty)
+ran on lava the same way (12 h; its m = 0 multipliers missed the Prec-80 floor once and passed at
+Prec 160) and agrees with the trace formula at every curve of genus >= 1 (45 of 45).
+`models_111_2.m` (12 keys: 1 of genus 0, 2 of genus 1, then genus 2, 5, 5, 10; 5 keys empty): its first
+run (composite-level code) lost all precision in the numerical m = 0 multiplier at M = 444 (a
+class-constancy deviation of 3e61) and sat in the Prec-160 retry for 13 hours; restarted from the
+cached Borcherds forms with the exact algebraic multiplier (branch exact-m0), it finished in 25 minutes.
+Trace formula 36 of 36.
+
+## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
+
+The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
+genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
+order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
+read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
+exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
+present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
+each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
+36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
+keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
