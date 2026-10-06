@@ -22,11 +22,15 @@ bases, star curves excluded) **285 have a model and 210 do not**, at 132 bases. 
   420 holds 13 (the five DN = 210 bases and 35_3), 1140 holds 9. Those seven levels are 141 of the
   204; the other 33 levels hold 63 between them, mostly single X_0^D(1) bases.
 * **3 are Borcherds-obstructed**: one quotient each at X_0^6(109), X_0^14(23), X_0^22(19).
-* **3 are the deferred conics** at X_0^22(13), X_0^34(5), X_0^38(7). Each is the quotient by an
-  order-4 Atkin-Lehner subgroup -- {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- and each is
-  ABSENT from its base's model file rather than stored empty, so the pipeline never produced a
-  candidate there. These are the genus-0 curves with no rational point: the Hauptmodul machinery needs
-  one, so what is missing is a conic equation, not a Borcherds run. Nothing here waits on Normaliz.
+* **3 were "deferred conics" at X_0^22(13), X_0^34(5), X_0^38(7) -- and were nothing of the kind.**
+  The quotients by the order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} were ABSENT
+  from files that turned out to be early outputs (5 to 10 keys, no provenance). Rerun with the current
+  pipeline (minutes each) all three come out as P^1 with a rational point -- y^2 = (121/16) x (x - 1),
+  y^2 = (2x - 3)(2x + 1), y^2 = 5 - 8x -- with 14, 15 and 13 keys and the trace formula agreeing at
+  every curve of genus >= 1 (36/36, 45/45, 35/35). Committed to branch backlog-odd-2026-10 (#78).
+  ⚠ I had labelled them "conics without a rational point" from the census alone; the rule "a missing
+  quotient is a stale file until a rerun says otherwise" applied once more. The genus-0 gap is now
+  **207 = 204 behind the wall + 3 Borcherds-obstructed.**
 Everything else below the wall is built or running; the bases still in the lava queue have no
 genus-0 quotients and contribute covers only.
 
