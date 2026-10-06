@@ -40,7 +40,11 @@ genmodels runs printed at verbosity 2) agree as multisets on all three classes. 
 (which took 2.5 h on the same machine). tests/M0MultipliersAlgebraic.m; regressions green:
 Kappa0, M0PoleSum, M0MultiplierExact, X0_15_2, X0_21_2, X0_10_3.
 Cost: ~1100 s per composite base on lovelace with Verify (23 classes, 10 sampled cosets, degree-10080
-polynomial products), against an hour per batch before. Two traps while building it: a RATIO test of
+polynomial products), against an hour per batch before. In production (SchoferFormula calls it with
+Verify off): X_0^111(2) on lava, whose numerical run had lost all precision at M = 444 (class-constancy
+deviation 3e61 at Prec 80) and sat 13 h in the Prec-160 retry, finished in 25 min after a restart on
+this branch from its cached Borcherds forms (trace formula 36/36). The precision collapse is the
+"precision is M^2" effect; the algebraic route has no precision. Two traps while building it: a RATIO test of
 two mostly-vanishing vectors is noise (compare by difference with the lift sign fixed on a nonzero
 component), and in the CRT split of the Gauss sum only the quadratic term takes the cofactor (every
 a = 1 representative is right with the wrong split; the two-representative check caught it).
