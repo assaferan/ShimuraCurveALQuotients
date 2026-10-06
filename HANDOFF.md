@@ -11,6 +11,33 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-06 — THE GENUS-0 CENSUS RECOUNTED, AND THE FIRST RUNGS OF FIVE MORE LEVELS
+
+Counting the stored models of every open branch together (main, #64, #74, #76, #78 and the
+fibre-product work) against the candidate list: of the **495 genus-0 quotient curves in scope** (259
+bases, star curves excluded) **285 have a model and 210 do not**, at 132 bases. The causes:
+* **204 quotients at 110 bases are behind the Normaliz wall** (#div(M) >= 24) -- now essentially the
+  whole gap. The unit of work is the level M, and the groups are uneven: M = 660 holds 39 quotients
+  (9 bases, 20 of them on X_0^330(1)), 780 holds 23, 924 holds 21, 1020 and 1092 hold 18 each,
+  420 holds 13 (the five DN = 210 bases and 35_3), 1140 holds 9. Those seven levels are 141 of the
+  204; the other 33 levels hold 63 between them, mostly single X_0^D(1) bases.
+* **3 are Borcherds-obstructed**: one quotient each at X_0^6(109), X_0^14(23), X_0^22(19).
+* **3 are the deferred conics** at X_0^22(13), X_0^34(5), X_0^38(7).
+Everything else below the wall is built or running; the bases still in the lava queue have no
+genus-0 quotients and contribute covers only.
+
+**The first rung of each level, read off 30-minute probes** (lovelace `~/gymodels/composite/probesnext/`,
+one base per level, NMZ_TIMEOUT=120 VERB:=3): M = 780 -> (780, 274, 0), 924 -> (924, 325, 0),
+1020 -> (1020, 360, 0), 1092 -> (1092, 385, 0), 1140 -> (1140, 403, 0). ⚠ **Read the LOWEST rung in
+the log, not the last.** With a 2-minute Normaliz limit every rung fails silently ("no solutions"), so
+the search climbs the whole ladder -- the 6_65 probe ends at (780, 2835, 0), ten steps above its real
+first request, and quoting that number would have made the job look impossible.
+Launched (user's go, `bank_launch.sh` on both machines, 8 threads, 10-day limit, each with the cheap
+weight-0 shift set the t-shift fallback needs): **(780, 274, 0) and (924, 325, 0) on lava**
+(`~/bank780`, `~/bank924`), **(1020, 360, 0) on lovelace** (`~/bank1020`). (1092, 385, 0) and
+(1140, 403, 0) wait for (660, 231, 0) to finish on lava (20 h in). For scale: (420, 145, 0) took
+13.4 h at pole order 145, so these are longer jobs.
+
 ## Handoff — 2026-10-05 (late evening) — THE m = 0 MULTIPLIER WITHOUT A TRANSCENDENTAL STEP (branch exact-m0, on composite-level)
 
 `M0MultipliersAlgebraic` (VectorValuedForm.m) computes (1/2) c_eta(0) per support class as an exact
