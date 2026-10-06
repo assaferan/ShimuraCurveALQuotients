@@ -474,3 +474,6 @@ composite-level 9201ae0 both passed at Prec 160 and the trace formula agrees at 
 each). `models_69_2.m` (14 keys: 3 of genus 1, 4 of genus 2; 7 keys stay empty after the Hauptmodul
 sweep, none of them genus 0) ran the same way on lava and agrees with the trace formula at every
 curve (35 of 35). This base has no genus-0 quotient, so its equations are new covers only.
+`models_95_2.m` (14 keys: 1 of genus 0, 2 of genus 1, then genus 2, 3, 4, 5, 5, 7, 10; 4 keys empty)
+ran on lava the same way (12 h; its m = 0 multipliers missed the Prec-80 floor once and passed at
+Prec 160) and agrees with the trace formula at every curve of genus >= 1 (45 of 45).
