@@ -482,3 +482,20 @@ p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231,
 smooth curve whose counts differ from the trace formula; the trace formula does not describe the
 reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
 published equation exists for this base.
+
+`models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
+support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
+{1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
+covers up to genus 6, 6 fibre products over a conic -- and 28 empty; four genus-3 covers have no
+(degree g+1, conic) pair over a common base and stay deferred, and the Hauptmodul rebase sweep
+fills none of the 28. Outside check: every stored curve of genus >= 1 agrees with the trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
+exists for this base.
+
+The other four bases with N > 1 of the group, X_0^21(11), X_0^21(22), X_0^33(7) and X_0^33(14), are
+NOT here. After the {oo}-weakly holomorphic ring (the shared rung above), their Borcherds searches
+go on to ask for the ring of forms with poles at both cusps 0 and oo, which the three bases above
+never request. That search climbs the weight-236 ladder (924, n, 236) in steps of 236 in n, finds
+rank 0 at every rung while the requested dimension grows by 236, and dies at the cap n = 10000 after
+3.5 days. The climb depends on the level alone: the logs of the four runs are byte-for-byte identical
+up to the point each was stopped.
