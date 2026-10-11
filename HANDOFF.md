@@ -11,6 +11,33 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-11 — LEVEL 924: THE THREE EVEN-D BASES BUILT, THE ODD-D ONES BEHIND A SECOND WALL
+
+PR #80 (`level-924-models`) carries the first rung `(924, 325, 0)`, the weight-0 shift set, and the
+models of `462_1`, `6_77` and `22_21`, each checked against the trace formula at the six smallest
+good primes (228/228, 180/180, 126/126; campaign `composite/checkcomp.m`). lovelace logs are under
+`~/gymodels/m924/logs`; the runs used `~/gymodels/composite/tree`.
+
+**The five odd-D bases (`21_11`, `21_22`, `33_7`, `33_14`, `77_3`) hit a SECOND Normaliz wall.** For
+odd D `BorcherdsForms` also asks for the ring of weight-1/2 forms with poles at BOTH cusps
+(`WeaklyHolomorphicBasis(... : Zero)`), and at every finished odd-D base that ring converges after
+exactly two polytopes, `(M, n0, k)` and `(M, n0 + k, k)`, k the pole order of the level's `t`: at
+564 it was (56, 92) then (148, 92), at 948 (85, 156) then (241, 156). At 924 they are
+**`(924, 89, 236)` and `(924, 325, 236)`**, and both time out at the 2 h `NMZ_TIMEOUT` the launcher
+used. A timed-out solve returns "no points" silently, so `21_11` and `33_7` climbed the ladder at
+rank 0 (one 2 h timeout per rung, 43 rungs) for 3.5 days and died at the `n = 10000` cap; `21_22`
+and `33_14` were replaying the identical ladder (logs byte-for-byte prefixes of the failed ones)
+when this was written and should be killed. ⇒ The "non-convergence" error here means "every
+polytope timed out", not that the form ring diverges.
+
+Both polytopes are being enumerated on **lava** (`/scratch/home/assaferan/bank924/`, logs
+`logs/nmz_924_{89,325}_236.log`, 10-day limit, 8 threads each, launched 2026-10-11 01:20 lava time).
+When `polymake_solution_924_325_236` exists, the lower rung is its subset with pole ≤ 89 at oo, so
+one enumeration suffices in principle; copy both files into `polymake/` on the branch and the
+run tree, then relaunch the odd-D bases with `launchM.sh`. The reproduce-a-known-value check for
+this probe: `(948, 85, 156)`, `(948, 241, 156)` and `(564, 56, 92)` re-solve in 0–2 s on the Mac
+and equal the committed files as vector sets.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
