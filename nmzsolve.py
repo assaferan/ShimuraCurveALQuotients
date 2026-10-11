@@ -178,6 +178,25 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
             _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m=0) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
 
+# ---- a lower two-cusp rung is a subset of a higher cached one -----------------
+# (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
+# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  Restricted to
+# m > 0: the t-shift fallback above writes shifted, thinned m = 0 rungs under the same file names,
+# and a subset of a thinned rung is not the rung.  The two two-cusp rungs an odd-D search asks for,
+# (M, n0, k) and (M, n0 + k, k), are the case this serves: one enumeration instead of two.
+if m_pole > 0:
+    higher = []
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
+        if mm and int(mm.group(1)) > n_pole:
+            higher.append(int(mm.group(1)))
+    if higher:
+        hi = min(higher)
+        pts = sorted({ tuple(r) for r in _load_magma_seq(f'polymake/polymake_solution_{M}_{hi}_{m_pole}') if _pole(r) <= n_pole })
+        print(f"# lower rung: (M={M}, n={n_pole}, m={m_pole}) read off the cached (M={M}, n={hi}, m={m_pole}): {len(pts)} lattice points", file=sys.stderr)
+        _write_solution(outp, pts)
+        sys.exit(0)
+
 work = tempfile.mkdtemp(prefix='nmz_')
 base = os.path.join(work, f'poly_{M}_{n_pole}_{m_pole}')
 with open(base + '.in', 'w') as f:
