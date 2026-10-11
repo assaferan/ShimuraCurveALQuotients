@@ -552,3 +552,16 @@ never request. That search climbs the weight-236 ladder (924, n, 236) in steps o
 rank 0 at every rung while the requested dimension grows by 236, and dies at the cap n = 10000 after
 3.5 days. The climb depends on the level alone: the logs of the four runs are byte-for-byte identical
 up to the point each was stopped.
+
+**Every empty key of `22_21` and `6_77` filled as a fibre product (2026-10-11, branch
+level-924-fibre-products).** The 28 empty keys of each file are the covers with no genus-0
+Atkin-Lehner quotient to carry a hyperelliptic equation; each is the fibre product over the star
+line of its index-2 double covers already in the file, built by the writer of the fibre-product
+stage (`tools/writefp.m`, as the 203 entries above) and stored in the same `<genus, "CRV", [...]>`
+shape: `22_21` genera 3 to 7, `6_77` genera 3 to 9. The writer accepted each one on the genus formula
+and the trace formula over F_p and F_{p^2} at the first three good primes. Then, independently of
+the writer, every entry was re-read from its stored strings alone and compared with the trace
+formula at the 4th and 5th good primes, which the writer never used: 112 of 112 (prime, cover)
+counts agree. `462_1` keeps its 11 empty keys: none of them has committed double covers to multiply.
+As for the 203 above, at level N > 1 these rest on the m = 0 term of Schofer's formula through their
+factors (PR #66), so they are checked by point counts, not proved.
