@@ -1498,6 +1498,87 @@ function pin_complex_conjugation(L)
 end function;
 
 
+// The ideal class behind complex conjugation on CM points ([GR] Lemma 5.10), read off the Eichler
+// order.  For an optimal embedding q : R -> O of the order R of discriminant d, with theta = q(sqrt d),
+//     Lambda = { x in O : x theta = -theta x }
+// is a rank-2 lattice and a left q(R)-module, so Lambda = q(c) j_0 for any j_0 in Lambda and a
+// fractional R-ideal c.  Complex conjugation sends the point of q to the point of the conjugate
+// embedding eps q(bar .) eps^-1 (eps a unit of norm -1), and the transporter between the two
+// embeddings is eps Lambda; comparing with the transporter w beta^-1 q(a^-1) of w_m sigma_a gives
+// [a] = [c]^-1 in Pic(R), so [a] = [c] in Pic(R)/Pic(R)^2.  [GR]'s condition B ~ (d, m N(a)) sees
+// only the genus characters of the maximal order; at a prime dividing the conductor it cannot
+// separate the classes, which is why several passed it (two for d = -48 on X_0(15,1)/<w_15>,
+// giving Q(i) and Q(sqrt 3); the lattice gives Q(i), as [GY]'s tables do at every ambiguous
+// point of tests/CMPoints.m).  Returned as an integral ideal coprime to the conductor, which the
+// Picard discrete log needs; the inverse is taken for that, harmless modulo squares.
+intrinsic CMConjugationIdeal(R::RngQuad, D::RngIntElt, N::RngIntElt) -> RngQuadIdl
+{An ideal of the quadratic order R whose class in Pic(R)/Pic(R)^2 is the class [a] with complex
+ conjugation acting on the CM points by R of X_0(D,N) as w_m sigma_a ([GR] Lemma 5.10), computed
+ from an optimal embedding of R into the Eichler order of level N in B_D.  Requires such an
+ embedding to exist.}
+    d := Discriminant(R);
+    Ldata := ShimuraCurveLattice(D, N);       // the Eichler order object the Schofer code uses
+    O := Ldata`O;
+    B := Algebra(O);
+    f := Conductor(R);
+    // theta with theta^2 = d and O meet Q(theta) = R: FindLambda's vector generates O meet Q(sqrt d)
+    found, v := FindLambda(Ldata`Q, -d, O, Ldata`basis_L);
+    require found : Sprintf("CMConjugationIdeal: the order of discriminant %o does not embed optimally in the Eichler order of level %o in B_%o", d, N, D);
+    bl := Ldata`basis_L;
+    elt := &+[v[i]/2*bl[i] : i in [1..#bl]] + ((-d) mod 4 eq 3 select B!1/2 else 0);
+    th := B!(2*elt - Trace(elt));
+    assert th^2 eq d;
+    t := (d mod 4 eq 0) select 0 else 1;
+    om := (t + th)/2;
+    for p in PrimeDivisors(f) do
+        for u in [0..p-1] do
+            require not ((u + om)/p in O) : "CMConjugationIdeal: FindLambda's embedding is not optimal";
+        end for;
+    end for;
+    // Lambda = O meet (anticommuting plane), as a Z-lattice
+    bas := Basis(O);
+    M := Matrix(Rationals(), 4, 4, [Eltseq(B!(th*bas[a] + bas[a]*th)) : a in [1..4]]);
+    rows := [];
+    for w in Basis(Kernel(M)) do
+        den := LCM([Denominator(c) : c in Eltseq(w)]);
+        Append(~rows, [Integers()| c*den : c in Eltseq(w)]);
+    end for;
+    S := Saturation(Matrix(Integers(), rows));
+    Vs := [B!(&+[S[r][k]*bas[k] : k in [1..4]]) : r in [1..2]];
+    j0 := Vs[1];
+    // x j0^-1 = alpha + beta theta in Q(theta); the alpha + beta sqrt(d) generate c
+    K := NumberField(R);
+    sd := K!(2*R.2 - Trace(R.2));
+    assert sd^2 eq d;
+    Mb := Matrix(Rationals(), 2, 4, [Eltseq(B!1), Eltseq(th)]);
+    coords := [];
+    for x in Vs do
+        ok, sol := IsConsistent(Mb, Vector(Rationals(), Eltseq(x * j0^-1)));
+        assert ok;
+        Append(~coords, <sol[1], sol[2]>);
+    end for;
+    // scale so that alpha + beta sqrt(d) = u + v (t + sqrt d)/2 has u, v in Z, i.e. lies in R
+    // (integrality in K is not enough: R is not the maximal order in general)
+    den := LCM(&cat[[Denominator(2*cb[2]), Denominator(cb[1] - t*cb[2])] : cb in coords]);
+    g1 := R!(den*(coords[1][1] + coords[1][2]*sd)); g2 := R!(den*(coords[2][1] + coords[2][2]*sd));
+    c := ideal<R | [g1, g2]>;
+    // an integral representative coprime to the conductor: beta cbar / N(c) for beta in c with
+    // N(beta)/N(c) coprime to f; its class is [c]^-1
+    Nc := Norm(c);
+    for bd in [1..30] do
+        for u, w in [-bd..bd] do
+            beta := u*g1 + w*g2;
+            if beta eq 0 then continue; end if;
+            if GCD(Integers()!(Norm(beta)/Nc), f) eq 1 then
+                conj := func<x | Trace(x) - x>;
+                return ideal<R | [R | beta*conj(g1)/Nc, beta*conj(g2)/Nc]>;
+            end if;
+        end for;
+    end for;
+    error "CMConjugationIdeal: no representative coprime to the conductor found";
+end intrinsic;
+
+
 // This is following [GR, Section 5]
 intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
 {Return possible fields of definition for CM point with CM by d on X.
@@ -1544,22 +1625,15 @@ DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check
     // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
     m := D_R*N_star_R;
     
-    frakas := [];
-    for a in A do
-        alift := a@@PicR_to_A;
-        // circumventing a bug in Magma in mPicR
-        if (alift eq PicR!0) then
-            fraka := 1*R;
-        else
-            fraka := mPicR(alift);
-        end if;
-        B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
-        if IsIsomorphic(B_fraka, B) then
-            Append(~frakas, fraka);
-            if IsFundamentalDiscriminant(d) then break; end if; // see [GR], Remark 5.11
-        end if;
-    end for;
-    require #frakas gt 0 : "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    // The class [a] of Lemma 5.10 comes from the Eichler order (CMConjugationIdeal); the condition
+    // B ~ (d, m N(a)) of [GR] is kept as a check, since it is necessary but, for a non-maximal
+    // order, not sufficient to single out the class.
+    alift := PicR_to_A(CMConjugationIdeal(R, D, N) @@ mPicR) @@ PicR_to_A;
+    // circumventing a bug in Magma in mPicR
+    fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
+    require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
+        "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
+    frakas := [fraka];
     sigma_as := [rec(fraka) : fraka in frakas];
     abs_sig_as := [H_R_to_abs^(-1)*sigma_a*H_R_to_abs : sigma_a in sigma_as];
 
@@ -1639,10 +1713,11 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
                congruence together with GCD(D, Conductor(R)) = 1 (e.g. d = -656 on
                X_0(34,5)*).  DegreeOfFieldOfDefinitionOfCMPoint returns 0 here.
    [* Aabs *]  complex conjugation is not active on the quotient.
-   otherwise   one field per valid class [a] in Pic(R)/Pic(R)^2: the fixed field of the
-               reflection c . sigma_a . sigma_w0, of degree Degree(A_abs)/2.  It need not
-               be totally real (d = -228 on X_0(38,1)/<w_38> gives Q(sqrt(-19)), as in
-               [GY]).  The list has length 1 for fundamental d ([GR] Rem 5.11).
+   [* F *]     otherwise: the fixed field of the reflection c . sigma_a . sigma_w0, of degree
+               Degree(A_abs)/2, for the class [a] in Pic(R)/Pic(R)^2 that CMConjugationIdeal
+               reads off the Eichler order.  It need not be totally real (d = -228 on
+               X_0(38,1)/<w_38> gives Q(sqrt(-19)), as in [GY]).  The list always has
+               length 1.
 
  MaxDegree > 0: return [* *] when the degree exceeds it, before building any field, so
  [* *] then means "no point of degree <= MaxDegree".  For the degree alone use
@@ -1757,18 +1832,14 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     frakb_w0 := &*[Parent(1*OK) | pa[1]^(pa[2] div 2) : pa in Factorization(w0*OK)];
     tw := (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
 
-    sigma_as := [* *];
-    for a in A2 do
-        alift := a@@PicR_to_A2;
-        fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
-        if not IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) then
-            continue;
-        end if;
-        Append(~sigma_as, (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs);
-        if IsFundamentalDiscriminant(d) then break; end if;   // [GR] Remark 5.11
-    end for;
-    require #sigma_as gt 0 :
-        "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    // The class [a] of Lemma 5.10 comes from the Eichler order (CMConjugationIdeal).  [GR]'s
+    // condition B ~ (d, m N(a)) is kept as a check: it is necessary, and for a maximal order
+    // sufficient ([GR] Remark 5.11), but for a non-maximal order several classes pass it.
+    alift := PicR_to_A2(CMConjugationIdeal(R, D, N) @@ mPicR) @@ PicR_to_A2;
+    fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
+    require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
+        "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
+    sigma_as := [* (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs *];
 
     // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}; collect distinct.
     fields := [* *];

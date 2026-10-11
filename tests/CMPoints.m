@@ -166,7 +166,7 @@ procedure test_FieldOfDefinition()
     curves := GetHyperellipticCandidates();
     // Two lists of number fields are equal as SETS up to isomorphism (order/multiplicity ignored).
     // Depends only on its arguments (no closure over outer variables) to avoid the Magma 2.29
-    // eval/closure segfault quirk.
+    // eval/closure segfault quirk.  Used by the Table 49 block at the end.
     same_fields := function(A, B)
         for F in A do
             if not exists{G : G in B | IsIsomorphic(F, G)} then return false; end if;
@@ -211,17 +211,16 @@ procedure test_FieldOfDefinition()
             // Field disputed with [GY], unresolved: only the degree above is asserted.
             if exists{g : g in degree_only_pts | g eq <D, N, W, d>} then continue; end if;
             Fs := FieldsOfDefinitionOfCMPoint(X, d);
-            // [GY] ground truth: K must be among the computed fields.
-            assert exists(F){F : F in Fs | IsIsomorphic(F,K)};
-            // Regression guard (added after the exponent>2 over-generation bug): the fast and slow
-            // routines must agree as SETS up to isomorphism, and fast must also contain the ground
-            // truth. The slow routine used to enumerate every order-2 automorphism restricting to
-            // complex conjugation on K (spurious extra fields for Pic(R) of exponent > 2) instead of
-            // the single genuine complex conjugation; the membership check above tolerated that, so it
-            // went unnoticed. Asserting set-equality keeps either routine from silently drifting.
+            // [GY] ground truth: exactly one field, and it is K.  A membership check ("K is among
+            // the computed fields") let two defects through: the slow routine enumerating every
+            // order-2 automorphism restricting to complex conjugation on K (spurious fields for
+            // Pic(R) of exponent > 2), and both routines returning every class of Pic(R)/Pic(R)^2
+            // passing [GR]'s quaternion-algebra condition, two of them at the twelve non-maximal
+            // orders below where that condition does not decide (e.g. d = -48 on X_0^87(1)/<w_87>:
+            // Q(i) and Q(sqrt 3); [GY] has Q(i)).
+            assert #Fs eq 1 and IsIsomorphic(Fs[1], K);
             Fs_fast := FieldsOfDefinitionOfCMPointFast(X, d);
-            assert exists(F){F : F in Fs_fast | IsIsomorphic(F,K)};
-            assert same_fields(Fs, Fs_fast);
+            assert #Fs_fast eq 1 and IsIsomorphic(Fs_fast[1], K);
         end for;
         vprintf ShimuraQuotients, 1: "Done!\n";
     end for;
