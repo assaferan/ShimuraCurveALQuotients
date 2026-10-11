@@ -40,6 +40,13 @@ lovelace (`composite/logs/nmz_420_146_104.log`). When it exists, the six odd-D l
 (`15_14`, `21_10`, `35_6`, `15_7`, `21_5`, `35_3`) are routine runs. The launch scripts are banked
 on campaign under `vvdata/weyl-campaign/launchers/`.
 
+**Every empty key of `22_21` and `6_77` (28 + 28) is a fibre product of its double covers.** PR
+#72's writer (`tools/writefp.m`, branch `fibre-product-models`) run over this branch's three model
+files fills all 56, each passing the genus formula and the trace formula at up to three primes;
+`462_1`'s 11 empties have no committed double covers. The `"CRV"` shape lives on
+`fibre-product-stage` (PR #71), not `main`, so the entries are banked on campaign under
+`vvdata/weyl-campaign/level924/fibre-products/` until #71 and #80 merge.
+
 Both polytopes are being enumerated on **lava** (`/scratch/home/assaferan/bank924/`, logs
 `logs/nmz_924_{89,325}_236.log`, 10-day limit, 8 threads each, launched 2026-10-11 01:20 lava time).
 When `polymake_solution_924_325_236` exists, the lower rung is its subset with pole ≤ 89 at oo, so
