@@ -27,6 +27,18 @@ which at every finished odd-D base converges after exactly two rungs `(M, n0, k)
 `(M, n0 + k, k)`, k the pole order of the level's `t`: (420, 42, 104) and (420, 146, 104);
 (924, 89, 236) and (924, 325, 236). Bank both before launching an odd-D base of a 24-divisor level.
 
+**A tall m = 0 rung can be served from a rung ~75 lower (measured at 924, 2026-10-11).** The
+form-ring loop accepts any set of eta quotients whose q-expansions have full rank, and the products
+of a lower rung with the weight-0 shift set (`tshift_w0_<M>.txt`) have it from surprisingly low:
+at 924 the 292 points of `(924, 250, 0)` times the 283 shifts give 565 products of rank 237 = dim,
+the same as the 8674-point `(924, 325, 0)`; from 240 the rank is 214 and the loop climbs. The
+fallback in `nmzsolve.py` does this automatically once a lower rung and the shift set are cached
+(no thinning below `NMZ_SHIFT_KEEP` points). Procedure for a new level: bank the shift set
+(`bank_launch.sh`'s second line, minutes), then enumerate `(M, n, 0)` for rising n (each +40 in n
+costs ~x6) and launch the bases after each; the loop converges or climbs, never answers wrong. The
+shifts' smallest pole is the pole of t, so the base cannot go lower than (rung − pole of t) and in
+practice sits ~75 below; eta quotients are sparse at low pole orders (1 point at 924 below 89).
+
 **The queue script outlives the jobs it launched.** `launchM.sh` waits for a free slot and starts
 the next base; killing a running base frees a slot and the queue fills it. To stop a level, kill
 the `bash launchM.sh` process first, then the Magma jobs (by PID, never `pkill -f magma.exe`).
