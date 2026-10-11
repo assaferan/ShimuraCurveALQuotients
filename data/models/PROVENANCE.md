@@ -458,3 +458,28 @@ genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a si
 nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
+
+## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
+
+The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
+`polymake/polymake_solution_780_274_0` (12729 lattice points). It was enumerated on lovelace in
+74 minutes with the coordinate order of PR #88 (divisors farthest from sqrt(M) first, Normaliz
+keeping the order); the run in the old order had not finished after five days. The four even-D
+bases were then built in the default recipe (`genmodels.m`, BFCACHE=1, the composite-level
+tree with the exact m = 0 multipliers per support class), each in 16 to 35 minutes, with the solver
+script of PR #88 for any further rung. No weight-0 shift set was needed. The two odd-D bases,
+X_0^15(13) and X_0^39(5), wait on the two-cusp rungs, as at level 924.
+
+* `models_390_1.m`: 66 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 11 empty. 16 minutes.
+* `models_6_65.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 5 --
+  and 24 empty. 33 minutes.
+* `models_10_39.m`: 65 keys, 33 with an equation -- all 3 genus-0 quotients, covers up to genus 4,
+  5 of them stored as pairs over a conic -- and 32 empty. 33 minutes.
+* `models_26_15.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 35 minutes.
+
+Outside check: every stored hyperelliptic curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 390,
+p = 7, 11, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 264 of 264, 216 of 216, 150 of 150
+and 126 of 126. No published equation exists for any of these bases.
