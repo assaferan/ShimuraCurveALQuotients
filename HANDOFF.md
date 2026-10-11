@@ -11,6 +11,23 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-05 — X_0^210(1) BUILT IN 7½ MINUTES FROM THE BANKED LEVEL-420 RUNG (branch level-420-models)
+
+The wall is a property of M, and bases with the same M share the polytope cache. M = 420 has two cached
+rungs — (420, 145, 0) enumerated in August (13.4 h) and (420, 250, 0) from the t-shift fallback — and
+X_0^210(1) needs nothing else: a two-minute-timeout PROBE ran the whole base in 7 min 37 s. 66 cover
+keys (40 of genus 0 — the single largest group of missing genus-0 quotients — 31 of genus 1, 10 of
+genus 2, 4 + 6 of genus 3), 234/234 point counts of the trace formula at six primes (campaign
+composite/checkcomp.m). data/models/models_210_1.m and BOTH cache files are committed on this branch,
+so the default recipe reproduces the base without Normaliz.
+The other M = 420 bases: 6_35, 10_21, 14_15 built (branch composite-level); 15_7, 21_5, 15_14, 21_10,
+35_6 all ask for (420, 42, 104) — ONE enumeration, running on lovelace since 2026-10-05 ~17:30
+(~/gymodels/composite/bank/) — and 35_3 for (420, 146, 104). Probing a base with NMZ_TIMEOUT=120 and
+VERB:=3 is the cheap way to learn its rungs: the names appear in polymake/nmzsolve.err.
+⇒ THE PLAN for the 240 missing genus-0 quotients: per M, one base-rung enumeration + the fallback for
+m = 0; a fallback for the m > 0 rungs (poles at the cusp 0) would remove most of the wall — validate it
+against (420, 42, 104) when that enumeration lands, as the m = 0 one was validated at 420.
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
