@@ -130,6 +130,12 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                         pts.update(layer)
                 pts = sorted(pts)
             else:
+                # Every shifted point with pole <= n is kept while the set stays small.  Thinning to
+                # a few points per pole order loses rank: at level 924, from the rung 250 the 565
+                # products span the whole rung-325 space (rank 237 = dim) while four per order give
+                # 193 and the form-ring loop climbs for ever.  Only a set beyond NMZ_SHIFT_KEEP points
+                # (default 20000) is thinned, to the old four per pole order.
+                keep_all = int(os.environ.get('NMZ_SHIFT_KEEP', '20000'))
                 byorder = {}
                 layer = [ tuple(r) for r in base ]
                 seen = set(layer)
@@ -137,9 +143,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                     for v in vs:
                         pl = _pole(list(v))
                         if pl > n_pole: continue
-                        b = byorder.setdefault(pl, [])
-                        if len(b) < 4:
-                            b.append(v)
+                        byorder.setdefault(pl, []).append(v)
                 _absorb(layer)
                 for j in range(J):
                     nxt = []
@@ -150,11 +154,16 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                                 seen.add(v); nxt.append(v)
                     _absorb(nxt)
                     layer = nxt
-                pts = sorted({ v for b in byorder.values() for v in b })
+                total = sum(len(b) for b in byorder.values())
+                if total > keep_all:
+                    print(f"# tshift fallback: {total} shifted points, thinning to 4 per pole order", file=sys.stderr)
+                    pts = sorted({ v for b in byorder.values() for v in b[:4] })
+                else:
+                    pts = sorted({ v for b in byorder.values() for v in b })
             residues = { _pole(list(r)) % tp for r in base }
             if len(residues) < tp:
                 print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
-            print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} thinned pts for n={n_pole}", file=sys.stderr)
+            print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
             _write_solution(outp, pts)
             sys.exit(0)
 
