@@ -225,15 +225,25 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     // solution file directly in the polymake_solution (Magma-evaluable) format --
     // validated point-for-point against 11 cached polymake outputs across levels
     // 132/204/308/616, m = 0 and m > 0.  It bounds its own runtime (NMZ_TIMEOUT,
-    // default 1800 s); on timeout/failure no file is written and we degrade to []
-    // exactly as before.
+    // default 1800 s): exit 2 on timeout, 1 on any other failure, and then no file.
+    // An empty polytope is NOT a failure -- nmzsolve writes an empty solution file and
+    // exits 0 -- so a nonzero exit is raised here rather than read as "no points": the
+    // form-ring loop treats [] as rank 0 and climbs one rung per call, and at level 924
+    // that was 43 silent two-hour timeouts (3.5 days) before the n-cap stopped it.
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
     cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
                    M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
-    _ := System(cmd);
-    if not FileExists(solname) then return []; end if;
+    rc := System(cmd) div 256;    // System returns the wait status; the exit code is its high byte
+    error if rc ne 0,
+        Sprintf("nmzsolve.py exited with code %o on the polytope (%o, %o, %o) [24k=%o, sq_disc=%o, cuspidal=%o]: %o. " *
+                "See polymake/nmzsolve.err; enumerate the polytope separately (nmzsolve.py with a larger NMZ_TIMEOUT) " *
+                "and place the result at %o.",
+                rc, M, n, m, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0,
+                rc eq 2 select "Normaliz timed out (NMZ_TIMEOUT)" else "Normaliz or the script failed", solname);
+    error if not FileExists(solname),
+        Sprintf("nmzsolve.py exited 0 but wrote no file at %o", solname);
     return Sort(eval Read(solname));
 end function;
 
