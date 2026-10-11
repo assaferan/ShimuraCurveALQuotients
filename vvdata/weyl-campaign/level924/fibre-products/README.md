@@ -3,7 +3,9 @@
 **PR #82** (`level-924-fibre-products`, based on #72's branch with #80 merged in) carries the 56
 level-924 entries appended to their model files. `recheck_crv.m` is the independent check run for
 it: every entry re-read from its stored strings, compared with the trace formula at the 4th and 5th
-good primes (112/112). The 22_7 and 26_5 appends are still only here.
+good primes (112/112). The 22_7 `[1,22]` and 26_5 `[1,10]` appends are NOT worth a PR: PR #73
+(stacked on #72) gives both covers hyperelliptic models from reruns, which take precedence over a
+fibre product; they are kept here only as a cross-check of #73's two models when it is reviewed.
 
 `tools/writefp.m` from the branch `fibre-product-models` (PR #72, at commit 4bd3d86), run over the
 model files of PR #80 (`models_462_1.m`, `models_6_77.m`, `models_22_21.m` copied into that branch's
