@@ -1,0 +1,15 @@
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurveALQuotients/2ccd0b0f-dcda-423c-b902-8aad70e4879f/scratchpad/fod/gydata.m"
+AMBIGUOUS (69,1,{ 1, 69 },d=-75): Fast gave 2 fields, Lambda picks x^2 - 2*x - 124, GY field $.1^2 - 5 -> MATCH
+AMBIGUOUS (69,1,{ 1, 69 },d=-147): Fast gave 2 fields, Lambda picks x^2 - 2*x + 344, GY field $.1^2 + 7 -> MATCH
+AMBIGUOUS (87,1,{ 1, 87 },d=-48): Fast gave 2 fields, Lambda picks x^2 - 2*x + 2, GY field $.1^2 + 1 -> MATCH
+AMBIGUOUS (87,1,{ 1, 87 },d=-147): Fast gave 2 fields, Lambda picks x^2 - 2*x + 344, GY field $.1^2 + 7 -> MATCH
+AMBIGUOUS (119,1,{ 1, 7, 17, 119 },d=-63): Fast gave 2 fields, Lambda picks x^2 - 2*x + 193, GY field $.1^2 + 3 -> MATCH
+AMBIGUOUS (119,1,{ 1, 7, 17, 119 },d=-99): Fast gave 2 fields, Lambda picks x^2 - 2*x + 769, GY field $.1^2 + 3 -> MATCH
+AMBIGUOUS (119,1,{ 1, 119 },d=-63): Fast gave 2 fields, Lambda picks x^4 + 7902479741516*x^3 + 12774426668530469825983310454*x^2 + 767576480813174996669682646880327717335340*x + 29421793149752710807756283447539735053515369162727318289, GY field x^4 + 18*x^2 + 189 -> MATCH
+AMBIGUOUS (119,1,{ 1, 119 },d=-99): Fast gave 2 fields, Lambda picks x^2 - 2*x + 769, GY field $.1^2 + 3 -> MATCH
+AMBIGUOUS (119,1,{ 1, 119 },d=-112): Fast gave 2 fields, Lambda picks x^2 - 2*x + 145, GY field $.1^2 + 1 -> MATCH
+AMBIGUOUS (159,1,{ 1, 159 },d=-48): Fast gave 2 fields, Lambda picks x^2 - 2*x + 2, GY field $.1^2 + 1 -> MATCH
+AMBIGUOUS (159,1,{ 1, 159 },d=-75): Fast gave 2 fields, Lambda picks x^2 - 2*x - 124, GY field $.1^2 - 5 -> MATCH
+UNIQUE MISMATCH (206,1,{ 1, 206 },d=-132): Lambda x^4 - 2520*x^3 + 13034354112*x^2 - 214046846421120*x + 3582978001211886336 vs GY $.1^2 - 11 (disputed in test)
+AMBIGUOUS (21,2,{ 1, 3, 7, 21 },d=-100): Fast gave 2 fields, Lambda picks x^2 - 2*x - 719, GY field $.1^2 - 5 -> MATCH
+SUMMARY: 460 degree>=2 GY points checked; algebra test ambiguous at 12 of them, Lambda matches GY at 12 of those; unique cases mismatching GY: 1; unique cases where Lambda != Fast: 0
