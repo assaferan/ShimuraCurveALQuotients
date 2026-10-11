@@ -486,9 +486,8 @@ published equation exists for this base.
 `models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
 support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
 {1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
-covers up to genus 6, 6 fibre products over a conic -- and 28 empty; four genus-3 covers have no
-(degree g+1, conic) pair over a common base and stay deferred, and the Hauptmodul rebase sweep
-fills none of the 28. Outside check: every stored curve of genus >= 1 agrees with the trace formula
+covers up to genus 6, 6 fibre products over a conic -- and 28 empty, none of which the Hauptmodul
+rebase sweep fills. Outside check: every stored curve of genus >= 1 agrees with the trace formula
 over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
 exists for this base.
 
