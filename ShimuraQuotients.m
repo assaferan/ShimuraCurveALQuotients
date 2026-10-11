@@ -1499,7 +1499,7 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}) -> SeqEnum, SeqEnum
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}, AllOrders := false) -> SeqEnum, SeqEnum
 {returns rational and quadratic CM points on X. Excludes those in exclude.
  Keep: discriminants exempt from the coprime_to_level filter. The filter exists to keep out CM points
  whose Schofer values misbehave, but it is a blunt instrument: on even-level bases it drops every even
@@ -1616,6 +1616,19 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
 -19363, -19747, -19947, -19987, -20155, -20395, -21403, -21715, -21835, -22243, 
 -22843, -23395, -23587, -24403, -25027, -25267, -27307, -27787, -28963, -31243, 
 -35275};
+
+    // The lists above hold every order of class number <= 8 and the 531 discriminants of class
+    // number 16.  By default the class-number 1, 2, 4, 8 lists are cut to the maximal orders, as
+    // they were before: the Borcherds search takes its divisor support from this routine, and a
+    // non-fundamental anchor changes the Hauptmoduln (X_0^14(5): the second one moved its zero
+    // from -91 to -36, a conductor-3 order, and the cover equations no longer had a solution).
+    // AllOrders admits the non-maximal orders; the Schofer evaluation step asks for them under
+    // NONFUND, where the conductor-prime terms of the m = 0 coefficient apply.
+    if not AllOrders then
+        for h in [1, 2, 4, 8] do
+            CNs[h] := {d : d in CNs[h] | IsFundamentalDiscriminant(d)};
+        end for;
+    end if;
 
     i := 1;
     allCN := {};
