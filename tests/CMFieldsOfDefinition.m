@@ -6,7 +6,7 @@
 //       class number", Warwick report (2013), table p. 19, and [Wat] M. Watkins, "Class numbers
 //       of imaginary quadratic fields", Math. Comp. 73 (2004), table p. 936.  A brute force over
 //       Magma's ClassNumber must reproduce both; CMClassLists must then equal it.
-//   [2] DegreeOfFieldOfDefinitionOfCMPoint vs the degrees of FieldsOfDefinitionOfCMPointFast on
+//   [2] DegreeOfFieldOfDefinitionOfCMPoint vs the degree of FieldOfDefinitionOfCMPoint on
 //       every W of three bases.  NO EXTERNAL SOURCE.  The two share the existence test, D_R, N_R,
 //       N*_R, W_gal and cc_active, so this checks only the independent parts: #W_gal / 2^eps
 //       against the Artin-class subgroup #alSub, h(R) against the norm group, and the cc halving
@@ -72,12 +72,13 @@ procedure test_DegreeMatchesFields()
             X := CreateShimuraQuot(D, N, Wdata[1]);
             for d in discs do
                 deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
-                Fs := FieldsOfDefinitionOfCMPointFast(X, d);
                 if deg eq 0 then
-                    assert #Fs eq 0;
+                    // no CM point by this order: the field routine must refuse, not return something
+                    raised := false;
+                    try F := FieldOfDefinitionOfCMPoint(X, d); catch e raised := true; end try;
+                    assert raised;
                 else
-                    assert #Fs gt 0;
-                    assert &and[AbsoluteDegree(F) eq deg : F in Fs];
+                    assert AbsoluteDegree(FieldOfDefinitionOfCMPoint(X, d)) eq deg;
                 end if;
                 nchecks +:= 1;
             end for;

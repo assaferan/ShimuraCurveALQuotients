@@ -3,7 +3,7 @@
 // REGRESSION PIN: guarantees the answer is UNCHANGED, not CORRECT (for source-backed checks see
 // tests/CMPoints.m and tests/CMFieldsOfDefinition.m).  For every entry of data/cm_fields_pin.m
 // (3252 keys: 26 quotients x 151 discriminants of class number <= 4, minus PIN_EXCLUDED; see its
-// header), asserts that FieldsOfDefinitionOfCMPointFast returns the pinned fields up to
+// header), asserts that FieldOfDefinitionOfCMPoint returns the pinned field up to
 // isomorphism and DegreeOfFieldOfDefinitionOfCMPoint the pinned degree.  On an intended change,
 // regenerate with tools/regen-cm-fields-pin.m and review the diff.  Runtime ~45 s.
 
@@ -34,7 +34,10 @@ procedure test_CMFieldsRegressionPin(PIN, PIN_CURVES, PIN_DISCS, PIN_EXCLUDED)
         end if;
         X := Xs[<D, N, W>];
         pinF := [* toabs(#c eq 2 select Rationals() else NumberField(R ! c)) : c in flds *];
-        got := [* toabs(F) : F in FieldsOfDefinitionOfCMPointFast(X, d) *];
+        // the pin stores a list per key (one field, or none when X has no CM point by d); the
+        // routine returns one field or raises an error in that case
+        got := [* *];
+        try Append(~got, toabs(FieldOfDefinitionOfCMPoint(X, d))); catch e got := [* *]; end try;
         // equal as sets up to isomorphism: each side's every field is isomorphic to one on the other
         same := true;
         for pair in [<pinF, got>, <got, pinF>] do
