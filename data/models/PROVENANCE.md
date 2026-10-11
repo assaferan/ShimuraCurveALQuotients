@@ -458,3 +458,43 @@ genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a si
 nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
+
+## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
+
+The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
+first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threads, 4 h 19 min, 8674
+lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
+weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
+for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, branch exact-m0 for the exact m = 0
+multiplier) on lovelace, 15 minutes; 66 cover keys, 49 with an equation -- all 11 genus-0 quotients
+of the base, covers up to genus 5, 6 of them as fibre products over a conic -- and 11 empty. Outside
+check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
+228; campaign `composite/checkcomp.m`). No published equation exists for this base.
+
+`models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
+lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
+{7, 11}. 65 cover keys, 34 with an equation -- all 4 genus-0 quotients, covers up to genus 4, 3 fibre
+products over a conic -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180). At
+p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
+smooth curve whose counts differ from the trace formula; the trace formula does not describe the
+reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
+published equation exists for this base.
+
+`models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
+support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
+{1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
+covers up to genus 6, 6 fibre products over a conic -- and 28 empty, none of which the Hauptmodul
+rebase sweep fills. Outside check: every stored curve of genus >= 1 agrees with the trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
+exists for this base.
+
+The other four bases with N > 1 of the group, X_0^21(11), X_0^21(22), X_0^33(7) and X_0^33(14), are
+NOT here. After the {oo}-weakly holomorphic ring (the shared rung above), their Borcherds searches
+go on to ask for the ring of forms with poles at both cusps 0 and oo, which the three bases above
+never request. That search climbs the weight-236 ladder (924, n, 236) in steps of 236 in n, finds
+rank 0 at every rung while the requested dimension grows by 236, and dies at the cap n = 10000 after
+3.5 days. The climb depends on the level alone: the logs of the four runs are byte-for-byte identical
+up to the point each was stopped.
