@@ -1,4 +1,9 @@
-# Fibre-product entries for the level-924 bases (banked 2026-10-11, not yet in any PR)
+# Fibre-product entries for the level-924 bases (banked 2026-10-11; now PR #82)
+
+**PR #82** (`level-924-fibre-products`, based on #72's branch with #80 merged in) carries the 56
+level-924 entries appended to their model files. `recheck_crv.m` is the independent check run for
+it: every entry re-read from its stored strings, compared with the trace formula at the 4th and 5th
+good primes (112/112). The 22_7 and 26_5 appends are still only here.
 
 `tools/writefp.m` from the branch `fibre-product-models` (PR #72, at commit 4bd3d86), run over the
 model files of PR #80 (`models_462_1.m`, `models_6_77.m`, `models_22_21.m` copied into that branch's
