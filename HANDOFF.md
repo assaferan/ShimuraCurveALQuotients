@@ -44,8 +44,10 @@ on campaign under `vvdata/weyl-campaign/launchers/`.
 #72's writer (`tools/writefp.m`, branch `fibre-product-models`) run over this branch's three model
 files fills all 56, each passing the genus formula and the trace formula at up to three primes;
 `462_1`'s 11 empties have no committed double covers. The `"CRV"` shape lives on
-`fibre-product-stage` (PR #71), not `main`, so the entries are banked on campaign under
-`vvdata/weyl-campaign/level924/fibre-products/` until #71 and #80 merge.
+`fibre-product-stage` (PR #71), not `main`, so the entries are **PR #82** (`level-924-fibre-products`,
+#72's branch with this branch merged in, targeting #72); each entry was also re-read from its stored
+strings and checked against the trace formula at the 4th and 5th good primes (112/112). Copies and
+the re-check script are on campaign under `vvdata/weyl-campaign/level924/fibre-products/`.
 
 Both polytopes are being enumerated on **lava** (`/scratch/home/assaferan/bank924/`, logs
 `logs/nmz_924_{89,325}_236.log`, 10-day limit, 8 threads each, launched 2026-10-11 01:20 lava time).
