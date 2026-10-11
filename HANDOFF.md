@@ -27,8 +27,18 @@ exactly two polytopes, `(M, n0, k)` and `(M, n0 + k, k)`, k the pole order of th
 used. A timed-out solve returns "no points" silently, so `21_11` and `33_7` climbed the ladder at
 rank 0 (one 2 h timeout per rung, 43 rungs) for 3.5 days and died at the `n = 10000` cap; `21_22`
 and `33_14` were replaying the identical ladder (logs byte-for-byte prefixes of the failed ones)
-when this was written and should be killed. ⇒ The "non-convergence" error here means "every
-polytope timed out", not that the form ring diverges.
+and were killed on 2026-10-11. ⚠ Killing a base frees a slot and the queue script fills it:
+`launchM.sh` started `77_3` two minutes later, so kill the `bash launchM.sh` process first. The
+level-924 queue is now stopped (`m924/logs/queue.log`). ⇒ The "non-convergence" error here means
+"every polytope timed out", not that the form ring diverges. **PR #81** (`nmz-timeout-error`)
+makes a nonzero solver exit an error that names the polytope, so the climb cannot recur silently.
+
+The same two-cusp wall was already half-paid at level 420: `(420, 42, 104)` finished on lovelace
+on 2026-10-07 (11495 points) and sat unharvested in `~/gymodels/composite/bank/`; it is now
+committed on `level-420-models` (PR #76) and the second rung `(420, 146, 104)` is enumerating on
+lovelace (`composite/logs/nmz_420_146_104.log`). When it exists, the six odd-D level-420 bases
+(`15_14`, `21_10`, `35_6`, `15_7`, `21_5`, `35_3`) are routine runs. The launch scripts are banked
+on campaign under `vvdata/weyl-campaign/launchers/`.
 
 Both polytopes are being enumerated on **lava** (`/scratch/home/assaferan/bank924/`, logs
 `logs/nmz_924_{89,325}_236.log`, 10-day limit, 8 threads each, launched 2026-10-11 01:20 lava time).
