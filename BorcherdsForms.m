@@ -1227,6 +1227,24 @@ alone cannot do odd D.}
 
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
+                    if IsOdd(Xstar`D) then
+                        // The cusp-0 side sees the CM discriminants scaled by N^2, the cusp-oo side by 4,
+                        // so for N > 2 the 0-side list is not contained in relevant_ds and the lookup
+                        // below returned column 0 (X_0^21(11), the first odd-D base with odd N > 1 ever
+                        // run).  Index the divisor by the union: the extra discriminants get zero
+                        // columns on the oo side, correctly, since no coefficient of the principal
+                        // part at oo (pole order <= -min_m) lands on them.
+                        extra := [d : d in relevant_ds_0_oo | d notin relevant_ds];
+                        if #extra gt 0 then
+                            new_ds := Sort(relevant_ds cat extra);
+                            new_mat := ZeroMatrix(Integers(), Nrows(mat), #new_ds + 1);
+                            for j->d in relevant_ds do
+                                InsertBlock(~new_mat, ColumnSubmatrix(mat, j, 1), 1, Index(new_ds, d));
+                            end for;
+                            InsertBlock(~new_mat, ColumnSubmatrix(mat, Ncols(mat), 1), 1, #new_ds + 1);   // the constant coefficient
+                            mat := new_mat; relevant_ds := new_ds;
+                        end if;
+                    end if;
                     coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
 
                     if IsOdd(Xstar`D) then
