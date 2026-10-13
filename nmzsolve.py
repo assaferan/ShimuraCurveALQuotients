@@ -203,20 +203,37 @@ if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
         _write_solution(outp, pts)
         sys.exit(0)
 
+# ---- coordinate order ---------------------------------------------------------
+# Normaliz lifts the lattice points coordinate by coordinate in the order of the input, and the
+# whole cost is lifting partial points that die on integrality late in the tree.  Putting the
+# divisors farthest from sqrt(M) first (1, M, 2, M/2, ...) shortens that tree by an order of
+# magnitude at 24-divisor levels: (924, 160, 0) 94 s -> 6 s, (924, 200, 0) 637 s -> 54 s, the same
+# points.  -k keeps the order given; the solution file is written back in divisor order, so
+# nothing downstream sees the permutation.  NMZ_ORDER=id restores the old (divisor) order.
+order = os.environ.get('NMZ_ORDER', 'ends')
+if order == 'ends':
+    perm = sorted(range(nd), key=lambda i: -abs(math.log(ds[i]) - math.log(M)/2))
+else:
+    perm = list(range(nd))
+def permute(row):
+    return [row[i] for i in perm] + row[nd:]
+
 work = tempfile.mkdtemp(prefix='nmz_')
 base = os.path.join(work, f'poly_{M}_{n_pole}_{m_pole}')
 with open(base + '.in', 'w') as f:
     f.write(f'amb_space {nd}\n')
     f.write(f'inhom_equations {len(eqs)}\n')
-    for r in eqs: f.write(' '.join(map(str, r)) + '\n')
+    for r in eqs: f.write(' '.join(map(str, permute(r))) + '\n')
     f.write(f'inhom_congruences {len(congs)}\n')
-    for r in congs: f.write(' '.join(map(str, r)) + '\n')
+    for r in congs: f.write(' '.join(map(str, permute(r))) + '\n')
     f.write(f'inhom_inequalities {len(ineqs)}\n')
-    for r in ineqs: f.write(' '.join(map(str, r)) + '\n')
+    for r in ineqs: f.write(' '.join(map(str, permute(r))) + '\n')
     f.write('LatticePoints\n')
 
 try:
-    res = subprocess.run([NMZ, '-x=8', base + '.in'], capture_output=True, text=True, timeout=NMZ_TIMEOUT)
+    # NMZ_THREADS (default 8): the lifting phase is parallel over partial points, and (924, 250, 0)
+    # took 888 s with 8 threads and 387 s with 32 on the same machine.
+    res = subprocess.run([NMZ, f"-x={os.environ.get('NMZ_THREADS', '8')}", '-k', base + '.in'], capture_output=True, text=True, timeout=NMZ_TIMEOUT)
 except subprocess.TimeoutExpired:
     sys.stderr.write(f"# normaliz timed out after {NMZ_TIMEOUT}s on {base}.in\n")
     sys.exit(2)
@@ -237,7 +254,10 @@ while i < len(lines):
             parts = lines[i].split()
             if len(parts) == nd + 1 and all(p.lstrip('-').isdigit() for p in parts):
                 assert parts[-1] == '1', parts
-                pts.append(tuple(int(x) for x in parts[:nd]))
+                v = [int(x) for x in parts[:nd]]
+                r = [0]*nd
+                for pos, j in enumerate(perm): r[j] = v[pos]     # back to divisor order
+                pts.append(tuple(r))
                 got += 1
             i += 1
         break
