@@ -1,17 +1,14 @@
 // tests/X0_93_1.m -- RE-DERIVATION test for X_0^93(1).
 //
-// ⚠ WHY THIS FILE EXISTS. Before it, 93_1 was validated only against a COMMITTED FILE: the
-// gy93_* block at the end of tests/GuoYangEquations.m compares data/models/models_93_1.m to
-// Guo-Yang's published row, and ModelChecks checks it structurally. Neither RUNS THE PIPELINE, so
-// "we can no longer produce this model" was invisible -- and 93_1 is exactly the base where that
-// matters, because it regenerates ONLY since the vx fix (`n_oo`, BorcherdsForms.m:771). A silent
-// regression of that fix would have left every committed artifact looking fine.
+// This test runs the pipeline: the comparison of data/models/models_93_1.m with Guo-Yang's row
+// (tests/GuoYangEquations.m) and ModelChecks read the committed file and cannot tell whether the
+// model still regenerates, and 93_1 regenerates only with the pole order of the oo-side pool set
+// by the whole pool at 0 (`n_oo` in BorcherdsForms.m).
 //
 // COST: 370 s on a Mac, 495 s in CI (2026-10-01).
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
-// ⚠ NORMALIZ_BIN MUST BE SET. Without it a fresh polytope solve produces no solution file and the
-// search now stops with an error naming the polytope. It used to fail SILENTLY ("no solutions"
-// rather than an error, CLAUDE.md), which is how X0_10_19 once spent 84 min in CI verifying nothing.
+// NORMALIZ_BIN must be set: without it a fresh polytope solve produces no solution file and the
+// search stops with an error naming the polytope.
 //
 // WHAT IS CHECKED, and at what strength:
 //   [1] EXTERNAL, one comparison: the re-derived [1,93] quotient against GUO-YANG'S PUBLISHED

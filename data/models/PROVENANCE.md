@@ -401,21 +401,21 @@ second rung of the Borcherds ladder (0-side pole order 3325) had never finished 
 five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
 all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
 published equation (`tests/GuoYangEquations.m`), and genus 7 and the hyperelliptic involution match
-Table 1. The quotient oracle (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
+Table 1. The quotient comparison (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
 nothing here; the quotient models rest on the L-polynomial comparison against the trace formula in
 `VerifyModelSet` and on the involution check in `tests/_offline/X0_95_1.m`.
 
 `models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
 (m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
 lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation and matches
-Table 1. The quotient oracle has no entry for `119_1` either; its quotients are checked the same
+Table 1. The quotient comparison has no entry for `119_1` either; its quotients are checked the same
 way as `95_1`'s.
 
 `models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
 order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
 lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
 published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
-and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient oracle has no entry for
+and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient comparison has no entry for
 `159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
 (`y^2 + h y = f`).
 

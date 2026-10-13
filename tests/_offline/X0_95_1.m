@@ -5,7 +5,9 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // Checks, against models_95_1.m:
 //   [1] the stored W={1} curve is isomorphic to Guo-Yang's published equation (degree 16,
 //       genus 7), in tests/GuoYangEquations.m;
-//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one;
+//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one
+//       (a regression check: the stored covers are this branch's own output; the outside checks
+//       are [1], [3] and the L-polynomials in tests/ModelChecks.m);
 //   [3] Guo-Yang's w_5 is an involution of the top curve, in our coordinates.
 //
 // Guo-Yang give w_5(x,y) = (-1/x, y/x^8) in their coordinates, a Mobius involution, so its matrix
@@ -13,6 +15,9 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // from our stored curve to Guo-Yang's, obtained from the two equations alone, the map below is
 // psi^-1 . w_5 . psi, which is linear in the weighted coordinates (x : y : z):
 //     (x, y, z) -> (-x - z, y, 2x + z)
+// produced, with C our stored curve and C_GY Guo-Yang's (tests/GuoYangEquations.m), by
+//     _, psi := IsIsomorphic(C, C_GY);  w := psi * w_5 * Inverse(psi);   // maps compose left to right
+// and reading the matrix off the defining polynomials of w.
 // Its square is diag(-1, 1, -1), the identity on the weighted ambient (weights 1, 8, 1), and it
 // maps our curve to itself.  The other two involutions of the base are not transcribed in this
 // repository and are not checked here.
