@@ -953,6 +953,12 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     W := Ncols(coeffs); npool := Nrows(coeffs);
     non_div := [i : i in [1..W] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..W] | (i-1-pole_order) mod D0 eq 0];
+    if GetEnv("BFPOOLDUMP") ne "" then
+        // the pool matrix and the q^(1/4) columns, for offline experiments with the linear algebra
+        dump := Sprintf("%o/pool_%o_%o.m", GetEnv("BFPOOLDUMP"), pole_order, D0);
+        Write(dump, Sprintf("pole_order := %o; D0 := %o; div_cols := %o;\ncoeffs := Matrix(Rationals(), %o, %o, %o);\n",
+                            pole_order, D0, div_cols, npool, W, Eltseq(coeffs)) : Overwrite);
+    end if;
     rowfor := [0 : c in [1..W]];
     extra := [];
     for i in [1..npool] do
