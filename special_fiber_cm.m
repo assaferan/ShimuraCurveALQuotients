@@ -432,7 +432,7 @@ CM_BASE_DATA[<6,5>] := rec< CMBaseData |
 
 // D = 6, M = 7 (Phase-B base): X_0(6,7)* genus 0, 6 rational + 12 quadratic CM discs, and the 6
 // genus-0 |W''| = 4 conic covers y^2 = a s^2 + b s + c stored as [c,b,a].  Generated 2026-06 (cc-
-// pinned FieldOfDefinitionOfCMPoint + find_y2_signs skip; full disc->s table at MaxNum=18).
+// pinned field-of-definition routine + find_y2_signs skip; full disc->s table at MaxNum=18).
 d67fq := AssociativeArray();
 d67fq[[Integers()|1,2,3,6]]   := [Rationals()|  -1/6, 113/144,   -3/4];   // y^2 = -3/4 s^2 + 113/144 s - 1/6
 d67fq[[Integers()|1,2,21,42]] := [Rationals()|     0,     1/4,      0];   // y^2 = s/4
