@@ -547,6 +547,31 @@ nothing external covers this key; it rests on the independent checks in `ModelVe
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
 
+## Level M = 660: X_0^330(1), X_0^6(55), X_0^10(33), X_0^22(15) (2026-10-12, branch level-660-models)
+
+The level-660 group (nine bases, 39 genus-0 quotients) was the largest single block behind the
+Normaliz wall: its first polytope, (660, 231, 0), had run for seven days on lava in the old
+coordinate order and died of its own time limit. With the coordinate order of PR #88 it took about
+30 hours on lovelace at 8 threads, 12461 lattice points, and is committed here as
+`polymake/polymake_solution_660_231_0`. The four even-D bases were built in the default recipe
+(`genmodels.m`, BFCACHE=1, the composite-level tree with the exact m = 0 multipliers per support
+class), with the solver script of PR #88 for any further rung and no weight-0 shift set. The five
+odd-D bases, X_0^15(11), X_0^15(22), X_0^33(5), X_0^33(10) and X_0^55(3), need the two-cusp rung
+(660, 68, 166), enumerated the same day (7591 points), and the odd-D fix of PR #91; they are running.
+
+* `models_330_1.m`: 66 cover keys, 65 with an equation -- all 20 genus-0 quotients, covers up to
+  genus 3, 6 stored as pairs over a conic -- and 1 empty. 8 minutes.
+* `models_6_55.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 5,
+  3 pairs over a conic -- and 24 empty. 22 minutes.
+* `models_10_33.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 7,
+  3 pairs over a conic -- and 24 empty. 22 minutes.
+* `models_22_15.m`: 65 keys, 28 with an equation -- both genus-0 quotients, covers up to genus 6 --
+  and 37 empty. 25 minutes.
+
+Outside check: every stored hyperelliptic curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
+p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 234 of 234, 198 of 198, 198 of 198
+and 156 of 156. No published equation exists for any of these bases.
 ## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
 
 The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
