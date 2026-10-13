@@ -1193,7 +1193,8 @@ intrinsic SchoferFormula(etas::SeqEnum[EtaQuot], d::RngIntElt, D::RngIntElt, N::
         // has to be read and accepted by the authors before anything here calls it proved.  Its outside
         // evidence is Guo-Yang arXiv:1510.06193v1 Table 45 on X_0^15(2) (tests/SchoferIsometry.m,
         // tests/M0PoleSum.m) and the forced Guo-Yang points of tests/_offline/GuoYang_*.m; the
-        // composite case has no outside evidence at all: no composite-level base has been built.
+        // composite case has no published value; its evidence is the three composite-level bases
+        // X_0^6(35), X_0^10(21), X_0^14(15), whose models match the trace formula at six primes.
         //
         // The second part of the m = 0 term comes from the vectors on the CM line (prop:mult), and
         // at a point off the divisor reduces to the oo-coefficients of f at the exponents
