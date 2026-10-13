@@ -37,7 +37,7 @@ procedure test_CMFieldsRegressionPin(PIN, PIN_CURVES, PIN_DISCS, PIN_EXCLUDED)
         // the pin stores a list per key (one field, or none when X has no CM point by d); the
         // routine returns one field or raises an error in that case
         got := [* *];
-        try Append(~got, toabs(FieldOfDefinitionOfCMPoint(X, d))); catch e got := [* *]; end try;
+        try Append(~got, toabs(FieldOfDefinitionOfCMPoint(X, d))); catch e assert "no CM point" in e`Object; got := [* *]; end try;
         // equal as sets up to isomorphism: each side's every field is isomorphic to one on the other
         same := true;
         for pair in [<pinF, got>, <got, pinF>] do

@@ -73,9 +73,9 @@ procedure test_DegreeMatchesFields()
             for d in discs do
                 deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
                 if deg eq 0 then
-                    // no CM point by this order: the field routine must refuse, not return something
+                    // no CM point by this order: the field routine must refuse with its own message
                     raised := false;
-                    try F := FieldOfDefinitionOfCMPoint(X, d); catch e raised := true; end try;
+                    try F := FieldOfDefinitionOfCMPoint(X, d); catch e raised := "no CM point" in e`Object; end try;
                     assert raised;
                 else
                     assert AbsoluteDegree(FieldOfDefinitionOfCMPoint(X, d)) eq deg;
