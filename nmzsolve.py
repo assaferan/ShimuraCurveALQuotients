@@ -19,7 +19,7 @@ NMZ_TIMEOUT = int(os.environ.get('NMZ_TIMEOUT', '1800'))
 
 M, n_pole, m_pole, outp = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
 
-def _write_solution(outp, pts):
+def _write_solution(outp, pts, derived=None):
     """Write the Magma-evaluable solution file ATOMICALLY.
 
     ⚠ WHY THIS IS NOT JUST `open(outp,'w')`. BorcherdsForms.m:180 caches every solve at a
@@ -37,6 +37,10 @@ def _write_solution(outp, pts):
     """
     tmp = f'{outp}.tmp.{os.getpid()}'
     with open(tmp, 'w') as f:
+        if derived:
+            # A Magma comment, so `eval Read(file)` still returns the sequence; marks a file that
+            # holds a spanning subset built from a lower rung, not the lattice points of the polytope.
+            f.write(f'// derived: {derived}\n')
         f.write('[ PowerSequence(IntegerRing()) |\n')
         f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
         f.write('\n]\n')
@@ -130,6 +134,9 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                         pts.update(layer)
                 pts = sorted(pts)
             else:
+                # Every shifted point with pole <= n is kept while the set has at most NMZ_SHIFT_KEEP
+                # points (default 20000); thinning to a few points per pole order can lose rank.
+                keep_all = int(os.environ.get('NMZ_SHIFT_KEEP', '20000'))
                 byorder = {}
                 layer = [ tuple(r) for r in base ]
                 seen = set(layer)
@@ -137,9 +144,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                     for v in vs:
                         pl = _pole(list(v))
                         if pl > n_pole: continue
-                        b = byorder.setdefault(pl, [])
-                        if len(b) < 4:
-                            b.append(v)
+                        byorder.setdefault(pl, []).append(v)
                 _absorb(layer)
                 for j in range(J):
                     nxt = []
@@ -150,12 +155,21 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                                 seen.add(v); nxt.append(v)
                     _absorb(nxt)
                     layer = nxt
-                pts = sorted({ v for b in byorder.values() for v in b })
-            residues = { _pole(list(r)) % tp for r in base }
-            if len(residues) < tp:
-                print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
-            print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} thinned pts for n={n_pole}", file=sys.stderr)
-            _write_solution(outp, pts)
+                total = sum(len(b) for b in byorder.values())
+                if total > keep_all:
+                    # beyond the cap, keep as many points per pole order as the cap allows, at least four
+                    per = max(4, keep_all // max(1, len(byorder)))
+                    print(f"# tshift fallback: {total} shifted points, keeping {per} per pole order", file=sys.stderr)
+                    pts = sorted({ v for b in byorder.values() for v in b[:per] })
+                else:
+                    pts = sorted({ v for b in byorder.values() for v in b })
+            if len(shifts) == 1:
+                # with a single shift of pole k, only the residues mod k present in the base are reached
+                residues = { _pole(list(r)) % tp for r in base }
+                if len(residues) < tp:
+                    print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
+            print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
+            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m=0) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
 
 work = tempfile.mkdtemp(prefix='nmz_')
