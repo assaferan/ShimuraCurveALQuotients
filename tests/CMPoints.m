@@ -211,13 +211,9 @@ procedure test_FieldOfDefinition()
             // Field disputed with [GY], unresolved: only the degree above is asserted.
             if exists{g : g in degree_only_pts | g eq <D, N, W, d>} then continue; end if;
             Fs := FieldsOfDefinitionOfCMPoint(X, d);
-            // [GY] ground truth: exactly one field, and it is K.  A membership check ("K is among
-            // the computed fields") let two defects through: the slow routine enumerating every
-            // order-2 automorphism restricting to complex conjugation on K (spurious fields for
-            // Pic(R) of exponent > 2), and both routines returning every class of Pic(R)/Pic(R)^2
-            // passing [GR]'s quaternion-algebra condition, two of them at the twelve non-maximal
-            // orders below where that condition does not decide (e.g. d = -48 on X_0^87(1)/<w_87>:
-            // Q(i) and Q(sqrt 3); [GY] has Q(i)).
+            // [GY] ground truth: exactly one field, isomorphic to K (not a list containing it: at
+            // the twelve non-maximal orders below more than one class passes [GR]'s
+            // quaternion-algebra condition, and only one is right).
             assert #Fs eq 1 and IsIsomorphic(Fs[1], K);
             Fs_fast := FieldsOfDefinitionOfCMPointFast(X, d);
             assert #Fs_fast eq 1 and IsIsomorphic(Fs_fast[1], K);

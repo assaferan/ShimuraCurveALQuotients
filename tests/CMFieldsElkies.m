@@ -11,6 +11,7 @@
 // SOURCES.
 //  [Elk] N. D. Elkies, "Shimura curve computations", ANTS-III, LNCS 1423 (1998); arXiv:math/0005160.
 //  [Err] E. Errthum, "Singular moduli of Shimura curves", Canad. J. Math. 63 (2011); arXiv:0711.4316v2.
+//  [GR06] J. Gonzalez, V. Rotger, "Non-elliptic Shimura curves of genus one", J. Math. Soc. Japan 58 (2006).
 //
 //  D = 15: [Elk] Sec. 5.2: the function field of X_0^15(1) is Q(t)(sqrt(-3t), sqrt(-3(t-1)(t-81))).
 //          Values and the labels of the elliptic points: [Elk] Table 6 (t = oo, 0, 1, 81 at
@@ -35,9 +36,9 @@
 // w_5 {-20}, w_10 {-40}.  D=14: w_2 {-4,-8}, w_7 none, w_14 {-56}.  D=15: w_3 {-3,-12}, w_5 none,
 // w_15 {-15,-60}.
 //
-// One point per discriminant: for every d below, Pic(R) and the Atkin-Lehner group act transitively
-// on the CM points by R of X_0^D(1), so X* has exactly one such point, the rational one listed
-// (for D = 6 this is also [Err] Sec. 2.4).
+// One point per discriminant: Pic(R) x W acts transitively on the CM points by R of X_0^D(1)
+// ([GR06] Prop. 5.6; every conductor below is coprime to D), so X* has exactly one such point,
+// the rational one listed.
 
 function cm_norm_val(g, t0)
     QQ := Rationals();
