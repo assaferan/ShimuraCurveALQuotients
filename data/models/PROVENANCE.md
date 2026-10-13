@@ -547,6 +547,26 @@ nothing external covers this key; it rests on the independent checks in `ModelVe
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
 
+## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
+
+The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
+as `polymake/polymake_solution_1020_360_0` (11973 lattice points), enumerated on lovelace in
+68 minutes with the coordinate order of PR #88 where the old order had not finished after five
+days. The three even-D bases were built in the default recipe (`genmodels.m`, BFCACHE=1, the
+composite-level tree with the exact m = 0 multipliers per support class), with the solver script of
+PR #88 for any further rung and no weight-0 shift set. The three odd-D bases, X_0^15(17),
+X_0^15(34) and X_0^51(5), wait on the two-cusp rungs.
+
+* `models_510_1.m`: 65 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 10 empty. 33 minutes.
+* `models_6_85.m`: 65 keys, 28 with an equation -- both genus-0 quotients, covers up to genus 5 --
+  and 37 empty. 61 minutes.
+* `models_10_51.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 59 minutes.
+
+Outside check: every stored curve of genus >= 1 agrees with the trace formula over F_p and F_{p^2}
+at the six smallest primes not dividing 510, p = 7, 11, 13, 19, 23, 29: 264 of 264, 156 of 156 and
+126 of 126. No published equation exists for any of these bases.
 ## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
 
 The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
