@@ -134,11 +134,8 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                         pts.update(layer)
                 pts = sorted(pts)
             else:
-                # Every shifted point with pole <= n is kept while the set stays small.  Thinning to
-                # a few points per pole order loses rank: at level 924, from the rung 250 the 565
-                # products span the whole rung-325 space (rank 237 = dim) while four per order give
-                # 193 and the form-ring loop climbs for ever.  Only a set beyond NMZ_SHIFT_KEEP points
-                # (default 20000) is thinned, to the old four per pole order.
+                # Every shifted point with pole <= n is kept while the set has at most NMZ_SHIFT_KEEP
+                # points (default 20000); thinning to a few points per pole order can lose rank.
                 keep_all = int(os.environ.get('NMZ_SHIFT_KEEP', '20000'))
                 byorder = {}
                 layer = [ tuple(r) for r in base ]
@@ -160,10 +157,7 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                     layer = nxt
                 total = sum(len(b) for b in byorder.values())
                 if total > keep_all:
-                    # keep as many points per pole order as the cap allows, at least four.  At level
-                    # 780 the 333051 products of the rung 274 with the shifts give 12521 points at 69
-                    # per order; four per order (1049 points) already has the full rank 396 with the
-                    # same leading orders, measured independently, so the extra points are a margin.
+                    # beyond the cap, keep as many points per pole order as the cap allows, at least four
                     per = max(4, keep_all // max(1, len(byorder)))
                     print(f"# tshift fallback: {total} shifted points, keeping {per} per pole order", file=sys.stderr)
                     pts = sorted({ v for b in byorder.values() for v in b[:per] })
