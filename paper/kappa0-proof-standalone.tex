@@ -496,8 +496,8 @@ and the restored term per CM point is $\sum_{p\mid N}\log p\,\bigl(\tfrac12c_{\e
 \bigr)$, the pole sum of Remark~\ref{rem:xsum} being the same at every prime (the routine
 \texttt{M0MultipliersBySupport} returns the multipliers indexed by the primes of $N$, checks that
 the constant terms agree on each support class, and refuses a level that is not squarefree; at a
-prime level it is the old routine). What has been checked, no composite-level base having been
-built: at the six bases with a genus-zero star curve and $DN=210$ --- $X_0^6(35)$, $X_0^{10}(21)$,
+prime level it is the old routine). What was checked before any composite-level base existed, and
+is the direct test of the coset sums: at the six bases with a genus-zero star curve and $DN=210$ --- $X_0^6(35)$, $X_0^{10}(21)$,
 $X_0^{14}(15)$, $X_0^{15}(14)$, $X_0^{21}(10)$, $X_0^{35}(6)$, all with $\lvert\Ldual/L\rvert=88200$
 and $M=420$ --- the nonzero isotropic cosets number exactly $2p-2$ on each class $\{p\}$ and
 $(2p-2)(2q-2)$ on $\{p,q\}$, as the proof says; and on $X_0^6(35)$, for four weight-$\tfrac12$ eta quotients of
@@ -513,8 +513,12 @@ pipeline's own inputs satisfy the cusp condition by construction. The same routi
 as it should: the coset sum is then not well defined, and the two-point and class-constancy checks
 fail at the first word where the constant term is nonzero (\texttt{compmult.m}--\texttt{compmult4.m},
 weight $0$ or the wrong character). The three functionals of \textup{Section~sec:determined of the preprint}
-are therefore computed, and the one attached to $\{p\}$ is used at $p$; whether the values are
-right at a composite level is untested, since no such base has forms, let alone outside values.
+are therefore computed, and the one attached to $\{p\}$ is used at $p$. Three composite-level bases
+have since been built with it on this branch, $X_0^6(35)$, $X_0^{10}(21)$ and $X_0^{14}(15)$: every
+model of genus at least one has the point counts of the trace formula over $\mathbf F_p$ and
+$\mathbf F_{p^2}$ at six good primes, and every genus-one Jacobian is semistable with conductor
+divisible by $D$ and dividing $210$, as Jacquet--Langlands predicts. No published CM value exists at
+a composite level, so this is the only outside evidence for the values there.
 \end{remark}
 
 \begin{remark}[computing $c_\eta(0)$ exactly]\label{rem:exact}
