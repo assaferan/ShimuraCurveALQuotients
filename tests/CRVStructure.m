@@ -9,10 +9,13 @@
 //
 // WHAT THIS CHECKS, and why it is cheap enough to be checked. Two structural facts that need no
 // Shimura input at all, only the stored strings:
-//   [1] the two equations must define an IRREDUCIBLE scheme -- a `CRV` entry is a curve;
-//   [2] the ambient WEIGHTS are derivable (`y`'s weight is half the degree of its own equation,
-//       every other variable has weight 1), and with them the curve's genus must equal the genus
-//       recorded beside it.
+//   [1] the equations must define an IRREDUCIBLE scheme -- a `CRV` entry is a curve;
+//   [2] the ambient WEIGHTS are derivable (a fibre coordinate's weight is half the degree of its
+//       own equation, every other variable has weight 1), and with them the curve's genus must
+//       equal the genus recorded beside it.
+// Two shapes occur: the PAIRED one (y^2 and x^2 against forms in s, z, in P(1,2,1,1)) and, since
+// 2026-10-03, the FIBRE-PRODUCT one (y_1^2, ..., y_k^2 against forms in s, z; FibreProductCovers.m),
+// for which the curve is built as the tower of double covers of the t-line.
 // [2] doubles as the check that the weights ARE derivable, which is what `PROVENANCE.md` needs
 // before `ModelRegen` and the `X0_*` helper can handle `CRV` entries at all: they are currently
 // skipped only because "the model file does not record the ambient weights". It does not have to
@@ -66,21 +69,45 @@ for crv_f in crv_files do
             crv_tag := Substring(crv_tag, 1, #crv_tag-2) cat "]";
             crv_n +:= 1;
 
-            // derive the weights from the y-equation's degree
-            R<yy,xx,ss,zz> := PolynomialRing(Rationals(), 4);
-            crv_dy := Degree(eval ("return " cat crv_s[1] cat ";"))
-                      where y is yy where x is xx where s is ss where z is zz;
-            crv_wy := crv_dy div 2;
-
             crv_ok := true; crv_got := -1; crv_irr := false;
-            try
-                Pw<xw,yw,sw,zw> := WeightedProjectiveSpace(Rationals(), [1,crv_wy,1,1]);
-                crv_eqs := [eval ("return " cat st cat ";") : st in crv_s]
-                           where y is yw where x is xw where s is sw where z is zw;
-                crv_irr := IsIrreducible(Scheme(Pw, crv_eqs));
-                if crv_irr then crv_got := Genus(Curve(Pw, crv_eqs)); end if;
-            catch e crv_ok := false;
-            end try;
+            if exists{st : st in crv_s | Regexp("y[0-9]", st)} then
+                // FIBRE-PRODUCT shape (FibreProductCovers.m): equations y_i^2 - F_i(s,z), one per
+                // factor, in coordinates s, z of weight 1 and y_i of weight half the degree of its
+                // own equation.  The curve is the compositum of the double covers y_i^2 = F_i(t,1)
+                // of the t-line; building that tower IS the irreducibility check (Magma refuses a
+                // reducible extension), and its genus must be the recorded one.
+                R6<s, z, y1, y2, y3, y4> := PolynomialRing(Rationals(), 6);
+                Pt<t> := PolynomialRing(Rationals());
+                try
+                    FF := RationalFunctionField(Rationals()); K := FF;
+                    for i in [1..#crv_s] do
+                        q := eval ("return " cat crv_s[i] cat ";");
+                        F := R6.(2+i)^2 - q;                       // = F_i(s,z)
+                        assert Evaluate(F, [R6.1, R6.2, 0, 0, 0, 0]) eq F;   // involves s, z only
+                        fi := Evaluate(F, [t, 1, 0, 0, 0, 0]);
+                        RK<Y> := PolynomialRing(K);
+                        K := FunctionField(Y^2 - K!Evaluate(fi, FF.1));
+                    end for;
+                    crv_irr := true;
+                    crv_got := Genus(K);
+                catch e crv_ok := false;
+                end try;
+            else
+                // PAIRED shape: y^2 and x^2 against forms in s, z; derive the weights from the
+                // y-equation's degree
+                R<yy,xx,ss,zz> := PolynomialRing(Rationals(), 4);
+                crv_dy := Degree(eval ("return " cat crv_s[1] cat ";"))
+                          where y is yy where x is xx where s is ss where z is zz;
+                crv_wy := crv_dy div 2;
+                try
+                    Pw<xw,yw,sw,zw> := WeightedProjectiveSpace(Rationals(), [1,crv_wy,1,1]);
+                    crv_eqs := [eval ("return " cat st cat ";") : st in crv_s]
+                               where y is yw where x is xw where s is sw where z is zw;
+                    crv_irr := IsIrreducible(Scheme(Pw, crv_eqs));
+                    if crv_irr then crv_got := Genus(Curve(Pw, crv_eqs)); end if;
+                catch e crv_ok := false;
+                end try;
+            end if;
 
             if crv_ok and crv_irr and (crv_got eq crv_g) then continue; end if;
             crv_why := (not crv_irr) select "scheme is REDUCIBLE"
