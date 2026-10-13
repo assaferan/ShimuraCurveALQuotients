@@ -19,7 +19,7 @@ NMZ_TIMEOUT = int(os.environ.get('NMZ_TIMEOUT', '1800'))
 
 M, n_pole, m_pole, outp = int(sys.argv[1]), int(sys.argv[2]), int(sys.argv[3]), sys.argv[4]
 
-def _write_solution(outp, pts):
+def _write_solution(outp, pts, derived=None):
     """Write the Magma-evaluable solution file ATOMICALLY.
 
     ⚠ WHY THIS IS NOT JUST `open(outp,'w')`. BorcherdsForms.m:180 caches every solve at a
@@ -37,6 +37,10 @@ def _write_solution(outp, pts):
     """
     tmp = f'{outp}.tmp.{os.getpid()}'
     with open(tmp, 'w') as f:
+        if derived:
+            # A Magma comment, so `eval Read(file)` still returns the sequence; marks a file that
+            # holds a spanning subset built from a lower rung, not the lattice points of the polytope.
+            f.write(f'// derived: {derived}\n')
         f.write('[ PowerSequence(IntegerRing()) |\n')
         f.write(',\n'.join('[ ' + ', '.join(str(x) for x in r) + ' ]' for r in pts))
         f.write('\n]\n')
@@ -165,11 +169,13 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                     pts = sorted({ v for b in byorder.values() for v in b[:per] })
                 else:
                     pts = sorted({ v for b in byorder.values() for v in b })
-            residues = { _pole(list(r)) % tp for r in base }
-            if len(residues) < tp:
-                print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
+            if len(shifts) == 1:
+                # with a single shift of pole k, only the residues mod k present in the base are reached
+                residues = { _pole(list(r)) % tp for r in base }
+                if len(residues) < tp:
+                    print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
             print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
-            _write_solution(outp, pts)
+            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m=0) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
 
 work = tempfile.mkdtemp(prefix='nmz_')
