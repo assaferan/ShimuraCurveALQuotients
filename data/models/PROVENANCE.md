@@ -495,3 +495,9 @@ each with an evident rational point, so all three curves are P^1 over Q and noth
 Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
 36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
 keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
+
+Three keys in these files are hyperelliptic quotients that are still empty and have not yet been
+computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,186}`), `111_2` by w_222
+(`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
+`38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
+agree up to isomorphism.
