@@ -708,6 +708,18 @@ genus-0 quotient is beyond the covers above it agreeing with one another; the 28
 covers with no genus-0 Atkin-Lehner quotient to carry an equation, which the fibre-product writer
 can fill from the double covers here once the coordinate check of issue #99 is in place.
 
+**`models_33_14.m`** (12 h 07 min, 16 threads; the deep rung is the pool of 7624 forms at the cusp 0
+at order m = -33, whose good forms took 950 s of forward substitution -- the step that had been the
+172 GB kernel). 50 cover keys, 15 with an equation -- 5 of genus 1, 2 of genus 2, 3 of genus 3, 2 of
+genus 4, 3 of genus 5 -- and 35 empty; this base has no genus-0 quotient other than the star curve
+itself, so every equation here is a cover of the Hauptmodul line. Its searches asked for
+(924, 325, 0) (committed with level 924) and the two-cusp rung (924, 89, 236), committed here
+(`polymake/polymake_solution_924_89_236`, 3194 lattice points, the Normaliz enumeration of
+2026-10-12 on lovelace that PR #80 had recorded as missing). Outside check: every stored curve has
+the point counts of the trace formula over F_p and F_{p^2} at p = 13, 17, 19, 23, 29, 31 (campaign
+`composite/checkcomp.m`): 90 of 90. No published equation exists for this base; the same remarks on
+the m = 0 term apply.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
