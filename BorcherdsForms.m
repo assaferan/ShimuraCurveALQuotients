@@ -770,8 +770,18 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
         bwh_Rq := Parent(bwh_qt);
         bwh_q := bwh_Rq.1;
         bwh_t1 := Cputime();
+        // A product of two series whose coefficients have varying denominators is about three
+        // thousand times slower than the same product with integral coefficients (150 s against
+        // 0.05 s at precision 8110, 600-bit entries), and the expansions at 0 have such
+        // denominators.  So every factor is scaled to integral coefficients, the products and the
+        // powers of t are taken there, and each product is divided by its scalar once.
+        function bwh_integral(f)      // <d f, d> with d f of integral coefficients
+            d := LCM([Integers() | Denominator(c) : c in Coefficients(f)]);
+            return <d*f, d>;
+        end function;
+        bwh_qt_i, bwh_dt := Explode(bwh_integral(bwh_qt));
         bwh_tpow := [bwh_Rq!1];
-        for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt); end for;
+        for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt_i); end for;   // (dt t)^j
         bwh_t2 := Cputime();
         bwh_head := init_basis[n0+k-s..#init_basis];
         if Zero then
@@ -784,11 +794,23 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
             bwh_qz := [qExpansionAtoo(f, 1) : f in basis_n0];
         end if;
         bwh_t3 := Cputime();
-        qexps := [bwh_tpow[r+1]*f : f in bwh_qh];
+        bwh_qh_i := [bwh_integral(f) : f in bwh_qh];               // pairs <d f, d>
+        bwh_qi_i := [bwh_integral(f) : f in bwh_qi];
+        qexps := [(bwh_tpow[r+1]*fd[1]) / (bwh_dt^r * fd[2]) : fd in bwh_qh_i];
         if r gt 0 then
-            qexps cat:= &cat[[bwh_tpow[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]];
+            qexps cat:= &cat[[(bwh_tpow[r-bwh_j]*fd[1]) / (bwh_dt^(r-1-bwh_j) * fd[2]) : fd in bwh_qi_i] : bwh_j in [0..r-1]];
         end if;
         qexps := [x + O(bwh_q^1) : x in qexps];
+        if GetEnv("BFPOOLCHECK") ne "" then
+            // the direct rational products, for a check of the scaling
+            bwh_tp := [bwh_Rq!1];
+            for bwh_j in [1..r] do Append(~bwh_tp, bwh_tp[#bwh_tp]*bwh_qt); end for;
+            bwh_direct := [bwh_tp[r+1]*f : f in bwh_qh];
+            if r gt 0 then bwh_direct cat:= &cat[[bwh_tp[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]]; end if;
+            bwh_direct := [x + O(bwh_q^1) : x in bwh_direct];
+            assert bwh_direct eq qexps;
+            WriteStderr(Sprintf("  BFPOOLCHECK pole_order=%o Zero=%o: the scaled products equal the direct ones (%o series)\n", pole_order, Zero, #qexps));
+        end if;
         qexps cat:= bwh_qz;                                   // never multiplied by t
         if GetEnv("BFPROGRESS") ne "" then
             WriteStderr(Sprintf("  BFPOOLTIME pole_order=%o Zero=%o  pool=%o  t %os, t-powers %os, basis expansions %os, products %os\n",
