@@ -205,11 +205,16 @@ if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
 
 # ---- coordinate order ---------------------------------------------------------
 # Normaliz lifts the lattice points coordinate by coordinate in the order of the input, and the
-# whole cost is lifting partial points that die on integrality late in the tree.  Putting the
-# divisors farthest from sqrt(M) first (1, M, 2, M/2, ...) shortens that tree by an order of
-# magnitude at 24-divisor levels: (924, 160, 0) 94 s -> 6 s, (924, 200, 0) 637 s -> 54 s, the same
-# points.  -k keeps the order given; the solution file is written back in divisor order, so
-# nothing downstream sees the permutation.  NMZ_ORDER=id restores the old (divisor) order.
+# whole cost is lifting partial points that die on integrality late in the tree.  The "ends" order
+# puts the divisors farthest from sqrt(M) first (1, M, 2, M/2, ...).  How much it helps depends on
+# the level and on the Normaliz version, measured with 8 threads and the same points either way:
+# at levels 660, 780 and 1020 the divisor order does not finish the first rung in 90 minutes where
+# the ends order takes 3 to 4 minutes ((660,155,0) 178 s, (780,200,0) 257 s, (1020,250,0) 165 s on
+# lovelace, Normaliz 3.10.2); at level 924 on the same machine the divisor order is twice as fast
+# ((924,250,0) 360 s against 725 s), while on Normaliz 3.11.1 the ends order wins there too
+# ((924,200,0) 655 s against 58 s).  The keep-order flag -k changes nothing measurable; the order
+# of the input coordinates is what matters.  The solution file is written back in divisor order,
+# so nothing downstream sees the permutation.  NMZ_ORDER=id restores the divisor order.
 order = os.environ.get('NMZ_ORDER', 'ends')
 if order == 'ends':
     perm = sorted(range(nd), key=lambda i: -abs(math.log(ds[i]) - math.log(M)/2))
