@@ -173,14 +173,11 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
             sys.exit(0)
 
 # ---- a lower two-cusp rung is a subset of a higher cached one -----------------
-# (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
-# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  The cache file
-# name records only (M, n, m), so this applies only to the weight-1/2, default-parity, non-cuspidal
-# request the name stands for, and only to m > 0: the t-shift fallback above writes shifted,
-# thinned m = 0 rungs under the same file names, and a subset of a thinned rung is not the rung.
-# A cached file whose first line marks it as derived (a spanning set, not the lattice points) is
-# skipped for the same reason.  The two two-cusp rungs an odd-D search asks for, (M, n0, k) and
-# (M, n0 + k, k), are the case this serves: one enumeration instead of two.
+# (M, n, m) and (M, n', m) differ only in the bound on the pole at oo, so for n' > n the lower rung
+# is the points of the higher one whose pole at oo is <= n.  Three conditions: the file name records
+# only the level and the pole orders, so this serves only the weight-1/2, default-parity,
+# non-cuspidal request; only rungs with a pole at 0 (m > 0), since shifted sets are written under
+# the m = 0 names; and a cached file marked derived (a spanning set, not the lattice points) is skipped.
 def _is_derived(path):
     with open(path) as f:
         return f.readline().startswith('//')
