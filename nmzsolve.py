@@ -180,15 +180,21 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
 
 # ---- a lower two-cusp rung is a subset of a higher cached one -----------------
 # (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
-# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  Restricted to
-# m > 0: the t-shift fallback above writes shifted, thinned m = 0 rungs under the same file names,
-# and a subset of a thinned rung is not the rung.  The two two-cusp rungs an odd-D search asks for,
-# (M, n0, k) and (M, n0 + k, k), are the case this serves: one enumeration instead of two.
-if m_pole > 0:
+# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  The cache file
+# name records only (M, n, m), so this applies only to the weight-1/2, default-parity, non-cuspidal
+# request the name stands for, and only to m > 0: the t-shift fallback above writes shifted,
+# thinned m = 0 rungs under the same file names, and a subset of a thinned rung is not the rung.
+# A cached file whose first line marks it as derived (a spanning set, not the lattice points) is
+# skipped for the same reason.  The two two-cusp rungs an odd-D search asks for, (M, n0, k) and
+# (M, n0 + k, k), are the case this serves: one enumeration instead of two.
+def _is_derived(path):
+    with open(path) as f:
+        return f.readline().startswith('//')
+if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
     higher = []
     for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
         mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
-        if mm and int(mm.group(1)) > n_pole:
+        if mm and int(mm.group(1)) > n_pole and not _is_derived(f):
             higher.append(int(mm.group(1)))
     if higher:
         hi = min(higher)
