@@ -80,11 +80,6 @@ for b in ds:
         c = 24 * m_pole if b == 1 else (24 * n_pole if b == M else 0)
     ineqs.append(row + [c])
 
-# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
-# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
-# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
-# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
-# the cache, answer tall requests by shifting + thinning instead of normaliz.
 import glob as _glob, re as _re
 def _load_magma_seq(path):
     return [ [int(x) for x in m.split(',')] for m in _re.findall(r'\\?\[ ([-\d, ]+) \]', open(path).read().replace('\\\n', '').replace('\n', ' ')) ]
@@ -92,12 +87,41 @@ def _pole(r):
     s24 = sum(d*x for d, x in zip(ds, r))
     assert s24 % 24 == 0
     return -s24 // 24
-# The same ladder at a FIXED cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the
-# pole at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted, exactly as for m = 0
-# (checked against enumerated rungs: M = 204, (20, 32) -> (45, 32), rank 63/63; M = 60, (0|3|8, 8)
-# -> (11, 8), rank 17/17).  What it cannot do is reach a cusp-0 order from the m = 0 rungs (at
-# M = 204 the products of rung (47, 0) with the weight-0 quotients of poles <= 20, 32 span 24 of the
-# 38 dimensions of (20, 32)); the LOWEST rung at each cusp-0 order has to be enumerated once.
+# ---- a lower two-cusp rung is a subset of a higher cached one -----------------
+# (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
+# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  The cache file
+# name records only (M, n, m), so this applies only to the weight-1/2, default-parity, non-cuspidal
+# request the name stands for, and only to m > 0: the t-shift fallback above writes shifted,
+# thinned m = 0 rungs under the same file names, and a subset of a thinned rung is not the rung.
+# A cached file whose first line marks it as derived (a spanning set, not the lattice points) is
+# skipped for the same reason.  The two two-cusp rungs an odd-D search asks for, (M, n0, k) and
+# (M, n0 + k, k), are the case this serves: one enumeration instead of two.
+def _is_derived(path):
+    with open(path) as f:
+        return f.readline().startswith('//')
+if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
+    higher = []
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
+        if mm and int(mm.group(1)) > n_pole and not _is_derived(f):
+            higher.append(int(mm.group(1)))
+    if higher:
+        hi = min(higher)
+        pts = sorted({ tuple(r) for r in _load_magma_seq(f'polymake/polymake_solution_{M}_{hi}_{m_pole}') if _pole(r) <= n_pole })
+        print(f"# lower rung: (M={M}, n={n_pole}, m={m_pole}) read off the cached (M={M}, n={hi}, m={m_pole}): {len(pts)} lattice points", file=sys.stderr)
+        _write_solution(outp, pts)
+        sys.exit(0)
+
+# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
+# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
+# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
+# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
+# the cache, answer tall requests by shifting + thinning instead of normaliz.
+# The same ladder at a fixed cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the pole
+# at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted.  A cusp-0 order cannot be
+# reached from the m = 0 rungs, so the lowest rung at each cusp-0 order has to be enumerated once.
+# The read of a lower rung off a higher cached one runs first: where both are cached, the exact
+# points are preferred to a shifted spanning set.
 if k24 == 12 and cuspidal == 0:
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []
@@ -183,31 +207,6 @@ if k24 == 12 and cuspidal == 0:
             print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
             _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m={m_pole}) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
-
-# ---- a lower two-cusp rung is a subset of a higher cached one -----------------
-# (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
-# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  The cache file
-# name records only (M, n, m), so this applies only to the weight-1/2, default-parity, non-cuspidal
-# request the name stands for, and only to m > 0: the t-shift fallback above writes shifted,
-# thinned m = 0 rungs under the same file names, and a subset of a thinned rung is not the rung.
-# A cached file whose first line marks it as derived (a spanning set, not the lattice points) is
-# skipped for the same reason.  The two two-cusp rungs an odd-D search asks for, (M, n0, k) and
-# (M, n0 + k, k), are the case this serves: one enumeration instead of two.
-def _is_derived(path):
-    with open(path) as f:
-        return f.readline().startswith('//')
-if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
-    higher = []
-    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
-        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
-        if mm and int(mm.group(1)) > n_pole and not _is_derived(f):
-            higher.append(int(mm.group(1)))
-    if higher:
-        hi = min(higher)
-        pts = sorted({ tuple(r) for r in _load_magma_seq(f'polymake/polymake_solution_{M}_{hi}_{m_pole}') if _pole(r) <= n_pole })
-        print(f"# lower rung: (M={M}, n={n_pole}, m={m_pole}) read off the cached (M={M}, n={hi}, m={m_pole}): {len(pts)} lattice points", file=sys.stderr)
-        _write_solution(outp, pts)
-        sys.exit(0)
 
 # ---- coordinate order ---------------------------------------------------------
 # Normaliz lifts the lattice points coordinate by coordinate in the order of the input, and the

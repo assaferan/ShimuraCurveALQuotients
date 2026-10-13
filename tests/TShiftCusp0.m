@@ -6,11 +6,9 @@
 // and the shifted set spans the same space of forms: the rank of the q-expansions at oo equals that
 // of the full rung.  The output file carries the first-line mark of a derived spanning set.
 //
-// PROVENANCE.  The two rungs are the committed cache files (Normaliz enumerations).  The rank is
-// computed here twice with plain power series, independently of the EtaQuot code, and the two
-// numbers are compared with each other, not with a stored constant; the value, 63, matches the one
-// Sachi computed in the review of PR #77 (63 = 63) and the campaign-branch check
-// vvdata/weyl-campaign/cusp0ladder/fbrank.m.
+// The two rungs are the committed cache files (Normaliz enumerations).  The rank is computed here
+// twice with plain power series, independently of the EtaQuot code, and the two numbers are
+// compared with each other, not with a stored constant.
 
 // The cache files are evaluated at top level: `eval` inside a procedure segfaults under the harness.
 M := 204; nlo := 20; nhi := 45; m := 32;
