@@ -5,7 +5,7 @@
 // model still regenerates, and 93_1 regenerates only with the pole order of the oo-side pool set
 // by the whole pool at 0 (`n_oo` in BorcherdsForms.m).
 //
-// COST: 370 s on a Mac, 495 s in CI (2026-10-01).
+// The file re-runs the Borcherds search, so it is one of the slower files in the suite:
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
 // NORMALIZ_BIN must be set: without it a fresh polytope solve produces no solution file and the
 // search stops with an error naming the polytope.
@@ -73,7 +73,7 @@ function load_covers_and_ws_data_93_1()
     // pin a matrix (X0_82_1.m, X0_10_19.m); this one should not become the third.
     //
     // The construct branch fires only if the RE-DERIVED W={1} also arrives as a non-CrvHyp with
-    // exactly 2 defining polynomials, which it does on the green runs (8 min in CI). If the
+    // exactly 2 defining polynomials, which is how the pipeline presents it here. If the
     // pipeline ever presents it otherwise, the helper falls through to a plain IsIsomorphic and
     // this test becomes the 10 h+ case rather than failing. If this file's runtime suddenly
     // jumps, that is the cause -- not a regression in the mathematics.
@@ -134,10 +134,10 @@ procedure test_93_1()
     // own quotients.  ⚠ That the committed model is the 11199 pair while today's default lands on
     // 11198 is pipeline DRIFT since 2026-09-05; the pin restores agreement with the artifact.
     //
-    // The PINNED run is green end to end (first on 2026-10-01; 495 s in CI), so the other keys do
-    // fill under the pin.  EquationsCovers.m:1079 records that EquationsByRebase is pin-aware -- it
-    // rebases ON the pinned base and threads the pin into its own inner conic pass; 14_3, 21_2 and
-    // 6_17 pin and pass too, while 10_13 and 26_3 needed `model_drift_ok`.  ⇒ If this ever comes
+    // The other keys do fill under the pin, because the rebasing step (EquationsByRebase) is
+    // itself pin-aware: it rebases ON the pinned base and threads the pin into its own inner
+    // conic pass; 14_3, 21_2 and 6_17 pin and pass too, while 10_13 and 26_3 needed
+    // `model_drift_ok`.  ⇒ If this ever comes
     // back with empty keys, `model_drift_ok` is the expected remedy, NOT removing the pin.
     // ⇒ Do not re-run the sweep hoping for more: the candidate pool is exactly one base.
     test_AllEquationsAboveCoversSingleCurve(93, 1, cover_data, ws_data, curves : base_label := 11199);

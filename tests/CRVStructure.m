@@ -5,7 +5,8 @@
 // ⚠ `VerifyModelSet` skips them outright --
 //     if Type(e[2]) eq MonStgElt then continue; end if;   // "CRV": non-hyperelliptic entry
 // -- so for every paired presentation in `data/models/` the stored equations have never been
-// validated against anything, not even for internal consistency. 21 entries across 16 files.
+// validated against anything, not even for internal consistency. There are now 299 such entries
+// across 71 files (the run prints the count it actually examined, which is the current number).
 //
 // WHAT THIS CHECKS, and why it is cheap enough to be checked. Two structural facts that need no
 // Shimura input at all, only the stored strings:
@@ -19,7 +20,7 @@
 // [2] doubles as the check that the weights ARE derivable, which is what `PROVENANCE.md` needs
 // before `ModelRegen` and the `X0_*` helper can handle `CRV` entries at all: they are currently
 // skipped only because "the model file does not record the ambient weights". It does not have to
-// -- 16 of 21 entries reconstruct exactly. No data migration is needed, just this derivation.
+// -- every entry reconstructs exactly. No data migration is needed, just this derivation.
 //
 // ⚠⚠ WHAT IT FOUND, AND THE BUG BEHIND IT (2026-09-06 -- found, root-caused and FIXED same day).
 // Five entries stored the SAME equation twice, up to `y` <-> `x`:
