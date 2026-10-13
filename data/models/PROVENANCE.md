@@ -678,6 +678,36 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## The odd-D bases behind the wall, first base: X_0^33(10) (2026-10-13, branch odd-d-models-2026-10-13)
+
+The odd-D bases of the level groups 660, 780, 924 and 1020 need, besides the shared rungs with poles
+at oo only, the ring of weight-1/2 forms with poles at both cusps, and that search was stopped twice:
+once by the two-cusp polytopes, which Normaliz did not enumerate within the runs' time limits
+(PRs #80 and #88), and once by the pool of forms at the cusp 0, which grows with the product of the
+cusp-0 order and the level and took the kernel computation of PR #63 to a 172 GB segmentation fault at
+X_0^33(7) (PR #95 replaced it by a forward substitution against the triangular pool). Two further
+defects affected only odd D with N > 2: the divisor of a Borcherds form was sampled at the wrong
+discriminants (PR #91), and the expansion at the cusp 0 was read in the wrong variable (PR #63).
+With all four merged the fifteen bases were started together on lovelace on 2026-10-13 from one tree
+(the code of PRs #63, #91 and #95 on top of the exact m = 0 multiplier of PR #79; `genmodels.m`,
+BFCACHE=1, 8 threads, 10-day cap). This section records them as they finish.
+
+**`models_33_10.m`** (31 minutes). 50 cover keys, 22 with an equation -- the one genus-0 quotient, by
+{1, 2, 15, 30, 33, 55, 66, 110}, is y^2 = (88209/16) x (1 - x), a P^1 with a rational point; then 5
+of genus 1, 7 of genus 2, 3 of genus 3, 3 of genus 4, 2 of genus 5 and one of genus 8 -- and 28
+empty. Its searches asked for the polytopes (660, 231, 0) (already committed with level 660),
+(660, 401, 0) and the two-cusp rung (660, 69, 166); the last two are committed here
+(`polymake/polymake_solution_660_401_0`, 856 lattice points, and `polymake_solution_660_69_166`,
+8171 points, both Normaliz enumerations on lovelace), so the default recipe reproduces the base
+without Normaliz. Outside check: every stored curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
+p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 126 of 126. No published equation
+exists for this base. As at every base with N > 1, the equations rest on the m = 0 term of Schofer's
+formula (PRs #66, #74, #79, not yet merged), and nothing fixes which quadratic twist of the conic the
+genus-0 quotient is beyond the covers above it agreeing with one another; the 28 empty keys are
+covers with no genus-0 Atkin-Lehner quotient to carry an equation, which the fibre-product writer
+can fill from the double covers here once the coordinate check of issue #99 is in place.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
