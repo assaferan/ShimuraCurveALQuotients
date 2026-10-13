@@ -4,10 +4,13 @@
 //   * the genus-5 TOP curve, which has no model because it is not subhyperelliptic (no genus-0
 //     Atkin-Lehner quotient), comes out of three double covers and matches the Eichler-Selberg
 //     trace formula on the 6-new space at four primes over two degrees;
-//   * W={1,6}, which the pipeline DID build and stores as a pair, is reproduced by the same code
-//     and matches the trace formula at four primes (the construction reproduces the stored cover),
-//     while the same factors with one of them twisted by -1 give a curve of the same genus that the
-//     trace formula rejects (the stage refuses a compositum the point counts reject);
+//   * W={1,6}, which the pipeline DID build and stores as a pair of equations, is rebuilt by the
+//     same code; the compositum matches the trace formula at four primes AND is compared with the
+//     stored pair itself -- each stored equation y^2 = F(t) defines the same quadratic extension
+//     of Q(t) as one of the three the rebuilt curve contains, so the two curves have the same
+//     function field.  The same factors with one of them twisted by -1 give a curve of the same
+//     genus that the trace formula rejects (the stage refuses a compositum the point counts
+//     reject);
 //   * at X_0(21,2) the committed double covers come from runs with different Hauptmodul
 //     normalisations, and their fibre product has the right genus but the wrong point counts, so
 //     the stage must refuse it (the genus alone does not accept a compositum).
@@ -37,6 +40,17 @@ models_14_19 := eval (Read("data/models/models_14_19.m") cat "\nreturn models;")
 models_21_2 := eval (Read("data/models/models_21_2.m") cat "\nreturn models;");
 poly_6_23 := hyperelliptic_polys(models_6_23);
 poly_21_2 := hyperelliptic_polys(models_21_2);
+// the two equations the pipeline stored for W={1,6}, as double covers y^2 = F(t) of the star line
+stored_6_23 := CRVDoubleCovers(models_6_23[[Integers()|1,6]][1][3]);
+
+// y^2 = a and y^2 = b are the same extension of Q(t) exactly when a*b is a square there: every
+// irreducible factor to an even power, and the constant left over a square in Q
+function same_quadratic_subfield(a, b)
+    if a eq 0 or b eq 0 then return false; end if;
+    fa, u := Factorization(a * b);
+    if exists{v : v in fa | IsOdd(v[2])} then return false; end if;
+    return IsSquare(u);
+end function;
 
 // every hyperelliptic committed model of one base over a single base label, pipeline-shaped
 function pipeline_shaped(poly, D, N, curves)
@@ -87,7 +101,7 @@ procedure test_h_term_completes_the_square()
     printf " ok (%o good primes)\n", checked;
 end procedure;
 
-procedure test_fibre_product_6_23(poly)
+procedure test_fibre_product_6_23(poly, stored)
     curves := GetHyperellipticCandidates();
 
     // the seven index-2 subgroups above W={1}, all with hyperelliptic models
@@ -150,6 +164,20 @@ procedure test_fibre_product_6_23(poly)
     end function;
     ok_pos, n_pos := counts_agree(fs6, X6, [5, 7, 11, 13]);
     assert ok_pos and n_pos eq 4;
+    // and against the two equations the pipeline stored for this cover: the rebuilt curve has the
+    // three quadratic subfields given by fs6[1], fs6[2] and their product, and each stored
+    // equation must be one of them (two different ones, so the two compositums agree)
+    // (control, 2026-10-13: scaling a stored equation by 4 still matches, as it must -- it is the
+    // same extension -- while scaling it by 2 or by -1 matches nothing)
+    assert #stored eq 2;
+    subf := [fs6[1], fs6[2], fs6[1]*fs6[2]];
+    matched := [];
+    for f in stored do
+        m := [j : j in [1..3] | same_quadratic_subfield(f, subf[j])];
+        assert #m eq 1;
+        Append(~matched, m[1]);
+    end for;
+    assert #Set(matched) eq 2;
     twisted := [-fs6[1], fs6[2]];
     assert Genus(FibreProductFunctionField(twisted)) eq 3;
     ok_neg, n_neg := counts_agree(twisted, X6, [5, 7, 11, 13]);
@@ -207,7 +235,7 @@ procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     assert not IsDefined(all_eqns, i14);
 end procedure;
 
-test_fibre_product_6_23(poly_6_23);
+test_fibre_product_6_23(poly_6_23, stored_6_23);
 test_fibre_product_refuses_mixed_coordinates_21_2(poly_21_2);
 
 test_degenerate_factor_sets();
