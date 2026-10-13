@@ -466,18 +466,20 @@ first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threa
 lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
 weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
 for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
-them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, branch exact-m0 for the exact m = 0
-multiplier) on lovelace, 15 minutes; 66 cover keys, 49 with an equation -- all 11 genus-0 quotients
-of the base, covers up to genus 5, 6 of them as fibre products over a conic -- and 11 empty. Outside
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, the composite-level tree at commit
+e85261a of branch exact-m0, PR #79, which carries the m = 0 term of #66, #74 and #79) on lovelace,
+15 minutes; 66 cover keys, 55 with a model (49 as y^2 = f(x), 6 as double covers of a conic) -- all 11
+genus-0 quotients of the base, covers up to genus 5 -- and 11 empty. Outside
 check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
 over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
-228; campaign `composite/checkcomp.m`). No published equation exists for this base.
+228; campaign `composite/checkcomp.m`; the six double covers of a conic were not part of this check). No published equation exists for this base.
 
 `models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
 lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
-{7, 11}. 65 cover keys, 34 with an equation -- all 4 genus-0 quotients, covers up to genus 4, 3 fibre
-products over a conic -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
-trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180). At
+{7, 11}. 65 cover keys, 37 with a model (34 as y^2 = f(x), 3 as double covers of a conic) -- all 4 genus-0
+quotients, covers up to genus 7 -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180; the three
+double covers of a conic were not part of this check). At
 p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
 smooth curve whose counts differ from the trace formula; the trace formula does not describe the
 reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
@@ -491,10 +493,11 @@ check: every stored curve of genus >= 1 agrees with the trace formula
 over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
 exists for this base.
 
-The other four bases with N > 1 of the group, X_0^21(11), X_0^21(22), X_0^33(7) and X_0^33(14), are
-NOT here. After the {oo}-weakly holomorphic ring (the shared rung above), their Borcherds searches
-go on to ask for the ring of forms with poles at both cusps 0 and oo, which the three bases above
-never request. That search climbs the weight-236 ladder (924, n, 236) in steps of 236 in n, finds
-rank 0 at every rung while the requested dimension grows by 236, and dies at the cap n = 10000 after
-3.5 days. The climb depends on the level alone: the logs of the four runs are byte-for-byte identical
-up to the point each was stopped.
+The five odd-D bases of the group, X_0^21(11), X_0^21(22), X_0^33(7), X_0^33(14) and X_0^77(3), are
+not here. For odd D the search also needs the ring of weight-1/2 forms with poles at both cusps,
+which asks for the two-cusp polytope (924, 89, 236). That enumeration did not finish within the
+two-hour Normaliz limit the runs used, and a timed-out solve then returned "no points" rather than
+an error (PR #81 makes it an error), so the four runs that were started climbed the ladder
+(924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
+enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
+divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
