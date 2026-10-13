@@ -86,8 +86,13 @@ cached enumerated pairs, with the span of the q-expansions as the criterion:
   the Atkin-Lehner reversal r_d -> r_{M/d} of an m = 0 rung lands in the TWISTED character (odd-prime
   parities flip), whose reversal is in the right polytope but the union still spans 14 of 38.
 ⇒ nmzsolve.py's fallback now runs at any m: a cached (M, n, m) with n < n_pole and tshift_w0_M.txt
-answer (M, n_pole, m); the m = 0 core file stays m = 0; for m > 0 NO thinning (four per pole order lost
-2 of 63 dimensions at 204; all 274 shifted points give 63/63). So per M the cost is one enumeration of
+answer (M, n_pole, m); the m = 0 core file stays m = 0. ⚠ Thinning is NOT switched off for m > 0: the
+size limit of 20000 points (NMZ_SHIFT_KEEP) applies at every order at the cusp 0, and above it the
+code keeps as many points per pole order as the limit allows. Asking for (420, 146, 104) keeps 153
+per pole order, 9896 in all, and that set still has the full rank 210 (checked modulo one prime;
+Sachi, review of PR #96). What m > 0 avoids is thinning to a FEW points per pole order, which can
+lose rank: at 204, four per pole order lost 2 of 63 dimensions, while all 274 shifted points give
+63/63. So per M the cost is one enumeration of
 the LOWEST rung at each cusp-0 order a base asks for, plus the m = 0 base rung; the ladder is free.
 Validation scripts and the shift sets: campaign vvdata/weyl-campaign/cusp0ladder/.
 ## Handoff — 2026-10-04 — review of #63 (Sachi): three answers, one fix
