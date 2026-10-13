@@ -849,6 +849,29 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
     return ech_basis, coeffs, full_basis;
 end function;
 
+// Shared tail of the two good-forms routines below: the eta-quotient combinations, their expansions, and
+// the deepest pole at oo over the pool.
+function good_forms_finish(K, G, coeffs, full_basis, pole_order, div_cols, non_div, ngood, nrel)
+    assert IsZero(Submatrix(G, [1..Nrows(G)], non_div));
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o  dependencies=%o\n",
+                            pole_order, Nrows(coeffs), ngood, nrel));
+    end if;
+    etas := [&+[K[i][j]*full_basis[j] : j in [1..Ncols(K)] | K[i][j] ne 0] : i in [1..Nrows(K)]];
+    // The oo-expansion of each form is inherited from the pool elements through the sum; the
+    // 0-expansion is the row of G (the pool elements do not carry theirs, see
+    // weakly_holomorphic_pool), known through the constant term.
+    Rq<q> := LaurentSeriesRing(Rationals());
+    for i in [1..#etas] do
+        etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
+        etas[i]`prec_0 := 1;
+        etas[i]`adm_0 := true;
+        assert assigned etas[i]`qexp_oo;
+    end for;
+    deepest_oo := -Minimum([Valuation(f`qexp_oo) : f in full_basis]);
+    return Submatrix(G, [1..Nrows(G)], div_cols), etas, deepest_oo;
+end function;
+
 // The 0-side "good forms": the members of the pool at 0 (pole order pole_order in q^(1/4D0))
 // whose expansion at 0 has exponents = pole_order mod D0 only, i.e. lives in q^(1/4)Z.  They
 // are the left kernel of the pool's coefficient matrix restricted to the other columns; that
@@ -865,8 +888,8 @@ end function;
 // echelon form, and each one's pool coordinates are reduced modulo the dependency rows; two pool
 // combinations with the same expansion at 0 differ by a dependency, so this fixes the
 // combination.
-function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
-    coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
+// This is the kernel routine, kept under BFGOOD=kernel; the default is the forward substitution below.
+function good_forms_at_zero_kernel(coeffs, full_basis, pole_order, D0)
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 eq 0];
     den := matrix_denominator(coeffs);
@@ -891,24 +914,79 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     end for;
     K := VerticalJoin(Kg, Kr);
     G := VerticalJoin(Gg, ZeroMatrix(Rationals(), Nrows(Kr), Ncols(G)));
-    assert IsZero(Submatrix(G, [1..Nrows(G)], non_div));
-    if GetEnv("BFPROGRESS") ne "" then
-        WriteStderr(Sprintf("  BFPOOL0 pole_order=%o  pool=%o  good=%o  dependencies=%o\n",
-                            pole_order, Nrows(coeffs), #good, #rel));
+    return good_forms_finish(K, G, coeffs, full_basis, pole_order, div_cols, non_div, #good, #rel);
+end function;
+
+// The same good forms by forward substitution.  The pool has one element per pole order at 0, so
+// its coefficient matrix on the window q^-pole_order .. q^0 is triangular up to the order of the
+// rows: every column is the leading column of some row.  A good form with principal part exactly
+// q^-(n/4) is then the solution x of x * coeffs = (unit vector at that column), found column by
+// column, each column matched by the row that leads there.  That costs O(#good * pool^2) field
+// operations and never forms a kernel of the whole pool: the integer kernel the routine above
+// takes grew to 172 GB at pole order 21021 (X_0^33(7), m = -91) and killed Magma twice.
+// The remaining pool elements -- those with zero window, and duplicates of a leading column --
+// span the dependencies; echelonised, they reduce the good rows exactly as above, so the output
+// is the same canonical K and G (checked equal on X_0^15(2), X_0^21(2) and X_0^95(1)).
+// BFGOOD=kernel selects the kernel routine.
+function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
+    coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
+    if GetEnv("BFGOOD") eq "kernel" then
+        return good_forms_at_zero_kernel(coeffs, full_basis, pole_order, D0);
     end if;
-    etas := [&+[K[i][j]*full_basis[j] : j in [1..Ncols(K)] | K[i][j] ne 0] : i in [1..Nrows(K)]];
-    // The oo-expansion of each form is inherited from the pool elements through the sum; the
-    // 0-expansion is the row of G (the pool elements do not carry theirs, see
-    // weakly_holomorphic_pool), known through the constant term.
-    Rq<q> := LaurentSeriesRing(Rationals());
-    for i in [1..#etas] do
-        etas[i]`qexp_0 := q^(-pole_order) * (Rq!Eltseq(G[i])) + O(q^1);
-        etas[i]`prec_0 := 1;
-        etas[i]`adm_0 := true;
-        assert assigned etas[i]`qexp_oo;
+    Q := Rationals();
+    W := Ncols(coeffs); npool := Nrows(coeffs);
+    non_div := [i : i in [1..W] | (i-1-pole_order) mod D0 ne 0];
+    div_cols := [i : i in [1..W] | (i-1-pole_order) mod D0 eq 0];
+    rowfor := [0 : c in [1..W]];
+    extra := [];
+    for i in [1..npool] do
+        S := Support(coeffs[i]);
+        c := #S eq 0 select 0 else Minimum(S);
+        if c eq 0 or rowfor[c] ne 0 then Append(~extra, i); else rowfor[c] := i; end if;
     end for;
-    deepest_oo := -Minimum([Valuation(f`qexp_oo) : f in full_basis]);
-    return Submatrix(G, [1..Nrows(G)], div_cols), etas, deepest_oo;
+    assert forall{c : c in [1..W] | rowfor[c] ne 0};     // the pool spans the window
+    dups := [e : e in extra | not IsZero(coeffs[e])];
+    zeros := [e : e in extra | IsZero(coeffs[e])];
+    // targets: a unit vector per q^(1/4)-column, deepest first, then the windows of the duplicates
+    B := ZeroMatrix(Q, #div_cols + #dups, W);
+    for j->c in div_cols do B[j, c] := 1; end for;
+    for j->e in dups do InsertBlock(~B, Matrix(coeffs[e]), #div_cols + j, 1); end for;
+    X := ZeroMatrix(Q, Nrows(B), npool);
+    Res := B;
+    for c in [1..W] do
+        col := ColumnSubmatrix(Res, c, 1);
+        if IsZero(col) then continue; end if;
+        i := rowfor[c];
+        a := col / coeffs[i][c];
+        InsertBlock(~X, a, 1, i);
+        Res := Res - a * Matrix(coeffs[i]);
+    end for;
+    assert IsZero(Res);
+    Kg := Submatrix(X, [1..#div_cols], [1..npool]);
+    Dm := ZeroMatrix(Q, #dups + #zeros, npool);
+    for j->e in dups do
+        InsertBlock(~Dm, -Submatrix(X, [#div_cols + j], [1..npool]), j, 1);
+        Dm[j, e] +:= 1;
+    end for;
+    for j->e in zeros do Dm[#dups + j, e] := 1; end for;
+    Kr := EchelonForm(Dm);
+    assert forall{j : j in [1..Nrows(Kr)] | not IsZero(Kr[j])};
+    for j in [1..Nrows(Kr)] do
+        c := Minimum(Support(Kr[j]));
+        Kg := Kg - Matrix(Q, Nrows(Kg), 1, [Kg[i][c] : i in [1..Nrows(Kg)]]) * Matrix(Kr[j]);
+    end for;
+    K := VerticalJoin(Kg, Kr);
+    G := VerticalJoin(Submatrix(B, [1..#div_cols], [1..W]), ZeroMatrix(Q, Nrows(Kr), W));
+    if GetEnv("BFGOODCHECK") ne "" then
+        // the kernel routine on the same pool must give the same K and G
+        Gk, etas_k, _ := good_forms_at_zero_kernel(coeffs, full_basis, pole_order, D0);
+        assert Gk eq Submatrix(G, [1..Nrows(G)], div_cols);
+        assert #etas_k eq Nrows(K);
+        assert forall{i : i in [1..#etas_k] | Exponents(etas_k[i]) eq Exponents(&+[K[i][j]*full_basis[j] : j in [1..npool] | K[i][j] ne 0])
+                                              and Coefficients(etas_k[i]) eq Coefficients(&+[K[i][j]*full_basis[j] : j in [1..npool] | K[i][j] ne 0])};
+        WriteStderr(Sprintf("  BFGOODCHECK pole_order=%o: the two routines agree (%o good, %o dependencies)\n", pole_order, #div_cols, Nrows(Kr)));
+    end if;
+    return good_forms_finish(K, G, coeffs, full_basis, pole_order, div_cols, non_div, #div_cols, Nrows(Kr));
 end function;
 
 
