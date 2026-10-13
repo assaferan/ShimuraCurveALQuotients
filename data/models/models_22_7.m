@@ -20,4 +20,4 @@ models[[Integers()|1,22]] := [* <3, "CRV", [ Strings() | "y^2 - 1/4*s^4 - 4*s^3*
 // (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2} (two where a factor reduces badly at one of the first three).
 // Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
 models[[Integers()|1]] := [* <5, "CRV", [ Strings() | "-4*s^2 - 16*s*z - 5*z^2 + y1^2", "-1/16*s^2 - 3/4*s*z - 1/4*z^2 + y2^2", "27*s^4 + 164*s^3*z + 1095/4*s^2*z^2 + 134*s*z^3 + 20*z^4 + y3^2" ]> *];
-models[[Integers()|1,11]] := [* <3, "CRV", [ Strings() | "-4*s^2 - 16*s*z - 5*z^2 + y1^2", "27/16*s^6 + 61/2*s^5*z + 9399/64*s^4*z^2 + 4075/16*s^3*z^3 + 2723/16*s^2*z^4 + 97/2*s*z^5 + 5*z^6 + y2^2" ]> *];
+models[[Integers()|1,11]] := [* <3, P![ -27/65536, -41/4096, 3047/16384, -5065/4096, 161911/32768, -55715/4096, 368687/16384, -54571/4096, -395307/65536 ], P![]> *];

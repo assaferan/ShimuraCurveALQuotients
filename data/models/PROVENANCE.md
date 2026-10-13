@@ -531,11 +531,14 @@ finished exited 0; `143_1`, `145_1`, `203_1` run separately). Against this branc
     38_7   [1,14,19,266] [1,2,7,14] [1,266] [1,7,38,266] [1,38] [1,14,38,133]
     58_5   [1,10] [1,10,58,145] [1,2,5,10] [1,29] [1,2,29,58] [1,5,29,145]
 
-Nothing committed was replaced: where a key already held a model the rerun's version (often a
-different normalisation of the same curve) was discarded, and where this branch holds a
-fibre-product `CRV` entry it was kept even when the rerun found a hyperelliptic model for the same
-key (`10_17 [1,85]`, `10_29 [1,58]`, `10_37`, `14_13`, `6_41`, `6_43`, `86_3`, `34_3`, `22_7 [1,11]`,
-`26_5 [1,65]`, `34_7`, `14_19 [1,14]`; the rerun output is in `gapscan/out` on lovelace). The two
+Where a key already held a model of the form y^2 = f(x) the rerun's version (often a different
+normalisation of the same curve) was discarded. Where this branch held a fibre-product `CRV` pair
+and the rerun found a model y^2 = f(x) for the same key, the hyperelliptic model replaces the pair
+(Eran's decision, 2026-10-13: the hyperelliptic form is the more useful one when it exists; the
+two were produced independently and both agree with the trace formula): 13 keys, `10_17 [1,85]`,
+`10_29 [1,58]`, `10_37 [1,2] [1,185]`, `14_13 [1,91]`, `14_19 [1,14]`, `22_7 [1,11]`, `26_5 [1,65]`,
+`34_3 [1,3] [1,6]`, `34_7 [1,14] [1,238]`, `6_41 [1,123]`, each with the genus of the pair it replaces
+(the rerun output is in `gapscan/out` on lovelace). The two
 odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
