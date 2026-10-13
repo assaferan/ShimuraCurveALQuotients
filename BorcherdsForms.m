@@ -228,27 +228,32 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     // default 1800 s).
     //
     // nmzsolve.py writes its solution file whenever it finishes, including when the polytope has
-    // no lattice point, so a missing file means the solve timed out or failed.  An empty answer
-    // here does not stop the search: the caller takes it as "no form at this pole order" and
-    // retries at a larger one, so a solve that silently failed would be read as a short basis
-    // and the search would run on from it.  That is why a missing file is an error.  NMZ_DEGRADE=1
-    // keeps the old behaviour for a sweep that would rather skip a base than stop.
+    // no lattice point (exit 0), and exits nonzero with no file when Normaliz timed out (2), failed
+    // (1), or left output without the lattice-points header (3) or shorter than it announces (4).
+    // An empty answer does not stop the search: the caller takes it as "no form at this pole order"
+    // and retries at a larger one, so a solve read as empty when it had failed would give a short
+    // basis and the search would run on from it -- at level 924 that was 43 silent two-hour
+    // timeouts before the n-cap.  So a nonzero exit, and a missing file, are errors; there is no
+    // way to continue with no solutions, since the eta-quotient basis routine has no rank check
+    // that would catch the shortfall.  A sweep that wants to skip a base catches the error.
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
     cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
                    M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
-    _ := System(cmd);
-    if not FileExists(solname) then
-        if GetEnv("NMZ_DEGRADE") ne "" then
-            vprintf ShimuraQuotients, 1 : "\n⚠ lattice-point solve (M, n, m) = (%o, %o, %o) did not finish; NMZ_DEGRADE is set, continuing with no solutions.\n", M, n, m;
-            return [];
-        end if;
-        error Sprintf("the lattice-point solve for (M, n, m) = (%o, %o, %o) produced no file: " cat
-                      "Normaliz timed out (NMZ_TIMEOUT, default 1800 s) or failed. See " cat
-                      "polymake/nmzsolve.err. Continuing would give an incomplete eta-quotient " cat
-                      "basis; raise NMZ_TIMEOUT, or set NMZ_DEGRADE=1 to accept no solutions here.", M, n, m);
+    rc := System(cmd) div 256;    // System returns the wait status; the exit code is its high byte
+    if rc ne 0 then
+        reason := case<rc | 2: "Normaliz timed out (NMZ_TIMEOUT, default 1800 s)",
+                            3: "Normaliz exited normally but its output has no lattice-points header",
+                            4: "Normaliz exited normally but listed fewer lattice points than it announced",
+                            default: "Normaliz or the script failed">;
+        error Sprintf("nmzsolve.py exited with code %o on the polytope (%o, %o, %o) [24k=%o, sq_disc=%o, cuspidal=%o]: %o. " cat
+                      "See polymake/nmzsolve.err. Continuing would give an incomplete eta-quotient basis; " cat
+                      "enumerate the polytope separately (nmzsolve.py with a larger NMZ_TIMEOUT) and place the result at %o.",
+                      rc, M, n, m, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0, reason, solname);
     end if;
+    error if not FileExists(solname),
+        Sprintf("nmzsolve.py exited 0 but wrote no file at %o (see polymake/nmzsolve.err)", solname);
     return Sort(eval Read(solname));
 end function;
 
