@@ -12,8 +12,9 @@
 // <= 4 of CMClassLists() (maximal and non-maximal orders).  Each key is either in PIN or in
 // PIN_EXCLUDED, never both.
 //
-// AN ENTRY IS PINNED ONLY IF, in each of the three versions, FieldsOfDefinitionOfCMPoint (slow)
-// and FieldsOfDefinitionOfCMPointFast returned the same fields as sets up to isomorphism, neither
+// AN ENTRY IS PINNED ONLY IF, in each of the three versions, the slow and fast field-of-definition
+// routines (now FieldOfDefinitionOfCMPointSlow and FieldOfDefinitionOfCMPoint, each returning one
+// field or raising an error when there is no point) returned the same fields as sets up to isomorphism, neither
 // raised an error, all three versions agree, and in the current version
 // DegreeOfFieldOfDefinitionOfCMPoint equals the common absolute degree of those fields.
 //

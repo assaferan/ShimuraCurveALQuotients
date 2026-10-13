@@ -1,7 +1,7 @@
 // Degrees of the fields of definition of CM points on the Atkin-Lehner quotient
 // X^D_0(N)/W, read off Pic(R) and the Atkin-Lehner combinatorics of W alone (no
 // ring class field), and the rational and degree-2 CM points built from them.
-// For the fields themselves see FieldsOfDefinitionOfCMPointFast in SchoferFormula.m.
+// For the field itself see FieldOfDefinitionOfCMPoint in SchoferFormula.m.
 //
 // The degree of the field of definition of the CM points by R on X^D_0(N)/W is
 //
@@ -48,7 +48,7 @@ intrinsic DegreeOfFieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Rn
 {Degree over Q of the field of definition of the CM points by the order of
  discriminant d on X, or 0 if X carries no CM point by that order.  Computed
  from Pic(R) and the Atkin-Lehner data alone, without building a ring class
- field; agrees with Degree of the fields returned by FieldsOfDefinitionOfCMPoint.}
+ field; agrees with Degree of the field returned by FieldOfDefinitionOfCMPoint.}
     D := X`D;
     N := X`N;
     W := X`W;
@@ -131,8 +131,8 @@ end intrinsic;
 
 intrinsic Degree2Points(X::ShimuraQuot : max_class_num := 0, compute_fields := true) -> Assoc
 {Discriminants of the orders whose CM points on X have degree 2, mapped to
- <multiplicity, fields, field discriminants>.  max_class_num > 0 considers only
- class numbers up to that bound.  compute_fields := false leaves the two field
+ <multiplicity, field of definition, its discriminant>.  max_class_num > 0 considers
+ only class numbers up to that bound.  compute_fields := false leaves the two field
  slots as false, skipping the ring class field build that dominates the cost.}
     require IsSquarefree(X`D * X`N) : "Degree2Points requires D*N squarefree";
     CNs := CMClassLists();
@@ -152,11 +152,8 @@ intrinsic Degree2Points(X::ShimuraQuot : max_class_num := 0, compute_fields := t
                 cm_pts[disc] := <mult, false, false>;
                 continue;
             end if;
-            flds := FieldsOfDefinitionOfCMPointFast(X, disc);
-            error if #flds eq 0,
-                Sprintf("degree 2 at discriminant %o but no field of definition (D=%o, N=%o)",
-                        disc, X`D, X`N);
-            cm_pts[disc] := <mult, flds, [* Discriminant(F) : F in flds *]>;
+            F := FieldOfDefinitionOfCMPoint(X, disc);
+            cm_pts[disc] := <mult, F, Discriminant(F)>;
         end for;
     end for;
     return cm_pts;

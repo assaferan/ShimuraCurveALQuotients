@@ -132,10 +132,10 @@ procedure test_CMFieldsElkies()
                     K := cm_field_from_vals([cm_norm_val(c[2], t0) : c in covers]);
                 end if;
                 X := CreateShimuraQuot(D, 1, W);
-                Fs := FieldsOfDefinitionOfCMPointFast(X, d);
-                assert #Fs eq 1 and IsIsomorphic(AbsoluteField(Fs[1]), K);
-                Fs := FieldsOfDefinitionOfCMPoint(X, d);
-                assert #Fs eq 1 and IsIsomorphic(AbsoluteField(Fs[1]), K);
+                F := FieldOfDefinitionOfCMPoint(X, d);
+                assert IsIsomorphic(AbsoluteField(F), K);
+                F := FieldOfDefinitionOfCMPointSlow(X, d);
+                assert IsIsomorphic(AbsoluteField(F), K);
                 assert DegreeOfFieldOfDefinitionOfCMPoint(X, d) eq Degree(K);
                 nchecks +:= 1;
             end for;

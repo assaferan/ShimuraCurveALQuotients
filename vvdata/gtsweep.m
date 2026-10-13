@@ -51,7 +51,7 @@ ReduceTable(abs_tab);
 ds    := abs_tab`Discs;
 s     := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sIndex] *];
 stild := [* RationalNumber(x) : x in abs_tab`Values[abs_tab`sTildeIndex] *];
-degs  := [ Degree(abs_tab`FldsOfDefn[abs_tab`Xstar`CurveID][d][1]) : d in ds ];
+degs  := [ Degree(abs_tab`FldsOfDefn[abs_tab`Xstar`CurveID][d]) : d in ds ];
 printf "table built (%o s)\n  ds     = %o\n  s      = %o\n  stilde = %o\n  degs   = %o\n",
        Cputime(t0), ds, s, stild, degs;
 for i->d in ds do
