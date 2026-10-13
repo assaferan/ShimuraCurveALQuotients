@@ -15,24 +15,28 @@ assert #tmp gt 0 and tmp[1] eq "/";
 here := GetCurrentDirectory();
 ok := System(Sprintf("mkdir -p %o/polymake && cp polymake/polymake_solution_%o_%o_%o %o/polymake/", tmp, M, nhi, m, tmp));
 assert ok eq 0;
-rc := System(Sprintf("cd %o && NORMALIZ_BIN=/nonexistent python3 %o/nmzsolve.py %o %o %o polymake/polymake_solution_%o_%o_%o 2> nmzsolve.err",
+// The script says on its error stream which route answered a request: "lower rung:" for the
+// read off a higher rung, a Normaliz line otherwise (Normaliz may or may not be installed here).
+rc := System(Sprintf("cd %o && python3 %o/nmzsolve.py %o %o %o polymake/polymake_solution_%o_%o_%o 2> first.err",
                      tmp, here, M, nlo, m, M, nlo, m));
-assert rc eq 0;                                              // served from the cache, no Normaliz
+assert rc eq 0;
+first_route := Read(Sprintf("%o/first.err", tmp));
 got := Sort(eval Read(Sprintf("%o/polymake/polymake_solution_%o_%o_%o", tmp, M, nlo, m)));
-// a higher rung marked as derived is skipped: with only such a file present the script must go to
-// Normaliz, which is absent here, so it fails
+// with the higher rung marked as derived, the read must not be used
 ok := System(Sprintf("cd %o && rm polymake/polymake_solution_%o_%o_%o && (echo '// derived: test'; cat %o/polymake/polymake_solution_%o_%o_%o) > polymake/polymake_solution_%o_%o_%o",
                      tmp, M, nlo, m, here, M, nhi, m, M, nhi, m));
 assert ok eq 0;
-rc2 := System(Sprintf("cd %o && NORMALIZ_BIN=/nonexistent python3 %o/nmzsolve.py %o %o %o polymake/polymake_solution_%o_%o_%o 2>> nmzsolve.err",
-                      tmp, here, M, nlo, m, M, nlo, m));
+_ := System(Sprintf("cd %o && NMZ_TIMEOUT=60 python3 %o/nmzsolve.py %o %o %o polymake/polymake_solution_%o_%o_%o 2> second.err",
+                    tmp, here, M, nlo, m, M, nlo, m));
+second_route := Read(Sprintf("%o/second.err", tmp));
 _ := System(Sprintf("rm -rf %o", tmp));
 
-procedure test_LowerRungRead(lower, got, rc2)
+procedure test_LowerRungRead(lower, got, first_route, second_route)
     printf "Testing the lower-rung read, (380, 28, 65) off (380, 93, 65)...";
+    assert "lower rung:" in first_route;                        // answered by the read, not by Normaliz
     assert got eq lower;
-    assert rc2 ne 0;
+    assert not ("lower rung:" in second_route);                 // a derived higher rung is not read
     printf "Done! (%o points; a derived higher rung is not used)\n", #lower;
 end procedure;
 
-test_LowerRungRead(lower, got, rc2);
+test_LowerRungRead(lower, got, first_route, second_route);
