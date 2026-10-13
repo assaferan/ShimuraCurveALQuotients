@@ -5,7 +5,9 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // Checks, against models_159_1.m:
 //   [1] the stored W={1} curve is isomorphic to Guo-Yang's published equation (degree 20,
 //       genus 9), in tests/GuoYangEquations.m;
-//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one;
+//   [2] AllEquationsAboveCovers re-derives every cover and each agrees with the stored one
+//       (a regression check: the stored covers are this branch's own output; the outside checks
+//       are [1], [3] and the L-polynomials in tests/ModelChecks.m);
 //   [3] Guo-Yang's w_3 is an involution of the top curve.
 //
 // Guo-Yang give w_3(x,y) = (-x, y) in their coordinates.  Our stored W={1} polynomial is even

@@ -1,10 +1,6 @@
 // COST: 636 s on a Mac, 889 s in CI (2026-10-01), so it runs in CI: 14 curve comparisons,
-// 3 involution comparisons, 14/14 expected covers matched.
-// ⚠ It was RED from 638223e (2026-09-23) until 2026-09-25 and nobody knew, because it lived in
-// tests/_offline, which CI does not run, and the line here used to assert "the test is expected
-// to pass" without anyone having run it.  State what was measured and when, not what is expected.
-// It became possible at all on 2026-09-07, when the coprime-to-level CM filter became OFF BY
-// DEFAULT: before that 39_2 needed CMNONCOPRIME=1, and a plain X0_*.m test cannot set an env var.
+// 3 involution comparisons, 14/14 expected covers matched.  This base needs the coprime-to-level
+// CM filter off, which is the default; a test file cannot set an environment variable.
 //
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 

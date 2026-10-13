@@ -260,10 +260,9 @@ intrinsic HolomorphicEtaQuotients(N::RngIntElt, k::RngIntElt : Prec := 100) -> S
     return [EtaQuotient(R,r) : r in rs];
 end intrinsic;
 
-// Common denominator of a rational matrix, ROW BY ROW.  Magma's own Denominator for a matrix is
-// LCM({Denominator(x) : x in Eltseq(X)}) (Module/Mtrx/ir.m:60), and Eltseq refuses a matrix with
-// more than about 10^9 entries, which is where X_0^141(1)'s pool matrix lands at the rung m = -235
-// (33135 x 33135).  Taking the LCM over rows never forms a sequence longer than one row.
+// Common denominator of a rational matrix, row by row: Eltseq, which Magma's Denominator of a
+// matrix uses, refuses a matrix with more than about 10^9 entries (a 33135 x 33135 pool), and the
+// LCM over rows never forms a sequence longer than one row.
 function matrix_denominator(X)
     den := 1;
     for i in [1..Nrows(X)] do
@@ -850,21 +849,13 @@ function basis_of_weakly_holomorphic_forms(pole_order, fs_E, n0, n, t : Zero := 
 end function;
 
 // The 0-side "good forms": the members of the pool at 0 (pole order pole_order in q^(1/4D0))
-// whose expansion at 0 has exponents = pole_order mod D0 only, i.e. lives in q^(1/4)Z.  They
-// are the left kernel of the pool's coefficient matrix restricted to the other columns; that
-// kernel is small (about pole_order/D0 dimensional) while the pool is not.
-//
-// Returns the good forms' 0-expansions restricted to the q^(1/4)-columns, the forms as
-// eta-quotient combinations (rows correspond), and the deepest pole at oo over the pool.
-//
-// The rows are canonical, so the search's solution (one point of an affine space, chosen by
-// the row basis) does not depend on how the kernel was computed.  Kernel rows with zero
-// expansion at 0 are dependencies among pool elements -- as forms, they vanish at 0 through the
-// constant term, with a pole at oo or identically zero -- and are returned in reduced echelon
-// form with respect to the pool coordinates.  The other rows carry their 0-expansions in reduced
-// echelon form, and each one's pool coordinates are reduced modulo the dependency rows; two pool
-// combinations with the same expansion at 0 differ by a dependency, so this fixes the
-// combination.
+// whose expansion at 0 has exponents = pole_order mod D0 only, i.e. lives in q^(1/4)Z: the left
+// kernel of the pool's coefficient matrix restricted to the other columns.  Returns their
+// 0-expansions on the q^(1/4)-columns, the forms as eta-quotient combinations (rows correspond),
+// and the deepest pole at oo over the pool.  The rows are canonical: the 0-expansions are in
+// reduced echelon form, the dependency rows (pool combinations vanishing at 0 through the
+// constant term) are in reduced echelon form in pool coordinates, and each good row's pool
+// coordinates are reduced modulo them, so the search's solution does not depend on the kernel basis.
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     non_div := [i : i in [1..Ncols(coeffs)] | (i-1-pole_order) mod D0 ne 0];
