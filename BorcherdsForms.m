@@ -953,6 +953,7 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     for j->e in dups do InsertBlock(~B, Matrix(coeffs[e]), #div_cols + j, 1); end for;
     X := ZeroMatrix(Q, Nrows(B), npool);
     Res := B;
+    gf_t0 := Cputime();
     for c in [1..W] do
         col := ColumnSubmatrix(Res, c, 1);
         if IsZero(col) then continue; end if;
@@ -962,6 +963,9 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
         Res := Res - a * Matrix(coeffs[i]);
     end for;
     assert IsZero(Res);
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFGOOD0 pole_order=%o  window=%o  targets=%o  substitution %os\n", pole_order, W, Nrows(B), Cputime(gf_t0)));
+    end if;
     Kg := Submatrix(X, [1..#div_cols], [1..npool]);
     Dm := ZeroMatrix(Q, #dups + #zeros, npool);
     for j->e in dups do
