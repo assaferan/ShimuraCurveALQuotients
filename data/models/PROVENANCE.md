@@ -475,9 +475,10 @@ sweep (PR #71) tries every generating set and reported 11 failures over a pool t
 24 stored pairs: the difference is six covers that a second generating set builds. The writer now
 tries every set too (and skips a degenerate one, where some subset of factors multiplies to a
 constant times a square), which reaches seven more covers; three are added here, on 2026-10-04,
-`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have hyperelliptic models
-from reruns instead (`21_2` `[1,3]`, `[1,6]` in PR #70; `22_7` `[1,22]`, `26_5` `[1,10]` in
-PR #73). What remains rejected, with
+`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have models from reruns
+instead: `21_2` `[1,3]`, `[1,6]` (PR #70) and `26_5` `[1,10]` (PR #73) as `y^2 = f(x)`, and `22_7`
+`[1,22]` (PR #73) as a genus-3 double cover of the conic `{1,14,22,77}`, which has no rational
+point, so that curve has no model `y^2 = f(x)` over Q. What remains rejected, with
 every generating set: `14_19` `[1,19]`, `[1,38]`; `34_7` `[1,7]`, `[1,119]`; `82_3` `[1,2]`,
 `[1,82]`, `[1,123]` (no set has the right genus), and `21_2` `[1,14]`, `34_3` `[1,34]` (right genus,
 wrong point counts: factors in mixed Hauptmodul coordinates).

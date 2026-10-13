@@ -10,6 +10,6 @@ models[[Integers()|1,2,133,266]] := [* <1, P![ 4, -12, 17, -8 ], P![]> *];
 models[[Integers()|1,266]] := [*  *];
 
 // Built 2026-10-03 as fibre products over the star line of committed double covers
-// (FibreProductCovers.m); each verified against the trace formula at three primes, F_p and F_{p^2}.
+// (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2} (two where a factor reduces badly at one of the first three).
 // Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
 models[[Integers()|1,2]] := [* <7, "CRV", [ Strings() | "76*s^6 - 249*s^5*z + 5775/16*s^4*z^2 - 2371/8*s^3*z^3 + 2327/16*s^2*z^4 - 81/2*s*z^5 + 5*z^6 + y1^2", "8*s^3*z - 17*s^2*z^2 + 12*s*z^3 - 4*z^4 + y2^2" ]> *];
