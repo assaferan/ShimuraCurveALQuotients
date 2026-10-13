@@ -125,7 +125,7 @@ encode.
 | `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
-| `tests/_offline/X0_10_19.m`, `X0_21_1.m` | the same, for the two bases still too slow for CI (`87_1`, `111_1`, `93_1` and `39_2` moved into CI on 2026-10-01, minutes each with the Borcherds search of #63) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 ## THE QUOTIENT ORACLE — the largest source of external validation here
 
@@ -392,39 +392,6 @@ code version*. Anyone bisecting `main` to an older commit will find this file un
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
 
-## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
-
-`models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
-BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
-tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
-second rung of the Borcherds ladder (0-side pole order 3325) had never finished (7 h+); with it the
-five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
-all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
-published equation (`tests/GuoYangEquations.m`), and genus 7 and the hyperelliptic involution match
-Table 1. The quotient oracle (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
-nothing here; the quotient models rest on the L-polynomial comparison against the trace formula in
-`VerifyModelSet` and on the involution check in `tests/_offline/X0_95_1.m`.
-
-`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
-(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
-lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation and matches
-Table 1. The quotient oracle has no entry for `119_1` either; its quotients are checked the same
-way as `95_1`'s.
-
-`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
-order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
-lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
-published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
-and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient oracle has no entry for
-`159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
-(`y^2 + h y = f`).
-
-For all three, every stored quotient's L-polynomial at the small good primes equals the one the
-trace formula gives for the W-fixed part of the D-new space (`tests/ModelChecks.m`, check [5]),
-which also fixes the labels of the w_p: the opposite sign convention would swap the genera of the
-two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
-58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
-
 ## Reproducibility status, measured 2026-09-05
 
 Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
@@ -468,32 +435,26 @@ a regression, not something to add to the list.
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
 
-## The first composite-level base: `models_6_35.m` (2026-10-04, branch composite-level, PR #74)
+## `21_2` and `6_5`: four quotients added 2026-10-03, both files regenerated with the default recipe
 
-`X_0^6(35)` is the first base with a composite squarefree level in the data. The default recipe
-(`genmodels.m`, no flags) on lovelace, with the level-420 polytope `(420, 145, 0)` enumerated in
-August (campaign `vvdata/weyl-campaign/nmz_420_145_0.txt.gz`) installed as
-`polymake/polymake_solution_420_145_0` and the t-shift fallback answering the higher rungs
-(`polymake/tshift_{core,w0}_420.txt`); 2 h 25 min, of which two hours were the m = 0 multipliers on
-the 88200-element discriminant group (computed twice — fixed since). 66 cover keys: 12 of genus 0,
-21 of genus 1, 18 of genus 2, 3 of genus 3 as `y^2 + h y = f`, and 3 of genus 3 as fibre products
-(`CRV`). The Schofer values here use, for the first time, the m = 0 term at a composite level
-(prop:composite: one multiplier per prime of N). **Outside check**: every stored curve of genus >= 1
-has the point counts over F_p and F_{p^2} of the Eichler-Selberg trace formula at p = 11, 13, 17, 19
-(156 of 156; campaign `composite/check635.m`), which knows nothing about CM values. No published
-equation or CM value exists for this base.
+Both files predated the current cover propagation and were missing covers the pipeline now
+produces; no flag is needed, the default recipe above fills them.
 
-`models_10_21.m` (2026-10-05): the second composite-level base, same recipe and the same level-420
-cache (DN = 210 shares the polytope); 3 h 50 min on lovelace, of which three multiplier computations
-of about 73 min each (forms first met at later CM points). 66 cover keys in the same shape as
-`6_35` (12 of genus 0, 21 of genus 1, 18 of genus 2, 3 + 3 of genus 3). The multipliers at the two
-level primes differ here (for one form 6 at 3 and -7 at 7), so this is the first base where the
-per-prime structure of prop:composite acts in production. Outside check as for `6_35`: 156 of 156
-point counts of the Eichler-Selberg trace formula at p = 11, 13, 17, 19 (campaign
-`composite/checkcomp.m`).
+**`21_2`, the three genus-2 quotients `{1,3}`, `{1,6}`, `{1,14}`.** These are the quotients by the
+three Atkin-Lehner involutions that act without fixed points, so Riemann-Hurwitz drops the genus
+from 3 to 2 rather than to 1 or 0. They are now checked against **Guo-Yang's published curve**, not
+against our own output: their pair is `y^2 = -(9u-1)(u+7)(u+3)`, `z^2 = -(u+3)`, `u = x^2`, with the
+group acting by sign changes on `(x,y,z)`, and each quotient is the invariant subfield of one sign
+pattern (the derivation is written out in `tests/X0_21_2.m`). Our models are those curves with `y`
+scaled by `3/32`, `3/16`, `3/32`, so they agree over **Q**.
 
-`models_14_15.m` (2026-10-05): the third composite-level base, same recipe and cache; 3 h 54 min on
-lovelace (three multiplier computations). 65 cover keys: 7 of genus 0, 15 of genus 1, 14 of genus 2,
-6 of genus 3 and 1 of genus 4 as `y^2 + h y = f`, and 3 fibre products (1 of genus 3, 2 of genus 5).
-Outside check: 192 of 192 point counts of the trace formula at p = 11, 13, 17, 19, 23, 29 (primes
-where a model has no reduction are skipped).
+⚠ **The three were absent because the top curve here is stored as a non-hyperelliptic pair and the
+old code only quotiented hyperelliptic curves** — but do not read that as the obstruction: a plain
+rerun produces all three as hyperelliptic curves, so the limitation had already been lifted
+elsewhere. The lesson is the usual one: rerun before diagnosing from the code.
+
+**`6_5`, the quotient `{1,3,5,15}`.** The one genus-1 double cover of the star curve; its six
+genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a single `w_m`, so
+nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
+(genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
+291 checks with no failures.
