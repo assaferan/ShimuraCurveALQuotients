@@ -589,6 +589,23 @@ computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,18
 (`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
 `38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
 agree up to isomorphism.
+## `models_210_1.m` and the level-420 polytope cache (2026-10-05, branch level-420-models)
+
+`X_0^210(1)` was behind the Normaliz wall (M = 420 has 24 divisors) until its first polytope rung
+was enumerated in August for the theta campaign: `polymake/polymake_solution_420_145_0` (19864
+lattice points, 13.4 wall-hours of Normaliz, banked on the campaign branch as
+`vvdata/weyl-campaign/nmz_420_145_0.txt.gz`). The t-shift fallback of `nmzsolve.py` answers the
+second rung from it (`polymake_solution_420_250_0`, 212 points, a spanning set of the rung's forms and
+not the lattice points of the polytope; its first line says so, as a Magma comment, so that a later
+enumeration is not mistaken for it); both files are committed here so the default recipe reproduces
+the base without Normaliz. The run used the composite-level tree on lovelace at ca87e19 (branch
+composite-level, PR #74; at N = 1 no m = 0 term is involved). With them the whole run took 7 min 37 s on
+lovelace: 66 cover keys, 40 of genus 0, 31 of genus 1, 10 of genus 2, 4 of genus 3 and 6 fibre
+products of genus 3. Outside check: 234 of 234 point counts of the Eichler-Selberg trace formula at
+p = 11, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`). The same cache serves every base with
+M = 420: the composite-level bases `6_35`, `10_21`, `14_15` (branch composite-level) ran from it; the
+bases that also need a cusp-0 rung, `15_7`, `21_5`, `15_14`, `21_10`, `35_6` (all `(420, 42, 104)`)
+and `35_3` (`(420, 146, 104)`), wait on those enumerations.
 ## 36 quotient models from a rerun of the gap bases (2026-10-03, lovelace, code at e4d8b4a, a commit on the branch of PR #63 and not on `main`)
 
 The census of 2026-10-03 found 100 subhyperelliptic quotients with no model across 31 bases, almost
