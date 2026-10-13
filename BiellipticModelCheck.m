@@ -10,7 +10,7 @@
 //     iota       : (x,y) -> ( x, -y)   Fix = the 6 Weierstrass points (roots of the sextic)
 // On the Shimura side, each nontrivial coset of W in W_full has fixed points counted by Ogg's
 // formula (NumFixedPointsByCMOrder) with fields from Shimura reciprocity
-// (FieldsOfDefinitionOfCMPointFast).  A genus-0 coset is iota; a genus-1 coset is sigma or
+// (FieldOfDefinitionOfCMPoint).  A genus-0 coset is iota; a genus-1 coset is sigma or
 // sigma*iota, matched by the a_p of its elliptic quotient.  A candidate is CONSISTENT when, for
 // some matching, every model involution's fixed-point orbits fit the predicted rows
 // (MatchFixedPointOrbits).
@@ -27,7 +27,7 @@ ALClassRF := recformat< Class : SeqEnum,         // the coset of W, as a sorted 
                         Quotient : ShimuraQuot,   // X_0(D,N)/<W, coset>
                         QuotientGenus : RngIntElt,
                         NumFixed : RngIntElt,     // # fixed points of the coset on C
-                        Rows : List >;            // [* <disc, count on C, [* possible fields *]> *]
+                        Rows : List >;            // [* <disc, count on C, field of definition> *]
 
 VerdictRF := recformat< D : RngIntElt, N : RngIntElt, Wgens : SetEnum, W : SetEnum,
                         Status : MonStgElt,       // determined | ambiguous | none consistent |
@@ -147,14 +147,10 @@ intrinsic ExpectedALFixedPointData(X::ShimuraQuot : Fast := true) -> List
             c := Integers()!c;
             total +:= c;
             vprintf BiellipticModelCheck, 2 : "  class %o: disc %o, %o fixed point(s) on C; computing fields...\n", cl, d, c;
-            // Fast := false selects the deprecated FieldsOfDefinitionOfCMPoint (tests only).
-            fs := Fast select FieldsOfDefinitionOfCMPointFast(X, d) else FieldsOfDefinitionOfCMPoint(X, d);
-            // An empty list can match no orbit, so every candidate would read CONTRADICTION: error
-            // rather than return a wrong "none consistent" verdict (as Degree2Points does).
-            error if #fs eq 0,
-                Sprintf("fixed points with discriminant %o but no field of definition (D=%o, N=%o)",
-                        d, D, N);
-            Append(~rows, <d, c, fs>);
+            // Fast := false selects the deprecated FieldOfDefinitionOfCMPointSlow (tests only).
+            // Both raise an error if X has no CM point by d, which fixed points by d rule out.
+            F := Fast select FieldOfDefinitionOfCMPoint(X, d) else FieldOfDefinitionOfCMPointSlow(X, d);
+            Append(~rows, <d, c, F>);
         end for;
         require total eq nfix : "per-discriminant fixed-point counts do not sum to CountFixedPointsOnQuotient";
         Append(~out, rec< ALClassRF | Class := cl, Quotient := Xq, QuotientGenus := Xq`g,
@@ -210,9 +206,9 @@ end intrinsic;
 
 intrinsic MatchFixedPointOrbits(observed::List, expected::List) -> BoolElt
 {observed: the Galois orbits of the fixed points of a model involution, one number field (or Q) per
- orbit.  expected: rows <disc, count on the quotient, [* possible fields of definition *]>.  True
- iff the orbits can be assigned to rows so that each row receives exactly its count of points and
- each orbit's field is isomorphic to one of the possible fields of its row.}
+ orbit.  expected: rows <disc, count on the quotient, field of definition>.  True iff the orbits
+ can be assigned to rows so that each row receives exactly its count of points and each orbit's
+ field is isomorphic to the field of its row.}
     if &+[Integers() | field_deg(F) : F in observed] ne &+[Integers() | r[2] : r in expected] then
         return false;
     end if;
@@ -221,7 +217,7 @@ intrinsic MatchFixedPointOrbits(observed::List, expected::List) -> BoolElt
         if i gt #observed then return true; end if;
         F := observed[i]; k := field_deg(F);
         for j in [1..#expected] do
-            if rem[j] ge k and &or[fields_iso(F, G) : G in expected[j][3]] then
+            if rem[j] ge k and fields_iso(F, expected[j][3]) then
                 rem2 := rem; rem2[j] -:= k;
                 if go(i+1, rem2) then return true; end if;
             end if;
@@ -296,7 +292,7 @@ intrinsic CheckBiellipticCandidate(X::ShimuraQuot, f::RngUPolElt, expected::List
         return "{" cat Join([Sprintf("w_%o", m) : m in cl], ",") cat "}";
     end function;
     function rows_name(rows)
-        return Join([Sprintf("%o x disc %o: %o", r[2], r[1], [fldname(F) : F in r[3]]) : r in rows], "; ");
+        return Join([Sprintf("%o x disc %o: %o", r[2], r[1], fldname(r[3])) : r in rows], "; ");
     end function;
 
     // iota is the unique hyperelliptic involution, so this check does not depend on which V_4
@@ -386,7 +382,7 @@ intrinsic CheckBiellipticEntry(e::List : NumPrimes := 12, Fast := true, AssumeUn
             rep cat:= Sprintf("  AL coset {%o}: %o fixed point(s), quotient genus %o\n",
                               Join([Sprintf("w_%o", m) : m in r`Class], ","), r`NumFixed, r`QuotientGenus);
             for row in r`Rows do
-                rep cat:= Sprintf("      %o x disc %o -> %o\n", row[2], row[1], [fldname(F) : F in row[3]]);
+                rep cat:= Sprintf("      %o x disc %o -> %o\n", row[2], row[1], fldname(row[3]));
             end for;
         end for;
         for i->f in cands do

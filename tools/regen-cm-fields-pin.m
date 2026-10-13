@@ -68,20 +68,32 @@ for c in PIN_CURVES do
         key := Sprintf("%o, %o, %o, %o", D, N, seqstr(W), d);
         refs := IsDefined(committed, <D, N, W, d>) select committed[<D, N, W, d>] else [];
         try
-            slowF := FieldsOfDefinitionOfCMPoint(X, d);
-        catch e
-            printf "INCONSISTENT <%o>: slow raised %o\n", key, e`Object; bad +:= 1; continue;
-        end try;
-        try
-            fastF := FieldsOfDefinitionOfCMPointFast(X, d);
-        catch e
-            printf "INCONSISTENT <%o>: fast raised %o\n", key, e`Object; bad +:= 1; continue;
-        end try;
-        try
             deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
         catch e
             printf "INCONSISTENT <%o>: degree function raised %o\n", key, e`Object; bad +:= 1; continue;
         end try;
+        // the pin keeps a list per key: one field, or none when X has no CM point by d, where both
+        // routines must raise an error
+        slowF := [* *]; fastF := [* *];
+        if deg ne 0 then
+            try
+                slowF := [* FieldOfDefinitionOfCMPointSlow(X, d) *];
+            catch e
+                printf "INCONSISTENT <%o>: slow raised %o\n", key, e`Object; bad +:= 1; continue;
+            end try;
+            try
+                fastF := [* FieldOfDefinitionOfCMPoint(X, d) *];
+            catch e
+                printf "INCONSISTENT <%o>: fast raised %o\n", key, e`Object; bad +:= 1; continue;
+            end try;
+        else
+            raised := 0;
+            try F := FieldOfDefinitionOfCMPointSlow(X, d); catch e raised +:= 1; end try;
+            try F := FieldOfDefinitionOfCMPoint(X, d); catch e raised +:= 1; end try;
+            if raised ne 2 then
+                printf "INCONSISTENT <%o>: degree 0 but a field routine returned a field\n", key; bad +:= 1; continue;
+            end if;
+        end if;
         fast := canon(fastF, refs);
         degs := {#p - 1 : p in fast};
         if not same_fields(slowF, fastF) then
