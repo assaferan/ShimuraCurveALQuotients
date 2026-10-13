@@ -1499,7 +1499,15 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
 {Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f.}
     foo := qExpansionAtoo(f,0);
     f0_D0 := qExpansionAt0(f,0);
-    D0 := Xstar`D div 2^Valuation(Xstar`D,2);
+    // The expansion at 0 is in powers of q^(1/(4 D0)), D0 the odd part of DN (the eta quotients
+    // have level 4 D0).  [GY, Lemma 25] reads the divisor off the coefficients of q^(-n/4): that
+    // coefficient contributes the CM points of discriminant -N^2 n / r^2.  So only the exponents
+    // divisible by D0 carry divisor, and the search returns only forms supported there (the
+    // good-forms kernel above).  D0 was the odd part of D alone, which agrees only when the odd
+    // part of N is 1; at X_0^21(22) that read every disc at 11 times its value.
+    D0 := get_D0_M_g(Xstar`D, Xstar`N);
+    require forall{k : k in [Valuation(f0_D0)..-1] | k mod D0 eq 0 or Coefficient(f0_D0, k) eq 0} :
+        "the principal part at 0 must be supported on powers of q^(1/4) (exponents divisible by the odd part of DN)";
     v := Valuation(f0_D0) div D0;
     coeffs_f0_D0 := [Coefficient(f0_D0,m*D0) : m in [v..-1]];
     R<q> := Parent(f0_D0);
