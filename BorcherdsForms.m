@@ -770,11 +770,9 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
         bwh_Rq := Parent(bwh_qt);
         bwh_q := bwh_Rq.1;
         bwh_t1 := Cputime();
-        // A product of two series whose coefficients have varying denominators is about three
-        // thousand times slower than the same product with integral coefficients (150 s against
-        // 0.05 s at precision 8110, 600-bit entries), and the expansions at 0 have such
-        // denominators.  So every factor is scaled to integral coefficients, the products and the
-        // powers of t are taken there, and each product is divided by its scalar once.
+        // Series products are far slower when the coefficients have varying denominators, as the
+        // expansions at 0 do, so each factor is scaled to integral coefficients, the powers of t
+        // and the products are taken there, and each product is divided by its scalar once.
         function bwh_integral(f)      // <d f, d> with d f of integral coefficients
             d := LCM([Integers() | Denominator(c) : c in Coefficients(f)]);
             return <d*f, d>;
@@ -956,16 +954,12 @@ function good_forms_at_zero_kernel(coeffs, full_basis, pole_order, D0)
 end function;
 
 // The same good forms by forward substitution.  The pool has one element per pole order at 0, so
-// its coefficient matrix on the window q^-pole_order .. q^0 is triangular up to the order of the
-// rows: every column is the leading column of some row.  A good form with principal part exactly
-// q^-(n/4) is then the solution x of x * coeffs = (unit vector at that column), found column by
-// column, each column matched by the row that leads there.  That costs O(#good * pool^2) field
-// operations and never forms a kernel of the whole pool: the integer kernel the routine above
-// takes grew to 172 GB at pole order 21021 (X_0^33(7), m = -91) and killed Magma twice.
-// The remaining pool elements -- those with zero window, and duplicates of a leading column --
-// span the dependencies; echelonised, they reduce the good rows exactly as above, so the output
-// is the same canonical K and G (checked equal on X_0^15(2), X_0^21(2) and X_0^95(1)).
-// BFGOOD=kernel selects the kernel routine.
+// on the window q^-pole_order .. q^0 every column is the leading column of some row; a good form
+// with principal part q^-(n/4) is the solution x of x * coeffs = (unit vector at that column),
+// found column by column.  The pool elements left over (zero window, or a duplicated leading
+// column) span the dependencies, which reduce the good rows as in the kernel routine, so K and G
+// are the same.  BFGOOD=kernel selects the kernel routine; BFGOODCHECK=1 runs both and asserts
+// they agree.
 function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     coeffs, full_basis := weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero);
     if GetEnv("BFGOOD") eq "kernel" then
@@ -975,12 +969,6 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
     W := Ncols(coeffs); npool := Nrows(coeffs);
     non_div := [i : i in [1..W] | (i-1-pole_order) mod D0 ne 0];
     div_cols := [i : i in [1..W] | (i-1-pole_order) mod D0 eq 0];
-    if GetEnv("BFPOOLDUMP") ne "" then
-        // the pool matrix and the q^(1/4) columns, for offline experiments with the linear algebra
-        dump := Sprintf("%o/pool_%o_%o.m", GetEnv("BFPOOLDUMP"), pole_order, D0);
-        Write(dump, Sprintf("pole_order := %o; D0 := %o; div_cols := %o;\ncoeffs := Matrix(Rationals(), %o, %o, %o);\n",
-                            pole_order, D0, div_cols, npool, W, Eltseq(coeffs)) : Overwrite);
-    end if;
     rowfor := [0 : c in [1..W]];
     extra := [];
     for i in [1..npool] do
