@@ -465,8 +465,11 @@ nothing external covers this key; it rests on the independent checks in `ModelVe
 was enumerated in August for the theta campaign: `polymake/polymake_solution_420_145_0` (19864
 lattice points, 13.4 wall-hours of Normaliz, banked on the campaign branch as
 `vvdata/weyl-campaign/nmz_420_145_0.txt.gz`). The t-shift fallback of `nmzsolve.py` answers the
-second rung from it (`polymake_solution_420_250_0`, 212 points); both files are committed here so the
-default recipe reproduces the base without Normaliz. With them the whole run took 7 min 37 s on
+second rung from it (`polymake_solution_420_250_0`, 212 points, a spanning set of the rung's forms and
+not the lattice points of the polytope; its first line says so, as a Magma comment, so that a later
+enumeration is not mistaken for it); both files are committed here so the default recipe reproduces
+the base without Normaliz. The run used the composite-level tree on lovelace at ca87e19 (branch
+composite-level, PR #74; at N = 1 no m = 0 term is involved). With them the whole run took 7 min 37 s on
 lovelace: 66 cover keys, 40 of genus 0, 31 of genus 1, 10 of genus 2, 4 of genus 3 and 6 fibre
 products of genus 3. Outside check: 234 of 234 point counts of the Eichler-Selberg trace formula at
 p = 11, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`). The same cache serves every base with
