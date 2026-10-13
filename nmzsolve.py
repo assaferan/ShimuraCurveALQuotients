@@ -88,14 +88,11 @@ def _pole(r):
     assert s24 % 24 == 0
     return -s24 // 24
 # ---- a lower two-cusp rung is a subset of a higher cached one -----------------
-# (M, n, m) and (M, n', m) differ only in the bound 24n on the cusp-oo inequality, so for n' > n
-# the lower rung is exactly the points of the higher one whose pole at oo is <= n.  The cache file
-# name records only (M, n, m), so this applies only to the weight-1/2, default-parity, non-cuspidal
-# request the name stands for, and only to m > 0: the t-shift fallback above writes shifted,
-# thinned m = 0 rungs under the same file names, and a subset of a thinned rung is not the rung.
-# A cached file whose first line marks it as derived (a spanning set, not the lattice points) is
-# skipped for the same reason.  The two two-cusp rungs an odd-D search asks for, (M, n0, k) and
-# (M, n0 + k, k), are the case this serves: one enumeration instead of two.
+# (M, n, m) and (M, n', m) differ only in the bound on the pole at oo, so for n' > n the lower rung
+# is the points of the higher one whose pole at oo is <= n.  Three conditions: the file name records
+# only the level and the pole orders, so this serves only the weight-1/2, default-parity,
+# non-cuspidal request; only rungs with a pole at 0 (m > 0), since shifted sets are written under
+# the m = 0 names; and a cached file marked derived (a spanning set, not the lattice points) is skipped.
 def _is_derived(path):
     with open(path) as f:
         return f.readline().startswith('//')
@@ -164,11 +161,8 @@ if k24 == 12 and cuspidal == 0:
                         pts.update(layer)
                 pts = sorted(pts)
             else:
-                # Every shifted point with pole <= n is kept while the set stays small.  Thinning to
-                # a few points per pole order loses rank: at level 924, from the rung 250 the 565
-                # products span the whole rung-325 space (rank 237 = dim) while four per order give
-                # 193 and the form-ring loop climbs for ever.  Only a set beyond NMZ_SHIFT_KEEP points
-                # (default 20000) is thinned, to the old four per pole order.
+                # Every shifted point with pole <= n is kept while the set has at most NMZ_SHIFT_KEEP
+                # points (default 20000); thinning to a few points per pole order can lose rank.
                 keep_all = int(os.environ.get('NMZ_SHIFT_KEEP', '20000'))
                 byorder = {}
                 layer = [ tuple(r) for r in base ]
@@ -190,10 +184,7 @@ if k24 == 12 and cuspidal == 0:
                     layer = nxt
                 total = sum(len(b) for b in byorder.values())
                 if total > keep_all:
-                    # keep as many points per pole order as the cap allows, at least four.  At level
-                    # 780 the 333051 products of the rung 274 with the shifts give 12521 points at 69
-                    # per order; four per order (1049 points) already has the full rank 396 with the
-                    # same leading orders, measured independently, so the extra points are a margin.
+                    # beyond the cap, keep as many points per pole order as the cap allows, at least four
                     per = max(4, keep_all // max(1, len(byorder)))
                     print(f"# tshift fallback: {total} shifted points, keeping {per} per pole order", file=sys.stderr)
                     pts = sorted({ v for b in byorder.values() for v in b[:per] })
@@ -209,17 +200,10 @@ if k24 == 12 and cuspidal == 0:
             sys.exit(0)
 
 # ---- coordinate order ---------------------------------------------------------
-# Normaliz lifts the lattice points coordinate by coordinate in the order of the input, and the
-# whole cost is lifting partial points that die on integrality late in the tree.  The "ends" order
-# puts the divisors farthest from sqrt(M) first (1, M, 2, M/2, ...).  How much it helps depends on
-# the level and on the Normaliz version, measured with 8 threads and the same points either way:
-# at levels 660, 780 and 1020 the divisor order does not finish the first rung in 90 minutes where
-# the ends order takes 3 to 4 minutes ((660,155,0) 178 s, (780,200,0) 257 s, (1020,250,0) 165 s on
-# lovelace, Normaliz 3.10.2); at level 924 on the same machine the divisor order is twice as fast
-# ((924,250,0) 360 s against 725 s), while on Normaliz 3.11.1 the ends order wins there too
-# ((924,200,0) 655 s against 58 s).  The keep-order flag -k changes nothing measurable; the order
-# of the input coordinates is what matters.  The solution file is written back in divisor order,
-# so nothing downstream sees the permutation.  NMZ_ORDER=id restores the divisor order.
+# Normaliz lifts the lattice points coordinate by coordinate in the order of the input.  The "ends"
+# order puts the divisors farthest from sqrt(M) first (1, M, 2, M/2, ...); the solution file is
+# written back in divisor order, so nothing downstream sees the permutation.  NMZ_ORDER=id keeps
+# the divisor order.
 order = os.environ.get('NMZ_ORDER', 'ends')
 if order == 'ends':
     perm = sorted(range(nd), key=lambda i: -abs(math.log(ds[i]) - math.log(M)/2))
@@ -241,8 +225,7 @@ with open(base + '.in', 'w') as f:
     f.write('LatticePoints\n')
 
 try:
-    # NMZ_THREADS (default 8): the lifting phase is parallel over partial points, and (924, 250, 0)
-    # took 888 s with 8 threads and 387 s with 32 on the same machine.
+    # NMZ_THREADS (default 8): the lifting phase is parallel over partial points
     res = subprocess.run([NMZ, f"-x={os.environ.get('NMZ_THREADS', '8')}", '-k', base + '.in'], capture_output=True, text=True, timeout=NMZ_TIMEOUT)
 except subprocess.TimeoutExpired:
     sys.stderr.write(f"# normaliz timed out after {NMZ_TIMEOUT}s on {base}.in\n")
@@ -255,6 +238,7 @@ pts = []
 with open(base + '.out') as f:
     lines = f.readlines()
 i = 0
+cnt = None
 while i < len(lines):
     if 'lattice points in polytope' in lines[i] and lines[i].rstrip().endswith(':'):
         cnt = int(lines[i].split()[0])
@@ -272,6 +256,17 @@ while i < len(lines):
             i += 1
         break
     i += 1
+
+# Normaliz can exit 0 and still leave no usable answer: an output file without the
+# lattice-points header, or one cut short of the count it announces.  Writing an empty or
+# short solution file there would be taken downstream as "the polytope has few points" and
+# produce an incomplete eta-quotient basis, so both are errors and no file is written.
+if cnt is None:
+    sys.stderr.write(f"# normaliz output {base}.out has no 'lattice points in polytope' header\n")
+    sys.exit(3)
+if len(pts) != cnt:
+    sys.stderr.write(f"# normaliz output {base}.out announces {cnt} lattice points but lists {len(pts)}\n")
+    sys.exit(4)
 
 pts = sorted(set(pts))
 print(f"# M={M} n={n_pole} m={m_pole} k24={k24} sq_disc={sq_disc} cuspidal={cuspidal}: {len(pts)} lattice points", file=sys.stderr)
