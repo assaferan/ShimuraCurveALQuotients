@@ -222,8 +222,10 @@ as the judge.
 
 ## Handoff — 2026-10-04 (evening) — SACHI'S REVIEW OF THE FOUR STATEMENTS: hypotheses stated, outside sources found (PR #66)
 
-Sachi read lem:WN, prop:kappa0, prop:mult, prop:fibre line by line (lem:WN rechecked by counting) and
-found no errors; prop:composite accepted as a corollary. What she asked for, and what was done:
+The review of lem:WN, prop:kappa0, prop:mult and prop:fibre (lem:WN rechecked by counting) was done by
+agents working in Sachi's session, which found no errors and read prop:composite as a corollary; Sachi
+has not yet read the proofs herself, and no one has explicitly accepted prop:composite, so none of the
+four is agreed on yet. What the review asked for, and what was done:
 
 * **Schofer's normalisation of the m = 0 terms** (standalone intro): his (0,2)-theorem is proved as
   ∫Φ dh = lim_t [2 Σ_μ Σ_{m≥0} c_μ(−m) b_μ(m,t) − 2c_0(0) log t]; the "m = 0 part"
