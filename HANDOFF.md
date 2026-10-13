@@ -68,6 +68,34 @@ reading `merged: true`. And on this Mac (Magma 2.29-7) `ZetaFunction` returns a 
 for X_0(69,2)/{1,2,3,6} at p = 11 while its own point counts (and 2.29-10) are right; the model
 check now verifies the zeta function against two point counts and falls back to counts (PR open).
 
+**The evening: Sachi's two issues and the follow-up PRs.** #98 lists record-keeping follow-ups on
+the merged PRs; #99 says the fibre-product stage never checked that its factors share a coordinate
+on the star curve, and that nothing in the suite compares the `"CRV"` curves with anything. Six PRs
+answer them, none changing a stored curve except two cosmetic rebuilds: #102 (the model check builds
+the L-polynomial from point counts when `ZetaFunction` disagrees with them; full ModelChecks on the
+Mac 138 files, 28078 checks, 0 failures), #103 (the shift fallback multiplies only enumerated rungs,
+the search enumerates a rung whose derived set falls short instead of climbing, `polymake/README.md`
+records the shift-set bounds 204: 32, 380: 93, 420: 104, 780: 274, 924: 325 with the rank checks
+behind them), #104 (the record: test comments, the 162 points of (60, 11, 0), the #78 section — its
+diff against main was four equations rescaled by squares and four new empty keys, the genus-0
+quotients identical to #73's — the genus-0 caveat at 660/780/1020/924, 203 → 190 fibre products,
+299 CRV entries in 71 files), #105 (the triple check f_U f_V f_T = square in the stage and the
+writer, refusing a pair known to disagree; reproduces Sachi's 227/9/10 exactly; the [1,2] entries
+of 22_13 and 38_7 were NOT in another coordinate — #78 rescaled by squares — but are rebuilt
+anyway; two covers out of step she did not list: 22_13 [1,11,13,143], 38_7 [1,14,38,133];
+VERIFICATION.m reports a non-hyperelliptic model instead of erroring), #106 on #105 (every CRV
+entry against the trace formula, 299 entries, two primes, 148 s; the LMFDB check at X_0(6,23): the
+Atkin–Lehner sign at the primes of the discriminant is MINUS the newform's — with that rule all 14
+curves match the four level-138 newforms at the eight primes below 32, without it nothing does;
+planequartic fixed and tested). ⚠ Two primes are a screen: a factor scaled by 2 passes at 5 and 7.
+
+**First odd-D base behind the wall: X_0^33(10)** (PR #107), 31 minutes on the combined tree; 50
+keys, 22 with an equation (genus 0 to 8), 28 empty; trace formula 126/126; the rungs (660, 401, 0)
+and (660, 69, 166) committed with it. The other fourteen are still running (`odd3/logs`).
+
+⚠ CI has been queued since 19:08Z: six runs on branches of already-merged PRs (each 102 jobs) hold
+the runners; cancelling them from the Actions tab frees main and the new PRs.
+
 ## Handoff — 2026-10-11 — LEVEL 924: THE THREE EVEN-D BASES BUILT, THE ODD-D ONES BEHIND A SECOND WALL
 
 PR #80 (`level-924-models`) carries the first rung `(924, 325, 0)`, the weight-0 shift set, and the
