@@ -1498,24 +1498,16 @@ function pin_complex_conjugation(L)
 end function;
 
 
-// The ideal class behind complex conjugation on CM points ([GR] Lemma 5.10), read off the Eichler
-// order.  For an optimal embedding q : R -> O of the order R of discriminant d, with theta = q(sqrt d),
-//     Lambda = { x in O : x theta = -theta x }
-// is a rank-2 lattice and a left q(R)-module, so Lambda = q(c) j_0 for any j_0 in Lambda and a
-// fractional R-ideal c.  Complex conjugation sends the point of q to the point of the conjugate
-// embedding eps q(bar .) eps^-1 (eps a unit of norm -1), and the transporter between the two
-// embeddings is eps Lambda; comparing with the transporter w beta^-1 q(a^-1) of w_m sigma_a gives
-// [a] = [c]^-1 in Pic(R), so [a] = [c] in Pic(R)/Pic(R)^2.  [GR]'s condition B ~ (d, m N(a)) sees
-// only the genus characters of the maximal order; at a prime dividing the conductor it cannot
-// separate the classes, which is why several passed it (two for d = -48 on X_0(15,1)/<w_15>,
-// giving Q(i) and Q(sqrt 3); the lattice gives Q(i), as [GY]'s tables do at every ambiguous
-// point of tests/CMPoints.m).  Returned as an integral ideal coprime to the conductor, which the
-// Picard discrete log needs; the inverse is taken for that, harmless modulo squares.
+// The returned ideal must be integral and coprime to the conductor of R, which the Picard
+// discrete log needs; the inverse of the class is taken for that, harmless modulo squares.
 intrinsic CMConjugationIdeal(R::RngQuad, D::RngIntElt, N::RngIntElt) -> RngQuadIdl
 {An ideal of the quadratic order R whose class in Pic(R)/Pic(R)^2 is the class [a] with complex
- conjugation acting on the CM points by R of X_0(D,N) as w_m sigma_a ([GR] Lemma 5.10), computed
- from an optimal embedding of R into the Eichler order of level N in B_D.  Requires such an
- embedding to exist.}
+ conjugation acting on the CM points by R of X_0(D,N) as w_m sigma_a ([GR] Lemma 5.10), read off
+ an optimal embedding q of R into the Eichler order O of level N in B_D: with theta = q(sqrt d), the
+ lattice Lambda = (x in O : x theta = -theta x) is a left q(R)-module, Lambda = q(c) j_0 for a
+ fractional ideal c, and comparing the transporter between q and its complex conjugate embedding
+ with the transporter of w_m sigma_a gives [a] = [c] modulo squares.  Requires such an embedding
+ to exist.}
     d := Discriminant(R);
     Ldata := ShimuraCurveLattice(D, N);       // the Eichler order object the Schofer code uses
     O := Ldata`O;
