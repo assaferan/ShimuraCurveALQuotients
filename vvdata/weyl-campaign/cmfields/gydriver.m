@@ -12,7 +12,7 @@ for datum in data do
         if ClassNumber(d) gt 8 then continue; end if;
         if AbsoluteDegree(K) eq 1 then continue; end if;      // degree 1: nothing to choose
         Fs, nvalid := FieldsOfDefinitionOfCMPointLambda(X, d);
-        old := FieldsOfDefinitionOfCMPointFast(X, d);
+        old := [* FieldOfDefinitionOfCMPoint(X, d) *];       // the routine of main since PR #84/#85: one field
         if #Fs eq 0 then printf "NO POINT (D,N,W,d)=(%o,%o,%o,%o)\n", D, N, W, d; continue; end if;
         nchecked +:= 1;
         okK := IsIsomorphic(Fs[1], K);

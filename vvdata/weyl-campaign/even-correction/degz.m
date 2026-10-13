@@ -21,7 +21,8 @@ Xstar := rep{X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
 
 function degZ(X, d)
     try
-        flds := FieldsOfDefinitionOfCMPointFast(X, d);
+        // one field, or an error when X has no CM point by d (main since PR #85)
+        flds := DegreeOfFieldOfDefinitionOfCMPoint(X, d) eq 0 select [* *] else [* FieldOfDefinitionOfCMPoint(X, d) *];
     catch e
         return -1;
     end try;

@@ -20,8 +20,7 @@ curves := GetQuotientsAndGenera([Xstar]);
 _ := exists(star){c : c in curves | IsStarCurve(c)};
 
 // star field of definition at d = -68
-flds := FieldsOfDefinitionOfCMPointFast(star, -68 : MaxDegree := 2);
-K := flds[1];
+K := FieldOfDefinitionOfCMPoint(star, -68);     // one field (main since PR #85)
 printf "star field at -68: %o\n", K;
 
 // ---- FILL IN from /tmp/degw_10_23.log (RationalNumber of each LogSum, or the
