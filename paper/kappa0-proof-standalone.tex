@@ -520,14 +520,31 @@ right at a composite level is untested, since no such base has forms, let alone 
 \begin{remark}[computing $c_\eta(0)$ exactly]\label{rem:exact}
 The constant term $c_\eta(0)=\sum_w\rho(w^{-1})e_0[\eta]\,a_0(f|w)$, a sum over the cosets $w$ of
 $\Gamma_0(M)\backslash SL_2(\mathbf Z)$, is an algebraic number, and it can be computed with no
-transcendental step. The per-coset product depends only on the class $g=\gcd(c,M)$ of the bottom row
-of $w$ (both factors change by the character of $f$ on $\Gamma_0(M)$ under left multiplication, and
-$e_0$ is an eigenvector for that character), so one representative $\gamma=\bigl(\begin{smallmatrix}
-a&b\\c&d\end{smallmatrix}\bigr)$ with $c>0$ per class suffices, both factors taken for the lift
-$(\gamma,\sqrt{c\tau+d})$ of the metaplectic group. The first factor is a Gauss sum: writing
+transcendental step. The per-coset product is well defined on $\Gamma_0(M)\backslash SL_2(\mathbf Z)$
+(both factors change by the character of $f$ on $\Gamma_0(M)$ under left multiplication, and $e_0$ is
+an eigenvector for that character), and it is constant on each class $g=\gcd(c,M)$ of the bottom row
+of $w$ for two reasons. Right multiplication by $T$ leaves $a_0(f|w)$ unchanged and multiplies the
+$\eta$-component of $\rho(w^{-1})e_0$ by $\mathbf e(\pm Q(\eta))=1$, $Q(\eta)$ being an integer at
+the isotropic $\eta$ in question, so the product is a function of the cusp $\Gamma_0(M)w\infty$ alone;
+and the cusps of $\Gamma_0(M)$ with $\gcd(c,M)=g$ number $\varphi(\gcd(g,M/g))$, which is $1$ for
+every $g$ because $M$ is four times an odd squarefree number, so each class is a single cusp. One
+representative $\gamma=\bigl(\begin{smallmatrix}a&b\\c&d\end{smallmatrix}\bigr)$ with $c>0$ per
+class therefore suffices, both factors taken for the lift $(\gamma,\sqrt{c\tau+d})$ of the metaplectic
+group; the check at a second representative, which this makes redundant, is off by default in the
+pipeline. The first factor is Shintani's formula for the Weil representation at a general element
+\cite[Prop.~1.6]{Shintani}, in the form given by Scheithauer \cite[Thm.~4.7]{Scheithauer} and
+Str\"omberg \cite{Stromberg}: for $\gamma$ with $c>0$, $\rho_L(\gamma)e_\delta$ is a Gauss sum over
+$L/cL$ with the prefactor $\mathbf e\bigl((b^--b^+)/8\bigr)\,c^{-n/2}\,\lvert\Ldual/L\rvert^{-1/2}$,
+$(b^+,b^-)$ the signature and $n=b^++b^-$, the same formula one gets by writing
 $\gamma\tau=a/c-1/(c(c\tau+d))$ and applying Poisson summation to the inversion in the theta
-transformation formula \cite[Thm.~4.1]{Borcherds} gives, for the dual representation $\rho$ of a
-lattice of signature $(1,2)$,
+transformation formula \cite[Thm.~4.1]{Borcherds}. Two conventions enter. The input forms transform
+under the dual of Borcherds' $\rho_L$, its complex conjugate: the coset sum $\sum_w(f|w)\rho(w^{-1})e_0$
+is well defined only if $\rho(Z^{-1})e_0=\mathbf e(\tfrac14)e_0$ for $Z=S^2$, and at signature $(1,2)$
+that is the dual's sign ($\rho_L(Z)e_\gamma=\mathbf e(\tfrac14)e_{-\gamma}$ for Borcherds' $\rho_L$).
+And what is needed is $\rho(\gamma^{-1})$, whose lower-left entry is $-c<0$; writing
+$\gamma^{-1}=Z^{-1}\cdot(-\gamma^{-1})$ and applying the formula to $-\gamma^{-1}$ gives the dual's
+prefactor $\mathbf e(-\tfrac18)$ times $\mathbf e(\tfrac14)$ from $Z^{-1}$. So, for the dual
+representation $\rho$ of a lattice of signature $(1,2)$,
 \[
 \rho(\gamma^{-1})e_0[\eta]=\mathbf e(\tfrac18)\,c^{-3/2}\,\lvert\Ldual/L\rvert^{-1/2}\,
 \mathbf e\Bigl(\frac{d\,Q(\eta)}c\Bigr)\sum_{\nu\in L/cL}\mathbf e\Bigl(\frac{a\,Q(\nu)+(\eta,\nu)}c\Bigr),
@@ -1221,6 +1238,12 @@ functions for orthogonal groups}, Invent.\ Math.\ \textbf{225} (2021), 693--785.
 
 \bibitem{Borcherds} R.~E.~Borcherds, \emph{Automorphic forms with singularities on Grassmannians},
 Invent.\ Math.\ \textbf{132} (1998), 491--562.
+\bibitem{Shintani} T.~Shintani, \emph{On construction of holomorphic cusp forms of half integral
+weight}, Nagoya Math.\ J.\ \textbf{58} (1975), 83--126.
+\bibitem{Scheithauer} N.~R.~Scheithauer, \emph{The Weil representation of $SL_2(\mathbf Z)$ and some
+applications}, Int.\ Math.\ Res.\ Not.\ IMRN (2009), no.~8, 1488--1545.
+\bibitem{Stromberg} F.~Str\"omberg, \emph{Weil representations associated with finite quadratic
+modules}, Math.\ Z.\ \textbf{275} (2013), 509--527.
 \end{thebibliography}
 
 \end{document}
