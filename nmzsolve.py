@@ -80,11 +80,6 @@ for b in ds:
         c = 24 * m_pole if b == 1 else (24 * n_pole if b == M else 0)
     ineqs.append(row + [c])
 
-# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
-# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
-# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
-# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
-# the cache, answer tall requests by shifting + thinning instead of normaliz.
 import glob as _glob, re as _re
 def _load_magma_seq(path):
     return [ [int(x) for x in m.split(',')] for m in _re.findall(r'\\?\[ ([-\d, ]+) \]', open(path).read().replace('\\\n', '').replace('\n', ' ')) ]
@@ -92,23 +87,55 @@ def _pole(r):
     s24 = sum(d*x for d, x in zip(ds, r))
     assert s24 % 24 == 0
     return -s24 // 24
-if m_pole == 0 and k24 == 12 and cuspidal == 0:
+# ---- a lower two-cusp rung is a subset of a higher cached one -----------------
+# (M, n, m) and (M, n', m) differ only in the bound on the pole at oo, so for n' > n the lower rung
+# is the points of the higher one whose pole at oo is <= n.  Three conditions: the file name records
+# only the level and the pole orders, so this serves only the weight-1/2, default-parity,
+# non-cuspidal request; only rungs with a pole at 0 (m > 0), since shifted sets are written under
+# the m = 0 names; and a cached file marked derived (a spanning set, not the lattice points) is skipped.
+def _is_derived(path):
+    with open(path) as f:
+        return f.readline().startswith('//')
+if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
+    higher = []
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
+        if mm and int(mm.group(1)) > n_pole and not _is_derived(f):
+            higher.append(int(mm.group(1)))
+    if higher:
+        hi = min(higher)
+        pts = sorted({ tuple(r) for r in _load_magma_seq(f'polymake/polymake_solution_{M}_{hi}_{m_pole}') if _pole(r) <= n_pole })
+        print(f"# lower rung: (M={M}, n={n_pole}, m={m_pole}) read off the cached (M={M}, n={hi}, m={m_pole}): {len(pts)} lattice points", file=sys.stderr)
+        _write_solution(outp, pts)
+        sys.exit(0)
+
+# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
+# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
+# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
+# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
+# the cache, answer tall requests by shifting + thinning instead of normaliz.
+# The same ladder at a fixed cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the pole
+# at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted.  A cusp-0 order cannot be
+# reached from the m = 0 rungs, so the lowest rung at each cusp-0 order has to be enumerated once.
+# The read of a lower rung off a higher cached one runs first: where both are cached, the exact
+# points are preferred to a shifted spanning set.
+if k24 == 12 and cuspidal == 0:
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []
-    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_0'):
-        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_0$', f)
+    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
+        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
         if mm and int(mm.group(1)) < n_pole:
             cands.append(int(mm.group(1)))
     if os.path.exists(w0p) and cands:
         base_n = max(cands)
-        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_0')
+        base = _load_magma_seq(f'polymake/polymake_solution_{M}_{base_n}_{m_pole}')
         shifts = [ t for t in _load_magma_seq(w0p) if any(t) ]
         # a rank-preserving CORE (same span as the full rung, ~dim vectors) beats
         # thinning by pole order: 42 of sol(420,145)'s 105 pivots come from
         # cancellations between same-leading-order vectors, which order-thinning
         # destroys.  If a core file exists, shift it verbatim (no thinning).
         corep = f'polymake/tshift_core_{M}.txt'
-        use_core = os.path.exists(corep)
+        use_core = m_pole == 0 and os.path.exists(corep)      # the core is a reduced m = 0 rung
         if use_core:
             core = _load_magma_seq(corep)
             if core: base = core
@@ -169,30 +196,8 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                 if len(residues) < tp:
                     print(f"# tshift fallback WARNING: only {len(residues)}/{tp} pole residues covered", file=sys.stderr)
             print(f"# tshift fallback: base rung {base_n} ({len(base)} pts) + {len(shifts)} shift(s) x{J} -> {len(pts)} pts for n={n_pole}", file=sys.stderr)
-            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m=0) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
+            _write_solution(outp, pts, derived=f'spanning set for (M={M}, n={n_pole}, m={m_pole}) from the rung {base_n} and {len(shifts)} weight-0 shift(s), not the lattice points of the polytope')
             sys.exit(0)
-
-# ---- a lower two-cusp rung is a subset of a higher cached one -----------------
-# (M, n, m) and (M, n', m) differ only in the bound on the pole at oo, so for n' > n the lower rung
-# is the points of the higher one whose pole at oo is <= n.  Three conditions: the file name records
-# only the level and the pole orders, so this serves only the weight-1/2, default-parity,
-# non-cuspidal request; only rungs with a pole at 0 (m > 0), since shifted sets are written under
-# the m = 0 names; and a cached file marked derived (a spanning set, not the lattice points) is skipped.
-def _is_derived(path):
-    with open(path) as f:
-        return f.readline().startswith('//')
-if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
-    higher = []
-    for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
-        mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
-        if mm and int(mm.group(1)) > n_pole and not _is_derived(f):
-            higher.append(int(mm.group(1)))
-    if higher:
-        hi = min(higher)
-        pts = sorted({ tuple(r) for r in _load_magma_seq(f'polymake/polymake_solution_{M}_{hi}_{m_pole}') if _pole(r) <= n_pole })
-        print(f"# lower rung: (M={M}, n={n_pole}, m={m_pole}) read off the cached (M={M}, n={hi}, m={m_pole}): {len(pts)} lattice points", file=sys.stderr)
-        _write_solution(outp, pts)
-        sys.exit(0)
 
 # ---- coordinate order ---------------------------------------------------------
 # Normaliz lifts the lattice points coordinate by coordinate in the order of the input.  The "ends"
