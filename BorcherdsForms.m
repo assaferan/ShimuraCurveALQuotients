@@ -1228,12 +1228,10 @@ alone cannot do odd D.}
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
                     if IsOdd(Xstar`D) then
-                        // The cusp-0 side sees the CM discriminants scaled by N^2, the cusp-oo side by 4,
-                        // so for N > 2 the 0-side list is not contained in relevant_ds and the lookup
-                        // below returned column 0 (X_0^21(11), the first odd-D base with odd N > 1 ever
-                        // run).  Index the divisor by the union: the extra discriminants get zero
-                        // columns on the oo side, correctly, since no coefficient of the principal
-                        // part at oo (pole order <= -min_m) lands on them.
+                        // The cusp-0 side sees the CM discriminants scaled by N^2, the cusp-oo side by 4
+                        // ([GY, Lemma 25]), so for N > 2 the 0-side list is not contained in relevant_ds.
+                        // The divisor is indexed by the union; the extra discriminants get zero columns on
+                        // the oo side, since no coefficient of the principal part at oo reaches them.
                         extra := [d : d in relevant_ds_0_oo | d notin relevant_ds];
                         if #extra gt 0 then
                             new_ds := Sort(relevant_ds cat extra);
@@ -1500,11 +1498,8 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     foo := qExpansionAtoo(f,0);
     f0_D0 := qExpansionAt0(f,0);
     // The expansion at 0 is in powers of q^(1/(4 D0)), D0 the odd part of DN (the eta quotients
-    // have level 4 D0).  [GY, Lemma 25] reads the divisor off the coefficients of q^(-n/4): that
-    // coefficient contributes the CM points of discriminant -N^2 n / r^2.  So only the exponents
-    // divisible by D0 carry divisor, and the search returns only forms supported there (the
-    // good-forms kernel above).  D0 was the odd part of D alone, which agrees only when the odd
-    // part of N is 1; at X_0^21(22) that read every disc at 11 times its value.
+    // have level 4 D0), and [GY, Lemma 25] reads the divisor off the coefficients of q^(-n/4), i.e.
+    // the exponents divisible by D0; the search returns only forms supported there.
     D0 := get_D0_M_g(Xstar`D, Xstar`N);
     require forall{k : k in [Valuation(f0_D0)..-1] | k mod D0 eq 0 or Coefficient(f0_D0, k) eq 0} :
         "the principal part at 0 must be supported on powers of q^(1/4) (exponents divisible by the odd part of DN)";
