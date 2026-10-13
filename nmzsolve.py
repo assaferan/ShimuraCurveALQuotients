@@ -109,22 +109,26 @@ if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
         _write_solution(outp, pts)
         sys.exit(0)
 
-# ---- t-shift fallback for tall weight-1/2 {oo}-pole rungs ------------------
-# Enumeration cost grows ~10x per +22 in n at 24-divisor levels, but rung n+k
-# is spanned by rung n shifted by weight-0 pole<=k quotients (validated at 308:
-# rank 108/108). If a weight-0 shift file and a lower enumerated rung exist in
-# the cache, answer tall requests by shifting + thinning instead of normaliz.
-# The same ladder at a fixed cusp-0 order m > 0: a weight-0 shift with its pole at oo leaves the pole
-# at 0 alone, so rung (M, n + k, m) is spanned by rung (M, n, m) shifted.  A cusp-0 order cannot be
-# reached from the m = 0 rungs, so the lowest rung at each cusp-0 order has to be enumerated once.
-# The read of a lower rung off a higher cached one runs first: where both are cached, the exact
-# points are preferred to a shifted spanning set.
-if k24 == 12 and cuspidal == 0:
+# ---- shifted spanning sets for tall rungs ---------------------------------------
+# Enumeration cost grows about tenfold per +22 in n at levels with 24 divisors, but the forms of
+# the rung (M, n + j, m) are spanned by those of the rung (M, n, m) times the weight-0 eta quotients
+# of level M with poles at oo only and pole order at most j (a shift leaves the pole at 0 alone).
+# When the level's shift set polymake/tshift_w0_M.txt and a lower ENUMERATED rung at the same
+# cusp-0 order are cached, a tall request is answered by those products, every one kept up to the
+# size limit NMZ_SHIFT_KEEP (default 20000), and the file written carries a first-line mark saying
+# it is a spanning set, not the lattice points.  A derived file is never used as the base, so a short
+# set at one rung does not make the rungs above it short; and the caller enumerates a rung whose
+# derived set falls short of the rank it needs (NMZ_NO_SHIFT=1 bypasses this section).  Checked in CI
+# at levels 204 (tests/TShiftCusp0.m) and 380 (tests/TShiftProducts.m); the bounds of the shift sets
+# are recorded in polymake/README.md.  A cusp-0 order cannot be reached from the m = 0 rungs, so the
+# lowest rung at each cusp-0 order has to be enumerated once.  The read of a lower rung off a higher
+# cached one (above) runs first: where both are cached, the exact points are preferred.
+if k24 == 12 and cuspidal == 0 and os.environ.get('NMZ_NO_SHIFT', '') != '1':
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []
     for f in _glob.glob(f'polymake/polymake_solution_{M}_*_{m_pole}'):
         mm = _re.match(rf'polymake/polymake_solution_{M}_(\d+)_{m_pole}$', f)
-        if mm and int(mm.group(1)) < n_pole:
+        if mm and int(mm.group(1)) < n_pole and not _is_derived(f):
             cands.append(int(mm.group(1)))
     if os.path.exists(w0p) and cands:
         base_n = max(cands)
@@ -141,10 +145,7 @@ if k24 == 12 and cuspidal == 0:
             if core: base = core
         if base and shifts:
             tp = max(_pole(t) for t in shifts)                     # shift pole k
-            # the cache accumulates rungs THIS fallback wrote (shifted, not
-            # enumerated), so the filename's n overstates the reach of `base`
-            # once it has been swapped for the core: compute J from the actual
-            # max pole of the vectors being shifted, never from base_n.
+            # the core is a reduced rung, so its reach is the largest pole among its vectors
             base_n = max(_pole(list(r)) for r in base)
             J = max(0, -(-(n_pole - base_n) // tp))                # ceil
             if use_core:
