@@ -2172,36 +2172,94 @@ Shimura genus formula run fine on non-squarefree bases — that is exactly what 
 constants, and it is an oracle for a whole class the pipeline cannot otherwise touch. Any candidate
 model for these 9 can be checked the same way.
 
-**What does NOT generalise: the GENERATION half.** `15_4` worked because Tu (Pacific J. Math. 269
-(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote. Nothing
-supplies that for the other 8. Two possible routes:
+**The GENERATION half, as first scoped:** `15_4` worked because Tu (Pacific J. Math. 269
+(2014), Lem. 13) published a Hauptmodul with explicit CM values, which Guo-Yang quote, and nothing
+supplies that for the other 8. Two routes were listed:
 * **the Hall-divisor refactor** (index `W` by Hall divisors; lift `assert IsSquarefree(N)`), which
   only helps where Guo-Yang's obstruction is ABSENT;
-* **external Hauptmoduls** — Tu's paper is about genus-zero Shimura curves generally, so it may
-  cover more of these. We do not have it; it is not in the user's Dropbox.
+* **external Hauptmoduls** — Tu's paper covers none of the other 8 (see below).
 
-**⚠ A PREDICTION, NOT A MEASUREMENT — which of the 8 are only CODE-blocked.** Guo-Yang's
-obstruction is that `N^+_B(O)` strictly contains the Atkin-Lehner group. By analogy with
-Atkin-Lehner-Newman for `Gamma_0(N)` — where the normalizer exceeds the AL group exactly when
-`h > 1` for `h` the largest divisor of **24** with `h^2 | N` — one expects:
+⇒ Superseded by the normaliser argument below: Tu's Hauptmodul is on `X_0^15(1)^*`, and the
+obstructed curves are Galois covers of star curves we already have.
 
-| base | `N` | `h` | expected |
+**THE NORMALISER IS ATKIN–LEHNER–NEWMAN'S — an argument, computed 2026-10-02, not yet checked
+against a reference (Kontogeorgis–Rotger cover squarefree level only) nor by all of us.** Guo-Yang's
+obstruction is that the normaliser of `Gamma_0^D(N)` strictly contains the Atkin-Lehner group.
+The normaliser is local: `Gamma = O^1` is dense in `prod_p O_p^1` (strong approximation, `B`
+indefinite), so `alpha` normalises `Gamma` iff it normalises every `O_p^1`, and every adelic
+normaliser has a global representative (one-sided class number 1). At `p | D` the local
+normaliser is all of `B_p^*` (giving `w_p`); at `p` not dividing `D` the local order is the
+standard Eichler order in `M_2(Q_p)`, so the local normaliser is that of `Gamma_0(p^e)`, which
+Atkin-Lehner-Newman computed: beyond `Q_p^* O_p^*` and `w_{p^e}` there is an extra element
+exactly when `p in {2, 3}` and `p^2 | N`, the translation `(1 1/h; 0 1)`, which normalises
+because `ad = 1 mod h^2` forces `a = d mod h` for all units iff `h | 24`. So **the normaliser
+exceeds the AL group iff `h > 1`**, `h` the largest divisor of 24 with `h^2 | N`:
+
+| base | `h` | Galois over | group | genus (R–H = formula) | full-normaliser quotient |
+|---|---|---|---|---|---|
+| `6_25`, `6_49` | 1 | — | `W` only | 5, 9 | **unobstructed** |
+| `15_4`, `21_4`, `33_4` | 2 | `X_0^D(1)` | `S_3` | 5, 7, 11 | `X_0^D(1)^*`, genus 0 |
+| `15_8` | 2 | `X_0^15(2)` | `(Z/2)^2` | 9 | `X_0^15(2)^*`, genus 0 |
+| `10_9`, `14_9`, `22_9` | 3 | `X_0^D(1)` | `A_4` | 5, 7, 11 | `X_0^D(1)^*`, genus 0 |
+
+**What the extra elements are.** Conjugating by `(h 0; 0 1)` turns `Gamma_0^D(h^2 N')` into
+`Gamma^D(h) cap Gamma_0^D(N')`, normal in `Gamma_0^D(N')` with quotient `SL_2(F_h)` (`S_3` for
+`h = 2`, `A_4` for `h = 3`; for `8 | N` the same over `N/4` with degree 4). So each obstructed
+curve is a **Galois cover of a curve we have**, ramified only over the elliptic points of the
+base (order 3: index 3; order 2: index 2). **Riemann–Hurwitz from the base reproduces the genus
+formula in all seven cases** — that is the computational check
+(`vvdata/weyl-campaign/kappa0-xterms/normaliser.m` on the campaign branch, log alongside).
+
+⇒ **What this changes for `6_25` and `6_49`:** they are reachable by our own route — the
+Hall-divisor refactor plus a level-`p^2` version of the local analysis. **That analysis is now
+done** (campaign `vvdata/weyl-campaign/level-p2/`): for `p^e || N` the negative plane is the
+`p^e`-scaled binary lattice (computed, generalising Yang's Lemma 18), and at a `p^2`-scaled split
+plane the `m = 0` factor takes three values, so the multiplier becomes `(1/2)(c_1(0) + c_2(0))`
+over the two surviving coset classes instead of `(1/2) c_eta(0)`. Every value was confirmed by
+brute-force counting at `p = 3, 5`. ⚠ This multiplier rests on the `m = 0` term itself, for which
+a proof is *proposed* in PR #66 and not yet agreed. **Do not run the pipeline's star quotient on
+the six obstructed bases**: it is the wrong object.
+
+#### ⇒ CAN THE `15_4` ROUTE BE GENERALISED? Two maps, and the earlier "no" was about the wrong one (2026-10-02, corrected 2026-10-03)
+
+**⚠ CORRECTED.** An earlier version of this section said there is no map `X^*(D,N) -> X^*(D,N')`,
+because the top level's new involution `w_{q^2}` is not in `<Gamma_0(N'), W'>`. That is true of
+the *projection* `z -> z`, which does not descend, and false of the *degeneracy map* `z -> qz`,
+which does (Sachi, review of PR #67): conjugating by `diag(q,1)` carries `w_{q^2}` into `q` times
+an element of the lower-level group, as in `X_0(4)/w_4 -> X(1)`. Checked classically at level
+`84 = 4*21`: `diag(2,1) * w_4 * diag(2,1)^-1 = 2 * (2 -1; 21 -10)`, an element of `Gamma_0(21)`.
+So the maps between the star curves **exist**, of degree `psi(N)/psi(N') * #W'/#W`, and the
+degree-3 map `X^*(21,4) -> X^*(21,1)` that the Hurwitz solve below assumed is a genuine map after
+all; that solve, retracted on the strength of the wrong statement, is to be **rechecked, not
+discarded** (campaign `nonsquarefree/NOTES.md`). Everything below about the quotient
+`X_0^D(N)/U -> X_0^D(N')/U` with `U = Hall(DN) cap Hall(DN')` stands as written; it is the map
+Tu's `t_4` uses for `15_4`, where he quotients by `W_15`, not by `Hall(60)`, and its genus decides
+whether a Hauptmodul exists on *that* curve:
+
+| base | `U` | degree | `g(X_0^D(N)/U)` |
 |---|---|---|---|
-| `6_25` | 25 | 1 (5 does not divide 24) | **no obstruction — possibly only code-blocked** |
-| `6_49` | 49 | 1 (7 does not divide 24) | **no obstruction — possibly only code-blocked** |
-| `15_4`, `21_4`, `33_4` | 4 | 2 | obstruction — matches Guo-Yang's Remark 39 ✓ |
-| `15_8` | 8 | 2 | obstruction |
-| `10_9`, `14_9`, `22_9` | 9 | 3 | obstruction |
+| **`15_4`** | `{1,3,5,15}` | 6 | **0** |
+| `21_4` | `{1,3,7,21}` | 6 | 1 |
+| `33_4` | `{1,3,11,33}` | 6 | 3 |
+| `15_8` | `{1,3,5,15}` | 4 | 1 |
+| `10_9`, `14_9` | `{1,2,p,2p}` | 12 | 1 |
+| `22_9` | `{1,2,11,22}` | 12 | 3 |
 
-The single confirming data point is `15_4` itself, where the criterion agrees with Guo-Yang.
-⚠ **I could not COMPUTE this.** `TwoSidedIdealClassGroup(O)` returns 1 for all nine INCLUDING
-`15_4` — it fails the positive control, so it is not measuring `N^+_B(O)/Q^*O^*` and its output must
-not be quoted. Until someone computes the normalizer properly (or reads Michon/Ogg on normalizers
-of Eichler orders), the table above is an **analogy with one confirmation**, not a result.
+`15_4` is the only one of the seven at genus 0 on *this* quotient, which is why Tu's route goes
+through `X_0^15(4)/W_15`. The star curves `X^*(D,N)` themselves have genus 0 at five of the seven
+(`15_4`, `21_4`, `15_8`, `10_9`, `14_9`) and genus 1 at `33_4` and `22_9` (Sachi, through
+Jacquet–Langlands, with the sign convention checked against the fixed-point genus formula on 15
+squarefree cases), and the degeneracy map `X^*(D,N) -> X^*(D,N')` exists, so a Belyi-type solve
+for a Hauptmodul of the top star over the lower star is open for those five and **not** excluded
+by this table — that was the wrong conclusion drawn here on 2026-10-02; for `33_4` and `22_9` there
+is no Hauptmodul to solve for. The degree-3 solve for `21_4` (the Hauptmodul
+`1/s = (t^3 - 4/3 t + 16/27)/(t^2 + 29/12 t + 22/9)`, with its `Q(sqrt -7)` and `Q(sqrt -3)` fibres)
+was retracted on that wrong basis and is to be rechecked; see the dated correction in campaign
+`vvdata/weyl-campaign/nonsquarefree/NOTES.md`. (Computation of the table:
+`vvdata/weyl-campaign/nonsquarefree/whichobject.m`.)
 
-⇒ **Recommended if this is pursued:** test the prediction at `6_25` or `6_49` — they are the only
-two where the payoff (a base reachable by fixing code) justifies the Hall-divisor refactor. Confirm
-the normalizer claim FIRST; the refactor is wasted if the obstruction is present anyway.
+(The earlier attempt to measure this with `TwoSidedIdealClassGroup(O)` failed its positive
+control at `15_4` and measured nothing; it is superseded by the argument above.)
 
 #### ⚠ WE HAVE BEEN READING THE SUPERSEDED VERSION
 

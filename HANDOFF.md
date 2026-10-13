@@ -11,6 +11,102 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-11 — LEVEL 924: THE THREE EVEN-D BASES BUILT, THE ODD-D ONES BEHIND A SECOND WALL
+
+PR #80 (`level-924-models`) carries the first rung `(924, 325, 0)`, the weight-0 shift set, and the
+models of `462_1`, `6_77` and `22_21`, each checked against the trace formula at the six smallest
+good primes (228/228, 180/180, 126/126; campaign `composite/checkcomp.m`). lovelace logs are under
+`~/gymodels/m924/logs`; the runs used `~/gymodels/composite/tree`.
+
+**The five odd-D bases (`21_11`, `21_22`, `33_7`, `33_14`, `77_3`) hit a SECOND Normaliz wall.** For
+odd D `BorcherdsForms` also asks for the ring of weight-1/2 forms with poles at BOTH cusps
+(`WeaklyHolomorphicBasis(... : Zero)`), and at every finished odd-D base that ring converges after
+exactly two polytopes, `(M, n0, k)` and `(M, n0 + k, k)`, k the pole order of the level's `t`: at
+564 it was (56, 92) then (148, 92), at 948 (85, 156) then (241, 156). At 924 they are
+**`(924, 89, 236)` and `(924, 325, 236)`**, and both time out at the 2 h `NMZ_TIMEOUT` the launcher
+used. A timed-out solve returns "no points" silently, so `21_11` and `33_7` climbed the ladder at
+rank 0 (one 2 h timeout per rung, 43 rungs) for 3.5 days and died at the `n = 10000` cap; `21_22`
+and `33_14` were replaying the identical ladder (logs byte-for-byte prefixes of the failed ones)
+and were killed on 2026-10-11. ⚠ Killing a base frees a slot and the queue script fills it:
+`launchM.sh` started `77_3` two minutes later, so kill the `bash launchM.sh` process first. The
+level-924 queue is now stopped (`m924/logs/queue.log`). ⇒ The "non-convergence" error here means
+"every polytope timed out", not that the form ring diverges. **PR #81** (`nmz-timeout-error`)
+makes a nonzero solver exit an error that names the polytope, so the climb cannot recur silently.
+
+The same two-cusp wall was already half-paid at level 420: `(420, 42, 104)` finished on lovelace
+on 2026-10-07 (11495 points) and sat unharvested in `~/gymodels/composite/bank/`; it is now
+committed on `level-420-models` (PR #76) and the second rung `(420, 146, 104)` is enumerating on
+lovelace (`composite/logs/nmz_420_146_104.log`). When it exists, the six odd-D level-420 bases
+(`15_14`, `21_10`, `35_6`, `15_7`, `21_5`, `35_3`) are routine runs. The launch scripts are banked
+on campaign under `vvdata/weyl-campaign/launchers/`.
+
+**Every empty key of `22_21` and `6_77` (28 + 28) is a fibre product of its double covers.** PR
+#72's writer (`tools/writefp.m`, branch `fibre-product-models`) run over this branch's three model
+files fills all 56, each passing the genus formula and the trace formula at up to three primes;
+`462_1`'s 11 empties have no committed double covers. The `"CRV"` shape lives on
+`fibre-product-stage` (PR #71), not `main`, so the entries are **PR #82** (`level-924-fibre-products`,
+#72's branch with this branch merged in, targeting #72); each entry was also re-read from its stored
+strings and checked against the trace formula at the 4th and 5th good primes (112/112). Copies and
+the re-check script are on campaign under `vvdata/weyl-campaign/level924/fibre-products/`.
+
+Both polytopes are being enumerated on **lava** (`/scratch/home/assaferan/bank924/`, logs
+`logs/nmz_924_{89,325}_236.log`, 10-day limit, 8 threads each, launched 2026-10-11 01:20 lava time).
+When `polymake_solution_924_325_236` exists, the lower rung is its subset with pole ≤ 89 at oo, so
+one enumeration suffices in principle; copy both files into `polymake/` on the branch and the
+run tree, then relaunch the odd-D bases with `launchM.sh`. The reproduce-a-known-value check for
+this probe: `(948, 85, 156)`, `(948, 241, 156)` and `(564, 56, 92)` re-solve in 0–2 s on the Mac
+and equal the committed files as vector sets.
+## Handoff — 2026-10-05 — X_0^210(1) BUILT IN 7½ MINUTES FROM THE BANKED LEVEL-420 RUNG (branch level-420-models)
+
+The wall is a property of M, and bases with the same M share the polytope cache. M = 420 has two cached
+rungs — (420, 145, 0) enumerated in August (13.4 h) and (420, 250, 0) from the t-shift fallback — and
+X_0^210(1) needs nothing else: a two-minute-timeout PROBE ran the whole base in 7 min 37 s. 66 cover
+keys (40 of genus 0 — the single largest group of missing genus-0 quotients — 31 of genus 1, 10 of
+genus 2, 4 + 6 of genus 3), 234/234 point counts of the trace formula at six primes (campaign
+composite/checkcomp.m). data/models/models_210_1.m and BOTH cache files are committed on this branch,
+so the default recipe reproduces the base without Normaliz.
+The other M = 420 bases: 6_35, 10_21, 14_15 built (branch composite-level); 15_7, 21_5, 15_14, 21_10,
+35_6 all ask for (420, 42, 104) — ONE enumeration, running on lovelace since 2026-10-05 ~17:30
+(~/gymodels/composite/bank/) — and 35_3 for (420, 146, 104). Probing a base with NMZ_TIMEOUT=120 and
+VERB:=3 is the cheap way to learn its rungs: the names appear in polymake/nmzsolve.err.
+⇒ THE PLAN for the 240 missing genus-0 quotients: per M, one base-rung enumeration + the fallback for
+m = 0; a fallback for the m > 0 rungs (poles at the cusp 0) would remove most of the wall — validate it
+against (420, 42, 104) when that enumeration lands, as the m = 0 one was validated at 420.
+## Handoff — 2026-10-05 — THE t-SHIFT LADDER WORKS AT A FIXED CUSP-0 ORDER (branch cusp0-ladder, nmzsolve.py)
+
+The cusp-0 rungs (M, n, m), m > 0, were outside the fallback, so a base needing one (every base at
+M = 420 except 6_35, 10_21, 14_15, 210_1 asks for (420, 42, 104)) hit the Normaliz wall. Measured on the
+cached enumerated pairs, with the span of the q-expansions as the criterion:
+* the rung (M, n', m) IS spanned by the rung (M, n, m), n < n', shifted by the weight-0 quotients with
+  poles at oo only (the existing tshift_w0 set): 204 (20,32)->(45,32) 63/63; 60 (0|3|8,8)->(11,8)
+  17/17; 372 (32,60)->(92,60) 124/124; 380 (28,65)->(93,65) 132/132. Every shifted point is a lattice
+  point of the target (none outside the truth).
+* it is NOT reached from the m = 0 rungs: products of (204, 47, 0) with the weight-0 quotients of poles
+  <= 20 at oo and <= 32 at 0 span 24 of 38 dimensions of (204, 20, 32), iterating does not help; and
+  the Atkin-Lehner reversal r_d -> r_{M/d} of an m = 0 rung lands in the TWISTED character (odd-prime
+  parities flip), whose reversal is in the right polytope but the union still spans 14 of 38.
+⇒ nmzsolve.py's fallback now runs at any m: a cached (M, n, m) with n < n_pole and tshift_w0_M.txt
+answer (M, n_pole, m); the m = 0 core file stays m = 0; for m > 0 NO thinning (four per pole order lost
+2 of 63 dimensions at 204; all 274 shifted points give 63/63). So per M the cost is one enumeration of
+the LOWEST rung at each cusp-0 order a base asks for, plus the m = 0 base rung; the ladder is free.
+Validation scripts and the shift sets: campaign vvdata/weyl-campaign/cusp0ladder/.
+## Handoff — 2026-10-04 — review of #63 (Sachi): three answers, one fix
+
+* An EMPTY polytope still gets the "0 lattice points in polytope:" header from Normaliz (3.11.1 here,
+  3.10.2 on lovelace, this branch's nmzsolve.py on (8,1,0) cuspidal=1), so the new header check
+  leaves empty answers alone; only a missing header or a truncated list errors.
+* `good_forms_at_zero`: the dependencies are now the KERNEL OF THE EXPANSION-AT-0 MAP (echelonise the
+  expansions with the transform; rank = independent nonzero expansions; every dependency, including the
+  difference of two rows with the same expansion, is a zero row), not "the rows whose expansion is zero";
+  the old assertion would have failed on such a pair. X0_15_1, 51_1, 39_1, 39_2, 87_1, 93_1, 111_1,
+  VectorValuedForm pass (abf6460).
+* 95_1 / 119_1 / 159_1: the expansion at 0 had NOT been rebuilt from the eta-quotient formula (pole
+  order > 1000, no BFVERIFY). ✅ DONE 2026-10-05 on lovelace (~/gymodels/verify63, this branch at
+  9037444, BFVERIFY=1, NO form cache, 4 h 53 / 5 h 05): for 95_1 and 119_1 every returned form's fresh
+  expansion at 0 and divisor agree with the stored ones (the asserts would have stopped the run), and
+  the model files written are BYTE-IDENTICAL to PR #64's. 159_1 still running (started 14:00).
+* After this merges: merge main into m0-theta-campaign (shared-path nmzsolve.py).
+
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 
 **One theme again, and it is the same one: the gap is where nobody was looking.** Every find today
@@ -3775,3 +3871,53 @@ the deficiency is pure Borcherds duality, not a property of the divisor matrix.
 (all ten traces agree), but its k = 3/2 phase is wrong by very nearly **−d/6** — **do not tune
 that constant to fit**; get the half-integral convention right, then check it against the
 measured deficits (`38_5` → 1, `38_7` → 0, `34_3` → 0).
+
+### 2026-10-04: review of the fibre-product stage (Sachi, #71) — fixes
+
+* **Degenerate sets**: `SquarefreePart` returns the radical, so the old check only caught a subset
+  whose product is literally constant; `[f, -3f]` built a curve with a constant field of degree 2 and
+  `[f1, f2, f1 f2]` stopped Magma. Now `IsDegenerateFactorSet`: some nonempty subset's product has
+  every irreducible factor to an even power. Same in `tools/writefp.m` (#72 branch).
+* **Rejections are always printed** (`WARNING FibreProductCovers: ...`, naming the cover, the base and
+  the generating set): if the stored double covers are right and share a coordinate, every generating
+  set gives the same curve, so a rejected set means a stored equation is wrong or in another coordinate.
+* **The trace check runs to the stated number of GOOD primes** (bad-reduction primes are replaced,
+  not counted; fails if 60 primes do not yield enough).
+* `tools/planequartic.m` is the computation behind the three non-hyperelliptic verdicts
+  (6_23/w_23, 34_3/w_2, 46_3/w_3): fibre product of two stored genus-1 quotients, trace counts at
+  p = 5, 7, 11, 13, IsHyperelliptic false, canonical image a nonsingular plane quartic.
+* The fibre product is returned in its natural affine model, usually SINGULAR (shared branch points):
+  a model for the function field and the point counts, not a curve to search for points on.
+* Counts: 203 new covers (not 200). ⚠ Open: the #72 data were written from committed model files,
+  which do not record which stored equations came from the rebase or back-fill stages; only the
+  trace check protects them. Rebuilding them with the stage itself (which skips those) is a pipeline
+  run per base, not a writer run.
+
+### ✅ 2026-10-03: covers with NO genus-0 quotient are fibre products of their double covers — a final pipeline stage, 203 new curves
+
+A cover `X_0(D,N)/W` is Galois over the star with group `W_full/W`, elementary abelian, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 = f(t)`, which
+the earlier stages usually did build. This needs no genus-0 quotient, so it reaches exactly what
+the Borcherds–Schofer route cannot: the non-subhyperelliptic covers, the top curve included.
+`FibreProductCovers.m` implements it; `AllEquationsAboveCovers` runs it last. A result is kept
+only if the compositum has the genus of the genus formula **and** its point counts at three good
+primes over `F_p`, `F_{p^2}` agree with the trace formula — the second test is what rejects a
+compositum of factors in different Hauptmodul normalisations (the committed `21_2` quotients do
+this: right genus, wrong curve).
+
+Measured over the committed model files: 235 missing covers have enough double covers; those
+passing **both checks** are the **203 with no entry of any kind** (Sachi's count, and the 203 entries of
+#72; an earlier version of this entry said 200) plus 24 that re-derive stored pairs; 9 fail
+the genus check, 2 the trace formula. Among the 203 are **29 top curves of genus 4–11** (`65_1 77_1
+106_1 118_1 122_1 178_1 202_1` and 22 with `N > 1`, from `6_23`, `34_3`, `22_7` at genus 5 to
+`14_19`, `62_3`, `6_59`, `10_29` at genus 11); the rest are intermediate quotients of genus 2–11.
+The same construction decided three genus-3 covers left open in `curves_after_UpdateCurves8.dat` —
+`6_23/w_23`, `34_3/w_2`, `46_3/w_3` are smooth plane quartics, hence **not** hyperelliptic.
+⚠ At `N > 1` the double covers come from models that depend on the `m = 0` term of Schofer's
+formula, for which PR #66 proposes a proof; so these curves, and the three verdicts, are checked
+by point counts against the trace formula, not proved. ⚠ The 830 undecided covers
+there are almost all at bases with no model file (826), so as a hyperellipticity decider the stage
+is downstream of model-building; as a model producer it is a new reach.
+
+⚠ A test that `eval`s a model file **inside a procedure** segfaults Magma 2.29-7 under
+`run_tests.m` only; evaluate model files at top level (see `tests/FibreProductCovers.m`).

@@ -141,6 +141,40 @@ intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 
                 end if;
             end for;
         end for;
+
+        // [5] the whole L-polynomial at the smallest good primes.  The counts over F_{p^v},
+        // v <= g, from the trace formula determine L(X/W, T) (the functional equation supplies
+        // the upper half), and it must equal the model's.  This is the Hecke characteristic
+        // polynomial of the W-fixed part of the D-new space at p, so a model of the wrong
+        // quotient -- a swapped Atkin-Lehner label, say -- fails here even if its point count
+        // over F_p happens to agree.  Only primes with p^g <= 10^7 are used, to keep the trace
+        // formula's t-range short.
+        for W in Wsets do
+            if not IsDefined(Xs, W) then continue; end if;
+            X := Xs[W]; C := Cs[W]; g := X`g;
+            if g eq 0 then continue; end if;
+            for p in [3,5,7,11,13] do
+                if (D*N mod p eq 0) or (p^g gt 10^7) then continue; end if;
+                b, Lmodel := model_lpoly(C, p);
+                if not b then continue; end if;
+                counts := [ComputePointsViaTrace(X, p, v) : v in [1..g]];
+                // L(T) = exp(sum_v (N_v - 1 - p^v) T^v / v) through T^g, then a_{2g-i} = p^(g-i) a_i
+                PS<T> := PowerSeriesRing(Rationals(), g + 1);
+                logL := &+[PS | (counts[v] - 1 - p^v) * T^v / v : v in [1..g]];
+                Lser := Exp(logL);
+                a := [Coefficient(Lser, i) : i in [0..g]];
+                PQ := PolynomialRing(Rationals());
+                Ltrace := PQ ! ([a[i+1] : i in [0..g]] cat [p^(i-g) * a[2*g-i+1] : i in [g+1..2*g]]);
+                nchk +:= 1;
+                if Ltrace ne PQ!Lmodel then
+                    if Verbose then
+                        printf "  [5] FAIL W=%o p=%o: trace formula gives L = %o, model gives %o\n",
+                            Sort(SetToSequence(W)), p, Ltrace, Lmodel;
+                    end if;
+                    nfail +:= 1;
+                end if;
+            end for;
+        end for;
     end if;
     return nchk, nfail;
 end intrinsic;
