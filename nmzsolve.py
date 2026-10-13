@@ -183,6 +183,7 @@ pts = []
 with open(base + '.out') as f:
     lines = f.readlines()
 i = 0
+cnt = None
 while i < len(lines):
     if 'lattice points in polytope' in lines[i] and lines[i].rstrip().endswith(':'):
         cnt = int(lines[i].split()[0])
@@ -197,6 +198,17 @@ while i < len(lines):
             i += 1
         break
     i += 1
+
+# Normaliz can exit 0 and still leave no usable answer: an output file without the
+# lattice-points header, or one cut short of the count it announces.  Writing an empty or
+# short solution file there would be taken downstream as "the polytope has few points" and
+# produce an incomplete eta-quotient basis, so both are errors and no file is written.
+if cnt is None:
+    sys.stderr.write(f"# normaliz output {base}.out has no 'lattice points in polytope' header\n")
+    sys.exit(3)
+if len(pts) != cnt:
+    sys.stderr.write(f"# normaliz output {base}.out announces {cnt} lattice points but lists {len(pts)}\n")
+    sys.exit(4)
 
 pts = sorted(set(pts))
 print(f"# M={M} n={n_pole} m={m_pole} k24={k24} sq_disc={sq_disc} cuspidal={cuspidal}: {len(pts)} lattice points", file=sys.stderr)

@@ -125,7 +125,7 @@ encode.
 | `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
-| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+| `tests/_offline/X0_10_19.m`, `X0_21_1.m` | the same, for the two bases still too slow for CI (`87_1`, `111_1`, `93_1` and `39_2` moved into CI on 2026-10-01, minutes each with the Borcherds search of #63) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 ## THE QUOTIENT ORACLE — the largest source of external validation here
 
@@ -391,6 +391,39 @@ This is a **third** category, distinct from the two below: not a flag, not drift
 code version*. Anyone bisecting `main` to an older commit will find this file unregenerable and
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
+
+## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+
+`models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
+BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
+tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
+second rung of the Borcherds ladder (0-side pole order 3325) had never finished (7 h+); with it the
+five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
+all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), and genus 7 and the hyperelliptic involution match
+Table 1. The quotient oracle (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
+nothing here; the quotient models rest on the L-polynomial comparison against the trace formula in
+`VerifyModelSet` and on the involution check in `tests/_offline/X0_95_1.m`.
+
+`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
+(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
+lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation and matches
+Table 1. The quotient oracle has no entry for `119_1` either; its quotients are checked the same
+way as `95_1`'s.
+
+`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
+order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
+lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
+and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient oracle has no entry for
+`159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
+(`y^2 + h y = f`).
+
+For all three, every stored quotient's L-polynomial at the small good primes equals the one the
+trace formula gives for the W-fixed part of the D-new space (`tests/ModelChecks.m`, check [5]),
+which also fixes the labels of the w_p: the opposite sign convention would swap the genera of the
+two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
+58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
 
 ## Reproducibility status, measured 2026-09-05
 
