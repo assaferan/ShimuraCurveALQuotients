@@ -1227,6 +1227,22 @@ alone cannot do odd D.}
 
 
                     mat, relevant_ds := coeffs_to_divisor_matrix(min_m, Xstar`D, Xstar`N, Ncols(ech_basis));
+                    if IsOdd(Xstar`D) then
+                        // The cusp-0 side sees the CM discriminants scaled by N^2, the cusp-oo side by 4
+                        // ([GY, Lemma 25]), so for N > 2 the 0-side list is not contained in relevant_ds.
+                        // The divisor is indexed by the union; the extra discriminants get zero columns on
+                        // the oo side, since no coefficient of the principal part at oo reaches them.
+                        extra := [d : d in relevant_ds_0_oo | d notin relevant_ds];
+                        if #extra gt 0 then
+                            new_ds := Sort(relevant_ds cat extra);
+                            new_mat := ZeroMatrix(Integers(), Nrows(mat), #new_ds + 1);
+                            for j->d in relevant_ds do
+                                InsertBlock(~new_mat, ColumnSubmatrix(mat, j, 1), 1, Index(new_ds, d));
+                            end for;
+                            InsertBlock(~new_mat, ColumnSubmatrix(mat, Ncols(mat), 1), 1, #new_ds + 1);   // the constant coefficient
+                            mat := new_mat; relevant_ds := new_ds;
+                        end if;
+                    end if;
                     coeffs_trunc := ech_basis * ChangeRing(mat, BaseRing(ech_basis));
 
                     if IsOdd(Xstar`D) then
@@ -1481,7 +1497,12 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
 {Return the divisor of the Borcherds form associated to the (0,oo)-Weakly holomorphic modular form f.}
     foo := qExpansionAtoo(f,0);
     f0_D0 := qExpansionAt0(f,0);
-    D0 := Xstar`D div 2^Valuation(Xstar`D,2);
+    // The expansion at 0 is in powers of q^(1/(4 D0)), D0 the odd part of DN (the eta quotients
+    // have level 4 D0), and [GY, Lemma 25] reads the divisor off the coefficients of q^(-n/4), i.e.
+    // the exponents divisible by D0; the search returns only forms supported there.
+    D0 := get_D0_M_g(Xstar`D, Xstar`N);
+    require forall{k : k in [Valuation(f0_D0)..-1] | k mod D0 eq 0 or Coefficient(f0_D0, k) eq 0} :
+        "the principal part at 0 must be supported on powers of q^(1/4) (exponents divisible by the odd part of DN)";
     v := Valuation(f0_D0) div D0;
     coeffs_f0_D0 := [Coefficient(f0_D0,m*D0) : m in [v..-1]];
     R<q> := Parent(f0_D0);
