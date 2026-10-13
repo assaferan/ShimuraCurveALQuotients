@@ -547,6 +547,48 @@ nothing external covers this key; it rests on the independent checks in `ModelVe
 (genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
 291 checks with no failures.
 
+## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
+
+The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
+first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threads, 4 h 19 min, 8674
+lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
+weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
+for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, the composite-level tree at commit
+e85261a of branch exact-m0, PR #79, which carries the m = 0 term of #66, #74 and #79) on lovelace,
+15 minutes; 66 cover keys, 55 with a model (49 as y^2 = f(x), 6 as double covers of a conic) -- all 11
+genus-0 quotients of the base, covers up to genus 5 -- and 11 empty. Outside
+check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
+228; campaign `composite/checkcomp.m`; the six double covers of a conic were not part of this check). No published equation exists for this base.
+
+`models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
+lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
+{7, 11}. 65 cover keys, 37 with a model (34 as y^2 = f(x), 3 as double covers of a conic) -- all 4 genus-0
+quotients, covers up to genus 7 -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180; the three
+double covers of a conic were not part of this check). At
+p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
+smooth curve whose counts differ from the trace formula; the trace formula does not describe the
+reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
+published equation exists for this base.
+
+`models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
+support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
+{1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
+covers up to genus 6 -- and 28 empty, none of which the Hauptmodul rebase sweep fills. Outside
+check: every stored curve of genus >= 1 agrees with the trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
+exists for this base.
+
+The five odd-D bases of the group, X_0^21(11), X_0^21(22), X_0^33(7), X_0^33(14) and X_0^77(3), are
+not here. For odd D the search also needs the ring of weight-1/2 forms with poles at both cusps,
+which asks for the two-cusp polytope (924, 89, 236). That enumeration did not finish within the
+two-hour Normaliz limit the runs used, and a timed-out solve then returned "no points" rather than
+an error (PR #81 makes it an error), so the four runs that were started climbed the ladder
+(924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
+enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
+divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
