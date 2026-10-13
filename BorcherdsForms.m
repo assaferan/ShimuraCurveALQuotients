@@ -764,6 +764,7 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
         // Verified 30/30 at 51_1 with a negative control (j=3 against j=2) that DIFFERS, so the
         // check discriminates rather than merely agreeing.
         bwh_A := pole_order + 1;
+        bwh_t0 := Cputime();
         bwh_qt := Zero select qExpansionAt0(t, bwh_A : Admissible := false)
                          else qExpansionAtoo(t, bwh_A);
         bwh_Rq := Parent(bwh_qt);
@@ -786,6 +787,10 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
         end if;
         qexps := [x + O(bwh_q^1) : x in qexps];
         qexps cat:= bwh_qz;                                   // never multiplied by t
+        if GetEnv("BFPROGRESS") ne "" then
+            WriteStderr(Sprintf("  BFPOOLTIME pole_order=%o Zero=%o  pool=%o  expansions and products %os\n",
+                                pole_order, Zero, #full_basis, Cputime(bwh_t0)));
+        end if;
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
     assert minval eq -Minimum([Valuation(f) : f in qexps]);
@@ -963,10 +968,13 @@ function good_forms_at_zero(pole_order, fs_E, n0, n, t, D0)
         Res := Res - a * Matrix(coeffs[i]);
     end for;
     assert IsZero(Res);
-    if GetEnv("BFPROGRESS") ne "" then
-        WriteStderr(Sprintf("  BFGOOD0 pole_order=%o  window=%o  targets=%o  substitution %os\n", pole_order, W, Nrows(B), Cputime(gf_t0)));
-    end if;
     Kg := Submatrix(X, [1..#div_cols], [1..npool]);
+    if GetEnv("BFPROGRESS") ne "" then
+        gf_bits := Maximum([Ilog2(1 + Maximum([Abs(Numerator(x)), Denominator(x)])) : x in Eltseq(Kg)]);
+        gf_cbits := Maximum([Ilog2(1 + Maximum([Abs(Numerator(x)), Denominator(x)])) : x in Eltseq(coeffs)]);
+        WriteStderr(Sprintf("  BFGOOD0 pole_order=%o  window=%o  targets=%o  substitution %os  (entries: pool up to %o bits, solution up to %o bits)\n",
+                            pole_order, W, Nrows(B), Cputime(gf_t0), gf_cbits, gf_bits));
+    end if;
     Dm := ZeroMatrix(Q, #dups + #zeros, npool);
     for j->e in dups do
         InsertBlock(~Dm, -Submatrix(X, [#div_cols + j], [1..npool]), j, 1);
