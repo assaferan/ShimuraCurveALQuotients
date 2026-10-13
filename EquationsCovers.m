@@ -764,6 +764,7 @@ end function;
 
 function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
     all_W := Xstar`W;
+    filled := {Integers()|};     // the keys this stage writes: their equations are in CurveQuotient's coordinate
     for k in deferred do
         if IsDefined(all_eqns, k) and not IsEmpty(Keys(all_eqns[k])) then continue; end if; // already have it
         recovered := false;
@@ -803,6 +804,7 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
             for u in (all_W diff curves[k]`W) do all_ws[k][base][u] := HyperellipticInvolution(Cq); end for;
             vprintf ShimuraQuotients, 1 : "  Recovered deferred cover W=%o (g=%o) as (%o)/w_%o.\n",
                 curves[k]`W, curves[k]`g, curves[above]`W, w;
+            Include(~filled, k);
             recovered := true;
             break;
         end for;
@@ -810,7 +812,7 @@ function backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar)
             vprintf ShimuraQuotients, 1 : "  WARNING: could not recover deferred cover W=%o.\n", curves[k]`W;
         end if;
     end for;
-    return all_eqns, all_ws;
+    return all_eqns, all_ws, filled;
 end function;
 
 // ---------------------------------------------------------------------------------------------
@@ -839,10 +841,11 @@ end function;
 // ⚠ FILLING A KEY IS NOT PROVING IT CORRECT. Validated against Guo-Yang at 22_5 and 10_19
 // (tests/_offline/FullCurve_22_5.m, tests/GuoYangQuotients_*.m); no such check exists for an
 // arbitrary base.
-intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc
+intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : base_label := 0) -> Assoc, Assoc, SetEnum
     {Fill still-empty covers by changing the Hauptmodul on the star base and re-propagating.}
+    filled := {Integers()|};     // the keys this stage writes: their STAR equations are in the rebased coordinate u
     empty_keys := [k : k in Keys(all_eqns) | #Keys(all_eqns[k]) eq 0];
-    if IsEmpty(empty_keys) then return all_eqns, all_ws; end if;
+    if IsEmpty(empty_keys) then return all_eqns, all_ws, filled; end if;
 
     // the base carrying the most first-level equations is the star base
     base_count := AssociativeArray();
@@ -852,7 +855,7 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : ba
             base_count[b] +:= 1;
         end for;
     end for;
-    if IsEmpty(Keys(base_count)) then return all_eqns, all_ws; end if;
+    if IsEmpty(Keys(base_count)) then return all_eqns, all_ws, filled; end if;
     // ⚠ STAR IS *NOT* FORCED TO A PINNED base_label, AND THAT WAS MEASURED, NOT ASSUMED.
     // Forcing STAR := base_label is the obvious reading of "keep the pinned presentation", and it
     // is WRONG HERE: at 26_3 with base_label = 8103 the rebase then runs and fills NOTHING, leaving
@@ -882,7 +885,7 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : ba
             Include(~roots, rt[1]);
         end for;
     end for;
-    if IsEmpty(roots) then return all_eqns, all_ws; end if;
+    if IsEmpty(roots) then return all_eqns, all_ws, filled; end if;
     vprintf ShimuraQuotients, 1 :
         "\n\t%o cover(s) still empty; sweeping %o Hauptmodul root(s) on base %o...",
         #empty_keys, #roots, STAR;
@@ -957,12 +960,13 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : ba
             if not IsDefined(re_eqns, k) then continue; end if;
             if IsEmpty(Keys(re_eqns[k])) then continue; end if;
             all_eqns[k] := re_eqns[k];
+            Include(~filled, k);
             if IsDefined(re_ws, k) then all_ws[k] := re_ws[k]; end if;
             vprintf ShimuraQuotients, 1 :
                 "\n\t  rebase at r = %o filled W = %o", r, curves[k]`W;
         end for;
     end for;
-    return all_eqns, all_ws;
+    return all_eqns, all_ws, filled;
 end intrinsic;
 
 intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, base_label := 0, IntegralSolution := false, Targets := {})-> Assoc, Assoc
@@ -1084,13 +1088,23 @@ intrinsic AllEquationsAboveCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuo
     // 6_17 also pin and were unaffected.  The stage is pin-aware now: it rebases ON the pinned
     // base and threads the pin into its own inner conic pass, so it is safe to run pinned.
     vprintf ShimuraQuotients, 1 : "Filling empty covers by Hauptmodul rebase...";
-    all_eqns, all_ws := EquationsByRebase(all_eqns, all_ws, curves : base_label := base_label);
+    all_eqns, all_ws, rebased := EquationsByRebase(all_eqns, all_ws, curves : base_label := base_label);
     vprintf ShimuraQuotients, 1 : "Done\n";
+    backfilled := {Integers()|};
     if not IsEmpty(deferred) then
         vprintf ShimuraQuotients, 1 : "Back-filling %o deferred cover(s) as quotients...", #deferred;
-        all_eqns, all_ws := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
+        all_eqns, all_ws, backfilled := backfill_deferred(all_eqns, all_ws, deferred, curves, Xstar);
         vprintf ShimuraQuotients, 1 : "Done\n";
     end if;
+    // Covers with no genus-0 quotient are outside everything above.  They are still Galois over
+    // the star with an elementary abelian 2-group, so they are fibre products of their index-2
+    // double covers, which the stages above usually did build.  Kept only when the genus and the
+    // trace-formula point counts both agree (FibreProductCovers.m).
+    vprintf ShimuraQuotients, 1 : "Building remaining covers as fibre products of their double covers...";
+    // The rebase and back-fill stages store equations under a base's key in a coordinate of their
+    // own (u = 1/(t - r), resp. CurveQuotient's), so they must not be multiplied with the others.
+    all_eqns, all_ws := EquationsByFibreProduct(all_eqns, all_ws, curves : Skip := rebased join backfilled);
+    vprintf ShimuraQuotients, 1 : "Done\n";
     return all_eqns, all_ws;
 end intrinsic;
 
