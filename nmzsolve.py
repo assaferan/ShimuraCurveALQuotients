@@ -160,10 +160,10 @@ if m_pole == 0 and k24 == 12 and cuspidal == 0:
                     layer = nxt
                 total = sum(len(b) for b in byorder.values())
                 if total > keep_all:
-                    # keep as many points per pole order as the cap allows (at least 4), so the
-                    # leading-order pattern the form-ring loop checks survives: at level 780 the
-                    # 333051 products of the rung 274 with the shifts thin to 1049 at four per
-                    # order, which has full rank but a wrong gap pattern and the loop climbs
+                    # keep as many points per pole order as the cap allows, at least four.  At level
+                    # 780 the 333051 products of the rung 274 with the shifts give 12521 points at 69
+                    # per order; four per order (1049 points) already has the full rank 396 with the
+                    # same leading orders, measured independently, so the extra points are a margin.
                     per = max(4, keep_all // max(1, len(byorder)))
                     print(f"# tshift fallback: {total} shifted points, keeping {per} per pole order", file=sys.stderr)
                     pts = sorted({ v for b in byorder.values() for v in b[:per] })
