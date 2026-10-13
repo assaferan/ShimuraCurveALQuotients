@@ -393,7 +393,10 @@ intrinsic M0MultipliersBySupport(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData
  verified at a second (its closed form -- the Dedekind-sum eta multiplier system -- is certified in
  vvdata/weyl-campaign/cusp4.m).  Then c_eta(0) = sum_w rho(w^-1)e_0[eta] * a0(f|w).  Raises an
  error rather than return an unverified value (two-point check, agreement within each support
- class, rational snap).}
+ class, rational snap).
+
+ This is the NUMERICAL route (complex arithmetic at Prec digits, an hour at |L^v/L| = 88200);
+ M0MultipliersAlgebraic computes the same values by exact algebra and is what SchoferFormula uses.}
     require N gt 1 : "There are no nonzero isotropic cosets when N = 1, so no m = 0 multiplier.";
     require IsSquarefree(N) : "N must be squarefree";
     require #fs gt 0 : "Empty form sequence.";
@@ -683,6 +686,340 @@ intrinsic M0MultipliersBySupport(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData
             if #S eq 1 then arr[Representative(S)] := mult; end if;
         end for;
         Append(~mults, arr);
+    end for;
+    return mults;
+end intrinsic;
+
+// ---------------------------------------------------------------------------------------------
+// The constant terms by exact algebraic arithmetic: no transcendental step
+// ---------------------------------------------------------------------------------------------
+// c_eta(0) = sum_w rho*(w^-1) e_0 [eta] * a_0(f | w) with the per-coset product constant on the
+// class g = gcd(c, M), so one representative gamma = [a b; c d], c > 0, per class, both factors
+// taken with the canonical lift (gamma, sqrt(c tau + d)):
+//   rho*(gamma^-1) e_0 [eta] = e(1/8) c^{-3/2} |L^v/L|^{-1/2} e(d Q(eta)/c) G(c, a; eta),
+//       G(c, a; eta) = sum_{nu in L/cL} e((a Q(nu) + (eta, nu))/c)
+//   (the theta transformation formula: gamma tau = a/c - 1/(c(c tau + d)), Poisson summation on the
+//   inversion; the Gauss sum splits over the prime powers of c, the quadratic term taking the
+//   cofactor c/p^k and the linear term not);
+//   a_0(prod_d eta(d tau)^{r_d} | gamma) = e(-1/8) prod_d [eps(g_d) e(b_d/(24 e_d)) e_d^{-1/2}]^{r_d}
+//       * [constant term of q^{sum_d r_d a_d/(24 e_d)} prod_d prod_n (1 - e(n b_d/e_d) q^{n a_d/e_d})^{r_d}]
+//   where [d 0; 0 1] gamma = g_d [a_d b_d; 0 e_d] with g_d in SL_2(Z) of positive lower-left entry,
+//   and eps is the Dedekind-eta multiplier of Apostol, Thm 3.4 (a 24th root of unity from a
+//   Dedekind sum).
+// Every root of unity lies in mu_n, n = 24 M; they are carried as monomials of Q[x]/(x^n - 1), the
+// positive square roots of integers as Gauss sums in the same ring, and the total is reduced modulo
+// the n-th cyclotomic polynomial, where it must be a rational constant.  The formulas were checked
+// against the numerical route coset by coset (vvdata/weyl-campaign/exactm0/, branch
+// m0-theta-campaign: the rho row against the Fourier transform to 1e-58 for c up to 10 including
+// representatives with a != d, the slash constant on 140/140 (monomial, point) pairs), and the
+// multipliers against M0MultipliersBySupport on 15_2, 21_2, 10_3, 22_3, 34_11 and the three
+// composite bases 6_35, 10_21, 14_15.
+
+// Dedekind sum s(h, k)
+function m0alg_dedsum(h, k)
+    s := Rationals()!0;
+    for i := 1 to k - 1 do
+        x := Rationals()!i/k;
+        y := Rationals()!(h*i)/k; y := y - Floor(y);
+        if y ne 0 then s +:= (x - 1/2)*(y - 1/2); end if;
+    end for;
+    return s;
+end function;
+
+// eps(g) = e(x), x in (1/24)Z, for g in SL_2(Z) with c > 0; returns x in [0, 1)
+function m0alg_epsexp(g)
+    a := g[1][1]; c := g[2][1]; d := g[2][2];
+    error if c le 0, "the eta multiplier needs c > 0";
+    x := (Rationals()!(a + d)/(12*c) + m0alg_dedsum(-d, c))/2;
+    x := x - Floor(x);
+    error if not IsIntegral(24*x), "the eta multiplier is not a 24th root of unity";
+    return x;
+end function;
+
+// [d 0; 0 1] g = gd * [a b; 0 e], gd in SL_2(Z) with gd[2][1] > 0, a = gcd(d a_g, c), e = d/a
+function m0alg_triang(g, d)
+    c := g[2][1];
+    g2 := Matrix(Integers(), 2, 2, [d*g[1][1], d*g[1][2], c, g[2][2]]);
+    h := GCD(g2[1][1], c);
+    p1 := g2[1][1] div h; p2 := c div h;
+    _, u, v := XGCD(p1, p2);
+    gd := Matrix(Integers(), 2, 2, [p1, -v, p2, u]);
+    sd := gd^-1 * g2;
+    assert Determinant(gd) eq 1 and sd[2][1] eq 0 and sd[1][1] eq h and sd[2][2] eq d div h and gd*sd eq g2;
+    return sd[1][1], sd[1][2], sd[2][2], gd;
+end function;
+
+// The coefficient of t^(-L) in prod_d P(zeta_{e_d}^{b_d} t^{step_d})^{r_d}, t = q^{1/(24 W)},
+// step_d = 24 a_d W/e_d, P(y) = prod_{n >= 1} (1 - y^n) (Euler's pentagonal series): an element of
+// Q(zeta_{W'}), W' the lcm of the orders of the e(b_d/e_d), returned with that field and W'.
+function m0alg_unit_constant(r, tri, W, L)
+    depth := -L + 1;
+    act := [i : i in [1..#tri] | r[i] ne 0];
+    Wp := LCM([ tri[i][3] div GCD(tri[i][2] mod tri[i][3], tri[i][3]) : i in act ]);
+    if Wp le 2 then
+        F := Rationals(); zW := [F | (-1)^j : j in [0..Wp-1]];
+    else
+        F := CyclotomicField(Wp); zW := [F.1^j : j in [0..Wp-1]];
+    end if;
+    S := PowerSeriesRing(F, depth);
+    prod := S!1;
+    for i in act do
+        a, b, e := Explode(tri[i]);
+        step := 24*a*(W div e);
+        ydepth := (depth - 1) div step;
+        Z := PowerSeriesRing(Integers(), ydepth + 1); y := Z.1;
+        Pe := Z!1; k := 1;
+        while k*(3*k - 1) div 2 le ydepth do
+            Pe +:= (-1)^k * y^(k*(3*k - 1) div 2);
+            if k*(3*k + 1) div 2 le ydepth then Pe +:= (-1)^k * y^(k*(3*k + 1) div 2); end if;
+            k +:= 1;
+        end while;
+        Pr := r[i] ge 0 select Pe^r[i] else (1/Pe)^(-r[i]);
+        bb := b mod e; gg := GCD(bb, e); kk := (bb div gg) * (Wp div (e div gg));   // e(b/e) = zeta_W'^kk
+        coeffs := [F | 0 : j in [1..depth]];
+        for j in [0..ydepth] do
+            cj := Coefficient(Pr, j);
+            if cj ne 0 then coeffs[j*step + 1] := cj * zW[((kk*j) mod Wp) + 1]; end if;
+        end for;
+        prod *:= S!coeffs;
+    end for;
+    return Coefficient(prod, -L), F, Wp;
+end function;
+
+intrinsic M0MultipliersAlgebraic(fs::SeqEnum[EtaQuot], Ld::QuaternionLatticeData, D::RngIntElt,
+                                 N::RngIntElt : Verify := true, EtaPerClass := 3) -> SeqEnum
+{The m = 0 multipliers of Schofer's formula for the forms fs at a squarefree level N, one
+ associative array per form indexed by the primes p of N (the same values as
+ M0MultipliersBySupport), computed by exact algebraic arithmetic: roots of unity in Q[x]/(x^n - 1)
+ with n = 24 M, square roots as Gauss sums, the total reduced modulo the cyclotomic polynomial and
+ required to be a rational number.  Per coset class one representative; the Weil-representation
+ component is a Gauss sum over L/cL and the slash constant the Dedekind-eta multiplier system.
+
+ Verify (default on, doubling a cost of seconds to minutes) recomputes every class 1 < g < M from a
+ second coset with a different bottom row and demands exact agreement.  EtaPerClass isotropic
+ cosets are evaluated per support class and must agree.  The zero coset is evaluated too and its
+ value, c_0(0)/2, is reported at verbosity 2.}
+    require N gt 1 : "There are no nonzero isotropic cosets when N = 1, so no m = 0 multiplier.";
+    require IsSquarefree(N) : "N must be squarefree";
+    require #fs gt 0 : "Empty form sequence.";
+    R := Parent(fs[1]); ds := R`ds;
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    require R`M eq M : "The forms live at the wrong level for (D, N).";
+    require IsEven(M) : "M must be even (e(1/8) must lie in the cyclotomic field used)";
+    n := 24*M;
+    P<x> := PolynomialRing(Rationals());
+    Phi := CyclotomicPolynomial(n);
+    fold := function(h)
+        if Degree(h) lt n then return h; end if;
+        cs := Coefficients(h); out := [Rationals() | 0 : i in [1..n]];
+        for i->ci in cs do out[((i - 1) mod n) + 1] +:= ci; end for;
+        return P!out;
+    end function;
+    zet := func< k | x^(k mod n) >;                                  // e(k/n)
+    // the positive real square root of a squarefree m >= 1, as a Gauss sum
+    sqrtpoly := function(m)
+        s := P!1;
+        if IsEven(m) then s := fold(s*(zet(n div 8) + zet(-(n div 8)))); m := m div 2; end if;
+        for p in PrimeDivisors(m) do
+            error if n mod p ne 0, "sqrt(p) is not in Q(zeta_n)";
+            g := &+[ P | KroneckerSymbol(a, p)*zet(a*(n div p)) : a in [1..p-1] ];
+            if p mod 4 eq 3 then g := fold(g*zet(-(n div 4))); end if;
+            s := fold(s*g);
+        end for;
+        return s;
+    end function;
+
+    // the discriminant group: integral lifts v with Q(eta) = (v Q v)/(2 dn^2), (eta, nu) = (v Q nu)/dn
+    Qm := ChangeRing(Ld`Q, Integers()); dn := Ld`denom;
+    elts := [g : g in Ld`disc_grp];
+    vs := [];
+    for e in elts do
+        v := ChangeRing(e@@Ld`to_disc, Rationals());
+        require &and[IsIntegral(c) : c in Eltseq(v)] : "Expected integral lifts of the discriminant group.";
+        Append(~vs, Vector(Integers(), [Integers()!c : c in Eltseq(v)]));
+    end for;
+    iso := []; supp := AssociativeArray(); Qeta := AssociativeArray();
+    for i->v in vs do
+        q := (v*Qm, v);
+        if q mod (2*dn^2) eq 0 then
+            Append(~iso, i);
+            Qeta[i] := q div (2*dn^2);
+            supp[i] := Set(PrimeDivisors(LCM([Denominator(c/dn) : c in Eltseq(v)])));
+        end if;
+    end for;
+    require #iso ge 2 : "No nonzero isotropic coset found.";
+    i0 := rep{i : i in iso | IsZero(vs[i])};
+    Nprimes := Set(PrimeDivisors(N));
+    classes_eta := [Set(s) : s in Sort([Sort(Setseq(S)) : S in {supp[i] : i in iso}])];
+    require forall{S : S in classes_eta | S subset Nprimes} :
+        "a nonzero isotropic coset is supported outside the primes of N";
+    for p in Nprimes do
+        require #[i : i in iso | supp[i] eq {p}] eq 2*p - 2 :
+            Sprintf("expected %o nonzero isotropic cosets supported exactly at %o", 2*p - 2, p);
+    end for;
+    sample := [];
+    for S in classes_eta do
+        idx := [i : i in iso | supp[i] eq S];
+        sample cat:= idx[1..Minimum(#idx, EtaPerClass)];
+    end for;
+
+    // G(c, a; eta) in Q[x]/(x^n - 1), by CRT over the prime powers of c
+    gauss := function(c, a, v)
+        G := P!1;
+        for fac in Factorization(c) do
+            p := fac[1]; k := fac[2]; pk := p^k; cc := c div pk;
+            cnt := [0 : j in [1..pk]];
+            for nu in CartesianPower([0..pk-1], 3) do
+                nv := Vector(Integers(), [nu[1], nu[2], nu[3]]);
+                qn := (nv*Qm, nv) div 2;                     // Q(nu)
+                pr := (v*Qm, nv);                            // dn (eta, nu)
+                assert pr mod dn eq 0;
+                j := (a*cc*qn + pr div dn) mod pk;
+                cnt[j + 1] +:= 1;
+            end for;
+            G := fold(G * &+[ P | cnt[j + 1]*zet(j*(n div pk)) : j in [0..pk-1] ]);
+        end for;
+        return G;
+    end function;
+
+    monos := {@ @};
+    for f in fs do for r in Exponents(f) do Include(~monos, r); end for; end for;
+    require forall{r : r in monos | &+r eq 1} : "every monomial must have weight 1/2";
+
+    // per representative gamma (c > 0): monomial -> <kexp, scale, m1, c0 poly> with
+    //   e(1/8) a_0(monomial | gamma) = scale * sqrt(m1) * e(kexp/n) * c0
+    classdata := function(g)
+        tri := []; gds := [];
+        for dd in ds do
+            ad, bd, ed, gd := m0alg_triang(g, dd); Append(~tri, <ad, bd, ed>); Append(~gds, gd);
+        end for;
+        W := LCM([t[3] : t in tri]);
+        epsk := [ Integers()!(n*m0alg_epsexp(gd)) : gd in gds ];
+        assert forall{i : i in [1..#ds] | (M*tri[i][2]) mod tri[i][3] eq 0};
+        bk := [ (M*tri[i][2]) div tri[i][3] : i in [1..#ds] ];     // e(b/(24 e)) = e((M b/e)/n)
+        data := AssociativeArray();
+        for r in monos do
+            L := &+[ r[i]*tri[i][1]*(W div tri[i][3]) : i in [1..#ds] ];
+            if L gt 0 then continue; end if;
+            if L eq 0 then
+                c0poly := P!1;
+            else
+                c0, F, Wp := m0alg_unit_constant(r, tri, W, L);
+                if c0 eq 0 then continue; end if;
+                if Type(F) eq FldRat then
+                    c0poly := P!c0;
+                else
+                    cs := Eltseq(c0);
+                    c0poly := &+[ P | cs[i]*zet((i - 1)*(n div Wp)) : i in [1..#cs] ];
+                end if;
+            end if;
+            kexp := &+[ r[i]*(epsk[i] + bk[i]) : i in [1..#ds] ];
+            E := &*[ Rationals() | tri[i][3]^r[i] : i in [1..#ds] ];   // prod e_d^{r_d}
+            num := Numerator(E); den := Denominator(E);
+            m1, s1 := SquarefreeFactorization(num*den);                 // E^{-1/2} = s1 sqrt(m1)/num
+            data[r] := <kexp mod n, s1/num, m1, c0poly>;
+        end for;
+        return data;
+    end function;
+    // e(-1/8) rho_B(gamma)_{0,eta} = scale * sqrt(m0) * poly
+    rhofac := function(g, i)
+        a := g[1][1]; c := g[2][1]; d := g[2][2];
+        poly := fold(zet(d*Qeta[i]*(n div c)) * gauss(c, a, vs[i]));
+        m0, s := SquarefreeFactorization(2*c);                       // c^{-3/2}/sqrt 2 = s sqrt(m0)/(2 c^2)
+        return poly, s/(2*c^2*D*N), m0;
+    end function;
+
+    Ng := func< g | (EulerPhi(M div g)*M*EulerPhi(g)) div (g*EulerPhi(M)) >;
+    assert &+[Ng(g) : g in Divisors(M)] eq M*&*[Rationals() | 1 + 1/p : p in PrimeDivisors(M)];
+    Smat := Matrix(Integers(), 2, 2, [0, -1, 1, 0]);
+    rep1 := func< g | g eq 1 select Smat else Matrix(Integers(), 2, 2, [1, 0, g, 1]) >;
+    rep2 := function(g)          // a second coset in the class, with d not = +-1 mod g when possible
+        d0 := g - 1;
+        for d in [2..g-2] do
+            if GCD(d, g) eq 1 then d0 := d; break; end if;
+        end for;
+        a0 := Integers()!((Integers(g)!d0)^-1); if a0 eq 0 then a0 := 1; end if;
+        return Matrix(Integers(), 2, 2, [a0, (a0*d0 - 1) div g, g, d0]);
+    end function;
+
+    reps := [];
+    for g in [g : g in Divisors(M) | g lt M] do
+        gm := rep1(g);
+        Append(~reps, <gm, Ng(g), classdata(gm)>);
+    end for;
+    // the identity class enters the zero coset only: a_0(f) at oo, rho = 1
+    idtri := [<dd, 0, 1> : dd in ds];
+    iddata := AssociativeArray();
+    for r in monos do
+        L := &+[ r[i]*ds[i] : i in [1..#ds] ];
+        if L gt 0 then continue; end if;
+        c0 := L eq 0 select Rationals()!1 else m0alg_unit_constant(r, idtri, 1, L);
+        if c0 ne 0 then iddata[r] := c0; end if;
+    end for;
+
+    contrib := function(f, i, gm, Ngm, data)
+        acc := AssociativeArray();
+        rpoly, rscale, m0 := rhofac(gm, i);
+        a0 := AssociativeArray();
+        for r in Exponents(f) do
+            if not IsDefined(data, r) then continue; end if;
+            kexp, sc, m1, c0poly := Explode(data[r]);
+            term := (f`coeffs[r] * sc) * fold(zet(kexp) * c0poly);
+            if IsDefined(a0, m1) then a0[m1] +:= term; else a0[m1] := term; end if;
+        end for;
+        for m1 in Keys(a0) do
+            mm, ss := SquarefreeFactorization(m0*m1);
+            term := (Ngm * rscale * ss) * fold(rpoly * a0[m1]);
+            if IsDefined(acc, mm) then acc[mm] +:= term; else acc[mm] := term; end if;
+        end for;
+        return acc;
+    end function;
+    reduce := function(acc)
+        tot := P!0;
+        for mm in Keys(acc) do tot +:= fold(acc[mm] * sqrtpoly(mm)); end for;
+        return tot mod Phi;
+    end function;
+
+    mults := [];
+    for fi->f in fs do
+        vals := AssociativeArray();
+        for i in sample do
+            tot := P!0;
+            for rp in reps do tot +:= reduce(contrib(f, i, rp[1], rp[2], rp[3])); end for;
+            if i eq i0 then
+                tot +:= &+[ Rationals() | f`coeffs[r]*iddata[r] : r in Exponents(f) | IsDefined(iddata, r) ];
+            end if;
+            tot := tot mod Phi;
+            error if Degree(tot) gt 0,
+                Sprintf("M0MultipliersAlgebraic: c_eta(0) is not rational (form %o, coset %o)", fi, i);
+            vals[i] := Coefficient(tot, 0);
+        end for;
+        arr := AssociativeArray();
+        for S in classes_eta do
+            idx := [i : i in sample | supp[i] eq S];
+            vS := [vals[i] : i in idx];
+            error if #Set(vS) ne 1,
+                Sprintf("M0MultipliersAlgebraic: c_eta(0) differs within the support class %o: %o", S, vS);
+            vprintf ShimuraQuotients, 2 : "\n\t(1/2) c_eta(0) at the cosets supported at %o: %o", S, vS[1]/2;
+            if #S eq 1 then arr[Representative(S)] := vS[1]/2; end if;
+        end for;
+        Append(~mults, arr);
+        if Verify then
+            for rp in reps do
+                g := rp[1][2][1];
+                if g eq 1 then continue; end if;      // the two class-1 cosets differ by a T-power
+                gm2 := rep2(g);
+                if gm2 eq rp[1] then continue; end if;
+                data2 := classdata(gm2);
+                for i in sample do
+                    v1 := reduce(contrib(f, i, rp[1], rp[2], rp[3]));
+                    v2 := reduce(contrib(f, i, gm2, rp[2], data2));
+                    error if v1 ne v2,
+                        Sprintf("M0MultipliersAlgebraic: class %o gives different values from the cosets %o and %o (form %o)",
+                                g, Eltseq(rp[1]), Eltseq(gm2), fi);
+                end for;
+            end for;
+        end if;
     end for;
     return mults;
 end intrinsic;
