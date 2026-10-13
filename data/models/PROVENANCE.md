@@ -478,6 +478,11 @@ or Schofer computation, by the writer `tools/writefp.m` (the same construction t
 stage runs). Among them are 29 top curves `W = {1}`, of genus 4 to 11; the rest are intermediate
 quotients of genus 2 to 11.
 
+Of the 203, **190 are still in the files**: PR #73 (the section at the end) later found a
+hyperelliptic model `y^2 = f(x)` for 13 of these keys, and the hyperelliptic form replaced the
+fibre product there. The 13 are listed in that section; none of them is a top curve, so all 29
+of those remain.
+
 ⚠ **At level `N > 1` these entries rest on the `m = 0` term of Schofer's formula**, through the
 double covers they are built from, and PR #66 only *proposes* a proof of that term; so they are
 checked by point counts against the trace formula, not proved. The same goes for the three
@@ -486,7 +491,7 @@ checked by point counts against the trace formula, not proved. The same goes for
 **Format.** Stored as the existing non-hyperelliptic shape `<genus, "CRV", [ Strings() | ... ]>`,
 one equation per factor, in coordinates `s, z` of weight 1 and fibre coordinates `y1, y2, ...`
 each of weight half the degree of its own equation (the same rule the older `x, y, s, z` pairs
-follow). Twenty-nine of them are top curves `W = {1}`, of genus 3 to 11, which no earlier stage
+follow). Twenty-nine of them are top curves `W = {1}`, of genus 4 to 11, which no earlier stage
 could reach because they are not subhyperelliptic.
 
 **What vouches for them.** Each entry was accepted only when the compositum has the genus the
@@ -572,6 +577,20 @@ Outside check: every stored hyperelliptic curve of genus >= 1 has the point coun
 Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
 p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 234 of 234, 198 of 198, 198 of 198
 and 156 of 156. No published equation exists for any of these bases.
+
+⚠ **The 32 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the three bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases.
+
+The 12 curves stored as a pair over a conic (6 in `models_330_1.m`, 3 in `models_6_55.m`, 3 in
+`models_10_33.m`, of genus 3 to 7) are outside that trace-formula check, which covers the
+hyperelliptic entries only. All 12 were checked by hand in the review of PR #92 (Sachi): the
+L-polynomial of each, as the product over its two double covers, against the trace formula at two
+or three primes; all agree. `tests/CRVTraceCounts.m` now makes the same comparison automatically.
 ## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
 
 The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
@@ -592,6 +611,14 @@ X_0^15(34) and X_0^51(5), wait on the two-cusp rungs.
 Outside check: every stored curve of genus >= 1 agrees with the trace formula over F_p and F_{p^2}
 at the six smallest primes not dividing 510, p = 7, 11, 13, 19, 23, 29: 264 of 264, 156 of 156 and
 126 of 126. No published equation exists for any of these bases.
+
+⚠ **The 14 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the two bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases.
 ## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
 
 The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
@@ -616,6 +643,20 @@ Outside check: every stored hyperelliptic curve of genus >= 1 has the point coun
 Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 390,
 p = 7, 11, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 264 of 264, 216 of 216, 150 of 150
 and 126 of 126. No published equation exists for any of these bases.
+
+⚠ **The 20 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the three bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases.
+
+The 5 curves of `models_10_39.m` stored as a pair over a conic (all of genus 3) are outside that
+trace-formula check, which covers the hyperelliptic entries only. All 5 were checked by hand in the
+review of PR #89 (Sachi): the L-polynomial of each, as the product over its two double covers,
+against the trace formula at two or three primes; all agree. `tests/CRVTraceCounts.m` now makes the
+same comparison automatically.
 ## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
 
 The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
@@ -678,6 +719,19 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+
+⚠ **The 16 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the two bases with N > 1, the five genus-0 quotients of
+`6_77` and `22_21`, every equation rests on that term, and so does every hyperelliptic cover
+written over one of these conics. Nothing fixes which quadratic twist of the conic is stored beyond
+the covers of a single key agreeing with one another; the trace-formula counts above see only the
+curves of genus >= 1; and no published equation reaches these bases.
+
+The nine curves stored as a pair over a conic (6 in `models_462_1.m`, 3 in `models_6_77.m`) were
+left out of the trace-formula checks above, as those sections say. `tests/CRVTraceCounts.m` now
+covers them, comparing the L-polynomial of each -- as the product over its two double covers --
+with the trace formula.
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
@@ -704,22 +758,35 @@ Trace formula 36 of 36.
 
 ## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
 
-The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
-genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
-order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
-read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
-exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
-present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
-each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+The three files predated the current pipeline and carried no record of how they had been produced:
+5 to 10 keys each, mostly the quotients by a single involution, many of them empty. Rerun with the
+current pipeline (default recipe, branch exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15
+and 13 keys. The genus-0 quotient of each -- by the order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170},
+{1, 7, 38, 266} -- comes out rational: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and
+y^2 = 5 - 8x, each with an evident rational point, so all three curves are P^1 over Q.
 Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
 36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
-keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
+keys.
+
+**What the rerun changed, and what it did not.** It replaced no curve. Compared with `main` as it
+stood immediately before this work was merged, the three files differ in exactly two ways. Four
+equations are rescaled by the square of a constant -- `22_13` {1,2,11,22} and {1,2,13,26} by 44^2,
+`22_13` {1,2,143,286} by (11/104)^2, `38_7` {1,2,133,266} by 4^2 -- which is the substitution
+y -> cy and leaves the curve unchanged. And four keys are listed that the files had not listed
+before, all four empty: `34_5` {1,10} and {1,85}, `38_7` {1,7} and {1,14}. Every other entry,
+including all three genus-0 quotients, is identical character for character. So the entries the
+rerun shares with the lovelace rerun of PR #73 (the section below, which is where those keys of
+`22_13`, `34_5` and `38_7` were first written) are not merely isomorphic to them but the same
+equations; what this rerun adds is the renormalisation of four older equations and a provenance
+record for the files. The branch this came from had assumed instead that the genus-0 quotients were
+missing, and a census had read them as conics without a rational point; that was true of the branch,
+never of `main`, where PR #73 had already stored them.
 
 Three keys in these files are hyperelliptic quotients that are still empty and have not yet been
 computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,186}`), `111_2` by w_222
-(`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
-`38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
-agree up to isomorphism.
+(`{1,222}`) and `38_7` by w_7 (`{1,7}`). The quotients by w_2 of `22_13` and `38_7` are stored as
+fibre products (the batch of 2026-10-03 above); this rerun writes only hyperelliptic equations and
+so produces nothing for those two keys, and the merge kept the fibre products.
 ## `models_210_1.m` and the level-420 polytope cache (2026-10-05, branch level-420-models)
 
 `X_0^210(1)` was behind the Normaliz wall (M = 420 has 24 divisors) until its first polytope rung
