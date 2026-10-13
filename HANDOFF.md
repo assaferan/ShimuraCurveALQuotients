@@ -54,6 +54,40 @@ one enumeration suffices in principle; copy both files into `polymake/` on the b
 run tree, then relaunch the odd-D bases with `launchM.sh`. The reproduce-a-known-value check for
 this probe: `(948, 85, 156)`, `(948, 241, 156)` and `(564, 56, 92)` re-solve in 0–2 s on the Mac
 and equal the committed files as vector sets.
+## Handoff — 2026-10-05 — THE t-SHIFT LADDER WORKS AT A FIXED CUSP-0 ORDER (branch cusp0-ladder, nmzsolve.py)
+
+The cusp-0 rungs (M, n, m), m > 0, were outside the fallback, so a base needing one (every base at
+M = 420 except 6_35, 10_21, 14_15, 210_1 asks for (420, 42, 104)) hit the Normaliz wall. Measured on the
+cached enumerated pairs, with the span of the q-expansions as the criterion:
+* the rung (M, n', m) IS spanned by the rung (M, n, m), n < n', shifted by the weight-0 quotients with
+  poles at oo only (the existing tshift_w0 set): 204 (20,32)->(45,32) 63/63; 60 (0|3|8,8)->(11,8)
+  17/17; 372 (32,60)->(92,60) 124/124; 380 (28,65)->(93,65) 132/132. Every shifted point is a lattice
+  point of the target (none outside the truth).
+* it is NOT reached from the m = 0 rungs: products of (204, 47, 0) with the weight-0 quotients of poles
+  <= 20 at oo and <= 32 at 0 span 24 of 38 dimensions of (204, 20, 32), iterating does not help; and
+  the Atkin-Lehner reversal r_d -> r_{M/d} of an m = 0 rung lands in the TWISTED character (odd-prime
+  parities flip), whose reversal is in the right polytope but the union still spans 14 of 38.
+⇒ nmzsolve.py's fallback now runs at any m: a cached (M, n, m) with n < n_pole and tshift_w0_M.txt
+answer (M, n_pole, m); the m = 0 core file stays m = 0; for m > 0 NO thinning (four per pole order lost
+2 of 63 dimensions at 204; all 274 shifted points give 63/63). So per M the cost is one enumeration of
+the LOWEST rung at each cusp-0 order a base asks for, plus the m = 0 base rung; the ladder is free.
+Validation scripts and the shift sets: campaign vvdata/weyl-campaign/cusp0ladder/.
+## Handoff — 2026-10-04 — review of #63 (Sachi): three answers, one fix
+
+* An EMPTY polytope still gets the "0 lattice points in polytope:" header from Normaliz (3.11.1 here,
+  3.10.2 on lovelace, this branch's nmzsolve.py on (8,1,0) cuspidal=1), so the new header check
+  leaves empty answers alone; only a missing header or a truncated list errors.
+* `good_forms_at_zero`: the dependencies are now the KERNEL OF THE EXPANSION-AT-0 MAP (echelonise the
+  expansions with the transform; rank = independent nonzero expansions; every dependency, including the
+  difference of two rows with the same expansion, is a zero row), not "the rows whose expansion is zero";
+  the old assertion would have failed on such a pair. X0_15_1, 51_1, 39_1, 39_2, 87_1, 93_1, 111_1,
+  VectorValuedForm pass (abf6460).
+* 95_1 / 119_1 / 159_1: the expansion at 0 had NOT been rebuilt from the eta-quotient formula (pole
+  order > 1000, no BFVERIFY). ✅ DONE 2026-10-05 on lovelace (~/gymodels/verify63, this branch at
+  9037444, BFVERIFY=1, NO form cache, 4 h 53 / 5 h 05): for 95_1 and 119_1 every returned form's fresh
+  expansion at 0 and divisor agree with the stored ones (the asserts would have stopped the run), and
+  the model files written are BYTE-IDENTICAL to PR #64's. 159_1 still running (started 14:00).
+* After this merges: merge main into m0-theta-campaign (shared-path nmzsolve.py).
 
 ## Handoff — 2026-09-24 — THE GR ELEVEN COMPLETE, A REGRESSION FIXED, AND A THIRD GUO-YANG TABLE
 

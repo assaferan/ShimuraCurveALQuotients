@@ -14,7 +14,7 @@ models[[Integers()|1,2,67,134]] := [* <3, P![ -43/544195584, 115/272097792, -388
 models[[Integers()|1,6,134,201]] := [* <2, P![ -43/136048896, 503/272097792, -2045/725594112, 4597/2176782336, -6787/8707129344, 1/8957952 ], P![]> *];
 
 // Built 2026-10-03 as fibre products over the star line of committed double covers
-// (FibreProductCovers.m); each verified against the trace formula at three primes, F_p and F_{p^2}.
+// (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2} (two where a factor reduces badly at one of the first three).
 // Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
 models[[Integers()|1,134]] := [* <6, "CRV", [ Strings() | "-1/143327232*s^7*z + 39055/557256278016*s^6*z^2 - 41831/139314069504*s^5*z^3 + 99719/139314069504*s^4*z^4 - 8975/8707129344*s^3*z^5 + 3889/4353564672*s^2*z^6 - 115/272097792*s*z^7 + 43/544195584*z^8 + y1^2", "-1/36*s^4 + 19/192*s^3*z - 277/2304*s^2*z^2 + 5/96*s*z^3 - 1/144*z^4 + y2^2" ]> *];
 models[[Integers()|1,6]] := [* <6, "CRV", [ Strings() | "1/2902376448*s^8 - 40027/11284439629824*s^7*z + 236117/15045919506432*s^6*z^2 - 440707/11284439629824*s^5*z^3 + 674119/11284439629824*s^4*z^4 - 40087/705277476864*s^3*z^5 + 11249/352638738432*s^2*z^6 - 67/7346640384*s*z^7 + 43/44079842304*z^8 + y1^2", "-1/8957952*s^5*z + 6787/8707129344*s^4*z^2 - 4597/2176782336*s^3*z^3 + 2045/725594112*s^2*z^4 - 503/272097792*s*z^5 + 43/136048896*z^6 + y2^2" ]> *];

@@ -125,7 +125,7 @@ encode.
 | `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
-| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+| `tests/_offline/X0_10_19.m`, `X0_21_1.m` | the same, for the two bases still too slow for CI (`87_1`, `111_1`, `93_1` and `39_2` moved into CI on 2026-10-01, minutes each with the Borcherds search of #63) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 ## THE QUOTIENT ORACLE — the largest source of external validation here
 
@@ -392,6 +392,39 @@ code version*. Anyone bisecting `main` to an older commit will find this file un
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
 
+## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+
+`models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
+BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
+tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
+second rung of the Borcherds ladder (0-side pole order 3325) had never finished (7 h+); with it the
+five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
+all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), and genus 7 and the hyperelliptic involution match
+Table 1. The quotient comparison (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
+nothing here; the quotient models rest on the L-polynomial comparison against the trace formula in
+`VerifyModelSet` and on the involution check in `tests/_offline/X0_95_1.m`.
+
+`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
+(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
+lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation and matches
+Table 1. The quotient comparison has no entry for `119_1` either; its quotients are checked the same
+way as `95_1`'s.
+
+`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
+order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
+lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
+and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient comparison has no entry for
+`159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
+(`y^2 + h y = f`).
+
+For all three, every stored quotient's L-polynomial at the small good primes equals the one the
+trace formula gives for the W-fixed part of the D-new space (`tests/ModelChecks.m`, check [5]),
+which also fixes the labels of the w_p: the opposite sign convention would swap the genera of the
+two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
+58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
+
 ## Reproducibility status, measured 2026-09-05
 
 Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
@@ -475,10 +508,11 @@ sweep (PR #71) tries every generating set and reported 11 failures over a pool t
 24 stored pairs: the difference is six covers that a second generating set builds. The writer now
 tries every set too (and skips a degenerate one, where some subset of factors multiplies to a
 constant times a square), which reaches seven more covers; three are added here, on 2026-10-04,
-`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have hyperelliptic models
-from reruns instead (`21_2` `[1,3]`, `[1,6]` in PR #70; `22_7` `[1,22]`, `26_5` `[1,10]` in
-PR #73). What remains rejected, with
-every generating set: `14_19` `[1,19]`, `[1,38]`; `34_7` `[1,7]`, `[1,119]`; `82_3` `[1,2]`,
+`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have models from reruns
+instead: `21_2` `[1,3]`, `[1,6]` (PR #70) and `26_5` `[1,10]` (PR #73) as `y^2 = f(x)`, and `22_7`
+`[1,22]` (PR #73) as a genus-3 double cover of the conic `{1,14,22,77}`, which has no rational
+point, so that curve has no model `y^2 = f(x)` over Q. What remains rejected, with
+every generating set: `14_19` `[1,38]` (`[1,19]` has a hyperelliptic model from the rerun below); `34_7` `[1,7]`, `[1,119]`; `82_3` `[1,2]`,
 `[1,82]`, `[1,123]` (no set has the right genus), and `21_2` `[1,14]`, `34_3` `[1,34]` (right genus,
 wrong point counts: factors in mixed Hauptmodul coordinates).
 
@@ -565,3 +599,31 @@ formula at the 4th and 5th good primes, which the writer never used: 112 of 112 
 counts agree. `462_1` keeps its 11 empty keys: none of them has committed double covers to multiply.
 As for the 203 above, at level N > 1 these rest on the m = 0 term of Schofer's formula through their
 factors (PR #66), so they are checked by point counts, not proved.
+## 36 quotient models from a rerun of the gap bases (2026-10-03, lovelace, code at e4d8b4a, a commit on the branch of PR #63 and not on `main`)
+
+The census of 2026-10-03 found 100 subhyperelliptic quotients with no model across 31 bases, almost
+all of them because the committed file predates a code fix rather than because the method fails
+(`21_2` and `6_5` closed by a plain rerun, PR #70). The 27 reachable bases were rerun on lovelace
+with the default recipe (`genmodels.m`, `NORMALIZ_BIN=/usr/bin/normaliz`, 10 h cap, all 24 that
+finished exited 0; `143_1`, `145_1`, `203_1` run separately). Against this branch the reruns add
+36 entries in 8 files, of genus 0 to 7 (3, 8, 9, 6, 5, 3, 1, 1 entries of genus 0 through 7):
+
+    14_19  [1,133] [1,7,19,133] [1,19] [1,14,38,133]
+    22_13  [1,286] [1,26] [1,22,26,143] [1,13,22,286] [1,11,26,286] [1,11,13,143] [1,11]
+    22_7   [1,22]            26_5  [1,10]
+    34_5   nine: [1,5,34,170] [1,10,34,85] [1,2,5,10] [1,5] [1,34] [1,5,17,85] [1,170] [1,2,85,170] [1,10,17,170]
+    34_7   [1,14,34,119] [1,7,34,238]
+    38_7   [1,14,19,266] [1,2,7,14] [1,266] [1,7,38,266] [1,38] [1,14,38,133]
+    58_5   [1,10] [1,10,58,145] [1,2,5,10] [1,29] [1,2,29,58] [1,5,29,145]
+
+Where a key already held a model of the form y^2 = f(x) the rerun's version (often a different
+normalisation of the same curve) was discarded. Where this branch held a fibre-product `CRV` pair
+and the rerun found a model y^2 = f(x) for the same key, the hyperelliptic model replaces the pair
+(Eran's decision, 2026-10-13: the hyperelliptic form is the more useful one when it exists; the
+two were produced independently and both agree with the trace formula): 13 keys, `10_17 [1,85]`,
+`10_29 [1,58]`, `10_37 [1,2] [1,185]`, `14_13 [1,91]`, `14_19 [1,14]`, `22_7 [1,11]`, `26_5 [1,65]`,
+`34_3 [1,3] [1,6]`, `34_7 [1,14] [1,238]`, `6_41 [1,123]`, each with the genus of the pair it replaces
+(the rerun output is in `gapscan/out` on lovelace). The two
+odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
+checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
+reach: `GonzalezRotger`, `GuoYangTable1`).

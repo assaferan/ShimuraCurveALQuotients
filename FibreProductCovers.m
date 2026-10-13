@@ -206,8 +206,10 @@ intrinsic EquationsByFibreProduct(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnu
             end for;
             if exists{f : f in fs | f eq 0} then continue; end if;
             if IsDegenerateFactorSet(fs) then
-                vprintf FibreProductCovers, 1 : "  fibre product for W=%o over base %o: a subset of the factors multiplies to a constant times a square: skipped\n",
-                    Sort(SetToSequence(X`W)), b;
+                // correct double covers in one coordinate never form such a set, so this is a
+                // defect in the stored equations and is reported like the genus and point-count failures
+                printf "WARNING FibreProductCovers: X_0^%o(%o) W=%o over base %o: a subset of the factors multiplies to a constant times a square -- skipped\n",
+                    X`D, X`N, Sort(SetToSequence(X`W)), b;
                 continue;
             end if;
             K := FibreProductFunctionField(fs);

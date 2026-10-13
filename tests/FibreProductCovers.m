@@ -5,13 +5,12 @@
 //     Atkin-Lehner quotient), comes out of three double covers and matches the Eichler-Selberg
 //     trace formula on the 6-new space at four primes over two degrees;
 //   * W={1,6}, which the pipeline DID build and stores as a pair, is reproduced by the same code
-//     and matches the trace formula at four primes (a positive control: the construction must agree
-//     with the existing route where both apply), while the same factors with one of them twisted by
-//     -1 give a curve of the same genus that the trace formula rejects (a negative control: the
-//     point counts, not the genus, are what accepts);
+//     and matches the trace formula at four primes (the construction reproduces the stored cover),
+//     while the same factors with one of them twisted by -1 give a curve of the same genus that the
+//     trace formula rejects (the stage refuses a compositum the point counts reject);
 //   * at X_0(21,2) the committed double covers come from runs with different Hauptmodul
-//     normalisations, and their fibre product has the right genus but the WRONG point counts, so
-//     the stage must refuse it (a negative control: the genus alone is not an acceptance test).
+//     normalisations, and their fibre product has the right genus but the wrong point counts, so
+//     the stage must refuse it (the genus alone does not accept a compositum).
 //
 // EXTERNAL SOURCE for the point counts: ComputePointsViaTrace, the codebase's own evaluation of
 // the Eichler-Selberg trace formula on the W-fixed part of the D-new space, independent of every
@@ -124,9 +123,9 @@ procedure test_fibre_product_6_23(poly)
     C, eqns := FibreProductCurve(fs);
     assert #eqns eq 3;
 
-    // POSITIVE CONTROL: W={1,6} (genus 3), built by the pipeline as a pair, rebuilt here and checked
-    // against the trace formula at four primes; then a NEGATIVE control, the same two factors with
-    // the first twisted by -1: same genus, and the trace formula must reject it at some prime
+    // W={1,6} (genus 3), built by the pipeline as a pair, is rebuilt here and checked against the
+    // trace formula at four primes; then the same two factors with the first twisted by -1: same
+    // genus, and the trace formula must reject it at some prime
     X6 := rep{Y : Y in curves | Y`D eq 6 and Y`N eq 23 and Y`W eq {Integers()|1,6}};
     ok6, gens6 := FibreProductGenerators({Integers()|1,6},
                      {U : U in AtkinLehnerDoubleCoversOver({Integers()|1,6}, 6, 23) | IsDefined(poly, U)}, 6, 23);
@@ -191,9 +190,9 @@ procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     curves := GetHyperellipticCandidates();
     all_eqns, labels := pipeline_shaped(poly, 21, 2, curves);
     i14 := rep{i : i in labels | curves[i]`W eq {Integers()|1,14}};
-    // Since PR #70 the model file stores the true genus-2 curve X_0^21(2)/w_14 (checked against
-    // Guo-Yang's equations in tests/X0_21_2.m).  This test is about the stage, so that equation is
-    // taken out of the input: the stage must not rebuild the cover from the committed double covers.
+    // The model file stores the genus-2 curve X_0^21(2)/w_14 (checked against Guo-Yang's equations
+    // in tests/X0_21_2.m).  This test is about the stage, so that equation is taken out of the
+    // input: the stage must not rebuild the cover from the committed double covers.
     if IsDefined(all_eqns, i14) then Remove(~all_eqns, i14); end if;
     // the committed index-2 covers above W={1,14} do give a compositum of the right genus ...
     ups := AtkinLehnerDoubleCoversOver({Integers()|1,14}, 21, 2);
