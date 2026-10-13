@@ -1275,7 +1275,7 @@ function find_degs(abs_schofer_tab)
     cid := abs_schofer_tab`Xstar`CurveID;
     degs := [];
     for d in ds do
-        Append(~degs, Degree(fldsofdef[cid][d][1]));
+        Append(~degs, Degree(fldsofdef[cid][d]));
     end for;
     return degs;
 end function;
@@ -1498,10 +1498,85 @@ function pin_complex_conjugation(L)
 end function;
 
 
+// The returned ideal must be integral and coprime to the conductor of R, which the Picard
+// discrete log needs; the inverse of the class is taken for that, harmless modulo squares.
+intrinsic CMConjugationIdeal(R::RngQuad, D::RngIntElt, N::RngIntElt) -> RngQuadIdl
+{An ideal of the quadratic order R whose class in Pic(R)/Pic(R)^2 is the class [a] with complex
+ conjugation acting on the CM points by R of X_0(D,N) as w_m sigma_a ([GR] Lemma 5.10), read off
+ an optimal embedding q of R into the Eichler order O of level N in B_D: with theta = q(sqrt d), the
+ lattice Lambda = (x in O : x theta = -theta x) is a left q(R)-module, Lambda = q(c) j_0 for a
+ fractional ideal c, and comparing the transporter between q and its complex conjugate embedding
+ with the transporter of w_m sigma_a gives [a] = [c] modulo squares.  Requires such an embedding
+ to exist.}
+    d := Discriminant(R);
+    Ldata := ShimuraCurveLattice(D, N);       // the Eichler order object the Schofer code uses
+    O := Ldata`O;
+    B := Algebra(O);
+    f := Conductor(R);
+    // theta with theta^2 = d and O meet Q(theta) = R: FindLambda's vector generates O meet Q(sqrt d)
+    found, v := FindLambda(Ldata`Q, -d, O, Ldata`basis_L);
+    require found : Sprintf("CMConjugationIdeal: the order of discriminant %o does not embed optimally in the Eichler order of level %o in B_%o", d, N, D);
+    bl := Ldata`basis_L;
+    elt := &+[v[i]/2*bl[i] : i in [1..#bl]] + ((-d) mod 4 eq 3 select B!1/2 else 0);
+    th := B!(2*elt - Trace(elt));
+    assert th^2 eq d;
+    t := (d mod 4 eq 0) select 0 else 1;
+    om := (t + th)/2;
+    for p in PrimeDivisors(f) do
+        for u in [0..p-1] do
+            require not ((u + om)/p in O) : "CMConjugationIdeal: FindLambda's embedding is not optimal";
+        end for;
+    end for;
+    // Lambda = O meet (anticommuting plane), as a Z-lattice
+    bas := Basis(O);
+    M := Matrix(Rationals(), 4, 4, [Eltseq(B!(th*bas[a] + bas[a]*th)) : a in [1..4]]);
+    rows := [];
+    for w in Basis(Kernel(M)) do
+        den := LCM([Denominator(c) : c in Eltseq(w)]);
+        Append(~rows, [Integers()| c*den : c in Eltseq(w)]);
+    end for;
+    S := Saturation(Matrix(Integers(), rows));
+    Vs := [B!(&+[S[r][k]*bas[k] : k in [1..4]]) : r in [1..2]];
+    j0 := Vs[1];
+    // x j0^-1 = alpha + beta theta in Q(theta); the alpha + beta sqrt(d) generate c
+    K := NumberField(R);
+    sd := K!(2*R.2 - Trace(R.2));
+    assert sd^2 eq d;
+    Mb := Matrix(Rationals(), 2, 4, [Eltseq(B!1), Eltseq(th)]);
+    coords := [];
+    for x in Vs do
+        ok, sol := IsConsistent(Mb, Vector(Rationals(), Eltseq(x * j0^-1)));
+        assert ok;
+        Append(~coords, <sol[1], sol[2]>);
+    end for;
+    // scale so that alpha + beta sqrt(d) = u + v (t + sqrt d)/2 has u, v in Z, i.e. lies in R
+    // (integrality in K is not enough: R is not the maximal order in general)
+    den := LCM(&cat[[Denominator(2*cb[2]), Denominator(cb[1] - t*cb[2])] : cb in coords]);
+    g1 := R!(den*(coords[1][1] + coords[1][2]*sd)); g2 := R!(den*(coords[2][1] + coords[2][2]*sd));
+    c := ideal<R | [g1, g2]>;
+    // an integral representative coprime to the conductor: beta cbar / N(c) for beta in c with
+    // N(beta)/N(c) coprime to f; its class is [c]^-1
+    Nc := Norm(c);
+    for bd in [1..30] do
+        for u, w in [-bd..bd] do
+            beta := u*g1 + w*g2;
+            if beta eq 0 then continue; end if;
+            if GCD(Integers()!(Norm(beta)/Nc), f) eq 1 then
+                conj := func<x | Trace(x) - x>;
+                return ideal<R | [R | beta*conj(g1)/Nc, beta*conj(g2)/Nc]>;
+            end if;
+        end for;
+    end for;
+    error "CMConjugationIdeal: no representative coprime to the conductor found";
+end intrinsic;
+
+
 // This is following [GR, Section 5]
-intrinsic FieldsOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> List
-{Return possible fields of definition for CM point with CM by d on X.
-DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check; slated for removal.}
+intrinsic FieldOfDefinitionOfCMPointSlow(X::ShimuraQuot, d::RngIntElt) -> Fld
+{The field of definition of the CM points by the order of discriminant d on X, computed inside the
+full ring class field.  DEPRECATED: use FieldOfDefinitionOfCMPoint, which works in the smaller
+Atkin-Lehner-fixed subfield; kept only as a test cross-check.  Raises an error if X has no CM point
+by that order (DegreeOfFieldOfDefinitionOfCMPoint is 0 exactly then).}
     // require IsFundamentalDiscriminant(d) : "Field of definition currently only supports maximal orders";
     R := QuadraticOrder(BinaryQuadraticForms(d));
     K := NumberField(R);
@@ -1516,9 +1591,8 @@ DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check
     // Proposition 5.6 + correction (adding GCD(D,f) = 1)
     // This test must come before the asserts below: when p | GCD(D, f), KroneckerCharacter(d)
     // (primitive) gives chi(p) = -1, so p lands in D_R and the first assert fails.
-    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
-        return [* *];
-    end if;
+    require ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) eq 0) and (GCD(D, f) eq 1) :
+        Sprintf("X_0(%o,%o)/W has no CM point by the order of discriminant %o", D, N, d);
 
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
@@ -1544,22 +1618,15 @@ DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check
     // Theorem 5.12 (1) and Lemma 5.10 for complex conjugation
     m := D_R*N_star_R;
     
-    frakas := [];
-    for a in A do
-        alift := a@@PicR_to_A;
-        // circumventing a bug in Magma in mPicR
-        if (alift eq PicR!0) then
-            fraka := 1*R;
-        else
-            fraka := mPicR(alift);
-        end if;
-        B_fraka := QuaternionAlgebra(Rationals(), d, m*Norm(fraka));
-        if IsIsomorphic(B_fraka, B) then
-            Append(~frakas, fraka);
-            if IsFundamentalDiscriminant(d) then break; end if; // see [GR], Remark 5.11
-        end if;
-    end for;
-    require #frakas gt 0 : "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    // The class [a] of Lemma 5.10 comes from the Eichler order (CMConjugationIdeal); the condition
+    // B ~ (d, m N(a)) of [GR] is kept as a check, since it is necessary but, for a non-maximal
+    // order, not sufficient to single out the class.
+    alift := PicR_to_A(CMConjugationIdeal(R, D, N) @@ mPicR) @@ PicR_to_A;
+    // circumventing a bug in Magma in mPicR
+    fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
+    require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
+        "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
+    frakas := [fraka];
     sigma_as := [rec(fraka) : fraka in frakas];
     abs_sig_as := [H_R_to_abs^(-1)*sigma_a*H_R_to_abs : sigma_a in sigma_as];
 
@@ -1608,8 +1675,9 @@ DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check
     cc := pin_complex_conjugation(abs_H_R);
     cc_reps := [cc];
     sigmas := [hom<abs_H_R -> abs_H_R | cc(abs_sig_a(abs_H_R.1))> : abs_sig_a in abs_sig_as, cc in cc_reps];
-    if m eq 1 then 
-        return [* FixedField(Q_P, [sigma]) : Q_P in Q_Ps, sigma in sigmas *];
+    if m eq 1 then
+        assert #Q_Ps eq 1 and #sigmas eq 1;
+        return FixedField(Q_Ps[1], [sigmas[1]]);
     end if;
     Q_Ps := [* *];
     known_al := Keys(al_action);
@@ -1623,29 +1691,26 @@ DEPRECATED: use FieldsOfDefinitionOfCMPointFast. Kept only as a test cross-check
         Q_P := FixedField(abs_H_R, fixed_by);
         Append(~Q_Ps, Q_P);
     end for;
-
-    return Q_Ps;
+    assert #Q_Ps eq 1;
+    return Q_Ps[1];
 
 end intrinsic;
 
-intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegree := 0) -> List
-{Fields of definition Q(P) of the CM points of discriminant d on the Atkin-Lehner
+intrinsic FieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Fld
+{The field of definition Q(P) of the CM points P of discriminant d on the Atkin-Lehner
  quotient X = X_0(D,N)/W, following [GR, Sec 5] (arXiv:math/0612732v2, Appendix).
  Works inside A_abs, the subfield of the ring class field H_R fixed by the Galois
  Atkin-Lehner subgroup of W (Lemma 5.9), of degree 2*h_R/#alSub_W.
 
- Returns:
-   [* *]       X has no CM point by the order R of discriminant d: the Prop 5.6
-               congruence together with GCD(D, Conductor(R)) = 1 (e.g. d = -656 on
-               X_0(34,5)*).  DegreeOfFieldOfDefinitionOfCMPoint returns 0 here.
-   [* Aabs *]  complex conjugation is not active on the quotient.
-   otherwise   one field per valid class [a] in Pic(R)/Pic(R)^2: the fixed field of the
-               reflection c . sigma_a . sigma_w0, of degree Degree(A_abs)/2.  It need not
-               be totally real (d = -228 on X_0(38,1)/<w_38> gives Q(sqrt(-19)), as in
-               [GY]).  The list has length 1 for fundamental d ([GR] Rem 5.11).
+ Raises an error when X has no CM point by the order R of discriminant d (the Prop 5.6
+ congruence together with GCD(D, Conductor(R)) = 1 fails, e.g. d = -656 on X_0(34,5)*);
+ DegreeOfFieldOfDefinitionOfCMPoint returns 0 exactly then, and is the way to test.
 
- MaxDegree > 0: return [* *] when the degree exceeds it, before building any field, so
- [* *] then means "no point of degree <= MaxDegree".  For the degree alone use
+ Returns A_abs itself when complex conjugation is not active on the quotient, and
+ otherwise the fixed field of the reflection c . sigma_a . sigma_w0, of degree
+ Degree(A_abs)/2, for the class [a] in Pic(R)/Pic(R)^2 that CMConjugationIdeal reads
+ off the Eichler order.  It need not be totally real (d = -228 on X_0(38,1)/<w_38>
+ gives Q(sqrt(-19)), as in [GY]).  For the degree alone use
  DegreeOfFieldOfDefinitionOfCMPoint.}
     D := X`D;
     N := X`N;
@@ -1667,9 +1732,8 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     // X0(34,5)*: 2 | D and 2 | f), and without the guard the al_gen loop hands `frakb @@ mG` a prime
     // ramified in the ring class field and Magma throws "not in the codomain". This combined test is
     // verified equivalent to NumberOfOptimalEmbeddings(R,D,N) = 0 (0 mismatches over 2000 discs).
-    if ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) ne 0) or (GCD(D, f) ne 1) then
-        return [* *];
-    end if;
+    require ((Discriminant(R) mod ((D*N) div (D_R*N_star_R))) eq 0) and (GCD(D, f) eq 1) :
+        Sprintf("X_0(%o,%o)/W has no CM point by the order of discriminant %o", D, N, d);
 
     mG := NormGroup(RingClassField(R));   // Gal(H_R/K) -> ideals of O_K
     G  := Domain(mG);
@@ -1709,22 +1773,6 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
         end if;
     end for;
 
-    // The field of definition DEGREE is known from GROUP ORDERS alone, with no number field built:
-    // Degree(A_abs/Q) = 2 * #G div #alSub_W, and every returned field is either A_abs itself (cc
-    // inactive) or the fixed field of an order-2 reflection c.sigma_a.sigma_{w0} (cc active, degree
-    // halved).  A caller that only keeps degree <= MaxDegree points can bail HERE -- before the
-    // AbelianExtension / AbsoluteField build (~1s/disc) AND the far more expensive cc pinning (a
-    // Roots() over the degree-[A_abs] field, ~1min for high-Picard-exponent CNs[16] discriminants) --
-    // because the point is discarded regardless of WHICH fields those steps would name.  Verified
-    // deg_def below equals the actual returned field degree on the deg-1/deg-2 discs that survive.
-    deg_Aabs := 2 * #G div #alSub;
-    if MaxDegree gt 0 then
-        deg_def := cc_active select (deg_Aabs div 2) else deg_Aabs;
-        if deg_def gt MaxDegree then
-            return [* *];
-        end if;
-    end if;
-
     // Build A_abs = H_R fixed by alSub_W, as an abelian extension of K.
     _, pi_quo := quo<G | alSub>;
     Aext := AbelianExtension(Inverse(pi_quo)*mG);
@@ -1734,7 +1782,7 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     KinA := Aabs!K.1;
 
     if not cc_active then
-        return [* Aabs *];   // field of definition contains K
+        return Aabs;   // field of definition contains K
     end if;
 
     // Complex conjugation on A_abs.  When A_abs is CM (Pic(R) exponent <= 2) it is canonical; otherwise
@@ -1744,7 +1792,6 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     // closest-root pick certified by r1(Fix) > 0 with precision raised until it certifies) -- avoiding
     // the AutomorphismGroup enumeration entirely.
     cc := pin_complex_conjugation(Aabs);
-    ccs := [* cc *];
 
     // Valid classes [a] in Pic(R)/Pic(R)^2 with B_D ~ (-s, m*N(a))_Q  (Lemma CC /
     // Remark uniqueness); their Artin automorphisms sigma_a restricted to A_abs.
@@ -1757,34 +1804,18 @@ intrinsic FieldsOfDefinitionOfCMPointFast(X::ShimuraQuot, d::RngIntElt : MaxDegr
     frakb_w0 := &*[Parent(1*OK) | pa[1]^(pa[2] div 2) : pa in Factorization(w0*OK)];
     tw := (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
 
-    sigma_as := [* *];
-    for a in A2 do
-        alift := a@@PicR_to_A2;
-        fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
-        if not IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) then
-            continue;
-        end if;
-        Append(~sigma_as, (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs);
-        if IsFundamentalDiscriminant(d) then break; end if;   // [GR] Remark 5.11
-    end for;
-    require #sigma_as gt 0 :
-        "Error in field of definition - could not find a fractional ideal for complex conjugation!";
+    // The class [a] of Lemma 5.10 comes from the Eichler order (CMConjugationIdeal).  [GR]'s
+    // condition B ~ (d, m N(a)) is kept as a check: it is necessary, and for a maximal order
+    // sufficient ([GR] Remark 5.11), but for a non-maximal order several classes pass it.
+    alift := PicR_to_A2(CMConjugationIdeal(R, D, N) @@ mPicR) @@ PicR_to_A2;
+    fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
+    require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
+        "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
+    sigma_as := [* (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs *];
 
-    // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}; collect distinct.
-    fields := [* *];
-    for c in ccs do
-        for sa in sigma_as do
-            sigma := hom<Aabs -> Aabs | tw(c(sa(Aabs.1)))>;
-            F := FixedField(Aabs, [sigma]);
-            is_new := true;
-            for FF in fields do
-                if IsIsomorphic(F, FF) then is_new := false; break; end if;
-            end for;
-            if is_new then Append(~fields, F); end if;
-        end for;
-    end for;
-
-    return fields;
+    // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}
+    sigma := hom<Aabs -> Aabs | tw(cc(sigma_as[1](Aabs.1)))>;
+    return FixedField(Aabs, [sigma]);
 
 end intrinsic;
 
@@ -1799,9 +1830,7 @@ procedure replace_column(schofer_tab, d, dnew, is_log)
     row_scales := schofer_tab`RowScales;
     all_fs := [fs[k] : k in keys_fs];
     UpdateFieldsOfDefn(schofer_tab, dnew);
-    flds := (schofer_tab`FldsOfDefn)[curveid][dnew];
-    assert #flds eq 1;
-    deg := Degree(flds[1]);
+    deg := Degree((schofer_tab`FldsOfDefn)[curveid][dnew]);
     d_idx := Index(ds,d);
     ds[d_idx] := dnew;
     Ldata := ShimuraCurveLattice(Xstar`D,Xstar`N);
@@ -1835,7 +1864,7 @@ function find_y2_scales(schofer_table)
     scale_factors :=[];
     unscaled_keys := [];   // covers whose y2-scale is a placeholder; their twist is NOT trusted
     for i in k_idxs do
-        if exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] eq 1 and Degree(fldsofdef[keys_fs[i]][d1][1]) eq 1 and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)} then
+        if exists(j1){j : j->d1 in ratds  | Degree(fldsofdef[keys_fs[i]][d1]) eq 1 and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)} then
             //then we have a rational point on X
             // d1 := ratds[j1];
             v1 := table[i][j1];
@@ -1844,8 +1873,8 @@ function find_y2_scales(schofer_table)
             // Append(~scale_factors, AbsoluteValue(scale));
             Append(~scale_factors, log_scale);
         else 
-            found_j1 := exists(j1){j : j->d1 in ratds  | #fldsofdef[keys_fs[i]][d1] le 2 and {Degree(fldsofdef[keys_fs[i]][d1][k]) : k in [1..#fldsofdef[keys_fs[i]][d1]]} subset {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
-            found_j2 := found_j1 and exists(j2){j : j->d2 in ratds  | #fldsofdef[keys_fs[i]][d2] le 2 and {Degree(fldsofdef[keys_fs[i]][d2][k]) : k in [1..#fldsofdef[keys_fs[i]][d2]]} subset {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
+            found_j1 := exists(j1){j : j->d1 in ratds  | Degree(fldsofdef[keys_fs[i]][d1]) in {1,2} and table[i][j] ne LogSum(Infinity()) and table[i][j] ne LogSum(0)};
+            found_j2 := found_j1 and exists(j2){j : j->d2 in ratds  | Degree(fldsofdef[keys_fs[i]][d2]) in {1,2}  and table[i][j] ne LogSum(Infinity()) and ratds[j1] ne d2 and table[i][j] ne LogSum(0)};
             // Graceful: without two suitable rational CM points we cannot pin this cover's y2-scale.
             // Leave the row unscaled (placeholder) and RECORD the cover: the constraints may still
             // come out consistent and produce a model with the wrong quadratic twist (issue #36, 22_3),
@@ -1861,16 +1890,8 @@ function find_y2_scales(schofer_table)
             v2 := table[i][j2];
             d1 := ratds[j1];
             d2 := ratds[j2];
-            quad_idx_1 := 1;
-            quad_idx_2 := 1;
-            if fldsofdef[keys_fs[i]][d1][1] eq Rationals() then
-                quad_idx_1 := 2;
-            end if;
-            if fldsofdef[keys_fs[i]][d2][1] eq Rationals() then
-                quad_idx_2 := 2;
-            end if;
-            d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1][quad_idx_1]));
-            d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2][quad_idx_2]));
+            d1 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d1]));
+            d2 := Discriminant(MaximalOrder(fldsofdef[keys_fs[i]][d2]));
             log_scale1 := SquareFree(v1 - LogSum(AbsoluteValue(d1)));
             log_scale2 := SquareFree(v1);
             // scale1, _ := SquareFree(v1/d1); //two possibilities
@@ -1909,26 +1930,24 @@ function find_y2_signs(abs_schofer_tab)
         for k->i in k_idxs do
             if table[i][d_idx] eq Infinity() then continue; end if;
             if table[i][d_idx] eq 0 then continue; end if;
-            fields := flds[keys_fs[i]][d];
+            F := flds[keys_fs[i]][d];
             possible_answers := [* *];
             for eps in [-1,1] do
                 y2 := eps*table[i][d_idx];
-                for F in fields do
-                    is_sqr, y := IsSquare(F!y2);
-                    if (is_sqr) then
-                        if d_idx in rat_idxs then
-                            if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
-                                Append(~possible_answers, <F,eps,y>);
-                            end if;
-                        elif d_idx in quad_idxs then
-                            if Degree(MinimalPolynomial(y)) eq 1 then
-                                if NormEquation(F, y2) then
-                                    Append(~possible_answers, <F,eps,y>); //this is just a norm value
-                                end if;
+                is_sqr, y := IsSquare(F!y2);
+                if (is_sqr) then
+                    if d_idx in rat_idxs then
+                        if (Type(F) eq FldRat) or (Degree(F) eq Degree(sub<F|y>)) then
+                            Append(~possible_answers, <F,eps,y>);
+                        end if;
+                    elif d_idx in quad_idxs then
+                        if Degree(MinimalPolynomial(y)) eq 1 then
+                            if NormEquation(F, y2) then
+                                Append(~possible_answers, <F,eps,y>); //this is just a norm value
                             end if;
                         end if;
                     end if;
-                end for;
+                end if;
             end for;
             // When the sign is determined (cover value of degree <= 2, i.e. f_q(s) a square in the
             // star field), apply it.  Otherwise -- the cover value is degree 4 (f_q(s) NOT a square,
@@ -1965,11 +1984,7 @@ function hauptmodul_sign_candidates(abs_schofer_tab, d, d_idx)
     flds := abs_schofer_tab`FldsOfDefn;
     cid := abs_schofer_tab`Xstar`CurveID;
 
-    // For non-fundamental d the list can hold several possible star fields, and the true one is not
-    // known.  Testing against one of them could keep a wrong minpoly, so return [] and let the caller
-    // swap the point for a spare (it errors if none is left).
-    if #flds[cid][d] ne 1 then return []; end if;
-    K := flds[cid][d][1];                          // star field of definition: exactly where s(P) lives
+    K := flds[cid][d];                             // star field of definition: exactly where s(P) lives
     K_imaginary := not IsTotallyReal(K);
     norm_s := table[s_idx][d_idx];
     norm_stilde := table[stilde_idx][d_idx];

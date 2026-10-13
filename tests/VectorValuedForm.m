@@ -183,7 +183,12 @@ procedure test_m0_multiplier_15_2()
     D := 15; N := 2;
     fs := borcherds_forms(D, N);
     Ld := ShimuraCurveLattice(D, N);
-    // Ground truth, measured independently by the kernel-consistency oracle sweep, in units of log N.
+    // The m = 0 multiplier mult(f) = (1/2) c_eta(0) at a nonzero isotropic coset, in units of
+    // log N.  4 is the only value for which the Schofer values of fs[-1] reproduce Guo-Yang,
+    // arXiv:1510.06193v1, Table 45 at d = -7, -15, -60 (tests/SchoferIsometry.m), the single outside
+    // check; the general formula is Proposition prop:kappa0 of paper/level-prime-kappa.tex, not yet
+    // proved (a proposed proof is PR #66).  fs[13] has the same principal part as fs[-1], hence 4
+    // under that formula.
     // Only the two cheap forms are checked here: the pole-order-30 forms need Prec 200 / 192 samples
     // and about 20 minutes.  Forms -1 and 13 have pole order 10 and converge quickly.
     expected := AssociativeArray();
