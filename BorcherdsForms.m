@@ -769,8 +769,10 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
                          else qExpansionAtoo(t, bwh_A);
         bwh_Rq := Parent(bwh_qt);
         bwh_q := bwh_Rq.1;
+        bwh_t1 := Cputime();
         bwh_tpow := [bwh_Rq!1];
         for bwh_j in [1..r] do Append(~bwh_tpow, bwh_tpow[#bwh_tpow]*bwh_qt); end for;
+        bwh_t2 := Cputime();
         bwh_head := init_basis[n0+k-s..#init_basis];
         if Zero then
             bwh_qh := [qExpansionAt0(f, bwh_A) : f in bwh_head];
@@ -781,6 +783,7 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
             bwh_qi := (r gt 0) select [qExpansionAtoo(f, bwh_A) : f in init_basis] else [];
             bwh_qz := [qExpansionAtoo(f, 1) : f in basis_n0];
         end if;
+        bwh_t3 := Cputime();
         qexps := [bwh_tpow[r+1]*f : f in bwh_qh];
         if r gt 0 then
             qexps cat:= &cat[[bwh_tpow[r-bwh_j]*f : f in bwh_qi] : bwh_j in [0..r-1]];
@@ -788,14 +791,18 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
         qexps := [x + O(bwh_q^1) : x in qexps];
         qexps cat:= bwh_qz;                                   // never multiplied by t
         if GetEnv("BFPROGRESS") ne "" then
-            WriteStderr(Sprintf("  BFPOOLTIME pole_order=%o Zero=%o  pool=%o  expansions and products %os\n",
-                                pole_order, Zero, #full_basis, Cputime(bwh_t0)));
+            WriteStderr(Sprintf("  BFPOOLTIME pole_order=%o Zero=%o  pool=%o  t %os, t-powers %os, basis expansions %os, products %os\n",
+                                pole_order, Zero, #full_basis, bwh_t1 - bwh_t0, bwh_t2 - bwh_t1, bwh_t3 - bwh_t2, Cputime(bwh_t3)));
         end if;
     Rq<q> := Universe(qexps);
     R := BaseRing(Rq);
     assert minval eq -Minimum([Valuation(f) : f in qexps]);
 
+    bwh_t4 := Cputime();
     coeffs := Matrix(R, [AbsEltseq(q^minval*f : FixedLength) : f in qexps]);
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFPOOLTIME coefficient matrix %o x %o in %os\n", Nrows(coeffs), Ncols(coeffs), Cputime(bwh_t4)));
+    end if;
 
     // Every pool element carries its expansion at the OTHER cusp too, to O(q^1), by the same
     // bootstrap: each factor expanded just deep enough for the product to be right through
@@ -806,6 +813,7 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
     // The pool's own expansions are attached only on the oo side: on the 0 side they are
     // thousands of terms per element at the deep rungs and the kernel below gives their
     // combinations directly.
+    bwh_t5 := Cputime();
     oc_exp := Zero select func<f, A | qExpansionAtoo(f, A)> else func<f, A | qExpansionAt0(f, A)>;
     oc_t := Zero select func<A | qExpansionAtoo(t, A)> else func<A | qExpansionAt0(t, A : Admissible := false)>;
     oc_vt := Valuation(oc_t(1));
@@ -832,6 +840,9 @@ function weakly_holomorphic_pool(pole_order, fs_E, n0, n, t : Zero := false)
             full_basis[j]`qexp_oo := qexps[j]; full_basis[j]`prec_oo := 1;
         end if;
     end for;
+    if GetEnv("BFPROGRESS") ne "" then
+        WriteStderr(Sprintf("  BFPOOLTIME other-cusp expansions %os\n", Cputime(bwh_t5)));
+    end if;
     return coeffs, full_basis;
 end function;
 
