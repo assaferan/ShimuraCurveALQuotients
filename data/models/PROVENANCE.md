@@ -572,6 +572,151 @@ Outside check: every stored hyperelliptic curve of genus >= 1 has the point coun
 Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
 p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 234 of 234, 198 of 198, 198 of 198
 and 156 of 156. No published equation exists for any of these bases.
+## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
+
+The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
+as `polymake/polymake_solution_1020_360_0` (11973 lattice points), enumerated on lovelace in
+68 minutes with the coordinate order of PR #88 where the old order had not finished after five
+days. The three even-D bases were built in the default recipe (`genmodels.m`, BFCACHE=1, the
+composite-level tree with the exact m = 0 multipliers per support class), with the solver script of
+PR #88 for any further rung and no weight-0 shift set. The three odd-D bases, X_0^15(17),
+X_0^15(34) and X_0^51(5), wait on the two-cusp rungs.
+
+* `models_510_1.m`: 65 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 10 empty. 33 minutes.
+* `models_6_85.m`: 65 keys, 28 with an equation -- both genus-0 quotients, covers up to genus 5 --
+  and 37 empty. 61 minutes.
+* `models_10_51.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 59 minutes.
+
+Outside check: every stored curve of genus >= 1 agrees with the trace formula over F_p and F_{p^2}
+at the six smallest primes not dividing 510, p = 7, 11, 13, 19, 23, 29: 264 of 264, 156 of 156 and
+126 of 126. No published equation exists for any of these bases.
+## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
+
+The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
+`polymake/polymake_solution_780_274_0` (12729 lattice points). It was enumerated on lovelace in
+74 minutes with the coordinate order of PR #88 (divisors farthest from sqrt(M) first, Normaliz
+keeping the order); the run in the old order had not finished after five days. The four even-D
+bases were then built in the default recipe (`genmodels.m`, BFCACHE=1, the composite-level
+tree with the exact m = 0 multipliers per support class), each in 16 to 35 minutes, with the solver
+script of PR #88 for any further rung. No weight-0 shift set was needed. The two odd-D bases,
+X_0^15(13) and X_0^39(5), wait on the two-cusp rungs, as at level 924.
+
+* `models_390_1.m`: 66 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 11 empty. 16 minutes.
+* `models_6_65.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 5 --
+  and 24 empty. 33 minutes.
+* `models_10_39.m`: 65 keys, 33 with an equation -- all 3 genus-0 quotients, covers up to genus 4,
+  5 of them stored as pairs over a conic -- and 32 empty. 33 minutes.
+* `models_26_15.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 35 minutes.
+
+Outside check: every stored hyperelliptic curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 390,
+p = 7, 11, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 264 of 264, 216 of 216, 150 of 150
+and 126 of 126. No published equation exists for any of these bases.
+## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
+
+The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
+first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threads, 4 h 19 min, 8674
+lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
+weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
+for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, the composite-level tree at commit
+e85261a of branch exact-m0, PR #79, which carries the m = 0 term of #66, #74 and #79) on lovelace,
+15 minutes; 66 cover keys, 55 with a model (49 as y^2 = f(x), 6 as double covers of a conic) -- all 11
+genus-0 quotients of the base, covers up to genus 5 -- and 11 empty. Outside
+check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
+228; campaign `composite/checkcomp.m`; the six double covers of a conic were not part of this check). No published equation exists for this base.
+
+`models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
+lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
+{7, 11}. 65 cover keys, 37 with a model (34 as y^2 = f(x), 3 as double covers of a conic) -- all 4 genus-0
+quotients, covers up to genus 7 -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180; the three
+double covers of a conic were not part of this check). At
+p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
+smooth curve whose counts differ from the trace formula; the trace formula does not describe the
+reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
+published equation exists for this base.
+
+`models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
+support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
+{1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
+covers up to genus 6 -- and 28 empty, none of which the Hauptmodul rebase sweep fills. Outside
+check: every stored curve of genus >= 1 agrees with the trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
+exists for this base.
+
+The five odd-D bases of the group, X_0^21(11), X_0^21(22), X_0^33(7), X_0^33(14) and X_0^77(3), are
+not here. For odd D the search also needs the ring of weight-1/2 forms with poles at both cusps,
+which asks for the two-cusp polytope (924, 89, 236). That enumeration did not finish within the
+two-hour Normaliz limit the runs used, and a timed-out solve then returned "no points" rather than
+an error (PR #81 makes it an error), so the four runs that were started climbed the ladder
+(924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
+enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
+divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
+
+`models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
+`models_93_2.m` (12 keys: 1 of genus 0, 2 of genus 1, 1 of genus 2, 2 of genus 4, 1 of genus 8),
+default recipe (`genmodels.m`, BFCACHE=1) on lava from branch composite-level, 3 min and 46 min.
+Outside check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace
+formula over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (50 of 50 and 36 of 36; campaign
+`composite/checkcomp.m`). No published equation exists for either base. `models_55_2.m` (15 keys: 1 of genus 0, 3 of genus 1, 2 of genus 2, 3 of
+genus 3, 1 of genus 6; 68 min) and `models_87_2.m` (14 keys, genus up to 8; 2 h): their first runs
+stopped in the exact m = 0 multiplier's class-constancy check at d = -15, a roundoff miss at Prec 80
+(3e-15 against a floor of 1e-15 at M = 220, and 2e-5 at M = 348); with the precision retry of
+composite-level 9201ae0 both passed at Prec 160 and the trace formula agrees at every curve (45 of 45
+each). `models_69_2.m` (14 keys: 3 of genus 1, 4 of genus 2; 7 keys stay empty after the Hauptmodul
+sweep, none of them genus 0) ran the same way on lava and agrees with the trace formula at every
+curve (35 of 35). This base has no genus-0 quotient, so its equations are new covers only.
+`models_95_2.m` (14 keys: 1 of genus 0, 2 of genus 1, then genus 2, 3, 4, 5, 5, 7, 10; 4 keys empty)
+ran on lava the same way (12 h; its m = 0 multipliers missed the Prec-80 floor once and passed at
+Prec 160) and agrees with the trace formula at every curve of genus >= 1 (45 of 45).
+`models_111_2.m` (12 keys: 1 of genus 0, 2 of genus 1, then genus 2, 5, 5, 10; 5 keys empty): its first
+run (composite-level code) lost all precision in the numerical m = 0 multiplier at M = 444 (a
+class-constancy deviation of 3e61) and sat in the Prec-160 retry for 13 hours; restarted from the
+cached Borcherds forms with the exact algebraic multiplier (branch exact-m0), it finished in 25 minutes.
+Trace formula 36 of 36.
+
+## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
+
+The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
+genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
+order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
+read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
+exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
+present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
+each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
+36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
+keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
+
+Three keys in these files are hyperelliptic quotients that are still empty and have not yet been
+computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,186}`), `111_2` by w_222
+(`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
+`38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
+agree up to isomorphism.
+## `models_210_1.m` and the level-420 polytope cache (2026-10-05, branch level-420-models)
+
+`X_0^210(1)` was behind the Normaliz wall (M = 420 has 24 divisors) until its first polytope rung
+was enumerated in August for the theta campaign: `polymake/polymake_solution_420_145_0` (19864
+lattice points, 13.4 wall-hours of Normaliz, banked on the campaign branch as
+`vvdata/weyl-campaign/nmz_420_145_0.txt.gz`). The t-shift fallback of `nmzsolve.py` answers the
+second rung from it (`polymake_solution_420_250_0`, 212 points, a spanning set of the rung's forms and
+not the lattice points of the polytope; its first line says so, as a Magma comment, so that a later
+enumeration is not mistaken for it); both files are committed here so the default recipe reproduces
+the base without Normaliz. The run used the composite-level tree on lovelace at ca87e19 (branch
+composite-level, PR #74; at N = 1 no m = 0 term is involved). With them the whole run took 7 min 37 s on
+lovelace: 66 cover keys, 40 of genus 0, 31 of genus 1, 10 of genus 2, 4 of genus 3 and 6 fibre
+products of genus 3. Outside check: 234 of 234 point counts of the Eichler-Selberg trace formula at
+p = 11, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`). The same cache serves every base with
+M = 420: the composite-level bases `6_35`, `10_21`, `14_15` (branch composite-level) ran from it; the
+bases that also need a cusp-0 rung, `15_7`, `21_5`, `15_14`, `21_10`, `35_6` (all `(420, 42, 104)`)
+and `35_3` (`(420, 146, 104)`), wait on those enumerations.
 ## 36 quotient models from a rerun of the gap bases (2026-10-03, lovelace, code at e4d8b4a, a commit on the branch of PR #63 and not on `main`)
 
 The census of 2026-10-03 found 100 subhyperelliptic quotients with no model across 31 bases, almost
