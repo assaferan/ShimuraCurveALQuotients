@@ -227,15 +227,10 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     // 132/204/308/616, m = 0 and m > 0.  It bounds its own runtime (NMZ_TIMEOUT,
     // default 1800 s).
     //
-    // nmzsolve.py writes its solution file whenever it finishes, including when the polytope has
-    // no lattice point (exit 0), and exits nonzero with no file when Normaliz timed out (2), failed
-    // (1), or left output without the lattice-points header (3) or shorter than it announces (4).
-    // An empty answer does not stop the search: the caller takes it as "no form at this pole order"
-    // and retries at a larger one, so a solve read as empty when it had failed would give a short
-    // basis and the search would run on from it -- at level 924 that was 43 silent two-hour
-    // timeouts before the n-cap.  So a nonzero exit, and a missing file, are errors; there is no
-    // way to continue with no solutions, since the eta-quotient basis routine has no rank check
-    // that would catch the shortfall.  A sweep that wants to skip a base catches the error.
+    // An empty answer is read by the caller as "no form at this pole order" and the search climbs,
+    // and the eta-quotient basis routine has no rank check that would catch a short basis; so a
+    // solve that did not finish must be an error, not an empty answer.  The script writes its file
+    // whenever it finishes, an empty polytope included, and exits nonzero with no file otherwise.
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
