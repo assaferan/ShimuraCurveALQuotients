@@ -1811,7 +1811,16 @@ intrinsic FieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Fld
     fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
     require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
         "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
-    sigma_as := [* (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs *];
+    // The Artin map is defined on ideals coprime to the modulus of A_abs, which divides the
+    // conductor of R, and the representative Magma returns for a class of Pic(R) need not be:
+    // scaling it by an element of K^* keeps its class in Pic(R) and clears the valuations at the
+    // primes of the conductor.
+    frakaK := OK !! fraka;
+    mod_ps := [pa[1] : pa in Factorization(Index(OK, R) * OK)];
+    if exists{p : p in mod_ps | Valuation(frakaK, p) ne 0} then
+        frakaK := WeakApproximation(mod_ps, [-Valuation(frakaK, p) : p in mod_ps]) * frakaK;
+    end if;
+    sigma_as := [* (NFA_to_abs^-1)*am(frakaK)*NFA_to_abs *];
 
     // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}
     sigma := hom<Aabs -> Aabs | tw(cc(sigma_as[1](Aabs.1)))>;
