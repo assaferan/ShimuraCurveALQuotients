@@ -113,6 +113,7 @@ for X in curves do
     end while;
     if not agree then continue; end if;
     if checked lt 3 then Append(~reasons, Sprintf("only %o good primes among the first 60", checked)); continue; end if;
+    chosen := gens;                    // the loop variable is not visible after the loop
     found := true; break;
     end for;
     if not found then
@@ -120,7 +121,7 @@ for X in curves do
         nrej +:= 1; continue;
     end if;
     printf "BUILT %o_%o W=%o: triple check %o\n", X`D, X`N, Sort(SetToSequence(X`W)),
-        TripleCheckVerdict(gens, trip[key][1], trip[key][2]);
+        TripleCheckVerdict(chosen, trip[key][1], trip[key][2]);
     C, eqns := FibreProductCurve(fs);
     Wseq := Sort(SetToSequence(X`W));
     line := Sprintf("models[[Integers()|%o]] := [* <%o, \"CRV\", [ Strings() | %o ]> *];",
