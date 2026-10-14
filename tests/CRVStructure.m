@@ -5,8 +5,8 @@
 // ⚠ `VerifyModelSet` skips them outright --
 //     if Type(e[2]) eq MonStgElt then continue; end if;   // "CRV": non-hyperelliptic entry
 // -- so for every paired presentation in `data/models/` the stored equations have never been
-// validated against anything, not even for internal consistency. There are now 299 such entries
-// across 71 files (the run prints the count it actually examined, which is the current number).
+// validated against anything, not even for internal consistency. The run prints the number of
+// entries it examines.
 //
 // WHAT THIS CHECKS, and why it is cheap enough to be checked. Two structural facts that need no
 // Shimura input at all, only the stored strings:

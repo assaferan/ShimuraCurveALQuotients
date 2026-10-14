@@ -584,13 +584,15 @@ is neither merged nor agreed as proved; at the three bases with N > 1 every equa
 term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
 quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
 the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
-these bases.
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
 
 The 12 curves stored as a pair over a conic (6 in `models_330_1.m`, 3 in `models_6_55.m`, 3 in
 `models_10_33.m`, of genus 3 to 7) are outside that trace-formula check, which covers the
 hyperelliptic entries only. All 12 were checked by hand in the review of PR #92 (Sachi): the
 L-polynomial of each, as the product over its two double covers, against the trace formula at two
-or three primes; all agree. `tests/CRVTraceCounts.m` now makes the same comparison automatically.
+or three primes; all agree. #106 adds a test (`tests/CRVTraceCounts.m`) that makes the same comparison automatically.
 ## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
 
 The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
@@ -618,7 +620,9 @@ is neither merged nor agreed as proved; at the two bases with N > 1 every equati
 term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
 quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
 the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
-these bases.
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
 ## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
 
 The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
@@ -650,13 +654,15 @@ is neither merged nor agreed as proved; at the three bases with N > 1 every equa
 term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
 quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
 the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
-these bases.
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
 
 The 5 curves of `models_10_39.m` stored as a pair over a conic (all of genus 3) are outside that
 trace-formula check, which covers the hyperelliptic entries only. All 5 were checked by hand in the
 review of PR #89 (Sachi): the L-polynomial of each, as the product over its two double covers,
-against the trace formula at two or three primes; all agree. `tests/CRVTraceCounts.m` now makes the
-same comparison automatically.
+against the trace formula at two or three primes; all agree. #106 adds a test
+(`tests/CRVTraceCounts.m`) that makes the same comparison automatically.
 ## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
 
 The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
@@ -726,11 +732,13 @@ is neither merged nor agreed as proved; at the two bases with N > 1, the five ge
 `6_77` and `22_21`, every equation rests on that term, and so does every hyperelliptic cover
 written over one of these conics. Nothing fixes which quadratic twist of the conic is stored beyond
 the covers of a single key agreeing with one another; the trace-formula counts above see only the
-curves of genus >= 1; and no published equation reaches these bases.
+curves of genus >= 1; and no published equation reaches these bases. The 11 genus-0 quotients of `462_1` do not rest on that term (at N = 1 Schofer's formula has no
+m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers written
+over them, what is unverified is only the twist of the conic.
 
 The nine curves stored as a pair over a conic (6 in `models_462_1.m`, 3 in `models_6_77.m`) were
-left out of the trace-formula checks above, as those sections say. `tests/CRVTraceCounts.m` now
-covers them, comparing the L-polynomial of each -- as the product over its two double covers --
+left out of the trace-formula checks above, as those sections say. #106 adds a test
+(`tests/CRVTraceCounts.m`) that covers them, comparing the L-polynomial of each -- as the product over its two double covers --
 with the trace formula.
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
@@ -769,7 +777,9 @@ Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curv
 keys.
 
 **What the rerun changed, and what it did not.** It replaced no curve. Compared with `main` as it
-stood immediately before this work was merged, the three files differ in exactly two ways. Four
+stood immediately before this work was merged, the three files differ, apart from comments, in
+exactly two ways (the merge also dropped the note on how the fibre products of `22_13` and `38_7`
+were built, which #105 restores). Four
 equations are rescaled by the square of a constant -- `22_13` {1,2,11,22} and {1,2,13,26} by 44^2,
 `22_13` {1,2,143,286} by (11/104)^2, `38_7` {1,2,133,266} by 4^2 -- which is the substitution
 y -> cy and leaves the curve unchanged. And four keys are listed that the files had not listed
