@@ -18,7 +18,7 @@
 //   FilterByComplicatedALFixedPointsOnQuotient,
 //   FilterByGeneralizedComplicatedFixedPoints, FilterByGeneralizedComplicatedFixedPointsStar,
 //   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
-//   FilterByDegeneracyMorphism
+//   FilterByDegeneracyMorphism, FilterBySpecialFiber, FilterByComponentInvolution
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
