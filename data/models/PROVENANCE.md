@@ -720,6 +720,19 @@ the point counts of the trace formula over F_p and F_{p^2} at p = 13, 17, 19, 23
 `composite/checkcomp.m`): 90 of 90. No published equation exists for this base; the same remarks on
 the m = 0 term apply.
 
+**Every empty key of both files filled as a fibre product (2026-10-14).** The 28 empty keys of
+`33_10` and the 35 of `33_14` are the covers with no genus-0 Atkin-Lehner quotient to carry an
+equation; each is the fibre product over the star line of its index-2 double covers already in the
+file, built by the writer of the fibre-product stage (`tools/writefp.m`) with the coordinate check of
+PR #105: for every generating set the three double covers above each pair of factors were tested,
+and at all 63 the check was conclusive (the factors share a coordinate). Genera 3 to 8 at `33_10`
+(2, 2, 5, 4, 9, 6 of genus 3 through 8) and 3 to 11 at `33_14` (2, 4, 1, 0, 3, 4, 8, 8, 5 of genus 3
+through 11, so `33_14`'s top curve of genus 11 is among them). The writer accepted each on the genus
+formula and the trace formula over F_p and F_{p^2} at the first three good primes; then,
+independently of the writer, every entry was re-read from its stored strings and compared with the
+trace formula at the 4th and 5th good primes: 126 of 126 counts agree. Stored in the
+`<genus, "CRV", [...]>` shape, with the note at the top of each file.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
