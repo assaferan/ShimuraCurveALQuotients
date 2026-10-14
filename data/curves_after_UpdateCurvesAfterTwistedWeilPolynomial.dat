@@ -2548,7 +2548,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 72>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 320, 321, 322 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"AutomorphismGroup H = <V3, w9, V2*w8> is <8, 5>, not in PGL_2">
+"AutomorphismGroup H = <w8, w9, V2*w8> is <8, 5>, not in PGL_2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 72>,
 <"W", { IntegerRing() | 1, 8 }>,
@@ -4639,7 +4639,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 120>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 584, 586, 588 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"AutomorphismGroup H = <w3, V2*w8, w8> is <8, 5>, not in PGL_2">
+"AutomorphismGroup H = <S2, w24, V2*w8> is D_4 and g = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 120>,
 <"W", { IntegerRing() | 1, 5 }>,
@@ -8739,7 +8739,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 252>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 1095 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"AutomorphismGroup H = <V3*w4, S2*w4> is D_3 and g = 7">
+"AutomorphismGroup H = <w4, S2*w4> is D_3 and g = 7">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 252>,
 <"W", { IntegerRing() | 1, 4, 9, 36 }>,
@@ -12847,7 +12847,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 25>,
 <"CoveredBy", { IntegerRing() | 1592 }>,
 <"Covers", { IntegerRing() | 1600, 1605, 1606 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w3 with p^v = 7^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 25>,
 <"W", { IntegerRing() | 1, 6 }>,
@@ -22970,7 +22970,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 169>,
 <"g", 3>, <"CurveID", 2856>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2862 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 169>,
 <"W", { IntegerRing() | 1, 3, 169, 507 }>,
@@ -23306,7 +23307,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2909, 2914, 2917 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w3 with p^v = 11^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 6, 50, 75 }>,
@@ -23385,14 +23386,16 @@ CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"g", 3>, <"CurveID", 2908>,
 <"CoveredBy", { IntegerRing() | 2872, 2876, 2886, 2889, 2892, 2901, 2904 }>,
 <"Covers", { IntegerRing() | 2921 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 2, 21, 25, 42, 50, 525, 1050 }>,
 <"g", 3>, <"CurveID", 2909>,
 <"CoveredBy", { IntegerRing() | 2871, 2877, 2887, 2890, 2892, 2898, 2900 }>,
 <"Covers", { IntegerRing() | 2921 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 2, 21, 42, 75, 150, 175, 350 }>,
@@ -23431,7 +23434,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"g", 3>, <"CurveID", 2914>,
 <"CoveredBy", { IntegerRing() | 2874, 2876, 2888, 2894, 2895, 2898, 2899 }>,
 <"Covers", { IntegerRing() | 2921 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42 }>,
@@ -23455,7 +23459,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"CoveredBy", { IntegerRing() | 2880, 2882, 2883, 2897, 2898, 2901, 2902 }>,
 <"Covers", { IntegerRing() | 2921 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = w2 with p = 19">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 6, 7, 42, 50, 75, 350, 525 }>,
@@ -23478,7 +23482,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"g", 3>, <"CurveID", 2920>,
 <"CoveredBy", { IntegerRing() | 2875, 2876, 2877, 2878, 2881, 2882, 2905 }>,
 <"Covers", { IntegerRing() | 2921 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 175>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 25, 42, 50, 75, 150, 175, 350, 
@@ -26605,7 +26610,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 245>,
 <"g", 3>, <"CurveID", 3308>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3318 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 245>,
 <"W", { IntegerRing() | 1, 3, 10, 30, 98, 245, 294, 735 }>,
@@ -26660,7 +26666,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 245>,
 <"g", 3>, <"CurveID", 3315>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3318 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 245>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 49, 98, 245, 490 }>,
@@ -27270,7 +27277,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 275>,
 <"g", 3>, <"CurveID", 3390>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3403 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 275>,
 <"W", { IntegerRing() | 1, 2, 25, 33, 50, 66, 825, 1650 }>,
@@ -27537,7 +27545,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 289>,
 <"g", 3>, <"CurveID", 3423>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 293>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 293, 586, 879, 1758 }>,
@@ -28367,7 +28376,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 2, N2 = 1950">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 25, 50, 75, 150 }>,
@@ -28375,14 +28384,15 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_13 has 6 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 325, 650, 975, 1950 }>,
 <"g", 6>, <"CurveID", 3527>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 25, 39, 50, 78, 975, 1950 }>,
@@ -28390,7 +28400,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 75, N2 = 325">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 39, 75, 78, 150, 325, 650 }>,
@@ -28398,7 +28408,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 25, N2 = 1950">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 3, 25, 26, 75, 78, 650, 1950 }>,
@@ -28406,7 +28416,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 2, N2 = 325">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 3, 26, 50, 78, 150, 325, 975 }>,
@@ -28414,7 +28424,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 6, 25, 26, 39, 150, 650, 975 }>,
@@ -28422,14 +28432,15 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 6, 26, 39, 50, 75, 325, 1950 }>,
 <"g", 6>, <"CurveID", 3533>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 78 }>,
@@ -28437,7 +28448,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_25 has 8 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 75, 150, 975, 1950 }>,
@@ -28445,7 +28456,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 25, N2 = 325">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 3, 13, 39, 50, 150, 650, 1950 }>,
@@ -28453,7 +28464,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 6, 13, 50, 75, 78, 650, 975 }>,
@@ -28461,7 +28472,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 13, 25, 26, 50, 325, 650 }>,
@@ -28469,14 +28480,15 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 75, N2 = 1950">
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 6, 13, 25, 78, 150, 325, 1950 }>,
 <"g", 6>, <"CurveID", 3539>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3540 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"UpwardClosure from 3540">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 25, 26, 39, 50, 75, 78, 150, 325, 650, 
@@ -28485,7 +28497,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 325>,
 <"CoveredBy", { IntegerRing() | 3525, 3526, 3527, 3528, 3529, 3530, 3531, 3532, 
 3533, 3534, 3535, 3536, 3537, 3538, 3539 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 329>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 47, 141, 329, 987 }>,
@@ -29068,7 +29081,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 361>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 365>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 73, 219, 365, 1095 }>,
@@ -30496,7 +30509,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 425>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 11">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 427>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 61, 122, 183, 366, 427, 854, 
@@ -31041,7 +31054,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 475>,
 <"g", 4>, <"CurveID", 3847>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 479>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 479, 958, 1437, 2874 }>,
@@ -31157,7 +31171,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 539>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 545>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 109, 218, 327, 545, 654, 
@@ -31210,7 +31224,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 575>,
 <"g", 4>, <"CurveID", 3866>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 581>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 83, 166, 249, 498, 581, 1162,
@@ -31536,7 +31551,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 605>,
 <"g", 4>, <"CurveID", 3902>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 611>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 47, 78, 94, 141, 282, 611, 1222,
@@ -32006,7 +32022,8 @@ CreateShimuraQuot([* <"D", 6>, <"N", 725>,
 <"g", 6>, <"CurveID", 3954>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 731>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 43, 51, 86, 102, 129, 258, 731, 
@@ -37313,7 +37330,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"g", 7>, <"CurveID", 4611>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 4619, 4622, 4626 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 45, 70, 126 }>,
@@ -37352,7 +37370,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"CoveredBy", { IntegerRing() | 4580, 4584, 4594, 4598, 4600, 4606, 4608 }>,
 <"Covers", { IntegerRing() | 4630 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 17">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 35, 70, 315, 630 }>,
@@ -37360,21 +37378,23 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"CoveredBy", { IntegerRing() | 4581, 4585, 4595, 4598, 4601, 4610, 4613 }>,
 <"Covers", { IntegerRing() | 4630 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V3*w5 with p = 13">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 63, 126, 315, 630 }>,
 <"g", 3>, <"CurveID", 4618>,
 <"CoveredBy", { IntegerRing() | 4580, 4586, 4596, 4599, 4601, 4607, 4609 }>,
 <"Covers", { IntegerRing() | 4630 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 35, 45, 63, 70, 90, 126 }>,
 <"g", 3>, <"CurveID", 4619>,
 <"CoveredBy", { IntegerRing() | 4581, 4587, 4597, 4599, 4600, 4611, 4612 }>,
 <"Covers", { IntegerRing() | 4630 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 5, 9, 14, 45, 70, 126, 630 }>,
@@ -37382,7 +37402,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"CoveredBy", { IntegerRing() | 4582, 4586, 4594, 4602, 4604, 4610, 4612 }>,
 <"Covers", { IntegerRing() | 4630 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V3*w2 with p = 13">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 9, 10, 14, 35, 90, 126, 315 }>,
@@ -37390,21 +37410,23 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"CoveredBy", { IntegerRing() | 4583, 4587, 4595, 4602, 4605, 4606, 4609 }>,
 <"Covers", { IntegerRing() | 4630 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V3*w2 with p = 19">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 5, 14, 18, 63, 70, 90, 315 }>,
 <"g", 3>, <"CurveID", 4622>,
 <"CoveredBy", { IntegerRing() | 4582, 4584, 4596, 4603, 4605, 4611, 4613 }>,
 <"Covers", { IntegerRing() | 4630 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 10, 14, 18, 35, 45, 63, 630 }>,
 <"g", 3>, <"CurveID", 4623>,
 <"CoveredBy", { IntegerRing() | 4583, 4585, 4597, 4603, 4604, 4607, 4608 }>,
 <"Covers", { IntegerRing() | 4630 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 7, 9, 14, 18, 63, 126 }>,
@@ -39790,7 +39812,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 99>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 4930 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 13">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 99>,
 <"W", { IntegerRing() | 1, 9, 10, 22, 55, 90, 198, 495 }>,
@@ -39838,7 +39860,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 99>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 4930 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = w2 with p = 13">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 99>,
 <"W", { IntegerRing() | 1, 10, 11, 18, 45, 110, 198, 495 }>,
@@ -40329,7 +40351,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"g", 5>, <"CurveID", 4987>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 18, 45, 90 }>,
@@ -40344,21 +40367,24 @@ CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"g", 5>, <"CurveID", 4989>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 117, 234, 585, 1170 }>,
 <"g", 5>, <"CurveID", 4990>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 2, 45, 65, 90, 117, 130, 234 }>,
 <"g", 5>, <"CurveID", 4991>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 5, 9, 26, 45, 130, 234, 1170 }>,
@@ -40373,21 +40399,24 @@ CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"g", 5>, <"CurveID", 4993>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 5, 18, 26, 90, 117, 130, 585 }>,
 <"g", 5>, <"CurveID", 4994>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 10, 18, 26, 45, 65, 117, 1170 }>,
 <"g", 5>, <"CurveID", 4995>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 2, 9, 13, 18, 26, 117, 234 }>,
@@ -40402,7 +40431,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"g", 5>, <"CurveID", 4997>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 9, 10, 13, 90, 117, 130, 1170 }>,
@@ -40432,7 +40462,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"g", 5>, <"CurveID", 5001>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5002 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 117>,
 <"W", { IntegerRing() | 1, 2, 5, 9, 10, 13, 18, 26, 45, 65, 90, 117, 130, 234, 
@@ -41335,7 +41366,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 147>,
 <"g", 4>, <"CurveID", 5112>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5119 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 147>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 49, 98, 147, 294 }>,
@@ -41433,7 +41465,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5137 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3*w5 with p^v = 7^1">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 153, 306, 765, 1530 }>,
@@ -41505,7 +41537,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5137 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3*w2 with p^v = 7^1">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 153>,
 <"W", { IntegerRing() | 1, 10, 17, 18, 45, 170, 306, 765 }>,
@@ -41961,7 +41993,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 171>,
 5182, 5183, 5184, 5185, 5186, 5187, 5188 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V3 with p = 17">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 173>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 173, 346, 865, 1730 }>,
@@ -42263,7 +42295,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 189>,
 <"g", 4>, <"CurveID", 5226>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 191>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 191, 382, 955, 1910 }>,
@@ -42442,7 +42475,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 207>,
 <"g", 3>, <"CurveID", 5248>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 209>,
 <"W", { IntegerRing() | 1, 5, 11, 19, 55, 95, 209, 1045 }>,
@@ -43001,7 +43035,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 261>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V3 W1 6">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 267>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 89, 178, 267, 445, 534, 890, 
@@ -43309,7 +43343,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 279>,
 <"g", 5>, <"CurveID", 5346>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 35, 41, 70, 82, 205, 287, 410, 574, 
@@ -43335,7 +43370,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 297>,
 <"g", 6>, <"CurveID", 5349>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 299>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 13, 23, 26, 46, 65, 115, 130, 230, 299, 
@@ -43424,7 +43460,8 @@ CreateShimuraQuot([* <"D", 10>, <"N", 333>,
 <"g", 6>, <"CurveID", 5359>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 339>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 113, 226, 339, 565, 678, 
@@ -43887,7 +43924,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 9>,
 <"CoveredBy", { IntegerRing() | 5413 }>,
 <"Covers", { IntegerRing() | 5421, 5424, 5425 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w7 with p^v = 13^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 9>,
 <"W", { IntegerRing() | 1, 14 }>,
@@ -43903,7 +43940,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 9>,
 <"CoveredBy", { IntegerRing() | 5413 }>,
 <"Covers", { IntegerRing() | 5422, 5424, 5427 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w7 with p^v = 13^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 9>,
 <"W", { IntegerRing() | 1, 126 }>,
@@ -46759,8 +46796,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5804, 5810, 5816 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_5 to curve 5416 (source: 
-\n\n\n\n\n\nTwistedWeilPolynomial h = w2 with p = 5)">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 5, 126, 630 }>,
@@ -46888,8 +46924,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5804, 5805, 5812 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_5 to curve 5414 (source: 
-\n\n\n\n\n\nWeilPolynomial with p = 5)">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 9, 14, 126 }>,
@@ -47023,7 +47058,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"g", 3>, <"CurveID", 5805>,
 <"CoveredBy", { IntegerRing() | 5767, 5773, 5783, 5786, 5788, 5794, 5796 }>,
 <"Covers", { IntegerRing() | 5817 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 35, 45, 63, 70, 90, 126 }>,
@@ -47062,7 +47098,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"g", 3>, <"CurveID", 5810>,
 <"CoveredBy", { IntegerRing() | 5770, 5772, 5784, 5790, 5791, 5794, 5795 }>,
 <"Covers", { IntegerRing() | 5817 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 7, 9, 14, 18, 63, 126 }>,
@@ -47070,7 +47107,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"CoveredBy", { IntegerRing() | 5775, 5777, 5779, 5785, 5786, 5789, 5790 }>,
 <"Covers", { IntegerRing() | 5817 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V3 with p = 19">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 45, 90, 315, 630 }>,
@@ -47078,7 +47115,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"CoveredBy", { IntegerRing() | 5775, 5778, 5780, 5787, 5788, 5791, 5792 }>,
 <"Covers", { IntegerRing() | 5817 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = w5 with p = 13">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 7, 9, 10, 63, 70, 90, 630 }>,
@@ -47110,7 +47147,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"CoveredBy", { IntegerRing() | 5771, 5772, 5773, 5774, 5777, 5778, 5801 }>,
 <"Covers", { IntegerRing() | 5817 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = w2 with p = 13">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 9, 10, 14, 18, 35, 45, 63, 70, 90, 126, 315,
@@ -49155,7 +49192,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 75>,
 <"g", 3>, <"CurveID", 6070>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6074 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 75>,
 <"W", { IntegerRing() | 1, 6, 7, 42, 50, 75, 350, 525 }>,
@@ -49260,7 +49298,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 81>,
 <"g", 4>, <"CurveID", 6083>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 83>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 83, 166, 581, 1162 }>,
@@ -49827,14 +49866,16 @@ CreateShimuraQuot([* <"D", 14>, <"N", 99>,
 <"g", 5>, <"CurveID", 6153>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6166 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 99>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 99, 198, 693, 1386 }>,
 <"g", 5>, <"CurveID", 6154>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6166 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 99>,
 <"W", { IntegerRing() | 1, 2, 63, 77, 99, 126, 154, 198 }>,
@@ -49921,7 +49962,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 99>,
 <"g", 5>, <"CurveID", 6165>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6166 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 99>,
 <"W", { IntegerRing() | 1, 2, 7, 9, 11, 14, 18, 22, 63, 77, 99, 126, 154, 198, 
@@ -50239,7 +50281,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 117>,
 <"g", 3>, <"CurveID", 6204>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 121>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 121, 242, 847, 1694 }>,
@@ -50247,7 +50290,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 121>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 3">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 123>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 
@@ -50297,7 +50340,8 @@ CreateShimuraQuot([* <"D", 14>, <"N", 135>,
 <"g", 4>, <"CurveID", 6211>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 137>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 137, 274, 959, 1918 }>,
@@ -50692,7 +50736,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 171>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 177>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42, 59, 118, 177, 354, 413, 826, 
@@ -52285,14 +52329,16 @@ CreateShimuraQuot([* <"D", 15>, <"N", 16>,
 <"g", 3>, <"CurveID", 6451>,
 <"CoveredBy", { IntegerRing() | 6445, 6446, 6449 }>,
 <"Covers", { IntegerRing() | 6457 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 5, 15 }>,
 <"g", 3>, <"CurveID", 6452>,
 <"CoveredBy", { IntegerRing() | 6447, 6448, 6449 }>,
 <"Covers", { IntegerRing() | 6457 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 16, 48 }>,
@@ -53599,7 +53645,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 5>, <"CurveID", 6615>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6649, 6652, 6654 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 7, 60, 420 }>,
@@ -53614,7 +53661,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 5>, <"CurveID", 6617>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6640, 6649, 6651 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 7, 15, 105 }>,
@@ -53797,7 +53845,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 3>, <"CurveID", 6640>,
 <"CoveredBy", { IntegerRing() | 6617, 6618, 6619, 6620, 6621, 6622, 6639 }>,
 <"Covers", { IntegerRing() | 6655 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 20, 60 }>,
@@ -53836,7 +53885,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 3>, <"CurveID", 6645>,
 <"CoveredBy", { IntegerRing() | 6607, 6611, 6619, 6627, 6629, 6635, 6637 }>,
 <"Covers", { IntegerRing() | 6655 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 3, 20, 28, 35, 60, 84, 105 }>,
@@ -53859,7 +53909,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 3>, <"CurveID", 6648>,
 <"CoveredBy", { IntegerRing() | 6608, 6610, 6622, 6628, 6629, 6632, 6633 }>,
 <"Covers", { IntegerRing() | 6655 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 3, 4, 7, 12, 21, 28, 84 }>,
@@ -53890,7 +53941,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"g", 3>, <"CurveID", 6652>,
 <"CoveredBy", { IntegerRing() | 6614, 6615, 6618, 6633, 6634, 6637, 6638 }>,
 <"Covers", { IntegerRing() | 6655 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 4, 5, 7, 20, 28, 35, 140 }>,
@@ -53898,7 +53950,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"CoveredBy", { IntegerRing() | 6605, 6606, 6607, 6608, 6613, 6614, 6639 }>,
 <"Covers", { IntegerRing() | 6655 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 6426">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 28>,
 <"W", { IntegerRing() | 1, 5, 7, 12, 35, 60, 84, 420 }>,
@@ -54139,21 +54191,24 @@ CreateShimuraQuot([* <"D", 15>, <"N", 32>,
 <"g", 5>, <"CurveID", 6683>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6686 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 32>,
 <"W", { IntegerRing() | 1, 3, 160, 480 }>,
 <"g", 5>, <"CurveID", 6684>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6686 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 32>,
 <"W", { IntegerRing() | 1, 15, 96, 160 }>,
 <"g", 5>, <"CurveID", 6685>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6686 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 32>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 32, 96, 160, 480 }>,
@@ -54739,7 +54794,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6790, 6792 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 8 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 15, 19, 285 }>,
@@ -54755,7 +54810,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6782, 6786 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_19 has 6 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 3, 95, 285 }>,
@@ -54763,7 +54818,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6783, 6787 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 5, 57, 285 }>,
@@ -54771,7 +54826,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6784, 6788 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 15, 57, 95 }>,
@@ -54779,7 +54834,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6785, 6789 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 2, 3, 6 }>,
@@ -54921,7 +54976,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6781, 6794, 6795 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 12 fixed points">
+"UpwardClosure from 6781">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 38>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 19, 57, 95, 285 }>,
@@ -55233,7 +55288,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"g", 3>, <"CurveID", 6819>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6828 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"W", { IntegerRing() | 1, 5, 12, 33, 44, 60, 165, 220 }>,
@@ -55248,7 +55304,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"g", 3>, <"CurveID", 6821>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6828 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"W", { IntegerRing() | 1, 3, 4, 11, 12, 33, 44, 132 }>,
@@ -55288,7 +55345,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6828 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 6522">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 44>,
 <"W", { IntegerRing() | 1, 5, 11, 12, 55, 60, 132, 660 }>,
@@ -55867,7 +55924,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 56>,
 <"g", 5>, <"CurveID", 6898>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6900 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 56>,
 <"W", { IntegerRing() | 1, 5, 7, 24, 35, 120, 168, 840 }>,
@@ -56521,7 +56579,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 8 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 20, 60 }>,
@@ -56529,7 +56587,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_19 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 95, 285, 380, 1140 }>,
@@ -56537,7 +56595,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 57, 228, 285, 1140 }>,
@@ -56545,7 +56603,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 4, 15, 57, 60, 95, 228, 380 }>,
@@ -56553,7 +56611,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 76, 228, 380, 1140 }>,
@@ -56569,7 +56627,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 8 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 5, 12, 57, 60, 76, 285, 380 }>,
@@ -56577,7 +56635,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 10 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 12, 15, 20, 57, 76, 95, 1140 }>,
@@ -56593,7 +56651,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 8 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 4, 15, 19, 60, 76, 285, 1140 }>,
@@ -56609,7 +56667,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 12, 15, 19, 20, 228, 285, 380 }>,
@@ -56617,7 +56675,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 4, 5, 19, 20, 76, 95, 380 }>,
@@ -56625,7 +56683,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6993 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 12 fixed points">
+"UpwardClosure from 6993">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 <"W", { IntegerRing() | 1, 5, 12, 19, 60, 95, 228, 1140 }>,
@@ -56643,7 +56701,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 76>,
 6986, 6987, 6988, 6989, 6990, 6991, 6992 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(15, 19)/W is trigonal">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 77>,
 <"W", { IntegerRing() | 1, 5, 7, 11, 35, 55, 77, 385 }>,
@@ -56988,7 +57046,8 @@ CreateShimuraQuot([* <"D", 15>, <"N", 98>,
 <"g", 3>, <"CurveID", 7035>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 101>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 101, 303, 505, 1515 }>,
@@ -57013,7 +57072,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 104>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 8">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 106>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 53, 106, 159, 265, 318, 530, 
@@ -57047,7 +57106,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 112>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 113>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 113, 339, 565, 1695 }>,
@@ -57064,7 +57123,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 116>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(15, 29)/W is trigonal">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 118>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 59, 118, 177, 295, 354, 590, 
@@ -57127,7 +57186,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 136>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 142>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 71, 142, 213, 355, 426, 710, 
@@ -57172,7 +57231,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 152>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 10">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 154>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 11, 14, 15, 21, 22, 30, 33, 35, 
@@ -57784,7 +57843,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 8>,
 <"CoveredBy", { IntegerRing() | 7120, 7122, 7123 }>,
 <"Covers", { IntegerRing() | 7133 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w7 with p^v = 11^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 8>,
 <"W", { IntegerRing() | 1, 21, 24, 56 }>,
@@ -58579,7 +58638,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 16>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7237 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 16>,
 <"W", { IntegerRing() | 1, 7, 48, 336 }>,
@@ -58587,7 +58646,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 16>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7237 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V2 with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 16>,
 <"W", { IntegerRing() | 1, 3, 7, 21 }>,
@@ -59074,7 +59133,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"g", 5>, <"CurveID", 7292>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7308, 7311, 7313 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 28, 60, 105 }>,
@@ -59106,7 +59166,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7304, 7311, 7315 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpwardClosure from 7304">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 20, 84, 105 }>,
@@ -59137,7 +59197,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"g", 5>, <"CurveID", 7300>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7307, 7308, 7315 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 12, 105, 140 }>,
@@ -59169,7 +59230,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"CoveredBy", { IntegerRing() | 7268, 7272, 7282, 7286, 7288, 7294, 7296 }>,
 <"Covers", { IntegerRing() | 7318 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 7163">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 35, 105, 140, 420 }>,
@@ -59224,7 +59285,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"g", 3>, <"CurveID", 7311>,
 <"CoveredBy", { IntegerRing() | 7271, 7273, 7285, 7291, 7292, 7295, 7296 }>,
 <"Covers", { IntegerRing() | 7318 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 7, 12, 21, 28, 84 }>,
@@ -59255,7 +59317,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"g", 3>, <"CurveID", 7315>,
 <"CoveredBy", { IntegerRing() | 7277, 7278, 7281, 7296, 7297, 7300, 7301 }>,
 <"Covers", { IntegerRing() | 7318 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 4, 5, 7, 20, 28, 35, 140 }>,
@@ -59270,7 +59333,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"g", 3>, <"CurveID", 7317>,
 <"CoveredBy", { IntegerRing() | 7272, 7273, 7274, 7275, 7278, 7279, 7302 }>,
 <"Covers", { IntegerRing() | 7318 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 7, 12, 15, 20, 21, 28, 35, 60, 84, 105, 140,
@@ -60092,7 +60156,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 34>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7434 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpdateIsoStatus, isomorphic to 7535">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 34>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42 }>,
@@ -60506,14 +60570,16 @@ CreateShimuraQuot([* <"D", 21>, <"N", 40>,
 <"g", 7>, <"CurveID", 7470>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7474 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 40>,
 <"W", { IntegerRing() | 1, 7, 15, 24, 40, 105, 168, 280 }>,
 <"g", 7>, <"CurveID", 7471>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7474 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 40>,
 <"W", { IntegerRing() | 1, 5, 7, 8, 35, 40, 56, 280 }>,
@@ -60831,7 +60897,8 @@ CreateShimuraQuot([* <"D", 21>, <"N", 50>,
 <"g", 3>, <"CurveID", 7510>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 52>,
 <"W", { IntegerRing() | 1, 3, 4, 7, 12, 13, 21, 28, 39, 52, 84, 91, 156, 273, 
@@ -61037,7 +61104,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 68>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 7419">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 71>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 71, 213, 497, 1491 }>,
@@ -61071,7 +61138,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 76>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(21, 19)/W is trigonal">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 79>,
 <"W", { IntegerRing() | 1, 3, 7, 21, 79, 237, 553, 1659 }>,
@@ -61088,7 +61155,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 80>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 82>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 
@@ -61699,7 +61766,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 9>,
 <"g", 3>, <"CurveID", 7616>,
 <"CoveredBy", { IntegerRing() | 7606, 7608, 7610 }>,
 <"Covers", { IntegerRing() | 7620 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 99, 198 }>,
@@ -63197,7 +63265,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 25>,
 <"g", 5>, <"CurveID", 7803>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7805 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 25>,
 <"W", { IntegerRing() | 1, 22, 50, 275 }>,
@@ -63253,7 +63322,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7813 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = w11 with p = 5">
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 27>,
 <"W", { IntegerRing() | 1, 22, 27, 594 }>,
@@ -64161,7 +64230,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 45>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7936 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3*w5 with p^v = 13^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 45>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 99, 198, 495, 990 }>,
@@ -64339,7 +64408,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 49>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 3">
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 51>,
 <"W", { IntegerRing() | 1, 3, 11, 17, 33, 51, 187, 561 }>,
@@ -64644,7 +64713,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7996 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3*w7 with p^v = 13^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 99, 198, 693, 1386 }>,
@@ -64675,7 +64744,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"g", 7>, <"CurveID", 7987>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7996 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"W", { IntegerRing() | 1, 7, 18, 22, 99, 126, 154, 693 }>,
@@ -64690,7 +64760,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"g", 7>, <"CurveID", 7989>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7996 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"W", { IntegerRing() | 1, 2, 9, 11, 18, 22, 99, 198 }>,
@@ -64705,14 +64776,16 @@ CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"g", 7>, <"CurveID", 7991>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7996 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"W", { IntegerRing() | 1, 9, 11, 14, 99, 126, 154, 1386 }>,
 <"g", 7>, <"CurveID", 7992>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7996 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"W", { IntegerRing() | 1, 11, 14, 18, 63, 154, 198, 693 }>,
@@ -65037,7 +65110,8 @@ CreateShimuraQuot([* <"D", 22>, <"N", 75>,
 <"g", 4>, <"CurveID", 8032>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 79>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 79, 158, 869, 1738 }>,
@@ -65424,7 +65498,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 117>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V3 W1 10">
+"DualGraph at p = 11">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 119>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 17, 22, 34, 77, 119, 154, 187, 238, 
@@ -67366,7 +67440,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_27 has 6 fixed points">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 13, 54, 702 }>,
@@ -67374,7 +67448,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 2, N2 = 26">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 13, 27, 351 }>,
@@ -67382,7 +67456,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 10 fixed points">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 27, 54 }>,
@@ -67390,7 +67464,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_13 has 6 fixed points">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 351, 702 }>,
@@ -67398,7 +67472,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_13 has 6 fixed points">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 26, 27, 702 }>,
@@ -67406,7 +67480,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 2, N2 = 54">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 26, 54, 351 }>,
@@ -67414,14 +67488,15 @@ CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8323 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ComplicatedALFixedPointsOnQuotient with N1 = 2, N2 = 702">
+"UpwardClosure from 8323">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 27, 54, 351, 702 }>,
 <"g", 3>, <"CurveID", 8323>,
 <"CoveredBy", { IntegerRing() | 8316, 8317, 8318, 8319, 8320, 8321, 8322 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 13">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 29, 58 }>,
@@ -67942,14 +68017,15 @@ CreateShimuraQuot([* <"D", 26>, <"N", 45>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8397 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3 with p^v = 7^1">
+"DualGraph at p = 13">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 45>,
 <"W", { IntegerRing() | 1, 9, 10, 26, 65, 90, 234, 585 }>,
 <"g", 5>, <"CurveID", 8388>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8397 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 13">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 45>,
 <"W", { IntegerRing() | 1, 5, 18, 26, 90, 117, 130, 585 }>,
@@ -68461,7 +68537,8 @@ CreateShimuraQuot([* <"D", 26>, <"N", 63>,
 <"g", 3>, <"CurveID", 8451>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 67>,
 <"W", { IntegerRing() | 1, 2, 13, 26, 67, 134, 871, 1742 }>,
@@ -68502,7 +68579,8 @@ CreateShimuraQuot([* <"D", 26>, <"N", 75>,
 <"g", 4>, <"CurveID", 8456>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 13">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 77>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286,
@@ -68819,7 +68897,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"CoveredBy", { IntegerRing() | 8491 }>,
 <"Covers", { IntegerRing() | 8500, 8502, 8505 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w11 with p^v = 5^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"W", { IntegerRing() | 1, 132 }>,
@@ -68835,7 +68913,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"CoveredBy", { IntegerRing() | 8491 }>,
 <"Covers", { IntegerRing() | 8501, 8502, 8504 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w11 with p^v = 7^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"W", { IntegerRing() | 1, 33 }>,
@@ -68874,7 +68952,8 @@ CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"g", 3>, <"CurveID", 8501>,
 <"CoveredBy", { IntegerRing() | 8496, 8497, 8498 }>,
 <"Covers", { IntegerRing() | 8506 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"W", { IntegerRing() | 1, 3, 4, 12 }>,
@@ -68906,7 +68985,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"CoveredBy", { IntegerRing() | 8493, 8494, 8497 }>,
 <"Covers", { IntegerRing() | 8506 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w3 with p^v = 5^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 4>,
 <"W", { IntegerRing() | 1, 3, 4, 11, 12, 33, 44, 132 }>,
@@ -69226,7 +69305,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 8>,
 <"CoveredBy", { IntegerRing() | 8538, 8539, 8544 }>,
 <"Covers", { IntegerRing() | 8552 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w3 with p^v = 7^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 8>,
 <"W", { IntegerRing() | 1, 11, 24, 264 }>,
@@ -70229,7 +70308,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 16>,
 <"CoveredBy", { IntegerRing() | 8663, 8664, 8665, 8666, 8667, 8668, 8669 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 17, 51 }>,
@@ -70429,8 +70508,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 20>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8702 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_5 to curve 8505 (source: 
-\n\n\n\n\n\nTwistedTrace, h = w3 with p^v = 5^1)">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 20>,
 <"W", { IntegerRing() | 1, 3, 4, 11, 12, 33, 44, 132 }>,
@@ -70559,7 +70637,8 @@ CreateShimuraQuot([* <"D", 33>, <"N", 25>,
 <"g", 4>, <"CurveID", 8711>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 26>,
 <"W", { IntegerRing() | 1, 3, 11, 13, 33, 39, 143, 429 }>,
@@ -71008,7 +71087,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 40>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 41>,
 <"W", { IntegerRing() | 1, 3, 11, 33, 41, 123, 451, 1353 }>,
@@ -71049,7 +71128,8 @@ CreateShimuraQuot([* <"D", 33>, <"N", 50>,
 <"g", 6>, <"CurveID", 8771>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 52>,
 <"W", { IntegerRing() | 1, 3, 4, 11, 12, 13, 33, 39, 44, 52, 132, 143, 156, 429,
@@ -71067,7 +71147,7 @@ CreateShimuraQuot([* <"D", 33>, <"N", 56>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 8">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 33>, <"N", 58>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 29, 33, 58, 66, 87, 174, 319, 638, 
@@ -72615,7 +72695,8 @@ CreateShimuraQuot([* <"D", 34>, <"N", 27>,
 <"g", 4>, <"CurveID", 8966>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 17">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 29, 58 }>,
@@ -73195,7 +73276,8 @@ CreateShimuraQuot([* <"D", 34>, <"N", 75>,
 <"g", 7>, <"CurveID", 9037>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 17">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 77>,
 <"W", { IntegerRing() | 1, 2, 7, 11, 14, 17, 22, 34, 77, 119, 154, 187, 238, 
@@ -74227,7 +74309,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9168 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V2 with p^v = 3^1">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 8>,
 <"W", { IntegerRing() | 1, 5, 56, 280 }>,
@@ -74947,7 +75029,8 @@ CreateShimuraQuot([* <"D", 35>, <"N", 18>,
 <"g", 5>, <"CurveID", 9255>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9268 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 18>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 63, 126, 315, 630 }>,
@@ -75389,7 +75472,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 24>,
 9302, 9303, 9304, 9305, 9306, 9307, 9308 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 26>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 13, 14, 26, 35, 65, 70, 91, 130, 182, 
@@ -75449,7 +75532,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 36>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V3 W1 8">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 37>,
 <"W", { IntegerRing() | 1, 5, 7, 35, 37, 185, 259, 1295 }>,
@@ -75502,7 +75585,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 48>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 12">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 51>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 17, 21, 35, 51, 85, 105, 119, 255, 357, 
@@ -76936,7 +77019,7 @@ CreateShimuraQuot([* <"D", 38>, <"N", 25>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 3">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 19, 27, 38, 54, 513, 1026 }>,
@@ -77885,7 +77968,8 @@ CreateShimuraQuot([* <"D", 39>, <"N", 8>,
 <"g", 3>, <"CurveID", 9617>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9622 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 8, 24 }>,
@@ -78536,7 +78620,7 @@ CreateShimuraQuot([* <"D", 39>, <"N", 16>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedWeilPolynomial h = V2 with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 17>,
 <"W", { IntegerRing() | 1, 3, 17, 51 }>,
@@ -78951,7 +79035,7 @@ CreateShimuraQuot([* <"D", 39>, <"N", 28>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(39, 7)/W is trigonal">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 29>,
 <"W", { IntegerRing() | 1, 3, 13, 29, 39, 87, 377, 1131 }>,
@@ -79009,7 +79093,8 @@ CreateShimuraQuot([* <"D", 39>, <"N", 40>,
 <"g", 5>, <"CurveID", 9756>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 44>,
 <"W", { IntegerRing() | 1, 3, 4, 11, 12, 13, 33, 39, 44, 52, 132, 143, 156, 429,
@@ -79469,7 +79554,8 @@ CreateShimuraQuot([* <"D", 46>, <"N", 9>,
 <"g", 4>, <"CurveID", 9813>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9819 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9, 23, 207 }>,
@@ -79484,14 +79570,16 @@ CreateShimuraQuot([* <"D", 46>, <"N", 9>,
 <"g", 5>, <"CurveID", 9815>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9819 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 207, 414 }>,
 <"g", 4>, <"CurveID", 9816>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9819 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9, 46, 414 }>,
@@ -80113,7 +80201,7 @@ CreateShimuraQuot([* <"D", 46>, <"N", 45>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V3 W1 8">
+"DualGraph at p = 23">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 51>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 23, 34, 46, 51, 69, 102, 138, 391, 782, 
@@ -80629,7 +80717,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"Trace, with p^v = 5^2">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 17, 24, 408 }>,
@@ -80637,7 +80725,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"Trace, with p^v = 5^2">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 17, 51 }>,
@@ -80645,7 +80733,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_8 has 8 fixed points">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 8, 24 }>,
@@ -80653,7 +80741,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_17 has 6 fixed points">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 8, 51, 408 }>,
@@ -80661,7 +80749,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 136, 408 }>,
@@ -80669,7 +80757,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"AutomorphismGroup H = <w8, V2> is V4 and g = 6 is even">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 24, 51, 136 }>,
@@ -80677,14 +80765,15 @@ CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9964 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"AutomorphismGroup H = <w3, V2> is V4 and g = 6 is even">
+"UpwardClosure from 9964">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 8>,
 <"W", { IntegerRing() | 1, 3, 8, 17, 24, 51, 136, 408 }>,
 <"g", 3>, <"CurveID", 9964>,
 <"CoveredBy", { IntegerRing() | 9957, 9958, 9959, 9960, 9961, 9962, 9963 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 10>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 17, 51, 85, 255 }>,
@@ -81081,7 +81170,7 @@ CreateShimuraQuot([* <"D", 51>, <"N", 16>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 12">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 51>, <"N", 19>,
 <"W", { IntegerRing() | 1, 3, 17, 19, 51, 57, 323, 969 }>,
@@ -81682,7 +81771,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10119, 10121 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 8 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 11, 15, 165 }>,
@@ -81690,7 +81779,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10120, 10122 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 5, 15 }>,
@@ -81698,7 +81787,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10111, 10115 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_22 has 8 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 55, 165 }>,
@@ -81706,7 +81795,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10112, 10116 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 5, 33, 165 }>,
@@ -81714,7 +81803,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10113, 10117 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 15, 33, 55 }>,
@@ -81722,7 +81811,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10114, 10118 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 6 }>,
@@ -81862,7 +81951,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10110, 10123, 10124 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 10110">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 5, 11, 15, 33, 55, 165 }>,
@@ -82208,7 +82297,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 8 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 20, 60 }>,
@@ -82216,7 +82305,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 10089">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 55, 165, 220, 660 }>,
@@ -82224,7 +82313,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 8 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 33, 132, 165, 660 }>,
@@ -82232,7 +82321,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 15, 33, 55, 60, 132, 220 }>,
@@ -82240,7 +82329,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 44, 132, 220, 660 }>,
@@ -82248,9 +82337,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_3 to curve 10072 (source: 
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nALFixedPointsOnQuotient\
-, \nW_4\n\nhas\n8\n\n\nfixed\n\n\n\npoints,\np\n\n\n\nodd)">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 20, 44, 55, 60, 132, 165 }>,
@@ -82258,7 +82345,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 5, 12, 33, 44, 60, 165, 220 }>,
@@ -82266,7 +82353,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 10 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 12, 15, 20, 33, 44, 55, 660 }>,
@@ -82282,7 +82369,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 8 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 11, 15, 44, 60, 165, 660 }>,
@@ -82290,7 +82377,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 11, 20, 33, 60, 220, 660 }>,
@@ -82298,7 +82385,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 11, 12, 15, 20, 132, 165, 220 }>,
@@ -82306,9 +82393,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_3 to curve 10068 (source: 
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nALFixedPointsOnQuotient\
-, \nW_4\n\nhas\n6\n\n\nfixed\n\n\n\npoints,\np\n\n\n\nodd)">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 5, 11, 20, 44, 55, 220 }>,
@@ -82316,7 +82401,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 10 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 5, 11, 12, 55, 60, 132, 660 }>,
@@ -82324,7 +82409,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10165 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10165">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 11, 12, 15, 20, 33, 44, 55, 60, 132, 165, 
@@ -82334,7 +82419,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 12>,
 10157, 10158, 10159, 10160, 10161, 10162, 10163, 10164 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(55, 3)/W is trigonal">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 13>,
 <"W", { IntegerRing() | 1, 5, 11, 13, 55, 65, 143, 715 }>,
@@ -82533,7 +82618,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 24>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 10">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 26>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 11, 13, 22, 26, 55, 65, 110, 130, 143, 286,
@@ -83101,7 +83186,7 @@ CreateShimuraQuot([* <"D", 57>, <"N", 8>,
 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 10>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 19, 57, 95, 285 }>,
@@ -83109,7 +83194,7 @@ CreateShimuraQuot([* <"D", 57>, <"N", 10>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10275 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpdateIsoStatus, isomorphic to 10303">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30 }>,
@@ -83458,7 +83543,7 @@ CreateShimuraQuot([* <"D", 57>, <"N", 20>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 10260">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 22>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 19, 22, 33, 38, 57, 66, 114, 209, 418, 
@@ -83493,7 +83578,7 @@ CreateShimuraQuot([* <"D", 57>, <"N", 28>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 11">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 35>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 15, 19, 21, 35, 57, 95, 105, 133, 285, 399, 
@@ -83937,7 +84022,7 @@ CreateShimuraQuot([* <"D", 58>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10367 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3*w2 with p^v = 7^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 58>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18 }>,
@@ -85823,7 +85908,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10626, 10628 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 16 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 13, 15, 195 }>,
@@ -85831,7 +85916,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10627, 10629 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 5, 15 }>,
@@ -85839,7 +85924,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10618, 10622 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_13 has 10 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 65, 195 }>,
@@ -85847,7 +85932,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10619, 10623 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 5, 39, 195 }>,
@@ -85855,7 +85940,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10620, 10624 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 15, 39, 65 }>,
@@ -85863,7 +85948,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10621, 10625 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 8 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 6 }>,
@@ -86001,7 +86086,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10617, 10630, 10631 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 10 fixed points">
+"UpwardClosure from 10617">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 5, 13, 15, 39, 65, 195 }>,
@@ -86243,7 +86328,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 10 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 15, 20, 60 }>,
@@ -86251,7 +86336,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_13 has 10 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 65, 195, 260, 780 }>,
@@ -86259,7 +86344,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 6 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 5, 20, 39, 156, 195, 780 }>,
@@ -86267,7 +86352,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 8 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 15, 39, 60, 65, 156, 260 }>,
@@ -86275,7 +86360,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 8 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 52, 156, 260, 780 }>,
@@ -86283,7 +86368,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 6 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 20, 52, 60, 65, 156, 195 }>,
@@ -86291,7 +86376,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 10 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 5, 12, 39, 52, 60, 195, 260 }>,
@@ -86299,7 +86384,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 8 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 12, 15, 20, 39, 52, 65, 780 }>,
@@ -86307,7 +86392,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 8 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 12, 13, 39, 52, 156 }>,
@@ -86315,7 +86400,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_5 has 16 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 4, 13, 15, 52, 60, 195, 780 }>,
@@ -86323,7 +86408,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 6 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 13, 20, 39, 60, 260, 780 }>,
@@ -86331,7 +86416,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_4 has 6 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 12, 13, 15, 20, 156, 195, 260 }>,
@@ -86347,7 +86432,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 10 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 5, 12, 13, 60, 65, 156, 780 }>,
@@ -86355,7 +86440,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10659 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_3 has 12 fixed points">
+"UpwardClosure from 10659">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 <"W", { IntegerRing() | 1, 3, 4, 5, 12, 13, 15, 20, 39, 52, 60, 65, 156, 195, 
@@ -86365,7 +86450,7 @@ CreateShimuraQuot([* <"D", 65>, <"N", 12>,
 10651, 10652, 10653, 10654, 10655, 10656, 10657, 10658 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(65, 3)/W is trigonal">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 65>, <"N", 14>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 13, 14, 26, 35, 65, 70, 91, 130, 182, 
@@ -86613,7 +86698,7 @@ CreateShimuraQuot([* <"D", 69>, <"N", 4>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10695 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = w3 with p^v = 11^1">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 69>, <"N", 4>,
 <"W", { IntegerRing() | 1, 3, 23, 69 }>,
@@ -87393,7 +87478,7 @@ CreateShimuraQuot([* <"D", 74>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10787 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"TwistedTrace, h = V3 with p^v = 5^1">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 74>, <"N", 9>,
 <"W", { IntegerRing() | 1, 18, 74, 333 }>,
@@ -88214,7 +88299,7 @@ CreateShimuraQuot([* <"D", 77>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 10">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 77>, <"N", 9>,
 <"W", { IntegerRing() | 1, 7, 9, 11, 63, 77, 99, 693 }>,
@@ -88239,7 +88324,7 @@ CreateShimuraQuot([* <"D", 77>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(77, 3)/W is trigonal">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 77>, <"N", 13>,
 <"W", { IntegerRing() | 1, 7, 11, 13, 77, 91, 143, 1001 }>,
@@ -88630,7 +88715,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_9 has 8 fixed points">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 18, 41, 738 }>,
@@ -88638,7 +88723,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"Trace, with p^v = 5^2">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9, 41, 369 }>,
@@ -88646,7 +88731,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"Trace, with p^v = 5^2">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18 }>,
@@ -88654,7 +88739,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_41 has 12 fixed points">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 369, 738 }>,
@@ -88662,7 +88747,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"Trace, with p^v = 5^2">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9, 82, 738 }>,
@@ -88670,7 +88755,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 18, 82, 369 }>,
@@ -88678,7 +88763,7 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10944 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpwardClosure from 10944">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"W", { IntegerRing() | 1, 2, 9, 18, 41, 82, 369, 738 }>,
@@ -88686,7 +88771,8 @@ CreateShimuraQuot([* <"D", 82>, <"N", 9>,
 <"CoveredBy", { IntegerRing() | 10937, 10938, 10939, 10940, 10941, 10942, 10943 
 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 82>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 41, 82 }>,
@@ -89231,7 +89317,7 @@ CreateShimuraQuot([* <"D", 85>, <"N", 4>,
 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 3">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 85>, <"N", 6>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 17, 51, 85, 255 }>,
@@ -89239,9 +89325,7 @@ CreateShimuraQuot([* <"D", 85>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 11027 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_3 to curve 10990 (source: 
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWeilPolynomia\
-l \n\nwith \np \n= \n\n3)">
+"UpdateIsoStatus, isomorphic to 11032">
 *]),
 CreateShimuraQuot([* <"D", 85>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30 }>,
@@ -89407,9 +89491,7 @@ CreateShimuraQuot([* <"D", 85>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"SpecialFiberIsomorphism, isomorphic over F_3 to curve 11011 (source: 
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nWeilPolynomia\
-l \n\nwith \np \n= \n\n3)">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 85>, <"N", 13>,
 <"W", { IntegerRing() | 1, 5, 13, 17, 65, 85, 221, 1105 }>,
@@ -89733,7 +89815,8 @@ CreateShimuraQuot([* <"D", 86>, <"N", 9>,
 <"g", 3>, <"CurveID", 11072>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 86>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 43, 86, 473, 946 }>,
@@ -90146,9 +90229,7 @@ CreateShimuraQuot([* <"D", 87>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"GeneralizedComplicatedFixedPoints: V2, pPart=8, \n\n\n\n\n\n\n\n\n\nN1=232 
-\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n(nu=8), 
-N2=696\n\n\n\n\n(nu=24)">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 87>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 29, 30, 58, 87, 145, 174, 290, 
@@ -90477,7 +90558,7 @@ CreateShimuraQuot([* <"D", 91>, <"N", 4>,
 }>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 3">
+"DualGraph at p = 7">
 *]),
 CreateShimuraQuot([* <"D", 91>, <"N", 5>,
 <"W", { IntegerRing() | 1, 5, 13, 65 }>,
@@ -91103,7 +91184,7 @@ CreateShimuraQuot([* <"D", 93>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 93>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 31, 62, 93, 155, 186, 310, 
@@ -91785,7 +91866,7 @@ CreateShimuraQuot([* <"D", 95>, <"N", 6>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 11338 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 6 fixed points">
+"UpdateIsoStatus, isomorphic to 11343">
 *]),
 CreateShimuraQuot([* <"D", 95>, <"N", 6>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30 }>,
@@ -91948,7 +92029,7 @@ CreateShimuraQuot([* <"D", 95>, <"N", 12>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 11323">
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 95>, <"N", 14>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 14, 19, 35, 38, 70, 95, 133, 190, 266, 
@@ -92256,7 +92337,7 @@ CreateShimuraQuot([* <"D", 106>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 106>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 53, 106, 583, 1166 }>,
@@ -92605,7 +92686,7 @@ CreateShimuraQuot([* <"D", 111>, <"N", 8>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V2 W1 6">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 111>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 37, 74, 111, 185, 222, 370, 
@@ -93257,7 +93338,7 @@ CreateShimuraQuot([* <"D", 118>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ModularNonALInvolution V3 W1 8">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 118>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 59, 118, 649, 1298 }>,
@@ -93924,7 +94005,7 @@ CreateShimuraQuot([* <"D", 122>, <"N", 9>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 122>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 61, 122, 671, 1342 }>,
@@ -94406,7 +94487,7 @@ CreateShimuraQuot([* <"D", 129>, <"N", 4>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"DegeneracyMorphism to X0(129, 1)/W is trigonal">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 129>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 43, 129, 215, 645 }>,
@@ -94812,7 +94893,8 @@ CreateShimuraQuot([* <"D", 134>, <"N", 9>,
 <"g", 5>, <"CurveID", 11695>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 2">
 *]),
 CreateShimuraQuot([* <"D", 134>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 67, 134, 737, 1474 }>,
@@ -96927,7 +97009,7 @@ CreateShimuraQuot([* <"D", 183>, <"N", 4>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 5">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 183>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 61, 183, 305, 915 }>,
@@ -106906,7 +106988,7 @@ CreateShimuraQuot([* <"D", 237>, <"N", 4>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"WeilPolynomial with p = 7">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 237>, <"N", 5>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 79, 237, 395, 1185 }>,
@@ -117610,7 +117692,8 @@ CreateShimuraQuot([* <"D", 462>, <"N", 25>,
 <"g", 6>, <"CurveID", 14411>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 462>, <"N", 29>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 11, 14, 21, 22, 29, 33, 42, 58, 66, 77, 
@@ -127103,7 +127186,8 @@ CreateShimuraQuot([* <"D", 770>, <"N", 9>,
 <"g", 4>, <"CurveID", 15528>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 770>, <"N", 13>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 11, 13, 14, 22, 26, 35, 55, 65, 70, 77, 
@@ -130768,7 +130852,8 @@ CreateShimuraQuot([* <"D", 910>, <"N", 9>,
 <"g", 5>, <"CurveID", 15954>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
+"DualGraph at p = 5">
 *]),
 CreateShimuraQuot([* <"D", 910>, <"N", 11>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 11, 13, 14, 22, 26, 35, 55, 65, 70, 77, 
@@ -134054,7 +134139,7 @@ CreateShimuraQuot([* <"D", 1155>, <"N", 2>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 16365 }>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"ALFixedPointsOnQuotient, W_2 has 8 fixed points">
+"UpdateIsoStatus, isomorphic to 16366">
 *]),
 CreateShimuraQuot([* <"D", 1155>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 
@@ -134311,7 +134396,7 @@ CreateShimuraQuot([* <"D", 1155>, <"N", 4>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
 <"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", 
-"UpdateIsoStatus, isomorphic to 16338">
+"DualGraph at p = 3">
 *]),
 CreateShimuraQuot([* <"D", 1190>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 7, 14 }>,
