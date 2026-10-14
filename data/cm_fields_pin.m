@@ -13,11 +13,13 @@
 // PIN_EXCLUDED, never both.
 //
 // AN ENTRY IS PINNED ONLY IF, in each of the three versions, the slow and fast field-of-definition
-// routines (FieldOfDefinitionOfCMPointSlow and FieldOfDefinitionOfCMPoint since PR #85, each
-// returning one field) returned the same fields as sets up to isomorphism, all three versions
+// routines (FieldOfDefinitionOfCMPointSlow and FieldOfDefinitionOfCMPoint, which in those versions
+// returned lists of fields) returned the same fields as sets up to isomorphism, all three versions
 // agree, and DegreeOfFieldOfDefinitionOfCMPoint equals the common absolute degree of those fields.
-// At the 2120 discriminants where the quotient has no CM point by the order, the entry is an empty
-// list: there both routines raise the "no CM point" error (earlier versions returned empty lists).
+// Since PR #85 each routine returns one field, or refuses with the "no CM point" error.  At the
+// 2119 entries (curve, d) where the quotient has no CM point by the order, spread over all 151
+// discriminants, the entry is an empty list: there both routines now refuse (the earlier versions
+// returned empty lists).
 //
 // PIN entry  <D, N, W, d, fields, deg>
 //   fields : one coefficient list (constant term first) per field, of a defining polynomial of
