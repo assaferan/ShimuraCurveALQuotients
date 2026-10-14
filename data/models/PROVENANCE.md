@@ -709,7 +709,7 @@ since each of these top curves is hyperelliptic and stored, nothing is lost; the
 touched. `87_2`, rerun with the exact m = 0 multiplier of PR #79 (the numerical one on `main` stops in its
 class-constancy check at d = -15), also came back unchanged (9 of 9 isomorphic) with one of its
 seven double covers still in the rebase coordinate, so its four empty keys stay empty and the file
-is not touched. `22_15` was still running when this was written.
+is not touched. `22_15`, rerun the same way, also came back unchanged (26 of 26 isomorphic), with one of its fifteen double covers in the rebase coordinate; its 37 empty keys stay empty for now.
 
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
