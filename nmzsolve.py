@@ -109,20 +109,11 @@ if m_pole > 0 and k24 == 12 and sq_disc == 0 and cuspidal == 0:
         _write_solution(outp, pts)
         sys.exit(0)
 
-# ---- shifted spanning sets for tall rungs ---------------------------------------
-# Enumeration cost grows about tenfold per +22 in n at levels with 24 divisors, but the forms of
-# the rung (M, n + j, m) are spanned by those of the rung (M, n, m) times the weight-0 eta quotients
-# of level M with poles at oo only and pole order at most j (a shift leaves the pole at 0 alone).
-# When the level's shift set polymake/tshift_w0_M.txt and a lower ENUMERATED rung at the same
-# cusp-0 order are cached, a tall request is answered by those products, every one kept up to the
-# size limit NMZ_SHIFT_KEEP (default 20000), and the file written carries a first-line mark saying
-# it is a spanning set, not the lattice points.  A derived file is never used as the base, so a short
-# set at one rung does not make the rungs above it short; and the caller enumerates a rung whose
-# derived set falls short of the rank it needs (NMZ_NO_SHIFT=1 bypasses this section).  Checked in CI
-# at levels 204 (tests/TShiftCusp0.m) and 380 (tests/TShiftProducts.m); the bounds of the shift sets
-# are recorded in polymake/README.md.  A cusp-0 order cannot be reached from the m = 0 rungs, so the
-# lowest rung at each cusp-0 order has to be enumerated once.  The read of a lower rung off a higher
-# cached one (above) runs first: where both are cached, the exact points are preferred.
+# ---- shifted spanning sets for tall rungs (polymake/README.md) ------------------
+# The products of a lower ENUMERATED rung at the same cusp-0 order with the level's weight-0 shift
+# set span the forms of a tall rung; the file written is marked derived (a spanning set, not the
+# lattice points), is never used as a base, and is enumerated by the caller when its rank falls
+# short.  NMZ_NO_SHIFT=1 bypasses this section; the read of a lower rung off a higher one runs first.
 if k24 == 12 and cuspidal == 0 and os.environ.get('NMZ_NO_SHIFT', '') != '1':
     w0p = f'polymake/tshift_w0_{M}.txt'
     cands = []

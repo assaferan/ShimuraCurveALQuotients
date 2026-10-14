@@ -22,8 +22,17 @@ pole `k` of the Hauptmodul-like quotient the search uses as its climbing step, s
 `B >= k` reaches every rung; the bound used at each level is the pole order of the first rung the
 search asks for there (or `k` itself), and whether the products span the tall rung is a measured
 fact, checked by the rank of the q-expansions, not a theorem: eta quotients are sparse at low pole
-orders, and at level 924 the products of a rung 75 below the target span it while lower rungs do
-not (HANDOFF.md, 2026-10-11).
+orders, and at level 924 the products of the rung (924, 250, 0) span (924, 325, 0) while the
+products of the rungs at 120, 160, 200 and 230 do not (ranks of the q-expansions of each product
+set against the enumerated rung, 2026-10-11).
+
+The spanning checks at 780 and 924 in the table were made with two scratch scripts, not yet in the
+repository: one computes the q-expansions at oo of the eta quotients of a file of exponent vectors
+over GF(p) for two large primes and reports the rank and the leading orders attained (level 780:
+the products kept four per pole order and the products kept 69 per pole order, both of rank 396);
+the other forms the products of a base rung with the shift set, filters them by the cusp conditions
+of the target rung, and compares the rank of their q-expansions with that of the enumerated rung
+(level 924: 237 = 237). The 204 and 380 checks are the two tests named in the table.
 
 | level | bound B | shifts | spanning checks (rank of q-expansions at oo, products = enumerated rung) |
 |---|---|---|---|
