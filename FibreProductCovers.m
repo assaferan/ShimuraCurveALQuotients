@@ -247,7 +247,9 @@ end intrinsic;
 
 intrinsic TripleCheckVerdict(gens::SeqEnum, failing::SeqEnum, classes::SeqEnum) -> MonStgElt
 {What the triple check settles about a generating set it did not refuse: whether the generators are
- known to share a coordinate, and whether a failing triple at this base involves two of them.}
+ consistent with one coordinate on the star (a triple twisted by one non-square on two of its covers
+ also passes, so this is up to such a shared twist), and whether a failing triple at this base
+ involves two of them.}
     G := Seqset(gens);
     extra := "";
     for tri in failing do
@@ -262,7 +264,7 @@ intrinsic TripleCheckVerdict(gens::SeqEnum, failing::SeqEnum, classes::SeqEnum) 
         return "inconclusive (a generator is in no triple that passes)" cat extra;
     end if;
     if #Set(cls) eq 1 then
-        return "conclusive (the generators share a coordinate)" cat extra;
+        return "consistent (the generators agree with one coordinate, up to a quadratic twist shared by two of them)" cat extra;
     end if;
     return "inconclusive (the generators fall in classes no triple joins)" cat extra;
 end intrinsic;
