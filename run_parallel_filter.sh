@@ -113,7 +113,7 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves7.dat"
         ;;
     FilterByNonALInvolutions)
-        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
+        INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat"
         ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2

@@ -54,6 +54,8 @@
 #   UpdateCurves7                          [sequential]
 #   FilterByTwistedWeilPolynomial          [PARALLEL, by level]
 #   UpdateCurvesAfterTwistedWeilPolynomial [sequential]
+#   FilterByCanonicalQuadrics [sequential]
+#   UpdateCurvesAfterCanonicalQuadrics [sequential]
 #   FilterByNonALInvolutions               [PARALLEL]
 #   UpdateCurves8                          [sequential]
 
@@ -219,6 +221,10 @@ run_seq "UpdateCurves7"       "${D}/curves_after_FilterByWeilPolynomial.dat"    
 run_par "FilterByTwistedWeilPolynomial"
 run_seq "UpdateCurvesAfterTwistedWeilPolynomial" "${D}/curves_after_FilterByTwistedWeilPolynomial.dat" \
                                                                                    "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
+run_seq "FilterByCanonicalQuadrics" "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat" \
+                                                                                   "${D}/curves_after_FilterByCanonicalQuadrics.dat"
+run_seq "UpdateCurvesAfterCanonicalQuadrics" "${D}/curves_after_FilterByCanonicalQuadrics.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat"
 run_par "FilterByNonALInvolutions"
 run_seq "UpdateCurves8"       "${D}/curves_after_FilterByNonALInvolutions.dat"     "${D}/curves_after_UpdateCurves8.dat"
 

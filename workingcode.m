@@ -86,6 +86,9 @@ FILTER_STAGES := [*
     // Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables.
     <"FilterByTwistedWeilPolynomial", FilterByTwistedWeilPolynomial>,
     <"UpdateCurvesAfterTwistedWeilPolynomial", UpdateCurves>,
+    // Noether's count on the canonical embedding: q-expansions at D = 1, a stored model at D > 1.
+    <"FilterByCanonicalQuadrics", FilterByCanonicalQuadrics>,
+    <"UpdateCurvesAfterCanonicalQuadrics", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>
 *];

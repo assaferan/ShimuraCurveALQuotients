@@ -8,6 +8,7 @@ VectorValuedForm.m
 EquationsCovers.m
 FibreProductCovers.m
 HyperellipticDetection.m
+CanonicalQuadrics.m
 Caching.m
 ClassNumberData.m
 Utils.m

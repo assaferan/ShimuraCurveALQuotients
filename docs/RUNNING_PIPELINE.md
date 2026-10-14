@@ -146,6 +146,8 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurves7
     FilterByTwistedWeilPolynomial             parallel, by level  NEW
     UpdateCurvesAfterTwistedWeilPolynomial                        NEW
+    FilterByCanonicalQuadrics                 sequential          NEW
+    UpdateCurvesAfterCanonicalQuadrics                            NEW
     FilterByNonALInvolutions                  parallel
     UpdateCurves8
 
@@ -207,6 +209,10 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   lemma and contains a non-AL central involution. Its quotient genus then comes from
   `TraceDNewQuotient`, which takes about 30 s per involution at level ~1000 and grows with the
   level.
+* **`FilterByCanonicalQuadrics`**: Noether's count of quadrics through the canonical image, from
+  the W-fixed weight-2 cusp forms at D = 1 and from a stored model (`data/models/`) at D > 1; about
+  a minute for the whole list, sequential. It decides nothing at a base with D > 1 and no model
+  file, which is where most of the undecided curves live.
 * **`FilterByNonALInvolutions`** and **`FilterByGeneralizedComplicatedFixedPoints`** skip levels
   above 3000 (`NonALModSymMaxLevel`, `GeneralizedComplicatedMaxLevel`).
 

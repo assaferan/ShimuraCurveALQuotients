@@ -158,6 +158,9 @@ T2 := [
  <"Twisted Weil polynomials (Section~\\ref{sec:Weilpolys})",
         "data/curves_after_FilterByTwistedWeilPolynomial.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat">,
+ <"Canonical quadrics (Section~\\ref{sec:canonicalquadrics})",
+        "data/curves_after_FilterByCanonicalQuadrics.dat">,
+ <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat">,
  <"Modular non-Atkin--Lehner involutions (Section~\\ref{sec:modularnonAL})",
         "data/curves_after_FilterByNonALInvolutions.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves8.dat">
