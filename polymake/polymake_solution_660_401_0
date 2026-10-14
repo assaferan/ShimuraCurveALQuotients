@@ -1,3 +1,4 @@
+// derived: spanning set for (M=660, n=401, m=0) from the rung 231 and 441 weight-0 shift(s), not the lattice points of the polytope
 [ PowerSequence(IntegerRing()) |
 [ -8, 18, 4, -6, 3, -7, -5, -1, 2, -3, 2, 3, 5, 0, -2, -1, 0, -3, -2, 5, 2, 8, 10, -23 ],
 [ -8, 18, 4, -6, 3, -7, -5, 0, 2, -3, 2, 0, 5, 0, -1, 0, 0, -1, -4, 4, 0, 10, 11, -23 ],
