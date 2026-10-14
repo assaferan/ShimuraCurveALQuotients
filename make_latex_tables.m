@@ -18,9 +18,11 @@
 // logical sub-steps of the single UpdateByGenus stage, so their intermediate
 // counts are computed rather than read from a snapshot.  The final
 // "Resolve classical modular curve cases from literature" row moves every still-open
-// D=1 quotient (a classical modular curve, resolved by the literature) to Filt.
+// D=1 quotient (a classical modular curve) to Filt or Proved, by the verdict of its
+// canonical model in data/curves_after_D1Oracle.dat.
 SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);   // no line wrapping: output lines (and LaTeX) must not be split at 80 columns
 SetVerbose("ShimuraQuotients", 0);
 
 out := "data/pipeline_tables.tex";
@@ -170,12 +172,21 @@ for i in [1..#T2] do
     oF := o; rF := r; pF := p;
 end for;
 
-// literature row: every remaining D=1 quotient (classical modular curve) is
-// resolved (non-sub-hyperelliptic) by the literature and moves Open -> Filt.
+// literature row: every remaining D=1 quotient (classical modular curve) is resolved by its
+// canonical model in data/curves_after_D1Oracle.dat -- most are not sub-hyperelliptic, but some
+// are hyperelliptic (e.g. X_0(114)/<w2,w38>), so each moves Open -> Filt or Open -> Proved.
 final := eval Read("data/curves_after_UpdateCurves8.dat");
-d1open := #[X : X in final | not assigned X`IsSubhyp and X`D eq 1];
+oracle := AssociativeArray();
+for Y in eval Read("data/curves_after_D1Oracle.dat") do
+    if Y`D eq 1 and assigned Y`IsSubhyp then oracle[<Y`N, Y`W>] := Y`IsSubhyp; end if;
+end for;
+d1open := [X : X in final | not assigned X`IsSubhyp and X`D eq 1];
+error if exists(X){X : X in d1open | not IsDefined(oracle, <X`N, X`W>)},
+    "make_latex_tables: open D=1 curve with no D1Oracle verdict:", X`N, X`W;
+d1ruled  := #[X : X in d1open | not oracle[<X`N, X`W>]];
+d1proved := #[X : X in d1open | oracle[<X`N, X`W>]];
 tab2 cat:= Row("Resolve classical modular curve cases from literature",
-               oF-d1open, rF+d1open, pF, d1open, 0) cat "\n";
+               oF-#d1open, rF+d1ruled, pF+d1proved, d1ruled, d1proved) cat "\n";
 nquot := total;
 
 // ---------------------------------------------------------------------------

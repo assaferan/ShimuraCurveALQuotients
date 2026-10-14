@@ -4,11 +4,12 @@
 //   2. fig:test-attribution    -- per-test count of the resolved quotients.
 //
 // Status for the genus chart is the FINAL status: the still-open D=1 quotients
-// are classical modular curves resolved (not sub-hyperelliptic) by the literature,
-// so they are counted under "Proved not subhyperelliptic", leaving "Open" = the
-// genuinely-open D>1 quotients.  The attribution figure lists, per resolving reason,
-// every quotient that is not genuinely open: the pipeline TESTS (via TestInWhichProved)
-// plus a "Classical modular curve (literature)" row for the still-open D=1 cases.
+// are classical modular curves resolved by their canonical models
+// (data/curves_after_D1Oracle.dat), so each is counted as proved or not
+// subhyperelliptic by that verdict, leaving "Open" = the genuinely-open D>1
+// quotients.  The attribution figure lists, per resolving reason, every quotient
+// that is not genuinely open: the pipeline TESTS (via TestInWhichProved) plus a
+// "Classical modular curve (literature)" row, in each block, for the D=1 cases.
 //
 // Tests are grouped BY PAPER SECTION (same rule as make_latex_tables.m): the
 // consecutive same-section stages are merged -- ComplicatedAL + Generalized ->
@@ -17,6 +18,7 @@
 // the log-scaled bars are normalised to the largest count.
 SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);   // no line wrapping: output lines (and LaTeX) must not be split at 80 columns
 SetVerbose("ShimuraQuotients", 0);
 
 curves := eval Read("data/curves_after_UpdateCurves8.dat");
@@ -28,6 +30,16 @@ function Status(X)
     return X`IsSubhyp select "proved" else "ruled";
 end function;
 
+// Verdict of the D=1 canonical models for the curves the pipeline leaves open.
+oracle := AssociativeArray();
+for Y in eval Read("data/curves_after_D1Oracle.dat") do
+    if Y`D eq 1 and assigned Y`IsSubhyp then oracle[<Y`N, Y`W>] := Y`IsSubhyp; end if;
+end for;
+d1openAll := [X : X in curves | Status(X) eq "open" and X`D eq 1];
+error if exists(X){X : X in d1openAll | not IsDefined(oracle, <X`N, X`W>)},
+    "make_latex_figures: open D=1 curve with no D1Oracle verdict:", X`N, X`W;
+function D1Sub(X) return oracle[<X`N, X`W>]; end function;
+
 // ---------------------------------------------------------------------------
 // FIGURE 1 : genus distribution (final status)
 // ---------------------------------------------------------------------------
@@ -37,9 +49,10 @@ for g in genera do
     cg := [X : X in curves | X`g eq g];
     sub := #[X : X in cg | Status(X) eq "proved"];
     rul := #[X : X in cg | Status(X) eq "ruled"];
-    d1op := #[X : X in cg | Status(X) eq "open" and X`D eq 1];   // literature -> not subhyp
-    op  := #[X : X in cg | Status(X) eq "open"] - d1op;
-    Append(~subS, sub); Append(~notS, rul + d1op); Append(~opS, op);
+    d1 := [X : X in cg | Status(X) eq "open" and X`D eq 1];      // resolved by the D=1 models
+    d1sub := #[X : X in d1 | D1Sub(X)];
+    op  := #[X : X in cg | Status(X) eq "open"] - #d1;
+    Append(~subS, sub + d1sub); Append(~notS, rul + #d1 - d1sub); Append(~opS, op);
 end for;
 
 xs := Join([Sprint(g) : g in genera], ",");
@@ -97,8 +110,20 @@ ruledGroups := [
  <"Isomorphism", ["UpdateIsoStatus"]>,
  <"Modular non-Atkin--Lehner involution", ["ModularNonALInvolution"]>,
  <"Degeneracy morphism", ["DegeneracyMorphism"]>,
- <"Dual graphs of the special fibres", ["DualGraph"]>
+ <"Dual graphs of the special fibres", ["DualGraph"]>,
+ <"Special fiber", ["SpecialFiber", "SpecialFiberCM", "SpecialFiberD6", "SpecialFiberD10", "SpecialFiberD22"]>,
+ <"Automorphism groups", ["AutomorphismGroup"]>,
+ <"Twisted point counts", ["TwistedTrace"]>,
+ <"Twisted Weil polynomials", ["TwistedWeilPolynomial"]>
 ];
+
+// Every decided curve must fall in exactly one group, or the figure silently drops it.
+for pair in [<proved, provedGroups>, <ruled, ruledGroups>] do
+    toks := &join[{Canon(X)} : X in pair[1]];
+    grouped := &join[Set(g[2]) : g in pair[2]];
+    missing := toks diff grouped;
+    error if not IsEmpty(missing), "make_latex_figures: labels in no group:", missing;
+end for;
 
 function Rows(curveset, groups)
     rows := [];
@@ -113,12 +138,17 @@ end function;
 provedRows := Rows(proved, provedGroups);
 ruledRows  := Rows(ruled, ruledGroups);
 
-// still-open D=1 quotients are classical modular curves resolved (not sub-
-// hyperelliptic) by the literature -- record them as their own reason.
-d1open := #[X : X in curves | Status(X) eq "open" and X`D eq 1];
-if d1open gt 0 then
-    Append(~ruledRows, <"Classical modular curve (literature)", d1open>);
+// still-open D=1 quotients are classical modular curves resolved by their canonical
+// models -- record them as their own reason, in the block their verdict belongs to.
+d1ruled  := #[X : X in d1openAll | not D1Sub(X)];
+d1proved := #[X : X in d1openAll | D1Sub(X)];
+if d1ruled gt 0 then
+    Append(~ruledRows, <"Classical modular curve (literature)", d1ruled>);
     Sort(~ruledRows, func<a,b | b[2]-a[2]>);
+end if;
+if d1proved gt 0 then
+    Append(~provedRows, <"Classical modular curve (literature)", d1proved>);
+    Sort(~provedRows, func<a,b | b[2]-a[2]>);
 end if;
 
 maxcount := Max([r[2] : r in provedRows cat ruledRows]);
