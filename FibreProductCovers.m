@@ -69,6 +69,45 @@ intrinsic FibreProductCurve(fs::SeqEnum) -> Crv, SeqEnum
     return Curve(Pamb, eqns), eqns;
 end intrinsic;
 
+intrinsic CRVDoubleCovers(eqns::SeqEnum[MonStgElt]) -> SeqEnum
+{The double covers y_i^2 = f_i(t) of the base line whose fibre product is the curve a model file
+ stores as <genus, "CRV", [ Strings() | ... ]>: given the stored equations, return the f_i in Q[t].
+ Each equation is c*v^2 + G, with v a fibre coordinate occurring in no other equation and G a form
+ in the two coordinates of the base line; f is -G/c read in the affine coordinate t on that line.
+ Both stored shapes are read: the pairs over a conic (fibre coordinates x, y) and the fibre
+ products (y_1, ..., y_k).}
+    require not IsEmpty(eqns) : "need at least one equation";
+    // the names the stored strings use; a variable not occurring in any of them is harmless
+    R<s, x, y, y1, y2, y3, y4, z> := PolynomialRing(Rationals(), 8);
+    es := [eval ("return " cat st cat ";") : st in eqns];
+    nocc := [#[1 : E in es | Degree(E, R.j) gt 0] : j in [1..8]];
+    fib := [];
+    for i in [1..#es] do
+        cand := [j : j in [1..8] | nocc[j] eq 1 and Degree(es[i], R.j) eq 2
+                 and Degree(es[i] - MonomialCoefficient(es[i], R.j^2)*R.j^2, R.j) le 0];
+        require #cand eq 1 :
+            Sprintf("equation %o does not have exactly one fibre coordinate: %o", i, eqns[i]);
+        Append(~fib, cand[1]);
+    end for;
+    base := [j : j in [1..8] | nocc[j] gt 0 and j notin fib];
+    require #base eq 2 : Sprintf("the base line must have two coordinates, found %o", #base);
+    Pt<t> := PolynomialRing(Rationals());
+    // the same affine coordinate t for every equation: the second base variable is set to 1
+    vals := [Pt!0 : j in [1..8]];
+    vals[base[1]] := t; vals[base[2]] := Pt!1;
+    fs := [];
+    for i in [1..#es] do
+        c := MonomialCoefficient(es[i], R.fib[i]^2);
+        G := es[i] - c*R.fib[i]^2;
+        require IsHomogeneous(G) :
+            Sprintf("equation %o is not homogeneous in the base coordinates: %o", i, eqns[i]);
+        f := -Evaluate(G, vals) / c;
+        require Degree(f) ge 1 : Sprintf("equation %o gives a constant double cover", i);
+        Append(~fs, f);
+    end for;
+    return fs;
+end intrinsic;
+
 // The index-2 subgroups of the full Atkin-Lehner group that contain W.  Each one's quotient is a
 // double cover of the star curve.
 function index_two_over(W, full, DN)
