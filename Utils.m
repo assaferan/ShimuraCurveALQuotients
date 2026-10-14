@@ -89,6 +89,10 @@ heavy curves are always dispatched early.}
         return R!0;
     end if;
 
+    if stage eq "FilterByComponentInvolution" then
+        return R!(#PrimeDivisors(X`N) * #Divisors(X`D * X`N));     // genera only
+    end if;
+
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then
         // The stage asks for #X(F_{p^v}), v <= g, at every good prime p up to its bound (the
         // class-number database, the disc budget, and the per-genus ceiling), i.e. one trace at
