@@ -1,8 +1,9 @@
 // Criterion H (ComponentInvolution.m): at an odd p || N with p !| D, a special-fibre component of
 // genus >= 2 whose hyperelliptic involution is an Atkin-Lehner w_u forces iota = w_u.
-// (a) The 12 open curves of the 2026-09-30 list that criterion H rules out, from the prototype run.
-//     All 12 also fail an independent Brandt-module check of the node gluing under w_u, and the
-//     first four are also ruled out by a point-count criterion at p (both computed separately).
+// (a) Regression values: the 12 open curves of the 2026-09-30 list that a prototype of this test
+//     rules out.  Two separate computations agree: in the Brandt module of discriminant D*p and
+//     level N/p, with Frobenius acting as w_p, the node gluing is incompatible with iota = w_u for
+//     all 12; and the first four also fail a point count of the special fibre at p.
 // (b) Soundness: no curve proved subhyperelliptic by other stages (genus >= 2) is ruled out.
 // (c) A genus-1 component must not be used.  (d) In case B the component is X_0^D(N/p)/W',
 //     W' = {w in W : p !| w}, not the image of W.
