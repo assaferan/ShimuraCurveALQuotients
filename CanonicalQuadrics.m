@@ -39,7 +39,7 @@ intrinsic HyperellipticByQExpansions(N::RngIntElt, W::SetEnum) -> BoolElt, RngIn
  weight-2 cusp forms; also returns the number of quadratic relations found and the dimension of
  the fixed space (which must be g).}
     idx := N * &*[1 + 1/p : p in PrimeDivisors(N)];
-    prec := Integers()!(4 * idx / 12) + 10;             // past the Sturm bound of weight 4
+    prec := Ceiling(4 * idx / 12) + 10;                 // past the Sturm bound of weight 4
     fs, g := fixed_cusp_forms(N, W, prec);
     require g ge 3 : "the fixed space has dimension less than 3";
     prods := [fs[i] * fs[j] : j in [i..g], i in [1..g]];
@@ -94,16 +94,21 @@ function trace_formula_agrees(fs, X)
     return checked eq 3;
 end function;
 
-// A model for X from the file: "hyperelliptic" when a y^2 + h y = f is stored; otherwise the
-// double covers of a fibre product (stored, or assembled from the covers above W), checked; or
-// "none".
+// A model for X from the file: "hyperelliptic" when a y^2 + h y = f is stored with the genus the
+// formula predicts and point counts matching the trace formula; otherwise the double covers of a
+// fibre product (stored, or assembled from the covers above W), checked the same way; or "none".
 function model_for(X, ModelDir)
     ok, models, covers := stored_models(X`D, X`N, ModelDir);
     if not ok then return "none", _; end if;
     k := Sort(SetToSequence(X`W));
     if IsDefined(models, k) and #models[k] gt 0 then
         e := models[k][1];
-        if Type(e[2]) ne MonStgElt then return "hyperelliptic", _; end if;
+        if Type(e[2]) ne MonStgElt then
+            f := e[2] + (#e ge 3 select e[3]^2/4 else 0);     // y^2 + h y = f  <=>  (y + h/2)^2 = f + h^2/4
+            if Genus(HyperellipticCurve(f)) ne X`g then return "none", _; end if;
+            if not trace_formula_agrees([f], X) then return "none", _; end if;
+            return "hyperelliptic", _;
+        end if;
         fs := CRVDoubleCovers(e[3]);
     else
         ups := AtkinLehnerDoubleCoversOver(X`W, X`D, X`N);
@@ -137,13 +142,13 @@ intrinsic FilterByCanonicalQuadrics(~curves::SeqEnum : ModelDir := "data/models"
         else
             kind, K := model_for(X, ModelDir);
             if kind eq "none" then nskip +:= 1; continue; end if;
+            m0 := X`N eq 1 select "" else "; the model rests on the m = 0 term at N > 1";
             if kind eq "hyperelliptic" then
                 hyp := true;
-                label := "CanonicalQuadrics: a stored hyperelliptic model";
+                label := Sprintf("CanonicalQuadrics: a stored hyperelliptic model (genus and point counts checked%o)", m0);
             else
                 hyp, nrel := IsHyperellipticFunctionField(K);
-                label := Sprintf("CanonicalQuadrics on the stored model (%o quadrics%o)", nrel,
-                                 X`N eq 1 select "" else "; the model rests on the m = 0 term at N > 1");
+                label := Sprintf("CanonicalQuadrics on the stored model (%o quadrics%o)", nrel, m0);
             end if;
             nm +:= 1;
         end if;
