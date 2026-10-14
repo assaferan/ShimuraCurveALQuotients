@@ -7,13 +7,19 @@
 // The test is Max Noether's count of quadrics through the canonical image (IsHyperellipticFunctionField):
 // (g-1)(g-2)/2 linear relations among the pairwise products of the holomorphic differentials for a
 // hyperelliptic curve, (g-2)(g-3)/2 otherwise.  For every hyperelliptic curve found, the test then
-// checks two things.  Its hyperelliptic involution is an Atkin-Lehner one: some product of a subset
-// of the double covers is, up to squares, of degree at most 2, so the curve is the double cover of
-// the genus-0 quotient y^2 = c(t) by one of the (Z/2)^k automorphisms (a hyperelliptic involution
-// outside that group would be new, and the test fails so that it is looked at).  And that conic has
-// no rational point: if it had one, the curve would have a model y^2 = f(x) over Q
+// checks two things.  Its hyperelliptic involution is an Atkin-Lehner one: the product of the two
+// double covers, or one of them, is, up to squares, of degree at most 2, so the curve is the double
+// cover of the genus-0 quotient y^2 = c(t) by one of its three involutions (a hyperelliptic
+// involution outside that group would be new, and the test fails so that it is looked at).  And
+// that conic has no rational point: if it had one, the curve would have a model y^2 = f(x) over Q
 // (HyperellipticModelOverConic), and the file should store that instead -- as the two covers of
 // X_0(10,53) by w_530 and w_53 now do.  A hyperelliptic curve of even genus always has such a model.
+//
+// Both checks assume exactly two factors.  With k factors the double covers y^2 = f_S(t) are the
+// quotients by the index-2 subgroups of (Z/2)^k, and the quotient by an involution w, the one that
+// decides whether the hyperelliptic involution is Atkin-Lehner and whose rational points decide the
+// model, is among them only when k = 2; for k >= 3 it has degree 2^(k-1) over the line.  So the test
+// fails if a hyperelliptic entry has three or more factors, rather than conclude anything from it.
 //
 // Controls: y^2 = h(t), w^2 = t, z^2 = t - 1 with deg h = 4 (genus 7, the hyperelliptic curve
 // y^2 = h(w^2) together with z) must be detected, and the three plane quartics X_0(6,23)/w_23,
@@ -53,6 +59,10 @@ for f in crv_files do
             if not hyp then continue; end if;
             n_hyp +:= 1;
             tag := Sprintf("%o %o (genus %o)", base, Sort(SetToSequence(Set(k))), g);
+            if #fs ne 2 then
+                Append(~bad, tag cat ": hyperelliptic with " cat Sprint(#fs) cat " factors; the conic test decides the involution only for two");
+                continue;
+            end if;
             ok, c := ConicFactorOfFibreProduct(fs);
             if not ok then
                 Append(~bad, tag cat ": hyperelliptic, but by an involution outside the Atkin-Lehner group");
@@ -67,4 +77,4 @@ error if n_crv eq 0, "HyperellipticCRV: no CRV entries found, nothing was checke
 error if quartics_seen ne 3, "HyperellipticCRV: the three plane quartics were not all found";
 error if not IsEmpty(bad),
     Sprintf("HyperellipticCRV: %o stored curve(s) should be stored differently: %o", #bad, bad);
-printf " ok (%o CRV entries, %o hyperelliptic, each a double cover of a conic without a rational point)\n", n_crv, n_hyp;
+printf " ok (%o CRV entries, %o hyperelliptic, each with two factors and a double cover of a conic without a rational point)\n", n_crv, n_hyp;
