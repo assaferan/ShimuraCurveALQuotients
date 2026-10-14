@@ -79,4 +79,35 @@ procedure test_6_5()
     return;
 end procedure;
 
+// The stored W = {1,3,5,15} entry against Gonzalez-Rotger: their X_0(6,5) is y^2 = -x^4 + 61x^2 - 1024
+// (Table 1, p. 8) with w_30 = (x,-y), w_2 = (-x,y), w_6 = (32/x, 32y/x^2), so w_15 = w_2 w_30 = (-x,-y)
+// and w_3 = w_2 w_6 = (-32/x, 32y/x^2).  The quotient by w_15 has invariants u = x^2, v = xy with
+// v^2 = u(-u^2 + 61u - 1024); on it w_3 is (u,v) -> (1024/u, -1024 v/u^2), under which v/u and
+// u - 1024/u change sign, so s = u + 1024/u and t = (v/u)(u - 1024/u) are invariant with
+// t^2 = (61 - s)(s^2 - 4096).  That curve is 30a6 and must be isomorphic to the stored entry.
+procedure test_6_5_quotient_by_w15_w3(models)
+    P<x> := PolynomialRing(Rationals());
+    FF<u> := FunctionField(Rationals());
+    s := u + 1024/u;
+    assert (-u^2 + 61*u - 1024)/u eq 61 - s;        // f(u)/u in terms of s
+    assert (u - 1024/u)^2 eq s^2 - 4096;
+    E2 := HyperellipticCurve((61 - x)*(x^2 - 4096));
+    E2e := MinimalModel(EllipticCurve(E2, E2![61,0,1]));
+    assert CremonaReference(E2e) eq "30a6";
+    k := [kk : kk in Keys(models) | Set(kk) eq {1,3,5,15}];
+    assert #k eq 1 and #models[k[1]] eq 1;
+    e := models[k[1]][1];
+    ours := HyperellipticCurve(e[2], e[3]);
+    assert Genus(ours) eq 1;
+    // the stored cubic has no constant term, so (0,0) is a rational point (Points() would need an
+    // integral model; this does not)
+    assert Coefficient(e[2], 0) eq 0 and e[3] eq 0;
+    ourse := MinimalModel(EllipticCurve(ours, ours![0,0,1]));
+    assert IsIsomorphic(E2e, ourse);
+end procedure;
+
+// evaluated at top level: a model-file eval inside a procedure crashes this Magma under run_tests.m
+models_6_5 := eval (Read("data/models/models_6_5.m") cat "\nreturn models;");
+
 test_6_5();
+test_6_5_quotient_by_w15_w3(models_6_5);

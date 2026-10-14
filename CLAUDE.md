@@ -126,18 +126,22 @@ therefore drift apart silently (`nmzsolve.py` at the root, `vvdata/gtsweep.m`). 
 
     git diff origin/main origin/m0-theta-campaign --name-only -- ':!vvdata/weyl-campaign/*'
 
-**should print nothing but doc files.** Anything else is a silent divergence — run it before
-trusting either branch's code. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
+**should print nothing but doc files** — except in the window between a PR merging to `main` and
+the merge of `main` down into `m0-theta-campaign`, when shared-path files legitimately differ;
+the merge-down clears it. Anything else is a silent divergence — run it before trusting either
+branch's code. Corollary: **make a change to a shared-path file via a PR to `main`, then merge `main` down.**
 If something belongs only to the research line, put it under `vvdata/weyl-campaign/` — that is
 why the FIRE variant is `vvdata/weyl-campaign/gtsweep_fire.m` and not a fork of
 `vvdata/gtsweep.m`.
 
-`nmzsolve.py` on `main` carries the **t-shift fallback**, with the two files it reads at runtime,
-`polymake/tshift_{core,w0}_420.txt`. Its generator and probe stay on campaign
-(`vvdata/weyl-campaign/tshift_gen.py`, `tshift308.m`) per the tooling convention. The fallback is
-guarded — it needs `m_pole==0 && k24==12 && cuspidal==0`, a `polymake/tshift_w0_<M>.txt`, and a
-lower cached rung — so it is inert at levels without those files, and it is validated at
-**M = 420 only**.
+`nmzsolve.py` on `main` carries the **t-shift fallback**, with the files it reads at runtime,
+`polymake/tshift_core_420.txt` and `polymake/tshift_w0_<M>.txt` (levels 204, 380, 420, 780, 924).
+Its generator and probe stay on campaign (`vvdata/weyl-campaign/tshift_gen.py`, `tshift308.m`,
+`cusp0ladder/`) per the tooling convention. The fallback needs a weight-1/2, non-cuspidal request,
+a shift set for the level and a lower cached rung at the same cusp-0 order, so it is inert at levels
+without those files; it is checked in CI at levels 204 (`tests/TShiftCusp0.m`) and 380
+(`tests/TShiftProducts.m`), and a file it writes carries a first-line mark saying it is a spanning
+set, not the lattice points.
 
 `tier1-models` is retired and merged into `main`; do not recreate it. Older notes mentioning it or
 `-campaign` / `-mainport` sibling directories are historical.

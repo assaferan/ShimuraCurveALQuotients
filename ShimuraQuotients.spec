@@ -6,6 +6,7 @@ WeilRepresentation.m
 EisensteinLocalFactors.m
 VectorValuedForm.m
 EquationsCovers.m
+FibreProductCovers.m
 Caching.m
 ClassNumberData.m
 Utils.m
