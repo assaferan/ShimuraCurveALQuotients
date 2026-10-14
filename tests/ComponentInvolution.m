@@ -1,15 +1,16 @@
 // Criterion H (ComponentInvolution.m): at an odd p || N with p !| D, a special-fibre component of
 // genus >= 2 whose hyperelliptic involution is an Atkin-Lehner w_u forces iota = w_u.
-// (a) Regression values from the prototype run on the 2026-09-30 open list; the same 8 curves fail
-//     an independent Brandt-module check of the node gluing under w_u (computed separately, not by
-//     this code), which is what makes them more than a regression check.
+// (a) The 12 open curves of the 2026-09-30 list that criterion H rules out, from the prototype run.
+//     All 12 also fail an independent Brandt-module check of the node gluing under w_u, and the
+//     first four are also ruled out by a point-count criterion at p (both computed separately).
 // (b) Soundness: no curve proved subhyperelliptic by other stages (genus >= 2) is ruled out.
 // (c) A genus-1 component must not be used.  (d) In case B the component is X_0^D(N/p)/W',
 //     W' = {w in W : p !| w}, not the image of W.
 
 procedure test_ComponentInvolutionRules()
-    printf "Testing ComponentInvolutionNotHyperelliptic on the eight open curves...";
-    cases := [ <14, 15, {1,5,7,35}>, <15, 14, {1,2,7,14}>, <21, 20, {1,15,28,420}>,
+    printf "Testing ComponentInvolutionNotHyperelliptic on the twelve open curves...";
+    cases := [ <14, 15, {1,3,7,21}>, <14, 15, {1,3,70,210}>, <15, 28, {1,7,12,84}>, <15, 28, {1,3,7,21}>,
+               <14, 15, {1,5,7,35}>, <15, 14, {1,2,7,14}>, <21, 20, {1,15,28,420}>,
                <21, 20, {1,15,84,140}>, <21, 20, {1,12,15,20,21,28,35,420}>,
                <22, 15, {1,2,55,110}>, <34, 21, {1,2,7,14,51,102,357,714}>, <62, 5, {1,5,31,155}> ];
     for c in cases do

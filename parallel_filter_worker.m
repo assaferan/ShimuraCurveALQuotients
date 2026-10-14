@@ -134,6 +134,8 @@ case stage:
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterBySpecialFiber":
         FilterBySpecialFiber(~subseq);
+    when "FilterByComponentInvolution":
+        FilterByComponentInvolution(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":
