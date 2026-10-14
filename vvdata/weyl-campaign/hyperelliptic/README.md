@@ -23,3 +23,12 @@ curves PR #51 found hyperelliptic with explicit models). The remaining 137: 132 
 D > 1 whose star curve has genus > 0 (no genus-0 quotient, so no Borcherds model and no fibre
 product can exist), and 5 at genus-0 bases not yet run (15_14; 210_13 at M = 5460; 798_1, 870_1,
 1326_1 at M = 1596, 1740, 2652).
+
+## 2026-10-14, evening: the dual graph at non-squarefree N (PR #114) and the 61 open cases
+
+`decided83.txt` lists the 83 undecided curves the extended dual-graph filter rules out (built with
+the Atkin-Lehner ideal from the reflection of the lattice chain, `alideal3.m`); `open61.txt` is what
+remains after #113 and #114 (`open61.m`): 55 of genus 3 and 6 of genus 4; 12 at bases whose star curve
+has genus 0 (the model route: 7 already known not hyperelliptic from the composite-level files, 15_14
+and the three next-wall bases to run), 38 of index 2 over a star of genus 1 or 2, 11 star curves of
+genus 3; only two with N not squarefree (22_63, 34_25, both star curves).

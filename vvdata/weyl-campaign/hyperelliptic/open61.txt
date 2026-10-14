@@ -1,0 +1,62 @@
+6 35 [ 1, 3, 5, 15 ] g=3 index=4 star_genus=0 N_squarefree=true
+6 35 [ 1, 5, 7, 35 ] g=3 index=4 star_genus=0 N_squarefree=true
+6 185 [ 1, 2, 15, 30, 111, 185, 222, 370 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 187 [ 1, 3, 11, 17, 33, 51, 187, 561 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 247 [ 1, 2, 19, 38, 39, 78, 741, 1482 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 253 [ 1, 2, 23, 33, 46, 66, 759, 1518 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 301 [ 1, 3, 14, 42, 43, 129, 602, 1806 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 323 [ 1, 6, 19, 34, 51, 114, 646, 969 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 341 [ 1, 3, 11, 33, 62, 186, 682, 2046 ] g=4 index=2 star_genus=2 N_squarefree=true
+6 379 [ 1, 2, 3, 6, 379, 758, 1137, 2274 ] g=3 index=1 star_genus=3 N_squarefree=true
+6 385 [ 1, 5, 6, 11, 14, 21, 30, 55, 66, 70, 105, 154, 231, 330, 770, 1155 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 403 [ 1, 2, 13, 26, 93, 186, 1209, 2418 ] g=4 index=2 star_genus=2 N_squarefree=true
+6 455 [ 1, 6, 7, 10, 13, 15, 42, 70, 78, 91, 105, 130, 195, 546, 910, 1365 ] g=3 index=2 star_genus=1 N_squarefree=true
+6 649 [ 1, 2, 3, 6, 11, 22, 33, 59, 66, 118, 177, 354, 649, 1298, 1947, 3894 ] g=3 index=1 star_genus=3 N_squarefree=true
+10 21 [ 1, 2, 7, 14 ] g=3 index=4 star_genus=0 N_squarefree=true
+10 21 [ 1, 7, 10, 70 ] g=3 index=4 star_genus=0 N_squarefree=true
+14 15 [ 1, 3, 7, 21 ] g=3 index=4 star_genus=0 N_squarefree=true
+14 15 [ 1, 3, 70, 210 ] g=3 index=4 star_genus=0 N_squarefree=true
+14 15 [ 1, 5, 7, 35 ] g=3 index=4 star_genus=0 N_squarefree=true
+14 33 [ 1, 3, 7, 21, 22, 66, 154, 462 ] g=3 index=2 star_genus=1 N_squarefree=true
+14 51 [ 1, 6, 14, 21, 34, 51, 119, 714 ] g=3 index=2 star_genus=1 N_squarefree=true
+15 14 [ 1, 2, 7, 14 ] g=3 index=4 star_genus=0 N_squarefree=true
+15 38 [ 1, 2, 15, 19, 30, 38, 285, 570 ] g=3 index=2 star_genus=1 N_squarefree=true
+15 46 [ 1, 5, 6, 23, 30, 115, 138, 690 ] g=3 index=2 star_genus=1 N_squarefree=true
+21 34 [ 1, 3, 14, 17, 42, 51, 238, 714 ] g=3 index=2 star_genus=1 N_squarefree=true
+21 58 [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ] g=3 index=1 star_genus=3 N_squarefree=true
+22 51 [ 1, 2, 33, 51, 66, 102, 187, 374 ] g=3 index=2 star_genus=1 N_squarefree=true
+22 51 [ 1, 3, 11, 33, 34, 102, 374, 1122 ] g=3 index=2 star_genus=1 N_squarefree=true
+22 51 [ 1, 6, 17, 22, 33, 102, 374, 561 ] g=3 index=2 star_genus=1 N_squarefree=true
+22 63 [ 1, 2, 7, 9, 11, 14, 18, 22, 63, 77, 99, 126, 154, 198, 693, 1386 ] g=3 index=1 star_genus=3 N_squarefree=false
+26 85 [ 1, 2, 5, 10, 13, 17, 26, 34, 65, 85, 130, 170, 221, 442, 1105, 2210 ] g=3 index=1 star_genus=3 N_squarefree=true
+34 21 [ 1, 2, 7, 14, 51, 102, 357, 714 ] g=3 index=2 star_genus=1 N_squarefree=true
+34 25 [ 1, 2, 17, 25, 34, 50, 425, 850 ] g=3 index=1 star_genus=3 N_squarefree=false
+38 15 [ 1, 3, 5, 15, 38, 114, 190, 570 ] g=3 index=2 star_genus=1 N_squarefree=true
+38 15 [ 1, 3, 10, 30, 38, 95, 114, 285 ] g=3 index=2 star_genus=1 N_squarefree=true
+39 11 [ 1, 11, 39, 429 ] g=3 index=2 star_genus=1 N_squarefree=true
+39 34 [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ] g=3 index=1 star_genus=3 N_squarefree=true
+46 31 [ 1, 2, 23, 31, 46, 62, 713, 1426 ] g=3 index=1 star_genus=3 N_squarefree=true
+55 7 [ 1, 35, 55, 77 ] g=3 index=2 star_genus=1 N_squarefree=true
+57 5 [ 1, 3, 19, 57 ] g=3 index=2 star_genus=1 N_squarefree=true
+57 10 [ 1, 5, 6, 19, 30, 95, 114, 570 ] g=3 index=2 star_genus=1 N_squarefree=true
+62 5 [ 1, 5, 31, 155 ] g=3 index=2 star_genus=1 N_squarefree=true
+65 2 [ 1, 2, 13, 26 ] g=3 index=2 star_genus=1 N_squarefree=true
+77 10 [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ] g=3 index=1 star_genus=3 N_squarefree=true
+86 15 [ 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 645, 1290 ] g=3 index=1 star_genus=3 N_squarefree=true
+141 1 [ 1, 3 ] g=3 index=2 star_genus=1 N_squarefree=true
+141 2 [ 1, 3, 94, 282 ] g=3 index=2 star_genus=1 N_squarefree=true
+141 2 [ 1, 6, 94, 141 ] g=3 index=2 star_genus=1 N_squarefree=true
+158 3 [ 1, 2, 237, 474 ] g=3 index=2 star_genus=1 N_squarefree=true
+194 3 [ 1, 6, 194, 291 ] g=3 index=2 star_genus=1 N_squarefree=true
+210 13 [ 1, 2, 21, 42, 65, 130, 1365, 2730 ] g=3 index=4 star_genus=0 N_squarefree=true
+690 7 [ 1, 6, 10, 14, 15, 21, 23, 35, 138, 210, 230, 322, 345, 483, 805, 4830 ] g=3 index=2 star_genus=1 N_squarefree=true
+714 5 [ 1, 3, 10, 14, 17, 30, 35, 42, 51, 105, 170, 238, 510, 595, 714, 1785 ] g=3 index=2 star_genus=1 N_squarefree=true
+798 1 [ 1, 3, 38, 114 ] g=3 index=4 star_genus=0 N_squarefree=true
+870 1 [ 1, 5, 29, 145 ] g=3 index=4 star_genus=0 N_squarefree=true
+1326 1 [ 1, 17, 78, 1326 ] g=3 index=4 star_genus=0 N_squarefree=true
+2002 1 [ 1, 2, 13, 26, 77, 154, 1001, 2002 ] g=4 index=2 star_genus=2 N_squarefree=true
+2030 1 [ 1, 10, 14, 35, 58, 145, 203, 2030 ] g=4 index=2 star_genus=2 N_squarefree=true
+2418 1 [ 1, 2, 13, 26, 93, 186, 1209, 2418 ] g=4 index=2 star_genus=2 N_squarefree=true
+3390 1 [ 1, 5, 6, 30, 113, 565, 678, 3390 ] g=4 index=2 star_genus=2 N_squarefree=true
+4130 1 [ 1, 2, 5, 7, 10, 14, 35, 59, 70, 118, 295, 413, 590, 826, 2065, 4130 ] g=3 index=1 star_genus=3 N_squarefree=true
+
