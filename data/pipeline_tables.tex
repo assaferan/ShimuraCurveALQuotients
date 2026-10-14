@@ -15,12 +15,20 @@ Genus $\leq 2$ curves (Section~\ref{sec:genus})
 & 1319 & 0 & 1023 & 0 & 1023 \\
 Finite field point count (Section~\ref{sec:trace})
 & 504 & 815 & 1023 & 815 & 0 \\
+Dual graphs of the special fibres at $p \mid D$ (Section~\ref{sec:dualgraph})
+& 162 & 1157 & 1023 & 342 & 0 \\
+Twisted point counts (Section~\ref{sec:trace})
+& 160 & 1159 & 1023 & 2 & 0 \\
 Special fiber isomorphisms (Section~\ref{sec:specialfiber})
-& 495 & 824 & 1023 & 9 & 0 \\
+& 156 & 1163 & 1023 & 4 & 0 \\
+Refined Atkin--Lehner fixed points (Section~\ref{sec:fixedpointsAL})
+& 152 & 1167 & 1023 & 4 & 0 \\
 Weil polynomials (Section~\ref{sec:Weilpolys})
-& 234 & 1085 & 1023 & 261 & 0 \\
+& 113 & 1206 & 1023 & 39 & 0 \\
+Twisted Weil polynomials (Section~\ref{sec:Weilpolys})
+& 110 & 1209 & 1023 & 3 & 0 \\
 Modular non-Atkin--Lehner involutions (Section~\ref{sec:modularnonAL})
-& 194 & 1110 & 1038 & 25 & 15 \\
+& 72 & 1232 & 1038 & 23 & 15 \\
 \hline
 \end{tabularx}
 \caption{Filtering the $2342$ star curves $\StarCurve{D}{N}$.}
@@ -36,43 +44,61 @@ Modular non-Atkin--Lehner involutions (Section~\ref{sec:modularnonAL})
 Operation & Open & Filt. & Proved & New filt. & New proved \\
 \midrule
 Generate all quotients $\Curve{D}{N}/W$
-& 16231 & 1110 & 1038 & -- & -- \\
+& 16109 & 1232 & 1038 & -- & -- \\
 Genus $\leq 2$ curves (Section~\ref{sec:genus})
-& 13106 & 1110 & 4163 & 0 & 3125 \\
+& 12984 & 1232 & 4163 & 0 & 3125 \\
 Atkin--Lehner involutions as hyperelliptic involutions (Section~\ref{sec:ALashyp})
-& 11458 & 1110 & 5811 & 0 & 1648 \\
+& 11336 & 1232 & 5811 & 0 & 1648 \\
 Propagate closure and isomorphism
-& 10906 & 1661 & 5812 & 551 & 1 \\
+& 10731 & 1836 & 5812 & 604 & 1 \\
+Special fiber (Section~\ref{sec:specialfiber})
+& 9999 & 2568 & 5812 & 732 & 0 \\
 Atkin--Lehner fixed points (Section~\ref{sec:fixedpointsAL})
-& 2125 & 10442 & 5812 & 8781 & 0 \\
+& 1824 & 10743 & 5812 & 8175 & 0 \\
 Propagate closure and isomorphism
-& 2067 & 10500 & 5812 & 58 & 0 \\
+& 1738 & 10829 & 5812 & 86 & 0 \\
 Genus $3$ covers of genus $2$ curves (Section~\ref{sec:g3coverg2})
-& 2051 & 10500 & 5828 & 0 & 16 \\
+& 1722 & 10829 & 5828 & 0 & 16 \\
 Propagate closure and isomorphism
-& 2051 & 10500 & 5828 & 0 & 0 \\
+& 1722 & 10829 & 5828 & 0 & 0 \\
 Degeneracy morphism (Section~\ref{sec:degeneracy})
-& 2032 & 10519 & 5828 & 19 & 0 \\
+& 1704 & 10847 & 5828 & 18 & 0 \\
 Propagate closure and isomorphism
-& 2002 & 10549 & 5828 & 30 & 0 \\
+& 1675 & 10876 & 5828 & 29 & 0 \\
 Refined Atkin--Lehner fixed points (Section~\ref{sec:fixedpointsAL})
-& 1629 & 10922 & 5828 & 373 & 0 \\
+& 1359 & 11192 & 5828 & 316 & 0 \\
 Propagate closure and isomorphism
-& 1613 & 10938 & 5828 & 16 & 0 \\
+& 1351 & 11200 & 5828 & 8 & 0 \\
+Automorphism groups (Section~\ref{sec:autgroups})
+& 1288 & 11263 & 5828 & 63 & 0 \\
+Propagate closure and isomorphism
+& 1285 & 11266 & 5828 & 3 & 0 \\
 Finite field point count (Section~\ref{sec:trace})
-& 1053 & 11498 & 5828 & 560 & 0 \\
+& 838 & 11713 & 5828 & 447 & 0 \\
 Propagate closure and isomorphism
-& 1016 & 11535 & 5828 & 37 & 0 \\
+& 816 & 11735 & 5828 & 22 & 0 \\
+Dual graphs of the special fibres at $p \mid D$ (Section~\ref{sec:dualgraph})
+& 259 & 12292 & 5828 & 557 & 0 \\
+Propagate closure and isomorphism
+& 255 & 12296 & 5828 & 4 & 0 \\
+Twisted point counts (Section~\ref{sec:trace})
+& 232 & 12319 & 5828 & 23 & 0 \\
+Propagate closure and isomorphism
+& 229 & 12322 & 5828 & 3 & 0 \\
 Weil polynomials (Section~\ref{sec:Weilpolys})
-& 892 & 11659 & 5828 & 124 & 0 \\
+& 219 & 12332 & 5828 & 10 & 0 \\
 Propagate closure and isomorphism
-& 881 & 11670 & 5828 & 11 & 0 \\
+& 219 & 12332 & 5828 & 0 & 0 \\
+Twisted Weil polynomials (Section~\ref{sec:Weilpolys})
+& 208 & 12343 & 5828 & 11 & 0 \\
+Propagate closure and isomorphism
+& 208 & 12343 & 5828 & 0 & 0 \\
 Modular non-Atkin--Lehner involutions (Section~\ref{sec:modularnonAL})
-& 828 & 11705 & 5846 & 35 & 18 \\
+& 173 & 12359 & 5847 & 16 & 19 \\
 Propagate closure and isomorphism
-& 827 & 11706 & 5846 & 1 & 0 \\
+& 173 & 12359 & 5847 & 0 & 0 \\
 Resolve classical modular curve cases from literature
-& 784 & 11749 & 5846 & 43 & 0 \\
+& 151 & 12378 & 5850 & 19 & 3 \\
 \hline
 \end{tabularx}
 \caption{Filtering all $18379$ Atkin--Lehner quotients after expansion.}
