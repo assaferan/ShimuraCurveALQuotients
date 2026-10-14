@@ -48,13 +48,15 @@ rc := System(Sprintf("cd %o && rm polymake/polymake_solution_%o_%o_0 && (echo '/
 assert rc eq 0;
 again := Sort(eval Read(out));
 again_err := Read(Sprintf("%o/again.err", tmp));
-// and the bypass: no fallback, so no file and a nonzero exit (Normaliz is pointed at nothing)
-rc := System(Sprintf("cd %o && rm polymake/polymake_solution_%o_%o_0 && NMZ_NO_SHIFT=1 NORMALIZ_BIN=/nonexistent python3 %o/nmzsolve.py %o %o 0 polymake/polymake_solution_%o_%o_0 2> bypass.err",
-                     tmp, M, nhi, here, M, nhi, M, nhi));
-bypass_rc := rc; bypass_exists := FileExists(out);
+// and the bypass: no products are built, so either Normaliz enumerates the rung (where a normaliz
+// binary is on the path, as in CI) or there is no file; in neither case is a derived file written
+_ := System(Sprintf("cd %o && rm polymake/polymake_solution_%o_%o_0 && NMZ_NO_SHIFT=1 NORMALIZ_BIN=/nonexistent python3 %o/nmzsolve.py %o %o 0 polymake/polymake_solution_%o_%o_0 2> bypass.err",
+                    tmp, M, nhi, here, M, nhi, M, nhi));
+bypass_err := Read(Sprintf("%o/bypass.err", tmp));
+bypass_derived := FileExists(out) and Pipe(Sprintf("head -1 %o", out), "")[1..10] eq "// derived";
 _ := System(Sprintf("rm -rf %o", tmp));
 
-procedure test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, capped, capped_err, again, again_err, bypass_rc, bypass_exists)
+procedure test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, capped, capped_err, again, again_err, bypass_err, bypass_derived)
     printf "Testing the shift fallback, (380, 92, 0) x shifts -> (380, 158, 0)...";
     ds := Divisors(M);
     assert first[1..10] eq "// derived";                         // marked as a spanning set
@@ -81,7 +83,7 @@ procedure test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, c
     // the derived file at the rung 120 is not the base
     assert "base rung 92" in again_err and Set(again) eq expected;
     // the bypass runs no fallback
-    assert bypass_rc ne 0 and not bypass_exists;
+    assert not ("tshift fallback" in bypass_err) and not bypass_derived;
     // rank of the q-expansions at infinity over GF(p): prod_d eta(d tau)^{r_d} = q^{(sum d r_d)/24} prod (1 - q^{dn})^{r_d};
     // a weight-1/2 form holomorphic away from infinity with a pole of order at most nhi there has
     // at most index/24 + nhi zeros at infinity, so this many coefficients determine it
@@ -107,4 +109,4 @@ procedure test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, c
     printf "Done! (%o products of %o points, rank %o = %o; %o kept under the size limit)\n", #shifted, #full, rk_shift, rk_full, #capped;
 end procedure;
 
-test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, capped, capped_err, again, again_err, bypass_rc, bypass_exists);
+test_TShiftProducts(M, nlo, nhi, full, shifted, first, base, shifts, capped, capped_err, again, again_err, bypass_err, bypass_derived);
