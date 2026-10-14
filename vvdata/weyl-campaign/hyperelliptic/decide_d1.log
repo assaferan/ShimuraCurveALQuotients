@@ -1,0 +1,22 @@
+X_0(84)/<w_[ 12, 21, 28 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(96)/<w_[ 32 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(96)/<w_[ 96 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(114)/<w_[ 2, 19, 38 ]>: genus 3 (fixed space dimension 3), 1 quadrics: HYPERELLIPTIC
+X_0(120)/<w_[ 3, 5, 15 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(130)/<w_[ 2, 13, 26 ]>: genus 3 (fixed space dimension 3), 1 quadrics: HYPERELLIPTIC
+X_0(130)/<w_[ 5, 26, 130 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(156)/<w_[ 12, 39, 52 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(165)/<w_[ 5, 11, 55 ]>: genus 4 (fixed space dimension 4), 1 quadrics: not hyperelliptic
+X_0(180)/<w_[ 5, 36, 180 ]>: genus 5 (fixed space dimension 5), 3 quadrics: not hyperelliptic
+X_0(180)/<w_[ 20, 36, 45 ]>: genus 5 (fixed space dimension 5), 3 quadrics: not hyperelliptic
+X_0(195)/<w_[ 5, 39, 195 ]>: genus 3 (fixed space dimension 3), 1 quadrics: HYPERELLIPTIC
+X_0(210)/<w_[ 3, 10, 14, 30, 35, 42, 105 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(210)/<w_[ 2, 5, 7, 10, 14, 35, 70 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(210)/<w_[ 5, 6, 7, 30, 35, 42, 210 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(240)/<w_[ 3, 5, 15, 16, 48, 80, 240 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(294)/<w_[ 2, 3, 6, 49, 98, 147, 294 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(330)/<w_[ 6, 10, 11, 15, 66, 110, 165 ]>: genus 4 (fixed space dimension 4), 1 quadrics: not hyperelliptic
+X_0(510)/<w_[ 2, 3, 5, 6, 10, 15, 17, 30, 34, 51, 85, 102, 170, 255, 510 ]>: genus 3 (fixed space dimension 3), 0 quadrics: not hyperelliptic
+X_0(570)/<w_[ 2, 3, 5, 6, 10, 15, 19, 30, 38, 57, 95, 114, 190, 285, 570 ]>: genus 4 (fixed space dimension 4), 1 quadrics: not hyperelliptic
+X_0(630)/<w_[ 2, 5, 7, 9, 10, 14, 18, 35, 45, 63, 70, 90, 126, 315, 630 ]>: genus 5 (fixed space dimension 5), 3 quadrics: not hyperelliptic
+X_0(714)/<w_[ 2, 3, 6, 7, 14, 17, 21, 34, 42, 51, 102, 119, 238, 357, 714 ]>: genus 5 (fixed space dimension 5), 3 quadrics: not hyperelliptic
