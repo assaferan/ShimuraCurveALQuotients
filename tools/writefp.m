@@ -130,7 +130,7 @@ for X in curves do
     fn := Sprintf("%o/models_%o_%o.append", OUT, X`D, X`N);
     if not IsDefined(written, key) then
         written[key] := 0;
-        Write(fn, Sprintf("// Built 2026-10-03 as fibre products over the star line of committed double covers\n// (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2}.\n// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.") : Overwrite := true);
+        Write(fn, Sprintf("// Fibre-product entries (FibreProductCovers.m): built over the star line from the double covers of this file\n// by tools/writefp.m, with the coordinate check of the three covers above each pair of factors; each checked\n// against the trace formula at up to three primes, F_p and F_{p^2}.\n// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.") : Overwrite := true);
     end if;
     Write(fn, line);
     written[key] +:= 1; nbuilt +:= 1;
