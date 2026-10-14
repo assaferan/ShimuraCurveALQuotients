@@ -35,5 +35,7 @@
 34  UpdateCurves7                                  18379  219    12332   5828   0     
 35  FilterByTwistedWeilPolynomial                  18379  208    12343   5828   11    
 36  UpdateCurvesAfterTwistedWeilPolynomial         18379  208    12343   5828   0     
-37  FilterByNonALInvolutions                       18379  173    12359   5847   16    
-38  UpdateCurves8                                  18379  173    12359   5847   0     
+37  FilterByCanonicalQuadrics                      18379  173    12370   5836   27    
+38  UpdateCurvesAfterCanonicalQuadrics             18379  173    12370   5836   0     
+39  FilterByNonALInvolutions                       18379  144    12385   5850   15    
+40  UpdateCurves8                                  18379  144    12385   5850   0     
