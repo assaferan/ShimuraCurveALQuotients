@@ -41,110 +41,111 @@ PHASE A — STAR CURVES ONLY (X* = X_0(D,N)/W*) : 2342 curves
  3  UpdateByGenusStar                               1319      0    1023    0   (g<=2 => proved +1023)
  4  FilterByTraceStar                                504    815    1023    815  (#X*(F_p) <= 2p+2)
  -  HHProposition1                                   504    815    1023    0    (check only: reproduces HH Table 2)
- 5  FilterByDualGraphStar                            162   1157    1023    342  (dual graph of the fibre at p | D)
- 6  FilterByTwistedTraceStar                         160   1159    1023    2    (twists by V2, V3)
- 7  SpecialFiberIsomorphismStar                      156   1163    1023    4    (mod-p reduction of X*, certified source)
- 8  FilterByGeneralizedComplicatedFixedPointsStar    152   1167    1023    4    (generalized Prop-6, mixed groups)
- 9  FilterByWeilPolynomialStar                       113   1206    1023    39   (admissible Weil polys on X*)
-10  FilterByTwistedWeilPolynomialStar                110   1209    1023    3    (Weil polys of the twists)
-11  FilterStarCurvesByFpAutomorphisms                110   1209    1023    0    (redundant cross-check; 0 missed)
-12  FilterByNonALInvolutionsStar                      72   1232    1038    23   (non-AL involution; proved +15)
+ 5  FilterByDualGraphStar                             79   1240    1023    425  (dual graph of the fibre at p | D)
+ 6  FilterByTwistedTraceStar                          77   1242    1023    2    (twists by V2, V3)
+ 7  SpecialFiberIsomorphismStar                       73   1246    1023    4    (mod-p reduction of X*, certified source)
+ 8  FilterByGeneralizedComplicatedFixedPointsStar     70   1249    1023    3    (generalized Prop-6, mixed groups)
+ 9  FilterByWeilPolynomialStar                        46   1273    1023    24   (admissible Weil polys on X*)
+10  FilterByTwistedWeilPolynomialStar                 45   1274    1023    1    (Weil polys of the twists)
+11  FilterStarCurvesByFpAutomorphisms                 45   1274    1023    0    (redundant cross-check; 0 missed)
+12  FilterByNonALInvolutionsStar                      27   1277    1038    3    (non-AL involution; proved +15)
 
 End of Phase A: of 2342 star curves -> 1038 proved sub-hyperelliptic,
-                1232 ruled out, 72 still open.
+                1277 ruled out, 27 still open.
 Ruling out a star curve prunes its entire cover-tree after expansion (UpwardClosure).
 
 
 EXPANSION  (clean breakdown — one Magma call, three logical operations)
 ----------------------------------------------------------------------
 Step 13 (GetQuotientsAndGenera + UpdateByGenus) is a single call that does three
-distinct things. Counts below are exact (total is always 18379; ruled stays 1232
+distinct things. Counts below are exact (total is always 18379; ruled stays 1277
 throughout because no new per-curve filter runs yet).
 
 13a  GENERATE.  Each (D,N) is expanded into all its 2^k AL quotients
      X_0(D,N)/W, giving 18379 curves.  The 2342 star curves are themselves in
      this list and carry their Phase-A verdicts; every newly-created non-star
      quotient starts open.
-        open 16109 | ruled 1232 | proved 1038     (proved/ruled = inherited stars)
+        open 16064 | ruled 1277 | proved 1038     (proved/ruled = inherited stars)
 
 13b  CLASSIFY BY GENUS (Sec. genus).  Any quotient of genus <= 2 is automatically
      sub-hyperelliptic (P^1 / elliptic / genus-2 hyperelliptic).  4148 curves are
      genus <= 2; 1023 were already proved (the genus-<=2 stars), so this proves
      +3125 more.
-        open 12984 | ruled 1232 | proved 4163      (+3125 proved)
+        open 12939 | ruled 1277 | proved 4163      (+3125 proved)
 
 13c  AL-AS-HYPERELLIPTIC (Sec. ALashyp).  A genus->=3 quotient that double-covers
      an elliptic/hyperelliptic maximal quotient X* via an Atkin-Lehner involution
      is itself hyperelliptic.  This proves +1648 genus->=3 curves.
-        open 11336 | ruled 1232 | proved 5811      (+1648 proved)
+        open 11291 | ruled 1277 | proved 5811      (+1648 proved)
 
- END OF STEP 13:  18379 total = 11336 open + 1232 ruled + 5811 proved
+ END OF STEP 13:  18379 total = 11291 open + 1277 ruled + 5811 proved
    proved 5811 = 4148 (genus <= 2, free) + 1663 genus >= 3, where
                  1663 = 1648 via AL double-cover + 15 star curves proved by a
                  modular non-AL involution (genus 3-5)
-   ruled  1232 = exactly the 1232 star curves eliminated in Phase A
+   ruled  1277 = exactly the 1277 star curves eliminated in Phase A
                  (no non-star quotient is ruled out yet)
-   open  11336 = the remainder, ALL genus >= 3
+   open  11291 = the remainder, ALL genus >= 3
 
 
 PHASE B — ALL AL QUOTIENTS : 18379 curves
 -----------------------------------------
  #  Step                                        open   ruled  proved  newly-ruled
-14  UpdateCurves1                              10731    1836    5812   604  (propagate verdicts; +1 proved)
+14  UpdateCurves1                              10573    1994    5812   717  (propagate verdicts; +1 proved)
        Pushes EXISTING verdicts through the cover lattice -- no new per-curve
        computation. Two mechanisms: (i) closure (Def. closure / UpwardClosure):
        a curve forced non-sub-hyperelliptic by its position relative to a ruled
        curve; (ii) cross-level isomorphisms (Sec. isomorphism: SpecialFiber-
        Isomorphism + UpdateIsoStatus) copy a verdict to an isomorphic curve at
        another level.
-15  FilterBySpecialFiber                        9999    2568    5812   732  (special fibre at p || N)
-16  FilterByALFixedPointsOnQuotient             1824   10743    5812   8175 (AL fixed pts via class nos.)
-17  UpdateCurves2                               1738   10829    5812   86   (propagate)
-18  Genus3CoversGenus2                          1722   10829    5828   0    (g3->g2 cover; proved +16)
-19  UpdateCurves3                               1722   10829    5828   0    (propagate)
-20  FilterByDegeneracyMorphism                  1704   10847    5828   18   (degeneracy maps)
-21  UpdateCurves4                               1675   10876    5828   29   (propagate)
-22  FilterByComplicatedALFixedPointsOnQuotient  1359   11192    5828   316  (Prop-6 fixed-point filter)
-23  FilterByGeneralizedComplicatedFixedPoints   1359   11192    5828   0    (generalized Prop-6; star curves done in step 8)
-24  UpdateCurves5                               1351   11200    5828   8    (propagate)
-25  FilterByAutomorphismGroup                   1288   11263    5828   63   (automorphism groups)
-26  UpdateCurvesAfterAutomorphismGroup          1285   11266    5828   3    (propagate)
-27  FilterByTrace                                838   11713    5828   447  (point-count / trace bound)
-28  UpdateCurves6                                816   11735    5828   22   (propagate)
-29  FilterByDualGraph                            259   12292    5828   557  (dual graph of the fibre at p | D)
-30  UpdateCurvesAfterDualGraph                   255   12296    5828   4    (propagate)
-31  FilterByTwistedTrace                         232   12319    5828   23   (twisted point counts)
-32  UpdateCurvesAfterTwistedTrace                229   12322    5828   3    (propagate)
-33  FilterByWeilPolynomial                       219   12332    5828   10   (admissible Weil polys, 2^36 budget)
-34  UpdateCurves7                                219   12332    5828   0    (propagate)
-35  FilterByTwistedWeilPolynomial                208   12343    5828   11   (Weil polys of the twists)
-36  UpdateCurvesAfterTwistedWeilPolynomial       208   12343    5828   0    (propagate)
-37  FilterByNonALInvolutions                     173   12359    5847   16   (non-AL involution; proved +19)
-38  UpdateCurves8                                173   12359    5847   0    (propagate)
+15  FilterBySpecialFiber                        9841    2726    5812   732  (special fibre at p || N)
+16  FilterByALFixedPointsOnQuotient             1743   10824    5812   8098 (AL fixed pts via class nos.)
+17  UpdateCurves2                               1664   10903    5812   79   (propagate)
+18  Genus3CoversGenus2                          1648   10903    5828   0    (g3->g2 cover; proved +16)
+19  UpdateCurves3                               1648   10903    5828   0    (propagate)
+20  FilterByDegeneracyMorphism                  1638   10913    5828   10   (degeneracy maps)
+21  UpdateCurves4                               1624   10927    5828   14   (propagate)
+22  FilterByComplicatedALFixedPointsOnQuotient  1317   11234    5828   307  (Prop-6 fixed-point filter)
+23  FilterByGeneralizedComplicatedFixedPoints   1317   11234    5828   0    (generalized Prop-6; star curves done in step 8)
+24  UpdateCurves5                               1309   11242    5828   8    (propagate)
+25  FilterByAutomorphismGroup                   1248   11303    5828   61   (automorphism groups)
+26  UpdateCurvesAfterAutomorphismGroup          1245   11306    5828   3    (propagate)
+27  FilterByTrace                                803   11748    5828   442  (point-count / trace bound)
+28  UpdateCurves6                                781   11770    5828   22   (propagate)
+29  FilterByDualGraph                            123   12428    5828   658  (dual graph of the fibre at p | D; N need not be squarefree)
+30  UpdateCurvesAfterDualGraph                   123   12428    5828   0    (propagate)
+31  FilterByTwistedTrace                         118   12433    5828   5    (twisted point counts)
+32  UpdateCurvesAfterTwistedTrace                118   12433    5828   0    (propagate)
+33  FilterByWeilPolynomial                       111   12440    5828   7    (admissible Weil polys, 2^36 budget)
+34  UpdateCurves7                                111   12440    5828   0    (propagate)
+35  FilterByTwistedWeilPolynomial                110   12441    5828   1    (Weil polys of the twists)
+36  UpdateCurvesAfterTwistedWeilPolynomial       110   12441    5828   0    (propagate)
+37  FilterByCanonicalQuadrics                     75   12468    5836   27   (Noether's count of canonical quadrics; proved +8)
+38  UpdateCurvesAfterCanonicalQuadrics            75   12468    5836   0    (propagate)
+39  FilterByNonALInvolutions                      61   12468    5850   0    (non-AL involution; proved +14)
+40  UpdateCurves8                                 61   12468    5850   0    (propagate)
 
-END OF PIPELINE: 18379 total = 173 open + 12359 ruled + 5847 proved.
-The census below reports this pipeline result. The paper tables and figures
-(pipeline_tables.tex, pipeline_figures.tex) also resolve the 22 open D=1 curves
-by their canonical models (data/curves_after_D1Oracle.dat): 19 not
-sub-hyperelliptic and 3 hyperelliptic, leaving 151 open, 12378 ruled and 5850
-proved.
+END OF PIPELINE: 18379 total = 61 open + 12468 ruled + 5850 proved.
+No open curve has D = 1: the canonical-quadrics stage (step 37) decides every
+remaining D = 1 quotient from the W-fixed weight-2 cusp forms, so the paper tables
+and figures (pipeline_tables.tex, pipeline_figures.tex) no longer need the
+separate D = 1 canonical-model verdicts (data/curves_after_D1Oracle.dat).
 
 The single most powerful filter is FilterByALFixedPointsOnQuotient (step 16),
-which alone rules out 8175 curves.  The trace, the dual graph at p | D, and the
+which alone rules out 8098 curves.  The trace, the dual graph at p | D, and the
 complicated fixed-point filters clean up most of the remainder.
 
 NOTE on special-fibre isomorphisms: a verdict is copied from X_0(D,N)/W' to
 X_0(D,Np)/W only if the source is certified non-hyperelliptic at the same prime
-p. Six verdicts of the 2026-09-26 run lose their certificate and are open here:
-547 X_0(114)/<w2,w38>, 624 X_0(130)/<w2,w26> and 889 X_0(195)/<w5,w195> (all
-three hyperelliptic by the D=1 canonical models, so the old verdict was wrong),
-629 X_0(130)/<w5,w26> (not hyperelliptic by the D=1 models, so the old verdict
-was right but is now unproven), and 7989 and 7991 at (22,63), which have no
-independent check.
+p. The three D = 1 quotients whose 2026-09-26 verdict was wrong (547 X_0(114)/
+<w2,w38>, 624 X_0(130)/<w2,w26>, 889 X_0(195)/<w5,w195>, all hyperelliptic) are
+now proved hyperelliptic by the canonical quadrics.
 
-NOTE on the dual graph: 899 curves are ruled out by the dual graph of the special
-fibre at a prime p | D (342 star, 557 in Phase B), 157 of them at p = 2 only
-(odd primes are tried first).
+NOTE on the dual graph: 1083 curves are ruled out by the dual graph of the special
+fibre at a prime p | D (425 star, 658 in Phase B), 184 of them at p = 2 only
+(odd primes are tried first). Since this run the stage also covers levels N that
+are not squarefree (the Atkin-Lehner ideal at a prime power is built from the
+reflection of the lattice chain), which accounts for most of the increase from
+899 in the 2026-09-30 run.
 
 NOTE on attribution: the per-step "newly-ruled" deltas above count when a curve's
 OPEN status first changed in the pipeline ordering. The attribution census below
@@ -152,12 +153,12 @@ counts curves by the TEST whose proof is recorded on the curve (TestInWhichProve
 Every filter that records a verdict guards with "if assigned IsSubhyp then continue"
 (don't overwrite), so TestInWhichProved holds the FIRST test that determined each
 curve -- the census and the stage-table deltas agree where a tag corresponds to a
-single step (e.g. FilterByALFixedPointsOnQuotient: 8175 newly-ruled = 8175
-recorded; FilterByComplicatedALFixedPointsOnQuotient: 316 = 316; DualGraph: 342 +
-557 = 899). The two views still differ where a tag aggregates work across phases
-or via lattice propagation rather than a single step: the "Trace" tag (1262)
+single step (e.g. FilterByALFixedPointsOnQuotient: 8098 newly-ruled = 8098
+recorded; FilterByComplicatedALFixedPointsOnQuotient: 307 = 307; DualGraph: 425 +
+658 = 1083). The two views still differ where a tag aggregates work across phases
+or via lattice propagation rather than a single step: the "Trace" tag (1257)
 collects both the Phase-A FilterByTraceStar (815) and the Phase-B FilterByTrace
-(447) rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags are
+(442) rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags are
 assigned in UpdateByGenus/UpdateCurves and then propagated through the cover
 lattice. Treat the stage table as the makespan ("when first determined") view and
 the census as the first-writer "which test determined it" view.
