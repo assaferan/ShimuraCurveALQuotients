@@ -692,14 +692,15 @@ coordinate check of PR #105, it filled 232 keys in sixteen files:
     55_2    5 (5-11)           69_2    7 (4-6)       95_2    4 (9-10)     111_2   4 (9-10)
 
 Each was accepted on the genus formula and the trace formula over F_p and F_{p^2} at the first three
-good primes, with the coordinate check conclusive (the generators share a coordinate) at every one;
+good primes, with the coordinate check passed at every one (the generators consistent with one
+coordinate, up to a quadratic twist shared by two of them);
 then, independently of the writer, every entry was re-read from its stored strings and compared with
-the trace formula at the 4th and 5th good primes: 564 of 564 counts agree. The writer refused seven
+the trace formula over F_p and F_{p^2} at the 4th and 5th good primes (primes between 13 and 29): all 928 counts of the 232 entries agree. The writer refused seven
 keys, all at bases whose double covers are in more than one coordinate (`34_3` [1,34]; `38_7`
 [1,133]; `82_3` [1,2], [1,82], [1,123]; `93_2` [1,62], [1,93]). It also built entries at `21_2`,
-`34_7`, `58_5`, `87_2`, `93_2` and `22_15`, which are not here: the first four files are regenerated in
-one coordinate on branch renormalise-mixed-bases (PR #110), where the stage builds the same covers
-in-run, `87_2` keeps a cover in the rebase coordinate, and `22_15` is being regenerated. The level-1
+`34_7`, `58_5`, `93_2`, `87_2` and `22_15`, which are not here: `21_2`, `34_7`, `58_5` and `93_2` are
+regenerated in one coordinate on branch renormalise-mixed-bases (PR #110), where the stage builds the
+same covers in-run, `87_2` keeps a cover in the rebase coordinate, and `22_15` is being regenerated. The level-1
 bases `210_1`, `330_1`, `390_1`, `510_1` and `462_1` were not reached: their remaining keys are top
 curves of genus well above 11 (or, at `462_1`, have no stored double covers), and the function-field
 work for one of them ran for hours; they stay empty. As at every base with N > 1, these entries rest
