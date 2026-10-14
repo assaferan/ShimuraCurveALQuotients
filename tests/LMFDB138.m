@@ -40,7 +40,7 @@
 // of degree 1 (and of degree 1 and 2) of the function field, so they are counts on the smooth
 // curve.  A prime at which the genus drops is bad reduction of the model and is skipped.
 //
-// WHAT MAKES IT FAIL (negative controls run 2026-10-13).  With the Atkin-Lehner sign at 2 and 3
+// WHAT MAKES IT FAIL.  With the Atkin-Lehner sign at 2 and 3
 // left unflipped, the very first curve already has the wrong dimension (1 against 2), so the
 // Jacquet-Langlands sign is what the agreement below is evidence for.  Replacing every stored
 // hyperelliptic f by -f gives 27 disagreements in the point counts.

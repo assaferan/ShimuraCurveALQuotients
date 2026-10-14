@@ -193,8 +193,8 @@ procedure test_fibre_product_6_23(poly, stored)
     // and against the two equations the pipeline stored for this cover: the rebuilt curve has the
     // three quadratic subfields given by fs6[1], fs6[2] and their product, and each stored
     // equation must be one of them (two different ones, so the two compositums agree)
-    // (control, 2026-10-13: scaling a stored equation by 4 still matches, as it must -- it is the
-    // same extension -- while scaling it by 2 or by -1 matches nothing)
+    // (scaling a stored equation by 4 still matches, as it must, since it is the same extension,
+    // while scaling it by 2 or by -1 matches nothing)
     assert #stored eq 2;
     subf := [fs6[1], fs6[2], fs6[1]*fs6[2]];
     matched := [];

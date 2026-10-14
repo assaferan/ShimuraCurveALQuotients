@@ -5,7 +5,7 @@
 // Each is a genus-3 quotient all of whose three index-2 Atkin-Lehner quotients have genus 1, so it
 // is the fibre product over the star line of any two of them, and the model files store those
 // elliptic quotients as y^2 + h y = f.  The verdict "not hyperelliptic" recorded for these three
-// in data/models/PROVENANCE.md and HANDOFF.md (2026-10-03) is why they are stored as fibre
+// in data/models/PROVENANCE.md is why they are stored as fibre
 // products and have no equation y^2 = f(x); nothing in the suite checked it.
 //
 // For each of the three this test rebuilds the curve from the stored elliptic quotients
@@ -18,9 +18,9 @@
 // conic for its canonical image.  A prime at which the tower cannot be built or the genus drops is
 // bad reduction of the model and is replaced by the next, searching the first 40.
 //
-// The hyperellipticity check is not vacuous: run on X_0^6(23)/w_2, the genus-3 hyperelliptic
-// curve stored in the same file, the same two calls return "hyperelliptic" and a canonical image
-// of degree 2 in P^2, a conic (control, 2026-10-13).
+// The same two calls, run on X_0^6(23)/w_2, the genus-3 hyperelliptic curve stored in the same
+// file, return "hyperelliptic" and a canonical image of degree 2 in P^2, a conic; so the check
+// tells the two cases apart.
 
 printf "Checking the three quotients recorded as not hyperelliptic...\n";
 

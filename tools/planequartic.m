@@ -12,8 +12,8 @@
 //     magma -b D:=34 N:=3 W:=2 tools/planequartic.m           (X_0^34(3)/w_2)
 //     magma -b D:=46 N:=3 W:=3 tools/planequartic.m           (X_0^46(3)/w_3)
 //
-// The three curves named first are the ones recorded as non-hyperelliptic in data/models/PROVENANCE.md
-// and HANDOFF.md (2026-10-03); this is the computation behind that record, and tests/PlaneQuartics.m
+// The three curves named first are the ones recorded as non-hyperelliptic in data/models/PROVENANCE.md;
+// this is the computation behind that record, and tests/PlaneQuartics.m
 // is the test that keeps it true.
 AttachSpec("ShimuraQuotients.spec");
 SetColumns(0);
