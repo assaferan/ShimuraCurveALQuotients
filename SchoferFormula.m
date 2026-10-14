@@ -1597,14 +1597,20 @@ by that order (DegreeOfFieldOfDefinitionOfCMPoint is 0 exactly then).}
     assert GCD(D_R * N_star_R, Discriminant(R)) eq 1;
     assert GCD(D_R*N_R, Discriminant(R)) eq GCD(N,f);
 
-    rec := ArtinMap(H_R);
-
     // also number of points is 2^PrimeDivisors(D_R*N_R) * ClassNumber(R)
 
     // Theorem 5.8 - Shimura reciprocity
-    
+
     // setting up number fields
     H_R_NF := NumberField(H_R);
+    // When h(R) = 1 the ring class field is K and every Artin symbol is the identity.  Magma's
+    // ArtinMap caches its result on the number field, here K itself, shared with other
+    // discriminants, so a map of an earlier modulus would be reused.
+    if #PicardGroup(R) eq 1 then
+        rec := func<I | hom<H_R_NF -> H_R_NF | H_R_NF.1>>;
+    else
+        rec := ArtinMap(H_R);
+    end if;
     abs_H_R := AbsoluteField(H_R_NF);
     _, H_R_to_abs := IsIsomorphic(H_R_NF, abs_H_R);
 
@@ -1798,11 +1804,16 @@ intrinsic FieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Fld
     B := QuaternionAlgebra(D);
     PicR, mPicR := PicardGroup(R);
     A2, PicR_to_A2 := PicR / (2*PicR);
-    am := ArtinMap(Aext);
+    // When A_abs = K every Artin symbol is the identity.  Magma's ArtinMap caches its result on
+    // the number field, and that field is then K itself, shared with other discriminants, so a
+    // map of an earlier modulus would be reused and reject a prime dividing it.
+    trivial := #alSub eq #G;
+    idA := hom<Aabs -> Aabs | Aabs.1>;
+    if not trivial then am := ArtinMap(Aext); end if;
 
     // Extra Atkin-Lehner twist sigma_{w0} on A_abs from the reflection m*w0 in W.
     frakb_w0 := &*[Parent(1*OK) | pa[1]^(pa[2] div 2) : pa in Factorization(w0*OK)];
-    tw := (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
+    tw := trivial select idA else (NFA_to_abs^-1)*am(frakb_w0)*NFA_to_abs;
 
     // The class [a] of Lemma 5.10 comes from the Eichler order (CMConjugationIdeal).  [GR]'s
     // condition B ~ (d, m N(a)) is kept as a check: it is necessary, and for a maximal order
@@ -1811,16 +1822,7 @@ intrinsic FieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Fld
     fraka := (alift eq PicR!0) select 1*R else mPicR(alift);
     require IsIsomorphic(QuaternionAlgebra(Rationals(), d, m*Norm(fraka)), B) :
         "Error in field of definition - the conjugation class from the order fails the quaternion-algebra condition";
-    // The Artin map is defined on ideals coprime to the modulus of A_abs, which divides the
-    // conductor of R, and the representative Magma returns for a class of Pic(R) need not be:
-    // scaling it by an element of K^* keeps its class in Pic(R) and clears the valuations at the
-    // primes of the conductor.
-    frakaK := OK !! fraka;
-    mod_ps := [pa[1] : pa in Factorization(Index(OK, R) * OK)];
-    if exists{p : p in mod_ps | Valuation(frakaK, p) ne 0} then
-        frakaK := WeakApproximation(mod_ps, [-Valuation(frakaK, p) : p in mod_ps]) * frakaK;
-    end if;
-    sigma_as := [* (NFA_to_abs^-1)*am(frakaK)*NFA_to_abs *];
+    sigma_as := [* trivial select idA else (NFA_to_abs^-1)*am(OK !! fraka)*NFA_to_abs *];
 
     // Q(P) = fixed field of the reflection c . sigma_a . sigma_{w0}
     sigma := hom<Aabs -> Aabs | tw(cc(sigma_as[1](Aabs.1)))>;
