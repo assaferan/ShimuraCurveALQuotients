@@ -706,9 +706,10 @@ coordinate check conclusive. `87_1`, `159_1` and `206_1` were rerun too and came
 curves (3 of 3 isomorphic each), still with their three double covers in different coordinates:
 there the mixing happens inside one run, in the rebase stage, which stores its own coordinate, and
 since each of these top curves is hyperelliptic and stored, nothing is lost; their files are not
-touched. `22_15` and `87_2` were still running when this was written (`87_2` needs the exact m = 0
-multiplier of PR #79, since the numerical one on `main` stops in its class-constancy check at
-d = -15).
+touched. `87_2`, rerun with the exact m = 0 multiplier of PR #79 (the numerical one on `main` stops in its
+class-constancy check at d = -15), also came back unchanged (9 of 9 isomorphic) with one of its
+seven double covers still in the rebase coordinate, so its four empty keys stay empty and the file
+is not touched. `22_15` was still running when this was written.
 
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
