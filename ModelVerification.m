@@ -23,12 +23,39 @@
 //   nchk, nfail := VerifyModelSet(models, 22, 7);
 // ============================================================================
 
+// L(T) of a genus-g curve from its point counts N_1, ..., N_g: L = exp(sum_v (N_v - 1 - p^v) T^v / v)
+// through T^g, and a_{2g-i} = p^(g-i) a_i.
+function lpoly_from_counts(counts, p, g)
+    PS<T> := PowerSeriesRing(Rationals(), g + 1);
+    Lser := Exp(&+[PS | (counts[v] - 1 - p^v) * T^v / v : v in [1..g]]);
+    a := [Coefficient(Lser, i) : i in [0..g]];
+    return PolynomialRing(Rationals()) ! ([a[i+1] : i in [0..g]] cat [p^(i-g) * a[2*g-i+1] : i in [g+1..2*g]]);
+end function;
+
+// the point counts N_1, ..., N_v a polynomial L predicts: Z(T) = L(T)/((1-T)(1-pT))
+function counts_from_lpoly(L, p, v)
+    PS<T> := PowerSeriesRing(Rationals(), v + 1);
+    logZ := Log(PS ! L) - Log(1 - T) - Log(1 - p*T);
+    return [Integers() | Coefficient(logZ, i) * i : i in [1..v]];
+end function;
+
 function model_lpoly(C, p)
-    // numerator of the zeta function of C/F_p; false if p is bad for this model
+    // L-polynomial of C/F_p; false if p is bad for this model.  Magma's ZetaFunction is checked
+    // against the point counts over F_p and F_{p^2} and, if it disagrees, replaced by the polynomial
+    // built from the counts over F_{p^v}, v <= g: on Magma 2.29-7 (macOS) ZetaFunction returns a
+    // wrong x^2 coefficient for the genus-2 quotient of X_0(69,2) by {1,2,3,6} at p = 11, while the
+    // counts (and 2.29-10) do not.
     try
         Cp := ChangeRing(C, GF(p));
         if not IsNonsingular(Cp) then return false, _; end if;
-        return true, Numerator(ZetaFunction(Cp));
+        g := Genus(Cp);
+        L := Numerator(ZetaFunction(Cp));
+        n12 := [#Points(ChangeRing(C, GF(p^v))) : v in [1..Minimum(2, g)]];
+        if counts_from_lpoly(L, p, #n12) ne n12 then
+            counts := [#Points(ChangeRing(C, GF(p^v))) : v in [1..g]];
+            L := lpoly_from_counts(counts, p, g);
+        end if;
+        return true, L;
     catch e
         return false, _;
     end try;
@@ -158,15 +185,9 @@ intrinsic VerifyModelSet(models::Assoc, D::RngIntElt, N::RngIntElt : NPrimes := 
                 b, Lmodel := model_lpoly(C, p);
                 if not b then continue; end if;
                 counts := [ComputePointsViaTrace(X, p, v) : v in [1..g]];
-                // L(T) = exp(sum_v (N_v - 1 - p^v) T^v / v) through T^g, then a_{2g-i} = p^(g-i) a_i
-                PS<T> := PowerSeriesRing(Rationals(), g + 1);
-                logL := &+[PS | (counts[v] - 1 - p^v) * T^v / v : v in [1..g]];
-                Lser := Exp(logL);
-                a := [Coefficient(Lser, i) : i in [0..g]];
-                PQ := PolynomialRing(Rationals());
-                Ltrace := PQ ! ([a[i+1] : i in [0..g]] cat [p^(i-g) * a[2*g-i+1] : i in [g+1..2*g]]);
+                Ltrace := lpoly_from_counts(counts, p, g);
                 nchk +:= 1;
-                if Ltrace ne PQ!Lmodel then
+                if Ltrace ne Lmodel then
                     if Verbose then
                         printf "  [5] FAIL W=%o p=%o: trace formula gives L = %o, model gives %o\n",
                             Sort(SetToSequence(W)), p, Ltrace, Lmodel;
