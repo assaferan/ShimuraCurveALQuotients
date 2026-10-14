@@ -7,6 +7,7 @@ EisensteinLocalFactors.m
 VectorValuedForm.m
 EquationsCovers.m
 FibreProductCovers.m
+HyperellipticDetection.m
 Caching.m
 ClassNumberData.m
 Utils.m
