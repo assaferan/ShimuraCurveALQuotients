@@ -678,6 +678,37 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## Which stored fibre products are hyperelliptic (2026-10-14, branch hyperelliptic-crv)
+
+A curve stored as a list of equations has no model y^2 = f(x) only if it is not hyperelliptic, or
+is hyperelliptic over a conic without a rational point. Max Noether's count decides the first
+question from the function field alone: the pairwise products of a basis of holomorphic
+differentials satisfy (g-1)(g-2)/2 linear relations when the curve is hyperelliptic (its canonical
+image is a rational normal curve of degree g-1) and (g-2)(g-3)/2 otherwise
+(`HyperellipticDetection.m`; Magma's own `IsHyperelliptic` stops with an error on these models).
+Over the 299 entries of 2026-10-14: 60 are hyperelliptic, all of odd genus (3, 5 or 7), and in
+every case the hyperelliptic involution is an Atkin-Lehner one -- some product of a subset of the
+double covers has degree at most 2, so the curve is the double cover of the genus-0 quotient
+y^2 = c(t) by one of its own automorphisms; no new involution turned up. For 58 of them the conic
+c has no rational point (the 34 older pairs over a conic by construction, and 24 fibre products
+built because the hyperelliptic stage stops at a conic without a point), so no model y^2 = f(x)
+over Q exists. The two exceptions are at X_0(10,53): the covers by w_530 (genus 3) and w_53
+(genus 7) are double covers of the quotient by {1, 10, 53, 530}, y^2 = 5x^2 - 8x + 16, which has
+the rational point (4, -8); parametrising the conic gives
+
+    X_0(10,53)/w_530:  y^2 = 121 x^8 + 544 x^7 + 124 x^6 - 96 x^5 - 234 x^4 + 96 x^3 + 124 x^2 - 544 x + 121
+    X_0(10,53)/w_53:   y^2 = -163 x^16 - 1202 x^15 - 5731 x^14 - 20698 x^13 - 30018 x^12 - 34050 x^11 - 31821 x^10
+                             - 13274 x^9 - 40662 x^8 + 13274 x^7 - 31821 x^6 + 34050 x^5 - 30018 x^4 + 20698 x^3
+                             - 5731 x^2 + 1202 x - 163,
+
+each with the point counts of the trace formula over F_p and F_{p^2} at the eight primes 3 to 29
+other than 5 (`HyperellipticModelOverConic`; the models are isomorphic to the stored fibre
+products by construction, and the model checks pass, 157 of 157). Both replace the fibre products
+in `models_10_53.m`. Why the pipeline's own conic stage did not reach these two keys is not
+settled; the stored conic is the one it would have parametrised. `tests/HyperellipticCRV.m` runs
+the count over every stored entry (7 s) and fails if a hyperelliptic one has an involution outside
+the Atkin-Lehner group or a conic with a rational point.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and

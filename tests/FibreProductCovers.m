@@ -4,13 +4,21 @@
 //   * the genus-5 TOP curve, which has no model because it is not subhyperelliptic (no genus-0
 //     Atkin-Lehner quotient), comes out of three double covers and matches the Eichler-Selberg
 //     trace formula on the 6-new space at four primes over two degrees;
-//   * W={1,6}, which the pipeline DID build and stores as a pair, is reproduced by the same code
-//     and matches the trace formula at four primes (the construction reproduces the stored cover),
-//     while the same factors with one of them twisted by -1 give a curve of the same genus that the
-//     trace formula rejects (the stage refuses a compositum the point counts reject);
-//   * at X_0(21,2) the committed double covers come from runs with different Hauptmodul
-//     normalisations, and their fibre product has the right genus but the wrong point counts, so
-//     the stage must refuse it (the genus alone does not accept a compositum).
+//   * W={1,6}, which the pipeline DID build and stores as a pair of equations, is rebuilt by the
+//     same code; the compositum matches the trace formula at four primes AND is compared with the
+//     stored pair itself -- each stored equation y^2 = F(t) defines the same quadratic extension
+//     of Q(t) as one of the three the rebuilt curve contains, so the two curves have the same
+//     function field.  The same factors with one of them twisted by -1 give a curve of the same
+//     genus that the trace formula rejects (the stage refuses a compositum the point counts
+//     reject);
+//   * at X_0(21,2) the double covers come from runs with different Hauptmodul normalisations, and
+//     their fibre product has the right genus but the wrong point counts, so the stage must refuse
+//     it (the genus alone does not accept a compositum).  Those polynomials are written out in
+//     this file rather than read from the model file, so that the test keeps its meaning when that
+//     file is regenerated;
+//   * the triple check, which multiplies the three double covers above a common subgroup and asks
+//     whether the product is a square: all seven covers of X_0(6,23) fall in one class, one cover
+//     rescaled by 3 is caught, and six of the seven triples at X_0(21,2) fail.
 //
 // EXTERNAL SOURCE for the point counts: ComputePointsViaTrace, the codebase's own evaluation of
 // the Eichler-Selberg trace formula on the W-fixed part of the D-new space, independent of every
@@ -34,9 +42,41 @@ end function;
 
 models_6_23 := eval (Read("data/models/models_6_23.m") cat "\nreturn models;");
 models_14_19 := eval (Read("data/models/models_14_19.m") cat "\nreturn models;");
-models_21_2 := eval (Read("data/models/models_21_2.m") cat "\nreturn models;");
 poly_6_23 := hyperelliptic_polys(models_6_23);
-poly_21_2 := hyperelliptic_polys(models_21_2);
+
+// The double covers of X_0(21,2)*, copied from data/models/models_21_2.m at commit faa2af2 (the
+// first entry under each key) and written out here so that the test keeps its meaning if that file
+// is ever regenerated in a single run.  The file mixes two Hauptmodul normalisations: the three
+// covers above w_7 are in one coordinate, and the other four are each out of step with them, so of
+// the seven triples of index-2 covers only {[1,2,7,14], [1,3,7,21], [1,6,7,42]} has a square
+// product.  This is the mixed set the review of issue #99 reported and the one the stage refuses.
+poly_21_2 := AssociativeArray();
+poly_21_2[{Integers()|1,2}]          := P![ -4/9, -16/9, -23/9, -14/9, -7/9 ];
+poly_21_2[{Integers()|1,3}]          := P![ 189/1024, 0, -1611/1024, 0, -801/1024, 0, -81/1024 ];
+poly_21_2[{Integers()|1,6}]          := P![ 189/16, 0, 153/32, 0, -171/256, 0, -81/256 ];
+poly_21_2[{Integers()|1,7}]          := P![ -3, 0, -1 ];
+poly_21_2[{Integers()|1,14}]         := P![ 189/64, 0, 1053/128, 0, 5589/1024, 0, 189/1024 ];
+poly_21_2[{Integers()|1,21}]         := P![ -7/256, 0, 31/128, 0, 9/256 ];
+poly_21_2[{Integers()|1,42}]         := P![ -7/16, 0, -1/32, 0, 9/256 ];
+poly_21_2[{Integers()|1,2,3,6}]      := P![ -4/9, 32/9, -71/9, 28/9 ];
+poly_21_2[{Integers()|1,2,7,14}]     := P![ 0, 81/4, -81/4 ];
+poly_21_2[{Integers()|1,2,21,42}]    := P![ -7/16, 3/32, 81/256 ];
+poly_21_2[{Integers()|1,3,7,21}]     := P![ -3, 3 ];
+poly_21_2[{Integers()|1,3,14,42}]    := P![ 0, 7/4, -1/8, -9/64 ];
+poly_21_2[{Integers()|1,6,7,42}]     := P![ 0, -3 ];
+poly_21_2[{Integers()|1,6,14,21}]    := P![ 0, 7/64, 31/32, -9/64 ];
+
+// the two equations the pipeline stored for W={1,6}, as double covers y^2 = F(t) of the star line
+stored_6_23 := CRVDoubleCovers(models_6_23[[Integers()|1,6]][1][3]);
+
+// y^2 = a and y^2 = b are the same extension of Q(t) exactly when a*b is a square there: every
+// irreducible factor to an even power, and the constant left over a square in Q
+function same_quadratic_subfield(a, b)
+    if a eq 0 or b eq 0 then return false; end if;
+    fa, u := Factorization(a * b);
+    if exists{v : v in fa | IsOdd(v[2])} then return false; end if;
+    return IsSquare(u);
+end function;
 
 // every hyperelliptic committed model of one base over a single base label, pipeline-shaped
 function pipeline_shaped(poly, D, N, curves)
@@ -87,7 +127,7 @@ procedure test_h_term_completes_the_square()
     printf " ok (%o good primes)\n", checked;
 end procedure;
 
-procedure test_fibre_product_6_23(poly)
+procedure test_fibre_product_6_23(poly, stored)
     curves := GetHyperellipticCandidates();
 
     // the seven index-2 subgroups above W={1}, all with hyperelliptic models
@@ -150,6 +190,20 @@ procedure test_fibre_product_6_23(poly)
     end function;
     ok_pos, n_pos := counts_agree(fs6, X6, [5, 7, 11, 13]);
     assert ok_pos and n_pos eq 4;
+    // and against the two equations the pipeline stored for this cover: the rebuilt curve has the
+    // three quadratic subfields given by fs6[1], fs6[2] and their product, and each stored
+    // equation must be one of them (two different ones, so the two compositums agree)
+    // (control, 2026-10-13: scaling a stored equation by 4 still matches, as it must -- it is the
+    // same extension -- while scaling it by 2 or by -1 matches nothing)
+    assert #stored eq 2;
+    subf := [fs6[1], fs6[2], fs6[1]*fs6[2]];
+    matched := [];
+    for f in stored do
+        m := [j : j in [1..3] | same_quadratic_subfield(f, subf[j])];
+        assert #m eq 1;
+        Append(~matched, m[1]);
+    end for;
+    assert #Set(matched) eq 2;
     twisted := [-fs6[1], fs6[2]];
     assert Genus(FibreProductFunctionField(twisted)) eq 3;
     ok_neg, n_neg := counts_agree(twisted, X6, [5, 7, 11, 13]);
@@ -186,6 +240,79 @@ procedure test_fibre_product_6_23(poly)
     assert not IsDefined(all_eqns2, itop);
 end procedure;
 
+// The index-2 covers of one base, as the triple check wants them.
+function index_two_covers(poly, D, N)
+    DN := D * N;
+    full := {Integers()| d : d in Divisors(DN) | GCD(d, DN div d) eq 1};
+    covers := AssociativeArray();
+    for U in Keys(poly) do
+        if #U * 2 eq #full then covers[U] := poly[U]; end if;
+    end for;
+    return covers, full;
+end function;
+
+procedure test_triple_check_6_23(poly)
+    // The seven double covers of X_0(6,23)* come from one pipeline run, so every triple of them
+    // multiplies to a rational constant times a square and the check puts all seven in one class.
+    printf "  the triple check on the seven double covers of X_0^6(23)...";
+    covers := index_two_covers(poly, 6, 23);
+    assert #Keys(covers) eq 7;
+    failing, classes := AtkinLehnerTripleCheck(covers, 6, 23);
+    assert #failing eq 0;
+    assert #classes eq 1 and #classes[1] eq 7;
+    printf " ok (no failing triple)\n";
+
+    // Twisting one cover by 3 keeps its genus and its degree, and leaves the other six agreeing
+    // with one another; the three triples through the twisted cover must fail.
+    printf "  one cover of X_0^6(23) rescaled by 3 is detected...";
+    R := Representative(Keys(covers));
+    tw := AssociativeArray();
+    for U in Keys(covers) do tw[U] := (U eq R select 3 else 1) * covers[U]; end for;
+    failing, classes := AtkinLehnerTripleCheck(tw, 6, 23);
+    assert #failing eq 3;
+    assert #classes eq 2;
+    assert exists{c : c in classes | c eq {R}} and exists{c : c in classes | #c eq 6};
+    // a failing triple through the twisted cover: the other two share a class, so the twisted one
+    // is the odd one and must not be multiplied with either
+    tri := failing[1];
+    mem := [tri[1], tri[2], tri[3]];
+    assert R in mem;
+    others := [U : U in mem | U ne R];
+    assert DefinitelyDisagreeingFactors([R, others[1]], failing, classes);
+    assert DefinitelyDisagreeingFactors([R, others[2]], failing, classes);
+    // and the two untwisted members of the same triple are not accused of disagreeing
+    assert not DefinitelyDisagreeingFactors(others, failing, classes);
+    printf " ok\n";
+end procedure;
+
+procedure test_triple_check_mixed_coordinates_21_2(poly)
+    printf "  the triple check on the mixed double covers of X_0^21(2)...";
+    covers, full := index_two_covers(poly, 21, 2);
+    assert #Keys(covers) eq 7;
+    failing, classes := AtkinLehnerTripleCheck(covers, 21, 2);
+    // one triple of the seven passes: the three covers above w_7
+    assert #failing eq 6;
+    w7 := {U : U in Keys(covers) | 7 in U};
+    assert #w7 eq 3;
+    assert exists{c : c in classes | c eq w7};
+    assert #classes eq 5 and #[c : c in classes | #c eq 1] eq 4;
+
+    // the three covers above W = {1, 14}, from any two of which the stage would build the cover,
+    // are one of the failing triples, so they are not all in one coordinate
+    ups := AtkinLehnerDoubleCoversOver({Integers()|1,14}, 21, 2);
+    assert #ups eq 3;
+    assert exists{tri : tri in failing | {tri[1], tri[2], tri[3]} eq ups};
+    ok, gens := FibreProductGenerators({Integers()|1,14}, ups, 21, 2);
+    assert ok and #gens eq 2;
+    assert "inconclusive" in TripleCheckVerdict(gens, failing, classes);
+    // The check does not say WHICH of the three is out of step: that would need the third cover to
+    // share a class with one of the other two, and at this base the only class with more than one
+    // member is the one above w_7, which no failing triple meets twice.  So the stage refuses this
+    // cover on its point counts, not on the triple check.
+    assert not DefinitelyDisagreeingFactors(gens, failing, classes);
+    printf " ok (6 of 7 triples fail)\n";
+end procedure;
+
 procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     curves := GetHyperellipticCandidates();
     all_eqns, labels := pipeline_shaped(poly, 21, 2, curves);
@@ -207,8 +334,10 @@ procedure test_fibre_product_refuses_mixed_coordinates_21_2(poly)
     assert not IsDefined(all_eqns, i14);
 end procedure;
 
-test_fibre_product_6_23(poly_6_23);
+test_fibre_product_6_23(poly_6_23, stored_6_23);
 test_fibre_product_refuses_mixed_coordinates_21_2(poly_21_2);
 
+test_triple_check_6_23(poly_6_23);
+test_triple_check_mixed_coordinates_21_2(poly_21_2);
 test_degenerate_factor_sets();
 test_h_term_completes_the_square();
