@@ -24,8 +24,9 @@ multiples of the odd part of DN), #95 (the good forms at 0 by forward substituti
 pool build), #71/#73 (the fibre-product stage and 203 + 36 models), and the model PRs #76, #78,
 #80, #89, #90, #92, #82 (levels 420, 924, 780, 1020, 660, the odd-D backlog, the 924 fibre
 products). #72, #83, #77, #94 closed unmerged because a PR above them in the stack carried their
-content or a replacement did (#73, #88, #96, #95). Still open: #66, #74, #79, #86 (the m = 0
-proof, waiting on Sachi's reading), #100 (three small points on #85 that arrived after its merge).
+content or a replacement did (#73, #88, #96, #95). Still open: #66, #74, #79 (the m = 0 proof,
+waiting on Sachi's reading); #86 (the CM-point search up to class number 16, a separate topic that
+builds on #66); #100 (three small points on #85 that arrived after its merge).
 
 **Odd D, N > 2, two defects.** The divisor constraints were indexed by the cusp-∞ discriminant list
 alone, which contains the cusp-0 list only for N ≤ 2 (#91, first commit). And the routine that
@@ -58,8 +59,11 @@ order does not finish the first rungs of 660, 780 and 1020 in 90 min where the e
 924/780/1020/660 run from `oddrun/tree` (branch `odd-run-tree` = exact-m0 + #63 + #91 + #95), logs
 `odd3/logs`; 33_14 is past its deep rung and in the Schofer stage, 33_7 in its 43197-wide third
 rung. First rungs of the next wall levels, (1092, 385, 0) and (1140, 403, 0), enumerating in
-`bank_next/`. The #63 verification rerun of 159_1 (`verify63`) is still in its third rung after a day;
-the byte-identical rebuild settled the question.
+`bank_next/`. The #63 verification rerun of 159_1 (`verify63`, the rebuild with the independent
+re-expansion at 0) stopped in its third rung on 2026-10-13 at 06:34 with no exit line and no process
+left, so it has to be restarted; the byte-identical rebuild of 159_1 was run WITHOUT that check, so
+the #63 question for 159_1 stays open until a run with the check finishes and its result is posted
+on #63.
 
 **Two traps met while merging** (memory `stacked-pr-base-deletion-closes-them`): deleting a merged
 PR's branch through the refs API closes the PRs stacked on it instead of retargeting them, and a
@@ -71,7 +75,7 @@ check now verifies the zeta function against two point counts and falls back to 
 **The evening: Sachi's two issues and the follow-up PRs.** #98 lists record-keeping follow-ups on
 the merged PRs; #99 says the fibre-product stage never checked that its factors share a coordinate
 on the star curve, and that nothing in the suite compares the `"CRV"` curves with anything. Six PRs
-answer them, none changing a stored curve except two cosmetic rebuilds: #102 (the model check builds
+answer them, none changing a stored curve except two cosmetic rebuilds: #102, merged 2026-10-14 (the model check builds
 the L-polynomial from point counts when `ZetaFunction` disagrees with them; full ModelChecks on the
 Mac 138 files, 28078 checks, 0 failures), #103 (the shift fallback multiplies only enumerated rungs,
 the search enumerates a rung whose derived set falls short instead of climbing, `polymake/README.md`
@@ -89,12 +93,10 @@ Atkin–Lehner sign at the primes of the discriminant is MINUS the newform's —
 curves match the four level-138 newforms at the eight primes below 32, without it nothing does;
 planequartic fixed and tested). ⚠ Two primes are a screen: a factor scaled by 2 passes at 5 and 7.
 
-**First odd-D base behind the wall: X_0^33(10)** (PR #107), 31 minutes on the combined tree; 50
-keys, 22 with an equation (genus 0 to 8), 28 empty; trace formula 126/126; the rungs (660, 401, 0)
-and (660, 69, 166) committed with it. The other fourteen are still running (`odd3/logs`).
-
-⚠ CI has been queued since 19:08Z: six runs on branches of already-merged PRs (each 102 jobs) hold
-the runners; cancelling them from the Actions tab frees main and the new PRs.
+**First odd-D bases behind the wall: X_0^33(10) and X_0^33(14)** (PR #107, which now carries
+both), 31 minutes on the combined tree for 33_10; 50 keys, 22 with an equation (genus 0 to 8), 28
+empty; trace formula 126/126; the rungs (660, 401, 0) and (660, 69, 166) committed with it. The
+other thirteen: see `odd3/logs`.
 
 ## Handoff — 2026-10-11 — LEVEL 924: THE THREE EVEN-D BASES BUILT, THE ODD-D ONES BEHIND A SECOND WALL
 
