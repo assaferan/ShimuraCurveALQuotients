@@ -11,6 +11,78 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-14/15 — OPEN CASES 173 → 34; VOIGHT–WILLIS VALIDATED BUT OUT OF REACH; ONE CRITERION REFUTED
+
+**The count.** The full pipeline was rerun from the first stage on lovelace with the canonical-quadrics
+stage and the dual graph at non-squarefree levels, and leaves **61 open** (PR #117, data only; 5850
+proved subhyperelliptic, 12468 not). Three further arguments cut that to **34**, none of them yet in
+the data: the metric refinement of the dual graph rules out 22 (#116), a non-hyperelliptic
+special-fibre component at a prime exactly dividing N rules out 3, and the composite-level models of
+X_0^6(35) decide its two quotients, conditionally on the m = 0 term of #74. Landing any of them needs
+a rerun from the dual-graph stage.
+
+**The metric refinement (#116, on #114).** The stable fibre at p | D is the minimised quotient graph
+with edge lengths the stabiliser orders, lengths adding when valence-2 vertices are merged. The
+hyperelliptic involution of a metric graph is unique, hence an isometry commuting with the residual
+Atkin–Lehner action, so the search may be restricted to those. ⚠ Two earlier "strengthenings" were
+NOT sound and were dropped: vertex weights, and unit lengths summed along chains (subdivision
+counts). Both read the UNMINIMISED graph, which assumes the involution lifts to the Bruhat–Tits
+tree. Soundness was checked by sweeping all 1315 known-hyperelliptic applicable quotients with
+DN ≤ 1500: none is ruled out.
+
+**Data files were silently damaged by line wrapping (#118).** Magma's default 80-column width makes
+`Sprint` split long strings, so verdict labels in `data/curves_after_*.dat` contained literal "\n"
+and were not what was written — 84 labels in the 2026-09-30 data, found by Sachi reviewing #111.
+The four writers now set the width to 0. Any script that prints records for later `eval` must do the
+same.
+
+**Voight–Willis: the implementation works, the reach does not.** Banked at
+`vvdata/weyl-campaign/voight-willis/` on the campaign branch, deliberately NOT under the
+hyperelliptic triage, since it is a general model-production route comparable with Guo–Yang. It
+reproduces Elkies' published Hauptmodul coordinates at X_0^6(1)* and X_0^10(1)*: one Möbius map
+carries his values onto the computed ones at **14 of 14** and **12 of 12** CM points, with 11 and 9
+independent predictions and residuals 5.4e-13 and 4.1e-16. The Atkin–Lehner layer is built and gives
+15 of 15 correct dimensions at both D = 6 and D = 10.
+⚠ **Three traps, each of which cost a day.** Magma's `SingularValueDecomposition(M)` on an m × n
+matrix returns (m × n, m × m, n × n) and the singular values are the diagonal of the **first**
+return; reading the second (an orthogonal matrix) produced an entirely spurious "the method does not
+work". The disc must be recentred — Magma's `UnitDisc` defaults to a centre unrelated to the group.
+And the columns must be equilibrated.
+⚠ **The binding constraint is the domain radius, not D·N and not the volume.** Everything with radius
+≤ 0.693 resolves and nothing above it has. X_0^330(1) has volume 13 and a 9-second fundamental
+domain but radius 0.985, so the bases behind the Borcherds divisor wall are NOT reachable after all.
+Getting past this needs expansions patched across several points, which is beyond the published
+method. A complex-analytic route also cannot see the quadratic twist.
+
+**⇒ REFUTED, do not retry: the elliptic-point fixed-point criterion.** The proposal was to label each
+elliptic point of X by (stabiliser order, field of definition), note that a rational involution fixes
+a point of every odd-size class and hence its whole Galois orbit, and conclude that a sum of degrees
+above 2g + 2 proves X not hyperelliptic. It is WRONG. The negative control fired on about twenty
+curves of genus 2, which are hyperelliptic by definition; X_0^6(157)* gives 8 against a bound of 6.
+The flaw is exactly the obstacle Rotger records (Compositio 132 (2002), the remark on V_291/W): the
+elliptic points are NOT intrinsic to the curve. The map from the upper half plane is the universal
+cover only when the group is torsion free, so an automorphism need not normalise it and CAN move the
+elliptic points. Two verdicts it produced were withdrawn; the branch was never pushed.
+
+**Gross–Kohnen–Zagier, measured and not recommended.** The Heegner-point condition on an elliptic
+quotient is strong — at D = 1, where every verdict is known, it refutes 19 of 25 non-hyperelliptic
+curves with no false refutation. But GKZ gives only the trace of a whole Heegner divisor, and only 4
+of those 19 group into full divisors, so the vector-valued machinery would realise about a sixth of
+the criterion's power.
+
+**The bielliptic shortcut reaches two curves and neither is buildable.** A genus-3 curve with two
+elliptic Atkin–Lehner quotients is their fibre product, needing only the genus-1 covers. Of the 34
+only X_0^1326(1) and X_0^210(13) qualify, at polytope levels 2652 and 5460 with 24 and 48 divisors;
+every 24-divisor level ever solved (660, 780, 924, 1020) was a multi-day effort and 2652 gives no
+usable rung. **Corollary: all six level-1 open bases are behind that same barrier.**
+
+**Smaller things worth keeping.** `DegreeOfFieldOfDefinitionOfCMPoint` is some 200× cheaper than
+building the field and avoids the Artin-map bug entirely, so prefer it wherever only the degree is
+needed. A census of model coverage must merge `data/models` across ALL branches first (147 files);
+a single worktree reports no model for any open base. And the intermittent CI failure in the CM-field
+tests is the cached Artin map diagnosed by Sachi on #109 — it is the cause of the failures on both
+the rerun-data and campaign branches, and clears when #109 merges.
+
 ## Handoff — 2026-10-13 — NINETEEN PRs MERGED; TWO ODD-D DEFECTS FIXED; THE 172 GB STEP REPLACED
 
 **Merged into `main` today** (Sachi's review on each, then Eran's go-ahead): #63 (good forms at 0
