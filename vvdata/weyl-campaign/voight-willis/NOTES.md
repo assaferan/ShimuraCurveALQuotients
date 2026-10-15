@@ -1,3 +1,33 @@
+# Working log
+
+## 2026-10-15 (later): building equations, and what the cost really is
+
+Four defects and one lever, in the order they were found.
+
+1. **Three element searches used a coordinate box.**  The reduced norm form is indefinite, so a
+   cube in basis coordinates is the wrong shape and misses elements silently.  Replaced by short
+   vectors of a positive definite majorant.  37 cases at thirteen bases now find the full set
+   where the box found it in a minority.  Committed separately.
+2. **The Atkin-Lehner sampling and the CM point location still used `ShimuraReduceUnit` with a
+   minimal generating set**, the defect already fixed for the Gamma sampling.  Now both descend
+   over the side pairing; nothing is dropped at D = 6 or D = 10 where 20 to 30 percent used to be.
+3. **The cost model in the README was an estimate, not a measurement, and it is 700 times too
+   fast.**  Timed: a real 640 x 320 decomposition is 60 seconds and the cost goes as n^2.8, almost
+   independent of working precision.  Everything in the reach table is wrong by that factor.
+4. **Capping a row budget with a break keeps a contiguous arc of the sampling circle**, and a
+   short arc is exponentially ill-conditioned.  This produced exactly the signature the earlier
+   broken reduction did -- a smooth ramp far below the truncation floor -- and cost two runs
+   before it was recognised.  Rows are now taken with a stride.
+
+The lever: **expand on the normaliser's domain, not on Gamma's.**  The forms wanted are
+Atkin-Lehner invariant, so they live on a group whose domain is 1/#W* of the area, and the term
+count follows that smaller radius.  Measured gains run from 1.3 at D = 6 to 765 at X_0^21(5).
+Together with (3) this is the difference between the open bases being unaffordable and being
+about an hour each.
+
+`model.m` and `finish.m` build the equation; see the README for the construction and for what was
+validated.
+
 # Voight-Willis at discriminant 6 — WORKS.  2026-10-15
 
 Supersedes the earlier no-go in ../vw/NOTES.md **on the method**.  Every number in that file was

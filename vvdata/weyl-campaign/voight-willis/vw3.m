@@ -11,6 +11,30 @@ function DiscMatrix(mrep, q, p, CC)
 end function;
 function DiscJ(W, w) return W[2][1]*w + W[2][2]; end function;
 
+// A positive definite MAJORANT of the reduced norm, used wherever elements of an order (or of an
+// ideal in it) of a prescribed reduced norm have to be enumerated.  The reduced norm form itself
+// is indefinite of signature (2,2), so its level sets are hyperboloids and a cube in the
+// coordinates of a basis is the wrong shape: it cuts them along directions unrelated to the
+// lattice, and misses elements.  With iota the real matrix representation used throughout here,
+// F(x) = Tr(iota(x) iota(x)^t) is positive definite, and for a real 2x2 matrix F >= 2|det|, so
+// every element of reduced norm m has F(x) >= 2m and each class modulo the unit group has a
+// shortest representative.  Enumerating F(x) <= C*m and raising C therefore terminates.
+//
+// The Gram matrix is real, so it is scaled by SCL and rounded; that can only change which
+// candidates are OFFERED, never which are accepted, because every acceptance test downstream
+// (reduced norm, membership in the order) is exact arithmetic.
+SCL := 10^10;
+function FrobeniusGram(bas, mrep, A)
+    Ms := [ [ x : x in Eltseq(mrep(A ! b)) ] : b in bas ];
+    n := #bas;
+    GM := ZeroMatrix(Integers(), n, n);
+    for i in [1..n] do for j in [i..n] do
+        g := Round(SCL * (&+[ Ms[i][r]*Ms[j][r] : r in [1..4] ]));
+        GM[i][j] := g; GM[j][i] := g;
+    end for; end for;
+    return GM;
+end function;
+
 // real 2m x 2n form of a complex matrix: same singular values, each twice
 function RealForm(Mx)
     CC := BaseRing(Mx); RR := RealField(Precision(CC));
@@ -43,16 +67,67 @@ function SmallestVec(Mx)
     return v, Abs(Sig[r][r]);
 end function;
 
+// The side pairing of the fundamental domain, as SU(1,1) matrices with their inverses.  This is
+// the set a reduction must descend over, and it is NOT Generators(G): that is a minimal generating
+// set, three elements where the domain has fourteen sides at D = 15.  Magma records the side
+// pairing in ShimFDGens, for the domain it most recently computed, so the domain for THIS disc is
+// recomputed first.  Side pairings have reduced norm 1, so DiscMatrix divides by 1 and the matrix
+// product below carries no square-root sign ambiguity.
+function SidePairingMatrices(G, DD, mrep, p, CC)
+    _ := FundamentalDomain(G, DD);
+    try
+        qs := [ Algebra(Parent(g)) ! g : g in G`ShimFDGens ];
+    catch e
+        qs := [ Quaternion(g) : g in Generators(G) ];
+    end try;
+    Ws := [];
+    for q in qs do
+        M := DiscMatrix(mrep, q, CC ! p, CC);
+        Append(~Ws, M); Append(~Ws, M^(-1));
+    end for;
+    return Ws;
+end function;
+
+// Magma's fundamental domain here is the Dirichlet domain centred at the disc centre, so a point
+// lies in it exactly when no side pairing decreases its modulus, and applying the pairing that
+// decreases it most terminates inside.  Returns the accumulated Mobius matrix and the reduced
+// point.
+function ReduceByPairing(Ws, w, CC : maxit := 200)
+    cur := w; bw := w;
+    Acc := IdentityMatrix(CC, 2); bM := Acc;
+    eps := (RealField(Precision(CC)) ! 10)^(-Precision(CC) div 3);
+    for it in [1..maxit] do
+        best := Abs(cur); moved := false;
+        for M in Ws do
+            jj := DiscJ(M, cur);
+            if Abs(jj) le eps then continue; end if;
+            nw := (M[1][1]*cur + M[1][2]) / jj;
+            if Abs(nw) lt best - eps then best := Abs(nw); bM := M; bw := nw; moved := true; end if;
+        end for;
+        if not moved then break; end if;
+        Acc := bM * Acc; cur := bw;
+    end for;
+    return Acc, cur;
+end function;
+
+// Sample a circle of radius rad and keep the points that carry a relation.  A point inside the
+// domain reduces to itself and carries none, which is why such points are dropped; but
+// ShimuraReduceUnit, given only Generators(G), returns the identity on points it FAILS to reduce
+// as well, and those were being dropped with them.  At D = 15 that left 15% of a circle of radius
+// rho, and 25% of a circle lying entirely outside the domain where the true figure must be 100%.
+// The survivors cluster on short arcs, and fitting a degree-90 polynomial on a short arc is
+// ill-conditioned however many points it has: that, not the size of the domain, is what made the
+// larger bases fail.
 function ReducedSamples(G, O, DD, mrep, p, rad, Q, CC)
-    out := []; gens := Generators(G);
-    pi := Pi(RealField(Precision(CC)));
+    Ws := SidePairingMatrices(G, DD, mrep, p, CC);
+    RR := RealField(Precision(CC));
+    pi := Pi(RR);
+    eps := (RR ! 10)^(-Precision(CC) div 3);
+    out := [];
     for m in [1..Q] do
         wc := CC ! (rad * Exp(2*pi*CC.1*m/Q));
-        red := ShimuraReduceUnit(G ! (O ! 1), gens, DD : z0 := DD ! wc);
-        delta := red[1];
-        if IsScalar(Quaternion(delta)) then continue; end if;
-        W := DiscMatrix(mrep, Quaternion(delta), CC ! p, CC);
-        wp := (W[1][1]*wc + W[1][2]) / (W[2][1]*wc + W[2][2]);
+        W, wp := ReduceByPairing(Ws, wc, CC);
+        if Abs(wp - wc) le eps then continue; end if;
         Append(~out, <wc, wp, W>);
     end for;
     return out;

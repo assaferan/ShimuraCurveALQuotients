@@ -22,15 +22,38 @@ function ALNormalises(mu, O)
 end function;
 
 // mu in O with reduced norm exactly m (positive) normalising O, found in the two-sided ideal.
-function ALElement(O, m, B)
-    P := 1*O;
-    for p in PrimeDivisors(m) do P := P * PrimeIdeal(O, p); end for;
-    bas := Basis(P);
-    for c1 in [-B..B] do for c2 in [-B..B] do for c3 in [-B..B] do for c4 in [-B..B] do
-        mu := c1*bas[1] + c2*bas[2] + c3*bas[3] + c4*bas[4];
-        if mu eq 0 or Norm(mu) ne m then continue; end if;
-        if ALNormalises(mu, O) then return true, mu; end if;
-    end for; end for; end for; end for;
+//
+// The cube in the coordinates of a basis of that ideal is the wrong shape for the same reason as
+// in the Hecke coset search: the reduced norm form is indefinite, so its level set Nrd = m is a
+// hyperboloid and a cube cuts it along directions that have nothing to do with the lattice.  A box
+// of 3 finds nothing at all at D = 35 for m = 7.  Enumerating short vectors of the positive
+// definite majorant of vw3.m instead, and raising the bound until an element turns up, finds one
+// at every base tried; the second argument is kept so existing callers still work, and is used
+// only as a starting bound.
+// ⚠ A SCALAR IS NOT AN ATKIN-LEHNER ELEMENT, and at non-squarefree level the search can return
+// one.  For m a square, say m = 9 at level 9, the element 3 of the order has reduced norm 9 and
+// normalises the order, but it acts trivially on the upper half plane, so taking it as w_9 builds
+// a group SMALLER than the normaliser and the invariant space comes out too big -- at X_0^10(9)
+// the weight-4 space on the star had dimension 4 where the signature predicts 3, and the pencil
+// never resolved.  Reject anything with mu/d still in the order.  The search also runs over the
+// order itself rather than over a product of PrimeIdeal(O, p), which is the wrong ideal when a
+// prime divides the level more than once.
+function ALElement(O, m, B : cmax := 65536)
+    A := Algebra(O);
+    mrep := FuchsianMatrixRepresentation(A : Precision := 60);
+    bas := Basis(O);
+    L := LatticeWithGram(FrobeniusGram(bas, mrep, A));
+    ds := [ d : d in [2..Isqrt(m)] | m mod d^2 eq 0 ];
+    c := 8;
+    while c le cmax do
+        for v in ShortVectors(L, SCL*c*m) do
+            mu := &+[ (Integers() ! v[1][i]) * bas[i] : i in [1..4] ];
+            if Norm(mu) ne m then continue; end if;
+            if exists{ d : d in ds | (A ! mu)/d in O } then continue; end if;
+            if ALNormalises(mu, O) then return true, mu; end if;
+        end for;
+        c *:= 4;
+    end while;
     return false, _;
 end function;
 
@@ -60,15 +83,16 @@ function ActOn(W, w) return (W[1][1]*w + W[1][2]) / (W[2][1]*w + W[2][2]); end f
 // element delta of Gamma; the relation imposed is the one for the composite delta*mu, which lies in
 // the extended group.
 //
-// ⚠ ShimuraReduceUnit does not always succeed here.  Applying mu throws the point very close to the
-// boundary (modulus up to 0.997 at D = 6), and the reduction then returns a point still outside the
-// domain -- 20 to 30 percent of them, with modulus up to 0.91 against a domain radius of 0.54.  The
-// truncated series is meaningless there (0.91^50 is about 1 percent), and keeping those rows
-// destroys the linear system.  They are dropped.  On the rows that do reduce, the relation holds to
-// the same accuracy as the Gamma relation itself (3e-10 against 3e-11 at D = 6, weight 4), so the
-// relation is right and only the reduction is at fault.
+// The reduction back into the domain descends over the SIDE PAIRING, for the same reason as in
+// vw3.m: ShimuraReduceUnit given only Generators(G) returns the identity on the points it cannot
+// handle, and here it failed on 20 to 30 percent of the Atkin-Lehner images even at D = 6, leaving
+// them at modulus up to 0.91 against a domain radius of 0.54, where a truncated series is
+// worthless.  Applying mu throws a sample point very close to the boundary, so this is the harder
+// of the two reductions and the one where the defect showed first.  Rows whose target still sits
+// outside the sampling radius are dropped and counted, so a caller can see whether any were.
 function ALSamples(G, O, DD, mrep, p, rad, Q, CC, mus)
-    out := []; gens := Generators(G);
+    out := [];
+    Ws := SidePairingMatrices(G, DD, mrep, p, CC);
     pi := Pi(RealField(Precision(CC)));
     tol := rad + 1e-10;
     nbad := 0;
@@ -78,8 +102,7 @@ function ALSamples(G, O, DD, mrep, p, rad, Q, CC, mus)
             wc := CC ! (rad * Exp(2*pi*CC.1*m/Q));
             wmu := ActOn(Wmu, wc);
             if Abs(wmu) ge 1 then continue; end if;
-            red := ShimuraReduceUnit(G ! (O ! 1), gens, DD : z0 := DD ! wmu);
-            Wd := DiscMatrix(mrep, Quaternion(red[1]), CC ! p, CC);
+            Wd, _ := ReduceByPairing(Ws, wmu, CC);
             Wt := Wd * Wmu;
             wt := ActOn(Wt, wc);
             if Abs(wt) gt tol then nbad +:= 1; continue; end if;
@@ -87,6 +110,80 @@ function ALSamples(G, O, DD, mrep, p, rad, Q, CC, mus)
         end for;
     end for;
     return out, nbad;
+end function;
+
+// ---- expanding on the NORMALISER's domain instead of Gamma's ----
+//
+// The term count is NT = T ln10 / (-ln rho), with rho the circumradius of the domain the points
+// are reduced into, and the decomposition costs NT^3.  Every model here is of a quotient by an
+// Atkin-Lehner subgroup, so the forms wanted are invariant under the larger group generated by
+// Gamma and the Atkin-Lehner elements; its domain is 1/#W* of the area and has a visibly smaller
+// circumradius.  At X_0^35(1) rho falls from 0.879 to 0.774 and the term count from 357 to 180, a
+// factor of seven in the decomposition; the gain grows as rho approaches 1, which is exactly the
+// regime where the cost is otherwise prohibitive.
+//
+// Reducing over the larger group is a two-level descent: reduce by the side pairing of Gamma,
+// then try each Atkin-Lehner translate and reduce by Gamma again, keeping whichever decreases the
+// modulus most, and repeat.  The Atkin-Lehner steps are recorded as a Hall divisor, so each
+// sample comes with the coset of the larger group it landed in; that label is what lets ONE set
+// of samples serve the invariant space, the star space and the anti-invariant space at once,
+// since a relation for an element labelled m holds with a sign that depends only on m.
+function ReduceOverStar(Ws, Als, w, CC : maxit := 40)
+    eps := (RealField(Precision(CC)) ! 10)^(-Precision(CC) div 3);
+    Acc, cur := ReduceByPairing(Ws, w, CC);
+    lab := 1;
+    for it in [1..maxit] do
+        best := Abs(cur); bM := Acc; bw := cur; bl := lab; moved := false;
+        for am in Als do
+            m := am[1]; M := am[2];
+            den := M[2][1]*cur + M[2][2];
+            if Abs(den) le eps then continue; end if;
+            nw := (M[1][1]*cur + M[1][2])/den;
+            if Abs(nw) ge 1 then continue; end if;
+            A2, nw2 := ReduceByPairing(Ws, nw, CC);
+            if Abs(nw2) lt best - eps then
+                best := Abs(nw2); bM := A2*M*Acc; bw := nw2;
+                bl := (lab*m) div GCD(lab, m)^2; moved := true;
+            end if;
+        end for;
+        if not moved then break; end if;
+        Acc := bM; cur := bw; lab := bl;
+    end for;
+    return Acc, cur, lab;
+end function;
+
+// Samples on the circle of radius rad, reduced over the larger group, as <w, w', matrix, label>.
+// A point that reduces to itself carries no relation and is dropped.
+function StarSamples(Ws, Als, rad, Q, CC)
+    RR := RealField(Precision(CC));
+    eps := (RR ! 10)^(-Precision(CC) div 3);
+    out := [];
+    for m in [1..Q] do
+        wc := CC ! (rad * Exp(2*Pi(RR)*CC.1*m/Q));
+        Acc, wp, lab := ReduceOverStar(Ws, Als, wc, CC);
+        if Abs(wp - wc) le eps then continue; end if;
+        Append(~out, <wc, wp, Acc, lab>);
+    end for;
+    return out;
+end function;
+
+// The same, but each point is first moved by the Atkin-Lehner element mu of Hall divisor m and
+// then reduced; the relation obtained is the one for an element of the coset labelled m times
+// whatever the reduction used.  This is what supplies rows in the cosets the plain sampling
+// happens not to reach.
+function StarSamplesVia(Ws, Als, Wmu, m0, rad, Q, CC)
+    RR := RealField(Precision(CC));
+    out := [];
+    for i in [1..Q] do
+        wc := CC ! (rad * Exp(2*Pi(RR)*CC.1*i/Q));
+        den := Wmu[2][1]*wc + Wmu[2][2];
+        nw := (Wmu[1][1]*wc + Wmu[1][2])/den;
+        if Abs(nw) ge 1 then continue; end if;
+        Acc, wp, lab := ReduceOverStar(Ws, Als, nw, CC);
+        if Abs(wp) gt rad then continue; end if;
+        Append(~out, <wc, wp, Acc*Wmu, (lab*m0) div GCD(lab, m0)^2>);
+    end for;
+    return out;
 end function;
 
 // The signature of the quotient X = X_0^D(N)/W, from the repository's own elliptic-point counts:
@@ -183,4 +280,23 @@ function GapDimRel(sv, relcut)
         if sv[i] gt 0 and sv[i+1]/sv[i] gt best then best := sv[i+1]/sv[i]; bi := i; end if;
     end for;
     return bi, best, sv[bi], sv[bi+1];
+end function;
+
+// GapDimRel always names a dimension: it returns the index of the largest relative gap even when
+// the spectrum is a smooth continuum with no gap at all, which is what happens at D = 15.  This
+// one refuses to answer in that case, returning -1.  A dimension is reported only when the
+// gap is at least mingap and the first value above it is a real singular value rather than more
+// noise, taken as at least 1e-6 of the largest.  The kernel values are NOT required to sit at the
+// truncation floor: once the rows come from a reduction rather than from truncation alone they
+// float above it, by a factor of 37 at D = 15.  Voight-Willis call a gap of 4
+// unsatisfactory in their Example 1 and a gap above 1e19 convincing in their Example 4.
+function GapDimStrict(sv, floor, mingap)
+    if #sv lt 2 or sv[#sv] le 0 then return -1, 0.0; end if;
+    best := 0.0; bi := 0;
+    for i in [1..#sv-1] do
+        if sv[i] gt 0 and sv[i+1]/sv[i] gt best then best := sv[i+1]/sv[i]; bi := i; end if;
+    end for;
+    if bi eq 0 or best lt mingap then return -1, best; end if;
+    if sv[bi+1] lt 10^-6 * sv[#sv] then return -1, best; end if;
+    return bi, best;
 end function;

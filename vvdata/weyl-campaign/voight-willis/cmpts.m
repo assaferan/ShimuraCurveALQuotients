@@ -52,7 +52,12 @@ end function;
 // which a naive search for an element of given trace and norm does not guarantee.  It also finds
 // elements a box search misses: at D = 10 the generator of discriminant -40 has coefficients
 // outside a box of 6, and a brute-force search over that box returns nothing at all.
-function CMDiscPoint(O, d, DD, mrep, p, CC, G)
+// The reduction into the domain descends over the side pairing, not over Generators(G): the latter
+// is a minimal generating set and ShimuraReduceUnit silently returns the identity on the points it
+// cannot handle, which would leave a CM point outside the domain where the truncated series means
+// nothing.  Pass Ws (from SidePairingMatrices) to avoid rebuilding it at every discriminant.
+function CMDiscPoint(O, d, DD, mrep, p, CC, G : Ws := [])
+    if IsEmpty(Ws) then Ws := SidePairingMatrices(G, DD, mrep, p, CC); end if;
     R := QuadraticOrder(BinaryQuadraticForms(d));
     ok := true; mu := O ! 1;
     try mu := Embed(R, O); catch e ok := false; end try;
@@ -64,9 +69,8 @@ function CMDiscPoint(O, d, DD, mrep, p, CC, G)
     rad := Sqrt((e-a)^2 + 4*b*c);
     for rt in [ (-(e-a)+rad)/(2*c), (-(e-a)-rad)/(2*c) ] do
         if Abs(rt) lt 0.9999 then
-            red := ShimuraReduceUnit(G ! (O ! 1), Generators(G), DD : z0 := DD ! rt);
-            Wd := DiscMatrix(mrep, Quaternion(red[1]), CC ! p, CC);
-            return true, ActOn(Wd, rt), mu, <Trace(mu), Norm(mu)>;
+            _, wred := ReduceByPairing(Ws, rt, CC);
+            return true, wred, mu, <Trace(mu), Norm(mu)>;
         end if;
     end for;
     return false, _, _, _;

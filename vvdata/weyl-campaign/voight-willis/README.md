@@ -29,8 +29,13 @@ Atkin–Lehner subgroup of each base and weights 2, 4 and 6, the computed dimens
 predicted from the quotient's own signature: **15 of 15 at D = 6 and 15 of 15 at D = 10**, with
 gaps of 10^4 to 10^12. At weight 2 that prediction is the genus of the quotient, so this is also an
 independent analytic confirmation of `GenusShimuraCurveQuotient` and `NumberOfEllipticPointsByCMOrder`.
-D = 14 and D = 15 do **not** yet work; the reason is identified below and is not the one that
-blocked D = 10.
+
+**D = 15, 22 and 26 now work too** (2026-10-15), at weight 4 and the correct dimensions 2, 3 and 3,
+with gaps of 10^9 at a truncation target of 1e-12 and 10^17 at 1e-20. The cause of their failure
+was a defective reduction, not the size of the domain; see "What actually blocked the larger bases"
+below, which supersedes the retention argument in the section before it. Hecke relations
+(eq. 18) are now implemented and validated as well. What is left is not resolution but cost, and
+that is quantified at the end of this file.
 
 **Validated at X_0^6(1)** (signature (0; 2,2,3,3), domain radius 0.5435):
 
@@ -46,7 +51,8 @@ blocked D = 10.
 ## What has to happen next, in order
 
 1. ~~The Atkin–Lehner layer.~~ **Done and validated at D = 6 and D = 10**, see below.
-   D = 14 and D = 15 need the side-pairing sampling described below first.
+   ~~D = 14 and D = 15 need the side-pairing sampling described below first.~~ Done: D = 15, 22
+   and 26 resolve with the side-pairing reduction.
 2. **Agreement with the models we already have.** Still open, and it is the step that matters; see
    "What is still NOT done" below for why it is more than a thin wrapper and where to start.
 3. **Beyond the Borcherds reach.** The timings below say this is now worth attempting: the first
@@ -84,6 +90,12 @@ truncation floor rho^N while the smallest non-kernel singular value sits 1e4 or 
 reported one dimension too many at weight 2.
 
 ## What limits the reach: how OVER-DETERMINED the system is
+
+⇒ **Superseded in its conclusions by "What actually blocked the larger bases" below.**  The
+retention figures quoted here were measuring a broken reduction; with it fixed, retention is 100
+percent at every base and two rows per term suffice everywhere.  The section is kept because the
+rule it states -- size the sampling by the rows RETAINED, not by the points attempted -- is still
+right, and because it records what the numbers looked like before.
 
 Measured 2026-10-15, and it supersedes the earlier reading that D = 14 fails for the same reason as
 D = 15.  **D = 14 resolves.**  What it needed was more sample points, nothing else.
@@ -153,16 +165,16 @@ with the series: the condition numbers are 9.0e37 at D = 26 and 2.8e74 at D = 15
 D = 22.  That one measurement -- the smallest singular value against rho^NT -- tells the two apart,
 and it is what `walldiag.m` exists to report.
 
-**What does predict it is how much of the sampling circle lies OUTSIDE the fundamental domain**, as
-the retention of `ReducedSamples` measures: 63 percent at D = 22, 27 percent at D = 26, 14 percent at
-D = 15, in exactly the order of the table.  A point inside the domain reduces to itself and carries
-no relation, so when the domain covers most of the circle the relations come from a few short arcs,
-and recovering two hundred coefficients from short arcs is exponentially ill-conditioned however
-many samples are taken from them.  The remedy is to sample on a circle of radius LARGER than rho, so
-that every point lies outside the domain and reduces non-trivially; this is what the paper does in
-its Example 3, where rho = 0.718 and the contour is taken at R = 0.8.  `basediag.m` takes `RADF`
-above 100 for exactly this, and `vwcauchy.m` likewise keeps every point of the circle rather than
-discarding the ones that reduce trivially.
+**What correlates with it is how much of the sampling circle lies OUTSIDE the fundamental domain**,
+as the retention of `ReducedSamples` measures: 63 percent at D = 22, 27 percent at D = 26, 14
+percent at D = 15, in exactly the order of the table.  A point inside the domain reduces to itself
+and carries no relation, so when the domain covers most of the circle the relations come from a few
+short arcs, and recovering two hundred coefficients from short arcs is exponentially
+ill-conditioned however many samples are taken from them.
+
+⇒ **The mechanism is right and the numbers are an artefact.  See the next section**: those
+retention figures were measuring a broken reduction, not the geometry, and the remedy is not a
+larger sampling radius.
 
 **Remark 3.3 is NOT the explanation, contrary to a natural first guess.**  The paper recommends
 working with f_norm = f (Im z)^{k/2}, whose automorphy factor has absolute value 1, "if rho is
@@ -170,9 +182,114 @@ large".  Measured (`jfac.m`), |j|^k is bounded by 1 at every base and its spread
 only 1.5 at D = 6 rising to 11 at D = 22 -- nothing like the seven orders of magnitude that would
 be needed to explain the failures.
 
-## Two things the paper prescribes that are still not implemented
+## ⇒ What actually blocked the larger bases (2026-10-15): the reduction, in one line of `vw3.m`
 
-Both are in Section 3 and both bear directly on large rho.
+A circle of radius rho touches the fundamental domain only at its outermost vertices, so **the
+true retention at radius rho is essentially 100 percent at every base**, and on a circle outside
+the domain it is 100 percent exactly.  The 14 and 27 percent above were not geometry.  They were
+`ShimuraReduceUnit` failing.
+
+`ReducedSamples` called it with `Generators(G)`, which is a **minimal generating set** -- three
+elements where the domain at D = 15 has fourteen sides.  Given too few generators it returns the
+identity on points it cannot reduce, with no indication of failure, and `ReducedSamples` discarded
+those points on the correct-looking test that a trivial reduction carries no relation.  So the
+points that survived were the few the three generators happened to handle, and they cluster on
+short arcs.  The ill-conditioning the previous section describes was real; its cause was this.
+
+The fix is to descend over the **side pairing** of the domain, which Magma records in
+`G`ShimFDGens` (fourteen elements at D = 15, one per side), repeatedly applying the pairing that
+most decreases |w|.  The domain Magma returns here behaves as the Dirichlet domain centred at the disc centre, so a
+point should be reduced exactly when no side pairing decreases its modulus; that the descent does
+terminate inside was checked directly, on the Hecke images at D = 6, 15, 22 and 26, where the
+worst modulus after descent is below rho at all four and was 0.91 to 0.99 before.  `vw3.m` now
+does this; `ShimuraReduceUnit` is no longer used for sampling.
+
+Measured at weight 4, truncation target 1e-20, two rows per term, recentred disc:
+
+| base | volume | rho | retention before | retention after | condition before | condition after | dimension | gap |
+|---|---|---|---|---|---|---|---|---|
+| X_0^6(1) | 0.33 | 0.447 | 53% | **100%** | 1.3e21 | 1.5e18 | 1 of 1 | 6.9e17 |
+| X_0^10(1) | 0.67 | 0.648 | — | **100%** | — | 3.1e18 | 1 of 1 | 8.9e17 |
+| X_0^15(1) | 1.33 | 0.736 | 15% | **100%** | 2.9e53 | 4.5e18 | **2 of 2** | 2.3e17 |
+| X_0^22(1) | 1.67 | 0.839 | 63% | **100%** | — | 4.5e18 | 3 of 3 | 7.5e16 |
+| X_0^26(1) | 2.00 | 0.774 | 27% | **100%** | — | 3.2e18 | **3 of 3** | 1.6e17 |
+
+D = 15 is the clearest case: the condition number falls from 2.9e53 to 4.5e18 and the gap rises
+from 59 to 2.3e17.  The Elkies comparison is unchanged by the fix -- 14 of 14 CM values at D = 6
+weight 24 and 12 of 12 at D = 10 weight 12, exactly as before.
+
+**Consequences for the two knobs that were expected to matter.**
+
+* *More terms.*  Worth nothing on a base that is rank-deficient.  Before the fix, D = 15 at 91,
+  151 and 211 terms gave gaps of 22.6, 58.8 and 40.4 while the smallest singular value ran from 20
+  to 47 orders of magnitude BELOW the truncation floor.  After the fix the same base gives 5.5e9,
+  2.3e17 and 1.5e25: the gap grows by eight orders per step, which is what a sound system does.
+  So raising the term count is how one confirms a dimension, not how one rescues a base.
+* *Sampling outside the domain.*  Now buys nothing, because retention is already 100 percent at
+  radius rho, and it costs a great deal: the series is evaluated out to the sampling radius, so
+  the term count follows that rather than rho, and at D = 15 a contour at 1.25 rho needs 331 terms
+  where rho needs 91.  Useful only in the Cauchy formulation, where the contour has a different
+  job.
+
+**A reporting defect found along the way.**  `GapDimRel` returns the index of the largest relative
+gap and therefore always names a dimension, even on a spectrum that is a smooth continuum with no
+gap at all.  Every "wrong dimension" recorded for D = 15 and D = 26 was really "no resolution":
+the largest ratio in those spectra was about 50.  `GapDimStrict` refuses to answer unless the gap
+reaches a stated size and the first value above it is a real singular value rather than more
+noise.  Use it; the paper calls a gap of 4 unsatisfactory and a gap of 1e19 convincing.
+
+## Hecke relations (eq. 18): implemented and validated
+
+`vwhecke.m`, with `heckecal.m` to calibrate and `heckedim.m` to apply.
+
+The paper writes (18) with the upper half-plane automorphy factor, and everything else here works
+in the disc.  Writing w = (z-p)/(z-pbar), so that 1-w = (p-pbar)/(z-pbar), and J(g,w) for the
+factor of the SU(1,1) matrix, one has the identity
+
+    J(g,w) = j(g,z) (1-w)/(1-w')
+
+and the three half-plane factors in (18) collapse: the (1-w) weights cancel and
+
+    K_n^h = sum_i [ J(pi_i, 0) J(g_i, w_{p,i}) ]^-k (w'_{p,i})^n ,   sum_n K_n^h b_n = a_p b_0 .
+
+The same identity is why the rows in `vw3.m` are the bare `w'^n - J^k w^n` with no (1-w)^k weights:
+that is eq. (11) divided by -(1-w')^k.
+
+**The coset representatives need no group cohomology.**  The p+1 left ideals of reduced norm p are
+`O*x + O*p` for x in O of reduced norm p, and such an x generates its own ideal, so a box search
+over a basis of O with deduplication by ideal equality gives the cosets.  A box of 5 gives all p+1 at
+D = 6 and D = 15 for p up to 13, but only 8 of 14 at D = 22 for p = 13 and 2 of 6 at D = 26 for
+p = 5.  A cube in the coordinates of a basis is the wrong shape for a skew order, so this wants
+replacing by an enumeration of short vectors of the positive definite form given by the Frobenius
+norm of the matrix representation, whose determinant is the reduced norm.  Until then, check the
+count against p+1 and skip the prime if it is short -- `heckedim.m` does.
+
+**The normalisation, fixed by measurement and confirmed by derivation.**  With the coset matrices
+scaled to determinant 1, as `DiscMatrix` does, the operator of (17) has eigenvalue
+p^(1-k/2) a_p, where a_p is the classical one.  The check is at D = 6 weight 4, where the space is
+one-dimensional and so the computed expansion is itself an eigenform: the measured ratio comes out
+as a_p/p at p = 5, 7, 11 and 13, to the full 149 digits of the computation and with an imaginary
+part of the same size.  Four primes agreeing exactly is what distinguishes a normalisation from a
+fitted constant.
+
+**It does what the paper says it does.**  At D = 15 weight 4 the space is two-dimensional; adding
+one Hecke row per prime for p = 2 and 7, with the eigenvalues of each of the two newforms of
+S_4^{15-new}(Gamma_0(15)), splits the kernel into two one-dimensional ones with gaps of 6.4e9 and
+6.7e9.  **With a deliberately wrong eigenvalue the kernel disappears**, the smallest singular value
+rising by a factor of 1e9; that negative control is what shows the rows are constraining something.
+
+Two things worth knowing before relying on it:
+
+* The accuracy of a Hecke row is set by truncation at the WORST reduced Hecke image, which can sit
+  much further out than the samples do.  Before the reduction was fixed the images at D = 15 landed
+  at modulus 0.98 against rho = 0.736 and the rows were pure noise, changing nothing.
+* A Hecke relation cannot rescue a rank-deficient system.  Applied to the pre-fix D = 15 matrix it
+  moved the smallest singular value by a factor of 1.0.  It reduces the gap a base must achieve,
+  not the conditioning it must have.
+
+## One thing the paper prescribes that is still not implemented
+
+It is in Section 3 and bears directly on large rho.
 
 1. **The Cauchy-integral formulation** (eq. 13-14 with Simpson's rule at eq. 16).  The paper is
    explicit that it prefers this: relations are assembled "by taking appropriate linear
@@ -186,15 +303,9 @@ Both are in Section 3 and both bear directly on large rho.
    26 it returns large numbers of spurious near-zero singular values and does not yet match the
    paper's conditioning.  It is not debugged and should not be trusted as it stands.
 
-2. **Hecke relations** (eq. 18), and this is probably the more important of the two.  The paper's
-   whole framework is built around resolving a ONE-dimensional kernel: "Suppose first we are in the
-   case where the space of forms of interest is one-dimensional... one can also arrange for this as
-   in the previous section by adding linear relations coming from Hecke operators."  Its Example 4
-   reaches rho = 0.885611 with N = 600 on a genus-2 curve by adding Hecke relations for each
-   eigenform separately and finding, in each case, one singular value below 1e-20 against a next one
-   above 0.2.  A one-dimensional kernel only needs a gap after the first singular value, which is a
-   far weaker demand on conditioning than a gap after the third.  We compute no Hecke relations at
-   all, and the eigenvalues they need are already available in this repository.
+   ⇒ Its spurious near-zero singular values at D = 15, 22 and 26 were measured BEFORE the
+   reduction was fixed, and that fix is the likeliest cause; it has not been re-measured since.
+   Re-measure before treating it as broken.
 
 **For the record, the radii the paper itself reaches**: Example 2 (D = 6) rho = 0.447213, which
 matches our recentred value exactly; Example 3 rho = 0.71807 with N = 150, one singular value below
@@ -242,6 +353,186 @@ differ, in the direction that matters.
 
 Volumes of the other bases at those levels, for planning: X_0^10(33) 32, X_0^22(15) 40,
 X_0^6(77) 32, X_0^22(21) 53, X_0^10(51) 48, X_0^6(85) 36.
+
+## ⇒ How far this reaches, now that resolution is not the obstacle (2026-10-15)
+
+⇒ **THE COST CONSTANT IN THIS SECTION IS WRONG BY A FACTOR OF ABOUT SEVEN HUNDRED, and the table
+of timings and the verdict that follow from it are wrong with it.  See "What the decomposition
+actually costs" and "Expand on the normaliser's domain" below, both 2026-10-15 (later).**  The
+shape of the argument -- that the cost is set by rho alone, through NT = T ln10 / (-ln rho), and
+grows as NT^3 -- is right, and so is the observation that the working precision need not grow
+with NT.  Only the constant, and therefore every absolute time and every conclusion about what is
+affordable, is wrong.
+
+With the reduction fixed, nothing in the method fails at the bases tested.  What stops it is cost,
+and the cost is governed by **one number per base: the circumradius rho of the recentred domain**.
+
+Everything follows from it.  The term count is NT = T ln10 / (-ln rho) for a truncation target of
+1e-T.  The singular value decomposition is then the whole expense and it goes as NT^3, measured at
+3.1e-8 seconds per NT^3 at working precision 200 for a system of 2 NT rows -- consistent to within
+15 percent across D = 15, 22 and 26.  The working precision does **not** have to grow with NT,
+because the dynamic range of the matrix is rho^NT, which the target pins to 1e-T by construction.
+Memory for the real form of the matrix is 8 NT^2 complex entries, about 332 bytes each.
+
+Measured by `rhoprobe.m`, at a target of 1e-20:
+
+| base | volume | domain | sides | rho | NT | decomposition | memory |
+|---|---|---|---|---|---|---|---|
+| X_0^6(1) | 0.33 | 0.5 s | 6 | 0.4472 | 58 | < 1 s | 0.01 GB |
+| X_0^10(1) | 0.67 | 0.3 s | 6 | 0.6483 | 107 | < 1 s | 0.03 GB |
+| X_0^15(1) | 1.33 | 0.3 s | 14 | 0.7358 | 151 | < 1 s | 0.06 GB |
+| X_0^22(1) | 1.67 | 1.6 s | 10 | 0.8391 | 263 | 1 s | 0.17 GB |
+| X_0^26(1) | 2.00 | 1.8 s | 14 | 0.7742 | 180 | < 1 s | 0.08 GB |
+| X_0^35(1) | 4.00 | 5.4 s | 26 | 0.8788 | 357 | 1 s | 0.32 GB |
+| X_0^51(1) | 5.33 | 23 s | 38 | 0.9484 | 870 | 20 s | 1.9 GB |
+| X_0^58(1) | 4.67 | 14 s | 22 | 0.9692 | 1474 | 99 s | 5.4 GB |
+| X_0^330(1) | 13.3 | 29 s | 70 | 0.9852 | 3100 | 15 min | 24 GB |
+| X_0^6(35) | 16.0 | 267 s | 102 | 0.9883 | 3938 | 32 min | 38 GB |
+| X_0^462(1) | 20.0 | 886 s | 100 | 0.9943 | 8117 | 4.6 h | 163 GB |
+| X_0^510(1) | 21.3 | 236 s | 116 | **0.9977** | **19944** | **68 h** | **984 GB** |
+
+**Volume is only a rough proxy and rho must be measured per base**: X_0^58(1) has a smaller volume
+than X_0^51(1) and a larger rho, and X_0^510(1) needs two and a half times the terms of
+X_0^462(1) on six percent more volume.  The geometric lower bound rho >= sqrt(V/(V+2)), from the fact
+that a domain of hyperbolic area 2 pi V cannot fit inside |w| < r unless r^2/(1-r^2) >= V/2, is
+weak -- it gives 0.957 at X_0^510(1) where the truth is 0.9977, and the term count depends on the
+difference through 1/(-ln rho), a factor of 19 here.
+
+**So the answer for the 34 open quotients is no, and by a wide margin.**  Their bases have
+arithmetic volumes of 46 to 240.  At volume 21 the decomposition already needs about a terabyte,
+and the memory grows as NT^2 while rho is still climbing towards 1.  Lowering the target to 1e-12
+scales NT by 0.6 and the memory by 0.36, which does not change the verdict.
+
+Neither of the remaining levers touches this.  The Cauchy formulation makes the matrix square,
+(N+1) x (N+1) instead of 2N x N, which saves a factor of two in rows and nothing in the N^2
+memory.  Hecke relations reduce the gap a base has to achieve, not the number of coefficients it
+has to carry.  **The wall is NT ~ 1/(-ln rho), and it is structural**: a base whose domain nearly
+fills the disc needs that many coefficients to describe a form on it, whatever one does with them
+afterwards.  Reaching volume 46 and above needs a method whose cost is not a dense decomposition
+of a matrix of that size -- Nelson's Shimizu lift (below) evaluates one eigenform at a time and
+has no such matrix, which is the shape worth weighing.
+
+What this does open, since it was not reachable before: everything up to about volume 16 is now
+routine on one machine, which includes **X_0^330(1)** at 15 minutes and 24 GB and **X_0^6(35)** at
+32 minutes and 38 GB, both behind the Borcherds divisor wall.  Volume 20 and 21 are a large
+server, and the domain itself starts to dominate there -- 886 seconds at X_0^462(1).
+
+## ⇒ What the decomposition actually costs (2026-10-15, later)
+
+The constant above was never measured; it was an estimate written into `rhoprobe.m`, and the
+"measured" claim beside it is an error.  Timed directly, Magma's `SingularValueDecomposition` on a
+real m x n matrix with m = 2n takes
+
+| n | 80 | 160 | 320 |
+|---|---|---|---|
+| precision 40 | 1.4 s | 8.4 s | 56 s |
+| precision 70 | 1.5 s | 9.2 s | 60 s |
+| precision 120 | 1.9 s | 11.2 s | 71 s |
+
+so the cost grows as n^2.8 and is **almost independent of the working precision** -- going from 40
+to 120 digits costs a third more, not three times more.  The system here has NT complex columns
+and about 2 NT complex rows, whose real form is 4 NT x 2 NT, so n = 2 NT, and the timing agrees
+with a run of `heckedim.m` at D = 15: NT = 151, 302 rows, **79 seconds**.  The rule is therefore
+
+    one decomposition  ~  79 s x (NT/151)^2.8
+
+against the 0.11 s the old constant predicts there.  **Everything in the reach table above is
+about seven hundred times too fast**: X_0^330(1) at NT = 3100 is not 15 minutes but something over
+a hundred hours, and a quotient of the cheapest of the open bases would have been nineteen hours
+rather than a minute.  Precision is not a lever, and neither is the normal-equations form of the
+decomposition (forming M^t M and decomposing that is 38 s against 60 s at n = 320, a factor of
+1.6).  The lever is the next section.
+
+## ⇒ Expand on the NORMALISER's domain, not on Gamma's (2026-10-15, later)
+
+Every model this project stores is of a quotient by an Atkin-Lehner subgroup, so the forms wanted
+are invariant under the group generated by Gamma and the Atkin-Lehner elements.  That group's
+Dirichlet domain is 1/#W* of the area and has a smaller circumradius, and since NT goes as
+1/(-ln rho) with rho close to 1, a modest reduction in rho is a large reduction in NT and a cubic
+one in the cost.  Measured by `rhostar.m`, which reduces several thousand points of the disc over
+the larger group and takes the largest modulus reached:
+
+| base | volume | #W* | rho(Gamma) | rho(normaliser) | NT | NT* | cost ratio |
+|---|---|---|---|---|---|---|---|
+| X_0^6(1) | 0.33 | 4 | 0.4472 | 0.4185 | 58 | 53 | 1.3 |
+| X_0^35(1) | 4.0 | 4 | 0.8788 | 0.7584 | 357 | 180 | 6.9 |
+| X_0^10(9) | 8.0 | 8 | 0.9551 | 0.8369 | 1004 | 259 | 46 |
+| X_0^6(25) | 10.0 | 8 | 0.9597 | 0.9296 | 1121 | 631 | 5.1 |
+| X_0^15(7) | 10.67 | 8 | 0.9810 | 0.9020 | 2406 | 447 | 115 |
+| X_0^85(1) | 10.67 | 4 | 0.9656 | 0.9442 | 1316 | 803 | 4.0 |
+| X_0^142(1) | 11.67 | 4 | 0.9825 | 0.9194 | 2608 | 548 | 81 |
+| X_0^14(9) | 12.0 | 8 | 0.9820 | 0.9324 | 2536 | 659 | 45 |
+| X_0^21(4) | 12.0 | 8 | 0.9761 | 0.9134 | 1905 | 509 | 41 |
+| X_0^21(5) | 12.0 | 8 | 0.9861 | 0.8627 | 3286 | 312 | 765 |
+| X_0^91(1) | 12.0 | 4 | 0.9847 | 0.9630 | 2991 | 1220 | 13 |
+| X_0^158(1) | 13.0 | 4 | 0.9877 | 0.8826 | 3731 | 369 | 682 |
+| X_0^123(1) | 13.33 | 4 | 0.9751 | 0.9535 | 1826 | 968 | 6.0 |
+
+The gain is not predictable from #W* -- X_0^21(5) and X_0^158(1) gain a factor of several hundred
+while X_0^85(1) with the same volume gains four -- so it has to be measured per base, which takes
+a minute or two and needs no decomposition.  Together with the corrected constant it is the
+difference between these bases being unaffordable and being an hour's work each.
+
+The reduction descends over the side pairing of Gamma and over the Atkin-Lehner translates
+alternately, and records which coset of the normaliser it ended in as a Hall divisor.  That label
+is what lets ONE set of samples serve three spaces at once: a form invariant under W with
+eigenvalue eps on the other coset satisfies f|g = eps f, so the invariant space, the star space
+and the anti-invariant space differ only in the table of signs.
+
+## ⇒ From the expansions to an equation over Q (`model.m`, `finish.m`)
+
+For W of index 2 in the full group W*, with the star curve of genus 0, the model is a double cover
+y^2 = f(t) of the star written over a hauptmodul t -- which is the form this project stores.  Two
+functions come out of the expansions:
+
+* **t = f1/f2**, a ratio of two forms on the star.  A space of weight-k forms on a genus-0
+  quotient is the sections of a line bundle of degree dim - 1, so a ratio of two of them has
+  degree dim - 1 and a hauptmodul needs dim - 2 common zeros imposed; each extra zero is one more
+  row asking the series to vanish at a point of the disc.
+* **y = g/h**, with g changing sign under the deck transformation and h a form on the star of the
+  same weight.  y^2 is invariant under all of W*, hence a rational function of t, and fitting
+  P(t) - y^2 Q(t) = 0 at points of the disc recovers it.  The branch points are the roots of P*Q
+  of **odd** multiplicity, together with infinity when the degrees differ by an odd number, and
+  there must be exactly 2g+2 of them -- an internal check the fit has to pass.
+
+The coordinate the computation chose for itself is not defined over Q, so the equation cannot be
+read off in it.  `finish.m` goes through the **invariants**, which do not depend on the coordinate
+at all and are rational for a curve over Q: the absolute Igusa-Clebsch invariants in genus 2, the
+j-invariant in genus 1.  Recognise them as rationals, rebuild the curve over Q from them (Mestre's
+construction, which Magma provides), and what is left is exactly the **quadratic twist**, which is
+arithmetic and which a complex-analytic method cannot see.
+
+**The twist is solved for, not searched for.**  Mestre's construction returns an arbitrary member
+of the isomorphism class over Qbar, and the number relating it to the curve over Q is not small:
+at X_0^85(1) it is 288862917341177298307577.  But twisting a genus-2 curve by c replaces a_p by
+-a_p, so comparing the point count of the reconstructed curve with the trace formula at a prime p
+reads off the Legendre symbol (c|p); and c can only be divisible by primes dividing the
+discriminant of the reconstructed curve or 2DN.  Writing c as a product of those with exponents 0
+or 1 turns each prime into one linear equation over F_2, and the system is heavily
+overdetermined.  At X_0^85(1): 11 candidate primes, 25 usable symbols, a unique solution, and the
+resulting curve then matches 64 point counts over F_p and F_{p^2} that it was not fitted to.
+
+**Validated end to end on the arithmetic stage.**  Starting from the six branch points of Molina's
+X_0^85(1)/w_5 carried through a random Mobius change and perturbed at the 1e-28 level -- which is
+what a truncation target of 1e-28 leaves -- `finish.m` recovers the three absolute invariants
+exactly (to a relative 1.3e-24), solves the twist exactly, and returns
+y^2 + (x^3+1) y = -x^6 - 4x^5 + 5x^4 + 12x^3 - 9x^2 - 5x - 2, isomorphic over Q to the published
+equation, with 64 point counts against the trace formula.  **That is the right control for this
+stage**: it tests the step from numerical branch points to a verified rational model, with the
+geometry supplied by a published answer rather than by the expansions.
+
+**How many digits are needed.**  Two different numbers, and conflating them wastes a run.  The
+WORKING precision must be comfortably above 80 or `IgusaClebschInvariants` over the complex
+numbers is meaningless -- at precision 40 it returns I10 wrong in every digit, which is
+cancellation inside the invariant and nothing to do with the input.  What a recognition may rely
+on is the TRUNCATION target, less about four digits for the degree-10 arithmetic.  The invariants
+of these curves have numerators of seventeen digits, so a target of 1e-28 is about the minimum.
+
+**Five of the sixteen open bases are out of scope for this construction**, because their star
+curve has genus 1 and there is no hauptmodul to write over: X_0^142(1), X_0^91(1), X_0^158(1),
+X_0^123(1) and X_0^141(1).  A quotient of index 4 is likewise not a double cover of the star; it
+is the fibre product of the three index-2 quotients between, which is how the rest of the
+repository builds them.
 
 ## The Atkin-Lehner layer (`vwal.m`)
 
@@ -324,6 +615,44 @@ that is arithmetic, not geometry, and nothing here tests it.
 
 ## Traps, each of which cost a day
 
+* **A CUBE IN THE COORDINATES OF A BASIS IS THE WRONG SHAPE FOR AN ORDER.**  The reduced norm
+  form is indefinite of signature (2,2), so its level sets are hyperboloids and a cube cuts them
+  along directions unrelated to the lattice.  Three searches here did that and all three missed
+  elements silently: the Hecke cosets (8 of 14 at D = 22 for p = 13, 2 of 6 at D = 26 for p = 5),
+  the Atkin-Lehner elements (nothing at all at D = 35 for m = 7), and the CM points.  Enumerate
+  short vectors of the positive definite majorant `FrobeniusGram` instead, raising the bound until
+  the expected number appears -- and check the number against what theory says it is, which for
+  the Hecke cosets is p+1.
+* **CAPPING A ROW BUDGET WITH A BREAK KEEPS A SHORT ARC.**  Samples come in order of angle around
+  the sampling circle, so taking the first 2 NT of several thousand takes a sixth of the circle,
+  and fitting a degree-NT polynomial on a short arc is exponentially ill-conditioned however many
+  points it has.  Take them with a STRIDE.  The symptom is worth recognising because it is the
+  same one the broken reduction produced: a smooth geometric ramp of singular values, running
+  far BELOW the truncation floor, with no gap anywhere.  Separately, each row is normalised to
+  unit length so that every relation carries the same relative truncation error whatever its
+  automorphy factor; that was not the cause here (the factors span less than one order of
+  magnitude at D = 35) but it costs nothing.
+* **`by` IS A RESERVED WORD IN MAGMA** (`for i in [1..n by 2]`), so it cannot be a variable name;
+  using it gives "bad syntax" at the line that assigns it and nowhere else.
+* **MAGMA READS A SCRIPT AS IT RUNS IT.**  Editing a driver while a run of it is in flight makes
+  that run fail with a syntax error in the middle of a finished computation -- it happened twice
+  here, each time throwing away a decomposition that had already succeeded.  Same hazard as
+  editing `tests/` during a suite.  Write progress to a separate file that is closed after every
+  line (Magma buffers stdout to a file, so the log tells you nothing), and leave the script alone
+  until the run ends.
+* **`Generators(G)` is NOT the side pairing of the fundamental domain.** It is a minimal
+  generating set: three elements at D = 15, where the domain has fourteen sides. The side pairing
+  is `G`ShimFDGens`, for the domain Magma most recently computed, so recompute the domain for the
+  disc in hand before reading it. Its entries are order elements (`AlgQuatOrdElt`), not group
+  elements, so `Quaternion` fails on them; coerce into the algebra instead.
+* **`ShimuraReduceUnit` returns the identity on a point it cannot reduce**, with no indication of
+  failure, so "the reduction was trivial" and "the reduction failed" are indistinguishable at the
+  call site. Given too few generators it fails often: at D = 15 on 85 percent of a circle of
+  radius rho. Check the modulus of what comes back against rho rather than trusting it.
+* **`GapDimRel` always names a dimension**, being the index of the largest relative gap, so it
+  reports a number on a spectrum with no gap at all. Every "wrong dimension" at D = 15 and D = 26
+  was really "no resolution". Use `GapDimStrict`.
+
 * **Magma's `SingularValueDecomposition(M)`** on an m × n matrix returns (m × n, m × m, n × n), and
   the singular values are the diagonal of the **first** return, descending; the second is the left
   orthogonal matrix. Reading its diagonal instead gives numbers bounded by 1 and of arbitrary sign,
@@ -357,10 +686,26 @@ that is arithmetic, not geometry, and nothing here tests it.
 
 ## Files
 
-`vw3.m` is the working library and `vwal.m` the Atkin-Lehner layer (which also holds
-`RecentredDisc` and `ZeroLevel`); `aldims.m` is the validation sweep over all Atkin-Lehner
-subgroups of a base, `basediag.m` tests the base library alone at one base and is the first thing to
-run when something does not resolve, `recentre.m` reports how much recentring gains, `aldiag.m`
+`vw3.m` is the working library (holding the sampling, the side-pairing reduction, the automorphy
+system and the positive definite majorant `FrobeniusGram` that the three element searches share),
+`vwal.m` the Atkin-Lehner layer (which also holds `RecentredDisc`, `ZeroLevel`, `GapDimStrict`,
+and the reduction over the normaliser with its coset labels) and `vwhecke.m` the Hecke relations
+of eq. (18).
+
+For building an equation: **`model.m`** takes a base and one Atkin-Lehner subgroup of index 2 and
+writes the branch points of the double cover over the star to `out/`, with `vwmodel.m` holding the
+labelled system, the imposed-zero rows and the rational-function fit; **`finish.m`** reads that
+file and returns the curve over Q with its twist settled against the trace formula.  `rhostar.m`
+measures how much the normaliser's domain saves at a base, in a minute and with no decomposition,
+and is the first thing to run at a new base.  `heckecos.m` checks the Hecke coset search finds all
+p+1.  For measurement: `reach.m` asks
+whether a base resolves and at what cost, sweeping truncation targets and sampling radius, and is
+the first thing to run at a new base; `rhoprobe.m` gives the circumradius and the predicted cost
+without computing anything else; `heckecal.m` calibrates the Hecke normalisation against a known
+eigenvalue and `heckedim.m` applies the relations, with a wrong-eigenvalue control.
+`aldims.m` is the validation sweep over all Atkin-Lehner
+subgroups of a base, `basediag.m` tests the base library alone at one base, `recentre.m` reports
+how much recentring gains, `aldiag.m`
 instruments the reduction quality; `dims.m` computes dimensions of M_k, `haupt.m` builds a Hauptmodul
 as a ratio of weight-12 forms, `cmchk.m` evaluates it at a CM point, `predict.m` is the
 valence-formula prediction. `vw2.m`, `run2.m`, `shape*.m` and `dbg_*.m` are development history,
