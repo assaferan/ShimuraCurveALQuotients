@@ -1,0 +1,10 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwal.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson2.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^6(1) weight 4, dim 1, rho 0.447213598719987567286350139966, NT 58, cut 40
+  correct input                          : residual 8.46113024515127195389876383758E-13   (next 1.41421356237309504880168847110)
+  a_f(5) negated                         : residual 0.00104483583053349970336258170225   (next 1.41421317640520067153146839156)
+  divisor sum truncated to d = 1 only    : residual 0.186875507767446490282924683910   (next 1.40181223585637853658184736814)
+  R^(d) replaced by R for every d        : residual 0.186875507767446490282924683911   (next 1.40181223585637853658184736814)
+CONTROL DONE

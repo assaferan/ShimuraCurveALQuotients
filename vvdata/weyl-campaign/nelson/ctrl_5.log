@@ -1,0 +1,7 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwal.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson2.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+MODE 5 at X_0^6(1) weight 4 cut 40: residual 0.00215507031795457697158688858002   next 1.41421192035420372889837340994
+  first three values: [ 0.000639740060383609960088433874855 + 3.54749752425312024102998536120E-34*I, 0.000716000010103668266341180478662 - 0.000325233086178176891689871651800*I, 0.000873745998521850136483377041422 - 0.000678517630326630608472556759933*I ]
+CONTROL2 DONE

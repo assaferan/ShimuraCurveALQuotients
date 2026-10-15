@@ -1,0 +1,13 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+W_2 table for cut <= 34 built in 14.6700000000000017053025658242 s (base independent)
+base      DN     s2/DN     setup s  lattice pts  eval s     n_max    rel.chg     a_f source
+85_1      85     88.706    0.04000  36741        2.410      549      6.96E-8     2 elliptic curve(s) of conductor 85 + surrogate
+91_1      91     93.406    0.0000   38691        2.590      587      2.48E-6     3 elliptic curve(s) of conductor 91
+123_1     123    136.75    0.01000  56683        3.890      796      6.87E-8     3 elliptic curve(s) of conductor 123
+142_1     142    177.54    0.01000  73234        4.940      903      5.33E-6     3 elliptic curve(s) of conductor 142
+6_35      210    309.52    0.01000  128359       9.280      1357     7.47E-8     3 elliptic curve(s) of conductor 210
+330_1     330    480.61    0.01000  199328       13.54      2131     9.42E-8     3 elliptic curve(s) of conductor 330
+462_1     462    660.17    0.01000  272787       18.81      2994     2.33E-7     3 elliptic curve(s) of conductor 462
+510_1     510    739.22    0.0000   306494       20.01      3302     3.02E-6     3 elliptic curve(s) of conductor 510
+COST2 DONE
