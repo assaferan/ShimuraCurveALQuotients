@@ -101,7 +101,7 @@ a smooth geometric ramp with no gap anywhere, which is easy to misread as the me
 | X_0^10(1) | 0 | 0.648 | 107 | 189 | resolves | | |
 | X_0^14(1) | 1 | 0.693 | 126 | 148 (1.2x) | ramp | **984 (7.8x)** | **resolves, gap 67** |
 | X_0^15(1) | 1 | 0.736 | 151 | 66 (0.4x) | ramp | 878 (5.8x) | still a ramp |
-| X_0^22(1) | 0 | 0.839 | 263 | 494 (1.9x) | ramp | 4117 (15.6x) in flight | |
+| X_0^22(1) | 0 | 0.839 | 263 | 494 (1.9x) | ramp |  4117 (15.6x), not finished | |
 | X_0^26(1) | 2 | 0.774 | 180 | 147 (0.8x) | ramp | 977 (5.4x) | **still a ramp** |
 
 So the first rule is to size Q by the rows RETAINED, aiming for several times NT -- D = 14 needed
