@@ -10,7 +10,7 @@
 // 93_1 the full curve is a genus-5 CRV pair, which forced that test to anchor on the [1,93] and
 // [1,3] quotients and leave the top curve unpinned.
 //
-// COST: 315 s on a Mac (genus 7 at W={1}), so it runs in CI.
+// To run it alone:
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_111_1.m run_tests.m < /dev/null
 // NORMALIZ_BIN must be set: without it a fresh polytope solve produces no solution file and the
 // search stops with an error naming the polytope.
@@ -20,12 +20,11 @@
 //       y^2 = -(19x^8-44x^7-16x^6+55x^5+37x^4-55x^3-16x^2+44x+19)(x^8-3x^5-x^4+3x^3+1),
 //       degree 16, genus 7. Transcribed from tests/GuoYangEquations.m, where the same polynomial
 //       already validates the STORED model -- so this file adds the re-derivation, not the reading.
-//   [2] DRIFT: the helper cross-checks every committed cover key against the same run, so
+//   [2] Every committed cover key: the helper cross-checks every committed cover key against the same run, so
 //       [1,3], [1,37] and [1,111] are compared too without being named here.
 //
-// ⚠ NOT CHECKED: involutions. ws_data is deliberately EMPTY -- Guo-Yang's w_m for 111_1 are
-// transcribed nowhere in this repo, and taking them from our own `ws` would be circular (see the
-// tests/_gyinvol.m header). A pass here says the CURVES are re-derived, not their labelling.
+// INVOLUTIONS: w_37 and w_111 are transcribed from Guo-Yang's Table A.1 in the function below, in
+// their coordinates, which is right because the expected curve is their published one.
 import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 
 function load_covers_and_ws_data_111_1()
@@ -42,10 +41,6 @@ function load_covers_and_ws_data_111_1()
 
     // ATKIN-LEHNER INVOLUTIONS, from Guo-Yang (journal, Table A.1, printed page 35):
     //     w_37 (x,y) = (-1/x, y/x^8)      w_111 (x,y) = (x, -y)
-    // ✅ ADDED 2026-09-23, and it RETIRES this file's own stated blocker. The header used to say
-    // "Guo-Yang's w_m for 111_1 are transcribed nowhere in this repo" -- true when written, no
-    // longer: they are read off the journal page above.
-    //
     // ⚠ THESE ARE IN GUO-YANG'S COORDINATES, and that is correct HERE precisely because
     // cover_data[{1}] above is gy_f, their published curve, rather than our stored model. The
     // helper conjugates the pipeline's own w_Q into C_ex's coordinates, and C_ex is theirs -- so
@@ -60,9 +55,9 @@ function load_covers_and_ws_data_111_1()
     // (x:y:z) -> (-z:y:x) IS linear, and rescaling by 1/x to normalise the last coordinate gives
     // (-1/x, y/x^(g+1), 1). Here g+1 = 8, matching their y/x^8 exactly.
     //
-    // ⚠ VERIFIED BEFORE RUNNING: on gy_f itself, both matrices
-    // below are automorphisms AND involutions, while DiagonalMatrix([-1,1,1]) is NOT -- the
-    // reverse of the situation at 87_1, so the two files cannot have been filled in by copying.
+    // ⚠ On gy_f itself, both matrices below were checked to be automorphisms AND involutions,
+    // while DiagonalMatrix([-1,1,1]) is NOT -- the reverse of the situation at 87_1, so the two
+    // files cannot have been filled in by copying.
     ws_data := AssociativeArray();
     ws_data[{1}] := AssociativeArray();
     ws_data[{1}][37]  := Matrix(3,3,[ 0,0,1,  0,1,0, -1,0,0 ]);

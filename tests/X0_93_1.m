@@ -5,7 +5,7 @@
 // model still regenerates, and 93_1 regenerates only with the pole order of the oo-side pool set
 // by the whole pool at 0 (`n_oo` in BorcherdsForms.m).
 //
-// COST: 370 s on a Mac, 495 s in CI (2026-10-01).
+// The file re-runs the Borcherds search, so it is one of the slower files in the suite:
 //     NORMALIZ_BIN=... magma -b filename:=tests/X0_93_1.m run_tests.m < /dev/null
 // NORMALIZ_BIN must be set: without it a fresh polytope solve produces no solution file and the
 // search stops with an error naming the polytope.
@@ -17,11 +17,11 @@
 //       plausible repairs give genus-2 curves that are NOT isomorphic; GuoYangEquations.m keeps all
 //       three refutations live so the conclusion cannot decay into "some reading works"). The
 //       journal version independently confirms it. So this entry is external evidence, not ours.
-//   [2] DRIFT, automatically: test_AllEquationsAboveCoversSingleCurve now cross-checks EVERY
+//   [2] Every committed cover key: test_AllEquationsAboveCoversSingleCurve cross-checks EVERY
 //       committed cover key against the same run, so [1,3] and [1,31] are compared too without
 //       being named here.
 //
-//   [3] ✅ THE FULL CURVE AND ITS INVOLUTIONS, both added 2026-09-23 -- see the two blocks in
+//   [3] THE FULL CURVE AND ITS INVOLUTIONS -- see the two blocks in
 //       load_covers_and_ws_data_93_1 below. Guo-Yang publish 93_1 as a PAIR, so the W={1} entry is
 //       built from THEIR equations in P(1,3,1,1) and compared through the helper's
 //       construct-the-isomorphism branch rather than a 10 h+ IsIsomorphic; their w_3 and w_31 come
@@ -54,8 +54,6 @@ function load_covers_and_ws_data_93_1()
     cover_data[{1,93}] := <HyperellipticCurve(gy_A*gy_B), IdentityMatrix(Rationals(), 3)>;
 
     // ---- THE FULL CURVE, W = {1} -----------------------------------------------------------
-    // ✅ ADDED 2026-09-23. This was the last X0_* test with NO top-curve key at all.
-    //
     // Guo-Yang publish 93_1 as a PAIR, so the expected curve is built from THEIR equations rather
     // than from our stored strings -- external evidence, and strictly stronger than comparing a
     // committed file against itself:
@@ -73,7 +71,7 @@ function load_covers_and_ws_data_93_1()
     // pin a matrix (X0_82_1.m, X0_10_19.m); this one should not become the third.
     //
     // The construct branch fires only if the RE-DERIVED W={1} also arrives as a non-CrvHyp with
-    // exactly 2 defining polynomials, which it does on the green runs (8 min in CI). If the
+    // exactly 2 defining polynomials, which is how the pipeline presents it here. If the
     // pipeline ever presents it otherwise, the helper falls through to a plain IsIsomorphic and
     // this test becomes the 10 h+ case rather than failing. If this file's runtime suddenly
     // jumps, that is the cause -- not a regression in the mathematics.
@@ -110,10 +108,9 @@ end function;
 procedure test_93_1()
     cover_data, ws_data := load_covers_and_ws_data_93_1();
     curves := GetHyperellipticCandidates();
-    // ⚠ base_label := 11199 IS PINNED (2026-09-27), from a sweep, not a guess.  On a CRV base the
+    // ⚠ base_label := 11199 comes from a sweep, not a guess.  On a CRV base the
     // base decides WHICH V_4 the pair presents, so this is the FIRST thing to vary here -- never a
-    // coordinate parametrisation.  `magma -b Dd:=93 Nn:=1 tests/_basesweep.m < /dev/null`, base run
-    // 26280 s (7.3 h):
+    // coordinate parametrisation.  `magma -b Dd:=93 Nn:=1 tests/_basesweep.m < /dev/null`:
     //     W={1} is label 11195;  default bases { 11198 };  candidate base labels [ 11199 ]
     //     base 11199 : genus 5, CONSTRUCTED ISOMORPHISM TO GY: true
     //
@@ -124,7 +121,7 @@ procedure test_93_1()
     // and that file's provenance header records it was produced with NO non-default flags.  So
     // 11199's presentation is the one this repo has stored for 93_1 all along.
     //
-    // ⚠ WHY THE DEFAULT IS NOT GOOD ENOUGH -- this pin is not cosmetic.  Today's default run leaves
+    // ⚠ WHY THE DEFAULT IS NOT GOOD ENOUGH -- fixing the base is not cosmetic.  The default run leaves
     // W={1} at base 11198 ONLY, and 11198 is not in the candidate set at all (it is a
     // rebase-produced base).  test_AllEquationsAboveCoversSingleCurve raises its "matches NONE"
     // error PER BASE ("W=%o over base %o"), so an unpinned run compares the 11198 pair -- which has
@@ -132,12 +129,12 @@ procedure test_93_1()
     // The three quotient keys [1,3], [1,31] and [1,93] all live at 11199 (that is exactly where the
     // sweep's candidate list comes from), so the pin also puts the top curve on the same base as its
     // own quotients.  ⚠ That the committed model is the 11199 pair while today's default lands on
-    // 11198 is pipeline DRIFT since 2026-09-05; the pin restores agreement with the artifact.
+    // 11198 is a drift of the pipeline's default; fixing the base restores agreement with the file.
     //
-    // The PINNED run is green end to end (first on 2026-10-01; 495 s in CI), so the other keys do
-    // fill under the pin.  EquationsCovers.m:1079 records that EquationsByRebase is pin-aware -- it
-    // rebases ON the pinned base and threads the pin into its own inner conic pass; 14_3, 21_2 and
-    // 6_17 pin and pass too, while 10_13 and 26_3 needed `model_drift_ok`.  ⇒ If this ever comes
+    // The other keys do fill under the pin, because the rebasing step (EquationsByRebase) is
+    // itself pin-aware: it rebases ON the pinned base and threads the pin into its own inner
+    // conic pass; 14_3, 21_2 and 6_17 pin and pass too, while 10_13 and 26_3 needed
+    // `model_drift_ok`.  ⇒ If this ever comes
     // back with empty keys, `model_drift_ok` is the expected remedy, NOT removing the pin.
     // ⇒ Do not re-run the sweep hoping for more: the candidate pool is exactly one base.
     test_AllEquationsAboveCoversSingleCurve(93, 1, cover_data, ws_data, curves : base_label := 11199);
