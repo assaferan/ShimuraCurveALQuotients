@@ -11,6 +11,121 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-16 — A METHOD WHOSE COST DOES NOT SEE THE VOLUME; FOUR NEW MODELS; THE COST MODEL WAS 700× WRONG
+
+**The headline is Nelson's evaluator.** Nelson, *Evaluating modular forms on Shimura curves*,
+Math. Comp. **84** (2015) 2471–2503, writes the product of the values of a form at two points as a
+sum over elements of positive reduced norm in a lattice between an Eichler order and its dual,
+weighted by the classical coefficients of the Jacquet–Langlands correspondent. There is no
+fundamental domain, no sampling, no reduction and no matrix, so the cost cannot depend on the
+volume — and measurement confirms it does not. Over `D·N` from 6 to 4830 the number of lattice
+points is about `10 (cut/4π)^4 σ_2(DN)/DN`, which is linear in `D·N` for squarefree level, and the
+coefficients are needed only to `DN (cut/4π)^2`. **X_0^510(1), which costs the Voight–Willis route
+68 h and 984 GB, takes 20 seconds; X_0^690(7), the largest base carrying an open quotient, takes
+under four minutes.** Several eigenforms share one enumeration. The eigenvalue supply was expected
+to be the obstruction and is not: at level 4830 the weight-2 space decomposes in 33 s and one
+newform expands to 31 331 coefficients in 186 s.
+
+Validation is against Voight–Willis where both run: each eigenform's value vector must lie in the
+Voight–Willis span at the same points. At discriminant 15 the space is two-dimensional, so the
+eigenvalues are what separate the two forms and each lands in the plane separately, with residual
+1.7e-16 against a next singular value of 0.90. Raising the truncation moves the residual from
+2.5e-10 to 1.7e-16, so the disagreement is truncation and nothing systematic. Independently, the
+matrix of products comes out of rank one, which is the only internal check not forced by a symmetry
+of the truncated sum.
+
+⚠ **The limit is now the hypothesis, not the cost.** Theorem 3.1 is stated for a newform of level
+exactly `D·N`, but at `N > 1` the differentials also carry oldform copies from the proper divisors
+of `N`. This is measurable per base in seconds (`nold.m`): X_0^39(11), X_0^55(7) and X_0^1326(1)
+are spanned by newforms alone; **X_0^141(2) and X_0^77(10) are not**, and both carry open
+quotients. Extending to the oldform part is the mathematical work that remains.
+
+⚠ **No open quotient has been decided by this yet.** Noether's count of canonical quadrics runs on
+these values and discriminates — X_0^35(1) and X_0^57(1) hyperelliptic, X_0^91(1)/w_7 not — but all
+three are controls whose answers were already known, and all three were checked against the stored
+models and the pipeline's own trace-formula verdict. A run on the open quotients at the bases the
+newforms cover was in flight when this was written; **X_0^1326(1) is the one to watch**, being one
+of only two open cases with a star curve of genus 0 and sitting above the Borcherds divisor wall,
+so nothing else we have reaches it.
+
+⚠ Two traps recorded with the code. A naive reading of the gap named one relation on a smooth ramp
+at discriminant 57: clustered evaluation points give nearly proportional rows, and a matrix of
+effective rank near six always has a conic through it. Points are now spread by the square root of
+the arithmetic volume and no verdict is returned on a gap below 1e4. Separately, one of the five
+negative controls is degenerate — replacing every lattice by the order gives exactly twice the
+`d = 1` values, because the coefficients are multiplicative at the ramified primes — so it fires
+but tests nothing new.
+
+**Four new models, the first the Voight–Willis route has produced that we did not hold.** All four
+index-2 Atkin–Lehner quotients of X_0^10(9) have genus 1 and none had a model: conductors 30, 90,
+90, 90, pairwise non-isomorphic over Q, each checked by 64 point counts against the trace formula,
+by genus, and by the branch-point count the fit must produce on its own. Independently of any point
+count, Jacquet–Langlands puts the Jacobian in the 10-new part of `J_0(90)`, forcing the conductor to
+divide 90 and be divisible by 2 and 5. The control is X_0^35(1)/w_5, which comes out isomorphic over
+Q both to our stored model and to Molina's published equation. ⚠ **The twist is solved for, never
+searched**: twisting sends `a_p` to `−a_p`, so each prime is one linear equation over `F_2` for the
+exponents of the primes dividing `2DN`, and the solution is required to be unique — an earlier
+search over small numbers returned four survivors at nine primes and its first pick was the wrong
+curve.
+
+⚠⚠ **The Voight–Willis cost model was never a measurement and is about 700× too fast.** Every
+timing in the earlier reach table is wrong by that factor; the measured rule is about
+`79 s × (NT/151)^2.8` per decomposition. The recovery is to expand on the **normaliser's** domain
+rather than on Γ's, since the forms wanted are Atkin–Lehner invariant — gains run from 1.3× at
+discriminant 6 to 765× at X_0^21(5), and ⚠ the gain is **not** predictable from the order of the
+group, so it must be measured per base (`rhostar.m`, about a minute).
+
+⚠ **Structural, not compute: five of the sixteen bases within reach by volume cannot be done this
+way at all.** X_0^142(1), X_0^91(1), X_0^158(1), X_0^123(1) and X_0^141(1) have a star curve of
+genus 1, so there is no hauptmodul to write a double cover over. X_0^21(5)/{1,5,7,35} is unfinished
+for a precision reason only: genus 2 needs truncation near 1e-38 rather than 1e-28, because its
+Igusa invariants have seventeen-digit numerators over nine-digit denominators. Its branch points are
+saved.
+
+⚠ **A scalar is not an Atkin–Lehner element, and at non-squarefree level the search returns one.**
+At level 9 the element 3 has reduced norm 9 and normalises the order but acts trivially, so the
+group built is smaller than the normaliser. The symptoms do not say "wrong group": the weight-4
+space on the star curve at X_0^10(9) came out of dimension 4 where the signature predicts 3, and it
+inflated the measured sampling radius by a factor of five in cost. Anything with `μ/d` still in the
+order is now rejected. Same lesson as the Atkin–Lehner ideal at non-squarefree level in #114.
+
+⚠ Three element searches — Hecke coset representatives, Atkin–Lehner elements and CM points — used a
+box in basis coordinates. The reduced norm is indefinite of signature (2,2), so its level sets are
+hyperboloids and a box cuts them along directions unrelated to the lattice; it found **nothing at
+all** at 85_1, 91_1, 123_1 and 158_1. All three now enumerate short vectors of the positive definite
+majorant `F(x) = Tr(ι(x) ι(x)^t) ≥ 2|nrd|`, and all 37 test cases find the full `p+1`.
+
+**Molina's method is reproduced in full** and is now an outside check on the models: all ten
+equations of his Table 2 come out, each isomorphic over Q to the published one and each checked
+against the trace formula. Four are quotients we held no model for, and two appear in no published
+table — X_0^115(1)/⟨w_115⟩ and X_0^161(1)/⟨w_161⟩, both of genus 2. Its reach is small and precisely
+bounded: it needs `D` odd, and it stops where a factor's number field has degree 5 or more, so it
+covers 5 of the 43 bases with a ceiling at genus 4. The equations are in the repository as tests
+(PR #120).
+
+**Continuous integration, correcting the earlier record.** Both standing failures had been recorded
+as the Artin map caching bug. Only one is. **#117 fails on the CM fields regression test**, which is
+that bug and which #109 fixes. **#115 fails on the Weil cost proxy**, at the assertion that the
+proxy ranks the curve measured at nine hours above the one measured at nine minutes; its branch is
+193 commits behind main and carries a stale copy of the file defining the proxy, so merging main
+down is what clears it and **#109 will not**. The failure is not in Criterion H's mathematics.
+
+**Where the campaign branch stands.** Five commits were added: Molina's method (`f196310`), the
+Voight–Willis side-pairing reduction and Atkin–Lehner layer (`7ef83a3`), Nelson's lift (`3e0a94a`
+and `f0c3766`), the four new models with the model-building code (`68c4fee`), and the Hecke
+relations with the reach measurement (`2737805`) — the last of which had been treated as banked for
+a day while existing only on disk. All 1562 committed files under the campaign directory were
+compared against the working tree afterwards and none differ.
+
+⚠ **If git fails everywhere with "Operation not permitted", it is not the repository.** macOS can
+revoke directory enumeration under `~/Documents`, and every git command then fails, including a
+fresh clone attempted from a shell sitting in that tree. Reading and writing files by exact path
+still work; only enumeration is denied. **Clone the repository outside `~/Documents` and run git
+there**, stepping outside the tree first, since git resolves its working directory before it looks
+at any path. ⚠ The dangerous part is that **shell globbing silently expands to nothing** rather than
+erroring, and `run_tests.m` builds its file list by globbing `tests/`, so a suite launched from that
+tree runs zero files and prints no failures.
+
 ## Handoff — 2026-10-14/15 — OPEN CASES 173 → 34; VOIGHT–WILLIS VALIDATED BUT OUT OF REACH; ONE CRITERION REFUTED
 
 **The count.** The full pipeline was rerun from the first stage on lovelace with the canonical-quadrics
