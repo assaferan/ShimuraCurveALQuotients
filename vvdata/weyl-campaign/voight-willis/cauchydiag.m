@@ -1,0 +1,38 @@
+// Does the Cauchy formulation resolve where the automorphy one does not?
+//   magma -b DISC:=22 LEVEL:=1 PR:=150 TGT:=20 RFAC:=100 K:=4 cauchydiag.m < /dev/null
+AttachSpec("/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.spec");
+SetColumns(0);
+load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m";
+load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwal.m";
+load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwcauchy.m";
+D := StringToInteger(DISC); N := StringToInteger(LEVEL); PREC := StringToInteger(PR);
+TARGET := StringToInteger(TGT); k := StringToInteger(K); rfac := StringToInteger(RFAC)/100;
+CC := ComplexField(PREC); RR := RealField(PREC);
+A := QuaternionAlgebra(D); O := QuaternionOrder(A, N); G := FuchsianGroup(O);
+H := UpperHalfPlane();
+_, DD, FD := RecentredDisc(G, H, PREC, 3);
+rho := Max([Abs(ComplexValue(v)) : v in FD]);
+R := rfac*rho;
+p := ComplexValue(DiscToPlane(H, DD ! 0) : Precision := PREC);
+mrep := FuchsianMatrixRepresentation(A : Precision := PREC);
+NT := TermsFor(rho, TARGET);
+Q := 2*NT;
+X1 := CreateShimuraQuot(D, N, {Integers() | 1});
+g1, es1 := QuotientSignature(X1);
+expd := DimMkSig(k, g1, es1);
+t0 := Cputime(); samp := CauchySamples(G, O, DD, mrep, p, R, Q, CC); ts := Cputime(t0);
+t1 := Cputime(); Mx := CauchySystem(samp, k, NT, R, CC); tb := Cputime(t1);
+t2 := Cputime(); sv := SingVals(Mx); tsvd := Cputime(t2);
+gr, grat := GapDimRel(sv, 1e-3);
+printf "D=%o N=%o k=%o rho %o R %o NT %o Q %o prec %o\n", D, N, k, RR!rho, RR!R, NT, Q, PREC;
+printf "  expected dim %o | GapDimRel %o (gap %o)\n", expd, gr, RR!grat;
+flo := rho^NT;
+nbelow := #[x : x in sv | x lt flo];
+printf "  truncation floor rho^NT = %o; singular values below it: %o\n", RR!flo, nbelow;
+lo := Max(1, nbelow-2); hi := Min(#sv, nbelow+5);
+printf "  spectrum around the floor (indices %o..%o): %o\n", lo, hi, [RR!sv[i] : i in [lo..hi]];
+printf "  8 smallest sv: %o\n", [RR!s : s in sv[1..Min(8,#sv)]];
+printf "  largest sv %o\n", RR!sv[#sv];
+printf "  times: samples %o s, build %o s, svd %o s\n", RR!ts, RR!tb, RR!tsvd;
+printf "CAUCHYDIAG DONE\n";
+quit;
