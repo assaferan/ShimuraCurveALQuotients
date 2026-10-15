@@ -456,22 +456,37 @@ the larger group and takes the largest modulus reached:
 |---|---|---|---|---|---|---|---|
 | X_0^6(1) | 0.33 | 4 | 0.4472 | 0.4185 | 58 | 53 | 1.3 |
 | X_0^35(1) | 4.0 | 4 | 0.8788 | 0.7584 | 357 | 180 | 6.9 |
-| X_0^10(9) | 8.0 | 8 | 0.9551 | 0.8369 | 1004 | 259 | 46 |
-| X_0^6(25) | 10.0 | 8 | 0.9597 | 0.9296 | 1121 | 631 | 5.1 |
+| X_0^10(9) | 8.0 | 8 | 0.9515 | 0.7300 | 927 | 147 | 180 |
+| X_0^6(25) | 10.0 | 8 | 0.9615 | 0.8094 | 1174 | 218 | 115 |
 | X_0^15(7) | 10.67 | 8 | 0.9810 | 0.9020 | 2406 | 447 | 115 |
 | X_0^85(1) | 10.67 | 4 | 0.9656 | 0.9442 | 1316 | 803 | 4.0 |
 | X_0^142(1) | 11.67 | 4 | 0.9825 | 0.9194 | 2608 | 548 | 81 |
-| X_0^14(9) | 12.0 | 8 | 0.9820 | 0.9324 | 2536 | 659 | 45 |
-| X_0^21(4) | 12.0 | 8 | 0.9761 | 0.9134 | 1905 | 509 | 41 |
+| X_0^14(9) | 12.0 | 8 | 0.9820 | 0.8489 | 2536 | 282 | 490 |
+| X_0^21(4) | 12.0 | 8 | 0.9761 | 0.8652 | 1905 | 319 | 154 |
 | X_0^21(5) | 12.0 | 8 | 0.9861 | 0.8627 | 3286 | 312 | 765 |
 | X_0^91(1) | 12.0 | 4 | 0.9847 | 0.9630 | 2991 | 1220 | 13 |
 | X_0^158(1) | 13.0 | 4 | 0.9877 | 0.8826 | 3731 | 369 | 682 |
 | X_0^123(1) | 13.33 | 4 | 0.9751 | 0.9535 | 1826 | 968 | 6.0 |
+| X_0^166(1) | 13.67 | 4 | 0.9926 | 0.9706 | 6170 | 1544 | 50 |
+| X_0^141(1) | 15.33 | 4 | 0.9903 | 0.9647 | 4737 | 1282 | 40 |
+| X_0^15(8) | 16.0 | 8 | 0.9846 | 0.9160 | 2954 | 525 | 131 |
+
+X_0^15(11) and X_0^35(3), both of volume 16, are not in the table: their fundamental domains had
+not finished after an hour and a half, and the domain is the prerequisite for everything else.
 
 The gain is not predictable from #W* -- X_0^21(5) and X_0^158(1) gain a factor of several hundred
 while X_0^85(1) with the same volume gains four -- so it has to be measured per base, which takes
 a minute or two and needs no decomposition.  Together with the corrected constant it is the
 difference between these bases being unaffordable and being an hour's work each.
+
+⚠ **At non-squarefree level the figure depends on the Atkin-Lehner elements being right.**  The
+rows for X_0^10(9), X_0^14(9), X_0^21(4) and X_0^15(8) above are the ones measured AFTER the fix
+described next; before it, the search returned a scalar for the Atkin-Lehner element of a square
+Hall divisor, which acts trivially, so the group was too small and the radius too large -- 0.837
+instead of 0.730 at X_0^10(9), a factor of five in the cost and a weight-4 star space of
+dimension 4 where the signature says 3.  **A scalar is not an Atkin-Lehner element**: 3 has
+reduced norm 9 and normalises the order at level 9, and nothing but an explicit test rules it
+out.  `alchk.m` is that test, over every Hall divisor of a base.
 
 The reduction descends over the side pairing of Gamma and over the Atkin-Lehner translates
 alternately, and records which coset of the normaliser it ended in as a Hall divisor.  That label
