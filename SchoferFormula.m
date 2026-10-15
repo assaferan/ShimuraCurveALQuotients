@@ -1298,7 +1298,7 @@ intrinsic CandidateDiscriminants(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot
     // NB BorcherdsForms.m:709 already fell back this way for CM-starved bases; the asymmetry this
     // flag existed to probe is now resolved in favour of that behaviour.
     cm_coprime := GetEnv("CMCOPRIME") ne "";
-    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := cm_coprime,
+    rat_pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, coprime_to_level := cm_coprime, AllOrders := GetEnv("NONFUND") ne "",
                                                               bd := bd, Keep := Keep);
     return [rat_pts, quad_pts];
 end intrinsic;
@@ -1352,7 +1352,7 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
         // ⚠ This call used to hardcode `true`, so before 2026-09-07 the incremental fetch kept
         // filtering even when the main gate had been relaxed -- a base could be admitted by one
         // and starved by the other.
-        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude,
+        new_rat_cm, new_quad_cm := RationalandQuadraticCMPoints(Xstar : bd := bd, Exclude := Exclude, AllOrders := nonfund_ok,
                                        coprime_to_level := (GetEnv("CMCOPRIME") ne ""), target := fetch_target);
         new_rat_cm := fund(new_rat_cm); new_quad_cm := fund(new_quad_cm);
         pt_list_rat := pt_list_rat cat new_rat_cm;
