@@ -11,6 +11,93 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-13 — NINETEEN PRs MERGED; TWO ODD-D DEFECTS FIXED; THE 172 GB STEP REPLACED
+
+**Merged into `main` today** (Sachi's review on each, then Eran's go-ahead): #63 (good forms at 0
+as a kernel, the three Guo–Yang bases 95_1/119_1/159_1 with their offline tests, the L-polynomial
+check in ModelChecks), #81 (a failed lattice-point solve is an error naming the reason), #84 and
+#85 (one field of definition per CM point, read off the Eichler order; singular routine names),
+#87/#97/#88/#96 (the solver script: shift products with a size limit and the derived-file mark, the
+lower-rung read, the ends coordinate order, the shift fallback at a cusp-0 order), #91 (odd D with
+N > 2: constraints indexed by both cusps; the divisor routine samples the expansion at 0 at
+multiples of the odd part of DN), #95 (the good forms at 0 by forward substitution; the integral
+pool build), #71/#73 (the fibre-product stage and 203 + 36 models), and the model PRs #76, #78,
+#80, #89, #90, #92, #82 (levels 420, 924, 780, 1020, 660, the odd-D backlog, the 924 fibre
+products). #72, #83, #77, #94 closed unmerged because a PR above them in the stack carried their
+content or a replacement did (#73, #88, #96, #95). Still open: #66, #74, #79 (the m = 0 proof,
+waiting on Sachi's reading); #86 (the CM-point search up to class number 16, a separate topic that
+builds on #66); #100 (three small points on #85 that arrived after its merge).
+
+**Odd D, N > 2, two defects.** The divisor constraints were indexed by the cusp-∞ discriminant list
+alone, which contains the cusp-0 list only for N ≤ 2 (#91, first commit). And the routine that
+recomputes a found form's divisor sampled the expansion at 0 at multiples of the odd part of D,
+not of DN; it agrees only when the odd part of N is 1, i.e. at every base finished before. The rule
+itself — the coefficient of q^(-n/4) at 0 carries the CM points of discriminant -N² n/r² — is
+Guo–Yang, Compositio 153, Lemma 25 (proved for odd N, stated for even N); the code's expansion at 0
+is in q^(1/(4D0)), so that coefficient sits at exponent n·D0. X_0^21(22) failed the post-solve
+check with the old routine (every discriminant 11 times too large) and passes with the fix.
+
+**The 172 GB step.** At rung m the search builds a pool at 0 of |m|·D0 + 1 forms and found the good
+forms (principal part on q^(1/4) powers) as an integer kernel; at 33_7's rung m = −91 (pool 21022)
+that kernel killed Magma twice at 172 GB. The pool's window matrix is triangular up to row order,
+so a good form is the solution x of x·pool = (unit vector) by forward substitution (#95): on
+159_1's third rung (8110 wide, 52 good forms) 3645 s at 10 GB against ~3 h for the kernel; on 33_7's
+21022-wide rung 21295 s at 66 GB. The entries are the cost (pool coefficients ~1000 bits, solution
+up to several thousand): a modular substitution (52 primes) and Magma's own solver are both slower
+than the exact one. Second lever in the same PR: series products with varying denominators are
+~3000× slower than with integral coefficients, and the expansions at 0 have them; scaling each
+factor by its denominator lcm cut the pool products at 8110 from 1737 s to ~300 s (at 21022, 6109 s).
+159_1 rebuilt from scratch with both changes is byte-identical to the committed file, 2 h 46 min
+against 5 h 40. `BFGOODCHECK=1` and `BFPOOLCHECK=1` cross-check both against the old routes.
+
+**The coordinate order is level- and version-dependent.** On lovelace (Normaliz 3.10.2) the divisor
+order does not finish the first rungs of 660, 780 and 1020 in 90 min where the ends order takes
+3–30 min, but at 924 the divisor order is twice as fast; on the Mac's 3.11.1 the ends order wins at
+924 by ten. The keep-order flag changes nothing. Table in #88. Default stays `ends`.
+
+**Runs on lovelace** (`~/gymodels/README.txt` is the ownership log): all fifteen odd-D bases of
+924/780/1020/660 run from `oddrun/tree` (branch `odd-run-tree` = exact-m0 + #63 + #91 + #95), logs
+`odd3/logs`; 33_14 is past its deep rung and in the Schofer stage, 33_7 in its 43197-wide third
+rung. First rungs of the next wall levels, (1092, 385, 0) and (1140, 403, 0), enumerating in
+`bank_next/`. The #63 verification rerun of 159_1 (`verify63`, the rebuild with the independent
+re-expansion at 0) stopped in its third rung on 2026-10-13 at 06:34 with no exit line and no process
+left, so it has to be restarted; the byte-identical rebuild of 159_1 was run WITHOUT that check, so
+the #63 question for 159_1 stays open until a run with the check finishes and its result is posted
+on #63.
+
+**Two traps met while merging** (memory `stacked-pr-base-deletion-closes-them`): deleting a merged
+PR's branch through the refs API closes the PRs stacked on it instead of retargeting them, and a
+merge call can be refused for stale mergeability seconds after a push — delete a branch only after
+reading `merged: true`. And on this Mac (Magma 2.29-7) `ZetaFunction` returns a wrong L-polynomial
+for X_0(69,2)/{1,2,3,6} at p = 11 while its own point counts (and 2.29-10) are right; the model
+check now verifies the zeta function against two point counts and falls back to counts (PR open).
+
+**The evening: Sachi's two issues and the follow-up PRs.** #98 lists record-keeping follow-ups on
+the merged PRs; #99 says the fibre-product stage never checked that its factors share a coordinate
+on the star curve, and that nothing in the suite compares the `"CRV"` curves with anything. Six PRs
+answer them, none changing a stored curve except two cosmetic rebuilds: #102, merged 2026-10-14 (the model check builds
+the L-polynomial from point counts when `ZetaFunction` disagrees with them; full ModelChecks on the
+Mac 138 files, 28078 checks, 0 failures), #103 (the shift fallback multiplies only enumerated rungs,
+the search enumerates a rung whose derived set falls short instead of climbing, `polymake/README.md`
+records the shift-set bounds 204: 32, 380: 93, 420: 104, 780: 274, 924: 325 with the rank checks
+behind them), #104 (the record: test comments, the 162 points of (60, 11, 0), the #78 section — its
+diff against main was four equations rescaled by squares and four new empty keys, the genus-0
+quotients identical to #73's — the genus-0 caveat at 660/780/1020/924, 203 → 190 fibre products,
+299 CRV entries in 71 files), #105 (the triple check f_U f_V f_T = square in the stage and the
+writer, refusing a pair known to disagree; reproduces Sachi's 227/9/10 exactly; the [1,2] entries
+of 22_13 and 38_7 were NOT in another coordinate — #78 rescaled by squares — but are rebuilt
+anyway; two covers out of step she did not list: 22_13 [1,11,13,143], 38_7 [1,14,38,133];
+VERIFICATION.m reports a non-hyperelliptic model instead of erroring), #106 on #105 (every CRV
+entry against the trace formula, 299 entries, two primes, 148 s; the LMFDB check at X_0(6,23): the
+Atkin–Lehner sign at the primes of the discriminant is MINUS the newform's — with that rule all 14
+curves match the four level-138 newforms at the eight primes below 32, without it nothing does;
+planequartic fixed and tested). ⚠ Two primes are a screen: a factor scaled by 2 passes at 5 and 7.
+
+**First odd-D bases behind the wall: X_0^33(10) and X_0^33(14)** (PR #107, which now carries
+both), 31 minutes on the combined tree for 33_10; 50 keys, 22 with an equation (genus 0 to 8), 28
+empty; trace formula 126/126; the rungs (660, 401, 0) and (660, 69, 166) committed with it. The
+other thirteen: see `odd3/logs`.
+
 ## Handoff — 2026-10-11 — LEVEL 924: THE THREE EVEN-D BASES BUILT, THE ODD-D ONES BEHIND A SECOND WALL
 
 PR #80 (`level-924-models`) carries the first rung `(924, 325, 0)`, the weight-0 shift set, and the
