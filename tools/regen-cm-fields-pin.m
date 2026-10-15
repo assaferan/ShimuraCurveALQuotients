@@ -87,11 +87,12 @@ for c in PIN_CURVES do
                 printf "INCONSISTENT <%o>: fast raised %o\n", key, e`Object; bad +:= 1; continue;
             end try;
         else
+            // only the routines' own refusal counts; any other error is a defect
             raised := 0;
-            try F := FieldOfDefinitionOfCMPointSlow(X, d); catch e raised +:= 1; end try;
-            try F := FieldOfDefinitionOfCMPoint(X, d); catch e raised +:= 1; end try;
+            try F := FieldOfDefinitionOfCMPointSlow(X, d); catch e if "no CM point" in e`Object then raised +:= 1; end if; end try;
+            try F := FieldOfDefinitionOfCMPoint(X, d); catch e if "no CM point" in e`Object then raised +:= 1; end if; end try;
             if raised ne 2 then
-                printf "INCONSISTENT <%o>: degree 0 but a field routine returned a field\n", key; bad +:= 1; continue;
+                printf "INCONSISTENT <%o>: degree 0 but a field routine returned a field or raised another error\n", key; bad +:= 1; continue;
             end if;
         end if;
         fast := canon(fastF, refs);
