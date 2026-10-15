@@ -33,47 +33,12 @@ has genus 0 (the model route: 7 already known not hyperelliptic from the composi
 and the three next-wall bases to run), 38 of index 2 over a star of genus 1 or 2, 11 star curves of
 genus 3; only two with N not squarefree (22_63, 34_25, both star curves).
 
-## voight-willis/ — power series expansions of modular forms on Shimura curves (2026-10-15)
+## voight-willis/ — MOVED
 
-An implementation of Voight–Willis, "Computing power series expansions of modular forms"
-(author's copy at jvoight.github.io/articles/ModFormPaper-090317.pdf; Springer, Computations with
-Modular Forms, 2014), following its Section 3.  The motive: deciding hyperellipticity by Max
-Noether's count needs a basis of holomorphic differentials, which at D > 1 we otherwise only get
-from a model, and models are out of reach at the levels of the remaining open quotients.
-
-`vw3.m` is the working library (`vw2.m`, `run2.m`, `shape*.m`, `dbg_*.m` are its development
-history, kept only because they record what was tried).  `dims.m` computes dimensions of M_k,
-`haupt.m` builds a Hauptmodul as a ratio of weight-12 forms, `cmchk.m` evaluates it at a CM point,
-`predict.m` the valence-formula prediction.  `vwlib.m`, `time2.m` and `NOTES-firstattempt.md` are
-from the first attempt and are superseded; `time2.m` still serves for timing the prerequisite.
-
-WHY THE NUMBERS ARE TRUSTWORTHY, at X_0^6(1), signature (0; 2,2,3,3), rho = 0.5435:
-  * dim M_k for k = 2,4,...,14 reproduces the orbifold dimension formula (0,1,1,1,1,3,1), with the
-    vanishing singular values separated from the rest by 1e6 to 1e9;
-  * the Hauptmodul reproduces Elkies ("Shimura curve computations", arXiv:math/0005160, Sec. 3.1 and
-    Table 1, as transcribed with its corrections in tests/CMFieldsElkies.m on main): the cross-ratio
-    of the elliptic points is -1 to 7.7e-15, and his t = 0 at discriminant -24 comes out as 1e-34;
-  * a check NOT forced by symmetry: the valence formula gives deg div(f_4) = 2/3, carriable only by
-    the two order-3 points at 1/3 each, and the computed weight-4 form vanishes at exactly those
-    two, at relative magnitude 8.4e-21 against 0.503 and 1.000 elsewhere.
-
-⚠ TRAPS, both of which cost a day.
-  * Magma's `SingularValueDecomposition(M)` on an m x n matrix returns (m x n, m x m, n x n), and the
-    SINGULAR VALUES are the diagonal of the FIRST return, descending.  The second is the left
-    orthogonal matrix.  Reading its diagonal instead yields numbers bounded by 1, of arbitrary sign,
-    and produced an entirely spurious earlier conclusion that the method does not work.
-  * The columns must be equilibrated: they scale like rho^n, so without it every singular value sits
-    at rho^N and no gap is visible at all.
-  * Magma's own `CMPoints` is broken at D = 6 (RingClassGroup coercion error inside
-    package/Geometry/GrpPSL2/GrpPSL2Shim/reciprocity.m line 29).  Take instead the fixed point of a
-    trace-zero element of reduced norm m.
-
-⚠ WHAT IS NOT DONE.  Everything here is on X_0^D(N) itself, never on a quotient X/W; the
-Atkin-Lehner layer is beyond the published method and is the first thing a continuation needs.
-And the prerequisite is the wall: `FundamentalDomain` takes 248 s at D*N = 210 (102 sides) and did
-NOT finish in 30 minutes at D*N = 770 on lovelace, which is the SMALLEST of the open quotients by
-level (the largest is 4130).  A 12 h run at 770 was launched on 2026-10-15 to replace "timed out"
-with a number.
+The Voight-Willis expansion code is a general model-production method, comparable with the
+Guo-Yang/Borcherds route, not a hyperellipticity probe; it now lives at
+`vvdata/weyl-campaign/voight-willis/`.  It reached this directory only because the motive for
+building it was Noether's count on the quotients still undecided here.
 
 ## star-elliptic/ — the fixed-point criterion for star curves (2026-10-15)
 
