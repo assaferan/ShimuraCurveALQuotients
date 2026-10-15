@@ -83,28 +83,37 @@ truncation floor rho^N while the smallest non-kernel singular value sits 1e4 or 
 `1000 * rho^N` separates them cleanly. The old value swallowed the first non-kernel value and
 reported one dimension too many at weight 2.
 
-## Why D = 14 and D = 15 still fail — a different cause
+## What limits the reach: how OVER-DETERMINED the system is
 
-Not centring, and not precision. It is the **coverage and strength of `ShimuraReduceUnit`**:
+Measured 2026-10-15, and it supersedes the earlier reading that D = 14 fails for the same reason as
+D = 15.  **D = 14 resolves.**  What it needed was more sample points, nothing else.
 
-* **Retention is about 14 percent and does not improve with more sample points.** At D = 15, of the
-  points placed on the circle of radius rho, only 46 of 318 reduce to a non-identity element; raising
-  the count to 1272 and 3180 gives 185 and 461, the same fraction. Sampling more does not help
-  because the failures are systematic, not random.
-* **The reductions that do succeed barely move the point.** At D = 15 the sources sit at 0.7358 and
-  the targets land in the narrow band 0.666 to 0.736, so the relation f(delta w) = j^k f(w) relates
-  two nearly equal points and carries almost no information. Compare D = 10, where sources at 0.648
-  map to targets spread over 0.188 to 0.645.
-* The consequence at D = 15 is a system that is underdetermined on its face at the default sample
-  count (46 usable rows against 106 unknowns) and, even when overdetermined, has a numerical null
-  space far larger than the true dimension.
+`ReducedSamples` places Q points on the sampling circle and keeps only those that reduce to a
+non-identity element.  Retention varies enormously between bases -- about 15 percent at D = 15, 27
+percent at D = 26, 100 percent at D = 22 -- so setting `Q = 3*NT`, as the drivers did, controls the
+number of points ATTEMPTED and leaves the number of rows actually obtained to chance.  When that
+lands near or below NT the system is square or underdetermined and the singular values come out as
+a smooth geometric ramp with no gap anywhere, which is easy to misread as the method failing.
 
-The fix is to stop relying on reduction and pair points across the boundary using the **side-pairing
-generators** instead, which `ShimFDGens` supplies: a point on a side and its image on the paired side
-are both on the boundary, so both are within the convergence radius by construction and the relation
-is informative. The first attempt sampled isometric circles in something like this spirit and
-abandoned it, but only while the singular values were being read wrongly, so it was never a fair
-test. That is the next thing to try.
+| base | genus | rho | NT | rows at Q = 3 NT | result | rows raised | result |
+|---|---|---|---|---|---|---|---|
+| X_0^6(1) | 0 | 0.447 | 58 | 73 | resolves | | |
+| X_0^10(1) | 0 | 0.648 | 107 | 189 | resolves | | |
+| X_0^14(1) | 1 | 0.693 | 126 | 148 (1.2x) | ramp | **984 (7.8x)** | **resolves, gap 67** |
+| X_0^15(1) | 1 | 0.736 | 151 | 66 (0.4x) | ramp | 878 (5.8x) | still a ramp |
+| X_0^22(1) | 0 | 0.839 | 263 | 494 (1.9x) | ramp | in flight | |
+| X_0^26(1) | 2 | 0.774 | 180 | 147 (0.8x) | ramp | in flight | |
+
+So the rule is to size Q by the rows RETAINED, aiming for several times NT -- D = 14 needed about
+eight times -- and not by NT itself.  Neither genus nor the domain radius is the obstruction:
+D = 22 has genus 0 and fails at 1.9x, D = 14 has genus 1 and succeeds at 7.8x.
+
+**D = 15 is the genuine exception** and its diagnosis stands: raising the rows to 878, nearly six
+times NT, still gives a ramp.  Its reductions barely move the point -- sources at 0.7358 land in
+the narrow band 0.666 to 0.736 -- so the relation f(delta w) = j^k f(w) ties two nearly equal points
+and carries almost no information, however many of them there are.  Compare D = 10, where sources at
+0.648 spread over 0.188 to 0.645.  The fix there is still to pair points across the boundary with
+the side-pairing generators from `ShimFDGens` rather than relying on reduction.
 
 ## The wall, measured — and it is the volume, not D·N
 
