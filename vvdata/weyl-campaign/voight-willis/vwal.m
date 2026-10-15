@@ -117,8 +117,13 @@ end function;
 function TermsFor(rho, target)
     return Ceiling(target * Log(10) / (-Log(rho)));
 end function;
-function ZeroLevel(rho, nterms)
-    return Max(1e-10, 1e6 * rho^nterms);
+// Measured separation, D = 6 and D = 10 with the disc recentred: a genuine kernel vector sits
+// within about 100 times the truncation floor rho^N, while the smallest NON-kernel singular value
+// sits 1e4 or more above it.  A cutoff of 1000 * rho^N therefore separates them; the earlier 1e6
+// was loose enough to swallow the first non-kernel value and report one dimension too many at
+// weight 2.  The absolute floor only guards against asking for more than the working precision.
+function ZeroLevel(rho, nterms : prec := 100)
+    return Max(10^(-(prec-30)), 1000 * rho^nterms);
 end function;
 
 // Dimension as the position of the largest gap in the ascending singular values, counting only
@@ -131,4 +136,29 @@ function GapDim(sv, tolabs)
         if sv[i] gt 0 and sv[i+1]/sv[i] gt best then best := sv[i+1]/sv[i]; bi := i; end if;
     end for;
     return bi, best;
+end function;
+
+// Magma's UnitDisc defaults to Center := (9/10)*i, a point of the upper half plane fixed in advance
+// and unrelated to the group.  The series is expanded about that point, so the circumradius rho of
+// the fundamental domain -- which fixes both the number of terms (rho^N) and the conditioning of
+// the linear system -- is an accident of that default.  At D = 10 it gives a domain spanning
+// |w| = 0.05 to 0.82; recentring on the domain's own centroid gives 0.49 to 0.65 and rho 0.648.
+// Returns a centre in the upper half plane, and the disc and domain computed there.
+function RecentredDisc(G, H, PREC, iters)
+    ctr := H ! (9/10*H.1);
+    DD := UnitDisc( : Center := ctr, Precision := PREC);
+    FD := FundamentalDomain(G, DD);
+    for it in [1..iters] do
+        vs := [ComplexValue(v) : v in FD];
+        c := (&+vs) / #vs;
+        if Abs(c) lt 10^-12 then break; end if;
+        ctr2 := DiscToPlane(H, DD ! c);
+        DD2 := UnitDisc( : Center := ctr2, Precision := PREC);
+        FD2 := FundamentalDomain(G, DD2);
+        r1 := Max([Abs(ComplexValue(v)) : v in FD]);
+        r2 := Max([Abs(ComplexValue(v)) : v in FD2]);
+        if r2 ge r1 then break; end if;          // keep the better of the two
+        ctr := ctr2; DD := DD2; FD := FD2;
+    end for;
+    return ctr, DD, FD;
 end function;

@@ -24,6 +24,14 @@ bases behind the divisor wall are all well inside this method's reach.
 
 ## Status
 
+**Validated at X_0^6(1) and X_0^10(1), base curve and all Atkin–Lehner quotients.** For every
+Atkin–Lehner subgroup of each base and weights 2, 4 and 6, the computed dimension matches the one
+predicted from the quotient's own signature: **15 of 15 at D = 6 and 15 of 15 at D = 10**, with
+gaps of 10^4 to 10^12. At weight 2 that prediction is the genus of the quotient, so this is also an
+independent analytic confirmation of `GenusShimuraCurveQuotient` and `NumberOfEllipticPointsByCMOrder`.
+D = 14 and D = 15 do **not** yet work; the reason is identified below and is not the one that
+blocked D = 10.
+
 **Validated at X_0^6(1)** (signature (0; 2,2,3,3), domain radius 0.5435):
 
 * `dim M_k` for k = 2, 4, …, 14 reproduces the orbifold dimension formula (0, 1, 1, 1, 1, 3, 1),
@@ -37,11 +45,66 @@ bases behind the divisor wall are all well inside this method's reach.
 
 ## What has to happen next, in order
 
-1. ~~The Atkin–Lehner layer.~~ **Done**, see below.
+1. ~~The Atkin–Lehner layer.~~ **Done and validated at D = 6 and D = 10**, see below.
+   D = 14 and D = 15 need the side-pairing sampling described below first.
 2. **Agreement with the models we already have.** Still open, and it is the step that matters; see
    "What is still NOT done" below for why it is more than a thin wrapper and where to start.
 3. **Beyond the Borcherds reach.** The timings below say this is now worth attempting: the first
    bases behind the divisor wall compute their domains in seconds to minutes.
+
+## Two things that had to be fixed, and how they were found
+
+Both were found by asking first whether the **base** library (Gamma relations only, no
+Atkin–Lehner) resolves at the base in question — `basediag.m` does exactly that. At D = 10 it did
+not, which ruled out the Atkin–Lehner layer as the cause before any time was spent on it.
+
+**1. The disc was centred in the wrong place.** Magma's `UnitDisc` defaults to
+`Center := (9/10)*i`, a point of the upper half plane fixed in advance and unrelated to the group.
+The series is expanded about that point, so the circumradius rho of the fundamental domain — which
+sets both the number of terms (rho^N) and the conditioning of the linear system — is an accident of
+that default. `RecentredDisc` in `vwal.m` iterates: compute the domain, take the Euclidean centroid
+of its vertices, map that back to the upper half plane and rebuild the disc there, keeping the
+better of the two.
+
+| base | rho, Magma's default centre | rho, recentred | vertex moduli before | after |
+|---|---|---|---|---|
+| X_0^6(1) | 0.5435 | **0.4472** | 0.41–0.54 | 0.41–0.45 |
+| X_0^10(1) | 0.8212 | **0.6482** | 0.05–0.82 | 0.49–0.65 |
+
+At D = 10 the default centre gave a domain spanning |w| = 0.05 to 0.82. The symptom was a smooth
+geometric ramp of singular values with no gap anywhere — and, decisively, **the ramp moved down with
+the truncation floor as terms were added but never separated** (234 terms at 160 digits put the
+floor at 1e-20 and the ramp simply followed it). That is what rules out "not enough terms" and
+points at conditioning instead. Recentred, the same computation gives gaps of 10^4 to 10^12.
+
+**2. The zero cutoff was a thousand times too loose.** `ZeroLevel` returned `1e6 * rho^N`. Measured
+at D = 6 and D = 10 with the disc recentred, a genuine kernel vector sits within about 100 times the
+truncation floor rho^N while the smallest non-kernel singular value sits 1e4 or more above it, so
+`1000 * rho^N` separates them cleanly. The old value swallowed the first non-kernel value and
+reported one dimension too many at weight 2.
+
+## Why D = 14 and D = 15 still fail — a different cause
+
+Not centring, and not precision. It is the **coverage and strength of `ShimuraReduceUnit`**:
+
+* **Retention is about 14 percent and does not improve with more sample points.** At D = 15, of the
+  points placed on the circle of radius rho, only 46 of 318 reduce to a non-identity element; raising
+  the count to 1272 and 3180 gives 185 and 461, the same fraction. Sampling more does not help
+  because the failures are systematic, not random.
+* **The reductions that do succeed barely move the point.** At D = 15 the sources sit at 0.7358 and
+  the targets land in the narrow band 0.666 to 0.736, so the relation f(delta w) = j^k f(w) relates
+  two nearly equal points and carries almost no information. Compare D = 10, where sources at 0.648
+  map to targets spread over 0.188 to 0.645.
+* The consequence at D = 15 is a system that is underdetermined on its face at the default sample
+  count (46 usable rows against 106 unknowns) and, even when overdetermined, has a numerical null
+  space far larger than the true dimension.
+
+The fix is to stop relying on reduction and pair points across the boundary using the **side-pairing
+generators** instead, which `ShimFDGens` supplies: a point on a side and its image on the paired side
+are both on the boundary, so both are within the convergence radius by construction and the relation
+is informative. The first attempt sampled isometric circles in something like this spirit and
+abandoned it, but only while the singular values were being read wrongly, so it was never a fair
+test. That is the next thing to try.
 
 ## The wall, measured — and it is the volume, not D·N
 
@@ -140,7 +203,11 @@ coordinate, which is avoidable.
 
 ## Files
 
-`vw3.m` is the working library; `dims.m` computes dimensions of M_k, `haupt.m` builds a Hauptmodul
+`vw3.m` is the working library and `vwal.m` the Atkin-Lehner layer (which also holds
+`RecentredDisc` and `ZeroLevel`); `aldims.m` is the validation sweep over all Atkin-Lehner
+subgroups of a base, `basediag.m` tests the base library alone at one base and is the first thing to
+run when something does not resolve, `recentre.m` reports how much recentring gains, `aldiag.m`
+instruments the reduction quality; `dims.m` computes dimensions of M_k, `haupt.m` builds a Hauptmodul
 as a ratio of weight-12 forms, `cmchk.m` evaluates it at a CM point, `predict.m` is the
 valence-formula prediction. `vw2.m`, `run2.m`, `shape*.m` and `dbg_*.m` are development history,
 kept only because they record what was tried. `vwlib.m` and `NOTES-firstattempt.md` are from the

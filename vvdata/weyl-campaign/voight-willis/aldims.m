@@ -18,17 +18,16 @@ CC := ComplexField(PREC);
 t0 := Cputime();
 A := QuaternionAlgebra(D); O := QuaternionOrder(A, N);
 G := FuchsianGroup(O);
-DD := UnitDisc( : Precision := PREC);
-FD := FundamentalDomain(G, DD);
-rho := Max([Abs(ComplexValue(v)) : v in FD]);
 H := UpperHalfPlane();
+_, DD, FD := RecentredDisc(G, H, PREC, 3);
+rho := Max([Abs(ComplexValue(v)) : v in FD]);
 p := ComplexValue(DiscToPlane(H, DD ! 0) : Precision := PREC);
 mrep := FuchsianMatrixRepresentation(A : Precision := PREC);
 tdom := Cputime(t0);
 
 // terms and tolerance follow the domain radius, not a fixed choice
 NT := TermsFor(rho, TARGET);
-tol := ZeroLevel(rho, NT);
+tol := ZeroLevel(rho, NT : prec := PREC);
 Q := 3*NT;
 sampG := ReducedSamples(G, O, DD, mrep, p, rho, Q, CC);
 printf "D=%o N=%o DN=%o vol %o rho=%o domain %o s, %o sides, N=%o tol=%o, %o Gamma samples, prec %o\n",
