@@ -101,12 +101,21 @@ a smooth geometric ramp with no gap anywhere, which is easy to misread as the me
 | X_0^10(1) | 0 | 0.648 | 107 | 189 | resolves | | |
 | X_0^14(1) | 1 | 0.693 | 126 | 148 (1.2x) | ramp | **984 (7.8x)** | **resolves, gap 67** |
 | X_0^15(1) | 1 | 0.736 | 151 | 66 (0.4x) | ramp | 878 (5.8x) | still a ramp |
-| X_0^22(1) | 0 | 0.839 | 263 | 494 (1.9x) | ramp | in flight | |
-| X_0^26(1) | 2 | 0.774 | 180 | 147 (0.8x) | ramp | in flight | |
+| X_0^22(1) | 0 | 0.839 | 263 | 494 (1.9x) | ramp | 4117 (15.6x) in flight | |
+| X_0^26(1) | 2 | 0.774 | 180 | 147 (0.8x) | ramp | 977 (5.4x) | **still a ramp** |
 
-So the rule is to size Q by the rows RETAINED, aiming for several times NT -- D = 14 needed about
-eight times -- and not by NT itself.  Neither genus nor the domain radius is the obstruction:
-D = 22 has genus 0 and fails at 1.9x, D = 14 has genus 1 and succeeds at 7.8x.
+So the first rule is to size Q by the rows RETAINED, aiming for several times NT -- D = 14 needed
+about eight times -- and not by NT itself.  Genus is NOT the obstruction: D = 22 has genus 0 and
+fails where D = 14 has genus 1 and succeeds.
+
+But over-determination is necessary and **not sufficient**: D = 26 still gives a ramp at 5.4 times.
+What the two bases that resolve easily have in common is a small domain radius, and the table is
+monotone in it -- 0.447 and 0.648 resolve at under 2x, 0.693 resolves only at 7.8x, and 0.736,
+0.774 and 0.839 have not resolved at any row count tried.  So the radius governs the conditioning
+and the row count governs whether that conditioning can be exploited; both have to be right.
+Shrinking the radius by sampling on a smaller circle does not by itself help (D = 22 at 70 percent
+of the maximal vertex modulus is still a ramp), because the terms needed fall with it and the
+relations get weaker in step.
 
 **D = 15 is the genuine exception** and its diagnosis stands: raising the rows to 878, nearly six
 times NT, still gives a ramp.  Its reductions barely move the point -- sources at 0.7358 land in
