@@ -31,7 +31,7 @@
     line width=0.25pt,
     fill=StatusNot!65
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,1213) (4,1878) (5,2117) (6,2023) (7,1897) (8,1239) (9,1062) (10,534) (11,288) (12,25) (13,32) (14,7) (15,6) (17,7) (18,3) (19,16) (20,10) (21,15) (22,11) (23,2) 
+  (0,0) (1,0) (2,0) (3,1253) (4,1892) (5,2135) (6,2031) (7,1900) (8,1239) (9,1062) (10,534) (11,288) (12,25) (13,32) (14,7) (15,6) (17,7) (18,3) (19,16) (20,10) (21,15) (22,11) (23,2) 
   };
 
   \addplot+[
@@ -39,7 +39,7 @@
     line width=0.25pt,
     fill=StatusOpen!45
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,95) (4,20) (5,18) (6,8) (7,3) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
+  (0,0) (1,0) (2,0) (3,55) (4,6) (5,0) (6,0) (7,0) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
   };
 
   \legend{Proved subhyperelliptic, Proved not subhyperelliptic, Open}
@@ -53,7 +53,7 @@
 % \testbar normalises log-scaled bars to the largest count; drop this line if
 % the macro is already defined in your preamble.
 \newcommand{\testbar}[2]{%
-  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(8175))}%
+  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(8098))}%
   \begin{tikzpicture}[baseline=-0.55ex]
     \fill[#1!10] (0,0) rectangle (2.7,0.16);
     \draw[black!45, line width=0.2pt] (0,0) rectangle (2.7,0.16);
@@ -101,54 +101,54 @@ Isomorphism
 \addlinespace[0.2em]
 
 Atkin--Lehner fixed points
-  & 8175 & \testbar{StatusNot}{8175} \\
+  & 8098 & \testbar{StatusNot}{8098} \\
 
 Finite field point count
-  & 1262 & \testbar{StatusNot}{1262} \\
+  & 1257 & \testbar{StatusNot}{1257} \\
 
 Dual graphs of the special fibres
-  & 899 & \testbar{StatusNot}{899} \\
+  & 1083 & \testbar{StatusNot}{1083} \\
 
 Special fiber
   & 732 & \testbar{StatusNot}{732} \\
 
 Upward closure
-  & 552 & \testbar{StatusNot}{552} \\
+  & 646 & \testbar{StatusNot}{646} \\
 
 Refined Atkin--Lehner fixed points
-  & 320 & \testbar{StatusNot}{320} \\
+  & 310 & \testbar{StatusNot}{310} \\
 
 Isomorphism
-  & 114 & \testbar{StatusNot}{114} \\
+  & 111 & \testbar{StatusNot}{111} \\
 
 Special fiber isomorphism
-  & 97 & \testbar{StatusNot}{97} \\
+  & 90 & \testbar{StatusNot}{90} \\
 
 Automorphism groups
-  & 63 & \testbar{StatusNot}{63} \\
+  & 61 & \testbar{StatusNot}{61} \\
 
 Weil polynomial
-  & 49 & \testbar{StatusNot}{49} \\
-
-Modular non-Atkin--Lehner involution
-  & 38 & \testbar{StatusNot}{38} \\
+  & 31 & \testbar{StatusNot}{31} \\
 
 Canonical quadrics
   & 27 & \testbar{StatusNot}{27} \\
 
-Twisted point counts
-  & 25 & \testbar{StatusNot}{25} \\
-
 Degeneracy morphism
-  & 18 & \testbar{StatusNot}{18} \\
+  & 10 & \testbar{StatusNot}{10} \\
+
+Twisted point counts
+  & 7 & \testbar{StatusNot}{7} \\
+
+Modular non-Atkin--Lehner involution
+  & 3 & \testbar{StatusNot}{3} \\
 
 Twisted Weil polynomials
-  & 14 & \testbar{StatusNot}{14} \\
+  & 2 & \testbar{StatusNot}{2} \\
 
 \bottomrule
 \end{tabularx}
 
-\caption{Distribution of the tests that determined the $18235$ resolved quotients. Bar lengths are log-scaled.}
+\caption{Distribution of the tests that determined the $18318$ resolved quotients. Bar lengths are log-scaled.}
 \label{fig:test-attribution}
 \end{figure}
 
