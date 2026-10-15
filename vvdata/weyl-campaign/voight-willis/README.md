@@ -15,13 +15,12 @@ both:
 
 | | Borcherds / Guo–Yang | Voight–Willis |
 |---|---|---|
-| what blocks it | the number of divisors of M = 2DN (the Normaliz wall at 24), and the m = 0 multiplier when N > 1 | the size of the fundamental domain, which grows with D·N |
+| what blocks it | the number of divisors of M = 2DN (the Normaliz wall at 24), and the m = 0 multiplier when N > 1 | the size of the fundamental domain, which grows with the **arithmetic volume**, not with D·N |
 | exactness | exact equations | numerical, so a verdict needs an error statement or an exact post-check |
 | conditionality at N > 1 | rests on the m = 0 term | none |
 
-So a base can be out of reach of one and inside the other. The bases behind the divisor wall sit at
-D·N = 330, 462, 510 and upward with many divisors, while this method does not care how many
-divisors D·N has. That is the opportunity to test.
+So a base can be out of reach of one and inside the other, and measurement (below) shows the first
+bases behind the divisor wall are all well inside this method's reach.
 
 ## Status
 
@@ -38,34 +37,91 @@ divisors D·N has. That is the opportunity to test.
 
 ## What has to happen next, in order
 
-1. **The Atkin–Lehner layer.** Everything so far is on X_0^D(N) itself. Every model we store, and
-   every curve we care about, is a quotient X/W, so the group must be extended by the Atkin–Lehner
-   elements and the forms cut down to the W-invariant ones. This is beyond the published method and
-   is the first real piece of work.
-2. **Agreement with the models we already have.** The decisive test is not a dimension count: build
-   models from the expansions at bases where `data/models/models_D_N.m` already holds equations, and
-   check they agree with the stored ones. Note the model files are scattered across branches, so
-   assemble a merged directory first (see `../hyperelliptic/open-cases/have.m`). Compare through the
-   checks the repository already trusts: the genus from the genus formula, point counts over F_p and
-   F_{p^2} against the trace formula (`ComputePointsViaTrace`, as `tests/CRVTraceCounts.m` does),
-   and curve isomorphism by construction. Agreement across many bases is what would make this a
-   second source rather than a second guess.
-3. **Beyond the Borcherds reach.** Only then try the bases the polytope cannot do — the 24-divisor
-   levels — and the quotients still undecided for hyperellipticity.
+1. ~~The Atkin–Lehner layer.~~ **Done**, see below.
+2. **Agreement with the models we already have.** Still open, and it is the step that matters; see
+   "What is still NOT done" below for why it is more than a thin wrapper and where to start.
+3. **Beyond the Borcherds reach.** The timings below say this is now worth attempting: the first
+   bases behind the divisor wall compute their domains in seconds to minutes.
 
-## The wall, measured
+## The wall, measured — and it is the volume, not D·N
 
-`FundamentalDomain` is the prerequisite and the bottleneck:
+`FundamentalDomain` is the prerequisite and the bottleneck, but **D·N is a bad proxy for its cost**;
+`ArithmeticVolume` is a good one. For a fixed D·N the split between D and N changes the volume by a
+factor of several, because each ramified prime p contributes p − 1.
 
-| D·N | result |
-|---|---|
-| 210 | 248 s, 102 sides, presentation 18 generators |
-| 770 | not finished in 30 min, on both the Mac and lovelace |
+| base | D·N | volume | domain | sides |
+|---|---|---|---|---|
+| X_0^6(1) | 6 | 0.33 | 0.19 s | 6 |
+| X_0^10(1) | 10 | 0.67 | 0.21 s | 6 |
+| X_0^6(35) | 210 | 16 | 248 s | 102 |
+| **X_0^330(1)** | 330 | 13.3 | **9.3 s** | 70 |
+| **X_0^510(1)** | 510 | 21.3 | **120 s** | 116 |
+| **X_0^462(1)** | 462 | 20 | **233 s** | 98 |
+| **X_0^6(55)** | 330 | 24 | **317 s** | 150 |
+| X_0^77(10) | 770 | **180** | not finished in 30 min | — |
 
-A 12 h run at 770 was launched on 2026-10-15 (`lovelace:~/gymodels/vwdom770.log`) to replace
-"timed out" with a number. Note the comparison that matters is against D·N, not against the
-polytope level M = 2DN: the first bases behind the divisor wall are at D·N = 330, 462 and 510,
-which are between the two rows above, so whether they are reachable is genuinely open.
+The earlier reading, that the method stops somewhere below D·N = 770, was an artefact of the base
+chosen to test it: X_0^77(10) has volume 180 because D = 77 contributes (7−1)(11−1) = 60, eleven
+times the volume of X_0^6(35), which does finish. **The bases behind the Borcherds divisor wall are
+not like that.** X_0^330(1), X_0^462(1) and X_0^510(1) have volumes of 13 to 21 and their domains
+come out in seconds to minutes, so the reach of this method and of the polytope route genuinely do
+differ, in the direction that matters.
+
+Volumes of the other bases at those levels, for planning: X_0^10(33) 32, X_0^22(15) 40,
+X_0^6(77) 32, X_0^22(21) 53, X_0^10(51) 48, X_0^6(85) 36.
+
+## The Atkin-Lehner layer (`vwal.m`)
+
+Implemented and validated at X_0^6(1): for all five Atkin-Lehner subgroups and weights 2, 4 and 6,
+**15 of 15** computed dimensions match the dimension predicted from the quotient's own signature,
+with gaps of 10^9 to 10^10. At weight 2 that prediction is the genus of the quotient, so this is
+also an independent analytic confirmation of `GenusShimuraCurveQuotient` and of
+`NumberOfEllipticPointsByCMOrder`, which supply the signature.
+
+Three things the work turned up, all recorded in the code:
+
+* The Atkin-Lehner element of reduced norm m is found in the **two-sided ideal** of that norm, where
+  every element of reduced norm exactly m is a generator and so normalises the order. Searching the
+  order itself with a box of 4 misses several; searching the ideal with a box of 3 succeeds at every
+  base tried. Magma's `Normalizer` is implemented for definite orders only and cannot be used.
+* The reduced norm **must come out positive**. A generator of negative norm sends the upper half
+  plane to the lower one and does not act on the curve, and `IsPrincipal` returns exactly such a
+  generator at D = 6, m = 3.
+* `ShimuraReduceUnit` **fails on 20 to 30 percent** of Atkin-Lehner images. Applying mu throws the
+  point to modulus up to 0.997, and the reduction then returns a point still outside the domain,
+  with modulus up to 0.91 against a domain radius of 0.54, where a 50-term series is worthless.
+  Those rows are dropped. On the rest the relation holds to 3e-10, against 3e-11 for the group's own
+  relation, which is how we know the relation is right and only the reduction is at fault.
+  Recovering those samples would need a better reduction and is not done.
+
+**The number of terms and the vanishing tolerance must follow the domain radius.** At D = 6 the
+radius is 0.54 and 50 terms suffice; at D = 10 it is 0.82, where 50 terms leave an error of 1e-5 and
+a fixed tolerance of 1e-7 reports every space as empty. `TermsFor` and `ZeroLevel` in `vwal.m` set
+both from the radius. The cost of this is real: D = 10 needs 164 terms where D = 6 needs 53.
+
+## What is still NOT done: agreement with the stored models
+
+This is the step that would make the method a second source, and it is not built. What exists is a
+dimension match, which is not a model match.
+
+The missing piece is model reconstruction: functions on the quotient as ratios of forms of equal
+weight, their degrees, and the algebraic relation between two of them fitted from values. Two
+things make it more than a thin wrapper:
+
+* **At D = 6 the comparison has no content.** The star curve has three elliptic points, and any
+  three points are equivalent under a Mobius change of coordinate, so matching the stored model's
+  branch points is free. The branch assignment is already determined by the signatures, which come
+  from the repository rather than from the expansions. The first base where a coordinate-free
+  comparison bites is D = 10, whose star curve has four elliptic points (orders 2, 2, 2, 3) and
+  hence a genuine cross-ratio to compare.
+* The stored models are written over a Hauptmodul of the **star** curve, so a comparison needs that
+  Hauptmodul reconstructed and normalised the same way, and at D = 10 the star curve first reaches
+  dimension 2 at **weight 12**, which at 164 terms is a much heavier computation than weight 4.
+
+Coordinate-free invariants are the way to do the comparison when it is built: the j-invariant for a
+genus-1 quotient, Igusa invariants for genus 2, the cross-ratio of the elliptic points for genus 0.
+Comparing raw coefficients would require recognising numerical values as rationals and matching a
+coordinate, which is avoidable.
 
 ## Traps, each of which cost a day
 
