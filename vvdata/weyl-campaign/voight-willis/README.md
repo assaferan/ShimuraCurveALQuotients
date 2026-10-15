@@ -162,29 +162,55 @@ radius is 0.54 and 50 terms suffice; at D = 10 it is 0.82, where 50 terms leave 
 a fixed tolerance of 1e-7 reports every space as empty. `TermsFor` and `ZeroLevel` in `vwal.m` set
 both from the radius. The cost of this is real: D = 10 needs 164 terms where D = 6 needs 53.
 
-## What is still NOT done: agreement with the stored models
+## Agreement with published equations: DONE, and it holds
 
-This is the step that would make the method a second source, and it is not built. What exists is a
-dimension match, which is not a model match.
+The step that makes this a second source rather than a second guess.  `starcmp.m` builds the
+Hauptmodul of a **star** curve from the expansions -- which exercises the Atkin-Lehner layer, since
+the star is the quotient by the full group -- and compares it with Elkies' published coordinates
+(*Shimura curve computations*, arXiv:math/0005160, Sec. 3.1 and Table 1 for D = 6, Sec. 4 and
+Table 3 for D = 10, transcribed with their corrections in `tests/CMFieldsElkies.m` on `main`).
 
-The missing piece is model reconstruction: functions on the quotient as ratios of forms of equal
-weight, their degrees, and the algebraic relation between two of them fitted from values. Two
-things make it more than a thin wrapper:
+A computed Hauptmodul is defined only up to a Mobius change, so the test is whether **one** Mobius
+map carries the published value onto the computed one at **every** CM point at once.  Writing
+s = (a t + b)/(c t + d) gives one linear equation per point in four unknowns defined up to scale, so
+three points fix the coordinate and every further point is a prediction.  The smallest singular
+value of that system is the residual of the fit and the next one its conditioning; nothing is
+fitted point by point.
 
-* **At D = 6 the comparison has no content.** The star curve has three elliptic points, and any
-  three points are equivalent under a Mobius change of coordinate, so matching the stored model's
-  branch points is free. The branch assignment is already determined by the signatures, which come
-  from the repository rather than from the expansions. The first base where a coordinate-free
-  comparison bites is D = 10, whose star curve has four elliptic points (orders 2, 2, 2, 3) and
-  hence a genuine cross-ratio to compare.
-* The stored models are written over a Hauptmodul of the **star** curve, so a comparison needs that
-  Hauptmodul reconstructed and normalised the same way, and at D = 10 the star curve first reaches
-  dimension 2 at **weight 12**, which at 164 terms is a much heavier computation than weight 4.
+| base | weight | rho | terms | CM points | predictions | residual | next sv |
+|---|---|---|---|---|---|---|---|
+| X_0^6(1)* | 24 | 0.4472 | 58 | **14 of 14** | 11 | 5.4e-13 | 1.30 |
+| X_0^10(1)* | 12 | 0.6482 | 107 | **12 of 12** | 9 | 4.1e-16 | 1.51 |
 
-Coordinate-free invariants are the way to do the comparison when it is built: the j-invariant for a
-genus-1 quotient, Igusa invariants for genus 2, the cross-ratio of the elliptic points for genus 0.
-Comparing raw coefficients would require recognising numerical values as rationals and matching a
-coordinate, which is avoidable.
+Per-point relative residuals are 1e-13 at D = 6 and 1e-15 to 1e-16 at D = 10.  **D = 10 is the case
+with real content**: its star curve has four elliptic points (orders 2, 2, 2, 3) at t = 0, oo, 2, 27
+for discriminants -3, -8, -20, -40, so their cross-ratio is an invariant no change of coordinate can
+fake, and the twelve points fitted include all four.  At D = 6 the star has only three elliptic
+points, which any Mobius map matches, but the eleven further CM values carry the content there.
+
+Convergence is clean, which is what rules out a coincidence (D = 6, weight 24):
+
+| terms | 46 | 69 | 92 |
+|---|---|---|---|
+| kernel | 7.5e-10 | 1.0e-15 | 3.9e-22 |
+| fit residual | 1.8e-3 | 1.1e-6 | 1.6e-9 |
+
+## Why the comparison against OUR OWN stored models is vacuous at D = 6 and D = 10
+
+Worth stating so nobody builds it twice.  For these bases every quotient has genus 0, and a stored
+model of an index-2 quotient is a double cover y^2 = f_W(x) of the star whose branch points are the
+roots of f_W.  Those branch points are exactly the elliptic points of the star not fixed by W, so
+the whole complex-geometric content of the stored file is the **position of three points** on a
+genus-0 curve -- and any three points are equivalent under a Mobius change.  At D = 10 the models
+give the three order-2 points (x = 0, 1, 2/27 for the points fixed by w_2, w_5, w_10 respectively)
+but say nothing about where the order-3 point sits, so there is no fourth point to over-determine
+anything.  The comparison therefore has **zero independent predictions** at both bases, which is why
+the Elkies CM tables, not the model files, are what the expansions are tested against above.
+
+A non-vacuous model comparison needs a base whose stored quotients have **positive genus**, where
+the j-invariant or the Igusa invariants are genuine moduli rather than a coordinate choice.
+Separately, a complex-analytic method cannot see the **quadratic twist** of y^2 = f_W(x) at all:
+that is arithmetic, not geometry, and nothing here tests it.
 
 ## Traps, each of which cost a day
 
@@ -200,6 +226,24 @@ coordinate, which is avoidable.
 * The undocumented `ShimFDGens` and `ShimFDDisc` hold the side-pairing generators and the domain
   vertices; the Cayley conjugate of the half-plane matrix lands exactly in SU(1,1), so the
   automorphy factor is unambiguous at even weight.
+* **The absolute zero cutoff is the wrong instrument once Atkin-Lehner rows are present.**
+  `ZeroLevel` assumes the kernel sits near the truncation floor rho^N, which holds for Gamma rows
+  alone.  Atkin-Lehner rows are limited by the quality of the reduction instead, so the kernel
+  floats far above rho^N: at D = 6 weight 24 it sat at 7.5e-10 and 1.4e-8 against a floor of 1e-16,
+  while the first non-kernel value was 0.0195 -- a ratio of 1.4e6, unmistakable, yet every kernel
+  value was above the cutoff and the dimension came out 0.  Use `GapDimRel`, which takes the largest
+  ratio jump among values below a RELATIVE threshold and uses no absolute cutoff at all.
+* **Use `Embed(R, O)` to place CM points, never a box search.**  It returns an OPTIMAL embedding, so
+  the fixed point really has discriminant disc(R) and not that of some larger order containing it,
+  which a search for an element of given trace and norm does not guarantee.  It also succeeds where
+  a box search simply fails: at D = 10 the generator of discriminant -40 lies outside a box of 6 on
+  the order basis, and brute force over that box returns nothing at all, silently losing 9 of the 12
+  CM points.  Note the reduced norm form is INDEFINITE here, so basis elements have negative norms
+  and "small norm" is no guide to small coefficients.
+* **`AttachSpec` with a relative path breaks when a script is run from its own directory**, and the
+  failure is quiet: the intrinsics are simply undefined, so every check that uses them is skipped
+  while the rest of the script runs on and prints plausible-looking output.  All scripts here now
+  use the absolute path.
 
 ## Files
 

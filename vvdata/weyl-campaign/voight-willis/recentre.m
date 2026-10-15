@@ -7,7 +7,7 @@
 // back to the upper half plane and rebuild the disc there.  Report rho at each step.
 //
 //   magma -b DISC:=10 LEVEL:=1 PR:=100 ITERS:=4 recentre.m < /dev/null
-AttachSpec("ShimuraQuotients.spec");
+AttachSpec("/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.spec");
 SetColumns(0);
 D := StringToInteger(DISC); N := StringToInteger(LEVEL);
 PREC := StringToInteger(PR); ITERS := StringToInteger(ITERS);

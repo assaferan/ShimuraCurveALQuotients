@@ -4,7 +4,7 @@
 //   (3) how does the singular-value gap respond when rows with a large reduced modulus are dropped?
 //
 //   magma -b DISC:=10 LEVEL:=1 PR:=150 TGT:=14 BOX:=3 aldiag.m < /dev/null
-AttachSpec("ShimuraQuotients.spec");
+AttachSpec("/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.spec");
 SetColumns(0);
 VW := "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/";
 load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m";

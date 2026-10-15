@@ -4,7 +4,7 @@
 // NumberOfEllipticPointsByCMOrder).  At k = 2 the prediction is the genus of X_0^D(N)/W itself.
 //
 //   magma -b DISC:=6 LEVEL:=1 PR:=100 NTERMS:=50 QQ:=60 BOX:=3 aldims.m < /dev/null
-AttachSpec("ShimuraQuotients.spec");
+AttachSpec("/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.spec");
 SetColumns(0);
 load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m";
 load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwal.m";

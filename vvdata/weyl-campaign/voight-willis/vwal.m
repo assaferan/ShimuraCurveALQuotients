@@ -162,3 +162,25 @@ function RecentredDisc(G, H, PREC, iters)
     end for;
     return ctr, DD, FD;
 end function;
+
+// Dimension from the largest RELATIVE gap, with no absolute cutoff.
+//
+// ZeroLevel above assumes the kernel sits near the truncation floor rho^N, which holds when the
+// rows come from Gamma alone.  It does NOT hold once Atkin-Lehner rows are included: those are
+// limited by the quality of the reduction, not by truncation, so the kernel floats far above
+// rho^N.  At D = 6, weight 24, the two kernel values are 7.5e-10 and 1.4e-8 against a truncation
+// floor of 1e-16, while the first non-kernel value is 0.0195 -- a ratio of 1.4e6, unmistakable,
+// but every kernel value is above the absolute cutoff and the count comes out 0.
+// So: call a singular value plausibly zero when it is below relcut times the LARGEST one, and take
+// the largest ratio jump among those.  Returns the dimension, the gap ratio, and the two values
+// bracketing the gap so a caller can report how unambiguous it was.
+function GapDimRel(sv, relcut)
+    top := sv[#sv];
+    nz := #[s : s in sv | s lt relcut*top];
+    if nz eq 0 then return 0, 0.0, 0.0, sv[1]; end if;
+    best := 0.0; bi := 0;
+    for i in [1..Min(nz, #sv-1)] do
+        if sv[i] gt 0 and sv[i+1]/sv[i] gt best then best := sv[i+1]/sv[i]; bi := i; end if;
+    end for;
+    return bi, best, sv[bi], sv[bi+1];
+end function;

@@ -4,7 +4,7 @@
 //
 //   magma -b DISC:=10 LEVEL:=1 PR:=120 TGT:=12 RADF:=100 RC:=3 QMUL:=3 KS:=2,4 basediag.m < /dev/null
 //   (RADF in percent of the maximal vertex modulus; RC = recentring iterations, 0 for Magma's default)
-AttachSpec("ShimuraQuotients.spec");
+AttachSpec("/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.spec");
 SetColumns(0);
 load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vw3.m";
 load "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/voight-willis/vwal.m";
