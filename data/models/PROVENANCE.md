@@ -678,6 +678,82 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## The odd-D bases behind the wall, first base: X_0^33(10) (2026-10-13, branch odd-d-models-2026-10-13)
+
+The odd-D bases of the level groups 660, 780, 924 and 1020 need, besides the shared rungs with poles
+at oo only, the ring of weight-1/2 forms with poles at both cusps, and that search was stopped twice:
+once by the two-cusp polytopes, which Normaliz did not enumerate within the runs' time limits
+(PRs #80 and #88), and once by the pool of forms at the cusp 0, which grows with the product of the
+cusp-0 order and the level and took the kernel computation of PR #63 to a 172 GB segmentation fault at
+X_0^33(7) (PR #95 replaced it by a forward substitution against the triangular pool). Two further
+defects affected only odd D with N > 2: the divisor of a Borcherds form was sampled at the wrong
+discriminants (PR #91), and the expansion at the cusp 0 was read in the wrong variable (PR #63).
+With the three fixes merged and the exact m = 0 multiplier of PR #79 (not merged) applied on top, the
+fifteen bases were started together on lovelace on 2026-10-13 from one tree (`genmodels.m`,
+BFCACHE=1, 8 threads, 10-day cap); reproducing these files from main therefore needs PR #79, and
+PR #105 for the fibre products. This section records them as they finish.
+
+**`models_33_10.m`** (31 minutes). 50 cover keys, all with an equation: 22 from the Borcherds run
+-- the one genus-0 quotient, by {1, 2, 15, 30, 33, 55, 66, 110}, is y^2 = (88209/16) x (1 - x), a
+P^1 with a rational point; then 5 of genus 1, 7 of genus 2, 3 of genus 3, 3 of genus 4, 2 of genus 5
+and one of genus 8 -- and 28 fibre products of the file's double covers (the paragraph below). Its
+searches asked for the polytopes (660, 231, 0) (already committed with level 660), (660, 401, 0) and
+the two-cusp polytope (660, 69, 166); the last two are committed here. `polymake_solution_660_69_166`
+is a Normaliz enumeration on lovelace, 8170 lattice points (as is the committed (660, 231, 0),
+12461 points; in each file the first line is the Magma sequence header and the last its closing
+bracket). `polymake/polymake_solution_660_401_0` is NOT the lattice points of its polytope: the
+search was served by the shifted-products fallback of `nmzsolve.py`, which built a spanning set of
+855 points from the rung (660, 231, 0) and the 441 weight-0 shifts (the run's log line: "base rung
+231 (12461 pts) + 441 shift(s) x1 -> 855 pts for n=401"); the file carries the first-line mark
+`// derived: ...` that the fallback writes, so the lower-rung read and the products path do not
+take it for a complete enumeration. With these files the default recipe reproduces the base
+without Normaliz. Outside check: every stored curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
+p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 126 of 126. Six primes do not by
+themselves determine the quadratic twist: several quotients of genus 2 to 4 here have trace zero at
+every one of these primes where the character of a twist by -33, -3, -30, 231, -770 or 2310 is -1,
+so the twisted curve has the same six counts. Primes up to 113 rule every such twist out (Sachi's
+independent check at the 25 primes from 13 to 113: all counts agree). `tools/check_models_trace.m`
+(this PR) compares all 49 curves of positive genus, hyperelliptic entries and fibre products alike,
+with the trace formula over F_p and F_{p^2}: at the 13 primes from 13 to 61, 637 of 637 prime
+counts agree (each prime counting both fields), none skipped; the run at the primes to 113 is
+still in progress when this is written. No published equation
+exists for this base. As at every base with N > 1, the equations rest on the m = 0 term of Schofer's
+formula (PRs #66, #74, #79, not yet merged), and nothing fixes which quadratic twist of the conic the
+genus-0 quotient is beyond the covers above it agreeing with one another.
+
+**`models_33_14.m`** (12 h 07 min, 16 threads; the deep rung is the pool of 7624 forms at the cusp 0
+at order m = -33, whose good forms took 950 s of forward substitution -- the step that had been the
+172 GB kernel). 50 cover keys, all with an equation: 15 from the Borcherds run -- 5 of genus 1, 2 of
+genus 2, 3 of genus 3, 2 of genus 4, 3 of genus 5 -- and 35 fibre products of them (the paragraph
+below); this base has no genus-0 quotient other than the star curve itself, so every equation here
+is a cover of the Hauptmodul line. Its searches asked for (924, 325, 0) (committed with level 924)
+and the two-cusp polytope (924, 89, 236), committed here (`polymake/polymake_solution_924_89_236`,
+3194 lattice points, the Normaliz enumeration of 2026-10-12 on lovelace that PR #80 had recorded as
+missing). Outside check: every stored curve has the point counts of the trace formula over F_p and
+F_{p^2} at p = 13, 17, 19, 23, 29, 31 (campaign `composite/checkcomp.m`): 90 of 90; and at the 25
+primes from 13 to 113, which separate every quadratic twist by a d supported on 2, 3, 7, 11 and -1,
+`tools/check_models_trace.m` compares all 50 curves of positive genus with the trace formula over
+F_p and F_{p^2}: at the 13 primes from 13 to 61, 650 of 650 prime counts agree, none skipped
+(Sachi's independent check at the 25 primes from 13 to 113 agrees throughout; the run to 113 with
+this script is still in progress when this is written). No published
+equation exists for this base; the same remarks on the m = 0 term apply.
+
+**Every empty key of both files filled as a fibre product (2026-10-14).** The 28 empty keys of
+`33_10` and the 35 of `33_14` are the covers with no genus-0 Atkin-Lehner quotient to carry an
+equation; each is the fibre product over the star line of its index-2 double covers already in the
+file, built by the writer of the fibre-product stage (`tools/writefp.m`) with the coordinate check of
+PR #105: for every generating set the three double covers above each pair of factors were tested,
+and at all 63 the product of the three is a square, so the factors are consistent with one
+coordinate on the star line (up to a quadratic twist shared by two of them, which the test cannot
+see). Genera 3 to 8 at `33_10`
+(2, 2, 5, 4, 9, 6 of genus 3 through 8) and 3 to 11 at `33_14` (2, 4, 1, 0, 3, 4, 8, 8, 5 of genus 3
+through 11, so `33_14`'s top curve of genus 11 is among them). The writer accepted each on the genus
+formula and the trace formula over F_p and F_{p^2} at the first three good primes; then,
+independently of the writer, every entry was re-read from its stored strings and compared with the
+trace formula at the 4th and 5th good primes: 126 of 126 counts agree. Stored in the
+`<genus, "CRV", [...]>` shape, with the note at the top of each file.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
