@@ -108,21 +108,113 @@ So the first rule is to size Q by the rows RETAINED, aiming for several times NT
 about eight times -- and not by NT itself.  Genus is NOT the obstruction: D = 22 has genus 0 and
 fails where D = 14 has genus 1 and succeeds.
 
-But over-determination is necessary and **not sufficient**: D = 26 still gives a ramp at 5.4 times.
-What the two bases that resolve easily have in common is a small domain radius, and the table is
-monotone in it -- 0.447 and 0.648 resolve at under 2x, 0.693 resolves only at 7.8x, and 0.736,
-0.774 and 0.839 have not resolved at any row count tried.  So the radius governs the conditioning
-and the row count governs whether that conditioning can be exploited; both have to be right.
-Shrinking the radius by sampling on a smaller circle does not by itself help (D = 22 at 70 percent
-of the maximal vertex modulus is still a ramp), because the terms needed fall with it and the
-relations get weaker in step.
+But over-determination is necessary and **not sufficient**, and the reading that followed from
+this table -- that the domain radius is a hard wall somewhere near 0.693 -- was **WRONG**.  It came
+from testing every base at the same truncation target, 1e-12, which is far too loose once rho is
+large.  See the next section.
 
-**D = 15 is the genuine exception** and its diagnosis stands: raising the rows to 878, nearly six
-times NT, still gives a ramp.  Its reductions barely move the point -- sources at 0.7358 land in
-the narrow band 0.666 to 0.736 -- so the relation f(delta w) = j^k f(w) ties two nearly equal points
-and carries almost no information, however many of them there are.  Compare D = 10, where sources at
-0.648 spread over 0.188 to 0.645.  The fix there is still to pair points across the boundary with
-the side-pairing generators from `ShimFDGens` rather than relying on reduction.
+## ⇒ CORRECTION (2026-10-15): the radius is not a wall.  The term count was too low
+
+**D = 22, at rho = 0.839, resolves.**  Holding everything else fixed and raising only the
+truncation target (and the working precision with it), `walldiag.m` gives, for weight 4 where the
+expected dimension is 3:
+
+| target | NT | prec | rows | floor rho^NT | dimension found | gap |
+|---|---|---|---|---|---|---|
+| 1e-12 | 158 | 120 | 297 | 9.1e-13 | 4, **wrong** | 14.8 |
+| 1e-20 | 263 | 150 | 494 | 9.1e-21 | **3, right** | 63.1 |
+| 1e-28 | 368 | 170 | 692 | 9.1e-29 | **3, right** | 620 |
+
+The three kernel singular values sit at 0.9 to 8 times the floor at every term count, while the
+first non-kernel value sits at 62, then 503, then 2176 times it.  That is the signature of
+TRUNCATION, not of conditioning: the kernel tracks the floor downward while the gap above it widens
+by an order of magnitude per step.  Conditioning would instead show the whole spectrum sliding down
+together with no gap ever opening, which is exactly what the mis-centred D = 10 computation did
+before `RecentredDisc` (see above), and the contrast between the two is what settles it.
+
+**So the rule is not a radius cutoff but a relation between the two.**  The term count must be set
+so that the first non-kernel singular value stands clear of rho^NT, and since the kernel sits AT the
+floor, the way to check a dimension is to raise NT and confirm the gap grows.  A single fixed
+target, as the drivers used, silently under-resolves every base with a large radius.
+
+**There are TWO distinct failure modes, and the radius does not separate them.**  D = 15 and
+D = 26 do not resolve however many terms they are given, and both have a SMALLER radius than D = 22,
+which does.  So the monotone-in-rho reading of the previous table is wrong twice over.
+
+| base | rho | NT | rows | floor | smallest sv | verdict |
+|---|---|---|---|---|---|---|
+| D = 22 | **0.839** | 368 | 692 | 9.1e-29 | 8.2e-29, i.e. **at** the floor | resolves |
+| D = 26 | 0.774 | 252 | 1026 | 1.0e-28 | 3.6e-38, **10 orders below** | fails, got 11 for 3 |
+| D = 15 | 0.736 | 211 | 828 | 7.7e-29 | 1.2e-74, **45 orders below** | fails, got 1 for 2 |
+
+Where the smallest singular values sit AT the floor, the limit is truncation and more terms fix it.
+Where they sit far BELOW the floor, the matrix is rank-deficient for reasons that have nothing to do
+with the series: the condition numbers are 9.0e37 at D = 26 and 2.8e74 at D = 15, against 1.4e12 at
+D = 22.  That one measurement -- the smallest singular value against rho^NT -- tells the two apart,
+and it is what `walldiag.m` exists to report.
+
+**What does predict it is how much of the sampling circle lies OUTSIDE the fundamental domain**, as
+the retention of `ReducedSamples` measures: 63 percent at D = 22, 27 percent at D = 26, 14 percent at
+D = 15, in exactly the order of the table.  A point inside the domain reduces to itself and carries
+no relation, so when the domain covers most of the circle the relations come from a few short arcs,
+and recovering two hundred coefficients from short arcs is exponentially ill-conditioned however
+many samples are taken from them.  The remedy is to sample on a circle of radius LARGER than rho, so
+that every point lies outside the domain and reduces non-trivially; this is what the paper does in
+its Example 3, where rho = 0.718 and the contour is taken at R = 0.8.  `basediag.m` takes `RADF`
+above 100 for exactly this, and `vwcauchy.m` likewise keeps every point of the circle rather than
+discarding the ones that reduce trivially.
+
+**Remark 3.3 is NOT the explanation, contrary to a natural first guess.**  The paper recommends
+working with f_norm = f (Im z)^{k/2}, whose automorphy factor has absolute value 1, "if rho is
+large".  Measured (`jfac.m`), |j|^k is bounded by 1 at every base and its spread across samples is
+only 1.5 at D = 6 rising to 11 at D = 22 -- nothing like the seven orders of magnitude that would
+be needed to explain the failures.
+
+## Two things the paper prescribes that are still not implemented
+
+Both are in Section 3 and both bear directly on large rho.
+
+1. **The Cauchy-integral formulation** (eq. 13-14 with Simpson's rule at eq. 16).  The paper is
+   explicit that it prefers this: relations are assembled "by taking appropriate linear
+   combinations of these relations, or (what seems better in practice) using the Cauchy integral
+   formula".  All three of its Shimura-curve examples use it; the automorphy relations of eq.
+   (9)-(11), which `vw3.m` implements, are presented first and then superseded.  The matrix is
+   SQUARE, (N+1) x (N+1), where ours is overdetermined, and Remark 3.4's two rescalings -- b'_n =
+   b_n rho^n, then dividing row n by (K_nn - 1) -- are what make it nearly diagonally dominant.
+   `vwcauchy.m` is a prototype.  It reproduces the correct dimension at D = 10 with fewer terms (64
+   against 107) and reaches 1e-28 where the automorphy system reaches 1e-12, but at D = 15, 22 and
+   26 it returns large numbers of spurious near-zero singular values and does not yet match the
+   paper's conditioning.  It is not debugged and should not be trusted as it stands.
+
+2. **Hecke relations** (eq. 18), and this is probably the more important of the two.  The paper's
+   whole framework is built around resolving a ONE-dimensional kernel: "Suppose first we are in the
+   case where the space of forms of interest is one-dimensional... one can also arrange for this as
+   in the previous section by adding linear relations coming from Hecke operators."  Its Example 4
+   reaches rho = 0.885611 with N = 600 on a genus-2 curve by adding Hecke relations for each
+   eigenform separately and finding, in each case, one singular value below 1e-20 against a next one
+   above 0.2.  A one-dimensional kernel only needs a gap after the first singular value, which is a
+   far weaker demand on conditioning than a gap after the third.  We compute no Hecke relations at
+   all, and the eigenvalues they need are already available in this repository.
+
+**For the record, the radii the paper itself reaches**: Example 2 (D = 6) rho = 0.447213, which
+matches our recentred value exactly; Example 3 rho = 0.71807 with N = 150, one singular value below
+1e-20 and the next at 0.4994; Example 4 rho = 0.885611 with N = 600.  Its Example 1 is the
+non-cocompact case at rho = 0.85, where the paper says plainly that "our method does not work well
+in this non-cocompact situation" and reports a ramp, the next singular value being "only 4 times as
+large".
+
+## An alternative worth knowing about
+
+Nelson, *Evaluating modular forms on Shimura curves*, Math. Comp. 84 (2015) 2471-2503
+(arXiv:1210.1243), evaluates a newform by computing the Shimizu lift, a realisation of
+Jacquet-Langlands, as "an explicit, rapidly-convergent formula that is well-suited for numerical
+computation".  The Voight-Willis paper cites it and says "It will be interesting to compare the two
+techniques."  Two things to weigh before reaching for it: its input is a newform specified by its
+Hecke eigenvalues and it evaluates THAT form, so it gives one eigenform at a time rather than a
+basis of a space; and implementing the theta correspondence effectively is a substantial piece of
+work that Magma does not provide.  For our purpose -- a basis of weight-2 forms on a quotient, to
+feed a canonical model -- the eigenform-at-a-time shape is workable, since the repository can
+supply the eigenvalues, but it is a bigger build than finishing Section 3.
 
 ## The wall, measured — and it is the volume, not D·N
 
