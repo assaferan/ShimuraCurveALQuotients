@@ -1,0 +1,12 @@
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurveALQuotients/2ccd0b0f-dcda-423c-b902-8aad70e4879f/scratchpad/nelson/nelson2.m"
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurveALQuotients/2ccd0b0f-dcda-423c-b902-8aad70e4879f/scratchpad/nelson/wk.m"
+base      DN     s2/DN     #div  setup s  lattice pts eval s    n_max    rel.chg     cancel      a_f source
+6_1       6      8.3334    4     13.95    8552        0.6100    60       1.68E-6     671.1       SURROGATE coefficients (timing and counts only)
+10_1      10     13.000    4     13.83    13069       0.9300    99       4.44E-9     11.60       SURROGATE coefficients (timing and counts only)
+15_1      15     17.333    4     13.74    17564       1.260     151      1.88E-10    0.3188      elliptic curve of conductor 15
+22_1      22     27.727    4     13.82    27990       2.040     221      2.39E-8     3.944       SURROGATE coefficients (timing and counts only)
+26_1      26     32.692    4     13.79    33189       2.500     261      3.08E-10    0.2961      elliptic curve of conductor 26
+35_1      35     37.143    4     13.70    37585       2.840     354      3.16E-10    0.4823      elliptic curve of conductor 35
+51_1      51     56.863    4     13.77    57650       4.270     515      2.12E-10    0.3365      elliptic curve of conductor 51
+58_1      58     72.586    4     13.71    73315       5.420     585      1.86E-8     12.79       elliptic curve of conductor 58
+COST DONE
