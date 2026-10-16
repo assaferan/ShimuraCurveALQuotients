@@ -1,0 +1,71 @@
+
+=== X_0^39(11)   D*N = 429   #W* = 8
+   W = [ 1, 11, 39, 429 ]  genus 3   index of W in W* = 2
+      overgroup by w_3 : [ 1, 3, 11, 13, 33, 39, 143, 429 ]  genus 1
+   star genus 1
+
+=== X_0^55(7)   D*N = 385   #W* = 8
+   W = [ 1, 35, 55, 77 ]  genus 3   index of W in W* = 2
+      overgroup by w_5 : [ 1, 5, 7, 11, 35, 55, 77, 385 ]  genus 1
+   star genus 1
+
+=== X_0^6(185)   D*N = 1110   #W* = 16
+   W = [ 1, 2, 15, 30, 111, 185, 222, 370 ]  genus 3   index of W in W* = 2
+      overgroup by w_3 : [ 1, 2, 3, 5, 6, 10, 15, 30, 37, 74, 111, 185, 222, 370, 555, 1110 ]  genus 1
+   star genus 1
+
+=== X_0^46(31)   D*N = 1426   #W* = 8
+   W = [ 1, 2, 23, 31, 46, 62, 713, 1426 ]  genus 3   index of W in W* = 1
+   star genus 3
+
+=== X_0^6(301)   D*N = 1806   #W* = 16
+   W = [ 1, 3, 14, 42, 43, 129, 602, 1806 ]  genus 3   index of W in W* = 2
+      overgroup by w_2 : [ 1, 2, 3, 6, 7, 14, 21, 42, 43, 86, 129, 258, 301, 602, 903, 1806 ]  genus 1
+   star genus 1
+
+=== X_0^1326(1)   D*N = 1326   #W* = 16
+   W = [ 1, 17, 78, 1326 ]  genus 3   index of W in W* = 4
+      overgroup by w_2 : [ 1, 2, 17, 34, 39, 78, 663, 1326 ]  genus 1
+      overgroup by w_3 : [ 1, 3, 17, 26, 51, 78, 442, 1326 ]  genus 1
+      overgroup by w_6 : [ 1, 6, 13, 17, 78, 102, 221, 1326 ]  genus 1
+   star genus 0
+
+=== X_0^6(323)   D*N = 1938   #W* = 16
+   (W not supplied here)
+
+=== X_0^6(379)   D*N = 2274   #W* = 8
+   (W not supplied here)
+
+=== X_0^6(385)   D*N = 2310   #W* = 32
+   (W not supplied here)
+
+=== X_0^6(649)   D*N = 3894   #W* = 16
+   (W not supplied here)
+
+=== X_0^714(5)   D*N = 3570   #W* = 32
+   (W not supplied here)
+
+=== X_0^2002(1)   D*N = 2002   #W* = 16
+   W = [ 1, 2, 13, 26, 77, 154, 1001, 2002 ]  genus 4   index of W in W* = 2
+      overgroup by w_7 : [ 1, 2, 7, 11, 13, 14, 22, 26, 77, 91, 143, 154, 182, 286, 1001, 2002 ]  genus 2
+   star genus 2
+
+=== X_0^2030(1)   D*N = 2030   #W* = 16
+   W = [ 1, 10, 14, 35, 58, 145, 203, 2030 ]  genus 4   index of W in W* = 2
+      overgroup by w_2 : [ 1, 2, 5, 7, 10, 14, 29, 35, 58, 70, 145, 203, 290, 406, 1015, 2030 ]  genus 2
+   star genus 2
+
+=== X_0^6(403)   D*N = 2418   #W* = 16
+   W = [ 1, 2, 13, 26, 93, 186, 1209, 2418 ]  genus 4   index of W in W* = 2
+      overgroup by w_3 : [ 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 1209, 2418 ]  genus 2
+   star genus 2
+
+=== X_0^2418(1)   D*N = 2418   #W* = 16
+   W = [ 1, 2, 13, 26, 93, 186, 1209, 2418 ]  genus 4   index of W in W* = 2
+      overgroup by w_3 : [ 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 1209, 2418 ]  genus 2
+   star genus 2
+
+=== X_0^3390(1)   D*N = 3390   #W* = 16
+   (W not supplied here)
+
+STRUCT DONE

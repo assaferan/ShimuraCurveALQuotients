@@ -1,0 +1,8 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^35(1) / [ 1 ] : genus 3, cut 30, 40 digits, 2 circles of 4, rho 0.03000000000000000000000000000000000000000
+W-fixed newforms of level exactly 35: 3 (genus 3)
+10 evaluations in total
+  10/10  9.059999999999998721023075631819665431976 s
+10 evaluations: 9.059999999999998721023075631819665431976 s, 118703 lattice points
+HYPEVAL DONE

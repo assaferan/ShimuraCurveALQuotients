@@ -1,0 +1,20 @@
+=== X_0^35(1)/[ 1 ], u = w_7
+gnorm(t) = 2401/3626739360000*x^4 + 49/26280720*x^3 + 1939/952200*x^2 + x + 1
+X genus 3; X/w_7 has group [ 1, 7 ] and genus 1
+trace-formula counts taken at 32 good odd primes below 150
+the two numbers can only be supported on 6 primes: [ 2, 3, 5, 7, 23, 277 ]
+kappa: 28 primes give a symbol, 0 unusable, 7 unknowns
+kappa kernel dimension 0
+kappa = -7
+X_0^35(1)/w_7 VERIFIED at 60 counts: Hyperelliptic Curve defined by y^2 = -16807/3626739360000*x^4 - 343/26280720*x^3 - 13573/952200*x^2 - 7*x - 7 over Rational Field
+mu: 29 primes give a symbol, 0 unusable, 7 unknowns
+mu kernel dimension 0
+mu = 2415
+
+MODEL X_0^35(1)/[ 1 ] :
+   Hyperelliptic Curve defined by y^2 + x^2*y = -2*x^8 - 5*x^7 - 4*x^6 + 5*x^5 + 10*x^4 + 5*x^3 - 4*x^2 - 5*x - 2 over Rational Field
+genus 3 (formula says 3)
+VERIFIED 64 point counts over F_p and F_p^2 against the trace formula (0 skipped for bad reduction), at 32 primes below 150
+STORED MODEL: Hyperelliptic Curve defined by y^2 = -7/100000000*x^8 - 1/40000*x^6 - 277/80000*x^4 - 69/320*x^2 - 7/256 over Rational Field
+ISOMORPHIC OVER Q TO THE STORED MODEL: true
+HYPFINISH3 DONE
