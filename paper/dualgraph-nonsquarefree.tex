@@ -98,7 +98,7 @@ The involution $w_p$ acts on $\Gamma_+\backslash\Omega$ through any element of $
 \end{lemma}
 
 \begin{proof}
-This is \cite[\S4, p.~463]{Rib} for $D = pq$ and \cite[Theorem~4.4]{JL} for maximal orders; their proofs apply without change to arbitrary $D$ and to Eichler orders of any level $N$. See also \cite[p.~202]{Ogg}. The last assertion follows from Lemma~\ref{lem:wm}, since $w_m = w_p w_{m/p}$.
+This is \cite[\S4, p.~463]{Rib} for $D = pq$, combining Drinfeld's description of the action of $(B \otimes \Qp)^\times$ with \cite[Theorems~4.3$'$ and~4.4]{JL}; see also \cite[p.~202]{Ogg}. We give a proof at our generality. The involution $w_p$ is induced by a uniformizer $\pi$ of $B \otimes \Qp$, and the uniformization is compatible with the action of $(B \otimes \Qp)^\times$ \cite[III, Theorem~(5.5)]{BC}, applied with $n = 0$, where $(B \otimes \Qp)^\times$ acts as in \cite[II, 9.4]{BC}. By \cite[II, Theorem~(9.5)]{BC}, $\pi$ acts on $\Ohat \otimes \Zpnr$ as $1 \otimes \Fr^{-1}$, and by \cite[II, Theorem~(9.3)]{BC} an element $g \in \GL_2(\Qp)$ acts as $g \otimes \Fr^{-v}$, where $v$ is the $p$-adic valuation of $\det g$. In the quotient by $R[1/p]^\times \subset \GL_2(\Qp)$, the group of \cite[III, 5.3.3]{BC}, the scalar $p$ acts trivially, so $1 \otimes \Fr^2$ does, and any $\omega \in \Gamma - \Gamma_+$, whose determinant has odd valuation, acts as $\omega \otimes \Fr^{-1}$, which is trivial. Hence $1 \otimes \Fr^{-1}$ and $\omega^{-1} \otimes 1$ induce the same automorphism of this quotient, which is the action of $w_p$; after base change to $\Qpnr$ it is the automorphism $\omega^{-1}$ of $\Gamma_+\backslash\Omega$, and $\omega^{-1} \equiv \omega$ modulo $\Gamma_+$. Neither the level nor the number of primes dividing $D$ enters. The last assertion follows from Lemma~\ref{lem:wm}, since $w_m = w_p w_{m/p}$.
 \end{proof}
 
 \subsection{The quotient by $W$}
@@ -110,7 +110,7 @@ The group $\Gamma_W$ is discrete and cocompact, $\Gamma_W/\Gamma_+ \cong W$, and
 \end{lemma}
 
 \begin{proof}
-Since $W$ acts faithfully on $X$, the kernel of $\Gamma_W \to \Aut(\Gamma_+\backslash\Omega)$ is $\Gamma_+$, which gives the first two assertions. The quotient of a projective scheme by a finite group is projective, and its generic fibre is the quotient of the generic fibre, here $Y$. Formation of $W$-invariants commutes with the flat base change to the completion, so the completion of the quotient is $(\Gamma_+\backslash\Ohat)/(\Gamma_W/\Gamma_+) = \Gamma_W\backslash\Ohat$, as in Kurihara's construction \cite[p.~285]{Kur}.
+Since $W$ acts faithfully on $X$, the kernel of $\Gamma_W \to \Aut(\Gamma_+\backslash\Omega)$ is $\Gamma_+$, which gives the first two assertions. By Lemmas~\ref{lem:wm} and~\ref{lem:wp} the action of $W$ on the generic fibre of the model of Proposition~\ref{prop:BC} is that of $\Gamma_W/\Gamma_+$, and since the model is flat over $\Z_{p^2}$ the two actions agree on the model. The quotient of a projective scheme by a finite group is projective, and its generic fibre is the quotient of the generic fibre, here $Y$. Formation of $W$-invariants commutes with the flat base change to the completion, so the completion of the quotient is $(\Gamma_+\backslash\Ohat)/(\Gamma_W/\Gamma_+) = \Gamma_W\backslash\Ohat$, as in Kurihara's construction \cite[p.~285]{Kur}.
 \end{proof}
 
 \begin{proposition}[Kurihara]\label{prop:kur}
