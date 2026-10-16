@@ -11,7 +11,55 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
-## Handoff — 2026-10-16 — A METHOD WHOSE COST DOES NOT SEE THE VOLUME; FOUR NEW MODELS; THE COST MODEL WAS 700× WRONG
+## Handoff — 2026-10-16 — OPEN CASES 34 → 26; A METHOD WHOSE COST DOES NOT SEE THE VOLUME; FOUR NEW MODELS
+
+**✅ Eight of the thirty-four still-open quotients are decided, all hyperelliptic**, by Noether's
+count of canonical quadrics run on values from Nelson's Shimizu lift, each confirmed at two or more
+truncation cutoffs: X_0^39(11), X_0^55(7), X_0^6(185), X_0^46(31), X_0^6(301) and **X_0^1326(1)**
+at genus 3 with one quadric, and X_0^2002(1) and X_0^2030(1) at genus 4 with three. **Twenty-six
+remain**: nine are within reach and merely unrun, the other seventeen need the oldform part of the
+space, which Nelson's Theorem 3.1 does not cover. That so many are hyperelliptic is the expected
+direction, since every filter in the pipeline rules a curve *out*, so the survivors are enriched in
+genuinely hyperelliptic curves.
+
+⚠ **The consequence is NOT yet in `data/`.** Exactly like #116's twenty-two, landing it needs a
+rerun from the dual-graph stage. Note also that the thirty-four itself is unlanded: it is the
+sixty-one of the #117 rerun minus three hand-maintained Magma set literals under
+`vvdata/weyl-campaign/hyperelliptic/open-cases/`, which appear in no data file.
+
+Two runs are outside checks rather than results: X_0^141(1)/w₃ and X_0^57(5) both come out **not**
+hyperelliptic, agreeing with the metric dual-graph argument of #116 by an unrelated route.
+
+⚠⚠ **RAISE THE WORKING PRECISION ALONG WITH THE CUTOFF.** X_0^1326(1) was nearly called wrong.
+Between cutoffs 46 and 50 at thirty digits its residual *stopped falling*, which is exactly how a
+genuine tiny singular value behaves — that is, it looked non-hyperelliptic. At fifty digits the
+residual fell by a factor of 112 with the rest of the spectrum unchanged to eleven digits. **A real
+singular value does not move with the working precision; a numerical zero does.** This is a real
+limit on the cost law recorded with the code, which was measured at cutoffs up to 32: above roughly
+ten million lattice terms the residual floors at the working precision instead. Two other
+explanations were proposed and refuted by experiment first, the Gram rounding and the
+Fourier-coefficient margin. Useful calibration from the whole run: a genuine non-hyperelliptic
+smallest singular value sits near 1e-2 and does not fall, and nothing produced a value anywhere
+between 1e-2 and 1e-12.
+
+⚠⚠ **A claim made earlier in this session and REFUTED within it.** Nine of the open quotients —
+eight at X_0^210(13), one at X_0^1326(1) — share one structure: genus 3, a Klein four group of
+Atkin–Lehner involutions with all three quotients elliptic and the star curve rational, so the
+Jacobian splits into three elliptic curves identifiable from the elliptic tables. I called that
+splitting a third independent determination of hyperellipticity alongside Noether's count. **It is
+not a hyperellipticity test at all.** The witness is `y² = x⁸ + 1`, which is hyperelliptic of genus
+3 and carries exactly this configuration: σ:(x,y)↦(−x,y) and τ:(x,y)↦(1/x, y/x⁴) commute, neither is
+the hyperelliptic involution, and the three quotients `y²=u⁴+1`, `y²=v⁴−4v²+2`, `y²=s⁴+4s²+2` all
+have genus 1 with the full quotient rational. So the configuration is consistent with both answers,
+and X_0^1326(1) turning out hyperelliptic confirms it concretely.
+
+What the structure *does* give is an exact criterion: such a curve is hyperelliptic precisely when
+the three quadratics cutting the pairs of branch points on the star curve are **linearly
+dependent**. Verified in both directions, twenty independent cases. ⚠ It is not a cheap route to
+the remaining eight, because it needs those six branch points up to PGL₂, and the obvious way in
+fails — there are no Atkin–Lehner-invariant weight-2 forms, the star having genus 0.
+
+## Earlier on 2026-10-16 — the cost model, Voight–Willis, and four new models
 
 **The headline is Nelson's evaluator.** Nelson, *Evaluating modular forms on Shimura curves*,
 Math. Comp. **84** (2015) 2471–2503, writes the product of the values of a form at two points as a
