@@ -17,7 +17,9 @@ SetColumns(0);
 
 // the star curves of the five genus-4 members of the sixteen, plus a spread of other levels
 bases := [ <2002,1>, <2030,1>, <2418,1>, <3390,1>, <6,403>,
-           <1155,1>, <858,1>, <546,1>, <1122,1>, <210,13>, <6,205>, <555,1> ];
+           <106,1>, <115,1>, <122,1>, <129,1>, <158,1>, <166,1>, <183,1>, <206,1>,
+           <215,1>, <314,1>, <326,1>, <390,1>, <410,1>, <435,1>, <462,1>, <510,1>,
+           <665,1>, <770,1>, <798,1>, <870,1>, <910,1>, <930,1> ];
 for b in bases do
     D := b[1]; N := b[2]; DN := D*N;
     if not (IsSquarefree(DN) and GCD(D,N) eq 1) then continue; end if;
@@ -55,8 +57,9 @@ for b in bases do
             Append(~odd, Sprintf("(q=%o,deg=%o,n=%o,d=%o)", cl[1], Degree(cl[2]), cl[3], cl[4]));
         end if;
     end for;
+    nell := (#classes eq 0) select 0 else &+[ cl[3] : cl in classes ];
     printf "X_0^%o(%o)*  genus 2, %o elliptic points in %o classes; odd classes %o\n",
-        D, N, &+[ cl[3] : cl in classes ], #classes, Join(odd, " ");
+        D, N, nell, #classes, Join(odd, " ");
     printf "    SUM = %o  against the bound 6  ==> %o%o\n", S,
         S gt 6 select "CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic"
                  else "consistent",

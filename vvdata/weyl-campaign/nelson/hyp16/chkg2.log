@@ -1,0 +1,26 @@
+
+=== X_0^6(403)*  genus 2  volume 28/3
+   q=2 d=-9672    n=3   h(d)=24    deg=3    h/deg=8 ok
+   q=2 d=-4836    n=5   h(d)=40    deg=5    h/deg=8 ok
+   q=2 d=-744     n=3   h(d)=12    deg=3    h/deg=4 ok
+   q=2 d=-403     n=1   h(d)=2     deg=1    h/deg=2 ok
+   q=2 d=-52      n=1   h(d)=2     deg=1    h/deg=2 ok
+   q=6 d=-3       n=1   h(d)=1     deg=1    h/deg=1 ok
+   total elliptic points 14; genus from the volume = 2 (computed 2): CONSISTENT
+
+=== X_0^3390(1)*  genus 2  volume 28/3
+   q=2 d=-13560   n=4   h(d)=32    deg=4    h/deg=8 ok
+   q=2 d=-2712    n=5   h(d)=20    deg=5    h/deg=4 ok
+   q=2 d=-2260    n=3   h(d)=12    deg=3    h/deg=4 ok
+   q=2 d=-40      n=1   h(d)=2     deg=1    h/deg=2 ok
+   q=6 d=-3       n=1   h(d)=1     deg=1    h/deg=1 ok
+   total elliptic points 14; genus from the volume = 2 (computed 2): CONSISTENT
+
+=== X_0^2418(1)*  genus 2  volume 15/2
+   q=2 d=-9672    n=3   h(d)=24    deg=3    h/deg=8 ok
+   q=2 d=-4836    n=5   h(d)=40    deg=5    h/deg=8 ok
+   q=2 d=-403     n=1   h(d)=2     deg=1    h/deg=2 ok
+   q=2 d=-372     n=1   h(d)=4     deg=1    h/deg=4 ok
+   q=2 d=-312     n=1   h(d)=4     deg=1    h/deg=4 ok
+   total elliptic points 11; genus from the volume = 2 (computed 2): CONSISTENT
+CHKG2 DONE

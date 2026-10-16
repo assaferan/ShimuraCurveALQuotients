@@ -1,0 +1,36 @@
+X_0^2002(1)*  genus 2, 11 elliptic points in 4 classes; odd classes (q=2,deg=5,n=5,d=[ -4004 ])
+    SUM = 5  against the bound 6  ==> consistent
+X_0^2030(1)*  genus 2, 10 elliptic points in 3 classes; odd classes (q=2,deg=5,n=5,d=[ -8120 ]) (q=2,deg=1,n=3,d=[ -280, -232, -8 ])
+    SUM = 6  against the bound 6  ==> consistent
+X_0^2418(1)*  genus 2, 11 elliptic points in 3 classes; odd classes (q=2,deg=3,n=3,d=[ -9672 ]) (q=2,deg=5,n=5,d=[ -4836 ]) (q=2,deg=1,n=3,d=[ -403, -372, -312 ])
+    SUM = 9  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^3390(1)*  genus 2, 14 elliptic points in 5 classes; odd classes (q=2,deg=5,n=5,d=[ -2712 ]) (q=2,deg=3,n=3,d=[ -2260 ]) (q=2,deg=1,n=1,d=[ -40 ]) (q=6,deg=1,n=1,d=[ -3 ])
+    SUM = 10  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^6(403)*  genus 2, 14 elliptic points in 5 classes; odd classes (q=2,deg=3,n=3,d=[ -9672 ]) (q=2,deg=5,n=5,d=[ -4836 ]) (q=2,deg=3,n=3,d=[ -744 ]) (q=6,deg=1,n=1,d=[ -3 ])
+    SUM = 12  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^106(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^115(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^122(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^129(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^158(1)*: genus 1 -- skipped (this control needs genus 2)
+X_0^166(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^183(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^206(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^215(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^314(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^326(1)*: genus 1 -- skipped (this control needs genus 2)
+X_0^390(1)*: genus 0 -- skipped (this control needs genus 2)
+
+GenusShimuraCurveQuotient(
+D: 410,
+N: 1,
+als: { 1, 2, 5, 10, 41, 82, 205, 410 }
+)
+GenusShimuraCurve(
+D: 410,
+N: 1
+)
+In file "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/ShimuraQuotients.m", line 254, column 5:
+>>     assert IsIntegral(g);
+       ^
+Runtime error in assert: Assertion failed
