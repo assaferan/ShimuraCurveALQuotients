@@ -13,14 +13,31 @@ about state, this file wins.
 
 ## Handoff — 2026-10-16 — OPEN CASES 34 → 26; A METHOD WHOSE COST DOES NOT SEE THE VOLUME; FOUR NEW MODELS
 
-**✅ Eight of the thirty-four still-open quotients are decided, all hyperelliptic**, by Noether's
-count of canonical quadrics run on values from Nelson's Shimizu lift, each confirmed at two or more
-truncation cutoffs: X_0^39(11), X_0^55(7), X_0^6(185), X_0^46(31), X_0^6(301) and **X_0^1326(1)**
+**Eight of the thirty-four still-open quotients come out hyperelliptic** under Noether's count of
+canonical quadrics run on values from Nelson's Shimizu lift, each at two or more truncation
+cutoffs: X_0^39(11), X_0^55(7), X_0^6(185), X_0^46(31), X_0^6(301) and **X_0^1326(1)**
 at genus 3 with one quadric, and X_0^2002(1) and X_0^2030(1) at genus 4 with three. **Twenty-six
 remain**: nine are within reach and merely unrun, the other seventeen need the oldform part of the
 space, which Nelson's Theorem 3.1 does not cover. That so many are hyperelliptic is the expected
 direction, since every filter in the pipeline rules a curve *out*, so the survivors are enriched in
 genuinely hyperelliptic curves.
+
+⚠⚠ **THESE ARE NUMERICAL RESULTS, NOT PROOFS, AND THEY HAVE NO EXACT VERIFICATION STEP.** The
+differentials are evaluated in complex floating point and the count is the numerical kernel
+dimension of a matrix of quadratic monomials in those values. Calling a singular value zero is not
+a proof that it is zero. This differs from everything else the project calls settled: the dual
+graph is combinatorial, the trace-formula verdicts are exact, Noether's count in
+`CanonicalQuadrics.m` is exact from a function field, and every Borcherds model is built
+numerically but then *verified exactly* against point counts and an isomorphism test. Here there
+is no such second step, because these curves have no model — which is the whole reason Nelson was
+used. ⚠ The asymmetry matters: a *non*-hyperelliptic reading says the matrix has full rank, which
+numerics supports well, whereas all eight of these assert that a singular value vanishes, which is
+the harder direction to certify. What the evidence is worth: the separation between the two
+populations is more than ten orders of magnitude, the controls reproduce known answers in both
+directions, and a genuine singular value was shown to be precision-insensitive to 29 digits while a
+numerical zero moved by 112×. ⇒ **Treat these as strong evidence pending an exact argument, and say
+so in the paper.** For the nine Klein-four cases an exact route exists in principle: the
+determinant criterion, given the six branch points as algebraic numbers.
 
 ⚠ **The consequence is NOT yet in `data/`.** Exactly like #116's twenty-two, landing it needs a
 rerun from the dual-graph stage. Note also that the thirty-four itself is unlanded: it is the
