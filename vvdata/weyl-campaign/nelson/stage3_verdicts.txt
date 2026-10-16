@@ -75,6 +75,29 @@ Two explanations were tested and REFUTED before this one, and both are worth not
   -- changes the residual in NO digit of the thirty, and the enumeration finds the same 59 352 084
   lattice points.  So nothing is being dropped, and the margin of 20 is ample (stage3x.m, NMX).
 
+## X_0^6(403) and X_0^2418(1): two different curves with the same differentials
+
+These two are easy to mistake for a duplicated row, and if they ever disagree it is easy to
+mistake that for a bug.  They are neither.  Both have D*N = 2418, both carry the same
+Atkin-Lehner group W = {1,2,13,26,93,186,1209,2418}, and both have genus 4; and in both cases the
+space of differentials is spanned by the SAME four newforms of level exactly 2418 -- for
+X_0^2418(1) because N = 1, and for X_0^6(403) because the W-fixed oldform part happens to vanish
+there (nold.m says complete at both).  So their Jacobians are isogenous.
+
+But they are quotients of different quaternionic curves: the evaluator is handed a different
+quaternion algebra and a different Eichler order in the two cases, the points lie in different
+fundamental domains, and the canonical images are different curves.
+
+Hyperellipticity is not an isogeny invariant.  The witness is concrete: y^2 = x^8 + 1 is a
+HYPERELLIPTIC curve of genus 3 carrying a Klein four group whose three quotients all have genus 1
+and whose full quotient is rational -- genera 1, 1, 1 and 0, with the Kani-Rosen relation
+3 + 2*0 = 1 + 1 + 1 -- which is exactly the shape that elsewhere in this project produces smooth
+plane quartics.  A Jacobian that splits into elliptic curves says nothing about whether the curve
+has a hyperelliptic involution.
+
+So if these two come out differently, that is a legitimate result and not an inconsistency.  Do
+not go looking for a defect on the strength of it.
+
 ## The cost law needs a precision clause
 
 The README's cost section says the cutoff buys about 0.4 decimal digits per unit with no trend in
