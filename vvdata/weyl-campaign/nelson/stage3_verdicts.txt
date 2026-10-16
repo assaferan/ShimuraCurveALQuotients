@@ -63,6 +63,17 @@ drops the residual by a factor of 112, to 8.18e-15, leaving the rest of the spec
 eleven digits.  A genuine singular value does not move with the working precision; a numerical
 zero does.  So the residual is zero and the curve is hyperelliptic.
 
+The contrast with a genuine smallest singular value is about as sharp as it could be, and the
+non-hyperelliptic control measures it.  At X_0^91(1)/w_7, cutoff 40, the smallest singular value is
+
+    0.0183504187415874290636060502918                      at 30 digits
+    0.018350418741587429063606050215161502702314627266929  at 50 digits
+
+the same number to TWENTY-NINE digits: a real singular value does not notice the working precision
+at all.  The 9.1e-13 at X_0^1326(1) moved by a factor of 112 under exactly that change.  So the
+precision test separates the two cases by some thirty orders of magnitude in sensitivity, and it
+is the test to use whenever a residual stops responding to the cutoff.
+
 Two explanations were tested and REFUTED before this one, and both are worth not repeating:
 
 * the fixed `SCL := 10^16` rounding of the Gram matrix in nelson3.m.  Raising it to 10^(prec-4)
