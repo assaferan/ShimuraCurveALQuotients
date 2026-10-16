@@ -1,0 +1,22 @@
+X_0^2002(1)*  genus 2, 11 elliptic points in 4 classes; odd classes (q=2,deg=5,n=5,d=[ -4004 ])
+    SUM = 5  against the bound 6  ==> consistent
+X_0^2030(1)*  genus 2, 10 elliptic points in 3 classes; odd classes (q=2,deg=5,n=5,d=[ -8120 ]) (q=2,deg=1,n=3,d=[ -280, -232, -8 ])
+    SUM = 6  against the bound 6  ==> consistent
+X_0^2418(1)*  genus 2, 11 elliptic points in 3 classes; odd classes (q=2,deg=3,n=3,d=[ -9672 ]) (q=2,deg=5,n=5,d=[ -4836 ]) (q=2,deg=1,n=3,d=[ -403, -372, -312 ])
+    SUM = 9  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^3390(1)*  genus 2, 14 elliptic points in 5 classes; odd classes (q=2,deg=5,n=5,d=[ -2712 ]) (q=2,deg=3,n=3,d=[ -2260 ]) (q=2,deg=1,n=1,d=[ -40 ]) (q=6,deg=1,n=1,d=[ -3 ])
+    SUM = 10  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^6(403)*  genus 2, 14 elliptic points in 5 classes; odd classes (q=2,deg=3,n=3,d=[ -9672 ]) (q=2,deg=5,n=5,d=[ -4836 ]) (q=2,deg=3,n=3,d=[ -744 ]) (q=6,deg=1,n=1,d=[ -3 ])
+    SUM = 12  against the bound 6  ==> CRITERION REFUTED: it would call a genus-2 curve non-hyperelliptic
+X_0^1155(1)*: genus 1 -- skipped (this control needs genus 2)
+X_0^858(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^546(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^1122(1)*: genus 0 -- skipped (this control needs genus 2)
+X_0^210(13)*: genus 0 -- skipped (this control needs genus 2)
+X_0^6(205)*: genus 1 -- skipped (this control needs genus 2)
+
+In file "ellg2.m", line 59, column 15:
+>>         D, N, &+[ cl[3] : cl in classes ], #classes, Join(odd, " ");
+                 ^
+Runtime error in '&+': Illegal null sequence
+
