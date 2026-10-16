@@ -86,6 +86,9 @@ All scripts take `name:=value` arguments and must be run with stdin redirected.
     # does Theorem 3.1 reach the whole space of differentials at a base with N > 1?
     magma -b "BASES:=39_11:1,11,39,429;141_2:1,3,94,282" $NB/nold.m < /dev/null
 
+    # stage 3 at N > 1 (only the newforms of level exactly D*N; stops if they do not span)
+    magma -b DISC:=55 LEV:=7 WS:=1,35,55,77 PR:=30 CUT:=46 NPTS:=18 $NB/stage3n.m < /dev/null
+
 `cmpvw.m` is the earlier ratio form of the stage-1 test and `scan3.m` the search that found the
 control pair. `t0.m`–`t3.m` and `twk.m` are the probes the traps below were found with.
 
@@ -283,6 +286,17 @@ So some of the open bases are directly attackable as the method stands and some 
 which is which is a two-second computation. Extending to the oldform part means handling an
 eigenvector of `U_p` inside an oldclass, which Theorem 3.1 does not cover.
 
+**The whole open set has now been measured** (`nold_open61.txt`, 2026-10-16): over the 61
+quotients the pipeline rerun of PR #117 leaves open, the newforms of level exactly `D N` span the
+space at **25** and fall short at 36. Restricting to the 34 that are still open once the three
+arguments recorded in `../hyperelliptic/open-cases/` are applied — the metric dual graph of
+PR #116 (22), a non-hyperelliptic special-fibre component at a prime exactly dividing `N` (3), and
+the composite-level models of `X_0^6(35)` (2, conditionally) — the method reaches **17 of the 34**.
+That is a good deal more than the three rows above, which were the only ones measured when they
+were written. At `N = 1` the count is automatically complete, and the check is not empty there:
+it reproduces the genus at all nine of the `N = 1` open quotients, which is what tests the
+Atkin–Lehner convention.
+
 ## Stage 3: Noether's count of canonical quadrics
 
 `stage3.m` builds the differentials of `X_0^D(1)/W` from Theorem 3.1 — the weight-2 eigenforms
@@ -324,8 +338,44 @@ always has a conic through it. Spreading the points by the square root of the ar
 and raising the cutoff turned that into a ratio of 1.2e11 followed by 52, which is a gap. The
 script now refuses a verdict below a ratio of 1e4.
 
-⚠ **Only `N = 1` is in scope for `stage3.m` as it stands**, for the oldform reason above; `nold.m`
-says which `N > 1` bases could be done with the same code.
+⚠ `stage3.m` itself only does `N = 1`. **`stage3n.m` does general `N`**: it keeps only the
+newforms of level exactly `D N`, takes the Atkin–Lehner eigenvalue of `w_m` to be the product of
+`a_f(p)` at `p | D` and of `-a_f(p)` at `p | N`, and refuses to run unless their number equals the
+genus, so a base the theorem does not reach stops rather than returning a count taken over a
+subspace. It reproduces all three controls through `stage3.m`'s own settings to every printed
+digit.
+
+### Verdicts on the open quotients (2026-10-16)
+
+Eight of the 34 still-open quotients are decided, every one of them at two or more cutoffs, and
+every one **hyperelliptic**: `X_0^39(11)`, `X_0^55(7)`, `X_0^6(185)`, `X_0^46(31)`, `X_0^6(301)`,
+`X_0^1326(1)`, and at genus 4 `X_0^2002(1)` and `X_0^2030(1)`. The residuals, gaps and timings are
+in `stage3_verdicts.txt`, together with two cross-checks against PR #116 — `X_0^141(1)/w_3` and
+`X_0^57(5)` both come out not hyperelliptic, which is what the metric dual graph says — and the
+account of the one case that needed more than the cutoff to settle.
+
+That so many come out hyperelliptic is the expected direction, not a surprise: every filter in the
+pipeline rules a curve OUT, so what survives to the open set is enriched in curves that really are
+hyperelliptic.
+
+### ⚠ The residual floors at the working precision, not at the cutoff
+
+Raising the cutoff stops helping once the truncation error falls below the working precision. At
+`X_0^1326(1)` with 30 digits the residual is 9.128e-13 at cutoff 46 and 9.144e-13 at cutoff 50 —
+no improvement — while the rest of the spectrum agrees to twelve digits. Raising the precision to
+50 digits at cutoff 46 drops it to 8.18e-15, a factor of 112. The sum there is 59 million lattice
+terms; at `X_0^35(1)` and `X_0^57(1)`, one or two million terms, the truncation error at cutoff 46
+is still the larger of the two and precision changes nothing. **Above roughly 10^7 lattice terms,
+raise `PR` along with `CUT`.** This is a limit on the cost law of the previous section, which was
+measured at cutoffs 26 to 32 and is right there.
+
+A stalled residual is exactly what a genuine, very small singular value would look like, so it has
+to be settled rather than assumed — a residual that moves with the precision is numerically zero,
+one that does not is real. Two other explanations were tested first and **refuted**: the fixed
+`SCL := 10^16` rounding of the Gram matrix changes no digit of the answer (`nelson3hi.m`,
+`stage3hi.m`), because the scaling only decides which vectors the enumeration offers and each is
+then accepted or rejected by `4 pi |X| <= cut` at full precision; and widening the
+Fourier-coefficient margin `nmax` from 20 to 4000 changes no digit either (`stage3x.m`, `NMX`).
 
 ## Files
 
@@ -334,7 +384,12 @@ structural checks were run against; `nelson2.m` the working library, with the in
 to four complex multiplications and one polynomial evaluation; `nelson3.m` the version for large
 bases, enumerating by a `ShortVectorsProcess` and evaluating several eigenforms in one pass.
 Drivers: `stage1.m`, `cmpvw.m`, `control.m` (superseded by `control2.m`), `control2.m`, `cost.m`,
-`cost2.m`, `stage3.m`, `eig.m`, `nold.m`, `scan3.m`, `scan4.m`.
+`cost2.m`, `stage3.m`, `stage3n.m` (general `N`), `eig.m`, `nold.m`, `scan3.m`, `scan4.m`.
+Diagnostics kept because the questions they answer recur: `nelson3hi.m` + `stage3hi.m` scale the
+Gram matrix with the precision instead of by a fixed `10^16`, and `stage3x.m` takes the
+Fourier-coefficient margin as an argument `NMX`; neither changes any answer, which is the point.
+Results: `nold_open61.txt` (how much of each open quotient's space Theorem 3.1 reaches) and
+`stage3_verdicts.txt` (the hyperellipticity verdicts, with the residual at each cutoff).
 
 ## Traps
 

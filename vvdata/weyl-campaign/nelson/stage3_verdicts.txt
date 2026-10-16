@@ -1,0 +1,121 @@
+# Noether's count of canonical quadrics on the open quotients, differentials from Theorem 3.1
+# Run 2026-10-16.  stage3.m at N = 1, stage3n.m at N > 1.  30 digits, 18 points (20 at genus 4)
+# unless a column says otherwise.  At genus 3 one relation means hyperelliptic and none means not;
+# at genus 4 it is three against one.
+#
+# WHICH CURVES THESE ARE.  The pipeline rerun of PR #117 leaves 61 quotients open (the records
+# with no IsSubhyp in worktrees/rerun/data/curves_after_UpdateCurves8.dat).  Twenty-seven of those
+# are already settled by arguments recorded in hyperelliptic/open-cases/ but not yet in the data:
+# 22 by the metric dual graph (PR #116), 3 by a non-hyperelliptic special-fibre component at a
+# prime exactly dividing N, and 2 by the composite-level models of X_0^6(35), the last
+# conditionally.  The 34 that remain are the open set.  Of those 34, Theorem 3.1 reaches 17
+# (nold_open61.txt); the eight below are the ones run so far.
+#
+# EVERY VERDICT IS TAKEN AT TWO OR MORE CUTOFFS.  A hyperelliptic verdict is only accepted when
+# the residual (smallest singular value) FALLS as the cutoff rises while the rest of the spectrum
+# stays put; a non-hyperelliptic verdict when the smallest singular value does NOT fall.
+
+## The eight decided, all of them in the 34
+
+  base        g  D*N   W                                        verdict
+  39_11       3   429  {1,11,39,429}                            HYPERELLIPTIC
+  55_7        3   385  {1,35,55,77}                             HYPERELLIPTIC
+  6_185       3  1110  {1,2,15,30,111,185,222,370}              HYPERELLIPTIC
+  46_31       3  1426  {1,2,23,31,46,62,713,1426}               HYPERELLIPTIC
+  6_301       3  1806  {1,3,14,42,43,129,602,1806}              HYPERELLIPTIC
+  1326_1      3  1326  {1,17,78,1326}                           HYPERELLIPTIC
+  2002_1      4  2002  {1,2,13,26,77,154,1001,2002}             HYPERELLIPTIC
+  2030_1      4  2030  {1,10,14,35,58,145,203,2030}             HYPERELLIPTIC
+
+## Residual and gap at each cutoff
+
+  base      cut  pts  prec  seconds  residual (smallest sv)   gap after n relations
+  39_11      40   18    30      693  1.48e-13                 1.34e12   n=1
+  39_11      46   18    30     1303  3.75e-16                 1.38e14   n=1
+  39_11      50   18    30     1772  2.05e-16                 3.58e15   n=1
+  55_7       40   18    30      596  1.67e-13                 1.00e11   n=1
+  55_7       46   18    30     1134  2.00e-15                 1.04e13   n=1
+  55_7       50   18    30     1541  1.59e-16                 4.64e15   n=1
+  6_185      40   18    30     2449  8.15e-13                 1.36e11   n=1
+  6_185      46   18    30     3861  5.35e-16                 3.07e14   n=1
+  46_31      40   18    30     2749  6.28e-14                 2.60e12   n=1
+  46_31      46   18    30     4418  2.09e-14                 4.13e12   n=1
+  6_301      40   18    30     3886  6.79e-12                 2.17e09   n=1
+  6_301      46   18    30     6334  2.65e-14                 3.34e10   n=1
+  1326_1     40   18    30     2545  2.38e-12                 9.19e09   n=1
+  1326_1     46   18    30     4321  9.13e-13                 2.40e10   n=1
+  1326_1     50   18    30     5691  9.14e-13                 2.40e10   n=1   <- plateau, see below
+  1326_1     40   30    30     3884  1.98e-12                 1.32e10   n=1   <- 24 predictions
+  1326_1     46   18    50     5002  8.18e-15                 2.68e12   n=1   <- precision, not cutoff
+  2002_1     40   20    30     4132  1.55e-14                 8.98e11   n=3
+  2002_1     46   20    30     6917  4.35e-17                 2.24e14   n=3
+  2030_1     40   20    30     4083  1.01e-14                 5.68e08   n=3
+  2030_1     46   20    30     6721  5.41e-17                 1.17e11   n=3
+
+## X_0^1326(1): why the plateau is not a verdict against it
+
+Between cutoff 46 and 50 at 30 digits the residual stopped falling -- 9.128e-13 then 9.144e-13 --
+while the rest of the spectrum agreed to twelve significant digits (0.021900900036168...,
+0.125908476207997...).  A residual that is stable under the cutoff is what a genuine, very small
+singular value would look like, which would mean the curve is NOT hyperelliptic, so this had to be
+settled rather than assumed.  Raising the working precision from 30 to 50 digits at cutoff 46
+drops the residual by a factor of 112, to 8.18e-15, leaving the rest of the spectrum unchanged to
+eleven digits.  A genuine singular value does not move with the working precision; a numerical
+zero does.  So the residual is zero and the curve is hyperelliptic.
+
+Two explanations were tested and REFUTED before this one, and both are worth not repeating:
+
+* the fixed `SCL := 10^16` rounding of the Gram matrix in nelson3.m.  Raising it to 10^(prec-4)
+  (nelson3hi.m, stage3hi.m) changes the answer at X_0^1326(1) in NO digit at all -- 30 identical
+  digits -- and likewise at all three controls.  The scaling only decides which lattice vectors
+  the enumeration offers; each one is then accepted or rejected by `4 pi |X| <= cut` computed at
+  full precision, so the rounding costs no accuracy.
+* the Fourier-coefficient bound `nmax`.  Raising its margin from 20 to 4000 at X_0^57(1)
+  (stage3x.m, NMX) changes no digit either.
+
+## The cost law needs a precision clause
+
+The README's cost section says the cutoff buys about 0.4 decimal digits per unit with no trend in
+D*N.  That was measured at cutoffs 26 to 32 and at bases up to D*N = 4830, and it is right there.
+It stops being right once the truncation error falls below the working precision: at
+X_0^1326(1), 59 million lattice terms summed at 30 digits floor the residual at about 1e-12, and
+cutoff 50 buys nothing over cutoff 46.  The controls do not show this because at X_0^35(1) and
+X_0^57(1) the truncation error at cutoff 46 (4.3e-16, 5.1e-15) is still the larger of the two.
+So: above roughly 10^7 lattice terms, raise PR with CUT, or the residual stalls.
+
+## Two cross-checks against PR #116
+
+Neither of these is in the 34 -- both are among the 22 the metric dual graph already rules out --
+so each is a check of this method against an independent one.  Ruled out there means not
+sub-hyperelliptic, and at genus 3 that means not hyperelliptic.  Both agree.
+
+  base      cut  residual   verdict             PR #116 says
+  141_1      40  4.57e-3    NOT hyperelliptic   ruled out  -- AGREES
+  141_1      46  4.57e-3    NOT hyperelliptic   ruled out  -- AGREES
+  57_5       40  3.78e-2    NOT hyperelliptic   ruled out  -- AGREES
+  57_5       46  7.13e-2    NOT hyperelliptic   ruled out  -- AGREES
+
+Note the shape of a genuine non-hyperelliptic answer: the smallest singular value is around 1e-2,
+and it does not fall when the cutoff rises.  Nothing in this project has produced a true smallest
+singular value anywhere between 1e-2 and 1e-12, which is the second reason the 9.1e-13 at
+X_0^1326(1) could not have been a real one.
+
+## Controls, reproduced before any of the above was believed
+
+All three README controls were rerun at the README's own settings and reproduce it to every
+printed digit, through stage3.m and again through stage3n.m:
+
+  X_0^35(1)     cut 46, 18 pts   1 185 802 lattice points   gap 8.09e14   HYPERELLIPTIC
+  X_0^57(1)     cut 46, 18 pts   2 026 839 lattice points   gap 1.24e11   HYPERELLIPTIC
+  X_0^91(1)/w_7 cut 40, 18 pts   1 705 938 lattice points   no near-zero  NOT hyperelliptic
+
+The non-hyperelliptic control was also run at 30 points (no spurious relation appears) and all
+three at 50 digits (the residuals are unchanged, which is what says they are truncation-limited
+rather than precision-limited at those bases).
+
+## Still to run
+
+Nine of the 17 reachable members of the 34 were not reached for time: 6_323, 6_379, 6_385, 6_403,
+6_649, 714_5, 2418_1, 3390_1, 4130_1.  At D*N above about 2000 use PR:=40 or more alongside
+CUT:=46, per the precision clause above.  The other 17 of the 34 need the oldform part of the
+space and are out of scope for Theorem 3.1 as written.
