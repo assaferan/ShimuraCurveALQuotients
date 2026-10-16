@@ -375,7 +375,10 @@ one that does not is real. Two other explanations were tested first and **refute
 `SCL := 10^16` rounding of the Gram matrix changes no digit of the answer (`nelson3hi.m`,
 `stage3hi.m`), because the scaling only decides which vectors the enumeration offers and each is
 then accepted or rejected by `4 pi |X| <= cut` at full precision; and widening the
-Fourier-coefficient margin `nmax` from 20 to 4000 changes no digit either (`stage3x.m`, `NMX`).
+Fourier-coefficient margin `nmax` changes no digit either (`stage3x.m`, `NMX`) — from 20 to 4000 at
+`X_0^57(1)`, and from 20 to 20000 at `X_0^1326(1)`, where coefficients to `n = 37769` against the
+17789 the cutoff asks for give the same residual to all thirty digits and the same 59 352 084
+lattice points. The margin of 20 is ample and nothing is being dropped.
 
 ## Files
 

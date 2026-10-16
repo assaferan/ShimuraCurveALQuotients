@@ -70,8 +70,10 @@ Two explanations were tested and REFUTED before this one, and both are worth not
   digits -- and likewise at all three controls.  The scaling only decides which lattice vectors
   the enumeration offers; each one is then accepted or rejected by `4 pi |X| <= cut` computed at
   full precision, so the rounding costs no accuracy.
-* the Fourier-coefficient bound `nmax`.  Raising its margin from 20 to 4000 at X_0^57(1)
-  (stage3x.m, NMX) changes no digit either.
+* the Fourier-coefficient bound `nmax`.  Raising its margin from 20 to 4000 at X_0^57(1), and at
+  X_0^1326(1) from 20 to 20000 -- coefficients to n = 37769 against the 17789 the cutoff asks for
+  -- changes the residual in NO digit of the thirty, and the enumeration finds the same 59 352 084
+  lattice points.  So nothing is being dropped, and the margin of 20 is ample (stage3x.m, NMX).
 
 ## The cost law needs a precision clause
 
