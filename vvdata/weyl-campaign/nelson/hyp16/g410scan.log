@@ -1,0 +1,4 @@
+discriminants D <= 500 (squarefree, even number of prime factors, N = 1, W = {1})
+where GenusShimuraCurveQuotient fails its own integrality assertion:
+   []
+G410SCAN DONE

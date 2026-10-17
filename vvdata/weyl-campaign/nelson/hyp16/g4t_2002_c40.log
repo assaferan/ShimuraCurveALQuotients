@@ -1,0 +1,34 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== star curve of X_0^2002(1): genus 2; testing the branch points w_11 and w_91
+W*-invariant newforms of level exactly 2002: 2 (genus of the star says 2)
+w_11 (discriminant -11): fixed point z0 = -1.3350204234243 + 0.014500500654830*$.1, Im = 0.01450050066
+w_91 (discriminant -91): fixed point z0 = -7.2069099341016 + 3.2931021234149*$.1, Im = 3.293102123
+   Taylor coefficients of r about z0, scaled (|a_j| rho^j relative to |a_0|):
+      [ 1.000000000, 3.835369214E-10, 0.003310738735, 0.0003310738733, 3.354677203E-5, 3.452164937E-6 ]
+   vanishing order of r - r(z0): the first non-negligible a_j above j = 0 (2 means NOT a Weierstrass point of the star curve, 4 means it is)
+
+w_11 at z0 = -1.3350204234243 + 0.014500500654830*$.1  (circle radius 0.0014500501)
+   |f2| at the centre 7.294613254E-14 against 0.06839689403 on the circle: ratio 1.066512355E-12
+   (a W*-invariant differential MUST vanish at an Atkin-Lehner fixed point, so a small ratio here is the check that z0 really is one)
+   canonical-map value (circle mean of f1/f2) = -1.00617169244498930395265 - 0.264470179165855501005366*$.1
+   same from half the circle points: -1.0061945397221 - 0.26449656166583*$.1   (relative difference 3.354677203E-5)
+   Taylor coefficients of r about z0, scaled (|a_j| rho^j relative to |a_0|):
+      [ 1.000000000, 2.666028430E-10, 0.003654359680, 0.0003654359686, 2.430403488E-5, 1.651461847E-6 ]
+   vanishing order of r - r(z0): the first non-negligible a_j above j = 0 (2 means NOT a Weierstrass point of the star curve, 4 means it is)
+
+w_91 at z0 = -7.2069099341016 + 3.2931021234149*$.1  (circle radius 0.32931021)
+   |f2| at the centre 1.775906963E-16 against 0.0003324250347 on the circle: ratio 5.342278039E-13
+   (a W*-invariant differential MUST vanish at an Atkin-Lehner fixed point, so a small ratio here is the check that z0 really is one)
+   canonical-map value (circle mean of f1/f2) = -1.00617169348082875670330 - 0.264470175000548821212034*$.1
+   same from half the circle points: -1.0061494180639 - 0.26448213830730*$.1   (relative difference 2.430403488E-5)
+
+total evaluation time 4451.010000 s
+
+==== THE TEST ====
+  w_11    canonical image -1.00617169244498930395265 - 0.264470179165855501005366*$.1
+  w_91    canonical image -1.00617169348082875670330 - 0.264470175000548821212034*$.1
+
+  relative difference between the two branch points: 4.125704440E-9
+  => THE TWO IMAGES DIFFER: P + Q is NOT the canonical class.  X is hyperelliptic only if BOTH points are Weierstrass points of the star curve, which is the remaining case to exclude
+G4TEST DONE

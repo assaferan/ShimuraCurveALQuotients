@@ -1,0 +1,38 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/ca\
+mpaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^39(11)/[ 1, 11, 39, 429 ]  genus 3, cut 40, 40 digits, 12 circles of 16, rho 0.030000000
+Atkin-Lehner involution w_3 : quotient genus 1; invariant differential #1, anti-invariant #[ 2, 3 ]
+conic singular values: [ 1.0488411E-13, 0.057957240, 0.31391932, 0.84613544, 1.2486864, 1.9034003 ]
+conic residual 1.0488411E-13, next 0.057957240, ratio 5.5258360E11
+kernel vector: residual as a column of V 0.86374114, as a row 1.0488411E-13 -- taking the row
+u-equivariance of the quadric (these must vanish): 6.0729531E-14  3.6153002E-13
+normal form w2^2 = w1 w3: max relative residual 1.1614384E-12
+Cauchy derivative 16 points against 8: max relative difference 9.6258907E-11
+circle mean against independently evaluated centre: max relative difference 5.4128823E-14
+x at the centres: [ 0.45444581, 0.45525108, 0.68497764, 0.39220170, 0.52255046, 0.50573130, 0.64354787, 0.54303185, 0.70436376, 0.20513493, 1.1622680, 0.47206153 ]
+rescaling x by 0.52174652 for conditioning (A, B, C are unchanged by this)
+quartic in t = x^2 fitted on 5 centres, 7 PREDICTIONS:
+   centre 6: relative difference 3.0012658E-11
+   centre 7: relative difference 1.1061574E-11
+   centre 8: relative difference 1.2491094E-11
+   centre 9: relative difference 1.3292245E-10
+   centre 10: relative difference 5.5399016E-12
+   centre 11: relative difference 7.7792402E-11
+   centre 12: relative difference 9.1240705E-12
+WORST PREDICTION (quartic in x^2): 1.3292245E-10
+octic fitted independently on 9 centres; odd coefficients relative to the largest (these measure the evenness directly): [ 4.4947064E-10, 2.2167688E-9, 2.1510262E-9, 4.3836673E-10 ]
+weighted least squares over all 12 centres: max relative residual 7.2911366E-12
+five-point and least-squares quartics agree to: 1.9361474E-10
+
+marked-quartic invariants (these are the rational numbers):
+   A = 0.1809313215404581482191004954926210942065 - 2.890867207231330877944064146409299547662E-14*CC.1
+   B = -2.826797100164018249684971257670961143333 + 3.863430993632732251260421727395978599387E-13*CC.1
+   C = -0.1749405469684739293265053838194645862473 - 1.074596516649556253877007246729753682874E-13*CC.1
+   imaginary parts (a measure of the noise): 2.8908672E-14  3.8634310E-13  1.0745965E-13
+
+recognising with the classical certainty criterion at 13 digits:
+   A = 1391/7688
+   B = NOT RECOGNISED
+   C = -1177/6728
+the other root ordering (x -> 1/x) gives (A,B,C) = (C,B,A)
+HYPFIT2 DONE

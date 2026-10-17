@@ -1,0 +1,11 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== star curve of X_0^2002(1): genus 2; testing the branch points w_11 and w_91
+W*-invariant newforms of level exactly 2002: 2 (genus of the star says 2)
+w_11: 0 usable fixed points found; using 0
+
+In file "g4test.m", line 127, column 5:
+>>     require #fx ge 1 : "no Atkin-Lehner fixed point found at a usable heigh
+       ^
+Runtime error: Not in signature
+

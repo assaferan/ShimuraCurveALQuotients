@@ -1,0 +1,15 @@
+SetColumns(0);
+A := QuaternionAlgebra(2002); O := MaximalOrder(A);
+K := QuadraticField(-11); R := MaximalOrder(K);
+printf "Embed signatures:\n";
+r := [* *];
+try  mu := Embed(R, O); Append(~r, <"1-return", Type(mu)>); catch e printf "  1-return fails: %o\n", e`Object; end try;
+try  mu, f := Embed(R, O); Append(~r, <"2-return", Type(mu), Type(f)>); catch e printf "  2-return fails: %o\n", e`Object; end try;
+print r;
+mu, f := Embed(R, O);
+printf "mu = %o   trace %o norm %o\n", mu, Trace(A!mu), Norm(A!mu);
+printf "R.1 = %o, R.2 = %o\n", R.1, R.2;
+printf "f(R.2) = %o  trace %o norm %o\n", f(R.2), Trace(A!f(R.2)), Norm(A!f(R.2));
+w := R ! (K.1);
+printf "sqrt(-11) in R: %o ; f(sqrt(-11)) trace %o norm %o\n", w, Trace(A!f(w)), Norm(A!f(w));
+printf "DBGEM2 DONE\n"; quit;
