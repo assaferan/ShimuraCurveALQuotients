@@ -1,0 +1,40 @@
+X_0^146(1)* genus = 0 ; covers = [
+<11792, [ 1, 146 ], 0>,
+<11793, [ 1, 73 ], 3>,
+<11791, [ 1, 2 ], 4>
+]
+Computing Borcherds forms...WHYFAIL infty=-11 key=-1 divisor=[ <-20, 1>, <-11, -1> ] FEASIBLE
+WHYFAIL infty=-11 key=-2 divisor=[ <-40, 1>, <-11, -1> ] INFEASIBLE
+WHYFAIL infty=-11 key=-1 divisor=[ <-20, 1>, <-11, -1> ] FEASIBLE
+WHYFAIL infty=-11 key=-2 divisor=[ <-43, 1>, <-11, -1> ] FEASIBLE
+WHYFAIL infty=-11 key=11791 divisor=[ <-584, 1>, <-292, 1>, <-11, -10> ] FEASIBLE
+WHYFAIL infty=-11 key=11792 divisor=[ <-292, 1>, <-11, -2> ] FEASIBLE
+WHYFAIL infty=-11 key=11793 divisor=[ <-584, 1>, <-11, -8> ] FEASIBLE
+Done!
+Computing divisors of hauptmodules...Done!
+Computing candidate discriminants...Computing absolute values at CM points...
+	singular pair at d = -20: Q(x) = m = 5, x = (78 16 -3), coset (0 0 0)
+	singular pair at d = -20: Q(x) = m = 5, x = (-78 -16   3), coset (0 0 0)
+	singular pair at d = -20: Q(x) = m = 20, x = (156  32  -6), coset (0 0 0)
+	singular pair at d = -20: Q(x) = m = 20, x = (-156  -32    6), coset (0 0 0)
+	singular pair at d = -52: Q(x) = m = 13, x = (122  21   3), coset (0 0 0)
+	singular pair at d = -52: Q(x) = m = 13, x = (-122  -21   -3), coset (0 0 0)
+	singular pair at d = -52: Q(x) = m = 52, x = (244  42   6), coset (0 0 0)
+	singular pair at d = -52: Q(x) = m = 52, x = (-244  -42   -6), coset (0 0 0)
+	singular pair at d = -84: Q(x) = m = 21, x = (91 19 -4), coset (0 0 0)
+	singular pair at d = -84: Q(x) = m = 21, x = (-91 -19   4), coset (0 0 0)
+	singular pair at d = -84: Q(x) = m = 84, x = (182  38  -8), coset (0 0 0)
+	singular pair at d = -84: Q(x) = m = 84, x = (-182  -38    8), coset (0 0 0)Done!
+Computing actual values at CM points...sign of -115 unresolved (2 candidates); trying spare -120.
+Done!
+Computing equations of covers...Done!
+Computing equations above P1s and conics...Done
+Computing equations above pointless conics...Done
+Filling empty covers by Hauptmodul rebase...Done
+
+RETURNED after 136.440 s. keys = { 11790, 11791, 11792, 11793 }
+  11792 : Associative Array with index universe Integer Ring
+  11793 : Associative Array with index universe Integer Ring
+  11790 : Associative Array with index universe Integer Ring
+  11791 : Associative Array with index universe Integer Ring
+CTRL146 DONE

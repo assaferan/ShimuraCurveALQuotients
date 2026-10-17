@@ -1,0 +1,26 @@
+=== star X_0^39(11)* (genus 1) ===
+  star p=2 : bad reduction of the model, skipped
+  star p=5 : L-polynomial AGREES (3 coefficients)
+
+zetacheck(
+C: Hyperelliptic Curve defined by y^2 = -25447851*x^4 - 2844148...,
+X: ,
+g: 1,
+name: star,
+nchk: 1,
+nfail: 0
+)
+ZetaFunction(
+C: X
+)
+LPolynomial(
+C: X
+)
+EllipticCurve(
+C: X
+)
+In file "/Applications/Magma/package/Geometry/CrvEll/ellmodel.m", line 680, column 37:
+>>       pts:=RationalPointsByFibration(C : Max:=1,IncludeSingularPoints:=fals
+                                       ^
+Runtime error in 'RationalPointsByFibration': X must lie in affine or ordinary projective space.
+

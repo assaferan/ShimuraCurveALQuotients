@@ -1,0 +1,54 @@
+_offline/X0_39_2.m: Computing Borcherds forms...
+        Computing generators for the ring of {oo}-weakly holomorphic modular 
+forms of level 156...Done!
+        Computing generators for the ring of {0,oo}-weakly holomorphic modular 
+forms of level 156...Done!
+        Computing CM points up to class number 2...
+        counting elliptic points by CM order... done (0.000s).
+        computing degrees of fields of definition for 27 candidate 
+discriminant(s)...
+        done computing degrees of fields of definition (0.020s).
+Done!
+
+        Attempting to find Borcherds forms with m = -6...
+        Trying infinity = <-7, 1, 1>...
+        Trying infinity = <-15, 1, 1>...
+        Trying infinity = <-24, 2, 1>...
+Done!
+Computing divisors of hauptmodules...Done!
+Computing candidate discriminants...
+        Computing CM points up to class number 4...
+        counting elliptic points by CM order... done (0.000s).
+        computing degrees of fields of definition for 81 candidate 
+discriminant(s)...
+        done computing degrees of fields of definition (0.060s).
+Done!
+Computing absolute values at CM points...        finding elements of norm for 9 CM point(s)...
+        Finding lambdas for norms in [ 24, 52, 312, 7, 15, 84, 132, 148, 228 ] 
+(optimal embeddings)...Found lambdas. done (0.760s).
+        absolute values at rational CM point 1/9 (d = -24)... done (0.010s).
+        absolute values at rational CM point 2/9 (d = -52)... done (1.300s).
+        absolute values at rational CM point 3/9 (d = -312)... done (0.590s).
+        absolute values at rational CM point 4/9 (d = -7)... done (682.680s).
+        absolute values at rational CM point 5/9 (d = -15)... done (1.490s).
+        absolute values at rational CM point 6/9 (d = -84)... done (1.610s).
+        absolute values at rational CM point 7/9 (d = -132)... done (1.820s).
+        absolute values at rational CM point 8/9 (d = -148)... done (3.550s).
+        absolute values at rational CM point 9/9 (d = -228)... done (1.760s).
+
+Done!
+Computing actual values at CM points...Done!
+Computing equations of covers...Done!
+Computing equations above P1s and conics...
+        Remaining curves above P1s: { 9555, 9556, 9557, 9558, 9559, 9560, 9561 
+},
+        Remaining curves above conics: { 9555, 9556, 9557, 9558, 9559, 9560, 
+9561 }...
+        Remaining curves above P1s: { 9554 },
+        Remaining curves above conics: { 9554 }...
+Done
+Computing equations above pointless conics...Done
+Filling empty covers by Hauptmodul rebase...Done
+        X0^39(2): 14 curve comparison(s), 3 involution comparison(s), 14/14 
+expected covers matched; 17 committed model cover(s) re-derived (0 CRV skipped)
+Success! 733.100 s
