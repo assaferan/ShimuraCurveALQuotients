@@ -56,6 +56,7 @@ FILTER_STAGES := [*
     // first in the all-quotients block: it is by far the cheapest filter, so its determinations
     // prune every heavier filter below.  Mirrors run_pipeline.sh.
     <"FilterBySpecialFiber", FilterBySpecialFiber>,
+    <"FilterByComponentInvolution", FilterByComponentInvolution>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
