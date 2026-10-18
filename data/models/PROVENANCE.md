@@ -125,7 +125,7 @@ encode.
 | `tests/GuoYangQuotients_10_13.m` | **9** `10_13` quotients, hand-derived; determines a labelling error in Guo-Yang's table | CI, 0.05 s |
 | `tests/_offline/FullCurve_22_5.m` | CONSTRUCTS `22_5`'s full curve; reproduces Guo-Yang verbatim | offline, ~420 s |
 | `tests/X0_D_N.m` (34 files) | re-derive the curve via `AllEquationsAboveCovers` and compare to stored/hand-written data — passing IS reproduction | CI |
-| `tests/_offline/X0_87_1.m`, `X0_57_1.m`, `X0_14_5.m` | the same, for bases too slow for CI (`87_1` runs 45+ min) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
+| `tests/_offline/X0_10_19.m`, `X0_21_1.m` | the same, for the two bases still too slow for CI (`87_1`, `111_1`, `93_1` and `39_2` moved into CI on 2026-10-01, minutes each with the Borcherds search of #63) — `run_tests.m` globs only `tests/*.m`, so `_offline` is excluded automatically | offline |
 
 ## THE QUOTIENT ORACLE — the largest source of external validation here
 
@@ -392,6 +392,39 @@ code version*. Anyone bisecting `main` to an older commit will find this file un
 should not read that as corruption. The same fix is what `95_1`, `115_1`, `123_1`, `129_1`,
 `159_1` were blocked on.
 
+## `95_1`, `119_1`, `159_1`: default flags, but the Borcherds search of PR #63 (`zero-side-kernel`)
+
+`models_95_1.m` was produced 2026-10-01 on lovelace with the default recipe (`BFPROGRESS=1
+BFCACHE=1`, no result-changing flag) from the branch of PR #63 at `fa90a45`, the class-number
+tables mounted (`CLASS_GROUPS_FAST_DIR=/scratch/class-groups-fast`). On `main` before that PR the
+second rung of the Borcherds ladder (0-side pole order 3325) had never finished (7 h+); with it the
+five forms take 23 min on a Mac and the ladder ends on the third rung (m = -43). The whole run,
+all six stages, took about 2 h on a loaded lovelace. The top curve is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), and genus 7 and the hyperelliptic involution match
+Table 1. The quotient comparison (`tests/GuoYangQuotientOracle.m`) has no entry for `95_1`, so it checks
+nothing here; the quotient models rest on the L-polynomial comparison against the trace formula in
+`VerifyModelSet` and on the involution check in `tests/_offline/X0_95_1.m`.
+
+`models_119_1.m` was produced the same way, the same day: its ladder ends on the third rung
+(m = -51, 0-side pole order 6069, 52 good forms), the whole run took about 2 h 10 min on a loaded
+lovelace, and the top curve (genus 9) is isomorphic to Guo-Yang's published equation and matches
+Table 1. The quotient comparison has no entry for `119_1` either; its quotients are checked the same
+way as `95_1`'s.
+
+`models_159_1.m`, the same way and day: its ladder ends on the third rung (m = -51, 0-side pole
+order 8109, pool 8234, 52 good forms), whose kernel alone took about 4 h 40 min on a loaded
+lovelace (5 h 40 min for the whole run); the top curve (genus 9) is isomorphic to Guo-Yang's
+published equation (`tests/GuoYangEquations.m`), genus and hyperelliptic involution match Table 1,
+and `tests/_offline/X0_159_1.m` checks Guo-Yang's w_3. The quotient comparison has no entry for
+`159_1`, so it checks nothing there. Its `[1,53]` quotient is stored with an `h` term
+(`y^2 + h y = f`).
+
+For all three, every stored quotient's L-polynomial at the small good primes equals the one the
+trace formula gives for the W-fixed part of the D-new space (`tests/ModelChecks.m`, check [5]),
+which also fixes the labels of the w_p: the opposite sign convention would swap the genera of the
+two middle quotients at each base. The re-derivation tests for `95_1` and `119_1` take 28 and
+58 min on a Mac and live in `tests/_offline/` with `159_1`'s.
+
 ## Reproducibility status, measured 2026-09-05
 
 Of the 38 Guo-Yang bases we reproduce (`93_1` added 2026-09-05; the denominator is 42, not
@@ -434,3 +467,301 @@ a regression, not something to add to the list.
 ⚠ Cost of the repair: `10_3` loses 4 entries and `22_3` loses its `[1,3]` quotient. Neither costs an
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
+
+## 203 covers built as fibre products of their double covers (2026-10-03/04, `FibreProductCovers.m`)
+
+A cover `X_0(D,N)/W` is Galois over the star curve with an elementary abelian 2-group, so it is
+the fibre product over the star line of its index-2 Atkin–Lehner double covers `y^2 + hy = f(t)`,
+i.e. `(y + h/2)^2 = f + h^2/4`. The entries added on these dates, 203 of them across 53 files, were
+built that way from the hyperelliptic entries already committed in the same file, with no Borcherds
+or Schofer computation, by the writer `tools/writefp.m` (the same construction the pipeline's final
+stage runs). Among them are 29 top curves `W = {1}`, of genus 4 to 11; the rest are intermediate
+quotients of genus 2 to 11.
+
+⚠ **At level `N > 1` these entries rest on the `m = 0` term of Schofer's formula**, through the
+double covers they are built from, and PR #66 only *proposes* a proof of that term; so they are
+checked by point counts against the trace formula, not proved. The same goes for the three
+"not hyperelliptic" verdicts the construction gives (`6_23/w_23`, `34_3/w_2`, `46_3/w_3`).
+
+**Format.** Stored as the existing non-hyperelliptic shape `<genus, "CRV", [ Strings() | ... ]>`,
+one equation per factor, in coordinates `s, z` of weight 1 and fibre coordinates `y1, y2, ...`
+each of weight half the degree of its own equation (the same rule the older `x, y, s, z` pairs
+follow). Twenty-nine of them are top curves `W = {1}`, of genus 3 to 11, which no earlier stage
+could reach because they are not subhyperelliptic.
+
+**What vouches for them.** Each entry was accepted only when the compositum has the genus the
+Shimura-curve genus formula predicts and its point counts over `F_p` and `F_{p^2}` at the first
+three good primes agree with the Eichler–Selberg trace formula on the `W`-fixed part of the `D`-new
+space. A prime at which a factor reduces badly is skipped, so eleven entries rest on two primes
+rather than three: `14_19` `[1]`, `[1,7]`, `[1,14]`; `35_2` `[1]`, `[1,10]`, `[1,14]`; `62_3` `[1]`,
+`[1,2]`, `[1,6]`, `[1,31]`, `[1,93]` (a prime where some factor has a repeated root mod `p`; with
+the writer's weaker criterion, a factor that is a square mod `p`, only the three `62_3` entries
+`[1]`, `[1,2]`, `[1,6]` do). Every written entry was then re-read from its stored strings alone and
+re-checked the same way at two primes. Nothing external publishes these curves, so there is no
+published-equation comparison; the two genus-2 curves at `34_3` are isomorphic to Saia's models
+(Sachi, review of PR #72), and all 200 of the first batch agree with point counts from modular
+symbols at 9–13 primes each (same review).
+
+**Rejections, and the two counts.** The writer of 2026-10-03 tried one generating set of double
+covers per cover and rejected 16 candidates (14 by genus, 2 by the trace formula). The stage's own
+sweep (PR #71) tries every generating set and reported 11 failures over a pool that also held the
+24 stored pairs: the difference is six covers that a second generating set builds. The writer now
+tries every set too (and skips a degenerate one, where some subset of factors multiplies to a
+constant times a square), which reaches seven more covers; three are added here, on 2026-10-04,
+`22_7` `[1,7]`, `26_5` `[1,13]` and `74_3` `[1,111]`, and the other four have models from reruns
+instead: `21_2` `[1,3]`, `[1,6]` (PR #70) and `26_5` `[1,10]` (PR #73) as `y^2 = f(x)`, and `22_7`
+`[1,22]` (PR #73) as a genus-3 double cover of the conic `{1,14,22,77}`, which has no rational
+point, so that curve has no model `y^2 = f(x)` over Q. What remains rejected, with
+every generating set: `14_19` `[1,38]` (`[1,19]` has a hyperelliptic model from the rerun below); `34_7` `[1,7]`, `[1,119]`; `82_3` `[1,2]`,
+`[1,82]`, `[1,123]` (no set has the right genus), and `21_2` `[1,14]`, `34_3` `[1,34]` (right genus,
+wrong point counts: factors in mixed Hauptmodul coordinates).
+
+**Regenerating.** The default recipe produces them since the fibre-product stage runs last in
+`AllEquationsAboveCovers`; the pipeline's own run will write them in the same format, and from
+2026-10-04 that stage never uses an equation the rebase or back-fill stage stored (those are in a
+coordinate of their own). The writer here reads committed files, which do not record which entries
+came from those stages; the trace-formula check is what protects it. ⚠ A fibre product of factors
+from runs with DIFFERENT Hauptmodul normalisations can have the right genus and be the wrong curve
+(`21_2 [1,14]`, `34_3 [1,34]` above); never accept one on genus alone.
+## `21_2` and `6_5`: four quotients added 2026-10-03, both files regenerated with the default recipe
+
+Both files predated the current cover propagation and were missing covers the pipeline now
+produces; no flag is needed, the default recipe above fills them.
+
+**`21_2`, the three genus-2 quotients `{1,3}`, `{1,6}`, `{1,14}`.** These are the quotients by the
+three Atkin-Lehner involutions that act without fixed points, so Riemann-Hurwitz drops the genus
+from 3 to 2 rather than to 1 or 0. They are now checked against **Guo-Yang's published curve**, not
+against our own output: their pair is `y^2 = -(9u-1)(u+7)(u+3)`, `z^2 = -(u+3)`, `u = x^2`, with the
+group acting by sign changes on `(x,y,z)`, and each quotient is the invariant subfield of one sign
+pattern (the derivation is written out in `tests/X0_21_2.m`). Our models are those curves with `y`
+scaled by `3/32`, `3/16`, `3/32`, so they agree over **Q**.
+
+⚠ **The three were absent because the top curve here is stored as a non-hyperelliptic pair and the
+old code only quotiented hyperelliptic curves** — but do not read that as the obstruction: a plain
+rerun produces all three as hyperelliptic curves, so the limitation had already been lifted
+elsewhere. The lesson is the usual one: rerun before diagnosing from the code.
+
+**`6_5`, the quotient `{1,3,5,15}`.** The one genus-1 double cover of the star curve; its six
+genus-0 siblings were already present. Gonzalez-Rotger publish quotients by a single `w_m`, so
+nothing external covers this key; it rests on the independent checks in `ModelVerification.m`
+(genus formula, L-polynomial divisibility over every nested pair, trace-formula point counts),
+291 checks with no failures.
+
+## Level M = 660: X_0^330(1), X_0^6(55), X_0^10(33), X_0^22(15) (2026-10-12, branch level-660-models)
+
+The level-660 group (nine bases, 39 genus-0 quotients) was the largest single block behind the
+Normaliz wall: its first polytope, (660, 231, 0), had run for seven days on lava in the old
+coordinate order and died of its own time limit. With the coordinate order of PR #88 it took about
+30 hours on lovelace at 8 threads, 12461 lattice points, and is committed here as
+`polymake/polymake_solution_660_231_0`. The four even-D bases were built in the default recipe
+(`genmodels.m`, BFCACHE=1, the composite-level tree with the exact m = 0 multipliers per support
+class), with the solver script of PR #88 for any further rung and no weight-0 shift set. The five
+odd-D bases, X_0^15(11), X_0^15(22), X_0^33(5), X_0^33(10) and X_0^55(3), need the two-cusp rung
+(660, 68, 166), enumerated the same day (7591 points), and the odd-D fix of PR #91; they are running.
+
+* `models_330_1.m`: 66 cover keys, 65 with an equation -- all 20 genus-0 quotients, covers up to
+  genus 3, 6 stored as pairs over a conic -- and 1 empty. 8 minutes.
+* `models_6_55.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 5,
+  3 pairs over a conic -- and 24 empty. 22 minutes.
+* `models_10_33.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 7,
+  3 pairs over a conic -- and 24 empty. 22 minutes.
+* `models_22_15.m`: 65 keys, 28 with an equation -- both genus-0 quotients, covers up to genus 6 --
+  and 37 empty. 25 minutes.
+
+Outside check: every stored hyperelliptic curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
+p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 234 of 234, 198 of 198, 198 of 198
+and 156 of 156. No published equation exists for any of these bases.
+## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
+
+The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
+as `polymake/polymake_solution_1020_360_0` (11973 lattice points), enumerated on lovelace in
+68 minutes with the coordinate order of PR #88 where the old order had not finished after five
+days. The three even-D bases were built in the default recipe (`genmodels.m`, BFCACHE=1, the
+composite-level tree with the exact m = 0 multipliers per support class), with the solver script of
+PR #88 for any further rung and no weight-0 shift set. The three odd-D bases, X_0^15(17),
+X_0^15(34) and X_0^51(5), wait on the two-cusp rungs.
+
+* `models_510_1.m`: 65 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 10 empty. 33 minutes.
+* `models_6_85.m`: 65 keys, 28 with an equation -- both genus-0 quotients, covers up to genus 5 --
+  and 37 empty. 61 minutes.
+* `models_10_51.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 59 minutes.
+
+Outside check: every stored curve of genus >= 1 agrees with the trace formula over F_p and F_{p^2}
+at the six smallest primes not dividing 510, p = 7, 11, 13, 19, 23, 29: 264 of 264, 156 of 156 and
+126 of 126. No published equation exists for any of these bases.
+## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
+
+The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
+`polymake/polymake_solution_780_274_0` (12729 lattice points). It was enumerated on lovelace in
+74 minutes with the coordinate order of PR #88 (divisors farthest from sqrt(M) first, Normaliz
+keeping the order); the run in the old order had not finished after five days. The four even-D
+bases were then built in the default recipe (`genmodels.m`, BFCACHE=1, the composite-level
+tree with the exact m = 0 multipliers per support class), each in 16 to 35 minutes, with the solver
+script of PR #88 for any further rung. No weight-0 shift set was needed. The two odd-D bases,
+X_0^15(13) and X_0^39(5), wait on the two-cusp rungs, as at level 924.
+
+* `models_390_1.m`: 66 cover keys, 55 with an equation -- all 11 genus-0 quotients, covers up to
+  genus 5 -- and 11 empty. 16 minutes.
+* `models_6_65.m`: 65 keys, 41 with an equation -- all 5 genus-0 quotients, covers up to genus 5 --
+  and 24 empty. 33 minutes.
+* `models_10_39.m`: 65 keys, 33 with an equation -- all 3 genus-0 quotients, covers up to genus 4,
+  5 of them stored as pairs over a conic -- and 32 empty. 33 minutes.
+* `models_26_15.m`: 50 keys, 22 with an equation -- the one genus-0 quotient, covers up to genus 6 --
+  and 28 empty. 35 minutes.
+
+Outside check: every stored hyperelliptic curve of genus >= 1 has the point counts of the
+Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 390,
+p = 7, 11, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 264 of 264, 216 of 216, 150 of 150
+and 126 of 126. No published equation exists for any of these bases.
+## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
+
+The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
+first for the polytope (924, 325, 0), enumerated once on lava (Normaliz, 8 threads, 4 h 19 min, 8674
+lattice points) and committed here as `polymake/polymake_solution_924_325_0`, together with the
+weight-0 shift set `polymake/tshift_w0_924.txt` (283 points, minutes) that the t-shift fallback uses
+for the taller m = 0 rungs; the cache is keyed by the polytope alone, so every level-924 base shares
+them. `models_462_1.m`: default recipe (`genmodels.m`, BFCACHE=1, the composite-level tree at commit
+e85261a of branch exact-m0, PR #79, which carries the m = 0 term of #66, #74 and #79) on lovelace,
+15 minutes; 66 cover keys, 55 with a model (49 as y^2 = f(x), 6 as double covers of a conic) -- all 11
+genus-0 quotients of the base, covers up to genus 5 -- and 11 empty. Outside
+check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462, p = 13, 17, 19, 23, 29, 31 (228 of
+228; campaign `composite/checkcomp.m`; the six double covers of a conic were not part of this check). No published equation exists for this base.
+
+`models_6_77.m` (2026-10-06): the first composite-level base of the group (N = 77), same recipe on
+lovelace, 26 minutes, the m = 0 multipliers from the algebraic routine per support class {7}, {11},
+{7, 11}. 65 cover keys, 37 with a model (34 as y^2 = f(x), 3 as double covers of a conic) -- all 4 genus-0
+quotients, covers up to genus 7 -- and 28 empty. Outside check: every stored curve of genus >= 1 agrees with the
+trace formula over F_p and F_{p^2} at the six smallest primes not dividing 462 (180 of 180; the three
+double covers of a conic were not part of this check). At
+p = 11, a prime of the level, the genus-1 quotient by {1, 2, 7, 14, 33, 66, 231, 462} reduces to a
+smooth curve whose counts differ from the trace formula; the trace formula does not describe the
+reduction at a prime of bad reduction of the Shimura curve, so the check now skips such primes. No
+published equation exists for this base.
+
+`models_22_21.m` (2026-10-09): same recipe on lovelace, 34 minutes, the m = 0 multipliers per
+support class {3}, {7}, {3, 7}. 50 cover keys, 22 with an equation -- the one genus-0 quotient
+{1, 3, 14, 22, 42, 66, 77, 231} (the star curve is the Hauptmodul base and is stored nowhere),
+covers up to genus 6 -- and 28 empty, none of which the Hauptmodul rebase sweep fills. Outside
+check: every stored curve of genus >= 1 agrees with the trace formula
+over F_p and F_{p^2} at the six smallest primes not dividing 462 (126 of 126). No published equation
+exists for this base.
+
+The other four bases with N > 1 of the group, X_0^21(11), X_0^21(22), X_0^33(7) and X_0^33(14), are
+NOT here. After the {oo}-weakly holomorphic ring (the shared rung above), their Borcherds searches
+go on to ask for the ring of forms with poles at both cusps 0 and oo, which the three bases above
+never request. That search climbs the weight-236 ladder (924, n, 236) in steps of 236 in n, finds
+rank 0 at every rung while the requested dimension grows by 236, and dies at the cap n = 10000 after
+3.5 days. The climb depends on the level alone: the logs of the four runs are byte-for-byte identical
+up to the point each was stopped.
+
+**Every empty key of `22_21` and `6_77` filled as a fibre product (2026-10-11, branch
+level-924-fibre-products).** The 28 empty keys of each file are the covers with no genus-0
+Atkin-Lehner quotient to carry a hyperelliptic equation; each is the fibre product over the star
+line of its index-2 double covers already in the file, built by the writer of the fibre-product
+stage (`tools/writefp.m`, as the 203 entries above) and stored in the same `<genus, "CRV", [...]>`
+shape: `22_21` genera 3 to 7, `6_77` genera 3 to 9. The writer accepted each one on the genus formula
+and the trace formula over F_p and F_{p^2} at the first three good primes. Then, independently of
+the writer, every entry was re-read from its stored strings alone and compared with the trace
+formula at the 4th and 5th good primes, which the writer never used: 112 of 112 (prime, cover)
+counts agree. `462_1` keeps its 11 empty keys: none of them has committed double covers to multiply.
+As for the 203 above, at level N > 1 these rest on the m = 0 term of Schofer's formula through their
+factors (PR #66), so they are checked by point counts, not proved.
+The five odd-D bases of the group, X_0^21(11), X_0^21(22), X_0^33(7), X_0^33(14) and X_0^77(3), are
+not here. For odd D the search also needs the ring of weight-1/2 forms with poles at both cusps,
+which asks for the two-cusp polytope (924, 89, 236). That enumeration did not finish within the
+two-hour Normaliz limit the runs used, and a timed-out solve then returned "no points" rather than
+an error (PR #81 makes it an error), so the four runs that were started climbed the ladder
+(924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
+enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
+divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
+
+`models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
+`models_93_2.m` (12 keys: 1 of genus 0, 2 of genus 1, 1 of genus 2, 2 of genus 4, 1 of genus 8),
+default recipe (`genmodels.m`, BFCACHE=1) on lava from branch composite-level, 3 min and 46 min.
+Outside check: every stored curve of genus >= 1 has the point counts of the Eichler-Selberg trace
+formula over F_p and F_{p^2} at p = 11, 13, 17, 19, 23, 29 (50 of 50 and 36 of 36; campaign
+`composite/checkcomp.m`). No published equation exists for either base. `models_55_2.m` (15 keys: 1 of genus 0, 3 of genus 1, 2 of genus 2, 3 of
+genus 3, 1 of genus 6; 68 min) and `models_87_2.m` (14 keys, genus up to 8; 2 h): their first runs
+stopped in the exact m = 0 multiplier's class-constancy check at d = -15, a roundoff miss at Prec 80
+(3e-15 against a floor of 1e-15 at M = 220, and 2e-5 at M = 348); with the precision retry of
+composite-level 9201ae0 both passed at Prec 160 and the trace formula agrees at every curve (45 of 45
+each). `models_69_2.m` (14 keys: 3 of genus 1, 4 of genus 2; 7 keys stay empty after the Hauptmodul
+sweep, none of them genus 0) ran the same way on lava and agrees with the trace formula at every
+curve (35 of 35). This base has no genus-0 quotient, so its equations are new covers only.
+`models_95_2.m` (14 keys: 1 of genus 0, 2 of genus 1, then genus 2, 3, 4, 5, 5, 7, 10; 4 keys empty)
+ran on lava the same way (12 h; its m = 0 multipliers missed the Prec-80 floor once and passed at
+Prec 160) and agrees with the trace formula at every curve of genus >= 1 (45 of 45).
+`models_111_2.m` (12 keys: 1 of genus 0, 2 of genus 1, then genus 2, 5, 5, 10; 5 keys empty): its first
+run (composite-level code) lost all precision in the numerical m = 0 multiplier at M = 444 (a
+class-constancy deviation of 3e61) and sat in the Prec-160 retry for 13 hours; restarted from the
+cached Borcherds forms with the exact algebraic multiplier (branch exact-m0), it finished in 25 minutes.
+Trace formula 36 of 36.
+
+## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
+
+The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
+genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
+order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
+read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
+exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
+present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
+each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
+36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
+keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
+
+Three keys in these files are hyperelliptic quotients that are still empty and have not yet been
+computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,186}`), `111_2` by w_222
+(`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
+`38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
+agree up to isomorphism.
+## `models_210_1.m` and the level-420 polytope cache (2026-10-05, branch level-420-models)
+
+`X_0^210(1)` was behind the Normaliz wall (M = 420 has 24 divisors) until its first polytope rung
+was enumerated in August for the theta campaign: `polymake/polymake_solution_420_145_0` (19864
+lattice points, 13.4 wall-hours of Normaliz, banked on the campaign branch as
+`vvdata/weyl-campaign/nmz_420_145_0.txt.gz`). The t-shift fallback of `nmzsolve.py` answers the
+second rung from it (`polymake_solution_420_250_0`, 212 points, a spanning set of the rung's forms and
+not the lattice points of the polytope; its first line says so, as a Magma comment, so that a later
+enumeration is not mistaken for it); both files are committed here so the default recipe reproduces
+the base without Normaliz. The run used the composite-level tree on lovelace at ca87e19 (branch
+composite-level, PR #74; at N = 1 no m = 0 term is involved). With them the whole run took 7 min 37 s on
+lovelace: 66 cover keys, 40 of genus 0, 31 of genus 1, 10 of genus 2, 4 of genus 3 and 6 fibre
+products of genus 3. Outside check: 234 of 234 point counts of the Eichler-Selberg trace formula at
+p = 11, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`). The same cache serves every base with
+M = 420: the composite-level bases `6_35`, `10_21`, `14_15` (branch composite-level) ran from it; the
+bases that also need a cusp-0 rung, `15_7`, `21_5`, `15_14`, `21_10`, `35_6` (all `(420, 42, 104)`)
+and `35_3` (`(420, 146, 104)`), wait on those enumerations.
+## 36 quotient models from a rerun of the gap bases (2026-10-03, lovelace, code at e4d8b4a, a commit on the branch of PR #63 and not on `main`)
+
+The census of 2026-10-03 found 100 subhyperelliptic quotients with no model across 31 bases, almost
+all of them because the committed file predates a code fix rather than because the method fails
+(`21_2` and `6_5` closed by a plain rerun, PR #70). The 27 reachable bases were rerun on lovelace
+with the default recipe (`genmodels.m`, `NORMALIZ_BIN=/usr/bin/normaliz`, 10 h cap, all 24 that
+finished exited 0; `143_1`, `145_1`, `203_1` run separately). Against this branch the reruns add
+36 entries in 8 files, of genus 0 to 7 (3, 8, 9, 6, 5, 3, 1, 1 entries of genus 0 through 7):
+
+    14_19  [1,133] [1,7,19,133] [1,19] [1,14,38,133]
+    22_13  [1,286] [1,26] [1,22,26,143] [1,13,22,286] [1,11,26,286] [1,11,13,143] [1,11]
+    22_7   [1,22]            26_5  [1,10]
+    34_5   nine: [1,5,34,170] [1,10,34,85] [1,2,5,10] [1,5] [1,34] [1,5,17,85] [1,170] [1,2,85,170] [1,10,17,170]
+    34_7   [1,14,34,119] [1,7,34,238]
+    38_7   [1,14,19,266] [1,2,7,14] [1,266] [1,7,38,266] [1,38] [1,14,38,133]
+    58_5   [1,10] [1,10,58,145] [1,2,5,10] [1,29] [1,2,29,58] [1,5,29,145]
+
+Where a key already held a model of the form y^2 = f(x) the rerun's version (often a different
+normalisation of the same curve) was discarded. Where this branch held a fibre-product `CRV` pair
+and the rerun found a model y^2 = f(x) for the same key, the hyperelliptic model replaces the pair
+(Eran's decision, 2026-10-13: the hyperelliptic form is the more useful one when it exists; the
+two were produced independently and both agree with the trace formula): 13 keys, `10_17 [1,85]`,
+`10_29 [1,58]`, `10_37 [1,2] [1,185]`, `14_13 [1,91]`, `14_19 [1,14]`, `22_7 [1,11]`, `26_5 [1,65]`,
+`34_3 [1,3] [1,6]`, `34_7 [1,14] [1,238]`, `6_41 [1,123]`, each with the genus of the pair it replaces
+(the rerun output is in `gapscan/out` on lovelace). The two
+odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
+checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
+reach: `GonzalezRotger`, `GuoYangTable1`).
