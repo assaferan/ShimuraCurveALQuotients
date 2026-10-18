@@ -23,7 +23,9 @@
 // wrong genus, but at X_0(21,2) of the right one, where only the point counts tell.  Before the
 // genus, a set of factors also goes through the triple check below, which uses the third double
 // cover above the intersection of two of them to decide, where it can, whether two factors are
-// written in the same coordinate; a set with two factors that provably are not is refused.
+// written in the same coordinate; a set with two factors that the triples say are not is refused.
+// The triples see a coordinate only up to a quadratic twist shared by two covers, so a pass is
+// agreement in that sense, and a refusal can be wrong when two covers carry the same wrong twist.
 // Inside one pipeline run the first-level stages share a coordinate; the rebase and back-fill
 // stages do not (the former substitutes t = (ru+1)/u, the latter stores CurveQuotient's own
 // coordinate), so
@@ -183,7 +185,9 @@ intrinsic AtkinLehnerTripleCheck(covers::Assoc, D::RngIntElt, N::RngIntElt) -> S
  are written in the same coordinate: the three quadratic characters multiply to the trivial one, so
  the product is a square in Q(t), and a square in Q(t) that is a polynomial is the square of one.
  Returns the triples <U, V, T> that fail this, and the partition of the keys into classes joined by
- the triples that pass: two covers in one class are written in the same coordinate.}
+ the triples that pass: two covers in one class are written in the same coordinate up to a
+ quadratic twist shared by both, since twisting two of the three by one non-square changes the
+ product by its square.}
     DN := D * N;
     full := {Integers()| d : d in Divisors(DN) | GCD(d, DN div d) eq 1};
     ks := [k : k in Keys(covers) | k subset full and #k * 2 eq #full];
@@ -227,7 +231,9 @@ intrinsic DefinitelyDisagreeingFactors(gens::SeqEnum, failing::SeqEnum, classes:
 {True when two of the double covers gens are known to be written in different coordinates: some
  failing triple holds both of them, and its third member is in the class of one of the two.  That
  one shares a coordinate with the third, so the other cannot, and the two must not be multiplied
- together.  A failing triple whose third member is in neither class says only that one of the three
+ together.  The classes are joined by passing triples, and a triple passes when two of its covers
+ carry the same wrong twist; so a correct pair can be refused on that basis.  Against factors
+ from runs with different normalisations of t, which is what this is for, the refusal is right.  A failing triple whose third member is in neither class says only that one of the three
  is out of step, not which, so it does not refuse anything.  Also returns the triple.}
     G := Seqset(gens);
     for tri in failing do
