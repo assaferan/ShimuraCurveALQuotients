@@ -1,4 +1,4 @@
-import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, point_counts;
+import "Caching.m" : cached_traces, SetCache, GetCache, class_nos, point_counts, weil_tables;
 
 intrinsic ComputePointsViaTrace(X::ShimuraQuot, p::RngIntElt, d::RngIntElt) -> RngIntElt
     {Compute points via trace formula on X(Fp^d) (this is better if d < g) }
@@ -340,24 +340,48 @@ function EffectiveWeilPrimeBound(c, ceiling)
     return b;
 end function;
 
+// The Weil-polynomial test of IsHypWeilPolynomial at the single good prime p, on the tables it
+// is given (possible_wps[g][p] if defined, and poss_wps_at2 for the 2-rank test at p = 2 when
+// g notin [3..6]).  Returns false if the Weil polynomial of X at p is not that of a hyperelliptic
+// curve over F_p.  Only data at p is used, so a false is a statement about X over F_p (hence over
+// the algebraic closure of F_p: there a hyperelliptic curve of genus >= 2 is hyperelliptic over
+// F_p already, as its hyperelliptic involution is unique and the quotient conic has a point).
+function hypWeilAtPrime(X, p, possible_wps, poss_wps_at2)
+    g := X`g;
+    if (p eq 2) and (g notin [3,4,5,6]) then //check at 2 by f-rank
+        wp := WeilPolynomial(X,2);
+        slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
+        f := &+[Integers() | i[2] : i in slopes | i[1] eq 0]; //2-rank = multiplicity of slope 0
+        u := Universe(poss_wps_at2[f]);
+        // wp is the characteristic polynomial T^2g + a_1 T^(2g-1) + ... + 2^g of Frobenius, and
+        // Reverse(Coefficients(wp)) = [1, a_1, ..., a_2g]. Only the unit-root factor is
+        // constrained: mod 2, wp = T^(2g-f) * (unit-root factor), whose coefficients from the
+        // top down are [1, a_1, ..., a_f]. The a_i with i > f are even. The table entries
+        // have length f+1.
+        wp := Reverse(Coefficients(wp))[1..f+1];
+        if u!wp notin poss_wps_at2[f] then
+            vprint ShimuraQuotients, 2 : u!wp;
+            return false;
+        end if;
+    end if;
+    if IsDefined(possible_wps, g) and IsDefined(possible_wps[g], p) then
+        wp := Reverse(Coefficients(WeilPolynomial(X,p)));
+        u:= Universe(possible_wps[g][p]);
+        if u!wp notin possible_wps[g][p] then
+            vprint ShimuraQuotients, 2 : u!wp;
+            return false;
+        end if;
+    end if;
+    return true;
+end function;
+
 intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2 ::Assoc, bound::RngIntElt) -> BoolElt, RngIntElt
     {Return false if not a hyperelliptic Weil Poly at some good prime p <= bound.}
     g := X`g;
     assert g in Keys(possible_wps);
     if g notin [3,4,5,6] then //first check at 2 by f-rank
         if (2 le bound) and (2 notin PrimeDivisors(X`D*X`N)) then
-            wp := WeilPolynomial(X,2);
-            slopes := SlopesWithMultiplicities(NewtonPolygon(wp,2));
-            f := &+[Integers() | i[2] : i in slopes | i[1] eq 0]; //2-rank = multiplicity of slope 0
-            u := Universe(poss_wps_at2[f]);
-            // wp is the characteristic polynomial T^2g + a_1 T^(2g-1) + ... + 2^g of Frobenius, and
-            // Reverse(Coefficients(wp)) = [1, a_1, ..., a_2g]. Only the unit-root factor is
-            // constrained: mod 2, wp = T^(2g-f) * (unit-root factor), whose coefficients from the
-            // top down are [1, a_1, ..., a_f]. The a_i with i > f are even. The table entries
-            // have length f+1.
-            wp := Reverse(Coefficients(wp))[1..f+1];
-            if u!wp notin poss_wps_at2[f] then
-                vprint ShimuraQuotients, 2 : u!wp;
+            if not hypWeilAtPrime(X, 2, AssociativeArray(), poss_wps_at2) then
                 return false, 2;
             end if;
         end if;
@@ -366,10 +390,8 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
     primes := Sort([p : p in Keys(possible_wps[g]) | p le bound]);
     for p in primes do
         if p in PrimeDivisors(X`D*X`N) then continue; end if;
-        wp := Reverse(Coefficients(WeilPolynomial(X,p)));
-        u:= Universe(possible_wps[g][p]);
-        if u!wp notin possible_wps[g][p] then
-            vprint ShimuraQuotients, 2 : u!wp;
+        pw := AssociativeArray(); pw[g] := AssociativeArray(); pw[g][p] := possible_wps[g][p];
+        if not hypWeilAtPrime(X, p, pw, poss_wps_at2) then
             return false, p;
         end if;
     end for;
@@ -377,6 +399,10 @@ intrinsic IsHypWeilPolynomial(X::ShimuraQuot, possible_wps ::Assoc, poss_wps_at2
 
 end intrinsic;
 
+// The primes at which data/hypg<g>q<p>.txt is complete and used.
+function HasLMFDBweilpolys(g,p)
+    return (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2);
+end function;
 
 function LMFDBweilpolys(g,p)
     f :=  Read(Sprintf("data/hypg%oq%o.txt",g,p));
@@ -400,7 +426,7 @@ function createpossiblepolys(genera, genus_bounds)
         possible_wps[g] := AssociativeArray();
         away := Set(HyperellipticWeilPolysAwayFromTwo(g)); // independent of p, compute once
         for p in PrimesUpTo(genus_bounds[g]) do
-            if (g eq 3 and p lt 25) or (g eq 4 and p le 5) or (g in [5,6] and p eq 2) then
+            if HasLMFDBweilpolys(g,p) then
                 possible_wps[g][p] := LMFDBweilpolys(g,p);
             elif p ne 2 then
                 possible_wps[g][p] := away;
@@ -410,6 +436,50 @@ function createpossiblepolys(genera, genus_bounds)
     return possible_wps, poss_wps_at2;
 
 end function;
+
+// The per-genus practical ceiling on the Weil prime bound that FilterByWeilPolynomial uses when no
+// prime_ceiling is supplied.
+function DefaultWeilPrimeCeiling()
+    prime_ceiling := AssociativeArray();
+    prime_ceiling[3] := 53; prime_ceiling[4] := 53; prime_ceiling[5] := 37;
+    prime_ceiling[6] := 29; prime_ceiling[7] := 23; prime_ceiling[8] := 17;
+    return prime_ceiling;
+end function;
+
+intrinsic CheckWeilPolynomialAtPrime(X::ShimuraQuot, p::RngIntElt) -> BoolElt
+    {The test of FilterByWeilPolynomial at the single good prime p: returns false if the Weil
+    polynomial of X at p is not that of a hyperelliptic curve over F_p (the same tables, and at
+    p = 2 the same 2-rank test), so that X is not hyperelliptic over the algebraic closure of F_p.
+    Returns true if the test is inconclusive, including when p is above the prime bound that
+    FilterByWeilPolynomial (default ceilings) would use on X, where the trace formula is not
+    affordable.}
+    g := X`g;
+    assert g ge 3;
+    assert (X`D*X`N) mod p ne 0;
+    if p gt EffectiveWeilPrimeBound(X, DefaultWeilPrimeCeiling()) then
+        return true;
+    end if;
+    // Tables for (g, p) only, kept for the session: an LMFDB table can take a while to load.
+    b, tabs := GetCache(<g, p>, weil_tables);
+    if not b then
+        possible_wps := AssociativeArray();
+        possible_wps[g] := AssociativeArray();
+        if HasLMFDBweilpolys(g,p) then
+            possible_wps[g][p] := LMFDBweilpolys(g,p);
+        elif p ne 2 then
+            possible_wps[g][p] := Set(HyperellipticWeilPolysAwayFromTwo(g));
+        end if;
+        poss_wps_at2 := AssociativeArray();
+        if p eq 2 then
+            for f in [0..g] do
+                poss_wps_at2[f] := HyperellipticWeilPolysAtTwo(f);
+            end for;
+        end if;
+        tabs := <possible_wps, poss_wps_at2>;
+        SetCache(<g, p>, tabs, weil_tables);
+    end if;
+    return hypWeilAtPrime(X, p, tabs[1], tabs[2]);
+end intrinsic;
 
 
 intrinsic FilterByWeilPolynomial(~curves::SeqEnum : genera := { c`g : c in curves | not assigned c`IsSubhyp }, prime_ceiling := AssociativeArray())
@@ -421,8 +491,7 @@ intrinsic FilterByWeilPolynomial(~curves::SeqEnum : genera := { c`g : c in curve
     8->17; higher genera are bounded by the tables alone).}
     if IsEmpty(genera) then return; end if;
     if IsEmpty(Keys(prime_ceiling)) then
-        prime_ceiling[3] := 53; prime_ceiling[4] := 53; prime_ceiling[5] := 37;
-        prime_ceiling[6] := 29; prime_ceiling[7] := 23; prime_ceiling[8] := 17;
+        prime_ceiling := DefaultWeilPrimeCeiling();
     end if;
     // Precompute possible Weil polynomials up to the largest per-curve bound per genus.
     precompute_bd := AssociativeArray();
