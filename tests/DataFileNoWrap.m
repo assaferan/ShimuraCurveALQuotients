@@ -2,8 +2,8 @@
 //
 // The pipeline writes its curve lists with Sprint(curves, "Magma").  With Magma's default line
 // width of 80 columns a long verdict label is split over several lines with "\n" inserted, and the
-// label read back from the file is not the one written (84 labels of the 2026-09-30 data were
-// damaged this way, as Sachi found reviewing #111).  The writers now set the line width to 0 first.
+// label read back from the file is not the one written.  The writers now set the line width to 0
+// first.
 // This test writes a curve with a label longer than 80 characters the way the writers do, reads
 // it back, and checks the label is unchanged; it also checks that the default width does damage
 // it, so that the test tells the two apart.
