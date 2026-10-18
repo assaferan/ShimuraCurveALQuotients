@@ -678,6 +678,39 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## Four files regenerated in one run so that their double covers share a coordinate (2026-10-14, branch renormalise-mixed-bases)
+
+The review of the fibre-product stage (issue #99) listed the bases whose stored double covers are
+written in more than one coordinate on the star curve, so that no fibre product could be built over
+them: `21_2`, `22_15`, `58_5`, `87_1`, `87_2`, `93_2`, `159_1`, `206_1`, `34_7`. Each was rerun with
+the default recipe (`genmodels.m`, BFCACHE=1, the code of `main` at a2e0747) so that every cover of
+the file comes from a single run. Four files changed and are committed here:
+
+* `models_21_2.m`: the same 15 keys; every hyperelliptic model of genus >= 1 is isomorphic to the
+  committed one (9 of 9) and the seven index-2 double covers now pass the coordinate check of PR
+  #105 as one class. Nothing else changes; the mixed set that `tests/FibreProductCovers.m` uses is
+  written into that test and does not depend on this file.
+* `models_34_7.m`: 14 keys as before, 9 of 9 hyperelliptic models isomorphic, and three covers that
+  had been refused as fibre products because of the mixed coordinates are now built: `[1,34]`
+  (genus 3), `[1,7]` and `[1,119]` (genus 5).
+* `models_58_5.m`: 10 keys become 14: 9 of 9 hyperelliptic models isomorphic, plus the fibre
+  products `[1,2]`, `[1,5]`, `[1,58]` (genus 8) and `[1,145]` (genus 6).
+* `models_93_2.m`: the same 12 keys, 6 of 6 hyperelliptic models isomorphic, plus the fibre
+  products `[1,3]` (genus 8) and `[1,2]` (genus 7).
+
+Outside check: every hyperelliptic model of genus >= 1 in the four files has the point counts of the
+trace formula over F_p and F_{p^2} at the six smallest good primes (53, 51, 54 and 32 of as many);
+the model checks pass on all four (227, 145, 160 and 100 checks, no failures); the fibre products
+were accepted by the stage on the genus formula and the trace formula at three primes, with the
+coordinate check conclusive. `87_1`, `159_1` and `206_1` were rerun too and came back with the same
+curves (3 of 3 isomorphic each), still with their three double covers in different coordinates:
+there the mixing happens inside one run, in the rebase stage, which stores its own coordinate, and
+since each of these top curves is hyperelliptic and stored, nothing is lost; their files are not
+touched. `87_2`, rerun with the exact m = 0 multiplier of PR #79 (the numerical one on `main` stops in its
+class-constancy check at d = -15), also came back unchanged (9 of 9 isomorphic) with one of its
+seven double covers still in the rebase coordinate, so its four empty keys stay empty and the file
+is not touched. `22_15`, rerun the same way, also came back unchanged (26 of 26 isomorphic), with one of its fifteen double covers in the rebase coordinate; its 37 empty keys stay empty for now.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
