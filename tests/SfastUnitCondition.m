@@ -24,7 +24,7 @@
 //     from 15.2.a.a); (1, 1848, 7) with the V4 below: main gives -20, modular symbols -9.  It
 //     now sums Lemma 4.20 block by block over the N' divisible by D, for every n.  Beyond the
 //     cases here, 0 of 1548 such traces differed from modular symbols across 23 (D, N) pairs
-//     (D up to 26), several W each, n in {2..25}
+//     (D up to 26), several W each, n in {2, 3, 4, 5, 6, 8, 9, 10, 12, 25}
 //     (vvdata/weyl-campaign/trace-formula-gcd-2026-09-30/dnew_general.m on the campaign branch).
 //
 // Magma's HeckeOperator on a SUBSPACE dies at (N, k, n) = (6, 4, 2) ("incompatible

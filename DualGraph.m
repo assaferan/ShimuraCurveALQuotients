@@ -13,7 +13,7 @@
 // classes v of O; one edge e for each of the h' left ideal classes of OO, joining (org[e], +) to
 // (org[w_p e], -), where org[e] is the class of O*I_e.  w_q (q | D'N) acts on classes of both
 // levels by I -> P_q I (P_q the two-sided prime of norm q) and preserves the copies; w_p acts on
-// edges by P_p and swaps the copies.  Specification: docs/superpowers/specs/2026-09-29-dual-graph-filter-design.md.
+// edges by P_p and swaps the copies.
 
 import "Caching.m" : dual_graphs, SetCache, GetCache;
 

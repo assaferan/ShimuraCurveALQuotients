@@ -26,22 +26,22 @@ assert AllALsFromGens({Integers() | }, 102) eq {1};
 
 // [2]  HAND: synthetic inputs; the expected answer follows from the definition (each orbit of
 //      degree k takes k points from one row whose field list contains its field; every row must
-//      be filled exactly).  Rows are <disc, count on the quotient, [* possible fields *]>.
+//      be filled exactly).  Rows are <disc, count on the quotient, field of definition>.
 Qm3 := QuadraticField(-3);
 K4 := NumberField(x^4 + 1/4*x^2 - 1/4);
-exp_ell := [* <-51, 2, [* Qm3 *]> *];
+exp_ell := [* <-51, 2, Qm3> *];
 assert MatchFixedPointOrbits([* Qm3 *], exp_ell);                     // one quadratic orbit
 assert not MatchFixedPointOrbits([* QQ, QQ *], exp_ell);              // two rational points: no
 assert not MatchFixedPointOrbits([* QuadraticField(-222) *], exp_ell);
-exp_rat := [* <-3, 2, [* QQ *]> *];
+exp_rat := [* <-3, 2, QQ> *];
 assert MatchFixedPointOrbits([* QQ, QQ *], exp_rat);
 assert not MatchFixedPointOrbits([* Qm3 *], exp_rat);                 // Q(sqrt-3) is not Q
-exp_hyp := [* <-24, 2, [* Qm3 *]>, <-68, 4, [* K4 *]> *];
+exp_hyp := [* <-24, 2, Qm3>, <-68, 4, K4> *];
 assert MatchFixedPointOrbits([* Qm3, K4 *], exp_hyp);
 assert not MatchFixedPointOrbits([* Qm3, Qm3, QuadraticField(17) *], exp_hyp);  // -24 has only 2
 assert not MatchFixedPointOrbits([* QuadraticField(3), K4 *], exp_hyp);
-// a rational orbit can also sit in a row whose field list contains a degree-1 field
-assert MatchFixedPointOrbits([* QQ, QQ *], [* <-3, 2, [* NumberField(x - 1 : DoLinearExtension) *]> *]);
+// a rational orbit can also sit in a row whose field is a degree-1 number field
+assert MatchFixedPointOrbits([* QQ, QQ *], [* <-3, 2, NumberField(x - 1 : DoLinearExtension)> *]);
 
 // [3]  FILE: the vendored file has 231 entries.  This is a count of that fixed file, not a
 //      mathematical fact; it is cross-checked here against the raw text (one "[* D, N," opener

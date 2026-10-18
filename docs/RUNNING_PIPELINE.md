@@ -181,18 +181,20 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   bound from the mass formula over all 945 applicable star levels; on the committed data only 354
   star curves are undecided and applicable), and Phase B at most 1.2 CPU-h before cache reuse. The
   per-curve work is under 0.01 s.
-* **`FilterByWeilPolynomial`**: hours on a single curve at the top end, and the top end is
-  **high genus with a small `W`**, not a big level. The stage needs one trace at `n = p^g` per
-  good prime up to its bound, and the cost of that trace is set by `n`: replayed on a Mac
-  (2026-09-30, `main` at `95cf87b`, *without* the class-number tables), the biggest level in the
-  stage, `X_0^{210}(73)/W_{32}` (`g = 4`, `Qmax = 15330`), took 9 min for all seven of its primes,
-  while `X_0(240)/W_4` (`g = 6`, `Qmax = 80`) took 49 min through `p = 17` alone and projects to
-  ~9 h; a `g = 7` curve (`X_0^{21}(20)/W_4`) is heavier still. ⚠ Those are table-less numbers
-  and support the *ordering* only; re-measure on lovelace, where `CLASS_GROUPS_FAST_DIR` points
-  at the tables, before quoting an absolute time. `CurveCostProxy` now sums `p^g` over the good
-  primes (it used to sum `4·Qmax·p^g`, the discriminant depth, which put the 9-min curve above
-  the 9-h one and ranked the latter 138th of 886). The makespan of this stage is roughly the
-  slowest single curve, so getting that ordering right is what the heavy-first dispatch is for.
+* **`FilterByWeilPolynomial`**: up to **about 1.7 h** on a single curve at the top end, and the top
+  end is **high genus at a moderate level** — not a big level, and not a large `W` either. The stage
+  needs one trace at `n = p^g` per good prime up to its bound, and Eichler--Selberg evaluates it as
+  a sum over the `#W` elements of `W` of about `2 sqrt(n/Q_w)` terms, so the cost is
+  `#W * sum_p p^{g/2}`, which is what `CurveCostProxy` now returns. Measured on lovelace with the
+  class-number tables over 36 curves spanning genus 3 to 7, `#W` from 1 to 64 and level from 30 to
+  30030, on `main` at `95b19e6` (`vvdata/weyl-campaign/weil-retime-2026-10-02/` on the
+  `m0-theta-campaign` branch): the slowest two are `X_0(595)/W_8` (`g = 5`) at 101 min and
+  `X_0^6(97)/W_2` (`g = 6`) at 74 min, while `X_0(240)/W_4` (`g = 6`) takes 6 min, against 87 min
+  with #58 alone and 14.8 h before it. The makespan of this stage is roughly the slowest single
+  curve, so getting that ordering right is what the heavy-first dispatch is for; of the curve pairs
+  whose times differ by more than a factor 10 the estimate orders 246 of 271 correctly. ⚠ A residual
+  spread of 237x remains and real pairs are
+  mis-ordered, so it orders chunks and is not a cost: quote the measured times.
 * **`FilterByTwistedTrace`**: modular symbols of level D·N, plus T_p for every good p < 4g².
   Small levels take seconds (level 1530 takes about 30 s), but the largest levels (D·N from about
   2000 up to 15330) take **hours each**, and the sweep's top levels ran for more than 4 h.
