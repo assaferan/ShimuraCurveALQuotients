@@ -9,6 +9,15 @@
 // are ignored (unweighted): an isometric involution is in particular a combinatorial one, so "no
 // combinatorial involution" is sound for every choice of lengths.
 //
+// The metric refinement (Metric := true).  The special fibre of the stable model is the minimised
+// graph with edge lengths the orders of the edge stabilisers in the extended group (Kurihara 1979):
+// for an edge e of G_W this is |O_R(I_e)^x| . |W| / |W-orbit of e|, and lengths add when two edges
+// are merged at a vertex of valence 2 (Chan 2013, bridges contracted).  The hyperelliptic
+// involution of the metric graph is unique (Chan, Thm 1.2), so it is an isometry and commutes with
+// every automorphism, in particular with the residual action of W_full/W on Y.  The refinement
+// therefore searches only isometric involutions commuting with that action; an involution of the
+// curve with tree quotient always survives, so a failed search is a proof of non-hyperellipticity.
+//
 // Graph G (Kurihara; Padurariu--Saia 2.3).  B' = definite algebra of discriminant D/p, O an Eichler
 // order of level N, OO the level-Np suborder.  Vertices (v, +) and (v, -) for the h left ideal
 // classes v of O; one edge e for each of the h' left ideal classes of OO, joining (org[e], +) to
@@ -323,6 +332,185 @@ the number of vertex orbits that carry an edge and the edges as pairs <u, v>, u 
     return used, edges;
 end intrinsic;
 
+// ---------- metric quotient graph with the residual Atkin-Lehner action ----------
+
+intrinsic DualGraphMetricQuotientFromData(data::Tup, p::RngIntElt, W::SetEnum) -> RngIntElt, SeqEnum, SeqEnum, SeqEnum
+{The quotient of the dual graph by W as DualGraphQuotientFromData, keeping every vertex orbit,
+with the length of each edge (the order of its stabiliser in the extended group, up to the common
+factor 2 of the centre) and the action of each w in W_full \ W on the vertex orbits.  Returns the
+number of vertex orbits, the edges <u, v>, their lengths and the residual maps as sequences.}
+    h := data[1]; hh := data[2]; org := data[3];
+    wp := dg_img(data[4], p);
+    labels := [x[1] : x in data[4]];                       // the exact prime powers of DN
+    full := {Integers()| &*[Integers()| labels[i] : i in S] : S in Subsets({1..#labels})};
+    require W subset full : "W must consist of Hall divisors of DN";
+    function vact(m, x)
+        v := ((x-1) mod h) + 1; s := (x-1) div h;
+        for q in PrimeDivisors(m) do
+            if q eq p then s := 1 - s; else v := dg_img(data[5], q)[v]; end if;
+        end for;
+        return v + s*h;
+    end function;
+    function eact(m, e)
+        for q in PrimeDivisors(m) do e := dg_img(data[4], q)[e]; end for;
+        return e;
+    end function;
+    vorb := [0 : x in [1..2*h]]; reps := []; nv := 0;
+    for x in [1..2*h] do
+        if vorb[x] ne 0 then continue; end if;
+        nv +:= 1; Append(~reps, x);
+        for m in W do vorb[vact(m, x)] := nv; end for;
+    end for;
+    edges := []; lens := [];
+    seen := {};
+    for e in [1..hh] do
+        if e in seen then continue; end if;
+        S := {eact(m, e) : m in W}; seen join:= S;
+        if exists{m : m in W | m mod p eq 0 and eact(m, e) eq e} then continue; end if;
+        u := vorb[org[e]]; v := vorb[org[wp[e]] + h];
+        Append(~edges, <Min(u, v), Max(u, v)>);
+        Append(~lens, data[7][e] * #W div #S);
+    end for;
+    resid := [[vorb[vact(m, x)] : x in reps] : m in full | not (m in W)];
+    return nv, edges, lens, resid;
+end intrinsic;
+
+// Minimise with lengths: delete leaves, contract bridges, merge the two edges at a valence-2
+// vertex adding their lengths.  Returns the model on [1..nv'] and rep, the image of each original
+// vertex (0 when it was deleted or absorbed into an edge).
+intrinsic MetricGraphModel(nv::RngIntElt, edges::SeqEnum, lens::SeqEnum) -> RngIntElt, SeqEnum, SeqEnum, SeqEnum
+{The stable model of a metric graph (edges <u, v> on [1..nv] with lengths): leaves deleted, bridges
+contracted, the two edges at a vertex of valence 2 merged with lengths added.  Returns the vertex
+count, edges, lengths and the map from the original vertices (0 for a vertex no longer present).}
+    require #edges eq #lens : "one length per edge";
+    rep := [i : i in [1..nv]];
+    changed := #edges gt 0;
+    while changed do
+        changed := false;
+        cur := [v : v in Seqset(rep) | v ne 0];
+        inc := AssociativeArray(); for v in cur do inc[v] := []; end for;
+        for i->e in edges do Append(~inc[e[1]], i); if e[2] ne e[1] then Append(~inc[e[2]], i); end if; end for;
+        for v in cur do                                   // leaves
+            if #inc[v] eq 1 and edges[inc[v][1]][1] ne edges[inc[v][1]][2] then
+                Remove(~edges, inc[v][1]); Remove(~lens, inc[v][1]);
+                rep := [r eq v select 0 else r : r in rep]; changed := true; break;
+            end if;
+        end for;
+        if changed then continue; end if;
+        for i->e in edges do                              // bridges: contract
+            if e[1] ne e[2] then
+                seen := {e[1]}; frontier := [e[1]];
+                while #frontier gt 0 do
+                    x := frontier[#frontier]; Prune(~frontier);
+                    for k->f in edges do
+                        if k eq i then continue; end if;
+                        if f[1] eq x and not (f[2] in seen) then Include(~seen, f[2]); Append(~frontier, f[2]); end if;
+                        if f[2] eq x and not (f[1] in seen) then Include(~seen, f[1]); Append(~frontier, f[1]); end if;
+                    end for;
+                end while;
+                if #seen lt #cur then
+                    u := e[1]; v := e[2]; Remove(~edges, i); Remove(~lens, i);
+                    edges := [<Min(a, b), Max(a, b)> where a := f[1] eq v select u else f[1] where b := f[2] eq v select u else f[2] : f in edges];
+                    rep := [r eq v select u else r : r in rep]; changed := true; break;
+                end if;
+            end if;
+        end for;
+        if changed then continue; end if;
+        for v in cur do                                   // valence 2, both edges non-loops: merge
+            if #inc[v] eq 2 and forall{k : k in inc[v] | edges[k][1] ne edges[k][2]} then
+                k1 := inc[v][1]; k2 := inc[v][2]; e1 := edges[k1]; e2 := edges[k2];
+                a := e1[1] eq v select e1[2] else e1[1]; b := e2[1] eq v select e2[2] else e2[1];
+                L := lens[k1] + lens[k2];
+                keep := [k : k in [1..#edges] | k ne k1 and k ne k2];
+                edges := [edges[k] : k in keep] cat [<Min(a, b), Max(a, b)>]; lens := [lens[k] : k in keep] cat [L];
+                rep := [r eq v select 0 else r : r in rep]; changed := true; break;
+            end if;
+        end for;
+    end while;
+    verts := Sort(Setseq({r : r in rep | r ne 0}));
+    idx := AssociativeArray(); for i->v in verts do idx[v] := i; end for;
+    return #verts, [<idx[e[1]], idx[e[2]]> : e in edges], lens, [r eq 0 select 0 else idx[r] : r in rep];
+end intrinsic;
+
+// As dg_search, with the lengths between two vertices compared as multisets and the involution
+// required to commute with each map in resid.  Parallel edges between two fixed vertices can only
+// be swapped in pairs of equal length, so each length of odd multiplicity leaves one edge fixed.
+function dg_msearch(n, pi, mult, g, resid)
+    u := 0;
+    for i in [1..n] do if pi[i] eq 0 then u := i; break; end if; end for;
+    if u eq 0 then
+        if exists{r : r in resid | exists{v : v in [1..n] | pi[r[v]] ne r[pi[v]]}} then return false, pi; end if;
+        chi := #[i : i in [1..n] | pi[i] eq i];
+        for a in [1..n] do
+            for b in [a..n] do
+                ls := mult(a, b); m := #ls;
+                if a eq b then
+                    if pi[a] eq a then chi +:= m; end if;
+                elif pi[a] eq a and pi[b] eq b then
+                    chi -:= #[L : L in Set(ls) | IsOdd(#[x : x in ls | x eq L])];
+                elif pi[a] eq b then
+                    chi +:= m;
+                end if;
+            end for;
+        end for;
+        assert chi le g + 1;
+        return chi eq g + 1, pi;
+    end if;
+    for v in [u] cat [w : w in [u+1..n] | pi[w] eq 0] do
+        pi2 := pi; pi2[u] := v; pi2[v] := u;
+        asg := [i : i in [1..n] | pi2[i] ne 0];
+        if forall{<a, b> : a, b in asg | b lt a or mult(a, b) eq mult(pi2[a], pi2[b])} then
+            found, w := dg_msearch(n, pi2, mult, g, resid);
+            if found then return true, w; end if;
+        end if;
+    end for;
+    return false, pi;
+end function;
+
+intrinsic IsHyperellipticMetricGraph(nv::RngIntElt, edges::SeqEnum, lens::SeqEnum, g::RngIntElt, resid::SeqEnum) -> BoolElt, SeqEnum
+{For a 2-edge-connected metric graph of genus g >= 2 (edges <u, v> on [1..nv] with lengths) and a
+list of automorphisms given as vertex maps: true iff it has an isometric involution with tree
+quotient commuting with each of them on the vertices; if so, also returns it.}
+    require g ge 2 and #edges - nv + 1 eq g : "needs a graph of genus g >= 2";
+    require #edges eq #lens : "one length per edge";
+    M := AssociativeArray();
+    for k->e in edges do
+        key := <Min(e[1], e[2]), Max(e[1], e[2])>;
+        if IsDefined(M, key) then Append(~M[key], lens[k]); else M[key] := [lens[k]]; end if;
+    end for;
+    for key in Keys(M) do Sort(~M[key]); end for;
+    mult := func< a, b | IsDefined(M, <Min(a, b), Max(a, b)>) select M[<Min(a, b), Max(a, b)>] else [] >;
+    return dg_msearch(nv, [0 : i in [1..nv]], mult, g, resid);
+end intrinsic;
+
+intrinsic DualGraphMetricTest(D::RngIntElt, N::RngIntElt, W::SetEnum, g::RngIntElt, p::RngIntElt : CacheDir := "") -> BoolElt
+{For Y = X_0^D(N)/W of genus g >= 2 and p | D: false if the metric dual graph of Y at p has no
+isometric involution with tree quotient commuting with the residual action of W_full/W, which
+proves Y is not hyperelliptic; true otherwise (no conclusion).}
+    require g ge 2 : "needs g >= 2";
+    data := DualGraphData(D, N, p : CacheDir := CacheDir);
+    nv, edges, lens, resid := DualGraphMetricQuotientFromData(data, p, W);
+    b1 := #edges eq 0 select 0 else #edges - nv + 1;
+    if b1 ne g then
+        error Sprintf("DUALGRAPH_GENUS: X_0^%o(%o)/%o at p = %o has graph genus %o, curve genus %o", D, N, W, p, b1, g);
+    end if;
+    mv, medges, mlens, rep := MetricGraphModel(nv, edges, lens);
+    // the residual maps descend to the model: well defined on every vertex it keeps
+    mres := [];
+    for r in resid do
+        img := [0 : v in [1..mv]];
+        for x in [1..nv] do
+            if rep[x] eq 0 then continue; end if;
+            y := rep[r[x]];
+            error if y eq 0 or (img[rep[x]] ne 0 and img[rep[x]] ne y),
+                Sprintf("DUALGRAPH_RESIDUAL: the residual Atkin-Lehner action on X_0^%o(%o)/%o at p = %o does not descend to the stable graph", D, N, W, p);
+            img[rep[x]] := y;
+        end for;
+        Append(~mres, img);
+    end for;
+    return IsHyperellipticMetricGraph(mv, medges, mlens, g, mres);
+end intrinsic;
+
 // ---------- canonical model and involution search ----------
 
 function dg_relabel(edges)
@@ -438,11 +626,12 @@ involution whose quotient is a tree; if so, also returns it as the vertex images
     return dg_search(nv, [0 : i in [1..nv]], mult, g);
 end intrinsic;
 
-intrinsic DualGraphTest(D::RngIntElt, N::RngIntElt, W::SetEnum, g::RngIntElt, p::RngIntElt : CacheDir := "") -> BoolElt, RngIntElt, SeqEnum
+intrinsic DualGraphTest(D::RngIntElt, N::RngIntElt, W::SetEnum, g::RngIntElt, p::RngIntElt : CacheDir := "", Metric := false) -> BoolElt, RngIntElt, SeqEnum, BoolElt
 {For Y = X_0^D(N)/W of genus g >= 2 and p | D: false if the dual graph of Y at p has no involution
 with tree quotient, which proves Y is not hyperelliptic; true otherwise (no conclusion).  Also
-returns the canonical model (vertex count, edges).  Raises DUALGRAPH_GENUS if the quotient graph
-does not have genus g.}
+returns the canonical model (vertex count, edges) and whether the verdict needed the metric
+refinement (Metric := true runs DualGraphMetricTest when the combinatorial search is inconclusive).
+Raises DUALGRAPH_GENUS if the quotient graph does not have genus g.}
     require g ge 2 : "needs g >= 2";
     data := DualGraphData(D, N, p : CacheDir := CacheDir);
     nv, edges := DualGraphQuotientFromData(data, p, W);
@@ -452,7 +641,11 @@ does not have genus g.}
     end if;
     nv, edges := CanonicalGraphModel(nv, edges);
     hyp := IsHyperellipticGraph(nv, edges, g);
-    return hyp, nv, edges;
+    if hyp and Metric then
+        hyp := DualGraphMetricTest(D, N, W, g, p : CacheDir := CacheDir);
+        return hyp, nv, edges, not hyp;
+    end if;
+    return hyp, nv, edges, false;
 end intrinsic;
 
 // ---------- the filter ----------
@@ -463,37 +656,48 @@ function dg_primes(D)
     return [q : q in ps | q ne 2] cat [q : q in ps | q eq 2];
 end function;
 
-intrinsic DualGraphVerdict(X::ShimuraQuot : CacheDir := "") -> BoolElt, RngIntElt
-{False and a prime p | D if the dual graph of X at p proves X is not hyperelliptic; true if no
-prime of D does (no conclusion).  Needs X`g >= 3 and DualGraphApplicable(X`D, X`N).}
+intrinsic DualGraphVerdict(X::ShimuraQuot : CacheDir := "", Metric := false) -> BoolElt, RngIntElt, BoolElt
+{False and a prime p | D if the dual graph of X at p proves X is not hyperelliptic, with whether
+the metric refinement was needed; true if no prime of D does (no conclusion).  The combinatorial
+test is tried at every prime before the metric one at any.  Needs X`g >= 3 and
+DualGraphApplicable(X`D, X`N).}
     require X`g ge 3 : "needs genus >= 3";
     require DualGraphApplicable(X`D, X`N) : "needs D > 1, gcd(D, N) = 1";
     for p in dg_primes(X`D) do
         hyp := DualGraphTest(X`D, X`N, X`W, X`g, p : CacheDir := CacheDir);
-        if not hyp then return false, p; end if;
+        if not hyp then return false, p, false; end if;
     end for;
-    return true, _;
+    if Metric then
+        for p in dg_primes(X`D) do
+            hyp := DualGraphMetricTest(X`D, X`N, X`W, X`g, p : CacheDir := CacheDir);
+            if not hyp then return false, p, true; end if;
+        end for;
+    end if;
+    return true, _, _;
 end intrinsic;
 
-intrinsic FilterByDualGraph(~curves::SeqEnum : CacheDir := "")
+intrinsic FilterByDualGraph(~curves::SeqEnum : CacheDir := "", Metric := true)
 {Marks as not hyperelliptic every undecided curve of genus >= 3 whose dual graph at some p | D has
-no involution with tree quotient.  Curves with D = 1 are not applicable and are
-left unchanged; decided curves are never overwritten.  Prints one DualGraph summary line.}
-    tested := 0; ruled := 0; ruled2 := 0; notapp := 0; decided := 0; lowg := 0;
+no involution with tree quotient, or (Metric) no isometric one commuting with the residual
+Atkin-Lehner action.  Curves with D = 1 are not applicable and are left unchanged; decided curves
+are never overwritten.  Prints one DualGraph summary line.}
+    tested := 0; ruled := 0; ruled2 := 0; ruledm := 0; notapp := 0; decided := 0; lowg := 0;
     for i->X in curves do
         if assigned X`IsSubhyp then decided +:= 1; continue; end if;
         if X`g lt 3 then lowg +:= 1; continue; end if;
         if not DualGraphApplicable(X`D, X`N) then notapp +:= 1; continue; end if;
         tested +:= 1;
-        hyp, p := DualGraphVerdict(X : CacheDir := CacheDir);
+        hyp, p, metric := DualGraphVerdict(X : CacheDir := CacheDir, Metric := Metric);
         if not hyp then
             curves[i]`IsSubhyp := false;
             curves[i]`IsHyp := false;
-            curves[i]`TestInWhichProved := Sprintf("DualGraph at p = %o", p);
+            curves[i]`TestInWhichProved := Sprintf("DualGraph at p = %o%o", p,
+                metric select ", metric graph with the residual Atkin-Lehner action" else "");
             ruled +:= 1;
             if p eq 2 then ruled2 +:= 1; end if;
+            if metric then ruledm +:= 1; end if;
         end if;
     end for;
-    printf "DualGraph summary: tested %o, ruled %o (witness p = 2: %o), not applicable %o, already decided %o, genus < 3 %o\n",
-        tested, ruled, ruled2, notapp, decided, lowg;
+    printf "DualGraph summary: tested %o, ruled %o (witness p = 2: %o; by the metric graph: %o), not applicable %o, already decided %o, genus < 3 %o\n",
+        tested, ruled, ruled2, ruledm, notapp, decided, lowg;
 end intrinsic;
