@@ -155,3 +155,47 @@ Nine of the 17 reachable members of the 34 were not reached for time: 6_323, 6_3
 6_649, 714_5, 2418_1, 3390_1, 4130_1.  At D*N above about 2000 use PR:=40 or more alongside
 CUT:=46, per the precision clause above.  The other 17 of the 34 need the oldform part of the
 space and are out of scope for Theorem 3.1 as written.
+
+=== SECOND BATCH, 2026-10-17/18: the nine quotients reachable but unrun at the time of the table above ===
+
+  base        g   W                                        cut  digits  smallest sv   verdict
+  6_323       3   {1,6,19,34,51,114,646,969}                40    50    3.273e-13    HYPERELLIPTIC
+  6_323       3   {1,6,19,34,51,114,646,969}                46    50    4.808e-14    HYPERELLIPTIC
+  6_379       3   {1,2,3,6,379,758,1137,2274}               40    50    5.112e-11    HYPERELLIPTIC
+  6_379       3   {1,2,3,6,379,758,1137,2274}               46    50    9.796e-16    HYPERELLIPTIC
+  6_385       3   {1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155}  40    50    8.902e-14    HYPERELLIPTIC
+  6_385       3   {1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155}  46    50    7.682e-16    HYPERELLIPTIC
+  6_403       4   {1,2,13,26,93,186,1209,2418}              40    50    5.124e-14    HYPERELLIPTIC
+  6_403       4   {1,2,13,26,93,186,1209,2418}              46    50    6.448e-16    HYPERELLIPTIC
+  6_649       3   {1,2,3,6,11,22,33,59,66,118,177,354,649,1298,1947,3894}  40    50    7.713e-14    HYPERELLIPTIC
+  6_649       3   {1,2,3,6,11,22,33,59,66,118,177,354,649,1298,1947,3894}  46    50    3.814e-08    HYPERELLIPTIC
+  6_649       3   {1,2,3,6,11,22,33,59,66,118,177,354,649,1298,1947,3894}  40    90    1.524e-13    HYPERELLIPTIC
+  6_649       3   {1,2,3,6,11,22,33,59,66,118,177,354,649,1298,1947,3894}  46    90    2.892e-16    HYPERELLIPTIC
+  714_5       3   {1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785}  40    50    1.111e-13    HYPERELLIPTIC
+  714_5       3   {1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785}  46    50    4.197e-16    HYPERELLIPTIC
+  2418_1      4   {1,2,13,26,93,186,1209,2418}              40    50    3.762e-14    HYPERELLIPTIC
+  2418_1      4   {1,2,13,26,93,186,1209,2418}              46    50    1.398e-16    HYPERELLIPTIC
+  3390_1      4   {1,5,6,30,113,565,678,3390}               40    50    2.167e-14    HYPERELLIPTIC
+  3390_1      4   {1,5,6,30,113,565,678,3390}               46    50    1.147e-16    HYPERELLIPTIC
+  4130_1      3   {1,2,5,7,10,14,35,59,70,118,295,413,590,826,2065,4130}  40    50    1.919e-03    NOT hyperelliptic
+  4130_1      3   {1,2,5,7,10,14,35,59,70,118,295,413,590,826,2065,4130}  46    50    1.919e-03    NOT hyperelliptic
+  4130_1      3   {1,2,5,7,10,14,35,59,70,118,295,413,590,826,2065,4130}  50    50    1.919e-03    NOT hyperelliptic
+  4130_1      3   {1,2,5,7,10,14,35,59,70,118,295,413,590,826,2065,4130}  40    80    2.002e-10    HYPERELLIPTIC
+  4130_1      3   {1,2,5,7,10,14,35,59,70,118,295,413,590,826,2065,4130}  46    80    2.002e-10    HYPERELLIPTIC
+
+Reading. Every one of the nine is HYPERELLIPTIC at its highest-precision run. Two needed the precision
+raised before they read correctly, and both are recorded above at every setting tried:
+  X_0^6(649): at 50 digits the residual ROSE from 7.7e-14 (cut 40) to 3.8e-08 (cut 46); at 90 digits it
+    is 1.5e-13 and 2.9e-16 with jumps 1.0e12 and 2.0e14.  A precision artefact.
+  X_0^4130(1): at 50 digits the smallest singular value sits at 1.919e-3 at BOTH cutoffs, agreeing to
+    eleven digits, and the script called it NOT hyperelliptic because 1.9e-3 exceeds its 1e-4 branch
+    threshold.  At 80 digits, same cutoffs, it is 2.00e-10 with the jump at 1.4e9: one relation,
+    HYPERELLIPTIC.  Stability across cutoffs at fixed precision does NOT establish a genuine singular
+    value; two cutoffs can share one precision floor.  Only insensitivity to the precision does.
+  X_0^6(379): the star-curve fixed-point criterion said NOT hyperelliptic (sum 9 > 8); that criterion
+    is refuted by genus-2 counterexamples (X_0^2418(1)*, X_0^3390(1)*, X_0^6(403)*, sums 9, 10, 12
+    against 6).  The count stands: 4.4e-13 and 9.7e-16 at 90 digits.
+
+Together with the eight above: SEVENTEEN of the thirty-four come out hyperelliptic, none the other way.
+The remaining seventeen need the oldform part of the space (nold_open61.txt), which Theorem 3.1 does
+not cover.  All seventeen verdicts are numerical, not proved: see the certification notes in hyp16/.
