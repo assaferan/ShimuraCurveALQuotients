@@ -1,0 +1,32 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^34(7) / [ 1, 14 ] : genus 3, cut 40, 18 points, 30 digits  [oldforms included]
+W-fixed differentials: 2 from newforms of level 238, 1 from oldclasses; genus says 3
+   level 34 (M=1)  a_2..a_6 = [ 1.00000000000000000000000000000, -2.00000000000000000000000000000, 1.00000000000000000000000000000, 0.000000000000000000000000000000, -2.00000000000000000000000000000 ]  T = [ 7 ]  chi fixed = [
+[ 1 ]
+]  (carried, not fixed: [
+[ -1 ]
+])
+   level 238 (M=7)  a_2..a_6 = [ -1.00000000000000000000000000000, 2.00000000000000000000000000000, 1.00000000000000000000000000000, 4.00000000000000000000000000000, -2.00000000000000000000000000000 ]  T = []  chi fixed = [
+[]
+]
+   level 238 (M=7)  a_2..a_6 = [ 1.00000000000000000000000000000, 2.00000000000000000000000000000, 1.00000000000000000000000000000, 0.000000000000000000000000000000, 2.00000000000000000000000000000 ]  T = []  chi fixed = [
+[]
+]
+w_7 = 21/2 + 3/2*i + 23/6*j - 5/6*k
+first point: 34.5999999999999943156581139192 s, 401417 lattice points
+18 evaluations of 3 columns: 632.150000000000090949470177293 s, 7116191 lattice points total
+W-invariance check: V(w_m z) conj(j)/j against V(z); the entry is measured/predicted
+   w_14, point 1: fixed columns [ 1.0000000 + 1.0467412E-12*C8.1, 1.0000000 - 2.2042264E-29*C8.1, 1.0000000 - 1.6740458E-29*C8.1 ]
+      carried (predicted [ -1.0000000 ]): [ 1.0000000 - 1.0194595E-12*C8.1 ]
+   w_14, point 2: fixed columns [ 1.0000000 + 6.7373058E-13*C8.1, 1.0000000 + 2.7489382E-14*C8.1, 1.0000000 + 1.8860921E-13*C8.1 ]
+      carried (predicted [ -1.0000000 ]): [ 1.0000000 + 1.8488645E-12*C8.1 ]
+   largest deviation of measured/predicted from 1 over all columns and generators: 3.87425948860899674966397167403E-12
+singular values of the 18 x 6 monomial matrix:
+  [ 2.71014558608378080639570337300E-12, 0.0275741847328532312163720271417, 0.161983939711355464880430675442, 0.618835463502358730142145675877, 1.19206014693613152779889340741, 2.04182177057899345671618257976 ]
+consecutive ratios: [ 10174429327.5028544251414780001, 5.87447793219285584529444844182, 3.82035073727112757410070541967, 1.92629578820443265669529191295, 1.71285129850783498448720437636 ]
+largest ratio jump 10174429327.5028544251414780001 after 1 value(s); clean gap required 10000.0000000000000000000000000
+=> quadric relations: 1   (hyperelliptic would be 1, non-hyperelliptic 0)
+VERDICT: HYPERELLIPTIC
+smallest singular value 2.71014558608378080639570337300E-12 ; old columns 1 of 3
+STAGE3O DONE

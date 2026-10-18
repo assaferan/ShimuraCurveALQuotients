@@ -1,0 +1,34 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/nelson3.m"
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/campaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^38(3) / [ 1, 57 ] : genus 3, cut 40, 18 points, 30 digits  [oldforms included]
+W-fixed differentials: 1 from newforms of level 114, 2 from oldclasses; genus says 3
+   level 38 (M=1)  a_2..a_6 = [ -1.00000000000000000000000000000, 1.00000000000000000000000000000, 1.00000000000000000000000000000, 0.000000000000000000000000000000, -1.00000000000000000000000000000 ]  T = [ 3 ]  chi fixed = [
+[ 1 ]
+]  (carried, not fixed: [
+[ -1 ]
+])
+   level 38 (M=1)  a_2..a_6 = [ 1.00000000000000000000000000000, -1.00000000000000000000000000000, 1.00000000000000000000000000000, -4.00000000000000000000000000000, -1.00000000000000000000000000000 ]  T = [ 3 ]  chi fixed = [
+[ -1 ]
+]  (carried, not fixed: [
+[ 1 ]
+])
+   level 114 (M=3)  a_2..a_6 = [ -1.00000000000000000000000000000, -1.00000000000000000000000000000, 1.00000000000000000000000000000, 0.000000000000000000000000000000, 1.00000000000000000000000000000 ]  T = []  chi fixed = [
+[]
+]
+w_3 = -9/2 - 1/2*i - 5/2*j + 1/2*k
+first point: 21.6300000000000025579538487364 s, 261160 lattice points
+18 evaluations of 3 columns: 387.820000000000050022208597511 s, 4637426 lattice points total
+W-invariance check: V(w_m z) conj(j)/j against V(z); the entry is measured/predicted
+   w_57, point 1: fixed columns [ 1.0000000 + 3.3093946E-13*C8.1, 1.0000000 - 2.6262973E-15*C8.1, 1.0000000 - 1.1648313E-28*C8.1 ]
+      carried (predicted [ -1.0000000, -1.0000000 ]): [ 1.0000000 + 1.7491587E-13*C8.1, 1.0000000 - 8.7957717E-15*C8.1 ]
+   w_57, point 2: fixed columns [ 1.0000000 - 4.8006534E-13*C8.1, 1.0000000 + 7.5889508E-15*C8.1, 1.0000000 + 4.6847685E-14*C8.1 ]
+      carried (predicted [ -1.0000000, -1.0000000 ]): [ 1.0000000 + 7.7172231E-13*C8.1, 1.0000000 + 3.2698946E-14*C8.1 ]
+   largest deviation of measured/predicted from 1 over all columns and generators: 1.42845471109910797350790930145E-12
+singular values of the 18 x 6 monomial matrix:
+  [ 1.57053846259835704422973070519E-13, 0.0267072230741805274192169313658, 0.277943989286554754252644522181, 1.02903539828958456302429934713, 1.47180536769135930616025077477, 1.64222683322281644992466955434 ]
+consecutive ratios: [ 170051378620.776390711181915899, 10.4070718439933899520565035188, 3.70231211306631072815895153598, 1.43027671364632030766656890219, 1.11579076233345745277323284490 ]
+largest ratio jump 170051378620.776390711181915899 after 1 value(s); clean gap required 10000.0000000000000000000000000
+=> quadric relations: 1   (hyperelliptic would be 1, non-hyperelliptic 0)
+VERDICT: HYPERELLIPTIC
+smallest singular value 1.57053846259835704422973070519E-13 ; old columns 2 of 3
+STAGE3O DONE

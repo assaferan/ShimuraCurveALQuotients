@@ -464,3 +464,26 @@ instances); 6_301, 6_323, 6_385, 714_5 w_2. Out of reach of this fit: 46_31, 6_3
 whole Atkin–Lehner group, no involution marks the coordinate) and the genus-4 targets (canonical
 image a rational normal quartic; y² = degree-10). Per-point cost at cutoff 46 / 80 digits under
 load: 55_7 85 s, 1326_1 440 s, 6_301 640 s.
+
+## Oldforms (2026-10-18): `stage3o.m`
+
+The seventeen open quotients that Theorem 3.1 of Nelson does not cover have differentials coming
+from newforms of lower level DM, M | N. `stage3o.m` evaluates them: for g new of level DM the
+span of g|w_S, S ⊆ T = primes of N/M, with f|w = nrd(w) j(w,z)^{-2} f(wz); w_q for q | DM acts by
+the quaternionic eigenvalue, w_p for p ∈ T permutes S ↦ S △ {p} with no scalar (w_p²/p is a unit of
+O_N, checked exactly), so the W-fixed differentials are the W-fixed newforms of level DN plus one
+v_χ = Σ_S χ(S) g|w_S per (g, χ) with the right product of signs on W. The evaluation is the
+level-M lattice sum at the moved point times a phase with the same constant in front, so the
+relative scale is fixed by the slash operator. Refuses p² | N, gcd(D,N) > 1, non-squarefree D.
+Derivation: `oldforms_derivation.txt`. Validation: the count equals the genus at all seventeen and
+48 control candidates (`noldx.m`); the newform path reproduces `stage3n.m` to thirty digits at
+X_0^34(7)/w_17 with the same lattice count once both use the same Eichler order (`SEED`); a direct
+W-invariance check of every column, with the rejected characters carried along, measures +1 on the
+fixed columns and −1 on the rejected ones to 7e-14; twelve stored-model controls across both signs
+agree (six hyperelliptic with residuals 1e-12..1e-14, six not, including the proven smooth
+quartics 46_3/w_3 and 34_3/w_2 and the genus-4 57_2/{1,2} with exactly one relation).
+First tentative verdict: **X_0^141(2)/{1,6,94,141} NOT hyperelliptic** at cutoff 40 (smallest
+singular value 0.21, two of its three differentials old). The rest run from `runq2.sh` /
+`items17.txt`; one line per run in `oldforms-logs/queue.log`. Seven of the seventeen are entirely
+old (141_2/W1, 57_10, 15_46, 21_34, 77_10, 21_58, 39_34). ⚠ `QuaternionOrder(A, N)` depends on the
+random state; use `SEED` when comparing runs.

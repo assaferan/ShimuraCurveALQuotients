@@ -1,0 +1,118 @@
+=== THIRD BATCH, 2026-10-18: the seventeen quotients whose differentials are not all newforms of level D*N ===
+=== (stage3o.m: Theorem 3.1 extended to the oldform part of the space; TENTATIVE verdicts)      ===
+
+## The extension (what stage3o.m computes, and the conventions it depends on)
+
+Setting: D*N squarefree, weight 2.  The differentials of X_0^D(N) are the D-new part of
+S_2(Gamma_0(DN)), which is the direct sum over M | N of the OLDCLASSES of the newforms g of level
+exactly D*M.  Let T be the set of primes dividing N/M.  The oldclass of g at level N is spanned by
+the 2^#T pullbacks
+
+    g | w_S ,  S a subset of T,    (f|w)(z) := nrd(w) j(w,z)^-2 f(w z),
+
+where w_S = prod_{p in S} w_p and w_p is an element of the level-N Eichler order O_N of reduced
+norm p normalising O_N (the Atkin-Lehner element).  f|w is the pullback of the differential f dz
+under z -> w z, so g|w_S is the pullback of g under the degeneracy map X_0^D(N) -> X_0^D(M),
+[z] -> [w_S z]; S = {} is the natural projection and S = {p} the second degeneracy map at p
+(the analogue of f(z) -> f(pz)).  Any two choices of w_p differ by a unit of O_N of norm 1 on the
+right, up to sign, so g|w_p does not depend on the choice.
+
+Action of the Atkin-Lehner group on the oldclass.
+  * q | DM: w_q at level N is also an Atkin-Lehner element at level M (it lies in O_M and
+    normalises it, the two orders agreeing locally at q), so it acts on every g|w_S by the
+    quaternionic eigenvalue eps_q(g) of g on X_0^D(M): eps_q(g) = a_g(q) for q | D and
+    eps_q(g) = -a_g(q) for q | M (the convention of stage3n.m / nold.m, which the genus counts
+    there validate).
+  * p in T: (g|w_S)|w_p = g|w_{S xor {p}} with NO scalar, because w_p^2 = p u with u a unit of
+    O_N of norm 1 (checked exactly in the code: w_p^2/p lies in O_N), and the weight-2 slash
+    operator is trivial on scalars and on O_N^1.
+  So the oldclass is the regular representation of {+-1}^T twisted by eps, and its eigenvectors are
+
+    v_chi = sum_S chi(S) g|w_S ,   chi a character of {+-1}^T,  chi(S) = prod_{p in S} chi(p),
+
+  with w_m eigenvalue  prod_{q | m, q | DM} eps_q(g) * prod_{p | m, p in T} chi(p).
+
+  The W-fixed differentials of X_0^D(N)/W are therefore: the W-fixed newforms of level D*N, plus
+  one v_chi for every (g, chi) with that product equal to 1 for all m in W.  noldx.m counts these
+  and the count equals the genus at all seventeen open quotients and at all 48 control candidates
+  tried (including the two-prime classes T = {2,23} at X_0^15(46), T = {2,17} at X_0^21(34),
+  T = {3,5} at X_0^26(15)).  That is the check of the eigenvalue bookkeeping.
+
+Evaluation.  Theorem 3.1 at level M gives S_g(z1, z2) = y1 y2 conj(g_B(z1)) g_B(z2) from the
+lattices R^(d), d | DM, of the level-M order O_M.  For the pullback, with j = j(w_S, z2),
+
+    y1 y2 conj(g_B(z1)) (g_B|w_S)(z2)  =  (conj(j)/j) * S_g(z1, w_S z2),
+
+because Im(w z) = nrd(w) y / |j|^2.  So each member of the oldclass is the level-M evaluator at
+the MOVED second point, times a phase, with the SAME constant conj(g_B(z1)) in front as the
+untransformed pullback; the column of v_chi is  sum_S chi(S) (conj(j_S)/j_S) S_g(z1, w_S z_j).
+No normalisation is free here: the relative scale of the pullbacks is fixed by the slash operator,
+and that is exactly what makes w_p act by +-1 on v_chi.  The newform columns are the level-N
+evaluator unchanged (same algebra, same O_N = QuaternionOrder(A, N), same splitting, same points),
+and the row factor y1 y_j is common to every column, so the matrix of values differs from the
+one stage3n.m would build only by having the oldform columns added.
+
+Orders and Atkin-Lehner elements.  O_1 := MaximalOrder(O_N); O_M := O_N + M O_1 (locally O_N at
+the primes of M and O_1 elsewhere, so the Eichler order of level M containing O_N; discriminant
+checked).  w_m is a short vector, for the Frobenius majorant of the real splitting, in the lattice
+J_m = { x in O_N : trd(x y) in m Z for all y in O_N } -- the radical of O_N/mO_N, which is the
+two-sided ideal of norm m (index m^2, checked) -- with nrd(x) = m exactly; such an x generates J_m
+and hence normalises O_N (checked directly as well).  Magma's Normalizer is for definite orders
+only, and its IsPrincipal can return a generator of negative norm (vwal.m), so neither is used.
+
+Direct check of the sign and normalisation (CHECKW).  For each generator m of W the script
+evaluates every column at w_m z as well and forms V(w_m z) conj(j)/j / V(z), which must be the
+predicted eigenvalue (1 for the W-fixed columns).  The REJECTED characters of each oldclass are
+carried along as extra columns so that their predicted eigenvalues (-1 under the generators that
+flip them) are measured too.  A wrong relative scale c between g and g|w_p would show as c and 1/c
+instead of +1 and -1.  For the newform columns this is a direct test of the Atkin-Lehner
+convention, which before was tested only through dimension counts.
+
+Where this would fail.
+  * N not squarefree (p^2 | N): the oldclass has three pullbacks at p, w_p is not an involution on
+    them, and J_m is no longer the radical description; the script refuses (require).
+  * gcd(D, N) > 1 or D not squarefree: same refusal, and Theorem 3.1 is stated for Eichler orders.
+  * weight k > 2 would need the phase (conj(j)/j)^(k/2) and the det^(k/2) slash; k = 2 only.
+  * The Fourier coefficients are taken to the level-N bound nmax = DN (cut/4pi)^2 + 20 at every
+    level, so the smaller levels are over-supplied, never under.
+  * The conjugates of a newform orbit come from Magma as the same expansion over a number field
+    with different embeddings; each embedding of Conjugates(K.1) is used once per orbit, which
+    gives the right SET of forms whatever the matching, and the W-selection uses only the
+    rational a_p at p | DM.
+
+## Controls (all at cutoff 40, 30 digits, 18 points; 20 at genus 4).  Stored model vs the count.
+# Every control has oldform constituents, and in every row marked (sens.) some element of W meets a
+# prime of N/M for a contributing oldclass, so the sign and scale of the second pullback matter.
+# "model" is how the stored hyperellipticity is known: y2=f (a stored y^2 = f(x) of genus 3, with a
+# genus-0 Atkin-Lehner quotient above it by the genus formula) or FF (re-derived here from the
+# stored CRV function field by Noether's count, hypchk.m).  W-check = largest deviation of
+# measured/predicted eigenvalue from 1 over every column, every generator of W, 2 points, with the
+# rejected characters of each oldclass carried along (they measure -1 where predicted).
+#
+#  quotient            model   old/g  chi      smallest sv   gap        W-check   count verdict      agrees
+  26_3   {1,3}         y2=f    2/3    +1,+1    8.9e-14       1.9e7     3.0e-14   HYPERELLIPTIC      yes  (sens.)
+  26_3   {1,39}        y2=f    2/3    +1,-1    5.8e-13       3.4e7     6.1e-14   HYPERELLIPTIC      yes  (sens.)
+  34_7   {1,14}        y2=f    1/3    +1       2.7e-12       1.0e7     3.9e-14   HYPERELLIPTIC      yes  (sens.)
+  34_7   {1,238}       y2=f    1/3    -1       1.6e-12       1.1e7     6.7e-14   HYPERELLIPTIC      yes  (sens.)
+  38_3   {1,6}         FF hyp  2/3    -1,+1    6.0e-13       1.4e7     2.0e-14   HYPERELLIPTIC      yes  (sens.)
+  38_3   {1,57}        FF hyp  2/3    +1,-1    1.6e-13       1.7e7     1.4e-14   HYPERELLIPTIC      yes  (sens.)
+  46_3   {1,3}         FF not  1/3    +1       0.20          --        1.1e-13   NOT hyperelliptic  yes  (sens.)  [smooth plane quartic]
+  46_3   {1,6}         FF not  1/3    -1       0.11          --        5.0e-14   NOT hyperelliptic  yes  (sens.)
+  14_11  {1,22}        FF not  1/3    -1       0.037         --        6.6e-14   NOT hyperelliptic  yes  (sens.)
+  14_11  {1,11}        FF not  1/3    +1       0.011         --        1.5e-14   NOT hyperelliptic  yes  (sens.)
+  34_3   {1,2}         FF not  2/3    +1,-1    0.0094        --        2.5e-14   NOT hyperelliptic  yes  [smooth plane quartic; both chi fixed, so insensitive]
+  57_2   {1,2}  g=4    FF not  3/4    +1x3     1.0e-12 (1 rel.) 1.1e9  4.3e-14   NOT hyperelliptic  yes  (sens.)  [genus 4: one relation, as it should be]
+# Hyperelliptic direction: three bases (26_3, 34_7, 38_3), six quotients, both signs of chi.
+# Non-hyperelliptic direction: four bases (46_3, 14_11, 34_3, 57_2), six quotients, both signs.
+# Still running when this was written: 58_3 {1,3} (g=4, not hyp), 26_15 {1,3,10,13,30,39,130,390}
+# (three oldclasses, two levels, T = {3,5}), 22_21, 35_2, 39_2 (all hyperelliptic by stored y^2=f).
+# Regression: at X_0^34(7)/w_17 (no oldforms) stage3o.m reproduces stage3n.m to all 30 digits and the
+# same 2 427 703 lattice points once both use the same Eichler order (SEED:=1); without a seed
+# QuaternionOrder(A, N) returns a conjugate order and the points move, which changes the digits but
+# not the verdict.
+
+## The seventeen (80 digits, 18 points; 20 at genus 4; every column's W-invariance checked at 1 point)
+#  quotient                                old/g  cut  smallest sv   gap            verdict (TENTATIVE)
+  141_2  {1,6,94,141}                      2/3    40   0.2097        -- (no value near zero)   NOT hyperelliptic
+  [the other sixteen, and all cutoff-46 runs, were still in the queue when this report was written;
+   logs/queue.log in the scratchpad nelold/ directory records each as it finishes]

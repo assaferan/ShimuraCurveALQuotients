@@ -1,0 +1,244 @@
+35_2 W=[ 1, 70 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 35 (M=1) a_2..a_5=[ 0, 1, -2, -1 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      level 35 (M=1) a_2..a_5=[ $.1, -$.1 - 1, -$.1 + 2, 1 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      level 35 (M=1) a_2..a_5=[ $.1, -$.1 - 1, -$.1 + 2, 1 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 2, 1, 1, 2, 0 ]
+35_2 W=[ 1, 2 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 35 (M=1) a_2..a_5=[ 0, 1, -2, -1 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      level 35 (M=1) a_2..a_5=[ $.1, -$.1 - 1, -$.1 + 2, 1 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      level 35 (M=1) a_2..a_5=[ $.1, -$.1 - 1, -$.1 + 2, 1 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 1, 2, 1, 0, 0 ]
+38_3 W=[ 1, 6 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 38 (M=1) a_2..a_5=[ -1, 1, 1, 0 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      level 38 (M=1) a_2..a_5=[ 1, -1, 1, -4 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 1, 0, 0, 1 ]
+38_3 W=[ 1, 57 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 38 (M=1) a_2..a_5=[ -1, 1, 1, 0 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      level 38 (M=1) a_2..a_5=[ 1, -1, 1, -4 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 1, 2, 0, 2, 0, 1 ]
+38_3 W=[ 1, 2 ] genus 4: new 2 + old 2 = 4  MATCHES GENUS  swap-sign sensitive: false
+      level 38 (M=1) a_2..a_5=[ 1, -1, 1, -4 ]  T=[ 3 ]  chi=[
+[ 1 ],
+[ -1 ]
+]
+      genera one step above: [ 2, 2, 1, 1, 1, 1 ]
+39_2 W=[ 1, 13 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: false
+      level 39 (M=1) a_2..a_5=[ 1, -1, -1, 2 ]  T=[ 2 ]  chi=[
+[ 1 ],
+[ -1 ]
+]
+      genera one step above: [ 2, 0, 1, 2, 0, 1 ]
+39_2 W=[ 1, 6 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 39 (M=1) a_2..a_5=[ 1, -1, -1, 2 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      level 39 (M=1) a_2..a_5=[ $.1, 1, -2*$.1 - 1, -2*$.1 - 2 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      level 39 (M=1) a_2..a_5=[ $.1, 1, -2*$.1 - 1, -2*$.1 - 2 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 1, 0, 0, 1 ]
+39_2 W=[ 1, 78 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 39 (M=1) a_2..a_5=[ 1, -1, -1, 2 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      level 39 (M=1) a_2..a_5=[ $.1, 1, -2*$.1 - 1, -2*$.1 - 2 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      level 39 (M=1) a_2..a_5=[ $.1, 1, -2*$.1 - 1, -2*$.1 - 2 ]  T=[ 2 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 2, 1, 1, 2, 0 ]
+46_3 W=[ 1, 2 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 1, 1, 2, 2, 0, 0 ]
+46_3 W=[ 1, 3 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 46 (M=1) a_2..a_5=[ -1, 0, 1, 4 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 1, 1, 1, 1, 1, 1 ]
+46_3 W=[ 1, 6 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 46 (M=1) a_2..a_5=[ -1, 0, 1, 4 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 1, 1, 1, 1, 1, 1 ]
+46_3 W=[ 1, 46 ] genus 4: new 4 + old 0 = 4  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 2, 1, 1, 2, 1, 1 ]
+46_5 W=[ 1, 2, 5, 10 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 0, 0, 0, 0 ]
+46_5 W=[ 1, 5, 23, 115 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 46 (M=1) a_2..a_5=[ -1, 0, 1, 4 ]  T=[ 5 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 0, 0, 0, 0 ]
+57_2 W=[ 1, 2 ] genus 4: new 1 + old 3 = 4  MATCHES GENUS  swap-sign sensitive: true
+      level 57 (M=1) a_2..a_5=[ -2, -1, 2, -3 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      level 57 (M=1) a_2..a_5=[ 1, 1, -1, -2 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      level 57 (M=1) a_2..a_5=[ -2, 1, 2, 1 ]  T=[ 2 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 1, 1, 1, 1 ]
+58_3 W=[ 1, 3 ] genus 4: new 2 + old 2 = 4  MATCHES GENUS  swap-sign sensitive: true
+      level 58 (M=1) a_2..a_5=[ -1, -3, 1, -3 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      level 58 (M=1) a_2..a_5=[ 1, -1, 1, 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 1, 1, 1, 1 ]
+58_3 W=[ 1, 6, 58, 87 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 58 (M=1) a_2..a_5=[ -1, -3, 1, -3 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 0, 0, 0 ]
+62_3 W=[ 1, 186 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 62 (M=1) a_2..a_5=[ 1, 0, 1, -2 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      level 62 (M=1) a_2..a_5=[ -1, $.1, 1, -2*$.1 + 2 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      level 62 (M=1) a_2..a_5=[ -1, $.1, 1, -2*$.1 + 2 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 1, 0, 2, 2, 0, 1 ]
+74_3 W=[ 1, 2, 3, 6 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 74 (M=1) a_2..a_5=[ 1, $.1, 1, -3*$.1 - 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      level 74 (M=1) a_2..a_5=[ 1, $.1, 1, -3*$.1 - 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 0, 0, 0, 0 ]
+86_3 W=[ 1, 3, 43, 129 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 86 (M=1) a_2..a_5=[ -1, $.1, 1, -$.1 + 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      level 86 (M=1) a_2..a_5=[ -1, $.1, 1, -$.1 + 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 0, 0, 0, 0 ]
+86_3 W=[ 1, 6, 43, 258 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 86 (M=1) a_2..a_5=[ -1, $.1, 1, -$.1 + 1 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      level 86 (M=1) a_2..a_5=[ -1, $.1, 1, -$.1 + 1 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 0, 0, 0 ]
+86_3 W=[ 1, 86 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 2, 1, 0, 2, 0, 1 ]
+14_11 W=[ 1, 2 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 2, 1, 2, 1, 0, 0 ]
+14_11 W=[ 1, 22 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 14 (M=1) a_2..a_5=[ -1, -2, 1, 0 ]  T=[ 11 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 1, 1, 1, 1, 1, 1 ]
+14_11 W=[ 1, 11 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 14 (M=1) a_2..a_5=[ -1, -2, 1, 0 ]  T=[ 11 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 1, 1, 1, 1, 1, 1 ]
+14_3 W=[ 1 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: false
+      level 14 (M=1) a_2..a_5=[ -1, -2, 1, 0 ]  T=[ 3 ]  chi=[
+[ 1 ],
+[ -1 ]
+]
+      genera one step above: [ 1, 2, 2, 2, 0, 1, 1 ]
+14_5 W=[ 1 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: false
+      level 14 (M=1) a_2..a_5=[ -1, -2, 1, 0 ]  T=[ 5 ]  chi=[
+[ 1 ],
+[ -1 ]
+]
+      genera one step above: [ 1, 2, 2, 2, 0, 1, 1 ]
+15_2 W=[ 1 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: false
+      level 15 (M=1) a_2..a_5=[ -1, -1, -1, 1 ]  T=[ 2 ]  chi=[
+[ 1 ],
+[ -1 ]
+]
+      genera one step above: [ 2, 1, 2, 2, 1, 0, 1 ]
+22_21 W=[ 1, 14, 66, 231 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 154 (M=7) a_2..a_5=[ 1, 0, 1, 2 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 1, 0, 2, 1, 2, 2, 0, 1, 0, 0, 2, 1 ]
+22_21 W=[ 1, 2, 11, 21, 22, 42, 231, 462 ] genus 3: new 0 + old 3 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 66 (M=3) a_2..a_5=[ 1, 1, 1, -4 ]  T=[ 7 ]  chi=[
+[ -1 ]
+]
+      level 154 (M=7) a_2..a_5=[ 1, $.1, 1, -$.1 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      level 154 (M=7) a_2..a_5=[ 1, $.1, 1, -$.1 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+22_21 W=[ 1, 14, 22, 77 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 66 (M=3) a_2..a_5=[ -1, 1, 1, 0 ]  T=[ 7 ]  chi=[
+[ -1 ]
+]
+      level 66 (M=3) a_2..a_5=[ 1, 1, 1, -4 ]  T=[ 7 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 0, 1, 2, 2, 1, 1, 0, 0, 2, 0, 1 ]
+22_21 W=[ 1, 3, 14, 42 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 66 (M=3) a_2..a_5=[ 1, -1, 1, 2 ]  T=[ 7 ]  chi=[
+[ 1 ]
+]
+      level 154 (M=7) a_2..a_5=[ 1, 0, 1, 2 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 2, 1, 2, 0, 1, 0, 0, 1, 0, 1 ]
+22_21 W=[ 1, 6, 7, 22, 33, 42, 154, 231 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 66 (M=3) a_2..a_5=[ -1, 1, 1, 0 ]  T=[ 7 ]  chi=[
+[ 1 ]
+]
+      level 154 (M=7) a_2..a_5=[ -1, 0, 1, -4 ]  T=[ 3 ]  chi=[
+[ -1 ]
+]
+      genera one step above: [ 0, 0, 0, 0, 0, 0, 0, 0 ]
+10_39 W=[ 1, 3, 10, 30 ] genus 3: new 2 + old 1 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 130 (M=13) a_2..a_5=[ 1, 0, 1, 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 2, 2, 1, 2, 0, 1, 0, 0, 1, 0, 1 ]
+10_39 W=[ 1, 3, 26, 78 ] genus 3: new 1 + old 2 = 3  MATCHES GENUS  swap-sign sensitive: true
+      level 130 (M=13) a_2..a_5=[ -1, -2, 1, 1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      level 130 (M=13) a_2..a_5=[ 1, 2, 1, -1 ]  T=[ 3 ]  chi=[
+[ 1 ]
+]
+      genera one step above: [ 2, 1, 2, 0, 2, 1, 0, 2, 0, 1, 0, 1 ]
+6_23 W=[ 1, 23 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 1, 1, 1, 1, 1, 1 ]
+6_23 W=[ 1, 2 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 2, 2, 1, 1, 0, 0 ]
+6_23 W=[ 1, 3 ] genus 3: new 3 + old 0 = 3  MATCHES GENUS  swap-sign sensitive: false
+      genera one step above: [ 2, 2, 1, 0, 1, 0 ]
+NOLDX DONE
