@@ -716,8 +716,8 @@ so the twisted curve has the same six counts. Primes up to 113 rule every such t
 independent check at the 25 primes from 13 to 113: all counts agree). `tools/check_models_trace.m`
 (this PR) compares all 49 curves of positive genus, hyperelliptic entries and fibre products alike,
 with the trace formula over F_p and F_{p^2}: at the 13 primes from 13 to 61, 637 of 637 prime
-counts agree (each prime counting both fields), none skipped; the run at the primes to 113 is
-still in progress when this is written. No published equation
+counts agree (each prime counting both fields), none skipped. The run with the same script at the primes to 113 was killed for memory on the
+Mac (two Magma processes at once) and is to be repeated on lovelace. No published equation
 exists for this base. As at every base with N > 1, the equations rest on the m = 0 term of Schofer's
 formula (PRs #66, #74, #79, not yet merged), and nothing fixes which quadratic twist of the conic the
 genus-0 quotient is beyond the covers above it agreeing with one another.
@@ -736,7 +736,7 @@ primes from 13 to 113, which separate every quadratic twist by a d supported on 
 `tools/check_models_trace.m` compares all 50 curves of positive genus with the trace formula over
 F_p and F_{p^2}: at the 13 primes from 13 to 61, 650 of 650 prime counts agree, none skipped
 (Sachi's independent check at the 25 primes from 13 to 113 agrees throughout; the run to 113 with
-this script is still in progress when this is written). No published
+this script was killed for memory on the Mac and is to be repeated on lovelace). No published
 equation exists for this base; the same remarks on the m = 0 term apply.
 
 **Every empty key of both files filled as a fibre product (2026-10-14).** The 28 empty keys of
