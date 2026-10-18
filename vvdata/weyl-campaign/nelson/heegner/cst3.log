@@ -1,0 +1,191 @@
+Loading "/private/tmp/claude-501/-Users-assaferan-Documents-GitHub-ShimuraCurveALQuotients/2ccd0b0f-dcda-423c-b902-8aad70e4879f/scratchpad/heeg/rowsW.m"
+
+10_11 W=[ 55, 1 ] E=110c1 W'\W=[ 22, 10 ]
+   w_22: disc -88 (h=2, fund true) field disc -11: observed [ 2.200725 ]  predicted 2.200725  OK (-11,8)
+   w_10: disc -40 (h=2, fund true) field disc 5: observed [ 0.770405 ]  predicted 0.770405  OK (-8,5)
+
+10_11 W=[ 1, 5 ] E=110a2 W'\W=[ 2, 10 ]
+   w_2: disc -8 (h=1, fund true) field disc -8: observed [ 0.701111 ]  predicted 0.701111  OK (1,-8)
+   w_10: disc -40 (h=2, fund true) field disc -40: observed [ 2.006348 ]  predicted 2.006348  OK (1,-40)
+
+10_11 W=[ 11, 1 ] E=110b2 W'\W=[ 22, 2 ]
+   w_22: disc -88 (h=2, fund true) field disc -88: observed [ 3.911677 ]  predicted 3.911677  OK (1,-88)
+   w_2: disc -8 (h=1, fund true) field disc -8: observed [ 1.832396 ]  predicted 1.832396  OK (1,-8)
+
+10_19 W=[ 1, 5 ] E=190c2 W'\W=[ 2, 10 ]
+   w_2: disc -8 (h=1, fund true) field disc -8: observed [ 1.760101 ]  predicted 1.760101  OK (1,-8)
+   w_10: disc -40 (h=2, fund true) field disc -40: observed [ 1.765504 ]  predicted 1.765504  OK (1,-40)
+
+10_51 W=[ 1, 170, 51, 30 ] E=510f1 W'\W=[ 2, 102, 15, 85 ]
+   w_2: disc -8 (h=1, fund true) field disc -8: observed [ 1.775130 ]  predicted 1.775130  OK (1,-8)
+   w_102: disc -408 (h=4, fund true) field disc 17: observed [ 2.275525 ]  predicted 2.275525  OK (-24,17)
+
+22_21 W=[ 1, 3, 14, 42 ] E=462c1 W'\W=[ 154, 462, 11, 33 ]
+   w_462: disc -1848 (h=8, fund true) field disc -11: observed [ 3.484266, 3.484266 ]  predicted 1.218947  MISMATCH (-11,168)
+   w_33: disc -132 (h=4, fund true) field disc -11: observed [ 3.484266, 3.484266 ]  predicted 1.218947  MISMATCH (-11,12)
+
+22_5 W=[ 55, 1 ] E=110c2 W'\W=[ 11, 5 ]
+   w_11: disc -11 (h=1, fund true) field disc -11: observed [ 0.733575 ]  predicted 0.733575  OK (1,-11)
+   w_5: disc -20 (h=2, fund true) field disc 5: observed [ 0.256802 ]  predicted 0.256802  OK (-4,5)
+
+22_5 W=[ 22, 1 ] E=110a1 W'\W=[ 11, 2 ]
+   w_11: disc -11 (h=1, fund true) field disc -11: observed [ 0.552420 ]  predicted 0.552420  OK (1,-11)
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 2.033808 ]  predicted 2.033808  OK (1,-4)
+
+35_1 W=[ 1 ] E=35a1 W'\W=[ 7 ]
+   w_7: disc -7 (h=1, fund true) field disc -7: observed [ 1.959348, 0.489837 ]  predicted 0.489837  OK (1,-7)
+   w_7: disc -28 (h=0, fund false) field disc -7: observed [ 1.959348, 0.489837 ]  predicted n/a   
+
+390_1 W=[ 1, 5, 6, 30 ] E=390f2 W'\W=[ 26, 39, 195, 130 ]
+   w_195: disc -195 (h=4, fund true) field disc -39: observed [ 2.499662 ]  predicted 2.499662  OK (-39,5)
+   w_130: disc -520 (h=4, fund true) field disc -104: observed [ 4.834988 ]  predicted 4.834988  OK (-104,5)
+
+390_1 W=[ 1, 3, 30, 10 ] E=390g3 W'\W=[ 78, 26, 195, 65 ]
+   w_78: disc -312 (h=4, fund true) field disc -24: observed [ 3.426088 ]  predicted 3.426088  OK (-24,13)
+   w_195: disc -195 (h=4, fund true) field disc -15: observed [ 1.110481 ]  predicted 1.110481  OK (-15,13)
+
+390_1 W=[ 1, 3, 15, 5 ] E=390d4 W'\W=[ 13, 39, 195, 65 ]
+   w_13: disc -52 (h=2, fund true) field disc 13: observed [ 1.530216 ]  predicted 1.530216  OK (-4,13)
+   w_195: disc -195 (h=4, fund true) field disc -195: observed [ 2.743530 ]  predicted 2.743530  OK (1,-195)
+
+390_1 W=[ 1, 2, 3, 6 ] E=390c4 W'\W=[ 78, 13, 26, 39 ]
+   w_78: disc -312 (h=4, fund true) field disc -312: observed [ 5.402105 ]  predicted 5.402105  OK (1,-312)
+   w_13: disc -52 (h=2, fund true) field disc -52: observed [ 2.908495 ]  predicted 2.908495  OK (1,-52)
+
+390_1 W=[ 1, 2, 5, 10 ] E=390b5 W'\W=[ 13, 26, 130, 65 ]
+   w_13: disc -52 (h=2, fund true) field disc -52: observed [ 1.763963 ]  predicted 1.763963  OK (1,-52)
+   w_130: disc -520 (h=4, fund true) field disc -520: observed [ 4.237381 ]  predicted 4.237381  OK (1,-520)
+
+390_1 W=[ 1, 2, 15, 30 ] E=390e2 W'\W=[ 78, 39, 130, 65 ]
+   w_78: disc -312 (h=4, fund true) field disc -39: observed [ 3.937553 ]  predicted 3.937553  OK (-39,8)
+   w_130: disc -520 (h=4, fund true) field disc 65: observed [ 3.651488 ]  predicted 3.651488  OK (-8,65)
+
+462_1 W=[ 33, 231, 1, 7 ] E=462e2 W'\W=[ 462, 66, 2, 14 ]
+   w_462: disc -1848 (h=8, fund true) field disc -231: observed [ 3.653685 ]  predicted 3.338397  MISMATCH (-231,8)
+   w_2: disc -4 (h=1, fund true) field disc 1: observed [ 0.000000, 1.261154 ]  predicted 0.315288  MISMATCH (1,-4)
+
+462_1 W=[ 11, 77, 1, 7 ] E=462c4 W'\W=[ 462, 66, 6, 42 ]
+   w_462: disc -1848 (h=8, fund true) field disc 77: observed [ 5.428310 ]  predicted 5.428310  OK (-24,77)
+   w_42: disc -168 (h=4, fund true) field disc 56: observed [ 3.182193 ]  predicted 3.182193  OK (-3,56)
+
+462_1 W=[ 1, 3, 7, 21 ] E=462g4 W'\W=[ 2, 14, 6, 42 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 3.514181 ]  predicted 3.514181  OK (1,-4)
+   w_42: disc -168 (h=4, fund true) field disc -168: observed [ 3.572810 ]  predicted 3.572810  OK (1,-168)
+
+510_1 W=[ 1, 255, 170, 6 ] E=510a2 W'\W=[ 102, 15, 17, 10 ]
+   w_102: disc -408 (h=4, fund true) field disc -51: observed [ 4.216302 ]  predicted 4.216302  OK (-51,8)
+   w_10: disc -40 (h=2, fund true) field disc 5: observed [ 0.105102 ]  predicted 0.105102  OK (-8,5)
+
+510_1 W=[ 1, 5, 6, 30 ] E=510g4 W'\W=[ 2, 3, 15, 10 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 3.650094 ]  predicted 3.650094  OK (1,-3)
+   w_10: disc -40 (h=2, fund true) field disc -40: observed [ 1.866582 ]  predicted 1.866582  OK (1,-40)
+
+510_1 W=[ 1, 255, 5, 51 ] E=510b2 W'\W=[ 3, 15, 17, 85 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 2.472068 ]  predicted 2.472068  OK (1,-3)
+   w_85: disc -340 (h=4, fund true) field disc 85: observed [ 2.390038 ]  predicted 2.390038  OK (-4,85)
+
+510_1 W=[ 1, 34, 5, 170 ] E=510e7 W'\W=[ 2, 17, 85, 10 ]
+   w_85: disc -340 (h=4, fund true) field disc -340: observed [ 4.588712 ]  predicted 4.588712  OK (1,-340)
+   w_10: disc -40 (h=2, fund true) field disc -40: observed [ 2.225704 ]  predicted 2.225704  OK (1,-40)
+
+510_1 W=[ 1, 34, 6, 51 ] E=510f3 W'\W=[ 2, 102, 3, 17 ]
+   w_102: disc -408 (h=4, fund true) field disc -408: observed [ 4.321805 ]  predicted 4.321805  OK (1,-408)
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 3.217768 ]  predicted 3.217768  OK (1,-3)
+
+510_1 W=[ 1, 170, 51, 30 ] E=510c2 W'\W=[ 2, 102, 15, 85 ]
+   w_102: disc -408 (h=4, fund true) field disc -24: observed [ 4.917642 ]  predicted 4.917642  OK (-24,17)
+   w_85: disc -340 (h=4, fund true) field disc -20: observed [ 3.666575 ]  predicted 3.666575  OK (-20,17)
+
+51_1 W=[ 1 ] E=51a2 W'\W=[ 3 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 0.000000, 1.354677 ]  predicted 1.354677  OK (1,-3)
+   w_3: disc -12 (h=0, fund false) field disc -3: observed [ 0.000000, 1.354677 ]  predicted n/a   
+
+6_29 W=[ 1, 3 ] E=174b2 W'\W=[ 2, 6 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 2.406900 ]  predicted 2.406900  OK (1,-4)
+   w_6: disc -24 (h=2, fund true) field disc -24: observed [ 1.560410 ]  predicted 1.560410  OK (1,-24)
+
+6_29 W=[ 1, 29 ] E=174c1 W'\W=[ 2, 58 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 1.781413 ]  predicted 1.781413  OK (1,-4)
+   w_58: disc -232 (h=2, fund true) field disc -232: observed [ 4.011223 ]  predicted 4.011223  OK (1,-232)
+
+6_29 W=[ 1, 87 ] E=174e1 W'\W=[ 58, 6 ]
+   w_58: disc -232 (h=2, fund true) field disc 29: observed [ 3.222510 ]  predicted 3.222510  OK (-8,29)
+   w_6: disc -24 (h=2, fund true) field disc -3: observed [ 0.109287 ]  predicted 0.109287  OK (-3,8)
+
+6_31 W=[ 1, 2 ] E=186b2 W'\W=[ 3, 6 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 2.588462 ]  predicted 2.588462  OK (1,-3)
+   w_6: disc -24 (h=2, fund true) field disc -24: observed [ 1.297220 ]  predicted 1.297220  OK (1,-24)
+
+6_31 W=[ 1, 31 ] E=186c1 W'\W=[ 3, 93 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 2.369814, 1.333020 ]  predicted 1.333020  OK (1,-3)
+   w_93: disc -372 (h=4, fund true) field disc -3: observed [ 2.369814, 1.333020 ]  predicted 2.369814  OK (-3,124)
+
+6_31 W=[ 1, 62 ] E=186a1 W'\W=[ 93, 6 ]
+   w_93: disc -372 (h=4, fund true) field disc -4: observed [ 3.912158 ]  predicted 3.912158  OK (-4,93)
+   w_6: disc -24 (h=2, fund true) field disc 8: observed [ 1.670435 ]  predicted 1.670435  OK (-3,8)
+
+6_37 W=[ 1, 111 ] E=222d1 W'\W=[ 3, 37 ]
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 1.386131 ]  predicted 1.386131  OK (1,-3)
+   w_37: disc -148 (h=2, fund true) field disc 37: observed [ 2.096449 ]  predicted 2.096449  OK (-4,37)
+
+6_37 W=[ 1, 6 ] E=222a2 W'\W=[ 2, 3 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 2.234316 ]  predicted 2.234316  OK (1,-4)
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 2.769489 ]  predicted 2.769489  OK (1,-3)
+
+6_37 W=[ 1, 74 ] E=222b1 W'\W=[ 2, 37 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 2.135593 ]  predicted 2.135593  OK (1,-4)
+   w_37: disc -148 (h=2, fund true) field disc -148: observed [ 3.359546 ]  predicted 3.359546  OK (1,-148)
+
+6_55 W=[ 22, 55, 1, 10 ] E=330e1 W'\W=[ 330, 33, 15, 6 ]
+   w_330: disc -1320 (h=8, fund true) field disc -3: observed [ 3.966837, 0.440760 ]  predicted 3.966837  OK (-3,440)
+   w_6: disc -24 (h=2, fund true) field disc -3: observed [ 3.966837, 0.440760 ]  predicted 0.440760  OK (-3,8)
+
+6_55 W=[ 33, 165, 1, 5 ] E=330a1 W'\W=[ 22, 110, 6, 30 ]
+   w_6: disc -24 (h=2, fund true) field disc 8: observed [ 2.035588 ]  predicted 2.035588  OK (-3,8)
+   w_30: disc -120 (h=4, fund true) field disc -24: observed [ 2.437203 ]  predicted 2.437203  OK (-24,5)
+
+6_65 W=[ 1, 3, 195, 65 ] E=390d1 W'\W=[ 78, 26, 30, 10 ]
+   w_30: disc -120 (h=4, fund true) field disc 40: observed [ 2.785291 ]  predicted 2.785291  OK (-3,40)
+   w_10: disc -40 (h=2, fund true) field disc -8: observed [ 1.668028 ]  predicted 1.668028  OK (-8,5)
+
+6_65 W=[ 1, 2, 13, 26 ] E=390e1 W'\W=[ 5, 130, 10, 65 ]
+   w_130: disc -520 (h=4, fund true) field disc -520: observed [ 3.167819 ]  predicted 3.167819  OK (1,-520)
+   w_10: disc -40 (h=2, fund true) field disc -40: observed [ 1.730466 ]  predicted 1.730466  OK (1,-40)
+
+6_65 W=[ 1, 13, 15, 195 ] E=390f1 W'\W=[ 78, 6, 130, 10 ]
+   w_130: disc -520 (h=4, fund true) field disc -40: observed [ 4.153083 ]  predicted 4.153083  OK (-40,13)
+   w_10: disc -40 (h=2, fund true) field disc -8: observed [ 2.216170 ]  predicted 2.216170  OK (-8,5)
+
+6_77 W=[ 33, 77, 1, 21 ] E=462c1 W'\W=[ 462, 22, 14, 6 ]
+   w_462: disc -1848 (h=8, fund true) field disc -88: observed [ 4.771679 ]  predicted 4.519977  MISMATCH (-88,21)
+   w_6: disc -24 (h=2, fund true) field disc 8: observed [ 2.175271 ]  predicted 1.923569  MISMATCH (-3,8)
+
+6_77 W=[ 22, 154, 1, 7 ] E=462b1 W'\W=[ 231, 33, 6, 42 ]
+   w_33: disc -132 (h=4, fund true) field disc -3: observed [ 0.544075, 0.544075 ]  predicted 0.544075  OK (-3,44)
+   w_6: disc -24 (h=2, fund true) field disc -3: observed [ 0.544075, 0.544075 ]  predicted 0.544075  OK (-3,8)
+
+6_77 W=[ 22, 462, 1, 21 ] E=462c1 W'\W=[ 77, 33, 14, 6 ]
+   w_33: disc -132 (h=4, fund true) field disc 44: observed [ 4.436902 ]  predicted 2.171583  MISMATCH (-3,44)
+   w_6: disc -24 (h=2, fund true) field disc 8: observed [ 4.188887 ]  predicted 1.923569  MISMATCH (-3,8)
+
+6_77 W=[ 22, 66, 1, 3 ] E=462g3 W'\W=[ 11, 33, 2, 6 ]
+   w_33: disc -132 (h=4, fund true) field disc -132: observed [ 2.810018 ]  predicted 2.810018  OK (1,-132)
+   w_6: disc -24 (h=2, fund true) field disc -24: observed [ 2.017833 ]  predicted 2.017833  OK (1,-24)
+
+6_77 W=[ 66, 77, 1, 42 ] E=462a1 W'\W=[ 462, 11, 6, 7 ]
+   w_462: disc -1848 (h=8, fund true) field disc 77: observed [ 3.890559 ]  predicted 3.890559  OK (-24,77)
+   w_6: disc -24 (h=2, fund true) field disc 8: observed [ 1.342314 ]  predicted 1.342314  OK (-3,8)
+
+6_85 W=[ 1, 15, 51, 85 ] E=510e1 W'\W=[ 2, 102, 170, 30 ]
+   w_2: disc -4 (h=1, fund true) field disc -4: observed [ 2.787974 ]  predicted 2.787974  OK (1,-4)
+   w_30: disc -120 (h=4, fund true) field disc 8: observed [ 1.821059 ]  predicted 1.821059  OK (-15,8)
+
+6_89 W=[ 1, 534 ] E=534a1 W'\W=[ 2, 267 ]
+   w_2: disc -4 (h=1, fund true) field disc 1: observed [ 0.000000, 3.455768 ]  predicted 0.863942  MISMATCH (1,-4)
+   w_267: disc -267 (h=2, fund true) field disc 89: observed [ 3.222620 ]  predicted 2.358678  MISMATCH (-3,89)
+
+82_3 W=[ 1, 41 ] E=246g1 W'\W=[ 123, 3 ]
+   w_123: disc -123 (h=2, fund true) field disc -123: observed [ 1.268607 ]  predicted 1.268607  OK (1,-123)
+   w_3: disc -3 (h=1, fund true) field disc -3: observed [ 1.222583 ]  predicted 1.222583  OK (1,-3)
+
+matched 82, mismatched 10

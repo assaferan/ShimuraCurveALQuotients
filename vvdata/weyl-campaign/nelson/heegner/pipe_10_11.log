@@ -1,0 +1,23 @@
+elliptic quotients consistent with the signs: [
+<[ 2, 10 ], "110a1">,
+<[ 2, 10 ], "110a1">
+]
+isogeny class: [ 110a1, 110a2 ]
+branch points: [ <2, -8, -8, 2>, <10, -40, -40, 2> ]
+
+==== E = 110a1 (rank 0) ====
+disc -8 over Q(sqrt -2): predicted height 0.701111; E^d rank 1, generator heights [ 0.876389 ], torsion 5
+   height ratio gives multiple k = 0.894427
+   not a lattice point on this curve of the isogeny class; this E is not the quotient
+
+==== E = 110a2 (rank 0) ====
+disc -8 over Q(sqrt -2): predicted height 0.701111; E^d rank 1, generator heights [ 0.175278 ], torsion 1
+   height ratio gives multiple k = 2.000000
+disc -40 over Q(sqrt -10): predicted height 2.006348; E^d rank 1, generator heights [ 0.501587 ], torsion 1
+   height ratio gives multiple k = 2.000000
+candidate places: 1 x 1
+   configuration (1,1): covers noether [ 5 ], consistent: [ <1, 2> ]
+      hyperelliptic model: y^2 = -512*T^8 + 2000*T^6 - 1864*T^4 - 171*T^2 - 10
+      Q-isomorphic to the stored model: true
+surviving configurations: 1
+DONE
