@@ -1067,7 +1067,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false, MaxZeroPoleOrder := 3000) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -1087,7 +1087,9 @@ beyond the hauptmodul search's window n_oo + k - 1 (default: six further powers 
 adds values of m to the cusp-0 ladder, which otherwise stops at the deepest point of the class-number-2 pool
 (a coefficient at m feeds every discriminant m r^2, so separating P_d from P_(4d) needs the rung m = d);
 PoolClassNumber is the class-number bound of the CM points the divisors may use (default 2, as in the hauptmodul search);
-with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.}
+with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.
+On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
+that no divisor uses (the rung's pool grows with that pole order: 48 GB at X_0^141(1) without a bound).}
     prescribed := not IsEmpty(Divisors);
     if prescribed then
         // filled from the CM pool once it is known
@@ -1213,7 +1215,14 @@ with AllowMissing the divisors that admit no form are reported and the others re
             poles[key] := pole_pt;
             used join:= Set(zeros) join {pole};
         end for;
-        ladder_pts := [p : p in pts cat quad_pts | ClassNumber(p[1]) le 2 or p[1] in used]
+        // The cusp-0 rung at m costs a pool of pole order D0*|m| there, and with AllowMissing the
+        // search climbs every rung whenever one divisor is out of reach; so a pool point that no
+        // divisor uses contributes a rung only below MaxZeroPoleOrder.  (X_0^141(1): the unused
+        // class-number-2 points -235, -267 gave rungs of pole order 141*267 at cusp 0, and the
+        // process grew to 48 GB.)  The rungs of the points actually used are always kept.
+        rung_of := func<d | (d mod 4 eq 0) select -d div 4 else -d>;
+        ladder_pts := [p : p in pts cat quad_pts | p[1] in used or
+                       (ClassNumber(p[1]) le 2 and (IsEven(Xstar`D) or D0*rung_of(p[1]) le MaxZeroPoleOrder))]
                       cat [p : p in pool | p[1] in used and p[1] notin {x[1] : x in pts cat quad_pts}];
     end if;
 

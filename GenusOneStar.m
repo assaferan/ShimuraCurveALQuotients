@@ -19,9 +19,9 @@ end function;
 
 intrinsic BorcherdsFormValues(fs::SeqEnum[EtaQuot], ds::SeqEnum[RngIntElt], Xstar::ShimuraQuot : Degrees := []) -> SeqEnum
 {The absolute values |psi_f| of the Borcherds forms of the forms in fs at the CM points of Xstar of
-discriminants ds, one list per form (a zero gives 0, a pole Infinity()).  Degrees gives the degree
-of each point (default 1 throughout); at a quadratic point the value is the norm over the two
-conjugates.}
+discriminants ds, one list per form (a zero gives 0, a pole Infinity(), a value that is not a
+rational number -- a fractional exponent -- the LogSm itself).  Degrees gives the degree of each
+point (default 1 throughout); at a quadratic point the value is the norm over the two conjugates.}
     if IsEmpty(Degrees) then Degrees := [1 : d in ds]; end if;
     require #Degrees eq #ds : "Degrees must have one entry per discriminant";
     Ldata := ShimuraCurveLattice(Xstar`D, Xstar`N);
@@ -30,7 +30,11 @@ conjugates.}
     for j->d in ds do
         vals := AbsoluteValuesAtRationalCMPoint(fs, d, Xstar, Ldata : Lambda := lambdas[-d], PointDegree := Degrees[j]);
         for i->v in vals do
-            Append(~table[i], RationalNumber(v));
+            // a value with a fractional exponent (seen at a discriminant not coprime to N) is
+            // kept as the log-sum itself, for the caller to drop that point
+            r := 0;
+            try r := RationalNumber(v); catch e r := v; end try;
+            Append(~table[i], r);
         end for;
     end for;
     return table;
@@ -151,4 +155,67 @@ with the shift counted twice, once per point.}
     end for;
     B := Matrix(Rationals(), #Basis(WI), #ds, [[(V!b)[idx[j]]/e[j] : j in [1..#ds]] : b in Basis(WI)]);
     return Kernel(Transpose(B)), P;
+end intrinsic;
+
+// ---- certification of a genus-three double cover of the star ----------------------------
+intrinsic BiellipticBranchCriterion(B::SeqEnum, L::PtEll) -> BoolElt, List
+{B is the branch locus of a double cover C -> E of a genus-one curve by a genus-three curve: four
+distinct points of E over one number field.  L is a point of E giving the square-root class of
+the cover: the cover is E(sqrt phi) with div phi = B - 2 D and L = the sum of the two points of
+D (for a Borcherds form with divisor B - 4 P_oo, L = 2 P_oo).  Returns whether C is
+hyperelliptic, and the list of pairings of B into two pairs with equal sums, each with its sum Q0.
+C is hyperelliptic exactly when some pairing has Q0 = L: the hyperelliptic involution descends
+to P -> Q0 - P on E, which must preserve B, and of the four double covers branched at B only the
+one of class Q0 has an involution over it with eight fixed points (the others are Ciani quartics).}
+    require #B eq 4 and #Set(B) eq 4 : "four distinct branch points";
+    PS := Universe(B);
+    LK := PS!Eltseq(L);
+    pairings := [[[1,2],[3,4]], [[1,3],[2,4]], [[1,4],[2,3]]];
+    equal := [* *];
+    for pr in pairings do
+        s1 := B[pr[1][1]] + B[pr[1][2]];
+        s2 := B[pr[2][1]] + B[pr[2][2]];
+        if s1 eq s2 then Append(~equal, <pr, s1>); end if;
+    end for;
+    return exists{e : e in equal | e[2] eq LK}, equal;
+end intrinsic;
+
+intrinsic BiellipticBranchCriterion(S1::PtEll, S2::PtEll, L::PtEll) -> BoolElt, BoolElt
+{The same for a branch locus made of two conjugate pairs with sums S1 and S2, when only the sums
+are known: returns (S1 = S2 = L) and the necessary condition S1 = S2.  The two pairings that mix
+the pairs are not tested; they need each pair to differ by a 2-torsion point, which the caller
+rules out separately.}
+    return (S1 eq S2) and (S1 eq L), S1 eq S2;
+end intrinsic;
+
+intrinsic IsHyperellipticByCanonicalQuadric(FC::FldFun) -> BoolElt
+{Whether the genus-three function field FC is hyperelliptic: its three holomorphic differentials
+satisfy a quadratic relation (the canonical image is a conic) exactly then.  Decided by a
+constant-coefficient linear relation among the six pairwise products, written as functions by
+dividing by one differential; the products are expanded in a basis of FC over the rational
+function field, which turns the relation into linear algebra over the constants.}
+    require Genus(FC) eq 3 : "genus three only";
+    V, m := SpaceOfHolomorphicDifferentials(FC);
+    omegas := [m(V.i) : i in [1..3]];
+    fs := [omegas[i]/omegas[1] : i in [1..3]];       // functions: omega_i = f_i omega_1
+    prods := [fs[i]*fs[j] : j in [i..3], i in [1..3]];
+    // coordinates over the rational function field at the bottom of the tower
+    flatten := function(f)
+        cs := [f];
+        while not ISA(Type(Universe(cs)), FldFunRat) do
+            cs := &cat[Eltseq(c) : c in cs];
+        end while;
+        return cs;
+    end function;
+    vecs := [flatten(f) : f in prods];
+    den := LCM(&cat[[Denominator(c) : c in v] : v in vecs]);
+    polys := [[Numerator(den*c) : c in v] : v in vecs];
+    degs := [Maximum([Degree(q) : q in polys[i]]) : i in [1..#polys]];
+    dmax := Maximum(degs cat [0]);
+    rows := [&cat[[Coefficient(q, e) : e in [0..dmax]] : q in polys[i]] : i in [1..#polys]];
+    kern := Kernel(Matrix(BaseRing(Universe(vecs[1])), rows));
+    for v in Basis(kern) do
+        if IsZero(&+[v[i]*prods[i] : i in [1..6]]) then return true; end if;
+    end for;
+    return false;
 end intrinsic;
