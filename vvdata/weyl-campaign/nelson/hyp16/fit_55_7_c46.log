@@ -1,0 +1,40 @@
+Loading "/Users/assaferan/Documents/GitHub/ShimuraCurveALQuotients/worktrees/ca\
+mpaign/vvdata/weyl-campaign/nelson/wk.m"
+=== X_0^55(7)/[ 1, 35, 55, 77 ]  genus 3, cut 46, 80 digits, 14 circles of 16, rho 0.030000000
+Atkin-Lehner involution w_5 : quotient genus 1; invariant differential #1, anti-invariant #[ 2, 3 ]
+conic singular values: [ 5.0670623E-16, 0.088226503, 0.39084129, 1.0678413, 1.3841816, 1.6682971 ]
+conic residual 5.0670623E-16, next 0.088226503, ratio 1.7411766E14
+kernel vector: residual as a column of V 1.0685312, as a row 5.0670623E-16 -- taking the row
+u-equivariance of the quadric (these must vanish): 5.3864960E-16  8.5271815E-16
+normal form w2^2 = w1 w3: max relative residual 2.6597947E-15
+Cauchy derivative 16 points against 8: max relative difference 5.8884310E-11
+circle mean against independently evaluated centre: max relative difference 3.5567366E-16
+x at the centres: [ 0.72508725, 0.66691957, 0.43437523, 0.75653567, 1.1214530, 0.66521761, 0.46016861, 0.98863290, 0.68282278, 1.0299949, 0.39248879, 0.30589958, 0.24636635, 0.91836233 ]
+rescaling x by 0.61184701 for conditioning (A, B, C are unchanged by this)
+quartic in t = x^2 fitted on 5 centres, 9 PREDICTIONS:
+   centre 6: relative difference 1.0761746E-12
+   centre 7: relative difference 1.5051523E-13
+   centre 8: relative difference 2.4633006E-13
+   centre 9: relative difference 8.6131642E-13
+   centre 10: relative difference 7.6867146E-14
+   centre 11: relative difference 2.5416849E-13
+   centre 12: relative difference 2.8043375E-13
+   centre 13: relative difference 2.6788835E-13
+   centre 14: relative difference 2.6065559E-14
+WORST PREDICTION (quartic in x^2): 1.0761746E-12
+octic fitted independently on 9 centres; odd coefficients relative to the largest (these measure the evenness directly): [ 1.8740619E-12, 6.6623701E-12, 5.4880700E-12, 1.0124579E-12 ]
+weighted least squares over all 14 centres: max relative residual 2.2775278E-14
+five-point and least-squares quartics agree to: 8.2783564E-12
+
+marked-quartic invariants (these are the rational numbers):
+   A = 0.21410034602076219833349831432695482971251652522887738043304464130246178173714088 + 1.6386249539324690943445621687030827369713280928807048048133019814059468585681174E-15*CC.1
+   B = -3.5176002448729267437687301733033354867337048364373972216848794745329383655459236 + 3.8010992458556385058438765979810348686481192842749548754086200432577664036618924E-14*CC.1
+   C = -0.0016849900213603084394731795997022633915262826603165696456767100220152632470161885 - 7.1238172462587877775065702937007813224495935827712817537667980662311646617524830E-16*CC.1
+   imaginary parts (a measure of the noise): 1.6386250E-15  3.8010992E-14  7.1238173E-16
+
+recognising with the classical certainty criterion at 26 digits:
+   A = 495/2312
+   B = -11492/3267
+   C = -385/228488
+the other root ordering (x -> 1/x) gives (A,B,C) = (C,B,A)
+HYPFIT3 DONE
