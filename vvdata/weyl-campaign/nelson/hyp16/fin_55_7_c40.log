@@ -1,0 +1,19 @@
+=== X_0^55(7)/[ 1, 35, 55, 77 ], u = w_5
+gnorm(t) = -214375/16914992230656*x^4 - 20825/2085181488*x^3 - 385/228488*x^2 + x + 1
+X genus 3; X/w_5 has group [ 1, 5, 7, 11, 35, 55, 77, 385 ] and genus 1
+trace-formula counts taken at 31 good odd primes below 150
+the two numbers can only be supported on 7 primes: [ 2, 3, 5, 7, 11, 13, 17 ]
+kappa: 26 primes give a symbol, 0 unusable, 8 unknowns
+kappa kernel dimension 0
+kappa = -35
+X_0^55(7)/w_5 VERIFIED at 58 counts: Hyperelliptic Curve defined by y^2 = 7503125/16914992230656*x^4 + 728875/2085181488*x^3 + 13475/228488*x^2 - 35*x - 35 over Rational Field
+mu: 23 primes give a symbol, 0 unusable, 8 unknowns
+mu kernel dimension 0
+mu = 105
+
+MODEL X_0^55(7)/[ 1, 35, 55, 77 ] :
+   Hyperelliptic Curve defined by y^2 + (x^4 + x + 1)*y = x^8 + 5*x^7 + 13*x^6 + 21*x^5 + 24*x^4 + 19*x^3 + x^2 - 6*x - 2 over Rational Field
+genus 3 (formula says 3)
+VERIFIED 62 point counts over F_p and F_p^2 against the trace formula (0 skipped for bad reduction), at 31 primes below 150
+no model file for this base
+HYPFINISH3 DONE
