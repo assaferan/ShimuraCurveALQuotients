@@ -1,0 +1,56 @@
+elliptic quotients consistent with the signs: [
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 78, 35, 91, 70, 15, 182, 39, 30 ], "2730s1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">,
+<[ 210, 13, 26, 5, 105, 546, 273, 10 ], "2730u1">
+]
+W' \ W = [ 78, 35, 91, 70, 15, 182, 39, 30 ], isogeny class [ 2730s1, 2730s2 ]
+branch points: [ <78, -312, 8, 2>, <30, -120, 8, 2> ]
+trace-formula counts: [ 16, 32, 16, 32, 52, 28, 36, 40, 48, 72, 52, 64, 84, 56, 80, 52, 120, 64, 88, 92, 108, 124, 96, 116, 92, 120 ]
+
+==== E = 2730s1 (rank 1) ====
+E(F): generator of the minus part height 1.485048, generator of E(Q) height 0.304633, torsion 2
+disc -312 (h = 4): characters [ <1, -312, false, 1, 0, "4.874126">, <-3, 104, false, 0, 1, "20.896322">, <-24, 13, false, 0, 1, "4.364766">, <-39, 8, true, 0, 1, "23.760768"> ]
+   predicted height of P - Pbar: 5.940192 = k^2 h(G'), k = 2.000000
+disc -120 (h = 4): characters [ <1, -120, false, 1, 0, "4.874126">, <-3, 40, false, 0, 1, "8.145885">, <-15, 8, true, 0, 1, "23.760768">, <-24, 5, false, 0, 1, "3.116438"> ]
+   predicted height of P - Pbar: 5.940192 = k^2 h(G'), k = 2.000000
+SURVIVOR b=-6: P1 = (1/64*(7*F.1 + 2033) : 1/5120*(-5047*F.1 - 1176713) : 1), P2 = (1/289*(8*F.1 - 1253) : 1/49130*(-257*F.1 - 420883) : 1); covers noether [ 5, 5 ]; consistent [ <1, -7555>, <1, 1725066875196512082569122984400753459103789605537305>, <1, 10505192672448878433657769669707439951081234>, <1, -1507217033888928560066806>, <1, -246626010310054413094147297254663625890>, <1, 3204796456307010536145273577624970278362098436007891590>, <1, 57307769830326701300100305441508349305746987523>, <1, -9304570928555244651987354512342019611173895387337>, <1, -68998364758053994921710048704042643>, <1, 354029052621667052642658393>, <1, 248942260250031810>, <1, -661987215720221170354766266648306182782122879538790>, <1, -561392515494052659292769201499280611634>, <1, 19257203732473823715389307941705969494>, <1, 4475245034627827880728564817076096595>, <1, -114641661022293222159519222757848599035300329767022505> ]
+   HYPERELLIPTIC, model y^2 = 14163015508624312793960132596826526133043725336576*T^8 + 466668480433665778495984885100427725027636638908416*T^7 + 4550401922034882608497483100805426988392485839962112*T^6 - 3526257933048981688805151582263439077068882128535552*T^5 - 148188133797376282101489966467913701762334045759610880*T^4 + 470916766029580887119270001475119091412318745328904192*T^3 + 5855657844166410078826401158067267501925852924061646592*T^2 + 7397848248929921456832546716527529145248575560948941024*T + 9918411553274907712021473493187573356854018621769469881
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+
+   HYPERELLIPTIC, but Runtime error in 'HyperellipticModelOfCover': the canonical conic has no rational point
+

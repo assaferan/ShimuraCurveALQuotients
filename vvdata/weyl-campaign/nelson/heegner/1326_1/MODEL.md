@@ -26,6 +26,9 @@ fixed points of the involutions over Q(√2) (−24, −408), Q(√17) (−136) 
 discriminant 18496 (−1768), exactly the fields of definition of those CM points. 8 rational points
 of height ≤ 10⁴. Hyperelliptic, as Nelson's numerics said.
 
-What is not a theorem: that the true b lies in [−6, 6]. Everything else is exact.
+Only b mod 2 matters (translating both branch points by a rational point of E gives an isomorphic cover,
+and halvability depends on b mod 2), so the enumeration over b ∈ {0, 1} is complete: the even class has
+no configurations (b = −6 above) and the odd class gives this one curve. Rigorous given Cai–Shu–Tian's
+theorem and the exact cover test; the sweep over the other b was stopped as redundant.
 Scripts: `pipeline2.m` (the sweep), `surv1326.m` (twist and raw model), `norm3.m`/`norm5.m` (normal
 form), `check1326.m` (the checks), `overconic.m` (model over the canonical conic, not needed here).

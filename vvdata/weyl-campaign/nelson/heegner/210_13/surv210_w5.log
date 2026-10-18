@@ -1,0 +1,6 @@
+field from disc -420: $.1^2 - 2*$.1 + 43265
+covers: noether [ 5, 5 ]
+consistent (cover, kappa): [ <2, 2> ]
+raw model saved, 11 digits
+automorphism group order 8
+DONE
