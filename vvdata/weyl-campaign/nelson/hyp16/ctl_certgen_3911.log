@@ -1,0 +1,58 @@
+=== X_0^39(11)/[ 1, 11, 39, 429 ], u = w_3, coset [ 3, 13, 33, 143 ]
+model (u : x -> -x):  y^2 = -726816072411/256*x^8 + 1259797149/16*x^6 + 3056027/8*x^4 - 5239*x^2 + 13
+genus 3;  reduced minimal model: Hyperelliptic Curve defined by y^2 + (x^4 + x^3 + x^2 + x + 1)*y = -3*x^7 - 22*x^6 - 55*x^5 - 69*x^4 - 55*x^3 - 22*x^2 - 3*x over Rational Field
+
+(a) FIXED POINTS OF u
+   model: pair over x = 0 defined over Q(sqrt(13)), pair over x = infinity over Q(sqrt(-11))
+   w_3      fixed points on X_0^39(11): 0    by discriminant []
+   w_13     fixed points on X_0^39(11): 8    by discriminant [ <-52, 8> ]
+   w_33     fixed points on X_0^39(11): 8    by discriminant [ <-132, 8> ]
+   w_143    fixed points on X_0^39(11): 0    by discriminant []
+   total 16 over #W = 4: 4 fixed points on X/W (Riemann-Hurwitz needs 4)
+   disc -52     2 point(s) on X/W, field Q(sqrt(13)) (degree 2)
+   disc -132    2 point(s) on X/W, field Q(sqrt(-11)) (degree 2)
+   CM theory: {* -11, 13 *}   model: {* -11, 13 *}   -> AGREE
+
+(b),(c) NEWFORMS OF LEVEL 429 FIXED BY W
+   W-fixed orbit of degree 1, quaternionic w_3 eigenvalue 1
+   W-fixed orbit of degree 2, quaternionic w_3 eigenvalue -1
+   (c) splitting under u: 1 + 2   -> 1 + 2 as required
+   (b) Jacobian of X/<W,w_3> = Y^2 = -25447851/236421376*x^4 - 573417/476656*x^3 + 18083/7688*x^2 + 13*x + 13 :
+       Elliptic Curve defined by y^2 + x*y = x^3 - 24*x + 63 over Rational Field, conductor 429, Cremona 429b1
+   newform a_p, p in [ 2, 5, 7, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97 ]:
+       [ -1, -2, 0, -6, -4, -8, -10, 0, 6, 10, 4, 8, -10, -12, 14, -12, 0, -6, 8, 12, 2, -14 ]
+   Jacobian a_p:
+       [ -1, -2, 0, -6, -4, -8, -10, 0, 6, 10, 4, 8, -10, -12, 14, -12, 0, -6, 8, 12, 2, -14 ]
+   -> IDENTICAL at 22 primes
+
+(d) FULL ZETA NUMERATORS against the trace formula, good p <= 60
+   X/W    p=5: agrees  125*T^6 + 100*T^5 + 85*T^4 + 36*T^3 + 17*T^2 + 4*T + 1
+   X/W    p=7: agrees  343*T^6 + 196*T^5 + 175*T^4 + 56*T^3 + 25*T^2 + 4*T + 1
+   X/W    p=17: agrees  4913*T^6 - 1156*T^5 + 221*T^4 - 4*T^3 + 13*T^2 - 4*T + 1
+   X/W    p=19: agrees  6859*T^6 + 4332*T^5 + 1767*T^4 + 472*T^3 + 93*T^2 + 12*T + 1
+   X/W    p=23: agrees  12167*T^6 + 6348*T^5 + 2415*T^4 + 584*T^3 + 105*T^2 + 12*T + 1
+   X/W    p=29: agrees  24389*T^6 + 6728*T^5 + 1189*T^4 + 204*T^3 + 41*T^2 + 8*T + 1
+   X/W    p=31: agrees  29791*T^6 + 5766*T^5 + 2325*T^4 + 372*T^3 + 75*T^2 + 6*T + 1
+   X/W    p=37: agrees  50653*T^6 - 2738*T^5 + 3367*T^4 - 172*T^3 + 91*T^2 - 2*T + 1
+   X/W    p=41: agrees  68921*T^6 - 10086*T^5 + 3075*T^4 - 412*T^3 + 75*T^2 - 6*T + 1
+   X/W    p=43: agrees  79507*T^6 - 3698*T^5 + 4085*T^4 - 68*T^3 + 95*T^2 - 2*T + 1
+   X/W    p=47: agrees  103823*T^6 - 26508*T^5 + 7755*T^4 - 1064*T^3 + 165*T^2 - 12*T + 1
+   X/W    p=53: agrees  148877*x^6 + 16854*x^5 + 6519*x^4 + 676*x^3 + 123*x^2 + 6*x + 1
+   X/W    p=59: agrees  205379*x^6 + 111392*x^5 + 29795*x^4 + 4832*x^3 + 505*x^2 + 32*x + 1
+   X/<W,u> p=5: agrees  5*x^2 + 2*x + 1
+   X/<W,u> p=7: agrees  7*x^2 + 1
+   X/<W,u> p=17: agrees  17*x^2 + 6*x + 1
+   X/<W,u> p=19: agrees  19*x^2 + 4*x + 1
+   X/<W,u> p=23: agrees  23*x^2 + 8*x + 1
+   X/<W,u> p=29: agrees  29*x^2 + 10*x + 1
+   X/<W,u> p=31: bad reduction of this model, skipped
+   X/<W,u> p=37: agrees  37*x^2 - 6*x + 1
+   X/<W,u> p=41: agrees  41*x^2 - 10*x + 1
+   X/<W,u> p=43: agrees  43*x^2 - 4*x + 1
+   X/<W,u> p=47: agrees  47*x^2 - 8*x + 1
+   X/<W,u> p=53: agrees  53*x^2 + 10*x + 1
+   X/<W,u> p=59: agrees  59*x^2 + 12*x + 1
+   zeta numerators checked: 25, mismatches: 0
+
+CERTGEN ALL CHECKS PASS: 0 failures
+CERTGEN DONE

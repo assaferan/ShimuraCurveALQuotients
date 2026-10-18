@@ -425,3 +425,42 @@ Results: `nold_open61.txt` (how much of each open quotient's space Theorem 3.1 r
 * **Do not take a hyperellipticity verdict from memory of the literature.** Ogg's list, as I
   recalled it, said `X_0^57(1)` was not hyperelliptic; the repository's own model file says its
   quotient by `w_19` has genus 0, so it is. Check `data/models/`.
+
+## hyp16: model fitting, second batch (2026-10-18)
+
+**X_0^55(7)/{1,35,55,77}**, u = w_5: `y² + (x⁴+x+1) y = x⁸ + 5x⁷ + 13x⁶ + 21x⁵ + 24x⁴ + 19x³ + x² − 6x − 2`.
+Invariants A = 495/2312, B = −11492/3267, C = −385/228488 recognised at 26 digits from cutoff 46 /
+80 digits (238 points; conic residual 5.1e-16, gap 1.7e14), the cutoff-40 run gives the same reduced
+minimal model with the roots in the other order (the x → 1/x freedom). Checks: the coset
+w_5·W = {5, 7, 11, 385} has 8 fixed points at −20 (w_7) and 8 at −1540 (w_11), fields Q(√5) and
+Q(√−35) as the model has over x = 0 and x = ∞; the Jacobian of X/⟨W, w_5⟩ is 385a1 and agrees with the
+W-fixed +1 newform at 22 primes; 1 + 2 newform orbits; 62 point counts at 31 primes < 150 and zeta
+numerators at all good p ≤ 60 with no mismatch. Still numerical plus point counts, not a proof.
+Files: `hyp16/fit_55_7_c46.log`, `fin_55_7_c46.log`, `cert_55_7_c46.log` and the `_c40` trio.
+
+**X_0^6(185)/W**, u = w_3: not a candidate yet. At cutoff 40 the conic is clean (1.7e-13) but only
+A = −602/54195 is recognised. Cause is conditioning, not precision: ten of the twelve centres have
+|x| in 0.4–1.0 and only two beyond 2.9, so in t = x² the top coefficients rest on two points.
+`xscan.m` (cutoff 24, 19 s per point) locates |x| growing toward a pole near z ≈ −4.5 + 0.5i; eight
+extra centres (`ctr_6_185_x.txt`, |x|/σ from 2.6 to 6.5) are being evaluated at cutoff 46 / 80
+digits and combined with the standard pass by `after6185.sh`. The explicit-centre path is validated
+on X_0^35(1) (14 + 2 circles give the control invariants unchanged). ⇒ Check the spread of |x| at
+the centres before trusting an unrecognised invariant.
+
+**⚠ `QuaternionOrder(A, N)` is not deterministic across processes**: three runs at D = 55, N = 7
+gave two distinct Z-bases for the Eichler order (`detprobe.m`, logs `detprobe1-3.log`), while the
+algebra's standard form and the Fuchsian matrix representation were identical. Splitting the
+evaluation across processes without fixing the order produces chunks that each lie on a canonical
+conic (1e-14) but share none (`conicdiag.m`: 0.10 overall). `hypsetup.m` now writes the order's
+Z-basis once and `hypeval_part.m` rebuilds it (discriminant and membership checked); `launch.sh`,
+`merge.sh`, `finish.sh`, `queue.sh` drive the chunked pipeline. Control: X_0^35(1) in four chunks
+reproduces A, B, C = 1939/952200, 34500/76729, 1939/5000 with the same conic residual 5.17e-16 as
+the single-process run (`fit_35_c46_chunked.log`, `fit_35_c46all.log`). `certgen.m` reproduces
+every 39_11 claim (`ctl_certgen_3911.log`). ⚠ `zeta3911.m` assembles the zeta numerator with the
+functional-equation coefficients reversed; the 39_11 zeta claim rests on `zeta3.m`/`log_zeta3.txt`.
+
+Choice of u (`uchoice.log`): 55_7 w_5; 6_185 w_3; 1326_1 w_2, w_3, w_6 (three independent
+instances); 6_301, 6_323, 6_385, 714_5 w_2. Out of reach of this fit: 46_31, 6_379, 6_649 (W is the
+whole Atkin–Lehner group, no involution marks the coordinate) and the genus-4 targets (canonical
+image a rational normal quartic; y² = degree-10). Per-point cost at cutoff 46 / 80 digits under
+load: 55_7 85 s, 1326_1 440 s, 6_301 640 s.

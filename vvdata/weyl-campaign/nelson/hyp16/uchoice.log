@@ -1,0 +1,40 @@
+
+=== X_0^55(7)/W, D*N = 385, #AL = 8, #W = 4, genus 3
+   W-fixed newforms of level exactly 385: 2 (sum of degrees 3)
+   u = w_5      coset [ 5, 7, 11, 385 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^6(185)/W, D*N = 1110, #AL = 16, #W = 8, genus 3
+   W-fixed newforms of level exactly 1110: 3 (sum of degrees 3)
+   u = w_3      coset [ 3, 5, 6, 10, 37, 74, 555, 1110 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^1326(1)/W, D*N = 1326, #AL = 16, #W = 4, genus 3
+   W-fixed newforms of level exactly 1326: 3 (sum of degrees 3)
+   u = w_2      coset [ 2, 34, 39, 663 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+   u = w_3      coset [ 3, 26, 51, 442 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+   u = w_6      coset [ 6, 13, 102, 221 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^6(301)/W, D*N = 1806, #AL = 16, #W = 8, genus 3
+   W-fixed newforms of level exactly 1806: 3 (sum of degrees 3)
+   u = w_2      coset [ 2, 6, 7, 21, 86, 258, 301, 903 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^6(323)/W, D*N = 1938, #AL = 16, #W = 8, genus 3
+   W-fixed newforms of level exactly 1938: 2 (sum of degrees 3)
+   u = w_2      coset [ 2, 3, 17, 38, 57, 102, 323, 1938 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^6(385)/W, D*N = 2310, #AL = 32, #W = 16, genus 3
+   W-fixed newforms of level exactly 2310: 2 (sum of degrees 3)
+   u = w_2      coset [ 2, 3, 7, 10, 15, 22, 33, 35, 42, 77, 110, 165, 210, 385, 462, 2310 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^714(5)/W, D*N = 3570, #AL = 32, #W = 16, genus 3
+   W-fixed newforms of level exactly 3570: 2 (sum of degrees 3)
+   u = w_2      coset [ 2, 5, 6, 7, 15, 21, 34, 70, 85, 102, 119, 210, 255, 357, 1190, 3570 ]  genus X/<W,u> = 1   newforms with u = +1: 1   <-- usable
+
+=== X_0^46(31)/W, D*N = 1426, #AL = 8, #W = 8, genus 3
+   W is the full group: no u available
+
+=== X_0^6(379)/W, D*N = 2274, #AL = 8, #W = 8, genus 3
+   W is the full group: no u available
+
+=== X_0^6(649)/W, D*N = 3894, #AL = 16, #W = 16, genus 3
+   W is the full group: no u available
+UCHOICE DONE
