@@ -78,7 +78,9 @@ intrinsic DoubleCoversWithBranchDivisor(E::CrvEll, B::DivCrvElt) -> List
 f with div f = B - 2((Q) + (O)), the function field of y^2 = f, its genus, and the dimension of
 the span of the pairwise products of a basis of holomorphic differentials (5 if hyperelliptic,
 6 if not).}
-    require Degree(B) eq 4 and IsEffective(B): "the branch divisor must be effective of degree 4";
+    _, mults := Support(B);
+    require Degree(B) eq 4 and IsEffective(B) and &and[m eq 1 : m in mults]:
+        "the branch divisor must be reduced, effective, of degree 4";
     FE := FunctionField(E);
     O := Divisor(Place(E!0));
     PB := point_of_class(E, B);
