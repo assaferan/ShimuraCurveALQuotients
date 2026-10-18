@@ -1,0 +1,38 @@
+elliptic quotients consistent with the signs: [
+<[ 78, 26, 195, 65 ], "390g1">,
+<[ 78, 26, 195, 65 ], "390g1">,
+<[ 78, 26, 195, 65 ], "390g1">,
+<[ 78, 26, 195, 65 ], "390g1">
+]
+isogeny class: [ 390g1, 390g2, 390g3, 390g4 ]
+branch points: [ <78, -312, -24, 2>, <195, -195, -15, 2> ]
+
+==== E = 390g1 (rank 0) ====
+disc -312 over Q(sqrt -6): predicted height 3.426088; E^d rank 1, generator heights [ 13.704353 ], torsion 2
+   height ratio gives multiple k = 0.500000
+   not a lattice point on this curve of the isogeny class; this E is not the quotient
+
+==== E = 390g2 (rank 0) ====
+disc -312 over Q(sqrt -6): predicted height 3.426088; E^d rank 1, generator heights [ 6.852177 ], torsion 4
+   height ratio gives multiple k = 0.707107
+   not a lattice point on this curve of the isogeny class; this E is not the quotient
+
+==== E = 390g3 (rank 0) ====
+disc -312 over Q(sqrt -6): predicted height 3.426088; E^d rank 1, generator heights [ 3.426088 ], torsion 2
+   height ratio gives multiple k = 1.000000
+disc -195 over Q(sqrt -15): predicted height 1.110481; E^d rank 1, generator heights [ 1.110481 ], torsion 2
+   height ratio gives multiple k = 1.000000
+candidate places: 2 x 2
+   configuration (1,1): covers noether [ 5, 6 ], consistent: [ <1, -1> ]
+      hyperelliptic model: y^2 = -1934614528*T^8 + 564999051264*T^7 - 73029024520448*T^6 + 5436371585882368*T^5 - 253942625024210288*T^4 + 7580378073701942976*T^3 - 140133633679831310424*T^2 + 1449923760469567985760*T - 6363238963166984262015
+      Q-isomorphic to the stored model: true
+   configuration (2,2): covers noether [ 5, 6 ], consistent: [ <1, -10> ]
+      hyperelliptic model: y^2 = -19183697264855110240*T^8 + 10298746051722023466240*T^7 - 2422337390931683646171791*T^6 + 326046620444323606277452876*T^5 - 27469440372691360730498061683*T^4 + 1483394131661413827724116192552*T^3 - 50143078365799471207770013199568*T^2 + 970075096444360537478623884555648*T - 8223662332370627296038073213274880
+      Q-isomorphic to the stored model: true
+surviving configurations: 2
+
+==== E = 390g4 (rank 0) ====
+disc -312 over Q(sqrt -6): predicted height 3.426088; E^d rank 1, generator heights [ 13.704353 ], torsion 2
+   height ratio gives multiple k = 0.500000
+   not a lattice point on this curve of the isogeny class; this E is not the quotient
+DONE
