@@ -11,6 +11,86 @@ invariant prints nothing against `origin`. ⚠ lava's clone is still stale at `8
 **➡ For what to do next, see `PLAN.md`.** This file records *what happened*; when the two disagree
 about state, this file wins.
 
+## Handoff — 2026-10-18 — TWO MODELS FROM NELSON (UNPROVED); MODELS OVER A GENUS-ONE STAR; THE EXACT LAST STEP
+
+**Two candidate models for open quotients were fitted from Nelson's values** (campaign branch,
+`vvdata/weyl-campaign/nelson/hyp16/`), both genus 3 with the Klein-four shape:
+
+* X_0^39(11)/W: `y² + (x⁴+x³+x²+x+1) y = −3x⁷ − 22x⁶ − 55x⁵ − 69x⁴ − 55x³ − 22x² − 3x`; the three
+  branch-point quadratics have invariants A = 1391/7688, B = −32364/11449, C = −1177/6728, each
+  stable to 26 digits; twist κ = 13, μ = −403; the elliptic quotient by the W-fixed form is 429b1,
+  matching the newform at twelve primes; the alternatives for B were excluded exhaustively.
+* X_0^55(7)/W: `y² + (x⁴+x+1) y = x⁸ + 5x⁷ + 13x⁶ + 21x⁵ + 24x⁴ + 19x³ + x² − 6x − 2`; A = 495/2312,
+  B = −11492/3267, C = −385/228488 at 26 digits; κ = −35, μ = 105; zeta numerators agree with the
+  trace formula at 23 primes.
+
+⚠⚠ **Agreement with the trace formula is NOT a proof of the model.** It fixes the isogeny class of
+the Jacobian only, and hyperellipticity is not an isogeny invariant (`y² = x⁸ + 1` again). The
+stored models in `data/models/` are exact computations with the trace formula as an extra check;
+these two are numerical fits, and a precision artefact could have made us accept the wrong curve.
+Keep them as strong evidence; the proof is the exact route below. The fields of definition of the
+Atkin–Lehner fixed points (Q(√13) and Q(√−11) for the −52 and −132 points at 39_11; the coset under
+the Atkin–Lehner group law is {3, 13, 33, 143}) are not isogeny invariants and do match.
+
+**Guo–Yang's construction does NOT need a genus-0 star; the old driver did.** Example 42 of the
+journal version builds the genus-one star X_0^142(1)* from degree-two divisors P_a + P_b − 2P_c
+with exact Schofer values. Branch `genus1-star-driver` (PR #121) adds prescribed divisors to
+`BorcherdsForms` and `GenusOneStar.m`; `tests/GuoYangExample42.m` reproduces the example (all
+twenty table entries, the relation, 142a1). ⚠ The obstacle was two things: the degree-one demand
+AND a fixed window on the pole order at ∞ (54 at level 284 where the paper's forms need 87–116).
+First model-store entries at a positive-genus star: `models_142_1.m` (142a1) and `models_158_1.m`
+(158a1, no published equation), PR #122; ModelChecks 28108/0 over all files. The driver refused
+85_2, 65_2, 14_17, 38_5 ("fewer than two poles carry a coordinate") — forms found but no two
+sharing a pole; 14_17 is even D, so it is not only the odd-D ladder. ⚠ The level is
+M = 4·oddpart(DN), so 39_11 needs the level-1716 form ring (24 divisors; 607 and 1058 are the heavy
+pole orders) and 55_7 level 1540; both are building on lovelace (`~/gymodels/wh1716/`, tree
+`~/gymodels/composite/tree`). ⚠ "142_1 obstructed, deficit 1 at every rung" in the old census was
+the Abel–Jacobi condition of a rank-one Jacobian, not an obstruction — reread every "obstructed"
+verdict at a positive-genus star.
+
+**The exact last step is written: PR #123, `ExactDoubleCover.m`.** From E and the exact branch
+divisor B it lists every double cover over Q (indexed by the rational halves of the class point of
+B, a torsor under E(Q)[2]), decides hyperellipticity of each from its function field by Noether's
+count, selects X/W by trace-formula counts (a wrong candidate fails at some prime under both
+twists), solves for the twist with a provable bound on its support (2, the primes of DN, and the
+primes where y² = f is not smooth: Disc E, coefficients of f, collisions of branch points), and
+returns y² = G(t) with t, y in the function field. Controls: X_0^35(1) and X_0^51(1) rebuilt from
+their elliptic quotients and Q-isomorphic to the stored octics. ⚠⚠ **The branch points alone do not
+determine the cover**: X_0^6(23)/w_23 has two covers over Q with the same E and the same four branch
+points, one hyperelliptic and one not, and only the trace formula tells them apart. ⚠ Twisting
+Q(E)(√f) by κ twists along the deck involution, which is not the hyperelliptic twist of the model;
+rebuild from κ·f. Not covered: E without a rational point (62_1, 69_1, 94_1), a canonical conic
+without one. ⇒ For 39_11: E = 429b1 and the −52/−132 points from the genus-one driver, then
+`IsIsomorphic` against the Nelson model is the proof.
+
+**Padurariu–Saia do not cover the quotients.** Their classification is of bielliptic X_0^D(N) (the
+full curve, N > 1 coprime to D) and its bielliptic involutions; quotients enter only as targets.
+Castelnuovo–Severi forbids a curve of genus ≥ 4 from being both hyperelliptic and bielliptic, which
+is why their Lemma 5.6 works, and says nothing at genus 3 (X_0^D(1) for D = 35, 39, 51, 55, 57, 62,
+69, 82, 94 are genus 3, hyperelliptic and bielliptic by an Atkin–Lehner involution). None of the
+open quotients of genus ≥ 4 has a genus-one Atkin–Lehner quotient, so there is no free verdict.
+Census script: `vvdata/weyl-campaign/nelson/biell_census.m`.
+
+**Magma's interval arithmetic cannot certify Nelson yet**: the development `core` exposes
+`RealIntervalField`/`ComplexIntervalField` with + − × ÷ and matrix inverse only — no Exp, Sqrt or
+Bessel functions, and no rigorous nonzero test (`eq` is a probabilistic digest).
+
+**Pull requests** (all reviews by Sachi addressed): #109 carries the Artin-map fix and `main`, with
+#118, #120, #105, #114, #103 stacked on it; #115 (Criterion H) repaired and retargeted; #66's chain
+merged with `main`; #119 this file; #121, #122, #123 as above. #109 was waiting on a CI rerun.
+
+**Running when this was written:** the oldform extension of Nelson's evaluator for the seventeen
+quotients the newform-only hypothesis does not cover (three controls reproduce stored verdicts; the
+oldform path reproduces the newform path to thirty digits on X_0^34(7)/w_17); the Nelson model queue
+(1326_1, 6_301 at cutoff 46; 6_185 needs 46); the genus-one driver at 141_1; the two form rings.
+
+**Next:** certify 39_11 and 55_7 as above. For the nine Klein-four cases (210_13 ×8, 1326_1), level
+5460 is behind the divisor wall, so the branch points must come another way: they are CM points on
+a rational elliptic curve over known quadratic fields, and Gross–Zagier–Zhang gives their heights,
+so the candidates are a finite set, each testable exactly by `ExactDoubleCover`. The constant in the
+height formula for a Shimura-curve parametrisation is the delicate part; control on 35_1 and 51_1
+where the branch points are known exactly.
+
 ## Handoff — 2026-10-16 — OPEN CASES 34 → 26; A METHOD WHOSE COST DOES NOT SEE THE VOLUME; FOUR NEW MODELS
 
 **Eight of the thirty-four still-open quotients come out hyperelliptic** under Noether's count of
