@@ -6,6 +6,7 @@ WeilRepresentation.m
 EisensteinLocalFactors.m
 VectorValuedForm.m
 EquationsCovers.m
+FibreProductCovers.m
 Caching.m
 ClassNumberData.m
 Utils.m
@@ -29,4 +30,5 @@ AutomorphismGroupFilter.m
 TwistedFilters.m
 special_fiber_modular.m
 special_fiber_cm.m
+DualGraph.m
 }

@@ -15,3 +15,9 @@ models[[ 1, 2, 3, 6 ]] := [* <1, P![ -4/9, 32/9, -71/9, 28/9 ], P![]> *];
 models[[ 1, 2, 21, 42 ]] := [* <0, P![ -7/16, 3/32, 81/256 ], P![]> *];
 models[[ 1, 3, 14, 42 ]] := [* <1, P![ 0, 7/4, -1/8, -9/64 ], P![]> *];
 models[[ 1, 6, 14, 21 ]] := [* <1, P![ 0, 7/64, 31/32, -9/64 ], P![]> *];
+// The three genus-2 quotients, by the Atkin-Lehner involutions without fixed points.  Each is
+// isomorphic to the quotient of Guo-Yang's equations for X_0^21(2) (Compositio 153 (2017),
+// Appendix A, Table A.2); tests/X0_21_2.m checks that.
+models[[ 1, 3 ]] := [* <2, P![ 189/1024, 0, -1611/1024, 0, -801/1024, 0, -81/1024 ], P![]> *];
+models[[ 1, 6 ]] := [* <2, P![ 189/16, 0, 153/32, 0, -171/256, 0, -81/256 ], P![]> *];
+models[[ 1, 14 ]] := [* <2, P![ 189/64, 0, 1053/128, 0, 5589/1024, 0, 189/1024 ], P![]> *];

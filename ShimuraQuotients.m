@@ -10,7 +10,8 @@ import "TraceFormula.m" : TraceFormulaGamma0HeckeAL,
        TraceFormulaGamma0HeckeALNew, TraceHeckeALNewBlocks,
        get_ds, n_prime, d_prime, dd_prime, Q_prime;
 import "Caching.m" : CacheClearOrders, SetCache, GetCache, cached_orders,
-                     IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs;
+                     IsCollecting, StartCollecting, StopCollecting, GetCollectedDiscs,
+                     sfi_certificates;
 
 // D - Discriminant of Quaternion algebra
 // N - Level of Eichler order
@@ -741,21 +742,36 @@ end intrinsic;
 // Returns false if X is not subhyperelliptic
 // If returns true we don't know (compare point counts)
 
+intrinsic CheckHeckeTraceAtPrime(X::ShimuraQuot, p::RngIntElt) -> BoolElt, RngIntElt
+{The point-count test of CheckHeckeTrace at the single good prime p: returns false if
+#X(F_(p^v)) > 2(p^v + 1) for some v with p^v <= 4g^2, and then also returns v.  A curve with that
+many points over F_(p^v) is not hyperelliptic over F_(p^v), so X is not hyperelliptic over the
+algebraic closure of F_p (a hyperelliptic curve over a finite field is a double cover of P^1 over
+that field), and hence not over Qbar either.  Returns true if the test is inconclusive at p.}
+    assert X`g ge 3;
+    assert X`D*X`N mod p ne 0;
+    // #X(F_q) <= q + 1 + 2g sqrt(q), which exceeds 2(q + 1) only when q < 4g^2.
+    v_max := Floor(Log(p,4*X`g^2));
+    for v in [1..v_max] do
+        num_pts := ComputePointsViaTrace(X, p, v);
+        if (num_pts gt 2*(1+p^v)) then
+            vprint ShimuraQuotients, 2: "p, v = ", p, v;
+            return false, v;
+        end if;
+    end for;
+    return true, _;
+end intrinsic;
+
 intrinsic CheckHeckeTrace(X::ShimuraQuot) -> BoolElt, RngIntElt, RngIntElt
 {Returns false if X is not hyperelliptic, true if this fact cannot be determined from counting points and using a naive inequality.
 If returns false, also returns p, v such that point counts over GF(p^v) proves non-hyperellipticity.}
     assert X`g ge 3;
-    ws := [w : w in X`W | w ne 1];
     ps := [p : p in PrimesUpTo(4*X`g^2) | X`D*X`N mod p ne 0];
     for p in ps do
-        v_max := Floor(Log(p,4*X`g^2));
-        for v in [1..v_max] do
-	    num_pts := ComputePointsViaTrace(X, p, v);
-            if (num_pts gt 2*(1+p^v)) then
-		vprint ShimuraQuotients, 2: "p, v = ", p, v;
-                return false, p, v;
-            end if;
-        end for;
+        ok, v := CheckHeckeTraceAtPrime(X, p);
+        if not ok then
+            return false, p, v;
+        end if;
     end for;
     return true, _, _;
 end intrinsic;
@@ -1070,13 +1086,28 @@ end intrinsic;
 // The pipeline runs this CHECK-ONLY (CheckHHProposition1), so it credits no curve: on the star
 // list (W full, gcd(D, N) = 1) the source X_0^*(D, N) of a target X_0^*(D, pN) is exactly the
 // source <D, N, {w in W : p does not divide w}> that SpecialFiberIsomorphism looks up, and SFI's
-// conditions are HH's without the equal-genus requirement.  So every curve marked here is ruled
+// conditions are HH's without the equal-genus requirement, plus a certificate that the source is
+// not hyperelliptic mod p (NonHyperellipticAtPrimeCertificate; not being hyperelliptic over Q is not
+// enough).  That certificate is checked below, not implied: on the star list it holds because the
+// sources here are ruled by point counts at p itself.  A source that it does not certify is not
+// used (as in SpecialFiberIsomorphism) and a message is printed; if no other source marks the target,
+// the pair <source, target, p> is returned in `uncertified`, which CheckHHProposition1 turns into a
+// failure after VerifyHHProposition1 has had its say.  So every curve marked here is ruled
 // out by SpecialFiberIsomorphismStar at the latest (the stages in between only rule curves out),
 // including a curve whose source was itself marked earlier in this loop, by induction along the
 // list order (sources precede targets, asserted): SFI walks the list in index order and reads
-// each source's verdict as it goes.  The asserts below check that this identification holds.
+// each source's verdict as it goes.
 intrinsic HHProposition1(~curves::SeqEnum)
     {}
+    uncertified := [];
+    HHProposition1(~curves, ~uncertified);
+end intrinsic;
+
+intrinsic HHProposition1(~curves::SeqEnum, ~uncertified::SeqEnum)
+{As HHProposition1(~curves), and sets uncertified to the triples <source CurveID, target CurveID, p>
+ at which [HH] Proposition 1 applies but the source is not certified non-hyperelliptic mod p
+ (NonHyperellipticAtPrimeCertificate) and no other source marks the target.}
+    uncertified := [];
     lut_D := AssociativeArray();
     lut_DN := AssociativeArray();
     for X in curves do
@@ -1107,6 +1138,14 @@ intrinsic HHProposition1(~curves::SeqEnum)
                         // The source precedes its target in the list (CurveID is the index), so
                         // SpecialFiberIsomorphism reaches the source, and any mark on it, first.
                         assert i lt other;
+                        // ... and certifies it at p, as SpecialFiberIsomorphism requires.  If not,
+                        // neither stage may use it: skip, as SpecialFiberIsomorphism does, but loudly.
+                        if not NonHyperellipticAtPrimeCertificate(X, p) then
+                            printf "HHProposition1: source %o (%o) of curve %o (%o) is not certified non-hyperelliptic mod %o; [HH] Proposition 1 is not applied to it (another source may still mark the curve)\n",
+                                X`CurveID, X, other, curves[other], p;
+                            Append(~uncertified, <X`CurveID, other, p>);
+                            continue;
+                        end if;
                         curves[other]`IsSubhyp := false;
                         curves[other]`IsHyp := false;
                         curves[other]`TestInWhichProved := Sprintf("HHproposition1 isomorphic to %o", X`CurveID);
@@ -1115,15 +1154,98 @@ intrinsic HHProposition1(~curves::SeqEnum)
             end for;
         end if;
     end for;
+    // Drop the pairs whose target another source marked (CurveID is the index).
+    uncertified := [t : t in uncertified | not assigned curves[t[2]]`IsSubhyp];
 end intrinsic;
 
 
+// A certificate that X is not hyperelliptic over the algebraic closure of F_p, for SpecialFiberIsomorphism.
+// Only tests whose conclusion is a statement in characteristic p are used, re-run here on X at p;
+// how X's own IsSubhyp was decided is deliberately not consulted, since most of the pipeline's tests
+// are statements in characteristic 0 (or at another prime) that say nothing about X mod p:
+//  * the point count of FilterByTrace at p: more than 2q + 2 points over F_q, q = p^v;
+//  * the Weil-polynomial test of FilterByWeilPolynomial at p (tables, and the 2-rank at p = 2);
+//  * for p odd only, the plain AL fixed-point test (FilterByALFixedPointsOnQuotient).  Its input is
+//    the genus of X and the number of fixed points of each AL involution, which are the same on
+//    X mod p: X and its AL quotients have good reduction at p, which does not divide DN, and for p
+//    odd every involution is tame, so Riemann-Hurwitz gives the fixed-point count from the genera.
+//    Its argument (an involution other than the hyperelliptic one has 0, 2 or 4 fixed points on a
+//    hyperelliptic curve) needs characteristic not 2.
+//  * the twisted trace and twisted Weil tests at p (a twist of X by an involution defined over Q is
+//    isomorphic to X over the algebraic closure of F_p).  Tried last: they are the only ones that
+//    need the modular symbols of level DN.
+// Deliberately NOT used: [FH] Prop 6 (FilterByComplicatedALFixedPointsOnQuotient).  Its proof also
+// uses a Galois orbit of size 3 among the fixed points of w_N2 (3 | [Q(P):Q]); mod p the only Galois
+// action is Frobenius, and when p is inert in Q(sqrt(-N2)) those fixed points are supersingular,
+// defined over F_(p^2), with orbits of size at most 2.  (In the 2026-09-26 rerun, 5040, 5047, 5051
+// and 5202 were ruled at p = 3 through a source certified only by it.)
+// Deliberately NOT used: the dual-graph test (FilterByDualGraph, DualGraph.m).  It is a statement
+// about the special fibre at a prime p | D, where X has bad (Mumford) reduction, and says nothing
+// about X mod a good prime.  tests/DualGraph.m asserts this intrinsic never mentions it.
+// Results are cached per <D, N, W, g, p> for the session.
+intrinsic NonHyperellipticAtPrimeCertificate(X::ShimuraQuot, p::RngIntElt) -> BoolElt, MonStgElt
+{Returns true and a description of the certificate if X, of genus at least 3, is proved not
+hyperelliptic over the algebraic closure of F_p (p a prime not dividing DN) by a test valid in
+characteristic p: the point count or Weil polynomial of X at p, their twisted versions at p, or,
+for p odd, the AL fixed-point test of FilterByALFixedPointsOnQuotient.  Returns false if no such certificate is found.}
+    require (X`D*X`N) mod p ne 0 : "p must be a prime of good reduction";
+    if X`g lt 3 then return false, _; end if;
+    // g is in the key: it is an attribute, not recomputed here, so a curve with a different
+    // (e.g. hand-set) genus must not reuse another's result.
+    key := <X`D, X`N, X`W, X`g, p>;
+    b, cert := GetCache(key, sfi_certificates);
+    if b then
+        if cert eq "" then return false, _; end if;
+        return true, cert;
+    end if;
+    cert := "";
+    if p ne 2 then
+        ok, d, fix := TestALFixedPointsOnQuotient(X);
+        // A w_d with 2g+2 fixed points is the hyperelliptic involution (X/w_d has genus 0), which
+        // the test does not exclude itself; it never is the witness on a non-hyperelliptic X.
+        if (not ok) and (fix ne 2*X`g + 2) then
+            cert := Sprintf("ALFixedPointsOnQuotient, W_%o has %o fixed points, p odd", d, fix);
+        end if;
+    end if;
+    if cert eq "" then
+        ok, v := CheckHeckeTraceAtPrime(X, p);
+        if not ok then
+            cert := Sprintf("more than 2q+2 points over F_q, q = %o^%o", p, v);
+        end if;
+    end if;
+    if cert eq "" then
+        if not CheckWeilPolynomialAtPrime(X, p) then
+            cert := Sprintf("WeilPolynomial with p = %o", p);
+        end if;
+    end if;
+    // Last, as the only certificate that needs the modular symbols of level DN.
+    if cert eq "" then
+        ok, desc := CheckTwistedAtPrime(X, p);
+        if not ok then
+            cert := desc;
+        end if;
+    end if;
+    SetCache(key, cert, sfi_certificates);
+    if cert eq "" then return false, _; end if;
+    return true, cert;
+end intrinsic;
+
+intrinsic ClearSFICertificateCache()
+{Empties the session cache of NonHyperellipticAtPrimeCertificate results.}
+    StoreClear(sfi_certificates);
+end intrinsic;
+
 intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
-    {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p |m. 
-    Then the normalization of X_0(D,Np)/W over Fp is isomorphic to X_0(D,N)/W' over Fp where 
-    W' = all w_m in W such that p does not divide m. If X_0(D,N)/W' is not hyperelliptic, then 
-    X_0(D,Np)/W  is also not hyperelliptic. This filters all curves by starting with all known non-hyperelliptic curves
-    and multiply by primes p such that Np is still a level in curves, and considering all possible W = W' union w_m where m divisible by p  }
+    {Let p be a prime. Consider X_0(D,Np)/W where (N,p) = 1 and W contains some w_m with p | m.
+    Then the normalization of X_0(D,Np)/W over F_p is isomorphic to X_0(D,N)/W' over F_p where
+    W' = all w_m in W such that p does not divide m. If X_0(D,N)/W' is not subhyperelliptic over
+    the algebraic closure of F_p, then X_0(D,Np)/W is not hyperelliptic. Non-hyperellipticity over
+    Q is NOT enough: a source that is not hyperelliptic over Q may be hyperelliptic mod p.  So each
+    candidate source X_0(D,N)/W' (one already known not to be subhyperelliptic over Q, which is
+    necessary) is certified at p itself by NonHyperellipticAtPrimeCertificate, which re-runs a test
+    valid in characteristic p on it.  This filters all curves by starting with all known
+    non-hyperelliptic curves and multiply by primes p such that Np is still a level in curves, and
+    considering all possible W = W' union w_m where m divisible by p}
 
     // Lookup from (D, N, W) to the curve's position in `curves`
     // (CurveID coincides with the index, as built by GetQuotientsAndGenera).
@@ -1133,6 +1255,11 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
     end for;
 
     for i->tgt in curves do
+        // Only undecided targets can gain a verdict; a decided one only needs the consistency
+        // check below, which is only worth a certificate when the target is recorded hyperelliptic.
+        if assigned tgt`IsSubhyp and not (assigned tgt`IsHyp and tgt`IsHyp) then
+            continue;
+        end if;
         D := tgt`D;
         M := tgt`N;
         W := tgt`W;
@@ -1155,12 +1282,19 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
                 continue;
             end if;
             src := curves[lut[key]];
-            // Is the source X_0(D, N)/W' known to be NOT subhyperelliptic?
-            // The reduction argument only gives information here: if the target
-            // were hyperelliptic, its hyperelliptic involution would descend
-            // through the special fiber to the normalization, forcing the source
-            // to be subhyperelliptic. 
+            // The reduction argument only gives information if the source is not
+            // subhyperelliptic over the algebraic closure of F_p: if the target were
+            // hyperelliptic, its hyperelliptic involution would descend through the special
+            // fiber to the normalization, forcing the source mod p to be subhyperelliptic.
+            // Not subhyperelliptic over Q is necessary for that (good reduction), so it is the
+            // cheap first filter; the certificate at p is what makes the argument valid.
             if not (assigned src`IsSubhyp and not src`IsSubhyp) then
+                continue;
+            end if;
+            ok, cert := NonHyperellipticAtPrimeCertificate(src, p);
+            if not ok then
+                vprintf ShimuraQuotients, 2: "SpecialFiberIsomorphism: source %o of curve %o is not certified non-hyperelliptic mod %o\n",
+                    src`CurveID, tgt`CurveID, p;
                 continue;
             end if;
             // The normalization of X_0(D, Np)/W over F_p is isomorphic to the
@@ -1177,8 +1311,8 @@ intrinsic SpecialFiberIsomorphism(~curves::SeqEnum)
                 curves[i]`IsSubhyp := false;
                 curves[i]`IsHyp := false;
                 curves[i]`TestInWhichProved := Sprintf(
-                    "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o",
-                    p, src`CurveID);
+                    "SpecialFiberIsomorphism, isomorphic over F_%o to curve %o (source: %o)",
+                    p, src`CurveID, cert);
             end if;
             break;
         end for;
@@ -1499,7 +1633,7 @@ intrinsic NumberOfEllipticPointsByCMOrder(X::ShimuraQuot) -> Assoc
     return ell;
 end intrinsic;
 
-intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}) -> SeqEnum, SeqEnum
+intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, coprime_to_level := true, target := 0, Keep := {}, AllOrders := false) -> SeqEnum, SeqEnum
 {returns rational and quadratic CM points on X. Excludes those in exclude.
  Keep: discriminants exempt from the coprime_to_level filter. The filter exists to keep out CM points
  whose Schofer values misbehave, but it is a blunt instrument: on even-level bases it drops every even
@@ -1538,11 +1672,97 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
     rat_pts := Reverse(Sort(rat_pts));
 
     CNs := AssociativeArray();
-    CNs[1] := {-3,-4,-7,-8,-11,-19,-43,-67,-163};
-    CNs[2] := {-15, -20, -24, -35, -40, -51, -52, -88, -91, -115, -123, -148, -187, -232, -235, -267, -403, -427};
-    CNs[4] := {-39, -55, -56, -68, -84, -120, -132, -136, -155, -168, -184, -195, -203, -219, -228, -259, -280, -291, -292, -312, -323, -328, -340, -355, -372, -388, -408, -435, -483, -520, -532, -555, -568, -595, -627, -667, -708, -715, -723, -760, -763, -772, -795, -955, -1003, -1012, -1027, -1227, -1243, -1387, -1411, -1435, -1507, -1555};
-    CNs[8] := {-95, -111, -164, -183, -248, -260, -264, -276, -295, -299, -308, -371, -376, -395, -420, -452, -456, -548, -552, -564, -579, -580, -583, -616, -632, -651, -660, -712, -820, -840, -852, -868, -904, -915, -939, -952, -979, -987, -995, -1032, -1043, -1060, -1092, -1128, -1131, -1155, -1195, -1204, -1240, -1252, -1288, -1299, -1320, -1339, -1348, -1380, -1428, -1443, -1528, -1540, -1635, -1651, -1659, -1672, -1731, -1752, -1768, -1771, -1780, -1795, -1803, -1828, -1848, -1864, -1912, -1939, -1947, -1992, -1995, -2020, -2035, -2059, -2067, -2139, -2163, -2212, -2248, -2307, -2308, -2323, -2392, -2395, -2419, -2451, -2587, -2611, -2632, -2667, -2715, -2755, -2788, -2827, -2947, -2968, -2995, -3003, -3172, -3243, -3315, -3355, -3403, -3448, -3507, -3595, -3787, -3883, -3963, -4123, -4195, -4267, -4323, -4387, -4747, -4843, -4867, -5083, -5467, -5587, -5707, -5947, -6307};
-    CNs[16] := {-399,-407,-471,-495,-559,-584,-644,-656,-663,-735,-740,-799,-855,-884,-895,-896,-903,-943,-975,-992,-1015,-1016,-1023,-1028,-1040,-1047,-1056,-1088,-1104,-1139,-1140,-1159,-1220,-1224,-1232,-1280,-1344,-1379,-1400,-1412,-1416,-1440,-1476,-1504,-1508,-1520,-1536,-1560,-1568,-1595,-1596,-1608,-1624,-1628,-1636,-1640,-1656,-1680,-1716,-1764,-1776,-1808,-1824,-1860,-1872,-1876,-1884,-1920,-1924,-1980,-1983,-2004,-2016,-2019,-2040,-2048,-2056,-2072,-2095,-2100,-2112,-2176,-2192,-2195,-2208,-2211,-2232,-2236,-2244,-2256,-2280,-2292,-2296,-2304,-2312,-2320,-2328,-2331,-2340,-2356,-2379,-2400,-2436,-2448,-2464,-2496,-2499,-2520,-2528,-2560,-2568,-2580,-2584,-2628,-2640,-2652,-2688,-2691,-2739,-2760,-2772,-2811,-2848,-2868,-2880,-2884,-2928,-2940,-2944,-2952,-2980,-3060,-3063,-3072,-3108,-3136,-3140,-3144,-3160,-3168,-3171,-3192,-3195,-3196,-3220,-3280,-3328,-3336,-3339,-3360,-3363,-3379,-3400,-3408,-3420,-3432,-3435,-3443,-3460,-3472,-3480,-3492,-3520,-3528,-3531,-3555,-3556,-3580,-3588,-3600,-3603,-3612,-3616,-3640,-3648,-3732,-3752,-3772,-3784,-3795,-3808,-3819,-3828,-3832,-3840,-3844,-3900,-3939,-3976,-4008,-4020,-4032,-4043,-4060,-4068,-4092,-4096,-4128,-4171,-4179,-4180,-4188,-4216,-4228,-4240,-4251,-4260,-4275,-4312,-4324,-4368,-4379,-4420,-4427,-4440,-4452,-4480,-4488,-4512,-4515,-4516,-4596,-4600,-4608,-4612,-4624,-4636,-4672,-4680,-4683,-4687,-4712,-4720,-4740,-4788,-4804,-4816,-4851,-4899,-4900,-4932,-4939,-4960,-4971,-4984,-4992,-5008,-5112,-5115,-5152,-5160,-5187,-5195,-5208,-5248,-5280,-5328,-5355,-5363,-5380,-5392,-5403,-5412,-5428,-5440,-5460,-5475,-5491,-5520,-5572,-5632,-5668,-5688,-5712,-5752,-5848,-5860,-5883,-5896,-5907,-5908,-5952,-5992,-5995,-6003,-6027,-6040,-6052,-6099,-6112,-6123,-6148,-6160,-6195,-6208,-6312,-6315,-6328,-6355,-6395,-6400,-6420,-6435,-6475,-6528,-6532,-6580,-6595,-6612,-6627,-6628,-6688,-6708,-6747,-6771,-6792,-6820,-6840,-6867,-6868,-6923,-6948,-6952,-7003,-7008,-7035,-7051,-7072,-7120,-7168,-7195,-7252,-7275,-7288,-7312,-7315,-7347,-7368,-7392,-7395,-7456,-7480,-7491,-7540,-7579,-7588,-7648,-7672,-7707,-7747,-7755,-7780,-7795,-7819,-7828,-7843,-7923,-7932,-7968,-7995,-8008,-8043,-8052,-8080,-8083,-8283,-8299,-8308,-8320,-8352,-8380,-8452,-8512,-8515,-8547,-8548,-8595,-8635,-8643,-8680,-8683,-8715,-8835,-8848,-8859,-8932,-8955,-8968,-8992,-9027,-9088,-9108,-9208,-9219,-9232,-9243,-9328,-9387,-9412,-9472,-9483,-9507,-9508,-9568,-9595,-9640,-9763,-9835,-9867,-9955,-10132,-10168,-10195,-10203,-10227,-10312,-10387,-10420,-10528,-10563,-10587,-10635,-10803,-10843,-10948,-10963,-11067,-11092,-11107,-11152,-11179,-11187,-11203,-11328,-11368,-11512,-11515,-11523,-11563,-11572,-11635,-11715,-11848,-11872,-11995,-12027,-12160,-12252,-12259,-12352,-12387,-12427,-12483,-12523,-12595,-12688,-12699,-12747,-12772,-12835,-12859,-12868,-12915,-13083,-13123,-13192,-13195,-13288,-13323,-13363,-13507,-13563,-13792,-13795,-13819,-13827,-13995,-14008,-14155,-14371,-14403,-14547,-14707,-14763,-14848,-14995,-15067,-15387,-15403,-15547,-15715,-16027,-16192,-16195,-16347,-16531,-16555,-16723,-17227,-17323,-17347,-17427,-17515,-18403,-18715,-18748,-18883,-18907,-19147,-19195,-19363,-19747,-19947,-19987,-20155,-20395,-21403,-21715,-21835,-22243,-22843,-23395,-23587,-24403,-25027,-25267,-27307,-27787,-28963,-31243,-35275};
+    CNs[1] := { -3, -4, -7, -8, -11, -12, -16, -19, -27, -28, -43, -67, -163};
+    CNs[2] := { -15, -20, -24, -32, -35, -36, -40, -48, -51, -52, -60, -64, -72, -75, -88, 
+-91, -99, -100, -112, -115, -123, -147, -148, -187, -232, -235, -267, -403, -427};
+    CNs[4] := { -39, -55, -56, -63, -68, -80, -84, -96, -120, -128, -132, -136, -144, -155, 
+-156, -160, -168, -171, -180, -184, -192, -195, -196, -203, -208, -219, -220, 
+-228, -240, -252, -256, -259, -275, -280, -288, -291, -292, -312, -315, -323, 
+-328, -340, -352, -355, -363, -372, -387, -388, -400, -408, -435, -448, -475, 
+-483, -507, -520, -532, -555, -568, -592, -595, -603, -627, -667, -708, -715, 
+-723, -760, -763, -772, -795, -928, -955, -1003, -1012, -1027, -1227, -1243, 
+-1387, -1411, -1435, -1467, -1507, -1555};
+    CNs[8] := { -95, -111, -164, -183, -224, -248, -260, -264, -272, -276, -295, -299, -308, 
+-320, -336, -360, -371, -376, -380, -384, -392, -395, -420, -444, -452, -456, 
+-468, -480, -504, -512, -528, -539, -544, -548, -552, -564, -576, -579, -580, 
+-583, -600, -612, -616, -624, -632, -640, -651, -660, -672, -712, -720, -732, 
+-736, -768, -784, -792, -819, -820, -832, -840, -852, -868, -880, -900, -904, 
+-912, -915, -939, -952, -960, -979, -987, -995, -1008, -1024, -1032, -1035, 
+-1043, -1060, -1092, -1120, -1128, -1131, -1152, -1155, -1156, -1168, -1180, 
+-1195, -1204, -1240, -1248, -1252, -1275, -1288, -1299, -1312, -1320, -1332, 
+-1339, -1348, -1360, -1380, -1395, -1408, -1428, -1443, -1488, -1528, -1540, 
+-1552, -1587, -1600, -1632, -1635, -1651, -1659, -1672, -1683, -1731, -1752, 
+-1768, -1771, -1780, -1792, -1795, -1803, -1827, -1828, -1848, -1864, -1912, 
+-1939, -1947, -1992, -1995, -2020, -2035, -2059, -2067, -2080, -2088, -2107, 
+-2115, -2128, -2139, -2163, -2212, -2248, -2272, -2275, -2307, -2308, -2323, 
+-2332, -2368, -2392, -2395, -2419, -2451, -2475, -2587, -2611, -2632, -2667, 
+-2715, -2755, -2788, -2827, -2832, -2907, -2947, -2968, -2995, -3003, -3040, 
+-3088, -3172, -3243, -3283, -3315, -3355, -3403, -3448, -3507, -3595, -3627, 
+-3712, -3787, -3843, -3883, -3963, -4048, -4123, -4195, -4267, -4323, -4387, 
+-4747, -4843, -4867, -5083, -5467, -5587, -5707, -5947, -6307, -7987};    
+    CNs[16] := { -399, -407, -471, -495, -559, -584, -644, -656, -663, -735, -740, -799, -855, 
+-884, -895, -896, -903, -943, -975, -992, -1015, -1016, -1023, -1028, -1040, 
+-1047, -1056, -1088, -1104, -1139, -1140, -1159, -1220, -1224, -1232, -1280, 
+-1344, -1379, -1400, -1412, -1416, -1440, -1476, -1504, -1508, -1520, -1536, 
+-1560, -1568, -1595, -1596, -1608, -1624, -1628, -1636, -1640, -1656, -1680, 
+-1716, -1764, -1776, -1808, -1824, -1860, -1872, -1876, -1884, -1920, -1924, 
+-1980, -1983, -2004, -2016, -2019, -2040, -2048, -2056, -2072, -2095, -2100, 
+-2112, -2176, -2192, -2195, -2208, -2211, -2232, -2236, -2244, -2256, -2280, 
+-2292, -2296, -2304, -2312, -2320, -2328, -2331, -2340, -2356, -2379, -2400, 
+-2436, -2448, -2464, -2496, -2499, -2520, -2528, -2560, -2568, -2580, -2584, 
+-2628, -2640, -2652, -2688, -2691, -2739, -2760, -2772, -2811, -2848, -2868, 
+-2880, -2884, -2928, -2940, -2944, -2952, -2980, -3060, -3063, -3072, -3108, 
+-3136, -3140, -3144, -3160, -3168, -3171, -3192, -3195, -3196, -3220, -3280, 
+-3328, -3336, -3339, -3360, -3363, -3379, -3400, -3408, -3420, -3432, -3435, 
+-3443, -3460, -3472, -3480, -3492, -3520, -3528, -3531, -3555, -3556, -3580, 
+-3588, -3600, -3603, -3612, -3616, -3640, -3648, -3732, -3752, -3772, -3784, 
+-3795, -3808, -3819, -3828, -3832, -3840, -3844, -3900, -3939, -3976, -4008, 
+-4020, -4032, -4043, -4060, -4068, -4092, -4096, -4128, -4171, -4179, -4180, 
+-4188, -4216, -4228, -4240, -4251, -4260, -4275, -4312, -4324, -4368, -4379, 
+-4420, -4427, -4440, -4452, -4480, -4488, -4512, -4515, -4516, -4596, -4600, 
+-4608, -4612, -4624, -4636, -4672, -4680, -4683, -4687, -4712, -4720, -4740, 
+-4788, -4804, -4816, -4851, -4899, -4900, -4932, -4939, -4960, -4971, -4984, 
+-4992, -5008, -5112, -5115, -5152, -5160, -5187, -5195, -5208, -5248, -5280, 
+-5328, -5355, -5363, -5380, -5392, -5403, -5412, -5428, -5440, -5460, -5475, 
+-5491, -5520, -5572, -5632, -5668, -5688, -5712, -5752, -5848, -5860, -5883, 
+-5896, -5907, -5908, -5952, -5992, -5995, -6003, -6027, -6040, -6052, -6099, 
+-6112, -6123, -6148, -6160, -6195, -6208, -6312, -6315, -6328, -6355, -6395, 
+-6400, -6420, -6435, -6475, -6528, -6532, -6580, -6595, -6612, -6627, -6628, 
+-6688, -6708, -6747, -6771, -6792, -6820, -6840, -6867, -6868, -6923, -6948, 
+-6952, -7003, -7008, -7035, -7051, -7072, -7120, -7168, -7195, -7252, -7275, 
+-7288, -7312, -7315, -7347, -7368, -7392, -7395, -7456, -7480, -7491, -7540, 
+-7579, -7588, -7648, -7672, -7707, -7747, -7755, -7780, -7795, -7819, -7828, 
+-7843, -7923, -7932, -7968, -7995, -8008, -8043, -8052, -8080, -8083, -8283, 
+-8299, -8308, -8320, -8352, -8380, -8452, -8512, -8515, -8547, -8548, -8595, 
+-8635, -8643, -8680, -8683, -8715, -8835, -8848, -8859, -8932, -8955, -8968, 
+-8992, -9027, -9088, -9108, -9208, -9219, -9232, -9243, -9328, -9387, -9412, 
+-9472, -9483, -9507, -9508, -9568, -9595, -9640, -9763, -9835, -9867, -9955, 
+-10132, -10168, -10195, -10203, -10227, -10312, -10387, -10420, -10528, -10563, 
+-10587, -10635, -10803, -10843, -10948, -10963, -11067, -11092, -11107, -11152, 
+-11179, -11187, -11203, -11328, -11368, -11512, -11515, -11523, -11563, -11572, 
+-11635, -11715, -11848, -11872, -11995, -12027, -12160, -12252, -12259, -12352, 
+-12387, -12427, -12483, -12523, -12595, -12688, -12699, -12747, -12772, -12835, 
+-12859, -12868, -12915, -13083, -13123, -13192, -13195, -13288, -13323, -13363, 
+-13507, -13563, -13792, -13795, -13819, -13827, -13995, -14008, -14155, -14371, 
+-14403, -14547, -14707, -14763, -14848, -14995, -15067, -15387, -15403, -15547, 
+-15715, -16027, -16192, -16195, -16347, -16531, -16555, -16723, -17227, -17323, 
+-17347, -17427, -17515, -18403, -18715, -18748, -18883, -18907, -19147, -19195, 
+-19363, -19747, -19947, -19987, -20155, -20395, -21403, -21715, -21835, -22243, 
+-22843, -23395, -23587, -24403, -25027, -25267, -27307, -27787, -28963, -31243, 
+-35275};
+
+    // The lists above hold every order of class number <= 8 and the 531 discriminants of class
+    // number 16.  By default the class-number 1, 2, 4, 8 lists are cut to the maximal orders, as
+    // they were before: the Borcherds search takes its divisor support from this routine, and a
+    // non-fundamental anchor changes the Hauptmoduln (X_0^14(5): the second one moved its zero
+    // from -91 to -36, a conductor-3 order, and the cover equations no longer had a solution).
+    // AllOrders admits the non-maximal orders; the Schofer evaluation step asks for them under
+    // NONFUND, where the conductor-prime terms of the m = 0 coefficient apply.
+    if not AllOrders then
+        for h in [1, 2, 4, 8] do
+            CNs[h] := {d : d in CNs[h] | IsFundamentalDiscriminant(d)};
+        end for;
+    end if;
 
     i := 1;
     allCN := {};
@@ -1571,10 +1791,8 @@ intrinsic RationalandQuadraticCMPoints(X::ShimuraQuot : bd := 4, Exclude := {}, 
         if exists(pt){p : p in rat_pts | p[1] eq d} then continue; end if;
         if coprime_to_level and (GCD(d, X`N) ne 1) and (d notin Keep) then continue; end if;
 
-        // Degree 0 means X carries no CM point by this order.  A degree-2 point is kept even when
-        // its quadratic field is not determined (possible for non-fundamental d, where
-        // FieldsOfDefinitionOfCMPointFast returns several fields): it is still a quadratic point.
-        // A caller that needs the field must check that it is unique (hauptmodul_sign_candidates does).
+        // Degree 0 means X carries no CM point by this order.  Only the degree is needed here; the
+        // field itself (FieldOfDefinitionOfCMPoint) is built by the Schofer table for the points kept.
         deg := DegreeOfFieldOfDefinitionOfCMPoint(X, d);
         if deg eq 1 and d notin Exclude then
             Append(~rat_pts, <d,1,1>);

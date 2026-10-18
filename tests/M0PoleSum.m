@@ -148,7 +148,7 @@ procedure test_values_at_conductor_discriminants_15_2()
     // polynomial of s at d = -588 -- must exist: a rationality condition on the discriminant of a
     // quadratic.  With the log 7 term of M0FibreCorrection (standalone lem:unimod) it does, and the
     // cubic field it cuts out must be the field of definition of the CM points, which
-    // FieldsOfDefinitionOfCMPoint computes by class field theory (discriminant -588); without the
+    // FieldOfDefinitionOfCMPoint computes by class field theory (discriminant -588); without the
     // term no rational cubic exists (campaign level-p2/classpoly.log).
     printf "  the class polynomial of s at d = -588 (conductor prime 7 outside the level)...";
     d := -588;
@@ -181,7 +181,7 @@ procedure test_values_at_conductor_discriminants_15_2()
         end for;
     end for;
     error if IsEmpty(found), "no rational monic cubic H has the norms the values prescribe at d = -588";
-    flds := FieldsOfDefinitionOfCMPoint(star, d);
+    flds := [* FieldOfDefinitionOfCMPoint(star, d) *];
     want_disc := {Discriminant(MaximalOrder(F)) : F in flds | Type(F) ne FldRat};
     assert want_disc eq {-588};
     good := [H : H in found | IsIrreducible(H) and Discriminant(MaximalOrder(NumberField(H))) eq -588];

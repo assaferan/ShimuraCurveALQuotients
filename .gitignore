@@ -29,3 +29,6 @@ BorcherdsForms/
 paper/*.aux
 paper/*.log
 paper/*.out
+
+# DualGraphData disk cache (DualGraph.m); regenerated on lava, never committed
+data/dualgraph/
