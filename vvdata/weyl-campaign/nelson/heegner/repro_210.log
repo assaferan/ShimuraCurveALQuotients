@@ -1,0 +1,23 @@
+X_0^210(13)/{ 1, 2, 21, 42, 65, 130, 1365, 2730 }, elliptic quotient by w_5, isogeny class [ 2730u1, 2730u2 ]
+
+== E = 2730u1 ==
+disc -420 over Q(sqrt -1): minus generator of height 0.891820091845190726138053942, E(Q) generator of height 0.0991363240049414394442126007, torsion 2
+disc -1092 over Q(sqrt -1): minus generator of height 0.891820091845190726138053942, E(Q) generator of height 0.0991363240049414394442126007, torsion 2
+disc -420: P - Pbar has predicted height 3.56728036738076290455221577045 = k^2 h(G'), k = 2.00000000000000000000000000
+disc -1092: P - Pbar has predicted height 3.56728036738076290455221577045 = k^2 h(G'), k = 2.00000000000000000000000000
+class b = 0: 4 x 4 candidate points
+survivor b = 0: cover 2 twisted by 2, noether 5
+survivor b = 0: cover 2 twisted by 2, noether 5
+class b = 1: 0 x 0 candidate points
+class b = 0, cover 2 twisted by 2, noether 5
+   model y^2 = 4*T^8 - 20*T^7 + 97*T^6 - 20*T^5 - 138*T^4 + 20*T^3 + 97*T^2 + 20*T + 4
+class b = 0, cover 2 twisted by 2, noether 5
+   model y^2 = 4*T^8 - 20*T^7 + 97*T^6 - 20*T^5 - 138*T^4 + 20*T^3 + 97*T^2 + 20*T + 4   (isomorphic to a model above)
+
+== E = 2730u2 ==
+disc -420 over Q(sqrt -1): minus generator of height 0.445910045922595363069026971, E(Q) generator of height 0.0495681620024707197221063004, torsion 2
+disc -1092 over Q(sqrt -1): minus generator of height 0.445910045922595363069026971, E(Q) generator of height 0.0495681620024707197221063004, torsion 2
+disc -420: P - Pbar has predicted height 3.56728036738076290455221577045 = k^2 h(G'), k = 2.82842712474619009760337745
+not a lattice point: E is not the quotient
+
+1 model(s) up to Q-isomorphism

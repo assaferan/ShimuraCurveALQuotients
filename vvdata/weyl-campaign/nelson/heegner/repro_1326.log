@@ -1,0 +1,35 @@
+X_0^1326(1)/{ 1, 17, 78, 1326 }, elliptic quotient by w_6, isogeny class [ 1326b1, 1326b2, 1326b3, 1326b4 ]
+
+== E = 1326b1 ==
+disc -408 over Q(sqrt 2): minus generator of height 10.8446295017508565938421122, E(Q) generator of height 1.41197013133721369305587799, torsion 2
+disc -24 over Q(sqrt 2): minus generator of height 10.8446295017508565938421122, E(Q) generator of height 1.41197013133721369305587799, torsion 2
+disc -408: P - Pbar has predicted height 5.42231475087542829692105610397 = k^2 h(G'), k = 0.707106781186547524400844362
+not a lattice point: E is not the quotient
+
+== E = 1326b2 ==
+disc -408 over Q(sqrt 2): minus generator of height 5.42231475087542829692105610, E(Q) generator of height 0.705985065668606846527938993, torsion 4
+disc -24 over Q(sqrt 2): minus generator of height 5.42231475087542829692105610, E(Q) generator of height 0.705985065668606846527938993, torsion 4
+disc -408: P - Pbar has predicted height 5.42231475087542829692105610397 = k^2 h(G'), k = 1.00000000000000000000000000
+disc -24: P - Pbar has predicted height 5.42231475087542829692105610397 = k^2 h(G'), k = 1.00000000000000000000000000
+class b = 0: 0 x 0 candidate points
+class b = 1: 8 x 8 candidate points
+survivor b = 1: cover 3 twisted by 17, noether 5
+survivor b = 1: cover 3 twisted by 17, noether 5
+class b = 1, cover 3 twisted by 17, noether 5
+   model y^2 = 17*T^8 - 18*T^6 - 55*T^4 - 72*T^2 + 272
+class b = 1, cover 3 twisted by 17, noether 5
+   model y^2 = 17*T^8 - 18*T^6 - 55*T^4 - 72*T^2 + 272   (isomorphic to a model above)
+
+== E = 1326b3 ==
+disc -408 over Q(sqrt 2): minus generator of height 2.71115737543771414846052805, E(Q) generator of height 0.352992532834303423263969496, torsion 2
+disc -24 over Q(sqrt 2): minus generator of height 2.71115737543771414846052805, E(Q) generator of height 0.352992532834303423263969496, torsion 2
+disc -408: P - Pbar has predicted height 5.42231475087542829692105610397 = k^2 h(G'), k = 1.41421356237309504880168872
+not a lattice point: E is not the quotient
+
+== E = 1326b4 ==
+disc -408 over Q(sqrt 2): minus generator of height 10.8446295017508565938421122, E(Q) generator of height 1.41197013133721369305587798, torsion 4
+disc -24 over Q(sqrt 2): minus generator of height 10.8446295017508565938421122, E(Q) generator of height 1.41197013133721369305587798, torsion 4
+disc -408: P - Pbar has predicted height 5.42231475087542829692105610397 = k^2 h(G'), k = 0.707106781186547524400844362
+not a lattice point: E is not the quotient
+
+1 model(s) up to Q-isomorphism

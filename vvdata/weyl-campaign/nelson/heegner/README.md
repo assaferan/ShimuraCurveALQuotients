@@ -49,3 +49,12 @@ X_0^10(11)/{1,5} (`pipe_10_11.log`): the heights exclude 110a1 and select 110a2 
 class, each branch point is exactly twice the generator of E(F), one configuration survives, and
 its model is Q-isomorphic to the stored one. Paper copy: `CaiShuTian-explicit-GZ-arXiv1408.1733.pdf`
 in the scratchpad (not committed).
+
+## Intrinsics (PR #124, branch heegner-heights on #123)
+
+`HeegnerHeights.m` on `main`'s side carries the route as intrinsics; `tools/heegner_model.m` reruns a
+search; `tests/HeegnerHeights.m` holds the calibration, the two controls end to end, and the two models
+as regression values. `repro_1326.log` and `repro_210.log` are the reproductions of both models through
+the intrinsics (one curve up to Q-isomorphism each; every other curve of the isogeny class excluded by
+the lattice test). Only the class mod 2 of the origin-dependent component matters (translation by a
+rational point of E gives an isomorphic cover), so the enumeration is complete.
