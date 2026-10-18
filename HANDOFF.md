@@ -63,6 +63,20 @@ rebuild from κ·f. Not covered: E without a rational point (62_1, 69_1, 94_1), 
 without one. ⇒ For 39_11: E = 429b1 and the −52/−132 points from the genus-one driver, then
 `IsIsomorphic` against the Nelson model is the proof.
 
+**✅ LATER ON 2026-10-18 — TWO EXACT MODELS BEHIND THE DIVISOR WALL, BY HEEGNER HEIGHTS (PR #124 on #123).**
+The branch points of X/W → E = X/⟨W, w⟩ are CM points over known quadratic fields; the explicit
+Gross–Zagier formula of Cai–Shu–Tian gives their heights (the constant was pinned on 82 of the 92
+branch points of the stored models — the ten exceptions are the rank-one E, where only the
+origin-dependent component shifts, and it matters only mod 2); the points of E(F) of those heights are
+finite, and each configuration is tested exactly with `ExactDoubleCover`. Results:
+X_0^1326(1)/{1,17,78,1326}: y² = 272x⁸ − 72x⁶ − 55x⁴ − 18x² + 17; X_0^210(13)/{1,2,21,42,65,130,1365,2730}:
+y² = 4x⁸ − 20x⁷ + 97x⁶ − 20x⁵ − 138x⁴ + 20x³ + 97x² + 20x + 4, the latter obtained twice through two
+different elliptic quotients. Both: bad primes = primes of DN, counts to 1000/600, Aut of order 8 with
+the predicted elliptic quotients, fixed-point fields as the CM computation says. Both hyperelliptic, as
+Nelson's numerics said. ⚠ Two traps: use the CM DISCRIMINANT of a branch point, not the discriminant of
+its field (they differ for h > 1); and u ↦ λu on y² = G(x²) is a Q-isomorphism only for λ a square.
+Campaign: `vvdata/weyl-campaign/nelson/heegner/` (calibration, drivers, logs, MODEL.md per curve).
+
 **Padurariu–Saia do not cover the quotients.** Their classification is of bielliptic X_0^D(N) (the
 full curve, N > 1 coprime to D) and its bielliptic involutions; quotients enter only as targets.
 Castelnuovo–Severi forbids a curve of genus ≥ 4 from being both hyperelliptic and bielliptic, which
