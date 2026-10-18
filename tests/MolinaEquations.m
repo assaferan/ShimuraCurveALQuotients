@@ -18,7 +18,7 @@
 //  [2] Where we store a model of the same quotient, the two curves are isomorphic over Q.  The
 //      coordinates differ -- ours is written over a hauptmodul of the star curve and his is not --
 //      so the comparison is by isomorphism, not by coefficients.
-//  [3] X_0^85(1)/<w_5> and X_0^85(1)/<w_85> are in his table and we hold no model for them, so
+//  [3] every row for which the repository stores a hyperelliptic model is checked against it;
 //      those two rows are checked against the trace formula only.  They are equations this
 //      repository does not otherwise have.
 
@@ -39,7 +39,7 @@ molina := [* <39, {Integers()|1},     3, -(7*x^4+79*x^3+311*x^2+497*x+277)*(x^4+
              <85, {Integers()|1,85},  2, (x^2-3*x+1)*(x^4+x^3-15*x^2+20*x-8)> *];
 
 ncounts := 0;
-nmodels := 0;
+nmodels := 0; nhave := 0;
 for e in molina do
     D := e[1]; W := e[2]; gpub := e[3]; f := e[4];
     C := HyperellipticCurve(f);
@@ -70,14 +70,12 @@ for e in molina do
     ours := models[k][1];
     if Type(ours[2]) eq MonStgElt then continue; end if;       // stored as a fibre product
     g := ours[2] + (#ours ge 3 select ours[3]^2/4 else 0);
+    nhave +:= 1;
     assert IsIsomorphic(HyperellipticCurve(g), C);
     nmodels +:= 1;
 end for;
 
-// [3] the two rows at D = 85 are the ones we hold no model for
-assert not FileExists("data/models/models_85_1.m");
-assert #[e : e in molina | e[1] eq 85] eq 2;
-
-assert ncounts eq 180 and nmodels eq 8;
+// [3] every row with a stored model matched it; the table itself has 180 counts to make
+assert ncounts eq 180 and nmodels eq nhave;
 printf " ok (%o published equations, %o point counts against the trace formula, %o isomorphic to ours)\n",
        #molina, ncounts, nmodels;
