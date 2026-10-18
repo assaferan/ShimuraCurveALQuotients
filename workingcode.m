@@ -56,6 +56,7 @@ FILTER_STAGES := [*
     // first in the all-quotients block: it is by far the cheapest filter, so its determinations
     // prune every heavier filter below.  Mirrors run_pipeline.sh.
     <"FilterBySpecialFiber", FilterBySpecialFiber>,
+    <"FilterByComponentInvolution", FilterByComponentInvolution>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
@@ -97,6 +98,7 @@ function compute_data(start_stage, stages)
       func(~curves);
       print name, " took ", Realtime() - t0;
       fname := Sprintf("data/curves_after_%o.dat", name);
+      SetColumns(0);   // at 80 columns Sprint splits a long verdict label with "\n"
       Write(fname, Sprint(curves, "Magma") : Overwrite);
       return;
     end procedure;
