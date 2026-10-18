@@ -1,0 +1,59 @@
+D=6 N=25 p=2: h=6 h'=16 build+validate 0.3s; unit orders V={ 2, 4 } E={ 2, 4 }
+   vertex action of w_3: 0 fixed classes of 6
+   vertex action of w_25: 2 fixed classes of 6
+   edge action of w_2: 2 fixed classes of 16
+   edge action of w_3: 0 fixed classes of 16
+   edge action of w_25: 2 fixed classes of 16
+   genus identities: 16 subgroups, 0 mismatches
+D=6 N=25 p=3: h=3 h'=10 build+validate 0.1s; unit orders V={ 2, 4 } E={ 2 }
+   vertex action of w_2: 1 fixed classes of 3
+   vertex action of w_25: 1 fixed classes of 3
+   edge action of w_2: 0 fixed classes of 10
+   edge action of w_3: 0 fixed classes of 10
+   edge action of w_25: 0 fixed classes of 10
+   genus identities: 16 subgroups, 0 mismatches
+D=22 N=9 p=2: h=10 h'=30 build+validate 0.5s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_9: 2 fixed classes of 10
+   vertex action of w_11: 4 fixed classes of 10
+   edge action of w_2: 0 fixed classes of 30
+   edge action of w_9: 2 fixed classes of 30
+   edge action of w_11: 6 fixed classes of 30
+   genus identities: 16 subgroups, 0 mismatches
+D=22 N=9 p=11: h=1 h'=12 build+validate 0.2s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_2: 1 fixed classes of 1
+   vertex action of w_9: 1 fixed classes of 1
+   edge action of w_2: 2 fixed classes of 12
+   edge action of w_9: 0 fixed classes of 12
+   edge action of w_11: 2 fixed classes of 12
+   genus identities: 16 subgroups, 0 mismatches
+D=15 N=16 p=3: h=8 h'=32 build+validate 0.4s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_16: 0 fixed classes of 8
+   vertex action of w_5: 0 fixed classes of 8
+   edge action of w_16: 0 fixed classes of 32
+   edge action of w_3: 0 fixed classes of 32
+   edge action of w_5: 0 fixed classes of 32
+   genus identities: 16 subgroups, 0 mismatches
+D=15 N=16 p=5: h=4 h'=24 build+validate 0.3s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_16: 2 fixed classes of 4
+   vertex action of w_3: 0 fixed classes of 4
+   edge action of w_16: 4 fixed classes of 24
+   edge action of w_3: 0 fixed classes of 24
+   edge action of w_5: 0 fixed classes of 24
+   genus identities: 16 subgroups, 0 mismatches
+D=14 N=9 p=2: h=6 h'=18 build+validate 0.3s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_9: 2 fixed classes of 6
+   vertex action of w_7: 0 fixed classes of 6
+   edge action of w_2: 2 fixed classes of 18
+   edge action of w_9: 2 fixed classes of 18
+   edge action of w_7: 0 fixed classes of 18
+   genus identities: 16 subgroups, 0 mismatches
+D=14 N=9 p=7: h=1 h'=8 build+validate 9.0E-2s; unit orders V={ 2 } E={ 2 }
+   vertex action of w_2: 1 fixed classes of 1
+   vertex action of w_9: 1 fixed classes of 1
+   edge action of w_2: 0 fixed classes of 8
+   edge action of w_9: 0 fixed classes of 8
+   edge action of w_7: 0 fixed classes of 8
+   genus identities: 16 subgroups, 0 mismatches
+control (w_25 made trivial at 6_25, p=2): 9 of 16 genus identities fail
+DONE
+exit 0
