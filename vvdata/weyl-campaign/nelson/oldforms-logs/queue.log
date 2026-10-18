@@ -38,3 +38,6 @@
 13:21:02 done  38_3 W=1,57 cut=40 prec=30 : VERDICT: HYPERELLIPTIC smallest singular value 1.57053846259835704422973070519E-13 ; old columns 2 of 3
 13:21:03 start 26_15 W=1,3,10,13,30,39,130,390 cut=40 prec=30 npts=18
 13:24:43 done  141_2 W=1,6,94,141 cut=40 prec=80 : VERDICT: NOT hyperelliptic smallest singular value 0.20967297595487548626711463447999856637829388331198097739153313004334055973632318 ; old columns 2 of 3 [orphan]
+13:34:36 done  58_3 W=1,3 cut=40 prec=30 : VERDICT: NOT hyperelliptic smallest singular value 2.81380483986577910080544788521E-12 ; old columns 2 of 4
+13:49:52 done  26_15 W=1,3,10,13,30,39,130,390 cut=40 prec=30 : VERDICT: HYPERELLIPTIC smallest singular value 3.84910686346111789582079598096E-13 ; old columns 3 of 3
+13:49:52 start 22_21 W=1,2,11,21,22,42,231,462 cut=40 prec=30 npts=18

@@ -480,7 +480,7 @@ Derivation: `oldforms_derivation.txt`. Validation: the count equals the genus at
 X_0^34(7)/w_17 with the same lattice count once both use the same Eichler order (`SEED`); a direct
 W-invariance check of every column, with the rejected characters carried along, measures +1 on the
 fixed columns and −1 on the rejected ones to 7e-14; twelve stored-model controls across both signs
-agree (six hyperelliptic with residuals 1e-12..1e-14, six not, including the proven smooth
+agree (seven hyperelliptic with residuals 1e-12..1e-14 — including 26_15/{1,3,10,13,30,39,130,390}, all three differentials old across three levels, the two-prime path — and seven not, including the proven smooth
 quartics 46_3/w_3 and 34_3/w_2 and the genus-4 57_2/{1,2} with exactly one relation).
 First tentative verdict: **X_0^141(2)/{1,6,94,141} NOT hyperelliptic** at cutoff 40 (smallest
 singular value 0.21, two of its three differentials old). The rest run from `runq2.sh` /
