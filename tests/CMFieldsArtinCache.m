@@ -4,9 +4,8 @@
 // K is kept alive.  When the field of definition is K itself (the Atkin-Lehner group acts as all
 // of Gal(H_R/K), or h(R) = 1 in the slow routine), the abelian extension's number field is K, and
 // Magma's ArtinMap caches its result on that field: the second call would reuse the map of the
-// first modulus and reject a prime dividing it ("Element is not in the codomain").  Found by
-// S. Hashimoto on PR #109 (2026-10-14); it only showed in CI because locally K was freed between
-// the calls.
+// first modulus and reject a prime dividing it ("Element is not in the codomain").  The failure
+// appears only when K stays alive between the calls, which is why a local run can miss it.
 //
 // The expected fields are what the routines return when the two discriminants are computed in the
 // opposite order in a fresh process (a regression value, not an independent verification); each
