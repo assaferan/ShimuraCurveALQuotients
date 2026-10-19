@@ -1431,14 +1431,14 @@ with AllowMissing the divisors that admit no form are reported and the others re
             end if;
             continue;
         end if;
-        // With prescribed divisors every pole is given per key, so the (infty, P, Q) sweep
-        // collapses to a single pass; the loop variables below are then not read.  What is
-        // swept instead is the pole order at oo: a form with the prescribed CM divisor may need
-        // coefficients at exponents that meet no CM point, deeper than the window n_oo + k - 1
-        // the hauptmodul search uses (at X_0^142(1) the Guo-Yang divisors need pole order
-        // between 55 and 102).  Each rung widens the window by one power of t.
+        // A form with a prescribed CM divisor may need coefficients at exponents that meet no CM
+        // point, so the pole order at oo is swept beyond the window n_oo + k - 1 that suffices
+        // for a hauptmodul; each rung widens it by one power of t.
         pole_ladder := prescribed select ([0] cat (IsEmpty(PoleOrders) select [n_oo + k - 1 + j*k : j in [1..6]] else PoleOrders))
                                   else [0];
+        // before the ladder too, so a pool too small to enter the sweep below still reports every
+        // divisor as not found rather than leaving this unset
+        missing := [i : i in Keys(rams)];
         for P_rung in pole_ladder do
         for infty in (prescribed select pts[1..1] else pts) do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
@@ -1455,6 +1455,8 @@ with AllowMissing the divisors that admit no form are reported and the others re
                 end if;
 
                 found_all := true;
+                // the keys that fail in THIS pass; a key found at an earlier rung is skipped
+                // below and so stays out of it
                 missing := [];
                 for i in Keys(rams) do
                     // a prescribed divisor keeps the form of the first rung that gave one

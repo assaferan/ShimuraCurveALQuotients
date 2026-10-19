@@ -11,17 +11,24 @@
 // the relation between them, of bidegree (2, 2), is read off their values at nine or more CM points.
 // tests/GuoYangExample42.m runs the whole recipe on X_0^142(1)* against the paper's own numbers.
 //
-// Where Guo-Yang's Assumption 40 enters.  A Borcherds form transforms under the Atkin-Lehner
-// group by a character, and it is a function on the star quotient only when that character is
-// trivial, which Guo-Yang assume (their Assumption 40; Example 42 is stated under it).  The
-// search here does not check the character: it only finds a form whose divisor on the star is the
-// prescribed one.  Some power of the form is a function, so the prescribed divisor, which is
-// rational, has a class of finite order in E(Q).  When E(Q) has no torsion the class is trivial,
-// a function g with that divisor exists, and the form divided by g has no zeros or poles, so the
-// character is trivial and the assumption holds; this is the case at X_0^142(1)* (142a1 has
-// trivial torsion).  When E(Q) has torsion the form may be a root of a function, its Schofer
-// values are then those of the root, and a model built from them is conditional on the
-// assumption.
+// Where Guo-Yang's Assumption 40 enters.  A Borcherds form carries a character of the group that
+// uniformises the star quotient (Guo-Yang, Lemma 5 and Remark 41), and it is a function on the
+// star only when that character is trivial, which Guo-Yang assume (their Assumption 40; Example
+// 42 is stated under it).  The search here does not check the character: it only finds a form
+// whose divisor on the star is the prescribed one.
+// When the principal part of the input is INTEGRAL, that character has finite order (Borcherds,
+// "The Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97 (1999), proof of
+// Theorem 4.1); the search is run with IntegralSolution so that it is.  Then some power of the
+// form is a function, so the prescribed divisor, which is rational, has a class of finite order
+// in E(Q); and the order of the character is exactly the order of that class, since psi^n is a
+// function precisely when n times the divisor is principal.
+// When E(Q) has no torsion the class is therefore trivial, a function g with that divisor exists,
+// and the form divided by g has no zeros or poles, so the character is trivial and the assumption
+// holds: this is the case at X_0^142(1)* (142a1 has trivial torsion).  When E(Q) has rational
+// torsion the assumption is a genuine hypothesis -- the form may be a root of a function, and its
+// Schofer values are then those of the root -- and a model built from such forms is conditional
+// on it.  Replacing each form by its e-th power, e the exponent of the torsion of E(Q), gives
+// functions for certain, with the e-th powers of the values.
 
 import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
 
