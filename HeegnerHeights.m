@@ -189,7 +189,7 @@ function counts_mod_p(ctx, pts)
     return counts;
 end function;
 
-intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 8) -> List
+intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 8, DegreeFactor := 1) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
 X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
@@ -203,13 +203,17 @@ an earlier one by a rational point of E, or their negatives, are omitted. Effort
 MordellWeilGroup, which must prove the rank and the saturation of E and of the twists; raise it when
 it cannot. A branch place whose discriminant is not fundamental is beyond the formula as implemented:
 its multiple of the generator of E(Q) is searched over the integers of absolute value at most
-FreeWindow instead, so for such a branch locus the list is complete only within that window.}
+FreeWindow instead, so for such a branch locus the list is complete only within that window.
+DegreeFactor multiplies the degree of the map that enters the formula: it is 1 when the quaternionic
+form is the Jacquet-Langlands lift of a newform of level D*N, and 2 has been measured at X_0^141(2),
+where the form is old at 2 and E has conductor D*N/2 (the predicted heights come out twice as large,
+which is what makes them heights of lattice points).}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
     require &and[b[4] in {1, 2} : b in branch] and &+[b[4] : b in branch] eq 4:
         "branch places of degree 1 or 2, of total degree 4, are expected";
-    degf := 2*#W;
+    degf := 2*#W*DegreeFactor;
     G0, mG0, rk0, sat0 := MordellWeilGroup(E : Effort := Effort);
     require rk0 and sat0: "the Mordell-Weil group of E is not proved";
     gQ := [mG0(G0.i) : i in [1..Ngens(G0)] | Order(G0.i) eq 0];
@@ -272,9 +276,17 @@ FreeWindow instead, so for such a branch locus the list is complete only within 
             k := Round(kr);
         else
             // A branch place of degree 1: every conjugate of the CM point has the same image in E, so
-            // the component of every nontrivial character vanishes.
-            require &and[c[6] lt 1e-10 : c in comps | c[1] ne 1 and c[3]]:
-                "a branch place of degree 1 whose nontrivial characters do not all have vanishing components";
+            // the component of every nontrivial character should vanish. Where it does not, the
+            // admissibility rule is being applied outside the case it was checked on, and the
+            // trivial character's component is not to be trusted either, so the place is searched.
+            if not &and[c[6] lt 1e-10 : c in comps | c[1] ne 1 and c[3]] then
+                vprintf HeegnerHeights: "disc %o: a rational place with a nonvanishing component of a nontrivial character; searching it over |n| <= %o\n", b[2], FreeWindow;
+                T1, mT1 := TorsionSubgroup(EF);
+                Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d, free > | e := e, F := F,
+                    EF := EF, Gm := Gm, k := 0, bp := Rationals()!0, h := 1,
+                    tors := [mT1(t) : t in T1], d := b[2], free := true >);
+                continue;
+            end if;
             vprintf HeegnerHeights: "disc %o: the branch place is rational\n", b[2];
         end if;
         // The trivial character's component is (h/e) times the sum of the points over the place minus
