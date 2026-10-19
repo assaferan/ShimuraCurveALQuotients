@@ -33,9 +33,10 @@ nmax := Max(60, Ceiling(D*N*(cutv/(4*Pi(RR)))^2) + 20);
 NFs := Newforms(CuspForms(Gamma0(D*N), k));
 sel := [];
 for orb in NFs do
+    if Level(Parent(orb[1])) ne D*N then continue; end if;
+    KF := BaseRing(Parent(orb[1]));
+    css := [];
     for f in orb do
-        if Level(Parent(f)) ne D*N then continue; end if;
-        KF := BaseRing(Parent(f));
         qq := qExpansion(f, nmax+1);
         if Degree(KF) eq 1 then
             cs := [ CC ! (Rationals() ! Coefficient(qq, n)) : n in [1..nmax] ];
@@ -45,6 +46,13 @@ for orb in NFs do
             cs := [ CC | Evaluate(Polynomial(Rationals(), Eltseq(Coefficient(qq,n))), cj[idx])
                     : n in [1..nmax] ];
         end if;
+        Append(~css, cs);
+    end for;
+    // the conjugates of an orbit ordered by their coefficients: the generator of the coefficient
+    // field, hence Magma's order of its conjugates, is not the same from one process to the next,
+    // and chunks must agree on which conjugate is which column
+    Sort(~css, func< a, b | Sign(&+[ Sign(Round(10^12*(Real(a[n]) - Real(b[n])))) * 2^(-n) : n in [1..Min(60, #a)] ]) >);
+    for cs in css do
         inv := true;
         for m in W do
             if m eq 1 then continue; end if;

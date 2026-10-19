@@ -1,0 +1,19 @@
+=== X_0^1326(1)/[ 1, 17, 78, 1326 ], u = w_2
+gnorm(t) = 83521/6561*x^4 + 289/81*x^3 - 935/324*x^2 + x + 1
+X genus 3; X/w_2 has group [ 1, 2, 17, 34, 39, 78, 663, 1326 ] and genus 1
+trace-formula counts taken at 31 good odd primes below 150
+the two numbers can only be supported on 6 primes: [ 2, 3, 5, 11, 13, 17 ]
+kappa: 25 primes give a symbol, 0 unusable, 7 unknowns
+kappa kernel dimension 0
+kappa = 17
+X_0^1326(1)/w_2 VERIFIED at 62 counts: Hyperelliptic Curve defined by y^2 = 1419857/6561*x^4 + 4913/81*x^3 - 15895/324*x^2 + 17*x + 17 over Rational Field
+mu: 30 primes give a symbol, 0 unusable, 7 unknowns
+mu kernel dimension 0
+mu = -34
+
+MODEL X_0^1326(1)/[ 1, 17, 78, 1326 ] :
+   Hyperelliptic Curve defined by y^2 + (x^4 + x^2)*y = 4*x^8 - 5*x^6 - 14*x^4 - 18*x^2 + 68 over Rational Field
+genus 3 (formula says 3)
+VERIFIED 62 point counts over F_p and F_p^2 against the trace formula (0 skipped for bad reduction), at 31 primes below 150
+no model file for this base
+HYPFINISH3 DONE

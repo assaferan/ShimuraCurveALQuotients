@@ -487,3 +487,25 @@ singular value 0.21, two of its three differentials old). The rest run from `run
 `items17.txt`; one line per run in `oldforms-logs/queue.log`. Seven of the seventeen are entirely
 old (141_2/W1, 57_10, 15_46, 21_34, 77_10, 21_58, 39_34). ⚠ `QuaternionOrder(A, N)` depends on the
 random state; use `SEED` when comparing runs.
+
+## hyp16: three defects found while writing the package tests (2026-10-19; package on main's side, PR #127)
+
+* **Galois conjugates are not labelled consistently across processes** (the generator of the
+  coefficient field changes), so chunked evaluations of a base with a quadratic newform orbit can have
+  the two conjugate columns swapped between chunks. The 6_323 cutoff-46 data had "no conic" for this
+  reason while each chunk had one at 1e-17; `fixconj.m` swaps columns 2, 3 in chunks 2 and 3 and the
+  conic returns to 1.8e-16 (`ev_6_323_c46f.m`). `hypeval_part.m` now sorts conjugates by their
+  coefficients. ⚠ The 6_385 and 714_5 runs were launched before the fix: repair their merged dumps
+  with `fixconj.m` before fitting.
+* **The base point matters more than expected**: at one Eichler order of X_0^46(3) the default z1 gave
+  W-invariance deviations of 1e-3 at cutoff 30 (another base point 1e-9); the package picks z1 among
+  six candidates by the smallest relative diagonal value. Mechanism only partly understood.
+* **A verdict at a small cutoff can depend on the order**, so tests fix the order by its Z-basis.
+
+**A new case, reported not solved — 6_323.** The repaired values fit perfectly (conic 2.8e-16) but
+give B = 22468/134689 rational and A, C complex conjugate (−0.1031 ∓ 0.1124 i): the fixed points of u
+on the conic are conjugate over an imaginary quadratic field, the quartic lives there and the Galois
+action is x ↔ 1/x. The descent to Q is not implemented. 6_385 and 714_5 may be in the same class.
+
+1326_1 via w_2: invariants −935/324, 1296/3025, −935/324, κ = 17, μ = −34; the model is Q-isomorphic
+to the exact one from the height route; check (a) now passes with the per-pair counting of CM fields.
