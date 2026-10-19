@@ -93,8 +93,8 @@ procedure test_formula()
     obs := branch_heights(E, E0, mn, u);
     for dd in [<-24, 8>, <-1848, -88>] do
         comps, h := HeegnerHeightComponents(E, D, N, 2*#W, dd[1]);
-        adm := [cc : cc in comps | cc[3] and cc[6] gt 0];
-        assert #adm eq 1;
+        adm := [cc : cc in comps | cc[1] ne 1 and (IsSquare(cc[1]*dd[2]) or IsSquare(cc[2]*dd[2]))];
+        assert #adm eq 1 and adm[1][3] and adm[1][6] gt 0;
         pred := adm[1][6] * (2/h)^2;
         got := [o[3] : o in obs | o[1] eq dd[2]];
         assert exists{hh : hh in got | Abs(hh - pred) lt 1e-10};
@@ -162,8 +162,8 @@ procedure test_model(D, N, W, F, Elabels, quotients, kexp)
         halves := DivisionPoints(Gm, 2);
         while #halves gt 0 do Gm := halves[1]; halves := DivisionPoints(Gm, 2); end while;
         comps, h := HeegnerHeightComponents(E, D, N, 2*#W, b[2]);
-        adm := [c : c in comps | c[3] and c[6] gt 0];
-        assert #adm eq 1;
+        adm := IsSquare(dF*b[2]) select [c : c in comps | c[1] eq 1] else [c : c in comps | c[1] ne 1 and (IsSquare(c[1]*dF) or IsSquare(c[2]*dF))];
+        assert #adm eq 1 and adm[1][3] and adm[1][6] gt 0;
         k := Sqrt(adm[1][6] * (2/h)^2 / Height(Gm));
         assert Abs(k - kexp) lt 1e-6;
     end for;
