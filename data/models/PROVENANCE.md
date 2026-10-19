@@ -930,6 +930,34 @@ dividing twice the denominators of the `b`'s.
   Mordell–Weil computations, and on 3570x1 Magma does not prove the group of the twist even then, so
   as at X_0^6(385) uniqueness within the isogeny class is not yet settled.
 
+## X_0^15(38)/{1,2,15,19,30,38,285,570}: four rational branch points, one of them outside the formula (branch models-1326-210)
+
+    magma -b D:=15 N:=38 W:=1,2,15,19,30,38,285,570 U:=2 tools/heegner_model.m < /dev/null
+
+**`y^2 = 81x^8 + 180x^6 + 2062x^4 - 1660x^2 + 361`**, over `E = X/<W, w_2>` = 570e4. Every branch place
+has degree 1 here, which changes two things.
+
+First, there is no minus part at any place, so the lattice test that picks the curve inside the
+isogeny class is unavailable. Its replacement is the integrality of the rational parts: the sum of the
+points over place i is `xi_E ± b_i·G`, and the points are rational, so `b_i − b_j` must be an integer
+for some choice of signs. On 570e1 and 570e3 the `b_i` come out 1, 3/2, 1/2, which no common shift
+makes integral, and on 570e2 they are not rational at all; on 570e4 they are 2, 3, 1. That is what
+identifies the quotient, and it is a genuine test: three of the four curves are excluded by it.
+
+Second, the branch point of discriminant −12 belongs to an order of conductor 2, and the formula as
+implemented is for fundamental discriminants, so its position is not predicted. The search covers the
+integers of absolute value at most 8 for that place (`FreeWindow`), which leaves one configuration;
+its value is 0, that is, the branch point is `xi_E` up to torsion. **Uniqueness therefore rests on
+that window**, unlike the other models in these sections; the model itself passes the same checks as
+the others. The three predicted places came out at 2, 3 and 1 times the generator, with the signs the
+search selected.
+
+**Checks that were predictions.** The genus is 3; the point counts agree with the trace formula at
+the 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; the primes of bad
+reduction are exactly 2, 3, 5 and 19, the primes of `DN`; the quotient by `x -> -x` is 570e4; the
+automorphism group has order 4; and all four branch points are rational on X, as the CM computation
+says.
+
 **Checks that were predictions.** For each: the genus of the model is 3; point counts agree with the
 trace formula at the 41 or 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
 reduction is exactly at the primes of `DN`; the quotient by `x -> -x` is the predicted elliptic curve;
