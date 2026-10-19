@@ -808,3 +808,30 @@ discriminant; the only component it does not give is the one that depends on the
 and that component matters only modulo 2 (translating both branch points by a rational point gives
 an isomorphic cover), so the enumeration is complete. Both models are therefore proved, given the
 trace-formula point counts.
+
+## X_0^39(11)/{1,11,39,429} and X_0^55(7)/{1,35,55,77}: the two Nelson candidates, proved (branch models-1326-210)
+
+Same construction as the two quotients above, run with
+
+    magma -b D:=39 N:=11 W:=1,11,39,429 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=55 N:=7 W:=1,35,55,77 U:=5 tools/heegner_model.m < /dev/null
+
+**X_0^39(11)/{1,11,39,429}: `y^2 = -891x^8 + 1044x^6 + 214x^4 - 124x^2 + 13`.** `E = X/<W, w_3>` is
+429b1 (the lattice test excludes the other five curves of 429b). Branch points of discriminants −132
+(class number 4) over `Q(sqrt -11)` and −52 (class number 2) over `Q(sqrt 13)`; the genus characters
+attached to those fields, (−11, 12) and (−4, 13), give minus parts exactly equal to the generators of
+`E(F)^-` (`E` has rank 1, so the trivial character is admissible as well, but its component lies in
+`E(Q)` and cancels in `P - Pbar`). One surviving configuration, hyperelliptic.
+
+**X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`.** `E = X/<W, w_5>` is 385a1
+(a2–a4 excluded). Branch points −1540 (class number 8) over `Q(sqrt -35)` and −20 (class number 2) over
+`Q(sqrt 5)`, characters (−35, 44) and (−4, 5), minus parts the generators. One survivor, hyperelliptic.
+
+**Both are Q-isomorphic to the models fitted numerically from Nelson's values** (campaign branch,
+`vvdata/weyl-campaign/nelson/hyp16/`): `y^2 + (x^4+x^3+x^2+x+1)y = -3x^7 - 22x^6 - 55x^5 - 69x^4 - 55x^3
+- 22x^2 - 3x` and `y^2 + (x^4+x+1)y = x^8 + 5x^7 + 13x^6 + 21x^5 + 24x^4 + 19x^3 + x^2 - 6x - 2`, whose
+invariants had been recognised at 26 digits. With this the numerical fits become proved models, given
+the trace formula and Cai–Shu–Tian's theorem. The automorphism group has order 4 (one residual
+Atkin–Lehner involution and the hyperelliptic one), as the Atkin–Lehner group of order 8 modulo `W`
+requires; the discriminants of the stored octics carry a factor 2 that the odd-characteristic form with
+an `h` term does not.
