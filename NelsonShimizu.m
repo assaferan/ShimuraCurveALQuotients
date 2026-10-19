@@ -788,32 +788,19 @@ function ComplexKernel(My)
     return sv, (rc lt rw select vcol else vrow), Minimum(rc, rw);
 end function;
 
-intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeCap := 150) -> CrvHyp, Rec
-{From a value record of a genus-3 quotient (NelsonCircleValues, or ReadNelsonValues) to a
- hyperelliptic model over Q.  Involution names the Atkin-Lehner element u pinning the coordinate
- (default: the first Hall divisor outside W under which exactly one column is invariant, i.e.
- X/<W,u> has genus 1).  Steps: the canonical conic from the centres and one point of each circle;
- the coordinate x with u : x -> -x; x and dx/dz at each centre by Cauchy's formula; the quartic
- g in t = x^2 by least squares, with the centres beyond the first five as predictions; the
- invariants A, B, C recognised by the certainty criterion with the noise taken from their
- imaginary parts (Digits caps the digits claimed; default a third of the precision); then
- NelsonTwistConstants.  When B is rational but A and C are not, the fixed points of u on the
- conic are conjugate over a quadratic field K; K is read off the fields of definition of the
- fixed points of u on X, A is recognised in K, and NelsonQuadraticTwist gives the curve over Q
- (or, when the conic has no rational point, the K-model with its descent datum, returned as a
- curve over K; kappa and mu then hold r and e).  Fails with a message at the first step that
- does not resolve.  The record returned carries every diagnostic (conic singular values,
- u-equivariance, derivative convergence, worst prediction, the complex invariants, kappa, mu, the
- quartic).  Numerical: the model is recognised, not derived, and the point counts confirm only
- the isogeny class.}
+// The geometry of the model step -- conic, coordinate, Cauchy derivative, quartic -- which
+// NelsonMarkedInvariants exposes and NelsonHyperellipticModel continues by recognising the
+// three invariants.  Returns them as complex numbers together with the involution and the
+// diagnostics.
+function MarkedInvariantsOf(V, Involution)
     g := V`g;
-    require g eq 3 : "genus 3 only";
+    error if not (g eq 3), "genus 3 only";
     prec := V`prec;
     CC := ComplexField(prec); RR := RealField(prec); Ic := CC.1; R6 := RealField(8);
     np := V`npc; nc := V`ncirc; rho := RR ! V`rho;
     pts := V`pts; HALLS := V`halls; ALSIG := V`alsig; ISCTR := V`isctr;
-    require #pts eq nc*(np+1) : "point list does not tile the circles";
-    require forall{ j : j in [1..#pts] | exists{ v : v in V`vals[j] | v ne 0 } } : "some points carry no value (incomplete chunks?)";
+    error if not (#pts eq nc*(np+1)), "point list does not tile the circles";
+    error if not (forall{ j : j in [1..#pts] | exists{ v : v in V`vals[j] | v ne 0 } }), "some points carry no value (incomplete chunks?)";
     Gv := [ [ CC | V`vals[j][i] / Imaginary(pts[j]) : i in [1..g] ] : j in [1..#pts] ];
     diag := rec< recformat< u, conicsv, conicres, equivariance, normalform, cauchy, centremean, xscale,
                             worstprediction, oddcoefficients, lsresidual, A, B, C, Arat, Brat, Crat,
@@ -823,14 +810,14 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
     uix := 0;
     if Involution ne 0 then
         uix := Index(HALLS, Involution);
-        require uix ne 0 : "Involution is not a Hall divisor of D*N";
-        require #[ r : r in ALSIG | r[uix] eq 1 ] eq 1 : "X/<W,u> does not have genus 1 for this u";
+        error if not (uix ne 0), "Involution is not a Hall divisor of D*N";
+        error if not (#[ r : r in ALSIG | r[uix] eq 1 ] eq 1), "X/<W,u> does not have genus 1 for this u";
     else
         for i in [1..#HALLS] do
             if HALLS[i] eq 1 then continue; end if;
             if #[ r : r in ALSIG | r[i] eq 1 ] eq 1 then uix := i; break; end if;
         end for;
-        require uix ne 0 : "no Atkin-Lehner involution with a genus-1 quotient";
+        error if not (uix ne 0), "no Atkin-Lehner involution with a genus-1 quotient";
     end if;
     um := HALLS[uix]; diag`u := um;
     pind := [ j : j in [1..g] | ALSIG[j][uix] eq 1 ][1];
@@ -849,8 +836,8 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
     sv, kvec, kres := ComplexKernel(Mx);
     diag`conicsv := sv; diag`conicres := kres;
     vprintf NelsonShimizu, 1: "conic singular values %o\n", [ R6 ! x : x in sv ];
-    require sv[2]/sv[1] ge 10^4 : "no clean conic through the canonical image";
-    require kres le 10^(-8) : "neither reading of the SVD gives a kernel vector";
+    error if not (sv[2]/sv[1] ge 10^4), "no clean conic through the canonical image";
+    error if not (kres le 10^(-8)), "neither reading of the SVD gives a kernel vector";
     qc := [ CC | kvec[j]/cn[j] : j in [1..#mons] ];
     Q := ZeroMatrix(CC, 3, 3);
     for c in [1..#mons] do
@@ -910,7 +897,7 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
     // the quartic in t = x^2: five unknowns, the other centres predictions
     ts := [ xx^2 : xx in xs ];
     nun := 5;
-    require nc ge nun + 1 : "at least six circles are needed to leave a prediction";
+    error if not (nc ge nun + 1), "at least six circles are needed to leave a prediction";
     Amx := Matrix(CC, nun, nun, &cat[ [ ts[j]^(i-1) : i in [1..nun] ] : j in [1..nun] ]);
     bv := Matrix(CC, nun, 1, [ ys[j]^2 : j in [1..nun] ]);
     cf := Amx^(-1)*bv;
@@ -941,6 +928,42 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
 
     A := gc[1]*gc[3]/gc[2]^2; Bq := gc[2]*gc[4]/gc[3]^2; Cq := gc[3]*gc[5]/gc[4]^2;
     diag`A := A; diag`B := Bq; diag`C := Cq;
+    return A, Bq, Cq, um, diag;
+end function;
+
+intrinsic NelsonMarkedInvariants(V::Rec : Involution := 0) -> FldComElt, FldComElt, FldComElt, RngIntElt, Rec
+{The three marked invariants A, B, C of the quartic of a genus-3 value record, as complex numbers,
+ with the Atkin-Lehner element u that fixes the coordinate and the diagnostics of the fit (conic
+ singular values, u-equivariance, derivative convergence, worst prediction, least-squares
+ residual).  This is NelsonHyperellipticModel without the step that recognises them as rational
+ numbers, which is what a comparison against a model known by other means needs: the invariants
+ of such a model can be compared with these whether or not the certainty criterion accepts them.
+ Numerical.}
+    A, Bq, Cq, um, diag := MarkedInvariantsOf(V, Involution);
+    return A, Bq, Cq, um, diag;
+end intrinsic;
+
+intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeCap := 150) -> CrvHyp, Rec
+{From a value record of a genus-3 quotient (NelsonCircleValues, or ReadNelsonValues) to a
+ hyperelliptic model over Q.  Involution names the Atkin-Lehner element u pinning the coordinate
+ (default: the first Hall divisor outside W under which exactly one column is invariant, i.e.
+ X/<W,u> has genus 1).  Steps: the canonical conic from the centres and one point of each circle;
+ the coordinate x with u : x -> -x; x and dx/dz at each centre by Cauchy's formula; the quartic
+ g in t = x^2 by least squares, with the centres beyond the first five as predictions; the
+ invariants A, B, C recognised by the certainty criterion with the noise taken from their
+ imaginary parts (Digits caps the digits claimed; default a third of the precision); then
+ NelsonTwistConstants.  When B is rational but A and C are not, the fixed points of u on the
+ conic are conjugate over a quadratic field K; K is read off the fields of definition of the
+ fixed points of u on X, A is recognised in K, and NelsonQuadraticTwist gives the curve over Q
+ (or, when the conic has no rational point, the K-model with its descent datum, returned as a
+ curve over K; kappa and mu then hold r and e).  Fails with a message at the first step that
+ does not resolve.  The record returned carries every diagnostic (conic singular values,
+ u-equivariance, derivative convergence, worst prediction, the complex invariants, kappa, mu, the
+ quartic).  Numerical: the model is recognised, not derived, and the point counts confirm only
+ the isogeny class.}
+    A, Bq, Cq, um, diag := MarkedInvariantsOf(V, Involution);
+    g := V`g; prec := V`prec;
+    CC := ComplexField(prec); RR := RealField(prec); R6 := RealField(8);
     acc := Digits eq 0 select Maximum(8, prec div 3) else Digits;
     okA, Ar := RecogniseRational(A, acc);
     okB, Br := RecogniseRational(Bq, acc);

@@ -10,13 +10,12 @@
 //   FILE         a stored model in data/models/ (read there, not retyped)
 //   HAND         follows from the definitions; the argument is in the comment
 //   MAGMA        a Magma built-in (not this repo's code)
-//   EXACT MODEL  the equation of X_0^1326(1)/<w_17, w_78> obtained by an exact construction
-//                (the double cover of the elliptic curve 1326b2 branched at the CM points of
-//                discriminants -24 and -408 prescribed by the heights of Heegner points), which
-//                agrees with the trace formula at all primes up to 1000.  That construction is
-//                pull request #124; its model file is read here once it is merged, and until then
-//                the equation is taken from the line below and checked against the file whenever
-//                the file is present
+//   EXACT MODEL  an equation read from data/models/, obtained by an exact construction: the
+//                double cover of an elliptic quotient branched at the CM points prescribed by the
+//                heights of Heegner points (for X_0^1326(1)/<w_17, w_78>, over 1326b2 with branch
+//                points of discriminants -24 and -408, agreeing with the trace formula at all
+//                primes up to 1000).  How each stored model was built is recorded in
+//                data/models/PROVENANCE.md
 //   CODE-DERIVED a value produced by this code with no independent source; a regression value
 //
 // Cutoffs are kept small so that the whole file runs in a few minutes; the verdicts need only a
@@ -103,16 +102,11 @@ assert diag`u eq 2;
 assert diag`Arat eq -935/324 and diag`Brat eq 1296/3025 and diag`Crat eq -935/324;   // CODE-DERIVED
 assert diag`kappa eq 17 and diag`mu eq -34;                                          // CODE-DERIVED
 assert Genus(C) eq 3;
-fexact := 272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17;
-if FileExists("data/models/models_1326_1.m") then
-    m1326 := eval (Read("data/models/models_1326_1.m") cat "\nreturn models;");
-    key1326 := [Integers()|1,17,78,1326];
-    if IsDefined(m1326, key1326) and Type(m1326[key1326][1][2]) ne MonStgElt then
-        stored1326 := m1326[key1326][1][2];
-        assert IsIsomorphic(HyperellipticCurve(stored1326), HyperellipticCurve(fexact));
-        fexact := stored1326;
-    end if;
-end if;
+m1326 := eval (Read("data/models/models_1326_1.m") cat "\nreturn models;");
+key1326 := [Integers()|1,17,78,1326];
+e1326 := m1326[key1326][1];
+assert e1326[1] eq 3 and e1326[3] eq 0;
+fexact := e1326[2];
 Cexact := HyperellipticCurve(fexact);
 assert IsIsomorphic(C, Cexact);                                                      // EXACT MODEL
 // the diagnostics must show what the construction relies on: a clean conic, u-equivariance of
@@ -281,3 +275,68 @@ catch e
     refused := true;
 end try;
 assert refused;
+
+// [13] EXACT MODEL: the fit checked against a model known exactly at a base where the certainty
+//      criterion REFUSES the invariants, which is what tells a height limit from an error.  The
+//      stored model of X_0^6(185)/<w_2, w_15, w_111> is an even octic, so the residual
+//      Atkin-Lehner involution is already x -> -x there and its three marked invariants are
+//      exact rationals.  The banked values (data/nelson/values_6_185.m, cutoff 46, 80 digits, 22
+//      centres; produced by
+//        B := NelsonBasis(6, 185, {1,2,15,30,111,185,222,370} : Precision := 80, Cutoff := 46, OrderBasis := obas);
+//        V := NelsonCircleValues(B, ctr, 16, RealField(80)!3/100);
+//      with obas the Z-basis in the file and ctr fourteen points from NelsonSamplePoints together
+//      with eight where |x| is large) must reproduce them, and they do to about 2e-12 relative.
+//      Which of the two outer invariants is which is not determined: exchanging the two roots of
+//      the binary form is x -> 1/x, which reverses the quartic, so the fit fixes the pair and the
+//      middle invariant, and either ordering is correct.  The relative differences are
+//      CODE-DERIVED; the exact invariants are not.
+//      The refusal is then shown to be correct rather than conservative: the criterion accepts a
+//      fraction p/q only when q^2 eps < 1/2 with eps the noise it reads off the imaginary part,
+//      and here that number is about 15 for the invariant of denominator 15792200 and 0.8 for the
+//      one of denominator 3721, both refused, against 0.003 for the one of denominator 137288,
+//      which it accepted.  The margin at 3721 is thin, which is the measure of how much more
+//      accuracy that base would need.
+V185 := ReadNelsonValues("data/nelson/values_6_185.m");
+assert V185`D eq 6 and V185`N eq 185 and V185`g eq 3 and V185`cut eq 46 and V185`prec eq 80;
+assert V185`W eq [1,2,15,30,111,185,222,370] and V185`ncirc eq 22;
+m185 := eval (Read("data/models/models_6_185.m") cat "\nreturn models;");
+e185 := m185[[Integers()|1,2,15,30,111,185,222,370]][1];
+assert e185[1] eq 3 and e185[3] eq 0;
+f185 := e185[2];
+assert &and[ Coefficient(f185, i) eq 0 : i in [1,3,5,7] ];      // even: u acts as x -> -x
+cf := [ Coefficient(f185, 2*j) : j in [0..4] ];
+exA := cf[1]*cf[3]/cf[2]^2; exB := cf[2]*cf[4]/cf[3]^2; exC := cf[3]*cf[5]/cf[4]^2;
+assert Denominator(exA) eq 15792200 and Denominator(exB) eq 3721 and Denominator(exC) eq 137288;
+A185, B185, C185, um185, d185 := NelsonMarkedInvariants(V185);
+assert um185 eq 3;
+CCp := Parent(A185);
+rel := func< z, q | Abs(z - CCp ! q)/Abs(CCp ! q) >;
+assert rel(B185, exB) lt 10^(-10);
+direct := rel(A185, exA) lt 10^(-10) and rel(C185, exC) lt 10^(-10);
+reversed := rel(A185, exC) lt 10^(-10) and rel(C185, exA) lt 10^(-10);
+assert direct or reversed;
+// the certainty criterion's decision, reproduced from the noise and the exact denominators
+qeps := func< z, q | Denominator(q)^2 * 20 * Abs(Imaginary(z)) >;
+tall := direct select A185 else C185;        // the invariant of denominator 15792200
+short := direct select C185 else A185;       // the invariant of denominator 137288
+assert qeps(tall, exA) gt 1;                 // refused, and not marginally
+assert qeps(B185, exB) gt 1/2;               // refused
+assert qeps(short, exC) lt 1/100;            // accepted
+
+// [14] EXACT MODEL against CODE-DERIVED: at the three bases where this pipeline and the exact
+//      construction have both produced a model, they must agree over Q.  The equations below are
+//      what this code printed (regression values, with the commands in data/nelson/ and in the
+//      write-up); the curves they are compared with are read from data/models/, where they were
+//      put by the Heegner-height construction, which shares no step with the evaluation here.
+//      X_0^1326(1) is also the model recovered in [5] from the banked values.
+pairs := [* <[Integers()|1,11,39,429], "data/models/models_39_11.m",
+             HyperellipticCurve(-3*x^7-22*x^6-55*x^5-69*x^4-55*x^3-22*x^2-3*x, x^4+x^3+x^2+x+1)>,
+           <[Integers()|1,35,55,77], "data/models/models_55_7.m",
+             HyperellipticCurve(x^8+5*x^7+13*x^6+21*x^5+24*x^4+19*x^3+x^2-6*x-2, x^4+x+1)>,
+           <key1326, "data/models/models_1326_1.m", C> *];
+for pr in pairs do
+    ms := eval (Read(pr[2]) cat "\nreturn models;");
+    es := ms[pr[1]][1];
+    assert es[1] eq 3;
+    assert IsIsomorphic(pr[3], HyperellipticCurve(es[2] + es[3]^2/4));
+end for;
