@@ -21,19 +21,29 @@
 // character is trivial and the assumption holds; this is the case at X_0^142(1)* (142a1 has
 // trivial torsion).  When E(Q) has torsion the form may be a root of a function, its Schofer
 // values are then those of the root, and a model built from them is conditional on the
-// assumption.  The character can be dealt with exactly.  W is an elementary abelian 2-group, so
-// every character has order at most 2 and the square of every form is a function.  A form with
-// character chi != 1 is a function on X/ker(chi), a quotient by an index-2 subgroup of W, and its
-// square has even divisor on the star, so X/ker(chi) is an etale double cover of the star and
-// has genus one.  Hence: when no index-2 quotient of the star has genus one, every Borcherds form
-// is a function, whatever the torsion of E(Q) (EtaleDoubleCovers).  When such a quotient X' exists,
-// the form psi with divisor A - P (A - P of order 2 in E(Q)) is an anti-invariant function on X',
-// its square is the function with divisor 2A - 2P in L(2P), and the sign of that square at a
-// rational CM point Q of the star is the sign of the discriminant of the field of definition of
-// the preimages of Q on X' (a rational preimage gives a rational value of psi, a quadratic pair
-// gives r*sqrt(delta) and its square r^2 delta), up to one global sign (SquareCoordinateSigns).
-// The coordinates built this way use only functions, so the model does not depend on the
 // assumption.
+//
+// The character can be decided instead of assumed.  Let psi have the prescribed divisor D on the
+// star.  If D is principal, say D = div(g), then psi/g has neither zeros nor poles, so psi is a
+// constant multiple of g: a function, with trivial character.  If D is not principal, psi is a
+// function on X' = X/ker(chi), a quotient by an index-2 subgroup of W, and div(psi) = pi^*(D) is
+// principal there; so the class of D is a nonzero element of ker(pi^* : J(X*) -> J(X')).  For a
+// double cover that kernel is trivial when pi is ramified, and is {0, epsilon} with epsilon the
+// 2-torsion class defining the cover when pi is etale.  Hence a form with nontrivial character
+// exists only over an ETALE double cover of the star, which by Riemann-Hurwitz has genus one, and
+// only for the single divisor class epsilon.
+//
+// Two consequences, and together they remove the assumption from the construction.
+//   * When no index-2 quotient of the star has genus one there is no etale double cover, so every
+//     Borcherds form on the star is a function, whatever the torsion of E(Q) (EtaleDoubleCovers).
+//   * When one exists, a form psi whose divisor is a difference of two distinct rational CM points
+//     A - P cannot have that divisor principal, so its class is epsilon and psi is anti-invariant
+//     on X'.  Then psi^2 is a function on the star, with divisor 2A - 2P; the Schofer values give
+//     |psi^2|, and its sign at a rational CM point Q of the star is +1 when the preimages of Q on
+//     X' are rational and the sign of the discriminant of their field of definition otherwise
+//     (psi takes a rational value in the first case and r*sqrt(delta) in the second), up to one
+//     global sign (SquareCoordinateSigns).  The coordinates are then functions, so the model does
+//     not depend on the assumption either.
 
 import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
 
@@ -248,8 +258,10 @@ end intrinsic;
 intrinsic EtaleDoubleCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
 {The quotients of X_0(D, N) by index-2 subgroups of the Atkin-Lehner group of the genus-one star
 Xstar that have genus one, i.e. the etale double covers of the star among the Atkin-Lehner
-quotients.  A Borcherds form with nontrivial character is a function on one of these; when the
-list is empty every Borcherds form on Xstar is a function.}
+quotients (a ramified double cover of a genus-one curve has genus at least two).  A Borcherds form
+with nontrivial character is a function on one of these, and its divisor is in the class defining
+the cover; so when the list is empty every Borcherds form on Xstar is a function and nothing built
+from such forms depends on Guo-Yang's Assumption 40.}
     require Xstar`g eq 1 : "the star must have genus one";
     return [curves[i] : i in Xstar`CoveredBy | curves[i]`g eq 1];
 end intrinsic;

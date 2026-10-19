@@ -16,18 +16,16 @@
 //     Jacobian is the elliptic curve of the rational newform of level D*M (M | N) whose
 //     Atkin-Lehner signs make it quaternionically invariant, i.e. a_p = +1 at p | D (the sign is
 //     flipped at the discriminant primes) and a_p = -1 at p || N.  The model's curve must have
-//     those traces of Frobenius at every good prime up to 100.  When the isogeny class has a
-//     single curve the model must be isomorphic to it, and then the curve is determined; when it
-//     has several, the model's curve is known up to isogeny only, since nothing here checks the
-//     character of the Borcherds forms (Guo-Yang's Assumption 40; see the header of
-//     GenusOneStar.m) and E(Q) then has torsion.
+//     those traces of Frobenius at every good prime up to 100, which identifies the isogeny class;
+//     the model itself identifies the curve in it, since the coordinates are functions on the star
+//     (see the next item).
 //   * Characters (header of GenusOneStar.m): when no index-2 quotient of the star has genus one,
 //     every Borcherds form is a function and the model does not depend on Guo-Yang's Assumption
 //     40, whatever the torsion of E(Q).  When one has (an etale double cover X' of the star), the
-//     coordinates are the functions with divisor 2A - 2P, where A - P has order two in E(Q) (found
-//     as the degree-one divisors that admit a form), with the sign at each CM point read from the
-//     field of definition of its preimages on X'; the model then uses only functions, and the
-//     partners A are checked to differ from P by a point of order two on the model.
+//     coordinates are the functions psi^2 with divisor 2A - 2P, psi a form with divisor A - P
+//     (such a divisor is never principal, so its class is forced to be the one defining the cover,
+//     which is of order two -- checked on the model), with the sign at each CM point read from the
+//     field of definition of its preimages on X'.  The model then uses only functions either way.
 //   * Every CM point of fundamental discriminant and class number <= bd that is rational on the
 //     star (the pool of RationalandQuadraticCMPoints, elliptic points included) is placed on the
 //     minimal model, as a point and as an element of the Mordell-Weil group (origin: the CM point
@@ -209,11 +207,14 @@ printf "Jacobian check: traces at %o good primes match the newform(s) %o\n", #go
        [CremonaReference(EllipticCurve(f)) : f in matches];
 error if IsEmpty(matches), "the model's curve matches no Jacobian candidate";
 for f in matches do
-    if #IsogenousCurves(EllipticCurve(f)) eq 1 then
+    nc := #IsogenousCurves(EllipticCurve(f));
+    if nc eq 1 then
         printf "  the class %o has one curve: isomorphic to it: %o\n", CremonaReference(EllipticCurve(f)), IsIsomorphic(E, EllipticCurve(f));
     else
-        printf "  the class of %o has %o curves: the curve of the star is known up to isogeny only\n",
-               CremonaReference(EllipticCurve(f)), #IsogenousCurves(EllipticCurve(f));
+        // the coordinates are functions on the star in both routes, so the model is the star
+        // curve and not merely a curve isogenous to it
+        printf "  the class of %o has %o curves; the model picks out %o\n",
+               CremonaReference(EllipticCurve(f)), nc, CremonaReference(E);
     end if;
 end for;
 
