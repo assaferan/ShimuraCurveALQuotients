@@ -189,7 +189,7 @@ function counts_mod_p(ctx, pts)
     return counts;
 end function;
 
-intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1) -> List
+intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 8) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
 X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
@@ -201,7 +201,9 @@ the twist identified by MatchCoverToCounts, noether 5 or 6, and H the hyperellip
 noether is 5 (0 when the canonical conic has no rational point). Configurations that are translates of
 an earlier one by a rational point of E, or their negatives, are omitted. Effort is passed to
 MordellWeilGroup, which must prove the rank and the saturation of E and of the twists; raise it when
-it cannot.}
+it cannot. A branch place whose discriminant is not fundamental is beyond the formula as implemented:
+its multiple of the generator of E(Q) is searched over the integers of absolute value at most
+FreeWindow instead, so for such a branch locus the list is complete only within that window.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
@@ -222,6 +224,20 @@ it cannot.}
         e := b[4]; F := e eq 2 select b[3] else Rationals();
         EF := e eq 2 select BaseChange(E, F) else E;
         Gm := EF!0; k := 0;
+        // the formula is implemented for fundamental discriminants; at any other the place is left
+        // free and its rational part searched over a window
+        free := not IsFundamentalDiscriminant(b[2]);
+        require not free or e eq 1:
+            "a branch place of degree 2 whose discriminant is not fundamental is beyond the formula";
+        if free then
+            T0, mT0 := TorsionSubgroup(EF);
+            Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d, free > | e := e, F := F,
+                EF := EF, Gm := Gm, k := 0, bp := Rationals()!0, h := 1,
+                tors := [mT0(t) : t in T0], d := b[2], free := true >);
+            vprintf HeegnerHeights: "disc %o: not a fundamental discriminant, the place is searched over |n| <= %o\n",
+                b[2], FreeWindow;
+            continue;
+        end if;
         comps, h := HeegnerHeightComponents(E, D, N, degf, b[2]);
         if e eq 2 then
             dF := Discriminant(Integers(F));
@@ -279,8 +295,9 @@ it cannot.}
             end if;
         end if;
         T, mT := TorsionSubgroup(EF);
-        Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d > | e := e, F := F, EF := EF,
-            Gm := Gm, k := k, bp := bp, h := h, tors := [mT(t) : t in T], d := b[2] >);
+        Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d, free > | e := e, F := F,
+            EF := EF, Gm := Gm, k := k, bp := bp, h := h, tors := [mT(t) : t in T], d := b[2],
+            free := false >);
     end for;
     // The sum of the points over place i is n_i*G + torsion with n_i = e_i*y + s_i*b_i, where y is the
     // multiple of G in xi_E: it is common to all the places and matters only modulo 1, because
@@ -290,11 +307,23 @@ it cannot.}
     // the enumeration over y is finite and complete.
     nvecs := {};
     L := LCM([Integers() | 2*Denominator(dt`bp) : dt in data]);
+    frees := [i : i in [1..#data] | data[i]`free];
     for sg in CartesianPower([1, -1], #data) do
         if #gQ eq 0 then Include(~nvecs, [0 : i in [1..#data]]); continue; end if;
         for u in [0..L-1] do
             ns := [Rationals() | data[i]`e * u/L + sg[i] * data[i]`bp : i in [1..#data]];
-            if &and[IsIntegral(n) : n in ns] then Include(~nvecs, [Integers() | n : n in ns]); end if;
+            if not &and[IsIntegral(ns[i]) : i in [1..#data] | not data[i]`free] then continue; end if;
+            if #frees eq 0 then
+                Include(~nvecs, [Integers() | n : n in ns]);
+                continue;
+            end if;
+            // a free place contributes every integer of the window; its own congruence class is
+            // unknown, so nothing is required of it
+            for extra in CartesianPower([-FreeWindow..FreeWindow], #frees) do
+                nn := ns;
+                for j in [1..#frees] do nn[frees[j]] := extra[j]; end for;
+                Include(~nvecs, [Integers() | n : n in nn]);
+            end for;
         end for;
     end for;
     if #nvecs eq 0 then
