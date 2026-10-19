@@ -812,7 +812,7 @@ shift matters only modulo 2 (translating both branch points by a rational point 
 cover). Here `E` has rank 0 and the rational components are torsion, so the enumeration is complete.
 Both models are therefore proved, given the trace-formula point counts.
 
-## X_0^6(247), X_0^6(253), X_0^6(185): three quotients with rational branch points (branch models-1326-210)
+## X_0^6(247), X_0^6(253), X_0^6(185), X_0^6(385): four quotients with rational branch points (branch models-1326-210)
 
 Same construction as the section below, extended to branch places of degree 1. A rational branch
 point is a rational point of the elliptic quotient; the formula gives its height through the trivial
@@ -826,6 +826,7 @@ dividing twice the denominators of the `b`'s.
     magma -b D:=6 N:=247 W:=1,2,19,38,39,78,741,1482 U:=3 tools/heegner_model.m < /dev/null
     magma -b D:=6 N:=253 W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
     magma -b D:=6 N:=185 W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6 N:=385 W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
 
 * **X_0^6(247)/{1,2,19,38,39,78,741,1482}: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over
   `E = X/<W, w_3>` = 1482i1, branched at the rational CM points of discriminants −52 and −3 and at a
@@ -837,6 +838,13 @@ dividing twice the denominators of the `b`'s.
 * **X_0^6(185)/{1,2,15,30,111,185,222,370}: `y^2 = 2025x^8 + 4716x^6 - 122x^4 - 5620x^2 - 999`**, over
   1110m1, branched at the rational point of discriminant −555, a place of degree 2 of discriminant
   −4440 over `Q(sqrt -111)`, and the rational point of discriminant −40.
+
+* **X_0^6(385)/{1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155}:
+  `y^2 = 9x^8 - 580x^6 - 9482x^4 + 60092x^2 + 3465`**, over 2310q1, branched at the rational points of
+  discriminants −40 and −1540 and at a place of degree 2 of discriminant −9240. Two curves of the
+  isogeny class are excluded by the heights; on the remaining two, Magma does not prove the
+  Mordell–Weil group of the twist at the default effort, so uniqueness in the class rests on a
+  computation that is still to be completed, while the model itself passes every check below.
 
 **Checks that were predictions.** For each: the genus of the model is 3; point counts agree with the
 trace formula at the 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
