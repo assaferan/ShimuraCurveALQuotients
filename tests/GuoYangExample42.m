@@ -1,13 +1,12 @@
 // EXTERNAL SOURCE: Guo-Yang, "Equations of hyperelliptic Shimura curves", Compositio Math. 153
-// (2017), Example 42, pp. 30-31 (journal version; the PDF is in Dropbox under
-// Research/HyperellipticQuotients).  Everything compared against below is printed there: the
-// principal parts of their forms f_1..f_4 in M^!(284), the four divisors, the table of x and y at
-// ten CM points, the relation between x and y, the curve E142A1 and the positions of the CM
-// points on it as multiples of Q = (1, 1).
+// (2017), Example 42, pp. 30-31 of the journal version.  Everything compared against below is
+// printed there: the principal parts of their forms f_1..f_4 in M^!(284), the four divisors, the
+// table of x and y at ten CM points, the relation between x and y, the curve E142A1 and the
+// positions of the CM points on it as multiples of Q = (1, 1).
 //
 // X = X_0^142(1)/W_{142,1} has genus one, so the hauptmodul search cannot succeed (no divisor of
-// degree one is principal; this base sat in the "obstructed" list for that reason).  The paper
-// builds the model from four Borcherds forms of degree two instead:
+// degree one is principal).  The paper builds the model from four Borcherds forms of degree two
+// instead:
 //     div psi_1 = P_-4  + P_-8  - 2 P_-3,     div psi_2 = P_-19 + P_-43 - 2 P_-3,
 //     div psi_3 = P_-8  + P_-40 - 2 P_-20,    div psi_4 = P_-19 + P_-24 - 2 P_-20,
 // x = 2^-10 psi_1 with 1 - x = psi_2, y = psi_3/2 with 1 - y = psi_4/2, and the relation
@@ -20,6 +19,12 @@
 // Borcherds form by a constant (measured: our psi_1, .., psi_4 are the paper's times 2^-18,
 // 2^-10, 2^-3, 2^-1).  The values of x and y do not depend on this, and the constants are not
 // checked against the paper, only printed and required to be powers of 2 like the paper's.
+//
+// Guo-Yang's Assumption 40 (the Borcherds forms have trivial character, so are functions on the
+// star) is not needed here: the four divisors are rational, some power of each form is a
+// function, so their classes have finite order in E(Q), and 142a1 has trivial torsion (checked
+// in part 5), so each divisor is principal and the character is trivial.  The search itself does
+// not check the character; see the header of GenusOneStar.m.
 
 procedure test_guoyang_example42()
     printf "Guo-Yang Example 42: X_0^142(1)* (genus one) from Borcherds forms of degree two...";
@@ -60,6 +65,11 @@ procedure test_guoyang_example42()
     divisors := [<[-4, -8], -3>, <[-19, -43], -3>, <[-8, -40], -20>, <[-19, -24], -20>];
     fs := BorcherdsForms(star, curves : Divisors := divisors);
     assert Keys(fs) eq {1, 2, 3, 4};
+    // the prescribed search needs no minimum number of CM points: with the pool cut to P_-3 and
+    // P_-4 a request for the (non-principal) divisor P_-4 - P_-3 is refused and nothing else happens
+    none := BorcherdsForms(star, curves : Divisors := [<[-4], -3>], AllowMissing := true,
+                                           Exclude := {-8, -19, -20, -24, -40, -43, -148, -232});
+    assert IsEmpty(Keys(none));
     for i in [1..4] do
         assert Set(DivisorOfBorcherdsForm(fs[i], star)) eq paper_div[i];
         g := qExpansionAtoo(fs[i], 1);
