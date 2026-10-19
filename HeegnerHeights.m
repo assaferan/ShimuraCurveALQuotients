@@ -189,7 +189,7 @@ function counts_mod_p(ctx, pts)
     return counts;
 end function;
 
-intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800) -> List
+intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
 X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
@@ -199,14 +199,16 @@ entry is a tuple <ns, pts, cover, kappa, noether, H>: ns the multiples of the ge
 the sums of the points over the branch places, pts one point per place, cover and kappa the index and
 the twist identified by MatchCoverToCounts, noether 5 or 6, and H the hyperelliptic model when
 noether is 5 (0 when the canonical conic has no rational point). Configurations that are translates of
-an earlier one by a rational point of E, or their negatives, are omitted.}
+an earlier one by a rational point of E, or their negatives, are omitted. Effort is passed to
+MordellWeilGroup, which must prove the rank and the saturation of E and of the twists; raise it when
+it cannot.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
     require &and[b[4] in {1, 2} : b in branch] and &+[b[4] : b in branch] eq 4:
         "branch places of degree 1 or 2, of total degree 4, are expected";
     degf := 2*#W;
-    G0, mG0, rk0, sat0 := MordellWeilGroup(E);
+    G0, mG0, rk0, sat0 := MordellWeilGroup(E : Effort := Effort);
     require rk0 and sat0: "the Mordell-Weil group of E is not proved";
     gQ := [mG0(G0.i) : i in [1..Ngens(G0)] | Order(G0.i) eq 0];
     require #gQ le 1: "E must have rank at most 1";
@@ -224,7 +226,7 @@ an earlier one by a rational point of E, or their negatives, are omitted.}
         if e eq 2 then
             dF := Discriminant(Integers(F));
             Ed := QuadraticTwist(E, dF);
-            Gd, mGd, rkd, satd := MordellWeilGroup(Ed);
+            Gd, mGd, rkd, satd := MordellWeilGroup(Ed : Effort := Effort);
             require rkd and satd: "the Mordell-Weil group of the twist of E is not proved";
             gd := [mGd(Gd.i) : i in [1..Ngens(Gd)] | Order(Gd.i) eq 0];
             require #gd eq 1: "the twist of E by the field of a branch point must have rank 1";
