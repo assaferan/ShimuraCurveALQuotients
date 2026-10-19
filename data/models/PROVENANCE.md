@@ -930,6 +930,43 @@ dividing twice the denominators of the `b`'s.
   Mordell–Weil computations, and on 3570x1 Magma does not prove the group of the twist even then, so
   as at X_0^6(385) uniqueness within the isogeny class is not yet settled.
 
+## X_0^141(2) and X_0^21(34): quotients whose elliptic factor is an oldform (branch models-1326-210)
+
+At these two the elliptic quotient is not a newform of level `DN`, so the routine that reads the
+quotient off the Atkin-Lehner signs does not find it: the quaternionic form is old at 2 and the curve
+has conductor `DN/2`, namely 141a1 for X_0^141(2) and 357d1 for X_0^21(34). The curve was identified
+from the trace formula, by matching the point counts of the genus-one quotient against the elliptic
+curves of conductor dividing `DN`.
+
+The formula then needs one change, which was **measured, not derived**: with the degree of the map
+taken to be `2|W|` as for a newform, the predicted heights are half of what they should be, and the
+multiples come out as `2*sqrt(2)` times the generator rather than an integer. Doubling that degree
+(`DegreeFactor := 2`) makes every predicted quantity a lattice point at both bases, and the
+configurations it then allows contain exactly one that the trace formula accepts. The factor was
+found by searching the configurations directly at X_0^141(2), without using the predicted heights at
+all, and reading it off the configuration the trace formula selected; it is consistent with the form
+appearing twice in the old space at 2, but that is not a proof, and a second base agreeing is the
+only evidence that it is not an accident of the first.
+
+    magma -b D:=141 N:=2 W:=1,3,94,282 U:=2 tools/heegner_model.m < /dev/null      # with DegreeFactor := 2
+    magma -b D:=21 N:=34 W:=1,3,14,17,42,51,238,714 U:=2 tools/heegner_model.m < /dev/null
+
+* **X_0^141(2)/{1,3,94,282}: `y^2 = 81x^8 + 252x^6 - 26x^4 - 260x^2 - 47`**, over 141a1, branched at
+  the rational points of discriminants −4 and −24 and a place of degree 2 of discriminant −564 over
+  `Q(sqrt -47)`. Bad reduction exactly at 2, 3 and 47; 43 good primes below 200 and 10 squares below
+  40 agree with the trace formula; the quotient by `x -> -x` is 141a1 and the automorphism group has
+  order 4.
+* **X_0^21(34)/{1,3,14,17,42,51,238,714}: `y^2 = 81x^8 - 612x^6 + 262x^4 + 220x^2 + 49`**, over 357d1.
+  Bad reduction exactly at 2, 3, 7 and 17; 42 primes and 8 squares agree; the quotient is 357d1 and
+  the automorphism group has order 4. One of its rational branch places has a nonvanishing component
+  for a nontrivial character, which cannot happen for a point defined over Q, so the admissibility
+  rule is being used outside the case it was checked on; that place was searched rather than
+  predicted, and as at X_0^15(38) its position rests on the search window.
+
+The same treatment leaves X_0^57(10) and X_0^15(46) unresolved: the predicted quantities are lattice
+points there too, but no configuration is consistent with the trace formula, so something beyond the
+degree is different at those two.
+
 ## X_0^15(38)/{1,2,15,19,30,38,285,570}: four rational branch points, one of them outside the formula (branch models-1326-210)
 
     magma -b D:=15 N:=38 W:=1,2,15,19,30,38,285,570 U:=2 tools/heegner_model.m < /dev/null
