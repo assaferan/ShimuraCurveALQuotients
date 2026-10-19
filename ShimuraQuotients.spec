@@ -1,5 +1,6 @@
 {
 BorcherdsForms.m
+GenusOneStar.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
 WeilRepresentation.m
