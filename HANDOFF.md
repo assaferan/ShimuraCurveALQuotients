@@ -63,6 +63,24 @@ rebuild from κ·f. Not covered: E without a rational point (62_1, 69_1, 94_1), 
 without one. ⇒ For 39_11: E = 429b1 and the −52/−132 points from the genus-one driver, then
 `IsIsomorphic` against the Nelson model is the proof.
 
+**2026-10-19.** (i) **Nelson's fit agrees with an exact model**: its independent fit of
+X_0^1326(1)/{1,17,78,1326} via w_2 (invariants −935/324, 1296/3025, −935/324 at 26 digits) is
+Q-isomorphic to the height-route model — the first test of the numerical pipeline against a proof,
+passed; the "1 failure" its check script reported is a false alarm in the CM-field lookup. (ii) The
+oldform pass over the seventeen is complete at cutoff 40: sixteen hyperelliptic, **141_2/{1,6,94,141}
+not** (0.21 at cutoff 40, 0.041 at cutoff 46 — a precision run at 120 digits is queued; by the
+project's rule only insensitivity to precision certifies). (iii) **Assumption 40 of Guo–Yang is
+equivalent, given Lemma 7's parity condition, to the Borcherds divisor being principal rather than
+torsion**; automatic when J(Q)_tors is trivial on CM classes (142a1, 158a1, 190a1), and it FAILS at
+X_0^14(17)* (a value 2·7^{3/2}·17^{1/2}, a character of order 2 matching the Z/2 torsion of 238a);
+the remedy is e-th powers of the forms (being implemented on `genus1-star-models`). (iv) **Kodaira
+types from the metric dual graph**: for a genus-one quotient the minimal metric cycle has length 2n
+for I_n (6/6 calibration); X_0^14(17)* = 238a2, X_0^94(3)* = 282b1 — PR #126 on #116, with the
+write-up `paper/character-and-reduction-types.tex`. (v) Sachi reviewed #121–#125 and #103 overnight;
+every point is addressed and replied to; #105, #107 merged. (vi) PR #124 carries the height route as
+intrinsics with tests (410 s) — the two models reproduce through `tools/heegner_model.m`.
+⚠ 39_11's genus-3 quotient is W = {1, 11, 39, 429} (not {1,3,13,39}, which has genus 4).
+
 **✅ LATER ON 2026-10-18 — TWO EXACT MODELS BEHIND THE DIVISOR WALL, BY HEEGNER HEIGHTS (PR #124 on #123).**
 The branch points of X/W → E = X/⟨W, w⟩ are CM points over known quadratic fields; the explicit
 Gross–Zagier formula of Cai–Shu–Tian gives their heights (the constant was pinned on 82 of the 92
