@@ -765,7 +765,7 @@ two were produced independently and both agree with the trace formula): 13 keys,
 odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
-## X_0^142(1)* and X_0^158(1)*: the first models at a star curve of positive genus (branch models-142-158)
+## X_0^142(1)* and X_0^158(1)*: the first models at a star curve of positive genus (2026-10-19, branch models-142-158)
 
 Both star curves have genus 1, so there is no Hauptmodul and the default recipe above does not
 apply: `genmodels.m` builds covers of a rational star line. `models_142_1.m` and `models_158_1.m`
@@ -783,8 +783,12 @@ coordinates of degree 2 on the star, reads off the bidegree-(2,2) relation betwe
 (`4x^2y^2 + 5xy - x - y + 1 = 0` at 142, `4x^2y^2 - 8x^2y + 4x^2 + 7xy - 8x + y = 0` at 158) and
 takes the minimal model. No numerical step and no Hauptmodul normalisation is involved. A Borcherds
 form with the requested divisor is a function on the star only if its character is trivial, which
-Guo-Yang assume (their Assumption 40). It is not needed here: the divisor is rational and its class
-has finite order, and `E(Q)` is torsion-free for both 142a1 and 158a1, so the divisor is principal;
+Guo-Yang assume (their Assumption 40). It is not needed here. The character is one of the group
+uniformising the star (Guo-Yang, Lemma 5 and Remark 41) and has finite order because the principal
+parts used are integral (Borcherds, *The Gross-Kohnen-Zagier theorem in higher dimensions*, Duke
+Math. J. 97 (1999), proof of Theorem 4.1); so a power of each form is a function on the star and
+the class of its divisor, which is rational, has finite order. `E(Q)` is torsion-free for both
+142a1 and 158a1, so that class is trivial and the divisor is principal;
 consistently, the divisors for which the search found a form are exactly those that the tabulated
 positions make principal. On a star with rational torsion this argument would not apply. About two
 minutes each:
@@ -822,5 +826,18 @@ pair, and `X/<w_142>` (genus 2) over `P_{-4}`, `P_{-8}`. At 158, `w_2` fixes `-4
 fixes no point and `w_158` fixes eight points of discriminant `-632`, so `X/<w_79>` (genus 4) is
 branched over `P_{-4}`, `P_{-8}` and the four points of `Z(-632)`, `X/<w_2>` (genus 3) over
 `Z(-632)`, and `X/<w_158>` (genus 2) over `P_{-4}`, `P_{-8}`. Those covers are not in these files:
-the hyperelliptic-cover stages need a rational base and do not reach them. `tests/_offline/ModelRegen.m` works from a fixed list of
-bases and does not cover these two.
+the hyperelliptic-cover stages need a rational base and do not reach them.
+`tests/_offline/ModelRegen.m` works from a fixed list of bases and does not cover these two.
+
+**The two positions that fix those branch loci, checked without the Borcherds computation**
+(`tests/PrymBranchPositions.m`, six seconds). `X/<w_{2D}>` is a genus-2 double cover of the star
+branched over `P_{-4}` and `P_{-8}` alone, so `Jac` of it is the star times an elliptic Prym, and
+since the quaternionic eigenvalue of `w_p` is the `p`-th coefficient of the newform, that Prym is
+the rational newform of level `D` with Atkin-Lehner signs `(+1, +1)`, up to a quadratic twist at
+the primes of `2D`. Translating the branch pair so that one point is the origin, the cover is the
+one branched over `O` and `nQ` with `nQ = P_{-4} - P_{-8}`, which is defined over **Q** only for
+even `n`. Comparing Prym traces at the primes below 47 over the even `n`, exactly one value works
+at each base, and it is the one the tables record: `n = 2` at 142 and `n = 6` at 158. Perturbing
+either expected value makes the test fail, so it discriminates. At 142 this reproduces Guo-Yang's
+positions from the newforms alone; at 158, where no equation is published, it is the only check of
+those positions that shares no step with the construction.
