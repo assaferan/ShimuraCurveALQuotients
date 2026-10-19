@@ -812,7 +812,7 @@ shift matters only modulo 2 (translating both branch points by a rational point 
 cover). Here `E` has rank 0 and the rational components are torsion, so the enumeration is complete.
 Both models are therefore proved, given the trace-formula point counts.
 
-## X_0^6(247), X_0^6(253), X_0^6(185), X_0^6(385): four quotients with rational branch points (branch models-1326-210)
+## X_0^6(247), X_0^6(253), X_0^6(185), X_0^6(385), X_0^714(5): five quotients with rational branch points (branch models-1326-210)
 
 Same construction as the section below, extended to branch places of degree 1. A rational branch
 point is a rational point of the elliptic quotient; the formula gives its height through the trivial
@@ -827,6 +827,7 @@ dividing twice the denominators of the `b`'s.
     magma -b D:=6 N:=253 W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
     magma -b D:=6 N:=185 W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
     magma -b D:=6 N:=385 W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=714 N:=5 W:=1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785 U:=2 tools/heegner_model.m < /dev/null
 
 * **X_0^6(247)/{1,2,19,38,39,78,741,1482}: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over
   `E = X/<W, w_3>` = 1482i1, branched at the rational CM points of discriminants −52 and −3 and at a
@@ -846,8 +847,15 @@ dividing twice the denominators of the `b`'s.
   Mordell–Weil group of the twist at the default effort, so uniqueness in the class rests on a
   computation that is still to be completed, while the model itself passes every check below.
 
+* **X_0^714(5)/{1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785}:
+  `y^2 = 9720x^8 + 2061x^6 + 598x^4 - 155x^2 + 16`**, over 3570x2, branched at a place of degree 2 of
+  discriminant −14280 and the rational points of discriminants −840 and −340. Two configurations
+  survive, with twists −43 and −2171; they are Q-isomorphic. The search needs `Effort := 2` in the
+  Mordell–Weil computations, and on 3570x1 Magma does not prove the group of the twist even then, so
+  as at X_0^6(385) uniqueness within the isogeny class is not yet settled.
+
 **Checks that were predictions.** For each: the genus of the model is 3; point counts agree with the
-trace formula at the 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
+trace formula at the 41 or 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
 reduction is exactly at the primes of `DN`; the quotient by `x -> -x` is the predicted elliptic curve;
 the automorphism group has order 4; and the fields of definition of the fixed points are the fields of
 the branch places, in particular rational exactly at the places of degree 1.
