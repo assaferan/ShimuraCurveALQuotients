@@ -170,17 +170,26 @@ end intrinsic;
 intrinsic CoverPointCounts(E::CrvEll, C::Rec, primes::SeqEnum) -> SeqEnum
 {For each prime p in primes, the pair <#X(F_p), #X'(F_p)> for the cover y^2 = f and its
 quadratic twist by a non-square, or <0,0> when the reduction is not available (p | 2, bad
-reduction of E, non-integral coefficients, or the reduced cover has a different genus).}
+reduction or a non-integral coefficient of the model of E, non-integral coefficients of f, two
+branch points meeting modulo p, or the reduced cover has a different genus).}
     out := [];
     for p in primes do
-        if p eq 2 or Valuation(Discriminant(E), p) ne 0 then Append(~out, <0,0>); continue; end if;
+        if p eq 2 or Valuation(Discriminant(E), p) ne 0 or exists{a : a in aInvariants(E) | Valuation(a, p) lt 0} then
+            Append(~out, <0,0>); continue;
+        end if;
         Ep := ChangeRing(E, GF(p));
         FEp := FunctionField(Ep);
         ok, fp := reduce_function(E, C`f, p, FEp);
         if not ok then Append(~out, <0,0>); continue; end if;
         AFp, mp := AlgorithmicFunctionField(FEp);
-        Fp := FunctionField(Polynomial([AFp | -mp(fp), 0, 1]));
-        if Genus(Fp) ne C`genus then Append(~out, <0,0>); continue; end if;
+        // the reduced function can be a square when two branch points meet modulo p
+        try
+            Fp := FunctionField(Polynomial([AFp | -mp(fp), 0, 1]));
+            g := Genus(Fp);
+        catch err
+            Append(~out, <0,0>); continue;
+        end try;
+        if g ne C`genus then Append(~out, <0,0>); continue; end if;
         n := NumberOfPlacesOfDegreeOneECF(RationalExtensionRepresentation(Fp));
         Append(~out, <n, 2*#Ep(GF(p)) - n>);
     end for;
@@ -243,12 +252,15 @@ identified) and the primes where the untwisted cover can have bad reduction: tho
 discriminant of E or a coefficient of f, and those modulo which two branch points coincide. At
 any other odd prime the cover y^2 = f is smooth, so a twist ramified there would have bad
 reduction where the identified curve has good reduction. Two pairs with the same cover index
-mean the primes used do not separate the twists.}
+mean the primes used do not separate the twists; kappa = 0 means no usable prime distinguished
+the cover from its twist. kappa refers to the function f of the cover as returned, which is only
+determined up to a constant: a kappa computed in one session goes with that session's f.}
     disc := Discriminant(E);
     hits := [];
     for ci in [1..#covers] do
         counts := CoverPointCounts(E, covers[ci], primes);
         S := Set(PrimeDivisors(2*Numerator(disc)*Denominator(disc))) join Set(ExtraPrimes)
+             join &join[Set(PrimeDivisors(Denominator(a))) : a in aInvariants(E)]
              join coefficient_primes(covers[ci]`f) join branch_collision_primes(E, covers[ci]`B);
         vprintf ExactDoubleCover: "cover %o: twist supported on %o\n", ci, Sort(Setseq(S));
         gens := [-1] cat Sort(Setseq(S));
@@ -264,10 +276,14 @@ mean the primes used do not separate the twists.}
             Append(~rows, [GF(2) | KroneckerSymbol(q, p) eq -1 select 1 else 0 : q in gens]);
             Append(~rhs, GF(2)!(sgn eq -1 select 1 else 0));
         end for;
-        if not good or #rows eq 0 then continue; end if;
+        if not good then continue; end if;
+        if #rows eq 0 then Append(~hits, <ci, 0>); continue; end if;   // consistent, twist undetermined
         M := Matrix(GF(2), rows);
         ok, sol, ker := IsConsistent(Transpose(M), Vector(GF(2), rhs));
-        if not ok then continue; end if;
+        if not ok then
+            vprintf ExactDoubleCover: "cover %o: the signs of the twist are not those of a character on the support\n", ci;
+            continue;
+        end if;
         for k in ker do
             v := sol + k;
             kappa := &*[Integers() | gens[j] : j in [1..#gens] | v[j] eq 1];
