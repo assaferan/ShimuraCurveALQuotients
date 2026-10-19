@@ -10,6 +10,18 @@
 // together, the sign of x.  Two such functions with distinct poles generate the function field, and
 // the relation between them, of bidegree (2, 2), is read off their values at nine or more CM points.
 // tests/GuoYangExample42.m runs the whole recipe on X_0^142(1)* against the paper's own numbers.
+//
+// Where Guo-Yang's Assumption 40 enters.  A Borcherds form transforms under the Atkin-Lehner
+// group by a character, and it is a function on the star quotient only when that character is
+// trivial, which Guo-Yang assume (their Assumption 40; Example 42 is stated under it).  The
+// search here does not check the character: it only finds a form whose divisor on the star is the
+// prescribed one.  Some power of the form is a function, so the prescribed divisor, which is
+// rational, has a class of finite order in E(Q).  When E(Q) has no torsion the class is trivial,
+// a function g with that divisor exists, and the form divided by g has no zeros or poles, so the
+// character is trivial and the assumption holds; this is the case at X_0^142(1)* (142a1 has
+// trivial torsion).  When E(Q) has torsion the form may be a root of a function, its Schofer
+// values are then those of the root, and a model built from them is conditional on the
+// assumption.
 
 import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
 

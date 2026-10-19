@@ -1182,6 +1182,9 @@ that no divisor uses (the rung's pool grows with that pole order: 48 GB at X_0^1
     require prescribed or #pts ge 3 : "Could not find enough rational CM points!";
 
     if prescribed then
+        // the forms found so far, kept across the rungs of the two ladders
+        etas := AssociativeArray();
+        targets := AssociativeArray();
         // The zeros may be quadratic points (the divisor then contains the whole degree-2 cycle);
         // the pole must be rational, so that -deg * Z(pole) has the degree of the zeros.
         pool := pts cat quad_pts;
@@ -1449,20 +1452,22 @@ that no divisor uses (the rung's pool grows with that pole order: 48 GB at X_0^1
         for infty in (prescribed select pts[1..1] else pts) do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
             non_infty := [pt : pt in pts | pt ne infty];
-            for other_pts in CartesianPower(non_infty,2) do
-                if other_pts[1] eq other_pts[2] then continue; end if;
+            // one pass with prescribed divisors, whatever the size of the pool; the pair is not read
+            for other_pts in (prescribed select [<infty, infty>] else CartesianPower(non_infty,2)) do
+                if (not prescribed) and other_pts[1] eq other_pts[2] then continue; end if;
                 vprintf ShimuraQuotients, 3 : "\n\t\tTrying other points = %o...", other_pts;
                 if not prescribed then
                     rams[-1] := [other_pts[1]];
                     rams[-2] := [other_pts[2]];
+                    etas := AssociativeArray();
+                    targets := AssociativeArray();
                 end if;
-
-                etas := AssociativeArray();
-                targets := AssociativeArray();
 
                 found_all := true;
                 missing := [];
                 for i in Keys(rams) do
+                    // a prescribed divisor keeps the form of the first rung that gave one
+                    if prescribed and IsDefined(etas, i) then continue; end if;
                     ram := rams[i];
                     infty_i := prescribed select poles[i] else infty;
                     // adding the part at infinity
