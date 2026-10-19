@@ -149,13 +149,18 @@ For (1), an Atkin--Lehner element $w_q$ of $R_N$ at a prime $q\mid DM$ lies in $
 normalises it, the two orders agreeing locally at $q$, so it is also an Atkin--Lehner element at
 level $M$ and acts on $g_B$ by its eigenvalue there; and $w_qw_S$ and $w_Sw_q$ generate the same
 two-sided ideal of $R_N$, so they differ by a unit of $R_N$ of reduced norm one, on which the
-slash operator is trivial.
+slash operator is trivial. That eigenvalue is $\varepsilon_q(g)=a_g(q)$ for $q\mid D$ and
+$-a_g(q)$ for $q\mid M$: the classical Atkin--Lehner eigenvalue of a newform at a prime exactly
+dividing its level is $-a_g(q)$, and the Jacquet--Langlands correspondence reverses the sign at
+the primes where the quaternion algebra ramifies \cite{JL,Voight}.
 For (2), $w_p^2$ has reduced norm $p^2$ and lies in $R_N$, and $w_p^2/p$ is a unit of $R_N$ of
 reduced norm one (this is checked exactly in the code for every $w_p$ used). The weight-two slash
 is trivial on scalars, by the factor $\nrd(w)$, and on units of norm one, which act trivially on
-forms for $\Gamma$. The sign convention at $q\mid D$ and $q\mid M$ is the one the dimension
-counts of the next paragraph confirm.
+forms for $\Gamma$.
 \end{proof}
+
+The dimension counts of the next paragraph, and the direct measurement of each column's
+eigenvalues, are consistency checks on the convention rather than its justification.
 
 The $W$-fixed differentials of $X_0^D(N)/W$ are then the $W$-fixed newforms of level exactly
 $DN$ together with one $v_\chi$ for each pair $(g,\chi)$ whose eigenvalue product is $1$ for every
@@ -308,8 +313,10 @@ CM points, their fields of definition contain $K$, and $K$ is the quadratic subf
 common (at the base above, one discriminant, $-7752$, carries all four points, over a quartic
 field whose quadratic subfield is $\Q(\sqrt{-2})$). $A$ is then recognised in $K$ by simultaneous
 rational approximation of its two coordinates, which certifies a denominator up to about
-$\varepsilon^{-2/3}$ at absolute accuracy $\varepsilon$: $10^{9}$ at the fifteen digits the values
-carry, against $1.3\cdot10^9$ for the $A$ found. Write $F(x)=g_0(\mu x^2)$ with
+$(2\varepsilon^2)^{-1/3}$ at absolute accuracy $\varepsilon$. At the base above the data give
+$\varepsilon=4.4\cdot10^{-15}$, hence denominators up to $2.97\cdot10^9$, and the $A$ found has
+denominator $1\,262\,027\,560$, inside that bound; a fraction of larger height would be missed,
+not misread. Write $F(x)=g_0(\mu x^2)$ with
 $g_0(t)=1+t+At^2+A^2Bt^3+A^3B^2Ct^4$ and $\mu\in K^\times$. The identity
 $t^4g_0(1/t)=A^3B^2C\,g_0^\sigma(t/ABC)$ turns the condition that the branch divisor be
 Galois-stable, $F^\sigma(x)=c\,x^8F(a/x)$, into the norm equation
@@ -396,8 +403,20 @@ points prescribed by the heights of Heegner points gives the exact model
 y^2=272x^8-72x^6-55x^4-18x^2+17,
 \]
 and the model recognised from the values of the three differentials at fourteen sample points,
-with $u=w_2$, is isomorphic to it over $\Q$. That is one instance; it is the one in which a
-numerical model produced here has met an exact one.
+with $u=w_2$, is isomorphic to it over $\Q$.
+
+Two further comparisons with that construction, which has since reached more of these quotients,
+say what the numerical route is worth where it does not finish. At
+$X_0^{6}(185)/\langle w_2,w_{15},w_{111}\rangle$ the fit is clean but the certainty criterion
+refuses two of the three invariants; against the exact model
+$y^2=2025x^8+4716x^6-122x^4-5620x^2-999$ the three computed invariants agree to relative
+$3\cdot10^{-12}$, $6\cdot10^{-12}$ and $3\cdot10^{-12}$ (in the reversed root ordering), with
+measured errors matching the noise estimates to within twenty percent. The refusals are correct
+rather than conservative: for the two refused invariants $q^2\varepsilon$ is $3.4$ and $65$,
+against $0.015$ for the one recognised. So at that base the limit is the height of the invariants
+against the conditioning of the fit, and nothing else. And the pointless conic of the previous
+section is not peculiar to one base: the exact route finds the same phenomenon at
+$X_0^{6}(187)$ and $X_0^{22}(51)$, hyperelliptic quotients with no model $y^2=f(x)$ over $\Q$.
 
 \section{Two traps}
 
@@ -436,8 +455,12 @@ above; the values on circles, their storage, and the model step through the elli
 and the four checks. Every docstring says that its result is numerical.
 
 \begin{thebibliography}{9}
+\bibitem{JL} H.~Jacquet and R.~P. Langlands, \emph{Automorphic forms on $GL(2)$}, Lecture Notes
+in Mathematics \textbf{114}, Springer (1970).
 \bibitem{Nelson} P.~D. Nelson, \emph{Evaluating modular forms on Shimura curves}, Math. Comp.
 \textbf{84} (2015), 2471--2503.
+\bibitem{Voight} J.~Voight, \emph{Quaternion algebras}, Graduate Texts in Mathematics
+\textbf{288}, Springer (2021).
 \bibitem{VW} J.~Voight and J.~Willis, \emph{Computing power series expansions of modular forms},
 in: Computations with modular forms, Contrib. Math. Comput. Sci. 6, Springer (2014), 331--361.
 \end{thebibliography}

@@ -1,47 +1,22 @@
 // Evaluating the weight-2 forms of an Atkin-Lehner quotient X_0^D(N)/W at points of the upper
 // half-plane by the Shimizu lift (P. Nelson, Evaluating modular forms on Shimura curves, Math.
 // Comp. 84 (2015), Theorem 3.1), and what the project does with the values: Noether's count of
-// quadrics through the canonical image, and for genus 3 with a marked Atkin-Lehner involution the
-// hyperelliptic model.
+// quadrics through the canonical image, and for genus 3 with a marked Atkin-Lehner involution a
+// hyperelliptic model.  The formula, the oldform extension, the model step, the descent from a
+// quadratic field and the traps are written out in paper/nelson-method.tex.
 //
-// EVERYTHING IN THIS FILE IS NUMERICAL.  A value is a truncated lattice sum at a finite working
-// precision; a count of quadrics is a reading of singular values; a model is recognised from
-// floating-point invariants and then confirmed only by point counts, which determine the isogeny
-// class of the Jacobian and not the curve.  No intrinsic here proves anything.
-//
-// Theorem 3.1.  For a newform f of level exactly DN with Jacquet-Langlands correspondent f_B on
-// X_0^D(N) and z1, z2 in the upper half-plane,
-//
-//   (y1 y2)^{k/2} conj(f_B(z1)) f_B(z2)
-//      = sum_{d | DN} mu((d,N))/(d a_f(d)) sum_alpha a_f(d nrd alpha) e^{ik arg X(alpha)} W_k(4 pi |X(alpha)|),
-//
-// the inner sum over the elements of positive reduced norm of R^(d) = R + (DN/d) R^dual, R an
-// Eichler order of level N, each alpha carried to M_2(R) by sigma_{z1}^{-1} iota(alpha) sigma_{z2},
-// X([a b; c d]) = (a + d + i(b - c))/2, and W_k(x) = 2^{1-k} sum_n n^k (n x K_{k-1}(nx) - K_k(nx)).
-// Since 2|X|^2 = P(alpha) + det(alpha) with P the sum of the squared entries, truncating at
-// 4 pi |X| <= cut is an enumeration of a positive definite quaternary form, and the cost is
-// linear in DN (the number of lattice points is about 10 (cut/4pi)^4 sigma_2(DN)/DN).
-//
-// The oldform extension.  The theorem supplies the newforms of level exactly DN; the remaining
-// differentials of X_0^D(N) are the oldclasses of the newforms g of level DM, M | N, spanned by
-// the pullbacks g|w_S, S a subset of the primes T of N/M, where w_S is a product of Atkin-Lehner
-// elements w_p of the level-N order and (f|w)(z) = nrd(w) j(w,z)^{-2} f(wz) is the pullback of the
-// differential f dz.  On the oldclass w_q for q | DM acts by the quaternionic eigenvalue of g
-// (a_g(q) at q | D, -a_g(q) at q | M) and w_p for p in T sends g|w_S to g|w_{S xor {p}} with no
-// scalar, since w_p^2 is p times a unit of reduced norm one and the weight-2 slash is trivial on
-// both; so the eigenvectors are v_chi = sum_S chi(S) g|w_S for the characters chi of {+-1}^T.
-// Evaluating: y1 y2 conj(g_B(z1)) (g_B|w_S)(z2) = (conj(j)/j) S_g(z1, w_S z2) with j = j(w_S, z2),
-// so every member of the oldclass is the level-M evaluator at the moved point times a phase, with
-// the same constant in front, and no normalisation is free.
+// EVERYTHING HERE IS NUMERICAL: a value is a truncated lattice sum at a finite working precision,
+// a count of quadrics is a reading of singular values, and a model is recognised rather than
+// derived and then confirmed only by point counts, which fix the isogeny class of the Jacobian
+// and not the curve.
 //
 // Two facts the code depends on and cannot show:
 //   * Magma's QuaternionOrder(A, N) returns a different Eichler order of level N from one process
-//     to the next.  Values computed against different orders are values at different points of
-//     the curve with different normalisations, so a computation split over processes must rebuild
-//     ONE order from its serialised Z-basis (NelsonEichlerOrderBasis / the OrderBasis parameter).
-//   * The truncation error falls with the cutoff only until it meets the rounding error of the sum;
-//     above some ten million lattice terms the working precision must rise with the cutoff, or the
-//     residual stalls at a value that looks like a genuine small singular value.
+//     to the next, so a computation split over processes must rebuild ONE order from its
+//     serialised Z-basis (NelsonEichlerOrderBasis, the OrderBasis parameter).
+//   * The truncation error of the lattice sum falls with the cutoff only until it meets the
+//     rounding error; above some ten million terms the working precision must rise with the
+//     cutoff, or a residual stalls at the rounding floor and looks like a genuine small value.
 
 declare verbose NelsonShimizu, 2;
 
@@ -301,7 +276,7 @@ end function;
 
 intrinsic NelsonBasis(D::RngIntElt, N::RngIntElt, W::SetEnum :
                       Precision := 30, Cutoff := 40, Oldforms := true, OrderBasis := [],
-                      CarryRejected := false, CoefficientBound := 0) -> Rec
+                      CarryRejected := false, CoefficientBound := 0, AllowCoarsePrecision := false) -> Rec
 {The data needed to evaluate a basis of the W-fixed weight-2 forms of X_0^D(N)/W by Theorem 3.1
  (Nelson, Math. Comp. 84 (2015)) at the given working precision, for cutoffs up to Cutoff: the
  Eichler order (rebuilt from OrderBasis when given, see NelsonEichlerOrderBasis), the real
@@ -311,10 +286,22 @@ intrinsic NelsonBasis(D::RngIntElt, N::RngIntElt, W::SetEnum :
  equal the genus, which is what checks the Atkin-Lehner eigenvalue convention (a_p at p | D, -a_p
  at p | M, chi(p) at p | N/M); the intrinsic fails otherwise.  With CarryRejected the characters
  that are NOT fixed by W are kept as extra columns, so that NelsonCheckWInvariance can measure
- their predicted eigenvalues (which are not 1) as well.  Numerical throughout.}
+ their predicted eigenvalues (which are not 1) as well.  A request whose evaluations would sum
+ more than about a million terms at fewer than 50 digits is refused, since the rounding error of
+ the sum then overtakes its truncation error and a residual stalls; AllowCoarsePrecision runs it
+ anyway.  Numerical throughout.}
     require IsSquarefree(D*N) and GCD(D, N) eq 1 : "D*N squarefree and coprime is assumed";
     require 1 in W : "W must contain 1";
     k := 2;
+    // One evaluation sums about 10 (cut/4pi)^4 sigma_2(DN)/DN terms.  Past about a million of
+    // them the rounding error of the sum overtakes its truncation error, and a residual then
+    // stops falling with the cutoff while looking like a genuine small singular value, which is
+    // the trap this refuses; AllowCoarsePrecision runs it anyway.
+    terms := 10 * (Cutoff/(4*Pi(RealField(20))))^4 * (&+[ dv^2 : dv in Divisors(D*N) ])/(D*N);
+    require AllowCoarsePrecision or terms lt 10^6 or Precision ge 50 :
+        Sprintf("one evaluation sums about %o terms at cutoff %o, which needs 50 digits or more; "
+                * "pass Precision := 50, or AllowCoarsePrecision to run at %o anyway",
+                Round(terms), Cutoff, Precision);
     PREC := Precision; cutv := Cutoff;
     CC := ComplexField(PREC); RR := RealField(PREC); Ic := CC.1;
     g := GenusShimuraCurveQuotient(D, N, W);
@@ -486,11 +473,10 @@ intrinsic NelsonChooseBasePoint(~B::Rec : Candidates := 6, Cutoff := 0)
 {Replace the base point z1 of B (the point at which every column is normalised through
  conj(f_i(z1))) by the best of Candidates points: the default z1 and sample points, scored by the
  smallest diagonal value y^2 |f_i(z)|^2 over the columns relative to its largest value among
- the candidates.  At a base point where a diagonal value is small (a point near a zero of one of
- the forms) the truncated sums have been observed to carry relative errors of 1e-3 at cutoff 30
- that only reach the generic 1e-13 at cutoff 40, where other base points give 1e-9 at cutoff 30
- already; which points these are depends on the Eichler order, hence varies between processes
- unless the order is fixed.  Costs Candidates evaluations.  Numerical.}
+ the candidates.  At a base point where a diagonal value is small -- a point near a zero of one of
+ the forms -- every value of that column is a small difference of large terms, so its relative
+ truncation error is far larger than elsewhere at the same cutoff; which points these are depends
+ on the Eichler order.  Costs Candidates evaluations.  Numerical.}
     cands := [ B`z1 ] cat NelsonSamplePoints(B, Candidates - 1);
     diag := [];
     for z in cands do
@@ -555,18 +541,22 @@ end intrinsic;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // Noether's count
 
-intrinsic NoetherQuadricCount(vals::SeqEnum, g::RngIntElt : MinGap := 10^4) -> RngIntElt, SeqEnum, FldReElt
+intrinsic NoetherQuadricCount(vals::SeqEnum, g::RngIntElt : MinGap := 10^4, ZeroTol := 10^(-4)) -> RngIntElt, SeqEnum, FldReElt
 {Given values of a basis of g differentials at several points (vals[j] the g values at the j-th
  point), the number of quadrics through the canonical image, read off the singular values of the
  matrix of quadratic monomials: rows and columns are normalised, the matrix is realified, and the
- count is the position of the largest ratio between consecutive singular values provided that
- ratio is at least MinGap and the smallest singular value is below 1e-4; otherwise the count is
- 0 when nothing is near zero and -1 (inconclusive) when the spectrum is a ramp.  Returns the
- count, the singular values (ascending) and the ratio.  Reading rule: no genuine smallest singular
- value between 1e-2 and 1e-12 has been observed on this project's curves; a value that does not
- fall as the cutoff rises can still be the rounding floor of the sum, so only its insensitivity
- to the WORKING PRECISION says it is real.  Genus 3: one relation means hyperelliptic, none means
- not; genus 4: three against one.  Numerical.}
+ count is the number of singular values below ZeroTol, accepted only when that number is one a
+ canonical image of genus g can have -- (g-2)(g-3)/2 if the curve is not hyperelliptic,
+ (g-1)(g-2)/2 if it is -- and the ratio of the first value above them to the last below them
+ reaches MinGap; otherwise the count is -1, inconclusive.  Returns the count, the singular values
+ (ascending) and that ratio.  Counting the values below a tolerance rather than looking for the
+ largest ratio anywhere is what keeps a cluster of truncation-level values that differ among
+ themselves from being split, which at genus 4 would report one quadric for a hyperelliptic curve.
+ Reading rule: a small singular value is a small number, and a value that does not fall as the
+ cutoff rises can still be the rounding floor of the sum, so only its insensitivity to the WORKING
+ PRECISION says it is real; see paper/nelson-method.tex, "What a numerical kernel dimension
+ proves".  Genus 3: one relation means hyperelliptic, none means not; genus 4: three against one.
+ Numerical.}
     npts := #vals;
     CC := Universe(vals[1]); RR := RealField(Precision(CC));
     mons := [ [a,b] : b in [a..g], a in [1..g] ];
@@ -589,18 +579,27 @@ intrinsic NoetherQuadricCount(vals::SeqEnum, g::RngIntElt : MinGap := 10^4) -> R
     r := Min(Nrows(MR), Ncols(MR));
     sv := Reverse([ Abs(Sig[i][i]) : i in [1..r] ]);
     sv := [ sv[i] : i in [1..#sv by 2] ];      // realification doubles every singular value
-    best := 1; bestr := RR ! 1;
-    for i in [1..#sv-1] do
-        if sv[i] gt 0 and sv[i+1]/sv[i] gt bestr then bestr := sv[i+1]/sv[i]; best := i; end if;
-    end for;
-    if sv[1] gt 10^(-4) then return 0, sv, bestr; end if;
-    if bestr lt MinGap then return -1, sv, bestr; end if;
-    return best, sv, bestr;
+    // The count is the number of singular values below ZeroTol, and it is accepted only if that
+    // number is one a canonical image of genus g can have -- (g-2)(g-3)/2 when the curve is not
+    // hyperelliptic, (g-1)(g-2)/2 when it is -- and if the gap above them reaches MinGap.
+    // Reading the count off the largest ratio anywhere instead can land inside the cluster of
+    // truncation-level values when they differ among themselves, which at genus 4 reports one
+    // quadric for a hyperelliptic curve.
+    nonhyp := (g-2)*(g-3) div 2; hyp := (g-1)*(g-2) div 2;
+    n := #[ i : i in [1..#sv] | sv[i] lt ZeroTol ];
+    if n eq 0 then return (nonhyp eq 0 select 0 else -1), sv, sv[1]/ZeroTol; end if;
+    if n ge #sv then return -1, sv, RR ! 0; end if;
+    // exact input (a curve given by equations rather than by evaluated values) makes the
+    // relations vanish exactly, and an exact zero is the cleanest gap there is
+    gap := sv[n] eq 0 select RR ! 10^Precision(RR) else sv[n+1]/sv[n];
+    if not (n in { nonhyp, hyp }) or gap lt MinGap then return -1, sv, gap; end if;
+    return n, sv, gap;
 end intrinsic;
 
 intrinsic NelsonHyperellipticVerdict(D::RngIntElt, N::RngIntElt, W::SetEnum :
                                      Precision := 30, Cutoff := 40, Points := 18, Oldforms := true,
-                                     CheckW := 0, OrderBasis := [], ChooseBasePoint := true) -> MonStgElt, Rec
+                                     CheckW := 0, OrderBasis := [], ChooseBasePoint := true,
+                                     AllowCoarsePrecision := false) -> MonStgElt, Rec
 {Noether's count of canonical quadrics on X_0^D(N)/W, genus at least 3, with the differentials
  evaluated by Theorem 3.1 at Points sample points: "HYPERELLIPTIC", "NOT hyperelliptic" or
  "INCONCLUSIVE", and a record with the singular values, the gap, the number of relations, the
@@ -609,7 +608,8 @@ intrinsic NelsonHyperellipticVerdict(D::RngIntElt, N::RngIntElt, W::SetEnum :
  ChooseBasePoint is false.  A verdict is a reading of numerical singular values, not a proof;
  take it at two cutoffs and, when the residual stops falling, at a higher precision.}
     B := NelsonBasis(D, N, W : Precision := Precision, Cutoff := Cutoff, Oldforms := Oldforms,
-                              OrderBasis := OrderBasis, CarryRejected := CheckW gt 0);
+                              OrderBasis := OrderBasis, CarryRejected := CheckW gt 0,
+                              AllowCoarsePrecision := AllowCoarsePrecision);
     require B`g ge 3 : "Noether's count needs genus at least 3";
     if ChooseBasePoint then NelsonChooseBasePoint(~B); end if;
     pts := [ B`z1 ] cat [ z : z in NelsonSamplePoints(B, Points) | z ne B`z1 ][1..Points - 1];
@@ -635,13 +635,10 @@ intrinsic NelsonHyperellipticVerdict(D::RngIntElt, N::RngIntElt, W::SetEnum :
 end intrinsic;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-// Values on circles, for the model: the canonical image of a hyperelliptic curve is a rational
-// normal curve and carries no moduli, so the values of the differentials alone cannot give the
-// equation; one derivative does.  With x = u2/u1 a coordinate on the canonical conic, the
-// function y = (dx/dz)/u1(z) is odd under the hyperelliptic involution and y^2 = f(x) with f of
-// degree 8.  The derivative is taken by Cauchy's formula on a circle of radius rho, where the
-// trapezoidal rule converges like (rho/R)^n, R the distance to the nearest pole of x, and the
-// input noise is amplified only by 1/rho.
+// Values on circles, for the model.  The canonical image of a hyperelliptic curve carries no
+// moduli, so the values of the differentials alone cannot give the equation; one derivative does,
+// and it is taken by Cauchy's formula on a circle rather than by finite differences, which would
+// cost a third of the digits.  See paper/nelson-method.tex, "The model".
 
 NelVals := recformat< D, N, W, g, prec, cut, rho, ncirc, npc, halls, alsig, pts, owner, isctr, vals, obas >;
 
@@ -745,15 +742,11 @@ intrinsic ReadNelsonValues(filename::MonStgElt) -> Rec
 end intrinsic;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
-// The model.  The coordinate is pinned by an Atkin-Lehner involution u with X/<W,u> of genus 1:
-// the hyperelliptic involution is central, so u descends to the conic and the coordinate can be
-// chosen with u : x -> -x; the octic is then even, f(x) = g(x^2), and X/u is Y^2 = g(t).  Both are
-// checks, not assumptions: the quadric must have no cross term between the u-invariant
-// differential and the two anti-invariant ones, and the quartic in t must predict the centres it
-// was not fitted on.  With g marked at t = 0 and t = infinity, the three numbers
-//     A = c0 c2 / c1^2,   B = c1 c3 / c2^2,   C = c2 c4 / c3^2
-// are unchanged by t -> lambda t and by rescaling g, and their heights are small enough to
-// recognise; the coordinate-free invariants of the octic are not.
+// The model.  An Atkin-Lehner involution u with X/<W,u> of genus 1 fixes the coordinate on the
+// canonical conic (u : x -> -x), which makes the octic even and its quartic in t = x^2 carry the
+// three invariants c0c2/c1^2, c1c3/c2^2, c2c4/c3^2 -- of small enough height to recognise, unlike
+// the coordinate-free invariants of the octic.  Both the evenness and the u-equivariance of the
+// conic are read off the fit, not assumed.  See paper/nelson-method.tex, "The model".
 
 // the classical certainty criterion: a rational p/q within eps of a real number is accepted when
 // q^2 eps < 1/2, so that no other fraction of denominator at most q lies as close
@@ -957,22 +950,18 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
         [ R6 ! Abs(Imaginary(z)) : z in [A, Bq, Cq] ],
         okA select Sprint(Ar) else "not recognised", okB select Sprint(Br) else "not recognised",
         okC select Sprint(Cr) else "not recognised";
-    // When the two fixed points of u on the conic are conjugate over a quadratic field K rather
-    // than rational, the coordinate with u : x -> -x exists only over K, the quartic has
-    // coefficients in K, and Gal(K/Q) acts as x -> 1/x: B is rational and A, C are conjugate.
-    // The descent to Q is not implemented; the pattern is reported rather than left as a failure.
     if okB and not (okA and okC) then
-        // the fixed points of u on the conic may be conjugate over a quadratic field K: then A
-        // and C are conjugate in K (complex conjugate when K is imaginary) and the quartic lives
-        // over K.  K is read off the fields of definition of the fixed points of u on X, A is
-        // recognised in K by simultaneous approximation at the accuracy the data show, and the
-        // curve over Q is found by NelsonQuadraticTwist.
+        // B rational with A, C irrational is the signature of fixed points of u on the conic that
+        // are conjugate over a quadratic field K: K comes from the fields of definition of the
+        // fixed points of u on X, A is recognised in K, and the curve from NelsonQuadraticTwist.
         dK, info := NelsonBranchField(V`D, V`N, Set(V`W), um);
         require dK ne 0 : "B is rational but A, C are not, and the fixed points of u on X show no common quadratic field";
         dsf := Squarefree(dK);
         noise := Maximum([ RR | Abs(Imaginary(Bq)), Abs(Real(A) - Real(Cq)), Abs(Imaginary(A) + Imaginary(Cq))/2,
                            dsf gt 0 select Abs(Imaginary(A)) else 0, 10^(-acc) ]);
         okK, AK, bound := NelsonRecogniseInQuadraticField(A, Cq, dsf, RR ! (2*noise));
+        vprintf NelsonShimizu, 1: "fixed points of u conjugate over Q(sqrt %o); noise %o, so denominators are certified to %o\n",
+            dsf, RealField(6) ! noise, bound;
         require okK : Sprintf("the fixed points of u are conjugate over Q(sqrt %o) and B = %o, but A is not recognised in that field at accuracy %o (denominators certified up to %o)", dsf, Br, RealField(4) ! noise, bound);
         diag`Arat := AK; diag`Brat := Br; diag`Crat := Parent(AK) ! 0;
         diag`recognised := [true, true, true];
@@ -1106,7 +1095,8 @@ end intrinsic;
 intrinsic NelsonHyperellipticModel(D::RngIntElt, N::RngIntElt, W::SetEnum :
                                    Precision := 80, Cutoff := 46, Circles := 14, CirclePoints := 16,
                                    Radius := 3/100, Centres := [], Involution := 0, Digits := 0,
-                                   PrimeCap := 150, OrderBasis := [], ChooseBasePoint := true) -> CrvHyp, Rec, Rec
+                                   PrimeCap := 150, OrderBasis := [], ChooseBasePoint := true,
+                                   AllowCoarsePrecision := false) -> CrvHyp, Rec, Rec
 {The whole route from (D, N, W), genus 3 with an Atkin-Lehner involution u such that X/<W,u> has
  genus 1, to a hyperelliptic model over Q: Circles centres (NelsonSamplePoints, or Centres when
  given) with CirclePoints points on a circle of radius Radius around each, evaluated by Theorem
@@ -1114,7 +1104,8 @@ intrinsic NelsonHyperellipticModel(D::RngIntElt, N::RngIntElt, W::SetEnum :
  diagnostics record and the value record (for WriteNelsonValues).  The cost is Circles *
  (CirclePoints + 1) evaluations, each linear in DN; at cutoff 46 the precision should be 80 digits
  or more.  Numerical.}
-    B := NelsonBasis(D, N, W : Precision := Precision, Cutoff := Cutoff, OrderBasis := OrderBasis);
+    B := NelsonBasis(D, N, W : Precision := Precision, Cutoff := Cutoff, OrderBasis := OrderBasis,
+                              AllowCoarsePrecision := AllowCoarsePrecision);
     require B`g eq 3 : "genus 3 only";
     if ChooseBasePoint then NelsonChooseBasePoint(~B); end if;
     ctr := #Centres eq 0 select NelsonSamplePoints(B, Circles) else [ B`CC ! c : c in Centres ];
@@ -1170,17 +1161,12 @@ end intrinsic;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // Descent from a quadratic field.  When the two fixed points of u on the canonical conic are
-// conjugate over K = Q(sqrt d), the coordinate x with u : x -> -x exists only over K, with
-// sigma(x) = 1/x after a K-rescaling, and the quartic G has coefficients in K with sigma acting
-// as x -> 1/x: B rational, C = sigma(A).  Writing F(x) = G0(mu x^2) with
-// G0(t) = 1 + t + A t^2 + A^2 B t^3 + A^3 B^2 C t^4, the identity
-//     t^4 G0(1/t) = A^3 B^2 C . sigma(G0)(t / (A B C))
-// turns the Galois condition sigma(F)(x) = c x^8 F(1/x) into N(mu) = 1/(B N(A)): a norm
-// equation in K, which has a solution exactly when the K-model is the base change of a curve over
-// Q with this marking (Hilbert 90).  The cocycle x -> 1/x is split by x = (1 + w s)/(1 - w s),
-// w = sqrt d: sigma(x) = 1/x exactly when s is rational, u becomes s -> 1/(d s), and
-// (1 - w s)^8 F(x(s)) has coefficients whose ratios are rational.  The curve over Q is then
-// y^2 = r P(s) with r in Q^x/(Q^x)^2 read off point counts, as in the rational case.
+// conjugate over K = Q(sqrt d), the quartic lives over K (B rational, C = sigma(A)), and the
+// Galois-stability of the branch divisor is a norm equation in K, solvable exactly when the
+// K-model is the base change of a curve over Q with this marking (Hilbert 90).  Two twists remain,
+// the twist by u and the quadratic twist, both read off point counts; when the twist by u is not a
+// norm from K the conic X/iota has no rational point and no model y^2 = f(s) over Q exists.
+// See paper/nelson-method.tex, "When the coordinate is not rational".
 
 // a Legendre-symbol row for the F_2 system in the exponents of a twist constant over supp
 function TwistSymbolRow(supp, p)
@@ -1357,19 +1343,10 @@ intrinsic NelsonQuadraticTwist(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIn
     end for;
     splitp := [ p : p in good | KroneckerSymbol(Discriminant(OK), p) eq 1 ];
     inertp := [ p : p in good | KroneckerSymbol(Discriminant(OK), p) eq -1 ];
-    // The scalar kappa of the K-model y^2 = kappa G0((mu/e) x^2) is rational only after the
-    // model is normalised by the constant of the descent, F_e(1) (the value at s = 0); before
-    // that normalisation the quadratic twist is a K-number whose symbols at split primes follow
-    // no rational pattern.  So e is found first from the split primes, using only whether the
-    // count matches with mu/e a square or a non-square at p whatever the quadratic twist, and
-    // r afterwards on the normalised model.
-    // e is a twist of X by a quadratic character through u, and a character ramified at a
-    // prime of good reduction of X would make the twist bad there, so e is supported on 2 D N d
-    // -- relative to a canonical mu.  The solution mu of the norm equation is only defined up to
-    // norm-one elements sigma(gamma)/gamma, and (mu sigma(gamma)/gamma, e N(gamma)) describes the
-    // same curves as (mu, e); the primes of gamma are the primes of the ideal (mu) whose exponents
-    // do not reach the norm, so the rational primes below the prime ideals dividing (mu) join the
-    // support
+    // e is found before r, because the quadratic twist of the K-model is a K-number until the
+    // model is normalised by the scalar the descent datum requires.  e is supported on the primes
+    // of 2 D N d and on those below the prime ideals dividing (mu): the solution of the norm
+    // equation is defined only up to norm-one elements, which shift e by norms.
     mufac := Factorization(mu*OK);
     suppE := Sort(SetToSequence(Set(PrimeDivisors(2*DN*Abs(d))) join { Minimum(f[1]) : f in mufac }));
     nsuppE := #suppE + 1;
@@ -1404,12 +1381,9 @@ intrinsic NelsonQuadraticTwist(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIn
         Sprintf("the twist by u is not determined by the split primes beyond the factor d (kernel dimension %o); raise PrimeCap", Dimension(Kmat));
     e0 := FromVec(v);
     vprintf NelsonShimizu, 2: "split primes give e = %o modulo the factor d = %o\n", e0, d;
-    // The descent datum of y^2 = kappa F_e(x) is (x, y) -> (e/x, eps y/x^4) with
-    // eps^2 = sigma(kappa) c / kappa, where sigma(F_e)(e/x) x^8 = c F_e(x), and N(eps) = e^4.
-    // With eps = e^2 this is sigma(kappa)/kappa = e^4/c, an element of norm one, so Hilbert 90
-    // gives kappa_0 = 1 + c/e^4 (or w + sigma(w) c/e^4 if that vanishes); every valid scalar is
-    // kappa_0 times a rational number times a square of K, and the rational number is the
-    // quadratic twist r.  Nothing here needs e to be a norm.
+    // The datum (x, y) -> (e/x, e^2 y/x^4) forces sigma(kappa)/kappa = e^4/c, of norm one, so
+    // Hilbert 90 supplies kappa_0 = 1 + c/e^4; every valid scalar is kappa_0 times a rational
+    // number (the quadratic twist) times a square.  This needs no e that is a norm.
     function Datum(ee)
         Fe := Evaluate(G0, (mu/ee)*x^2);
         Fs := PK ! [ sig(c) : c in Coefficients(Fe) ];

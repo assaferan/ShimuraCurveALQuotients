@@ -13,7 +13,10 @@
 //   EXACT MODEL  the equation of X_0^1326(1)/<w_17, w_78> obtained by an exact construction
 //                (the double cover of the elliptic curve 1326b2 branched at the CM points of
 //                discriminants -24 and -408 prescribed by the heights of Heegner points), which
-//                agrees with the trace formula at all primes up to 1000
+//                agrees with the trace formula at all primes up to 1000.  That construction is
+//                pull request #124; its model file is read here once it is merged, and until then
+//                the equation is taken from the line below and checked against the file whenever
+//                the file is present
 //   CODE-DERIVED a value produced by this code with no independent source; a regression value
 //
 // Cutoffs are kept small so that the whole file runs in a few minutes; the verdicts need only a
@@ -101,6 +104,15 @@ assert diag`Arat eq -935/324 and diag`Brat eq 1296/3025 and diag`Crat eq -935/32
 assert diag`kappa eq 17 and diag`mu eq -34;                                          // CODE-DERIVED
 assert Genus(C) eq 3;
 fexact := 272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17;
+if FileExists("data/models/models_1326_1.m") then
+    m1326 := eval (Read("data/models/models_1326_1.m") cat "\nreturn models;");
+    key1326 := [Integers()|1,17,78,1326];
+    if IsDefined(m1326, key1326) and Type(m1326[key1326][1][2]) ne MonStgElt then
+        stored1326 := m1326[key1326][1][2];
+        assert IsIsomorphic(HyperellipticCurve(stored1326), HyperellipticCurve(fexact));
+        fexact := stored1326;
+    end if;
+end if;
 Cexact := HyperellipticCurve(fexact);
 assert IsIsomorphic(C, Cexact);                                                      // EXACT MODEL
 // the diagnostics must show what the construction relies on: a clean conic, u-equivariance of
@@ -219,6 +231,7 @@ end for;
 //      split 1 + 2, and the zeta numerators at the split primes agree with the trace formula.
 V := ReadNelsonValues("data/nelson/values_6_323.m");
 assert V`D eq 6 and V`N eq 323 and V`ncirc eq 14;
+assert V`W eq [1,6,19,34,51,114,646,969] and V`g eq 3 and V`cut eq 46 and V`prec eq 80;
 dK := NelsonBranchField(6, 323, {1,6,19,34,51,114,646,969}, 2);
 assert dK eq -8;                                                                      // CM theory
 C6, diag := NelsonHyperellipticModel(V : Involution := 2);
@@ -234,3 +247,37 @@ ok6, Rc6 := NelsonDescentChecks(6, 323, {1,6,19,34,51,114,646,969}, 2, R6);
 assert ok6;
 assert Rc6`splitting eq [1, 2] and Conductor(Rc6`jacobian) eq 1938 and Rc6`zetafailed eq 0 and Rc6`zetachecked ge 10;
 assert Degree(Rc6`branchmodel) eq 4;
+
+// [11] HAND: the counting rule at genus 4, where the suite has no curve.  The canonical image of
+//      a hyperelliptic curve of genus 4 is a rational normal curve in P^3, which lies on exactly
+//      three quadrics -- the 2x2 minors of the 2x3 matrix of its coordinates -- so values
+//      (1, t, t^2, t^3) at twelve points must give the count 3.  The three vanishing singular
+//      values there differ among themselves by large factors (two are exactly zero at this
+//      precision and the first nonzero one is 0.019), which is the configuration a rule reading
+//      off the largest ratio anywhere would split into one relation.
+//      The second configuration is a sample of the quadric surface u1 u4 = u2 u3 that nearly
+//      satisfies a second quadric: its rank is 2, which no canonical image of genus 4 can have,
+//      and the rule must refuse the count rather than report the nearest admissible one.
+CC := ComplexField(30);
+rnc := [ [ CC | sc*1, sc*t, sc*t^2, sc*t^3 ] where sc := CC ! (1 + t/7)
+         : t in [ CC | 1/2, -2/3, 3, -5/4, 7/5, -8/3, 11/4, -13/5, 17/6, -19/7, 23/8, 29/9 ] ];
+cnt4, sv4, gap4 := NoetherQuadricCount(rnc, 4);
+assert cnt4 eq 3 and gap4 gt 10^4;
+assert #[ i : i in [1..#sv4] | sv4[i] lt 10^(-4) ] eq 3;
+quad := [ [ CC | a, b, c, b*c/a ] where a := CC ! (1 + i/3) where b := CC ! (2 - j/5) where c := CC ! (1 + i*j/11)
+          : i in [1..4], j in [1..3] ];
+cnt2, sv2, gap2 := NoetherQuadricCount(quad, 4);
+assert #[ i : i in [1..#sv2] | sv2[i] lt 10^(-4) ] eq 2;
+assert cnt2 eq -1;
+
+// [12] The precision rule: a request whose evaluations would sum more than about a million terms
+//      at fewer than 50 digits is refused, which is the X_0^1326(1) setting whose residual
+//      stalled (about 3.3 million terms per evaluation at cutoff 46).  HAND: the term count is
+//      10 (cut/4pi)^4 sigma_2(DN)/DN, the law measured in the write-up.
+refused := false;
+try
+    _ := NelsonBasis(1326, 1, {1,17,78,1326} : Precision := 30, Cutoff := 46);
+catch e
+    refused := true;
+end try;
+assert refused;
