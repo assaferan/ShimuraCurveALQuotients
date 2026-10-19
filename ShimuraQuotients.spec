@@ -1,5 +1,7 @@
 {
 BorcherdsForms.m
+ExactDoubleCover.m
+HeegnerHeights.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
 WeilRepresentation.m
