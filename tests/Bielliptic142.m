@@ -7,19 +7,33 @@
 // tests/GuoYangExample42.m).  C -> E is a double cover branched at the four points of E fixed by
 // w_2 or w_142: P_-4, P_-8 (Ogg: w_2 fixes the CM points of discriminants -4, -8) and the two
 // conjugate points of discriminant -568 = -4*142 (w_142).  If C were hyperelliptic, its
-// hyperelliptic involution would commute with w_71 and descend to an involution P -> Q0 - P of E
-// preserving the branch locus B; so B would split into two pairs with equal sums Q0.  Conversely
-// of the double covers branched at B the one of square-root class Q0 is hyperelliptic (the
-// others are Ciani quartics), and here the class is forced: E(Q) is torsion-free, so B has one
-// rational square root.
+// hyperelliptic involution would commute with w_71 and descend to tau: P -> Q0 - P on E
+// preserving the branch locus B, and tau would fix no branch point (a lift of tau to C would
+// otherwise have at most seven fixed points instead of eight), so B would split into two pairs
+// with equal sums Q0.  Conversely, of the four double covers branched at B, whose classes are
+// Q0 + E[2], the one of class Q0 is hyperelliptic and the others are Ciani quartics; here no
+// pairing has equal sums, so none of the four is hyperelliptic and the class is not needed.
+//
+// Guo-Yang's Assumption 40 (trivial character of the Borcherds forms) is not needed either:
+// E(Q) is Z with no torsion, the divisor of a Borcherds product is rational and its class has
+// finite order, so it is principal; the positions of P_-4, P_-8 and of R + R' follow from the
+// Schofer values alone.
+//
+// Sources of the numbers.  The positions of the ten rational CM points as multiples of
+// Q = (1, 1) are Guo-Yang, Compositio 153 (2017), Example 42, the second table of the example
+// (-Q, -2Q, O, Q, 2Q, 3Q, 4Q, -3Q, -4Q, -6Q for -3, -4, -8, -19, -20, -24, -40, -43, -148,
+// -232).  R + R' = 16 Q, the entry 4 - 16 of the obstruction functional at the cycle, the pole
+// order 159 at which it is computed, and the twist c = -15006 below were computed by this
+// repository and are regression values, not verifications.  That the field of definition of the
+// -568 points is Q(sqrt -71) is checked both from the model and from the CM-field code.
 //
 // What is checked.
-//   1. The model and the positions of the CM points (Guo-Yang's table: multiples of Q = (1, 1)).
+//   1. The model and the positions of the CM points (the paper's table).
 //   2. A Borcherds form with divisor Z(-568) + P_-148 - 3 P_-40 (found by the prescribed-divisor
 //      search) is pinned inside L(3 P_-40 - P_-148) by its Schofer values at eight CM points; its
-//      remaining zeros are the two points R, R' of discriminant -568, and R + R' = 16 Q.  This is
-//      exactly what the obstruction functional predicts (CMDivisorObstruction read in point
-//      multiplicities assigns the cycle 16 + 2*2 - 2*2 = 16).
+//      remaining zeros are the two points R, R' of discriminant -568, defined over Q(sqrt -71),
+//      and R + R' = 16 Q.  This is what the obstruction functional predicts (CMDivisorObstruction
+//      read in point multiplicities assigns the cycle 2 + 2 - 16 = 4 - 16).
 //   3. No pairing of B has equal sums: -2Q + O != 16Q, and a mixed pairing would need R - R' to
 //      be 2-torsion.  So the criterion says: not hyperelliptic.
 //   4. Independently: the double cover w^2 = phi, phi the generator of
@@ -27,9 +41,10 @@
 //      differentials satisfy no quadratic relation (canonical image a plane quartic), while the
 //      cover branched at the equal-sum locus {P_-4, P_-8, P_-19, P_-43} with the matching class
 //      does satisfy one (hyperelliptic) and the criterion says so.
-//   5. The cover is X/w_71: at every good prime up to 100 the trace formula's point count of
-//      X_0^142(1)/w_71 equals that of w^2 = c phi for c a square or for c a non-square mod p, never
-//      neither, and the resulting Legendre symbols are those of a single squarefree integer c.
+//   5. The cover is X/w_71: with c = -15006 = -2*3*41*61 (3, 41, 61 come from the scaling of
+//      the generator phi), the curve w^2 = c phi has the trace formula's number of points of
+//      X_0^142(1)/w_71 over F_p at every prime 5 <= p <= 250 where the reduction of the model is
+//      a curve of genus 3, which is at least forty primes.
 
 procedure test_bielliptic_142()
     printf "X_0^142(1)/w_71 through the genus-one star: branch pair, criterion, canonical quadric, point counts...";
@@ -92,6 +107,8 @@ procedure test_bielliptic_142()
     assert #deg2 eq 1;
     Rpl := deg2[1];
     K := ResidueClassField(Rpl);
+    assert IsIsomorphic(K, QuadraticField(-71));
+    assert IsIsomorphic(FieldOfDefinitionOfCMPoint(star, -568), QuadraticField(-71));
     EK := BaseChange(E, K);
     R := EK!Eltseq(RepresentativePoint(Rpl));
     sigma := Automorphisms(K)[2];
@@ -99,8 +116,9 @@ procedure test_bielliptic_142()
     S := R + Rc;
     assert forall{c : c in Eltseq(S) | c in Rationals()};
     S := E![Rationals()!c : c in Eltseq(S)];
-    assert S eq 16*sgn*Q;
+    assert S eq 16*sgn*Q;     // regression value (computed here)
     // the functional, read on the cycle: its entry at Z(-568) in point multiplicities is 4 - 16
+    // (regression values: the entry and the pole order 159)
     Kf, _ := CMDivisorObstruction(star, ds cat [-568] : PoleOrder := 159);
     assert Dimension(Kf) eq 1;
     v := Eltseq(Basis(Kf)[1]);
@@ -130,13 +148,14 @@ procedure test_bielliptic_142()
     assert IsHyperellipticByCanonicalQuadric(FCtl);
     assert BiellipticBranchCriterion([pts[-4], pts[-8], pts[-19], pts[-43]], pts[-4] + pts[-8]);
 
-    // (5) the cover is X/w_71: point counts and the twist
+    // (5) the cover is X/w_71: point counts with the twist c = -15006 (regression value)
+    c := -15006;
     pf := ProjectiveFunction(phi);
     Nphi := Numerator(pf); Dphi := Denominator(pf);
     cN := Coefficients(Nphi); cD := Coefficients(Dphi);
-    den := LCM([Denominator(c) : c in cN cat cD]);
-    symbols := AssociativeArray();
-    for p in [q : q in PrimesUpTo(60) | q ge 5] do
+    den := LCM([Denominator(x) : x in cN cat cD]);
+    checked := 0;
+    for p in [q : q in PrimesUpTo(250) | q ge 5] do
         Ep := ChangeRing(E, GF(p));
         FEp := FunctionField(Ep);
         AFFp, toAFFp := AlgorithmicFunctionField(FEp);
@@ -144,27 +163,21 @@ procedure test_bielliptic_142()
         xp := FEp.1; yp := FEp.2;
         Np := &+[R3 | (GF(p)!(den*MonomialCoefficient(Nphi, m)))*Monomial(R3, Exponents(m)) : m in Monomials(Nphi)];
         Dp := &+[R3 | (GF(p)!(den*MonomialCoefficient(Dphi, m)))*Monomial(R3, Exponents(m)) : m in Monomials(Dphi)];
-        if Evaluate(Dp, [xp, yp, 1]) eq 0 then continue; end if;
+        if Evaluate(Dp, [xp, yp, 1]) eq 0 or Evaluate(Np, [xp, yp, 1]) eq 0 then continue; end if;
         phip := Evaluate(Np, [xp, yp, 1]) / Evaluate(Dp, [xp, yp, 1]);
         PTp<Tp> := PolynomialRing(AFFp);
-        nonsq := [a : a in [2..p-1] | not IsSquare(GF(p)!a)][1];
         try
-            Fplus := FunctionField(Tp^2 - toAFFp(phip));
-            Fminus := FunctionField(Tp^2 - nonsq*toAFFp(phip));
-            gp := Genus(Fplus);
+            Fc := FunctionField(Tp^2 - (GF(p)!c)*toAFFp(phip));
+            gp := Genus(Fc);
         catch e
             continue;
         end try;
         if gp ne 3 then continue; end if;
-        target := ComputePointsViaTrace(X71, p, 1);
-        nplus := #Places(Fplus, 1); nminus := #Places(Fminus, 1);
-        assert nplus eq target or nminus eq target;
-        if nplus ne nminus then symbols[p] := (nplus eq target) select 1 else -1; end if;
+        assert #Places(Fc, 1) eq ComputePointsViaTrace(X71, p, 1);
+        checked +:= 1;
     end for;
-    assert #Keys(symbols) ge 8;
-    cs := [c : c in [-10^5..10^5] | c ne 0 and IsSquarefree(c) and forall{p : p in Keys(symbols) | KroneckerSymbol(c, p) eq symbols[p]}];
-    printf " [twist c in %o]", cs;
-    assert #cs ge 1;
+    printf " [%o primes]", checked;
+    assert checked ge 40;
     printf "Done!\n";
 end procedure;
 

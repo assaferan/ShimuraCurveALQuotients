@@ -1089,7 +1089,7 @@ adds values of m to the cusp-0 ladder, which otherwise stops at the deepest poin
 PoolClassNumber is the class-number bound of the CM points the divisors may use (default 2, as in the hauptmodul search);
 with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.
 On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
-that no divisor uses (the rung's pool grows with that pole order: 48 GB at X_0^141(1) without a bound).}
+that no divisor uses; the pool of a rung grows with that pole order.}
     prescribed := not IsEmpty(Divisors);
     if prescribed then
         // filled from the CM pool once it is known
@@ -1220,9 +1220,8 @@ that no divisor uses (the rung's pool grows with that pole order: 48 GB at X_0^1
         end for;
         // The cusp-0 rung at m costs a pool of pole order D0*|m| there, and with AllowMissing the
         // search climbs every rung whenever one divisor is out of reach; so a pool point that no
-        // divisor uses contributes a rung only below MaxZeroPoleOrder.  (X_0^141(1): the unused
-        // class-number-2 points -235, -267 gave rungs of pole order 141*267 at cusp 0, and the
-        // process grew to 48 GB.)  The rungs of the points actually used are always kept.
+        // divisor uses contributes a rung only below MaxZeroPoleOrder.  The rungs of the points
+        // actually used are always kept.
         rung_of := func<d | (d mod 4 eq 0) select -d div 4 else -d>;
         ladder_pts := [p : p in pts cat quad_pts | p[1] in used or
                        (ClassNumber(p[1]) le 2 and (IsEven(Xstar`D) or D0*rung_of(p[1]) le MaxZeroPoleOrder))]

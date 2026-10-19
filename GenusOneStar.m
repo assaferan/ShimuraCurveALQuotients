@@ -31,9 +31,9 @@ end function;
 
 intrinsic BorcherdsFormValues(fs::SeqEnum[EtaQuot], ds::SeqEnum[RngIntElt], Xstar::ShimuraQuot : Degrees := []) -> SeqEnum
 {The absolute values |psi_f| of the Borcherds forms of the forms in fs at the CM points of Xstar of
-discriminants ds, one list per form (a zero gives 0, a pole Infinity(), a value that is not a
-rational number -- a fractional exponent -- the LogSm itself).  Degrees gives the degree of each
-point (default 1 throughout); at a quadratic point the value is the norm over the two conjugates.}
+discriminants ds, one list per form (a zero gives 0, a pole Infinity()); a value that is not a
+rational number is an error.  Degrees gives the degree of each point (default 1 throughout); at
+a quadratic point the value is the norm over the two conjugates.}
     if IsEmpty(Degrees) then Degrees := [1 : d in ds]; end if;
     require #Degrees eq #ds : "Degrees must have one entry per discriminant";
     Ldata := ShimuraCurveLattice(Xstar`D, Xstar`N);
@@ -42,10 +42,12 @@ point (default 1 throughout); at a quadratic point the value is the norm over th
     for j->d in ds do
         vals := AbsoluteValuesAtRationalCMPoint(fs, d, Xstar, Ldata : Lambda := lambdas[-d], PointDegree := Degrees[j]);
         for i->v in vals do
-            // a value with a fractional exponent (seen at a discriminant not coprime to N) is
-            // kept as the log-sum itself, for the caller to drop that point
-            r := 0;
-            try r := RationalNumber(v); catch e r := v; end try;
+            // a fractional exponent means the form is not a function on the star (a nontrivial
+            // character) or the local factor of Schofer's formula at a prime dividing both d and
+            // N is wrong; either way nothing downstream is valid, so stop here
+            ok := true;
+            try r := RationalNumber(v); catch e ok := false; end try;
+            error if not ok, Sprintf("BorcherdsFormValues: the value of form %o at discriminant %o is not a rational number: %o", i, d, v);
             Append(~table[i], r);
         end for;
     end for;
@@ -176,9 +178,14 @@ distinct points of E over one number field.  L is a point of E giving the square
 the cover: the cover is E(sqrt phi) with div phi = B - 2 D and L = the sum of the two points of
 D (for a Borcherds form with divisor B - 4 P_oo, L = 2 P_oo).  Returns whether C is
 hyperelliptic, and the list of pairings of B into two pairs with equal sums, each with its sum Q0.
-C is hyperelliptic exactly when some pairing has Q0 = L: the hyperelliptic involution descends
-to P -> Q0 - P on E, which must preserve B, and of the four double covers branched at B only the
-one of class Q0 has an involution over it with eight fixed points (the others are Ciani quartics).}
+C is hyperelliptic exactly when some pairing has Q0 = L.  If C is hyperelliptic its hyperelliptic
+involution commutes with the covering involution and descends to tau: P -> Q0 - P on E, which
+preserves B; tau fixes no branch point, since over a fixed branch point a lift of tau to C would
+fix at most one point and have at most seven fixed points in all instead of eight; so tau swaps
+B in two pairs, each of sum Q0.  Conversely the four double covers branched at B have classes
+Q0 + E[2], and only the class Q0, the pull-back of O(1) from E/tau = P^1, carries a lift of tau
+with eight fixed points; the other three are Ciani quartics.  When no pairing has equal sums the
+verdict needs no class at all.}
     require #B eq 4 and #Set(B) eq 4 : "four distinct branch points";
     PS := Universe(B);
     LK := PS!Eltseq(L);
@@ -190,14 +197,6 @@ one of class Q0 has an involution over it with eight fixed points (the others ar
         if s1 eq s2 then Append(~equal, <pr, s1>); end if;
     end for;
     return exists{e : e in equal | e[2] eq LK}, equal;
-end intrinsic;
-
-intrinsic BiellipticBranchCriterion(S1::PtEll, S2::PtEll, L::PtEll) -> BoolElt, BoolElt
-{The same for a branch locus made of two conjugate pairs with sums S1 and S2, when only the sums
-are known: returns (S1 = S2 = L) and the necessary condition S1 = S2.  The two pairings that mix
-the pairs are not tested; they need each pair to differ by a 2-torsion point, which the caller
-rules out separately.}
-    return (S1 eq S2) and (S1 eq L), S1 eq S2;
 end intrinsic;
 
 intrinsic IsHyperellipticByCanonicalQuadric(FC::FldFun) -> BoolElt

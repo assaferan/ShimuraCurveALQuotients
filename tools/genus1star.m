@@ -5,54 +5,51 @@
 //     magma -b D:=158 N:=1 tools/genus1star.m < /dev/null > genus1star_158_1.log 2>&1
 //
 // Options (name:=value): stage (0 object checks; 1 the divisor search; 2 the model, default;
-// 3 also the quadratic branch pairs), bd (class-number bound of the CM pool, default 4),
-// maxpole / maxzero (largest |d| used as a pole / a zero of a Borcherds form, defaults 100 / 200),
-// intsol (1, default: keep only integral principal parts, so each Borcherds form is a function and
-// not a root of one; 0 to accept rational ones), verb (verbosity, default 1).
+// 3 also the quadratic cycles that are fibres of a coordinate), bd (class-number bound of the CM
+// pool, default 4), maxpole / maxzero (largest |d| used as a pole / a zero of a Borcherds form,
+// defaults 100 / 200), intsol (1, default: keep only integral principal parts, so each Borcherds
+// form is a function and not a root of one; 0 to accept rational ones), exclude (discriminants
+// left out of the value table, comma-separated, e.g. exclude:=-51), verb (verbosity, default 1).
 //
 // What is printed, and how it is checked.
 //   * The Jacobian is identified independently of the model: by Jacquet-Langlands the star's
 //     Jacobian is the elliptic curve of the rational newform of level D*M (M | N) whose
 //     Atkin-Lehner signs make it quaternionically invariant, i.e. a_p = +1 at p | D (the sign is
 //     flipped at the discriminant primes) and a_p = -1 at p || N.  The model's curve must have
-//     those traces of Frobenius at every good prime up to 100, and when the isogeny class has a
-//     single curve it must be isomorphic to it.
-//   * Every rational CM point of class number <= bd is placed on the minimal model, as a point
-//     and as an element of the Mordell-Weil group (origin: the CM point named as base point).
+//     those traces of Frobenius at every good prime up to 100.  When the isogeny class has a
+//     single curve the model must be isomorphic to it, and then the curve is determined; when it
+//     has several, the model's curve is known up to isogeny only, since nothing here checks the
+//     character of the Borcherds forms (Guo-Yang's Assumption 40; see the header of
+//     GenusOneStar.m) and E(Q) then has torsion.
+//   * Every CM point of fundamental discriminant and class number <= bd that is rational on the
+//     star (the pool of RationalandQuadraticCMPoints, elliptic points included) is placed on the
+//     minimal model, as a point and as an element of the Mordell-Weil group (origin: the CM point
+//     named as base point).  A point whose Schofer value is not a rational number stops the run
+//     (BorcherdsFormValues); leaving it out with exclude:= makes the model conditional on the
+//     values at the remaining points.  Schofer's formula at a discriminant not coprime to N has
+//     no theoretical warrant here (see the note at CandidateDiscriminants).
 //   * Stage 3 lists the quadratic CM cycles Z(d) = {P, P'} with Z(d) - 2 P_oo principal for some
-//     rational CM point P_oo, which says P + P' = 2 P_oo exactly in the group.  These are the
-//     branch points of the genus-three double covers of the star (tests of hyperellipticity use
-//     them: see BiellipticBranchCriterion in GenusOneStar.m).
+//     rational CM point P_oo, i.e. P + P' = 2 P_oo exactly in the group: such a cycle is a fibre
+//     of the coordinate with pole P_oo.  (The branch points of a double cover X/<w_m> -> X* are
+//     the images of the fixed points of the other involutions, CM points by orders containing
+//     sqrt(-m') with m' the other elements of W; tests of hyperellipticity need those, see
+//     BiellipticBranchCriterion in GenusOneStar.m.)
 //   * The Borcherds forms, the Schofer values and the relation are printed so that a value can be
 //     traced; the file ends with one line  RESULT := <...>;  that Magma can read back.
 //
-// Known limits.  Non-squarefree N is refused upstream (the CM-field code asserts); on odd D the
-// cusp-0 ladder only reaches the class-number-2 pool plus the points used, so "no form" there may
-// mean "not reached" rather than "not principal" (tools history: 15_2).  Schofer's formula at a
-// discriminant not coprime to N has no theoretical warrant here, only the record of the N > 1
-// bases that passed their external checks (see the note at CandidateDiscriminants).
-//
-// MEMORY ON ODD D -- read before running one on a shared machine.  Each cusp-0 rung m builds a
-// pool of eta quotients of pole order D0*|m| at the zero cusp (basis_of_weakly_holomorphic_forms
-// with Zero), and that pool, not the divisor check or the lattice, is what grows: the memory of
-// the process tracks the deepest rung reached.  With AllowMissing the search climbs EVERY rung
-// as soon as one requested divisor is out of reach, so an odd-D run always reaches the deepest
-// rung of its ladder.  X_0^141(1) (D0 = 141) reached 48 GB on a 48 GB machine after five hours
-// in stage 1 and was reclaimed by the system; its ladder ended at the unused class-number-2
-// points -235 and -267, i.e. pole order 141*267 at cusp 0.  BorcherdsForms now drops the rungs of
-// unused pool points above MaxZeroPoleOrder (default 3000; the rungs of the points a divisor uses
-// are kept), which bounds the pool but not the rungs the request itself demands: keep maxzero
-// small on odd D, and run odd D with D0 > 60 on lovelace, not on the Mac.  Measured on the Mac:
-// 65_2 (D0 = 65) 9 min, 85_2 12 min, both within the old ladder; 141_1 did not finish.
-//
-// X_0^39(11)* (Jacobian 429b1, branch discriminants -52 and -132 of the genus-3 quotient by
-// {1,11,39,429}) and X_0^55(7)* are the targets this was written for; their form rings (levels
-// 1716 and 1540) are being built on lovelace and are not to be attempted on the Mac.
+// Limits.  Non-squarefree N is refused upstream (the CM-field code asserts).  On odd D the
+// cusp-0 ladder reaches the class-number-2 pool plus the points used, so "no form" there may
+// mean "not reached" rather than "not principal"; and each rung m of that ladder builds a pool
+// of pole order D0*|m| at the zero cusp, whose size is what bounds the memory of a run
+// (BorcherdsForms drops the rungs of unused pool points above MaxZeroPoleOrder, so keep maxzero
+// small on odd D).
 
 AttachSpec("ShimuraQuotients.spec");
 SetColumns(0);
-if not assigned D then error "usage: magma -b D:=.. N:=.. tools/genus1star.m"; end if;
-D := StringToInteger(D); N := StringToInteger(N);
+if not assigned D or not assigned N then error "usage: magma -b D:=.. N:=.. tools/genus1star.m"; end if;
+D := StringToInteger(D);
+N := StringToInteger(N);
+excluded := assigned exclude select [StringToInteger(x) : x in Split(exclude, ",")] else [];
 stage := assigned stage select StringToInteger(stage) else 2;
 bd := assigned bd select StringToInteger(bd) else 4;
 maxpole := assigned maxpole select StringToInteger(maxpole) else 100;
@@ -87,11 +84,10 @@ ells := NumberOfEllipticPointsByCMOrder(star);
 printf "rational CM points (class number <= %o): %o\nquadratic: %o\nelliptic points: %o\n",
        bd, [p[1] : p in rat], [p[1] : p in quad],
        [<q, [<d, ells[q][d]> : d in Keys(ells[q])]> : q in Keys(ells) | #Keys(ells[q]) gt 0];
-// every rational CM point supports divisors and enters the value table; a point whose Schofer
-// value is not a rational number is dropped from the table below (X_0^14(17) at -51: a
-// fractional exponent; Schofer's formula at a discriminant not coprime to N has no warrant here)
+// every rational CM point supports divisors and enters the value table unless excluded
 support_ds := Sort([p[1] : p in rat], func<a, b | Abs(a) - Abs(b)>);
-table_ds := support_ds;
+table_ds := [d : d in support_ds | d notin excluded];
+if #excluded gt 0 then printf "left out of the value table on request: %o\n", excluded; end if;
 if stage eq 0 then quit; end if;
 
 // ---- stage 1: the divisor search ------------------------------------------------------------
@@ -134,12 +130,6 @@ cx := coord_choices[1]; cy := coord_choices[2];
 t0 := Realtime();
 vals := BorcherdsFormValues([fs[cx[2]], fs[cx[3]], fs[cy[2]], fs[cy[3]]], table_ds, star);
 printf "stage 2: Schofer values in %os\n", Realtime() - t0;
-bad := [j : j in [1..#table_ds] | exists{i : i in [1..4] | Type(vals[i][j]) eq LogSm}];
-if #bad gt 0 then
-    printf "  dropped from the table (value not a rational number): %o\n", [table_ds[j] : j in bad];
-    vals := [[* vals[i][j] : j in [1..#table_ds] | j notin bad *] : i in [1..4]];
-    table_ds := [table_ds[j] : j in [1..#table_ds] | j notin bad];
-end if;
 for i in [1..4] do printf "  |psi_%o| at %o: %o\n", i, table_ds, vals[i]; end for;
 xs, cx0, cx1 := CoordinateFromBorcherdsForms(vals[1], vals[2], table_ds, divisors[cx[2]][1], divisors[cx[3]][1]);
 ys, cy0, cy1 := CoordinateFromBorcherdsForms(vals[3], vals[4], table_ds, divisors[cy[2]][1], divisors[cy[3]][1]);
@@ -160,9 +150,13 @@ matches := [f : f in cands | forall{p : p in good_ps | TraceOfFrobenius(E, p) eq
 printf "Jacobian check: traces at %o good primes match the newform(s) %o\n", #good_ps,
        [CremonaReference(EllipticCurve(f)) : f in matches];
 error if IsEmpty(matches), "the model's curve matches no Jacobian candidate";
-single := [f : f in matches | #IsogenousCurves(EllipticCurve(f)) eq 1];
-for f in single do
-    printf "  the class %o has one curve: isomorphic to it: %o\n", CremonaReference(EllipticCurve(f)), IsIsomorphic(E, EllipticCurve(f));
+for f in matches do
+    if #IsogenousCurves(EllipticCurve(f)) eq 1 then
+        printf "  the class %o has one curve: isomorphic to it: %o\n", CremonaReference(EllipticCurve(f)), IsIsomorphic(E, EllipticCurve(f));
+    else
+        printf "  the class of %o has %o curves: the curve of the star is known up to isogeny only\n",
+               CremonaReference(EllipticCurve(f)), #IsogenousCurves(EllipticCurve(f));
+    end if;
 end for;
 
 // the CM points on E: the finite ones through the map, a pole of x or of y through its divisor
