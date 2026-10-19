@@ -204,6 +204,21 @@ for key in group_order do
         end if;
         C := curve_of[i];
         Append(~models, <i, desc, C>);
+        if Type(C) ne CrvHyp then
+            // The fibre-product stage stores a plain curve in a weighted projective space, with no
+            // hyperelliptic polynomials and no isomorphism test against the table's y^2 + h y = f.
+            gC := 0; got := true;
+            try
+                gC := Genus(C);
+            catch e
+                got := false;
+            end try;
+            printf "  [%o] NON-HYPERELLIPTIC-MODEL: the computed model is not hyperelliptic, %o (%o)\n",
+                   desc, got select Sprintf("genus %o", gC) else "genus not computable", reason_of[i];
+            Append(~verdicts, <i, desc, (got select Sprintf("NON-HYPERELLIPTIC-MODEL (g=%o)", gC)
+                                              else "NON-HYPERELLIPTIC-MODEL")>);
+            continue;
+        end if;
         try
             gC := Genus(C);
             if gC ne 2 then
@@ -251,6 +266,10 @@ for m in models do
     exp_aut := expected_aut(m[1]);
     exp_bi := exp_aut eq 4;
     try
+        if Type(m[3]) ne CrvHyp then
+            printf "  SKIP   %o : model is not hyperelliptic, no biellipticity check\n", m[2];
+            continue;
+        end if;
         if Genus(m[3]) ne 2 then
             printf "  SKIP   %o : model not genus 2\n", m[2];
             biell_all_ok := false;
