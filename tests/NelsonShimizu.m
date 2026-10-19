@@ -100,7 +100,8 @@ assert diag`u eq 2;
 assert diag`Arat eq -935/324 and diag`Brat eq 1296/3025 and diag`Crat eq -935/324;   // CODE-DERIVED
 assert diag`kappa eq 17 and diag`mu eq -34;                                          // CODE-DERIVED
 assert Genus(C) eq 3;
-Cexact := HyperellipticCurve(272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17);
+fexact := 272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17;
+Cexact := HyperellipticCurve(fexact);
 assert IsIsomorphic(C, Cexact);                                                      // EXACT MODEL
 // the diagnostics must show what the construction relies on: a clean conic, u-equivariance of
 // the conic, an even octic (the quartic in x^2 predicts the centres it was not fitted on)
@@ -145,3 +146,91 @@ WriteNelsonValues(V, tmp);
 V2 := ReadNelsonValues(tmp);
 assert V2`pts eq V`pts and V2`vals eq V`vals and V2`obas eq V`obas and V2`alsig eq V`alsig;
 System("rm -f " cat tmp);
+
+// [9]  The descent from a quadratic field (NelsonQuadraticDescent, NelsonQuadraticTwist): when
+//      the two fixed points of the marking involution on the canonical conic are conjugate over
+//      K = Q(sqrt d), the quartic lives over K and the curve over Q is recovered by the norm
+//      equation, the substitution x = (1 + sqrt d s)/(1 - sqrt d s), and the two twists e (by
+//      the involution) and r (quadratic) read off point counts.  Controls with known equations:
+//      HAND: a synthetic octic prod (d s^2 - d tau s + 1) is invariant under s -> 1/(d s) by
+//      construction; moved to the K-coordinate and descended it must come back isomorphic over Q
+//      for some pair (e, r) supported on the bad primes.  EXACT MODEL: the 1326 model above with
+//      its involutions x -> -1/(2x) (fixed points over Q(sqrt -2), the quotient by w_3) and
+//      x -> 1/(2x) (over Q(sqrt 2), by w_6), the twists found from the trace formula, must give
+//      a curve isomorphic to the model and the quotient Jacobians 1326c1 and 1326b2 (MAGMA:
+//      Cremona labels); the K-invariants of the model are computed exactly here, not retyped.
+function KInvariantsOfModel(f, a, b, c, dd)
+    // the involution M(x) = (a x + b)/(c x - a); X = (x - r1)/(x - r2) for its fixed points r1, r2
+    K<w> := QuadraticField(dd); PK<X> := PolynomialRing(K);
+    rts := Roots(PK ! (c*x^2 - 2*a*x - b)); r1 := rts[1][1]; r2 := rts[2][1];
+    F := PK ! (Evaluate(PK ! f, (r1 - r2*X)/(1 - X)) * (1 - X)^8);
+    assert &and[ Coefficient(F, i) eq 0 : i in [1..7 by 2] ];      // M acts as X -> -X
+    g := [ Coefficient(F, 2*j) : j in [0..4] ];
+    return g[1]*g[3]/g[2]^2, Rationals() ! (g[2]*g[4]/g[3]^2);
+end function;
+for dd in [-2, 2] do
+    Ps := &*[ dd*x^2 - dd*t*x + 1 : t in [3/2, -7/3, 5, -1/4] ];
+    assert Ps eq P ! (dd^4*x^8*Evaluate(Ps, 1/(dd*x)));           // HAND: the symmetry
+    Ad, Bd := KInvariantsOfModel(Ps, 0, 1, dd, dd);
+    assert Degree(Parent(Ad)) eq 2 and not Ad in Rationals();   // a generic case: A irrational
+    Pd := NelsonQuadraticDescent(Ad, Bd);
+    dPs := Discriminant(Ps); dPd := Discriminant(Pd);
+    supp := Sort(SetToSequence(Set(PrimeDivisors(Numerator(dPs))) join Set(PrimeDivisors(Denominator(dPs)))
+                                join Set(PrimeDivisors(Numerator(dPd))) join {2, Abs(dd)}));
+    Cs := HyperellipticCurve(Ps); recovered := false;
+    for bits in CartesianPower([0,1], #supp) do
+        e0 := &*([1] cat [ supp[i] : i in [1..#supp] | bits[i] eq 1 ]);
+        for e in [e0, -e0] do
+            if not NormEquation(Parent(Ad), Rationals() ! e) then continue; end if;
+            Pe := NelsonQuadraticDescent(Ad, Bd : Twist := e);
+            for bits2 in CartesianPower([0,1], #supp) do
+                r0 := &*([1] cat [ supp[i] : i in [1..#supp] | bits2[i] eq 1 ]);
+                if IsIsomorphic(Cs, HyperellipticCurve(r0*Pe)) or IsIsomorphic(Cs, HyperellipticCurve(-r0*Pe)) then
+                    recovered := true; break bits;
+                end if;
+            end for;
+        end for;
+    end for;
+    assert recovered;
+end for;
+for tup in [ <0, -1/2, 1, -2, 3, "1326c1">, <0, 1/2, 1, 2, 6, "1326b2"> ] do
+    Am, Bm := KInvariantsOfModel(fexact, tup[1], tup[2], tup[3], tup[4]);
+    e, r, R := NelsonQuadraticTwist(1326, 1, {1,17,78,1326}, tup[5], Am, Bm);
+    assert R`split and IsIsomorphic(R`model, Cexact);
+    assert CremonaReference(MinimalModel(Jacobian(GenusOneModel(R`rE*R`PE)))) eq tup[6];
+    assert Conductor(MinimalModel(Jacobian(GenusOneModel(R`rE*R`PE)))) eq 1326;
+end for;
+
+// [10] The quadratic-field case on real data: X_0^6(323)/<w_6, w_19, w_34>, from the stored
+//      values data/nelson/values_6_323.m (cutoff 46, 80 digits, 14 circles of 16 points, four
+//      processes against the Z-basis recorded in the file; produced by
+//        B := NelsonBasis(6, 323, {1,6,19,34,51,114,646,969} : Precision := 80, Cutoff := 46, OrderBasis := obas);
+//        V := NelsonCircleValues(B, NelsonSamplePoints(B, 14), 16, RealField(80)!3/100);
+//      with base point 0.1103 + 1.0411 i).  With u = w_2 the middle invariant is rational and
+//      the other two are complex conjugates; the fixed points of u on X are CM points of
+//      discriminant -7752 defined over a quartic field whose quadratic subfield is Q(sqrt -2)
+//      (CM theory, through FieldOfDefinitionOfCMPoint), A is recognised there, and the twists
+//      from the trace formula put the curve over a conic with NO rational point: the quotient
+//      has no model y^2 = f(s) over Q, and the result is the K-model with its descent datum.
+//      What is asserted: the field, B, that A lies in K with the recognised value
+//      (CODE-DERIVED), that the conic is pointless, and the four checks: the fixed points of u
+//      on the K-model are defined over the CM field, the Jacobian of the descended quotient has
+//      conductor 1938 and the a_p of the W-fixed newform with w_2 = +1, the W-fixed newforms
+//      split 1 + 2, and the zeta numerators at the split primes agree with the trace formula.
+V := ReadNelsonValues("data/nelson/values_6_323.m");
+assert V`D eq 6 and V`N eq 323 and V`ncirc eq 14;
+dK := NelsonBranchField(6, 323, {1,6,19,34,51,114,646,969}, 2);
+assert dK eq -8;                                                                      // CM theory
+C6, diag := NelsonHyperellipticModel(V : Involution := 2);
+K6 := Parent(diag`Arat);
+assert Degree(K6) eq 2 and Discriminant(Integers(K6)) eq -8;
+assert diag`Brat eq 22468/134689;                                                     // CODE-DERIVED
+assert diag`Arat eq (100340736*K6.1 - 130090857)/1262027560 or diag`Arat eq (-100340736*K6.1 - 130090857)/1262027560;  // CODE-DERIVED
+assert BaseRing(C6) eq K6;                                                            // no model over Q
+e6, r6, R6 := NelsonQuadraticTwist(6, 323, {1,6,19,34,51,114,646,969}, 2, diag`Arat, diag`Brat);
+assert not R6`split and not HasRationalPoint(R6`conic);
+assert R6`counts ge 30;
+ok6, Rc6 := NelsonDescentChecks(6, 323, {1,6,19,34,51,114,646,969}, 2, R6);
+assert ok6;
+assert Rc6`splitting eq [1, 2] and Conductor(Rc6`jacobian) eq 1938 and Rc6`zetafailed eq 0 and Rc6`zetachecked ge 10;
+assert Degree(Rc6`branchmodel) eq 4;

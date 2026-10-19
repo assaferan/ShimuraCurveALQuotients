@@ -296,13 +296,62 @@ form and its point counts over $\F_p$ and $\F_{p^2}$ compared with the trace for
 
 \subsection*{When the coordinate is not rational}
 The two fixed points of $u$ on the conic are the points $x=0,\infty$; they are either two rational
-points or a conjugate pair over a quadratic field $K$. In the second case the coordinate with
-$u\colon x\mapsto -x$ exists only over $K$, the quartic $g$ has coefficients in $K$, and the
-nontrivial element of $\mathrm{Gal}(K/\Q)$ acts as $x\mapsto 1/x$, so that $B$ is rational while
-$A$ and $C$ are conjugate. This is what the values show at one base: $B$ recognised, $A$ and $C$
+points or a conjugate pair over a quadratic field $K=\Q(\sqrt d)$. In the second case the
+coordinate with $u\colon x\mapsto -x$ exists only over $K$, the quartic $g$ has coefficients in
+$K$, and the nontrivial element $\sigma$ of $\mathrm{Gal}(K/\Q)$ acts as $x\mapsto a/x$ for some
+$a\in\Q^\times$, so that $B$ is rational while $A$ and $C$ are conjugate. This is what the
+values show at $X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$: $B$ recognised, $A$ and $C$
 complex conjugates to sixteen digits, with the conic and the predictions as clean as anywhere.
-The descent of $y^2=g(x^2)$ from $K$ to $\Q$ is not implemented, and the package reports the
-pattern rather than a failure to recognise.
+
+The descent goes as follows. $K$ is read off the arithmetic: the fixed points of $u$ on $X$ are
+CM points, their fields of definition contain $K$, and $K$ is the quadratic subfield they have in
+common (at the base above, one discriminant, $-7752$, carries all four points, over a quartic
+field whose quadratic subfield is $\Q(\sqrt{-2})$). $A$ is then recognised in $K$ by simultaneous
+rational approximation of its two coordinates, which certifies a denominator up to about
+$\varepsilon^{-2/3}$ at absolute accuracy $\varepsilon$: $10^{9}$ at the fifteen digits the values
+carry, against $1.3\cdot10^9$ for the $A$ found. Write $F(x)=g_0(\mu x^2)$ with
+$g_0(t)=1+t+At^2+A^2Bt^3+A^3B^2Ct^4$ and $\mu\in K^\times$. The identity
+$t^4g_0(1/t)=A^3B^2C\,g_0^\sigma(t/ABC)$ turns the condition that the branch divisor be
+Galois-stable, $F^\sigma(x)=c\,x^8F(a/x)$, into the norm equation
+$N_{K/\Q}(\mu)=1/(a^2B\,N_{K/\Q}(A))$, solvable exactly when $B\,N(A)$ is a norm from $K$
+(Hilbert~90); when it is not, that is the result. The solution $\mu$ is defined up to norm-one
+elements $\sigma(\gamma)/\gamma$, and $(\mu\sigma(\gamma)/\gamma,\,aN(\gamma))$ describes the
+same curves as $(\mu,a)$: the forms over $\Q$ of the marked curve are the twists by the involution
+$u$ over $\Q(\sqrt e)$, $e\in\Q^\times/\Q^{\times2}$, which appear as $(\mu/e,\,a=e)$, together
+with the quadratic twists by $r$. The quotient by $u$ is the same for every $e$. The descent
+datum of $y^2=\kappa F_e(x)$ is $(x,y)\mapsto(e/x,\,\epsilon y/x^4)$ with
+$\epsilon^2=\sigma(\kappa)c/\kappa$ and $N(\epsilon)=e^4$; taking $\epsilon=e^2$, Hilbert~90 gives
+$\kappa_0=1+c/e^4$, and every valid scalar is $\kappa_0$ times a rational number $r$ times a
+square. Nothing here needs $e$ to be a norm from $K$. When $e$ is a norm, $c\in K$ with $N(c)=e$
+splits the cocycle through $x=c(1+\sqrt d\,s)/(1-\sqrt d\,s)$, $s$ rational, and the curve is
+$y^2=rP(s)$ over $\Q$ with $u$ acting as $s\mapsto 1/(ds)$; when $e$ is not a norm, the conic
+$X/\iota$ is $X^2-dY^2=eZ^2$, which has no rational point, the curve has no model $y^2=f(s)$ over
+$\Q$, and the $K$-model with its datum is the result.
+
+Both $e$ and $r$ are read off point counts. At a prime $p$ split in $K$ the curve over $\F_p$ is
+the $K$-model reduced at a prime above $p$, so $e$ is found first, as the class whose counts match
+for one of the two quadratic twists, by a linear system over $\F_2$ in its exponents over the
+primes of $2DNd$ and of $\mu$; then $r$ from the same primes on $y^2=\kappa_0F_e$. The factor $d$
+in each is invisible at split primes, where $d$ is a square; at an inert prime the $\F_p$-points
+of the curve are the points $(x,y)$ over $\F_{p^2}$ with $x^{p+1}=e$, $y^2=F(x)$ and
+$y^{p-1}=\epsilon/x^4$, the factor $d$ in $r$ is the sign of $\epsilon$, and these counts settle
+both. The procedure is checked on curves whose equations are known: a synthetic octic with the
+symmetry $s\mapsto 1/(ds)$ over $\Q(\sqrt{-2})$ and $\Q(\sqrt2)$, moved to the $K$-coordinate and
+recovered up to isomorphism over $\Q$; the exact model of $X_0^{1326}(1)/\langle w_{17},w_{78}\rangle$
+with its two further involutions, whose fixed points are conjugate over $\Q(\sqrt{-2})$ and over
+$\Q(\sqrt2)$, recovered up to isomorphism over $\Q$ with the twists read off the trace formula, the
+quotients having Jacobians $1326c1$ and $1326b2$; and the model of
+$X_0^{210}(13)/\langle w_2,w_{21},w_{65}\rangle$ with its involution over $\Q(i)$.
+
+At $X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$ the outcome is the second kind: $e$ is not a
+norm from $\Q(\sqrt{-2})$, the conic has no rational point, and the curve is given by its model
+over $\Q(\sqrt{-2})$ with the datum $\sigma(x)=e/x$. The four checks pass: the fixed points of
+$u$ on the model are defined over a quartic field isomorphic to the field of definition of the CM
+points of discriminant $-7752$; the Jacobian of the descended quotient is the elliptic curve
+$y^2+xy=x^3-139x-271$ of conductor $1938$, with the Fourier coefficients of the $W$-fixed newform
+with $w_2=+1$; the $W$-fixed newforms split $1+2$; and the numerators of the zeta functions at the
+split primes agree with the trace formula, as do the counts over $\F_p$ at the inert primes through
+the datum. The same label applies as to every model here: numerical, confirmed by point counts.
 
 \subsection*{Where the fit is conditioned, and where it is not}
 The quartic is determined at its large-$t$ end by the sample points with large $\lvert x\rvert$

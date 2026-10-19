@@ -804,10 +804,15 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
  g in t = x^2 by least squares, with the centres beyond the first five as predictions; the
  invariants A, B, C recognised by the certainty criterion with the noise taken from their
  imaginary parts (Digits caps the digits claimed; default a third of the precision); then
- NelsonTwistConstants.  Fails with a message at the first step that does not resolve.  The record
- returned carries every diagnostic (conic singular values, u-equivariance, derivative convergence,
- worst prediction, the complex invariants, kappa, mu, the quartic).  Numerical: the model is
- recognised, not derived, and the point counts confirm only the isogeny class.}
+ NelsonTwistConstants.  When B is rational but A and C are not, the fixed points of u on the
+ conic are conjugate over a quadratic field K; K is read off the fields of definition of the
+ fixed points of u on X, A is recognised in K, and NelsonQuadraticTwist gives the curve over Q
+ (or, when the conic has no rational point, the K-model with its descent datum, returned as a
+ curve over K; kappa and mu then hold r and e).  Fails with a message at the first step that
+ does not resolve.  The record returned carries every diagnostic (conic singular values,
+ u-equivariance, derivative convergence, worst prediction, the complex invariants, kappa, mu, the
+ quartic).  Numerical: the model is recognised, not derived, and the point counts confirm only
+ the isogeny class.}
     g := V`g;
     require g eq 3 : "genus 3 only";
     prec := V`prec;
@@ -956,11 +961,30 @@ intrinsic NelsonHyperellipticModel(V::Rec : Involution := 0, Digits := 0, PrimeC
     // than rational, the coordinate with u : x -> -x exists only over K, the quartic has
     // coefficients in K, and Gal(K/Q) acts as x -> 1/x: B is rational and A, C are conjugate.
     // The descent to Q is not implemented; the pattern is reported rather than left as a failure.
-    conjpair := okB and not okA and not okC and Abs(A - ComplexConjugate(Cq)) lt 10^(-8)*(1 + Abs(A))
-                and Abs(Imaginary(A)) gt 10^(-6);
+    if okB and not (okA and okC) then
+        // the fixed points of u on the conic may be conjugate over a quadratic field K: then A
+        // and C are conjugate in K (complex conjugate when K is imaginary) and the quartic lives
+        // over K.  K is read off the fields of definition of the fixed points of u on X, A is
+        // recognised in K by simultaneous approximation at the accuracy the data show, and the
+        // curve over Q is found by NelsonQuadraticTwist.
+        dK, info := NelsonBranchField(V`D, V`N, Set(V`W), um);
+        require dK ne 0 : "B is rational but A, C are not, and the fixed points of u on X show no common quadratic field";
+        dsf := Squarefree(dK);
+        noise := Maximum([ RR | Abs(Imaginary(Bq)), Abs(Real(A) - Real(Cq)), Abs(Imaginary(A) + Imaginary(Cq))/2,
+                           dsf gt 0 select Abs(Imaginary(A)) else 0, 10^(-acc) ]);
+        okK, AK, bound := NelsonRecogniseInQuadraticField(A, Cq, dsf, RR ! (2*noise));
+        require okK : Sprintf("the fixed points of u are conjugate over Q(sqrt %o) and B = %o, but A is not recognised in that field at accuracy %o (denominators certified up to %o)", dsf, Br, RealField(4) ! noise, bound);
+        diag`Arat := AK; diag`Brat := Br; diag`Crat := Parent(AK) ! 0;
+        diag`recognised := [true, true, true];
+        vprintf NelsonShimizu, 1: "A = %o in Q(sqrt %o)\n", AK, dsf;
+        e, r, R := NelsonQuadraticTwist(V`D, V`N, Set(V`W), um, AK, Br : PrimeCap := PrimeCap);
+        diag`kappa := r; diag`mu := e; diag`quotient := R`quotient; diag`counts := R`counts;
+        diag`quartic := R`PE;
+        if R`split then return R`model, diag; end if;
+        return HyperellipticCurve(R`F), diag;
+    end if;
     require okA and okB and okC :
-        conjpair select Sprintf("B = %o is rational but A and C are complex conjugates (A = %o): the fixed points of u on the conic are conjugate over a quadratic field and the quartic lives there; the descent to Q is not implemented", Br, ComplexField(12) ! A)
-        else Sprintf("invariants not recognised at the certainty criterion: A %o, B %o, C %o",
+        Sprintf("invariants not recognised at the certainty criterion: A %o, B %o, C %o",
                 okA select Sprint(Ar) else "?", okB select Sprint(Br) else "?", okC select Sprint(Cr) else "?");
     diag`Arat := Ar; diag`Brat := Br; diag`Crat := Cr;
     kappa, mu, Cfin, Ecur, gnorm, ncounts := NelsonTwistConstants(V`D, V`N, Set(V`W), um, [Ar, Br, Cr] : PrimeCap := PrimeCap);
@@ -1145,7 +1169,614 @@ intrinsic NelsonCoordinateSpread(V::Rec : Involution := 0) -> SeqEnum
 end intrinsic;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
+// Descent from a quadratic field.  When the two fixed points of u on the canonical conic are
+// conjugate over K = Q(sqrt d), the coordinate x with u : x -> -x exists only over K, with
+// sigma(x) = 1/x after a K-rescaling, and the quartic G has coefficients in K with sigma acting
+// as x -> 1/x: B rational, C = sigma(A).  Writing F(x) = G0(mu x^2) with
+// G0(t) = 1 + t + A t^2 + A^2 B t^3 + A^3 B^2 C t^4, the identity
+//     t^4 G0(1/t) = A^3 B^2 C . sigma(G0)(t / (A B C))
+// turns the Galois condition sigma(F)(x) = c x^8 F(1/x) into N(mu) = 1/(B N(A)): a norm
+// equation in K, which has a solution exactly when the K-model is the base change of a curve over
+// Q with this marking (Hilbert 90).  The cocycle x -> 1/x is split by x = (1 + w s)/(1 - w s),
+// w = sqrt d: sigma(x) = 1/x exactly when s is rational, u becomes s -> 1/(d s), and
+// (1 - w s)^8 F(x(s)) has coefficients whose ratios are rational.  The curve over Q is then
+// y^2 = r P(s) with r in Q^x/(Q^x)^2 read off point counts, as in the rational case.
+
+// a Legendre-symbol row for the F_2 system in the exponents of a twist constant over supp
+function TwistSymbolRow(supp, p)
+    return [ GF(2) | (LegendreSymbol(q, p) eq 1 select 0 else 1) : q in supp ]
+           cat [ GF(2) | (p mod 4 eq 1 select 0 else 1) ];
+end function;
+
+function TwistSolve(supp, rows, rhs, name)
+    error if #rows lt #supp + 4, "too few primes for " cat name cat "; raise PrimeCap";
+    M := Matrix(GF(2), #rows, #supp+1, &cat rows);
+    ok, v := IsConsistent(Transpose(M), Vector(GF(2), rhs));
+    error if not ok, "the Legendre symbols for " cat name cat " are inconsistent: the curve is not a twist of the target";
+    error if Rank(M) ne #supp+1, name cat " is not determined uniquely; raise PrimeCap";
+    sgn := (v[#supp+1] eq GF(2)!1) select -1 else 1;
+    return sgn * (&*([Integers() | 1] cat [ supp[i] : i in [1..#supp] | v[i] eq GF(2)!1 ]));
+end function;
+
+// point count of y^2 = poly over F_{p^d}, or -1 when the model is bad there
+function TwistCountQ(poly, p, d)
+    PQ := Parent(poly);
+    den := LCM([ Denominator(c) : c in Coefficients(poly) ] cat [1]);
+    if den mod p eq 0 then return -1; end if;
+    pint := PQ ! (den^2 * poly);
+    gg := ChangeRing(pint, GF(p^d));
+    if Degree(gg) lt Degree(pint) - 1 or Degree(gg) lt 3 or Discriminant(gg) eq 0 then return -1; end if;
+    return #Points(HyperellipticCurve(gg));
+end function;
+
+function PolySupport(poly, extra)
+    cs := Coefficients(poly);
+    dd := LCM([ Denominator(c) : c in cs ]);
+    S := Set(PrimeDivisors(extra)) join Set(PrimeDivisors(Integers() ! (dd^(2*Degree(poly)) * Discriminant(poly))));
+    for c in cs do
+        if c ne 0 then S join:= Set(PrimeDivisors(Numerator(c))); end if;
+        S join:= Set(PrimeDivisors(Denominator(c)));
+    end for;
+    return Sort(SetToSequence(S));
+end function;
+
+intrinsic NelsonQuadraticDescent(A::FldNumElt, B::FldRatElt : Twist := 1) -> RngUPolElt, RngUPolElt, FldNumElt, RngUPolElt
+{Given the marked invariants of the quartic over a quadratic field K = Q(sqrt d), A in K and B
+ rational (C = sigma(A)), of a genus-3 curve whose marking involution has conjugate fixed points
+ on the canonical conic: solves the norm equation N(mu) = 1/(B N(A)) in K (fails, with a message,
+ when 1/(B N(A)) is not a norm, in which case the K-model is not the base change of a curve over
+ Q with this marking), forms F(x) = G0(mu x^2) over K, checks the Galois condition
+ sigma(F)(x) = c x^8 F(1/x), and substitutes x = (1 + w s)/(1 - w s).  Returns P(s) in Q[s]
+ (the branch octic over Q, defined up to a rational constant: the curve is y^2 = r P(s)), the
+ quartic P_E(v) in Q[v] of the quotient by u in the same way (t = x^2 = (1 + w v)/(1 - w v);
+ the quotient is y^2 = r_E P_E(v)), mu, and F.  The solution mu of the norm equation is defined
+ up to norm-one elements sigma(gamma)/gamma, and replacing mu by mu sigma(gamma)/gamma gives the
+ twist of the curve by the involution u over Q(sqrt N(gamma)): the forms of the marked curve over
+ Q with a split conic are the u-twists by the rational numbers e that are norms from K, together
+ with the quadratic twists by r.  Twist := e (a norm from K) selects that form; which e is the
+ curve's is a matter of point counts (NelsonQuadraticTwist).  The quotient by u is the same for
+ every e.  Exact.}
+    K := Parent(A);
+    require Degree(K) eq 2 : "A must lie in a quadratic field";
+    w := K.1;
+    d := Rationals() ! (w^2);
+    require d in Rationals() : "the generator of K must be a square root of a rational number";
+    sig := hom< K -> K | -w >;
+    C := sig(A);
+    PK<x> := PolynomialRing(K);
+    G0 := 1 + x + A*x^2 + A^2*B*x^3 + A^3*B^2*C*x^4;
+    require Degree(G0) eq 4 and Discriminant(G0) ne 0 : "the quartic is degenerate";
+    target := 1/(B*Norm(A));
+    ok, sols := NormEquation(K, target);
+    require ok : Sprintf("1/(B N(A)) = %o is not a norm from %o: the quartic with this marking does not descend", target, K);
+    mu := sols[1];
+    e := Rationals() ! Twist;
+    if e ne 1 then
+        oke, gs := NormEquation(K, e);
+        require oke : Sprintf("the twist %o is not a norm from %o", e, K);
+        mu := mu * sig(gs[1])/gs[1];
+    end if;
+    F := Evaluate(G0, mu*x^2);
+    Fs := PK ! [ sig(c) : c in Coefficients(F) ];
+    Frev := PK ! Reverse(Coefficients(F));          // x^8 F(1/x)
+    require Degree(Frev) eq 8 and Degree(Fs) eq 8 : "F must have degree 8 with nonzero constant term";
+    cst := Coefficient(Fs, 0)/Coefficient(Frev, 0);
+    require Fs eq cst*Frev : "the Galois condition sigma(F)(x) = c x^8 F(1/x) fails";
+    // the descent
+    PKs<s> := PolynomialRing(K);
+    Pt := PKs ! (&+[ Coefficient(F, i) * (1 + w*s)^i * (1 - w*s)^(8-i) : i in [0..8] ]);
+    j := Min([ i : i in [0..8] | Coefficient(Pt, i) ne 0 ]);
+    Pq := Pt / Coefficient(Pt, j);
+    require forall{ c : c in Coefficients(Pq) | c in Rationals() } : "the descended octic is not rational";
+    PQ<S> := PolynomialRing(Rationals());
+    P := PQ ! [ Rationals() ! c : c in Coefficients(Pq) ];
+    dd := LCM([ Denominator(c) : c in Coefficients(P) ]); P := P*dd;
+    cc := GCD([ Integers() ! c : c in Coefficients(P) ]); P := P/cc;
+    // the quotient: G(t) = G0(mu t) with sigma(t) = 1/t
+    Gt := Evaluate(G0, mu*x);
+    PEt := PKs ! (&+[ Coefficient(Gt, i) * (1 + w*s)^i * (1 - w*s)^(4-i) : i in [0..4] ]);
+    j := Min([ i : i in [0..4] | Coefficient(PEt, i) ne 0 ]);
+    PEq := PEt / Coefficient(PEt, j);
+    require forall{ c : c in Coefficients(PEq) | c in Rationals() } : "the descended quartic is not rational";
+    PE := PQ ! [ Rationals() ! c : c in Coefficients(PEq) ];
+    dd := LCM([ Denominator(c) : c in Coefficients(PE) ]); PE := PE*dd;
+    cc := GCD([ Integers() ! c : c in Coefficients(PE) ]); PE := PE/cc;
+    return P, PE, mu, F;
+end intrinsic;
+
+intrinsic NelsonQuadraticTwist(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIntElt,
+                               A::FldNumElt, B::FldRatElt : PrimeCap := 150)
+          -> FldRatElt, FldRatElt, Rec
+{The form over Q of the marked curve with K-invariants A, B (NelsonQuadraticDescent) that is
+ X = X_0^D(N)/W, found from the trace formula.  Over K the forms are y^2 = kappa G0((mu/e) x^2)
+ with the descent datum (x, y) -> (e/x, e^2 y/x^4), where e in Q^x/(Q^x)^2 is the twist by the
+ involution u and kappa = r kappa_0 with kappa_0 the Hilbert-90 scalar the datum requires and r
+ the quadratic twist.  At a prime split in K the curve over F_p is the K-model reduced at a prime
+ above p, and at an inert prime its F_p-points are the points over F_(p^2) fixed by the Frobenius
+ composed with the datum.  e is found first, from the split primes, as the class whose counts
+ match for some quadratic twist (a linear system over F_2 in its exponents over the primes of
+ 2DNd and of the norm-equation solution mu); then r from the split primes on y^2 = kappa_0 F_e;
+ the factor d in each, invisible at split primes, is settled at the inert primes, where it is the
+ sign of the datum.  Returns e, r and a record with: the K-model F = r kappa_0 F_e over K with the
+ datum (e, eps), the conic X^2 - d Y^2 = e Z^2 that X/iota is over Q and whether it has a rational
+ point (e a norm from K), and when it has, the model y^2 = rQ P(s) over Q (rQ its own twist, in
+ the normalisation of P) with its reduced minimal form, the quotient y^2 = r_E P_E(v) over Q, and
+ the number of point counts the model matched.  When the conic has no rational point the curve
+ has no model y^2 = f(s) over Q and the K-model with its datum is the result.  The counts fix the
+ isogeny class of the Jacobian and nothing more.}
+    DN := D*N;
+    K := Parent(A);
+    require Degree(K) eq 2 : "A must lie in a quadratic field";
+    w := K.1; d := Integers() ! (w^2);
+    sig := hom< K -> K | -w >;
+    OK := Integers(K);
+    WU := { ALMul(a, um) : a in W } join W;
+    require GenusShimuraCurveQuotient(D, N, W) eq 3 and GenusShimuraCurveQuotient(D, N, WU) eq 1 :
+        "expected genus 3 over a genus-1 Atkin-Lehner quotient";
+    XQ := CreateShimuraQuot(D, N, W);  XQ`g := 3;
+    EQ := CreateShimuraQuot(D, N, WU); EQ`g := 1;
+    P1, PE, mu, F1 := NelsonQuadraticDescent(A, B);
+    PK<x> := PolynomialRing(K);
+    G0 := 1 + x + A*x^2 + A^2*B*x^3 + A^3*B^2*sig(A)*x^4;
+    // bad primes: those of 2DN, of K, and of the discriminant and coefficients of G0(mu x^2)
+    Fmu := Evaluate(G0, mu*x^2);
+    cs := Coefficients(Fmu);
+    den := LCM([ Denominator(c) : c in cs ]);
+    bad := Set(PrimeDivisors(2*DN*Abs(d))) join Set(PrimeDivisors(den))
+           join Set(PrimeDivisors(Integers() ! Norm(den^16*Discriminant(Fmu))));
+    for c in cs do if c ne 0 then bad join:= Set(PrimeDivisors(Integers() ! Norm(den*c))); end if; end for;
+    supp := Sort(SetToSequence(bad));
+    nsupp := #supp + 1;   // the sign is the last unknown
+    // reduction of K at a split prime
+    function Reduce(c, pi, red)
+        dn := Denominator(c);
+        return red(OK ! (c*dn)) / red(OK ! dn);
+    end function;
+    // the coefficients and mu must be p-integral for the reduction to mean anything
+    function Reducible(p)
+        return forall{ c : c in Coefficients(G0) cat [mu] | Denominator(c) mod p ne 0 };
+    end function;
+    function CountSplit(eps_e, eps_r, p, pi, red, np)
+        if not Reducible(p) then return -1; end if;
+        k := Codomain(red);
+        Pk := PolynomialRing(k);
+        eta := eps_e select k ! 1 else k ! np;      // e a square at p or not
+        rho := eps_r select k ! 1 else k ! np;
+        // y^2 = rho G0((mu/e) x^2) with mu/e reduced: mu/eta
+        mred := Reduce(mu, pi, red)/eta;
+        g := Pk ! [ Reduce(Coefficient(G0, i), pi, red) : i in [0..4] ];
+        f := rho * Evaluate(g, mred * Pk.1^2);
+        if Degree(f) lt 7 or Discriminant(f) eq 0 then return -1; end if;
+        return #Points(HyperellipticCurve(f));
+    end function;
+    tX := AssociativeArray(); tE := AssociativeArray();
+    good := [ p : p in PrimesUpTo(PrimeCap) | p ne 2 and DN mod p ne 0 ];
+    for p in good do
+        tX[p] := [ ComputePointsViaTrace(XQ, p, dg) : dg in [1,2] ];
+        tE[p] := [ ComputePointsViaTrace(EQ, p, dg) : dg in [1,2] ];
+    end for;
+    splitp := [ p : p in good | KroneckerSymbol(Discriminant(OK), p) eq 1 ];
+    inertp := [ p : p in good | KroneckerSymbol(Discriminant(OK), p) eq -1 ];
+    // The scalar kappa of the K-model y^2 = kappa G0((mu/e) x^2) is rational only after the
+    // model is normalised by the constant of the descent, F_e(1) (the value at s = 0); before
+    // that normalisation the quadratic twist is a K-number whose symbols at split primes follow
+    // no rational pattern.  So e is found first from the split primes, using only whether the
+    // count matches with mu/e a square or a non-square at p whatever the quadratic twist, and
+    // r afterwards on the normalised model.
+    // e is a twist of X by a quadratic character through u, and a character ramified at a
+    // prime of good reduction of X would make the twist bad there, so e is supported on 2 D N d
+    // -- relative to a canonical mu.  The solution mu of the norm equation is only defined up to
+    // norm-one elements sigma(gamma)/gamma, and (mu sigma(gamma)/gamma, e N(gamma)) describes the
+    // same curves as (mu, e); the primes of gamma are the primes of the ideal (mu) whose exponents
+    // do not reach the norm, so the rational primes below the prime ideals dividing (mu) join the
+    // support
+    mufac := Factorization(mu*OK);
+    suppE := Sort(SetToSequence(Set(PrimeDivisors(2*DN*Abs(d))) join { Minimum(f[1]) : f in mufac }));
+    nsuppE := #suppE + 1;
+    dvec := [ GF(2) | (Abs(d) mod q eq 0 select 1 else 0) : q in suppE ] cat [ GF(2) | (d lt 0 select 1 else 0) ];
+    function SymRow(p)
+        return [ GF(2) | (LegendreSymbol(q, p) eq 1 select 0 else 1) : q in suppE ] cat [ GF(2) | (p mod 4 eq 1 select 0 else 1) ];
+    end function;
+    function FromVec(vec)
+        sgn := (vec[nsuppE] eq GF(2)!1) select -1 else 1;
+        return Rationals() ! (sgn * (&*([Integers() | 1] cat [ suppE[i] : i in [1..#suppE] | vec[i] eq GF(2)!1 ])));
+    end function;
+    rows := []; rhs := []; nsplit := 0;
+    for p in splitp do
+        pi := Factorization(p*OK)[1][1];
+        k, red := ResidueClassField(pi);
+        np := 2; while LegendreSymbol(np, p) eq 1 do np +:= 1; end while;
+        adm := { };
+        for ee in [true, false], rr in [true, false] do
+            c := CountSplit(ee, rr, p, pi, red, np);
+            if c eq tX[p][1] then Include(~adm, ee); end if;
+        end for;
+        if #adm ne 1 then continue; end if;
+        nsplit +:= 1;
+        Append(~rows, SymRow(p)); Append(~rhs, GF(2) ! (Rep(adm) select 0 else 1));
+    end for;
+    require nsplit ge 4 : "too few split primes decide the twist by u; raise PrimeCap";
+    M := Matrix(GF(2), #rows, nsuppE, &cat rows);
+    ok, v := IsConsistent(Transpose(M), Vector(GF(2), rhs));
+    require ok : "the split-prime counts are inconsistent with every twist by u: the invariants or the field are wrong";
+    Kmat := Kernel(Transpose(M));
+    require Dimension(Kmat) le 1 and forall{ k : k in Basis(Kmat) | k eq Vector(GF(2), dvec) } :
+        Sprintf("the twist by u is not determined by the split primes beyond the factor d (kernel dimension %o); raise PrimeCap", Dimension(Kmat));
+    e0 := FromVec(v);
+    vprintf NelsonShimizu, 2: "split primes give e = %o modulo the factor d = %o\n", e0, d;
+    // The descent datum of y^2 = kappa F_e(x) is (x, y) -> (e/x, eps y/x^4) with
+    // eps^2 = sigma(kappa) c / kappa, where sigma(F_e)(e/x) x^8 = c F_e(x), and N(eps) = e^4.
+    // With eps = e^2 this is sigma(kappa)/kappa = e^4/c, an element of norm one, so Hilbert 90
+    // gives kappa_0 = 1 + c/e^4 (or w + sigma(w) c/e^4 if that vanishes); every valid scalar is
+    // kappa_0 times a rational number times a square of K, and the rational number is the
+    // quadratic twist r.  Nothing here needs e to be a norm.
+    function Datum(ee)
+        Fe := Evaluate(G0, (mu/ee)*x^2);
+        Fs := PK ! [ sig(c) : c in Coefficients(Fe) ];
+        num := PK ! (&+[ Coefficient(Fs, i) * ee^i * x^(8-i) : i in [0..8] ]);   // sigma(F)(e/x) x^8
+        cst := Coefficient(num, 0)/Coefficient(Fe, 0);
+        if num ne cst*Fe then return false, Fe, K ! 0, K ! 0; end if;
+        eta := ee^4/cst;
+        assert Norm(eta) eq 1;
+        kap0 := 1 + 1/eta;
+        if kap0 eq 0 then kap0 := w + sig(w)/eta; end if;
+        assert sig(kap0)/kap0 eq eta;
+        return true, kap0*Fe, K ! ee^2, kap0;
+    end function;
+    // count over F_p at an inert prime: x in F_{p^2} with x^{p+1} = e, y^2 = F(x), y^p = eps y/x^4
+    function CountInert(poly, ee, eps, p)
+        if not Reducible(p) or Denominator(ee) mod p eq 0 or Numerator(ee) mod p eq 0 then return -1; end if;
+        if exists{ c : c in Coefficients(poly) cat [eps] | Denominator(c) mod p eq 0 } then return -1; end if;
+        pid := Factorization(p*OK)[1][1];
+        k, red := ResidueClassField(pid);
+        function rd(c) return red(OK ! (c*Denominator(c)))/red(OK ! Denominator(c)); end function;
+        Pk := PolynomialRing(k);
+        f := Pk ! [ rd(Coefficient(poly, i)) : i in [0..8] ];
+        if Degree(f) lt 7 or Discriminant(f) eq 0 then return -1; end if;
+        epsk := rd(eps); ek := k ! (Integers() ! (GF(p) ! ee));
+        cnt := 0;
+        for xx in k do
+            if xx eq 0 or xx^(p+1) ne ek then continue; end if;
+            fx := Evaluate(f, xx);
+            if fx eq 0 then cnt +:= 1; continue; end if;
+            // y^2 = fx and y^(p-1) = eps/x^4: the second reads fx^((p-1)/2) = eps/x^4, the same
+            // for both square roots, so either both count or neither
+            if fx^((p-1) div 2) eq epsk/xx^4 then cnt +:= 2; end if;
+        end for;
+        return cnt;
+    end function;
+    // count over F_p at a split prime of the normalised model y^2 = rho Fhat
+    function CountSplitN(Fhat, rho, p)
+        if exists{ c : c in Coefficients(Fhat) | Denominator(c) mod p ne 0 and false } then return -1; end if;
+        if exists{ c : c in Coefficients(Fhat) | Denominator(c) mod p eq 0 } then return -1; end if;
+        pi := Factorization(p*OK)[1][1]; k, red := ResidueClassField(pi); Pk := PolynomialRing(k);
+        f := (k ! rho) * (Pk ! [ Reduce(Coefficient(Fhat, i), pi, red) : i in [0..8] ]);
+        if Degree(f) lt 7 or Discriminant(f) eq 0 then return -1; end if;
+        return #Points(HyperellipticCurve(f));
+    end function;
+    cands := [];
+    for ee in [e0, Rationals() ! (e0*d)], sg in [1, -1] do
+        okd, Fhat, eps, kap0 := Datum(ee);
+        vprintf NelsonShimizu, 2: "   candidate e = %o, sign %o: datum exists %o\n", ee, sg, okd;
+        if not okd then continue; end if;
+        // r is rational relative to kappa_0, whose own rational content is arbitrary, so the
+        // primes of N(kappa_0) join the support
+        nk := Norm(kap0);
+        suppR := Sort(SetToSequence(Set(supp) join Set(PrimeDivisors(Numerator(nk))) join Set(PrimeDivisors(Denominator(nk)))));
+        nsuppR := #suppR + 1;
+        dvecR := [ GF(2) | (Abs(d) mod q eq 0 select 1 else 0) : q in suppR ] cat [ GF(2) | (d lt 0 select 1 else 0) ];
+        rws := []; rh := [];
+        for p in splitp do
+            n1 := CountSplitN(Fhat, 1, p);
+            if n1 lt 0 then continue; end if;
+            np := 2; while LegendreSymbol(np, p) eq 1 do np +:= 1; end while;
+            n2 := CountSplitN(Fhat, np, p);
+            t1 := tX[p][1];
+            if n1 eq t1 and n2 eq t1 then continue; end if;
+            if n1 eq t1 then b := 0; elif n2 eq t1 then b := 1; else rws := []; break; end if;
+            Append(~rws, [ GF(2) | (LegendreSymbol(q, p) eq 1 select 0 else 1) : q in suppR ] cat [ GF(2) | (p mod 4 eq 1 select 0 else 1) ]);
+            Append(~rh, GF(2) ! b);
+        end for;
+        if #rws lt 4 then continue; end if;
+        Mr := Matrix(GF(2), #rws, nsuppR, &cat rws);
+        okr, vr := IsConsistent(Transpose(Mr), Vector(GF(2), rh));
+        if not okr then vprintf NelsonShimizu, 2: "      no rational twist fits the split primes\n"; continue; end if;
+        Kr := Kernel(Transpose(Mr));
+        if Dimension(Kr) gt 1 or exists{ k : k in Basis(Kr) | k ne Vector(GF(2), dvecR) } then
+            vprintf NelsonShimizu, 2: "      the quadratic twist is not determined by the split primes (kernel %o)\n", Dimension(Kr); continue;
+        end if;
+        sgnr := (vr[nsuppR] eq GF(2)!1) select -1 else 1;
+        rr := Rationals() ! (sgnr * (&*([Integers() | 1] cat [ suppR[i] : i in [1..#suppR] | vr[i] eq GF(2)!1 ])));
+        agree := true; nin := 0;
+        for p in inertp do
+            c := CountInert(rr*Fhat, ee, sg*eps, p);
+            if c lt 0 then continue; end if;
+            nin +:= 1;
+            if c ne tX[p][1] then
+                vprintf NelsonShimizu, 2: "      inert p = %o: count %o against trace %o\n", p, c, tX[p][1];
+                agree := false; break;
+            end if;
+        end for;
+        if agree and nin ge 3 then Append(~cands, <ee, sg*eps, rr, Fhat>); end if;
+    end for;
+    require #cands ge 1 : "no candidate (e, sign of eps) matches the counts at the inert primes";
+    require #cands eq 1 : Sprintf("several candidates match: %o", [ c[1] : c in cands ]);
+    e := cands[1][1]; eps := cands[1][2]; r := cands[1][3]; Fhat := cands[1][4];
+    vprintf NelsonShimizu, 2: "   chosen e = %o, r = %o (relative to the Hilbert-90 scalar), eps = %o\n", e, r, eps;
+    Fe := Fhat;
+    con := Conic([ Rationals() | 1, -d, -e ]);
+    split := HasRationalPoint(con);
+    R := rec< recformat< e, r, rQ, rE, K, F, conic, split, P, PE, model, quotient, counts, mu, eps > |
+              e := e, r := r, K := K, F := r*Fe, conic := con, split := split, mu := mu, eps := eps >;
+    vprintf NelsonShimizu, 1: "u-twist e = %o, quadratic twist r = %o; conic x^2 - %o y^2 = %o z^2 has a rational point: %o\n", e, r, d, e, split;
+    // the quotient by u is the same for every e
+    function SolveE()
+        suppE := PolySupport(PE, 2*DN*Abs(d));
+        rws := []; rh := [];
+        for p in good do
+            n1 := TwistCountQ(PE, p, 1);
+            if n1 lt 0 then continue; end if;
+            t1 := tE[p][1];
+            if n1 eq t1 and 2*(p+1) - n1 eq t1 then continue; end if;
+            if n1 eq t1 then b := 0; elif 2*(p+1) - n1 eq t1 then b := 1; else continue; end if;
+            Append(~rws, TwistSymbolRow(suppE, p)); Append(~rh, GF(2) ! b);
+        end for;
+        return TwistSolve(suppE, rws, rh, "r_E");
+    end function;
+    rE := SolveE();
+    R`rE := rE; R`PE := PE; R`quotient := HyperellipticCurve(rE*PE);
+    for p in good do for dg in [1,2] do
+        c := TwistCountQ(rE*PE, p, dg);
+        require c lt 0 or c eq tE[p][dg] : Sprintf("the quotient's count disagrees at p = %o, degree %o", p, dg);
+    end for; end for;
+    if split then
+        P := NelsonQuadraticDescent(A, B : Twist := e);
+        // r exactly, from all odd good primes on the model over Q
+        suppR := PolySupport(P, 2*DN*Abs(d));
+        rws := []; rh := [];
+        for p in good do
+            n1 := TwistCountQ(P, p, 1);
+            if n1 lt 0 then continue; end if;
+            t1 := tX[p][1];
+            if n1 eq t1 and 2*(p+1) - n1 eq t1 then continue; end if;
+            if n1 eq t1 then b := 0; elif 2*(p+1) - n1 eq t1 then b := 1; else continue; end if;
+            Append(~rws, TwistSymbolRow(suppR, p)); Append(~rh, GF(2) ! b);
+        end for;
+        rQ := TwistSolve(suppR, rws, rh, "r");
+        // R`F keeps the K-model with its own twist; rQ is the twist of the model over Q, whose
+        // normalisation differs from the K-model's by the constant of the descent
+        R`rQ := rQ;
+        Cfin := HyperellipticCurve(rQ*P);
+        try Cfin := ReducedMinimalWeierstrassModel(Cfin); catch err
+            try Cfin := ReducedModel(SimplifiedModel(Cfin)); catch err2 ; end try;
+        end try;
+        require Genus(Cfin) eq 3 : "genus mismatch";
+        fq, hq := HyperellipticPolynomials(Cfin);
+        gg := fq + hq^2/4;
+        nchk := 0;
+        for p in good do for dg in [1,2] do
+            c := TwistCountQ(gg, p, dg);
+            if c lt 0 then continue; end if;
+            require c eq tX[p][dg] : Sprintf("point count disagrees at p = %o, degree %o: %o against %o", p, dg, c, tX[p][dg]);
+            nchk +:= 1;
+        end for; end for;
+        R`P := P; R`model := Cfin; R`counts := nchk;
+        vprintf NelsonShimizu, 1: "model over Q: %o (%o point counts agree)\n", Cfin, nchk;
+    else
+        // no model y^2 = f(s) over Q; count at split primes on the K-model, degrees 1 and 2
+        nchk := 0;
+        for p in good do
+            if KroneckerSymbol(Discriminant(OK), p) ne 1 then continue; end if;
+            if not Reducible(p) or Denominator(r) mod p eq 0 or Denominator(e) mod p eq 0 or Numerator(e) mod p eq 0 then continue; end if;
+            pi := Factorization(p*OK)[1][1]; k, red := ResidueClassField(pi);
+            Pk := PolynomialRing(k);
+            f := Pk ! [ Reduce(Coefficient(r*Fe, i), pi, red) : i in [0..8] ];
+            if Degree(f) lt 7 or Discriminant(f) eq 0 then continue; end if;
+            C := HyperellipticCurve(f);
+            for dg in [1,2] do
+                c := #Points(BaseChange(C, GF(p^dg)));
+                require c eq tX[p][dg] : Sprintf("K-model count disagrees at p = %o, degree %o", p, dg);
+                nchk +:= 1;
+            end for;
+        end for;
+        for p in good do
+            if KroneckerSymbol(Discriminant(OK), p) ne -1 then continue; end if;
+            c := CountInert(r*Fe, e, eps, p);
+            if c lt 0 then continue; end if;
+            require c eq tX[p][1] : Sprintf("K-model count disagrees at the inert prime %o", p);
+            nchk +:= 1;
+        end for;
+        R`counts := nchk;
+        vprintf NelsonShimizu, 1: "no model y^2 = f(s) over Q: the conic is pointless; K-model y^2 = %o with sigma(x) = %o/x (%o counts agree)\n", r*Fe, e, nchk;
+    end if;
+    return e, r, R;
+end intrinsic;
+
+intrinsic NelsonRecogniseInQuadraticField(A::FldComElt, C::FldComElt, d::RngIntElt, eps::FldReElt) -> BoolElt, FldNumElt, RngIntElt
+{Recognise A as an element (p + q sqrt d)/r of K = Q(sqrt d), with C its conjugate (for d < 0 the
+ complex conjugate of A up to noise; for d > 0 a second real number), from the two rationals
+ (A + C)/2 and (A - C)/(2 sqrt d) at absolute accuracy eps, by lattice reduction on the pair.
+ A solution is accepted when both residuals are below eps r and r is below the bound
+ (1/(2 eps^2))^(1/3), the denominator up to which a spurious simultaneous approximation of two
+ numbers to that accuracy is not expected; the bound is returned as the third value.  As with
+ any such recognition, the result is certain only relative to that bound, and an element of K of
+ larger height is missed, not misread.}
+    RR := Parent(eps);
+    K := QuadraticField(d); w := K.1;
+    sd := Sqrt(RR ! Abs(d));
+    if d lt 0 then
+        re := RR ! (Real(A) + Real(C))/2;
+        im := RR ! (Imaginary(A) - Imaginary(C))/(2*sd);
+    else
+        re := RR ! (Real(A) + Real(C))/2;
+        im := RR ! (Real(A) - Real(C))/(2*sd);
+    end if;
+    bound := Floor((1/(2*eps^2))^(1/3));
+    S := Round(RR ! 1/eps);
+    L := LatticeWithBasis(Matrix(Integers(), 3, 5, [
+        1, 0, 0, Round(S*re), Round(S*im),
+        0, 1, 0, -S, 0,
+        0, 0, 1, 0, -S ]));
+    Lr := LLL(L);
+    for i in [1..3] do
+        v := Lr.i;
+        r := Integers() ! v[1]; p := Integers() ! v[2]; q := Integers() ! v[3];
+        if r eq 0 then continue; end if;
+        if r lt 0 then r := -r; p := -p; q := -q; end if;
+        if r gt bound then continue; end if;
+        if Abs(r*re - p) lt eps*r and Abs(r*im - q) lt eps*r then
+            return true, (p + q*w)/r, bound;
+        end if;
+    end for;
+    return false, K ! 0, bound;
+end intrinsic;
+
+intrinsic NelsonBranchField(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIntElt) -> RngIntElt, SeqEnum
+{The discriminants of the quadratic subfields of the fields of definition of the fixed points of
+ u = w_um on X = X_0^D(N)/W (the CM points of the coset u W), and the list <discriminant, points
+ on X/W, degree of the field, quadratic subfield discriminants>.  When the fixed points of u on
+ the canonical conic are conjugate over K, every fixed point of u on X is defined over a field
+ containing K, so K is a common quadratic subfield; the first return value is the discriminant
+ of the unique common quadratic subfield, or 0 when the fields have degree at most 2 with
+ different or no quadratic subfield (the rational case).}
+    DN := D*N;
+    WU := { ALMul(a, um) : a in W } join W;
+    coset := WU diff W;
+    XQ := CreateShimuraQuot(D, N, W); XQ`g := 3;
+    out := []; common := {};
+    first := true;
+    for m in Sort(SetToSequence(coset)) do
+        fp := NumFixedPointsByCMOrder(D, N, m);
+        for dsc in Sort(SetToSequence(Keys(fp))) do
+            if fp[dsc] eq 0 then continue; end if;
+            F := FieldOfDefinitionOfCMPoint(XQ, dsc);
+            deg := Type(F) eq FldRat select 1 else Degree(F);
+            subs := deg eq 1 select [] else (deg eq 2 select [ Discriminant(Integers(F)) ]
+                    else [ Discriminant(Integers(s[1])) : s in Subfields(F) | Degree(s[1]) eq 2 ]);
+            Append(~out, <dsc, fp[dsc]/#W, deg, subs>);
+            if first then common := Set(subs); first := false; else common meet:= Set(subs); end if;
+        end for;
+    end for;
+    degs := [ o[3] : o in out ];
+    if #common eq 1 and Max(degs) eq 4 then return Rep(common), out; end if;
+    if #common eq 1 and Max(degs) eq 2 and #out eq 1 then return Rep(common), out; end if;
+    return 0, out;
+end intrinsic;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
 // The checks beyond point counts
+
+intrinsic NelsonDescentChecks(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIntElt, R::Rec :
+                              ZetaCap := 60, PrimeCap := 100) -> BoolElt, Rec
+{The checks (a)-(d) of NelsonModelChecks for a model found by NelsonQuadraticTwist (R its record).
+ (a) The four fixed points of u on X lie over x = 0 and x = infinity of the K-coordinate; on the
+ K-model y^2 = F(x) those over x = 0 are defined over K(sqrt F(0)), a field of degree 2 or 4
+ over Q (the ones over infinity over its conjugate), which must be isomorphic to the field of
+ definition of the CM points of the coset u W, and their total over #W must be 4.  (b), (c) as
+ before, with the Jacobian of the descended quotient y^2 = r_E P_E.  (d) The numerator of the zeta
+ function over F_p from the K-model reduced at a prime above a SPLIT p <= ZetaCap against the trace
+ formula's counts over F_p, F_p^2, F_p^3 (at inert primes only the count over F_p is compared,
+ through the descent datum); and the quotient's likewise at every good p.  Numerical plus point
+ counts, as the model itself.}
+    DN := D*N;
+    K := R`K; w := K.1; d := Integers() ! (w^2); OK := Integers(K); sig := hom< K -> K | -w >;
+    F := R`F; e := R`e;
+    WU := { ALMul(a, um) : a in W } join W;
+    coset := WU diff W;
+    out := rec< recformat< branchmodel, branchcm, splitting, jacobian, newformap, jacobianap, zetachecked, zetafailed, failures > | failures := [] >;
+    fails := [];
+    // (a)
+    PK<x> := PolynomialRing(K);
+    f0 := Coefficient(F, 0);
+    issq, rt := IsSquare(f0);
+    Fmodel := issq select K else AbsoluteField(ext< K | Polynomial(K, [-f0, 0, 1]) >);
+    out`branchmodel := Fmodel;
+    tot := 0; cmfields := [* *];
+    XQ := CreateShimuraQuot(D, N, W); XQ`g := 3;
+    for m in Sort(SetToSequence(coset)) do
+        tot +:= NumFixedPoints(D, N, m);
+        fp := NumFixedPointsByCMOrder(D, N, m);
+        for dsc in Sort(SetToSequence(Keys(fp))) do
+            if fp[dsc] gt 0 then Append(~cmfields, <dsc, fp[dsc]/#W, FieldOfDefinitionOfCMPoint(XQ, dsc)>); end if;
+        end for;
+    end for;
+    out`branchcm := cmfields;
+    if tot ne 4*#W then Append(~fails, Sprintf("(a) %o fixed points of the coset over #W = %o, not 4", tot, #W)); end if;
+    for c in cmfields do
+        Fc := c[3];
+        same := (Type(Fc) eq FldRat and Degree(Fmodel) eq 1) or
+                (Type(Fc) ne FldRat and Degree(Fc) eq Degree(Fmodel) and IsIsomorphic(Fc, Fmodel));
+        if not same then Append(~fails, Sprintf("(a) the CM points of discriminant %o are defined over %o, the model's fixed points over %o", c[1], Fc, Fmodel)); end if;
+    end for;
+    // (b), (c)
+    ps := [ p : p in PrimesUpTo(PrimeCap) | DN mod p ne 0 ];
+    plusdim := 0; minusdim := 0; plusf := [];
+    for orb in Newforms(CuspForms(Gamma0(DN), 2)) do
+        f := orb[1];
+        if Level(Parent(f)) ne DN then continue; end if;
+        dg := Degree(BaseRing(Parent(f)));
+        q := qExpansion(f, Max(PrimeDivisors(DN)) + 2);
+        ok := true; eu := 0;
+        for m in Sort(SetToSequence(WU)) do
+            if m eq 1 then continue; end if;
+            ev := 1;
+            for p in PrimeDivisors(m) do ev *:= (D mod p eq 0) select Coefficient(q, p) else -Coefficient(q, p); end for;
+            if m in W and ev ne 1 then ok := false; end if;
+            if m eq um then eu := ev; end if;
+        end for;
+        if not ok then continue; end if;
+        if eu eq 1 then plusdim +:= dg; Append(~plusf, f); else minusdim +:= dg; end if;
+    end for;
+    out`splitting := [plusdim, minusdim];
+    if not (plusdim eq 1 and minusdim eq 2) then Append(~fails, Sprintf("(c) splitting %o + %o", plusdim, minusdim)); end if;
+    E := MinimalModel(Jacobian(GenusOneModel(R`rE*R`PE)));
+    out`jacobian := E;
+    if Conductor(E) ne DN then Append(~fails, Sprintf("(b) conductor %o", Conductor(E))); end if;
+    if #plusf eq 1 then
+        q := qExpansion(plusf[1], PrimeCap + 1);
+        af := [ Integers() ! Coefficient(q, p) : p in ps ];
+        aE := [ TraceOfFrobenius(E, p) : p in ps ];
+        out`newformap := af; out`jacobianap := aE;
+        if af ne aE then Append(~fails, "(b) the Jacobian's a_p differ from the newform's"); end if;
+    end if;
+    // (d)
+    EQ := CreateShimuraQuot(D, N, WU); EQ`g := 1;
+    RT<T> := PolynomialRing(Rationals());
+    function TraceL(Xq, g, p)
+        cnt := [ ComputePointsViaTrace(Xq, p, r) : r in [1..g] ];
+        s := [ p^r + 1 - cnt[r] : r in [1..g] ];
+        ee := [ Rationals() | ];
+        for r in [1..g] do
+            acc := s[r];
+            for j in [1..r-1] do acc +:= (-1)^j * ee[j] * s[r-j]; end for;
+            Append(~ee, (-1)^(r-1)*acc/r);
+        end for;
+        a := [ Rationals() | 1 ] cat [ (-1)^r*ee[r] : r in [1..g] ];
+        for r in [g-1..0 by -1] do Append(~a, p^(g-r)*a[r+1]); end for;
+        return &+[ a[i+1]*T^i : i in [0..2*g] ];
+    end function;
+    nchk := 0; nfz := 0;
+    for p in [ p : p in PrimesUpTo(ZetaCap) | (2*DN*Abs(d)) mod p ne 0 ] do
+        if KroneckerSymbol(Discriminant(OK), p) ne 1 then continue; end if;
+        if exists{ c : c in Coefficients(F) | Denominator(c) mod p eq 0 } then continue; end if;
+        pid := Factorization(p*OK)[1][1]; k, red := ResidueClassField(pid); Pk := PolynomialRing(k);
+        fp := Pk ! [ red(OK ! (c*Denominator(c)))/red(OK ! Denominator(c)) : c in Coefficients(F) ];
+        if Degree(fp) lt 7 or Discriminant(fp) eq 0 then continue; end if;
+        nchk +:= 1;
+        if RT ! LPolynomial(HyperellipticCurve(fp)) ne TraceL(XQ, 3, p) then nfz +:= 1; end if;
+    end for;
+    for p in [ p : p in PrimesUpTo(ZetaCap) | (2*DN) mod p ne 0 ] do
+        if TwistCountQ(R`rE*R`PE, p, 1) lt 0 then continue; end if;
+        nchk +:= 1;
+        if 1 - TraceOfFrobenius(E, p)*T + p*T^2 ne TraceL(EQ, 1, p) then nfz +:= 1; end if;
+    end for;
+    out`zetachecked := nchk; out`zetafailed := nfz;
+    if nfz gt 0 then Append(~fails, Sprintf("(d) %o of %o zeta numerators differ", nfz, nchk)); end if;
+    out`failures := fails;
+    vprintf NelsonShimizu, 1: "checks: fixed points over %o; CM %o; splitting %o; Jacobian %o; zeta %o/%o; %o\n",
+        Fmodel, [ <c[1], c[2], c[3]> : c in cmfields ], out`splitting, E, nchk - nfz, nchk, #fails eq 0 select "all pass" else fails;
+    return #fails eq 0, out;
+end intrinsic;
 
 intrinsic NelsonModelChecks(D::RngIntElt, N::RngIntElt, W::SetEnum, um::RngIntElt,
                             ABC::SeqEnum, twist::SeqEnum : ZetaCap := 60, PrimeCap := 100) -> BoolElt, Rec
