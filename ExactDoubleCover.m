@@ -237,16 +237,43 @@ end intrinsic;
 
 intrinsic PointCountOverConic(conic::RngMPolElt, G::RngMPolElt, q::RngIntElt) -> RngIntElt
 {The number of points over F_q of the curve  conic = 0, y^2 = G  in the weighted projective space
-with X1, X2, X3 of weight 1 and y of weight 2, for q a prime power coprime to the coefficients of
-the conic: each of the q + 1 points of the conic carries 1 + chi(G) points, chi the quadratic
-character of F_q.}
+with X1, X2, X3 of weight 1 and y of weight 2, or -1 when this model does not have smooth reduction
+at q and so says nothing about the curve (q even, a degenerate conic, or a repeated zero of G on it).
+Over F_q with q odd the conic is isotropic, hence parametrised by a line; G pulls back to a form of
+degree 8 there and the model is smooth exactly when that form is squarefree. Each point of the line
+then carries 1 + chi(G) points of the curve, chi the quadratic character of F_q. A repeated zero is
+the case this refuses: there one point of the conic would be counted once where the smooth curve has
+none or two.}
+    if IsEven(q) then return -1; end if;
     Fq := GF(q);
-    P2 := ProjectiveSpace(Fq, 2);
-    Cq := Conic(P2, Evaluate(conic, [P2.1, P2.2, P2.3]));
-    Gq := ChangeRing(G, Fq);
-    n := 0;
-    for pt in Points(Cq) do
-        v := Evaluate(Gq, Eltseq(pt));
+    R := Parent(conic);
+    cq := ChangeRing(conic, Fq); Gq := ChangeRing(G, Fq);
+    Gram := Matrix(Fq, 3, 3, [MonomialCoefficient(cq, R2.i*R2.j) * (i eq j select 1 else (Fq!2)^-1)
+                              : i, j in [1..3]]) where R2 := Parent(cq);
+    if Determinant(Gram) eq 0 then return -1; end if;
+    // a point of the conic, and a basis completing it: the pencil of lines through the point meets the
+    // conic in one further point, which gives the parametrisation v :-> cq(v)*P0 - 2*B(P0, v)*v
+    V := VectorSpace(Fq, 3);
+    P2q := ProjectiveSpace(Fq, 2);
+    pts := Points(Conic(P2q, Evaluate(cq, [P2q.1, P2q.2, P2q.3])));
+    assert #pts gt 0;
+    P0 := V!Eltseq(Rep(pts));
+    cmpl := [v : v in Basis(Complement(V, sub<V | P0>))];
+    Pab<a, b> := PolynomialRing(Fq, 2);
+    vv := [Pab | a*cmpl[1][i] + b*cmpl[2][i] : i in [1..3]];
+    cv := &+[Gram[i,j]*vv[i]*vv[j] : i, j in [1..3]];
+    bv := &+[Gram[i,j]*(P0[i]*vv[j] + vv[i]*P0[j]) : i, j in [1..3]];
+    par := [cv*P0[i] - bv*vv[i] : i in [1..3]];
+    Gline := Evaluate(Gq, par);
+    if Gline eq 0 then return -1; end if;
+    Pu<u> := PolynomialRing(Fq);
+    gu := Pu![MonomialCoefficient(Gline, a^i*b^(8-i)) : i in [0..8]];
+    if gu eq 0 or Degree(Gline) ne 8 or Degree(gu) lt 7 or not IsSquarefree(gu) then return -1; end if;
+    // the point b = 0 of the line, where the form takes the coefficient of a^8
+    c8 := Coefficient(gu, 8);
+    n := c8 eq 0 select 1 else (IsSquare(c8) select 2 else 0);
+    for t in Fq do
+        v := Evaluate(gu, t);
         n +:= v eq 0 select 1 else (IsSquare(v) select 2 else 0);
     end for;
     return n;
@@ -254,27 +281,28 @@ end intrinsic;
 
 intrinsic CoverPointCounts(E::CrvEll, C::Rec, primes::SeqEnum) -> SeqEnum
 {For each prime p in primes, the pair <#X(F_p), #X'(F_p)> for the cover y^2 = f and its
-quadratic twist by a non-square, or <0,0> when the reduction is not available (p | 2, bad
+quadratic twist by a non-square, or <-1,-1> when the reduction is not available (p | 2, bad
 reduction or a non-integral coefficient of the model of E, non-integral coefficients of f, two
-branch points meeting modulo p, or the reduced cover has a different genus).}
+branch points meeting modulo p, or the reduced cover has a different genus). The sentinel is
+negative because 0 is a possible count: X_0^51(1) has no point over F_5.}
     out := [];
     for p in primes do
         if p eq 2 or Valuation(Discriminant(E), p) ne 0 or exists{a : a in aInvariants(E) | Valuation(a, p) lt 0} then
-            Append(~out, <0,0>); continue;
+            Append(~out, <-1,-1>); continue;
         end if;
         Ep := ChangeRing(E, GF(p));
         FEp := FunctionField(Ep);
         ok, fp := reduce_function(E, C`f, p, FEp);
-        if not ok then Append(~out, <0,0>); continue; end if;
+        if not ok then Append(~out, <-1,-1>); continue; end if;
         AFp, mp := AlgorithmicFunctionField(FEp);
         // the reduced function can be a square when two branch points meet modulo p
         try
             Fp := FunctionField(Polynomial([AFp | -mp(fp), 0, 1]));
             g := Genus(Fp);
         catch err
-            Append(~out, <0,0>); continue;
+            Append(~out, <-1,-1>); continue;
         end try;
-        if g ne C`genus then Append(~out, <0,0>); continue; end if;
+        if g ne C`genus then Append(~out, <-1,-1>); continue; end if;
         n := NumberOfPlacesOfDegreeOneECF(RationalExtensionRepresentation(Fp));
         Append(~out, <n, 2*#Ep(GF(p)) - n>);
     end for;
@@ -328,7 +356,7 @@ end function;
 intrinsic MatchCoverToCounts(E::CrvEll, covers::List, target::SeqEnum, primes::SeqEnum :
                              ExtraPrimes := []) -> SeqEnum
 {Which of the covers, twisted by which squarefree kappa, has the point counts target[i] at
-primes[i] (a target of 0 means no count is available at that prime). Returns the <cover index,
+primes[i] (a negative target means no count is available at that prime; 0 is a count). Returns the <cover index,
 kappa> pairs consistent with every usable prime. A cover is excluded as soon as one prime matches
 neither it nor its twist, whatever kappa. The sign of the twist at each remaining prime then
 determines the Kronecker symbols of kappa, and kappa is solved for as a product of -1, 2, the
@@ -338,8 +366,12 @@ discriminant of E or a coefficient of f, and those modulo which two branch point
 any other odd prime the cover y^2 = f is smooth, so a twist ramified there would have bad
 reduction where the identified curve has good reduction. Two pairs with the same cover index
 mean the primes used do not separate the twists; kappa = 0 means no usable prime distinguished
-the cover from its twist. kappa refers to the function f of the cover as returned, which is only
-determined up to a constant: a kappa computed in one session goes with that session's f.}
+the cover from its twist. A cover is also excluded when each prime's count matches one of its two
+twists but the signs are not the Kronecker symbols of any kappa supported on the listed primes:
+that is how a candidate with the right counts at every prime separately is ruled out, and it is
+also what happens if the support of the twist has been underestimated. kappa refers to the
+function f of the cover as returned, which is only determined up to a constant: a kappa computed
+in one session goes with that session's f.}
     disc := Discriminant(E);
     hits := [];
     for ci in [1..#covers] do
@@ -353,7 +385,7 @@ determined up to a constant: a kappa computed in one session goes with that sess
         good := true;
         for i in [1..#primes] do
             p := primes[i];
-            if target[i] eq 0 or counts[i][1] eq 0 or p in S then continue; end if;
+            if target[i] lt 0 or counts[i][1] lt 0 or p in S then continue; end if;
             if target[i] eq counts[i][1] then sgn := 1;
             elif target[i] eq counts[i][2] then sgn := -1;
             else good := false; break; end if;
