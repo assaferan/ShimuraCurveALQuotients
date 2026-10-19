@@ -54,10 +54,10 @@ for E in cls do
     printf "\n== E = %o ==\n", CremonaReference(E);
     surv := ModelByHeegnerHeights(X, Wp, E);
     for s in surv do
-        printf "class b = %o, cover %o twisted by %o, noether %o\n", s[1], s[4], s[5], s[6];
-        if s[6] ne 5 then printf "   not hyperelliptic\n"; continue; end if;
-        if Type(s[7]) ne CrvHyp then
-            c := TwistedCover(DoubleCoversWithBranchDivisor(E, Divisor(Place(s[2])) + Divisor(Place(s[3])))[s[4]], s[5]);
+        printf "rational parts %o, cover %o twisted by %o, noether %o\n", s[1], s[3], s[4], s[5];
+        if s[5] ne 5 then printf "   not hyperelliptic\n"; continue; end if;
+        if Type(s[6]) ne CrvHyp then
+            c := TwistedCover(DoubleCoversWithBranchDivisor(E, &+[Divisor(pl) : pl in {@ Place(P) : P in s[2] @}])[s[3]], s[4]);
             conic, G := HyperellipticModelOverConic(c);
             Rc := Parent(conic);
             printf "   hyperelliptic, canonical conic without a rational point:\n      %o = 0,  y^2 = %o\n", conic, G;
@@ -70,7 +70,7 @@ for E in cls do
             end if;
             continue;
         end if;
-        H := SmallHyperellipticModel(s[7]);
+        H := SmallHyperellipticModel(s[6]);
         ok, He := KleinFourEvenModel(H);
         if ok and #Sprint(HyperellipticPolynomials(He)) lt #Sprint(HyperellipticPolynomials(H)) then H := He; end if;
         f := HyperellipticPolynomials(H);

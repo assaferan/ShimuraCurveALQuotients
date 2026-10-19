@@ -154,6 +154,11 @@ function counts_mod_p(ctx, pts)
     places := {@ @};
     for Q in pts do
         c := Eltseq(Q); F := Ring(Parent(Q));
+        if Type(F) eq FldRat then
+            if exists{a : a in c | Valuation(a, ctx`p) lt 0} then return {}; end if;
+            Include(~places, Place(ctx`Ep![GF(ctx`p) | a : a in c]));
+            continue;
+        end if;
         pp := Decomposition(Integers(F), ctx`p)[1][1];
         if exists{a : a in c | Valuation(a, pp) lt 0} then return {}; end if;
         k, red := ResidueClassField(pp);
@@ -187,88 +192,111 @@ end function;
 intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
-X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not heights
-of lattice points, and the list is empty). The two branch places must be of degree 2, over quadratic
-fields F1, F2 (possibly equal), E must have rank 0 or 1 over Q and its twists by F1, F2 rank 1. Each entry is a tuple
-<b, P1, P2, cover, kappa, noether, H> with b the class mod 2 of the origin-dependent component, P1, P2
-points of E(F1), E(F2) generating the branch places, cover and kappa the index and twist identified by
-MatchCoverToCounts, noether 5 or 6, and H the hyperelliptic model when noether is 5 (0 when the
-canonical conic has no rational point); configurations that are translates of an earlier one by a
-rational point of E, or their negatives, are omitted.}
+X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
+heights of lattice points, and the list is empty). The branch places must have degree 1 or 2, E must
+have rank 0 or 1 over Q, and its twist by the field of a place of degree 2 must have rank 1. Each
+entry is a tuple <ns, pts, cover, kappa, noether, H>: ns the multiples of the generator of E(Q) in
+the sums of the points over the branch places, pts one point per place, cover and kappa the index and
+the twist identified by MatchCoverToCounts, noether 5 or 6, and H the hyperelliptic model when
+noether is 5 (0 when the canonical conic has no rational point). Configurations that are translates of
+an earlier one by a rational point of E, or their negatives, are omitted.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
-    require #branch eq 2 and &and[b[4] eq 2 : b in branch] and &and[Type(b[3]) ne FldRat : b in branch]:
-        "two branch places of degree 2 expected";
+    require &and[b[4] in {1, 2} : b in branch] and &+[b[4] : b in branch] eq 4:
+        "branch places of degree 1 or 2, of total degree 4, are expected";
     degf := 2*#W;
     G0, mG0, rk0, sat0 := MordellWeilGroup(E);
     require rk0 and sat0: "the Mordell-Weil group of E is not proved";
     gQ := [mG0(G0.i) : i in [1..Ngens(G0)] | Order(G0.i) eq 0];
     require #gQ le 1: "E must have rank at most 1";
-    // per branch place: the field F, E(F) = E(Q) + E^dF(Q) up to 2-torsion with generators saturated at 2
+    hG := #gQ eq 1 select Height(gQ[1]) else 0;
+    // Per branch place: its degree e, its field F (Q when e = 1), the group E(F), which is
+    // E(Q) + E^dF(Q) up to 2-torsion with generators saturated at 2, the multiple k of the generator
+    // of E(F)^- in P - Pbar, and the multiple m of the generator of E(Q) in the trivial character's
+    // component of the Heegner point.
     data := [* *];
     for b in branch do
-        F := b[3]; dF := Discriminant(Integers(F));
-        EF := BaseChange(E, F);
-        Ed := QuadraticTwist(E, dF);
-        Gd, mGd, rkd, satd := MordellWeilGroup(Ed);
-        require rkd and satd: "the Mordell-Weil group of the twist of E is not proved";
-        gd := [mGd(Gd.i) : i in [1..Ngens(Gd)] | Order(Gd.i) eq 0];
-        require #gd eq 1: "the twist of E by the field of a branch point must have rank 1";
-        ok, tw := IsIsomorphic(BaseChange(Ed, F), EF);
-        Gm := tw(BaseChange(Ed, F)!Eltseq(gd[1]));
-        halves := DivisionPoints(Gm, 2);
-        while #halves gt 0 do Gm := halves[1]; halves := DivisionPoints(Gm, 2); end while;
-        // the classes of P + Pbar are those of E(Q) modulo 2E(Q): the generator over Q itself, not a
-        // half of it in E(F)
-        GQ := #gQ eq 1 select EF!Eltseq(gQ[1]) else EF!0;
-        T, mT := TorsionSubgroup(EF);
-        Append(~data, rec< recformat< F, EF, Gm, GQ, tors, d > | F := F, EF := EF, Gm := Gm, GQ := GQ, tors := [mT(t) : t in T], d := b[2] >);
-        vprintf HeegnerHeights: "disc %o over Q(sqrt %o): minus generator of height %o, E(Q) generator of height %o, torsion %o\n",
-            b[2], SquarefreeFactorization(dF), Height(Gm), #gQ eq 1 select Height(GQ) else 0, #T;
-    end for;
-    // the multiple k of the minus generator for each branch discriminant, and the multiple b' of the
-    // generator of E(Q) in P + Pbar - 2 xi_E, xi_E the image of the Hodge class of X_0^D(N)
-    ks := []; bps := [];
-    hG := #gQ eq 1 select Height(gQ[1]) else 0;
-    for i in [1..2] do
-        comps, h := HeegnerHeightComponents(E, D, N, degf, data[i]`d);
-        // P - Pbar is (2/h) times the component of the character attached to the field F of the branch
-        // point: the trivial character when F is the CM field itself (then Gal(H/K) fixes P and the
-        // other components vanish), otherwise the genus character (d1, d2) with Q(sqrt d1) or
-        // Q(sqrt d2) equal to F; the trivial character's component then lies in E(Q) and cancels, and
-        // characters attached to other fields vanish on the orbit of P. That character must be
-        // admissible with a nonzero value, or P would be rational up to torsion.
-        dF := Discriminant(Integers(data[i]`F));
-        adm := IsSquare(dF*data[i]`d) select [c : c in comps | c[1] eq 1]
-               else [c : c in comps | c[1] ne 1 and (IsSquare(c[1]*dF) or IsSquare(c[2]*dF))];
-        require #adm eq 1: "no genus character cuts out the field of the branch point";
-        require adm[1][3] and adm[1][6] gt 0:
-            "the character attached to the field of the branch point is inadmissible or has vanishing value";
-        hminus := adm[1][6] * (2/h)^2;
-        k := Sqrt(hminus / Height(data[i]`Gm));
-        vprintf HeegnerHeights: "disc %o: P - Pbar has predicted height %o = k^2 h(G'), k = %o\n", data[i]`d, hminus, k;
-        if Abs(k - Round(k)) gt 1e-4 then
-            vprintf HeegnerHeights: "not a lattice point: E is not the quotient\n";
-            return [* *];
+        e := b[4]; F := e eq 2 select b[3] else Rationals();
+        EF := e eq 2 select BaseChange(E, F) else E;
+        Gm := EF!0; k := 0;
+        comps, h := HeegnerHeightComponents(E, D, N, degf, b[2]);
+        if e eq 2 then
+            dF := Discriminant(Integers(F));
+            Ed := QuadraticTwist(E, dF);
+            Gd, mGd, rkd, satd := MordellWeilGroup(Ed);
+            require rkd and satd: "the Mordell-Weil group of the twist of E is not proved";
+            gd := [mGd(Gd.i) : i in [1..Ngens(Gd)] | Order(Gd.i) eq 0];
+            require #gd eq 1: "the twist of E by the field of a branch point must have rank 1";
+            _, tw := IsIsomorphic(BaseChange(Ed, F), EF);
+            Gm := tw(BaseChange(Ed, F)!Eltseq(gd[1]));
+            halves := DivisionPoints(Gm, 2);
+            while #halves gt 0 do Gm := halves[1]; halves := DivisionPoints(Gm, 2); end while;
+            // P - Pbar is (2/h) times the component of the character attached to the field F of the
+            // branch point: the trivial character when F is the CM field itself (then Gal(H/K) fixes P
+            // and the other components vanish), otherwise the genus character (d1, d2) with Q(sqrt d1)
+            // or Q(sqrt d2) equal to F; characters attached to other fields vanish on the orbit of P.
+            // That character must be admissible with a nonzero value, or P would be rational up to
+            // torsion.
+            adm := IsSquare(dF*b[2]) select [c : c in comps | c[1] eq 1]
+                   else [c : c in comps | c[1] ne 1 and (IsSquare(c[1]*dF) or IsSquare(c[2]*dF))];
+            require #adm eq 1: "no genus character cuts out the field of the branch point";
+            require adm[1][3] and adm[1][6] gt 0:
+                "the character attached to the field of the branch point is inadmissible or has vanishing value";
+            hminus := adm[1][6] * (2/h)^2;
+            kr := Sqrt(hminus / Height(Gm));
+            vprintf HeegnerHeights: "disc %o over Q(sqrt %o): P - Pbar has predicted height %o = k^2 h(G'), k = %o\n",
+                b[2], SquarefreeFactorization(dF), hminus, kr;
+            if Abs(kr - Round(kr)) gt 1e-4 then
+                vprintf HeegnerHeights: "not a lattice point: E is not the quotient\n";
+                return [* *];
+            end if;
+            k := Round(kr);
+        else
+            // A branch place of degree 1: every conjugate of the CM point has the same image in E, so
+            // the component of every nontrivial character vanishes.
+            require &and[c[6] lt 1e-10 : c in comps | c[1] ne 1 and c[3]]:
+                "a branch place of degree 1 whose nontrivial characters do not all have vanishing components";
+            vprintf HeegnerHeights: "disc %o: the branch place is rational\n", b[2];
         end if;
-        Append(~ks, Round(k));
-        // P + Pbar - 2 xi_E = b' G: when F is not K the trivial character's component is (h/2) times
-        // it, zero when that character is inadmissible; when E has rank 0 there is nothing to find
+        // The trivial character's component is (h/e) times the sum of the points over the place minus
+        // e*xi_E, with xi_E the image in E of the Hodge class of X_0^D(N). The sum lies in E(Q) and
+        // xi_E in E(Q) tensor Q, so that component's height gives |n - e*x| with n the multiple of the
+        // generator of E(Q) in the sum and x the multiple in xi_E: a rational number, whose denominator
+        // is that of x and need not be 1.
         triv := [c : c in comps | c[1] eq 1][1];
-        bp := (#gQ eq 1 and triv[3] and not IsSquare(dF*data[i]`d)) select (2/h)*Sqrt(triv[6]/hG) else 0;
-        vprintf HeegnerHeights: "disc %o: P + Pbar - 2 xi_E = b' G with |b'| = %o\n", data[i]`d, bp;
-        Append(~bps, bp);
+        bp := Rationals()!0;
+        if #gQ eq 1 and triv[3] and triv[6] gt 0 then
+            br := (e/h) * Sqrt(triv[6] / hG);
+            bp := BestApproximation(br, 10^4);
+            vprintf HeegnerHeights: "disc %o: the sum of the points over the place is e*xi_E +- %o*G, measured %o\n",
+                b[2], bp, br;
+            if Abs(br - bp) gt 1e-15 then
+                vprintf HeegnerHeights: "not a rational multiple of the generator: E is not the quotient\n";
+                return [* *];
+            end if;
+        end if;
+        T, mT := TorsionSubgroup(EF);
+        Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d > | e := e, F := F, EF := EF,
+            Gm := Gm, k := k, bp := bp, h := h, tors := [mT(t) : t in T], d := b[2] >);
     end for;
-    // P_i + Pbar_i = b_i G + t_i with b_i = (+-|b_i'|) + 2c for one c (the Hodge class), so after a
-    // translation by a rational point b_1 is 0 or 1, and b_2 - b_1 = +-|b_2'| +-|b_1'| is an integer
-    deltas := {};
-    for s1 in [1, -1], s2 in [1, -1] do
-        dd := s2*bps[2] - s1*bps[1];
-        if Abs(dd - Round(dd)) lt 1e-4 then Include(~deltas, Round(dd)); end if;
+    // The sum of the points over place i is n_i*G + torsion with n_i = e_i*y + s_i*b_i, where y is the
+    // multiple of G in xi_E: it is common to all the places and matters only modulo 1, because
+    // translating every branch point by a rational point of E gives an isomorphic cover. Each sign s_i
+    // is free; changing all of them at once is [-1] on E, whose configurations are removed as
+    // duplicates below. Any y making every n_i an integer has denominator dividing the bound below, so
+    // the enumeration over y is finite and complete.
+    nvecs := {};
+    L := LCM([Integers() | 2*Denominator(dt`bp) : dt in data]);
+    for sg in CartesianPower([1, -1], #data) do
+        if #gQ eq 0 then Include(~nvecs, [0 : i in [1..#data]]); continue; end if;
+        for u in [0..L-1] do
+            ns := [Rationals() | data[i]`e * u/L + sg[i] * data[i]`bp : i in [1..#data]];
+            if &and[IsIntegral(n) : n in ns] then Include(~nvecs, [Integers() | n : n in ns]); end if;
+        end for;
     end for;
-    if #deltas eq 0 then
-        vprintf HeegnerHeights: "the rational components of the two branch points do not differ by a lattice point: E is not the quotient\n";
+    if #nvecs eq 0 then
+        vprintf HeegnerHeights: "the rational parts of the branch places are not compatible: E is not the quotient\n";
         return [* *];
     end if;
     // trace-formula counts
@@ -278,46 +306,54 @@ rational point of E, or their negatives, are omitted.}
     ctxs := [reduction_context(E, p) : p in small[1..Min(6, #small)]];
     out := [* *];
     seen := [* *];
-    for b in (#gQ eq 1 select [0, 1] else [0]), delta in deltas do
+    for ns in Sort(SetToSequence(nvecs)) do
         lists := [* *];
-        for i in [1..2] do
+        for i in [1..#data] do
             dt := data[i]; pts := {@ @};
-            for sg in [1, -1], t in dt`tors do
-                twoP := (b + (i eq 1 select 0 else delta))*dt`GQ + sg*ks[i]*dt`Gm + t;
-                for Q in DivisionPoints(twoP, 2) do
-                    if &and[a in Rationals() : a in Eltseq(Q)] then continue; end if;
-                    Include(~pts, E(dt`F)!Eltseq(Q));
+            nGF := #gQ eq 1 select dt`EF!Eltseq(ns[i]*gQ[1]) else dt`EF!0;
+            if dt`e eq 1 then
+                for t in dt`tors do Include(~pts, E(dt`F)!Eltseq(nGF + t)); end for;
+            else
+                for sg in [1, -1], t in dt`tors do
+                    for Q in DivisionPoints(nGF + sg*dt`k*dt`Gm + t, 2) do
+                        if &and[a in Rationals() : a in Eltseq(Q)] then continue; end if;
+                        Include(~pts, E(dt`F)!Eltseq(Q));
+                    end for;
                 end for;
-            end for;
+            end if;
             Append(~lists, pts);
         end for;
-        vprintf HeegnerHeights: "class b = %o, b_2 - b_1 = %o: %o x %o candidate points\n", b, delta, #lists[1], #lists[2];
-        for P1 in lists[1], P2 in lists[2] do
-            if Place(P1) eq Place(P2) then continue; end if;
+        vprintf HeegnerHeights: "rational parts %o: %o candidate points\n", ns, [#l : l in lists];
+        for idx in CartesianProduct([[1..#l] : l in lists]) do
+            cfg := [* lists[i][idx[i]] : i in [1..#data] *];
+            // the branch divisor must be reduced of degree 4: two of the chosen points may lie over
+            // the same place
+            B := &+[Divisor(Place(P)) : P in cfg];
+            _, mlt := Support(B);
+            if Degree(B) ne 4 or not &and[mm eq 1 : mm in mlt] then continue; end if;
             // translates by a rational point, or negatives, of an earlier configuration give an
             // isomorphic cover (translations and [-1] are automorphisms of E over Q)
             dup := false;
             for sn in seen, sg in [1, -1] do
-                Tc := sg*P1 - sn[2];
+                Tc := sg*cfg[1] - sn[1];
                 if not &and[a in Rationals() : a in Eltseq(Tc)] then continue; end if;
                 Tq := E(Rationals())!Eltseq(Tc);
-                if Place(sg*P1) eq Place(sn[2] + E(data[1]`F)!Eltseq(Tq)) and Place(sg*P2) eq Place(sn[3] + E(data[2]`F)!Eltseq(Tq)) then
+                if &and[Place(sg*cfg[i]) eq Place(sn[i] + E(data[i]`F)!Eltseq(Tq)) : i in [1..#data]] then
                     dup := true; break;
                 end if;
             end for;
             if dup then continue; end if;
             rejected := false;
             for ctx in ctxs do
-                S := counts_mod_p(ctx, [* P1, P2 *]);
+                S := counts_mod_p(ctx, cfg);
                 if #S eq 0 then continue; end if;
                 if target[Index(primes, ctx`p)] notin S then rejected := true; break; end if;
             end for;
             if rejected then continue; end if;
-            B := Divisor(Place(P1)) + Divisor(Place(P2));
             covers := DoubleCoversWithBranchDivisor(E, B);
             hits := MatchCoverToCounts(E, covers, target, primes : ExtraPrimes := PrimeDivisors(D*N));
             if #hits eq 0 then continue; end if;
-            Append(~seen, <b, P1, P2>);
+            Append(~seen, cfg);
             // pin the twist with more primes
             primes2 := [p : p in PrimesInInterval(3, TwistPrimes) | (D*N) mod p ne 0];
             target2 := [ComputePointsViaTrace(X, p, 1) : p in primes2];
@@ -328,8 +364,8 @@ rational point of E, or their negatives, are omitted.}
                 if c`noether eq 5 then
                     try H := HyperellipticModelOfCover(c); catch err H := 0; end try;
                 end if;
-                Append(~out, <b, P1, P2, hh[1], hh[2], c`noether, H>);
-                vprintf HeegnerHeights: "survivor b = %o: cover %o twisted by %o, noether %o\n", b, hh[1], hh[2], c`noether;
+                Append(~out, <ns, cfg, hh[1], hh[2], c`noether, H>);
+                vprintf HeegnerHeights: "survivor %o: cover %o twisted by %o, noether %o\n", ns, hh[1], hh[2], c`noether;
             end for;
         end for;
     end for;

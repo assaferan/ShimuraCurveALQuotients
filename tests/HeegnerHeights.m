@@ -121,9 +121,9 @@ procedure test_route(D, N, W)
         // the wrong curve of the class is excluded by the lattice test, so survivors identify E
         assert IsIsomorphic(E, Estored);
         for s in surv do
-            assert s[6] eq 5 and Type(s[7]) eq CrvHyp;
+            assert s[5] eq 5 and Type(s[6]) eq CrvHyp;
             Hs := HyperellipticCurve(P!(F * LCM([Denominator(c) : c in Coefficients(F)])^2));
-            assert IsIsomorphic(s[7], Hs);
+            assert IsIsomorphic(s[6], Hs);
             nmodels +:= 1;
         end for;
     end for;
