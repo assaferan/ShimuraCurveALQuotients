@@ -772,20 +772,26 @@ apply: `genmodels.m` builds covers of a rational star line. `models_142_1.m` and
 hold the star key only, `{1, 2, 71, 142}` and `{1, 2, 79, 158}`, each a Weierstrass model
 `y^2 + h y = f`. They are the first entries in this directory whose star curve is not rational.
 
-**Construction, exact throughout** (the genus-one star driver `tools/genus1star.m`, branch
-`genus1-star-driver`, PR #121; logs `vvdata/weyl-campaign/genus1star/g1_142_1.log` and
-`g1_158_1.log` on the campaign branch, commit 6e4d0ea). The driver asks the Borcherds search for
+**Construction, exact throughout** (the genus-one star driver `tools/genus1star.m`, on the branch
+`genus1-star-models` of PR #125, stacked on the prescribed-divisor search of PR #121; the command
+below needs that branch; logs `vvdata/weyl-campaign/genus1star/g1_142_1.log` and `g1_158_1.log` on
+the campaign branch, commit 6e4d0ea). The driver asks the Borcherds search for
 forms with prescribed divisors `Z(d_1) + Z(d_2) - 2 Z(d_oo)` on the rational CM points (18 of 248
 candidate divisors have a form at 142, 23 of 378 at 158), evaluates them at every rational CM
 point by Schofer's formula, which gives exact rational values here, forms from two poles two
 coordinates of degree 2 on the star, reads off the bidegree-(2,2) relation between them
 (`4x^2y^2 + 5xy - x - y + 1 = 0` at 142, `4x^2y^2 - 8x^2y + 4x^2 + 7xy - 8x + y = 0` at 158) and
-takes the minimal model. No numerical step and no Hauptmodul normalisation is involved. About two
-minutes each on a Mac:
+takes the minimal model. No numerical step and no Hauptmodul normalisation is involved. A Borcherds
+form with the requested divisor is a function on the star only if its character is trivial, which
+Guo-Yang assume (their Assumption 40). It is not needed here: the divisor is rational and its class
+has finite order, and `E(Q)` is torsion-free for both 142a1 and 158a1, so the divisor is principal;
+consistently, the divisors for which the search found a form are exactly those that the tabulated
+positions make principal. On a star with rational torsion this argument would not apply. About two
+minutes each:
 
     magma -b D:=142 N:=1 stage:=3 tools/genus1star.m < /dev/null
 
-**The Jacobian is pinned independently of the model.** By Jacquet-Langlands the star's Jacobian
+**The Jacobian is determined independently of the model.** By Jacquet-Langlands the star's Jacobian
 is the elliptic curve of the rational newform of level D whose Atkin-Lehner eigenvalues are -1 at
 both primes (the sign is flipped at the primes of the discriminant). At each level there is exactly
 one such newform, its isogeny class has a single curve (142a1, 158a1), the constructed curve has
@@ -793,8 +799,10 @@ its traces of Frobenius at the 23 good primes below 100, and is isomorphic to it
 curve is the right curve up to isomorphism before any check of ours is applied. `X_0^142(1)*` is
 Guo-Yang, Compositio 153 (2017), Example 42, reproduced entry by entry: their curve
 `y^2 + xy + y = x^3 - x^2 - 12x + 15`, and their table of CM points as multiples of the generator
-`Q = (1, 1)` (ours is theirs with `Q` replaced by `-Q`, the automorphism `-1` of the curve). No
-published equation exists for `X_0^158(1)*`.
+`Q = (1, 1)`, with the same sign convention. The positions of `P_{-3} = -Q` and `P_{-4} = -2Q` are
+not among the placements of the run log; they follow from the divisors of the two coordinates,
+`2 P_{-3} = P_{-4} + P_{-8}` and `P_{-3} + P_{-43} = 2 P_{-4}`, and agree with Guo-Yang. We know of
+no published equation for `X_0^158(1)*`.
 
 **Additional check, the trace formula.** `tests/ModelChecks.m` runs 15 checks on each file
 (genus, the genus formula, point counts over `F_p` at the eight primes 3 to 23, and the whole
@@ -802,12 +810,17 @@ L-polynomial at 3, 5, 7, 11, 13), none failing; and directly on the star quotien
 Eichler-Selberg count agrees with the model over `F_p` and `F_{p^2}` at every prime below 50 not
 dividing D, 28 of 28 counts at each base.
 
-**What the file headers record, and why.** Every rational CM point of class number at most 4 is
-placed on the curve, as a point and as a multiple of the generator, together with the quadratic CM
-cycles the search found to be twice a rational point (`Z(-187)`, `Z(-120)` at 142; `Z(-115)`,
-`Z(-123)`, `Z(-184)`, `Z(-51)` at 158). These are the branch points of the genus-3 double covers of
-the star by a single involution, so they are what a later certification of such a cover needs. The
-covers themselves (`{1,2}`, `{1,142}`, `{1,71}` of genus 2, 2, 3 at 142; `{1,2}`, `{1,158}`,
-`{1,79}` of genus 3, 2, 4 at 158) are not in these files: the hyperelliptic-cover stages need a
-rational base and do not reach them. `tests/_offline/ModelRegen.m` works from a fixed list of
+**What the file headers record, and why.** Every rational CM point of fundamental discriminant and
+class number at most 4 is placed on the curve, as a point and as a multiple of the generator,
+together with the quadratic CM cycles the search found to be twice a rational point (`Z(-187)`,
+`Z(-120)` at 142; `Z(-115)`, `Z(-123)`, `Z(-184)`, `Z(-51)` at 158). The branch points of the
+double covers of the star by a single involution are the images of the fixed points of the other
+two involutions. At 142, `w_2` fixes the CM points of discriminants `-4` and `-8`, `w_71` fixes no
+point and `w_142` fixes four points of discriminant `-568`, so `X/<w_71>` (genus 3) is branched over
+`P_{-4}`, `P_{-8}` and the two points of discriminant `-568`, `X/<w_2>` (genus 2) over the `-568`
+pair, and `X/<w_142>` (genus 2) over `P_{-4}`, `P_{-8}`. At 158, `w_2` fixes `-4` and `-8`, `w_79`
+fixes no point and `w_158` fixes eight points of discriminant `-632`, so `X/<w_79>` (genus 4) is
+branched over `P_{-4}`, `P_{-8}` and the four points of `Z(-632)`, `X/<w_2>` (genus 3) over
+`Z(-632)`, and `X/<w_158>` (genus 2) over `P_{-4}`, `P_{-8}`. Those covers are not in these files:
+the hyperelliptic-cover stages need a rational base and do not reach them. `tests/_offline/ModelRegen.m` works from a fixed list of
 bases and does not cover these two.
