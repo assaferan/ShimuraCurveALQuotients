@@ -765,3 +765,46 @@ two were produced independently and both agree with the trace formula): 13 keys,
 odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
+
+## X_0^1326(1)/{1,17,78,1326} and X_0^210(13)/{1,2,21,42,65,130,1365,2730}: models from the heights of their branch points (branch models-1326-210)
+
+Both quotients have genus 3 and lie behind the divisor wall of the Borcherds search (the level
+`M = 4·oddpart(DN)` is 2652 and 5460), so none of the recipes above reaches them. Each has an
+elliptic quotient `E = X/<W, w>` and is a double cover of it branched at four CM points over known
+quadratic fields; the heights of those points on `E` are given by the explicit Gross–Zagier formula
+of Cai, Shu and Tian (`HeegnerHeights.m`), the points of `E(F)` of those heights are a finite set, and
+every configuration is tested exactly against the trace formula by `ExactDoubleCover.m`. Nothing in
+the construction is numerical except the L-values, which enter only through the recognition of an
+integer (the multiple of a Mordell–Weil generator). The files hold the genus-3 quotient only.
+
+    magma -b D:=1326 N:=1 W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
+    magma -b D:=210 N:=13 W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
+
+**X_0^1326(1)/{1,17,78,1326}: `y^2 = 272x^8 - 72x^6 - 55x^4 - 18x^2 + 17`** (stored reversed, as
+`17 - 18x^2 - 55x^4 - 72x^6 + 272x^8`). `E = X/<W, w_6>` is 1326b2: the Atkin–Lehner signs give the
+isogeny class 1326b, and the heights pick b2 within it (on the other three curves the predicted
+height is not the height of a lattice point). The branch points, of discriminants −24 and −408 over
+`Q(sqrt 2)`, have minus parts exactly the generator of `E(Q(sqrt 2))^-`; one configuration survives the
+exact test, with four covers over `Q` of which one is consistent with the trace formula, and it is
+hyperelliptic.
+
+**X_0^210(13)/{1,2,21,42,65,130,1365,2730}: `y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3 + 97x^2 + 20x + 4`**,
+obtained twice, through `E = X/<W, w_15>` = 2730s1 (branch points −312, −120 over `Q(sqrt 2)`) and
+through `E = X/<W, w_5>` = 2730u1 (−420, −1092 over `Q(i)`); the two curves are Q-isomorphic.
+
+**Checks that were predictions, not inputs.** Bad primes are exactly the primes of `DN`; the
+L-polynomial at every good prime up to 60 equals the product of those of the three elliptic
+quotients predicted by the Atkin–Lehner signs (1326b2, 1326c1, 1326d1; 2730u1, 2730s1, 210a2), which
+in genus 3 determines the zeta function; point counts agree with the trace formula at all primes
+up to 1000 (resp. 600); the automorphism group has order 8; and the fixed points of the three
+involutions lie over the fields the CM computation gives for the corresponding discriminants
+(`Q(sqrt 2)`, `Q(sqrt 17)` and the quartic field of discriminant 18496 at 1326). The numerical
+verdicts of Nelson's method on both quotients were "hyperelliptic", and its independent fit of the
+1326 model via `w_2` is Q-isomorphic to this one (`tests/HeegnerHeights.m`, `tests/ModelChecks.m`).
+
+**What rests on a theorem and what does not.** The formula is Theorem 1.5 of Cai–Shu–Tian with the
+admissibility rule for the characters at the primes dividing both the conductor and the
+discriminant; the only component it does not give is the one that depends on the choice of origin,
+and that component matters only modulo 2 (translating both branch points by a rational point gives
+an isomorphic cover), so the enumeration is complete. Both models are therefore proved, given the
+trace-formula point counts.
