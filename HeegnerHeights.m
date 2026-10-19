@@ -63,12 +63,13 @@ are not listed.}
     return out;
 end intrinsic;
 
-intrinsic BranchPointData(X::ShimuraQuot, Wp::SetEnum) -> SeqEnum
-{For the double cover X = X_0^D(N)/W -> X/W', the branch points grouped by CM order: tuples
-<m, d, F, n> with m in W' \ W, d the discriminant of the CM order of the fixed points of w_m, F the
-field of definition of those points on X, and n their number on X.}
+intrinsic BranchPointData(X::ShimuraQuot, Wp::SetEnum) -> List
+{For the double cover X = X_0^D(N)/W -> X/W', the branch points grouped by CM order: a list of
+tuples <m, d, F, n> with m in W' \ W, d the discriminant of the CM order of the fixed points of
+w_m, F the field of definition of those points on X (the rationals or an absolute number field),
+and n their number on X.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
-    out := [];
+    out := [* *];
     for m in Wp diff W do
         fp := NumFixedPointsByCMOrder(D, N, m);
         for d in Keys(fp) do
@@ -102,10 +103,13 @@ of sum_t chi(t) f(P)^t over the class group when chi is admissible, by Cai-Shu-T
 8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number. The class group
 must be 2-elementary.}
     require IsFundamentalDiscriminant(d) and d lt 0: "d must be a negative fundamental discriminant";
+    // for a squarefree conductor no Euler factor is removed from L(s, E, chi) in the formula, and the
+    // Manin constant of the optimal curve is 1
+    require IsSquarefree(Conductor(E)): "the conductor of E must be squarefree";
     Cl := ClassGroup(QuadraticField(d));
     require Exponent(Cl) le 2: "the class group must be 2-elementary (genus characters only)";
-    // the first curve of its class in Cremona's table is the optimal one (the single exception, 990h, is
-    // out of range here)
+    // the first curve of its class in Cremona's table is the optimal one, except in class 990h
+    require Conductor(E) ne 990: "the optimal curve of class 990h is not the first of its class";
     lab := CremonaReference(E);
     Eopt := EllipticCurve(Substring(lab, 1, #lab - 1) cat "1");
     SigD := [p : p in PrimeDivisors(Conductor(E)) | d mod p eq 0];
@@ -162,8 +166,14 @@ function counts_mod_p(ctx, pts)
     for Q in DivisionPoints(PB, 2) do
         ok, f := IsPrincipal(B - 2*(Divisor(Place(Q)) + O));
         if not ok then continue; end if;
-        Fc := FunctionField(Polynomial([ctx`AFp | -ctx`mp(f), 0, 1]));
-        if Genus(Fc) ne 3 then continue; end if;
+        // two branch points meeting modulo p make f a square; then there is no information
+        try
+            Fc := FunctionField(Polynomial([ctx`AFp | -ctx`mp(f), 0, 1]));
+            g := Genus(Fc);
+        catch err
+            return {};
+        end try;
+        if g ne 3 then continue; end if;
         n := NumberOfPlacesOfDegreeOneECF(RationalExtensionRepresentation(Fc));
         counts join:= {n, 2*ctx`nE - n};
     end for;
@@ -187,7 +197,8 @@ rational point of E, or their negatives, are omitted.}
     require #branch eq 2 and &and[b[4] eq 2 : b in branch] and &and[Type(b[3]) ne FldRat : b in branch]:
         "two branch places of degree 2 expected";
     degf := 2*#W;
-    G0, mG0 := MordellWeilGroup(E);
+    G0, mG0, rk0, sat0 := MordellWeilGroup(E);
+    require rk0 and sat0: "the Mordell-Weil group of E is not proved";
     gQ := [mG0(G0.i) : i in [1..Ngens(G0)] | Order(G0.i) eq 0];
     require #gQ le 1: "E must have rank at most 1";
     // per branch place: the field F, E(F) = E(Q) + E^dF(Q) up to 2-torsion with generators saturated at 2
@@ -196,18 +207,17 @@ rational point of E, or their negatives, are omitted.}
         F := b[3]; dF := Discriminant(Integers(F));
         EF := BaseChange(E, F);
         Ed := QuadraticTwist(E, dF);
-        Gd, mGd := MordellWeilGroup(Ed);
+        Gd, mGd, rkd, satd := MordellWeilGroup(Ed);
+        require rkd and satd: "the Mordell-Weil group of the twist of E is not proved";
         gd := [mGd(Gd.i) : i in [1..Ngens(Gd)] | Order(Gd.i) eq 0];
         require #gd eq 1: "the twist of E by the field of a branch point must have rank 1";
         ok, tw := IsIsomorphic(BaseChange(Ed, F), EF);
         Gm := tw(BaseChange(Ed, F)!Eltseq(gd[1]));
         halves := DivisionPoints(Gm, 2);
         while #halves gt 0 do Gm := halves[1]; halves := DivisionPoints(Gm, 2); end while;
+        // the classes of P + Pbar are those of E(Q) modulo 2E(Q): the generator over Q itself, not a
+        // half of it in E(F)
         GQ := #gQ eq 1 select EF!Eltseq(gQ[1]) else EF!0;
-        if #gQ eq 1 then
-            halves := DivisionPoints(GQ, 2);
-            while #halves gt 0 do GQ := halves[1]; halves := DivisionPoints(GQ, 2); end while;
-        end if;
         T, mT := TorsionSubgroup(EF);
         Append(~data, rec< recformat< F, EF, Gm, GQ, tors, d > | F := F, EF := EF, Gm := Gm, GQ := GQ, tors := [mT(t) : t in T], d := b[2] >);
         vprintf HeegnerHeights: "disc %o over Q(sqrt %o): minus generator of height %o, E(Q) generator of height %o, torsion %o\n",
@@ -219,6 +229,12 @@ rational point of E, or their negatives, are omitted.}
         comps, h := HeegnerHeightComponents(E, D, N, degf, data[i]`d);
         adm := [c : c in comps | c[3] and c[6] gt 0];
         require #adm eq 1: "expected exactly one admissible character with nonzero L-value";
+        // that character must be the one cutting out the field F of the branch point: Q(sqrt d1) or
+        // Q(sqrt d2) is F (for the trivial character, F is the CM field itself); any other admissible
+        // character would be a component the enumeration below does not account for
+        dF := Discriminant(Integers(data[i]`F));
+        require IsSquare(adm[1][1]*dF) or IsSquare(adm[1][2]*dF):
+            "the admissible character is not the one attached to the field of the branch point";
         hminus := adm[1][6] * (2/h)^2;
         k := Sqrt(hminus / Height(data[i]`Gm));
         vprintf HeegnerHeights: "disc %o: P - Pbar has predicted height %o = k^2 h(G'), k = %o\n", data[i]`d, hminus, k;

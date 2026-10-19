@@ -6,23 +6,31 @@
 //     X_0^390(1)/{1,3,10,30} (d = -312 and -195, class number 4, genus-character components), the
 //     predicted canonical height of each branch point of the stored even octic on its elliptic quotient
 //     equals the computed height to ten digits.
-// (b) The route end to end on X_0^10(11)/{1,5} and X_0^390(1)/{1,3,10,30}: the heights exclude the
-//     wrong curve of the isogeny class, the surviving configuration is unique up to the symmetries,
-//     and its hyperelliptic model is Q-isomorphic to the stored one.
-// (c) The two models the route produced where no other method reaches (regression values, the full
-//     searches took an hour each and are recorded with the campaign data): X_0^1326(1)/{1,17,78,1326},
+//     On X_0^6(77)/{1,21,33,77}, whose elliptic quotient 462c1 has rank 1, the formula is compared
+//     with the heights of P - Pbar (the part independent of the origin), discriminants -24 and -1848.
+// (b) The route end to end on X_0^10(11)/{1,5}, X_0^390(1)/{1,3,10,30} and (rank 1)
+//     X_0^6(77)/{1,21,33,77}: the heights exclude the wrong curve of the isogeny class, the surviving
+//     configuration is unique up to the symmetries, and its hyperelliptic model is Q-isomorphic to the
+//     stored one.
+// (c) The two models the route produced where no other method reaches: X_0^1326(1)/{1,17,78,1326},
 //     y^2 = 272x^8 - 72x^6 - 55x^4 - 18x^2 + 17, and X_0^210(13)/{1,2,21,42,65,130,1365,2730},
-//     y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3 + 97x^2 + 20x + 4. Checked here: bad primes
-//     are the primes of DN, point counts agree with the trace formula, the automorphism group has
-//     order 8 (the Klein four group of Atkin-Lehner involutions and the hyperelliptic involution), and
-//     the predicted height of P - Pbar is an integer multiple of the generator of E(F)^- (k = 1 for
-//     both branch discriminants at 1326, k = 2 at 210), which is the lattice condition the search used.
+//     y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3 + 97x^2 + 20x + 4, reproduced by
+//       magma -b D:=1326 N:=1 W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
+//       magma -b D:=210 N:=13 W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
+//     (a few minutes each). Checked here: bad primes are the primes of DN; at every good prime up to
+//     60 the L-polynomial equals the product of those of the three elliptic quotients predicted by the
+//     Atkin-Lehner signs, Cremona's 1326b2, 1326c1, 1326d1 (LMFDB 1326.b, 1326.c, 1326.d) and
+//     2730u1, 2730s1, 210a2 (LMFDB 2730.u, 2730.s, 210.a), which in genus 3 determines the zeta
+//     function; the point counts agree with the trace formula; the automorphism group has order 8
+//     (the Klein four group of Atkin-Lehner involutions and the hyperelliptic involution); and the
+//     predicted height of P - Pbar is an integer multiple of the generator of E(F)^- (k = 1 for both
+//     branch discriminants at 1326, k = 2 at 210), the lattice condition the search used.
 
 P<x> := PolynomialRing(Rationals());
 
 // model files are evaluated at top level (evaluating them inside a procedure crashes the harness)
 stored := AssociativeArray();
-for DN in [<35, 1>, <10, 11>, <390, 1>] do
+for DN in [<35, 1>, <10, 11>, <390, 1>, <6, 77>] do
     stored[DN] := eval (Read("data/models/models_" cat IntegerToString(DN[1]) cat "_" cat IntegerToString(DN[2]) cat ".m") cat " return models;");
 end for;
 
@@ -44,15 +52,20 @@ function stored_even_model(D, N, W)
     return F, E, E0, mn, u;
 end function;
 
-// heights of the branch points (fibres of u over 0 and oo) on E, keyed by the discriminant of their field
+// the branch points (fibres of u over 0 and oo) on E with the discriminant of their field, their
+// height, and the height of P - Pbar
 function branch_heights(E, E0, mn, u)
     Z, Pl := SignDecomposition(Divisor(u));
     out := [];
     for pl in Support(Z + Pl) do
         R := RepresentativePoint(pl); K := Ring(Parent(R));
-        dk := Type(K) eq FldRat select 1 else Discriminant(Integers(AbsoluteField(K)));
-        PK := Type(K) eq FldRat select mn(E0!R) else BaseChange(E, K)!Eltseq(mn(E0(K)!R));
-        Append(~out, <dk, Height(PK)>);
+        if Type(K) eq FldRat then Append(~out, <1, Height(mn(E0!R)), 0>); continue; end if;
+        K := AbsoluteField(K); dk := Discriminant(Integers(K));
+        EK := BaseChange(E, K);
+        PK := EK!Eltseq(mn(E0(K)!R));
+        sigma := [a : a in Automorphisms(K) | a(K.1) ne K.1][1];
+        Pbar := EK![sigma(c) : c in Eltseq(PK)];
+        Append(~out, <dk, Height(PK), Height(PK - Pbar)>);
     end for;
     return out;
 end function;
@@ -72,6 +85,19 @@ procedure test_formula()
             got := [o[2] : o in obs | o[1] eq dd[2]];
             assert exists{h : h in got | Abs(h - pred) lt 1e-10};
         end for;
+    end for;
+    // rank 1: the height of P - Pbar is (2/h)^2 times the admissible character component
+    D := 6; N := 77; W := {1, 21, 33, 77};
+    F, E, E0, mn, u := stored_even_model(D, N, W);
+    assert CremonaReference(E) eq "462c1" and Rank(E) eq 1;
+    obs := branch_heights(E, E0, mn, u);
+    for dd in [<-24, 8>, <-1848, -88>] do
+        comps, h := HeegnerHeightComponents(E, D, N, 2*#W, dd[1]);
+        adm := [cc : cc in comps | cc[3] and cc[6] gt 0];
+        assert #adm eq 1;
+        pred := adm[1][6] * (2/h)^2;
+        got := [o[3] : o in obs | o[1] eq dd[2]];
+        assert exists{hh : hh in got | Abs(hh - pred) lt 1e-10};
     end for;
     printf "Done\n";
 end procedure;
@@ -105,13 +131,16 @@ procedure test_route(D, N, W)
     printf "%o surviving configuration(s), all the stored curve. Done\n", nmodels;
 end procedure;
 
-procedure test_model(D, N, W, F, Elabels, kexp)
+procedure test_model(D, N, W, F, Elabels, quotients, kexp)
     printf "Testing the model of X_0^%o(%o)/%o...", D, N, W;
     H := HyperellipticCurve(F);
     assert Set(PrimeDivisors(Integers()!Discriminant(F))) eq Set(PrimeDivisors(D*N));
     X := CreateShimuraQuot(D, N, W); X`g := 3;
+    Es := [EllipticCurve(l) : l in quotients];
+    PT<T> := PolynomialRing(Integers());
     for p in [q : q in PrimesInInterval(5, 60) | (D*N) mod q ne 0] do
         assert #Points(ChangeRing(H, GF(p))) eq ComputePointsViaTrace(X, p, 1);
+        assert LPolynomial(ChangeRing(H, GF(p))) eq &*[1 - TraceOfFrobenius(Ec, p)*T + p*T^2 : Ec in Es];
     end for;
     A := AutomorphismGroup(H);
     assert #A eq 8;
@@ -144,5 +173,6 @@ end procedure;
 test_formula();
 test_route(10, 11, {1, 5});
 test_route(390, 1, {1, 3, 10, 30});
-test_model(1326, 1, {1, 17, 78, 1326}, 272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17, ["1326b1", "1326b2"], 1);
-test_model(210, 13, {1, 2, 21, 42, 65, 130, 1365, 2730}, 4*x^8 - 20*x^7 + 97*x^6 - 20*x^5 - 138*x^4 + 20*x^3 + 97*x^2 + 20*x + 4, ["2730u1", "2730u1"], 2);
+test_route(6, 77, {1, 21, 33, 77});
+test_model(1326, 1, {1, 17, 78, 1326}, 272*x^8 - 72*x^6 - 55*x^4 - 18*x^2 + 17, ["1326b1", "1326b2"], ["1326b2", "1326c1", "1326d1"], 1);
+test_model(210, 13, {1, 2, 21, 42, 65, 130, 1365, 2730}, 4*x^8 - 20*x^7 + 97*x^6 - 20*x^5 - 138*x^4 + 20*x^3 + 97*x^2 + 20*x + 4, ["2730u1", "2730u1"], ["2730u1", "2730s1", "210a2"], 2);

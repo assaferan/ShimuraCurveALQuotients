@@ -7,9 +7,9 @@
 //
 // Every curve of the isogeny class of E is tried; on all but the quotient itself the predicted heights are
 // not heights of lattice points and the search returns nothing. The run prints the surviving
-// configurations, the twist, and the model; survivors that are rational translates of one another are
-// merged by the intrinsic, those differing by other symmetries (negation, conjugation) are isomorphic
-// curves and are reported as such.
+// configurations, the twist, and the model; the intrinsic omits configurations that are rational
+// translates or negatives of an earlier one, and a survivor isomorphic to a model already printed is
+// marked as such.
 AttachSpec("ShimuraQuotients.spec");
 SetColumns(0);
 SetVerbose("HeegnerHeights", 1);
