@@ -1,0 +1,44 @@
+X_0^39(11)/{ 1, 11, 39, 429 }, elliptic quotient by w_3, isogeny class [ 429b1, 429b2, 429b3, 429b4, 429b5, 429b6 ]
+
+== E = 429b1 ==
+disc -132 over Q(sqrt -11): minus generator of height 3.74757360264479245993736761, E(Q) generator of height 1.05772659821975184755120323, torsion 8
+disc -52 over Q(sqrt 13): minus generator of height 2.14101002963885401296973528, E(Q) generator of height 1.05772659821975184755120323, torsion 8
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 1.00000000000000000000000000
+disc -52: P - Pbar has predicted height 2.14101002963885401296973527929 = k^2 h(G'), k = 1.00000000000000000000000000
+class b = 0: 0 x 0 candidate points
+class b = 1: 16 x 16 candidate points
+survivor b = 1: cover 1 twisted by 7, noether 5
+class b = 1, cover 1 twisted by 7, noether 5
+   model y^2 = -891*T^8 + 1044*T^6 + 214*T^4 - 124*T^2 + 13
+
+== E = 429b2 ==
+disc -132 over Q(sqrt -11): minus generator of height 7.49514720528958491987473522, E(Q) generator of height 2.11545319643950369510240646, torsion 8
+disc -52 over Q(sqrt 13): minus generator of height 4.28202005927770802593947056, E(Q) generator of height 2.11545319643950369510240646, torsion 8
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 0.707106781186547524400844362
+not a lattice point: E is not the quotient
+
+== E = 429b3 ==
+disc -132 over Q(sqrt -11): minus generator of height 14.9902944105791698397494704, E(Q) generator of height 1.05772659821975184755120323, torsion 4
+disc -52 over Q(sqrt 13): minus generator of height 2.14101002963885401296973528, E(Q) generator of height 1.05772659821975184755120323, torsion 4
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 0.500000000000000000000000000
+not a lattice point: E is not the quotient
+
+== E = 429b4 ==
+disc -132 over Q(sqrt -11): minus generator of height 14.9902944105791698397494704, E(Q) generator of height 4.23090639287900739020481292, torsion 4
+disc -52 over Q(sqrt 13): minus generator of height 8.56404011855541605187894112, E(Q) generator of height 4.23090639287900739020481292, torsion 4
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 0.500000000000000000000000000
+not a lattice point: E is not the quotient
+
+== E = 429b5 ==
+disc -132 over Q(sqrt -11): minus generator of height 7.49514720528958491987473522, E(Q) generator of height 2.11545319643950369510240646, torsion 2
+disc -52 over Q(sqrt 13): minus generator of height 4.28202005927770802593947056, E(Q) generator of height 2.11545319643950369510240646, torsion 2
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 0.707106781186547524400844362
+not a lattice point: E is not the quotient
+
+== E = 429b6 ==
+disc -132 over Q(sqrt -11): minus generator of height 29.9805888211583396794989409, E(Q) generator of height 0.528863299109875923775601615, torsion 2
+disc -52 over Q(sqrt 13): minus generator of height 4.28202005927770802593947056, E(Q) generator of height 0.528863299109875923775601615, torsion 2
+disc -132: P - Pbar has predicted height 3.74757360264479245993736761111 = k^2 h(G'), k = 0.353553390593273762200422181
+not a lattice point: E is not the quotient
+
+1 model(s) up to Q-isomorphism
