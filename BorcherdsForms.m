@@ -1079,7 +1079,7 @@ the odd-D-capable form of vvdata/weyl-campaign/deficit.m -- see the block below 
 alone cannot do odd D.
 If Divisors is non-empty, no hauptmodul and no cover is sought: each entry <zeros, pole> asks for one form
 with divisor sum_(d in zeros) Z(d) - deg * Z(pole), where Z(d) is the CM cycle of discriminant d on Xstar
-(a point of degree 1 or 2), the pole is a rational CM point and deg is the total degree of the zeros.
+(a point of degree 1 or 2; a zero listed twice counts twice), the pole is a rational CM point and deg is the total degree of the zeros.
 The forms come back keyed 1..#Divisors in the order given. This is the shape Guo-Yang use when the star
 curve has genus one (Compositio 153, Example 42: four forms of degree 2), where no divisor of degree 1
 is principal and the hauptmodul search cannot succeed. PoleOrders lists the pole orders at oo to try
@@ -1636,7 +1636,9 @@ that no divisor uses; the pool of a rung grows with that pole order.}
                     // an expansion of its eta-quotient dictionary.  The dictionary itself is
                     // checked once, after the search, for the forms that are returned.
                     assert assigned etas[i]`qexp_oo and assigned etas[i]`qexp_0;
-                    targets[i] := {<pt[1], div_coeffs[j]> : j->pt in ram};
+                    // a zero may be listed more than once (the function with divisor 2A - 2P
+                    // is asked for as zeros [A, A]), so the target divisor sums the coefficients
+                    targets[i] := {<d, &+[div_coeffs[j] : j->pt in ram | pt[1] eq d]> : d in {pt[1] : pt in ram}};
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                     assert Set(div_f) eq targets[i];
                 end for;

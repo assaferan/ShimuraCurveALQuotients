@@ -11,7 +11,7 @@
 // the relation between them, of bidegree (2, 2), is read off their values at nine or more CM points.
 // tests/GuoYangExample42.m runs the whole recipe on X_0^142(1)* against the paper's own numbers.
 //
-// Where Guo-Yang's Assumption 40 enters.  A Borcherds form transforms under the Atkin-Lehner
+// Where Guo-Yang's Assumption 40 enters, and when it is automatic.  A Borcherds form transforms under the Atkin-Lehner
 // group by a character, and it is a function on the star quotient only when that character is
 // trivial, which Guo-Yang assume (their Assumption 40; Example 42 is stated under it).  The
 // search here does not check the character: it only finds a form whose divisor on the star is the
@@ -21,6 +21,18 @@
 // character is trivial and the assumption holds; this is the case at X_0^142(1)* (142a1 has
 // trivial torsion).  When E(Q) has torsion the form may be a root of a function, its Schofer
 // values are then those of the root, and a model built from them is conditional on the
+// assumption.  The character can be dealt with exactly.  W is an elementary abelian 2-group, so
+// every character has order at most 2 and the square of every form is a function.  A form with
+// character chi != 1 is a function on X/ker(chi), a quotient by an index-2 subgroup of W, and its
+// square has even divisor on the star, so X/ker(chi) is an etale double cover of the star and
+// has genus one.  Hence: when no index-2 quotient of the star has genus one, every Borcherds form
+// is a function, whatever the torsion of E(Q) (EtaleDoubleCovers).  When such a quotient X' exists,
+// the form psi with divisor A - P (A - P of order 2 in E(Q)) is an anti-invariant function on X',
+// its square is the function with divisor 2A - 2P in L(2P), and the sign of that square at a
+// rational CM point Q of the star is the sign of the discriminant of the field of definition of
+// the preimages of Q on X' (a rational preimage gives a rational value of psi, a quadratic pair
+// gives r*sqrt(delta) and its square r^2 delta), up to one global sign (SquareCoordinateSigns).
+// The coordinates built this way use only functions, so the model does not depend on the
 // assumption.
 
 import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
@@ -229,4 +241,35 @@ function field, which turns the relation into linear algebra over the constants.
         if IsZero(&+[v[i]*prods[i] : i in [1..6]]) then return true; end if;
     end for;
     return false;
+end intrinsic;
+
+// ---- characters: the etale double covers of the star, and signs of square-coordinates ----------
+
+intrinsic EtaleDoubleCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
+{The quotients of X_0(D, N) by index-2 subgroups of the Atkin-Lehner group of the genus-one star
+Xstar that have genus one, i.e. the etale double covers of the star among the Atkin-Lehner
+quotients.  A Borcherds form with nontrivial character is a function on one of these; when the
+list is empty every Borcherds form on Xstar is a function.}
+    require Xstar`g eq 1 : "the star must have genus one";
+    return [curves[i] : i in Xstar`CoveredBy | curves[i]`g eq 1];
+end intrinsic;
+
+intrinsic SquareCoordinateSigns(Xp::ShimuraQuot, ds::SeqEnum[RngIntElt]) -> SeqEnum
+{For the function x = psi^2 on the star, psi an anti-invariant function on the etale double cover
+Xp of the star: the sign of x at the rational CM point of each discriminant in ds, up to one
+common sign.  It is +1 when the preimages of the point on Xp are rational, and the sign of the
+discriminant of their quadratic field of definition otherwise.}
+    signs := [];
+    for d in ds do
+        deg := DegreeOfFieldOfDefinitionOfCMPoint(Xp, d);
+        require deg in {1, 2} : Sprintf("the CM points of discriminant %o on the cover have degree %o", d, deg);
+        if deg eq 1 then
+            Append(~signs, 1);
+        else
+            K := FieldOfDefinitionOfCMPoint(Xp, d);
+            require Degree(K) eq 2 : Sprintf("the field of definition at %o is not quadratic", d);
+            Append(~signs, Sign(Discriminant(MaximalOrder(K))));
+        end if;
+    end for;
+    return signs;
 end intrinsic;

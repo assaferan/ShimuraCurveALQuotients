@@ -21,6 +21,13 @@
 //     has several, the model's curve is known up to isogeny only, since nothing here checks the
 //     character of the Borcherds forms (Guo-Yang's Assumption 40; see the header of
 //     GenusOneStar.m) and E(Q) then has torsion.
+//   * Characters (header of GenusOneStar.m): when no index-2 quotient of the star has genus one,
+//     every Borcherds form is a function and the model does not depend on Guo-Yang's Assumption
+//     40, whatever the torsion of E(Q).  When one has (an etale double cover X' of the star), the
+//     coordinates are the functions with divisor 2A - 2P, where A - P has order two in E(Q) (found
+//     as the degree-one divisors that admit a form), with the sign at each CM point read from the
+//     field of definition of its preimages on X'; the model then uses only functions, and the
+//     partners A are checked to differ from P by a point of order two on the model.
 //   * Every CM point of fundamental discriminant and class number <= bd that is rational on the
 //     star (the pool of RationalandQuadraticCMPoints, elliptic points included) is placed on the
 //     minimal model, as a point and as an element of the Mordell-Weil group (origin: the CM point
@@ -88,6 +95,18 @@ printf "rational CM points (class number <= %o): %o\nquadratic: %o\nelliptic poi
 support_ds := Sort([p[1] : p in rat], func<a, b | Abs(a) - Abs(b)>);
 table_ds := [d : d in support_ds | d notin excluded];
 if #excluded gt 0 then printf "left out of the value table on request: %o\n", excluded; end if;
+// the characters of the Borcherds forms (header of GenusOneStar.m): a nontrivial one needs an
+// etale double cover of the star among the index-2 quotients
+etale := EtaleDoubleCovers(star, curves);
+if IsEmpty(etale) then
+    printf "no index-2 quotient has genus one: every Borcherds form on the star is a function, and the model does not depend on Assumption 40\n";
+else
+    printf "index-2 quotient(s) of genus one: %o -- forms may carry a character; coordinates will be squares of degree-one forms\n",
+           [Sort(Setseq(c`W)) : c in etale];
+    error if #etale gt 1, "several etale double covers: the kernel of a character cannot be told apart here";
+end if;
+square_route := not IsEmpty(etale);
+sq := [];
 if stage eq 0 then quit; end if;
 
 // ---- stage 1: the divisor search ------------------------------------------------------------
@@ -103,6 +122,22 @@ for P in poles do
         if Abs(q[1]) le maxzero then Append(~divisors, <[q[1]], P>); end if;
     end for;
 end for;
+if square_route then
+    // a form with divisor A - P exists exactly when A - P has finite order in E(Q); its square,
+    // the function with divisor 2A - 2P, spans L(2P) with the constants
+    deg1 := [<[A], P> : A in support_ds, P in poles | A ne P];
+    t0 := Realtime();
+    f1 := BorcherdsForms(star, curves : Divisors := deg1, PoolClassNumber := bd, IntegralSolution := true, AllowMissing := true);
+    partners := [deg1[k] : k in Sort(Setseq(Keys(f1)))];
+    printf "stage 1 (squares): degree-one divisors with a form, %os: %o\n", Realtime() - t0, partners;
+    error if IsEmpty(partners), "no degree-one divisor has a form: no square-coordinate is available";
+    divisors := [<[pr[1][1], pr[1][1]], pr[2]> : pr in partners];
+    for P in poles do
+        for q in quad do
+            if Abs(q[1]) le maxzero then Append(~divisors, <[q[1]], P>); end if;
+        end for;
+    end for;
+end if;
 printf "stage 1: %o candidate divisors over the poles %o\n", #divisors, poles;
 t0 := Realtime();
 fs := BorcherdsForms(star, curves : Divisors := divisors, PoolClassNumber := bd,
@@ -115,6 +150,28 @@ end for;
 if stage eq 1 then quit; end if;
 
 // ---- stage 2: coordinates, relation, curve, CM points -----------------------------------------
+if square_route then
+    // x = the function with divisor 2A - 2P, normalised to 1 at a table point, its sign at the
+    // other points from the fields of definition on the etale cover (one global sign is free and
+    // only changes x into -x)
+    sq := [k : k in found | #divisors[k][1] eq 2 and divisors[k][1][1] eq divisors[k][1][2] and divisors[k][2] in table_ds];
+    printf "stage 2 (squares): square-coordinates at the poles %o\n", [divisors[k][2] : k in sq];
+    error if #sq lt 2, "fewer than two poles carry a square-coordinate";
+    cx := <divisors[sq[1]][2], sq[1], sq[1]>; cy := <divisors[sq[2]][2], sq[2], sq[2]>;
+    t0 := Realtime();
+    vals := BorcherdsFormValues([fs[sq[1]], fs[sq[2]]], table_ds, star);
+    printf "stage 2: Schofer values in %os\n", Realtime() - t0;
+    for i in [1..2] do printf "  |x_%o| at %o: %o\n", i, table_ds, vals[i]; end for;
+    signs := SquareCoordinateSigns(etale[1], table_ds);
+    printf "  signs from the fields of definition on the cover: %o\n", signs;
+    coord := function(v)
+        j0 := [j : j in [1..#table_ds] | Type(v[j]) ne Infty and v[j] ne 0][1];
+        return [* Type(v[j]) eq Infty select Infinity() else signs[j]*signs[j0]*v[j]/v[j0] : j in [1..#table_ds] *];
+    end function;
+    xs := coord(vals[1]); ys := coord(vals[2]);
+    printf "x (pole %o, double zero %o):\n  %o\ny (pole %o, double zero %o):\n  %o\n",
+           cx[1], divisors[sq[1]][1][1], xs, cy[1], divisors[sq[2]][1][1], ys;
+else
 coord_choices := [];
 for P in poles do
     // a coordinate needs its zeros in the value table (they fix its normalisation)
@@ -135,6 +192,7 @@ xs, cx0, cx1 := CoordinateFromBorcherdsForms(vals[1], vals[2], table_ds, divisor
 ys, cy0, cy1 := CoordinateFromBorcherdsForms(vals[3], vals[4], table_ds, divisors[cy[2]][1], divisors[cy[3]][1]);
 printf "x (pole %o, zeros %o, ones %o; c_0 = %o, c_1 = %o):\n  %o\n", cx[1], divisors[cx[2]][1], divisors[cx[3]][1], cx0, cx1, xs;
 printf "y (pole %o, zeros %o, ones %o; c_0 = %o, c_1 = %o):\n  %o\n", cy[1], divisors[cy[2]][1], divisors[cy[3]][1], cy0, cy1, ys;
+end if;
 F := BidegreeTwoRelation(xs, ys);
 printf "relation: %o = 0\n", F;
 // base point: the first table point that is finite on the plane model and nonsingular there
@@ -189,6 +247,8 @@ while progress do
         P := divisors[k][2]; z := divisors[k][1];
         if IsDefined(pts, P) or #z ne 2 or not (IsDefined(pts, z[1]) and IsDefined(pts, z[2])) then continue; end if;
         halves := [Q : Q in DivisionPoints(pts[z[1]] + pts[z[2]], 2)];
+        // a square-coordinate has 2P = 2A with P != A, so A itself is not the pole
+        if z[1] eq z[2] then halves := [Q : Q in halves | Q ne pts[z[1]]]; end if;
         if #halves eq 1 then
             pts[P] := halves[1]; pos[P] := mw_coords(halves[1]); progress := true;
         else
@@ -196,6 +256,17 @@ while progress do
         end if;
     end for;
 end while;
+if square_route then
+    // the partner A of each pole P must differ from P by a point of order 2 on the model
+    for k in sq do
+        A := divisors[k][1][1]; P := divisors[k][2];
+        if IsDefined(pts, A) and IsDefined(pts, P) then
+            T := pts[A] - pts[P];
+            printf "  A - P for (A, P) = (%o, %o): %o, order %o\n", A, P, T, Order(T);
+            assert Order(T) eq 2;
+        end if;
+    end for;
+end if;
 printf "CM points on E (discriminant, point, Mordell-Weil coordinates):\n";
 for d in table_ds do
     if IsDefined(pts, d) then printf "  %o: %o   %o\n", d, pts[d], pos[d]; end if;

@@ -34,6 +34,9 @@ procedure test_guoyang_example42()
     assert Xstar`g eq 1;
     curves := GetQuotientsAndGenera([Xstar]);
     _ := exists(star){c : c in curves | IsStarCurve(c)};
+    // no index-2 quotient has genus one (the three have genus 2, 2, 3), so every Borcherds form on
+    // the star is a function: a second reason, besides the trivial torsion, that Assumption 40 holds
+    assert IsEmpty(EtaleDoubleCovers(star, curves));
 
     // the ten rational CM points of the paper's table, and no others up to class number 2
     ds := [-3, -4, -8, -19, -20, -24, -40, -43, -148, -232];
