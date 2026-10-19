@@ -21,3 +21,19 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# The character of a Borcherds form in positive genus, and reduction types
+
+`character-and-reduction-types.tex` — what Guo–Yang's Assumption 40 amounts to and how to do
+without it, and the Kodaira type of a genus-one quotient from the Čerednik–Drinfeld dual graph.
+Build with `pdflatex character-and-reduction-types.tex` (twice). Inline bibliography.
+
+* **Proposition 3.1** — given Lemma 7's parity condition, the character is trivial exactly when the
+  divisor is principal (not merely torsion); its order is the order of the class in the Jacobian.
+* **Corollary 3.2** — no rational torsion among CM classes, no assumption needed; so 142a1, 158a1,
+  190a1 are unconditional.
+* **Example 3.4** — the assumption fails at X_0^14(17)*: a form with value 2·7^{3/2}·17^{1/2}
+  (computed by `tools/genus1star.m`; a character of order 2).
+* **Section 4** — e-th powers of the forms remove the assumption.
+* **Proposition 5.1** and the table — the Kodaira index is half the length of the metric cycle
+  (`KodairaIndexFromDualGraph`, `tests/KodairaFromDualGraph.m`): 238a2 and 282b1.
