@@ -5,7 +5,9 @@
 //   y^2 = F(x) (the equations of Guo-Yang, Compositio 153 (2017), as stored in
 //   data/models); E is y^2 = F_even(u) with u = x^2 and the branch divisor is the fibre over u = 0
 //   and u = oo. The expected outcome is a single cover over Q, hyperelliptic, whose model after
-//   the twist read off the trace-formula counts is Q-isomorphic to the stored octic.
+//   the twist read off the trace-formula counts is Q-isomorphic to the stored octic. The same
+//   cover written as a double cover of its canonical conic (the presentation that exists even when
+//   the conic has no rational point) has the point counts of the trace formula.
 //
 //   X_0^6(23)/w_23: not hyperelliptic. Its stored model was built in this repository as the fibre
 //   product of its two elliptic quotients y1^2 = q1(x), y2^2 = q2(x) over the star, so this case
@@ -53,6 +55,10 @@ for D in [35, 51] do
     assert #hits eq 1;
     H := HyperellipticModelOfCover(TwistedCover(covers[1], hits[1][2]));
     assert IsIsomorphic(H, integral(HyperellipticCurve(Ftop)));
+    conic, G := HyperellipticModelOverConic(TwistedCover(covers[1], hits[1][2]));
+    bad := Set(PrimeDivisors(2*D*Integers()!&*[MonomialCoefficient(conic, Parent(conic).i^2) : i in [1..3]]));
+    X := CreateShimuraQuot(D, 1, {1}); X`g := 3;
+    assert &and[PointCountOverConic(conic, G, p) eq ComputePointsViaTrace(X, p, 1) : p in PrimesInInterval(3, 60) | p notin bad];
     printf "X_0^%o(1): one cover, hyperelliptic, twist %o, Q-isomorphic to the stored model\n", D, hits[1][2];
 end for;
 
