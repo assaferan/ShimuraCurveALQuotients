@@ -227,14 +227,18 @@ rational point of E, or their negatives, are omitted.}
     ks := [];
     for i in [1..2] do
         comps, h := HeegnerHeightComponents(E, D, N, degf, data[i]`d);
-        adm := [c : c in comps | c[3] and c[6] gt 0];
-        require #adm eq 1: "expected exactly one admissible character with nonzero L-value";
-        // that character must be the one cutting out the field F of the branch point: Q(sqrt d1) or
-        // Q(sqrt d2) is F (for the trivial character, F is the CM field itself); any other admissible
-        // character would be a component the enumeration below does not account for
+        // P - Pbar is (2/h) times the component of the character attached to the field F of the branch
+        // point: the trivial character when F is the CM field itself (then Gal(H/K) fixes P and the
+        // other components vanish), otherwise the genus character (d1, d2) with Q(sqrt d1) or
+        // Q(sqrt d2) equal to F; the trivial character's component then lies in E(Q) and cancels, and
+        // characters attached to other fields vanish on the orbit of P. That character must be
+        // admissible with a nonzero value, or P would be rational up to torsion.
         dF := Discriminant(Integers(data[i]`F));
-        require IsSquare(adm[1][1]*dF) or IsSquare(adm[1][2]*dF):
-            "the admissible character is not the one attached to the field of the branch point";
+        adm := IsSquare(dF*data[i]`d) select [c : c in comps | c[1] eq 1]
+               else [c : c in comps | c[1] ne 1 and (IsSquare(c[1]*dF) or IsSquare(c[2]*dF))];
+        require #adm eq 1: "no genus character cuts out the field of the branch point";
+        require adm[1][3] and adm[1][6] gt 0:
+            "the character attached to the field of the branch point is inadmissible or has vanishing value";
         hminus := adm[1][6] * (2/h)^2;
         k := Sqrt(hminus / Height(data[i]`Gm));
         vprintf HeegnerHeights: "disc %o: P - Pbar has predicted height %o = k^2 h(G'), k = %o\n", data[i]`d, hminus, k;
