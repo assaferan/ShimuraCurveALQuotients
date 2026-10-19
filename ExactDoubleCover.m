@@ -167,6 +167,91 @@ it in the function field of the cover.}
     require false: "no quadratic relation found";
 end intrinsic;
 
+intrinsic HyperellipticModelOverConic(C::Rec) -> RngMPolElt, RngMPolElt, SeqEnum, FldFunElt
+{For a genus-3 hyperelliptic cover from DoubleCoversWithBranchDivisor, a model
+    a X1^2 + b X2^2 + c X3^2 = 0,   y^2 = G(X1, X2, X3)
+over Q with a, b, c integers, G a quartic form with integral coefficients, no square content and
+no monomial divisible by X3^2 (it is the representative of the class of y^2 modulo the conic in
+that complement); X1, X2, X3 have weight 1 and y weight 2. The model exists whether or not the
+canonical conic has a rational point. Also returned are the functions X1, X2, X3, y of the
+function field of the cover realising it.}
+    require C`genus eq 3 and C`noether eq 5: "the cover is not a hyperelliptic curve of genus 3";
+    F := C`F; gs := C`diffs;
+    prods := [gs[i]*gs[j] : j in [i..3], i in [1..3]];
+    idx := [[i,j] : j in [i..3], i in [1..3]];
+    rel := q_relations(prods)[1];
+    R<X1,X2,X3> := PolynomialRing(Rationals(), 3);
+    quadric := &+[rel[k]*R.idx[k][1]*R.idx[k][2] : k in [1..#idx]];
+    // H^0(2K) = span of the products g_i g_j plus one more function b; the function y = b + sum c_k g_i g_j
+    // anti-invariant under the hyperelliptic involution is the one whose square lies in the span of the
+    // quartic monomials in the g_i, which is a linear condition on the c_k
+    omega := BasisOfDifferentialsFirstKind(F)[1];
+    L2, m2 := RiemannRochSpace(2*Divisor(omega));
+    assert Dimension(L2) eq 6;
+    b := 0;
+    for e in [m2(L2.i) : i in [1..6]] do
+        if #q_relations(prods cat [e]) eq #q_relations(prods) then b := e; break; end if;
+    end for;
+    assert b ne 0;
+    mons4 := MonomialsOfDegree(R, 4);
+    vals := [Evaluate(m, gs) : m in mons4];
+    rels := q_relations([b^2] cat [b*q : q in prods] cat vals);
+    r := [v : v in rels | v[1] ne 0][1];
+    y := b + &+[r[1 + k] / (2*r[1]) * prods[k] : k in [1..#prods]];
+    rels := q_relations(vals cat [y^2]);
+    r := [v : v in rels | v[#mons4 + 1] ne 0][1];
+    G := -&+[r[k]*mons4[k] : k in [1..#mons4]] / r[#mons4 + 1];
+    // diagonalise the conic, x = (s_j w_j)_j T with T Gram T^t diagonal, and make the diagonal
+    // entries squarefree integers with no common factor
+    Gram := Matrix(Rationals(), 3, 3, [MonomialCoefficient(quadric, R.i*R.j) * (i eq j select 1 else 1/2) : i, j in [1..3]]);
+    Dg, T := OrthogonalizeGram(Gram);
+    scal := [];
+    for i in [1..3] do
+        dd := Dg[i,i]; nn := Numerator(dd)*Denominator(dd);
+        sq := &*[Integers() | pf[1]^(pf[2] div 2) : pf in Factorization(nn)];
+        Append(~scal, Denominator(dd)/sq);
+    end for;
+    diag := [Dg[i,i]*scal[i]^2 : i in [1..3]];
+    g := GCD([Integers() | d : d in diag]);
+    diag := [Integers() | d/g : d in diag];
+    subst := [&+[T[j,i]*scal[j]*R.j : j in [1..3]] : i in [1..3]];
+    conic := &+[diag[i]*R.i^2 : i in [1..3]];
+    assert Evaluate(quadric, subst) eq g*conic;
+    Ti := T^-1;
+    ws := [(&+[gs[i]*Ti[i,j] : i in [1..3]]) / scal[j] : j in [1..3]];
+    Gw := Evaluate(G, subst);
+    // the representative without X3^2: on the conic X3^2 = -(a X1^2 + b X2^2)/c
+    while Degree(Gw, 3) ge 2 do
+        d3 := Degree(Gw, 3); co := Coefficient(Gw, 3, d3);
+        Gw := Gw - co*X3^d3 - co*X3^(d3-2)*(diag[1]*X1^2 + diag[2]*X2^2)/diag[3];
+    end while;
+    den := LCM([Denominator(co) : co in Coefficients(Gw)]);
+    Gw *:= den^2;
+    cont := GCD([Integers() | co : co in Coefficients(Gw)]);
+    csq := &*[Integers() | pf[1]^(pf[2] div 2) : pf in Factorization(cont)];
+    Gw := Gw / csq^2;
+    y *:= den/csq;
+    assert Evaluate(conic, ws) eq 0 and y^2 eq Evaluate(Gw, ws);
+    return conic, Gw, ws, y;
+end intrinsic;
+
+intrinsic PointCountOverConic(conic::RngMPolElt, G::RngMPolElt, q::RngIntElt) -> RngIntElt
+{The number of points over F_q of the curve  conic = 0, y^2 = G  in the weighted projective space
+with X1, X2, X3 of weight 1 and y of weight 2, for q a prime power coprime to the coefficients of
+the conic: each of the q + 1 points of the conic carries 1 + chi(G) points, chi the quadratic
+character of F_q.}
+    Fq := GF(q);
+    P2 := ProjectiveSpace(Fq, 2);
+    Cq := Conic(P2, Evaluate(conic, [P2.1, P2.2, P2.3]));
+    Gq := ChangeRing(G, Fq);
+    n := 0;
+    for pt in Points(Cq) do
+        v := Evaluate(Gq, Eltseq(pt));
+        n +:= v eq 0 select 1 else (IsSquare(v) select 2 else 0);
+    end for;
+    return n;
+end intrinsic;
+
 intrinsic CoverPointCounts(E::CrvEll, C::Rec, primes::SeqEnum) -> SeqEnum
 {For each prime p in primes, the pair <#X(F_p), #X'(F_p)> for the cover y^2 = f and its
 quadratic twist by a non-square, or <0,0> when the reduction is not available (p | 2, bad
