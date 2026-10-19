@@ -804,10 +804,81 @@ verdicts of Nelson's method on both quotients were "hyperelliptic", and its inde
 
 **What rests on a theorem and what does not.** The formula is Theorem 1.5 of Cai–Shu–Tian with the
 admissibility rule for the characters at the primes dividing both the conductor and the
-discriminant; the only component it does not give is the one that depends on the choice of origin,
-and that component matters only modulo 2 (translating both branch points by a rational point gives
-an isomorphic cover), so the enumeration is complete. Both models are therefore proved, given the
-trace-formula point counts.
+discriminant. The formula gives the heights of the Heegner points `P - xi`, with `xi` the Hodge class
+of `X_0^D(N)`; the image of `xi` in `E(Q) ⊗ Q` is the one quantity it does not give. That image is the
+same for both branch points, so it enters the rational components `P_i + Pbar_i` of the two points as
+a common shift: the trivial character fixes the difference of the two components, and the common
+shift matters only modulo 2 (translating both branch points by a rational point gives an isomorphic
+cover). Here `E` has rank 0 and the rational components are torsion, so the enumeration is complete.
+Both models are therefore proved, given the trace-formula point counts.
+
+## X_0^6(301), X_0^6(455), X_0^6(187), X_0^22(51): four more quotients from the heights of their branch points (branch models-1326-210)
+
+The same construction as the sections before and after this one, run on the open genus-3 quotients
+whose two branch places have degree 2 and whose elliptic quotient has rank at most one:
+
+    magma -b D:=6  N:=301 W:=1,3,14,42,43,129,602,1806 U:=903 tools/heegner_model.m < /dev/null
+    magma -b D:=6  N:=455 W:=1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365 U:=30 tools/heegner_model.m < /dev/null
+    magma -b D:=6  N:=187 W:=1,3,11,17,33,51,187,561 U:=374 tools/heegner_model.m < /dev/null
+    magma -b D:=22 N:=51  W:=1,6,17,22,33,102,374,561 U:=187 tools/heegner_model.m < /dev/null
+
+In all four the elliptic quotient has rank 1, so the rational component of a branch point is only
+determined up to the image of the Hodge class; the enumeration is explained at the end of this
+section. Each run leaves exactly one curve, and the other curves of the isogeny class are excluded
+because the predicted height is not the height of a lattice point.
+
+**X_0^6(301)/{1,3,14,42,43,129,602,1806}: `y^2 = 129x^8 - 2276x^6 + 3334x^4 + 1180x^2 - 63`.**
+`E = X/<W, w_903>` is 1806l1, the only curve of its isogeny class. Branch points of discriminants
+−1204 over `Q(sqrt -7)` and −1032 over `Q(sqrt 129)`, with minus parts four times the generators.
+
+**X_0^6(455)/{1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365}: `y^2 = -416x^8 - 515x^6 + 582x^4 - 251x^2 + 40`.**
+`E = X/<W, w_30>` is 2730y1; 2730y2 is excluded by the lattice test, and 2730y3, 2730y4 pass it but
+no configuration over them is consistent with the trace formula, which is the expected behaviour —
+the lattice test is a necessary condition only. Branch points −10920 over `Q(sqrt -26)` and −1560
+over `Q(sqrt 10)`.
+
+The remaining two quotients are **hyperelliptic curves with no model `y^2 = f(x)` over Q**: their
+canonical image is a conic without a rational point (in both cases the conic ramified at 2 and at the
+real place). They are stored as double covers of that conic, in coordinates `s`, `z` of weight 1 and
+`y` of weight 2, with the residual Atkin–Lehner involution acting on the third coordinate of the
+conic; `HyperellipticModelOverConic` builds that presentation and `PointCountOverConic` counts its
+points over a finite field, by summing `1 + chi(A)` over the points of the conic.
+
+**X_0^6(187)/{1,3,11,17,33,51,187,561}:** the conic `X1^2 + 2 X2^2 + 22 X3^2 = 0` with
+`y^2 = 4449 s^4 + 84056 s^3 z + 411472 s^2 z^2 + 195328 s z^3 + 797696 z^4`, where `s = X1`, `z = X2`
+and the stored `x` is `22 X3`. `E = X/<W, w_374>` is 1122i1 (1122i2 excluded by the lattice test).
+Branch points of discriminants −4488 and −264, both over `Q(sqrt -2)`. Two configurations survive the
+exact test, with twists −14 and 721; they give the same curve over Q, which was checked by exhibiting
+the isomorphism: the genus-2 quotients by the residual involution composed with the hyperelliptic one
+are isomorphic over Q, the Möbius map realising that isomorphism carries one conic to the other and
+one quartic to a square multiple of the other.
+
+**X_0^22(51)/{1,6,17,22,33,102,374,561}:** the conic `X1^2 + 2 X2^2 + 59 X3^2 = 0` with
+`y^2 = 9242176 s^4 - 2871136 s^3 z + 4331508 s^2 z^2 + 124292 s z^3 + 4787449 z^4`, stored with
+`x = 59 X3`. `E = X/<W, w_187>` is 1122f1 (1122f2 excluded by the lattice test). Branch points of
+discriminants −4488 and −264 over `Q(sqrt -2)`, one surviving configuration with twist −7. The 59 in
+the conic is an artefact of the coordinates, not bad reduction: the conic has points over every
+`Q_p` with p odd.
+
+**Checks that were predictions, not inputs.** For each of the four: the genus of the model is 3, as
+the genus formula says; point counts agree with the trace formula at every good prime below 200 and
+over `F_{p^2}` for every good prime below 40 (42, 41, 42, 41 primes and 9, 7, 8, 8 squares); the
+primes of bad reduction are exactly the primes of `DN` (for the two conic models, the primes of the
+discriminants of the two equations, apart from the 59 above); the quotient by the residual
+Atkin–Lehner involution is the predicted curve 1806l1, 2730y1, 1122i1, 1122f1; the automorphism group
+of the two models `y^2 = f(x)` has order 4, which is what the Atkin–Lehner group of order 16 modulo
+`W` requires; and the fixed points of the residual involution lie over the fields the CM computation
+gives for the two branch discriminants (`Q(sqrt -7)` and `Q(sqrt 129)`; `Q(sqrt -26)` and
+`Q(sqrt 10)`; `Q(sqrt -2)` twice; `Q(sqrt -2)` twice).
+
+**The enumeration at rank one.** The formula gives the height of `P - Pbar` exactly, and for the
+rational part it gives the height of the component of the trivial character, which is `(h/2)` times
+`P + Pbar - 2 xi_E`, with `xi_E` the image of the Hodge class of `X_0^D(N)`. So the multiple `b_i` of
+the generator of `E(Q)` in `P_i + Pbar_i` is known up to sign and up to the shift by `2 xi_E`, and
+that shift is the same for both branch points: the enumeration runs over the sign choices for the
+difference `b_2 - b_1` (it must be an integer, which is already a check) and over `b_1` modulo 2,
+translation of both branch points by a rational point of `E` giving an isomorphic cover. It is
+therefore complete, and the four models are proved, given the trace-formula point counts.
 
 ## X_0^39(11)/{1,11,39,429} and X_0^55(7)/{1,35,55,77}: the two Nelson candidates, proved (branch models-1326-210)
 
@@ -826,6 +897,9 @@ attached to those fields, (−11, 12) and (−4, 13), give minus parts exactly e
 **X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`.** `E = X/<W, w_5>` is 385a1
 (a2–a4 excluded). Branch points −1540 (class number 8) over `Q(sqrt -35)` and −20 (class number 2) over
 `Q(sqrt 5)`, characters (−35, 44) and (−4, 5), minus parts the generators. One survivor, hyperelliptic.
+Both have rank 1, so the rational components of the branch points are enumerated as the section above
+describes; there the two trivial-character components agree, and the difference of the two rational
+components is 0.
 
 **Both are Q-isomorphic to the models fitted numerically from Nelson's values** (campaign branch,
 `vvdata/weyl-campaign/nelson/hyp16/`): `y^2 + (x^4+x^3+x^2+x+1)y = -3x^7 - 22x^6 - 55x^5 - 69x^4 - 55x^3

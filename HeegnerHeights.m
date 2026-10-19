@@ -83,7 +83,8 @@ end intrinsic;
 
 intrinsic GenusCharacters(d::RngIntElt) -> SeqEnum
 {The factorisations d = d1 d2 into fundamental discriminants with d1 < d2, the trivial character
-<1, d> first. For a 2-elementary class group these are all the characters of the class group.}
+<1, d> first: the genus characters, i.e. the characters of order dividing 2 of the class group of d.
+For a 2-elementary class group these are all its characters.}
     require IsFundamentalDiscriminant(d): "d must be a fundamental discriminant";
     facs := [<1, d>];
     for d1 in Divisors(Abs(d)), s in [1, -1] do
@@ -97,17 +98,18 @@ end intrinsic;
 
 intrinsic HeegnerHeightComponents(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt) -> SeqEnum, RngIntElt
 {For a CM point P of fundamental discriminant d on X_0^D(N) and f : X_0^D(N) -> E of degree degf, the
-genus-character components of the Heegner divisor of f(P): for each character chi = (d1, d2) a tuple
-<d1, d2, admissible, ord L(E^d1,1), ord L(E^d2,1), h_chi>, where h_chi is the absolute canonical height
-of sum_t chi(t) f(P)^t over the class group when chi is admissible, by Cai-Shu-Tian's formula with
-8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number. The class group
-must be 2-elementary.}
+genus-character components of the Heegner divisor of f(P): for each genus character chi = (d1, d2) a
+tuple <d1, d2, admissible, ord L(E^d1,1), ord L(E^d2,1), h_chi>, where h_chi is the absolute canonical
+height of sum_t chi(t) f(P)^t over the whole class group when chi is admissible, by Cai-Shu-Tian's
+formula with 8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number.
+Characters of higher order are not computed: a point defined over a quadratic field F has nonzero
+components only for the characters trivial on Gal(H/F), the trivial one and the genus character
+attached to F.}
     require IsFundamentalDiscriminant(d) and d lt 0: "d must be a negative fundamental discriminant";
     // for a squarefree conductor no Euler factor is removed from L(s, E, chi) in the formula, and the
     // Manin constant of the optimal curve is 1
     require IsSquarefree(Conductor(E)): "the conductor of E must be squarefree";
     Cl := ClassGroup(QuadraticField(d));
-    require Exponent(Cl) le 2: "the class group must be 2-elementary (genus characters only)";
     // the first curve of its class in Cremona's table is the optimal one, except in class 990h
     require Conductor(E) ne 990: "the optimal curve of class 990h is not the first of its class";
     lab := CremonaReference(E);
@@ -131,9 +133,11 @@ end intrinsic;
 
 intrinsic PredictedBranchPointHeight(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt) -> FldReElt
 {The absolute canonical height of f(P) for a CM point P of discriminant d, when the trivial-character
-component is given by the formula (E of rank 0 or the trivial character inadmissible): the sum of the
-admissible components divided by the square of the class number.}
+component is given by the formula (E of rank 0 or the trivial character inadmissible) and the class
+group is 2-elementary, so that the genus characters are all the characters: the sum of the admissible
+components divided by the square of the class number.}
     comps, h := HeegnerHeightComponents(E, D, N, degf, d);
+    require Exponent(ClassGroup(QuadraticField(d))) le 2: "the class group must be 2-elementary";
     return &+[RealField(30) | c[6] : c in comps | c[3]] / h^2;
 end intrinsic;
 
@@ -223,8 +227,10 @@ rational point of E, or their negatives, are omitted.}
         vprintf HeegnerHeights: "disc %o over Q(sqrt %o): minus generator of height %o, E(Q) generator of height %o, torsion %o\n",
             b[2], SquarefreeFactorization(dF), Height(Gm), #gQ eq 1 select Height(GQ) else 0, #T;
     end for;
-    // the multiple k of the minus generator for each branch discriminant
-    ks := [];
+    // the multiple k of the minus generator for each branch discriminant, and the multiple b' of the
+    // generator of E(Q) in P + Pbar - 2 xi_E, xi_E the image of the Hodge class of X_0^D(N)
+    ks := []; bps := [];
+    hG := #gQ eq 1 select Height(gQ[1]) else 0;
     for i in [1..2] do
         comps, h := HeegnerHeightComponents(E, D, N, degf, data[i]`d);
         // P - Pbar is (2/h) times the component of the character attached to the field F of the branch
@@ -247,7 +253,24 @@ rational point of E, or their negatives, are omitted.}
             return [* *];
         end if;
         Append(~ks, Round(k));
+        // P + Pbar - 2 xi_E = b' G: when F is not K the trivial character's component is (h/2) times
+        // it, zero when that character is inadmissible; when E has rank 0 there is nothing to find
+        triv := [c : c in comps | c[1] eq 1][1];
+        bp := (#gQ eq 1 and triv[3] and not IsSquare(dF*data[i]`d)) select (2/h)*Sqrt(triv[6]/hG) else 0;
+        vprintf HeegnerHeights: "disc %o: P + Pbar - 2 xi_E = b' G with |b'| = %o\n", data[i]`d, bp;
+        Append(~bps, bp);
     end for;
+    // P_i + Pbar_i = b_i G + t_i with b_i = (+-|b_i'|) + 2c for one c (the Hodge class), so after a
+    // translation by a rational point b_1 is 0 or 1, and b_2 - b_1 = +-|b_2'| +-|b_1'| is an integer
+    deltas := {};
+    for s1 in [1, -1], s2 in [1, -1] do
+        dd := s2*bps[2] - s1*bps[1];
+        if Abs(dd - Round(dd)) lt 1e-4 then Include(~deltas, Round(dd)); end if;
+    end for;
+    if #deltas eq 0 then
+        vprintf HeegnerHeights: "the rational components of the two branch points do not differ by a lattice point: E is not the quotient\n";
+        return [* *];
+    end if;
     // trace-formula counts
     primes := [p : p in PrimesInInterval(3, Primes) | (D*N) mod p ne 0];
     target := [ComputePointsViaTrace(X, p, 1) : p in primes];
@@ -255,12 +278,12 @@ rational point of E, or their negatives, are omitted.}
     ctxs := [reduction_context(E, p) : p in small[1..Min(6, #small)]];
     out := [* *];
     seen := [* *];
-    for b in (#gQ eq 1 select [0, 1] else [0]) do
+    for b in (#gQ eq 1 select [0, 1] else [0]), delta in deltas do
         lists := [* *];
         for i in [1..2] do
             dt := data[i]; pts := {@ @};
             for sg in [1, -1], t in dt`tors do
-                twoP := b*dt`GQ + sg*ks[i]*dt`Gm + t;
+                twoP := (b + (i eq 1 select 0 else delta))*dt`GQ + sg*ks[i]*dt`Gm + t;
                 for Q in DivisionPoints(twoP, 2) do
                     if &and[a in Rationals() : a in Eltseq(Q)] then continue; end if;
                     Include(~pts, E(dt`F)!Eltseq(Q));
@@ -268,7 +291,7 @@ rational point of E, or their negatives, are omitted.}
             end for;
             Append(~lists, pts);
         end for;
-        vprintf HeegnerHeights: "class b = %o: %o x %o candidate points\n", b, #lists[1], #lists[2];
+        vprintf HeegnerHeights: "class b = %o, b_2 - b_1 = %o: %o x %o candidate points\n", b, delta, #lists[1], #lists[2];
         for P1 in lists[1], P2 in lists[2] do
             if Place(P1) eq Place(P2) then continue; end if;
             // translates by a rational point, or negatives, of an earlier configuration give an
