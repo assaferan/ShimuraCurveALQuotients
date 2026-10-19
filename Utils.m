@@ -24,6 +24,16 @@ have their own rough measures below.  It deliberately over-estimates curves that
     g := X`g; DN := X`D * X`N; nW := #X`W;
     if g lt 3 then return R!0; end if;
 
+    if stage in {"FilterByDualGraph", "FilterByDualGraphStar"} then
+        // Ideal classes of level N*p in the algebra of discriminant D/p (mass formula), times the
+        // number of AL primes, summed over p | D: the class lookups dominate (spec section 8).
+        // The worker takes the maximum over a level, whose fibers are shared.
+        if not DualGraphApplicable(X`D, X`N) then return R!0; end if;
+        return R!(#PrimeDivisors(DN) * &+[(&*[Integers() | q - 1 : q in PrimeDivisors(X`D div p)]) *
+                                         (&*[Integers() | l + 1 : l in PrimeDivisors(X`N * p)])
+                                         : p in PrimeDivisors(X`D)]);
+    end if;
+
     if stage in {"FilterByNonALInvolutions", "FilterByNonALInvolutionsStar"} then
         // cost ~ ModularSymbols(D*N); only curves with non-AL involutions do work, and only
         // those within the level cap (larger levels are skipped, so they cost ~nothing).
@@ -77,6 +87,10 @@ have their own rough measures below.  It deliberately over-estimates curves that
         if X`D eq 10 then return R!(#PrimeDivisors(X`N) * R!X`N * 2); end if;
         if X`D eq 22 then return R!(#PrimeDivisors(X`N) * R!X`N * 2); end if;   // Brandt(22p) + CM lift
         return R!0;
+    end if;
+
+    if stage eq "FilterByComponentInvolution" then
+        return R!(#PrimeDivisors(X`N) * #Divisors(X`D * X`N));     // genera only
     end if;
 
     if stage in {"FilterByWeilPolynomial", "FilterByWeilPolynomialStar"} then

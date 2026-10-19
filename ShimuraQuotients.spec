@@ -30,4 +30,6 @@ AutomorphismGroupFilter.m
 TwistedFilters.m
 special_fiber_modular.m
 special_fiber_cm.m
+DualGraph.m
+ComponentInvolution.m
 }

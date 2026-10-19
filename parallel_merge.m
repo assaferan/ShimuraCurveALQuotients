@@ -11,6 +11,7 @@
 
 SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);   // the data file is printed with Sprint; at 80 columns a long verdict label is split with "\n"
 
 tc := StringToInteger(total_chunks);
 
