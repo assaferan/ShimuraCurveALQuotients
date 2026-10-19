@@ -11,40 +11,28 @@
 // the relation between them, of bidegree (2, 2), is read off their values at nine or more CM points.
 // tests/GuoYangExample42.m runs the whole recipe on X_0^142(1)* against the paper's own numbers.
 //
-// Where Guo-Yang's Assumption 40 enters, and when it is automatic.  A Borcherds form transforms under the Atkin-Lehner
-// group by a character, and it is a function on the star quotient only when that character is
-// trivial, which Guo-Yang assume (their Assumption 40; Example 42 is stated under it).  The
-// search here does not check the character: it only finds a form whose divisor on the star is the
-// prescribed one.  Some power of the form is a function, so the prescribed divisor, which is
-// rational, has a class of finite order in E(Q).  When E(Q) has no torsion the class is trivial,
-// a function g with that divisor exists, and the form divided by g has no zeros or poles, so the
-// character is trivial and the assumption holds; this is the case at X_0^142(1)* (142a1 has
-// trivial torsion).  When E(Q) has torsion the form may be a root of a function, its Schofer
-// values are then those of the root, and a model built from them is conditional on the
-// assumption.
-//
-// The character can be decided instead of assumed.  Let psi have the prescribed divisor D on the
-// star.  If D is principal, say D = div(g), then psi/g has neither zeros nor poles, so psi is a
-// constant multiple of g: a function, with trivial character.  If D is not principal, psi is a
-// function on X' = X/ker(chi), a quotient by an index-2 subgroup of W, and div(psi) = pi^*(D) is
-// principal there; so the class of D is a nonzero element of ker(pi^* : J(X*) -> J(X')).  For a
-// double cover that kernel is trivial when pi is ramified, and is {0, epsilon} with epsilon the
-// 2-torsion class defining the cover when pi is etale.  Hence a form with nontrivial character
-// exists only over an ETALE double cover of the star, which by Riemann-Hurwitz has genus one, and
-// only for the single divisor class epsilon.
-//
-// Two consequences, and together they remove the assumption from the construction.
-//   * When no index-2 quotient of the star has genus one there is no etale double cover, so every
-//     Borcherds form on the star is a function, whatever the torsion of E(Q) (EtaleDoubleCovers).
-//   * When one exists, a form psi whose divisor is a difference of two distinct rational CM points
-//     A - P cannot have that divisor principal, so its class is epsilon and psi is anti-invariant
-//     on X'.  Then psi^2 is a function on the star, with divisor 2A - 2P; the Schofer values give
-//     |psi^2|, and its sign at a rational CM point Q of the star is +1 when the preimages of Q on
-//     X' are rational and the sign of the discriminant of their field of definition otherwise
-//     (psi takes a rational value in the first case and r*sqrt(delta) in the second), up to one
-//     global sign (SquareCoordinateSigns).  The coordinates are then functions, so the model does
-//     not depend on the assumption either.
-
+// Where Guo-Yang's Assumption 40 enters, and how far it can be removed.  A Borcherds form carries
+// a character of the group that uniformises the star quotient (Guo-Yang, Lemma 5 and Remark 41),
+// and it is a function on the star only when that character is trivial, which Guo-Yang assume
+// (their Assumption 40; Example 42 is stated under it).  The search here does not check it: it
+// only finds a form whose divisor on the star is the prescribed one.
+// When the principal part of the input is INTEGRAL the character has finite order (Borcherds,
+// "The Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97 (1999), proof of
+// Theorem 4.1); run the search with IntegralSolution so that it is.  Then psi^n is a function
+// exactly when n times the prescribed divisor is principal, so the order of the character equals
+// the order of the divisor class in E(Q), and in particular:
+//   * if E(Q) is torsion-free the class is trivial, a function g with that divisor exists, and
+//     psi/g has no zeros or poles, so psi is a function and the assumption holds -- the case of
+//     X_0^142(1)*, X_0^158(1)* and X_0^38(5)*;
+//   * otherwise the order divides the exponent e of the torsion of E(Q), so psi^e is a function
+//     for certain, with the e-th powers of the Schofer values.  Coordinates built from e-th
+//     powers therefore need no assumption, whatever the torsion.  This is what the square-
+//     coordinate route below does at e = 2.
+// ⚠ The order of the character is NOT bounded by 2 in general, and the quotient on which a form
+// with nontrivial character becomes a function need NOT be an Atkin-Lehner quotient: the character
+// is one of the uniformising group, which has more characters than the Atkin-Lehner group.  So the
+// genera of the Atkin-Lehner quotients decide nothing here, and EtaleDoubleCovers is a census of
+// those quotients, nothing more.
 import "BorcherdsForms.m" : basis_of_weakly_holomorphic_forms, coeffs_to_divisor_matrix;
 
 function is_infinite(v)
@@ -253,24 +241,31 @@ function field, which turns the relation into linear algebra over the constants.
     return false;
 end intrinsic;
 
-// ---- characters: the etale double covers of the star, and signs of square-coordinates ----------
+// ---- the square-coordinate route, for a star whose Jacobian has rational 2-torsion ------------
 
 intrinsic EtaleDoubleCovers(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot]) -> SeqEnum
 {The quotients of X_0(D, N) by index-2 subgroups of the Atkin-Lehner group of the genus-one star
 Xstar that have genus one, i.e. the etale double covers of the star among the Atkin-Lehner
-quotients (a ramified double cover of a genus-one curve has genus at least two).  A Borcherds form
-with nontrivial character is a function on one of these, and its divisor is in the class defining
-the cover; so when the list is empty every Borcherds form on Xstar is a function and nothing built
-from such forms depends on Guo-Yang's Assumption 40.}
+quotients.  This is a census of those quotients and is NOT a test of the character of a Borcherds
+form: the character is one of the group uniformising the star, so the quotient on which a form
+with nontrivial character becomes a function need not be an Atkin-Lehner quotient at all.  Its use
+is to supply the cover whose fields of definition SquareCoordinateSigns reads, when there is one.}
     require Xstar`g eq 1 : "the star must have genus one";
     return [curves[i] : i in Xstar`CoveredBy | curves[i]`g eq 1];
 end intrinsic;
 
 intrinsic SquareCoordinateSigns(Xp::ShimuraQuot, ds::SeqEnum[RngIntElt]) -> SeqEnum
-{For the function x = psi^2 on the star, psi an anti-invariant function on the etale double cover
-Xp of the star: the sign of x at the rational CM point of each discriminant in ds, up to one
-common sign.  It is +1 when the preimages of the point on Xp are rational, and the sign of the
-discriminant of their quadratic field of definition otherwise.}
+{For a function x = psi^2 on the star, psi a form with divisor A - P whose square is a function:
+the sign of x at the rational CM point of each discriminant in ds, up to one common sign, read as
++1 when the preimages of the point on Xp are rational and the sign of the discriminant of their
+quadratic field of definition otherwise -- psi takes a rational value in the first case and
+r*sqrt(delta) in the second.
+⚠ This is valid only if Xp is the quotient on which psi becomes a function, which the caller
+cannot verify: the character of psi is one of the group uniformising the star and its kernel need
+not cut out an Atkin-Lehner quotient.  The signs returned are therefore a HYPOTHESIS about psi,
+to be corroborated downstream -- a wrong sign vector will in general leave no bidegree-(2,2)
+relation through the points, or give a curve outside the isogeny class that Jacquet-Langlands
+forces.  Both of those are checked by the genus-one star driver.}
     signs := [];
     for d in ds do
         deg := DegreeOfFieldOfDefinitionOfCMPoint(Xp, d);

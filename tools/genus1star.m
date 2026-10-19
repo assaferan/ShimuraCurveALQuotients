@@ -19,13 +19,15 @@
 //     those traces of Frobenius at every good prime up to 100, which identifies the isogeny class;
 //     the model itself identifies the curve in it, since the coordinates are functions on the star
 //     (see the next item).
-//   * Characters (header of GenusOneStar.m): when no index-2 quotient of the star has genus one,
-//     every Borcherds form is a function and the model does not depend on Guo-Yang's Assumption
-//     40, whatever the torsion of E(Q).  When one has (an etale double cover X' of the star), the
-//     coordinates are the functions psi^2 with divisor 2A - 2P, psi a form with divisor A - P
-//     (such a divisor is never principal, so its class is forced to be the one defining the cover,
-//     which is of order two -- checked on the model), with the sign at each CM point read from the
-//     field of definition of its preimages on X'.  The model then uses only functions either way.
+//   * Guo-Yang's Assumption 40 (header of GenusOneStar.m): it is not needed when E(Q) is
+//     torsion-free, since the divisor class of a form with integral principal part has finite
+//     order and is then trivial; it is a genuine hypothesis when E(Q) has rational torsion, and
+//     the driver says which case it is in.  With rational 2-torsion and an Atkin-Lehner quotient
+//     of genus one available, the driver can instead build each coordinate as psi^2, psi a form
+//     with divisor A - P: that divisor is not principal, so its class has order 2 (the torsion
+//     being of exponent 2) and psi^2 is a function.  The signs of psi^2 are read from the fields
+//     of definition on that quotient, which is a hypothesis about psi rather than a proof (see
+//     SquareCoordinateSigns); the bidegree-(2,2) relation and the isogeny class corroborate it.
 //   * Every CM point of fundamental discriminant and class number <= bd that is rational on the
 //     star (the pool of RationalandQuadraticCMPoints, elliptic points included) is placed on the
 //     minimal model, as a point and as an element of the Mordell-Weil group (origin: the CM point
@@ -95,15 +97,23 @@ table_ds := [d : d in support_ds | d notin excluded];
 if #excluded gt 0 then printf "left out of the value table on request: %o\n", excluded; end if;
 // the characters of the Borcherds forms (header of GenusOneStar.m): a nontrivial one needs an
 // etale double cover of the star among the index-2 quotients
+// Assumption 40 is automatic when the Jacobian has no rational torsion, and otherwise the
+// square-coordinate route removes it when the torsion has exponent 2 and an Atkin-Lehner quotient
+// of genus one is available to read the signs from
 etale := EtaleDoubleCovers(star, curves);
-if IsEmpty(etale) then
-    printf "no index-2 quotient has genus one: every Borcherds form on the star is a function, and the model does not depend on Assumption 40\n";
-else
-    printf "index-2 quotient(s) of genus one: %o -- forms may carry a character; coordinates will be squares of degree-one forms\n",
+tors := [TorsionSubgroup(EllipticCurve(f)) : f in cands];
+etors := IsEmpty(tors) select 1 else LCM([Exponent(T) : T in tors]);
+printf "torsion exponent over the Jacobian candidates: %o\n", etors;
+if etors eq 1 then
+    printf "the Jacobian is torsion-free: every Borcherds form with integral principal part is a function here, and the model does not depend on Assumption 40\n";
+elif etors eq 2 and not IsEmpty(etale) then
+    printf "rational 2-torsion, and the genus-one quotient(s) %o are available: the coordinates will be squares of degree-one forms\n",
            [Sort(Setseq(c`W)) : c in etale];
-    error if #etale gt 1, "several etale double covers: the kernel of a character cannot be told apart here";
+    error if #etale gt 1, "several genus-one Atkin-Lehner quotients: the signs cannot be attributed to one of them";
+else
+    printf "⚠ the Jacobian has rational torsion of exponent %o and the square route is not available: the model below is CONDITIONAL on Assumption 40\n", etors;
 end if;
-square_route := not IsEmpty(etale);
+square_route := (etors eq 2) and not IsEmpty(etale);
 sq := [];
 if stage eq 0 then quit; end if;
 
@@ -250,6 +260,10 @@ while progress do
         halves := [Q : Q in DivisionPoints(pts[z[1]] + pts[z[2]], 2)];
         // a square-coordinate has 2P = 2A with P != A, so A itself is not the pole
         if z[1] eq z[2] then halves := [Q : Q in halves | Q ne pts[z[1]]]; end if;
+        // distinct CM points of the star are distinct points of the model, so a candidate
+        // already carrying another discriminant is not this pole
+        taken := {pts[d] : d in Keys(pts) | d ne P};
+        if #halves gt 1 then halves := [Q : Q in halves | Q notin taken]; end if;
         if #halves eq 1 then
             pts[P] := halves[1]; pos[P] := mw_coords(halves[1]); progress := true;
         else

@@ -1,22 +1,23 @@
-// The character of a Borcherds form on a genus-one star quotient, decided rather than assumed.
+// The ingredients of the square-coordinate route on a genus-one star quotient, and the census of
+// the genus-one Atkin-Lehner quotients that supplies them.
 //
-// A form psi with prescribed divisor D is a function on the star when D is principal; when D is
-// not, psi is a function on X' = X/ker(chi) for an index-2 subgroup of the Atkin-Lehner group,
-// and the class of D is a nonzero element of the kernel of J(X*) -> J(X'), which for a double
-// cover is nontrivial only when the cover is etale -- and an etale double cover of a genus-one
-// curve has genus one (a ramified one has genus at least two, by Riemann-Hurwitz).  So the forms
-// on a star with no genus-one index-2 quotient are all functions, and Guo-Yang's Assumption 40
-// is not needed there; see the header of GenusOneStar.m.
+// A Borcherds form with integral principal part has a character of finite order (Borcherds, "The
+// Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97 (1999), proof of Theorem
+// 4.1), equal to the order of the class of its divisor in E(Q); so Guo-Yang's Assumption 40 is
+// automatic when E(Q) is torsion-free, and when the torsion has exponent e the e-th power of the
+// form is a function.  ⚠ The character is one of the group uniformising the star, NOT of the
+// Atkin-Lehner group, so the quotient on which a form with nontrivial character becomes a
+// function need not be an Atkin-Lehner quotient: the census below decides nothing about
+// characters.  Its role is to say whether an Atkin-Lehner quotient of genus one is available for
+// SquareCoordinateSigns to read the fields of definition from.
 //
-// This test checks the census that decides it on the six genus-one stars the driver has been run
-// on, and the ingredients of the construction used when an etale cover does exist.  The genera
-// are computed from the Atkin-Lehner signature (GenusShimuraCurveQuotient) and the fields of
+// The genera come from the Atkin-Lehner signature (GenusShimuraCurveQuotient) and the fields of
 // definition from the quaternion order (FieldOfDefinitionOfCMPoint); no Borcherds form, Schofer
-// value or stored model is read, so this is arithmetic of the objects, not of a construction.
+// value or stored model is read.
 
 procedure test_genus_one_star_characters()
-    printf "Characters of Borcherds forms on genus-one stars: the etale-double-cover census...";
-    // one base per line: D, N, and whether an etale double cover exists
+    printf "Genus-one stars: the census of genus-one Atkin-Lehner quotients and the square-coordinate signs...";
+    // one base per line: D, N, and whether a genus-one Atkin-Lehner quotient exists
     cases := [<39, 11, false>, <158, 1, false>, <38, 5, false>, <142, 1, false>,
               <14, 17, true>, <94, 3, false>];
     for c in cases do
@@ -29,12 +30,12 @@ procedure test_genus_one_star_characters()
         _ := exists(star){x : x in curves | IsStarCurve(x)};
         etale := EtaleDoubleCovers(star, curves);
         assert (#etale gt 0) eq expected;
-        // the genus-one quotients are exactly the etale double covers, and a double cover of the
-        // star that is not etale has genus at least two
-        assert forall{x : x in [curves[i] : i in star`CoveredBy] | x`g eq 1 or x`g ge 2};
+        // a double cover of a genus-one curve has genus one when etale and at least two otherwise,
+        // so no index-2 quotient of a genus-one star is rational
+        assert forall{x : x in [curves[i] : i in star`CoveredBy] | x`g ge 1};
     end for;
 
-    // X_0^14(17)*: one etale double cover, the quotient by {1, 2, 119, 238}
+    // X_0^14(17)*: one genus-one Atkin-Lehner quotient, by {1, 2, 119, 238}
     D := 14; N := 17;
     W := {m : m in Divisors(D*N) | GCD(m, (D*N) div m) eq 1};
     Xstar := CreateShimuraQuot(D, N, W);
@@ -46,9 +47,9 @@ procedure test_genus_one_star_characters()
     assert etale[1]`W eq {1, 2, 119, 238};
 
     // the signs of a square-coordinate at the rational CM points of the star: +1 where the
-    // preimages on the cover are rational, the sign of the discriminant of their field of
+    // preimages on that quotient are rational, the sign of the discriminant of their field of
     // definition otherwise.  Every rational CM point of the star has preimages of degree at most
-    // two on an etale double cover, so the signs are defined at all of them.
+    // two there, so the signs are defined at all of them.
     ds := [-4, -8, -35, -43, -51, -67, -84, -168, -280, -340, -408, -427, -595];
     signs := SquareCoordinateSigns(etale[1], ds);
     // regression values (computed here): the fields of definition on X_0^14(17)/{1,2,119,238} are
