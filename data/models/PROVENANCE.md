@@ -678,6 +678,34 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+## 232 fibre products for the empty keys of sixteen files (2026-10-14, branch fibre-products-all-levels)
+
+The files of the level groups 660, 780 and 1020 and of the odd-D backlog were committed with their
+covers of genus >= 1 that have no genus-0 Atkin-Lehner quotient left empty: those are fibre products
+over the star line of the file's own double covers, which the writer of the fibre-product stage
+(`tools/writefp.m`) builds, as it did for level 924 (PR #82). Run over every committed file with the
+coordinate check of PR #105, it filled 232 keys in sixteen files:
+
+    6_55   24 (genus 3-7)      6_65   24 (3-7)       6_85   37 (3-9)      10_33  24 (4-9)
+    10_39  32 (3-9)            10_51  28 (3-7)       26_15  28 (3-7)      22_13   3 (4-5)
+    14_19   1 (6)              33_2    3 (3-5)       34_5    5 (4-9)      38_7    3 (6-7)
+    55_2    5 (5-11)           69_2    7 (4-6)       95_2    4 (9-10)     111_2   4 (9-10)
+
+Each was accepted on the genus formula and the trace formula over F_p and F_{p^2} at the first three
+good primes, with the coordinate check passed at every one (the generators consistent with one
+coordinate, up to a quadratic twist shared by two of them);
+then, independently of the writer, every entry was re-read from its stored strings and compared with
+the trace formula over F_p and F_{p^2} at the 4th and 5th good primes (primes between 13 and 29): all 928 counts of the 232 entries agree. The writer refused seven
+keys, all at bases whose double covers are in more than one coordinate (`34_3` [1,34]; `38_7`
+[1,133]; `82_3` [1,2], [1,82], [1,123]; `93_2` [1,62], [1,93]). It also built entries at `21_2`,
+`34_7`, `58_5`, `93_2`, `87_2` and `22_15`, which are not here: `21_2`, `34_7`, `58_5` and `93_2` are
+regenerated in one coordinate on branch renormalise-mixed-bases (PR #110), where the stage builds the
+same covers in-run, `87_2` keeps a cover in the rebase coordinate, and `22_15` is being regenerated. The level-1
+bases `210_1`, `330_1`, `390_1`, `510_1` and `462_1` were not reached: their remaining keys are top
+curves of genus well above 11 (or, at `462_1`, have no stored double covers), and the function-field
+work for one of them ran for hours; they stay empty. As at every base with N > 1, these entries rest
+on the m = 0 term of Schofer's formula through their factors.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and

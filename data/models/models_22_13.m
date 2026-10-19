@@ -4,18 +4,20 @@
 // this file.  The W={1,2} entry was rebuilt on 2026-10-13 from the covers as they now stand, and
 // checked against the trace formula at five primes over F_p and F_{p^2}.  Coordinates s, z have
 // weight 1; y_i has weight half the degree of its own equation.
+// Further entries of 2026-10-14 by the same writer, with the coordinate check of the covers above each pair of
+ // factors (FibreProductCovers.m), checked at the first three good primes and again at the 4th and 5th.
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
-models[[Integers()|1,13]] := [*  *];
+models[[Integers()|1,13]] := [* <5, "CRV", [ Strings() | "395307/256*s^4 - 1662419/256*s^3*z + 329483/32*s^2*z^2 - 116523/16*s*z^3 + 1936*z^4 + y1^2", "-14641/692224*s^4 + 35937/692224*s^3*z - 3025/86528*s^2*z^2 + 121/43264*s*z^3 + y2^2" ]> *];
 models[[Integers()|1,2,11,22]] := [* <2, P![ -1936, 472747/16, -430881/4, 22694881/128, -38813291/256, 270726731/4096, -47832147/4096 ], P![]> *];
 models[[Integers()|1,2]] := [* <4, "CRV", [ Strings() | "-14641/173056*s^4 + 25289/86528*s^3*z - 60137/173056*s^2*z^2 + 3267/21632*s*z^3 - 121/10816*z^4 + y1^2", "47832147/4096*s^6 - 270726731/4096*s^5*z + 38813291/256*s^4*z^2 - 22694881/128*s^3*z^3 + 430881/4*s^2*z^4 - 472747/16*s*z^5 + 1936*z^6 + y2^2" ]> *];
 models[[Integers()|1,2,13,26]] := [* <1, P![ -1936, 116523/16, -329483/32, 1662419/256, -395307/256 ], P![]> *];
 models[[Integers()|1,286]] := [* <2, P![ 121/86528, 0, -55/43264, 0, 19/40898, 0, 16/2474329 ], P![]> *];
 models[[Integers()|1,26]] := [* <2, P![ -1331, 0, -2176, 0, 249856/121, 0, -16777216/14641 ], P![]> *];
 models[[Integers()|1,2,143,286]] := [* <1, P![ 121/10816, -3267/21632, 60137/173056, -25289/86528, 14641/173056 ], P![]> *];
-models[[Integers()|1,143]] := [*  *];
+models[[Integers()|1,143]] := [* <5, "CRV", [ Strings() | "-14641/173056*s^4 + 25289/86528*s^3*z - 60137/173056*s^2*z^2 + 3267/21632*s*z^3 - 121/10816*z^4 + y1^2", "395307*s^4 - 1267112*s^3*z + 1368752*s^2*z^2 - 495616*s*z^3 + y2^2" ]> *];
 models[[Integers()|1,11]] := [* <5, P![ -1936, 0, -286891/16, 0, 175571/16, 0, -405713/128, 0, 102971/256, 0, -58443/4096, 0, -1331/512 ], P![]> *];
-models[[Integers()|1,22]] := [*  *];
+models[[Integers()|1,22]] := [* <4, "CRV", [ Strings() | "47832147/4096*s^6 - 270726731/4096*s^5*z + 38813291/256*s^4*z^2 - 22694881/128*s^3*z^3 + 430881/4*s^2*z^4 - 472747/16*s*z^5 + 1936*z^6 + y1^2", "395307*s^4 - 1267112*s^3*z + 1368752*s^2*z^2 - 495616*s*z^3 + y2^2" ]> *];
 models[[Integers()|1,22,26,143]] := [* <1, P![ 0, 495616, -1368752, 1267112, -395307 ], P![]> *];
 models[[Integers()|1,13,22,286]] := [* <1, P![ 0, -121/43264, 3025/86528, -35937/692224, 14641/692224 ], P![]> *];
 models[[Integers()|1,11,26,286]] := [* <0, P![ 0, -121/16, 121/16 ], P![]> *];
