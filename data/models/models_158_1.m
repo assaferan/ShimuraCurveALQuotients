@@ -3,10 +3,10 @@
 //
 // The star curve has genus 1; the model is its minimal Weierstrass model, 158a1, the curve of the
 // newform of level 158 with Atkin-Lehner signs -1 at 2 and 79 (a class with one curve), built by
-// the genus-one star driver (tools/genus1star.m, on the branch genus1-star-models) from Borcherds
-// forms with prescribed divisors and their values by Schofer's formula. We know of no published
-// equation. E(Q) is torsion-free, so the divisors of the Borcherds forms are principal and no
-// assumption on their characters is used.
+// the genus-one star driver (tools/genus1star.m) from Borcherds forms with prescribed divisors
+// and their values by Schofer's formula; data/models/PROVENANCE.md records the run. We know of
+// no published equation. E(Q) is torsion-free, so the divisors of the Borcherds forms are
+// principal and no assumption on their characters is used.
 //
 // Rational CM points of fundamental discriminant on the model, with Q = (-1, -4) a generator of
 // E(Q) = Z (the origin is the CM point of discriminant -4):

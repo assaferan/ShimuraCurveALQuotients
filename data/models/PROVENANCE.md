@@ -772,9 +772,8 @@ apply: `genmodels.m` builds covers of a rational star line. `models_142_1.m` and
 hold the star key only, `{1, 2, 71, 142}` and `{1, 2, 79, 158}`, each a Weierstrass model
 `y^2 + h y = f`. They are the first entries in this directory whose star curve is not rational.
 
-**Construction, exact throughout** (the genus-one star driver `tools/genus1star.m`, on the branch
-`genus1-star-models` of PR #125, stacked on the prescribed-divisor search of PR #121; the command
-below needs that branch; logs `vvdata/weyl-campaign/genus1star/g1_142_1.log` and `g1_158_1.log` on
+**Construction, exact throughout** (the genus-one star driver `tools/genus1star.m`, which arrived
+with the prescribed-divisor search it calls; logs `vvdata/weyl-campaign/genus1star/g1_142_1.log` and `g1_158_1.log` on
 the campaign branch, commit 6e4d0ea). The driver asks the Borcherds search for
 forms with prescribed divisors `Z(d_1) + Z(d_2) - 2 Z(d_oo)` on the rational CM points (18 of 248
 candidate divisors have a form at 142, 23 of 378 at 158), evaluates them at every rational CM
