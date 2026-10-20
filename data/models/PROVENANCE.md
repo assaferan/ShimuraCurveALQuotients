@@ -785,7 +785,10 @@ form with the requested divisor is a function on the star only if its character 
 Guo-Yang assume (their Assumption 40). It is not needed here. The character is one of the group
 uniformising the star (Guo-Yang, Lemma 5 and Remark 41) and has finite order because the principal
 parts used are integral (Borcherds, *The Gross-Kohnen-Zagier theorem in higher dimensions*, Duke
-Math. J. 97 (1999), proof of Theorem 4.1); so a power of each form is a function on the star and
+Math. J. 97 (1999), proof of Theorem 4.1, with the correction in Duke Math. J. 105 (2000),
+183-184 = arXiv alg-geom/9710002v3, which restores the finite-order condition that the printed
+version omits from the definition of a principal Heegner divisor); so a power of each form is a
+function on the star and
 the class of its divisor, which is rational, has finite order. `E(Q)` is torsion-free for both
 142a1 and 158a1, so that class is trivial and the divisor is principal;
 consistently, the divisors for which the search found a form are exactly those that the tabulated
