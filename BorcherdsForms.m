@@ -186,7 +186,16 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     return;
 end procedure;
 
-function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+// A cached solution file whose first line is a comment holds a spanning set the solver script
+// derived from a lower rung and the level's shift set, not the lattice points of the polytope.
+function solution_is_derived(M, n, m)
+    fn := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
+    if not FileExists(fn) then return false; end if;
+    return Substring(Read(fn), 1, 2) eq "//";
+end function;
+
+// Enumerate: bypass the script's shifted spanning sets and enumerate the polytope with Normaliz.
+function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false, Enumerate := false)
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     // ⚠⚠ THE CACHE KEY IS ONLY (M, n, m) -- IT OMITS k, sq_disc AND cuspidal, AND ALL THREE CHANGE
     // THE ANSWER. Measured 2026-09-10 at (M,n,m) = (8,1,0), varying only the omitted parameters:
@@ -234,7 +243,7 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
-    cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
+    cmd := Sprintf("%opython3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", Enumerate select "NMZ_NO_SHIFT=1 " else "", nmz,
                    M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
     rc := System(cmd) div 256;    // System returns the wait status; the exit code is its high byte
     if rc ne 0 then
@@ -490,6 +499,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     // produced ~10^7 junk files before being caught).  Fail fast and informatively instead of looping
     // forever.  (The proper fix -- why rk < dim persists for these bases -- is separate.)
     BORCHERDS_N_CAP := 10000;
+    enumerate := false;
     vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
         error if n gt BORCHERDS_N_CAP,
@@ -498,7 +508,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
 
         vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim;
         
-        rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
+        rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0 : Enumerate := enumerate);
+        enumerate := false;
         
         eta_quotients := [EtaQuotient(R,r) : r in rs];
         t_eta_quotient := EtaQuotient(R,t[1..n_ds]);
@@ -567,6 +578,13 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         if (rk lt dim) then
             if (dim gt Prec) then
                 Prec := dim;
+            elif solution_is_derived(M, n + (Zero select 0 else k), Zero select k else 0) then
+                // the shifted spanning set of this rung falls short of the rank the ring needs:
+                // discard it and enumerate the rung before climbing
+                vprintf ShimuraQuotients, 2: "\n\t\tthe derived set for (%o, %o, %o) has rank %o < %o; enumerating the rung...",
+                    M, n + (Zero select 0 else k), Zero select k else 0, rk, dim;
+                _ := System(Sprintf("rm -f polymake/polymake_solution_%o_%o_%o", M, n + (Zero select 0 else k), Zero select k else 0));
+                enumerate := true;
             else
                 Prec +:= k;
                 // update n

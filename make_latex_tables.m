@@ -128,6 +128,8 @@ T2 := [
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves1.dat">,
  <"Special fiber (Section~\\ref{sec:specialfibermethod})",
         "data/curves_after_FilterBySpecialFiber.dat">,
+ <"Hyperelliptic special-fibre components at $p \\parallel N$",
+        "data/curves_after_FilterByComponentInvolution.dat">,
  <"Atkin--Lehner fixed points (Section~\\ref{sec:fixedpointsAL})",
         "data/curves_after_FilterByALFixedPointsOnQuotient.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves2.dat">,

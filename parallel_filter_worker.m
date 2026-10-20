@@ -18,7 +18,7 @@
 //   FilterByComplicatedALFixedPointsOnQuotient,
 //   FilterByGeneralizedComplicatedFixedPoints, FilterByGeneralizedComplicatedFixedPointsStar,
 //   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
-//   FilterByDegeneracyMorphism
+//   FilterByDegeneracyMorphism, FilterBySpecialFiber, FilterByComponentInvolution
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
@@ -35,6 +35,7 @@
 // Convert integer args from the raw strings Magma receives on the command line
 chunk_i        := StringToInteger(chunk);
 total_chunks_i := StringToInteger(total_chunks);
+SetColumns(0);   // the chunk file is printed with Sprint; at 80 columns a long verdict label is split with "\n"
 
 if not assigned stage then
     stage := "FilterByTrace";
@@ -134,6 +135,8 @@ case stage:
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterBySpecialFiber":
         FilterBySpecialFiber(~subseq);
+    when "FilterByComponentInvolution":
+        FilterByComponentInvolution(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":
