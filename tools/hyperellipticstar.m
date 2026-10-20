@@ -63,8 +63,15 @@ if stage eq 1 then
         end for;
     end for;
     printf "searching %o degree-two divisors over %o effective divisors\n", #divisors, #eff;
+    // maxpole caps the ladder of pole orders at infinity: with it the search makes one pass at the
+    // natural window and one at the given order, instead of climbing six rungs.  At a level with
+    // many divisors the deep rungs are unaffordable -- enumeration costs about ten times as much
+    // per further 22 in the rung -- so a capped pass is the bounded experiment: a form living
+    // shallow is found cheaply, and nothing found means nothing shallow, not nothing.
+    po := assigned maxpole select [StringToInteger(maxpole)] else [];
     t0 := Realtime();
     fs := BorcherdsForms(star, curves : Divisors := divisors, PoolClassNumber := bd,
+                                        PoleOrders := po,
                                         IntegralSolution := true, AllowMissing := true);
     printf "done in %o s: %o of %o divisors carry a form\n", Realtime() - t0, #Keys(fs), #divisors;
     for k in Sort([k : k in Keys(fs)]) do
