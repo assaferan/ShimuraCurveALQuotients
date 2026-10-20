@@ -1216,11 +1216,15 @@ that no divisor uses; the pool of a rung grows with that pole order.}
         // The zeros may be quadratic points (the divisor then contains the whole degree-2 cycle);
         // the pole must be rational, so that -deg * Z(pole) has the degree of the zeros.
         pool := pts cat quad_pts;
-        if PoolClassNumber gt 2 then
+        // The prescribed divisors may use the points by non-maximal orders under the same switch
+        // the Schofer evaluation uses; a search needs no value, so only the lookup is affected.
+        nonfund := GetEnv("NONFUND") ne "";
+        if PoolClassNumber gt 2 or nonfund then
             // Only for looking the prescribed points up: the 0-side ladder below stays on the
             // class-number-2 pool, since a rung at a large discriminant is unaffordable.
             more_rat, more_quad := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := PoolClassNumber,
-                                                                        coprime_to_level := false);
+                                                                        coprime_to_level := false,
+                                                                        AllOrders := nonfund);
             pool cat:= [p : p in more_rat cat more_quad | p[1] notin {x[1] : x in pool}];
         end if;
         // The search weights a point by its stabiliser order (DivisorOfBorcherdsForm divides the
