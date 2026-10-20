@@ -1115,12 +1115,14 @@ with AllowMissing the divisors that admit no form are reported and the others re
 On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
 that no divisor uses; the pool of a rung grows with that pole order.}
     prescribed := not IsEmpty(Divisors);
+    // Keyed by the same keys as rams, and set only for the entries given as a general divisor,
+    // whose coefficients are not determined by the points alone.  It is read on both paths below,
+    // so it exists on both.
+    dcoeffs := AssociativeArray();
     if prescribed then
-        // filled from the CM pool once it is known; dcoeffs is set only for the entries given as a
-        // general divisor, whose coefficients are not determined by the points alone
+        // filled from the CM pool once it is known
         rams := AssociativeArray();
         poles := AssociativeArray();
-        dcoeffs := AssociativeArray();
     else
         rams := RamficationPointsOfCovers(Xstar, curves);
     end if;
