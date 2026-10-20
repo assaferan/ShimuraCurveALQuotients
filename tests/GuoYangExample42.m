@@ -85,6 +85,20 @@ procedure test_guoyang_example42()
         assert forall{m : m in [Valuation(g)..0] | IsIntegral(Coefficient(g, m))};
         assert Coefficient(g, 0) eq 0;
     end for;
+    // Forms with these divisors are banked as their combinations of eta quotients, which is what
+    // says such forms exist without solving for one.  They need not be the forms just found: two
+    // inputs with the same Heegner divisor differ by one with no CM divisor, which changes the
+    // lift by a constant (the same phenomenon as the header's comparison with the paper), and the
+    // banked set was solved for with integral principal parts while this one was not.  What the
+    // certificate must support is the claim the search supports -- the paper's four divisors, with
+    // integral principal parts.
+    banked := BorcherdsFormsFromFile("data/borcherds/forms_142_1.m", star);
+    assert #Keys(banked) eq 4;
+    assert {Set(DivisorOfBorcherdsForm(banked[i], star)) : i in Keys(banked)} eq Set(paper_div);
+    for i in Keys(banked) do
+        gb := qExpansionAtoo(banked[i], 1);
+        assert forall{m : m in [Valuation(gb)..0] | IsIntegral(Coefficient(gb, m))};
+    end for;
 
     // (3) Schofer values at the ten points, the two coordinates, and the paper's table entry by
     // entry.  Every disagreement is printed before the assertion fires.
