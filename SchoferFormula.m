@@ -919,7 +919,7 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
     // ⇒ This is what produced the "runaway log coefficient" class.  A common huge factor C sits in
     // every column of a row and cancels in ReduceTable, which subtracts the per-row MINIMUM -- but
     // the doubled scale made the d = -4 column carry 2C, so C survived there and overflowed
-    // RationalNumber.  See HANDOFF.md, 2026-09-14.
+    // RationalNumber.  See HANDOFF_2026-10-19.md, the 2026-09-14 section.
     m_al := -(d div 4);
     Ogg_condition := ((d eq -4) and IsEven(D*N)) or
                      ((d mod 4 eq 0) and (m_al gt 1) and ((D*N mod m_al) eq 0)) or

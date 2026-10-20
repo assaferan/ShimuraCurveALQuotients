@@ -145,7 +145,7 @@ intrinsic RationalNumber(s::LogSm) -> FldRatElt
     // base's triage record). The useful diagnostic is the offending (p, coeff) pair, not the
     // power that overflowed.
     //
-    // ⇒ CAUSE FOUND 2026-09-14 (it is no longer "OPEN"; see HANDOFF.md, the night section, and run
+    // ⇒ CAUSE FOUND 2026-09-14 (it is no longer "OPEN"; see HANDOFF_2026-10-19.md, the night section, and run
     // with RUNAWAY=1 to reproduce the chain).  Three things have to line up:
     //   1. the Borcherds form has a huge principal part -- c(-m) reaches 19 digits at X_0^33(1)
     //      where X_0^21(1), which builds, tops out at 10 -- so every Schofer value carries a
