@@ -23,6 +23,10 @@ A list of several `<genus,f,h>` for one key means several model representations 
 (e.g. multiple conic forms for a genus-0 cover); they are isomorphic. Non-hyperelliptic
 covers (pointless conics etc.) are stored as `<genus, "CRV", [defining-poly strings]>`.
 
+When the star curve itself has genus 1 (`models_142_1.m`, `models_158_1.m`) there is no
+Hauptmodul; the file holds the star key alone, as a Weierstrass model `y^2 + h*y = f`, with the
+rational CM points placed on it in the header. See `PROVENANCE.md`.
+
 To use one:
 ```magma
 load "data/models/models_6_11.m";
