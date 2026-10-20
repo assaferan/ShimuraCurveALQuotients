@@ -842,7 +842,7 @@ odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouc
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
 
-## Nineteen quotients from the heights of their branch points (branch models-1326-210)
+## Twenty quotients from the heights of their branch points (branch models-1326-210)
 
 Every quotient in this section has genus 3 and lies behind the divisor wall of the Borcherds
 search, so none of the recipes above reaches it. Each has an elliptic Atkin–Lehner quotient `E =
@@ -988,6 +988,37 @@ each branch place with the field it is defined over.
   4787449z^4`, over 1122f1, branched at the same two discriminants, one surviving configuration,
   twist −7. The 59 is an artefact of the coordinates and not bad reduction: that conic has points
   over every `Q_p` with `p` odd.
+
+**X_0^6(323)/{1,6,19,34,51,114,646,969}, where the branch locus is one place of degree 4.** The four
+points are a single Galois orbit, so the characters that would pin one of them have order 4, and
+their L-functions do not factor into quadratic twists: the formula as implemented does not reach
+them. What it does give is enough to leave a small search. The trivial character puts the sum of the
+four points at `4·xi_E ± 2G`; the character attached to the quadratic subfield `Q(sqrt -2)` of the
+place's field has a vanishing component, because the twist of 1938h1 by −8 has analytic rank 2, so
+`P + sigma^2 P` and its conjugate differ by torsion alone, with `sigma` a generator of the cyclic
+group of order four acting on the orbit. Writing `F` for the quartic field (discriminant 62016) and
+`F_2` for `Q(sqrt -2)`, a point of the orbit then satisfies
+
+    2P = Q^+ + M,   Q^+ = P + sigma^2 P in E(F_2),   M = P - sigma^2 P in the minus part for F/F_2,
+
+where `Q^+` is one of the finitely many halves of the pinned sum, and the minus part is the
+Mordell–Weil group of the twist of E by the element defining `F` over `F_2`: of rank one, proved and
+saturated, with generator of height 7.1168638516. So `M` runs over multiples of that generator, and
+the exact test decides. The search over `|k| <= 4` leaves one curve, at `k = ±1`, in two
+presentations that are the same curve over Q — the isomorphism is exhibited as at X_0^6(187).
+
+**The model is hyperelliptic with no `y^2 = f(x)` over Q**: the conic is `X1^2 + 2X2^2 + 22X3^2 = 0`,
+again the one ramified at 2 and at the real place, with
+
+    y^2 = 46521 s^4 + 32184 s^3 z + 101968 s^2 z^2 + 91392 s z^3 + 41984 z^4.
+
+The quotient by the residual involution is `y^2 = A(s, 1)`, whose Jacobian is 1938h1 as predicted;
+the counts agree with the trace formula at the 41 good primes below 200 where this model is smooth
+and over `F_{p^2}` at 7 primes (the model is singular at 11, which is not a prime of `DN`, an artefact
+of the coordinates). **Uniqueness rests on the search window**, since the order-four characters are
+not computed; the value found is the smallest nonzero one. This agrees with the Nelson–Shimizu lift,
+which reached the same conclusion numerically, including that the canonical conic has no rational
+point, by a route sharing no step with this one.
 
 **Checks that were predictions, not inputs.** For every model: the genus is 3, as the genus
 formula says; the primes of bad reduction are exactly the primes of `DN` (for the two models over
