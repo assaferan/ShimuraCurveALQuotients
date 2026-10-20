@@ -842,262 +842,178 @@ odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouc
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
 
-## X_0^1326(1)/{1,17,78,1326} and X_0^210(13)/{1,2,21,42,65,130,1365,2730}: models from the heights of their branch points (branch models-1326-210)
+## Eighteen quotients from the heights of their branch points (branch models-1326-210)
 
-Both quotients have genus 3 and lie behind the divisor wall of the Borcherds search (the level
-`M = 4·oddpart(DN)` is 2652 and 5460), so none of the recipes above reaches them. Each has an
-elliptic quotient `E = X/<W, w>` and is a double cover of it branched at four CM points over known
-quadratic fields; the heights of those points on `E` are given by the explicit Gross–Zagier formula
-of Cai, Shu and Tian (`HeegnerHeights.m`), the points of `E(F)` of those heights are a finite set, and
-every configuration is tested exactly against the trace formula by `ExactDoubleCover.m`. Nothing in
-the construction is numerical except the L-values, which enter only through the recognition of an
-integer (the multiple of a Mordell–Weil generator). The files hold the genus-3 quotient only.
+Every quotient in this section has genus 3 and lies behind the divisor wall of the Borcherds
+search, so none of the recipes above reaches it. Each has an elliptic Atkin–Lehner quotient `E =
+X/<W, w>` and is a double cover of it branched at four CM points. The heights of those points on
+`E` are given by the explicit Gross–Zagier formula of Cai–Shu–Tian (Algebra & Number Theory 8
+(2014), Theorem 1.5, second special case), implemented in `HeegnerHeights.m`; the points of `E` of
+those heights form a finite set, and every configuration is tested exactly against the trace
+formula by `ExactDoubleCover.m`. Nothing in the construction is numerical except the L-values,
+which direct the search; what certifies a result is the agreement of the point counts. The files
+hold the genus-3 quotient only.
 
-    magma -b D:=1326 N:=1 W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
-    magma -b D:=210 N:=13 W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
+**What the formula gives, and what is enumerated.** For a branch place of degree 2 over a
+quadratic field `F`, the character attached to `F` gives the height of `P - Pbar` exactly, so `P -
+Pbar` is a known multiple of the generator of `E(F)^-`; that multiple being an integer is also the
+test that identifies `E` inside its isogeny class, since on the other curves it is not. The
+rational part is the trivial character's component, which gives the sum of the points over a place
+of degree `e` as `e·xi_E ± b·G`, with `xi_E` the image of the Hodge class of `X_0^D(N)`, common to
+every place, and `b` a rational number. So the enumeration runs over the signs and over the
+multiple of the generator in `xi_E`, which matters only modulo 1 because translating every branch
+point by a rational point of `E` gives an isomorphic cover, and which has denominator dividing
+twice the denominators of the `b`'s. That makes the enumeration finite and complete. When every
+branch place has degree 1 there is no minus part, hence no lattice test, and the integrality of
+the rational parts takes its place.
 
-**X_0^1326(1)/{1,17,78,1326}: `y^2 = 272x^8 - 72x^6 - 55x^4 - 18x^2 + 17`** (stored reversed, as
-`17 - 18x^2 - 55x^4 - 72x^6 + 272x^8`). `E = X/<W, w_6>` is 1326b2: the Atkin–Lehner signs give the
-isogeny class 1326b, and the heights pick b2 within it (on the other three curves the predicted
-height is not the height of a lattice point). The branch points, of discriminants −24 and −408 over
-`Q(sqrt 2)`, have minus parts exactly the generator of `E(Q(sqrt 2))^-`; one configuration survives the
-exact test, with four covers over `Q` of which one is consistent with the trace formula, and it is
-hyperelliptic.
+**Quotients whose elliptic factor is an oldform.** At five of these the quaternionic form is old
+at 2, so `E` has conductor `DN/2` and the routine that reads the quotient off the Atkin–Lehner
+signs does not find it; `E` was identified from the trace formula, by matching the point counts of
+the genus-one quotient against the elliptic curves of conductor dividing `DN`. The formula then
+needs the degree of the map it is applied to. Write `p = 2`, let `f` parametrise `E` from the
+curve on which its form is new, and let `pi_1`, `pi_2` be the two degeneracy maps, `pi_2 = pi_1
+w_p`. The quotient map factors through `w_p`, so it is `g = f pi_1 + f pi_2`, of degree `2(p + 1 +
+a_p)·deg f`: each `f pi_i` has degree `(p + 1) deg f` and each cross term is `f T_p f^dual`, of
+degree `a_p deg f`. Where `p` ramifies in the field of the CM point, `w_p` acts on it as the
+Frobenius of the prime above `p`, so `pi_2(P)` is that conjugate of `pi_1(P)` and the
+`chi`-component of `g(P)` is `(1 + chi(p))` times the component of `f(pi_1 P)`. With the degree
+taken to be `deg g`, every component of the formula is therefore multiplied by
 
-**X_0^210(13)/{1,2,21,42,65,130,1365,2730}: `y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3 + 97x^2 + 20x + 4`**,
-obtained twice, through `E = X/<W, w_15>` = 2730s1 (branch points −312, −120 over `Q(sqrt 2)`) and
-through `E = X/<W, w_5>` = 2730u1 (−420, −1092 over `Q(i)`); the two curves are Q-isomorphic.
+    (1 + chi(p))^2 / (2(p + 1 + a_p)),
 
-**Checks that were predictions, not inputs.** Bad primes are exactly the primes of `DN`; the
-L-polynomial at every good prime up to 60 equals the product of those of the three elliptic
-quotients predicted by the Atkin–Lehner signs (1326b2, 1326c1, 1326d1; 2730u1, 2730s1, 210a2), which
-in genus 3 determines the zeta function; point counts agree with the trace formula at all primes
-up to 1000 (resp. 600); the automorphism group has order 8; and the fixed points of the three
-involutions lie over the fields the CM computation gives for the corresponding discriminants
-(`Q(sqrt 2)`, `Q(sqrt 17)` and the quartic field of discriminant 18496 at 1326). The numerical
-verdicts of Nelson's method on both quotients were "hyperelliptic", and its independent fit of the
-1326 model via `w_2` is Q-isomorphic to this one (`tests/HeegnerHeights.m`, `tests/ModelChecks.m`).
+which is `2/(p + 1 + a_p)` for the characters with `chi(p) = +1` and zero for the others. That is
+2 at 141a1, 357d1 and 345f1, where `a_2 = -2`, and 1 at 285a1, where `a_2 = -1`. The vanishing at
+`chi(p) = -1` is what explains the rational branch places whose nontrivial characters would
+otherwise have had nonzero components. The argument is for `p` ramified in the field of the branch
+point; the same expression is used at a place where it is not, which is not derived, so there the
+height directs the search and only the counts certify the answer. This derivation is Sachi
+Hashimoto's.
 
-**What rests on a theorem and what does not.** The formula is Theorem 1.5 of Cai–Shu–Tian with the
+**Reproducing.** `tools/heegner_model.m` takes the base, the involution, and for an oldform
+quotient the curve and the prime at which the form is old:
+
+    magma -b D:=1326 N:=1    W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
+    magma -b D:=210  N:=13   W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
+    magma -b D:=39   N:=11   W:=1,11,39,429 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=55   N:=7    W:=1,35,55,77 U:=5 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=301  W:=1,3,14,42,43,129,602,1806 U:=903 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=455  W:=1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365 U:=30 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=187  W:=1,3,11,17,33,51,187,561 U:=374 tools/heegner_model.m < /dev/null
+    magma -b D:=22   N:=51   W:=1,6,17,22,33,102,374,561 U:=187 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=247  W:=1,2,19,38,39,78,741,1482 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=253  W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=185  W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=385  W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=714  N:=5    W:=1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=15   N:=38   W:=1,2,15,19,30,38,285,570 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=141  N:=2    W:=1,3,94,282 U:=2 curve:=141a1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=21   N:=34   W:=1,3,14,17,42,51,238,714 U:=2 curve:=357d1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=57   N:=10   W:=1,5,6,19,30,95,114,570 U:=2 curve:=285a1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=15   N:=46   W:=1,5,6,23,30,115,138,690 U:=2 curve:=345f1 old:=2 tools/heegner_model.m < /dev/null
+
+**The models.** `E` is the elliptic quotient, and the branch data gives the CM discriminant of
+each branch place with the field it is defined over.
+
+* **X_0^1326(1)/{1,17,78,1326}: `y^2 = 272x^8 - 72x^6 - 55x^4 - 18x^2 + 17`** (stored reversed),
+  over 1326b2, rank 1, branched at discriminants −24 and −408 over `Q(sqrt 2)`. The isogeny class
+  1326b is given by the Atkin–Lehner signs and the heights pick b2 within it. Obtained once; the
+  surviving configuration has both sums equal to the generator.
+* **X_0^210(13)/{1,2,21,42,65,130,1365,2730}: `y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3
+  + 97x^2 + 20x + 4`**, obtained twice, over 2730s1 (branch points −312, −120 over `Q(sqrt 2)`)
+  and over 2730u1 (−420, −1092 over `Q(i)`), both of rank 1; the two curves are Q-isomorphic.
+* **X_0^39(11)/{1,11,39,429}: `y^2 = -891x^8 + 1044x^6 + 214x^4 - 124x^2 + 13`**, over 429b1 (the
+  lattice test excludes the other five curves of 429b). Branch points −132 over `Q(sqrt -11)` and
+  −52 over `Q(sqrt 13)`, with the genus characters (−11, 12) and (−4, 13).
+* **X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`**, over 385a1. Branch
+  points −1540 over `Q(sqrt -35)` and −20 over `Q(sqrt 5)`, characters (−35, 44) and (−4, 5).
+* **X_0^6(301)/{1,3,14,42,43,129,602,1806}: `y^2 = 129x^8 - 2276x^6 + 3334x^4 + 1180x^2 - 63`**,
+  over 1806l1, the only curve of its class; branch points −1204 over `Q(sqrt -7)` and −1032 over
+  `Q(sqrt 129)`, minus parts four times the generators.
+* **X_0^6(455)/W: `y^2 = -416x^8 - 515x^6 + 582x^4 - 251x^2 + 40`**, over 2730y1; branch points
+  −10920 over `Q(sqrt -26)` and −1560 over `Q(sqrt 10)`. 2730y2 is excluded by the lattice test,
+  and 2730y3, 2730y4 pass it but no configuration over them is consistent with the trace formula,
+  which is the expected behaviour: the lattice test is necessary, not sufficient.
+* **X_0^6(247)/W: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over 1482i1; the rational
+  CM points of discriminants −52 and −3 and a place of degree 2 of discriminant −456 over `Q(sqrt
+  57)`.
+* **X_0^6(253)/W: `y^2 = 9x^8 + 1388x^6 + 3526x^4 - 3060x^2 - 1863`**, over 1518p1; discriminant
+  −552 over `Q(sqrt -23)` and the rational points −88 and −1012. Here the multiple of the
+  generator in `xi_E` has denominator 3, which is why an earlier version of the search that
+  assumed it integral found nothing.
+* **X_0^6(185)/W: `y^2 = 2025x^8 + 4716x^6 - 122x^4 - 5620x^2 - 999`**, over 1110m1; the rational
+  point −555, a place of degree 2 of discriminant −4440 over `Q(sqrt -111)`, and the rational
+  point −40. The numerical fit of Nelson's method here had recognised only one of its three
+  invariants, so this is the first model of that quotient.
+* **X_0^6(385)/W: `y^2 = 9x^8 - 580x^6 - 9482x^4 + 60092x^2 + 3465`**, over 2310q1; the rational
+  points −40 and −1540 and a place of degree 2 of discriminant −9240. See the caveat below.
+* **X_0^714(5)/W: `y^2 = 9720x^8 + 2061x^6 + 598x^4 - 155x^2 + 16`**, over 3570x2; a place of
+  degree 2 of discriminant −14280 and the rational points −840 and −340. Two configurations
+  survive, with twists −43 and −2171, and they are Q-isomorphic. The search needs `Effort := 2` in
+  the Mordell–Weil computations. See the caveat below.
+* **X_0^15(38)/{1,2,15,19,30,38,285,570}: `y^2 = 81x^8 + 180x^6 + 2062x^4 - 1660x^2 + 361`**, over
+  570e4. Every branch place is rational, of discriminants −228, −12, −760 and −40, so there is no
+  lattice test; the integrality of the rational parts takes its place and excludes the other three
+  curves of 570e (on 570e1 and 570e3 the parts come out 1, 3/2, 1/2, which no common shift makes
+  integral, and on 570e2 they are not rational). The branch point of discriminant −12 belongs to
+  an order of conductor 2, which the formula as implemented does not reach, so its position was
+  searched over the integers of absolute value at most the window rather than predicted, and came
+  out at 0, that is, the point is `xi_E` up to torsion. **Uniqueness there rests on that window.**
+* **X_0^141(2)/{1,3,94,282}: `y^2 = 81x^8 + 252x^6 - 26x^4 - 260x^2 - 47`**, over 141a1, form old
+  at 2; the rational points −4 and −24 and a place of degree 2 of discriminant −564 over `Q(sqrt
+  -47)`.
+* **X_0^21(34)/{1,3,14,17,42,51,238,714}: `y^2 = 81x^8 - 612x^6 + 262x^4 + 220x^2 + 49`**, over
+  357d1, form old at 2.
+* **X_0^57(10)/{1,5,6,19,30,95,114,570}: `y^2 = 729x^8 + 500x^6 - 2x^4 + 68x^2 - 15`**, over
+  285a1, form old at 2, where the multiplier is 1 rather than 2.
+* **X_0^15(46)/{1,5,6,23,30,115,138,690}: `y^2 = 81x^8 - 900x^6 + 358x^4 + 380x^2 + 81`**, over
+  345f1, form old at 2; one of its places sits at ten times the generator, outside the search
+  window the earlier version used.
+* The remaining two are **hyperelliptic with no model `y^2 = f(x)` over Q**: their canonical image
+  is the conic ramified at 2 and at the real place, which has no rational point to project from.
+  They are stored as double covers of that conic, in the shape of the other paired entries in this
+  directory, with coordinates `s`, `z` of weight 1 and `y` of weight 2, and `x` the third
+  coordinate of the conic scaled so that the equation is integral: **X_0^6(187)/W** is `X1^2 +
+  2X2^2 + 22X3^2 = 0` with `y^2 = 4449s^4 + 84056s^3z + 411472s^2z^2 + 195328sz^3 + 797696z^4`,
+  over 1122i1 (1122i2 excluded by the lattice test), branched at −4488 and −264 over `Q(sqrt -2)`;
+  two configurations survive, with twists −14 and 721, and they give the same curve, the
+  isomorphism being exhibited rather than inferred from the counts. **X_0^22(51)/W** is `X1^2 +
+  2X2^2 + 59X3^2 = 0` with `y^2 = 9242176s^4 - 2871136s^3z + 4331508s^2z^2 + 124292sz^3 +
+  4787449z^4`, over 1122f1, branched at the same two discriminants, one surviving configuration,
+  twist −7. The 59 is an artefact of the coordinates and not bad reduction: that conic has points
+  over every `Q_p` with `p` odd.
+
+**Checks that were predictions, not inputs.** For every model: the genus is 3, as the genus
+formula says; the primes of bad reduction are exactly the primes of `DN` (for the two models over
+a conic, the primes of the discriminants of the two equations, apart from the 59 above); the point
+counts agree with the trace formula at every good prime below 200 and over `F_{p^2}` at every good
+prime below 40, which in genus 3 determines the zeta function; the quotient by the residual
+Atkin–Lehner involution is the predicted elliptic curve; the automorphism group has order 4, or 8
+at X_0^1326(1) and X_0^210(13) where `W` has index 4 in the Atkin–Lehner group; and the fields of
+definition of the fixed points are the fields of the branch places, rational exactly at the places
+of degree 1. At X_0^1326(1) the L-polynomial at every good prime below 60 equals the product of
+those of 1326b2, 1326c1 and 1326d1, and at X_0^210(13) that of 2730u1, 2730s1 and 210a2. The
+models of X_0^39(11) and X_0^55(7) are Q-isomorphic to the curves fitted numerically by the
+Nelson–Shimizu lift (campaign branch, `vvdata/weyl-campaign/nelson/hyp16/`), which shares no step
+with this construction; at X_0^6(185), where that fit could not recognise two of its invariants,
+the exact model agrees with the numerical values to twelve digits.
+
+**⚠ Two of the eighteen are candidates rather than proved.** At X_0^6(385) and X_0^714(5) the
+search over the isogeny class is incomplete: Magma does not prove the Mordell–Weil group of the
+twist on every curve of the class, even at `Effort := 2`, so a curve with isogenous Jacobian is
+not excluded, and the trace formula cannot separate those. Everything else about the two models
+checks out. The way to settle them without a new Mordell–Weil computation is to use the isogeny:
+if `phi : E -> E'` has degree `m`, the generator of the twist of `E'` is `(c/m)·phi(G)` for some
+integer `c` between 1 and `m`, so its height is `c^2/m` times the known one, and the height
+comparison on `E'` can be run over those finitely many values.
+
+**What rests on a theorem.** Theorem 1.5 of Cai–Shu–Tian in its second special case, with the
 admissibility rule for the characters at the primes dividing both the conductor and the
-discriminant. The formula gives the heights of the Heegner points `P - xi`, with `xi` the Hodge class
-of `X_0^D(N)`; the image of `xi` in `E(Q) ⊗ Q` is the one quantity it does not give. That image is the
-same for both branch points, so it enters the rational components `P_i + Pbar_i` of the two points as
-a common shift: the trivial character fixes the difference of the two components, and the common
-shift matters only modulo 2 (translating both branch points by a rational point gives an isomorphic
-cover). Here `E` has rank 0 and the rational components are torsion, so the enumeration is complete.
-Both models are therefore proved, given the trace-formula point counts.
-
-## X_0^6(247), X_0^6(253), X_0^6(185), X_0^6(385), X_0^714(5): five quotients with rational branch points (branch models-1326-210)
-
-Same construction as the section below, extended to branch places of degree 1. A rational branch
-point is a rational point of the elliptic quotient; the formula gives its height through the trivial
-character alone, which is the same quantity that gives the rational part of a place of degree 2, so
-one enumeration covers both. The sum of the points over a place of degree e is `e·xi_E ± b·G` with
-`xi_E` the image of the Hodge class, common to all the places, and `b` read off the trivial
-character's component; the multiple of the generator in `xi_E` is a rational number, and the
-enumeration over it is finite because any value making all the sums lattice points has denominator
-dividing twice the denominators of the `b`'s.
-
-    magma -b D:=6 N:=247 W:=1,2,19,38,39,78,741,1482 U:=3 tools/heegner_model.m < /dev/null
-    magma -b D:=6 N:=253 W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
-    magma -b D:=6 N:=185 W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
-    magma -b D:=6 N:=385 W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
-    magma -b D:=714 N:=5 W:=1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785 U:=2 tools/heegner_model.m < /dev/null
-
-* **X_0^6(247)/{1,2,19,38,39,78,741,1482}: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over
-  `E = X/<W, w_3>` = 1482i1, branched at the rational CM points of discriminants −52 and −3 and at a
-  place of degree 2 of discriminant −456 over `Q(sqrt 57)`.
-* **X_0^6(253)/{1,2,23,33,46,66,759,1518}: `y^2 = 9x^8 + 1388x^6 + 3526x^4 - 3060x^2 - 1863`**, over
-  1518p1, branched at discriminant −552 over `Q(sqrt -23)` and at the rational points of
-  discriminants −88 and −1012. Here the multiple of the generator in `xi_E` has denominator 3, which
-  is why an earlier version of the search that assumed it integral found nothing.
-* **X_0^6(185)/{1,2,15,30,111,185,222,370}: `y^2 = 2025x^8 + 4716x^6 - 122x^4 - 5620x^2 - 999`**, over
-  1110m1, branched at the rational point of discriminant −555, a place of degree 2 of discriminant
-  −4440 over `Q(sqrt -111)`, and the rational point of discriminant −40.
-
-* **X_0^6(385)/{1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155}:
-  `y^2 = 9x^8 - 580x^6 - 9482x^4 + 60092x^2 + 3465`**, over 2310q1, branched at the rational points of
-  discriminants −40 and −1540 and at a place of degree 2 of discriminant −9240. Two curves of the
-  isogeny class are excluded by the heights; on the remaining two, Magma does not prove the
-  Mordell–Weil group of the twist at the default effort, so uniqueness in the class rests on a
-  computation that is still to be completed, while the model itself passes every check below.
-
-* **X_0^714(5)/{1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785}:
-  `y^2 = 9720x^8 + 2061x^6 + 598x^4 - 155x^2 + 16`**, over 3570x2, branched at a place of degree 2 of
-  discriminant −14280 and the rational points of discriminants −840 and −340. Two configurations
-  survive, with twists −43 and −2171; they are Q-isomorphic. The search needs `Effort := 2` in the
-  Mordell–Weil computations, and on 3570x1 Magma does not prove the group of the twist even then, so
-  as at X_0^6(385) uniqueness within the isogeny class is not yet settled.
-
-## X_0^141(2) and X_0^21(34): quotients whose elliptic factor is an oldform (branch models-1326-210)
-
-At these two the elliptic quotient is not a newform of level `DN`, so the routine that reads the
-quotient off the Atkin-Lehner signs does not find it: the quaternionic form is old at 2 and the curve
-has conductor `DN/2`, namely 141a1 for X_0^141(2) and 357d1 for X_0^21(34). The curve was identified
-from the trace formula, by matching the point counts of the genus-one quotient against the elliptic
-curves of conductor dividing `DN`.
-
-The formula then needs one change, which was **measured, not derived**: with the degree of the map
-taken to be `2|W|` as for a newform, the predicted heights are half of what they should be, and the
-multiples come out as `2*sqrt(2)` times the generator rather than an integer. Doubling that degree
-(`DegreeFactor := 2`) makes every predicted quantity a lattice point at both bases, and the
-configurations it then allows contain exactly one that the trace formula accepts. The factor was
-found by searching the configurations directly at X_0^141(2), without using the predicted heights at
-all, and reading it off the configuration the trace formula selected; it is consistent with the form
-appearing twice in the old space at 2, but that is not a proof, and a second base agreeing is the
-only evidence that it is not an accident of the first.
-
-    magma -b D:=141 N:=2 W:=1,3,94,282 U:=2 tools/heegner_model.m < /dev/null      # with DegreeFactor := 2
-    magma -b D:=21 N:=34 W:=1,3,14,17,42,51,238,714 U:=2 tools/heegner_model.m < /dev/null
-
-* **X_0^141(2)/{1,3,94,282}: `y^2 = 81x^8 + 252x^6 - 26x^4 - 260x^2 - 47`**, over 141a1, branched at
-  the rational points of discriminants −4 and −24 and a place of degree 2 of discriminant −564 over
-  `Q(sqrt -47)`. Bad reduction exactly at 2, 3 and 47; 43 good primes below 200 and 10 squares below
-  40 agree with the trace formula; the quotient by `x -> -x` is 141a1 and the automorphism group has
-  order 4.
-* **X_0^21(34)/{1,3,14,17,42,51,238,714}: `y^2 = 81x^8 - 612x^6 + 262x^4 + 220x^2 + 49`**, over 357d1.
-  Bad reduction exactly at 2, 3, 7 and 17; 42 primes and 8 squares agree; the quotient is 357d1 and
-  the automorphism group has order 4. One of its rational branch places has a nonvanishing component
-  for a nontrivial character, which cannot happen for a point defined over Q, so the admissibility
-  rule is being used outside the case it was checked on; that place was searched rather than
-  predicted, and as at X_0^15(38) its position rests on the search window.
-
-The same treatment leaves X_0^57(10) and X_0^15(46) unresolved: the predicted quantities are lattice
-points there too, but no configuration is consistent with the trace formula, so something beyond the
-degree is different at those two.
-
-## X_0^15(38)/{1,2,15,19,30,38,285,570}: four rational branch points, one of them outside the formula (branch models-1326-210)
-
-    magma -b D:=15 N:=38 W:=1,2,15,19,30,38,285,570 U:=2 tools/heegner_model.m < /dev/null
-
-**`y^2 = 81x^8 + 180x^6 + 2062x^4 - 1660x^2 + 361`**, over `E = X/<W, w_2>` = 570e4. Every branch place
-has degree 1 here, which changes two things.
-
-First, there is no minus part at any place, so the lattice test that picks the curve inside the
-isogeny class is unavailable. Its replacement is the integrality of the rational parts: the sum of the
-points over place i is `xi_E ± b_i·G`, and the points are rational, so `b_i − b_j` must be an integer
-for some choice of signs. On 570e1 and 570e3 the `b_i` come out 1, 3/2, 1/2, which no common shift
-makes integral, and on 570e2 they are not rational at all; on 570e4 they are 2, 3, 1. That is what
-identifies the quotient, and it is a genuine test: three of the four curves are excluded by it.
-
-Second, the branch point of discriminant −12 belongs to an order of conductor 2, and the formula as
-implemented is for fundamental discriminants, so its position is not predicted. The search covers the
-integers of absolute value at most 8 for that place (`FreeWindow`), which leaves one configuration;
-its value is 0, that is, the branch point is `xi_E` up to torsion. **Uniqueness therefore rests on
-that window**, unlike the other models in these sections; the model itself passes the same checks as
-the others. The three predicted places came out at 2, 3 and 1 times the generator, with the signs the
-search selected.
-
-**Checks that were predictions.** The genus is 3; the point counts agree with the trace formula at
-the 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; the primes of bad
-reduction are exactly 2, 3, 5 and 19, the primes of `DN`; the quotient by `x -> -x` is 570e4; the
-automorphism group has order 4; and all four branch points are rational on X, as the CM computation
-says.
-
-**Checks that were predictions.** For each: the genus of the model is 3; point counts agree with the
-trace formula at the 41 or 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
-reduction is exactly at the primes of `DN`; the quotient by `x -> -x` is the predicted elliptic curve;
-the automorphism group has order 4; and the fields of definition of the fixed points are the fields of
-the branch places, in particular rational exactly at the places of degree 1.
-
-The numerical fit of Nelson's method at X_0^6(185) had not recognised two of its three invariants, so
-this is the first model of that quotient.
-
-## X_0^6(301), X_0^6(455), X_0^6(187), X_0^22(51): four more quotients from the heights of their branch points (branch models-1326-210)
-
-The same construction as the sections before and after this one, run on the open genus-3 quotients
-whose two branch places have degree 2 and whose elliptic quotient has rank at most one:
-
-    magma -b D:=6  N:=301 W:=1,3,14,42,43,129,602,1806 U:=903 tools/heegner_model.m < /dev/null
-    magma -b D:=6  N:=455 W:=1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365 U:=30 tools/heegner_model.m < /dev/null
-    magma -b D:=6  N:=187 W:=1,3,11,17,33,51,187,561 U:=374 tools/heegner_model.m < /dev/null
-    magma -b D:=22 N:=51  W:=1,6,17,22,33,102,374,561 U:=187 tools/heegner_model.m < /dev/null
-
-In all four the elliptic quotient has rank 1, so the rational component of a branch point is only
-determined up to the image of the Hodge class; the enumeration is explained at the end of this
-section. Each run leaves exactly one curve, and the other curves of the isogeny class are excluded
-because the predicted height is not the height of a lattice point.
-
-**X_0^6(301)/{1,3,14,42,43,129,602,1806}: `y^2 = 129x^8 - 2276x^6 + 3334x^4 + 1180x^2 - 63`.**
-`E = X/<W, w_903>` is 1806l1, the only curve of its isogeny class. Branch points of discriminants
-−1204 over `Q(sqrt -7)` and −1032 over `Q(sqrt 129)`, with minus parts four times the generators.
-
-**X_0^6(455)/{1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365}: `y^2 = -416x^8 - 515x^6 + 582x^4 - 251x^2 + 40`.**
-`E = X/<W, w_30>` is 2730y1; 2730y2 is excluded by the lattice test, and 2730y3, 2730y4 pass it but
-no configuration over them is consistent with the trace formula, which is the expected behaviour —
-the lattice test is a necessary condition only. Branch points −10920 over `Q(sqrt -26)` and −1560
-over `Q(sqrt 10)`.
-
-The remaining two quotients are **hyperelliptic curves with no model `y^2 = f(x)` over Q**: their
-canonical image is a conic without a rational point (in both cases the conic ramified at 2 and at the
-real place). They are stored as double covers of that conic, in coordinates `s`, `z` of weight 1 and
-`y` of weight 2, with the residual Atkin–Lehner involution acting on the third coordinate of the
-conic; `HyperellipticModelOverConic` builds that presentation and `PointCountOverConic` counts its
-points over a finite field, by summing `1 + chi(A)` over the points of the conic.
-
-**X_0^6(187)/{1,3,11,17,33,51,187,561}:** the conic `X1^2 + 2 X2^2 + 22 X3^2 = 0` with
-`y^2 = 4449 s^4 + 84056 s^3 z + 411472 s^2 z^2 + 195328 s z^3 + 797696 z^4`, where `s = X1`, `z = X2`
-and the stored `x` is `22 X3`. `E = X/<W, w_374>` is 1122i1 (1122i2 excluded by the lattice test).
-Branch points of discriminants −4488 and −264, both over `Q(sqrt -2)`. Two configurations survive the
-exact test, with twists −14 and 721; they give the same curve over Q, which was checked by exhibiting
-the isomorphism: the genus-2 quotients by the residual involution composed with the hyperelliptic one
-are isomorphic over Q, the Möbius map realising that isomorphism carries one conic to the other and
-one quartic to a square multiple of the other.
-
-**X_0^22(51)/{1,6,17,22,33,102,374,561}:** the conic `X1^2 + 2 X2^2 + 59 X3^2 = 0` with
-`y^2 = 9242176 s^4 - 2871136 s^3 z + 4331508 s^2 z^2 + 124292 s z^3 + 4787449 z^4`, stored with
-`x = 59 X3`. `E = X/<W, w_187>` is 1122f1 (1122f2 excluded by the lattice test). Branch points of
-discriminants −4488 and −264 over `Q(sqrt -2)`, one surviving configuration with twist −7. The 59 in
-the conic is an artefact of the coordinates, not bad reduction: the conic has points over every
-`Q_p` with p odd.
-
-**Checks that were predictions, not inputs.** For each of the four: the genus of the model is 3, as
-the genus formula says; point counts agree with the trace formula at every good prime below 200 and
-over `F_{p^2}` for every good prime below 40 (42, 41, 42, 41 primes and 9, 7, 8, 8 squares); the
-primes of bad reduction are exactly the primes of `DN` (for the two conic models, the primes of the
-discriminants of the two equations, apart from the 59 above); the quotient by the residual
-Atkin–Lehner involution is the predicted curve 1806l1, 2730y1, 1122i1, 1122f1; the automorphism group
-of the two models `y^2 = f(x)` has order 4, which is what the Atkin–Lehner group of order 16 modulo
-`W` requires; and the fixed points of the residual involution lie over the fields the CM computation
-gives for the two branch discriminants (`Q(sqrt -7)` and `Q(sqrt 129)`; `Q(sqrt -26)` and
-`Q(sqrt 10)`; `Q(sqrt -2)` twice; `Q(sqrt -2)` twice).
-
-**The enumeration at rank one.** The formula gives the height of `P - Pbar` exactly, and for the
-rational part it gives the height of the component of the trivial character, which is `(h/2)` times
-`P + Pbar - 2 xi_E`, with `xi_E` the image of the Hodge class of `X_0^D(N)`. So the multiple `b_i` of
-the generator of `E(Q)` in `P_i + Pbar_i` is known up to sign and up to the shift by `2 xi_E`, and
-that shift is the same for both branch points: the enumeration runs over the sign choices for the
-difference `b_2 - b_1` (it must be an integer, which is already a check) and over `b_1` modulo 2,
-translation of both branch points by a rational point of `E` giving an isomorphic cover. It is
-therefore complete, and the four models are proved, given the trace-formula point counts.
-
-## X_0^39(11)/{1,11,39,429} and X_0^55(7)/{1,35,55,77}: the two Nelson candidates, proved (branch models-1326-210)
-
-Same construction as the two quotients above, run with
-
-    magma -b D:=39 N:=11 W:=1,11,39,429 U:=3 tools/heegner_model.m < /dev/null
-    magma -b D:=55 N:=7 W:=1,35,55,77 U:=5 tools/heegner_model.m < /dev/null
-
-**X_0^39(11)/{1,11,39,429}: `y^2 = -891x^8 + 1044x^6 + 214x^4 - 124x^2 + 13`.** `E = X/<W, w_3>` is
-429b1 (the lattice test excludes the other five curves of 429b). Branch points of discriminants −132
-(class number 4) over `Q(sqrt -11)` and −52 (class number 2) over `Q(sqrt 13)`; the genus characters
-attached to those fields, (−11, 12) and (−4, 13), give minus parts exactly equal to the generators of
-`E(F)^-` (`E` has rank 1, so the trivial character is admissible as well, but its component lies in
-`E(Q)` and cancels in `P - Pbar`). One surviving configuration, hyperelliptic.
-
-**X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`.** `E = X/<W, w_5>` is 385a1
-(a2–a4 excluded). Branch points −1540 (class number 8) over `Q(sqrt -35)` and −20 (class number 2) over
-`Q(sqrt 5)`, characters (−35, 44) and (−4, 5), minus parts the generators. One survivor, hyperelliptic.
-Both have rank 1, so the rational components of the branch points are enumerated as the section above
-describes; there the two trivial-character components agree, and the difference of the two rational
-components is 0.
-
-**Both are Q-isomorphic to the models fitted numerically from Nelson's values** (campaign branch,
-`vvdata/weyl-campaign/nelson/hyp16/`): `y^2 + (x^4+x^3+x^2+x+1)y = -3x^7 - 22x^6 - 55x^5 - 69x^4 - 55x^3
-- 22x^2 - 3x` and `y^2 + (x^4+x+1)y = x^8 + 5x^7 + 13x^6 + 21x^5 + 24x^4 + 19x^3 + x^2 - 6x - 2`, whose
-invariants had been recognised at 26 digits. With this the numerical fits become proved models, given
-the trace formula and Cai–Shu–Tian's theorem. The automorphism group has order 4 (one residual
-Atkin–Lehner involution and the hyperelliptic one), as the Atkin–Lehner group of order 8 modulo `W`
-requires; the discriminants of the stored octics carry a factor 2 that the odd-characteristic form with
-an `h` term does not.
+discriminant, which is that theorem's own test-vector condition: at a ramified prime dividing the
+level the involution induced by a uniformiser of `K_v` is the Atkin–Lehner involution `w_v`, and
+the theorem asks that the form be a `chi(pi_v)`-eigenvector for it. The Manin constant of the
+optimal curve is 1 for squarefree conductor (Česnavičius, *The Manin constant in the semistable
+case*, Compositio Math. 154 (2018)), and the LMFDB records it as 1 for every curve used here. The
+oldform multiplier above is derived, except at a branch place where the prime is not ramified.
+Given those, and given the window at X_0^15(38) and the isogeny-class caveat at the two
+candidates, the models are proved.
