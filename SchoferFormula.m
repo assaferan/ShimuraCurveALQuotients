@@ -119,7 +119,7 @@ box path.  Returns true with the lambdas iff all d found.}
         end while;
     end if;
 
-    // ---- FALLBACK: maximal-order embedding + small level-N conjugation into Order ----
+    // ---- FALLBACK: embedding into the Eichler order, else maximal order + level-N conjugation ----
     // Magma's Embed(Oc, Order) THROWS ("IsRightIsomorphic: same right order") for a level-N
     // EICHLER order, so it is useless here.  But Embed(Oc, Omax) into the MAXIMAL order is
     // robust (it solves a conic).  The only obstruction to landing in the smaller Eichler
@@ -136,9 +136,30 @@ box path.  Returns true with the lambdas iff all d found.}
         if d in Keys(lambdas) then continue; end if;
         vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; maximal-embed + level-N conjugation\n", d;
         embeds := true; e2 := A!0;
+        Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
+                              else EquationOrder(NumberField(x^2+(d div 4)));
+        // Embed into the Eichler order ITSELF first. It is documented below that this throws for
+        // some orders, which is why the conjugation search exists, but when it succeeds there is
+        // nothing to conjugate; the conjugator the search would need can exceed its cap, and then
+        // the whole routine returns "does not embed" for a discriminant that does
+        // (discriminant -280 at (D, N) = (690, 7)).
+        direct := false;
         try
-            Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
-                                  else EquationOrder(NumberField(x^2+(d div 4)));
+            e1 := A ! Embed(Oc, Order);
+            lam1 := (d mod 4 eq 3) select 2*e1 - 1 else 2*e1;
+            cv1 := coordsL(lam1);
+            if &and[IsCoercible(Integers(), z) : z in Eltseq(cv1)] then
+                v1 := Vector([Integers()| z : z in Eltseq(cv1)]);
+                if (v1*QZ, v1) eq 2*d and is_optimal(v1, d) then
+                    lambdas[d] := v1; direct := true;
+                    vprintf ShimuraQuotients, 3 : "\t  Embed into the Eichler order: d = %o\n", d;
+                end if;
+            end if;
+        catch e
+            direct := false;
+        end try;
+        if direct then continue; end if;
+        try
             e2 := A ! Embed(Oc, Omax);
         catch e
             embeds := false;                                // K does not embed -> no lambda for this d
