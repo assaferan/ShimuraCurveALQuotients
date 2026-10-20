@@ -1,0 +1,3 @@
+tab32.log: g=3 q=2 enumerated 59 table 59 equal true  enum-minus-table 0 table-minus-enum 0
+tab33.log: g=3 q=3 enumerated 297 table 297 equal true  enum-minus-table 0 table-minus-enum 0
+tab42.log: g=4 q=2 enumerated 217 table 217 equal true  enum-minus-table 0 table-minus-enum 0
