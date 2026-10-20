@@ -215,6 +215,201 @@ Validation scripts and the shift sets: campaign vvdata/weyl-campaign/cusp0ladder
   `DG_FORMAT` if the construction changes.
 * Next: full rerun on lovelace. Paper section `sec:dualgraph` (unweighted statement). Paper totals
   in the later pass.
+## NEXT (agreed 2026-10-05): an EXACT m = 0 multiplier, no transcendental step
+## Handoff — 2026-10-06 — THE GENUS-0 CENSUS RECOUNTED, AND THE FIRST RUNGS OF FIVE MORE LEVELS
+
+Counting the stored models of every open branch together (main, #64, #74, #76, #78 and the
+fibre-product work) against the candidate list: of the **495 genus-0 quotient curves in scope** (259
+bases, star curves excluded) **285 have a model and 210 do not**, at 132 bases. The causes:
+* **204 quotients at 110 bases are behind the Normaliz wall** (#div(M) >= 24) -- now essentially the
+  whole gap. The unit of work is the level M, and the groups are uneven: M = 660 holds 39 quotients
+  (9 bases, 20 of them on X_0^330(1)), 780 holds 23, 924 holds 21, 1020 and 1092 hold 18 each,
+  420 holds 13 (the five DN = 210 bases and 35_3), 1140 holds 9. Those seven levels are 141 of the
+  204; the other 33 levels hold 63 between them, mostly single X_0^D(1) bases.
+* **3 are Borcherds-obstructed**: one quotient each at X_0^6(109), X_0^14(23), X_0^22(19).
+* **3 were "deferred conics" at X_0^22(13), X_0^34(5), X_0^38(7) -- and were nothing of the kind.**
+  The quotients by the order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} were ABSENT
+  from files that turned out to be early outputs (5 to 10 keys, no provenance). Rerun with the current
+  pipeline (minutes each) all three come out as P^1 with a rational point -- y^2 = (121/16) x (x - 1),
+  y^2 = (2x - 3)(2x + 1), y^2 = 5 - 8x -- with 14, 15 and 13 keys and the trace formula agreeing at
+  every curve of genus >= 1 (36/36, 45/45, 35/35). Committed to branch backlog-odd-2026-10 (#78).
+  ⚠ I had labelled them "conics without a rational point" from the census alone; the rule "a missing
+  quotient is a stale file until a rerun says otherwise" applied once more. The genus-0 gap is now
+  **207 = 204 behind the wall + 3 Borcherds-obstructed.**
+Everything else below the wall is built or running; the bases still in the lava queue have no
+genus-0 quotients and contribute covers only.
+
+**The first rung of each level, read off 30-minute probes** (lovelace `~/gymodels/composite/probesnext/`,
+one base per level, NMZ_TIMEOUT=120 VERB:=3): M = 780 -> (780, 274, 0), 924 -> (924, 325, 0),
+1020 -> (1020, 360, 0), 1092 -> (1092, 385, 0), 1140 -> (1140, 403, 0). ⚠ **Read the LOWEST rung in
+the log, not the last.** With a 2-minute Normaliz limit every rung fails silently ("no solutions"), so
+the search climbs the whole ladder -- the 6_65 probe ends at (780, 2835, 0), ten steps above its real
+first request, and quoting that number would have made the job look impossible.
+Launched (user's go, `bank_launch.sh` on both machines, 8 threads, 10-day limit, each with the cheap
+weight-0 shift set the t-shift fallback needs): **(780, 274, 0) and (924, 325, 0) on lava**
+(`~/bank780`, `~/bank924`), **(1020, 360, 0) on lovelace** (`~/bank1020`). (1092, 385, 0) and
+(1140, 403, 0) wait for (660, 231, 0) to finish on lava (20 h in). For scale: (420, 145, 0) took
+13.4 h at pole order 145, so these are longer jobs.
+
+## Handoff — 2026-10-05 (late evening) — THE m = 0 MULTIPLIER WITHOUT A TRANSCENDENTAL STEP (branch exact-m0, on composite-level)
+
+`M0MultipliersAlgebraic` (VectorValuedForm.m) computes (1/2) c_eta(0) per support class as an exact
+rational, and SchoferFormula now uses it (the Prec-80/160/240 retry is gone; M0MultipliersBySupport
+stays as the numerical cross-check). One coset representative per class g = gcd(c, M), both factors
+with the canonical lift (gamma, sqrt(c tau + d)):
+* the Weil-representation component rho*(gamma^-1) e_0 [eta] = e(1/8) c^{-3/2} |L^v/L|^{-1/2}
+  e(d Q(eta)/c) sum_{nu in L/cL} e((a Q(nu) + (eta, nu))/c) — the theta transformation formula
+  (gamma tau = a/c − 1/(c(c tau + d)), Poisson summation), the Gauss sum split over the prime powers of
+  c; NOTE d in the prefactor and a in the Gauss sum, the swap is wrong by O(1);
+* the slash constant from Apostol Thm 3.4: e(−1/8) prod_d [eps(g_d) e(b_d/(24 e_d)) e_d^{-1/2}]^{r_d}
+  with [d 0; 0 1] gamma = g_d [a_d b_d; 0 e_d], eps a 24th root of unity from a Dedekind sum; the
+  polytope monomials are holomorphic at the middle cusps, so a q-series is needed only at the cusp 0,
+  where the representative S makes its coefficients rational.
+Roots of unity are monomials of Q[x]/(x^n − 1), n = 24 M; square roots are Gauss sums; the total is
+reduced modulo the n-th cyclotomic polynomial and must be a constant. Verify (default) recomputes
+every middle class from a second coset with d ≢ ±1 (mod g) and demands exact equality.
+
+Checked (campaign vvdata/weyl-campaign/exactm0/, README there): the rho row against the Fourier
+transform to 1e-58 for c ≤ 10 including representatives with a ≠ d (rhotest.m, rhotest2.m); the
+slash constant on 140/140 (monomial, point) pairs; the multipliers equal the measured ground truth on
+all nine forms of X_0^15(2) (3 s) and the numerical routine on 21_2, 10_3, 22_3 (9/9 each); the four
+compmult5 probe monomials at X_0^6(35) give the twelve class values of compmult5.m (including the
+{5,7} class); the production forms of X_0^6(35), X_0^10(21), X_0^14(15) (17 each, the values the
+genmodels runs printed at verbosity 2) agree as multisets on all three classes. X_0^34(11)
+(|L^v/L| = 279752) takes 148 s with Verify and agrees with the numerical routine on all nine forms
+(which took 2.5 h on the same machine). tests/M0MultipliersAlgebraic.m; regressions green:
+Kappa0, M0PoleSum, M0MultiplierExact, X0_15_2, X0_21_2, X0_10_3.
+Cost: ~1100 s per composite base on lovelace with Verify (23 classes, 10 sampled cosets, degree-10080
+polynomial products), against an hour per batch before. In production (SchoferFormula calls it with
+Verify off): X_0^111(2) on lava, whose numerical run had lost all precision at M = 444 (class-constancy
+deviation 3e61 at Prec 80) and sat 13 h in the Prec-160 retry, finished in 25 min after a restart on
+this branch from its cached Borcherds forms (trace formula 36/36). The precision collapse is the
+"precision is M^2" effect; the algebraic route has no precision. Two traps while building it: a RATIO test of
+two mostly-vanishing vectors is noise (compare by difference with the lift sign fixed on a nonzero
+component), and in the CRT split of the Gauss sum only the quadratic term takes the cofactor (every
+a = 1 representative is right with the wrong split; the two-representative check caught it).
+
+## Handoff — 2026-10-05 (late) — lava backlog: two bases done, two stopped by a ROUNDOFF guard, now retrying with more precision
+
+33_2 (3 min, 15 keys) and 93_2 (46 min, 12 keys, genus up to 8) built on lava and pass the trace formula
+(50/50, 36/36) — branch backlog-odd-2026-10. 55_2 and 87_2 stopped at d = -15 in M0MultiplierExact's
+class-constancy check: "dev 2.95e-15, scale 0.0136" (55_2, M = 220) and "dev 2.2e-5, scale 0.0115"
+(87_2, M = 348). At 55_2 this is ROUNDOFF: the same forms at Prec 160 give the multipliers as small
+rationals (2, 2/3, 8, 4, 16/3, 26/3, 2/3, 10/3, 14/3; 23 min). The guards' 1e-15 floor is what the code's
+own comments say is base-dependent (33 digits at 58_5, 18 at 34_11). FIX (composite-level 9201ae0):
+SchoferFormula retries M0MultipliersBySupport at Prec 160 then 240 before erroring — more precision,
+never a looser check. 55_2 and 87_2 relaunched on lava with it (their first logs kept as *.failed.log);
+87_2's deviation is 10 orders larger, so it is the real test of whether that one is roundoff too.
+
+## Handoff — 2026-10-05 (night) — lava: the cheap backlog; lovelace: M = 660 probes; the cusp-0 fallback idea
+
+* **lava** (idle, 32 cores, 125 GB; reach it with `ssh -A lovelace 'ssh lava ...'` after ssh-add, or
+  `scp -o ProxyJump=lovelace`): fresh clone of composite-level at `~/backlog/tree` (= /scratch/home/
+  assaferan/backlog/tree), genmodels.m from campaign, NORMALIZ_BIN=/usr/bin/normaliz, BFCACHE=1.
+  Running since 2026-10-05 ~18:40: 33_2, 55_2, 87_2, 93_2 (the reachable bases WITH genus-0
+  quotients; 48 h timeouts; logs ~/backlog/logs/). Next: 95_2, 111_2, then the ten with none
+  (69_2 77_2 85_1 115_2 119_2 143_1 143_2 159_2 215_1 237_1; 143_1/145_1 run on lovelace already).
+* **lovelace**: nine 30-min probes at M = 660 (6_55 10_33 15_11 15_22 22_15 33_5 33_10 55_3 330_1,
+  NMZ_TIMEOUT=120, VERB:=3; logs ~/gymodels/composite/probes660/) to read their rungs off
+  polymake/nmzsolve.err; the (420, 42, 104) enumeration continues; 159_1 BFVERIFY still searching.
+* **lava, 2026-10-05 ~19:00**: the M = 660 probes all ask FIRST for (660, 231, 0) — one m = 0 rung for
+  nine bases (39 genus-0 quotients). Its enumeration runs on lava (~/bank660/polymake_solution_660_231_0,
+  7-day timeout) together with the weight-0 shift set for 660 (k24=0, sq_disc=1, pole <= 231:
+  ~/bank660/w0_660_231), which the t-shift fallback needs as polymake/tshift_w0_660.txt.
+* **The cusp-0 fallback, the design to test**: a rung (M, n, m) with m > 0 should be spanned by the
+  rung (M, n, 0) — which is FREE as the subset of a cached taller (M, n', 0) with pole at oo <= n —
+  shifted by weight-0 eta quotients with poles at the CUSP 0 only, and those are the Atkin-Lehner
+  images of the existing oo-pole shift set: reverse the exponent vector (r_d -> r_{M/d}). Every sum is
+  a lattice point of the target polytope (poles add; holomorphy elsewhere preserved); what has to be
+  checked is that they SPAN it, as the m = 0 shifts did (rank 108/108 at M = 308). Ground truth to
+  test against: cached pairs like (60, n, 8), (204, 20|45, 32), (372, 32|92, 60), and, at the level
+  that matters, (420, 42, 104) when its enumeration lands.
+
+## Handoff — 2026-10-05 — THREE COMPOSITE-LEVEL BASES BUILT, 660/660 AGAINST THE TRACE FORMULA (branch composite-level)
+
+X_0^6(35) (2 h 25), X_0^10(21) (3 h 50) and X_0^14(15) (3 h 54) on lovelace, default recipe, the
+banked (420, 145, 0) rung + t-shift fallback: 66, 66 and 65 cover keys (data/models/models_{6_35,
+10_21,14_15}.m; the third has genus-4 and genus-5 covers). Every stored curve of genus >= 1 has the
+Eichler-Selberg point counts over F_p and F_p^2 at p = 11, 13, 17, 19, 23, 29 (234 + 234 + 192 = 660
+of 660; campaign composite/checkcomp.m, checkcomp.log); ModelChecks 116 files, 14680 checks, 0
+failures. At X_0^10(21) the multipliers at 3 and at 7 differ (6 and -7 on one form): the per-prime
+structure of prop:composite acts in production. ⚠ X_0^15(14) and X_0^21(10) STOPPED after 2 h 30 (2026-10-05): both ask for the
+polytope (420, 42, 104) — a cusp-0 pole order of 104 that the three built bases never requested —
+which Normaliz does not finish in the 2-hour limit, and the t-shift fallback covers m = 0 rungs only;
+after the timeout the search re-requests the same polytope, so the run would loop in 2-hour timeouts
+(composite-level still has main's "no file -> no solutions" behaviour, #63 turns it into an error).
+What would unblock them: one long enumeration of (420, 42, 104) (the August (420,145,0) took 13 h),
+or extending the t-shift fallback to m > 0 rungs. X_0^35(6), probed with a 2-minute timeout: it asks for the SAME polytope
+(420, 42, 104). ⇒ All three remaining DN = 210 bases are blocked on that one enumeration; one long
+Normaliz job (the (420, 145, 0) enumeration took 13.4 wall-hours) would unblock all three, and would
+be banked like the first one. LAUNCHED 2026-10-05 ~17:30 (user's go): `nmzsolve.py 420 42 104` on lovelace,
+8 threads, 7-day timeout, output ~/gymodels/composite/bank/polymake_solution_420_42_104, log
+~/gymodels/composite/logs/nmz_420_42_104.log. When it finishes: copy the file into
+polymake/polymake_solution_420_42_104 of the composite tree (and bank it on the campaign branch like
+nmz_420_145_0.txt.gz), then rerun 15_14, 21_10, 35_6 with the default recipe.
+⚠ The multiplier computation (~73 min on the 88200-element group) still runs up to three times per
+base, once for each set of forms first met at a later CM point; computing it for ALL forms up front
+would make it once. Not done yet.
+
+## Handoff — 2026-10-04 (later) — THE m = 0 TERM AT COMPOSITE SQUAREFREE LEVEL (branch composite-level, on #66)
+
+**What changed.** The Schofer routine no longer refuses composite N. prop:composite (standalone)
+gives the restored term as a sum over the primes p of N of log p · ((1/2) c_{eta_p}(0) − pole sum),
+eta_p any nonzero isotropic coset of ORDER p (support {p}); the cosets supported at two or more
+primes carry their own constant term but kappa^-_nu(0) vanishes to second order there, so they do
+not enter. The exact multiplier is now computed by support class:
+
+    VectorValuedForm.m   M0MultipliersBySupport(fs, Ld, D, N) -> one associative array per form,
+                         indexed by the primes of N (checks: supports inside the primes of N, exactly
+                         2p-2 cosets of support {p}, constancy on every class, rational snap).
+                         M0MultiplierExact is now its prime-level wrapper (require IsPrime(N)).
+    SchoferFormula.m     eta`m0mult is that array; the Nprimes loop uses eta`m0mult[p] (also in the
+                         fibre sum at a conductor prime); require IsSquarefree(N) replaces IsPrime(N).
+    tests/M0MultiplierExact.m  also checks the array form at 15_2 (key {2}, same nine values).
+
+Regressions green: M0MultiplierExact, Kappa0, M0PoleSum, X0_15_2, X0_21_2, X0_10_3.
+
+**What is and is not checked at a composite level.** No composite-level base exists in data/ (every
+N is 1 or prime; the smallest composite candidates with a genus-0 star curve all have DN = 210,
+M = 420 = the #div(M) = 24 Normaliz wall, |L^v/L| = 88200: 6_35, 10_21, 14_15, 15_14, 21_10, 35_6).
+At all six the nonzero isotropic cosets split by support as prop:composite says (2p-2 at {p},
+(2p-2)(2q-2) at {p,q}). M0MultipliersBySupport RUNS at 6_35 (about 45 min, almost all of it the
+interpreted rho(w^-1)e_0 loops over 88200 cosets, form-independent) and the class-constancy checks
+pass -- campaign vvdata/weyl-campaign/composite/compmult*.m. RESULT (compmult5.m, four
+weight-1/2 eta quotients WITH the character of the input space -- sum r = 1, sum d r = sum (M/d) r = 0
+mod 24, prod d^r = 2·square, found as short vectors of the solution lattice; poles anywhere): constant
+on each class, rational, and DIFFERENT across classes -- form 2: {5} -23/4, {7} -39/4, {5,7} 0; form 3:
+78, 64, 0; form 4: -1/4, 9/8, 0; form 1: 1/2, 1/2, 1/4. So the prime-level single multiplier would be
+wrong at composite N. ⚠⚠ WRONG-OBJECT TRAP, cost four 45-minute runs: compmult.m--compmult4.m used eta
+quotients OUTSIDE the input space (weight 0, or weight 1/2 with the wrong character). The coset sum is
+not well defined for those, and the routine's two-point / class-constancy checks fail -- correctly --
+at the first word with a nonzero constant term (weight-0 forms with fractional cusp orders pass
+trivially with every c_eta(0) = 0; raising Prec does nothing). The error "slash constant failed its
+two-point check" means WRONG FORM before it means precision.
+⚠ Whether the VALUES are right at a composite level is untested: it needs Borcherds forms at an
+M = 420 base and then the Hauptmodul-consistency check, since no outside table has such a point.
+**The M = 420 wall is already paid for.** A Borcherds search at 6_35 asks for the polytopes
+(420, 145, 0), (420, 249, 0), (420, 353, 0), ... (probe with NMZ_TIMEOUT=120: Normaliz times out on
+the first). But (420, 145, 0) was enumerated in August for the 210_1 theta campaign -- 19864 lattice
+points, 13.4 wall-hours -- and is banked on the campaign branch as
+vvdata/weyl-campaign/nmz_420_145_0.txt.gz (Magma solution format); polymake/tshift_{core,w0}_420.txt
+are on main. Installing the rung as polymake/polymake_solution_420_145_0 serves 145 from cache and
+the t-shift fallback answers every higher m = 0 rung (run210_1.sh is the recipe). The cache key is
+(M, n, m) only, so the same rung serves all six DN = 210 bases. RUNNING on lovelace since 2026-10-04 10:55 (user's go):
+`~/gymodels/composite/tree` = clone of composite-level with the rung installed as
+`polymake/polymake_solution_420_145_0`; `genmodels.m` from campaign; NORMALIZ_BIN=/usr/bin/normaliz,
+NMZ_TIMEOUT=7200 (m > 0 rungs are not covered by the fallback and solve live), BFPROGRESS=1 BFCACHE=1,
+VERB:=2, OUTDIR ~/gymodels/composite/out, 96 h timeout; logs ~/gymodels/composite/logs/6_35.{log,err},
+solver lines in tree/polymake/nmzsolve.err ("# tshift fallback: ..." = a rung answered from the cache).
+FINISHED 2026-10-04 13:20 (2 h 25 min; the Borcherds stage was six minutes, the two
+m = 0 multiplier computations an hour each — now computed only for the forms that lack it): 66 cover
+keys written, data/models/models_6_35.m. ⇒ **FIRST OUTSIDE TEST OF prop:composite PASSED**: all 39
+stored curves of genus >= 1 have the trace formula's point counts over F_p and F_p^2 at p = 11, 13,
+17, 19 (156/156; campaign composite/check635.m). The pool was 170 eta quotients at pole order 210,
+not 20000. When it finishes: the values at the
+CM points go through the Hauptmodul-consistency check (tests/HauptmodulGroundTruth.m pattern), the first
+test of prop:composite's multipliers against numbers they did not produce; the five other DN = 210 bases
+can reuse the same tree.
 ## Handoff — 2026-10-05 — THE "LEVEL PRIME DIVIDING d_0" GAP IS NOT THERE: 104 published points agree
 
 The CMNONCOPRIME comment in SchoferFormula.m said the m > 0 local factor at p | gcd(d_0, N) had no live
