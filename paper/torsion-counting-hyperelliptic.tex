@@ -73,15 +73,27 @@ $Z(f)$ is a sum of Heegner cycles and so is Galois-stable, hence defines a class
 $\Pic^0(X)(\Q) = J(\Q)$, which is therefore killed by $n$.
 \end{proof}
 
+\begin{corollary}\label{cor:rational}
+Let $f$ have \emph{rational} principal part, with $n$ a positive integer clearing its
+denominators, and suppose the Borcherds lift of $nf$ has divisor $n Z$. Then the class of $Z$ is
+torsion in $J(\Q)$.
+\end{corollary}
+
+\begin{proof}
+$nf$ has integral principal part, so by Lemma~\ref{lem:torsion} the class of $nZ$ is torsion. A
+class whose $n$-th multiple is torsion is itself torsion, $J(\Q)$ being finitely generated.
+\end{proof}
+
 \begin{theorem}\label{thm:count}
 Let $t$ be an integer with $\#J(\Q)_{\mathrm{tors}} \le t$. Suppose $D_1, \dots, D_r$ are pairwise
 distinct effective divisors of degree two on $X$, each defined over $\Q$, such that for all $i \ne
-j$ the divisor $D_i - D_j$ is the divisor of a Borcherds form with integral principal part. If
-$r > t$, then $X$ is hyperelliptic.
+j$ some positive integer multiple of $D_i - D_j$ is the divisor of a Borcherds form with integral
+principal part. If $r > t$, then $X$ is hyperelliptic.
 \end{theorem}
 
 \begin{proof}
-By Lemma~\ref{lem:torsion} the classes $[D_i - D_1]$, for $i = 1, \dots, r$, all lie in
+By Lemma~\ref{lem:torsion} and Corollary~\ref{cor:rational} the classes $[D_i - D_1]$, for
+$i = 1, \dots, r$, all lie in
 $J(\Q)_{\mathrm{tors}}$, a set of at most $t$ elements. As $r > t$, two of them coincide: there are
 $i \ne j$ with $[D_i - D_1] = [D_j - D_1]$, hence $[D_i - D_j] = 0$ and $D_i \sim D_j$.
 
@@ -119,8 +131,10 @@ come from the trace formula, so $P_p$ and the bound are computed with no equatio
 
 \emph{The divisors.} Each $D_i - D_j$ is produced by a search for a weakly holomorphic form with
 that prescribed Heegner divisor. Two things are then to be checked, and both are checked on the
-form itself rather than on the search: that its principal part is integral, which is the hypothesis
-of Lemma~\ref{lem:torsion}; and that a form with that principal part exists at all. The second is
+form itself rather than on the search: the denominator $n$ of its principal part, after which
+Corollary~\ref{cor:rational} applies --- in practice the search returns a rational principal part,
+its integrality option making the solution integral over an echelonised basis of the pool, which is
+a weaker thing --- and that a form with that principal part exists at all. The second is
 witnessed by presenting the form as a combination of eta quotients, which is what the search
 computes and what the existence claim really rests on. The coefficients of that combination are
 rational, and in practice large --- they come out of an echelon form --- so the presentation is not
@@ -145,7 +159,8 @@ pairwise differences of
   A = P_{-3} + P_{-403}, \quad B = P_{-24} + P_{-232}, \quad C = P_{-115} + P_{-372}, \quad
   D = Z(-292),
 \]
-the last a cycle of degree two; each of the six forms has integral principal part. The trace
+the last a cycle of degree two; the six principal parts are rational with denominators $20, 20,
+10, 10, 4, 10$, so Corollary~\ref{cor:rational} applies to each. The trace
 formula gives $\#J(\mathbb{F}_p)$ equal to $86, 356, 604, 1882, 3554, 5560$ at
 $p = 3, 5, 7, 11, 13, 17$, whose greatest common divisor is $2$, so $t = 2$. Four effective
 divisors against $t = 2$ satisfies $r > t$ with room to spare, and Theorem~\ref{thm:count} gives
