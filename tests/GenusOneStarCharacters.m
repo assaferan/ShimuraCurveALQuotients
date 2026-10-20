@@ -1,22 +1,26 @@
-// The ingredients of the square-coordinate route on a genus-one star quotient, and the census of
-// the genus-one Atkin-Lehner quotients that supplies them.
+// The hypotheses of the square-coordinate route on a genus-one star quotient, and the census of
+// the genus-one Atkin-Lehner quotients that supplies its cover.
 //
 // A Borcherds form with integral principal part has a character of finite order (Borcherds, "The
 // Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97 (1999), proof of Theorem
-// 4.1), equal to the order of the class of its divisor in E(Q); so Guo-Yang's Assumption 40 is
+// 4.1, with the correction in Duke Math. J. 105 (2000), 183-184 = arXiv alg-geom/9710002v3),
+// equal to the order of the class of its divisor in E(Q); so Guo-Yang's Assumption 40 is
 // automatic when E(Q) is torsion-free, and when the torsion has exponent e the e-th power of the
 // form is a function.  ⚠ The character is one of the group uniformising the star, NOT of the
-// Atkin-Lehner group, so the quotient on which a form with nontrivial character becomes a
-// function need not be an Atkin-Lehner quotient: the census below decides nothing about
-// characters.  Its role is to say whether an Atkin-Lehner quotient of genus one is available for
-// SquareCoordinateSigns to read the fields of definition from.
+// Atkin-Lehner group, so the census below decides nothing about characters on its own.  Its role
+// is in the identification argument of GenusOneStar.m: when the torsion is Z/2 on every curve of
+// the isogeny class -- the star may be any of them -- and the star has exactly one genus-one
+// Atkin-Lehner quotient, that quotient is the cover on which a form of divisor A - P becomes a
+// function, and the signs of its square at the CM points follow.  Full rational 2-torsion breaks
+// the identification, so this checks the number of nonzero rational 2-torsion points and not only
+// the exponent.
 //
-// The genera come from the Atkin-Lehner signature (GenusShimuraCurveQuotient) and the fields of
-// definition from the quaternion order (FieldOfDefinitionOfCMPoint); no Borcherds form, Schofer
-// value or stored model is read.
+// The genera come from the Atkin-Lehner signature (GenusShimuraCurveQuotient), the fields of
+// definition from the quaternion order (FieldOfDefinitionOfCMPoint) and the torsion from the
+// Cremona database; no Borcherds form, Schofer value or stored model is read.
 
 procedure test_genus_one_star_characters()
-    printf "Genus-one stars: the census of genus-one Atkin-Lehner quotients and the square-coordinate signs...";
+    printf "Genus-one stars: the hypotheses of the square-coordinate route and its signs...";
     // one base per line: D, N, and whether a genus-one Atkin-Lehner quotient exists
     cases := [<39, 11, false>, <158, 1, false>, <38, 5, false>, <142, 1, false>,
               <14, 17, true>, <94, 3, false>];
@@ -60,6 +64,26 @@ procedure test_genus_one_star_characters()
     // the degree of the point: both degree-two cases occur
     assert #{signs[i] : i in [1..#ds] | DegreeOfFieldOfDefinitionOfCMPoint(etale[1], ds[i]) eq 2} eq 2;
 
+    // the arithmetic the identification rests on, over EVERY curve of the class (the star may be
+    // any of them): torsion Z/2 with a single nonzero rational 2-torsion point at 238a, which is
+    // what lets the Atkin-Lehner quotient be identified with the cover carrying psi; and at 429b
+    // both the exponent and the number of 2-torsion points fail, so X_0^39(11)* is out of reach
+    // of the route for two independent reasons.  Torsion-free classes need no route at all.
+    expected := [<"238a1", 2, {1}>, <"282b1", 2, {1}>, <"429b1", 4, {1, 3}>,
+                 <"142a1", 1, {0}>, <"158a1", 1, {0}>, <"190a1", 1, {0}>];
+    for e in expected do
+        lab, exp_e, exp_two := Explode(e);
+        cls := IsogenousCurves(EllipticCurve(CremonaDatabase(), lab));
+        assert LCM([Exponent(TorsionSubgroup(C)) : C in cls]) eq exp_e;
+        two := {};
+        for C in cls do
+            T := TorsionSubgroup(C);
+            Include(~two, #[Pt : Pt in T | 2*Pt eq T!0 and Pt ne T!0]);
+        end for;
+        assert two eq exp_two;
+    end for;
+    // so the route applies at 14_17 and nowhere else among the six: 282b has the right torsion but
+    // no genus-one Atkin-Lehner quotient, 429b has neither
     printf "Done!\n";
 end procedure;
 

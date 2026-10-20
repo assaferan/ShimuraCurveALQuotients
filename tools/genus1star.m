@@ -24,10 +24,10 @@
 //     order and is then trivial; it is a genuine hypothesis when E(Q) has rational torsion, and
 //     the driver says which case it is in.  With rational 2-torsion and an Atkin-Lehner quotient
 //     of genus one available, the driver can instead build each coordinate as psi^2, psi a form
-//     with divisor A - P: that divisor is not principal, so its class has order 2 (the torsion
-//     being of exponent 2) and psi^2 is a function.  The signs of psi^2 are read from the fields
-//     of definition on that quotient, which is a hypothesis about psi rather than a proof (see
-//     SquareCoordinateSigns); the bidegree-(2,2) relation and the isogeny class corroborate it.
+//     with divisor A - P: that divisor is not principal, so its class is the unique nonzero point
+//     of E(Q)[2] and psi^2 is a function.  That quotient is then provably the cover on which psi
+//     becomes a function, so the signs it supplies are forced (SquareCoordinateSigns, and the
+//     argument in the header of GenusOneStar.m); the model is unconditional in that case too.
 //   * Every CM point of fundamental discriminant and class number <= bd that is rational on the
 //     star (the pool of RationalandQuadraticCMPoints, elliptic points included) is placed on the
 //     minimal model, as a point and as an element of the Mordell-Weil group (origin: the CM point
@@ -97,23 +97,35 @@ table_ds := [d : d in support_ds | d notin excluded];
 if #excluded gt 0 then printf "left out of the value table on request: %o\n", excluded; end if;
 // the characters of the Borcherds forms (header of GenusOneStar.m): a nontrivial one needs an
 // etale double cover of the star among the index-2 quotients
-// Assumption 40 is automatic when the Jacobian has no rational torsion, and otherwise the
-// square-coordinate route removes it when the torsion has exponent 2 and an Atkin-Lehner quotient
-// of genus one is available to read the signs from
+// Assumption 40 is automatic when the Jacobian has no rational torsion.  Otherwise the square-
+// coordinate route removes it, provided the torsion is Z/2 on every curve of the isogeny class --
+// the star may be any of them -- and the star has a genus-one Atkin-Lehner quotient, which is then
+// provably the cover on which a form of divisor A - P becomes a function (header of
+// GenusOneStar.m).  Full rational 2-torsion would leave that identification open, so it is
+// excluded here rather than only its exponent.
 etale := EtaleDoubleCovers(star, curves);
-tors := [TorsionSubgroup(EllipticCurve(f)) : f in cands];
-etors := IsEmpty(tors) select 1 else LCM([Exponent(T) : T in tors]);
-printf "torsion exponent over the Jacobian candidates: %o\n", etors;
+// over every curve of every candidate isogeny class, since the star may be any of them
+cls := IsEmpty(cands) select [] else &cat[IsogenousCurves(EllipticCurve(f)) : f in cands];
+etors := IsEmpty(cls) select 1 else LCM([Exponent(TorsionSubgroup(C)) : C in cls]);
+two_torsion := [];
+for C in cls do
+    T := TorsionSubgroup(C);
+    Append(~two_torsion, #[Pt : Pt in T | 2*Pt eq T!0 and Pt ne T!0]);
+end for;
+printf "over the %o curve(s) of the candidate class(es): torsion exponent %o, nonzero rational 2-torsion points %o\n",
+       #cls, etors, two_torsion;
+single_two := not IsEmpty(two_torsion) and forall{t : t in two_torsion | t eq 1};
 if etors eq 1 then
     printf "the Jacobian is torsion-free: every Borcherds form with integral principal part is a function here, and the model does not depend on Assumption 40\n";
-elif etors eq 2 and not IsEmpty(etale) then
-    printf "rational 2-torsion, and the genus-one quotient(s) %o are available: the coordinates will be squares of degree-one forms\n",
+elif etors eq 2 and single_two and not IsEmpty(etale) then
+    printf "torsion Z/2 on every curve of the class, and the genus-one quotient(s) %o: the coordinates will be squares of forms with divisor A - P, whose signs that quotient then determines\n",
            [Sort(Setseq(c`W)) : c in etale];
     error if #etale gt 1, "several genus-one Atkin-Lehner quotients: the signs cannot be attributed to one of them";
 else
-    printf "⚠ the Jacobian has rational torsion of exponent %o and the square route is not available: the model below is CONDITIONAL on Assumption 40\n", etors;
+    printf "⚠ the square route is not available here (torsion exponent %o, nonzero rational 2-torsion points %o, genus-one quotients %o): the model below is CONDITIONAL on Assumption 40\n",
+           etors, two_torsion, #etale;
 end if;
-square_route := (etors eq 2) and not IsEmpty(etale);
+square_route := (etors eq 2) and single_two and not IsEmpty(etale);
 sq := [];
 if stage eq 0 then quit; end if;
 
@@ -162,6 +174,8 @@ if square_route then
     // x = the function with divisor 2A - 2P, normalised to 1 at a table point, its sign at the
     // other points from the fields of definition on the etale cover (one global sign is free and
     // only changes x into -x)
+    // every divisor the search is given has rational CM points as its zeros and its pole, which
+    // the identification of the cover depends on
     sq := [k : k in found | #divisors[k][1] eq 2 and divisors[k][1][1] eq divisors[k][1][2] and divisors[k][2] in table_ds];
     printf "stage 2 (squares): square-coordinates at the poles %o\n", [divisors[k][2] : k in sq];
     error if #sq lt 2, "fewer than two poles carry a square-coordinate";
@@ -221,10 +235,12 @@ for f in matches do
     if nc eq 1 then
         printf "  the class %o has one curve: isomorphic to it: %o\n", CremonaReference(EllipticCurve(f)), IsIsomorphic(E, EllipticCurve(f));
     else
-        // the coordinates are functions on the star in both routes, so the model is the star
-        // curve and not merely a curve isogenous to it
-        printf "  the class of %o has %o curves; the model picks out %o\n",
-               CremonaReference(EllipticCurve(f)), nc, CremonaReference(E);
+        // the coordinates are functions on the star when the square route was taken or the
+        // Jacobian is torsion-free, and then the model is the star curve itself; otherwise the
+        // forms may be roots of functions and the curve is picked out only under Assumption 40
+        printf "  the class of %o has %o curves; the model picks out %o%o\n",
+               CremonaReference(EllipticCurve(f)), nc, CremonaReference(E),
+               (square_route or etors eq 1) select "" else " (under Assumption 40)";
     end if;
 end for;
 
