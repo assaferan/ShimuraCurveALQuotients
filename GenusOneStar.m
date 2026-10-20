@@ -95,20 +95,24 @@ a quadratic point the value is the norm over the two conjugates.}
 end intrinsic;
 
 intrinsic CoordinateFromBorcherdsForms(vals0::List, vals1::List, ds::SeqEnum[RngIntElt],
-                                       zeros0::SeqEnum[RngIntElt], zeros1::SeqEnum[RngIntElt]) -> List, FldRatElt, FldRatElt
+                                       zeros0::SeqEnum[RngIntElt], zeros1::SeqEnum[RngIntElt]
+                                       : Value := 1) -> List, FldRatElt, FldRatElt
 {vals0, vals1 are the absolute values at the points ds (from BorcherdsFormValues) of two Borcherds
 forms psi_0, psi_1 with the same double pole, psi_0 vanishing at zeros0 and psi_1 at zeros1.
-Returns the values at ds of the function x = c_0 psi_0 with x = 0 at zeros0 and x = 1 at zeros1,
-and the constants c_0, c_1 > 0 with |x| = c_0 |psi_0| and |1 - x| = c_1 |psi_1|.  The sign of x at
-a point is the one for which |1 - x| agrees with c_1 |psi_1|; the call fails if neither or both do.}
+Returns the values at ds of the function x = c_0 psi_0 with x = 0 at zeros0 and x = Value at
+zeros1, and the constants c_0, c_1 > 0 with |x| = c_0 |psi_0| and |Value - x| = c_1 |psi_1|.  The
+sign of x at a point is the one for which |Value - x| agrees with c_1 |psi_1|; the call fails if
+neither or both do.  Value is there because the natural normalisation of a coordinate is not always
+1: Guo-Yang's Example 43 takes x = 2 on the second fibre.}
     require #vals0 eq #ds and #vals1 eq #ds : "one value per discriminant";
     idx := func<d | Index(ds, d)>;
     require forall{d : d in zeros0 cat zeros1 | idx(d) ne 0} : "every zero must be among ds";
     require forall{d : d in zeros0 | vals0[idx(d)] eq 0} : "psi_0 does not vanish at zeros0";
     require forall{d : d in zeros1 | vals1[idx(d)] eq 0} : "psi_1 does not vanish at zeros1";
-    // x = 1 at the zeros of psi_1 fixes c_0; 1 - x = 1 at the zeros of psi_0 fixes c_1
-    c0s := {1/vals0[idx(d)] : d in zeros1};
-    c1s := {1/vals1[idx(d)] : d in zeros0};
+    require Value ne 0 : "Value must be nonzero";
+    // x = Value at the zeros of psi_1 fixes c_0; Value - x = Value at the zeros of psi_0 fixes c_1
+    c0s := {AbsoluteValue(Value)/vals0[idx(d)] : d in zeros1};
+    c1s := {AbsoluteValue(Value)/vals1[idx(d)] : d in zeros0};
     require #c0s eq 1 : Sprintf("|psi_0| is not constant on the zeros of psi_1: 1/c_0 in %o", {1/c : c in c0s});
     require #c1s eq 1 : Sprintf("|psi_1| is not constant on the zeros of psi_0: 1/c_1 in %o", {1/c : c in c1s});
     c0 := Rep(c0s); c1 := Rep(c1s);
@@ -121,8 +125,8 @@ a point is the one for which |1 - x| agrees with c_1 |psi_1|; the call fails if 
             continue;
         end if;
         a := c0*vals0[j]; b := c1*vals1[j];
-        cands := {s*a : s in [1, -1] | AbsoluteValue(1 - s*a) eq b};
-        require #cands eq 1 : Sprintf("sign of x at %o undetermined: |x| = %o, |1 - x| = %o", d, a, b);
+        cands := {s*a : s in [1, -1] | AbsoluteValue(Value - s*a) eq b};
+        require #cands eq 1 : Sprintf("sign of x at %o undetermined: |x| = %o, |%o - x| = %o", d, a, Value, b);
         Append(~xs, Rep(cands));
     end for;
     return xs, c0, c1;

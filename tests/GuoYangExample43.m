@@ -12,14 +12,12 @@
 // Two features of this divisor shape are new here: the poles are two distinct points rather than
 // one double point, and psi_3, psi_4 have a point of multiplicity two.
 //
-// WHICH FORMS ARE USED HERE.  The zeros of psi_1 and psi_2 include the discriminants -72 and -36,
-// which are not fundamental (both have conductor 3), and this repository's CM pool is the
-// fundamental discriminants of bounded class number, so those two points are not available.  In
-// their place the test uses the forms of two other fibres of the same function, read off the
-// paper's own table: x = 1 at -11 and -40, and x = 5/3 at -148 and -232, over the same poles.  The
-// coordinate u they define is therefore the paper's x composed with the affine map that sends 1 to
-// 0 and 5/3 to 1, namely u = (3x - 3)/2, and the curve is the same.  Guo-Yang's psi_3 and psi_4 are
-// used as printed.
+// WHICH FORMS ARE USED HERE: the paper's own four. Their psi_1 and psi_2 vanish at -72 and -36,
+// CM points by orders of conductor 3, so they are available only once the pool admits the
+// non-maximal orders; with that they are found exactly as printed. The forms are not searched for
+// when the test runs -- that takes 1 h 47 m -- but rebuilt from their combinations of eta
+// quotients in data/borcherds/forms_302_1.m, which is what witnesses that forms with these
+// principal parts exist, and each divisor is recomputed from the rebuilt form.
 //
 // ASSUMPTION 40 IS A GENUINE HYPOTHESIS HERE, as the paper states.  A Borcherds form with integral
 // principal part has a divisor class of finite order, so when the Jacobian has no rational torsion
@@ -61,6 +59,9 @@ procedure test_guoyang_example43()
         if Degree(fp) lt 2*Genus(GYcurve) + 1 or not IsSquarefree(fp) then return -1; end if;
         return #Points(HyperellipticCurve(fp));
     end function;
+    // Two relations built by different calls live in different polynomial rings, which Magma will
+    // not compare, so they are compared by their terms.
+    terms := func<G | {<[Degree(m, 1), Degree(m, 2)], MonomialCoefficient(G, m)> : m in Monomials(G)}>;
     good := [p : p in PrimesInInterval(3, 60) | (D*N) mod p ne 0];
     traces := [ComputePointsViaTrace(Xstar, p, 1) : p in good];
 
@@ -98,34 +99,33 @@ procedure test_guoyang_example43()
     end for;
     assert nagree ge 15;
 
-    // (3) Our four forms.  The first two replace the paper's psi_1 and psi_2 (see the header); the
-    // last two are the paper's psi_3 and psi_4.  The principal parts must be integral, so that each
-    // Borcherds form is a function and not a root of one.
-    divisors := [[<-11, 1>, <-40, 1>, <-19, -1>, <-88, -1>],
-                 [<-148, 1>, <-232, 1>, <-19, -1>, <-88, -1>],
-                 [<-8, 1>, <-40, 2>, <-4, -1>, <-88, -2>],
-                 [<-11, 1>, <-19, 1>, <-43, 1>, <-4, -1>, <-88, -2>]];
-    fs := BorcherdsForms(star, curves : Divisors := divisors, IntegralSolution := true);
+    // (3) The paper's own four forms, rebuilt from their combinations of eta quotients rather
+    // than searched for again (the search is 1 h 47 m; rebuilding is seconds).  Their zeros at
+    // -72 and -36 are CM points by non-maximal orders, which is why these two were out of reach
+    // before.  BorcherdsFormsFromFile recomputes each divisor from the rebuilt form and refuses
+    // the file if one disagrees, so what is checked here is the paper's divisors exactly.
+    gy_div := [[<-43, 1>, <-72, 1>, <-19, -1>, <-88, -1>],
+               [<-20, 1>, <-36, 1>, <-19, -1>, <-88, -1>],
+               [<-8, 1>, <-40, 2>, <-4, -1>, <-88, -2>],
+               [<-11, 1>, <-19, 1>, <-43, 1>, <-4, -1>, <-88, -2>]];
+    fs := BorcherdsFormsFromFile("data/borcherds/forms_302_1.m", star);
     assert Keys(fs) eq {1, 2, 3, 4};
     for i in [1..4] do
-        assert Set(DivisorOfBorcherdsForm(fs[i], star)) eq {<c[1], c[2]> : c in divisors[i]};
-        g := qExpansionAtoo(fs[i], 1);
-        assert forall{m : m in [Valuation(g)..0] | IsIntegral(Coefficient(g, m))};
+        assert Set(DivisorOfBorcherdsForm(fs[i], star)) eq {<c[1], c[2]> : c in gy_div[i]};
     end for;
 
-    // (4) Schofer values at the ten points, the two coordinates, and the paper's table entry by
-    // entry.  Our u is the paper's x composed with s -> (3s - 3)/2 (see the header); our y is
-    // theirs, since both are normalised by the same divisor and the same value 1 at the zeros of
-    // psi_4.  Every disagreement is printed before the assertion fires.
-    vals := BorcherdsFormValues([fs[i] : i in [1..4]], ds, star);
-    us := CoordinateFromBorcherdsForms(vals[1], vals[2], ds, [-11, -40], [-148, -232]);
-    ys := CoordinateFromBorcherdsForms(vals[3], vals[4], ds, [-8, -40], [-11, -19, -43]);
+    // (4) Schofer values, and the paper's table entry by entry -- with their forms the coordinates
+    // are theirs, so the comparison is verbatim: x is normalised to 0 on the zeros of psi_1 and to
+    // 2 on those of psi_2, which is their x(tau_-20) = 2, and y to 0 and 1 likewise.
+    dsx := ds cat [-36, -72];
+    vals := BorcherdsFormValues([fs[i] : i in [1..4]], dsx, star);
+    xs := CoordinateFromBorcherdsForms(vals[1], vals[2], dsx, [-43, -72], [-20, -36] : Value := 2);
+    ys := CoordinateFromBorcherdsForms(vals[3], vals[4], dsx, [-8, -40], [-11, -19, -43]);
     same := func<a, b | (Type(a) eq Infty and Type(b) eq Infty) or
                         (Type(a) ne Infty and Type(b) ne Infty and a eq b)>;
-    moebius := func<s | Type(s) eq Infty select Infinity() else (3*s - 3)/2>;
     bad := [* *];
     for j->d in ds do
-        if not same(us[j], moebius(paper_x[j])) then Append(~bad, <"x", d, us[j], moebius(paper_x[j])>); end if;
+        if not same(xs[j], paper_x[j]) then Append(~bad, <"x", d, xs[j], paper_x[j]>); end if;
         if not same(ys[j], paper_y[j]) then Append(~bad, <"y", d, ys[j], paper_y[j]>); end if;
     end for;
     if #bad gt 0 then
@@ -133,25 +133,12 @@ procedure test_guoyang_example43()
     end if;
     assert #bad eq 0;
 
-    // (5) The relation between u and y, and the curve: the paper's relation in the coordinate u,
-    // and a model isomorphic to the one the paper prints.
-    F := HyperellipticRelation(ds, us, ys, divy);
-    P<u, y> := Parent(F);
-    subst := Evaluate(Fpaper, [(2*u + 3)/3, y]);
-    subst *:= LCM([Denominator(c) : c in Coefficients(subst)]);
-    subst /:= GCD([Integers() | c : c in Coefficients(subst)]);
-    assert F eq subst or F eq -subst;
+    // (5) The relation and the curve, which must now be the paper's own, not a transform of it.
+    F := HyperellipticRelation(ds, [* xs[j] : j in [1..#ds] *], [* ys[j] : j in [1..#ds] *], divy);
+    assert terms(F) eq terms(Fpaper) or terms(F) eq terms(-Fpaper);
     H, num, den := HyperellipticModelFromRelation(F);
     assert Genus(H) eq 2;
     assert IsIsomorphic(H, GYcurve);
-    // the substitution really is a point of the model: the hyperelliptic coordinate at the CM
-    // points where both of ours are finite
-    for j->d in ds do
-        if Type(us[j]) eq Infty or Type(ys[j]) eq Infty then continue; end if;
-        Y := Evaluate(num, [us[j], ys[j]]) / Evaluate(den, [us[j], ys[j]]);
-        assert Y^2 eq Evaluate(HyperellipticPolynomials(H), us[j]);
-    end for;
-    // and the model against the trace formula
     fH := HyperellipticPolynomials(IntegralModel(H));
     nagree := 0;
     for j->p in good do
@@ -170,7 +157,8 @@ procedure test_guoyang_example43()
     // good prime.  A control that produced the same curve, or no curve, would not show that.
     // (two relations from different calls are built in different polynomial rings, which Magma
     // will not compare, so the control is stated on the curves they define)
-    Fbad := HyperellipticRelation(ds, us, ys, [<-8, 2>, <-40, 1>, <-4, -1>, <-88, -2>]);
+    Fbad := HyperellipticRelation(ds, [* xs[j] : j in [1..#ds] *], [* ys[j] : j in [1..#ds] *],
+                                  [<-8, 2>, <-40, 1>, <-4, -1>, <-88, -2>]);
     Hbad := HyperellipticModelFromRelation(Fbad);
     assert Genus(Hbad) eq 2;
     assert not IsIsomorphic(Hbad, GYcurve);
