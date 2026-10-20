@@ -696,3 +696,19 @@ are never overwritten.  Prints one DualGraph summary line.}
     printf "DualGraph summary: tested %o, ruled %o (witness p = 2: %o; by the metric graph: %o), not applicable %o, already decided %o, genus < 3 %o\n",
         tested, ruled, ruled2, ruledm, notapp, decided, lowg;
 end intrinsic;
+
+intrinsic KodairaIndexFromDualGraph(D::RngIntElt, N::RngIntElt, W::SetEnum, p::RngIntElt : CacheDir := "") -> RngIntElt
+{For a quotient X_0^D(N)/W of genus 1 and a prime p dividing D, the index n of the Kodaira type I_n
+of its Jacobian at p: the minimal metric model of the quotient of the dual graph of the
+Cerednik-Drinfeld special fibre is a cycle whose total length is 2n (the factor 2 is the centre's,
+common to every edge length).}
+    require IsPrime(p) and D mod p eq 0: "p must be a prime dividing D";
+    require GenusShimuraCurveQuotient(D, N, {Integers() | w : w in W}) eq 1: "the quotient must have genus 1";
+    data := DualGraphData(D, N, p : CacheDir := CacheDir);
+    nv, edges, lens := DualGraphMetricQuotientFromData(data, p, {Integers() | w : w in W});
+    nv2, e2, l2 := MetricGraphModel(nv, edges, lens);
+    require nv2 eq 1 and #e2 eq 1: "the minimal metric graph of a genus-one quotient should be a single cycle";
+    total := &+l2;
+    require IsEven(total): "the cycle length should be even";
+    return total div 2;
+end intrinsic;
