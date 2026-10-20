@@ -18,7 +18,10 @@
 // whose divisor on the star is the prescribed one.
 // When the principal part of the input is INTEGRAL, that character has finite order (Borcherds,
 // "The Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97 (1999), proof of
-// Theorem 4.1); the search is run with IntegralSolution so that it is.  Then some power of the
+// Theorem 4.1, with the correction in Duke Math. J. 105 (2000), 183-184 = arXiv alg-geom/9710002v3:
+// the printed 1999 version omits the finite-order condition from the definition of a principal
+// Heegner divisor, and the correction restores it and fills the gap in the proof); the search is
+// run with IntegralSolution so that it is.  Then some power of the
 // form is a function, so the prescribed divisor, which is rational, has a class of finite order
 // in E(Q); and the order of the character is exactly the order of that class, since psi^n is a
 // function precisely when n times the divisor is principal.

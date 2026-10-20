@@ -21,13 +21,16 @@
 // checked against the paper, only printed and required to be powers of 2 like the paper's.
 //
 // Guo-Yang's Assumption 40 (the Borcherds forms have trivial character, so are functions on the
-// star) is not needed here.  The character of a form with INTEGRAL principal part has finite
+// star) is not needed here.  The character of a form whose principal part is INTEGRAL has finite
 // order (Borcherds, "The Gross-Kohnen-Zagier theorem in higher dimensions", Duke Math. J. 97
-// (1999), proof of Theorem 4.1), so a power of each form is a function and the class of its
-// divisor has finite order in E(Q); 142a1 has trivial torsion (checked in part 5), so each
-// divisor is principal and the character is trivial.  Integrality of the four principal parts is
-// checked in part 2, which is what lets the theorem be applied.  The search itself does not check
-// the character; see the header of GenusOneStar.m.
+// (1999), proof of Theorem 4.1, with the correction in Duke Math. J. 105 (2000), 183-184 =
+// arXiv alg-geom/9710002v3, which restores the finite-order condition that the printed version
+// omits from the definition of a principal Heegner divisor and fills the gap in the proof), so a
+// power of each form is a function and the class of its divisor has finite order in E(Q).  142a1
+// has trivial torsion (checked in part 5), so each class is trivial, each divisor is principal and
+// each character is trivial.  Integrality of the four principal parts is checked in part 2, which
+// is what lets the theorem be applied.  The search itself does not check the character; see the
+// header of GenusOneStar.m.
 
 procedure test_guoyang_example42()
     printf "Guo-Yang Example 42: X_0^142(1)* (genus one) from Borcherds forms of degree two...";
