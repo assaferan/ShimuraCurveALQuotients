@@ -842,7 +842,7 @@ odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouc
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
 
-## Eighteen quotients from the heights of their branch points (branch models-1326-210)
+## Nineteen quotients from the heights of their branch points (branch models-1326-210)
 
 Every quotient in this section has genus 3 and lies behind the divisor wall of the Borcherds
 search, so none of the recipes above reaches it. Each has an elliptic Atkin–Lehner quotient `E =
@@ -911,6 +911,7 @@ quotient the curve and the prime at which the form is old:
     magma -b D:=21   N:=34   W:=1,3,14,17,42,51,238,714 U:=2 curve:=357d1 old:=2 tools/heegner_model.m < /dev/null
     magma -b D:=57   N:=10   W:=1,5,6,19,30,95,114,570 U:=2 curve:=285a1 old:=2 tools/heegner_model.m < /dev/null
     magma -b D:=15   N:=46   W:=1,5,6,23,30,115,138,690 U:=2 curve:=345f1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=690  N:=7    W:=1,6,10,14,15,21,23,35,138,210,230,322,345,483,805,4830 U:=2 tools/heegner_model.m < /dev/null
 
 **The models.** `E` is the elliptic quotient, and the branch data gives the CM discriminant of
 each branch place with the field it is defined over.
@@ -969,6 +970,11 @@ each branch place with the field it is defined over.
 * **X_0^15(46)/{1,5,6,23,30,115,138,690}: `y^2 = 81x^8 - 900x^6 + 358x^4 + 380x^2 + 81`**, over
   345f1, form old at 2; one of its places sits at ten times the generator, outside the search
   window the earlier version used.
+* **X_0^690(7)/W: `y^2 = 9x^8 - 130x^6 - 767x^4 - 520x^2 + 144`**, over 4830bj1, branched at four
+  rational points, of discriminants −3, −280, −420 and −115. This base was out of reach until the
+  search for an optimal embedding of a CM order was corrected: it reported that the order of
+  discriminant −280 does not embed in the Eichler order of level 7 in `B_690`, although it does, so
+  no branch data could be computed at all.
 * The remaining two are **hyperelliptic with no model `y^2 = f(x)` over Q**: their canonical image
   is the conic ramified at 2 and at the real place, which has no rational point to project from.
   They are stored as double covers of that conic, in the shape of the other paired entries in this
