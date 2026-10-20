@@ -33,6 +33,7 @@
 #   UpdateCurves1                          [sequential]
 #   FilterBySpecialFiber                   [PARALLEL]  (special fiber mod p, [FH] Section 5; D=1,6,10,22;
 #                                                       cheapest filter, run first to prune the rest)
+#   FilterByComponentInvolution            [PARALLEL]  (criterion H at odd p || N, p !| D; genera only)
 #   FilterByALFixedPointsOnQuotient        [PARALLEL]
 #   UpdateCurves2                          [sequential]
 #   Genus3CoversGenus2                     [sequential]
@@ -179,6 +180,7 @@ run_seq "UpdateCurves1"       "${D}/curves_after_UpdateByGenus.dat"             
 # to the fixed-point provers; correctness is order-independent (filters only add determinations
 # and skip already-determined curves).
 run_par "FilterBySpecialFiber"
+run_par "FilterByComponentInvolution"
 run_par "FilterByALFixedPointsOnQuotient"
 run_seq "UpdateCurves2"       "${D}/curves_after_FilterByALFixedPointsOnQuotient.dat" \
                                                                                    "${D}/curves_after_UpdateCurves2.dat"

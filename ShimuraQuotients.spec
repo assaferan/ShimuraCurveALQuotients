@@ -1,6 +1,7 @@
 {
 BorcherdsForms.m
 GenusOneStar.m
+HyperellipticStar.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
 WeilRepresentation.m
@@ -32,4 +33,5 @@ TwistedFilters.m
 special_fiber_modular.m
 special_fiber_cm.m
 DualGraph.m
+ComponentInvolution.m
 }

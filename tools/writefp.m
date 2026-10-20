@@ -15,7 +15,9 @@
 //
 // ⚠ The factors are taken from the committed file by key; a file that mixes equations from runs
 // with different Hauptmodul normalisations (the rebase stage can leave one so) gives a compositum
-// of the right genus and the wrong curve, which only the trace-formula check rejects.
+// of the right genus and the wrong curve.  A set with two factors that the triple check of
+// FibreProductCovers.m proves to be in different coordinates is refused outright; where the check
+// cannot decide, only the trace formula rejects such a set.
 // ⚠ At level N > 1 the committed double covers depend on the m = 0 term of Schofer's formula
 // (PR #66, a proposed proof), so these entries are checked by point counts, not proved.
 AttachSpec("ShimuraQuotients.spec");
@@ -24,7 +26,7 @@ SetColumns(0);
 P<x> := PolynomialRing(Rationals());
 curves := eval Read("data/curves_after_UpdateCurves8.dat");
 OUT := OUTDIR;
-has := AssociativeArray(); ent := AssociativeArray();
+has := AssociativeArray(); ent := AssociativeArray(); trip := AssociativeArray();
 files := Split(Pipe("ls data/models/models_*.m", ""), "\n");
 for f in files do
     if #f eq 0 then continue; end if;
@@ -41,6 +43,14 @@ for f in files do
         end if;
     end for;
     has[<D,N>] := <s, anyk>;
+    // the triple check of FibreProductCovers.m, over every double cover this file stores
+    full := {Integers()| d : d in Divisors(D*N) | GCD(d, (D*N) div d) eq 1};
+    covers := AssociativeArray();
+    for W in s do
+        if #W * 2 eq #full then covers[W] := ent[<D,N,W>]; end if;
+    end for;
+    fl, cl := AtkinLehnerTripleCheck(covers, D, N);
+    trip[<D,N>] := <fl, cl>;
 end for;
 written := AssociativeArray();
 nbuilt := 0; nrej := 0;
@@ -66,6 +76,12 @@ for X in curves do
     fs := [ent[<X`D, X`N, U>] : U in gens];
     if IsDegenerateFactorSet(fs) then
         Append(~reasons, "degenerate factor set"); continue;
+    end if;
+    bad, tri := DefinitelyDisagreeingFactors(gens, trip[key][1], trip[key][2]);
+    if bad then
+        Append(~reasons, Sprintf("two factors are in different coordinates (the triple %o fails)",
+            [Sort(SetToSequence(U)) : U in [tri[1], tri[2], tri[3]]]));
+        continue;
     end if;
     K := FibreProductFunctionField(fs);
     if Genus(K) ne X`g then
@@ -97,12 +113,15 @@ for X in curves do
     end while;
     if not agree then continue; end if;
     if checked lt 3 then Append(~reasons, Sprintf("only %o good primes among the first 60", checked)); continue; end if;
+    chosen := gens;                    // the loop variable is not visible after the loop
     found := true; break;
     end for;
     if not found then
         printf "REJECT %o_%o W=%o: %o\n", X`D, X`N, Sort(SetToSequence(X`W)), reasons;
         nrej +:= 1; continue;
     end if;
+    printf "BUILT %o_%o W=%o: triple check %o\n", X`D, X`N, Sort(SetToSequence(X`W)),
+        TripleCheckVerdict(chosen, trip[key][1], trip[key][2]);
     C, eqns := FibreProductCurve(fs);
     Wseq := Sort(SetToSequence(X`W));
     line := Sprintf("models[[Integers()|%o]] := [* <%o, \"CRV\", [ Strings() | %o ]> *];",
@@ -111,7 +130,7 @@ for X in curves do
     fn := Sprintf("%o/models_%o_%o.append", OUT, X`D, X`N);
     if not IsDefined(written, key) then
         written[key] := 0;
-        Write(fn, Sprintf("// Built 2026-10-03 as fibre products over the star line of committed double covers\n// (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2}.\n// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.") : Overwrite := true);
+        Write(fn, Sprintf("// Fibre-product entries (FibreProductCovers.m): built over the star line from the double covers of this file\n// by tools/writefp.m, with the coordinate check of the three covers above each pair of factors; each checked\n// against the trace formula at up to three primes, F_p and F_{p^2}.\n// Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.") : Overwrite := true);
     end if;
     Write(fn, line);
     written[key] +:= 1; nbuilt +:= 1;

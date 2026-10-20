@@ -186,7 +186,16 @@ procedure write_polymake_scriptfile(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     return;
 end procedure;
 
-function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false)
+// A cached solution file whose first line is a comment holds a spanning set the solver script
+// derived from a lower rung and the level's shift set, not the lattice points of the polytope.
+function solution_is_derived(M, n, m)
+    fn := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
+    if not FileExists(fn) then return false; end if;
+    return Substring(Read(fn), 1, 2) eq "//";
+end function;
+
+// Enumerate: bypass the script's shifted spanning sets and enumerate the polytope with Normaliz.
+function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq_disc := false, cuspidal := false, Enumerate := false)
     vprintf ShimuraQuotients, 3 : "\n\t\tMaking polymake file for (%o, %o, %o)...", M, n, m;
     // ⚠⚠ THE CACHE KEY IS ONLY (M, n, m) -- IT OMITS k, sq_disc AND cuspidal, AND ALL THREE CHANGE
     // THE ANSWER. Measured 2026-09-10 at (M,n,m) = (8,1,0), varying only the omitted parameters:
@@ -234,7 +243,7 @@ function get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n, m : k := 1/2, sq
     solname := Sprintf("polymake/polymake_solution_%o_%o_%o", M, n, m);
     nmz := GetEnv("NMZSOLVE");
     if nmz eq "" then nmz := "nmzsolve.py"; end if;
-    cmd := Sprintf("python3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", nmz,
+    cmd := Sprintf("%opython3 %o %o %o %o %o %o %o %o 2>>polymake/nmzsolve.err", Enumerate select "NMZ_NO_SHIFT=1 " else "", nmz,
                    M, n, m, solname, Integers()!(24*k), sq_disc select 1 else 0, cuspidal select 1 else 0);
     rc := System(cmd) div 256;    // System returns the wait status; the exit code is its high byte
     if rc ne 0 then
@@ -490,6 +499,7 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
     // produced ~10^7 junk files before being caught).  Fail fast and informatively instead of looping
     // forever.  (The proper fix -- why rk < dim persists for these bases -- is separate.)
     BORCHERDS_N_CAP := 10000;
+    enumerate := false;
     vprintf ShimuraQuotients, 2: "\n\tComputing generators for the ring of %o-weakly holomorphic modular forms of level %o...", pole_string, M;
     while (rk lt dim) or (not gap_condition) do
         error if n gt BORCHERDS_N_CAP,
@@ -498,7 +508,8 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
 
         vprintf ShimuraQuotients, 3: "\n\t\tprec = %o, n = %o, k = %o, rk = %o, dim = %o...", Prec, n, k, rk, dim;
         
-        rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0);
+        rs := get_integer_prog_solutions(M, lhs, rhs, n_eq, n_ds, n + (Zero select 0 else k), Zero select k else 0 : Enumerate := enumerate);
+        enumerate := false;
         
         eta_quotients := [EtaQuotient(R,r) : r in rs];
         t_eta_quotient := EtaQuotient(R,t[1..n_ds]);
@@ -567,6 +578,13 @@ intrinsic WeaklyHolomorphicBasis(D::RngIntElt,N::RngIntElt : Prec := 100, Zero :
         if (rk lt dim) then
             if (dim gt Prec) then
                 Prec := dim;
+            elif solution_is_derived(M, n + (Zero select 0 else k), Zero select k else 0) then
+                // the shifted spanning set of this rung falls short of the rank the ring needs:
+                // discard it and enumerate the rung before climbing
+                vprintf ShimuraQuotients, 2: "\n\t\tthe derived set for (%o, %o, %o) has rank %o < %o; enumerating the rung...",
+                    M, n + (Zero select 0 else k), Zero select k else 0, rk, dim;
+                _ := System(Sprintf("rm -f polymake/polymake_solution_%o_%o_%o", M, n + (Zero select 0 else k), Zero select k else 0));
+                enumerate := true;
             else
                 Prec +:= k;
                 // update n
@@ -1077,12 +1095,18 @@ If DeficitScreen is set, NO forms are computed: the search reports the obstructi
 Ncols(mat) - Rank(coeffs_trunc) over a sweep of (m, pole order) and returns an empty array. This is
 the odd-D-capable form of vvdata/weyl-campaign/deficit.m -- see the block below for why the script
 alone cannot do odd D.
-If Divisors is non-empty, no hauptmodul and no cover is sought: each entry <zeros, pole> asks for one form
-with divisor sum_(d in zeros) Z(d) - deg * Z(pole), where Z(d) is the CM cycle of discriminant d on Xstar
-(a point of degree 1 or 2; a zero listed twice counts twice), the pole is a rational CM point and deg is the total degree of the zeros.
-The forms come back keyed 1..#Divisors in the order given. This is the shape Guo-Yang use when the star
-curve has genus one (Compositio 153, Example 42: four forms of degree 2), where no divisor of degree 1
-is principal and the hauptmodul search cannot succeed. PoleOrders lists the pole orders at oo to try
+If Divisors is non-empty, no hauptmodul and no cover is sought: each entry asks for one form with a
+prescribed divisor, supported on the CM cycles Z(d) of Xstar (each of degree 1 or 2). An entry may be
+given in either of two shapes:
+  <zeros, pole>        the divisor sum_(d in zeros) Z(d) - deg * Z(pole), with pole a rational CM
+                       point, deg the total degree of the zeros and a zero listed twice counting twice;
+  [<d, a_d>, ...]      the divisor sum_d a_d Z(d), with arbitrary integer coefficients, which must have
+                       degree zero: sum_d a_d deg Z(d) = 0.
+The second shape is needed as soon as the divisor has more than one pole, or a pole of multiplicity
+less than the degree. The forms come back keyed 1..#Divisors in the order given. These are the shapes
+Guo-Yang use when the star curve has positive genus and the hauptmodul search cannot succeed: four
+forms of degree 2 with a double pole at genus one (Compositio 153, Example 42), and at genus two four
+forms of degree 2 and 3 whose poles are two distinct points (Example 43). PoleOrders lists the pole orders at oo to try
 beyond the hauptmodul search's window n_oo + k - 1 (default: six further powers of t); on odd D, ExtraRungs
 adds values of m to the cusp-0 ladder, which otherwise stops at the deepest point of the class-number-2 pool
 (a coefficient at m feeds every discriminant m r^2, so separating P_d from P_(4d) needs the rung m = d);
@@ -1091,6 +1115,10 @@ with AllowMissing the divisors that admit no form are reported and the others re
 On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
 that no divisor uses; the pool of a rung grows with that pole order.}
     prescribed := not IsEmpty(Divisors);
+    // Keyed by the same keys as rams, and set only for the entries given as a general divisor,
+    // whose coefficients are not determined by the points alone.  It is read on both paths below,
+    // so it exists on both.
+    dcoeffs := AssociativeArray();
     if prescribed then
         // filled from the CM pool once it is known
         rams := AssociativeArray();
@@ -1203,6 +1231,28 @@ that no divisor uses; the pool of a rung grows with that pole order.}
         for q in Keys(ells) do for d in Keys(ells[q]) do ell_lut[d] := q; end for; end for;
         used := {};
         for key->dv in Divisors do
+            if Type(dv) eq SeqEnum then
+                // sum_d a_d Z(d) with the coefficients given: the shape needed as soon as there is
+                // more than one pole, or a pole of multiplicity below the degree of the zeros
+                ram := []; cfs := [];
+                for c in dv do
+                    require exists(pt){p : p in pool | p[1] eq c[1]} :
+                        Sprintf("BorcherdsForms: %o is not a CM point of degree <= 2 on Xstar (pool %o)", c[1], [p[1] : p in pool]);
+                    require c[1] notin [r[1] : r in ram] :
+                        Sprintf("BorcherdsForms: discriminant %o appears twice in the divisor %o", c[1], dv);
+                    if IsDefined(ell_lut, c[1]) then pt := <c[1], ell_lut[c[1]], pt[3]>; end if;
+                    Append(~ram, pt); Append(~cfs, c[2]);
+                end for;
+                deg := &+[cfs[j] * ram[j][3] : j in [1..#ram]];
+                require deg eq 0 :
+                    Sprintf("BorcherdsForms: the divisor %o has degree %o, so it is not the divisor of a function", dv, deg);
+                require exists{c : c in cfs | c gt 0} and exists{c : c in cfs | c lt 0} :
+                    Sprintf("BorcherdsForms: the divisor %o has no zero or no pole", dv);
+                rams[key] := ram;
+                dcoeffs[key] := cfs;
+                used join:= {c[1] : c in dv};
+                continue;
+            end if;
             zeros, pole := Explode(dv);
             require exists(pole_pt){p : p in pool | p[1] eq pole and p[3] eq 1} :
                 Sprintf("BorcherdsForms: pole %o is not a rational CM point of Xstar (pool %o)", pole, [p[1] : p in pool | p[3] eq 1]);
@@ -1470,18 +1520,25 @@ that no divisor uses; the pool of a rung grows with that pole order.}
                     // a prescribed divisor keeps the form of the first rung that gave one
                     if prescribed and IsDefined(etas, i) then continue; end if;
                     ram := rams[i];
-                    infty_i := prescribed select poles[i] else infty;
-                    // adding the part at infinity
-                    if exists(j){j : j->pt in ram | pt[1] eq infty_i[1]} then
-                        assert ram[j] eq infty_i;
-                        Remove(~ram, j);
+                    if IsDefined(dcoeffs, i) then
+                        // the coefficients came with the divisor, so there is no part at infinity
+                        // to reconstruct; the deepest pole stands for it in the progress line
+                        div_coeffs := dcoeffs[i];
+                        infty_i := ram[Index(div_coeffs, Minimum(div_coeffs))];
+                    else
+                        infty_i := prescribed select poles[i] else infty;
+                        // adding the part at infinity
+                        if exists(j){j : j->pt in ram | pt[1] eq infty_i[1]} then
+                            assert ram[j] eq infty_i;
+                            Remove(~ram, j);
+                        end if;
+                        // A cover ramified only at the point taken as infinity leaves no divisor
+                        // to build; this choice of infinity fails and the next one is tried.
+                        if IsEmpty(ram) then found_all := false; break; end if;
+                        deg := &+[pt[3] : pt in ram];
+                        div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
+                        Append(~ram, infty_i);
                     end if;
-                    // A cover ramified only at the point taken as infinity leaves no divisor
-                    // to build; this choice of infinity fails and the next one is tried.
-                    if IsEmpty(ram) then found_all := false; break; end if;
-                    deg := &+[pt[3] : pt in ram];
-                    div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
-                    Append(~ram, infty_i);
 
                     vprintf ShimuraQuotients, 4 : "\n\t\t\tWorking on ramification divisor %o...", [<pt[1], div_coeffs[j]> : j->pt in ram];
 
