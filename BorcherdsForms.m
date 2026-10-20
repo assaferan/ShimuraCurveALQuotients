@@ -1085,7 +1085,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -1094,11 +1094,29 @@ the targets we actually need are determined as long as THEIR forms exist. Empty 
 If DeficitScreen is set, NO forms are computed: the search reports the obstruction deficit
 Ncols(mat) - Rank(coeffs_trunc) over a sweep of (m, pole order) and returns an empty array. This is
 the odd-D-capable form of vvdata/weyl-campaign/deficit.m -- see the block below for why the script
-alone cannot do odd D.}
-    rams := RamficationPointsOfCovers(Xstar, curves);
+alone cannot do odd D.
+If Divisors is non-empty, no hauptmodul and no cover is sought: each entry <zeros, pole> asks for one form
+with divisor sum_(d in zeros) Z(d) - deg * Z(pole), where Z(d) is the CM cycle of discriminant d on Xstar
+(a point of degree 1 or 2), the pole is a rational CM point and deg is the total degree of the zeros.
+The forms come back keyed 1..#Divisors in the order given. This is the shape Guo-Yang use when the star
+curve has genus one (Compositio 153, Example 42: four forms of degree 2), where no divisor of degree 1
+is principal and the hauptmodul search cannot succeed. PoleOrders lists the pole orders at oo to try
+beyond the hauptmodul search's window n_oo + k - 1 (default: six further powers of t); on odd D, ExtraRungs
+adds values of m to the cusp-0 ladder, which otherwise stops at the deepest point of the class-number-2 pool
+(a coefficient at m feeds every discriminant m r^2, so separating P_d from P_(4d) needs the rung m = d);
+PoolClassNumber is the class-number bound of the CM points the divisors may use (default 2, as in the hauptmodul search);
+with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.}
+    prescribed := not IsEmpty(Divisors);
+    if prescribed then
+        // filled from the CM pool once it is known
+        rams := AssociativeArray();
+        poles := AssociativeArray();
+    else
+        rams := RamficationPointsOfCovers(Xstar, curves);
+    end if;
     // Restrict to the target covers (the two hauptmoduls, keys -1/-2, are added below and always kept). rams is
     // keyed by CurveID and curves is indexed by CurveID, so curves[k]`W is the cover's AL group.
-    if not IsEmpty(Targets) then
+    if not IsEmpty(Targets) and not prescribed then
         for k in [j : j in Keys(rams) | curves[j]`W notin Targets] do
             Remove(~rams, k);
         end for;
@@ -1136,15 +1154,15 @@ alone cannot do odd D.}
     // alone is known to break 14_3 / 39_2 (the bases the 2026-09-07 flip recovered).  PTSCOPRIME=1
     // restores the old behaviour of THIS line only, so the control isolates this change.
     pts_coprime := GetEnv("PTSCOPRIME") ne "";
-    pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2,
-                                           coprime_to_level := pts_coprime); // pts <-> infty, 0, rational
+    pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2,
+                                                  coprime_to_level := pts_coprime); // pts <-> infty, 0, rational
     if #pts lt 3 then
         // CM-starved bases (e.g. the even-level X0^15(2), which has only 2 coprime-to-N rational CM
         // points) do not have enough coprime points to pin the infty/0/rational divisor structure.
         // Fall back to admitting NON-coprime rational CM points here: these are used ONLY as divisor
         // support (zeros/poles of the Borcherds form), never Schofer-evaluated, so coprimality to N is
         // irrelevant for them. Bases that already have >= 3 coprime points are untouched by this.
-        pts, _ := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2, coprime_to_level := false);
+        pts, quad_pts := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := 2, coprime_to_level := false);
     end if;
     // ⚠⚠ ORDER IS LOAD-BEARING: it chooses the HAUPTMODUL'S NORMALISATION DIVISOR.
     // The (infty, P, Q) sweep below takes the FIRST triple that yields every form it needs, and it
@@ -1177,8 +1195,48 @@ alone cannot do odd D.}
     // -- just after the coprime ones have been tried.
     pts := [p : p in pts | GCD(p[1], Xstar`N) eq 1]
            cat [p : p in pts | GCD(p[1], Xstar`N) ne 1];
-    require #pts ge 3 : "Could not find enough rational CM points!";
+    require prescribed or #pts ge 3 : "Could not find enough rational CM points!";
 
+    if prescribed then
+        // the forms found so far, kept across the rungs of the two ladders
+        etas := AssociativeArray();
+        targets := AssociativeArray();
+        // The zeros may be quadratic points (the divisor then contains the whole degree-2 cycle);
+        // the pole must be rational, so that -deg * Z(pole) has the degree of the zeros.
+        pool := pts cat quad_pts;
+        if PoolClassNumber gt 2 then
+            // Only for looking the prescribed points up: the 0-side ladder below stays on the
+            // class-number-2 pool, since a rung at a large discriminant is unaffordable.
+            more_rat, more_quad := RationalandQuadraticCMPoints(Xstar : Exclude := Exclude, bd := PoolClassNumber,
+                                                                        coprime_to_level := false);
+            pool cat:= [p : p in more_rat cat more_quad | p[1] notin {x[1] : x in pool}];
+        end if;
+        // The search weights a point by its stabiliser order (DivisorOfBorcherdsForm divides the
+        // coefficient by it).  Rational points carry that order in their second entry; a quadratic
+        // point enters the pool as <d, 1, 2> whatever its stabiliser, so it is restored here.
+        ells := NumberOfEllipticPointsByCMOrder(Xstar);
+        ell_lut := AssociativeArray();
+        for q in Keys(ells) do for d in Keys(ells[q]) do ell_lut[d] := q; end for; end for;
+        used := {};
+        for key->dv in Divisors do
+            zeros, pole := Explode(dv);
+            require exists(pole_pt){p : p in pool | p[1] eq pole and p[3] eq 1} :
+                Sprintf("BorcherdsForms: pole %o is not a rational CM point of Xstar (pool %o)", pole, [p[1] : p in pool | p[3] eq 1]);
+            require pole notin zeros : Sprintf("BorcherdsForms: pole %o also listed among the zeros", pole);
+            ram := [];
+            for d in zeros do
+                require exists(zero_pt){p : p in pool | p[1] eq d} :
+                    Sprintf("BorcherdsForms: zero %o is not a CM point of degree <= 2 on Xstar (pool %o)", d, [p[1] : p in pool]);
+                if IsDefined(ell_lut, d) then zero_pt := <d, ell_lut[d], zero_pt[3]>; end if;
+                Append(~ram, zero_pt);
+            end for;
+            rams[key] := ram;
+            poles[key] := pole_pt;
+            used join:= Set(zeros) join {pole};
+        end for;
+        ladder_pts := [p : p in pts cat quad_pts | ClassNumber(p[1]) le 2 or p[1] in used]
+                      cat [p : p in pool | p[1] in used and p[1] notin {x[1] : x in pts cat quad_pts}];
+    end if;
 
     max_pole_order_oo := 0;
     ech_basis_all_oo :=  MatrixAlgebra(Rationals(),0)!0; // zero matrix
@@ -1187,7 +1245,10 @@ alone cannot do odd D.}
 
     all_ms := [];
     m_idx := 1;
-    all_ms := &cat[[(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in pts] : pt in pts];
+    // The 0-side rungs come from the discriminants in the pool; a prescribed divisor may use a
+    // quadratic zero, whose rung must then be reachable too.
+    all_ms := &cat[[(d[1] mod 4 eq 0) select d[1] div 4 else d[1] : d in (prescribed select ladder_pts else pts)] : pt in pts];
+    if prescribed then all_ms cat:= ExtraRungs; end if;
     all_ms := Reverse(Sort([m : m in Set(all_ms)]));
 
     found_all := false;
@@ -1388,24 +1449,41 @@ alone cannot do odd D.}
             end if;
             continue;
         end if;
-        for infty in pts do
+        // A form with a prescribed CM divisor may need coefficients at exponents that meet no CM
+        // point, so the pole order at oo is swept beyond the window n_oo + k - 1 that suffices
+        // for a hauptmodul; each rung widens it by one power of t.
+        pole_ladder := prescribed select ([0] cat (IsEmpty(PoleOrders) select [n_oo + k - 1 + j*k : j in [1..6]] else PoleOrders))
+                                  else [0];
+        // before the ladder too, so a pool too small to enter the sweep below still reports every
+        // divisor as not found rather than leaving this unset
+        missing := [i : i in Keys(rams)];
+        for P_rung in pole_ladder do
+        for infty in (prescribed select pts[1..1] else pts) do
             vprintf ShimuraQuotients, 2 : "\n\tTrying infinity = %o...", infty;
             non_infty := [pt : pt in pts | pt ne infty];
-            for other_pts in CartesianPower(non_infty,2) do
-                if other_pts[1] eq other_pts[2] then continue; end if;
+            // one pass with prescribed divisors, whatever the size of the pool; the pair is not read
+            for other_pts in (prescribed select [<infty, infty>] else CartesianPower(non_infty,2)) do
+                if (not prescribed) and other_pts[1] eq other_pts[2] then continue; end if;
                 vprintf ShimuraQuotients, 3 : "\n\t\tTrying other points = %o...", other_pts;
-                rams[-1] := [other_pts[1]];
-                rams[-2] := [other_pts[2]];
-                
-                etas := AssociativeArray();
-                targets := AssociativeArray();
+                if not prescribed then
+                    rams[-1] := [other_pts[1]];
+                    rams[-2] := [other_pts[2]];
+                    etas := AssociativeArray();
+                    targets := AssociativeArray();
+                end if;
 
                 found_all := true;
+                // the keys that fail in THIS pass; a key found at an earlier rung is skipped
+                // below and so stays out of it
+                missing := [];
                 for i in Keys(rams) do
+                    // a prescribed divisor keeps the form of the first rung that gave one
+                    if prescribed and IsDefined(etas, i) then continue; end if;
                     ram := rams[i];
+                    infty_i := prescribed select poles[i] else infty;
                     // adding the part at infinity
-                    if exists(j){j : j->pt in ram | pt[1] eq infty[1]} then
-                        assert ram[j] eq infty;
+                    if exists(j){j : j->pt in ram | pt[1] eq infty_i[1]} then
+                        assert ram[j] eq infty_i;
                         Remove(~ram, j);
                     end if;
                     // A cover ramified only at the point taken as infinity leaves no divisor
@@ -1413,7 +1491,7 @@ alone cannot do odd D.}
                     if IsEmpty(ram) then found_all := false; break; end if;
                     deg := &+[pt[3] : pt in ram];
                     div_coeffs := [1 : pt in ram] cat [-deg]; // divisor coefficients
-                    Append(~ram, infty);
+                    Append(~ram, infty_i);
 
                     vprintf ShimuraQuotients, 4 : "\n\t\t\tWorking on ramification divisor %o...", [<pt[1], div_coeffs[j]> : j->pt in ram];
 
@@ -1426,7 +1504,8 @@ alone cannot do odd D.}
                     // Identical to the old line whenever n_oo = n0, i.e. on every base that already
                     // worked.
                     min_m := Minimum(min_m, -(n_oo + k - 1));
-                    
+                    min_m := Minimum(min_m, -P_rung);    // 0 outside prescribed mode, so inert there
+
                     if (max_pole_order_oo lt -min_m) then
                         max_pole_order_oo := -min_m;
                         vprintf ShimuraQuotients, 5 : "\n\t\t\t\tComputing basis of {oo}-weakly holomorphic forms with pole order %o...", -min_m;
@@ -1483,13 +1562,20 @@ alone cannot do odd D.}
                     
                     found_v := target_v in Image(coeffs_trunc);
                     bf_evals +:= 1;
-                    if not found_v then bf_t_lin +:= Realtime() - bf_ta; found_all := false; break; end if;
+                    if not found_v then
+                        bf_t_lin +:= Realtime() - bf_ta;
+                        found_all := false;
+                        // Prescribed divisors are independent requests: keep going so the
+                        // report at the end names every divisor that is not principal.
+                        if prescribed then Append(~missing, i); continue; end if;
+                        break;
+                    end if;
                     bf_found +:= 1;
                     if bf_progress then
                         // the 0-side rung m exists only on odd D
                         WriteStderr(Sprintf("  BFFOUND m=%o key=%o P=%o infty=%o others=%o\n",
                                             IsOdd(Xstar`D) select Sprint(m_choice) else "oo", i, -min_m,
-                                            infty[1], [other_pts[1][1], other_pts[2][1]]));
+                                            infty_i[1], prescribed select [pt[1] : pt in ram] else [other_pts[1][1], other_pts[2][1]]));
                     end if;
                     sol := Solution(coeffs_trunc, target_v);
                     bf_t_lin +:= Realtime() - bf_ta;
@@ -1537,7 +1623,11 @@ alone cannot do odd D.}
                         vprintf ShimuraQuotients, 3 :
                             "\n\t\t\tIntegralSolution: key %o intsol %o (solden %o)",
                             i, okZ, LCM([Denominator(Rationals()!x) : x in Eltseq(sol)]);
-                        if not okZ then found_all := false; break; end if;
+                        if not okZ then
+                            found_all := false;
+                            if prescribed then Append(~missing, i); continue; end if;
+                            break;
+                        end if;
                         sol := ChangeRing(solZ, Rationals());
                     end if;
 
@@ -1562,19 +1652,42 @@ alone cannot do odd D.}
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                     assert Set(div_f) eq targets[i];
                 end for;
-                if found_all then break; end if;
+                if prescribed then
+                    vprintf ShimuraQuotients, 2 : "\n\tPrescribed divisors%o, pole order at oo %o: %o of %o found%o",
+                            IsOdd(Xstar`D) select Sprintf(" at m = %o", m_choice) else "",
+                            Maximum(P_rung, n_oo + k - 1),
+                            #Keys(rams) - #missing, #Keys(rams),
+                            IsEmpty(missing) select "" else Sprintf(", not found: %o", missing);
+                end if;
+                if found_all or prescribed then break; end if;
             end for;
             if found_all then break; end if;
         end for;
+        if found_all then break; end if;
+        end for;
+        // Nothing on even D depends on m, so a prescribed divisor that failed once fails at every m.
+        if prescribed and IsEven(Xstar`D) then break; end if;
         m_idx +:= 1;
         if (m_idx gt #all_ms) then break; end if;
-    end while;  
+    end while;
     vprintf ShimuraQuotients, 2 : "\n";
     // The screen never sets found_all -- it does no divisor work at all -- so it must return
     // before the obstruction error, which would otherwise fire on every screened base.
     if DeficitScreen then return AssociativeArray(); end if;
     if not found_all then
-        error "Failed to find all Borcherds forms";
+        if prescribed then
+            report := Sprintf("no form with the prescribed divisor for key(s) %o of %o " cat
+                              "(pole orders at oo tried: %o%o)",
+                              missing, Divisors, [Maximum(P, n_oo + k - 1) : P in pole_ladder],
+                              IsOdd(Xstar`D) select Sprintf("; 0-side rungs m: %o", all_ms) else "");
+            if AllowMissing then
+                vprintf ShimuraQuotients, 1 : "\n\tBorcherdsForms: %o; returning the %o found\n", report, #Keys(etas);
+            else
+                error "BorcherdsForms: " cat report;
+            end if;
+        else
+            error "Failed to find all Borcherds forms";
+        end if;
     end if;
     // The search checked each divisor from cached principal parts.  The eta-quotient
     // dictionary is what is returned, saved and expanded downstream, so check it against the
