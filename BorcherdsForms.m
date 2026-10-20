@@ -1067,7 +1067,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false, MaxZeroPoleOrder := 3000) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -1079,7 +1079,7 @@ the odd-D-capable form of vvdata/weyl-campaign/deficit.m -- see the block below 
 alone cannot do odd D.
 If Divisors is non-empty, no hauptmodul and no cover is sought: each entry <zeros, pole> asks for one form
 with divisor sum_(d in zeros) Z(d) - deg * Z(pole), where Z(d) is the CM cycle of discriminant d on Xstar
-(a point of degree 1 or 2), the pole is a rational CM point and deg is the total degree of the zeros.
+(a point of degree 1 or 2; a zero listed twice counts twice), the pole is a rational CM point and deg is the total degree of the zeros.
 The forms come back keyed 1..#Divisors in the order given. This is the shape Guo-Yang use when the star
 curve has genus one (Compositio 153, Example 42: four forms of degree 2), where no divisor of degree 1
 is principal and the hauptmodul search cannot succeed. PoleOrders lists the pole orders at oo to try
@@ -1087,7 +1087,9 @@ beyond the hauptmodul search's window n_oo + k - 1 (default: six further powers 
 adds values of m to the cusp-0 ladder, which otherwise stops at the deepest point of the class-number-2 pool
 (a coefficient at m feeds every discriminant m r^2, so separating P_d from P_(4d) needs the rung m = d);
 PoolClassNumber is the class-number bound of the CM points the divisors may use (default 2, as in the hauptmodul search);
-with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.}
+with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.
+On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
+that no divisor uses; the pool of a rung grows with that pole order.}
     prescribed := not IsEmpty(Divisors);
     if prescribed then
         // filled from the CM pool once it is known
@@ -1216,7 +1218,13 @@ with AllowMissing the divisors that admit no form are reported and the others re
             poles[key] := pole_pt;
             used join:= Set(zeros) join {pole};
         end for;
-        ladder_pts := [p : p in pts cat quad_pts | ClassNumber(p[1]) le 2 or p[1] in used]
+        // The cusp-0 rung at m costs a pool of pole order D0*|m| there, and with AllowMissing the
+        // search climbs every rung whenever one divisor is out of reach; so a pool point that no
+        // divisor uses contributes a rung only below MaxZeroPoleOrder.  The rungs of the points
+        // actually used are always kept.
+        rung_of := func<d | (d mod 4 eq 0) select -d div 4 else -d>;
+        ladder_pts := [p : p in pts cat quad_pts | p[1] in used or
+                       (ClassNumber(p[1]) le 2 and (IsEven(Xstar`D) or D0*rung_of(p[1]) le MaxZeroPoleOrder))]
                       cat [p : p in pool | p[1] in used and p[1] notin {x[1] : x in pts cat quad_pts}];
     end if;
 
@@ -1630,7 +1638,9 @@ with AllowMissing the divisors that admit no form are reported and the others re
                     // an expansion of its eta-quotient dictionary.  The dictionary itself is
                     // checked once, after the search, for the forms that are returned.
                     assert assigned etas[i]`qexp_oo and assigned etas[i]`qexp_0;
-                    targets[i] := {<pt[1], div_coeffs[j]> : j->pt in ram};
+                    // a zero may be listed more than once (the function with divisor 2A - 2P
+                    // is asked for as zeros [A, A]), so the target divisor sums the coefficients
+                    targets[i] := {<d, &+[div_coeffs[j] : j->pt in ram | pt[1] eq d]> : d in {pt[1] : pt in ram}};
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                     assert Set(div_f) eq targets[i];
                 end for;
