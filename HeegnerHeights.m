@@ -96,7 +96,7 @@ For a 2-elementary class group these are all its characters.}
     return facs;
 end intrinsic;
 
-intrinsic HeegnerHeightComponents(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt) -> SeqEnum, RngIntElt
+intrinsic HeegnerHeightComponents(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt : OldformPrime := 0) -> SeqEnum, RngIntElt
 {For a CM point P of fundamental discriminant d on X_0^D(N) and f : X_0^D(N) -> E of degree degf, the
 genus-character components of the Heegner divisor of f(P): for each genus character chi = (d1, d2) a
 tuple <d1, d2, admissible, ord L(E^d1,1), ord L(E^d2,1), h_chi>, where h_chi is the absolute canonical
@@ -104,16 +104,33 @@ height of sum_t chi(t) f(P)^t over the whole class group when chi is admissible,
 formula with 8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number.
 Characters of higher order are not computed: a point defined over a quadratic field F has nonzero
 components only for the characters trivial on Gal(H/F), the trivial one and the genus character
-attached to F.}
+attached to F.
+
+OldformPrime p, nonzero, is for a quotient whose form is old at p, with E of conductor D*N/p. The
+map is then g = f o pi_1 + f o pi_2 with pi_1, pi_2 the two degeneracy maps and f a parametrisation
+by the curve on which the form is new; deg g = 2(p + 1 + a_p) deg f, since each f o pi_i has degree
+(p + 1) deg f and each cross term is f o T_p o f^dual of degree a_p deg f. When p ramifies in the
+field of the CM point, w_p acts on it as the Frobenius of the prime above p, so pi_2(P) is that
+conjugate of pi_1(P) and the chi-component of g(P) is (1 + chi(p)) times the component of f(pi_1 P).
+With degf passed as deg g, every component is therefore multiplied by
+(1 + chi(p))^2 / (2(p + 1 + a_p)); in particular it vanishes for chi(p) = -1. The argument is for p
+ramified in the field of the CM point, where w_p is that Frobenius; the same expression is applied
+at a p that is not ramified there, which is not derived, so at such a place the predicted height
+directs the search and only the point counts certify the result.}
     require IsFundamentalDiscriminant(d) and d lt 0: "d must be a negative fundamental discriminant";
+    require OldformPrime eq 0 or IsPrime(OldformPrime): "OldformPrime must be a prime";
     // for a squarefree conductor no Euler factor is removed from L(s, E, chi) in the formula, and the
-    // Manin constant of the optimal curve is 1
+    // Manin constant of the optimal curve is 1 (Cesnavicius, The Manin constant in the semistable
+    // case, Compositio Math. 154 (2018))
     require IsSquarefree(Conductor(E)): "the conductor of E must be squarefree";
     Cl := ClassGroup(QuadraticField(d));
     // the first curve of its class in Cremona's table is the optimal one, except in class 990h
     require Conductor(E) ne 990: "the optimal curve of class 990h is not the first of its class";
     lab := CremonaReference(E);
     Eopt := EllipticCurve(Substring(lab, 1, #lab - 1) cat "1");
+    // the admissible characters are those of the theorem's test-vector condition: at a ramified prime
+    // dividing the level the involution induced by a uniformiser of K_v is w_v, and the form must be a
+    // chi(pi_v)-eigenvector for it, so the character's value there is the Atkin-Lehner sign
     SigD := [p : p in PrimeDivisors(Conductor(E)) | d mod p eq 0];
     eps := AssociativeArray();
     for v in SigD do eps[v] := QuaternionicAtkinLehnerSign(E, v, D, N); end for;
@@ -126,7 +143,15 @@ attached to F.}
         E1 := d1 eq 1 select E else QuadraticTwist(E, d1); E2 := QuadraticTwist(E, d2);
         v1, o1 := L_value_or_derivative(E1); v2, o2 := L_value_or_derivative(E2);
         Lp := (o1 + o2 eq 1) select v1*v2 else 0;
-        Append(~out, <d1, d2, adm, o1, o2, (1/2) * norm * Lp>);
+        // a form old at p: the two degeneracy maps contribute 1 + chi(p) each, against a degree
+        // 2(p + 1 + a_p) times that of the parametrisation at the level where the form is new
+        oldfac := Rationals()!1;
+        if OldformPrime ne 0 then
+            p0 := OldformPrime;
+            chip := (d1 mod p0 ne 0) select KroneckerSymbol(d1, p0) else KroneckerSymbol(d2, p0);
+            oldfac := (1 + chip)^2 / (2*(p0 + 1 + TraceOfFrobenius(E, p0)));
+        end if;
+        Append(~out, <d1, d2, adm, o1, o2, (1/2) * norm * Lp * oldfac>);
     end for;
     return out, #Cl;
 end intrinsic;
@@ -189,7 +214,7 @@ function counts_mod_p(ctx, pts)
     return counts;
 end function;
 
-intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 8, DegreeFactor := 1) -> List
+intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 12, OldformPrime := 0) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
 X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
@@ -204,16 +229,22 @@ MordellWeilGroup, which must prove the rank and the saturation of E and of the t
 it cannot. A branch place whose discriminant is not fundamental is beyond the formula as implemented:
 its multiple of the generator of E(Q) is searched over the integers of absolute value at most
 FreeWindow instead, so for such a branch locus the list is complete only within that window.
-DegreeFactor multiplies the degree of the map that enters the formula: it is 1 when the quaternionic
-form is the Jacquet-Langlands lift of a newform of level D*N, and 2 has been measured at X_0^141(2),
-where the form is old at 2 and E has conductor D*N/2 (the predicted heights come out twice as large,
-which is what makes them heights of lattice points).}
+OldformPrime is 0 when the quaternionic form is the Jacquet-Langlands lift of a newform of level
+D*N, and otherwise the prime at which it is old, with E of conductor D*N/OldformPrime; see
+HeegnerHeightComponents for what that changes.
+
+The heights direct the search and the point counts certify what it returns: the L-values are computed
+numerically and a nonzero value is recognised against a threshold, so a value wrongly taken for zero
+can only lose candidates, never admit a wrong one. The window is used for a branch place whose
+discriminant is not fundamental, and also for a rational place whose nontrivial characters do not all
+have vanishing components, which cannot happen for a point defined over Q and so means the formula is
+being applied outside the case it was checked on.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
     require &and[b[4] in {1, 2} : b in branch] and &+[b[4] : b in branch] eq 4:
         "branch places of degree 1 or 2, of total degree 4, are expected";
-    degf := 2*#W*DegreeFactor;
+    degf := 2*#W;
     G0, mG0, rk0, sat0 := MordellWeilGroup(E : Effort := Effort);
     require rk0 and sat0: "the Mordell-Weil group of E is not proved";
     gQ := [mG0(G0.i) : i in [1..Ngens(G0)] | Order(G0.i) eq 0];
@@ -242,7 +273,7 @@ which is what makes them heights of lattice points).}
                 b[2], FreeWindow;
             continue;
         end if;
-        comps, h := HeegnerHeightComponents(E, D, N, degf, b[2]);
+        comps, h := HeegnerHeightComponents(E, D, N, degf, b[2] : OldformPrime := OldformPrime);
         if e eq 2 then
             dF := Discriminant(Integers(F));
             Ed := QuadraticTwist(E, dF);
@@ -262,7 +293,14 @@ which is what makes them heights of lattice points).}
             // torsion.
             adm := IsSquare(dF*b[2]) select [c : c in comps | c[1] eq 1]
                    else [c : c in comps | c[1] ne 1 and (IsSquare(c[1]*dF) or IsSquare(c[2]*dF))];
-            require #adm eq 1: "no genus character cuts out the field of the branch point";
+            // When no character cuts out F, the two points over the place are not a Heegner point and
+            // its conjugate but two distinct CM points of the same discriminant that Galois exchanges,
+            // which is a configuration this enumeration does not describe: the formula gives the
+            // height of each of them separately, not of their difference.
+            require #adm eq 1:
+                "the field of a branch place of degree 2 is cut out by no genus character of its "
+                * "discriminant: its two points are distinct CM points of the same order rather than "
+                * "a conjugate pair, which this routine does not handle";
             require adm[1][3] and adm[1][6] gt 0:
                 "the character attached to the field of the branch point is inadmissible or has vanishing value";
             hminus := adm[1][6] * (2/h)^2;
@@ -397,7 +435,7 @@ which is what makes them heights of lattice points).}
             hits := MatchCoverToCounts(E, covers, target, primes : ExtraPrimes := PrimeDivisors(D*N));
             if #hits eq 0 then continue; end if;
             Append(~seen, cfg);
-            // pin the twist with more primes
+            // more primes, to determine the twist
             primes2 := [p : p in PrimesInInterval(3, TwistPrimes) | (D*N) mod p ne 0];
             target2 := [ComputePointsViaTrace(X, p, 1) : p in primes2];
             hits := MatchCoverToCounts(E, covers, target2, primes2 : ExtraPrimes := PrimeDivisors(D*N));
