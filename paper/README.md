@@ -32,8 +32,13 @@ Build with `pdflatex character-and-reduction-types.tex` (twice). Inline bibliogr
   divisor is principal (not merely torsion); its order is the order of the class in the Jacobian.
 * **Corollary 3.2** — no rational torsion among CM classes, no assumption needed; so 142a1, 158a1,
   190a1 are unconditional.
-* **Example 3.4** — the assumption fails at X_0^14(17)*: a form with value 2·7^{3/2}·17^{1/2}
-  (computed by `tools/genus1star.m`; a character of order 2).
+* **Example 3.4** — the assumption appears to fail at X_0^14(17)*: one run of the genus-one star
+  driver reported a form whose value at the rational CM point of discriminant −4 is 2·7^{3/2}·17^{1/2},
+  which Remark 3.3 reads as a character of order 2. The driver and its log are not in this branch, so
+  the example is an observation and not reproducible from the files beside the note.
 * **Section 4** — e-th powers of the forms remove the assumption.
-* **Proposition 5.1** and the table — the Kodaira index is half the length of the metric cycle
-  (`KodairaIndexFromDualGraph`, `tests/KodairaFromDualGraph.m`): 238a2 and 282b1.
+* **Proposition 5.1** and the table — the Kodaira index is the sum of the thicknesses of the nodes on
+  the cycle, that is half the length of the metric cycle (`KodairaIndexFromDualGraph`,
+  `tests/KodairaFromDualGraph.m`): 238a2 and 282b1. The method is González–Rotger's;
+  `tests/KodairaGonzalezRotger.m` runs it on the 29 genus-one curves and quotients of their two
+  tables, taking each isogeny class from the trace formula, and reproduces every identification.
