@@ -340,3 +340,42 @@ for pr in pairs do
     assert es[1] eq 3;
     assert IsIsomorphic(pr[3], HyperellipticCurve(es[2] + es[3]^2/4));
 end for;
+
+// [15] EXACT MODEL: the boundary of what the numerical route can reach, at
+//      X_0^6(385)/<w_5, w_6, w_11, w_14>.  The fit is as clean as anywhere -- conic residual
+//      1.6e-15, predictions to 3e-9 -- and the three computed invariants agree with the stored
+//      exact model to relative 1.4e-13, 1.3e-12 and 2.1e-11.  But their heights put two of them
+//      beyond any recognition: the criterion accepts p/q only when q^2 eps < 1/2, and with
+//      denominators 1 805 524 232 and 22 477 081 that number is about 35 000 and 870 here,
+//      against 0.37 for the third, of denominator 168 200.  Since eps falls roughly like the
+//      accuracy of the values, closing a factor of 35 000 would need four or five more digits
+//      everywhere, which no feasible cutoff at D*N = 2310 provides.  So this base is not a case
+//      of needing a little more precision, as X_0^6(185) is with its margin of 0.8 -- it is where
+//      the route stops, and the model has to come from somewhere else.
+//      The banked values (cutoff 46, 90 digits, 14 centres) were evaluated in four processes
+//      before the Galois conjugates of the quadratic newform orbit were ordered canonically, and
+//      the two conjugate columns of one chunk were exchanged afterwards; the conic residual
+//      asserted below is what says that repair is right, since each chunk alone has a conic and
+//      the four share one only after it.
+V385 := ReadNelsonValues("data/nelson/values_6_385.m");
+assert V385`D eq 6 and V385`N eq 385 and V385`g eq 3 and V385`cut eq 46 and V385`prec eq 90;
+assert V385`W eq [1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155];
+m385 := eval (Read("data/models/models_6_385.m") cat "\nreturn models;");
+e385 := m385[[Integers()|1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155]][1];
+assert e385[1] eq 3 and e385[3] eq 0;
+f385 := e385[2];
+assert &and[ Coefficient(f385, i) eq 0 : i in [1,3,5,7] ];
+cg := [ Coefficient(f385, 2*j) : j in [0..4] ];
+gA := cg[1]*cg[3]/cg[2]^2; gB := cg[2]*cg[4]/cg[3]^2; gC := cg[3]*cg[5]/cg[4]^2;
+assert Denominator(gA) eq 1805524232 and Denominator(gB) eq 22477081 and Denominator(gC) eq 168200;
+A385, B385, C385, um385, d385 := NelsonMarkedInvariants(V385);
+assert um385 eq 2;
+assert d385`conicres lt 10^(-13);                  // the conjugate columns agree across chunks
+CC385 := Parent(A385);
+rel385 := func< z, q | Abs(z - CC385 ! q)/Abs(CC385 ! q) >;
+assert rel385(B385, gB) lt 10^(-9);
+assert (rel385(A385, gA) lt 10^(-9) and rel385(C385, gC) lt 10^(-9))
+    or (rel385(A385, gC) lt 10^(-9) and rel385(C385, gA) lt 10^(-9));
+qeps385 := func< z, q | Denominator(q)^2 * 20 * Abs(Imaginary(z)) >;
+assert qeps385(A385, gA) gt 100 and qeps385(B385, gB) gt 100;   // out of reach, not marginal
+assert qeps385(C385, gC) lt 1/2;                                // the one the criterion accepts
