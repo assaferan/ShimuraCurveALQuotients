@@ -38,9 +38,12 @@ _ := exists(star){c : c in curves | IsStarCurve(c)};
 printf "X_0^%o(%o)*: genus %o\n", D, N, star`g;
 error if star`g lt 2, "the star has genus < 2; for genus one use tools/genus1star.m";
 
-rat, quad := RationalandQuadraticCMPoints(star : bd := bd, coprime_to_level := false);
+// NONFUND admits the points by non-maximal orders, here and in the search's own lookup
+nonfund := GetEnv("NONFUND") ne "";
+rat, quad := RationalandQuadraticCMPoints(star : bd := bd, coprime_to_level := false,
+                                                 AllOrders := nonfund);
 ds := Reverse(Sort([p[1] : p in rat]));
-printf "rational CM points (class number <= %o): %o\n", bd, ds;
+printf "rational CM points (class number <= %o%o): %o\n", bd, nonfund select ", non-maximal orders included" else "", ds;
 printf "quadratic CM cycles: %o\n", Sort([p[1] : p in quad]);
 
 if stage eq 1 then
