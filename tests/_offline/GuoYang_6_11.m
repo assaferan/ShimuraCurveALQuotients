@@ -15,4 +15,4 @@ gy := [
 <-123, -9/41>,
 <-132, 1>
 ];
-test_gy_table(6, 11, gy);
+test_gy_table(6, 11, gy : Force := [-88, -132]);   // forced: the published points the search never offers -- conductor points, and those a level prime shares with d_0 (the ramified-level values; none is excluded)
