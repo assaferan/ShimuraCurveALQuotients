@@ -24,6 +24,16 @@
 // and the divisor of y supplies the rest, so a wrong divisor yields a wrong curve of the right
 // genus through the same points.  Read the trace-formula line before believing the model.
 AttachSpec("ShimuraQuotients.spec"); SetColumns(0);
+// ⚠ NMZ_TIMEOUT.  Normaliz is given 1800 s per polytope by default, which is right for the levels
+// the hauptmodul search uses and wrong for these: three searches died on it in one day, at
+// (4004, 1252), (8260, 2592) and (1540, 480, 343), each after hours of other work, and the rung
+// they stopped on was reachable with more time.  A failure is loud and names the fix, so nothing
+// is silently wrong, but the run is wasted; the warning is here because the setting belongs to
+// the caller's environment and cannot be set from inside Magma.
+if GetEnv("NMZ_TIMEOUT") eq "" then
+    printf "⚠ NMZ_TIMEOUT is unset, so Normaliz gets 1800 s per polytope.  At these levels a deep\n"
+         * "  rung needs hours: export NMZ_TIMEOUT=21600 before a long run.\n";
+end if;
 D := StringToInteger(D); N := StringToInteger(N);
 stage := assigned stage select StringToInteger(stage) else 1;
 bd := assigned bd select StringToInteger(bd) else 2;
