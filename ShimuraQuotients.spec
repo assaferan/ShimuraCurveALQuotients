@@ -35,4 +35,5 @@ special_fiber_cm.m
 DualGraph.m
 ComponentInvolution.m
 NelsonShimizu.m
+NelsonFilter.m
 }
