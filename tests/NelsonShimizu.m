@@ -66,8 +66,16 @@ catch e
 end try;
 assert refused;
 ob46 := [ [ 1, 0, 0, 0 ], [ 1/2, 1, 1/6, 4/3 ], [ 0, 1/2, 0, 3/2 ], [ 0, 3/2, 0, 3/2 ] ];
-verdict, R := NelsonHyperellipticVerdict(46, 3, {1,3} : Precision := 30, Cutoff := 30, Points := 12, CheckW := 1, OrderBasis := ob46);
+//      The non-hyperelliptic reading is the one a precision floor can fake, so the code refuses it
+//      without a second precision: the count is repeated at 45 digits at the same points, and the
+//      smallest singular value must stay put (it is 8.4e-3 here, nowhere near a floor).  At
+//      X_0^4130(1) that same check overturned a reading: 1.9e-3 at three cutoffs at 50 digits,
+//      2.0e-10 at 80 (campaign record, second batch).
+verdict, R := NelsonHyperellipticVerdict(46, 3, {1,3} : Precision := 30, Cutoff := 30, Points := 12,
+                                         CheckW := 1, OrderBasis := ob46, ConfirmPrecision := 45);
 assert verdict eq "NOT hyperelliptic";
+assert R`confirmed and R`verdictatconfirm eq "NOT hyperelliptic";
+
 assert R`relations eq 0 and R`singular[1] gt 10^(-3);
 assert R`basis`oldcount eq 1 and R`basis`newcount eq 2;
 assert R`wcheck lt 10^(-6);

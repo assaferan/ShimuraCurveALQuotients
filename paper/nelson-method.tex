@@ -228,20 +228,39 @@ singular value is below $10^{-4}$; otherwise, when nothing is near zero, there i
 when the spectrum is a ramp the count is declared inconclusive.
 
 \subsection*{What a numerical kernel dimension proves}
-Nothing, strictly: a small singular value is a small number. What the reading relies on is an
-observed separation. On every curve of this project the smallest singular value is either at the
-truncation level of the sum, which falls as the cutoff rises, or at least $10^{-2}$, which does
-not; nothing has been seen between $10^{-2}$ and $10^{-12}$. A verdict is therefore taken at two
-or more cutoffs and accepted as hyperelliptic only when the residual falls with the cutoff while
-the rest of the spectrum stays put, and as non-hyperelliptic only when it does not fall.
+Nothing, strictly: a small singular value is a small number. What the reading relies on is a
+separation that has to be established in two directions, and the second one is easy to omit.
+A residual at the truncation level of the sum falls as the cutoff rises; a genuine singular value
+does not move with the cutoff; and a residual limited by the working precision does not move with
+the cutoff either, so the cutoff alone cannot tell the last two apart. Two cutoffs can share one
+precision floor. A verdict is therefore taken at two or more cutoffs \emph{and} at two
+precisions, and it is the precision that does the work.
 
-There is one more condition, which the first trap below explains: a residual that is stable
-across cutoffs can still be a rounding floor rather than a genuine singular value. The test that
-separates the two is the working precision. A genuine singular value does not notice it (on the
-non-hyperelliptic control the smallest singular value agrees to twenty-nine digits between thirty
-and fifty digits of precision), while a numerical zero moves with it (by a factor of about a
-hundred at the first base where the floor was met). So a stalled residual is settled by raising
-the precision, never by assumption.
+An earlier draft of this section claimed that nothing had been seen between $10^{-2}$ and
+$10^{-12}$ on this project's curves, and used that as a second reason to trust a reading. The
+claim is false and the record contains the counterexample. At $X_0^{4130}(1)$ the smallest
+singular value sits at $1.919\cdot10^{-3}$ at cutoffs $40$, $46$ and $50$, all at $50$ digits,
+agreeing to eleven digits across them, and the count there is zero: not hyperelliptic. At $80$
+digits, at the same cutoffs, it is $2.002\cdot10^{-10}$ with a jump of $1.4\cdot10^{9}$ above it:
+one relation, hyperelliptic. A residual can therefore sit in the middle of the spectrum, be
+perfectly stable in the cutoff, and be an artefact of the precision. $X_0^{6}(649)$ is the same
+trap in the other direction: at $50$ digits the residual \emph{rose} from $7.7\cdot10^{-14}$ to
+$3.8\cdot10^{-8}$ as the cutoff went from $40$ to $46$, which reads as a refusal, while at $90$
+digits it is $1.5\cdot10^{-13}$ and $2.9\cdot10^{-16}$.
+
+So the band is a description of the well-resolved cases, not a test, and the asymmetry matters:
+the reading a precision floor fakes is the \emph{negative} one, since a floor puts a nonzero
+number where a vanishing singular value belongs. A hyperelliptic reading is protected by the gap
+it must show; a non-hyperelliptic reading is not protected by anything except a second precision,
+and the code refuses to return one without it.
+
+The test in both directions is the working precision. A genuine singular value does not notice it
+(on the non-hyperelliptic control the smallest singular value agrees to twenty-nine digits between
+thirty and fifty digits of precision), while a value limited by the precision moves with it: by a
+factor of about a hundred at the first base where a floor was met, and by seven orders of
+magnitude at $X_0^{4130}(1)$ above. So a residual is settled by raising the precision, never by
+assumption, and the seventeen readings this project has taken of the open quotients are all at the
+highest precision tried for each base.
 
 The verdict is numerical. The project treats it as a strong indication that directs the exact
 methods (a model, or an exact argument that excludes a hyperelliptic involution), not as a proof.
