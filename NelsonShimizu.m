@@ -552,11 +552,14 @@ intrinsic NoetherQuadricCount(vals::SeqEnum, g::RngIntElt : MinGap := 10^4, Zero
  (ascending) and that ratio.  Counting the values below a tolerance rather than looking for the
  largest ratio anywhere is what keeps a cluster of truncation-level values that differ among
  themselves from being split, which at genus 4 would report one quadric for a hyperelliptic curve.
- Reading rule: a small singular value is a small number, and a value that does not fall as the
- cutoff rises can still be the rounding floor of the sum, so only its insensitivity to the WORKING
- PRECISION says it is real; see paper/nelson-method.tex, "What a numerical kernel dimension
- proves".  Genus 3: one relation means hyperelliptic, none means not; genus 4: three against one.
- Numerical.}
+ Reading rule: a small singular value is a small number.  A value that falls as the cutoff rises
+ is the truncation of the sum; a value that does NOT fall may be genuine or may be a limit of the
+ working precision, and only repeating the count at another precision separates those -- at one
+ base of this project the smallest value sat at 1.9e-3 at three cutoffs at 50 digits and at
+ 2.0e-10 at 80, so a value anywhere in the spectrum can be precision-limited and stable across
+ cutoffs.  See paper/nelson-method.tex, "What a numerical kernel dimension proves", and use
+ NelsonHyperellipticVerdict's ConfirmPrecision.  Genus 3: one relation means hyperelliptic, none
+ means not; genus 4: three against one.  Numerical.}
     npts := #vals;
     CC := Universe(vals[1]); RR := RealField(Precision(CC));
     mons := [ [a,b] : b in [a..g], a in [1..g] ];
@@ -599,14 +602,23 @@ end intrinsic;
 intrinsic NelsonHyperellipticVerdict(D::RngIntElt, N::RngIntElt, W::SetEnum :
                                      Precision := 30, Cutoff := 40, Points := 18, Oldforms := true,
                                      CheckW := 0, OrderBasis := [], ChooseBasePoint := true,
-                                     AllowCoarsePrecision := false) -> MonStgElt, Rec
+                                     AllowCoarsePrecision := false, ConfirmPrecision := 0,
+                                     AllowUnconfirmed := false) -> MonStgElt, Rec
 {Noether's count of canonical quadrics on X_0^D(N)/W, genus at least 3, with the differentials
  evaluated by Theorem 3.1 at Points sample points: "HYPERELLIPTIC", "NOT hyperelliptic" or
  "INCONCLUSIVE", and a record with the singular values, the gap, the number of relations, the
  lattice-term count, and with CheckW := n the largest deviation of the W-invariance of every
  column measured at n points.  The base point is chosen by NelsonChooseBasePoint unless
- ChooseBasePoint is false.  A verdict is a reading of numerical singular values, not a proof;
- take it at two cutoffs and, when the residual stops falling, at a higher precision.}
+ ChooseBasePoint is false.
+ ConfirmPrecision := m repeats the count at m digits, at the same points and the same base point,
+ and reports whether the smallest singular value and the count agree; when they disagree the
+ verdict returned is the one at the higher precision, which should itself be confirmed by a
+ further raise.  A NOT hyperelliptic verdict is REFUSED without that confirmation (or without
+ AllowUnconfirmed), because it is the reading a precision floor can fake: at one base of this
+ project the smallest singular value sat at 1.9e-3 at three cutoffs at 50 digits, agreeing to
+ eleven digits, and was 2.0e-10 at 80 digits -- not hyperelliptic became hyperelliptic.  Taking
+ the count at two cutoffs is NOT sufficient on its own, since two cutoffs can share one precision
+ floor.  A verdict is a reading of numerical singular values, not a proof.}
     B := NelsonBasis(D, N, W : Precision := Precision, Cutoff := Cutoff, Oldforms := Oldforms,
                               OrderBasis := OrderBasis, CarryRejected := CheckW gt 0,
                               AllowCoarsePrecision := AllowCoarsePrecision);
@@ -628,9 +640,37 @@ intrinsic NelsonHyperellipticVerdict(D::RngIntElt, N::RngIntElt, W::SetEnum :
     end if;
     vprintf NelsonShimizu, 1: "singular values %o\n   relations %o, gap %o, W-check %o: %o\n",
         [ RealField(6) ! x : x in sv ], cnt, RealField(6) ! gap, RealField(6) ! wdev, verdict;
-    R := rec< recformat< singular, gap, relations, terms, wcheck, basis, values, points > |
+    confirmed := false; svc := []; cntc := 0; verdictc := "";
+    if ConfirmPrecision gt 0 then
+        B2 := NelsonBasis(D, N, W : Precision := ConfirmPrecision, Cutoff := Cutoff,
+                                   Oldforms := Oldforms, OrderBasis := B`obas,
+                                   AllowCoarsePrecision := AllowCoarsePrecision);
+        B2`z1 := B2`CC ! B`z1;          // the same base point, so the two counts are comparable
+        valsc := [];
+        for z in pts do
+            v := NelsonValues(B2, B2`z1, B2`CC ! z);
+            Append(~valsc, v);
+        end for;
+        cntc, svc, gapc := NoetherQuadricCount(valsc, g);
+        verdictc := cntc eq (g-1)*(g-2) div 2 select "HYPERELLIPTIC"
+                    else (cntc eq (g-2)*(g-3) div 2 select "NOT hyperelliptic" else "INCONCLUSIVE");
+        moved := svc[1] eq 0 or sv[1] eq 0 select true
+                 else Maximum(svc[1]/sv[1], sv[1]/svc[1]) gt 10;
+        confirmed := (verdictc eq verdict) and not moved;
+        vprintf NelsonShimizu, 1: "at %o digits: smallest %o against %o, %o -- %o\n",
+            ConfirmPrecision, RealField(6) ! svc[1], RealField(6) ! sv[1], verdictc,
+            confirmed select "confirmed" else "NOT confirmed: the lower precision was inadequate";
+        if not confirmed then verdict := verdictc; end if;
+    end if;
+    require verdict ne "NOT hyperelliptic" or ConfirmPrecision gt 0 or AllowUnconfirmed :
+        "a NOT hyperelliptic reading is the one a precision floor can fake, and two cutoffs can "
+        * "share one floor: pass ConfirmPrecision := (more digits) to repeat the count there, or "
+        * "AllowUnconfirmed to take it as it stands";
+    R := rec< recformat< singular, gap, relations, terms, wcheck, basis, values, points,
+                         confirmed, singularatconfirm, relationsatconfirm, verdictatconfirm > |
               singular := sv, gap := gap, relations := cnt, terms := nt, wcheck := wdev,
-              basis := B, values := vals, points := pts >;
+              basis := B, values := vals, points := pts, confirmed := confirmed,
+              singularatconfirm := svc, relationsatconfirm := cntc, verdictatconfirm := verdictc >;
     return verdict, R;
 end intrinsic;
 
