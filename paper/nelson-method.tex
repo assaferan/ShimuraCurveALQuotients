@@ -1,0 +1,492 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{conjecture}[theorem]{Conjecture}
+\theoremstyle{definition}
+\newtheorem{computation}[theorem]{Computation}
+\newtheorem{observation}[theorem]{Observation}
+\newtheorem{remark}[theorem]{Remark}
+
+\DeclareMathOperator{\Diff}{Diff}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\disc}{disc}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\nrd}{nrd}
+\DeclareMathOperator{\trd}{trd}
+\DeclareMathOperator{\Jac}{Jac}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\HH}{\mathbb{H}}
+\newcommand{\Ldual}{L^{\vee}}
+\newcommand{\Lm}{L_{-}}
+\newcommand{\Lp}{L_{+}}
+
+\begin{document}
+
+\title[Evaluating forms on Shimura curves by the Shimizu lift]
+{Evaluating weight-two forms on Shimura curves by the Shimizu lift,\\
+and what the values decide}
+
+\author{}
+\date{}
+
+\begin{abstract}
+We record how the differentials of an Atkin--Lehner quotient $X_0^D(N)/W$ are evaluated at
+points of the upper half-plane by Nelson's formula for the Shimizu lift, how the formula is
+extended from the newforms of level exactly $DN$ to the whole space of differentials, and the
+two uses made of the values: Noether's count of quadrics through the canonical image, which
+decides hyperellipticity numerically, and, in genus three with an Atkin--Lehner involution whose
+quotient has genus one, an explicit hyperelliptic model recognised from three rational
+invariants and confirmed by point counts. We state precisely what each step proves and what it
+does not, and we record the two traps met on the way: the working precision must rise with the
+cutoff of the lattice sum, and the Eichler order that Magma returns is not the same from one
+process to the next.
+\end{abstract}
+
+\maketitle
+
+\section{The formula}
+
+Let $B$ be the indefinite quaternion algebra over $\Q$ of discriminant $D$, let $R$ be an Eichler
+order of level $N$ with $(D,N)=1$ and $DN$ squarefree, and let $X=X_0^D(N)$ be the Shimura curve
+$\Gamma\backslash\HH$ for the group $\Gamma$ of units of reduced norm one, embedded in
+$\mathrm{SL}_2(\R)$ by a fixed splitting $\iota$. A weight-$k$ form $f_B$ on $X$ with
+Jacquet--Langlands correspondent a newform $f=\sum a_f(n)q^n$ of level exactly $DN$, $a_f(1)=1$,
+is given by the following theorem of Nelson \cite[Theorem~3.1]{Nelson}, which is the Shimizu
+lift made explicit. For $z\in\HH$ put $\sigma_z=\begin{psmallmatrix} y^{1/2} & x y^{-1/2}\\ 0 &
+y^{-1/2}\end{psmallmatrix}$, so that $\sigma_z i = z$, and for a real $2\times 2$ matrix put
+\[
+X\!\begin{pmatrix} a & b\\ c & d\end{pmatrix} = \frac{a+d+i(b-c)}{2},
+\qquad
+P\!\begin{pmatrix} a & b\\ c & d\end{pmatrix} = \frac{a^2+b^2+c^2+d^2}{2}.
+\]
+For $d\mid DN$ let $R^{(d)}=R+\tfrac{DN}{d}R^\vee$, where $R^\vee$ is the dual of $R$ for the
+trace form; it is a lattice between $R$ and $R^\vee$ of index $d^2$ over $R$, and the reduced
+norms of its elements have denominators dividing $d$. Then for $z_1,z_2\in\HH$,
+\begin{equation}\label{eq:nelson}
+(y_1y_2)^{k/2}\,\overline{f_B(z_1)}\,f_B(z_2)
+= \sum_{d\mid DN}\frac{\mu((d,N))}{d\,a_f(d)}
+\sum_{\substack{\alpha\in R^{(d)}\\ \nrd\alpha>0}}
+a_f\big(d\,\nrd\alpha\big)\,e^{ik\arg X(\alpha_{12})}\,W_k\big(4\pi\lvert X(\alpha_{12})\rvert\big),
+\end{equation}
+where $\alpha_{12}=\sigma_{z_1}^{-1}\iota(\alpha)\sigma_{z_2}$ and
+\[
+W_k(x)=2^{1-k}\sum_{n\ge 1} n^k\big(nx\,K_{k-1}(nx)-K_k(nx)\big).
+\]
+Two features of \eqref{eq:nelson} govern everything below.
+
+First, the left side is a product of a value and a conjugate value. An individual value
+$f_B(z)$ is defined only up to a constant of modulus one, and the right side determines the
+product. Fixing $z_1$ once and reading $\overline{f_B(z_1)}f_B(z_j)$ across $j$ gives every form
+with its own constant in front, which for the purposes below (a basis of differentials up to
+rescaling of its members) costs nothing.
+
+Second, the sum is finite once truncated, and the truncation is an enumeration of a positive
+definite quaternary form. Since $2\lvert X(\alpha)\rvert^2=P(\alpha)+\det\alpha$, the condition
+$4\pi\lvert X\rvert\le c$ is implied by $P(\alpha)\le 2(c/4\pi)^2$, and $P$ is positive definite
+on $M_2(\R)$. The function $W_k$ decays like $e^{-x}$, so the terms dropped at cutoff $c$ are of
+size about $e^{-c}$ relative to the largest; in practice the cutoff buys about $0.4$ decimal
+digits per unit, with a scatter of a digit or so between bases and between points, and no trend
+in $DN$. There is no fundamental domain, no reduction and no sampling anywhere in the method.
+
+The ingredients are therefore: the algebra and an Eichler order, a real splitting, the lattices
+$R^{(d)}$, the Fourier coefficients $a_f(n)$ for $n\le DN(c/4\pi)^2$, and $W_k$. The only
+transcendental ingredient is $W_k$, evaluated once per lattice point; it is tabulated once per
+cutoff by a Chebyshev approximation of $W_k(x)e^x$ on panels in geometric progression, the
+geometric spacing being what keeps the singularity of $W_k$ at the origin equally far from every
+panel.
+
+\subsection*{The hypothesis of the theorem}
+Theorem~3.1 is stated for a newform of level exactly $DN$. The space of differentials of
+$X_0^D(N)$ is the $D$-new part of $S_2(\Gamma_0(DN))$, which also contains, for every proper
+divisor $M$ of $N$, the oldclass of each newform of level $DM$. Whether the newforms of level
+exactly $DN$ span the $W$-fixed differentials of a given quotient is a dimension count that takes
+a second, and it fails at a good many quotients of interest. The next section removes the
+restriction.
+
+\section{The oldform extension}
+
+Fix $M\mid N$, let $T$ be the set of primes dividing $N/M$, and let $g$ be a newform of level
+exactly $DM$ with correspondent $g_B$ on $X_0^D(M)$. Let $R_N\subset R_M$ be Eichler orders of
+levels $N$ and $M$, $R_M=R_N+M R_1$ for a maximal order $R_1\supset R_N$. For $p\in T$ let $w_p$
+be an element of $R_N$ of reduced norm $p$ normalising $R_N$ (an Atkin--Lehner element), and for
+$S\subseteq T$ let $w_S=\prod_{p\in S}w_p$. The weight-two slash operator
+\[
+(f\mid w)(z)=\nrd(w)\,j(w,z)^{-2}f(wz)
+\]
+is the pullback of the differential $f(z)\,dz$ under $z\mapsto wz$, and the oldclass of $g$ at
+level $N$ is spanned by the $2^{\#T}$ pullbacks $g_B\mid w_S$: $S=\emptyset$ is the natural
+projection $X_0^D(N)\to X_0^D(M)$ and $S=\{p\}$ the second degeneracy map at $p$. Any two choices
+of $w_p$ differ by a unit of $R_N$ of reduced norm one, up to sign, so $g_B\mid w_S$ does not
+depend on the choice.
+
+\begin{proposition}\label{prop:oldclass}
+On the oldclass of $g$ the Atkin--Lehner group acts as follows.
+\begin{enumerate}
+\item For $q\mid DM$, $w_q$ acts on every $g_B\mid w_S$ by the quaternionic eigenvalue
+$\varepsilon_q(g)$ of $g_B$ on $X_0^D(M)$, which is $a_g(q)$ for $q\mid D$ and $-a_g(q)$ for
+$q\mid M$.
+\item For $p\in T$, $w_p$ sends $g_B\mid w_S$ to $g_B\mid w_{S\,\triangle\,\{p\}}$ with no scalar.
+\end{enumerate}
+Consequently the eigenvectors are $v_\chi=\sum_{S\subseteq T}\chi(S)\,g_B\mid w_S$ for the
+characters $\chi$ of $\{\pm1\}^T$, and $w_m$ acts on $v_\chi$ by
+$\prod_{q\mid m,\ q\mid DM}\varepsilon_q(g)\prod_{p\mid m,\ p\in T}\chi(p)$.
+\end{proposition}
+
+\begin{proof}
+For (1), an Atkin--Lehner element $w_q$ of $R_N$ at a prime $q\mid DM$ lies in $R_M$ and
+normalises it, the two orders agreeing locally at $q$, so it is also an Atkin--Lehner element at
+level $M$ and acts on $g_B$ by its eigenvalue there; and $w_qw_S$ and $w_Sw_q$ generate the same
+two-sided ideal of $R_N$, so they differ by a unit of $R_N$ of reduced norm one, on which the
+slash operator is trivial. That eigenvalue is $\varepsilon_q(g)=a_g(q)$ for $q\mid D$ and
+$-a_g(q)$ for $q\mid M$: the classical Atkin--Lehner eigenvalue of a newform at a prime exactly
+dividing its level is $-a_g(q)$, and the Jacquet--Langlands correspondence reverses the sign at
+the primes where the quaternion algebra ramifies \cite{JL,Voight}.
+For (2), $w_p^2$ has reduced norm $p^2$ and lies in $R_N$, and $w_p^2/p$ is a unit of $R_N$ of
+reduced norm one (this is checked exactly in the code for every $w_p$ used). The weight-two slash
+is trivial on scalars, by the factor $\nrd(w)$, and on units of norm one, which act trivially on
+forms for $\Gamma$.
+\end{proof}
+
+The dimension counts of the next paragraph, and the direct measurement of each column's
+eigenvalues, are consistency checks on the convention rather than its justification.
+
+The $W$-fixed differentials of $X_0^D(N)/W$ are then the $W$-fixed newforms of level exactly
+$DN$ together with one $v_\chi$ for each pair $(g,\chi)$ whose eigenvalue product is $1$ for every
+$m\in W$. This count must equal the genus, and the code refuses to continue when it does not;
+agreement at every quotient tried, including classes with two primes in $T$, is the check of the
+eigenvalue bookkeeping, and in particular of the sign at $q\mid M$.
+
+\subsection*{Evaluating a pullback}
+Formula \eqref{eq:nelson} at level $M$ gives $S_g(z_1,z_2)=y_1y_2\,\overline{g_B(z_1)}\,g_B(z_2)$.
+Since $\operatorname{Im}(wz)=\nrd(w)\,y/\lvert j(w,z)\rvert^2$,
+\begin{equation}\label{eq:pullback}
+y_1y_2\,\overline{g_B(z_1)}\,(g_B\mid w_S)(z_2)=\frac{\overline{j(w_S,z_2)}}{j(w_S,z_2)}\,
+S_g(z_1,w_Sz_2).
+\end{equation}
+So every member of the oldclass is the level-$M$ evaluator at the moved point, times a phase,
+with the \emph{same} constant $\overline{g_B(z_1)}$ in front for every $S$. Nothing is left to
+normalise: the relative scale of the pullbacks is fixed by the slash operator, and that is what
+makes $v_\chi$ an eigenvector with eigenvalue exactly $\chi(p)$ rather than some $c$ and $1/c$.
+The sign and scale are also measured directly: for each generator $m$ of $W$ and a few points
+$z$, the ratio of the value of every column at $w_mz$, times $\overline{j}/j$, to its value at
+$z$ is compared with the predicted eigenvalue, the rejected characters of each oldclass being
+carried along so that their predicted eigenvalues $-1$ are measured too. On every control the
+ratios are $\pm1$ to the working accuracy.
+
+\subsection*{The Atkin--Lehner elements}
+$w_m$ is found in the two-sided ideal $J_m=\{x\in R_N:\trd(xy)\in m\Z\text{ for all }y\in R_N\}$,
+the radical of $R_N/mR_N$, of index $m^2$, as an element of reduced norm exactly $m$; such an
+element generates $J_m$ and hence normalises $R_N$, which is checked directly as well. It is
+produced as a short vector of $J_m$ for the positive definite majorant of the real splitting.
+Magma's normaliser routines are for definite orders, and its principal-generator routine can
+return a generator of negative norm, so neither is used.
+
+\section{Sample points and cost}
+
+The values are taken at points of $\HH$ spread by the square root of the arithmetic volume of
+$\Gamma$. The spread matters for the count of the next section: rows from nearby points are
+nearly proportional, and a matrix of quadratic monomials of effective rank near the number of
+columns always has a quadric through it. The symptom of clustered points is a smooth ramp of
+singular values instead of a gap, and a verdict is refused unless the gap reaches a stated size.
+
+The cost is the lattice enumeration. The number of lattice points summed is, to within a few
+percent at every base measured,
+\[
+10\,\Big(\frac{c}{4\pi}\Big)^4\,\frac{\sigma_2(DN)}{DN},\qquad
+\frac{\sigma_2(DN)}{DN}=\prod_{p\mid DN}\Big(p+\frac1p\Big)=DN\prod_{p\mid DN}\Big(1+\frac1{p^2}\Big),
+\]
+so the cost of one evaluation is linear in $DN$ at a fixed cutoff, with a constant that is
+larger when $DN$ has small prime factors, and grows like the fourth power of the cutoff. Several
+eigenforms cost one enumeration, not several: everything but $a_f(n)$ is shared, so a basis of
+$g$ differentials at a pair of points is one enumeration. The Fourier coefficients are needed up
+to $DN(c/4\pi)^2$, and the newform decomposition at level $DN$ is the first ingredient to become
+expensive, well beyond the levels of interest here.
+
+\section{Noether's count}
+
+Let $X$ have genus $g\ge3$ and let $u_1,\dots,u_g$ be a basis of its differentials. The canonical
+image lies on $(g-2)(g-3)/2$ independent quadrics if $X$ is not hyperelliptic (Noether), and on
+$(g-1)(g-2)/2$ if it is, the image being then a rational normal curve. At genus three this is
+$0$ against $1$, at genus four $1$ against $3$. With values of the basis at $m$ points the
+quadrics through the image are the kernel of the $m\times\binom{g+1}{2}$ matrix of quadratic
+monomials, and the count is read off its singular values: rows and columns are normalised, the
+matrix is realified, and the number of relations is the position of the largest ratio between
+consecutive singular values, accepted only when that ratio is at least $10^4$ and the smallest
+singular value is below $10^{-4}$; otherwise, when nothing is near zero, there is no relation, and
+when the spectrum is a ramp the count is declared inconclusive.
+
+\subsection*{What a numerical kernel dimension proves}
+Nothing, strictly: a small singular value is a small number. What the reading relies on is a
+separation that has to be established in two directions, and the second one is easy to omit.
+A residual at the truncation level of the sum falls as the cutoff rises; a genuine singular value
+does not move with the cutoff; and a residual limited by the working precision does not move with
+the cutoff either, so the cutoff alone cannot tell the last two apart. Two cutoffs can share one
+precision floor. A verdict is therefore taken at two or more cutoffs \emph{and} at two
+precisions, and it is the precision that does the work.
+
+An earlier draft of this section claimed that nothing had been seen between $10^{-2}$ and
+$10^{-12}$ on this project's curves, and used that as a second reason to trust a reading. The
+claim is false and the record contains the counterexample. At $X_0^{4130}(1)$ the smallest
+singular value sits at $1.919\cdot10^{-3}$ at cutoffs $40$, $46$ and $50$, all at $50$ digits,
+agreeing to eleven digits across them, and the count there is zero: not hyperelliptic. At $80$
+digits, at the same cutoffs, it is $2.002\cdot10^{-10}$ with a jump of $1.4\cdot10^{9}$ above it:
+one relation, hyperelliptic. A residual can therefore sit in the middle of the spectrum, be
+perfectly stable in the cutoff, and be an artefact of the precision. $X_0^{6}(649)$ is the same
+trap in the other direction: at $50$ digits the residual \emph{rose} from $7.7\cdot10^{-14}$ to
+$3.8\cdot10^{-8}$ as the cutoff went from $40$ to $46$, which reads as a refusal, while at $90$
+digits it is $1.5\cdot10^{-13}$ and $2.9\cdot10^{-16}$.
+
+So the band is a description of the well-resolved cases, not a test, and the asymmetry matters:
+the reading a precision floor fakes is the \emph{negative} one, since a floor puts a nonzero
+number where a vanishing singular value belongs. A hyperelliptic reading is protected by the gap
+it must show; a non-hyperelliptic reading is not protected by anything except a second precision,
+and the code refuses to return one without it.
+
+The test in both directions is the working precision. A genuine singular value does not notice it
+(on the non-hyperelliptic control the smallest singular value agrees to twenty-nine digits between
+thirty and fifty digits of precision), while a value limited by the precision moves with it: by a
+factor of about a hundred at the first base where a floor was met, and by seven orders of
+magnitude at $X_0^{4130}(1)$ above. So a residual is settled by raising the precision, never by
+assumption, and the seventeen readings this project has taken of the open quotients are all at the
+highest precision tried for each base.
+
+The verdict is numerical. The project treats it as a strong indication that directs the exact
+methods (a model, or an exact argument that excludes a hyperelliptic involution), not as a proof.
+
+\section{The model}
+
+Let $X=X_0^D(N)/W$ have genus three and suppose that an Atkin--Lehner element $u\notin W$ has
+$X/\langle W,u\rangle$ of genus one. The canonical image of a hyperelliptic curve carries no
+moduli, so the values of the differentials alone cannot give the equation; one derivative does.
+With $x=u_2/u_1$ a coordinate on the canonical conic, the function $y=(dx/dz)/u_1(z)$ is odd
+under the hyperelliptic involution and $y^2=f(x)$ with $f$ of degree eight. The derivative is
+taken by Cauchy's formula on a circle of radius $\rho$ around each sample point, where the
+trapezoidal rule converges like $(\rho/R)^n$, $R$ the distance to the nearest pole of $x$, and the
+noise of the input is amplified only by $1/\rho$; the same circle gives the derivative from half
+its points, which is the convergence check.
+
+\subsection*{The coordinate}
+The hyperelliptic involution is central in the automorphism group, so $u$ descends to an
+involution of the conic and the coordinate can be chosen with $u\colon x\mapsto -x$. Concretely,
+$u$ fixes one of the three differentials and negates the other two; the conic has no cross term
+between the fixed one and the other two (this is checked, and it would fail if the eigenvalue
+convention were wrong), so it reads $q_{pp}e_p^2+(\text{binary form in }e_a,e_b)$, and factoring
+the binary form gives $w_2^2=w_1w_3$ with $w_2=e_p$. Then $x=w_2/w_1$, the octic is even,
+$f(x)=g(x^2)$, and the quotient $X/u$ is $Y^2=g(t)$. The evenness is read off the fit, not
+assumed: the quartic $g$ in $t=x^2$ has five coefficients, is fitted on five sample points, and
+must predict $y^2$ at the others.
+
+\subsection*{The invariants}
+The coordinate-free invariants of a binary octic have heights far beyond what the values carry.
+The quartic $g$ with its two marked points $t=0,\infty$ has instead the three numbers
+\[
+A=\frac{c_0c_2}{c_1^2},\qquad B=\frac{c_1c_3}{c_2^2},\qquad C=\frac{c_2c_4}{c_3^2},
+\]
+unchanged by $t\mapsto\lambda t$ and by rescaling $g$, which fifteen digits settle at the
+control $X_0^{35}(1)$ ($A=1939/952200$, $B=34500/76729$, $C=1939/5000$). Each is recognised by
+the classical certainty criterion: a fraction $p/q$ within $\varepsilon$ of the computed real part
+is accepted when $q^2\varepsilon<\tfrac12$, so that no other fraction of denominator at most $q$
+lies as close, with $\varepsilon$ taken from the imaginary part of the computed number, which is
+pure noise. Swapping the two roots of the binary form is $x\mapsto 1/x$, which reverses $g$ and
+exchanges $A$ and $C$; both orderings are legitimate.
+
+\subsection*{The twist}
+$A,B,C$ fix $g$ up to $t\mapsto\lambda t$ and rescaling, so the curve is
+\[
+y^2=\kappa\,g_0(\mu x^2),\qquad g_0(t)=1+t+At^2+A^2Bt^3+A^3B^2Ct^4,
+\]
+with $\kappa,\mu\in\Q^\times$ mattering only modulo squares, and a complex-analytic computation
+cannot see either: its coordinate differs from a rational one by a complex scalar, which moves
+$\kappa$ and $\mu$ by complex squares. Both are solved rather than searched. The genus-one
+quotient is $Y^2=\kappa g_0(t)$, $\mu$ having disappeared under $t\mapsto t/\mu$, so at each odd
+prime $p$ of good reduction the point count of $Y^2=g_0(t)$ over $\F_p$ against the trace formula
+for $X/\langle W,u\rangle$ gives the Legendre symbol $(\kappa\mid p)$, one linear equation over
+$\F_2$ in the exponents of $\kappa$ over the primes of $2DN$ and the bad primes of $g_0$; the
+system is heavily overdetermined and must have a unique solution. Then $\mu$ is read off the
+curve itself the same way, $\kappa$ being known. The resulting curve is put in reduced minimal
+form and its point counts over $\F_p$ and $\F_{p^2}$ compared with the trace formula.
+
+\subsection*{When the coordinate is not rational}
+The two fixed points of $u$ on the conic are the points $x=0,\infty$; they are either two rational
+points or a conjugate pair over a quadratic field $K=\Q(\sqrt d)$. In the second case the
+coordinate with $u\colon x\mapsto -x$ exists only over $K$, the quartic $g$ has coefficients in
+$K$, and the nontrivial element $\sigma$ of $\mathrm{Gal}(K/\Q)$ acts as $x\mapsto a/x$ for some
+$a\in\Q^\times$, so that $B$ is rational while $A$ and $C$ are conjugate. This is what the
+values show at $X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$: $B$ recognised, $A$ and $C$
+complex conjugates to sixteen digits, with the conic and the predictions as clean as anywhere.
+
+The descent goes as follows. $K$ is read off the arithmetic: the fixed points of $u$ on $X$ are
+CM points, their fields of definition contain $K$, and $K$ is the quadratic subfield they have in
+common (at the base above, one discriminant, $-7752$, carries all four points, over a quartic
+field whose quadratic subfield is $\Q(\sqrt{-2})$). $A$ is then recognised in $K$ by simultaneous
+rational approximation of its two coordinates, which certifies a denominator up to about
+$(2\varepsilon^2)^{-1/3}$ at absolute accuracy $\varepsilon$. At the base above the data give
+$\varepsilon=4.4\cdot10^{-15}$, hence denominators up to $2.97\cdot10^9$, and the $A$ found has
+denominator $1\,262\,027\,560$, inside that bound; a fraction of larger height would be missed,
+not misread. Write $F(x)=g_0(\mu x^2)$ with
+$g_0(t)=1+t+At^2+A^2Bt^3+A^3B^2Ct^4$ and $\mu\in K^\times$. The identity
+$t^4g_0(1/t)=A^3B^2C\,g_0^\sigma(t/ABC)$ turns the condition that the branch divisor be
+Galois-stable, $F^\sigma(x)=c\,x^8F(a/x)$, into the norm equation
+$N_{K/\Q}(\mu)=1/(a^2B\,N_{K/\Q}(A))$, solvable exactly when $B\,N(A)$ is a norm from $K$
+(Hilbert~90); when it is not, that is the result. The solution $\mu$ is defined up to norm-one
+elements $\sigma(\gamma)/\gamma$, and $(\mu\sigma(\gamma)/\gamma,\,aN(\gamma))$ describes the
+same curves as $(\mu,a)$: the forms over $\Q$ of the marked curve are the twists by the involution
+$u$ over $\Q(\sqrt e)$, $e\in\Q^\times/\Q^{\times2}$, which appear as $(\mu/e,\,a=e)$, together
+with the quadratic twists by $r$. The quotient by $u$ is the same for every $e$. The descent
+datum of $y^2=\kappa F_e(x)$ is $(x,y)\mapsto(e/x,\,\epsilon y/x^4)$ with
+$\epsilon^2=\sigma(\kappa)c/\kappa$ and $N(\epsilon)=e^4$; taking $\epsilon=e^2$, Hilbert~90 gives
+$\kappa_0=1+c/e^4$, and every valid scalar is $\kappa_0$ times a rational number $r$ times a
+square. Nothing here needs $e$ to be a norm from $K$. When $e$ is a norm, $c\in K$ with $N(c)=e$
+splits the cocycle through $x=c(1+\sqrt d\,s)/(1-\sqrt d\,s)$, $s$ rational, and the curve is
+$y^2=rP(s)$ over $\Q$ with $u$ acting as $s\mapsto 1/(ds)$; when $e$ is not a norm, the conic
+$X/\iota$ is $X^2-dY^2=eZ^2$, which has no rational point, the curve has no model $y^2=f(s)$ over
+$\Q$, and the $K$-model with its datum is the result.
+
+Both $e$ and $r$ are read off point counts. At a prime $p$ split in $K$ the curve over $\F_p$ is
+the $K$-model reduced at a prime above $p$, so $e$ is found first, as the class whose counts match
+for one of the two quadratic twists, by a linear system over $\F_2$ in its exponents over the
+primes of $2DNd$ and of $\mu$; then $r$ from the same primes on $y^2=\kappa_0F_e$. The factor $d$
+in each is invisible at split primes, where $d$ is a square; at an inert prime the $\F_p$-points
+of the curve are the points $(x,y)$ over $\F_{p^2}$ with $x^{p+1}=e$, $y^2=F(x)$ and
+$y^{p-1}=\epsilon/x^4$, the factor $d$ in $r$ is the sign of $\epsilon$, and these counts settle
+both. The procedure is checked on curves whose equations are known: a synthetic octic with the
+symmetry $s\mapsto 1/(ds)$ over $\Q(\sqrt{-2})$ and $\Q(\sqrt2)$, moved to the $K$-coordinate and
+recovered up to isomorphism over $\Q$; the exact model of $X_0^{1326}(1)/\langle w_{17},w_{78}\rangle$
+with its two further involutions, whose fixed points are conjugate over $\Q(\sqrt{-2})$ and over
+$\Q(\sqrt2)$, recovered up to isomorphism over $\Q$ with the twists read off the trace formula, the
+quotients having Jacobians $1326c1$ and $1326b2$; and the model of
+$X_0^{210}(13)/\langle w_2,w_{21},w_{65}\rangle$ with its involution over $\Q(i)$.
+
+At $X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$ the outcome is the second kind: $e$ is not a
+norm from $\Q(\sqrt{-2})$, the conic has no rational point, and the curve is given by its model
+over $\Q(\sqrt{-2})$ with the datum $\sigma(x)=e/x$. The four checks pass: the fixed points of
+$u$ on the model are defined over a quartic field isomorphic to the field of definition of the CM
+points of discriminant $-7752$; the Jacobian of the descended quotient is the elliptic curve
+$y^2+xy=x^3-139x-271$ of conductor $1938$, with the Fourier coefficients of the $W$-fixed newform
+with $w_2=+1$; the $W$-fixed newforms split $1+2$; and the numerators of the zeta functions at the
+split primes agree with the trace formula, as do the counts over $\F_p$ at the inert primes through
+the datum. The same label applies as to every model here: numerical, confirmed by point counts.
+
+\subsection*{Where the fit is conditioned, and where it is not}
+The quartic is determined at its large-$t$ end by the sample points with large $\lvert x\rvert$
+and at its small-$t$ end by the others. When the moduli $\lvert x\rvert$ at the sample points span
+less than a factor of about five, the fit is ill conditioned and the invariants come out to far
+fewer digits than the values carry, with the predictions at $10^{-6}$ while the conic is at
+$10^{-15}$; this happened at several bases. The remedy is to add sample points where
+$\lvert x\rvert$ is large, which a coarse evaluation at a small cutoff finds, since $x$ is read off
+the conic.
+
+\section{The checks, and their status}
+
+Point counts determine the isogeny class of the Jacobian, not the curve, so four further checks
+are made, each of which the isogeny class cannot supply.
+
+\begin{enumerate}
+\item[(a)] The four fixed points of $u$ on $X$ are the images of the fixed points of the elements
+of the coset $uW$, CM points whose discriminants and multiplicities are known; their total over
+$\#W$ must be $4$, as Riemann--Hurwitz demands for a double cover of a genus-one curve by a
+genus-three curve. On the model they are the points over $x=0$, defined over $\Q(\sqrt\kappa)$,
+and over $x=\infty$, defined over $\Q(\sqrt{\text{leading coefficient}})$; the fields of definition
+of the CM points on $X$ are computed independently, by Shimura reciprocity, and must match pair by
+pair. A discriminant carrying four points of $X$ defined over one quadratic field contributes that
+field twice.
+\item[(b)] The Jacobian of $X/\langle W,u\rangle$ has conductor $DN$ and the Fourier coefficients
+of the $W$-fixed newform of level $DN$ with quaternionic $u$-eigenvalue $+1$, at every good prime
+below a hundred.
+\item[(c)] The $W$-fixed newforms of level $DN$ split $1+2$ under $u$.
+\item[(d)] The numerator of the zeta function of the model over $\F_p$, for good $p\le60$, equals
+the one assembled from the trace formula's counts over $\F_p,\F_{p^2},\F_{p^3}$, which determine
+it; likewise for the quotient.
+\end{enumerate}
+
+\subsection*{Status}
+The construction is numerical and the checks are arithmetic consequences of the isogeny class
+and of the Galois structure of the branch locus; none of them proves the model. The strongest
+evidence available is agreement with a model obtained exactly. At $X_0^{1326}(1)/\langle
+w_{17},w_{78}\rangle$, whose Borcherds level lies beyond the reach of the project's lattice-point
+enumerator, the double cover of the elliptic curve $X/\langle W,w_2\rangle$ branched at the CM
+points prescribed by the heights of Heegner points gives the exact model
+\[
+y^2=272x^8-72x^6-55x^4-18x^2+17,
+\]
+and the model recognised from the values of the three differentials at fourteen sample points,
+with $u=w_2$, is isomorphic to it over $\Q$.
+
+Two further comparisons with that construction, which has since reached more of these quotients,
+say what the numerical route is worth where it does not finish. At
+$X_0^{6}(185)/\langle w_2,w_{15},w_{111}\rangle$ the fit is clean but the certainty criterion
+refuses two of the three invariants; against the exact model
+$y^2=2025x^8+4716x^6-122x^4-5620x^2-999$ the three computed invariants agree to relative
+$2\cdot10^{-12}$, $4\cdot10^{-12}$ and $2\cdot10^{-12}$, with the measured errors matching the
+noise estimates the criterion reads off the imaginary parts. The refusals are correct rather than
+conservative: $q^2\varepsilon$ is about $15$ for the invariant of denominator $15\,792\,200$ and
+$0.8$ for the one of denominator $3721$, both refused, against $0.003$ for the one of denominator
+$137\,288$, which was accepted. So at that base the limit is the height of the invariants against
+the conditioning of the fit, and nothing else; the margin at $3721$ is thin, which measures how
+little more accuracy would settle it. Which of the two outer invariants is which is not
+determined by the fit -- exchanging the roots of the binary form is $x\mapsto1/x$, which reverses
+the quartic -- so a comparison must allow either ordering, and the two runs made of this base
+chose differently. And the pointless conic of the previous
+section is not peculiar to one base: the exact route finds the same phenomenon at
+$X_0^{6}(187)$ and $X_0^{22}(51)$, hyperelliptic quotients with no model $y^2=f(x)$ over $\Q$.
+
+\section{Two traps}
+
+\subsection*{Precision must rise with the cutoff}
+Raising the cutoff stops helping once the truncation error falls below the rounding error of the
+sum. At $X_0^{1326}(1)$ with thirty digits the residual of Noether's count was the same at cutoffs
+$46$ and $50$ while the rest of the spectrum agreed to twelve digits, which is exactly what a
+genuine small singular value would look like; raising the precision to fifty digits at cutoff
+$46$ lowered it by a factor of a hundred, and the curve is hyperelliptic, as the exact model
+confirms. The sum there has some sixty million terms; above roughly ten million terms the
+working precision must rise with the cutoff. Two other explanations were tested first and ruled
+out: the fixed scaling by which the Gram matrix is rounded before the enumeration changes no digit
+(the scaling only decides which vectors are offered, and each is then accepted or rejected at full
+precision), and widening the margin on the Fourier coefficients changes no digit either.
+
+\subsection*{The Eichler order is not deterministic across processes}
+Magma's construction of an Eichler order of level $N$ returns a different (conjugate) order from
+one process to the next, with the algebra's standard form and the real splitting unchanged. Values
+computed against different orders are values at different points of the curve, with different
+normalising constants, so a computation split over processes gives chunks that each lie on a
+canonical conic and share none. The order is therefore fixed once, through its $\Z$-basis in the
+standard basis of the algebra, and rebuilt in every process; with the same order the split
+computation reproduces the single-process invariants of the control to every digit. The same
+care is needed for the Galois conjugates of a newform orbit: the generator of the coefficient
+field, and with it the order in which the conjugates are listed, is not the same from one process
+to the next either, so the conjugates are ordered by their coefficients.
+
+\section{What is implemented}
+
+The package \texttt{NelsonShimizu.m} provides: the Eichler order serialised and rebuilt; the
+basis of $W$-fixed differentials, newforms of level exactly $DN$ together with the oldform
+eigenvectors $v_\chi$, with the dimension check; the evaluation of the basis at a pair of points
+by \eqref{eq:nelson} and \eqref{eq:pullback}, with the cutoff and precision as parameters; the
+direct measurement of the $W$-eigenvalues of every column; Noether's count with the reading rule
+above; the values on circles, their storage, and the model step through the elliptic quotient;
+and the four checks. Every docstring says that its result is numerical.
+
+\begin{thebibliography}{9}
+\bibitem{JL} H.~Jacquet and R.~P. Langlands, \emph{Automorphic forms on $GL(2)$}, Lecture Notes
+in Mathematics \textbf{114}, Springer (1970).
+\bibitem{Nelson} P.~D. Nelson, \emph{Evaluating modular forms on Shimura curves}, Math. Comp.
+\textbf{84} (2015), 2471--2503.
+\bibitem{Voight} J.~Voight, \emph{Quaternion algebras}, Graduate Texts in Mathematics
+\textbf{288}, Springer (2021).
+\bibitem{VW} J.~Voight and J.~Willis, \emph{Computing power series expansions of modular forms},
+in: Computations with modular forms, Contrib. Math. Comput. Sci. 6, Springer (2014), 331--361.
+\end{thebibliography}
+
+\end{document}
