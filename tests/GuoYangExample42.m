@@ -111,7 +111,9 @@ procedure test_guoyang_example42()
     raw := Read("data/borcherds/forms_142_1.m");
     car := Index(raw, "car<");
     firstdiv := car + 3 + Index(Substring(raw, car + 4, #raw), "<");
-    bad := GetTempDir() cat Tempname("forms142") cat ".m";
+    // GetTempDir() ends with a separator on some platforms and not on others, so join explicitly
+    td := GetTempDir();
+    bad := td cat (td[#td] eq "/" select "" else "/") cat Tempname("forms142") cat ".m";
     Write(bad, Substring(raw, 1, firstdiv) cat "1" cat Substring(raw, firstdiv + 1, #raw)
                : Overwrite);
     refused := false;
