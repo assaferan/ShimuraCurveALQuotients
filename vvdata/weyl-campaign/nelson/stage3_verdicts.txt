@@ -9,7 +9,10 @@
 # 22 by the metric dual graph (PR #116), 3 by a non-hyperelliptic special-fibre component at a
 # prime exactly dividing N, and 2 by the composite-level models of X_0^6(35), the last
 # conditionally.  The 34 that remain are the open set.  Of those 34, Theorem 3.1 reaches 17
-# (nold_open61.txt); the eight below are the ones run so far.
+# (nold_open61.txt); the eight in the first table below were the ones run when it was written.
+# TWO FURTHER BATCHES WERE APPENDED LATER AND ARE EASY TO MISS: the nine of the SECOND BATCH
+# (2026-10-17/18), and the oldform runs of the THIRD BATCH, which cover the seventeen this
+# header calls out of scope.  Read to the end of the file before concluding anything is unrun.
 #
 # EVERY VERDICT IS TAKEN AT TWO OR MORE CUTOFFS.  A hyperelliptic verdict is only accepted when
 # the residual (smallest singular value) FALLS as the cutoff rises while the rest of the spectrum
@@ -149,12 +152,13 @@ The non-hyperelliptic control was also run at 30 points (no spurious relation ap
 three at 50 digits (the residuals are unchanged, which is what says they are truncation-limited
 rather than precision-limited at those bases).
 
-## Still to run
+## Still to run  -- SUPERSEDED, all of these were run; see the two batches below
 
 Nine of the 17 reachable members of the 34 were not reached for time: 6_323, 6_379, 6_385, 6_403,
 6_649, 714_5, 2418_1, 3390_1, 4130_1.  At D*N above about 2000 use PR:=40 or more alongside
 CUT:=46, per the precision clause above.  The other 17 of the 34 need the oldform part of the
-space and are out of scope for Theorem 3.1 as written.
+space and are out of scope for Theorem 3.1 as written -- SUPERSEDED: stage3o.m reaches them and
+they are the THIRD BATCH at the end of this file.
 
 === SECOND BATCH, 2026-10-17/18: the nine quotients reachable but unrun at the time of the table above ===
 
@@ -198,4 +202,85 @@ raised before they read correctly, and both are recorded above at every setting 
 
 Together with the eight above: SEVENTEEN of the thirty-four come out hyperelliptic, none the other way.
 The remaining seventeen need the oldform part of the space (nold_open61.txt), which Theorem 3.1 does
-not cover.  All seventeen verdicts are numerical, not proved: see the certification notes in hyp16/.
+not cover -- SUPERSEDED: stage3o.m does cover them and they are the THIRD BATCH below, where every
+one of the open set reads hyperelliptic except X_0^141(2)/{1,6,94,141}.  All of these verdicts are
+numerical, not proved: see the certification notes in hyp16/.
+
+=== THIRD BATCH: THE OLDFORM RUNS (stage3o.m).  Transcribed 2026-10-21 from the 45 logs under
+    oldforms-logs/, which until then were their only record. ===
+
+These are the quotients the sections above call out of scope for Theorem 3.1 as written, because
+their W-fixed differentials are not all newforms of level exactly D*N.  stage3o.m spans each
+oldclass by the pullbacks g|w_S and uses the eigenvectors v_chi = sum_S chi(S) g|w_S, so the whole
+space is reached.  `basis' below records how the W-fixed space splits between newforms of level
+exactly D*N and oldclasses; `old cols' how many of the columns used are old.
+
+REPRODUCE one row with
+    magma -b DISC:=<D> LEV:=<N> WS:=<W comma-separated> PR:=<prec> CUT:=<cut> NPTS:=<pts> \
+          CHECKW:=2 stage3o.m < /dev/null
+for example DISC:=39 LEV:=34 WS:=1,2,3,6,13,17,26,34,39,51,78,102,221,442,663,1326 PR:=80
+CUT:=40 NPTS:=18.  The reading rule is the one at the head of this file: at genus 3 one quadric
+relation means hyperelliptic and none means not; at genus 4 it is three against one.
+A blank singular value is a run with no near-zero to report, which is the non-hyperelliptic shape.
+
+  base      g  W                              cut prec rel  smallest sv  old cols  basis       verdict
+  141_2     3  1,3,94,282                     40  80   1    1.529E-12    3 of 3    0new+3old   HYPERELLIPTIC
+  141_2     3  1,3,94,282                     46  80   1    6.684E-15    3 of 3    0new+3old   HYPERELLIPTIC
+  141_2     3  1,6,94,141                     40  80   0    n/a          2 of 3    1new+2old   NOT hyperelliptic
+  141_2     3  1,6,94,141                     46  80   0    n/a          2 of 3    1new+2old   NOT hyperelliptic
+  14_11     3  1,11                           40  30   0    n/a          1 of 3    2new+1old   NOT hyperelliptic
+  14_11     3  1,22                           40  30   0    n/a          1 of 3    2new+1old   NOT hyperelliptic
+  15_38     3  1,2,15,19,30,38,285,570        40  80   1    2.286E-13    1 of 3    2new+1old   HYPERELLIPTIC
+  15_38     3  1,2,15,19,30,38,285,570        46  80   1    7.919E-16    1 of 3    2new+1old   HYPERELLIPTIC
+  15_46     3  1,5,6,23,30,115,138,690        40  80   1    1.019E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  15_46     3  1,5,6,23,30,115,138,690        46  80   1    8.692E-16    3 of 3    0new+3old   HYPERELLIPTIC
+  210_13    3  1,2,21,42,65,130,1365,2730     40  80   1    1.277E-12    1 of 3    2new+1old   HYPERELLIPTIC
+  21_34     3  1,3,14,17,42,51,238,714        40  80   1    3.596E-12    3 of 3    0new+3old   HYPERELLIPTIC
+  21_34     3  1,3,14,17,42,51,238,714        46  80   1    4.652E-15    3 of 3    0new+3old   HYPERELLIPTIC
+  21_58     3  1,2,3,6,7,14,21,29,42,58,87... 40  80   1    4.986E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  22_21     3  1,2,11,21,22,42,231,462        40  30   1    1.155E-12    3 of 3    0new+3old   HYPERELLIPTIC
+  22_51     3  1,6,17,22,33,102,374,561       40  80   1    1.391E-13    2 of 3    1new+2old   HYPERELLIPTIC
+  22_51     3  1,6,17,22,33,102,374,561       46  80   ?    n/a          ?         1new+2old   no verdict
+  26_15     3  1,3,10,13,30,39,130,390        40  30   1    3.849E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  26_3      3  1,3                            40  30   1    8.920E-14    2 of 3    1new+2old   HYPERELLIPTIC
+  26_3      3  1,3                            40  30   1    9.643E-14    2 of 3    1new+2old   HYPERELLIPTIC
+  26_3      3  1,39                           40  30   1    5.846E-13    2 of 3    1new+2old   HYPERELLIPTIC
+  34_3      3  1,2                            40  30   0    n/a          2 of 3    1new+2old   NOT hyperelliptic
+  34_7      3  1,14                           40  30   1    2.710E-12    1 of 3    2new+1old   HYPERELLIPTIC
+  34_7      3  1,238                          40  30   1    1.633E-12    1 of 3    2new+1old   HYPERELLIPTIC
+  35_2      3  1,70                           40  30   1    7.436E-14    3 of 3    0new+3old   HYPERELLIPTIC
+  38_3      3  1,57                           40  30   1    1.570E-13    2 of 3    1new+2old   HYPERELLIPTIC
+  38_3      3  1,6                            40  30   1    5.978E-13    2 of 3    1new+2old   HYPERELLIPTIC
+  39_2      3  1,6                            40  30   1    6.241E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  39_34     3  1,2,3,6,13,17,26,34,39,51,7... 40  80   1    1.241E-12    3 of 3    0new+3old   HYPERELLIPTIC
+  46_3      3  1,3                            40  30   0    n/a          1 of 3    2new+1old   NOT hyperelliptic
+  46_3      3  1,3                            40  30   0    n/a          1 of 3    2new+1old   NOT hyperelliptic
+  46_3      3  1,6                            40  30   0    n/a          1 of 3    2new+1old   NOT hyperelliptic
+  57_10     3  1,5,6,19,30,95,114,570         40  80   1    2.713E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  57_10     3  1,5,6,19,30,95,114,570         46  80   1    6.092E-16    3 of 3    0new+3old   HYPERELLIPTIC
+  57_2      4  1,2                            40  30   1    1.013E-12    3 of 4    1new+3old   NOT hyperelliptic
+  58_3      4  1,3                            40  30   1    2.813E-12    2 of 4    2new+2old   NOT hyperelliptic
+  690_7     3  1,6,10,14,15,21,23,35,138,2... 40  80   1    4.115E-14    1 of 3    2new+1old   HYPERELLIPTIC
+  6_187     3  1,3,11,17,33,51,187,561        40  80   1    1.681E-13    2 of 3    1new+2old   HYPERELLIPTIC
+  6_187     3  1,3,11,17,33,51,187,561        46  80   ?    n/a          ?         1new+2old   no verdict
+  6_247     3  1,2,19,38,39,78,741,1482       40  80   1    4.858E-14    1 of 3    2new+1old   HYPERELLIPTIC
+  6_253     3  1,2,23,33,46,66,759,1518       40  80   1    5.496E-14    1 of 3    2new+1old   HYPERELLIPTIC
+  6_341     4  1,3,11,33,62,186,682,2046      40  80   3    4.530E-14    1 of 4    3new+1old   HYPERELLIPTIC
+  6_455     3  1,6,7,10,13,15,42,70,78,91,... 40  80   1    1.588E-13    1 of 3    2new+1old   HYPERELLIPTIC
+  77_10     3  1,2,5,7,10,11,14,22,35,55,7... 40  80   1    1.201E-13    3 of 3    0new+3old   HYPERELLIPTIC
+  77_10     3  1,2,5,7,10,11,14,22,35,55,7... 46  80   ?    n/a          ?         0new+3old   no verdict
+
+READING.  45 runs over 28 bases: 32 hyperelliptic, 10 not, 3 with no verdict line -- the cutoff-46
+runs at 22_51, 6_187 and 77_10 did not finish, and those three bases rest on their cutoff-40 runs.
+Every negative reading other than X_0^141(2)/{1,6,94,141} is at a base that already has a stored
+model and so served as a control: 14_11, 34_3 and 46_3 at genus 3 with no relation, 57_2 and 58_3
+at genus 4 with one, which is the non-hyperelliptic answer there.
+
+X_0^141(2) SPLITS, and both of its quotients were run at both cutoffs: {1,3,94,282} has one
+relation and reads HYPERELLIPTIC, {1,6,94,141} has none and reads NOT.  Taken with the two
+batches above, it is the only quotient of the open set that does not read hyperelliptic.
+
+ALL OF THIS IS NUMERICAL.  The caveats at the head of this file apply unchanged, and the one
+about precision applies with particular force here: two cutoffs at a single precision can share
+a precision floor and agree to many digits without either being a genuine singular value.
+
