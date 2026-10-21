@@ -38,4 +38,5 @@ DualGraph.m
 JacobianTorsion.m
 ComponentInvolution.m
 NelsonShimizu.m
+NelsonFilter.m
 }
