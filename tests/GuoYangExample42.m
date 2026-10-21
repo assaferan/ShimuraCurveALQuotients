@@ -85,6 +85,44 @@ procedure test_guoyang_example42()
         assert forall{m : m in [Valuation(g)..0] | IsIntegral(Coefficient(g, m))};
         assert Coefficient(g, 0) eq 0;
     end for;
+    // Forms with these divisors are banked as their combinations of eta quotients, which is what
+    // says such forms exist without solving for one.  They need not be the forms just found: two
+    // inputs with the same Heegner divisor differ by one with no CM divisor, which changes the
+    // lift by a constant (the same phenomenon as the header's comparison with the paper), and the
+    // banked set was solved for with integral principal parts while this one was not.  What the
+    // certificate must support is the claim the search supports -- the paper's four divisors, with
+    // integral principal parts.
+    banked := BorcherdsFormsFromFile("data/borcherds/forms_142_1.m", star);
+    assert #Keys(banked) eq 4;
+    assert {Set(DivisorOfBorcherdsForm(banked[i], star)) : i in Keys(banked)} eq Set(paper_div);
+    for i in Keys(banked) do
+        gb := qExpansionAtoo(banked[i], 1);
+        assert forall{m : m in [Valuation(gb)..0] | IsIntegral(Coefficient(gb, m))};
+    end for;
+    // The reading is only worth something if it would refuse a file that does not support the
+    // claim, so here is one that does not: the same four forms with a divisor altered beside one
+    // of them.  The read must fail, and fail because the rebuilt divisor disagrees with the
+    // stored one -- not for some other reason, which is why the message is checked too.
+    // The edit is made on the text rather than on the parsed file because `eval` of a data file
+    // inside a procedure segfaults Magma 2.29-7 under run_tests.m.  A divisor is printed as a
+    // sequence over car<IntegerRing(), RationalField()>, so the first angle bracket after that
+    // opens the first entry <discriminant, multiplicity>, and a digit inserted there moves that
+    // discriminant and leaves the rest of the file alone.
+    raw := Read("data/borcherds/forms_142_1.m");
+    car := Index(raw, "car<");
+    firstdiv := car + 3 + Index(Substring(raw, car + 4, #raw), "<");
+    bad := GetTempDir() cat Tempname("forms142") cat ".m";
+    Write(bad, Substring(raw, 1, firstdiv) cat "1" cat Substring(raw, firstdiv + 1, #raw)
+               : Overwrite);
+    refused := false;
+    try
+        _ := BorcherdsFormsFromFile(bad, star);
+    catch e
+        refused := true;
+        assert "not the" in e`Object;     // "...rebuilds with divisor X, not the Y stored with it"
+    end try;
+    assert refused;
+    System("rm -f " cat bad);
 
     // (3) Schofer values at the ten points, the two coordinates, and the paper's table entry by
     // entry.  Every disagreement is printed before the assertion fires.
