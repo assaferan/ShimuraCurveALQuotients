@@ -1,0 +1,194 @@
+% Hyperellipticity of a Shimura curve quotient from several Borcherds divisors, by counting against
+% the rational torsion of the Jacobian, with no appeal to Guo-Yang's Assumption 40.
+%
+% The argument is elementary once the two inputs are in place -- Borcherds' finite-order character
+% and a bound on the rational torsion -- and the point of writing it down is that both inputs are
+% computable here without any model of the curve, so the criterion is effective.
+%
+% Status: the mathematics below is complete as stated. Its application to X_0^46(31)* rests on a
+% search whose exhaustiveness is not part of the argument (see Remark rem:exhaust), and on the
+% banked certificates described in Section sec:effective.
+%
+% Numbering is local to this file.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\divisor}{div}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\PP}{\mathbb{P}}
+\begin{document}
+\title{Hyperellipticity from several Borcherds divisors, by counting torsion}
+\author{}
+\date{\today}
+\maketitle
+
+\section{The problem this removes}
+
+Guo and Yang's method for the equation of a Shimura curve quotient produces functions as Borcherds
+lifts: a weakly holomorphic form $f$ of weight $1/2$ with prescribed principal part lifts to a
+meromorphic modular form $\Psi_f$ whose divisor is the Heegner divisor $Z(f)$ prescribed with it.
+What the lift does not give for free is that $\Psi_f$ is a \emph{function} on the quotient. Their
+Assumption~40 asks exactly this, and it is a genuine hypothesis: the character of $\Psi_f$ has
+finite order, so a power of $\Psi_f$ is a function and the class of $Z(f)$ is torsion in the
+Jacobian, but the class need not be trivial.
+
+So a search that returns one divisor $Z(f)$ of degree two proves hyperellipticity only under the
+assumption. The observation below is that a search returning \emph{several} divisors proves it
+outright, as soon as there are more of them than the rational torsion of the Jacobian can separate.
+The hypothesis is then replaced by a count, and both sides of the count are computable without a
+model of the curve.
+
+\section{The criterion}
+
+Throughout, $X$ is a smooth projective geometrically connected curve over $\Q$ of genus $g \ge 2$
+with $X(\Q) \neq \emptyset$, and $J = \Jac(X)$. Since $X$ has a rational point, the natural map
+$\Pic^0(X)(\Q) \to J(\Q)$ is an isomorphism, so a $\Q$-rational divisor class of degree zero is a
+point of $J(\Q)$.
+
+\begin{lemma}[Borcherds]\label{lem:torsion}
+Let $f$ be a weakly holomorphic form whose principal part is integral, and let $\Psi_f$ be its
+Borcherds lift on $X$, with divisor $Z(f)$. Then the class of $Z(f)$ is torsion in $J(\Q)$.
+\end{lemma}
+
+\begin{proof}
+Integrality of the principal part is the hypothesis under which the character of $\Psi_f$ has
+finite order, say $n$; see \cite[proof of Theorem 4.1]{borcherds-gkz}, with the correction
+\cite{borcherds-correction} restoring the finite-order condition that the printed statement omits
+from the definition of a principal Heegner divisor. Then $\Psi_f^{\,n}$ has trivial character and
+is a rational function on $X$, so $n \cdot Z(f) = \divisor(\Psi_f^{\,n})$ is principal. The divisor
+$Z(f)$ is a sum of Heegner cycles and so is Galois-stable, hence defines a class in
+$\Pic^0(X)(\Q) = J(\Q)$, which is therefore killed by $n$.
+\end{proof}
+
+\begin{corollary}\label{cor:rational}
+Let $f$ have \emph{rational} principal part, with $n$ a positive integer clearing its
+denominators, and suppose the Borcherds lift of $nf$ has divisor $n Z$. Then the class of $Z$ is
+torsion in $J(\Q)$.
+\end{corollary}
+
+\begin{proof}
+$nf$ has integral principal part, so by Lemma~\ref{lem:torsion} the class of $nZ$ is torsion. A
+class whose $n$-th multiple is torsion is itself torsion, $J(\Q)$ being finitely generated.
+\end{proof}
+
+\begin{theorem}\label{thm:count}
+Let $t$ be an integer with $\#J(\Q)_{\mathrm{tors}} \le t$. Suppose $D_1, \dots, D_r$ are pairwise
+distinct effective divisors of degree two on $X$, each defined over $\Q$, such that for all $i \ne
+j$ some positive integer multiple of $D_i - D_j$ is the divisor of a Borcherds form with integral
+principal part. If $r > t$, then $X$ is hyperelliptic.
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:torsion} and Corollary~\ref{cor:rational} the classes $[D_i - D_1]$, for
+$i = 1, \dots, r$, all lie in
+$J(\Q)_{\mathrm{tors}}$, a set of at most $t$ elements. As $r > t$, two of them coincide: there are
+$i \ne j$ with $[D_i - D_1] = [D_j - D_1]$, hence $[D_i - D_j] = 0$ and $D_i \sim D_j$.
+
+Since $D_i \ne D_j$, the linear equivalence is realised by a nonconstant $h \in \Q(X)$ with
+$\divisor(h) = D_i - D_j$. Write $G$ for the greatest common divisor of the effective divisors $D_i$
+and $D_j$, so that the polar divisor of $h$ is $D_j - G$, of degree $2 - \deg G$ with $\deg G \in
+\{0, 1\}$; it is not $2$, as $D_i \neq D_j$. The degree of $h$ as a morphism $X \to \PP^1$ is the
+degree of its polar divisor. If $\deg G = 1$ that degree is one and $X \cong \PP^1$, contradicting
+$g \ge 2$. Hence $\deg G = 0$ and $h$ has degree two, so $X$ is hyperelliptic.
+\end{proof}
+
+\begin{remark}
+Only $r > t$ is used, not which pair of divisors becomes equivalent, and the proof does not
+identify the pair. For the \emph{equation} of $X$ one must know it, and there the candidates are
+few and can be separated by a different means; see Remark~\ref{rem:which}.
+\end{remark}
+
+\begin{remark}
+The argument is not special to degree two. With $D_1, \dots, D_r$ effective of degree $d$ and
+$r > t$, the same count gives $D_i \sim D_j$ and hence a map $X \to \PP^1$ of degree $d - \deg G
+\le d$, so the gonality of $X$ is at most $d$. Degree two is the case where the conclusion is a
+dichotomy, because a map of degree one is excluded by the genus.
+\end{remark}
+
+\section{Why both sides of the count are computable}\label{sec:effective}
+
+The criterion is useful here because neither hypothesis needs a model of $X$.
+
+\emph{The torsion bound.} For an abelian variety over $\Q$ with good reduction at an odd prime $p$,
+reduction is injective on the rational torsion \cite[Appendix]{katz-torsion}. Hence
+$\#J(\Q)_{\mathrm{tors}}$ divides $\#J(\mathbb{F}_p) = P_p(1)$, where $P_p$ is the numerator of the
+zeta function of $X$ over $\mathbb{F}_p$, and so divides the greatest common divisor of these over
+any set of such primes. For a quotient of a Shimura curve the point counts over $\mathbb{F}_{p^k}$
+come from the trace formula, so $P_p$ and the bound are computed with no equation for $X$ in sight.
+
+\emph{The divisors.} Each $D_i - D_j$ is produced by a search for a weakly holomorphic form with
+that prescribed Heegner divisor. Two things are then to be checked, and both are checked on the
+form itself rather than on the search: the denominator $n$ of its principal part, after which
+Corollary~\ref{cor:rational} applies --- in practice the search returns a rational principal part,
+its integrality option making the solution integral over an echelonised basis of the pool, which is
+a weaker thing --- and that a form with that principal part exists at all. The second is
+witnessed by presenting the form as a combination of eta quotients, which is what the search
+computes and what the existence claim really rests on. The coefficients of that combination are
+rational, and in practice large --- they come out of an echelon form --- so the presentation is not
+short; but it is finite and explicit, and expanding it and recomputing the divisor is cheap
+compared with the search that produced it. Recording it is therefore what lets a later reader
+verify the hypothesis without repeating the search.
+
+\begin{remark}\label{rem:exhaust}
+The count needs $r$ divisors to exist, not that the search found all there are. Exhaustiveness of a
+search is therefore never part of the argument, which matters because exhaustiveness is the part
+that is expensive and the part that depends on a chosen window of pole orders.
+\end{remark}
+
+\section{The case that prompted this}
+
+\begin{example}
+Let $X = X_0^{46}(31)/W_{46,31}$, of genus three, which has no Atkin--Lehner involution left and so
+is reached by none of the cover constructions. A search over the degree-two divisors supported on
+its rational CM points and its quadratic CM cycles returns exactly six, and they are the six
+pairwise differences of
+\[
+  A = P_{-3} + P_{-403}, \quad B = P_{-24} + P_{-232}, \quad C = P_{-115} + P_{-372}, \quad
+  D = Z(-292),
+\]
+the last a cycle of degree two; the six principal parts are rational with denominators $20, 20,
+10, 10, 4, 10$, so Corollary~\ref{cor:rational} applies to each. The trace
+formula gives $\#J(\mathbb{F}_p)$ equal to $86, 356, 604, 1882, 3554, 5560$ at
+$p = 3, 5, 7, 11, 13, 17$, whose greatest common divisor is $2$, so $t = 2$. Four effective
+divisors against $t = 2$ satisfies $r > t$ with room to spare, and Theorem~\ref{thm:count} gives
+that $X$ is hyperelliptic, unconditionally.
+\end{example}
+
+\begin{remark}\label{rem:which}
+Which of the six differences is principal is not determined by the count. For the equation one
+takes each candidate in turn as the degree-two coordinate, builds the model it gives, and compares
+the number of points of that model over $\mathbb{F}_p$ with the trace formula, which again needs no
+prior model and which a wrong candidate fails.
+\end{remark}
+
+\begin{remark}
+The six divisors have pole orders at infinity between $556$ and $1760$, and three of them use the
+quadratic cycle. Neither is reachable by a search restricted to divisors with a single double pole,
+which is how such searches were previously posed; that restriction returns nothing at all here. It
+is the availability of several divisors, not of one deeper one, that removes the assumption.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{borcherds-gkz} R. E. Borcherds, \emph{The Gross--Kohnen--Zagier theorem in higher
+dimensions}, Duke Math. J. \textbf{97} (1999), 219--233.
+\bibitem{borcherds-correction} R. E. Borcherds, \emph{Correction to: ``The Gross--Kohnen--Zagier
+theorem in higher dimensions''}, Duke Math. J. \textbf{105} (2000), 183--184.
+\bibitem{guo-yang} J.-W. Guo and Y. Yang, \emph{Equations of hyperelliptic Shimura curves},
+Compositio Math. \textbf{153} (2017), 1--40.
+\bibitem{katz-torsion} N. M. Katz, \emph{Galois properties of torsion points on abelian varieties},
+Invent. Math. \textbf{62} (1981), 481--502.
+\end{thebibliography}
+\end{document}
