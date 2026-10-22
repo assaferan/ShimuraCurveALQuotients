@@ -30,6 +30,7 @@ stages := [
     "UpdateByGenus",
     "UpdateCurves1",
     "FilterBySpecialFiber",
+    "FilterByComponentInvolution",
     "FilterByALFixedPointsOnQuotient",
     "UpdateCurves2",
     "Genus3CoversGenus2",

@@ -18,7 +18,7 @@
 //   FilterByComplicatedALFixedPointsOnQuotient,
 //   FilterByGeneralizedComplicatedFixedPoints, FilterByGeneralizedComplicatedFixedPointsStar,
 //   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
-//   FilterByDegeneracyMorphism
+//   FilterByDegeneracyMorphism, FilterBySpecialFiber, FilterByComponentInvolution
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
@@ -135,6 +135,8 @@ case stage:
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterBySpecialFiber":
         FilterBySpecialFiber(~subseq);
+    when "FilterByComponentInvolution":
+        FilterByComponentInvolution(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":

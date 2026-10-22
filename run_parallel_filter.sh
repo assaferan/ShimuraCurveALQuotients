@@ -72,9 +72,9 @@ case "${STAGE}" in
         INPUT_DAT="${DATA_DIR}/curves_after_FilterStarCurvesByFpAutomorphisms.dat"
         ;;
     FilterByALFixedPointsOnQuotient)
-        # Preceded by FilterBySpecialFiber (moved to the front of the all-quotients block so its
-        # cheap determinations prune every downstream filter), hence reads its output.
-        INPUT_DAT="${DATA_DIR}/curves_after_FilterBySpecialFiber.dat"
+        # Preceded by FilterBySpecialFiber and FilterByComponentInvolution (the two cheapest filters,
+        # at the front of the all-quotients block so they prune every downstream filter).
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByComponentInvolution.dat"
         ;;
     FilterByDegeneracyMorphism)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves3.dat"
@@ -92,6 +92,10 @@ case "${STAGE}" in
         # all-quotients block (right after UpdateCurves1): it is by far the cheapest filter, so
         # its determinations prune all the heavier filters that follow.
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurves1.dat"
+        ;;
+    FilterByComponentInvolution)
+        # Criterion H; genera only, so it runs right after the special-fibre stage.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterBySpecialFiber.dat"
         ;;
     FilterByAutomorphismGroup)
         # Brandt-Stichtenoth lemma on the known automorphism group; after both refined
@@ -124,6 +128,7 @@ case "${STAGE}" in
         echo "           FilterByALFixedPointsOnQuotient, FilterByDegeneracyMorphism," >&2
         echo "           FilterByComplicatedALFixedPointsOnQuotient," >&2
         echo "           FilterByGeneralizedComplicatedFixedPoints, FilterBySpecialFiber," >&2
+        echo "           FilterByComponentInvolution," >&2
         echo "           FilterByAutomorphismGroup, FilterByTrace, FilterByTwistedTrace," >&2
         echo "           FilterByWeilPolynomial, FilterByTwistedWeilPolynomial," >&2
         echo "           FilterByNonALInvolutions," >&2
