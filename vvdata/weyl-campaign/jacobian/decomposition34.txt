@@ -25,10 +25,14 @@
 # decomposition, never coarser.  The coarsest pattern over several primes is therefore the answer,
 # and the number of primes realising it is the confidence.
 #
-# WHAT EACH METHOD NEEDS.  oldform.m uses only GenusShimuraCurveQuotient and Magma's own modular
-# symbols, so it runs on this branch as it stands.  jacdecomp.m calls ZetaNumeratorViaTrace, which
-# at the time of writing exists ONLY on the branch of PR #130 and is absent from both main and this
-# one; the column below was computed there.
+# BOTH SCRIPTS RUN ON THIS BRANCH, which is the point of writing them this way.  oldform.m uses
+# only GenusShimuraCurveQuotient and Magma's own modular symbols.  jacdecomp.m builds the zeta
+# numerator itself from ComputePointsViaTrace -- the same construction as ZetaNumeratorViaTrace,
+# which lives on the branch of PR #130 and is on neither main nor this one, so calling it would
+# have left the script unrunnable here.  The inlined version was checked against the #130-based one
+# and reproduces all 34 rows identically.  The two intrinsics it does use, in automorphisms.m and
+# ShimuraQuotients.m, are byte-identical on main and on this branch, so the shared-path divergence
+# noted below does not touch this computation.  When #130 lands, the construction can become a call.
 #
 # ⚠ Method 2 is EVIDENCE, not proof, wherever the coarsest pattern was realised at few primes: the
 # three weakest rows were 2030_1 at 3/6 and 6_385 and 714_5 at 2/5.  Method 1 settles all three,
