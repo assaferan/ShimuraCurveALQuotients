@@ -2,6 +2,7 @@
 // Writes a table to data/stage_counts.txt.
 SetQuitOnError(true);
 AttachSpec("ShimuraQuotients.spec");
+SetColumns(0);   // no line wrapping: output lines (and LaTeX) must not be split at 80 columns
 SetVerbose("ShimuraQuotients", 0);
 
 out := "data/stage_counts.txt";
@@ -18,6 +19,7 @@ stages := [
     "UpdateByGenusStar",
     "FilterByTraceStar",
     // (HHProposition1 is check-only: its snapshot equals FilterByTraceStar's, so it has no row.)
+    "FilterByDualGraphStar",
     "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar",
     "FilterByGeneralizedComplicatedFixedPointsStar",
@@ -28,6 +30,7 @@ stages := [
     "UpdateByGenus",
     "UpdateCurves1",
     "FilterBySpecialFiber",
+    "FilterByComponentInvolution",
     "FilterByALFixedPointsOnQuotient",
     "UpdateCurves2",
     "Genus3CoversGenus2",
@@ -41,17 +44,21 @@ stages := [
     "UpdateCurvesAfterAutomorphismGroup",
     "FilterByTrace",
     "UpdateCurves6",
+    "FilterByDualGraph",
+    "UpdateCurvesAfterDualGraph",
     "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace",
     "FilterByWeilPolynomial",
     "UpdateCurves7",
     "FilterByTwistedWeilPolynomial",
     "UpdateCurvesAfterTwistedWeilPolynomial",
+    "FilterByCanonicalQuadrics",
+    "UpdateCurvesAfterCanonicalQuadrics",
     "FilterByNonALInvolutions",
     "UpdateCurves8"
 ];
 
-W(Sprintf("%-3o %-44o %-6o %-6o %-7o %-6o %-6o", "#", "Step", "total", "open", "ruled", "proved", "+ruled"));
+W(Sprintf("%-3o %-46o %-6o %-6o %-7o %-6o %-6o", "#", "Step", "total", "open", "ruled", "proved", "+ruled"));
 // A stage whose file does not exist yet (the stages added after the last full run, until the
 // rerun) is left out of the table, and the remaining rows are numbered consecutively; on data
 // from before those stages the table is therefore unchanged.
@@ -78,7 +85,7 @@ for s in stages do
     o := #[X : X in curves | Status(X) eq "open"];
     r := #[X : X in curves | Status(X) eq "ruled"];
     p := #[X : X in curves | Status(X) eq "proved"];
-    W(Sprintf("%-3o %-44o %-6o %-6o %-7o %-6o %-6o", i, s, n, o, r, p, r-prevR));
+    W(Sprintf("%-3o %-46o %-6o %-6o %-7o %-6o %-6o", i, s, n, o, r, p, r-prevR));
     prevR := r;
     delete curves;
 end for;

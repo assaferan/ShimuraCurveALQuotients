@@ -84,6 +84,7 @@ The star-curve block in `run_pipeline.sh` reads:
     FindPairs, UpdateGenera, UpdateByGenusStar
     FilterByTraceStar                         parallel
     HHProposition1                            check only (VerifyHHTable2, VerifyHHProposition1)
+    FilterByDualGraphStar                     parallel, by level  NEW
     FilterByTwistedTraceStar                  parallel, by level  NEW
     SpecialFiberIsomorphismStar
     FilterByGeneralizedComplicatedFixedPointsStar  parallel     NEW
@@ -115,10 +116,18 @@ its input unchanged to `curves_after_HHProposition1.dat`. HH Proposition 1 decid
 X_0^*(546), (205, 3), (1995, 2)) are credited to the special fiber isomorphism, and the stage has
 no row in the stage counts, the attribution or the paper tables.
 
+`FilterByDualGraphStar` runs after the check-only `HHProposition1`, so `VerifyHHTable2` still reads
+`curves_after_FilterByTraceStar.dat`. The HH curves have D = 1 and are not applicable to it anyway.
+Both dual-graph stages apply only to D > 1 with N squarefree, and they skip everything else. They
+cache each fiber in `data/dualgraph/` (gitignored, keyed `dualgraph_v2_<D>_<N>_<p>`; override with
+`DUALGRAPH_CACHE_DIR`), so Phase B reuses the fibers built in Phase A. A curve whose quotient graph
+does not have the curve's genus stops the stage with `DUALGRAPH_GENUS`, like `BADDIM`.
+
 The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 
     UpdateCurves1
     FilterBySpecialFiber                      parallel
+    FilterByComponentInvolution               parallel
     FilterByALFixedPointsOnQuotient           parallel
     UpdateCurves2, Genus3CoversGenus2, UpdateCurves3
     FilterByDegeneracyMorphism                parallel
@@ -130,12 +139,16 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurvesAfterAutomorphismGroup                            NEW
     FilterByTrace                             parallel
     UpdateCurves6
+    FilterByDualGraph                         parallel, by level  NEW
+    UpdateCurvesAfterDualGraph                                    NEW
     FilterByTwistedTrace                      parallel, by level  NEW
     UpdateCurvesAfterTwistedTrace                                 NEW
     FilterByWeilPolynomial                    parallel
     UpdateCurves7
     FilterByTwistedWeilPolynomial             parallel, by level  NEW
     UpdateCurvesAfterTwistedWeilPolynomial                        NEW
+    FilterByCanonicalQuadrics                 sequential          NEW
+    UpdateCurvesAfterCanonicalQuadrics                            NEW
     FilterByNonALInvolutions                  parallel
     UpdateCurves8
 
@@ -145,7 +158,8 @@ read `curves_after_UpdateCurves<N>.dat`, so every existing name keeps its meanin
 
 **Splitting by level.** Most parallel stages deal curves to chunks one at a time, in descending order of
 `CurveCostProxy`. The twisted stages (all four) compute the modular symbols of level D·N once and use them
-for every curve at that level. `parallel_filter_worker.m` therefore deals whole **levels** to the
+for every curve at that level; the two dual-graph stages likewise build the graphs once per level.
+`parallel_filter_worker.m` therefore deals whole **levels** to the
 chunks for them, again heaviest first. The merge (`parallel_merge.m`) is unchanged: every chunk's
 curves are tagged with their original index.
 
@@ -164,6 +178,11 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
 
 ## Cost hot spots
 
+* **`FilterByDualGraphStar` / `FilterByDualGraph`**: one fiber per (D, N, p), cached on disk. The
+  largest star level (39270, 1) takes 50 s at p = 2. Phase A takes at most about 2.7 CPU-h (an upper
+  bound from the mass formula over all 945 applicable star levels; on the committed data only 354
+  star curves are undecided and applicable), and Phase B at most 1.2 CPU-h before cache reuse. The
+  per-curve work is under 0.01 s.
 * **`FilterByWeilPolynomial`**: up to **about 1.7 h** on a single curve at the top end, and the top
   end is **high genus at a moderate level** — not a big level, and not a large `W` either. The stage
   needs one trace at `n = p^g` per good prime up to its bound, and Eichler--Selberg evaluates it as
@@ -191,6 +210,10 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   lemma and contains a non-AL central involution. Its quotient genus then comes from
   `TraceDNewQuotient`, which takes about 30 s per involution at level ~1000 and grows with the
   level.
+* **`FilterByCanonicalQuadrics`**: Noether's count of quadrics through the canonical image, from
+  the W-fixed weight-2 cusp forms at D = 1 and from a stored model (`data/models/`) at D > 1; about
+  a minute for the whole list, sequential. It decides nothing at a base with D > 1 and no model
+  file, which is where most of the undecided curves live.
 * **`FilterByNonALInvolutions`** and **`FilterByGeneralizedComplicatedFixedPoints`** skip levels
   above 3000 (`NonALModSymMaxLevel`, `GeneralizedComplicatedMaxLevel`).
 

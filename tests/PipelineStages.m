@@ -8,16 +8,18 @@ function StageOrder(text, names)
 end function;
 
 wc := [
-    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
+    "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
     "FilterByWeilPolynomialStar",
     "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1",
+    "FilterByNonALInvolutionsStar", "UpdateByGenus", "UpdateCurves1", "FilterBySpecialFiber", "FilterByComponentInvolution", "FilterByALFixedPointsOnQuotient", "UpdateCurves2", "Genus3CoversGenus2",
     "FilterByComplicatedALFixedPointsOnQuotient", "FilterByGeneralizedComplicatedFixedPoints",
     "UpdateCurves5", "FilterByAutomorphismGroup", "UpdateCurvesAfterAutomorphismGroup",
-    "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
+    "FilterByTrace", "UpdateCurves6", "FilterByDualGraph", "UpdateCurvesAfterDualGraph",
+    "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
     "FilterByWeilPolynomial", "UpdateCurves7", "FilterByTwistedWeilPolynomial",
-    "UpdateCurvesAfterTwistedWeilPolynomial", "FilterByNonALInvolutions", "UpdateCurves8"];
+    "UpdateCurvesAfterTwistedWeilPolynomial", "FilterByCanonicalQuadrics", "UpdateCurvesAfterCanonicalQuadrics",
+    "FilterByNonALInvolutions", "UpdateCurves8"];
 pos, ok := StageOrder(Read("workingcode.m"), wc);
 printf "  workingcode.m positions %o\n", pos;
 assert ok;
@@ -27,13 +29,15 @@ assert Position(Read("workingcode.m"), "<\"UpdateCurves8\", UpdateCurves>\n*];")
 rp := Read("run_pipeline.sh");
 body := rp[Position(rp, "set -euo pipefail")..#rp];   // skip the header comment
 sh := [
-    "FilterByTraceStar", "HHProposition1", "FilterByTwistedTraceStar",
+    "FilterByTraceStar", "HHProposition1", "FilterByDualGraphStar", "FilterByTwistedTraceStar",
     "SpecialFiberIsomorphismStar", "FilterByGeneralizedComplicatedFixedPointsStar",
     "FilterByWeilPolynomialStar", "FilterByTwistedWeilPolynomialStar", "FilterStarCurvesByFpAutomorphisms",
-    "FilterByNonALInvolutionsStar", "UpdateCurves5", "FilterByAutomorphismGroup",
-    "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByTwistedTrace",
+    "FilterByNonALInvolutionsStar", "FilterBySpecialFiber", "FilterByComponentInvolution", "UpdateCurves2", "Genus3CoversGenus2", "UpdateCurves5", "FilterByAutomorphismGroup",
+    "UpdateCurvesAfterAutomorphismGroup", "FilterByTrace", "UpdateCurves6", "FilterByDualGraph", "UpdateCurvesAfterDualGraph",
+    "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
     "FilterByTwistedWeilPolynomial", "UpdateCurvesAfterTwistedWeilPolynomial",
+    "FilterByCanonicalQuadrics", "UpdateCurvesAfterCanonicalQuadrics",
     "FilterByNonALInvolutions", "UpdateCurves8"];
 pos, ok := StageOrder(body, sh);
 printf "  run_pipeline.sh positions %o\n", pos;
@@ -70,7 +74,7 @@ for line in Split(body, "\n") do
 end for;
 printf "  star phase, workingcode.m:    %o\n", wstar;
 printf "  star phase, run_pipeline.sh: %o\n", sstar;
-assert #wstar eq 11;
+assert #wstar eq 12;   // the two newest star stages: FilterByDualGraphStar, FilterByGeneralizedComplicatedFixedPointsStar
 assert wstar eq sstar;
 // compute_data has no VerifyHHTable2 of its own after FilterByTraceStar: the next stage,
 // CheckHHProposition1, runs it on the same curves.
@@ -162,3 +166,45 @@ copy := eval before;
 HHProposition1(~copy);
 hh := [i : i in [1..#copy] | assigned copy[i]`IsSubhyp and not assigned star[i]`IsSubhyp];
 assert [<copy[i]`D, copy[i]`N> : i in hh] eq [<1, 194>, <1, 546>, <205, 3>, <1995, 2>];
+
+// Restricted to genus <= 12 (no undecided D = 1 curves above), GetModularByGenus is shorter than
+// Table 2 and both checks still pass.  Without HH's marks, 194 and 546 are reported in genus 3, 4.
+// 12: the largest genus in GetHHTable2 (N = 2310), which omits [HH] Table 2's genus-19 N = 1680.
+// 194 has genus 3 and 546 genus 4 ([HH] Table 2, p. 183); both are removed by Prop. 1, p. 184.
+low := [X : X in copy | X`g le 12];
+VerifyHHTable2([X : X in star | X`g le 12]);
+VerifyHHProposition1(low);
+msg := "";
+try
+    VerifyHHProposition1([X : X in star | X`g le 12]);
+catch e
+    msg := e`Object;
+end try;
+assert Position(msg, "in genus [ 3, 4 ]") gt 0;
+
+// An uncertified source is reported only if its target stays unmarked.  Genuine star curves, but the
+// targets' genera are hand-set to the sources' so that HHProposition1 applies:
+//  * X_0^*(1290): X_0^*(258) at p = 5, not certified, is recorded first; X_0^*(430) at p = 3 then marks it.
+//  * X_0^*(1120): only X_0^*(160) at p = 7, not certified, so it stays unmarked and is reported.
+// Source genera 3, 3, 4: dim of the all-signs-+1 AL subspace of S_2(Gamma_0(N)), Magma modular symbols.
+// Target genera hand-set to 3, 4; the true genera of X_0^*(1290), X_0^*(1120) are 10, 19.
+mkstar := function(N, g, id)
+    X := CreateShimuraQuot(1, N, {d : d in Divisors(N) | GCD(d, N div d) eq 1});
+    X`g := g;
+    X`CurveID := id;
+    return X;
+end function;
+two := [mkstar(258, 3, 1), mkstar(430, 3, 2), mkstar(160, 4, 3), mkstar(1290, 3, 4), mkstar(1120, 4, 5)];
+for i in [1..3] do
+    assert GenusShimuraCurveQuotient(1, two[i]`N, two[i]`W) eq two[i]`g;
+    two[i]`IsSubhyp := false; two[i]`IsHyp := false; two[i]`TestInWhichProved := "hand-set";
+end for;
+assert not NonHyperellipticAtPrimeCertificate(two[1], 5);
+assert NonHyperellipticAtPrimeCertificate(two[2], 3); // #X_0^*(430)(F_9) = 24 > 2*9+2 = 20
+assert not NonHyperellipticAtPrimeCertificate(two[3], 7);
+assert [X`N : X in two[1..2]] eq [258, 430]; // 258 must precede 430, or it is never recorded and the filter goes untested
+uncertified := [];
+HHProposition1(~two, ~uncertified);
+assert assigned two[4]`IsSubhyp and not two[4]`IsSubhyp and two[4]`TestInWhichProved eq "HHproposition1 isomorphic to 2";
+assert not assigned two[5]`IsSubhyp;
+assert uncertified eq [<3, 5, 7>];

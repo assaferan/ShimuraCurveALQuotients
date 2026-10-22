@@ -18,7 +18,7 @@
 //   FilterByComplicatedALFixedPointsOnQuotient,
 //   FilterByGeneralizedComplicatedFixedPoints, FilterByGeneralizedComplicatedFixedPointsStar,
 //   FilterByWeilPolynomial, FilterByWeilPolynomialStar,
-//   FilterByDegeneracyMorphism
+//   FilterByDegeneracyMorphism, FilterBySpecialFiber, FilterByComponentInvolution
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
@@ -26,6 +26,8 @@
 // FilterByTwistedWeilPolynomial (and their *Star versions) compute the modular symbols of level D*N once per level and
 // share them between the curves at that level, so for them the unit of work is a LEVEL: all
 // curves with the same (D,N) go to the same chunk (see the assignment below).
+// FilterByDualGraph (and its Star version) is level-grouped too: the dual graph of X_0^D(N) at
+// each p | D is built once per level.
 //
 // The non-star stages that have a *Star version skip the star curves once that version has run
 // (see star_of below): it already ran the same function on them.
@@ -33,6 +35,7 @@
 // Convert integer args from the raw strings Magma receives on the command line
 chunk_i        := StringToInteger(chunk);
 total_chunks_i := StringToInteger(total_chunks);
+SetColumns(0);   // the chunk file is printed with Sprint; at 80 columns a long verdict label is split with "\n"
 
 if not assigned stage then
     stage := "FilterByTrace";
@@ -58,6 +61,7 @@ star_of["FilterByTwistedTrace"]          := "FilterByTwistedTraceStar";
 star_of["FilterByWeilPolynomial"]        := "FilterByWeilPolynomialStar";
 star_of["FilterByTwistedWeilPolynomial"] := "FilterByTwistedWeilPolynomialStar";
 star_of["FilterByNonALInvolutions"]      := "FilterByNonALInvolutionsStar";
+star_of["FilterByDualGraph"]             := "FilterByDualGraphStar";
 star_of["FilterByGeneralizedComplicatedFixedPoints"] := "FilterByGeneralizedComplicatedFixedPointsStar";
 skip := [false : i in [1..n]];
 if IsDefined(star_of, stage) then
@@ -80,7 +84,8 @@ end if;
 proxy := [CurveCostProxy(curves[i], stage) : i in [1..n]];
 for i in [1..n] do if skip[i] then proxy[i] := 0; end if; end for;   // skipped: no cost
 if stage in {"FilterByTwistedTrace", "FilterByTwistedWeilPolynomial",
-             "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar"} then
+             "FilterByTwistedTraceStar", "FilterByTwistedWeilPolynomialStar",
+             "FilterByDualGraph", "FilterByDualGraphStar"} then
     // Level-grouped stages: the same cost-aware strided deal, over levels instead of curves.  A
     // level's cost is its most expensive curve (the modular symbols dominate and are shared), and
     // every curve of the level, decided or not, goes with it, so the chunks still partition 1..n.
@@ -118,6 +123,8 @@ case stage:
         FilterByTwistedTrace(~subseq);
     when "FilterByTwistedWeilPolynomial", "FilterByTwistedWeilPolynomialStar":
         FilterByTwistedWeilPolynomial(~subseq);
+    when "FilterByDualGraph", "FilterByDualGraphStar":
+        FilterByDualGraph(~subseq);
     when "FilterStarCurvesByFpAutomorphisms":
         FilterStarCurvesByFpAutomorphisms(~subseq);
     when "FilterByALFixedPointsOnQuotient":
@@ -128,6 +135,8 @@ case stage:
         FilterByGeneralizedComplicatedFixedPoints(~subseq);
     when "FilterBySpecialFiber":
         FilterBySpecialFiber(~subseq);
+    when "FilterByComponentInvolution":
+        FilterByComponentInvolution(~subseq);
     when "FilterByDegeneracyMorphism":
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":

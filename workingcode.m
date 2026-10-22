@@ -31,6 +31,7 @@ FILTER_STAGES := [*
     // so CheckHHProposition1 runs it (and VerifyHHProposition1) on a copy and leaves the curves
     // unchanged; the stage credits no curve.
     <"HHProposition1", CheckHHProposition1>,
+    <"FilterByDualGraphStar", FilterByDualGraph>,
     // Twisted tests on the star curves (W full, so h ranges over V2, V3 and V2 V3 only); like
     // FilterByNonALInvolutionsStar, determinations are carried onto the full-W entries by
     // GetQuotientsAndGenera.  The star block is in the same order as run_pipeline.sh
@@ -55,6 +56,7 @@ FILTER_STAGES := [*
     // first in the all-quotients block: it is by far the cheapest filter, so its determinations
     // prune every heavier filter below.  Mirrors run_pipeline.sh.
     <"FilterBySpecialFiber", FilterBySpecialFiber>,
+    <"FilterByComponentInvolution", FilterByComponentInvolution>,
     <"FilterByALFixedPointsOnQuotient", FilterByALFixedPointsOnQuotient>,
     <"UpdateCurves2", UpdateCurves>,
     <"Genus3CoversGenus2", Genus3CoversGenus2>,
@@ -75,6 +77,8 @@ FILTER_STAGES := [*
     <"UpdateCurvesAfterAutomorphismGroup", UpdateCurves>,
     <"FilterByTrace", FilterByTrace>,
     <"UpdateCurves6", UpdateCurves>,
+    <"FilterByDualGraph", FilterByDualGraph>,
+    <"UpdateCurvesAfterDualGraph", UpdateCurves>,
     // Trace twisted by the involutions defined over Q (modular symbols, once per level).
     <"FilterByTwistedTrace", FilterByTwistedTrace>,
     <"UpdateCurvesAfterTwistedTrace", UpdateCurves>,
@@ -83,6 +87,9 @@ FILTER_STAGES := [*
     // Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables.
     <"FilterByTwistedWeilPolynomial", FilterByTwistedWeilPolynomial>,
     <"UpdateCurvesAfterTwistedWeilPolynomial", UpdateCurves>,
+    // Noether's count on the canonical embedding: q-expansions at D = 1, a stored model at D > 1.
+    <"FilterByCanonicalQuadrics", FilterByCanonicalQuadrics>,
+    <"UpdateCurvesAfterCanonicalQuadrics", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
     <"UpdateCurves8", UpdateCurves>
 *];
@@ -94,6 +101,7 @@ function compute_data(start_stage, stages)
       func(~curves);
       print name, " took ", Realtime() - t0;
       fname := Sprintf("data/curves_after_%o.dat", name);
+      SetColumns(0);   // at 80 columns Sprint splits a long verdict label with "\n"
       Write(fname, Sprint(curves, "Magma") : Overwrite);
       return;
     end procedure;
