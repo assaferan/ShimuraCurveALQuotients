@@ -41,110 +41,111 @@ PHASE A — STAR CURVES ONLY (X* = X_0(D,N)/W*) : 2342 curves
  3  UpdateByGenusStar                               1319      0    1023    0   (g<=2 => proved +1023)
  4  FilterByTraceStar                                504    815    1023    815  (#X*(F_p) <= 2p+2)
  -  HHProposition1                                   504    815    1023    0    (check only: reproduces HH Table 2)
- 5  FilterByDualGraphStar                            162   1157    1023    342  (dual graph of the fibre at p | D)
- 6  FilterByTwistedTraceStar                         160   1159    1023    2    (twists by V2, V3)
- 7  SpecialFiberIsomorphismStar                      156   1163    1023    4    (mod-p reduction of X*, certified source)
- 8  FilterByGeneralizedComplicatedFixedPointsStar    152   1167    1023    4    (generalized Prop-6, mixed groups)
- 9  FilterByWeilPolynomialStar                       113   1206    1023    39   (admissible Weil polys on X*)
-10  FilterByTwistedWeilPolynomialStar                110   1209    1023    3    (Weil polys of the twists)
-11  FilterStarCurvesByFpAutomorphisms                110   1209    1023    0    (redundant cross-check; 0 missed)
-12  FilterByNonALInvolutionsStar                      72   1232    1038    23   (non-AL involution; proved +15)
+ 5  FilterByDualGraphStar                             79   1240    1023    425  (dual graph of the fibre at p | D)
+ 6  FilterByTwistedTraceStar                          77   1242    1023    2    (twists by V2, V3)
+ 7  SpecialFiberIsomorphismStar                       73   1246    1023    4    (mod-p reduction of X*, certified source)
+ 8  FilterByGeneralizedComplicatedFixedPointsStar     70   1249    1023    3    (generalized Prop-6, mixed groups)
+ 9  FilterByWeilPolynomialStar                        46   1273    1023    24   (admissible Weil polys on X*)
+10  FilterByTwistedWeilPolynomialStar                 45   1274    1023    1    (Weil polys of the twists)
+11  FilterStarCurvesByFpAutomorphisms                 45   1274    1023    0    (redundant cross-check; 0 missed)
+12  FilterByNonALInvolutionsStar                      27   1277    1038    3    (non-AL involution; proved +15)
 
 End of Phase A: of 2342 star curves -> 1038 proved sub-hyperelliptic,
-                1232 ruled out, 72 still open.
+                1277 ruled out, 27 still open.
 Ruling out a star curve prunes its entire cover-tree after expansion (UpwardClosure).
 
 
 EXPANSION  (clean breakdown — one Magma call, three logical operations)
 ----------------------------------------------------------------------
 Step 13 (GetQuotientsAndGenera + UpdateByGenus) is a single call that does three
-distinct things. Counts below are exact (total is always 18379; ruled stays 1232
+distinct things. Counts below are exact (total is always 18379; ruled stays 1277
 throughout because no new per-curve filter runs yet).
 
 13a  GENERATE.  Each (D,N) is expanded into all its 2^k AL quotients
      X_0(D,N)/W, giving 18379 curves.  The 2342 star curves are themselves in
      this list and carry their Phase-A verdicts; every newly-created non-star
      quotient starts open.
-        open 16109 | ruled 1232 | proved 1038     (proved/ruled = inherited stars)
+        open 16064 | ruled 1277 | proved 1038     (proved/ruled = inherited stars)
 
 13b  CLASSIFY BY GENUS (Sec. genus).  Any quotient of genus <= 2 is automatically
      sub-hyperelliptic (P^1 / elliptic / genus-2 hyperelliptic).  4148 curves are
      genus <= 2; 1023 were already proved (the genus-<=2 stars), so this proves
      +3125 more.
-        open 12984 | ruled 1232 | proved 4163      (+3125 proved)
+        open 12939 | ruled 1277 | proved 4163      (+3125 proved)
 
 13c  AL-AS-HYPERELLIPTIC (Sec. ALashyp).  A genus->=3 quotient that double-covers
      an elliptic/hyperelliptic maximal quotient X* via an Atkin-Lehner involution
      is itself hyperelliptic.  This proves +1648 genus->=3 curves.
-        open 11336 | ruled 1232 | proved 5811      (+1648 proved)
+        open 11291 | ruled 1277 | proved 5811      (+1648 proved)
 
- END OF STEP 13:  18379 total = 11336 open + 1232 ruled + 5811 proved
+ END OF STEP 13:  18379 total = 11291 open + 1277 ruled + 5811 proved
    proved 5811 = 4148 (genus <= 2, free) + 1663 genus >= 3, where
                  1663 = 1648 via AL double-cover + 15 star curves proved by a
                  modular non-AL involution (genus 3-5)
-   ruled  1232 = exactly the 1232 star curves eliminated in Phase A
+   ruled  1277 = exactly the 1277 star curves eliminated in Phase A
                  (no non-star quotient is ruled out yet)
-   open  11336 = the remainder, ALL genus >= 3
+   open  11291 = the remainder, ALL genus >= 3
 
 
 PHASE B — ALL AL QUOTIENTS : 18379 curves
 -----------------------------------------
  #  Step                                        open   ruled  proved  newly-ruled
-14  UpdateCurves1                              10731    1836    5812   604  (propagate verdicts; +1 proved)
+14  UpdateCurves1                              10573    1994    5812   717  (propagate verdicts; +1 proved)
        Pushes EXISTING verdicts through the cover lattice -- no new per-curve
        computation. Two mechanisms: (i) closure (Def. closure / UpwardClosure):
        a curve forced non-sub-hyperelliptic by its position relative to a ruled
        curve; (ii) cross-level isomorphisms (Sec. isomorphism: SpecialFiber-
        Isomorphism + UpdateIsoStatus) copy a verdict to an isomorphic curve at
        another level.
-15  FilterBySpecialFiber                        9999    2568    5812   732  (special fibre at p || N)
-16  FilterByALFixedPointsOnQuotient             1824   10743    5812   8175 (AL fixed pts via class nos.)
-17  UpdateCurves2                               1738   10829    5812   86   (propagate)
-18  Genus3CoversGenus2                          1722   10829    5828   0    (g3->g2 cover; proved +16)
-19  UpdateCurves3                               1722   10829    5828   0    (propagate)
-20  FilterByDegeneracyMorphism                  1704   10847    5828   18   (degeneracy maps)
-21  UpdateCurves4                               1675   10876    5828   29   (propagate)
-22  FilterByComplicatedALFixedPointsOnQuotient  1359   11192    5828   316  (Prop-6 fixed-point filter)
-23  FilterByGeneralizedComplicatedFixedPoints   1359   11192    5828   0    (generalized Prop-6; star curves done in step 8)
-24  UpdateCurves5                               1351   11200    5828   8    (propagate)
-25  FilterByAutomorphismGroup                   1288   11263    5828   63   (automorphism groups)
-26  UpdateCurvesAfterAutomorphismGroup          1285   11266    5828   3    (propagate)
-27  FilterByTrace                                838   11713    5828   447  (point-count / trace bound)
-28  UpdateCurves6                                816   11735    5828   22   (propagate)
-29  FilterByDualGraph                            259   12292    5828   557  (dual graph of the fibre at p | D)
-30  UpdateCurvesAfterDualGraph                   255   12296    5828   4    (propagate)
-31  FilterByTwistedTrace                         232   12319    5828   23   (twisted point counts)
-32  UpdateCurvesAfterTwistedTrace                229   12322    5828   3    (propagate)
-33  FilterByWeilPolynomial                       219   12332    5828   10   (admissible Weil polys, 2^36 budget)
-34  UpdateCurves7                                219   12332    5828   0    (propagate)
-35  FilterByTwistedWeilPolynomial                208   12343    5828   11   (Weil polys of the twists)
-36  UpdateCurvesAfterTwistedWeilPolynomial       208   12343    5828   0    (propagate)
-37  FilterByNonALInvolutions                     173   12359    5847   16   (non-AL involution; proved +19)
-38  UpdateCurves8                                173   12359    5847   0    (propagate)
+15  FilterBySpecialFiber                        9841    2726    5812   732  (special fibre at p || N)
+16  FilterByALFixedPointsOnQuotient             1743   10824    5812   8098 (AL fixed pts via class nos.)
+17  UpdateCurves2                               1664   10903    5812   79   (propagate)
+18  Genus3CoversGenus2                          1648   10903    5828   0    (g3->g2 cover; proved +16)
+19  UpdateCurves3                               1648   10903    5828   0    (propagate)
+20  FilterByDegeneracyMorphism                  1638   10913    5828   10   (degeneracy maps)
+21  UpdateCurves4                               1624   10927    5828   14   (propagate)
+22  FilterByComplicatedALFixedPointsOnQuotient  1317   11234    5828   307  (Prop-6 fixed-point filter)
+23  FilterByGeneralizedComplicatedFixedPoints   1317   11234    5828   0    (generalized Prop-6; star curves done in step 8)
+24  UpdateCurves5                               1309   11242    5828   8    (propagate)
+25  FilterByAutomorphismGroup                   1248   11303    5828   61   (automorphism groups)
+26  UpdateCurvesAfterAutomorphismGroup          1245   11306    5828   3    (propagate)
+27  FilterByTrace                                803   11748    5828   442  (point-count / trace bound)
+28  UpdateCurves6                                781   11770    5828   22   (propagate)
+29  FilterByDualGraph                            123   12428    5828   658  (dual graph of the fibre at p | D; N need not be squarefree)
+30  UpdateCurvesAfterDualGraph                   123   12428    5828   0    (propagate)
+31  FilterByTwistedTrace                         118   12433    5828   5    (twisted point counts)
+32  UpdateCurvesAfterTwistedTrace                118   12433    5828   0    (propagate)
+33  FilterByWeilPolynomial                       111   12440    5828   7    (admissible Weil polys, 2^36 budget)
+34  UpdateCurves7                                111   12440    5828   0    (propagate)
+35  FilterByTwistedWeilPolynomial                110   12441    5828   1    (Weil polys of the twists)
+36  UpdateCurvesAfterTwistedWeilPolynomial       110   12441    5828   0    (propagate)
+37  FilterByCanonicalQuadrics                     75   12468    5836   27   (Noether's count of canonical quadrics; proved +8)
+38  UpdateCurvesAfterCanonicalQuadrics            75   12468    5836   0    (propagate)
+39  FilterByNonALInvolutions                      61   12468    5850   0    (non-AL involution; proved +14)
+40  UpdateCurves8                                 61   12468    5850   0    (propagate)
 
-END OF PIPELINE: 18379 total = 173 open + 12359 ruled + 5847 proved.
-The census below reports this pipeline result. The paper tables and figures
-(pipeline_tables.tex, pipeline_figures.tex) also resolve the 22 open D=1 curves
-by their canonical models (data/curves_after_D1Oracle.dat): 19 not
-sub-hyperelliptic and 3 hyperelliptic, leaving 151 open, 12378 ruled and 5850
-proved.
+END OF PIPELINE: 18379 total = 61 open + 12468 ruled + 5850 proved.
+No open curve has D = 1: the canonical-quadrics stage (step 37) decides every
+remaining D = 1 quotient from the W-fixed weight-2 cusp forms, so the paper tables
+and figures (pipeline_tables.tex, pipeline_figures.tex) no longer need the
+separate D = 1 canonical-model verdicts (data/curves_after_D1Oracle.dat).
 
 The single most powerful filter is FilterByALFixedPointsOnQuotient (step 16),
-which alone rules out 8175 curves.  The trace, the dual graph at p | D, and the
+which alone rules out 8098 curves.  The trace, the dual graph at p | D, and the
 complicated fixed-point filters clean up most of the remainder.
 
 NOTE on special-fibre isomorphisms: a verdict is copied from X_0(D,N)/W' to
 X_0(D,Np)/W only if the source is certified non-hyperelliptic at the same prime
-p. Six verdicts of the 2026-09-26 run lose their certificate and are open here:
-547 X_0(114)/<w2,w38>, 624 X_0(130)/<w2,w26> and 889 X_0(195)/<w5,w195> (all
-three hyperelliptic by the D=1 canonical models, so the old verdict was wrong),
-629 X_0(130)/<w5,w26> (not hyperelliptic by the D=1 models, so the old verdict
-was right but is now unproven), and 7989 and 7991 at (22,63), which have no
-independent check.
+p. The three D = 1 quotients whose 2026-09-26 verdict was wrong (547 X_0(114)/
+<w2,w38>, 624 X_0(130)/<w2,w26>, 889 X_0(195)/<w5,w195>, all hyperelliptic) are
+now proved hyperelliptic by the canonical quadrics.
 
-NOTE on the dual graph: 899 curves are ruled out by the dual graph of the special
-fibre at a prime p | D (342 star, 557 in Phase B), 157 of them at p = 2 only
-(odd primes are tried first).
+NOTE on the dual graph: 1083 curves are ruled out by the dual graph of the special
+fibre at a prime p | D (425 star, 658 in Phase B), 184 of them at p = 2 only
+(odd primes are tried first). Since this run the stage also covers levels N that
+are not squarefree (the Atkin-Lehner ideal at a prime power is built from the
+reflection of the lattice chain), which accounts for most of the increase from
+899 in the 2026-09-30 run.
 
 NOTE on attribution: the per-step "newly-ruled" deltas above count when a curve's
 OPEN status first changed in the pipeline ordering. The attribution census below
@@ -152,12 +153,12 @@ counts curves by the TEST whose proof is recorded on the curve (TestInWhichProve
 Every filter that records a verdict guards with "if assigned IsSubhyp then continue"
 (don't overwrite), so TestInWhichProved holds the FIRST test that determined each
 curve -- the census and the stage-table deltas agree where a tag corresponds to a
-single step (e.g. FilterByALFixedPointsOnQuotient: 8175 newly-ruled = 8175
-recorded; FilterByComplicatedALFixedPointsOnQuotient: 316 = 316; DualGraph: 342 +
-557 = 899). The two views still differ where a tag aggregates work across phases
-or via lattice propagation rather than a single step: the "Trace" tag (1262)
+single step (e.g. FilterByALFixedPointsOnQuotient: 8098 newly-ruled = 8098
+recorded; FilterByComplicatedALFixedPointsOnQuotient: 307 = 307; DualGraph: 425 +
+658 = 1083). The two views still differ where a tag aggregates work across phases
+or via lattice propagation rather than a single step: the "Trace" tag (1257)
 collects both the Phase-A FilterByTraceStar (815) and the Phase-B FilterByTrace
-(447) rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags are
+(442) rulings, and the "HyperellipticALInvolution"/"GenusLt3"/closure tags are
 assigned in UpdateByGenus/UpdateCurves and then propagated through the cover
 lattice. Treat the stage table as the makespan ("when first determined") view and
 the census as the first-writer "which test determined it" view.
@@ -170,8 +171,8 @@ FINAL CENSUS  (data/curves_after_UpdateCurves8.dat)
 ================================================================
 Total AL quotients         : 18379
   proved sub-hyperelliptic : 5850
-  ruled out (not subhyp)   : 12385
-  open (undetermined)      : 144
+  ruled out (not subhyp)   : 12468
+  open (undetermined)      : 61
 
 Proved sub-hyperelliptic, by type
 ---------------------------------
@@ -197,11 +198,11 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
   0      905      905      0        0       
   1      1518     1518     0        0       
   2      1725     1725     0        0       
-  3      2181     873      1213     95      
-  4      2271     373      1878     20      
-  5      2395     260      2117     18      
-  6      2117     86       2023     8       
-  7      1974     74       1897     3       
+  3      2181     873      1253     55      
+  4      2271     373      1892     6       
+  5      2395     260      2135     0       
+  6      2117     86       2031     0       
+  7      1974     74       1900     0       
   8      1257     18       1239     0       
   9      1075     13       1062     0       
   10     538      4        534      0       
@@ -220,26 +221,26 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
 
 Attribution: which test recorded the determination (ruled-out curves)
 --------------------------------------------------------------------
-  ALFixedPointsOnQuotient,                      : 8175
-  Trace,                                        : 1262
-  DualGraph                                     : 899
-  UpwardClosure                                 : 552
-  ComplicatedALFixedPointsOnQuotient            : 316
+  ALFixedPointsOnQuotient,                      : 8098
+  Trace,                                        : 1257
+  DualGraph                                     : 1083
+  UpwardClosure                                 : 646
+  ComplicatedALFixedPointsOnQuotient            : 307
   SpecialFiber                                  : 234
   SpecialFiberCM                                : 231
   SpecialFiberD6                                : 153
-  UpdateIsoStatus,                              : 114
-  SpecialFiberIsomorphism,                      : 97
+  UpdateIsoStatus,                              : 111
+  SpecialFiberIsomorphism,                      : 90
   SpecialFiberD10                               : 89
-  AutomorphismGroup                             : 63
-  WeilPolynomial                                : 49
-  ModularNonALInvolution                        : 38
+  AutomorphismGroup                             : 61
+  WeilPolynomial                                : 31
   CanonicalQuadrics                             : 27
   SpecialFiberD22                               : 25
-  TwistedTrace,                                 : 25
-  DegeneracyMorphism                            : 18
-  TwistedWeilPolynomial                         : 14
-  GeneralizedComplicatedFixedPoints:            : 4
+  DegeneracyMorphism                            : 10
+  TwistedTrace,                                 : 7
+  GeneralizedComplicatedFixedPoints:            : 3
+  ModularNonALInvolution                        : 3
+  TwistedWeilPolynomial                         : 2
 
 Attribution: which test recorded the determination (proved subhyp)
 ------------------------------------------------------------------
@@ -252,146 +253,63 @@ Attribution: which test recorded the determination (proved subhyp)
 
 OPEN (undetermined) cases — full list
 =====================================
-count = 144
+count = 61
   D      N      g      W                             
   6      35     3      [ 1, 3, 5, 15 ]               
   6      35     3      [ 1, 5, 7, 35 ]               
-  6      169    3      [ 1, 6, 169, 1014 ]           
-  6      175    3      [ 1, 2, 3, 6, 175, 350, 525, 1050 ]
-  6      175    3      [ 1, 2, 21, 25, 42, 50, 525, 1050 ]
-  6      175    3      [ 1, 6, 14, 21, 50, 75, 175, 1050 ]
-  6      175    3      [ 1, 6, 7, 25, 42, 150, 175, 1050 ]
   6      185    3      [ 1, 2, 15, 30, 111, 185, 222, 370 ]
   6      187    3      [ 1, 3, 11, 17, 33, 51, 187, 561 ]
-  6      245    3      [ 1, 3, 5, 15, 98, 294, 490, 1470 ]
-  6      245    3      [ 1, 6, 10, 15, 49, 294, 490, 735 ]
   6      247    3      [ 1, 2, 19, 38, 39, 78, 741, 1482 ]
   6      253    3      [ 1, 2, 23, 33, 46, 66, 759, 1518 ]
-  6      275    3      [ 1, 2, 3, 6, 275, 550, 825, 1650 ]
-  6      289    3      [ 1, 2, 3, 6, 289, 578, 867, 1734 ]
   6      301    3      [ 1, 3, 14, 42, 43, 129, 602, 1806 ]
   6      323    3      [ 1, 6, 19, 34, 51, 114, 646, 969 ]
-  6      325    3      [ 1, 2, 3, 6, 13, 25, 26, 39, 50, 75, 78, 150, 325, 650, 975, 1950 ]
-  6      325    6      [ 1, 2, 3, 6, 325, 650, 975, 1950 ]
-  6      325    6      [ 1, 6, 26, 39, 50, 75, 325, 1950 ]
-  6      325    6      [ 1, 6, 13, 25, 78, 150, 325, 1950 ]
   6      341    4      [ 1, 3, 11, 33, 62, 186, 682, 2046 ]
   6      379    3      [ 1, 2, 3, 6, 379, 758, 1137, 2274 ]
   6      385    3      [ 1, 5, 6, 11, 14, 21, 30, 55, 66, 70, 105, 154, 231, 330, 770, 1155 ]
   6      403    4      [ 1, 2, 13, 26, 93, 186, 1209, 2418 ]
   6      455    3      [ 1, 6, 7, 10, 13, 15, 42, 70, 78, 91, 105, 130, 195, 546, 910, 1365 ]
-  6      475    4      [ 1, 2, 3, 6, 19, 25, 38, 50, 57, 75, 114, 150, 475, 950, 1425, 2850 ]
-  6      575    4      [ 1, 2, 3, 6, 23, 25, 46, 50, 69, 75, 138, 150, 575, 1150, 1725, 3450 ]
-  6      605    4      [ 1, 2, 3, 5, 6, 10, 15, 30, 121, 242, 363, 605, 726, 1210, 1815, 3630 ]
   6      649    3      [ 1, 2, 3, 6, 11, 22, 33, 59, 66, 118, 177, 354, 649, 1298, 1947, 3894 ]
-  6      725    6      [ 1, 2, 3, 6, 25, 29, 50, 58, 75, 87, 150, 174, 725, 1450, 2175, 4350 ]
   10     21     3      [ 1, 2, 7, 14 ]               
   10     21     3      [ 1, 7, 10, 70 ]              
-  10     63     3      [ 1, 2, 5, 10, 63, 126, 315, 630 ]
-  10     63     3      [ 1, 2, 35, 45, 63, 70, 90, 126 ]
-  10     63     3      [ 1, 5, 14, 18, 63, 70, 90, 315 ]
-  10     63     3      [ 1, 10, 14, 18, 35, 45, 63, 630 ]
-  10     117    5      [ 1, 2, 5, 10, 117, 234, 585, 1170 ]
-  10     117    5      [ 1, 2, 45, 65, 90, 117, 130, 234 ]
-  10     117    5      [ 1, 5, 18, 26, 90, 117, 130, 585 ]
-  10     117    5      [ 1, 10, 18, 26, 45, 65, 117, 1170 ]
-  10     117    5      [ 1, 2, 13, 26, 45, 90, 585, 1170 ]
-  10     117    5      [ 1, 5, 13, 18, 65, 90, 234, 1170 ]
-  10     147    4      [ 1, 6, 10, 15, 98, 147, 245, 1470 ]
-  10     189    4      [ 1, 2, 5, 7, 10, 14, 27, 35, 54, 70, 135, 189, 270, 378, 945, 1890 ]
-  10     207    3      [ 1, 2, 5, 9, 10, 18, 23, 45, 46, 90, 115, 207, 230, 414, 1035, 2070 ]
-  10     279    5      [ 1, 2, 5, 9, 10, 18, 31, 45, 62, 90, 155, 279, 310, 558, 1395, 2790 ]
-  10     297    6      [ 1, 2, 5, 10, 11, 22, 27, 54, 55, 110, 135, 270, 297, 594, 1485, 2970 ]
-  10     333    6      [ 1, 2, 5, 9, 10, 18, 37, 45, 74, 90, 185, 333, 370, 666, 1665, 3330 ]
   14     15     3      [ 1, 3, 7, 21 ]               
   14     15     3      [ 1, 3, 70, 210 ]             
   14     15     3      [ 1, 5, 7, 35 ]               
   14     33     3      [ 1, 3, 7, 21, 22, 66, 154, 462 ]
-  14     45     3      [ 1, 2, 5, 10, 63, 126, 315, 630 ]
-  14     45     3      [ 1, 10, 14, 18, 35, 45, 63, 630 ]
   14     51     3      [ 1, 6, 14, 21, 34, 51, 119, 714 ]
-  14     75     3      [ 1, 3, 7, 21, 50, 150, 350, 1050 ]
-  14     81     4      [ 1, 2, 7, 14, 81, 162, 567, 1134 ]
-  14     99     5      [ 1, 2, 7, 14, 99, 198, 693, 1386 ]
-  14     99     5      [ 1, 7, 11, 18, 77, 126, 198, 1386 ]
-  14     117    3      [ 1, 2, 7, 9, 13, 14, 18, 26, 63, 91, 117, 126, 182, 234, 819, 1638 ]
-  14     135    4      [ 1, 2, 5, 7, 10, 14, 27, 35, 54, 70, 135, 189, 270, 378, 945, 1890 ]
   15     14     3      [ 1, 2, 7, 14 ]               
-  15     16     3      [ 1, 5, 48, 240 ]             
-  15     16     3      [ 1, 3, 5, 15 ]               
-  15     28     3      [ 1, 12, 15, 20, 21, 28, 35, 420 ]
-  15     28     3      [ 1, 7, 12, 15, 20, 84, 105, 140 ]
-  15     28     3      [ 1, 3, 5, 7, 15, 21, 35, 105 ]
-  15     28     3      [ 1, 3, 5, 15, 28, 84, 140, 420 ]
-  15     28     5      [ 1, 7, 12, 84 ]              
-  15     28     5      [ 1, 3, 7, 21 ]               
   15     38     3      [ 1, 2, 15, 19, 30, 38, 285, 570 ]
-  15     44     3      [ 1, 3, 20, 44, 55, 60, 132, 165 ]
-  15     44     3      [ 1, 12, 15, 20, 33, 44, 55, 660 ]
   15     46     3      [ 1, 5, 6, 23, 30, 115, 138, 690 ]
-  15     98     3      [ 1, 2, 3, 5, 6, 10, 15, 30, 49, 98, 147, 245, 294, 490, 735, 1470 ]
-  21     20     3      [ 1, 5, 7, 12, 35, 60, 84, 420 ]
-  21     20     3      [ 1, 12, 15, 20, 21, 28, 35, 420 ]
-  21     20     3      [ 1, 7, 12, 15, 20, 84, 105, 140 ]
-  21     20     5      [ 1, 15, 84, 140 ]            
-  21     20     5      [ 1, 15, 28, 420 ]            
   21     34     3      [ 1, 3, 14, 17, 42, 51, 238, 714 ]
-  21     50     3      [ 1, 2, 3, 6, 7, 14, 21, 25, 42, 50, 75, 150, 175, 350, 525, 1050 ]
   21     58     3      [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ]
-  22     9      3      [ 1, 2, 9, 18 ]               
-  22     25     5      [ 1, 22, 25, 550 ]            
   22     51     3      [ 1, 2, 33, 51, 66, 102, 187, 374 ]
   22     51     3      [ 1, 3, 11, 33, 34, 102, 374, 1122 ]
   22     51     3      [ 1, 6, 17, 22, 33, 102, 374, 561 ]
   22     63     3      [ 1, 2, 7, 9, 11, 14, 18, 22, 63, 77, 99, 126, 154, 198, 693, 1386 ]
-  22     63     7      [ 1, 14, 18, 22, 63, 77, 99, 1386 ]
-  22     63     7      [ 1, 2, 11, 22, 63, 126, 693, 1386 ]
-  22     75     4      [ 1, 2, 3, 6, 11, 22, 25, 33, 50, 66, 75, 150, 275, 550, 825, 1650 ]
-  26     27     3      [ 1, 2, 13, 26, 27, 54, 351, 702 ]
-  26     45     5      [ 1, 9, 10, 26, 65, 90, 234, 585 ]
-  26     63     3      [ 1, 2, 7, 9, 13, 14, 18, 26, 63, 91, 117, 126, 182, 234, 819, 1638 ]
-  26     75     4      [ 1, 2, 3, 6, 13, 25, 26, 39, 50, 75, 78, 150, 325, 650, 975, 1950 ]
   26     85     3      [ 1, 2, 5, 10, 13, 17, 26, 34, 65, 85, 130, 170, 221, 442, 1105, 2210 ]
-  33     4      3      [ 1, 3, 11, 33 ]              
-  33     25     4      [ 1, 3, 11, 25, 33, 75, 275, 825 ]
-  33     50     6      [ 1, 2, 3, 6, 11, 22, 25, 33, 50, 66, 75, 150, 275, 550, 825, 1650 ]
   34     21     3      [ 1, 2, 7, 14, 51, 102, 357, 714 ]
   34     25     3      [ 1, 2, 17, 25, 34, 50, 425, 850 ]
-  34     27     4      [ 1, 2, 17, 27, 34, 54, 459, 918 ]
-  34     75     7      [ 1, 2, 3, 6, 17, 25, 34, 50, 51, 75, 102, 150, 425, 850, 1275, 2550 ]
   38     15     3      [ 1, 3, 5, 15, 38, 114, 190, 570 ]
   38     15     3      [ 1, 3, 10, 30, 38, 95, 114, 285 ]
-  39     8      3      [ 1, 3, 13, 39 ]              
   39     11     3      [ 1, 11, 39, 429 ]            
   39     34     3      [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ]
-  39     40     5      [ 1, 3, 5, 8, 13, 15, 24, 39, 40, 65, 104, 120, 195, 312, 520, 1560 ]
-  46     9      4      [ 1, 18, 23, 414 ]            
-  46     9      4      [ 1, 2, 207, 414 ]            
   46     31     3      [ 1, 2, 23, 31, 46, 62, 713, 1426 ]
-  51     8      3      [ 1, 3, 8, 17, 24, 51, 136, 408 ]
   55     7      3      [ 1, 35, 55, 77 ]             
   57     5      3      [ 1, 3, 19, 57 ]              
   57     10     3      [ 1, 5, 6, 19, 30, 95, 114, 570 ]
   62     5      3      [ 1, 5, 31, 155 ]             
   65     2      3      [ 1, 2, 13, 26 ]              
   77     10     3      [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ]
-  82     9      3      [ 1, 2, 9, 18, 41, 82, 369, 738 ]
-  86     9      3      [ 1, 2, 9, 18, 43, 86, 387, 774 ]
   86     15     3      [ 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 645, 1290 ]
-  134    9      5      [ 1, 2, 9, 18, 67, 134, 603, 1206 ]
   141    1      3      [ 1, 3 ]                      
   141    2      3      [ 1, 3, 94, 282 ]             
   141    2      3      [ 1, 6, 94, 141 ]             
   158    3      3      [ 1, 2, 237, 474 ]            
   194    3      3      [ 1, 6, 194, 291 ]            
   210    13     3      [ 1, 2, 21, 42, 65, 130, 1365, 2730 ]
-  462    25     6      [ 1, 2, 3, 6, 7, 11, 14, 21, 22, 25, 33, 42, 50, 66, 75, 77, 150, 154, 175, 231, 275, 350, 462, 525, 550, 825, 1050, 1650, 1925, 3850, 5775, 11550 ]
   690    7      3      [ 1, 6, 10, 14, 15, 21, 23, 35, 138, 210, 230, 322, 345, 483, 805, 4830 ]
   714    5      3      [ 1, 3, 10, 14, 17, 30, 35, 42, 51, 105, 170, 238, 510, 595, 714, 1785 ]
-  770    9      4      [ 1, 2, 5, 7, 9, 10, 11, 14, 18, 22, 35, 45, 55, 63, 70, 77, 90, 99, 110, 126, 154, 198, 315, 385, 495, 630, 693, 770, 990, 1386, 3465, 6930 ]
   798    1      3      [ 1, 3, 38, 114 ]             
   870    1      3      [ 1, 5, 29, 145 ]             
-  910    9      5      [ 1, 2, 5, 7, 9, 10, 13, 14, 18, 26, 35, 45, 63, 65, 70, 90, 91, 117, 126, 130, 182, 234, 315, 455, 585, 630, 819, 910, 1170, 1638, 4095, 8190 ]
   1326   1      3      [ 1, 17, 78, 1326 ]           
   2002   1      4      [ 1, 2, 13, 26, 77, 154, 1001, 2002 ]
   2030   1      4      [ 1, 10, 14, 35, 58, 145, 203, 2030 ]
@@ -401,46 +319,36 @@ count = 144
 
 Open cases, by genus
 --------------------
-  genus 3 : 95
-  genus 4 : 20
-  genus 5 : 18
-  genus 6 : 8
-  genus 7 : 3
+  genus 3 : 55
+  genus 4 : 6
 
 Open cases, by D (quaternion discriminant)
 ------------------------------------------
-  D=6      : 31
-  D=10     : 18
-  D=14     : 13
-  D=15     : 14
-  D=21     : 8
-  D=22     : 9
-  D=26     : 5
-  D=33     : 3
-  D=34     : 4
+  D=6      : 14
+  D=10     : 2
+  D=14     : 5
+  D=15     : 3
+  D=21     : 2
+  D=22     : 4
+  D=26     : 1
+  D=34     : 2
   D=38     : 2
-  D=39     : 4
-  D=46     : 3
-  D=51     : 1
+  D=39     : 2
+  D=46     : 1
   D=55     : 1
   D=57     : 2
   D=62     : 1
   D=65     : 1
   D=77     : 1
-  D=82     : 1
-  D=86     : 2
-  D=134    : 1
+  D=86     : 1
   D=141    : 3
   D=158    : 1
   D=194    : 1
   D=210    : 1
-  D=462    : 1
   D=690    : 1
   D=714    : 1
-  D=770    : 1
   D=798    : 1
   D=870    : 1
-  D=910    : 1
   D=1326   : 1
   D=2002   : 1
   D=2030   : 1
@@ -450,68 +358,57 @@ Open cases, by D (quaternion discriminant)
 ================================================================
 OPEN (UNDETERMINED) CASES — ANALYSIS
 ================================================================
-open before final step                 : 144
+open before final step                 : 61
   resolved: D=1 modular curves known   : 0
-GENUINELY OPEN (D>1 quaternion Shimura) : 144
+GENUINELY OPEN (D>1 quaternion Shimura) : 61
 ================================================================
 
 By genus
 --------
-  genus 3 : 95
-  genus 4 : 20
-  genus 5 : 18
-  genus 6 : 8
-  genus 7 : 3
+  genus 3 : 55
+  genus 4 : 6
 
 By |W| (number of AL involutions in the quotient group, incl. identity)
 ----------------------------------------------------------------------
   |W|=2   : 1
-  |W|=4   : 33
-  |W|=8   : 75
-  |W|=16  : 32
-  |W|=32  : 3
+  |W|=4   : 20
+  |W|=8   : 28
+  |W|=16  : 12
 
 By # AL involutions still acting non-trivially on the quotient (2^omega(DN)/|W| - 1)
 -----------------------------------------------------------------------------------
-  multiset: { 0^43, 1^85, 3^16 }
-  0 acting : 43
-  1 acting : 85
-  3 acting : 16
+  multiset: { 0^11, 1^38, 3^12 }
+  0 acting : 11
+  1 acting : 38
+  3 acting : 12
 
 By D (indefinite quaternion discriminant)
 -----------------------------------------
-  D=6      : 31
-  D=10     : 18
-  D=14     : 13
-  D=15     : 14
-  D=21     : 8
-  D=22     : 9
-  D=26     : 5
-  D=33     : 3
-  D=34     : 4
+  D=6      : 14
+  D=10     : 2
+  D=14     : 5
+  D=15     : 3
+  D=21     : 2
+  D=22     : 4
+  D=26     : 1
+  D=34     : 2
   D=38     : 2
-  D=39     : 4
-  D=46     : 3
-  D=51     : 1
+  D=39     : 2
+  D=46     : 1
   D=55     : 1
   D=57     : 2
   D=62     : 1
   D=65     : 1
   D=77     : 1
-  D=82     : 1
-  D=86     : 2
-  D=134    : 1
+  D=86     : 1
   D=141    : 3
   D=158    : 1
   D=194    : 1
   D=210    : 1
-  D=462    : 1
   D=690    : 1
   D=714    : 1
-  D=770    : 1
   D=798    : 1
   D=870    : 1
-  D=910    : 1
   D=1326   : 1
   D=2002   : 1
   D=2030   : 1
@@ -519,107 +416,55 @@ By D (indefinite quaternion discriminant)
   D=3390   : 1
   D=4130   : 1
 
-Distinct (D,N) families with at least one open quotient : 105
+Distinct (D,N) families with at least one open quotient : 53
   (D, N, #open, total quotients of this (D,N), genus of X_0(D,N))
     D=6     N=35     open=2   / 67  quotients
-    D=6     N=169    open=1   / 8   quotients
-    D=6     N=175    open=4   / 51  quotients
     D=6     N=185    open=1   / 51  quotients
     D=6     N=187    open=1   / 51  quotients
-    D=6     N=245    open=2   / 16  quotients
     D=6     N=247    open=1   / 16  quotients
     D=6     N=253    open=1   / 16  quotients
-    D=6     N=275    open=1   / 16  quotients
-    D=6     N=289    open=1   / 1   quotients
     D=6     N=301    open=1   / 16  quotients
     D=6     N=323    open=1   / 16  quotients
-    D=6     N=325    open=4   / 16  quotients
     D=6     N=341    open=1   / 16  quotients
     D=6     N=379    open=1   / 1   quotients
     D=6     N=385    open=1   / 32  quotients
     D=6     N=403    open=1   / 16  quotients
     D=6     N=455    open=1   / 32  quotients
-    D=6     N=475    open=1   / 1   quotients
-    D=6     N=575    open=1   / 1   quotients
-    D=6     N=605    open=1   / 1   quotients
     D=6     N=649    open=1   / 1   quotients
-    D=6     N=725    open=1   / 1   quotients
     D=10    N=21     open=2   / 66  quotients
-    D=10    N=63     open=4   / 51  quotients
-    D=10    N=117    open=6   / 16  quotients
-    D=10    N=147    open=1   / 16  quotients
-    D=10    N=189    open=1   / 1   quotients
-    D=10    N=207    open=1   / 1   quotients
-    D=10    N=279    open=1   / 1   quotients
-    D=10    N=297    open=1   / 1   quotients
-    D=10    N=333    open=1   / 1   quotients
     D=14    N=15     open=3   / 66  quotients
     D=14    N=33     open=1   / 51  quotients
-    D=14    N=45     open=2   / 51  quotients
     D=14    N=51     open=1   / 51  quotients
-    D=14    N=75     open=1   / 16  quotients
-    D=14    N=81     open=1   / 1   quotients
-    D=14    N=99     open=2   / 16  quotients
-    D=14    N=117    open=1   / 1   quotients
-    D=14    N=135    open=1   / 1   quotients
     D=15    N=14     open=1   / 66  quotients
-    D=15    N=16     open=2   / 15  quotients
-    D=15    N=28     open=6   / 51  quotients
     D=15    N=38     open=1   / 51  quotients
-    D=15    N=44     open=2   / 16  quotients
     D=15    N=46     open=1   / 16  quotients
-    D=15    N=98     open=1   / 1   quotients
-    D=21    N=20     open=5   / 51  quotients
     D=21    N=34     open=1   / 16  quotients
-    D=21    N=50     open=1   / 1   quotients
     D=21    N=58     open=1   / 1   quotients
-    D=22    N=9      open=1   / 16  quotients
-    D=22    N=25     open=1   / 8   quotients
     D=22    N=51     open=3   / 16  quotients
-    D=22    N=63     open=3   / 16  quotients
-    D=22    N=75     open=1   / 1   quotients
-    D=26    N=27     open=1   / 8   quotients
-    D=26    N=45     open=1   / 16  quotients
-    D=26    N=63     open=1   / 1   quotients
-    D=26    N=75     open=1   / 1   quotients
+    D=22    N=63     open=1   / 16  quotients
     D=26    N=85     open=1   / 1   quotients
-    D=33    N=4      open=1   / 16  quotients
-    D=33    N=25     open=1   / 1   quotients
-    D=33    N=50     open=1   / 1   quotients
     D=34    N=21     open=1   / 16  quotients
     D=34    N=25     open=1   / 8   quotients
-    D=34    N=27     open=1   / 1   quotients
-    D=34    N=75     open=1   / 1   quotients
     D=38    N=15     open=2   / 51  quotients
-    D=39    N=8      open=1   / 8   quotients
     D=39    N=11     open=1   / 8   quotients
     D=39    N=34     open=1   / 1   quotients
-    D=39    N=40     open=1   / 1   quotients
-    D=46    N=9      open=2   / 8   quotients
     D=46    N=31     open=1   / 1   quotients
-    D=51    N=8      open=1   / 8   quotients
     D=55    N=7      open=1   / 8   quotients
     D=57    N=5      open=1   / 15  quotients
     D=57    N=10     open=1   / 16  quotients
     D=62    N=5      open=1   / 15  quotients
     D=65    N=2      open=1   / 15  quotients
     D=77    N=10     open=1   / 1   quotients
-    D=82    N=9      open=1   / 8   quotients
-    D=86    N=9      open=1   / 1   quotients
     D=86    N=15     open=1   / 1   quotients
-    D=134   N=9      open=1   / 1   quotients
     D=141   N=1      open=1   / 5   quotients
     D=141   N=2      open=2   / 8   quotients
     D=158   N=3      open=1   / 8   quotients
     D=194   N=3      open=1   / 8   quotients
     D=210   N=13     open=1   / 187 quotients
-    D=462   N=25     open=1   / 1   quotients
     D=690   N=7      open=1   / 32  quotients
     D=714   N=5      open=1   / 32  quotients
-    D=770   N=9      open=1   / 1   quotients
     D=798   N=1      open=1   / 66  quotients
     D=870   N=1      open=1   / 66  quotients
-    D=910   N=9      open=1   / 1   quotients
     D=1326  N=1      open=1   / 51  quotients
     D=2002  N=1      open=1   / 16  quotients
     D=2030  N=1      open=1   / 16  quotients
@@ -628,7 +473,7 @@ Distinct (D,N) families with at least one open quotient : 105
     D=4130  N=1      open=1   / 1   quotients
 
 ================================================================
-GENUS-3 open cases : 95
+GENUS-3 open cases : 55
 A genus-3 curve is either hyperelliptic or a smooth plane quartic.
 These are open because no filter settled which; resolving them needs
 an explicit model / rational-point or gonality argument.
@@ -636,86 +481,46 @@ an explicit model / rational-point or gonality argument.
   D     N      W                             
   6     35     [ 1, 3, 5, 15 ]               
   6     35     [ 1, 5, 7, 35 ]               
-  6     169    [ 1, 6, 169, 1014 ]           
-  6     175    [ 1, 2, 3, 6, 175, 350, 525, 1050 ]
-  6     175    [ 1, 2, 21, 25, 42, 50, 525, 1050 ]
-  6     175    [ 1, 6, 14, 21, 50, 75, 175, 1050 ]
-  6     175    [ 1, 6, 7, 25, 42, 150, 175, 1050 ]
   6     185    [ 1, 2, 15, 30, 111, 185, 222, 370 ]
   6     187    [ 1, 3, 11, 17, 33, 51, 187, 561 ]
-  6     245    [ 1, 3, 5, 15, 98, 294, 490, 1470 ]
-  6     245    [ 1, 6, 10, 15, 49, 294, 490, 735 ]
   6     247    [ 1, 2, 19, 38, 39, 78, 741, 1482 ]
   6     253    [ 1, 2, 23, 33, 46, 66, 759, 1518 ]
-  6     275    [ 1, 2, 3, 6, 275, 550, 825, 1650 ]
-  6     289    [ 1, 2, 3, 6, 289, 578, 867, 1734 ]
   6     301    [ 1, 3, 14, 42, 43, 129, 602, 1806 ]
   6     323    [ 1, 6, 19, 34, 51, 114, 646, 969 ]
-  6     325    [ 1, 2, 3, 6, 13, 25, 26, 39, 50, 75, 78, 150, 325, 650, 975, 1950 ]
   6     379    [ 1, 2, 3, 6, 379, 758, 1137, 2274 ]
   6     385    [ 1, 5, 6, 11, 14, 21, 30, 55, 66, 70, 105, 154, 231, 330, 770, 1155 ]
   6     455    [ 1, 6, 7, 10, 13, 15, 42, 70, 78, 91, 105, 130, 195, 546, 910, 1365 ]
   6     649    [ 1, 2, 3, 6, 11, 22, 33, 59, 66, 118, 177, 354, 649, 1298, 1947, 3894 ]
   10    21     [ 1, 2, 7, 14 ]               
   10    21     [ 1, 7, 10, 70 ]              
-  10    63     [ 1, 2, 5, 10, 63, 126, 315, 630 ]
-  10    63     [ 1, 2, 35, 45, 63, 70, 90, 126 ]
-  10    63     [ 1, 5, 14, 18, 63, 70, 90, 315 ]
-  10    63     [ 1, 10, 14, 18, 35, 45, 63, 630 ]
-  10    207    [ 1, 2, 5, 9, 10, 18, 23, 45, 46, 90, 115, 207, 230, 414, 1035, 2070 ]
   14    15     [ 1, 3, 7, 21 ]               
   14    15     [ 1, 3, 70, 210 ]             
   14    15     [ 1, 5, 7, 35 ]               
   14    33     [ 1, 3, 7, 21, 22, 66, 154, 462 ]
-  14    45     [ 1, 2, 5, 10, 63, 126, 315, 630 ]
-  14    45     [ 1, 10, 14, 18, 35, 45, 63, 630 ]
   14    51     [ 1, 6, 14, 21, 34, 51, 119, 714 ]
-  14    75     [ 1, 3, 7, 21, 50, 150, 350, 1050 ]
-  14    117    [ 1, 2, 7, 9, 13, 14, 18, 26, 63, 91, 117, 126, 182, 234, 819, 1638 ]
   15    14     [ 1, 2, 7, 14 ]               
-  15    16     [ 1, 5, 48, 240 ]             
-  15    16     [ 1, 3, 5, 15 ]               
-  15    28     [ 1, 3, 5, 7, 15, 21, 35, 105 ]
-  15    28     [ 1, 3, 5, 15, 28, 84, 140, 420 ]
-  15    28     [ 1, 12, 15, 20, 21, 28, 35, 420 ]
-  15    28     [ 1, 7, 12, 15, 20, 84, 105, 140 ]
   15    38     [ 1, 2, 15, 19, 30, 38, 285, 570 ]
-  15    44     [ 1, 3, 20, 44, 55, 60, 132, 165 ]
-  15    44     [ 1, 12, 15, 20, 33, 44, 55, 660 ]
   15    46     [ 1, 5, 6, 23, 30, 115, 138, 690 ]
-  15    98     [ 1, 2, 3, 5, 6, 10, 15, 30, 49, 98, 147, 245, 294, 490, 735, 1470 ]
-  21    20     [ 1, 12, 15, 20, 21, 28, 35, 420 ]
-  21    20     [ 1, 7, 12, 15, 20, 84, 105, 140 ]
-  21    20     [ 1, 5, 7, 12, 35, 60, 84, 420 ]
   21    34     [ 1, 3, 14, 17, 42, 51, 238, 714 ]
-  21    50     [ 1, 2, 3, 6, 7, 14, 21, 25, 42, 50, 75, 150, 175, 350, 525, 1050 ]
   21    58     [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ]
-  22    9      [ 1, 2, 9, 18 ]               
   22    51     [ 1, 2, 33, 51, 66, 102, 187, 374 ]
   22    51     [ 1, 3, 11, 33, 34, 102, 374, 1122 ]
   22    51     [ 1, 6, 17, 22, 33, 102, 374, 561 ]
   22    63     [ 1, 2, 7, 9, 11, 14, 18, 22, 63, 77, 99, 126, 154, 198, 693, 1386 ]
-  26    27     [ 1, 2, 13, 26, 27, 54, 351, 702 ]
-  26    63     [ 1, 2, 7, 9, 13, 14, 18, 26, 63, 91, 117, 126, 182, 234, 819, 1638 ]
   26    85     [ 1, 2, 5, 10, 13, 17, 26, 34, 65, 85, 130, 170, 221, 442, 1105, 2210 ]
-  33    4      [ 1, 3, 11, 33 ]              
   34    21     [ 1, 2, 7, 14, 51, 102, 357, 714 ]
   34    25     [ 1, 2, 17, 25, 34, 50, 425, 850 ]
   38    15     [ 1, 3, 5, 15, 38, 114, 190, 570 ]
   38    15     [ 1, 3, 10, 30, 38, 95, 114, 285 ]
-  39    8      [ 1, 3, 13, 39 ]              
   39    11     [ 1, 11, 39, 429 ]            
   39    34     [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ]
   46    31     [ 1, 2, 23, 31, 46, 62, 713, 1426 ]
-  51    8      [ 1, 3, 8, 17, 24, 51, 136, 408 ]
   55    7      [ 1, 35, 55, 77 ]             
   57    5      [ 1, 3, 19, 57 ]              
   57    10     [ 1, 5, 6, 19, 30, 95, 114, 570 ]
   62    5      [ 1, 5, 31, 155 ]             
   65    2      [ 1, 2, 13, 26 ]              
   77    10     [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ]
-  82    9      [ 1, 2, 9, 18, 41, 82, 369, 738 ]
-  86    9      [ 1, 2, 9, 18, 43, 86, 387, 774 ]
   86    15     [ 1, 2, 3, 5, 6, 10, 15, 30, 43, 86, 129, 215, 258, 430, 645, 1290 ]
   141   1      [ 1, 3 ]                      
   141   2      [ 1, 3, 94, 282 ]             
@@ -735,21 +540,21 @@ COVER-LATTICE CONTEXT OF OPEN CURVES
 For each open curve, look at the curves it covers (its further
 quotients) and the curves that cover it (its parents).
 ================================================================
-  open curves that COVER a proved sub-hyperelliptic quotient : 96
+  open curves that COVER a proved sub-hyperelliptic quotient : 50
   open curves COVERED BY a proved sub-hyperelliptic quotient : 0
   open curves all of whose further quotients are ruled out   : 0
-  open curves with no recorded cover relations (isolated)    : 37
+  open curves with no recorded cover relations (isolated)    : 9
 
 ================================================================
 RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES
 ================================================================
-  cover another open curve (closure may apply)         : 9
+  cover another open curve (closure may apply)         : 0
   + isomorphic over F_p to another open curve, source certified mod p : 0
-  + fully isomorphic (FH99 Prop 4/5) to another open   : 16
+  + fully isomorphic (FH99 Prop 4/5) to another open   : 0
 
-  (ungated F_p candidates, certificate not required : 3)
+  (ungated F_p candidates, certificate not required : 1)
   (caveat: uncertified ones are not resolved by resolving the source over Qbar;
    a nonzero certified count means the char-p filters missed those sources)
 
-  open curves with NO such lifeline -> must be resolved individually : 119
+  open curves with NO such lifeline -> must be resolved individually : 61
 
