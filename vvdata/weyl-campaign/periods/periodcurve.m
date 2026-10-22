@@ -164,8 +164,10 @@ for Q in princ do
     if not ok then continue; end if;
     PC<x> := PolynomialRing(CC);
     f6 := x*(x-1)*&*[ x - e : e in rh ];
-    IC := IgusaClebschInvariants(f6);
-    j := [ IC[1]^5/IC[4], IC[1]^3*IC[2]/IC[4], IC[1]^2*IC[3]/IC[4] ];
+    // The Cardona-Quer absolute invariants, with Magma's own reconstruction from them.  Feeding
+    // Igusa-Clebsch RATIOS to Mestre instead -- [1, j2/j1, j3/j1, 1/j1], denominators about 1e22
+    // at level 2002 -- produces a model so large that reducing it ran 46 minutes and 19 GB.
+    j := G2Invariants(HyperellipticCurve(f6));   // G2Invariants needs a curve, not a bare polynomial
     printf "  absolute invariants (real parts) %o\n", [ R8 ! Real(a) : a in j ];
     printf "  imaginary parts relative %o\n", [ R8 ! (Abs(Imaginary(a))/(1+Abs(a))) : a in j ];
 
@@ -186,9 +188,7 @@ for Q in princ do
     end for;
     if not allrec then printf "  NOT RECOGNISED with a safe margin\n"; continue; end if;
 
-    j1, j2, j3 := Explode([ Rationals() | r : r in rec ]);
-    ICQ := [ Rationals() | 1, j2/j1, j3/j1, 1/j1 ];
-    C := HyperellipticCurveFromIgusaClebsch(ICQ);
+    C := HyperellipticCurveFromG2Invariants([ Rationals() | r : r in rec ]);
     // Mestre's output is far from minimal -- 128-digit coefficients at level 23 -- and reducing a
     // non-minimal model mod small p gives bad or singular reductions, so the point counts below
     // would be meaningless without this step.

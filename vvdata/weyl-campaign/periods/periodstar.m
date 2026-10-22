@@ -63,7 +63,7 @@ for B in NewformDecomposition(NS) do
                     (W eq -IdentityMatrix(BaseRing(W), Nrows(W)) select -1 else 0));
     end for;
     if sg eq [ -1 : q in PrimeDivisors(N) ] then
-        Af := ModularAbelianVariety(B); found := true;
+        Af := ModularAbelianVariety(B); MSfactor := B; found := true;
         printf "star factor found, Atkin-Lehner signs %o\n", sg;
         break;
     end if;
@@ -71,7 +71,10 @@ end for;
 error if not found, "no newform orbit of dimension 2 with all Atkin-Lehner signs -1";
 printf "abelian variety: %o\n", Af;
 
-terms := 8*P;
+// The terms needed scale with the LEVEL, not just the precision: measured at N = 2002, 15000
+// terms saturate 60-digit accuracy while 1600 give about two digits.  That calibration is
+// terms ~ 0.125 * digits * N, used here with a little margin.
+terms := Ceiling(P * N / 6);
 t0 := Cputime();
 Pi := Transpose(Matrix([ Eltseq(v) : v in Periods(Af, terms) ]));
 CC := BaseRing(Pi);
@@ -170,8 +173,10 @@ for Q in princ do
     if not ok then continue; end if;
     PC<x> := PolynomialRing(CC);
     f6 := x*(x-1)*&*[ x - e : e in rh ];
-    IC := IgusaClebschInvariants(f6);
-    j := [ IC[1]^5/IC[4], IC[1]^3*IC[2]/IC[4], IC[1]^2*IC[3]/IC[4] ];
+    // The Cardona-Quer absolute invariants, with Magma's own reconstruction from them.  Feeding
+    // Igusa-Clebsch RATIOS to Mestre instead -- [1, j2/j1, j3/j1, 1/j1], denominators about 1e22
+    // at level 2002 -- produces a model so large that reducing it ran 46 minutes and 19 GB.
+    j := G2Invariants(HyperellipticCurve(f6));   // G2Invariants needs a curve, not a bare polynomial
     printf "  absolute invariants (real parts) %o\n", [ R8 ! Real(a) : a in j ];
     printf "  imaginary parts relative %o\n", [ R8 ! (Abs(Imaginary(a))/(1+Abs(a))) : a in j ];
 
@@ -192,9 +197,7 @@ for Q in princ do
     end for;
     if not allrec then printf "  NOT RECOGNISED with a safe margin\n"; continue; end if;
 
-    j1, j2, j3 := Explode([ Rationals() | r : r in rec ]);
-    ICQ := [ Rationals() | 1, j2/j1, j3/j1, 1/j1 ];
-    C := HyperellipticCurveFromIgusaClebsch(ICQ);
+    C := HyperellipticCurveFromG2Invariants([ Rationals() | r : r in rec ]);
     // Mestre's output is far from minimal -- 128-digit coefficients at level 23 -- and reducing a
     // non-minimal model mod small p gives bad or singular reductions, so the point counts below
     // would be meaningless without this step.
@@ -208,12 +211,15 @@ for Q in princ do
     // twisting discriminant.  Recovering d from that pattern and then checking every prime is a
     // genuine test -- a wrong curve has no single d fitting all the signs.
     aps := AssociativeArray();
-    for p in PrimesInInterval(3, 200) do
+    // ⚠ p up to 200 with Hecke operators on the modular ABELIAN VARIETY is what killed the
+    // level-2002 run (SIGTERM right after the candidate was printed).  The traces are read from
+    // the modular symbols factor instead, and 60 is ample: thirteen primes already pin the twist.
+    for p in PrimesInInterval(3, 60) do
         // T_p acts on the 4-dimensional homology as a_p on K^2, so its trace is TWICE the trace
         // of a_p from K to Q, which is what p + 1 - #C(F_p) equals.  Verified against X_0(23):
         // the ratio is exactly 2 at every prime tested.
         if N mod p ne 0 then
-            aps[p] := (Integers() ! Trace(HeckeOperator(Af, p))) div 2;
+            aps[p] := (Integers() ! Trace(HeckeOperator(MSfactor, p))) div 2;
         end if;
     end for;
     ps := Sort([ k : k in Keys(aps) ]);
