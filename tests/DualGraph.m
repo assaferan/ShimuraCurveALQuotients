@@ -1,4 +1,4 @@
-// Dual-graph filter (DualGraph.m).  Spec: docs/superpowers/specs/2026-09-29-dual-graph-filter-design.md.
+// Dual-graph filter (DualGraph.m).
 // Why each number is trustworthy: genus identities are b_1(G_W) = GenusShimuraCurveQuotient (an
 // independent formula); the K4 and the controls reproduce the 2026-09-29 pilot
 // (handoff_2026-09-29/graph-pilot/); the Stankewicz data is raw output of fiber() from

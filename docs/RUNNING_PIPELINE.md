@@ -127,6 +127,7 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
 
     UpdateCurves1
     FilterBySpecialFiber                      parallel
+    FilterByComponentInvolution               parallel
     FilterByALFixedPointsOnQuotient           parallel
     UpdateCurves2, Genus3CoversGenus2, UpdateCurves3
     FilterByDegeneracyMorphism                parallel
