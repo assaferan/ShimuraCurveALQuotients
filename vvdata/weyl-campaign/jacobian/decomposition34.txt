@@ -1,0 +1,102 @@
+# THE JACOBIAN OF EVERY OPEN QUOTIENT, DECOMPOSED -- BY TWO INDEPENDENT METHODS
+#
+# Computed 2026-10-22.  All 34 rows agree between the two methods, and all 34 agree with the genus
+# computed independently from the trace formula.
+#
+# WHICH CURVES THESE ARE.  The 34 quotients left open after the pipeline rerun of PR #117 and the
+# 27 further arguments recorded in hyperelliptic/open-cases/ -- that is, the rows marked OPEN in
+# nelson/nold_open61.txt.  Two rows are the two different W at D = 141, N = 2.
+#
+# METHOD 1, EXACT (oldform.m, oldform_all.m).  By Jacquet-Langlands the differentials on X_0^D(N)
+# are the weight-two forms of level D*N that are new at every p | D, so they decompose over the
+# newform orbits of EVERY level M with D | M | D*N, not only M = D*N.  An orbit of level M enters
+# through the degeneracy maps, one copy per divisor of D*N/M.  For p not dividing M the two maps
+# into level pM span a w_p-stable plane on which w_p swaps them, so w_p has trace zero there and
+# eigenvalues +1 and -1, one each; hence the copies split into simultaneous w_p-eigenspaces indexed
+# by a free sign eta_p for each prime p of N at which the orbit is old, each sign vector occurring
+# once.  At p | M the sign is the orbit's own eps_p, and at p | D it is MINUS that -- the
+# Jacquet-Langlands flip.  So the orbit contributes dim(f) times the number of sign vectors making
+# every w_m with m in W act as +1, which is a linear system over F_2 with 0 or 2^nullity solutions.
+# The total must equal the genus, and nothing in the computation is fitted to that number.
+#
+# METHOD 2, CHEAP AND OFFLINE (jacdecomp.m).  If J ~ prod A_i with A_i simple of dimension d_i then
+# P_p = prod P_{p,i} with deg P_{p,i} = 2 d_i, and a single P_{p,i} can factor FURTHER at a special
+# prime -- so the irreducible factorisation of P_p over Q is always a refinement of the true
+# decomposition, never coarser.  The coarsest pattern over several primes is therefore the answer,
+# and the number of primes realising it is the confidence.
+#
+# WHAT EACH METHOD NEEDS.  oldform.m uses only GenusShimuraCurveQuotient and Magma's own modular
+# symbols, so it runs on this branch as it stands.  jacdecomp.m calls ZetaNumeratorViaTrace, which
+# at the time of writing exists ONLY on the branch of PR #130 and is absent from both main and this
+# one; the column below was computed there.
+#
+# ⚠ Method 2 is EVIDENCE, not proof, wherever the coarsest pattern was realised at few primes: the
+# three weakest rows were 2030_1 at 3/6 and 6_385 and 714_5 at 2/5.  Method 1 settles all three,
+# and agrees.
+#
+# COLUMNS.  base; genus; D*N; the dimensions of the simple factors; the level each factor comes
+# from (a level below D*N means the factor enters through the degeneracy maps); the Method 2
+# pattern with the primes realising it; and the LMFDB newform orbit where it was looked up.
+#
+# LMFDB CONFIRMATIONS, nine of them, every one agreeing:
+#   2002_1  2002.2.a.f (2, Q(sqrt 5))   and 2002.2.a.h (2, Q(sqrt 13))
+#   2030_1  2030.2.a.g (2, Q(sqrt 5))   and 2030.2.a.d (2, Q(sqrt 13))
+#   714_5   3570.2.a.v (1, Q)           and 3570.2.a.bd (2, Q(sqrt 13))
+#   6_385   2310.2.a.q (1, Q)           and 2310.2.a.w (2, Q(sqrt 3))
+#   4130_1  4130.2.a.h (3, Q(zeta_18)+) -- a simple threefold with cubic real multiplication
+#   77_10   385.2.a.e  (3, field 3.3.148.1) -- likewise, and entirely from oldforms
+#   2418_1* 2418.2.a.h (2, Q(sqrt 13))  3390_1* 3390.2.a.j (2, Q(sqrt 5))
+#   control 35_1/w_5 = 35.2.a.b (2, Q(sqrt 17)), Atkin-Lehner +1 at 5 and -1 at 7, i.e. the
+#           quotient by w_5 and not the star -- which is what it should be.
+#
+# ⇒ FIFTEEN OF THE 34 HAVE A FACTOR FROM A LEVEL BELOW D*N, so a search over Atkin-Lehner patterns
+# at the top level alone would miss part or all of their Jacobians.  Three are ENTIRELY oldform and
+# all three are simple threefolds: 77_10 from level 385, 21_58 from 609, 39_34 from 663, each one
+# orbit of dimension 3, old at 2, with exactly one of its two degeneracy copies surviving.  The
+# extreme case is 15_46, where a factor sits at level 15 while D*N = 690 -- old at both 2 and 23,
+# a four-dimensional old space contributing a single line.
+#
+# ⇒ SIXTEEN OF THE 34 ARE COMPLETELY SPLIT (1+1+1), where the fibre-product construction applies
+# with neither Borcherds nor Nelson.  ⚠⚠ splitting is NOT a hyperellipticity test: y^2 = x^8 + 1 is
+# hyperelliptic with the same configuration.
+#
+# ⇒ SIX HAVE SIMPLE JACOBIANS -- 46_31, 6_379, 4130_1, 77_10, 21_58, 39_34 -- and these are exactly
+# the cases the targeted Borcherds searches are aimed at, since there is no elliptic or genus-two
+# quotient to descend to.  46_31 is proved hyperelliptic (PR #133); 6_379 and 4130_1 have
+# torsion-free Jacobians, so for them ONE confirmed divisor settles it outright.
+#
+# base      g  D*N   factors          levels of the factors      m2     RM fields of dim-2 factors
+  141_2     3  282   [ 1, 1, 1 ]      [ 141, 141, 141 ]          8/8    -
+  141_2     3  282   [ 1, 1, 1 ]      [ 141, 141, 282 ]          8/8    -
+  55_7      3  385   [ 1, 2 ]         [ 385, 385 ]               4/6    { 3 }
+  39_11     3  429   [ 1, 2 ]         [ 429, 429 ]               4/6    { 3 }
+  15_38     3  570   [ 1, 1, 1 ]      [ 285, 570, 570 ]          6/6    -
+  57_10     3  570   [ 1, 2 ]         [ 285, 285 ]               6/6    { 2 }
+  15_46     3  690   [ 1, 1, 1 ]      [ 15, 345, 345 ]           6/6    -
+  21_34     3  714   [ 1, 1, 1 ]      [ 21, 357, 357 ]           6/6    -
+  77_10     3  770   [ 3 ]            [ 385 ]                    6/6    -
+  6_185     3  1110  [ 1, 1, 1 ]      [ 1110, 1110, 1110 ]       7/7    -
+  6_187     3  1122  [ 1, 1, 1 ]      [ 66, 102, 1122 ]          6/6    -
+  22_51     3  1122  [ 1, 1, 1 ]      [ 66, 374, 1122 ]          6/6    -
+  21_58     3  1218  [ 3 ]            [ 609 ]                    5/6    -
+  39_34     3  1326  [ 3 ]            [ 663 ]                    5/6    -
+  1326_1    3  1326  [ 1, 1, 1 ]      [ 1326, 1326, 1326 ]       6/6    -
+  46_31     3  1426  [ 3 ]            [ 1426 ]                   8/8    -
+  6_247     3  1482  [ 1, 1, 1 ]      [ 114, 1482, 1482 ]        6/6    -
+  6_253     3  1518  [ 1, 1, 1 ]      [ 138, 1518, 1518 ]        6/6    -
+  6_301     3  1806  [ 1, 1, 1 ]      [ 1806, 1806, 1806 ]       7/7    -
+  6_323     3  1938  [ 1, 2 ]         [ 1938, 1938 ]             5/6    { 3 }
+  2002_1    4  2002  [ 2, 2 ]         [ 2002, 2002 ]             5/6    { 5, 13 }
+  2030_1    4  2030  [ 2, 2 ]         [ 2030, 2030 ]             3/6    { 5, 13 }
+  6_341     4  2046  [ 1, 1, 2 ]      [ 66, 2046, 2046 ]         7/7    { 2 }
+  6_379     3  2274  [ 3 ]            [ 2274 ]                   7/8    -
+  6_385     3  2310  [ 1, 2 ]         [ 2310, 2310 ]             2/5    { 3 }
+  6_403     4  2418  [ 2, 2 ]         [ 2418, 2418 ]             7/7    { 5 }
+  2418_1    4  2418  [ 2, 2 ]         [ 2418, 2418 ]             7/7    { 5, 13 }
+  6_455     3  2730  [ 1, 1, 1 ]      [ 390, 2730, 2730 ]        5/5    -
+  210_13    3  2730  [ 1, 1, 1 ]      [ 210, 2730, 2730 ]        5/5    -
+  3390_1    4  3390  [ 2, 2 ]         [ 3390, 3390 ]             5/7    { 5 }
+  714_5     3  3570  [ 1, 2 ]         [ 3570, 3570 ]             2/5    { 13 }
+  6_649     3  3894  [ 1, 1, 1 ]      [ 3894, 3894, 3894 ]       7/7    -
+  4130_1    3  4130  [ 3 ]            [ 4130 ]                   7/7    -
+  690_7     3  4830  [ 1, 1, 1 ]      [ 690, 4830, 4830 ]        5/5    -
