@@ -28,16 +28,19 @@ Riemann's second relation (positivity). This is the computational face of the cl
 principal polarizations on GL₂-type surfaces (González, Guàrdia, Rotger, *Abelian surfaces of
 GL₂-type as Jacobians of curves*, Acta Arith. **116** (2005), 263–287).
 
-## Controls, both passing
+## Controls: two pass, and the third does not
 
-| level | factor | curve recovered | certified at |
+| level | factor | curve recovered | outcome |
 |---|---|---|---|
-| 23 | `JZero(23)` entire | `y² + (x³+x+1)y = −2x⁵ − 3x² + 2x − 2`, i.e. X_0(23) | 38 primes |
-| 67 | a proper quotient of a 5-dimensional J₀ | `y² + (x³+x²+1)y = −x³ − x` | 41 primes |
+| 23 | `JZero(23)` entire | `y² + (x³+x+1)y = −2x⁵ − 3x² + 2x − 2` | equals `SmallModularCurve(23)` |
+| 67 | a proper quotient of a 5-dimensional J₀ | `y² + (x³+x²+1)y = −x³ − x` | counts agree at 41 primes |
+| **35** | the dimension-2 factor of `JZero(35)` | `y² + (x³+x)y = −x⁵−x⁴+3x³−3x²−5x` | **⚠ NOT the Guo–Yang model of X_0^35(1)/w_5** |
 
-The second is the one that matters. At level 23 the polarization is principal for free, because
-J_0(23) *is* a genus-two Jacobian; level 67 is a genuine proper quotient, which is the situation at
-every star. Invariant recognition margins were about 10¹⁷⁶ and 10⁶³ over the accidental rate.
+Level 23 is the easy case: the polarization is principal for free, because J_0(23) *is* a
+genus-two Jacobian. Level 67 is a proper quotient, which is the situation at every star, and the
+route returns a curve its polarizations all agree on. **Level 35 is the one that matters most**,
+because it is the only control with an independent model: there the route returns a curve that is
+not the right one, and the point counts cannot tell. See entry 8 below and `models.md`.
 
 ## ⚠ Seven ways this computation returns a confident wrong answer
 
@@ -72,12 +75,22 @@ Two smaller ones: the real-multiplication field must be read at a prime **not di
 primes with a_p = 0 carry no information about the twist's character and must be excluded from the
 sign-pattern fit.
 
-## The certification, and why it needs no prior knowledge
+## ⚠⚠ 8. THE POINT COUNTS DO NOT IDENTIFY THE CURVE
+
+This is the most important entry and it invalidates the obvious reading of the section below. All
+the principal polarizations on the surface give curves with isomorphic *unpolarized* Jacobians, so
+they share an L-function and agree in #C(F_p) at **every** prime. The counts therefore confirm the
+isogeny class and cannot select among the curves. Demonstrated at level 35 against the independent
+Guo–Yang model of X_0^35(1)/w_5: the period route returns a curve with different G2 invariants —
+so not even geometrically isomorphic — whose point counts agree at all eight primes tested. See
+`models.md`. Until a selector exists, a curve produced here is a candidate, not a model.
+
+## The certification, and what it does and does not establish
 
 Mestre's construction gives the curve only up to quadratic twist, and the right twist is not
 generally small — at level 23 it is −16108971167423174820, so scanning |d| ≤ 2000 finds nothing.
 The twist is therefore *determined* rather than guessed: at each good prime the count is
 p + 1 ∓ a_p, the sign pattern is the quadratic character of the twisting discriminant, and that
 discriminant can only ramify where the model has bad reduction, so it is found among signed
-squarefree products of those primes. A wrong curve has no single character fitting all the signs.
-This check is available at a level where the answer is unknown, which is the whole point.
+squarefree products of those primes. A wrong *twist* has no single character fitting all the signs, so this does pin the twist. It does
+not pin the curve: see the warning above.
