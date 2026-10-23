@@ -1,0 +1,146 @@
+% Models of the genus-two Atkin-Lehner stars X_0^D(1)^* for D = 2002 and 2030, obtained from the
+% periods of the associated modular abelian surface.
+%
+% ⚠ WHAT THIS NOTE DOES AND DOES NOT PROVE.  Everything in Section 2 is exact.  The construction of
+% Section 3 is numerical, and is not claimed as proof: it is a method for PRODUCING a candidate.
+% Section 4 proves what the point counts do establish, and Remark rem:gap states precisely the one
+% inference that is not proved here, namely that agreement of the counts at finitely many primes
+% forces an isomorphism.  The note is written so that a reader can see exactly where that line is.
+%
+% Numbering is local to this file.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{Two genus-two Shimura curve quotients, from the periods of their Jacobians}
+\author{}
+\date{\today}
+\maketitle
+
+\section{The curves}
+
+Let $D \in \{2002, 2030\}$ and let $X = X_0^D(1)^*$ be the quotient of the Shimura curve of
+discriminant $D$ and level one by its full group of Atkin--Lehner involutions. Both have genus two.
+We exhibit models
+\begin{align*}
+  X_0^{2002}(1)^* &: \quad y^2 + (x^2+x)\,y = 16x^6 + 4x^5 + 180x^4 - 456x^3 + 196x^2 + 64x + 4,\\
+  X_0^{2030}(1)^* &: \quad y^2 + (x^2+x)\,y = x^6 + 29x^5 + 13x^4 + 9x^3 + 159x^2 + 149x + 39,
+\end{align*}
+and prove the arithmetic statements of Theorem~\ref{thm:counts} about them.
+
+\section{What is exact}\label{sec:exact}
+
+\begin{lemma}\label{lem:jac}
+$\Jac(X)$ is isogenous over $\Q$ to the abelian surface $A_f$ attached to the newform orbit $f$ of
+level $D$, weight two and trivial character whose Atkin--Lehner eigenvalue is $-1$ at every prime
+dividing $D$; that orbit is unique and of dimension two. For $D = 2002$ it is \texttt{2002.2.a.f},
+with real multiplication by $\Q(\sqrt 5)$, and for $D = 2030$ it is \texttt{2030.2.a.g}, likewise
+with $\Q(\sqrt 5)$.
+\end{lemma}
+
+\begin{proof}
+By Jacquet--Langlands the space of weight-two forms on $X_0^D(1)$ corresponds to the subspace of
+$S_2(D)$ new at every prime dividing $D$, which at level one is all of $S_2(D)^{\mathrm{new}}$, and
+the correspondence reverses the Atkin--Lehner sign at each prime dividing the discriminant. The
+differentials on the quotient $X$ are those fixed by every Atkin--Lehner involution, so they
+correspond to the newforms whose classical sign is $-1$ at each $p \mid D$. A search over the
+newforms of level $D$ shows this condition picks out a single Galois orbit, of dimension two. The
+claim then follows from Eichler--Shimura. The orbit's identity and its coefficient field are read
+off the tables \cite{lmfdb}; independently, the real multiplication field is the quadratic
+resolvent of the characteristic polynomial of Frobenius computed from the Eichler--Selberg trace
+formula, and agrees.
+\end{proof}
+
+\begin{lemma}\label{lem:torsion}
+$\Jac(X)(\Q)$ is torsion free, for both $D$.
+\end{lemma}
+
+\begin{proof}
+For an abelian variety over $\Q$ with good reduction at an odd prime $p$, reduction is injective on
+rational torsion \cite[Appendix]{katz}, so $\#\Jac(X)(\Q)_{\mathrm{tors}}$ divides $P_p(1)$ for the
+numerator $P_p$ of the zeta function of $X$ over $\F_p$. The point counts come from the trace
+formula, so $P_p$ needs no model of $X$; over ten primes $p \le 43$ of good reduction the greatest
+common divisor of the $P_p(1)$ is $1$.
+\end{proof}
+
+\section{The construction}\label{sec:constr}
+
+This section is numerical and is recorded for reproducibility, not as proof. Let $\Pi$ be the
+period matrix of $A_f$, computed from the $q$-expansion of $f$. An integral alternating form $Q$ on
+the period lattice satisfies Riemann's first relation $\Pi Q \Pi^{t} = 0$ exactly when it is a
+N\'eron--Severi class; for a surface with real multiplication those form a group of rank two, found
+by lattice reduction, and the principal polarizations among them are the classes of Pfaffian $\pm
+1$ satisfying Riemann's positivity condition. Each such class gives a Riemann matrix $\tau$, hence
+Rosenhain and then absolute invariants, which are recognised as rationals and fed to Mestre's
+construction. Several principal polarizations occur and they give different curves; the selection
+among them is made in Section~\ref{sec:counts} and not here.
+
+\section{What the point counts prove}\label{sec:counts}
+
+\begin{theorem}\label{thm:counts}
+Let $C$ be either curve displayed in Section~1, and let $f$ be the corresponding newform orbit of
+Lemma~\ref{lem:jac}. Then $C$ is a smooth projective genus-two curve over $\Q$; its discriminant is
+supported exactly on the primes dividing $D$; and for every prime $p < 60$ not dividing $D$,
+\[
+  \# C(\F_p) \;=\; p + 1 - \mathrm{Tr}_{K/\Q}\,a_p(f),
+\]
+thirteen primes in each case. Consequently $\Jac(C)$ and $A_f$ have the same characteristic
+polynomial of Frobenius at each of those primes.
+\end{theorem}
+
+\begin{proof}
+Each assertion is a finite exact computation with the displayed integral model: the genus and the
+discriminant from the model itself, the point counts by enumeration over $\F_p$, and
+$\mathrm{Tr}\,a_p(f)$ from the Hecke action on the modular symbols attached to $f$. The last
+sentence is the Eichler--Shimura relation, both sides being $p+1$ minus the trace of Frobenius.
+\end{proof}
+
+\begin{remark}\label{rem:gap}
+Theorem~\ref{thm:counts} does \emph{not} prove $C \cong X$. What it gives is that $\Jac(C)$ and
+$\Jac(X)$ have the same Frobenius characteristic polynomial at thirteen primes. To conclude an
+isomorphism one needs, first, that this forces $\Jac(C) \sim A_f$ --- an isogeny statement that
+would follow from the Faltings--Serre method with an explicit prime bound, which we have not
+carried out --- and then that the isogeny can be upgraded to an isomorphism of principally
+polarized varieties, after which Torelli gives $C \cong X$ over $\overline{\Q}$ and the counts
+themselves fix the quadratic twist. Worse, the counts cannot even distinguish $C$ from the other curves whose Jacobians are isomorphic
+to $A_f$ as unpolarized varieties: those share an $L$-function, so they agree in $\#C(\F_p)$ at
+every prime. This is not hypothetical. At level $35$, where an independent model of
+$X_0^{35}(1)/w_5$ is available from the method of Guo and Yang, the construction of
+Section~\ref{sec:constr} returns a curve with different absolute invariants --- hence not
+isomorphic even over $\overline{\Q}$ --- whose point counts nevertheless agree with it at all
+eight primes tested. So the agreement recorded in Theorem~\ref{thm:counts} is evidence for the
+isogeny class of $\Jac(C)$ and for the quadratic twist, and for nothing more; the curves displayed
+in Section~1 are candidates for the stars, not identifications of them.
+\end{remark}
+
+\begin{remark}
+The two facts in Section~\ref{sec:exact} are worth separating from the rest because they are
+unconditional and were obtained with no model of $X$ in hand: Lemma~\ref{lem:jac} identifies the
+Jacobian up to isogeny, and Lemma~\ref{lem:torsion} shows there is no rational torsion. The second
+is what makes a Borcherds divisor class on $X$ vanish rather than merely be torsion, and so is used
+elsewhere independently of any model.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{katz} N. M. Katz, \emph{Galois properties of torsion points on abelian varieties},
+Invent. Math. \textbf{62} (1981), 481--502.
+\bibitem{lmfdb} The LMFDB Collaboration, \emph{The $L$-functions and modular forms database},
+\url{https://www.lmfdb.org}.
+\bibitem{ggr} J. Gonz\'alez, J. Gu\`ardia and V. Rotger, \emph{Abelian surfaces of
+$\mathrm{GL}_2$-type as Jacobians of curves}, Acta Arith. \textbf{116} (2005), 263--287.
+\bibitem{mestre} J.-F. Mestre, \emph{Construction de courbes de genre $2$ \`a partir de leurs
+modules}, in: Effective methods in algebraic geometry, Progr. Math. \textbf{94}, Birkh\"auser,
+1991, 313--334.
+\end{thebibliography}
+\end{document}
