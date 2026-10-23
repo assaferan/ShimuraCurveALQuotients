@@ -45,13 +45,18 @@ and what the values decide}
 We record how the differentials of an Atkin--Lehner quotient $X_0^D(N)/W$ are evaluated at
 points of the upper half-plane by Nelson's formula for the Shimizu lift, how the formula is
 extended from the newforms of level exactly $DN$ to the whole space of differentials, and the
-two uses made of the values: Noether's count of quadrics through the canonical image, which
-decides hyperellipticity numerically, and, in genus three with an Atkin--Lehner involution whose
-quotient has genus one, an explicit hyperelliptic model recognised from three rational
-invariants and confirmed by point counts. We state precisely what each step proves and what it
-does not, and we record the two traps met on the way: the working precision must rise with the
-cutoff of the lattice sum, and the Eichler order that Magma returns is not the same from one
-process to the next.
+uses made of the values: Noether's count of quadrics through the canonical image, which decides
+hyperellipticity numerically; in genus three with an Atkin--Lehner involution whose quotient has
+genus one, an explicit hyperelliptic model recognised from three rational invariants and confirmed
+by point counts; and in genus two an equation over $\Q$ obtained from the differentials alone,
+where the sextic is a linear system in its coefficients, the coordinate is fixed by rational CM
+points, and the counts are needed only for the quadratic twist. The derivative of a form that the
+last two require is taken inside the lattice sum rather than by a contour, which shares the
+enumeration of lattice points between a value and its derivative. We state precisely what each
+step proves and what it does not, and we record the three traps met on the way: the working
+precision must rise with the cutoff of the lattice sum, the Eichler order that Magma returns is not
+the same from one process to the next, and a rational reconstruction must take its denominator
+bound from the accuracy achieved rather than from the working precision.
 \end{abstract}
 
 \maketitle
@@ -277,6 +282,30 @@ trapezoidal rule converges like $(\rho/R)^n$, $R$ the distance to the nearest po
 noise of the input is amplified only by $1/\rho$; the same circle gives the derivative from half
 its points, which is the convergence check.
 
+\subsection*{The derivative, from inside the sum}
+A circle costs a dozen evaluations for one derivative, and it is not needed. The point $z$ enters
+\eqref{eq:nelson} only through $\sigma(z)$, so the sum may be differentiated under the summation
+sign, and the enumeration of short vectors --- which is the entire cost --- is then shared between
+a value and its derivative. That the individual terms are not holomorphic in $z$ is no obstacle:
+it is the $\partial_{\bar z}$ parts that cancel in the sum, not the $\partial_z$ ones, so
+$\partial_z$ may be applied term by term. The matrices entering $X$ are real, so $X$ and $\bar X$
+are the two linear functionals $\tfrac12(M_{11}+M_{22})\pm\tfrac{i}{2}(M_{12}-M_{21})$ of $M$, and
+the same two applied to $\partial_z M=\sigma(z_1)^{-1}\varrho(b)\,\partial_z\sigma(z)$ give
+$\partial_zX$ and $\partial_z\bar X$, whence
+$\partial_z|X|=(\bar X\partial_zX+X\partial_z\bar X)/2|X|$. Each term also needs $W_k'$, which
+comes from differentiating the Chebyshev series already fitted for $W_k$.
+
+Against the circle at $X_0^{35}(1)/w_5$ the two derivatives agree to $10^{-14}$, which is the
+circle's own accuracy, and the evaluation is $7.6$ times faster; over a whole model build the
+saving is a factor $5.3$. Carrying no radius, the derivative inside the sum is also the more
+accurate of the two, and the circle is kept as its check. What the values return is
+$g_i=y_1y_2\overline{f_i(z_1)}f_i(z_2)$, which the factor $y_2$ makes non-holomorphic; the
+holomorphic $h_i=g_i/y_2$ has
+\[
+  h_i'=\frac{\partial_zg_i+\tfrac{i}{2}h_i}{y_2},
+\]
+since $\partial_z\operatorname{Im}z=-i/2$.
+
 \subsection*{The coordinate}
 The hyperelliptic involution is central in the automorphism group, so $u$ descends to an
 involution of the conic and the coordinate can be chosen with $u\colon x\mapsto -x$. Concretely,
@@ -442,7 +471,74 @@ chose differently. And the pointless conic of the previous
 section is not peculiar to one base: the exact route finds the same phenomenon at
 $X_0^{6}(187)$ and $X_0^{22}(51)$, hyperelliptic quotients with no model $y^2=f(x)$ over $\Q$.
 
-\section{Two traps}
+\section{A genus-two quotient, and a model over $\Q$}\label{sec:genus2}
+
+Let $X=X_0^D(N)/W$ have genus two. The canonical map is then the hyperelliptic map itself, so no
+marked involution is needed and the equation comes from the differentials alone: with
+$\omega_i=h_i\,dz$ a basis of them,
+\[
+  x=\frac{h_2}{h_1},\qquad y=\frac{dx/dz}{h_1},
+\]
+since $dx/y$ and $x\,dx/y$ are a basis of the differentials of $y^2=F(x)$. The relation
+$y^2=F(x)$ is therefore \emph{linear} in the seven coefficients of $F$: seven sample points
+determine it, and the others test it. Equivalently, with $\mathcal W=h_1h_2'-h_1'h_2$ the
+Wronskian --- a form of weight six vanishing exactly at the six Weierstrass points --- it reads
+$\mathcal W^2=\sum_k c_kh_2^kh_1^{6-k}$, a relation among forms of weight twelve.
+
+\subsection*{A coordinate in which the equation is rational}
+$F$ comes out with complex coefficients, $h_1,h_2$ being some complex basis: the curve is right
+and its equation is not over $\Q$. Recognising the absolute invariants instead does not work,
+their heights lying far beyond what the values carry --- at the control they have numerators of
+order $10^{17}$ and would need some twenty-six digits. So the coordinate is fixed instead. A CM
+point defined over $\Q$ is a rational point of $X$, so in a coordinate carrying three of them to
+$0,1,\infty$ every rational point has rational coordinate, and the sextic then has rational
+coefficient ratios --- of small height, being an honest equation of the curve. The rational CM
+points that fixed nothing must come out rational in that coordinate too, which is a second test
+alongside the sample points held back.
+
+\subsection*{A CM point at which the coordinate is $0/0$}
+The $h_i$ are pullbacks of the differentials of the quotient, and a pullback vanishes wherever the
+covering map ramifies. So at a point fixed by some $w_m\in W$ --- a CM point of discriminant
+$-4m$, or $-m$ when $m\equiv3\pmod 4$ --- \emph{both} $h_1$ and $h_2$ vanish, $x=h_2/h_1$ is
+$0/0$, and what is computed there is a quotient of two rounding errors. At a full star every $w_m$
+lies in $W$, so the case cannot be avoided. An Atkin--Lehner involution has order two, so both
+forms vanish to order exactly one and the limit is $h_2'/h_1'$, which the derivative of the
+previous section supplies at no extra cost.
+
+At $X_0^{2002}(1)^*$ this is visible without any model. Seven of the nine rational CM points share
+one line through the origin to $6\cdot10^{-16}$ --- the real locus is a line in this normalisation,
+and a rational point must lie on it --- while the two that miss it, by $1.6\cdot10^{-2}$ and
+$0.85$, are exactly those whose discriminants $-11$ and $-91$ are fixed by $w_{11}$ and $w_{91}$.
+There $|h_1|\approx10^{-16}$, against $10^{-1}$ at an ordinary point of the same run.
+
+\subsection*{The twist, and the control}
+Mestre's construction is not needed, the sextic being obtained directly; what the normalisation
+discards is a single scalar, so the curve is determined up to a quadratic twist. The twist is read
+off the counts: the right curve has $\#C(\F_p)=p+1-\operatorname{Tr}a_p(f)$, so at each good prime
+the untwisted model gives one of $p+1\mp\operatorname{Tr}a_p$, the pattern of signs is the
+quadratic character of the twisting discriminant, and that discriminant can ramify only where the
+model is bad --- finitely many characters, cut out by Legendre symbols over $\F_2$. The newform
+orbit is identified by $|\operatorname{Tr}a_p|$ rather than by Atkin--Lehner signs, which is
+convention-free and at the same time checks the isogeny class.
+
+At $X_0^{35}(1)/w_5$, whose model is known independently from Guo and Yang, the route returns
+\[
+  y^2=-2401u^5+4900u^4-3878u^3+1380u^2-u
+\]
+in the coordinate sending the CM points of discriminant $-28,-35,-7$ to $0,1,\infty$, with
+twisting constant $-1$. The reduced minimal model then agrees with the stored one equation for
+equation, the absolute invariants agree \emph{as rationals} rather than numerically, and the counts
+agree with the newform at all forty-three good primes below two hundred. The route's own two tests
+pass as well: the three sample points held back are predicted to $2\cdot10^{-17}$, and the rational
+CM points that fixed nothing come out rational.
+
+This is worth separating from the method of the previous section. There the curve is pinned only up
+to its isogeny class until something external selects it, which is the difficulty a surface with
+several principal polarizations raises: all of them share an unpolarized Jacobian, hence an
+$L$-function, hence every point count. Here the curve is read off its own canonical differentials,
+no choice is made, and the counts are used only for the twist --- which they do determine.
+
+\section{Three traps}
 
 \subsection*{Precision must rise with the cutoff}
 Raising the cutoff stops helping once the truncation error falls below the rounding error of the
@@ -468,6 +564,19 @@ care is needed for the Galois conjugates of a newform orbit: the generator of th
 field, and with it the order in which the conjugates are listed, is not the same from one process
 to the next either, so the conjugates are ordered by their coefficients.
 
+\subsection*{A denominator bound must come from the accuracy, not the precision}
+\texttt{BestApproximation}$(\alpha,Q)$ returns a fraction within $1/Q^{2}$ of \emph{any} real
+whatever, so a bound taken from the working precision rather than from the accuracy achieved
+guarantees a spurious fit. Fitted at twelve digits, one coefficient of the control's sextic came
+back as $-6227397235/7868552463$ in place of $-277/350$, with a smaller residual than the truth.
+Both the tolerance and the bound are therefore read off the accuracy that the fit itself measures
+at the points held back: $Q$ is chosen so that $1/Q^{2}$ is four orders of magnitude looser than
+that accuracy, and the factor by which each coefficient beats $1/Q^{2}$ is reported next to it. At
+the control those factors run from $10^{5}$ to $10^{14}$. The same caution applies to a vanishing
+coefficient, which shows up at the size of the accuracy and not below it: judged against the
+working precision it looks like a failure, and the run then reports no rational sextic on data that
+is in fact exact.
+
 \section{What is implemented}
 
 The package \texttt{NelsonShimizu.m} provides: the Eichler order serialised and rebuilt; the
@@ -476,7 +585,10 @@ eigenvectors $v_\chi$, with the dimension check; the evaluation of the basis at 
 by \eqref{eq:nelson} and \eqref{eq:pullback}, with the cutoff and precision as parameters; the
 direct measurement of the $W$-eigenvalues of every column; Noether's count with the reading rule
 above; the values on circles, their storage, and the model step through the elliptic quotient;
-and the four checks. Every docstring says that its result is numerical.
+the values together with their derivatives in $z$, and from them the hyperelliptic coordinate and
+$dx/dz$ that a genus-two equation needs; and the four checks. Every docstring says that its result
+is numerical. The two drivers \texttt{tools/genus2model.m} and \texttt{tools/genus2twist.m} carry
+out the genus-two route of \S\ref{sec:genus2} and the twist that completes it.
 
 \begin{thebibliography}{9}
 \bibitem{JL} H.~Jacquet and R.~P. Langlands, \emph{Automorphic forms on $GL(2)$}, Lecture Notes

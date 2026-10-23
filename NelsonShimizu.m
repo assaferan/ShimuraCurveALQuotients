@@ -48,6 +48,27 @@ function ChebEval(cs, a, b, x)
     return t*d - dd + cs[1]/2;
 end function;
 
+// The derivative of a Chebyshev series, in the convention ChebEval reads: the input list stands
+// for c_0/2 + sum_{m >= 1} c_m T_m(t) on [a, b], and the output is the list for the derivative
+// with respect to x, so ChebEval applied to it returns d/dx of the original.  Differentiating the
+// fit is exact for the fit, which is what is wanted: the kernel enters the lattice sum only
+// through this approximation, so its derivative must be the derivative of the same function.
+function ChebDeriv(cs, a, b)
+    n := #cs;
+    RR := Parent(cs[1]);
+    A := [ RR | cs[1]/2 ] cat [ cs[j+1] : j in [1..n-1] ];
+    Bc := [ RR | 0 : j in [1..n+1] ];
+    for j in [n-1 .. 1 by -1] do
+        Bc[j] := Bc[j+2] + 2*j*A[j+1];
+    end for;
+    // The recurrence already returns the constant term in the halved convention ChebEval reads --
+    // for f = T_1 it gives B_0 = 2 where f' = 1 -- so it is passed through unscaled.  Doubling it
+    // here is the one error this function invites, and it is wrong by a bounded amount rather than
+    // grossly, so it survives a casual look.
+    sc := 2/(b - a);
+    return [ RR | Bc[1]*sc ] cat [ Bc[j+1]*sc : j in [1..n-1] ];
+end function;
+
 function WkDirect(k, x, RR)
     eps := RR ! 10^(-(Precision(RR)+5));
     s := RR ! 0; n := 1;
@@ -67,13 +88,26 @@ function WkTable(k, cutmax, RR)
     edges := [ a * r^i : i in [0..nps] ];
     F := func< x | WkDirect(k, x, RR) * Exp(x) >;
     coeffs := [ ChebFit(F, edges[i], edges[i+1], Precision(RR) + 14, RR) : i in [1..nps] ];
-    return <edges, coeffs, Log(r), a, nps>;
+    dcoeffs := [ ChebDeriv(coeffs[i], edges[i], edges[i+1]) : i in [1..nps] ];
+    return <edges, coeffs, Log(r), a, nps, dcoeffs>;
 end function;
 
 function WkFast(P, x)
     edges := P[1]; coeffs := P[2]; lr := P[3]; a := P[4]; nps := P[5];
     i := Minimum(nps, Maximum(1, Ceiling(Log(x/a)/lr)));
     return ChebEval(coeffs[i], edges[i], edges[i+1], x) * Exp(-x);
+end function;
+
+// The kernel and its derivative together.  The table fits F(x) = W_k(x) e^x, so W_k = C e^{-x}
+// and W_k' = (C' - C) e^{-x}; the two Chebyshev evaluations share the panel lookup and the
+// exponential, which is why asking for the derivative costs little beyond the second series.
+function WkFastBoth(P, x)
+    edges := P[1]; coeffs := P[2]; lr := P[3]; a := P[4]; nps := P[5]; dcoeffs := P[6];
+    i := Minimum(nps, Maximum(1, Ceiling(Log(x/a)/lr)));
+    e := Exp(-x);
+    C := ChebEval(coeffs[i], edges[i], edges[i+1], x);
+    Cd := ChebEval(dcoeffs[i], edges[i], edges[i+1], x);
+    return C*e, (Cd - C)*e;
 end function;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -188,6 +222,15 @@ function SigZi(z, CC)
     return Matrix(CC, 2, 2, [ 1/r, -x/r, 0, r ]);
 end function;
 
+// d/dz of SigZ.  With x = (z + conj z)/2 and y = (z - conj z)/2i one has d/dz y = -i/2, hence
+// d/dz sqrt(y) = -i/(4 sqrt y), d/dz (1/sqrt y) = i/(4 y^{3/2}) and
+// d/dz (x/sqrt y) = 1/(2 sqrt y) + i x/(4 y^{3/2}).  This is the only place z enters the lattice
+// sum, so it is the only derivative the chain rule needs.
+function SigZd(z, CC)
+    x := Real(z); y := Imaginary(z); r := Sqrt(y); i_ := CC.1;
+    return Matrix(CC, 2, 2, [ -i_/(4*r), 1/(2*r) + i_*x/(4*y*r), 0, i_/(4*y*r) ]);
+end function;
+
 function LevelSetup(D, N, k, prec, cutmax, Wtab, O, mrep)
     A := Algebra(O);
     assert Discriminant(O) eq D*N;
@@ -209,13 +252,22 @@ function LevelSetup(D, N, k, prec, cutmax, Wtab, O, mrep)
 end function;
 
 // Theorem 3.1 for several eigenforms in one enumeration: afs[i][n] = a_f(n) of the i-th form.
-function EvalMulti(dat, z1, z2, afs, cut, CC)
+// Deriv also returns d/dz2 of each value, as a third return value.  The point of doing it here
+// rather than by a difference quotient outside is that the enumeration of short vectors -- the
+// whole cost -- is shared: asking for the derivative adds a second Chebyshev evaluation and a few
+// products per term, against the dozen extra evaluations a Cauchy circle would need.
+//
+// Each term is not holomorphic in z2, only the sum is; but d/dz may still be applied term by term,
+// since it is the d/dz-bar parts that cancel and not the d/dz ones.
+function EvalMulti(dat, z1, z2, afs, cut, CC : Deriv := false)
     k := dat`k; RR := RealField(Precision(CC)); pi := Pi(RR); i_ := CC.1;
     assert IsEven(k) and cut le dat`cutmax;
     nf := #afs; nmax := #afs[1];
     s1i := SigZi(z1, CC); s2 := SigZ(z2, CC);
+    s2d := Deriv select SigZd(z2, CC) else s2;
     C := cut/(4*pi); Pb := 2*C^2;
     tot := [ CC | 0 : i in [1..nf] ];
+    dtot := [ CC | 0 : i in [1..nf] ];
     nterms := 0;
     // the Gram matrix is rounded to decide which vectors the enumeration offers; each one is then
     // accepted or rejected by 4 pi |X| <= cut at full precision, so the rounding costs no accuracy
@@ -224,6 +276,15 @@ function EvalMulti(dat, z1, z2, afs, cut, CC)
         bs := dat`latb[d]; Qn := dat`latQ[d];
         Ms := [ s1i * ChangeRing(dat`mrep(b), CC) * s2 : b in bs ];
         Xs := [ ((M[1][1]+M[2][2]) + i_*(M[1][2]-M[2][1]))/2 : M in Ms ];
+        // M has REAL entries, so X and its conjugate are the two functionals below applied to M;
+        // applying the same two to dM/dz gives dX/dz and d(conj X)/dz.  The Gram matrix, and hence
+        // the enumeration, is built from M alone and is untouched by this.
+        Xzs := [ CC | ]; Xbzs := [ CC | ];
+        if Deriv then
+            Ps := [ s1i * ChangeRing(dat`mrep(b), CC) * s2d : b in bs ];
+            Xzs  := [ ((P[1][1]+P[2][2]) + i_*(P[1][2]-P[2][1]))/2 : P in Ps ];
+            Xbzs := [ ((P[1][1]+P[2][2]) - i_*(P[1][2]-P[2][1]))/2 : P in Ps ];
+        end if;
         G := Matrix(RR, 4, 4, [ RR ! 0 : j in [1..16] ]);
         for a in [1..4] do for b in [a..4] do
             v := (&+[ Real(Ms[a][r][c])*Real(Ms[b][r][c]) : r, c in [1..2] ])/2;
@@ -235,6 +296,7 @@ function EvalMulti(dat, z1, z2, afs, cut, CC)
         L := LatticeWithGram(GI);
         cfs := [ (CC ! MoebiusMu(GCD(d, dat`N))) / (d * afs[i][d]) : i in [1..nf] ];
         sub := [ CC | 0 : i in [1..nf] ];
+        dsub := [ CC | 0 : i in [1..nf] ];
         P := ShortVectorsProcess(L, Ceiling(SCL*Pb*1.000001));
         while not IsEmpty(P) do
             vv := NextVector(P);
@@ -247,13 +309,33 @@ function EvalMulti(dat, z1, z2, afs, cut, CC)
             X := v[1]*Xs[1] + v[2]*Xs[2] + v[3]*Xs[3] + v[4]*Xs[4];
             aX := Abs(X); x := 4*pi*aX;
             if x gt cut then continue; end if;
-            wv := (X/aX)^k * WkFast(dat`Wtab, x);
-            for i in [1..nf] do sub[i] +:= afs[i][n]*wv; end for;
+            if Deriv then
+                Wv, Wd := WkFastBoth(dat`Wtab, x);
+                Xz  := v[1]*Xzs[1]  + v[2]*Xzs[2]  + v[3]*Xzs[3]  + v[4]*Xzs[4];
+                Xbz := v[1]*Xbzs[1] + v[2]*Xbzs[2] + v[3]*Xbzs[3] + v[4]*Xbzs[4];
+                // d/dz |X| = (conj(X) dX/dz + X d(conj X)/dz) / 2|X|
+                du := (ComplexConjugate(X)*Xz + X*Xbz)/(2*aX);
+                q := X/aX;
+                dq := (Xz - q*du)/aX;
+                wv := q^k * Wv;
+                dwv := k*q^(k-1)*dq*Wv + q^k*Wd*4*pi*du;
+                for i in [1..nf] do
+                    sub[i] +:= afs[i][n]*wv;
+                    dsub[i] +:= afs[i][n]*dwv;
+                end for;
+            else
+                wv := (X/aX)^k * WkFast(dat`Wtab, x);
+                for i in [1..nf] do sub[i] +:= afs[i][n]*wv; end for;
+            end if;
             nterms +:= 1;
         end while;
         for i in [1..nf] do tot[i] +:= 2*cfs[i]*sub[i]; end for;
+        if Deriv then
+            for i in [1..nf] do dtot[i] +:= 2*cfs[i]*dsub[i]; end for;
+        end if;
     end for;
-    return tot, nterms;
+    // the derivative comes LAST, so that the existing two-value call sites are unaffected
+    return tot, nterms, dtot;
 end function;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -467,6 +549,95 @@ intrinsic NelsonValues(B::Rec, z1::FldComElt, z2::FldComElt : Cutoff := 0) -> Se
         end for;
     end for;
     return fixed, rejv, nt;
+end intrinsic;
+
+intrinsic NelsonKernelDerivativeCheck(k::RngIntElt, prec::RngIntElt, cutmax::RngIntElt,
+                                      xs::SeqEnum) -> SeqEnum
+{For each x in xs, the kernel W_k(x) read off the Chebyshev table, its derivative from the
+ differentiated series, and the derivative from a central difference of WkDirect, as a triple.
+ This isolates the Chebyshev differentiation from the lattice sum: a convention error in it shows
+ up here and nowhere else.}
+    RR := RealField(prec);
+    Wtab := WkTable(k, cutmax, RR);
+    out := [];
+    h := RR ! 10^(-(prec div 3));
+    for x0 in xs do
+        x := RR ! x0;
+        W, Wd := WkFastBoth(Wtab, x);
+        fd := (WkDirect(k, x+h, RR) - WkDirect(k, x-h, RR))/(2*h);
+        Append(~out, <W, WkDirect(k, x, RR), Wd, fd>);
+    end for;
+    return out;
+end intrinsic;
+
+intrinsic NelsonValuesD(B::Rec, z1::FldComElt, z2::FldComElt : Cutoff := 0)
+    -> SeqEnum, SeqEnum, RngIntElt
+{The values of the W-fixed basis of B at z2, as NelsonValues returns them, together with the
+ derivative of each with respect to z2, and the number of lattice terms summed.  The derivative is
+ taken inside the lattice sum, so it shares the enumeration of short vectors and costs a fraction
+ of a second evaluation, where a difference quotient or a Cauchy circle would cost several.
+
+ WHAT THE SECOND LIST IS.  NelsonValues returns g_i(z) = y1 y2 conj(f_i(z1)) f_i(z2), which is not
+ holomorphic because of the factor y2 = Im(z2).  This returns g_i and d g_i/d z2.  The holomorphic
+ object is h_i = g_i / Im(z2), and its derivative is recovered as
+
+     h_i'  =  ( d g_i/d z2  +  (i/2) h_i ) / Im(z2),
+
+ since d(Im z)/dz = -i/2.  NelsonDerivedRatio does this and forms the ratio a hyperelliptic
+ coordinate needs.  Numerical.}
+    CC := B`CC; RR := B`RR;
+    cut := Cutoff eq 0 select B`cut else Cutoff;
+    require cut le B`cutmax : "cutoff above the one the basis was built for";
+    A := B`A; mrep := B`mrep; N := B`N;
+    z1 := CC ! z1; z := CC ! z2;
+    fixed := [ CC | ]; dfixed := [ CC | ]; nt := 0;
+    for M in B`levels do
+        T := PrimeDivisors(N div M);
+        subs := Subsets({ p : p in T });
+        vS := AssociativeArray(); dvS := AssociativeArray();
+        for S in subs do
+            w := &*([A ! 1] cat [ A ! B`wp[p] : p in S ]);
+            Mw := ChangeRing(mrep(w), CC);
+            jj := Mw[2][1]*z + Mw[2][2];
+            zz := (Mw[1][1]*z + Mw[1][2])/jj;
+            vals, n1, dvals := EvalMulti(B`dat[M], z1, zz, B`formsAt[M], RR ! cut, CC : Deriv);
+            nt +:= n1;
+            ph := ComplexConjugate(jj)/jj;
+            // Mw is a real matrix, so conj(jj) is a function of conj(z) alone and drops out of
+            // d/dz; the two surviving pieces are d/dz of 1/jj and the inner substitution
+            dph := -Mw[2][1]*ComplexConjugate(jj)/jj^2;
+            dzz := (Mw[1][1]*Mw[2][2] - Mw[1][2]*Mw[2][1])/jj^2;
+            vS[S] := [ ph * v : v in vals ];
+            dvS[S] := [ dph*vals[i] + ph*dvals[i]*dzz : i in [1..#vals] ];
+        end for;
+        for c in B`colsAt[M] do
+            tot := CC ! 0; dtot := CC ! 0;
+            for S in subs do
+                sg := &*([1] cat [ c[2][Index(T, p)] : p in S ]);
+                tot +:= sg * vS[S][c[1]];
+                dtot +:= sg * dvS[S][c[1]];
+            end for;
+            if c[3] then Append(~fixed, tot); Append(~dfixed, dtot); end if;
+        end for;
+    end for;
+    return fixed, dfixed, nt;
+end intrinsic;
+
+intrinsic NelsonDerivedRatio(B::Rec, z1::FldComElt, z2::FldComElt : Cutoff := 0)
+    -> SeqEnum, SeqEnum, FldComElt, FldComElt
+{The forms h_i = g_i / Im(z2) of the W-fixed basis at z2, their derivatives h_i', and for a
+ genus-two quotient the hyperelliptic coordinate x = h_2/h_1 together with dx/dz2.  This is the
+ pair a hyperelliptic equation needs: with omega_i = h_i dz, the curve y^2 = F(x) has
+ x = h_2/h_1 and y = (dx/dz)/h_1, so F is then a linear system in its seven coefficients.}
+    CC := B`CC;
+    g, dg, _ := NelsonValuesD(B, z1, z2 : Cutoff := Cutoff);
+    y := Imaginary(CC ! z2);
+    h := [ CC | t/y : t in g ];
+    hd := [ CC | (dg[i] + (CC.1/2)*h[i])/y : i in [1..#g] ];
+    require #h ge 2 : "a hyperelliptic coordinate needs at least two forms";
+    x := h[2]/h[1];
+    dx := (hd[2]*h[1] - h[2]*hd[1])/h[1]^2;
+    return h, hd, x, dx;
 end intrinsic;
 
 intrinsic NelsonChooseBasePoint(~B::Rec : Candidates := 6, Cutoff := 0)
