@@ -387,3 +387,67 @@ assert (rel385(A385, gA) lt 10^(-9) and rel385(C385, gC) lt 10^(-9))
 qeps385 := func< z, q | Denominator(q)^2 * 20 * Abs(Imaginary(z)) >;
 assert qeps385(A385, gA) gt 100 and qeps385(B385, gB) gt 100;   // out of reach, not marginal
 assert qeps385(C385, gC) lt 1/2;                                // the one the criterion accepts
+
+// [N]  HAND: the derivative of the kernel, isolated from the lattice sum.  W_k is tabulated as a
+//      Chebyshev fit of W_k(x)e^x, and the derivative is obtained by differentiating that series;
+//      the comparison is against a central difference of WkDirect, which computes W_k from its
+//      Bessel series and shares no code with the table.  This is the step that caught the one
+//      error the construction invites: the recurrence for the derivative of a Chebyshev series
+//      already returns its constant term in the halved convention that the evaluator reads, and
+//      doubling it is wrong by a few per cent -- not by orders of magnitude -- so it survives
+//      every test but a direct one.
+kch := NelsonKernelDerivativeCheck(2, 40, 20, [0.5, 1.0, 2.0, 5.0, 10.0]);
+assert #kch eq 5;
+for t in kch do
+    assert Abs(t[1] - t[2])/Abs(t[2]) lt 10^(-20);        // the table reproduces WkDirect
+    assert Abs(t[3] - t[4])/Abs(t[4]) lt 10^(-10);        // and so does its derivative
+end for;
+
+// [N+1]  HAND: the derivative of a form, taken inside the lattice sum, against Cauchy's formula
+//      on a circle.  The two share only the evaluation itself: one differentiates the summand,
+//      the other never differentiates anything.  Three things could be wrong silently and are
+//      checked together here -- that d/dz may be applied term by term although no single term is
+//      holomorphic, that dX/dz and d(conj X)/dz are the two functionals of dM/dz that the code
+//      uses, and the Chebyshev derivative above.  The circle's own accuracy is what limits the
+//      agreement, since a radius rho amplifies the evaluation error by 1/rho.
+//      X_0^35(1)/w_5 has genus two, which is the case the genus-two route needs.
+obas35 := NelsonEichlerOrderBasis(35, 1);
+B35 := NelsonBasis(35, 1, {1,5} : Precision := 40, Cutoff := 30, OrderBasis := obas35);
+assert B35`g eq 2;
+CC35 := B35`CC; I35 := CC35.1;
+z35 := NelsonSamplePoints(B35, 1)[1];
+_, _, x35, dx35 := NelsonDerivedRatio(B35, B35`z1, z35 : Cutoff := 30);
+np35 := 12; rho35 := (B35`RR) ! (1/50);
+om35 := Exp(2*Pi(CC35)*I35/np35);
+xc35 := [ CC35 | ];
+for t in [0..np35-1] do
+    v := NelsonValues(B35, B35`z1, z35 + rho35*Exp(2*Pi(CC35)*I35*t/np35) : Cutoff := 30);
+    Append(~xc35, v[2]/v[1]);
+end for;
+dxc35 := (&+[ xc35[t+1]*om35^(-t) : t in [0..np35-1] ])/(np35*rho35);
+//      The threshold is set from both sides, measured: at this cutoff the two agree to 2.9e-8
+//      (and to 2.1e-10 at cutoff 36), while the Chebyshev error this guards against moved the
+//      derivative by 8e-2.  So 1e-6 passes correct code with room and still fails that defect by
+//      four orders of magnitude.  A tighter bound would only be testing the circle's own
+//      accuracy, which a radius of 1/50 limits to 1/50 of the evaluation's.
+assert Abs(dx35 - dxc35)/Abs(dxc35) lt 10^(-6);
+// and the coordinate itself is the ratio of the values, which the circle route also uses
+v35 := NelsonValues(B35, B35`z1, z35 : Cutoff := 30);
+assert Abs(x35 - v35[2]/v35[1])/Abs(x35) lt 10^(-20);
+
+// [N+2]  FILE: the genus-two route reproduces the stored model of X_0^35(1)/w_5, which came from
+//      the method of Guo and Yang and so is independent of this package.  The equation is fitted
+//      from the differentials -- y^2 = F(x) with x = h_2/h_1 and y = (dx/dz)/h_1 is linear in the
+//      seven coefficients of F -- then carried into the coordinate sending the rational CM points
+//      of discriminant -28, -35, -7 to 0, 1, infinity, in which it has rational coefficients.
+//      What is asserted is the sextic in that coordinate, so the test pins the whole chain and not
+//      only its invariants.  The cutoff is the one the full run used; at a smaller cutoff the
+//      coefficients are not yet separated from a spurious rational of larger denominator.
+//      CODE-DERIVED as a pin, but the ABSOLUTE INVARIANTS it gives are checked against the file.
+m35 := eval (Read("data/models/models_35_1.m") cat "\nreturn models;");
+e35 := m35[[Integers()|1,5]][1];
+assert e35[1] eq 2;
+Pq<Tq> := PolynomialRing(Rationals());
+want35 := G2Invariants(HyperellipticCurve(Pq ! e35[2], Pq ! e35[3]));
+got35 := G2Invariants(HyperellipticCurve(-2401*Tq^5 + 4900*Tq^4 - 3878*Tq^3 + 1380*Tq^2 - Tq));
+assert got35 eq want35;         // equal as rationals, not merely numerically
