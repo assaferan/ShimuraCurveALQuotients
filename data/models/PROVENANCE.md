@@ -1075,3 +1075,34 @@ order and the CM points so the pieces share a coordinate system).
 polarizations and point counts cannot choose between them. The two agree: equal absolute invariants
 as rationals, and isomorphic over Q. The route used here makes no such choice -- the curve is read
 off its own canonical differentials -- so it is what promotes the candidate to a model.
+
+**Proved.** `paper/star-2002-proof.tex` proves that the star is this curve over Q (modularity of
+its Jacobian, rigidity of the isogeny class, a single class of principal polarisations, Torelli);
+the computations are in `tools/proof-2002/`.
+
+### `2002_1`, the genus-four quotient by $\langle w_2, w_{13}, w_{77}\rangle$: from the star
+
+The second key, $W = \{1,2,13,26,77,154,1001,2002\}$, is a genus-four double cover $Y$ of the
+star, branched at two rational points, and the entry
+
+    y^2 = -1001 x^10 + 98289 x^8 - 279360 x^6 + 185856 x^4 - 16384 x^2 + 65536
+
+was not fitted to anything: it is derived from the star's equation. If $Y$ is hyperelliptic its
+branch divisor is a fibre of the star's hyperelliptic map, the star then has the quintic model
+$y^2 = q_1(u)$ with that fibre at $u = 0$ and its rational Weierstrass point at infinity, and $Y$ is
+$y^2 = q_1(t^2/c)$ for a twist $c$ supported on the bad primes (Section 3 of the note, Lemma 3).
+Among the ten rational fibres of the star of height up to $10^6$ and the 32 twists, exactly one
+pair, the fibre at infinity with $c = 2$, has the point counts of $Y$ (`tools/proof-2002/stepH-enumerate.m`);
+the curve above is that pair, and it has the counts of $Y$ at all 31 good primes below 150
+(`stepH-verify.m`). Its quotient by $x \mapsto -x$ is the star, and by $(x,y) \mapsto (-x,-y)$ the
+genus-two curve $y^2 + (x^2+x)y = -2x^5 + 10x^4 - 44x^3 + 29x^2 + 9x + 1$ of conductor $2002^2$.
+
+**What is proved and what is not.** Exact: the branch locus is the pair of CM points of
+discriminants $-11$ and $-91$, both rational (Ogg's fixed-point counts and Riemann-Hurwitz);
+hyperellipticity is equivalent to that pair being a fibre; and *if* the pair is the fibre at
+infinity then $Y$ is the curve above (Jac(star)(Q)[2] = 0 leaves only twists, and the counts fix the
+twist). Numerical: that the pair is the fibre at infinity. The star's Jacobian has rank 2, so its
+rational points cannot be listed; the note's Remark 3 reduces an exact identification to a
+Thue-Mahler equation of degree five in the primes 2, 7, 11, 13, not yet solved. ⚠ So this entry is
+a model with a conditional proof, the condition being numerical -- stronger than a fitted model,
+weaker than the star's.

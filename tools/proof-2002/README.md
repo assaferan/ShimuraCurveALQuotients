@@ -13,6 +13,18 @@ quantity the proof quotes.  Run from the repository root with `< /dev/null`.
 | `stepB-congruence.m` | 5 | gcd of (a_p − σa_p)² is exactly 5 |
 | `step5-ramified.m` | 5 | the 5-rank of Jac(C)(F_p) is odd at p = 29, so Jac(C)[5] is not a split extension |
 
+The genus-four quotient `Y = X_0^2002(1)/<w_2, w_13, w_77>` (Section 3 of the note) is a double
+cover of the star, and three more scripts carry the star's proof over to it:
+
+| file | what it establishes |
+|---|---|
+| `stepH-branch.m` | the fixed points of every `w_m` with `m` outside `H`, by CM discriminant: eight of discriminant −11, eight of −91, none else; with Riemann–Hurwitz, the branch locus is one rational point of each |
+| `stepH-enumerate.m` | over every fibre of the star above a rational point of height ≤ 10^6 and every twist supported on {−1, 2, 7, 11, 13}, which double covers have the point counts of `Y`: exactly one, the fibre at infinity with `c = 2` |
+| `stepH-verify.m` | the resulting curve `Y_2`, its two genus-two quotients (the star and `C'`), its counts against the trace formula at the 31 good primes below 150, and the conductor of `C'` |
+
+What these do not do is identify the branch fibre exactly: that identification is numerical (the
+note's Remark 3 says what an exact one would take).
+
 Two of the inputs need packages that are not in this repository: `Genus2Conductor` and
 `endomorphisms`, both bundled in `edgarcosta/CHIMP`.  On lovelace that bundle is at
 `~/GitHub/CHIMP`; its `MagmaPolred` submodule had to be checked out, and line 41 of
