@@ -512,8 +512,18 @@ $0.85$, are exactly those whose discriminants $-11$ and $-91$ are fixed by $w_{1
 There $|h_1|\approx10^{-16}$, against $10^{-1}$ at an ordinary point of the same run.
 
 \subsection*{The twist, and the control}
-Mestre's construction is not needed, the sextic being obtained directly; what the normalisation
-discards is a single scalar, so the curve is determined up to a quadratic twist. The twist is read
+Mestre's construction is not needed, the sextic being obtained directly. What is left over is a
+single scalar, and it is worth saying exactly where it comes from, since a reader will otherwise
+assume the unavoidable twist ambiguity of a construction from invariants. Formula \eqref{eq:nelson}
+returns $y_1y_2\overline{f_i(z_1)}f_i(z_2)$, so each form carries an unknown constant of the base
+point, $h_i=K_if_i$ with $K_i=y_1\overline{f_i(z_1)}$. The coordinate $x=h_2/h_1$ is merely
+rescaled by $K_2/K_1$, which the M\"obius normalisation absorbs; but $y=(dx/dz)/h_1$ is multiplied
+by $\mu=K_2/K_1^{2}$, so the fitted sextic is $\mu^{2}$ times the honest one, and normalising by a
+coefficient discards $\mu^{2}$ outright. The scalar is therefore \emph{lost rather than absent}:
+putting $z_2=z_1$ in \eqref{eq:nelson} returns $y_1^{2}\lvert f_i(z_1)\rvert^{2}$ and so gives
+$\lvert\mu\rvert^{2}$, while the phase is pinned by the coefficients having to be real. Only a sign
+survives, which is the twist by $-1$, and one prime settles it. So the curve is determined up to
+that one bit by the differentials alone. The twist is read
 off the counts: the right curve has $\#C(\F_p)=p+1-\operatorname{Tr}a_p(f)$, so at each good prime
 the untwisted model gives one of $p+1\mp\operatorname{Tr}a_p$, the pattern of signs is the
 quadratic character of the twisting discriminant, and that discriminant can ramify only where the

@@ -167,6 +167,98 @@ for i in [4..#rds] do
 end for;
 printf "all of them rational: %o\n", allrat;
 
+// --- the twist, which completes the model
+//
+// WHY A TWIST IS LEFT AT ALL, since the curve was read off its own differentials.  Nelson's formula
+// returns g_i = y_1 y_2 conj(f_i(z_1)) f_i(z_2), so each form carries an unknown constant of the
+// base point, h_i = K_i f_i.  The coordinate x = h_2/h_1 is only rescaled by that, and the Mobius
+// step absorbs it; but y = (dx/dz)/h_1 is multiplied by mu = K_2/K_1^2, so the fitted sextic is
+// mu^2 times the honest one.  Dividing by the largest coefficient above then discards mu^2
+// outright.  So the scalar is LOST, not absent: |mu|^2 could be recovered by evaluating at
+// z_2 = z_1, which returns y_1^2 |f_i(z_1)|^2, and the phase is pinned by the coefficients having
+// to be real -- leaving only a SIGN, the twist by -1, which one prime settles.  The point counts
+// below do that job, and are worth keeping anyway as an independent check of the isogeny class.
+//
+// ⚠ The counts fix the twist and confirm the isogeny class; they could NOT select the curve, since
+// every principal polarization on the surface shares an L-function.  The curve comes from the
+// differentials, not from here.
+supp := Set(PrimeDivisors(D*N))
+        join Set(PrimeDivisors(Integers() ! (den^(2*Degree(GQ)) * Discriminant(GQ))));
+for c in Coefficients(GQ) do
+    if c ne 0 then supp join:= Set(PrimeDivisors(Numerator(c))); end if;
+    supp join:= Set(PrimeDivisors(Denominator(c)));
+end for;
+supp := Sort(SetToSequence(supp));
+function CountAt(poly, p)
+    dd := LCM([ Denominator(c) : c in Coefficients(poly) ] cat [1]);
+    if dd mod p eq 0 then return -1; end if;
+    gg := ChangeRing(PQ ! (dd^2 * poly), GF(p));
+    if Degree(gg) lt Degree(PQ ! (dd^2*poly)) - 1 or Degree(gg) lt 3 or Discriminant(gg) eq 0 then
+        return -1;
+    end if;
+    return #Points(HyperellipticCurve(gg));
+end function;
+cnt := AssociativeArray();
+for p in PrimesInInterval(3, 300) do
+    if (D*N) mod p ne 0 then
+        c := CountAt(GQ, p);
+        if c ge 0 then cnt[p] := c; end if;
+    end if;
+end for;
+gp := Sort([ p : p in Keys(cnt) ]);
+MS := ModularSymbols(D*N, 2);
+hit := 0; traces := AssociativeArray();
+for Fm in NewformDecomposition(NewSubspace(CuspidalSubspace(MS))) do
+    if Dimension(Fm) ne 4 then continue; end if;
+    tr := AssociativeArray(); good := true;
+    for p in gp do
+        // Trace(HeckeOperator) is TWICE Tr(a_p): T_p acts on the four-dimensional homology as a_p
+        t := (Integers() ! Trace(HeckeOperator(Fm, p))) div 2;
+        tr[p] := t;
+        // the orbit is matched on |Tr a_p|, which is free of the Atkin-Lehner sign convention
+        if Abs(p + 1 - cnt[p]) ne Abs(t) then good := false; break; end if;
+    end for;
+    if good then hit := Fm; traces := tr; break; end if;
+end for;
+if hit cmpeq 0 then
+    printf "\n=> no dimension-two newform orbit matches |Tr a_p| at all %o good primes, so this\n", #gp;
+    printf "   curve is not in the isogeny class of any of them; the twist is not determined\n";
+else
+    printf "\nmatched a newform orbit on |Tr a_p| at all %o good primes\n", #gp;
+    rows := []; rhs := []; used := [];
+    for p in gp do
+        t := traces[p];
+        if t eq 0 then continue; end if;       // carries no information about the character
+        b := (p + 1 - cnt[p] eq t) select 0 else 1;
+        Append(~rows, [ GF(2) | (LegendreSymbol(q, p) eq 1 select 0 else 1) : q in supp ]
+                      cat [ GF(2) | (p mod 4 eq 1 select 0 else 1) ]);
+        Append(~rhs, GF(2) ! b); Append(~used, p);
+    end for;
+    if #used lt #supp + 4 then
+        printf "=> too few informative primes to determine the twist\n";
+    else
+        Mt := Matrix(GF(2), #rows, #supp+1, &cat rows);
+        ok2, vv := IsConsistent(Transpose(Mt), Vector(GF(2), rhs));
+        if not ok2 then
+            printf "=> the Legendre symbols are inconsistent: no single twist fits the counts\n";
+        elif Rank(Mt) ne #supp+1 then
+            printf "=> the twist is not determined uniquely; widen the prime range\n";
+        else
+            sgn := (vv[#supp+1] eq GF(2)!1) select -1 else 1;
+            tw := sgn * (&*([Integers() | 1] cat [ supp[i] : i in [1..#supp] | vv[i] eq GF(2)!1 ]));
+            printf "twisting constant: %o\n", tw;
+            Cm := ReducedMinimalWeierstrassModel(IntegralModel(HyperellipticCurve(tw*GQ)));
+            printf "\nTHE MODEL: %o\n", Cm;
+            Note(Sprintf("model: %o", Cm));
+            bad := 0;
+            for p in gp do
+                if CountAt(tw*GQ, p) ne p + 1 - traces[p] then bad +:= 1; end if;
+            end for;
+            printf "counts against the newform: %o mismatches over %o good primes\n", bad, #gp;
+        end if;
+    end if;
+end if;
+
 fn := Sprintf("data/models/models_%o_%o.m", D, N);
 if FileExists(fn) then
     models := eval (Read(fn) cat "\nreturn models;");
