@@ -1036,3 +1036,42 @@ the trace formula and Cai–Shu–Tian's theorem. The automorphism group has ord
 Atkin–Lehner involution and the hyperelliptic one), as the Atkin–Lehner group of order 8 modulo `W`
 requires; the discriminants of the stored octics carry a factor 2 that the odd-characteristic form with
 an `h` term does not.
+
+## `2002_1`, the full Atkin-Lehner star: not from the pipeline
+
+`models_2002_1.m` holds one key, the full star $W = \{1,2,7,11,13,14,22,26,77,91,143,154,182,286,
+1001,2002\}$, of genus two. It is not a pipeline product and `genmodels.m` does not reach it: the
+star base has positive genus, so there is no Borcherds model and no fibre product. It was built
+instead from the differentials of the quotient, which the Shimizu lift evaluates directly.
+
+**How to regenerate** (`tools/genus2model.m` and the evaluation it needs, `NelsonShimizu.m`, are
+both in this branch):
+
+    magma -b DD:=2002 NN:=1 WS:=1,2,7,11,13,14,22,26,77,91,143,154,182,286,1001,2002 \
+          CUTA:=60 PRA:=60 tools/genus2model.m < /dev/null
+
+or, in Magma, `NelsonModelFromDifferentials(2002, 1, W : Precision := 60, Cutoff := 60)`, which
+finds the nine rational CM discriminants itself. Either returns `y^2 = 256u^6 + 2816u^5 + 9220u^4 + 8396u^3 + 2765u^2 + 254u + 9` in the coordinate
+sending the CM points of discriminant $-67, -99, -148$ to $0, 1, \infty$; then
+the driver finishes by determining the twist, which here is $1$, and printing the stored equation. At
+D*N = 2002 the nineteen evaluations are about five hours in one process, so they are better split
+one per point (`g2setup.m` / `g2slice.m` / `g2join.m` on the same branch, which pin the Eichler
+order and the CM points so the pieces share a coordinate system).
+
+**Vouching.** Three checks, none of which is the construction itself.
+1. The ten sample points held back from the fit are predicted to 1.4e-19, and every coefficient is
+   recognised with a margin of 10^7 to 10^10 over what a chance fit of that denominator could
+   reach.
+2. The six rational CM points that fixed nothing come out rational in that coordinate as well, and
+   all nine lie on one line through the origin to 3.9e-21 -- which is what a rational point
+   requires, the real locus being a line in this normalisation.
+3. `#C(F_p) = p + 1 - Tr a_p(f)` for the newform orbit `2002.2.a.f` at all 58 good primes below
+   300, with no mismatch. ⚠ These counts are evidence for the isogeny class and fix the twist; by
+   themselves they could NOT select the curve, since every principal polarization on the surface
+   shares an L-function.
+
+⚠ The same equation was produced independently from the PERIODS of the modular abelian surface
+(PR #137), where it was recorded only as a candidate, because that route offers several principal
+polarizations and point counts cannot choose between them. The two agree: equal absolute invariants
+as rationals, and isomorphic over Q. The route used here makes no such choice -- the curve is read
+off its own canonical differentials -- so it is what promotes the candidate to a model.

@@ -492,7 +492,13 @@ their heights lying far beyond what the values carry --- at the control they hav
 order $10^{17}$ and would need some twenty-six digits. So the coordinate is fixed instead. A CM
 point defined over $\Q$ is a rational point of $X$, so in a coordinate carrying three of them to
 $0,1,\infty$ every rational point has rational coordinate, and the sextic then has rational
-coefficient ratios --- of small height, being an honest equation of the curve. The rational CM
+coefficient ratios --- of small height, being an honest equation of the curve. The three must lie
+in three \emph{distinct fibres} of the hyperelliptic map: rational CM points pair up under the
+hyperelliptic involution (at $D=2002$ the points of discriminant $-148$ and $-232$ share an
+$x$-coordinate, as do $-163$ and $-312$), and two of the three sharing a fibre gives a M\"obius
+map of enormous scale, after which every coefficient but one is recognised as zero. The pairing is
+worth recording in its own right, since it names the degree-two divisor an exact construction of
+the hyperelliptic map would have to prescribe. The rational CM
 points that fixed nothing must come out rational in that coordinate too, which is a second test
 alongside the sample points held back.
 
@@ -512,8 +518,18 @@ $0.85$, are exactly those whose discriminants $-11$ and $-91$ are fixed by $w_{1
 There $|h_1|\approx10^{-16}$, against $10^{-1}$ at an ordinary point of the same run.
 
 \subsection*{The twist, and the control}
-Mestre's construction is not needed, the sextic being obtained directly; what the normalisation
-discards is a single scalar, so the curve is determined up to a quadratic twist. The twist is read
+Mestre's construction is not needed, the sextic being obtained directly. What is left over is a
+single scalar, and it is worth saying exactly where it comes from, since a reader will otherwise
+assume the unavoidable twist ambiguity of a construction from invariants. Formula \eqref{eq:nelson}
+returns $y_1y_2\overline{f_i(z_1)}f_i(z_2)$, so each form carries an unknown constant of the base
+point, $h_i=K_if_i$ with $K_i=y_1\overline{f_i(z_1)}$. The coordinate $x=h_2/h_1$ is merely
+rescaled by $K_2/K_1$, which the M\"obius normalisation absorbs; but $y=(dx/dz)/h_1$ is multiplied
+by $\mu=K_2/K_1^{2}$, so the fitted sextic is $\mu^{2}$ times the honest one, and normalising by a
+coefficient discards $\mu^{2}$ outright. The scalar is therefore \emph{lost rather than absent}:
+putting $z_2=z_1$ in \eqref{eq:nelson} returns $y_1^{2}\lvert f_i(z_1)\rvert^{2}$ and so gives
+$\lvert\mu\rvert^{2}$, while the phase is pinned by the coefficients having to be real. Only a sign
+survives, which is the twist by $-1$, and one prime settles it. So the curve is determined up to
+that one bit by the differentials alone. The twist is read
 off the counts: the right curve has $\#C(\F_p)=p+1-\operatorname{Tr}a_p(f)$, so at each good prime
 the untwisted model gives one of $p+1\mp\operatorname{Tr}a_p$, the pattern of signs is the
 quadratic character of the twisting discriminant, and that discriminant can ramify only where the
@@ -587,8 +603,9 @@ direct measurement of the $W$-eigenvalues of every column; Noether's count with 
 above; the values on circles, their storage, and the model step through the elliptic quotient;
 the values together with their derivatives in $z$, and from them the hyperelliptic coordinate and
 $dx/dz$ that a genus-two equation needs; and the four checks. Every docstring says that its result
-is numerical. The two drivers \texttt{tools/genus2model.m} and \texttt{tools/genus2twist.m} carry
-out the genus-two route of \S\ref{sec:genus2} and the twist that completes it.
+is numerical. The genus-two route of \S\ref{sec:genus2} is the intrinsic \texttt{NelsonModelFromDifferentials},
+which returns the curve and a record of its own checks; \texttt{tools/genus2model.m} is a driver
+over it, and \texttt{tools/genus2twist.m} determines the twist of a sextic on its own.
 
 \begin{thebibliography}{9}
 \bibitem{JL} H.~Jacquet and R.~P. Langlands, \emph{Automorphic forms on $GL(2)$}, Lecture Notes

@@ -640,6 +640,288 @@ intrinsic NelsonDerivedRatio(B::Rec, z1::FldComElt, z2::FldComElt : Cutoff := 0)
     return h, hd, x, dx;
 end intrinsic;
 
+intrinsic NelsonModelFromDifferentials(D::RngIntElt, N::RngIntElt, W::SetEnum :
+            Precision := 60, Cutoff := 46, Samples := 0, Discriminants := [],
+            DiscriminantBound := 400, PrimeCap := 300, OrderBasis := [],
+            AllowCoarsePrecision := false) -> CrvHyp, Rec
+{A hyperelliptic model over Q of a GENUS-TWO Atkin-Lehner quotient, from its differentials alone,
+ with the diagnostics record second.  Unlike NelsonHyperellipticModel this needs no marked
+ Atkin-Lehner involution, so it reaches the quotients where W is already the full star.
+
+ In genus two the canonical map IS the hyperelliptic map: with omega_i = h_i dz the coordinate
+ x = h_2/h_1 and y = (dx/dz)/h_1 satisfy y^2 = F(x), which is LINEAR in the seven coefficients of
+ F, so seven points determine it and the others test it.  The derivative comes from inside the
+ lattice sum (NelsonDerivedRatio), one evaluation per point.
+
+ The coefficients are complex, the basis being a complex one, so the coordinate is then fixed by
+ sending three CM points defined over Q, in three DISTINCT fibres of the hyperelliptic map, to 0,
+ 1 and infinity (rational CM points pair up under the hyperelliptic involution, and the pairing is
+ returned, being the degree-two divisor an exact construction would prescribe); in that coordinate every rational
+ point has rational coordinate, so the sextic has rational coefficient ratios, of small height.
+ Recognising the absolute invariants instead does not work: their heights are far beyond what the
+ values carry.  The discriminants are found here rather than supplied, since normalising on a point
+ that is NOT rational yields a plausible wrong curve that nothing downstream detects; pass
+ Discriminants to override, and DiscriminantBound to widen the search.
+
+ What is left over is one scalar: the values carry an unknown constant of the base point,
+ h_i = K_i f_i, which rescales x harmlessly but multiplies y by K_2/K_1^2, and normalising by a
+ coefficient discards it.  The quadratic twist is therefore read off the point counts against the
+ newform orbit, matched on |Tr a_p| so that no Atkin-Lehner sign convention enters.  Those counts
+ fix the twist and confirm the isogeny class; they could NOT select the curve, since every
+ principal polarization on the surface shares an L-function.
+
+ Numerical.  Fails with a message at the first step that does not meet its own test: the points
+ held back from the fit, the collinearity of the rational CM points, the rationality of the
+ coefficients, or the counts.}
+    require IsSquarefree(D*N) and GCD(D, N) eq 1 : "D*N squarefree and coprime is assumed";
+    nc := (Samples eq 0) select 10 else Samples;
+    require nc ge 9 : "at least nine points, so that two are held back";
+
+    // which discriminants give a CM point defined over Q, and which of those sit at an
+    // Atkin-Lehner fixed point, where x = h_2/h_1 is 0/0
+    rds := Discriminants;
+    X := CreateShimuraQuot(D, N, W);
+    X`g := GenusShimuraCurveQuotient(D, N, W);
+    require X`g eq 2 : Sprintf("this is for genus two; the quotient has genus %o", X`g);
+    if IsEmpty(rds) then
+        for d in [-3 .. -DiscriminantBound by -1] do
+            if d mod 4 notin {0, 1} then continue; end if;
+            dg := 0;
+            try dg := DegreeOfFieldOfDefinitionOfCMPoint(X, d); catch e continue; end try;
+            if dg eq 1 then Append(~rds, d); end if;
+        end for;
+    end if;
+    alfix := func< m | m eq 1 select {} else
+                       (m eq 2 select {-4, -8} else
+                       ((m mod 4) eq 3 select {-m, -4*m} else {-4*m})) >;
+    isbr := [ exists{ m : m in W | d in alfix(m) } : d in rds ];
+    // the three that fix the coordinate must be ordinary and have distinct coordinates, so the
+    // ordinary ones are tried first
+    rds := [ rds[i] : i in [1..#rds] | not isbr[i] ] cat [ rds[i] : i in [1..#rds] | isbr[i] ];
+    isbr := [ exists{ m : m in W | d in alfix(m) } : d in rds ];
+    require #[ i : i in [1..#rds] | not isbr[i] ] ge 3 :
+        Sprintf("only %o CM points of X are both defined over Q and away from an Atkin-Lehner "
+                cat "fixed point; three are needed to fix the coordinate", 
+                #[ i : i in [1..#rds] | not isbr[i] ]);
+
+    B := NelsonBasis(D, N, W : Precision := Precision, Cutoff := Cutoff, OrderBasis := OrderBasis,
+                               AllowCoarsePrecision := AllowCoarsePrecision);
+    require B`g eq 2 : "the basis does not have genus two";
+    CC := B`CC; RR := RealField(Precision); A := B`A; O := B`ON;
+    PQ := PolynomialRing(Rationals()); T := PQ.1;
+    diag := rec< recformat< discs, isbranch, cmx, fibres, normalisers, spread, worst, tol, bound,
+                            margins, sextic, invariants, twist, counts, orbit > | >;
+
+    bas := [ A ! t : t in Basis(O) ];
+    Lsp := Kernel(Transpose(Matrix(Integers(), [[ Integers() ! Trace(t) : t in bas ]])));
+    bl := [ &+[ b[i]*bas[i] : i in [1..4] ] : b in Basis(Lsp) ];
+    Qf := Matrix([[ Norm(t+u) - Norm(t) - Norm(u) : u in bl ] : t in bl ]);
+    function CMPoint(d)
+        found, v := FindLambda(Qf, -d, O, bl);
+        if not found then return false, CC ! 0; end if;
+        elt := &+[ v[i]/2*bl[i] : i in [1..#bl] ] + (((-d) mod 4 eq 3) select A ! (1/2) else A ! 0);
+        th := A ! (2*elt - Trace(elt));
+        if th^2 ne d then return false, CC ! 0; end if;
+        Mm := ChangeRing(B`mrep(th), CC);
+        a := Mm[1][1]; bb := Mm[1][2]; c := Mm[2][1];
+        rt := Sqrt(CC ! (a^2 + bb*c));
+        z := (a + rt)/c;
+        if Imaginary(z) lt 0 then z := (a - rt)/c; end if;
+        return true, z;
+    end function;
+
+    cmx := [ CC | ]; cmy := [ CC | ]; keep := []; kbr := [];
+    for i in [1..#rds] do
+        ok, z := CMPoint(rds[i]);
+        if not ok then continue; end if;
+        h, hd, xv, dxv := NelsonDerivedRatio(B, B`z1, z : Cutoff := Cutoff);
+        if isbr[i] then
+            // both forms vanish; an Atkin-Lehner involution has order two, so each vanishes to
+            // order exactly one and the coordinate is the limit h_2'/h_1'
+            Append(~cmx, hd[2]/hd[1]); Append(~cmy, CC ! 0);
+        else
+            Append(~cmx, xv); Append(~cmy, dxv/h[1]);
+        end if;
+        Append(~keep, rds[i]); Append(~kbr, isbr[i]);
+    end for;
+    require #[ i : i in [1..#keep] | not kbr[i] ] ge 3 :
+        "fewer than three ordinary rational CM points embed in this order";
+    diag`discs := keep; diag`isbranch := kbr; diag`cmx := cmx;
+    // a rational point must lie on the image of the real locus, which is a line through the origin
+    // in this normalisation; this is NECESSARY, not sufficient
+    rsp := [ Imaginary(cmx[i])/Real(cmx[i]) : i in [1..#cmx] ];
+    diag`spread := Maximum(rsp) - Minimum(rsp);
+
+    // the sextic.  Nodes are chosen FARTHEST APART and the ordinary CM points join the sample
+    // points: the sample coordinates cluster, and a degree-six Vandermonde on close nodes discards
+    // most of the digits the evaluation delivered.
+    pts := NelsonSamplePoints(B, nc);
+    alx := [ CC | ]; aly := [ CC | ];
+    for j in [1..nc] do
+        h, hd, xv, dxv := NelsonDerivedRatio(B, B`z1, pts[j] : Cutoff := Cutoff);
+        Append(~alx, xv); Append(~aly, dxv/h[1]);
+    end for;
+    for i in [1..#keep] do
+        if not kbr[i] then Append(~alx, cmx[i]); Append(~aly, cmy[i]); end if;
+    end for;
+    nu := 7;
+    sel := [ 1 ];
+    for t in [2..nu] do
+        bd := RR ! -1; bi := 0;
+        for i in [1..#alx] do
+            if i in sel then continue; end if;
+            dd := Minimum([ Abs(alx[i] - alx[j]) : j in sel ]);
+            if dd gt bd then bd := dd; bi := i; end if;
+        end for;
+        Append(~sel, bi);
+    end for;
+    held := [ i : i in [1..#alx] | i notin sel ];
+    Mv := Matrix(CC, nu, nu, [ alx[sel[i]]^(k-1) : k in [1..nu], i in [1..nu] ]);
+    require Abs(Determinant(Mv)) ge 10^(-Precision div 2) : "the chosen nodes do not determine F";
+    cs := Eltseq(Mv^-1 * Matrix(CC, nu, 1, [ aly[sel[i]]^2 : i in [1..nu] ]));
+    PCx := PolynomialRing(CC); xx := PCx.1;
+    F := &+[ cs[k]*xx^(k-1) : k in [1..nu] ];
+    // the residual is scaled by the size of the TERMS, not by |y|^2: a held-back point near a
+    // Weierstrass point has y near zero and would report a huge residual on a perfect fit
+    worst := RR ! 0;
+    for i in held do
+        sc := &+[ Abs(cs[k])*Abs(alx[i])^(k-1) : k in [1..nu] ] + Abs(aly[i])^2;
+        worst := Max(worst, Abs(Evaluate(F, alx[i]) - aly[i]^2)/sc);
+    end for;
+    diag`worst := worst;
+
+    // The three points that fix the coordinate must lie in DISTINCT fibres of the hyperelliptic
+    // map.  Rational CM points pair up under the hyperelliptic involution -- at 2002 the points of
+    // discriminant -148 and -232 share an x, and so do -163 and -312 -- and two of the three
+    // sharing an x gives a Mobius map of enormous scale, after which every coefficient but one
+    // recognises as zero.  So the three are chosen farthest apart, and the pairing is recorded,
+    // since it is exactly the degree-two divisor the exact (Borcherds) route needs to prescribe.
+    ord := [ i : i in [1..#keep] | not kbr[i] ];
+    sep := RR ! 10^(-8);
+    fibres := [];
+    for i in ord do
+        placed := false;
+        for f in [1..#fibres] do
+            if Abs(cmx[i] - cmx[fibres[f][1]]) le sep*(1 + Abs(cmx[i])) then
+                Append(~fibres[f], i); placed := true; break;
+            end if;
+        end for;
+        if not placed then Append(~fibres, [i]); end if;
+    end for;
+    diag`fibres := [ [ keep[i] : i in f ] : f in fibres ];
+    require #fibres ge 3 :
+        Sprintf("the rational CM points away from Atkin-Lehner fixed points lie in only %o "
+                cat "fibre(s) of the hyperelliptic map (%o); three distinct fibres are needed to "
+                cat "fix the coordinate", #fibres, diag`fibres);
+    reps := [ f[1] : f in fibres ];
+    pick := [ reps[1] ];
+    for t in [2..3] do
+        bd := RR ! -1; bi := 0;
+        for i in reps do
+            if i in pick then continue; end if;
+            dd := Minimum([ Abs(cmx[i] - cmx[j]) : j in pick ]);
+            if dd gt bd then bd := dd; bi := i; end if;
+        end for;
+        Append(~pick, bi);
+    end for;
+    x1 := cmx[pick[1]]; x2 := cmx[pick[2]]; x3 := cmx[pick[3]];
+    diag`normalisers := [ keep[i] : i in pick ];
+    Ac := x2 - x3; Bc := -x1*(x2 - x3); Cc := x2 - x1; Dc := -x3*(x2 - x1);
+    PCu := PolynomialRing(CC); uu := PCu.1;
+    G := &+[ cs[k+1] * (-Dc*uu + Bc)^k * (Cc*uu - Ac)^(6-k) : k in [0..6] ];
+    gc := [ Coefficient(G, k) : k in [0..6] ];
+    _, imax := Maximum([ Abs(t) : t in gc ]);
+    gn := [ t/gc[imax] : t in gc ];
+    // BOTH the tolerance and the denominator bound come from the accuracy the fit MEASURED at the
+    // points held back, never from the working precision: BestApproximation(x, Q) returns a
+    // fraction within 1/Q^2 of any real whatever, so a bound taken from the precision guarantees a
+    // spurious fit.  Q is chosen so that a chance fit would be four orders of magnitude worse.
+    tol := Maximum(100*worst, RR ! 10^(-Precision + 5));
+    Qb := Maximum(10, Floor(Sqrt(1/tol)/100));
+    diag`tol := tol; diag`bound := Qb;
+    qs := []; mg := [];
+    for k in [1..nu] do
+        z := gn[k];
+        q := BestApproximation(Real(z), Qb);
+        err := Max(Abs(Imaginary(z)), Abs(RR ! q - Real(z)))/(1 + Abs(z));
+        require err le tol :
+            Sprintf("coefficient %o is not rational at the accuracy achieved (%o against a "
+                    cat "tolerance of %o): raise the cutoff AND the precision", k-1, err, tol);
+        Append(~qs, q); Append(~mg, (err gt 0) select (RR ! 1/Qb^2)/err else RR ! 0);
+    end for;
+    diag`margins := mg;
+    den := LCM([ Denominator(q) : q in qs ]);
+    GQ := &+[ (Integers() ! (den*qs[k+1])) * T^k : k in [0..6] ];
+    diag`sextic := GQ;
+    require Discriminant(GQ) ne 0 : "the recognised sextic is singular";
+    diag`invariants := G2Invariants(HyperellipticCurve(GQ));
+
+    // the twist, from the counts against the newform orbit
+    supp := Set(PrimeDivisors(D*N))
+            join Set(PrimeDivisors(Integers() ! (den^12 * Discriminant(GQ))));
+    for c in Coefficients(GQ) do
+        if c ne 0 then supp join:= Set(PrimeDivisors(Numerator(c))); end if;
+        supp join:= Set(PrimeDivisors(Denominator(c)));
+    end for;
+    supp := Sort(SetToSequence(supp));
+    function CountAt(poly, p)
+        dd := LCM([ Denominator(c) : c in Coefficients(poly) ] cat [1]);
+        if dd mod p eq 0 then return -1; end if;
+        gg := ChangeRing(PQ ! (dd^2 * poly), GF(p));
+        if Degree(gg) lt Degree(PQ ! (dd^2*poly)) - 1 or Degree(gg) lt 3
+           or Discriminant(gg) eq 0 then return -1; end if;
+        return #Points(HyperellipticCurve(gg));
+    end function;
+    cnt := AssociativeArray();
+    for p in PrimesInInterval(3, PrimeCap) do
+        if (D*N) mod p ne 0 then
+            c := CountAt(GQ, p);
+            if c ge 0 then cnt[p] := c; end if;
+        end if;
+    end for;
+    gp := Sort([ p : p in Keys(cnt) ]);
+    hit := 0; traces := AssociativeArray();
+    for Fm in NewformDecomposition(NewSubspace(CuspidalSubspace(ModularSymbols(D*N, 2)))) do
+        if Dimension(Fm) ne 4 then continue; end if;
+        tr := AssociativeArray(); good := true;
+        for p in gp do
+            // Trace(HeckeOperator) is TWICE Tr(a_p): T_p acts on the four-dimensional homology
+            // as a_p on K^2.  The orbit is matched on |Tr a_p|, which is convention-free.
+            t := (Integers() ! Trace(HeckeOperator(Fm, p))) div 2;
+            tr[p] := t;
+            if Abs(p + 1 - cnt[p]) ne Abs(t) then good := false; break; end if;
+        end for;
+        if good then hit := Fm; traces := tr; break; end if;
+    end for;
+    require hit cmpne 0 :
+        "no dimension-two newform orbit of this level matches |Tr a_p| at every good prime, so the "
+        cat "curve is not in the isogeny class of any of them";
+    diag`orbit := hit;
+    rows := []; rhs := []; used := [];
+    for p in gp do
+        t := traces[p];
+        if t eq 0 then continue; end if;         // carries no information about the character
+        b := (p + 1 - cnt[p] eq t) select 0 else 1;
+        Append(~rows, [ GF(2) | (LegendreSymbol(q, p) eq 1 select 0 else 1) : q in supp ]
+                      cat [ GF(2) | (p mod 4 eq 1 select 0 else 1) ]);
+        Append(~rhs, GF(2) ! b); Append(~used, p);
+    end for;
+    require #used ge #supp + 4 : "too few informative primes for the twist; raise PrimeCap";
+    Mt := Matrix(GF(2), #rows, #supp+1, &cat rows);
+    ok2, vv := IsConsistent(Transpose(Mt), Vector(GF(2), rhs));
+    require ok2 : "the Legendre symbols are inconsistent: no single twist fits the counts";
+    require Rank(Mt) eq #supp+1 : "the twist is not determined uniquely; raise PrimeCap";
+    sgn := (vv[#supp+1] eq GF(2)!1) select -1 else 1;
+    tw := sgn * (&*([Integers() | 1] cat [ supp[i] : i in [1..#supp] | vv[i] eq GF(2)!1 ]));
+    diag`twist := tw;
+    Cm := ReducedMinimalWeierstrassModel(IntegralModel(HyperellipticCurve(tw*GQ)));
+    bad := [ p : p in gp | CountAt(tw*GQ, p) ne p + 1 - traces[p] ];
+    diag`counts := <#gp, #bad>;
+    require IsEmpty(bad) :
+        Sprintf("the twisted model misses the newform's count at %o of %o good primes", #bad, #gp);
+    return Cm, diag;
+end intrinsic;
+
 intrinsic NelsonChooseBasePoint(~B::Rec : Candidates := 6, Cutoff := 0)
 {Replace the base point z1 of B (the point at which every column is normalised through
  conj(f_i(z1))) by the best of Candidates points: the default z1 and sample points, scored by the

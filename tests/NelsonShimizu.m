@@ -451,3 +451,22 @@ Pq<Tq> := PolynomialRing(Rationals());
 want35 := G2Invariants(HyperellipticCurve(Pq ! e35[2], Pq ! e35[3]));
 got35 := G2Invariants(HyperellipticCurve(-2401*Tq^5 + 4900*Tq^4 - 3878*Tq^3 + 1380*Tq^2 - Tq));
 assert got35 eq want35;         // equal as rationals, not merely numerically
+
+// [N+3]  FILE: the whole genus-two route as one intrinsic, against the stored Guo-Yang model of
+//      X_0^35(1)/w_5 -- the CM discriminants found by the intrinsic itself, the sextic fitted and
+//      recognised, the twist read off the counts.  What is asserted is the CURVE, equation for
+//      equation after reduction, which is stronger than agreement of invariants.  This is the
+//      test the driver tools/genus2model.m rests on.  Cutoff 60 as in the full run; at 46 the
+//      recognition succeeds too but with a smaller margin.
+C35, dg35 := NelsonModelFromDifferentials(35, 1, {1,5} : Precision := 60, Cutoff := 60);
+assert dg35`discs eq [-7, -28, -35] and dg35`isbranch eq [false, false, false];
+// the three lie in three distinct fibres of the hyperelliptic map; at a level where two rational
+// CM points share a fibre (as -148 and -232 do at 2002) the intrinsic must not use both to fix
+// the coordinate, and this field is what records the pairing
+assert #dg35`fibres eq 3 and #dg35`normalisers eq 3;
+assert dg35`spread lt 10^(-15);                 // the rational CM points are collinear
+assert dg35`worst lt 10^(-15);                  // the held-back points are predicted
+assert dg35`twist eq -1 and dg35`counts[2] eq 0;
+S35 := ReducedMinimalWeierstrassModel(IntegralModel(SimplifiedModel(
+           HyperellipticCurve(Pq ! e35[2], Pq ! e35[3]))));
+assert C35 eq S35;
