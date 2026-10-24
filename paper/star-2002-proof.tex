@@ -1,0 +1,259 @@
+% A proof that the genus-two star X_0^2002(1)^* is the curve C stored in data/models/models_2002_1.m.
+%
+% Every computation the proof quotes is a script in tools/proof-2002/, each printing the number
+% used here.  Two of them need packages outside this repository (Genus2Conductor and
+% endomorphisms, bundled in edgarcosta/CHIMP); the README there says which.
+%
+% Numbering is local to this file.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\Norm}{N}
+\DeclareMathOperator{\Frob}{Frob}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Qbar}{\overline{\mathbb{Q}}}
+\newcommand{\OK}{\mathcal{O}_K}
+\begin{document}
+\title{The genus-two Shimura curve quotient $X_0^{2002}(1)^*$}
+\author{}
+\date{\today}
+\maketitle
+
+\section{The statement}
+
+Let $X = X_0^{2002}(1)^*$ be the quotient of the Shimura curve of discriminant $2002 = 2\cdot 7\cdot
+11\cdot 13$ and level one by its full group of Atkin--Lehner involutions. It has genus two. Let
+\[
+  C:\quad y^2 + (x^2+x)\,y \;=\; 16x^6 + 4x^5 + 180x^4 - 456x^3 + 196x^2 + 64x + 4 .
+\]
+
+\begin{theorem}\label{thm:main}
+$X \cong C$ over $\Q$.
+\end{theorem}
+
+The curve $C$ was found twice, by two numerical routes sharing nothing: from the periods of the
+modular abelian surface attached to the newform below, and from the differentials of $X$ evaluated
+by the Shimizu lift. Neither route proves anything, and this note does not use how $C$ was found.
+What it uses is that $C$ is in hand: every step below is either a theorem from the literature or a
+finite exact computation on $C$ or on a space of modular symbols, and the computations are listed
+in Section~\ref{sec:computations}.
+
+Throughout, $f$ is the newform orbit \texttt{2002.2.a.f} of weight two, level $2002$ and trivial
+character: its coefficient field is $K=\Q(\sqrt5)$ with ring of integers $\OK=\Z[\beta]$,
+$\beta=(1+\sqrt5)/2$, it has no complex multiplication and no inner twist, and its Atkin--Lehner
+sign is $-1$ at each of $2,7,11,13$ \cite{lmfdb}. We write $a_p\in\OK$ for its coefficients,
+$\sigma$ for the nontrivial automorphism of $K$, $t_p=\Tr_{K/\Q}a_p$ and $n_p=\Norm_{K/\Q}a_p$,
+and $A_f$ for the abelian surface over $\Q$ attached to $f$ by Shimura.
+
+\section{The proof}
+
+\subsection*{Step 1: $\Jac(X)$ is $\Q$-isogenous to $A_f$.}
+By Jacquet--Langlands the weight-two forms on $X_0^{2002}(1)$ correspond to the newforms of level
+$2002$, with the Atkin--Lehner eigenvalue at each prime dividing the discriminant reversed; the
+differentials on the quotient $X$ are those fixed by every Atkin--Lehner involution, hence
+correspond to the newforms whose classical sign is $-1$ at each of $2,7,11,13$. A search over the
+newforms of level $2002$ shows this picks out the single orbit $f$, of dimension two. By
+Eichler--Shimura for Shimura curves \cite{ribet80}, $\Jac(X)\sim_\Q A_f$.
+
+\subsection*{Step 2: $\End_\Q(\Jac C)=\OK$.}
+The algorithm of Costa, Mascot, Sijsling and Voight \cite{cmsv} computes the endomorphism ring of a
+Jacobian numerically and then \emph{certifies} the answer: it verifies that the lattice found is
+saturated, and it realises each generator as an explicit correspondence on the curve by exact
+computation. On $C$ it returns the generators $1$ and an endomorphism whose action on the
+differentials has matrix $\begin{psmallmatrix}0&1\\1&-1\end{psmallmatrix}$, of characteristic
+polynomial $x^2+x-1$, so that the ring generated is $\Z[(-1+\sqrt5)/2]=\OK$; the correspondence
+realising it is written out in the certificate. So $\Jac(C)$ is of $\mathrm{GL}_2$-type over $\Q$
+with $\End_\Q(\Jac C)=\OK$, and the same holds over $\Qbar$.
+
+\subsection*{Step 3: the conductor of $\Jac(C)$ is $2002^2$.}
+The discriminant of $C$ is $2^{20}\,7^6\,11^4\,13^6$, so $\Jac(C)$ has good reduction outside
+$\{2,7,11,13\}$. The conductor exponents at $7$, $11$, $13$ are $2$ each, by Liu's algorithm as
+implemented in Magma and in \textsc{Pari}'s \texttt{genus2red}, which agree. At $2$ the usual
+formula of Ogg is not a theorem in genus two --- Liu gave counterexamples --- and Magma says so when
+it falls back on it; the exponent at $2$ is instead computed by the $3$-torsion method of Dokchitser
+and Doris \cite{dd}, with its proof flag set, and is $2$. Hence the conductor is
+$2^2 7^2 11^2 13^2 = 2002^2$.
+
+\subsection*{Step 4: $\Jac(C)$ is $\Q$-isogenous to $A_f$.}
+By Ribet \cite[Theorem~4.4]{ribet92}, now unconditional through the proof of Serre's conjecture by
+Khare and Wintenberger \cite{kw}, an abelian variety of $\mathrm{GL}_2$-type over $\Q$ is
+$\Q$-isogenous to $A_g$ for a newform $g$ of weight two, whose level $N$ satisfies
+$\mathrm{cond}(A_g)=N^{\dim A_g}$ \cite{carayol}. By Steps 2 and 3, $g$ has level $2002$ and
+coefficient field $\Q(\sqrt5)=\End_\Q(\Jac C)\otimes\Q$; a newform whose coefficient field is
+totally real has trivial character. The Euler factor of $\Jac(C)$ at a good prime $p$ is that of
+$A_g$, namely $\prod_{\tau}(1-\tau(a_p(g))T+pT^2)$ over the two embeddings of $\Q(\sqrt5)$. There
+are five Galois orbits of newforms of level $2002$, weight two and trivial character with
+coefficient field of degree two (three with field $\Q(\sqrt5)$, two with $\Q(\sqrt{13})$), and
+exactly one of them has the Euler factor of $\Jac(C)$ at $p=3$, namely
+$1+3T+7T^2+9T^3+9T^4$; it is $f$, and the other four differ already there. So $g=f$ up to
+conjugation, and $\Jac(C)\sim_\Q A_f$. (The Euler factors agree at every good prime below $120$;
+one prime is what the argument needs.)
+
+\subsection*{Step 5: every $\Q$-isogeny out of $\Jac(C)$ is an isomorphism.}
+Write $J=\Jac(C)$ and, for a prime $\lambda$ of $\OK$, let $\rho_\lambda$ be the representation of
+$\Gal(\Qbar/\Q)$ on $J[\lambda]$, a two-dimensional space over $\F_\lambda=\OK/\lambda$; its
+semisimplification is an isogeny invariant, so it is also that of $A_f[\lambda]$, whose Frobenius
+traces are $a_p \bmod \lambda$.
+
+\begin{lemma}\label{lem:irred}
+$\rho_\lambda$ is irreducible for every prime $\lambda$ of $\OK$.
+\end{lemma}
+\begin{proof}
+Suppose $\rho_\lambda$ reducible, $\lambda\mid\ell$. Its semisimplification is $\chi_1\oplus\chi_2$
+with $\chi_1\chi_2$ the mod-$\ell$ cyclotomic character, both unramified outside $2002\ell$, and
+both of order prime to $\ell$ since their values lie in $\F_\lambda^\times$; so neither is wildly
+ramified at $\ell$, and each is $\varepsilon_i\,\omega^{a_i}$ with $\omega$ the cyclotomic
+character and $\varepsilon_i$ of conductor prime to $\ell$. The conductors of $\chi_1,\chi_2$
+multiply to a divisor of the conductor $2002$ of $\rho_\lambda$, so each divides $2002$, hence
+$1001$, there being no nontrivial character of conductor $2$. For $\ell\nmid 2002$ the restriction
+to inertia at $\ell$ is $1\oplus\omega$ in weight two, so $\{a_1,a_2\}=\{0,1\}$; for $\ell\mid
+2002$ the representation is Steinberg at $\ell$, with the same restriction to inertia up to twist,
+and the same conclusion. At a prime $p\equiv1\pmod{2002}$ therefore
+$a_p\equiv\varepsilon_1(p)p^{a_1}+\varepsilon_2(p)p^{a_2} = 1+p \pmod\lambda$. So $\lambda$
+divides $\Norm_{K/\Q}(a_p-1-p)$ for every such $p$. Over the $24$ primes $p\equiv1\pmod{2002}$
+below $200000$ the greatest common divisor of these norms is $1$.
+\end{proof}
+
+\begin{lemma}\label{lem:conj}
+For every rational prime $\ell$, the $\F_\ell[\Gal(\Qbar/\Q)]$-module $J[\ell]$ is a direct sum of
+pairwise non-isomorphic irreducible modules, except that $J[5]$ is a non-split extension of
+$\rho_{(\sqrt5)}$ by itself.
+\end{lemma}
+\begin{proof}
+If $\ell$ splits, $J[\ell]=\rho_\lambda\oplus\rho_{\lambda'}$ with $\F_\lambda=\F_\ell$, each
+irreducible by Lemma~\ref{lem:irred}, and $\rho_\lambda\cong\rho_{\lambda'}$ would force $a_p\equiv
+\sigma(a_p)\pmod\lambda$ for all $p$. If $\ell$ is inert, $J[\ell]=\rho_\lambda$ is a
+two-dimensional $\F_{\ell^2}$-space, and the restriction of scalars of an irreducible
+$\F_{\ell^2}$-representation to $\F_\ell$ is irreducible exactly when the representation is not
+isomorphic to its conjugate under $\Gal(\F_{\ell^2}/\F_\ell)$, which acts on $\OK/\ell$ as
+$\sigma$; again that isomorphism would force $a_p\equiv\sigma(a_p)\pmod\lambda$. In either case
+$\lambda$ would divide $(a_p-\sigma(a_p))^2$ for every good $p$. Over the good primes below $400$
+the greatest common divisor of $(a_p-\sigma(a_p))^2 = t_p^2-4n_p$ is exactly $5$ --- the factor
+forced by $a_p-\sigma(a_p)\in\sqrt5\,\OK$ --- so no such $\lambda$ exists.
+
+At $\ell=5$, $(\sqrt5)^2=(5)$ and $J[5]$ is an extension of $\rho=\rho_{(\sqrt5)}$ by itself. Were
+it split as a Galois module, $J[5]\cong\rho\oplus\rho$, then for every good prime $p$ the
+$\Frob_p$-invariants $J(\F_p)[5]$ would have even $\F_5$-dimension. But $J(\F_{29})\cong
+\Z/4\times\Z/220$, of $5$-rank one. (The same happens at $37, 71, 101, 103, 113, 149$.)
+\end{proof}
+
+\begin{proposition}\label{prop:iso}
+Every finite subgroup of $J(\Qbar)$ stable under $\Gal(\Qbar/\Q)$ is $J[\mathfrak a]$ for an ideal
+$\mathfrak a$ of $\OK$. Consequently every $\Q$-isogeny $J\to B$ is an isomorphism.
+\end{proposition}
+\begin{proof}
+Let $G$ be such a subgroup. It is the direct sum of its $\ell$-primary parts, each Galois-stable, so
+we may take $G\subset J[\ell^\infty]$ and argue by induction on $|G|$, the case $G=0$ being
+trivial. If $G\neq0$ then $G\cap J[\ell]$ is a nonzero Galois-stable subgroup of $J[\ell]$. For
+$\ell\ne5$, Lemma~\ref{lem:conj} and the fact that a submodule of a direct sum of pairwise
+non-isomorphic irreducibles is a sum of some of them give $G\cap J[\ell]=J[\mathfrak a_1]$ for an
+ideal $\mathfrak a_1\supsetneq(\ell)$ dividing $\ell$; for $\ell=5$ the Galois-stable subgroups of a
+non-split self-extension of an irreducible are $0$, $J[\sqrt5]$ and $J[5]$, so the same holds. As
+$K$ has class number one, $\mathfrak a_1=(\alpha_1)$. The endomorphism $\alpha_1$ has kernel
+$J[\mathfrak a_1]\subset G$, so $\alpha_1(G)$ is a Galois-stable subgroup of $J[\ell^\infty]$ of
+order $|G|/|J[\mathfrak a_1]|<|G|$; by induction $\alpha_1(G)=J[\mathfrak a']$, and then
+$G=\{x: \alpha_1x\in J[\mathfrak a']\}=J[\mathfrak a_1\mathfrak a']$.
+
+For the last sentence, the kernel of a $\Q$-isogeny $J\to B$ is $J[\mathfrak a]$ with $\mathfrak
+a=(\alpha)$, and $\alpha$ induces an isomorphism $J/J[\mathfrak a]\to J$; so $B\cong J$.
+\end{proof}
+
+\subsection*{Step 6: $\Jac(X)\cong\Jac(C)$ over $\Q$ as unpolarised surfaces.}
+By Steps 1 and 4 there is a $\Q$-isogeny $\psi\colon\Jac(X)\to\Jac(C)$. Both are principally
+polarised, so the dual isogeny is a $\Q$-isogeny $\Jac(C)\to\Jac(X)$, which by
+Proposition~\ref{prop:iso} is an isomorphism.
+
+\subsection*{Step 7: the polarisation, and the curve.}
+The surface $A=\Jac(C)$ has $\End_\Q A=\OK$, an order in a real quadratic field fixed pointwise by
+complex conjugation, and $\OK^\times$ contains the unit $\beta$ of norm $-1$. By Gonz\'alez,
+Gu\`ardia and Rotger \cite[Theorem~1.1(1)]{ggr}, \emph{a principally polarisable abelian surface
+over $\Q$ with $\End_\Q A=R$ an order in a quadratic field has a single isomorphism class of
+principal polarisations over $\Q$ whenever $R^\times$ contains a unit of negative norm}. The
+canonical polarisations of $\Jac(X)$ and of $\Jac(C)$ are both principal polarisations of $A$
+defined over $\Q$, so they are $\Q$-isomorphic: $(\Jac X,\Theta_X)\cong(\Jac C,\Theta_C)$ over
+$\Q$. Finally, Torelli holds over the base field for hyperelliptic curves \cite{serre-lauter}:
+since $-1$ is induced by the hyperelliptic involution, an isomorphism of principally polarised
+Jacobians over $\Q$ comes from an isomorphism of the curves over $\Q$. Hence $X\cong C$ over $\Q$.
+\qed
+
+\begin{remark}
+Step 7 is where the method of Section~1 of the period note would have failed by itself. Point
+counts cannot distinguish curves whose Jacobians are isomorphic as unpolarised surfaces, and for a
+field whose fundamental unit has norm $+1$ the theorem cited gives \emph{two} classes of principal
+polarisations, hence possibly two non-isomorphic curves with the same counts at every prime ---
+this is what happens at level $35$. For $\Q(\sqrt5)$ the fundamental unit has norm $-1$ and the
+ambiguity is absent. Nothing in the proof uses the quadratic twist: Step 7 identifies $X$ with $C$
+over $\Q$ outright, which agrees with the twisting constant $1$ that the counts return.
+\end{remark}
+
+\begin{remark}
+The proof does not use Faltings--Serre. For a surface with $\End=\Z$ that method would be the way
+to Step 4, and it is implemented in \cite{bppt}; but it requires the residual representation into
+$\mathrm{GSp}_4(\F_2)$ to be absolutely irreducible, which fails for a $\mathrm{GL}_2$-type surface,
+whose $2$-torsion splits over $\F_4$ into two pieces. For $\mathrm{GL}_2$-type the route through
+Serre's conjecture is both shorter and standard, and its one non-formal input, the endomorphism
+ring, is exactly what \cite{cmsv} certifies.
+\end{remark}
+
+\section{The computations}\label{sec:computations}
+
+Each line is a script in \texttt{tools/proof-2002/}, and each prints the number quoted.
+\begin{itemize}
+\item \texttt{step0-conductor-euler.m}: the odd part of the conductor, and the Euler factors of
+  $\Jac(C)$ against $1-t_pT+(n_p+2p)T^2-t_ppT^3+p^2T^4$ at every good prime below $120$. ($t_p$
+  and $n_p$ are read off the characteristic polynomial of $T_p$ on the four-dimensional space of
+  modular symbols of $f$, which is $(x^2-t_px+n_p)^2$; its square root is taken as a polynomial,
+  since a factorisation returns a linear factor at the primes where $a_p$ is rational.)
+\item \texttt{step0-conductor-at-2.m}: the exponent at $2$, by \texttt{EvenConductorExponent\_Genus2}
+  with \texttt{Proof := true} \cite{dd}.
+\item \texttt{step2-endomorphisms.m}: \texttt{CertifiedEndomorphismAlgebra} \cite{cmsv} over $\Q$,
+  with its output, the certificate, kept beside it.
+\item \texttt{stepA-orbit.m}: the five orbits at level $2002$ and their Euler factors.
+\item \texttt{stepB-reducibility.m}: $\gcd_p \Norm(a_p-1-p)=1$ over the $24$ primes $p\equiv1
+  \pmod{2002}$ below $200000$.
+\item \texttt{stepB-congruence.m}: $\gcd_p (a_p-\sigma a_p)^2=5$ over the good primes below $400$.
+\item \texttt{step5-ramified.m}: the group structure of $\Jac(C)(\F_p)$ for $p<200$, and the primes
+  of odd $5$-rank.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{bppt} A.~Brumer, A.~Pacetti, C.~Poor, G.~Tornar\'ia, J.~Voight and D.~S. Yuen, \emph{On
+the paramodularity of typical abelian surfaces}, Algebra Number Theory \textbf{13} (2019),
+1145--1195.
+\bibitem{carayol} H.~Carayol, \emph{Sur les repr\'esentations $\ell$-adiques associ\'ees aux formes
+modulaires de Hilbert}, Ann. Sci. \'Ecole Norm. Sup. \textbf{19} (1986), 409--468.
+\bibitem{cmsv} E.~Costa, N.~Mascot, J.~Sijsling and J.~Voight, \emph{Rigorous computation of the
+endomorphism ring of a Jacobian}, Math. Comp. \textbf{88} (2019), 1303--1339.
+\bibitem{dd} T.~Dokchitser and C.~Doris, \emph{3-torsion and conductor of genus 2 curves}, Math.
+Comp. \textbf{88} (2019), 1913--1927.
+\bibitem{ggr} J.~Gonz\'alez, J.~Gu\`ardia and V.~Rotger, \emph{Abelian surfaces of $\mathrm{GL}_2$-type
+as Jacobians of curves}, Acta Arith. \textbf{116} (2005), 263--287.
+\bibitem{kw} C.~Khare and J.-P. Wintenberger, \emph{Serre's modularity conjecture, I, II}, Invent.
+Math. \textbf{178} (2009), 485--504, 505--586.
+\bibitem{lmfdb} The LMFDB Collaboration, \emph{The $L$-functions and modular forms database},
+newform \texttt{2002.2.a.f}, \url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/2002/2/a/f/}.
+\bibitem{ribet80} K.~A. Ribet, \emph{Sur les vari\'et\'es ab\'eliennes \`a multiplications
+r\'eelles}, C. R. Acad. Sci. Paris \textbf{291} (1980), 121--123; and \emph{On modular
+representations of $\mathrm{Gal}(\overline{\Q}/\Q)$ arising from modular forms}, Invent. Math.
+\textbf{100} (1990), 431--476, \S4.
+\bibitem{ribet92} K.~A. Ribet, \emph{Abelian varieties over $\Q$ and modular forms}, in: Algebra and
+topology 1992 (Taej\u{o}n), Korea Adv. Inst. Sci. Tech., 1992, 53--79.
+\bibitem{serre-lauter} J.-P. Serre, appendix to K.~Lauter, \emph{Geometric methods for improving
+the upper bounds on the number of rational points on algebraic curves over finite fields}, J.
+Algebraic Geom. \textbf{10} (2001), 19--36.
+\end{thebibliography}
+\end{document}
