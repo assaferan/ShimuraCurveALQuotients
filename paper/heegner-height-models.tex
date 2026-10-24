@@ -1,0 +1,383 @@
+% The argument behind the twenty genus-three models of data/models added on branch models-1326-210
+% (PR #128): branch points located by the explicit Gross-Zagier formula, covers built exactly,
+% alternatives excluded by the trace formula.  Code: HeegnerHeights.m, ExactDoubleCover.m,
+% tools/heegner_model.m; the per-curve record is the PROVENANCE.md section of the same name.
+%
+% Numbering is local to this file.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,array,longtable}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\Div}{div}
+\DeclareMathOperator{\Area}{Area}
+\DeclareMathOperator{\ord}{ord}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Qbar}{\overline{\mathbb{Q}}}
+\newcommand{\hh}{\hat h}
+\begin{document}
+\title{Twenty genus-three Shimura curve quotients\\ from the heights of their branch points}
+\author{}
+\date{\today}
+\maketitle
+
+\section{The statement}
+
+Let $X=X_0^D(N)/W$ be an Atkin--Lehner quotient of genus three that has an elliptic quotient
+$E=X/\langle W,w\rangle$ by one further Atkin--Lehner involution. Then $X\to E$ is a double cover
+branched at four points, and those points are CM points whose discriminants are known. The explicit
+Gross--Zagier formula of Cai, Shu and Tian gives the canonical heights of their images on $E$; the
+points of $E$ of those heights are finitely many; every double cover of $E$ over $\Q$ branched
+along each candidate divisor is constructed exactly, and all but one are excluded by their point
+counts against the trace formula, which needs no model. This note writes out that argument and
+records the twenty curves it identifies. They are the genus-three quotients of the classification
+that lie beyond the reach of the Borcherds-product constructions, each being a double cover of a
+genus-one curve rather than of $\mathbb P^1$.
+
+\begin{theorem}\label{thm:main}
+Each quotient $X=X_0^D(N)/W$ of Table~\ref{tab:models} is $\Q$-isomorphic to the curve listed
+beside it, with the following qualifications. For $X_0^6(385)/W$ and $X_0^{714}(5)/W$ the
+identification is conditional on the completeness of the enumeration over the isogeny class of $E$,
+which Magma's Mordell--Weil computation does not certify on every curve of the class; for
+$X_0^{15}(38)/W$ and $X_0^6(323)/W$ it is conditional on a finite search window for one branch place
+whose position the formula does not predict. In every case the listed curve is a double cover of $E$
+branched at the CM points of the stated discriminants, is hyperelliptic of genus three, and has the
+zeta function of $X$ at every good prime below $200$ and over $\F_{p^2}$ at every good prime below
+$40$.
+\end{theorem}
+
+Three of the twenty have no model $y^2=f(x)$ over $\Q$: their canonical image is the conic
+$X_1^2+2X_2^2+2bX_3^2=0$ ramified at $2$ and at infinity, which has no rational point to project
+from, and they are given as double covers of that conic. The thirty-fourth open quotient,
+$X_0^{141}(2)/\{1,6,94,141\}$, is decided by the same computation in the other direction: the one
+configuration consistent with the trace formula there is not hyperelliptic.
+
+\begingroup
+\footnotesize
+\setlength{\tabcolsep}{5pt}
+\begin{longtable}{@{}p{4.6cm} p{1.6cm} p{8.9cm}@{}}
+\caption{The twenty quotients: $W$ by generators, $E$ by Cremona label, the branch places by the
+CM discriminant of their points (Ogg), with the degree of the place when it is not one and its
+field; below each, the model. $\dagger$: the quaternionic form is old at $2$, so $E$ has conductor
+$DN/2$. For the conic models $X_1,X_2,X_3$ have weight $1$ and $y$ weight $2$; $s,z$ stand for
+$X_1,X_2$.}\label{tab:models}\\
+\toprule
+quotient & $E$ & branch places \\
+\midrule
+\endfirsthead
+\toprule
+quotient & $E$ & branch places \\
+\midrule
+\endhead
+$X_0^{1326}(1)/\langle w_{17},w_{78}\rangle$ & 1326b2 & $-24$, $-408$: both of degree 2 over $\Q(\sqrt2)$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=272x^8-72x^6-55x^4-18x^2+17$}\\[2pt]
+$X_0^{210}(13)/\langle w_2,w_{21},w_{65}\rangle$ & 2730u1 & $-420$, $-1092$: degree 2 over $\Q(i)$ (also from 2730s1: $-312$, $-120$ over $\Q(\sqrt2)$)\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=4x^8-20x^7+97x^6-20x^5-138x^4+20x^3+97x^2+20x+4$}\\[2pt]
+$X_0^{39}(11)/\langle w_{11},w_{39}\rangle$ & 429b1 & $-52$ over $\Q(\sqrt{13})$, $-132$ over $\Q(\sqrt{-11})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=-891x^8+1044x^6+214x^4-124x^2+13$}\\[2pt]
+$X_0^{55}(7)/\langle w_{35},w_{55}\rangle$ & 385a1 & $-20$ over $\Q(\sqrt5)$, $-1540$ over $\Q(\sqrt{-35})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=-35x^8-2028x^6+198x^4+68x^2+5$}\\[2pt]
+$X_0^{6}(301)/\langle w_3,w_{14},w_{43}\rangle$ & 1806l1 & $-1032$ over $\Q(\sqrt{129})$, $-1204$ over $\Q(\sqrt{-7})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=129x^8-2276x^6+3334x^4+1180x^2-63$}\\[2pt]
+$X_0^{6}(455)/\langle w_6,w_7,w_{10},w_{13}\rangle$ & 2730y1 & $-1560$ over $\Q(\sqrt{10})$, $-10920$ over $\Q(\sqrt{-26})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=-416x^8-515x^6+582x^4-251x^2+40$}\\[2pt]
+$X_0^{6}(187)/\langle w_3,w_{11},w_{17}\rangle$ & 1122i1 & $-264$, $-4488$: both of degree 2 over $\Q(\sqrt{-2})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle X_1^2+2X_2^2+22X_3^2=0,\ \ y^2=4449s^4+84056s^3z+411472s^2z^2+195328sz^3+797696z^4$}\\[2pt]
+$X_0^{22}(51)/\langle w_6,w_{17},w_{22}\rangle$ & 1122f1 & $-264$, $-4488$: both of degree 2 over $\Q(\sqrt{-2})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle X_1^2+2X_2^2+59X_3^2=0,\ \ y^2=9242176s^4-2871136s^3z+4331508s^2z^2+124292sz^3+4787449z^4$}\\[2pt]
+$X_0^{6}(247)/\langle w_2,w_{19},w_{39}\rangle$ & 1482i1 & $-3$, $-52$ rational; $-456$ of degree 2 over $\Q(\sqrt{57})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=81x^8-4788x^6+1654x^4+2540x^2+513$}\\[2pt]
+$X_0^{6}(253)/\langle w_2,w_{23},w_{33}\rangle$ & 1518p1 & $-88$, $-1012$ rational; $-552$ of degree 2 over $\Q(\sqrt{-23})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=9x^8+1388x^6+3526x^4-3060x^2-1863$}\\[2pt]
+$X_0^{6}(185)/\langle w_2,w_{15},w_{111}\rangle$ & 1110m1 & $-40$, $-555$ rational; $-4440$ of degree 2 over $\Q(\sqrt{-111})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=2025x^8+4716x^6-122x^4-5620x^2-999$}\\[2pt]
+$X_0^{6}(385)/\langle w_5,w_6,w_{11},w_{14}\rangle$ & 2310q1 & $-40$, $-1540$ rational; $-9240$ of degree 2\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=9x^8-580x^6-9482x^4+60092x^2+3465$} \hfill\textit{candidate}\\[2pt]
+$X_0^{714}(5)/\langle w_3,w_{10},w_{14},w_{17}\rangle$ & 3570x2 & $-340$, $-840$ rational; $-14280$ of degree 2\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=9720x^8+2061x^6+598x^4-155x^2+16$} \hfill\textit{candidate}\\[2pt]
+$X_0^{15}(38)/\langle w_2,w_{15},w_{19}\rangle$ & 570e4 & $-12$, $-40$, $-228$, $-760$, all rational\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=81x^8+180x^6+2062x^4-1660x^2+361$} \hfill\textit{window at $-12$}\\[2pt]
+$X_0^{141}(2)/\langle w_3,w_{94}\rangle$ & 141a1$^{\dagger}$ & $-4$, $-24$ rational; $-564$ of degree 2 over $\Q(\sqrt{-47})$\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=81x^8+252x^6-26x^4-260x^2-47$}\\[2pt]
+$X_0^{21}(34)/\langle w_3,w_{14},w_{17}\rangle$ & 357d1$^{\dagger}$ & $-4$, $-84$, $-408$, $-1428$, all rational\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=81x^8-612x^6+262x^4+220x^2+49$}\\[2pt]
+$X_0^{57}(10)/\langle w_5,w_6,w_{19}\rangle$ & 285a1$^{\dagger}$ & $-4$, $-760$ rational; $-1140$ of degree 2\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=729x^8+500x^6-2x^4+68x^2-15$}\\[2pt]
+$X_0^{15}(46)/\langle w_5,w_6,w_{23}\rangle$ & 345f1$^{\dagger}$ & $-15$, $-40$, $-60$, $-1380$, all rational\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=81x^8-900x^6+358x^4+380x^2+81$}\\[2pt]
+$X_0^{690}(7)/\langle w_6,w_{10},w_{14},w_{23}\rangle$ & 4830bj1 & $-3$, $-115$, $-280$, $-420$, all rational\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle y^2=9x^8-130x^6-767x^4-520x^2+144$}\\[2pt]
+$X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$ & 1938h1 & $-7752$: one place of degree 4\\
+\multicolumn{3}{@{}l@{}}{\quad$\scriptstyle X_1^2+2X_2^2+22X_3^2=0,\ \ y^2=46521s^4+32184s^3z+101968s^2z^2+91392sz^3+41984z^4$} \hfill\textit{window}\\[2pt]
+\bottomrule
+\end{longtable}
+\endgroup
+
+\section{The branch locus}\label{sec:branch}
+
+Write $W'=\langle W,w\rangle$, so that $E=X_0^D(N)/W'$ has genus one, and $\pi\colon X\to E$ is
+the quotient by the involution that $W'/W$ induces on $X$. A point of $E$ is a branch point of
+$\pi$ exactly when its $W'$-orbit on $X_0^D(N)$ is a single $W$-orbit, that is, when the orbit
+consists of fixed points of some $w_m$ with $m\in W'\setminus W$. By Ogg \cite{ogg} the fixed
+points of $w_m$ on $X_0^D(N)$ are the CM points by the quadratic orders $R$ of discriminant $-4m$
+and, for $m\equiv3\pmod 4$, $-m$ (and for $m=2$ also $-4$, $-8$), and $R$ contributes
+$h(R)\prod_{p\mid DN,\,p\nmid m}\bigl(1-\{R/p\}\bigr)$ of them, $\{R/p\}$ the Eichler symbol. The
+count divided by $|W|$ is the number of points of $X$ over the branch points of that discriminant,
+and Riemann--Hurwitz for $\pi$, $2\cdot3-2=2\cdot0+\deg B$, says the branch divisor $B$ has degree
+four. The fields of definition of the points of $X$ over a branch point of discriminant $d$ come
+from Shimura reciprocity: the CM points of discriminant $d$ are defined over the ring class field,
+and the Galois action on them is that of the class group twisted by the Atkin--Lehner action of
+the primes dividing $DN$ (\texttt{BranchPointData}). In the twenty cases the places of $B$ have
+degree one or two, except at $X_0^6(323)/W$, where $B$ is a single place of degree four. The third
+and fourth columns of Table~\ref{tab:models} are this computation.
+
+\section{The heights of the branch points}\label{sec:heights}
+
+Let $f\colon X_0^D(N)\to E$ be the composite $X_0^D(N)\to X\to E$, of degree $2|W|$, and let $P$ be
+a CM point of fundamental discriminant $d$ on $X_0^D(N)$, with $h=h(d)$ and $u=[\mathcal
+O_d^\times:\Z^\times]$. For a genus character $\chi=(d_1,d_2)$ of the class group of $d$, that is a
+factorisation $d=d_1d_2$ into fundamental discriminants, put $L(s,E,\chi)=L(E^{d_1},s)L(E^{d_2},s)$
+and let $P^0_\chi=\sum_{t}\chi(t)\,f(P)^t$, the sum over the class group acting through
+Shimura reciprocity. Theorem 1.5 of Cai, Shu and Tian \cite{cst}, in its second special case
+($F=\Q$, trivial central character, a character of conductor $1$), states
+\[
+  L'(1,E,\chi)\;=\;2^{-\#\Sigma_D}\,\frac{8\pi^2(\varphi,\varphi)_{\Gamma_0(N_E)}}{u^2\sqrt{|d|}}\,
+  \frac{\langle P^0_\chi,P^0_{\bar\chi}\rangle_K}{\deg f},
+\]
+where $\varphi$ is the normalised newform of $E$, $\Sigma_D$ is the set of primes dividing both
+$N_E$ and $d$, and the pairing is the N\'eron--Tate pairing over $K=\Q(\sqrt d)$, which is twice
+the absolute height. The theorem's test-vector condition, in our situation, is the following:
+at a prime $v\in\Sigma_D$ the involution induced by a uniformiser of $K_v$ is the Atkin--Lehner
+involution $w_v$, and the formula holds for the characters $\chi$ whose value at the ramified
+prime above $v$ equals the eigenvalue $\varepsilon_v$ of $w_v$ on the quaternionic form, which is
+$a_v(E)$ for $v\mid D$ and $-a_v(E)$ for $v\mid N$ (the Jacquet--Langlands correspondence changes the
+sign at the primes of $D$); for the other characters the component $P^0_\chi$ is torsion. We call
+the former characters \emph{admissible}. If $\pi\colon X_0(N_E)\to E_{\mathrm{opt}}$ is the optimal
+parametrisation then $\pi^*\omega=2\pi i\,\varphi(z)\,dz$ up to the Manin constant, which is $1$ for
+squarefree conductor \cite{cesnavicius}, so $8\pi^2(\varphi,\varphi)=2\deg\pi\cdot\Area(E_{\mathrm
+{opt}})$, and the formula becomes
+\begin{equation}\label{eq:height}
+  \hh(P^0_\chi)\;=\;\frac12\cdot\frac{u^2\sqrt{|d|}\,\deg f\;2^{\#\Sigma_D}\,L'(1,E,\chi)}
+  {2\deg\pi\cdot\Area(E_{\mathrm{opt}})}
+\end{equation}
+for the absolute canonical height (\texttt{HeegnerHeightComponents}). Since $f(P)=\frac1h\sum_\chi
+P^0_\chi$ and the $P^0_\chi$ for distinct characters are orthogonal,
+$\hh(f(P))=h^{-2}\sum_{\chi\ \mathrm{adm.}}\hh(P^0_\chi)$ when the class group is $2$-elementary.
+What is used, though, is finer than the height of $f(P)$. A branch place of degree two with field
+$F=\Q(\sqrt{d_F})$ is a pair $\{f(P),\overline{f(P)}\}$ of conjugate points, and the only
+characters with a nonzero component on a point defined over $F$ are the trivial one and the genus
+character $\chi_F$ attached to $F$; so
+\[
+  f(P)-\overline{f(P)}=\tfrac{2}{h}\,P^0_{\chi_F}\in E(F)^-,\qquad
+  f(P)+\overline{f(P)}=\tfrac{2}{h}\,P^0_{1}+(\text{torsion})\in E(\Q),
+\]
+and \eqref{eq:height} gives the height of each side exactly. The twists $E^{d_1}$, $E^{d_2}$ that
+occur have analytic rank at most one, and the L-values are computed numerically; a nonzero value
+is recognised against a threshold, so a value wrongly taken for zero can only remove candidates
+and never admit one.
+
+\subsection*{The rank-one shift.}
+When $E$ has rank one over $\Q$ the trivial-character component is not given by
+\eqref{eq:height} alone: on a modular curve the Heegner divisor must be made of degree zero, and
+the image of the Hodge class of $X_0^D(N)$ enters. Concretely, the sum of the points of $X$ over a
+branch place of degree $e$ is
+\[
+  e\,\xi_E\;\pm\;b\,G\;+\;(\text{torsion}),
+\]
+with $\xi_E\in E(\Q)\otimes\Q$ the image of the Hodge class, the same for every place, $G$ a
+generator of $E(\Q)$ modulo torsion, and $b$ a rational number whose absolute value
+\eqref{eq:height} gives (as $(2/h)\sqrt{\hh(P^0_1)/\hh(G)}$; zero when the trivial character is
+inadmissible). This is what the comparison with the branch points of the models already known
+showed: $82$ of $92$ branch points matched \eqref{eq:height} to six digits, and the ten that did
+not were all on curves of rank one, shifted by a common amount. Translating every branch point by
+one rational point of $E$ gives an isomorphic cover, so only the class of $\xi_E$ modulo $\Z G$
+(and torsion) matters, and its denominator divides twice the denominators of the $b$'s; the
+enumeration over the signs of the $b$'s and over that finite set of shifts is therefore finite and
+complete (\texttt{ModelByHeegnerHeights}). At $X_0^6(253)/W$ the shift has denominator $3$, and an
+earlier version of the search that assumed it integral found nothing.
+
+\subsection*{Oldforms.}
+At five of the twenty the quaternionic form is old at $p=2$: $E$ has conductor $DN/2$ and the
+routine that reads an elliptic quotient off the Atkin--Lehner signs does not find it, so $E$ was
+identified from the trace formula by matching the point counts of the genus-one quotient against
+the elliptic curves of conductor dividing $DN$. The map to which the formula applies is then
+$g=f\pi_1+f\pi_2$ with $\pi_1,\pi_2$ the two degeneracy maps, $\pi_2=\pi_1w_p$, and $f$ the
+parametrisation from the curve on which the form is new; its degree is $2(p+1+a_p)\deg f$, each
+$f\pi_i$ having degree $(p+1)\deg f$ and each cross term $fT_pf^\vee$ degree $a_p\deg f$. Where $p$
+ramifies in the field of the CM point, $w_p$ acts on it as the Frobenius of the prime above $p$,
+so $\pi_2(P)$ is that conjugate of $\pi_1(P)$ and the $\chi$-component of $g(P)$ is $(1+\chi(p))$
+times that of $f(\pi_1P)$. With $\deg g$ in place of $\deg f$ in \eqref{eq:height}, every
+component is multiplied by
+\[
+  \frac{(1+\chi(p))^2}{2(p+1+a_p)},
+\]
+which is $2/(p+1+a_p)$ for $\chi(p)=1$ and $0$ for $\chi(p)=-1$: $2$ at 141a1, 357d1 and 345f1
+($a_2=-2$) and $1$ at 285a1 ($a_2=-1$). The vanishing at $\chi(p)=-1$ is what accounts for the
+rational branch places whose nontrivial characters would otherwise have had nonzero components.
+This derivation is Sachi Hashimoto's. It is for $p$ ramified in the field of the branch point; the
+same expression is applied at a place where $p$ is not ramified, which is not derived, and there
+the height only directs the search while the counts certify the answer.
+
+\section{From heights to points}\label{sec:points}
+
+Fix $E$ in its isogeny class. For a branch place of degree two with field $F$, the minus part
+$f(P)-\overline{f(P)}$ is a point of $E(F)^-$, which is the Mordell--Weil group of the quadratic
+twist $E^{d_F}$; in the cases at hand that group has rank one, and Magma proves its rank and
+saturation (with \texttt{Effort := 2} at $X_0^{714}(5)/W$). The height of the minus part is known
+exactly, so it is $\pm k\,G_F$ for a determined integer $k$ --- and that $k$ is an integer is a
+test: on the other curves of the isogeny class the predicted height is not the height of a lattice
+point, which is how $E$ is identified within its class (at $X_0^{39}(11)/W$ it excludes five of the
+six curves of 429b; at $X_0^6(455)/W$ two curves pass this necessary test and are excluded only by
+the counts). The plus part is $2\xi_E\pm bG$ as above. A place of degree one is a point of $E(\Q)$
+equal to $\xi_E\pm bG$ up to torsion; when every place is rational there is no minus part and no
+lattice test, and the integrality of the rational parts takes its place: at $X_0^{15}(38)/W$ it
+excludes three of the four curves of 570e. Two places are outside the formula as implemented: a
+discriminant that is not fundamental ($-12$ at $X_0^{15}(38)/W$, the order of conductor $2$ in
+$\Q(\sqrt{-3})$), whose multiple of $G$ is searched over $|n|\le12$ instead; and the place of
+degree four at $X_0^6(323)/W$, whose pinning characters have order four. There the trivial
+character gives the sum of the four points as $4\xi_E\pm2G$, the character of the quadratic
+subfield $\Q(\sqrt{-2})$ of the quartic field has a vanishing component because the twist of 1938h1
+by $-8$ has analytic rank two, and the one unknown left is the minus part for the quartic field
+over $\Q(\sqrt{-2})$, a multiple of the generator of a rank-one Mordell--Weil group (proved and
+saturated, height $7.1168638516$); multiples $|k|\le4$ were searched and $k=\pm1$ is the only
+survivor. These two are the window-conditional cases of Theorem~\ref{thm:main}.
+
+The outcome of this section is, for each $E$ in the isogeny class, a finite list of candidate
+branch divisors $B$, each a reduced $\Q$-rational divisor of degree four on $E$, and the guarantee
+that the true branch divisor is among them (within the stated windows).
+
+\section{The covers, and the certification}\label{sec:covers}
+
+A double cover of $E$ over $\Q$ branched along a reduced $\Q$-rational divisor $B$ of degree four
+has function field $\Q(E)(\sqrt\gamma)$ with $\Div\gamma=B-2\Delta$, $\Delta$ of degree two. Writing
+$\Delta\sim(Q)+(O)$, the condition $2\Delta\sim B$ says $2Q=P_B$, where $P_B$ is the point with
+$B\sim(P_B)+3(O)$; so the covers over $\Q$ are indexed by the rational halves $Q$ of $P_B$, a torsor
+under $E(\Q)[2]$ with at most four elements, and each is determined up to a quadratic twist along
+the deck involution, $\gamma\mapsto\kappa\gamma$ with $\kappa\in\Q^\times/\Q^{\times2}$
+(\texttt{DoubleCoversWithBranchDivisor}). Whether such a cover is hyperelliptic is read off its
+function field: in genus three the pairwise products of a basis of the holomorphic differentials
+span a space of dimension $5$ if the curve is hyperelliptic, its canonical image being a conic, and
+$6$ otherwise. When the conic has a rational point, projecting from it gives a function $t$ of
+degree two and a model $y^2=G(t)$; when it has none, the curve has no such model over $\Q$ and is
+written as $aX_1^2+bX_2^2+cX_3^2=0$, $y^2=G(X_1,X_2,X_3)$ (\texttt{HyperellipticModelOverConic}),
+whose points over $\F_q$ are counted by parametrising the conic, which is isotropic over every
+finite field (\texttt{PointCountOverConic}).
+
+\begin{proposition}\label{prop:certify}
+Let $X\to E$ be as above, let $\mathcal B$ be a finite set of reduced $\Q$-rational divisors of
+degree four on $E$ containing the branch divisor of $X$, and for each $B\in\mathcal B$ let
+$\mathcal C_B$ be the covers over $\Q$ branched along $B$, up to twist. Suppose that for every
+$(B,C)$ with $C\in\mathcal C_B$ except one, there is a good prime $p$ at which $\#X(\F_p)$, given by
+the trace formula, equals neither $\#C(\F_p)$ nor the count of the twist of $C$ by a non-square
+modulo $p$; and that for the remaining $(B_0,C_0)$ exactly one squarefree $\kappa$ supported on
+$\{-1,2\}$, the primes of bad reduction of $X$, and the primes where $C_0$ can have bad reduction
+(those dividing the discriminant of $E$ or a coefficient of $\gamma$, and those modulo which two
+points of $B_0$ coincide) has $\#C_0^{\kappa}(\F_p)=\#X(\F_p)$ at every good prime used. Then
+$X\cong C_0^{\kappa}$ over $\Q$.
+\end{proposition}
+
+\begin{proof}
+$X$ is a double cover of $E$ over $\Q$ branched along its branch divisor $B\in\mathcal B$, hence
+$X\cong C^{\kappa'}$ for some $C\in\mathcal C_B$ and some $\kappa'$. At a good odd prime $p$ the
+reductions of $C$ and of its twist by a non-square have the two possible counts of any twist
+$C^{\kappa'}$, so a pair $(B,C)$ matching neither at some $p$ is not $X$; this leaves $(B_0,C_0)$.
+A twist $\kappa'$ ramified at an odd prime $p$ where $C_0$ has good reduction gives $C_0^{\kappa'}$
+bad reduction at $p$, and $X$ has good reduction at every prime not dividing $DN$ (Morita, and the
+quotient by a group of order prime to $p$), so $\kappa'$ is supported on the listed primes; the
+counts at the good primes then determine the Kronecker symbols of $\kappa'$ at each of them, and by
+hypothesis only $\kappa$ fits. (\texttt{MatchCoverToCounts}; a cover whose counts match one of its
+two twists at every prime separately but whose signs are the symbols of no admissible $\kappa$ is
+excluded by the same rule.)
+\end{proof}
+
+Theorem~\ref{thm:main} follows: Sections~\ref{sec:branch}--\ref{sec:points} produce $\mathcal B$ with
+the guarantee that it contains the branch divisor --- unconditionally where every place is
+predicted by \eqref{eq:height} and the Mordell--Weil groups are proved, within the window at
+$X_0^{15}(38)/W$ and $X_0^6(323)/W$, and conditionally on the isogeny class having been exhausted at
+$X_0^6(385)/W$ and $X_0^{714}(5)/W$ --- and \texttt{tools/heegner\_model.m} runs the proposition's
+test over all of it, returning one curve up to $\Q$-isomorphism in each case. Where two
+configurations survive (twists $-14$ and $721$ at $X_0^6(187)/W$, $-43$ and $-2171$ at
+$X_0^{714}(5)/W$, and the two presentations at $X_0^6(323)/W$) the isomorphism between the resulting
+curves is exhibited, not inferred from the counts. That the selection by counts is part of the
+argument and not a formality is shown by $X_0^6(23)/w_{23}$, whose $E$ has $E(\Q)[2]$ of order two:
+there are two covers over $\Q$ with the same $E$ and the same four branch points, one hyperelliptic
+and one not, and the trace formula is consistent with the second only.
+
+\section{What was predicted, and what rests on what}\label{sec:checks}
+
+The following were not inputs to the construction and came out as predicted for every model: the
+genus is three; the primes of bad reduction are exactly the primes of $DN$ (for the conic models,
+of the two equations' discriminants, apart from a $59$ at $X_0^{22}(51)/W$ that is an artefact of
+the coordinates, the conic having points over every $\Q_p$ with $p$ odd); the point counts agree
+with the trace formula at every good prime below $200$ and over $\F_{p^2}$ at every good prime
+below $40$, which in genus three determines the zeta function; the quotient by the residual
+involution is $E$; the automorphism group has order $4$, or $8$ at $X_0^{1326}(1)/W$ and
+$X_0^{210}(13)/W$ where $W$ has index four in the Atkin--Lehner group, with the three elliptic
+quotients the signs predict (1326b2, 1326c1, 1326d1; 2730u1, 2730s1, 210a2); and the fields of
+definition of the fixed points of the involutions are the fields of the branch places, rational
+exactly at the places of degree one. The models of $X_0^{39}(11)/W$ and $X_0^{55}(7)/W$ are
+$\Q$-isomorphic to the curves fitted numerically from the Shimizu-lifted differentials, a route
+sharing no step with this one; at $X_0^6(185)/W$, where that fit could not recognise two of its
+invariants, the exact model agrees with the numerical values to twelve digits.
+
+What the theorem rests on: Theorem 1.5 of \cite{cst} with the admissibility rule, which is its own
+test-vector condition; the Manin constant $1$ for squarefree conductor \cite{cesnavicius}, recorded
+as $1$ in the LMFDB for every curve used; Magma's proofs of the Mordell--Weil ranks and saturations
+(the two candidates are exactly where that proof is missing on part of the isogeny class); the
+oldform multiplier, derived where $p$ ramifies in the field of the branch point; the enumeration of
+Section~\ref{sec:points}, complete except within the two windows; the exact double-cover
+construction of Section~\ref{sec:covers}; and the trace formula for the counts of $X$. The
+L-values are the only numerical quantities, and they direct the search rather than certify it.
+
+\begin{remark}
+The candidates can be settled without new Mordell--Weil computations. If $\phi\colon E\to E'$ is an
+isogeny of degree $m$ inside the class, the generator of the twist of $E'$ is $(c/m)\phi(G)$ for an
+integer $1\le c\le m$, so its height is $c^2/m$ times the known one, and the height comparison on
+$E'$ can be run over those finitely many values.
+\end{remark}
+
+\section{The computations}\label{sec:computations}
+
+\begin{itemize}
+\item \texttt{HeegnerHeights.m}: \texttt{QuaternionicAtkinLehnerSign}, \texttt{EllipticQuotientsBySigns},
+  \texttt{BranchPointData} (Section~\ref{sec:branch}), \texttt{GenusCharacters},
+  \texttt{HeegnerHeightComponents} and \texttt{PredictedBranchPointHeight} (Section~\ref{sec:heights}),
+  \texttt{ModelByHeegnerHeights} (Section~\ref{sec:points} and the search), \texttt{SmallHyperellipticModel},
+  \texttt{KleinFourEvenModel}.
+\item \texttt{ExactDoubleCover.m}: \texttt{DoubleCoversWithBranchDivisor}, \texttt{TwistedCover},
+  \texttt{HyperellipticModelOfCover}, \texttt{HyperellipticModelOverConic}, \texttt{PointCountOverConic},
+  \texttt{CoverPointCounts}, \texttt{MatchCoverToCounts} (Section~\ref{sec:covers}).
+\item \texttt{tools/heegner\_model.m}: the search for a given $(D,N,W,w)$ over the whole isogeny
+  class; the command for each of the twenty is in the \texttt{PROVENANCE.md} section ``Twenty
+  quotients from the heights of their branch points'', which also records each run's survivors.
+\item \texttt{tests/HeegnerHeights.m}: the formula against the branch points of the stored models
+  of $X_0^{35}(1)$, $X_0^{10}(11)/\{1,5\}$, $X_0^{390}(1)/\{1,3,10,30\}$, and the route end to end on
+  the last two; \texttt{tests/ExactDoubleCover.m}: the covers of $X_0^{35}(1)$, $X_0^{51}(1)$,
+  $X_0^6(23)/w_{23}$ and a configuration over a pointless conic; \texttt{tests/ModelChecks.m}: every
+  stored model against the trace formula; \texttt{tests/CRVStructure.m}: the conic entries as
+  irreducible curves of genus three.
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{cst} L.~Cai, J.~Shu and Y.~Tian, \emph{Explicit Gross--Zagier and Waldspurger formulae},
+Algebra Number Theory \textbf{8} (2014), 2523--2572.
+\bibitem{cesnavicius} K.~\v{C}esnavi\v{c}ius, \emph{The Manin constant in the semistable case},
+Compos. Math. \textbf{154} (2018), 1889--1920.
+\bibitem{gz} B.~H. Gross and D.~B. Zagier, \emph{Heegner points and derivatives of $L$-series},
+Invent. Math. \textbf{84} (1986), 225--320.
+\bibitem{ogg} A.~P. Ogg, \emph{Real points on Shimura curves}, in: Arithmetic and geometry, Vol.~I,
+Progr. Math. \textbf{35}, Birkh\"auser, 1983, 277--307.
+\bibitem{yzz} X.~Yuan, S.-W. Zhang and W.~Zhang, \emph{The Gross--Zagier formula on Shimura curves},
+Ann. of Math. Stud. \textbf{184}, Princeton, 2013.
+\end{thebibliography}
+\end{document}

@@ -21,3 +21,17 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# Twenty genus-three quotients from the heights of their branch points
+
+`heegner-height-models.tex` — the argument behind the twenty models of `data/models` added on this
+branch (PR #128), written as a proof: the branch locus of `X -> E` from Ogg's fixed-point counts
+(Section 2); the explicit Gross–Zagier formula of Cai–Shu–Tian in the normalisation the code uses,
+the admissibility rule, the rank-one shift by the Hodge class, and the oldform multiplier (Section
+3); why the candidate branch divisors form a finite, complete list, and the two places searched over
+a window (Section 4); the classification of the double covers along a given divisor and the
+proposition that the point counts select the curve (Section 5); what was predicted rather than
+input, and what the theorem rests on (Section 6). Table 1 lists all twenty with `W` by generators,
+`E`, the branch places and the model; the two candidates and the two window-conditional cases are
+marked. Code: `HeegnerHeights.m`, `ExactDoubleCover.m`, `tools/heegner_model.m`; the per-curve run
+record is the PROVENANCE section of the same name.
