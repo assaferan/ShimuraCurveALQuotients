@@ -1048,10 +1048,10 @@ instead from the differentials of the quotient, which the Shimizu lift evaluates
 both in this branch):
 
     magma -b DD:=2002 NN:=1 WS:=1,2,7,11,13,14,22,26,77,91,143,154,182,286,1001,2002 \
-          RATDISCS:=-67,-99,-148,-163,-280,-232,-312,-11,-91 NC:=10 CUTA:=60 PRA:=60 \
-          PROG:=prog.txt tools/genus2model.m < /dev/null
+          CUTA:=60 PRA:=60 tools/genus2model.m < /dev/null
 
-which returns `y^2 = 256u^6 + 2816u^5 + 9220u^4 + 8396u^3 + 2765u^2 + 254u + 9` in the coordinate
+or, in Magma, `NelsonModelFromDifferentials(2002, 1, W : Precision := 60, Cutoff := 60)`, which
+finds the nine rational CM discriminants itself. Either returns `y^2 = 256u^6 + 2816u^5 + 9220u^4 + 8396u^3 + 2765u^2 + 254u + 9` in the coordinate
 sending the CM points of discriminant $-67, -99, -148$ to $0, 1, \infty$; then
 the driver finishes by determining the twist, which here is $1$, and printing the stored equation. At
 D*N = 2002 the nineteen evaluations are about five hours in one process, so they are better split
