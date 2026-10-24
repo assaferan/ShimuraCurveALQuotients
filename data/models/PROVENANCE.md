@@ -1099,10 +1099,16 @@ genus-two curve $y^2 + (x^2+x)y = -2x^5 + 10x^4 - 44x^3 + 29x^2 + 9x + 1$ of con
 
 **What is proved and what is not.** Exact: the branch locus is the pair of CM points of
 discriminants $-11$ and $-91$, both rational (Ogg's fixed-point counts and Riemann-Hurwitz);
-hyperellipticity is equivalent to that pair being a fibre; and *if* the pair is the fibre at
-infinity then $Y$ is the curve above (Jac(star)(Q)[2] = 0 leaves only twists, and the counts fix the
-twist). Numerical: that the pair is the fibre at infinity. The star's Jacobian has rank 2, so its
-rational points cannot be listed; the note's Remark 3 reduces an exact identification to a
-Thue-Mahler equation of degree five in the primes 2, 7, 11, 13, not yet solved. ⚠ So this entry is
-a model with a conditional proof, the condition being numerical -- stronger than a fitted model,
-weaker than the star's.
+hyperellipticity is equivalent to that pair being a fibre of the star's hyperelliptic map; and
+*if it is a fibre*, then it is the fibre at infinity and $Y$ is the curve above. That last step is
+exact too: the two branch points stay distinct modulo every prime of good reduction of $Y$, so the
+fibre's weighted $y$-coordinate is a unit outside $\{2,7,11,13\}$, which makes the quintic factor of
+the star's sextic an $S$-unit -- a Thue-Mahler equation, solved completely by Gherga-Siksek's
+solver (21 solutions, `tools/proof-2002/stepH-thuemahler.sols`), leaving seven fibres, of which the
+count test keeps one (`stepH-thuemahler.m`); and Jac(star)(Q)[2] = 0 leaves only twists, which the
+counts fix. Still numerical: **hyperellipticity itself** (Noether's count on the differentials, and
+the canonical images of the two fixed points on $Y$ proportional to 1.3e-16). The note says which
+Borcherds form on the star closes that -- one with divisor a multiple of
+$Z(-11)+Z(-91)-Z(-148)-Z(-232)$, the star's Jacobian being torsion-free -- and the search is
+running. ⚠ So this entry is a model whose proof is complete modulo hyperellipticity -- stronger than a
+fitted model, weaker than the star's.
