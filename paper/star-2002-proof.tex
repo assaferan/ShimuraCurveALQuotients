@@ -117,14 +117,37 @@ Suppose $\rho_\lambda$ reducible, $\lambda\mid\ell$. Its semisimplification is $
 with $\chi_1\chi_2$ the mod-$\ell$ cyclotomic character, both unramified outside $2002\ell$, and
 both of order prime to $\ell$ since their values lie in $\F_\lambda^\times$; so neither is wildly
 ramified at $\ell$, and each is $\varepsilon_i\,\omega^{a_i}$ with $\omega$ the cyclotomic
-character and $\varepsilon_i$ of conductor prime to $\ell$. The conductors of $\chi_1,\chi_2$
-multiply to a divisor of the conductor $2002$ of $\rho_\lambda$, so each divides $2002$, hence
-$1001$, there being no nontrivial character of conductor $2$. For $\ell\nmid 2002$ the restriction
-to inertia at $\ell$ is $1\oplus\omega$ in weight two, so $\{a_1,a_2\}=\{0,1\}$; for $\ell\mid
-2002$ the representation is Steinberg at $\ell$, with the same restriction to inertia up to twist,
-and the same conclusion. At a prime $p\equiv1\pmod{2002}$ therefore
-$a_p\equiv\varepsilon_1(p)p^{a_1}+\varepsilon_2(p)p^{a_2} = 1+p \pmod\lambda$. So $\lambda$
-divides $\Norm_{K/\Q}(a_p-1-p)$ for every such $p$. Over the $24$ primes $p\equiv1\pmod{2002}$
+character and $\varepsilon_i$ of conductor prime to $\ell$. The prime-to-$\ell$ Artin
+conductor of $\rho_\lambda$ divides that of the $\lambda$-adic representation \cite{carayol89},
+which is the prime-to-$\ell$ part of $2002$; for a reducible $\rho_\lambda$ that conductor is
+$\mathrm{cond}(\varepsilon_1)\mathrm{cond}(\varepsilon_2)$, so each $\varepsilon_i$ has conductor
+dividing $2002$, hence dividing $1001$, there being no nontrivial character of conductor $2$. In
+particular $\varepsilon_i(p)=1$ at every prime $p\equiv1\pmod{2002}$. It remains to pin the
+exponents $a_i$, and there are three cases.
+
+\emph{(i) $\ell\nmid2002$, which includes $\ell=5$.} In weight two with $\ell$ prime to the level,
+the restriction of $\rho_\lambda$ to the inertia group at $\ell$ is either absolutely irreducible,
+given by the two fundamental characters of level two, or has semisimplification $1\oplus\omega$
+\cite{edixhoven}. A globally reducible $\rho_\lambda$ is in the second case, so
+$\{a_1,a_2\}=\{0,1\}$, and at $p\equiv1\pmod{2002}$ we get $a_p\equiv p^{a_1}+p^{a_2}=1+p
+\pmod\lambda$.
+
+\emph{(ii) $\ell\in\{7,11,13\}$.} Here $\ell$ divides the level exactly once and the character is
+trivial, so the $\lambda$-adic representation is special (Steinberg) at $\ell$: its restriction to
+the decomposition group is an unramified twist of $\begin{psmallmatrix}\tilde\omega&*\\0&1
+\end{psmallmatrix}$, the twist being the Atkin--Lehner sign. Reducing, the restriction of
+$\rho_\lambda$ to inertia at $\ell$ again has semisimplification $\omega\oplus1$, so
+$\{a_1,a_2\}=\{0,1\}$ and the conclusion is the same as in (i).
+
+\emph{(iii) $\ell=2$.} The prime $2$ is inert in $K$, so $\lambda=(2)$ and $\F_\lambda=\F_4$, whose
+multiplicative group has order $3$; thus $\chi_1,\chi_2$ are Dirichlet characters of order dividing
+$3$. Such a character is unramified at $2$, since $(\Z/2^k)^\times$ is a $2$-group for every $k$,
+and $\omega\equiv1\pmod 2$; so $\chi_i=\varepsilon_i$ with conductor dividing $1001$ as above, and at
+$p\equiv1\pmod{2002}$ we get $a_p\equiv\chi_1(p)+\chi_2(p)=2\equiv0\equiv1+p\pmod\lambda$, $p$
+being odd. The congruence is the same one.
+
+In every case, then, $\lambda$ divides $\Norm_{K/\Q}(a_p-1-p)$ for every prime
+$p\equiv1\pmod{2002}$. Over the $24$ primes $p\equiv1\pmod{2002}$
 below $200000$ the greatest common divisor of these norms is $1$.
 \end{proof}
 
@@ -236,10 +259,14 @@ the paramodularity of typical abelian surfaces}, Algebra Number Theory \textbf{1
 1145--1195.
 \bibitem{carayol} H.~Carayol, \emph{Sur les repr\'esentations $\ell$-adiques associ\'ees aux formes
 modulaires de Hilbert}, Ann. Sci. \'Ecole Norm. Sup. \textbf{19} (1986), 409--468.
+\bibitem{carayol89} H.~Carayol, \emph{Sur les repr\'esentations galoisiennes modulo $\ell$
+attach\'ees aux formes modulaires}, Duke Math. J. \textbf{59} (1989), 785--801.
 \bibitem{cmsv} E.~Costa, N.~Mascot, J.~Sijsling and J.~Voight, \emph{Rigorous computation of the
 endomorphism ring of a Jacobian}, Math. Comp. \textbf{88} (2019), 1303--1339.
 \bibitem{dd} T.~Dokchitser and C.~Doris, \emph{3-torsion and conductor of genus 2 curves}, Math.
 Comp. \textbf{88} (2019), 1913--1927.
+\bibitem{edixhoven} B.~Edixhoven, \emph{The weight in Serre's conjectures on modular forms},
+Invent. Math. \textbf{109} (1992), 563--594.
 \bibitem{ggr} J.~Gonz\'alez, J.~Gu\`ardia and V.~Rotger, \emph{Abelian surfaces of $\mathrm{GL}_2$-type
 as Jacobians of curves}, Acta Arith. \textbf{116} (2005), 263--287.
 \bibitem{kw} C.~Khare and J.-P. Wintenberger, \emph{Serre's modularity conjecture, I, II}, Invent.
