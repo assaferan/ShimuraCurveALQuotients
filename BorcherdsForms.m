@@ -1085,7 +1085,7 @@ function sum_divisors(div1, div2)
 end function;
 
 
-intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false, MaxZeroPoleOrder := 3000) -> Assoc
+intrinsic BorcherdsForms(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQuot] : Prec := 100, Exclude := {}, Targets := {}, IntegralSolution := false, DeficitScreen := false, Divisors := [], PoleOrders := [], ExtraRungs := [], PoolClassNumber := 2, AllowMissing := false, MaxZeroPoleOrder := 3000, RawDivisors := []) -> Assoc
 {Returns weakly holomorphic modular forms with divisors that are the ramification divisors of each of the double covers in curves,
 along with two different hauptmoduls. If Targets (a set of W subgroups) is non-empty, only the covers whose W is in
 Targets are required: the search keeps the two hauptmoduls plus those covers, and ignores every other immediate cover.
@@ -1113,8 +1113,16 @@ adds values of m to the cusp-0 ladder, which otherwise stops at the deepest poin
 PoolClassNumber is the class-number bound of the CM points the divisors may use (default 2, as in the hauptmodul search);
 with AllowMissing the divisors that admit no form are reported and the others returned, instead of an error.
 On odd D, MaxZeroPoleOrder bounds the cusp-0 pole order D0*|m| of the rungs contributed by pool points
-that no divisor uses; the pool of a rung grows with that pole order.}
-    prescribed := not IsEmpty(Divisors);
+that no divisor uses; the pool of a rung grows with that pole order.
+RawDivisors asks for Borcherds products of possibly NONZERO weight. Each entry is a list [<d, c_d>, ...] of
+discriminants with the coefficients of the principal part itself, so c_d is the multiplicity of every point
+of the Heegner divisor Z(d) on X_0(D,N) rather than of its image on Xstar; there is no pool lookup and no
+degree condition. The weight of the product is forced by the degree of its divisor (a meromorphic section
+of the k-th power of the Hodge bundle has a divisor of degree k times that of the bundle), so a product
+found with divisor D of degree 2g-2 on a base without elliptic points has weight two, and its existence
+proves D linearly equivalent to the canonical divisor. Raw entries are keyed after the Divisors entries.}
+    prescribed := not IsEmpty(Divisors) or not IsEmpty(RawDivisors);
+    raw_keys := {};
     // Keyed by the same keys as rams, and set only for the entries given as a general divisor,
     // whose coefficients are not determined by the points alone.  It is read on both paths below,
     // so it exists on both.
@@ -1267,6 +1275,20 @@ that no divisor uses; the pool of a rung grows with that pole order.}
             rams[key] := ram;
             poles[key] := pole_pt;
             used join:= Set(zeros) join {pole};
+        end for;
+        // Raw entries: the coefficients of the principal part given directly, any degree.
+        for key->dv in RawDivisors do
+            k0 := #Divisors + key;
+            ram := []; cfs := [];
+            for c in dv do
+                require c[1] notin [r[1] : r in ram] :
+                    Sprintf("BorcherdsForms: discriminant %o appears twice in the raw divisor %o", c[1], dv);
+                Append(~ram, <c[1], 1, 1>); Append(~cfs, c[2]);
+            end for;
+            rams[k0] := ram;
+            dcoeffs[k0] := cfs;
+            Include(~raw_keys, k0);
+            used join:= {c[1] : c in dv};
         end for;
         // The cusp-0 rung at m costs a pool of pole order D0*|m| there, and with AllowMissing the
         // search climbs every rung whenever one divisor is out of reach; so a pool point that no
@@ -1698,6 +1720,10 @@ that no divisor uses; the pool of a rung grows with that pole order.}
                     // a zero may be listed more than once (the function with divisor 2A - 2P
                     // is asked for as zeros [A, A]), so the target divisor sums the coefficients
                     targets[i] := {<d, &+[div_coeffs[j] : j->pt in ram | pt[1] eq d]> : d in {pt[1] : pt in ram}};
+                    if i in raw_keys then
+                        // raw coefficients are those of the principal part; the divisor read-off divides by the elliptic order
+                        targets[i] := {<t[1], t[2]/(IsDefined(ell_lut, t[1]) select ell_lut[t[1]] else 1)> : t in targets[i]};
+                    end if;
                     div_f := DivisorOfBorcherdsForm(etas[i], Xstar);
                     assert Set(div_f) eq targets[i];
                 end for;
@@ -1939,3 +1965,37 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     return ret;
 end intrinsic;
 
+intrinsic WriteBorcherdsForms(fs::Assoc, Xstar::ShimuraQuot, fname::MonStgElt)
+{Write the Borcherds forms fs as their coefficient maps over the eta quotients of their ring, each
+with its divisor beside it.  A form is the sum over the exponent vectors k of coeffs[k] times the
+eta quotient of k, so what is written presents it as an integral combination of eta quotients.}
+    require not IsEmpty(Keys(fs)) : "WriteBorcherdsForms: no forms to write";
+    entries := [];
+    for i in Sort([k : k in Keys(fs)]) do
+        coeffs_list := [[* k, fs[i]`coeffs[k] *] : k in Keys(fs[i]`coeffs)];
+        Append(~entries, [* i, coeffs_list, DivisorOfBorcherdsForm(fs[i], Xstar) *]);
+    end for;
+    k0 := Rep(Keys(fs));
+    Write(fname, Sprint(<Parent(fs[k0])`M, Parent(fs[k0])`disc, entries>, "Magma") : Overwrite);
+end intrinsic;
+
+intrinsic BorcherdsFormsFromFile(fname::MonStgElt, Xstar::ShimuraQuot) -> Assoc
+{The forms of WriteBorcherdsForms, rebuilt from their eta-quotient coefficient maps.  The divisor
+stored beside each one is recomputed from the rebuilt form and compared, so a file that has been
+corrupted, truncated or written for another curve is refused rather than used.}
+    require FileExists(fname) : "BorcherdsFormsFromFile: no such file " cat fname;
+    data := eval Read(fname);
+    R := EtaQuotientsRing(data[1], data[2]);
+    fs := AssociativeArray();
+    for entry in data[3] do
+        coeffs := AssociativeArray();
+        for pair in entry[2] do coeffs[pair[1]] := pair[2]; end for;
+        f := EtaQuotient(R, coeffs);
+        require Set(DivisorOfBorcherdsForm(f, Xstar)) eq Set(entry[3]) :
+            Sprintf("BorcherdsFormsFromFile: the form keyed %o in %o rebuilds with divisor %o, not "
+                    cat "the %o stored with it", entry[1], fname,
+                    Set(DivisorOfBorcherdsForm(f, Xstar)), Set(entry[3]));
+        fs[entry[1]] := f;
+    end for;
+    return fs;
+end intrinsic;
