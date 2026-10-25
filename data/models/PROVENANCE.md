@@ -923,3 +923,36 @@ conductor $2^2 3^2 11^2 31$ (`verify.m`). ⚠ So: hyperellipticity and the equat
 **given the star's equation**, which is a candidate. ⚠ The lesson for the other covers: when the
 star's Jacobian has rational $2$-torsion, enumerate over both theta characteristics; with one base
 only, this case produced no match at all.
+
+
+## `2418_1`: the star (a candidate) and the genus-four quotient by $\langle w_2, w_{13}, w_{93}\rangle$ (2026-10-26, branch models-genus4-covers)
+
+`models_2418_1.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-2418_1/star-model.log`):
+
+    y^2 + (x^2 + x) y = 9 x^6 - 3 x^5 - 9 x^4 - 5 x^3 - 6 x^2 + 30 x + 4,
+
+with the counts of the newform at all 58 good primes tried, conductor $2418^2$, one rational
+Weierstrass point at $x = -4/3$, and no rational torsion. ⚠ It is a **candidate**: point counts do
+not identify a curve, and the star has not been proved. Everything below is exact relative to it.
+
+The second key, $W = \{1,2,13,26,93,186,1209,2418\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-312$ and $-403$ (the images of the fixed points of
+$w_{78}$ and $w_{403}$, one rational point each), and the entry
+
+    y^2 = 2304 x^10 + 3481 x^8 + 5068 x^6 + 5190 x^4 + 172 x^2 + 169
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic2418_1.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; with a single rational Weierstrass point the normal form
+$y^2 = q_1(t^2/c)$ is unique up to the twist $c$, supported on $\{-1, 2, 3, 13, 31\}$. Which fibre: the
+two branch points stay distinct modulo every prime of good reduction of $Y$, so the fibre's weighted
+$y$-coordinate is a unit outside $S = \{2,3,13,31\}$, and since the sextic factors as $(3x+4)Q_5$ with
+resultant $2^{11}3^3$, $Q_5(a,b)$ is an $S$-unit: a Thue-Mahler equation of degree five, solved
+completely by Gherga-Siksek's solver (17 solutions in 207 s, `tools/models-2418_1/thuemahler.sols`,
+listed verbatim), leaving five fibres, of which the twist-and-count test keeps exactly one, $x = 4/3$
+with $c = 1$ (`thuemahler.m`; the same pair is the only match among the six fibres of height up to
+$10^6$, `enumerate.m`). The curve has the counts of $Y$ at all 31 good primes below 150; its
+quotient by $x \mapsto -x$ is the star and by $(x,y) \mapsto (-x,-y)$ the genus-two curve
+$y^2 + (x^2+x)y = -3x^6 - 9x^5 - 5x^4 - x^3 + 31x^2 - 27x + 9$ of conductor $2418^2$ (`verify.m`).
+⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which is a candidate.

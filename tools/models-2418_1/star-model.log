@@ -1,0 +1,20 @@
+=== X_0^2418(1)/[ 1, 2, 3, 6, 13, 26, 31, 39, 62, 78, 93, 186, 403, 806, 1209, 2418 ], cutoff 60, 60 digits
+
+rational CM points used, with their coordinates:
+   d = -19     ordinary   x = 0.243790580183 - 0.00650166944639*C12.1
+   d = -67     ordinary   x = 0.243790580183 - 0.00650166944639*C12.1
+   d = -132    ordinary   x = -2.65934734699 + 0.0709223358028*C12.1
+   d = -163    ordinary   x = 1.09672626838 - 0.0292486759121*C12.1
+   d = -195    ordinary   x = -0.662915712018 + 0.0176793493298*C12.1
+   d = -267    ordinary   x = -0.662915712018 + 0.0176793493298*C12.1
+   d = -312    fixed pt   x = -0.293459354185 + 0.00782628974194*C12.1
+   d = -372    fixed pt   x = 0.152571246740 - 0.00406893413430*C12.1
+spread of Im(x)/Re(x) over them: 9.3850314E-21   (a rational point must lie on that one line)
+worst prediction at the points held back from the fit: 2.4166609E-18
+tolerance 2.4166609E-16, denominator bound 643268; margins over a chance fit: [ 15808910., 1931107.3, 591856.35, 255142.71, 301134.98, 617886.25, 0.00000000 ]
+
+sextic in the coordinate fixed by the CM points: 1521*x^6 - 546*x^5 - 731*x^4 - 292*x^3 + 660*x^2 - 352*x + 64
+absolute invariants: [ -11535879585533205394007/3021250467301687296, -117330453629294464511/251770872275140608, 9548998128182185/259023531147264 ]
+twisting constant 1; counts against the newform: 58 good primes, 0 mismatches
+
+THE MODEL: Hyperelliptic Curve defined by y^2 + (x^2 + x)*y = 9*x^6 - 3*x^5 - 9*x^4 - 5*x^3 - 6*x^2 + 30*x + 4 over Rational Field
