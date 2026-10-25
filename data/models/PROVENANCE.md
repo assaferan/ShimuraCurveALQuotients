@@ -841,3 +841,40 @@ two were produced independently and both agree with the trace formula): 13 keys,
 odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
+
+
+## `2030_1`: the star (a candidate) and the genus-four quotient by $\langle w_{10}, w_{14}, w_{58}\rangle$ (2026-10-25, branch models-genus4-covers)
+
+`models_2030_1.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-2030_1/star-model.log`):
+
+    y^2 + (x^2 + x) y = x^6 + 29 x^5 + 13 x^4 + 9 x^3 + 159 x^2 + 149 x + 39,
+
+with the counts of the newform at all 58 good primes tried, a rational Weierstrass point at
+$x = -3/2$, and $\mathrm{Jac}(\mathbb{Q})[2] = 0$. ⚠ It is a **candidate**: point counts do not
+identify a curve (the level-35 lesson), and unlike `2002_1` the star has not been proved by the
+route of PR #139. Everything below is exact relative to it.
+
+The second key, $W = \{1,10,14,35,58,145,203,2030\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-8$ and $-280$ (the images of the fixed points of
+$w_2$ and $w_{70}$, one rational point each by Ogg's counts and Riemann-Hurwitz), and the entry
+
+    y^2 = -1960 x^10 + 81 x^8 + 2796 x^6 - 186 x^4 - 1100 x^2 + 625
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic2030_1.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; the star then has the quintic model $y^2 = q_1(u)$ with that
+fibre at $u = 0$ and the Weierstrass point at infinity, and $Y$ is $y^2 = q_1(t^2/c)$ with $c$
+supported on $\{-1, 2, 5, 7, 29\}$ (the argument of Section 3 of `paper/star-2002-proof.tex`,
+Lemma 3). Which fibre: the two branch points stay distinct modulo every prime of good reduction of
+$Y$, so the fibre's weighted $y$-coordinate is a unit outside $S = \{2, 5, 7, 29\}$, and since the
+sextic factors as $(2x+3) Q_5$ with resultant $2^6 \cdot 5 \cdot 7^2$, $Q_5(a,b)$ is an $S$-unit: a
+Thue-Mahler equation of degree five, solved completely by Gherga-Siksek's solver (17 solutions in
+246 s, `tools/models-2030_1/thuemahler.sols`, listed verbatim), leaving six fibres, of which the
+twist-and-count test keeps exactly one, $x = 1/2$ with $c = 1$ (`thuemahler.m`; the same pair is
+the only match among the nine fibres of height up to $10^6$, `enumerate.m`). $\mathrm{Jac}(\mathbb{Q})[2] = 0$
+leaves only twists, fixed by the counts. The curve has the counts of $Y$ at all 31 good primes below
+150; its quotient by $x \mapsto -x$ is the star and by $(x, y) \mapsto (-x, -y)$ the genus-two
+curve $y^2 + (x^2+x) y = x^6 + 27x^5 - 42x^4 + 65x^3 + 56x^2 - 15x - 13$ of conductor $2030^2$
+(`verify.m`). ⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which
+is a candidate.
