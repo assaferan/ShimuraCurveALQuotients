@@ -1,0 +1,286 @@
+% X_0^6(341)/<w_3, w_11, w_62> is hyperelliptic: the certificate of PR #142, the star of PR #143, and
+% the one argument that was missing -- that the star's isogeny class holds exactly two principally
+% polarised surfaces, and the CM branch divisor tells them apart.  Scripts in tools/proof-6_341/.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\End}{End}
+\DeclareMathOperator{\Gal}{Gal}
+\DeclareMathOperator{\ord}{ord}
+\DeclareMathOperator{\CM}{CM}
+\DeclareMathOperator{\NS}{NS}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\OK}{\mathcal{O}_K}
+\begin{document}
+\title{$X_0^6(341)/\langle w_3,w_{11},w_{62}\rangle$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^6(341)$, $W=W_{6,341}$ its Atkin--Lehner group of order $16$, $H=\langle w_3,w_{11},w_{62}\rangle$
+of order $8$, $Y=X/H$ and $C^*=X/W$ the star. Then $Y$ has genus four, $C^*$ genus two, and $Y\to C^*$
+is a double cover branched at the images of the fixed points of the involutions outside $H$; by
+Ogg's counts these are eight points of discriminant $-24$ (fixed by $w_2$) and eight of
+discriminant $-88$ (fixed by $w_{22}$), one $W$-orbit each, so the branch divisor is
+$B=P_{-24}+P_{-88}$ with both points rational, and Riemann--Hurwitz allows no other
+(\texttt{tests/Hyperelliptic6\_341.m}). As for every such cover, $Y$ is hyperelliptic if and only if
+$B$ is a fibre of the hyperelliptic map of $C^*$, i.e.\ $B\sim K_{C^*}$ (\texttt{paper/star-2002-proof.tex},
+Section~3).
+
+\begin{theorem}\label{thm:main}
+$Y=X_0^6(341)/\langle w_3,w_{11},w_{62}\rangle$ is hyperelliptic. The star is the curve
+\[
+  C:\quad y^2+(x^2+x)y=6x^5-12x^4+29x^3+9x^2-33x+9,
+\]
+and $Y$ is
+\[
+  y^2=-744x^{10}-47x^8+1420x^6+1126x^4+468x^2+81 .
+\]
+\end{theorem}
+
+The proof has three ingredients that already exist and one that is new. The Borcherds certificate of
+PR~\#142 makes $B$ canonical up to the rational torsion of $\Jac(C^*)$, of order at most $2$
+(Section~\ref{sec:cert}). The curve $C$ was fitted to the star's differentials in PR~\#143, and the
+route of PR~\#139 identifies its Jacobian with that of the star up to isogeny
+(Section~\ref{sec:class}). The new point is that the isogeny class contains exactly two principally
+polarised surfaces, $\Jac(C)$ and its quotient by the rational $2$-torsion point, that the second is
+the Jacobian of an explicit curve $C_A$ (Section~\ref{sec:two}), and that the branch divisor itself
+decides between them: no double cover of $C_A$ defined over $\Q$ can be branched along any divisor
+class the certificate allows, while on $C$ the canonical class is realised and the other is not
+(Section~\ref{sec:decide}). Every number quoted is produced by a script under
+\texttt{tools/proof-6\_341/}, listed in Section~\ref{sec:scripts}.
+
+\section{The certificate}\label{sec:cert}
+
+\begin{proposition}\label{prop:cert}
+Let $t$ generate $\Jac(C^*)(\Q)_{\mathrm{tors}}$, a group of order $1$ or $2$. Then
+$B\sim K_{C^*}$ or $B\sim K_{C^*}+t$.
+\end{proposition}
+\begin{proof}
+\texttt{tests/Hyperelliptic6\_341.m} rebuilds three Borcherds forms on $C^*$ from their banked
+eta-quotient coefficient maps, recomputes their divisors, $D_1-D_2$, $D_1-D_3$, $D_2-D_3$ with
+$D_1=B$, $D_2=P_{-43}+P_{-123}$, $D_3=P_{-84}+P_{-228}$, checks that their principal parts are
+integral, and computes from the trace formula that $\gcd_p\#\Jac(C^*)(\F_p)=2$ over the odd good
+primes below $60$, into which the rational torsion injects. The divisor class of a Borcherds form is
+rational of finite order, so the three classes agree up to $T=\Jac(C^*)(\Q)_{\mathrm{tors}}$,
+$|T|\le2$. Two distinct effective divisors of degree two in one class on a curve of genus two are
+canonical, and a class $K+t$ with $t\ne0$ has exactly one effective divisor ($h^0(K+t)=1$). If
+$[D_2]=K$ then $[D_1]\in\{K,K+t\}$. If $[D_2]=K+t$ then $D_2$ is the unique effective divisor of its
+class, so $D_3\ne D_2$ forces $[D_3]=K$ and again $[D_1]\in\{K,K+t\}$.
+\end{proof}
+
+\section{The Jacobian of the star and the curve $C$}\label{sec:class}
+
+\subsection*{The star} By Jacquet--Langlands and Eichler--Shimura (Ribet), $\Jac(C^*)$ is
+$\Q$-isogenous to $A_f$ for the newform orbits $f$ of weight two and level $2046$ whose
+Atkin--Lehner eigenvalues are $-1$ at the primes of $D=6$ and $+1$ at those of $N=341$ (the sign at a
+prime of $D$ is minus the eigenvalue on the Shimura curve). Among the five two-dimensional orbits at
+level $2046$ exactly one has signs $(-1,-1,+1,+1)$ at $(2,3,11,31)$; its coefficient field is
+$K=\Q(\sqrt2)$ (\texttt{proofsteps.m}). The Hecke operators act on $\Jac(C^*)$ through the order
+$\Z[a_p]$, which is the maximal order $\OK=\Z[\sqrt2]$: $a_{19}=-2-3\sqrt2$, $a_{23}=-4+\sqrt2$
+(\texttt{heckeorder.m}). So $\End(\Jac(C^*))\supseteq\OK$.
+
+\subsection*{The curve $C$} Let $J=\Jac(C)$. CHIMP's certified endomorphism computation gives
+$\End_\Q(J)\otimes\Q=\Q(\sqrt2)$ with an explicit endomorphism acting as $\bigl(\begin{smallmatrix}
+0&1\\2&0\end{smallmatrix}\bigr)$ on the tangent space (\texttt{step2-endomorphisms.log}); its
+conductor is $2046^2$, the odd part by Magma and the exponent $2$ at the prime $2$ proved by CHIMP
+(\texttt{step0-conductor-at-2.log}). So $J$ is of $\mathrm{GL}_2$-type, hence by Ribet and
+Khare--Wintenberger $\Q$-isogenous to $A_g$ for a newform $g$ of weight two and level $2046$ with
+coefficient field $\Q(\sqrt2)$. The Euler factors of $J$ at the $13$ good primes below $60$ and at
+$p=4093,12277,14323,16369$ agree with those of the orbit $f$ above and with no other orbit of
+level $2046$, so $g=f$ and $J\sim_\Q\Jac(C^*)$ (\texttt{proofsteps.m}, \texttt{reducibility.m}).
+Its Mordell--Weil group is $J(\Q)\cong\Z/2\times\Z^2$, proved by Magma's
+\texttt{MordellWeilGroupGenus2}, and its $2$-torsion point is $t=[W_2-W_1]$ for the two rational
+Weierstrass points of $C$ ($W_1$ at infinity and $W_2$ at $x=1/3$ on the simplified model, whose
+quintic factors as $(x-\tfrac13)$ times an irreducible quartic) (\texttt{coverA2.m}).
+
+\section{The isogeny class has exactly two principally polarised members}\label{sec:two}
+
+\begin{proposition}\label{prop:odd}
+For every odd prime $\ell$ and every $\lambda\mid\ell$ in $\OK$, the representation of
+$\Gal(\overline\Q/\Q)$ on $J[\lambda]$ is irreducible, and for $\ell$ split the two
+representations at the primes above $\ell$ are not isomorphic. Consequently every Galois-stable
+subgroup of $J[\ell^\infty]$ is $J[\mathfrak a]$ for an ideal $\mathfrak a$, and $J/J[\mathfrak a]
+\cong J$.
+\end{proposition}
+\begin{proof}
+As in Section~B of \texttt{paper/star-2002-proof.tex}: a reducible $J[\lambda]$ forces
+$\lambda\mid\mathrm{Norm}(a_p-1-p)$ at every $p\equiv1\bmod 2046$, and
+$\gcd\{\mathrm{Norm}(a_p-1-p):p=4093,12277,14323,16369\}=8$ (\texttt{reducibility.m}); an isomorphism
+between the two pieces at a split $\ell$ forces $\lambda\mid\gcd_p(\mathrm{tr}(a_p)^2-4\mathrm{N}(a_p))
+=8$ (\texttt{proofsteps.m}). Both gcds are powers of $2$. With $\OK$ a principal ideal domain,
+$J/J[\mathfrak a]\cong J$ via a generator of $\mathfrak a$.
+\end{proof}
+
+So any $\Q$-isogeny $J\to B$ factors as an isomorphism followed by a $2$-power isogeny, and it
+remains to classify the $2$-power ones. Let $\lambda=\sqrt2$, $\mathcal O_\lambda=\Z_2[\sqrt2]$, let
+$T=T_\lambda(J)$ be the $\lambda$-adic Tate module, free of rank $2$ over $\mathcal O_\lambda$, and
+$V=T\otimes\Q$. An abelian surface $B$ that is $2$-power isogenous to $J$ and has
+$\End(B)\supseteq\OK$ is determined by its Tate module, a Galois-stable $\mathcal O_\lambda$-lattice
+in $V$, and two lattices give isomorphic $B$ when they are homothetic. Homothety classes of
+$\mathcal O_\lambda$-lattices are the vertices of the Bruhat--Tits tree of $\mathrm{PGL}_2(K_\lambda)$,
+in which each vertex $[L]$ has three neighbours, the lattices $L'$ with $L\subset L'\subset
+\lambda^{-1}L$ of index $2$, i.e.\ the lines of $L'/L\subset\lambda^{-1}L/L\cong\F_2^2$. Galois acts
+on the tree through $\rho_\lambda$, and the set of vertices fixed by a group acting on a tree is a
+subtree.
+
+\begin{proposition}\label{prop:tree}
+The Galois-fixed vertices of the tree are exactly $[T]$ and $[L_A]$, where $L_A$ is the preimage of
+$\langle t\rangle$ under $\lambda^{-1}T\to\lambda^{-1}T/T\cong J[\lambda]$. Hence every $B$ as above
+is isomorphic to $J$ or to $A:=J/\langle t\rangle$.
+\end{proposition}
+\begin{proof}
+The neighbours of $[T]$ are the lines of $J[\lambda]\cong\F_2^2$, and a line is Galois-fixed exactly
+when its nonzero point is rational. $J(\Q)[2]=\{0,t\}$ and $\sqrt2\,t=0$ (the lift of $t$ to the
+period lattice has coordinates $(0,-\tfrac12,-\tfrac12,-\tfrac12)$, and the integer matrix of
+$\sqrt2$ on the lattice sends it into the lattice, \texttt{quotientA.m}), so the only fixed
+neighbour of $[T]$ is $[L_A]$, with $L_A/T=\langle t\rangle$, whose quotient is $A$. The neighbours
+of $[L_A]$ are the lines of $L_A/\lambda L_A=A[\lambda]$, fixed exactly when the nonzero point is in
+$A(\Q)[2]$, which is $\{0,t_A\}$ by Proposition~\ref{prop:CA} below. The kernel of
+$A=J/\langle t\rangle\to J/J[\lambda]\cong J$ is $J[\lambda]/\langle t\rangle$, a Galois-stable
+subgroup of order $2$, hence rational, hence $\{0,t_A\}$; so the unique fixed neighbour of $[L_A]$
+other than through $t_A$ does not exist, and the one through $t_A$ is $[\lambda^{-1}T]=[T]$. The
+fixed subtree is connected and has no vertex adjacent to it beyond these two, so it is
+$\{[T],[L_A]\}$. For the last sentence, $B$ has Tate module a Galois-stable $\mathcal O_\lambda$-lattice
+(as $\End(B)\supseteq\OK$), hence a fixed vertex, hence $B\cong J$ or $B\cong A$.
+\end{proof}
+
+\begin{proposition}\label{prop:CA}
+$A=J/\langle t\rangle$ carries a principal polarisation, unique up to automorphisms, and is the
+Jacobian of
+\[
+  C_A:\quad y^2=36x^6-12x^5+133x^4-82x^3+265x^2-120x+144,
+\]
+a curve of conductor $2046^2$ with $\Jac(C_A)(\Q)\cong\Z/2\times\Z^2$ (proved), whose Weierstrass
+points form Galois orbits of sizes $2$ and $4$ (the sextic is $(x^2-\tfrac23x+1)$ times an
+irreducible quartic), so $C_A$ has no rational Weierstrass point; its $2$-torsion point is
+$t_A=[W_1+W_2-\infty_+-\infty_-]$ for the conjugate pair $W_1,W_2$.
+\end{proposition}
+\begin{proof}
+Write $J=\mathbb C^2/\Lambda$ with the principal polarisation $E$ and $\sqrt2$ acting by an integer
+matrix $M$ on $\Lambda$, Rosati-symmetric ($J_0M=M^{\mathsf T}J_0$). Every polarisation of $J$, $A$ or
+any surface in the class is of the form $E(\alpha\,\cdot,\cdot)$ with $\alpha\in K$ totally positive,
+because $\NS\otimes\Q$ is the Rosati-fixed part of $\End\otimes\Q=K$, and all of $K$ is Rosati-fixed.
+On $\Lambda_A=\Lambda+\Z\tau/2$, where $\tau/2$ lifts $t$, the form $E(\alpha\,\cdot,\cdot)$ has
+determinant $\mathrm N(\alpha)^2/4$, so a principal polarisation needs $\mathrm N(\alpha)=\pm2$ and
+integrality; $\alpha=2+\sqrt2$ gives an integral alternating form of determinant $1$ on $\Lambda_A$
+(\texttt{quotientA.m}), and any other such $\alpha$ differs from it by a totally positive unit of
+$\Z[\sqrt2]$, all of which are squares ($1+\sqrt2$ has norm $-1$), hence by an automorphism of $A$.
+From a symplectic basis of $(\Lambda_A,E(\alpha\,\cdot,\cdot))$ one reads the small period matrix of
+$A$, its Rosenhain invariants, and its Igusa--Clebsch invariants, which are rational to $10^{-104}$
+at $120$ digits; $A$ is therefore the Jacobian of a genus-two curve over $\Q$ or of a quadratic twist
+of one (it is indecomposable, being simple). Mestre's construction from the invariants returns a
+curve twisted by a product of six large primes, visible as the primes to the tenth power in its
+discriminant; stripping that twist and choosing the twist supported on $\{-1,2,3,11,31\}$ whose
+point counts agree with those of $C$ at every good prime below $80$ gives $C_A$ (\texttt{curveA3.m}).
+The remaining statements are Magma computations on $C_A$: the factorisation of the sextic, the
+conductor, the $2$-torsion, and the Mordell--Weil group with its proof flags (\texttt{coverA.m},
+\texttt{coverA2.m}). That the twist is the right one is also forced by Proposition~\ref{prop:tree}:
+the Jacobian of the wrong twist would not be in the class.
+\end{proof}
+
+\begin{corollary}\label{cor:torelli}
+$C^*$ is isomorphic over $\Q$ to $C$ or to $C_A$.
+\end{corollary}
+\begin{proof}
+$\Jac(C^*)$ is $\Q$-isogenous to $J$ (Section~\ref{sec:class}) with $\End\supseteq\OK$, so by
+Propositions~\ref{prop:odd} and \ref{prop:tree} it is isomorphic to $J$ or $A$ as an abelian
+variety; its canonical principal polarisation is then the unique one of that surface up to
+automorphisms (Proposition~\ref{prop:CA} and the same argument for $J$). Two curves of genus two
+over $\Q$ with isomorphic principally polarised Jacobians over $\Q$ are isomorphic over $\Q$
+(Torelli for hyperelliptic curves over a non-algebraically closed field: Serre's appendix to
+Lauter, \emph{J.\ Algebraic Geom.}\ 10 (2001), Th\'eor\`eme~1).
+\end{proof}
+
+\section{The branch divisor decides}\label{sec:decide}
+
+A double cover $\pi:Y\to C'$ of a curve over $\Q$, defined over $\Q$ and branched along a divisor
+$B$, is given by a line bundle $L$ on $C'$ with $L^{\otimes2}\cong\mathcal O(B)$ together with a
+section; $L$ is the $(-1)$-eigensheaf of $\pi_*\mathcal O_Y$, so it is defined over $\Q$, and when
+$C'$ has a rational point every rational line bundle class is represented by a divisor over $\Q$.
+So a rational double cover branched along $B$ exists only if $\mathcal O(B)$ is a square in
+$\mathrm{Pic}(C')(\Q)$.
+
+\begin{proposition}\label{prop:notCA}
+$C^*\not\cong C_A$.
+\end{proposition}
+\begin{proof}
+Suppose $C^*=C_A$. By Proposition~\ref{prop:cert}, $B\sim K$ or $B\sim K+t_A$. If $B\sim K$ then
+$L$ is a theta characteristic defined over $\Q$; the $16$ theta characteristics of a genus-two
+curve correspond to the subsets of odd size of the six Weierstrass points modulo complements, and
+a rational one is a Galois-stable such subset; with Galois orbits of sizes $2$ and $4$ no subset of
+odd size is stable. If $B\sim K+t_A$ then $B=W_1+W_2$, the unique effective divisor of that class,
+and $L^{\otimes2}\cong\mathcal O(W_1+W_2)$ means, writing $L=\mathcal O(P_0)\otimes s$ for a rational
+point $P_0$ and $s\in\Jac(C_A)(\Q)$, that $[W_1+W_2-2P_0]=2s$. In the proved Mordell--Weil group
+$\Z/2\times\Z^2$ the class $[W_1+W_2-2P_0]$ has coordinates $(1,3,1)$, so it is not divisible by $2$
+(\texttt{coverA2.m}). Neither case admits the cover $Y\to C^*$, which exists.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Corollary~\ref{cor:torelli} and Proposition~\ref{prop:notCA}, $C^*\cong C$. On $C$,
+Proposition~\ref{prop:cert} gives $B\sim K$ or $B\sim K+t$, and $K+t=\mathcal O(W_1+W_2)$ for the
+two rational Weierstrass points. A rational cover branched at $W_1+W_2$ needs $[W_1+W_2-2P_0]\in
+2J(\Q)$; with $P_0=W_1$ this class is $[W_2-W_1]=t$, the generator of the torsion of
+$J(\Q)\cong\Z/2\times\Z^2$, which is not divisible by $2$. So $B\sim K$, $B$ is a fibre of the
+hyperelliptic map, and $Y$ is hyperelliptic.
+
+For the equation: $Y$ is $y^2=q_1(t^2/c)$ for the quintic model $y^2=q_1(u)$ of $C$ with the branch
+fibre at $u=0$ and one of the two rational Weierstrass points at $u=\infty$, and $c$ a twist
+supported on the bad primes; the two Weierstrass points give the two rational theta characteristics,
+hence two normal forms. The branch fibre is pinned by the Thue--Mahler equation of PR~\#143
+(\texttt{tools/models-6\_341/thuemahler.m}): among its $56$ solutions four are fibres of $C$ with
+$S$-unit weighted $y$-coordinate, and over both bases and the $32$ twists exactly one triple has the
+point counts of $Y$ at the eleven good primes below $50$, giving the curve of the theorem, which has
+the counts of $Y$ at all $31$ good primes below $150$ and quotients $C$ and a curve of conductor
+$2^2 3^2 11^2 31$ (\texttt{tools/models-6\_341/verify.m}). With $C^*=C$ now proved, that
+derivation is unconditional.
+\end{proof}
+
+\begin{remark}
+Two features of this case are worth keeping in view for the other covers. A rational $2$-torsion
+point on the star doubles the normal forms: with one base only, the enumeration of PR~\#143 found
+no cover at all. And it puts a second principally polarised surface into the isogeny class, which
+the rigidity argument of PR~\#139 does not exclude; here it is the branch divisor, a CM divisor
+whose class the Borcherds certificate controls, that separates the two, by asking which of the two
+curves can carry the cover at all.
+\end{remark}
+
+\section{What is computed where}\label{sec:scripts}
+
+All scripts live in \texttt{tools/proof-6\_341/} and run from the repository root with
+\texttt{magma -b <script> < /dev/null}; the two CHIMP scripts ran on lovelace with the CHIMP
+package attached, and their logs are kept next to them.
+
+\begin{center}\small
+\begin{tabular}{ll}
+\toprule
+\texttt{proofsteps.m} & conductor (Magma), the five orbits at level $2046$ with Atkin--Lehner signs,\\
+ & Euler factors against $J$ at $p<60$, the congruence gcd $8$, the $2$-ranks of $J(\F_p)$\\
+\texttt{reducibility.m} & $a_p$ and $\mathrm{Norm}(a_p-1-p)$ at $p\equiv1\bmod 2046$, gcd $8$; Euler factors there\\
+\texttt{heckeorder.m} & $a_p=u+v\sqrt2$; $\gcd(v)=1$, so the Hecke order is $\Z[\sqrt2]$\\
+\texttt{step2-endomorphisms.m} & CHIMP: certified $\End_\Q(J)\otimes\Q=\Q(\sqrt2)$ with an explicit $\sqrt2$\\
+\texttt{step0-conductor-at-2.m} & CHIMP: the conductor exponent $2$ at the prime $2$, with proof\\
+\texttt{richelot2.m} & the $(2,2)$-isogeny graph of $J$ over $\Q$ is a single vertex\\
+\texttt{quotientA.m} & period lattice, $\sqrt2$ on it, the lift of $t$, $(2\pm\sqrt2)E$ unimodular on $\Lambda_A$,\\
+ & period matrix of $A$, Rosenhain and Igusa--Clebsch invariants\\
+\texttt{curveA3.m} & $C_A$ from the invariants, the spurious twist, the twist by counts; its torsion, points\\
+\texttt{coverA.m}, \texttt{coverA2.m} & no rational theta characteristic on $C_A$; $[W_1+W_2-2P_0]\notin2\Jac(C_A)(\Q)$\\
+ & and $t\notin2J(\Q)$, through the proved Mordell--Weil groups\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
