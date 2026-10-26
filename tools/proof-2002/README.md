@@ -23,9 +23,11 @@ cover of the star, and three more scripts carry the star's proof over to it:
 | `stepH-verify.m` | the resulting curve `Y_2`, its two genus-two quotients (the star and `C'`), its counts against the trace formula at the 31 good primes below 150, and the conductor of `C'` |
 | `stepH-thuemahler.m` | the branch fibre, exactly: the two branch points stay distinct modulo every prime of good reduction, which makes the weighted y-coordinate of the fibre a unit outside {2, 7, 11, 13} and the quintic factor of the star's sextic an S-unit — a Thue–Mahler equation whose 21 solutions (`stepH-thuemahler.sols`, from Gherga–Siksek's solver, 237 s) give 7 possible fibres, of which only the fibre at infinity passes the count test |
 
-With these, *if* `Y` is hyperelliptic then it is `Y_2`, with nothing numerical in the chain. What
-they do not do is prove hyperellipticity: that is the position of one rational divisor on the star,
-and the note's Section 3 says which Borcherds form would settle it (the search is in progress).
+| `stepH-dual.m` | hyperellipticity itself: the principal part of a weight-1/2 form on `Gamma_0(4004)` whose Borcherds lift has divisor a multiple of `Z(-11)+Z(-91)-Z(-148)-Z(-232)` on the star. It computes the weight-3/2 cusp forms of level 4004 (329 of them, to precision 2202, about 67 minutes) and solves the linear system "pairs to zero with every cusp form, and the coefficients sum to the prescribed multiplicities at every discriminant carrying CM points"; the solution is `data/dual/cert_2002_1.m`, checked by `tests/DualCertificate2002_1_divisor.m` (the divisor) and `tests/_offline/DualCertificate2002_1.m` (the pairing) |
+
+With these, `Y` is hyperelliptic (the branch pair is a fibre, since its difference from another
+fibre is the divisor of a Borcherds form and the star's Jacobian has no torsion), and it is `Y_2`,
+with nothing numerical in the chain.
 
 The Thue–Mahler solver is not in this repository: it is `Code/TMSolver/solveThueMahler.m` of
 `github.com/adelagherga/ThueMahler`, run as `solveThueMahler([8,1,90,-239,128,16], 1, [2,7,11,13] :

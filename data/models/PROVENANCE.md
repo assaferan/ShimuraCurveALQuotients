@@ -1106,9 +1106,11 @@ fibre's weighted $y$-coordinate is a unit outside $\{2,7,11,13\}$, which makes t
 the star's sextic an $S$-unit -- a Thue-Mahler equation, solved completely by Gherga-Siksek's
 solver (21 solutions, `tools/proof-2002/stepH-thuemahler.sols`), leaving seven fibres, of which the
 count test keeps one (`stepH-thuemahler.m`); and Jac(star)(Q)[2] = 0 leaves only twists, which the
-counts fix. Still numerical: **hyperellipticity itself** (Noether's count on the differentials, and
-the canonical images of the two fixed points on $Y$ proportional to 1.3e-16). The note says which
-Borcherds form on the star closes that -- one with divisor a multiple of
-$Z(-11)+Z(-91)-Z(-148)-Z(-232)$, the star's Jacobian being torsion-free -- and the search is
-running. ⚠ So this entry is a model whose proof is complete modulo hyperellipticity -- stronger than a
-fitted model, weaker than the star's.
+counts fix. Hyperellipticity itself is now exact as well: the pair is a fibre because
+$Z(-11)+Z(-91)-Z(-148)-Z(-232)$ is principal on the star, the divisor of the Borcherds lift of a
+weight-1/2 form on $\Gamma_0(4004)$ whose principal part is `data/dual/cert_2002_1.m`. The form is
+not constructed; it exists because that principal part pairs to zero with the 329-dimensional
+space of weight-3/2 cusp forms on $\Gamma_0(4004)$ (Serre duality), which is
+`tests/_offline/DualCertificate2002_1.m` (an hour), and its lift has the stated divisor by Guo-Yang's
+Lemma 25, which is `tests/DualCertificate2002_1_divisor.m`. **Proved**: this entry has the same
+standing as the star's.
