@@ -1,4 +1,5 @@
-% A proof that the genus-two star X_0^2002(1)^* is the curve C stored in data/models/models_2002_1.m.
+% A proof that the genus-two star X_0^2002(1)^* is the curve C stored in data/models/models_2002_1.m,
+% and what it gives for the genus-four quotient by <w_2, w_13, w_77> (Section 3).
 %
 % Every computation the proof quotes is a script in tools/proof-2002/, each printing the number
 % used here.  Two of them need packages outside this repository (Genus2Conductor and
@@ -232,10 +233,317 @@ Serre's conjecture is both shorter and standard, and its one non-formal input, t
 ring, is exactly what \cite{cmsv} certifies.
 \end{remark}
 
+\section{The genus-four quotient by $\langle w_2,w_{13},w_{77}\rangle$}\label{sec:genus4}
+
+Let $G\cong(\Z/2)^4$ be the Atkin--Lehner group of $X_0^{2002}(1)$, let
+$H=\langle w_2,w_{13},w_{77}\rangle=\{w_m : m\in\{1,2,13,26,77,154,1001,2002\}\}$, of index two in
+$G$, and let $Y=X_0^{2002}(1)/H$. It has genus four and is one of the quotients left open by the
+classification; Noether's count on its Shimizu-lifted differentials says, numerically, that it is
+hyperelliptic. The involution $\bar w$ of $Y$ induced by $G/H$ has quotient $Y/\bar w=X\cong C$, so
+$Y$ is a double cover of the curve of Theorem~\ref{thm:main}, and this section shows how far that
+theorem carries. Put
+\begin{align*}
+  Y_2:&\quad y^2=-1001x^{10}+98289x^8-279360x^6+185856x^4-16384x^2+65536,\\
+  C':&\quad y^2+(x^2+x)\,y=-2x^5+10x^4-44x^3+29x^2+9x+1 .
+\end{align*}
+$Y_2$ is hyperelliptic of genus four; its involutions $x\mapsto-x$ and $(x,y)\mapsto(-x,-y)$ have
+quotients $\Q$-isomorphic to $C$ and to $C'$ respectively, so $\Jac(Y_2)\sim\Jac(C)\times\Jac(C')$,
+and $C'$ has conductor $2002^2$.
+
+\begin{theorem}\label{thm:genus4}
+Let $\pi\colon Y\to C$ be the quotient by $\bar w$ and $B$ its branch divisor.
+\begin{enumerate}
+\item $B=P_{11}+P_{91}$, where $P_{11}$ and $P_{91}$ are the images in $C$ of the CM points of
+  discriminants $-11$ and $-91$. Both are $\Q$-rational points of $C$.
+\item $Y$ is hyperelliptic if and only if $P_{91}=\bar\iota(P_{11})$, $\bar\iota$ the hyperelliptic
+  involution of $C$; that is, if and only if $B$ is a fibre of the hyperelliptic map of $C$.
+\item If $B$ is a fibre of the hyperelliptic map of $C$, then it is the fibre at infinity, the two
+  points $(1:\pm4:0)$, and $Y\cong Y_2$ over $\Q$.
+\end{enumerate}
+In particular: if $Y$ is hyperelliptic, then $Y\cong Y_2$ over $\Q$.
+\end{theorem}
+
+Everything in the theorem is exact. What it does not decide is whether $Y$ is hyperelliptic at
+all, and by (2) that is the position of one rational divisor on $C$: whether $P_{11}+P_{91}$ is
+linearly equivalent to $2W$ for a Weierstrass point $W$. Proposition~\ref{prop:count} below reduces
+it to the existence of one Borcherds form on $C$, whose search is in progress; the numerical
+evidence is in Remark~\ref{rem:gap}.
+
+\subsection*{The branch locus}
+A point of $C=X_0^{2002}(1)/G$ is a branch point of $\pi$ exactly when its $G$-orbit upstairs is a
+single $H$-orbit, that is, when the stabiliser in $G$ of a point of that orbit is not contained in
+$H$: when the orbit consists of fixed points of some $w_m$ with $m\notin H$. By Ogg
+\cite{ogg}, the fixed points of $w_m$ on $X_0^D(1)$ are the CM points by the quadratic orders of
+discriminant $-4m$ and, when $m\equiv3\pmod4$, $-m$, and the order $R$ contributes
+$h(R)\prod_{p\mid D,\,p\nmid m}\bigl(1-\{R/p\}\bigr)$ of them, $\{R/p\}$ the Eichler symbol. For
+the eight $m\notin H$ this gives (\texttt{stepH-branch.m}): $w_7$, $w_{14}$, $w_{22}$, $w_{143}$,
+$w_{182}$ and $w_{286}$ have no fixed points, at each a prime of $2002$ splitting in the order;
+$w_{11}$ has exactly eight, all of discriminant $-11$ (the order of discriminant $-44$ has conductor
+$2$, and $2$ ramifies in the quaternion algebra); and $w_{91}$ has exactly eight, all of discriminant
+$-91$. So the branch points of $\pi$ are the images of these sixteen points. Riemann--Hurwitz for
+$\pi$ reads $2\cdot4-2=2(2\cdot2-2)+\deg B$, so $\deg B=2$; each discriminant contributes at least one
+branch point, hence exactly one: the eight points of discriminant $-11$ form a single $G$-orbit and
+so do the eight of discriminant $-91$. The set of CM points of a given discriminant is stable under
+$\Gal(\Qbar/\Q)$, so each orbit is Galois-stable and its image is a rational point of $C$. This is
+(1).
+
+\subsection*{Hyperellipticity, and the normal form}
+\begin{lemma}\label{lem:normalform}
+Let $\pi\colon Y\to C$ be a double cover over $\Q$ of a curve of genus two by a curve of genus
+four, with covering involution $\bar w$ and branch divisor $B=P+Q$, $P,Q\in C(\Q)$. If $Y$ is
+hyperelliptic then $Q=\bar\iota(P)$, $C$ has a $\Q$-rational Weierstrass point, and there are a
+coordinate $t$ on $Y/\iota=\mathbb P^1$ and a quintic $h_1\in\Q[u]$ with $h_1(0)\ne0$ such that
+\[
+  Y:\ y^2=h_1(t^2),\qquad \bar w\colon t\mapsto -t,\qquad C=Y/\bar w:\ y^2=h_1(u),\ u=t^2,
+\]
+the branch points being the two points of $C$ over $u=0$ and the rational Weierstrass point the
+one over $u=\infty$. Conversely, if $C$ has a model $y^2=h_1(u)$ with $h_1$ a quintic, $h_1(0)\neq
+0$, then for every $c\in\Q^\times$ the curve $Y_c\colon y^2=h_1(t^2/c)$ is a hyperelliptic double
+cover of $C$, branched along the fibre $u=0$, and its second involution $(t,y)\mapsto(-t,-y)$ has
+quotient $v^2=c\,u\,h_1(u)$, $v=ty$.
+\end{lemma}
+
+\begin{proof}
+Let $\iota$ be the hyperelliptic involution of $Y$. It is central in $\operatorname{Aut}(Y)$, so it
+commutes with $\bar w$ and descends to an involution of $C$ whose quotient is
+$Y/\langle\iota,\bar w\rangle=(Y/\iota)/\bar w$, of genus zero; so it is $\bar\iota$. Let $\tilde
+P,\tilde Q\in Y$ be the fixed points of $\bar w$, the points over $P$ and $Q$; $\iota$ permutes them.
+The involution that $\bar w$ induces on $Y/\iota=\mathbb P^1$ is not the identity (otherwise $\bar w
+\in\{1,\iota\}$, whereas $Y/\bar w$ has genus two), so it has exactly two fixed points $a,b\in
+\mathbb P^1$, and $\tilde P,\tilde Q$ lie over them. Neither $a$ nor $b$ is a branch point of
+$Y\to\mathbb P^1$: if, say, $a$ were, choose the coordinate $t$ with $a=0$, $b=\infty$ and write
+$Y\colon y^2=F(t)$ with $F$ squarefree and $F(0)=0$; the lift of $t\mapsto-t$ to $Y$ is
+$y\mapsto\lambda(t)y$ with $\lambda^2=F(-t)/F(t)$, but $F(-t)/F(t)$ has odd order at $t=0$ and is
+not a square. So the fibres over $a$ and $b$ have two points each, $\bar w$ acts on each fibre, and
+since it has exactly two fixed points on $Y$ it fixes one fibre pointwise and swaps the other.
+Hence $\{\tilde P,\tilde Q\}$ is a fibre of $Y\to\mathbb P^1$, $\tilde Q=\iota\tilde P$ and
+$Q=\bar\iota P$.
+
+Now take $t$ with $t(\tilde P)=0$, which is a rational coordinate because $\tilde P$ is a
+rational point, and $b=\infty$ (rational, being the other fixed point of a rational involution of
+$\mathbb P^1$ with one rational fixed point). Then $\bar w$ is $t\mapsto-t$, $y\mapsto\pm y$, and
+since $\bar w$ fixes the points over $t=0$ the sign is $+$; so $F(-t)=F(t)$, $F$ is even, and being
+squarefree of degree $9$ or $10$ it has degree $10$: $F(t)=h_1(t^2)$ with $\deg h_1=5$ and
+$h_1(0)=F(0)\neq0$. The invariants of $\bar w$ are $u=t^2$ and $y$, so $C=Y/\bar w$ is $y^2=h_1(u)$,
+with the branch points over $u=0$ and a rational Weierstrass point over $u=\infty$, $h_1$ having
+odd degree. The converse is a computation: $Y_c$ has genus four, $t\mapsto-t$ fixes exactly the
+two points over $t=0$, its quotient is $y^2=h_1(u)$ with $u=t^2/c$, and the invariants of
+$(t,y)\mapsto(-t,-y)$ are $u$ and $v=ty$, with $v^2=t^2h_1(t^2/c)=c\,u\,h_1(u)$.
+\end{proof}
+
+Part (2) of the theorem is the first assertion of the lemma together with its converse: if $P_{91}=
+\bar\iota P_{11}$ then $B$ is a fibre $\{u=u_0\}$ of the hyperelliptic map, and $C$ has a rational
+Weierstrass point (below), so after moving that point to $u=\infty$ and $u_0$ to $0$ the lemma's
+converse applies to some double cover branched along $B$; that $Y$ itself is such a cover, hence
+hyperelliptic, is the argument of the next paragraph, which shows that all of them are.
+
+\subsection*{The covers branched along a fibre}
+The sextic $4f+h^2=64x^6+16x^5+721x^4-1822x^3+785x^2+256x+16$ of $C$ factors over $\Q$ as
+$(8x+1)\,q(x)$ with $q$ irreducible of degree five, so $C$ has exactly one rational Weierstrass
+point, $W$, over $x=-1/8$. The $2$-torsion of $\Jac(C)$ is spanned by the differences of
+Weierstrass points, and a rational $2$-torsion class corresponds to a Galois-stable even subset of
+the six roots up to complement; with Galois orbits of sizes $1$ and $5$ there is none, so
+$\Jac(C)(\Q)[2]=0$.
+
+Suppose $B$ is a fibre of the hyperelliptic map, over the point $x_0\in\mathbb P^1(\Q)$ (we
+write $g=4f+h^2$ and work on $y^2=g(x)$). Put $u=(x-x_0)/(x+\tfrac18)$, or $u=8/(8x+1)$ if
+$x_0=\infty$, so that $u(W)=\infty$ and $u=0$ along $B$; then $C$ is $y^2=q_1(u)$ with $q_1$ the
+quintic $(u-1)^6g\bigl((-\tfrac18u-x_0)/(u-1)\bigr)$ up to a square constant, the degree dropping
+because $W$ has gone to infinity. For $x_0=\infty$,
+\[
+  q_1(u)=64\,u^6\,g(-\tfrac18+\tfrac1u)=-2002u^5+98289u^4-139680u^3+46464u^2-2048u+4096 .
+\]
+Any double cover $Y'\to C$ over $\Q$ has function field $\Q(C)(\sqrt{\gamma})$ for some
+$\gamma\in\Q(C)^\times$, and its branch divisor is the odd part of $\operatorname{div}\gamma$. The
+function $u$ has divisor $B-2W$. If $Y'$ is branched along $B$ then $\operatorname{div}(\gamma/u)$ is
+even, say $2D$; the class of $D$ lies in $\Jac(C)(\Q)[2]=0$, so $D=\operatorname{div}\delta$ with
+$\delta\in\Q(C)^\times$ and $\gamma/u\delta^2$ is a constant $c\in\Q^\times$. Hence every double
+cover of $C$ over $\Q$ branched along $B$ is one of the $Y_c\colon y^2=q_1(t^2/c)$ of
+Lemma~\ref{lem:normalform}, $c\in\Q^\times/\Q^{\times2}$, and $Y$ is one of them. Its $c$ is
+supported on $\{-1,2,7,11,13\}$: $Y$ has good reduction at every $p\nmid2002$ (Morita's theorem for
+$X_0^{2002}(1)$, and the quotient by a group of order prime to $p$ of a curve with good reduction has
+good reduction), so $\Jac(Y)\sim\Jac(C)\times\Jac(C'_c)$ does, where $C'_c\colon v^2=c\,u\,q_1(u)$
+is the quadratic twist by $c$ of $C'_1$; a twist by a character ramified at an odd prime $p$ of good
+reduction has bad reduction at $p$, so no such $p$ divides $c$ to an odd power. That leaves $32$
+curves for each fibre, and the trace formula gives $\#Y(\F_p)$ at every good prime, as $p+1$ minus
+the trace of Frobenius on the $H$-invariants of the weight-two forms of level $2002$ (the same
+computation that underlies Step~1). By the Klein-four structure $\#Y_c(\F_p)=\#C(\F_p)+\#C'_c(\F_p)
+-(p+1)$, so the candidates are told apart by the genus-two curves $C'_c$ alone.
+
+\subsection*{The branch fibre}
+It remains to find the fibre, and $C(\Q)$ cannot simply be listed: $\Jac(C)$ has rank $2$, equal to
+the genus, so Chabauty's method does not apply and $C(\Q)$ is infinite. What makes the search
+finite is reduction.
+
+\begin{proposition}\label{prop:fibre}
+Let $S=\{2,7,11,13\}$. If $B$ is a fibre $\{(a:\pm y':b)\}$ of $C$, written in the weighted
+coordinates of $y^2=g(x)$ with $\gcd(a,b)=1$, then $y'$ is an $S$-unit. There are exactly seven such
+fibres: $x=\infty,-1,0,\tfrac32,\tfrac13,-\tfrac14,\tfrac54$.
+\end{proposition}
+
+\begin{proof}
+Let $p\notin S$. Then $Y$ and $C$ have good reduction at $p$ and $\pi$ extends to the smooth
+models, as the quotient by $\bar w$; since $p$ is odd the reduction $\pi_p\colon Y_p\to C_p$ is a
+tame double cover of smooth curves of genera $4$ and $2$, so by Riemann--Hurwitz it has exactly two
+ramification points, and they lie in distinct fibres, a fibre of a degree-two map containing at most
+one ramification point. The branch divisor of $\pi$ is a relative effective Cartier divisor of
+degree two on the smooth model of $C$ whose generic fibre is $B$ and whose special fibre is the branch
+divisor of $\pi_p$; so the two points of $B$ reduce to distinct points of $C_p$. For $B=\{(a:\pm y':
+b)\}$ with $\gcd(a,b)=1$ the two reductions are $(\bar a:\pm\bar y':\bar b)$, which coincide exactly
+when $p\mid 2y'$. Hence $p\nmid y'$ for every $p\notin S$.
+
+Now $y'^2=G(a,b)$ for the binary sextic form $G(a,b)=b^6g(a/b)$, so $G(a,b)$ is an $S$-unit. Over
+$\Z$, $G=(8a+b)\,Q_5(a,b)$ with
+\[
+  Q_5(a,b)=8a^5+a^4b+90a^3b^2-239a^2b^3+128ab^4+16b^5
+\]
+irreducible, and the resultant of the two factors is $2^7\cdot7\cdot11\cdot13$; so any prime
+dividing both lies in $S$, and both factors are $S$-units. Thus $(a,b)$ is a coprime solution of
+the Thue--Mahler equation
+\[
+  Q_5(a,b)=\pm\,2^{z_1}7^{z_2}11^{z_3}13^{z_4}.
+\]
+Such equations have finitely many solutions, and the algorithm of Gherga and Siksek \cite{gs} finds
+them all: here it returns $21$ coprime pairs $(a,b)$ up to sign (\texttt{stepH-thuemahler.sols}),
+among them $(1,0)$, $(0,1)$, $(3,2)$ and $(1,3)$. For each, $G(a,b)$ is a square with $S$-unit
+root exactly for the seven pairs listed (\texttt{stepH-thuemahler.m}); the pair $(1,-8)$, where
+$G=0$, is the Weierstrass point $W$ and not a fibre of two points, and the pairs such as $(3,1)$,
+where $G=260^2$, have $8a+b=25$ and fail.
+\end{proof}
+
+Along each of the seven fibres the $32$ twists are now compared with $\#Y(\F_p)$ at $p=3,5,17,19,
+23,29,31,37,41,43,47$: exactly one pair survives, the fibre at infinity with $c=2$
+(\texttt{stepH-thuemahler.m}; \texttt{stepH-enumerate.m} runs the same comparison over the fibres
+of all rational points of height at most $10^6$, which are the same seven and three more, with the
+same outcome). And $y^2=q_1(t^2/2)$ is $Y_2$ after $y\mapsto4y$, while $v^2=2u\,q_1(u)$ is $C'$,
+and $Y_2$ has the counts of $Y$ at all $31$ good primes below $150$ (\texttt{stepH-verify.m}). This
+proves (3). \qed
+
+\subsection*{Hyperellipticity, exactly}
+By (2), $Y$ is hyperelliptic exactly when $P_{11}+P_{91}$ is a fibre of the hyperelliptic map of
+$C$, that is, when it lies in the canonical class; and on a curve of genus two two \emph{distinct}
+effective divisors of degree two that are linearly equivalent are both canonical, since
+$h^0(D)\ge2$ forces $D\in|K_C|$. This turns the question into one about a divisor class on the
+star, where Borcherds products live and where the counting argument of the note on $X_0^{46}(31)^*$
+applies: a Borcherds form has a divisor class of finite order \cite{borcherds}, and a class of
+finite order in $\Jac(C)(\Q)$ is trivial when that group has no torsion.
+
+\begin{proposition}\label{prop:count}
+$\Jac(C)(\Q)$ is torsion-free. Consequently, if for some $n\ge1$ there is a Borcherds form on
+$X_0^{2002}(1)^*$ whose divisor is $n\bigl(Z(-11)+Z(-91)-Z(d)-Z(d')\bigr)$, where $Z(d)$ and
+$Z(d')$ are rational CM points of $C$ distinct from $P_{11}$, $P_{91}$ and from each other, then
+$P_{11}+P_{91}$ and $Z(d)+Z(d')$ are both fibres of the hyperelliptic map of $C$, $Y$ is
+hyperelliptic, and $Y\cong Y_2$ over $\Q$.
+\end{proposition}
+
+\begin{proof}
+The torsion subgroup of $\Jac(C)(\Q)$ is computed exactly from the model (\texttt{stepH-verify.m}):
+it is trivial. A Borcherds form of weight zero on $X_0^{2002}(1)$ with that divisor is a rational
+function whose divisor is $G$-invariant; its $|G|$-th power descends to $C$, where the Heegner
+divisors $Z(-11)$, $Z(-91)$, $Z(d)$, $Z(d')$, each a single $G$-orbit, become the points
+$P_{11},P_{91},Z(d),Z(d')$ with multiplicities given by the ramification of $X_0^{2002}(1)\to C$ at
+each, which are positive integers. So some positive multiple $m\bigl(P_{11}+P_{91}-Z(d)-Z(d')\bigr)$
+is the divisor of a function on $C$ over $\Q$ --- the class is Galois-stable, the form's divisor
+being defined over $\Q$ --- hence the class of $P_{11}+P_{91}-Z(d)-Z(d')$ is torsion in
+$\Jac(C)(\Q)$, hence zero. The two effective divisors are distinct and linearly equivalent, so both
+are canonical: $P_{91}=\bar\iota P_{11}$, and Theorem~\ref{thm:genus4}(2),(3) finish.
+\end{proof}
+
+The CM points of the star, located on the model by the Shimizu lift (and all rational), are:
+$P_{-67}$ over $x=1$, $P_{-99}$ over $x=\tfrac13$, $P_{-148}$ and $P_{-232}$ both over $x=0$,
+$P_{-163}$ and $P_{-312}$ both over $x=3$, $P_{-280}$ over $x=-1$; each of $Z(-148)$, $Z(-232)$,
+$Z(-163)$, $Z(-312)$ is a single point by Ogg's counts (sixteen points of the base in one free
+orbit). So the natural divisor to ask for is $Z(-11)+Z(-91)-Z(-148)-Z(-232)$, a difference of two
+numerical fibres. The prescribed-divisor search used for Guo--Yang's Example~43 and for
+$X_0^{46}(31)^*$ builds such a form as a combination of eta quotients of level $4004$ and needs an
+enumeration of lattice points at pole order $2175$ that did not finish in twenty hours; the form
+was found instead by the dual computation, which decides existence without constructing the form.
+
+\begin{proposition}\label{prop:dual}
+Let $M=4004$. Let $c(-n)$, $1\le n\le2200$, be the integers listed in \texttt{data/dual/cert\_2002\_1.m}
+($329$ of them nonzero, the largest index $2192$). Then there is a weakly holomorphic form $f$ of
+weight $\tfrac12$ on $\Gamma_0(M)$ with the theta multiplier, holomorphic at every cusp other than
+$\infty$, with principal part $\sum_nc(-n)q^{-n}$ at $\infty$, and its Borcherds lift $\psi_{F_f}$
+is a function on $X_0^{2002}(1)^*$ with divisor $\lambda\,(P_{11}+P_{91}-P_{-148}-P_{-232})$ for a positive integer $\lambda$ (the listed vector is primitive; $\lambda=222706250475728656$). Consequently
+$P_{11}+P_{91}$ is canonical, $Y$ is hyperelliptic, and $Y\cong Y_2$ over $\Q$.
+\end{proposition}
+
+\begin{proof}
+A form of weight $\tfrac12$ with a prescribed principal part at $\infty$ and no other poles exists
+if and only if that principal part pairs to zero with every cusp form $g$ of weight $\tfrac32$ on
+$\Gamma_0(M)$ with the conjugate multiplier, which is the multiplier of $\theta^3$: the product
+$fg\,d\tau$ is then a meromorphic differential on $X_0(M)$ with its only pole at $\infty$, whose
+residue $\sum_nc(-n)a_g(n)$ must vanish, and Serre duality (Riemann--Roch on $X_0(M)$ for the line
+bundle of weight-$\tfrac12$ forms) makes the vanishing of all these residues sufficient. That space
+has dimension $329$, the obstruction dimension the eta-quotient pipeline predicts at this level, and
+the pairing of the listed principal part with a basis of it is zero, exactly, in rational arithmetic
+(\texttt{tests/\_offline/DualCertificate2002\_1.m}). The divisor of the lift is \cite[Lemma~25]{gy}:
+a pole of $f$ at $q^{-n}$ contributes $c(-n)/e_d$ times the CM divisor $P_d$ for every discriminant
+$d=-4n/r^2$ carrying CM points, $e_d$ the stabiliser order of those points; the listed coefficients
+sum to $2\lambda$ at $d=-11$ and $-91$ (fixed points of $w_{11}$, $w_{91}$, so $e_d=2$), to $-\lambda$ at $-148$
+and $-232$, and to $0$ at each of the other $214$ discriminants reachable from poles of order at most
+$2200$ (\texttt{tests/DualCertificate2002\_1\_divisor.m}); the companions $-44$ and $-364$ of $-11$
+and $-91$ carry no CM points, their conductor $2$ dividing $D$. The divisor has degree zero on the
+star, while a Borcherds form of weight $k$ has a divisor of degree $k$ times the area of the curve
+over $4\pi$, so the lift has weight zero and is a function, up to a character of finite order; its
+divisor class is therefore torsion, and Proposition~\ref{prop:count} finishes.
+\end{proof}
+
+The method was validated on $X_0^{2030}(1)^*$, where three Borcherds forms had been constructed
+explicitly: their principal parts pair to zero with all $353$ cusp forms of weight $\tfrac32$ at
+level $4060$, a random principal part of the same support pairs to a nonzero value with every one
+of them, the solver recovers a certificate for the certified pair, and it refuses the difference of
+the two points of one fibre, a class of infinite order. The solver is \texttt{stepH-dual.m}; the
+certificate it found is banked as data, and the two tests above check it from scratch.
+
+\begin{remark}
+A second exact criterion, needing no second fibre and no model of the star, asks for a Borcherds
+product of positive weight on $X=X_0^{2002}(1)$ with divisor $R+\pi^*(P_{11}+P_{91})$, $R$ the
+divisor of the $88$ Atkin--Lehner fixed points: since $K_X=\pi^*K_C+R$ and $\deg$ forces weight two,
+such a product makes $P_{11}+P_{91}-K_C$ torsion, hence zero. It involves $Z(-8008)$ and so a pole
+order near $2000$ on the eta-quotient side, out of reach at this level, and was not pursued.
+\end{remark}
+
+\begin{remark}\label{rem:gap}
+The numerical evidence for hyperellipticity is of two kinds. Noether's count on the four
+Shimizu-lifted differentials of $Y$ finds the three quadratic relations of a rational normal
+quartic. And on $Y$ itself, where the forms do not vanish at the fixed points of $\bar w$ (the
+covering $X_0^{2002}(1)\to Y$ is unramified there), the canonical images of $\tilde P_{11}$ and
+$\tilde P_{91}$ are proportional to $1.3\cdot10^{-16}$ at $80$ digits, while unrelated pairs of CM
+points give $0.5$ to $0.9$: so $\tilde P_{91}=\iota\tilde P_{11}$ numerically, which is
+hyperellipticity by Lemma~\ref{lem:normalform}. Neither can become a proof, because hyperellipticity
+is the vanishing of a class, which numerics can only bound; Proposition~\ref{prop:count} is the
+exact replacement. Note that Proposition~\ref{prop:fibre} assumed $B$ to be a fibre: for a
+non-hyperelliptic $Y$ its two rational branch points would only be constrained not to coincide
+modulo any prime outside $S$, an $S$-integrality condition on $C\times C$ minus the diagonal with no
+effective finiteness, which is why the exact route to hyperellipticity goes through the divisor
+class and not through the branch points.
+\end{remark}
+
+\begin{remark}
+The same shape recurs. Each of the open quotients $X_0^{2030}(1)/H$, $X_0^{2418}(1)/H$,
+$X_0^{3390}(1)/H$, $X_0^{6}(341)/H$ and $X_0^{6}(403)/H$ (with $H$ of index two in the
+Atkin--Lehner group) has genus four over a star of genus two, so once the star is proved by the
+method of Section~2 the present section applies verbatim: the branch locus is read off Ogg's
+formula, hyperellipticity is the position of one rational divisor, and the model, if any, is
+$y^2=q_1(t^2/c)$ with $c$ pinned by counts.
+\end{remark}
+
 \section{The computations}\label{sec:computations}
 
 Each line is a script in \texttt{tools/proof-2002/}, and each prints the number quoted.
 \begin{itemize}
+\item \texttt{stepH-branch.m}: the fixed points of every $w_m$, $m\notin H$, on $X_0^{2002}(1)$ by
+  discriminant, and the genera of $Y$ and of the star.
+\item \texttt{stepH-enumerate.m}: the rational points of $C$ of height at most $10^6$, the
+  $S$-unit test on each fibre, and for each fibre and each of the $32$ twists the counts of
+  $C'_c$ against those forced by the trace formula.
+\item \texttt{stepH-verify.m}: $Y_2$ against the trace formula at the $31$ good primes below $150$,
+  its two quotients against $C$ and $C'$, the quintic model $q_1$, the torsion of $\Jac(C)(\Q)$, and
+  the conductor of $C'$.
+\item \texttt{stepH-thuemahler.m}, with \texttt{stepH-thuemahler.sols}: the $21$ solutions of the
+  Thue--Mahler equation as returned by the solver of \cite{gs} (run outside this repository, in
+  $237$ s), each re-verified; the seven fibres they give; and the twist-and-count test along each.
 \item \texttt{step0-conductor-euler.m}: the odd part of the conductor, and the Euler factors of
   $\Jac(C)$ against $1-t_pT+(n_p+2p)T^2-t_ppT^3+p^2T^4$ at every good prime below $120$. ($t_p$
   and $n_p$ are read off the characteristic polynomial of $T_p$ on the four-dimensional space of
@@ -254,6 +562,8 @@ Each line is a script in \texttt{tools/proof-2002/}, and each prints the number 
 \end{itemize}
 
 \begin{thebibliography}{9}
+\bibitem{borcherds} R.~E. Borcherds, \emph{The Gross--Kohnen--Zagier theorem in higher dimensions},
+Duke Math. J. \textbf{97} (1999), 219--233; correction, Duke Math. J. \textbf{105} (2000), 183--184.
 \bibitem{bppt} A.~Brumer, A.~Pacetti, C.~Poor, G.~Tornar\'ia, J.~Voight and D.~S. Yuen, \emph{On
 the paramodularity of typical abelian surfaces}, Algebra Number Theory \textbf{13} (2019),
 1145--1195.
@@ -267,12 +577,18 @@ endomorphism ring of a Jacobian}, Math. Comp. \textbf{88} (2019), 1303--1339.
 Comp. \textbf{88} (2019), 1913--1927.
 \bibitem{edixhoven} B.~Edixhoven, \emph{The weight in Serre's conjectures on modular forms},
 Invent. Math. \textbf{109} (1992), 563--594.
+\bibitem{gy} J.-W. Guo and Y.~Yang, \emph{Equations of hyperelliptic Shimura curves}, Compos. Math.
+\textbf{153} (2017), 1--40.
+\bibitem{gs} A.~Gherga and S.~Siksek, \emph{Efficient resolution of Thue--Mahler equations},
+preprint, arXiv:2207.14492 (2022).
 \bibitem{ggr} J.~Gonz\'alez, J.~Gu\`ardia and V.~Rotger, \emph{Abelian surfaces of $\mathrm{GL}_2$-type
 as Jacobians of curves}, Acta Arith. \textbf{116} (2005), 263--287.
 \bibitem{kw} C.~Khare and J.-P. Wintenberger, \emph{Serre's modularity conjecture, I, II}, Invent.
 Math. \textbf{178} (2009), 485--504, 505--586.
 \bibitem{lmfdb} The LMFDB Collaboration, \emph{The $L$-functions and modular forms database},
 newform \texttt{2002.2.a.f}, \url{https://www.lmfdb.org/ModularForm/GL2/Q/holomorphic/2002/2/a/f/}.
+\bibitem{ogg} A.~P. Ogg, \emph{Real points on Shimura curves}, in: Arithmetic and geometry, Vol.~I,
+Progr. Math. \textbf{35}, Birkh\"auser, 1983, 277--307.
 \bibitem{ribet80} K.~A. Ribet, \emph{Sur les vari\'et\'es ab\'eliennes \`a multiplications
 r\'eelles}, C. R. Acad. Sci. Paris \textbf{291} (1980), 121--123; and \emph{On modular
 representations of $\mathrm{Gal}(\overline{\Q}/\Q)$ arising from modular forms}, Invent. Math.
