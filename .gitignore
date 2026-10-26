@@ -29,3 +29,4 @@ BorcherdsForms/
 
 # DualGraphData disk cache (DualGraph.m); regenerated on lava, never committed
 data/dualgraph/
+data/dual/basis_*.txt
