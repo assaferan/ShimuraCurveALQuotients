@@ -1,0 +1,300 @@
+% X_0^21(58)* is hyperelliptic.  The proof is the counting argument (CM divisors of degree two that
+% are pairwise torsion-related, against the torsion bound), with the torsion relations certified by
+% a dual test against weight-3/2 forms.  At a level with 2 || N the dual test needs a lemma relating
+% the Heegner series of X_0^D(N)* to that of X_0^D(N/2)*, proved here.  Tests:
+% tests/Hyperelliptic21_58.m and tests/_offline/Hyperelliptic21_58.m; solver in tools/proof-21-58/.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\CM}{CM}
+\DeclareMathOperator{\Div}{Div}
+\DeclareMathOperator{\nm}{nm}
+\DeclareMathOperator{\tr}{tr}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\HH}{\mathfrak{H}}
+\newcommand{\cO}{\mathcal{O}}
+\newcommand{\Hs}{\mathcal{H}}
+\begin{document}
+\title{$X_0^{21}(58)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^{21}(58)$, the Shimura curve of an Eichler order of level $58$ in the quaternion algebra
+of discriminant $21$, and $C=X^*=X/W$ its quotient by the full Atkin--Lehner group, of order $16$.
+Then $C$ has genus three, its Jacobian is simple and isogenous to $A_f$ for the newform
+$f=\texttt{609.2.a.d}$ of level $609=21\cdot29$ (so $f$ is old at $2$ on $X$), and no Atkin--Lehner
+involution survives on $C$.
+
+\begin{theorem}\label{thm:main}
+$C=X_0^{21}(58)^*$ is hyperelliptic. The fibres of its hyperelliptic map include
+\[
+F_2=\{P_{-16},P_{-120}\},\quad F_4=\{P_{-88},P_{-100}\},\quad F_5=\{P_{-112},P_{-372}\},\quad
+F_6=\{P_{-168},P_{-228}\},
+\]
+$P_d$ the rational CM point of discriminant $d$ on $C$.
+\end{theorem}
+
+The argument is the one of \texttt{paper/torsion-counting-hyperelliptic.tex}: the classes of the four
+effective divisors $F_i$ of degree two lie in one coset of $\Jac(C)(\Q)_{\mathrm{tors}}$, which has
+order at most $2$, so two of them coincide, and two distinct effective divisors of degree two in one
+class give a $g^1_2$. What is new is how the torsion relations $F_i-F_j$ are certified. On the
+curves treated so far they came from Borcherds forms given by their principal parts; at level $2436$
+with $2\,\|\,N$ that formulation is blind to half of the relevant modular forms, and the certificate
+goes instead through the curve $X_0^{21}(29)^*$ of half the level. The lemma that makes this work
+(Section~\ref{sec:lemma}) is general: it applies to every $X_0^D(N)^*$ with $D$ odd and $N=2N'$,
+$N'$ odd.
+
+\section{The dual test}\label{sec:dual}
+
+We recall the setting of \cite{gy} and of \texttt{paper/hyperelliptic-6-379.tex}. For an Eichler
+order $\cO$ of level $N$ in the quaternion algebra of discriminant $D$ let $L=\{x\in\cO:\tr x=0\}$,
+a lattice of level $M=4\cdot\mathrm{oddpart}(DN)$, and let $G=N_B^+(\cO)/\Q^\times$, so that
+$X^*=G\backslash\HH$. A weakly holomorphic form $f=\sum_nc(n)q^n$ of weight $\tfrac12$ on
+$\Gamma_0(M)$ with the theta multiplier, holomorphic at every cusp other than $\infty$, induces a
+vector-valued form $F_f$ of type $\rho_L$ whose principal part is $\sum_{n>0}c(-n)q^{-n}e_0$
+\cite[Lemmas 10 and 24]{gy}, and the Borcherds lift $\Psi_f$ of $F_f$ is a meromorphic modular form
+on $X^*$ of weight $c(0)$ with divisor
+\begin{equation}\label{eq:div}
+\operatorname{div}\Psi_f=\sum_{n>0}c(-n)\,Z(n),\qquad
+Z(n)=\sum_{\substack{r\ge1\\ -4n/r^2\ \text{a discriminant}}}\frac1{e_{-4n/r^2}}\,P_{-4n/r^2},
+\end{equation}
+where $P_d$ is the sum of the CM points of discriminant $d$ on $X^*$ (zero if there are none) and
+$e_d$ the order of their stabiliser in $G$ \cite[Lemmas 22 and 25]{gy}.
+
+\begin{proposition}\label{prop:dual}
+Let $\lambda\in\Pic(X^*)_\Q$ be the Hodge class, and for $\varphi$ a linear form on $\Pic(X^*)_\Q$
+with $\varphi(\lambda)=0$ put $\Phi_\varphi=\sum_{n\ge1}\varphi(Z(n))q^n$. Then $\Phi_\varphi$ is the
+$q$-expansion of a cusp form of weight $\tfrac32$ on $\Gamma_0(M)$ with the multiplier of
+$\theta^3$.
+\end{proposition}
+
+\begin{proof}
+Let $c=(c(-n))_{n\ge1}$ be a finitely supported vector. There is a form $f$ as above with principal
+part $\sum c(-n)q^{-n}$ if and only if $\sum_nc(-n)a_g(n)=0$ for every cusp form $g$ of weight
+$\tfrac32$ on $\Gamma_0(M)$ with the conjugate multiplier: the differential $fg\,d\tau$ on $X_0(M)$
+has its only pole at $\infty$, with residue $\sum c(-n)a_g(n)$, and Serre duality makes the
+vanishing of these residues sufficient. For such $f$, \eqref{eq:div} gives $\sum c(-n)Z(n)=k\lambda$
+in $\Pic(X^*)_\Q$ with $k$ the weight of $\Psi_f$, so $\sum c(-n)\varphi(Z(n))=0$. Thus
+$\Phi_\varphi$ pairs to zero with every vector in the annihilator of $S_{3/2}(\Gamma_0(M))$ under
+the residue pairing; by finite dimensionality it is itself a cusp form.
+\end{proof}
+
+The \emph{dual test} follows. A degree-zero divisor $\Delta$ supported on CM points of $X^*$ is
+written as $\sum c(-n)Z(n)$ by solving, for every discriminant reachable from the poles considered,
+the linear condition that the coefficients sum to $e_d$ times the prescribed multiplicity. If $V$ is a
+space of formal $q$-series containing every $\Phi_\varphi$ and $c$ is orthogonal to $V$, then
+$\varphi(\Delta)=0$ for all $\varphi$, i.e.\ $\Delta$ is torsion in $\Jac(X^*)(\Q)$. The natural
+choice $V=W:=\{g\in S_{3/2}:a_g(n)=0$ whenever $Z(n)=0\}$ is sharp when $2\mid D$: there the
+$2$-adic condition for CM points removes about half of all indices and $W$ has dimension equal to
+the rank of $\Jac(X^*)(\Q)$. When $2\,\|\,N$ almost every index carries CM points and $W$ is twice
+too large; the lemma below cuts it to size.
+
+\section{The lemma for $2\,\|\,N$}\label{sec:lemma}
+
+Throughout $D$ is odd, $N=2N'$ with $N'$ odd and squarefree, $\cO=\cO_N\subset\cO_{N'}$ are Eichler
+orders of levels $N$ and $N'$ with $\cO_N\subset\cO_{N'}$, $G=N^+(\cO_N)/\Q^\times$ and
+$G'=N^+(\cO_{N'})/\Q^\times$, $X^*=G\backslash\HH$, $X'^*=G'\backslash\HH$. Both lattices have level
+$M=4DN'$. For an order $R$ of discriminant $d$ in an imaginary quadratic field put
+\[
+\chi_d(2)=\begin{cases}\left(\tfrac d2\right)&\text{if }2\nmid\text{cond}(R),\\ 0&\text{if }2\mid\text{cond}(R),\end{cases}
+\]
+and write $R_2=\Z+2R$, of discriminant $4d$.
+
+\subsection{Divisors on the upper half plane}
+For a subgroup $\Gamma\subset\mathrm{PGL}_2^+(\mathbb{R})$ acting on $\HH$ with finite stabilisers,
+a $\Gamma$-invariant locally finite divisor $\sum_\tau m_\tau[\tau]$ on $\HH$ defines the
+$\Q$-divisor $\sum_{x}(m_\tau/e_\tau)[x]$ on the coarse curve $\Gamma\backslash\HH$, $e_\tau$ the
+order of the stabiliser of $\tau$; this is how \eqref{eq:div} arises, the divisor of $\Psi_f$ on
+$\HH$ having multiplicity $\sum c(-n)$ at each CM point. For $\Gamma_1\subset\Gamma_2$ of finite
+index and the coarse map $\pi$, pullback of $\Q$-divisors is the identity on invariant divisors of
+$\HH$, and pushforward is $D\mapsto\sum_{g\in\Gamma_2/\Gamma_1}g\cdot D$ (one checks both against
+the ramification indices $e^{\Gamma_2}_\tau/e^{\Gamma_1}_\tau$ of the coarse map).
+
+For $\tau\in\HH$ let $K_\tau\subset B$ be the quadratic field fixing $\tau$ and $R^{(N)}_\tau=K_\tau\cap\cO_N$,
+$R'_\tau=K_\tau\cap\cO_{N'}$. Put
+\[
+C(d)=\sum_{\tau:\ R^{(N)}_\tau\simeq R_d}[\tau],\qquad C'(d)=\sum_{\tau:\ R'_\tau\simeq R_d}[\tau],
+\]
+$G$- resp.\ $G'$-invariant divisors on $\HH$, which define $e_d^{-1}P_d$ on $X^*$ and
+$e_d'^{-1}P'_d$ on $X'^*$. Thus $Z(n)=\sum_rC(-4n/r^2)$, and we set
+\[
+Z'(n)=\sum_{r}C'(-4n/r^2),\qquad H(n)=\sum_{\substack{s\ge1\\ -n/s^2\ \text{a discriminant}}}C'(-n/s^2).
+\]
+$H(n)$ is nonzero only for $n\equiv0,3\pmod4$, and $H(4n)=Z'(n)$, since $-4n/s^2$ runs over all
+$s\ge1$. Also $Z'(n)=O'(n)+H(n)$ with $O'(n)=\sum_{r\text{ odd}}C'(-4n/r^2)$.
+
+\subsection{The correspondence}
+Let $G''=G\cap G'$. The elements of $G'$ normalising $\cO_N$ are $\Gamma_NW_{N'}$ (the normaliser
+of an Eichler order of level $2$ in $\mathrm{GL}_2(\Z_2)$ is the order itself), so
+$G''=\Gamma_NW_{N'}$, of index $2$ in $G$ (missing $w_2$) and of index $3$ in $G'$. Let
+$Y=G''\backslash\HH$ with $q:Y\to X^*$ and $p:Y\to X'^*$, and $T=p_*q^*$ on $\Q$-divisors.
+
+\begin{lemma}\label{lem:fibre}
+$T\,C(d)=(1+\chi_d(2))\,C'(d)+(2-\chi_{d/4}(2))\,C'(d/4)$, the second term being zero if $d/4$ is
+not a discriminant.
+\end{lemma}
+
+\begin{proof}
+On divisors of $\HH$, $q^*$ is the identity and $p_*C(d)=\sum_{i=1}^3g_i\,C(d)$ for coset
+representatives $g_i$ of $G'/G''$, which may be taken in $\Gamma_{N'}$. Now $g_iC(d)$ is the sum of
+$[\tau]$ over $\tau$ with $K_\tau\cap g_i\cO_Ng_i^{-1}\simeq R_d$, and $g_i\cO_Ng_i^{-1}$, $i=1,2,3$,
+are the three Eichler orders of level $N$ inside $\cO_{N'}$: they correspond to the three lines of
+$\F_2^2$ through $\cO_{N'}/2\cO_{N'}\simeq M_2(\F_2)$, permuted transitively by $\Gamma_{N'}$. Fix
+$\tau$ with $R'_\tau=R$ of discriminant $\tilde d$. The order $K_\tau\cap\cO^{(i)}$ is the
+stabiliser in $R$ of the $i$-th line, which is $R$ if the line is $R$-stable and $\Z+2R=R_2$
+otherwise: an element of $R$ fixing a non-stable line acts on $\F_2^2$ as a scalar, and conversely.
+The number of $R$-stable lines is $1+\chi_{\tilde d}(2)$: $R/2R$ is $\F_2\times\F_2$, $\F_4$ or
+$\F_2[\varepsilon]/(\varepsilon^2)$ according as $2$ splits, is inert, or is ramified in $R$, with
+$2$, $0$, $1$ stable lines, and when $2\mid\text{cond}(R)$ the element $2\omega_0$ ($\omega_0$ a
+generator of the maximal order) acts as a nonzero nilpotent, with one stable line. So $\tau$ occurs
+in $p_*C(d)$ with multiplicity $1+\chi_d(2)$ if $R'_\tau\simeq R_d$, and with multiplicity
+$2-\chi_{d/4}(2)$ if $R'_\tau\simeq R_{d/4}$, and not otherwise.
+\end{proof}
+
+\begin{lemma}\label{lem:series}
+$T\,Z(n)=H(4n)+2H(n)$ for every $n\ge1$; in other words $T\circ Z=(U(4)+2)H$ as series of divisors
+on $X'^*$.
+\end{lemma}
+
+\begin{proof}
+Apply Lemma~\ref{lem:fibre} to each term $C(-4n/r^2)$ of $Z(n)$. For $r$ odd, $d=-4n/r^2\equiv0\pmod4$
+has $\chi_d(2)=0$: either $d/4$ is a discriminant and then $2\mid\text{cond}(R_d)$, or
+$d/4\equiv2,3\pmod4$ and then $2$ ramifies in $R_d$. For $r=2s$, $d=-n/s^2$. Hence
+\[
+T\,Z(n)=\sum_{r\text{ odd}}C'(-4n/r^2)+\sum_{s}\bigl(1+\chi_{-n/s^2}(2)\bigr)C'(-n/s^2)
++\sum_{s}\bigl(2-\chi_{-n/s^2}(2)\bigr)C'(-n/s^2),
+\]
+the last two sums over $s$ with $-n/s^2$ a discriminant (the third comes from the $d/4$ terms of
+all $r$, odd and even, with $d/4=-n/r^2$). The characters cancel, leaving $O'(n)+3H(n)=Z'(n)+2H(n)=H(4n)+2H(n)$.
+\end{proof}
+
+\begin{lemma}\label{lem:inj}
+Suppose $\Jac(X^*)$ is isogenous to $A_f$ for a newform $f$ of level $DN'$ (new at the primes of
+$D$, old at $2$). Then $T:\Jac(X^*)_\Q\to\Jac(X'^*)_\Q$ is injective.
+\end{lemma}
+
+\begin{proof}
+Let $\pi_1=p$ and $\pi_2=p\circ w_2:Y\to X'^*$, the two degeneracy maps. The $f$-part of $\Jac(Y)$ is
+$\pi_1^*A_f\oplus\pi_2^*A_f$, and $q^*$ identifies $\Jac(X^*)_\Q$ with its $w_2$-invariants
+$\{\pi_1^*y+\pi_2^*y\}$. Then $T(\pi_1^*y+\pi_2^*y)=3y+(\pi_1)_*\pi_2^*y=(3+T_2)y$ with $T_2$ the
+Hecke correspondence at the good prime $2$ of $X'^*$, which acts on $A_f$ through the eigenvalue
+$a_2(f)$ of absolute value at most $2\sqrt2<3$.
+\end{proof}
+
+\begin{proposition}\label{prop:plus}
+For every linear form $\varphi'$ on $\Pic(X'^*)_\Q$ killing the Hodge class, $H_{\varphi'}:=\sum_n\varphi'(H(n))q^n$
+is the $q$-expansion of a cusp form in Kohnen's plus space $S^+_{3/2}(\Gamma_0(M))$, i.e.\ a form
+of weight $\tfrac32$ on $\Gamma_0(M)$ with the multiplier of $\theta^3$ whose coefficients vanish
+unless $n\equiv0,3\pmod4$.
+\end{proposition}
+
+\begin{proof}
+By \cite[Corollary 9]{gy}, $L'^\vee/L'\simeq\Z/2\times(\Z/DN')^2$; the $\Z/2$ is generated by
+$\ell_1/2$ with $\nm(\ell_1/2)\equiv-\tfrac14\pmod1$, so the $2$-part of the discriminant form is
+that of a rank-one lattice and $\rho_{L'}=\rho_2\otimes\rho_{\mathrm{odd}}$ accordingly. By
+Borcherds \cite[Theorem 4.5]{borcherds}, the generating series
+$\mathcal F=\sum_{\eta}\sum_{m}\varphi'(y_{m,\eta})q^me_\eta$ of the Heegner divisors of $L'$ is a
+vector-valued modular form of weight $\tfrac32$ and type $\rho_{L'}$ (for the dual sign convention),
+cuspidal because $\varphi'$ kills the Hodge class. Its component at $(0,0)$ has coefficients
+$\varphi'(Z'(n))$, and its component at $(\ell_1/2,0)$ has coefficients $\varphi'(\sum_{r\text{ odd}}C'(-m/r^2))$
+at exponent $m/4$ with $m\equiv3\pmod4$: a vector $\lambda\in L'+\ell_1/2$ has $\tfrac12+\lambda\in\cO_{N'}$
+and $\lambda^\perp$ is a CM point of odd discriminant, as in the proof of \cite[Lemma 25]{gy}. For
+$\gamma\in\Gamma_0(DN')$ the Weil representation of the odd part satisfies
+$\rho_{\mathrm{odd}}(\gamma)e_0=\chi(\gamma)e_0$ for a character $\chi$ (see e.g.\ \cite[Theorem 4.7]{scheithauer}),
+so the pair of components $(\mathcal F_{(0,0)},\mathcal F_{(\ell_1/2,0)})$ is a vector-valued form
+of type $\rho_2\otimes\chi$ on $\Gamma_0(DN')$, and the map
+$(F_0,F_{1/2})\mapsto F_0(4\tau)+F_{1/2}(4\tau)$ identifies such forms with the Kohnen plus space
+of level $4DN'$ (\cite[\S5]{ez} for level one, \cite{kohnen} for odd level). The image is exactly $H_{\varphi'}$: its
+coefficient at $n\equiv0\pmod4$ is $\varphi'(Z'(n/4))=\varphi'(H(n))$ and at $n\equiv3\pmod4$ it is
+$\varphi'(\sum_{r\text{ odd}}C'(-n/r^2))=\varphi'(H(n))$. The character $\chi$ is trivial here,
+because the scalar forms of \cite[Lemma 10]{gy} that induce $\rho_{L'}$-forms carry the bare theta
+multiplier.
+\end{proof}
+
+\begin{theorem}[the test for $2\,\|\,N$]\label{thm:test}
+Assume Lemma~\ref{lem:inj}. Let
+\[
+W^+=\{g\in S_{3/2}(\Gamma_0(M)):a_g(n)=0\ \text{unless }n\equiv0,3\ (4)\text{ and }H(n)\neq0\},\qquad
+V=(U(4)+2)\,W^+ .
+\]
+If a degree-zero divisor $\Delta=\sum_nc(-n)Z(n)$ on $X^*$ has $\sum_nc(-n)v(n)=0$ for all $v\in V$,
+then $\Delta$ is torsion in $\Jac(X^*)(\Q)$.
+\end{theorem}
+
+\begin{proof}
+Every $\varphi$ on $\Jac(X^*)_\Q$ is $\varphi'\circ T$ for some $\varphi'$, by Lemma~\ref{lem:inj}.
+By Lemma~\ref{lem:series}, $\varphi(Z(n))=\varphi'(H(4n))+2\varphi'(H(n))$, i.e.\
+$\Phi_\varphi=(U(4)+2)H_{\varphi'}$, and $H_{\varphi'}\in W^+$ by Proposition~\ref{prop:plus} and
+because $H_{\varphi'}(n)=0$ when $H(n)=0$. So $\varphi(\Delta)=\sum c(-n)\Phi_\varphi(n)=0$.
+\end{proof}
+
+In practice $W^+$ is computed from a basis of $S_{3/2}(\Gamma_0(M))$ to a finite precision $B$,
+imposing the vanishing at the indices $n\le B$; this gives a space containing $W^+$, so the test
+stays valid, and for $B$ large enough it is $W^+$ itself. The pairing with $V$ needs the
+coefficients of $U(4)g$ up to the largest pole, i.e.\ $B/4$ at least that.
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}
+The curve $C$ has genus three, and its Jacobian is isogenous to $A_f$ with $f=\texttt{609.2.a.d}$:
+the characteristic polynomials of $T_5$, $T_{11}$, $T_{13}$ on $\Jac(C)$, read off the point counts
+over $\F_p,\F_{p^2},\F_{p^3}$ from the trace formula, are
+\[
+x^3+6x^2+8x+2,\quad x^3+10x^2+28x+20,\quad x^3+6x^2+12x+8,
+\]
+the first irreducible, so $\Jac(C)$ is isotypic for a single newform orbit of dimension three; by
+Jacquet--Langlands that orbit has level $21m$ with $m\mid58$ and is new at $3$ and $7$, and among the newform orbits of weight two and dimension three at the levels $21m$, $m\mid58$, that
+Jacquet--Langlands allows, exactly one has these Hecke polynomials; it has level $609$ and
+Atkin--Lehner signs $-,-,+$ at $3,7,29$, which become $+,+,+$ on the Shimura curve
+(\texttt{tests/Hyperelliptic21\_58.m}). So Lemma~\ref{lem:inj} applies, with $X'^*=X_0^{21}(29)^*$.
+The eight discriminants of the four fibres each carry one rational point of $C$ (the degree of the
+field of definition of the CM points is one, and they form one Galois orbit). The torsion of
+$\Jac(C)(\Q)$ has order dividing $\#\Jac(C)(\F_p)$ for every odd good prime, and the greatest common
+divisor over the good primes up to $60$ is $2$.
+
+The dual test of Theorem~\ref{thm:test} at $M=2436$, with the $233$ cusp forms computed to
+precision $1600$, gives $\dim W^+=3$, the rank of $\Jac(C)(\Q)$, and certifies that
+$F_2-F_4$, $F_2-F_5$, $F_2-F_6$ and $F_4-F_5$ are torsion, while refusing the differences
+$P_{-16}-P_{-120}$, $P_{-88}-P_{-100}$, $P_{-16}-P_{-88}$, $P_{-112}-P_{-372}$, $P_{-16}-P_{-168}$
+of points that are not fibres (\texttt{tests/\_offline/Hyperelliptic21\_58.m}). So the classes of
+$F_2,F_4,F_5,F_6$ lie in one coset of a group of order at most $2$, two of them coincide, and $C$ has
+two distinct effective divisors of degree two in one class: a $g^1_2$.
+\end{proof}
+
+\begin{remark}
+In the pole-at-infinity dictionary \eqref{eq:div}, an odd discriminant $d$ and $4d$ are reached from
+the same indices $n=|d|s^2$, and when $2\mid N$ both carry CM points, so $P_d$ and $P_{4d}$ cannot be
+prescribed separately. This is why only the fibres in even discriminants enter the proof; the fifth
+and sixth fibres of the numerical screen, $\{P_{-7},P_{-312}\}$ and $\{P_{-28},P_{-840}\}$, involve
+$-7$ and $-28$ and are not used. The same obstruction leaves $X_0^{77}(10)^*$ with two usable fibres
+against a torsion bound of $2$, and $X_0^{39}(34)^*$ with one against a bound of $4$.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{borcherds} R.~E.~Borcherds, \emph{The Gross--Kohnen--Zagier theorem in higher dimensions},
+Duke Math. J. 97 (1999), 219–233; correction, Duke Math. J. 105 (2000), 183–184.
+\bibitem{ez} M.~Eichler and D.~Zagier, \emph{The theory of Jacobi forms}, Progr. Math. 55,
+Birkh\"auser, 1985.
+\bibitem{gy} J.~Guo and Y.~Yang, \emph{Equations of hyperelliptic Shimura curves}, Compos. Math.
+153 (2017), 1–40.
+\bibitem{kohnen} W.~Kohnen, \emph{Newforms of half-integral weight}, J. reine angew. Math. 333
+(1982), 32–72.
+\bibitem{scheithauer} N.~R.~Scheithauer, \emph{The Weil representation of $\mathrm{SL}_2(\Z)$ and
+some applications}, Int. Math. Res. Not. 2009, 1488–1545.
+\end{thebibliography}
+\end{document}
