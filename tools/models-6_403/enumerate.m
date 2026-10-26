@@ -47,10 +47,12 @@ for e in es do for x0 in x0s do
         end for;
         if ok then
             Append(~hits, <e, x0, c>);
-            Y := Evaluate(q1, t^2/c); den := LCM([Denominator(a) : a in Coefficients(Y)]);
-            Yi := PT ! (den * Y); cont := GCD([Integers() | a : a in Coefficients(Yi)]);
-            // scale so that y^2 = Yi/cont * (den/cont as a twist) is integral and primitive: report both
-            printf "MATCH: base e = %o, fibre x0 = %o, twist c = %o\n   C' = %o\n   Y : y^2 = %o   (times 1/%o)\n", e, x0, c, Cp, Yi div cont, den div cont;
+            Y := Evaluate(q1, t^2/c);
+            // the primitive integral multiple of q1(t^2/c); the scaling is by a constant, so y^2 = (that)
+            // is a quadratic twist of Y at worst, and verify.m settles the isomorphism over Q
+            den := LCM([Denominator(a) : a in Coefficients(Y)]); Yi := PT ! (den * Y);
+            cont := GCD([Integers() | a : a in Coefficients(Yi)]);
+            printf "MATCH: base e = %o, fibre x0 = %o, twist c = %o\n   C' = %o\n   Y : y^2 = q1(t^2/c), primitive integral multiple %o\n", e, x0, c, Cp, Yi div cont;
         end if;
     end for;
 end for; end for;
