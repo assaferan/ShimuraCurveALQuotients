@@ -1050,8 +1050,12 @@ intrinsic ScaleForSchofer(d::RngIntElt, D::RngIntElt, N::RngIntElt) -> FldRatElt
 end intrinsic;
 
 intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngIntElt, Ldata::QuaternionLatticeData : Lambda := false) -> LogSm
-{Assuming that f is the q-expansions of a oo-weakly holomorphic modular form at oo, 
- returns the log of the absolute value of Psi_F_f at the CM point with CM d.}
+{Given the q-expansion f at the cusp oo of a weight-1/2 form holomorphic at every other cusp (a dual
+ certificate, or any form whose only pole is at oo), returns the log of the absolute value of Psi_F_f
+ at the CM points of discriminant d, summed over the CM cycle on the star.  At a non-fundamental d the
+ m = 0 term at each conductor prime outside the level is included; the term at a level prime needs
+ the constant terms of f at the other cusps, which the expansion at oo does not determine, so a level
+ prime must be ramified in the CM field and prime to the conductor.}
     // _,_,_,_,_,Q,O,basis_L := ShimuraCurveLattice(D,N);
     Q := Ldata`Q;
     O := Ldata`O;
@@ -1059,13 +1063,29 @@ intrinsic SchoferFormula(f::RngSerLaurElt, d::RngIntElt, D::RngIntElt, N::RngInt
 
     scale := ScaleForSchofer(d,D,N);
 
-     if Type(Lambda) eq BoolElt then 
+     if Type(Lambda) eq BoolElt then
         lambda := ElementOfNorm(Q,-d, O, basis_L);
     else
         lambda := Lambda;
     end if;
 
-    return SchoferFormula(f, d, Q, lambda, scale);
+    val := SchoferFormula(f, d, Q, lambda, scale);
+
+    d_fund := FundamentalDiscriminant(d);
+    _, cond := IsSquare(d div d_fund);
+    require forall{p : p in PrimeDivisors(N) | d_fund mod p eq 0 and cond mod p ne 0} :
+        "the m = 0 term at a level prime unramified in the CM field, or dividing the conductor, needs the constant terms of f at the other cusps, which the expansion at oo does not determine";
+    // The m = 0 term at a conductor prime q outside the level is the fibre sum of M0FibreCorrection
+    // over the poles of f at the discriminants d/q^2, d/q^4, ..., with an empty cusp-0 side since f
+    // is holomorphic there.  It is a term per CM point, and -4 * scale is the number of CM points of
+    // discriminant d on the star.
+    M := IsOdd(D*N) select 4*D*N else 2*D*N;
+    f0 := BigO(Parent(f).1);
+    for q in [q : q in PrimeDivisors(cond) | (D*N) mod q ne 0] do
+        corr := M0FibreCorrection([f], [f0], [Rationals() | 0], d, q, Q : Lambda := lambda, M := M, Unimodular := true);
+        val +:= (-4*scale) * corr[1] * LogSum(Rationals()!1, q);
+    end for;
+    return val;
 end intrinsic;
 
 
