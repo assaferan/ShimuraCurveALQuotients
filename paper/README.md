@@ -21,3 +21,13 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# X_0^77(10)* is hyperelliptic
+
+`hyperelliptic-77-10.tex` — the proof, with no equation for the curve: five CM divisors of degree
+two (four pairs of rational points, two of them outside the class-number-four screen, and one
+quadratic point) are pairwise torsion-related against a torsion bound of 2, so two coincide and the
+genus-three curve carries a `g^1_2`. The relations come from the dual test for `2 || N` proved in
+`hyperelliptic-21-58.tex`, run as a search over all CM divisors of degree at most two. Tests
+`tests/Hyperelliptic77_10.m` (a minute) and `tests/_offline/Hyperelliptic77_10.m` (twenty-five
+minutes); solver and scan in `tools/proof-77-10/`.
