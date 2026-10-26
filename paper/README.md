@@ -21,3 +21,13 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# X_0^39(34)* is hyperelliptic
+
+`hyperelliptic-39-34.tex` — the proof, with no equation for the curve: five CM divisors of degree two
+(three pairs of rational points, one of them in the odd discriminant -15, and two quadratic points)
+are pairwise torsion-related against a torsion bound of 4, so two coincide and the genus-three curve
+carries a `g^1_2`. The relations come from the dual test for `2 || N` of `hyperelliptic-21-58.tex`,
+extended here to odd discriminants through the plus-type dictionary of the level-17 curve. Tests
+`tests/Hyperelliptic39_34.m` (a minute) and `tests/_offline/Hyperelliptic39_34.m` (thirty-five
+minutes); solver, odd-discriminant solver and scan in `tools/proof-39-34/`.
