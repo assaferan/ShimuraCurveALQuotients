@@ -956,3 +956,40 @@ $10^6$, `enumerate.m`). The curve has the counts of $Y$ at all 31 good primes be
 quotient by $x \mapsto -x$ is the star and by $(x,y) \mapsto (-x,-y)$ the genus-two curve
 $y^2 + (x^2+x)y = -3x^6 - 9x^5 - 5x^4 - x^3 + 31x^2 - 27x + 9$ of conductor $2418^2$ (`verify.m`).
 ⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which is a candidate.
+
+
+## `6_403`: the star (a candidate) and the genus-four quotient by $\langle w_2, w_{13}, w_{93}\rangle$ (2026-10-26, branch models-genus4-covers)
+
+`models_6_403.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-6_403/star-model.log`):
+
+    y^2 + (x^2 + x) y = x^6 + 9 x^5 + 15 x^4 - 47 x^3 + 33 x^2 - 21 x + 9,
+
+with the counts of the newform at all 58 good primes tried, conductor $2418^2$ (the same conductor
+as the star of `2418_1`, a different curve), one rational Weierstrass point at $x = 1$, no rational
+torsion, rank $2$. ⚠ It is a **candidate**: point counts do not identify a curve, and the star has
+not been proved. Everything below is exact relative to it. (The fit's collinearity report shows a
+large spread because the point of discriminant $-3$, an elliptic point of order three where the
+coordinate $f_2/f_1$ is $0/0$, is printed with its naive value; the fit itself does not use it.)
+
+The second key, $W = \{1,2,13,26,93,186,1209,2418\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-3$ and $-403$ (the images of the fixed points of
+$w_3$ and $w_{403}$, one rational point each), and the entry
+
+    y^2 = 9 x^10 + 316 x^8 + 2630 x^6 + 9388 x^4 + 2745 x^2 + 1296
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic6_403.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; with a single rational Weierstrass point the normal form
+$y^2 = q_1(t^2/c)$ is unique up to the twist $c$, supported on $\{-1, 2, 3, 13, 31\}$. Which fibre: the
+two branch points stay distinct modulo every prime of good reduction of $Y$, so the fibre's weighted
+$y$-coordinate is a unit outside $S = \{2,3,13,31\}$, and since the sextic factors as $(x-1)Q_5$ with
+resultant $72$, $Q_5(a,b)$ is an $S$-unit: a Thue-Mahler equation of degree five, solved completely
+by Gherga-Siksek's solver (17 solutions in 293 s, `tools/models-6_403/thuemahler.sols`, listed
+verbatim), leaving six fibres, of which the twist-and-count test keeps exactly one, $x = -7$ with
+$c = 1$ (`thuemahler.m`; the same triple is the only match of the generic enumeration over the
+fibres of height up to $10^6$, `enumerate.m`). The curve has the counts of $Y$ at all 31 good primes
+below 150; its quotient by $x \mapsto -x$ is the star and by $(x,y) \mapsto (-x,-y)$ the genus-two
+curve $y^2 + (x^2+x)y = x^6 - 11x^5 + 25x^4 + 75x^3 - 187x^2 - 513x - 351$ of conductor $2418^2$
+(`verify.m`). ⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which
+is a candidate.
