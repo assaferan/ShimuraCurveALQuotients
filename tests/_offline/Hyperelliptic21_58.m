@@ -1,5 +1,6 @@
 // X_0^21(58)* IS HYPERELLIPTIC, PART TWO: FOUR CM DIVISORS OF DEGREE TWO ARE PAIRWISE TORSION-RELATED.
-// About half an hour (the weight-3/2 cusp forms of level 2436 to precision 1600).
+// About forty minutes (the weight-3/2 cusp forms of level 2436 to precision 4000; at precision 1600
+// the vanishing conditions do not yet cut the plus-space subspace down to its true dimension 3).
 //
 // Setting (paper/hyperelliptic-21-58.tex).  X* = X_0^21(58)*, X'* = X_0^21(29)*, both with Borcherds
 // forms coming from weight-1/2 forms of level M = 2436.  For a degree-zero divisor Delta on X*
@@ -21,7 +22,7 @@
 
 procedure test_hyperelliptic_21_58_relations()
     printf "X_0^21(58)*: the four even fibres are pairwise torsion-related (level 2436, plus space)...";
-    D := 21; N := 58; Np := 29; M := 2436; B := 1600;
+    D := 21; N := 58; Np := 29; M := 2436; B := 4000;
     function HasCM(d, D, N)
         d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
         if exists{p : p in PrimeDivisors(D) | f mod p eq 0 or KroneckerSymbol(d0, p) eq 1} then return false; end if;

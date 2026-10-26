@@ -32,5 +32,5 @@ forms, and the note proves (Section 3) that the Heegner components of `X_0^D(N)*
 `(U(4) + 2)` applied to Kohnen plus-space forms attached to `X_0^D(N/2)*`: a fibre count along the
 degeneracy map, the injectivity of the correspondence on a 2-old Jacobian, and Borcherds' modularity
 of the vector-valued Heegner series restricted to the 2-part of the discriminant form. Tests
-`tests/Hyperelliptic21_58.m` (minutes) and `tests/_offline/Hyperelliptic21_58.m` (half an hour);
+`tests/Hyperelliptic21_58.m` (minutes) and `tests/_offline/Hyperelliptic21_58.m` (forty minutes);
 solver in `tools/proof-21-58/`.
