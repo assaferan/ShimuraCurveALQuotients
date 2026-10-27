@@ -1,0 +1,35 @@
+% Compiles paper/hyperelliptic-candidates.tex on its own, with the macros and theorem environments of the
+% manuscript (paper/manuscript/arXiv_v1.tex) it is written for.  pdflatex twice.
+\documentclass[11pt]{amsart}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,tabularx,xcolor}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\newcommand{\todo}[1]{\textcolor{red}{[#1]}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\newcommand{\Curve}[2]{X_0({#1},{#2})}
+\newcommand{\StarCurve}[2]{X_0^*({#1},{#2})}
+\newcommand{\ALfull}[2]{W_{{#1}{#2}}}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+% labels of the manuscript sections referred to, so that the references resolve here
+\begin{document}
+\title{The remaining candidates}
+\author{}
+\date{\today}
+\maketitle
+\setcounter{section}{8}
+\makeatletter
+\newcommand{\fakelabel}[2]{\@namedef{r@#1}{{#2}{}{}{}{}}}
+\makeatother
+\fakelabel{sec:results}{8}\fakelabel{sec:fixedpointsAL}{3.2}\fakelabel{sec:trace}{4}\fakelabel{sec:specialfiber}{8.4}\fakelabel{sec:limits}{9.2}
+\input{hyperelliptic-candidates}
+\end{document}
