@@ -1,0 +1,86 @@
+% X_0^6(649)* is hyperelliptic: three degree-two CM divisors whose differences are torsion (dual test), with the
+% 3-part of the torsion killed by the component group at 3 (Molina's reduction of CM points), so two of them are
+% linearly equivalent.  Tests: tests/Hyperelliptic6_649.m and tests/_offline/Hyperelliptic6_649.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{6}(649)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $Y=X_0^6(649)^*$ be the quotient of $X_0^6(649)$ by its full Atkin--Lehner group $W$, of order $16$. It has
+genus three and no further quotient, so it is hyperelliptic if and only if it carries two distinct linearly
+equivalent divisors of degree two. Consider the three divisors
+\[
+D_1=P_{-24}+P_{-132},\qquad D_2=P_{-40}+P_{-187},\qquad D_3=P_{-52}+P_{-660},
+\]
+each the sum of two rational CM points of $Y$.
+
+\begin{theorem}\label{thm:main}
+Two of $D_1,D_2,D_3$ are linearly equivalent. In particular $Y$ is hyperelliptic.
+\end{theorem}
+
+The three divisors are the fibres of the hyperelliptic map found by the Shimizu screen of the invariant
+differentials of $Y$ at its rational CM points; the proof uses them only as divisors.
+
+\section{Proof}
+
+\emph{The differences are torsion.} The dual test of \texttt{paper/hyperelliptic-15-38.tex}, Proposition~2.1,
+at $M=4\cdot1947=7788$ (\texttt{tests/\_offline/Hyperelliptic6\_649.m}): a principal part with divisor
+$D_i-D_j$ in the dictionary of Guo--Yang pairs to zero with the space $W$ of cusp forms of weight $\tfrac32$ on
+$\Gamma_0(7788)$ vanishing at every index carrying no CM point, for each of the three pairs $i<j$; the test
+also checks that $T(49)$ acts on $W$ with a factor of the polynomial of the traces of Frobenius of $Y$ at $7$,
+and refuses $P_{-24}-P_{-132}$ and $P_{-24}+P_{-40}-P_{-132}-P_{-187}$.
+
+\emph{The torsion of $\Jac(Y)(\Q)$ has order dividing $6$.} The orders $\#\Jac(Y)(\F_p)=L_p(1)$, from the
+point counts of $Y$ over $\F_p$, $\F_{p^2}$, $\F_{p^3}$ by the trace formula, have greatest common divisor $6$
+over the good primes below $120$.
+
+\emph{The $3$-part injects into $\Phi_3$.} $Y$ is a quotient of the \v{C}erednik--Drinfeld model of $X_0^6(649)$
+at $3$, so its stable reduction at $3$ is a union of rational curves meeting at ordinary double points, with
+dual graph the quotient by $W$ of the \v{C}erednik--Drinfeld graph; its first Betti number is $3$, the genus,
+so the reduction is totally degenerate and the identity component of the N\'eron model of $\Jac(Y)$ at $3$ is
+a torus $T$. The torus is split: Frobenius acts on the \v{C}erednik--Drinfeld graph as $w_3$, which lies in
+$W$, so it acts trivially on the quotient graph and on $H_1$ of it, the character group of $T$. Hence
+$T(\F_3)=(\F_3^\times)^3$ has no $3$-torsion. The kernel of reduction $\Jac(Y)(\Q_3)\to\mathcal J(\F_3)$ is
+the group of $3\Z_3$-points of the formal group of $\mathcal J$, which is torsion-free because the formal
+logarithm is an isomorphism onto $(3\Z_3)^3$ (the ramification index $1$ is less than $3-1$). So
+$\Jac(Y)(\Q)[3^\infty]$ injects into $\mathcal J(\F_3)$ and, having no image in $T(\F_3)$, into the component
+group $\Phi_3$, which is the critical group of the quotient graph: $\Phi_3\cong\Z/102$.
+
+\emph{The differences reduce to zero.} Each $P_d$ reduces at $3$ to the singular point or component of the
+\v{C}erednik--Drinfeld fibre whose Eichler order admits the optimal embedding of the order of discriminant $d$
+(Molina, \emph{Ribet bimodules and the specialization of Heegner points}, Theorems 5.3, 5.4, 5.8): to a singular
+point when $3$ ramifies in $\Q(\sqrt d)$ ($d=-24,-132,-660$), each at a singular point whose branches are
+swapped by an involution of $W$ divisible by $3$, hence at a smooth point of a merged component of $Y$; to a
+component when $3$ is inert ($d=-40,-187,-52$). The classes of $D_1-D_2$, $D_1-D_3$, $D_2-D_3$ in $\Phi_3$ are
+all zero (\texttt{tests/Hyperelliptic6\_649.m}; the same holds in $\Phi_2\cong\Z/3\times\Z/3\times\Z/90$).
+
+\emph{Conclusion.} Let $i<j$. The class $[D_i-D_j]\in\Jac(Y)(\Q)$ is torsion, of order dividing $6$; its
+$3$-part maps injectively to $\Phi_3$ and its image there is zero, so the $3$-part is zero and
+$[D_i-D_j]$ lies in $\Jac(Y)(\Q)[2]$, a group of order at most $2$. Three elements $[D_1],[D_2],[D_3]$ of a
+coset of a group of order at most two cannot be pairwise distinct, so $D_i\sim D_j$ for some $i<j$, and since
+$D_i\neq D_j$ as divisors, $|D_i|$ is a $g^1_2$ on $Y$. \qed
+
+\begin{remark}
+The counting argument of \texttt{paper/torsion-counting-hyperelliptic.tex} would need $7$ pairwise related divisors
+against the bound $6$; the component group at $3$ reduces the bound to $2$ for these divisors, so three suffice.
+The $2$-part cannot be removed the same way: at $3$ the torus has $2$-torsion, and at $2$ the formal group does.
+\end{remark}
+
+\end{document}

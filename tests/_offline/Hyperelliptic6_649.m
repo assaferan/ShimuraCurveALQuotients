@@ -1,0 +1,75 @@
+// X_0^6(649)* IS HYPERELLIPTIC, PART TWO: THE THREE FIBRE DIFFERENCES ARE TORSION.  Many hours
+// (the cusp forms of weight 3/2 on Gamma_0(7788) to precision 1200).
+//
+// On Y = X_0^6(649)* (genus three, W the full Atkin-Lehner group) let Z(n) = sum_r (1/e_d) P_d over the discriminants
+// d = -4n/r^2 with CM points (Guo-Yang Lemma 25).  For a linear form phi on Pic(Y)_Q vanishing on the Hodge class,
+// sum_n phi(Z(n)) q^n is a cusp form of weight 3/2 on Gamma_0(7788) with the theta^3 multiplier vanishing at every index
+// carrying no CM point (paper/hyperelliptic-15-38.tex, Section 2); the space W of such forms carries T(p^2) with the
+// characteristic polynomial of the traces of Frobenius of Y at p (checked at p = 7 against the point counts).  A
+// degree-zero CM divisor is torsion as soon as some principal part with that divisor pairs to zero with W.  This test
+// certifies the three differences of D_1 = P_-24 + P_-132, D_2 = P_-40 + P_-187, D_3 = P_-52 + P_-660 and refuses two
+// non-relations; tests/Hyperelliptic6_649.m then shows a torsion difference is zero or the 2-torsion point and that two
+// of the three D_i are linearly equivalent (paper/hyperelliptic-6-649.tex).
+
+procedure test_hyperelliptic_6_649_torsion()
+    printf "X_0^6(649)*: the differences of P_-24 + P_-132, P_-40 + P_-187, P_-52 + P_-660 are torsion (level 7788, the space W)...";
+    D := 6; N := 649; M := 7788; B := 1200;
+    function HasCM(d)
+        d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
+        if exists{p : p in PrimeDivisors(D) | f mod p eq 0 or KroneckerSymbol(d0, p) eq 1} then return false; end if;
+        if exists{p : p in PrimeDivisors(N) | f mod p ne 0 and KroneckerSymbol(d0, p) eq -1} then return false; end if;
+        return true;
+    end function;
+    function Stab(d)
+        e := d eq -3 select 3 else (d eq -4 select 2 else 1);
+        if exists{m : m in Divisors(D*N) | m gt 1 and GCD(m, (D*N) div m) eq 1 and (d eq -4*m or (m mod 4 eq 3 and d eq -m))} then e *:= 2; end if;
+        return e;
+    end function;
+    discs := func< n | [ -4*n div (r^2) : r in [1..Isqrt(4*n)] | (4*n) mod (r^2) eq 0 and ((-4*n div (r^2)) mod 4) in {0, 1} ] >;
+    S := CuspidalSubspace(HalfIntegralWeightForms(Gamma0(M), 3/2));
+    Bq := Basis(S, B + 2);
+    A0 := Matrix(Rationals(), #Bq, B, [ Coefficient(g, n) : n in [1..B], g in Bq ]);
+    cmd := AssociativeArray();
+    for n in [1..B] do cmd[n] := [ d : d in discs(n) | HasCM(d) ]; end for;
+    empty := [ n : n in [1..B] | IsEmpty(cmd[n]) ];
+    K := Kernel(Matrix(Rationals(), #Bq, #empty, [ A0[i, n] : n in empty, i in [1..#Bq] ]));
+    Wb := [ Vector(k) * A0 : k in Basis(K) ];
+    assert #Wb ge 1 and #Wb le 3;
+    // T(p^2) on W: a(p^2 n) + (-n/p) a(n) + p a(n/p^2), read on the indices up to B/p^2; its characteristic polynomial
+    // divides prod (x - a_p(f)) over the three newforms of Y, which is x^3 + c1 x^2 + (c2 - 3p) x + (c3 - 2p c1) for
+    // L_p(x) = 1 + c1 x + c2 x^2 + c3 x^3 + ...
+    W := {m : m in Divisors(D*N) | GCD(m, (D*N) div m) eq 1};
+    Y := CreateShimuraQuot(D, N, W); Y`g := GenusShimuraCurveQuotient(D, N, W); Y`CurveID := 0;
+    p := 7; Bp := B div p^2;
+    s := [ p^i + 1 - ComputePointsViaTrace(Y, p, i) : i in [1..3] ];
+    e := [Rationals() | 1];
+    for k in [1..3] do Append(~e, (&+[ (-1)^(i-1) * e[k-i+1] * s[i] : i in [1..k] ]) / k); end for;
+    c1 := -e[2]; c2 := e[3]; c3 := -e[4];
+    Tp := func< g | [ g[p^2*n] + KroneckerSymbol(-n, p) * g[n] + (n mod p^2 eq 0 select p * g[n div p^2] else 0) : n in [1..Bp] ] >;
+    Wmat := Matrix(Rationals(), [ [ g[n] : n in [1..Bp] ] : g in Wb ]);
+    ok, Tm := IsConsistent(Wmat, Matrix(Rationals(), [ Tp(g) : g in Wb ]));
+    assert ok;
+    R<x> := PolynomialRing(Rationals());
+    assert IsDivisibleBy(x^3 + c1 * x^2 + (c2 - 3*p) * x + (c3 - 2*p*c1), CharacteristicPolynomial(Tm));
+    cmds := Sort(Setseq(&join{ Set(cmd[n]) : n in [1..B] }));
+    function Certified(target)
+        tg := AssociativeArray(); for t in target do tg[t[1]] := t[2]; end for;
+        assert forall{t : t in target | t[1] in cmds};
+        nrows := #Wb + #cmds;
+        A := ZeroMatrix(Rationals(), nrows, B); rhs := ZeroMatrix(Rationals(), nrows, 1);
+        for i->g in Wb do for n in [1..B] do A[i, n] := g[n]; end for; end for;
+        for j->d in cmds do
+            for n in [1..B] do if d in cmd[n] then A[#Wb + j, n] +:= 1; end if; end for;
+            rhs[#Wb + j, 1] := IsDefined(tg, d) select Stab(d) * tg[d] else 0;
+        end for;
+        return IsConsistent(Transpose(A), Transpose(rhs));
+    end function;
+    assert Certified([<-24, 1>, <-132, 1>, <-40, -1>, <-187, -1>]);
+    assert Certified([<-24, 1>, <-132, 1>, <-52, -1>, <-660, -1>]);
+    assert Certified([<-40, 1>, <-187, 1>, <-52, -1>, <-660, -1>]);
+    assert not Certified([<-24, 1>, <-132, -1>]);
+    assert not Certified([<-24, 1>, <-40, 1>, <-132, -1>, <-187, -1>]);
+    printf " [dim W = %o; three differences certified, two controls refused] Done!\n", #Wb;
+end procedure;
+
+test_hyperelliptic_6_649_torsion();
