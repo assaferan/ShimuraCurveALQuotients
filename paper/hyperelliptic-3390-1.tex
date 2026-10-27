@@ -1,0 +1,73 @@
+% X_0^3390(1)/<w_5,w_6,w_113> is hyperelliptic: a genus-four double cover of the genus-two star, branched at the
+% rational CM points of discriminants -3 and -40, which form a fibre of the star's hyperelliptic map.  The fibre
+% statement is a dual test (paper/hyperelliptic-15-38.tex, Section 2) on a star whose Jacobian has no rational torsion.
+% Tests: tests/Hyperelliptic3390_1.m and tests/_offline/Hyperelliptic3390_1.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{3390}(1)/\langle w_5,w_6,w_{113}\rangle$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^{3390}(1)$, $W$ its Atkin--Lehner group of order $16$, $H=\langle w_5,w_6,w_{113}\rangle$, the only
+index-two subgroup for which $Y=X/H$ has genus four, and $X^*=X/W$ the star, of genus two. The double cover
+$Y\to X^*$ has two branch points by Riemann--Hurwitz; a point of $X^*$ is a branch point exactly when its orbit
+on $X$ consists of fixed points of some $w_m$ with $m\notin H$, and Ogg's count of those fixed points by CM
+discriminant finds them only for $w_3$ (discriminant $-3$) and $w_{10}$ (discriminant $-40$), eight each. So the
+branch points are the rational CM points $P_{-3}$ and $P_{-40}$ of $X^*$.
+
+\begin{theorem}\label{thm:main}
+$Y$ is hyperelliptic.
+\end{theorem}
+
+By the normal form of \texttt{paper/star-2002-proof.tex}, Lemma~3, a genus-four double cover of a genus-two curve
+branched at two points is hyperelliptic if and only if the two branch points form a fibre of the hyperelliptic map
+of the base. So the theorem says that $P_{-3}+P_{-40}$ is a fibre of the $g^1_2$ of $X^*$, i.e.\ that
+$P_{-3}+P_{-40}-F$ is principal for one, hence every, fibre $F$.
+
+\section{Proof}
+
+\emph{The star has no rational torsion.} The orders $\#\Jac(X^*)(\F_p)=L_p(1)$, from the point counts of $X^*$
+over $\F_p$ and $\F_{p^2}$ by the trace formula, have greatest common divisor $1$ over the good primes below
+$120$; so $\Jac(X^*)(\Q)_{\mathrm{tors}}=0$ and a degree-zero divisor on $X^*$ is principal as soon as it is
+torsion.
+
+\emph{The pairing is torsion.} The dual test of \texttt{paper/hyperelliptic-15-38.tex}, Proposition~2.1, at
+$M=4\cdot1695=6780$ (\texttt{tests/\_offline/Hyperelliptic3390\_1.m}): the cusp forms of weight $\tfrac32$ on
+$\Gamma_0(6780)$ vanishing at every index carrying no CM point form a space $W$ of dimension two, on which
+$T(49)$ has characteristic polynomial $x^2+7x+11$, the polynomial of the traces of Frobenius of $X^*$ at $7$;
+so $W$ is the star's. A principal part with divisor $P_{-3}+P_{-40}-P_{-43}-P_{-67}$ in the dictionary of
+Guo--Yang pairs to zero with $W$, as does one with divisor $P_{-3}+P_{-40}-P_{-123}-P_{-168}$ (and, as a
+consistency check, $P_{-43}+P_{-67}-P_{-123}-P_{-168}$), while $P_{-3}-P_{-40}$ and
+$P_{-3}+P_{-43}-P_{-40}-P_{-67}$ are refused. The point $P_{-3}$ is elliptic of order three on $X$ and fixed
+by $w_3$; the dictionary carries the weight $1/e_d$ with $e_{-3}=6$ on $X^*$, which is why the test is run in
+this form rather than through a Borcherds form of weight two.
+
+So $P_{-3}+P_{-40}-P_{-43}-P_{-67}$ is torsion, hence principal: $P_{-3}+P_{-40}$ and $P_{-43}+P_{-67}$ are
+fibres of one map of degree two, which is the hyperelliptic map of $X^*$. By the normal form, $Y$ is
+hyperelliptic. \qed
+
+\begin{remark}
+The fibres $\{-43,-67\}$ and $\{-123,-168\}$ were found numerically, by the Shimizu screen of the invariant
+differentials of $X^*$ at its rational CM points; the proof uses them only as the other side of a relation that
+the dual test certifies, so nothing depends on the numerics. Since $\Jac(X^*)$ has rank two, equal to its
+dimension, the rational points of $X^*$ cannot be listed by Chabauty's method, and the fibre statement is not
+accessible that way.
+\end{remark}
+
+\end{document}
