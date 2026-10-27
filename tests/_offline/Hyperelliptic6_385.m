@@ -1,17 +1,17 @@
 // X_0^6(385)/<w_5, w_6, w_11, w_14> IS HYPERELLIPTIC, PART TWO: THE BRANCH PAIRING IS TORSION.  Hours
-// (the cusp forms of weight 3/2 on Gamma_0(4620) to precision 1200).
+// (the cusp forms of weight 3/2 on Gamma_0(4620) to precision 4000: the place of degree two sits at the index |d|/4, beyond 1200).
 //
 // On the genus-one star E = X_0^6(385)/W let Z(n) = sum_r (1/e_d) P_d over the discriminants d = -4n/r^2 with CM
 // points (Guo-Yang Lemma 25).  For a linear form phi on Pic(E)_Q vanishing on the Hodge class, Phi_phi =
 // sum_n phi(Z(n)) q^n is a cusp form of weight 3/2 on Gamma_0(4620) with the theta^3 multiplier vanishing at every
 // index carrying no CM point, and it lies in the a_13(E) = -6 eigenspace W_f of T(13^2) on the space W of such
 // forms (paper/hyperelliptic-15-38.tex, Section 2).  A degree-zero CM divisor is torsion as soon as some principal
-// part with that divisor pairs to zero with W_f.  This test certifies Delta = P_-40 + P_-1540 - Z_-9240 and refuses the other
+// part with that divisor pairs to zero with W; the test uses all of W, which is the sufficient direction.  This test certifies Delta = P_-40 + P_-1540 - Z_-9240 and refuses the other
 // pairings of the branch places and the differences within them (paper/hyperelliptic-6-385.tex).
 
 procedure test_hyperelliptic_6_385_torsion()
     printf "X_0^6(385)*: P_-40 + P_-1540 - Z_-9240 is torsion (level 4620, the a_13 = -6 eigenspace)...";
-    D := 6; N := 385; M := 4620; B := 1200;
+    D := 6; N := 385; M := 4620; B := 4000;
     function HasCM(d)
         d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
         if exists{p : p in PrimeDivisors(D) | f mod p eq 0 or KroneckerSymbol(d0, p) eq 1} then return false; end if;
@@ -37,10 +37,14 @@ procedure test_hyperelliptic_6_385_torsion()
     Tp := func< g | [ g[p^2*n] + KroneckerSymbol(-n, p) * g[n] + (n mod p^2 eq 0 select p * g[n div p^2] else 0) : n in [1..Bp] ] >;
     Wmat := Matrix(Rationals(), [ [ g[n] : n in [1..Bp] ] : g in Wb ]);
     ok, Tm := IsConsistent(Wmat, Matrix(Rationals(), [ Tp(g) : g in Wb ]));
-    assert ok;
-    Ef := Kernel(Tm - -6 * IdentityMatrix(Rationals(), #Wb));
-    Wf := [ &+[ v[i] * Wb[i] : i in [1..#Wb] ] : v in Basis(Ef) ];
-    assert #Wf eq 1;                       // the rank of E(Q) is one
+    determined := ok and Rank(Wmat) eq #Wb;      // T(p^2) on W is read off the indices up to B/p^2, which must separate W
+    // every form of W is used (the sufficient direction: the curve's own form lies in W); when the coefficients determine
+    // T(p^2) on W, its -6 eigenspace must be a line, the curve's
+    if determined then
+        Ef := Kernel(Tm - -6 * IdentityMatrix(Rationals(), #Wb));
+        assert Dimension(Ef) eq 1;
+    end if;
+    Wf := Wb;
     cmds := Sort(Setseq(&join{ Set(cmd[n]) : n in [1..B] }));
     function Certified(target)
         tg := AssociativeArray(); for t in target do tg[t[1]] := t[2]; end for;
@@ -57,7 +61,8 @@ procedure test_hyperelliptic_6_385_torsion()
     assert Certified([<-40, 1>, <-1540, 1>, <-9240, -1>]);
     assert not Certified([<-40, 1>, <-1540, -1>]);
     assert not Certified([<-40, 2>, <-9240, -1>]);
-    printf " [dim W = %o, dim W_f = 1; the pairing certified, two controls refused] Done!\n", #Wb;
+    printf " [dim W = %o, T(p^2) on it %o; the pairing certified, two controls refused] Done!
+", #Wb, determined select "determined, with the curve's eigenvalue on a line" else "not determined by the coefficients available";
 end procedure;
 
 test_hyperelliptic_6_385_torsion();

@@ -18,3 +18,5 @@ The tests: `tests/Hyperelliptic6_385.m` (a few minutes) identifies the star, che
 identity components, recomputes the component groups, places the branch places, shows the pairing divisor has
 class zero and the Prym is simple; `tests/_offline/Hyperelliptic6_385.m` recomputes the cusp forms of weight 3/2
 at the level of the dual test and certifies the pairing torsion.
+| `basisS.m` | the cusp forms of weight 3/2 on `Gamma_0(M)` to precision `B`, written to `basis_<M>_<B>.txt`: `magma -b MM:=4620 BB:=4000 tools/proof-6-385/basisS.m` (about a day at this level) |
+| `withbasis.m` | the dual test of the offline test from that saved basis, in minutes: `magma -b BASIS:=basis_4620_4000.txt tools/proof-6-385/withbasis.m` |
