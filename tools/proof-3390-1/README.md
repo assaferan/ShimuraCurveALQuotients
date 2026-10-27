@@ -2,7 +2,7 @@
 
 `X_0^3390(1)` modulo `<w_5, w_6, w_113>` is the only genus-four quotient of that curve by an index-two subgroup of
 its Atkin-Lehner group, and it is a double cover of the genus-two star branched at the rational CM points of
-discriminants -3 and -40. By the normal form of `paper/star-2002-proof.tex` (Lemma 3) it is hyperelliptic exactly when
+discriminants -3 and -40. By the normal form of `paper/star-2002-proof.tex` (Lemma 8) it is hyperelliptic exactly when
 those two points form a fibre of the star's hyperelliptic map. The Jacobian of the star has no rational torsion, so
 the fibre statement is the statement that `P_-3 + P_-40 - P_-43 - P_-67` is torsion, which the dual test of
 `paper/hyperelliptic-15-38.tex` (Section 2) decides against the two-dimensional space of cusp forms of weight 3/2 on

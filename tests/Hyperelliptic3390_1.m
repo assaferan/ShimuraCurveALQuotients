@@ -7,7 +7,7 @@
 // fixed points of some w_m with m outside H, and Ogg's count of those fixed points by CM discriminant finds them only
 // for w_3 (discriminant -3) and w_10 (discriminant -40), eight each: the branch points are the rational CM points
 // P_-3 and P_-40 of the star.  Y is hyperelliptic if and only if P_-3 + P_-40 is a fibre of the hyperelliptic map of
-// X* (paper/star-2002-proof.tex, Lemma 3), i.e. iff P_-3 + P_-40 - F is principal for a fibre F.  The rational torsion
+// X* (paper/star-2002-proof.tex, Lemma 8), i.e. iff P_-3 + P_-40 - F is principal for a fibre F.  The rational torsion
 // of J(X*) is trivial: the orders #J(X*)(F_p) = L_p(1), from the point counts over F_p and F_{p^2}, have gcd 1 over the
 // good primes below 120.  So principal is the same as torsion, which tests/_offline/Hyperelliptic3390_1.m decides
 // (paper/hyperelliptic-3390-1.tex).  This test also records the traces of Frobenius of the star used there to

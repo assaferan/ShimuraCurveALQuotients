@@ -5,7 +5,7 @@
 // Y = X_0^3390(1)/H, H = <w_5, w_6, w_113>, has genus four and is a double cover of the genus-two star X* = X_0^3390(1)/W,
 // branched at the two rational CM points P_-3 and P_-40 (the fixed points of w_3 and w_10, the only involutions outside
 // H with fixed points; tests/Hyperelliptic3390_1.m).  Y is hyperelliptic if and only if P_-3 + P_-40 is a fibre of the
-// hyperelliptic map of X* (paper/star-2002-proof.tex, Lemma 3), i.e. iff P_-3 + P_-40 - F is principal for a fibre F.
+// hyperelliptic map of X* (paper/star-2002-proof.tex, Lemma 8), i.e. iff P_-3 + P_-40 - F is principal for a fibre F.
 // The rational torsion of J(X*) is trivial (tests/Hyperelliptic3390_1.m), so principal is the same as torsion, and
 // torsion is decided by the dual test of paper/hyperelliptic-15-38.tex, Section 2: on X* let Z(n) = sum_r (1/e_d) P_d
 // over the discriminants d = -4n/r^2 with CM points; for a linear form phi on Pic(X*)_Q vanishing on the Hodge class,
