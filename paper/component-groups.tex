@@ -1,0 +1,196 @@
+% Component groups of the Jacobian of X_0^D(N)/W at p | D, the reduction of CM points to them (Molina), and what
+% they say about rational torsion: the l-part of the torsion injects into Phi_p for every l not dividing p - 1
+% (p itself included when p >= 3).  Implemented in ComponentGroups.m; test tests/ComponentGroups.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\Frob}{Frob}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\G}{\mathbb{G}}
+\begin{document}
+\title{Component groups at the primes of the discriminant,\\ the reduction of CM points, and rational torsion}
+\author{}
+\date{\today}
+\maketitle
+
+\begin{abstract}
+For $Y=X_0^D(N)/W$ and a prime $p\mid D$ we describe the component group $\Phi_p$ of the N\'eron model of
+$\Jac(Y)$ as the critical group of a graph, locate the reduction of the CM points of $Y$ on that graph, and
+prove that the $\ell$-part of $\Jac(Y)(\Q)_{\mathrm{tors}}$ injects into $\Phi_p$ for every prime $\ell$ not
+dividing $p-1$, including $\ell=p$ when $p\ge3$. The consequence used in the hyperellipticity proofs is that
+a torsion CM divisor whose class in $\Phi_p$ vanishes has trivial $\ell$-part for those $\ell$, which lowers
+the number of CM divisors a counting argument needs, and sometimes decides a pairing outright.
+\end{abstract}
+
+\section{The special fibre and its component group}\label{sec:fibre}
+
+Throughout, $D>1$ is the discriminant of an indefinite quaternion algebra over $\Q$, $N$ a squarefree integer
+prime to $D$, $W$ a subgroup of the Atkin--Lehner group of $X=X_0^D(N)$ (a group of Hall divisors of $DN$),
+$Y=X/W$, and $p$ a prime dividing $D$.
+
+By \v{C}erednik and Drinfeld, $X$ has a model over $\Z_p$ whose special fibre is a union of rational curves
+meeting at ordinary double points, with dual graph $\mathcal G$ described by Kurihara and Ribet: let $B'$ be the
+definite quaternion algebra of discriminant $D/p$, $\mathcal O$ an Eichler order of level $N$ in it and
+$\mathcal O'$ its suborder of level $Np$. The vertices of $\mathcal G$ are two copies $(v,\pm)$ of the $h$ left
+ideal classes $v$ of $\mathcal O$, and the edges are the $h'$ left ideal classes $e$ of $\mathcal O'$, the edge
+$e$ joining $(\mathcal O e,+)$ to $(\mathcal O\,\pi_pe,-)$ where $\pi_p$ is the two-sided prime of $\mathcal O'$
+of norm $p$. The thickness of the double point $e$ (the exponent $t$ in its local equation $xy=p^t$) is
+$|\mathcal O_e^\times/\{\pm1\}|$, $\mathcal O_e$ the right order of $e$. The Atkin--Lehner involution $w_q$
+acts on vertices and edges by multiplication by the two-sided prime of norm $q$, and $w_p$ swaps the two
+copies; Frobenius acts on $\mathcal G$ as $w_p$.
+
+The quotient $Y$ inherits a semistable model: its special fibre has dual graph $\mathcal G/W$, with the
+following two local rules. A double point $e$ of $X$ fixed by some $w_m\in W$ with $p\mid m$ has its two
+branches swapped (such a $w_m$ swaps the two copies), and the quotient $\Z_p[x,y]/(xy-p^t)$ by $x\leftrightarrow
+y$ is $\Z_p[x+y]$: the double point becomes a smooth point of the merged component, and the edge disappears
+from the quotient graph. A double point with stabiliser $S\subset W$ acting without swapping the branches
+survives as a double point of thickness $t\cdot|S|$ (an element of order $2$ fixing both branches acts by
+$(x,y)\mapsto(-x,-y)$, whose invariants $x^2,y^2,xy$ satisfy $XY=p^{2t}$).
+
+\begin{proposition}\label{prop:phi}
+Let $\Gamma$ be the quotient graph $\mathcal G/W$ with these thicknesses, and $\Gamma'$ the graph obtained by
+replacing each edge of thickness $t$ by a chain of $t$ edges through $t-1$ new vertices. The component group
+$\Phi_p$ of the N\'eron model of $\Jac(Y)$ at $p$ is the critical group of $\Gamma'$: the torsion subgroup of
+the cokernel of the Laplacian of $\Gamma'$.
+\end{proposition}
+
+\begin{proof}
+$\Gamma'$ is the dual graph of the minimal regular model of $Y$ over $\Z_p$ (blowing up a double point of
+thickness $t$ gives a chain of $t-1$ projective lines), and Raynaud's theorem (Bosch--L\"utkebohmert--Raynaud,
+\emph{N\'eron models}, 9.6, Theorem 1) identifies the component group of the N\'eron model of the Jacobian of a
+curve with a regular model whose special fibre has rational components meeting transversally with the
+torsion of the cokernel of the intersection matrix, which is the Laplacian of the dual graph.
+\end{proof}
+
+The intrinsic \texttt{ComponentGroupData(D, N, W, p)} builds $\mathcal G$ from one list of ideal classes
+(validated by \texttt{ValidateDualGraphData}), the quotient $\Gamma$ with its thicknesses, and the Smith form of
+the Laplacian of $\Gamma'$; \texttt{ComponentGroup} returns the invariants of $\Phi_p$ and
+\texttt{QuotientGraph} the graph. When $Y$ has genus one these invariants must equal the Tamagawa number of the
+curve, which is the check in \texttt{tests/ComponentGroups.m}: $\Z/8$ and $\Z/4$ at $3$ and $5$ for
+$X_0^{15}(38)^*=570\mathrm{e}4$, $\Z/14$ and $\Z/3$ at $2$ and $3$ for $X_0^6(323)^*=1938\mathrm{h}1$.
+
+\section{The reduction of CM points}\label{sec:cm}
+
+Let $R$ be the order of discriminant $d<0$ and suppose $Y$ has CM points of discriminant $d$; then $p$ does not
+split in $\Q(\sqrt d)$ and $R$ is maximal at $p$. Molina (\emph{Ribet bimodules and the specialization of
+Heegner points}, Theorems 5.3, 5.4, 5.8) describes their reduction: a CM point of $X$ of discriminant $d$ reduces
+to a double point of the special fibre when $p$ ramifies in $\Q(\sqrt d)$ and to a smooth point of a component
+when $p$ is inert; the double point, respectively the component, is one whose Eichler order admits an optimal
+embedding of $R$, and the number of CM points of $X$ reducing to a given double point or component is the number
+of optimal embeddings of $R$ into its order up to conjugation by the units of that order. The correspondence
+is equivariant for the Atkin--Lehner group, so it descends to $Y$: dividing the counts by the number of CM points
+of $X$ above one CM point of $Y$ (the order of $W$ divided by the order of the stabiliser, which is $2$ at a fixed
+point of an involution of $W$ and otherwise $1$, times the extra automorphisms at $d=-3,-4$) gives, for each
+vertex of $\Gamma'$, the number of CM points of $Y$ of discriminant $d$ reducing to that component. A point
+reducing to a double point that survives in the quotient lies on its chain; we place it on the middle
+component, which is the only choice compatible with the involution fixing the point (its thickness is even).
+
+This is \texttt{CMSpecialisation(G, d)}, and \texttt{ClassInComponentGroup(G, divisor)} returns the class in
+$\Phi_p$ of a degree-zero combination of the CM cycles $Z_d$ (the sum of the points of discriminant $d$ on $Y$).
+A nonzero class proves the divisor is not principal. When the cycle $Z_d$ has several points and the divisor
+involves some of them with different coefficients, the class is defined only after the points are matched with
+vertices, which needs the Galois action; Section~\ref{sec:torsion} shows that this is sometimes unnecessary.
+
+Molina's theorems are stated for every prime $p$ dividing $D$, and the results of Ribet (\emph{Bimodules and
+abelian surfaces}) on which they rest carry no hypothesis on the parity of $p$; they are used at $p=2$ in
+\texttt{paper/hyperelliptic-6-385.tex} and \texttt{paper/hyperelliptic-6-323.tex}.
+
+\section{Rational torsion and the component group}\label{sec:torsion}
+
+Let $J=\Jac(Y)$, $\mathcal J$ its N\'eron model over $\Z_p$, $\mathcal J^0_{\F_p}$ the identity component of the
+special fibre and $\Phi_p=\mathcal J_{\F_p}/\mathcal J^0_{\F_p}$.
+
+\begin{lemma}\label{lem:torus}
+Suppose the Hall divisor $p$ itself lies in $W$. Then $\mathcal J^0_{\F_p}$ is a split torus of dimension the
+genus $g$ of $Y$, and $\mathcal J^0(\F_p)\cong(\F_p^\times)^g$.
+\end{lemma}
+
+\begin{proof}
+The special fibre of $Y$ is a union of rational curves meeting at ordinary double points, so $\mathcal J^0_{\F_p}$
+is a torus, of dimension the first Betti number of $\Gamma$, which is $g$ (the arithmetic genus of a reduced
+nodal curve with rational components is the Betti number of its dual graph). Its character group is $H_1(\Gamma,\Z)$
+with the Galois action induced by Frobenius on $\Gamma$. Frobenius acts on $\mathcal G$ as $w_p$, hence on
+$\Gamma=\mathcal G/W$ as the image of $w_p$ in the group acting on the quotient, which is trivial when $w_p\in W$.
+So the character group has trivial Galois action and the torus is split.
+\end{proof}
+
+\begin{proposition}\label{prop:inj}
+Suppose $w_p\in W$, and let $\ell$ be a prime. If $\ell\nmid p-1$ and either $\ell\neq p$ or $p\ge3$, then the
+$\ell$-primary part of $J(\Q)_{\mathrm{tors}}$ injects into $\Phi_p$ under reduction. In particular every odd
+$\ell$-part injects into $\Phi_2$, and the $p$-part injects into $\Phi_p$ for every odd $p\mid D$.
+\end{proposition}
+
+\begin{proof}
+Reduction $J(\Q_p)=\mathcal J(\Z_p)\to\mathcal J(\F_p)$ has kernel $\widehat{\mathcal J}(p\Z_p)$, the points of
+the formal group of $\mathcal J^0$. For $\ell\neq p$ this kernel has no $\ell$-torsion, since the formal group is
+pro-$p$. For $\ell=p$: the formal group of $\mathcal J^0$ is that of a split torus by Lemma~\ref{lem:torus},
+$\widehat{\G}_m^{\,g}$, and $\widehat{\G}_m(p\Z_p)=1+p\Z_p$ is torsion-free when $p\ge3$ ($(1+px)^p\equiv1+p^2x
+\pmod{p^3}$, so a $p$-th root of unity in $1+p\Z_p$ is $1$; equivalently the $p$-adic logarithm is injective on
+$1+p\Z_p$ for $p>2$). So in both cases $J(\Q)[\ell^\infty]\to\mathcal J(\F_p)$ is injective. The image lies in an
+extension of $\Phi_p$ by $\mathcal J^0(\F_p)\cong(\F_p^\times)^g$, whose order $(p-1)^g$ is prime to $\ell$; so
+the composite to $\Phi_p$ is still injective on the $\ell$-part.
+\end{proof}
+
+For $p=2$ the $2$-part cannot be handled this way: $1+2\Z_2$ contains $-1$. Nor can it be handled at an odd $p$,
+where $\F_p^\times$ has even order. The intrinsic \texttt{IsTorsionPartInjective(G, l)} returns the verdict of
+the proposition, refusing to answer when $p\notin W$.
+
+\begin{corollary}\label{cor:bound}
+Let $\Delta$ be a degree-zero CM divisor on $Y$ that is torsion in $J(\Q)$ (for instance by the dual test of
+\texttt{paper/hyperelliptic-15-38.tex}), let $B$ be a multiple of $|J(\Q)_{\mathrm{tors}}|$, and let $p\mid D$ with
+$w_p\in W$ and the class of $\Delta$ in $\Phi_p$ zero. Then the order of $\Delta$ divides $B$ with every
+$\ell$-part removed for the $\ell$ of Proposition~\ref{prop:inj}.
+\end{corollary}
+
+\begin{proof}
+The class of $\Delta$ in $J(\Q)_{\mathrm{tors}}$ decomposes into its $\ell$-parts, each of which maps to the
+$\ell$-part of the image of $\Delta$ in $\Phi_p$, which is zero; for the $\ell$ of the proposition the map is
+injective, so those parts vanish.
+\end{proof}
+
+This is \texttt{TorsionOrderBoundOfCMDivisor(D, N, W, divisor)}, which takes $B$ from
+\texttt{JacobianTorsionBound} (the gcd of $\#J(\F_q)$ over good primes $q$), runs over the primes $p\mid D$ at
+which $p$ is unsplit in every field of the divisor, and returns the refined bound together with a flag that is
+false when some class is nonzero, i.e.\ when $\Delta$ is proved not principal.
+
+\begin{example}[$X_0^6(649)^*$]
+Genus three, $W$ the full Atkin--Lehner group, $B=6$. Three degree-two divisors $D_1,D_2,D_3$ (fibres of the
+hyperelliptic map, found numerically) have pairwise differences certified torsion by the dual test. $\Phi_3\cong
+\Z/102$ and each $D_i-D_j$ has class zero there, so by the corollary with $\ell=3$ each difference has order
+dividing $2$; the three classes $[D_i]$ then lie in a coset of a group of order at most two and two of them
+coincide, giving a $g^1_2$. The counting argument of \texttt{paper/torsion-counting-hyperelliptic.tex} would have
+needed seven divisors against $B=6$ (\texttt{paper/hyperelliptic-6-649.tex}).
+\end{example}
+
+\begin{example}[$X_0^6(323)/\langle w_6,w_{19},w_{34}\rangle$: a pairing decided without matching points]
+The star $E=1938\mathrm{h}1$ has a place of degree four, with points $P,\sigma P,\sigma^2P,\sigma^3P$ permuted
+cyclically, and the question is whether $\Delta=P+\sigma^2P-\sigma P-\sigma^3P$, known to be torsion and lying in
+$E(K)^-$ for a quadratic field $K$ with $E(K)^-_{\mathrm{tors}}=\{0,T\}$, is zero. At $p=2$ the four points
+reduce two to each of two components $C,C'$ at distance $3$ on the cycle of length $14$ of $\Gamma$. Over
+$K_{\mathfrak p}$ the class of $\Delta$ is $\pm2([C]-[C'])$ if the pair $\{P,\sigma^2P\}$ shares a component and
+$0$ otherwise; $\pm2([C]-[C'])$ has order $7$, which a divisor of order at most two cannot have, so $\Delta$
+reduces to $0$, while $T$ does not: $\Delta=0$. No identification of which point reduces where is needed
+(\texttt{paper/hyperelliptic-6-323.tex}).
+\end{example}
+
+\begin{remark}
+The hypothesis $w_p\in W$ is what makes the torus split. It holds for every star, and for a quotient $X/H$
+exactly when the Hall divisor $p$ itself lies in $H$; it is not enough that $H$ contain some $w_m$ with $p\mid m$.
+Without it the torus may be a twisted form, $\mathcal J^0(\F_p)$ can have order divisible by $p+1$, and the
+proposition must be reconsidered.
+\end{remark}
+
+\end{document}
