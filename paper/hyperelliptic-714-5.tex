@@ -1,0 +1,64 @@
+% X_0^714(5)/<w_3,w_10,w_14,w_17> is hyperelliptic: a genus-three double cover of the genus-one star 3570x2, whose
+% branch places pair exactly.  Method of paper/hyperelliptic-15-38.tex; the torsion is removed by the component
+% groups at the three odd primes of the discriminant, and the simple Prym fixes the twist.
+% Tests: tests/Hyperelliptic714_5.m and tests/_offline/Hyperelliptic714_5.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Pic}{Pic}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\begin{document}
+\title{$X_0^{714}(5)/\langle w_3,w_{10},w_{14},w_{17}\rangle$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^{714}(5)$, $W$ its Atkin--Lehner group of order $32$, $H=\langle w_3,w_{10},w_{14},w_{17}\rangle$ of
+index two, $Y=X/H$ of genus three and $E=X/W$ of genus one. The double cover $Y\to E$ is branched at the rational
+CM points $P_{-340}$, $P_{-840}$ and the place $Z_{-14280}$ of degree two.
+
+\begin{theorem}\label{thm:main}
+$Y$ is hyperelliptic: $P_{-340}+P_{-840}\sim Z_{-14280}$ on $E$, and $Y$ is the double cover $E(\sqrt{cx})$ of a
+function $x$ with that divisor.
+\end{theorem}
+
+The criterion and the method are those of \texttt{paper/hyperelliptic-15-38.tex}, Sections 1--4. The only
+Galois-stable pairing is $\{P_{-340},P_{-840}\}\,|\,Z_{-14280}$; write $\Delta=P_{-340}+P_{-840}-Z_{-14280}$.
+
+\section{Proof}
+
+\emph{The curve $E$.} Its traces of Frobenius agree with the class 3570x at every good prime up to the Sturm
+bound $1728$ of level $3570$. The component groups at the three odd primes of the discriminant $714=2\cdot3\cdot7\cdot17$
+have orders $10$, $4$, $2$ at $3$, $7$, $17$, which singles out 3570x2, $y^2+xy=x^3-66296x+2072640$, with
+$E(\Q)_{\mathrm{tors}}\cong\Z/2\times\Z/2$. Each of the three nonzero torsion points reduces to the singular point
+at one of $3$, $7$, $17$, so $E(\Q)_{\mathrm{tors}}\to\Phi_3\times\Phi_7\times\Phi_{17}$ is injective.
+
+\emph{$\Delta$ is torsion.} The dual test at $M=4\cdot1785=7140$ (\texttt{tests/\_offline/Hyperelliptic714\_5.m}).
+
+\emph{$\Delta$ is zero.} At each $p\in\{3,7,17\}$ the Cerednik--Drinfeld fibre is described by the ideal classes
+of the Eichler order of level $5$ in the definite algebra of discriminant $714/p$, the quotient by $W$ is a graph
+with $6$, $3$, $2$ vertices and critical group $\Z/10$, $\Z/4$, $\Z/2$, and the branch places are placed by the
+optimal embeddings of their orders (Molina, Theorems 5.3, 5.4, 5.8): $P_{-340}$ is inert at $3$ and $7$ and
+ramified at $17$, $P_{-840}$ ramified at $3$ and $7$ and inert at $17$, $Z_{-14280}$ ramified at all three. At $3$
+the two points of $Z_{-14280}$ reduce to one component and the two rational points to two others; at $7$ and $17$
+they reduce to the two components of the rational points, one each. In all three cases the class of $\Delta$ in
+the critical group is zero, so $\Delta=0$ by the injectivity.
+
+\emph{The cover is untwisted.} The $L$-polynomial of the Prym of $Y\to E$ at $p=11$ is
+$121x^4+22x^3+10x^2+2x+1$, irreducible over $\Q$, so the Prym is simple over $\Q$. Write $E$ as
+$v^2=q(u)$ with $q$ quartic in the coordinate $u=x$. Each of the three nonzero classes $T$ of
+$\Pic^0(E)(\Q)[2]$ gives a factorisation $q=q_1q_2$ into quadratics over $\Q$, and the twist of the
+hyperelliptic cover by $T$ is the fibre product of $E$ with $w^2=c\,u\,q_1(u)$ over the $u$-line, whose Prym is
+isogenous over $\Q$ to the product of the elliptic curves $w^2=c\,u\,q_1(u)$ and $w^2=c\,u\,q_2(u)$. A constant
+twist does not change that. So $Y$ is none of the three twists: it is the untwisted cover and is
+hyperelliptic. \qed
+
+\end{document}
