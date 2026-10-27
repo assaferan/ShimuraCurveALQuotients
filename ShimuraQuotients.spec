@@ -32,5 +32,6 @@ special_fiber_modular.m
 special_fiber_cm.m
 DualGraph.m
 JacobianTorsion.m
+ComponentGroups.m
 ComponentInvolution.m
 }
