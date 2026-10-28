@@ -1,5 +1,5 @@
 // The dual test of tests/_offline/Hyperelliptic4130_1.m from a SAVED basis (basisS.m writes basis_<M>_<B>.txt):
-//   magma -b BASIS:=basis_8260_1200.txt tools/proof-4130-1/withbasis.m
+//   magma -b BASIS:=basis_8260_4000.txt tools/proof-4130-1/withbasis.m
 // Minutes once the basis exists; the offline test recomputes the basis instead.
 //
 // On Y = X_0^4130(1)* (genus three, W the full Atkin-Lehner group) let Z(n) = sum_r (1/e_d) P_d over the discriminants
@@ -17,7 +17,7 @@
 AttachSpec("ShimuraQuotients.spec");
 procedure test_hyperelliptic_4130_1_torsion()
     printf "X_0^4130(1)*: the differences of the four fibres P_-35 + P_-532, P_-163 + P_-595, P_-315 + P_-520, P_-340 + P_-420 are torsion (level 8260, the space W)...";
-    D := 4130; N := 1; M := 8260; B := 1200;
+    D := 4130; N := 1; M := 8260; B := 4000;
     function HasCM(d)
         d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
         if exists{p : p in PrimeDivisors(D) | f mod p eq 0 or KroneckerSymbol(d0, p) eq 1} then return false; end if;

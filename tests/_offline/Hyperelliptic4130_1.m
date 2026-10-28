@@ -1,5 +1,5 @@
 // X_0^4130(1)* IS HYPERELLIPTIC, PART TWO: A FIBRE DIFFERENCE IS TORSION.  Many hours
-// (the cusp forms of weight 3/2 on Gamma_0(8260) to precision 1200).
+// (the cusp forms of weight 3/2 on Gamma_0(8260) to precision 4000).
 //
 // On Y = X_0^4130(1)* (genus three, W the full Atkin-Lehner group) let Z(n) = sum_r (1/e_d) P_d over the discriminants
 // d = -4n/r^2 with CM points (Guo-Yang Lemma 25).  For a linear form phi on Pic(Y)_Q vanishing on the Hodge class,
@@ -15,7 +15,7 @@
 
 procedure test_hyperelliptic_4130_1_torsion()
     printf "X_0^4130(1)*: the differences of the four fibres P_-35 + P_-532, P_-163 + P_-595, P_-315 + P_-520, P_-340 + P_-420 are torsion (level 8260, the space W)...";
-    D := 4130; N := 1; M := 8260; B := 1200;
+    D := 4130; N := 1; M := 8260; B := 4000;
     function HasCM(d)
         d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
         if exists{p : p in PrimeDivisors(D) | f mod p eq 0 or KroneckerSymbol(d0, p) eq 1} then return false; end if;
