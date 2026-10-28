@@ -5,8 +5,8 @@ its Atkin-Lehner group, and it is a double cover of the genus-two star branched 
 discriminants -3 and -40. By the normal form of `paper/star-2002-proof.tex` (Lemma 8) it is hyperelliptic exactly when
 those two points form a fibre of the star's hyperelliptic map. The Jacobian of the star has no rational torsion, so
 the fibre statement is the statement that `P_-3 + P_-40 - P_-43 - P_-67` is torsion, which the dual test of
-`paper/hyperelliptic-15-38.tex` (Section 2) decides against the two-dimensional space of cusp forms of weight 3/2 on
-`Gamma_0(6780)` vanishing at the indices without CM points.
+`paper/hyperelliptic-15-38.tex` (Section 2) decides against the space of cusp forms of weight 3/2 on `Gamma_0(6780)` vanishing at the
+indices without CM points (51-dimensional at precision 1100; it contains the star's two forms).
 
 | file | what it does |
 |---|---|

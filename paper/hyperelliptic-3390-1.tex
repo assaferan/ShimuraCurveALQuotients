@@ -48,13 +48,15 @@ $120$; so $\Jac(X^*)(\Q)_{\mathrm{tors}}=0$ and a degree-zero divisor on $X^*$ i
 torsion.
 
 \emph{The pairing is torsion.} The dual test of \texttt{paper/hyperelliptic-15-38.tex}, Proposition~2.1, at
-$M=4\cdot1695=6780$ (\texttt{tests/\_offline/Hyperelliptic3390\_1.m}): the cusp forms of weight $\tfrac32$ on
-$\Gamma_0(6780)$ vanishing at every index carrying no CM point form a space $W$ of dimension two, on which
-$T(49)$ has characteristic polynomial $x^2+7x+11$, the polynomial of the traces of Frobenius of $X^*$ at $7$;
-so $W$ is the star's. A principal part with divisor $P_{-3}+P_{-40}-P_{-43}-P_{-67}$ in the dictionary of
-Guo--Yang pairs to zero with $W$, as does one with divisor $P_{-3}+P_{-40}-P_{-123}-P_{-168}$ (and, as a
-consistency check, $P_{-43}+P_{-67}-P_{-123}-P_{-168}$), while $P_{-3}-P_{-40}$ and
-$P_{-3}+P_{-43}-P_{-40}-P_{-67}$ are refused. The point $P_{-3}$ is elliptic of order three on $X$ and fixed
+$M=4\cdot1695=6780$ (\texttt{tests/\_offline/Hyperelliptic3390\_1.m}): let $W$ be the space of cusp forms of
+weight $\tfrac32$ on $\Gamma_0(6780)$ vanishing at every index up to the precision that carries no CM point. It
+contains the two forms $\Phi_\varphi$ attached to the star, and at precision $1100$ it has dimension $51$, too
+large for the Hecke operator $T(49)$ to be read off the coefficients available (its characteristic polynomial on
+the star's two forms is $x^2+7x+11$, the polynomial of the traces of Frobenius of $X^*$ at $7$). The test
+therefore uses the whole of $W$, which is the sufficient direction of the dual test: a principal part with
+divisor $P_{-3}+P_{-40}-P_{-43}-P_{-67}$ in the dictionary of Guo--Yang pairs to zero with every form of $W$, as
+does one with divisor $P_{-3}+P_{-40}-P_{-123}-P_{-168}$ (and, as a consistency check,
+$P_{-43}+P_{-67}-P_{-123}-P_{-168}$), while $P_{-3}-P_{-40}$ and $P_{-3}+P_{-43}-P_{-40}-P_{-67}$ are refused. The point $P_{-3}$ is elliptic of order three on $X$ and fixed
 by $w_3$; the dictionary carries the weight $1/e_d$ with $e_{-3}=6$ on $X^*$, which is why the test is run in
 this form rather than through a Borcherds form of weight two.
 

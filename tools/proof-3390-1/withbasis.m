@@ -10,9 +10,9 @@
 // torsion is decided by the dual test of paper/hyperelliptic-15-38.tex, Section 2: on X* let Z(n) = sum_r (1/e_d) P_d
 // over the discriminants d = -4n/r^2 with CM points; for a linear form phi on Pic(X*)_Q vanishing on the Hodge class,
 // sum_n phi(Z(n)) q^n is a cusp form of weight 3/2 on Gamma_0(6780) with the theta^3 multiplier vanishing at every
-// index carrying no CM point.  The space W of such forms has dimension two, the genus, and T(49) acts on it with the
-// characteristic polynomial of the star's a_7, so W is the star's; a degree-zero CM divisor is torsion as soon as some
-// principal part with that divisor pairs to zero with W.  This test certifies P_-3 + P_-40 - P_-43 - P_-67 and
+// index carrying no CM point.  The space W of such forms contains the star's two forms (on which T(49) has the
+// characteristic polynomial of the star's a_7) and may be larger at a finite precision (51-dimensional at 1100); a
+// degree-zero CM divisor is torsion as soon as some principal part with that divisor pairs to zero with all of W.  This test certifies P_-3 + P_-40 - P_-43 - P_-67 and
 // P_-3 + P_-40 - P_-123 - P_-168 (two fibres found numerically by the Shimizu screen, which the test does not use), and
 // refuses the non-fibres P_-3 - P_-40 and P_-3 + P_-43 - P_-40 - P_-67.
 
