@@ -10,7 +10,7 @@ Shimizu screen (any one difference suffices).
 | file | what it does |
 |---|---|
 | `data.m` | the genus of the star, the degrees of the eight CM places, the traces of Frobenius at 3, 11, 13 with the characteristic polynomial of `T(p^2)` on `W`, and the torsion bound of the Jacobian: `magma -b tools/proof-4130-1/data.m` |
-| `basisS.m` | the cusp forms of weight 3/2 on `Gamma_0(M)` to precision `B`, written to `basis_<M>_<B>.txt` (about 56 h at 8260/1200; at precision 1200 the space W still has dimension 38 and refuses every difference, so the test uses 4000) |
+| `basisS.m` | the cusp forms of weight 3/2 on `Gamma_0(M)` to precision `B`, written to `basis_<M>_<B>.txt` (about 61 h at 8260/4000, where W has dimension 3, the genus; at precision 1200 it still has dimension 38 and refuses every difference) |
 | `withbasis.m` | the dual test of `tests/_offline/Hyperelliptic4130_1.m` from a saved basis: `magma -b BASIS:=basis_8260_4000.txt tools/proof-4130-1/withbasis.m` |
 
 The tests: `tests/Hyperelliptic4130_1.m` (about four minutes) checks the genus, the rationality of the eight points,
