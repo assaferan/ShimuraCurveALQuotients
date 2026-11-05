@@ -15,9 +15,10 @@
 //     (computed here); the stage must say so.
 // [3] D > 1 from stored models: X_0(6,23)/w_23 is stored as a fibre product and is a smooth plane
 //     quartic (tools/planequartic.m, PROVENANCE.md 2026-10-03); X_0(10,53)/w_530 is stored as
-//     y^2 = f(x) of genus 3, accepted only after its genus and point counts are checked, and its
-//     label says the model rests on the m = 0 term; a curve with no model file is left undecided;
-//     a decided curve is not touched.
+//     y^2 = f(x) of genus 3, accepted only after its genus and point counts are checked; a curve with
+//     no model file is left undecided; a decided curve is not touched.  A model decides a curve only
+//     when the list of proved models names it: the test passes its own list naming these two, whose
+//     argument the label must quote, and the same two curves stay undecided with an empty list.
 //
 // The records are built directly (CreateShimuraQuot and the genus from the genus formula), with
 // IsSubhyp unassigned, as the pipeline's undecided curves are.
@@ -54,7 +55,14 @@ curves := [rec(1, 40, {Integers()|1}), rec(1, 34, {Integers()|1}),
            rec(1, 48, {Integers()|1})];
 assert [X`g : X in curves] eq [3, 3, 3, 3, 3, 3, 3, GenusShimuraCurveQuotient(6, 109, {Integers()|1, 2}), 3];
 curves[9]`IsSubhyp := false; curves[9]`IsHyp := false; curves[9]`TestInWhichProved := "planted";   // a decided curve is left alone
-FilterByCanonicalQuadrics(~curves);
+listed := GetTempDir() cat "/cq_proved_models.m";
+Write(listed, "proved_models := [ <6, 23, [1, 23], \"the test's own list\">, <10, 53, [1, 530], \"the test's own list\"> ];\n" : Overwrite := true);
+empty := GetTempDir() cat "/cq_no_proved_models.m";
+Write(empty, "proved_models := [];\n" : Overwrite := true);
+unlisted := [rec(6, 23, {Integers()|1, 23}), rec(10, 53, {Integers()|1, 530})];
+FilterByCanonicalQuadrics(~unlisted : ProvedModels := empty);
+assert not assigned unlisted[1]`IsSubhyp and not assigned unlisted[2]`IsSubhyp;
+FilterByCanonicalQuadrics(~curves : ProvedModels := listed);
 expected := [true, false, true, true, true, false, true];
 for i in [1..7] do
     assert assigned curves[i]`IsSubhyp and curves[i]`IsSubhyp eq expected[i] and curves[i]`IsHyp eq expected[i];
@@ -62,7 +70,7 @@ for i in [1..7] do
 end for;
 assert not assigned curves[8]`IsSubhyp;
 assert curves[9]`TestInWhichProved eq "planted" and not curves[9]`IsSubhyp;
-assert "stored hyperelliptic model" in curves[7]`TestInWhichProved and "m = 0 term" in curves[7]`TestInWhichProved;
+assert "stored hyperelliptic model" in curves[7]`TestInWhichProved and "the test's own list" in curves[7]`TestInWhichProved;
 assert "W-fixed cusp forms" in curves[1]`TestInWhichProved;
 // a stored hyperelliptic model of the wrong genus is not accepted: the same curve against a file
 // holding y^2 = x^5 + 1 (genus 2) under its key
@@ -71,6 +79,6 @@ System("mkdir -p " cat dir);
 P<x> := PolynomialRing(Rationals());
 Write(dir cat "/models_10_53.m", "P<x> := PolynomialRing(Rationals());\nmodels := AssociativeArray();\nmodels[[1, 530]] := [ <2, P![1, 0, 0, 0, 0, 1], P![]> ];\n" : Overwrite := true);
 wrong := [rec(10, 53, {Integers()|1, 530})];
-FilterByCanonicalQuadrics(~wrong : ModelDir := dir);
+FilterByCanonicalQuadrics(~wrong : ModelDir := dir, ProvedModels := listed);
 assert not assigned wrong[1]`IsSubhyp;
-printf " ok (Ogg's list and X0NQuotient, the three hyperelliptic quotients, two stored models, a wrong-genus model refused, one base without a file)\n";
+printf " ok (Ogg's list and X0NQuotient, the three hyperelliptic quotients, two stored models, the same two refused when unlisted, a wrong-genus model refused, one base without a file)\n";

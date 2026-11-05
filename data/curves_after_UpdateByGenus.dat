@@ -55731,7 +55731,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 53>,
 <"g", 3>, <"CurveID", 7962>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "WeilPolynomial with p = 3">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 57>,
 <"W", { IntegerRing() | 1, 3, 11, 19, 33, 57, 209, 627 }>,
@@ -55969,7 +55969,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 63>,
 <"g", 3>, <"CurveID", 7996>,
 <"CoveredBy", { IntegerRing() | 7981, 7982, 7983, 7984, 7985, 7986, 7987, 7988, 7989, 7990, 7991, 7992, 7993, 7994, 7995 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 65>,
 <"W", { IntegerRing() | 1, 5, 11, 13, 55, 65, 143, 715 }>,
@@ -59210,7 +59210,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 85>,
 <"g", 3>, <"CurveID", 8459>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 87>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 29, 39, 58, 78, 87, 174, 377, 754, 1131, 2262 }>,
@@ -59245,7 +59245,7 @@ CreateShimuraQuot([* <"D", 26>, <"N", 105>,
 <"g", 3>, <"CurveID", 8464>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "WeilPolynomial with p = 23">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 26>, <"N", 111>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 37, 39, 74, 78, 111, 222, 481, 962, 1443, 2886 }>,
@@ -62752,7 +62752,7 @@ CreateShimuraQuot([* <"D", 34>, <"N", 25>,
 <"g", 3>, <"CurveID", 8965>,
 <"CoveredBy", { IntegerRing() | 8958, 8959, 8960, 8961, 8962, 8963, 8964 }>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 27>,
 <"W", { IntegerRing() | 1, 2, 17, 27, 34, 54, 459, 918 }>,
@@ -69234,7 +69234,7 @@ CreateShimuraQuot([* <"D", 46>, <"N", 39>,
 <"g", 3>, <"CurveID", 9891>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "WeilPolynomial with p = 5">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 41>,
 <"W", { IntegerRing() | 1, 2, 23, 41, 46, 82, 943, 1886 }>,
@@ -77522,7 +77522,7 @@ CreateShimuraQuot([* <"D", 86>, <"N", 15>,
 <"g", 3>, <"CurveID", 11075>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action">
 *]),
 CreateShimuraQuot([* <"D", 86>, <"N", 17>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 43, 86, 731, 1462 }>,

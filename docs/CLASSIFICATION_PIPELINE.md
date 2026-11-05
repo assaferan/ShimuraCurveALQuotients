@@ -22,16 +22,26 @@ polynomial filters, Noether's count on stored models (`FilterByCanonicalQuadrics
 record (`alquots.m:3`): `IsSubhyp`/`IsHyp` are set, and `TestInWhichProved` names the stage; a curve is
 undecided while `IsSubhyp` is unassigned.
 
-**From 61 to 34 is not in the data.** `data/stage_counts.txt:40` still reads 61 undecided. The cut to 34
-(22 by the metric dual graph of #116, 3 by special fibres, 2 by models at 6_35) is recorded only in
-`HANDOFF_2026-10-19.md:320-328`, and the 34 are listed only in `paper/hyperelliptic-candidates.tex`
-(table `tab:candidates`). The committed data also predates Criterion H (`FilterByComponentInvolution`).
+**The data (rerun of 2026-11-05 on this branch).** 40 quotients are undecided
+(`data/stage_counts.txt`): the 34 of `paper/hyperelliptic-candidates.tex`, listed in `data/open_34.m`, and
+six more that the second list of that file names with what each is missing (`tests/OpenThirtyFour.m`
+checks both lists against the data). Of the 27 that the earlier notes settle beyond the 61→34 cut, the
+stages now decide 21; the six are:
 
-**A rerun would already credit the stored models.** `FilterByCanonicalQuadrics` marks a quotient
-hyperelliptic as soon as a stored model y² + hy = f of the right genus agrees with the trace formula at
-three primes (`CanonicalQuadrics.m:100-127`). That includes the models of #128 that its own note calls
-*candidate* (6_385, 714_5) or found in a *window* (15_38). Those curves are proved hyperelliptic by other
-means (#151–#154), so the verdicts are right, but the label would name the wrong argument.
+* the two quotients of X_0(6,35): their stored models are not hyperelliptic (Noether's count), but the
+  models rest on the m = 0 term of Schofer's formula at a composite level;
+* X_0(390,1)/{1,6,26,39}: decided before only by its stored model (Borcherds products at N = 1);
+* X_0(14,51), X_0(38,15), X_0(158,3) with the groups in the file: at p = 3 the special fibre is the genus-3
+  curve Z = X_0(D, N/3)/W′, which the dual graph at another prime shows is not hyperelliptic. What is
+  missing is that Z mod 3 is not hyperelliptic: the Weil polynomials of Z and of its twists at 3 are all
+  those of hyperelliptic curves (`CheckWeilPolynomialAtPrime`, `CheckTwistedAtPrime`), and no model of Z
+  is stored.
+
+**Stored models decide a curve only when proved.** `FilterByCanonicalQuadrics` reads
+`data/models/proved_models.m` and uses a stored model at D > 1 only for a curve listed there with the
+argument that proves its equation; the list is empty for now. Agreement of a model with the trace formula
+does not prove it, so the 25 of the 34 that stored models used to decide (the sixteen of group D, 15_38,
+6_385, 714_5, 6_323, and the genus-four models) wait for their certificates.
 
 **The 34th curve has no code.** That X_0(141,2)/{1,6,94,141} is not hyperelliptic is asserted in two
 sentences (`paper/heegner-height-models.tex:61-63`, `paper/hyperelliptic-candidates.tex:309-310`): the
@@ -143,9 +153,9 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 
 ## Order of work
 
-1. **Land 61 → 34 in the data.** Rerun the pipeline on this branch (Criterion H, the metric dual graph, the
-   special fibres, the 6_35 models), commit the stage counts, and add `data/open_34.m` with a test that the
-   undecided set equals it.
+1. **Land 61 → 34 in the data.** Done 2026-11-05 up to six quotients: the rerun leaves 40 undecided, the
+   34 and the six of `open_gaps` (see "The data" above); `tests/OpenThirtyFour.m` checks both lists.
+   Remaining: the mod-3 step for the three special fibres, and the 6_35 and 390_1 models.
 2. **The dual test as an intrinsic.** One CM dictionary and one dual test, with the 2 ∥ N and odd-D
    variants; the basis cache with checksums. Acceptance: it reproduces, from the saved bases, every
    certified relation and every refused control of #146–#157.
@@ -154,9 +164,8 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    and the per-curve tests still pass.
 4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
    multiplier; first for the 34th, then for the sixteen curves of group D.
-5. **Labels of stored models.** Decide how `FilterByCanonicalQuadrics` treats a stored model: credit it only
-   when its provenance says the model is proved, or move the crediting of the #128 models into certificate D
-   so that the label names the argument.
+5. **Labels of stored models.** Done (decision 6): only models on `data/models/proved_models.m` decide a
+   curve. Open: whether the N = 1 Borcherds model of 390_1 goes on the list.
 6. **The full run** on lovelace from this branch, ending with no undecided quotient; tables and figures
    regenerated.
 
@@ -180,6 +189,11 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    cache; the deposit is created from Eran's or Sachi's account.
 5. **The list of 34 is a data file**, `data/open_34.m`, with a test that the curves left undecided before the
    new stage are exactly these; certificates are keyed by the same labels.
+6. **A stored model decides a curve only when the model is proved**: `FilterByCanonicalQuadrics` uses a model
+   at D > 1 only for the curves on `data/models/proved_models.m`, each with the argument that proves its
+   equation.
+7. **The three special-fibre quotients get a stage that also checks Z mod p.** The checks by point counts
+   are inconclusive at p = 3 (see "The data"), so the stage waits for a model of Z mod 3 or another argument.
 
 ## Branch
 
