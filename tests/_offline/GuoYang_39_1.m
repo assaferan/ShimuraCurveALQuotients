@@ -18,4 +18,4 @@ gy := [
 <-312, -17/7>,
 <-403, -75/17>
 ];
-test_gy_table(39, 1, gy);
+test_gy_table(39, 1, gy : Force := [-28, -60]);   // conductor primes the search never offers

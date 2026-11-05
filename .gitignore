@@ -26,6 +26,9 @@ __pycache__/
 # polymake cache, a bad entry cannot poison a run silently: every hit is verified against the
 # stored divisor before use (see GetBorcherdsForms in BorcherdsForms.m).
 BorcherdsForms/
+paper/*.aux
+paper/*.log
+paper/*.out
 
 # DualGraphData disk cache (DualGraph.m); regenerated on lava, never committed
 data/dualgraph/

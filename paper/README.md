@@ -121,3 +121,12 @@ input, and what the theorem rests on (Section 6). Table 1 lists all twenty with 
 `E`, the branch places and the model; the two candidates and the two window-conditional cases are
 marked. Code: `HeegnerHeights.m`, `ExactDoubleCover.m`, `tools/heegner_model.m`; the per-curve run
 record is the PROVENANCE section of the same name.
+
+# The CM value formula, stated once for every coset and index
+
+`schofer-formula.tex` — the formula `SchoferFormula` evaluates (Theorem 2.2 with Theorem 2.3 and
+Corollary 2.4), with a proof that treats composite squarefree level and non-fundamental
+discriminant on the same footing as the prime, fundamental case: the level, the conductor and the
+ramification of the primes of DN enter only through the local lattices, and the statement about
+those is one formula (Theorem 2.3(c)); the case list is Part II, carried over from
+`kappa0-proof-standalone.tex`, which this note is meant to supersede. Draft; not yet agreed.
