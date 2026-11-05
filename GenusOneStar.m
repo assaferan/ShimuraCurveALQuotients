@@ -133,23 +133,7 @@ intrinsic BidegreeTwoRelation(xs::List, ys::List) -> RngMPolElt
 Infinity() marks a pole, when the pairs determine it up to a scalar (nine coefficients, so at
 least eight independent conditions).  F is returned with integer coefficients of content one and
 positive leading coefficient.}
-    require #xs eq #ys : "xs and ys must have the same length";
-    rows := [];
-    for i in [1..#xs] do
-        X := is_infinite(xs[i]) select [Rationals() | 0, 1] else [Rationals() | 1, xs[i]];   // (X0 : X1), x = X1/X0
-        Y := is_infinite(ys[i]) select [Rationals() | 0, 1] else [Rationals() | 1, ys[i]];
-        Append(~rows, [X[1]^(2-a)*X[2]^a*Y[1]^(2-b)*Y[2]^b : a in [0..2], b in [0..2]]);
-    end for;
-    K := Kernel(Transpose(Matrix(Rationals(), rows)));
-    require Dimension(K) eq 1 : Sprintf("the points leave a %o-dimensional space of relations", Dimension(K));
-    kv := Basis(K)[1];
-    P<x, y> := PolynomialRing(Rationals(), 2);
-    mons := [x^a*y^b : a in [0..2], b in [0..2]];
-    F := &+[kv[i]*mons[i] : i in [1..#mons]];
-    F *:= LCM([Denominator(c) : c in Coefficients(F)]);
-    F /:= GCD([Integers() | c : c in Coefficients(F)]);
-    if LeadingCoefficient(F) lt 0 then F := -F; end if;
-    return F;
+    return BidegreeRelation(xs, ys, 2, 2);
 end intrinsic;
 
 intrinsic EllipticCurveFromRelation(F::RngMPolElt, xs::List, ys::List : BasePoint := 0) -> CrvEll, Map
