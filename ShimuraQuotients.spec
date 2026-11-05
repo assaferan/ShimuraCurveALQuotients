@@ -2,6 +2,8 @@
 BorcherdsForms.m
 GenusOneStar.m
 HyperellipticStar.m
+ExactDoubleCover.m
+HeegnerHeights.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
 WeilRepresentation.m
@@ -38,4 +40,5 @@ DualGraph.m
 JacobianTorsion.m
 ComponentGroups.m
 ComponentInvolution.m
+NelsonShimizu.m
 }

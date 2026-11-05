@@ -32,3 +32,4 @@ data/dualgraph/
 
 # the per-machine handoff log of a working session; the dated HANDOFF_*.md files are the archive
 HANDOFF.md
+data/dual/basis_*.txt
