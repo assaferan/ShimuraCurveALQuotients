@@ -1,0 +1,92 @@
+% X_0^77(10)* is hyperelliptic: the counting argument with five CM divisors of degree two, two of
+% them beyond the class-number-four screen and one a quadratic point, whose torsion relations are
+% certified by the dual test for 2 || N of paper/hyperelliptic-21-58.tex.  Tests:
+% tests/Hyperelliptic77_10.m and tests/_offline/Hyperelliptic77_10.m; solver in tools/proof-77-10/.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{77}(10)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $C=X_0^{77}(10)^*$, the quotient of the Shimura curve of an Eichler order of level $10$ in the
+quaternion algebra of discriminant $77$ by its Atkin--Lehner group of order $16$. It has genus three
+and a simple Jacobian, isogenous to $A_f$ for $f=\texttt{385.2.a.e}$, a newform of level $385=77\cdot5$,
+old at $2$ on $X_0^{77}(10)$. For a discriminant $d$ let $Z_d$ be the sum of the CM points of
+discriminant $d$ on $C$.
+
+\begin{theorem}\label{thm:main}
+$C$ is hyperelliptic. The five effective divisors of degree two
+\[
+F_2=Z_{-16}+Z_{-100},\quad F_3=Z_{-280}+Z_{-660},\quad F_7=Z_{-760}+Z_{-1540},\quad
+F_8=Z_{-840}+Z_{-1320},\quad Q=Z_{-4180},
+\]
+each $Z_d$ with $d\neq-4180$ a single rational point and $Z_{-4180}$ a pair of conjugate quadratic
+points, have pairwise torsion differences, and at least two of them are fibres of the hyperelliptic
+map.
+\end{theorem}
+
+\section{Proof}
+
+This is the counting argument of \texttt{paper/torsion-counting-hyperelliptic.tex} with the torsion
+relations certified by the dual test for $2\,\|\,N$ of \texttt{paper/hyperelliptic-21-58.tex},
+Theorem~3.7 there, which we use with $X^*=C$ and $X'^*=X_0^{77}(5)^*$, both at scalar level
+$M=1540$.
+
+\emph{The Jacobian.} The characteristic polynomials of $T_3,T_{13},T_{17}$ on $\Jac(C)$, from the
+point counts over $\F_p,\F_{p^2},\F_{p^3}$ given by the trace formula, are
+\[
+x^3+4x^2+2x-2,\quad x^3+8x^2+18x+10,\quad x^3+14x^2+62x+86,
+\]
+the first irreducible; among the newform orbits of weight two and dimension three at the levels
+$77m$, $m\mid10$, that Jacquet--Langlands allows, exactly one has these Hecke polynomials, at level
+$385$ with Atkin--Lehner signs $+,-,-$ at $5,7,11$, i.e.\ $+,+,+$ on the Shimura curve. So $f$ is
+old at $2$ and Lemma~3.5 of the cited note applies.
+
+\emph{The points.} The eight discriminants $-16,-100,-280,-660,-760,-1540,-840,-1320$ each carry a
+single rational point of $C$, and $-4180$ carries one Galois orbit of two points (the degree of the
+field of definition of the CM points, which form one orbit). The last four discriminants have class
+numbers $8$ and $16$ and lie outside the screen that found the first two fibres numerically; they
+were found by the test itself, which was run over every discriminant of the right $2$-adic type
+(Remark~\ref{rem:scan}). All nine are $\equiv0,8,12\pmod{16}$, so each $Z_d$ can be prescribed on
+its own in the pole-at-infinity dictionary.
+
+\emph{The torsion.} The order of $\Jac(C)(\Q)_{\mathrm{tors}}$ divides $\#\Jac(C)(\F_p)$ for every
+odd good prime; the greatest common divisor over $3\le p\le59$ is $2$
+(\texttt{tests/Hyperelliptic77\_10.m}).
+
+\emph{The relations.} With the $137$ cusp forms of weight $\tfrac32$ on $\Gamma_0(1540)$ computed to
+precision $8000$, the space $W^+$ of plus-space forms vanishing wherever the plus-type Heegner
+series of $X_0^{77}(5)^*$ is the zero divisor has dimension $3$, the rank of $\Jac(C)(\Q)$, and the
+test against $V=(U(4)+2)W^+$ certifies that $F_3-F_2$, $F_7-F_2$, $F_8-F_2$ and $Q-F_2$ are torsion,
+while refusing the differences $Z_{-16}-Z_{-100}$, $Z_{-280}-Z_{-660}$, $Z_{-16}-Z_{-280}$,
+$Z_{-760}-Z_{-1540}$, $Z_{-840}-Z_{-1320}$ (\texttt{tests/\_offline/Hyperelliptic77\_10.m}).
+
+So the classes of the five divisors lie in one coset of a group of order at most $2$; two of them
+coincide, and a curve of genus three with two distinct effective divisors of degree two in one
+class carries a $g^1_2$. \qed
+
+\begin{remark}\label{rem:scan}
+Once $W^+$ is computed, each candidate costs a fraction of a second, so the test doubles as a
+search: run over all $Z_d$ of degree two and all sums $Z_d+Z_{d'}$ of rational points with
+$|d|\le8000$ and $d\equiv0,8,12\pmod{16}$, against $F_2$, it returned exactly $F_3$, $F_7$, $F_8$
+and $Q$. The two fibres with an odd discriminant found by the numerical screen,
+$\{Z_{-15},Z_{-36}\}$ among them, cannot be used, since $Z_{-15}$ comes glued to $Z_{-60}$ in the
+dictionary; they are not needed.
+\end{remark}
+
+\end{document}
