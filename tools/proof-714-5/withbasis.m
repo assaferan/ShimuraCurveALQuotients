@@ -12,7 +12,7 @@
 
 AttachSpec("ShimuraQuotients.spec");
 procedure test_hyperelliptic_714_5_torsion()
-    printf "X_0^714(5)*: P_-340 + P_-840 - Z_-14280 is torsion (level 7140, the a_11 = -4 eigenspace)...";
+    printf "X_0^714(5)*: P_-340 + P_-840 - Z_-14280 is torsion (level 7140, the space W)...";
     D := 714; N := 5; M := 7140; B := 4000;
     function HasCM(d)
         d0 := FundamentalDiscriminant(d); _, f := IsSquare(d div d0);
