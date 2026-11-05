@@ -36,10 +36,15 @@ function squarefree_with_constant(f)
 end function;
 
 intrinsic ConicFactorOfFibreProduct(fs::SeqEnum[RngUPolElt]) -> BoolElt, RngUPolElt, SetEnum
-{For the fibre product over the t-line of the double covers y_i^2 = f_i(t): a nonempty subset S
+{For the fibre product over the t-line of two double covers y_i^2 = f_i(t): a nonempty subset S
  of the factors whose product is, up to squares, a polynomial c of degree at most 2, so that
- y^2 = c(t) is a genus-0 quotient of the curve by one of its (Z/2)^k-automorphisms.  Returns
- false when there is none; otherwise true, c and S.}
+ y^2 = c(t) is the genus-0 quotient of the curve by one of its three involutions.  Returns false
+ when there is none; otherwise true, c and S.  Two factors only: the double covers y^2 = f_S(t)
+ are the quotients by the index-2 subgroups of (Z/2)^k, which are the quotients by involutions
+ only when k = 2.}
+    // With k factors, y^2 = f_S(t) is X/H for H of index 2; the hyperelliptic involution is one of
+    // the w in (Z/2)^k iff X/<w> has genus 0, and X/<w> is one of these quotients only for k = 2.
+    require #fs eq 2 : "two factors only: a product of degree at most 2 identifies a genus-0 quotient by an index-2 subgroup, which is the quotient by an involution only for two factors";
     for S in Subsets({1..#fs}) do
         if IsEmpty(S) then continue; end if;
         c := squarefree_with_constant(&*[fs[i] : i in S]);
