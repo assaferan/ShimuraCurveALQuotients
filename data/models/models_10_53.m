@@ -14,9 +14,11 @@ models[[Integers()|1,10,106,265]] := [* <4, P![ -2752, -11808, 12756, -17856, 80
 // Built 2026-10-03 as fibre products over the star line of committed double covers
 // (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2} (two where a factor reduces badly at one of the first three).
 // Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
+// The covers by w_530 and w_53 are double covers of the genus-0 quotient by {1, 10, 53, 530}, a conic
+// with a rational point, and are stored as y^2 = f(x) (2026-10-14, HyperellipticDetection.m).
 models[[Integers()|1,2]] := [* <10, "CRV", [ Strings() | "-8*s^3*z + 7*s^2*z^2 - 20*s*z^3 - 4*z^4 + y1^2", "4/5*s^9*z - 513/100*s^8*z^2 + 1021/50*s^7*z^3 - 3749/100*s^6*z^4 + 989/25*s^5*z^5 + 2087/25*s^4*z^6 - 6736/25*s^3*z^7 + 14624/25*s^2*z^8 - 13312/25*s*z^9 + 11008/25*z^10 + y2^2" ]> *];
 models[[Integers()|1,106]] := [* <10, "CRV", [ Strings() | "-5/8*s^5*z + 99/64*s^4*z^2 - 71/16*s^3*z^3 + 63/16*s^2*z^4 - 9/2*s*z^5 - z^6 + y1^2", "4/5*s^9*z - 513/100*s^8*z^2 + 1021/50*s^7*z^3 - 3749/100*s^6*z^4 + 989/25*s^5*z^5 + 2087/25*s^4*z^6 - 6736/25*s^3*z^7 + 14624/25*s^2*z^8 - 13312/25*s*z^9 + 11008/25*z^10 + y2^2" ]> *];
-models[[Integers()|1,530]] := [* <3, "CRV", [ Strings() | "-8*s^3*z + 7*s^2*z^2 - 20*s*z^3 - 4*z^4 + y1^2", "-5*s^2 + 8*s*z - 16*z^2 + y2^2" ]> *];
+models[[Integers()|1,530]] := [* <3, P![ 121, -544, 124, 96, -234, -96, 124, 544, 121 ], P![]> *];
 models[[Integers()|1,5]] := [* <10, "CRV", [ Strings() | "160*s^12 - 1166*s^11*z + 21527/4*s^10*z^2 - 27113/2*s^9*z^3 + 96679/4*s^8*z^4 - 6930*s^7*z^5 - 52466*s^6*z^6 + 209840*s^5*z^7 - 335236*s^4*z^8 + 446784*s^3*z^9 - 284800*s^2*z^10 + 166912*s*z^11 + 44032*z^12 + y1^2", "-5/8*s^5*z + 99/64*s^4*z^2 - 71/16*s^3*z^3 + 63/16*s^2*z^4 - 9/2*s*z^5 - z^6 + y2^2" ]> *];
 models[[Integers()|1,265]] := [* <8, "CRV", [ Strings() | "4/25*s^7*z - 77/100*s^6*z^2 + 117/50*s^5*z^3 - 129/100*s^4*z^4 - 41/25*s^3*z^5 + 91/5*s^2*z^6 - 488/25*s*z^7 + 688/25*z^8 + y1^2", "32*s^10 - 182*s^9*z + 2731/4*s^8*z^2 - 2073/2*s^7*z^3 + 3963/4*s^6*z^4 + 3516*s^5*z^5 - 8038*s^4*z^6 + 17856*s^3*z^7 - 12756*s^2*z^8 + 11808*s*z^9 + 2752*z^10 + y2^2" ]> *];
-models[[Integers()|1,53]] := [* <7, "CRV", [ Strings() | "4/25*s^7*z - 77/100*s^6*z^2 + 117/50*s^5*z^3 - 129/100*s^4*z^4 - 41/25*s^3*z^5 + 91/5*s^2*z^6 - 488/25*s*z^7 + 688/25*z^8 + y1^2", "-5*s^2 + 8*s*z - 16*z^2 + y2^2" ]> *];
+models[[Integers()|1,53]] := [* <7, P![ -163, 1202, -5731, 20698, -30018, 34050, -31821, 13274, -40662, -13274, -31821, -34050, -30018, -20698, -5731, -1202, -163 ], P![]> *];
