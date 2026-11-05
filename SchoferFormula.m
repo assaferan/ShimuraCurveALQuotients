@@ -2020,6 +2020,12 @@ intrinsic FieldOfDefinitionOfCMPoint(X::ShimuraQuot, d::RngIntElt) -> Fld
     // X_0^21(2), w0 = 2, the prime above 2); the slow routine does not go through the Artin map,
     // so it answers those cases.
     frakb_w0 := &*[Parent(1*OK) | pa[1]^(pa[2] div 2) : pa in Factorization(w0*OK)];
+    // Both sides of this are needed.  When A_abs is K every Artin symbol is the identity and the
+    // map must not be built at all, since Magma caches it on the number field and would hand back
+    // the map of another discriminant's modulus.  Otherwise it is built, and it can still refuse
+    // the twist ideal -- the map is defined only on ideals coprime to the modulus it chose for the
+    // ring class field (d = -100 on X_0^21(2), w0 = 2, the prime above 2) -- and the slow routine,
+    // which does not go through the Artin map, answers those cases.
     if trivial then
         tw := idA;
     else
