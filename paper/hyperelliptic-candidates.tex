@@ -1,0 +1,315 @@
+% The remaining candidates: a section for the manuscript (paper/manuscript/arXiv_v1.tex), written in its
+% conventions (\Curve{D}{N}, \StarCurve{D}{N}, \ALfull{D}{N}; theorem environments numbered by equation) and meant
+% to be \input after Section \ref{sec:results}.  Every general statement is proved in one of the notes under
+% paper/ (cited by file and printed numbering); every per-curve claim is a test in tests/.  Numbers marked
+% \todo{} must be re-read from the current manuscript before the section is merged into it.
+% Compile alone with paper/hyperelliptic-candidates-standalone.tex.
+
+\section{The remaining candidates}\label{sec:candidates}
+
+The filters of Section~\ref{sec:results} leave a list of quotients $\Curve{D}{N}/W$ of genus at least three
+whose hyperellipticity they neither establish nor exclude. This section describes what decides the question for
+the curves on that list that are hyperelliptic. The answer has a uniform shape. A numerical computation of the
+differentials of $\Curve{D}{N}/W$ says which of the open quotients look hyperelliptic and, for those, which pairs
+of CM points look like fibres of the hyperelliptic map. Each such guess is a statement about divisor classes on a
+quotient curve: that a certain degree-zero combination of CM divisors is principal. The torsion part of that
+statement is settled by Borcherds products or, equivalently, by a linear-algebra condition on cusp forms of
+weight $\tfrac32$; the torsion itself is settled by reduction at the primes of~$D$, where the quotient is a
+Mumford curve whose special fibre, and the reduction of its CM points to it, are known explicitly. No equation of
+the curve is needed at any point, and for most of the curves none is produced.
+
+\subsection{Where the list stands}\label{sec:candidates-list}
+
+\todo{Reconcile with the current manuscript: the filters added after the first version (the dual graph of the
+special fibre at a prime of $D$, its isometric involutions, and the isogeny classes it determines) bring the
+open list from $784$ to $61$; the count below refers to those $61$.}
+
+Among the open quotients, a numerical criterion singles out $34$ as hyperelliptic. Let $Y=\Curve{D}{N}/W$ have
+genus $g\ge3$ with a basis $u_1,\dots,u_g$ of holomorphic differentials, evaluated at sample points of the upper
+half plane through Nelson's explicit form of the Shimizu lift (\texttt{paper/nelson-method.tex}, Section~1): the
+weight-two form on $\Curve{D}{N}$ attached to a newform $f$ of level $DN$ is a sum over a positive-definite
+quaternary lattice of Bessel terms weighted by the coefficients of $f$, so a basis of differentials of any
+quotient is computable without a fundamental domain, the $W$-invariant forms being the $W$-fixed newforms of
+level $DN$ together with the old classes whose Atkin--Lehner signs multiply to one on $W$
+(\texttt{paper/nelson-method.tex}, Proposition~2.1). Noether's theorem then separates the two cases: the
+canonical image of $Y$ lies on $\binom{g-1}{2}$ independent quadrics if $Y$ is hyperelliptic and on
+$\binom{g-2}{2}$ otherwise, one quadric against none in genus three, three against one in genus four, and the
+number is read off the singular values of the matrix of quadratic monomials at the sample points. The verdict is
+numerical; it is accepted only when it is stable under the cutoff of the lattice sum and the working precision,
+and it is used only to direct the exact arguments below. The same computation names, for each hyperelliptic
+candidate, the pairs of CM points whose canonical images coincide, which are the fibres of the hyperelliptic map
+through CM points, and these are the divisors the exact arguments prescribe. (At a CM point fixed by some
+$w_m\in W$ every pulled-back differential vanishes, so the coordinate is $0/0$ there and its value is taken from
+the derivatives; \texttt{paper/nelson-method.tex}, Section~7.)
+
+Of the $34$, one is not hyperelliptic: $\Curve{141}{2}/\{1,6,94,141\}$ is a double cover of an elliptic curve
+whose possible covers are enumerated exactly in Section~\ref{sec:candidates-heights} and none is hyperelliptic.
+The other $33$ fall into three shapes according to the involutions that survive on the quotient.
+
+\begin{enumerate}
+\item \emph{Genus three over genus one.} $W$ has index two in a group $W'$ for which $E=\Curve{D}{N}/W'$ has
+genus one; $Y\to E$ is a double cover branched at four points. Twenty cases.
+\item \emph{Genus four over genus two.} $W$ has index two in $\ALfull{D}{N}$ and the star
+$C=\StarCurve{D}{N}$ has genus two; $Y\to C$ is a double cover branched at two points. Six cases.
+\item \emph{Genus three with the full group.} $Y=\StarCurve{D}{N}$ itself, of genus three, with no residual
+involution. Seven cases.
+\end{enumerate}
+
+\subsection{Three criteria}\label{sec:candidates-criteria}
+
+In each shape the branch locus of the double cover is known exactly. For $W\subset W'$ of index two, a point of
+$\Curve{D}{N}/W'$ is a branch point of $\Curve{D}{N}/W\to\Curve{D}{N}/W'$ exactly when its $W'$-orbit on
+$\Curve{D}{N}$ is a single $W$-orbit, that is, when the orbit consists of fixed points of some $w_m$ with
+$m\in W'\setminus W$; by Ogg these are the CM points of discriminant $-4m$ and, for $m\equiv3\pmod4$, $-m$ (and
+$-4,-8$ for $m=2$), counted by the formula of Section~\ref{sec:fixedpointsAL}, with the degree of the branch
+divisor fixed by Riemann--Hurwitz (\texttt{paper/heegner-height-models.tex}, Section~2). The fields of definition
+of the branch points follow from Shimura reciprocity.
+
+\begin{proposition}[genus three over genus one]\label{prop:bielliptic}
+Let $Y$ be a curve of genus three with an involution whose quotient $E$ has genus one, branched at
+$B_1,\dots,B_4$. Then $Y$ is hyperelliptic if and only if the branch points split into two pairs with
+$B_1+B_2\sim B_3+B_4$ on $E$.
+\end{proposition}
+
+The hyperelliptic involution is central, so it commutes with the covering involution and descends to $E$, whose
+quotient is then a line; the degree-two map so obtained on $E$ has the fixed points of the covering involution in
+two of its fibres. Conversely a function $x$ on $E$ with divisor $B_1+B_2-B_3-B_4$ pulls back to a square on $Y$
+(\texttt{paper/hyperelliptic-15-38.tex}, Section~1). Over $\Q$ the double covers of $E$ branched exactly at a
+given rational divisor form a torsor under $E(\Q)[2]$, up to constant twists, and only one of them is the
+hyperelliptic one; which cover $Y$ is must be decided separately (Section~\ref{sec:candidates-torsion}).
+
+\begin{proposition}[genus four over genus two]\label{prop:normalform}
+Let $\pi\colon Y\to C$ be a double cover over $\Q$ of a curve of genus two by a curve of genus four, branched at
+$P+Q$ with $P,Q\in C(\Q)$. Then $Y$ is hyperelliptic if and only if $P+Q$ is a fibre of the hyperelliptic map
+of $C$; in that case $C$ has a rational Weierstrass point, $C\colon y^2=h(u)$ with $h$ a quintic, $h(0)\neq0$,
+the fibre at $u=0$, and $Y$ is $y^2=h(t^2/c)$ for some $c\in\Q^\times$.
+\end{proposition}
+
+This is Lemma~8 of \texttt{paper/star-2002-proof.tex}. Since two distinct effective divisors of degree two on a
+curve of genus two that are linearly equivalent are both canonical, the condition is that the branch pair be
+linearly equivalent to any one other fibre.
+
+\begin{proposition}[genus three with the full group]\label{prop:g12}
+Let $Y$ be a curve of genus three. If $D_1\neq D_2$ are effective divisors of degree two with $D_1\sim D_2$, then
+$|D_1|$ is a $g^1_2$ and $Y$ is hyperelliptic.
+\end{proposition}
+
+In all three shapes, then, hyperellipticity is the statement that a specific degree-zero divisor supported on CM
+points, a difference of two candidate fibres, is principal. The rest of the section is about proving such a
+statement.
+
+\subsection{Relations between CM divisors}\label{sec:candidates-relations}
+
+Let $X^*=\Curve{D}{N}/W$ be the quotient on which the relation is to be proved, $M=4\cdot\mathrm{oddpart}(DN)$,
+and for $n\ge1$ let
+\[
+Z(n)=\sum_{r\ge1,\ d=-4n/r^2}\frac1{e_d}\,P_d
+\]
+be the Heegner divisor of index $n$ on $X^*$: $P_d$ is the sum of the CM points of discriminant $d$ on $X^*$ and
+$e_d$ the order of their stabiliser (Guo--Yang, Lemma~25). A weakly holomorphic form of weight $\tfrac12$ on
+$\Gamma_0(M)$ with the theta multiplier and principal part $\sum_n c(-n)q^{-n}$ at $\infty$ has a Borcherds lift
+to $X^*$ with divisor $\sum_n c(-n)Z(n)$, and of weight zero exactly when this divisor has degree zero. Two
+consequences are used.
+
+\begin{lemma}\label{lem:borcherds-torsion}
+If the principal part is integral, the class of the divisor of the lift is torsion in $\Jac(X^*)(\Q)$; with a
+rational principal part the same holds for the divisor it prescribes.
+\end{lemma}
+
+This is Borcherds's theorem that the lift has a character of finite order
+(\texttt{paper/torsion-counting-hyperelliptic.tex}, Lemma~1 and Corollary~2). When the degree-zero CM divisors
+generate a torsion-free subgroup of the Jacobian, the character is trivial and the lift is a function
+(\texttt{paper/character-and-reduction-types.tex}, Proposition~3.1 and Corollary~3.2); in general its order
+divides the exponent of the rational torsion, which is why the torsion must be handled on its own.
+
+\begin{lemma}\label{lem:dual-certificate}
+A weakly holomorphic form of weight $\tfrac12$ on $\Gamma_0(M)$ with the theta multiplier, holomorphic away
+from $\infty$ and with a prescribed principal part $\sum_n c(-n)q^{-n}$, exists if and only if
+$\sum_n c(-n)a_g(n)=0$ for every cusp form $g$ of weight $\tfrac32$ on $\Gamma_0(M)$ with the conjugate
+multiplier.
+\end{lemma}
+
+The product of the two forms is a differential on $X_0(M)$ with its only pole at $\infty$, so the condition is
+the vanishing of a residue, and Serre duality makes it sufficient (\texttt{paper/hyperelliptic-6-379.tex},
+Proposition~3.1). The lemma turns the existence of a Borcherds form with a given divisor into linear algebra:
+the space $S_{3/2}(\Gamma_0(M))$ is computed once, to a precision at least the largest index the divisor
+involves, and each prescribed divisor is a linear system in the $c(-n)$. Where a search for the form itself by
+eta quotients (Section~\ref{sec:limits}) does not finish, the certificate decides in seconds.
+
+The same duality gives a test for the torsion statement that needs no form at all.
+
+\begin{proposition}[the dual test]\label{prop:dual-test}
+Let $\lambda$ be the Hodge class in $\Pic(X^*)_\Q$, and for a linear form $\varphi$ on $\Pic(X^*)_\Q$ with
+$\varphi(\lambda)=0$ put $\Phi_\varphi=\sum_{n\ge1}\varphi(Z(n))q^n$. Then $\Phi_\varphi$ is a cusp form of
+weight $\tfrac32$ on $\Gamma_0(M)$ with the multiplier of $\theta^3$, vanishing at every index $n$ with
+$Z(n)=0$. Consequently, if $\Delta=\sum_n c(-n)Z(n)$ is a degree-zero CM divisor and
+$\sum_n c(-n)a_g(n)=0$ for every $g$ in the space $\mathcal W$ of such forms, then $\Delta$ is torsion in
+$\Jac(X^*)(\Q)$.
+\end{proposition}
+
+(\texttt{paper/hyperelliptic-15-38.tex}, Proposition~2.1; \texttt{paper/hyperelliptic-21-58.tex},
+Proposition~2.1.) The space $\mathcal W$ is cut out of $S_{3/2}(\Gamma_0(M))$ by the vanishing conditions, and
+it is sharp when $2\mid D$: its dimension is the rank of $\Jac(X^*)(\Q)$ in every case computed, and the Hecke
+operators $T(p^2)$ act on it through the traces of Frobenius of $X^*$. Since the forms $\Phi_\varphi$ lie in
+$\mathcal W$ whatever its dimension, orthogonality to all of $\mathcal W$ proves torsion unconditionally; the
+converse, that a divisor not orthogonal to $\mathcal W$ is not torsion, needs $\mathcal W$ to be spanned by the
+$\Phi_\varphi$, and is used only for controls. The precision of the computation must reach the index $|d|/4$ of
+every discriminant in the divisor; the cost is in the level, not the precision.
+
+When $2\parallel N$ the dictionary is coarser: an odd discriminant $d$ and $4d$ are reached from the same
+indices and both carry CM points, so $P_d$ and $P_{4d}$ cannot be prescribed separately, and almost every index
+carries CM points, so $\mathcal W$ is twice too large. Both are repaired by passing to the curve of level $N/2$:
+with $T$ the correspondence from $X^*$ to the star of level $N/2$, $T\circ Z=(U(4)+2)H$ for the Heegner series
+$H$ of the lower level, $T$ is injective on $\Jac(X^*)_\Q$ when the Jacobian is old at $2$, and the test is run
+against $(U(4)+2)$ applied to the Kohnen plus-space forms vanishing where $H$ vanishes
+(\texttt{paper/hyperelliptic-21-58.tex}, Lemmas~3.1--3.3, Proposition~3.4 and Theorem~3.5); an odd-discriminant
+fibre is prescribed directly on the lower curve (\texttt{paper/hyperelliptic-39-34.tex}, Proposition~2.1).
+
+Finally, torsion relations are turned into principal ones by counting.
+
+\begin{theorem}[counting]\label{thm:counting}
+Let $t$ be a multiple of $\#\Jac(X^*)(\Q)_{\mathrm{tors}}$, and let $D_1,\dots,D_r$ be pairwise distinct
+effective divisors of degree two on $X^*$, defined over $\Q$, such that $D_i-D_j$ is torsion for all $i\neq j$.
+If $r>t$, then two of the $D_i$ are linearly equivalent and $X^*$ is hyperelliptic.
+\end{theorem}
+
+(\texttt{paper/torsion-counting-hyperelliptic.tex}, Theorem~3.) The bound $t$ comes from the trace formula: the
+rational torsion injects into $\Jac(X^*)(\F_p)$ for every odd prime $p$ of good reduction, so its order divides
+the greatest common divisor of the orders $\#\Jac(X^*)(\F_p)$, which are the values at $1$ of the zeta numerators
+computed from point counts (Section~\ref{sec:trace}); no model is needed. When $t=1$ a single torsion relation
+between two fibres suffices, and the test of Proposition~\ref{prop:dual-test} proves hyperellipticity by itself.
+The divisors $D_i$ beyond those named by the numerical screen are found by the same test run as a search over
+all CM divisors of degree at most two.
+
+\subsection{The torsion part}\label{sec:candidates-torsion}
+
+When the torsion bound is not $1$ and not enough fibres are available, or when the relation is a pairing on an
+elliptic curve with rational torsion, the torsion part of the relation has to be decided, and this is done by
+reduction at a prime $p\mid D$. There $\Curve{D}{N}$ has the \v{C}erednik--Drinfeld model, and $Y=\Curve{D}{N}/W$
+inherits a semistable model whose special fibre is a union of rational curves meeting at ordinary double points.
+Its dual graph is the quotient by $W$ of the graph of Section~\ref{sec:specialfiber}: vertices the two copies of
+the left ideal classes of an Eichler order of level $N$ in the definite algebra of discriminant $D/p$, edges the
+classes of the level-$Np$ suborder, with the thickness of a double point the order of the unit group of its
+order modulo $\pm1$; under the quotient a double point whose two branches are swapped by an involution of $W$
+divisible by $p$ becomes a smooth point, and a surviving double point has its thickness multiplied by the order
+of its stabiliser.
+
+\begin{proposition}\label{prop:component-group}
+The component group $\Phi_p$ of the N\'eron model of $\Jac(Y)$ at $p$ is the critical group of the graph obtained
+from the quotient graph by replacing each edge of thickness $t$ by a chain of $t$ edges: the torsion of the
+cokernel of its Laplacian.
+\end{proposition}
+
+\begin{proposition}\label{prop:cm-reduction}
+A CM point of discriminant $d$ on $Y$, $p$ unsplit in $\Q(\sqrt d)$, reduces to a double point if $p$ ramifies in
+$\Q(\sqrt d)$ and to a smooth point of a component if $p$ is inert; the double point, or the component, is one
+whose Eichler order admits an optimal embedding of the order of discriminant $d$, and the number of CM points of
+$\Curve{D}{N}$ reducing to it is the number of such embeddings up to conjugation by the units of that order.
+\end{proposition}
+
+The first is Raynaud's theorem applied to the minimal regular model (\texttt{paper/component-groups.tex},
+Proposition~1.1); the second is Molina's description of the specialisation of Heegner points, Theorems~5.3,
+5.4 and 5.8 of \emph{Ribet bimodules and the specialization of Heegner points}, which rests on Ribet's
+\emph{Bimodules and abelian surfaces} and carries no restriction on $p$. Together they make the class in
+$\Phi_p$ of any degree-zero combination of CM divisors of $Y$ computable by counting optimal embeddings into
+definite orders. A nonzero class shows the divisor is not principal. For the converse one needs to know that
+the torsion in question is seen by $\Phi_p$.
+
+\begin{proposition}\label{prop:torsion-injects}
+Suppose the Hall divisor $p$ itself lies in $W$. Then the identity component of the special fibre of the N\'eron
+model of $\Jac(Y)$ at $p$ is a split torus, and for every prime $\ell$ not dividing $p-1$, with $\ell=p$
+allowed when $p\ge3$, the $\ell$-primary part of $\Jac(Y)(\Q)_{\mathrm{tors}}$ injects into $\Phi_p$. In
+particular all odd torsion injects into $\Phi_2$, and the $p$-part into $\Phi_p$ for every odd $p\mid D$.
+\end{proposition}
+
+Frobenius acts on the \v{C}erednik--Drinfeld graph as $w_p$, hence trivially on the quotient graph when
+$w_p\in W$, which splits the torus; its $\F_p$-points have order $(p-1)^g$, and the formal group of a split torus
+over $\Z_p$ is torsion-free for $p\ge3$ (\texttt{paper/component-groups.tex}, Lemma~3.1 and Proposition~3.2).
+Consequently a torsion CM divisor whose class in $\Phi_p$ vanishes has trivial $\ell$-part for those $\ell$,
+which lowers the bound $t$ of Theorem~\ref{thm:counting} for that divisor (Corollary~3.3 there). For an
+elliptic quotient $E$ the statement is simpler: a rational torsion point reducing to the singular point lies
+outside $E^0$, so when every nonzero torsion point does, the torsion injects into $\Phi_p$
+(\texttt{paper/hyperelliptic-15-38.tex}, Lemma~3.1), and the pairing of Proposition~\ref{prop:bielliptic} is
+exact as soon as it is torsion and its class in $\Phi_p$ is zero.
+
+Two further points complete the argument in the first shape. The cover $Y\to E$ must be identified among the
+double covers branched at the same four points, which are the twists of the hyperelliptic one by $E(\Q)[2]$:
+either the dual graph of $Y$ itself decides (the twist by a $2$-torsion class changes the parity of the slope of
+the function along the chains of the regular model, and the twisted cover is not semistable where that slope is
+odd along a double point of odd thickness; \texttt{paper/hyperelliptic-15-38.tex}, Section~4), or the Prym of
+$Y\to E$ does, since the twist has a Prym isogenous over $\Q$ to a product of two elliptic curves while the
+$L$-polynomial of the Prym of $Y$ at one good prime may be irreducible of degree four
+(\texttt{paper/hyperelliptic-6-385.tex}). And when the branch points are conjugate the pairing lives over a
+quadratic field $K$, in the minus part of $E(K)$: the torsion statement is then the Gross--Zagier formula of
+Yuan--Zhang--Zhang for the relevant genus character, and the class in $\Phi_p$ can be computed over
+$K_{\mathfrak p}$ without matching individual points to components, because a distribution of the points that
+would give the conjugate pair a nonzero class is incompatible with the order of the torsion
+(\texttt{paper/hyperelliptic-6-323.tex}).
+
+\subsection{Results}\label{sec:candidates-results}
+
+\begin{theorem}\label{thm:thirtythree}
+Of the $34$ open quotients $\Curve{D}{N}/W$ on which the differentials satisfy Noether's count for a
+hyperelliptic curve, the $33$ listed in Table~\ref{tab:candidates} are hyperelliptic, and
+$\Curve{141}{2}/\{1,6,94,141\}$ is not.
+\end{theorem}
+
+\todo{At the time of writing, $27$ of the $33$ are proved and $6$ await the dual test of
+Proposition~\ref{prop:dual-test} at levels $4620$, $7140$, $6780$, $7788$ and $8260$, where the spaces
+$S_{3/2}$ (dimension $561$ to $849$) are being computed; every other step of their proofs is complete and
+tested. Update the table and this theorem when they finish.}
+
+\begin{table}[ht]
+\centering\small
+\renewcommand{\arraystretch}{1.12}
+\setlength{\tabcolsep}{4pt}
+\begin{tabularx}{\textwidth}{>{\hsize=.62\hsize\raggedright\arraybackslash}Xc>{\hsize=1.38\hsize\raggedright\arraybackslash}X}
+\hline
+Curve & Shape & How the relation is proved (note under \texttt{paper/}) \\
+\hline
+\multicolumn{3}{l}{\emph{Genus three over genus one (Proposition~\ref{prop:bielliptic})}}\\
+$1326_1$, $210_{13}$, $39_{11}$, $55_7$, $6_{301}$, $6_{455}$, $6_{247}$, $6_{253}$, $6_{185}$, $6_{187}$, $22_{51}$, $141_2$, $21_{34}$, $57_{10}$, $15_{46}$, $690_7$
+ & 3/1 & exact model: the branch points from their Heegner heights, every cover tested against the trace formula (\texttt{heegner-height-models})\\
+$15_{38}$ & 3/1 & dual test; torsion by $\Phi_3,\Phi_5$; twist by the dual graph (\texttt{hyperelliptic-15-38})\\
+$6_{385}$ & 3/1 & dual test$^*$; torsion by $\Phi_2$; twist by the Prym (\texttt{hyperelliptic-6-385})\\
+$714_5$ & 3/1 & dual test$^*$; torsion by $\Phi_3\times\Phi_7\times\Phi_{17}$; twist by the Prym (\texttt{hyperelliptic-714-5})\\
+$6_{323}$ & 3/1 & Gross--Zagier (genus character); torsion by $\Phi_2$ over $\Q(\sqrt{-2})$; twist by the Prym (\texttt{hyperelliptic-6-323})\\
+\multicolumn{3}{l}{\emph{Genus four over genus two (Proposition~\ref{prop:normalform})}}\\
+$2002_1$ & 4/2 & dual certificate; star torsion-free (\texttt{star-2002-proof})\\
+$2030_1$, $2418_1$, $6_{403}$ & 4/2 & three Borcherds forms; star torsion-free (\todo{certificates note})\\
+$6_{341}$ & 4/2 & Borcherds forms; the two polarisations in the star's class told apart by the branch divisor (\todo{6\_341 note})\\
+$3390_1$ & 4/2 & dual test$^*$; star torsion-free (\texttt{hyperelliptic-3390-1})\\
+\multicolumn{3}{l}{\emph{Genus three with the full group (Proposition~\ref{prop:g12})}}\\
+$46_{31}$ & 3 & four divisors by Borcherds forms against $t=2$ (\texttt{torsion-counting-hyperelliptic})\\
+$6_{379}$ & 3 & dual certificate; torsion-free (\texttt{hyperelliptic-6-379})\\
+$21_{58}$ & 3 & dual test at $2\parallel N$; four divisors against $t=2$ (\texttt{hyperelliptic-21-58})\\
+$77_{10}$ & 3 & dual test at $2\parallel N$ as a search; five divisors against $t=2$ (\texttt{hyperelliptic-77-10})\\
+$39_{34}$ & 3 & dual test at $2\parallel N$, odd fibre via level $N/2$; five divisors against $t=4$ (\texttt{hyperelliptic-39-34})\\
+$6_{649}$ & 3 & dual test$^*$; three divisors, $t=6$ lowered to $2$ by $\Phi_3$ (\texttt{hyperelliptic-6-649})\\
+$4130_1$ & 3 & dual test$^*$; torsion-free (\texttt{hyperelliptic-4130-1})\\
+\hline
+\end{tabularx}
+\caption{The $33$ hyperelliptic candidates and the proofs. $D_N$ denotes $\Curve{D}{N}/W$ with $W$ as in the
+note named; $^*$ marks a dual test whose weight-$\tfrac32$ basis was still being computed at the time of
+writing. Equations exist for the first group (Section~\ref{sec:candidates-heights}) and for $2002_1$,
+$2030_1$, $2418_1$, $6_{341}$, $6_{403}$ (Proposition~\ref{prop:normalform}); the others are proved
+hyperelliptic without one.}
+\label{tab:candidates}
+\end{table}
+
+\subsection{Equations}\label{sec:candidates-heights}
+
+For a double cover $Y\to E$ of an elliptic curve branched at CM points, the branch points can be located
+exactly: the explicit Gross--Zagier formula of Cai, Shu and Tian gives the N\'eron--Tate height of the trace of a
+CM point of fundamental discriminant $d$ to $E$, and of its twists by the genus characters, in terms of
+$L'(1,E,\chi)$; the points of $E$ of those heights are finitely many, every double cover of $E$ branched along
+each candidate divisor is written down, and the trace formula selects the one with the point counts of $Y$
+(\texttt{paper/heegner-height-models.tex}, Section~3 and Proposition~2). This produced the twenty equations of
+the first group of Table~\ref{tab:candidates}, three of them as double covers of a conic without rational
+points, and it is also what shows that $\Curve{141}{2}/\{1,6,94,141\}$ is not hyperelliptic: its unique
+compatible cover is a plane quartic. For $2002_1$ the branch fibre of Proposition~\ref{prop:normalform} is
+found exactly by a Thue--Mahler equation, since the two branch points stay distinct modulo every prime of good
+reduction (\texttt{paper/star-2002-proof.tex}, Proposition~9), and the constant $c$ by the point counts; the
+other genus-four models are exact given their stars, whose equations are candidates certified by point counts.
+No equation is known for the seven curves of the third group, nor for $15_{38}$, $6_{385}$, $714_5$, $6_{323}$
+beyond the models of the heights route, which the proofs above do not use.
