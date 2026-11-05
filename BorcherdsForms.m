@@ -1777,3 +1777,50 @@ intrinsic DivisorOfBorcherdsForm(f::EtaQuot, Xstar::ShimuraQuot) -> SeqEnum
     return ret;
 end intrinsic;
 
+
+// A FORM AS A COMBINATION OF ETA QUOTIENTS, BANKED FOR A PROOF.
+//
+// A principal part on its own does not say that a Borcherds form with it exists: that is what the
+// search establishes, by exhibiting an integral combination of eta quotients whose expansion has
+// it.  The combination is therefore the certificate, and it is small -- a coefficient per exponent
+// vector -- where the search that found it can take days.  Writing it down lets a later reader
+// rebuild the form and check the claim with no polytope solve, which is what the tests do.
+//
+// This is the same serialisation as the opt-in BFCACHE above and deliberately NOT the same code:
+// the cache may ignore an entry that fails verification and recompute, while a banked certificate
+// that fails must be refused, because the claim resting on it is then unsupported.
+
+intrinsic WriteBorcherdsForms(fs::Assoc, Xstar::ShimuraQuot, fname::MonStgElt)
+{Write the Borcherds forms fs as their coefficient maps over the eta quotients of their ring, each
+with its divisor beside it.  A form is the sum over the exponent vectors k of coeffs[k] times the
+eta quotient of k, so what is written presents it as an integral combination of eta quotients.}
+    require not IsEmpty(Keys(fs)) : "WriteBorcherdsForms: no forms to write";
+    entries := [];
+    for i in Sort([k : k in Keys(fs)]) do
+        coeffs_list := [[* k, fs[i]`coeffs[k] *] : k in Keys(fs[i]`coeffs)];
+        Append(~entries, [* i, coeffs_list, DivisorOfBorcherdsForm(fs[i], Xstar) *]);
+    end for;
+    k0 := Rep(Keys(fs));
+    Write(fname, Sprint(<Parent(fs[k0])`M, Parent(fs[k0])`disc, entries>, "Magma") : Overwrite);
+end intrinsic;
+
+intrinsic BorcherdsFormsFromFile(fname::MonStgElt, Xstar::ShimuraQuot) -> Assoc
+{The forms of WriteBorcherdsForms, rebuilt from their eta-quotient coefficient maps.  The divisor
+stored beside each one is recomputed from the rebuilt form and compared, so a file that has been
+corrupted, truncated or written for another curve is refused rather than used.}
+    require FileExists(fname) : "BorcherdsFormsFromFile: no such file " cat fname;
+    data := eval Read(fname);
+    R := EtaQuotientsRing(data[1], data[2]);
+    fs := AssociativeArray();
+    for entry in data[3] do
+        coeffs := AssociativeArray();
+        for pair in entry[2] do coeffs[pair[1]] := pair[2]; end for;
+        f := EtaQuotient(R, coeffs);
+        require Set(DivisorOfBorcherdsForm(f, Xstar)) eq Set(entry[3]) :
+            Sprintf("BorcherdsFormsFromFile: the form keyed %o in %o rebuilds with divisor %o, not "
+                    cat "the %o stored with it", entry[1], fname,
+                    Set(DivisorOfBorcherdsForm(f, Xstar)), Set(entry[3]));
+        fs[entry[1]] := f;
+    end for;
+    return fs;
+end intrinsic;
