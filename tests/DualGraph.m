@@ -88,7 +88,7 @@ procedure test_DualGraphDiskCache()
     System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
     ClearDualGraphCache();
     d1 := DualGraphData(6, 35, 2 : CacheDir := dir);
-    path := dir cat "/dualgraph_v2_6_35_2";
+    path := dir cat "/dualgraph_v3_6_35_2";
     assert OpenTest(path, "r");
     assert Pipe(Sprintf("ls '%o' | grep -c tmp || true", dir), "") eq "0\n";     // no temp file left
     ClearDualGraphCache();
