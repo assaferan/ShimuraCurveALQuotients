@@ -1,0 +1,20 @@
+=== X_0^6(341)/[ 1, 2, 3, 6, 11, 22, 31, 33, 62, 66, 93, 186, 341, 682, 1023, 2046 ], cutoff 60, 60 digits
+
+rational CM points used, with their coordinates:
+   d = -43     ordinary   x = -0.0748480357829 + 0.124834030108*C12.1
+   d = -52     ordinary   x = -2.54262989616 + 4.24068225294*C12.1
+   d = -84     ordinary   x = -0.436246321991 + 0.727586047175*C12.1
+   d = -120    ordinary   x = 0.436246321991 - 0.727586047175*C12.1
+   d = -123    ordinary   x = -0.0748480357829 + 0.124834030108*C12.1
+   d = -228    ordinary   x = -0.436246321991 + 0.727586047175*C12.1
+   d = -24     fixed pt   x = 0.156719535904 - 0.261382026382*C12.1
+   d = -88     fixed pt   x = 0.156719535904 - 0.261382026382*C12.1
+spread of Im(x)/Re(x) over them: 1.9694597E-20   (a rational point must lie on that one line)
+worst prediction at the points held back from the fit: 2.9685955E-18
+tolerance 2.9685955E-16, denominator bound 580396; margins over a chance fit: [ 18331106., 7498659.9, 0.00000000, 1394941.4, 1900087.9, 2122343.2, 9013336.8 ]
+
+sextic in the coordinate fixed by the CM points: -192*x^5 + 292*x^4 - 340*x^3 + 349*x^2 - 114*x + 9
+absolute invariants: [ 26024049340425599/15693342462369792, 18451505033549/3602695698432, -110729251143745/12109060541952 ]
+twisting constant 1; counts against the newform: 58 good primes, 0 mismatches
+
+THE MODEL: Hyperelliptic Curve defined by y^2 + (x^2 + x)*y = 6*x^5 - 12*x^4 + 29*x^3 + 9*x^2 - 33*x + 9 over Rational Field
