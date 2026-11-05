@@ -41,4 +41,5 @@ JacobianTorsion.m
 ComponentGroups.m
 ComponentInvolution.m
 NelsonShimizu.m
+NelsonFilter.m
 }
