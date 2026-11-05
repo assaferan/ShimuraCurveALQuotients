@@ -5,6 +5,11 @@
 //   magma -b D:=1326 N:=1 W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
 //   magma -b D:=210 N:=13 W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
 //
+// When the form is old at a prime p of N the elliptic quotient has conductor D*N/p and is not found
+// by the Atkin-Lehner signs, so it is named instead, together with that prime:
+//
+//   magma -b D:=141 N:=2 W:=1,3,94,282 U:=2 curve:=141a1 old:=2 tools/heegner_model.m < /dev/null
+//
 // Every curve of the isogeny class of E is tried; on all but the quotient itself the predicted heights are
 // not heights of lattice points and the search returns nothing. The run prints the surviving
 // configurations, the twist, and the model; the intrinsic omits configurations that are rational
@@ -15,15 +20,23 @@ SetColumns(0);
 SetVerbose("HeegnerHeights", 1);
 D := StringToInteger(D); N := StringToInteger(N); U := StringToInteger(U);
 W := {Integers() | StringToInteger(s) : s in Split(W, ",")};
+oldp := assigned old select StringToInteger(old) else 0;
 X := CreateShimuraQuot(D, N, W); X`g := GenusShimuraCurveQuotient(D, N, W);
-quots := EllipticQuotientsBySigns(D, N, W);
-sel := [q : q in quots | U in q[1]];
-error if #sel eq 0, "no elliptic quotient through w_U with a newform of level DN";
-Wp, Erep := Explode(sel[1]);
 DB := CremonaDatabase();
-cls := [EllipticCurve(DB, D*N, i, j) : j in [1..NumberOfCurves(DB, D*N, i)]]
-       where i := [i : i in [1..NumberOfIsogenyClasses(DB, D*N)] | IsIsogenous(EllipticCurve(DB, D*N, i, 1), Erep)][1];
-printf "X_0^%o(%o)/%o, elliptic quotient by w_%o, isogeny class %o\n", D, N, W, U, [CremonaReference(E) : E in cls];
+if assigned curve then
+    Erep := EllipticCurve(curve);
+    Wp := {Integers() | (v*U) div GCD(v, U)^2 : v in W} join W;
+else
+    quots := EllipticQuotientsBySigns(D, N, W);
+    sel := [q : q in quots | U in q[1]];
+    error if #sel eq 0, "no elliptic quotient through w_U with a newform of level DN; name one with curve:=";
+    Wp, Erep := Explode(sel[1]);
+end if;
+M := Conductor(Erep);
+cls := [EllipticCurve(DB, M, i, j) : j in [1..NumberOfCurves(DB, M, i)]]
+       where i := [i : i in [1..NumberOfIsogenyClasses(DB, M)] | IsIsogenous(EllipticCurve(DB, M, i, 1), Erep)][1];
+printf "X_0^%o(%o)/%o, elliptic quotient by w_%o%o, isogeny class %o\n", D, N, W, U,
+    oldp eq 0 select "" else Sprintf(" (form old at %o, conductor %o)", oldp, M), [CremonaReference(E) : E in cls];
 models := [];
 // For a cover whose canonical conic has no rational point there is no model y^2 = f(x), and the model
 // over the conic is printed instead: a X1^2 + b X2^2 + c X3^2 = 0 with y^2 = A(X1, X2). Over the line
@@ -52,7 +65,7 @@ end function;
 conicmodels := [];
 for E in cls do
     printf "\n== E = %o ==\n", CremonaReference(E);
-    surv := ModelByHeegnerHeights(X, Wp, E);
+    surv := ModelByHeegnerHeights(X, Wp, E : OldformPrime := oldp);
     for s in surv do
         printf "rational parts %o, cover %o twisted by %o, noether %o\n", s[1], s[3], s[4], s[5];
         if s[5] ne 5 then printf "   not hyperelliptic\n"; continue; end if;

@@ -19,8 +19,8 @@
 //       magma -b D:=210 N:=13 W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
 //     (a few minutes each). Checked here: bad primes are the primes of DN; at every good prime up to
 //     60 the L-polynomial equals the product of those of the three elliptic quotients predicted by the
-//     Atkin-Lehner signs, Cremona's 1326b2, 1326c1, 1326d1 (LMFDB 1326.b, 1326.c, 1326.d) and
-//     2730u1, 2730s1, 210a2 (LMFDB 2730.u, 2730.s, 210.a), which in genus 3 determines the zeta
+//     Atkin-Lehner signs, 1326b2, 1326c1, 1326d1 and 2730u1, 2730s1, 210a2 in Cremona's labels,
+//     which are the labels used throughout this file, and which in genus 3 determines the zeta
 //     function; the point counts agree with the trace formula; the automorphism group has order 8
 //     (the Klein four group of Atkin-Lehner involutions and the hyperelliptic involution); and the
 //     predicted height of P - Pbar is an integer multiple of the generator of E(F)^- (k = 1 for both
