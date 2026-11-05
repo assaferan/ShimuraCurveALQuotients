@@ -19,7 +19,7 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  check only: VerifyHHTable2 (input),
 #                                                        VerifyHHProposition1 (on a copy); writes input unchanged
-#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1, N squarefree)
+#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByGeneralizedComplicatedFixedPointsStar [PARALLEL]  (generalized Prop 6 on the star curves)
