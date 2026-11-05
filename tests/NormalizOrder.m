@@ -3,7 +3,7 @@
 // The solver script hands Normaliz its coordinates in one of two orders (the divisors of M, or the
 // divisors farthest from sqrt(M) first) and writes the solution back in divisor order.  Both orders
 // must give the same set of lattice points, and the same set as the committed cache file.  The
-// polytope is (60, 11, 0), 163 points, a few seconds of Normaliz; NORMALIZ_BIN must point to a
+// polytope is (60, 11, 0), 162 points, a few seconds of Normaliz; NORMALIZ_BIN must point to a
 // Normaliz binary (CI has /usr/bin/normaliz).
 //
 // The reference is the committed cache file polymake/polymake_solution_60_11_0, a Normaliz
