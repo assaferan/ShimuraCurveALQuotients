@@ -119,7 +119,7 @@ box path.  Returns true with the lambdas iff all d found.}
         end while;
     end if;
 
-    // ---- FALLBACK: maximal-order embedding + small level-N conjugation into Order ----
+    // ---- FALLBACK: maximal-order embedding + small level-N conjugation, then the Eichler order ----
     // Magma's Embed(Oc, Order) THROWS ("IsRightIsomorphic: same right order") for a level-N
     // EICHLER order, so it is useless here.  But Embed(Oc, Omax) into the MAXIMAL order is
     // robust (it solves a conic).  The only obstruction to landing in the smaller Eichler
@@ -136,9 +136,9 @@ box path.  Returns true with the lambdas iff all d found.}
         if d in Keys(lambdas) then continue; end if;
         vprintf ShimuraQuotients, 2 : "\t  box missed d = %o; maximal-embed + level-N conjugation\n", d;
         embeds := true; e2 := A!0;
+        Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
+                              else EquationOrder(NumberField(x^2+(d div 4)));
         try
-            Oc := (d mod 4 eq 3) select MaximalOrder(NumberField(x^2+d))
-                                  else EquationOrder(NumberField(x^2+(d div 4)));
             e2 := A ! Embed(Oc, Omax);
         catch e
             embeds := false;                                // K does not embed -> no lambda for this d
@@ -158,6 +158,27 @@ box path.  Returns true with the lambdas iff all d found.}
             end for;
             if found_conj then break; end if;
         end for;
+        if found_conj then continue; end if;
+        // LAST RESORT: Embed into the Eichler order itself. It is the path this routine avoids,
+        // because on some order representatives it runs for many minutes where the box takes
+        // seconds, so it is reached only when the conjugator the search needs exceeds the cap and
+        // the answer would otherwise be that the order does not embed, although it does: at
+        // (D, N) = (690, 7) the order of discriminant -280 is one such, and without this the
+        // branch points of that quotient cannot be computed at all.
+        try
+            e3 := A ! Embed(Oc, Order);
+            lam3 := (d mod 4 eq 3) select 2*e3 - 1 else 2*e3;
+            cv3 := coordsL(lam3);
+            if &and[IsCoercible(Integers(), z) : z in Eltseq(cv3)] then
+                v3 := Vector([Integers()| z : z in Eltseq(cv3)]);
+                if (v3*QZ, v3) eq 2*d and is_optimal(v3, d) then
+                    lambdas[d] := v3;
+                    vprintf ShimuraQuotients, 2 : "\t  d = %o by embedding into the Eichler order\n", d;
+                end if;
+            end if;
+        catch e
+            ;                                               // leave d unfound
+        end try;
     end for;
 
     if Set(ds) eq Keys(lambdas) then
