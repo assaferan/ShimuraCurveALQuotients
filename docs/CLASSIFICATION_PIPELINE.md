@@ -152,32 +152,34 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 3. **The certificate format and the stage, one shape at a time:** A (46_31 first: no basis needed), then
    B, then C, then D. Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
-4. **The 34th.** Write the non-hyperelliptic proof as code (below), with a test.
+4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
+   multiplier; first for the 34th, then for the sixteen curves of group D.
 5. **Labels of stored models.** Decide how `FilterByCanonicalQuadrics` treats a stored model: credit it only
    when its provenance says the model is proved, or move the crediting of the #128 models into certificate D
    so that the label names the argument.
 6. **The full run** on lovelace from this branch, ending with no undecided quotient; tables and figures
    regenerated.
 
-## Points that need a decision
+## Decisions (Eran, 2026-11-05)
 
-1. **The 34th, completeness.** For a negative verdict the enumeration must miss nothing. #128's route has
-   three places where a candidate can be lost: numerical zero-tests of L-values (1e-8), the rational
-   recognition of a coordinate (`BestApproximation`), and the window |n| ≤ 12 for places with a
-   non-fundamental discriminant. Either each is justified for this curve (exact L-ratios by modular symbols,
-   exact heights, no non-fundamental place), or a different proof is used, e.g. Noether's count on a model
-   of the curve built from its Jacobian, or the dual graph or special fibre at a prime of D.
-2. **6_323 uses Yuan–Zhang–Zhang.** It needs L(E/k, χ, s) to vanish to order at least 3: the sign gives odd
-   order for one factor, and the other factor needs L(E^(969), 1) = 0. That value can be computed exactly
-   (modular symbols give L(E,1)/Ω as a rational number), so this step can be made rigorous in code; the
-   certificate should record it.
-3. **Group D's inputs.** Theorem 1 of the #141 note rests on Magma's proofs of Mordell–Weil groups, on
-   Manin constant 1, and on the oldform multiplier, which is derived only where the prime ramifies in the CM
-   field (possibly not at 15_46, d = −15, p = 2: to check). Should the stage accept #128's theorem as it
-   stands, or should these curves also get a group-C proof (dual test plus component groups)? The second is
-   uniform with C but costs a basis per level.
-4. **Hosting the bases.** Zenodo (citable, permanent) or GitHub release assets; who uploads.
-5. **Where the list of 34 lives**: a data file on this branch (step 1), or only the stage's output.
+1. **The 34th is proved by making #128's enumeration exact for that curve.** L-values enter as exact
+   ratios from modular symbols instead of zero-tests at 1e-8, heights and coordinates are recognised
+   exactly instead of by `BestApproximation`, and the certificate shows that no branch place needs the
+   window |n| ≤ 12. Then "one cover consistent with the trace formula, a plane quartic" is a proof, rerun
+   by a test.
+2. **6_323: the Gross–Zagier step is checked exactly.** The certificate computes the root numbers of
+   E^(−8) and E^(969) and the rational number L(E^(969), 1)/Ω by modular symbols, and the stage checks it
+   is 0; with the signs this gives order of vanishing ≥ 3. The theorem of Yuan–Zhang–Zhang is cited as an
+   input, as Molina's theorems are for the component groups.
+3. **The sixteen curves of group D: #128 made exact, the same way as for the 34th.** Point counts make the
+   Jacobians isogenous, not the curves isomorphic, so the positive verdicts also rest on the enumeration
+   missing nothing. Each certificate records its run's inputs (the curves of the isogeny class tried, the
+   Mordell–Weil proofs, Manin constant 1) and the oldform multiplier is derived, or shown unneeded, at every
+   place where it is used (15_46 at d = −15, p = 2 first).
+4. **The bases go to Zenodo**, with checksums in the repository and a script that downloads them into the
+   cache; the deposit is created from Eran's or Sachi's account.
+5. **The list of 34 is a data file**, `data/open_34.m`, with a test that the curves left undecided before the
+   new stage are exactly these; certificates are keyed by the same labels.
 
 ## Branch
 
