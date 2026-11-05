@@ -68,6 +68,8 @@ full_stages := [
  "UpdateCurves7",
  "FilterByTwistedWeilPolynomial",
  "UpdateCurvesAfterTwistedWeilPolynomial",
+ "FilterByCanonicalQuadrics",
+ "UpdateCurvesAfterCanonicalQuadrics",
  "FilterByNonALInvolutions",
  "UpdateCurves8"
 ];
