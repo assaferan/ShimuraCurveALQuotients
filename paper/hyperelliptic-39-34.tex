@@ -1,0 +1,127 @@
+% X_0^39(34)* is hyperelliptic: the counting argument with five CM divisors of degree two, whose
+% torsion relations are certified by the dual test for 2 || N of paper/hyperelliptic-21-58.tex, here
+% extended to divisors in odd discriminants through the plus-type dictionary of the level-N/2 curve.
+% Tests: tests/Hyperelliptic39_34.m and tests/_offline/Hyperelliptic39_34.m; solvers in tools/proof-39-34/.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{39}(34)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $C=X_0^{39}(34)^*$, the quotient of the Shimura curve of an Eichler order of level $34$ in the
+quaternion algebra of discriminant $39$ by its Atkin--Lehner group of order $16$. It has genus three
+and a simple Jacobian, isogenous to $A_f$ for $f=\texttt{663.2.a.d}$, a newform of level
+$663=39\cdot17$, old at $2$ on $X_0^{39}(34)$. For a discriminant $d$ let $Z_d$ be the sum of the CM
+points of discriminant $d$ on $C$.
+
+\begin{theorem}\label{thm:main}
+$C$ is hyperelliptic. The five effective divisors of degree two
+\[
+F=Z_{-84}+Z_{-132},\quad F_1=Z_{-15}+Z_{-52},\quad F_7=Z_{-1092}+Z_{-372},\quad Q_1=Z_{-3432},\quad Q_2=Z_{-1560},
+\]
+the first six discriminants carrying a single rational point each and the last two a pair of
+conjugate quadratic points each, have pairwise torsion differences, and at least two of them are
+fibres of the hyperelliptic map.
+\end{theorem}
+
+The torsion bound here is $4$, so five pairwise torsion-related divisors are needed, and the search
+of \texttt{paper/hyperelliptic-77-10.tex} over even discriminants supplies only four: $F$, $F_7$,
+$Q_1$, $Q_2$. The fifth is the fibre $F_1$ found by the numerical screen, which involves the odd
+discriminant $-15$; in the pole-at-infinity dictionary of $C$ the divisor $Z_{-15}$ cannot be
+prescribed without $Z_{-60}$. Section~\ref{sec:odd} shows how the correspondence of the lemma of
+\texttt{paper/hyperelliptic-21-58.tex} carries such a divisor to the level-$17$ curve, where a
+dictionary indexed by discriminants rather than by four times them prescribes every CM divisor on
+its own.
+
+\section{Odd discriminants through the level-$N/2$ curve}\label{sec:odd}
+
+We use the notation of \texttt{paper/hyperelliptic-21-58.tex}, Section~3: $D$ odd, $N=2N'$,
+$X^*=X_0^D(N)^*$, $X'^*=X_0^D(N')^*$, the orbifold CM divisors $C(d)=e_d^{-1}P_d$ on $X^*$ and
+$C'(d)$ on $X'^*$, the correspondence $T$ with
+\[
+T\,C(d)=(1+\chi_d(2))\,C'(d)+(2-\chi_{d/4}(2))\,C'(d/4)
+\]
+(Lemma~3.3 there), the plus-type series $H(n)=\sum_{s}C'(-n/s^2)$ of $X'^*$, and the space $W^+$ of
+cusp forms of weight $\tfrac32$ on $\Gamma_0(M)$, $M=4DN'$, supported on the indices $n\equiv0,3\pmod4$
+at which $H(n)\neq0$, which contains $H_{\varphi'}=\sum\varphi'(H(n))q^n$ for every linear form
+$\varphi'$ on $\Pic(X'^*)_\Q$ killing the Hodge class (Proposition~3.6 there).
+
+\begin{proposition}\label{prop:odd}
+Assume $\Jac(X^*)$ is isogenous to $A_f$ with $f$ old at $2$, so that $T$ is injective on
+$\Jac(X^*)_\Q$ (Lemma~3.5 of the cited note). Let $\Delta$ be a degree-zero divisor on $X^*$ supported
+on CM points, and write $T\Delta=\sum_{d'}\mu_{d'}C'(d')$. If there is a vector $(c'(n))_n$ with
+$\sum_nc'(n)H(n)=T\Delta$, i.e.\ $\sum_{n:\,-n/s^2=d'}c'(n)=\mu_{d'}$ for every discriminant $d'$, and
+$\sum_nc'(n)g(n)=0$ for every $g\in W^+$, then $\Delta$ is torsion in $\Jac(X^*)(\Q)$.
+\end{proposition}
+
+\begin{proof}
+For $\varphi'$ as above, $\varphi'(T\Delta)=\sum_nc'(n)\varphi'(H(n))=\sum_nc'(n)H_{\varphi'}(n)=0$
+since $H_{\varphi'}\in W^+$. So $T\Delta$ is torsion, and $\Delta$ is torsion because $T$ is injective
+on $\Jac(X^*)_\Q$.
+\end{proof}
+
+Such a vector always exists: the index $n=|d'|$ carries the discriminant $d'$ with $s=1$ and no
+larger index does, so the system is triangular. This is the point of the plus-type dictionary: in
+the pole-at-infinity dictionary of $X^*$ an odd $d$ and $4d$ share their indices, and when $2\mid N$
+both carry CM points.
+
+\section{Proof of Theorem~\ref{thm:main}}
+
+\begin{proof}
+\emph{The Jacobian.} The characteristic polynomials of $T_7,T_{11},T_{19}$ on $\Jac(C)$, from the
+point counts over $\F_p,\F_{p^2},\F_{p^3}$ given by the trace formula, are
+\[
+x^3+2x^2-4x-4,\quad x^3+8x^2+8x-16,\quad x^3+4x^2-8x-16,
+\]
+the first irreducible (that of $T_5$ is $(x+2)^3$); among the newform orbits of weight two and
+dimension three at the levels $39m$, $m\mid34$, that Jacquet--Langlands allows, exactly one has
+these Hecke polynomials, at level $663$ with Atkin--Lehner signs $-,-,+$ at $3,13,17$, i.e.\ $+,+,+$
+on the Shimura curve. So $f$ is old at $2$.
+
+\emph{The points.} The discriminants $-84,-132,-15,-52,-1092,-372$ each carry a single rational
+point of $C$, and $-3432$, $-1560$ one Galois orbit of two points each (the degree of the field of
+definition of the CM points, which form one orbit). The points of discriminants $-1092$, $-372$,
+$-3432$, $-1560$ were found by running the test over all CM divisors of degree at most two in
+discriminants $\equiv0,8,12\pmod{16}$ with $|d|\le4000$, against $F$; those four were the only hits.
+
+\emph{The torsion.} The order of $\Jac(C)(\Q)_{\mathrm{tors}}$ divides $\#\Jac(C)(\F_p)$ for every
+odd good prime; the greatest common divisor over $5\le p\le59$ is $4$ (\texttt{tests/Hyperelliptic39\_34.m}).
+
+\emph{The relations.} With the $245$ cusp forms of weight $\tfrac32$ on $\Gamma_0(2652)$ computed to
+precision $4000$, $W^+$ has dimension $3$, the rank of $\Jac(C)(\Q)$. The test of Theorem~3.7 of the
+cited note certifies $F_7-F$, $Q_1-F$, $Q_2-F$ torsion, and Proposition~\ref{prop:odd} certifies
+$F_1-F$ torsion: here $T(F_1-F)=2C'(-15)+2C'(-52)-C'(-84)-C'(-132)$, since $2$ splits in
+$\Q(\sqrt{-15})$, ramifies in the other three fields, $e_{-52}=2$ ($Z_{-52}$ is fixed by $w_{13}$),
+and none of $-52/4,-84/4,-132/4$ is a discriminant. The same tests refuse the differences
+$Z_{-84}-Z_{-132}$, $Z_{-1092}-Z_{-372}$, $Z_{-84}-Z_{-372}$, $Z_{-15}-Z_{-52}$, $Z_{-15}-Z_{-84}$ of
+points that are not fibres, and both dictionaries certify $F_7-F$
+(\texttt{tests/\_offline/Hyperelliptic39\_34.m}).
+
+So the classes of the five divisors lie in one coset of a group of order at most $4$; two of them
+coincide, and a curve of genus three with two distinct effective divisors of degree two in one
+class carries a $g^1_2$. \qed
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:odd} also certifies the fibres in odd discriminants of $X_0^{21}(58)^*$ and
+$X_0^{77}(10)^*$, $\{Z_{-7},Z_{-312}\}$, $\{Z_{-28},Z_{-840}\}$ and $\{Z_{-15},Z_{-36}\}$, which
+the notes on those curves set aside; their proofs did not need them.
+\end{remark}
+
+\end{document}
