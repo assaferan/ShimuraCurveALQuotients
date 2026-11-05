@@ -186,3 +186,9 @@ both sides in the provenance log, the paper README, `.gitignore` and the spec fi
 the two fixes to the field of definition (no Artin map when the field is K; fall back to the slow routine
 when the Artin map refuses the twist ideal) are combined, as #66 already does. When a PR here changes, merge
 its branch again rather than editing it on this branch.
+
+Checked on the merged branch (2026-11-05): 13 of 14 fast tests pass (CM fields of definition, the divisor
+point at 21_2, dual graph, Kodaira, component groups, plane quartics, 15_38, 46_31, 2030_1, 6_341, 4130_1).
+`tests/HyperellipticCRV.m` (#108) fails on a curve that #112 adds: X_0(38,7)/{1,7}, genus 7, stored as a
+pair over a conic that has a rational point, so it has a model y^2 = f(x) and should be stored as one, as
+#108 does at 10_53. Neither PR is wrong alone; #112's entry needs converting.
