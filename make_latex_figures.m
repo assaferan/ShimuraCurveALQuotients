@@ -113,6 +113,7 @@ ruledGroups := [
  <"Degeneracy morphism", ["DegeneracyMorphism"]>,
  <"Dual graphs of the special fibres", ["DualGraph"]>,
  <"Special fiber", ["SpecialFiber", "SpecialFiberCM", "SpecialFiberD6", "SpecialFiberD10", "SpecialFiberD22"]>,
+ <"Hyperelliptic special-fibre components", ["ComponentInvolution"]>,
  <"Automorphism groups", ["AutomorphismGroup"]>,
  <"Twisted point counts", ["TwistedTrace"]>,
  <"Twisted Weil polynomials", ["TwistedWeilPolynomial"]>,

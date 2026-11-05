@@ -18,6 +18,9 @@
 //     predicts and its point counts agree with the trace formula over F_p and F_{p^2} at three good
 //     primes.  At N > 1 the stored double covers rest on the m = 0 term of Schofer's formula, and the
 //     verdict's label says so.
+//     The checks above are consistent with the model but do not prove it, so at D > 1 a model decides
+//     a curve only when the list of proved models (data/models/proved_models.m) names the curve,
+//     with the argument that proves its equation; any other curve is left undecided.
 
 // The W-fixed weight-2 cusp forms on Gamma_0(N) as q-expansions to precision prec.
 function fixed_cusp_forms(N, W, prec)
@@ -94,6 +97,17 @@ function trace_formula_agrees(fs, X)
     return checked eq 3;
 end function;
 
+// The curves whose stored model is proved, as <D, N, W> -> the argument, from the list file; an
+// empty array when there is no file.
+function proved_models(fn)
+    A := AssociativeArray();
+    if not FileExists(fn) then return A; end if;
+    for e in eval (Read(fn) cat "\nreturn proved_models;") do
+        A[<e[1], e[2], {Integers() | m : m in e[3]}>] := e[4];
+    end for;
+    return A;
+end function;
+
 // A model for X from the file: "hyperelliptic" when a y^2 + h y = f is stored with the genus the
 // formula predicts and point counts matching the trace formula; otherwise the double covers of a
 // fibre product (stored, or assembled from the covers above W), checked the same way; or "none".
@@ -126,12 +140,15 @@ function model_for(X, ModelDir)
     return "fibre product", K;
 end function;
 
-intrinsic FilterByCanonicalQuadrics(~curves::SeqEnum : ModelDir := "data/models")
+intrinsic FilterByCanonicalQuadrics(~curves::SeqEnum : ModelDir := "data/models",
+                                   ProvedModels := "data/models/proved_models.m")
 {Decides every undecided curve of genus >= 3 for which the canonical embedding is available: at
  D = 1 from the W-fixed weight-2 cusp forms on Gamma_0(N), at D > 1 from a stored model or the
- fibre product of the stored double covers above W (ModelDir).  A stored model y^2 + h y = f is
- hyperelliptic outright.  Decided curves are never overwritten.  Prints one summary line.}
-    nq := 0; nm := 0; nhyp := 0; nnon := 0; nskip := 0;
+ fibre product of the stored double covers above W (ModelDir), but only for the curves that the
+ list ProvedModels names as having a proved model.  A stored model y^2 + h y = f is hyperelliptic
+ outright.  Decided curves are never overwritten.  Prints one summary line.}
+    proved := proved_models(ProvedModels);
+    nq := 0; nm := 0; nhyp := 0; nnon := 0; nskip := 0; nunproved := 0;
     for i->X in curves do
         if assigned X`IsSubhyp or X`g lt 3 then continue; end if;
         if X`D eq 1 then
@@ -140,15 +157,16 @@ intrinsic FilterByCanonicalQuadrics(~curves::SeqEnum : ModelDir := "data/models"
             label := Sprintf("CanonicalQuadrics on the W-fixed cusp forms (%o quadrics)", nrel);
             nq +:= 1;
         else
+            if not IsDefined(proved, <X`D, X`N, X`W>) then nunproved +:= 1; continue; end if;
             kind, K := model_for(X, ModelDir);
             if kind eq "none" then nskip +:= 1; continue; end if;
-            m0 := X`N eq 1 select "" else "; the model rests on the m = 0 term at N > 1";
+            why := "; the model is proved by " cat proved[<X`D, X`N, X`W>];
             if kind eq "hyperelliptic" then
                 hyp := true;
-                label := Sprintf("CanonicalQuadrics: a stored hyperelliptic model (genus and point counts checked%o)", m0);
+                label := Sprintf("CanonicalQuadrics: a stored hyperelliptic model (genus and point counts checked%o)", why);
             else
                 hyp, nrel := IsHyperellipticFunctionField(K);
-                label := Sprintf("CanonicalQuadrics on the stored model (%o quadrics%o)", nrel, m0);
+                label := Sprintf("CanonicalQuadrics on the stored model (%o quadrics%o)", nrel, why);
             end if;
             nm +:= 1;
         end if;
@@ -157,6 +175,6 @@ intrinsic FilterByCanonicalQuadrics(~curves::SeqEnum : ModelDir := "data/models"
         curves[i]`TestInWhichProved := label;
         if hyp then nhyp +:= 1; else nnon +:= 1; end if;
     end for;
-    printf "CanonicalQuadrics summary: decided %o (hyperelliptic %o, not %o): %o by q-expansions at D = 1, %o by a stored model; %o undecided curves with D > 1 have no usable model\n",
-        nhyp + nnon, nhyp, nnon, nq, nm, nskip;
+    printf "CanonicalQuadrics summary: decided %o (hyperelliptic %o, not %o): %o by q-expansions at D = 1, %o by a proved stored model; of the undecided curves with D > 1, %o have no proved model and %o have a proved model that is not usable\n",
+        nhyp + nnon, nhyp, nnon, nq, nm, nunproved, nskip;
 end intrinsic;
