@@ -1,0 +1,146 @@
+% X_0^6(323)/<w_6,w_19,w_34> is hyperelliptic: a genus-three double cover of the genus-one star 1938h1 branched at a
+% single place of degree four, whose two Galois-stable halves are linearly equivalent.  The pairing divisor is a CM
+% cycle twisted by a genus character; it is torsion by the Gross-Zagier formula of Yuan-Zhang-Zhang (the twisted
+% L-function vanishes to order three), it is zero by reduction at 2 without identifying which point reduces where,
+% and the Prym of the cover, simple over Q, shows the cover is the untwisted one.
+% Test: tests/Hyperelliptic6_323.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Cl}{Cl}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\ord}{ord}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{6}(323)/\langle w_6,w_{19},w_{34}\rangle$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^6(323)$, $W$ its Atkin--Lehner group of order $16$, $H=\langle w_6,w_{19},w_{34}\rangle$ of index
+two, $Y=X/H$ of genus three and $E=X/W$ of genus one. The involutions in $W\setminus H$ are the $w_m$ with
+$m\in\{2,3,17,19,\dots\}$ of the coset $w_2H$; their fixed points on $X$ are the CM points of discriminant
+$-4\cdot1938=-7752$, which form a single place $Z$ of degree four on $E$, and the double cover $Y\to E$ is
+branched exactly at $Z$.
+
+\begin{theorem}\label{thm:main}
+$Y$ is hyperelliptic.
+\end{theorem}
+
+The criterion is that of \texttt{paper/hyperelliptic-15-38.tex}, Section~1: a bielliptic curve of genus three
+is hyperelliptic if and only if its four branch points split into two pairs with equal sums in the group $E$
+and the cover is the untwisted one. The new feature here is that the four branch points are conjugate, so the
+pairing is a relation over a quadratic field and its torsion part cannot be read off a rational component group
+directly.
+
+\section{The four points and the pairing}
+
+Let $k=\Q(\sqrt{-1938})$, of discriminant $-7752$, and $R$ its maximal order. Its class group is
+$\Cl\cong\Z/8\times\Z/2\times\Z/2$; the classes of the ramified primes above $2,3,17,19$ generate the
+$2$-torsion $\Cl[2]$, of order $8$, and the Atkin--Lehner involutions act on the CM points of discriminant
+$-7752$ through these classes ($w_m$ as the class of the ideal of norm $m$). So the $32$ CM points of $X$
+form a torsor under $\Cl$ and their $4$ images on $E$ a torsor under $\Cl/\Cl[2]\cong\Z/4$. Write
+$P,\sigma P,\sigma^2P,\sigma^3P$ for them, $\sigma$ a generator. Complex conjugation acts on $\Cl$ by
+inversion, so the Galois group of the orbit is dihedral of order $8$; the field $F$ of the place is a quartic
+field with Galois closure $F\cdot k$, and its quadratic subfield $K$ is one of $\Q(\sqrt{-2})$ and
+$\Q(\sqrt{969})$, the quadratic subfields other than $k$ of $k(\sqrt{-2})=k(\sqrt{969})$. (The Heegner-height
+computation of \texttt{data/models/models\_6\_323.m} identifies $F$ as the quartic field of discriminant
+$62016$, with $K=\Q(\sqrt{-2})$; the argument below does not use which.)
+
+The only partition of the four points into two pairs that is stable under $\sigma$ is
+$\{P,\sigma^2P\}\,|\,\{\sigma P,\sigma^3P\}$, and a hyperelliptic $Y$ would give such a partition over $\Q$
+(the fibres of $E\to E/\bar\iota$ through the branch points, $\bar\iota$ the involution induced by the
+hyperelliptic one). So $Y$ is hyperelliptic if and only if
+\[
+\Delta \;=\; P+\sigma^2P-\sigma P-\sigma^3P
+\]
+is zero in $E$ and the cover is untwisted. The divisor $P+\sigma^2P$ is defined over $K$ and its conjugate
+is $\sigma P+\sigma^3P$, so $\Delta\in E(K)$ with $\tau\Delta=-\Delta$ for the nontrivial automorphism $\tau$ of
+$K$: $\Delta$ lies in the minus part $E(K)^-$, which is the Mordell--Weil group of the quadratic twist of $E$ by
+$K$.
+
+In terms of characters, $\Delta=\sum_{a\in\Cl/\Cl[2]}\chi(a)\,P^a$ where $\chi$ is the character of order two
+of $\Cl/\Cl[2]\cong\Z/4$. A character of $\Cl$ of order two trivial on $\Cl[2]$ is a genus character trivial
+on the ramified classes; here it is the genus character attached to the factorisation
+$-7752=(-8)\cdot969$, since $\bigl(\tfrac{969}{2}\bigr)=\bigl(\tfrac{-8}{3}\bigr)=\bigl(\tfrac{-8}{17}\bigr)=
+\bigl(\tfrac{-8}{19}\bigr)=1$.
+
+\section{Proof}
+
+\emph{The curve $E$.} Its traces of Frobenius agree with the class 1938h of Cremona's tables at every good
+prime up to the Sturm bound $720$ of level $1938$. The component groups computed below have orders $14$ at $2$
+and $3$ at $3$, which in that class singles out 1938h1, $y^2+xy=x^3-139x-271$, with
+$E(\Q)_{\mathrm{tors}}\cong\Z/2$ generated by $T=(-2,1)$. At $2$ the reduction is split multiplicative of type
+$\mathrm{I}_{14}$ and $T$ reduces to the singular point; at $3$ it is of type $\mathrm{I}_3$ and $T$ lies on the
+identity component. The twists of $E$ by $-8$ and by $969$ have root numbers $-1$ and $+1$, ranks $1$ and $2$
+(proved by descent), and rational torsion $\Z/2$ each; hence $E(K)^-_{\mathrm{tors}}=\{0,T\}$ for either
+candidate $K$.
+
+\emph{$\Delta$ is torsion.} Let $f$ be the newform of $E$. The $\chi$-twisted $L$-function factors through
+the genus character,
+\[
+L(f/k,\chi,s)=L(f\otimes\chi_{-8},s)\,L(f\otimes\chi_{969},s).
+\]
+The first factor has root number $-1$, so it vanishes at $s=1$ to odd order. The second has root number $+1$
+and its curve has Mordell--Weil rank two, so by Kolyvagin's theorem its central value is zero and it vanishes
+to even order at least two. Hence $\ord_{s=1}L(f/k,\chi,s)\ge3$ and $L'(f/k,\chi,1)=0$. Let $P_\chi=\sum_{a\in
+\Cl}\chi(a)P^a$ be the $\chi$-twisted CM divisor on $X$; its image on $E$ is $8\Delta$, because $\chi$ is
+trivial on $\Cl[2]$, and the map $J(X)\to E$ is, up to isogeny, the projection to the $f$-isotypic part. By the
+Gross--Zagier formula of Yuan, Zhang and Zhang (\emph{The Gross--Zagier formula on Shimura curves}, Theorem
+1.2) the N\'eron--Tate height of the $f$-isotypic component of $P_\chi$ is a nonzero multiple of
+$L'(f/k,\chi,1)$ when the local root numbers of $(f,\chi)$ select the quaternion algebra of discriminant $6$,
+and when they do not, that component vanishes by the local dichotomy of Tunnell and Saito that underlies the
+same theorem. In either case $8\Delta$, hence $\Delta$, is torsion, so $\Delta\in\{0,T\}$.
+
+\emph{$\Delta$ is zero.} At $p=2$ the \v{C}erednik--Drinfeld fibre of $X$ has components indexed by two
+copies of the $60$ left ideal classes of the Eichler order of level $323$ in the definite quaternion algebra
+of discriminant $3$, and singular points indexed by the $180$ classes of the level-$646$ order; the quotient
+by $W$ is a graph with $11$ vertices and one cycle, of total thickness $14$, so its critical group is
+$\Phi_2\cong\Z/14$. Since $2$ ramifies in $k$, all four points of $Z$ reduce to singular points of the fibre
+of $X$ (Molina, \emph{Ribet bimodules and the specialization of Heegner points}, Theorem 5.3, with the
+optimal embeddings of $R$ into the Eichler orders of the singular points locating them), each at a singular
+point whose branches are swapped by an involution of $W$ divisible by $2$, hence at a smooth point of a merged
+component of $E$. The count comes out as two points on a component $C$ and two on a component $C'$, with $C$
+and $C'$ at distance $3$ along the cycle: $[C]-[C']$ has order $14$ in $\Phi_2$.
+
+Now reduce $\Delta$ over $K_{\mathfrak p}$, $\mathfrak p$ a prime of $K$ above $2$. If $K=\Q(\sqrt{969})$,
+$2$ splits and $K_{\mathfrak p}=\Q_2$: the component group is $\Phi_2=\Z/14$, $T$ maps to its element $7$ of
+order two, and $2([C]-[C'])=\pm6$. If $K=\Q(\sqrt{-2})$, $2$ ramifies: the stable model is the base change of
+the \v{C}erednik--Drinfeld quotient, every thickness doubles, the reduction of $E$ is of type
+$\mathrm{I}_{28}$, the component group is $\Z/28$, $T$ maps to $14$, and $2([C]-[C'])=\pm12$. The four points
+reduce to smooth points of $C$ and $C'$ in both cases, so the class of $\Delta$ in the component group is
+$\pm2([C]-[C'])$ if the pair $\{P,\sigma^2P\}$ reduces to a single component, and $0$ for every other
+distribution of the four points over $C$ and $C'$. Since $\Delta\in\{0,T\}$ has order at most two and
+$\pm2([C]-[C'])$ has order $7$, the first case is impossible; so $\Delta$ reduces to $0$. But $T$ does not.
+Hence $\Delta=0$: the pairing is exact.
+
+\emph{The cover is untwisted.} $E(\Q)[2]$ has order two, so up to a constant there are two double covers of
+$E$ branched at $Z$, the untwisted one $Y_0$, which is hyperelliptic by Section~2, and its twist $Y_1$ by the
+class of $T$. The quotient $E\to E/\bar\iota$ is a map of degree two to $\mathbb P^1$ over $\Q$ (the image of
+the origin is a rational point of the quotient conic), so $E$ has a model $v^2=(u-e_1)\,q(u)$ with $e_1$
+rational and the branch points of $Y\to E$ lie over the two conjugate roots $c,\bar c\in K$ of a quadratic
+$r(u)\in\Q[u]$; then $Y_1$ is $v^2=(u-e_1)q(u)$, $w^2=(u-e_1)r(u)$, and its Prym is isogenous over $\Q$ to the
+product of the elliptic curves $w^2=(u-e_1)r(u)$ and $z^2=q(u)r(u)$. The $L$-polynomial of the Prym of
+$Y\to E$ at $p=7$, from the point counts of $Y$ over $\F_{7^k}$, $k\le3$, is $49x^4+14x^3+12x^2+2x+1$,
+irreducible over $\Q$: the Prym is simple over $\Q$, so $Y=Y_0$ up to a constant twist, and $Y$ is
+hyperelliptic. \qed
+
+\begin{remark}
+Two steps rest on theorems rather than certificates. The torsion statement uses the Gross--Zagier formula on
+Shimura curves; a twisted version of the dual test of \texttt{paper/hyperelliptic-15-38.tex}, Section~2, would
+replace it, but the twisted theta lifts of Bruinier and Ono require the twisting discriminant to be prime to
+the level, and both $-8$ and $969$ share primes with $1938$. The specialisation uses Molina's theorems at
+$p=2$, where they are stated without restriction on $p$.
+\end{remark}
+
+\end{document}
