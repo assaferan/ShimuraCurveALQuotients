@@ -8,7 +8,7 @@
 // every CM point in the Schofer table, and checking that ONE Mobius map carries one set onto the
 // other. Written 2026-09-24 to settle whether 0ca6e37's newly admitted CM points carry WRONG
 // VALUES or merely a DIFFERENT NORMALISATION. Answer at 10_3: the same function, so the values are
-// right and the cover loss is a normalisation artefact. See HANDOFF 2026-09-24.
+// right and the cover loss is a normalisation artefact. See HANDOFF_2026-10-19.md, the 2026-09-24 section.
 //
 // ⚠⚠ THE OBVIOUS FORM OF THIS TEST IS VACUOUS, AND THE FIRST DRAFT OF IT WAS.
 // Any two hauptmoduls of a genus-0 curve are Mobius-related BY DEFINITION, so "does a map exist"
