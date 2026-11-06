@@ -71,6 +71,7 @@ full_stages := [
  "FilterByCanonicalQuadrics",
  "UpdateCurvesAfterCanonicalQuadrics",
  "FilterByNonALInvolutions",
+ "FilterByHyperellipticCertificates",
  "UpdateCurves8"
 ];
 

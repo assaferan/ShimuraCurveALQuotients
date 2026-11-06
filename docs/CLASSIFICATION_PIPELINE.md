@@ -22,26 +22,41 @@ polynomial filters, Noether's count on stored models (`FilterByCanonicalQuadrics
 record (`alquots.m:3`): `IsSubhyp`/`IsHyp` are set, and `TestInWhichProved` names the stage; a curve is
 undecided while `IsSubhyp` is unassigned.
 
-**The data (rerun of 2026-11-05 on this branch).** 40 quotients are undecided
+**The data (rerun of 2026-11-06 on this branch).** Before the certificate stage 39 quotients are undecided
 (`data/stage_counts.txt`): the 34 of `paper/hyperelliptic-candidates.tex`, listed in `data/open_34.m`, and
-six more that the second list of that file names with what each is missing (`tests/OpenThirtyFour.m`
+five more that the second list of that file names with what each is missing (`tests/OpenThirtyFour.m`
 checks both lists against the data). Of the 27 that the earlier notes settle beyond the 61→34 cut, the
-stages now decide 21; the six are:
+stages now decide 22; the five are:
 
 * the two quotients of X_0(6,35): their stored models are not hyperelliptic (Noether's count), but the
   models rest on the m = 0 term of Schofer's formula at a composite level;
-* X_0(390,1)/{1,6,26,39}: decided before only by its stored model (Borcherds products at N = 1);
 * X_0(14,51), X_0(38,15), X_0(158,3) with the groups in the file: at p = 3 the special fibre is the genus-3
   curve Z = X_0(D, N/3)/W′, which the dual graph at another prime shows is not hyperelliptic. What is
   missing is that Z mod 3 is not hyperelliptic: the Weil polynomials of Z and of its twists at 3 are all
   those of hyperelliptic curves (`CheckWeilPolynomialAtPrime`, `CheckTwistedAtPrime`), and no model of Z
-  is stored.
+  is stored. Each Z is a genus-3 double cover of its elliptic star branched at four CM points (shape C),
+  so a route is: build every double cover of the star with that branch divisor (all twists by
+  2-torsion, `ExactDoubleCover.m`), reduce each mod 3 and run Noether's count over F_3; if all are smooth
+  and non-hyperelliptic mod 3, so is Z, whichever cover is the right one. The star and some CM
+  coordinates exist for 158_1 (campaign `genus1star/g1_158_1.log`); for 14_17 and 38_5 the Borcherds
+  route at the genus-one star failed, so the star and branch points would come from #128's heights.
 
 **Stored models decide a curve only when proved.** `FilterByCanonicalQuadrics` reads
 `data/models/proved_models.m` and uses a stored model at D > 1 only for a curve listed there with the
 argument that proves its equation; the list is empty for now. Agreement of a model with the trace formula
-does not prove it, so the 25 of the 34 that stored models used to decide (the sixteen of group D, 15_38,
+does not prove it. The list has one entry, X_0(390,1)/{1,6,26,39}: built by Borcherds products at N = 1
+(no m = 0 term), every sign of s, 1 − s and y² at the CM points used is forced and the cover equations
+are unique up to the twist (`tests/_offline/ProvedModel390_1.m`, ~15 min). The 25 of the 34 that stored
+models used to decide (the sixteen of group D, 15_38,
 6_385, 714_5, 6_323, and the genus-four models) wait for their certificates.
+
+**The genus-0 data of the special-fibre stages.** D = 1 uses Magma's classical modular curves and D = 6
+Elkies' hypergeometric description; D = 10 and 22, and the registry of level-M bases (X_0(6,M) for
+M = 5, 7, 11, 13, 17, 19 and X_0(14,11)), use our own Borcherds/Schofer values. Measured 2026-11-06: with
+those three tests switched off the pipeline ends at the same undecided set, so no verdict depends on them;
+and the current code reproduces the stored data of all seven registry bases (values after the Möbius
+normalisation, conics up to a square, no ambiguous sign), except 2–8 discriminants per base that the
+recomputed table did not reach.
 
 **The 34th curve has no code.** That X_0(141,2)/{1,6,94,141} is not hyperelliptic is asserted in two
 sentences (`paper/heegner-height-models.tex:61-63`, `paper/hyperelliptic-candidates.tex:309-310`): the
@@ -131,7 +146,7 @@ target index (B ≥ |d|/4).
 the way banked Borcherds forms are read: it names the shape (A–E above) and holds what the proof needs —
 the CM divisors or fibres, the banked forms or principal parts, the levels and precisions of the dual
 tests, the primes for the component groups, and for D/E the run's inputs. A new stage,
-`FilterByHyperellipticCertificates`, placed after `FilterByCanonicalQuadrics`, loads the certificate of each
+`FilterByHyperellipticCertificates`, placed last among the deciding stages, loads the certificate of each
 undecided curve, rechecks it, and records the verdict with a label naming the shape and the certificate
 (for example "Certificate A: 4 divisors against torsion 2, data/certificates/46_31.m"). The searches that
 *found* the divisors (the Nelson screen, the scans in `tools/proof-77-10/`, the Borcherds searches) stay as
@@ -155,17 +170,19 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 
 1. **Land 61 → 34 in the data.** Done 2026-11-05 up to six quotients: the rerun leaves 40 undecided, the
    34 and the six of `open_gaps` (see "The data" above); `tests/OpenThirtyFour.m` checks both lists.
-   Remaining: the mod-3 step for the three special fibres, and the 6_35 and 390_1 models.
+   Remaining: the mod-3 step for the three special fibres, and the 6_35 models; 390_1 done 2026-11-06.
 2. **The dual test as an intrinsic.** One CM dictionary and one dual test, with the 2 ∥ N and odd-D
    variants; the basis cache with checksums. Acceptance: it reproduces, from the saved bases, every
    certified relation and every refused control of #146–#157.
 3. **The certificate format and the stage, one shape at a time:** A (46_31 first: no basis needed), then
-   B, then C, then D. Each shape is accepted when the stage decides its curves from the certificates alone
+   B, then C, then D. Started 2026-11-06: `HyperellipticCertificates.m`, `data/certificates/46_31.m`,
+   `tests/HyperellipticCertificates.m`; the stage `FilterByHyperellipticCertificates` runs last (after
+   `FilterByNonALInvolutions`, before `UpdateCurves8`), so it receives exactly what no filter decides. Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
 4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
    multiplier; first for the 34th, then for the sixteen curves of group D.
 5. **Labels of stored models.** Done (decision 6): only models on `data/models/proved_models.m` decide a
-   curve. Open: whether the N = 1 Borcherds model of 390_1 goes on the list.
+   curve; 390_1 is on the list (2026-11-06).
 6. **The full run** on lovelace from this branch, ending with no undecided quotient; tables and figures
    regenerated.
 

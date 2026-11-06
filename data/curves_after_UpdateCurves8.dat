@@ -69206,7 +69206,7 @@ CreateShimuraQuot([* <"D", 46>, <"N", 31>,
 <"g", 3>, <"CurveID", 9887>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate A: 4 degree-two CM divisors related by 6 Borcherds forms, torsion bound 2 (data/certificates/46_31.m)">
 *]),
 CreateShimuraQuot([* <"D", 46>, <"N", 33>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 23, 33, 46, 66, 69, 138, 253, 506, 759, 1518 }>,
@@ -96289,7 +96289,7 @@ CreateShimuraQuot([* <"D", 390>, <"N", 1>,
 <"g", 3>, <"CurveID", 13756>,
 <"CoveredBy", { IntegerRing() | 13719, 13722, 13727 }>,
 <"Covers", { IntegerRing() | 13775, 13776, 13777 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "CanonicalQuadrics on the stored model (0 quadrics; the model is proved by Borcherds products at N = 1, where Schofer's formula has no m = 0 term: every sign forced and the cover equations unique up to the twist (tests/_offline/ProvedModel390_1.m))">
 *]),
 CreateShimuraQuot([* <"D", 390>, <"N", 1>,
 <"W", { IntegerRing() | 1, 15, 26, 390 }>,

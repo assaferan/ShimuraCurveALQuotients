@@ -13,6 +13,7 @@ EquationsCovers.m
 FibreProductCovers.m
 HyperellipticDetection.m
 CanonicalQuadrics.m
+HyperellipticCertificates.m
 Caching.m
 ClassNumberData.m
 Utils.m
