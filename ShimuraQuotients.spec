@@ -14,6 +14,7 @@ FibreProductCovers.m
 HyperellipticDetection.m
 CanonicalQuadrics.m
 HyperellipticCertificates.m
+DualTest.m
 Caching.m
 ClassNumberData.m
 Utils.m
