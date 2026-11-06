@@ -7,4 +7,6 @@
 // Entries are <D, N, W, argument>: W the full Atkin-Lehner group as a sequence of indices m, and
 // argument a short reference to what proves the equation (a paper or a note under paper/, and the
 // test that reruns it).  Read with eval (Read(file) cat "\nreturn proved_models;").
-proved_models := [];
+proved_models := [
+    <390, 1, [1, 6, 26, 39], "Borcherds products at N = 1, where Schofer's formula has no m = 0 term: every sign forced and the cover equations unique up to the twist (tests/_offline/ProvedModel390_1.m)">
+];

@@ -165,6 +165,8 @@ T2 := [
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat">,
  <"Modular non-Atkin--Lehner involutions (Section~\\ref{sec:modularnonAL})",
         "data/curves_after_FilterByNonALInvolutions.dat">,
+ <"Certificates of hyperellipticity",
+        "data/curves_after_FilterByHyperellipticCertificates.dat">,
  <"Propagate closure and isomorphism", "data/curves_after_UpdateCurves8.dat">
 ];
 

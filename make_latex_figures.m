@@ -99,6 +99,7 @@ provedGroups := [
  <"Genus 3 cover of genus 2", ["Genus3CoverGenus2"]>,
  <"Modular non-Atkin--Lehner involution", ["ModularNonALInvolution"]>,
  <"Canonical quadrics", ["CanonicalQuadrics"]>,
+ <"Certificates of hyperellipticity", ["HyperellipticCertificate"]>,
  <"Isomorphism", ["UpdateIsoStatus"]>
 ];
 ruledGroups := [

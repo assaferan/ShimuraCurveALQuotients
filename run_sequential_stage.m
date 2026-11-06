@@ -70,6 +70,9 @@ case stage:
     when "FilterByCanonicalQuadrics":
         FilterByCanonicalQuadrics(~curves);
 
+    when "FilterByHyperellipticCertificates":
+        FilterByHyperellipticCertificates(~curves);
+
     when "Genus3CoversGenus2":
         Genus3CoversGenus2(~curves);
 

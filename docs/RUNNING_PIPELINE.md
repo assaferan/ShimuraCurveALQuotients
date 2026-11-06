@@ -150,6 +150,7 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     FilterByCanonicalQuadrics                 sequential          NEW
     UpdateCurvesAfterCanonicalQuadrics                            NEW
     FilterByNonALInvolutions                  parallel
+    FilterByHyperellipticCertificates         sequential          NEW
     UpdateCurves8
 
 The new closure stages are called `UpdateCurvesAfter<Stage>` rather than renumbering the existing
@@ -214,6 +215,12 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   the W-fixed weight-2 cusp forms at D = 1 and from a stored model (`data/models/`) at D > 1; about
   a minute for the whole list, sequential. It decides nothing at a base with D > 1 and no model
   file, which is where most of the undecided curves live.
+* **`FilterByHyperellipticCertificates`**: for an undecided curve with a file
+  `data/certificates/<D>_<N>.m`, rechecks every hypothesis of the proof stored there
+  (`HyperellipticCertificates.m`) and marks the curve hyperelliptic if they all hold; a refused
+  certificate is reported and the curve left undecided. Shape A (degree-two CM divisors related by
+  Borcherds forms, against the torsion bound of the Jacobian) is implemented; X_0^46(31)* is its first
+  curve.
 * **`FilterByNonALInvolutions`** and **`FilterByGeneralizedComplicatedFixedPoints`** skip levels
   above 3000 (`NonALModSymMaxLevel`, `GeneralizedComplicatedMaxLevel`).
 

@@ -91,6 +91,9 @@ FILTER_STAGES := [*
     <"FilterByCanonicalQuadrics", FilterByCanonicalQuadrics>,
     <"UpdateCurvesAfterCanonicalQuadrics", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
+    // Certificates of hyperellipticity (data/certificates/): the inputs of a proof, rechecked.  Last,
+    // so that the curves it receives are exactly those no filter decides.
+    <"FilterByHyperellipticCertificates", FilterByHyperellipticCertificates>,
     <"UpdateCurves8", UpdateCurves>
 *];
 
