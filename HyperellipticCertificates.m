@@ -15,7 +15,9 @@
 // full Atkin-Lehner quotient.  The relations come either from banked Borcherds forms
 // (cert["forms"]) or from the dual test of DualTest.m against saved weight-3/2 bases
 // (cert["dualtests"], cert["relations"]); the 2 || N variants of the dual test also need the
-// Jacobian to be isotypic for a newform old at 2, which is rechecked.
+// Jacobian to be isotypic for a newform old at 2, which is rechecked.  The torsion bound may be lowered
+// by component groups (cert["phi"], paper/component-groups.tex): an l-part of the rational torsion that
+// injects into Phi_p is trivial on a torsion CM divisor whose class in Phi_p is zero.
 
 // The star X_0^D(N)/W_full as the record the Borcherds routines expect.
 function cert_star(D, N)
@@ -142,9 +144,67 @@ function verify_shape_A(X, cert)
     // Check := false: the bound needs the counts over F_p, ..., F_(p^g) only; the further extension
     // the check adds needs class numbers of discriminants near 4 p^(g+1), out of reach at p ~ 100
     t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
-    if #eff le t then return false, Sprintf("%o divisors against a torsion bound of %o", #eff, t); end if;
-    return true, Sprintf("HyperellipticCertificate A: %o degree-two CM divisors related by %o, torsion bound %o (%o)",
-                         #eff, info, t, cert["file"]);
+    // cert["phi"]: primes p | D whose component groups remove l-parts.  Every D_i - D_1 is torsion; an l
+    // whose part injects into Phi_p, where D_i - D_1 has class zero, does not divide its order.  For the l
+    // removed from every D_i - D_1, all the classes lie in the subgroup with trivial l-parts.
+    tt := t; how := "";
+    if IsDefined(cert, "phi") and #eff ge 2 then
+        common := {l : l in PrimeDivisors(t)};
+        for i in [2..#eff] do
+            Bi := TorsionOrderBoundOfCMDivisor(X`D, X`N, full, eff[i] cat [<c[1], -c[2]> : c in eff[1]] :
+                                               Bound := t, Primes := cert["phi"]);
+            common meet:= {l : l in PrimeDivisors(t) | Bi mod l ne 0};
+        end for;
+        for l in common do while tt mod l eq 0 do tt div:= l; end while; end for;
+        if tt ne t then how := Sprintf(", lowered to %o by the component groups at %o", tt, cert["phi"]); end if;
+    end if;
+    if #eff le tt then return false, Sprintf("%o divisors against a torsion bound of %o", #eff, tt); end if;
+    return true, Sprintf("HyperellipticCertificate A: %o degree-two CM divisors related by %o, torsion bound %o%o (%o)",
+                         #eff, info, t, how, cert["file"]);
+end function;
+
+// Shape B (genus four over a genus-two star, paper/hyperelliptic-candidates.tex, Proposition
+// prop:normalform).  Y = X_0^D(N)/H of genus 4 is a double cover of the star C (genus 2) branched at
+// the images of the fixed points of the involutions outside H; Y is hyperelliptic exactly when that
+// branch divisor D_1 is a fibre of the hyperelliptic map of C, i.e. canonical.  The certificate relates
+// D_1 to other effective degree-two divisors D_2, ... of C by torsion differences (Borcherds forms or
+// the dual test, as in shape A); when the Jacobian of C is torsion-free, D_1 is linearly equivalent to
+// a distinct effective divisor of degree two, so it is canonical.
+function verify_shape_B(X, cert)
+    star, full := cert_star(X`D, X`N);
+    if #full ne 2 * #X`W or star`g ne 2 or X`g ne 4 then
+        return false, "shape B needs a genus-four double cover of a genus-two star";
+    end if;
+    eff := cert["divisors"];
+    // the branch divisor: the CM points of the discriminants carrying fixed points of the involutions
+    // outside the group of Y
+    branch := {Integers() | };
+    for m in full diff X`W do
+        e := NumFixedPointsByCMOrder(X`D, X`N, m);
+        branch join:= {d : d in Keys(e) | e[d] ne 0};
+    end for;
+    if branch ne {c[1] : c in eff[1]} or exists{c : c in eff[1] | c[2] ne 1} then
+        return false, Sprintf("the branch divisor is supported on %o, not the first divisor %o", branch, eff[1]);
+    end if;
+    for E in eff do
+        if exists{c : c in E | c[2] le 0} then return false, Sprintf("divisor %o is not effective", E); end if;
+        deg := &+[c[2] * DegreeOfFieldOfDefinitionOfCMPoint(star, c[1]) : c in E];
+        if deg ne 2 then return false, Sprintf("divisor %o has degree %o", E, deg); end if;
+    end for;
+    sets := [{<c[1], c[2]> : c in E} : E in eff];
+    if #Set(sets) ne #eff or #eff lt 2 then return false, "the divisors must be at least two and distinct"; end if;
+    supp := [{c[1] : c in E} : E in eff];
+    if IsDefined(cert, "forms") then
+        ok, edges, info := relations_by_forms(star, cert, sets, supp, #eff);
+    else
+        ok, edges, info := relations_by_dual_test(star, cert, eff);
+    end if;
+    if not ok then return false, info; end if;
+    if not exists{e : e in edges | 1 in e} then return false, "no certified difference involves the branch divisor"; end if;
+    t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
+    if t ne 1 then return false, Sprintf("the Jacobian of the star has torsion bound %o, not 1", t); end if;
+    return true, Sprintf("HyperellipticCertificate B: the branch divisor %o is canonical on the genus-two star, related to %o other divisor(s) by %o, torsion-free (%o)",
+                         eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"]);
 end function;
 
 intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt, MonStgElt
@@ -155,6 +215,7 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
     end if;
     case cert["shape"]:
         when "A": return verify_shape_A(X, cert);
+        when "B": return verify_shape_B(X, cert);
     end case;
     return false, Sprintf("shape %o is not implemented", cert["shape"]);
 end intrinsic;
