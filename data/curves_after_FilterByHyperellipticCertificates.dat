@@ -25638,7 +25638,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 379>,
 <"g", 3>, <"CurveID", 3663>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate A: 2 degree-two CM divisors related by the dual test at level 4548, torsion bound 1 (data/certificates/6_379.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 383>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 383, 766, 1149, 2298 }>,
@@ -26142,7 +26142,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 403>,
 <"g", 4>, <"CurveID", 3735>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3747 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate B: the branch divisor [ <-3, 1>, <-403, 1> ] is canonical on the genus-two star, related to 2 other divisor(s) by 3 Borcherds forms, torsion-free (data/certificates/6_403.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 403>,
 <"W", { IntegerRing() | 1, 2, 39, 78, 93, 186, 403, 806 }>,
@@ -27353,7 +27353,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 649>,
 <"g", 3>, <"CurveID", 3908>,
 <"CoveredBy", {}>,
 <"Covers", {}>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate A: 3 degree-two CM divisors related by the dual test at level 7788, torsion bound 6, lowered to 2 by the component groups at [ 3 ] (data/certificates/6_649.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 655>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 131, 262, 393, 655, 786, 1310, 1965, 3930 }>,
@@ -123148,7 +123148,7 @@ CreateShimuraQuot([* <"D", 2030>, <"N", 1>,
 <"g", 4>, <"CurveID", 17593>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 17600 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate B: the branch divisor [ <-8, 1>, <-280, 1> ] is canonical on the genus-two star, related to 2 other divisor(s) by 3 Borcherds forms, torsion-free (data/certificates/2030_1.m)">
 *]),
 CreateShimuraQuot([* <"D", 2030>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 29, 58, 145, 290 }>,
@@ -124520,7 +124520,7 @@ CreateShimuraQuot([* <"D", 2418>, <"N", 1>,
 <"g", 4>, <"CurveID", 17789>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 17801 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate B: the branch divisor [ <-312, 1>, <-403, 1> ] is canonical on the genus-two star, related to 2 other divisor(s) by 3 Borcherds forms, torsion-free (data/certificates/2418_1.m)">
 *]),
 CreateShimuraQuot([* <"D", 2418>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 39, 78, 93, 186, 403, 806 }>,
@@ -127880,7 +127880,7 @@ CreateShimuraQuot([* <"D", 3390>, <"N", 1>,
 <"g", 4>, <"CurveID", 18269>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 18270 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate B: the branch divisor [ <-3, 1>, <-40, 1> ] is canonical on the genus-two star, related to 2 other divisor(s) by the dual test at level 6780, torsion-free (data/certificates/3390_1.m)">
 *]),
 CreateShimuraQuot([* <"D", 3390>, <"N", 1>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 113, 226, 339, 565, 678, 1130, 1695, 3390 }>,

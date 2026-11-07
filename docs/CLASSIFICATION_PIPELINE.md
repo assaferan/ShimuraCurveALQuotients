@@ -179,10 +179,13 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    B, then C, then D. Started 2026-11-06: `HyperellipticCertificates.m`, `data/certificates/46_31.m`,
    `tests/HyperellipticCertificates.m`; the stage `FilterByHyperellipticCertificates` runs last (after
    `FilterByNonALInvolutions`, before `UpdateCurves8`), so it receives exactly what no filter decides. Shape A
-   now certifies five curves from their files: 46_31 (Borcherds forms), 4130_1 (sharp dual test), 21_58,
-   77_10, 39_34 (2 || N dual tests, with the check that the Jacobian is old at 2); the pipeline ends with
-   34 undecided (29 of the 34 and the five gaps). Next in shape A: 6_649 (torsion lowered by Φ₃) and
-   6_379 (dual certificate). Each shape is accepted when the stage decides its curves from the certificates alone
+   certifies all seven of its curves: 46_31 (Borcherds forms), 4130_1 and 6_379 (sharp dual test), 21_58,
+   77_10, 39_34 (2 || N dual tests, with the check that the Jacobian is old at 2), 6_649 (sharp dual test,
+   torsion bound 6 lowered to 2 by Φ₃). Shape B (branch divisor recomputed from the fixed points, a
+   torsion-free genus-two star) certifies 2030_1, 2418_1, 6_403 (Borcherds forms) and 3390_1 (dual test).
+   The pipeline ends with 28 undecided (23 of the 34 and the five gaps). Left in shape B: 2002_1 (the
+   sharp test at level 4004, precision 2200, should replace its dual certificate) and 6_341 (torsion
+   bound 2; the second theta characteristic is excluded through the model of the star, #145). Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
 4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
    multiplier; first for the 34th, then for the sixteen curves of group D.
