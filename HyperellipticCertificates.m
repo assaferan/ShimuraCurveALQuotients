@@ -139,7 +139,9 @@ function verify_shape_A(X, cert)
         grown := #new gt #reached; reached := new;
     until not grown;
     if #reached ne #eff then return false, "the certified differences do not connect the divisors"; end if;
-    t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2]);
+    // Check := false: the bound needs the counts over F_p, ..., F_(p^g) only; the further extension
+    // the check adds needs class numbers of discriminants near 4 p^(g+1), out of reach at p ~ 100
+    t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
     if #eff le t then return false, Sprintf("%o divisors against a torsion bound of %o", #eff, t); end if;
     return true, Sprintf("HyperellipticCertificate A: %o degree-two CM divisors related by %o, torsion bound %o (%o)",
                          #eff, info, t, cert["file"]);

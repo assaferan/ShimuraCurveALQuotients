@@ -170,20 +170,20 @@ the census as the first-writer "which test determined it" view.
 FINAL CENSUS  (data/curves_after_UpdateCurves8.dat)
 ================================================================
 Total AL quotients         : 18379
-  proved sub-hyperelliptic : 5851
+  proved sub-hyperelliptic : 5855
   ruled out (not subhyp)   : 12490
-  open (undetermined)      : 38
+  open (undetermined)      : 34
 
 Proved sub-hyperelliptic, by type
 ---------------------------------
   P^1 (genus 0)         : 905
   elliptic (genus 1)    : 1518
-  hyperelliptic (g>=2)  : 3428
+  hyperelliptic (g>=2)  : 3432
 
 Hyperelliptic quotients, by genus
 ---------------------------------
   genus 2 : 1725
-  genus 3 : 874
+  genus 3 : 878
   genus 4 : 373
   genus 5 : 260
   genus 6 : 86
@@ -198,7 +198,7 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
   0      905      905      0        0       
   1      1518     1518     0        0       
   2      1725     1725     0        0       
-  3      2181     874      1275     32      
+  3      2181     878      1275     28      
   4      2271     373      1892     6       
   5      2395     260      2135     0       
   6      2117     86       2031     0       
@@ -250,12 +250,12 @@ Attribution: which test recorded the determination (proved subhyp)
   ModularNonALInvolution                        : 29
   Genus3CoverGenus2                             : 16
   CanonicalQuadrics                             : 8
-  HyperellipticCertificate                      : 1
+  HyperellipticCertificate                      : 5
   UpdateIsoStatus,                              : 1
 
 OPEN (undetermined) cases — full list
 =====================================
-count = 38
+count = 34
   D      N      g      W                             
   6      35     3      [ 1, 3, 5, 15 ]               
   6      35     3      [ 1, 5, 7, 35 ]               
@@ -275,14 +275,11 @@ count = 38
   15     38     3      [ 1, 2, 15, 19, 30, 38, 285, 570 ]
   15     46     3      [ 1, 5, 6, 23, 30, 115, 138, 690 ]
   21     34     3      [ 1, 3, 14, 17, 42, 51, 238, 714 ]
-  21     58     3      [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ]
   22     51     3      [ 1, 6, 17, 22, 33, 102, 374, 561 ]
   38     15     3      [ 1, 3, 10, 30, 38, 95, 114, 285 ]
   39     11     3      [ 1, 11, 39, 429 ]            
-  39     34     3      [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ]
   55     7      3      [ 1, 35, 55, 77 ]             
   57     10     3      [ 1, 5, 6, 19, 30, 95, 114, 570 ]
-  77     10     3      [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ]
   141    2      3      [ 1, 3, 94, 282 ]             
   141    2      3      [ 1, 6, 94, 141 ]             
   158    3      3      [ 1, 2, 237, 474 ]            
@@ -294,11 +291,10 @@ count = 38
   2030   1      4      [ 1, 10, 14, 35, 58, 145, 203, 2030 ]
   2418   1      4      [ 1, 2, 13, 26, 93, 186, 1209, 2418 ]
   3390   1      4      [ 1, 5, 6, 30, 113, 565, 678, 3390 ]
-  4130   1      3      [ 1, 2, 5, 7, 10, 14, 35, 59, 70, 118, 295, 413, 590, 826, 2065, 4130 ]
 
 Open cases, by genus
 --------------------
-  genus 3 : 32
+  genus 3 : 28
   genus 4 : 6
 
 Open cases, by D (quaternion discriminant)
@@ -306,13 +302,12 @@ Open cases, by D (quaternion discriminant)
   D=6      : 14
   D=14     : 1
   D=15     : 2
-  D=21     : 2
+  D=21     : 1
   D=22     : 1
   D=38     : 1
-  D=39     : 2
+  D=39     : 1
   D=55     : 1
   D=57     : 1
-  D=77     : 1
   D=141    : 2
   D=158    : 1
   D=210    : 1
@@ -323,30 +318,29 @@ Open cases, by D (quaternion discriminant)
   D=2030   : 1
   D=2418   : 1
   D=3390   : 1
-  D=4130   : 1
 ================================================================
 OPEN (UNDETERMINED) CASES — ANALYSIS
 ================================================================
-open before final step                 : 38
+open before final step                 : 34
   resolved: D=1 modular curves known   : 0
-GENUINELY OPEN (D>1 quaternion Shimura) : 38
+GENUINELY OPEN (D>1 quaternion Shimura) : 34
 ================================================================
 
 By genus
 --------
-  genus 3 : 32
+  genus 3 : 28
   genus 4 : 6
 
 By |W| (number of AL involutions in the quotient group, incl. identity)
 ----------------------------------------------------------------------
   |W|=4   : 8
   |W|=8   : 21
-  |W|=16  : 9
+  |W|=16  : 5
 
 By # AL involutions still acting non-trivially on the quotient (2^omega(DN)/|W| - 1)
 -----------------------------------------------------------------------------------
-  multiset: { 0^6, 1^28, 3^4 }
-  0 acting : 6
+  multiset: { 0^2, 1^28, 3^4 }
+  0 acting : 2
   1 acting : 28
   3 acting : 4
 
@@ -355,13 +349,12 @@ By D (indefinite quaternion discriminant)
   D=6      : 14
   D=14     : 1
   D=15     : 2
-  D=21     : 2
+  D=21     : 1
   D=22     : 1
   D=38     : 1
-  D=39     : 2
+  D=39     : 1
   D=55     : 1
   D=57     : 1
-  D=77     : 1
   D=141    : 2
   D=158    : 1
   D=210    : 1
@@ -372,9 +365,8 @@ By D (indefinite quaternion discriminant)
   D=2030   : 1
   D=2418   : 1
   D=3390   : 1
-  D=4130   : 1
 
-Distinct (D,N) families with at least one open quotient : 36
+Distinct (D,N) families with at least one open quotient : 32
   (D, N, #open, total quotients of this (D,N), genus of X_0(D,N))
     D=6     N=35     open=2   / 67  quotients
     D=6     N=185    open=1   / 51  quotients
@@ -393,14 +385,11 @@ Distinct (D,N) families with at least one open quotient : 36
     D=15    N=38     open=1   / 51  quotients
     D=15    N=46     open=1   / 16  quotients
     D=21    N=34     open=1   / 16  quotients
-    D=21    N=58     open=1   / 1   quotients
     D=22    N=51     open=1   / 16  quotients
     D=38    N=15     open=1   / 51  quotients
     D=39    N=11     open=1   / 8   quotients
-    D=39    N=34     open=1   / 1   quotients
     D=55    N=7      open=1   / 8   quotients
     D=57    N=10     open=1   / 16  quotients
-    D=77    N=10     open=1   / 1   quotients
     D=141   N=2      open=2   / 8   quotients
     D=158   N=3      open=1   / 8   quotients
     D=210   N=13     open=1   / 187 quotients
@@ -411,10 +400,9 @@ Distinct (D,N) families with at least one open quotient : 36
     D=2030  N=1      open=1   / 16  quotients
     D=2418  N=1      open=1   / 16  quotients
     D=3390  N=1      open=1   / 16  quotients
-    D=4130  N=1      open=1   / 1   quotients
 
 ================================================================
-GENUS-3 open cases : 32
+GENUS-3 open cases : 28
 A genus-3 curve is either hyperelliptic or a smooth plane quartic.
 These are open because no filter settled which; resolving them needs
 an explicit model / rational-point or gonality argument.
@@ -436,14 +424,11 @@ an explicit model / rational-point or gonality argument.
   15    38     [ 1, 2, 15, 19, 30, 38, 285, 570 ]
   15    46     [ 1, 5, 6, 23, 30, 115, 138, 690 ]
   21    34     [ 1, 3, 14, 17, 42, 51, 238, 714 ]
-  21    58     [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ]
   22    51     [ 1, 6, 17, 22, 33, 102, 374, 561 ]
   38    15     [ 1, 3, 10, 30, 38, 95, 114, 285 ]
   39    11     [ 1, 11, 39, 429 ]            
-  39    34     [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ]
   55    7      [ 1, 35, 55, 77 ]             
   57    10     [ 1, 5, 6, 19, 30, 95, 114, 570 ]
-  77    10     [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ]
   141   2      [ 1, 3, 94, 282 ]             
   141   2      [ 1, 6, 94, 141 ]             
   158   3      [ 1, 2, 237, 474 ]            
@@ -451,7 +436,6 @@ an explicit model / rational-point or gonality argument.
   690   7      [ 1, 6, 10, 14, 15, 21, 23, 35, 138, 210, 230, 322, 345, 483, 805, 4830 ]
   714   5      [ 1, 3, 10, 14, 17, 30, 35, 42, 51, 105, 170, 238, 510, 595, 714, 1785 ]
   1326  1      [ 1, 17, 78, 1326 ]           
-  4130  1      [ 1, 2, 5, 7, 10, 14, 35, 59, 70, 118, 295, 413, 590, 826, 2065, 4130 ]
 
 ================================================================
 COVER-LATTICE CONTEXT OF OPEN CURVES
@@ -461,7 +445,7 @@ quotients) and the curves that cover it (its parents).
   open curves that COVER a proved sub-hyperelliptic quotient : 32
   open curves COVERED BY a proved sub-hyperelliptic quotient : 0
   open curves all of whose further quotients are ruled out   : 0
-  open curves with no recorded cover relations (isolated)    : 6
+  open curves with no recorded cover relations (isolated)    : 2
 
 ================================================================
 RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES
@@ -474,5 +458,5 @@ RELATIONS OF OPEN CURVES TO OTHER OPEN CURVES
   (caveat: uncertified ones are not resolved by resolving the source over Qbar;
    a nonzero certified count means the char-p filters missed those sources)
 
-  open curves with NO such lifeline -> must be resolved individually : 38
+  open curves with NO such lifeline -> must be resolved individually : 34
 

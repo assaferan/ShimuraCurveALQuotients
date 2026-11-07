@@ -171,13 +171,18 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 1. **Land 61 → 34 in the data.** Done 2026-11-05 up to six quotients: the rerun leaves 40 undecided, the
    34 and the six of `open_gaps` (see "The data" above); `tests/OpenThirtyFour.m` checks both lists.
    Remaining: the mod-3 step for the three special fibres, and the 6_35 models; 390_1 done 2026-11-06.
-2. **The dual test as an intrinsic.** One CM dictionary and one dual test, with the 2 ∥ N and odd-D
+2. **The dual test as an intrinsic.** Done 2026-11-07: `DualTest.m`; `tests/_offline/DualTestReproduces.m`
+   reproduces all nine cases from the saved bases (`data/dual/bases.md5`). One CM dictionary and one dual test, with the 2 ∥ N and odd-D
    variants; the basis cache with checksums. Acceptance: it reproduces, from the saved bases, every
    certified relation and every refused control of #146–#157.
 3. **The certificate format and the stage, one shape at a time:** A (46_31 first: no basis needed), then
    B, then C, then D. Started 2026-11-06: `HyperellipticCertificates.m`, `data/certificates/46_31.m`,
    `tests/HyperellipticCertificates.m`; the stage `FilterByHyperellipticCertificates` runs last (after
-   `FilterByNonALInvolutions`, before `UpdateCurves8`), so it receives exactly what no filter decides. Each shape is accepted when the stage decides its curves from the certificates alone
+   `FilterByNonALInvolutions`, before `UpdateCurves8`), so it receives exactly what no filter decides. Shape A
+   now certifies five curves from their files: 46_31 (Borcherds forms), 4130_1 (sharp dual test), 21_58,
+   77_10, 39_34 (2 || N dual tests, with the check that the Jacobian is old at 2); the pipeline ends with
+   34 undecided (29 of the 34 and the five gaps). Next in shape A: 6_649 (torsion lowered by Φ₃) and
+   6_379 (dual certificate). Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
 4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
    multiplier; first for the 34th, then for the sixteen curves of group D.
