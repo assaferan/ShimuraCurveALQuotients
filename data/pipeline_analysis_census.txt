@@ -1,20 +1,20 @@
 FINAL CENSUS  (data/curves_after_UpdateCurves8.dat)
 ================================================================
 Total AL quotients         : 18379
-  proved sub-hyperelliptic : 5851
+  proved sub-hyperelliptic : 5855
   ruled out (not subhyp)   : 12490
-  open (undetermined)      : 38
+  open (undetermined)      : 34
 
 Proved sub-hyperelliptic, by type
 ---------------------------------
   P^1 (genus 0)         : 905
   elliptic (genus 1)    : 1518
-  hyperelliptic (g>=2)  : 3428
+  hyperelliptic (g>=2)  : 3432
 
 Hyperelliptic quotients, by genus
 ---------------------------------
   genus 2 : 1725
-  genus 3 : 874
+  genus 3 : 878
   genus 4 : 373
   genus 5 : 260
   genus 6 : 86
@@ -29,7 +29,7 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
   0      905      905      0        0       
   1      1518     1518     0        0       
   2      1725     1725     0        0       
-  3      2181     874      1275     32      
+  3      2181     878      1275     28      
   4      2271     373      1892     6       
   5      2395     260      2135     0       
   6      2117     86       2031     0       
@@ -81,12 +81,12 @@ Attribution: which test recorded the determination (proved subhyp)
   ModularNonALInvolution                        : 29
   Genus3CoverGenus2                             : 16
   CanonicalQuadrics                             : 8
-  HyperellipticCertificate                      : 1
+  HyperellipticCertificate                      : 5
   UpdateIsoStatus,                              : 1
 
 OPEN (undetermined) cases — full list
 =====================================
-count = 38
+count = 34
   D      N      g      W                             
   6      35     3      [ 1, 3, 5, 15 ]               
   6      35     3      [ 1, 5, 7, 35 ]               
@@ -106,14 +106,11 @@ count = 38
   15     38     3      [ 1, 2, 15, 19, 30, 38, 285, 570 ]
   15     46     3      [ 1, 5, 6, 23, 30, 115, 138, 690 ]
   21     34     3      [ 1, 3, 14, 17, 42, 51, 238, 714 ]
-  21     58     3      [ 1, 2, 3, 6, 7, 14, 21, 29, 42, 58, 87, 174, 203, 406, 609, 1218 ]
   22     51     3      [ 1, 6, 17, 22, 33, 102, 374, 561 ]
   38     15     3      [ 1, 3, 10, 30, 38, 95, 114, 285 ]
   39     11     3      [ 1, 11, 39, 429 ]            
-  39     34     3      [ 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 ]
   55     7      3      [ 1, 35, 55, 77 ]             
   57     10     3      [ 1, 5, 6, 19, 30, 95, 114, 570 ]
-  77     10     3      [ 1, 2, 5, 7, 10, 11, 14, 22, 35, 55, 70, 77, 110, 154, 385, 770 ]
   141    2      3      [ 1, 3, 94, 282 ]             
   141    2      3      [ 1, 6, 94, 141 ]             
   158    3      3      [ 1, 2, 237, 474 ]            
@@ -125,11 +122,10 @@ count = 38
   2030   1      4      [ 1, 10, 14, 35, 58, 145, 203, 2030 ]
   2418   1      4      [ 1, 2, 13, 26, 93, 186, 1209, 2418 ]
   3390   1      4      [ 1, 5, 6, 30, 113, 565, 678, 3390 ]
-  4130   1      3      [ 1, 2, 5, 7, 10, 14, 35, 59, 70, 118, 295, 413, 590, 826, 2065, 4130 ]
 
 Open cases, by genus
 --------------------
-  genus 3 : 32
+  genus 3 : 28
   genus 4 : 6
 
 Open cases, by D (quaternion discriminant)
@@ -137,13 +133,12 @@ Open cases, by D (quaternion discriminant)
   D=6      : 14
   D=14     : 1
   D=15     : 2
-  D=21     : 2
+  D=21     : 1
   D=22     : 1
   D=38     : 1
-  D=39     : 2
+  D=39     : 1
   D=55     : 1
   D=57     : 1
-  D=77     : 1
   D=141    : 2
   D=158    : 1
   D=210    : 1
@@ -154,4 +149,3 @@ Open cases, by D (quaternion discriminant)
   D=2030   : 1
   D=2418   : 1
   D=3390   : 1
-  D=4130   : 1

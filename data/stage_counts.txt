@@ -39,5 +39,5 @@
 38  FilterByCanonicalQuadrics                      18379  53     12490   5836   21    
 39  UpdateCurvesAfterCanonicalQuadrics             18379  53     12490   5836   0     
 40  FilterByNonALInvolutions                       18379  39     12490   5850   0     
-41  FilterByHyperellipticCertificates              18379  38     12490   5851   0     
-42  UpdateCurves8                                  18379  38     12490   5851   0     
+41  FilterByHyperellipticCertificates              18379  34     12490   5855   0     
+42  UpdateCurves8                                  18379  34     12490   5855   0     
