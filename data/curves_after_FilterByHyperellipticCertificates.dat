@@ -41080,7 +41080,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 51>,
 <"g", 3>, <"CurveID", 5869>,
 <"CoveredBy", { IntegerRing() | 5829, 5831, 5843, 5849, 5850, 5853, 5854 }>,
 <"Covers", { IntegerRing() | 5876 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1428, 1>, <-408, 1> ] and [ <-168, 1>, <-8, 1> ] have equal sum on 238a1, torsion by the dual test at level 1428, zero by Phi_p for p in [ 2, 7 ]; untwisted: the Prym simple (L-polynomial irreducible at 5) (data/certificates/14_51.m)">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 51>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 51, 102 }>,
@@ -66203,7 +66203,7 @@ CreateShimuraQuot([* <"D", 38>, <"N", 15>,
 <"g", 3>, <"CurveID", 9458>,
 <"CoveredBy", { IntegerRing() | 9420, 9424, 9432, 9439, 9442, 9443, 9446 }>,
 <"Covers", { IntegerRing() | 9467 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-24, 1>, <-20, 1> ] and [ <-2280, 1> ] have equal sum on 190a1, torsion by the dual test at level 1140, zero by Phi_p for p in [ 2, 19 ]; untwisted: no rational 2-torsion (data/certificates/38_15.m)">
 *]),
 CreateShimuraQuot([* <"D", 38>, <"N", 15>,
 <"W", { IntegerRing() | 1, 5, 6, 30, 38, 57, 190, 285 }>,
@@ -82933,7 +82933,7 @@ CreateShimuraQuot([* <"D", 158>, <"N", 3>,
 <"g", 3>, <"CurveID", 11848>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 11851 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate O: the branch place of discriminant -632 over a D4 field with quadratic subfield Q(sqrt 8); the form of the star is old at 3, where chi = -1, so the stable pairing has equal sums on 158a1; untwisted: no rational 2-torsion (data/certificates/158_3.m)">
 *]),
 CreateShimuraQuot([* <"D", 158>, <"N", 3>,
 <"W", { IntegerRing() | 1, 3, 158, 474 }>,

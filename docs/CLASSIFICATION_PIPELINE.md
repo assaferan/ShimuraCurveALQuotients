@@ -31,18 +31,16 @@ stages now decide 22; the five are:
 * the two quotients of X_0(6,35): their stored models are not hyperelliptic (Noether's count), but the
   models rest on the m = 0 term of Schofer's formula at a composite level;
 * X_0(14,51), X_0(38,15), X_0(158,3) with the groups in the file: at p = 3 the special fibre is the genus-3
-  curve Z = X_0(D, N/3)/W′, which the dual graph at another prime shows is not hyperelliptic. What is
-  missing is that Z mod 3 is not hyperelliptic: the Weil polynomials of Z and of its twists at 3 are all
-  those of hyperelliptic curves (`CheckWeilPolynomialAtPrime`, `CheckTwistedAtPrime`), and no model of Z
-  is stored. Each Z is a genus-3 double cover of its elliptic star branched at four CM points (shape C),
-  so a route is: build every double cover of the star with that branch divisor (all twists by
-  2-torsion, `ExactDoubleCover.m`), reduce each mod 3 and run Noether's count over F_3; if all are smooth
-  and non-hyperelliptic mod 3, so is Z, whichever cover is the right one. The star and some CM
-  coordinates exist for 158_1 (campaign `genus1star/g1_158_1.log`); for 14_17 and 38_5 the Borcherds
-  route at the genus-one star failed, so the star and branch points would come from #128's heights.
+  curve Z = X_0(D, N/3)/W′, which the dual graph at another prime shows is not hyperelliptic over Q. That
+  does not rule X out: X has good reduction at 3 with X mod 3 ≅ Z mod 3, and Z mod 3 is hyperelliptic
+  (2026-11-08, `tools/special-fibre-3/zmod3.m`: for 14_17 and 38_5 the certified Heegner heights leave one
+  cover of the star; it reduces mod 3 to a smooth hyperelliptic curve with the trace formula's L-polynomial
+  of Z at 3). All three are in fact **hyperelliptic**, by the certificate stage: 14_51 and 38_15 by shape C
+  (dual tests at 1428 and 1140), 158_3 by shape O (`paper/classification-certificates.tex`, Section 6).
 
-**Status (2026-11-08): all 34 are certified.** The certificate stage decides every one of the 34 (33
-hyperelliptic, the 34th not), so the pipeline ends with the five quotients above undecided and no other
+**Status (2026-11-08): all 34 are certified, and three of the five further quotients.** The certificate stage
+decides every one of the 34 (33 hyperelliptic, the 34th not) and the three special-fibre quotients above
+(hyperelliptic), so the pipeline ends with the two quotients of X_0(6,35) undecided and no other
 (`data/stage_counts.txt`, `tests/OpenThirtyFour.m`). The shapes are A (7), B (5), B2 (6_341), C and C4 (the
 four of group C, and ten of group D), D (the other six of group D) and N (the 34th); see
 `paper/classification-certificates.tex`.
@@ -182,7 +180,7 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 
 1. **Land 61 → 34 in the data.** Done 2026-11-05 up to six quotients: the rerun leaves 40 undecided, the
    34 and the six of `open_gaps` (see "The data" above); `tests/OpenThirtyFour.m` checks both lists.
-   Remaining: the mod-3 step for the three special fibres, and the 6_35 models; 390_1 done 2026-11-06.
+   Remaining: the 6_35 models; 390_1 done 2026-11-06; the three special fibres certified 2026-11-08.
 2. **The dual test as an intrinsic.** Done 2026-11-07: `DualTest.m`; `tests/_offline/DualTestReproduces.m`
    reproduces all nine cases from the saved bases (`data/dual/bases.md5`). One CM dictionary and one dual test, with the 2 ∥ N and odd-D
    variants; the basis cache with checksums. Acceptance: it reproduces, from the saved bases, every
@@ -235,8 +233,9 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 6. **A stored model decides a curve only when the model is proved**: `FilterByCanonicalQuadrics` uses a model
    at D > 1 only for the curves on `data/models/proved_models.m`, each with the argument that proves its
    equation.
-7. **The three special-fibre quotients get a stage that also checks Z mod p.** The checks by point counts
-   are inconclusive at p = 3 (see "The data"), so the stage waits for a model of Z mod 3 or another argument.
+7. **The three special-fibre quotients get a stage that also checks Z mod p.** Superseded 2026-11-08: Z mod 3
+   is hyperelliptic for 14_51 and 38_15 (and must be for 158_3), so no check of Z decides them; all three are
+   hyperelliptic and the certificate stage proves it (shapes C and O).
 8. **Group D and the 34th go through the certificate stage, not through #128 (2026-11-08; supersedes 1 and
    3 for the classification).** The sixteen are genus-three double covers of an elliptic star, so shape C
    proves them from the branch divisor alone (dual test, component groups, twist), with no enumeration;

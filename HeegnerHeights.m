@@ -198,10 +198,10 @@ by the curve on which the form is new; deg g = 2(p + 1 + a_p) deg f, since each 
 field of the CM point, w_p acts on it as the Frobenius of the prime above p, so pi_2(P) is that
 conjugate of pi_1(P) and the chi-component of g(P) is (1 + chi(p)) times the component of f(pi_1 P).
 With degf passed as deg g, every component is therefore multiplied by
-(1 + chi(p))^2 / (2(p + 1 + a_p)); in particular it vanishes for chi(p) = -1. The argument is for p
-ramified in the field of the CM point, where w_p is that Frobenius; the same expression is applied
-at a p that is not ramified there, which is not derived, so at such a place the predicted height
-directs the search and only the point counts certify the result.}
+(1 + chi(p))^2 / (2(p + 1 + a_p)); in particular it vanishes for chi(p) = -1. At a p split in the
+field (it cannot be inert there, the field embedding in an Eichler order of level p), pi_2(P) is
+pi_1(P) moved by the Artin symbol of the prime above p that the level structure picks out, and the
+same expression holds with chi(p) the value there (paper/classification-certificates.tex, Section 6).}
     require IsFundamentalDiscriminant(d) and d lt 0: "d must be a negative fundamental discriminant";
     require OldformPrime eq 0 or IsPrime(OldformPrime): "OldformPrime must be a prime";
     // for a squarefree conductor no Euler factor is removed from L(s, E, chi) in the formula, and the
