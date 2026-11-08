@@ -119,6 +119,10 @@ case "${STAGE}" in
     FilterByNonALInvolutions)
         INPUT_DAT="${DATA_DIR}/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat"
         ;;
+    FilterByHyperellipticCertificates)
+        # The certificates, last: only curves with a file in data/certificates/ do work.
+        INPUT_DAT="${DATA_DIR}/curves_after_FilterByNonALInvolutions.dat"
+        ;;
     *)
         echo "ERROR: unknown stage '${STAGE}'" >&2
         echo "Supported: FilterByTraceStar, FilterByDualGraphStar, FilterByDualGraph, FilterByTwistedTraceStar, FilterByWeilPolynomialStar," >&2
