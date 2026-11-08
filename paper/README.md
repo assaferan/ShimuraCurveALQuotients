@@ -21,3 +21,13 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# X_0^6(341)/<w_3, w_11, w_62> is hyperelliptic
+
+`hyperelliptic-6-341.tex` — the proof: the Borcherds certificate of PR #142 (the branch pair is
+canonical up to the star's torsion), the star's Jacobian identified with that of the curve C of
+PR #143 up to isogeny (CHIMP endomorphisms and conductor, Ribet, the orbit at level 2046), the
+isogeny class shown to contain exactly two principally polarised surfaces (a chain of length two in
+the Bruhat–Tits tree, since the star has a rational 2-torsion point), the second one computed as
+the Jacobian of an explicit curve C_A, and C_A excluded because no double cover over Q can be
+branched along any class the certificate allows. Scripts and CHIMP logs in `tools/proof-6_341/`.

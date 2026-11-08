@@ -1,0 +1,43 @@
+odd conductor: 1046529 = [ <3, 2>, <11, 2>, <31, 2> ]
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+260) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+516) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+516) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+517) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Time: 9.770
+PROVED conductor exponent at 2: 2   => conductor = 2^2 * 3^2 * 11^2 * 31^2
