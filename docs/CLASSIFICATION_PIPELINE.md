@@ -183,9 +183,15 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    77_10, 39_34 (2 || N dual tests, with the check that the Jacobian is old at 2), 6_649 (sharp dual test,
    torsion bound 6 lowered to 2 by Φ₃). Shape B (branch divisor recomputed from the fixed points, a
    torsion-free genus-two star) certifies 2030_1, 2418_1, 6_403 (Borcherds forms) and 3390_1 (dual test).
-   The pipeline ends with 28 undecided (23 of the 34 and the five gaps). Left in shape B: 2002_1 (the
-   sharp test at level 4004, precision 2200, should replace its dual certificate) and 6_341 (torsion
-   bound 2; the second theta characteristic is excluded through the model of the star, #145). Each shape is accepted when the stage decides its curves from the certificates alone
+   2002_1 is shape B through the sharp test at level 4004, precision 2200. Shape C (genus three over an
+   elliptic star; Eran's choice 2026-11-08: a general verifier) checks the halves of the branch divisor,
+   identifies E exactly (traces to the Sturm bound of level DN, Tamagawa numbers against the component
+   groups, unique in its isogeny class), makes the pairing torsion by the dual test (on E's eigenspace
+   where given), zero by the component groups and the reduction of E(Q)_tors, and the cover untwisted by
+   a simple Prym or by the dual graph of Y (CoverIsUntwistedAtPrime): 15_38, 6_385, 714_5. The pipeline
+   ends with 24 undecided (19 of the 34 and the five gaps). Left: 6_341 (shape B with torsion 2: needs the
+   exact star and its Mordell-Weil group, #145), 6_323 (shape C with the Gross-Zagier torsion step,
+   decision 2), the sixteen of group D and the 34th (#128 made exact, decisions 1 and 3). Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
 4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
    multiplier; first for the 34th, then for the sixteen curves of group D.

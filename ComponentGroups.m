@@ -241,3 +241,84 @@ zero.  Also returns false if some class is nonzero, which proves the divisor is 
     end for;
     return B, principal, record;
 end intrinsic;
+
+intrinsic CoverIsUntwistedAtPrime(G::Rec, H::SetEnum, A::SeqEnum, B::SeqEnum, P0::RngIntElt) -> BoolElt, MonStgElt
+{For Y = X_0^D(N)/H, H of index two in the group W of the star E = X_0^D(N)/W of genus one, branched at the
+ divisor A + B with A - B principal on E (a function x), and E(Q)[2] = Z/2: whether the dual graph of Y at p
+ (G = ComponentGroupData(D, N, W, p)) shows that Y is the cover E(sqrt(c x)) and not E(sqrt(c x f)), f the
+ function with divisor 2 S - 2 P_0, S - P_0 the rational 2-torsion class and P_0 the rational CM point of
+ discriminant P0 (paper/hyperelliptic-15-38.tex, Section 4).  On the regular model the divisor of a function
+ is its horizontal part plus a vertical part a with Lap a = minus the specialisation; over a singular point of
+ thickness t the cover is etale where the slope of a is even and a single node where it is odd, and a
+ thickness-one node with odd slope makes the special fibre non-reduced.  True when the number of H-orbits of
+ edges above each edge of E matches the parity of the slope of x, and x f has odd slope at a thickness-one
+ node, so that cover is not semistable at p while Y is.}
+    require #G`inv eq 1 and IsEven(G`inv[1]) : "the test needs a cyclic component group of even order";
+    p := G`p; V := G`V; W := G`W;
+    Ed := [];
+    for i->e in G`edges do
+        prev := e[1];
+        for v in G`chain[i] do Append(~Ed, <prev, v>); prev := v; end for;
+        Append(~Ed, <prev, e[2]>);
+    end for;
+    Lap := ZeroMatrix(Integers(), V, V);
+    for e in Ed do Lap[e[1],e[1]] +:= 1; Lap[e[2],e[2]] +:= 1; Lap[e[1],e[2]] -:= 1; Lap[e[2],e[1]] -:= 1; end for;
+    Sm, Pm, Qm := SmithForm(Lap);
+    function vec(divisor)
+        v := ZeroMatrix(Integers(), V, 1);
+        for t in divisor do
+            cnt := CMSpecialisation(G, t[1]);
+            for w in Keys(cnt) do v[w, 1] +:= t[2] * cnt[w]; end for;
+        end for;
+        return v;
+    end function;
+    function class_of(v)
+        w := Pm * v; return [ w[i,1] mod Sm[i,i] : i in [1..V] | Sm[i,i] notin {0, 1} ];
+    end function;
+    function solve(v)
+        w := Pm * v; y := ZeroMatrix(Integers(), V, 1);
+        for i in [1..V] do
+            if Sm[i,i] eq 0 then
+                if w[i,1] ne 0 then return false, _; end if;
+            else
+                if w[i,1] mod Sm[i,i] ne 0 then return false, _; end if;
+                y[i,1] := w[i,1] div Sm[i,i];
+            end if;
+        end for;
+        return true, Qm * y;
+    end function;
+    ok, ax := solve(vec(A cat [<c[1], -c[2]> : c in B]));
+    if not ok then return false, "the pairing does not reduce to the identity component"; end if;
+    cnt0 := CMSpecialisation(G, P0);
+    if #Keys(cnt0) ne 1 or &+[cnt0[k] : k in Keys(cnt0)] ne 1 then return false, "P_0 is not a single point on one component"; end if;
+    v0 := Rep(Keys(cnt0));
+    unit := func< v, m | Matrix(Integers(), V, 1, [ i eq v select m else 0 : i in [1..V] ]) >;
+    half := G`inv[1] div 2;
+    two := [ v : v in [1..V] | class_of(unit(v, 1) - unit(v0, 1)) eq [half] ];
+    if IsEmpty(two) then return false, "no component carries the 2-torsion class"; end if;
+    ok, af := solve(unit(two[1], 2) - unit(v0, 2));
+    if not ok then return false, "the function f does not exist on the regular model"; end if;
+    // the edges of Y: the H-orbits of the edges of the Cerednik-Drinfeld graph
+    eact := function(m, e) for q in PrimeDivisors(m) do e := cg_img(G`alE, q)[e]; end for; return e; end function;
+    eorbH := [0 : e in [1..G`hp]]; nH := 0;
+    for e in [1..G`hp] do
+        if eorbH[e] ne 0 then continue; end if;
+        S := { eact(m, e) : m in H };
+        if exists{m : m in H | m mod p eq 0 and eact(m, e) eq e} then for x in S do eorbH[x] := -1; end for; continue; end if;
+        nH +:= 1; for x in S do eorbH[x] := nH; end for;
+    end for;
+    oddslope := 0;
+    for i->e in G`edges do
+        reps := [ ee : ee in [1..G`hp] | G`eorb[ee] eq i ];
+        above := #{ eorbH[ee] : ee in reps };
+        if above notin {1, 2} or 0 in { eorbH[ee] : ee in reps } then return false, "an edge of E has no edge of Y above it"; end if;
+        sx := (ax[e[2],1] - ax[e[1],1]) / G`thick[i]; sf := ((ax + af)[e[2],1] - (ax + af)[e[1],1]) / G`thick[i];
+        if not (IsIntegral(sx) and IsIntegral(sf)) then return false, "a slope is not integral"; end if;
+        if (above eq 1) ne IsOdd(Integers()!sx) then
+            return false, Sprintf("the dual graph of Y does not match the cover E(sqrt(c x)) at edge %o", i);
+        end if;
+        if G`thick[i] eq 1 and IsOdd(Integers()!sf) then oddslope +:= 1; end if;
+    end for;
+    if oddslope eq 0 then return false, "the twisted cover is semistable at p as well"; end if;
+    return true, Sprintf("the dual graph of Y at %o is that of the untwisted cover, and the twisted cover is not semistable there", p);
+end intrinsic;

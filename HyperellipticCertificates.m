@@ -94,14 +94,16 @@ function relations_by_dual_test(star, cert, eff)
     D := star`D; N := star`N;
     tests := [* *];
     for spec in cert["dualtests"] do
-        M, B, variant, md5 := Explode(spec);
+        M, B, variant, md5 := Explode(<spec[1], spec[2], spec[3], spec[4]>);
         fn := Sprintf("%o/basis_%o_%o.txt", DualTestBasisDirectory(), M, B);
         if not FileExists(fn) then return false, {}, Sprintf("the weight-3/2 basis %o is missing", fn); end if;
         if variant ne "sharp" then
             ok, why := jacobian_old_at_two(star);
             if not ok then return false, {}, why; end if;
         end if;
-        Append(~tests, DualTestSpace(D, N, ReadWeightThreeHalvesBasis(M, B : MD5 := md5) : Variant := variant));
+        T := DualTestSpace(D, N, ReadWeightThreeHalvesBasis(M, B : MD5 := md5) : Variant := variant);
+        if #spec ge 5 then T := RestrictDualTestSpace(T, spec[5][1], spec[5][2]); end if;
+        Append(~tests, T);
     end for;
     edges := {};
     for r in cert["relations"] do
@@ -207,6 +209,103 @@ function verify_shape_B(X, cert)
                          eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"]);
 end function;
 
+// Shape C (genus three over an elliptic star, paper/hyperelliptic-15-38.tex, Sections 1-4).  Y = X_0^D(N)/H
+// of genus 3 is a double cover of the genus-one star E branched at four points; Y is hyperelliptic when they
+// split into two pairs A, B of equal sum in the group E and Y is the untwisted cover.  The certificate names
+// E (a Cremona label), the halves A and B, the dual test that makes A - B torsion, the primes p | D whose
+// component groups Phi_p kill the torsion, and, when E(Q)[2] is not zero, a prime at which the Prym of
+// Y -> E has an irreducible L-polynomial (the twist by the rational 2-torsion class has a Prym isogenous to
+// a product of two elliptic curves over Q, paper/hyperelliptic-6-385.tex).
+function verify_shape_C(X, cert)
+    D := X`D; N := X`N;
+    star, full := cert_star(D, N);
+    if #full ne 2 * #X`W or star`g ne 1 or X`g ne 3 then
+        return false, "shape C needs a genus-three double cover of a genus-one star";
+    end if;
+    A := cert["divisors"][1]; B := cert["divisors"][2];
+    // the branch divisor is A + B
+    branch := {Integers() | };
+    for m in full diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, m);
+        branch join:= {d : d in Keys(e) | e[d] ne 0};
+    end for;
+    if branch ne {c[1] : c in A cat B} or exists{c : c in A cat B | c[2] ne 1} or #(A cat B) ne #branch then
+        return false, Sprintf("the branch divisor is supported on %o, not on the halves %o, %o", branch, A, B);
+    end if;
+    for E0 in [A, B] do
+        deg := &+[c[2] * DegreeOfFieldOfDefinitionOfCMPoint(star, c[1]) : c in E0];
+        if deg ne 2 then return false, Sprintf("the half %o has degree %o", E0, deg); end if;
+    end for;
+    // E exactly: the isogeny class from the traces up to the Sturm bound of level DN, the curve from the
+    // Tamagawa numbers at the primes of D, which are the orders of the component groups of the star
+    E := MinimalModel(EllipticCurve(cert["E"]));
+    if (D*N) mod Conductor(E) ne 0 then return false, Sprintf("%o has conductor %o, not dividing %o", cert["E"], Conductor(E), D*N); end if;
+    sturm := Ceiling((D*N) * &*[1 + 1/q : q in PrimeDivisors(D*N)] / 6);
+    for q in [q : q in PrimesInInterval(2, sturm) | (D*N) mod q ne 0] do
+        if q + 1 - ComputePointsViaTrace(star, q, 1) ne TraceOfFrobenius(E, q) then
+            return false, Sprintf("the star and %o differ at %o", cert["E"], q);
+        end if;
+    end for;
+    tam := IsDefined(cert, "tamagawa") select cert["tamagawa"] else PrimeDivisors(D);
+    phis := AssociativeArray();
+    for q in Set(tam) join Set(cert["phi"]) do phis[q] := ComponentGroupData(D, N, full, q); end for;
+    orders := [&*([1] cat ComponentGroup(phis[q])) : q in tam];
+    if [TamagawaNumber(E, q) : q in tam] ne orders then
+        return false, Sprintf("the Tamagawa numbers of %o at %o are not the orders %o of the component groups", cert["E"], tam, orders);
+    end if;
+    if exists{E2 : E2 in IsogenousCurves(E) | not IsIsomorphic(E2, E) and [TamagawaNumber(E2, q) : q in tam] eq orders} then
+        return false, "the component groups do not single out one curve of the isogeny class";
+    end if;
+    // A - B is torsion.  On a genus-one star every Heegner component lies in the a_q(E)-eigenspace of
+    // T(q^2), so a test spec <M, B, variant, md5, q> is restricted to it, with a_q taken from E.
+    eff := [A, B];
+    cc := cert;
+    cc["dualtests"] := [ #spec ge 5 select <spec[1], spec[2], spec[3], spec[4], <spec[5], TraceOfFrobenius(E, spec[5])>>
+                                    else spec : spec in cert["dualtests"] ];
+    ok, edges, info := relations_by_dual_test(star, cc, eff);
+    if not ok then return false, info; end if;
+    if {1, 2} notin edges then return false, "the dual test does not relate the two halves"; end if;
+    // A - B = 0: its class is zero in each Phi_p of cert["phi"], and every nonzero rational torsion point
+    // leaves the identity component at one of those p
+    Delta := A cat [<c[1], -c[2]> : c in B];
+    for q in cert["phi"] do
+        if exists{x : x in ClassInComponentGroup(phis[q], Delta) | x ne 0} then
+            return false, Sprintf("the pairing has nonzero class in Phi_%o", q);
+        end if;
+    end for;
+    G, mG := TorsionSubgroup(E);
+    function in_identity_component(P, q)
+        Eq := ChangeRing(E, GF(q));
+        if IsZero(P) then return true; end if;
+        return not (Curve(Eq)!(Eq(GF(q))![GF(q)!c : c in Eltseq(P)]) in SingularPoints(Curve(Eq)));
+    end function;
+    if exists{T : T in G | T ne G!0 and forall{q : q in cert["phi"] | in_identity_component(mG(T), q)}} then
+        return false, Sprintf("a rational torsion point of %o lies on the identity component at every p in %o", cert["E"], cert["phi"]);
+    end if;
+    // the twist
+    two := #TwoTorsionSubgroup(E);
+    how := "no rational 2-torsion";
+    if two gt 1 then
+        if IsDefined(cert, "prym") then
+            q := cert["prym"];
+            P := ZetaNumeratorViaTrace(X, q : Check := false) div ZetaNumeratorViaTrace(star, q : Check := false);
+            if not IsIrreducible(P) then return false, Sprintf("the Prym L-polynomial at %o is reducible", q); end if;
+            how := Sprintf("the Prym simple (L-polynomial irreducible at %o)", q);
+        elif IsDefined(cert, "dualgraph") then
+            if two ne 2 then return false, "the dual-graph twist test needs E(Q)[2] = Z/2"; end if;
+            q, P0 := Explode(cert["dualgraph"]);
+            if not IsDefined(phis, q) then phis[q] := ComponentGroupData(D, N, full, q); end if;
+            ok, why := CoverIsUntwistedAtPrime(phis[q], X`W, A, B, P0);
+            if not ok then return false, why; end if;
+            how := why;
+        else
+            return false, "E(Q)[2] is not zero and no twist argument is given";
+        end if;
+    end if;
+    return true, Sprintf("HyperellipticCertificate C: the halves %o and %o have equal sum on %o, torsion by %o, zero by Phi_p for p in %o; untwisted: %o (%o)",
+                         A, B, cert["E"], info, cert["phi"], how, cert["file"]);
+end function;
+
 intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt, MonStgElt
 {True and a label if the certificate cert, read from a file of data/certificates/, proves that X is
  hyperelliptic; otherwise false and the hypothesis that fails.  Every hypothesis is rechecked.}
@@ -216,6 +315,7 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
     case cert["shape"]:
         when "A": return verify_shape_A(X, cert);
         when "B": return verify_shape_B(X, cert);
+        when "C": return verify_shape_C(X, cert);
     end case;
     return false, Sprintf("shape %o is not implemented", cert["shape"]);
 end intrinsic;
