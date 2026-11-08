@@ -231,8 +231,8 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    the 34th is shape N: the only Galois-stable pairing of its branch places, {P_-4, P_-12} | Z_-1128, has
    class 2 in Phi_3 = Z/7, so it is not hyperelliptic. #128's models stay as equations; making #128 exact
    is needed only if those equations are to be theorems. Done 2026-11-08: 39_11, 6_185, 141_2, 21_34,
-   55_7 (a_3(E)-eigenspace), 57_10, 15_46 (the odd variant), 6_253, 6_247. Open: 6_301 and 6_455 (bases at
-   3612 and 5460 computing), 690_7 (level 9660, started 2026-11-08), 22_51 (the pairing is certified zero, but
+   55_7 (a_3(E)-eigenspace), 57_10, 15_46 (the odd variant), 6_253, 6_247, 6_301. Open: 6_455 (basis at
+   5460 computing), 690_7 (level 9660, started 2026-11-08), 22_51 (the pairing is certified zero, but
    neither twist test applies: no simple Prym, and D = 22 has no odd prime with an even cyclic Phi), 6_187
    (the Galois-stable pairing is a mixed one over Q(sqrt -2), so its difference lies in E(K)^-, as at
    6_323), 1326_1 and 210_13 (W has index four, so the elliptic quotient is not the star).
