@@ -1,9 +1,9 @@
 // The quotients that the filters of the committed pipeline data leave undecided (no stage before
 // the certificates proved or ruled out hyperellipticity) are exactly the 34 of data/open_34.m, the list of
-// paper/hyperelliptic-candidates.tex, together with the five of its second list, which arguments
-// outside the code settle.  The 34 were obtained independently of the filters, from Noether's count
-// on the differentials, so the test fails if a stage stops deciding a quotient it used to decide, or
-// decides one of the 34.
+// paper/hyperelliptic-candidates.tex, together with the five of its second list.  The 34 were obtained
+// independently of the filters, from Noether's count on the differentials, so the test fails if a stage
+// stops deciding a quotient it used to decide, or decides one of the 34.  After the certificate stage,
+// exactly the listed quotients with a certificate are decided, by it.
 
 open_34, open_gaps := eval (Read("data/open_34.m") cat "\nreturn open_34, open_gaps;");
 assert #open_34 eq 34 and #open_gaps eq 5;
@@ -24,10 +24,10 @@ if found ne expected then
 end if;
 assert #undecided eq #found and found eq expected;
 
-// after it: the curves of the 34 with a certificate are decided by it (hyperelliptic, or not for shape N),
+// after it: the listed curves with a certificate are decided by it (hyperelliptic, or not for shape N),
 // nothing else moves
 shape := AssociativeArray();
-for k in the34 do
+for k in expected do
     for c in ReadHyperellipticCertificates(k[1], k[2]) do
         if {Integers() | m : m in c["W"]} eq k[3] then shape[k] := c["shape"]; end if;
     end for;

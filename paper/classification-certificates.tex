@@ -1,11 +1,13 @@
 % The certificate stage of the classification pipeline: what each certificate proves, the thirty-fourth open
 % quotient by one component group, the curves that #128 modelled, proved from their branch divisors or by
 % certified Heegner heights, 6_341 by the isogeny class of its star, the Gross-Zagier step of 6_323 made
-% exact, and two corrections to the counting of CM points.
+% exact, three quotients with a special fibre at 3 proved hyperelliptic, and two corrections to the counting
+% of CM points.
 % Code: HyperellipticCertificates.m, DualTest.m, ComponentGroups.m, HeegnerHeights.m; data:
 % data/certificates/, data/dual/.  Tests: tests/HyperellipticCertificates.m, tests/HyperellipticCertificatesB2.m,
-% tests/CertifiedLValues.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and tests/_offline/{DualTestReproduces,
-% HyperellipticCertificatesC,HyperellipticCertificatesC4,HyperellipticCertificatesD}.m.
+% tests/HyperellipticCertificatesO.m, tests/CertifiedLValues.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and
+% tests/_offline/{DualTestReproduces,HyperellipticCertificatesC,HyperellipticCertificatesC4,
+% HyperellipticCertificatesD,HyperellipticCertificatesSpecialFibre}.m; tools/special-fibre-3/zmod3.m.
 \documentclass[11pt,reqno]{amsart}
 \usepackage[margin=1.15in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
@@ -54,13 +56,16 @@ bound and by its reduction types $I_n$ against the orders of the $\Phi_p$.
 \item[D] Genus three over a genus-one quotient: the Heegner-height route of \texttt{paper/heegner-height-models.tex}
 with every numerical recognition proved (Section~3).
 \item[N] Not hyperelliptic (Section~2).
+\item[O] Genus three over a genus-one star whose form is old at a prime $p\parallel N$, with one branch place of
+degree four: the component of the pairing for a genus character with $\chi(p)=-1$ vanishes (Section~6).
 \end{itemize}
 
 All $34$ are decided this way: the seven of shape A, the five of shape B, $6_{341}$ by shape B2, the four of
 shapes C and C4 that \texttt{paper/hyperelliptic-candidates.tex} lists separately, the sixteen that
 \texttt{paper/heegner-height-models.tex} modelled (ten by shape C and six by shape D, Section~3), and the
-thirty-fourth (Section~2). Five further curves that the filters leave open, outside the $34$, wait on other
-arguments (\texttt{data/open\_34.m}, \texttt{open\_gaps}).
+thirty-fourth (Section~2). Five further curves that the filters leave open are outside the $34$
+(\texttt{data/open\_34.m}, \texttt{open\_gaps}): the three with a special fibre at $3$ are hyperelliptic
+(Section~6), and the two quotients of $X_0^6(35)$ wait on the $m=0$ term of Schofer's formula.
 
 \section{The thirty-fourth quotient is not hyperelliptic}
 
@@ -191,6 +196,74 @@ has $a_p=0$. So $L(E^{(969)},1)=0$ exactly when the image of the twisted winding
 $\sum_a\varepsilon(a)\{0,a/m\}$ in the $f$-part of the modular symbols of level $1938$ is zero, which it is. The
 same computation gives nonzero values for the twists of root number $+1$ by $5$, $17$, $21$. This replaces the
 proved rank $2$ of $E^{(969)}$ that the earlier argument used, which does not by itself give the vanishing.
+
+\section{Three quotients with a special fibre at $3$}
+
+The quotients $X_0^{14}(51)/\langle w_6,w_{14},w_{34}\rangle$, $X_0^{38}(15)/\langle w_3,w_{10},w_{38}\rangle$ and
+$X_0^{158}(3)/\langle w_2,w_{237}\rangle$ have genus three and are not among the $34$; the filters leave them
+open. At $p=3$, which exactly divides $N$ and not $D$, the special fibre of $X=X_0^D(N)/W$ is
+$Z=X_0^D(N/3)/W'$, $W'$ the elements of $W$ prime to $3$; $Z$ has genus three, so $X$ has good reduction at
+$3$ and $X\bmod 3\cong Z\bmod 3$. $Z$ is not hyperelliptic over $\Q$ (the dual graph at $7$, $2$, $2$), and the
+earlier note took this to rule $X$ out. It does not: a hyperelliptic $X$ makes $Z\bmod 3$ hyperelliptic, not $Z$,
+and $Z\bmod 3$ is hyperelliptic. For $Z=X_0^{14}(17)/\langle w_{14},w_{34}\rangle$ and $X_0^{38}(5)/\langle
+w_{10},w_{38}\rangle$, the certified Heegner heights leave one double cover of the star consistent with the trace
+formula; it is not hyperelliptic over $\Q$, and its reduction mod $3$ is smooth of genus three, has the
+$L$-polynomial of $Z$ at $3$ given by the trace formula, and has a conic for canonical image
+(\texttt{tools/special-fibre-3/zmod3.m}).
+
+\begin{theorem}
+All three quotients are hyperelliptic.
+\end{theorem}
+
+\begin{proof}
+In each case the star $S=X/\langle W,w\rangle$ has genus one and its form is old at $3$: $\Jac(S)$ is in the
+isogeny class of conductor $DN/3$, namely $238a$, $190a$, $158a$.
+
+\emph{$X_0^{14}(51)$ and $X_0^{38}(15)$: shape C.} Shape C uses nothing about the level of the form. The halves
+are $P_{-1428}+P_{-408}$ and $P_{-168}+P_{-8}$ on $E=238a1$, and $P_{-24}+P_{-20}$ and $Z_{-2280}$ on $E=190a1$. The
+dual test against the cusp forms of weight $\frac32$ of level $1428$, resp.\ $1140$, to precision $4000$ (the
+space $W$ has dimension one in both) makes the difference torsion. It is zero by its classes in
+$\Phi_2\cong\Z/14$ and $\Phi_7\cong\Z/2$, resp.\ $\Phi_2\cong\Z/11$ and $\Phi_{19}$. The cover is untwisted: the
+Prym is simple at $5$, resp.\ $E(\Q)[2]=0$. The other pairing of the four rational points of $X_0^{14}(51)$ is
+refused by the dual test, and $238a2$ by its reduction types. Independently, the Heegner heights with the
+form old at $3$ leave one cover of each star, hyperelliptic over $\Q$, matching the trace formula of $X$, and
+with the $L$-polynomial of $Z$ at $3$. For $X_0^{38}(15)$ it is $y^2=x^8+60x^6+2598x^4-14596x^2-95$, of
+discriminant $2^{130}5^5 19^3$.
+
+\emph{$X_0^{158}(3)$: shape O.} The branch points are the four points $Q_1,\dots,Q_4$ of discriminant $d=-632$
+fixed by $w_{158}$, one place over a quartic field whose Galois closure $H'$ has group $D_4$ and whose
+quadratic subfield is $k=\Q(\sqrt{-79})$. $K=\Q(\sqrt{-158})$ has class group $\Z/8$, and $H'$ is its class
+field with $\mathrm{Gal}(H'/K)\cong\Z/4$, which permutes the $Q_t$ cyclically. The only Galois-stable pairing
+is $\{Q_1,Q_3\}\mid\{Q_2,Q_4\}$, the orbits of the subgroup of order two, with sums $R=Q_1+Q_3$ and $R^\sigma$,
+$\sigma$ any element not fixing $k$. So $R-R^\sigma=\sum_t\chi(t)\,Q_t$ with $\chi$ the character of order two of
+$\mathrm{Gal}(H'/K)$, which is the genus character of $-632=(-79)\cdot 8$.
+
+Let $\varphi\colon X_0^{158}(1)\to E=158a1$ factor through the star of level $158$, and let
+$\pi_1,\pi_2\colon X_0^{158}(3)\to X_0^{158}(1)$ be the degeneracy maps. $G=\varphi\pi_1+\varphi\pi_2$ factors through
+$S$, since $\pi_2=\pi_1w_3$ and $\varphi$ is invariant under $w_2,w_{79}$, and has degree
+$2(3+1+a_3)\deg\varphi\neq0$, so $G_*\colon\Jac(S)\to E$ is an isogeny. The prime $3$ splits in $K$. A CM point
+$P$ of discriminant $d$ on $X_0^{158}(3)$ has an optimal embedding into an Eichler order of level $3$, the edge of
+the tree of $\mathrm{GL}_2(\Q_3)$ that $K_3^\times=\Q_3^\times\times\Q_3^\times$ translates by $(3,1)$; its two
+vertices are the two maximal orders, so $\pi_2(P)$ is $\pi_1(P)$ moved by a uniformiser at a prime $\mathfrak p\mid
+3$ of $K$, which by Shimura reciprocity is the Artin symbol $\sigma_{\mathfrak p}$. As
+$\chi(\mathfrak p)=(-79/3)=-1$,
+\[
+  G_*(R-R^\sigma)=\sum_t\chi(t)\bigl(\varphi(\pi_1P^t)+\varphi(\sigma_{\mathfrak p}\pi_1P^t)\bigr)
+  =(1+\chi(\mathfrak p))\sum_t\chi(t)\,\varphi(\pi_1P^t)=0 .
+\]
+So $R-R^\sigma$ is torsion. It lies in $\Jac(S)(k)^-\cong\Jac(S)^{(-79)}(\Q)$, and $158a1$, the only curve of its
+class, has a twist by $-79$ without torsion, so $R=R^\sigma$. The class of $Q_1+Q_3$ is then Galois-invariant,
+and since $S$ has the rational point $P_{-8}$ it is the class of a rational divisor; the square root of the
+branch divisor that defines the cover differs from it by a rational point of order two of $\Jac(S)$, which is
+zero. So $X$ is hyperelliptic (\texttt{paper/hyperelliptic-15-38.tex}, Section~1).
+\end{proof}
+
+On $Z=X_0^{158}(1)/\langle w_2\rangle$ the same component does not vanish: its height by Cai--Shu--Tian, with
+certified $L$-values, is $15.84$, as it must be for a curve that is not hyperelliptic over $\Q$. The factor
+$(1+\chi(p))^2$ is the one \texttt{HeegnerHeightComponents} applies for a form old at $p$; the argument above
+derives it at a split $p$ as well as at a ramified one. (\texttt{data/certificates/14\_51.m}, \texttt{38\_15.m},
+shape C; \texttt{158\_3.m}, shape O; \texttt{tests/HyperellipticCertificatesO.m},
+\texttt{tests/\_offline/HyperellipticCertificatesSpecialFibre.m}.)
 
 \section{Two corrections to the counting of CM points}
 

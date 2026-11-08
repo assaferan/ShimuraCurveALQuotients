@@ -623,6 +623,69 @@ function verify_shape_N(X, cert)
                          places, used, cert["file"]);
 end function;
 
+// Shape O (a genus-three double cover of an elliptic star whose form is old at a prime p || N, p not dividing
+// D; paper/classification-certificates.tex, Section 6).  The four branch points Q_1, ..., Q_4 are one Galois
+// orbit of CM points of fundamental discriminant d, permuted by a D4 whose unique stable pairing
+// {Q_1, Q_3} | {Q_2, Q_4} is defined over the quadratic subfield k, and R - R^sigma, R = Q_1 + Q_3, is the
+// chi-component of the orbit for the genus character chi of k.  The star maps to E by phi o pi_1 + phi o pi_2,
+// and pi_2 of a CM point is pi_1 of it moved by the Frobenius of a prime above p (p splits in Q(sqrt d)), so
+// that component is multiplied by 1 + chi(p) = 0: R - R^sigma is torsion in E(k)^- = E^(d_k)(Q), which is
+// torsion-free for every curve of the class, so the pairing has equal sums, and E(Q)[2] = 0 leaves no twist.
+function verify_shape_O(X, cert)
+    D := X`D; N := X`N; p := cert["p"];
+    star, full := cert_star(D, N);
+    if #full ne 2 * #X`W or star`g ne 1 or X`g ne 3 then
+        return false, "shape O needs a genus-three double cover of a genus-one star";
+    end if;
+    if not (IsPrime(p) and N mod p eq 0 and (N div p) mod p ne 0 and D mod p ne 0) then
+        return false, Sprintf("%o is not a prime exactly dividing N and prime to D", p);
+    end if;
+    // the star's Jacobian is the curve of conductor DN/p: its form is old at p
+    E := MinimalModel(EllipticCurve(cert["E"]));
+    if Conductor(E) ne (D*N) div p then return false, Sprintf("%o does not have conductor %o", cert["E"], (D*N) div p); end if;
+    sturm := Ceiling((D*N) * &*[1 + 1/q : q in PrimeDivisors(D*N)] / 6);
+    for q in [q : q in PrimesInInterval(2, sturm) | (D*N) mod q ne 0] do
+        if q + 1 - ComputePointsViaTrace(star, q, 1) ne TraceOfFrobenius(E, q) then
+            return false, Sprintf("the star and %o differ at %o", cert["E"], q);
+        end if;
+    end for;
+    // the branch points: one place of degree 4, of a fundamental discriminant d
+    branch := {Integers() | };
+    for m in full diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, m);
+        branch join:= {dd : dd in Keys(e) | e[dd] ne 0};
+    end for;
+    if #branch ne 1 then return false, Sprintf("the branch points have the discriminants %o, not one", branch); end if;
+    d := rep{dd : dd in branch};
+    if not IsFundamentalDiscriminant(d) or DegreeOfFieldOfDefinitionOfCMPoint(star, d) ne 4 then
+        return false, Sprintf("the branch place of discriminant %o is not of degree 4 with d fundamental", d);
+    end if;
+    L := AbsoluteField(FieldOfDefinitionOfCMPoint(star, d));
+    if #GaloisGroup(L) ne 8 then return false, "the Galois group of the branch place is not D4"; end if;
+    ks := Subfields(L, 2);
+    if #ks ne 1 then return false, "the field of the branch place does not have one quadratic subfield"; end if;
+    dk := Discriminant(MaximalOrder(ks[1][1]));
+    if dk eq d or d mod dk ne 0 or not IsFundamentalDiscriminant(d div dk) then
+        return false, Sprintf("Q(sqrt %o) is not the field of a genus character of discriminant %o", dk, d);
+    end if;
+    if KroneckerSymbol(d, p) ne 1 or KroneckerSymbol(dk, p) ne -1 then
+        return false, Sprintf("chi(p) is not -1: p = %o, d = %o, d_k = %o", p, d, dk);
+    end if;
+    for F in IsogenousCurves(E) do
+        if #TwoTorsionSubgroup(F) ne 1 then return false, Sprintf("%o has rational 2-torsion", CremonaReference(F)); end if;
+        if #TorsionSubgroup(QuadraticTwist(F, dk)) ne 1 then
+            return false, Sprintf("the twist of %o by %o has torsion", CremonaReference(F), dk);
+        end if;
+    end for;
+    // a rational point on the star, so a Galois-invariant divisor class is the class of a rational divisor
+    d0 := cert["ratpoint"];
+    if not (CarriesCMPoint(D, N, d0) and DegreeOfFieldOfDefinitionOfCMPoint(star, d0) eq 1) then
+        return false, Sprintf("the star has no rational CM point of discriminant %o", d0);
+    end if;
+    return true, Sprintf("HyperellipticCertificate O: the branch place of discriminant %o over a D4 field with quadratic subfield Q(sqrt %o); the form of the star is old at %o, where chi = %o, so the stable pairing has equal sums on %o; untwisted: no rational 2-torsion (%o)",
+                         d, dk, p, KroneckerSymbol(dk, p), cert["E"], cert["file"]);
+end function;
+
 // Shape D (the exact Heegner-height route, paper/heegner-height-models.tex with the certified mode of
 // ModelByHeegnerHeights): Y of genus 3 over the elliptic star E, identified exactly as in shape C; the
 // branch points' heights from Cai-Shu-Tian with certified L-values, every recognition proved, give a finite
@@ -667,6 +730,7 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
         when "C4": return verify_shape_C4(X, cert);
         when "N": return verify_shape_N(X, cert);
         when "D": return verify_shape_D(X, cert);
+        when "O": return verify_shape_O(X, cert);
     end case;
     return false, Sprintf("shape %o is not implemented", cert["shape"]);
 end intrinsic;

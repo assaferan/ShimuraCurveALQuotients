@@ -46,19 +46,19 @@ open_34 := [
     <690, 7, [1, 6, 10, 14, 15, 21, 23, 35, 138, 210, 230, 322, 345, 483, 805, 4830]>
 ];
 
-// Five further quotients that the filters leave undecided although an argument outside the code
-// settles each of them as not hyperelliptic.  Each stays here until its argument is a stage.
+// Five further quotients that the filters leave undecided, none of them among the 34.
 //   * X_0^6(35)/W, two groups: the canonical quadrics of the stored models (0 relations) show that
 //     the models are not hyperelliptic, but the models rest on the m = 0 term of Schofer's formula
 //     at a composite level, so they are not on the list of proved models.
-//   * X_0^14(51), X_0^38(15), X_0^158(3) with the groups below: at p = 3 the special fibre is the
-//     genus-3 curve Z = X_0^D(N/3)/W' (W contains an involution swapping the two copies), Z is not
-//     hyperelliptic by the dual graph at another prime, but Z mod 3 is not shown non-hyperelliptic
-//     (the Weil polynomials of Z and its twists at 3 are all those of hyperelliptic curves).
+//   * X_0^14(51), X_0^38(15), X_0^158(3) with the groups below: hyperelliptic, by the certificate stage
+//     (data/certificates/14_51.m, 38_15.m: shape C; 158_3.m: shape O).  The special fibre at 3 is the
+//     genus-3 curve Z = X_0^D(N/3)/W', which the dual graph shows is not hyperelliptic over Q, but Z mod 3
+//     is hyperelliptic (computed for the first two by tools/special-fibre-3/zmod3.m; for the third it follows
+//     from X, which has good reduction at 3), so the special fibre does not rule X out.
 open_gaps := [
     <6, 35, [1, 3, 5, 15], "model rests on the composite-level m = 0 term">,
     <6, 35, [1, 5, 7, 35], "model rests on the composite-level m = 0 term">,
-    <14, 51, [1, 6, 14, 21, 34, 51, 119, 714], "special fibre at 3: Z = X_0^14(17)/{1,14,34,119} mod 3">,
-    <38, 15, [1, 3, 10, 30, 38, 95, 114, 285], "special fibre at 3: Z = X_0^38(5)/{1,10,38,95} mod 3">,
-    <158, 3, [1, 2, 237, 474], "special fibre at 3: Z = X_0^158(1)/{1,2} mod 3">
+    <14, 51, [1, 6, 14, 21, 34, 51, 119, 714], "hyperelliptic: certificate, shape C">,
+    <38, 15, [1, 3, 10, 30, 38, 95, 114, 285], "hyperelliptic: certificate, shape C">,
+    <158, 3, [1, 2, 237, 474], "hyperelliptic: certificate, shape O">
 ];
