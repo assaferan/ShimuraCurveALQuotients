@@ -58,7 +58,7 @@
 #   FilterByCanonicalQuadrics [sequential]
 #   UpdateCurvesAfterCanonicalQuadrics [sequential]
 #   FilterByNonALInvolutions               [PARALLEL]
-#   FilterByHyperellipticCertificates      [sequential]  (data/certificates/: proofs rechecked; last,
+#   FilterByHyperellipticCertificates      [PARALLEL]    (data/certificates/: proofs rechecked; last,
 #                                                         so it sees exactly what no filter decides)
 #   UpdateCurves8                          [sequential]
 
@@ -230,8 +230,7 @@ run_seq "FilterByCanonicalQuadrics" "${D}/curves_after_UpdateCurvesAfterTwistedW
 run_seq "UpdateCurvesAfterCanonicalQuadrics" "${D}/curves_after_FilterByCanonicalQuadrics.dat" \
                                                                                    "${D}/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat"
 run_par "FilterByNonALInvolutions"
-run_seq "FilterByHyperellipticCertificates" "${D}/curves_after_FilterByNonALInvolutions.dat" \
-                                                                                   "${D}/curves_after_FilterByHyperellipticCertificates.dat"
+run_par "FilterByHyperellipticCertificates"
 run_seq "UpdateCurves8"       "${D}/curves_after_FilterByHyperellipticCertificates.dat" "${D}/curves_after_UpdateCurves8.dat"
 
 echo ""

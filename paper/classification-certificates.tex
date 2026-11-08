@@ -1,0 +1,131 @@
+% The certificate stage of the classification pipeline: what each certificate proves, the thirty-fourth open
+% quotient by one component group, the curves that #128 modelled proved from their branch divisors alone,
+% the Gross-Zagier step of 6_323 made exact, and two corrections to the counting of CM points.
+% Code: HyperellipticCertificates.m, DualTest.m, ComponentGroups.m; data: data/certificates/, data/dual/.
+% Tests: tests/HyperellipticCertificates.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and
+% tests/_offline/{DualTestReproduces,HyperellipticCertificatesC,HyperellipticCertificatesC4}.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\Cl}{Cl}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{Certificates for the open quotients}
+\author{}
+\date{\today}
+\maketitle
+
+\section{What the pipeline now proves}
+
+The filters of the classification leave $34$ Atkin--Lehner quotients $Y=X_0^D(N)/W$ of genus at least three
+undecided (\texttt{data/open\_34.m}). The last stage of the pipeline decides a curve from a \emph{certificate}: a
+file of \texttt{data/certificates/} that names the inputs of a proof, every hypothesis of which the stage
+rechecks. The searches that found the inputs are not repeated. Each certificate has one of the following
+shapes; the first two are those of \texttt{paper/torsion-counting-hyperelliptic.tex} and
+\texttt{paper/hyperelliptic-candidates.tex} (Proposition~prop:normalform), the third and fourth those of
+\texttt{paper/hyperelliptic-15-38.tex} and \texttt{paper/hyperelliptic-6-323.tex}.
+
+\begin{itemize}
+\item[A] Genus three, $W$ the whole group: effective divisors of degree two whose differences are torsion
+(Borcherds forms, or the dual test against saved cusp forms of weight $\frac32$), more of them than the torsion
+bound of the Jacobian, lowered where needed by a component group in which the differences vanish.
+\item[B] Genus four over a genus-two star: the branch divisor, recomputed from Ogg's fixed points, is linearly
+equivalent to a distinct effective divisor of degree two, and the star's Jacobian is torsion-free.
+\item[C] Genus three over a genus-one star $E$: the branch divisor is $A+B$ with $A-B$ torsion (the dual test,
+on the $a_q(E)$-eigenspace where needed), zero (its class in the component groups $\Phi_p$, and every nonzero
+rational torsion point of $E$ off the identity component at one of those $p$), and the cover untwisted (a
+simple Prym, or the dual graph of $Y$). $E$ is identified exactly by its traces of Frobenius up to the Sturm
+bound and by its Tamagawa numbers against the orders of the $\Phi_p$.
+\item[C4] As C, with one branch place of degree four, the torsion statement from Gross--Zagier (Section~4).
+\item[N] Not hyperelliptic (Section~2).
+\end{itemize}
+
+At the time of writing $26$ of the $34$ are decided this way: all seven of shape A, five of the six of shape B,
+the four of shapes C and C4 that \texttt{paper/hyperelliptic-candidates.tex} lists separately, nine of the
+sixteen that \texttt{paper/heegner-height-models.tex} modelled (Section~3), and the thirty-fourth (Section~2).
+
+\section{The thirty-fourth quotient is not hyperelliptic}
+
+\begin{theorem}
+$Y=X_0^{141}(2)/\{1,6,94,141\}$ is not hyperelliptic.
+\end{theorem}
+
+\begin{proof}
+$Y$ has genus three and is a double cover of the genus-one star $E=X_0^{141}(2)/W$, branched at the fixed
+points of the involutions outside $\{1,6,94,141\}$: the rational CM points $P_{-4}$, $P_{-12}$ and the place
+$Z_{-1128}$ of degree two. If $Y$ were hyperelliptic, its hyperelliptic involution $\iota$, defined over $\Q$
+and central in $\mathrm{Aut}(Y)$, would commute with the deck involution and descend to an involution
+$x\mapsto c-x$ of $E$; it would pair the four branch points into
+two pairs of equal sum in the group $E$, Galois-stably (\texttt{paper/hyperelliptic-15-38.tex}, Section~1). The
+only Galois-stable pairing is $\{P_{-4},P_{-12}\}\mid Z_{-1128}$, so $\Delta=P_{-4}+P_{-12}-Z_{-1128}$ would be
+zero in $\Pic^0(E)(\Q)$. At $p=3$, which divides $D$ and is not split in $\Q(i)$, $\Q(\sqrt{-3})$ or
+$\Q(\sqrt{-282})$, the special fibre of $E$ is a quotient of the \v{C}erednik--Drinfeld fibre, its component
+group is $\Phi_3\cong\Z/7$, and the CM points specialise to the components and singular points whose Eichler
+orders admit the corresponding optimal embeddings (Molina, Theorems 5.3, 5.4, 5.8). The class of $\Delta$ in
+$\Phi_3$ is $2\neq0$, so $\Delta\neq0$.
+\end{proof}
+
+This replaces the argument of \texttt{paper/heegner-height-models.tex}, which needed the enumeration of the
+candidate branch divisors to be complete. (\texttt{data/certificates/141\_2.m}, shape N.)
+
+\section{The curves modelled by Heegner heights}
+
+Each of the sixteen curves of \texttt{paper/heegner-height-models.tex}, Table 1, is a genus-three double cover of
+an elliptic quotient, and when that quotient is the star, shape C proves it hyperelliptic from its branch
+divisor alone, with none of the inputs that made the identification of the model conditional (the
+completeness of the enumeration, the recognition of integers from $L'$-values, the Mordell--Weil groups of the
+isogeny class, the oldform multiplier). Done so far: $39_{11}$, $6_{185}$, $141_2$ ($\{1,3,94,282\}$), $21_{34}$,
+$55_7$, $57_{10}$, $15_{46}$, $6_{253}$, $6_{247}$. At $21_{34}$ and $15_{46}$ the four branch points are rational
+and exactly one of the three pairings is certified; the other two are refused. Open: $6_{301}$, $6_{455}$ and
+$690_7$ (bases being computed), $22_{51}$ (the pairing is certified zero, but neither twist test applies),
+$6_{187}$ (the Galois-stable pairing is a mixed one over $\Q(\sqrt{-2})$), and $1326_1$, $210_{13}$, where $W$ has
+index four and the elliptic quotient is not the star. The models of the note remain as equations; they are
+theorems once the curve is proved hyperelliptic and the model is identified, which still needs the note's
+enumeration or another argument.
+
+\section{The Gross--Zagier step of $6_{323}$, exactly}
+
+For $Y=X_0^6(323)/\langle w_6,w_{19},w_{34}\rangle$ over $E=1938h1$, the pairing $\Delta$ of the four points of
+discriminant $-7752$ is the CM cycle twisted by the genus character $\chi=(-8,969)$, and it is torsion by the
+Gross--Zagier formula of Yuan--Zhang--Zhang once $L(E/\Q(\sqrt{-1938}),\chi,s)=L(E^{(-8)},s)L(E^{(969)},s)$
+vanishes to order three at $s=1$. $E^{(-8)}$ has root number $-1$. $E^{(969)}$ has root number $+1$, and
+$L(E^{(969)},1)=0$ is checked exactly: for the newform $f$ of $E$ and the primitive quadratic character
+$\varepsilon$ of conductor $m=969$,
+\[
+  L(f\otimes\varepsilon,1)=\frac{\tau(\varepsilon)}{m}\sum_{a\bmod m}\bar\varepsilon(a)\,
+  2\pi i\!\int_{a/m}^{i\infty}\! f(z)\,dz
+\]
+(Birch), which needs no coprimality between $m$ and the level, and $f\otimes\varepsilon$ is the $L$-series of
+$E^{(969)}$: at the primes $3,17,19$ of $m$, where $E$ is multiplicative, $\varepsilon(p)=0$ and the twisted curve
+has $a_p=0$. So $L(E^{(969)},1)=0$ exactly when the image of the twisted winding element
+$\sum_a\varepsilon(a)\{0,a/m\}$ in the $f$-part of the modular symbols of level $1938$ is zero, which it is. The
+same computation gives nonzero values for the twists of root number $+1$ by $5$, $17$, $21$. This replaces the
+proved rank $2$ of $E^{(969)}$ that the earlier argument used, which does not by itself give the vanishing.
+
+\section{Two corrections to the counting of CM points}
+
+\emph{The Heegner weight of $P_{-4}$.} The dictionary of the dual test weights a CM point $P_d$ by $1/e_d$, $e_d$
+the order of its stabiliser. The points of discriminant $-4$ are fixed by $w_2$ when $2\parallel DN$, since
+$1+i$ has norm $2$ (Ogg), so $e_{-4}=4$ there; the earlier scripts doubled $e_d$ only for $d=-4m$ and for $d=-m$
+with $m\equiv3\pmod 4$. The weight enters only targets that contain $P_{-4}$, which no earlier proof had; three
+of the curves of Section~3 do.
+
+\emph{Points over a star point.} The number of points of $X_0^D(N)$ over a point of $X_0^D(N)/W$ is $|W|$ divided
+by the order of the stabiliser of the point in $W$; the units of the CM order fix the point and do not enter.
+The component-group code had folded them in, which counted $P_{-3}$ on $X_0^6(247)^*$ as four points against its
+degree one, and was right at $P_{-4}$ of the thirty-fourth quotient only because the two errors cancelled there.
+\texttt{tests/CMPointCounts.m} checks both against Ogg's fixed-point counts and against the degrees of the fields
+of definition.
+
+\end{document}

@@ -22,6 +22,8 @@
 //
 // FilterStarCurvesByFpAutomorphisms is also safe (uses loop index, not CurveID)
 //
+// FilterByHyperellipticCertificates is per curve: each curve's certificate file is checked on its own.
+//
 // FilterByAutomorphismGroup is per curve, like the above.  FilterByTwistedTrace and
 // FilterByTwistedWeilPolynomial (and their *Star versions) compute the modular symbols of level D*N once per level and
 // share them between the curves at that level, so for them the unit of work is a LEVEL: all
@@ -141,6 +143,8 @@ case stage:
         FilterByDegeneracyMorphism(~subseq);
     when "FilterByWeilPolynomial", "FilterByWeilPolynomialStar":
         FilterByWeilPolynomialGenusScaled(~subseq);
+    when "FilterByHyperellipticCertificates":
+        FilterByHyperellipticCertificates(~subseq);
     when "FilterByNonALInvolutions", "FilterByNonALInvolutionsStar":
         FilterByNonALInvolutions(~subseq);
     else
