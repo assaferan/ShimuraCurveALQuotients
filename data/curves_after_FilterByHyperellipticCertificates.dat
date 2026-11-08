@@ -24644,7 +24644,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 3>, <"CurveID", 3521>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C4: the place of discriminant -7752 on 1938h1; Delta torsion by Yuan-Zhang-Zhang (root numbers [ -1, 1 ], L(E^(969),1) = 0 by the twisted modular symbol), zero by Phi_2; untwisted: the Prym simple at 7 (data/certificates/6_323.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 17, 19, 34, 38, 323, 646 }>,
@@ -81967,7 +81967,7 @@ CreateShimuraQuot([* <"D", 141>, <"N", 2>,
 <"g", 3>, <"CurveID", 11710>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 11711 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "HyperellipticCertificate N: not hyperelliptic, every Galois-stable pairing of the branch places [ -1128, -12, -4 ] has nonzero class in Phi_p (p = [ 3 ]) (data/certificates/141_2.m)">
 *]),
 CreateShimuraQuot([* <"D", 141>, <"N", 2>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 47, 94, 141, 282 }>,

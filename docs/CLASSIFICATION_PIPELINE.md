@@ -225,6 +225,13 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    equation.
 7. **The three special-fibre quotients get a stage that also checks Z mod p.** The checks by point counts
    are inconclusive at p = 3 (see "The data"), so the stage waits for a model of Z mod 3 or another argument.
+8. **Group D and the 34th go through the certificate stage, not through #128 (2026-11-08; supersedes 1 and
+   3 for the classification).** The sixteen are genus-three double covers of an elliptic star, so shape C
+   proves them from the branch divisor alone (dual test, component groups, twist), with no enumeration;
+   the 34th is shape N: the only Galois-stable pairing of its branch places, {P_-4, P_-12} | Z_-1128, has
+   class 2 in Phi_3 = Z/7, so it is not hyperelliptic. #128's models stay as equations; making #128 exact
+   is needed only if those equations are to be theorems. The weight-3/2 bases for group D are computed on
+   lovelace, small levels first; level 9660 (690_7) waits for a go-ahead (days of computation).
 
 ## Branch
 

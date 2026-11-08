@@ -35,9 +35,11 @@ end intrinsic;
 intrinsic CMPointWeight(D::RngIntElt, N::RngIntElt, d::RngIntElt) -> RngIntElt
 {The order e_d of the stabiliser of a CM point of discriminant d on the star X_0^D(N)*: the unit
  group of the order, doubled when the point is fixed by an Atkin-Lehner involution w_m
- (d = -4m, or d = -m with m = 3 mod 4).  The Heegner series weights P_d by 1/e_d.}
+ (d = -4m, or d = -m with m = 3 mod 4, or d = -4 with m = 2: 1 + i has norm 2; Ogg).  The Heegner
+ series weights P_d by 1/e_d.}
     e := d eq -3 select 3 else (d eq -4 select 2 else 1);
-    if exists{m : m in Divisors(D*N) | m gt 1 and GCD(m, (D*N) div m) eq 1 and (d eq -4*m or (m mod 4 eq 3 and d eq -m))} then
+    if exists{m : m in Divisors(D*N) | m gt 1 and GCD(m, (D*N) div m) eq 1 and
+              (d eq -4*m or (m mod 4 eq 3 and d eq -m) or (m eq 2 and d eq -4))} then
         e *:= 2;
     end if;
     return e;

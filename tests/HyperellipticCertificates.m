@@ -10,6 +10,8 @@
 // Shape B on X_0^2030(1)/<w_10, w_14, w_58> (genus four over the genus-two star, branched at
 // P_-8 + P_-280; data/certificates/2030_1.m): accepted, and refused when the first divisor is not the
 // branch divisor, and when the torsion bound, from a single prime, is not 1.
+// Shape N on X_0^141(2)/{1, 6, 94, 141} (data/certificates/141_2.m): proved not hyperelliptic, the stage
+// records it so, and the certificate is refused when its only prime is 47, where the class is zero.
 
 printf "Testing the certificate stage on X_0^46(31)*...";
 D := 46; N := 31;
@@ -60,4 +62,15 @@ assert JacobianTorsionBound(starB : MaxPrime := 5, NumPrimes := 1, Check := fals
 bad := certB; bad["torsion"] := [5, 1];
 ok, why := VerifyHyperellipticCertificate(Y, bad);
 assert not ok and "not 1" in why;
-printf " ok (A: accepted with torsion bound 2; refused for degree, for another curve, and for the count; B: accepted, refused for the branch divisor and the torsion)\n";
+// shape N
+HN := {Integers() | 1, 6, 94, 141};
+Z := CreateShimuraQuot(141, 2, HN); Z`g := GenusShimuraCurveQuotient(141, 2, HN); Z`CurveID := 3;
+certN := [c : c in ReadHyperellipticCertificates(141, 2) | c["shape"] eq "N"][1];
+ok, why := VerifyHyperellipticCertificate(Z, certN);
+assert ok and "not hyperelliptic" in why;
+zs := [Z]; FilterByHyperellipticCertificates(~zs);
+assert assigned zs[1]`IsSubhyp and not zs[1]`IsSubhyp and not zs[1]`IsHyp;
+bad := certN; bad["phi"] := [47];
+ok, why := VerifyHyperellipticCertificate(Z, bad);
+assert not ok and "class zero" in why;
+printf " ok (A: accepted with torsion bound 2; refused for degree, for another curve, and for the count; B: accepted, refused for the branch divisor and the torsion; N: accepted, recorded as not hyperelliptic, refused at 47)\n";

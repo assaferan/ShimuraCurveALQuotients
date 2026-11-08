@@ -24,15 +24,24 @@ if found ne expected then
 end if;
 assert #undecided eq #found and found eq expected;
 
-// after it: the curves of the 34 with a certificate are proved hyperelliptic by it, nothing else moves
-certified := {k : k in the34 | exists{c : c in ReadHyperellipticCertificates(k[1], k[2]) | {Integers() | m : m in c["W"]} eq k[3]}};
+// after it: the curves of the 34 with a certificate are decided by it (hyperelliptic, or not for shape N),
+// nothing else moves
+shape := AssociativeArray();
+for k in the34 do
+    for c in ReadHyperellipticCertificates(k[1], k[2]) do
+        if {Integers() | m : m in c["W"]} eq k[3] then shape[k] := c["shape"]; end if;
+    end for;
+end for;
+certified := Keys(shape);
 final := eval Read("data/curves_after_UpdateCurves8.dat");
 left := {<c`D, c`N, c`W> : c in final | not assigned c`IsSubhyp};
 printf "  certified: %o; undecided at the end: %o\n", #certified, #left;
 assert left eq expected diff certified;
 for c in final do
-    if <c`D, c`N, c`W> in certified then
-        assert c`IsSubhyp and c`IsHyp and "HyperellipticCertificate" in c`TestInWhichProved;
+    k := <c`D, c`N, c`W>;
+    if k in certified then
+        assert "HyperellipticCertificate" in c`TestInWhichProved;
+        assert c`IsSubhyp eq (shape[k] ne "N") and c`IsHyp eq (shape[k] ne "N");   // shape N: not hyperelliptic
     end if;
 end for;
 
