@@ -172,10 +172,13 @@ end function;
 // D_1 to other effective degree-two divisors D_2, ... of C by torsion differences (Borcherds forms or
 // the dual test, as in shape A); when the Jacobian of C is torsion-free, D_1 is linearly equivalent to
 // a distinct effective divisor of degree two, so it is canonical.
-function verify_shape_B(X, cert)
+
+// The common part of shapes B and B2: Y of genus four over the genus-two star, the first divisor its branch
+// divisor, and the certified relations between the divisors.
+function shape_B_relations(X, cert)
     star, full := cert_star(X`D, X`N);
     if #full ne 2 * #X`W or star`g ne 2 or X`g ne 4 then
-        return false, "shape B needs a genus-four double cover of a genus-two star";
+        return false, "shape B needs a genus-four double cover of a genus-two star", _, _, _, _;
     end if;
     eff := cert["divisors"];
     // the branch divisor: the CM points of the discriminants carrying fixed points of the involutions
@@ -186,52 +189,190 @@ function verify_shape_B(X, cert)
         branch join:= {d : d in Keys(e) | e[d] ne 0};
     end for;
     if branch ne {c[1] : c in eff[1]} or exists{c : c in eff[1] | c[2] ne 1} then
-        return false, Sprintf("the branch divisor is supported on %o, not the first divisor %o", branch, eff[1]);
+        return false, Sprintf("the branch divisor is supported on %o, not the first divisor %o", branch, eff[1]), _, _, _, _;
     end if;
     for E in eff do
-        if exists{c : c in E | c[2] le 0} then return false, Sprintf("divisor %o is not effective", E); end if;
+        if exists{c : c in E | c[2] le 0} then return false, Sprintf("divisor %o is not effective", E), _, _, _, _; end if;
         deg := &+[c[2] * DegreeOfFieldOfDefinitionOfCMPoint(star, c[1]) : c in E];
-        if deg ne 2 then return false, Sprintf("divisor %o has degree %o", E, deg); end if;
+        if deg ne 2 then return false, Sprintf("divisor %o has degree %o", E, deg), _, _, _, _; end if;
     end for;
     sets := [{<c[1], c[2]> : c in E} : E in eff];
-    if #Set(sets) ne #eff or #eff lt 2 then return false, "the divisors must be at least two and distinct"; end if;
+    if #Set(sets) ne #eff or #eff lt 2 then return false, "the divisors must be at least two and distinct", _, _, _, _; end if;
     supp := [{c[1] : c in E} : E in eff];
     if IsDefined(cert, "forms") then
         ok, edges, info := relations_by_forms(star, cert, sets, supp, #eff);
     else
         ok, edges, info := relations_by_dual_test(star, cert, eff);
     end if;
-    if not ok then return false, info; end if;
-    if not exists{e : e in edges | 1 in e} then return false, "no certified difference involves the branch divisor"; end if;
+    if not ok then return false, info, _, _, _, _; end if;
+    if not exists{e : e in edges | 1 in e} then return false, "no certified difference involves the branch divisor", _, _, _, _; end if;
+    return true, "", star, eff, edges, info;
+end function;
+
+function verify_shape_B(X, cert)
+    ok, why, star, eff, edges, info := shape_B_relations(X, cert);
+    if not ok then return false, why; end if;
     t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
     if t ne 1 then return false, Sprintf("the Jacobian of the star has torsion bound %o, not 1", t); end if;
     return true, Sprintf("HyperellipticCertificate B: the branch divisor %o is canonical on the genus-two star, related to %o other divisor(s) by %o, torsion-free (%o)",
                          eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"]);
 end function;
 
-// E exactly: the isogeny class from the traces up to the Sturm bound of level DN, the curve from the
-// Tamagawa numbers at the primes cert["tamagawa"] (default: those of D), which are the orders of the
-// component groups of the star.  Also returns the component-group data at those primes and cert["phi"].
-function identify_star_curve(D, N, star, full, cert)
+// The Hecke polynomial x^2 - s x + n of a genus-two curve C over Q at a good odd prime p, from its
+// L-polynomial 1 - s T + (2p + n) T^2 - p s T^3 + p^2 T^4.
+function hecke_poly_genus2(C, p)
+    L := LPolynomial(ChangeRing(C, GF(p)));
+    R<x> := PolynomialRing(Rationals());
+    s := -Coefficient(L, 1); n := Coefficient(L, 2) - 2*p;
+    return R![n, -s, 1];
+end function;
+
+// Whether the endomorphism with tangent matrix T (in the basis x^(i-1) dx/y of the simplified model f)
+// maps the period lattice of y^2 = f into itself, to 10^-40 at 80 digits.
+function tangent_preserves_lattice(f, T)
+    CC := ComplexField(80);
+    Pi := BigPeriodMatrix(AnalyticJacobian(ChangeRing(f, CC)));
+    cj := func< A | Matrix(CC, Nrows(A), Ncols(A), [ComplexConjugate(z) : z in Eltseq(A)]) >;
+    TP := ChangeRing(T, CC) * Pi;
+    R := VerticalJoin(Pi, cj(Pi))^-1 * VerticalJoin(TP, cj(TP));
+    return Max([Abs(z - Round(Real(z))) : z in Eltseq(R)]) lt 10^-40;
+end function;
+
+// Shape B2 (paper/hyperelliptic-6-341.tex): as shape B, but the star's Jacobian J may have a rational point
+// t of order two.  Relations joining t + 1 divisors to the branch divisor B put two of them in one class,
+// which is then canonical, so B ~ K or B ~ K + t.  The second is excluded on models.  The Hecke algebra
+// acts on J through the maximal order O_K of a real quadratic field, and every abelian surface isogenous to
+// J with O_K in its endomorphisms is J or J/<t>: odd isogenies are ideal quotients (the reducibility and
+// congruence gcds are powers of 2), and in the Bruhat-Tits tree at the prime over 2 every Galois-fixed
+// vertex has at most one fixed neighbour, as the rational torsion of the class has order at most 2.  The
+// certificate names two curves (cert["stars"]) whose Jacobians are two such surfaces, distinct by their
+// invariants; their real multiplication is CHIMP's certified endomorphism (cert["rm"], the tangent
+// matrix, which is rechecked to preserve the period lattice) and their conductor at 2 CHIMP's proved
+// exponent (cert["conductor2"]), from which modularity identifies their newform with J's.  Each has
+// O_K with totally positive units squares, so one principal polarisation, and J with its polarisation is
+// the Jacobian of one of them; on both, K + t is not twice a rational class, so no double cover over Q is
+// branched along it.
+function verify_shape_B2(X, cert)
+    ok, why, star, eff, edges, info := shape_B_relations(X, cert);
+    if not ok then return false, why; end if;
+    D := X`D; N := X`N; DN := D*N;
+    t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
+    if t gt 2 then return false, Sprintf("the Jacobian of the star has torsion bound %o, more than 2", t); end if;
+    comp := {1};
+    repeat n0 := #comp; comp join:= &join[e : e in edges | not IsEmpty(e meet comp)]; until #comp eq n0;
+    if #comp lt t + 1 then
+        return false, Sprintf("the branch divisor is related to %o divisor(s), fewer than the torsion bound %o", #comp - 1, t);
+    end if;
+    if t eq 1 then return verify_shape_B(X, cert); end if;
+    // the Hecke order: T_p0 generates the maximal order of a real quadratic field K of class number one with
+    // a unit of norm -1, in which 2 ramifies
+    p0 := cert["heckeprime"];
+    hp := hecke_poly(star, p0);
+    dK := Integers()!Discriminant(hp);
+    if not (dK gt 0 and IsFundamentalDiscriminant(dK) and IsEven(dK)) then
+        return false, Sprintf("T_%o has discriminant %o: not the maximal order of a real quadratic field ramified at 2", p0, dK);
+    end if;
+    K := QuadraticField(dK);
+    if ClassNumber(K) ne 1 or Norm(FundamentalUnit(MaximalOrder(K))) ne -1 then
+        return false, Sprintf("Q(sqrt %o) has class number %o or no unit of norm -1", dK, ClassNumber(K));
+    end if;
+    // Jacquet-Langlands: J is isogenous to the newforms of level DN new at D with signs -1 at D, +1 at N
+    if not IsSquarefree(DN) then return false, "shape B2 needs squarefree DN"; end if;
+    S := CuspidalSubspace(ModularSymbols(DN, 2, 1));
+    V := NewSubspace(S, D);
+    for p in PrimeDivisors(DN) do V := AtkinLehnerSubspace(V, p, D mod p eq 0 select -1 else 1); end for;
+    dec := [G : G in NewformDecomposition(NewSubspace(S)) | Dimension(G) eq 2];
+    if Dimension(V) ne 2 or not exists(f){G : G in dec | G eq V} then
+        return false, "the Atkin-Lehner eigenspace of the star is not one newform orbit of dimension two";
+    end if;
+    cq := func< h | [Rationals() | c : c in Eltseq(h)] >;
+    good := [p : p in PrimesInInterval(5, 60) | DN mod p ne 0];
+    hv := [cq(CharacteristicPolynomial(HeckeOperator(f, p))) : p in good];
+    if [cq(hecke_poly(star, p)) : p in good] ne hv then
+        return false, "the trace formula of the star and the newform disagree";
+    end if;
+    // the curves: conductor, real multiplication, the newform, the Mordell-Weil group, and K + t
+    PQ<x> := PolynomialRing(Rationals());
+    invs := [];
+    for i -> c in cert["stars"] do
+        C := HyperellipticCurve(PQ!c[1], PQ!c[2]);
+        f2 := HyperellipticPolynomials(SimplifiedModel(C));
+        cond := Conductor(C);
+        if exists{p : p in PrimeDivisors(cond) | p ne 2 and Valuation(cond, p) ne 2 * Valuation(DN, p)}
+           or exists{p : p in PrimeDivisors(DN) | p ne 2 and Valuation(cond, p) ne 2}
+           or cert["conductor2"][i] ne 2 * Valuation(DN, 2) then
+            return false, Sprintf("curve %o does not have conductor (DN)^2", i);
+        end if;
+        T := Matrix(Rationals(), 2, 2, cert["rm"][i]);
+        if T^2 ne (dK div 4) * IdentityMatrix(Rationals(), 2) or not tangent_preserves_lattice(f2, T) then
+            return false, Sprintf("the endomorphism cited for curve %o is not sqrt %o on its period lattice", i, dK div 4);
+        end if;
+        hc := [cq(hecke_poly_genus2(C, p)) : p in good];
+        if hc ne hv or exists{G : G in dec | G ne f and [cq(CharacteristicPolynomial(HeckeOperator(G, p))) : p in good] eq hc} then
+            return false, Sprintf("the Hecke polynomials of curve %o do not single out the newform of the star", i);
+        end if;
+        J := Jacobian(SimplifiedModel(C));
+        G, mw, f1, f3 := MordellWeilGroupGenus2(J);
+        if not (f1 and f3) then return false, Sprintf("the Mordell-Weil group of curve %o is not proved", i); end if;
+        tors := [G.j : j in [1..Ngens(G)] | Order(G.j) ne 0];
+        if &*[Integers() | Order(g) : g in tors] gt 2 then return false, Sprintf("curve %o has rational torsion of order more than 2", i); end if;
+        if #tors eq 1 then
+            pts := Points(SimplifiedModel(C) : Bound := 1000);
+            if #pts eq 0 then return false, Sprintf("no rational point found on curve %o", i); end if;
+            P0 := pts[1]; iP0 := SimplifiedModel(C)![P0[1], -P0[2], P0[3]];
+            // L^2 = O(B) with B ~ K + t and L = O(P0) + s needs 2s = [iota P0 - P0] + t
+            v := (J![iP0, P0] + mw(tors[1])) @@ mw;
+            if v in sub<G | [2*G.j : j in [1..Ngens(G)]]> then
+                return false, Sprintf("on curve %o the class K + t is twice a rational class", i);
+            end if;
+        end if;
+        Append(~invs, G2Invariants(C));
+    end for;
+    if #invs ne 2 or invs[1] eq invs[2] then return false, "the certificate must name two non-isomorphic curves"; end if;
+    // odd isogenies: reducibility at p = 1 mod DN and the congruence between the two embeddings
+    C1 := HyperellipticCurve(PQ!cert["stars"][1][1], PQ!cert["stars"][1][2]);
+    hs := [<p, hecke_poly_genus2(C1, p)> : p in cert["reducibility"] | IsPrime(p) and p mod DN eq 1];
+    red := GCD([Integers() | Evaluate(h[2], 1 + h[1]) : h in hs]);
+    cong := GCD([Integers() | Discriminant(hecke_poly_genus2(C1, p)) : p in PrimesInInterval(5, 400) | DN mod p ne 0]);
+    if #hs lt 2 or red eq 0 or exists{q : q in PrimeDivisors(red * cong) | q ne 2} then
+        return false, Sprintf("the reducibility gcd %o or the congruence gcd %o has an odd prime factor", red, cong);
+    end if;
+    return true, Sprintf("HyperellipticCertificate B2: the branch divisor %o is canonical on the genus-two star, related to %o other divisor(s) by %o; the star is one of two curves, on both of which the other class allowed by the torsion admits no double cover (%o)",
+                         eff[1], #comp - 1, info, cert["file"]);
+end function;
+
+// E exactly: the isogeny class from the traces up to the Sturm bound of level DN, the curve from its
+// reduction types I_n at the primes cert["tamagawa"] (default: those of D), n being the order of the
+// component group of the genus-one quotient Q = X_0^D(N)/WQ (the star, or an intermediate quotient).
+// Also returns the component-group data at those primes and cert["phi"].
+function identify_elliptic_quotient(D, N, Q, WQ, cert)
     E := MinimalModel(EllipticCurve(cert["E"]));
     if (D*N) mod Conductor(E) ne 0 then return false, _, _, Sprintf("%o has conductor %o, not dividing %o", cert["E"], Conductor(E), D*N); end if;
     sturm := Ceiling((D*N) * &*[1 + 1/q : q in PrimeDivisors(D*N)] / 6);
     for q in [q : q in PrimesInInterval(2, sturm) | (D*N) mod q ne 0] do
-        if q + 1 - ComputePointsViaTrace(star, q, 1) ne TraceOfFrobenius(E, q) then
-            return false, _, _, Sprintf("the star and %o differ at %o", cert["E"], q);
+        if q + 1 - ComputePointsViaTrace(Q, q, 1) ne TraceOfFrobenius(E, q) then
+            return false, _, _, Sprintf("the quotient and %o differ at %o", cert["E"], q);
         end if;
     end for;
     tam := IsDefined(cert, "tamagawa") select cert["tamagawa"] else PrimeDivisors(D);
     phis := AssociativeArray();
-    for q in Set(tam) join Set(cert["phi"]) do phis[q] := ComponentGroupData(D, N, full, q); end for;
+    for q in Set(tam) join Set(cert["phi"]) do phis[q] := ComponentGroupData(D, N, WQ, q); end for;
+    // the dual graph gives the geometric component group, of order n for reduction of type I_n, n the
+    // valuation of the minimal discriminant (the Tamagawa number agrees only when the reduction is split,
+    // as it is on the star, whose group contains w_p)
     orders := [&*([1] cat ComponentGroup(phis[q])) : q in tam];
-    if [TamagawaNumber(E, q) : q in tam] ne orders then
-        return false, _, _, Sprintf("the Tamagawa numbers of %o at %o are not the orders %o of the component groups", cert["E"], tam, orders);
+    nI := func< F, q | Valuation(Discriminant(MinimalModel(F)), q) >;
+    if [nI(E, q) : q in tam] ne orders then
+        return false, _, _, Sprintf("the reduction types I_n of %o at %o are not the orders %o of the component groups", cert["E"], tam, orders);
     end if;
-    if exists{E2 : E2 in IsogenousCurves(E) | not IsIsomorphic(E2, E) and [TamagawaNumber(E2, q) : q in tam] eq orders} then
+    if exists{E2 : E2 in IsogenousCurves(E) | not IsIsomorphic(E2, E) and [nI(E2, q) : q in tam] eq orders} then
         return false, _, _, "the component groups do not single out one curve of the isogeny class";
     end if;
     return true, E, phis, "";
+end function;
+
+function identify_star_curve(D, N, star, full, cert)
+    return identify_elliptic_quotient(D, N, star, full, cert);
 end function;
 
 // Whether the rational point P of the minimal model E reduces to the identity component at p: to O when p
@@ -482,6 +623,35 @@ function verify_shape_N(X, cert)
                          places, used, cert["file"]);
 end function;
 
+// Shape D (the exact Heegner-height route, paper/heegner-height-models.tex with the certified mode of
+// ModelByHeegnerHeights): Y of genus 3 over the elliptic star E, identified exactly as in shape C; the
+// branch points' heights from Cai-Shu-Tian with certified L-values, every recognition proved, give a finite
+// list of candidate branch divisors containing the true one; every double cover over each is built exactly
+// and all but the ones consistent with the trace formula are excluded.  Y is one of the survivors, so when
+// every survivor is hyperelliptic (Noether's count 5) Y is, and when none is, Y is not.
+function verify_shape_D(X, cert)
+    D := X`D; N := X`N;
+    star, full := cert_star(D, N);
+    // E = X_0^D(N)/Wp: the star by default, or the intermediate quotient cert["Wp"]
+    Wp := IsDefined(cert, "Wp") select {Integers() | m : m in cert["Wp"]} else full;
+    Q := star;
+    if Wp ne full then
+        Q := CreateShimuraQuot(D, N, Wp); Q`g := GenusShimuraCurveQuotient(D, N, Wp); Q`CurveID := 0;
+    end if;
+    if not (X`W subset Wp and #Wp eq 2 * #X`W and Q`g eq 1 and X`g eq 3) then
+        return false, "shape D needs a genus-three double cover of a genus-one quotient";
+    end if;
+    ok, E, phis, why := identify_elliptic_quotient(D, N, Q, Wp, cert);
+    if not ok then return false, why; end if;
+    res := ModelByHeegnerHeights(X, Wp, E : Certified := true, Effort := IsDefined(cert, "effort") select cert["effort"] else 1);
+    if #res eq 0 then return false, "no configuration of branch points is consistent with the trace formula"; end if;
+    noe := {r[5] : r in res};
+    if noe eq {5} then
+        return true, Sprintf("HyperellipticCertificate D: on %o, the certified Heegner heights leave %o configuration(s) consistent with the trace formula, all hyperelliptic (%o)", cert["E"], #res, cert["file"]);
+    end if;
+    return false, Sprintf("the surviving configurations have Noether counts %o", noe);
+end function;
+
 intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt, MonStgElt
 {True and a label if the certificate cert, read from a file of data/certificates/, proves its claim about X:
  that X is hyperelliptic, or for shape N that it is not; otherwise false and the hypothesis that fails.
@@ -492,9 +662,11 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
     case cert["shape"]:
         when "A": return verify_shape_A(X, cert);
         when "B": return verify_shape_B(X, cert);
+        when "B2": return verify_shape_B2(X, cert);
         when "C": return verify_shape_C(X, cert);
         when "C4": return verify_shape_C4(X, cert);
         when "N": return verify_shape_N(X, cert);
+        when "D": return verify_shape_D(X, cert);
     end case;
     return false, Sprintf("shape %o is not implemented", cert["shape"]);
 end intrinsic;

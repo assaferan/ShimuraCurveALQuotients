@@ -21165,7 +21165,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 3>, <"CurveID", 3024>,
 <"CoveredBy", { IntegerRing() | 3001, 3002, 3003, 3004, 3005, 3006, 3023 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 1122i1, the certified Heegner heights leave 2 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/6_187.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66 }>,
@@ -25057,7 +25057,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 341>,
 <"g", 4>, <"CurveID", 3580>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3590 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate B2: the branch divisor [ <-24, 1>, <-88, 1> ] is canonical on the genus-two star, related to 2 other divisor(s) by 3 Borcherds forms; the star is one of two curves, on both of which the other class allowed by the torsion admits no double cover (data/certificates/6_341.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 341>,
 <"W", { IntegerRing() | 1, 3, 22, 62, 66, 186, 341, 1023 }>,
@@ -26681,7 +26681,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 455>,
 <"g", 3>, <"CurveID", 3812>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3840 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 2730y1, the certified Heegner heights leave 1 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/6_455.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 455>,
 <"W", { IntegerRing() | 1, 3, 5, 7, 13, 15, 21, 35, 39, 65, 91, 105, 195, 273, 455, 1365 }>,
@@ -55703,7 +55703,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 51>,
 <"g", 3>, <"CurveID", 7958>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7961 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 1122f1, the certified Heegner heights leave 1 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/22_51.m)">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 51>,
 <"W", { IntegerRing() | 1, 2, 11, 17, 22, 34, 187, 374 }>,
@@ -86650,7 +86650,7 @@ CreateShimuraQuot([* <"D", 210>, <"N", 13>,
 <"g", 3>, <"CurveID", 12379>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 12496, 12501, 12512 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 2730u1, the certified Heegner heights leave 1 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/210_13.m)">
 *]),
 CreateShimuraQuot([* <"D", 210>, <"N", 13>,
 <"W", { IntegerRing() | 1, 2, 15, 21, 30, 35, 42, 70 }>,
@@ -106096,7 +106096,7 @@ CreateShimuraQuot([* <"D", 690>, <"N", 7>,
 <"g", 3>, <"CurveID", 15157>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 15158 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 4830bj1, the certified Heegner heights leave 2 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/690_7.m)">
 *]),
 CreateShimuraQuot([* <"D", 690>, <"N", 7>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 7, 10, 14, 15, 21, 23, 30, 35, 42, 46, 69, 70, 105, 115, 138, 161, 210, 230, 322, 345, 483, 690, 805, 966, 1610, 2415, 4830 }>,
@@ -117058,7 +117058,7 @@ CreateShimuraQuot([* <"D", 1326>, <"N", 1>,
 <"g", 3>, <"CurveID", 16723>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 16757, 16758, 16761 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate D: on 1326b2, the certified Heegner heights leave 1 configuration(s) consistent with the trace formula, all hyperelliptic (data/certificates/1326_1.m)">
 *]),
 CreateShimuraQuot([* <"D", 1326>, <"N", 1>,
 <"W", { IntegerRing() | 1, 3, 17, 51 }>,

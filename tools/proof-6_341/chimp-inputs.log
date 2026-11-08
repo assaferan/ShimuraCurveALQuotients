@@ -1,0 +1,109 @@
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+260) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+516) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+516) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+258) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+514) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+517) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+curve 1: certified endomorphism with tangent matrix [ 0, 1, 2, 0 ]: true; proved
+conductor exponent at 2: 2 (stored 2)
+Warning (get_approx): need to increase precision of defining polynomial (16 -> 
+22) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (32 -> 
+43) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (64 -> 
+75) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+139) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (16 -> 
+21) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (32 -> 
+39) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (64 -> 
+71) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+135) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+131) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (64 -> 
+66) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (128 -> 
+130) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+259) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+515) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (64 -> 
+268) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (256 -> 
+268) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+Warning (get_approx): need to increase precision of defining polynomial (512 -> 
+518) for unknown reasons
+Note: you can suppress future warnings with 
+ExactpAdics_SetWarningAction("get_approx", "Ignore")
+curve 2: certified endomorphism with tangent matrix [ -1, 1, 1, 1 ]: true; 
+proved conductor exponent at 2: 2 (stored 2)
+CHIMP inputs reproduced
