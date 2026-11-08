@@ -24273,7 +24273,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 301>,
 <"g", 3>, <"CurveID", 3468>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3472 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1204, 1> ] and [ <-1032, 1> ] have equal sum on 1806l1, torsion by the dual test at level 3612, zero by Phi_p for p in [ 2, 3 ]; untwisted: no rational 2-torsion (data/certificates/6_301.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 301>,
 <"W", { IntegerRing() | 1, 6, 14, 21, 43, 258, 602, 903 }>,
