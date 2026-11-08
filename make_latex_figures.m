@@ -118,7 +118,8 @@ ruledGroups := [
  <"Automorphism groups", ["AutomorphismGroup"]>,
  <"Twisted point counts", ["TwistedTrace"]>,
  <"Twisted Weil polynomials", ["TwistedWeilPolynomial"]>,
- <"Canonical quadrics", ["CanonicalQuadrics"]>
+ <"Canonical quadrics", ["CanonicalQuadrics"]>,
+ <"Certificates (not hyperelliptic)", ["HyperellipticCertificate"]>
 ];
 
 // Every decided curve must fall in exactly one group, or the figure silently drops it.

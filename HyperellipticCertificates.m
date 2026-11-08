@@ -209,6 +209,39 @@ function verify_shape_B(X, cert)
                          eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"]);
 end function;
 
+// E exactly: the isogeny class from the traces up to the Sturm bound of level DN, the curve from the
+// Tamagawa numbers at the primes cert["tamagawa"] (default: those of D), which are the orders of the
+// component groups of the star.  Also returns the component-group data at those primes and cert["phi"].
+function identify_star_curve(D, N, star, full, cert)
+    E := MinimalModel(EllipticCurve(cert["E"]));
+    if (D*N) mod Conductor(E) ne 0 then return false, _, _, Sprintf("%o has conductor %o, not dividing %o", cert["E"], Conductor(E), D*N); end if;
+    sturm := Ceiling((D*N) * &*[1 + 1/q : q in PrimeDivisors(D*N)] / 6);
+    for q in [q : q in PrimesInInterval(2, sturm) | (D*N) mod q ne 0] do
+        if q + 1 - ComputePointsViaTrace(star, q, 1) ne TraceOfFrobenius(E, q) then
+            return false, _, _, Sprintf("the star and %o differ at %o", cert["E"], q);
+        end if;
+    end for;
+    tam := IsDefined(cert, "tamagawa") select cert["tamagawa"] else PrimeDivisors(D);
+    phis := AssociativeArray();
+    for q in Set(tam) join Set(cert["phi"]) do phis[q] := ComponentGroupData(D, N, full, q); end for;
+    orders := [&*([1] cat ComponentGroup(phis[q])) : q in tam];
+    if [TamagawaNumber(E, q) : q in tam] ne orders then
+        return false, _, _, Sprintf("the Tamagawa numbers of %o at %o are not the orders %o of the component groups", cert["E"], tam, orders);
+    end if;
+    if exists{E2 : E2 in IsogenousCurves(E) | not IsIsomorphic(E2, E) and [TamagawaNumber(E2, q) : q in tam] eq orders} then
+        return false, _, _, "the component groups do not single out one curve of the isogeny class";
+    end if;
+    return true, E, phis, "";
+end function;
+
+// Whether the rational point P of the minimal model E reduces to the identity component at p: to O when p
+// divides a denominator, else to a smooth point of the reduction.
+function in_identity_component(E, P, p)
+    if IsZero(P) or exists{c : c in Eltseq(P) | Valuation(Denominator(c), p) gt 0} then return true; end if;
+    Ep := ChangeRing(E, GF(p));
+    return not (Curve(Ep)!(Ep(GF(p))![GF(p)!c : c in Eltseq(P)]) in SingularPoints(Curve(Ep)));
+end function;
+
 // Shape C (genus three over an elliptic star, paper/hyperelliptic-15-38.tex, Sections 1-4).  Y = X_0^D(N)/H
 // of genus 3 is a double cover of the genus-one star E branched at four points; Y is hyperelliptic when they
 // split into two pairs A, B of equal sum in the group E and Y is the untwisted cover.  The certificate names
@@ -236,26 +269,8 @@ function verify_shape_C(X, cert)
         deg := &+[c[2] * DegreeOfFieldOfDefinitionOfCMPoint(star, c[1]) : c in E0];
         if deg ne 2 then return false, Sprintf("the half %o has degree %o", E0, deg); end if;
     end for;
-    // E exactly: the isogeny class from the traces up to the Sturm bound of level DN, the curve from the
-    // Tamagawa numbers at the primes of D, which are the orders of the component groups of the star
-    E := MinimalModel(EllipticCurve(cert["E"]));
-    if (D*N) mod Conductor(E) ne 0 then return false, Sprintf("%o has conductor %o, not dividing %o", cert["E"], Conductor(E), D*N); end if;
-    sturm := Ceiling((D*N) * &*[1 + 1/q : q in PrimeDivisors(D*N)] / 6);
-    for q in [q : q in PrimesInInterval(2, sturm) | (D*N) mod q ne 0] do
-        if q + 1 - ComputePointsViaTrace(star, q, 1) ne TraceOfFrobenius(E, q) then
-            return false, Sprintf("the star and %o differ at %o", cert["E"], q);
-        end if;
-    end for;
-    tam := IsDefined(cert, "tamagawa") select cert["tamagawa"] else PrimeDivisors(D);
-    phis := AssociativeArray();
-    for q in Set(tam) join Set(cert["phi"]) do phis[q] := ComponentGroupData(D, N, full, q); end for;
-    orders := [&*([1] cat ComponentGroup(phis[q])) : q in tam];
-    if [TamagawaNumber(E, q) : q in tam] ne orders then
-        return false, Sprintf("the Tamagawa numbers of %o at %o are not the orders %o of the component groups", cert["E"], tam, orders);
-    end if;
-    if exists{E2 : E2 in IsogenousCurves(E) | not IsIsomorphic(E2, E) and [TamagawaNumber(E2, q) : q in tam] eq orders} then
-        return false, "the component groups do not single out one curve of the isogeny class";
-    end if;
+    ok, E, phis, why := identify_star_curve(D, N, star, full, cert);
+    if not ok then return false, why; end if;
     // A - B is torsion.  On a genus-one star every Heegner component lies in the a_q(E)-eigenspace of
     // T(q^2), so a test spec <M, B, variant, md5, q> is restricted to it, with a_q taken from E.
     eff := [A, B];
@@ -274,12 +289,7 @@ function verify_shape_C(X, cert)
         end if;
     end for;
     G, mG := TorsionSubgroup(E);
-    function in_identity_component(P, q)
-        Eq := ChangeRing(E, GF(q));
-        if IsZero(P) then return true; end if;
-        return not (Curve(Eq)!(Eq(GF(q))![GF(q)!c : c in Eltseq(P)]) in SingularPoints(Curve(Eq)));
-    end function;
-    if exists{T : T in G | T ne G!0 and forall{q : q in cert["phi"] | in_identity_component(mG(T), q)}} then
+    if exists{T : T in G | T ne G!0 and forall{q : q in cert["phi"] | in_identity_component(E, mG(T), q)}} then
         return false, Sprintf("a rational torsion point of %o lies on the identity component at every p in %o", cert["E"], cert["phi"]);
     end if;
     // the twist
@@ -306,9 +316,176 @@ function verify_shape_C(X, cert)
                          A, B, cert["E"], info, cert["phi"], how, cert["file"]);
 end function;
 
+// Shape C4 (genus three over an elliptic star, branched at one place of degree four; paper/hyperelliptic-6-323.tex).
+// The four points of discriminant d are a torsor under Cl(d)/Cl(d)[2] = Z/4, the only Galois-stable pairing is
+// {P, s^2 P} | {s P, s^3 P}, and Delta = P + s^2 P - s P - s^3 P is the CM cycle twisted by the genus character
+// chi = (d1, d2), d1 d2 = d.  It is torsion by the Gross-Zagier formula of Yuan-Zhang-Zhang when
+// L(E/Q(sqrt d), chi, s) = L(E^(d1), s) L(E^(d2), s) vanishes to order at least three at s = 1: one twist has
+// root number -1, the other root number +1 and L(1) = 0 exactly (the twisted winding element of E).  Delta lies in
+// the minus part of E(K)_tors for K one of Q(sqrt d1), Q(sqrt d2), which is {0, T}; at p | D the four points lie
+// on two components, two each, so the class of Delta in Phi_p over K_p is 0 or plus or minus twice their
+// difference, and when that is neither 0 nor the image of T, Delta = 0.  The cover is untwisted by a simple Prym.
+function verify_shape_C4(X, cert)
+    D := X`D; N := X`N;
+    star, full := cert_star(D, N);
+    if #full ne 2 * #X`W or star`g ne 1 or X`g ne 3 then
+        return false, "shape C4 needs a genus-three double cover of a genus-one star";
+    end if;
+    d := cert["d"];
+    branch := {Integers() | };
+    for m in full diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, m);
+        branch join:= {dd : dd in Keys(e) | e[dd] ne 0};
+    end for;
+    if branch ne {d} then return false, Sprintf("the branch divisor is supported on %o, not on %o", branch, d); end if;
+    if DegreeOfFieldOfDefinitionOfCMPoint(star, d) ne 4 then return false, "the branch place does not have degree four"; end if;
+    ok, E, phis, why := identify_star_curve(D, N, star, full, cert);
+    if not ok then return false, why; end if;
+    // the Galois structure and the genus character
+    Cl, mCl := ClassGroup(QuadraticForms(d));
+    amb := sub< Cl | [ g : g in Cl | 2*g eq Cl!0 ] >;
+    Q := quo< Cl | amb >;
+    if not (IsCyclic(Q) and #Q eq 4) then return false, "Cl(d)/Cl(d)[2] is not cyclic of order four"; end if;
+    d1, d2 := Explode(cert["chi"]);
+    if d1 * d2 ne d or not IsFundamentalDiscriminant(d1) or not IsFundamentalDiscriminant(d2) then
+        return false, Sprintf("(%o, %o) is not a genus character of discriminant %o", d1, d2, d);
+    end if;
+    chi := func< q | d1 mod q eq 0 select KroneckerSymbol(d2, q) else KroneckerSymbol(d1, q) >;
+    if exists{q : q in PrimeDivisors(d) | chi(q) ne 1} then return false, "the genus character is not trivial on the ambiguous classes"; end if;
+    // the L-functions.  L(E^(dd), 1) is the twisted period sum_a chi_dd(a) <f, {0, a/|dd|}> up to a nonzero
+    // constant (Birch's formula for the twist of f by a primitive character; at the primes of dd that
+    // divide the level, E is multiplicative and both sides have no p-term), read off the modular symbols
+    // of E at its own level, so the zero test is exact
+    function twisted_L_vanishes(dd)
+        eps := KroneckerCharacter(dd, Rationals());
+        A := ModularSymbols(E, Evaluate(eps, -1) eq 1 select 1 else -1);
+        return IsZero(RationalMapping(A)(TwistedWindingElement(AmbientSpace(A), 1, eps)));
+    end function;
+    w := []; vanish := [];
+    for dd in [d1, d2] do
+        Et := MinimalModel(QuadraticTwist(E, dd));
+        Append(~w, RootNumber(Et));
+        Append(~vanish, RootNumber(Et) eq -1 select 1 else (twisted_L_vanishes(dd) select 2 else 0));
+    end for;
+    if &+vanish lt 3 then return false, Sprintf("L(E/k, chi, s) is not shown to vanish to order 3 (root numbers %o)", w); end if;
+    // the minus part of the torsion over both candidate fields
+    G, mG := TorsionSubgroup(E);
+    two := [ mG(g) : g in G | g ne G!0 and 2*g eq G!0 ];
+    if #two ne 1 then return false, "E(Q)[2] is not Z/2"; end if;
+    T := two[1];
+    for dd in [d1, d2] do
+        K := QuadraticField(dd); EK := BaseChange(E, K);
+        GK, mK := TorsionSubgroup(EK);
+        minus := [ g : g in GK | g ne GK!0 and EK![ Conjugate(c) : c in Eltseq(mK(g)) ] eq -mK(g) ];
+        if #minus ne 1 or mK(minus[1]) ne EK!T then return false, Sprintf("the minus part of E(Q(sqrt %o))_tors is not {0, T}", dd); end if;
+    end for;
+    // the component groups at p
+    p := cert["phi"][1];
+    if in_identity_component(E, T, p) then return false, Sprintf("T reduces to the identity component at %o", p); end if;
+    Gp := phis[p];
+    cnt, total := CMSpecialisation(Gp, d);
+    vs := Sort(Setseq(Keys(cnt)));
+    if total ne 4 or #vs ne 2 or exists{v : v in vs | cnt[v] ne 2 or v gt Gp`nv} then
+        return false, "the four points do not lie two each on two components";
+    end if;
+    function critical(th)
+        V := Gp`nv; Ed := [];
+        for i->e in Gp`edges do
+            prev := e[1];
+            for k in [1..th[i]-1] do V +:= 1; Append(~Ed, <prev, V>); prev := V; end for;
+            Append(~Ed, <prev, e[2]>);
+        end for;
+        Lap := ZeroMatrix(Integers(), V, V);
+        for e in Ed do Lap[e[1],e[1]] +:= 1; Lap[e[2],e[2]] +:= 1; Lap[e[1],e[2]] -:= 1; Lap[e[2],e[1]] -:= 1; end for;
+        Sm, Pm := SmithForm(Lap);
+        idx := [i : i in [1..V] | Sm[i,i] notin {0, 1}];
+        if #idx ne 1 then return false, 0, 0; end if;
+        n := Sm[idx[1], idx[1]];
+        v := ZeroMatrix(Integers(), V, 1); v[vs[1], 1] := 1; v[vs[2], 1] := -1;
+        return true, n, (Pm * v)[idx[1], 1] mod n;
+    end function;
+    for dd in [d1, d2] do
+        K := QuadraticField(dd); OK := Integers(K);
+        fac := Factorization(p * OK);
+        if #fac eq 2 then
+            ok, n, delta := critical(Gp`thick);
+        elif fac[1][2] eq 2 then
+            ok, n, delta := critical([2 * t : t in Gp`thick]);
+            if ok and LocalInformation(EK, fac[1][1])[4] ne n where EK := BaseChange(E, K) then
+                return false, "the component group over the ramified extension is not the Tamagawa number there";
+            end if;
+        else
+            return false, Sprintf("%o is inert in Q(sqrt %o)", p, dd);
+        end if;
+        if not ok then return false, "the component group is not cyclic"; end if;
+        if (2 * delta) mod n in {0, n div 2} then
+            return false, Sprintf("over Q_%o(sqrt %o), twice the difference of the components is 0 or the image of T", p, dd);
+        end if;
+    end for;
+    // untwisted
+    q := cert["prym"];
+    P := ZetaNumeratorViaTrace(X, q : Check := false) div ZetaNumeratorViaTrace(star, q : Check := false);
+    if not IsIrreducible(P) then return false, Sprintf("the Prym L-polynomial at %o is reducible", q); end if;
+    return true, Sprintf("HyperellipticCertificate C4: the place of discriminant %o on %o; Delta torsion by Yuan-Zhang-Zhang (root numbers %o, L(E^(%o),1) = 0 by the twisted modular symbol), zero by Phi_%o; untwisted: the Prym simple at %o (%o)",
+                         d, cert["E"], w, w[1] eq 1 select d1 else d2, p, q, cert["file"]);
+end function;
+
+// Shape N (NOT hyperelliptic; a genus-three double cover of an elliptic star).  If Y were hyperelliptic, its
+// hyperelliptic involution, defined over Q and commuting with the deck involution, would descend to x -> c - x
+// on E and pair the four branch points Galois-stably into two pairs of equal sum (paper/hyperelliptic-15-38.tex,
+// Section 1).  The verifier lists the Galois-stable pairings from the degrees of the branch places and shows
+// that each difference A - B has nonzero class in a component group Phi_p, so is not zero in E.
+function verify_shape_N(X, cert)
+    D := X`D; N := X`N;
+    star, full := cert_star(D, N);
+    if #full ne 2 * #X`W or star`g ne 1 or X`g ne 3 then
+        return false, "shape N needs a genus-three double cover of a genus-one star";
+    end if;
+    branch := {Integers() | };
+    for m in full diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, m);
+        branch join:= {d : d in Keys(e) | e[d] ne 0};
+    end for;
+    places := Sort(Setseq(branch));
+    degs := [DegreeOfFieldOfDefinitionOfCMPoint(star, d) : d in places];
+    if &+degs ne 4 then return false, Sprintf("the branch places %o have degrees %o, not of total 4", places, degs); end if;
+    rat := [places[i] : i in [1..#places] | degs[i] eq 1];
+    quad := [places[i] : i in [1..#places] | degs[i] eq 2];
+    // the Galois-stable pairings, as differences A - B
+    pairings := [];
+    if Sort(degs) eq [1, 1, 2] then
+        pairings := [ [<rat[1], 1>, <rat[2], 1>, <quad[1], -1>] ];
+    elif degs eq [1, 1, 1, 1] then
+        r := rat;
+        pairings := [ [<r[1], 1>, <r[j], 1>] cat [<r[k], -1> : k in [2..4] | k ne j] : j in [2..4] ];
+    elif Sort(degs) eq [1, 3] then
+        return true, Sprintf("HyperellipticCertificate N: not hyperelliptic, the branch places %o of degrees %o admit no Galois-stable pairing (%o)", places, degs, cert["file"]);
+    else
+        return false, Sprintf("branch places of degrees %o are not handled", degs);
+    end if;
+    used := [];
+    for Delta in pairings do
+        hit := 0;
+        for p in cert["phi"] do
+            G := ComponentGroupData(D, N, full, p);
+            try
+                c := ClassInComponentGroup(G, Delta);
+            catch err
+                continue;
+            end try;
+            if exists{x : x in c | x ne 0} then hit := p; break; end if;
+        end for;
+        if hit eq 0 then return false, Sprintf("the pairing %o has class zero in every Phi_p for p in %o", Delta, cert["phi"]); end if;
+        Append(~used, hit);
+    end for;
+    return true, Sprintf("HyperellipticCertificate N: not hyperelliptic, every Galois-stable pairing of the branch places %o has nonzero class in Phi_p (p = %o) (%o)",
+                         places, used, cert["file"]);
+end function;
+
 intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt, MonStgElt
-{True and a label if the certificate cert, read from a file of data/certificates/, proves that X is
- hyperelliptic; otherwise false and the hypothesis that fails.  Every hypothesis is rechecked.}
+{True and a label if the certificate cert, read from a file of data/certificates/, proves its claim about X:
+ that X is hyperelliptic, or for shape N that it is not; otherwise false and the hypothesis that fails.
+ Every hypothesis is rechecked.}
     if <cert["D"], cert["N"]> ne <X`D, X`N> or {Integers() | m : m in cert["W"]} ne X`W then
         return false, "the certificate is for another curve";
     end if;
@@ -316,6 +493,8 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
         when "A": return verify_shape_A(X, cert);
         when "B": return verify_shape_B(X, cert);
         when "C": return verify_shape_C(X, cert);
+        when "C4": return verify_shape_C4(X, cert);
+        when "N": return verify_shape_N(X, cert);
     end case;
     return false, Sprintf("shape %o is not implemented", cert["shape"]);
 end intrinsic;
@@ -331,25 +510,26 @@ intrinsic ReadHyperellipticCertificates(D::RngIntElt, N::RngIntElt : Dir := "dat
 end intrinsic;
 
 intrinsic FilterByHyperellipticCertificates(~curves::SeqEnum : Dir := "data/certificates")
-{Marks hyperelliptic every undecided curve of genus at least three with a certificate in Dir that
- VerifyHyperellipticCertificate accepts.  A refused certificate is reported and the curve left
+{Decides every undecided curve of genus at least three with a certificate in Dir that
+ VerifyHyperellipticCertificate accepts: hyperelliptic, or not hyperelliptic for a shape-N certificate.  A refused certificate is reported and the curve left
  undecided.  Prints one summary line.}
-    nok := 0; nref := 0;
+    nok := 0; nnot := 0; nref := 0;
     for i->X in curves do
         if assigned X`IsSubhyp or X`g lt 3 then continue; end if;
         for cert in ReadHyperellipticCertificates(X`D, X`N : Dir := Dir) do
             if {Integers() | m : m in cert["W"]} ne X`W then continue; end if;
             ok, label := VerifyHyperellipticCertificate(X, cert);
             if ok then
-                curves[i]`IsSubhyp := true;
-                curves[i]`IsHyp := true;
+                hyp := cert["shape"] ne "N";
+                curves[i]`IsSubhyp := hyp;
+                curves[i]`IsHyp := hyp;
                 curves[i]`TestInWhichProved := label;
-                nok +:= 1;
+                if hyp then nok +:= 1; else nnot +:= 1; end if;
                 break;
             end if;
             printf "HyperellipticCertificates: X_0^%o(%o)/%o: certificate refused: %o\n", X`D, X`N, Sort(SetToSequence(X`W)), label;
             nref +:= 1;
         end for;
     end for;
-    printf "HyperellipticCertificates summary: %o curve(s) proved hyperelliptic, %o certificate(s) refused\n", nok, nref;
+    printf "HyperellipticCertificates summary: %o curve(s) proved hyperelliptic, %o proved not hyperelliptic, %o certificate(s) refused\n", nok, nnot, nref;
 end intrinsic;
