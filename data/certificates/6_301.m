@@ -3,7 +3,7 @@
 // X_0^6(301)/<w_3, w_14, w_43>, genus 3, shape C: a double cover of the star E = 1806l1 branched at the
 // places Z_-1204 (over Q(sqrt -7)) and Z_-1032 (over Q(sqrt 129)), each of degree two.  Z_-1204 - Z_-1032
 // is torsion by the sharp dual test at level 3612, precision 4000, zero by its class in Phi_2 and Phi_3 and
-// the reduction of E(Q)_tors, and E(Q)[2] = 0.  Found 2026-11-09 (decision 8); #128's model is not used.
+// the reduction of E(Q)_tors, and E(Q)[2] = 0.  Found 2026-11-08 (decision 8); #128's model is not used.
 c := AssociativeArray();
 c["D"] := 6; c["N"] := 301;
 c["W"] := [1, 3, 14, 42, 43, 129, 602, 1806];

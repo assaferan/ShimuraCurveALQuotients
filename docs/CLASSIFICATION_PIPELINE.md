@@ -41,6 +41,12 @@ stages now decide 22; the five are:
   coordinates exist for 158_1 (campaign `genus1star/g1_158_1.log`); for 14_17 and 38_5 the Borcherds
   route at the genus-one star failed, so the star and branch points would come from #128's heights.
 
+**Status (2026-11-08): all 34 are certified.** The certificate stage decides every one of the 34 (33
+hyperelliptic, the 34th not), so the pipeline ends with the five quotients above undecided and no other
+(`data/stage_counts.txt`, `tests/OpenThirtyFour.m`). The shapes are A (7), B (5), B2 (6_341), C and C4 (the
+four of group C, and ten of group D), D (the other six of group D) and N (the 34th); see
+`paper/classification-certificates.tex`.
+
 **Stored models decide a curve only when proved.** `FilterByCanonicalQuadrics` reads
 `data/models/proved_models.m` and uses a stored model at D > 1 only for a curve listed there with the
 argument that proves its equation; the list is empty for now. Agreement of a model with the trace formula
@@ -92,7 +98,7 @@ fibre (`genus4-over-genus2` normal form, #140/#142).
 | 2030_1 | 2030 | three banked Borcherds forms, level 4060 | #142 | fast |
 | 2418_1 | 2418 | three banked Borcherds forms, level 4836 | #142 | fast |
 | 6_403 | 2418 | three banked Borcherds forms, level 4836 | #142 | fast |
-| 6_341 | 2046 | Borcherds forms, branch pair up to 2-torsion, then the star identified | #145 | fast |
+| 6_341 | 2046 | Borcherds forms, branch pair up to 2-torsion; shape B2: the two curves of the isogeny class (#145, with CHIMP's certificate for C_A) both exclude K + t | #145 | fast (`tests/HyperellipticCertificatesB2.m`, ~2 min) |
 | 3390_1 | 3390 | dual test at level 6780 | #155 | fast + offline (basis 43 h) |
 
 **C. Double cover of an elliptic star: the branch pairing is torsion, then zero.** The dual test shows the
@@ -116,9 +122,15 @@ The model is hyperelliptic, so the curve is.
 those four independently.) Tests: `tests/HeegnerHeights.m` reruns the route end to end only for
 1326_1 and 210_13; `tests/ModelChecks.m` compares every stored model with the trace formula.
 
-**E. The one that is not hyperelliptic.** X_0(141,2)/{1,6,94,141}: the same enumeration as D, read in the
-other direction. Here completeness of the enumeration *is* the proof, so every input that could lose a
-candidate (see below) must be justified. Nothing runs it today.
+Certified (2026-11-08): ten by shape C (39_11, 6_185, 141_2, 21_34, 55_7, 57_10, 15_46, 6_253, 6_247,
+6_301), the other six by shape D, #128's route with certified L-values (`CertifiedLValueAtOne`,
+`CertifiedLDerivativeAtOne`), k² recognised within a proved error and b with denominator dividing
+φ(D)ψ(N) (Cai–Shu–Tian's Hodge class): 6_187, 22_51, 6_455, 690_7, and 1326_1, 210_13 over an intermediate
+quotient X/W′ (`cert["Wp"]`), identified by its reduction types I_n. `tests/_offline/HyperellipticCertificatesD.m`
+reruns 6_187 with a refused control (~3 min).
+
+**E. The one that is not hyperelliptic.** X_0(141,2)/{1,6,94,141}: decided by shape N (one component group,
+`paper/classification-certificates.tex`, Section 2), with no enumeration.
 
 ## The building blocks
 
@@ -193,8 +205,8 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    exact star and its Mordell-Weil group, #145), 6_323 (shape C with the Gross-Zagier torsion step,
    decision 2), the sixteen of group D and the 34th (#128 made exact, decisions 1 and 3). Each shape is accepted when the stage decides its curves from the certificates alone
    and the per-curve tests still pass.
-4. **#128 made exact** (decisions 1 and 3): exact L-ratios and recognition, no windowed place, the oldform
-   multiplier; first for the 34th, then for the sixteen curves of group D.
+4. **#128 made exact** (decisions 1 and 3). Done 2026-11-08 as shape D for the six curves of group D that
+   shape C does not decide; the 34th went through shape N instead (decision 8).
 5. **Labels of stored models.** Done (decision 6): only models on `data/models/proved_models.m` decide a
    curve; 390_1 is on the list (2026-11-06).
 6. **The full run** on lovelace from this branch, ending with no undecided quotient; tables and figures

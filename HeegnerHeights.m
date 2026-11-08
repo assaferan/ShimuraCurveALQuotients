@@ -21,7 +21,7 @@ declare verbose HeegnerHeights, 2;
 al_star := func<a, b | a*b div GCD(a, b)^2>;
 
 function lattice_area(E)
-    per := Periods(E);
+    per := Periods(E : Precision := 50);
     return Abs(Imaginary(ComplexConjugate(per[1])*per[2]));
 end function;
 
@@ -32,6 +32,37 @@ function L_value_or_derivative(E)
     v1 := Evaluate(L, 1 : Derivative := 1);
     if Abs(v1) gt 1e-8 then return v1, 1; end if;
     return 0, 2;
+end function;
+
+// Whether L(E tensor chi_dd, 1) = 0 exactly, for E of squarefree conductor and dd a fundamental discriminant
+// (dd = 1: E itself): the twisted winding element sum_a chi(a) {0, a/|dd|} in the modular symbols of E at
+// its own level (Birch's formula; at a prime of dd dividing the level E is multiplicative, so the twist
+// of E by dd has a_p = 0 there and the naive twisted L-series is that of the twisted curve).
+function twisted_L_vanishes(E, dd)
+    if dd eq 1 then
+        if RootNumber(E) eq -1 then return true; end if;
+        return LRatio(ModularSymbols(E, 1), 1) eq 0;
+    end if;
+    eps := KroneckerCharacter(dd, Rationals());
+    A := ModularSymbols(E, Evaluate(eps, -1) eq 1 select 1 else -1);
+    return IsZero(RationalMapping(A)(TwistedWindingElement(AmbientSpace(A), 1, eps)));
+end function;
+
+// The certified analogue of L_value_or_derivative for the twist of E by the fundamental discriminant dd:
+// L(1) when it is not zero (exact zero test, certified value), else L'(1) when the root number is -1
+// (certified value, required to be provably nonzero), else 0 with order 2 (root number +1 and L(1) = 0
+// exactly, so the order is at least 2).  Returns the value, the order and an absolute error bound.
+function certified_L(E, dd, prec)
+    Et := dd eq 1 select E else MinimalModel(QuadraticTwist(E, dd));
+    if RootNumber(Et) eq 1 then
+        if twisted_L_vanishes(E, dd) then return RealField(prec)!0, 2, RealField(prec)!0; end if;
+        v, e := CertifiedLValueAtOne(Et : Precision := prec);
+        error if Abs(v) le e, "a nonzero L(1) is not separated from zero by its error bound";
+        return v, 0, e;
+    end if;
+    v, e := CertifiedLDerivativeAtOne(Et : Precision := prec);
+    error if Abs(v) le e, Sprintf("L'(1) of the twist by %o is not provably nonzero (order 3 or more?)", dd);
+    return v, 1, e;
 end function;
 
 intrinsic QuaternionicAtkinLehnerSign(E::CrvEll, v::RngIntElt, D::RngIntElt, N::RngIntElt) -> RngIntElt
@@ -96,12 +127,66 @@ For a 2-elementary class group these are all its characters.}
     return facs;
 end intrinsic;
 
-intrinsic HeegnerHeightComponents(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt : OldformPrime := 0) -> SeqEnum, RngIntElt
+intrinsic CertifiedLDerivativeAtOne(E::CrvEll : Precision := 60) -> FldReElt, FldReElt
+{L'(E, 1) for E over Q of root number -1, with a proved bound on the error: the value and the bound.
+With w = -1, L'(E, 1) = 2 sum_n (a_n / n) E_1(2 pi n / sqrt(N)) (the approximate functional equation at
+the centre); the a_n are exact, and the tail past M is at most 2 * 2/(cM) exp(-c(M+1)) / (1 - exp(-c)),
+c = 2 pi / sqrt(N), from |a_n| <= d(n) sqrt(n) <= 2n and E_1(x) <= exp(-x)/x.  M is chosen so that
+the tail is below 10^(-Precision/2); the terms are summed in arithmetic of Precision + 20 digits, so
+their rounding errors, at most M * 10^(-Precision) together, are added to the bound.}
+    require RootNumber(E) eq -1 : "the root number must be -1";
+    R := RealField(Precision + 20);
+    N := Conductor(E);
+    c := 2 * Pi(R) / Sqrt(R!N);
+    tailb := func< M | 4 / (c*M) * Exp(-c*(M + 1)) / (1 - Exp(-c)) >;
+    M := 10;
+    while tailb(M) gt R!10^(-(Precision div 2)) do M := Ceiling(M * 1.25); end while;
+    an := LGetCoefficients(LSeries(E), M);
+    S := &+[R | (an[n] / n) * ExponentialIntegralE1(c*n) : n in [1..M] | an[n] ne 0];
+    err := 2 * tailb(M) + R!M * R!10^(-Precision);
+    return 2 * S, err;
+end intrinsic;
+
+intrinsic CertifiedLValueAtOne(E::CrvEll : Precision := 60) -> FldReElt, FldReElt
+{L(E, 1) for E over Q of root number +1, with a proved bound on the error: L(E, 1) = 2 sum_n (a_n / n)
+exp(-2 pi n / sqrt(N)), and the tail past M is at most 2 * 2 exp(-c(M+1)) / (1 - exp(-c)), c = 2 pi / sqrt(N),
+from |a_n| <= 2n; summed in arithmetic of Precision + 20 digits, as CertifiedLDerivativeAtOne.}
+    require RootNumber(E) eq 1 : "the root number must be +1";
+    R := RealField(Precision + 20);
+    N := Conductor(E);
+    c := 2 * Pi(R) / Sqrt(R!N);
+    tailb := func< M | 4 * Exp(-c*(M + 1)) / (1 - Exp(-c)) >;
+    M := 10;
+    while tailb(M) gt R!10^(-(Precision div 2)) do M := Ceiling(M * 1.25); end while;
+    an := LGetCoefficients(LSeries(E), M);
+    S := &+[R | (an[n] / n) * Exp(-c*n) : n in [1..M] | an[n] ne 0];
+    return 2 * S, 2 * tailb(M) + R!M * R!10^(-Precision);
+end intrinsic;
+
+intrinsic BSDLeadingTermRankOne(E::CrvEll : Effort := 1) -> FldReElt
+{The leading term Omega * Reg * #Sha * prod c_p / #E(Q)_tors^2 that the BSD formula predicts for L'(E, 1)
+when E has rank one, with #Sha taken as the order Magma's Sha bounds allow when they pin it down (else 1),
+for comparison with CertifiedLDerivativeAtOne; a cross-check only, the formula not being proved.}
+    G, mG, rk, sat := MordellWeilGroup(E : Effort := Effort);
+    require rk and sat : "the Mordell-Weil group is not proved";
+    gens := [mG(G.i) : i in [1..Ngens(G)] | Order(G.i) eq 0];
+    require #gens eq 1 : "E must have rank one";
+    Em := MinimalModel(E);
+    Om := RealPeriod(Em) * (Discriminant(Em) gt 0 select 2 else 1);
+    sha := 1;
+    return Om * Height(gens[1]) * sha * &*[Integers() | TamagawaNumber(Em, p) : p in BadPrimes(Em)] / #TorsionSubgroup(Em)^2;
+end intrinsic;
+
+intrinsic HeegnerHeightComponents(E::CrvEll, D::RngIntElt, N::RngIntElt, degf::RngIntElt, d::RngIntElt : OldformPrime := 0, Certified := false) -> SeqEnum, RngIntElt
 {For a CM point P of fundamental discriminant d on X_0^D(N) and f : X_0^D(N) -> E of degree degf, the
 genus-character components of the Heegner divisor of f(P): for each genus character chi = (d1, d2) a
 tuple <d1, d2, admissible, ord L(E^d1,1), ord L(E^d2,1), h_chi>, where h_chi is the absolute canonical
 height of sum_t chi(t) f(P)^t over the whole class group when chi is admissible, by Cai-Shu-Tian's
-formula with 8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number.
+formula with 8 pi^2 (phi,phi) = 2 deg(pi_opt) Area(E_opt). The second value is the class number. Each
+tuple ends with a bound on the relative error of h_chi: with Certified, the L-values are certified
+(CertifiedLValueAtOne, CertifiedLDerivativeAtOne, and the exact zero test of the twisted winding element)
+and the bound is proved, up to the floating-point evaluation of the period, which is done to 50 digits; without,
+it is 0 and the L-values are the numerical ones zero-tested against 1e-8.
 Characters of higher order are not computed: a point defined over a quadratic field F has nonzero
 components only for the characters trivial on Gal(H/F), the trivial one and the genus character
 attached to F.
@@ -135,13 +220,19 @@ directs the search and only the point counts certify the result.}
     eps := AssociativeArray();
     for v in SigD do eps[v] := QuaternionicAtkinLehnerSign(E, v, D, N); end for;
     u2 := d eq -3 select 9 else (d eq -4 select 4 else 1);
-    norm := u2 * Sqrt(RealField(30)!Abs(d)) * degf * 2^#SigD / (2 * ModularDegree(Eopt) * lattice_area(Eopt));
+    norm := u2 * Sqrt(RealField(50)!Abs(d)) * degf * 2^#SigD / (2 * ModularDegree(Eopt) * lattice_area(Eopt));
     out := [];
     for f in GenusCharacters(d) do
         d1 := f[1]; d2 := f[2];
         adm := not exists{v : v in SigD | ((d1 mod v ne 0) select KroneckerSymbol(d1, v) else KroneckerSymbol(d2, v)) ne eps[v]};
-        E1 := d1 eq 1 select E else QuadraticTwist(E, d1); E2 := QuadraticTwist(E, d2);
-        v1, o1 := L_value_or_derivative(E1); v2, o2 := L_value_or_derivative(E2);
+        if Certified then
+            v1, o1, e1 := certified_L(E, d1, 50); v2, o2, e2 := certified_L(E, d2, 50);
+            rel := (o1 + o2 eq 1) select e1/Abs(v1) + e2/Abs(v2) + 10^(-40) else 0;
+        else
+            E1 := d1 eq 1 select E else QuadraticTwist(E, d1); E2 := QuadraticTwist(E, d2);
+            v1, o1 := L_value_or_derivative(E1); v2, o2 := L_value_or_derivative(E2);
+            rel := 0;
+        end if;
         Lp := (o1 + o2 eq 1) select v1*v2 else 0;
         // a form old at p: the two degeneracy maps contribute 1 + chi(p) each, against a degree
         // 2(p + 1 + a_p) times that of the parametrisation at the level where the form is new
@@ -151,7 +242,7 @@ directs the search and only the point counts certify the result.}
             chip := (d1 mod p0 ne 0) select KroneckerSymbol(d1, p0) else KroneckerSymbol(d2, p0);
             oldfac := (1 + chip)^2 / (2*(p0 + 1 + TraceOfFrobenius(E, p0)));
         end if;
-        Append(~out, <d1, d2, adm, o1, o2, (1/2) * norm * Lp * oldfac>);
+        Append(~out, <d1, d2, adm, o1, o2, (1/2) * norm * Lp * oldfac, rel>);
     end for;
     return out, #Cl;
 end intrinsic;
@@ -214,7 +305,7 @@ function counts_mod_p(ctx, pts)
     return counts;
 end function;
 
-intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 12, OldformPrime := 0) -> List
+intrinsic ModelByHeegnerHeights(X::ShimuraQuot, Wp::SetEnum, E::CrvEll : Primes := 130, TwistPrimes := 800, Effort := 1, FreeWindow := 12, OldformPrime := 0, Certified := false) -> List
 {The configurations of branch points of X = X_0^D(N)/W -> E = X/W' allowed by the Heegner heights
 whose double cover is consistent with the trace formula. E must be a curve of the isogeny class of
 X/W' (every curve of the class should be tried: on the wrong one the predicted heights are not
@@ -238,7 +329,17 @@ numerically and a nonzero value is recognised against a threshold, so a value wr
 can only lose candidates, never admit a wrong one. The window is used for a branch place whose
 discriminant is not fundamental, and also for a rational place whose nontrivial characters do not all
 have vanishing components, which cannot happen for a point defined over Q and so means the formula is
-being applied outside the case it was checked on.}
+being applied outside the case it was checked on.
+
+With Certified, the L-values are certified (HeegnerHeightComponents with Certified) and every recognition is
+proved: k^2 must lie within its proved error, below 1/4, of a square integer; the rational b in the sum
+of the points over a place must be the only rational with denominator dividing phi(D) psi(N) within its
+proved error, which must be below 1/(2 phi(D) psi(N)).  That denominator bound: in Cai-Shu-Tian's formula
+the morphism sends the normalised Hodge class xi to torsion, xi of degree one and parallel to
+L = omega + sum_x (1 - 1/e_x) x (arXiv:1408.1733, Section 1); m L is integral for m = lcm(e_x) | 6, and
+deg L = phi(D) psi(N) / 6 (Gauss-Bonnet, no cusps for D > 1), so phi(D) psi(N) xi_E lies in E(Q) up to
+torsion and b = |n - e x| has denominator dividing phi(D) psi(N).  A component that is exactly zero is
+recognised as zero, so the test for a rational place uses no threshold.}
     D := X`D; N := X`N; W := {Integers() | w : w in X`W};
     require assigned X`g and X`g eq 3: "X must have genus 3 (assign X`g)";
     branch := BranchPointData(X, Wp);
@@ -273,7 +374,7 @@ being applied outside the case it was checked on.}
                 b[2], FreeWindow;
             continue;
         end if;
-        comps, h := HeegnerHeightComponents(E, D, N, degf, b[2] : OldformPrime := OldformPrime);
+        comps, h := HeegnerHeightComponents(E, D, N, degf, b[2] : OldformPrime := OldformPrime, Certified := Certified);
         if e eq 2 then
             dF := Discriminant(Integers(F));
             Ed := QuadraticTwist(E, dF);
@@ -304,6 +405,18 @@ being applied outside the case it was checked on.}
             require adm[1][3] and adm[1][6] gt 0:
                 "the character attached to the field of the branch point is inadmissible or has vanishing value";
             hminus := adm[1][6] * (2/h)^2;
+            if Certified then
+                k2 := hminus / Height(Gm : Precision := 50);
+                err := k2 * (adm[1][7] + 10^(-30));
+                vprintf HeegnerHeights: "disc %o over Q(sqrt %o): k^2 = %o (proved error %o)\n", b[2], SquarefreeFactorization(dF), k2, err;
+                require err lt 1/4 : "the error of k^2 is too large to recognise an integer";
+                kk := Round(k2);
+                if Abs(k2 - kk) gt err or not IsSquare(kk) then
+                    vprintf HeegnerHeights: "not a lattice point: E is not the quotient\n";
+                    return [* *];
+                end if;
+                _, k := IsSquare(kk);
+            else
             kr := Sqrt(hminus / Height(Gm));
             vprintf HeegnerHeights: "disc %o over Q(sqrt %o): P - Pbar has predicted height %o = k^2 h(G'), k = %o\n",
                 b[2], SquarefreeFactorization(dF), hminus, kr;
@@ -312,12 +425,13 @@ being applied outside the case it was checked on.}
                 return [* *];
             end if;
             k := Round(kr);
+            end if;
         else
             // A branch place of degree 1: every conjugate of the CM point has the same image in E, so
             // the component of every nontrivial character should vanish. Where it does not, the
             // admissibility rule is being applied outside the case it was checked on, and the
             // trivial character's component is not to be trusted either, so the place is searched.
-            if not &and[c[6] lt 1e-10 : c in comps | c[1] ne 1 and c[3]] then
+            if not &and[(Certified select c[6] eq 0 else c[6] lt 1e-10) : c in comps | c[1] ne 1 and c[3]] then
                 vprintf HeegnerHeights: "disc %o: a rational place with a nonvanishing component of a nontrivial character; searching it over |n| <= %o\n", b[2], FreeWindow;
                 T1, mT1 := TorsionSubgroup(EF);
                 Append(~data, rec< recformat< e, F, EF, Gm, k, bp, h, tors, d, free > | e := e, F := F,
@@ -335,6 +449,19 @@ being applied outside the case it was checked on.}
         triv := [c : c in comps | c[1] eq 1][1];
         bp := Rationals()!0;
         if #gQ eq 1 and triv[3] and triv[6] gt 0 then
+            if Certified then
+                br := (e/h) * Sqrt(triv[6] / Height(gQ[1] : Precision := 50));
+                err := br * (triv[7] + 10^(-30));
+                Mden := &*[Integers() | p - 1 : p in PrimeDivisors(D)] * &*[Integers() | q + 1 : q in PrimeDivisors(N)];
+                require IsSquarefree(N) : "the denominator bound phi(D) psi(N) is derived for squarefree N";
+                require err lt 1/(2*Mden) : "the error of b is too large to recognise a rational of denominator dividing phi(D) psi(N)";
+                bp := Round(br * Mden) / Mden;
+                vprintf HeegnerHeights: "disc %o: b = %o (measured %o, proved error %o, denominators divide %o)\n", b[2], bp, br, err, Mden;
+                if Abs(br - bp) gt err then
+                    vprintf HeegnerHeights: "not a rational multiple of the generator: E is not the quotient\n";
+                    return [* *];
+                end if;
+            else
             br := (e/h) * Sqrt(triv[6] / hG);
             bp := BestApproximation(br, 10^4);
             vprintf HeegnerHeights: "disc %o: the sum of the points over the place is e*xi_E +- %o*G, measured %o\n",
@@ -342,6 +469,7 @@ being applied outside the case it was checked on.}
             if Abs(br - bp) gt 1e-15 then
                 vprintf HeegnerHeights: "not a rational multiple of the generator: E is not the quotient\n";
                 return [* *];
+            end if;
             end if;
         end if;
         T, mT := TorsionSubgroup(EF);

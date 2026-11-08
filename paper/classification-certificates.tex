@@ -1,9 +1,11 @@
 % The certificate stage of the classification pipeline: what each certificate proves, the thirty-fourth open
-% quotient by one component group, the curves that #128 modelled proved from their branch divisors alone,
-% the Gross-Zagier step of 6_323 made exact, and two corrections to the counting of CM points.
-% Code: HyperellipticCertificates.m, DualTest.m, ComponentGroups.m; data: data/certificates/, data/dual/.
-% Tests: tests/HyperellipticCertificates.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and
-% tests/_offline/{DualTestReproduces,HyperellipticCertificatesC,HyperellipticCertificatesC4}.m.
+% quotient by one component group, the curves that #128 modelled, proved from their branch divisors or by
+% certified Heegner heights, 6_341 by the isogeny class of its star, the Gross-Zagier step of 6_323 made
+% exact, and two corrections to the counting of CM points.
+% Code: HyperellipticCertificates.m, DualTest.m, ComponentGroups.m, HeegnerHeights.m; data:
+% data/certificates/, data/dual/.  Tests: tests/HyperellipticCertificates.m, tests/HyperellipticCertificatesB2.m,
+% tests/CertifiedLValues.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and tests/_offline/{DualTestReproduces,
+% HyperellipticCertificatesC,HyperellipticCertificatesC4,HyperellipticCertificatesD}.m.
 \documentclass[11pt,reqno]{amsart}
 \usepackage[margin=1.15in]{geometry}
 \usepackage{amsmath,amssymb,amsthm,mathtools}
@@ -42,18 +44,23 @@ shapes; the first two are those of \texttt{paper/torsion-counting-hyperelliptic.
 bound of the Jacobian, lowered where needed by a component group in which the differences vanish.
 \item[B] Genus four over a genus-two star: the branch divisor, recomputed from Ogg's fixed points, is linearly
 equivalent to a distinct effective divisor of degree two, and the star's Jacobian is torsion-free.
+\item[B2] As B, with a star whose Jacobian may have a rational point of order two (Section~4).
 \item[C] Genus three over a genus-one star $E$: the branch divisor is $A+B$ with $A-B$ torsion (the dual test,
 on the $a_q(E)$-eigenspace where needed), zero (its class in the component groups $\Phi_p$, and every nonzero
 rational torsion point of $E$ off the identity component at one of those $p$), and the cover untwisted (a
 simple Prym, or the dual graph of $Y$). $E$ is identified exactly by its traces of Frobenius up to the Sturm
-bound and by its Tamagawa numbers against the orders of the $\Phi_p$.
-\item[C4] As C, with one branch place of degree four, the torsion statement from Gross--Zagier (Section~4).
+bound and by its reduction types $I_n$ against the orders of the $\Phi_p$.
+\item[C4] As C, with one branch place of degree four, the torsion statement from Gross--Zagier (Section~5).
+\item[D] Genus three over a genus-one quotient: the Heegner-height route of \texttt{paper/heegner-height-models.tex}
+with every numerical recognition proved (Section~3).
 \item[N] Not hyperelliptic (Section~2).
 \end{itemize}
 
-At the time of writing $27$ of the $34$ are decided this way: all seven of shape A, five of the six of shape B,
-the four of shapes C and C4 that \texttt{paper/hyperelliptic-candidates.tex} lists separately, ten of the
-sixteen that \texttt{paper/heegner-height-models.tex} modelled (Section~3), and the thirty-fourth (Section~2).
+All $34$ are decided this way: the seven of shape A, the five of shape B, $6_{341}$ by shape B2, the four of
+shapes C and C4 that \texttt{paper/hyperelliptic-candidates.tex} lists separately, the sixteen that
+\texttt{paper/heegner-height-models.tex} modelled (ten by shape C and six by shape D, Section~3), and the
+thirty-fourth (Section~2). Five further curves that the filters leave open, outside the $34$, wait on other
+arguments (\texttt{data/open\_34.m}, \texttt{open\_gaps}).
 
 \section{The thirty-fourth quotient is not hyperelliptic}
 
@@ -82,17 +89,89 @@ candidate branch divisors to be complete. (\texttt{data/certificates/141\_2.m}, 
 \section{The curves modelled by Heegner heights}
 
 Each of the sixteen curves of \texttt{paper/heegner-height-models.tex}, Table 1, is a genus-three double cover of
-an elliptic quotient, and when that quotient is the star, shape C proves it hyperelliptic from its branch
-divisor alone, with none of the inputs that made the identification of the model conditional (the
-completeness of the enumeration, the recognition of integers from $L'$-values, the Mordell--Weil groups of the
-isogeny class, the oldform multiplier). Done so far: $39_{11}$, $6_{185}$, $141_2$ ($\{1,3,94,282\}$), $21_{34}$,
-$55_7$, $57_{10}$, $15_{46}$, $6_{253}$, $6_{247}$, $6_{301}$. At $21_{34}$ and $15_{46}$ the four branch points are rational
-and exactly one of the three pairings is certified; the other two are refused. Open: $6_{455}$ and $690_7$ (bases
-being computed), $22_{51}$ (the pairing is certified zero, but neither twist test applies),
-$6_{187}$ (the Galois-stable pairing is a mixed one over $\Q(\sqrt{-2})$), and $1326_1$, $210_{13}$, where $W$ has
-index four and the elliptic quotient is not the star. The models of the note remain as equations; they are
-theorems once the curve is proved hyperelliptic and the model is identified, which still needs the note's
-enumeration or another argument.
+an elliptic quotient. When that quotient is the star, shape C proves it hyperelliptic from its branch divisor
+alone. Done this way: $39_{11}$, $6_{185}$, $141_2$ ($\{1,3,94,282\}$), $21_{34}$, $55_7$, $57_{10}$, $15_{46}$,
+$6_{253}$, $6_{247}$, $6_{301}$. At $21_{34}$ and $15_{46}$ the four branch points are rational and exactly one of
+the three pairings is certified; the other two are refused.
+
+The other six, $6_{187}$, $22_{51}$, $6_{455}$, $690_7$, $1326_1$ and $210_{13}$, are decided by the note's own route
+with every recognition proved (shape D). For $1326_1$ and $210_{13}$ the group $W$ has index four and the
+elliptic quotient $E=X/W'$ is an intermediate one, given in the certificate; it is identified as for shape C,
+except that the order of $\Phi_p$ is compared with $n$ for the reduction type $I_n$ of $E$, not with the Tamagawa
+number, which counts only the rational components and differs from $n$ when the reduction is non-split (on
+the star the reduction is split, $w_p$ being in the group, and the two agree). The route computes, for each
+branch place, the canonical heights of the genus-character components of the Heegner divisor from Cai--Shu--Tian's
+Gross--Zagier formula, and reads off from them a finite list of candidate branch divisors, among which the
+true one lies; every double cover over each candidate is built exactly and all but those consistent with the
+trace formula are discarded; $Y$ is one of the survivors, and every survivor is hyperelliptic. Three
+recognitions were numerical in the note and are now proved:
+\begin{itemize}
+\item the $L$-values. $L(E^{(d)},1)$, when the root number is $+1$, is either zero, decided exactly by the twisted
+winding element as in Section~5, or computed from $2\sum_n (a_n/n)e^{-2\pi n/\sqrt N}$; $L'(E^{(d)},1)$, when the root
+number is $-1$, from $2\sum_n (a_n/n)E_1(2\pi n/\sqrt N)$. In both the tail past $M$ terms is bounded using
+$|a_n|\le 2n$ and $E_1(x)\le e^{-x}/x$, and the rounding errors are added, so each value comes with a proved error,
+and a value used as nonzero must exceed it (\texttt{tests/CertifiedLValues.m} checks $L'(37a1,1)$ and $L(11a1,1)$
+against their known values). The BSD leading term of $E$ is computed alongside as a cross-check only.
+\item the multiplier $k$ at a place of degree two, recognised from $k^2$ within its proved error, which must be
+below $\tfrac14$, and required to be a square.
+\item the rational $b$ at a rational place, the multiple of the generator in the sum of the points over the place.
+In Cai--Shu--Tian's formula the morphism to $E$ sends the normalised Hodge class $\xi$ to torsion, where $\xi$ has
+degree one and is parallel to $\omega+\sum_x(1-1/e_x)x$ (arXiv:1408.1733, Section~1). Since $m(\omega+\sum_x(1-1/e_x)x)$
+is integral for $m$ the least common multiple of the $e_x$, which divides $6$, and its degree is
+$\varphi(D)\psi(N)/6$ (Gauss--Bonnet; there are no cusps), $\varphi(D)\psi(N)\,\xi_E$ is a rational point of $E$ up
+to torsion, and $b$ has denominator dividing $\varphi(D)\psi(N)$. It is recognised as the unique such rational
+within its proved error, which must be below $1/(2\varphi(D)\psi(N))$.
+\end{itemize}
+The heights are evaluated to $50$ digits, with periods to $50$ digits, and the proved errors are of order $10^{-27}$.
+At $6_{187}$, for example, $k^2=1$ at both places of degree two and $b=7,1$ with $\varphi(6)\psi(187)=432$, and the
+survivors are two twists of one cover, isomorphic and hyperelliptic. The models of the note are these survivors.
+
+\section{$6_{341}$: the isogeny class of the star}
+
+$Y=X_0^6(341)/\langle w_3,w_{11},w_{62}\rangle$ has genus four over the star $C^*$ of genus two, branched along
+$B=P_{-24}+P_{-88}$, and is hyperelliptic if and only if $B\sim K$. Three Borcherds forms relate $B$ to
+$P_{-43}+P_{-123}$ and to $P_{-84}+P_{-228}$, and $J=\Jac(C^*)$ has rational torsion of order at most $2$, so
+$B\sim K$ or $B\sim K+t$ for the rational point $t$ of order two, if there is one
+(\texttt{paper/hyperelliptic-6-341.tex}, Proposition~prop:cert). The component groups at $2$ and $3$ do not
+separate the two: every difference of the three divisors has class zero in $\Phi_2\cong\Z/46$ and $\Phi_3\cong\Z/41$.
+Shape B2 excludes $K+t$ on models, following \texttt{paper/hyperelliptic-6-341.tex} with one step shortened and one
+input added. The stage rechecks:
+\begin{enumerate}
+\item The Hecke polynomial of $T_{23}$ on $J$, from the trace formula, is $x^2+8x+14$, of discriminant $8$, so the
+Hecke algebra contains $\mathcal O_K=\Z[\sqrt2]$, $K=\Q(\sqrt2)$, which has class number one and the unit $1+\sqrt2$
+of norm $-1$. The Atkin--Lehner eigenspace of the star (new at $2,3$, signs $-1$ there and $+1$ at $11,31$) is one
+newform orbit $f$ of dimension two at level $2046$, whose Hecke polynomials agree with those of the trace formula
+at the good primes below $60$.
+\item For each of the two curves $C$ (the star's fitted model) and $C_A$ of the note: the conductor is
+$2046^2$ (odd part by Magma, the exponent $2$ at $2$ proved by CHIMP); CHIMP's certified endomorphism, with tangent
+matrix $T$, $T^2=2$, maps the period lattice to itself (rechecked to $10^{-40}$); so the Jacobian is of
+$\mathrm{GL}_2$-type with $\mathcal O_K$ in its endomorphisms, modular of level $2046$ by Ribet and Khare--Wintenberger,
+and its Hecke polynomials at the good primes below $60$ are those of $f$ and of no other orbit of dimension two
+at that level, so it is isogenous to $J$. Its Mordell--Weil group is proved to be $\Z/2\times\Z^2$, and for its
+point $t$ of order two and a rational point $P_0$, the class $[\iota P_0-P_0]+t$ is not in $2\Jac(\Q)$: a rational
+line bundle $L=\mathcal O(P_0)\otimes s$ with $L^{\otimes2}\cong\mathcal O(B)$, $B\sim K+t$, would need
+$2s=[\iota P_0-P_0]+t$.
+\item $C$ and $C_A$ have different Igusa invariants.
+\item The reducibility gcd $\gcd_p \mathrm N(a_p-1-p)$ over $p=4093,12277,14323,16369\equiv1\pmod{2046}$ and the congruence
+gcd $\gcd_p(\mathrm{tr}(a_p)^2-4\mathrm N(a_p))$ over the good $p<400$ are powers of $2$.
+\end{enumerate}
+By (4), every isogeny from $J$ is an ideal quotient followed by a $2$-power isogeny (Proposition~prop:odd of the
+note). For the $2$-power part, the surfaces with $\mathcal O_K$ in their endomorphisms isogenous to $J$ are the
+Galois-fixed vertices of the Bruhat--Tits tree at $\lambda=\sqrt2$, and the fixed neighbours of a fixed vertex
+$[L]$ are the lines of its $\lambda$-torsion spanned by a rational point. The rational torsion of every surface
+in the class injects into its points over $\F_p$, whose number is that of $J$, so it has order at most $2$, and
+every fixed vertex has at most one fixed neighbour. The fixed vertices form a subtree, which therefore has at
+most two vertices. (This replaces the note's use of the rational $2$-torsion of $J/\langle t\rangle$.) The Jacobians
+of $C$ and $C_A$ are two of them by (2), distinct by (3) and Torelli, since a surface with endomorphism algebra
+$K$ and totally positive units all squares carries one principal polarisation up to automorphisms. So $J$ with its
+polarisation is $\Jac(C)$ or $\Jac(C_A)$, and $C^*$ is $C$ or $C_A$ over $\Q$ (Serre's appendix to Lauter). On
+either, $K+t$ is not the branch divisor of a double cover over $\Q$, so $B\sim K$ and $Y$ is hyperelliptic.
+
+The input that is new here is CHIMP's certificate for $C_A$. The note identified $\Jac(C_A)$ with $J/\langle t\rangle$
+from period matrices, its Igusa--Clebsch invariants being rational to $10^{-104}$, and the identification is now
+proved: $\Jac(C_A)$ is isogenous to $J$, has $\mathcal O_K$ in its endomorphisms, and is not $\Jac(C)$. CHIMP is not a
+dependency of the stage. The certificate stores the two tangent matrices and the two exponents at $2$, and
+\texttt{tools/proof-6\_341/chimp-inputs.m} reproduces all four (log alongside).
 
 \section{The Gross--Zagier step of $6_{323}$, exactly}
 
