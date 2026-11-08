@@ -230,8 +230,15 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    proves them from the branch divisor alone (dual test, component groups, twist), with no enumeration;
    the 34th is shape N: the only Galois-stable pairing of its branch places, {P_-4, P_-12} | Z_-1128, has
    class 2 in Phi_3 = Z/7, so it is not hyperelliptic. #128's models stay as equations; making #128 exact
-   is needed only if those equations are to be theorems. The weight-3/2 bases for group D are computed on
-   lovelace, small levels first; level 9660 (690_7) waits for a go-ahead (days of computation).
+   is needed only if those equations are to be theorems. Done 2026-11-08: 39_11, 6_185, 141_2, 21_34,
+   55_7 (a_3(E)-eigenspace), 57_10, 15_46 (the odd variant), 6_253, 6_247. Open: 6_301 and 6_455 (bases at
+   3612 and 5460 computing), 690_7 (level 9660, started 2026-11-08), 22_51 (the pairing is certified zero, but
+   neither twist test applies: no simple Prym, and D = 22 has no odd prime with an even cyclic Phi), 6_187
+   (the Galois-stable pairing is a mixed one over Q(sqrt -2), so its difference lies in E(K)^-, as at
+   6_323), 1326_1 and 210_13 (W has index four, so the elliptic quotient is not the star).
+   Two counting fixes made on the way: the Heegner weight of P_-4 doubles when w_2 is in the group
+   (CMPointWeight), and the number of points of X_0^D(N) over a star point is #W over the stabiliser in W,
+   without the units of the CM order (cg_stab; it had been wrong at P_-3 and P_-4 off the fixed points).
 
 ## Branch
 

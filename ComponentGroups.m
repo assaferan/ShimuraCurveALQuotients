@@ -62,12 +62,12 @@ function cg_optemb(d, Ov)
     return #{ { u * x * u^-1 : u in U } : x in opt };
 end function;
 
-// the order of the stabiliser in W of a CM point of discriminant d of X, times |Aut| of the point: the e_d of the
-// dictionary of Guo-Yang (3 at -3, 2 at -4, doubled at the fixed points of an Atkin-Lehner involution)
+// the order of the stabiliser in W of a CM point of discriminant d of X_0^D(N): 2 when the point is fixed by an
+// Atkin-Lehner involution w_m in W (d = -4m, d = -m with m = 3 mod 4, or d = -4 with m = 2, as 1 + i has norm 2;
+// Ogg), else 1.  #W divided by it is the number of points of X_0^D(N) over one point of X_0^D(N)/W.  (The units
+// of the CM order do not enter: they fix the point.)
 function cg_stab(D, N, W, d)
-    e := d eq -3 select 3 else (d eq -4 select 2 else 1);
-    if exists{m : m in W | m gt 1 and (d eq -4*m or (m mod 4 eq 3 and d eq -m))} then e *:= 2; end if;
-    return e;
+    return exists{m : m in W | m gt 1 and (d eq -4*m or (m mod 4 eq 3 and d eq -m) or (m eq 2 and d eq -4))} select 2 else 1;
 end function;
 
 intrinsic ComponentGroupData(D::RngIntElt, N::RngIntElt, W::SetEnum, p::RngIntElt) -> Rec

@@ -20836,7 +20836,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 3>, <"CurveID", 2977>,
 <"CoveredBy", { IntegerRing() | 2939, 2945, 2955, 2957, 2958, 2969, 2970 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-555, 1>, <-40, 1> ] and [ <-4440, 1> ] have equal sum on 1110m1, torsion by the dual test at level 2220, zero by Phi_p for p in [ 2, 3 ]; untwisted: no rational 2-torsion (data/certificates/6_185.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 3, 5, 15, 74, 222, 370, 1110 }>,
@@ -23300,7 +23300,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 3>, <"CurveID", 3329>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-52, 1>, <-3, 1> ] and [ <-456, 1> ] have equal sum on 1482i1, torsion by the dual test at level 2964, zero by Phi_p for p in [ 2, 3 ]; untwisted: no rational 2-torsion (data/certificates/6_247.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 3, 19, 26, 57, 78, 494, 1482 }>,
@@ -23419,7 +23419,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"g", 3>, <"CurveID", 3346>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3351 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1012, 1>, <-88, 1> ] and [ <-552, 1> ] have equal sum on 1518p1, torsion by the dual test at level 3036, zero by Phi_p for p in [ 2, 3 ]; untwisted: no rational 2-torsion (data/certificates/6_253.m)">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"W", { IntegerRing() | 1, 3, 22, 23, 66, 69, 506, 1518 }>,
@@ -47898,7 +47898,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 46>,
 <"g", 3>, <"CurveID", 6843>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6844 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1380, 1>, <-60, 1> ] and [ <-40, 1>, <-15, 1> ] have equal sum on 345f1, torsion by the dual test at level 1380, zero by Phi_p for p in [ 3, 5 ]; untwisted: no rational 2-torsion (data/certificates/15_46.m)">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 46>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 23, 30, 46, 69, 115, 138, 230, 345, 690 }>,
@@ -52007,7 +52007,7 @@ CreateShimuraQuot([* <"D", 21>, <"N", 34>,
 <"g", 3>, <"CurveID", 7430>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 7434 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1428, 1>, <-84, 1> ] and [ <-408, 1>, <-4, 1> ] have equal sum on 357d1, torsion by the dual test at level 1428, zero by Phi_p for p in [ 3, 7 ]; untwisted: no rational 2-torsion (data/certificates/21_34.m)">
 *]),
 CreateShimuraQuot([* <"D", 21>, <"N", 34>,
 <"W", { IntegerRing() | 1, 6, 14, 17, 21, 102, 238, 357 }>,
@@ -67750,7 +67750,7 @@ CreateShimuraQuot([* <"D", 39>, <"N", 11>,
 <"g", 3>, <"CurveID", 9679>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9681 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-132, 1> ] and [ <-52, 1> ] have equal sum on 429b1, torsion by the dual test at level 1716, zero by Phi_p for p in [ 3, 13 ]; untwisted: the Prym simple (L-polynomial irreducible at 5) (data/certificates/39_11.m)">
 *]),
 CreateShimuraQuot([* <"D", 39>, <"N", 11>,
 <"W", { IntegerRing() | 1, 33, 39, 143 }>,
@@ -70921,7 +70921,7 @@ CreateShimuraQuot([* <"D", 55>, <"N", 7>,
 <"g", 3>, <"CurveID", 10132>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10133 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-1540, 1> ] and [ <-20, 1> ] have equal sum on 385a1, torsion by the dual test at level 1540, zero by Phi_p for p in [ 5, 11 ]; untwisted: the Prym simple (L-polynomial irreducible at 13) (data/certificates/55_7.m)">
 *]),
 CreateShimuraQuot([* <"D", 55>, <"N", 7>,
 <"W", { IntegerRing() | 1, 5, 7, 11, 35, 55, 77, 385 }>,
@@ -71915,7 +71915,7 @@ CreateShimuraQuot([* <"D", 57>, <"N", 10>,
 <"g", 3>, <"CurveID", 10274>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 10275 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-760, 1>, <-4, 1> ] and [ <-1140, 1> ] have equal sum on 285a1, torsion by the dual test at level 1140, zero by Phi_p for p in [ 3, 19 ]; untwisted: the Prym simple (L-polynomial irreducible at 7) (data/certificates/57_10.m)">
 *]),
 CreateShimuraQuot([* <"D", 57>, <"N", 10>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 19, 30, 38, 57, 95, 114, 190, 285, 570 }>,
@@ -81960,7 +81960,7 @@ CreateShimuraQuot([* <"D", 141>, <"N", 2>,
 <"g", 3>, <"CurveID", 11709>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 11711 }>,
-<"IsEC", false>
+<"IsEC", false>, <"IsHyp", true>, <"IsSubhyp", true>, <"TestInWhichProved", "HyperellipticCertificate C: the halves [ <-24, 1>, <-4, 1> ] and [ <-564, 1> ] have equal sum on 141a1, torsion by the dual test at level 564, zero by Phi_p for p in [ 3, 47 ]; untwisted: no rational 2-torsion (data/certificates/141_2.m)">
 *]),
 CreateShimuraQuot([* <"D", 141>, <"N", 2>,
 <"W", { IntegerRing() | 1, 6, 94, 141 }>,
