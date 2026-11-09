@@ -53,7 +53,7 @@
 % \testbar normalises log-scaled bars to the largest count; drop this line if
 % the macro is already defined in your preamble.
 \newcommand{\testbar}[2]{%
-  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(5617))}%
+  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(5723))}%
   \begin{tikzpicture}[baseline=-0.55ex]
     \fill[#1!10] (0,0) rectangle (2.7,0.16);
     \draw[black!45, line width=0.2pt] (0,0) rectangle (2.7,0.16);
@@ -104,25 +104,25 @@ Isomorphism
 \addlinespace[0.2em]
 
 Atkin--Lehner fixed points
-  & 5617 & \testbar{StatusNot}{5617} \\
+  & 5723 & \testbar{StatusNot}{5723} \\
 
 Hyperelliptic special-fibre components
-  & 2671 & \testbar{StatusNot}{2671} \\
+  & 2750 & \testbar{StatusNot}{2750} \\
 
 Finite field point count
-  & 1208 & \testbar{StatusNot}{1208} \\
+  & 1217 & \testbar{StatusNot}{1217} \\
 
 Dual graphs of the special fibres
-  & 1026 & \testbar{StatusNot}{1026} \\
-
-Special fiber
-  & 732 & \testbar{StatusNot}{732} \\
+  & 1056 & \testbar{StatusNot}{1056} \\
 
 Upward closure
-  & 664 & \testbar{StatusNot}{664} \\
+  & 665 & \testbar{StatusNot}{665} \\
+
+Special fiber
+  & 501 & \testbar{StatusNot}{501} \\
 
 Refined Atkin--Lehner fixed points
-  & 279 & \testbar{StatusNot}{279} \\
+  & 284 & \testbar{StatusNot}{284} \\
 
 Isomorphism
   & 106 & \testbar{StatusNot}{106} \\
@@ -131,7 +131,7 @@ Special fiber isomorphism
   & 80 & \testbar{StatusNot}{80} \\
 
 Automorphism groups
-  & 46 & \testbar{StatusNot}{46} \\
+  & 47 & \testbar{StatusNot}{47} \\
 
 Weil polynomial
   & 22 & \testbar{StatusNot}{22} \\

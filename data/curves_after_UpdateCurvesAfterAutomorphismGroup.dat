@@ -11729,7 +11729,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 35>,
 <"g", 3>, <"CurveID", 1676>,
 <"CoveredBy", { IntegerRing() | 1641, 1647, 1651 }>,
 <"Covers", { IntegerRing() | 1692, 1695, 1701 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 35>,
 <"W", { IntegerRing() | 1, 2, 105, 210 }>,
@@ -11743,7 +11743,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 35>,
 <"g", 3>, <"CurveID", 1678>,
 <"CoveredBy", { IntegerRing() | 1642, 1646, 1649 }>,
 <"Covers", { IntegerRing() | 1696, 1697, 1700 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 35>,
 <"W", { IntegerRing() | 1, 6, 14, 21 }>,
@@ -12849,7 +12849,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 55>,
 <"g", 3>, <"CurveID", 1836>,
 <"CoveredBy", { IntegerRing() | 1803, 1807, 1811 }>,
 <"Covers", { IntegerRing() | 1854, 1855, 1862 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 55>,
 <"W", { IntegerRing() | 1, 2, 33, 66 }>,
@@ -12863,7 +12863,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 55>,
 <"g", 3>, <"CurveID", 1838>,
 <"CoveredBy", { IntegerRing() | 1803, 1809, 1813 }>,
 <"Covers", { IntegerRing() | 1854, 1857, 1863 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 55>,
 <"W", { IntegerRing() | 1, 2, 165, 330 }>,
@@ -13430,7 +13430,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"g", 3>, <"CurveID", 1919>,
 <"CoveredBy", { IntegerRing() | 1904, 1906, 1912 }>,
 <"Covers", { IntegerRing() | 1951, 1957, 1964 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"W", { IntegerRing() | 1, 6, 65, 390 }>,
@@ -13472,7 +13472,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"g", 4>, <"CurveID", 1925>,
 <"CoveredBy", { IntegerRing() | 1904, 1905, 1914 }>,
 <"Covers", { IntegerRing() | 1959, 1962, 1964 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=13 component=X_0(6,13)/{ 1, 6, 13, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"W", { IntegerRing() | 1, 13, 30, 390 }>,
@@ -13556,7 +13556,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"g", 4>, <"CurveID", 1937>,
 <"CoveredBy", { IntegerRing() | 1901, 1905, 1908 }>,
 <"Covers", { IntegerRing() | 1955, 1956, 1959 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"W", { IntegerRing() | 1, 6, 26, 39 }>,
@@ -13598,7 +13598,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"g", 3>, <"CurveID", 1943>,
 <"CoveredBy", { IntegerRing() | 1902, 1904, 1910 }>,
 <"Covers", { IntegerRing() | 1951, 1958, 1962 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 65>,
 <"W", { IntegerRing() | 1, 10, 78, 195 }>,
@@ -14207,7 +14207,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"g", 4>, <"CurveID", 2030>,
 <"CoveredBy", { IntegerRing() | 2015, 2017, 2023 }>,
 <"Covers", { IntegerRing() | 2062, 2068, 2075 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"W", { IntegerRing() | 1, 6, 77, 462 }>,
@@ -14305,7 +14305,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"g", 4>, <"CurveID", 2044>,
 <"CoveredBy", { IntegerRing() | 2011, 2015, 2019 }>,
 <"Covers", { IntegerRing() | 2062, 2063, 2070 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"W", { IntegerRing() | 1, 2, 33, 66 }>,
@@ -14340,7 +14340,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"g", 3>, <"CurveID", 2049>,
 <"CoveredBy", { IntegerRing() | 2012, 2015, 2020 }>,
 <"Covers", { IntegerRing() | 2068, 2069, 2070 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"W", { IntegerRing() | 1, 21, 22, 462 }>,
@@ -14361,7 +14361,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"g", 5>, <"CurveID", 2052>,
 <"CoveredBy", { IntegerRing() | 2013, 2017, 2019 }>,
 <"Covers", { IntegerRing() | 2062, 2067, 2072 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 77>,
 <"W", { IntegerRing() | 1, 14, 33, 462 }>,
@@ -14851,7 +14851,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"g", 4>, <"CurveID", 2122>,
 <"CoveredBy", { IntegerRing() | 2107, 2109, 2119 }>,
 <"Covers", { IntegerRing() | 2158, 2160, 2170 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 2, 85, 170 }>,
@@ -14879,7 +14879,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"g", 4>, <"CurveID", 2126>,
 <"CoveredBy", { IntegerRing() | 2111, 2113, 2119 }>,
 <"Covers", { IntegerRing() | 2158, 2164, 2171 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 6, 85, 510 }>,
@@ -14977,14 +14977,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"g", 4>, <"CurveID", 2140>,
 <"CoveredBy", { IntegerRing() | 2107, 2111, 2115 }>,
 <"Covers", { IntegerRing() | 2158, 2159, 2166 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 2, 51, 102 }>,
 <"g", 3>, <"CurveID", 2141>,
 <"CoveredBy", { IntegerRing() | 2107, 2112, 2116 }>,
 <"Covers", { IntegerRing() | 2160, 2161, 2166 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 2, 15, 30 }>,
@@ -15005,7 +15005,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"g", 3>, <"CurveID", 2144>,
 <"CoveredBy", { IntegerRing() | 2108, 2112, 2115 }>,
 <"Covers", { IntegerRing() | 2162, 2163, 2166 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 6, 34, 51 }>,
@@ -15033,7 +15033,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"g", 4>, <"CurveID", 2148>,
 <"CoveredBy", { IntegerRing() | 2109, 2113, 2115 }>,
 <"Covers", { IntegerRing() | 2158, 2163, 2168 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=5 component=X_0(6,5)/{ 1, 3, 10, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(17)/{ 1, 3 } g=2 u=34 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 85>,
 <"W", { IntegerRing() | 1, 10, 51, 510 }>,
@@ -15516,7 +15516,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"g", 4>, <"CurveID", 2217>,
 <"CoveredBy", { IntegerRing() | 2196, 2198, 2200 }>,
 <"Covers", { IntegerRing() | 2238, 2239, 2243 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=7 component=X_0(6,7)/{ 1, 3, 7, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"W", { IntegerRing() | 1, 3, 91, 273 }>,
@@ -15551,7 +15551,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"g", 5>, <"CurveID", 2222>,
 <"CoveredBy", { IntegerRing() | 2188, 2193, 2197 }>,
 <"Covers", { IntegerRing() | 2241, 2242, 2247 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=13 component=X_0(6,13)/{ 1, 2, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"W", { IntegerRing() | 1, 2, 21, 42 }>,
@@ -15572,7 +15572,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"g", 4>, <"CurveID", 2225>,
 <"CoveredBy", { IntegerRing() | 2189, 2193, 2196 }>,
 <"Covers", { IntegerRing() | 2243, 2244, 2247 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"W", { IntegerRing() | 1, 6, 26, 39 }>,
@@ -15614,7 +15614,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"g", 5>, <"CurveID", 2231>,
 <"CoveredBy", { IntegerRing() | 2190, 2192, 2198 }>,
 <"Covers", { IntegerRing() | 2239, 2246, 2250 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_26 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 91>,
 <"W", { IntegerRing() | 1, 14, 78, 273 }>,
@@ -15908,7 +15908,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 6>, <"CurveID", 2273>,
 <"CoveredBy", { IntegerRing() | 2258, 2260, 2266 }>,
 <"Covers", { IntegerRing() | 2305, 2311, 2318 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 6, 95, 570 }>,
@@ -15964,7 +15964,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 5>, <"CurveID", 2281>,
 <"CoveredBy", { IntegerRing() | 2262, 2263, 2268 }>,
 <"Covers", { IntegerRing() | 2304, 2313, 2315 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_10 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 15, 19, 285 }>,
@@ -16006,7 +16006,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 6>, <"CurveID", 2287>,
 <"CoveredBy", { IntegerRing() | 2254, 2258, 2262 }>,
 <"Covers", { IntegerRing() | 2305, 2306, 2313 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 2, 57, 114 }>,
@@ -16020,7 +16020,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 6>, <"CurveID", 2289>,
 <"CoveredBy", { IntegerRing() | 2254, 2260, 2264 }>,
 <"Covers", { IntegerRing() | 2305, 2308, 2314 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(19)/{ 1, 2 } g=2 u=57 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 2, 285, 570 }>,
@@ -16034,7 +16034,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 4>, <"CurveID", 2291>,
 <"CoveredBy", { IntegerRing() | 2255, 2259, 2262 }>,
 <"Covers", { IntegerRing() | 2309, 2310, 2313 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=5 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 6, 38, 57 }>,
@@ -16062,7 +16062,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"g", 5>, <"CurveID", 2295>,
 <"CoveredBy", { IntegerRing() | 2256, 2260, 2262 }>,
 <"Covers", { IntegerRing() | 2305, 2310, 2315 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=5 component=X_0(6,5)/{ 1, 3, 10, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 95>,
 <"W", { IntegerRing() | 1, 10, 57, 570 }>,
@@ -16867,7 +16867,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"g", 6>, <"CurveID", 2410>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2446, 2448, 2458 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(23)/{ 1, 2 } g=3 u=69 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"W", { IntegerRing() | 1, 2, 115, 230 }>,
@@ -16895,7 +16895,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"g", 6>, <"CurveID", 2414>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2446, 2452, 2459 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(23)/{ 1, 6 } g=3 u=46 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"W", { IntegerRing() | 1, 6, 115, 690 }>,
@@ -16993,7 +16993,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"g", 7>, <"CurveID", 2428>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2446, 2447, 2454 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=A component=X_0^6(23)/{ 1, 2, 3, 6 } g=2 u=23 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"W", { IntegerRing() | 1, 2, 69, 138 }>,
@@ -17007,7 +17007,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"g", 6>, <"CurveID", 2430>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2446, 2449, 2455 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(23)/{ 1, 2 } g=3 u=69 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"W", { IntegerRing() | 1, 2, 345, 690 }>,
@@ -17049,7 +17049,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"g", 5>, <"CurveID", 2436>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2446, 2451, 2456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=5 component=X_0(6,5)/{ 1, 3, 10, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(23)/{ 1, 3 } g=3 u=46 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 115>,
 <"W", { IntegerRing() | 1, 10, 69, 690 }>,
@@ -17252,7 +17252,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"g", 6>, <"CurveID", 2465>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2497, 2503, 2510 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 6, 119, 714 }>,
@@ -17350,14 +17350,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"g", 7>, <"CurveID", 2479>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2497, 2498, 2505 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_119 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 2, 51, 102 }>,
 <"g", 7>, <"CurveID", 2480>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2499, 2500, 2505 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 2, 21, 42 }>,
@@ -17385,7 +17385,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"g", 5>, <"CurveID", 2484>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2503, 2504, 2505 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 21, 34, 714 }>,
@@ -17406,7 +17406,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"g", 6>, <"CurveID", 2487>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2497, 2502, 2507 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(17)/{ 1, 3 } g=2 u=34 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 14, 51, 714 }>,
@@ -17420,7 +17420,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"g", 6>, <"CurveID", 2489>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2497, 2504, 2508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 119>,
 <"W", { IntegerRing() | 1, 14, 102, 357 }>,
@@ -17833,7 +17833,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 7>, <"CurveID", 2548>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2580, 2586, 2593 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 6, 133, 798 }>,
@@ -17847,7 +17847,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 5>, <"CurveID", 2550>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2582, 2584, 2593 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "UpwardClosure from 2582">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 42, 114, 133 }>,
@@ -17875,7 +17875,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 6>, <"CurveID", 2554>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2588, 2591, 2593 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 19, 42, 798 }>,
@@ -17889,21 +17889,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 5>, <"CurveID", 2556>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2579, 2588, 2590 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 19, 21, 399 }>,
 <"g", 5>, <"CurveID", 2557>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2579, 2589, 2591 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "UpwardClosure from 2591">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 3, 7, 21 }>,
 <"g", 5>, <"CurveID", 2558>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2579, 2580, 2584 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 3, 7, 21 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 3, 133, 399 }>,
@@ -17931,42 +17931,42 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 6>, <"CurveID", 2562>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2580, 2581, 2588 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_133 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 57, 114 }>,
 <"g", 7>, <"CurveID", 2563>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2582, 2583, 2588 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 21, 42 }>,
 <"g", 6>, <"CurveID", 2564>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2580, 2583, 2589 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 2, 21, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(19)/{ 1, 2 } g=2 u=57 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 399, 798 }>,
 <"g", 5>, <"CurveID", 2565>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2581, 2582, 2589 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(19)/{ 1, 2 } g=2 u=57 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 3, 38, 114 }>,
 <"g", 6>, <"CurveID", 2566>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2584, 2585, 2588 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 6, 38, 57 }>,
 <"g", 7>, <"CurveID", 2567>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2586, 2587, 2588 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_14 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 21, 38, 798 }>,
@@ -17987,28 +17987,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 6>, <"CurveID", 2570>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2580, 2585, 2590 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 14, 57, 798 }>,
 <"g", 5>, <"CurveID", 2571>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2582, 2587, 2590 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 6, 14, 21 }>,
 <"g", 6>, <"CurveID", 2572>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2580, 2587, 2591 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 14, 114, 399 }>,
 <"g", 7>, <"CurveID", 2573>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2582, 2585, 2591 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 3, 266, 798 }>,
@@ -18029,14 +18029,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 6>, <"CurveID", 2576>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2583, 2584, 2591 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 6, 266, 399 }>,
 <"g", 7>, <"CurveID", 2577>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2581, 2586, 2591 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 7, 19, 133 }>,
@@ -18057,7 +18057,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 3>, <"CurveID", 2580>,
 <"CoveredBy", { IntegerRing() | 2544, 2548, 2558, 2562, 2564, 2570, 2572 }>,
 <"Covers", { IntegerRing() | 2594 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 2, 3, 6, 7, 14, 21, 42 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 133, 266, 399, 798 }>,
@@ -18071,7 +18071,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 3>, <"CurveID", 2582>,
 <"CoveredBy", { IntegerRing() | 2544, 2550, 2560, 2563, 2565, 2571, 2573 }>,
 <"Covers", { IntegerRing() | 2594 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 21, 42, 57, 114, 133, 266 }>,
@@ -18113,7 +18113,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 3>, <"CurveID", 2588>,
 <"CoveredBy", { IntegerRing() | 2552, 2554, 2556, 2562, 2563, 2566, 2567 }>,
 <"Covers", { IntegerRing() | 2594 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=7 M=19 component=X_0(6,19)/{ 1, 2, 3, 6, 19, 38, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 19, 21, 38, 42, 399, 798 }>,
@@ -18134,7 +18134,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"g", 3>, <"CurveID", 2591>,
 <"CoveredBy", { IntegerRing() | 2553, 2554, 2557, 2572, 2573, 2576, 2577 }>,
 <"Covers", { IntegerRing() | 2594 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 133>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 19, 38, 133, 266 }>,
@@ -18302,7 +18302,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 6>, <"CurveID", 2615>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2647, 2653, 2660 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 6, 143, 858 }>,
@@ -18330,7 +18330,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 7>, <"CurveID", 2619>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2655, 2656, 2659 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=13 component=X_0(6,13)/{ 1, 2, 13, 26 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 13, 22, 286 }>,
@@ -18344,7 +18344,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 7>, <"CurveID", 2621>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2655, 2658, 2660 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=13 component=X_0(6,13)/{ 1, 6, 13, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 13, 66, 858 }>,
@@ -18400,21 +18400,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 8>, <"CurveID", 2629>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2647, 2648, 2655 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=13 component=X_0(6,13)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 2, 39, 78 }>,
 <"g", 8>, <"CurveID", 2630>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2649, 2650, 2655 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=13 component=X_0(6,13)/{ 1, 2, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 2, 33, 66 }>,
 <"g", 6>, <"CurveID", 2631>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2647, 2650, 2656 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 2, 429, 858 }>,
@@ -18428,7 +18428,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 8>, <"CurveID", 2633>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2651, 2652, 2655 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 6, 26, 39 }>,
@@ -18470,7 +18470,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"g", 7>, <"CurveID", 2639>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2647, 2654, 2658 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 143>,
 <"W", { IntegerRing() | 1, 22, 78, 429 }>,
@@ -19541,7 +19541,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 8>, <"CurveID", 2792>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2824, 2830, 2837 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(23)/{ 1, 6 } g=3 u=46 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 6, 161, 966 }>,
@@ -19611,7 +19611,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 8>, <"CurveID", 2802>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2823, 2824, 2828 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 3, 7, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(23)/{ 1, 3 } g=3 u=46 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 3, 161, 483 }>,
@@ -19639,7 +19639,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 9>, <"CurveID", 2806>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2824, 2825, 2832 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=A component=X_0^6(23)/{ 1, 2, 3, 6 } g=2 u=23 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 2, 69, 138 }>,
@@ -19653,7 +19653,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 7>, <"CurveID", 2808>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2824, 2827, 2833 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 2, 21, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(23)/{ 1, 2 } g=3 u=69 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 2, 483, 966 }>,
@@ -19695,7 +19695,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 8>, <"CurveID", 2814>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2824, 2829, 2834 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(23)/{ 1, 3 } g=3 u=46 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 14, 69, 966 }>,
@@ -19709,7 +19709,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"g", 8>, <"CurveID", 2816>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2824, 2831, 2835 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(23)/{ 1, 6 } g=3 u=46 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 161>,
 <"W", { IntegerRing() | 1, 14, 138, 483 }>,
@@ -20563,56 +20563,56 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 8>, <"CurveID", 2938>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2976, 2986 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 2 } g=2 u=111 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 185, 370 }>,
 <"g", 6>, <"CurveID", 2939>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2975, 2977, 2986 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 2 } g=2 u=111 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 5, 74, 370 }>,
 <"g", 7>, <"CurveID", 2940>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2978, 2980, 2986 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 74 } g=3 u=3 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 10, 74, 185 }>,
 <"g", 9>, <"CurveID", 2941>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2979, 2981, 2986 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 74 } g=3 u=3 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 5, 6, 30 }>,
 <"g", 9>, <"CurveID", 2942>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2980, 2987 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 6 } g=3 u=37 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 6, 185, 1110 }>,
 <"g", 8>, <"CurveID", 2943>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2975, 2981, 2987 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 6 } g=3 u=37 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 5, 222, 1110 }>,
 <"g", 8>, <"CurveID", 2944>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2976, 2978, 2987 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 30, 185, 222 }>,
 <"g", 9>, <"CurveID", 2945>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2977, 2979, 2987 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 37, 74 }>,
@@ -20689,63 +20689,63 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 9>, <"CurveID", 2956>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2975, 2982 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_185 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 111, 222 }>,
 <"g", 9>, <"CurveID", 2957>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2976, 2977, 2982 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 15, 30 }>,
 <"g", 8>, <"CurveID", 2958>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2977, 2983 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 2 } g=2 u=111 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 555, 1110 }>,
 <"g", 6>, <"CurveID", 2959>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2975, 2976, 2983 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 2 } g=2 u=111 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 3, 74, 222 }>,
 <"g", 10>, <"CurveID", 2960>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2978, 2979, 2982 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 6, 74, 111 }>,
 <"g", 10>, <"CurveID", 2961>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2980, 2981, 2982 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=A component=X_0^6(37)/{ 1, 6, 74, 111 } g=2 u=2 g(X/w_u)=5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 15, 74, 1110 }>,
 <"g", 8>, <"CurveID", 2962>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2978, 2981, 2983 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 74 } g=3 u=3 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 30, 74, 555 }>,
 <"g", 8>, <"CurveID", 2963>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2979, 2980, 2983 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 74 } g=3 u=3 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 3, 10, 30 }>,
 <"g", 8>, <"CurveID", 2964>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2979, 2984 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 3, 10, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 3 } g=2 u=74 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 10, 111, 1110 }>,
@@ -20759,14 +20759,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 9>, <"CurveID", 2966>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2974, 2981, 2985 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 6 } g=3 u=37 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 10, 222, 555 }>,
 <"g", 8>, <"CurveID", 2967>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2976, 2979, 2985 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 3, 370, 1110 }>,
@@ -20787,14 +20787,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 7>, <"CurveID", 2970>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2977, 2978, 2985 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 6, 370, 555 }>,
 <"g", 6>, <"CurveID", 2971>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 2975, 2980, 2985 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=5 case=B component=X_0^6(37)/{ 1, 6 } g=3 u=37 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 5, 37, 185 }>,
@@ -20815,7 +20815,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 4>, <"CurveID", 2974>,
 <"CoveredBy", { IntegerRing() | 2938, 2942, 2952, 2956, 2958, 2964, 2966 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 5, 6, 10, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_37 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 185, 370, 555, 1110 }>,
@@ -20871,14 +20871,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 5>, <"CurveID", 2982>,
 <"CoveredBy", { IntegerRing() | 2946, 2948, 2950, 2956, 2957, 2960, 2961 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 15, 30, 37, 74, 555, 1110 }>,
 <"g", 3>, <"CurveID", 2983>,
 <"CoveredBy", { IntegerRing() | 2946, 2949, 2951, 2958, 2959, 2962, 2963 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 15, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComplicatedALFixedPointsOnQuotient with N1 = 10, N2 = 370">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 3, 10, 30, 37, 111, 370, 1110 }>,
@@ -20892,21 +20892,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"g", 3>, <"CurveID", 2985>,
 <"CoveredBy", { IntegerRing() | 2947, 2948, 2951, 2966, 2967, 2970, 2971 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 6, 10, 15 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 5, 10, 37, 74, 185, 370 }>,
 <"g", 3>, <"CurveID", 2986>,
 <"CoveredBy", { IntegerRing() | 2938, 2939, 2940, 2941, 2946, 2947, 2972 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 2, 5, 10 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 5, 6, 30, 37, 185, 222, 1110 }>,
 <"g", 4>, <"CurveID", 2987>,
 <"CoveredBy", { IntegerRing() | 2942, 2943, 2944, 2945, 2948, 2949, 2972 }>,
 <"Covers", { IntegerRing() | 2988 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=37 M=5 component=X_0(6,5)/{ 1, 5, 6, 30 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 185>,
 <"W", { IntegerRing() | 1, 2, 3, 5, 6, 10, 15, 30, 37, 74, 111, 185, 222, 370, 555, 1110 }>,
@@ -20927,7 +20927,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 9>, <"CurveID", 2990>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3026, 3028, 3037 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 11, 34, 374 }>,
@@ -20941,49 +20941,49 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 9>, <"CurveID", 2992>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3030, 3032, 3037 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 11, 66 }>,
 <"g", 8>, <"CurveID", 2993>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3025, 3031, 3038 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 187, 1122 }>,
 <"g", 7>, <"CurveID", 2994>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3026, 3032, 3038 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 11, 102, 1122 }>,
 <"g", 8>, <"CurveID", 2995>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3027, 3029, 3038 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 11 } g=2 u=6 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 66, 102, 187 }>,
 <"g", 7>, <"CurveID", 2996>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3028, 3030, 3038 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 17, 34 }>,
 <"g", 10>, <"CurveID", 2997>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3033, 3034, 3037 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 17, 22, 374 }>,
 <"g", 10>, <"CurveID", 2998>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3035, 3036, 3037 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 17 } g=2 u=2 g(X/w_u)=5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 17, 102 }>,
@@ -21053,105 +21053,105 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 9>, <"CurveID", 3008>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3027, 3028, 3033 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 33, 66 }>,
 <"g", 7>, <"CurveID", 3009>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3025, 3028, 3034 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 561, 1122 }>,
 <"g", 6>, <"CurveID", 3010>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3026, 3027, 3034 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 3, 34, 102 }>,
 <"g", 10>, <"CurveID", 3011>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3029, 3030, 3033 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 34, 51 }>,
 <"g", 9>, <"CurveID", 3012>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3031, 3032, 3033 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 33, 34, 1122 }>,
 <"g", 7>, <"CurveID", 3013>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3029, 3032, 3034 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 34, 66, 561 }>,
 <"g", 6>, <"CurveID", 3014>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3030, 3031, 3034 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 3, 22, 66 }>,
 <"g", 8>, <"CurveID", 3015>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3025, 3030, 3035 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 3, 22, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 3 } g=2 u=34 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 22, 51, 1122 }>,
 <"g", 7>, <"CurveID", 3016>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3027, 3032, 3035 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 22, 33 }>,
 <"g", 9>, <"CurveID", 3017>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3025, 3032, 3036 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 22, 102, 561 }>,
 <"g", 8>, <"CurveID", 3018>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3027, 3030, 3036 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 3, 374, 1122 }>,
 <"g", 8>, <"CurveID", 3019>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3026, 3029, 3035 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 3 } g=2 u=34 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 51, 66, 374 }>,
 <"g", 7>, <"CurveID", 3020>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3028, 3031, 3035 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 33, 102, 374 }>,
 <"g", 9>, <"CurveID", 3021>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3028, 3029, 3036 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 374, 561 }>,
 <"g", 8>, <"CurveID", 3022>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3026, 3031, 3036 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(17)/{ 1, 6 } g=2 u=34 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 11, 17, 187 }>,
@@ -21172,7 +21172,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 4>, <"CurveID", 3025>,
 <"CoveredBy", { IntegerRing() | 2989, 2993, 3003, 3007, 3009, 3015, 3017 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 2, 3, 6, 11, 22, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 187, 374, 561, 1122 }>,
@@ -21186,7 +21186,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 3>, <"CurveID", 3027>,
 <"CoveredBy", { IntegerRing() | 2989, 2995, 3005, 3008, 3010, 3016, 3018 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 33, 51, 66, 102, 187, 374 }>,
@@ -21200,7 +21200,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 4>, <"CurveID", 3029>,
 <"CoveredBy", { IntegerRing() | 2991, 2995, 3003, 3011, 3013, 3019, 3021 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 3, 22, 34, 66, 102, 187, 561 }>,
@@ -21214,7 +21214,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 3>, <"CurveID", 3031>,
 <"CoveredBy", { IntegerRing() | 2991, 2993, 3005, 3012, 3014, 3020, 3022 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 22, 33, 34, 51, 187, 1122 }>,
@@ -21228,7 +21228,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 5>, <"CurveID", 3033>,
 <"CoveredBy", { IntegerRing() | 2997, 2999, 3001, 3007, 3008, 3011, 3012 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 3, 6, 17, 34, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 17, 33, 34, 66, 561, 1122 }>,
@@ -21242,28 +21242,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"g", 3>, <"CurveID", 3035>,
 <"CoveredBy", { IntegerRing() | 2998, 3000, 3001, 3015, 3016, 3019, 3020 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 3, 22, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 17, 22, 33, 102, 374, 561 }>,
 <"g", 4>, <"CurveID", 3036>,
 <"CoveredBy", { IntegerRing() | 2998, 2999, 3002, 3017, 3018, 3021, 3022 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 11, 17, 22, 34, 187, 374 }>,
 <"g", 5>, <"CurveID", 3037>,
 <"CoveredBy", { IntegerRing() | 2989, 2990, 2991, 2992, 2997, 2998, 3023 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 6, 11, 17, 66, 102, 187, 1122 }>,
 <"g", 3>, <"CurveID", 3038>,
 <"CoveredBy", { IntegerRing() | 2993, 2994, 2995, 2996, 2999, 3000, 3023 }>,
 <"Covers", { IntegerRing() | 3039 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 187>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 17, 22, 33, 34, 51, 66, 102, 187, 374, 561, 1122 }>,
@@ -21998,28 +21998,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 11>, <"CurveID", 3143>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3175, 3181, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 6, 209, 1254 }>,
 <"g", 8>, <"CurveID", 3144>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3176, 3182, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 11, 114, 1254 }>,
 <"g", 8>, <"CurveID", 3145>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3177, 3179, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 11 } g=2 u=6 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 66, 114, 209 }>,
 <"g", 11>, <"CurveID", 3146>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3178, 3180, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 19, 38 }>,
@@ -22040,28 +22040,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 10>, <"CurveID", 3149>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3183, 3186, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 19, 66, 1254 }>,
 <"g", 7>, <"CurveID", 3150>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3184, 3185, 3188 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 19, 57 }>,
 <"g", 9>, <"CurveID", 3151>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3174, 3183, 3185 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 19, 33, 627 }>,
 <"g", 8>, <"CurveID", 3152>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3174, 3184, 3186 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 11, 33 }>,
@@ -22075,7 +22075,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 10>, <"CurveID", 3154>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3174, 3176, 3180 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 11, 57, 627 }>,
@@ -22089,7 +22089,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 9>, <"CurveID", 3156>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3174, 3178, 3182 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_6 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 3, 6 }>,
@@ -22103,28 +22103,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 10>, <"CurveID", 3158>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3177, 3178, 3183 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 2 } g=2 u=33 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 33, 66 }>,
 <"g", 10>, <"CurveID", 3159>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3175, 3178, 3184 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 2 } g=2 u=57 g(X/w_u)=4">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 627, 1254 }>,
 <"g", 7>, <"CurveID", 3160>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3176, 3177, 3184 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 2 } g=2 u=57 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 38, 114 }>,
 <"g", 11>, <"CurveID", 3161>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3179, 3180, 3183 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 6, 38, 57 }>,
@@ -22138,49 +22138,49 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 7>, <"CurveID", 3163>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3179, 3182, 3184 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 38 } g=2 u=3 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 38, 66, 627 }>,
 <"g", 10>, <"CurveID", 3164>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3180, 3181, 3184 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 38 } g=2 u=3 g(X/w_u)=5">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 22, 66 }>,
 <"g", 10>, <"CurveID", 3165>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3175, 3180, 3185 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 3, 22, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 14 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 22, 57, 1254 }>,
 <"g", 6>, <"CurveID", 3166>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3177, 3182, 3185 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 6, 22, 33 }>,
 <"g", 9>, <"CurveID", 3167>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3175, 3182, 3186 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 22, 114, 627 }>,
 <"g", 9>, <"CurveID", 3168>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3177, 3180, 3186 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 418, 1254 }>,
 <"g", 6>, <"CurveID", 3169>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3176, 3179, 3185 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=19 case=B component=X_0^6(11)/{ 1, 3 } g=2 u=22 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 57, 66, 418 }>,
@@ -22194,14 +22194,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 8>, <"CurveID", 3171>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3178, 3179, 3186 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 6, 418, 627 }>,
 <"g", 8>, <"CurveID", 3172>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3176, 3181, 3186 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(19)/{ 1, 6 } g=2 u=19 g(X/w_u)=3">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 11, 19, 209 }>,
@@ -22215,14 +22215,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 4>, <"CurveID", 3174>,
 <"CoveredBy", { IntegerRing() | 3151, 3152, 3153, 3154, 3155, 3156, 3173 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 33, 66 }>,
 <"g", 5>, <"CurveID", 3175>,
 <"CoveredBy", { IntegerRing() | 3139, 3143, 3153, 3157, 3159, 3165, 3167 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 2, 3, 6, 11, 22, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 209, 418, 627, 1254 }>,
@@ -22236,7 +22236,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 3>, <"CurveID", 3177>,
 <"CoveredBy", { IntegerRing() | 3139, 3145, 3155, 3158, 3160, 3166, 3168 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 33, 57, 66, 114, 209, 418 }>,
@@ -22250,7 +22250,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 3>, <"CurveID", 3179>,
 <"CoveredBy", { IntegerRing() | 3141, 3145, 3153, 3161, 3163, 3169, 3171 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 22, 38, 66, 114, 209, 627 }>,
@@ -22278,14 +22278,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 5>, <"CurveID", 3183>,
 <"CoveredBy", { IntegerRing() | 3147, 3149, 3151, 3157, 3158, 3161, 3162 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 2, 3, 6, 19, 38, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_11 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 19, 33, 38, 66, 627, 1254 }>,
 <"g", 3>, <"CurveID", 3184>,
 <"CoveredBy", { IntegerRing() | 3147, 3150, 3152, 3159, 3160, 3163, 3164 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 3, 19, 22, 57, 66, 418, 1254 }>,
@@ -22299,7 +22299,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 3>, <"CurveID", 3186>,
 <"CoveredBy", { IntegerRing() | 3148, 3149, 3152, 3167, 3168, 3171, 3172 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComplicatedALFixedPointsOnQuotient with N1 = 57, N2 = 1254">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 11, 19, 22, 38, 209, 418 }>,
@@ -22313,7 +22313,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"g", 4>, <"CurveID", 3188>,
 <"CoveredBy", { IntegerRing() | 3143, 3144, 3145, 3146, 3149, 3150, 3173 }>,
 <"Covers", { IntegerRing() | 3189 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=11 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 209>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 19, 22, 33, 38, 57, 66, 114, 209, 418, 627, 1254 }>,
@@ -22495,14 +22495,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"g", 3>, <"CurveID", 3214>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 3, 7, 21 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42 }>,
 <"g", 4>, <"CurveID", 3215>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 2, 3, 6, 7, 14, 21, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_31 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 217, 434, 651, 1302 }>,
@@ -22558,28 +22558,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"g", 5>, <"CurveID", 3223>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 21, 31, 42, 62, 651, 1302 }>,
 <"g", 3>, <"CurveID", 3224>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 2, 21, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(31)/{ 1, 2, 31, 62 } g=2 u=3 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 3, 14, 31, 42, 93, 434, 1302 }>,
 <"g", 4>, <"CurveID", 3225>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 6, 14, 21, 31, 186, 434, 651 }>,
 <"g", 4>, <"CurveID", 3226>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 31, 62, 217, 434 }>,
@@ -22593,7 +22593,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"g", 3>, <"CurveID", 3228>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3229 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=31 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 217>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 31, 42, 62, 93, 186, 217, 434, 651, 1302 }>,
@@ -22607,14 +22607,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"g", 5>, <"CurveID", 3230>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=13 component=X_0(6,13)/{ 1, 3, 13, 39 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 78 }>,
 <"g", 5>, <"CurveID", 3231>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=13 component=X_0(6,13)/{ 1, 2, 3, 6, 13, 26, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 221, 442, 663, 1326 }>,
@@ -22656,7 +22656,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"g", 4>, <"CurveID", 3237>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 6, 26, 34, 39, 51, 221, 1326 }>,
@@ -22670,14 +22670,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"g", 5>, <"CurveID", 3239>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=17 component=X_0(6,17)/{ 1, 2, 3, 6, 17, 34, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 2, 17, 34, 39, 78, 663, 1326 }>,
 <"g", 3>, <"CurveID", 3240>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=13 component=X_0(6,13)/{ 1, 2, 39, 78 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 3, 17, 26, 51, 78, 442, 1326 }>,
@@ -22698,14 +22698,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"g", 4>, <"CurveID", 3243>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 6, 13, 17, 78, 102, 221, 1326 }>,
 <"g", 3>, <"CurveID", 3244>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3245 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=13 component=X_0(6,13)/{ 1, 6, 13, 78 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 221>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 17, 26, 34, 39, 51, 78, 102, 221, 442, 663, 1326 }>,
@@ -23230,14 +23230,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 4>, <"CurveID", 3319>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 78 }>,
 <"g", 5>, <"CurveID", 3320>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=13 component=X_0(6,13)/{ 1, 2, 3, 6, 13, 26, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 247, 494, 741, 1482 }>,
@@ -23265,7 +23265,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 3>, <"CurveID", 3324>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComplicatedALFixedPointsOnQuotient with N1 = 78, N2 = 741">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 3, 26, 38, 78, 114, 247, 741 }>,
@@ -23293,7 +23293,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 5>, <"CurveID", 3328>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=19 component=X_0(6,19)/{ 1, 2, 3, 6, 19, 38, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 2, 19, 38, 39, 78, 741, 1482 }>,
@@ -23307,7 +23307,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 4>, <"CurveID", 3330>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 6, 19, 26, 39, 114, 494, 741 }>,
@@ -23321,14 +23321,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"g", 6>, <"CurveID", 3332>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=13 component=X_0(6,13)/{ 1, 2, 13, 26 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 6, 13, 19, 78, 114, 247, 1482 }>,
 <"g", 3>, <"CurveID", 3333>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3334 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=13 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComplicatedALFixedPointsOnQuotient with N1 = 3, N2 = 741">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 247>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 19, 26, 38, 39, 57, 78, 114, 247, 494, 741, 1482 }>,
@@ -23356,7 +23356,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"g", 5>, <"CurveID", 3337>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3351 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=11 component=X_0(6,11)/{ 1, 2, 3, 6, 11, 22, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(23)/{ 1, 2, 3, 6 } g=2 u=23 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 253, 506, 759, 1518 }>,
@@ -23426,14 +23426,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"g", 4>, <"CurveID", 3347>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3351 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=11 component=X_0(6,11)/{ 1, 3, 22, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"W", { IntegerRing() | 1, 6, 22, 23, 33, 138, 506, 759 }>,
 <"g", 5>, <"CurveID", 3348>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3351 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 23, 46, 253, 506 }>,
@@ -23447,7 +23447,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"g", 3>, <"CurveID", 3350>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3351 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 253>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 23, 33, 46, 66, 69, 138, 253, 506, 759, 1518 }>,
@@ -23846,14 +23846,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"g", 6>, <"CurveID", 3407>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 3, 7, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(41)/{ 1, 3, 41, 123 } g=2 u=2 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 42 }>,
 <"g", 7>, <"CurveID", 3408>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 2, 3, 6, 7, 14, 21, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(41)/{ 1, 2, 3, 6 } g=2 u=41 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 287, 574, 861, 1722 }>,
@@ -23909,28 +23909,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"g", 7>, <"CurveID", 3416>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_7 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 21, 41, 42, 82, 861, 1722 }>,
 <"g", 3>, <"CurveID", 3417>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 2, 21, 42 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 3, 14, 41, 42, 123, 574, 1722 }>,
 <"g", 4>, <"CurveID", 3418>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 3, 14, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=7 case=B component=X_0^6(41)/{ 1, 3, 41, 123 } g=2 u=2 g(X/w_u)=1">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 6, 14, 21, 41, 246, 574, 861 }>,
 <"g", 4>, <"CurveID", 3419>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 6, 14, 21 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 7, 14, 41, 82, 287, 574 }>,
@@ -23944,7 +23944,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"g", 6>, <"CurveID", 3421>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3422 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=41 M=7 component=X_0(6,7)/{ 1, 6, 7, 42 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 287>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 7, 14, 21, 41, 42, 82, 123, 246, 287, 574, 861, 1722 }>,
@@ -24084,14 +24084,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"g", 6>, <"CurveID", 3441>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 3, 13, 39 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 78 }>,
 <"g", 8>, <"CurveID", 3442>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 2, 3, 6, 13, 26, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(23)/{ 1, 2, 3, 6 } g=2 u=23 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 299, 598, 897, 1794 }>,
@@ -24147,21 +24147,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"g", 7>, <"CurveID", 3450>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 2, 23, 39, 46, 78, 897, 1794 }>,
 <"g", 5>, <"CurveID", 3451>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 2, 39, 78 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 3, 23, 26, 69, 78, 598, 1794 }>,
 <"g", 4>, <"CurveID", 3452>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 6, 23, 26, 39, 138, 598, 897 }>,
@@ -24175,14 +24175,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"g", 7>, <"CurveID", 3454>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 2, 13, 26 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 6, 13, 23, 78, 138, 299, 1794 }>,
 <"g", 6>, <"CurveID", 3455>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=13 component=X_0(6,13)/{ 1, 6, 13, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 299>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 23, 26, 39, 46, 69, 78, 138, 299, 598, 897, 1794 }>,
@@ -24455,7 +24455,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"g", 7>, <"CurveID", 3494>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=11 component=X_0(6,11)/{ 1, 2, 3, 6, 11, 22, 33, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_29 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 319, 638, 957, 1914 }>,
@@ -24518,21 +24518,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"g", 4>, <"CurveID", 3503>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=11 component=X_0(6,11)/{ 1, 2, 33, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 3, 22, 29, 66, 87, 638, 1914 }>,
 <"g", 5>, <"CurveID", 3504>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=11 component=X_0(6,11)/{ 1, 3, 22, 66 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=11 case=B component=X_0^6(29)/{ 1, 3, 29, 87 } g=2 u=2 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 6, 22, 29, 33, 174, 638, 957 }>,
 <"g", 6>, <"CurveID", 3505>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=11 component=X_0(6,11)/{ 1, 6, 22, 33 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 2, 11, 22, 29, 58, 319, 638 }>,
@@ -24546,7 +24546,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"g", 5>, <"CurveID", 3507>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3508 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=11 component=X_0(6,11)/{ 1, 6, 11, 66 }">
+<"IsEC", false>
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 319>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 11, 22, 29, 33, 58, 66, 87, 174, 319, 638, 957, 1914 }>,
@@ -24560,14 +24560,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 6>, <"CurveID", 3509>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=19 component=X_0(6,19)/{ 1, 3, 19, 57 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 34, 51, 102 }>,
 <"g", 7>, <"CurveID", 3510>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=17 component=X_0(6,17)/{ 1, 2, 3, 6, 17, 34, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_19 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 323, 646, 969, 1938 }>,
@@ -24581,7 +24581,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 4>, <"CurveID", 3512>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=19 component=X_0(6,19)/{ 1, 2, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 51, 57, 102, 114, 323, 646 }>,
@@ -24595,7 +24595,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 4>, <"CurveID", 3514>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=19 component=X_0(6,19)/{ 1, 3, 38, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 3, 34, 38, 102, 114, 323, 969 }>,
@@ -24623,21 +24623,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 8>, <"CurveID", 3518>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=19 component=X_0(6,19)/{ 1, 2, 3, 6, 19, 38, 57, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_17 has 14 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 19, 38, 51, 102, 969, 1938 }>,
 <"g", 4>, <"CurveID", 3519>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 3, 19, 34, 57, 102, 646, 1938 }>,
 <"g", 3>, <"CurveID", 3520>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComplicatedALFixedPointsOnQuotient with N1 = 51, N2 = 969">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 6, 19, 34, 51, 114, 646, 969 }>,
@@ -24651,14 +24651,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"g", 5>, <"CurveID", 3522>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=19 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 6, 17, 19, 102, 114, 323, 1938 }>,
 <"g", 6>, <"CurveID", 3523>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3524 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=17 M=19 component=X_0(6,19)/{ 1, 6, 19, 114 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 323>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 17, 19, 34, 38, 51, 57, 102, 114, 323, 646, 969, 1938 }>,
@@ -25526,14 +25526,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"g", 8>, <"CurveID", 3647>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 3, 13, 39 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(29)/{ 1, 3, 29, 87 } g=2 u=2 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 39, 78 }>,
 <"g", 8>, <"CurveID", 3648>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 2, 3, 6, 13, 26, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_29 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 377, 754, 1131, 2262 }>,
@@ -25589,21 +25589,21 @@ CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"g", 9>, <"CurveID", 3656>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 2, 3, 6 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_13 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 2, 29, 39, 58, 78, 1131, 2262 }>,
 <"g", 6>, <"CurveID", 3657>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 2, 39, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 3, 26, 29, 78, 87, 754, 2262 }>,
 <"g", 5>, <"CurveID", 3658>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 3, 26, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=13 case=B component=X_0^6(29)/{ 1, 3, 29, 87 } g=2 u=2 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 6, 26, 29, 39, 174, 754, 1131 }>,
@@ -25617,14 +25617,14 @@ CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"g", 6>, <"CurveID", 3660>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 2, 13, 26 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 6, 13, 29, 78, 174, 377, 2262 }>,
 <"g", 7>, <"CurveID", 3661>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3662 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=29 M=13 component=X_0(6,13)/{ 1, 6, 13, 78 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 8 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 377>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 13, 26, 29, 39, 58, 78, 87, 174, 377, 754, 1131, 2262 }>,
@@ -25890,7 +25890,7 @@ CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"g", 8>, <"CurveID", 3699>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3713 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=17 component=X_0(6,17)/{ 1, 2, 3, 6, 17, 34, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ComponentInvolution p=17 case=B component=X_0^6(23)/{ 1, 2, 3, 6 } g=2 u=23 g(X/w_u)=2">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"W", { IntegerRing() | 1, 2, 3, 6, 391, 782, 1173, 2346 }>,
@@ -25953,28 +25953,28 @@ CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"g", 6>, <"CurveID", 3708>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3713 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=17 component=X_0(6,17)/{ 1, 2, 51, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"W", { IntegerRing() | 1, 3, 23, 34, 69, 102, 782, 2346 }>,
 <"g", 6>, <"CurveID", 3709>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3713 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=17 component=X_0(6,17)/{ 1, 3, 34, 102 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"W", { IntegerRing() | 1, 6, 23, 34, 51, 138, 782, 1173 }>,
 <"g", 6>, <"CurveID", 3710>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3713 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=17 component=X_0(6,17)/{ 1, 6, 34, 51 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_2 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"W", { IntegerRing() | 1, 2, 17, 23, 34, 46, 391, 782 }>,
 <"g", 9>, <"CurveID", 3711>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 3713 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=6 p=23 M=17 component=X_0(6,17)/{ 1, 2, 17, 34 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_3 has 12 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 6>, <"N", 391>,
 <"W", { IntegerRing() | 1, 6, 17, 23, 102, 138, 391, 2346 }>,
@@ -39442,7 +39442,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 33>,
 <"g", 4>, <"CurveID", 5635>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5671, 5673, 5682 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=14 p=3 M=11 component=X_0(14,11)/{ 1, 2, 77, 154 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w7, w3> is V4 and g = 4 is even">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 33>,
 <"W", { IntegerRing() | 1, 7, 22, 154 }>,
@@ -41199,7 +41199,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 55>,
 <"g", 8>, <"CurveID", 5886>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 5922, 5924, 5933 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=14 p=5 M=11 component=X_0(14,11)/{ 1, 2, 77, 154 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 10 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 55>,
 <"W", { IntegerRing() | 1, 7, 22, 154 }>,
@@ -41528,7 +41528,7 @@ CreateShimuraQuot([* <"D", 14>, <"N", 55>,
 <"g", 4>, <"CurveID", 5933>,
 <"CoveredBy", { IntegerRing() | 5885, 5886, 5887, 5888, 5893, 5894, 5919 }>,
 <"Covers", { IntegerRing() | 5935 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "SpecialFiberCM D=14 p=5 M=11 component=X_0(14,11)/{ 1, 2, 7, 11, 14, 22, 77, 154 }">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "ALFixedPointsOnQuotient, W_5 has 6 fixed points">
 *]),
 CreateShimuraQuot([* <"D", 14>, <"N", 55>,
 <"W", { IntegerRing() | 1, 7, 10, 11, 70, 77, 110, 770 }>,

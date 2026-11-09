@@ -221,27 +221,26 @@ Genus distribution over ALL 18379 quotients (proved / ruled / open)
 
 Attribution: which test recorded the determination (ruled-out curves)
 --------------------------------------------------------------------
-  ALFixedPointsOnQuotient,                      : 5617
-  ComponentInvolution                           : 2671
-  Trace,                                        : 1208
-  DualGraph                                     : 1026
-  UpwardClosure                                 : 664
-  ComplicatedALFixedPointsOnQuotient            : 276
+  ALFixedPointsOnQuotient,                      : 5723
+  ComponentInvolution                           : 2750
+  Trace,                                        : 1217
+  DualGraph                                     : 1056
+  UpwardClosure                                 : 665
+  ComplicatedALFixedPointsOnQuotient            : 281
   SpecialFiber                                  : 234
-  SpecialFiberCM                                : 231
   SpecialFiberD6                                : 153
   UpdateIsoStatus,                              : 106
   SpecialFiberD10                               : 89
   SpecialFiberIsomorphism,                      : 80
-  AutomorphismGroup                             : 46
+  AutomorphismGroup                             : 47
   SpecialFiberD22                               : 25
   WeilPolynomial                                : 22
   CanonicalQuadrics                             : 21
   DegeneracyMorphism                            : 9
   TwistedTrace,                                 : 5
-  HyperellipticCertificate                      : 3
   GeneralizedComplicatedFixedPoints:            : 3
   ModularNonALInvolution                        : 3
+  HyperellipticCertificate                      : 3
   TwistedWeilPolynomial                         : 1
 
 Attribution: which test recorded the determination (proved subhyp)
