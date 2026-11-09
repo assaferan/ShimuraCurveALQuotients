@@ -13,10 +13,13 @@ what you are working on, and that have each cost a session at least once.
 > that check "is this number right" cannot catch "is this the right number". The two habits that
 > did catch things: **reproduce a KNOWN value before trusting a new one**, and **draft an edit
 > rather than applying it** — a wrong "the paper is wrong" claim was retracted while writing the
-> diff. See `HANDOFF.md`, "READ THIS FIRST".
+> diff. See `HANDOFF_2026-10-19.md`, "READ THIS FIRST".
 
-* **`HANDOFF.md`** — what happened. Authoritative on state; it wins over any agent memory when
-  they disagree.
+* **A working session's own handoff log is not tracked.** `HANDOFF.md` is in `.gitignore`: keep one
+  if it helps you, on your machine. The dated `HANDOFF_*.md` files are the frozen archive, and the
+  references to `HANDOFF.md` elsewhere in this repository mean the archive of the day they were
+  written. Nothing in a handoff overrides what the code, the tests and `data/models/PROVENANCE.md`
+  say; where a claim matters it belongs in one of those, in `PLAN.md`, or in the paper.
 
 ## Changes reach `main` only through a reviewed PR
 

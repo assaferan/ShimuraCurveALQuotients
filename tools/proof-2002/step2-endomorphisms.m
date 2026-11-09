@@ -1,0 +1,10 @@
+AttachSpec("/home/assaferan/GitHub/CHIMP/CHIMP.spec");
+SetVerbose("EndoFind", 0);
+prec := 100;
+F := RationalsExtra(prec);
+R<x> := PolynomialRing(F);
+X := HyperellipticCurve(16*x^6+4*x^5+180*x^4-456*x^3+196*x^2+64*x+4, x^2+x);
+time A, cert := CertifiedEndomorphismAlgebra(X);
+print "CERTIFIED endomorphism algebra OVER Q:"; print A;
+print "certificates:"; print cert;
+quit;

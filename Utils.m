@@ -34,6 +34,11 @@ have their own rough measures below.  It deliberately over-estimates curves that
                                          : p in PrimeDivisors(X`D)]);
     end if;
 
+    if stage eq "FilterByHyperellipticCertificates" then
+        // only curves with a certificate file do work; the larger the level, the longer the checks
+        return FileExists(Sprintf("data/certificates/%o_%o.m", X`D, X`N)) select R!DN else R!0;
+    end if;
+
     if stage in {"FilterByNonALInvolutions", "FilterByNonALInvolutionsStar"} then
         // cost ~ ModularSymbols(D*N); only curves with non-AL involutions do work, and only
         // those within the level cap (larger levels are skipped, so they cost ~nothing).

@@ -118,7 +118,7 @@ no row in the stage counts, the attribution or the paper tables.
 
 `FilterByDualGraphStar` runs after the check-only `HHProposition1`, so `VerifyHHTable2` still reads
 `curves_after_FilterByTraceStar.dat`. The HH curves have D = 1 and are not applicable to it anyway.
-Both dual-graph stages apply only to D > 1 with N squarefree, and they skip everything else. They
+Both dual-graph stages apply to every D > 1 (N need not be squarefree since 2026-10-14), and they skip D = 1. They
 cache each fiber in `data/dualgraph/` (gitignored, keyed `dualgraph_v2_<D>_<N>_<p>`; override with
 `DUALGRAPH_CACHE_DIR`), so Phase B reuses the fibers built in Phase A. A curve whose quotient graph
 does not have the curve's genus stops the stage with `DUALGRAPH_GENUS`, like `BADDIM`.
@@ -147,7 +147,10 @@ The all-quotients block (after `GetQuotientsAndGenera`) now reads:
     UpdateCurves7
     FilterByTwistedWeilPolynomial             parallel, by level  NEW
     UpdateCurvesAfterTwistedWeilPolynomial                        NEW
+    FilterByCanonicalQuadrics                 sequential          NEW
+    UpdateCurvesAfterCanonicalQuadrics                            NEW
     FilterByNonALInvolutions                  parallel
+    FilterByHyperellipticCertificates         sequential          NEW
     UpdateCurves8
 
 The new closure stages are called `UpdateCurvesAfter<Stage>` rather than renumbering the existing
@@ -208,6 +211,16 @@ curves that `FilterByWeilPolynomialStar` had already left undecided.
   lemma and contains a non-AL central involution. Its quotient genus then comes from
   `TraceDNewQuotient`, which takes about 30 s per involution at level ~1000 and grows with the
   level.
+* **`FilterByCanonicalQuadrics`**: Noether's count of quadrics through the canonical image, from
+  the W-fixed weight-2 cusp forms at D = 1 and from a stored model (`data/models/`) at D > 1; about
+  a minute for the whole list, sequential. It decides nothing at a base with D > 1 and no model
+  file, which is where most of the undecided curves live.
+* **`FilterByHyperellipticCertificates`**: for an undecided curve with a file
+  `data/certificates/<D>_<N>.m`, rechecks every hypothesis of the proof stored there
+  (`HyperellipticCertificates.m`) and marks the curve hyperelliptic if they all hold; a refused
+  certificate is reported and the curve left undecided. Shape A (degree-two CM divisors related by
+  Borcherds forms, against the torsion bound of the Jacobian) is implemented; X_0^46(31)* is its first
+  curve.
 * **`FilterByNonALInvolutions`** and **`FilterByGeneralizedComplicatedFixedPoints`** skip levels
   above 3000 (`NonALModSymMaxLevel`, `GeneralizedComplicatedMaxLevel`).
 

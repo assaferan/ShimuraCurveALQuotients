@@ -1,0 +1,158 @@
+% X_0^6(379)* is hyperelliptic: a Borcherds form on the star, given by its principal part and never
+% constructed, makes two CM divisors of degree two linearly equivalent.  Tests in
+% tests/DualCertificate6_379_divisor.m and tests/_offline/DualCertificate6_379.m; the solver in
+% tools/proof-6-379/.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools,booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\DeclareMathOperator{\Pic}{Pic}
+\DeclareMathOperator{\CM}{CM}
+\DeclareMathOperator{\Gal}{Gal}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^6(379)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $X=X_0^6(379)$ be the Shimura curve attached to an Eichler order of level $379$ in the
+quaternion algebra of discriminant $6$, $W=\{w_m : m\mid 2274\}$ its Atkin--Lehner group of order
+eight, and $C=X/W$ the star. The curve $C$ has genus three; its Jacobian is simple, of
+$\mathrm{GL}_2$-type over a cubic field, and no Atkin--Lehner involution survives on $C$, so none of
+the cover arguments applies and hyperellipticity has to be decided on $C$ itself.
+
+\begin{theorem}\label{thm:main}
+$C=X_0^6(379)^*$ is hyperelliptic. The hyperelliptic map carries the five fibres
+\[
+\{P_{-123},P_{-163}\},\quad \{P_{-75},P_{-228}\},\quad \{P_{-52},P_{-168}\},\quad
+\{P_{-43},P_{-312}\},\quad \{P_{-147},P_{-408}\},
+\]
+where $P_d$ is the rational CM point of discriminant $d$ on $C$.
+\end{theorem}
+
+Only the first and third fibres are used in the proof; the other three are proved to be fibres by
+the same argument (Remark~\ref{rem:others}). Nothing is numerical: the fibres were \emph{found}
+by a numerical screen (the canonical images of the two points of a fibre are proportional), and
+then \emph{proved} by the certificate below.
+
+\section{CM points on the star}
+
+For a negative discriminant $d$ write $\CM(d)$ for the set of points of $X$ with complex
+multiplication by the order $R_d$ of discriminant $d$. It is nonempty exactly when $R_d$ embeds
+optimally into the Eichler order, that is, when neither $2$ nor $3$ divides the conductor of $R_d$
+or splits in $\Q(\sqrt d)$, and $379$ either divides the conductor or does not stay inert. The
+Galois group acts on $\CM(d)$ through $\Pic(R_d)$ by Shimura reciprocity, and the Atkin--Lehner
+group acts through orientation changes at the ramified primes together with the classes of the
+ideals of norm $m$. Consequently the image $\CM(d)/W$ in $C$ is a single Galois orbit, and its
+field of definition has degree one exactly when it is one rational point, which we then denote
+$P_d$. The repository computes that degree from $\Pic(R_d)$ and the Atkin--Lehner data alone
+(\texttt{DegreeOfFieldOfDefinitionOfCMPoint}); the ten discriminants with a rational point and
+class number at most four are
+\[
+-3,\ -40,\ -43,\ -52,\ -123,\ -163,\ -168,\ -228,\ -312,\ -408,
+\]
+and $-75=-3\cdot5^2$, $-147=-3\cdot7^2$ are rational as well. None of the four points used below is
+fixed by an Atkin--Lehner involution or elliptic, so each has trivial stabiliser.
+
+\section{The certificate}
+
+Let $M=4548=4\cdot1137$, the level of the weight-$\tfrac12$ forms whose Borcherds lifts live on
+$X_0^6(379)$ (Guo--Yang \cite{gy}: $M=4\cdot\mathrm{oddpart}(DN)$). A weakly holomorphic form
+$f=\sum_nc(n)q^n$ of weight $\tfrac12$ on $\Gamma_0(M)$ with the theta multiplier, holomorphic at
+every cusp other than $\infty$, lifts to a meromorphic modular form $\Psi_f$ on $X$, invariant
+under $W$ up to a character of finite order, of weight $c(0)$ and with divisor
+\begin{equation}\label{eq:div}
+\operatorname{div}\Psi_f \;=\; \sum_{n>0}c(-n)\sum_{\substack{r\ge1\\ d=-4n/r^2\ \text{a discriminant}}}
+\frac1{e_d}\,P_d
+\end{equation}
+on $C$, where $P_d$ now stands for the full CM divisor of discriminant $d$ on $C$ (empty if
+$\CM(d)=\emptyset$) and $e_d$ is the order of the stabiliser of its points \cite[Lemma~25]{gy}. The
+form $f$ is never written down; only its principal part is.
+
+\begin{proposition}\label{prop:cert}
+Let $c(-n)$, $1\le n\le700$, be the integers listed in \texttt{data/dual/cert\_6\_379.m} ($208$
+of them nonzero). There is a weakly holomorphic form $f$ of weight $\tfrac12$ on $\Gamma_0(4548)$
+with the theta multiplier, holomorphic at every cusp other than $\infty$, with principal part
+$\sum_nc(-n)q^{-n}$ at $\infty$, and its Borcherds lift is a function on $C$ with divisor
+\[
+\lambda\,(P_{-123}+P_{-163}-P_{-52}-P_{-168}),\qquad \lambda=308065062 .
+\]
+\end{proposition}
+
+\begin{proof}
+A form of weight $\tfrac12$ with a prescribed principal part at $\infty$ and no other poles exists
+if and only if that principal part pairs to zero with every cusp form $g$ of weight $\tfrac32$ on
+$\Gamma_0(M)$ with the conjugate multiplier, the multiplier of $\theta^3$: the product $fg\,d\tau$
+is then a meromorphic differential on $X_0(M)$ whose only pole is at $\infty$, so its residue
+$\sum_nc(-n)a_g(n)$ vanishes, and Serre duality (Riemann--Roch on $X_0(M)$ for the line bundle of
+weight-$\tfrac12$ forms) makes the vanishing of all these residues sufficient. That space has
+dimension $377$, the obstruction dimension the eta-quotient pipeline predicts at this level, and the
+pairing of the listed principal part with a basis of it is zero, exactly, in rational arithmetic
+(\texttt{tests/\_offline/DualCertificate6\_379.m}; the test also checks that the pairing is not
+identically zero, by perturbing one coefficient). The divisor of the lift is \eqref{eq:div}: the
+listed coefficients sum to $\lambda$ at $d=-123$ and $-163$, to $-\lambda$ at $-52$ and $-168$, and
+to $0$ at each of the other $21$ discriminants carrying CM points that are reachable from poles of
+order at most $700$ (\texttt{tests/DualCertificate6\_379\_divisor.m}); the four stabilisers are
+trivial. The divisor has degree zero on $C$, while a Borcherds form of weight $k$ has a divisor of
+degree $k$ times the hyperbolic area of $C$ over $4\pi$, so the lift has weight zero and is a
+function up to a character of finite order; some power of it is a genuine function on $C$.
+\end{proof}
+
+How the vector was found: the unknowns are the $c(-n)$, $n\le700$; the equations are the
+$377$ pairings and, for each of the $25$ discriminants $d$ reachable from poles of order at most
+$700$, the condition that the coefficients sum to $e_d$ times the prescribed multiplicity. The
+system is consistent, a rational solution was cleared of denominators and made primitive
+(\texttt{tools/proof-6-379/stepH-dual.m}). It is not consistent with poles of order at most $500$,
+and it is not consistent for the divisor $P_{-123}-P_{-163}$, two points of one fibre, as it must
+not be: that class is a nonzero point of a torsion-free group.
+
+\section{The torsion, and the proof of the theorem}
+
+\begin{lemma}\label{lem:tors}
+$\Jac(C)(\Q)$ is torsion-free.
+\end{lemma}
+
+\begin{proof}
+For an odd prime $p$ of good reduction, reduction is injective on $\Jac(C)(\Q)_{\mathrm{tors}}$,
+so the torsion order divides $\#\Jac(C)(\F_p)$. The latter is $P(1)$ for the characteristic
+polynomial $P$ of Frobenius, which the trace formula gives from the point counts of $C$ over
+$\F_p$, $\F_{p^2}$, $\F_{p^3}$ (Newton's identities and the functional equation), with no model of
+$C$. The greatest common divisor over the good primes $5\le p\le59$ is $1$
+(\texttt{tests/DualCertificate6\_379\_divisor.m}).
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+By Proposition~\ref{prop:cert} the class of $\Delta=P_{-123}+P_{-163}-P_{-52}-P_{-168}$ in
+$\Jac(C)(\Q)$ is killed by a positive integer, so it is torsion, so it is zero by
+Lemma~\ref{lem:tors}. Thus $P_{-123}+P_{-163}$ and $P_{-52}+P_{-168}$ are two distinct effective
+divisors of degree two in one linear equivalence class, that class has $h^0\ge2$, and $C$ carries
+a $g^1_2$: it is hyperelliptic, and both divisors are fibres of the hyperelliptic map.
+\end{proof}
+
+\begin{remark}\label{rem:others}
+The same linear system is consistent for $P_{-75}+P_{-228}$, $P_{-43}+P_{-312}$ and
+$P_{-147}+P_{-408}$ against $P_{-52}+P_{-168}$ (poles of order at most $2400$), so all five
+pairs of Theorem~\ref{thm:main} are fibres; these three certificates are not banked.
+\end{remark}
+
+\begin{remark}
+Nothing here produces an equation for $C$. The proof is of the shape of \texttt{paper/torsion-counting-hyperelliptic.tex} (the star of $X_0^{46}(31)$): a relation between CM divisors, exact up to torsion, against a torsion bound. What is new is how the relation is certified. The eta-quotient search for a Borcherds form with this divisor ran for a day and a half at level $4548$ without finishing; the dual formulation decides the existence of the form by linear algebra against the weight-$\tfrac32$ cusp forms, in four hours for the basis and seconds for the solve, and the same basis then decides every other candidate divisor in seconds.
+\end{remark}
+
+\begin{thebibliography}{9}
+\bibitem{gy} J.~Guo and Y.~Yang, \emph{Equations of hyperelliptic Shimura curves}, Compos. Math.
+153 (2017), 1–40.
+\end{thebibliography}
+\end{document}
