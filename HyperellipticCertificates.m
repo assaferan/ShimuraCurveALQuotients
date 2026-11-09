@@ -623,6 +623,88 @@ function verify_shape_N(X, cert)
                          places, used, cert["file"]);
 end function;
 
+// Shape T (NOT hyperelliptic; a genus-three double cover of an elliptic intermediate quotient, decided by the
+// twist; paper/classification-certificates.tex, Section 7).  E = X/<W, w_m> (m = cert["over"]) has genus one and
+// Y -> E is branched at two places Z_1, Z_2 of degree two with different fields of definition, so Z_1 | Z_2 is the
+// only Galois-stable pairing.  Each Z_i is all the CM points of its discriminant on E, two of them, and a further
+// Atkin-Lehner involution t of E with genus-zero quotient moves them (a point of X has stabiliser of order at most
+// two in the Atkin-Lehner group, and theirs is in W), so Z_i is a fibre over a rational point of the quotient and
+// Z_1 - Z_2 is the divisor of a function x.  If Y were hyperelliptic it would be E(sqrt(c x)); the dual graph of Y
+// at the odd prime p = cert["p"] dividing D shows it is not.
+function verify_shape_T(X, cert)
+    D := X`D; N := X`N; L := D*N; m := cert["over"]; p := cert["p"];
+    full := {Integers() | q : q in Divisors(L) | GCD(q, L div q) eq 1};
+    if not (IsPrime(p) and p ge 3 and D mod p eq 0) then return false, Sprintf("%o is not an odd prime dividing D", p); end if;
+    if m notin full or m in X`W then return false, Sprintf("w_%o is not an Atkin-Lehner involution outside W", m); end if;
+    WE := X`W join {AtkinLehnerMul(m, w, L) : w in X`W};
+    E := CreateShimuraQuot(D, N, WE); E`g := GenusShimuraCurveQuotient(D, N, WE); E`CurveID := 0;
+    if X`g ne 3 or E`g ne 1 then return false, "shape T needs a genus-three double cover of a genus-one quotient"; end if;
+    branch := {Integers() | };
+    for q in WE diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, q);
+        branch join:= {d : d in Keys(e) | e[d] ne 0};
+    end for;
+    places := Sort(Setseq(branch));
+    if #places ne 2 or exists{d : d in places | DegreeOfFieldOfDefinitionOfCMPoint(E, d) ne 2} then
+        return false, Sprintf("the branch places %o are not two places of degree two", places);
+    end if;
+    F1 := FieldOfDefinitionOfCMPoint(E, places[1]); F2 := FieldOfDefinitionOfCMPoint(E, places[2]);
+    if IsIsomorphic(F1, F2) then return false, "the two branch places have the same field of definition"; end if;
+    G := ComponentGroupData(D, N, WE, p);
+    for d in places do
+        _, tot := CMSpecialisation(G, d);
+        if tot ne 2 then return false, Sprintf("E has %o CM points of discriminant %o, not two", tot, d); end if;
+    end for;
+    ts := [t : t in Sort(Setseq(full diff WE)) | GenusShimuraCurveQuotient(D, N, WE join {AtkinLehnerMul(t, w, L) : w in WE}) eq 0];
+    if #ts eq 0 then return false, "no Atkin-Lehner involution of E has a quotient of genus zero"; end if;
+    t := ts[1];
+    ok, why := CoverIsNotSquareRootAtPrime(G, X`W, [<places[1], 1>], [<places[2], 1>]);
+    if not ok then return false, why; end if;
+    return true, Sprintf("HyperellipticCertificate T: not hyperelliptic; over E = X/<W, w_%o> the only Galois-stable pairing of the branch places %o has equal sums (fibres of E/w_%o), and Y is not the square-root cover: %o (%o)",
+                         m, places, t, why, cert["file"]);
+end function;
+
+// Shape V (NOT hyperelliptic; a Klein-four cover of a genus-zero star; paper/classification-certificates.tex,
+// Section 7).  W has index four in the Atkin-Lehner group, the star C has genus zero and the three intermediate
+// quotients genus one.  Over E = X/<W, w_m> (m = cert["over"]) the branch points are two places Z_1, Z_2 of
+// degree two, of different discriminants and with different fields, so Z_1 | Z_2 is the only Galois-stable
+// pairing.  Each Z_i is a fibre of E -> C (a point of X has stabiliser of order at most two in the Atkin-Lehner
+// group), so a hyperelliptic Y would be E(sqrt(c x)) with x pulled back from C, and K(C)(sqrt(c x)) would be a
+// quadratic subfield of K(Y)/K(C) of genus zero; the three quadratic subfields of that extension have genus one.
+function verify_shape_V(X, cert)
+    D := X`D; N := X`N; L := D*N; m := cert["over"];
+    if not IsSquarefree(L) then return false, "shape V needs D*N squarefree"; end if;
+    full := {Integers() | q : q in Divisors(L) | GCD(q, L div q) eq 1};
+    if #full ne 4 * #X`W then return false, "W does not have index four in the Atkin-Lehner group"; end if;
+    if m notin full or m in X`W then return false, Sprintf("w_%o is not an Atkin-Lehner involution outside W", m); end if;
+    if X`g ne 3 or GenusShimuraCurveQuotient(D, N, full) ne 0 then
+        return false, "shape V needs a curve of genus three over a star of genus zero";
+    end if;
+    mids := {X`W join {AtkinLehnerMul(t, w, L) : w in X`W} : t in full diff X`W};
+    gs := [GenusShimuraCurveQuotient(D, N, Wt) : Wt in mids];
+    if #mids ne 3 or exists{g : g in gs | g ne 1} then
+        return false, Sprintf("the intermediate quotients have genera %o, not 1, 1, 1", gs);
+    end if;
+    WE := X`W join {AtkinLehnerMul(m, w, L) : w in X`W};
+    E := CreateShimuraQuot(D, N, WE); E`g := 1; E`CurveID := 0;
+    // a point of X_0^D(N) fixed by some w_q, q in WE \ W, has trivial stabiliser in W, so |W| of them lie over
+    // one branch point of Y -> E
+    cnt := AssociativeArray();
+    for q in WE diff X`W do
+        e := NumFixedPointsByCMOrder(D, N, q);
+        for d in [d : d in Keys(e) | e[d] ne 0] do cnt[d] := (IsDefined(cnt, d) select cnt[d] else 0) + e[d]; end for;
+    end for;
+    places := Sort(Setseq(Keys(cnt)));
+    if #places ne 2 or exists{d : d in places | cnt[d] ne 2 * #X`W or DegreeOfFieldOfDefinitionOfCMPoint(E, d) ne 2} then
+        return false, Sprintf("the branch points over E, of discriminants %o, are not two places of degree two", places);
+    end if;
+    if IsIsomorphic(FieldOfDefinitionOfCMPoint(E, places[1]), FieldOfDefinitionOfCMPoint(E, places[2])) then
+        return false, "the two branch places have the same field of definition";
+    end if;
+    return true, Sprintf("HyperellipticCertificate V: not hyperelliptic; Y is a Klein-four cover of a genus-zero star with three elliptic intermediate quotients, and over E = X/<W, w_%o> its branch places %o have different fields, so they are fibres over the star and a function of degree two on Y would give the star a genus-zero double cover inside Y (%o)",
+                         m, places, cert["file"]);
+end function;
+
 // Shape O (a genus-three double cover of an elliptic star whose form is old at a prime p || N, p not dividing
 // D; paper/classification-certificates.tex, Section 6).  The four branch points Q_1, ..., Q_4 are one Galois
 // orbit of CM points of fundamental discriminant d, permuted by a D4 whose unique stable pairing
@@ -717,7 +799,7 @@ end function;
 
 intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt, MonStgElt
 {True and a label if the certificate cert, read from a file of data/certificates/, proves its claim about X:
- that X is hyperelliptic, or for shape N that it is not; otherwise false and the hypothesis that fails.
+ that X is hyperelliptic, or for shapes N, T and V that it is not; otherwise false and the hypothesis that fails.
  Every hypothesis is rechecked.}
     if <cert["D"], cert["N"]> ne <X`D, X`N> or {Integers() | m : m in cert["W"]} ne X`W then
         return false, "the certificate is for another curve";
@@ -729,6 +811,8 @@ intrinsic VerifyHyperellipticCertificate(X::ShimuraQuot, cert::Assoc) -> BoolElt
         when "C": return verify_shape_C(X, cert);
         when "C4": return verify_shape_C4(X, cert);
         when "N": return verify_shape_N(X, cert);
+        when "T": return verify_shape_T(X, cert);
+        when "V": return verify_shape_V(X, cert);
         when "D": return verify_shape_D(X, cert);
         when "O": return verify_shape_O(X, cert);
     end case;
@@ -747,7 +831,7 @@ end intrinsic;
 
 intrinsic FilterByHyperellipticCertificates(~curves::SeqEnum : Dir := "data/certificates")
 {Decides every undecided curve of genus at least three with a certificate in Dir that
- VerifyHyperellipticCertificate accepts: hyperelliptic, or not hyperelliptic for a shape-N certificate.  A refused certificate is reported and the curve left
+ VerifyHyperellipticCertificate accepts: hyperelliptic, or not hyperelliptic for a certificate of shape N, T or V.  A refused certificate is reported and the curve left
  undecided.  Prints one summary line.}
     nok := 0; nnot := 0; nref := 0;
     for i->X in curves do
@@ -756,7 +840,7 @@ intrinsic FilterByHyperellipticCertificates(~curves::SeqEnum : Dir := "data/cert
             if {Integers() | m : m in cert["W"]} ne X`W then continue; end if;
             ok, label := VerifyHyperellipticCertificate(X, cert);
             if ok then
-                hyp := cert["shape"] ne "N";
+                hyp := cert["shape"] notin {"N", "T", "V"};
                 curves[i]`IsSubhyp := hyp;
                 curves[i]`IsHyp := hyp;
                 curves[i]`TestInWhichProved := label;

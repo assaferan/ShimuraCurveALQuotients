@@ -24,7 +24,7 @@ if found ne expected then
 end if;
 assert #undecided eq #found and found eq expected;
 
-// after it: the listed curves with a certificate are decided by it (hyperelliptic, or not for shape N),
+// after it: the listed curves with a certificate are decided by it (hyperelliptic, or not for shapes N, T and V),
 // nothing else moves
 shape := AssociativeArray();
 for k in expected do
@@ -41,7 +41,8 @@ for c in final do
     k := <c`D, c`N, c`W>;
     if k in certified then
         assert "HyperellipticCertificate" in c`TestInWhichProved;
-        assert c`IsSubhyp eq (shape[k] ne "N") and c`IsHyp eq (shape[k] ne "N");   // shape N: not hyperelliptic
+        hyp := shape[k] notin {"N", "T", "V"};                                    // shapes N, T, V: not hyperelliptic
+        assert c`IsSubhyp eq hyp and c`IsHyp eq hyp;
     end if;
 end for;
 

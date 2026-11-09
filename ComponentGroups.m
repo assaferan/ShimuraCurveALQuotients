@@ -322,3 +322,63 @@ intrinsic CoverIsUntwistedAtPrime(G::Rec, H::SetEnum, A::SeqEnum, B::SeqEnum, P0
     if oddslope eq 0 then return false, "the twisted cover is semistable at p as well"; end if;
     return true, Sprintf("the dual graph of Y at %o is that of the untwisted cover, and the twisted cover is not semistable there", p);
 end intrinsic;
+
+intrinsic CoverIsNotSquareRootAtPrime(G::Rec, H::SetEnum, A::SeqEnum, B::SeqEnum) -> BoolElt, MonStgElt
+{For Y = X_0^D(N)/H, H of index two in the group W of E = X_0^D(N)/W, and a function x on E with divisor A - B (pairs
+ <d, m_d> of CM cycles, which must reduce to the identity component): true when the dual graph of Y at the odd prime p
+ of G = ComponentGroupData(D, N, W, p) proves that Y is not E(sqrt(c x)) for any constant c.  This is the comparison
+ of CoverIsUntwistedAtPrime: over a singular point of E of thickness t along which the vertical part of div x has
+ slope s, E(sqrt(c x)) has two singular points swapped by the deck involution when s is even, and one fixed with its
+ branches when s is odd and t even (paper/hyperelliptic-15-38.tex, Section 4).  Only singular points whose chain
+ carries no point of A or B and along which the vertical part is linear are compared; also returns what differs.}
+    p := G`p; V := G`V;
+    require p ge 3 : "the comparison needs an odd prime";
+    Ed := [];
+    for i->e in G`edges do
+        prev := e[1];
+        for v in G`chain[i] do Append(~Ed, <prev, v>); prev := v; end for;
+        Append(~Ed, <prev, e[2]>);
+    end for;
+    Lap := ZeroMatrix(Integers(), V, V);
+    for e in Ed do Lap[e[1],e[1]] +:= 1; Lap[e[2],e[2]] +:= 1; Lap[e[1],e[2]] -:= 1; Lap[e[2],e[1]] -:= 1; end for;
+    Sm, Pm, Qm := SmithForm(Lap);
+    v := ZeroMatrix(Integers(), V, 1);
+    for t in A cat [<c[1], -c[2]> : c in B] do
+        cnt := CMSpecialisation(G, t[1]);
+        for w in Keys(cnt) do v[w, 1] +:= t[2] * cnt[w]; end for;
+    end for;
+    w := Pm * v; y := ZeroMatrix(Integers(), V, 1);
+    for i in [1..V] do
+        if Sm[i,i] eq 0 then
+            if w[i,1] ne 0 then return false, "the divisor A - B is not principal on the special fibre"; end if;
+        else
+            if w[i,1] mod Sm[i,i] ne 0 then return false, "the divisor A - B does not reduce to the identity component"; end if;
+            y[i,1] := w[i,1] div Sm[i,i];
+        end if;
+    end for;
+    ax := Qm * y;
+    eact := function(m, e) for q in PrimeDivisors(m) do e := cg_img(G`alE, q)[e]; end for; return e; end function;
+    eorbH := [0 : e in [1..G`hp]]; nH := 0;
+    for e in [1..G`hp] do
+        if eorbH[e] ne 0 then continue; end if;
+        S := { eact(m, e) : m in H };
+        if exists{m : m in H | m mod p eq 0 and eact(m, e) eq e} then for x in S do eorbH[x] := -1; end for; continue; end if;
+        nH +:= 1; for x in S do eorbH[x] := nH; end for;
+    end for;
+    for i->e in G`edges do
+        if exists{j : j in [1..V] | v[j,1] ne 0 and j in G`chain[i]} then continue; end if;
+        path := [e[1]] cat G`chain[i] cat [e[2]];
+        steps := { ax[path[k+1],1] - ax[path[k],1] : k in [1..#path-1] };
+        if #steps ne 1 then continue; end if;
+        s := Rep(steps);
+        above := { eorbH[ee] : ee in [1..G`hp] | G`eorb[ee] eq i };
+        if -1 in above or #above notin {1, 2} then continue; end if;
+        if IsEven(s) and #above eq 1 then
+            return true, Sprintf("at %o, over a singular point of thickness %o the vertical part of div x has even slope, so E(sqrt(c x)) has two singular points above it, and the dual graph of Y has one", p, G`thick[i]);
+        end if;
+        if IsOdd(s) and IsEven(G`thick[i]) and #above eq 2 then
+            return true, Sprintf("at %o, over a singular point of thickness %o the vertical part of div x has odd slope, so E(sqrt(c x)) has one singular point above it, and the dual graph of Y has two", p, G`thick[i]);
+        end if;
+    end for;
+    return false, "the dual graph of Y agrees with E(sqrt(c x)) at every singular point compared";
+end intrinsic;

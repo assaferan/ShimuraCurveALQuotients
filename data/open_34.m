@@ -49,15 +49,17 @@ open_34 := [
 // Five further quotients that the filters leave undecided, none of them among the 34.
 //   * X_0^6(35)/W, two groups: the canonical quadrics of the stored models (0 relations) show that
 //     the models are not hyperelliptic, but the models rest on the m = 0 term of Schofer's formula
-//     at a composite level, so they are not on the list of proved models.
+//     at a composite level, so they are not on the list of proved models.  Both are not hyperelliptic
+//     by the certificate stage, without the models (data/certificates/6_35.m: shape V, the Klein-four
+//     cover of the genus-zero star; the first also by shape T, the dual graph at 3).
 //   * X_0^14(51), X_0^38(15), X_0^158(3) with the groups below: hyperelliptic, by the certificate stage
 //     (data/certificates/14_51.m, 38_15.m: shape C; 158_3.m: shape O).  The special fibre at 3 is the
 //     genus-3 curve Z = X_0^D(N/3)/W', which the dual graph shows is not hyperelliptic over Q, but Z mod 3
 //     is hyperelliptic (computed for the first two by tools/special-fibre-3/zmod3.m; for the third it follows
 //     from X, which has good reduction at 3), so the special fibre does not rule X out.
 open_gaps := [
-    <6, 35, [1, 3, 5, 15], "model rests on the composite-level m = 0 term">,
-    <6, 35, [1, 5, 7, 35], "model rests on the composite-level m = 0 term">,
+    <6, 35, [1, 3, 5, 15], "not hyperelliptic: certificate, shape V (and shape T)">,
+    <6, 35, [1, 5, 7, 35], "not hyperelliptic: certificate, shape V">,
     <14, 51, [1, 6, 14, 21, 34, 51, 119, 714], "hyperelliptic: certificate, shape C">,
     <38, 15, [1, 3, 10, 30, 38, 95, 114, 285], "hyperelliptic: certificate, shape C">,
     <158, 3, [1, 2, 237, 474], "hyperelliptic: certificate, shape O">
