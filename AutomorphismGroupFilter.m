@@ -170,8 +170,50 @@ hyperelliptic involution: those whose quotient has genus 0 (or undetermined genu
     return [names[1^z] : z in Centre(G) | Order(z) eq 2 and agMaybeIota(X, decomp[1^z])];
 end intrinsic;
 
-// The subgroups of G that violate the lemma if they avoid iota, smallest first, each with the
-// reason.  Conjugacy classes suffice: the conditions are invariant and iota is central.
+// A subgroup H of the regular group G by its elements, as the sorted points 1^h: the index of h in
+// the enumeration of agGroup, which does not depend on the Magma process (Subgroups and Generators
+// do: their order and the class representatives they return vary between runs).
+function agKey(H)
+    return Sort([1^h : h in H]);
+end function;
+
+// Lexicographic comparison of two keys of the same length.
+function agCmpKey(a, b)
+    for i in [1..#a] do
+        if a[i] ne b[i] then return a[i] - b[i]; end if;
+    end for;
+    return 0;
+end function;
+
+// The conjugate of H with the smallest key, and that key.
+function agCanonicalConjugate(G, H)
+    best := H; bk := agKey(H);
+    for K in Conjugates(G, H) do
+        k := agKey(K);
+        if agCmpKey(k, bk) lt 0 then best := K; bk := k; end if;
+    end for;
+    return best, bk;
+end function;
+
+// Generators of H chosen greedily in the order of the key.
+function agCanonicalGenerators(G, H)
+    elt := AssociativeArray();
+    for h in H do elt[1^h] := h; end for;
+    gens := [];
+    S := sub<G | >;
+    for k in agKey(H) do
+        if #S eq #H then break; end if;
+        if elt[k] notin S then
+            Append(~gens, elt[k]);
+            S := sub<G | gens>;
+        end if;
+    end for;
+    return gens;
+end function;
+
+// The subgroups of G that violate the lemma if they avoid iota, each with the reason, smallest
+// first and, among those of one order, by key.  Conjugacy classes suffice: the conditions are
+// invariant and iota is central; each class is represented by its conjugate of smallest key.
 function agFailingSubgroups(G, g)
     if #G le 2 then return []; end if;
     if IsElementaryAbelian(G) then
@@ -198,9 +240,12 @@ function agFailingSubgroups(G, g)
         else
             why := Sprintf("is %o, not in PGL_2", IdentifyGroup(H));
         end if;
-        if why ne "" then Append(~fails, <H, why>); end if;
+        if why ne "" then
+            K, k := agCanonicalConjugate(G, H);
+            Append(~fails, <K, why, k>);
+        end if;
     end for;
-    Sort(~fails, func<a, b | #a[1] - #b[1]>);
+    Sort(~fails, func<a, b | #a[1] ne #b[1] select #a[1] - #b[1] else agCmpKey(a[3], b[3])>);
     return fails;
 end function;
 
@@ -226,7 +271,7 @@ case also returns a witness string.  Returns true if nothing is proven.}
             if status[k] then avoids := false; break; end if;
         end for;
         if avoids then
-            hgens := [names[1^h] : h in Generators(H)];
+            hgens := [names[1^h] : h in agCanonicalGenerators(G, H)];
             return false, Sprintf("H = <%o> %o", Join(hgens, ", "), f[2]);
         end if;
     end for;

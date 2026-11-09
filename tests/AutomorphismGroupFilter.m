@@ -70,6 +70,25 @@ procedure test_AutomorphismGroupControls(curves)
     assert cs[1]`IsSubhyp and cs[1]`TestInWhichProved eq proof;
 end procedure;
 
+// The witness does not depend on the Magma process.  Before the subgroups were ordered by their
+// elements, five runs on X_0(72) and X_0(120)/<w15> gave four different witnesses (different
+// subgroups of order 8 and different generators).  The strings are a regression pin of this
+// implementation; the claim behind each, (Z/2)^3 not in PGL_2, is the lemma.
+procedure test_AutomorphismGroupWitnessIsCanonical()
+    for c in [<72, {1}, "H = <w8, w9, V2> is <8, 5>, not in PGL_2">,
+              <120, {1, 15}, "H = <w3, w8, V2> is <8, 5>, not in PGL_2">] do
+        X := CreateShimuraQuot(1, c[1], c[2]);
+        X`g := GenusShimuraCurveQuotient(1, c[1], c[2]);
+        assert X`g eq 5;
+        for i in [1..3] do
+            ok, why := CheckAutomorphismGroup(X);
+            assert not ok and why eq c[3];
+        end for;
+        printf "  X_0(%o)/%o: %o\n", c[1], c[2], why;
+    end for;
+end procedure;
+
 curves := GetHyperellipticCandidates();
 test_AutomorphismGroupRuledOut(curves);
 test_AutomorphismGroupControls(curves);
+test_AutomorphismGroupWitnessIsCanonical();
