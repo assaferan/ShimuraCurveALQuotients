@@ -71,8 +71,8 @@ procedure test_AutomorphismGroupControls(curves)
 end procedure;
 
 // The witness does not depend on the Magma process.  Before the subgroups were ordered by their
-// elements, five runs on X_0(72) and X_0(120)/<w15> gave four different witnesses (different
-// subgroups of order 8 and different generators).  The strings are a regression pin of this
+// elements, five runs gave two different witnesses on X_0(72) and four on X_0(120)/<w15>
+// (different subgroups of order 8 and different generators).  The strings are a regression pin of this
 // implementation; the claim behind each, (Z/2)^3 not in PGL_2, is the lemma.
 procedure test_AutomorphismGroupWitnessIsCanonical()
     for c in [<72, {1}, "H = <w8, w9, V2> is <8, 5>, not in PGL_2">,
