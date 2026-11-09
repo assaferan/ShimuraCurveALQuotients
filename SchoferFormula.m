@@ -1183,16 +1183,15 @@ intrinsic AbsoluteValuesAtCMPoints(Xstar::ShimuraQuot, curves::SeqEnum[ShimuraQu
     other_cm_rat := [p : p in cm_pts_rat | p[1] notin Include];
     other_cm_quad := [p : p in cm_pts_quad | p[1] notin Include];
     need := MaxNum - #Include;
-    pt_list_quad := [];
+    pt_list_quad := cm_pts_must_quad;
     if #other_cm_rat ge need then
     //need to make space for include points, but otherwise fill up with rational points as much as possible
         pt_list_rat := cm_pts_must_rational cat other_cm_rat[1..need];
-        pt_list_quad cat:= cm_pts_must_quad;
     else
         need := need - #other_cm_rat; //update how many we need, after adding rational points
         vprintf ShimuraQuotients, 3: "Still need %o rational points\n", need;
         pt_list_rat := cm_pts_must_rational cat other_cm_rat; //now go search for more points
-        Exclude := Exclude join {pt[1] : pt in pt_list_rat};
+        Exclude := Exclude join {pt[1] : pt in pt_list_rat cat pt_list_quad};
         bd := Maximum(include_bd*2, 16); //reach CNs[16]; the scan computes degrees only, so it is cheap
         // Stop once MaxNum points plus a margin of spares (for the sign-finding replacement loop in
         // ValuesAtCMPoints) are found: every returned point costs Schofer values and fields downstream.
