@@ -706,6 +706,13 @@ curves of genus well above 11 (or, at `462_1`, have no stored double covers), an
 work for one of them ran for hours; they stay empty. As at every base with N > 1, these entries rest
 on the m = 0 term of Schofer's formula through their factors.
 
+One of them is stored as y^2 = f(x) instead (2026-11-09): `38_7` [1,7], of genus 7, is a double cover of the
+genus-0 quotient by {1,7,38,266}, y^2 = 5 - 8s, which has rational points, so it has a model y^2 = f(x) over Q.
+Parametrising that quotient over Q, as PR #108 does for the two covers of `10_53` (`HyperellipticModelOverConic`),
+gives a curve birational to the fibre product, of degree 16 in x; it agrees with the trace formula over F_p and
+F_{p^2} at the eight primes 3, 5, 11, 13, 17, 23, 29, 31.  Its fibre-product form failed `tests/HyperellipticCRV.m`
+of PR #108, which asks for this form whenever one exists.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
