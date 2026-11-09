@@ -1,5 +1,9 @@
 // Subhyperelliptic cover models for X_0(14,19)* -- Guo-Yang / AllEquationsAboveCovers
 // models[Sort(W)] := [* <genus, f, h> *] ; model is y^2 + h*y = f (h usually 0).
+// Fibre-product entries (FibreProductCovers.m, 2026-10-14): built over the star line from the double covers of
+// this file by tools/writefp.m with the coordinate check of the three covers above each pair of factors;
+// each checked against the trace formula at the first three good primes, F_p and F_{p^2}, and again at the
+// 4th and 5th.  Coordinates s, z of weight 1; y_i of weight half the degree of its own equation.
 P<x> := PolynomialRing(Rationals());
 models := AssociativeArray();
 models[[Integers()|1,2,133,266]] := [* <0, P![ 1/4, -135/98, 225/196 ], P![]> *];
@@ -11,7 +15,7 @@ models[[Integers()|1,7,38,266]] := [* <1, P![ 1/4, -165/98, 27225/9604, -3375/24
 models[[Integers()|1,19]] := [* <6, P![ 361/469762048, 0, 15811/822083584, 0, 456293/3288334336, 0, 324355/1644167168, 0, -76583/67108864, 0, -6811/4194304, 0, 391363/67108864, 0, -117649/33554432 ], P![]> *];
 models[[Integers()|1,2]] := [* <5, P![ -1/235298, -237/3764768, -1689/4302592, -19147/15059072, -8315/4302592, 1355/3764768, 191131/30118144, 132297/15059072, 20765/30118144, -66499/7529536, -54811/7529536, -1279/941192, -37/470596 ], P![]> *];
 models[[Integers()|1,2,19,38]] := [* <3, P![ -57, 817, 168, -4576, 5202, 85, -1538, -422, -32 ], P![ 0, 1, 0, 1 ]> *];
-models[[Integers()|1,38]] := [*  *];
+models[[Integers()|1,38]] := [* <6, "CRV", [ Strings() | "3375/2401*s^3*z - 27225/9604*s^2*z^2 + 165/98*s*z^3 - 1/4*z^4 + y1^2", "-759375/1229312*s^5*z + 19186875/9834496*s^4*z^2 - 5545125/2458624*s^3*z^3 + 5600925/4917248*s^2*z^4 - 11715/50176*s*z^5 + 67/4096*z^6 + y2^2" ]> *];
 
 // Built 2026-10-03 as fibre products over the star line of committed double covers
 // (FibreProductCovers.m); each verified against the trace formula at up to three primes, F_p and F_{p^2} (two where a factor reduces badly at one of the first three).
