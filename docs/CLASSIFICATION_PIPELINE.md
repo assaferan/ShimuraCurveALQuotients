@@ -314,6 +314,7 @@ its branch again rather than editing it on this branch.
 
 Checked on the merged branch when it was made (2026-11-05; not rechecked since): 13 of 14 fast tests pass (CM fields of definition, the divisor
 point at 21_2, dual graph, Kodaira, component groups, plane quartics, 15_38, 46_31, 2030_1, 6_341, 4130_1).
-`tests/HyperellipticCRV.m` (#108) fails on a curve that #112 adds: X_0(38,7)/{1,7}, genus 7, stored as a
+`tests/HyperellipticCRV.m` (#108) failed on a curve that #112 adds: X_0(38,7)/{1,7}, genus 7, stored as a
 pair over a conic that has a rational point, so it has a model y^2 = f(x) and should be stored as one, as
-#108 does at 10_53. Neither PR is wrong alone; #112's entry needs converting.
+#108 does at 10_53. Fixed on #112's branch 2026-11-09 (31b661f, the entry converted, trace formula at eight
+primes) and merged here; the test passes on this branch.
