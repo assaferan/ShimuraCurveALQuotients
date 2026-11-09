@@ -47,11 +47,10 @@ open_34 := [
 ];
 
 // Five further quotients that the filters leave undecided, none of them among the 34.
-//   * X_0^6(35)/W, two groups: the canonical quadrics of the stored models (0 relations) show that
-//     the models are not hyperelliptic, but the models rest on the m = 0 term of Schofer's formula
-//     at a composite level, so they are not on the list of proved models.  Both are not hyperelliptic
-//     by the certificate stage, without the models (data/certificates/6_35.m: shape V, the Klein-four
-//     cover of the genus-zero star; the first also by shape T, the dual graph at 3).
+//   * X_0^6(35)/W, two groups: no filter decides them and they have no proved model (a model would rest
+//     on the m = 0 term of Schofer's formula at a composite level).  Both are not hyperelliptic by the
+//     certificate stage (data/certificates/6_35.m: shape V, the Klein-four cover of the genus-zero star;
+//     the first also by shape T, the dual graph at 3).
 //   * X_0^14(51), X_0^38(15), X_0^158(3) with the groups below: hyperelliptic, by the certificate stage
 //     (data/certificates/14_51.m, 38_15.m: shape C; 158_3.m: shape O).  The special fibre at 3 is the
 //     genus-3 curve Z = X_0^D(N/3)/W', which the dual graph shows is not hyperelliptic over Q, but Z mod 3

@@ -1,9 +1,11 @@
 # Reproducing the classification: the proofs of the last 34 curves as pipeline stages
 
 Status (2026-11-09): implemented. The certificate stage decides all 34 and the five further quotients; the
-pipeline ends with no quotient undecided. Branch `classification-pipeline`
-= `main` plus every open PR except the three based on the campaign branch (#132, #136, #137) and the draft
-tooling PR #47.
+pipeline ends with no quotient undecided. Branch `classification-without-m0` = `classification-pipeline`
+without the work on the m = 0 term of Schofer's formula (#66, and #150 with the branches it carries: #144,
+#74): `main` plus every other open PR except the three based on the campaign branch (#132, #136, #137) and
+the draft tooling PR #47. No step of the classification uses the m = 0 term, a CM value at level N > 1 or
+a model built from such values; see "Independence from the m = 0 term" below.
 
 ## The goal
 
@@ -25,14 +27,14 @@ polynomial filters, Noether's count on proved stored models (`FilterByCanonicalQ
 record (`alquots.m:3`): `IsSubhyp`/`IsHyp` are set, and `TestInWhichProved` names the stage; a curve is
 undecided while `IsSubhyp` is unassigned.
 
-**The data (rerun of 2026-11-06 on this branch).** Before the certificate stage 39 quotients are undecided
+**The data (full run of 2026-11-09 on this branch).** Before the certificate stage 39 quotients are undecided
 (`data/stage_counts.txt`): the 34 of `paper/hyperelliptic-candidates.tex`, listed in `data/open_34.m`, and
 five more that the second list of that file names with what each is missing (`tests/OpenThirtyFour.m`
 checks both lists against the data). Of the 27 that the earlier notes settle beyond the 61→34 cut, the
 stages now decide 22; the five are:
 
-* the two quotients of X_0(6,35): their stored models are not hyperelliptic (Noether's count), but the
-  models rest on the m = 0 term of Schofer's formula at a composite level. Both are proved not hyperelliptic
+* the two quotients of X_0(6,35): their stored models (on `classification-pipeline`, not on this branch)
+  rest on the m = 0 term of Schofer's formula at a composite level. Both are proved not hyperelliptic
   without them, by shape V (2026-11-09, `paper/classification-certificates.tex`, Section 7): each is a
   Klein-four cover of the genus-zero star with three elliptic intermediate quotients, and over
   E = X/{1,3,5,7,15,21,35,105} its branch places Z_-420, Z_-84 have different fields, so they are fibres over
@@ -68,17 +70,44 @@ models used to decide (the sixteen of group D, 15_38, 6_385, 714_5, 6_323, and t
 now decided by their certificates; their models stay in the data as equations.
 
 **The genus-0 data of the special-fibre stages.** D = 1 uses Magma's classical modular curves and D = 6
-Elkies' hypergeometric description; D = 10 and 22, and the registry of level-M bases (X_0(6,M) for
-M = 5, 7, 11, 13, 17, 19 and X_0(14,11)), use our own Borcherds/Schofer values. Measured 2026-11-06: with
-those three tests switched off the pipeline ends at the same undecided set, so no verdict depends on them;
-and the current code reproduces the stored data of all seven registry bases (values after the Möbius
-normalisation, conics up to a square, no ambiguous sign), except 2–8 discriminants per base that the
-recomputed table did not reach.
+Elkies' hypergeometric description; D = 10 and 22 use CM values of the stars X_0(10,1)* and X_0(22,1)*
+computed by Schofer's formula at N = 1, every discriminant fundamental, so they are the values of Guo-Yang's
+Theorem B (`tests/SpecialFiberCMValuesN1.m` recomputes both tables and checks every stored value and conic).
+The level-M bases (X_0(6,M) for M = 5, 7, 11, 13, 17, 19 and X_0(14,11)) are removed on this branch: their
+values rest on the m = 0 term.
 
 **The 34th curve.** That X_0(141,2)/{1,6,94,141} is not hyperelliptic was first asserted from #128's
 enumeration (one cover consistent with the trace formula, a plane quartic;
 `paper/heegner-height-models.tex:61-63`, `paper/hyperelliptic-candidates.tex:309-310`). It is now proved by
 shape N (section E below), with no enumeration.
+
+## Independence from the m = 0 term
+
+Schofer's formula has an m = 0 term only at level N > 1 (`main`'s code adds it only for primes of N
+not dividing the fundamental discriminant; at N = 1 there are none). So the classification is independent of that term if
+no verdict reads a CM value at N > 1 or a model built from one. On this branch:
+
+* the CM tables of the special-fibre test hold only the stars X_0(10,1)* and X_0(22,1)* (above);
+* the list of proved models holds only X_0(390,1)/{1,6,26,39}, whose nine discriminants
+  (−52, −67, −115, −123, −132, −148, −195, −312, −520) are all fundamental;
+* `tests/ClassificationWithoutM0.m` fails if either gets an entry at N > 1.
+
+`main` itself still contains the m = 0 code, so this was checked by running it. The pipeline ran from stage
+1 on lovelace (2026-11-09, 32 jobs, 1 h 27 min) from an export of this branch in which Schofer's formula at
+N > 1, both routines for the m = 0 multiplier, and the reading of a stored model at N > 1 each write a
+marker file and raise an error (checked first on X_0(6,5), where it fires, and on the N = 1 tables, where
+it does not). None of them was reached. The run gives the same verdict on all 18,379 quotients as the
+committed run of `classification-pipeline` (12,493 not hyperelliptic, 5,886 hyperelliptic, 0 undecided).
+The 231 curves that the removed tables decided first are decided by later stages: the fixed points of the
+Atkin–Lehner involutions on the quotient 106, the component involution 79, the dual graph 30, the trace 7,
+the complicated fixed points 5, upward closure 3, the automorphism group 1; two curves move from upward
+closure to the trace. The committed data (`data/curves_after_*.dat`, `data/stage_counts.txt`,
+`data/pipeline_*`, `data/open_cases_analysis.txt`) are this run's.
+
+The certificate tests (A–D, B2, O, T, V), `tests/OpenThirtyFour.m`, `tests/PipelineStages.m`, the
+special-fibre tests and `tests/CMPointCounts.m` pass in the same export. `tests/CanonicalQuadrics.m` reaches
+the stored-model error there, as it should: it tests the stage's reading of models on a list of its own
+naming X_0(6,23)/w_23 and X_0(10,53)/w_530, outside the classification; it passes on the branch itself.
 
 ## The 39 certified curves by the shape of their proof
 
@@ -305,6 +334,14 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    without the units of the CM order (cg_stab; it had been wrong at P_-3 and P_-4 off the fixed points).
 
 ## Branch
+
+This branch is `classification-pipeline` rebuilt from `main` (2026-11-09) by replaying its merges and
+commits in order, leaving out the merges of #66 (kappa0-proof) and #150 (schofer-series-conductor-term,
+with #144, #74 and exact-m0). Where a later merge conflicted only because of the missing ones, the original
+resolution was kept, or the original merge's own change was applied. The diff against
+`classification-pipeline` is the m = 0 code, notes and tests, and the stored models of X_0(6,35),
+X_0(10,21) and X_0(14,15) that came with them; then the commits of this branch. The paragraphs below
+describe `classification-pipeline`.
 
 `classification-pipeline` merges the open PRs as they stand on 2026-11-05. Conflicts were resolved by keeping
 both sides in the provenance log, the paper README, `.gitignore` and the spec file; in `SchoferFormula.m`
