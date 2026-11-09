@@ -18,7 +18,8 @@ wc := [
     "FilterByTrace", "UpdateCurves6", "FilterByDualGraph", "UpdateCurvesAfterDualGraph",
     "FilterByTwistedTrace", "UpdateCurvesAfterTwistedTrace",
     "FilterByWeilPolynomial", "UpdateCurves7", "FilterByTwistedWeilPolynomial",
-    "UpdateCurvesAfterTwistedWeilPolynomial", "FilterByNonALInvolutions", "UpdateCurves8"];
+    "UpdateCurvesAfterTwistedWeilPolynomial", "FilterByCanonicalQuadrics", "UpdateCurvesAfterCanonicalQuadrics",
+    "FilterByNonALInvolutions", "FilterByHyperellipticCertificates", "UpdateCurves8"];
 pos, ok := StageOrder(Read("workingcode.m"), wc);
 printf "  workingcode.m positions %o\n", pos;
 assert ok;
@@ -36,7 +37,8 @@ sh := [
     "FilterByTwistedTrace",
     "UpdateCurvesAfterTwistedTrace", "FilterByWeilPolynomial", "UpdateCurves7",
     "FilterByTwistedWeilPolynomial", "UpdateCurvesAfterTwistedWeilPolynomial",
-    "FilterByNonALInvolutions", "UpdateCurves8"];
+    "FilterByCanonicalQuadrics", "UpdateCurvesAfterCanonicalQuadrics",
+    "FilterByNonALInvolutions", "FilterByHyperellipticCertificates", "UpdateCurves8"];
 pos, ok := StageOrder(body, sh);
 printf "  run_pipeline.sh positions %o\n", pos;
 assert ok;

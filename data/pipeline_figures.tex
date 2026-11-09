@@ -23,7 +23,7 @@
     line width=0.25pt,
     fill=StatusSub!85
   ] coordinates {
-  (0,905) (1,1518) (2,1725) (3,873) (4,373) (5,260) (6,86) (7,74) (8,18) (9,13) (10,4) (11,1) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
+  (0,905) (1,1518) (2,1725) (3,903) (4,379) (5,260) (6,86) (7,74) (8,18) (9,13) (10,4) (11,1) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
   };
 
   \addplot+[
@@ -31,7 +31,7 @@
     line width=0.25pt,
     fill=StatusNot!65
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,1206) (4,1878) (5,2117) (6,2023) (7,1897) (8,1239) (9,1062) (10,534) (11,288) (12,25) (13,32) (14,7) (15,6) (17,7) (18,3) (19,16) (20,10) (21,15) (22,11) (23,2) 
+  (0,0) (1,0) (2,0) (3,1278) (4,1892) (5,2135) (6,2031) (7,1900) (8,1239) (9,1062) (10,534) (11,288) (12,25) (13,32) (14,7) (15,6) (17,7) (18,3) (19,16) (20,10) (21,15) (22,11) (23,2) 
   };
 
   \addplot+[
@@ -39,7 +39,7 @@
     line width=0.25pt,
     fill=StatusOpen!45
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,102) (4,20) (5,18) (6,8) (7,3) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
+  (0,0) (1,0) (2,0) (3,0) (4,0) (5,0) (6,0) (7,0) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
   };
 
   \legend{Proved subhyperelliptic, Proved not subhyperelliptic, Open}
@@ -53,7 +53,7 @@
 % \testbar normalises log-scaled bars to the largest count; drop this line if
 % the macro is already defined in your preamble.
 \newcommand{\testbar}[2]{%
-  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(8175))}%
+  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(5617))}%
   \begin{tikzpicture}[baseline=-0.55ex]
     \fill[#1!10] (0,0) rectangle (2.7,0.16);
     \draw[black!45, line width=0.2pt] (0,0) rectangle (2.7,0.16);
@@ -83,14 +83,17 @@ Genus $\leq 2$
 Hyperelliptic Atkin--Lehner involution
   & 1648 & \testbar{StatusSub}{1648} \\
 
+Certificates of hyperellipticity
+  & 36 & \testbar{StatusSub}{36} \\
+
 Modular non-Atkin--Lehner involution
-  & 34 & \testbar{StatusSub}{34} \\
+  & 29 & \testbar{StatusSub}{29} \\
 
 Genus 3 cover of genus 2
   & 16 & \testbar{StatusSub}{16} \\
 
-Classical modular curve (literature)
-  & 3 & \testbar{StatusSub}{3} \\
+Canonical quadrics
+  & 8 & \testbar{StatusSub}{8} \\
 
 Isomorphism
   & 1 & \testbar{StatusSub}{1} \\
@@ -101,54 +104,60 @@ Isomorphism
 \addlinespace[0.2em]
 
 Atkin--Lehner fixed points
-  & 8175 & \testbar{StatusNot}{8175} \\
+  & 5617 & \testbar{StatusNot}{5617} \\
+
+Hyperelliptic special-fibre components
+  & 2671 & \testbar{StatusNot}{2671} \\
 
 Finite field point count
-  & 1262 & \testbar{StatusNot}{1262} \\
+  & 1208 & \testbar{StatusNot}{1208} \\
 
 Dual graphs of the special fibres
-  & 899 & \testbar{StatusNot}{899} \\
+  & 1026 & \testbar{StatusNot}{1026} \\
 
 Special fiber
   & 732 & \testbar{StatusNot}{732} \\
 
 Upward closure
-  & 552 & \testbar{StatusNot}{552} \\
+  & 664 & \testbar{StatusNot}{664} \\
 
 Refined Atkin--Lehner fixed points
-  & 320 & \testbar{StatusNot}{320} \\
+  & 279 & \testbar{StatusNot}{279} \\
 
 Isomorphism
-  & 114 & \testbar{StatusNot}{114} \\
+  & 106 & \testbar{StatusNot}{106} \\
 
 Special fiber isomorphism
-  & 97 & \testbar{StatusNot}{97} \\
+  & 80 & \testbar{StatusNot}{80} \\
 
 Automorphism groups
-  & 63 & \testbar{StatusNot}{63} \\
+  & 46 & \testbar{StatusNot}{46} \\
 
 Weil polynomial
-  & 49 & \testbar{StatusNot}{49} \\
+  & 22 & \testbar{StatusNot}{22} \\
 
-Modular non-Atkin--Lehner involution
-  & 39 & \testbar{StatusNot}{39} \\
-
-Twisted point counts
-  & 25 & \testbar{StatusNot}{25} \\
-
-Classical modular curve (literature)
-  & 19 & \testbar{StatusNot}{19} \\
+Canonical quadrics
+  & 21 & \testbar{StatusNot}{21} \\
 
 Degeneracy morphism
-  & 18 & \testbar{StatusNot}{18} \\
+  & 9 & \testbar{StatusNot}{9} \\
+
+Twisted point counts
+  & 5 & \testbar{StatusNot}{5} \\
+
+Modular non-Atkin--Lehner involution
+  & 3 & \testbar{StatusNot}{3} \\
+
+Certificates (not hyperelliptic)
+  & 3 & \testbar{StatusNot}{3} \\
 
 Twisted Weil polynomials
-  & 14 & \testbar{StatusNot}{14} \\
+  & 1 & \testbar{StatusNot}{1} \\
 
 \bottomrule
 \end{tabularx}
 
-\caption{Distribution of the tests that determined the $18228$ resolved quotients. Bar lengths are log-scaled.}
+\caption{Distribution of the tests that determined the $18379$ resolved quotients. Bar lengths are log-scaled.}
 \label{fig:test-attribution}
 \end{figure}
 

@@ -19,7 +19,7 @@
 #   FilterByTraceStar                      [PARALLEL]
 #   HHProposition1                         [sequential]  check only: VerifyHHTable2 (input),
 #                                                        VerifyHHProposition1 (on a copy); writes input unchanged
-#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1, N squarefree)
+#   FilterByDualGraphStar                  [PARALLEL, by level]  (dual graph at p | D; D > 1)
 #   FilterByTwistedTraceStar               [PARALLEL, by level]  (V2/V3 twists of the star curves)
 #   SpecialFiberIsomorphismStar            [sequential]  (mod-p reduction of star curves)
 #   FilterByGeneralizedComplicatedFixedPointsStar [PARALLEL]  (generalized Prop 6 on the star curves)
@@ -55,7 +55,11 @@
 #   UpdateCurves7                          [sequential]
 #   FilterByTwistedWeilPolynomial          [PARALLEL, by level]
 #   UpdateCurvesAfterTwistedWeilPolynomial [sequential]
+#   FilterByCanonicalQuadrics [sequential]
+#   UpdateCurvesAfterCanonicalQuadrics [sequential]
 #   FilterByNonALInvolutions               [PARALLEL]
+#   FilterByHyperellipticCertificates      [PARALLEL]    (data/certificates/: proofs rechecked; last,
+#                                                         so it sees exactly what no filter decides)
 #   UpdateCurves8                          [sequential]
 
 set -euo pipefail
@@ -221,8 +225,13 @@ run_seq "UpdateCurves7"       "${D}/curves_after_FilterByWeilPolynomial.dat"    
 run_par "FilterByTwistedWeilPolynomial"
 run_seq "UpdateCurvesAfterTwistedWeilPolynomial" "${D}/curves_after_FilterByTwistedWeilPolynomial.dat" \
                                                                                    "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat"
+run_seq "FilterByCanonicalQuadrics" "${D}/curves_after_UpdateCurvesAfterTwistedWeilPolynomial.dat" \
+                                                                                   "${D}/curves_after_FilterByCanonicalQuadrics.dat"
+run_seq "UpdateCurvesAfterCanonicalQuadrics" "${D}/curves_after_FilterByCanonicalQuadrics.dat" \
+                                                                                   "${D}/curves_after_UpdateCurvesAfterCanonicalQuadrics.dat"
 run_par "FilterByNonALInvolutions"
-run_seq "UpdateCurves8"       "${D}/curves_after_FilterByNonALInvolutions.dat"     "${D}/curves_after_UpdateCurves8.dat"
+run_par "FilterByHyperellipticCertificates"
+run_seq "UpdateCurves8"       "${D}/curves_after_FilterByHyperellipticCertificates.dat" "${D}/curves_after_UpdateCurves8.dat"
 
 echo ""
 echo "Pipeline complete. Final output: ${D}/curves_after_UpdateCurves8.dat"

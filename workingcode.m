@@ -87,7 +87,13 @@ FILTER_STAGES := [*
     // Weil polynomials of the twists by those involutions, against the LMFDB hyperelliptic tables.
     <"FilterByTwistedWeilPolynomial", FilterByTwistedWeilPolynomial>,
     <"UpdateCurvesAfterTwistedWeilPolynomial", UpdateCurves>,
+    // Noether's count on the canonical embedding: q-expansions at D = 1, a stored model at D > 1.
+    <"FilterByCanonicalQuadrics", FilterByCanonicalQuadrics>,
+    <"UpdateCurvesAfterCanonicalQuadrics", UpdateCurves>,
     <"FilterByNonALInvolutions",FilterByNonALInvolutions>,
+    // Certificates of hyperellipticity (data/certificates/): the inputs of a proof, rechecked.  Last,
+    // so that the curves it receives are exactly those no filter decides.
+    <"FilterByHyperellipticCertificates", FilterByHyperellipticCertificates>,
     <"UpdateCurves8", UpdateCurves>
 *];
 

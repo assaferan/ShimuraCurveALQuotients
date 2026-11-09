@@ -1,5 +1,9 @@
 {
 BorcherdsForms.m
+GenusOneStar.m
+HyperellipticStar.m
+ExactDoubleCover.m
+HeegnerHeights.m
 SchoferFormula.m
 CMFieldsOfDefinition.m
 WeilRepresentation.m
@@ -7,6 +11,10 @@ EisensteinLocalFactors.m
 VectorValuedForm.m
 EquationsCovers.m
 FibreProductCovers.m
+HyperellipticDetection.m
+CanonicalQuadrics.m
+HyperellipticCertificates.m
+DualTest.m
 Caching.m
 ClassNumberData.m
 Utils.m
@@ -31,5 +39,9 @@ TwistedFilters.m
 special_fiber_modular.m
 special_fiber_cm.m
 DualGraph.m
+JacobianTorsion.m
+ComponentGroups.m
 ComponentInvolution.m
+NelsonShimizu.m
+NelsonFilter.m
 }

@@ -21,3 +21,155 @@ What it records, and the status of each claim:
 
 The computations live in `VectorValuedForm.m` and `EisensteinLocalFactors.m`; `vvdata/` banks the
 runs the numbers come from.
+
+# The character of a Borcherds form in positive genus, and reduction types
+
+`character-and-reduction-types.tex` — what Guo–Yang's Assumption 40 amounts to and how to do
+without it, and the Kodaira type of a genus-one quotient from the Čerednik–Drinfeld dual graph.
+Build with `pdflatex character-and-reduction-types.tex` (twice). Inline bibliography.
+
+* **Proposition 3.1** — given Lemma 7's parity condition, the character is trivial exactly when the
+  divisor is principal (not merely torsion); its order is the order of the class in the Jacobian.
+* **Corollary 3.2** — no rational torsion among CM classes, no assumption needed; so 142a1, 158a1,
+  190a1 are unconditional.
+* **Example 3.4** — the assumption appears to fail at X_0^14(17)*: one run of the genus-one star
+  driver reported a form whose value at the rational CM point of discriminant −4 is 2·7^{3/2}·17^{1/2},
+  which Remark 3.3 reads as a character of order 2. The driver and its log are not in this branch, so
+  the example is an observation and not reproducible from the files beside the note.
+* **Section 4** — e-th powers of the forms remove the assumption.
+* **Proposition 5.1** and the table — the Kodaira index is the sum of the thicknesses of the nodes on
+  the cycle, that is half the length of the metric cycle (`KodairaIndexFromDualGraph`,
+  `tests/KodairaFromDualGraph.m`): 238a2 and 282b1. The method is González–Rotger's;
+  `tests/KodairaGonzalezRotger.m` runs it on the 29 genus-one curves and quotients of their two
+  tables, taking each isogeny class from the trace formula, and reproduces every identification.
+
+# Hyperellipticity from several Borcherds divisors
+
+`torsion-counting-hyperelliptic.tex` — why a search that returns several degree-two Borcherds
+divisors proves hyperellipticity outright, where one divisor proves it only under Guo-Yang's
+Assumption 40.
+
+Build with `pdflatex torsion-counting-hyperelliptic.tex` (twice). No external `.bib`.
+
+* **Lemma 1.1** — a Borcherds form with integral principal part has a divisor class of finite order
+  in J(Q). Borcherds' theorem, with the correction that restores the finite-order condition.
+* **Theorem 1.2** — more effective degree-two divisors, pairwise differing by such divisors, than
+  the rational torsion has elements, forces two of them to be linearly equivalent, hence a function
+  of degree two. The assumption becomes a count.
+* **Section 3** — why both sides of the count are computable with no model: the torsion bound from
+  the trace formula, and the forms from their recorded combinations of eta quotients.
+* **Example 4.1** — X_0^46(31)*, genus three with no Atkin-Lehner involution left: four effective
+  divisors against a torsion bound of 2, so it is hyperelliptic unconditionally.
+
+Checked by `tests/Hyperelliptic46_31.m`, which rebuilds the six forms from
+`data/borcherds/forms_46_31.m` and recomputes the torsion bound.
+
+# X_0^6(341)/<w_3, w_11, w_62> is hyperelliptic
+
+`hyperelliptic-6-341.tex` — the proof: the Borcherds certificate of PR #142 (the branch pair is
+canonical up to the star's torsion), the star's Jacobian identified with that of the curve C of
+PR #143 up to isogeny (CHIMP endomorphisms and conductor, Ribet, the orbit at level 2046), the
+isogeny class shown to contain exactly two principally polarised surfaces (a chain of length two in
+the Bruhat–Tits tree, since the star has a rational 2-torsion point), the second one computed as
+the Jacobian of an explicit curve C_A, and C_A excluded because no double cover over Q can be
+branched along any class the certificate allows. Scripts and CHIMP logs in `tools/proof-6_341/`.
+
+# Evaluating forms on Shimura curves by the Shimizu lift
+
+`nelson-method.tex` — how the differentials of an Atkin–Lehner quotient are evaluated at points
+of the upper half-plane by Nelson's formula for the Shimizu lift, the extension of that formula
+from the newforms of level exactly `DN` to the oldform part of the space, and the two uses of
+the values: Noether's count of canonical quadrics (hyperellipticity, numerically) and the
+hyperelliptic model of a genus-3 quotient with an Atkin–Lehner involution of genus-1 quotient.
+
+Build with `pdflatex nelson-method.tex` (twice). Bibliography inline.
+
+What it records, and the status of each claim:
+
+* **Section 1** — Nelson's Theorem 3.1 and its hypothesis (newforms of level exactly `DN`).
+* **Section 2** — the oldform extension: the oldclass of a newform of level `DM` as the span of
+  the pullbacks `g|w_S`, the action of the Atkin–Lehner group on it (Proposition 2.1), and the
+  evaluation of a pullback as the level-`M` sum at the moved point times a phase. Stated with a
+  proof, the sign convention at the ramified primes resting on the Jacquet–Langlands
+  correspondence; the dimension counts and the measured eigenvalues of each column are
+  consistency checks. Not to be called proved until both maintainers have read it.
+* **Section 3** — the sample points and the cost law (linear in `DN`), measured.
+* **Section 4** — Noether's count from numerical values, with the reading rule and what a
+  numerical kernel dimension does and does not prove.
+* **Section 5** — the model step through the elliptic quotient: the marked invariants, the
+  certainty criterion, the twist constants from point counts, and where the fit is ill
+  conditioned.
+* **Section 6** — the four checks and their status: numerical plus point counts; agreement with
+  the exact model of `X_0^1326(1)/<w_17, w_78>`, and at `X_0^6(185)` agreement of the computed
+  invariants with an exact model to twelve digits although the recognition step refuses them.
+* **Section 7** — the two traps: precision must rise with the cutoff; the Eichler order is not
+  deterministic across processes.
+
+The code is `NelsonShimizu.m`, tested by `tests/NelsonShimizu.m`; `data/nelson/` banks the stored
+values the model test reads.
+
+# Twenty genus-three quotients from the heights of their branch points
+
+`heegner-height-models.tex` — the argument behind the twenty models of `data/models` added on this
+branch (PR #128), written as a proof: the branch locus of `X -> E` from Ogg's fixed-point counts
+(Section 2); the explicit Gross–Zagier formula of Cai–Shu–Tian in the normalisation the code uses,
+the admissibility rule, the rank-one shift by the Hodge class, and the oldform multiplier (Section
+3); why the candidate branch divisors form a finite, complete list, and the two places searched over
+a window (Section 4); the classification of the double covers along a given divisor and the
+proposition that the point counts select the curve (Section 5); what was predicted rather than
+input, and what the theorem rests on (Section 6). Table 1 lists all twenty with `W` by generators,
+`E`, the branch places and the model; the two candidates and the two window-conditional cases are
+marked. Code: `HeegnerHeights.m`, `ExactDoubleCover.m`, `tools/heegner_model.m`; the per-curve run
+record is the PROVENANCE section of the same name.
+
+# The CM value formula, stated once for every coset and index
+
+`schofer-formula.tex` — the formula `SchoferFormula` evaluates (Theorem 2.2 with Theorem 2.3 and
+Corollary 2.4), with a proof that treats composite squarefree level and non-fundamental
+discriminant on the same footing as the prime, fundamental case: the level, the conductor and the
+ramification of the primes of DN enter only through the local lattices, and the statement about
+those is one formula (Theorem 2.3(c)); the case list is Part II, carried over from
+`kappa0-proof-standalone.tex`, which this note is meant to supersede. Draft; not yet agreed.
+
+# X_0^6(379)* is hyperelliptic
+
+`hyperelliptic-6-379.tex` — the proof, with no equation for the curve: a Borcherds form on the
+star, given only by its principal part at infinity (a weight-1/2 form of level 4548 whose existence
+is decided by linear algebra against the 377 weight-3/2 cusp forms of that level), has divisor a
+positive multiple of `P_-123 + P_-163 - P_-52 - P_-168`; the Jacobian has no rational torsion, so two
+distinct effective divisors of degree two are linearly equivalent and the genus-three curve carries
+a `g^1_2`. The certificate is `data/dual/cert_6_379.m`, checked by `tests/DualCertificate6_379_divisor.m`
+(12 s) and `tests/_offline/DualCertificate6_379.m` (an hour); the solver is `tools/proof-6-379/`.
+
+# X_0^21(58)* is hyperelliptic
+
+`hyperelliptic-21-58.tex` — the proof, with no equation for the curve, and the lemma it needs. Four
+CM divisors of degree two are pairwise torsion-related against a torsion bound of 2, so two coincide
+and the genus-three curve carries a `g^1_2`. The torsion relations are certified by the dual test
+against weight-3/2 forms; at a level with `2 || N` the plain test is blind to half of the relevant
+forms, and the note proves (Section 3) that the Heegner components of `X_0^D(N)*` are
+`(U(4) + 2)` applied to Kohnen plus-space forms attached to `X_0^D(N/2)*`: a fibre count along the
+degeneracy map, the injectivity of the correspondence on a 2-old Jacobian, and Borcherds' modularity
+of the vector-valued Heegner series restricted to the 2-part of the discriminant form. Tests
+`tests/Hyperelliptic21_58.m` (minutes) and `tests/_offline/Hyperelliptic21_58.m` (forty minutes);
+solver in `tools/proof-21-58/`.
+
+# X_0^77(10)* is hyperelliptic
+
+`hyperelliptic-77-10.tex` — the proof, with no equation for the curve: five CM divisors of degree
+two (four pairs of rational points, two of them outside the class-number-four screen, and one
+quadratic point) are pairwise torsion-related against a torsion bound of 2, so two coincide and the
+genus-three curve carries a `g^1_2`. The relations come from the dual test for `2 || N` proved in
+`hyperelliptic-21-58.tex`, run as a search over all CM divisors of degree at most two. Tests
+`tests/Hyperelliptic77_10.m` (a minute) and `tests/_offline/Hyperelliptic77_10.m` (twenty-five
+minutes); solver and scan in `tools/proof-77-10/`.
+
+# X_0^39(34)* is hyperelliptic
+
+`hyperelliptic-39-34.tex` — the proof, with no equation for the curve: five CM divisors of degree two
+(three pairs of rational points, one of them in the odd discriminant -15, and two quadratic points)
+are pairwise torsion-related against a torsion bound of 4, so two coincide and the genus-three curve
+carries a `g^1_2`. The relations come from the dual test for `2 || N` of `hyperelliptic-21-58.tex`,
+extended here to odd discriminants through the plus-type dictionary of the level-17 curve. Tests
+`tests/Hyperelliptic39_34.m` (a minute) and `tests/_offline/Hyperelliptic39_34.m` (thirty-five
+minutes); solver, odd-discriminant solver and scan in `tools/proof-39-34/`.

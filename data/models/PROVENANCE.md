@@ -67,7 +67,7 @@ order is Eichler. Therefore:
 | `21_1` | `HMFIT=1` | the hauptmodul normalisation is read off the two discriminants where a value VANISHES, so those satisfy the relation BY CONSTRUCTION and can never be flagged; at `21_1` the datum it reads FROM is the wrong one (five discriminants agree on `scale_tilde = 36`, the default takes `9` from `d = -7`). `HMFIT=1` solves for the pair against every rational CM point instead. ⚠ It also needed the fitted scale's SIGN pinned positive — see below | **`tests/GonzalezRotger.m`, an EXTERNAL oracle**: the `W=[1]` full curve has Jacobian `21a2`, matching the published equation (ours `-343x^4+94x^2-7`, theirs `-7x^4+94x^2-343` — the same curve by `x -> 1/x`). Negative-controlled: the `-1` twist gives `336e4` and the oracle rejects it. Also `VerifyModelSet` 44/0 (negative control: twisting the `[1,3]` entry gives 3 failures) and `ModelChecks` 44/0 |
 
 **`33_1` and `69_1` (2026-09-14) use the PLAIN RECIPE — no flag.** Both were blocked by the
-`ScaleForSchofer` bug at `d = -4` (see `HANDOFF.md`), not by anything about their data. `33_1` was
+`ScaleForSchofer` bug at `d = -4` (see `HANDOFF_2026-10-19.md`), not by anything about their data. `33_1` was
 built twice, with and without `HMFIT=1`, and the two files are BYTE-IDENTICAL: it does not need the
 flag. `33_1` is confirmed by `tests/GonzalezRotger.m` (Jacobian `33a1`, the published equation);
 `69_1` has no external oracle and rests on `VerifyModelSet` 44/0 plus a negative control.
@@ -468,6 +468,35 @@ a regression, not something to add to the list.
 external oracle — `10_3` is not a Guo-Yang base, and `22_3`'s Guo-Yang-validated `W={1}` entry is a
 genus-3 hyperelliptic, untouched.
 
+## The first composite-level base: `models_6_35.m` (2026-10-04, branch composite-level, PR #74)
+
+`X_0^6(35)` is the first base with a composite squarefree level in the data. The default recipe
+(`genmodels.m`, no flags) on lovelace, with the level-420 polytope `(420, 145, 0)` enumerated in
+August (campaign `vvdata/weyl-campaign/nmz_420_145_0.txt.gz`) installed as
+`polymake/polymake_solution_420_145_0` and the t-shift fallback answering the higher rungs
+(`polymake/tshift_{core,w0}_420.txt`); 2 h 25 min, of which two hours were the m = 0 multipliers on
+the 88200-element discriminant group (computed twice — fixed since). 66 cover keys: 12 of genus 0,
+21 of genus 1, 18 of genus 2, 3 of genus 3 as `y^2 + h y = f`, and 3 of genus 3 as fibre products
+(`CRV`). The Schofer values here use, for the first time, the m = 0 term at a composite level
+(prop:composite: one multiplier per prime of N). **Outside check**: every stored curve of genus >= 1
+has the point counts over F_p and F_{p^2} of the Eichler-Selberg trace formula at p = 11, 13, 17, 19
+(156 of 156; campaign `composite/check635.m`), which knows nothing about CM values. No published
+equation or CM value exists for this base.
+
+`models_10_21.m` (2026-10-05): the second composite-level base, same recipe and the same level-420
+cache (DN = 210 shares the polytope); 3 h 50 min on lovelace, of which three multiplier computations
+of about 73 min each (forms first met at later CM points). 66 cover keys in the same shape as
+`6_35` (12 of genus 0, 21 of genus 1, 18 of genus 2, 3 + 3 of genus 3). The multipliers at the two
+level primes differ here (for one form 6 at 3 and -7 at 7), so this is the first base where the
+per-prime structure of prop:composite acts in production. Outside check as for `6_35`: 156 of 156
+point counts of the Eichler-Selberg trace formula at p = 11, 13, 17, 19 (campaign
+`composite/checkcomp.m`).
+
+`models_14_15.m` (2026-10-05): the third composite-level base, same recipe and cache; 3 h 54 min on
+lovelace (three multiplier computations). 65 cover keys: 7 of genus 0, 15 of genus 1, 14 of genus 2,
+6 of genus 3 and 1 of genus 4 as `y^2 + h y = f`, and 3 fibre products (1 of genus 3, 2 of genus 5).
+Outside check: 192 of 192 point counts of the trace formula at p = 11, 13, 17, 19, 23, 29 (primes
+where a model has no reduction are skipped).
 ## 203 covers built as fibre products of their double covers (2026-10-03/04, `FibreProductCovers.m`)
 
 A cover `X_0(D,N)/W` is Galois over the star curve with an elementary abelian 2-group, so it is
@@ -478,6 +507,11 @@ or Schofer computation, by the writer `tools/writefp.m` (the same construction t
 stage runs). Among them are 29 top curves `W = {1}`, of genus 4 to 11; the rest are intermediate
 quotients of genus 2 to 11.
 
+Of the 203, **190 are still in the files**: PR #73 (the section at the end) later found a
+hyperelliptic model `y^2 = f(x)` for 13 of these keys, and the hyperelliptic form replaced the
+fibre product there. The 13 are listed in that section; none of them is a top curve, so all 29
+of those remain.
+
 ⚠ **At level `N > 1` these entries rest on the `m = 0` term of Schofer's formula**, through the
 double covers they are built from, and PR #66 only *proposes* a proof of that term; so they are
 checked by point counts against the trace formula, not proved. The same goes for the three
@@ -486,7 +520,7 @@ checked by point counts against the trace formula, not proved. The same goes for
 **Format.** Stored as the existing non-hyperelliptic shape `<genus, "CRV", [ Strings() | ... ]>`,
 one equation per factor, in coordinates `s, z` of weight 1 and fibre coordinates `y1, y2, ...`
 each of weight half the degree of its own equation (the same rule the older `x, y, s, z` pairs
-follow). Twenty-nine of them are top curves `W = {1}`, of genus 3 to 11, which no earlier stage
+follow). Twenty-nine of them are top curves `W = {1}`, of genus 4 to 11, which no earlier stage
 could reach because they are not subhyperelliptic.
 
 **What vouches for them.** Each entry was accepted only when the compositum has the genus the
@@ -572,6 +606,22 @@ Outside check: every stored hyperelliptic curve of genus >= 1 has the point coun
 Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 330,
 p = 7, 13, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 234 of 234, 198 of 198, 198 of 198
 and 156 of 156. No published equation exists for any of these bases.
+
+⚠ **The 32 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the three bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
+
+The 12 curves stored as a pair over a conic (6 in `models_330_1.m`, 3 in `models_6_55.m`, 3 in
+`models_10_33.m`, of genus 3 to 7) are outside that trace-formula check, which covers the
+hyperelliptic entries only. All 12 were checked by hand in the review of PR #92 (Sachi): the
+L-polynomial of each, as the product over its two double covers, against the trace formula at two
+or three primes; all agree. #106 adds a test (`tests/CRVTraceCounts.m`) that makes the same comparison automatically.
 ## Level M = 1020: X_0^510(1), X_0^6(85), X_0^10(51) (2026-10-11, branch level-1020-models)
 
 The first polytope every base of the level-1020 group asks for, (1020, 360, 0), is committed here
@@ -592,6 +642,16 @@ X_0^15(34) and X_0^51(5), wait on the two-cusp rungs.
 Outside check: every stored curve of genus >= 1 agrees with the trace formula over F_p and F_{p^2}
 at the six smallest primes not dividing 510, p = 7, 11, 13, 19, 23, 29: 264 of 264, 156 of 156 and
 126 of 126. No published equation exists for any of these bases.
+
+⚠ **The 14 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the two bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
 ## Level M = 780: X_0^390(1), X_0^6(65), X_0^10(39), X_0^26(15) (2026-10-11, branch level-780-models)
 
 The first polytope every base of the level-780 group asks for, (780, 274, 0), is committed here as
@@ -616,6 +676,22 @@ Outside check: every stored hyperelliptic curve of genus >= 1 has the point coun
 Eichler-Selberg trace formula over F_p and F_{p^2} at the six smallest primes not dividing 390,
 p = 7, 11, 17, 19, 23, 29 (campaign `composite/checkcomp.m`): 264 of 264, 216 of 216, 150 of 150
 and 126 of 126. No published equation exists for any of these bases.
+
+⚠ **The 20 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the three bases with N > 1 every equation rests on that
+term, and so does every hyperelliptic cover written over one of these conics. Nothing fixes which
+quadratic twist of the conic is stored beyond the covers of a single key agreeing with one another;
+the trace-formula counts above see only the curves of genus >= 1; and no published equation reaches
+these bases. The genus-0 quotients of the base with N = 1 do not rest on that term (at N = 1 Schofer's formula
+has no m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers
+written over them, what is unverified is only the twist of the conic.
+
+The 5 curves of `models_10_39.m` stored as a pair over a conic (all of genus 3) are outside that
+trace-formula check, which covers the hyperelliptic entries only. All 5 were checked by hand in the
+review of PR #89 (Sachi): the L-polynomial of each, as the product over its two double covers,
+against the trace formula at two or three primes; all agree. #106 adds a test
+(`tests/CRVTraceCounts.m`) that makes the same comparison automatically.
 ## Level M = 924: X_0^462(1) (2026-10-06, branch level-924-models)
 
 The first base of the level-924 group (eight bases, 21 genus-0 quotients). Its Borcherds search asks
@@ -678,6 +754,53 @@ an error (PR #81 makes it an error), so the four runs that were started climbed 
 (924, n, 236) at rank 0 for 3.5 days until the cap n = 10000. The two-cusp rung has since been
 enumerated (3194 points, with the coordinate order of PR #88); the bases with N > 2 also need the
 divisor-constraint fix of PR #91, and the odd-D bases follow in a later PR.
+
+⚠ **The 16 genus-0 quotients at this level are not verified.** They were produced by the
+composite-level code that carries the m = 0 term of Schofer's formula (PRs #66, #74 and #79), which
+is neither merged nor agreed as proved; at the two bases with N > 1, the five genus-0 quotients of
+`6_77` and `22_21`, every equation rests on that term, and so does every hyperelliptic cover
+written over one of these conics. Nothing fixes which quadratic twist of the conic is stored beyond
+the covers of a single key agreeing with one another; the trace-formula counts above see only the
+curves of genus >= 1; and no published equation reaches these bases. The 11 genus-0 quotients of `462_1` do not rest on that term (at N = 1 Schofer's formula has no
+m = 0 term and the code applies no multiplier); for them, and for the hyperelliptic covers written
+over them, what is unverified is only the twist of the conic.
+
+The nine curves stored as a pair over a conic (6 in `models_462_1.m`, 3 in `models_6_77.m`) were
+left out of the trace-formula checks above, as those sections say. #106 adds a test
+(`tests/CRVTraceCounts.m`) that covers them, comparing the L-polynomial of each -- as the product over its two double covers --
+with the trace formula.
+
+## Which stored fibre products are hyperelliptic (2026-10-14, branch hyperelliptic-crv)
+
+A curve stored as a list of equations has no model y^2 = f(x) only if it is not hyperelliptic, or
+is hyperelliptic over a conic without a rational point. Max Noether's count decides the first
+question from the function field alone: the pairwise products of a basis of holomorphic
+differentials satisfy (g-1)(g-2)/2 linear relations when the curve is hyperelliptic (its canonical
+image is a rational normal curve of degree g-1) and (g-2)(g-3)/2 otherwise
+(`HyperellipticDetection.m`; Magma's own `IsHyperelliptic` stops with an error on these models).
+Over the 299 entries of 2026-10-14: 60 are hyperelliptic, all of odd genus (3, 5 or 7), and in
+every case the hyperelliptic involution is an Atkin-Lehner one -- some product of a subset of the
+double covers has degree at most 2, so the curve is the double cover of the genus-0 quotient
+y^2 = c(t) by one of its own automorphisms; no new involution turned up. For 58 of them the conic
+c has no rational point (the 34 older pairs over a conic by construction, and 24 fibre products
+built because the hyperelliptic stage stops at a conic without a point), so no model y^2 = f(x)
+over Q exists. The two exceptions are at X_0(10,53): the covers by w_530 (genus 3) and w_53
+(genus 7) are double covers of the quotient by {1, 10, 53, 530}, y^2 = 5x^2 - 8x + 16, which has
+the rational point (4, -8); parametrising the conic gives
+
+    X_0(10,53)/w_530:  y^2 = 121 x^8 + 544 x^7 + 124 x^6 - 96 x^5 - 234 x^4 + 96 x^3 + 124 x^2 - 544 x + 121
+    X_0(10,53)/w_53:   y^2 = -163 x^16 - 1202 x^15 - 5731 x^14 - 20698 x^13 - 30018 x^12 - 34050 x^11 - 31821 x^10
+                             - 13274 x^9 - 40662 x^8 + 13274 x^7 - 31821 x^6 + 34050 x^5 - 30018 x^4 + 20698 x^3
+                             - 5731 x^2 + 1202 x - 163,
+
+each with the point counts of the trace formula over F_p and F_{p^2} at the eight primes 3 to 29
+other than 5 (`HyperellipticModelOverConic`; the models are isomorphic to the stored fibre
+products by construction, and the model checks pass, 157 of 157). Both replace the fibre products
+in `models_10_53.m`. Why the pipeline's own conic stage did not reach these two keys is not
+settled; the stored conic is the one it would have parametrised. `tests/HyperellipticCRV.m` runs
+the count over every stored entry (7 s) and fails if a hyperelliptic one has an involution outside
+the Atkin-Lehner group or a conic with a rational point.
+
 ## The odd-D bases behind the wall, first base: X_0^33(10) (2026-10-13, branch odd-d-models-2026-10-13)
 
 The odd-D bases of the level groups 660, 780, 924 and 1020 need, besides the shared rungs with poles
@@ -754,6 +877,74 @@ independently of the writer, every entry was re-read from its stored strings and
 trace formula at the 4th and 5th good primes: 126 of 126 counts agree. Stored in the
 `<genus, "CRV", [...]>` shape, with the note at the top of each file.
 
+## Four files regenerated in one run so that their double covers share a coordinate (2026-10-14, branch renormalise-mixed-bases)
+
+The review of the fibre-product stage (issue #99) listed the bases whose stored double covers are
+written in more than one coordinate on the star curve, so that no fibre product could be built over
+them: `21_2`, `22_15`, `58_5`, `87_1`, `87_2`, `93_2`, `159_1`, `206_1`, `34_7`. Each was rerun with
+the default recipe (`genmodels.m`, BFCACHE=1, the code of `main` at a2e0747) so that every cover of
+the file comes from a single run. Four files changed and are committed here:
+
+* `models_21_2.m`: the same 15 keys; every hyperelliptic model of genus >= 1 is isomorphic to the
+  committed one (9 of 9) and the seven index-2 double covers now pass the coordinate check of PR
+  #105 as one class. Nothing else changes; the mixed set that `tests/FibreProductCovers.m` uses is
+  written into that test and does not depend on this file.
+* `models_34_7.m`: 14 keys as before, 9 of 9 hyperelliptic models isomorphic, and three covers that
+  had been refused as fibre products because of the mixed coordinates are now built: `[1,34]`
+  (genus 3), `[1,7]` and `[1,119]` (genus 5).
+* `models_58_5.m`: 10 keys become 14: 9 of 9 hyperelliptic models isomorphic, plus the fibre
+  products `[1,2]`, `[1,5]`, `[1,58]` (genus 8) and `[1,145]` (genus 6).
+* `models_93_2.m`: the same 12 keys, 6 of 6 hyperelliptic models isomorphic, plus the fibre
+  products `[1,3]` (genus 8) and `[1,2]` (genus 7).
+
+Outside check: every hyperelliptic model of genus >= 1 in the four files has the point counts of the
+trace formula over F_p and F_{p^2} at the six smallest good primes (53, 51, 54 and 32 of as many);
+the model checks pass on all four (227, 145, 160 and 100 checks, no failures); the fibre products
+were accepted by the stage on the genus formula and the trace formula at three primes, with the
+coordinate check conclusive. `87_1`, `159_1` and `206_1` were rerun too and came back with the same
+curves (3 of 3 isomorphic each), still with their three double covers in different coordinates:
+there the mixing happens inside one run, in the rebase stage, which stores its own coordinate, and
+since each of these top curves is hyperelliptic and stored, nothing is lost; their files are not
+touched. `87_2`, rerun with the exact m = 0 multiplier of PR #79 (the numerical one on `main` stops in its
+class-constancy check at d = -15), also came back unchanged (9 of 9 isomorphic) with one of its
+seven double covers still in the rebase coordinate, so its four empty keys stay empty and the file
+is not touched. `22_15`, rerun the same way, also came back unchanged (26 of 26 isomorphic), with one of its fifteen double covers in the rebase coordinate; its 37 empty keys stay empty for now.
+
+## 232 fibre products for the empty keys of sixteen files (2026-10-14, branch fibre-products-all-levels)
+
+The files of the level groups 660, 780 and 1020 and of the odd-D backlog were committed with their
+covers of genus >= 1 that have no genus-0 Atkin-Lehner quotient left empty: those are fibre products
+over the star line of the file's own double covers, which the writer of the fibre-product stage
+(`tools/writefp.m`) builds, as it did for level 924 (PR #82). Run over every committed file with the
+coordinate check of PR #105, it filled 232 keys in sixteen files:
+
+    6_55   24 (genus 3-7)      6_65   24 (3-7)       6_85   37 (3-9)      10_33  24 (4-9)
+    10_39  32 (3-9)            10_51  28 (3-7)       26_15  28 (3-7)      22_13   3 (4-5)
+    14_19   1 (6)              33_2    3 (3-5)       34_5    5 (4-9)      38_7    3 (6-7)
+    55_2    5 (5-11)           69_2    7 (4-6)       95_2    4 (9-10)     111_2   4 (9-10)
+
+Each was accepted on the genus formula and the trace formula over F_p and F_{p^2} at the first three
+good primes, with the coordinate check passed at every one (the generators consistent with one
+coordinate, up to a quadratic twist shared by two of them);
+then, independently of the writer, every entry was re-read from its stored strings and compared with
+the trace formula over F_p and F_{p^2} at the 4th and 5th good primes (primes between 13 and 29): all 928 counts of the 232 entries agree. The writer refused seven
+keys, all at bases whose double covers are in more than one coordinate (`34_3` [1,34]; `38_7`
+[1,133]; `82_3` [1,2], [1,82], [1,123]; `93_2` [1,62], [1,93]). It also built entries at `21_2`,
+`34_7`, `58_5`, `93_2`, `87_2` and `22_15`, which are not here: `21_2`, `34_7`, `58_5` and `93_2` are
+regenerated in one coordinate on branch renormalise-mixed-bases (PR #110), where the stage builds the
+same covers in-run, `87_2` keeps a cover in the rebase coordinate, and `22_15` is being regenerated. The level-1
+bases `210_1`, `330_1`, `390_1`, `510_1` and `462_1` were not reached: their remaining keys are top
+curves of genus well above 11 (or, at `462_1`, have no stored double covers), and the function-field
+work for one of them ran for hours; they stay empty. As at every base with N > 1, these entries rest
+on the m = 0 term of Schofer's formula through their factors.
+
+One of them is stored as y^2 = f(x) instead (2026-11-09): `38_7` [1,7], of genus 7, is a double cover of the
+genus-0 quotient by {1,7,38,266}, y^2 = 5 - 8s, which has rational points, so it has a model y^2 = f(x) over Q.
+Parametrising that quotient over Q, as PR #108 does for the two covers of `10_53` (`HyperellipticModelOverConic`),
+gives a curve birational to the fibre product, of degree 16 in x; it agrees with the trace formula over F_p and
+F_{p^2} at the eight primes 3, 5, 11, 13, 17, 23, 29, 31.  Its fibre-product form failed `tests/HyperellipticCRV.m`
+of PR #108, which asks for this form whenever one exists.
+
 ## The reachable odd-D backlog, first two bases (2026-10-05, branch backlog-odd-2026-10)
 
 `models_33_2.m` (15 cover keys: 2 of genus 0, 6 of genus 1, 4 of genus 2, 3 of genus 3) and
@@ -780,22 +971,37 @@ Trace formula 36 of 36.
 
 ## Three stale files rebuilt: X_0^22(13), X_0^34(5), X_0^38(7) (2026-10-06)
 
-The old files held only the quotients by a single involution (most of them empty) and the genus-1 and
-genus-2 covers, 5 to 10 keys each, with no provenance; their one genus-0 quotient each -- by the
-order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170}, {1, 7, 38, 266} -- was absent, which a census had
-read as a conic without a rational point. Rerun with the current pipeline (default recipe, branch
-exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15 and 13 keys, with the genus-0 quotient
-present and rational in every case: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and y^2 = 5 - 8x,
-each with an evident rational point, so all three curves are P^1 over Q and nothing here was a conic.
+The three files predated the current pipeline and carried no record of how they had been produced:
+5 to 10 keys each, mostly the quotients by a single involution, many of them empty. Rerun with the
+current pipeline (default recipe, branch exact-m0, 4 to 8 minutes each on a laptop) they hold 14, 15
+and 13 keys. The genus-0 quotient of each -- by the order-4 groups {1, 11, 26, 286}, {1, 5, 34, 170},
+{1, 7, 38, 266} -- comes out rational: y^2 = (121/16) x (x - 1), y^2 = (2x - 3)(2x + 1) and
+y^2 = 5 - 8x, each with an evident rational point, so all three curves are P^1 over Q.
 Covers up to genus 5 (22_13), 4 (34_5) and 4 (38_7). Trace formula at every curve of genus >= 1:
 36 of 36, 45 of 45, 35 of 35 (campaign composite/checkcomp.m). No published equation covers these
-keys. The lesson is the standing one: a missing quotient is a stale file until a rerun says otherwise.
+keys.
+
+**What the rerun changed, and what it did not.** It replaced no curve. Compared with `main` as it
+stood immediately before this work was merged, the three files differ, apart from comments, in
+exactly two ways (the merge also dropped the note on how the fibre products of `22_13` and `38_7`
+were built, which #105 restores). Four
+equations are rescaled by the square of a constant -- `22_13` {1,2,11,22} and {1,2,13,26} by 44^2,
+`22_13` {1,2,143,286} by (11/104)^2, `38_7` {1,2,133,266} by 4^2 -- which is the substitution
+y -> cy and leaves the curve unchanged. And four keys are listed that the files had not listed
+before, all four empty: `34_5` {1,10} and {1,85}, `38_7` {1,7} and {1,14}. Every other entry,
+including all three genus-0 quotients, is identical character for character. So the entries the
+rerun shares with the lovelace rerun of PR #73 (the section below, which is where those keys of
+`22_13`, `34_5` and `38_7` were first written) are not merely isomorphic to them but the same
+equations; what this rerun adds is the renormalisation of four older equations and a provenance
+record for the files. The branch this came from had assumed instead that the genus-0 quotients were
+missing, and a census had read them as conics without a rational point; that was true of the branch,
+never of `main`, where PR #73 had already stored them.
 
 Three keys in these files are hyperelliptic quotients that are still empty and have not yet been
 computed, as opposed to being out of the method's reach: `93_2` by w_186 (`{1,186}`), `111_2` by w_222
-(`{1,222}`) and `38_7` by w_7 (`{1,7}`). PR #73 stores models for the quotients by w_2 of `22_13` and
-`38_7`, as pairs of equations over a conic, which are empty here; the models the two branches share
-agree up to isomorphism.
+(`{1,222}`) and `38_7` by w_7 (`{1,7}`). The quotients by w_2 of `22_13` and `38_7` are stored as
+fibre products (the batch of 2026-10-03 above); this rerun writes only hyperelliptic equations and
+so produces nothing for those two keys, and the merge kept the fibre products.
 ## `models_210_1.m` and the level-420 polytope cache (2026-10-05, branch level-420-models)
 
 `X_0^210(1)` was behind the Normaliz wall (M = 420 has 24 divisors) until its first polytope rung
@@ -841,3 +1047,682 @@ two were produced independently and both agree with the trace formula): 13 keys,
 odd-$D$ reruns `115_1` and `161_1` reproduce the entries of PR #69 exactly. Vouching: the same
 checks as every pipeline model (`tests/ModelChecks`, genus, and the published tables where they
 reach: `GonzalezRotger`, `GuoYangTable1`).
+## X_0^142(1)* and X_0^158(1)*: the first models at a star curve of positive genus (2026-10-19, branch models-142-158)
+
+Both star curves have genus 1, so there is no Hauptmodul and the default recipe above does not
+apply: `genmodels.m` builds covers of a rational star line. `models_142_1.m` and `models_158_1.m`
+hold the star key only, `{1, 2, 71, 142}` and `{1, 2, 79, 158}`, each a Weierstrass model
+`y^2 + h y = f`. They are the first entries in this directory whose star curve is not rational.
+
+**Construction, exact throughout** (the genus-one star driver `tools/genus1star.m`, which arrived
+with the prescribed-divisor search it calls; logs `vvdata/weyl-campaign/genus1star/g1_142_1.log` and `g1_158_1.log` on
+the campaign branch, commit 6e4d0ea). The driver asks the Borcherds search for
+forms with prescribed divisors `Z(d_1) + Z(d_2) - 2 Z(d_oo)` on the rational CM points (18 of 248
+candidate divisors have a form at 142, 23 of 378 at 158), evaluates them at every rational CM
+point by Schofer's formula, which gives exact rational values here, forms from two poles two
+coordinates of degree 2 on the star, reads off the bidegree-(2,2) relation between them
+(`4x^2y^2 + 5xy - x - y + 1 = 0` at 142, `4x^2y^2 - 8x^2y + 4x^2 + 7xy - 8x + y = 0` at 158) and
+takes the minimal model. No numerical step and no Hauptmodul normalisation is involved. A Borcherds
+form with the requested divisor is a function on the star only if its character is trivial, which
+Guo-Yang assume (their Assumption 40). It is not needed here. The character is one of the group
+uniformising the star (Guo-Yang, Lemma 5 and Remark 41) and has finite order because the principal
+parts used are integral (Borcherds, *The Gross-Kohnen-Zagier theorem in higher dimensions*, Duke
+Math. J. 97 (1999), proof of Theorem 4.1, with the correction in Duke Math. J. 105 (2000),
+183-184 = arXiv alg-geom/9710002v3, which restores the finite-order condition that the printed
+version omits from the definition of a principal Heegner divisor); so a power of each form is a
+function on the star and
+the class of its divisor, which is rational, has finite order. `E(Q)` is torsion-free for both
+142a1 and 158a1, so that class is trivial and the divisor is principal;
+consistently, the divisors for which the search found a form are exactly those that the tabulated
+positions make principal. On a star with rational torsion this argument would not apply. About two
+minutes each:
+
+    magma -b D:=142 N:=1 stage:=3 tools/genus1star.m < /dev/null
+
+**The Jacobian is determined independently of the model.** By Jacquet-Langlands the star's Jacobian
+is the elliptic curve of the rational newform of level D whose Atkin-Lehner eigenvalues are -1 at
+both primes (the sign is flipped at the primes of the discriminant). At each level there is exactly
+one such newform, its isogeny class has a single curve (142a1, 158a1), the constructed curve has
+its traces of Frobenius at the 23 good primes below 100, and is isomorphic to it. So the stored
+curve is the right curve up to isomorphism before any check of ours is applied. `X_0^142(1)*` is
+Guo-Yang, Compositio 153 (2017), Example 42, reproduced entry by entry: their curve
+`y^2 + xy + y = x^3 - x^2 - 12x + 15`, and their table of CM points as multiples of the generator
+`Q = (1, 1)`, with the same sign convention. The positions of `P_{-3} = -Q` and `P_{-4} = -2Q` are
+not among the placements of the run log; they follow from the divisors of the two coordinates,
+`2 P_{-3} = P_{-4} + P_{-8}` and `P_{-3} + P_{-43} = 2 P_{-4}`, and agree with Guo-Yang. We know of
+no published equation for `X_0^158(1)*`.
+
+**Additional check, the trace formula.** `tests/ModelChecks.m` runs 15 checks on each file
+(genus, the genus formula, point counts over `F_p` at the eight primes 3 to 23, and the whole
+L-polynomial at 3, 5, 7, 11, 13), none failing; and directly on the star quotient, the
+Eichler-Selberg count agrees with the model over `F_p` and `F_{p^2}` at every prime below 50 not
+dividing D, 28 of 28 counts at each base.
+
+**What the file headers record, and why.** Every rational CM point of fundamental discriminant and
+class number at most 4 is placed on the curve, as a point and as a multiple of the generator,
+together with the quadratic CM cycles the search found to be twice a rational point (`Z(-187)`,
+`Z(-120)` at 142; `Z(-115)`, `Z(-123)`, `Z(-184)`, `Z(-51)` at 158). The branch points of the
+double covers of the star by a single involution are the images of the fixed points of the other
+two involutions. At 142, `w_2` fixes the CM points of discriminants `-4` and `-8`, `w_71` fixes no
+point and `w_142` fixes four points of discriminant `-568`, so `X/<w_71>` (genus 3) is branched over
+`P_{-4}`, `P_{-8}` and the two points of discriminant `-568`, `X/<w_2>` (genus 2) over the `-568`
+pair, and `X/<w_142>` (genus 2) over `P_{-4}`, `P_{-8}`. At 158, `w_2` fixes `-4` and `-8`, `w_79`
+fixes no point and `w_158` fixes eight points of discriminant `-632`, so `X/<w_79>` (genus 4) is
+branched over `P_{-4}`, `P_{-8}` and the four points of `Z(-632)`, `X/<w_2>` (genus 3) over
+`Z(-632)`, and `X/<w_158>` (genus 2) over `P_{-4}`, `P_{-8}`. Those covers are not in these files:
+the hyperelliptic-cover stages need a rational base and do not reach them.
+`tests/_offline/ModelRegen.m` works from a fixed list of bases and does not cover these two.
+
+**The two positions that fix those branch loci, checked without the Borcherds computation**
+(`tests/PrymBranchPositions.m`, six seconds). `X/<w_{2D}>` is a genus-2 double cover of the star
+branched over `P_{-4}` and `P_{-8}` alone, so `Jac` of it is the star times an elliptic Prym, and
+since the quaternionic eigenvalue of `w_p` is the `p`-th coefficient of the newform, that Prym is
+the rational newform of level `D` with Atkin-Lehner signs `(+1, +1)`, up to a quadratic twist at
+the primes of `2D`. Translating the branch pair so that one point is the origin, the cover is the
+one branched over `O` and `nQ` with `nQ = P_{-4} - P_{-8}`, which is defined over **Q** only for
+even `n`. Comparing Prym traces at the primes below 47 over the even `n`, exactly one value works
+at each base, and it is the one the tables record: `n = 2` at 142 and `n = 6` at 158. Perturbing
+either expected value makes the test fail, so it discriminates. At 142 this reproduces Guo-Yang's
+positions from the newforms alone; at 158, where no equation is published, it is the only check of
+those positions that shares no step with the construction.
+
+
+
+## `2030_1`: the star (a candidate) and the genus-four quotient by $\langle w_{10}, w_{14}, w_{58}\rangle$ (2026-10-25, branch models-genus4-covers)
+
+`models_2030_1.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-2030_1/star-model.log`):
+
+    y^2 + (x^2 + x) y = x^6 + 29 x^5 + 13 x^4 + 9 x^3 + 159 x^2 + 149 x + 39,
+
+with the counts of the newform at all 58 good primes tried, a rational Weierstrass point at
+$x = -3/2$, and $\mathrm{Jac}(\mathbb{Q})[2] = 0$. ⚠ It is a **candidate**: point counts do not
+identify a curve (the level-35 lesson), and unlike `2002_1` the star has not been proved by the
+route of PR #139. Everything below is exact relative to it.
+
+The second key, $W = \{1,10,14,35,58,145,203,2030\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-8$ and $-280$ (the images of the fixed points of
+$w_2$ and $w_{70}$, one rational point each by Ogg's counts and Riemann-Hurwitz), and the entry
+
+    y^2 = -1960 x^10 + 81 x^8 + 2796 x^6 - 186 x^4 - 1100 x^2 + 625
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic2030_1.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; the star then has the quintic model $y^2 = q_1(u)$ with that
+fibre at $u = 0$ and the Weierstrass point at infinity, and $Y$ is $y^2 = q_1(t^2/c)$ with $c$
+supported on $\{-1, 2, 5, 7, 29\}$ (the argument of Section 3 of `paper/star-2002-proof.tex`,
+Lemma 3). Which fibre: the two branch points stay distinct modulo every prime of good reduction of
+$Y$, so the fibre's weighted $y$-coordinate is a unit outside $S = \{2, 5, 7, 29\}$, and since the
+sextic factors as $(2x+3) Q_5$ with resultant $2^6 \cdot 5 \cdot 7^2$, $Q_5(a,b)$ is an $S$-unit: a
+Thue-Mahler equation of degree five, solved completely by Gherga-Siksek's solver (17 solutions in
+246 s, `tools/models-2030_1/thuemahler.sols`, listed verbatim), leaving six fibres, of which the
+twist-and-count test keeps exactly one, $x = 1/2$ with $c = 1$ (`thuemahler.m`; the same pair is
+the only match among the nine fibres of height up to $10^6$, `enumerate.m`). $\mathrm{Jac}(\mathbb{Q})[2] = 0$
+leaves only twists, fixed by the counts. The curve has the counts of $Y$ at all 31 good primes below
+150; its quotient by $x \mapsto -x$ is the star and by $(x, y) \mapsto (-x, -y)$ the genus-two
+curve $y^2 + (x^2+x) y = x^6 + 27x^5 - 42x^4 + 65x^3 + 56x^2 - 15x - 13$ of conductor $2030^2$
+(`verify.m`). ⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which
+is a candidate.
+
+
+## `6_341`: the star (a candidate) and the genus-four quotient by $\langle w_3, w_{11}, w_{62}\rangle$ (2026-10-25, branch models-genus4-covers)
+
+`models_6_341.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-6_341/star-model.log`):
+
+    y^2 + (x^2 + x) y = 6 x^5 - 12 x^4 + 29 x^3 + 9 x^2 - 33 x + 9,
+
+with the counts of the newform at all 58 good primes tried, conductor $2046^2$, rank $2$, and
+$\mathrm{Jac}(\mathbb{Q})_{\mathrm{tors}}\cong\mathbb{Z}/2$ generated by the difference of its two
+rational Weierstrass points. ⚠ It is a **candidate**: point counts do not identify a curve, and the
+star has not been proved by the route of PR #139 (its Jacobian is simple with real multiplication by
+$\mathbb{Q}(\sqrt2)$, so that route applies). Everything below is exact relative to it.
+
+The second key, $W = \{1,3,11,33,62,186,682,2046\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-24$ and $-88$ (the images of the fixed points of
+$w_2$ and $w_{22}$, one rational point each), and the entry
+
+    y^2 = -744 x^10 - 47 x^8 + 1420 x^6 + 1126 x^4 + 468 x^2 + 81
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$, given the star:** the
+three Borcherds forms of `tests/Hyperelliptic6_341.m` make the branch pair canonical up to the
+star's rational torsion, which the model shows is the class $t$ of $W_2 - W_1$; the only
+alternative is a cover branched at $W_1 + W_2$, which would need a rational line bundle squaring to
+$\mathcal O(2W_1)\otimes t$, i.e.\ a rational square root of $t$, and $t$ is not twice a rational
+point (`IsDivisibleBy`). So the branch pair is a fibre of the hyperelliptic map and $Y$ is
+hyperelliptic. **The model.** Two rational Weierstrass points give two rational theta
+characteristics, hence two normal forms $y^2 = q_1(t^2/c)$ per fibre, with $u = (x-x_0)/(x-e)$ and
+$e$ either of them (in the coordinate $x\mapsto1/x$ of the simplified model, $e\in\{0,3\}$); the
+twist $c$ is supported on $\{-1,2,3,11,31\}$. Which fibre: the two branch points stay distinct
+modulo every prime of good reduction of $Y$, so the fibre's weighted $y$-coordinate is a unit
+outside $S=\{2,3,11,31\}$; the sextic factors as $x(x-3)Q_4(x)$ with $S$-unit resultants, so
+$Q_4(a,b)$ is an $S$-unit, a Thue-Mahler equation of degree four, solved completely for both signs
+by Gherga-Siksek's solver ($26+30$ solutions, `tools/models-6_341/thuemahler.sols`, listed
+verbatim), leaving four fibres; over the two bases and the 32 twists the count test keeps exactly
+one triple, the fibre $x = 1/3$ ($x = 3$ on the star as written) with $e = 3$ and $c = -3$
+(`thuemahler.m`; with the base $e = 0$ nothing matches, `enumerate.m`, and the same single match
+appears among the fibres of height up to $10^6$ with $e = 3$, `enumerate_e3.m`). The curve has the
+counts of $Y$ at all 31 good primes below 150; its quotient by $x\mapsto-x$ is the star and by
+$(x,y)\mapsto(-x,-y)$ the genus-two curve $y^2 + (x^2+x)y = -2x^5 - x^4 - 2x^3 + 39x + 9$ of
+conductor $2^2 3^2 11^2 31$ (`verify.m`). ⚠ So: hyperellipticity and the equation both exact
+**given the star's equation**, which is a candidate. ⚠ The lesson for the other covers: when the
+star's Jacobian has rational $2$-torsion, enumerate over both theta characteristics; with one base
+only, this case produced no match at all.
+
+
+## Twenty quotients from the heights of their branch points (branch models-1326-210)
+
+Every quotient in this section has genus 3 and lies behind the divisor wall of the Borcherds
+search, so none of the recipes above reaches it. Each has an elliptic Atkin–Lehner quotient `E =
+X/<W, w>` and is a double cover of it branched at four CM points. The heights of those points on
+`E` are given by the explicit Gross–Zagier formula of Cai–Shu–Tian (Algebra & Number Theory 8
+(2014), Theorem 1.5, second special case), implemented in `HeegnerHeights.m`; the points of `E` of
+those heights form a finite set, and every configuration is tested exactly against the trace
+formula by `ExactDoubleCover.m`. Nothing in the construction is numerical except the L-values,
+which direct the search; what certifies a result is the agreement of the point counts. The files
+hold the genus-3 quotient only.
+
+**What the formula gives, and what is enumerated.** For a branch place of degree 2 over a
+quadratic field `F`, the character attached to `F` gives the height of `P - Pbar` exactly, so `P -
+Pbar` is a known multiple of the generator of `E(F)^-`; that multiple being an integer is also the
+test that identifies `E` inside its isogeny class, since on the other curves it is not. The
+rational part is the trivial character's component, which gives the sum of the points over a place
+of degree `e` as `e·xi_E ± b·G`, with `xi_E` the image of the Hodge class of `X_0^D(N)`, common to
+every place, and `b` a rational number. So the enumeration runs over the signs and over the
+multiple of the generator in `xi_E`, which matters only modulo 1 because translating every branch
+point by a rational point of `E` gives an isomorphic cover, and which has denominator dividing
+twice the denominators of the `b`'s. That makes the enumeration finite and complete. When every
+branch place has degree 1 there is no minus part, hence no lattice test, and the integrality of
+the rational parts takes its place.
+
+**Quotients whose elliptic factor is an oldform.** At five of these the quaternionic form is old
+at 2, so `E` has conductor `DN/2` and the routine that reads the quotient off the Atkin–Lehner
+signs does not find it; `E` was identified from the trace formula, by matching the point counts of
+the genus-one quotient against the elliptic curves of conductor dividing `DN`. The formula then
+needs the degree of the map it is applied to. Write `p = 2`, let `f` parametrise `E` from the
+curve on which its form is new, and let `pi_1`, `pi_2` be the two degeneracy maps, `pi_2 = pi_1
+w_p`. The quotient map factors through `w_p`, so it is `g = f pi_1 + f pi_2`, of degree `2(p + 1 +
+a_p)·deg f`: each `f pi_i` has degree `(p + 1) deg f` and each cross term is `f T_p f^dual`, of
+degree `a_p deg f`. Where `p` ramifies in the field of the CM point, `w_p` acts on it as the
+Frobenius of the prime above `p`, so `pi_2(P)` is that conjugate of `pi_1(P)` and the
+`chi`-component of `g(P)` is `(1 + chi(p))` times the component of `f(pi_1 P)`. With the degree
+taken to be `deg g`, every component of the formula is therefore multiplied by
+
+    (1 + chi(p))^2 / (2(p + 1 + a_p)),
+
+which is `2/(p + 1 + a_p)` for the characters with `chi(p) = +1` and zero for the others. That is
+2 at 141a1, 357d1 and 345f1, where `a_2 = -2`, and 1 at 285a1, where `a_2 = -1`. The vanishing at
+`chi(p) = -1` is what explains the rational branch places whose nontrivial characters would
+otherwise have had nonzero components. The argument is for `p` ramified in the field of the branch
+point; the same expression is used at a place where it is not, which is not derived, so there the
+height directs the search and only the counts certify the answer. This derivation is Sachi
+Hashimoto's.
+
+**Reproducing.** `tools/heegner_model.m` takes the base, the involution, and for an oldform
+quotient the curve and the prime at which the form is old:
+
+    magma -b D:=1326 N:=1    W:=1,17,78,1326 U:=6 tools/heegner_model.m < /dev/null
+    magma -b D:=210  N:=13   W:=1,2,21,42,65,130,1365,2730 U:=5 tools/heegner_model.m < /dev/null
+    magma -b D:=39   N:=11   W:=1,11,39,429 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=55   N:=7    W:=1,35,55,77 U:=5 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=301  W:=1,3,14,42,43,129,602,1806 U:=903 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=455  W:=1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365 U:=30 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=187  W:=1,3,11,17,33,51,187,561 U:=374 tools/heegner_model.m < /dev/null
+    magma -b D:=22   N:=51   W:=1,6,17,22,33,102,374,561 U:=187 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=247  W:=1,2,19,38,39,78,741,1482 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=253  W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=185  W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6    N:=385  W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=714  N:=5    W:=1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=15   N:=38   W:=1,2,15,19,30,38,285,570 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=141  N:=2    W:=1,3,94,282 U:=2 curve:=141a1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=21   N:=34   W:=1,3,14,17,42,51,238,714 U:=2 curve:=357d1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=57   N:=10   W:=1,5,6,19,30,95,114,570 U:=2 curve:=285a1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=15   N:=46   W:=1,5,6,23,30,115,138,690 U:=2 curve:=345f1 old:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=690  N:=7    W:=1,6,10,14,15,21,23,35,138,210,230,322,345,483,805,4830 U:=2 tools/heegner_model.m < /dev/null
+
+**The models.** `E` is the elliptic quotient, and the branch data gives the CM discriminant of
+each branch place with the field it is defined over.
+
+* **X_0^1326(1)/{1,17,78,1326}: `y^2 = 272x^8 - 72x^6 - 55x^4 - 18x^2 + 17`** (stored reversed),
+  over 1326b2, rank 1, branched at discriminants −24 and −408 over `Q(sqrt 2)`. The isogeny class
+  1326b is given by the Atkin–Lehner signs and the heights pick b2 within it. Obtained once; the
+  surviving configuration has both sums equal to the generator.
+* **X_0^210(13)/{1,2,21,42,65,130,1365,2730}: `y^2 = 4x^8 - 20x^7 + 97x^6 - 20x^5 - 138x^4 + 20x^3
+  + 97x^2 + 20x + 4`**, obtained twice, over 2730s1 (branch points −312, −120 over `Q(sqrt 2)`)
+  and over 2730u1 (−420, −1092 over `Q(i)`), both of rank 1; the two curves are Q-isomorphic.
+* **X_0^39(11)/{1,11,39,429}: `y^2 = -891x^8 + 1044x^6 + 214x^4 - 124x^2 + 13`**, over 429b1 (the
+  lattice test excludes the other five curves of 429b). Branch points −132 over `Q(sqrt -11)` and
+  −52 over `Q(sqrt 13)`, with the genus characters (−11, 12) and (−4, 13).
+* **X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`**, over 385a1. Branch
+  points −1540 over `Q(sqrt -35)` and −20 over `Q(sqrt 5)`, characters (−35, 44) and (−4, 5).
+* **X_0^6(301)/{1,3,14,42,43,129,602,1806}: `y^2 = 129x^8 - 2276x^6 + 3334x^4 + 1180x^2 - 63`**,
+  over 1806l1, the only curve of its class; branch points −1204 over `Q(sqrt -7)` and −1032 over
+  `Q(sqrt 129)`, minus parts four times the generators.
+* **X_0^6(455)/W: `y^2 = -416x^8 - 515x^6 + 582x^4 - 251x^2 + 40`**, over 2730y1; branch points
+  −10920 over `Q(sqrt -26)` and −1560 over `Q(sqrt 10)`. 2730y2 is excluded by the lattice test,
+  and 2730y3, 2730y4 pass it but no configuration over them is consistent with the trace formula,
+  which is the expected behaviour: the lattice test is necessary, not sufficient.
+* **X_0^6(247)/W: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over 1482i1; the rational
+  CM points of discriminants −52 and −3 and a place of degree 2 of discriminant −456 over `Q(sqrt
+  57)`.
+* **X_0^6(253)/W: `y^2 = 9x^8 + 1388x^6 + 3526x^4 - 3060x^2 - 1863`**, over 1518p1; discriminant
+  −552 over `Q(sqrt -23)` and the rational points −88 and −1012. Here the multiple of the
+  generator in `xi_E` has denominator 3, which is why an earlier version of the search that
+  assumed it integral found nothing.
+* **X_0^6(185)/W: `y^2 = 2025x^8 + 4716x^6 - 122x^4 - 5620x^2 - 999`**, over 1110m1; the rational
+  point −555, a place of degree 2 of discriminant −4440 over `Q(sqrt -111)`, and the rational
+  point −40. The numerical fit of Nelson's method here had recognised only one of its three
+  invariants, so this is the first model of that quotient.
+* **X_0^6(385)/W: `y^2 = 9x^8 - 580x^6 - 9482x^4 + 60092x^2 + 3465`**, over 2310q1; the rational
+  points −40 and −1540 and a place of degree 2 of discriminant −9240. See the caveat below.
+* **X_0^714(5)/W: `y^2 = 9720x^8 + 2061x^6 + 598x^4 - 155x^2 + 16`**, over 3570x2; a place of
+  degree 2 of discriminant −14280 and the rational points −840 and −340. Two configurations
+  survive, with twists −43 and −2171, and they are Q-isomorphic. The search needs `Effort := 2` in
+  the Mordell–Weil computations. See the caveat below.
+* **X_0^15(38)/{1,2,15,19,30,38,285,570}: `y^2 = 81x^8 + 180x^6 + 2062x^4 - 1660x^2 + 361`**, over
+  570e4. Every branch place is rational, of discriminants −228, −12, −760 and −40, so there is no
+  lattice test; the integrality of the rational parts takes its place and excludes the other three
+  curves of 570e (on 570e1 and 570e3 the parts come out 1, 3/2, 1/2, which no common shift makes
+  integral, and on 570e2 they are not rational). The branch point of discriminant −12 belongs to
+  an order of conductor 2, which the formula as implemented does not reach, so its position was
+  searched over the integers of absolute value at most the window rather than predicted, and came
+  out at 0, that is, the point is `xi_E` up to torsion. **Uniqueness there rests on that window.**
+* **X_0^141(2)/{1,3,94,282}: `y^2 = 81x^8 + 252x^6 - 26x^4 - 260x^2 - 47`**, over 141a1, form old
+  at 2; the rational points −4 and −24 and a place of degree 2 of discriminant −564 over `Q(sqrt
+  -47)`.
+* **X_0^21(34)/{1,3,14,17,42,51,238,714}: `y^2 = 81x^8 - 612x^6 + 262x^4 + 220x^2 + 49`**, over
+  357d1, form old at 2.
+* **X_0^57(10)/{1,5,6,19,30,95,114,570}: `y^2 = 729x^8 + 500x^6 - 2x^4 + 68x^2 - 15`**, over
+  285a1, form old at 2, where the multiplier is 1 rather than 2.
+* **X_0^15(46)/{1,5,6,23,30,115,138,690}: `y^2 = 81x^8 - 900x^6 + 358x^4 + 380x^2 + 81`**, over
+  345f1, form old at 2; one of its places sits at ten times the generator, outside the search
+  window the earlier version used.
+* **X_0^690(7)/W: `y^2 = 9x^8 - 130x^6 - 767x^4 - 520x^2 + 144`**, over 4830bj1, branched at four
+  rational points, of discriminants −3, −280, −420 and −115. This base was out of reach until the
+  search for an optimal embedding of a CM order was corrected: it reported that the order of
+  discriminant −280 does not embed in the Eichler order of level 7 in `B_690`, although it does, so
+  no branch data could be computed at all.
+* The remaining two are **hyperelliptic with no model `y^2 = f(x)` over Q**: their canonical image
+  is the conic ramified at 2 and at the real place, which has no rational point to project from.
+  They are stored as double covers of that conic, in the shape of the other paired entries in this
+  directory, with coordinates `s`, `z` of weight 1 and `y` of weight 2, and `x` the third
+  coordinate of the conic scaled so that the equation is integral: **X_0^6(187)/W** is `X1^2 +
+  2X2^2 + 22X3^2 = 0` with `y^2 = 4449s^4 + 84056s^3z + 411472s^2z^2 + 195328sz^3 + 797696z^4`,
+  over 1122i1 (1122i2 excluded by the lattice test), branched at −4488 and −264 over `Q(sqrt -2)`;
+  two configurations survive, with twists −14 and 721, and they give the same curve, the
+  isomorphism being exhibited rather than inferred from the counts. **X_0^22(51)/W** is `X1^2 +
+  2X2^2 + 59X3^2 = 0` with `y^2 = 9242176s^4 - 2871136s^3z + 4331508s^2z^2 + 124292sz^3 +
+  4787449z^4`, over 1122f1, branched at the same two discriminants, one surviving configuration,
+  twist −7. The 59 is an artefact of the coordinates and not bad reduction: that conic has points
+  over every `Q_p` with `p` odd.
+
+**X_0^6(323)/{1,6,19,34,51,114,646,969}, where the branch locus is one place of degree 4.** The four
+points are a single Galois orbit, so the characters that would pin one of them have order 4, and
+their L-functions do not factor into quadratic twists: the formula as implemented does not reach
+them. What it does give is enough to leave a small search. The trivial character puts the sum of the
+four points at `4·xi_E ± 2G`; the character attached to the quadratic subfield `Q(sqrt -2)` of the
+place's field has a vanishing component, because the twist of 1938h1 by −8 has analytic rank 2, so
+`P + sigma^2 P` and its conjugate differ by torsion alone, with `sigma` a generator of the cyclic
+group of order four acting on the orbit. Writing `F` for the quartic field (discriminant 62016) and
+`F_2` for `Q(sqrt -2)`, a point of the orbit then satisfies
+
+    2P = Q^+ + M,   Q^+ = P + sigma^2 P in E(F_2),   M = P - sigma^2 P in the minus part for F/F_2,
+
+where `Q^+` is one of the finitely many halves of the pinned sum, and the minus part is the
+Mordell–Weil group of the twist of E by the element defining `F` over `F_2`: of rank one, proved and
+saturated, with generator of height 7.1168638516. So `M` runs over multiples of that generator, and
+the exact test decides. The search over `|k| <= 4` leaves one curve, at `k = ±1`, in two
+presentations that are the same curve over Q — the isomorphism is exhibited as at X_0^6(187).
+
+**The model is hyperelliptic with no `y^2 = f(x)` over Q**: the conic is `X1^2 + 2X2^2 + 22X3^2 = 0`,
+again the one ramified at 2 and at the real place, with
+
+    y^2 = 46521 s^4 + 32184 s^3 z + 101968 s^2 z^2 + 91392 s z^3 + 41984 z^4.
+
+The quotient by the residual involution is `y^2 = A(s, 1)`, whose Jacobian is 1938h1 as predicted;
+the counts agree with the trace formula at the 41 good primes below 200 where this model is smooth
+and over `F_{p^2}` at 7 primes (the model is singular at 11, which is not a prime of `DN`, an artefact
+of the coordinates). **Uniqueness rests on the search window**, since the order-four characters are
+not computed; the value found is the smallest nonzero one. This agrees with the Nelson–Shimizu lift,
+which reached the same conclusion numerically, including that the canonical conic has no rational
+point, by a route sharing no step with this one.
+
+**Checks that were predictions, not inputs.** For every model: the genus is 3, as the genus
+formula says; the primes of bad reduction are exactly the primes of `DN` (for the two models over
+a conic, the primes of the discriminants of the two equations, apart from the 59 above); the point
+counts agree with the trace formula at every good prime below 200 and over `F_{p^2}` at every good
+prime below 40, which in genus 3 determines the zeta function; the quotient by the residual
+Atkin–Lehner involution is the predicted elliptic curve; the automorphism group has order 4, or 8
+at X_0^1326(1) and X_0^210(13) where `W` has index 4 in the Atkin–Lehner group; and the fields of
+definition of the fixed points are the fields of the branch places, rational exactly at the places
+of degree 1. At X_0^1326(1) the L-polynomial at every good prime below 60 equals the product of
+those of 1326b2, 1326c1 and 1326d1, and at X_0^210(13) that of 2730u1, 2730s1 and 210a2. The
+models of X_0^39(11) and X_0^55(7) are Q-isomorphic to the curves fitted numerically by the
+Nelson–Shimizu lift (campaign branch, `vvdata/weyl-campaign/nelson/hyp16/`), which shares no step
+with this construction; at X_0^6(185), where that fit could not recognise two of its invariants,
+the exact model agrees with the numerical values to twelve digits.
+
+**⚠ Two of the eighteen are candidates rather than proved.** At X_0^6(385) and X_0^714(5) the
+search over the isogeny class is incomplete: Magma does not prove the Mordell–Weil group of the
+twist on every curve of the class, even at `Effort := 2`, so a curve with isogenous Jacobian is
+not excluded, and the trace formula cannot separate those. Everything else about the two models
+checks out. The way to settle them without a new Mordell–Weil computation is to use the isogeny:
+if `phi : E -> E'` has degree `m`, the generator of the twist of `E'` is `(c/m)·phi(G)` for some
+integer `c` between 1 and `m`, so its height is `c^2/m` times the known one, and the height
+comparison on `E'` can be run over those finitely many values.
+
+**What rests on a theorem.** Theorem 1.5 of Cai–Shu–Tian in its second special case, with the
+admissibility rule for the characters at the primes dividing both the conductor and the
+discriminant. The formula gives the heights of the Heegner points `P - xi`, with `xi` the Hodge class
+of `X_0^D(N)`; the image of `xi` in `E(Q) ⊗ Q` is the one quantity it does not give. That image is the
+same for both branch points, so it enters the rational components `P_i + Pbar_i` of the two points as
+a common shift: the trivial character fixes the difference of the two components, and the common
+shift matters only modulo 2 (translating both branch points by a rational point gives an isomorphic
+cover). Here `E` has rank 0 and the rational components are torsion, so the enumeration is complete.
+Both models are therefore proved, given the trace-formula point counts.
+
+## X_0^6(247), X_0^6(253), X_0^6(185), X_0^6(385), X_0^714(5): five quotients with rational branch points (branch models-1326-210)
+
+Same construction as the section below, extended to branch places of degree 1. A rational branch
+point is a rational point of the elliptic quotient; the formula gives its height through the trivial
+character alone, which is the same quantity that gives the rational part of a place of degree 2, so
+one enumeration covers both. The sum of the points over a place of degree e is `e·xi_E ± b·G` with
+`xi_E` the image of the Hodge class, common to all the places, and `b` read off the trivial
+character's component; the multiple of the generator in `xi_E` is a rational number, and the
+enumeration over it is finite because any value making all the sums lattice points has denominator
+dividing twice the denominators of the `b`'s.
+
+    magma -b D:=6 N:=247 W:=1,2,19,38,39,78,741,1482 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6 N:=253 W:=1,2,23,33,46,66,759,1518 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6 N:=185 W:=1,2,15,30,111,185,222,370 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=6 N:=385 W:=1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155 U:=2 tools/heegner_model.m < /dev/null
+    magma -b D:=714 N:=5 W:=1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785 U:=2 tools/heegner_model.m < /dev/null
+
+* **X_0^6(247)/{1,2,19,38,39,78,741,1482}: `y^2 = 81x^8 - 4788x^6 + 1654x^4 + 2540x^2 + 513`**, over
+  `E = X/<W, w_3>` = 1482i1, branched at the rational CM points of discriminants −52 and −3 and at a
+  place of degree 2 of discriminant −456 over `Q(sqrt 57)`.
+* **X_0^6(253)/{1,2,23,33,46,66,759,1518}: `y^2 = 9x^8 + 1388x^6 + 3526x^4 - 3060x^2 - 1863`**, over
+  1518p1, branched at discriminant −552 over `Q(sqrt -23)` and at the rational points of
+  discriminants −88 and −1012. Here the multiple of the generator in `xi_E` has denominator 3, which
+  is why an earlier version of the search that assumed it integral found nothing.
+* **X_0^6(185)/{1,2,15,30,111,185,222,370}: `y^2 = 2025x^8 + 4716x^6 - 122x^4 - 5620x^2 - 999`**, over
+  1110m1, branched at the rational point of discriminant −555, a place of degree 2 of discriminant
+  −4440 over `Q(sqrt -111)`, and the rational point of discriminant −40.
+
+* **X_0^6(385)/{1,5,6,11,14,21,30,55,66,70,105,154,231,330,770,1155}:
+  `y^2 = 9x^8 - 580x^6 - 9482x^4 + 60092x^2 + 3465`**, over 2310q1, branched at the rational points of
+  discriminants −40 and −1540 and at a place of degree 2 of discriminant −9240. Two curves of the
+  isogeny class are excluded by the heights; on the remaining two, Magma does not prove the
+  Mordell–Weil group of the twist at the default effort, so uniqueness in the class rests on a
+  computation that is still to be completed, while the model itself passes every check below.
+
+* **X_0^714(5)/{1,3,10,14,17,30,35,42,51,105,170,238,510,595,714,1785}:
+  `y^2 = 9720x^8 + 2061x^6 + 598x^4 - 155x^2 + 16`**, over 3570x2, branched at a place of degree 2 of
+  discriminant −14280 and the rational points of discriminants −840 and −340. Two configurations
+  survive, with twists −43 and −2171; they are Q-isomorphic. The search needs `Effort := 2` in the
+  Mordell–Weil computations, and on 3570x1 Magma does not prove the group of the twist even then, so
+  as at X_0^6(385) uniqueness within the isogeny class is not yet settled.
+
+**Checks that were predictions.** For each: the genus of the model is 3; point counts agree with the
+trace formula at the 41 or 42 good primes below 200 and over `F_{p^2}` at the 8 good primes below 40; bad
+reduction is exactly at the primes of `DN`; the quotient by `x -> -x` is the predicted elliptic curve;
+the automorphism group has order 4; and the fields of definition of the fixed points are the fields of
+the branch places, in particular rational exactly at the places of degree 1.
+
+The numerical fit of Nelson's method at X_0^6(185) had not recognised two of its three invariants, so
+this is the first model of that quotient.
+
+## X_0^6(301), X_0^6(455), X_0^6(187), X_0^22(51): four more quotients from the heights of their branch points (branch models-1326-210)
+
+The same construction as the sections before and after this one, run on the open genus-3 quotients
+whose two branch places have degree 2 and whose elliptic quotient has rank at most one:
+
+    magma -b D:=6  N:=301 W:=1,3,14,42,43,129,602,1806 U:=903 tools/heegner_model.m < /dev/null
+    magma -b D:=6  N:=455 W:=1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365 U:=30 tools/heegner_model.m < /dev/null
+    magma -b D:=6  N:=187 W:=1,3,11,17,33,51,187,561 U:=374 tools/heegner_model.m < /dev/null
+    magma -b D:=22 N:=51  W:=1,6,17,22,33,102,374,561 U:=187 tools/heegner_model.m < /dev/null
+
+In all four the elliptic quotient has rank 1, so the rational component of a branch point is only
+determined up to the image of the Hodge class; the enumeration is explained at the end of this
+section. Each run leaves exactly one curve, and the other curves of the isogeny class are excluded
+because the predicted height is not the height of a lattice point.
+
+**X_0^6(301)/{1,3,14,42,43,129,602,1806}: `y^2 = 129x^8 - 2276x^6 + 3334x^4 + 1180x^2 - 63`.**
+`E = X/<W, w_903>` is 1806l1, the only curve of its isogeny class. Branch points of discriminants
+−1204 over `Q(sqrt -7)` and −1032 over `Q(sqrt 129)`, with minus parts four times the generators.
+
+**X_0^6(455)/{1,6,7,10,13,15,42,70,78,91,105,130,195,546,910,1365}: `y^2 = -416x^8 - 515x^6 + 582x^4 - 251x^2 + 40`.**
+`E = X/<W, w_30>` is 2730y1; 2730y2 is excluded by the lattice test, and 2730y3, 2730y4 pass it but
+no configuration over them is consistent with the trace formula, which is the expected behaviour —
+the lattice test is a necessary condition only. Branch points −10920 over `Q(sqrt -26)` and −1560
+over `Q(sqrt 10)`.
+
+The remaining two quotients are **hyperelliptic curves with no model `y^2 = f(x)` over Q**: their
+canonical image is a conic without a rational point (in both cases the conic ramified at 2 and at the
+real place). They are stored as double covers of that conic, in coordinates `s`, `z` of weight 1 and
+`y` of weight 2, with the residual Atkin–Lehner involution acting on the third coordinate of the
+conic; `HyperellipticModelOverConic` builds that presentation and `PointCountOverConic` counts its
+points over a finite field, by summing `1 + chi(A)` over the points of the conic.
+
+**X_0^6(187)/{1,3,11,17,33,51,187,561}:** the conic `X1^2 + 2 X2^2 + 22 X3^2 = 0` with
+`y^2 = 4449 s^4 + 84056 s^3 z + 411472 s^2 z^2 + 195328 s z^3 + 797696 z^4`, where `s = X1`, `z = X2`
+and the stored `x` is `22 X3`. `E = X/<W, w_374>` is 1122i1 (1122i2 excluded by the lattice test).
+Branch points of discriminants −4488 and −264, both over `Q(sqrt -2)`. Two configurations survive the
+exact test, with twists −14 and 721; they give the same curve over Q, which was checked by exhibiting
+the isomorphism: the genus-2 quotients by the residual involution composed with the hyperelliptic one
+are isomorphic over Q, the Möbius map realising that isomorphism carries one conic to the other and
+one quartic to a square multiple of the other.
+
+**X_0^22(51)/{1,6,17,22,33,102,374,561}:** the conic `X1^2 + 2 X2^2 + 59 X3^2 = 0` with
+`y^2 = 9242176 s^4 - 2871136 s^3 z + 4331508 s^2 z^2 + 124292 s z^3 + 4787449 z^4`, stored with
+`x = 59 X3`. `E = X/<W, w_187>` is 1122f1 (1122f2 excluded by the lattice test). Branch points of
+discriminants −4488 and −264 over `Q(sqrt -2)`, one surviving configuration with twist −7. The 59 in
+the conic is an artefact of the coordinates, not bad reduction: the conic has points over every
+`Q_p` with p odd.
+
+**Checks that were predictions, not inputs.** For each of the four: the genus of the model is 3, as
+the genus formula says; point counts agree with the trace formula at every good prime below 200 and
+over `F_{p^2}` for every good prime below 40 (42, 41, 42, 41 primes and 9, 7, 8, 8 squares); the
+primes of bad reduction are exactly the primes of `DN` (for the two conic models, the primes of the
+discriminants of the two equations, apart from the 59 above); the quotient by the residual
+Atkin–Lehner involution is the predicted curve 1806l1, 2730y1, 1122i1, 1122f1; the automorphism group
+of the two models `y^2 = f(x)` has order 4, which is what the Atkin–Lehner group of order 16 modulo
+`W` requires; and the fixed points of the residual involution lie over the fields the CM computation
+gives for the two branch discriminants (`Q(sqrt -7)` and `Q(sqrt 129)`; `Q(sqrt -26)` and
+`Q(sqrt 10)`; `Q(sqrt -2)` twice; `Q(sqrt -2)` twice).
+
+**The enumeration at rank one.** The formula gives the height of `P - Pbar` exactly, and for the
+rational part it gives the height of the component of the trivial character, which is `(h/2)` times
+`P + Pbar - 2 xi_E`, with `xi_E` the image of the Hodge class of `X_0^D(N)`. So the multiple `b_i` of
+the generator of `E(Q)` in `P_i + Pbar_i` is known up to sign and up to the shift by `2 xi_E`, and
+that shift is the same for both branch points: the enumeration runs over the sign choices for the
+difference `b_2 - b_1` (it must be an integer, which is already a check) and over `b_1` modulo 2,
+translation of both branch points by a rational point of `E` giving an isomorphic cover. It is
+therefore complete, and the four models are proved, given the trace-formula point counts.
+
+## X_0^39(11)/{1,11,39,429} and X_0^55(7)/{1,35,55,77}: the two Nelson candidates, proved (branch models-1326-210)
+
+Same construction as the two quotients above, run with
+
+    magma -b D:=39 N:=11 W:=1,11,39,429 U:=3 tools/heegner_model.m < /dev/null
+    magma -b D:=55 N:=7 W:=1,35,55,77 U:=5 tools/heegner_model.m < /dev/null
+
+**X_0^39(11)/{1,11,39,429}: `y^2 = -891x^8 + 1044x^6 + 214x^4 - 124x^2 + 13`.** `E = X/<W, w_3>` is
+429b1 (the lattice test excludes the other five curves of 429b). Branch points of discriminants −132
+(class number 4) over `Q(sqrt -11)` and −52 (class number 2) over `Q(sqrt 13)`; the genus characters
+attached to those fields, (−11, 12) and (−4, 13), give minus parts exactly equal to the generators of
+`E(F)^-` (`E` has rank 1, so the trivial character is admissible as well, but its component lies in
+`E(Q)` and cancels in `P - Pbar`). One surviving configuration, hyperelliptic.
+
+**X_0^55(7)/{1,35,55,77}: `y^2 = -35x^8 - 2028x^6 + 198x^4 + 68x^2 + 5`.** `E = X/<W, w_5>` is 385a1
+(a2–a4 excluded). Branch points −1540 (class number 8) over `Q(sqrt -35)` and −20 (class number 2) over
+`Q(sqrt 5)`, characters (−35, 44) and (−4, 5), minus parts the generators. One survivor, hyperelliptic.
+Both have rank 1, so the rational components of the branch points are enumerated as the section above
+describes; there the two trivial-character components agree, and the difference of the two rational
+components is 0.
+
+**Both are Q-isomorphic to the models fitted numerically from Nelson's values** (campaign branch,
+`vvdata/weyl-campaign/nelson/hyp16/`): `y^2 + (x^4+x^3+x^2+x+1)y = -3x^7 - 22x^6 - 55x^5 - 69x^4 - 55x^3
+- 22x^2 - 3x` and `y^2 + (x^4+x+1)y = x^8 + 5x^7 + 13x^6 + 21x^5 + 24x^4 + 19x^3 + x^2 - 6x - 2`, whose
+invariants had been recognised at 26 digits. With this the numerical fits become proved models, given
+the trace formula and Cai–Shu–Tian's theorem. The automorphism group has order 4 (one residual
+Atkin–Lehner involution and the hyperelliptic one), as the Atkin–Lehner group of order 8 modulo `W`
+requires; the discriminants of the stored octics carry a factor 2 that the odd-characteristic form with
+an `h` term does not.
+
+## `2002_1`, the full Atkin-Lehner star: not from the pipeline
+
+`models_2002_1.m` holds one key, the full star $W = \{1,2,7,11,13,14,22,26,77,91,143,154,182,286,
+1001,2002\}$, of genus two. It is not a pipeline product and `genmodels.m` does not reach it: the
+star base has positive genus, so there is no Borcherds model and no fibre product. It was built
+instead from the differentials of the quotient, which the Shimizu lift evaluates directly.
+
+**How to regenerate** (`tools/genus2model.m` and the evaluation it needs, `NelsonShimizu.m`, are
+both in this branch):
+
+    magma -b DD:=2002 NN:=1 WS:=1,2,7,11,13,14,22,26,77,91,143,154,182,286,1001,2002 \
+          CUTA:=60 PRA:=60 tools/genus2model.m < /dev/null
+
+or, in Magma, `NelsonModelFromDifferentials(2002, 1, W : Precision := 60, Cutoff := 60)`, which
+finds the nine rational CM discriminants itself. Either returns `y^2 = 256u^6 + 2816u^5 + 9220u^4 + 8396u^3 + 2765u^2 + 254u + 9` in the coordinate
+sending the CM points of discriminant $-67, -99, -148$ to $0, 1, \infty$; then
+the driver finishes by determining the twist, which here is $1$, and printing the stored equation. At
+D*N = 2002 the nineteen evaluations are about five hours in one process, so they are better split
+one per point (`g2setup.m` / `g2slice.m` / `g2join.m` on the same branch, which pin the Eichler
+order and the CM points so the pieces share a coordinate system).
+
+**Vouching.** Three checks, none of which is the construction itself.
+1. The ten sample points held back from the fit are predicted to 1.4e-19, and every coefficient is
+   recognised with a margin of 10^7 to 10^10 over what a chance fit of that denominator could
+   reach.
+2. The six rational CM points that fixed nothing come out rational in that coordinate as well, and
+   all nine lie on one line through the origin to 3.9e-21 -- which is what a rational point
+   requires, the real locus being a line in this normalisation.
+3. `#C(F_p) = p + 1 - Tr a_p(f)` for the newform orbit `2002.2.a.f` at all 58 good primes below
+   300, with no mismatch. ⚠ These counts are evidence for the isogeny class and fix the twist; by
+   themselves they could NOT select the curve, since every principal polarization on the surface
+   shares an L-function.
+
+⚠ The same equation was produced independently from the PERIODS of the modular abelian surface
+(PR #137), where it was recorded only as a candidate, because that route offers several principal
+polarizations and point counts cannot choose between them. The two agree: equal absolute invariants
+as rationals, and isomorphic over Q. The route used here makes no such choice -- the curve is read
+off its own canonical differentials -- so it is what promotes the candidate to a model.
+
+**Proved.** `paper/star-2002-proof.tex` proves that the star is this curve over Q (modularity of
+its Jacobian, rigidity of the isogeny class, a single class of principal polarisations, Torelli);
+the computations are in `tools/proof-2002/`.
+
+### `2002_1`, the genus-four quotient by $\langle w_2, w_{13}, w_{77}\rangle$: from the star
+
+The second key, $W = \{1,2,13,26,77,154,1001,2002\}$, is a genus-four double cover $Y$ of the
+star, branched at two rational points, and the entry
+
+    y^2 = -1001 x^10 + 98289 x^8 - 279360 x^6 + 185856 x^4 - 16384 x^2 + 65536
+
+was not fitted to anything: it is derived from the star's equation. If $Y$ is hyperelliptic its
+branch divisor is a fibre of the star's hyperelliptic map, the star then has the quintic model
+$y^2 = q_1(u)$ with that fibre at $u = 0$ and its rational Weierstrass point at infinity, and $Y$ is
+$y^2 = q_1(t^2/c)$ for a twist $c$ supported on the bad primes (Section 3 of the note, Lemma 3).
+Among the ten rational fibres of the star of height up to $10^6$ and the 32 twists, exactly one
+pair, the fibre at infinity with $c = 2$, has the point counts of $Y$ (`tools/proof-2002/stepH-enumerate.m`);
+the curve above is that pair, and it has the counts of $Y$ at all 31 good primes below 150
+(`stepH-verify.m`). Its quotient by $x \mapsto -x$ is the star, and by $(x,y) \mapsto (-x,-y)$ the
+genus-two curve $y^2 + (x^2+x)y = -2x^5 + 10x^4 - 44x^3 + 29x^2 + 9x + 1$ of conductor $2002^2$.
+
+**What is proved and what is not.** Exact: the branch locus is the pair of CM points of
+discriminants $-11$ and $-91$, both rational (Ogg's fixed-point counts and Riemann-Hurwitz);
+hyperellipticity is equivalent to that pair being a fibre of the star's hyperelliptic map; and
+*if it is a fibre*, then it is the fibre at infinity and $Y$ is the curve above. That last step is
+exact too: the two branch points stay distinct modulo every prime of good reduction of $Y$, so the
+fibre's weighted $y$-coordinate is a unit outside $\{2,7,11,13\}$, which makes the quintic factor of
+the star's sextic an $S$-unit -- a Thue-Mahler equation, solved completely by Gherga-Siksek's
+solver (21 solutions, `tools/proof-2002/stepH-thuemahler.sols`), leaving seven fibres, of which the
+count test keeps one (`stepH-thuemahler.m`); and Jac(star)(Q)[2] = 0 leaves only twists, which the
+counts fix. Hyperellipticity itself is now exact as well: the pair is a fibre because
+$Z(-11)+Z(-91)-Z(-148)-Z(-232)$ is principal on the star, the divisor of the Borcherds lift of a
+weight-1/2 form on $\Gamma_0(4004)$ whose principal part is `data/dual/cert_2002_1.m`. The form is
+not constructed; it exists because that principal part pairs to zero with the 329-dimensional
+space of weight-3/2 cusp forms on $\Gamma_0(4004)$ (Serre duality), which is
+`tests/_offline/DualCertificate2002_1.m` (an hour), and its lift has the stated divisor by Guo-Yang's
+Lemma 25, which is `tests/DualCertificate2002_1_divisor.m`. **Proved**: this entry has the same
+standing as the star's.
+
+discriminant, which is that theorem's own test-vector condition: at a ramified prime dividing the
+level the involution induced by a uniformiser of `K_v` is the Atkin–Lehner involution `w_v`, and
+the theorem asks that the form be a `chi(pi_v)`-eigenvector for it. The Manin constant of the
+optimal curve is 1 for squarefree conductor (Česnavičius, *The Manin constant in the semistable
+case*, Compositio Math. 154 (2018)), and the LMFDB records it as 1 for every curve used here. The
+oldform multiplier above is derived, except at a branch place where the prime is not ramified.
+Given those, and given the window at X_0^15(38) and the isogeny-class caveat at the two
+candidates, the models are proved.
+
+## `2418_1`: the star (a candidate) and the genus-four quotient by $\langle w_2, w_{13}, w_{93}\rangle$ (2026-10-26, branch models-genus4-covers)
+
+`models_2418_1.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-2418_1/star-model.log`):
+
+    y^2 + (x^2 + x) y = 9 x^6 - 3 x^5 - 9 x^4 - 5 x^3 - 6 x^2 + 30 x + 4,
+
+with the counts of the newform at all 58 good primes tried, conductor $2418^2$, one rational
+Weierstrass point at $x = -4/3$, and no rational torsion. ⚠ It is a **candidate**: point counts do
+not identify a curve, and the star has not been proved. Everything below is exact relative to it.
+
+The second key, $W = \{1,2,13,26,93,186,1209,2418\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-312$ and $-403$ (the images of the fixed points of
+$w_{78}$ and $w_{403}$, one rational point each), and the entry
+
+    y^2 = 2304 x^10 + 3481 x^8 + 5068 x^6 + 5190 x^4 + 172 x^2 + 169
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic2418_1.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; with a single rational Weierstrass point the normal form
+$y^2 = q_1(t^2/c)$ is unique up to the twist $c$, supported on $\{-1, 2, 3, 13, 31\}$. Which fibre: the
+two branch points stay distinct modulo every prime of good reduction of $Y$, so the fibre's weighted
+$y$-coordinate is a unit outside $S = \{2,3,13,31\}$, and since the sextic factors as $(3x+4)Q_5$ with
+resultant $2^{11}3^3$, $Q_5(a,b)$ is an $S$-unit: a Thue-Mahler equation of degree five, solved
+completely by Gherga-Siksek's solver (17 solutions in 207 s, `tools/models-2418_1/thuemahler.sols`,
+listed verbatim), leaving five fibres, of which the twist-and-count test keeps exactly one, $x = 4/3$
+with $c = 1$ (`thuemahler.m`; the same pair is the only match among the six fibres of height up to
+$10^6$, `enumerate.m`). The curve has the counts of $Y$ at all 31 good primes below 150; its
+quotient by $x \mapsto -x$ is the star and by $(x,y) \mapsto (-x,-y)$ the genus-two curve
+$y^2 + (x^2+x)y = -3x^6 - 9x^5 - 5x^4 - x^3 + 31x^2 - 27x + 9$ of conductor $2418^2$ (`verify.m`).
+⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which is a candidate.
+
+
+## `6_403`: the star (a candidate) and the genus-four quotient by $\langle w_2, w_{13}, w_{93}\rangle$ (2026-10-26, branch models-genus4-covers)
+
+`models_6_403.m` holds two keys. The full star $W$ (genus two) is the curve fitted to the star's
+differentials by `tools/genus2model.m` (cutoff 60, 60 digits; `tools/models-6_403/star-model.log`):
+
+    y^2 + (x^2 + x) y = x^6 + 9 x^5 + 15 x^4 - 47 x^3 + 33 x^2 - 21 x + 9,
+
+with the counts of the newform at all 58 good primes tried, conductor $2418^2$ (the same conductor
+as the star of `2418_1`, a different curve), one rational Weierstrass point at $x = 1$, no rational
+torsion, rank $2$. ⚠ It is a **candidate**: point counts do not identify a curve, and the star has
+not been proved. Everything below is exact relative to it. (The fit's collinearity report shows a
+large spread because the point of discriminant $-3$, an elliptic point of order three where the
+coordinate $f_2/f_1$ is $0/0$, is printed with its naive value; the fit itself does not use it.)
+
+The second key, $W = \{1,2,13,26,93,186,1209,2418\}$, is the genus-four double cover $Y$ of the
+star branched at the CM points of discriminants $-3$ and $-403$ (the images of the fixed points of
+$w_3$ and $w_{403}$, one rational point each), and the entry
+
+    y^2 = 9 x^10 + 316 x^8 + 2630 x^6 + 9388 x^4 + 2745 x^2 + 1296
+
+is derived from the star's equation, not fitted. **Hyperellipticity of $Y$ is proved**, by the three
+Borcherds forms of `tests/Hyperelliptic6_403.m` on the torsion-free star, so the branch divisor is a
+fibre of the star's hyperelliptic map; with a single rational Weierstrass point the normal form
+$y^2 = q_1(t^2/c)$ is unique up to the twist $c$, supported on $\{-1, 2, 3, 13, 31\}$. Which fibre: the
+two branch points stay distinct modulo every prime of good reduction of $Y$, so the fibre's weighted
+$y$-coordinate is a unit outside $S = \{2,3,13,31\}$, and since the sextic factors as $(x-1)Q_5$ with
+resultant $72$, $Q_5(a,b)$ is an $S$-unit: a Thue-Mahler equation of degree five, solved completely
+by Gherga-Siksek's solver (17 solutions in 293 s, `tools/models-6_403/thuemahler.sols`, listed
+verbatim), leaving six fibres, of which the twist-and-count test keeps exactly one, $x = -7$ with
+$c = 1$ (`thuemahler.m`; the same triple is the only match of the generic enumeration over the
+fibres of height up to $10^6$, `enumerate.m`). The curve has the counts of $Y$ at all 31 good primes
+below 150; its quotient by $x \mapsto -x$ is the star and by $(x,y) \mapsto (-x,-y)$ the genus-two
+curve $y^2 + (x^2+x)y = x^6 - 11x^5 + 25x^4 + 75x^3 - 187x^2 - 513x - 351$ of conductor $2418^2$
+(`verify.m`). ⚠ So: hyperellipticity proved; the equation exact **given the star's equation**, which
+is a candidate.

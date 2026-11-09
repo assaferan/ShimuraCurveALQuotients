@@ -1,8 +1,11 @@
 # Working plan — what to do next
 
-Assembled 2026-09-02 from the branch audit, `HANDOFF.md` on `main`, and the GATE3B measurement on
-`10_61`. `HANDOFF.md` remains the record of *what happened*; this file is the record of *what to
-do*. When they disagree about state, `HANDOFF.md` wins.
+Assembled 2026-09-02 from the branch audit, the handoff log, and the GATE3B measurement on `10_61`.
+This file is the record of *what to do*. Every reference to `HANDOFF.md` below means the frozen
+archive of the day it was written, `HANDOFF_2026-10-19.md` for everything from 2026-09-05 on and
+`HANDOFF_2026-07-17.md` before that; a live handoff file is a working session's own and is not
+tracked. A handoff records what a session believed at the time, so where it disagrees with the code,
+the tests or `data/models/PROVENANCE.md`, those win.
 
 Five tracks. One is the main line; the rest run in parallel and **none of them blocks it**.
 
@@ -11,7 +14,7 @@ Five tracks. One is the main line; the rest run in parallel and **none of them b
 > **⇒ Spend your effort on WHICH OBJECT a claim is about, not on whether the computation is right.**
 > The 2026-09-04 session's most expensive errors all had correct arithmetic about the wrong object.
 > Reproduce a KNOWN value before trusting a new one; draft an edit rather than applying it.
-> Full account: `HANDOFF.md`, "READ THIS FIRST".
+> Full account: `HANDOFF_2026-10-19.md`, "READ THIS FIRST".
 
 ## ⇒ OPEN (2026-09-29): dual-graph filter awaiting the lava rerun
 

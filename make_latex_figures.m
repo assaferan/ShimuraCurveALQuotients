@@ -98,6 +98,8 @@ provedGroups := [
  <"Genus $\\leq 2$", ["GenusLt3"]>,
  <"Genus 3 cover of genus 2", ["Genus3CoverGenus2"]>,
  <"Modular non-Atkin--Lehner involution", ["ModularNonALInvolution"]>,
+ <"Canonical quadrics", ["CanonicalQuadrics"]>,
+ <"Certificates of hyperellipticity", ["HyperellipticCertificate"]>,
  <"Isomorphism", ["UpdateIsoStatus"]>
 ];
 ruledGroups := [
@@ -112,9 +114,12 @@ ruledGroups := [
  <"Degeneracy morphism", ["DegeneracyMorphism"]>,
  <"Dual graphs of the special fibres", ["DualGraph"]>,
  <"Special fiber", ["SpecialFiber", "SpecialFiberCM", "SpecialFiberD6", "SpecialFiberD10", "SpecialFiberD22"]>,
+ <"Hyperelliptic special-fibre components", ["ComponentInvolution"]>,
  <"Automorphism groups", ["AutomorphismGroup"]>,
  <"Twisted point counts", ["TwistedTrace"]>,
- <"Twisted Weil polynomials", ["TwistedWeilPolynomial"]>
+ <"Twisted Weil polynomials", ["TwistedWeilPolynomial"]>,
+ <"Canonical quadrics", ["CanonicalQuadrics"]>,
+ <"Certificates (not hyperelliptic)", ["HyperellipticCertificate"]>
 ];
 
 // Every decided curve must fall in exactly one group, or the figure silently drops it.

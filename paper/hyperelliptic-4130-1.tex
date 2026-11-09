@@ -1,0 +1,62 @@
+% X_0^4130(1)* is hyperelliptic: its Jacobian has no rational torsion, so one CM relation D_1 - D_2 between two
+% degree-two divisors certified torsion by the dual test is principal, and |D_1| is a g^1_2.
+% Tests: tests/Hyperelliptic4130_1.m and tests/_offline/Hyperelliptic4130_1.m.
+\documentclass[11pt,reqno]{amsart}
+\usepackage[margin=1.15in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\theoremstyle{definition}
+\newtheorem{remark}[theorem]{Remark}
+\DeclareMathOperator{\Jac}{Jac}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\F}{\mathbb{F}}
+\begin{document}
+\title{$X_0^{4130}(1)^*$ is hyperelliptic}
+\author{}
+\date{\today}
+\maketitle
+
+\section{Statement}
+
+Let $Y=X_0^{4130}(1)^*$ be the quotient of $X_0^{4130}(1)$ by its full Atkin--Lehner group $W$, of order $16$.
+It has genus three and no further quotient, so it is hyperelliptic if and only if it carries two distinct linearly
+equivalent divisors of degree two. Consider
+\[
+D_1=P_{-35}+P_{-532},\quad D_2=P_{-163}+P_{-595},\quad D_3=P_{-315}+P_{-520},\quad D_4=P_{-340}+P_{-420},
+\]
+each the sum of two rational CM points of $Y$ (the eight points are rational: their fields of definition have
+degree one). They are the fibres of the hyperelliptic map found by the Shimizu screen of the invariant
+differentials at the rational CM points; the proof uses them only as divisors.
+
+\begin{theorem}\label{thm:main}
+$D_1\sim D_2$. In particular $Y$ is hyperelliptic.
+\end{theorem}
+
+\section{Proof}
+
+\emph{$\Jac(Y)(\Q)$ is torsion-free.} The orders $\#\Jac(Y)(\F_p)=L_p(1)$, from the point counts of $Y$ over
+$\F_p$, $\F_{p^2}$, $\F_{p^3}$ by the trace formula, have greatest common divisor $1$ over the good primes below
+$120$. So a degree-zero divisor on $Y$ is principal as soon as it is torsion.
+
+\emph{$D_1-D_2$ is torsion.} The dual test of \texttt{paper/hyperelliptic-15-38.tex}, Proposition~2.1, at
+$M=4\cdot2065=8260$ (\texttt{tests/\_offline/Hyperelliptic4130\_1.m}): a principal part with divisor $D_1-D_2$ in
+the dictionary of Guo--Yang pairs to zero with the space $W$ of cusp forms of weight $\tfrac32$ on $\Gamma_0(8260)$
+vanishing at every index carrying no CM point (at precision $4000$ it has dimension $3$, the genus of $Y$); the test checks that $T(9)$ acts on $W$ through a factor of
+$x^3+3x^2-3$, the polynomial of the traces of Frobenius of $Y$ at $3$, certifies all six differences $D_i-D_j$,
+and refuses $P_{-35}-P_{-532}$ and $P_{-35}+P_{-163}-P_{-532}-P_{-595}$. Two of the points need a word: $P_{-35}$
+is a fixed point of $w_{35}$, so it enters the CM cycle $Z(35)$ with weight $\tfrac12$, and $-315=9\cdot(-35)$ is
+not fundamental, so $P_{-315}$ shares the cycle $Z(315)$ with $P_{-35}$; the dictionary carries both, and the
+linear system of the test separates them because $P_{-35}$ also appears alone in $Z(35)$.
+
+So $D_1-D_2$ is principal; $D_1\neq D_2$ as divisors, so $|D_1|$ is a $g^1_2$ on $Y$. \qed
+
+\begin{remark}
+This is the simplest shape of the argument: with no rational torsion, a single certified relation does
+everything. Compare \texttt{paper/hyperelliptic-6-649.tex}, where the torsion is bounded by $6$ and the
+component group at $3$ is needed to make three fibres suffice.
+\end{remark}
+
+\end{document}

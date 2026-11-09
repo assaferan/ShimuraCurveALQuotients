@@ -28,6 +28,11 @@ procedure test_m0_multiplier_exact_15_2()
     for i->k in keys do
         assert mults[i] eq expected[k];
     end for;
+    // the general entry point, indexed by the primes of N: at prime N a single entry, the same value
+    arrs := M0MultipliersBySupport([fs[k] : k in keys], Ld, D, N);
+    for i->k in keys do
+        assert Keys(arrs[i]) eq {N} and arrs[i][N] eq expected[k];
+    end for;
     printf " ok\n";
 end procedure;
 

@@ -76,8 +76,8 @@ procedure test_DualGraphData()
         try ValidateDualGraphData(6, 35, 2, bad); catch e rejected := true; end try;
         assert rejected;
     end for;
-    // not applicable: D = 1, N not squarefree
-    assert not DualGraphApplicable(1, 97) and not DualGraphApplicable(6, 25) and DualGraphApplicable(6, 35);
+    // not applicable: D = 1 only; a non-squarefree N is applicable since 2026-10-14
+    assert not DualGraphApplicable(1, 97) and DualGraphApplicable(6, 25) and DualGraphApplicable(6, 35);
     printf "Done!\n";
 end procedure;
 test_DualGraphData();
@@ -88,7 +88,7 @@ procedure test_DualGraphDiskCache()
     System(Sprintf("rm -rf '/tmp/dualgraph_test_%o'", Getpid()));
     ClearDualGraphCache();
     d1 := DualGraphData(6, 35, 2 : CacheDir := dir);
-    path := dir cat "/dualgraph_v2_6_35_2";
+    path := dir cat "/dualgraph_v3_6_35_2";
     assert OpenTest(path, "r");
     assert Pipe(Sprintf("ls '%o' | grep -c tmp || true", dir), "") eq "0\n";     // no temp file left
     ClearDualGraphCache();
@@ -232,13 +232,69 @@ function dg_mk(D, N, W)
     return X;
 end function;
 
+// The metric refinement: edge lengths are the stabiliser orders, and the involution must commute
+// with the residual action of W_full/W.  Synthetic graphs first, then curves.
+procedure test_DualGraphMetric()
+    printf "Testing the metric dual-graph test...";
+    // the 4-cycle 1-2-3-4 with (1,2) and (3,4) doubled, genus 3: its only involution with tree
+    // quotient is (1 2)(3 4), which reverses the doubled edges whatever their lengths and swaps
+    // (2,3) with (1,4), so the graph is hyperelliptic iff those two lengths agree
+    C := [<1,2>, <1,2>, <3,4>, <3,4>, <2,3>, <1,4>];
+    assert IsHyperellipticMetricGraph(4, C, [1,2,1,1,3,3], 3, []);
+    assert not IsHyperellipticMetricGraph(4, C, [1,2,1,2,3,5], 3, []);
+    // two parallel edges with a loop at each end (genus 3): the identity has tree quotient iff the
+    // parallel edges can be swapped, i.e. have equal length (the swap of the ends never does, as
+    // it exchanges the two loops)
+    assert IsHyperellipticMetricGraph(2, [<1,2>, <1,2>, <1,1>, <2,2>], [1,1,5,7], 3, []);
+    assert not IsHyperellipticMetricGraph(2, [<1,2>, <1,2>, <1,1>, <2,2>], [1,2,5,7], 3, []);
+    assert not IsHyperellipticMetricGraph(2, [<1,2>, <1,2>, <1,1>, <2,2>], [1,2,5,5], 3, []);
+    // residual action: the involution must commute with every given map ((1 3)(2 4) is an
+    // automorphism of C commuting with (1 2)(3 4); the rotation 1 -> 2 -> 3 -> 4 -> 1 does not)
+    assert IsHyperellipticMetricGraph(4, C, [1,1,1,1,3,3], 3, [[3,4,1,2]]);
+    assert not IsHyperellipticMetricGraph(4, C, [1,1,1,1,3,3], 3, [[2,3,4,1]]);
+    // the stable model keeps the lengths: a path 1-2-3 of lengths 2, 3 with a pendant edge at 2
+    // and parallel edges 1-3 (lengths 1, 1) becomes a banana with lengths 1, 1, 5
+    mv, me, ml, rep := MetricGraphModel(4, [<1,2>, <2,3>, <2,4>, <1,3>, <1,3>], [2,3,7,1,1]);
+    assert mv eq 2 and Sort(ml) eq [1,1,5] and rep[4] eq 0 and rep[2] eq 0;
+    // X_0^10(21)/<w_2, w_7> (genus 3) is open after every other stage of the 2026-10-14 pipeline;
+    // its combinatorial dual graph at p = 2 has an involution with tree quotient but the lengths
+    // 2, 2, 2, 2, 2, 4 of the stable model admit no isometric one (this repo, 2026-10-14: a
+    // regression value, not an independent verification)
+    hyp, nv, edges, metric := DualGraphTest(10, 21, {1, 2, 7, 14}, 3, 2 : CacheDir := "none", Metric := true);
+    assert (not hyp) and metric and nv eq 4;
+    assert DualGraphTest(10, 21, {1, 2, 7, 14}, 3, 2 : CacheDir := "none");
+    hyp, p, metric := DualGraphVerdict(dg_mk(10, 21, {1, 2, 7, 14}) : CacheDir := "none", Metric := true);
+    assert (not hyp) and p eq 2 and metric;
+    assert DualGraphVerdict(dg_mk(10, 21, {1, 2, 7, 14}) : CacheDir := "none");
+    // X_0^6(185)/<w_2, w_15, w_111> (genus 3): no conclusion at either prime (a verdict there
+    // from the subdivision counts of the unminimised graph is not intrinsic to the curve)
+    assert DualGraphVerdict(dg_mk(6, 185, {1, 2, 15, 30, 111, 185, 222, 370}) : CacheDir := "none", Metric := true);
+    // the ten known-hyperelliptic curves of test_DualGraphHyperelliptic survive the refinement
+    for c in [<15,2,{1},3>, <51,2,{1,6},4>, <38,3,{1,3},4>, <57,2,{1,114},3>, <119,1,{1,17},5>,
+              <6,23,{1,6},3>, <143,1,{1,13},6>, <146,1,{1,73},3>, <77,2,{1,2,7,14},3>, <33,5,{1,3,11,33},3>] do
+        for p in PrimeDivisors(c[1]) do
+            assert DualGraphMetricTest(c[1], c[2], c[3], c[4], p : CacheDir := "none");
+        end for;
+    end for;
+    // the filter records the refinement in its label
+    cs := [dg_mk(10, 21, {1, 2, 7, 14}), dg_mk(6, 185, {1, 2, 15, 30, 111, 185, 222, 370})];
+    FilterByDualGraph(~cs : CacheDir := "none");
+    assert cs[1]`IsSubhyp eq false and cs[1]`TestInWhichProved eq "DualGraph at p = 2, metric graph with the residual Atkin-Lehner action";
+    assert not assigned cs[2]`IsSubhyp;
+    cs := [dg_mk(10, 21, {1, 2, 7, 14})];
+    FilterByDualGraph(~cs : CacheDir := "none", Metric := false);
+    assert not assigned cs[1]`IsSubhyp;
+    printf "Done!\n";
+end procedure;
+test_DualGraphMetric();
+
 procedure test_FilterByDualGraph()
     printf "Testing FilterByDualGraph...";
     X1 := dg_mk(6, 55, {1, 3, 110, 330});         // ruled at p = 3 only (the graph at p = 2 is hyperelliptic)
     X2 := dg_mk(158, 1, {1, 2});                  // ruled at p = 2 only
     X3 := dg_mk(6, 55, {1, 3, 110, 330}); X3`IsSubhyp := true; X3`IsHyp := true; X3`TestInWhichProved := "hand";
     X4 := CreateShimuraQuot(1, 97, {1}); X4`g := 7;            // D = 1: not applicable
-    X5 := CreateShimuraQuot(6, 25, {1}); X5`g := 5;            // N not squarefree: not applicable
+    X5 := CreateShimuraQuot(1, 161, {1}); X5`g := 15;          // D = 1: not applicable
     X6 := dg_mk(15, 2, {1});                      // hyperelliptic: no conclusion
     X7 := dg_mk(6, 35, {1, 3, 14, 42});           // ruled at p = 2 and p = 3 (test_DualGraphStankewicz): the tag names 3
     cs := [X1, X2, X3, X4, X5, X6, X7];
@@ -258,6 +314,33 @@ procedure test_FilterByDualGraph()
     printf "Done!\n";
 end procedure;
 test_FilterByDualGraph();
+
+// N not squarefree.  Cerednik-Drinfeld needs only p coprime to N, and the Atkin-Lehner group is
+// generated by the w_q for the exact prime powers q of DN, realised on ideal classes by the
+// invertible two-sided ideal of norm q.  The check is the same as for squarefree N: the first Betti
+// number of the quotient graph by W equals the genus of X_0^D(N)/W from the genus formula, for every
+// subgroup W and every p | D.  Bases: the levels 9, 25, 16, 45, 63 at D = 22, 6, 15, 14, 10 (all
+// among the undecided curves of the 2026-09-30 rerun).
+procedure test_DualGraphNonSquarefree()
+    printf "Testing the dual graph at non-squarefree levels (genus identities for every W)...";
+    n := 0;
+    for t in [<22, 9>, <6, 25>, <15, 16>, <14, 45>, <10, 63>] do
+        D := t[1]; N := t[2]; DN := D*N;
+        full := {Integers()| d : d in Divisors(DN) | GCD(d, DN div d) eq 1};
+        subs := [W : W in Subsets(full) | 1 in W and forall{<a, b> : a, b in W | AtkinLehnerMul(a, b, DN) in W}];
+        for p in PrimeDivisors(D) do
+            data := DualGraphData(D, N, p : CacheDir := "none");      // validated on build
+            for W in subs do
+                nv, edges := DualGraphQuotientFromData(data, p, W);
+                b1 := #edges eq 0 select 0 else #edges - nv + 1;
+                assert b1 eq GenusShimuraCurveQuotient(D, N, W);
+                n +:= 1;
+            end for;
+        end for;
+    end for;
+    printf " ok (%o identities)\n", n;
+end procedure;
+test_DualGraphNonSquarefree();
 
 procedure test_DualGraphNotSFICertificate()
     printf "Testing that DualGraph verdicts are not SFI certificates...";

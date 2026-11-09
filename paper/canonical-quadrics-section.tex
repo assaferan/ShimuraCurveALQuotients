@@ -1,0 +1,96 @@
+% Section draft for the paper (sec:canonicalquadrics), to be pasted into the Overleaf project.
+% Companion of the pipeline stage FilterByCanonicalQuadrics (CanonicalQuadrics.m).
+% Notation assumed from the paper: X = X_0^D(N)/W, the Atkin--Lehner group W, the genus g = g(X).
+
+\section{Hyperellipticity from the canonical map}\label{sec:canonicalquadrics}
+
+The tests of the preceding sections decide hyperellipticity from invariants that a hyperelliptic
+curve cannot have: too many points over a finite field, a fixed-point count that no involution of a
+hyperelliptic curve admits, a dual graph with no involution of tree quotient. None of them can
+prove that a curve \emph{is} hyperelliptic, and for some quotients none of them applies. When the
+holomorphic differentials of $X$ are available, the canonical map decides the question exactly in
+both directions. This section records the criterion and the two situations in which we can compute
+the differentials.
+
+\subsection{Noether's count}
+
+Let $C$ be a smooth projective curve of genus $g \ge 3$ over a field $k$ of characteristic $0$,
+with canonical map $\phi\colon C \to \mathbf{P}^{g-1}$ given by a basis $\omega_1,\dots,\omega_g$ of
+$H^0(C,\Omega^1)$. Max Noether's theorem states that if $C$ is not hyperelliptic then $\phi$ is an
+embedding and the canonical ring is generated in degree one, so the multiplication map
+\[
+  \mu_2\colon \operatorname{Sym}^2 H^0(C,\Omega^1) \longrightarrow H^0(C,\Omega^{\otimes 2})
+\]
+is surjective; its target has dimension $3g-3$ by Riemann--Roch, its source dimension
+$\binom{g+1}{2}$, so the kernel, the space of quadrics containing $\phi(C)$, has dimension
+\[
+  \binom{g+1}{2} - (3g-3) = \frac{(g-2)(g-3)}{2}.
+\]
+If $C$ is hyperelliptic, $\phi$ factors through the double cover $C \to \mathbf{P}^1$ followed by the
+Veronese embedding of degree $g-1$, whose image is the rational normal curve; the quadrics through
+it form a space of dimension $\binom{g-1}{2} = (g-1)(g-2)/2$, and they are exactly the kernel of
+$\mu_2$ since the products $\omega_i\omega_j$ span the pull-back of
+$H^0(\mathbf{P}^1,\mathcal{O}(2g-2))$, of dimension $2g-1$. The two counts differ by $g-2 \ge 1$.
+Hence
+\[
+  \dim \ker \mu_2 =
+  \begin{cases}
+    (g-1)(g-2)/2 & \text{if $C$ is hyperelliptic,}\\
+    (g-2)(g-3)/2 & \text{otherwise,}
+  \end{cases}
+\]
+and computing the rank of the $\binom{g+1}{2}$ products $\omega_i\omega_j$ decides hyperellipticity.
+The criterion is insensitive to the field of definition of the basis: we may compute over any field
+containing $k$, and the rank is the same.
+
+\subsection{Classical modular curves: $q$-expansions}
+
+For $D = 1$ the holomorphic differentials of $X = X_0(N)/W$ are the weight-$2$ cusp forms on
+$\Gamma_0(N)$ fixed by every Atkin--Lehner involution in $W$, through $f \mapsto f(q)\,dq/q$. The
+product of two such forms is a weight-$4$ form on $\Gamma_0(N)$ (invariant under $W$, but we do
+not need this), and a weight-$4$ form on $\Gamma_0(N)$ vanishing to order greater than the Sturm
+bound $\tfrac{4}{12}[\mathrm{SL}_2(\mathbf{Z}) : \Gamma_0(N)]$ is zero. So a linear relation among
+the products $f_if_j$ holds if and only if it holds between their $q$-expansions through that bound,
+and the dimension of the kernel of $\mu_2$ is the number of products minus the rank of the matrix of
+coefficients $(a_n(f_if_j))_{n \le B}$, $B$ any integer strictly larger than the bound. Everything
+is computed exactly over $\mathbf{Q}$, from Magma's basis of $S_2(\Gamma_0(N))$ and the matrices of
+the Atkin--Lehner operators.
+
+The count reproduces Ogg's list \cite{Ogg74}: among the curves $X_0(N)$ of genus at least $3$,
+exactly $N = 30, 33, 35, 39, 40, 41, 46, 47, 48, 59, 71$ are hyperelliptic. On the quotients left
+open by the other tests it gives (list and table of the $D = 1$ verdicts); each of them agrees with
+Magma's own computation on a model of the quotient (\texttt{X0NQuotient}, \texttt{IsHyperelliptic}).
+
+\subsection{Shimura curves: the stored models}
+
+For $D > 1$ there are no $q$-expansions, and we use the equations of
+Section~\ref{sec:models}: a model of $X$ as a fibre product of double covers
+$y_i^2 = f_i(t)$ of the star curve $X^*$, from which Magma computes a basis of
+$H^0(X,\Omega^1)$ of the function field and the rank of the products. The verdict is only as good
+as the model, so before the count the stage checks (i) that the factors of the fibre product are
+consistent with a single coordinate $t$ (every triple $f_Uf_Vf_T$ a square in $\mathbf{Q}[t]$,
+Section~\ref{sec:models}), (ii) that the function field has the genus the genus formula gives,
+and (iii) that its numbers of points over $\mathbf{F}_p$ and $\mathbf{F}_{p^2}$ at three primes of
+good reduction agree with the trace formula of Section~\ref{sec:trace}. A quotient stored directly as
+$y^2 + h(t)y = f(t)$ is hyperelliptic by construction, and is accepted after the same genus and
+point-count checks. At $N > 1$ the models rest on the value of the $m = 0$ term of the Borcherds
+product (Section~\ref{sec:borcherds}), and the table marks those verdicts accordingly.
+
+\subsection{Results}
+
+On the (date) run the stage decides $35$ quotients of genus $3$ to $6$ that every other test leaves
+open: $28$ at $D = 1$ by $q$-expansions ($8$ hyperelliptic, $20$ not) and $7$ at $D > 1$ from stored
+fibre products (all of genus $3$, none hyperelliptic). (Table: $D$, $N$, $W$, $g$, verdict, number of
+quadrics; the $D = 1$ rows checked against \texttt{X0NQuotient}, the $D > 1$ rows against the plane
+models of the fibre products.) In particular the three quotients $X_0(114)/\langle w_2,w_{38}\rangle$,
+$X_0(130)/\langle w_2,w_{26}\rangle$ and $X_0(195)/\langle w_5,w_{195}\rangle$ are hyperelliptic of
+genus $3$, although earlier point-count certificates had suggested otherwise
+(Section~\ref{sec:specialfiber}); the certificates were copied from a source at a different prime,
+and the copying rule was corrected (Section~\ref{sec:specialfiber}).
+
+\begin{remark}
+Noether's theorem holds over any field of characteristic $0$, and the count makes no use of the
+modular structure. The two obstacles to applying it everywhere are the differentials themselves,
+which we only have at $D = 1$ or where a model exists, and, for the models, the independence of the
+verdict from the model's correctness, which (i)--(iii) address but do not replace by a proof.
+\end{remark}
