@@ -2230,7 +2230,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 72>,
 <"g", 5>, <"CurveID", 319>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 320, 321, 322 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w9, V2*w8, S2*V3> is <8, 5>, not in PGL_2">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w8, w9, V2> is <8, 5>, not in PGL_2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 72>,
 <"W", { IntegerRing() | 1, 8 }>,
@@ -4057,7 +4057,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 120>,
 <"g", 5>, <"CurveID", 580>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 584, 586, 588 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w3, V2*w8, w8> is <8, 5>, not in PGL_2">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w3, w8, V2> is <8, 5>, not in PGL_2">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 120>,
 <"W", { IntegerRing() | 1, 5 }>,
@@ -4260,7 +4260,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 126>,
 <"g", 5>, <"CurveID", 609>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 613, 615, 617 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w2, V3, w7> is D_4 and g = 5">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w2, w7, V3> is D_4 and g = 5">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 126>,
 <"W", { IntegerRing() | 1, 7 }>,
@@ -7627,7 +7627,7 @@ CreateShimuraQuot([* <"D", 1>, <"N", 252>,
 <"g", 7>, <"CurveID", 1090>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 1095 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <V3*w4, S2*w4> is D_3 and g = 7">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w4, S2> is D_3 and g = 7">
 *]),
 CreateShimuraQuot([* <"D", 1>, <"N", 252>,
 <"W", { IntegerRing() | 1, 4, 9, 36 }>,
@@ -32134,7 +32134,7 @@ CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"g", 5>, <"CurveID", 4591>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 4625, 4626, 4629 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w9, w2, V3> is D_4 and g = 5">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w2, w5, V3> is D_4 and g = 5">
 *]),
 CreateShimuraQuot([* <"D", 10>, <"N", 63>,
 <"W", { IntegerRing() | 1, 7, 9, 63 }>,
@@ -45133,7 +45133,7 @@ CreateShimuraQuot([* <"D", 15>, <"N", 16>,
 <"g", 5>, <"CurveID", 6448>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 6452, 6454, 6456 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w3, S2*V2, V2*w16> is <8, 2>, not in PGL_2">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w3, w16, V2> is <8, 5>, not in PGL_2">
 *]),
 CreateShimuraQuot([* <"D", 15>, <"N", 16>,
 <"W", { IntegerRing() | 1, 5 }>,
@@ -53260,7 +53260,7 @@ CreateShimuraQuot([* <"D", 22>, <"N", 9>,
 <"g", 4>, <"CurveID", 7609>,
 <"CoveredBy", { IntegerRing() | 7605 }>,
 <"Covers", { IntegerRing() | 7614, 7617, 7618 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w9, w11> is V4 and g = 4 is even">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w11, w2> is V4 and g = 4 is even">
 *]),
 CreateShimuraQuot([* <"D", 22>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9 }>,
@@ -61828,7 +61828,7 @@ CreateShimuraQuot([* <"D", 34>, <"N", 9>,
 <"g", 5>, <"CurveID", 8833>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 8838, 8841, 8842 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w9, w2, V3> is D_4 and g = 5">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w2, w17, V3> is D_4 and g = 5">
 *]),
 CreateShimuraQuot([* <"D", 34>, <"N", 9>,
 <"W", { IntegerRing() | 1, 9 }>,
@@ -64138,7 +64138,7 @@ CreateShimuraQuot([* <"D", 35>, <"N", 8>,
 <"g", 5>, <"CurveID", 9163>,
 <"CoveredBy", {}>,
 <"Covers", { IntegerRing() | 9168 }>,
-<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w8, V2*w8, S2> is D_4 and g = 5">
+<"IsEC", false>, <"IsHyp", false>, <"IsSubhyp", false>, <"TestInWhichProved", "AutomorphismGroup H = <w8, S2> is D_4 and g = 5">
 *]),
 CreateShimuraQuot([* <"D", 35>, <"N", 8>,
 <"W", { IntegerRing() | 1, 5, 8, 40 }>,
