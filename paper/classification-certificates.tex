@@ -1,11 +1,12 @@
 % The certificate stage of the classification pipeline: what each certificate proves, the thirty-fourth open
 % quotient by one component group, the curves that #128 modelled, proved from their branch divisors or by
 % certified Heegner heights, 6_341 by the isogeny class of its star, the Gross-Zagier step of 6_323 made
-% exact, three quotients with a special fibre at 3 proved hyperelliptic, and two corrections to the counting
-% of CM points.
+% exact, three quotients with a special fibre at 3 proved hyperelliptic, the two quotients of X_0^6(35) proved not
+% hyperelliptic as Klein-four covers of their star (and the first again by the twist), and two corrections to the
+% counting of CM points.
 % Code: HyperellipticCertificates.m, DualTest.m, ComponentGroups.m, HeegnerHeights.m; data:
 % data/certificates/, data/dual/.  Tests: tests/HyperellipticCertificates.m, tests/HyperellipticCertificatesB2.m,
-% tests/HyperellipticCertificatesO.m, tests/CertifiedLValues.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and
+% tests/HyperellipticCertificatesO.m, tests/HyperellipticCertificatesT.m, tests/HyperellipticCertificatesV.m, tests/CertifiedLValues.m, tests/CMPointCounts.m, tests/OpenThirtyFour.m and
 % tests/_offline/{DualTestReproduces,HyperellipticCertificatesC,HyperellipticCertificatesC4,
 % HyperellipticCertificatesD,HyperellipticCertificatesSpecialFibre}.m; tools/special-fibre-3/zmod3.m.
 \documentclass[11pt,reqno]{amsart}
@@ -58,6 +59,11 @@ with every numerical recognition proved (Section~3).
 \item[N] Not hyperelliptic (Section~2).
 \item[O] Genus three over a genus-one star whose form is old at a prime $p\parallel N$, with one branch place of
 degree four: the component of the pairing for a genus character with $\chi(p)=-1$ vanishes (Section~6).
+\item[T] Not hyperelliptic: genus three over a genus-one quotient whose only Galois-stable pairing has equal sums,
+where the dual graph at an odd $p\mid D$ shows that the cover is not the one with a function of degree two
+(Section~7).
+\item[V] Not hyperelliptic: genus three, a Klein-four cover of a genus-zero star with three elliptic intermediate
+quotients, over one of which the branch points are two places of degree two with different fields (Section~7).
 \end{itemize}
 
 All $34$ are decided this way: the seven of shape A, the five of shape B, $6_{341}$ by shape B2, the four of
@@ -65,7 +71,8 @@ shapes C and C4 that \texttt{paper/hyperelliptic-candidates.tex} lists separatel
 \texttt{paper/heegner-height-models.tex} modelled (ten by shape C and six by shape D, Section~3), and the
 thirty-fourth (Section~2). Five further curves that the filters leave open are outside the $34$
 (\texttt{data/open\_34.m}, \texttt{open\_gaps}): the three with a special fibre at $3$ are hyperelliptic
-(Section~6), and the two quotients of $X_0^6(35)$ wait on the $m=0$ term of Schofer's formula.
+(Section~6), and the two quotients of $X_0^6(35)$ are not (Section~7). Their stored models, plane quartics, rest on
+the $m=0$ term of Schofer's formula at a composite level and are not used.
 
 \section{The thirty-fourth quotient is not hyperelliptic}
 
@@ -264,6 +271,82 @@ $(1+\chi(p))^2$ is the one \texttt{HeegnerHeightComponents} applies for a form o
 derives it at a split $p$ as well as at a ramified one. (\texttt{data/certificates/14\_51.m}, \texttt{38\_15.m},
 shape C; \texttt{158\_3.m}, shape O; \texttt{tests/HyperellipticCertificatesO.m},
 \texttt{tests/\_offline/HyperellipticCertificatesSpecialFibre.m}.)
+
+\section{The two quotients of $X_0^6(35)$ are not hyperelliptic}
+
+\begin{proposition}\label{prop:kleinfour}
+Let $DN$ be squarefree, $W_0$ the Atkin--Lehner group of $X=X_0^D(N)$, and $Y=X/W$ of genus three with $W$ of
+index four in $W_0$. Suppose that the star $C=X/W_0$ has genus zero, that the three intermediate quotients
+$X/W'$, $W\subset W'\subset W_0$, have genus one, and that over one of them, $E=X/\langle W,w_m\rangle$, the four
+branch points of $Y\to E$ form two places $Z_1$, $Z_2$ of degree two, of different discriminants and with
+different fields of definition. Then $Y$ is not hyperelliptic.
+\end{proposition}
+
+\begin{proof}
+\emph{The places are fibres over $C$.} A point of $X$ has a cyclic stabiliser in $W_0$, so of order at most two.
+A point of $X$ above a point $P$ of $Z_i$ is fixed by some $w_q$ with $q\in mW$, so its stabiliser is
+$\langle w_q\rangle$, and the involution $\tau$ of $E$ induced by $W_0\setminus\langle W,w_m\rangle$ does not fix
+$P$ (otherwise an element of that coset, composed with one of $\langle W,w_m\rangle$, would fix the point above
+$P$). It commutes with $w_m$, so it preserves the branch points of $Y\to E$, and it preserves discriminants; so
+it swaps the two points of $Z_i$, and $Z_i$ is the fibre of $E\to C=E/\tau$ over a point $t_i$, rational because
+$Z_i$ is defined over $\Q$. Hence $C\cong\mathbb{P}^1$, and there is $v\in\Q(C)$ with
+$\operatorname{div}v=t_1-t_2$; as a function on $E$, $\operatorname{div}v=Z_1-Z_2$.
+
+\emph{A hyperelliptic $Y$ would be $E(\sqrt{cv})$.} The hyperelliptic involution $\iota$ is defined over $\Q$
+and central in $\mathrm{Aut}(Y)$, so it commutes with $w_m$ and descends to an involution $\bar\iota$ of $E$, and
+$E/\bar\iota=Y/\langle w_m,\iota\rangle$ has genus zero. The extension $\Q(Y)/\Q(E/\bar\iota)$ has group
+$(\Z/2)^2$, and $\Q(Y)=\Q(E)(\sqrt h)$ with $h\in\Q(E/\bar\iota)$ chosen so that $\Q(E/\bar\iota)(\sqrt h)=\Q(Y/\iota)$,
+of genus zero: over $\bar\Q$, $h$ has exactly two points of odd order. The branch points of $Y\to E$ are the
+points where the pullback of $h$ has odd order, which lie over these two points at places where
+$E\to E/\bar\iota$ is unramified; as there are four, they are the two fibres over them, two $\bar\iota$-orbits.
+That partition is Galois-stable, and since the fields of $Z_1$ and $Z_2$ differ (an automorphism of $\bar\Q$ that
+moves the points of $Z_1$ and fixes those of $Z_2$ moves every other partition into two pairs) it is
+$Z_1\mid Z_2$. So the two points of odd order of $h$ are the images of $Z_1$ and $Z_2$, and $h$ divided by the
+function with that divisor is a constant times a square: $\Q(Y)=\Q(E)(\sqrt{cv})$ for a constant $c$ (this is
+the criterion of \texttt{paper/hyperelliptic-15-38.tex}, Section~1).
+
+\emph{That is impossible.} Then $\Q(C)(\sqrt{cv})\subset\Q(Y)$ is a quadratic extension of $\Q(C)$ of genus zero,
+since $v$ has two points of odd order. But $\Q(Y)/\Q(C)$ is Galois with group $W_0/W\cong(\Z/2)^2$, and its three
+quadratic subextensions are the function fields of the three intermediate quotients, of genus one.
+\end{proof}
+
+The hypothesis on the fields cannot be dropped. The genus-three quotients $X_0^{210}(13)/W$ and
+$X_0^{1326}(1)/W$ of \texttt{data/certificates/210\_13.m} and \texttt{1326\_1.m} are hyperelliptic (shape D), and
+each meets every other hypothesis over one of its elliptic quotients, where its two branch places have the same
+field. Run over the committed data, the proposition applies to $144$ genus-three quotients: $142$ that earlier
+stages had already ruled out, and the two of $X_0^6(35)$.
+
+\begin{theorem}
+$Y=X_0^6(35)/\langle w_3,w_5\rangle$ and $Y'=X_0^6(35)/\langle w_5,w_7\rangle$ are not hyperelliptic.
+\end{theorem}
+
+\begin{proof}
+Both have genus three, with $W$ of order four in the group $W_0$ of order sixteen; the star has genus zero and the
+three intermediate quotients of each have genus one. Both are double covers of
+$E=X_0^6(35)/\langle w_3,w_5,w_7\rangle$, $Y$ by $w_7$ and $Y'$ by $w_3$, and in both cases the branch points are the
+CM points of discriminants $-420$ and $-84$ (Ogg's fixed points of the involutions of $\langle w_3,w_5,w_7\rangle$
+outside $W$). On $E$ each discriminant gives two points, a place $Z_{-420}$ of degree two over $\Q(\sqrt{-5})$ and
+a place $Z_{-84}$ over $\Q(\sqrt{7})$. Proposition~\ref{prop:kleinfour} applies to both.
+\end{proof}
+
+The proposition applies over each of the three elliptic quotients of each curve, with other branch places. $Y$ and
+$Y'$ are double covers of the same $E$ with the same branch points, twists of each other by a rational point of
+order two of $\Jac(E)\cong30a6$, and the argument does not see the twist: it shows that neither is $E(\sqrt{cv})$
+by the genera of the intermediate quotients. (\texttt{data/certificates/6\_35.m}, shape V;
+\texttt{tests/HyperellipticCertificatesV.m}.)
+
+\emph{A second proof for $Y$, at $p=3$.} By the first two steps of the proof, a hyperelliptic $Y$ would be
+$E(\sqrt{cx})$ with $\operatorname{div}x=Z_{-420}-Z_{-84}$. The special fibre of $E$, the quotient by
+$\langle w_3,w_5,w_7\rangle$ of the \v{C}erednik--Drinfeld fibre, has two components and two singular points: one
+of thickness one joining them and a self-intersection of the first component of thickness two. All four CM points
+reduce to the second component (Molina, Theorems 5.3, 5.4, 5.8), so the vertical part of $\operatorname{div}x$ on
+the regular model is zero. Along the singular point of thickness two $x$ is then a unit up to a power of $3$, and
+by the local analysis of \texttt{paper/hyperelliptic-15-38.tex}, Section~4, $E(\sqrt{cx})$ is \'etale there: it
+has two singular points above it, swapped by the deck involution. The dual graph of $Y$, the quotient of the same
+graph by $\langle w_3,w_5\rangle$, has one. So $Y\not\cong E(\sqrt{cx})$. This does not decide $Y'$: its dual graph
+at $3$ agrees with $E(\sqrt{cx})$, over each of its three elliptic quotients. The certificate file keeps this
+proof as a second certificate for $Y$ (shape T, \texttt{tests/HyperellipticCertificatesT.m}); the stage uses the
+first one it accepts.
 
 \section{Two corrections to the counting of CM points}
 

@@ -1,7 +1,7 @@
 # Reproducing the classification: the proofs of the last 34 curves as pipeline stages
 
-Status (2026-11-09): implemented. The certificate stage decides all 34 and three of the five further
-quotients; the pipeline ends with two undecided, the quotients of X_0(6,35). Branch `classification-pipeline`
+Status (2026-11-09): implemented. The certificate stage decides all 34 and the five further quotients; the
+pipeline ends with no quotient undecided. Branch `classification-pipeline`
 = `main` plus every open PR except the three based on the campaign branch (#132, #136, #137) and the draft
 tooling PR #47.
 
@@ -32,7 +32,12 @@ checks both lists against the data). Of the 27 that the earlier notes settle bey
 stages now decide 22; the five are:
 
 * the two quotients of X_0(6,35): their stored models are not hyperelliptic (Noether's count), but the
-  models rest on the m = 0 term of Schofer's formula at a composite level;
+  models rest on the m = 0 term of Schofer's formula at a composite level. Both are proved not hyperelliptic
+  without them, by shape V (2026-11-09, `paper/classification-certificates.tex`, Section 7): each is a
+  Klein-four cover of the genus-zero star with three elliptic intermediate quotients, and over
+  E = X/{1,3,5,7,15,21,35,105} its branch places Z_-420, Z_-84 have different fields, so they are fibres over
+  the star and a function of degree two would give the star a genus-zero double cover inside the curve.
+  X_0(6,35)/{1,3,5,15} has a second proof, shape T (the dual graph at 3);
 * X_0(14,51), X_0(38,15), X_0(158,3) with the groups in the file: at p = 3 the special fibre is the genus-3
   curve Z = X_0(D, N/3)/W′, which the dual graph at another prime shows is not hyperelliptic over Q. That
   does not rule X out: X has good reduction at 3 with X mod 3 ≅ Z mod 3, and Z mod 3 is hyperelliptic
@@ -41,19 +46,16 @@ stages now decide 22; the five are:
   of Z at 3). All three are in fact **hyperelliptic**, by the certificate stage: 14_51 and 38_15 by shape C
   (dual tests at 1428 and 1140), 158_3 by shape O (`paper/classification-certificates.tex`, Section 6).
 
-**Status (2026-11-08): all 34 are certified, and three of the five further quotients.** The certificate stage
-decides every one of the 34 (33 hyperelliptic, the 34th not) and the three special-fibre quotients above
-(hyperelliptic), so the pipeline ends with the two quotients of X_0(6,35) undecided and no other
-(`data/stage_counts.txt`: 12,491 not hyperelliptic, 5,886 hyperelliptic, 2 undecided; `tests/OpenThirtyFour.m`).
-The 37 certificates by shape: A 7, B 5, B2 1 (6_341), C 15 (three of group C, ten of group D, 14_51,
-38_15), C4 1 (6_323), D 6 (the rest of group D), N 1 (the 34th), O 1 (158_3); see
-`paper/classification-certificates.tex`.
+**Status (2026-11-09): all 34 are certified, and the five further quotients.** The certificate stage
+decides every one of the 34 (33 hyperelliptic, the 34th not), the three special-fibre quotients above
+(hyperelliptic) and the two quotients of X_0(6,35) (not), so the pipeline ends with no quotient undecided
+(`data/stage_counts.txt`: 12,493 not hyperelliptic, 5,886 hyperelliptic, 0 undecided;
+`tests/OpenThirtyFour.m`). The 39 curves by the shape of the certificate the stage uses: A 7, B 5, B2 1
+(6_341), C 15 (three of group C, ten of group D, 14_51, 38_15), C4 1 (6_323), D 6 (the rest of group D), N 1
+(the 34th), O 1 (158_3), V 2 (the 6_35 pair); 6_35/{1,3,5,15} also has a shape-T certificate, kept as a second
+proof. See `paper/classification-certificates.tex`.
 
-**What is left.** The two quotients of X_0(6,35), W = {1,3,5,15} and {1,5,7,35}. Their stored models are not
-hyperelliptic by Noether's count, but the models rest on the m = 0 term of Schofer's formula at a composite
-level, which is not proved, so `FilterByCanonicalQuadrics` does not use them. They are decided once that
-term is proved or a certificate argument not using the models is found. The other open item is the Zenodo
-deposit of the bases (decision 4). The full run from stage 1 reproduces the committed data (order of work,
+**What is left.** No quotient. The open item is the Zenodo deposit of the bases (decision 4). The full run from stage 1 reproduces the committed data (order of work,
 item 6).
 
 **Stored models decide a curve only when proved.** `FilterByCanonicalQuadrics` reads
@@ -78,7 +80,7 @@ enumeration (one cover consistent with the trace formula, a plane quartic;
 `paper/heegner-height-models.tex:61-63`, `paper/hyperelliptic-candidates.tex:309-310`). It is now proved by
 shape N (section E below), with no enumeration.
 
-## The 37 certified curves by the shape of their proof
+## The 39 certified curves by the shape of their proof
 
 A label `D_N` names the curve X_0(D,N)/W with the W listed. "Fast" means the test runs in the normal suite
 (minutes); "offline" means a test in `tests/_offline/` that needs a precomputed basis.
@@ -153,6 +155,25 @@ certificate for 158_3, so the special fibre gives no obstruction.
 | 38_15 | 190a1 | shape C: dual test at 1140, Φ₂, Φ₁₉ | offline (same file) |
 | 158_3 | 158a1 | shape O: one degree-4 branch place (d = −632, D₄ with k = Q(√−79)); the form is old at 3, so the χ-component is multiplied by 1 + χ(𝔭) = 0 at the split prime 3; E^(−79)(Q) is torsion-free and E(Q)[2] = 0 | fast (`HyperellipticCertificatesO.m`) |
 
+**G. The two quotients of X_0(6,35), not hyperelliptic** (outside the 34; `paper/classification-certificates.tex`,
+Section 7; `data/certificates/6_35.m`). Shape V (`tests/HyperellipticCertificatesV.m`, a few seconds): each
+curve Y has W of index four in the Atkin–Lehner group, the star has genus zero and the three intermediate
+quotients genus one; over E = X/{1,3,5,7,15,21,35,105} (Y → E by w_7, resp. w_3) the branch places Z_-420 and
+Z_-84 have fields Q(√−5) and Q(√7). So Z_-420 | Z_-84 is the only Galois-stable pairing, each place is a fibre of
+E over the star, a hyperelliptic Y would be E(√(cv)) with v a function on the star, and K(star)(√(cv)) would be a
+genus-zero quadratic subfield of the Klein-four extension K(Y)/K(star), whose three quadratic subfields have
+genus one. The hypothesis on the fields is needed: X_0(210,13)/{1,2,21,42,65,130,1365,2730} and
+X_0(1326,1)/{1,17,78,1326}, hyperelliptic by shape D, meet every other hypothesis over one of their elliptic
+quotients. Over the committed data the hypotheses hold for 144 genus-3 quotients: 142 ruled out by earlier
+stages, and this pair.
+
+Shape T, a second proof for X_0(6,35)/{1,3,5,15} (`tests/HyperellipticCertificatesT.m`, a few seconds). Over
+E = X/⟨w_7⟩ (Jacobian 30a6) the branch places Z_-420 and Z_-84 are defined over different quadratic fields, so
+they are the only Galois-stable pairing; both are fibres of E → E/w_2 (genus 0), so their difference is the
+divisor of a function x and the hyperelliptic cover would be E(√(cx)). At 3 the vertical part of div x is zero,
+so that cover is étale over the singular point of thickness two, where the dual graph of the curve has a single
+singular point (`CoverIsNotSquareRootAtPrime`, `ComponentGroups.m`).
+
 ## The building blocks
 
 | block | where |
@@ -202,7 +223,8 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
 
 1. **Land 61 → 34 in the data.** Done 2026-11-05 up to six quotients: the rerun leaves 40 undecided, the
    34 and the six of `open_gaps` (see "The data" above); `tests/OpenThirtyFour.m` checks both lists.
-   390_1 done 2026-11-06; the three special fibres certified 2026-11-08. Remaining: the two 6_35 quotients.
+   390_1 done 2026-11-06; the three special fibres certified 2026-11-08; the 6_35 pair by shape V
+   2026-11-09 (and 6_35/{1,3,5,15} also by shape T). Nothing remains.
 2. **The dual test as an intrinsic.** Done 2026-11-07: `DualTest.m`; `tests/_offline/DualTestReproduces.m`
    reproduces all nine cases from the saved bases (`data/dual/bases.md5`). One CM dictionary and one dual test, with the 2 ∥ N and odd-D
    variants; the basis cache with checksums. Acceptance: it reproduces, from the saved bases, every
@@ -236,7 +258,10 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    ones, and so is every curve file except for the witness of `FilterByAutomorphismGroup` on two of its 46
    curves, X_0(72) and X_0(120)/{1,15}: both are ruled out in both runs, by a different failing subgroup of
    the same order (the stage reports the first of the smallest, and their order is not fixed between
-   runs). The 8 fast and 6 offline tests of the certificate stage pass on the fresh data.
+   runs). The 8 fast and 6 offline tests of the certificate stage pass on the fresh data. With that order
+   fixed (#160, merged here as 322b2cb), a second run from stage 1 at 322b2cb (2026-11-09, 1 h 26 min) differs
+   from the committed data only in the witnesses of `FilterByAutomorphismGroup` on the nine curves #160 lists,
+   with the same verdicts; the committed data now comes from that run, with stages 41–42 rerun for shape V.
 
 ## Decisions (Eran, 2026-11-05; 7 and 8 later)
 
