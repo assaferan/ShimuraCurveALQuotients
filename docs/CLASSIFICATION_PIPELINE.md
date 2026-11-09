@@ -52,8 +52,9 @@ The 37 certificates by shape: A 7, B 5, B2 1 (6_341), C 15 (three of group C, te
 **What is left.** The two quotients of X_0(6,35), W = {1,3,5,15} and {1,5,7,35}. Their stored models are not
 hyperelliptic by Noether's count, but the models rest on the m = 0 term of Schofer's formula at a composite
 level, which is not proved, so `FilterByCanonicalQuadrics` does not use them. They are decided once that
-term is proved or a certificate argument not using the models is found. The other open items are the full
-run from stage 1 (order of work, item 6) and the Zenodo deposit of the bases (decision 4).
+term is proved or a certificate argument not using the models is found. The other open item is the Zenodo
+deposit of the bases (decision 4). The full run from stage 1 reproduces the committed data (order of work,
+item 6).
 
 **Stored models decide a curve only when proved.** `FilterByCanonicalQuadrics` reads
 `data/models/proved_models.m` and uses a stored model at D > 1 only for a curve listed there with the
@@ -229,10 +230,13 @@ an `UpdateCurvesAfter…` step), `run_sequential_stage.m`, `tests/PipelineStages
    shape C does not decide; the 34th went through shape N instead (decision 8).
 5. **Labels of stored models.** Done (decision 6): only models on `data/models/proved_models.m` decide a
    curve; 390_1 is on the list (2026-11-06).
-6. **The full run** on lovelace from this branch, from stage 1, ending with no undecided quotient other
-   than the 6_35 pair; tables and figures regenerated. Not yet done on the final code: the later runs
-   resume from the saved output of the earlier stages and recompute only the stages that changed (on
-   2026-11-08, stages 41 and 42).
+6. **The full run** on lovelace from this branch, from stage 1. Done 2026-11-08 at 05f4886 (an export of
+   the commit, every stage into an empty directory; 32 jobs, 1 h 26 min): it ends with the 6_35 pair
+   undecided and no other. `stage_counts.txt` and every summary and table are identical to the committed
+   ones, and so is every curve file except for the witness of `FilterByAutomorphismGroup` on two of its 46
+   curves, X_0(72) and X_0(120)/{1,15}: both are ruled out in both runs, by a different failing subgroup of
+   the same order (the stage reports the first of the smallest, and their order is not fixed between
+   runs). The 8 fast and 6 offline tests of the certificate stage pass on the fresh data.
 
 ## Decisions (Eran, 2026-11-05; 7 and 8 later)
 
