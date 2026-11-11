@@ -209,13 +209,31 @@ function shape_B_relations(X, cert)
     return true, "", star, eff, edges, info;
 end function;
 
+// A canonical branch divisor makes Y the double cover given by a theta characteristic L over Q, and Y is
+// hyperelliptic only when L is odd.  Galois preserves the quadratic form of L on J[2], whose orthogonal
+// group has order 72 when L is even and 120 when it is odd, so a Frobenius of order 5 on J[2] makes L odd.
+// Frob_p acts on J[2] by the L-polynomial mod 2, x^4 + a x^3 + b x^2 + a x + 1, of order 5 iff a, b are odd.
+// Returns the first such p, or 0.
+function frobenius_of_order_five(star : MaxPrime := 200)
+    for p in PrimesInInterval(3, MaxPrime) do
+        if (star`D * star`N) mod p eq 0 then continue; end if;
+        P := WeilPolynomial(star, p);
+        if IsOdd(Integers()!Coefficient(P, 1)) and IsOdd(Integers()!Coefficient(P, 2)) then return p; end if;
+    end for;
+    return 0;
+end function;
+
 function verify_shape_B(X, cert)
     ok, why, star, eff, edges, info := shape_B_relations(X, cert);
     if not ok then return false, why; end if;
     t := JacobianTorsionBound(star : MaxPrime := cert["torsion"][1], NumPrimes := cert["torsion"][2], Check := false);
     if t ne 1 then return false, Sprintf("the Jacobian of the star has torsion bound %o, not 1", t); end if;
-    return true, Sprintf("HyperellipticCertificate B: the branch divisor %o is canonical on the genus-two star, related to %o other divisor(s) by %o, torsion-free (%o)",
-                         eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"]);
+    p5 := frobenius_of_order_five(star);
+    if p5 eq 0 then
+        return false, "no Frobenius of order 5 on the 2-torsion of the star below 200, so the theta characteristic may be even";
+    end if;
+    return true, Sprintf("HyperellipticCertificate B: the branch divisor %o is canonical on the genus-two star, related to %o other divisor(s) by %o, torsion-free (%o); the theta characteristic is odd (Frobenius of order 5 on J[2] at p = %o)",
+                         eff[1], #{Rep(e diff {1}) : e in edges | 1 in e}, info, cert["file"], p5);
 end function;
 
 // The Hecke polynomial x^2 - s x + n of a genus-two curve C over Q at a good odd prime p, from its
