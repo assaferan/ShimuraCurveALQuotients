@@ -9,7 +9,9 @@
 //   * a certificate whose group is not the curve's is for another curve.
 // Shape B on X_0^2030(1)/<w_10, w_14, w_58> (genus four over the genus-two star, branched at
 // P_-8 + P_-280; data/certificates/2030_1.m): accepted, and refused when the first divisor is not the
-// branch divisor, and when the torsion bound, from a single prime, is not 1.
+// branch divisor, and when the torsion bound, from a single prime, is not 1.  The acceptance names
+// p = 3 as a Frobenius of order 5 on J[2] of the star: T_3 on the newforms of level 2030 with every
+// w_q = -1 has characteristic polynomial x^2 + 3x + 1 (Magma modular symbols), so a = 3, b = 2*3 + 1.
 // Shape N on X_0^141(2)/{1, 6, 94, 141} (data/certificates/141_2.m): proved not hyperelliptic, the stage
 // records it so, and the certificate is refused when its only prime is 47, where the class is zero.
 
@@ -54,6 +56,7 @@ assert Y`g eq 4;
 certB := ReadHyperellipticCertificates(2030, 1)[1];
 ok, why := VerifyHyperellipticCertificate(Y, certB);
 assert ok and "HyperellipticCertificate B" in why and "related to 2 other divisor(s)" in why;
+assert "Frobenius of order 5 on J[2] at p = 3" in why;
 bad := certB; bad["divisors"] := [certB["divisors"][2], certB["divisors"][1], certB["divisors"][3]];
 ok, why := VerifyHyperellipticCertificate(Y, bad);
 assert not ok and "branch divisor" in why;

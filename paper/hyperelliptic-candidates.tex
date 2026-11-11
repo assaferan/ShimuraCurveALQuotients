@@ -80,14 +80,27 @@ hyperelliptic one; which cover $Y$ is must be decided separately (Section~\ref{s
 
 \begin{proposition}[genus four over genus two]\label{prop:normalform}
 Let $\pi\colon Y\to C$ be a double cover over $\Q$ of a curve of genus two by a curve of genus four, branched at
-$P+Q$ with $P,Q\in C(\Q)$. Then $Y$ is hyperelliptic if and only if $P+Q$ is a fibre of the hyperelliptic map
-of $C$; in that case $C$ has a rational Weierstrass point, $C\colon y^2=h(u)$ with $h$ a quintic, $h(0)\neq0$,
+$P+Q$ with $P,Q\in C(\Q)$, and write $\pi_*\mathcal O_Y=\mathcal O_C\oplus L^{-1}$ with $L^2\cong\mathcal O_C(P+Q)$.
+Then $Y$ is hyperelliptic if and only if $P+Q$ is a fibre of the hyperelliptic map of $C$ and $L$ is odd (as a
+theta characteristic, $h^0(L)=1$); in that case $C$ has a rational Weierstrass point, $C\colon y^2=h(u)$ with $h$ a quintic, $h(0)\neq0$,
 the fibre at $u=0$, and $Y$ is $y^2=h(t^2/c)$ for some $c\in\Q^\times$.
 \end{proposition}
 
 This is Lemma~8 of \texttt{paper/star-2002-proof.tex}. Since two distinct effective divisors of degree two on a
 curve of genus two that are linearly equivalent are both canonical, the condition is that the branch pair be
 linearly equivalent to any one other fibre.
+
+A canonical branch divisor alone is not enough. When $P+Q\sim K_C$, $L$ is a theta characteristic defined over
+$\Q$. $Y$ is hyperelliptic exactly when $L$ is odd, that is $L=\mathcal O_C(W)$ for a Weierstrass point $W$,
+which is then rational. An even $L$ corresponds to a Galois-stable splitting of the six Weierstrass points into two triples.
+The proof of Lemma~8 uses the rational Weierstrass point. For the stars of shape~B we check parity directly.
+Galois acts on $J[2]$ preserving the quadratic form $q_L$, whose Arf invariant is the parity of $L$
+(Mumford, \emph{Theta characteristics of an algebraic curve}, Ann.\ Sci.\ \'Ecole Norm.\ Sup.\ 1971). The orthogonal group of $q_L$ has order $72$ when $L$ is even and $120$ when $L$ is odd. So a
+Frobenius acting on $J[2]$ with order $5$ forces $L$ to be odd. Frobenius at $p$ acts on $J[2]$ through the
+$L$-polynomial reduced mod $2$, which is $x^4+ax^3+bx^2+ax+1$, and this has order $5$ exactly when $a$ and $b$
+are both odd. This happens at $p=3$ for $\StarCurve{2002}{1}$ and $\StarCurve{2030}{1}$, at $p=5$ for
+$\StarCurve{2418}{1}$ and $\StarCurve{6}{403}$, and at $p=7$ for $\StarCurve{3390}{1}$. Each of these was computed
+twice, by the trace formula and by $T_p$ on modular symbols.
 
 \begin{proposition}[genus three with the full group]\label{prop:g12}
 Let $Y$ be a curve of genus three. If $D_1\neq D_2$ are effective divisors of degree two with $D_1\sim D_2$, then
