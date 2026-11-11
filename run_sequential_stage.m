@@ -29,7 +29,7 @@ case stage:
         r := GetLargestPrimeIndex();
         assert r eq 7;
         curves := FindPairs(r);
-        assert #curves eq 2342;
+        assert #curves eq 3114;   // 2717 with D > 1 (recounted independently by tools/recount_pairs.py) and 397 with D = 1
 
     when "UpdateGenera":
         UpdateGenera(~curves);
