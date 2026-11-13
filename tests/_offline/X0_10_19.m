@@ -228,10 +228,10 @@ procedure test_10_19()
     // with mu^2, nu^2 as the unknowns rather than mu, nu, so a non-square scaling is not the issue.
     // ⚠⚠ base_label WAS SWEPT, AND IT DOES NOT RESOLVE THIS BASE (2026-09-27).  On a CRV base the
     // FIRST move is `magma -b Dd:=10 Nn:=19 tests/_basesweep.m` -- the base decides which V_4 the
-    // pair presents, and it is what found 5394 for 14_3 and 8103 for 26_3 in seconds after exactly
+    // pair presents, and it is what found the bases of 14_3 and 26_3 in seconds after exactly
     // this symptom.  Here it comes back negative:
     //
-    //     W={1} is label 4089; default base 4091;  candidates 4097, 4102, 4103
+    //     W={1} is label 4089; default base 4091;  candidates 4097, 4102, 4103   (numbers in the earlier list of 18,379 quotients)
     //       4097  no pair produced
     //       4102  genus 5, construct_crv_isomorphism to GY: FALSE
     //       4103  no pair produced

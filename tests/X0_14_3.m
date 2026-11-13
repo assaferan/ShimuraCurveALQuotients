@@ -33,18 +33,18 @@ import "tests/BorcherdsProducts.m" : test_AllEquationsAboveCoversSingleCurve;
 // and psi comes from equations, never from the pipeline's own `ws`, which is what the harness
 // then checks against them -- so a labelling error in the pipeline is detectable.
 //
-// ⚠ base_label := 5394 IS REQUIRED, and finding it is the whole point of this entry. A CRV pair is
+// ⚠ the base W = {1, 3, 14, 42} IS REQUIRED, and finding it is the whole point of this entry. A CRV pair is
 // built over a chosen base cover, and THE BASE DECIDES WHICH V_4 THE PAIR PRESENTS. The default
-// base (5383) gives a valid pair that is NOT the one Guo-Yang present, and the two are then not
+// base (W = {1, 14}) gives a valid pair that is NOT the one Guo-Yang present, and the two are then not
 // directly comparable -- construct_crv_isomorphism declines, and the general IsIsomorphic needs
 // 6739 s (112 min) to confirm they are abstractly isomorphic while still yielding no usable
 // coordinate change. Sweeping the candidate bases (7 s each, replaying only the pointless-conic
-// step) finds 5394, whose pair IS Guo-Yang's V_4:
+// step) finds W = {1, 3, 14, 42}, whose pair IS Guo-Yang's V_4:
 //     ours  y^2 = 4s^4 + 88s^2z^2 - 28z^4,   x^2 = -2s^2 - 9z^2
 //     GY    y^2 = -7x^4 + 22x^2 + 1,         z^2 = -9x^2 - 2
 // i.e. theirs scaled by 4 with the two base coordinates exchanged. The constructor then finds the
 // isomorphism immediately. ⇒ WHEN A PAIR WILL NOT MATCH, SWEEP THE BASE BEFORE CONCLUDING
-// ANYTHING ABOUT THE CURVE -- same lesson as 26_3's base_label := 8103.
+// ANYTHING ABOUT THE CURVE -- same lesson as 26_3's pinned base.
 //
 // ⚠ The matrices were SOLVED FOR, not read off: the composite is an unreduced representation, so
 // inspecting its coefficients reports "not linear" although the MAP is linear. On P(1,2,1,1) only
@@ -58,7 +58,7 @@ function load_covers_and_ws_data_14_3()
     P3_1<x,y,s,z> := WeightedProjectiveSpace(Rationals(), [1,2,1,1]);
 
     cover_data := AssociativeArray();
-    cover_data[{1}] := <Curve(P3_1, [ y^2 - 4*s^4 - 88*s^2*z^2 + 28*z^4, x^2 + 2*s^2 + 9*z^2 ]), DiagonalMatrix([1,1,1,1])>;   // genus 3, CRV pair -- the base_label 5394 presentation
+    cover_data[{1}] := <Curve(P3_1, [ y^2 - 4*s^4 - 88*s^2*z^2 + 28*z^4, x^2 + 2*s^2 + 9*z^2 ]), DiagonalMatrix([1,1,1,1])>;   // genus 3, CRV pair -- the presentation over W = {1, 3, 14, 42}
     cover_data[{1,2,7,14}] := <HyperellipticCurve(Polynomial(Rationals(), [ -11, 104, -128 ])), DiagonalMatrix([1,1,1])>;   // genus 0
     cover_data[{1,42}] := <HyperellipticCurve(Polynomial(Rationals(), [ -28, 0, 88, 0, 4 ])), DiagonalMatrix([1,1,1])>;   // genus 1
     cover_data[{1,3,7,21}] := <HyperellipticCurve(Polynomial(Rationals(), [ -176, 2368, -3776, 1024 ])), DiagonalMatrix([1,1,1])>;   // genus 1
@@ -83,7 +83,7 @@ end function;
 procedure test_14_3()
     cover_data, ws_data := load_covers_and_ws_data_14_3();
     curves := GetHyperellipticCandidates();
-    test_AllEquationsAboveCoversSingleCurve(14, 3, cover_data, ws_data, curves : base_label := 5394);
+    test_AllEquationsAboveCoversSingleCurve(14, 3, cover_data, ws_data, curves : base_W := {1, 3, 14, 42});
     return;
 end procedure;
 

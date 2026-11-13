@@ -108,28 +108,29 @@ end function;
 procedure test_93_1()
     cover_data, ws_data := load_covers_and_ws_data_93_1();
     curves := GetHyperellipticCandidates();
-    // ⚠ base_label := 11199 comes from a sweep, not a guess.  On a CRV base the
+    // ⚠ the base W = {1, 3, 31, 93} comes from a sweep, not a guess.  On a CRV base the
     // base decides WHICH V_4 the pair presents, so this is the FIRST thing to vary here -- never a
     // coordinate parametrisation.  `magma -b Dd:=93 Nn:=1 tests/_basesweep.m < /dev/null`:
     //     W={1} is label 11195;  default bases { 11198 };  candidate base labels [ 11199 ]
     //     base 11199 : genus 5, CONSTRUCTED ISOMORPHISM TO GY: true
+    // (numbers in the earlier list of 18,379 quotients: 11195 is W = {1}, 11198 is W = {1, 31}, 11199 is W = {1, 3, 31, 93})
     //
-    // ✅ CORROBORATED BY THE COMMITTED ARTIFACT, independently of the sweep.  The pair base 11199
+    // ✅ CORROBORATED BY THE COMMITTED ARTIFACT, independently of the sweep.  The pair the base W = {1, 3, 31, 93}
     // produces is BYTE-IDENTICAL to models_93_1.m's W={1} CRV strings,
     //     y^2 - s^6 + 4*s^5*z - 50/9*s^4*z^2 + 34/9*s^3*z^3 - 17/9*s^2*z^4 + 2/3*s*z^5 - 1/9*z^6
     //     x^2 + 144*s^2 - 36*s*z + 63*z^2
     // and that file's provenance header records it was produced with NO non-default flags.  So
-    // 11199's presentation is the one this repo has stored for 93_1 all along.
+    // That presentation is the one this repo has stored for 93_1 all along.
     //
     // ⚠ WHY THE DEFAULT IS NOT GOOD ENOUGH -- fixing the base is not cosmetic.  The default run leaves
-    // W={1} at base 11198 ONLY, and 11198 is not in the candidate set at all (it is a
+    // W={1} at the base W = {1, 31} ONLY, and that base is not in the candidate set at all (it is a
     // rebase-produced base).  test_AllEquationsAboveCoversSingleCurve raises its "matches NONE"
-    // error PER BASE ("W=%o over base %o"), so an unpinned run compares the 11198 pair -- which has
+    // error PER BASE ("W=%o over base %o"), so an unpinned run compares the pair over W = {1, 31} -- which has
     // never been compared to Guo-Yang -- and it is not enough that some other base would match.
-    // The three quotient keys [1,3], [1,31] and [1,93] all live at 11199 (that is exactly where the
+    // The three quotient keys [1,3], [1,31] and [1,93] all live over W = {1, 3, 31, 93} (that is exactly where the
     // sweep's candidate list comes from), so the pin also puts the top curve on the same base as its
-    // own quotients.  ⚠ That the committed model is the 11199 pair while today's default lands on
-    // 11198 is a drift of the pipeline's default; fixing the base restores agreement with the file.
+    // own quotients.  ⚠ That the committed model is the pair over W = {1, 3, 31, 93} while today's default lands on
+    // W = {1, 31} is a drift of the pipeline's default; fixing the base restores agreement with the file.
     //
     // The other keys do fill under the pin, because the rebasing step (EquationsByRebase) is
     // itself pin-aware: it rebases ON the pinned base and threads the pin into its own inner
@@ -137,7 +138,7 @@ procedure test_93_1()
     // `model_drift_ok`.  ⇒ If this ever comes
     // back with empty keys, `model_drift_ok` is the expected remedy, NOT removing the pin.
     // ⇒ Do not re-run the sweep hoping for more: the candidate pool is exactly one base.
-    test_AllEquationsAboveCoversSingleCurve(93, 1, cover_data, ws_data, curves : base_label := 11199);
+    test_AllEquationsAboveCoversSingleCurve(93, 1, cover_data, ws_data, curves : base_W := {1, 3, 31, 93});
     return;
 end procedure;
 
