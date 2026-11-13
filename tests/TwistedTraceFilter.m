@@ -4,14 +4,22 @@
 // Known values, from the twisted-trace sweep (sweeps/twisted_trace/twist.m on branch
 // twisted-trace-sweep; the (26,45) and (10,153) hits were reproduced by an independent reviewer
 // implementation):
-//   11719 X_0^142(1)/<w71>      q = 3, h = w2,     tr = -6
-//   5124  (10,153)/<2,9,85>     q = 7, h = V3*w5,  tr = -12
-//   8387  (26,45)/<5,9,26>      q = 7, h = V3,     tr = -12
-//   896   (1,198)/<9,11>        q = 5, h = V3,     tr = -10   (V3 at p = 2 mod 3: needs 9 in W)
+//   X_0^142(1)/<w71>            q = 3, h = w2,     tr = -6
+//   (10,153)/<2,9,85>         q = 7, h = V3*w5,  tr = -12
+//   (26,45)/<5,9,26>          q = 7, h = V3,     tr = -12
+//   (1,198)/<9,11>            q = 5, h = V3,     tr = -10   (V3 at p = 2 mod 3: needs 9 in W)
 // All four are tested on fresh copies, so the test does not depend on their recorded status: on
-// main 5124 and 8387 are recorded non-hyperelliptic by GeneralizedComplicatedFixedPoints, and once
+// main (10,153)/<2,9,85> and (26,45)/<5,9,26> are recorded non-hyperelliptic by GeneralizedComplicatedFixedPoints, and once
 // the GC V3-certificate fix (PR #46) lands they are undecided and become TwistedTrace rule-outs.  Controls: recorded-hyperelliptic curves with AL, V2 and V3 twists, which
 // must not be ruled out (the sweep found 0 violations on all 914 hyperelliptic controls).
+
+// Each curve is named by D, N and its Atkin-Lehner group W: its position in the list of quotients
+// changes whenever the enumeration of pairs does.
+curve := function(curves, D, N, W)
+    found := [X : X in curves | X`D eq D and X`N eq N and X`W eq W];
+    assert #found eq 1;
+    return found[1];
+end function;
 
 fresh := function(X)
     Y := CreateShimuraQuot(X`D, X`N, X`W);
@@ -21,16 +29,19 @@ fresh := function(X)
 end function;
 
 procedure test_TwistedTrace(curves)
-    known := [<11719, "w2", 3, 1, -6>, <896, "V3", 5, 1, -10>,
-              <8387, "V3", 7, 1, -12>, <5124, "V3*w5", 7, 1, -12>];
+    known := [<<142, 1, {1, 71}>, "w2", 3, 1, -6>, <<1, 198, {1, 9, 11, 99}>, "V3", 5, 1, -10>,
+              <<26, 45, {1, 5, 9, 26, 45, 130, 234, 1170}>, "V3", 7, 1, -12>,
+              <<10, 153, {1, 2, 9, 18, 85, 170, 765, 1530}>, "V3*w5", 7, 1, -12>];
+    known_curves := [curve(curves, k[1][1], k[1][2], k[1][3]) : k in known];
     // the trace itself, on one curve
-    ok, h, p, v, tr := CheckTwistedTrace(curves[11719]);
+    ok, h, p, v, tr := CheckTwistedTrace(known_curves[1]);
     assert not ok and <h, p, v, tr> eq <"w2", 3, 1, -6>;
     // hyperelliptic controls: (6,23)/<2> (AL twists), (1,63)/<9> and (1,126)/<7,9> (V3 with 9 in W),
     // (1,120)/<5,24> (V2)
-    ctl := [1577, 263, 613, 583];
-    assert &and[curves[c]`IsSubhyp : c in ctl];
-    cs := [fresh(curves[k[1]]) : k in known] cat [fresh(curves[c]) : c in ctl];
+    ctl := [curve(curves, 6, 23, {1, 2}), curve(curves, 1, 63, {1, 9}),
+            curve(curves, 1, 126, {1, 7, 9, 63}), curve(curves, 1, 120, {1, 5, 24, 120})];
+    assert &and[X`IsSubhyp : X in ctl];
+    cs := [fresh(X) : X in known_curves] cat [fresh(X) : X in ctl];
     FilterByTwistedTrace(~cs);
     for i->k in known do
         X := cs[i];
@@ -39,22 +50,23 @@ procedure test_TwistedTrace(curves)
         assert X`TestInWhichProved eq Sprintf("TwistedTrace, h = %o with p^v = %o^%o", k[2], k[3], k[4]);
     end for;
     assert &and[not assigned cs[i]`IsSubhyp : i in [#known+1..#cs]];
-    // decided curves are skipped: 222 = X_0(56) (has V2 twists; decided by ALFixedPointsOnQuotient on
+    // decided curves are skipped: X_0(56) (has V2 twists; decided by ALFixedPointsOnQuotient on
     // main and on integration).  ShimuraQuot is a reference type, so compare against a saved string.
-    assert assigned curves[222]`IsSubhyp and not curves[222]`IsSubhyp;
-    proof := curves[222]`TestInWhichProved;
-    cs := [curves[222]];
+    X56 := curve(curves, 1, 56, {1});
+    assert assigned X56`IsSubhyp and not X56`IsSubhyp;
+    proof := X56`TestInWhichProved;
+    cs := [X56];
     FilterByTwistedTrace(~cs);
     assert (not cs[1]`IsSubhyp) and cs[1]`TestInWhichProved eq proof;
 end procedure;
 
-// V3 is used only when 9 in W (sigma(V3) = V3 W9): on X_0(90)/<w9, w2> (420) the V3 twists are
+// V3 is used only when 9 in W (sigma(V3) = V3 W9): on X_0(90)/<w9, w2> the V3 twists are
 // there, on X_0(90)/<w10> they must not be: there V3 preserves the w10-fixed part and is a
 // nontrivial involution on it (checked by hand), but it is not defined over Q, so only the
 // 9-in-W rule keeps it out.
 procedure test_V3Guard(curves)
     names := func<X | [x[1] : x in TwistedWeilPolynomials(X, 7)]>;
-    X := curves[420];
+    X := curve(curves, 1, 90, {1, 2, 9, 18});
     assert <X`D, X`N> eq <1, 90> and 9 in X`W;
     assert "V3" in names(X);
     assert exists(Y){Y : Y in curves | Y`D eq 1 and Y`N eq 90 and Y`W eq {1, 10}};
@@ -64,11 +76,11 @@ procedure test_V3Guard(curves)
 end procedure;
 
 // S2 w_Q is used only for odd Q, as in CheckModularNonALInvolutionModSym (S2 does not commute with
-// w_(2^v)).  On X_0(40) (146) that rule is the only thing keeping S2*V2*w8 and S2*V2*w40 out: both
+// w_(2^v)).  On X_0(40) that rule is the only thing keeping S2*V2*w8 and S2*V2*w40 out: both
 // pass the involution and T_p checks on K (found by deleting the rule).  The rule is conservative
 // here, since S2 V2 w8 = w8 S2 w8^-1; loosening it is a separate decision, and would change this pin.
 procedure test_S2EvenGuard(curves)
-    X := curves[146];
+    X := curve(curves, 1, 40, {1});
     assert <X`D, X`N, X`W> eq <1, 40, {1}>;
     names := [x[1] : x in TwistedWeilPolynomials(X, 3)];
     printf "  (1,40) S2 twists: %o\n", [h : h in names | "S2" in h];
@@ -77,15 +89,15 @@ procedure test_S2EvenGuard(curves)
 end procedure;
 
 // Star curves (W the full AL group; FilterByTwistedTraceStar): only V2, V3, V2 V3 can occur.
-// X_0^*(396) (1272, undecided) is ruled out by V3 at q = 5, trace -10; the hyperelliptic star
-// curves X_0^*(171) (813) and X_0^(9)(55)^* (10149), both with V3, are not.  A star curve with no
+// X_0^*(396) (undecided) is ruled out by V3 at q = 5, trace -10; the hyperelliptic star
+// curves X_0^*(171) and X_0^(55)(9)^*, both with V3, are not.  A star curve with no
 // V2/V3 has nothing to test and costs nothing (its level's modular symbols are never built).
 procedure test_TwistedTraceStar(curves)
-    X := curves[1272];
+    X := curve(curves, 1, 396, {1, 4, 9, 11, 36, 44, 99, 396});
     assert <X`D, X`N> eq <1, 396> and IsStarCurve(X);
-    ctl := [813, 10149];
-    assert &and[IsStarCurve(curves[c]) and curves[c]`IsSubhyp : c in ctl];
-    cs := [fresh(X)] cat [fresh(curves[c]) : c in ctl];
+    ctl := [curve(curves, 1, 171, {1, 9, 19, 171}), curve(curves, 55, 9, {1, 5, 9, 11, 45, 55, 99, 495})];
+    assert &and[IsStarCurve(Y) and Y`IsSubhyp : Y in ctl];
+    cs := [fresh(X)] cat [fresh(Y) : Y in ctl];
     FilterByTwistedTrace(~cs);
     printf "  star %o: %o\n", X`CurveID, cs[1]`TestInWhichProved;
     assert (not cs[1]`IsSubhyp) and cs[1]`TestInWhichProved eq "TwistedTrace, h = V3 with p^v = 5^1";

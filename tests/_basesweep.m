@@ -2,9 +2,9 @@
 //     magma -b Dd:=14 Nn:=3 tests/_basesweep.m < /dev/null
 //
 // ⚠ WHEN A CRV PAIR WILL NOT MATCH GUO-YANG'S, SWEEP THE BASE BEFORE CONCLUDING ANYTHING ABOUT
-// THE CURVE. This found base_label 5394 for 14_3 in seconds, replacing a 112-minute IsIsomorphic
+// THE CURVE. This found the base of 14_3 in seconds, replacing a 112-minute IsIsomorphic
 // that confirmed abstract isomorphism while yielding no usable coordinate change. Same lesson as
-// 26_3's 8103.
+// 26_3's.
 //
 // ⚠⚠ A "CONSTRUCTED ISOMORPHISM TO GY: false" ROW PRINTED BEFORE 2026-09-27 IS NOT EVIDENCE.
 // Until that date construct_crv_isomorphism silently declined every genuine MOBIUS base change
@@ -50,13 +50,16 @@ covers, ws := AllEquationsAboveCovers(Xstar, curves);
 printf "base run: %o s\n", Cputime(t0);
 
 assert exists(lab1){k : k in Keys(covers) | curves[k]`W eq {1}};
-printf "W={1} is label %o; default bases: %o\n", lab1, Keys(covers[lab1]);
+// A label is a position in the list of quotients and changes with the enumeration, so a test pins
+// its base by the Atkin-Lehner group printed beside it (base_W := ...).
+printf "W={1} is label %o; default bases (label, W): %o\n", lab1,
+       [<b, curves[b]`W> : b in Sort(Setseq(Keys(covers[lab1])))];
 
 cand := {};
 for oc in curves[lab1]`Covers do
     if IsDefined(covers, oc) then cand join:= Keys(covers[oc]); end if;
 end for;
-printf "candidate base labels: %o\n", Sort(Setseq(cand));
+printf "candidate bases (label, W): %o\n", [<b, curves[b]`W> : b in Sort(Setseq(cand))];
 
 w, eqf := Explode(gy[[D,N]]);
 Qg<a,b_,c,dd> := WeightedProjectiveSpace(Rationals(), w);
