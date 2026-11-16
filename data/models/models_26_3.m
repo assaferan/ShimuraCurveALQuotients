@@ -24,17 +24,17 @@
 // (Guo-Yang, Compositio 153 (2017), "Equations of level greater than one" table.)
 //
 // ✅ THE W={1} FULL CURVE IS PROVEN ISOMORPHIC TO GUO-YANG (2026-09-07), not merely its quotients.
-// ⚠ THE PRESENTATION BELOW IS THE base_label := 8103 ONE, DELIBERATELY. A CRV pair is built over a
+// ⚠ THE PRESENTATION BELOW IS THE ONE OVER THE BASE W = {1, 3, 26, 78}, DELIBERATELY. A CRV pair is built over a
 // chosen base cover, and the base decides WHICH V_4 the pair presents. The default run picked a
 // V_4 whose y-side is the [1,6] quotient -- perfectly valid, but NOT the one Guo-Yang present, so
 // the two were not directly comparable (their genus-2 y-curves are not isomorphic and the conic
-// discriminants differ by a non-square). Rebuilding with base_label := 8103 gives the V_4 they use:
+// discriminants differ by a non-square). Rebuilding over that base gives the V_4 they use:
 //     ours  y^2 = 1/64 t^6 - 1/32 t^4 + 9/64 t^2 + 1/8,   x^2 = -8t^2 - 3
 //     GY    y^2 =      t^6 -    2t^4 +    9t^2 + 8,       z^2 = -8t^2 - 3
 // i.e. our f is theirs scaled by 1/64 = (1/8)^2 and the conic is theirs VERBATIM, giving the
 // explicit isomorphism (t, y, x) -> (t, 8y, x), certified by IsIsomorphism. See
 // tests/CRVFullCurve.m. Regenerate with:
-//     CMNONCOPRIME=1 ... AllEquationsAboveCovers(Xstar, curves : base_label := 8103)
+//     CMNONCOPRIME=1 ... AllEquationsAboveCovers(Xstar, curves : base_label := <CurveID of the quotient with W = {1, 3, 26, 78}>)
 //
 // ⚠⚠ THE KNOWN-BAD CM VALUES DID NOT CORRUPT THE MODEL, and that is the interesting part.
 // This base has a recorded s <-> s~ SWAP at discriminants -267 and -708 -- Guo-Yang's `s` sits in

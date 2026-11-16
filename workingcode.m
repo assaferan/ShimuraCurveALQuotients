@@ -130,7 +130,7 @@ function compute_data(start_stage, stages)
         t0 := Realtime();
         curves := FindPairs(r); // time (lava, 05/28/26) : 1.570
         print "FindPairs took ", Realtime() - t0;
-        assert #curves eq 2342;
+        assert #curves eq 3114;   // 2717 with D > 1 (recounted independently by tools/recount_pairs.py) and 397 with D = 1
     end if;
 
     for i := start to #stages do

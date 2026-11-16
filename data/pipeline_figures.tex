@@ -10,11 +10,11 @@
   ymin=0,
   xlabel={Genus},
   ylabel={Curves},
-  symbolic x coords={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,23},
+  symbolic x coords={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35},
   xtick=data,
   x tick label style={font=\scriptsize},
   legend style={at={(0.5,-0.20)}, anchor=north, legend columns=3},
-  title={Genus distribution of all $18379$ quotients},
+  title={Genus distribution of all $39024$ quotients},
   grid=major,
   ]
 
@@ -23,7 +23,7 @@
     line width=0.25pt,
     fill=StatusSub!85
   ] coordinates {
-  (0,905) (1,1518) (2,1725) (3,903) (4,379) (5,260) (6,86) (7,74) (8,18) (9,13) (10,4) (11,1) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
+  (0,905) (1,1518) (2,1725) (3,903) (4,379) (5,260) (6,86) (7,74) (8,19) (9,13) (10,4) (11,1) (12,0) (13,0) (14,0) (15,0) (16,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) (24,0) (25,0) (26,0) (27,0) (28,0) (29,0) (30,0) (31,0) (32,0) (33,0) (34,0) (35,0) 
   };
 
   \addplot+[
@@ -31,7 +31,7 @@
     line width=0.25pt,
     fill=StatusNot!65
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,1278) (4,1892) (5,2135) (6,2031) (7,1900) (8,1239) (9,1062) (10,534) (11,288) (12,25) (13,32) (14,7) (15,6) (17,7) (18,3) (19,16) (20,10) (21,15) (22,11) (23,2) 
+  (0,0) (1,0) (2,0) (3,1281) (4,1927) (5,2272) (6,2423) (7,2635) (8,2217) (9,2515) (10,2037) (11,2137) (12,1460) (13,1787) (14,1066) (15,1473) (16,947) (17,1176) (18,686) (19,1102) (20,550) (21,912) (22,504) (23,580) (24,282) (25,579) (26,160) (27,157) (28,105) (29,87) (30,35) (31,19) (32,10) (33,10) (34,4) (35,2) 
   };
 
   \addplot+[
@@ -39,7 +39,7 @@
     line width=0.25pt,
     fill=StatusOpen!45
   ] coordinates {
-  (0,0) (1,0) (2,0) (3,0) (4,0) (5,0) (6,0) (7,0) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) 
+  (0,0) (1,0) (2,0) (3,0) (4,0) (5,0) (6,0) (7,0) (8,0) (9,0) (10,0) (11,0) (12,0) (13,0) (14,0) (15,0) (16,0) (17,0) (18,0) (19,0) (20,0) (21,0) (22,0) (23,0) (24,0) (25,0) (26,0) (27,0) (28,0) (29,0) (30,0) (31,0) (32,0) (33,0) (34,0) (35,0) 
   };
 
   \legend{Proved subhyperelliptic, Proved not subhyperelliptic, Open}
@@ -53,7 +53,7 @@
 % \testbar normalises log-scaled bars to the largest count; drop this line if
 % the macro is already defined in your preamble.
 \newcommand{\testbar}[2]{%
-  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(5723))}%
+  \pgfmathsetmacro{\barwidth}{max(0.6, 100*ln(#2)/ln(14006))}%
   \begin{tikzpicture}[baseline=-0.55ex]
     \fill[#1!10] (0,0) rectangle (2.7,0.16);
     \draw[black!45, line width=0.2pt] (0,0) rectangle (2.7,0.16);
@@ -87,7 +87,7 @@ Certificates of hyperellipticity
   & 36 & \testbar{StatusSub}{36} \\
 
 Modular non-Atkin--Lehner involution
-  & 29 & \testbar{StatusSub}{29} \\
+  & 30 & \testbar{StatusSub}{30} \\
 
 Genus 3 cover of genus 2
   & 16 & \testbar{StatusSub}{16} \\
@@ -104,34 +104,34 @@ Isomorphism
 \addlinespace[0.2em]
 
 Atkin--Lehner fixed points
-  & 5723 & \testbar{StatusNot}{5723} \\
+  & 14006 & \testbar{StatusNot}{14006} \\
 
 Hyperelliptic special-fibre components
-  & 2750 & \testbar{StatusNot}{2750} \\
-
-Finite field point count
-  & 1217 & \testbar{StatusNot}{1217} \\
-
-Dual graphs of the special fibres
-  & 1056 & \testbar{StatusNot}{1056} \\
+  & 7757 & \testbar{StatusNot}{7757} \\
 
 Upward closure
-  & 665 & \testbar{StatusNot}{665} \\
+  & 6993 & \testbar{StatusNot}{6993} \\
+
+Finite field point count
+  & 1956 & \testbar{StatusNot}{1956} \\
+
+Dual graphs of the special fibres
+  & 1172 & \testbar{StatusNot}{1172} \\
 
 Special fiber
-  & 501 & \testbar{StatusNot}{501} \\
+  & 564 & \testbar{StatusNot}{564} \\
 
 Refined Atkin--Lehner fixed points
-  & 284 & \testbar{StatusNot}{284} \\
+  & 304 & \testbar{StatusNot}{304} \\
 
 Isomorphism
-  & 106 & \testbar{StatusNot}{106} \\
+  & 160 & \testbar{StatusNot}{160} \\
 
 Special fiber isomorphism
-  & 80 & \testbar{StatusNot}{80} \\
+  & 105 & \testbar{StatusNot}{105} \\
 
 Automorphism groups
-  & 47 & \testbar{StatusNot}{47} \\
+  & 56 & \testbar{StatusNot}{56} \\
 
 Weil polynomial
   & 22 & \testbar{StatusNot}{22} \\
@@ -157,7 +157,7 @@ Twisted Weil polynomials
 \bottomrule
 \end{tabularx}
 
-\caption{Distribution of the tests that determined the $18379$ resolved quotients. Bar lengths are log-scaled.}
+\caption{Distribution of the tests that determined the $39024$ resolved quotients. Bar lengths are log-scaled.}
 \label{fig:test-attribution}
 \end{figure}
 

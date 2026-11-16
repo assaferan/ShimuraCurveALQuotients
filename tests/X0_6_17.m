@@ -23,7 +23,7 @@ procedure test_6_17()
     // pinned matrix was brittle -- it stopped being a map at all when CMNONCOPRIME=1 changed
     // the presentation -- while the construction survives re-presentation and still PROVES
     // the isomorphism (it exhibits a map and certifies it with IsIsomorphism).
-    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_label := 1557);
+    test_AllEquationsAboveCoversSingleCurve(6, 17, cover_data, ws_data, curves : base_W := {1, 3, 34, 102});
     return;
 end procedure;
 

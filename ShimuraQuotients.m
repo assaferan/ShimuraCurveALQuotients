@@ -94,8 +94,9 @@ intrinsic MinimalNumberOfALinQuotient(D::RngIntElt, N::RngIntElt) -> RngIntElt
     ps := PrimeDivisors(N);
     c_D := EulerPhi(D);
     c_N := N * &*[Rationals() | 1 + 1/p : p in ps];
+    // The supersingular count behind this bound [Ribet89SS, Thm 3.4] is for p not dividing DN.
     p := 2;
-    while (N mod p eq 0) do
+    while ((D*N) mod p eq 0) do
     p := NextPrime(p);
     end while;
     return Maximum(0,Ceiling(Log(2, (c_D * c_N) / UpperBound(p))));
@@ -186,8 +187,10 @@ intrinsic FindPairs(r :: RngIntElt: Coprime := true) -> SeqEnum
             print "N =", N;
             end if;
            */
+            // The bound lD*lN <= UpperBound(p) counts supersingular points at a prime of good
+            // reduction [Ribet89SS, Thm 3.4], so p must not divide D either.
             p := 2;
-            while (N mod p eq 0) do
+            while ((D*N) mod p eq 0) do
             p := NextPrime(p);
             end while;
             if D ne 1 then

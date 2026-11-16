@@ -99,13 +99,13 @@ end function;
 procedure test_21_2()
     cover_data, ws_data := load_covers_and_ws_data_21_2();
     curves := GetHyperellipticCandidates();
-    // ⚠ base_label := 7079 IS REQUIRED, and the reason is the V_4.
+    // ⚠ the base W = {1, 2, 7, 14} IS REQUIRED, and the reason is the V_4.
     // A CRV pair is built over a CHOSEN BASE, and the base decides which Klein four-group the pair
-    // presents. The DEFAULT run builds W={1} over base 7078 (conic -x^2-3) and yields a pair whose
+    // presents. The DEFAULT run builds W={1} over the base W = {1, 7} (conic -x^2-3) and yields a pair whose
     // y-quotient is NOT isomorphic to the stored one and whose conic differs by a non-square -- a
-    // different, equally valid V_4. Base 7079 (conic -3x^2-3) reproduces the committed entry
+    // different, equally valid V_4. The base W = {1, 2, 7, 14} (conic -3x^2-3) reproduces the committed entry
     // exactly. Same lesson as 26_3: the presentation is a choice, the curve is not.
-    test_AllEquationsAboveCoversSingleCurve(21, 2, cover_data, ws_data, curves : base_label := 7079);
+    test_AllEquationsAboveCoversSingleCurve(21, 2, cover_data, ws_data, curves : base_W := {1, 2, 7, 14});
     return;
 end procedure;
 

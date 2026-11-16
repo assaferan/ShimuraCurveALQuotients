@@ -215,14 +215,14 @@ printf "ModelRegen: %o base(s) reproduce, %o drifted%o\n", mr_ok, mr_fail,
 // ⚠ SHRUNK 2026-09-07 when the coprime filter became default-off: `39_2` and `14_3` came OFF
 // this list because they now regenerate WITHOUT a flag, byte-identical to the committed files.
 // `26_3` is NOT on the list for a flag reason -- it is here because its committed `W={1}` entry
-// deliberately stores the `base_label := 8103` presentation (the V_4 Guo-Yang use, so the full
+// deliberately stores the presentation over the base W = {1, 3, 26, 78} (the V_4 Guo-Yang use, so the full
 // curve is directly comparable), while a DEFAULT run produces a different, equally valid V_4.
 // The drift is therefore in the `W={1}` CRV entry ONLY, and it is intentional.
 // ⚠ SHRUNK AGAIN 2026-09-07: `22_3`, `15_2` and `22_5` came off once they were REGENERATED
 // with default flags (the coprime filter being off by default is what recovers their covers;
 // Y2TWIST was evaluated and does not fire). Only two remain, for unrelated reasons:
 //   14_43  produced with INTSOL=1
-//   26_3   stores the base_label := 8103 presentation deliberately (the V_4 Guo-Yang use)
+//   26_3   stores the presentation over the base W = {1, 3, 26, 78} deliberately (the V_4 Guo-Yang use)
 MR_KNOWN_DRIFT := ["14_43", "26_3"];
 mr_unexpected := [b : b in mr_bad | not (b in MR_KNOWN_DRIFT)];
 error if not IsEmpty(mr_unexpected),

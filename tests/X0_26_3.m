@@ -71,7 +71,7 @@ end function;
 procedure test_26_3()
     cover_data, ws_data := load_covers_and_ws_data_26_3();
     curves := GetHyperellipticCandidates();
-    // ⚠ base_label := 8103 IS REQUIRED, not cosmetic: models_26_3.m deliberately stores the V_4
+    // ⚠ the base W = {1, 3, 26, 78} IS REQUIRED, not cosmetic: models_26_3.m deliberately stores the V_4
     // that Guo-Yang use, which a DEFAULT run does not produce (it gives a different, equally valid
     // one). Without it the W={1} CRV pair the pipeline emits is a genuinely different presentation
     // and the isomorphism assertion fails. See models_26_3.m's header.
@@ -79,7 +79,7 @@ procedure test_26_3()
     // say AllEquationsAboveCovers gates EquationsByRebase on `base_label eq 0`, so a pinned run
     // skipped the stage entirely.  That gate has been REMOVED: EquationsCovers.m:1079 now reads
     // "Formerly gated on `base_label eq 0` ... The stage is pin-aware now".  ⚠ AND THIS BASE IS THE
-    // ONE THE REMOVAL WAS REASONED FROM: EquationsCovers.m:865 records that at base_label 8103 the
+    // ONE THE REMOVAL WAS REASONED FROM: EquationsCovers.m:865 records that at this base the
     // rebase fills NOTHING if STAR is forced to the pinned base, leaving [1,2] and [1,13] empty --
     // which is why STAR stays unpinned there.  So the two keys may now fill after all.
     // ⇒ model_drift_ok's NECESSITY HERE IS THEREFORE UNMEASURED.  Kept rather than removed on
@@ -93,7 +93,7 @@ procedure test_26_3()
     // 6_17 also pin a base_label and all three PASS -- 14_3's empties were fixed by the coprime
     // filter flip, not the rebase, and the other two never had any. The gate cost exactly the
     // rebase-filled keys and nothing else -- while it existed.
-    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : base_label := 8103);
+    test_AllEquationsAboveCoversSingleCurve(26, 3, cover_data, ws_data, curves : base_W := {1, 3, 26, 78});
     return;
 end procedure;
 

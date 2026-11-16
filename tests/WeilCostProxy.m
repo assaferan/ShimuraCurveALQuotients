@@ -5,7 +5,9 @@
 // Every assertion below is an ORDERING of two curves whose times were measured, never a cost.
 // Measured on lovelace with the class-number tables, over 36 curves, on main at 95b19e6 (with
 // #56, #57 and #58), by vvdata/weyl-campaign/weil-retime-2026-10-02/weil_timing.m on the
-// m0-theta-campaign branch (logs and the fit alongside it):
+// m0-theta-campaign branch (logs and the fit alongside it).  The first column is the curve's
+// index in the 18,379-quotient list of that run; the test finds each curve by D, N and W, since
+// a change to the enumeration renumbers the list.
 //
 //     curve  shape                     g  #W   measured
 //      1416  X_0(595)/W8               5   8   6087 s      the four slowest of the 36
@@ -35,19 +37,28 @@ end for;
 stage := "FilterByWeilPolynomial";
 slow := [1416, 2325, 1436, 3854];       // 32 min to 101 min
 fast := [12610, 976, 2176, 94];         // 4 to 18 s
-shapes := AssociativeArray();
-shapes[1416] := <1,595,5>;  shapes[2325] := <6,97,6>;   shapes[1436] := <1,690,6>;
-shapes[3854] := <6,511,4>;  shapes[7296] := <21,20,7>;  shapes[1071] := <1,240,6>;
-shapes[13029] := <210,73,4>; shapes[12610] := <210,17,3>; shapes[976] := <1,210,3>;
-shapes[2176] := <6,89,3>;   shapes[94] := <1,30,3>;
-for id -> sh in shapes do
-    X := curves[id];
-    assert X`CurveID eq id;
-    assert <X`D, X`N, X`g> eq sh;       // the IDs still name the curves the times were measured on
+timed := AssociativeArray();            // <D, N, W, g> of each timed curve, keyed as in the table
+timed[1416]  := <1, 595, {1, 5, 7, 17, 35, 85, 119, 595}, 5>;
+timed[2325]  := <6, 97, {1, 291}, 6>;
+timed[1436]  := <1, 690, Set(Divisors(690)), 6>;
+timed[3854]  := <6, 511, Set(Divisors(3066)), 4>;
+timed[7296]  := <21, 20, {1, 12, 15, 20}, 7>;
+timed[1071]  := <1, 240, {1, 15, 48, 80}, 6>;
+timed[13029] := <210, 73, Set(Divisors(15330)), 4>;
+timed[12610] := <210, 17, {1, 15, 42, 51, 70, 85, 238, 3570}, 3>;
+timed[976]   := <1, 210, {1, 3, 5, 7, 15, 21, 35, 105}, 3>;
+timed[2176]  := <6, 89, {1, 534}, 3>;
+timed[94]    := <1, 30, {1}, 3>;
+curve := AssociativeArray();
+for id -> t in timed do
+    found := [X : X in curves | X`D eq t[1] and X`N eq t[2] and X`W eq t[3]];
+    assert #found eq 1;
+    assert found[1]`g eq t[4];
+    curve[id] := found[1];
 end for;
 
 proxy := AssociativeArray();
-for id -> sh in shapes do proxy[id] := CurveCostProxy(curves[id], stage); end for;
+for id -> X in curve do proxy[id] := CurveCostProxy(X, stage); end for;
 printf "  proxy: %o\n", [<id, RealField(4)!proxy[id]> : id in Sort([k : k in Keys(proxy)])];
 
 // (1) every curve measured in the tens of minutes ranks above every curve measured in seconds.
@@ -68,9 +79,9 @@ pr := [<CurveCostProxy(c, stage), c`CurveID> : c in ranked];
 Sort(~pr, func<a, b | b[1] - a[1]>);
 ids := [t[2] : t in pr];
 printf "  ranks among %o curves of genus >= 3: %o\n", #ranked,
-       [<id, Position(ids, id)> : id in slow cat [7296, 1071, 13029] cat fast];
+       [<id, Position(ids, curve[id]`CurveID)> : id in slow cat [7296, 1071, 13029] cat fast];
 
 // Skipped curves still cost nothing, and a decided curve is 0.
-assert CurveCostProxy(curves[1], stage) eq 0;   // genus 0
-Xdec := curves[13029]; Xdec`IsSubhyp := true;
+assert CurveCostProxy([X : X in curves | X`g eq 0][1], stage) eq 0;   // genus 0
+Xdec := curve[13029]; Xdec`IsSubhyp := true;
 assert CurveCostProxy(Xdec, stage) eq 0;        // decided

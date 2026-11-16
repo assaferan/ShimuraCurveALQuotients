@@ -858,15 +858,16 @@ intrinsic EquationsByRebase(all_eqns::Assoc, all_ws::Assoc, curves::SeqEnum : ba
     if IsEmpty(Keys(base_count)) then return all_eqns, all_ws, filled; end if;
     // ⚠ STAR IS *NOT* FORCED TO A PINNED base_label, AND THAT WAS MEASURED, NOT ASSUMED.
     // Forcing STAR := base_label is the obvious reading of "keep the pinned presentation", and it
-    // is WRONG HERE: at 26_3 with base_label = 8103 the rebase then runs and fills NOTHING, leaving
+    // is WRONG HERE: at 26_3 pinned to the base W = {1, 3, 26, 78} the rebase then runs and fills NOTHING, leaving
     // exactly [1,2] and [1,13] empty -- the two keys this stage exists to fill.  Measured
-    // base_count at that base: <8092,1> <8098,1> <8103,3> <8104,3> <8105,7>, so the pinned base
+    // base_count at that base: <8092,1> <8098,1> <8103,3> <8104,3> <8105,7> (numbers in the earlier list of 18,379 quotients; 8103 is
+    // the pinned base, 8105 is W = {1, 2, 3, 6, 13, 26, 39, 78}), so the pinned base
     // carries 3 first-level equations while the heuristic picks 8105 with 7, and only 8105 admits
     // a usable Hauptmodul root.
     // ⚠ AND THE COMMITTED DATA SETTLES WHICH BEHAVIOUR IS RIGHT.  models_26_3.m's [1,2] and [1,13]
     // were filled by commit 7a923ae (2026-09-09) on a DEFAULT run -- the old gate here was
     // `base_label eq 0`, so that run cannot have been pinned.  The committed file is therefore a
-    // MIXTURE: 13 keys in the base_label := 8103 presentation plus 2 keys from an unpinned rebase.
+    // MIXTURE: 13 keys in the pinned presentation plus 2 keys from an unpinned rebase.
     // Reproducing it requires the unpinned STAR, so the heuristic stays.
     // This does not disturb the pin's purpose: the pin exists to select the V_4 of the W = {1} CRV
     // pair, this stage only ever fills keys that are ALREADY EMPTY, and the two it fills at 26_3

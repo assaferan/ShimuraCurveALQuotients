@@ -76,7 +76,7 @@ crv_cases := [*
      (3*t^3 - 7*t^2 - 3*t - 1)*(3*t^3 + t^2 - 3*t - 9),
      -4*t^2 - 6*t - 9>,
 
-    // 26_3: the committed W={1} entry is the base_label := 8103 presentation, which is the V_4
+    // 26_3: the committed W={1} entry is the presentation over the base W = {1, 3, 26, 78}, which is the V_4
     // Guo-Yang use. Our f is theirs scaled by 1/64 = (1/8)^2 and the conic is theirs verbatim, so
     // mu is the identity and the map is (t, y, x) -> (t, 8y, x).
     <"26_3", 3,
@@ -92,7 +92,7 @@ crv_cases := [*
 // differed by a non-square. Both V_4s are legitimate -- IsoScreen.m warns the Klein four-group is
 // not unique in Aut(C).
 // The fix was assaferan's: a CRV is built over a CHOSEN BASE, and the base decides the V_4. Running
-// AllEquationsAboveCovers with base_label := 8103 yields the V_4 Guo-Yang use, after which the
+// AllEquationsAboveCovers over the base W = {1, 3, 26, 78} yields the V_4 Guo-Yang use, after which the
 // comparison is nearly the identity. models_26_3.m now stores that presentation.
 // ⇒ GENERAL LESSON: when a CRV pair will not match, try another base before concluding anything
 // about the curve. The presentation is a choice; the curve is not.

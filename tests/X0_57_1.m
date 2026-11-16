@@ -52,10 +52,10 @@ end function;
 procedure test_57_1()
     cover_data, ws_data := load_covers_and_ws_data_57_1();
     curves := GetHyperellipticCandidates();
-    // ⚠ base_label := 10197 IS PINNED DELIBERATELY (2026-09-27).  On a CRV base the base decides
+    // ⚠ the base W = {1, 3, 19, 57} IS PINNED DELIBERATELY (2026-09-27).  On a CRV base the base decides
     // WHICH V_4 the pair presents, and the default is not guaranteed to keep choosing the one this
     // test's cover_data was written against -- that is precisely how tests/_offline/X0_10_19.m
-    // went red.  `magma -b Dd:=57 Nn:=1 tests/_basesweep.m` finds 10197, and the pair it produces
+    // went red.  `magma -b Dd:=57 Nn:=1 tests/_basesweep.m` finds W = {1, 3, 19, 57}, and the pair it produces
     // there is byte-identical to cover_data[{1}] below.
     //
     // ✅ AND THAT PAIR IS CERTIFIED ISOMORPHIC TO GUO-YANG'S PUBLISHED CURVE.  The sweep reports
@@ -67,7 +67,7 @@ procedure test_57_1()
     // ⚠ Measured both ways: with and without the pin the test gives 4 curve comparisons and 2
     // involution comparisons and passes in ~114 s, so pinning changes nothing today -- it fixes
     // the choice so a future re-presentation cannot silently change it.
-    test_AllEquationsAboveCoversSingleCurve(57, 1, cover_data, ws_data, curves : base_label := 10197);
+    test_AllEquationsAboveCoversSingleCurve(57, 1, cover_data, ws_data, curves : base_W := {1, 3, 19, 57});
     return;
 end procedure;
 

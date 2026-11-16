@@ -27,10 +27,18 @@ function genus0_conic_class(C)
 end function;
 import "_modelfile.m" : ReadModelSet;
 
-procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves : algebra_map := false, base_label := 0, manual_isomorphism := false, model_covers := true, model_drift_ok := false)
+procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, curves : algebra_map := false, base_label := 0, base_W := {}, manual_isomorphism := false, model_covers := true, model_drift_ok := false)
     // no longer needed as we now have a test for each curve
     // printf "testing equations of covers of X0*(%o;%o)...", D, N;
     assert exists(Xstar){X : X in curves | X`D eq D and X`N eq N and IsStarCurve(X)};
+    // base_W names the base curve by its Atkin-Lehner group. A base_label is the curve's position
+    // in the list of quotients, which changes whenever the enumeration of pairs does.
+    if not IsEmpty(base_W) then
+        assert base_label eq 0;
+        pinned := [X`CurveID : X in curves | X`D eq D and X`N eq N and X`W eq base_W];
+        assert #pinned eq 1;
+        base_label := pinned[1];
+    end if;
     covers, ws := AllEquationsAboveCovers(Xstar, curves : base_label := base_label);
 
     // ⚠ COUNT THE COMPARISONS ACTUALLY MADE. Without this the procedure can PASS WHILE CHECKING
@@ -127,8 +135,8 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                         D, N, Sort(SetToSequence(X`W)), base, #cex_list,
                         // ⚠ ON A CRV PAIR, SWEEP base_label BEFORE CONCLUDING ANYTHING. The base
                         // decides WHICH V_4 the pair presents, so the default can give a perfectly
-                        // valid pair that is simply not the published one. This found 5394 for
-                        // 14_3 and 8103 for 26_3 in seconds. Said HERE, in the failure itself,
+                        // valid pair that is simply not the published one. This found the bases of 14_3
+                        // and 26_3 in seconds. Said HERE, in the failure itself,
                         // because it was already written in tests/_basesweep.m's header and in the
                         // project notes and was still missed on 2026-09-27 at 10_19 -- three
                         // coordinate parametrisations were spent before the base was varied at all.
@@ -138,7 +146,7 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
                                  cat " Nn:=" cat IntegerToString(N)
                                  cat " tests/_basesweep.m < /dev/null`. base_label decides which "
                                  * "V_4 the pair presents; the default can be a valid pair that is "
-                                 * "not the published one (14_3 needed 5394, 26_3 needed 8103). "
+                                 * "not the published one (14_3 and 26_3 needed a pinned base). "
                                  * "If the sweep is exhausted too, see 21_2 and 10_19."
                           else "");
             if matched_at eq 1 then oracle_matched := true; end if;
@@ -368,13 +376,13 @@ procedure test_AllEquationsAboveCoversSingleCurve(D, N, cover_data, ws_data, cur
         // keys, but it is a different and smaller effect than a skipped stage.
         // ⇒ SO THE TWO model_drift_ok TESTS BELOW MAY NO LONGER NEED THE FLAG. Unmeasured; settle it
         // by dropping the flag on one test at a time, not by reasoning from this comment.
-        // Historically measured at 10_13 (base_label 4069), whose
+        // Historically measured at 10_13 (with its pinned base), whose
         // three missing keys are exactly the ones that run's own log reports as "leaving it
         // deferred". 26_3 is the case that confirms the reading rather than excusing it: its model
-        // was GENERATED at base_label 8103 (data/models/PROVENANCE.md) and its test pins the same
-        // value, so it must match.
+        // was GENERATED over the base W = {1, 3, 26, 78} (data/models/PROVENANCE.md) and its test pins
+        // the same base, so it must match.
         //
-        // But a key the pipeline DOES produce must still be the committed curve, whatever base_label
+        // But a key the pipeline DOES produce must still be the committed curve, whatever base
         // was pinned. Silencing both with one flag would hide the failure that actually matters, so
         // model_drift_ok covers MISSING keys ONLY.
         error if not IsEmpty(model_noniso),

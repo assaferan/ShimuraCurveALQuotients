@@ -61,7 +61,7 @@ order is Eichler. Therefore:
 
 | base | flag | why | validated by |
 |---|---|---|---|
-| `26_3` | *(no flag)* but `base_label := 8103` | stores the presentation whose `V_4` is the one Guo-Yang use, so the full curve is directly comparable. A DEFAULT run yields a different (equally valid) `V_4` and so differs in the `W={1}` entry only | `tests/CRVFullCurve.m` — full-curve isomorphism CONSTRUCTED and certified |
+| `26_3` | *(no flag)* but the base `W = {1, 3, 26, 78}` | stores the presentation whose `V_4` is the one Guo-Yang use, so the full curve is directly comparable. A DEFAULT run yields a different (equally valid) `V_4` and so differs in the `W={1}` entry only | `tests/CRVFullCurve.m` — full-curve isomorphism CONSTRUCTED and certified |
 | `14_43` | `INTSOL=1` | from the OBSTRUCTED class; produced under the integral-solution path. ⚠ The flag is recorded from a `ps` capture of the launch wrapper, not from the run log (lovelace's `genmodels.m` predates the line that prints it) — best available record, not log-confirmed | `ModelChecks` only (32 checks) — **no Guo-Yang equation exists for this base**, so there is no external oracle |
 
 | `21_1` | `HMFIT=1` | the hauptmodul normalisation is read off the two discriminants where a value VANISHES, so those satisfy the relation BY CONSTRUCTION and can never be flagged; at `21_1` the datum it reads FROM is the wrong one (five discriminants agree on `scale_tilde = 36`, the default takes `9` from `d = -7`). `HMFIT=1` solves for the pair against every rational CM point instead. ⚠ It also needed the fitted scale's SIGN pinned positive — see below | **`tests/GonzalezRotger.m`, an EXTERNAL oracle**: the `W=[1]` full curve has Jacobian `21a2`, matching the published equation (ours `-343x^4+94x^2-7`, theirs `-7x^4+94x^2-343` — the same curve by `x -> 1/x`). Negative-controlled: the `-1` twist gives `336e4` and the oracle rejects it. Also `VerifyModelSet` 44/0 (negative control: twisting the `[1,3]` entry gives 3 failures) and `ModelChecks` 44/0 |
@@ -187,25 +187,25 @@ same torsor, so the choice cannot produce a false verdict either way. **Negative
 `51_1`, swapping `w_3` and `w_51` makes the test fail on the labelling — and on `14_5` this
 machinery *determined a typo in the journal's table* (see below).
 
-⚠ **`26_3`'s test now REQUIRES `base_label := 8103`**, and this is not cosmetic. `models_26_3.m`
+⚠ **`26_3`'s test now REQUIRES the base `W = {1, 3, 26, 78}`**, and this is not cosmetic. `models_26_3.m`
 deliberately stores the `V_4` Guo-Yang use, which a default run does not produce — it gives a
-different, equally valid one — so without the label the `W={1}` pair the pipeline emits is a
+different, equally valid one — so without that base the `W={1}` pair the pipeline emits is a
 genuinely different presentation and the isomorphism assertion fails.
 
-⚠ **`14_3` NEEDED `base_label := 5394`, AND FINDING IT IS THE LESSON.** The default base (5383)
+⚠ **`14_3` NEEDED the base `W = {1, 3, 14, 42}`, AND FINDING IT IS THE LESSON.** The default base (`W = {1, 14}`)
 gives a valid pair that is NOT Guo-Yang's `V_4`; `construct_crv_isomorphism` declines, and the
 general `IsIsomorphic` needs **6739 s (112 min)** to confirm the curves are abstractly isomorphic
 while still producing no usable coordinate change. Sweeping the candidate bases — replaying only
-the pointless-conic step, ~7 s each — finds 5394, whose pair IS their `V_4`:
+the pointless-conic step, ~7 s each — finds `W = {1, 3, 14, 42}`, whose pair IS their `V_4`:
 
 |  | `y`-equation | conic |
 |---|---|---|
-| ours (base 5394) | `y^2 = 4s^4 + 88s^2z^2 - 28z^4` | `x^2 = -2s^2 - 9z^2` |
+| ours (base `W = {1, 3, 14, 42}`) | `y^2 = 4s^4 + 88s^2z^2 - 28z^4` | `x^2 = -2s^2 - 9z^2` |
 | Guo-Yang | `y^2 = -7x^4 + 22x^2 + 1` | `z^2 = -9x^2 - 2` |
 
 theirs scaled by 4 with the two base coordinates exchanged. The constructor then succeeds
 immediately and the linear solve drops from 70 monomial equations to 10.
-⇒ **SWEEP THE BASE BEFORE CONCLUDING ANYTHING ABOUT A PAIR** (same lesson as `26_3`'s 8103).
+⇒ **SWEEP THE BASE BEFORE CONCLUDING ANYTHING ABOUT A PAIR** (same lesson as `26_3`).
 Tool: `tests/_basesweep.m`.
 
 ⚠ **`21_2` IS DIFFERENT, AND THE SWEEP DOES NOT RESCUE IT.** All four candidate bases were tried

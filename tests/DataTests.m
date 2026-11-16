@@ -3,7 +3,7 @@ procedure test_genera()
     r := GetLargestPrimeIndex();
     assert r eq 7;
     star_curves := FindPairs(r); // time : 1.980
-    assert #star_curves eq 2342;
+    assert #star_curves eq 3114;   // 2717 with D > 1 (recounted independently by tools/recount_pairs.py) and 397 with D = 1
 
     UpdateGenera(~star_curves); // time: 12
     UpdateByGenus(~star_curves);
@@ -20,7 +20,7 @@ procedure test_data_file()
     r := GetLargestPrimeIndex();
     assert r eq 7;
     star_curves := FindPairs(r); // time : 1.980
-    assert #star_curves eq 2342;
+    assert #star_curves eq 3114;   // 2717 with D > 1 (recounted independently by tools/recount_pairs.py) and 397 with D = 1
     UpdateGenera(~star_curves); // time: 12
     UpdateByGenus(~star_curves);
     FilterByTrace(~star_curves); // time : 2850.270
